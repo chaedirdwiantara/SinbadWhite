@@ -5,25 +5,22 @@ import {
   StyleSheet,
   Image,
   Dimensions,
-  TextInput,
-  TouchableOpacity
+  TextInput
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import Text from 'react-native-text';
 import { connect } from 'react-redux';
-import IconsMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconsAntDesign from 'react-native-vector-icons/AntDesign';
-import { SafeAreaView } from 'react-navigation';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ActionCreators from '../../state/actions';
 import Fonts from '../../helpers/GlobalFont';
 import masterColor from '../../config/masterColor.json';
 import ButtonSingle from '../../components/button/ButtonSingle';
 import GlobalStyle from '../../helpers/GlobalStyle';
-import NavigationService from '../../navigation/NavigationService';
+import { SafeAreaView } from 'react-navigation';
 
 const { width, height } = Dimensions.get('window');
 
-class SignInWithPhoneView extends Component {
+class OtpView extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,9 +36,9 @@ class SignInWithPhoneView extends Component {
   componentDidMount() {
     console.log('Home');
   }
-  /** === CHECK PHONE NUMBER EXIST OR NOT */
-  checkPhoneExist() {
-    NavigationService.navigate('OtpView');
+
+  test() {
+    console.log('lala');
   }
   /** === PHONE NUMBER MODIFY === */
   phoneModify(phoneNumber) {
@@ -56,24 +53,6 @@ class SignInWithPhoneView extends Component {
       correctFormatPhoneNumber: checkFormat
     });
   }
-  /**
-   * ========================
-   * HEADER MODIFY
-   * ========================
-   */
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerRight: () => (
-        <TouchableOpacity style={{ marginRight: 16 }}>
-          <IconsAntDesign
-            color={masterColor.backButtonWhite}
-            name={'questioncircleo'}
-            size={24}
-          />
-        </TouchableOpacity>
-      )
-    };
-  };
   /**
    * ==============================
    * RENDER VIEW
@@ -93,9 +72,9 @@ class SignInWithPhoneView extends Component {
     return (
       <ButtonSingle
         disabled={!this.state.correctFormatPhoneNumber}
-        title={'Lanjutkan'}
+        title={'Verifikasi'}
         borderRadius={50}
-        onPress={() => this.checkPhoneExist()}
+        onPress={() => this.test()}
       />
     );
   }
@@ -105,59 +84,22 @@ class SignInWithPhoneView extends Component {
     return (
       <View>
         <View>
-          <Text style={Fonts.type1}>LOGIN</Text>
+          <Text style={Fonts.type1}>OTP</Text>
         </View>
         <View
           style={{ paddingRight: '30%', paddingBottom: 20, paddingTop: 10 }}
         >
-          <Text style={Fonts.type2}>
-            Silahkan masuk dengan nomor HP-mu yang terdaftar
-          </Text>
+          <Text style={Fonts.type2}>Kami telah mengirimi Anda SMS di</Text>
+          <Text style={Fonts.type2}>+6281322918441</Text>
         </View>
       </View>
     );
   }
   /** CONTENT */
-  renderContentPhoneNumberInput() {
-    return (
-      <View style={styles.boxPhoneInput}>
-        <View style={styles.boxPhoneNumberAreaCode}>
-          <Text style={Fonts.type3}>+62</Text>
-        </View>
-        <View style={styles.boxPhoneNumber}>
-          <TextInput
-            selectionColor={masterColor.mainColor}
-            placeholder="Masukan No.Handphone"
-            value={this.state.phoneNumber}
-            maxLength={13}
-            textContentType="telephoneNumber"
-            keyboardType="numeric"
-            onChangeText={phoneNumber => this.phoneModify(phoneNumber)}
-            style={[styles.textInput, Fonts.type3]}
-          />
-          <View style={{ justifyContent: 'center', height: '100%' }}>
-            {this.state.correctFormatPhoneNumber ? (
-              <IconsMaterial
-                color={masterColor.fontGreen50}
-                name={'check-circle'}
-                size={24}
-              />
-            ) : (
-              <View />
-            )}
-          </View>
-        </View>
-      </View>
-    );
-  }
-  /** MAIN CONTENT */
   renderContent() {
     return (
       <View style={GlobalStyle.cardContainerRadius12}>
-        <View style={styles.boxContent}>
-          {this.renderContentPhoneNumberInput()}
-          {this.renderButton()}
-        </View>
+        <View style={styles.boxContent}>{this.renderButton()}</View>
       </View>
     );
   }
@@ -212,35 +154,6 @@ const styles = StyleSheet.create({
   boxContent: {
     paddingTop: 42,
     paddingBottom: 26
-  },
-  boxPhoneInput: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    height: 46,
-    marginBottom: 15
-  },
-  boxPhoneNumberAreaCode: {
-    width: 52,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    borderColor: masterColor.fontBlack10
-  },
-  boxPhoneNumber: {
-    flex: 1,
-    flexDirection: 'row',
-    borderWidth: 1,
-    marginLeft: 12,
-    borderRadius: 8,
-    paddingHorizontal: 13,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    borderColor: masterColor.fontBlack10
-  },
-  /** for textInput */
-  textInput: {
-    flex: 1
   }
 });
 
@@ -253,7 +166,4 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SignInWithPhoneView);
+export default connect(mapStateToProps, mapDispatchToProps)(OtpView);

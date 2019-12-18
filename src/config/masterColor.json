@@ -2,6 +2,7 @@
   "mainColor": "#f0444c",
   "backgroundWhite": "#ffffff",
   "shadow": "#25282b",
+  "backButtonWhite": "#ffffff",
   "buttonActiveColorRed": "#f0444c",
   "buttonActiveColorWhite": "#ffffff",
   "buttonWhiteBorderRed": "#f0444c",
