@@ -1,22 +1,16 @@
 import React, { Component } from 'react';
-import {
-  View,
-  StatusBar,
-  StyleSheet,
-  Image,
-  Dimensions,
-  TextInput
-} from 'react-native';
+import { View, StatusBar, StyleSheet, Image, Dimensions } from 'react-native';
 import { bindActionCreators } from 'redux';
 import Text from 'react-native-text';
 import { connect } from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { SafeAreaView } from 'react-navigation';
 import * as ActionCreators from '../../state/actions';
 import Fonts from '../../helpers/GlobalFont';
 import masterColor from '../../config/masterColor.json';
 import ButtonSingle from '../../components/button/ButtonSingle';
 import GlobalStyle from '../../helpers/GlobalStyle';
-import { SafeAreaView } from 'react-navigation';
+import OtpInput from '../../components/otp/OtpInput';
 
 const { width, height } = Dimensions.get('window');
 
@@ -95,11 +89,18 @@ class OtpView extends Component {
       </View>
     );
   }
+  /** OTP INPUT */
+  renderOtpInput() {
+    return <OtpInput />;
+  }
   /** CONTENT */
   renderContent() {
     return (
       <View style={GlobalStyle.cardContainerRadius12}>
-        <View style={styles.boxContent}>{this.renderButton()}</View>
+        <View style={styles.boxContent}>
+          {this.renderOtpInput()}
+          {this.renderButton()}
+        </View>
       </View>
     );
   }

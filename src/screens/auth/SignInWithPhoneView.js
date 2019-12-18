@@ -130,7 +130,6 @@ class SignInWithPhoneView extends Component {
             placeholder="Masukan No.Handphone"
             value={this.state.phoneNumber}
             maxLength={13}
-            textContentType="telephoneNumber"
             keyboardType="numeric"
             onChangeText={phoneNumber => this.phoneModify(phoneNumber)}
             style={[styles.textInput, Fonts.type3]}

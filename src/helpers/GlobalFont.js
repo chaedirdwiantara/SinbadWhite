@@ -21,6 +21,12 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: masterColor.fontBlack50
   },
+  type4: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 21,
+    lineHeight: 25,
+    color: masterColor.fontBlack50
+  },
   /** === button text === */
   textButtonRedActive: {
     fontFamily: Fonts.MontserratSemiBold,
