@@ -36,12 +36,11 @@ class SignInWithPhoneView extends Component {
    * FUNCTIONAL
    * ========================
    */
-  componentDidMount() {
-    console.log('Home');
-  }
   /** === CHECK PHONE NUMBER EXIST OR NOT */
   checkPhoneExist() {
-    NavigationService.navigate('OtpView');
+    NavigationService.navigate('OtpView', {
+      phoneNumber: this.state.phoneNumber
+    });
   }
   /** === PHONE NUMBER MODIFY === */
   phoneModify(phoneNumber) {

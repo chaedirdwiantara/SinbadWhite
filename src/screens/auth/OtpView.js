@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { View, StatusBar, StyleSheet, Image, Dimensions } from 'react-native';
+import { View, StatusBar, StyleSheet, Image } from 'react-native';
 import { bindActionCreators } from 'redux';
 import Text from 'react-native-text';
 import { connect } from 'react-redux';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { SafeAreaView } from 'react-navigation';
 import * as ActionCreators from '../../state/actions';
 import Fonts from '../../helpers/GlobalFont';
@@ -12,14 +11,14 @@ import ButtonSingle from '../../components/button/ButtonSingle';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import OtpInput from '../../components/otp/OtpInput';
 
-const { width, height } = Dimensions.get('window');
-
 class OtpView extends Component {
   constructor(props) {
     super(props);
+    const { navigation } = this.props;
     this.state = {
-      phoneNumber: '',
-      correctFormatPhoneNumber: false
+      phoneNumber: navigation.state.params.phoneNumber,
+      correctFormatPhoneNumber: false,
+      otpInput: []
     };
   }
   /**
@@ -27,25 +26,16 @@ class OtpView extends Component {
    * FUNCTIONAL
    * ========================
    */
-  componentDidMount() {
-    console.log('Home');
+  /** === SAVE OTP FROM OTP INPUT TO STATE */
+  otpInput(data) {
+    const otpInput = this.state.otpInput;
+    otpInput[data.digit] = data.data;
+    this.setState({ otpInput });
   }
-
-  test() {
-    console.log('lala');
-  }
+  /** === CHECK OTP === */
   /** === PHONE NUMBER MODIFY === */
-  phoneModify(phoneNumber) {
-    let phone = phoneNumber.split('');
-    if (phone[0] === '0') {
-      phone.splice(0, 1);
-    }
-    const reg = /^8[0-9]{8,12}$/;
-    const checkFormat = reg.test(phone.join(''));
-    this.setState({
-      phoneNumber: phone.join(''),
-      correctFormatPhoneNumber: checkFormat
-    });
+  checkOtp() {
+    console.log(this.state.otpInput.join(''));
   }
   /**
    * ==============================
@@ -65,10 +55,10 @@ class OtpView extends Component {
   renderButton() {
     return (
       <ButtonSingle
-        disabled={!this.state.correctFormatPhoneNumber}
+        disabled={this.state.otpInput.filter(x => x !== '').length < 5}
         title={'Verifikasi'}
         borderRadius={50}
-        onPress={() => this.test()}
+        onPress={() => this.checkOtp()}
       />
     );
   }
@@ -84,7 +74,7 @@ class OtpView extends Component {
           style={{ paddingRight: '30%', paddingBottom: 20, paddingTop: 10 }}
         >
           <Text style={Fonts.type2}>Kami telah mengirimi Anda SMS di</Text>
-          <Text style={Fonts.type2}>+6281322918441</Text>
+          <Text style={Fonts.type2}>+62{this.state.phoneNumber}</Text>
         </View>
       </View>
     );
@@ -93,7 +83,10 @@ class OtpView extends Component {
   renderOtpInput() {
     return (
       <View style={styles.boxOtp}>
-        <OtpInput />
+        <OtpInput
+          onRef={ref => (this.fromOTPInput = ref)}
+          fromOTPInput={this.otpInput.bind(this)}
+        />
       </View>
     );
   }

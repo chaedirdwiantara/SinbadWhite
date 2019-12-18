@@ -15,7 +15,19 @@ class OtpInput extends Component {
       input5: ''
     };
   }
-
+  /**
+   * ======================
+   * FUNCTIONAL
+   * ======================
+   */
+  sendToOTPViewPage(data, digit) {
+    this.props.fromOTPInput({ data, digit });
+  }
+  /**
+   * =======================
+   * RENDER VIEW
+   * =======================
+   */
   /** === input 1 */
   renderInput1() {
     return (
@@ -33,6 +45,10 @@ class OtpInput extends Component {
               if (input1 !== '') {
                 this.setState({ input1 });
                 this.input2 && this.input2.focus();
+                this.sendToOTPViewPage(input1, 0);
+              } else {
+                this.setState({ input1 });
+                this.sendToOTPViewPage('', 0);
               }
             }}
             style={[Fonts.type4, { textAlign: 'center' }]}
@@ -62,9 +78,11 @@ class OtpInput extends Component {
               if (input2 === '') {
                 this.input1 && this.input1.focus();
                 this.setState({ input2 });
+                this.sendToOTPViewPage(input2, 1);
               } else {
                 this.setState({ input2 });
                 this.input3 && this.input3.focus();
+                this.sendToOTPViewPage(input2, 1);
               }
             }}
             style={[Fonts.type4, { textAlign: 'center' }]}
@@ -94,9 +112,11 @@ class OtpInput extends Component {
               if (input3 === '') {
                 this.input2 && this.input2.focus();
                 this.setState({ input3 });
+                this.sendToOTPViewPage(input3, 2);
               } else {
                 this.setState({ input3 });
                 this.input4 && this.input4.focus();
+                this.sendToOTPViewPage(input3, 2);
               }
             }}
             style={[Fonts.type4, { textAlign: 'center' }]}
@@ -126,9 +146,11 @@ class OtpInput extends Component {
               if (input4 === '') {
                 this.input3 && this.input3.focus();
                 this.setState({ input4 });
+                this.sendToOTPViewPage(input4, 3);
               } else {
                 this.setState({ input4 });
                 this.input5 && this.input5.focus();
+                this.sendToOTPViewPage(input4, 3);
               }
             }}
             style={[Fonts.type4, { textAlign: 'center' }]}
@@ -158,8 +180,10 @@ class OtpInput extends Component {
               if (input5 === '') {
                 this.input4 && this.input4.focus();
                 this.setState({ input5 });
+                this.sendToOTPViewPage(input5, 4);
               } else {
                 this.setState({ input5 });
+                this.sendToOTPViewPage(input5, 4);
               }
             }}
             style={[Fonts.type4, { textAlign: 'center' }]}
