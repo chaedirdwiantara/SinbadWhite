@@ -91,7 +91,11 @@ class OtpView extends Component {
   }
   /** OTP INPUT */
   renderOtpInput() {
-    return <OtpInput />;
+    return (
+      <View style={styles.boxOtp}>
+        <OtpInput />
+      </View>
+    );
   }
   /** CONTENT */
   renderContent() {
@@ -143,6 +147,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1000
   },
+  boxOtp: {
+    paddingBottom: 14
+  },
   backgroundLogin: {
     backgroundColor: masterColor.mainColor,
     height: 210
@@ -153,8 +160,8 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   boxContent: {
-    paddingTop: 42,
-    paddingBottom: 26
+    paddingTop: 30,
+    paddingBottom: 5
   }
 });
 
