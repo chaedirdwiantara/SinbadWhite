@@ -1,14 +1,13 @@
-import { createStackNavigator } from 'react-navigation-stack';
 import NotificationView from '../../screens/notifications/NotificationView';
 
-const StackNavigators = createStackNavigator({
-  Notification: {
+const NotificationNavigator = {
+  NotificationView: {
     screen: NotificationView,
     navigationOptions: {
       header: null,
       gesturesEnabled: false
     }
   }
-});
+};
 
-export default StackNavigators;
+export default NotificationNavigator;

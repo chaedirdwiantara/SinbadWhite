@@ -27,6 +27,36 @@ const styles = StyleSheet.create({
     lineHeight: 25,
     color: masterColor.fontBlack50
   },
+  type5: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 15,
+    lineHeight: 20,
+    color: masterColor.fontBlack50
+  },
+  type6: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 25,
+    lineHeight: 30,
+    color: masterColor.fontWhite
+  },
+  type7: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 14,
+    lineHeight: 18,
+    color: masterColor.fontBlack50
+  },
+  type8: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 12,
+    lineHeight: 15,
+    color: masterColor.fontBlack50
+  },
+  /** === bottom nav ==== */
+  bottomNav: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10.5,
+    lineHeight: 16
+  },
   /** === button text === */
   textButtonRedActive: {
     fontFamily: Fonts.MontserratSemiBold,

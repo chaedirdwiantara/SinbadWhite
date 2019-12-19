@@ -8,6 +8,7 @@
   "buttonWhiteBorderRed": "#f0444c",
   "buttonRedDisableColor": "rgba(240, 68, 76, 0.5)",
   "statusBarDefault": "#f0444c",
+  "statusBarWhite": "#ffffff",
   "statusBarModal": "#f0444c",
   "fontWhite": "#ffffff",
   "fontRed80": "#501619",

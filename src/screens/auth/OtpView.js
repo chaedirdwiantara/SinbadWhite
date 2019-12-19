@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
-import { View, StatusBar, StyleSheet, Image } from 'react-native';
+import {
+  View,
+  StatusBar,
+  StyleSheet,
+  Image,
+  TouchableOpacity
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import Text from 'react-native-text';
 import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-navigation';
+import IconsAntDesign from 'react-native-vector-icons/AntDesign';
 import * as ActionCreators from '../../state/actions';
 import Fonts from '../../helpers/GlobalFont';
 import masterColor from '../../config/masterColor.json';
 import ButtonSingle from '../../components/button/ButtonSingle';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import OtpInput from '../../components/otp/OtpInput';
+import NavigationService from '../../navigation/NavigationService';
 
 class OtpView extends Component {
   constructor(props) {
@@ -35,8 +43,26 @@ class OtpView extends Component {
   /** === CHECK OTP === */
   /** === PHONE NUMBER MODIFY === */
   checkOtp() {
-    console.log(this.state.otpInput.join(''));
+    NavigationService.navigate('Home');
   }
+  /**
+   * ========================
+   * HEADER MODIFY
+   * ========================
+   */
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerRight: () => (
+        <TouchableOpacity style={{ marginRight: 16 }}>
+          <IconsAntDesign
+            color={masterColor.backButtonWhite}
+            name={'questioncircleo'}
+            size={24}
+          />
+        </TouchableOpacity>
+      )
+    };
+  };
   /**
    * ==============================
    * RENDER VIEW

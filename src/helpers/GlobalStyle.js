@@ -15,6 +15,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
     elevation: 2
+  },
+  /** LINES WITH PADDING 16 */
+  lines: {
+    borderTopWidth: 1,
+    borderColor: masterColor.fontBlack10
   }
 });
 

@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
-import Text from 'react-native-text';
+import { View, Text } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
 
-class SignInWithIdView extends Component {
+class LogView extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -18,7 +17,7 @@ class SignInWithIdView extends Component {
   render() {
     return (
       <View>
-        <Text>Sign In With Phone</Text>
+        <Text>Log</Text>
       </View>
     );
   }
@@ -33,4 +32,4 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(SignInWithIdView);
+export default connect(mapStateToProps, mapDispatchToProps)(LogView);
