@@ -1,86 +1,27 @@
 import React from 'react';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createStackNavigator } from 'react-navigation-stack';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import HomeView from '../../screens/home/HomeView';
-import ProfileView from '../../screens/profiles/ProfileView';
-import ChatView from '../../screens/chat/ChatView';
-import LogView from '../../screens/logs/LogView';
 import GlobalFont from '../../helpers/GlobalFont';
 import masterColor from '../../config/masterColor.json';
-import { createStackNavigator } from 'react-navigation-stack';
-/** === REGISTER PAGE ROOT HOME TO STACK === */
-const HomeViewStack = createStackNavigator({
-  HomeView: {
-    screen: HomeView,
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: masterColor.backgroundWhite
-      },
-      gesturesEnabled: false
-    }
-  }
-});
-/** === REGISTER PAGE ROOT LOG TO STACK === */
-const LogViewStack = createStackNavigator({
-  LogView: {
-    screen: LogView,
-    navigationOptions: {
-      headerTitle: 'Log',
-      headerTitleStyle: GlobalFont.type5,
-      headerTitleContainerStyle: {
-        width: '100%',
-        justifyContent: 'center'
-      },
-      headerStyle: {
-        elevation: 0,
-        backgroundColor: masterColor.backgroundWhite
-      },
-      gesturesEnabled: false
-    }
-  }
-});
-/** === REGISTER PAGE ROOT CHAT TO STACK === */
-const ChatViewStack = createStackNavigator({
-  ChatView: {
-    screen: ChatView,
-    navigationOptions: {
-      headerTitle: 'Chat',
-      headerTitleStyle: GlobalFont.type5,
-      headerTitleContainerStyle: {
-        width: '100%',
-        justifyContent: 'center'
-      },
-      headerStyle: {
-        backgroundColor: masterColor.backgroundWhite
-      },
-      gesturesEnabled: false
-    }
-  }
-});
-/** === REGISTER PAGE ROOT PROFILE TO STACK === */
-const ProfileViewStack = createStackNavigator({
-  ProfileView: {
-    screen: ProfileView,
-    navigationOptions: {
-      headerTitle: 'Profil',
-      headerTitleStyle: GlobalFont.type5,
-      headerTitleContainerStyle: {
-        width: '100%',
-        justifyContent: 'center'
-      },
-      headerStyle: {
-        elevation: 0,
-        backgroundColor: masterColor.backgroundWhite
-      },
-      gesturesEnabled: false
-    }
-  }
-});
-/** === BOTTOM TAB REGISTER === */
-const BottomNavigator = createBottomTabNavigator(
+/**
+ * ==================================
+ * IMPORT ALL NAVIGATOR PAGE FOR TAB
+ * =================================
+ */
+/** === HOME === */
+import HomeNavigator from './HomeNavigator';
+/** === PROFILE === */
+import ProfileNavigator from './ProfileNavigator';
+/** === LOG === */
+import LogNavigator from './LogNavigator';
+/** === CHAT === */
+import ChatNavigator from './ChatNavigator';
+
+const BottomTabNavigator = createBottomTabNavigator(
   {
     Home: {
-      screen: HomeViewStack,
+      screen: createStackNavigator(HomeNavigator),
       navigationOptions: {
         tabBarLabel: 'Home',
         tabBarIcon: ({ tintColor }) => (
@@ -89,7 +30,7 @@ const BottomNavigator = createBottomTabNavigator(
       }
     },
     Log: {
-      screen: LogViewStack,
+      screen: createStackNavigator(LogNavigator),
       navigationOptions: {
         tabBarLabel: 'Log',
         tabBarIcon: ({ tintColor }) => (
@@ -98,7 +39,7 @@ const BottomNavigator = createBottomTabNavigator(
       }
     },
     Chat: {
-      screen: ChatViewStack,
+      screen: createStackNavigator(ChatNavigator),
       navigationOptions: {
         tabBarLabel: 'Chat',
         tabBarIcon: ({ tintColor }) => (
@@ -107,7 +48,7 @@ const BottomNavigator = createBottomTabNavigator(
       }
     },
     Profil: {
-      screen: ProfileViewStack,
+      screen: createStackNavigator(ProfileNavigator),
       navigationOptions: {
         tabBarLabel: 'Profil',
         tabBarIcon: ({ tintColor }) => (
@@ -128,5 +69,14 @@ const BottomNavigator = createBottomTabNavigator(
     }
   }
 );
+
+const BottomNavigator = {
+  BottomNavigator: {
+    screen: BottomTabNavigator,
+    navigationOptions: {
+      headerShown: false
+    }
+  }
+};
 
 export default BottomNavigator;

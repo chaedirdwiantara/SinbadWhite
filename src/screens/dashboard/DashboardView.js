@@ -4,21 +4,26 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
 
-class ChatView extends Component {
+class DashboardView extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
-  /**
-   * =======================
-   * FUNCTIONAL
-   * =======================
-   */
+
+  componentDidMount() {
+    console.log('Home');
+  }
+
+  static navigationOptions = ({ navigation }) => {
+    return {
+      tabBarVisible: false
+    };
+  };
 
   render() {
     return (
       <View>
-        <Text>Chat</Text>
+        <Text>Dashboard</Text>
       </View>
     );
   }
@@ -33,4 +38,4 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(ChatView);
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardView);

@@ -7,7 +7,8 @@ import {
   Image,
   SafeAreaView,
   FlatList,
-  ScrollView
+  BackHandler,
+  ToastAndroid
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Text from 'react-native-text';
@@ -42,8 +43,57 @@ class HomeView extends Component {
           image: require('../../assets/images/menu/dashboard.png'),
           goTo: 'dashboard'
         }
-      ]
+      ],
+      backPressCount: 0
     };
+  }
+  /**
+   * =======================
+   * FUNCTIONAL
+   * =======================
+   */
+  componentDidMount() {
+    /** === FOR H/W BACK LISTENER === */
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+  }
+  /** === UNMOUNT ALL LISTENER === */
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+  }
+  /** === HARDWARE BACK BUTTON === */
+  handleBackPress = () => {
+    console.log(this.props.navigation.state.routeName);
+    if (this.props.navigation.state.routeName === 'HomeView') {
+      const count = this.state.backPressCount;
+      this.setState({ backPressCount: count + 1 });
+      if (count > 0) {
+        BackHandler.exitApp();
+      } else {
+        ToastAndroid.showWithGravityAndOffset(
+          'Tekan sekali lagi untuk keluar',
+          ToastAndroid.SHORT,
+          ToastAndroid.BOTTOM,
+          25,
+          200
+        );
+      }
+      setTimeout(() => {
+        this.setState({ backPressCount: 0 });
+      }, 3000);
+
+      return true;
+    }
+    return false;
+  };
+  /** === GO TO PAGE === */
+  goToPage(item) {
+    switch (item.goTo) {
+      case 'dashboard':
+        NavigationService.navigate('DashboardView');
+        break;
+      default:
+        break;
+    }
   }
   /**
    * ========================
@@ -118,7 +168,11 @@ class HomeView extends Component {
   /** === RENDER MENU ITEM === */
   renderMenuItem = ({ item, index }) => {
     return (
-      <TouchableOpacity style={styles.menuBoxPerItem} key={index}>
+      <TouchableOpacity
+        style={styles.menuBoxPerItem}
+        key={index}
+        onPress={() => this.goToPage(item)}
+      >
         <Image source={item.image} style={styles.menuCircleImage} />
         <View style={styles.menuTitleBox}>
           <Text style={Fonts.type8}>{item.title1}</Text>

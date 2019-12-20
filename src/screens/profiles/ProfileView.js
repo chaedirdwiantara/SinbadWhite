@@ -11,7 +11,15 @@ class ProfileView extends Component {
   }
 
   componentDidMount() {
-    console.log('Home');
+    const { navigation } = this.props;
+    this.focusListener = navigation.addListener('didFocus', () => {
+      console.log(navigation);
+    });
+  }
+
+  componentWillUnmount() {
+    // Remove the event listener
+    this.focusListener.remove();
   }
 
   render() {

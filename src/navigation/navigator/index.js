@@ -1,25 +1,36 @@
-import { createAppContainer } from 'react-navigation';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { createDrawerNavigator } from 'react-navigation-drawer';
 import { fromRight } from 'react-navigation-transitions';
-import AuthNavigator from './AuthNavigator';
+/** === PAGE === */
 import BottomNavigator from './BottomNavigator';
+import AuthNavigator from './AuthNavigator';
 import NotificationNavigator from './NotificationNavigator';
+import DashboardNavigator from './DashboardNavigator';
 
 const MergeAllNavigator = {
-  ...AuthNavigator,
-  ...NotificationNavigator
+  ...NotificationNavigator,
+  ...DashboardNavigator,
+  ...BottomNavigator
 };
 
 const config = {
   transitionConfig: () => fromRight()
 };
 
-const StackNavigator = createStackNavigator(MergeAllNavigator, config);
-
-const DrawerNavigator = createDrawerNavigator({
-  StackNavigator: { screen: StackNavigator },
-  BottomNavigator: { screen: BottomNavigator }
+const StackAppNavigator = createStackNavigator(MergeAllNavigator, {
+  ...config,
+  initialRouteName: 'BottomNavigator'
 });
+const StackAuthNavigator = createStackNavigator(AuthNavigator, config);
 
-export default createAppContainer(DrawerNavigator);
+const SwitchNavigator = createSwitchNavigator(
+  {
+    App: StackAppNavigator,
+    Auth: StackAuthNavigator
+  },
+  {
+    initialRouteName: 'Auth'
+  }
+);
+
+export default createAppContainer(SwitchNavigator);

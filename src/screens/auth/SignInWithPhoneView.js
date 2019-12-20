@@ -6,7 +6,9 @@ import {
   Image,
   Dimensions,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  BackHandler,
+  ToastAndroid
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import Text from 'react-native-text';
@@ -28,7 +30,8 @@ class SignInWithPhoneView extends Component {
     super(props);
     this.state = {
       phoneNumber: '',
-      correctFormatPhoneNumber: false
+      correctFormatPhoneNumber: false,
+      backPressCount: 0
     };
   }
   /**
@@ -36,6 +39,40 @@ class SignInWithPhoneView extends Component {
    * FUNCTIONAL
    * ========================
    */
+  componentDidMount() {
+    /** === FOR H/W BACK LISTENER === */
+    this.backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackPress
+    );
+  }
+  /** === UNMOUNT ALL LISTENER === */
+  componentWillUnmount() {
+    if (this.backHandler) {
+      this.backHandler.remove();
+    }
+  }
+  /** === HARDWARE BACK BUTTON === */
+  handleBackPress = () => {
+    const count = this.state.backPressCount;
+    this.setState({ backPressCount: count + 1 });
+    if (count > 0) {
+      BackHandler.exitApp();
+    } else {
+      ToastAndroid.showWithGravityAndOffset(
+        'Tekan sekali lagi untuk keluar',
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+        25,
+        200
+      );
+    }
+    setTimeout(() => {
+      this.setState({ backPressCount: 0 });
+    }, 3000);
+
+    return true;
+  };
   /** === CHECK PHONE NUMBER EXIST OR NOT */
   checkPhoneExist() {
     NavigationService.navigate('OtpView', {
