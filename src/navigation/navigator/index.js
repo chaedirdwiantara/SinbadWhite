@@ -6,11 +6,17 @@ import BottomNavigator from './BottomNavigator';
 import AuthNavigator from './AuthNavigator';
 import NotificationNavigator from './NotificationNavigator';
 import DashboardNavigator from './DashboardNavigator';
+import JourneyNavigator from './JourneyNavigator';
+import MerchantNavigator from './MerchantNavigator';
+import LogNavigator from './LogNavigator';
 
 const MergeAllNavigator = {
   ...NotificationNavigator,
   ...DashboardNavigator,
-  ...BottomNavigator
+  ...BottomNavigator,
+  ...JourneyNavigator,
+  ...MerchantNavigator,
+  ...LogNavigator
 };
 
 const config = {
@@ -29,7 +35,7 @@ const SwitchNavigator = createSwitchNavigator(
     Auth: StackAuthNavigator
   },
   {
-    initialRouteName: 'Auth'
+    initialRouteName: 'App'
   }
 );
 

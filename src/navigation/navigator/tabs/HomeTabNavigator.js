@@ -1,7 +1,7 @@
-import HomeView from '../../screens/home/HomeView';
-import masterColor from '../../config/masterColor.json';
+import HomeView from '../../../screens/home/HomeView';
+import masterColor from '../../../config/masterColor.json';
 
-const HomeNavigator = {
+const HomeTabNavigator = {
   HomeView: {
     screen: HomeView,
     navigationOptions: {
@@ -13,4 +13,4 @@ const HomeNavigator = {
   }
 };
 
-export default HomeNavigator;
+export default HomeTabNavigator;

@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
-import ComingSoon from '../../components/empty_state/ComingSoon';
-import masterColor from '../../config/masterColor.json';
 
-class DashboardView extends Component {
+class LogDetailView extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -14,19 +12,12 @@ class DashboardView extends Component {
 
   render() {
     return (
-      <View style={styles.mainContainer}>
-        <ComingSoon />
+      <View>
+        <Text>Detail Log</Text>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    backgroundColor: masterColor.backgroundWhite
-  }
-});
 
 const mapStateToProps = ({ auth }) => {
   return { auth };
@@ -37,4 +28,4 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardView);
+export default connect(mapStateToProps, mapDispatchToProps)(LogDetailView);

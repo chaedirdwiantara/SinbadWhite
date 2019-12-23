@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
+import GlobalStyle from '../../helpers/GlobalStyle';
+import masterColor from '../../config/masterColor.json';
+import Fonts from '../../helpers/GlobalFont';
+import ComingSoon from '../../components/empty_state/ComingSoon';
 
 class ChatView extends Component {
   constructor(props) {
@@ -14,15 +18,26 @@ class ChatView extends Component {
    * FUNCTIONAL
    * =======================
    */
-
+  /**
+   * ========================
+   * RENDER VIEW
+   * =======================
+   */
   render() {
     return (
-      <View>
-        <Text>Chat</Text>
+      <View style={styles.mainContainer}>
+        <ComingSoon />
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: masterColor.backgroundWhite
+  }
+});
 
 const mapStateToProps = ({ auth }) => {
   return { auth };

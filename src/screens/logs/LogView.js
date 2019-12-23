@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
+import NavigationService from '../../navigation/NavigationService';
 
 class LogView extends Component {
   constructor(props) {
@@ -16,9 +17,11 @@ class LogView extends Component {
 
   render() {
     return (
-      <View>
+      <TouchableOpacity
+        onPress={() => NavigationService.navigate('LogDetailView')}
+      >
         <Text>Log</Text>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

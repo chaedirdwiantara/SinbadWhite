@@ -1,10 +1,25 @@
+import React from 'react';
+import { View } from 'react-native';
 import NotificationView from '../../screens/notifications/NotificationView';
+import masterColor from '../../config/masterColor.json';
+import GlobalFont from '../../helpers/GlobalFont';
 
 const NotificationNavigator = {
   NotificationView: {
     screen: NotificationView,
     navigationOptions: {
-      header: null,
+      headerTitle: 'Notifikasi',
+      headerTitleStyle: [
+        GlobalFont.type5,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
       gesturesEnabled: false
     }
   }

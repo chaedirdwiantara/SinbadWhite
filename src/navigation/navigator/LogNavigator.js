@@ -1,21 +1,25 @@
-import LogView from '../../screens/logs/LogView';
+import React from 'react';
+import { View } from 'react-native';
+import LogDetailView from '../../screens/logs/LogDetailView';
 import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 
 const LogNavigator = {
-  LogView: {
-    screen: LogView,
+  LogDetailView: {
+    screen: LogDetailView,
     navigationOptions: {
-      headerTitle: 'Log',
-      headerTitleStyle: GlobalFont.type5,
-      headerTitleContainerStyle: {
-        width: '100%',
-        justifyContent: 'center'
-      },
+      headerTitle: 'Detail Log',
+      headerTitleStyle: [
+        GlobalFont.type5,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
       headerStyle: {
-        elevation: 0,
         backgroundColor: masterColor.backgroundWhite
       },
+      headerRight: <View />,
       gesturesEnabled: false
     }
   }

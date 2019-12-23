@@ -10,18 +10,18 @@ import masterColor from '../../config/masterColor.json';
  * =================================
  */
 /** === HOME === */
-import HomeNavigator from './HomeNavigator';
+import HomeTabNavigator from './tabs/HomeTabNavigator';
 /** === PROFILE === */
-import ProfileNavigator from './ProfileNavigator';
+import ProfileTabNavigator from './tabs/ProfileTabNavigator';
 /** === LOG === */
-import LogNavigator from './LogNavigator';
+import LogTabNavigator from './tabs/LogTabNavigator';
 /** === CHAT === */
-import ChatNavigator from './ChatNavigator';
+import ChatTabNavigator from './tabs/ChatTabNavigator';
 
 const BottomTabNavigator = createBottomTabNavigator(
   {
     Home: {
-      screen: createStackNavigator(HomeNavigator),
+      screen: createStackNavigator(HomeTabNavigator),
       navigationOptions: {
         tabBarLabel: 'Home',
         tabBarIcon: ({ tintColor }) => (
@@ -30,7 +30,7 @@ const BottomTabNavigator = createBottomTabNavigator(
       }
     },
     Log: {
-      screen: createStackNavigator(LogNavigator),
+      screen: createStackNavigator(LogTabNavigator),
       navigationOptions: {
         tabBarLabel: 'Log',
         tabBarIcon: ({ tintColor }) => (
@@ -39,7 +39,7 @@ const BottomTabNavigator = createBottomTabNavigator(
       }
     },
     Chat: {
-      screen: createStackNavigator(ChatNavigator),
+      screen: createStackNavigator(ChatTabNavigator),
       navigationOptions: {
         tabBarLabel: 'Chat',
         tabBarIcon: ({ tintColor }) => (
@@ -48,7 +48,7 @@ const BottomTabNavigator = createBottomTabNavigator(
       }
     },
     Profil: {
-      screen: createStackNavigator(ProfileNavigator),
+      screen: createStackNavigator(ProfileTabNavigator),
       navigationOptions: {
         tabBarLabel: 'Profil',
         tabBarIcon: ({ tintColor }) => (

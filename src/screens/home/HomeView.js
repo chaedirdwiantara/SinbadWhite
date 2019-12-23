@@ -54,42 +54,47 @@ class HomeView extends Component {
    */
   componentDidMount() {
     /** === FOR H/W BACK LISTENER === */
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+    // BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
   }
   /** === UNMOUNT ALL LISTENER === */
   componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
   }
   /** === HARDWARE BACK BUTTON === */
-  handleBackPress = () => {
-    console.log(this.props.navigation.state.routeName);
-    if (this.props.navigation.state.routeName === 'HomeView') {
-      const count = this.state.backPressCount;
-      this.setState({ backPressCount: count + 1 });
-      if (count > 0) {
-        BackHandler.exitApp();
-      } else {
-        ToastAndroid.showWithGravityAndOffset(
-          'Tekan sekali lagi untuk keluar',
-          ToastAndroid.SHORT,
-          ToastAndroid.BOTTOM,
-          25,
-          200
-        );
-      }
-      setTimeout(() => {
-        this.setState({ backPressCount: 0 });
-      }, 3000);
+  // handleBackPress = () => {
+  //   if (this.props.navigation.state.routeName === 'HomeView') {
+  //     const count = this.state.backPressCount;
+  //     this.setState({ backPressCount: count + 1 });
+  //     if (count > 0) {
+  //       BackHandler.exitApp();
+  //     } else {
+  //       ToastAndroid.showWithGravityAndOffset(
+  //         'Tekan sekali lagi untuk keluar',
+  //         ToastAndroid.SHORT,
+  //         ToastAndroid.BOTTOM,
+  //         25,
+  //         200
+  //       );
+  //     }
+  //     setTimeout(() => {
+  //       this.setState({ backPressCount: 0 });
+  //     }, 3000);
 
-      return true;
-    }
-    return false;
-  };
+  //     return true;
+  //   }
+  //   return false;
+  // };
   /** === GO TO PAGE === */
   goToPage(item) {
     switch (item.goTo) {
       case 'dashboard':
         NavigationService.navigate('DashboardView');
+        break;
+      case 'list_toko':
+        NavigationService.navigate('MerchantView');
+        break;
+      case 'journey_plan':
+        NavigationService.navigate('JourneyView');
         break;
       default:
         break;
@@ -103,7 +108,10 @@ class HomeView extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       headerRight: () => (
-        <TouchableOpacity style={{ marginRight: 16 }}>
+        <TouchableOpacity
+          style={{ marginRight: 16 }}
+          onPress={() => NavigationService.navigate('NotificationView')}
+        >
           <MaterialIcon
             color={masterColor.fontBlack40}
             name={'notifications'}
