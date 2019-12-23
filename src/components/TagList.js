@@ -24,7 +24,7 @@ class TagList extends Component {
     super(props);
     this.renderItem = this.renderItem.bind(this);
     this.state = {
-      activeTag: 0
+      activeTag: this.props.selected
     };
   }
   /**
@@ -32,8 +32,10 @@ class TagList extends Component {
    * FUNCTIONAL
    * ======================
    */
-  selectTag(item, index) {
+  /** === SEND DATA TO PARENT === */
+  selectTag(index) {
     this.setState({ activeTag: index });
+    this.props.parentFunction({ type: 'portfolio', data: index });
   }
   /**
    * =======================
@@ -82,7 +84,7 @@ class TagList extends Component {
   renderTagInactive(item, index) {
     return (
       <TouchableOpacity
-        onPress={() => this.selectTag(item, index)}
+        onPress={() => this.selectTag(index)}
         style={this.tagInactiveStyle()}
       >
         <Text style={Fonts.type9}>{item}</Text>

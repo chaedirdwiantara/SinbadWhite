@@ -16,8 +16,14 @@ class MerchantTabView extends Component {
    * FUNCTIONAL
    * ======================
    */
+  /** SEND DATA TO PARENT */
+  toParentChangeTab(section) {
+    this.props.parentFunction({ type: 'section', data: section });
+  }
+  /** SAVE DATA TO STATE */
   changeTabs(section) {
     this.setState({ activeTab: section });
+    this.toParentChangeTab(section);
   }
   /**
    * ======================
@@ -47,7 +53,11 @@ class MerchantTabView extends Component {
     return this.state.activeTab === 'list' ? (
       <View style={this.styleTabs('list')}>
         <Text
-          style={this.state.activeTab === 'list' ? Fonts.type11 : Fonts.type10}
+          style={
+            this.state.activeTab === 'list'
+              ? [Fonts.type11, { marginBottom: -1 }]
+              : Fonts.type10
+          }
         >
           List
         </Text>
@@ -58,7 +68,11 @@ class MerchantTabView extends Component {
         onPress={() => this.changeTabs('list')}
       >
         <Text
-          style={this.state.activeTab === 'list' ? Fonts.type11 : Fonts.type10}
+          style={
+            this.state.activeTab === 'list'
+              ? [Fonts.type11, { marginBottom: -1 }]
+              : Fonts.type10
+          }
         >
           List
         </Text>
@@ -70,7 +84,11 @@ class MerchantTabView extends Component {
     return this.state.activeTab === 'map' ? (
       <View style={this.styleTabs('map')}>
         <Text
-          style={this.state.activeTab === 'map' ? Fonts.type11 : Fonts.type10}
+          style={
+            this.state.activeTab === 'map'
+              ? [Fonts.type11, { marginBottom: -1 }]
+              : Fonts.type10
+          }
         >
           Map
         </Text>
@@ -81,7 +99,11 @@ class MerchantTabView extends Component {
         onPress={() => this.changeTabs('map')}
       >
         <Text
-          style={this.state.activeTab === 'map' ? Fonts.type11 : Fonts.type10}
+          style={
+            this.state.activeTab === 'map'
+              ? [Fonts.type11, { marginBottom: -1 }]
+              : Fonts.type10
+          }
         >
           Map
         </Text>

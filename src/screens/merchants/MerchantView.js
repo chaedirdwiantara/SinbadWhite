@@ -1,21 +1,37 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
-import Fonts from '../../helpers/GlobalFont';
-import TagList from '../../components/TagList';
 import MerchantTabView from './MerchantTabView';
+import MerchantListView from './MerchantListView';
+import MerchantMapView from './MerchantMapView';
 
 class MerchantView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTab: 'list'
+      activeTab: 'list',
+      search: '',
+      portfolio: 0
     };
+  }
+  /**
+   * =======================
+   * FUNCTIONAL
+   * =======================
+   */
+  parentFunction(data) {
+    if (data.type === 'section') {
+      this.setState({ activeTab: data.data });
+    } else if (data.type === 'search') {
+      this.setState({ search: data.data });
+    } else if (data.type === 'portfolio') {
+      this.setState({ portfolio: data.data });
+    }
   }
   /**
    * ========================
@@ -43,50 +59,60 @@ class MerchantView extends Component {
    * RENDER VIEW
    * ======================
    */
-  /** === HEADER TABS === */
-  renderHeaderTabs() {
+  /** === CONTENT === */
+  renderContent() {
     return (
-      <View style={styles.boxTabs}>
-        <MerchantTabView />
+      <View style={styles.containerContent}>
+        {this.state.activeTab === 'list' ? (
+          <MerchantListView
+            searchText={this.state.search}
+            portfolio={this.state.portfolio}
+            onRef={ref => (this.parentFunction = ref)}
+            parentFunction={this.parentFunction.bind(this)}
+          />
+        ) : (
+          <MerchantMapView
+            searchText={this.state.search}
+            portfolio={this.state.portfolio}
+            onRef={ref => (this.parentFunction = ref)}
+            parentFunction={this.parentFunction.bind(this)}
+          />
+        )}
       </View>
     );
   }
-  /** === TAGS SECTION === */
-  renderTags() {
+  /** === HEADER TABS === */
+  renderHeaderTabs() {
     return (
-      <TagList
-        shadow
-        data={[
-          'Portfolio 1',
-          'Portfolio 2',
-          'Portfolio 3',
-          'Portfolio 4',
-          'Portfolio 5',
-          'Portfolio 6',
-          'Portfolio 7'
-        ]}
-      />
+      <View style={styles.containerTabs}>
+        <MerchantTabView
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
+        />
+      </View>
     );
   }
-
+  /** === MAIN === */
   render() {
     return (
-      <View>
+      <View style={styles.mainContainer}>
         {this.renderHeaderTabs()}
-        {this.renderTags()}
+        {this.renderContent()}
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  boxTabs: {
+  mainContainer: {
+    flex: 1,
+    backgroundColor: masterColor.backgroundWhite
+  },
+  containerTabs: {
     height: 44
   },
-  boxTabItem: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+  containerContent: {
+    flex: 1
   }
 });
 

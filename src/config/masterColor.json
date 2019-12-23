@@ -36,5 +36,6 @@
   "fontBlack50": "#25282b",
   "fontBlack40": "#cacccf",
   "fontBlack10": "#e8e8e8",
-  "fontBlack05": "#fafafa"
+  "fontBlack05": "#fafafa",
+  "fontBlack10OP50": "rgba(232, 232, 232, 0.5)"
 }
