@@ -129,7 +129,7 @@ class HomeView extends Component {
             navigation.state.params.imageUrl !== null ? (
               <View>
                 <Image
-                  source={navigation.state.params.imageUrl}
+                  source={{ uri: navigation.state.params.imageUrl }}
                   style={styles.circleImage}
                 />
               </View>
