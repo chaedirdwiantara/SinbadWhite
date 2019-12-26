@@ -9,6 +9,7 @@ import masterColor from '../../config/masterColor';
 import Fonts from '../../helpers/GlobalFont';
 import TagList from '../../components/TagList';
 import SearchBarType1 from '../../components/search_bar/SearchBarType1';
+import MerchantListDataView from './MerchantListDataView';
 
 class MerchantListView extends Component {
   constructor(props) {
@@ -42,26 +43,44 @@ class MerchantListView extends Component {
   /** === TAGS SECTION === */
   renderTags() {
     return (
-      <TagList
-        selected={this.props.portfolio}
-        onRef={ref => (this.parentFunction = ref)}
-        parentFunction={this.parentFunction.bind(this)}
-        data={this.props.user.portfolios}
-      />
+      <View>
+        <TagList
+          selected={this.props.portfolio}
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
+          data={this.props.user.portfolios}
+        />
+      </View>
     );
   }
-
+  /** === CONTENT === */
+  renderContent() {
+    return (
+      <View style={{ flex: 1 }}>
+        <MerchantListDataView
+          portfolioIndex={this.props.portfolio}
+          search={this.props.searchText}
+        />
+      </View>
+    );
+  }
+  /** === MAIN === */
   render() {
     return (
-      <View>
+      <View style={styles.mainContainer}>
         {this.renderSearchBar()}
         {this.renderTags()}
+        {this.renderContent()}
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: masterColor.backgroundWhite
+  },
   boxTabs: {
     height: 44
   },

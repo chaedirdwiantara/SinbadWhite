@@ -6,8 +6,8 @@ import * as types from '../types';
  * ==============================
  */
 /** === MERCHANT GET PROCESS ==== */
-export function merchantGetProcess() {
-  return { type: types.MERCHANT_GET_PROCESS };
+export function merchantGetProcess(data) {
+  return { type: types.MERCHANT_GET_PROCESS, payload: data };
 }
 /** === MERCHANT GET SUCCESS === */
 export function merchantGetSuccess(data) {
@@ -19,4 +19,16 @@ export function merchantGetSuccess(data) {
 /** === MERCHANT GET FAILED === */
 export function merchantGetFailed(data) {
   return { type: types.MERCHANT_GET_FAILED, payload: data };
+}
+/** === REFRESH GET MERCHANT === */
+export function merchantGetRefresh() {
+  return { type: types.MERCHANT_GET_REFRESH };
+}
+/** === RESET GET MERCHANT === */
+export function merchantGetReset() {
+  return { type: types.MERCHANT_GET_RESET };
+}
+/** === LOAD MORE GET MERCHANT === */
+export function merchantGetLoadMore(page) {
+  return { type: types.MERCHANT_GET_LOADMORE, payload: page };
 }

@@ -93,6 +93,24 @@ const styles = StyleSheet.create({
     lineHeight: 25,
     color: masterColor.fontRed50
   },
+  type16: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 12,
+    lineHeight: 15,
+    color: masterColor.fontBlack50
+  },
+  type17: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 11,
+    lineHeight: 14,
+    color: masterColor.fontBlack50
+  },
+  type18: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 10,
+    lineHeight: 13,
+    color: masterColor.fontWhite
+  },
   /** === bottom nav ==== */
   bottomNav: {
     fontFamily: Fonts.MontserratMedium,

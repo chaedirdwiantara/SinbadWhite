@@ -1,8 +1,8 @@
 import ApiRest from '../apiRest';
 
-function getMerchant() {
+function getMerchant(data) {
   return ApiRest({
-    path: 'agent-store-lists?$skip=0&$limit=10&portfolioId=1&keyword=',
+    path: `agent-store-lists?$skip=${data.page}&$limit=10&portfolioId=${data.portfolioId}&keyword=${data.search}`,
     method: 'GET'
   });
 }

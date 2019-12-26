@@ -26,17 +26,29 @@ class MerchantView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    this.props.merchantGetProcess();
+    this.getMerchant(0, '');
   }
   /** === FROM CHILD FUNCTION === */
   parentFunction(data) {
     if (data.type === 'section') {
       this.setState({ activeTab: data.data });
     } else if (data.type === 'search') {
+      this.getMerchant(this.state.portfolio, data.data);
       this.setState({ search: data.data });
     } else if (data.type === 'portfolio') {
+      this.getMerchant(data.data, this.state.search);
       this.setState({ portfolio: data.data });
     }
+  }
+  /** === CALL GET FUNCTION === */
+  getMerchant(portfolioIndex, search) {
+    this.props.merchantGetReset();
+    this.props.merchantGetProcess({
+      page: 0,
+      loading: true,
+      portfolioId: this.props.user.portfolios[portfolioIndex].id,
+      search
+    });
   }
   /**
    * ========================
@@ -121,8 +133,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ user }) => {
+  return { user };
 };
 
 const mapDispatchToProps = dispatch => {

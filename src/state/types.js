@@ -17,3 +17,6 @@ export const SIGN_IN_FAILED = 'signInFailed';
 export const MERCHANT_GET_PROCESS = 'MerchantGetProcess';
 export const MERCHANT_GET_SUCCESS = 'MerchantGetSuccess';
 export const MERCHANT_GET_FAILED = 'MerchantGetFailed';
+export const MERCHANT_GET_RESET = 'MerchantGetReset';
+export const MERCHANT_GET_REFRESH = 'MerchantGetRefresh';
+export const MERCHANT_GET_LOADMORE = 'MerchantGetLoadMore';
