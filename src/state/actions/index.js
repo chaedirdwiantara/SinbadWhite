@@ -3,4 +3,4 @@
  * EXPORT ALL MODULE ACTIONS
  * ===========================
  */
-export * from './ExampleAction';
+export * from './AuthAction';

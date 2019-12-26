@@ -50,6 +50,7 @@ class ButtonSingle extends Component {
               : Fonts.textButtonRedDisabled
           }
           type={'solid'}
+          loading={this.props.loading}
         />
       </View>
     );

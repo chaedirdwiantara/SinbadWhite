@@ -35,7 +35,7 @@ const SwitchNavigator = createSwitchNavigator(
     Auth: StackAuthNavigator
   },
   {
-    initialRouteName: 'App'
+    initialRouteName: 'Auth'
   }
 );
 

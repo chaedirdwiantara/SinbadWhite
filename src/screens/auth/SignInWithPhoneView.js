@@ -8,7 +8,8 @@ import {
   TextInput,
   TouchableOpacity,
   BackHandler,
-  ToastAndroid
+  ToastAndroid,
+  Keyboard
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import Text from 'react-native-text';
@@ -30,6 +31,7 @@ class SignInWithPhoneView extends Component {
     super(props);
     this.state = {
       phoneNumber: '',
+      errorPhoneNumber: false,
       correctFormatPhoneNumber: false,
       backPressCount: 0
     };
@@ -45,6 +47,29 @@ class SignInWithPhoneView extends Component {
       'hardwareBackPress',
       this.handleBackPress
     );
+  }
+  /** COMPONENT DID UPDATE */
+  componentDidUpdate(prevProps) {
+    /** CHECK IF SUCCESS */
+    if (prevProps.auth.dataGetOTP !== this.props.auth.dataGetOTP) {
+      if (this.props.auth.dataGetOTP !== null) {
+        NavigationService.navigate('OtpView', {
+          phoneNumber: this.state.phoneNumber
+        });
+        setTimeout(() => {
+          this.setState({ phoneNumber: '', correctFormatPhoneNumber: false });
+        }, 100);
+      }
+    }
+    /** CHECK IF ERROR */
+    if (prevProps.auth.errorGetOTP !== this.props.auth.errorGetOTP) {
+      if (this.props.auth.errorGetOTP !== null) {
+        this.setState({
+          errorPhoneNumber: true,
+          correctFormatPhoneNumber: false
+        });
+      }
+    }
   }
   /** === UNMOUNT ALL LISTENER === */
   componentWillUnmount() {
@@ -75,9 +100,9 @@ class SignInWithPhoneView extends Component {
   };
   /** === CHECK PHONE NUMBER EXIST OR NOT */
   checkPhoneExist() {
-    NavigationService.navigate('OtpView', {
-      phoneNumber: this.state.phoneNumber
-    });
+    Keyboard.dismiss();
+    this.setState({ errorPhoneNumber: false });
+    this.props.otpGetProcess('0' + this.state.phoneNumber);
   }
   /** === PHONE NUMBER MODIFY === */
   phoneModify(phoneNumber) {
@@ -89,7 +114,8 @@ class SignInWithPhoneView extends Component {
     const checkFormat = reg.test(phone.join(''));
     this.setState({
       phoneNumber: phone.join(''),
-      correctFormatPhoneNumber: checkFormat
+      correctFormatPhoneNumber: checkFormat,
+      errorPhoneNumber: false
     });
   }
   /**
@@ -128,10 +154,13 @@ class SignInWithPhoneView extends Component {
   renderButton() {
     return (
       <ButtonSingle
-        disabled={!this.state.correctFormatPhoneNumber}
+        disabled={
+          !this.state.correctFormatPhoneNumber || this.props.auth.loadingGetOTP
+        }
         title={'Lanjutkan'}
         borderRadius={50}
         onPress={() => this.checkPhoneExist()}
+        loading={this.props.auth.loadingGetOTP}
       />
     );
   }
@@ -157,10 +186,28 @@ class SignInWithPhoneView extends Component {
   renderContentPhoneNumberInput() {
     return (
       <View style={styles.boxPhoneInput}>
-        <View style={styles.boxPhoneNumberAreaCode}>
+        <View
+          style={[
+            styles.boxPhoneNumberAreaCode,
+            {
+              borderColor: this.state.errorPhoneNumber
+                ? masterColor.fontRed50
+                : masterColor.fontBlack10
+            }
+          ]}
+        >
           <Text style={Fonts.type3}>+62</Text>
         </View>
-        <View style={styles.boxPhoneNumber}>
+        <View
+          style={[
+            styles.boxPhoneNumber,
+            {
+              borderColor: this.state.errorPhoneNumber
+                ? masterColor.fontRed50
+                : masterColor.fontBlack10
+            }
+          ]}
+        >
           <TextInput
             selectionColor={masterColor.mainColor}
             placeholder="Masukan No.Handphone"
@@ -171,18 +218,40 @@ class SignInWithPhoneView extends Component {
             style={[styles.textInput, Fonts.type3]}
           />
           <View style={{ justifyContent: 'center', height: '100%' }}>
-            {this.state.correctFormatPhoneNumber ? (
+            {this.state.errorPhoneNumber ? (
               <IconsMaterial
-                color={masterColor.fontGreen50}
-                name={'check-circle'}
+                color={masterColor.fontRed50}
+                name={'close-circle'}
                 size={24}
               />
             ) : (
-              <View />
+              this.renderCheckInputIcon()
             )}
           </View>
         </View>
       </View>
+    );
+  }
+  /** CHECK ICON INPUT */
+  renderCheckInputIcon() {
+    return this.state.correctFormatPhoneNumber ? (
+      <IconsMaterial
+        color={masterColor.fontGreen50}
+        name={'check-circle'}
+        size={24}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** ERROR LOGIN */
+  renderErrorSignIn() {
+    return this.state.errorPhoneNumber ? (
+      <View style={{ paddingHorizontal: 16 }}>
+        <Text style={Fonts.type13}>No. HP yang anda masukan salah</Text>
+      </View>
+    ) : (
+      <View />
     );
   }
   /** MAIN CONTENT */
@@ -191,6 +260,7 @@ class SignInWithPhoneView extends Component {
       <View style={GlobalStyle.cardContainerRadius12}>
         <View style={styles.boxContent}>
           {this.renderContentPhoneNumberInput()}
+          {this.renderErrorSignIn()}
           {this.renderButton()}
         </View>
       </View>
@@ -259,8 +329,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
-    borderColor: masterColor.fontBlack10
+    borderRadius: 8
   },
   boxPhoneNumber: {
     flex: 1,
@@ -270,8 +339,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 13,
     justifyContent: 'center',
-    alignItems: 'flex-start',
-    borderColor: masterColor.fontBlack10
+    alignItems: 'flex-start'
   },
   /** for textInput */
   textInput: {

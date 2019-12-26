@@ -3,4 +3,4 @@
  * EXPORT ALL REDUCERS
  * ==============================
  */
-export * from './ExampleReducer';
+export * from './AuthReducer';
