@@ -10,6 +10,18 @@ function getOTP(phoneNumber) {
   });
 }
 
+function signIn({ mobilePhoneNo, otpCode }) {
+  return ApiRest({
+    path: 'auth/validate-otp',
+    method: 'POST',
+    params: {
+      mobilePhoneNo,
+      otpCode
+    }
+  });
+}
+
 export const AuthMethod = {
-  getOTP
+  getOTP,
+  signIn
 };

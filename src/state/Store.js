@@ -4,12 +4,13 @@ import storage from 'redux-persist/lib/storage';
 import { createLogger } from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
 
-import sagas from '../state/sagas/AuthSaga';
+import sagas from '../state/sagas';
 import * as rootReducers from '../state/reducers';
 
 const config = {
   key: 'root',
   storage,
+  whitelist: ['global', 'user'],
   blacklist: ['auth'],
   debug: true
 };
@@ -26,12 +27,9 @@ if (__DEV__) {
 const reducers = persistCombineReducers(config, rootReducers);
 const enhancers = [applyMiddleware(...middleware)];
 const persistConfig = { enhancers };
-const store = createStore(reducers, undefined, compose(...enhancers));
-const persistor = persistStore(store, persistConfig, () => {});
-const configureStore = () => {
-  return { persistor, store };
-};
+const Store = createStore(reducers, undefined, compose(...enhancers));
+const Persistor = persistStore(Store, persistConfig, () => {});
 
 sagaMiddleware.run(sagas);
 
-export default configureStore;
+export { Store, Persistor };

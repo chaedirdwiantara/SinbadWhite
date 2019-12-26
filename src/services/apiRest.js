@@ -1,7 +1,9 @@
 import { set, isEmpty } from 'lodash';
 import apiHost from './apiHost';
+import { Store } from '../state/Store';
 
 export default function endpoint({ path, method, params }) {
+  const stateData = Store.getState();
   const headers = {};
 
   set(headers, 'Accept', 'application/json');
@@ -12,6 +14,10 @@ export default function endpoint({ path, method, params }) {
     method,
     headers
   };
+
+  if (stateData.global.token !== null) {
+    set(headers, 'Authorization', `Bearer ${stateData.global.token}`);
+  }
 
   if (!isEmpty(params)) {
     reqBody.body = JSON.stringify(params);

@@ -53,6 +53,10 @@ class HomeView extends Component {
    * =======================
    */
   componentDidMount() {
+    this.props.navigation.setParams({
+      fullName: this.props.user.fullName,
+      imageUrl: this.props.user.imageUrl
+    });
     /** === FOR H/W BACK LISTENER === */
     // BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
   }
@@ -121,14 +125,39 @@ class HomeView extends Component {
       ),
       headerLeft: () => (
         <View style={styles.headerLeftBox}>
-          <View>
-            <Image
-              source={require('../../assets/images/profile/profile_picture.png')}
-              style={styles.circleImage}
-            />
-          </View>
+          {navigation.state.params ? (
+            navigation.state.params.imageUrl !== null ? (
+              <View>
+                <Image
+                  source={navigation.state.params.imageUrl}
+                  style={styles.circleImage}
+                />
+              </View>
+            ) : (
+              <View>
+                <MaterialIcon
+                  name="account-circle"
+                  color={masterColor.mainColor}
+                  size={30}
+                />
+              </View>
+            )
+          ) : (
+            <View>
+              <MaterialIcon
+                name="account-circle"
+                color={masterColor.mainColor}
+                size={30}
+              />
+            </View>
+          )}
+
           <View style={{ marginLeft: 12 }}>
-            <Text style={Fonts.type5}>Hello Arham !</Text>
+            <Text style={Fonts.type5}>
+              Hello{' '}
+              {navigation.state.params ? navigation.state.params.fullName : ''}{' '}
+              !
+            </Text>
           </View>
         </View>
       )
@@ -282,8 +311,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ user }) => {
+  return { user };
 };
 
 const mapDispatchToProps = dispatch => {

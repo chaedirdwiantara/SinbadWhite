@@ -4,7 +4,8 @@ import {
   StatusBar,
   StyleSheet,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Keyboard
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import Text from 'react-native-text';
@@ -25,7 +26,7 @@ class OtpView extends Component {
     const { navigation } = this.props;
     this.state = {
       phoneNumber: navigation.state.params.phoneNumber,
-      correctFormatPhoneNumber: false,
+      errorOTP: false,
       otpInput: []
     };
   }
@@ -34,16 +35,33 @@ class OtpView extends Component {
    * FUNCTIONAL
    * ========================
    */
+  /** === COMPONENT DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    /** IF SUCCESS OTP */
+    if (prevProps.auth.dataSignIn !== this.props.auth.dataSignIn) {
+      if (this.props.auth.dataSignIn !== null) {
+        NavigationService.navigate('Home');
+      }
+    }
+  }
   /** === SAVE OTP FROM OTP INPUT TO STATE */
   otpInput(data) {
     const otpInput = this.state.otpInput;
     otpInput[data.digit] = data.data;
-    this.setState({ otpInput });
+    this.setState({ otpInput, errorOTP: false });
   }
   /** === CHECK OTP === */
-  /** === PHONE NUMBER MODIFY === */
   checkOtp() {
-    NavigationService.navigate('Home');
+    Keyboard.dismiss();
+    this.setState({ errorOTP: false });
+    if (this.props.auth.dataGetOTP !== this.state.otpInput.join('')) {
+      this.setState({ errorOTP: true });
+    } else {
+      this.props.signInProcess({
+        mobilePhoneNo: '0' + this.state.phoneNumber,
+        otpCode: this.state.otpInput.join('')
+      });
+    }
   }
   /**
    * ========================
@@ -81,10 +99,14 @@ class OtpView extends Component {
   renderButton() {
     return (
       <ButtonSingle
-        disabled={this.state.otpInput.filter(x => x !== '').length < 5}
+        disabled={
+          this.state.otpInput.filter(x => x !== '').length < 5 ||
+          this.props.auth.loadingSignIn
+        }
         title={'Verifikasi'}
         borderRadius={50}
         onPress={() => this.checkOtp()}
+        loading={this.props.auth.loadingSignIn}
       />
     );
   }
@@ -112,8 +134,21 @@ class OtpView extends Component {
         <OtpInput
           onRef={ref => (this.fromOTPInput = ref)}
           fromOTPInput={this.otpInput.bind(this)}
+          error={this.state.errorOTP}
         />
       </View>
+    );
+  }
+  /** ERROR OTP */
+  renderErrorOTP() {
+    return this.state.errorOTP ? (
+      <View style={{ alignItems: 'center' }}>
+        <Text style={Fonts.type14}>
+          Pastikan kode verifikasi yang anda masukan benar
+        </Text>
+      </View>
+    ) : (
+      <View />
     );
   }
   /** CONTENT */
@@ -122,6 +157,7 @@ class OtpView extends Component {
       <View style={GlobalStyle.cardContainerRadius12}>
         <View style={styles.boxContent}>
           {this.renderOtpInput()}
+          {this.renderErrorOTP()}
           {this.renderButton()}
         </View>
       </View>

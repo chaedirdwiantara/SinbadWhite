@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import Navigator from './src/navigation';
 import { PersistGate } from 'redux-persist/integration/react';
-import configureStore from './src/state/Store';
-const { persistor, store } = configureStore();
+import { Store, Persistor } from './src/state/Store';
 
 class Main extends Component {
   render() {
     return (
-      <Provider store={store}>
-        <PersistGate persistor={persistor} loading={null}>
+      <Provider store={Store}>
+        <PersistGate persistor={Persistor} loading={null}>
           <Navigator />
         </PersistGate>
       </Provider>

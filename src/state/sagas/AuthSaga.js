@@ -14,8 +14,20 @@ function* getOTP(actions) {
   }
 }
 
+function* singIn(actions) {
+  try {
+    const response = yield call(() => {
+      return AuthMethod.signIn(actions.payload);
+    });
+    yield put(ActionCreators.signInSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.signInFailed(error));
+  }
+}
+
 function* AuthSaga() {
   yield takeEvery(types.OTP_GET_PROCESS, getOTP);
+  yield takeEvery(types.SIGN_IN_PROCESS, singIn);
 }
 
 export default AuthSaga;
