@@ -56,7 +56,7 @@ class TagList extends Component {
   renderTagActive(item) {
     return (
       <View style={this.tagActiveStyle()}>
-        <Text style={Fonts.type2}>{item}</Text>
+        <Text style={Fonts.type2}>{item.name}</Text>
       </View>
     );
   }
@@ -87,7 +87,7 @@ class TagList extends Component {
         onPress={() => this.selectTag(index)}
         style={this.tagInactiveStyle()}
       >
-        <Text style={Fonts.type9}>{item}</Text>
+        <Text style={Fonts.type9}>{item.name}</Text>
       </TouchableOpacity>
     );
   }

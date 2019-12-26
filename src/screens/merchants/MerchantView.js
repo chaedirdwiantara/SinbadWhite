@@ -24,6 +24,11 @@ class MerchantView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  /** === DID MOUNT === */
+  componentDidMount() {
+    this.props.merchantGetProcess();
+  }
+  /** === FROM CHILD FUNCTION === */
   parentFunction(data) {
     if (data.type === 'section') {
       this.setState({ activeTab: data.data });

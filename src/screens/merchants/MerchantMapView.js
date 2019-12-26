@@ -57,15 +57,7 @@ class MerchantMapView extends Component {
         selected={this.props.portfolio}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
-        data={[
-          'Portfolio 1',
-          'Portfolio 2',
-          'Portfolio 3',
-          'Portfolio 4',
-          'Portfolio 5',
-          'Portfolio 6',
-          'Portfolio 7'
-        ]}
+        data={this.props.user.portfolios}
       />
     );
   }
@@ -96,8 +88,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ user }) => {
+  return { user };
 };
 
 const mapDispatchToProps = dispatch => {

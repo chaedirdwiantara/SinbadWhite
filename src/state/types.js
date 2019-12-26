@@ -12,3 +12,8 @@ export const OTP_GET_FAILED = 'OTPgetFailed';
 export const SIGN_IN_PROCESS = 'signInProcess';
 export const SIGN_IN_SUCCESS = 'signInSuccess';
 export const SIGN_IN_FAILED = 'signInFailed';
+/** === MERCHANT === */
+/** FOR GET MERCHANT LIST */
+export const MERCHANT_GET_PROCESS = 'MerchantGetProcess';
+export const MERCHANT_GET_SUCCESS = 'MerchantGetSuccess';
+export const MERCHANT_GET_FAILED = 'MerchantGetFailed';
