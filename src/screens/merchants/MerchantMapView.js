@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import MapView, { Marker } from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
@@ -14,8 +16,28 @@ import TestModal from '../../components/modal_bottom/test';
 class MerchantMapView extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      latitude: -6.25511,
+      longitude: 106.808,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01
+    };
   }
+
+  componentDidMount() {
+    Geolocation.getCurrentPosition(
+      success => {
+        this.setState({
+          longitude: success.coords.longitude,
+          latitude: success.coords.latitude
+        });
+      },
+      () => {
+        this.setState({ openErrorGeolocation: true });
+      }
+    );
+  }
+
   parentFunction(data) {
     if (data.type === 'portfolio') {
       this.props.parentFunction(data);
@@ -61,13 +83,41 @@ class MerchantMapView extends Component {
       />
     );
   }
-
+  /** === MAPS === */
+  renderMaps() {
+    return (
+      <MapView
+        style={{ flex: 1, width: '100%' }}
+        initialRegion={{
+          latitude: this.state.latitude,
+          longitude: this.state.longitude,
+          latitudeDelta: this.state.latitudeDelta,
+          longitudeDelta: this.state.longitudeDelta
+        }}
+      >
+        {this.props.merchant.dataGetMerchant.map((marker, index) => (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: marker.latitude,
+              longitude: marker.longitude
+            }}
+            title={marker.name}
+            description={marker.address}
+          />
+        ))}
+      </MapView>
+    );
+  }
+  /** === MAIN === */
   render() {
     return (
       <View style={styles.mainContainer}>
-        {this.renderSearchBar()}
-        {this.renderTags()}
-        {this.renderModal()}
+        <View style={{ position: 'absolute', zIndex: 1000 }}>
+          {this.renderSearchBar()}
+          {this.renderTags()}
+        </View>
+        {this.renderMaps()}
       </View>
     );
   }
@@ -76,7 +126,7 @@ class MerchantMapView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: 'blue'
+    backgroundColor: masterColor.backgroundWhite
   },
   boxTabs: {
     height: 44
@@ -88,8 +138,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user }) => {
-  return { user };
+const mapStateToProps = ({ user, merchant }) => {
+  return { user, merchant };
 };
 
 const mapDispatchToProps = dispatch => {

@@ -12,9 +12,6 @@ import DashboardNavigator from './DashboardNavigator';
 import JourneyNavigator from './JourneyNavigator';
 import MerchantNavigator from './MerchantNavigator';
 import LogNavigator from './LogNavigator';
-/** === STATE DATA === */
-import { Store } from '../../state/Store';
-const stateData = Store.getState();
 
 const MergeAllNavigator = {
   ...NotificationNavigator,
