@@ -32,3 +32,23 @@ export function merchantGetReset() {
 export function merchantGetLoadMore(page) {
   return { type: types.MERCHANT_GET_LOADMORE, payload: page };
 }
+/**
+ * ====================================
+ * GET PORTFOLIO BY USERID
+ * ====================================
+ */
+/** PORTFOLIO GET PROCESS */
+export function portfolioGetProcess(userId) {
+  return { type: types.PORTFOLIO_GET_PROCESS, payload: userId };
+}
+/** PORTFOLIO GET SUCCESS */
+export function portfolioGetSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.PORTFOLIO_GET_SUCCESS, payload: data.data };
+  }
+  return { type: types.PORTFOLIO_GET_FAILED, payload: data };
+}
+/** PORTFOLIO GET FAILED */
+export function portfolioGetFailed(data) {
+  return { type: types.PORTFOLIO_GET_FAILED, payload: data };
+}

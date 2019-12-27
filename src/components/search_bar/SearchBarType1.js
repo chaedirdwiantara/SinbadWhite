@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
   TextInput,
   Keyboard
 } from 'react-native';
 import { connect } from 'react-redux';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
 

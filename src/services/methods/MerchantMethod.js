@@ -7,6 +7,14 @@ function getMerchant(data) {
   });
 }
 
+function getPortfolioByUserId(userId) {
+  return ApiRest({
+    path: `portfolios?userId=${userId}&paginate=false`,
+    method: 'GET'
+  });
+}
+
 export const MerchantMethod = {
-  getMerchant
+  getMerchant,
+  getPortfolioByUserId
 };

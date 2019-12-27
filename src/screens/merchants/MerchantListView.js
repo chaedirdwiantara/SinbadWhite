@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import * as ActionCreators from '../../state/actions';
-import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
-import Fonts from '../../helpers/GlobalFont';
 import TagList from '../../components/TagList';
 import SearchBarType1 from '../../components/search_bar/SearchBarType1';
 import MerchantListDataView from './MerchantListDataView';
+import SkeletonType2 from '../../components/skeleton/SkeletonType2';
 
 class MerchantListView extends Component {
   constructor(props) {
@@ -28,8 +26,27 @@ class MerchantListView extends Component {
    * RENDER VIEW
    * ======================
    */
-  /** === RENDER SEARCH BAR === */
+  /**
+   * ==========================
+   * SEARCH BAR
+   * =========================
+   */
+  /** === RENDER FOR SEARCH BAR === */
   renderSearchBar() {
+    return this.props.merchant.dataGetPortfolio !== null
+      ? this.renderCheckSearchBar()
+      : this.renderSearchBarContent();
+  }
+  /** RENDER CHECK SEARCH BAR === */
+  renderCheckSearchBar() {
+    return this.props.merchant.dataGetPortfolio.length > 0 ? (
+      this.renderSearchBarContent()
+    ) : (
+      <View />
+    );
+  }
+  /** === RENDER SEARCH BAR === */
+  renderSearchBarContent() {
     return (
       <View>
         <SearchBarType1
@@ -41,16 +58,16 @@ class MerchantListView extends Component {
     );
   }
   /** === TAGS SECTION === */
-  renderTags() {
-    return (
-      <View>
-        <TagList
-          selected={this.props.portfolio}
-          onRef={ref => (this.parentFunction = ref)}
-          parentFunction={this.parentFunction.bind(this)}
-          data={this.props.user.portfolios}
-        />
-      </View>
+  renderTagsContent() {
+    return this.props.merchant.dataGetPortfolio.length > 0 ? (
+      <TagList
+        selected={this.props.portfolio}
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+        data={this.props.merchant.dataGetPortfolio}
+      />
+    ) : (
+      <View />
     );
   }
   /** === CONTENT === */
@@ -63,6 +80,17 @@ class MerchantListView extends Component {
         />
       </View>
     );
+  }
+  /** === RENDER SKELETON TAGS === */
+  renderSkeletonTags() {
+    return <SkeletonType2 />;
+  }
+  /** === RENDER TAGS === */
+  renderTags() {
+    return !this.props.merchant.loadingGetPortfolio &&
+      this.props.merchant.dataGetPortfolio !== null
+      ? this.renderTagsContent()
+      : this.renderSkeletonTags();
   }
   /** === MAIN === */
   render() {
@@ -91,8 +119,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user }) => {
-  return { user };
+const mapStateToProps = ({ user, merchant }) => {
+  return { user, merchant };
 };
 
 const mapDispatchToProps = dispatch => {

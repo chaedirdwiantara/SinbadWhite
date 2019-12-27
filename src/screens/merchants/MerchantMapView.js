@@ -12,6 +12,7 @@ import Fonts from '../../helpers/GlobalFont';
 import TagList from '../../components/TagList';
 import SearchBarType2 from '../../components/search_bar/SearchBarType2';
 import TestModal from '../../components/modal_bottom/test';
+import EmptyMerchant from '../../components/empty_state/EmptyMerchant';
 
 class MerchantMapView extends Component {
   constructor(props) {
@@ -59,8 +60,27 @@ class MerchantMapView extends Component {
    * RENDER VIEW
    * ======================
    */
-  /** === RENDER SEARCH BAR === */
+  /**
+   * ==========================
+   * SEARCH BAR
+   * =========================
+   */
+  /** === RENDER FOR SEARCH BAR === */
   renderSearchBar() {
+    return this.props.merchant.dataGetPortfolio !== null
+      ? this.renderCheckSearchBar()
+      : this.renderSearchBarContent();
+  }
+  /** RENDER CHECK SEARCH BAR === */
+  renderCheckSearchBar() {
+    return this.props.merchant.dataGetPortfolio.length > 0 ? (
+      this.renderSearchBarContent()
+    ) : (
+      <View />
+    );
+  }
+  /** === RENDER SEARCH BAR === */
+  renderSearchBarContent() {
     return (
       <View>
         <SearchBarType2
@@ -72,19 +92,31 @@ class MerchantMapView extends Component {
     );
   }
   /** === TAGS SECTION === */
-  renderTags() {
-    return (
+  renderTagsContent() {
+    return this.props.merchant.dataGetPortfolio.length > 0 ? (
       <TagList
         shadow
         selected={this.props.portfolio}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
-        data={this.props.user.portfolios}
+        data={this.props.merchant.dataGetPortfolio}
       />
+    ) : (
+      <View />
     );
   }
   /** === MAPS === */
+  checkRenderMaps() {
+    return this.props.merchant.dataGetPortfolio.length > 0
+      ? this.renderMapsContent()
+      : this.renderMerchantEmpty();
+  }
   renderMaps() {
+    return this.props.merchant.dataGetPortfolio !== null
+      ? this.checkRenderMaps()
+      : this.renderMapsContent();
+  }
+  renderMapsContent() {
     return (
       <MapView
         style={{ flex: 1, width: '100%' }}
@@ -109,6 +141,21 @@ class MerchantMapView extends Component {
       </MapView>
     );
   }
+  /** === RENDER SKELETON TAGS === */
+  renderSkeletonTags() {
+    return <View />;
+  }
+  /** === RENDER TAGS === */
+  renderTags() {
+    return !this.props.merchant.loadingGetPortfolio &&
+      this.props.merchant.dataGetPortfolio !== null
+      ? this.renderTagsContent()
+      : this.renderSkeletonTags();
+  }
+  /** === RENDER MERCHANT EMPTY === */
+  renderMerchantEmpty() {
+    return <EmptyMerchant />;
+  }
   /** === MAIN === */
   render() {
     return (
@@ -118,6 +165,7 @@ class MerchantMapView extends Component {
           {this.renderTags()}
         </View>
         {this.renderMaps()}
+        {this.renderModal()}
       </View>
     );
   }

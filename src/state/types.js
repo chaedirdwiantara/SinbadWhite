@@ -13,6 +13,10 @@ export const SIGN_IN_PROCESS = 'signInProcess';
 export const SIGN_IN_SUCCESS = 'signInSuccess';
 export const SIGN_IN_FAILED = 'signInFailed';
 /** === MERCHANT === */
+/** PORTFOLIO */
+export const PORTFOLIO_GET_PROCESS = 'PortfolioGetProcess';
+export const PORTFOLIO_GET_SUCCESS = 'PortfolioGetSuccess';
+export const PORTFOLIO_GET_FAILED = 'PortfolioGetFailed';
 /** FOR GET MERCHANT LIST */
 export const MERCHANT_GET_PROCESS = 'MerchantGetProcess';
 export const MERCHANT_GET_SUCCESS = 'MerchantGetSuccess';

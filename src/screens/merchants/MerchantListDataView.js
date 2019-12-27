@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, FlatList, Image } from 'react-native';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor';
 import GlobalStyles from '../../helpers/GlobalStyle';
+import SkeletonType1 from '../../components/skeleton/SkeletonType1';
+import { LoadingLoadMore } from '../../components/Loading';
+import Address from '../../components/Address';
 import Fonts from '../../helpers/GlobalFont';
+import EmptyMerchant from '../../components/empty_state/EmptyMerchant';
 
 class MerchantListDataView extends Component {
   constructor(props) {
@@ -18,8 +21,6 @@ class MerchantListDataView extends Component {
    * FUNCTIONAL
    * =======================
    */
-  /** === DID MOUNT === */
-  componentDidMount() {}
   onHandleRefresh = () => {
     this.props.merchantGetRefresh();
     this.props.merchantGetProcess({
@@ -39,8 +40,8 @@ class MerchantListDataView extends Component {
         const page = this.props.merchant.pageGetMerchant + 10;
         this.props.merchantGetLoadMore(page);
         this.props.merchantGetProcess({
-          page: 0,
-          loading: true,
+          page,
+          loading: false,
           portfolioId: this.props.user.portfolios[this.props.portfolioIndex].id,
           search: this.props.search
         });
@@ -52,6 +53,25 @@ class MerchantListDataView extends Component {
    * RENDER VIEW
    * ======================
    */
+  /**
+   * =====================
+   * LOADING
+   * =====================
+   */
+  /** === RENDER SKELETON === */
+  renderSkeleton() {
+    return <SkeletonType1 />;
+  }
+  /** === RENDER LOADMORE === */
+  renderLoadMore() {
+    return this.props.merchant.loadingLoadMoreGetMerchant ? (
+      <LoadingLoadMore />
+    ) : (
+      <View />
+    );
+  }
+
+  /** === RENDER ITEM === */
   renderItem({ item, index }) {
     return (
       <View key={index} style={styles.boxItem}>
@@ -77,7 +97,13 @@ class MerchantListDataView extends Component {
             <Text style={Fonts.type16}>{item.name}</Text>
           </View>
           <View>
-            <Text style={Fonts.type17}>{item.address}</Text>
+            <Address
+              substring
+              font={Fonts.type17}
+              address={item.address}
+              urban={item.urban}
+              province={item.province}
+            />
           </View>
         </View>
         <View style={{ justifyContent: 'flex-end' }}>
@@ -88,72 +114,20 @@ class MerchantListDataView extends Component {
       </View>
     );
   }
-  renderItemSkeleton({ item, index }) {
-    return (
-      <View key={index} style={styles.boxItem}>
-        <SkeletonPlaceholder>
-          <View style={styles.boxImage} />
-        </SkeletonPlaceholder>
-        <View
-          style={{
-            paddingHorizontal: 16,
-            flex: 1
-          }}
-        >
-          <SkeletonPlaceholder>
-            <View style={{ flex: 1 }}>
-              <View
-                style={{
-                  width: '50%',
-                  height: 12,
-                  marginBottom: 5,
-                  borderRadius: 10
-                }}
-              />
-              <View style={{ width: '80%', height: 12, borderRadius: 10 }} />
-            </View>
-            <View style={{ flex: 1, marginTop: 10 }}>
-              <View
-                style={{
-                  width: '50%',
-                  height: 10,
-                  borderRadius: 10,
-                  marginBottom: 5
-                }}
-              />
-              <View style={{ width: '80%', height: 10, borderRadius: 10 }} />
-            </View>
-          </SkeletonPlaceholder>
-        </View>
-      </View>
-    );
-  }
-  renderSkeleton() {
-    return (
-      <View>
-        <View style={{ paddingHorizontal: 16, paddingVertical: 10 }}>
-          <SkeletonPlaceholder>
-            <View style={{ width: '40%', height: 12, borderRadius: 10 }} />
-          </SkeletonPlaceholder>
-        </View>
-        <View style={GlobalStyles.lines} />
-        <FlatList
-          contentContainerStyle={styles.flatListContainer}
-          data={[1, 2, 3, 4]}
-          renderItem={this.renderItemSkeleton.bind(this)}
-          keyExtractor={(item, index) => index.toString()}
-          ItemSeparatorComponent={this.renderSeparator}
-        />
-      </View>
-    );
-  }
+  /** === SEPARATOR FLATLIST === */
   renderSeparator() {
     return <View style={[GlobalStyles.lines, { marginLeft: 9 }]} />;
   }
   /** === RENDER DATA === */
   renderData() {
+    return this.props.merchant.dataGetMerchant.length > 0
+      ? this.renderContent()
+      : this.renderEmpty();
+  }
+  /** === RENDER DATA CONTENT === */
+  renderContent() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <View style={{ paddingHorizontal: 16, paddingVertical: 10 }}>
           <Text style={Fonts.type8}>
             {this.props.merchant.totalDataGetMerchant} List Store
@@ -167,12 +141,16 @@ class MerchantListDataView extends Component {
           keyExtractor={(item, index) => index.toString()}
           refreshing={this.props.merchant.refreshGetMerchant}
           onRefresh={this.onHandleRefresh}
-          onEndReachedThreshold={0.2}
+          onEndReachedThreshold={0.1}
           onEndReached={this.onHandleLoadMore.bind(this)}
           ItemSeparatorComponent={this.renderSeparator}
         />
       </View>
     );
+  }
+  /** === RENDER EMPTY === */
+  renderEmpty() {
+    return <EmptyMerchant />;
   }
   /** === MAIN === */
   render() {
@@ -181,6 +159,8 @@ class MerchantListDataView extends Component {
         {this.props.merchant.loadingGetMerchant
           ? this.renderSkeleton()
           : this.renderData()}
+        {/* for loadmore */}
+        {this.renderLoadMore()}
       </View>
     );
   }
@@ -192,7 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: masterColor.backgroundWhite
   },
   flatListContainer: {
-    paddingBottom: 16
+    paddingBottom: 26
   },
   boxItem: {
     flexDirection: 'row',

@@ -26,7 +26,21 @@ class MerchantView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    this.getMerchant(0, '');
+    this.props.portfolioGetProcess(this.props.user.id);
+  }
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.merchant.dataGetPortfolio !==
+      this.props.merchant.dataGetPortfolio
+    ) {
+      if (
+        this.props.merchant.dataGetPortfolio !== null &&
+        this.props.merchant.dataGetPortfolio.length > 0
+      ) {
+        this.getMerchant(0, '');
+      }
+    }
   }
   /** === FROM CHILD FUNCTION === */
   parentFunction(data) {
@@ -133,8 +147,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user }) => {
-  return { user };
+const mapStateToProps = ({ user, merchant }) => {
+  return { user, merchant };
 };
 
 const mapDispatchToProps = dispatch => {
