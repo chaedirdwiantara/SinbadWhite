@@ -13,6 +13,7 @@ import TagList from '../../components/TagList';
 import SearchBarType2 from '../../components/search_bar/SearchBarType2';
 import TestModal from '../../components/modal_bottom/test';
 import EmptyMerchant from '../../components/empty_state/EmptyMerchant';
+import { LoadingPage } from '../../components/Loading';
 
 class MerchantMapView extends Component {
   constructor(props) {
@@ -119,6 +120,7 @@ class MerchantMapView extends Component {
   renderMapsContent() {
     return (
       <MapView
+        ref={ref => (this.mapRef = ref)}
         style={{ flex: 1, width: '100%' }}
         initialRegion={{
           latitude: this.state.latitude,
@@ -126,10 +128,19 @@ class MerchantMapView extends Component {
           latitudeDelta: this.state.latitudeDelta,
           longitudeDelta: this.state.longitudeDelta
         }}
+        onLayout={() => {
+          if (this.props.merchant.dataGetMerchant.length) {
+            this.mapRef.fitToCoordinates(this.props.merchant.dataGetMerchant, {
+              edgePadding: { top: 16, right: 16, bottom: 16, left: 16 },
+              animated: true
+            });
+          }
+        }}
       >
         {this.props.merchant.dataGetMerchant.map((marker, index) => (
           <Marker
             key={index}
+            image={require('../../assets/icons/maps/drop_pin.png')}
             coordinate={{
               latitude: marker.latitude,
               longitude: marker.longitude
@@ -144,6 +155,10 @@ class MerchantMapView extends Component {
   /** === RENDER SKELETON TAGS === */
   renderSkeletonTags() {
     return <View />;
+  }
+  /** === RENDER PAGE === */
+  renderLoading() {
+    return <LoadingPage />;
   }
   /** === RENDER TAGS === */
   renderTags() {
@@ -164,7 +179,9 @@ class MerchantMapView extends Component {
           {this.renderSearchBar()}
           {this.renderTags()}
         </View>
-        {this.renderMaps()}
+        {!this.props.merchant.loadingGetMerchant
+          ? this.renderMaps()
+          : this.renderLoading()}
         {this.renderModal()}
       </View>
     );

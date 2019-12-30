@@ -12,6 +12,17 @@ const LoadingLoadMore = () => {
   );
 };
 
+const LoadingPage = () => {
+  return (
+    <View style={styles.loadingPage}>
+      <Image
+        source={require('../assets/gif/loading/load_triagle.gif')}
+        style={{ height: 80, width: 80 }}
+      />
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   loadMoreContainer: {
     width: '100%',
@@ -19,7 +30,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     bottom: 0
+  },
+  loadingPage: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1
   }
 });
 
-export { LoadingLoadMore };
+export { LoadingLoadMore, LoadingPage };
