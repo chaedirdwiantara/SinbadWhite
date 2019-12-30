@@ -1,5 +1,14 @@
 import * as types from '../types';
-
+/**
+ * ==============================
+ * SIGNOUT
+ * ==============================
+ */
+/** === DELETE ALL DATA ==== */
+export function deleteAllData() {
+  console.log('alalallala');
+  return { type: types.DELETE_ALL_DATA };
+}
 /**
  * ==============================
  * GET OTP

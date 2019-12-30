@@ -12,6 +12,8 @@ import DashboardNavigator from './DashboardNavigator';
 import JourneyNavigator from './JourneyNavigator';
 import MerchantNavigator from './MerchantNavigator';
 import LogNavigator from './LogNavigator';
+import ProfileNavigator from './ProfileNavigator';
+import GlobalNavigator from './GlobalNavigator';
 
 const MergeAllNavigator = {
   ...NotificationNavigator,
@@ -19,7 +21,9 @@ const MergeAllNavigator = {
   ...BottomNavigator,
   ...JourneyNavigator,
   ...MerchantNavigator,
-  ...LogNavigator
+  ...LogNavigator,
+  ...ProfileNavigator,
+  ...GlobalNavigator
 };
 
 const config = {

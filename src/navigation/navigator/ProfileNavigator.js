@@ -1,21 +1,44 @@
-import ProfileView from '../../screens/profiles/ProfileView';
+import React from 'react';
+import { View } from 'react-native';
 import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
+import ProfileDataView from '../../screens/profiles/ProfileDataView';
+import ProfileDataNameEdit from '../../screens/profiles/ProfileDataNameEdit';
 
 const ProfileNavigator = {
-  ProfileView: {
-    screen: ProfileView,
+  ProfileDataView: {
+    screen: ProfileDataView,
     navigationOptions: {
-      headerTitle: 'Profil',
-      headerTitleStyle: GlobalFont.type5,
-      headerTitleContainerStyle: {
-        width: '100%',
-        justifyContent: 'center'
-      },
+      headerTitle: 'Data Diri',
+      headerTitleStyle: [
+        GlobalFont.type5,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
       headerStyle: {
-        elevation: 0,
         backgroundColor: masterColor.backgroundWhite
       },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  ProfileDataNameEdit: {
+    screen: ProfileDataNameEdit,
+    navigationOptions: {
+      headerTitle: 'Ubah Nama',
+      headerTitleStyle: [
+        GlobalFont.type5,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
       gesturesEnabled: false
     }
   }

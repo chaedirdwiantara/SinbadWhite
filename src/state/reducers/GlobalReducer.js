@@ -10,6 +10,18 @@ const INITIAL_STATE = {
 
 export const global = createReducer(INITIAL_STATE, {
   /**
+   * ==================================
+   * DELETE ALL DATA
+   * ==================================
+   * - token
+   */
+  [types.DELETE_ALL_DATA](state, action) {
+    return {
+      ...state,
+      token: null
+    };
+  },
+  /**
    * ===================
    * TOKEN
    * ===================

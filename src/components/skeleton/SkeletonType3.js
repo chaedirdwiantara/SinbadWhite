@@ -8,10 +8,10 @@ import GlobalStyles from '../../helpers/GlobalStyle';
  * =============================
  * NOTE
  * =============================
- * this skeleton for "LIST TOKO"
+ * this skeleton for "JOURNEY PLAN"
  */
 
-class SkeletonType1 extends Component {
+class SkeletonType3 extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,9 +22,12 @@ class SkeletonType1 extends Component {
   renderItem({ item, index }) {
     return (
       <View key={index} style={styles.boxItem}>
-        <SkeletonPlaceholder>
-          <View style={styles.boxImage} />
-        </SkeletonPlaceholder>
+        <View style={styles.boxIcon}>
+          <SkeletonPlaceholder>
+            <View style={styles.circle} />
+          </SkeletonPlaceholder>
+        </View>
+
         <View
           style={{
             paddingHorizontal: 16,
@@ -67,12 +70,6 @@ class SkeletonType1 extends Component {
   renderSkeleton() {
     return (
       <View>
-        {/* <View style={{ paddingHorizontal: 16, paddingVertical: 10 }}>
-          <SkeletonPlaceholder>
-            <View style={{ width: '40%', height: 12, borderRadius: 10 }} />
-          </SkeletonPlaceholder>
-        </View>
-        <View style={GlobalStyles.lines} /> */}
         <FlatList
           contentContainerStyle={styles.flatListContainer}
           data={this.state.data}
@@ -96,6 +93,7 @@ const styles = StyleSheet.create({
     backgroundColor: masterColor.backgroundWhite
   },
   flatListContainer: {
+    paddingTop: 30,
     paddingBottom: 16
   },
   boxItem: {
@@ -103,11 +101,17 @@ const styles = StyleSheet.create({
     paddingVertical: 13,
     paddingHorizontal: 16
   },
-  boxImage: {
+  boxIcon: {
     height: 65,
-    width: 65,
-    borderRadius: 10
+    width: 24,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  circle: {
+    width: 24,
+    height: 24,
+    borderRadius: 24
   }
 });
 
-export default SkeletonType1;
+export default SkeletonType3;

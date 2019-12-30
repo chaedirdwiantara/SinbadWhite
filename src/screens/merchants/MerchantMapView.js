@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MapView, { Marker } from 'react-native-maps';
@@ -12,8 +18,11 @@ import Fonts from '../../helpers/GlobalFont';
 import TagList from '../../components/TagList';
 import SearchBarType2 from '../../components/search_bar/SearchBarType2';
 import TestModal from '../../components/modal_bottom/test';
-import EmptyMerchant from '../../components/empty_state/EmptyMerchant';
+import EmptyData from '../../components/empty_state/EmptyData';
 import { LoadingPage } from '../../components/Loading';
+import ModalBottomMerchantMapList from './ModalBottomMerchantMapList';
+
+const { height } = Dimensions.get('window');
 
 class MerchantMapView extends Component {
   constructor(props) {
@@ -53,8 +62,15 @@ class MerchantMapView extends Component {
    * =======================
    */
   /** RENDER MODAL BOTTOM */
-  renderModal() {
-    return <TestModal open />;
+  renderBottomList() {
+    return !this.props.merchant.loadingGetMerchant ? (
+      <ModalBottomMerchantMapList
+        search={this.props.searchText}
+        portfolioIndex={this.props.portfolio}
+      />
+    ) : (
+      <View />
+    );
   }
   /**
    * ======================
@@ -128,15 +144,33 @@ class MerchantMapView extends Component {
           latitudeDelta: this.state.latitudeDelta,
           longitudeDelta: this.state.longitudeDelta
         }}
-        onLayout={() => {
-          if (this.props.merchant.dataGetMerchant.length) {
-            this.mapRef.fitToCoordinates(this.props.merchant.dataGetMerchant, {
-              edgePadding: { top: 16, right: 16, bottom: 16, left: 16 },
-              animated: true
-            });
-          }
-        }}
+        onLayout={() =>
+          setTimeout(() => {
+            if (this.props.merchant.dataGetMerchant.length > 0) {
+              this.mapRef.fitToCoordinates(
+                this.props.merchant.dataGetMerchant,
+                {
+                  edgePadding: {
+                    top: 16,
+                    right: 16,
+                    bottom: 0.45 * height,
+                    left: 16
+                  },
+                  animated: true
+                }
+              );
+            }
+          }, 500)
+        }
       >
+        <Marker
+          image={require('../../assets/icons/maps/my_location.png')}
+          coordinate={{
+            latitude: this.state.latitude,
+            longitude: this.state.longitude
+          }}
+          title={'Anda'}
+        />
         {this.props.merchant.dataGetMerchant.map((marker, index) => (
           <Marker
             key={index}
@@ -169,7 +203,12 @@ class MerchantMapView extends Component {
   }
   /** === RENDER MERCHANT EMPTY === */
   renderMerchantEmpty() {
-    return <EmptyMerchant />;
+    return (
+      <EmptyData
+        title={'List Toko Kosong'}
+        description={'Maaf , Anda tidak mempunyai list toko'}
+      />
+    );
   }
   /** === MAIN === */
   render() {
@@ -182,7 +221,8 @@ class MerchantMapView extends Component {
         {!this.props.merchant.loadingGetMerchant
           ? this.renderMaps()
           : this.renderLoading()}
-        {this.renderModal()}
+        {/* {this.renderModal()} */}
+        {this.renderBottomList()}
       </View>
     );
   }
@@ -200,6 +240,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  boxBottomList: {
+    position: 'absolute',
+    bottom: 0,
+    borderWidth: 1,
+    backgroundColor: masterColor.backgroundWhite
   }
 });
 

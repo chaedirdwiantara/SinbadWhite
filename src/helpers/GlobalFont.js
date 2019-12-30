@@ -111,6 +111,78 @@ const styles = StyleSheet.create({
     lineHeight: 13,
     color: masterColor.fontWhite
   },
+  type19: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 13,
+    lineHeight: 16,
+    color: masterColor.fontWhite
+  },
+  type20: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 13,
+    lineHeight: 16,
+    color: masterColor.fontWhite
+  },
+  type21: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 12,
+    lineHeight: 15,
+    color: masterColor.mainColor
+  },
+  type22: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 11,
+    lineHeight: 14,
+    color: masterColor.mainColor
+  },
+  type23: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 12,
+    lineHeight: 15,
+    color: masterColor.fontBlack80
+  },
+  type24: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 13,
+    lineHeight: 16,
+    color: masterColor.fontBlack50
+  },
+  type25: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 12,
+    lineHeight: 15,
+    color: masterColor.fontWhite
+  },
+  type26: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10,
+    lineHeight: 13,
+    color: masterColor.fontWhite
+  },
+  type27: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 18,
+    lineHeight: 22,
+    color: masterColor.fontWhite
+  },
+  type28: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 10,
+    lineHeight: 13,
+    color: masterColor.mainColor
+  },
+  type29: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 12,
+    lineHeight: 15,
+    color: masterColor.mainColor
+  },
+  forCompare: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 12,
+    lineHeight: 15,
+    color: masterColor.fontBlack50
+  },
   /** === bottom nav ==== */
   bottomNav: {
     fontFamily: Fonts.MontserratMedium,

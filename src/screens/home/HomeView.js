@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   View,
   TouchableOpacity,
-  StatusBar,
   StyleSheet,
   Image,
   SafeAreaView,
@@ -19,6 +18,7 @@ import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import Fonts from '../../helpers/GlobalFont';
 import GlobalStyles from '../../helpers/GlobalStyle';
+import { StatusBarWhite } from '../../components/StatusBarGlobal';
 
 class HomeView extends Component {
   constructor(props) {
@@ -168,15 +168,6 @@ class HomeView extends Component {
    * RENDER VIEW
    * ==============================
    */
-  /** === STATUS BAR === */
-  renderStatusBar() {
-    return (
-      <StatusBar
-        backgroundColor={masterColor.statusBarWhite}
-        barStyle={'dark-content'}
-      />
-    );
-  }
   /** === RENDER BANNER === */
   renderBanner() {
     return (
@@ -267,7 +258,7 @@ class HomeView extends Component {
   render() {
     return (
       <SafeAreaView>
-        {this.renderStatusBar()}
+        <StatusBarWhite />
         {this.renderData()}
       </SafeAreaView>
     );

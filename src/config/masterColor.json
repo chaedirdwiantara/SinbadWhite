@@ -10,6 +10,8 @@
   "statusBarDefault": "#f0444c",
   "statusBarWhite": "#ffffff",
   "statusBarModal": "#f0444c",
+  "statusBarBlack": "#000000",
+  "statusBarBlackOP40": "rgba(0, 0, 0, 0.4)",
   "fontWhite": "#ffffff",
   "fontRed80": "#501619",
   "fontRed60": "#a02d32",
@@ -31,11 +33,14 @@
   "fontBlue50": "#388bf2",
   "fontBlue40": "#5ba0f5",
   "fontBlue10": "#dbebff",
+  "fontBlack100": "#000000",
   "fontBlack80": "#52575c",
   "fontBlack60": "#a0a4a8",
   "fontBlack50": "#25282b",
   "fontBlack40": "#cacccf",
   "fontBlack10": "#e8e8e8",
   "fontBlack05": "#fafafa",
-  "fontBlack10OP50": "rgba(232, 232, 232, 0.5)"
+  "fontBlack10OP50": "rgba(232, 232, 232, 0.5)",
+  "fontBlack80OP90": "rgba(82, 87, 92, 0.9)",
+  "fontBlack100OP40": "rgba(0, 0, 0, 0.4)"
 }

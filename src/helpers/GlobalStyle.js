@@ -24,9 +24,32 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: masterColor.fontBlack10
   },
+  linesSwipeModal: {
+    borderColor: masterColor.fontBlack10,
+    borderTopWidth: 5,
+    borderRadius: 10,
+    marginTop: 9,
+    width: 63
+  },
+  lineVerticalDash: {
+    borderLeftColor: masterColor.fontBlack10,
+    borderLeftWidth: 2,
+    flex: 1,
+    borderStyle: 'dotted'
+  },
   /** IMAGE SINBAD */
   fullImage: {
     height: 0.3 * height,
+    width: undefined,
+    aspectRatio: 1 / 1
+  },
+  image46: {
+    height: 46,
+    width: undefined,
+    aspectRatio: 1 / 1
+  },
+  image74: {
+    height: 74,
     width: undefined,
     aspectRatio: 1 / 1
   },

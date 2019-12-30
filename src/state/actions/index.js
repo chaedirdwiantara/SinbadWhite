@@ -5,3 +5,4 @@
  */
 export * from './AuthAction';
 export * from './MerchantAction';
+export * from './JourneyAction';

@@ -3,6 +3,9 @@
  * ALL VARIABLE THAT WILL USED BY ACTIONS AND REDUCERS
  * ====================================================
  */
+/** === GLOBAL === */
+/** FOR SIGNOUT */
+export const DELETE_ALL_DATA = 'DeleteAllData';
 /** === AUTH === */
 /** FOR OTP */
 export const OTP_GET_PROCESS = 'OTPgetProcess';
@@ -24,3 +27,18 @@ export const MERCHANT_GET_FAILED = 'MerchantGetFailed';
 export const MERCHANT_GET_RESET = 'MerchantGetReset';
 export const MERCHANT_GET_REFRESH = 'MerchantGetRefresh';
 export const MERCHANT_GET_LOADMORE = 'MerchantGetLoadMore';
+/** === JOURNEY === */
+/** FOR GET JOURNEY PLAN LIST */
+export const JOURNEY_PLAN_GET_PROCESS = 'JourneyPlanGetProcess';
+export const JOURNEY_PLAN_GET_SUCCESS = 'JourneyPlanGetSuccess';
+export const JOURNEY_PLAN_GET_FAILED = 'JourneyPlanGetFailed';
+export const JOURNEY_PLAN_GET_RESET = 'JourneyPlanGetReset';
+export const JOURNEY_PLAN_GET_REFRESH = 'JourneyPlanGetRefresh';
+export const JOURNEY_PLAN_GET_LOADMORE = 'JourneyPlanGetLoadMore';
+/** FOR POST MERCHANT TO JOURNEY PLAN */
+export const SAVE_MERCHANT_TO_JOURNEY_PLAN_PROCESS =
+  'saveMerchantToJourneyPlanProcess';
+export const SAVE_MERCHANT_TO_JOURNEY_PLAN_SUCCESS =
+  'saveMerchantToJourneyPlanSuccess';
+export const SAVE_MERCHANT_TO_JOURNEY_PLAN_FAILED =
+  'saveMerchantToJourneyPlanFailed';

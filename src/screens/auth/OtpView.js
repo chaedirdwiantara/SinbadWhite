@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   View,
-  StatusBar,
   StyleSheet,
   Image,
   TouchableOpacity,
@@ -19,6 +18,7 @@ import ButtonSingle from '../../components/button/ButtonSingle';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import OtpInput from '../../components/otp/OtpInput';
 import NavigationService from '../../navigation/NavigationService';
+import { StatusBarRed } from '../../components/StatusBarGlobal';
 
 class OtpView extends Component {
   constructor(props) {
@@ -86,15 +86,6 @@ class OtpView extends Component {
    * RENDER VIEW
    * ==============================
    */
-  /** === STATUS BAR === */
-  renderStatusBar() {
-    return (
-      <StatusBar
-        backgroundColor={masterColor.statusBarDefault}
-        barStyle={'light-content'}
-      />
-    );
-  }
   /** === RENDER BUTTON === */
   renderButton() {
     return (
@@ -180,8 +171,8 @@ class OtpView extends Component {
   render() {
     return (
       <SafeAreaView>
+        <StatusBarRed />
         <View>
-          {this.renderStatusBar()}
           {this.renderBackground()}
           <View style={styles.mainContainer}>
             {this.renderTitle()}

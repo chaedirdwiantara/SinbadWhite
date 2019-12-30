@@ -1,4 +1,4 @@
-package com.sinbadagents;
+package com.sinbad.agentstaging;
 
 import android.app.Application;
 import android.content.Context;

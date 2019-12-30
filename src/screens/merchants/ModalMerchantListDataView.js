@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, FlatList, Image } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Image,
+  TouchableOpacity
+} from 'react-native';
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor';
@@ -12,7 +19,7 @@ import Address from '../../components/Address';
 import Fonts from '../../helpers/GlobalFont';
 import EmptyData from '../../components/empty_state/EmptyData';
 
-class MerchantListDataView extends Component {
+class ModalMerchantListDataView extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -79,7 +86,13 @@ class MerchantListDataView extends Component {
   /** === RENDER ITEM === */
   renderItem({ item, index }) {
     return (
-      <View key={index} style={styles.boxItem}>
+      <TouchableOpacity
+        key={index}
+        style={styles.boxItem}
+        onPress={() =>
+          this.props.parentFunction({ type: 'merchant', data: item.id })
+        }
+      >
         <View>
           {item.imageUrl !== null ? (
             <Image source={item.imageUrl} style={styles.boxImage} />
@@ -111,12 +124,18 @@ class MerchantListDataView extends Component {
             />
           </View>
         </View>
-        <View style={{ justifyContent: 'flex-end' }}>
-          <View style={styles.boxButtonDetail}>
-            <Text style={Fonts.type18}>Detail</Text>
-          </View>
+        <View style={{ justifyContent: 'center' }}>
+          <MaterialIcons
+            name="check-circle"
+            color={
+              this.props.selectedMerchant.indexOf(item.id) > -1
+                ? masterColor.fontGreen50
+                : masterColor.fontBlack40
+            }
+            size={24}
+          />
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
   /** === SEPARATOR FLATLIST === */
@@ -133,12 +152,12 @@ class MerchantListDataView extends Component {
   renderContent() {
     return (
       <View style={{ flex: 1 }}>
-        {/* <View style={{ paddingHorizontal: 16, paddingVertical: 10 }}>
+        <View style={{ paddingHorizontal: 16, paddingVertical: 10 }}>
           <Text style={Fonts.type8}>
             {this.props.merchant.totalDataGetMerchant} List Store
           </Text>
         </View>
-        <View style={GlobalStyles.lines} /> */}
+        <View style={GlobalStyles.lines} />
         <FlatList
           contentContainerStyle={styles.flatListContainer}
           data={this.props.merchant.dataGetMerchant}
@@ -193,12 +212,6 @@ const styles = StyleSheet.create({
     height: 65,
     width: 65,
     borderRadius: 10
-  },
-  boxButtonDetail: {
-    paddingVertical: 8,
-    paddingHorizontal: 22,
-    borderRadius: 4,
-    backgroundColor: masterColor.mainColor
   }
 });
 
@@ -213,4 +226,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(MerchantListDataView);
+)(ModalMerchantListDataView);

@@ -1,4 +1,4 @@
-package com.sinbadagents;
+package com.sinbad.agentstaging;
 
 import com.facebook.react.ReactActivity;
 

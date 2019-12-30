@@ -60,7 +60,7 @@ class MerchantView extends Component {
     this.props.merchantGetProcess({
       page: 0,
       loading: true,
-      portfolioId: this.props.user.portfolios[portfolioIndex].id,
+      portfolioId: this.props.merchant.dataGetPortfolio[portfolioIndex].id,
       search
     });
   }

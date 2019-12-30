@@ -15,6 +15,14 @@ const INITIAL_STATE = {
 
 export const auth = createReducer(INITIAL_STATE, {
   /**
+   * ==================================
+   * DELETE ALL DATA
+   * ==================================
+   */
+  [types.DELETE_ALL_DATA](state, action) {
+    return INITIAL_STATE;
+  },
+  /**
    * ===================
    * OTP
    * ===================

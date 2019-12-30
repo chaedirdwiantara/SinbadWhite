@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { bindActionCreators } from 'redux';
+import Text from 'react-native-text';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor';
@@ -8,6 +9,8 @@ import TagList from '../../components/TagList';
 import SearchBarType1 from '../../components/search_bar/SearchBarType1';
 import MerchantListDataView from './MerchantListDataView';
 import SkeletonType2 from '../../components/skeleton/SkeletonType2';
+import Fonts from '../../helpers/GlobalFont';
+import GlobalStyles from '../../helpers/GlobalStyle';
 
 class MerchantListView extends Component {
   constructor(props) {
@@ -74,6 +77,19 @@ class MerchantListView extends Component {
   renderContent() {
     return (
       <View style={{ flex: 1 }}>
+        {!this.props.merchant.loadingGetMerchant ? (
+          <View>
+            <View style={{ paddingHorizontal: 16, paddingVertical: 10 }}>
+              <Text style={Fonts.type8}>
+                {this.props.merchant.totalDataGetMerchant} List Store
+              </Text>
+            </View>
+            <View style={GlobalStyles.lines} />
+          </View>
+        ) : (
+          <View />
+        )}
+
         <MerchantListDataView
           portfolioIndex={this.props.portfolio}
           search={this.props.searchText}

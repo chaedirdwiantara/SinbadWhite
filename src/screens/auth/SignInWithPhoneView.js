@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   View,
-  StatusBar,
   StyleSheet,
   Image,
   Dimensions,
@@ -23,6 +22,7 @@ import masterColor from '../../config/masterColor.json';
 import ButtonSingle from '../../components/button/ButtonSingle';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import NavigationService from '../../navigation/NavigationService';
+import { StatusBarRed } from '../../components/StatusBarGlobal';
 
 const { width, height } = Dimensions.get('window');
 
@@ -141,15 +141,6 @@ class SignInWithPhoneView extends Component {
    * RENDER VIEW
    * ==============================
    */
-  /** === STATUS BAR === */
-  renderStatusBar() {
-    return (
-      <StatusBar
-        backgroundColor={masterColor.statusBarDefault}
-        barStyle={'light-content'}
-      />
-    );
-  }
   /** === RENDER BUTTON === */
   renderButton() {
     return (
@@ -283,8 +274,8 @@ class SignInWithPhoneView extends Component {
   render() {
     return (
       <SafeAreaView>
+        <StatusBarRed />
         <View>
-          {this.renderStatusBar()}
           {this.renderBackground()}
           <View style={styles.mainContainer}>
             {this.renderTitle()}

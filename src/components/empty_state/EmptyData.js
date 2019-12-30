@@ -4,7 +4,16 @@ import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
 
-class EmptyMerchant extends Component {
+/**
+ * Props
+ * - title = '',
+ * - description = ''
+ */
+
+class EmptyData extends Component {
+  constructor(props) {
+    super(props);
+  }
   /** === EMPTY STATE === */
   renderEmptyState() {
     return (
@@ -13,12 +22,14 @@ class EmptyMerchant extends Component {
           source={require('../../assets/images/sinbad_image/cry_sinbad.png')}
           style={GlobalStyle.fullImage}
         />
-        <View style={{ marginBottom: 10 }}>
-          <Text style={Fonts.type7}>List Toko Kosong</Text>
+        <View style={styles.boxTitle}>
+          <Text style={[Fonts.type7, { textAlign: 'center' }]}>
+            {this.props.title}
+          </Text>
         </View>
-        <View>
-          <Text style={Fonts.type17}>
-            Maaf , Anda tidak mempunyai list toko
+        <View style={styles.boxDescription}>
+          <Text style={[Fonts.type17, { textAlign: 'center' }]}>
+            {this.props.description}
           </Text>
         </View>
       </View>
@@ -38,7 +49,20 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  boxTitle: {
+    width: '100%',
+    paddingBottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 75
+  },
+  boxDescription: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 75
   }
 });
 
-export default EmptyMerchant;
+export default EmptyData;
