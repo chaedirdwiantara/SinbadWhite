@@ -21,6 +21,7 @@ import TestModal from '../../components/modal_bottom/test';
 import EmptyData from '../../components/empty_state/EmptyData';
 import { LoadingPage } from '../../components/Loading';
 import ModalBottomMerchantMapList from './ModalBottomMerchantMapList';
+import Address from '../../components/Address';
 
 const { height } = Dimensions.get('window');
 
@@ -55,6 +56,26 @@ class MerchantMapView extends Component {
     } else if (data.type === 'search') {
       this.props.parentFunction(data);
     }
+  }
+
+  /** === COMBINE ADDRESS === */
+  combineAddress(item) {
+    let address = '';
+    let urban = '';
+    let province = '';
+    if (item.address) {
+      address = item.address ? item.address : '';
+    }
+    if (item.urban) {
+      urban =
+        (item.urban.urban ? `, ${item.urban.urban}` : '') +
+        (item.urban.district ? `, ${item.urban.district}` : '') +
+        (item.urban.city ? `, ${item.urban.city}` : '');
+    }
+    if (item.urban) {
+      province = item.urban.province ? `, ${item.urban.province.name}` : '';
+    }
+    return address;
   }
   /**
    * ======================
@@ -180,7 +201,7 @@ class MerchantMapView extends Component {
               longitude: marker.longitude
             }}
             title={marker.name}
-            description={marker.address}
+            description={this.combineAddress(marker)}
           />
         ))}
       </MapView>

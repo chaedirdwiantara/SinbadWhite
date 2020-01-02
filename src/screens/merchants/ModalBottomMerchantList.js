@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Dimensions,
-  TouchableOpacity,
-  KeyboardAvoidingView
-} from 'react-native';
+import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -101,7 +95,6 @@ class ModalBottomMerchantList extends Component {
   }
   /** === ADD JOURNEY PLAN === */
   addJourneyPlan() {
-    console.log(this.state.dataForAddJourney);
     this.props.saveMerchatToJourneyPlanProcess({
       storeType: 'exist_store',
       body: this.state.dataForAddJourney

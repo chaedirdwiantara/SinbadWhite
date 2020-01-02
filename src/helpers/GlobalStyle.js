@@ -66,6 +66,28 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
     elevation: 2
+  },
+  shadowForBox: {
+    borderWidth: 0,
+    shadowColor: masterColor.shadow,
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 2
+  },
+  shadowBottom: {
+    borderWidth: 0,
+    shadowColor: masterColor.shadow,
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.0,
+    elevation: 2
   }
 });
 

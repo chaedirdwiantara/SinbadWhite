@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   Dimensions,
+  Keyboard,
   TouchableOpacity,
   KeyboardAvoidingView
 } from 'react-native';
@@ -34,7 +35,20 @@ class ModalBottomMerchantMapList extends Component {
       showList: true
     };
   }
+  componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this.keyboardDidShow
+    );
+  }
 
+  keyboardDidShow = () => {
+    this.setState({ showList: false });
+  };
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+  }
   /**
    * ==================
    * RENDER VIEW

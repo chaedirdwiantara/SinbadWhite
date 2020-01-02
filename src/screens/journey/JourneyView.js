@@ -34,6 +34,19 @@ class JourneyView extends Component {
     this.props.journeyPlanGetReset();
     this.props.journeyPlanGetProcess({ page: 0, loading: true });
   }
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.journey.dataSaveMerchantToJourneyPlan !==
+      this.props.journey.dataSaveMerchantToJourneyPlan
+    ) {
+      if (this.props.journey.dataSaveMerchantToJourneyPlan !== null) {
+        this.props.journeyPlanGetReset();
+        this.props.journeyPlanGetProcess({ page: 0, loading: true });
+        this.setState({ openModalMerchantList: false });
+      }
+    }
+  }
   /** === ADD MERCHANT TO JOURNEY === */
   addMerchant() {
     this.setState({ openModalAddMerchant: true });

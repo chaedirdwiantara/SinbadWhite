@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, FlatList, Image } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Image,
+  TouchableOpacity
+} from 'react-native';
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -11,6 +17,7 @@ import { LoadingLoadMore } from '../../components/Loading';
 import Address from '../../components/Address';
 import Fonts from '../../helpers/GlobalFont';
 import EmptyData from '../../components/empty_state/EmptyData';
+import NavigationService from '../../navigation/NavigationService';
 
 class MerchantListDataView extends Component {
   constructor(props) {
@@ -22,6 +29,7 @@ class MerchantListDataView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  /** REFRESH LIST VIEW */
   onHandleRefresh = () => {
     this.props.merchantGetRefresh();
     this.props.merchantGetProcess({
@@ -33,7 +41,7 @@ class MerchantListDataView extends Component {
       search: this.props.search
     });
   };
-
+  /** LOAD MORE LIST VIEW */
   onHandleLoadMore = () => {
     if (this.props.merchant.dataGetMerchant) {
       if (
@@ -53,6 +61,12 @@ class MerchantListDataView extends Component {
       }
     }
   };
+  /** GO TO MERCHANT DETAIL */
+  goToDetailMerchant(storeId) {
+    NavigationService.navigate('MerchantDetailView', {
+      storeId
+    });
+  }
   /**
    * ======================
    * RENDER VIEW
@@ -112,9 +126,12 @@ class MerchantListDataView extends Component {
           </View>
         </View>
         <View style={{ justifyContent: 'flex-end' }}>
-          <View style={styles.boxButtonDetail}>
+          <TouchableOpacity
+            style={styles.boxButtonDetail}
+            onPress={() => this.goToDetailMerchant(item.id)}
+          >
             <Text style={Fonts.type18}>Detail</Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     );

@@ -27,6 +27,10 @@ export const MERCHANT_GET_FAILED = 'MerchantGetFailed';
 export const MERCHANT_GET_RESET = 'MerchantGetReset';
 export const MERCHANT_GET_REFRESH = 'MerchantGetRefresh';
 export const MERCHANT_GET_LOADMORE = 'MerchantGetLoadMore';
+/** FOR GET MERCHANT DETAIL */
+export const MERCHANT_GET_DETAIL_PROCESS = 'MerchantGetDetailProcess';
+export const MERCHANT_GET_DETAIL_SUCCESS = 'MerchantGetDetailSuccess';
+export const MERCHANT_GET_DETAIL_FAILED = 'MerchantGetDetailFailed';
 /** === JOURNEY === */
 /** FOR GET JOURNEY PLAN LIST */
 export const JOURNEY_PLAN_GET_PROCESS = 'JourneyPlanGetProcess';

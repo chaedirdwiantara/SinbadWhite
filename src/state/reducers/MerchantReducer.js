@@ -7,14 +7,17 @@ const INITIAL_STATE = {
   refreshGetMerchant: false,
   loadingLoadMoreGetMerchant: false,
   loadingGetPortfolio: false,
+  loadingGetMerchantDetail: false,
   /** data */
   dataGetMerchant: [],
+  dataGetMerchantDetail: null,
   totalDataGetMerchant: 0,
   pageGetMerchant: 0,
   dataGetPortfolio: null,
   /** error */
   errorGetMerchant: null,
-  errorGetPortfolio: null
+  errorGetPortfolio: null,
+  errorGetMerchantDetail: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -80,6 +83,33 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingLoadMoreGetMerchant: true,
       pageGetMerchant: action.payload
+    };
+  },
+  /**
+   * ==========================
+   * MERCHANT DETAIL
+   * ==========================
+   */
+  [types.MERCHANT_GET_DETAIL_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetMerchantDetail: true,
+      dataGetMerchantDetail: null,
+      errorGetMerchantDetail: null
+    };
+  },
+  [types.MERCHANT_GET_DETAIL_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetMerchantDetail: false,
+      dataGetMerchantDetail: action.payload
+    };
+  },
+  [types.MERCHANT_GET_DETAIL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetMerchantDetail: false,
+      errorGetMerchantDetail: action.payload
     };
   },
   /**

@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, FlatList, Image } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Image,
+  TouchableOpacity
+} from 'react-native';
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import * as ActionCreators from '../../state/actions';
+import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import SkeletonType3 from '../../components/skeleton/SkeletonType3';
@@ -41,6 +48,12 @@ class JourneyListDataView extends Component {
       }
     }
   };
+  /** go to detail merchant */
+  goToDetailMerchant(storeId) {
+    NavigationService.navigate('MerchantDetailView', {
+      storeId
+    });
+  }
   /**
    * ======================
    * RENDER VIEW
@@ -202,9 +215,12 @@ class JourneyListDataView extends Component {
             <View style={styles.boxButtonChat}>
               <Text style={Fonts.type28}>Chat</Text>
             </View>
-            <View style={styles.boxButtonDetail}>
+            <TouchableOpacity
+              style={styles.boxButtonDetail}
+              onPress={() => this.goToDetailMerchant(item.store.id)}
+            >
               <Text style={Fonts.type18}>Detail</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

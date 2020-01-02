@@ -34,6 +34,26 @@ export function merchantGetLoadMore(page) {
 }
 /**
  * ====================================
+ * GET MERCHANT DETAIL
+ * ====================================
+ */
+/** === MERCHANT GET DETAIL PROCESS === */
+export function merchantGetDetailProcess(data) {
+  return { type: types.MERCHANT_GET_DETAIL_PROCESS, payload: data };
+}
+/** === MERCHANT GET DETAIL SUCCESS === */
+export function merchantGetDetailSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.MERCHANT_GET_DETAIL_SUCCESS, payload: data.data };
+  }
+  return { type: types.MERCHANT_GET_DETAIL_FAILED, payload: data };
+}
+/** === MERCHANT GET DETAIL FAILED === */
+export function merchantGetDetailFailed(data) {
+  return { type: types.MERCHANT_GET_DETAIL_FAILED, payload: data };
+}
+/**
+ * ====================================
  * GET PORTFOLIO BY USERID
  * ====================================
  */
