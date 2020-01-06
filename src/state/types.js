@@ -6,7 +6,17 @@
 /** === GLOBAL === */
 /** FOR SIGNOUT */
 export const DELETE_ALL_DATA = 'DeleteAllData';
+/** FOR SAVE SEARCH GLOBAL */
 export const SEARCH_TEXT = 'SearchText';
+/** FOR SAVE LOCATION VOLATILE DATA */
+export const LOCATION_SAVE_DATA_VOLATILE = 'LocationSaveDataVolatile';
+/** FOR GET LOCATION */
+export const LOCATION_GET_PROCESS = 'LocationGetProcess';
+export const LOCATION_GET_SUCCESS = 'LocationGetSuccess';
+export const LOCATION_GET_FAILED = 'LocationGetFailed';
+export const LOCATION_GET_RESET = 'LocationGetReset';
+export const LOCATION_GET_REFRESH = 'LocationGetRefresh';
+export const LOCATION_GET_LOADMORE = 'LocationGetLoadMore';
 /** === AUTH === */
 /** FOR OTP */
 export const OTP_GET_PROCESS = 'OTPgetProcess';

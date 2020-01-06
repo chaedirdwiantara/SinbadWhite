@@ -50,6 +50,9 @@ class AddMerchantOTP extends Component {
       this.setState({ errorOTP: true });
     } else {
       NavigationService.navigate('AddMerchant3');
+      this.props.saveVolatileDataAddMerchant({
+        phoneNo: this.state.phoneNumber
+      });
     }
   }
   /**

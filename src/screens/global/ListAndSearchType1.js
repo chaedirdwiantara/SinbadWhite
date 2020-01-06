@@ -1,7 +1,15 @@
+/**
+ * =====================================
+ * THIS COMPONENT FOR LIST OF LOCATION
+ * =====================================
+ * PROPS PARAMS
+ * - type
+ */
 import React, { Component } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Text from 'react-native-text';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import ComingSoon from '../../components/empty_state/ComingSoon';
@@ -12,18 +20,41 @@ import SearchBarType3 from '../../components/search_bar/SearchBarType3';
 class ListAndSearchType1 extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      type: this.props.navigation.state.params.type,
+      provinceName: this.props.global.provinceName,
+      provinceId: this.props.global.provinceId,
+      cityName: this.props.global.cityName,
+      districName: this.props.global.districName,
+      search: this.props.global.search
+    };
   }
   /**
    * =====================
    * FUNCTIONAL
    * ======================
    */
+  /** === DID MOUNT === */
+  componentDidMount() {
+    this.getLocation();
+  }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
     if (prevProps.global.search !== this.props.global.search) {
-      console.log('call api');
+      this.getLocation();
     }
+  }
+  /** === GET LOCATION === */
+  getLocation() {
+    this.props.locationGetReset();
+    this.props.locationGetProcess({
+      page: 0,
+      type: this.state.type,
+      provinceId: this.state.provinceId,
+      cityName: this.state.cityName,
+      districName: this.state.districName,
+      search: this.state.search
+    });
   }
   /**
    * ========================

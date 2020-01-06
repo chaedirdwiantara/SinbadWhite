@@ -3,10 +3,24 @@ import createReducer from './createReducer';
 
 const INITIAL_STATE = {
   /** loading */
-  token: null,
+  loadingGetLocation: false,
+  refreshGetLocation: false,
+  loadingLoadMoreGetLocation: false,
   /** data */
-  search: ''
+  token: null,
+  search: '',
+  dataGetLocation: [],
+  totalDataGetLocation: 0,
+  pageGetLocation: 0,
+  dataLocationVolatile: {
+    provinceName: '',
+    provinceId: '',
+    cityName: '',
+    districName: '',
+    urbanName: ''
+  },
   /** error */
+  errorGetLocation: null
 };
 
 export const global = createReducer(INITIAL_STATE, {
@@ -42,6 +56,73 @@ export const global = createReducer(INITIAL_STATE, {
     return {
       ...state,
       search: action.payload
+    };
+  },
+  /**
+   * ============================
+   * SAVE LOCATION DATA VOLATILE
+   * ============================
+   */
+  [types.LOCATION_SAVE_DATA_VOLATILE](state, action) {
+    return {
+      ...state,
+      dataLocationVolatile: action.payload
+    };
+  },
+  /**
+   * ===================
+   * LOCATION LIST
+   * ===================
+   */
+  [types.LOCATION_GET_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetLocation: action.payload.loading,
+      errorGetLocation: null
+    };
+  },
+  [types.LOCATION_GET_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetLocation: false,
+      loadingLoadMoreGetLocation: false,
+      refreshGetLocation: false,
+      totalDataGetLocation: action.payload.total,
+      dataGetLocation: [...state.dataGetLocation, ...action.payload.data]
+    };
+  },
+  [types.LOCATION_GET_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetLocation: false,
+      loadingLoadMoreGetLocation: false,
+      refreshGetLocation: false,
+      errorGetLocation: action.payload
+    };
+  },
+  [types.LOCATION_GET_RESET](state, action) {
+    return {
+      ...state,
+      pageGetLocation: 0,
+      totalDataGetLocation: 0,
+      dataGetLocation: []
+    };
+  },
+  [types.LOCATION_GET_REFRESH](state, action) {
+    return {
+      ...state,
+      refreshGetLocation: true,
+      loadingGetLocation: true,
+      pageGetLocation: 0,
+      totalDataGetLocation: 0,
+      dataGetLocation: []
+    };
+  },
+  [types.LOCATION_GET_LOADMORE](state, action) {
+    return {
+      ...state,
+      loadingLoadMoreGetLocation: true,
+      pageGetLocation: action.payload
     };
   }
 });

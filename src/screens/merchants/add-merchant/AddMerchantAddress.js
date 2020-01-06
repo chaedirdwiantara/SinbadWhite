@@ -68,75 +68,126 @@ class AddMerchantAddress extends Component {
     );
   }
   /** === RENDER CONTENT === */
+  /** renderProvince */
+  renderProvince() {
+    return (
+      <DropdownType1
+        title={'Provinsi'}
+        placeholder={'Pilih Provinsi'}
+        selectedDropdownText={''}
+        openDropdown={() =>
+          this.goToDropdown({
+            type: 'province',
+            placeholder: 'Cari Provinsi Anda'
+          })
+        }
+      />
+    );
+  }
+  /** renderCity */
+  renderCity() {
+    return this.props.global.dataLocationVolatile.provinceName !== '' ? (
+      <DropdownType1
+        title={'Kota'}
+        placeholder={'Pilih Kota'}
+        selectedDropdownText={''}
+        openDropdown={() =>
+          this.goToDropdown({
+            type: 'city',
+            placeholder: 'Cari Kota Anda'
+          })
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** renderDistrict */
+  renderDistric() {
+    return this.props.global.dataLocationVolatile.cityName !== '' ? (
+      <DropdownType1
+        title={'Kecamatan'}
+        placeholder={'Pilih Kecamatan'}
+        selectedDropdownText={''}
+        openDropdown={() =>
+          this.goToDropdown({
+            type: 'distric',
+            placeholder: 'Cari Kecamatan Anda'
+          })
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** renderUrban */
+  renderUrban() {
+    return this.props.global.dataLocationVolatile.districName !== '' ? (
+      <DropdownType1
+        title={'Kelurahan'}
+        placeholder={'Pilih Kelurahan'}
+        selectedDropdownText={''}
+        openDropdown={() =>
+          this.goToDropdown({
+            type: 'urban',
+            placeholder: 'Cari Kelurahan Anda'
+          })
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** renderZipCode */
+  renderZipCode() {
+    return this.props.global.dataLocationVolatile.urbanName !== '' ? (
+      <InputType1
+        title={'Kodepos'}
+        editable={false}
+        placeholder={'Kodepos'}
+        keyboardType={'default'}
+        text={text => this.setState({ address: text })}
+        error={false}
+        errorText={''}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** address */
+  renderAddress() {
+    return (
+      <InputType2
+        title={'Alamat'}
+        placeholder={'Masukan Alamat lengkap Anda'}
+        keyboardType={'default'}
+        text={text => this.setState({ address: text })}
+        error={false}
+        errorText={''}
+      />
+    );
+  }
+  /** maps */
+  renderMaps() {
+    return (
+      <InputMapsType1
+        title={'Koordinat Lokasi'}
+        selectedMapText={''}
+        openMaps={() => this.goToMaps('maps')}
+      />
+    );
+  }
+  /** main content */
   renderContent() {
     return (
       <View style={{ flex: 1 }}>
-        <DropdownType1
-          title={'Provinsi'}
-          placeholder={'Pilih Provinsi'}
-          selectedDropdownText={''}
-          openDropdown={() =>
-            this.goToDropdown({
-              type: 'province',
-              placeholder: 'Cari Provinsi Anda'
-            })
-          }
-        />
-        <DropdownType1
-          title={'Kota'}
-          placeholder={'Pilih Kota'}
-          selectedDropdownText={''}
-          openDropdown={() =>
-            this.goToDropdown({
-              type: 'city',
-              placeholder: 'Cari Kota Anda'
-            })
-          }
-        />
-        <DropdownType1
-          title={'Kecamatan'}
-          placeholder={'Pilih Kecamatan'}
-          selectedDropdownText={''}
-          openDropdown={() =>
-            this.goToDropdown({
-              type: 'distric',
-              placeholder: 'Cari Kecamatan Anda'
-            })
-          }
-        />
-        <DropdownType1
-          title={'Kelurahan'}
-          placeholder={'Pilih Kelurahan'}
-          selectedDropdownText={''}
-          openDropdown={() =>
-            this.goToDropdown({
-              type: 'urban',
-              placeholder: 'Cari Kelurahan Anda'
-            })
-          }
-        />
-        <InputType1
-          title={'Kodepos'}
-          editable={false}
-          placeholder={'Kodepos'}
-          keyboardType={'default'}
-          text={text => this.setState({ address: text })}
-          error={false}
-          errorText={''}
-        />
-        <InputType2
-          title={'Alamat'}
-          placeholder={'Masukan Alamat lengkap Anda'}
-          keyboardType={'default'}
-          text={text => this.setState({ address: text })}
-          error={false}
-          errorText={''}
-        />
-        <InputMapsType1
-          title={'Koordinat Lokasi'}
-          selectedMapText={''}
-          openMaps={() => this.goToMaps('maps')}
-        />
+        {this.renderProvince()}
+        {this.renderCity()}
+        {this.renderDistric()}
+        {this.renderUrban()}
+        {this.renderZipCode()}
+        {this.renderAddress()}
+        {this.renderMaps()}
       </View>
     );
   }
@@ -174,8 +225,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ auth, global }) => {
+  return { auth, global };
 };
 
 const mapDispatchToProps = dispatch => {

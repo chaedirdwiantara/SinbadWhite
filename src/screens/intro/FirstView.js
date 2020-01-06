@@ -15,9 +15,11 @@ class FirstView extends Component {
    * ==============================
    */
   componentDidMount() {
-    this.props.navigation.navigate(
-      this.props.global.token !== null ? 'App' : 'Auth'
-    );
+    setTimeout(() => {
+      this.props.navigation.navigate(
+        this.props.global.token !== null ? 'App' : 'Auth'
+      );
+    }, 1000);
   }
   /**
    * ==============================
