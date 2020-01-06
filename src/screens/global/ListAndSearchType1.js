@@ -70,7 +70,7 @@ class ListAndSearchType1 extends Component {
     const { params } = navigation.state;
     return {
       headerTitle: () => (
-        <View style={{ width: '100%' }}>
+        <View style={{ width: '100%', paddingRight: 16 }}>
           <SearchBarType3 placeholder={params ? params.placeholder : ''} />
         </View>
       )

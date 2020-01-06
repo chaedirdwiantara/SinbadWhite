@@ -109,8 +109,7 @@ class SearchBarType3 extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    paddingVertical: 6,
-    paddingHorizontal: 16
+    paddingVertical: 6
   },
   boxSearchBar: {
     height: 32,

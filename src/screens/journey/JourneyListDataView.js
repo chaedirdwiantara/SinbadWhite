@@ -54,6 +54,12 @@ class JourneyListDataView extends Component {
       storeId
     });
   }
+  /** go to merchant dashboard */
+  goToMerchantDashboard(storeName) {
+    NavigationService.navigate('MerchantHomeView', {
+      storeName
+    });
+  }
   /**
    * ======================
    * RENDER VIEW
@@ -134,7 +140,8 @@ class JourneyListDataView extends Component {
             )}
           </View>
         </View>
-        <View
+        <TouchableOpacity
+          onPress={() => this.goToMerchantDashboard(item.store.name)}
           style={{
             paddingHorizontal: 10,
             paddingVertical: 13,
@@ -169,7 +176,7 @@ class JourneyListDataView extends Component {
               province={item.store.province}
             />
           </View>
-        </View>
+        </TouchableOpacity>
         <View
           style={{
             justifyContent: 'space-between',

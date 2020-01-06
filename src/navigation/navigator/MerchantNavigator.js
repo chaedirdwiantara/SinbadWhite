@@ -12,6 +12,8 @@ import AddMerchantIDPhoto from '../../screens/merchants/add-merchant/AddMerchant
 import AddMerchantInformation from '../../screens/merchants/add-merchant/AddMerchantInformation';
 import AddMerchantOwnerInformation from '../../screens/merchants/add-merchant/AddMerchantOwnerInformation';
 import AddMerchantSelfiePhoto from '../../screens/merchants/add-merchant/AddMerchantSelfiePhoto';
+/** merchant dashboard */
+import MerchantHomeView from '../../screens/merchants/dashboard-merchant/MerchantHomeView';
 
 const MerchantNavigator = {
   MerchantView: {
@@ -40,6 +42,17 @@ const MerchantNavigator = {
         backgroundColor: masterColor.backgroundWhite
       },
       headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  /** === MERCHANT DASHBOARD === */
+  MerchantHomeView: {
+    screen: MerchantHomeView,
+    navigationOptions: {
+      headerTintColor: masterColor.backButtonWhite,
+      headerStyle: {
+        backgroundColor: masterColor.mainColor
+      },
       gesturesEnabled: false
     }
   },
