@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   /** IMAGE SINBAD */
   fullImage: {
-    height: 0.3 * height,
+    height: 190,
     width: undefined,
     aspectRatio: 1 / 1
   },

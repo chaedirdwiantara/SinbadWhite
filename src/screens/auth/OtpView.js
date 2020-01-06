@@ -125,7 +125,6 @@ class OtpView extends Component {
         <OtpInput
           onRef={ref => (this.fromOTPInput = ref)}
           fromOTPInput={this.otpInput.bind(this)}
-          error={this.state.errorOTP}
         />
       </View>
     );
