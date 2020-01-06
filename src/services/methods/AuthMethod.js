@@ -10,6 +10,16 @@ function getOTP(phoneNumber) {
   });
 }
 
+function checkPhoneNumberAvailable(phoneNumber) {
+  return ApiRest({
+    path: 'auth/check-phone-available',
+    method: 'POST',
+    params: {
+      mobilePhoneNo: phoneNumber
+    }
+  });
+}
+
 function signIn({ mobilePhoneNo, otpCode }) {
   return ApiRest({
     path: 'auth/validate-otp',
@@ -23,5 +33,6 @@ function signIn({ mobilePhoneNo, otpCode }) {
 
 export const AuthMethod = {
   getOTP,
-  signIn
+  signIn,
+  checkPhoneNumberAvailable
 };

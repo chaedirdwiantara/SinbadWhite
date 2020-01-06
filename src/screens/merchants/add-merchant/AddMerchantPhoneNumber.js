@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { View, SafeAreaView, StyleSheet, Keyboard } from 'react-native';
 import Text from 'react-native-text';
 import NavigationService from '../../../navigation/NavigationService';
 import { bindActionCreators } from 'redux';
@@ -8,19 +8,61 @@ import * as ActionCreators from '../../../state/actions';
 import ButtonSingle from '../../../components/button/ButtonSingle';
 import { StatusBarWhite } from '../../../components/StatusBarGlobal';
 import masterColor from '../../../config/masterColor';
+import ProgressBarType1 from '../../../components/progress_bar/ProgressBarType1';
+import InputType1 from '../../../components/input/InputType1';
 
 class AddMerchantPhoneNumber extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      phoneNumber: '',
+      errorText: 'No. HP yang anda masukan salah',
+      correctFormatPhoneNumber: true
+    };
   }
   /**
    * =====================
    * FUNCTIONAL
    * =====================
    */
-  nextStep() {
-    NavigationService.navigate('AddMerchant2');
+  /** COMPONENT DID UPDATE */
+  componentDidUpdate(prevPros) {
+    /** IF SUCCESS */
+    if (
+      prevPros.auth.dataCheckPhoneAvailble !==
+      this.props.auth.dataCheckPhoneAvailble
+    ) {
+      if (this.props.auth.dataCheckPhoneAvailble !== null) {
+        NavigationService.navigate('AddMerchant2', {
+          phoneNumber: this.state.phoneNumber,
+          otp: this.props.auth.dataCheckPhoneAvailble
+        });
+      }
+    }
+    /** IF ERROR */
+    if (
+      prevPros.auth.errorCheckPhoneAvailble !==
+      this.props.auth.errorCheckPhoneAvailble
+    ) {
+      if (this.props.auth.errorCheckPhoneAvailble !== null) {
+        this.setState({
+          correctFormatPhoneNumber: false,
+          errorText: 'No. HP yang anda masukan sudah terdaftar'
+        });
+      }
+    }
+  }
+  /** === PHONE NUMBER MODIFY === */
+  checkPhone() {
+    Keyboard.dismiss();
+    const reg = /^08[0-9]{8,12}$/;
+    const checkFormat = reg.test(this.state.phoneNumber);
+    this.setState({
+      correctFormatPhoneNumber: checkFormat
+    });
+    if (checkFormat) {
+      this.props.checkPhoneNumberAvailableProcess(this.state.phoneNumber);
+    }
   }
   /**
    * ====================
@@ -30,8 +72,20 @@ class AddMerchantPhoneNumber extends Component {
   /** === RENDER CONTENT === */
   renderContent() {
     return (
-      <View style={{ flex: 1 }}>
-        <Text>lalalala</Text>
+      <View style={{ flex: 1, marginTop: 20 }}>
+        <InputType1
+          title={'Nomor Handphone'}
+          placeholder={'Masukkan Nomor Handphone'}
+          keyboardType={'numeric'}
+          text={text =>
+            this.setState({
+              phoneNumber: text,
+              correctFormatPhoneNumber: true
+            })
+          }
+          error={!this.state.correctFormatPhoneNumber}
+          errorText={this.state.errorText}
+        />
       </View>
     );
   }
@@ -39,21 +93,25 @@ class AddMerchantPhoneNumber extends Component {
   renderButton() {
     return (
       <ButtonSingle
-        disabled={false}
+        disabled={
+          this.state.phoneNumber === '' ||
+          this.props.auth.loadingCheckPhoneAvailble
+        }
+        loading={this.props.auth.loadingCheckPhoneAvailble}
         title={'Lanjutnya'}
         borderRadius={4}
-        onPress={() => this.nextStep()}
+        onPress={() => this.checkPhone()}
       />
     );
   }
   /** === RENDER STEP HEADER === */
-  renderStepHeader() {
+  renderProgressHeader() {
     return (
-      <View
-        style={{ borderWidth: 1, paddingVertical: 20, paddingHorizontal: 16 }}
-      >
-        <Text>lala</Text>
-      </View>
+      <ProgressBarType1
+        totalStep={7}
+        currentStep={1}
+        title={'Langkah melengkapi profil'}
+      />
     );
   }
   /** === MAIN === */
@@ -61,7 +119,7 @@ class AddMerchantPhoneNumber extends Component {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarWhite />
-        {this.renderStepHeader()}
+        {this.renderProgressHeader()}
         {this.renderContent()}
         {this.renderButton()}
       </SafeAreaView>

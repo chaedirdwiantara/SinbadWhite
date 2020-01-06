@@ -1,6 +1,14 @@
 import * as types from '../types';
 
 /**
+ * ==================================
+ * SAVE VOLATILE DATA TO ADD MERCHANT
+ * =================================
+ */
+export function saveVolatileDataAddMerchant(data) {
+  return { type: types.MERCHANT_ADD_DATA_VOLATILE, payload: data };
+}
+/**
  * ==============================
  * GET MERCHANT BY PORTFOLIO
  * ==============================

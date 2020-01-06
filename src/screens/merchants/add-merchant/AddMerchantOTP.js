@@ -8,6 +8,7 @@ import * as ActionCreators from '../../../state/actions';
 import ButtonSingle from '../../../components/button/ButtonSingle';
 import { StatusBarWhite } from '../../../components/StatusBarGlobal';
 import masterColor from '../../../config/masterColor';
+import ProgressBarType1 from '../../../components/progress_bar/ProgressBarType1';
 
 class AddMerchantOTP extends Component {
   constructor(props) {
@@ -27,6 +28,16 @@ class AddMerchantOTP extends Component {
    * RENDER VIEW
    * ===================
    */
+  /** === RENDER STEP HEADER === */
+  renderProgressHeader() {
+    return (
+      <ProgressBarType1
+        totalStep={7}
+        currentStep={2}
+        title={'Langkah melengkapi profil'}
+      />
+    );
+  }
   /** === RENDER CONTENT === */
   renderContent() {
     return (
@@ -51,6 +62,7 @@ class AddMerchantOTP extends Component {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarWhite />
+        {this.renderProgressHeader()}
         {this.renderContent()}
         {this.renderButton()}
       </SafeAreaView>

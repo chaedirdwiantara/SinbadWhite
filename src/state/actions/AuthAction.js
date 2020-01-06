@@ -6,7 +6,6 @@ import * as types from '../types';
  */
 /** === DELETE ALL DATA ==== */
 export function deleteAllData() {
-  console.log('alalallala');
   return { type: types.DELETE_ALL_DATA };
 }
 /**
@@ -28,6 +27,32 @@ export function otpGetSuccess(data) {
 /** === OTP FAILED === */
 export function otpGetFailed(data) {
   return { type: types.OTP_GET_FAILED, payload: data };
+}
+/**
+ * ==============================
+ * CHECK AVAILABLE PHONE NUMBER
+ * ==============================
+ */
+/** === CHECK PHONE NUMBER PROCESS ==== */
+export function checkPhoneNumberAvailableProcess(phoneNumber) {
+  return {
+    type: types.CHECK_PHONE_NUMBER_AVAILABLE_PROCESS,
+    payload: phoneNumber
+  };
+}
+/** === CHECK PHONE NUMBER SUCCESS === */
+export function checkPhoneNumberAvailableSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.CHECK_PHONE_NUMBER_AVAILABLE_SUCCESS,
+      payload: data.data.otp
+    };
+  }
+  return { type: types.CHECK_PHONE_NUMBER_AVAILABLE_FAILED, payload: data };
+}
+/** === CHECK PHONE NUMBER FAILED === */
+export function checkPhoneNumberAvailableFailed(data) {
+  return { type: types.CHECK_PHONE_NUMBER_AVAILABLE_FAILED, payload: data };
 }
 /**
  * =================================

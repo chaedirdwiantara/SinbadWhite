@@ -11,6 +11,7 @@ const INITIAL_STATE = {
   /** data */
   dataGetMerchant: [],
   dataGetMerchantDetail: null,
+  dataAddMerchantVolatile: {},
   totalDataGetMerchant: 0,
   pageGetMerchant: 0,
   dataGetPortfolio: null,
@@ -28,6 +29,17 @@ export const merchant = createReducer(INITIAL_STATE, {
    */
   [types.DELETE_ALL_DATA](state, action) {
     return INITIAL_STATE;
+  },
+  /**
+   * ==================================
+   * SAVE VOLATILE DATA TO ADD MERCHANT
+   * =================================
+   */
+  [types.MERCHANT_ADD_DATA_VOLATILE](state, action) {
+    return {
+      ...state,
+      dataAddMerchantVolatile: action.payload
+    };
   },
   /**
    * ===================

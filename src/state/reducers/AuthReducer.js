@@ -5,12 +5,15 @@ const INITIAL_STATE = {
   /** loading */
   loadingGetOTP: false,
   loadingSignIn: false,
+  loadingCheckPhoneAvailble: false,
   /** data */
   dataGetOTP: null,
+  dataCheckPhoneAvailble: null,
   dataSignIn: null,
   /** error */
   errorGetOTP: null,
-  errorSignIn: null
+  errorSignIn: null,
+  errorCheckPhoneAvailble: null
 };
 
 export const auth = createReducer(INITIAL_STATE, {
@@ -47,6 +50,33 @@ export const auth = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetOTP: false,
       errorGetOTP: action.payload
+    };
+  },
+  /**
+   * ===================
+   * CHECK PHONE NUMBER AVAILABLE
+   * ===================
+   */
+  [types.CHECK_PHONE_NUMBER_AVAILABLE_PROCESS](state, action) {
+    return {
+      ...state,
+      dataCheckPhoneAvailble: null,
+      errorCheckPhoneAvailble: null,
+      loadingCheckPhoneAvailble: true
+    };
+  },
+  [types.CHECK_PHONE_NUMBER_AVAILABLE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingCheckPhoneAvailble: false,
+      dataCheckPhoneAvailble: action.payload
+    };
+  },
+  [types.CHECK_PHONE_NUMBER_AVAILABLE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingCheckPhoneAvailble: false,
+      errorCheckPhoneAvailble: action.payload
     };
   },
   /**

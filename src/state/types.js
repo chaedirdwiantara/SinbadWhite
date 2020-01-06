@@ -6,6 +6,7 @@
 /** === GLOBAL === */
 /** FOR SIGNOUT */
 export const DELETE_ALL_DATA = 'DeleteAllData';
+export const SEARCH_TEXT = 'SearchText';
 /** === AUTH === */
 /** FOR OTP */
 export const OTP_GET_PROCESS = 'OTPgetProcess';
@@ -15,6 +16,13 @@ export const OTP_GET_FAILED = 'OTPgetFailed';
 export const SIGN_IN_PROCESS = 'signInProcess';
 export const SIGN_IN_SUCCESS = 'signInSuccess';
 export const SIGN_IN_FAILED = 'signInFailed';
+/** FOR CHECK PHONE NUMBER AVAILABLE */
+export const CHECK_PHONE_NUMBER_AVAILABLE_PROCESS =
+  'CheckPhoneNumberAvailbleProcess';
+export const CHECK_PHONE_NUMBER_AVAILABLE_SUCCESS =
+  'CheckPhoneNumberAvailbleSuccess';
+export const CHECK_PHONE_NUMBER_AVAILABLE_FAILED =
+  'CheckPhoneNumberAvailbleFailed';
 /** === MERCHANT === */
 /** PORTFOLIO */
 export const PORTFOLIO_GET_PROCESS = 'PortfolioGetProcess';
@@ -31,6 +39,8 @@ export const MERCHANT_GET_LOADMORE = 'MerchantGetLoadMore';
 export const MERCHANT_GET_DETAIL_PROCESS = 'MerchantGetDetailProcess';
 export const MERCHANT_GET_DETAIL_SUCCESS = 'MerchantGetDetailSuccess';
 export const MERCHANT_GET_DETAIL_FAILED = 'MerchantGetDetailFailed';
+/** FOR ADD MERCHANT */
+export const MERCHANT_ADD_DATA_VOLATILE = 'MerchantAddDataVolatile';
 /** === JOURNEY === */
 /** FOR GET JOURNEY PLAN LIST */
 export const JOURNEY_PLAN_GET_PROCESS = 'JourneyPlanGetProcess';

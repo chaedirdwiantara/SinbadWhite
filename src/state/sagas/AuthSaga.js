@@ -14,6 +14,17 @@ function* getOTP(actions) {
   }
 }
 
+function* checkPhoneNumberAvailable(actions) {
+  try {
+    const response = yield call(() => {
+      return AuthMethod.checkPhoneNumberAvailable(actions.payload);
+    });
+    yield put(ActionCreators.checkPhoneNumberAvailableSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.checkPhoneNumberAvailableFailed(error));
+  }
+}
+
 function* singIn(actions) {
   try {
     const response = yield call(() => {
@@ -28,6 +39,10 @@ function* singIn(actions) {
 function* AuthSaga() {
   yield takeEvery(types.OTP_GET_PROCESS, getOTP);
   yield takeEvery(types.SIGN_IN_PROCESS, singIn);
+  yield takeEvery(
+    types.CHECK_PHONE_NUMBER_AVAILABLE_PROCESS,
+    checkPhoneNumberAvailable
+  );
 }
 
 export default AuthSaga;

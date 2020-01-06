@@ -3,8 +3,9 @@ import createReducer from './createReducer';
 
 const INITIAL_STATE = {
   /** loading */
-  token: null
+  token: null,
   /** data */
+  search: ''
   /** error */
 };
 
@@ -30,6 +31,17 @@ export const global = createReducer(INITIAL_STATE, {
     return {
       ...state,
       token: action.payload.token
+    };
+  },
+  /**
+   * ======================
+   * SEARCH TEXT
+   * ======================
+   */
+  [types.SEARCH_TEXT](state, action) {
+    return {
+      ...state,
+      search: action.payload
     };
   }
 });
