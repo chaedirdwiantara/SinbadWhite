@@ -108,7 +108,7 @@ class AddMerchantPhoneNumber extends Component {
   renderProgressHeader() {
     return (
       <ProgressBarType1
-        totalStep={7}
+        totalStep={5}
         currentStep={1}
         title={'Langkah melengkapi profil'}
       />

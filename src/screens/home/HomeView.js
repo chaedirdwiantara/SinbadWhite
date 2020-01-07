@@ -236,8 +236,8 @@ class HomeView extends Component {
       <View style={styles.mainContainer} key={index}>
         {this.renderBanner()}
         {this.renderMenu()}
-        {this.renderLastActivity()}
-        {this.renderLastActivityItem()}
+        {/* {this.renderLastActivity()}
+        {this.renderLastActivityItem()} */}
       </View>
     );
   }

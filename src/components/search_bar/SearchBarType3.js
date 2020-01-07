@@ -32,6 +32,11 @@ class SearchBarType3 extends Component {
    * FUNCTIONAL
    * ======================
    */
+  /** === CLEAR SAVE SEARCH IF BACK === */
+  componentWillUnmount() {
+    this.props.saveSearch('');
+  }
+  /** === SAVE SEARCH TEXT === */
   searchText() {
     this.props.saveSearch(this.state.search);
   }

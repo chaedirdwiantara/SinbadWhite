@@ -31,7 +31,7 @@ class DropdownType1 extends Component {
       >
         <View>
           {this.props.selectedDropdownText !== '' ? (
-            <Text>lalalala</Text>
+            <Text style={Fonts.type24}>{this.props.selectedDropdownText}</Text>
           ) : (
             <Text style={Fonts.type33}>{this.props.placeholder}</Text>
           )}

@@ -51,7 +51,16 @@ class AddMerchantOTP extends Component {
     } else {
       NavigationService.navigate('AddMerchant3');
       this.props.saveVolatileDataAddMerchant({
-        phoneNo: this.state.phoneNumber
+        user: {
+          phone: this.state.phoneNumber,
+          fullName: '',
+          idNo: '',
+          taxNo: '',
+          email: '',
+          password: 'sinbad',
+          status: 'inactive',
+          roles: [1]
+        }
       });
     }
   }
@@ -106,7 +115,7 @@ class AddMerchantOTP extends Component {
   renderProgressHeader() {
     return (
       <ProgressBarType1
-        totalStep={7}
+        totalStep={5}
         currentStep={2}
         title={'Langkah melengkapi profil'}
       />

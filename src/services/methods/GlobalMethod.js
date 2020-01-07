@@ -13,22 +13,25 @@ function getLocation(data) {
   let getLocationApi = '';
   switch (data.type) {
     case 'province':
-      getLocationApi = 'provinces';
+      getLocationApi = 'provinces?';
       break;
     case 'city':
-      getLocationApi = `locations?type=city&provinceId=${data.provinceId}`;
+      getLocationApi = `locations?type=city&provinceId=${data.provinceId}&`;
       break;
     case 'distric':
-      getLocationApi = `locations?type=distric&city=${data.cityName}`;
+      getLocationApi = `locations?type=district&city=${data.cityName}&`;
       break;
     case 'urban':
-      getLocationApi = `locations?type=urban&distric=${data.districName}`;
+      getLocationApi = `locations?type=urban&district=${data.districName}&`;
       break;
     default:
       break;
   }
+  console.log(
+    `${getLocationApi}$skip=${data.page}&$limit=20&keyword=${data.search}`
+  );
   return ApiRest({
-    path: `${getLocationApi}?$skip=${data.page}&$limit=10&keyword=${data.search}`,
+    path: `${getLocationApi}$skip=${data.page}&$limit=20&keyword=${data.search}`,
     method: 'GET'
   });
 }

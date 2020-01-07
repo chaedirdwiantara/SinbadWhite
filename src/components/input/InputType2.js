@@ -28,6 +28,7 @@ class InputType2 extends Component {
         <TextInput
           selectionColor={masterColor.mainColor}
           placeholder={this.props.placeholder}
+          value={this.props.value}
           placeholderTextColor={masterColor.fontBlack40}
           onChangeText={this.props.text}
           keyboardType={this.props.keyboardType}

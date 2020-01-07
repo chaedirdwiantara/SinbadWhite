@@ -217,10 +217,10 @@ const styles = StyleSheet.create({
     color: masterColor.fontWhite
   },
   forCompare: {
-    fontFamily: Fonts.MontserratBold,
-    fontSize: 15,
-    lineHeight: 20,
-    color: masterColor.fontWhite
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 12,
+    lineHeight: 15,
+    color: masterColor.fontBlack50
   },
   /** === bottom nav ==== */
   bottomNav: {

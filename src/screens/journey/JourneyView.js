@@ -62,6 +62,9 @@ class JourneyView extends Component {
         break;
       case 'new_merchant':
         this.setState({ openModalAddMerchant: false });
+        setTimeout(() => {
+          NavigationService.navigate('AddMerchant1');
+        }, 100);
         break;
       default:
         break;

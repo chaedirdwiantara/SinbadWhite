@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
+import NavigationServices from '../../navigation/NavigationService';
 
 class InputMapsType1 extends Component {
   constructor(props) {
@@ -19,17 +21,67 @@ class InputMapsType1 extends Component {
     return (
       <View style={styles.boxTitle}>
         <Text style={Fonts.type32}>{this.props.title}</Text>
+        {this.props.selectedMapLat !== '' &&
+        this.props.selectedMapLong !== '' ? (
+          <TouchableOpacity
+            onPress={() => NavigationServices.navigate('MapsView')}
+          >
+            <Text style={Fonts.type22}>Ubah</Text>
+          </TouchableOpacity>
+        ) : (
+          <View />
+        )}
       </View>
     );
   }
   /** === RENDER BAR === */
-  selectedMaps() {
-    return this.props.selectedMapText !== '' ? (
-      <View style={styles.boxInput}>
-        <Text>{this.props.selectedMapText}</Text>
+  renderSelectedMaps() {
+    return (
+      <View style={styles.boxMaps}>
+        {!this.props.refresh ? (
+          <MapView
+            ref={ref => (this.mapRef = ref)}
+            style={{ flex: 1, width: '100%', borderRadius: 10 }}
+            initialRegion={{
+              latitude: this.props.selectedMapLat,
+              longitude: this.props.selectedMapLong,
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.05
+            }}
+            onLayout={() =>
+              setTimeout(() => {
+                this.mapRef.fitToCoordinates(
+                  [
+                    {
+                      latitude: this.props.selectedMapLat,
+                      longitude: this.props.selectedMapLong
+                    }
+                  ],
+                  {
+                    edgePadding: {
+                      top: 0,
+                      right: 0,
+                      bottom: 0,
+                      left: 0
+                    },
+                    animated: true
+                  }
+                );
+              }, 500)
+            }
+          >
+            <Marker
+              image={require('../../assets/icons/maps/drop_pin.png')}
+              coordinate={{
+                latitude: this.props.selectedMapLat,
+                longitude: this.props.selectedMapLong
+              }}
+            />
+          </MapView>
+        ) : (
+          <View />
+        )}
       </View>
-    ) : (
-      <View />
     );
   }
   /** === RENDER MAP VIEW === */
@@ -43,13 +95,17 @@ class InputMapsType1 extends Component {
       </TouchableOpacity>
     );
   }
+  renderMaps() {
+    return this.props.selectedMapLong !== '' && this.props.selectedMapLat !== ''
+      ? this.renderSelectedMaps()
+      : this.renderMapView();
+  }
   /** === RENDER CONTENT === */
   renderContent() {
     return (
       <View style={styles.contentContainer}>
         {this.renderTitle()}
-        {this.renderMapView()}
-        {this.selectedMaps()}
+        {this.renderMaps()}
         <View style={styles.spacing} />
       </View>
     );
@@ -68,11 +124,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16
   },
   boxTitle: {
-    paddingBottom: 16
+    paddingBottom: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   boxInput: {
     borderBottomWidth: 1,
     flexDirection: 'row',
+    borderRadius: 10,
     paddingBottom: 8,
     borderBottomColor: masterColor.fontBlack40
   },
@@ -83,6 +142,12 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 10,
     borderColor: masterColor.fontBlack60,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  boxMaps: {
+    height: 90,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center'
   },

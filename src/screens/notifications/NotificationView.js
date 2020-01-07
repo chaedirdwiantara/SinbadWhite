@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
+import ComingSoon from '../../components/empty_state/ComingSoon';
+import masterColor from '../../config/masterColor.json';
 
 class NotificationView extends Component {
   constructor(props) {
@@ -10,18 +12,21 @@ class NotificationView extends Component {
     this.state = {};
   }
 
-  componentDidMount() {
-    console.log('Home');
-  }
-
   render() {
     return (
-      <View>
-        <Text>Notification</Text>
+      <View style={styles.mainContainer}>
+        <ComingSoon />
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: masterColor.backgroundWhite
+  }
+});
 
 const mapStateToProps = ({ auth }) => {
   return { auth };

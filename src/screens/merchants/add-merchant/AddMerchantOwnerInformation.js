@@ -9,11 +9,14 @@ import ButtonSingle from '../../../components/button/ButtonSingle';
 import { StatusBarWhite } from '../../../components/StatusBarGlobal';
 import masterColor from '../../../config/masterColor';
 import ProgressBarType1 from '../../../components/progress_bar/ProgressBarType1';
+import InputType1 from '../../../components/input/InputType1';
 
 class AddMerchantOwnerInformation extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      fullName: this.props.merchant.dataAddMerchantVolatile.user.fullName
+    };
   }
   /**
    * =====================
@@ -32,19 +35,28 @@ class AddMerchantOwnerInformation extends Component {
   renderProgressHeader() {
     return (
       <ProgressBarType1
-        totalStep={7}
-        currentStep={7}
+        totalStep={5}
+        currentStep={5}
         title={'Langkah melengkapi profil'}
+      />
+    );
+  }
+  renderName() {
+    return (
+      <InputType1
+        title={'Nama Lengkap Pemilik'}
+        value={this.state.fullName}
+        placeholder={'Nama Lengkap Pemilik'}
+        keyboardType={'numeric'}
+        text={text => this.setState({ nameMerchant: text })}
+        error={false}
+        errorText={''}
       />
     );
   }
   /** === RENDER CONTENT === */
   renderContent() {
-    return (
-      <View style={{ flex: 1 }}>
-        <Text>lalalala</Text>
-      </View>
-    );
+    return <View style={{ flex: 1, marginTop: 20 }}>{this.renderName()}</View>;
   }
   /** === RENDER BUTTON === */
   renderButton() {
@@ -77,8 +89,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ merchant }) => {
+  return { merchant };
 };
 
 const mapDispatchToProps = dispatch => {

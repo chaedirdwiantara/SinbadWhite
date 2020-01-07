@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, SafeAreaView, StyleSheet, ScrollView } from 'react-native';
 import Text from 'react-native-text';
+import MapView, { Marker } from 'react-native-maps';
 import NavigationService from '../../../navigation/NavigationService';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -19,7 +20,8 @@ class AddMerchantAddress extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      address: ''
+      address: this.props.global.dataLocationVolatile.address,
+      refreshLocation: false
     };
   }
   /**
@@ -27,9 +29,31 @@ class AddMerchantAddress extends Component {
    * FUNCTIONAL
    * =====================
    */
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.global.dataLocationVolatile.longitude !==
+        this.props.global.dataLocationVolatile.longitude ||
+      prevProps.global.dataLocationVolatile.latitude !==
+        this.props.global.dataLocationVolatile.latitude
+    ) {
+      this.setState({ refreshLocation: true });
+      setTimeout(() => {
+        this.setState({ refreshLocation: false });
+      }, 100);
+    }
+  }
   /** NEXT STEP MULTI STEP FORM */
   nextStep() {
-    NavigationService.navigate('AddMerchant4');
+    this.props.saveLocationDataVolatile({
+      address: this.state.address
+    });
+    this.props.saveVolatileDataAddMerchant({
+      urbanId: this.props.global.dataLocationVolatile.urbanId,
+      longitude: this.props.global.dataLocationVolatile.longitude,
+      latitude: this.props.global.dataLocationVolatile.latitude,
+      address: this.props.global.dataLocationVolatile.address
+    });
+    NavigationService.navigate('AddMerchant6');
   }
   /** GO TO DROPDOWN LIST */
   goToDropdown(data) {
@@ -40,7 +64,7 @@ class AddMerchantAddress extends Component {
   }
   /** GO TO MAPS */
   goToMaps() {
-    console.log('lala');
+    NavigationService.navigate('MapsView');
   }
   /**
    * ====================
@@ -51,7 +75,7 @@ class AddMerchantAddress extends Component {
   renderProgressHeader() {
     return (
       <ProgressBarType1
-        totalStep={7}
+        totalStep={5}
         currentStep={3}
         title={'Langkah melengkapi profil'}
       />
@@ -74,7 +98,9 @@ class AddMerchantAddress extends Component {
       <DropdownType1
         title={'Provinsi'}
         placeholder={'Pilih Provinsi'}
-        selectedDropdownText={''}
+        selectedDropdownText={
+          this.props.global.dataLocationVolatile.provinceName
+        }
         openDropdown={() =>
           this.goToDropdown({
             type: 'province',
@@ -90,7 +116,7 @@ class AddMerchantAddress extends Component {
       <DropdownType1
         title={'Kota'}
         placeholder={'Pilih Kota'}
-        selectedDropdownText={''}
+        selectedDropdownText={this.props.global.dataLocationVolatile.cityName}
         openDropdown={() =>
           this.goToDropdown({
             type: 'city',
@@ -108,7 +134,9 @@ class AddMerchantAddress extends Component {
       <DropdownType1
         title={'Kecamatan'}
         placeholder={'Pilih Kecamatan'}
-        selectedDropdownText={''}
+        selectedDropdownText={
+          this.props.global.dataLocationVolatile.districName
+        }
         openDropdown={() =>
           this.goToDropdown({
             type: 'distric',
@@ -126,7 +154,7 @@ class AddMerchantAddress extends Component {
       <DropdownType1
         title={'Kelurahan'}
         placeholder={'Pilih Kelurahan'}
-        selectedDropdownText={''}
+        selectedDropdownText={this.props.global.dataLocationVolatile.urbanName}
         openDropdown={() =>
           this.goToDropdown({
             type: 'urban',
@@ -144,7 +172,11 @@ class AddMerchantAddress extends Component {
       <InputType1
         title={'Kodepos'}
         editable={false}
-        placeholder={'Kodepos'}
+        placeholder={
+          this.props.global.dataLocationVolatile.zipCode !== ''
+            ? this.props.global.dataLocationVolatile.zipCode
+            : 'Kodepos'
+        }
         keyboardType={'default'}
         text={text => this.setState({ address: text })}
         error={false}
@@ -156,15 +188,18 @@ class AddMerchantAddress extends Component {
   }
   /** address */
   renderAddress() {
-    return (
+    return this.props.global.dataLocationVolatile.urbanName !== '' ? (
       <InputType2
         title={'Alamat'}
+        value={this.state.address}
         placeholder={'Masukan Alamat lengkap Anda'}
         keyboardType={'default'}
         text={text => this.setState({ address: text })}
         error={false}
         errorText={''}
       />
+    ) : (
+      <View />
     );
   }
   /** maps */
@@ -172,7 +207,9 @@ class AddMerchantAddress extends Component {
     return (
       <InputMapsType1
         title={'Koordinat Lokasi'}
-        selectedMapText={''}
+        selectedMapLong={this.props.global.dataLocationVolatile.longitude}
+        selectedMapLat={this.props.global.dataLocationVolatile.latitude}
+        refresh={this.state.refreshLocation}
         openMaps={() => this.goToMaps('maps')}
       />
     );
@@ -188,14 +225,31 @@ class AddMerchantAddress extends Component {
         {this.renderZipCode()}
         {this.renderAddress()}
         {this.renderMaps()}
+        <View style={{ paddingBottom: 50 }} />
       </View>
     );
   }
   /** === RENDER BUTTON === */
   renderButton() {
+    const {
+      provinceName,
+      cityName,
+      districName,
+      urbanName,
+      longitude,
+      latitude
+    } = this.props.global.dataLocationVolatile;
     return (
       <ButtonSingle
-        disabled={false}
+        disabled={
+          (provinceName === '',
+          cityName === '',
+          districName === '',
+          urbanName === '',
+          longitude === '',
+          latitude === '',
+          this.state.address === '')
+        }
         title={'Lanjutkan'}
         borderRadius={4}
         onPress={() => this.nextStep()}

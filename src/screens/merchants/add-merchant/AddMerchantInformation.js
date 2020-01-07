@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { View, SafeAreaView, StyleSheet, ScrollView } from 'react-native';
 import Text from 'react-native-text';
 import NavigationService from '../../../navigation/NavigationService';
 import { bindActionCreators } from 'redux';
@@ -9,11 +9,18 @@ import ButtonSingle from '../../../components/button/ButtonSingle';
 import { StatusBarWhite } from '../../../components/StatusBarGlobal';
 import masterColor from '../../../config/masterColor';
 import ProgressBarType1 from '../../../components/progress_bar/ProgressBarType1';
+import InputType1 from '../../../components/input/InputType1';
+import DropdownType1 from '../../../components/input/DropdownType1';
 
 class AddMerchantInformation extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      name: this.props.merchant.dataAddMerchantVolatile.name,
+      largeArea: this.props.merchant.dataAddMerchantVolatile.largeArea,
+      numberOfEmployee: this.props.merchant.dataAddMerchantVolatile
+        .numberOfEmployee
+    };
   }
   /**
    * =====================
@@ -32,17 +39,148 @@ class AddMerchantInformation extends Component {
   renderProgressHeader() {
     return (
       <ProgressBarType1
-        totalStep={7}
-        currentStep={6}
+        totalStep={5}
+        currentStep={4}
         title={'Langkah melengkapi profil'}
+      />
+    );
+  }
+  renderNameMerchant() {
+    return (
+      <InputType1
+        title={'Nama Toko'}
+        value={this.state.nameMerchant}
+        placeholder={'Masukan Nama Toko Anda'}
+        keyboardType={'default'}
+        text={text => this.setState({ nameMerchant: text })}
+        error={false}
+        errorText={''}
+      />
+    );
+  }
+  renderMerchanSize() {
+    return (
+      <InputType1
+        title={'Ukuran Toko'}
+        value={this.state.nameMerchant}
+        placeholder={'0 M2'}
+        keyboardType={'numeric'}
+        text={text => this.setState({ nameMerchant: text })}
+        error={false}
+        errorText={''}
+      />
+    );
+  }
+  renderEmployeeTotal() {
+    return (
+      <InputType1
+        title={'Jumlah Karyawan'}
+        value={this.state.nameMerchant}
+        placeholder={'Jumlah Karyawan'}
+        keyboardType={'numeric'}
+        text={text => this.setState({ nameMerchant: text })}
+        error={false}
+        errorText={''}
+      />
+    );
+  }
+  renderMerchantType() {
+    return (
+      <DropdownType1
+        title={'Tipe Toko'}
+        placeholder={'Pilih Tipe Toko'}
+        selectedDropdownText={
+          this.props.merchant.dataAddMerchantVolatile.storeTypeName
+        }
+        openDropdown={() =>
+          this.goToDropdown({
+            type: 'province',
+            placeholder: 'Cari Provinsi Anda'
+          })
+        }
+      />
+    );
+  }
+  renderMerchantGroup() {
+    return (
+      <DropdownType1
+        title={'Group Toko'}
+        placeholder={'Pilih Group Toko'}
+        selectedDropdownText={
+          this.props.merchant.dataAddMerchantVolatile.storeGroupName
+        }
+        openDropdown={() =>
+          this.goToDropdown({
+            type: 'province',
+            placeholder: 'Cari Provinsi Anda'
+          })
+        }
+      />
+    );
+  }
+  renderMerchantCluster() {
+    return (
+      <DropdownType1
+        title={'Cluster Toko'}
+        placeholder={'Pilih Cluster Toko'}
+        selectedDropdownText={
+          this.props.merchant.dataAddMerchantVolatile.cluster.clusterName
+        }
+        openDropdown={() =>
+          this.goToDropdown({
+            type: 'province',
+            placeholder: 'Cari Provinsi Anda'
+          })
+        }
+      />
+    );
+  }
+  renderMerchantSegment() {
+    return (
+      <DropdownType1
+        title={'Segment Toko'}
+        placeholder={'Pilih Segment Toko'}
+        selectedDropdownText={
+          this.props.merchant.dataAddMerchantVolatile.storeSegmentName
+        }
+        openDropdown={() =>
+          this.goToDropdown({
+            type: 'province',
+            placeholder: 'Cari Provinsi Anda'
+          })
+        }
+      />
+    );
+  }
+  renderMerchantSupplier() {
+    return (
+      <DropdownType1
+        title={'Suplier Toko'}
+        placeholder={'Pilih Suplier Toko'}
+        selectedDropdownText={
+          this.props.merchant.dataAddMerchantVolatile.supplier.supplierName
+        }
+        openDropdown={() =>
+          this.goToDropdown({
+            type: 'province',
+            placeholder: 'Cari Provinsi Anda'
+          })
+        }
       />
     );
   }
   /** === RENDER CONTENT === */
   renderContent() {
     return (
-      <View style={{ flex: 1 }}>
-        <Text>lalalala</Text>
+      <View style={{ flex: 1, marginTop: 20 }}>
+        {this.renderNameMerchant()}
+        {this.renderMerchantType()}
+        {this.renderMerchantGroup()}
+        {this.renderMerchantCluster()}
+        {this.renderMerchantSegment()}
+        {this.renderMerchantSupplier()}
+        {this.renderMerchanSize()}
+        {this.renderEmployeeTotal()}
       </View>
     );
   }
@@ -62,8 +200,11 @@ class AddMerchantInformation extends Component {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarWhite />
-        {this.renderProgressHeader()}
-        {this.renderContent()}
+        <ScrollView>
+          {this.renderProgressHeader()}
+          {this.renderContent()}
+        </ScrollView>
+
         {this.renderButton()}
       </SafeAreaView>
     );
@@ -77,8 +218,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ merchant }) => {
+  return { merchant };
 };
 
 const mapDispatchToProps = dispatch => {

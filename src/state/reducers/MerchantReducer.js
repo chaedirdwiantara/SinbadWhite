@@ -11,7 +11,44 @@ const INITIAL_STATE = {
   /** data */
   dataGetMerchant: [],
   dataGetMerchantDetail: null,
-  dataAddMerchantVolatile: {},
+  dataAddMerchantVolatile: {
+    name: '',
+    taxNo: '',
+    address: '',
+    longitude: '',
+    latitude: '',
+    phoneNo: '',
+    numberOfEmployee: '',
+    largeArea: '',
+    status: 'inactive',
+    storeTypeId: '',
+    storeTypeName: '',
+    storeGroupId: '',
+    storeGroupName: '',
+    storeSegmentId: '',
+    storeSegmentName: '',
+    vehicleAccessibilityId: '',
+    vehicleAccessibilityName: '',
+    urbanId: '',
+    user: {
+      fullName: '',
+      idNo: '',
+      taxNo: '',
+      phone: '',
+      email: '',
+      password: 'sinbad',
+      status: 'inactive',
+      roles: [1]
+    },
+    cluster: {
+      cluster: '',
+      clusterName: ''
+    },
+    supplier: {
+      supplierId: '',
+      supplierName: ''
+    }
+  },
   totalDataGetMerchant: 0,
   pageGetMerchant: 0,
   dataGetPortfolio: null,
@@ -38,7 +75,10 @@ export const merchant = createReducer(INITIAL_STATE, {
   [types.MERCHANT_ADD_DATA_VOLATILE](state, action) {
     return {
       ...state,
-      dataAddMerchantVolatile: action.payload
+      dataAddMerchantVolatile: {
+        ...state.dataAddMerchantVolatile,
+        ...action.payload
+      }
     };
   },
   /**

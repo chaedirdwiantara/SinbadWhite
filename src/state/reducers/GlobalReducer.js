@@ -17,7 +17,12 @@ const INITIAL_STATE = {
     provinceId: '',
     cityName: '',
     districName: '',
-    urbanName: ''
+    urbanName: '',
+    urbanId: '',
+    zipCode: '',
+    address: '',
+    latitude: '',
+    longitude: ''
   },
   /** error */
   errorGetLocation: null
@@ -66,7 +71,7 @@ export const global = createReducer(INITIAL_STATE, {
   [types.LOCATION_SAVE_DATA_VOLATILE](state, action) {
     return {
       ...state,
-      dataLocationVolatile: action.payload
+      dataLocationVolatile: { ...state.dataLocationVolatile, ...action.payload }
     };
   },
   /**
