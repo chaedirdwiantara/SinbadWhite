@@ -1,5 +1,4 @@
 function MoneyFormat(money) {
-  console.log(money);
   return `Rp. ${money
     .toFixed(2)
     .replace(/\d(?=(\d{3})+\.)/g, '$&.')

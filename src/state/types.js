@@ -66,3 +66,11 @@ export const SAVE_MERCHANT_TO_JOURNEY_PLAN_SUCCESS =
   'saveMerchantToJourneyPlanSuccess';
 export const SAVE_MERCHANT_TO_JOURNEY_PLAN_FAILED =
   'saveMerchantToJourneyPlanFailed';
+/** === PDP === */
+/** FOR GET PDP LIST */
+export const PDP_GET_PROCESS = 'PdpGetProcess';
+export const PDP_GET_SUCCESS = 'PdpGetSuccess';
+export const PDP_GET_FAILED = 'PdpGetFailed';
+export const PDP_GET_RESET = 'PdpGetReset';
+export const PDP_GET_REFRESH = 'PdpGetRefresh';
+export const PDP_GET_LOADMORE = 'PdpGetLoadMore';
