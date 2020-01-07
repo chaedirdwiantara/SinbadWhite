@@ -50,6 +50,10 @@ export const MERCHANT_GET_DETAIL_PROCESS = 'MerchantGetDetailProcess';
 export const MERCHANT_GET_DETAIL_SUCCESS = 'MerchantGetDetailSuccess';
 export const MERCHANT_GET_DETAIL_FAILED = 'MerchantGetDetailFailed';
 /** FOR ADD MERCHANT */
+export const MERCHANT_ADD_PROCESS = 'MerchantAddProcess';
+export const MERCHANT_ADD_SUCCESS = 'MerchantAddSuccess';
+export const MERCHANT_ADD_FAILED = 'MerchantAddFailed';
+/** FOR ADD MERCHANT */
 export const MERCHANT_ADD_DATA_VOLATILE = 'MerchantAddDataVolatile';
 /** === JOURNEY === */
 /** FOR GET JOURNEY PLAN LIST */
