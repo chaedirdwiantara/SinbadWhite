@@ -3,7 +3,7 @@ import ApiRest from '../apiRest';
 function getLocation(data) {
   /**
    * PROPS
-   * data.type = 'province' / 'city' / 'distric' / 'urban'
+   * data.type = 'province' / 'city' / 'distric' / 'urban' / 'hierarchyMerchant' / 'clusterMerchant' / 'typeMerchant' / 'groupMerchant' / 'segmentMerchant'
    * data.provinceId = string (if data.type === 'city')
    * data.cityName = string (if data.type === 'distric')
    * data.districName = string (if data.type === 'urban')
@@ -23,6 +23,24 @@ function getLocation(data) {
       break;
     case 'urban':
       getLocationApi = `locations?type=urban&district=${data.districName}&`;
+      break;
+    case 'hierarchyMerchant':
+      getLocationApi = 'hierarchies?';
+      break;
+    case 'clusterMerchant':
+      getLocationApi = 'clusters?';
+      break;
+    case 'typeMerchant':
+      getLocationApi = 'store-types?';
+      break;
+    case 'groupMerchant':
+      getLocationApi = 'store-groups?';
+      break;
+    case 'suplierMerchant':
+      getLocationApi = 'store-groups?';
+      break;
+    case 'segmentMerchant':
+      getLocationApi = 'store-segments?';
       break;
     default:
       break;

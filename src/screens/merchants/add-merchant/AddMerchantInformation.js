@@ -30,6 +30,13 @@ class AddMerchantInformation extends Component {
   nextStep() {
     NavigationService.navigate('AddMerchant7');
   }
+  /** GO TO DROPDOWN LIST */
+  goToDropdown(data) {
+    NavigationService.navigate('ListAndSearchType1', {
+      placeholder: data.placeholder,
+      type: data.type
+    });
+  }
   /**
    * ====================
    * RENDER VIEW
@@ -94,8 +101,8 @@ class AddMerchantInformation extends Component {
         }
         openDropdown={() =>
           this.goToDropdown({
-            type: 'province',
-            placeholder: 'Cari Provinsi Anda'
+            type: 'typeMerchant',
+            placeholder: 'Cari Tipe Toko'
           })
         }
       />
@@ -111,8 +118,8 @@ class AddMerchantInformation extends Component {
         }
         openDropdown={() =>
           this.goToDropdown({
-            type: 'province',
-            placeholder: 'Cari Provinsi Anda'
+            type: 'groupMerchant',
+            placeholder: 'Cari Group Toko'
           })
         }
       />
@@ -128,8 +135,8 @@ class AddMerchantInformation extends Component {
         }
         openDropdown={() =>
           this.goToDropdown({
-            type: 'province',
-            placeholder: 'Cari Provinsi Anda'
+            type: 'clusterMerchant',
+            placeholder: 'Cari Cluster Toko'
           })
         }
       />
@@ -145,8 +152,8 @@ class AddMerchantInformation extends Component {
         }
         openDropdown={() =>
           this.goToDropdown({
-            type: 'province',
-            placeholder: 'Cari Provinsi Anda'
+            type: 'segmentMerchant',
+            placeholder: 'Cari Segment Toko'
           })
         }
       />
@@ -162,8 +169,8 @@ class AddMerchantInformation extends Component {
         }
         openDropdown={() =>
           this.goToDropdown({
-            type: 'province',
-            placeholder: 'Cari Provinsi Anda'
+            type: 'suplierMerchant',
+            placeholder: 'Cari Suplier Toko'
           })
         }
       />
