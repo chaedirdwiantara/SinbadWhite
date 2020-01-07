@@ -16,7 +16,6 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
-import { MoneyFormat } from '../../helpers/NumberFormater';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import SkeletonType4 from '../../components/skeleton/SkeletonType4';
 import { LoadingLoadMore } from '../../components/Loading';
@@ -25,7 +24,7 @@ import Fonts from '../../helpers/GlobalFont';
 import EmptyData from '../../components/empty_state/EmptyData';
 const { width, height } = Dimensions.get('window');
 
-class PdpListDataView extends Component {
+class PdpGridDataView extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -107,48 +106,33 @@ class PdpListDataView extends Component {
         <Card containerStyle={styles.cardProduct}>
           <View style={styles.boxContentListCard}>
             <TouchableOpacity
-              style={styles.boxContentImage}
+              style={styles.boxContentListCardTouch}
               onPress={() => this.toProductDetail(item)}
             >
               <View style={styles.boxImage}>{productImage}</View>
+              <View style={styles.boxName}>
+                <Text style={Fonts.type37}>{item.name}</Text>
+              </View>
+              <View style={styles.boxPrice}>
+                <Text style={Fonts.type36}>{item.price}</Text>
+                {item.displayStock && item.stock >= item.minQty ? (
+                  <Text style={Fonts.type38}>{`${item.stock} Tersisa`} </Text>
+                ) : (
+                  <Text style={Fonts.type38}>{''}</Text>
+                )}
+              </View>
             </TouchableOpacity>
-            <View style={styles.boxContentDesc}>
-              <View style={styles.boxTitleAndSku}>
-                <TouchableOpacity
-                  style={styles.boxName}
-                  onPress={() => this.toProductDetail(item)}
-                >
-                  <Text style={Fonts.type16}>{item.name}</Text>
-                </TouchableOpacity>
-                <View style={styles.boxSku}>
-                  <Text style={[Fonts.type24, { textAlign: 'right' }]}>
-                    {item.externalId}
+            <View style={styles.boxContentListCardNoTouch}>
+              <View style={styles.boxButton}>{this.renderButton(item)}</View>
+              {/* {item.addToCart ? (
+                <View style={styles.boxOrdered}>
+                  <Text style={styles.productQtyOrderText}>
+                    {item.qtyToCart} pcs
                   </Text>
                 </View>
-              </View>
-              <View style={styles.boxOrderedAndButton}>
-                <TouchableOpacity
-                  style={styles.boxPrice}
-                  onPress={() => this.toProductDetail(item)}
-                >
-                  <Text style={Fonts.type24}>
-                    {MoneyFormat(item.retailBuyingPrice)}
-                  </Text>
-                </TouchableOpacity>
-                {item.addToCart ? (
-                  <View style={styles.boxOrdered}>
-                    <Text style={styles.productQtyOrderText}>
-                      {item.qtyToCart} pcs
-                    </Text>
-                  </View>
-                ) : (
-                  <View style={styles.boxOrdered}>
-                    <Text style={styles.productQtyOrderText}>{''}</Text>
-                  </View>
-                )}
-
-                <View style={styles.boxButton}>{this.renderButton(item)}</View>
-              </View>
+              ) : (
+                <View />
+              )} */}
             </View>
           </View>
         </Card>
@@ -167,10 +151,10 @@ class PdpListDataView extends Component {
     return (
       <View style={{ flex: 1, paddingBottom: '7%' }}>
         <FlatList
-          contentContainerStyle={styles.boxFlatlist}
+          contentContainerStyle={styles.flatListContainer}
           data={this.props.pdp.dataGetPdp}
           renderItem={this.renderItem.bind(this)}
-          numColumns={1}
+          numColumns={2}
           extraData={this.state}
           keyExtractor={(item, index) => index.toString()}
           refreshing={this.props.pdp.refreshGetPdp}
@@ -207,11 +191,15 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: masterColor.backgroundWhite
   },
+  flatListContainer: {
+    paddingTop: 30,
+    paddingBottom: 26
+  },
   boxContentList: {
-    height: 0.18 * height,
-    width: '100%',
+    height: 0.35 * height,
+    width: '50%',
     paddingHorizontal: '1.5%',
-    paddingVertical: 5,
+    paddingVertical: '1.5%',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -238,64 +226,44 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   boxContentListCard: {
-    flexDirection: 'row',
     height: '100%',
-    width: 0.95 * width,
-    padding: 10
+    padding: 10,
+    width: 0.45 * width
   },
-  boxContentImage: {
-    justifyContent: 'center',
-    height: '100%',
-    alignItems: 'center',
-    width: 0.3 * 0.95 * width
+  boxContentListCardTouch: {
+    height: '70%'
   },
-  boxContentDesc: {
-    width: '70%'
+  boxContentListCardNoTouch: {
+    height: '30%',
+    marginTop: 15
   },
   boxImage: {
-    height: '90%',
+    height: '55%',
     justifyContent: 'center',
     alignItems: 'center'
   },
-  boxTitleAndSku: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start'
-  },
   boxName: {
-    flex: 1,
-    alignItems: 'flex-start',
-    paddingVertical: 2,
-    paddingHorizontal: 5
-  },
-  boxSku: {
-    paddingRight: 3,
-    justifyContent: 'flex-start'
+    height: '27%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 2
   },
   boxPrice: {
     paddingVertical: 2,
-    paddingHorizontal: 5,
     justifyContent: 'center',
     alignItems: 'flex-start'
-  },
-  boxOrderedAndButton: {
-    flexDirection: 'row'
   },
   boxStock: {
-    paddingHorizontal: 5,
-    // paddingVertical: 2,
     justifyContent: 'center',
-    alignItems: 'flex-start'
+    alignItems: 'center'
   },
   boxButton: {
-    flex: 1,
-    paddingRight: 5,
     justifyContent: 'center',
-    alignItems: 'flex-end'
+    alignItems: 'center'
   },
   boxOrdered: {
-    paddingHorizontal: 5,
     justifyContent: 'center',
-    alignItems: 'flex-start'
+    alignItems: 'center'
   },
   productImage: {
     resizeMode: 'contain',
@@ -327,4 +295,4 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PdpListDataView);
+export default connect(mapStateToProps, mapDispatchToProps)(PdpGridDataView);

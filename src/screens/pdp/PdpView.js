@@ -11,7 +11,9 @@ import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
 import { StatusBarRed } from '../../components/StatusBarGlobal';
 import NavigationService from '../../navigation/NavigationService';
+import PdpGridDataView from './PdpGridDataView';
 import PdpListDataView from './PdpListDataView';
+import PdpLineDataView from './PdpLineDataView';
 import PdpFilterView from './PdpFilterView';
 
 class PdpView extends Component {
@@ -67,8 +69,8 @@ class PdpView extends Component {
    * =======================
    */
   /** === EMPTY PDP === */
-  renderPdpListData() {
-    return <PdpListDataView />;
+  renderPdpData() {
+    return <PdpLineDataView />;
   }
   /**
    * ========================
@@ -109,7 +111,7 @@ class PdpView extends Component {
     return (
       <View style={styles.mainContainer}>
         <StatusBarRed />
-        {this.renderPdpListData()}
+        {this.renderPdpData()}
         <PdpFilterView />
       </View>
     );

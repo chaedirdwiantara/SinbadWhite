@@ -25,7 +25,7 @@ import Fonts from '../../helpers/GlobalFont';
 import EmptyData from '../../components/empty_state/EmptyData';
 const { width, height } = Dimensions.get('window');
 
-class PdpListDataView extends Component {
+class PdpLineDataView extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -92,70 +92,25 @@ class PdpListDataView extends Component {
   }
 
   renderItem({ item, index }) {
-    const productImage = (
-      <Image
-        defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
-        source={{
-          uri: item.catalogueImages[0].imageUrl
-        }}
-        style={styles.productImage}
-      />
-    );
-
     return (
       <View style={styles.boxContentList} key={index}>
-        <Card containerStyle={styles.cardProduct}>
-          <View style={styles.boxContentListCard}>
-            <TouchableOpacity
-              style={styles.boxContentImage}
-              onPress={() => this.toProductDetail(item)}
-            >
-              <View style={styles.boxImage}>{productImage}</View>
-            </TouchableOpacity>
-            <View style={styles.boxContentDesc}>
-              <View style={styles.boxTitleAndSku}>
-                <TouchableOpacity
-                  style={styles.boxName}
-                  onPress={() => this.toProductDetail(item)}
-                >
-                  <Text style={Fonts.type16}>{item.name}</Text>
-                </TouchableOpacity>
-                <View style={styles.boxSku}>
-                  <Text style={[Fonts.type24, { textAlign: 'right' }]}>
-                    {item.externalId}
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.boxOrderedAndButton}>
-                <TouchableOpacity
-                  style={styles.boxPrice}
-                  onPress={() => this.toProductDetail(item)}
-                >
-                  <Text style={Fonts.type24}>
-                    {MoneyFormat(item.retailBuyingPrice)}
-                  </Text>
-                </TouchableOpacity>
-                {item.addToCart ? (
-                  <View style={styles.boxOrdered}>
-                    <Text style={styles.productQtyOrderText}>
-                      {item.qtyToCart} pcs
-                    </Text>
-                  </View>
-                ) : (
-                  <View style={styles.boxOrdered}>
-                    <Text style={styles.productQtyOrderText}>{''}</Text>
-                  </View>
-                )}
-
-                <View style={styles.boxButton}>{this.renderButton(item)}</View>
-              </View>
-            </View>
-          </View>
-        </Card>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          <Text style={Fonts.type42}>SKU : {item.externalId}</Text>
+        </View>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          <Text style={Fonts.type41}>
+            {MoneyFormat(item.retailBuyingPrice)}
+          </Text>
+        </View>
+        <View style={{ flex: 1 }}>{this.renderButton(item)}</View>
       </View>
     );
   }
 
+  /** === SEPARATOR FLATLIST === */
+  renderSeparator() {
+    return <View style={[GlobalStyles.lines, { marginLeft: 50 }]} />;
+  }
   /** === RENDER DATA === */
   renderData() {
     return this.props.pdp.dataGetPdp.length > 0
@@ -177,7 +132,7 @@ class PdpListDataView extends Component {
           onRefresh={this.onHandleRefresh}
           onEndReachedThreshold={0.1}
           onEndReached={this.onHandleLoadMore.bind(this)}
-          showsVerticalScrollIndicator
+          ItemSeparatorComponent={this.renderSeparator}
         />
       </View>
     );
@@ -208,104 +163,9 @@ const styles = StyleSheet.create({
     backgroundColor: masterColor.backgroundWhite
   },
   boxContentList: {
-    height: 0.18 * height,
-    width: '100%',
-    paddingHorizontal: '1.5%',
-    paddingVertical: 5,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  boxFlatlist: {
-    paddingTop: 10,
-    paddingBottom: 70,
-    paddingHorizontal: 5
-  },
-  cardProduct: {
-    height: '100%',
-    width: '100%',
-    borderRadius: 5,
-    padding: 0,
-    borderWidth: 0,
-    elevation: 2,
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowColor: '#777777',
-    margin: 0,
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    alignItems: 'center'
-  },
-  boxContentListCard: {
-    flexDirection: 'row',
-    height: '100%',
-    width: 0.95 * width,
-    padding: 10
-  },
-  boxContentImage: {
-    justifyContent: 'center',
-    height: '100%',
-    alignItems: 'center',
-    width: 0.3 * 0.95 * width
-  },
-  boxContentDesc: {
-    width: '70%'
-  },
-  boxImage: {
-    height: '90%',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  boxTitleAndSku: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start'
-  },
-  boxName: {
     flex: 1,
-    alignItems: 'flex-start',
-    paddingVertical: 2,
-    paddingHorizontal: 5
-  },
-  boxSku: {
-    paddingRight: 3,
-    justifyContent: 'flex-start'
-  },
-  boxPrice: {
-    paddingVertical: 2,
-    paddingHorizontal: 5,
-    justifyContent: 'center',
-    alignItems: 'flex-start'
-  },
-  boxOrderedAndButton: {
-    flexDirection: 'row'
-  },
-  boxStock: {
-    paddingHorizontal: 5,
-    // paddingVertical: 2,
-    justifyContent: 'center',
-    alignItems: 'flex-start'
-  },
-  boxButton: {
-    flex: 1,
-    paddingRight: 5,
-    justifyContent: 'center',
-    alignItems: 'flex-end'
-  },
-  boxOrdered: {
-    paddingHorizontal: 5,
-    justifyContent: 'center',
-    alignItems: 'flex-start'
-  },
-  productImage: {
-    resizeMode: 'contain',
-    height: '100%',
-    width: undefined,
-    aspectRatio: 1 / 1
-  },
-  imageEmpty: {
-    height: 150,
-    width: 150
+    flexDirection: 'row',
+    paddingHorizontal: 16
   },
   /** button */
   pesanButton: {
@@ -327,4 +187,4 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PdpListDataView);
+export default connect(mapStateToProps, mapDispatchToProps)(PdpLineDataView);
