@@ -42,3 +42,10 @@ export function pdpGetLoadMore(page) {
 export function pdpChangeDisplay(data) {
   return { type: types.PDP_CHANGE_DISPLAY, payload: data };
 }
+/** === CHANGE DISPLAY GRID ==== */
+export function pdpOpenOrder(data) {
+  return { type: types.PDP_OPEN_ORDER, payload: data };
+}
+export function pdpCloseOrder(data) {
+  return { type: types.PDP_CLOSE_ORDER };
+}

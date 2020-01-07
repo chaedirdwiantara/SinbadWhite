@@ -6,15 +6,15 @@ const INITIAL_STATE = {
   loadingGetPdp: false,
   refreshGetPdp: false,
   loadingLoadMoreGetPdp: false,
-  loadingChangeDisplayPdp: false,
   /** data */
   dataGetPdp: [],
   totalDataGetPdp: 0,
   pageGetPdp: 0,
   pdpDisplay: 'grid',
+  pdpOpenModalOrder: false,
+  pdpOrderData: null,
   /** error */
-  errorGetPdp: null,
-  errorChangeDisplayPdp: null
+  errorGetPdp: null
 };
 
 export const pdp = createReducer(INITIAL_STATE, {
@@ -90,8 +90,26 @@ export const pdp = createReducer(INITIAL_STATE, {
   [types.PDP_CHANGE_DISPLAY](state, action) {
     return {
       ...state,
-      loadingChangeDisplayPdp: true,
       pdpDisplay: action.payload
+    };
+  },
+  /**
+   * ===================
+   * OPEN ORDER PDP
+   * ===================
+   */
+  [types.PDP_OPEN_ORDER](state, action) {
+    return {
+      ...state,
+      pdpOpenModalOrder: true,
+      pdpOrderData: action.payload
+    };
+  },
+  [types.PDP_CLOSE_ORDER](state, action) {
+    return {
+      ...state,
+      pdpOpenModalOrder: false,
+      pdpOrderData: null
     };
   }
 });

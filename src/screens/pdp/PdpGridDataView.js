@@ -80,6 +80,7 @@ class PdpGridDataView extends Component {
     return (item.stock > 0 && item.stock >= item.minQty) ||
       item.unlimitedStock ? (
       <TouchableOpacity
+        onPress={() => this.props.pdpOpenOrder(item)}
         style={[styles.pesanButton, { backgroundColor: '#f0444c' }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>

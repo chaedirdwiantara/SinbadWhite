@@ -15,6 +15,7 @@ import PdpGridDataView from './PdpGridDataView';
 import PdpListDataView from './PdpListDataView';
 import PdpLineDataView from './PdpLineDataView';
 import PdpFilterView from './PdpFilterView';
+import PdpOrderView from './PdpOrderView';
 
 class PdpView extends Component {
   constructor(props) {
@@ -81,12 +82,18 @@ class PdpView extends Component {
       )
     };
   };
+
+  renderOrderBottom() {
+    return <PdpOrderView />;
+  }
+
   /** MAIN */
   render() {
     return (
       <View style={styles.mainContainer}>
         <StatusBarRed />
         {this.renderPdpData()}
+        {this.renderOrderBottom()}
         <PdpFilterView />
       </View>
     );
