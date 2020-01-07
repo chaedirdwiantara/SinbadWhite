@@ -19,37 +19,6 @@ import PdpFilterView from './PdpFilterView';
 class PdpView extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      pdp: [
-        {
-          image:
-            'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67126185.png',
-          name: 'LAKME EYESHADOW CRAYON BRONZE',
-          price: 'Rp 82.500',
-          priceDisc: 'Rp 92.500',
-          stock: 100,
-          minQty: 3
-        },
-        {
-          image:
-            'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67126185.png',
-          name: 'LAKME EYESHADOW CRAYON BRONZE',
-          price: 'Rp 82.500',
-          priceDisc: 'Rp 92.500',
-          stock: 100,
-          minQty: 3
-        },
-        {
-          image:
-            'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67126185.png',
-          name: 'LAKME EYESHADOW CRAYON BRONZE',
-          price: 'Rp 82.500',
-          priceDisc: 'Rp 92.500',
-          stock: 0,
-          minQty: 3
-        }
-      ]
-    };
   }
 
   /**
@@ -70,7 +39,13 @@ class PdpView extends Component {
    */
   /** === EMPTY PDP === */
   renderPdpData() {
-    return <PdpLineDataView />;
+    if (this.props.pdp.pdpDisplay === 'grid') {
+      return <PdpGridDataView />;
+    } else if (this.props.pdp.pdpDisplay === 'list') {
+      return <PdpListDataView />;
+    } else if (this.props.pdp.pdpDisplay === 'line') {
+      return <PdpLineDataView />;
+    }
   }
   /**
    * ========================

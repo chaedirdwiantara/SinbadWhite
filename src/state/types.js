@@ -74,3 +74,4 @@ export const PDP_GET_FAILED = 'PdpGetFailed';
 export const PDP_GET_RESET = 'PdpGetReset';
 export const PDP_GET_REFRESH = 'PdpGetRefresh';
 export const PDP_GET_LOADMORE = 'PdpGetLoadMore';
+export const PDP_CHANGE_DISPLAY = 'PdpChangeDisplay';
