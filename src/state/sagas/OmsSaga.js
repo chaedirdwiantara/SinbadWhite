@@ -1,21 +1,33 @@
 import { put, call, takeEvery } from 'redux-saga/effects';
-import { GlobalMethod } from '../../services/methods';
+import { OmsMethod } from '../../services/methods';
 import * as ActionCreators from '../actions';
 import * as types from '../types';
-/** === MERCHANT LIST === */
-function* getLocation(actions) {
+/** === CART ITEM LIST === */
+function* getCartItem(actions) {
   try {
     const response = yield call(() => {
-      return GlobalMethod.getLocation(actions.payload);
+      return OmsMethod.getCartItem(actions.payload);
     });
-    yield put(ActionCreators.locationGetSuccess(response));
+    yield put(ActionCreators.omsGetCartItemSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.locationGetFailed(error));
+    yield put(ActionCreators.omsGetCartItemFailed(error));
+  }
+}
+/** === CHECKOUT ITEM LIST === */
+function* getCheckoutItem(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.getCartItem(actions.payload);
+    });
+    yield put(ActionCreators.omsGetCartItemSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.omsGetCartItemFailed(error));
   }
 }
 /** === SAGA FUNCTION === */
-function* GlobalSaga() {
-  yield takeEvery(types.LOCATION_GET_PROCESS, getLocation);
+function* OmsSaga() {
+  yield takeEvery(types.OMS_GET_CART_ITEM_PROCESS, getCartItem);
+  yield takeEvery(types.OMS_GET_CHECKOUT_ITEM_PROCESS, getCheckoutItem);
 }
 
-export default GlobalSaga;
+export default OmsSaga;

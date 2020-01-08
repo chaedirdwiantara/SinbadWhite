@@ -1,5 +1,12 @@
 import * as types from '../types';
-
+/**
+ * ==================================
+ * SELECTED MERCHANT FROM JOURNEY
+ * ==================================
+ */
+export function merchantSelected(data) {
+  return { type: types.MERCHANT_SELECTED, payload: data };
+}
 /**
  * ==================================
  * SAVE VOLATILE DATA TO ADD MERCHANT

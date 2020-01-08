@@ -10,6 +10,7 @@ import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
 import { StatusBarRed } from '../../components/StatusBarGlobal';
 import SearchBarType3 from '../../components/search_bar/SearchBarType3';
+import CartGlobal from '../../components/CartGlobal';
 
 class PdpSearchView extends Component {
   constructor(props) {
@@ -39,13 +40,9 @@ class PdpSearchView extends Component {
         </View>
       ),
       headerRight: () => (
-        <TouchableOpacity style={{ marginRight: 16 }}>
-          <MaterialIcon
-            color={masterColor.fontWhite}
-            name={'shopping-cart'}
-            size={24}
-          />
-        </TouchableOpacity>
+        <View style={{ marginRight: 16 }}>
+          <CartGlobal />
+        </View>
       )
     };
   };

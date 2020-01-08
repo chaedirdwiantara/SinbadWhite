@@ -298,6 +298,35 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     textAlign: 'center',
     color: masterColor.buttonRedDisableColor
+  },
+  /** === button small text === */
+  textButtonSmallRedActive: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 12,
+    lineHeight: 15,
+    textAlign: 'center',
+    color: masterColor.fontWhite
+  },
+  textButtonSmallRedDisabled: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 12,
+    lineHeight: 15,
+    textAlign: 'center',
+    color: masterColor.buttonActiveColorWhite
+  },
+  textButtonSmallWhiteActive: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 12,
+    lineHeight: 15,
+    textAlign: 'center',
+    color: masterColor.mainColor
+  },
+  textButtonSmallWhiteDisabled: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 12,
+    lineHeight: 15,
+    textAlign: 'center',
+    color: masterColor.buttonRedDisableColor
   }
 });
 

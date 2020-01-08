@@ -59,6 +59,8 @@ export const MERCHANT_ADD_DATA_VOLATILE = 'MerchantAddDataVolatile';
 export const MERCHANT_GET_LAST_ORDER_PROCESS = 'MerchantGetLastOrderProcess';
 export const MERCHANT_GET_LAST_ORDER_SUCCESS = 'MerchantGetLastOrderSuccess';
 export const MERCHANT_GET_LAST_ORDER_FAILED = 'MerchantGetLastOrderFailed';
+/** SELECTED MERCHANT === */
+export const MERCHANT_SELECTED = 'MerchantSelected';
 /** === JOURNEY === */
 /** FOR GET JOURNEY PLAN LIST */
 export const JOURNEY_PLAN_GET_PROCESS = 'JourneyPlanGetProcess';
@@ -95,3 +97,23 @@ export const OMS_ADD_TO_CART = 'OmsAddToCart';
 // INI SEMENTARA HARUS DI GANTI
 export const OMS_ITEM_FOR_CART = 'omsAddToCart';
 export const OMS_CHECKLIST_ITEM_CART = 'omsCheckListItemCart';
+/** GET CART ITEM */
+export const OMS_GET_CART_ITEM_PROCESS = 'OmsGetCartItemProcess';
+export const OMS_GET_CART_ITEM_SUCCESS = 'OmsGetCartItemSuccess';
+export const OMS_GET_CART_ITEM_FAILED = 'OmsGetCartItemFailed';
+/** GET CHECKOUT DATA */
+export const OMS_GET_CHECKOUT_ITEM_PROCESS = 'OmsGetCheckoutItemProcess';
+export const OMS_GET_CHECKOUT_ITEM_SUCCESS = 'OmsGetCheckoutItemSuccess';
+export const OMS_GET_CHECKOUT_ITEM_FAILED = 'OmsGetCheckoutItemFailed';
+/** CONFIRM ORDER */
+export const OMS_CONFIRM_ORDER_PROCESS = 'OmsConfirmOrderProcess';
+export const OMS_CONFIRM_ORDER_SUCCESS = 'OmsConfirmOrderSuccess';
+export const OMS_CONFIRM_ORDER_FAILED = 'OmsConfirmOrderFailed';
+/** DELETE CART ITEM */
+export const OMS_DELETE_CART_ITEM_PROCESS = 'OmsDeleteCartItemProcess';
+export const OMS_DELETE_CART_ITEM_SUCCESS = 'OmsDeleteCartItemSuccess';
+export const OMS_DELETE_CART_ITEM_FAILED = 'OmsDeleteCartItemFailed';
+/** PAYMENT */
+export const OMS_GET_PAYMENT_PROCESS = 'OmsGetPaymentProcess';
+export const OMS_GET_PAYMENT_SUCCESS = 'OmsGetPaymentSuccess';
+export const OMS_GET_PAYMENT_FAILED = 'OmsGetPaymentFailed';
