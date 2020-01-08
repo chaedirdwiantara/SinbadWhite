@@ -7,7 +7,6 @@ const INITIAL_STATE = {
   refreshGetLocation: false,
   loadingLoadMoreGetLocation: false,
   /** data */
-  token: null,
   search: '',
   dataGetLocation: [],
   totalDataGetLocation: 0,
@@ -36,10 +35,7 @@ export const global = createReducer(INITIAL_STATE, {
    * - token
    */
   [types.DELETE_ALL_DATA](state, action) {
-    return {
-      ...state,
-      token: null
-    };
+    return INITIAL_STATE;
   },
   /**
    * ===================

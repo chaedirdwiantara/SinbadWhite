@@ -29,8 +29,6 @@ const INITIAL_STATE = {
     storeGroupName: '',
     storeSegmentId: '',
     storeSegmentName: '',
-    vehicleAccessibilityId: '',
-    vehicleAccessibilityName: '',
     urbanId: '',
     user: {
       fullName: '',
@@ -43,7 +41,7 @@ const INITIAL_STATE = {
       roles: [1]
     },
     cluster: {
-      cluster: '',
+      clusterId: '',
       clusterName: ''
     },
     supplier: {

@@ -27,7 +27,16 @@ class AddMerchantInformation extends Component {
    * FUNCTIONAL
    * =====================
    */
+  componentDidMount() {
+    console.log('alal');
+    console.log(this.state.name);
+  }
   nextStep() {
+    this.props.saveVolatileDataAddMerchant({
+      name: this.state.name,
+      largeArea: this.state.largeArea,
+      numberOfEmployee: this.state.numberOfEmployee
+    });
     NavigationService.navigate('AddMerchant7');
   }
   /** GO TO DROPDOWN LIST */
@@ -36,6 +45,20 @@ class AddMerchantInformation extends Component {
       placeholder: data.placeholder,
       type: data.type
     });
+  }
+  /** CHECK IF BUTTON DISABLE */
+  buttonDisable() {
+    const data = this.props.merchant.dataAddMerchantVolatile;
+    return (
+      this.state.name !== '' &&
+      this.state.largeArea !== '' &&
+      this.state.numberOfEmployee !== '' &&
+      data.storeTypeId !== '' &&
+      data.storeGroupId !== '' &&
+      data.cluster.clusterId !== '' &&
+      data.storeSegmentId !== '' &&
+      data.supplier.supplierId !== ''
+    );
   }
   /**
    * ====================
@@ -56,10 +79,10 @@ class AddMerchantInformation extends Component {
     return (
       <InputType1
         title={'Nama Toko'}
-        value={this.state.nameMerchant}
+        value={this.state.name}
         placeholder={'Masukan Nama Toko Anda'}
         keyboardType={'default'}
-        text={text => this.setState({ nameMerchant: text })}
+        text={text => this.setState({ name: text })}
         error={false}
         errorText={''}
       />
@@ -69,10 +92,10 @@ class AddMerchantInformation extends Component {
     return (
       <InputType1
         title={'Ukuran Toko'}
-        value={this.state.nameMerchant}
+        value={this.state.largeArea}
         placeholder={'0 M2'}
         keyboardType={'numeric'}
-        text={text => this.setState({ nameMerchant: text })}
+        text={text => this.setState({ largeArea: text })}
         error={false}
         errorText={''}
       />
@@ -82,10 +105,10 @@ class AddMerchantInformation extends Component {
     return (
       <InputType1
         title={'Jumlah Karyawan'}
-        value={this.state.nameMerchant}
+        value={this.state.numberOfEmployee}
         placeholder={'Jumlah Karyawan'}
         keyboardType={'numeric'}
-        text={text => this.setState({ nameMerchant: text })}
+        text={text => this.setState({ numberOfEmployee: text })}
         error={false}
         errorText={''}
       />
@@ -188,6 +211,7 @@ class AddMerchantInformation extends Component {
         {this.renderMerchantSupplier()}
         {this.renderMerchanSize()}
         {this.renderEmployeeTotal()}
+        <View style={{ paddingBottom: 50 }} />
       </View>
     );
   }
@@ -195,7 +219,7 @@ class AddMerchantInformation extends Component {
   renderButton() {
     return (
       <ButtonSingle
-        disabled={false}
+        disabled={!this.buttonDisable()}
         title={'Lanjutkan'}
         borderRadius={4}
         onPress={() => this.nextStep()}
@@ -211,7 +235,6 @@ class AddMerchantInformation extends Component {
           {this.renderProgressHeader()}
           {this.renderContent()}
         </ScrollView>
-
         {this.renderButton()}
       </SafeAreaView>
     );

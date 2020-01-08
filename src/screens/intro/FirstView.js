@@ -17,7 +17,7 @@ class FirstView extends Component {
   componentDidMount() {
     setTimeout(() => {
       this.props.navigation.navigate(
-        this.props.global.token !== null ? 'App' : 'Auth'
+        this.props.permanent.token !== null ? 'App' : 'Auth'
       );
     }, 1000);
   }
@@ -67,8 +67,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ global }) => {
-  return { global };
+const mapStateToProps = ({ permanent }) => {
+  return { permanent };
 };
 
 export default connect(mapStateToProps)(FirstView);
