@@ -14,7 +14,6 @@ import { Button } from 'react-native-elements';
 // import { RFPercentage } from 'react-native-responsive-fontsize';
 import ModalBottom from 'react-native-modal';
 import * as ActionCreators from '../../state/actions';
-import { Fonts } from '../../utils/Fonts';
 import OrderButton from '../../components/OrderButton';
 import { MoneyFormat } from '../../helpers/NumberFormater';
 
@@ -26,11 +25,22 @@ class PdpOrderView extends Component {
 
     this.state = {
       buttonAddDisabled: false,
-      qtyFromChild: null
-      // qtyFromChild: this.props.pdpOrderData.addToCart
-      //   ? this.props.pdpOrderData.qtyToCart
-      //   : this.props.pdpOrderData.minQty
+      qtyFromChild: 0
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    //SEMENTARA
+    if (
+      prevProps.pdp.pdpOrderData !== this.props.pdp.pdpOrderData &&
+      this.props.pdp.pdpOrderData != null
+    ) {
+      this.setState({
+        qtyFromChild: this.props.pdp.pdpOrderData.addToCart
+          ? this.props.pdp.pdpOrderData.qtyToCart
+          : this.props.pdp.pdpOrderData.minQty
+      });
+    }
   }
 
   /**
@@ -50,19 +60,11 @@ class PdpOrderView extends Component {
   forCartData(method) {
     const data = {
       method,
-      catalogueId: parseInt(this.props.pdpOrderData.id, 10),
+      catalogueId: parseInt(this.props.pdp.pdpOrderData.id, 10),
       qty: this.state.qtyFromChild
     };
-    this.props.parentFunctionToCloseProductOrderView(data);
-    this.props.itemForCart(data);
-    this.props.modifyProductListData(data);
-    if (this.props.product.dataGetProductById !== null) {
-      if (
-        this.props.product.dataGetProductById.id === this.props.pdpOrderData.id
-      ) {
-        this.props.modifyProductDetailData(data);
-      }
-    }
+    this.props.omsAddToCart(data);
+    this.props.pdpModifyProductListData(data);
   }
 
   render() {
@@ -298,16 +300,19 @@ const styles = StyleSheet.create({
   titleButton: {
     // fontFamily: Fonts.MontserratExtraBold,
     // fontSize: RFPercentage(1.7),
+    fontSize: 15,
     color: '#ffffff'
   },
   titleButtonBoxTwo: {
     // fontFamily: Fonts.MontserratExtraBold,
     // fontSize: RFPercentage(1.3),
+    fontSize: 13,
     color: '#ffffff'
   },
   titleButtonCancel: {
     // fontFamily: Fonts.MontserratExtraBold,
     // fontSize: RFPercentage(1.3),
+    fontSize: 13,
     color: '#f0444c'
   },
   boxButton: {
@@ -382,8 +387,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ pdp }) => {
-  return { pdp };
+const mapStateToProps = ({ pdp, oms }) => {
+  return { pdp, oms };
 };
 
 const mapDispatchToProps = dispatch => {

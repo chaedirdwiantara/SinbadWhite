@@ -83,3 +83,11 @@ export const PDP_CHANGE_DISPLAY = 'PdpChangeDisplay';
 /** FOR ORDER PDP */
 export const PDP_OPEN_ORDER = 'PdpOpenOrder';
 export const PDP_CLOSE_ORDER = 'PdpCloseOrder';
+export const PDP_ADD_TO_CART = 'pdpAddToCart';
+export const PDP_MODIFY_PRODUCT_LIST_DATA = 'pdpModifyProductListData';
+
+/** === OMS === */
+export const OMS_ADD_TO_CART = 'OmsAddToCart';
+// INI SEMENTARA HARUS DI GANTI
+export const OMS_ITEM_FOR_CART = 'omsAddToCart';
+export const OMS_CHECKLIST_ITEM_CART = 'omsCheckListItemCart';

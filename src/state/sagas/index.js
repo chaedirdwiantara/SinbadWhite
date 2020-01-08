@@ -5,6 +5,7 @@ import MerchantSaga from './MerchantSaga';
 import JourneySaga from './JourneySaga';
 import GlobalSaga from './GlobalSaga';
 import PdpSaga from './PdpSaga';
+import OmsSaga from './OmsSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -12,6 +13,7 @@ export default function* rootSaga() {
     fork(MerchantSaga),
     fork(JourneySaga),
     fork(GlobalSaga),
-    fork(PdpSaga)
+    fork(PdpSaga),
+    fork(OmsSaga)
   ]);
 }
