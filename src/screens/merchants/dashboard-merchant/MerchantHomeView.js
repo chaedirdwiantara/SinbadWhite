@@ -279,7 +279,8 @@ class MerchantHomeView extends Component {
           <Text style={{ fontWeight: 'bold', fontSize: 15 }}>Store Menu</Text>
         </View>
         <View style={{ flex: 1, flexDirection: 'row' }}>
-          <View
+          <TouchableOpacity
+            onPress={() => this.goToPdp()}
             style={{
               padding: 5,
               justifyContent: 'center',
@@ -292,7 +293,7 @@ class MerchantHomeView extends Component {
             <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
               Order
             </Text>
-          </View>
+          </TouchableOpacity>
           <View
             style={{
               padding: 5,

@@ -117,3 +117,5 @@ export const OMS_DELETE_CART_ITEM_FAILED = 'OmsDeleteCartItemFailed';
 export const OMS_GET_PAYMENT_PROCESS = 'OmsGetPaymentProcess';
 export const OMS_GET_PAYMENT_SUCCESS = 'OmsGetPaymentSuccess';
 export const OMS_GET_PAYMENT_FAILED = 'OmsGetPaymentFailed';
+/** DELETE ALL DATA IN OMS */
+export const OMS_RESET_DATA = 'OmsResetData';

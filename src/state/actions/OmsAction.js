@@ -2,6 +2,14 @@ import * as types from '../types';
 import { Store } from '../Store';
 /**
  * ====================================
+ * DELETE ALL DATA IN OMS
+ * ====================================
+ */
+export function omsResetData() {
+  return { type: types.OMS_RESET_DATA };
+}
+/**
+ * ====================================
  * GET CART ITEM
  * ====================================
  */
@@ -99,6 +107,15 @@ export function omsGetPaymentSuccess(data) {
 /** === GET PAYMENT FAILED === */
 export function omsGetPaymentFailed(data) {
   return { type: types.OMS_GET_PAYMENT_FAILED, payload: data };
+}
+
+/** MUST CHANGE */
+/** save checklist item cart */
+export function saveChecklistCart(data) {
+  return {
+    type: types.CHECKLIST_ITEM_CART,
+    payload: data
+  };
 }
 /**
  * ==============================
