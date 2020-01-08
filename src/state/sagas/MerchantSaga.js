@@ -46,12 +46,24 @@ function* addMerchant(actions) {
     yield put(ActionCreators.merchantAddFailed(error));
   }
 }
+/** === MERCHANT DETAIL === */
+function* getMerchantLastOrder(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getMerchantLastOrder(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetLastOrderSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetLastOrderFailed(error));
+  }
+}
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_GET_PROCESS, getMerchant);
   yield takeEvery(types.MERCHANT_GET_DETAIL_PROCESS, getMerchantDetail);
   yield takeEvery(types.PORTFOLIO_GET_PROCESS, getPortfolio);
   yield takeEvery(types.MERCHANT_ADD_PROCESS, addMerchant);
+  yield takeEvery(types.MERCHANT_GET_LAST_ORDER_PROCESS, getMerchantLastOrder);
 }
 
 export default MerchantSaga;

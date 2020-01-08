@@ -55,6 +55,10 @@ export const MERCHANT_ADD_SUCCESS = 'MerchantAddSuccess';
 export const MERCHANT_ADD_FAILED = 'MerchantAddFailed';
 /** FOR ADD MERCHANT */
 export const MERCHANT_ADD_DATA_VOLATILE = 'MerchantAddDataVolatile';
+/** FOR GET MERCHANT LAST ORDER */
+export const MERCHANT_GET_LAST_ORDER_PROCESS = 'MerchantGetLastOrderProcess';
+export const MERCHANT_GET_LAST_ORDER_SUCCESS = 'MerchantGetLastOrderSuccess';
+export const MERCHANT_GET_LAST_ORDER_FAILED = 'MerchantGetLastOrderFailed';
 /** SELECTED MERCHANT === */
 export const MERCHANT_SELECTED = 'MerchantSelected';
 /** === JOURNEY === */
