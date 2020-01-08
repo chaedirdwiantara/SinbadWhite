@@ -13,6 +13,7 @@
   "statusBarBlack": "#000000",
   "statusBarBlackOP40": "rgba(0, 0, 0, 0.4)",
   "statusBarRedOP40": "rgba(94, 28, 30, 1)",
+  "statusBarRedOP50": "rgba(144, 39, 44, 1)",
   "fontWhite": "#ffffff",
   "fontRed80": "#501619",
   "fontRed60": "#a02d32",
