@@ -242,13 +242,13 @@ class AddMerchantAddress extends Component {
     return (
       <ButtonSingle
         disabled={
-          (provinceName === '',
-          cityName === '',
-          districName === '',
-          urbanName === '',
-          longitude === '',
-          latitude === '',
-          this.state.address === '')
+          provinceName === '' ||
+          cityName === '' ||
+          districName === '' ||
+          urbanName === '' ||
+          longitude === '' ||
+          latitude === '' ||
+          this.state.address === ''
         }
         title={'Lanjutkan'}
         borderRadius={4}

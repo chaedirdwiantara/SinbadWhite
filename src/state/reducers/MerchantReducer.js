@@ -4,12 +4,14 @@ import createReducer from './createReducer';
 const INITIAL_STATE = {
   /** loading */
   loadingGetMerchant: false,
+  loadingAddMerchant: false,
   refreshGetMerchant: false,
   loadingLoadMoreGetMerchant: false,
   loadingGetPortfolio: false,
   loadingGetMerchantDetail: false,
   /** data */
   dataGetMerchant: [],
+  dataAddMerchant: null,
   dataGetMerchantDetail: null,
   dataAddMerchantVolatile: {
     name: '',
@@ -27,8 +29,6 @@ const INITIAL_STATE = {
     storeGroupName: '',
     storeSegmentId: '',
     storeSegmentName: '',
-    vehicleAccessibilityId: '',
-    vehicleAccessibilityName: '',
     urbanId: '',
     user: {
       fullName: '',
@@ -41,7 +41,7 @@ const INITIAL_STATE = {
       roles: [1]
     },
     cluster: {
-      cluster: '',
+      clusterId: '',
       clusterName: ''
     },
     supplier: {
@@ -54,6 +54,7 @@ const INITIAL_STATE = {
   dataGetPortfolio: null,
   /** error */
   errorGetMerchant: null,
+  errorAddMerchant: null,
   errorGetPortfolio: null,
   errorGetMerchantDetail: null
 };
@@ -192,6 +193,33 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingGetPortfolio: false,
       loadingGetMerchant: false,
       errorGetPortfolio: action.payload
+    };
+  },
+  /**
+   * =============================
+   * ADD MERCHANT
+   * =============================
+   */
+  [types.MERCHANT_ADD_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingAddMerchant: true,
+      dataAddMerchant: null,
+      errorAddMerchant: null
+    };
+  },
+  [types.MERCHANT_ADD_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingAddMerchant: false,
+      dataAddMerchant: action.payload
+    };
+  },
+  [types.MERCHANT_ADD_FAILED](state, action) {
+    return {
+      ...state,
+      loadingAddMerchant: false,
+      errorAddMerchant: action.payload
     };
   }
 });

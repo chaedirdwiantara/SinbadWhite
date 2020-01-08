@@ -67,16 +67,18 @@ class ListAndSearchType1 extends Component {
       provinceId: this.props.global.dataLocationVolatile.provinceId,
       cityName: this.props.global.dataLocationVolatile.cityName,
       districName: this.props.global.dataLocationVolatile.districName,
-      search: this.props.global.search
+      search: this.props.global.search,
+      userId: this.props.user.id
     });
   }
   /** === SAVE DATA === */
   saveData(item) {
     switch (this.props.navigation.state.params.type) {
+      /** === FOR LOCATION === */
       case 'province':
         this.props.saveLocationDataVolatile({
           provinceName: item.name,
-          provinceId: item.id,
+          provinceId: parseInt(item.id, 10),
           cityName: '',
           districName: '',
           urbanName: '',
@@ -107,9 +109,49 @@ class ListAndSearchType1 extends Component {
       case 'urban':
         this.props.saveLocationDataVolatile({
           urbanName: item.urban,
-          urbanId: item.id,
+          urbanId: parseInt(item.id, 10),
           zipCode: item.zipCode,
           address: ''
+        });
+        NavigationService.goBack(this.props.navigation.state.key);
+        break;
+      /** === FOR MERCHANT === */
+      case 'typeMerchant':
+        this.props.saveVolatileDataAddMerchant({
+          storeTypeId: parseInt(item.id, 10),
+          storeTypeName: item.name
+        });
+        NavigationService.goBack(this.props.navigation.state.key);
+        break;
+      case 'groupMerchant':
+        this.props.saveVolatileDataAddMerchant({
+          storeGroupId: parseInt(item.id, 10),
+          storeGroupName: item.name
+        });
+        NavigationService.goBack(this.props.navigation.state.key);
+        break;
+      case 'clusterMerchant':
+        this.props.saveVolatileDataAddMerchant({
+          cluster: {
+            clusterId: parseInt(item.id, 10),
+            clusterName: item.name
+          }
+        });
+        NavigationService.goBack(this.props.navigation.state.key);
+        break;
+      case 'segmentMerchant':
+        this.props.saveVolatileDataAddMerchant({
+          storeSegmentId: parseInt(item.id, 10),
+          storeSegmentName: item.name
+        });
+        NavigationService.goBack(this.props.navigation.state.key);
+        break;
+      case 'suplierMerchant':
+        this.props.saveVolatileDataAddMerchant({
+          supplier: {
+            supplierId: parseInt(item.id, 10),
+            supplierName: item.name
+          }
         });
         NavigationService.goBack(this.props.navigation.state.key);
         break;
@@ -119,14 +161,26 @@ class ListAndSearchType1 extends Component {
   }
   /** === MODIFY ITEM === */
   modifyItem(item) {
-    if (this.props.navigation.state.params.type === 'province') {
-      return item.name;
-    } else if (this.props.navigation.state.params.type === 'city') {
-      return item.city;
-    } else if (this.props.navigation.state.params.type === 'distric') {
-      return item.district;
-    } else if (this.props.navigation.state.params.type === 'urban') {
-      return item.urban;
+    switch (this.props.navigation.state.params.type) {
+      /** === THIS FOR LOCATION === */
+      case 'province':
+        return item.name;
+      case 'city':
+        return item.city;
+      case 'distric':
+        return item.district;
+      case 'urban':
+        return item.urban;
+      /** === THIS FOR MERCHANT === */
+      case 'typeMerchant':
+      case 'groupMerchant':
+      case 'clusterMerchant':
+      case 'suplierMerchant':
+      case 'segmentMerchant':
+      case 'hierarchyMerchant':
+        return item.name;
+      default:
+        break;
     }
   }
   /**
@@ -220,8 +274,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ global }) => {
-  return { global };
+const mapStateToProps = ({ global, user }) => {
+  return { global, user };
 };
 
 const mapDispatchToProps = dispatch => {

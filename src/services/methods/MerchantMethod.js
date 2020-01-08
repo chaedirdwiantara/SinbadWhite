@@ -21,9 +21,18 @@ function getPortfolioByUserId(userId) {
     method: 'GET'
   });
 }
+/** === ADD MERCHANT === */
+function addMerchant(params) {
+  return ApiRest({
+    path: 'journey-plan-list?storeType=new_store',
+    method: 'POST',
+    params
+  });
+}
 
 export const MerchantMethod = {
   getMerchant,
   getMerchantDetail,
-  getPortfolioByUserId
+  getPortfolioByUserId,
+  addMerchant
 };

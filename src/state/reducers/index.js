@@ -10,3 +10,4 @@ export * from './MerchantReducer';
 export * from './JourneyReducer';
 export * from './PdpReducer';
 export * from './OmsReducer';
+export * from './PermanentReducer';

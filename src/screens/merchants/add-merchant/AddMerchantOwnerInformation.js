@@ -15,7 +15,8 @@ class AddMerchantOwnerInformation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fullName: this.props.merchant.dataAddMerchantVolatile.user.fullName
+      fullName: this.props.merchant.dataAddMerchantVolatile.user.fullName,
+      phone: this.props.merchant.dataAddMerchantVolatile.user.phone
     };
   }
   /**
@@ -24,7 +25,27 @@ class AddMerchantOwnerInformation extends Component {
    * =====================
    */
   nextStep() {
-    NavigationService.navigate('MerchantView');
+    this.props.saveVolatileDataAddMerchant({
+      user: {
+        fullName: this.state.fullName,
+        idNo: '',
+        taxNo: '',
+        phone: this.state.phone,
+        email: '',
+        password: 'sinbad',
+        status: 'inactive',
+        roles: [1]
+      }
+    });
+    setTimeout(() => {
+      this.props.merchantAddProcess(
+        this.props.merchant.dataAddMerchantVolatile
+      );
+    }, 100);
+  }
+  /** CHECK IF BUTTON DISABLE */
+  buttonDisable() {
+    return this.state.fullName !== '';
   }
   /**
    * ====================
@@ -47,8 +68,8 @@ class AddMerchantOwnerInformation extends Component {
         title={'Nama Lengkap Pemilik'}
         value={this.state.fullName}
         placeholder={'Nama Lengkap Pemilik'}
-        keyboardType={'numeric'}
-        text={text => this.setState({ nameMerchant: text })}
+        keyboardType={'default'}
+        text={text => this.setState({ fullName: text })}
         error={false}
         errorText={''}
       />
@@ -62,7 +83,7 @@ class AddMerchantOwnerInformation extends Component {
   renderButton() {
     return (
       <ButtonSingle
-        disabled={false}
+        disabled={!this.buttonDisable()}
         title={'Lanjutkan'}
         borderRadius={4}
         onPress={() => this.nextStep()}

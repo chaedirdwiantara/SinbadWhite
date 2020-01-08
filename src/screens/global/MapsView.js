@@ -56,7 +56,10 @@ class MapsView extends Component {
     setTimeout(() => {
       this.setState({ reRender: false });
     }, 100);
-    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
+    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
+      maximumAge: 0,
+      enableHighAccuracy: true
+    });
   }
   addLongLat() {
     this.props.saveLocationDataVolatile({
