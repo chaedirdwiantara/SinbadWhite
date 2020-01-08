@@ -9,10 +9,12 @@ const INITIAL_STATE = {
   loadingLoadMoreGetMerchant: false,
   loadingGetPortfolio: false,
   loadingGetMerchantDetail: false,
+  loadingGetMerchantLastOrder: false,
   /** data */
   dataGetMerchant: [],
   dataAddMerchant: null,
   dataGetMerchantDetail: null,
+  dataGetMerchantLastOrder: [],
   dataAddMerchantVolatile: {
     name: '',
     taxNo: '',
@@ -56,7 +58,8 @@ const INITIAL_STATE = {
   errorGetMerchant: null,
   errorAddMerchant: null,
   errorGetPortfolio: null,
-  errorGetMerchantDetail: null
+  errorGetMerchantDetail: null,
+  errorGetMerchantLastOrder: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -221,6 +224,33 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingAddMerchant: false,
       errorAddMerchant: action.payload
+    };
+  },
+  /**
+   * ==========================
+   * MERCHANT LAST ORDER
+   * ==========================
+   */
+  [types.MERCHANT_GET_LAST_ORDER_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetMerchantLastOrder: true,
+      dataGetMerchantLastOrder: null,
+      errorGetMerchantLastOrder: null
+    };
+  },
+  [types.MERCHANT_GET_LAST_ORDER_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetMerchantLastOrder: false,
+      dataGetMerchantLastOrder: action.payload
+    };
+  },
+  [types.MERCHANT_GET_LAST_ORDER_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetMerchantLastOrder: false,
+      errorGetMerchantLastOrder: action.payload
     };
   }
 });

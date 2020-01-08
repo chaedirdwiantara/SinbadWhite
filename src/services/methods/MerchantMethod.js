@@ -29,10 +29,18 @@ function addMerchant(params) {
     params
   });
 }
+/** === MERCHANT LAST ORDER === */
+function getMerchantLastOrder(storeId) {
+  return ApiRest({
+    path: `journey-reports/${storeId}`,
+    method: 'GET'
+  });
+}
 
 export const MerchantMethod = {
   getMerchant,
   getMerchantDetail,
   getPortfolioByUserId,
-  addMerchant
+  addMerchant,
+  getMerchantLastOrder
 };

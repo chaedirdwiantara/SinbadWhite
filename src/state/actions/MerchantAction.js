@@ -100,3 +100,24 @@ export function merchantAddSuccess(data) {
 export function merchantAddFailed(data) {
   return { type: types.MERCHANT_ADD_FAILED, payload: data };
 }
+
+/**
+ * ====================================
+ * GET LAST ORDER BY STORE ID
+ * ====================================
+ */
+/** PORTFOLIO GET PROCESS */
+export function merchantGetLastOrderProcess(storeId) {
+  return { type: types.MERCHANT_GET_LAST_ORDER_PROCESS, payload: storeId };
+}
+/** PORTFOLIO GET SUCCESS */
+export function merchantGetLastOrderSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.MERCHANT_GET_LAST_ORDER_SUCCESS, payload: data.data };
+  }
+  return { type: types.MERCHANT_GET_LAST_ORDER_FAILED, payload: data };
+}
+/** PORTFOLIO GET FAILED */
+export function merchantGetLastOrderFailed(data) {
+  return { type: types.MERCHANT_GET_LAST_ORDER_FAILED, payload: data };
+}
