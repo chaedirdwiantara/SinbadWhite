@@ -37,7 +37,7 @@ function getLocation(data) {
       getLocationApi = 'store-groups?';
       break;
     case 'suplierMerchant':
-      getLocationApi = 'store-groups?';
+      getLocationApi = `suppliers?userId=${data.userId}&`;
       break;
     case 'segmentMerchant':
       getLocationApi = 'store-segments?';

@@ -80,3 +80,23 @@ export function portfolioGetSuccess(data) {
 export function portfolioGetFailed(data) {
   return { type: types.PORTFOLIO_GET_FAILED, payload: data };
 }
+/**
+ * ==================================
+ * ADD MERCHANT
+ * ==================================
+ */
+/** PORTFOLIO GET PROCESS */
+export function merchantAddProcess(data) {
+  return { type: types.MERCHANT_ADD_PROCESS, payload: data };
+}
+/** PORTFOLIO GET SUCCESS */
+export function merchantAddSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.MERCHANT_ADD_SUCCESS, payload: data.data };
+  }
+  return { type: types.MERCHANT_ADD_FAILED, payload: data };
+}
+/** PORTFOLIO GET FAILED */
+export function merchantAddFailed(data) {
+  return { type: types.MERCHANT_ADD_FAILED, payload: data };
+}

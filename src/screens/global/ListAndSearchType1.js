@@ -67,7 +67,8 @@ class ListAndSearchType1 extends Component {
       provinceId: this.props.global.dataLocationVolatile.provinceId,
       cityName: this.props.global.dataLocationVolatile.cityName,
       districName: this.props.global.dataLocationVolatile.districName,
-      search: this.props.global.search
+      search: this.props.global.search,
+      userId: this.props.user.id
     });
   }
   /** === SAVE DATA === */
@@ -113,6 +114,13 @@ class ListAndSearchType1 extends Component {
         });
         NavigationService.goBack(this.props.navigation.state.key);
         break;
+      case 'typeMerchant':
+        this.props.saveVolatileDataAddMerchant({
+          storeTypeId: item.id,
+          storeTypeName: item.name
+        });
+        NavigationService.goBack(this.props.navigation.state.key);
+        break;
       default:
         break;
     }
@@ -127,6 +135,18 @@ class ListAndSearchType1 extends Component {
       return item.district;
     } else if (this.props.navigation.state.params.type === 'urban') {
       return item.urban;
+    } else if (this.props.navigation.state.params.type === 'typeMerchant') {
+      return item.name;
+    } else if (this.props.navigation.state.params.type === 'groupMerchant') {
+      return item.name;
+    } else if (this.props.navigation.state.params.type === 'suplierMerchant') {
+      return item.name;
+    } else if (this.props.navigation.state.params.type === 'segmentMerchant') {
+      return item.name;
+    } else if (
+      this.props.navigation.state.params.type === 'hierarchyMerchant'
+    ) {
+      return item.name;
     }
   }
   /**
@@ -220,8 +240,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ global }) => {
-  return { global };
+const mapStateToProps = ({ global, user }) => {
+  return { global, user };
 };
 
 const mapDispatchToProps = dispatch => {
