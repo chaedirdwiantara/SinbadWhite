@@ -16,6 +16,7 @@ import PdpListDataView from './PdpListDataView';
 import PdpLineDataView from './PdpLineDataView';
 import PdpFilterView from './PdpFilterView';
 import PdpOrderView from './PdpOrderView';
+import CartGlobal from '../../components/CartGlobal';
 
 class PdpView extends Component {
   constructor(props) {
@@ -71,13 +72,9 @@ class PdpView extends Component {
               size={24}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={{ marginRight: 16, marginLeft: 12 }}>
-            <MaterialIcon
-              color={masterColor.fontWhite}
-              name={'shopping-cart'}
-              size={24}
-            />
-          </TouchableOpacity>
+          <View style={{ marginRight: 16, marginLeft: 12 }}>
+            <CartGlobal />
+          </View>
         </View>
       )
     };

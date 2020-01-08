@@ -10,6 +10,7 @@ const INITIAL_STATE = {
   loadingGetPortfolio: false,
   loadingGetMerchantDetail: false,
   /** data */
+  selectedMerchant: null,
   dataGetMerchant: [],
   dataAddMerchant: null,
   dataGetMerchantDetail: null,
@@ -67,6 +68,17 @@ export const merchant = createReducer(INITIAL_STATE, {
    */
   [types.DELETE_ALL_DATA](state, action) {
     return INITIAL_STATE;
+  },
+  /**
+   * ============================
+   * SELECTED MERCHANT
+   * ============================
+   */
+  [types.MERCHANT_SELECTED](state, action) {
+    return {
+      ...state,
+      selectedMerchant: action.payload
+    };
   },
   /**
    * ==================================

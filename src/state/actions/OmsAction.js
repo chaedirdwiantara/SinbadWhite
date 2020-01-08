@@ -1,6 +1,26 @@
 import * as types from '../types';
 import { Store } from '../Store';
 /**
+ * ====================================
+ * GET CART ITEM
+ * ====================================
+ */
+/** === CART ITEM PROCESS === */
+export function omsGetCartItemProcess(data) {
+  return { type: types.OMS_GET_CART_ITEM_PROCESS, payload: data };
+}
+/** === CART ITEM SUCCESS === */
+export function omsGetCartItemSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.OMS_GET_CART_ITEM_SUCCESS, payload: data.data };
+  }
+  return { type: types.OMS_GET_CART_ITEM_FAILED, payload: data };
+}
+/** === CART ITEM FAILED === */
+export function omsGetCartItemFailed(data) {
+  return { type: types.OMS_GET_CART_ITEM_FAILED, payload: data };
+}
+/**
  * ==============================
  * ADD TO CART GLOBAL
  * ==============================

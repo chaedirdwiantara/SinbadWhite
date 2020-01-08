@@ -55,6 +55,8 @@ export const MERCHANT_ADD_SUCCESS = 'MerchantAddSuccess';
 export const MERCHANT_ADD_FAILED = 'MerchantAddFailed';
 /** FOR ADD MERCHANT */
 export const MERCHANT_ADD_DATA_VOLATILE = 'MerchantAddDataVolatile';
+/** SELECTED MERCHANT === */
+export const MERCHANT_SELECTED = 'MerchantSelected';
 /** === JOURNEY === */
 /** FOR GET JOURNEY PLAN LIST */
 export const JOURNEY_PLAN_GET_PROCESS = 'JourneyPlanGetProcess';
@@ -91,3 +93,7 @@ export const OMS_ADD_TO_CART = 'OmsAddToCart';
 // INI SEMENTARA HARUS DI GANTI
 export const OMS_ITEM_FOR_CART = 'omsAddToCart';
 export const OMS_CHECKLIST_ITEM_CART = 'omsCheckListItemCart';
+/** POST CART ITEM */
+export const OMS_GET_CART_ITEM_PROCESS = 'OmsGetCartItemProcess';
+export const OMS_GET_CART_ITEM_SUCCESS = 'OmsGetCartItemSuccess';
+export const OMS_GET_CART_ITEM_FAILED = 'OmsGetCartItemFailed';
