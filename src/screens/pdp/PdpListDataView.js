@@ -37,7 +37,12 @@ class PdpListDataView extends Component {
    */
   onHandleRefresh = () => {
     this.props.pdpGetRefresh();
-    this.props.pdpGetProcess({ page: 0, loading: true });
+    this.props.pdpGetProcess({
+      page: 0,
+      loading: true,
+      searchText: this.props.global.search,
+      supplierId: this.props.user.userSuppliers[0].supplierId
+    });
   };
 
   onHandleLoadMore = () => {
@@ -45,7 +50,12 @@ class PdpListDataView extends Component {
       if (this.props.pdp.dataGetPdp.length < this.props.pdp.totalDataGetPdp) {
         const page = this.props.pdp.pageGetPdp + 10;
         this.props.pdpGetLoadMore(page);
-        this.props.pdpGetProcess({ page, loading: false });
+        this.props.pdpGetProcess({
+          page,
+          loading: false,
+          searchText: this.props.global.search,
+          supplierId: this.props.user.userSuppliers[0].supplierId
+        });
       }
     }
   };
@@ -319,8 +329,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, pdp }) => {
-  return { user, pdp };
+const mapStateToProps = ({ user, pdp, global }) => {
+  return { user, pdp, global };
 };
 
 const mapDispatchToProps = dispatch => {

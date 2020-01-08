@@ -227,10 +227,10 @@ class MerchantHomeView extends Component {
       <Card containerStyle={{ flex: 1 }}>
         <View style={styles.containerTitle}>
           <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-            <Text>Task List</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 14 }}>Store Menu</Text>
           </View>
           <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-            <Text style={{ textAlign: 'right' }}>5 / 6 Selesai</Text>
+            <Text style={{ textAlign: 'right' }}>1 / 3 Selesai</Text>
           </View>
         </View>
         <View style={{ flex: 1 }}>
@@ -238,7 +238,7 @@ class MerchantHomeView extends Component {
             <View style={styles.checkBox}>
               <MaterialIcons
                 name="check-circle"
-                color={masterColor.fontGreen50}
+                color={[masterColor.fontGreen50]}
                 size={24}
               />
             </View>

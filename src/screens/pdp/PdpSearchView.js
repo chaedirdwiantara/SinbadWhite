@@ -11,6 +11,9 @@ import Fonts from '../../helpers/GlobalFont';
 import { StatusBarRed } from '../../components/StatusBarGlobal';
 import SearchBarType3 from '../../components/search_bar/SearchBarType3';
 import CartGlobal from '../../components/CartGlobal';
+import PdpGridDataView from './PdpGridDataView';
+import PdpListDataView from './PdpListDataView';
+import PdpLineDataView from './PdpLineDataView';
 
 class PdpSearchView extends Component {
   constructor(props) {
@@ -22,11 +25,40 @@ class PdpSearchView extends Component {
    * FUNCTIONAL
    * =======================
    */
+
+  componentDidMount() {
+    this.props.pdpGetReset();
+  }
+
+  componentDidUpdate(prevState) {
+    if (
+      prevState.global.search !== this.props.global.search &&
+      this.props.global.search !== ''
+    ) {
+      this.props.pdpGetReset();
+      this.props.pdpGetProcess({
+        page: 0,
+        loading: true,
+        searchText: this.props.global.search,
+        supplierId: this.props.user.userSuppliers[0].supplierId
+      });
+    }
+  }
+
   /**
    * ========================
    * RENDER VIEW
    * =======================
    */
+  renderPdpData() {
+    if (this.props.pdp.pdpDisplay === 'grid') {
+      return <PdpGridDataView />;
+    } else if (this.props.pdp.pdpDisplay === 'list') {
+      return <PdpListDataView />;
+    } else if (this.props.pdp.pdpDisplay === 'line') {
+      return <PdpLineDataView />;
+    }
+  }
   /**
    * ========================
    * HEADER MODIFY
@@ -51,7 +83,7 @@ class PdpSearchView extends Component {
     return (
       <View style={styles.mainContainer}>
         <StatusBarRed />
-        <Text>PDP LIST</Text>
+        {this.renderPdpData()}
       </View>
     );
   }
@@ -64,8 +96,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ auth, pdp, global, user }) => {
+  return { auth, pdp, global, user };
 };
 
 const mapDispatchToProps = dispatch => {
