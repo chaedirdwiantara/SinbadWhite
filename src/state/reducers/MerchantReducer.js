@@ -212,7 +212,8 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingAddMerchant: false,
-      dataAddMerchant: action.payload
+      dataAddMerchant: action.payload,
+      dataAddMerchantVolatile: INITIAL_STATE.dataAddMerchantVolatile
     };
   },
   [types.MERCHANT_ADD_FAILED](state, action) {

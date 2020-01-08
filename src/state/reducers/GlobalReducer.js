@@ -125,5 +125,17 @@ export const global = createReducer(INITIAL_STATE, {
       loadingLoadMoreGetLocation: true,
       pageGetLocation: action.payload
     };
+  },
+  /**
+   * ============================
+   * FOR CLEAR DATA REDUCER
+   * ============================
+   */
+  /** IF ADD MERCHANT SUCCESS CLEAR LOCATION */
+  [types.MERCHANT_ADD_SUCCESS](state, action) {
+    return {
+      ...state,
+      dataLocationVolatile: INITIAL_STATE.dataLocationVolatile
+    };
   }
 });

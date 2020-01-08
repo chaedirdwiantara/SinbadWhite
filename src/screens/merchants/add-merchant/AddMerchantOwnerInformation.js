@@ -24,7 +24,23 @@ class AddMerchantOwnerInformation extends Component {
    * FUNCTIONAL
    * =====================
    */
-  nextStep() {
+  /** DID UPDATE */
+  componentDidUpdate(prevProps) {
+    /** IF ADD MERCHANT SUCCESS */
+    if (
+      prevProps.merchant.dataAddMerchant !== this.props.merchant.dataAddMerchant
+    ) {
+      if (this.props.merchant.dataAddMerchant !== null) {
+        NavigationService.navigate('JourneyView');
+        setTimeout(() => {
+          this.props.journeyPlanGetRefresh();
+          this.props.journeyPlanGetProcess({ page: 0, loading: true });
+        }, 100);
+      }
+    }
+  }
+  /** SEND DATA ADD MERCHANT */
+  finalStep() {
     this.props.saveVolatileDataAddMerchant({
       user: {
         fullName: this.state.fullName,
@@ -83,10 +99,13 @@ class AddMerchantOwnerInformation extends Component {
   renderButton() {
     return (
       <ButtonSingle
-        disabled={!this.buttonDisable()}
+        disabled={
+          !this.buttonDisable() || this.props.merchant.loadingAddMerchant
+        }
         title={'Lanjutkan'}
         borderRadius={4}
-        onPress={() => this.nextStep()}
+        loading={this.props.merchant.loadingAddMerchant}
+        onPress={() => this.finalStep()}
       />
     );
   }

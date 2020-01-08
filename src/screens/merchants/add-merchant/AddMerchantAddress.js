@@ -51,7 +51,7 @@ class AddMerchantAddress extends Component {
       urbanId: this.props.global.dataLocationVolatile.urbanId,
       longitude: this.props.global.dataLocationVolatile.longitude,
       latitude: this.props.global.dataLocationVolatile.latitude,
-      address: this.props.global.dataLocationVolatile.address
+      address: this.state.address
     });
     NavigationService.navigate('AddMerchant6');
   }

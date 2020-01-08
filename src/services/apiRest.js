@@ -15,8 +15,8 @@ export default function endpoint({ path, method, params }) {
     headers
   };
 
-  if (stateData.global.token !== null) {
-    set(headers, 'Authorization', `Bearer ${stateData.global.token}`);
+  if (stateData.permanent.token !== null) {
+    set(headers, 'Authorization', `Bearer ${stateData.permanent.token}`);
   }
 
   if (!isEmpty(params)) {

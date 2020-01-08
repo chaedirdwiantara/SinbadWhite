@@ -288,12 +288,12 @@ class JourneyListDataView extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    height: '100%',
+    flex: 1,
     backgroundColor: masterColor.backgroundWhite
   },
   flatListContainer: {
     paddingTop: 30,
-    paddingBottom: 26
+    paddingBottom: 60
   },
   boxItem: {
     flexDirection: 'row',
