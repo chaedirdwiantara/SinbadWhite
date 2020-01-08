@@ -4,6 +4,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  ScrollView,
   Dimensions,
   Image
 } from 'react-native';
@@ -12,13 +13,15 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Card } from 'react-native-elements';
 // import LinearGradient from 'react-native-linear-gradient';
+import moment from 'moment';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import * as ActionCreators from '../../../state/actions';
 import GlobalStyle from '../../../helpers/GlobalStyle';
 import masterColor from '../../../config/masterColor.json';
 import Fonts from '../../../helpers/GlobalFont';
-import { MoneyFormatShort, MoneyFormat } from '../../../helpers/NumberFormater';
+import { MoneyFormat } from '../../../helpers/NumberFormater';
 import { StatusBarRed } from '../../../components/StatusBarGlobal';
 import NavigationService from '../../../navigation/NavigationService';
 const { width, height } = Dimensions.get('window');
@@ -47,7 +50,10 @@ class MerchantHomeView extends Component {
    */
 
   componentDidMount() {
-    this.props.merchantGetLastOrderProcess(1);
+    this.props.merchantGetLastOrderProcess(
+      // this.props.merchant.selectedMerchant.store.id
+      1
+    );
   }
 
   goToPdp() {
@@ -59,19 +65,26 @@ class MerchantHomeView extends Component {
    * =======================
    */
 
-  renderListProductImage() {
-    return (
-      <View style={{ paddingHorizontal: 5 }}>
-        <Image
-          defaultSource={require('../../../assets/images/sinbad_image/sinbadopacity.png')}
-          source={{
-            uri:
-              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67126185.png'
-          }}
-          style={styles.productImage}
-        />
-      </View>
-    );
+  renderListProductImage(item) {
+    return item.orderBrands.map((itemBrand, indexBrand) => {
+      return itemBrand.orderBrandCatalogues.map(
+        (itemCatalogue, indexCatalogue) => {
+          return indexCatalogue < 3 ? (
+            <View key={indexCatalogue} style={{ paddingHorizontal: 5 }}>
+              <Image
+                defaultSource={require('../../../assets/images/sinbad_image/sinbadopacity.png')}
+                source={{
+                  uri: itemCatalogue.catalogue.catalogueImages[0].imageUrl
+                }}
+                style={styles.productImage}
+              />
+            </View>
+          ) : (
+            <View key={indexCatalogue} />
+          );
+        }
+      );
+    });
   }
 
   renderPlusProduct() {
@@ -84,22 +97,31 @@ class MerchantHomeView extends Component {
 
   renderItem({ item, index }) {
     return (
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'red'
-        }}
-      >
+      <View>
+        <View>
+          <Text
+            style={{
+              fontSize: 13,
+              lineHeight: 16,
+              margin: 10,
+              fontWeight: 'bold'
+            }}
+          >
+            Faktur: {item.invoiceGroup.name}
+          </Text>
+        </View>
         <Card containerStyle={styles.cardPromo}>
-          <View style={{ height: '100%' }}>
+          <View style={{ flex: 1, flexDirection: 'column' }}>
             <View style={{ marginBottom: 0.025 * height }}>
               <Text style={styles.titleCard}>Last Order</Text>
             </View>
-            <TouchableOpacity
+            <View
               style={{
+                width: 0.8 * width,
+                height: 0.12 * height,
+                backgroundColor: '#fafafa',
                 flexDirection: 'row',
-                paddingHorizontal: 10,
+                padding: 10,
                 justifyContent: 'space-between'
               }}
               onPress={() =>
@@ -107,12 +129,64 @@ class MerchantHomeView extends Component {
               }
             >
               <View style={{ flexDirection: 'row' }}>
-                {this.renderListProductImage()}
+                {this.renderListProductImage(item)}
               </View>
               <View style={{ justifyContent: 'center', marginRight: 10 }}>
-                {this.renderPlusProduct()}
+                {this.renderPlusProduct(item)}
               </View>
-            </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-around'
+              }}
+            >
+              <View style={{ justifyContent: 'space-evenly' }}>
+                <Text
+                  style={{
+                    fontSize: 11,
+                    lineHeight: 14,
+                    color: '#52575c',
+                    textAlign: 'left'
+                  }}
+                >
+                  {item.orderCode}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 11,
+                    lineHeight: 14,
+                    color: '#52575c',
+                    textAlign: 'left'
+                  }}
+                >
+                  {moment(new Date(item.createdAt)).format('DD-MM-YYYY')}
+                </Text>
+              </View>
+              <View style={{ justifyContent: 'space-evenly' }}>
+                <Text
+                  style={{
+                    fontSize: 11,
+                    lineHeight: 14,
+                    color: '#52575c',
+                    textAlign: 'right'
+                  }}
+                >
+                  {item.parcelDetails.totalQty} Qty
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 11,
+                    lineHeight: 14,
+                    color: '#52575c',
+                    textAlign: 'right'
+                  }}
+                >
+                  Total: {MoneyFormat(item.parcelDetails.totalNettPrice)}
+                </Text>
+              </View>
+            </View>
           </View>
         </Card>
       </View>
@@ -120,11 +194,11 @@ class MerchantHomeView extends Component {
   }
 
   renderData() {
-    return (
+    return this.props.merchant.dataGetMerchantLastOrder !== null ? (
       <View>
         <Carousel
           ref={ref => (this.carousel = ref)}
-          data={this.state.banner}
+          data={this.props.merchant.dataGetMerchantLastOrder.orderParcels}
           sliderWidth={1 * width}
           itemWidth={1 * width}
           renderItem={this.renderItem.bind(this)}
@@ -137,6 +211,117 @@ class MerchantHomeView extends Component {
           activeSlideAlignment={'center'}
         />
         {/* {this.pagination()} */}
+      </View>
+    ) : (
+      <View />
+    );
+  }
+
+  renderTask() {
+    return (
+      <Card containerStyle={{ flex: 1 }}>
+        <View style={styles.containerTitle}>
+          <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+            <Text>Task List</Text>
+          </View>
+          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+            <Text style={{ textAlign: 'right' }}>5 / 6 Selesai</Text>
+          </View>
+        </View>
+        <View style={{ flex: 1 }}>
+          <View style={styles.containerList}>
+            <View style={styles.checkBox}>
+              <MaterialIcons
+                name="check-circle"
+                color={masterColor.fontGreen50}
+                size={24}
+              />
+            </View>
+            <View style={styles.taskBox}>
+              <Text style={{ textAlign: 'left' }}>Check in</Text>
+            </View>
+            <View style={styles.rightArrow}>
+              <MaterialIcons
+                name="chevron-right"
+                color={masterColor.fontBlack50}
+                size={24}
+              />
+            </View>
+          </View>
+          <View style={styles.containerList}>
+            <View style={styles.checkBox}>
+              <MaterialIcons
+                name="check-circle"
+                color={masterColor.fontGreen50}
+                size={24}
+              />
+            </View>
+            <View style={styles.taskBox}>
+              <Text style={{ textAlign: 'left' }}>Order</Text>
+            </View>
+            <View style={styles.rightArrow}>
+              <MaterialIcons
+                name="chevron-right"
+                color={masterColor.fontBlack50}
+                size={24}
+              />
+            </View>
+          </View>
+        </View>
+      </Card>
+    );
+  }
+
+  renderStoreMenu() {
+    return (
+      <View style={{ padding: 15 }}>
+        <View>
+          <Text style={{ fontWeight: 'bold', fontSize: 15 }}>Store Menu</Text>
+        </View>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          <View
+            style={{
+              padding: 5,
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <View
+              style={{ height: 50, width: 70, backgroundColor: '#fafafa' }}
+            />
+            <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
+              Order
+            </Text>
+          </View>
+          <View
+            style={{
+              padding: 5,
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <View
+              style={{ height: 50, width: 70, backgroundColor: '#fafafa' }}
+            />
+            <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
+              Check In
+            </Text>
+          </View>
+          <View
+            style={{
+              padding: 5,
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <View
+              style={{ height: 50, width: 70, backgroundColor: '#fafafa' }}
+            />
+            <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
+              Check Out
+            </Text>
+          </View>
+        </View>
       </View>
     );
   }
@@ -167,14 +352,18 @@ class MerchantHomeView extends Component {
 
   /** MAIN */
   render() {
-    return (
-      <View style={styles.mainContainer}>
+    return !this.props.merchant.loadingGetMerchantLastOrder ? (
+      <ScrollView style={styles.mainContainer}>
         <StatusBarRed />
         {this.renderData()}
-        <TouchableOpacity onPress={() => this.goToPdp()}>
+        {this.renderTask()}
+        {this.renderStoreMenu()}
+        {/* <TouchableOpacity onPress={() => this.goToPdp()}>
           <Text>Order</Text>
-        </TouchableOpacity>
-      </View>
+        </TouchableOpacity> */}
+      </ScrollView>
+    ) : (
+      <View />
     );
   }
 }
@@ -204,7 +393,7 @@ const styles = StyleSheet.create({
   cardPromo: {
     borderRadius: 15,
     borderWidth: 0,
-    height: 0.21 * height,
+    height: 0.31 * height,
     width: 0.9 * width,
     elevation: 2,
     shadowOffset: {
@@ -221,7 +410,7 @@ const styles = StyleSheet.create({
   },
   productImage: {
     resizeMode: 'contain',
-    width: 50,
+    width: 57,
     height: undefined,
     aspectRatio: 1 / 1
   },
@@ -229,11 +418,48 @@ const styles = StyleSheet.create({
     color: '#333333',
     fontSize: RFPercentage(1.3),
     fontFamily: Fonts.MontserratMedium
+  },
+  // SEMENTARA
+  cardTask: {
+    flex: 1,
+    flexDirection: 'column',
+    elevation: 2,
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowColor: '#777777',
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22
+  },
+  containerTitle: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 0.1 * width
+  },
+  containerList: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingVertical: 10
+  },
+  checkBox: {
+    flex: 1,
+    justifyContent: 'flex-start'
+  },
+  taskBox: {
+    flex: 2,
+    justifyContent: 'center'
+  },
+  rightArrow: {
+    flex: 2,
+    alignItems: 'flex-end',
+    justifyContent: 'center'
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ auth, merchant }) => {
+  return { auth, merchant };
 };
 
 const mapDispatchToProps = dispatch => {

@@ -15,7 +15,7 @@ const INITIAL_STATE = {
   dataGetMerchant: [],
   dataAddMerchant: null,
   dataGetMerchantDetail: null,
-  dataGetMerchantLastOrder: [],
+  dataGetMerchantLastOrder: null,
   dataAddMerchantVolatile: {
     name: '',
     taxNo: '',
@@ -255,7 +255,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetMerchantLastOrder: false,
-      dataGetMerchantLastOrder: action.payload
+      dataGetMerchantLastOrder: action.payload.lastOrder
     };
   },
   [types.MERCHANT_GET_LAST_ORDER_FAILED](state, action) {
