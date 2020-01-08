@@ -31,7 +31,11 @@ class PdpView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.props.pdpGetReset();
-    this.props.pdpGetProcess({ page: 0, loading: true });
+    this.props.pdpGetProcess({
+      page: 0,
+      loading: true,
+      supplierId: this.props.user.userSuppliers[0].supplierId
+    });
   }
 
   /**
@@ -104,8 +108,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ pdp }) => {
-  return { pdp };
+const mapStateToProps = ({ pdp, user }) => {
+  return { pdp, user };
 };
 
 const mapDispatchToProps = dispatch => {

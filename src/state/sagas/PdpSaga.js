@@ -4,6 +4,7 @@ import * as ActionCreators from '../actions';
 import * as types from '../types';
 
 function* getPdp(actions) {
+  console.log(actions.payload, 'ini apa');
   try {
     const response = yield call(() => {
       return PdpMethod.getPdp(actions.payload);
