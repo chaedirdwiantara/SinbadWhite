@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import Modal from 'react-native-modal';
 import masterColor from '../../config/masterColor.json';
-import { StatusBarBlackOP40 } from '../StatusBarGlobal';
 import Fonts from '../../helpers/GlobalFont';
 import ButtonSingle from '../../components/button/ButtonSingle';
 
@@ -68,12 +67,7 @@ class ModalBottomType1 extends Component {
   }
   /** === MAIN === */
   render() {
-    return (
-      <View>
-        <StatusBarBlackOP40 />
-        {this.renderContent()}
-      </View>
-    );
+    return <View>{this.renderContent()}</View>;
   }
 }
 

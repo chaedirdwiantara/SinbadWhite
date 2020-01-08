@@ -364,9 +364,9 @@ class MerchantHomeView extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
+        <StatusBarRed />
         {!this.props.merchant.loadingGetMerchantLastOrder ? (
           <ScrollView>
-            <StatusBarRed />
             {this.renderData()}
             {this.renderTask()}
             {this.renderStoreMenu()}
