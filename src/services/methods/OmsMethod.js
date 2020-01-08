@@ -11,6 +11,18 @@ function getCartItem(data) {
     }
   });
 }
+/** GET CHECKOUT ITEM */
+function getCheckoutItem(data) {
+  return ApiRest({
+    path: 'checkout',
+    method: 'POST',
+    params: {
+      storeId: data.storeId,
+      cartId: data.cartId,
+      catalogues: data.catalogues
+    }
+  });
+}
 /** GET PAYMENT */
 function getPayment(data) {
   return ApiRest({
@@ -18,7 +30,7 @@ function getPayment(data) {
     method: 'GET'
   });
 }
-/** GET PAYMENT */
+/** POST CONFIRM ORDER */
 function confirmOrder(data) {
   return ApiRest({
     path: 'confirm-order',
@@ -39,6 +51,7 @@ function deleteOrder(data) {
 
 export const OmsMethod = {
   getCartItem,
+  getCheckoutItem,
   getPayment,
   confirmOrder,
   deleteOrder

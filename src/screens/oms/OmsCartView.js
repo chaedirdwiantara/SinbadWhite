@@ -8,6 +8,7 @@ import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
 import ButtonSingleSmall from '../../components/button/ButtonSingleSmall';
+import ModalConfirmation from '../../components/modal/ModalConfirmation';
 
 const { width, height } = Dimensions.get('window');
 
@@ -17,7 +18,7 @@ class OmsCartView extends Component {
     this.state = {
       buttonCheckoutDisabled: false,
       modalDeleteConfirmation: false,
-      modalToCheckoutConfirmation: false,
+      openModalToCheckoutConfirmation: false,
       modalStockConfirmation: false,
       productWantToDelete: null,
       modalErrorGlobal: false,
@@ -37,8 +38,30 @@ class OmsCartView extends Component {
       catalogues: this.props.oms.dataCart
     });
   }
+  /** === DID UPDATE */
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.oms.dataOmsGetCheckoutItem !==
+      this.props.oms.dataOmsGetCheckoutItem
+    ) {
+      if (this.props.oms.dataOmsGetCheckoutItem !== null) {
+        NavigationService.navigate('OmsCheckoutView');
+      }
+    }
+  }
   wantToGoCheckout() {
-    NavigationService.navigate('OmsCheckoutView');
+    this.setState({ openModalToCheckoutConfirmation: true });
+  }
+  /**
+   * === GO TO CHECKOUT ===
+   * - check cart first
+   */
+  checkCart() {
+    this.props.omsGetCheckoutItemProcess({
+      storeId: this.props.merchant.selectedMerchant.storeId,
+      cartId: this.props.oms.dataOmsGetCartItem.id,
+      catalogues: this.props.oms.dataCart
+    });
   }
   /**
    * =============================
@@ -118,6 +141,27 @@ class OmsCartView extends Component {
     );
   }
   /**
+   * ==================
+   * MODAL
+   * ===================
+   */
+  renderModalConfirmationCheckout() {
+    return this.state.openModalToCheckoutConfirmation ? (
+      <ModalConfirmation
+        open={this.state.openModalToCheckoutConfirmation}
+        content={'Konfirmasi order dan lanjut ke Checkout ?'}
+        type={'okeRed'}
+        ok={() => {
+          this.setState({ openModalToCheckoutConfirmation: false });
+          this.checkCart();
+        }}
+        cancel={() => this.setState({ openModalToCheckoutConfirmation: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /**
    * ====================
    * MAIN
    * ====================
@@ -127,6 +171,8 @@ class OmsCartView extends Component {
       <View style={styles.mainContainer}>
         {this.renderData()}
         {this.renderTotalBottom()}
+        {/* modal */}
+        {this.renderModalConfirmationCheckout()}
       </View>
     );
   }
