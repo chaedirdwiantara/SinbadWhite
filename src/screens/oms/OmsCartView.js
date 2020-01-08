@@ -24,6 +24,7 @@ import Font from '../../utils/Fonts';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import { MoneyFormat } from '../../helpers/NumberFormater';
 import OrderButton from '../../components/OrderButton';
+import EmptyData from '../../components/empty_state/EmptyData';
 
 const { width, height } = Dimensions.get('window');
 
@@ -48,10 +49,12 @@ class OmsCartView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    this.props.omsGetCartItemProcess({
-      storeId: this.props.merchant.selectedMerchant.storeId,
-      catalogues: this.props.oms.dataCart
-    });
+    if (this.props.oms.dataCart.length > 0) {
+      this.props.omsGetCartItemProcess({
+        storeId: this.props.merchant.selectedMerchant.storeId,
+        catalogues: this.props.oms.dataCart
+      });
+    }
   }
   /** === DID UPDATE */
   componentDidUpdate(prevProps) {
@@ -706,6 +709,20 @@ class OmsCartView extends Component {
       </View>
     );
   }
+  renderMainContent() {
+    return (
+      <View style={styles.mainContainer}>
+        {!this.props.oms.loadingOmsGetCartItem &&
+        this.props.oms.dataOmsGetCartItem !== null
+          ? this.renderContent()
+          : this.renderSkeleton()}
+      </View>
+    );
+  }
+
+  renderEmpty() {
+    return <EmptyData title={'Keranjang Kosong'} />;
+  }
   /**
    * ====================
    * MAIN
@@ -714,10 +731,9 @@ class OmsCartView extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        {!this.props.oms.loadingOmsGetCartItem &&
-        this.props.oms.dataOmsGetCartItem !== null
-          ? this.renderContent()
-          : this.renderSkeleton()}
+        {this.props.oms.dataCart.length > 0
+          ? this.renderMainContent()
+          : this.renderEmpty()}
         {/* modal */}
         {this.renderModalConfirmationCheckout()}
         {this.renderModalDeleteProductConfirmation()}

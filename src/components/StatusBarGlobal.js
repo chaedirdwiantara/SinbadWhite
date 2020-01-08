@@ -49,10 +49,20 @@ const StatusBarRedOP40 = () => {
   );
 };
 
+const StatusBarRedOP50 = () => {
+  return (
+    <StatusBar
+      backgroundColor={masterColor.statusBarRedOP50}
+      barStyle={'light-content'}
+    />
+  );
+};
+
 export {
   StatusBarWhite,
   StatusBarRed,
   StatusBarBlack,
   StatusBarBlackOP40,
-  StatusBarRedOP40
+  StatusBarRedOP40,
+  StatusBarRedOP50
 };

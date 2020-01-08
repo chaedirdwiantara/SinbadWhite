@@ -262,10 +262,6 @@ class OmsCheckoutView extends Component {
     NavigationService.navigate('MerchantHomeView', {
       storeName
     });
-    /** DELETE ALL OMS DATA */
-    setTimeout(() => {
-      this.props.omsResetData();
-    }, 1000);
   }
   /** BACK BUTTON RN PRESS HANDLING */
   handleBackPress = () => {

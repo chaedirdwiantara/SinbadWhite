@@ -25,6 +25,7 @@ import { MoneyFormat } from '../../../helpers/NumberFormater';
 import { StatusBarRed } from '../../../components/StatusBarGlobal';
 import NavigationService from '../../../navigation/NavigationService';
 import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
+import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
 
 const { width, height } = Dimensions.get('window');
 
@@ -361,19 +362,24 @@ class MerchantHomeView extends Component {
 
   /** MAIN */
   render() {
-    return !this.props.merchant.loadingGetMerchantLastOrder ? (
-      <ScrollView style={styles.mainContainer}>
+    return (
+      <View style={styles.mainContainer}>
         <StatusBarRed />
-        {this.renderData()}
-        {this.renderTask()}
-        {this.renderStoreMenu()}
-        <ModalBottomMerchantCheckout
-          open={this.state.modalCheckout}
-          close={() => this.closeModalCheckout()}
-        />
-      </ScrollView>
-    ) : (
-      <View />
+        {!this.props.merchant.loadingGetMerchantLastOrder ? (
+          <ScrollView>
+            {this.renderData()}
+            {this.renderTask()}
+            {this.renderStoreMenu()}
+            <ModalBottomMerchantCheckout
+              open={this.state.modalCheckout}
+              close={() => this.closeModalCheckout()}
+            />
+          </ScrollView>
+        ) : (
+          <View />
+        )}
+        <ModalBottomSuccessOrder />
+      </View>
     );
   }
 }
