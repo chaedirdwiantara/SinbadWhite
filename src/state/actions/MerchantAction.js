@@ -128,3 +128,45 @@ export function merchantGetLastOrderSuccess(data) {
 export function merchantGetLastOrderFailed(data) {
   return { type: types.MERCHANT_GET_LAST_ORDER_FAILED, payload: data };
 }
+
+/**
+ * ==================================
+ * CHECK IN MERCHANT
+ * ==================================
+ */
+/** MERCHANT CHECKIN PROCESS */
+export function merchantCheckinProcess(data) {
+  return { type: types.MERCHANT_CHECKIN_PROCESS, payload: data };
+}
+/** MERCHANT CHECKIN SUCCESS */
+export function merchantCheckinSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.MERCHANT_CHECKIN_SUCCESS, payload: data.data };
+  }
+  return { type: types.MERCHANT_CHECKIN_FAILED, payload: data };
+}
+/** MERCHANT CHECKIN FAILED */
+export function merchantCheckinFailed(data) {
+  return { type: types.MERCHANT_CHECKIN_FAILED, payload: data };
+}
+
+/**
+ * ==================================
+ * CHECK OUT MERCHANT
+ * ==================================
+ */
+/** MERCHANT CHECKOUT PROCESS */
+export function merchantCheckoutProcess(data) {
+  return { type: types.MERCHANT_CHECKOUT_PROCESS, payload: data };
+}
+/** MERCHANT CHECKOUT SUCCESS */
+export function merchantCheckoutSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.MERCHANT_CHECKOUT_SUCCESS, payload: data.data };
+  }
+  return { type: types.MERCHANT_CHECKOUT_FAILED, payload: data };
+}
+/** MERCHANT CHECKOUT FAILED */
+export function merchantCheckoutFailed(data) {
+  return { type: types.MERCHANT_CHECKOUT_FAILED, payload: data };
+}

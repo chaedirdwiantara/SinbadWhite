@@ -59,6 +59,14 @@ export const MERCHANT_ADD_DATA_VOLATILE = 'MerchantAddDataVolatile';
 export const MERCHANT_GET_LAST_ORDER_PROCESS = 'MerchantGetLastOrderProcess';
 export const MERCHANT_GET_LAST_ORDER_SUCCESS = 'MerchantGetLastOrderSuccess';
 export const MERCHANT_GET_LAST_ORDER_FAILED = 'MerchantGetLastOrderFailed';
+/** FOR CHECKIN MERCHANT */
+export const MERCHANT_CHECKIN_PROCESS = 'MerchantCheckinProcess';
+export const MERCHANT_CHECKIN_SUCCESS = 'MerchantCheckinSuccess';
+export const MERCHANT_CHECKIN_FAILED = 'MerchantCheckinFailed';
+/** FOR CHECKOUT MERCHANT */
+export const MERCHANT_CHECKOUT_PROCESS = 'MerchantCheckoutProcess';
+export const MERCHANT_CHECKOUT_SUCCESS = 'MerchantCheckoutSuccess';
+export const MERCHANT_CHECKOUT_FAILED = 'MerchantCheckoutFailed';
 /** SELECTED MERCHANT === */
 export const MERCHANT_SELECTED = 'MerchantSelected';
 /** === JOURNEY === */

@@ -36,11 +36,20 @@ function getMerchantLastOrder(storeId) {
     method: 'GET'
   });
 }
+/** === CHECKIN MERCHANT === */
+function checkMerchant(params) {
+  return ApiRest({
+    path: 'journey-plan-sale-logs',
+    method: 'POST',
+    params
+  });
+}
 
 export const MerchantMethod = {
   getMerchant,
   getMerchantDetail,
   getPortfolioByUserId,
   addMerchant,
-  getMerchantLastOrder
+  getMerchantLastOrder,
+  checkMerchant
 };
