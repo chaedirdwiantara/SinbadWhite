@@ -100,7 +100,7 @@ class MerchantDetailView extends Component {
           <Text style={[Fonts.type31, { marginBottom: 6 }]}>{key}</Text>
           <Text style={Fonts.type8}>{value ? value : '-'}</Text>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {change ? (
             <TouchableOpacity>
               <Text style={Fonts.type22}>Ubah</Text>
@@ -115,7 +115,7 @@ class MerchantDetailView extends Component {
           ) : (
             <View />
           )}
-        </View>
+        </View> */}
       </View>
     );
   }

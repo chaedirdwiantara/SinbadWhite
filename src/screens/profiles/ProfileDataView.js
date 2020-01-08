@@ -24,7 +24,7 @@ class ProfileDataView extends Component {
       data: [
         {
           section: 'Name',
-          edit: true,
+          edit: false,
           goTo: 'edit_name',
           data: this.props.user.fullName
         },
@@ -74,7 +74,7 @@ class ProfileDataView extends Component {
               style={GlobalStyle.image74}
             />
           )}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.boxEditIcon}
             onPress={() => this.goTo('take_profile_photo')}
           >
@@ -83,7 +83,7 @@ class ProfileDataView extends Component {
               color={masterColor.fontBlack80}
               size={18}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     );

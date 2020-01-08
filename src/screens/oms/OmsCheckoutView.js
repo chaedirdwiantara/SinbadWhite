@@ -4,11 +4,12 @@ import {
   StyleSheet,
   BackHandler,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  ScrollView,
+  Image
 } from 'react-native';
 import Text from 'react-native-text';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { withNavigation } from 'react-navigation';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
@@ -16,6 +17,17 @@ import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
 import ModalConfirmation from '../../components/modal/ModalConfirmation';
 import ButtonSingleSmall from '../../components/button/ButtonSingleSmall';
+import Address from '../../components/Address';
+import Fonts from '../../helpers/GlobalFont';
+import GlobalStyles from '../../helpers/GlobalStyle';
+import { MoneyFormat } from '../../helpers/NumberFormater';
+import ModalBottomPaymentType from './ModalBottomPaymentType';
+import ModalTAndR from './ModalTAndR';
+import ModalBottomPaymentMethod from './ModalBottomPaymentMethod';
+import ModalBottomPaymentMethodDetail from './ModalBottomPaymentMethodDetail';
+import ModalBottomListProduct from './ModalBottomListProduct';
+import ModalBottomParcelDetail from './ModalBottomParcelDetail';
+import ModalWarning from './ModalWarning';
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,9 +37,38 @@ class OmsCheckoutView extends Component {
     this.state = {
       /** data */
       parcels: [],
+      productOrder: [],
+      dataOmsGetCheckoutItem: this.props.oms.dataOmsGetCheckoutItem,
+      selectedParcelIdForPayment: null,
+      selectedParcel: null,
+      openSubTotal: null,
       /** modal */
       openModalBackToCartItem: false,
-      openModalConfirmOrder: false
+      openModalConfirmOrder: false,
+      modalPaymentTypeList: false,
+      buttonCheckoutDisabled: false,
+      modalDeleteConfirmation: false,
+      modalToCheckoutConfirmation: false,
+      modalPaymentTypeMethod: false,
+      modalPaymentMethodDetail: false,
+      modalParcelDetail: false,
+      modalStockConfirmation: false,
+      modalStockConfirmationConfirmOrder: false,
+      modalTAndR: false,
+      modalConfirmOrder: false,
+      modalProductList: false,
+      modalErrorMinimumOrder: false,
+      modalWarningNotSelectPayment: false,
+      modalErrorBalance: false,
+      modalErrorPayment: false,
+      modalErrorGlobal: false,
+      orderPerParcel: null,
+      orderProduct: [],
+      makeConfirmOrder: false,
+      selectedParcelDetail: null,
+      selectedPaymentType: null,
+      paymentMethodDetail: null,
+      loading: false
     };
   }
   /**
@@ -61,6 +102,7 @@ class OmsCheckoutView extends Component {
   componentDidMount() {
     this.navigationFunction();
     this.modifyParcel();
+    this.productOrderList();
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
@@ -96,19 +138,134 @@ class OmsCheckoutView extends Component {
   modifyParcel() {
     const parcels = this.props.oms.dataOmsGetCheckoutItem.orderParcels.map(
       item => {
+        let paymentTypeSupplierMethodId = null;
+        let paymentMethodDetail = null;
+        let paymentTypeDetail = null;
+        let error = false;
+        if (this.state.parcels.length > 0) {
+          const itemParcelFind = this.state.parcels.find(
+            itemParcel => itemParcel.orderParcelId === item.id
+          );
+          if (itemParcelFind !== undefined) {
+            paymentTypeSupplierMethodId =
+              itemParcelFind.paymentTypeSupplierMethodId;
+            paymentMethodDetail = itemParcelFind.paymentMethodDetail;
+            paymentTypeDetail = itemParcelFind.paymentTypeDetail;
+            error = itemParcelFind.error;
+          }
+        }
         return {
           orderParcelId: parseInt(item.id, 10),
-          paymentTypeSupplierMethodId: 1
+          paymentTypeSupplierMethodId,
+          paymentMethodDetail,
+          paymentTypeDetail,
+          error
         };
       }
     );
     this.setState({ parcels });
+  }
+
+  checkTerm(selectedPaymentType) {
+    if (selectedPaymentType.paymentType.terms !== null) {
+      this.setState({
+        modalPaymentTypeList: false,
+        modalTAndR: true,
+        selectedPaymentType
+      });
+    } else {
+      this.setState({ modalPaymentTypeList: false, selectedPaymentType });
+      this.openPaymentMethod(selectedPaymentType);
+    }
+  }
+
+  openSeeMore(item) {
+    this.setState({
+      selectedParcelDetail: item,
+      modalParcelDetail: true
+    });
+  }
+
+  openPaymentType(item) {
+    this.setState({
+      modalPaymentTypeList: true,
+      selectedParcel: item.id,
+      selectedParcelIdForPayment: item.id
+    });
+  }
+
+  openPaymentMethod(selectedPaymentType) {
+    this.setState({
+      modalTAndR: false,
+      selectedPaymentType,
+      modalPaymentTypeMethod: true
+    });
+  }
+
+  openPaymentMethodDetail(paymentMethodDetail) {
+    this.setState({
+      paymentMethodDetail,
+      modalPaymentTypeMethod: false,
+      modalPaymentMethodDetail: true
+    });
+  }
+
+  renderTotalPriceValue() {
+    const mapParcel = this.state.dataOmsGetCheckoutItem.orderParcels.map(
+      item => item.parcelDetails.totalNettPrice
+    );
+    return mapParcel.reduce((a, b) => a + b, 0);
+  }
+
+  selectedPayment(item) {
+    const parcels = this.state.parcels;
+    if (this.state.parcels.length > 0 && this.state.selectedParcel !== null) {
+      const indexParcel = parcels.findIndex(
+        itemParcels =>
+          itemParcels.orderParcelId === parseInt(this.state.selectedParcel, 10)
+      );
+      if (indexParcel > -1) {
+        parcels[indexParcel].paymentTypeSupplierMethodId = parseInt(
+          item.id,
+          10
+        );
+        parcels[indexParcel].paymentTypeDetail = this.state.selectedPaymentType;
+        parcels[indexParcel].paymentMethodDetail = item;
+        parcels[indexParcel].error = false;
+      }
+      this.setState({ parcels, modalPaymentMethodDetail: false });
+    }
+  }
+
+  openSubTotal(item, index) {
+    if (this.state.openSubTotal === index) {
+      this.setState({ openSubTotal: null });
+    } else {
+      this.setState({ openSubTotal: index });
+    }
+  }
+  /** MODIFY STATE DATA FUNCTION (PRODUCT LIST) */
+  productOrderList() {
+    const productOrder = [];
+    this.props.oms.dataOmsGetCheckoutItem.orderParcels.map(item => {
+      item.orderBrands.forEach(itemBrand => {
+        for (let i = 0; i < itemBrand.orderBrandCatalogues.length; i++) {
+          const productItem = itemBrand.orderBrandCatalogues[i];
+          productOrder.push(productItem);
+        }
+      });
+    });
+    this.setState({ productOrder });
   }
   /** ======= DID UPDATE FUNCTION ==== */
   backToMerchantHomeView(storeName) {
     NavigationService.navigate('MerchantHomeView', {
       storeName
     });
+    /** DELETE ALL OMS DATA */
+    setTimeout(() => {
+      this.props.omsResetData();
+    }, 1000);
   }
   /** BACK BUTTON RN PRESS HANDLING */
   handleBackPress = () => {
@@ -128,7 +285,19 @@ class OmsCheckoutView extends Component {
   }
   /** CHECKOUT BUTTON PRESS */
   wantToConfirmOrder() {
-    this.setState({ openModalConfirmOrder: true });
+    this.setState({ makeConfirmOrder: true });
+    if (
+      this.state.parcels.find(
+        item => item.paymentTypeSupplierMethodId === null
+      ) === undefined
+    ) {
+      this.setState({ openModalConfirmOrder: true });
+    } else {
+      this.setState({ modalWarningNotSelectPayment: true });
+      setTimeout(() => {
+        this.setState({ modalWarningNotSelectPayment: false });
+      }, 1250);
+    }
   }
   /** CONFIRM ORDER */
   confirmOrder() {
@@ -142,6 +311,100 @@ class OmsCheckoutView extends Component {
    * RENDER VIEW
    * ==========================
    */
+  renderImageContent(itemParcel) {
+    return this.state.productOrder.filter(
+      item => item.parcelId === itemParcel.id
+    );
+  }
+
+  renderOpenSubTotal(item, index) {
+    return this.state.openSubTotal === index ? (
+      <View
+        style={{
+          paddingRight: 16,
+          paddingLeft: 40
+        }}
+      >
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 5
+          }}
+        >
+          <View>
+            <Text style={Fonts.type17}>
+              Total Barang (
+              {
+                this.state.productOrder.filter(
+                  itemOrderProduct => itemOrderProduct.parcelId === item.id
+                ).length
+              }
+              )
+            </Text>
+          </View>
+          <View>
+            <Text style={Fonts.type17}>
+              {MoneyFormat(item.parcelDetails.totalGrossPrice)}
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+          }}
+        >
+          <View>
+            <Text style={Fonts.type17}>PPN 10%</Text>
+          </View>
+          <View>
+            <Text style={Fonts.type17}>
+              {MoneyFormat(item.parcelDetails.tax)}
+            </Text>
+          </View>
+        </View>
+      </View>
+    ) : (
+      <View />
+    );
+  }
+
+  renderListProductImage(itemParcel) {
+    return this.renderImageContent(itemParcel).map((item, index) => {
+      return index < 3 ? (
+        <View key={index} style={{ paddingHorizontal: 5 }}>
+          <Image
+            defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
+            source={{
+              uri: item.catalogue.catalogueImages[0].imageUrl
+            }}
+            style={GlobalStyles.image77}
+          />
+        </View>
+      ) : (
+        <View key={index} />
+      );
+    });
+  }
+
+  renderPlusProduct(itemParcel) {
+    return this.state.productOrder.filter(
+      item => item.parcelId === itemParcel.id
+    ).length > 3 ? (
+      <View>
+        <Text style={Fonts.type49}>
+          (+
+          {this.state.productOrder.filter(
+            item => item.parcelId === itemParcel.id
+          ).length - 3}{' '}
+          Produk Lain)
+        </Text>
+      </View>
+    ) : (
+      <View />
+    );
+  }
   /**
    * ==========================
    * MAIN CONTENT
@@ -149,17 +412,257 @@ class OmsCheckoutView extends Component {
    */
   /** === RENDER ADDRESS === */
   renderAddress() {
+    const store = this.props.merchant.selectedMerchant.store;
     return (
-      <View>
-        <Text>this for address</Text>
+      <View style={[styles.boxAddress, GlobalStyles.shadowBottom]}>
+        <View style={styles.boxTitle}>
+          <Text style={Fonts.type48}>Alamat Pengiriman</Text>
+        </View>
+        <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+        <View style={{ paddingVertical: 10, paddingHorizontal: 16 }}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+          >
+            <View>
+              <Text style={Fonts.type16}>{store.name}</Text>
+            </View>
+            {/* <View>
+            <Text style={Fonts.type28}>Ganti Alamat</Text>
+          </View> */}
+          </View>
+          <View style={{ marginTop: 5 }}>
+            <Text style={Fonts.type47}>Alamat 1 (default)</Text>
+          </View>
+          <View style={{ marginTop: 5 }}>
+            <Address
+              font={Fonts.type46}
+              address={store.address}
+              urban={store.urban}
+              province={store.province}
+            />
+          </View>
+        </View>
       </View>
     );
   }
   /** === RENDER MAIN CONTENT === */
-  renderMainContent() {
+  renderSubTotal(item, index) {
+    return (
+      <TouchableOpacity
+        style={styles.boxSubTotal}
+        onPress={() => this.openSubTotal(item, index)}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          {this.state.openSubTotal === index ? (
+            <MaterialIcon name="keyboard-arrow-up" size={24} />
+          ) : (
+            <MaterialIcon name="keyboard-arrow-down" size={24} />
+          )}
+
+          <Text style={Fonts.type50}>Sub Total</Text>
+        </View>
+        <View>
+          <Text style={Fonts.type50}>
+            {MoneyFormat(item.parcelDetails.totalNettPrice)}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  renderListOrder() {
+    return this.state.dataOmsGetCheckoutItem.orderParcels.map((item, index) => {
+      return (
+        <View key={index}>
+          <View style={GlobalStyles.boxPadding} />
+          <View
+            style={[styles.boxListProductInCart, GlobalStyles.shadowForBox]}
+          >
+            <View style={{ paddingBottom: 8, paddingHorizontal: 16 }}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'space-between',
+                  flexDirection: 'row'
+                }}
+              >
+                <View>
+                  <Text style={Fonts.type48}>{item.invoiceGroup.name}</Text>
+                </View>
+                <TouchableOpacity onPress={() => this.openSeeMore(item)}>
+                  <Text style={Fonts.type14}>Lihat lebih</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                paddingHorizontal: 16,
+                justifyContent: 'space-between'
+              }}
+              onPress={() =>
+                this.setState({ modalProductList: true, orderPerParcel: item })
+              }
+            >
+              <View style={{ flexDirection: 'row' }}>
+                {this.renderListProductImage(item)}
+              </View>
+              <View style={{ justifyContent: 'center', marginRight: 10 }}>
+                {this.renderPlusProduct(item)}
+              </View>
+            </TouchableOpacity>
+            {this.renderRincianPengiriman()}
+            {this.renderMetodePembayaran(item)}
+            {this.state.openSubTotal === index ? (
+              <View style={{ paddingTop: 10 }}>
+                {this.renderOpenSubTotal(item, index)}
+              </View>
+            ) : (
+              <View />
+            )}
+            {this.renderSubTotal(item, index)}
+          </View>
+        </View>
+      );
+    });
+  }
+  /** === RINCIAN PENGIRIMAN === */
+  renderRincianPengiriman() {
     return (
       <View>
-        <Text>this for address</Text>
+        <View style={{ paddingLeft: 16, paddingBottom: 5, paddingTop: 10 }}>
+          <Text style={Fonts.type50}>Rincian Pengiriman</Text>
+        </View>
+
+        <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+        <View
+          style={{
+            paddingTop: 10,
+            paddingHorizontal: 16,
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+          }}
+        >
+          <View>
+            <Text style={Fonts.type17}>(± 3 hari)</Text>
+            <Text style={Fonts.type17}>Self Delivery</Text>
+          </View>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={Fonts.type51}>FREE ONGKIR</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+  /** SELECTED PAYMNENT */
+  renderSelectedPayment(item) {
+    const indexParcel = this.state.parcels.findIndex(
+      itemParcel =>
+        itemParcel.orderParcelId === parseInt(item.id, 10) &&
+        itemParcel.paymentTypeSupplierMethodId !== null
+    );
+    return indexParcel > -1 ? (
+      <View>
+        {this.state.parcels[indexParcel].paymentMethodDetail.paymentMethod
+          .name === 'Tunai' ? (
+          <Text style={Fonts.type17}>
+            {this.state.parcels[indexParcel].paymentTypeDetail.paymentType.name}{' '}
+            -{' '}
+            {
+              this.state.parcels[indexParcel].paymentMethodDetail.paymentMethod
+                .name
+            }
+          </Text>
+        ) : (
+          <Text style={Fonts.type17}>
+            {this.state.parcels[indexParcel].paymentTypeDetail.paymentType.name}{' '}
+            -{' '}
+            {
+              this.state.parcels[indexParcel].paymentMethodDetail.paymentMethod
+                .name
+            }
+          </Text>
+        )}
+      </View>
+    ) : (
+      <View />
+    );
+  }
+  /** === TIPE PEMBAYARAN === */
+  renderMetodePembayaran(item) {
+    return (
+      <View>
+        <View style={{ paddingLeft: 16, paddingBottom: 5, paddingTop: 10 }}>
+          <Text style={Fonts.type50}>Tipe Pembayaran</Text>
+        </View>
+        <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+        <TouchableOpacity
+          style={{
+            paddingHorizontal: 16,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            backgroundColor:
+              this.state.makeConfirmOrder &&
+              this.state.parcels.findIndex(
+                itemParcel =>
+                  (itemParcel.orderParcelId === parseInt(item.id, 10) &&
+                    itemParcel.paymentTypeSupplierMethodId === null) ||
+                  (itemParcel.orderParcelId === parseInt(item.id, 10) &&
+                    itemParcel.error)
+              ) > -1
+                ? 'rgba(240, 68, 76, 0.2)'
+                : '#ffffff'
+          }}
+          onPress={() => this.openPaymentType(item)}
+        >
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ justifyContent: 'center', marginRight: 20 }}>
+              <Image
+                source={require('../../assets/icons/oms/money.png')}
+                style={{ height: 24, width: 24 }}
+              />
+            </View>
+            {this.state.parcels.findIndex(
+              itemParcel =>
+                itemParcel.orderParcelId === parseInt(item.id, 10) &&
+                itemParcel.paymentTypeSupplierMethodId === null
+            ) > -1 ? (
+              <View style={{ paddingVertical: 15 }}>
+                <Text style={Fonts.type17}>Pilih Tipe</Text>
+              </View>
+            ) : (
+              <View style={{ paddingVertical: 15 }}>
+                {this.renderSelectedPayment(item)}
+              </View>
+            )}
+
+            {this.state.makeConfirmOrder &&
+            this.state.parcels.findIndex(
+              itemParcel =>
+                (itemParcel.orderParcelId === parseInt(item.id, 10) &&
+                  itemParcel.paymentTypeSupplierMethodId === null) ||
+                (itemParcel.orderParcelId === parseInt(item.id, 10) &&
+                  itemParcel.error)
+            ) > -1 ? (
+              <View
+                style={{
+                  justifyContent: 'center',
+                  marginLeft: 5
+                }}
+              >
+                <MaterialIcon name="error" size={15} color={'#f0444c'} />
+              </View>
+            ) : (
+              <View />
+            )}
+          </View>
+
+          <View>
+            <MaterialIcon name="keyboard-arrow-right" size={24} />
+          </View>
+        </TouchableOpacity>
+        <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
       </View>
     );
   }
@@ -167,8 +670,10 @@ class OmsCheckoutView extends Component {
   renderData() {
     return (
       <View style={styles.contentContainer}>
-        {this.renderAddress()}
-        {this.renderMainContent()}
+        <ScrollView>
+          {this.renderAddress()}
+          {this.renderListOrder()}
+        </ScrollView>
       </View>
     );
   }
@@ -181,15 +686,26 @@ class OmsCheckoutView extends Component {
   renderBottomValue() {
     return (
       <View style={{ flex: 1 }}>
-        <Text>lala</Text>
-      </View>
-    );
-  }
-  /** === RENDER TOTAL BOTTOM CHECK LIST === */
-  renderBottomCheckList() {
-    return (
-      <View style={{ flex: 1 }}>
-        <Text>lala</Text>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            paddingRight: 10
+          }}
+        >
+          <View>
+            <Text>
+              <Text style={Fonts.type9}>Total: </Text>
+              <Text style={Fonts.type53}>
+                {MoneyFormat(this.renderTotalPriceValue())}
+              </Text>
+            </Text>
+          </View>
+          {/* <View>
+            <Text style={styles.ongkirText}>Ongkir Rp17.000</Text>
+          </View> */}
+        </View>
       </View>
     );
   }
@@ -197,7 +713,9 @@ class OmsCheckoutView extends Component {
   renderCheckoutButton() {
     return (
       <ButtonSingleSmall
-        disabled={false}
+        disabled={this.props.oms.loadingOmsConfirmOrder}
+        loading={this.props.oms.loadingOmsConfirmOrder}
+        loadingPadding={33}
         onPress={() => this.wantToConfirmOrder()}
         title={'Buat Pesanan'}
         borderRadius={4}
@@ -208,7 +726,6 @@ class OmsCheckoutView extends Component {
   renderTotalBottom() {
     return (
       <View style={styles.totalContainer}>
-        {this.renderBottomCheckList()}
         {this.renderBottomValue()}
         {this.renderCheckoutButton()}
       </View>
@@ -257,6 +774,134 @@ class OmsCheckoutView extends Component {
       <View />
     );
   }
+  /** PAYMENT TYPE */
+  renderModalListPaymentType() {
+    return (
+      <View>
+        {this.state.modalPaymentTypeList ? (
+          <ModalBottomPaymentType
+            open={this.state.modalPaymentTypeList}
+            parcelId={this.state.selectedParcelIdForPayment}
+            close={() => this.setState({ modalPaymentTypeList: false })}
+            onRef={ref => (this.selectPaymentType = ref)}
+            selectPaymentType={this.checkTerm.bind(this)}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+  renderModalTAndR() {
+    return (
+      <View>
+        {this.state.modalTAndR && this.state.selectedPaymentType !== null ? (
+          <ModalTAndR
+            open={this.state.modalTAndR}
+            data={this.state.selectedPaymentType}
+            close={() => this.setState({ modalTAndR: false })}
+            onRef={ref => (this.agreeTAndR = ref)}
+            agreeTAndR={this.openPaymentMethod.bind(this)}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+  renderModalListPaymentMethod() {
+    return (
+      <View>
+        {this.state.modalPaymentTypeMethod ? (
+          <ModalBottomPaymentMethod
+            open={this.state.modalPaymentTypeMethod}
+            paymentType={this.state.selectedPaymentType}
+            close={() =>
+              this.setState({
+                modalPaymentTypeMethod: false,
+                modalPaymentTypeList: true
+              })
+            }
+            onRef={ref => (this.selectPaymentMethod = ref)}
+            selectPaymentMethod={this.openPaymentMethodDetail.bind(this)}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+  renderModalPaymentMethodDetail() {
+    return (
+      <View>
+        {this.state.modalPaymentMethodDetail ? (
+          <ModalBottomPaymentMethodDetail
+            open={this.state.modalPaymentMethodDetail}
+            paymentMethodDetail={this.state.paymentMethodDetail}
+            close={() =>
+              this.setState({
+                modalPaymentMethodDetail: false,
+                modalPaymentTypeMethod: true
+              })
+            }
+            onRef={ref => (this.selectedPayment = ref)}
+            selectedPayment={this.selectedPayment.bind(this)}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+  renderModalListProduct() {
+    return (
+      <View>
+        {this.state.modalProductList ? (
+          <ModalBottomListProduct
+            open={this.state.modalProductList}
+            data={this.state.orderPerParcel}
+            close={() => this.setState({ modalProductList: false })}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+  renderModalParcelDetail() {
+    return (
+      <View>
+        {this.state.modalParcelDetail ? (
+          <ModalBottomParcelDetail
+            open={this.state.modalParcelDetail}
+            data={this.state.selectedParcelDetail}
+            close={() => this.setState({ modalParcelDetail: false })}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+  renderWarningNotSelectPayment() {
+    return (
+      <View>
+        {this.state.modalWarningNotSelectPayment ? (
+          <ModalWarning
+            open={this.state.modalWarningNotSelectPayment}
+            content={'Anda belum memilih metode pembayaran'}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
 
   render() {
     return (
@@ -266,6 +911,13 @@ class OmsCheckoutView extends Component {
         {/* modal */}
         {this.renderModalConfirmationBackToCart()}
         {this.renderModalConfirmationConfirmOrder()}
+        {this.renderModalListPaymentType()}
+        {this.renderModalListPaymentMethod()}
+        {this.renderModalTAndR()}
+        {this.renderModalPaymentMethodDetail()}
+        {this.renderModalListProduct()}
+        {this.renderModalParcelDetail()}
+        {this.renderWarningNotSelectPayment()}
       </View>
     );
   }
@@ -282,10 +934,32 @@ const styles = StyleSheet.create({
   totalContainer: {
     height: 0.09 * height,
     paddingVertical: 10,
-    paddingHorizontal: 11,
+    paddingHorizontal: 16,
     flexDirection: 'row',
     borderTopWidth: 1,
     borderColor: masterColor.fontBlack10
+  },
+  /** for list order */
+  boxListProductInCart: {
+    backgroundColor: masterColor.backgroundWhite,
+    paddingVertical: 10
+  },
+  /** for sub total */
+  boxSubTotal: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 10
+  },
+  /** for address */
+  boxAddress: {
+    flex: 1,
+    backgroundColor: masterColor.backgroundWhite
+  },
+  boxTitle: {
+    paddingLeft: 16,
+    paddingVertical: 10
   }
 });
 

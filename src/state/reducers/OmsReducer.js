@@ -26,6 +26,14 @@ const INITIAL_STATE = {
 
 export const oms = createReducer(INITIAL_STATE, {
   /**
+   * ================================
+   * WARNING, THIS TYPE FOR DELETE ALL DATA
+   * ================================
+   */
+  [types.OMS_RESET_DATA](state, action) {
+    return INITIAL_STATE;
+  },
+  /**
    * ==================================
    * GET PAYMENT
    * =================================
@@ -170,6 +178,12 @@ export const oms = createReducer(INITIAL_STATE, {
     return {
       ...state,
       dataCart: action.payload
+    };
+  },
+  [types.OMS_CHECKLIST_ITEM_CART](state, action) {
+    return {
+      ...state,
+      dataCheckBoxlistCart: action.payload
     };
   }
 });

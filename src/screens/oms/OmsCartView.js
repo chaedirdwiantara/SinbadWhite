@@ -1,14 +1,29 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { Button } from 'react-native-elements';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  TouchableOpacity,
+  Image
+} from 'react-native';
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { RFPercentage } from 'react-native-responsive-fontsize';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import masterColor from '../../config/masterColor.json';
 import ButtonSingleSmall from '../../components/button/ButtonSingleSmall';
 import ModalConfirmation from '../../components/modal/ModalConfirmation';
+import { LoadingPage } from '../../components/Loading';
+import Address from '../../components/Address';
+import Fonts from '../../helpers/GlobalFont';
+import Font from '../../utils/Fonts';
+import GlobalStyles from '../../helpers/GlobalStyle';
+import { MoneyFormat } from '../../helpers/NumberFormater';
+import OrderButton from '../../components/OrderButton';
 
 const { width, height } = Dimensions.get('window');
 
@@ -41,6 +56,14 @@ class OmsCartView extends Component {
   /** === DID UPDATE */
   componentDidUpdate(prevProps) {
     if (
+      prevProps.oms.dataOmsGetCartItem !== this.props.oms.dataOmsGetCartItem
+    ) {
+      if (this.props.oms.dataOmsGetCartItem !== null) {
+        this.convertListProductToLocalState();
+      }
+    }
+    /** GO TO OMS */
+    if (
       prevProps.oms.dataOmsGetCheckoutItem !==
       this.props.oms.dataOmsGetCheckoutItem
     ) {
@@ -52,17 +75,214 @@ class OmsCartView extends Component {
   wantToGoCheckout() {
     this.setState({ openModalToCheckoutConfirmation: true });
   }
+
+  wantDelete(item) {
+    this.setState({
+      modalDeleteConfirmation: true,
+      productWantToDelete: item
+    });
+  }
+
+  forCartData(method, catalogueId, qty) {
+    const data = {
+      method,
+      catalogueId: parseInt(catalogueId, 10),
+      qty
+    };
+    this.props.omsAddToCart(data);
+  }
+
+  parentFunctionFromOrderButton(data) {
+    const productCartArray = this.state.productCartArray;
+    const indexProductCartArray = productCartArray.findIndex(
+      item => item.catalogueId === data.catalogueId
+    );
+    productCartArray[indexProductCartArray].qty = data.qty;
+    this.setState({ productCartArray });
+    /**
+     * jangan hapus code dibawah
+     * code untuk update qty
+     * akan tetapi lelet, jadi dipindah ke willunmount
+     * code :
+     * this.forCartData('update', data.catalogueId, data.qty);
+     */
+  }
+
+  /** check box */
+
+  checkBoxProduct(productId) {
+    const productCartArray = this.state.productCartArray;
+    const indexProductCartArray = productCartArray.findIndex(
+      item => item.catalogueId === productId
+    );
+    if (indexProductCartArray > -1) {
+      if (productCartArray[indexProductCartArray].checkBox) {
+        productCartArray[indexProductCartArray].checkBox = false;
+        this.setState({ productCartArray });
+      } else {
+        productCartArray[indexProductCartArray].checkBox = true;
+        this.setState({ productCartArray });
+      }
+    }
+  }
+
+  checkBoxBrand(brandId) {
+    const productCartArray = this.state.productCartArray;
+    const productCartArrayAllboxCheck = productCartArray.find(
+      itemProductCartArray =>
+        itemProductCartArray.brandId === brandId &&
+        !itemProductCartArray.checkBox
+    );
+    if (productCartArrayAllboxCheck === undefined) {
+      productCartArray.forEach((item, index) => {
+        if (item.brandId === brandId) {
+          productCartArray[index].checkBox = false;
+        }
+      });
+      this.setState({ productCartArray });
+    } else {
+      productCartArray.forEach((item, index) => {
+        if (item.brandId === brandId) {
+          productCartArray[index].checkBox = true;
+        }
+      });
+      this.setState({ productCartArray });
+    }
+  }
+
+  checkBoxAll() {
+    const productCartArray = this.state.productCartArray;
+    const productCartArrayAllboxCheck = productCartArray.find(
+      itemProductCartArray => !itemProductCartArray.checkBox
+    );
+    if (productCartArrayAllboxCheck === undefined) {
+      productCartArray.forEach((item, index) => {
+        productCartArray[index].checkBox = false;
+      });
+      this.setState({ productCartArray });
+    } else {
+      productCartArray.forEach((item, index) => {
+        productCartArray[index].checkBox = true;
+      });
+      this.setState({ productCartArray });
+    }
+  }
+
+  /** for total price all product in cart */
+  totalPriceValue() {
+    const productCheckBox = this.state.productCartArray.filter(
+      item => item.checkBox && item.statusInCart === 'available'
+    );
+    const mapProduct = productCheckBox.map(
+      item =>
+        (item.catalogue.discountedRetailBuyingPrice !== null
+          ? item.catalogue.discountedRetailBuyingPrice
+          : item.catalogue.retailBuyingPrice) * item.qty
+    );
+    return mapProduct.reduce((a, b) => a + b, 0);
+  }
+
+  /** check cart before go to checkout */
+  checkCart() {
+    const productCheckBox = this.state.productCartArray.filter(
+      item => item.checkBox && item.statusInCart === 'available'
+    );
+    const mapProduct = productCheckBox.map(item => {
+      return {
+        catalogueId: parseInt(item.catalogueId, 10),
+        qty: item.qty
+      };
+    });
+    setTimeout(() => {
+      this.props.omsGetCheckoutItemProcess({
+        storeId: this.props.merchant.selectedMerchant.storeId,
+        cartId: this.props.oms.dataOmsGetCartItem.id,
+        catalogues: mapProduct
+      });
+    }, 100);
+  }
+
+  deleteProductInCart() {
+    if (this.state.productWantToDelete !== null) {
+      const productCartArray = this.state.productCartArray;
+      /** delete item for check list */
+      const indexProductCartArray = productCartArray.findIndex(
+        item => item.catalogueId === this.state.productWantToDelete.catalogueId
+      );
+      if (indexProductCartArray > -1) {
+        productCartArray.splice(indexProductCartArray, 1);
+        this.setState({ productCartArray });
+      }
+      /** close modal delete */
+      this.setState({
+        modalDeleteConfirmation: false
+      });
+      /** delete item for global cart data, product list, product details */
+      setTimeout(() => {
+        this.forCartData(
+          'delete',
+          this.state.productWantToDelete.catalogueId,
+          this.state.productWantToDelete.qty
+        );
+      }, 1000);
+    }
+  }
+  /**
+   * ==========================================
+   * ALL FUNCTION IN COMPONENT DID UPDATE START
+   * ==========================================
+   * note:
+   * statusInCart:
+   *  - 'available' = no error for product
+   *  - 'outStock' = stok habis
+   *  - 'unavailable' = tidak tersedia
+   */
+
+  convertListProductToLocalState() {
+    const productCartArray = [];
+    this.props.oms.dataOmsGetCartItem.cartParcels.forEach(item => {
+      item.cartBrands.forEach(itemBrand => {
+        for (let i = 0; i < itemBrand.cartBrandCatalogues.length; i++) {
+          const productItem = itemBrand.cartBrandCatalogues[i];
+          productItem.checkBox = true;
+          if (
+            !productItem.catalogue.unlimitedStock &&
+            productItem.catalogue.stock < productItem.catalogue.minQty
+          ) {
+            productItem.statusInCart = 'outStock';
+          } else {
+            productItem.statusInCart = 'available';
+          }
+          if (this.props.oms.dataCheckBoxlistCart.length > 0) {
+            const indexDataCheckBoxlistCart = this.props.oms.dataCheckBoxlistCart.findIndex(
+              itemDataCheckBoxlistCart =>
+                itemDataCheckBoxlistCart.catalogue.id ===
+                itemBrand.cartBrandCatalogues[i].catalogue.id
+            );
+            if (indexDataCheckBoxlistCart > -1) {
+              productItem.checkBox = this.props.oms.dataCheckBoxlistCart[
+                indexDataCheckBoxlistCart
+              ].checkBox;
+              productItem.statusInCart =
+                !productItem.catalogue.unlimitedStock &&
+                productItem.catalogue.stock < productItem.catalogue.minQty
+                  ? 'outStock'
+                  : this.props.oms.dataCheckBoxlistCart[
+                      indexDataCheckBoxlistCart
+                    ].statusInCart;
+            }
+          }
+          productCartArray.push(productItem);
+        }
+      });
+    });
+    console.log(productCartArray);
+    this.setState({ productCartArray });
+  }
   /**
    * === GO TO CHECKOUT ===
    * - check cart first
    */
-  checkCart() {
-    this.props.omsGetCheckoutItemProcess({
-      storeId: this.props.merchant.selectedMerchant.storeId,
-      cartId: this.props.oms.dataOmsGetCartItem.id,
-      catalogues: this.props.oms.dataCart
-    });
-  }
   /**
    * =============================
    * RENDER VIEW
@@ -74,18 +294,261 @@ class OmsCartView extends Component {
    * ==========================
    */
   /** === RENDER ADDRESS === */
+  /** RENDER SKELETON */
+  renderSkeleton() {
+    return <LoadingPage />;
+  }
+  /** === RENDER ADDRESS === */
   renderAddress() {
+    const store = this.props.merchant.selectedMerchant.store;
     return (
-      <View>
-        <Text>this for address</Text>
+      <View style={[styles.boxAddress, GlobalStyles.shadowBottom]}>
+        <View style={styles.boxTitle}>
+          <Text style={Fonts.type48}>Alamat Pengiriman</Text>
+        </View>
+        <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+        <View style={{ paddingVertical: 10, paddingHorizontal: 16 }}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+          >
+            <View>
+              <Text style={Fonts.type16}>{store.name}</Text>
+            </View>
+            {/* <View>
+            <Text style={Fonts.type28}>Ganti Alamat</Text>
+          </View> */}
+          </View>
+          <View style={{ marginTop: 5 }}>
+            <Text style={Fonts.type47}>Alamat 1 (default)</Text>
+          </View>
+          <View style={{ marginTop: 5 }}>
+            <Address
+              font={Fonts.type46}
+              address={store.address}
+              urban={store.urban}
+              province={store.province}
+            />
+          </View>
+        </View>
       </View>
     );
   }
-  /** === RENDER MAIN CONTENT === */
-  renderMainContent() {
+  renderPriceProduct(item) {
     return (
       <View>
-        <Text>this for address</Text>
+        {item.catalogue.discountedRetailBuyingPrice !== null ? (
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ marginRight: 5 }}>
+              <Text style={styles.priceTextCross}>
+                {MoneyFormat(item.catalogue.retailBuyingPrice)}
+              </Text>
+            </View>
+            <View>
+              <Text style={styles.priceTextRed}>
+                {MoneyFormat(item.catalogue.discountedRetailBuyingPrice)}
+              </Text>
+            </View>
+          </View>
+        ) : (
+          <View>
+            <Text style={styles.priceTextRed}>
+              {MoneyFormat(item.catalogue.retailBuyingPrice)}
+            </Text>
+          </View>
+        )}
+      </View>
+    );
+  }
+  renderListCartItem(productItem) {
+    return this.state.productCartArray.map((item, index) => {
+      const itemForOrderButton = item.catalogue;
+      itemForOrderButton.addToCart = true;
+      itemForOrderButton.qtyToCart = item.qty;
+      return item.brandId === productItem.brandId &&
+        item.statusInCart === 'available' ? (
+        <View style={styles.boxListItem} key={index}>
+          <TouchableOpacity
+            style={{ width: 30, justifyContent: 'center' }}
+            onPress={() => this.checkBoxProduct(item.catalogue.id)}
+          >
+            {this.state.productCartArray.findIndex(
+              itemProductCartArray =>
+                itemProductCartArray.catalogueId === item.catalogue.id &&
+                item.checkBox
+            ) > -1 ? (
+              <Icons color="#f1414c" name="checkbox-marked" size={24} />
+            ) : (
+              <Icons
+                color="rgba(1,1,1,0.54)"
+                name="checkbox-blank-outline"
+                size={24}
+              />
+            )}
+          </TouchableOpacity>
+          <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row' }}>
+              <View
+                style={{
+                  width: '30%',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <Image
+                  defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
+                  source={{
+                    uri: item.catalogue.catalogueImages[0].imageUrl
+                  }}
+                  style={styles.productImage}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <View>
+                  <Text style={styles.nameProductText}>
+                    {item.catalogue.name}
+                  </Text>
+                </View>
+                {/* <View style={{ marginVertical: 5 }}>
+                  <Text style={styles.variationProductText}>variasi</Text>
+                </View> */}
+                <View style={{ marginVertical: 10 }}>
+                  {this.renderPriceProduct(item)}
+                </View>
+                <View>
+                  <OrderButton
+                    item={itemForOrderButton}
+                    onRef={ref => (this.parentFunctionFromOrderButton = ref)}
+                    parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
+                      this
+                    )}
+                    onFocus={() => this.setState({ buttonAddDisabled: true })}
+                    onBlur={() => this.setState({ buttonAddDisabled: false })}
+                  />
+                </View>
+              </View>
+              <View style={{ width: '30%', justifyContent: 'space-between' }}>
+                <TouchableOpacity
+                  style={{ alignItems: 'flex-end' }}
+                  onPress={() => this.wantDelete(item)}
+                >
+                  <Image
+                    source={require('../../assets/icons/oms/delete.png')}
+                    style={{ height: 24, width: 24 }}
+                  />
+                </TouchableOpacity>
+                <View style={{ alignItems: 'flex-end' }}>
+                  {item.catalogue.displayStock ? (
+                    <Text style={styles.tersisaText}>
+                      Tersisa {item.catalogue.stock} Pcs
+                    </Text>
+                  ) : (
+                    <Text>{''}</Text>
+                  )}
+                </View>
+              </View>
+            </View>
+            {/* <View>
+              <Text style={styles.discountText}>
+                *Beli 2 untuk dapatkan diskon Rp 5000
+              </Text>
+            </View> */}
+          </View>
+        </View>
+      ) : (
+        <View key={index} />
+      );
+    });
+  }
+  renderListBrand(itemBrand) {
+    return itemBrand.cartBrands.map((item, index) => {
+      return (
+        <View key={index}>
+          {this.state.productCartArray.filter(
+            itemProductCartArray =>
+              itemProductCartArray.brandId === item.brandId &&
+              itemProductCartArray.statusInCart === 'available'
+          ).length > 0 ? (
+            <View>
+              <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+              <View
+                style={[
+                  styles.boxListItemProductInCart,
+                  { paddingVertical: 8, paddingHorizontal: 16 }
+                ]}
+              >
+                <TouchableOpacity
+                  style={{
+                    width: 30,
+                    justifyContent: 'center',
+                    alignItems: 'flex-start'
+                  }}
+                  onPress={() => this.checkBoxBrand(item.brandId)}
+                >
+                  {this.state.productCartArray.filter(
+                    itemProductCartArray =>
+                      itemProductCartArray.brandId === item.brandId &&
+                      !itemProductCartArray.checkBox &&
+                      itemProductCartArray.statusInCart === 'available'
+                  ).length === 0 ? (
+                    <Icons color="#f1414c" name="checkbox-marked" size={24} />
+                  ) : (
+                    <Icons
+                      color="rgba(1,1,1,0.54)"
+                      name="checkbox-blank-outline"
+                      size={24}
+                    />
+                  )}
+                </TouchableOpacity>
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+                  <Text style={styles.brandTitle}>{item.brand.name}</Text>
+                </View>
+              </View>
+              <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+            </View>
+          ) : (
+            <View />
+          )}
+
+          {this.renderListCartItem(item)}
+        </View>
+      );
+    });
+  }
+  renderListCart() {
+    return this.props.oms.dataOmsGetCartItem.cartParcels.map((item, index) => {
+      return (
+        <View key={index}>
+          {this.state.productCartArray.find(
+            itemProductCartArray =>
+              itemProductCartArray.parcelId === item.id &&
+              itemProductCartArray.statusInCart === 'available'
+          ) !== undefined ? (
+            <View>
+              <View style={GlobalStyles.boxPadding} />
+              <View style={styles.boxListProductInCart}>
+                <View style={{ paddingBottom: 8, paddingHorizontal: 16 }}>
+                  <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <Text style={Fonts.type48}>{item.invoiceGroup.name}</Text>
+                  </View>
+                </View>
+                {this.renderListBrand(item)}
+                {/* {this.renderEstimasiSection(item)} */}
+                {/* {this.renderPotonganSection()} */}
+              </View>
+            </View>
+          ) : (
+            <View />
+          )}
+        </View>
+      );
+    });
+  }
+  /** RENDER MAIN CONTENT */
+  renderContent() {
+    return (
+      <View style={styles.contentContainer}>
+        {this.renderData()}
+        {this.renderTotalBottom()}
       </View>
     );
   }
@@ -93,8 +556,11 @@ class OmsCartView extends Component {
   renderData() {
     return (
       <View style={styles.contentContainer}>
-        {this.renderAddress()}
-        {this.renderMainContent()}
+        <ScrollView>
+          {this.renderAddress()}
+          {this.renderListCart()}
+          <View style={{ paddingBottom: 50 }} />
+        </ScrollView>
       </View>
     );
   }
@@ -107,15 +573,62 @@ class OmsCartView extends Component {
   renderBottomValue() {
     return (
       <View style={{ flex: 1 }}>
-        <Text>lala</Text>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+            paddingRight: 10
+          }}
+        >
+          <View>
+            <Text>
+              <Text style={styles.pilihSemuaText}>Total: </Text>
+              <Text style={styles.totalPriceText}>
+                {MoneyFormat(this.totalPriceValue())}
+              </Text>
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.taxText}>Belum termasuk PPN 10%</Text>
+          </View>
+        </View>
       </View>
     );
   }
   /** === RENDER TOTAL BOTTOM CHECK LIST === */
   renderBottomCheckList() {
     return (
-      <View style={{ flex: 1 }}>
-        <Text>lala</Text>
+      <View style={{ flexDirection: 'row' }}>
+        <TouchableOpacity
+          style={{
+            width: 30,
+            justifyContent: 'center',
+            alignItems: 'flex-start'
+          }}
+          onPress={() => this.checkBoxAll()}
+        >
+          {this.state.productCartArray.filter(
+            item => item.checkBox && item.statusInCart === 'available'
+          ).length ===
+            this.state.productCartArray.filter(
+              item => item.statusInCart === 'available'
+            ).length &&
+          this.state.productCartArray.filter(
+            item => item.statusInCart === 'available'
+          ).length > 0 ? (
+            <Icons color="#f1414c" name="checkbox-marked" size={24} />
+          ) : (
+            <Icons
+              color="rgba(1,1,1,0.54)"
+              name="checkbox-blank-outline"
+              size={24}
+            />
+          )}
+        </TouchableOpacity>
+        <View style={{ justifyContent: 'center' }}>
+          <Text style={styles.pilihSemuaText}>Pilih Semua</Text>
+        </View>
       </View>
     );
   }
@@ -123,7 +636,15 @@ class OmsCartView extends Component {
   renderCheckoutButton() {
     return (
       <ButtonSingleSmall
-        disabled={false}
+        disabled={
+          this.props.oms.loadingOmsGetCheckoutItem ||
+          this.state.loading ||
+          this.state.productCartArray.find(
+            item => item.checkBox && item.statusInCart === 'available'
+          ) === undefined
+        }
+        loading={this.props.oms.loadingOmsGetCheckoutItem || this.state.loading}
+        loadingPadding={20}
         onPress={() => this.wantToGoCheckout()}
         title={'Checkout'}
         borderRadius={4}
@@ -152,13 +673,37 @@ class OmsCartView extends Component {
         content={'Konfirmasi order dan lanjut ke Checkout ?'}
         type={'okeRed'}
         ok={() => {
-          this.setState({ openModalToCheckoutConfirmation: false });
+          this.setState({
+            openModalToCheckoutConfirmation: false,
+            loading: true
+          });
           this.checkCart();
         }}
         cancel={() => this.setState({ openModalToCheckoutConfirmation: false })}
       />
     ) : (
       <View />
+    );
+  }
+
+  renderModalDeleteProductConfirmation() {
+    return (
+      <View>
+        {this.state.modalDeleteConfirmation ? (
+          <ModalConfirmation
+            open={this.state.modalDeleteConfirmation}
+            content={'Apakah Anda yakin untuk menghapus barang ?'}
+            type={'okeNotRed'}
+            ok={() => {
+              this.setState({ modalDeleteConfirmation: false });
+              this.deleteProductInCart();
+            }}
+            cancel={() => this.setState({ modalDeleteConfirmation: false })}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
     );
   }
   /**
@@ -169,10 +714,13 @@ class OmsCartView extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        {this.renderData()}
-        {this.renderTotalBottom()}
+        {!this.props.oms.loadingOmsGetCartItem &&
+        this.props.oms.dataOmsGetCartItem !== null
+          ? this.renderContent()
+          : this.renderSkeleton()}
         {/* modal */}
         {this.renderModalConfirmationCheckout()}
+        {this.renderModalDeleteProductConfirmation()}
       </View>
     );
   }
@@ -189,10 +737,234 @@ const styles = StyleSheet.create({
   totalContainer: {
     height: 0.09 * height,
     paddingVertical: 10,
-    paddingHorizontal: 11,
+    paddingHorizontal: 16,
     flexDirection: 'row',
     borderTopWidth: 1,
     borderColor: masterColor.fontBlack10
+  },
+  /** for list order */
+  boxListProductInCart: {
+    backgroundColor: masterColor.backgroundWhite,
+    paddingVertical: 10
+  },
+  /** for sub total */
+  boxSubTotal: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 10
+  },
+  /** for address */
+  boxAddress: {
+    flex: 1,
+    backgroundColor: masterColor.backgroundWhite
+  },
+  boxTitle: {
+    paddingLeft: 16,
+    paddingVertical: 10
+  },
+  boxListItemProductInCart: {
+    flexDirection: 'row'
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff'
+  },
+  boxSpaceBottom: {
+    height: 0.07 * height
+  },
+  boxMargin: {
+    height: 10,
+    backgroundColor: '#f2f2f2'
+  },
+  boxProduct: {
+    height: 0.2 * height,
+    backgroundColor: '#ffffff',
+    borderWidth: 0,
+    elevation: 2,
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowColor: '#777777',
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22
+  },
+  boxErrorProduct: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    borderWidth: 0,
+    elevation: 2,
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowColor: '#777777',
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22
+  },
+  boxTotalPrice: {
+    height: 0.09 * height,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    borderColor: '#f2f2f2'
+  },
+  boxContentProductHabis: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-start'
+  },
+  boxListItem: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingVertical: 11
+  },
+  boxContentItem: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  boxContent: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    flexDirection: 'row'
+  },
+  lines: {
+    marginLeft: 10,
+    borderTopWidth: 1,
+    borderColor: '#f2f2f2'
+  },
+  productImage: {
+    resizeMode: 'contain',
+    width: 77,
+    height: undefined,
+    aspectRatio: 1 / 1
+  },
+  /** text */
+  titleBoxText: {
+    color: '#333333',
+    fontSize: RFPercentage(1.7),
+    fontFamily: Font.MontserratBold
+  },
+  textGantiAlamat: {
+    color: '#f0444c',
+    fontSize: RFPercentage(1.4),
+    fontFamily: Font.MontserratSemiBold
+  },
+  textAlamatTitle: {
+    color: '#4f4f4f',
+    fontSize: RFPercentage(1.5),
+    fontFamily: Font.MontserratSemiBold
+  },
+  textAlamat: {
+    color: '#4f4f4f',
+    fontSize: RFPercentage(1.4),
+    fontFamily: Font.MontserratMedium,
+    lineHeight: RFPercentage(1.7),
+    textTransform: 'capitalize'
+  },
+  textName: {
+    color: '#333333',
+    fontSize: RFPercentage(1.6),
+    fontFamily: Font.MontserratSemiBold
+  },
+  potonganText: {
+    color: '#4f4f4f',
+    fontSize: RFPercentage(1.5),
+    fontFamily: Font.MontserratRegular
+  },
+  supplierTitle: {
+    color: '#333333',
+    fontSize: RFPercentage(1.7),
+    fontFamily: Font.MontserratBold
+  },
+  brandTitle: {
+    color: '#333333',
+    fontSize: RFPercentage(1.7),
+    fontFamily: Font.MontserratSemiBold
+  },
+  discountText: {
+    marginTop: 5,
+    color: '#828282',
+    fontSize: RFPercentage(1.2),
+    fontFamily: Font.MontserratItalic
+  },
+  emptyCartTitle: {
+    color: '#4f4f4f',
+    fontSize: RFPercentage(1.8),
+    lineHeight: 18,
+    fontFamily: Font.MontserratBold,
+    textAlign: 'center'
+  },
+  emptyCartDesc: {
+    color: '#4f4f4f',
+    fontSize: RFPercentage(1.5),
+    lineHeight: 14,
+    fontFamily: Font.MontserratMedium,
+    textAlign: 'center'
+  },
+  nameProductText: {
+    color: '#4f4f4f',
+    fontSize: RFPercentage(1.5),
+    fontFamily: Font.MontserratMedium
+  },
+  variationProductText: {
+    color: '#828282',
+    fontSize: RFPercentage(1.4),
+    fontFamily: Font.MontserratMedium
+  },
+  priceTextRed: {
+    color: '#f0444c',
+    fontSize: RFPercentage(1.8),
+    fontFamily: Font.MontserratSemiBold
+  },
+  priceTextCross: {
+    color: '#bdbdbd',
+    textDecorationLine: 'line-through',
+    fontSize: RFPercentage(1.7),
+    fontFamily: Font.MontserratMedium,
+    marginRight: 10
+  },
+  tersisaText: {
+    color: '#f0444c',
+    fontSize: RFPercentage(1.5),
+    fontFamily: Font.MontserratMedium
+  },
+  pilihSemuaText: {
+    color: '#828282',
+    fontSize: RFPercentage(1.7),
+    fontFamily: Font.MontserratMedium
+  },
+  taxText: {
+    color: '#f57423',
+    fontSize: RFPercentage(1.6),
+    fontFamily: Font.MontserratMedium
+  },
+  totalPriceText: {
+    color: '#f0444c',
+    fontSize: RFPercentage(1.8),
+    fontFamily: Font.MontserratBold
+  },
+  /** for button */
+  titleButton: {
+    fontFamily: Font.MontserratBold,
+    fontSize: 12,
+    color: '#ffffff'
+  },
+  button: {
+    backgroundColor: '#f0444c',
+    borderRadius: 5,
+    width: 80,
+    height: 41
+  },
+  buttonDisabled: {
+    backgroundColor: 'rgba(240,68,76, 0.5)',
+    borderRadius: 5,
+    width: 80,
+    height: 41
   }
 });
 

@@ -61,6 +61,10 @@ class JourneyListDataView extends Component {
       storeName
     });
   }
+
+  goToChat() {
+    NavigationService.navigate('ChatView');
+  }
   /**
    * ======================
    * RENDER VIEW
@@ -220,9 +224,12 @@ class JourneyListDataView extends Component {
               flexDirection: 'row'
             }}
           >
-            <View style={styles.boxButtonChat}>
+            <TouchableOpacity
+              style={styles.boxButtonChat}
+              onPress={() => this.goToChat()}
+            >
               <Text style={Fonts.type28}>Chat</Text>
-            </View>
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.boxButtonDetail}
               onPress={() => this.goToDetailMerchant(item.store.id)}

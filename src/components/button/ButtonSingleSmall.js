@@ -55,6 +55,7 @@ class ButtonSingleSmall extends Component {
           }
           type={'solid'}
           loading={this.props.loading}
+          loadingStyle={{ paddingHorizontal: this.props.loadingPadding }}
         />
       </View>
     );

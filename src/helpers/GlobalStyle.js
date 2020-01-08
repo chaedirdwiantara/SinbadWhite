@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2.22,
     elevation: 2
   },
-  /** LINES WITH PADDING 16 */
+  /** LINES  */
   lines: {
     borderTopWidth: 1,
     borderColor: masterColor.fontBlack10
@@ -37,6 +37,11 @@ const styles = StyleSheet.create({
     flex: 1,
     borderStyle: 'dotted'
   },
+  /** BOX PADDING */
+  boxPadding: {
+    height: 10,
+    backgroundColor: masterColor.fontBlack05
+  },
   /** IMAGE SINBAD */
   fullImage: {
     height: 190,
@@ -51,6 +56,12 @@ const styles = StyleSheet.create({
   image74: {
     height: 74,
     width: undefined,
+    aspectRatio: 1 / 1
+  },
+  image77: {
+    resizeMode: 'contain',
+    width: 77,
+    height: undefined,
     aspectRatio: 1 / 1
   },
   /** SHADOW */
@@ -69,6 +80,7 @@ const styles = StyleSheet.create({
   },
   shadowForBox: {
     borderWidth: 0,
+    backgroundColor: masterColor.backgroundWhite,
     shadowColor: masterColor.shadow,
     shadowOffset: {
       width: 0,
