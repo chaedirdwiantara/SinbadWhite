@@ -23,6 +23,7 @@ import Fonts from '../../helpers/GlobalFont';
 import Font from '../../utils/Fonts';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import { MoneyFormat } from '../../helpers/NumberFormater';
+import OrderButton from '../../components/OrderButton';
 
 const { width, height } = Dimensions.get('window');
 
@@ -89,6 +90,22 @@ class OmsCartView extends Component {
       qty
     };
     this.props.omsAddToCart(data);
+  }
+
+  parentFunctionFromOrderButton(data) {
+    const productCartArray = this.state.productCartArray;
+    const indexProductCartArray = productCartArray.findIndex(
+      item => item.catalogueId === data.catalogueId
+    );
+    productCartArray[indexProductCartArray].qty = data.qty;
+    this.setState({ productCartArray });
+    /**
+     * jangan hapus code dibawah
+     * code untuk update qty
+     * akan tetapi lelet, jadi dipindah ke willunmount
+     * code :
+     * this.forCartData('update', data.catalogueId, data.qty);
+     */
   }
 
   /** check box */
@@ -398,8 +415,7 @@ class OmsCartView extends Component {
                   {this.renderPriceProduct(item)}
                 </View>
                 <View>
-                  <Text>lala</Text>
-                  {/* <OrderButton
+                  <OrderButton
                     item={itemForOrderButton}
                     onRef={ref => (this.parentFunctionFromOrderButton = ref)}
                     parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
@@ -407,7 +423,7 @@ class OmsCartView extends Component {
                     )}
                     onFocus={() => this.setState({ buttonAddDisabled: true })}
                     onBlur={() => this.setState({ buttonAddDisabled: false })}
-                  /> */}
+                  />
                 </View>
               </View>
               <View style={{ width: '30%', justifyContent: 'space-between' }}>
