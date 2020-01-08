@@ -16,6 +16,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
+import { MoneyFormat } from '../../helpers/NumberFormater';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import SkeletonType4 from '../../components/skeleton/SkeletonType4';
 import { LoadingLoadMore } from '../../components/Loading';
@@ -79,6 +80,7 @@ class PdpGridDataView extends Component {
     return (item.stock > 0 && item.stock >= item.minQty) ||
       item.unlimitedStock ? (
       <TouchableOpacity
+        onPress={() => this.props.pdpOpenOrder(item)}
         style={[styles.pesanButton, { backgroundColor: '#f0444c' }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>
@@ -114,7 +116,9 @@ class PdpGridDataView extends Component {
                 <Text style={Fonts.type37}>{item.name}</Text>
               </View>
               <View style={styles.boxPrice}>
-                <Text style={Fonts.type36}>{item.price}</Text>
+                <Text style={Fonts.type36}>
+                  {MoneyFormat(item.retailBuyingPrice)}
+                </Text>
                 {item.displayStock && item.stock >= item.minQty ? (
                   <Text style={Fonts.type38}>{`${item.stock} Tersisa`} </Text>
                 ) : (

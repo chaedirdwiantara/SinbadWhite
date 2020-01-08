@@ -32,3 +32,20 @@ export function pdpGetReset() {
 export function pdpGetLoadMore(page) {
   return { type: types.PDP_GET_LOADMORE, payload: page };
 }
+
+/**
+ * ==============================
+ * FILTER & DISPLAY PDP
+ * ==============================
+ */
+/** === CHANGE DISPLAY GRID ==== */
+export function pdpChangeDisplay(data) {
+  return { type: types.PDP_CHANGE_DISPLAY, payload: data };
+}
+/** === CHANGE DISPLAY GRID ==== */
+export function pdpOpenOrder(data) {
+  return { type: types.PDP_OPEN_ORDER, payload: data };
+}
+export function pdpCloseOrder(data) {
+  return { type: types.PDP_CLOSE_ORDER };
+}

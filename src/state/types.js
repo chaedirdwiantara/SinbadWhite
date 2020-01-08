@@ -78,3 +78,8 @@ export const PDP_GET_FAILED = 'PdpGetFailed';
 export const PDP_GET_RESET = 'PdpGetReset';
 export const PDP_GET_REFRESH = 'PdpGetRefresh';
 export const PDP_GET_LOADMORE = 'PdpGetLoadMore';
+/** FOR GET PDP LIST */
+export const PDP_CHANGE_DISPLAY = 'PdpChangeDisplay';
+/** FOR ORDER PDP */
+export const PDP_OPEN_ORDER = 'PdpOpenOrder';
+export const PDP_CLOSE_ORDER = 'PdpCloseOrder';

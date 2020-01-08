@@ -8,6 +8,8 @@ import {
   Image
 } from 'react-native';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as ActionCreators from '../../state/actions';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
@@ -19,9 +21,6 @@ const { width, height } = Dimensions.get('window');
 class PdpFilterView extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      layout: 'grid'
-    };
   }
 
   renderSort() {
@@ -44,32 +43,42 @@ class PdpFilterView extends Component {
   }
 
   renderLayout() {
+    let iconFilter = null;
+    if (this.props.pdp.pdpDisplay === 'grid') {
+      iconFilter = (
+        <TouchableOpacity onPress={() => this.props.pdpChangeDisplay('list')}>
+          <Image
+            source={require('../../assets/images/pdp/grid.png')}
+            style={styles.imageIcon}
+          />
+          <Text style={[Fonts.type40, { textAlign: 'center' }]}>Grid</Text>
+        </TouchableOpacity>
+      );
+    } else if (this.props.pdp.pdpDisplay === 'list') {
+      iconFilter = (
+        <TouchableOpacity onPress={() => this.props.pdpChangeDisplay('line')}>
+          <Image
+            source={require('../../assets/images/pdp/viewlist-float.png')}
+            style={styles.imageIcon}
+          />
+          <Text style={[Fonts.type40, { textAlign: 'center' }]}>List</Text>
+        </TouchableOpacity>
+      );
+    } else if (this.props.pdp.pdpDisplay === 'line') {
+      iconFilter = (
+        <TouchableOpacity onPress={() => this.props.pdpChangeDisplay('grid')}>
+          <Image
+            source={require('../../assets/images/pdp/line.png')}
+            style={styles.imageIcon}
+          />
+          <Text style={[Fonts.type40, { textAlign: 'center' }]}>Line</Text>
+        </TouchableOpacity>
+      );
+    }
+
     return (
       <View>
-        <TouchableOpacity
-          onPress={() =>
-            this.checkLayout(this.state.layout === 'grid' ? 'list' : 'grid')
-          }
-          style={styles.boxContent}
-        >
-          {this.state.layout === 'grid' ? (
-            <View>
-              <Image
-                source={require('../../assets/images/pdp/viewlist-float.png')}
-                style={styles.imageIcon}
-              />
-              <Text style={[Fonts.type40, { textAlign: 'center' }]}>List</Text>
-            </View>
-          ) : (
-            <View>
-              <Image
-                source={require('../../assets/images/pdp/grid.png')}
-                style={styles.imageIcon}
-              />
-              <Text style={[Fonts.type40, { textAlign: 'center' }]}>Grid</Text>
-            </View>
-          )}
-        </TouchableOpacity>
+        <View style={styles.boxContent}>{iconFilter}</View>
       </View>
     );
   }
@@ -112,40 +121,40 @@ class PdpFilterView extends Component {
             <Text style={styles.textIcon}>Kategori</Text>
           </TouchableOpacity> */}
         </View>
-        {this.state.sortButton ? (
-          // <SortBottom
-          //   title="Urutkan"
-          //   openSort={this.state.sortButton}
-          //   sortContent={this.state.sortContent}
-          //   onRef={ref => (this.checkSortFromChild = ref)}
-          //   checkSortFromChild={this.checkSort.bind(this)}
-          //   close={() => this.setState({ sortButton: false })}
-          //   sortChecked={this.state.sortCheck}
-          // />
+        {/* {this.state.sortButton ? (
+          <SortBottom
+            title="Urutkan"
+            openSort={this.state.sortButton}
+            sortContent={this.state.sortContent}
+            onRef={ref => (this.checkSortFromChild = ref)}
+            checkSortFromChild={this.checkSort.bind(this)}
+            close={() => this.setState({ sortButton: false })}
+            sortChecked={this.state.sortCheck}
+          />
           <View />
         ) : (
           <View />
-        )}
+        )} */}
 
-        {this.state.filterButton ? (
-          // <FilterBottom
-          //   onRef={ref => (this.filterFromChild = ref)}
-          //   filterFromChild={this.doFilter.bind(this)}
-          //   openFilter={this.state.filterButton}
-          //   close={() => this.setState({ filterButton: false })}
-          //   dataLabel={
-          //     this.props.product.dataKeywordProductList.length === 0
-          //       ? []
-          //       : this.props.product.dataKeywordProductList
-          //   }
-          //   dataFilter={this.props.product.dataProductFilter}
-          //   price
-          //   label={this.props.product.dataKeywordProductList.length > 0}
-          // />
+        {/* {this.state.filterButton ? (
+          <FilterBottom
+            onRef={ref => (this.filterFromChild = ref)}
+            filterFromChild={this.doFilter.bind(this)}
+            openFilter={this.state.filterButton}
+            close={() => this.setState({ filterButton: false })}
+            dataLabel={
+              this.props.product.dataKeywordProductList.length === 0
+                ? []
+                : this.props.product.dataKeywordProductList
+            }
+            dataFilter={this.props.product.dataProductFilter}
+            price
+            label={this.props.product.dataKeywordProductList.length > 0}
+          />
           <View />
         ) : (
           <View />
-        )}
+        )} */}
       </View>
     );
   }
@@ -191,8 +200,12 @@ const styles = StyleSheet.create({
   // }
 });
 
-const mapStateToProps = ({ product }) => {
-  return { product };
+const mapStateToProps = ({ pdp }) => {
+  return { pdp };
 };
 
-export default connect(mapStateToProps, {})(PdpFilterView);
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PdpFilterView);
