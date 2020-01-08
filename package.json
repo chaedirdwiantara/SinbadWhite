@@ -21,6 +21,7 @@
     "react-native-maps": "^0.26.1",
     "react-native-modal": "^11.5.3",
     "react-native-reanimated": "^1.4.0",
+    "react-native-responsive-fontsize": "^0.4.2",
     "react-native-skeleton-placeholder": "^1.0.3",
     "react-native-swipe-gestures": "^1.0.4",
     "react-native-text": "^0.2.0",
