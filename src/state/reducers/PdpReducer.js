@@ -93,6 +93,8 @@ export const pdp = createReducer(INITIAL_STATE, {
       pdpDisplay: action.payload
     };
   },
+
+  //SEMENTARA
   /**
    * ===================
    * OPEN ORDER PDP
@@ -110,6 +112,17 @@ export const pdp = createReducer(INITIAL_STATE, {
       ...state,
       pdpOpenModalOrder: false,
       pdpOrderData: null
+    };
+  },
+  /**
+   * ===================
+   * ADD TO CART PDP
+   * ===================
+   */
+  [types.PDP_MODIFY_PRODUCT_LIST_DATA](state, action) {
+    return {
+      ...state,
+      pdpOpenModalOrder: false
     };
   }
 });

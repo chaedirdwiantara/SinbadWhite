@@ -1,4 +1,5 @@
 import * as types from '../types';
+import { Store } from '../Store';
 
 /**
  * ==============================
@@ -48,4 +49,35 @@ export function pdpOpenOrder(data) {
 }
 export function pdpCloseOrder(data) {
   return { type: types.PDP_CLOSE_ORDER };
+}
+
+/**
+ * ==============================
+ * SEMENTARA
+ * ==============================
+ */
+export function pdpModifyProductListData(data) {
+  const allPropsData = Store.getState();
+  const findProductById = allPropsData.pdp.dataGetPdp.find(
+    product => parseInt(product.id, 10) === data.catalogueId
+  );
+  if (findProductById !== undefined) {
+    console.log(data, findProductById, 'ini apa');
+    switch (data.method) {
+      case 'add':
+        findProductById.addToCart = true;
+        findProductById.qtyToCart = data.qty;
+        break;
+      case 'update':
+        findProductById.qtyToCart = data.qty;
+        break;
+      case 'delete':
+        delete findProductById.addToCart;
+        delete findProductById.qtyToCart;
+        break;
+      default:
+        break;
+    }
+  }
+  return { type: types.PDP_MODIFY_PRODUCT_LIST_DATA };
 }
