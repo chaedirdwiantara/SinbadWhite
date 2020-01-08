@@ -55,7 +55,8 @@ class JourneyListDataView extends Component {
     });
   }
   /** go to merchant dashboard */
-  goToMerchantDashboard(storeName) {
+  goToMerchantDashboard(storeName, data) {
+    this.props.merchantSelected(data);
     NavigationService.navigate('MerchantHomeView', {
       storeName
     });
@@ -141,7 +142,7 @@ class JourneyListDataView extends Component {
           </View>
         </View>
         <TouchableOpacity
-          onPress={() => this.goToMerchantDashboard(item.store.name)}
+          onPress={() => this.goToMerchantDashboard(item.store.name, item)}
           style={{
             paddingHorizontal: 10,
             paddingVertical: 13,

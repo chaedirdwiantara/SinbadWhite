@@ -33,8 +33,8 @@ class OmsCartView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.props.omsGetCartItemProcess({
-      storeId: '',
-      catalogues: ''
+      storeId: this.props.merchant.selectedMerchant.storeId,
+      catalogues: this.props.oms.dataCart
     });
   }
   wantToGoCheckout() {
@@ -150,8 +150,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ merchant, oms }) => {
+  return { merchant, oms };
 };
 
 const mapDispatchToProps = dispatch => {
