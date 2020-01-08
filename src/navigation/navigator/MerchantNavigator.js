@@ -14,6 +14,7 @@ import AddMerchantOwnerInformation from '../../screens/merchants/add-merchant/Ad
 import AddMerchantSelfiePhoto from '../../screens/merchants/add-merchant/AddMerchantSelfiePhoto';
 /** merchant dashboard */
 import MerchantHomeView from '../../screens/merchants/dashboard-merchant/MerchantHomeView';
+import MerchantCheckinView from '../../screens/merchants/dashboard-merchant/MerchantCheckinView';
 
 const MerchantNavigator = {
   MerchantView: {
@@ -53,6 +54,13 @@ const MerchantNavigator = {
       headerStyle: {
         backgroundColor: masterColor.mainColor
       },
+      gesturesEnabled: false
+    }
+  },
+  MerchantCheckinView: {
+    screen: MerchantCheckinView,
+    navigationOptions: {
+      headerShown: false,
       gesturesEnabled: false
     }
   },

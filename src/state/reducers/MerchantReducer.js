@@ -10,6 +10,8 @@ const INITIAL_STATE = {
   loadingGetPortfolio: false,
   loadingGetMerchantDetail: false,
   loadingGetMerchantLastOrder: false,
+  loadingCheckinMerchant: false,
+  loadingCheckoutMerchant: false,
   /** data */
   selectedMerchant: null,
   dataGetMerchant: [],
@@ -55,12 +57,16 @@ const INITIAL_STATE = {
   totalDataGetMerchant: 0,
   pageGetMerchant: 0,
   dataGetPortfolio: null,
+  dataCheckinMerchant: null,
+  dataCheckoutMerchant: null,
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
   errorGetPortfolio: null,
   errorGetMerchantDetail: null,
-  errorGetMerchantLastOrder: null
+  errorGetMerchantLastOrder: null,
+  errorCheckinMerchant: null,
+  errorCheckoutMerchant: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -263,6 +269,60 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetMerchantLastOrder: false,
       errorGetMerchantLastOrder: action.payload
+    };
+  },
+  /**
+   * =============================
+   * CHECKIN MERCHANT
+   * =============================
+   */
+  [types.MERCHANT_CHECKIN_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingCheckinMerchant: true,
+      dataCheckinMerchant: null,
+      errorCheckinMerchant: null
+    };
+  },
+  [types.MERCHANT_CHECKIN_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingCheckinMerchant: false,
+      dataCheckinMerchant: action.payload
+    };
+  },
+  [types.MERCHANT_CHECKIN_FAILED](state, action) {
+    return {
+      ...state,
+      loadingCheckinMerchant: false,
+      errorCheckinMerchant: action.payload
+    };
+  },
+  /**
+   * =============================
+   * CHECKOUT MERCHANT
+   * =============================
+   */
+  [types.MERCHANT_CHECKOUT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingCheckoutMerchant: true,
+      dataCheckoutMerchant: null,
+      errorCheckoutMerchant: null
+    };
+  },
+  [types.MERCHANT_CHECKOUT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingCheckoutMerchant: false,
+      dataCheckoutMerchant: action.payload
+    };
+  },
+  [types.MERCHANT_CHECKOUT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingCheckoutMerchant: false,
+      errorCheckoutMerchant: action.payload
     };
   }
 });

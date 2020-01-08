@@ -57,6 +57,28 @@ function* getMerchantLastOrder(actions) {
     yield put(ActionCreators.merchantGetLastOrderFailed(error));
   }
 }
+/** === CHECKIN MERCHANT === */
+function* checkinMerchant(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.checkMerchant(actions.payload);
+    });
+    yield put(ActionCreators.merchantCheckinSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantCheckinFailed(error));
+  }
+}
+/** === CHECKOUT MERCHANT === */
+function* checkoutMerchant(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.checkMerchant(actions.payload);
+    });
+    yield put(ActionCreators.merchantCheckoutSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantCheckoutFailed(error));
+  }
+}
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_GET_PROCESS, getMerchant);
@@ -64,6 +86,8 @@ function* MerchantSaga() {
   yield takeEvery(types.PORTFOLIO_GET_PROCESS, getPortfolio);
   yield takeEvery(types.MERCHANT_ADD_PROCESS, addMerchant);
   yield takeEvery(types.MERCHANT_GET_LAST_ORDER_PROCESS, getMerchantLastOrder);
+  yield takeEvery(types.MERCHANT_CHECKIN_PROCESS, checkinMerchant);
+  yield takeEvery(types.MERCHANT_CHECKOUT_PROCESS, checkoutMerchant);
 }
 
 export default MerchantSaga;

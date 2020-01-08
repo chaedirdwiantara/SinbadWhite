@@ -24,6 +24,8 @@ import Fonts from '../../../helpers/GlobalFont';
 import { MoneyFormat } from '../../../helpers/NumberFormater';
 import { StatusBarRed } from '../../../components/StatusBarGlobal';
 import NavigationService from '../../../navigation/NavigationService';
+import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
+
 const { width, height } = Dimensions.get('window');
 
 class MerchantHomeView extends Component {
@@ -31,16 +33,7 @@ class MerchantHomeView extends Component {
     super(props);
     this.state = {
       activeIndex: 0,
-      banner: [
-        {
-          id: 1,
-          image: require('../../../assets/images/sinbad_image/loadingbanner.png')
-        },
-        {
-          id: 2,
-          image: require('../../../assets/images/sinbad_image/loadingbanner.png')
-        }
-      ]
+      modalCheckout: false
     };
   }
   /**
@@ -58,6 +51,18 @@ class MerchantHomeView extends Component {
 
   goToPdp() {
     NavigationService.navigate('PdpView');
+  }
+
+  goToCheckIn() {
+    NavigationService.navigate('MerchantCheckinView');
+  }
+
+  goToCheckOut() {
+    this.setState({ modalCheckout: true });
+  }
+
+  closeModalCheckout() {
+    this.setState({ modalCheckout: false });
   }
   /**
    * ========================
@@ -267,6 +272,25 @@ class MerchantHomeView extends Component {
               />
             </View>
           </View>
+          <View style={styles.containerList}>
+            <View style={styles.checkBox}>
+              <MaterialIcons
+                name="check-circle"
+                color={masterColor.fontGreen50}
+                size={24}
+              />
+            </View>
+            <View style={styles.taskBox}>
+              <Text style={{ textAlign: 'left' }}>Check Out</Text>
+            </View>
+            <View style={styles.rightArrow}>
+              <MaterialIcons
+                name="chevron-right"
+                color={masterColor.fontBlack50}
+                size={24}
+              />
+            </View>
+          </View>
         </View>
       </Card>
     );
@@ -279,48 +303,33 @@ class MerchantHomeView extends Component {
           <Text style={{ fontWeight: 'bold', fontSize: 15 }}>Store Menu</Text>
         </View>
         <View style={{ flex: 1, flexDirection: 'row' }}>
-          <View
-            style={{
-              padding: 5,
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
+          <TouchableOpacity
+            style={styles.wrapMenu}
+            onPress={() => this.goToPdp()}
           >
-            <View
-              style={{ height: 50, width: 70, backgroundColor: '#fafafa' }}
-            />
+            <View style={styles.boxMenu} />
             <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
               Order
             </Text>
-          </View>
-          <View
-            style={{
-              padding: 5,
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.wrapMenu}
+            onPress={() => this.goToCheckIn()}
           >
-            <View
-              style={{ height: 50, width: 70, backgroundColor: '#fafafa' }}
-            />
+            <View style={styles.boxMenu} />
             <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
               Check In
             </Text>
-          </View>
-          <View
-            style={{
-              padding: 5,
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.wrapMenu}
+            onPress={() => this.goToCheckOut()}
           >
-            <View
-              style={{ height: 50, width: 70, backgroundColor: '#fafafa' }}
-            />
+            <View style={styles.boxMenu} />
             <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
               Check Out
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -358,9 +367,10 @@ class MerchantHomeView extends Component {
         {this.renderData()}
         {this.renderTask()}
         {this.renderStoreMenu()}
-        {/* <TouchableOpacity onPress={() => this.goToPdp()}>
-          <Text>Order</Text>
-        </TouchableOpacity> */}
+        <ModalBottomMerchantCheckout
+          open={this.state.modalCheckout}
+          close={() => this.closeModalCheckout()}
+        />
       </ScrollView>
     ) : (
       <View />
@@ -455,6 +465,16 @@ const styles = StyleSheet.create({
     flex: 2,
     alignItems: 'flex-end',
     justifyContent: 'center'
+  },
+  wrapMenu: {
+    padding: 5,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  boxMenu: {
+    height: 50,
+    width: 70,
+    backgroundColor: '#fafafa'
   }
 });
 
