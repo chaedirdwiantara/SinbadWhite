@@ -174,17 +174,17 @@ class HomeView extends Component {
   renderBanner() {
     return (
       <View style={{ paddingVertical: 10 }}>
-        <Image
-          source={require('../../assets/images/sinbad_image/Sinbad-Agent-Apps.png')}
-          style={{
-            width: 0.9 * width,
-            height: undefined,
-            aspectRatio: 52 / 21,
-            zIndex: 10,
-            alignItems: 'flex-start',
-            marginTop: 2
-          }}
-        />
+        <View style={styles.boxBanner}>
+          <Image
+            source={require('../../assets/images/sinbad_image/Sinbad-Agent-Apps.png')}
+            style={{
+              resizeMode: 'contain',
+              width: '100%',
+              height: undefined,
+              aspectRatio: 7 / 3
+            }}
+          />
+        </View>
       </View>
     );
   }
@@ -285,10 +285,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16
   },
   boxBanner: {
-    backgroundColor: masterColor.mainColor,
-    borderRadius: 15,
-    paddingHorizontal: 20,
-    paddingVertical: 37
+    // backgroundColor: masterColor.mainColor,
+    width: '100%',
+    borderRadius: 15
+    // paddingHorizontal: 20,
+    // paddingVertical: 37
   },
   circleImage: {
     height: 30,
