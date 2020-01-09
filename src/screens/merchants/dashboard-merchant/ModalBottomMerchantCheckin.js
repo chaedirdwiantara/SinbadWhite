@@ -6,7 +6,8 @@ import {
   Dimensions,
   Keyboard,
   TouchableOpacity,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  ToastAndroid
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -55,6 +56,13 @@ class ModalBottomMerchantCheckin extends Component {
       activity: 'check_in'
     };
     this.props.merchantCheckinProcess(storeLogCheckin);
+    ToastAndroid.showWithGravityAndOffset(
+      'Check-in Berhasil',
+      ToastAndroid.SHORT,
+      ToastAndroid.TOP,
+      25,
+      200
+    );
   }
   /**
    * ==================

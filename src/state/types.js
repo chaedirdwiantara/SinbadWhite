@@ -67,6 +67,10 @@ export const MERCHANT_CHECKIN_FAILED = 'MerchantCheckinFailed';
 export const MERCHANT_CHECKOUT_PROCESS = 'MerchantCheckoutProcess';
 export const MERCHANT_CHECKOUT_SUCCESS = 'MerchantCheckoutSuccess';
 export const MERCHANT_CHECKOUT_FAILED = 'MerchantCheckoutFailed';
+/** FOR GET LOG MERCHANT */
+export const MERCHANT_GET_LOG_PROCESS = 'MerchantGetLogProcess';
+export const MERCHANT_GET_LOG_SUCCESS = 'MerchantGetLogSuccess';
+export const MERCHANT_GET_LOG_FAILED = 'MerchantGetLogFailed';
 /** SELECTED MERCHANT === */
 export const MERCHANT_SELECTED = 'MerchantSelected';
 /** === JOURNEY === */

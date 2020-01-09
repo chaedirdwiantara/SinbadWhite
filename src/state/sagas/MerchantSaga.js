@@ -61,7 +61,7 @@ function* getMerchantLastOrder(actions) {
 function* checkinMerchant(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.checkMerchant(actions.payload);
+      return MerchantMethod.insertLogMerchant(actions.payload);
     });
     yield put(ActionCreators.merchantCheckinSuccess(response));
   } catch (error) {
@@ -72,11 +72,22 @@ function* checkinMerchant(actions) {
 function* checkoutMerchant(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.checkMerchant(actions.payload);
+      return MerchantMethod.insertLogMerchant(actions.payload);
     });
     yield put(ActionCreators.merchantCheckoutSuccess(response));
   } catch (error) {
     yield put(ActionCreators.merchantCheckoutFailed(error));
+  }
+}
+/** === GET LOG MERCHANT === */
+function* getLogMerchant(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getLogMerchant(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetLogSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetLogFailed(error));
   }
 }
 /** === SAGA FUNCTION === */
@@ -88,6 +99,7 @@ function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_GET_LAST_ORDER_PROCESS, getMerchantLastOrder);
   yield takeEvery(types.MERCHANT_CHECKIN_PROCESS, checkinMerchant);
   yield takeEvery(types.MERCHANT_CHECKOUT_PROCESS, checkoutMerchant);
+  yield takeEvery(types.MERCHANT_GET_LOG_PROCESS, getLogMerchant);
 }
 
 export default MerchantSaga;
