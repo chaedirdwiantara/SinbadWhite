@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
     color: masterColor.fontBlack50
   },
   type49: {
-    fontFamily: Fonts.MontserratRegular,
+    fontFamily: Fonts.MontserratMedium,
     fontSize: 10,
     lineHeight: 13,
     color: masterColor.fontBlack50
@@ -336,10 +336,53 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     color: masterColor.fontBlack50
   },
+  type56: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 10,
+    lineHeight: 13,
+    color: masterColor.fontBlack60
+  },
+  type57: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 11,
+    lineHeight: 14,
+    color: masterColor.fontBlack80
+  },
+  type58: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 11,
+    lineHeight: 14,
+    color: masterColor.fontGreen50
+  },
+  type59: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 11,
+    lineHeight: 14,
+    color: masterColor.fontBlack80
+  },
+  type60: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10,
+    lineHeight: 13,
+    color: masterColor.fontBlack80
+  },
+  type61: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 11,
+    lineHeight: 14,
+    letterSpacing: 0.11,
+    color: masterColor.fontBlack80
+  },
+  type62: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 12,
+    lineHeight: 15,
+    color: masterColor.mainColor
+  },
   forCompare: {
-    fontFamily: Fonts.MontserratBold,
-    fontSize: 15,
-    lineHeight: 30,
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 12,
+    lineHeight: 15,
     color: masterColor.fontBlack50
   },
   /** === bottom nav ==== */

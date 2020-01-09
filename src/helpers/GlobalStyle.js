@@ -78,6 +78,19 @@ const styles = StyleSheet.create({
     shadowRadius: 2.22,
     elevation: 2
   },
+  shadow5: {
+    borderWidth: 0,
+    marginHorizontal: 1,
+    marginVertical: 2,
+    shadowColor: masterColor.shadow,
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
   shadowForBox: {
     borderWidth: 0,
     backgroundColor: masterColor.backgroundWhite,
@@ -89,6 +102,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
     elevation: 2
+  },
+  shadowForBox10: {
+    borderWidth: 0,
+    backgroundColor: masterColor.backgroundWhite,
+    shadowColor: masterColor.shadow,
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 10
   },
   shadowBottom: {
     borderWidth: 0,

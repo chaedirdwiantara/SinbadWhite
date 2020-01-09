@@ -127,3 +127,19 @@ export const OMS_GET_PAYMENT_SUCCESS = 'OmsGetPaymentSuccess';
 export const OMS_GET_PAYMENT_FAILED = 'OmsGetPaymentFailed';
 /** DELETE ALL DATA IN OMS */
 export const OMS_RESET_DATA = 'OmsResetData';
+/** === HISTORY === */
+/** GET ORDER STATUS */
+export const HISTORY_GET_ORDER_STATUS_PROCESS = 'HistoryGetOrderStatusProcess';
+export const HISTORY_GET_ORDER_STATUS_SUCCESS = 'HistoryGetOrderStatusSuccess';
+export const HISTORY_GET_ORDER_STATUS_FAILED = 'HistoryGetOrderStatusFailed';
+/** GET PAYMENT STATUS */
+export const HISTORY_GET_PAYMENT_STATUS_PROCESS =
+  'HistoryGetPaymentStatusProcess';
+export const HISTORY_GET_PAYMENT_STATUS_SUCCESS =
+  'HistoryGetPaymentStatusSuccess';
+export const HISTORY_GET_PAYMENT_STATUS_FAILED =
+  'HistoryGetPaymentStatusFailed';
+/** GET HISTORY LIST */
+export const HISTORY_GET_PROCESS = 'HistoryGetProcess';
+export const HISTORY_GET_SUCCESS = 'HistoryGetSuccess';
+export const HISTORY_GET_FAILED = 'HistoryGetFailed';

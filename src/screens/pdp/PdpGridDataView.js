@@ -77,7 +77,7 @@ class PdpGridDataView extends Component {
   /** === RENDER LOADMORE === */
   renderLoadMore() {
     return this.props.pdp.loadingLoadMoreGetPdp ? (
-      <View style={{ marginBottom: '12%' }}>
+      <View>
         <LoadingLoadMore />
       </View>
     ) : (
@@ -114,42 +114,32 @@ class PdpGridDataView extends Component {
     );
 
     return (
-      <View style={styles.boxContentList} key={index}>
-        <Card containerStyle={styles.cardProduct}>
-          <View style={styles.boxContentListCard}>
-            <TouchableOpacity
-              style={styles.boxContentListCardTouch}
-              onPress={() => this.toProductDetail(item)}
-            >
-              <View style={styles.boxImage}>{productImage}</View>
-              <View style={styles.boxName}>
+      <View style={styles.mainContent} key={index}>
+        <View style={styles.boxMainContent}>
+          <View style={[GlobalStyles.shadow5, styles.cardMainContent]}>
+            <View>{productImage}</View>
+            <View style={{ paddingHorizontal: 11, paddingVertical: 10 }}>
+              <View>
                 <Text style={Fonts.type37}>{item.name}</Text>
               </View>
-              <View style={styles.boxPrice}>
+              <View style={{ marginTop: 5 }}>
                 <Text style={Fonts.type36}>
                   {MoneyFormat(item.retailBuyingPrice)}
                 </Text>
-                {item.displayStock && item.stock >= item.minQty ? (
-                  <Text style={Fonts.type38}>{`${item.stock} Tersisa`} </Text>
-                ) : (
-                  <Text style={Fonts.type38}>{''}</Text>
-                )}
               </View>
-            </TouchableOpacity>
-            <View style={styles.boxContentListCardNoTouch}>
-              <View style={styles.boxButton}>{this.renderButton(item)}</View>
-              {/* {item.addToCart ? (
-                <View style={styles.boxOrdered}>
-                  <Text style={styles.productQtyOrderText}>
-                    {item.qtyToCart} pcs
-                  </Text>
+              {item.displayStock && item.stock >= item.minQty ? (
+                <View style={{ marginTop: 5 }}>
+                  <Text style={Fonts.type38}>{`${item.stock} Tersisa`} </Text>
                 </View>
               ) : (
                 <View />
-              )} */}
+              )}
+              <View style={{ alignItems: 'center', marginTop: 10 }}>
+                {this.renderButton(item)}
+              </View>
             </View>
           </View>
-        </Card>
+        </View>
       </View>
     );
   }
@@ -163,21 +153,19 @@ class PdpGridDataView extends Component {
   /** === RENDER DATA CONTENT === */
   renderContent() {
     return (
-      <View style={{ flex: 1, paddingBottom: '7%' }}>
-        <FlatList
-          contentContainerStyle={styles.flatListContainer}
-          data={this.props.pdp.dataGetPdp}
-          renderItem={this.renderItem.bind(this)}
-          numColumns={2}
-          extraData={this.state}
-          keyExtractor={(item, index) => index.toString()}
-          refreshing={this.props.pdp.refreshGetPdp}
-          onRefresh={this.onHandleRefresh}
-          onEndReachedThreshold={0.1}
-          onEndReached={this.onHandleLoadMore.bind(this)}
-          showsVerticalScrollIndicator
-        />
-      </View>
+      <FlatList
+        contentContainerStyle={styles.flatListContainer}
+        data={this.props.pdp.dataGetPdp}
+        renderItem={this.renderItem.bind(this)}
+        numColumns={2}
+        extraData={this.state}
+        keyExtractor={(item, index) => index.toString()}
+        refreshing={this.props.pdp.refreshGetPdp}
+        onRefresh={this.onHandleRefresh}
+        onEndReachedThreshold={0.2}
+        onEndReached={this.onHandleLoadMore.bind(this)}
+        showsVerticalScrollIndicator
+      />
     );
   }
   /** === RENDER EMPTY === */
@@ -202,102 +190,48 @@ class PdpGridDataView extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    height: '100%',
+    flex: 1,
     backgroundColor: masterColor.backgroundWhite
   },
   flatListContainer: {
-    paddingTop: 30,
-    paddingBottom: 26
+    paddingTop: 16,
+    paddingHorizontal: 11,
+    paddingBottom: 30
   },
-  boxContentList: {
-    height: 0.35 * height,
+  mainContent: {
     width: '50%',
-    paddingHorizontal: '1.5%',
-    paddingVertical: '1.5%',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  boxMainContent: {
+    paddingBottom: 10,
+    paddingHorizontal: 5,
+    width: '100%'
+  },
+  cardMainContent: {
+    borderRadius: 5,
+    backgroundColor: masterColor.backgroundWhite
   },
   boxFlatlist: {
     paddingTop: 10,
     paddingBottom: 70,
     paddingHorizontal: 5
   },
-  cardProduct: {
-    height: '100%',
-    width: '100%',
-    borderRadius: 5,
-    padding: 0,
-    borderWidth: 0,
-    elevation: 2,
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowColor: '#777777',
-    margin: 0,
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    alignItems: 'center'
-  },
-  boxContentListCard: {
-    height: '100%',
-    padding: 10,
-    width: 0.45 * width
-  },
-  boxContentListCardTouch: {
-    height: '70%'
-  },
-  boxContentListCardNoTouch: {
-    height: '30%',
-    marginTop: 15
-  },
-  boxImage: {
-    height: '55%',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  boxName: {
-    height: '27%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 2
-  },
-  boxPrice: {
-    paddingVertical: 2,
-    justifyContent: 'center',
-    alignItems: 'flex-start'
-  },
-  boxStock: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  boxButton: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  boxOrdered: {
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
   productImage: {
     resizeMode: 'contain',
-    height: '100%',
-    width: undefined,
-    aspectRatio: 1 / 1
-  },
-  imageEmpty: {
-    height: 150,
-    width: 150
+    height: undefined,
+    width: '100%',
+    aspectRatio: 1 / 1,
+    borderTopRightRadius: 5,
+    borderTopLeftRadius: 5
   },
   /** button */
   pesanButton: {
-    height: 25,
-    width: 118,
+    height: 27,
+    width: '95%',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 15,
-    marginTop: 10,
-    marginBottom: 5
+    borderRadius: 15
   }
 });
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -88,15 +88,20 @@ class PdpView extends Component {
     return <PdpOrderView />;
   }
 
+  renderFilterSection() {
+    return <PdpFilterView />;
+  }
+
   /** MAIN */
   render() {
     return (
-      <View style={styles.mainContainer}>
+      <SafeAreaView style={styles.mainContainer}>
         <StatusBarRed />
-        {this.renderPdpData()}
+        <View style={styles.contentContainer}>{this.renderPdpData()}</View>
+        {this.renderFilterSection()}
+        {/* order bottom */}
         {this.renderOrderBottom()}
-        <PdpFilterView />
-      </View>
+      </SafeAreaView>
     );
   }
 }
@@ -105,6 +110,9 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: masterColor.backgroundWhite
+  },
+  contentContainer: {
+    flex: 1
   }
 });
 
