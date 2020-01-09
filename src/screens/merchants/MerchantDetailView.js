@@ -130,10 +130,19 @@ class MerchantDetailView extends Component {
         ]}
       >
         <View>
-          <Image
-            source={require('../../assets/images/merchant/merchant_list.png')}
-            style={styles.imageHeader}
-          />
+          {this.props.merchant.dataGetMerchantDetail.imageUrl ? (
+            <Image
+              source={{
+                uri: this.props.merchant.dataGetMerchantDetail.imageUrl
+              }}
+              style={styles.imageHeader}
+            />
+          ) : (
+            <Image
+              source={require('../../assets/images/merchant/merchant_list.png')}
+              style={styles.imageHeader}
+            />
+          )}
         </View>
         <View
           style={{
