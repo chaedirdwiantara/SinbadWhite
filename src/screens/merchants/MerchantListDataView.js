@@ -96,7 +96,7 @@ class MerchantListDataView extends Component {
       <View key={index} style={styles.boxItem}>
         <View>
           {item.imageUrl !== null ? (
-            <Image source={item.imageUrl} style={styles.boxImage} />
+            <Image source={{ uri: item.imageUrl }} style={styles.boxImage} />
           ) : (
             <Image
               source={require('../../assets/images/merchant/merchant_list.png')}

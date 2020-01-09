@@ -92,21 +92,7 @@ class JourneyListDataView extends Component {
   renderItem({ item, index }) {
     return (
       <View key={index} style={styles.boxItem}>
-        <View>
-          <View
-            style={{
-              flex: 1,
-              alignItems: 'center'
-            }}
-          >
-            {index !== 0 &&
-            item.journeyPlanSaleLogs.findIndex(jp => jp.activity === 'visit') >
-              -1 ? (
-              <View style={GlobalStyles.lineVerticalDash} />
-            ) : (
-              <View />
-            )}
-          </View>
+        <View style={{ justifyContent: 'center' }}>
           {item.journeyPlanSaleLogs.length !== 0 ? (
             <MaterialIcons
               name="check-circle"
@@ -124,26 +110,6 @@ class JourneyListDataView extends Component {
               size={24}
             />
           )}
-
-          <View
-            style={{
-              flex: 1,
-              alignItems: 'center'
-            }}
-          >
-            {this.props.journey.dataGetJourneyPlan.length > index + 1 ? (
-              this.props.journey.dataGetJourneyPlan[
-                index + 1
-              ].journeyPlanSaleLogs.findIndex(jp => jp.activity === 'visit') >
-              -1 ? (
-                <View style={GlobalStyles.lineVerticalDash} />
-              ) : (
-                <View />
-              )
-            ) : (
-              <View />
-            )}
-          </View>
         </View>
         <TouchableOpacity
           onPress={() => this.goToMerchantDashboard(item.store.name, item)}
@@ -160,7 +126,7 @@ class JourneyListDataView extends Component {
                 item.storeType === 'exist_store' ? Fonts.type16 : Fonts.type29
               }
             >
-              [ID {item.store.storeCode}]
+              [ ID {item.store.storeCode ? item.store.storeCode : '-'} ]
             </Text>
             <Text
               style={
@@ -300,7 +266,7 @@ const styles = StyleSheet.create({
     backgroundColor: masterColor.backgroundWhite
   },
   flatListContainer: {
-    paddingTop: 30,
+    paddingTop: 10,
     paddingBottom: 60
   },
   boxItem: {
