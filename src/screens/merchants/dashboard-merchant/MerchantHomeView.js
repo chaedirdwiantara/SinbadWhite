@@ -354,7 +354,11 @@ class MerchantHomeView extends Component {
             style={styles.wrapMenu}
             onPress={() => this.goToPdp()}
           >
-            <View style={styles.boxMenu} />
+            <View style={styles.boxMenu}>
+              <Image
+                source={require('../../../assets/icons/journey/Order.png')}
+              />
+            </View>
             <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
               Order
             </Text>
@@ -363,7 +367,11 @@ class MerchantHomeView extends Component {
             style={styles.wrapMenu}
             onPress={() => this.goToCheckIn()}
           >
-            <View style={styles.boxMenu} />
+            <View style={styles.boxMenu}>
+              <Image
+                source={require('../../../assets/icons/journey/Check-in.png')}
+              />
+            </View>
             <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
               Check In
             </Text>
@@ -372,7 +380,11 @@ class MerchantHomeView extends Component {
             style={styles.wrapMenu}
             onPress={() => this.goToCheckOut()}
           >
-            <View style={styles.boxMenu} />
+            <View style={styles.boxMenu}>
+              <Image
+                source={require('../../../assets/icons/journey/Check-out.png')}
+              />
+            </View>
             <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
               Check Out
             </Text>
