@@ -170,3 +170,24 @@ export function merchantCheckoutSuccess(data) {
 export function merchantCheckoutFailed(data) {
   return { type: types.MERCHANT_CHECKOUT_FAILED, payload: data };
 }
+
+/**
+ * ==================================
+ * GET LOG MERCHANT
+ * ==================================
+ */
+/** MERCHANT GET LOG PROCESS */
+export function merchantGetLogProcess(data) {
+  return { type: types.MERCHANT_GET_LOG_PROCESS, payload: data };
+}
+/** MERCHANT GET LOG SUCCESS */
+export function merchantGetLogSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.MERCHANT_GET_LOG_SUCCESS, payload: data.data };
+  }
+  return { type: types.MERCHANT_GET_LOG_FAILED, payload: data };
+}
+/** MERCHANT GET LOG FAILED */
+export function merchantGetLogFailed(data) {
+  return { type: types.MERCHANT_GET_LOG_FAILED, payload: data };
+}

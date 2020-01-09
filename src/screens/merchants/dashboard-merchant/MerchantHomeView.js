@@ -4,9 +4,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
+  RefreshControl,
   ScrollView,
   Dimensions,
-  Image
+  Image,
+  ToastAndroid
 } from 'react-native';
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
@@ -34,7 +36,8 @@ class MerchantHomeView extends Component {
     super(props);
     this.state = {
       activeIndex: 0,
-      modalCheckout: false
+      modalCheckout: false,
+      refreshing: false
     };
   }
   /**
@@ -49,6 +52,35 @@ class MerchantHomeView extends Component {
     );
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.merchant.dataCheckoutMerchant !==
+        this.props.merchant.dataCheckoutMerchant &&
+      this.props.merchant.dataCheckoutMerchant !== null
+    ) {
+      this.setState({ modalCheckout: false });
+      ToastAndroid.showWithGravityAndOffset(
+        'Check-out Berhasil',
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+        25,
+        200
+      );
+    }
+  }
+
+  onRefresh = () => {
+    this.setState({ refreshing: true });
+
+    this.props.merchantGetLastOrderProcess(
+      this.props.merchant.selectedMerchant.store.id
+    );
+
+    this.setState({
+      refreshing: false
+    });
+  };
+
   goToPdp() {
     NavigationService.navigate('PdpView');
   }
@@ -58,6 +90,11 @@ class MerchantHomeView extends Component {
   }
 
   goToCheckOut() {
+    let getLog = {
+      journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+      activity: 'check_in'
+    };
+    this.props.merchantGetLogProcess(getLog);
     this.setState({ modalCheckout: true });
   }
 
@@ -269,11 +306,11 @@ class MerchantHomeView extends Component {
             (itemLog, indexLog) => {
               if (itemLog.activity === 'check_in') {
                 return (
-                  <View style={styles.containerList}>
+                  <View style={styles.containerList} key={indexLog}>
                     <View style={styles.checkBox}>
                       <MaterialIcons
                         name="check-circle"
-                        color={[masterColor.fontGreen50]}
+                        color={masterColor.fontGreen50}
                         size={24}
                       />
                     </View>
@@ -291,11 +328,11 @@ class MerchantHomeView extends Component {
                 );
               } else if (itemLog.activity === 'order') {
                 return (
-                  <View style={styles.containerList}>
+                  <View style={styles.containerList} key={indexLog}>
                     <View style={styles.checkBox}>
                       <MaterialIcons
                         name="check-circle"
-                        color={[masterColor.fontGreen50]}
+                        color={masterColor.fontGreen50}
                         size={24}
                       />
                     </View>
@@ -313,11 +350,11 @@ class MerchantHomeView extends Component {
                 );
               } else if (itemLog.activity === 'check_out') {
                 return (
-                  <View style={styles.containerList}>
+                  <View style={styles.containerList} key={indexLog}>
                     <View style={styles.checkBox}>
                       <MaterialIcons
                         name="check-circle"
-                        color={[masterColor.fontGreen50]}
+                        color={masterColor.fontGreen50}
                         size={24}
                       />
                     </View>
@@ -424,13 +461,22 @@ class MerchantHomeView extends Component {
       <View style={styles.mainContainer}>
         <StatusBarRed />
         {!this.props.merchant.loadingGetMerchantLastOrder ? (
-          <ScrollView>
+          <ScrollView
+            contentContainerStyle={styles.scrollView}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh}
+              />
+            }
+          >
             {this.renderData()}
             {this.renderTask()}
             {this.renderStoreMenu()}
             <ModalBottomMerchantCheckout
               open={this.state.modalCheckout}
               close={() => this.closeModalCheckout()}
+              log={this.props.merchant.dataGetLogMerchant}
             />
           </ScrollView>
         ) : (

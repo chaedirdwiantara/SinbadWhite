@@ -36,12 +36,20 @@ function getMerchantLastOrder(storeId) {
     method: 'GET'
   });
 }
-/** === CHECKIN MERCHANT === */
-function checkMerchant(params) {
+/** === INSERT LOG MERCHANT === */
+function insertLogMerchant(params) {
   return ApiRest({
     path: 'journey-plan-sale-logs',
     method: 'POST',
     params
+  });
+}
+
+/** === GET LOG ACTIVITY MERCHANT === */
+function getLogMerchant(data) {
+  return ApiRest({
+    path: `journey-plan-sale-logs?journeyPlanSaleId=${data.journeyPlanSaleId}&activity=${data.activity}&$limit=1&$skip=0&sort=asc&sortby=created_at`,
+    method: 'GET'
   });
 }
 
@@ -51,5 +59,6 @@ export const MerchantMethod = {
   getPortfolioByUserId,
   addMerchant,
   getMerchantLastOrder,
-  checkMerchant
+  insertLogMerchant,
+  getLogMerchant
 };

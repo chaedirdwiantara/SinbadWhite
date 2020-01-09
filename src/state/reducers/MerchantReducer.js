@@ -12,6 +12,7 @@ const INITIAL_STATE = {
   loadingGetMerchantLastOrder: false,
   loadingCheckinMerchant: false,
   loadingCheckoutMerchant: false,
+  loadingGetLogMerchant: false,
   /** data */
   selectedMerchant: null,
   dataGetMerchant: [],
@@ -59,6 +60,7 @@ const INITIAL_STATE = {
   dataGetPortfolio: null,
   dataCheckinMerchant: null,
   dataCheckoutMerchant: null,
+  dataGetLogMerchant: null,
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
@@ -66,7 +68,8 @@ const INITIAL_STATE = {
   errorGetMerchantDetail: null,
   errorGetMerchantLastOrder: null,
   errorCheckinMerchant: null,
-  errorCheckoutMerchant: null
+  errorCheckoutMerchant: null,
+  errorGetLogMerchant: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -323,6 +326,33 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingCheckoutMerchant: false,
       errorCheckoutMerchant: action.payload
+    };
+  },
+  /**
+   * =============================
+   * GET LOG MERCHANT
+   * =============================
+   */
+  [types.MERCHANT_GET_LOG_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetLogMerchant: true,
+      dataGetLogMerchant: null,
+      errorGetLogMerchant: null
+    };
+  },
+  [types.MERCHANT_GET_LOG_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetLogMerchant: false,
+      dataGetLogMerchant: action.payload
+    };
+  },
+  [types.MERCHANT_GET_LOG_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetLogMerchant: false,
+      errorGetLogMerchant: action.payload
     };
   }
 });
