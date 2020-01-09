@@ -49,6 +49,16 @@ class MerchantHomeView extends Component {
     );
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.merchant.dataCheckoutMerchant !==
+        this.props.merchant.dataCheckoutMerchant &&
+      this.props.merchant.dataCheckoutMerchant !== null
+    ) {
+      this.setState({ modalCheckout: false });
+    }
+  }
+
   goToPdp() {
     NavigationService.navigate('PdpView');
   }
@@ -269,7 +279,7 @@ class MerchantHomeView extends Component {
             (itemLog, indexLog) => {
               if (itemLog.activity === 'check_in') {
                 return (
-                  <View style={styles.containerList}>
+                  <View style={styles.containerList} key={indexLog}>
                     <View style={styles.checkBox}>
                       <MaterialIcons
                         name="check-circle"
@@ -291,7 +301,7 @@ class MerchantHomeView extends Component {
                 );
               } else if (itemLog.activity === 'order') {
                 return (
-                  <View style={styles.containerList}>
+                  <View style={styles.containerList} key={indexLog}>
                     <View style={styles.checkBox}>
                       <MaterialIcons
                         name="check-circle"
@@ -313,7 +323,7 @@ class MerchantHomeView extends Component {
                 );
               } else if (itemLog.activity === 'check_out') {
                 return (
-                  <View style={styles.containerList}>
+                  <View style={styles.containerList} key={indexLog}>
                     <View style={styles.checkBox}>
                       <MaterialIcons
                         name="check-circle"

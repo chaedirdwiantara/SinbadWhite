@@ -51,7 +51,7 @@ class ModalBottomMerchantCheckout extends Component {
 
   checkout() {
     let storeLogCheckout = {
-      joerneyPlanSaleId: this.props.merchant.selectedMerchant.id,
+      journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
       activity: 'check_out'
     };
     this.props.merchantCheckoutProcess(storeLogCheckout);

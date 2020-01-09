@@ -51,7 +51,7 @@ class ModalBottomMerchantCheckin extends Component {
 
   checkin() {
     let storeLogCheckin = {
-      joerneyPlanSaleId: this.props.merchant.selectedMerchant.id,
+      journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
       activity: 'check_in'
     };
     this.props.merchantCheckinProcess(storeLogCheckin);
