@@ -7,7 +7,8 @@ import {
   SafeAreaView,
   FlatList,
   BackHandler,
-  ToastAndroid
+  ToastAndroid,
+  Dimensions
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Text from 'react-native-text';
@@ -20,6 +21,7 @@ import Fonts from '../../helpers/GlobalFont';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import { StatusBarWhite } from '../../components/StatusBarGlobal';
 
+const { width } = Dimensions.get('window');
 class HomeView extends Component {
   constructor(props) {
     super(props);
@@ -172,10 +174,17 @@ class HomeView extends Component {
   renderBanner() {
     return (
       <View style={{ paddingVertical: 10 }}>
-        <View style={styles.boxBanner}>
-          <Text style={Fonts.type6}>CARD</Text>
-          <Text style={Fonts.type6}>TODAY PJP</Text>
-        </View>
+        <Image
+          source={require('../../assets/images/sinbad_image/Sinbad-Agent-Apps.png')}
+          style={{
+            width: 0.9 * width,
+            height: undefined,
+            aspectRatio: 52 / 21,
+            zIndex: 10,
+            alignItems: 'flex-start',
+            marginTop: 2
+          }}
+        />
       </View>
     );
   }

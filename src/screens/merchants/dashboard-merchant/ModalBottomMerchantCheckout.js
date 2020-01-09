@@ -51,8 +51,7 @@ class ModalBottomMerchantCheckout extends Component {
 
   checkout() {
     let storeLogCheckout = {
-      joerneyPlanSaleId: this.props.merchant.selectedMerchant
-        .journeyPlanSalePortfolios[0].journeyPlanSaleId,
+      joerneyPlanSaleId: this.props.merchant.selectedMerchant.id,
       activity: 'check_out'
     };
     this.props.merchantCheckoutProcess(storeLogCheckout);
@@ -129,21 +128,12 @@ class ModalBottomMerchantCheckout extends Component {
           </Text>
         </View>
         <View>
-          {this.props.merchant.selectedMerchant.journeyPlanSalePortfolios
-            .length > 0 ? (
-            <ButtonSingle
-              disabled={false}
-              title={'Check Out'}
-              borderRadius={4}
-              onPress={() => this.checkout()}
-            />
-          ) : (
-            <ButtonSingle
-              disabled={true}
-              title={'Sorry cannot check-out'}
-              borderRadius={4}
-            />
-          )}
+          <ButtonSingle
+            disabled={false}
+            title={'Check Out'}
+            borderRadius={4}
+            onPress={() => this.checkout()}
+          />
         </View>
       </View>
     ) : (

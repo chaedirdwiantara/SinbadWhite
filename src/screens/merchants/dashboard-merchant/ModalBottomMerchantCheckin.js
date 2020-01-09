@@ -51,8 +51,7 @@ class ModalBottomMerchantCheckin extends Component {
 
   checkin() {
     let storeLogCheckin = {
-      joerneyPlanSaleId: this.props.merchant.selectedMerchant
-        .journeyPlanSalePortfolios[0].journeyPlanSaleId,
+      joerneyPlanSaleId: this.props.merchant.selectedMerchant.id,
       activity: 'check_in'
     };
     this.props.merchantCheckinProcess(storeLogCheckin);
@@ -117,22 +116,12 @@ class ModalBottomMerchantCheckin extends Component {
           </Text>
         </View>
         <View style={{ position: 'absolute', width: '100%', bottom: 0 }}>
-          {this.props.merchant.selectedMerchant.journeyPlanSalePortfolios
-            .length > 0 ? (
-            <ButtonSingle
-              disabled={false}
-              title={'Check In'}
-              borderRadius={4}
-              onPress={() => this.checkin()}
-            />
-          ) : (
-            <ButtonSingle
-              disabled={true}
-              title={'Sorry cannot check-in'}
-              borderRadius={4}
-              onPress={() => this.checkin()}
-            />
-          )}
+          <ButtonSingle
+            disabled={false}
+            title={'Check In'}
+            borderRadius={4}
+            onPress={() => this.checkin()}
+          />
         </View>
       </View>
     ) : (

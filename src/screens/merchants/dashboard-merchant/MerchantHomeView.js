@@ -45,8 +45,7 @@ class MerchantHomeView extends Component {
 
   componentDidMount() {
     this.props.merchantGetLastOrderProcess(
-      // this.props.merchant.selectedMerchant.store.id
-      1
+      this.props.merchant.selectedMerchant.store.id
     );
   }
 
@@ -93,11 +92,22 @@ class MerchantHomeView extends Component {
     });
   }
 
-  renderPlusProduct() {
-    return (
+  renderPlusProduct(item) {
+    let count = 0;
+    item.orderBrands.map((itemBrand, indexBrand) => {
+      return itemBrand.orderBrandCatalogues.map(
+        (itemCatalogue, indexCatalogue) => {
+          count++;
+        }
+      );
+    });
+    let tempCount = count - 3 < 0 ? 0 : count - 3;
+    return tempCount > 0 ? (
       <View>
-        <Text style={styles.textPlusProduct}>(+3} Produk Lain)</Text>
+        <Text style={styles.textPlusProduct}>(+{tempCount} } Produk Lain)</Text>
       </View>
+    ) : (
+      <View />
     );
   }
 
@@ -200,22 +210,28 @@ class MerchantHomeView extends Component {
   }
 
   renderData() {
-    return this.props.merchant.dataGetMerchantLastOrder !== null ? (
+    return this.props.merchant.dataGetMerchantLastOrder !== null &&
+      this.props.merchant.dataGetMerchantLastOrder !== undefined ? (
       <View>
-        <Carousel
-          ref={ref => (this.carousel = ref)}
-          data={this.props.merchant.dataGetMerchantLastOrder.orderParcels}
-          sliderWidth={1 * width}
-          itemWidth={1 * width}
-          renderItem={this.renderItem.bind(this)}
-          onSnapToItem={index => this.setState({ activeIndex: index })}
-          slideStyle={{ padding: 10 }}
-          inactiveSlideOpacity={1}
-          inactiveSlideScale={1}
-          loop
-          autoplay
-          activeSlideAlignment={'center'}
-        />
+        {this.props.merchant.dataGetMerchantLastOrder.orderParcels.length >
+        0 ? (
+          <Carousel
+            ref={ref => (this.carousel = ref)}
+            data={this.props.merchant.dataGetMerchantLastOrder.orderParcels}
+            sliderWidth={1 * width}
+            itemWidth={1 * width}
+            renderItem={this.renderItem.bind(this)}
+            onSnapToItem={index => this.setState({ activeIndex: index })}
+            slideStyle={{ padding: 10 }}
+            inactiveSlideOpacity={1}
+            inactiveSlideScale={1}
+            loop
+            autoplay
+            activeSlideAlignment={'center'}
+          />
+        ) : (
+          <View />
+        )}
         {/* {this.pagination()} */}
       </View>
     ) : (
@@ -224,76 +240,106 @@ class MerchantHomeView extends Component {
   }
 
   renderTask() {
-    return (
+    let countTask = 0;
+    this.props.merchant.selectedMerchant.journeyPlanSaleLogs.map(
+      (itemLog, indexLog) => {
+        if (itemLog.activity === 'check_in') {
+          countTask += 1;
+        } else if (itemLog.activity === 'order') {
+          countTask += 1;
+        } else if (itemLog.activity === 'check_out') {
+          countTask += 1;
+        }
+      }
+    );
+
+    return this.props.merchant.selectedMerchant.journeyPlanSaleLogs.length >
+      0 ? (
       <Card containerStyle={{ flex: 1 }}>
         <View style={styles.containerTitle}>
           <View style={{ flex: 1, justifyContent: 'flex-start' }}>
             <Text style={{ fontWeight: 'bold', fontSize: 14 }}>Store Menu</Text>
           </View>
           <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-            <Text style={{ textAlign: 'right' }}>1 / 3 Selesai</Text>
+            <Text style={{ textAlign: 'right' }}>{countTask} / 3 Selesai</Text>
           </View>
         </View>
         <View style={{ flex: 1 }}>
-          <View style={styles.containerList}>
-            <View style={styles.checkBox}>
-              <MaterialIcons
-                name="check-circle"
-                color={[masterColor.fontGreen50]}
-                size={24}
-              />
-            </View>
-            <View style={styles.taskBox}>
-              <Text style={{ textAlign: 'left' }}>Check in</Text>
-            </View>
-            <View style={styles.rightArrow}>
-              <MaterialIcons
-                name="chevron-right"
-                color={masterColor.fontBlack50}
-                size={24}
-              />
-            </View>
-          </View>
-          <View style={styles.containerList}>
-            <View style={styles.checkBox}>
-              <MaterialIcons
-                name="check-circle"
-                color={masterColor.fontGreen50}
-                size={24}
-              />
-            </View>
-            <View style={styles.taskBox}>
-              <Text style={{ textAlign: 'left' }}>Order</Text>
-            </View>
-            <View style={styles.rightArrow}>
-              <MaterialIcons
-                name="chevron-right"
-                color={masterColor.fontBlack50}
-                size={24}
-              />
-            </View>
-          </View>
-          <View style={styles.containerList}>
-            <View style={styles.checkBox}>
-              <MaterialIcons
-                name="check-circle"
-                color={masterColor.fontGreen50}
-                size={24}
-              />
-            </View>
-            <View style={styles.taskBox}>
-              <Text style={{ textAlign: 'left' }}>Check Out</Text>
-            </View>
-            <View style={styles.rightArrow}>
-              <MaterialIcons
-                name="chevron-right"
-                color={masterColor.fontBlack50}
-                size={24}
-              />
-            </View>
-          </View>
+          {this.props.merchant.selectedMerchant.journeyPlanSaleLogs.map(
+            (itemLog, indexLog) => {
+              if (itemLog.activity === 'check_in') {
+                return (
+                  <View style={styles.containerList}>
+                    <View style={styles.checkBox}>
+                      <MaterialIcons
+                        name="check-circle"
+                        color={[masterColor.fontGreen50]}
+                        size={24}
+                      />
+                    </View>
+                    <View style={styles.taskBox}>
+                      <Text style={{ textAlign: 'left' }}>Check in</Text>
+                    </View>
+                    <View style={styles.rightArrow}>
+                      <MaterialIcons
+                        name="chevron-right"
+                        color={masterColor.fontBlack50}
+                        size={24}
+                      />
+                    </View>
+                  </View>
+                );
+              } else if (itemLog.activity === 'order') {
+                return (
+                  <View style={styles.containerList}>
+                    <View style={styles.checkBox}>
+                      <MaterialIcons
+                        name="check-circle"
+                        color={[masterColor.fontGreen50]}
+                        size={24}
+                      />
+                    </View>
+                    <View style={styles.taskBox}>
+                      <Text style={{ textAlign: 'left' }}>Order</Text>
+                    </View>
+                    <View style={styles.rightArrow}>
+                      <MaterialIcons
+                        name="chevron-right"
+                        color={masterColor.fontBlack50}
+                        size={24}
+                      />
+                    </View>
+                  </View>
+                );
+              } else if (itemLog.activity === 'check_out') {
+                return (
+                  <View style={styles.containerList}>
+                    <View style={styles.checkBox}>
+                      <MaterialIcons
+                        name="check-circle"
+                        color={[masterColor.fontGreen50]}
+                        size={24}
+                      />
+                    </View>
+                    <View style={styles.taskBox}>
+                      <Text style={{ textAlign: 'left' }}>Check Out</Text>
+                    </View>
+                    <View style={styles.rightArrow}>
+                      <MaterialIcons
+                        name="chevron-right"
+                        color={masterColor.fontBlack50}
+                        size={24}
+                      />
+                    </View>
+                  </View>
+                );
+              }
+            }
+          )}
         </View>
       </Card>
+    ) : (
+      <View />
     );
   }
 
@@ -308,7 +354,11 @@ class MerchantHomeView extends Component {
             style={styles.wrapMenu}
             onPress={() => this.goToPdp()}
           >
-            <View style={styles.boxMenu} />
+            <View style={styles.boxMenu}>
+              <Image
+                source={require('../../../assets/icons/journey/Order.png')}
+              />
+            </View>
             <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
               Order
             </Text>
@@ -317,7 +367,11 @@ class MerchantHomeView extends Component {
             style={styles.wrapMenu}
             onPress={() => this.goToCheckIn()}
           >
-            <View style={styles.boxMenu} />
+            <View style={styles.boxMenu}>
+              <Image
+                source={require('../../../assets/icons/journey/Check-in.png')}
+              />
+            </View>
             <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
               Check In
             </Text>
@@ -326,7 +380,11 @@ class MerchantHomeView extends Component {
             style={styles.wrapMenu}
             onPress={() => this.goToCheckOut()}
           >
-            <View style={styles.boxMenu} />
+            <View style={styles.boxMenu}>
+              <Image
+                source={require('../../../assets/icons/journey/Check-out.png')}
+              />
+            </View>
             <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
               Check Out
             </Text>
