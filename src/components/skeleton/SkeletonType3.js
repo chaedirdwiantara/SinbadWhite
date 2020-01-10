@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     backgroundColor: masterColor.backgroundWhite
   },
   flatListContainer: {
-    paddingTop: 30,
+    paddingTop: 10,
     paddingBottom: 16
   },
   boxItem: {

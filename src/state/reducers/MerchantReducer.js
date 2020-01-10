@@ -10,10 +10,13 @@ const INITIAL_STATE = {
   loadingGetPortfolio: false,
   loadingGetMerchantDetail: false,
   loadingGetMerchantLastOrder: false,
-  loadingCheckinMerchant: false,
-  loadingCheckoutMerchant: false,
-  loadingGetLogMerchant: false,
+  loadingPostActivity: false,
+  loadingGetLogAllActivity: false,
+  loadingGetLogPerActivity: false,
   /** data */
+  dataPostActivity: null,
+  dataGetLogAllActivity: null,
+  dataGetLogPerActivity: null,
   selectedMerchant: null,
   dataGetMerchant: [],
   dataAddMerchant: null,
@@ -58,18 +61,15 @@ const INITIAL_STATE = {
   totalDataGetMerchant: 0,
   pageGetMerchant: 0,
   dataGetPortfolio: null,
-  dataCheckinMerchant: null,
-  dataCheckoutMerchant: null,
-  dataGetLogMerchant: null,
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
   errorGetPortfolio: null,
   errorGetMerchantDetail: null,
   errorGetMerchantLastOrder: null,
-  errorCheckinMerchant: null,
-  errorCheckoutMerchant: null,
-  errorGetLogMerchant: null
+  errorPostActivity: null,
+  errorGetLogAllActivity: null,
+  errorGetLogPerActivity: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -276,83 +276,83 @@ export const merchant = createReducer(INITIAL_STATE, {
   },
   /**
    * =============================
-   * CHECKIN MERCHANT
+   * POST ACTIVITY
    * =============================
    */
-  [types.MERCHANT_CHECKIN_PROCESS](state, action) {
+  [types.MERCHANT_POST_ACTIVITY_PROCESS](state, action) {
     return {
       ...state,
-      loadingCheckinMerchant: true,
-      dataCheckinMerchant: null,
-      errorCheckinMerchant: null
+      loadingPostActivity: true,
+      dataPostActivity: null,
+      errorPostActivity: null
     };
   },
-  [types.MERCHANT_CHECKIN_SUCCESS](state, action) {
+  [types.MERCHANT_POST_ACTIVITY_SUCCESS](state, action) {
     return {
       ...state,
-      loadingCheckinMerchant: false,
-      dataCheckinMerchant: action.payload
+      loadingPostActivity: false,
+      dataPostActivity: action.payload
     };
   },
-  [types.MERCHANT_CHECKIN_FAILED](state, action) {
+  [types.MERCHANT_POST_ACTIVITY_FAILED](state, action) {
     return {
       ...state,
-      loadingCheckinMerchant: false,
-      errorCheckinMerchant: action.payload
+      loadingPostActivity: false,
+      errorPostActivity: action.payload
     };
   },
   /**
    * =============================
-   * CHECKOUT MERCHANT
+   * GET LOG ALL ACTIVITY MERCHANT
    * =============================
    */
-  [types.MERCHANT_CHECKOUT_PROCESS](state, action) {
+  [types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS](state, action) {
     return {
       ...state,
-      loadingCheckoutMerchant: true,
-      dataCheckoutMerchant: null,
-      errorCheckoutMerchant: null
+      loadingGetLogAllActivity: true,
+      dataGetLogAllActivity: null,
+      errorGetLogAllActivity: null
     };
   },
-  [types.MERCHANT_CHECKOUT_SUCCESS](state, action) {
+  [types.MERCHANT_GET_LOG_ALL_ACTIVITY_SUCCESS](state, action) {
     return {
       ...state,
-      loadingCheckoutMerchant: false,
-      dataCheckoutMerchant: action.payload
+      loadingGetLogAllActivity: false,
+      dataGetLogAllActivity: action.payload
     };
   },
-  [types.MERCHANT_CHECKOUT_FAILED](state, action) {
+  [types.MERCHANT_GET_LOG_ALL_ACTIVITY_FAILED](state, action) {
     return {
       ...state,
-      loadingCheckoutMerchant: false,
-      errorCheckoutMerchant: action.payload
+      loadingGetLogAllActivity: false,
+      errorGetLogAllActivity: action.payload
     };
   },
   /**
    * =============================
-   * GET LOG MERCHANT
+   * GET LOG PER ACTIVITY MERCHANT
    * =============================
    */
-  [types.MERCHANT_GET_LOG_PROCESS](state, action) {
+  [types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS](state, action) {
     return {
       ...state,
-      loadingGetLogMerchant: true,
-      dataGetLogMerchant: null,
-      errorGetLogMerchant: null
+      loadingGetLogPerActivity: true,
+      dataGetLogPerActivity: null,
+      errorGetLogPerActivity: null
     };
   },
-  [types.MERCHANT_GET_LOG_SUCCESS](state, action) {
+  [types.MERCHANT_GET_LOG_PER_ACTIVITY_SUCCESS](state, action) {
     return {
       ...state,
-      loadingGetLogMerchant: false,
-      dataGetLogMerchant: action.payload
+      loadingGetLogPerActivity: false,
+      dataGetLogPerActivity: action.payload
     };
   },
-  [types.MERCHANT_GET_LOG_FAILED](state, action) {
+  [types.MERCHANT_GET_LOG_PER_ACTIVITY_FAILED](state, action) {
     return {
       ...state,
-      loadingGetLogMerchant: false,
-      errorGetLogMerchant: action.payload
+      loadingGetLogPerActivity: false,
+      errorGetLogPerActivity: action.payload
     };
   }
 });

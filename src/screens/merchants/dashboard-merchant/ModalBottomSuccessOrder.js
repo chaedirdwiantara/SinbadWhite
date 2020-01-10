@@ -21,6 +21,14 @@ class ModalBottomSuccessOrder extends Component {
    */
   clearOmsData() {
     this.props.omsResetData();
+    /** FOR GET LAST ORDER */
+    this.props.merchantGetLastOrderProcess(
+      this.props.merchant.selectedMerchant.store.id
+    );
+    /** FOR GET LOG ALL ACTIVITY */
+    this.props.merchantGetLogAllActivityProcess(
+      this.props.merchant.selectedMerchant.id
+    );
   }
 
   /** MAIN */
@@ -52,8 +60,8 @@ class ModalBottomSuccessOrder extends Component {
   }
 }
 
-const mapStateToProps = ({ oms }) => {
-  return { oms };
+const mapStateToProps = ({ oms, merchant }) => {
+  return { oms, merchant };
 };
 
 const mapDispatchToProps = dispatch => {

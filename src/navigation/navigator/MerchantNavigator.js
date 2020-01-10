@@ -52,6 +52,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTintColor: masterColor.backButtonWhite,
       headerStyle: {
+        elevation: 0,
         backgroundColor: masterColor.mainColor
       },
       gesturesEnabled: false

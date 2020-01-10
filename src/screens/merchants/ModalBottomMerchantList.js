@@ -77,11 +77,11 @@ class ModalBottomMerchantList extends Component {
           this.props.merchant.dataGetPortfolio[this.state.portfolio].id,
           10
         ),
-        storeId: parseInt(data.data, 10),
-        journeyPlanId: parseInt(
-          this.props.journey.dataGetJourneyPlan[0].journeyPlanId,
-          10
-        )
+        storeId: parseInt(data.data, 10)
+        // journeyPlanId: parseInt(
+        //   this.props.journey.dataGetJourneyPlan[0].journeyPlanId,
+        //   10
+        // )
       };
       if (indexSelectedMerchant > -1) {
         selectedMerchant.splice(indexSelectedMerchant, 1);

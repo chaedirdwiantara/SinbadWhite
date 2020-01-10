@@ -150,12 +150,6 @@ class MerchantListDataView extends Component {
   renderContent() {
     return (
       <View style={{ flex: 1 }}>
-        {/* <View style={{ paddingHorizontal: 16, paddingVertical: 10 }}>
-          <Text style={Fonts.type8}>
-            {this.props.merchant.totalDataGetMerchant} List Store
-          </Text>
-        </View>
-        <View style={GlobalStyles.lines} /> */}
         <FlatList
           contentContainerStyle={styles.flatListContainer}
           data={this.props.merchant.dataGetMerchant}
@@ -195,7 +189,7 @@ class MerchantListDataView extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    height: '100%',
+    flex: 1,
     backgroundColor: masterColor.backgroundWhite
   },
   flatListContainer: {

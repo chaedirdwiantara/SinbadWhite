@@ -2,6 +2,9 @@ import ApiRest from '../apiRest';
 
 /** === MERCHANT LIST === */
 function getMerchant(data) {
+  console.log(
+    `agent-stores?$skip=${data.page}&$limit=10&portfolioId=${data.portfolioId}&keyword=${data.search}`
+  );
   return ApiRest({
     path: `agent-stores?$skip=${data.page}&$limit=10&portfolioId=${data.portfolioId}&keyword=${data.search}`,
     method: 'GET'
@@ -17,7 +20,7 @@ function getMerchantDetail(storeId) {
 /** === PORTFOLIO BY USERID === */
 function getPortfolioByUserId(userId) {
   return ApiRest({
-    path: `portfolios?userId=${userId}&paginate=false`,
+    path: `portfolios?userId=${userId}&type=group&paginate=false`,
     method: 'GET'
   });
 }
@@ -36,17 +39,23 @@ function getMerchantLastOrder(storeId) {
     method: 'GET'
   });
 }
-/** === INSERT LOG MERCHANT === */
-function insertLogMerchant(params) {
+/** === POST ACTIVITY === */
+function postActivity(params) {
   return ApiRest({
     path: 'journey-plan-sale-logs',
     method: 'POST',
     params
   });
 }
-
-/** === GET LOG ACTIVITY MERCHANT === */
-function getLogMerchant(data) {
+/** === GET LOG ALL ACTIVITY === */
+function getLogAllActivity(journeyPlanSaleId) {
+  return ApiRest({
+    path: `agent-activities?journeyPlanSaleId=${journeyPlanSaleId}`,
+    method: 'GET'
+  });
+}
+/** === GET LOG PER ACTIVITY === */
+function getLogPerActivity(data) {
   return ApiRest({
     path: `journey-plan-sale-logs?journeyPlanSaleId=${data.journeyPlanSaleId}&activity=${data.activity}&$limit=1&$skip=0&sort=asc&sortby=created_at`,
     method: 'GET'
@@ -59,6 +68,7 @@ export const MerchantMethod = {
   getPortfolioByUserId,
   addMerchant,
   getMerchantLastOrder,
-  insertLogMerchant,
-  getLogMerchant
+  postActivity,
+  getLogAllActivity,
+  getLogPerActivity
 };

@@ -6,6 +6,7 @@ import {
   FlatList,
   RefreshControl,
   ScrollView,
+  SafeAreaView,
   Dimensions,
   Image,
   ToastAndroid
@@ -28,6 +29,8 @@ import { StatusBarRed } from '../../../components/StatusBarGlobal';
 import NavigationService from '../../../navigation/NavigationService';
 import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
 import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
+import ProductListType1 from '../../../components/list/ProductListType1';
+import { LoadingPage } from '../../../components/Loading';
 
 const { width, height } = Dimensions.get('window');
 
@@ -37,7 +40,43 @@ class MerchantHomeView extends Component {
     this.state = {
       activeIndex: 0,
       modalCheckout: false,
-      refreshing: false
+      refreshing: false,
+      menu: [
+        {
+          menuName: 'Order',
+          icon: require('../../../assets/icons/merchant/order.png'),
+          goTo: 'pdp'
+        },
+        {
+          menuName: 'Pesanan',
+          icon: require('../../../assets/icons/merchant/pesanan.png'),
+          goTo: 'history'
+        },
+        {
+          menuName: 'Check-in',
+          icon: require('../../../assets/icons/merchant/check-in.png'),
+          goTo: 'checkIn'
+        },
+        {
+          menuName: 'Check-out',
+          icon: require('../../../assets/icons/merchant/check-out.png'),
+          goTo: 'checkOut'
+        }
+      ],
+      task: [
+        {
+          name: 'Check-in',
+          activity: 'check_in'
+        },
+        {
+          name: 'Order',
+          activity: 'order'
+        },
+        {
+          name: 'Check-out',
+          activity: 'check_out'
+        }
+      ]
     };
   }
   /**
@@ -47,8 +86,13 @@ class MerchantHomeView extends Component {
    */
 
   componentDidMount() {
+    /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
       this.props.merchant.selectedMerchant.store.id
+    );
+    /** FOR GET LOG ALL ACTIVITY */
+    this.props.merchantGetLogAllActivityProcess(
+      this.props.merchant.selectedMerchant.id
     );
   }
 
@@ -69,6 +113,11 @@ class MerchantHomeView extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.journeyPlanGetReset();
+    this.props.journeyPlanGetProcess({ page: 0, loading: true });
+  }
+
   onRefresh = () => {
     this.setState({ refreshing: true });
 
@@ -81,25 +130,61 @@ class MerchantHomeView extends Component {
     });
   };
 
-  goToPdp() {
-    NavigationService.navigate('PdpView');
-  }
-
-  goToCheckIn() {
-    NavigationService.navigate('MerchantCheckinView');
-  }
-
-  goToCheckOut() {
-    let getLog = {
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
-      activity: 'check_in'
-    };
-    this.props.merchantGetLogProcess(getLog);
-    this.setState({ modalCheckout: true });
+  /** === GO TO (MENU PRESS) */
+  goTo(page) {
+    switch (page) {
+      case 'pdp':
+        NavigationService.navigate('PdpView');
+        break;
+      case 'history':
+        NavigationService.navigate('PdpView');
+        break;
+      case 'checkIn':
+        NavigationService.navigate('MerchantCheckinView');
+        break;
+      case 'checkOut':
+        let getLog = {
+          journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+          activity: 'check_in'
+        };
+        this.props.merchantGetLogProcess(getLog);
+        this.setState({ modalCheckout: true });
+        break;
+      default:
+        break;
+    }
   }
 
   closeModalCheckout() {
     this.setState({ modalCheckout: false });
+  }
+  /** CHECK CHECK LIST TASK */
+  checkCheckListTask(activity) {
+    if (this.props.merchant.dataGetLogAllActivity !== null) {
+      const checkActivity = this.props.merchant.dataGetLogAllActivity.findIndex(
+        item => item.activity === activity
+      );
+      if (checkActivity > -1) {
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+  /** CHECK TOTAL COMPLETE TASK */
+  checkTotalCompleteTask() {
+    let total = 0;
+    if (this.props.merchant.dataGetLogAllActivity !== null) {
+      this.state.task.map((item, index) => {
+        const checkActivity = this.props.merchant.dataGetLogAllActivity.findIndex(
+          itemAllActivity => itemAllActivity.activity === item.activity
+        );
+        if (checkActivity > -1) {
+          total = total + 1;
+        }
+      });
+    }
+    return total;
   }
   /**
    * ========================
@@ -148,289 +233,82 @@ class MerchantHomeView extends Component {
     );
   }
 
-  renderItem({ item, index }) {
-    return (
-      <View>
-        <View>
-          <Text
+  renderLastOrder() {
+    const order = this.props.merchant.dataGetMerchantLastOrder;
+    return order !== undefined ? (
+      <View style={styles.lastOrderContainer}>
+        <View style={[styles.cardLastOrder, GlobalStyle.shadowForBox5]}>
+          <View style={{ paddingBottom: 8 }}>
+            <Text style={Fonts.type42}>Last Order</Text>
+          </View>
+          <View>
+            <ProductListType1 data={order.orderParcels[0].orderBrands} />
+          </View>
+          <View
             style={{
-              fontSize: 13,
-              lineHeight: 16,
-              margin: 10,
-              fontWeight: 'bold'
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingVertical: 8
             }}
           >
-            Faktur: {item.invoiceGroup.name}
-          </Text>
-        </View>
-        <Card containerStyle={styles.cardPromo}>
-          <View style={{ flex: 1, flexDirection: 'column' }}>
-            <View style={{ marginBottom: 0.025 * height }}>
-              <Text style={styles.titleCard}>Last Order</Text>
-            </View>
-            <View
-              style={{
-                width: 0.8 * width,
-                height: 0.12 * height,
-                backgroundColor: '#fafafa',
-                flexDirection: 'row',
-                padding: 10,
-                justifyContent: 'space-between'
-              }}
-              onPress={() =>
-                this.setState({ modalProductList: true, orderPerParcel: item })
-              }
-            >
-              <View style={{ flexDirection: 'row' }}>
-                {this.renderListProductImage(item)}
-              </View>
-              <View style={{ justifyContent: 'center', marginRight: 10 }}>
-                {this.renderPlusProduct(item)}
-              </View>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-around'
-              }}
-            >
-              <View style={{ justifyContent: 'space-evenly' }}>
-                <Text
-                  style={{
-                    fontSize: 11,
-                    lineHeight: 14,
-                    color: '#52575c',
-                    textAlign: 'left'
-                  }}
-                >
-                  {item.orderCode}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 11,
-                    lineHeight: 14,
-                    color: '#52575c',
-                    textAlign: 'left'
-                  }}
-                >
-                  {moment(new Date(item.createdAt)).format('DD-MM-YYYY')}
-                </Text>
-              </View>
-              <View style={{ justifyContent: 'space-evenly' }}>
-                <Text
-                  style={{
-                    fontSize: 11,
-                    lineHeight: 14,
-                    color: '#52575c',
-                    textAlign: 'right'
-                  }}
-                >
-                  {item.parcelDetails.totalQty} Qty
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 11,
-                    lineHeight: 14,
-                    color: '#52575c',
-                    textAlign: 'right'
-                  }}
-                >
-                  Total: {MoneyFormat(item.parcelDetails.totalNettPrice)}
-                </Text>
-              </View>
-            </View>
+            <Text style={Fonts.type59}>{order.orderParcels[0].orderCode}</Text>
+            <Text style={Fonts.type59}>
+              {order.orderParcels[0].parcelDetails.totalQty} Qty
+            </Text>
           </View>
-        </Card>
-      </View>
-    );
-  }
-
-  renderData() {
-    return this.props.merchant.dataGetMerchantLastOrder !== null &&
-      this.props.merchant.dataGetMerchantLastOrder !== undefined ? (
-      <View>
-        {this.props.merchant.dataGetMerchantLastOrder.orderParcels.length >
-        0 ? (
-          <Carousel
-            ref={ref => (this.carousel = ref)}
-            data={this.props.merchant.dataGetMerchantLastOrder.orderParcels}
-            sliderWidth={1 * width}
-            itemWidth={1 * width}
-            renderItem={this.renderItem.bind(this)}
-            onSnapToItem={index => this.setState({ activeIndex: index })}
-            slideStyle={{ padding: 10 }}
-            inactiveSlideOpacity={1}
-            inactiveSlideScale={1}
-            loop
-            autoplay
-            activeSlideAlignment={'center'}
-          />
-        ) : (
-          <View />
-        )}
-        {/* {this.pagination()} */}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}
+          >
+            <Text style={Fonts.type59}>
+              {moment(new Date(order.orderParcels[0].createdAt)).format(
+                'DD MMMM YYYY HH:mm:ss'
+              )}
+            </Text>
+            <Text style={Fonts.type59}>
+              Total:{' '}
+              {MoneyFormat(order.orderParcels[0].parcelDetails.totalNettPrice)}
+            </Text>
+          </View>
+        </View>
       </View>
     ) : (
       <View />
     );
   }
 
-  renderTask() {
-    let countTask = 0;
-    this.props.merchant.selectedMerchant.journeyPlanSaleLogs.map(
-      (itemLog, indexLog) => {
-        if (itemLog.activity === 'check_in') {
-          countTask += 1;
-        } else if (itemLog.activity === 'order') {
-          countTask += 1;
-        } else if (itemLog.activity === 'check_out') {
-          countTask += 1;
-        }
-      }
-    );
-
-    return this.props.merchant.selectedMerchant.journeyPlanSaleLogs.length >
-      0 ? (
-      <Card containerStyle={{ flex: 1 }}>
-        <View style={styles.containerTitle}>
-          <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 14 }}>Store Menu</Text>
-          </View>
-          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-            <Text style={{ textAlign: 'right' }}>{countTask} / 3 Selesai</Text>
-          </View>
-        </View>
-        <View style={{ flex: 1 }}>
-          {this.props.merchant.selectedMerchant.journeyPlanSaleLogs.map(
-            (itemLog, indexLog) => {
-              if (itemLog.activity === 'check_in') {
-                return (
-                  <View style={styles.containerList} key={indexLog}>
-                    <View style={styles.checkBox}>
-                      <MaterialIcons
-                        name="check-circle"
-                        color={masterColor.fontGreen50}
-                        size={24}
-                      />
-                    </View>
-                    <View style={styles.taskBox}>
-                      <Text style={{ textAlign: 'left' }}>Check in</Text>
-                    </View>
-                    <View style={styles.rightArrow}>
-                      <MaterialIcons
-                        name="chevron-right"
-                        color={masterColor.fontBlack50}
-                        size={24}
-                      />
-                    </View>
-                  </View>
-                );
-              } else if (itemLog.activity === 'order') {
-                return (
-                  <View style={styles.containerList} key={indexLog}>
-                    <View style={styles.checkBox}>
-                      <MaterialIcons
-                        name="check-circle"
-                        color={masterColor.fontGreen50}
-                        size={24}
-                      />
-                    </View>
-                    <View style={styles.taskBox}>
-                      <Text style={{ textAlign: 'left' }}>Order</Text>
-                    </View>
-                    <View style={styles.rightArrow}>
-                      <MaterialIcons
-                        name="chevron-right"
-                        color={masterColor.fontBlack50}
-                        size={24}
-                      />
-                    </View>
-                  </View>
-                );
-              } else if (itemLog.activity === 'check_out') {
-                return (
-                  <View style={styles.containerList} key={indexLog}>
-                    <View style={styles.checkBox}>
-                      <MaterialIcons
-                        name="check-circle"
-                        color={masterColor.fontGreen50}
-                        size={24}
-                      />
-                    </View>
-                    <View style={styles.taskBox}>
-                      <Text style={{ textAlign: 'left' }}>Check Out</Text>
-                    </View>
-                    <View style={styles.rightArrow}>
-                      <MaterialIcons
-                        name="chevron-right"
-                        color={masterColor.fontBlack50}
-                        size={24}
-                      />
-                    </View>
-                  </View>
-                );
-              }
-            }
-          )}
-        </View>
-      </Card>
-    ) : (
-      <View />
-    );
-  }
-
-  renderStoreMenu() {
-    return (
-      <View style={{ padding: 15 }}>
-        <View>
-          <Text style={{ fontWeight: 'bold', fontSize: 15 }}>Store Menu</Text>
-        </View>
-        <View style={{ flex: 1, flexDirection: 'row' }}>
-          <TouchableOpacity
-            style={styles.wrapMenu}
-            onPress={() => this.goToPdp()}
-          >
-            <View style={styles.boxMenu}>
-              <Image
-                source={require('../../../assets/icons/journey/Order.png')}
-              />
-            </View>
-            <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
-              Order
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.wrapMenu}
-            onPress={() => this.goToCheckIn()}
-          >
-            <View style={styles.boxMenu}>
-              <Image
-                source={require('../../../assets/icons/journey/Check-in.png')}
-              />
-            </View>
-            <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
-              Check In
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.wrapMenu}
-            onPress={() => this.goToCheckOut()}
-          >
-            <View style={styles.boxMenu}>
-              <Image
-                source={require('../../../assets/icons/journey/Check-out.png')}
-              />
-            </View>
-            <Text style={{ color: '#25282b', fontSize: 12, lineHeight: 15 }}>
-              Check Out
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
-
+  /** === THIS FOR TARGET USING SLIDER */
+  // renderData() {
+  //   return this.props.merchant.dataGetMerchantLastOrder !== null &&
+  //     this.props.merchant.dataGetMerchantLastOrder !== undefined ? (
+  //     <View>
+  //       {this.props.merchant.dataGetMerchantLastOrder.orderParcels.length >
+  //       0 ? (
+  //         <Carousel
+  //           ref={ref => (this.carousel = ref)}
+  //           data={this.props.merchant.dataGetMerchantLastOrder.orderParcels}
+  //           sliderWidth={1 * width}
+  //           itemWidth={1 * width}
+  //           renderItem={this.renderItem.bind(this)}
+  //           onSnapToItem={index => this.setState({ activeIndex: index })}
+  //           slideStyle={{ padding: 10 }}
+  //           inactiveSlideOpacity={1}
+  //           inactiveSlideScale={1}
+  //           loop
+  //           autoplay
+  //           activeSlideAlignment={'center'}
+  //         />
+  //       ) : (
+  //         <View />
+  //       )}
+  //       {/* {this.pagination()} */}
+  //     </View>
+  //   ) : (
+  //     <View />
+  //   );
+  // }
   /**
    * ========================
    * HEADER MODIFY
@@ -454,44 +332,190 @@ class MerchantHomeView extends Component {
       )
     };
   };
-
-  /** MAIN */
+  /**
+   * ====================
+   * FOR TASK LIST
+   * ====================
+   */
+  renderTastList() {
+    return (
+      <View style={styles.taskListContainer}>
+        <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingBottom: 10
+            }}
+          >
+            <Text style={Fonts.type64}>Task List</Text>
+            <Text style={Fonts.type31}>
+              {this.checkTotalCompleteTask()}/{this.state.task.length} Selesai
+            </Text>
+          </View>
+          {this.state.task.map((item, index) => {
+            return (
+              <View
+                key={index}
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingVertical: 8
+                }}
+              >
+                <View style={{ flexDirection: 'row' }}>
+                  <View>
+                    {this.checkCheckListTask(item.activity) ? (
+                      <MaterialIcons
+                        name="check-circle"
+                        color={masterColor.fontGreen50}
+                        size={24}
+                      />
+                    ) : (
+                      <MaterialIcons
+                        name="radio-button-unchecked"
+                        color={masterColor.fontBlack40}
+                        size={24}
+                      />
+                    )}
+                  </View>
+                  <View style={{ justifyContent: 'center', paddingLeft: 8 }}>
+                    <Text style={Fonts.type8}>{item.name}</Text>
+                  </View>
+                </View>
+                {/* <View>
+                  <MaterialIcons
+                    name="chevron-right"
+                    color={masterColor.fontBlack40}
+                    size={24}
+                  />
+                </View> */}
+              </View>
+            );
+          })}
+        </View>
+      </View>
+    );
+  }
+  /**
+   * ====================
+   * FOR MENU
+   * ====================
+   */
+  /** === MENU ITEM === */
+  renderItemMenu({ item, index }) {
+    return (
+      <TouchableOpacity
+        style={styles.boxMenu}
+        key={index}
+        onPress={() => this.goTo(item.goTo)}
+      >
+        <View>
+          <Image source={item.icon} style={styles.iconSize} />
+        </View>
+        <View style={{ marginTop: 5 }}>
+          <Text style={Fonts.type8}>{item.menuName}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+  /** === MAIN MENU === */
+  renderMerchantMenu() {
+    return (
+      <View style={styles.containerMenu}>
+        <View style={styles.boxMainMenu}>
+          <View>
+            <Text style={Fonts.type7}>Store Menu</Text>
+          </View>
+          <View style={[GlobalStyle.lines, { flex: 1, marginLeft: 10 }]} />
+        </View>
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          data={this.state.menu}
+          renderItem={this.renderItemMenu.bind(this)}
+          numColumns={4}
+          keyExtractor={(item, index) => index.toString()}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
+    );
+  }
+  /** === RENDER CONTENT ITEM === */
+  renderContentItem() {
+    return (
+      <View>
+        {/* {this.renderData()} */}
+        {this.renderLastOrder()}
+        {this.renderTastList()}
+        {this.renderMerchantMenu()}
+      </View>
+    );
+  }
+  /** === RENDER CONTENT === */
+  renderContent() {
+    return (
+      <View style={styles.contentContainer}>
+        <FlatList
+          showsVerticalScrollIndicator
+          data={[1]}
+          renderItem={this.renderContentItem.bind(this)}
+          keyExtractor={(data, index) => index.toString()}
+        />
+      </View>
+    );
+  }
+  /**
+   * ====================
+   * MODAL
+   * =====================
+   */
+  renderModalCheckout() {
+    return (
+      <ModalBottomMerchantCheckout
+        open={this.state.modalCheckout}
+        close={() => this.closeModalCheckout()}
+        log={this.props.merchant.dataGetLogMerchant}
+      />
+    );
+  }
+  /** BACKGROUND */
+  renderBackground() {
+    return <View style={styles.backgroundRed} />;
+  }
+  /** === RENDER MAIN === */
   render() {
     return (
-      <View style={styles.mainContainer}>
+      <SafeAreaView>
         <StatusBarRed />
-        {!this.props.merchant.loadingGetMerchantLastOrder ? (
-          <ScrollView
-            contentContainerStyle={styles.scrollView}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh}
-              />
-            }
-          >
-            {this.renderData()}
-            {this.renderTask()}
-            {this.renderStoreMenu()}
-            <ModalBottomMerchantCheckout
-              open={this.state.modalCheckout}
-              close={() => this.closeModalCheckout()}
-              log={this.props.merchant.dataGetLogMerchant}
-            />
-          </ScrollView>
+        {!this.props.merchant.loadingGetMerchantLastOrder &&
+        this.props.merchant.dataGetMerchantLastOrder !== null &&
+        !this.props.merchant.loadingGetLogAllActivity &&
+        this.props.merchant.dataGetLogAllActivity !== null ? (
+          <View style={{ height: '100%' }}>
+            {this.renderBackground()}
+            {this.renderContent()}
+          </View>
         ) : (
-          <View />
+          <View style={{ height: '100%' }}>
+            <LoadingPage />
+          </View>
         )}
+        {/* {this.renderModalCheckout()} */}
         <ModalBottomSuccessOrder />
-      </View>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+  contentContainer: {
+    height: '100%',
+    position: 'absolute',
+    zIndex: 1000
+  },
+  backgroundRed: {
+    backgroundColor: masterColor.mainColor,
+    height: 85
   },
   containerSlider: {
     flex: 1,
@@ -581,10 +605,49 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  /** for content */
+  lastOrderContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 11,
+    paddingBottom: 5
+  },
+  cardLastOrder: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    backgroundColor: masterColor.backgroundWhite
+  },
+  boxFaktur: {
+    marginBottom: 8
+  },
+  cardTaskList: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 4,
+    backgroundColor: masterColor.backgroundWhite
+  },
+  /** for menu */
+  containerMenu: {
+    paddingHorizontal: 16
+  },
+  taskListContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 16
+  },
   boxMenu: {
+    width: '25%',
+    alignItems: 'center',
+    paddingVertical: 10
+  },
+  boxMainMenu: {
+    paddingTop: 10,
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center'
+  },
+  iconSize: {
     height: 50,
-    width: 70,
-    backgroundColor: '#fafafa'
+    width: 70
   }
 });
 

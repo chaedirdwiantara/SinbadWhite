@@ -79,7 +79,14 @@ export function portfolioGetProcess(userId) {
 /** PORTFOLIO GET SUCCESS */
 export function portfolioGetSuccess(data) {
   if (data.result === 'Ok') {
-    return { type: types.PORTFOLIO_GET_SUCCESS, payload: data.data };
+    /** this for add default portfolio */
+    const dataResult = data.data;
+    const addingData = {
+      id: '',
+      name: 'Portfolio Direct'
+    };
+    dataResult.unshift(addingData);
+    return { type: types.PORTFOLIO_GET_SUCCESS, payload: dataResult };
   }
   return { type: types.PORTFOLIO_GET_FAILED, payload: data };
 }
@@ -113,81 +120,84 @@ export function merchantAddFailed(data) {
  * GET LAST ORDER BY STORE ID
  * ====================================
  */
-/** PORTFOLIO GET PROCESS */
+/** LAST ORDER GET PROCESS */
 export function merchantGetLastOrderProcess(storeId) {
   return { type: types.MERCHANT_GET_LAST_ORDER_PROCESS, payload: storeId };
 }
-/** PORTFOLIO GET SUCCESS */
+/** LAST ORDER GET SUCCESS */
 export function merchantGetLastOrderSuccess(data) {
   if (data.result === 'Ok') {
     return { type: types.MERCHANT_GET_LAST_ORDER_SUCCESS, payload: data.data };
   }
   return { type: types.MERCHANT_GET_LAST_ORDER_FAILED, payload: data };
 }
-/** PORTFOLIO GET FAILED */
+/** LAST ORDER GET FAILED */
 export function merchantGetLastOrderFailed(data) {
   return { type: types.MERCHANT_GET_LAST_ORDER_FAILED, payload: data };
 }
-
 /**
  * ==================================
- * CHECK IN MERCHANT
+ * POST ACTIVITY
  * ==================================
  */
-/** MERCHANT CHECKIN PROCESS */
-export function merchantCheckinProcess(data) {
-  return { type: types.MERCHANT_CHECKIN_PROCESS, payload: data };
+/** POST ACTIVITY PROCESS */
+export function merchantPostActivityProcess(data) {
+  return { type: types.MERCHANT_POST_ACTIVITY_PROCESS, payload: data };
 }
-/** MERCHANT CHECKIN SUCCESS */
-export function merchantCheckinSuccess(data) {
+/** POST ACTIVITY SUCCESS */
+export function merchantPostActivitySuccess(data) {
   if (data.result === 'Ok') {
-    return { type: types.MERCHANT_CHECKIN_SUCCESS, payload: data.data };
+    return { type: types.MERCHANT_POST_ACTIVITY_SUCCESS, payload: data.data };
   }
-  return { type: types.MERCHANT_CHECKIN_FAILED, payload: data };
+  return { type: types.MERCHANT_POST_ACTIVITY_FAILED, payload: data };
 }
-/** MERCHANT CHECKIN FAILED */
-export function merchantCheckinFailed(data) {
-  return { type: types.MERCHANT_CHECKIN_FAILED, payload: data };
+/** POST ACTIVITY FAILED */
+export function merchantPostActivityFailed(data) {
+  return { type: types.MERCHANT_POST_ACTIVITY_FAILED, payload: data };
 }
-
 /**
  * ==================================
- * CHECK OUT MERCHANT
+ * GET LOG ALL ACTIVITY MERCHANT
  * ==================================
  */
-/** MERCHANT CHECKOUT PROCESS */
-export function merchantCheckoutProcess(data) {
-  return { type: types.MERCHANT_CHECKOUT_PROCESS, payload: data };
+/** GET LOG ALL ACTIVITY MERCHANT PROCESS */
+export function merchantGetLogAllActivityProcess(data) {
+  return { type: types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS, payload: data };
 }
-/** MERCHANT CHECKOUT SUCCESS */
-export function merchantCheckoutSuccess(data) {
+/** GET LOG ALL ACTIVITY MERCHANT SUCCESS */
+export function merchantGetLogAllActivitySuccess(data) {
   if (data.result === 'Ok') {
-    return { type: types.MERCHANT_CHECKOUT_SUCCESS, payload: data.data };
+    return {
+      type: types.MERCHANT_GET_LOG_ALL_ACTIVITY_SUCCESS,
+      payload: data.data
+    };
   }
-  return { type: types.MERCHANT_CHECKOUT_FAILED, payload: data };
+  return { type: types.MERCHANT_GET_LOG_ALL_ACTIVITY_FAILED, payload: data };
 }
-/** MERCHANT CHECKOUT FAILED */
-export function merchantCheckoutFailed(data) {
-  return { type: types.MERCHANT_CHECKOUT_FAILED, payload: data };
+/** GET LOG ALL ACTIVITY MERCHANT FAILED */
+export function merchantGetLogAllActivityFailed(data) {
+  return { type: types.MERCHANT_GET_LOG_ALL_ACTIVITY_FAILED, payload: data };
 }
-
 /**
  * ==================================
- * GET LOG MERCHANT
+ * GET LOG PER ACTIVITY MERCHANT
  * ==================================
  */
-/** MERCHANT GET LOG PROCESS */
-export function merchantGetLogProcess(data) {
-  return { type: types.MERCHANT_GET_LOG_PROCESS, payload: data };
+/** GET LOG PER ACTIVITY MERCHANT PROCESS */
+export function merchantGetLogPerActivityProcess(data) {
+  return { type: types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS, payload: data };
 }
-/** MERCHANT GET LOG SUCCESS */
-export function merchantGetLogSuccess(data) {
+/** GET LOG PER ACTIVITY MERCHANT SUCCESS */
+export function merchantGetLogPerActivitySuccess(data) {
   if (data.result === 'Ok') {
-    return { type: types.MERCHANT_GET_LOG_SUCCESS, payload: data.data };
+    return {
+      type: types.MERCHANT_GET_LOG_PER_ACTIVITY_SUCCESS,
+      payload: data.data
+    };
   }
-  return { type: types.MERCHANT_GET_LOG_FAILED, payload: data };
+  return { type: types.MERCHANT_GET_LOG_PER_ACTIVITY_FAILED, payload: data };
 }
-/** MERCHANT GET LOG FAILED */
-export function merchantGetLogFailed(data) {
-  return { type: types.MERCHANT_GET_LOG_FAILED, payload: data };
+/** GET LOG PER ACTIVITY MERCHANT FAILED */
+export function merchantGetLogPerActivityFailed(data) {
+  return { type: types.MERCHANT_GET_LOG_PER_ACTIVITY_FAILED, payload: data };
 }

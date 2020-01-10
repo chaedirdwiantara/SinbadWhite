@@ -53,6 +53,11 @@ const styles = StyleSheet.create({
     width: undefined,
     aspectRatio: 1 / 1
   },
+  image60: {
+    height: 60,
+    width: undefined,
+    aspectRatio: 1 / 1
+  },
   image74: {
     height: 74,
     width: undefined,
@@ -102,6 +107,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
     elevation: 2
+  },
+  shadowForBox5: {
+    borderWidth: 0,
+    backgroundColor: masterColor.backgroundWhite,
+    shadowColor: masterColor.shadow,
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
   },
   shadowForBox10: {
     borderWidth: 0,

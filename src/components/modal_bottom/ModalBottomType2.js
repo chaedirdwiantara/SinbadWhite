@@ -1,34 +1,16 @@
+/**
+ * THIS MODAL FOR SWIPE TO BOTTOM
+ */
 import React, { Component } from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Dimensions,
-  Keyboard,
-  TouchableOpacity,
-  KeyboardAvoidingView
-} from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import Modal from 'react-native-modal';
-import GestureRecognizer, {
-  swipeDirections
-} from 'react-native-swipe-gestures';
+import { View, StyleSheet, Text, Dimensions, Keyboard } from 'react-native';
+import GestureRecognizer from 'react-native-swipe-gestures';
 import masterColor from '../../config/masterColor.json';
-import { StatusBarBlackOP40 } from '../../components/StatusBarGlobal';
 import Fonts from '../../helpers/GlobalFont';
-import MerchantListDataView from './MerchantListDataView';
-import SearchBarType1 from '../../components/search_bar/SearchBarType1';
-import * as ActionCreators from '../../state/actions';
-import TagList from '../../components/TagList';
-import SkeletonType2 from '../../components/skeleton/SkeletonType2';
-import ButtonSingle from '../../components/button/ButtonSingle';
 import GlobalStyle from '../../helpers/GlobalStyle';
 
 const { height } = Dimensions.get('window');
 
-class ModalBottomMerchantMapList extends Component {
+class ModalBottomType2 extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -71,9 +53,7 @@ class ModalBottomMerchantMapList extends Component {
               paddingVertical: 10
             }}
           >
-            <Text style={Fonts.type8}>
-              {this.props.merchant.totalDataGetMerchant} List Store
-            </Text>
+            <Text style={Fonts.type8}>{this.props.title}</Text>
           </View>
           <View style={GlobalStyle.lines} />
         </View>
@@ -83,12 +63,7 @@ class ModalBottomMerchantMapList extends Component {
   /** RENDER CONTENT LIST */
   renderContentList() {
     return this.state.showList ? (
-      <View style={{ flex: 1, height: 0.35 * height }}>
-        <MerchantListDataView
-          search={this.props.search}
-          portfolioIndex={this.props.portfolioIndex}
-        />
-      </View>
+      <View style={{ flex: 1, height: 0.35 * height }}>{this.props.body}</View>
     ) : (
       <View />
     );
@@ -134,7 +109,6 @@ const styles = StyleSheet.create({
   },
   boxContentBody: {
     flex: 1
-    // paddingVertical: 10
   },
   boxContentTitle: {
     marginTop: 18,
@@ -149,15 +123,4 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, merchant, journey }) => {
-  return { user, merchant, journey };
-};
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(ActionCreators, dispatch);
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ModalBottomMerchantMapList);
+export default ModalBottomType2;

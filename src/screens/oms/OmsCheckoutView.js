@@ -259,6 +259,11 @@ class OmsCheckoutView extends Component {
   }
   /** ======= DID UPDATE FUNCTION ==== */
   backToMerchantHomeView(storeName) {
+    /** UPDATE TASK ORDER */
+    this.props.merchantPostActivityProcess({
+      journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+      activity: 'order'
+    });
     NavigationService.navigate('MerchantHomeView', {
       storeName
     });

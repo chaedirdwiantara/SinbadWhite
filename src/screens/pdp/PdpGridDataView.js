@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5
   },
   productImage: {
-    resizeMode: 'contain',
+    // resizeMode: 'contain',
     height: undefined,
     width: '100%',
     aspectRatio: 1 / 1,

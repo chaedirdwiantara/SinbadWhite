@@ -1,27 +1,17 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions
-} from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import * as ActionCreators from '../../state/actions';
-import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
-import Fonts from '../../helpers/GlobalFont';
 import TagList from '../../components/TagList';
 import SearchBarType2 from '../../components/search_bar/SearchBarType2';
-import TestModal from '../../components/modal_bottom/test';
 import EmptyData from '../../components/empty_state/EmptyData';
 import { LoadingPage } from '../../components/Loading';
-import ModalBottomMerchantMapList from './ModalBottomMerchantMapList';
-import Address from '../../components/Address';
+import MerchantListDataView from './MerchantListDataView';
+import ModalBottomType2 from '../../components/modal_bottom/ModalBottomType2';
 
 const { height } = Dimensions.get('window');
 
@@ -57,26 +47,6 @@ class MerchantMapView extends Component {
       this.props.parentFunction(data);
     }
   }
-
-  /** === COMBINE ADDRESS === */
-  combineAddress(item) {
-    let address = '';
-    let urban = '';
-    let province = '';
-    if (item.address) {
-      address = item.address ? item.address : '';
-    }
-    if (item.urban) {
-      urban =
-        (item.urban.urban ? `, ${item.urban.urban}` : '') +
-        (item.urban.district ? `, ${item.urban.district}` : '') +
-        (item.urban.city ? `, ${item.urban.city}` : '');
-    }
-    if (item.urban) {
-      province = item.urban.province ? `, ${item.urban.province.name}` : '';
-    }
-    return address;
-  }
   /**
    * ======================
    * MODAL
@@ -85,9 +55,14 @@ class MerchantMapView extends Component {
   /** RENDER MODAL BOTTOM */
   renderBottomList() {
     return !this.props.merchant.loadingGetMerchant ? (
-      <ModalBottomMerchantMapList
-        search={this.props.searchText}
-        portfolioIndex={this.props.portfolio}
+      <ModalBottomType2
+        title={`${this.props.merchant.totalDataGetMerchant} List Store`}
+        body={
+          <MerchantListDataView
+            search={this.props.search}
+            portfolioIndex={this.props.portfolioIndex}
+          />
+        }
       />
     ) : (
       <View />
@@ -201,7 +176,7 @@ class MerchantMapView extends Component {
               longitude: marker.longitude
             }}
             title={marker.name}
-            description={this.combineAddress(marker)}
+            description={marker.address}
           />
         ))}
       </MapView>
@@ -235,7 +210,7 @@ class MerchantMapView extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        <View style={{ position: 'absolute', zIndex: 1000 }}>
+        <View style={{ position: 'absolute', zIndex: 1000, width: '100%' }}>
           {this.renderSearchBar()}
           {this.renderTags()}
         </View>

@@ -61,9 +61,26 @@ class JourneyListDataView extends Component {
       storeName
     });
   }
-
+  /** go to chat */
   goToChat() {
     NavigationService.navigate('ChatView');
+  }
+  /** CHECK CHECK LIST ACTIVITY */
+  checkCheckListActivity(logs) {
+    let total = 0;
+    const checkActivityOrder = logs.findIndex(
+      itemAllActivity => itemAllActivity.activity === 'order'
+    );
+    if (checkActivityOrder > -1) {
+      total = total + 1;
+    }
+    const checkActivityCheckOut = logs.findIndex(
+      itemAllActivity => itemAllActivity.activity === 'check_out'
+    );
+    if (checkActivityCheckOut > -1) {
+      total = total + 1;
+    }
+    return total;
   }
   /**
    * ======================
@@ -97,7 +114,7 @@ class JourneyListDataView extends Component {
             <MaterialIcons
               name="check-circle"
               color={
-                item.journeyPlanSaleLogs.length > 1
+                this.checkCheckListActivity(item.journeyPlanSaleLogs) > 1
                   ? masterColor.fontGreen50
                   : masterColor.fontYellow50
               }
@@ -165,7 +182,7 @@ class JourneyListDataView extends Component {
               name="motorcycle"
               color={
                 item.journeyPlanSaleLogs.findIndex(
-                  jp => jp.activity === 'visit'
+                  jp => jp.activity === 'check_out'
                 ) > -1
                   ? masterColor.fontGreen50
                   : masterColor.fontBlack40

@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Dimensions,
-  TouchableOpacity
-} from 'react-native';
+import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -13,13 +7,14 @@ import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
-import ComingSoon from '../../../components/empty_state/ComingSoon';
 import masterColor from '../../../config/masterColor.json';
 import { StatusBarWhite } from '../../../components/StatusBarGlobal';
 import SearchBarType3 from '../../../components/search_bar/SearchBarType3';
 import GlobalStyles from '../../../helpers/GlobalStyle';
+import Fonts from '../../../helpers/GlobalFont';
+import ModalBottomType2 from '../../../components/modal_bottom/ModalBottomType2';
+import Address from '../../../components/Address';
 import ButtonSingle from '../../../components/button/ButtonSingle';
-import ModalBottomMerchantCheckin from './ModalBottomMerchantCheckin';
 
 const { height } = Dimensions.get('window');
 
@@ -39,8 +34,25 @@ class MerchantCheckinView extends Component {
    * FUNCTIONAL
    * ======================
    */
+  /** === DID MOUNT === */
   componentDidMount() {
     this.getCurrentLocation();
+  }
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    /** IF CHECK IN SUCCESS */
+    if (
+      prevProps.merchant.dataPostActivity !==
+      this.props.merchant.dataPostActivity
+    ) {
+      if (this.props.merchant.dataPostActivity !== null) {
+        /** get log all activity */
+        this.props.merchantGetLogAllActivityProcess(
+          this.props.merchant.selectedMerchant.id
+        );
+        NavigationService.goBack(this.props.navigation.state.key);
+      }
+    }
   }
   /** === GET CURRENT LOCATION === */
   successMaps = success => {
@@ -61,13 +73,6 @@ class MerchantCheckinView extends Component {
       maximumAge: 0,
       enableHighAccuracy: true
     });
-  }
-  addLongLat() {
-    this.props.saveLocationDataVolatile({
-      latitude: this.state.latitude,
-      longitude: this.state.longitude
-    });
-    NavigationService.goBack(this.props.navigation.state.key);
   }
   /**
    * ========================
@@ -179,17 +184,57 @@ class MerchantCheckinView extends Component {
       </View>
     );
   }
-  /** === RENDER PAGE === */
+  /** === RENDER LOADING === */
   renderLoading() {
     return <View />;
   }
+  /** === RENDER MAP === */
   renderMaps() {
     return this.state.reRender
       ? this.renderLoading()
       : this.renderMapsContent();
   }
+  /**
+   * ====================
+   * MODAL
+   * ====================
+   */
   renderModalBottom() {
-    return <ModalBottomMerchantCheckin />;
+    const journeyPlanSaleId = this.props.merchant.selectedMerchant.id;
+    const store = this.props.merchant.selectedMerchant.store;
+    return (
+      <ModalBottomType2
+        title={`ID ${store.storeCode} - ${store.name}`}
+        body={
+          <View style={{ flex: 1 }}>
+            <View
+              style={{ paddingHorizontal: 16, paddingVertical: 16, flex: 1 }}
+            >
+              <Address
+                font={Fonts.type17}
+                address={store.address}
+                urban={store.urban}
+                province={store.province}
+              />
+            </View>
+            <View>
+              <ButtonSingle
+                disabled={this.props.merchant.loadingPostActivity}
+                title={'Check-in'}
+                loading={this.props.merchant.loadingPostActivity}
+                borderRadius={4}
+                onPress={() =>
+                  this.props.merchantPostActivityProcess({
+                    journeyPlanSaleId,
+                    activity: 'check_in'
+                  })
+                }
+              />
+            </View>
+          </View>
+        }
+      />
+    );
   }
   /** === MAIN === */
   render() {

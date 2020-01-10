@@ -58,36 +58,36 @@ function* getMerchantLastOrder(actions) {
   }
 }
 /** === CHECKIN MERCHANT === */
-function* checkinMerchant(actions) {
+function* postActivity(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.insertLogMerchant(actions.payload);
+      return MerchantMethod.postActivity(actions.payload);
     });
-    yield put(ActionCreators.merchantCheckinSuccess(response));
+    yield put(ActionCreators.merchantPostActivitySuccess(response));
   } catch (error) {
-    yield put(ActionCreators.merchantCheckinFailed(error));
+    yield put(ActionCreators.merchantPostActivityFailed(error));
   }
 }
 /** === CHECKOUT MERCHANT === */
-function* checkoutMerchant(actions) {
+function* getLogAllActivity(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.insertLogMerchant(actions.payload);
+      return MerchantMethod.getLogAllActivity(actions.payload);
     });
-    yield put(ActionCreators.merchantCheckoutSuccess(response));
+    yield put(ActionCreators.merchantGetLogAllActivitySuccess(response));
   } catch (error) {
-    yield put(ActionCreators.merchantCheckoutFailed(error));
+    yield put(ActionCreators.merchantGetLogAllActivityFailed(error));
   }
 }
 /** === GET LOG MERCHANT === */
-function* getLogMerchant(actions) {
+function* getLogPerActivity(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.getLogMerchant(actions.payload);
+      return MerchantMethod.getLogPerActivity(actions.payload);
     });
-    yield put(ActionCreators.merchantGetLogSuccess(response));
+    yield put(ActionCreators.merchantGetLogPerActivitySuccess(response));
   } catch (error) {
-    yield put(ActionCreators.merchantGetLogFailed(error));
+    yield put(ActionCreators.merchantGetLogPerActivityFailed(error));
   }
 }
 /** === SAGA FUNCTION === */
@@ -97,9 +97,15 @@ function* MerchantSaga() {
   yield takeEvery(types.PORTFOLIO_GET_PROCESS, getPortfolio);
   yield takeEvery(types.MERCHANT_ADD_PROCESS, addMerchant);
   yield takeEvery(types.MERCHANT_GET_LAST_ORDER_PROCESS, getMerchantLastOrder);
-  yield takeEvery(types.MERCHANT_CHECKIN_PROCESS, checkinMerchant);
-  yield takeEvery(types.MERCHANT_CHECKOUT_PROCESS, checkoutMerchant);
-  yield takeEvery(types.MERCHANT_GET_LOG_PROCESS, getLogMerchant);
+  yield takeEvery(types.MERCHANT_POST_ACTIVITY_PROCESS, postActivity);
+  yield takeEvery(
+    types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS,
+    getLogAllActivity
+  );
+  yield takeEvery(
+    types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS,
+    getLogPerActivity
+  );
 }
 
 export default MerchantSaga;
