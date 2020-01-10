@@ -4,20 +4,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  RefreshControl,
-  ScrollView,
   SafeAreaView,
   Dimensions,
-  Image,
-  ToastAndroid
+  Image
 } from 'react-native';
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Card } from 'react-native-elements';
-// import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import * as ActionCreators from '../../../state/actions';
@@ -31,6 +25,7 @@ import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
 import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
 import ProductListType1 from '../../../components/list/ProductListType1';
 import { LoadingPage } from '../../../components/Loading';
+import ToastType1 from '../../../components/toast/ToastType1';
 
 const { width, height } = Dimensions.get('window');
 
@@ -38,9 +33,9 @@ class MerchantHomeView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeIndex: 0,
-      modalCheckout: false,
-      refreshing: false,
+      openModalCheckout: false,
+      showToast: false,
+      notifToast: '',
       menu: [
         {
           menuName: 'Order',
@@ -98,18 +93,42 @@ class MerchantHomeView extends Component {
 
   componentDidUpdate(prevProps) {
     if (
-      prevProps.merchant.dataCheckoutMerchant !==
-        this.props.merchant.dataCheckoutMerchant &&
-      this.props.merchant.dataCheckoutMerchant !== null
+      prevProps.merchant.dataPostActivity !==
+      this.props.merchant.dataPostActivity
     ) {
-      this.setState({ modalCheckout: false });
-      ToastAndroid.showWithGravityAndOffset(
-        'Check-out Berhasil',
-        ToastAndroid.SHORT,
-        ToastAndroid.BOTTOM,
-        25,
-        200
-      );
+      if (this.props.merchant.dataPostActivity !== null) {
+        /** IF CHECK OUT SUCCESS */
+        if (this.props.merchant.dataPostActivity.activity === 'check_out') {
+          this.setState({
+            openModalCheckout: false,
+            showToast: true,
+            notifToast: 'Check-out Berhasil'
+          });
+          setTimeout(() => {
+            this.setState({ showToast: false });
+          }, 3000);
+          /** FOR GET LOG ALL ACTIVITY */
+          this.props.merchantGetLogAllActivityProcess(
+            this.props.merchant.selectedMerchant.id
+          );
+        } else if (
+        /** IF CHECK OUT SUCCESS */
+          this.props.merchant.dataPostActivity.activity === 'check_in'
+        ) {
+          this.setState({
+            openModalCheckout: false,
+            showToast: true,
+            notifToast: 'Check-in Berhasil'
+          });
+          setTimeout(() => {
+            this.setState({ showToast: false });
+          }, 3000);
+          /** FOR GET LOG ALL ACTIVITY */
+          this.props.merchantGetLogAllActivityProcess(
+            this.props.merchant.selectedMerchant.id
+          );
+        }
+      }
     }
   }
 
@@ -117,19 +136,6 @@ class MerchantHomeView extends Component {
     this.props.journeyPlanGetReset();
     this.props.journeyPlanGetProcess({ page: 0, loading: true });
   }
-
-  onRefresh = () => {
-    this.setState({ refreshing: true });
-
-    this.props.merchantGetLastOrderProcess(
-      this.props.merchant.selectedMerchant.store.id
-    );
-
-    this.setState({
-      refreshing: false
-    });
-  };
-
   /** === GO TO (MENU PRESS) */
   goTo(page) {
     switch (page) {
@@ -143,20 +149,15 @@ class MerchantHomeView extends Component {
         NavigationService.navigate('MerchantCheckinView');
         break;
       case 'checkOut':
-        let getLog = {
+        this.props.merchantGetLogPerActivityProcess({
           journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
           activity: 'check_in'
-        };
-        this.props.merchantGetLogProcess(getLog);
-        this.setState({ modalCheckout: true });
+        });
+        this.setState({ openModalCheckout: true });
         break;
       default:
         break;
     }
-  }
-
-  closeModalCheckout() {
-    this.setState({ modalCheckout: false });
   }
   /** CHECK CHECK LIST TASK */
   checkCheckListTask(activity) {
@@ -465,17 +466,36 @@ class MerchantHomeView extends Component {
     );
   }
   /**
+   * ===================
+   * TOAST
+   * ====================
+   */
+  renderToast() {
+    return this.state.showToast ? (
+      <ToastType1 margin={30} content={this.state.notifToast} />
+    ) : (
+      <View />
+    );
+  }
+  /**
    * ====================
    * MODAL
    * =====================
    */
   renderModalCheckout() {
-    return (
+    return this.state.openModalCheckout ? (
       <ModalBottomMerchantCheckout
-        open={this.state.modalCheckout}
-        close={() => this.closeModalCheckout()}
-        log={this.props.merchant.dataGetLogMerchant}
+        open={this.state.openModalCheckout}
+        close={() => this.setState({ openModalCheckout: false })}
+        onPress={() =>
+          this.props.merchantPostActivityProcess({
+            journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+            activity: 'check_out'
+          })
+        }
       />
+    ) : (
+      <View />
     );
   }
   /** BACKGROUND */
@@ -500,7 +520,8 @@ class MerchantHomeView extends Component {
             <LoadingPage />
           </View>
         )}
-        {/* {this.renderModalCheckout()} */}
+        {this.renderModalCheckout()}
+        {this.renderToast()}
         <ModalBottomSuccessOrder />
       </SafeAreaView>
     );

@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Modal from 'react-native-modal';
 import masterColor from '../../config/masterColor.json';
-import { StatusBarBlackOP40 } from '../StatusBarGlobal';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import Fonts from '../../helpers/GlobalFont';
 
@@ -20,9 +19,6 @@ class ModalBottomWithClose extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-  }
-  test(persent) {
-    console.log(persent);
   }
   /**
    * ==================
@@ -79,12 +75,7 @@ class ModalBottomWithClose extends Component {
   }
   /** === MAIN === */
   render() {
-    return (
-      <View>
-        <StatusBarBlackOP40 />
-        {this.renderContent()}
-      </View>
-    );
+    return <View>{this.renderContent()}</View>;
   }
 }
 

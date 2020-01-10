@@ -391,11 +391,23 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: masterColor.fontBlack50
   },
+  type65: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 9,
+    lineHeight: 11,
+    color: masterColor.fontBlack80
+  },
+  type66: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 20,
+    lineHeight: 24,
+    color: masterColor.mainColor
+  },
   forCompare: {
     fontFamily: Fonts.MontserratMedium,
-    fontSize: 10,
-    lineHeight: 13,
-    color: masterColor.fontBlack50
+    fontSize: 12,
+    lineHeight: 15,
+    color: masterColor.fontBlack80
   },
   /** === bottom nav ==== */
   bottomNav: {

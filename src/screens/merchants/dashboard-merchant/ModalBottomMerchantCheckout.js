@@ -17,7 +17,7 @@ import GestureRecognizer, {
 } from 'react-native-swipe-gestures';
 import moment from 'moment';
 import masterColor from '../../../config/masterColor.json';
-import { StatusBarBlackOP40 } from '../../../components/StatusBarGlobal';
+import { StatusBarRedOP50 } from '../../../components/StatusBarGlobal';
 import Fonts from '../../../helpers/GlobalFont';
 import SearchBarType1 from '../../../components/search_bar/SearchBarType1';
 import * as ActionCreators from '../../../state/actions';
@@ -25,29 +25,49 @@ import TagList from '../../../components/TagList';
 import SkeletonType2 from '../../../components/skeleton/SkeletonType2';
 import ButtonSingle from '../../../components/button/ButtonSingle';
 import GlobalStyle from '../../../helpers/GlobalStyle';
+import ModalBottomWithClose from '../../../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 
 const { height } = Dimensions.get('window');
 
 class ModalBottomMerchantCheckout extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      showList: true
-    };
-  }
-  componentDidMount() {
-    this.keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      this.keyboardDidShow
-    );
+    this.state = {};
   }
 
-  keyboardDidShow = () => {
-    this.setState({ showList: false });
-  };
-
-  componentWillUnmount() {
-    this.keyboardDidShowListener.remove();
+  /** CHECK CHECK IN */
+  checkCheckIn() {
+    if (
+      !this.props.merchant.loadingGetLogPerActivity &&
+      this.props.merchant.dataGetLogPerActivity !== null
+    ) {
+      if (this.props.merchant.dataGetLogPerActivity.length > 0) {
+        return moment(
+          this.props.merchant.dataGetLogPerActivity[0].createdAt
+        ).format('HH:mm:ss');
+      }
+      return 'Anda belum check-in';
+    }
+    return 'Checking...';
+  }
+  /** CHECK DISABLE BUTTON */
+  checkDisableButton() {
+    if (
+      !this.props.merchant.loadingGetLogPerActivity &&
+      this.props.merchant.dataGetLogPerActivity !== null
+    ) {
+      if (this.props.merchant.dataGetLogPerActivity.length > 0) {
+        return false;
+      }
+      return true;
+    }
+    return true;
+  }
+  /** FIND DIFF KUNJUNGAN */
+  findDiffVisit() {
+    const a = moment();
+    const b = moment(this.props.merchant.dataGetLogPerActivity[0].createdAt);
+    return a.diff(b, 'minutes');
   }
 
   checkout() {
@@ -62,133 +82,76 @@ class ModalBottomMerchantCheckout extends Component {
    * RENDER VIEW
    * ==================
    */
-  /** === RENDER TITLE === */
-  renderContentTitle() {
+  /** RENDER CONTENT LIST */
+  renderContentList() {
+    const store = this.props.merchant.selectedMerchant.store;
     return (
-      <GestureRecognizer
-        onSwipeDown={() => this.setState({ showList: false })}
-        onSwipeUp={() => this.setState({ showList: true })}
-      >
-        <View style={{ alignItems: 'center' }}>
-          <View style={GlobalStyle.linesSwipeModal} />
-        </View>
-        <View style={styles.boxContentTitle}>
-          <TouchableOpacity style={styles.boxClose} onPress={this.props.close}>
-            <MaterialIcon
-              name="close"
-              color={masterColor.fontBlack50}
-              size={24}
-            />
-          </TouchableOpacity>
-
-          <View>
-            <Text style={Fonts.type7}>Check Out</Text>
-          </View>
+      <View>
+        <View style={GlobalStyle.lines} />
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: 11
+          }}
+        >
+          <Text style={Fonts.type8}>
+            ID {store.storeCode} - {store.name}
+          </Text>
         </View>
         <View style={GlobalStyle.lines} />
         <View
           style={{
+            paddingVertical: 22,
             paddingHorizontal: 16,
-            paddingVertical: 10,
-            alignItems: 'center'
+            flexDirection: 'row',
+            justifyContent: 'space-between'
           }}
         >
-          <Text style={Fonts.type8}>
-            ID {this.props.merchant.selectedMerchant.store.storeCode} -{' '}
-            {this.props.merchant.selectedMerchant.store.name}
-          </Text>
-        </View>
-        <View style={GlobalStyle.lines} />
-      </GestureRecognizer>
-    );
-  }
-  /** RENDER CONTENT LIST */
-  renderContentList() {
-    let a = moment();
-    let b = moment(
-      this.props.log !== null ? this.props.log[0].createdAt : null
-    );
-    let duration = a.diff(b, 'minutes');
-
-    return this.state.showList ? (
-      <View
-        style={{
-          flex: 1,
-          height: 0.4 * height
-        }}
-      >
-        <View style={{ flex: 1, flexDirection: 'row' }}>
-          <View style={{ flex: 1, flexDirection: 'column' }}>
-            <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
-              <Text style={{ fontSize: 12, lineHeight: 15, color: '#52575c' }}>
-                Kunjungan dimulai
-              </Text>
-              <Text
-                style={{
-                  fontSize: 13,
-                  lineHeight: 16,
-                  color: '#25282b',
-                  marginTop: 15
-                }}
-              >
-                {this.props.log !== null
-                  ? moment(this.props.log[0].createdAt).format('HH:mm:ss')
-                  : '-'}
+          <View>
+            <View>
+              <Text style={Fonts.type23}>Kunjungan dimulai</Text>
+              <Text style={[Fonts.type24, { marginTop: 5 }]}>
+                {this.checkCheckIn()}
               </Text>
             </View>
-            <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
-              <Text style={{ fontSize: 12, lineHeight: 15, color: '#52575c' }}>
-                Kunjungan berakhir
-              </Text>
-              <Text
-                style={{
-                  fontSize: 13,
-                  lineHeight: 16,
-                  color: '#25282b',
-                  marginTop: 15
-                }}
-              >
+            <View style={{ marginTop: 12 }}>
+              <Text style={Fonts.type23}>Kunjungan berakhir</Text>
+              <Text style={[Fonts.type24, { marginTop: 5 }]}>
                 {moment().format('HH:mm:ss')}
               </Text>
             </View>
           </View>
-          <View style={{ margin: 20 }}>
-            <View style={styles.cirlceWrap}>
-              <View style={styles.durationWrap}>
-                <Text
-                  style={{ fontSize: 20, color: '#f0444c', lineHeight: 24 }}
-                >
-                  {this.props.log !== null ? duration : '00'}
+          <View>
+            {!this.checkDisableButton() ? (
+              <View style={styles.cirlce}>
+                <Text>
+                  <Text style={Fonts.type66}>{this.findDiffVisit()}</Text>
+                  <Text style={Fonts.type23}> Min</Text>
                 </Text>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    color: '#52575c',
-                    lineHeight: 15,
-                    marginLeft: 2
-                  }}
-                >
-                  Min
-                </Text>
+                <Text style={Fonts.type65}>Durasi</Text>
+                <Text style={Fonts.type65}>Kunjungan</Text>
               </View>
-              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: 9, lineHeight: 11 }}>Durasi</Text>
-                <Text style={{ fontSize: 9, lineHeight: 11 }}>kunjungan</Text>
-              </View>
-            </View>
+            ) : (
+              <View />
+            )}
           </View>
         </View>
-        <View style={{ flex: 1 }}>
-          <ButtonSingle
-            disabled={false}
-            title={'Check Out'}
-            borderRadius={4}
-            onPress={() => this.checkout()}
-          />
-        </View>
+        <ButtonSingle
+          disabled={
+            this.props.merchant.loadingGetLogPerActivity ||
+            this.checkDisableButton() ||
+            this.props.merchant.loadingPostActivity
+          }
+          title={'Check-out'}
+          loading={
+            this.props.merchant.loadingGetLogPerActivity ||
+            this.props.merchant.loadingPostActivity
+          }
+          borderRadius={4}
+          onPress={this.props.onPress}
+        />
       </View>
-    ) : (
-      <View />
     );
   }
   /** === RENDER BODY === */
@@ -197,29 +160,19 @@ class ModalBottomMerchantCheckout extends Component {
       <View style={styles.boxContentBody}>{this.renderContentList()}</View>
     );
   }
-  /** === RENDER STATUS BAR === */
-  renderContent() {
-    return (
-      <Modal
-        isVisible={this.props.open}
-        useNativeDriver={true}
-        hasBackdrop={true}
-        coverScreen={true}
-        backdropColor={masterColor.fontBlack100}
-        backdropOpacity={0.4}
-        deviceHeight={height}
-        style={styles.mainContainer}
-      >
-        <View style={[styles.contentContainer, GlobalStyle.shadow]}>
-          {this.renderContentTitle()}
-          {this.renderContentBody()}
-        </View>
-      </Modal>
-    );
-  }
   /** === MAIN === */
   render() {
-    return <View>{this.renderContent()}</View>;
+    return (
+      <View>
+        <StatusBarRedOP50 />
+        <ModalBottomWithClose
+          open={this.props.open}
+          title={'Check-out'}
+          close={this.props.close}
+          content={this.renderContentBody()}
+        />
+      </View>
+    );
   }
 }
 
@@ -258,12 +211,12 @@ const styles = StyleSheet.create({
     left: 16
   },
   // Circle
-  cirlceWrap: {
-    width: 100,
-    height: 100,
-    borderColor: '#f58287',
-    borderWidth: 1,
-    borderRadius: 50,
+  cirlce: {
+    width: 85,
+    height: 85,
+    borderColor: masterColor.fontRed40,
+    borderWidth: 2,
+    borderRadius: 85,
     justifyContent: 'center',
     alignItems: 'center'
   },

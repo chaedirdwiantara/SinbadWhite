@@ -345,7 +345,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetLogPerActivity: false,
-      dataGetLogPerActivity: action.payload
+      dataGetLogPerActivity: action.payload.data
     };
   },
   [types.MERCHANT_GET_LOG_PER_ACTIVITY_FAILED](state, action) {

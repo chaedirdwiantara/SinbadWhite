@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
+import { StatusBarBlackOP40 } from '../../components/StatusBarGlobal';
 
 class ModalContentMenuAddMerchant extends Component {
   constructor(props) {
@@ -47,7 +48,12 @@ class ModalContentMenuAddMerchant extends Component {
   }
   /** === MAIN === */
   render() {
-    return <View style={styles.mainContainer}>{this.renderContent()}</View>;
+    return (
+      <View style={styles.mainContainer}>
+        <StatusBarBlackOP40 />
+        {this.renderContent()}
+      </View>
+    );
   }
 }
 
