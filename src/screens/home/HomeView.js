@@ -21,6 +21,7 @@ import Fonts from '../../helpers/GlobalFont';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import { StatusBarWhite } from '../../components/StatusBarGlobal';
 import ToastType1 from '../../components/toast/ToastType1';
+import BackHandlerCloseApp from '../../components/BackHandlerCloseApp';
 
 const { width } = Dimensions.get('window');
 
@@ -49,8 +50,7 @@ class HomeView extends Component {
           image: require('../../assets/images/menu/dashboard.png'),
           goTo: 'dashboard'
         }
-      ],
-      backPressCount: 0
+      ]
     };
   }
   /**
@@ -63,8 +63,6 @@ class HomeView extends Component {
       fullName: this.props.user.fullName,
       imageUrl: this.props.user.imageUrl
     });
-    /** === FOR H/W BACK LISTENER === */
-    // BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
@@ -84,34 +82,6 @@ class HomeView extends Component {
       }
     }
   }
-  /** === UNMOUNT ALL LISTENER === */
-  componentWillUnmount() {
-    // BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
-  }
-  /** === HARDWARE BACK BUTTON === */
-  // handleBackPress = () => {
-  //   if (this.props.navigation.state.routeName === 'HomeView') {
-  //     const count = this.state.backPressCount;
-  //     this.setState({ backPressCount: count + 1 });
-  //     if (count > 0) {
-  //       BackHandler.exitApp();
-  //     } else {
-  //       ToastAndroid.showWithGravityAndOffset(
-  //         'Tekan sekali lagi untuk keluar',
-  //         ToastAndroid.SHORT,
-  //         ToastAndroid.BOTTOM,
-  //         25,
-  //         200
-  //       );
-  //     }
-  //     setTimeout(() => {
-  //       this.setState({ backPressCount: 0 });
-  //     }, 3000);
-
-  //     return true;
-  //   }
-  //   return false;
-  // };
   /** === GO TO PAGE === */
   goToPage(item) {
     switch (item.goTo) {
@@ -301,6 +271,7 @@ class HomeView extends Component {
   render() {
     return (
       <SafeAreaView>
+        <BackHandlerCloseApp navigation={this.props.navigation} />
         <StatusBarWhite />
         {this.renderData()}
         {this.renderToast()}

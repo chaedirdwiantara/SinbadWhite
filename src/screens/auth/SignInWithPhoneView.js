@@ -6,8 +6,6 @@ import {
   Dimensions,
   TextInput,
   TouchableOpacity,
-  BackHandler,
-  ToastAndroid,
   Keyboard
 } from 'react-native';
 import { bindActionCreators } from 'redux';
@@ -23,6 +21,7 @@ import ButtonSingle from '../../components/button/ButtonSingle';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import NavigationService from '../../navigation/NavigationService';
 import { StatusBarRed } from '../../components/StatusBarGlobal';
+import BackHandlerCloseApp from '../../components/BackHandlerCloseApp';
 
 const { width, height } = Dimensions.get('window');
 
@@ -32,8 +31,7 @@ class SignInWithPhoneView extends Component {
     this.state = {
       phoneNumber: '',
       errorPhoneNumber: false,
-      correctFormatPhoneNumber: false,
-      backPressCount: 0
+      correctFormatPhoneNumber: false
     };
   }
   /**
@@ -41,13 +39,6 @@ class SignInWithPhoneView extends Component {
    * FUNCTIONAL
    * ========================
    */
-  componentDidMount() {
-    /** === FOR H/W BACK LISTENER === */
-    this.backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      this.handleBackPress
-    );
-  }
   /** COMPONENT DID UPDATE */
   componentDidUpdate(prevProps) {
     /** CHECK IF SUCCESS */
@@ -71,33 +62,6 @@ class SignInWithPhoneView extends Component {
       }
     }
   }
-  /** === UNMOUNT ALL LISTENER === */
-  componentWillUnmount() {
-    if (this.backHandler) {
-      this.backHandler.remove();
-    }
-  }
-  /** === HARDWARE BACK BUTTON === */
-  handleBackPress = () => {
-    const count = this.state.backPressCount;
-    this.setState({ backPressCount: count + 1 });
-    if (count > 0) {
-      BackHandler.exitApp();
-    } else {
-      ToastAndroid.showWithGravityAndOffset(
-        'Tekan sekali lagi untuk keluar',
-        ToastAndroid.SHORT,
-        ToastAndroid.BOTTOM,
-        25,
-        200
-      );
-    }
-    setTimeout(() => {
-      this.setState({ backPressCount: 0 });
-    }, 3000);
-
-    return true;
-  };
   /** === CHECK PHONE NUMBER EXIST OR NOT */
   checkPhoneExist() {
     Keyboard.dismiss();
@@ -274,6 +238,7 @@ class SignInWithPhoneView extends Component {
   render() {
     return (
       <SafeAreaView>
+        <BackHandlerCloseApp navigation={this.props.navigation} />
         <StatusBarRed />
         <View>
           {this.renderBackground()}
