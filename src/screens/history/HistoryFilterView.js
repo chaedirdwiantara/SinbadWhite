@@ -79,7 +79,11 @@ class HistoryFilterView extends Component {
           <View>
             <Text style={[Fonts.type42, { marginBottom: 5 }]}>Portfolio</Text>
             {this.state.portfolio.length > 0 ? (
-              <Text style={Fonts.type23}>{this.modifyPorfolio()}</Text>
+              <Text style={Fonts.type23}>
+                {this.modifyPorfolio().length >= 55
+                  ? this.modifyPorfolio().substring(0, 55) + '...'
+                  : this.modifyPorfolio()}
+              </Text>
             ) : (
               <Text style={Fonts.type23}>(Semua)</Text>
             )}
