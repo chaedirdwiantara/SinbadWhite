@@ -31,11 +31,11 @@ class AddMerchantOwnerInformation extends Component {
       prevProps.merchant.dataAddMerchant !== this.props.merchant.dataAddMerchant
     ) {
       if (this.props.merchant.dataAddMerchant !== null) {
-        NavigationService.navigate('JourneyView');
-        setTimeout(() => {
-          this.props.journeyPlanGetRefresh();
-          this.props.journeyPlanGetProcess({ page: 0, loading: true });
-        }, 100);
+        NavigationService.navigate('Home');
+        // setTimeout(() => {
+        //   this.props.journeyPlanGetRefresh();
+        //   this.props.journeyPlanGetProcess({ page: 0, loading: true });
+        // }, 100);
       }
     }
   }

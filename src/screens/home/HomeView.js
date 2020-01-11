@@ -20,12 +20,16 @@ import masterColor from '../../config/masterColor';
 import Fonts from '../../helpers/GlobalFont';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import { StatusBarWhite } from '../../components/StatusBarGlobal';
+import ToastType1 from '../../components/toast/ToastType1';
 
 const { width } = Dimensions.get('window');
+
 class HomeView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      showToast: false,
+      notifToast: '',
       menu: [
         {
           title1: 'Journey',
@@ -61,6 +65,24 @@ class HomeView extends Component {
     });
     /** === FOR H/W BACK LISTENER === */
     // BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+  }
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    /** IF ADD MERCHANT SUCCESS */
+    if (
+      prevProps.merchant.dataAddMerchant !== this.props.merchant.dataAddMerchant
+    ) {
+      if (this.props.merchant.dataAddMerchant !== null) {
+        this.setState({
+          openModalCheckout: false,
+          showToast: true,
+          notifToast: 'Tambah Toko Berhasil'
+        });
+        setTimeout(() => {
+          this.setState({ showToast: false });
+        }, 3000);
+      }
+    }
   }
   /** === UNMOUNT ALL LISTENER === */
   componentWillUnmount() {
@@ -263,12 +285,25 @@ class HomeView extends Component {
       </View>
     );
   }
+  /**
+   * ==================
+   * MODAL
+   * =================
+   */
+  renderToast() {
+    return this.state.showToast ? (
+      <ToastType1 margin={30} content={this.state.notifToast} />
+    ) : (
+      <View />
+    );
+  }
   /** === RENDER MAIN === */
   render() {
     return (
       <SafeAreaView>
         <StatusBarWhite />
         {this.renderData()}
+        {this.renderToast()}
       </SafeAreaView>
     );
   }
@@ -312,8 +347,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user }) => {
-  return { user };
+const mapStateToProps = ({ user, merchant }) => {
+  return { user, merchant };
 };
 
 const mapDispatchToProps = dispatch => {
