@@ -177,6 +177,9 @@ export const HISTORY_GET_PAYMENT_STATUS_FAILED =
 export const HISTORY_GET_PROCESS = 'HistoryGetProcess';
 export const HISTORY_GET_SUCCESS = 'HistoryGetSuccess';
 export const HISTORY_GET_FAILED = 'HistoryGetFailed';
+export const HISTORY_GET_RESET = 'HistoryGetReset';
+export const HISTORY_GET_REFRESH = 'HistoryGetRefresh';
+export const HISTORY_GET_LOADMORE = 'HistoryGetLoadMore';
 /** DELETE NEW ORDER PER MERCHANT */
 export const HISTORY_DELETE_NEW_ORDER_NOTIF_PER_MERCHANT =
   'HistoryDeleteNewOrderNotifPerMerchant';

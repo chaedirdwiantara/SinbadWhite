@@ -9,6 +9,7 @@ import masterColor from '../../config/masterColor';
 import MerchantTabView from './MerchantTabView';
 import MerchantListView from './MerchantListView';
 import MerchantMapView from './MerchantMapView';
+import { StatusBarWhite } from '../../components/StatusBarGlobal';
 
 class MerchantView extends Component {
   constructor(props) {
@@ -127,6 +128,7 @@ class MerchantView extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
+        <StatusBarWhite />
         {this.renderHeaderTabs()}
         {this.renderContent()}
       </View>

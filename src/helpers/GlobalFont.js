@@ -403,11 +403,17 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     color: masterColor.mainColor
   },
+  type67: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10,
+    lineHeight: 13,
+    color: masterColor.fontBlack60
+  },
   forCompare: {
-    fontFamily: Fonts.MontserratSemiBold,
-    fontSize: 12,
-    lineHeight: 15,
-    color: masterColor.fontWhite
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10,
+    lineHeight: 13,
+    color: masterColor.fontBlack60
   },
   /** === bottom nav ==== */
   bottomNav: {

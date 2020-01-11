@@ -83,7 +83,7 @@ class SearchBarType1 extends Component {
           onEndEditing={() => this.searchText()}
           value={this.state.search}
           returnKeyType={'search'}
-          placeholder={'Cari nama / id toko disini'}
+          placeholder={this.props.placeholder}
           onChangeText={search => this.setState({ search })}
           style={[Fonts.type8, styles.inputBox]}
         />

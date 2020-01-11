@@ -11,7 +11,7 @@ import Fonts from '../../helpers/GlobalFont';
 import ModalBottomMerchantListDataView from './ModalMerchantListDataView';
 import SearchBarType1 from '../../components/search_bar/SearchBarType1';
 import * as ActionCreators from '../../state/actions';
-import TagList from '../../components/TagList';
+import TagListType1 from '../../components/tag/TagListType1';
 import SkeletonType2 from '../../components/skeleton/SkeletonType2';
 import ButtonSingle from '../../components/button/ButtonSingle';
 
@@ -128,7 +128,7 @@ class ModalBottomMerchantList extends Component {
   /** === TAGS SECTION === */
   renderTagsContent() {
     return this.props.merchant.dataGetPortfolio.length > 0 ? (
-      <TagList
+      <TagListType1
         selected={this.state.portfolio}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
@@ -144,6 +144,7 @@ class ModalBottomMerchantList extends Component {
       <View>
         <SearchBarType1
           searchText={this.state.search}
+          placeholder={'Cari nama / id toko disini'}
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
         />

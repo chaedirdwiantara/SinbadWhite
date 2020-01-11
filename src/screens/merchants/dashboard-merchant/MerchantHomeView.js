@@ -447,6 +447,7 @@ class MerchantHomeView extends Component {
         <FlatList
           showsHorizontalScrollIndicator={false}
           data={this.state.menu}
+          extraData={this.props}
           renderItem={this.renderItemMenu.bind(this)}
           numColumns={4}
           keyExtractor={(item, index) => index.toString()}

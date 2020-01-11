@@ -5,7 +5,7 @@ import Text from 'react-native-text';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor';
-import TagList from '../../components/TagList';
+import TagListType1 from '../../components/tag/TagListType1';
 import SearchBarType1 from '../../components/search_bar/SearchBarType1';
 import MerchantListDataView from './MerchantListDataView';
 import SkeletonType2 from '../../components/skeleton/SkeletonType2';
@@ -54,6 +54,7 @@ class MerchantListView extends Component {
       <View>
         <SearchBarType1
           searchText={this.props.searchText}
+          placeholder={'Cari nama / id toko disini'}
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
         />
@@ -63,7 +64,7 @@ class MerchantListView extends Component {
   /** === TAGS SECTION === */
   renderTagsContent() {
     return this.props.merchant.dataGetPortfolio.length > 0 ? (
-      <TagList
+      <TagListType1
         selected={this.props.portfolio}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}

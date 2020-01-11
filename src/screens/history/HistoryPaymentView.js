@@ -6,27 +6,90 @@ import * as ActionCreators from '../../state/actions';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
-import ComingSoon from '../../components/empty_state/ComingSoon';
+import TagListType2 from '../../components/tag/TagListType2';
+import SkeletonType2 from '../../components/skeleton/SkeletonType2';
+import HistoryDataListView from './HistoryDataListView';
 
 class HistoryPaymentView extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      selectedPaymentStatus: 0
+    };
   }
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
+  componentDidMount() {
+    this.props.historyGetPaymentStatusProcess();
+  }
+
+  parentFunction(data) {
+    if (data.type === 'status') {
+      this.setState({ selectedPaymentStatus: data.data });
+    }
+  }
   /**
    * ========================
    * RENDER VIEW
    * =======================
    */
+  /** === RENDER CONTENT === */
+  renderContent() {
+    return (
+      <HistoryDataListView
+        section={this.props.section}
+        portfolio={this.props.portfolio}
+        dateFilter={this.props.dateFilter}
+        search={this.props.search}
+        status={
+          this.props.history.dataGetPaymentStatus !== null
+            ? this.props.history.dataGetPaymentStatus[
+                this.state.selectedPaymentStatus
+              ].status
+            : ''
+        }
+      />
+    );
+  }
+  /** === TAGS SECTION === */
+  renderTagsContent() {
+    return (
+      <View>
+        <TagListType2
+          selected={this.state.selectedPaymentStatus}
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
+          data={this.props.history.dataGetPaymentStatus}
+        />
+        <View style={GlobalStyle.lines} />
+      </View>
+    );
+  }
+  /** === RENDER SKELETON TAGS === */
+  renderSkeletonTags() {
+    return (
+      <View>
+        <SkeletonType2 />
+        <View style={GlobalStyle.lines} />
+      </View>
+    );
+  }
+  /** === TAG LIST === */
+  renderTagList() {
+    return !this.props.history.loadingGetPaymentStatus &&
+      this.props.history.dataGetPaymentStatus !== null
+      ? this.renderTagsContent()
+      : this.renderSkeletonTags();
+  }
+  /** === MAIN === */
   render() {
     return (
       <View style={styles.mainContainer}>
-        <ComingSoon />
+        {this.renderTagList()}
+        {this.renderContent()}
       </View>
     );
   }
@@ -39,8 +102,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ history }) => {
+  return { history };
 };
 
 const mapDispatchToProps = dispatch => {

@@ -1,28 +1,12 @@
 import React, { Component } from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Dimensions,
-  Keyboard,
-  TouchableOpacity,
-  KeyboardAvoidingView
-} from 'react-native';
+import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import Modal from 'react-native-modal';
-import GestureRecognizer, {
-  swipeDirections
-} from 'react-native-swipe-gestures';
 import moment from 'moment';
 import masterColor from '../../../config/masterColor.json';
 import { StatusBarRedOP50 } from '../../../components/StatusBarGlobal';
 import Fonts from '../../../helpers/GlobalFont';
-import SearchBarType1 from '../../../components/search_bar/SearchBarType1';
 import * as ActionCreators from '../../../state/actions';
-import TagList from '../../../components/TagList';
-import SkeletonType2 from '../../../components/skeleton/SkeletonType2';
 import ButtonSingle from '../../../components/button/ButtonSingle';
 import GlobalStyle from '../../../helpers/GlobalStyle';
 import ModalBottomWithClose from '../../../components/modal_bottom/ModalBottomSwipeCloseNotScroll';

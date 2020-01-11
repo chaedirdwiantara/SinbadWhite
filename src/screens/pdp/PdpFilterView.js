@@ -21,7 +21,7 @@ class PdpFilterView extends Component {
         >
           <View style={{ alignItems: 'center' }}>
             <Image
-              source={require('../../assets/images/pdp/short.png')}
+              source={require('../../assets/icons/pdp/short.png')}
               style={styles.imageIcon}
             />
             <Text style={[Fonts.type40, { textAlign: 'center' }]}>Urutkan</Text>
@@ -37,7 +37,7 @@ class PdpFilterView extends Component {
       iconFilter = (
         <TouchableOpacity onPress={() => this.props.pdpChangeDisplay('list')}>
           <Image
-            source={require('../../assets/images/pdp/grid.png')}
+            source={require('../../assets/icons/pdp/grid.png')}
             style={styles.imageIcon}
           />
           <Text style={[Fonts.type40, { textAlign: 'center' }]}>Grid</Text>
@@ -47,7 +47,7 @@ class PdpFilterView extends Component {
       iconFilter = (
         <TouchableOpacity onPress={() => this.props.pdpChangeDisplay('line')}>
           <Image
-            source={require('../../assets/images/pdp/viewlist-float.png')}
+            source={require('../../assets/icons/pdp/viewlist-float.png')}
             style={styles.imageIcon}
           />
           <Text style={[Fonts.type40, { textAlign: 'center' }]}>List</Text>
@@ -57,7 +57,7 @@ class PdpFilterView extends Component {
       iconFilter = (
         <TouchableOpacity onPress={() => this.props.pdpChangeDisplay('grid')}>
           <Image
-            source={require('../../assets/images/pdp/line.png')}
+            source={require('../../assets/icons/pdp/line.png')}
             style={styles.imageIcon}
           />
           <Text style={[Fonts.type40, { textAlign: 'center' }]}>Line</Text>
@@ -81,7 +81,7 @@ class PdpFilterView extends Component {
         >
           <View>
             <Image
-              source={require('../../assets/images/pdp/filter.png')}
+              source={require('../../assets/icons/pdp/filter.png')}
               style={styles.imageIcon}
             />
             <Text style={[Fonts.type40, { textAlign: 'center' }]}>Filter</Text>

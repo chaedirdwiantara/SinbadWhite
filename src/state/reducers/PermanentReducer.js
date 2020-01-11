@@ -40,5 +40,12 @@ export const permanent = createReducer(INITIAL_STATE, {
         ...action.payload.storeId
       ]
     };
+  },
+  /** DELETE NEW ORDER PER MERCHANT */
+  [types.HISTORY_DELETE_NEW_ORDER_NOTIF_PER_MERCHANT](state, action) {
+    return {
+      ...state,
+      newOrderSuccessPerMerchant: action.payload
+    };
   }
 });

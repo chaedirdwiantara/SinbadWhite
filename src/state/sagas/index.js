@@ -6,6 +6,7 @@ import JourneySaga from './JourneySaga';
 import GlobalSaga from './GlobalSaga';
 import PdpSaga from './PdpSaga';
 import OmsSaga from './OmsSaga';
+import HistorySaga from './HistorySaga';
 
 export default function* rootSaga() {
   yield all([
@@ -14,6 +15,7 @@ export default function* rootSaga() {
     fork(JourneySaga),
     fork(GlobalSaga),
     fork(PdpSaga),
-    fork(OmsSaga)
+    fork(OmsSaga),
+    fork(HistorySaga)
   ]);
 }

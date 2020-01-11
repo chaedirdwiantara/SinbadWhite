@@ -6,10 +6,9 @@ import {
   FlatList,
   TouchableOpacity
 } from 'react-native';
-import { connect } from 'react-redux';
-import GlobalStyle from '../helpers/GlobalStyle';
-import masterColor from '../config/masterColor.json';
-import Fonts from '../helpers/GlobalFont';
+import GlobalStyle from '../../helpers/GlobalStyle';
+import masterColor from '../../config/masterColor.json';
+import Fonts from '../../helpers/GlobalFont';
 
 /**
  * =====================
@@ -19,7 +18,7 @@ import Fonts from '../helpers/GlobalFont';
  * =====================
  */
 
-class TagList extends Component {
+class TagListType2 extends Component {
   constructor(props) {
     super(props);
     this.renderItem = this.renderItem.bind(this);
@@ -35,7 +34,7 @@ class TagList extends Component {
   /** === SEND DATA TO PARENT === */
   selectTag(index) {
     this.setState({ activeTag: index });
-    this.props.parentFunction({ type: 'portfolio', data: index });
+    this.props.parentFunction({ type: 'status', data: index });
   }
   /**
    * =======================
@@ -56,7 +55,7 @@ class TagList extends Component {
   renderTagActive(item) {
     return (
       <View style={this.tagActiveStyle()}>
-        <Text style={Fonts.type2}>{item.name}</Text>
+        <Text style={Fonts.type2}>{item.title}</Text>
       </View>
     );
   }
@@ -87,7 +86,7 @@ class TagList extends Component {
         onPress={() => this.selectTag(index)}
         style={this.tagInactiveStyle()}
       >
-        <Text style={Fonts.type9}>{item.name}</Text>
+        <Text style={Fonts.type9}>{item.title}</Text>
       </TouchableOpacity>
     );
   }
@@ -144,9 +143,4 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({}) => {
-  return {};
-};
-
-// eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, {})(TagList);
+export default TagListType2;

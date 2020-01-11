@@ -6,7 +6,7 @@ import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor';
-import TagList from '../../components/TagList';
+import TagListType1 from '../../components/tag/TagListType1';
 import SearchBarType2 from '../../components/search_bar/SearchBarType2';
 import EmptyData from '../../components/empty_state/EmptyData';
 import { LoadingPage } from '../../components/Loading';
@@ -59,8 +59,8 @@ class MerchantMapView extends Component {
         title={`${this.props.merchant.totalDataGetMerchant} List Store`}
         body={
           <MerchantListDataView
-            search={this.props.search}
-            portfolioIndex={this.props.portfolioIndex}
+            search={this.props.searchText}
+            portfolioIndex={this.props.portfolio}
           />
         }
       />
@@ -107,7 +107,7 @@ class MerchantMapView extends Component {
   /** === TAGS SECTION === */
   renderTagsContent() {
     return this.props.merchant.dataGetPortfolio.length > 0 ? (
-      <TagList
+      <TagListType1
         shadow
         selected={this.props.portfolio}
         onRef={ref => (this.parentFunction = ref)}
