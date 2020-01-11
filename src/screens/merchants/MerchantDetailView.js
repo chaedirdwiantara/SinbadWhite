@@ -139,7 +139,7 @@ class MerchantDetailView extends Component {
             />
           ) : (
             <Image
-              source={require('../../assets/images/merchant/merchant_list.png')}
+              source={require('../../assets/images/merchant/store.png')}
               style={styles.imageHeader}
             />
           )}

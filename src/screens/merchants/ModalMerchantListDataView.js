@@ -98,7 +98,7 @@ class ModalMerchantListDataView extends Component {
             <Image source={item.imageUrl} style={styles.boxImage} />
           ) : (
             <Image
-              source={require('../../assets/images/merchant/merchant_list.png')}
+              source={require('../../assets/images/merchant/store.png')}
               style={styles.boxImage}
             />
           )}
