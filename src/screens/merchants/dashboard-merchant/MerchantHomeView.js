@@ -112,7 +112,7 @@ class MerchantHomeView extends Component {
             this.props.merchant.selectedMerchant.id
           );
         } else if (
-        /** IF CHECK OUT SUCCESS */
+          /** IF CHECK OUT SUCCESS */
           this.props.merchant.dataPostActivity.activity === 'check_in'
         ) {
           this.setState({
@@ -135,6 +135,9 @@ class MerchantHomeView extends Component {
   componentWillUnmount() {
     this.props.journeyPlanGetReset();
     this.props.journeyPlanGetProcess({ page: 0, loading: true });
+    this.props.getJourneyPlanReportProcess(
+      this.props.user.userSuppliers.map(item => item.id)
+    );
   }
   /** === GO TO (MENU PRESS) */
   goTo(page) {
@@ -143,7 +146,7 @@ class MerchantHomeView extends Component {
         NavigationService.navigate('PdpView');
         break;
       case 'history':
-        NavigationService.navigate('PdpView');
+        NavigationService.navigate('HistoryView');
         break;
       case 'checkIn':
         NavigationService.navigate('MerchantCheckinView');
@@ -411,6 +414,17 @@ class MerchantHomeView extends Component {
         key={index}
         onPress={() => this.goTo(item.goTo)}
       >
+        {item.menuName === 'Pesanan' &&
+        this.props.permanent.newOrderSuccessPerMerchant.indexOf(
+          this.props.merchant.selectedMerchant.storeId
+        ) > -1 ? (
+          <View style={styles.boxNotification}>
+            <View style={GlobalStyle.circleRedNotification16} />
+          </View>
+        ) : (
+          <View />
+        )}
+
         <View>
           <Image source={item.icon} style={styles.iconSize} />
         </View>
@@ -669,11 +683,17 @@ const styles = StyleSheet.create({
   iconSize: {
     height: 50,
     width: 70
+  },
+  boxNotification: {
+    position: 'absolute',
+    top: 2,
+    right: 2,
+    zIndex: 1000
   }
 });
 
-const mapStateToProps = ({ auth, merchant }) => {
-  return { auth, merchant };
+const mapStateToProps = ({ auth, merchant, user, permanent }) => {
+  return { auth, merchant, user, permanent };
 };
 
 const mapDispatchToProps = dispatch => {

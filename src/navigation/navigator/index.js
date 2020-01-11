@@ -16,6 +16,7 @@ import ProfileNavigator from './ProfileNavigator';
 import GlobalNavigator from './GlobalNavigator';
 import PdpNavigator from './PdpNavigator';
 import OmsNavigator from './OmsNavigator';
+import HistoryNavigator from './HistoryNavigator';
 
 const MergeAllNavigator = {
   ...NotificationNavigator,
@@ -27,7 +28,8 @@ const MergeAllNavigator = {
   ...ProfileNavigator,
   ...GlobalNavigator,
   ...PdpNavigator,
-  ...OmsNavigator
+  ...OmsNavigator,
+  ...HistoryNavigator
 };
 
 const config = {

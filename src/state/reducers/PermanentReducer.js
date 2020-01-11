@@ -3,7 +3,8 @@ import createReducer from './createReducer';
 
 const INITIAL_STATE = {
   /** data */
-  token: null
+  token: null,
+  newOrderSuccessPerMerchant: []
 };
 
 export const permanent = createReducer(INITIAL_STATE, {
@@ -28,6 +29,16 @@ export const permanent = createReducer(INITIAL_STATE, {
     return {
       ...state,
       token: action.payload.token
+    };
+  },
+  /** SAVE NEW ORDER PER MERCHANT */
+  [types.OMS_CONFIRM_ORDER_SUCCESS](state, action) {
+    return {
+      ...state,
+      newOrderSuccessPerMerchant: [
+        ...state.newOrderSuccessPerMerchant,
+        ...action.payload.storeId
+      ]
     };
   }
 });

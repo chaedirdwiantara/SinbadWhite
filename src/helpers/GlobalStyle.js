@@ -69,6 +69,15 @@ const styles = StyleSheet.create({
     height: undefined,
     aspectRatio: 1 / 1
   },
+  /** NOTIF */
+  circleRedNotification16: {
+    backgroundColor: masterColor.mainColor,
+    borderWidth: 2,
+    height: 16,
+    width: 16,
+    borderColor: masterColor.fontRed40,
+    borderRadius: 10
+  },
   /** SHADOW */
   shadow: {
     borderWidth: 0,

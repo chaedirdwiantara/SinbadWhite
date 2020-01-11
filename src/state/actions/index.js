@@ -9,3 +9,4 @@ export * from './JourneyAction';
 export * from './GlobalAction';
 export * from './PdpAction';
 export * from './OmsAction';
+export * from './HistoryAction';

@@ -13,7 +13,7 @@ class ComingSoon extends Component {
           source={require('../../assets/images/sinbad_image/smile_sinbad.png')}
           style={GlobalStyle.fullImage}
         />
-        <Text style={Fonts.type7}>Coming Soon</Text>
+        <Text style={Fonts.type7}>Segera Hadir</Text>
       </View>
     );
   }

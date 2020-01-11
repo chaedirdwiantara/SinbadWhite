@@ -18,6 +18,31 @@ class HistoryView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  /** === DID MOUNT FUNCTION === */
+  componentDidMount() {
+    this.checkNewOrderNotif();
+  }
+
+  /** WILL UNMOUNT */
+  componentWillUnmount() {
+    this.props.merchantGetLogAllActivityProcess(
+      this.props.merchant.selectedMerchant.id
+    );
+  }
+  /** CHECK NEW ORDER NOTIF */
+  checkNewOrderNotif() {
+    if (this.props.merchant.selectedMerchant !== null) {
+      const data = this.props.permanent.newOrderSuccessPerMerchant;
+      const selectedStoreId = this.props.merchant.selectedMerchant.storeId;
+      const index = this.props.permanent.newOrderSuccessPerMerchant.indexOf(
+        selectedStoreId
+      );
+      if (index > -1) {
+        data.splice(index, 1);
+        this.props.historyDeleteNewOrderNotifPerMerchant(data);
+      }
+    }
+  }
   /**
    * ========================
    * RENDER VIEW
@@ -39,8 +64,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ merchant, permanent }) => {
+  return { merchant, permanent };
 };
 
 const mapDispatchToProps = dispatch => {

@@ -6,15 +6,17 @@ const INITIAL_STATE = {
   loadingGetJourneyPlan: false,
   refreshGetJourneyPlan: false,
   loadingLoadMoreGetJourneyPlan: false,
-  loadingGetPortfolio: false,
   loadingSaveMerchantToJourneyPlan: false,
+  loadingGetJourneyPlanReport: false,
   /** data */
   dataGetJourneyPlan: [],
+  dataGetJourneyPlanReport: null,
   totalDataGetJourneyPlan: 0,
   pageGetJourneyPlan: 0,
   dataSaveMerchantToJourneyPlan: null,
   /** error */
   errorGetJourneyPlan: null,
+  errorGetJourneyPlanReport: null,
   errorSaveMerchantToJourneyPlan: null
 };
 
@@ -108,6 +110,33 @@ export const journey = createReducer(INITIAL_STATE, {
       ...state,
       loadingSaveMerchantToJourneyPlan: false,
       errorSaveMerchantToJourneyPlan: action.payload
+    };
+  },
+  /**
+   * ==============================
+   * GET JOURNEY PLAN REPORT VISIT AND TOTAL PRICE ORDER
+   * ==============================
+   */
+  [types.JOURNEY_PLAN_GET_REPORT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyPlanReport: true,
+      dataGetJourneyPlanReport: null,
+      errorGetJourneyPlanReport: null
+    };
+  },
+  [types.JOURNEY_PLAN_GET_REPORT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyPlanReport: false,
+      dataGetJourneyPlanReport: action.payload
+    };
+  },
+  [types.JOURNEY_PLAN_GET_REPORT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyPlanReport: false,
+      errorGetJourneyPlanReport: action.payload
     };
   }
 });

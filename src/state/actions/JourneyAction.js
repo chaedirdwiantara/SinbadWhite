@@ -54,3 +54,25 @@ export function saveMerchatToJourneyPlanSuccess(data) {
 export function saveMerchatToJourneyPlanFailed(data) {
   return { type: types.SAVE_MERCHANT_TO_JOURNEY_PLAN_FAILED, payload: data };
 }
+/**
+ * ==============================
+ * GET JOURNEY PLAN REPORT VISIT AND TOTAL PRICE ORDER
+ * ==============================
+ */
+export function getJourneyPlanReportProcess(data) {
+  return { type: types.JOURNEY_PLAN_GET_REPORT_PROCESS, payload: data };
+}
+/** === JOURNEY PLAN GET SUCCESS === */
+export function getJourneyPlanReportSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.JOURNEY_PLAN_GET_REPORT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.JOURNEY_PLAN_GET_REPORT_FAILED, payload: data };
+}
+/** === JOURNEY PLAN GET FAILED === */
+export function getJourneyPlanReportFailed(data) {
+  return { type: types.JOURNEY_PLAN_GET_REPORT_FAILED, payload: data };
+}

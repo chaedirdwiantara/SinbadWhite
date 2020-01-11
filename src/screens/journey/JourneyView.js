@@ -3,18 +3,18 @@ import { StyleSheet, View, SafeAreaView } from 'react-native';
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import Fonts from '../../helpers/GlobalFont';
 import ButtonFloatType1 from '../../components/button/ButtonFloatType1';
-import EmptyData from '../../components/empty_state/EmptyData';
 import { StatusBarWhite } from '../../components/StatusBarGlobal';
 import ModalBottomSwipeCloseNotScroll from '../../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalContentMenuAddMerchant from './ModalContentMenuAddMerchant';
 import ModalBottomMerchantList from '../merchants/ModalBottomMerchantList';
 import JourneyListDataView from './JourneyListDataView';
+import { MoneyFormat } from '../../helpers/NumberFormater';
 
 class JourneyView extends Component {
   constructor(props) {
@@ -33,6 +33,9 @@ class JourneyView extends Component {
   componentDidMount() {
     this.props.journeyPlanGetReset();
     this.props.journeyPlanGetProcess({ page: 0, loading: true });
+    this.props.getJourneyPlanReportProcess(
+      this.props.user.userSuppliers.map(item => item.id)
+    );
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
@@ -81,17 +84,29 @@ class JourneyView extends Component {
   }
   /** === RENDER HEADER === */
   renderHeader() {
-    return (
+    return !this.props.journey.loadingGetJourneyPlanReport &&
+      this.props.journey.dataGetJourneyPlanReport !== null ? (
       <View style={styles.headerContainer}>
         <View style={styles.boxHeader}>
-          <Text style={[Fonts.type27, { marginBottom: 5 }]}>0</Text>
+          <Text style={[Fonts.type27, { marginBottom: 5 }]}>
+            {this.props.journey.dataGetJourneyPlanReport.total}/
+            {this.props.journey.dataGetJourneyPlanReport.target}
+          </Text>
           <Text style={Fonts.type26}>Toko Visit</Text>
         </View>
         <View style={styles.boxHeader}>
-          <Text style={[Fonts.type27, { marginBottom: 5 }]}>Rp 0</Text>
+          <Text style={[Fonts.type27, { marginBottom: 5 }]}>
+            {MoneyFormat(
+              this.props.journey.dataGetJourneyPlanReport.totalOrder
+            )}
+          </Text>
           <Text style={Fonts.type26}>Toko Order</Text>
         </View>
       </View>
+    ) : (
+      <SkeletonPlaceholder>
+        <View style={{ height: 70 }} />
+      </SkeletonPlaceholder>
     );
   }
   /** === BUTTON ADD JOURNEY === */
@@ -184,8 +199,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ journey }) => {
-  return { journey };
+const mapStateToProps = ({ journey, user }) => {
+  return { journey, user };
 };
 
 const mapDispatchToProps = dispatch => {

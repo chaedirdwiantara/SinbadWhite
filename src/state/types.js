@@ -3,7 +3,10 @@
  * ALL VARIABLE THAT WILL USED BY ACTIONS AND REDUCERS
  * ====================================================
  */
-/** === GLOBAL === */
+/** =======================
+ * GLOBAL
+ * ========================
+ */
 /** FOR SIGNOUT */
 export const DELETE_ALL_DATA = 'DeleteAllData';
 /** FOR SAVE SEARCH GLOBAL */
@@ -17,7 +20,10 @@ export const LOCATION_GET_FAILED = 'LocationGetFailed';
 export const LOCATION_GET_RESET = 'LocationGetReset';
 export const LOCATION_GET_REFRESH = 'LocationGetRefresh';
 export const LOCATION_GET_LOADMORE = 'LocationGetLoadMore';
-/** === AUTH === */
+/** =======================
+ * AUTH
+ * ========================
+ */
 /** FOR OTP */
 export const OTP_GET_PROCESS = 'OTPgetProcess';
 export const OTP_GET_SUCCESS = 'OTPgetSuccess';
@@ -33,7 +39,10 @@ export const CHECK_PHONE_NUMBER_AVAILABLE_SUCCESS =
   'CheckPhoneNumberAvailbleSuccess';
 export const CHECK_PHONE_NUMBER_AVAILABLE_FAILED =
   'CheckPhoneNumberAvailbleFailed';
-/** === MERCHANT === */
+/** =======================
+ * MERCHANT
+ * ========================
+ */
 /** PORTFOLIO */
 export const PORTFOLIO_GET_PROCESS = 'PortfolioGetProcess';
 export const PORTFOLIO_GET_SUCCESS = 'PortfolioGetSuccess';
@@ -79,7 +88,10 @@ export const MERCHANT_GET_LOG_PER_ACTIVITY_FAILED =
   'MerchantGetLogPerActivityFailed';
 /** SELECTED MERCHANT === */
 export const MERCHANT_SELECTED = 'MerchantSelected';
-/** === JOURNEY === */
+/** =======================
+ * JOURNEY
+ * ========================
+ */
 /** FOR GET JOURNEY PLAN LIST */
 export const JOURNEY_PLAN_GET_PROCESS = 'JourneyPlanGetProcess';
 export const JOURNEY_PLAN_GET_SUCCESS = 'JourneyPlanGetSuccess';
@@ -94,7 +106,14 @@ export const SAVE_MERCHANT_TO_JOURNEY_PLAN_SUCCESS =
   'saveMerchantToJourneyPlanSuccess';
 export const SAVE_MERCHANT_TO_JOURNEY_PLAN_FAILED =
   'saveMerchantToJourneyPlanFailed';
-/** === PDP === */
+/** FOR GET REPORT VISIT AND TOTAL ORDER */
+export const JOURNEY_PLAN_GET_REPORT_PROCESS = 'JourneyPlanGetReportProcess';
+export const JOURNEY_PLAN_GET_REPORT_SUCCESS = 'JourneyPlanGetReportSuccess';
+export const JOURNEY_PLAN_GET_REPORT_FAILED = 'JourneyPlanGetReportFailed';
+/** =======================
+ * PDP
+ * ========================
+ */
 /** FOR GET PDP LIST */
 export const PDP_GET_PROCESS = 'PdpGetProcess';
 export const PDP_GET_SUCCESS = 'PdpGetSuccess';
@@ -109,8 +128,10 @@ export const PDP_OPEN_ORDER = 'PdpOpenOrder';
 export const PDP_CLOSE_ORDER = 'PdpCloseOrder';
 export const PDP_ADD_TO_CART = 'pdpAddToCart';
 export const PDP_MODIFY_PRODUCT_LIST_DATA = 'pdpModifyProductListData';
-
-/** === OMS === */
+/** =======================
+ * OMS
+ * ========================
+ */
 export const OMS_ADD_TO_CART = 'OmsAddToCart';
 // INI SEMENTARA HARUS DI GANTI
 export const OMS_ITEM_FOR_CART = 'omsAddToCart';
@@ -137,7 +158,10 @@ export const OMS_GET_PAYMENT_SUCCESS = 'OmsGetPaymentSuccess';
 export const OMS_GET_PAYMENT_FAILED = 'OmsGetPaymentFailed';
 /** DELETE ALL DATA IN OMS */
 export const OMS_RESET_DATA = 'OmsResetData';
-/** === HISTORY === */
+/** =======================
+ * HISTORY
+ * ========================
+ */
 /** GET ORDER STATUS */
 export const HISTORY_GET_ORDER_STATUS_PROCESS = 'HistoryGetOrderStatusProcess';
 export const HISTORY_GET_ORDER_STATUS_SUCCESS = 'HistoryGetOrderStatusSuccess';
@@ -153,3 +177,6 @@ export const HISTORY_GET_PAYMENT_STATUS_FAILED =
 export const HISTORY_GET_PROCESS = 'HistoryGetProcess';
 export const HISTORY_GET_SUCCESS = 'HistoryGetSuccess';
 export const HISTORY_GET_FAILED = 'HistoryGetFailed';
+/** DELETE NEW ORDER PER MERCHANT */
+export const HISTORY_DELETE_NEW_ORDER_NOTIF_PER_MERCHANT =
+  'HistoryDeleteNewOrderNotifPerMerchant';
