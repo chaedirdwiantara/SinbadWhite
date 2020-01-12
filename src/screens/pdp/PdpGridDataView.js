@@ -30,11 +30,11 @@ class PdpGridDataView extends Component {
     super(props);
     this.state = {};
   }
-  /**
-   * =======================
-   * FUNCTIONAL
-   * =======================
-   */
+  /** === FUNCTIONAL === */
+  toParentFunction(data) {
+    this.props.parentFunction(data);
+  }
+
   onHandleRefresh = () => {
     this.props.pdpGetRefresh();
     this.props.pdpGetProcess({
@@ -90,7 +90,7 @@ class PdpGridDataView extends Component {
     return (item.stock > 0 && item.stock >= item.minQty) ||
       item.unlimitedStock ? (
       <TouchableOpacity
-        onPress={() => this.props.pdpOpenOrder(item)}
+        onPress={() => this.toParentFunction({ type: 'order', data: item })}
         style={[styles.pesanButton, { backgroundColor: '#f0444c' }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>
@@ -124,7 +124,11 @@ class PdpGridDataView extends Component {
               </View>
               <View style={{ marginTop: 5 }}>
                 <Text style={Fonts.type36}>
-                  {MoneyFormat(item.retailBuyingPrice)}
+                  {MoneyFormat(
+                    item.discountedRetailBuyingPrice !== null
+                      ? item.discountedRetailBuyingPrice
+                      : item.retailBuyingPrice
+                  )}
                 </Text>
               </View>
               {item.displayStock && item.stock >= item.minQty ? (

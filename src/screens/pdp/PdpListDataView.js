@@ -4,26 +4,19 @@ import {
   StyleSheet,
   FlatList,
   Image,
-  TouchableOpacity,
-  Dimensions
+  TouchableOpacity
 } from 'react-native';
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Card } from 'react-native-elements';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Octicons from 'react-native-vector-icons/Octicons';
 import * as ActionCreators from '../../state/actions';
-import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import { MoneyFormat } from '../../helpers/NumberFormater';
 import GlobalStyles from '../../helpers/GlobalStyle';
-import SkeletonType4 from '../../components/skeleton/SkeletonType4';
+import SkeletonType1 from '../../components/skeleton/SkeletonType1';
 import { LoadingLoadMore } from '../../components/Loading';
-import Address from '../../components/Address';
 import Fonts from '../../helpers/GlobalFont';
 import EmptyData from '../../components/empty_state/EmptyData';
-const { width, height } = Dimensions.get('window');
 
 class PdpListDataView extends Component {
   constructor(props) {
@@ -35,6 +28,10 @@ class PdpListDataView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  toParentFunction(data) {
+    this.props.parentFunction(data);
+  }
+
   onHandleRefresh = () => {
     this.props.pdpGetRefresh();
     this.props.pdpGetProcess({
@@ -72,14 +69,12 @@ class PdpListDataView extends Component {
    */
   /** === RENDER SKELETON === */
   renderSkeleton() {
-    return <SkeletonType4 />;
+    return <SkeletonType1 />;
   }
   /** === RENDER LOADMORE === */
   renderLoadMore() {
     return this.props.pdp.loadingLoadMoreGetPdp ? (
-      <View style={{ marginBottom: '12%' }}>
-        <LoadingLoadMore />
-      </View>
+      <LoadingLoadMore />
     ) : (
       <View />
     );
@@ -90,13 +85,18 @@ class PdpListDataView extends Component {
     return (item.stock > 0 && item.stock >= item.minQty) ||
       item.unlimitedStock ? (
       <TouchableOpacity
-        onPress={() => this.props.pdpOpenOrder(item)}
-        style={[styles.pesanButton, { backgroundColor: '#f0444c' }]}
+        onPress={() => this.toParentFunction({ type: 'order', data: item })}
+        style={[styles.pesanButton, { backgroundColor: masterColor.mainColor }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>
       </TouchableOpacity>
     ) : (
-      <View style={[styles.pesanButton, { backgroundColor: '#bdbdbd' }]}>
+      <View
+        style={[
+          styles.pesanButton,
+          { backgroundColor: masterColor.fontBlack40 }
+        ]}
+      >
         <Text style={Fonts.type39}>Stok habis</Text>
       </View>
     );
@@ -109,60 +109,42 @@ class PdpListDataView extends Component {
         source={{
           uri: item.catalogueImages[0].imageUrl
         }}
-        style={styles.productImage}
+        style={GlobalStyles.image65}
       />
     );
 
     return (
       <View style={styles.boxContentList} key={index}>
-        <Card containerStyle={styles.cardProduct}>
-          <View style={styles.boxContentListCard}>
-            <TouchableOpacity
-              style={styles.boxContentImage}
-              onPress={() => this.toProductDetail(item)}
-            >
-              <View style={styles.boxImage}>{productImage}</View>
-            </TouchableOpacity>
-            <View style={styles.boxContentDesc}>
-              <View style={styles.boxTitleAndSku}>
-                <TouchableOpacity
-                  style={styles.boxName}
-                  onPress={() => this.toProductDetail(item)}
-                >
-                  <Text style={Fonts.type16}>{item.name}</Text>
-                </TouchableOpacity>
-                <View style={styles.boxSku}>
-                  <Text style={[Fonts.type24, { textAlign: 'right' }]}>
-                    {item.externalId}
-                  </Text>
-                </View>
+        <View style={styles.boxContentListItem}>
+          <View style={styles.boxContentImage}>
+            <View>{productImage}</View>
+          </View>
+          <View style={styles.boxContentDesc}>
+            <View style={styles.boxTitleAndSku}>
+              <View style={styles.boxName}>
+                <Text style={Fonts.type16}>{item.name}</Text>
               </View>
-              <View style={styles.boxOrderedAndButton}>
-                <TouchableOpacity
-                  style={styles.boxPrice}
-                  onPress={() => this.toProductDetail(item)}
-                >
-                  <Text style={Fonts.type24}>
-                    {MoneyFormat(item.retailBuyingPrice)}
-                  </Text>
-                </TouchableOpacity>
-                {item.addToCart ? (
-                  <View style={styles.boxOrdered}>
-                    <Text style={styles.productQtyOrderText}>
-                      {item.qtyToCart} pcs
-                    </Text>
-                  </View>
-                ) : (
-                  <View style={styles.boxOrdered}>
-                    <Text style={styles.productQtyOrderText}>{''}</Text>
-                  </View>
-                )}
-
-                <View style={styles.boxButton}>{this.renderButton(item)}</View>
+              <View style={styles.boxSku}>
+                <Text style={[Fonts.type8, { textAlign: 'right' }]}>
+                  SKU: {item.externalId}
+                </Text>
               </View>
             </View>
+            <View style={styles.boxOrderedAndButton}>
+              <View style={styles.boxPrice}>
+                <Text style={Fonts.type24}>
+                  {MoneyFormat(
+                    item.discountedRetailBuyingPrice !== null
+                      ? item.discountedRetailBuyingPrice
+                      : item.retailBuyingPrice
+                  )}
+                </Text>
+              </View>
+              <View style={styles.boxButton}>{this.renderButton(item)}</View>
+            </View>
           </View>
-        </Card>
+        </View>
+        <View style={[GlobalStyles.lines, { marginLeft: 10 }]} />
       </View>
     );
   }
@@ -176,7 +158,7 @@ class PdpListDataView extends Component {
   /** === RENDER DATA CONTENT === */
   renderContent() {
     return (
-      <View style={{ flex: 1, paddingBottom: '7%' }}>
+      <View style={{ flex: 1 }}>
         <FlatList
           contentContainerStyle={styles.boxFlatlist}
           data={this.props.pdp.dataGetPdp}
@@ -219,87 +201,51 @@ const styles = StyleSheet.create({
     backgroundColor: masterColor.backgroundWhite
   },
   boxContentList: {
-    height: 0.18 * height,
-    width: '100%',
-    paddingHorizontal: '1.5%',
-    paddingVertical: 5,
-    justifyContent: 'center',
-    alignItems: 'center'
+    width: '100%'
   },
   boxFlatlist: {
-    paddingTop: 10,
-    paddingBottom: 70,
-    paddingHorizontal: 5
+    paddingBottom: 30
   },
-  cardProduct: {
-    height: '100%',
-    width: '100%',
-    borderRadius: 5,
-    padding: 0,
-    borderWidth: 0,
-    elevation: 2,
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowColor: '#777777',
-    margin: 0,
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    alignItems: 'center'
-  },
-  boxContentListCard: {
+  boxContentListItem: {
     flexDirection: 'row',
-    height: '100%',
-    width: 0.95 * width,
-    padding: 10
+    paddingHorizontal: 10,
+    paddingVertical: 13
   },
   boxContentImage: {
     justifyContent: 'center',
-    height: '100%',
+    marginRight: 10,
+    height: 65,
     alignItems: 'center',
-    width: 0.3 * 0.95 * width
+    width: 65
   },
   boxContentDesc: {
-    width: '70%'
-  },
-  boxImage: {
-    height: '90%',
-    justifyContent: 'center',
-    alignItems: 'center'
+    flex: 1
   },
   boxTitleAndSku: {
     flexDirection: 'row',
-    justifyContent: 'flex-start'
+    justifyContent: 'space-between'
   },
   boxName: {
     flex: 1,
-    alignItems: 'flex-start',
-    paddingVertical: 2,
-    paddingHorizontal: 5
+    alignItems: 'flex-start'
   },
   boxSku: {
-    paddingRight: 3,
-    justifyContent: 'flex-start'
+    width: '40%'
   },
   boxPrice: {
-    paddingVertical: 2,
-    paddingHorizontal: 5,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-start'
   },
   boxOrderedAndButton: {
+    paddingTop: 5,
     flexDirection: 'row'
   },
   boxStock: {
-    paddingHorizontal: 5,
-    // paddingVertical: 2,
     justifyContent: 'center',
     alignItems: 'flex-start'
   },
   boxButton: {
-    flex: 1,
-    paddingRight: 5,
     justifyContent: 'center',
     alignItems: 'flex-end'
   },
@@ -308,25 +254,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-start'
   },
-  productImage: {
-    resizeMode: 'contain',
-    height: '100%',
-    width: undefined,
-    aspectRatio: 1 / 1
-  },
-  imageEmpty: {
-    height: 150,
-    width: 150
-  },
   /** button */
   pesanButton: {
-    height: 25,
-    width: 118,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 15,
-    marginTop: 10,
-    marginBottom: 5
+    borderRadius: 4,
+    paddingVertical: 7,
+    paddingHorizontal: 20
   }
 });
 

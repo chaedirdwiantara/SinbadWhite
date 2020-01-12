@@ -1,24 +1,26 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import Text from 'react-native-text';
+import { View, StyleSheet } from 'react-native';
 import { bindActionCreators } from 'redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
-import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
 import { StatusBarRed } from '../../components/StatusBarGlobal';
 import SearchBarType3 from '../../components/search_bar/SearchBarType3';
 import CartGlobal from '../../components/CartGlobal';
-import PdpGridDataView from './PdpGridDataView';
 import PdpListDataView from './PdpListDataView';
-import PdpLineDataView from './PdpLineDataView';
+import PdpOrderView from './PdpOrderView';
+import ModalBottomType3 from '../../components/modal_bottom/ModalBottomType3';
+import ToastType1 from '../../components/toast/ToastType1';
 
 class PdpSearchView extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      openOrder: false,
+      addProductNotif: false,
+      addProductNotifText: '',
+      selectedProduct: null
+    };
   }
   /**
    * =======================
@@ -28,13 +30,16 @@ class PdpSearchView extends Component {
 
   componentDidMount() {
     this.props.pdpGetReset();
+    this.props.pdpGetProcess({
+      page: 0,
+      loading: true,
+      searchText: this.props.global.search,
+      supplierId: this.props.user.userSuppliers[0].supplierId
+    });
   }
 
   componentDidUpdate(prevState) {
-    if (
-      prevState.global.search !== this.props.global.search &&
-      this.props.global.search !== ''
-    ) {
+    if (prevState.global.search !== this.props.global.search) {
       this.props.pdpGetReset();
       this.props.pdpGetProcess({
         page: 0,
@@ -45,19 +50,41 @@ class PdpSearchView extends Component {
     }
   }
 
+  /** CALLED FROM CHILD */
+  parentFunction(data) {
+    switch (data.type) {
+      case 'order':
+        this.setState({ openOrder: true, selectedProduct: data.data });
+        break;
+      case 'addProduct':
+        this.setState({
+          openOrder: false,
+          addProductNotif: true,
+          addProductNotifText: 'Produk berhasil ditambahkan ke keranjang'
+        });
+        setTimeout(() => {
+          this.setState({ addProductNotif: false });
+        }, 3000);
+        break;
+      default:
+        break;
+    }
+  }
+
   /**
    * ========================
    * RENDER VIEW
    * =======================
    */
   renderPdpData() {
-    if (this.props.pdp.pdpDisplay === 'grid') {
-      return <PdpGridDataView />;
-    } else if (this.props.pdp.pdpDisplay === 'list') {
-      return <PdpListDataView />;
-    } else if (this.props.pdp.pdpDisplay === 'line') {
-      return <PdpLineDataView />;
-    }
+    return this.props.global.search !== '' ? (
+      <PdpListDataView
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+      />
+    ) : (
+      <View />
+    );
   }
   /**
    * ========================
@@ -78,12 +105,47 @@ class PdpSearchView extends Component {
       )
     };
   };
+  /** MODAL */
+  renderModalOrder() {
+    return this.state.openOrder ? (
+      <ModalBottomType3
+        open={this.state.openOrder}
+        title={'Masukan Jumlah'}
+        content={
+          <PdpOrderView
+            data={this.state.selectedProduct}
+            onRef={ref => (this.parentFunction = ref)}
+            parentFunction={this.parentFunction.bind(this)}
+          />
+        }
+        close={() => this.setState({ openOrder: false })}
+        typeClose={'cancel'}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /**
+   * ===================
+   * TOAST
+   * ====================
+   */
+  renderToast() {
+    return this.state.addProductNotif ? (
+      <ToastType1 margin={10} content={this.state.addProductNotifText} />
+    ) : (
+      <View />
+    );
+  }
   /** MAIN */
   render() {
     return (
       <View style={styles.mainContainer}>
         <StatusBarRed />
         {this.renderPdpData()}
+        {/* order bottom */}
+        {this.renderModalOrder()}
+        {this.renderToast()}
       </View>
     );
   }

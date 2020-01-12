@@ -130,7 +130,7 @@ export function saveChecklistCart(data) {
  */
 export function omsAddToCart(data) {
   const allPropsData = Store.getState();
-  const dataCart = allPropsData.oms.dataCart;
+  const dataCart = allPropsData.permanent.dataCart;
   const dataCheckBoxlistCart = allPropsData.oms.dataCheckBoxlistCart;
   /**
    * ===============================================================
@@ -154,17 +154,21 @@ export function omsAddToCart(data) {
     }
   }
   /** =============================================================== */
-  if (allPropsData.oms.dataCart.length > 0) {
+  if (allPropsData.permanent.dataCart.length > 0) {
     const indexDataCart = dataCart.findIndex(
       itemCart => itemCart.catalogueId === data.catalogueId
     );
 
     switch (data.method) {
       case 'add':
-        dataCart.push({
-          catalogueId: data.catalogueId,
-          qty: data.qty
-        });
+        if (indexDataCart > -1) {
+          dataCart[indexDataCart].qty = data.qty;
+        } else {
+          dataCart.push({
+            catalogueId: data.catalogueId,
+            qty: data.qty
+          });
+        }
         break;
       case 'update':
         dataCart[indexDataCart].qty = data.qty;

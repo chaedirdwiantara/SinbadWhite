@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import { Card } from 'react-native-elements';
 import masterColor from '../../config/masterColor';
 import GlobalStyles from '../../helpers/GlobalStyle';
 
@@ -23,45 +22,60 @@ class SkeletonType4 extends Component {
   /** === RENDER ITEM SKELETON === */
   renderItem({ item, index }) {
     return (
-      <View style={styles.boxContentList}>
-        <Card containerStyle={styles.cardProduct}>
-          <View style={styles.boxContentListCard}>
+      <View style={styles.mainContent} key={index}>
+        <View style={styles.boxMainContent}>
+          <View style={[GlobalStyles.shadow5, styles.cardMainContent]}>
             <SkeletonPlaceholder>
               <View style={{ alignItems: 'center', width: '100%' }}>
-                <View
-                  style={[
-                    styles.boxImage,
-                    { borderRadius: 15, width: '100%', height: '50%' }
-                  ]}
-                />
-                <View style={styles.titleName} />
-                <View style={styles.prices} />
-                <View
-                  style={{
-                    height: '5%',
-                    borderRadius: 15,
-                    marginVertical: 5,
-                    width: '60%'
-                  }}
-                />
+                <View style={{ width: '100%', height: 135 }} />
+                <View style={{ width: '100%', paddingHorizontal: 11 }}>
+                  <View
+                    style={{
+                      height: 13,
+                      borderRadius: 15,
+                      marginTop: 10,
+                      width: '90%'
+                    }}
+                  />
+                  <View
+                    style={{
+                      height: 13,
+                      borderRadius: 15,
+                      marginVertical: 5,
+                      width: '70%'
+                    }}
+                  />
+                  <View
+                    style={{
+                      height: 13,
+                      borderRadius: 15,
+                      marginVertical: 5,
+                      width: '60%'
+                    }}
+                  />
+                  <View
+                    style={{
+                      height: 10,
+                      borderRadius: 15,
+                      marginVertical: 5,
+                      width: '60%'
+                    }}
+                  />
+                </View>
                 <View
                   style={{
                     height: 25,
                     borderRadius: 15,
-                    marginVertical: 5,
-                    width: 120
+                    marginVertical: 10,
+                    width: 128
                   }}
                 />
               </View>
             </SkeletonPlaceholder>
           </View>
-        </Card>
+        </View>
       </View>
     );
-  }
-  /** === RENDER SEPARATOR === */
-  renderSeparator() {
-    return <View style={[GlobalStyles.lines, { marginLeft: 9 }]} />;
   }
   /** === RENDER SKELETON === */
   renderSkeleton() {
@@ -74,7 +88,6 @@ class SkeletonType4 extends Component {
           numColumns={2}
           renderItem={this.renderItem.bind(this)}
           keyExtractor={(item, index) => index.toString()}
-          ItemSeparatorComponent={this.renderSeparator}
         />
       </View>
     );
@@ -87,64 +100,27 @@ class SkeletonType4 extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    height: '100%',
+    flex: 1,
     backgroundColor: masterColor.backgroundWhite
   },
   flatListContainer: {
-    paddingTop: 30,
-    paddingBottom: 16
+    paddingTop: 16,
+    paddingHorizontal: 11,
+    paddingBottom: 30
   },
-  boxImage: {
-    height: '55%',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  boxContentList: {
-    height: 0.35 * height,
+  mainContent: {
     width: '50%',
-    paddingHorizontal: '1.5%',
-    paddingVertical: '1.5%',
     justifyContent: 'center',
     alignItems: 'center'
   },
-  boxFlatlist: {
-    paddingTop: 10,
-    paddingBottom: 70,
-    paddingHorizontal: 5
-  },
-  cardProduct: {
-    height: '100%',
-    width: '100%',
-    borderRadius: 5,
-    padding: 0,
-    borderWidth: 0,
-    elevation: 2,
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowColor: '#777777',
-    margin: 0,
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    alignItems: 'center'
-  },
-  boxContentListCard: {
-    height: '100%',
-    padding: 10,
-    width: 0.45 * width
-  },
-  titleName: {
-    height: '8%',
-    borderRadius: 15,
-    marginTop: 5,
-    width: '90%'
-  },
-  prices: {
-    height: '5%',
-    borderRadius: 15,
-    marginTop: 2,
+  boxMainContent: {
+    paddingBottom: 10,
+    paddingHorizontal: 5,
     width: '100%'
+  },
+  cardMainContent: {
+    borderRadius: 5,
+    backgroundColor: masterColor.backgroundWhite
   }
 });
 

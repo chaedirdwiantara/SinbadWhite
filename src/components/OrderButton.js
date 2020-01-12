@@ -8,7 +8,9 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 // import { RFPercentage } from 'react-native-responsive-fontsize';
-import { Fonts } from '../utils/Fonts';
+import Fonts from '../helpers/GlobalFont';
+import masterColor from '../config/masterColor.json';
+import GlobalStyle from '../helpers/GlobalStyle';
 
 class OrderButton extends Component {
   constructor(props) {
@@ -48,99 +50,42 @@ class OrderButton extends Component {
   }
 
   /**
-   * =======================================
-   * function plus button begin
+   * =======================
+   * PLUS BUTTON CAL
+   * =======================
    */
-  onPressPlusIn(pressType) {
-    if (pressType === 'defaultPress') {
-      let qty = this.state.qty + this.state.multipleQty;
-      if (!this.state.unlimitedStock) {
-        if (qty > this.state.stock) {
-          const modMaxQtyFromPackage =
-            (this.state.stock - this.state.minQty) % this.state.packagedQty;
-          qty =
-            this.state.stock - (modMaxQtyFromPackage % this.state.multipleQty);
-          this.setState({ plusButtonDisable: true });
-        }
-      }
-      this.sendValueToParent(qty);
-      this.setState({ qty });
-    }
-    this.timerUp = setTimeout(() => {
-      if (pressType === 'defaultPress') {
-        if (this.state.qty <= this.state.packagedQty) {
-          const qty = this.state.packagedQty;
-          this.sendValueToParent(qty);
-          this.setState({ qty });
-        } else {
-          const qty =
-            (Math.floor(this.state.qty / this.state.packagedQty) + 1) *
-            this.state.packagedQty;
-          this.sendValueToParent(qty);
-          this.setState({ qty });
-        }
-      }
-      let qty = this.state.qty + this.state.packagedQty;
-      if (!this.state.unlimitedStock) {
-        if (qty > this.state.stock) {
-          const modMaxQtyFromPackage =
-            (this.state.stock - this.state.minQty) % this.state.packagedQty;
-          qty =
-            this.state.stock - (modMaxQtyFromPackage % this.state.multipleQty);
-          this.setState({ plusButtonDisable: true });
-          this.onPressPlusOut();
-        } else {
-          this.onPressPlusIn('longPress');
-        }
-      }
-      this.sendValueToParent(qty);
-      this.setState({ qty });
-    }, 200);
-  }
-
-  onPressPlusOut() {
-    for (let x = 0; x < 5; x++) {
-      clearTimeout(this.timerUp + x);
-    }
-  }
-
-  /**
-   * =======================================
-   * function plus button end
-   */
-
-  /**
-   * =======================================
-   * function minus button begin
-   */
-  onPressMinusIn(pressType) {
-    this.setState({ plusButtonDisable: false });
-    if (pressType === 'defaultPress') {
-      const qty = this.state.qty - this.state.multipleQty;
-      this.sendValueToParent(qty);
-      this.setState({ qty });
-    }
-    this.timerDown = setTimeout(() => {
-      if (pressType === 'defaultPress') {
-        const qty = this.state.qty + this.state.multipleQty;
+  onPressPlus() {
+    let qty = this.state.qty + this.state.multipleQty;
+    if (!this.state.unlimitedStock) {
+      if (this.state.stock - qty < this.state.multipleQty) {
+        this.sendValueToParent(qty);
+        this.setState({
+          qty,
+          plusButtonDisable: true
+        });
+      } else {
         this.sendValueToParent(qty);
         this.setState({ qty });
       }
-      let qty = this.state.qty - this.state.packagedQty;
-      if (qty > this.state.minQty) {
-        this.onPressMinusIn('longPress');
-      } else {
-        qty = this.state.minQty;
-        this.onPressMinusOut();
-      }
+    } else {
       this.sendValueToParent(qty);
       this.setState({ qty });
-    }, 200);
+    }
   }
-
-  onPressMinusOut() {
-    for (let x = 0; x < 5; x++) {
-      clearTimeout(this.timerDown + x);
+  /**
+   * =======================
+   * MINUS BUTTON CAL
+   * =======================
+   */
+  onPressMinus() {
+    this.setState({ plusButtonDisable: false });
+    const qty = this.state.qty - this.state.multipleQty;
+    if (qty < this.state.minQty) {
+      this.sendValueToParent(this.state.minQty);
+      this.setState({ qty: this.state.minQty });
+    } else {
+      this.sendValueToParent(this.state.minQty);
+      this.setState({ qty });
     }
   }
 
@@ -159,50 +104,13 @@ class OrderButton extends Component {
     });
   }
 
-  minQtyMultipleQtyMoreThanStock() {
+  modifyQty() {
+    const valueAfterMinimum = this.state.qty - this.state.minQty;
     return (
-      Math.floor(
-        (this.state.stock - this.state.minQty) / this.state.multipleQty
-      ) *
+      Math.floor(valueAfterMinimum / this.state.multipleQty) *
         this.state.multipleQty +
       this.state.minQty
     );
-  }
-
-  minQtyMultipleQtyLessThanStock() {
-    return (
-      Math.floor(
-        (this.state.qty - this.state.minQty) / this.state.multipleQty
-      ) *
-        this.state.multipleQty +
-      this.state.minQty
-    );
-  }
-
-  minQtyMultipleQtyPackageQtyMoreThanStock() {
-    const modPackage =
-      Math.floor(this.state.stock / this.state.packagedQty) *
-      this.state.packagedQty;
-    const modMultiple =
-      Math.floor((this.state.stock - modPackage) / this.state.multipleQty) *
-      this.state.multipleQty;
-    const modMinimum = Math.floor(
-      (this.state.stock - (modPackage + modMultiple)) / this.state.minQty
-    );
-    return modPackage + modMultiple + modMinimum;
-  }
-
-  minQtyMultipleQtyPackageQtyLessThanStock() {
-    const modPackage =
-      Math.floor(this.state.qty / this.state.packagedQty) *
-      this.state.packagedQty;
-    const modMultiple =
-      Math.floor((this.state.qty - modPackage) / this.state.multipleQty) *
-      this.state.multipleQty;
-    const modMinimum = Math.floor(
-      (this.state.qty - (modPackage + modMultiple)) / this.state.minQty
-    );
-    return modPackage + modMultiple + modMinimum;
   }
 
   checkQtyAfterEnter() {
@@ -211,37 +119,16 @@ class OrderButton extends Component {
       this.setState({ qty: this.state.minQty });
     }
     if (!this.state.unlimitedStock) {
-      if (this.state.qty > this.state.stock) {
-        if (this.state.qty < this.state.packagedQty) {
-          this.sendValueToParent(this.minQtyMultipleQtyMoreThanStock());
-          this.setState({
-            qty: this.minQtyMultipleQtyMoreThanStock(),
-            plusButtonDisable: true
-          });
-        } else {
-          this.sendValueToParent(
-            this.minQtyMultipleQtyPackageQtyMoreThanStock()
-          );
-          this.setState({
-            qty: this.minQtyMultipleQtyPackageQtyMoreThanStock(),
-            plusButtonDisable: true
-          });
+      if (this.modifyQty() <= this.state.stock) {
+        if (this.state.stock - this.modifyQty() <= this.state.multipleQty) {
+          this.setState({ plusButtonDisable: true });
         }
-      } else if (this.state.qty < this.state.packagedQty) {
-        this.sendValueToParent(this.minQtyMultipleQtyLessThanStock());
-        this.setState({ qty: this.minQtyMultipleQtyLessThanStock() });
-      } else {
-        this.sendValueToParent(this.minQtyMultipleQtyPackageQtyLessThanStock());
-        this.setState({
-          qty: this.minQtyMultipleQtyPackageQtyLessThanStock()
-        });
+        this.sendValueToParent(this.modifyQty());
+        this.setState({ qty: this.modifyQty() });
       }
-    } else if (this.state.qty < this.state.packagedQty) {
-      this.sendValueToParent(this.minQtyMultipleQtyLessThanStock());
-      this.setState({ qty: this.minQtyMultipleQtyLessThanStock() });
     } else {
-      this.sendValueToParent(this.minQtyMultipleQtyPackageQtyLessThanStock());
-      this.setState({ qty: this.minQtyMultipleQtyPackageQtyLessThanStock() });
+      this.sendValueToParent(this.modifyQty());
+      this.setState({ qty: this.modifyQty() });
     }
   }
 
@@ -251,16 +138,15 @@ class OrderButton extends Component {
 
   render() {
     return (
-      <View style={styles.containerInputQty}>
+      <View style={[styles.containerInputQty, GlobalStyle.shadowForBox]}>
         {this.state.qty <= this.state.minQty ? (
           <View style={styles.minusButtonDisabled}>
-            <Text style={styles.minusText}>-</Text>
+            <Text style={styles.minusTextDisabled}>-</Text>
           </View>
         ) : (
           <TouchableOpacity
             style={styles.minusButton}
-            onPressIn={() => this.onPressMinusIn('defaultPress')}
-            onPressOut={() => this.onPressMinusOut()}
+            onPress={() => this.onPressMinus()}
           >
             <Text style={styles.minusText}>-</Text>
           </TouchableOpacity>
@@ -269,7 +155,7 @@ class OrderButton extends Component {
         <View style={{ width: '30%', backgroundColor: '#f0444c' }} />
         <View style={styles.inputList}>
           <TextInput
-            selectionColor={'#f0444c'}
+            selectionColor={masterColor.mainColor}
             returnKeyType="done"
             value={this.state.qty.toString()}
             keyboardType="number-pad"
@@ -281,18 +167,17 @@ class OrderButton extends Component {
             onChangeText={qty =>
               this.setState({ qty, plusButtonDisable: false })
             }
-            style={styles.input}
+            style={[styles.input, Fonts.type8]}
           />
         </View>
         {this.state.plusButtonDisable ? (
           <View style={styles.plusButtonDisabled}>
-            <Text style={styles.plusText}>+</Text>
+            <Text style={styles.plusTextDisabled}>+</Text>
           </View>
         ) : (
           <TouchableOpacity
             style={styles.plusButton}
-            onPressIn={() => this.onPressPlusIn('defaultPress')}
-            onPressOut={() => this.onPressPlusOut()}
+            onPress={() => this.onPressPlus()}
           >
             <Text style={styles.plusText}>+</Text>
           </TouchableOpacity>
@@ -311,52 +196,57 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  /** FOR MINUS BUTTON */
   minusButton: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0444c',
-    borderBottomLeftRadius: 15,
-    borderTopLeftRadius: 15
+    backgroundColor: masterColor.backgroundColorWhite
   },
   minusButtonDisabled: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#bdbdbd',
-    borderBottomLeftRadius: 15,
-    borderTopLeftRadius: 15
+    backgroundColor: masterColor.backgroundColorWhite
   },
+  minusText: {
+    color: masterColor.mainColor,
+    fontSize: 18,
+    marginBottom: 3,
+    marginRight: '10%'
+  },
+  minusTextDisabled: {
+    color: masterColor.fontBlack40,
+    fontSize: 18,
+    marginBottom: 3,
+    marginRight: '10%'
+  },
+  /** FOR PLUS BUTTON */
   plusButton: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0444c',
-    borderTopRightRadius: 15,
-    borderBottomRightRadius: 15
+    backgroundColor: masterColor.backgroundColorWhite
   },
   plusButtonDisabled: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#bdbdbd',
-    borderTopRightRadius: 15,
-    borderBottomRightRadius: 15
-  },
-  minusText: {
-    // fontFamily: Fonts.MontserratExtraBold,
-    color: '#fff',
-    // fontSize: RFPercentage(2.5),
-    marginBottom: 3,
-    marginRight: '10%'
+    backgroundColor: masterColor.backgroundColorWhite
   },
   plusText: {
-    // fontFamily: Fonts.MontserratExtraBold,
-    color: '#fff',
-    // fontSize: RFPercentage(2.5),
-    marginBottom: 2,
+    color: masterColor.mainColor,
+    fontSize: 18,
+    marginBottom: 3,
     marginLeft: '10%'
   },
+  plusTextDisabled: {
+    color: masterColor.fontBlack40,
+    fontSize: 18,
+    marginBottom: 3,
+    marginLeft: '10%'
+  },
+  /** FOR INPUT  */
   inputList: {
     zIndex: 1000,
     height: '100%',
@@ -369,22 +259,15 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   input: {
-    // fontSize: RFPercentage(1.5),
-    color: '#f0444c',
     padding: 0,
     alignItems: 'center',
     height: '100%',
     width: '100%',
     textAlign: 'center'
-    // fontFamily: Fonts.MontserratBlack
   }
 });
 
-const mapStateToProps = ({ navigation }) => {
-  return { navigation };
-};
-
-export default connect(mapStateToProps, {})(OrderButton);
+export default OrderButton;
 
 /**
  * ========================================

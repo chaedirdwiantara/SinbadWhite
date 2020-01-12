@@ -10,32 +10,73 @@ import Fonts from '../../helpers/GlobalFont';
 class PdpFilterView extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      layout: 'grid'
+    };
   }
-
+  /** === FUNCTIONAL === */
+  toParentFunction(data) {
+    this.props.parentFunction(data);
+    if (data.type === 'layout') {
+      this.setState({ layout: data.data });
+    }
+  }
+  /** === RENDER SORT === */
   renderSort() {
     return (
-      <View>
-        <TouchableOpacity
-          onPress={() => this.openSort()}
-          style={styles.boxContent}
-        >
-          <View style={{ alignItems: 'center' }}>
-            <Image
-              source={require('../../assets/icons/pdp/short.png')}
-              style={styles.imageIcon}
-            />
-            <Text style={[Fonts.type40, { textAlign: 'center' }]}>Urutkan</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity onPress={() => this.toParentFunction({ type: 'sort' })}>
+        <View style={{ alignItems: 'center' }}>
+          <Image
+            source={require('../../assets/icons/pdp/short.png')}
+            style={styles.imageIcon}
+          />
+          <Text style={[Fonts.type40, { textAlign: 'center' }]}>Urutkan</Text>
+        </View>
+      </TouchableOpacity>
     );
   }
-
+  /** === RENDER FILTER === */
+  renderFilter() {
+    return (
+      <TouchableOpacity
+        onPress={() => this.toParentFunction({ type: 'filter' })}
+      >
+        <View style={{ alignItems: 'center' }}>
+          <Image
+            source={require('../../assets/icons/pdp/filter.png')}
+            style={styles.imageIcon}
+          />
+          <Text style={[Fonts.type40, { textAlign: 'center' }]}>Filter</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+  /** === RENDER CATEGORY === */
+  renderCategory() {
+    return (
+      <TouchableOpacity
+        onPress={() => this.toParentFunction({ type: 'category' })}
+      >
+        <View style={{ alignItems: 'center' }}>
+          <Image
+            source={require('../../assets/icons/pdp/category.png')}
+            style={styles.imageIcon}
+          />
+          <Text style={[Fonts.type40, { textAlign: 'center' }]}>Kategori</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+  /** === LAYOUT === */
   renderLayout() {
     let iconFilter = null;
-    if (this.props.pdp.pdpDisplay === 'grid') {
+    if (this.state.layout === 'grid') {
       iconFilter = (
-        <TouchableOpacity onPress={() => this.props.pdpChangeDisplay('list')}>
+        <TouchableOpacity
+          onPress={() =>
+            this.toParentFunction({ type: 'layout', data: 'list' })
+          }
+        >
           <Image
             source={require('../../assets/icons/pdp/grid.png')}
             style={styles.imageIcon}
@@ -43,9 +84,13 @@ class PdpFilterView extends Component {
           <Text style={[Fonts.type40, { textAlign: 'center' }]}>Grid</Text>
         </TouchableOpacity>
       );
-    } else if (this.props.pdp.pdpDisplay === 'list') {
+    } else if (this.state.layout === 'list') {
       iconFilter = (
-        <TouchableOpacity onPress={() => this.props.pdpChangeDisplay('line')}>
+        <TouchableOpacity
+          onPress={() =>
+            this.toParentFunction({ type: 'layout', data: 'line' })
+          }
+        >
           <Image
             source={require('../../assets/icons/pdp/viewlist-float.png')}
             style={styles.imageIcon}
@@ -53,9 +98,13 @@ class PdpFilterView extends Component {
           <Text style={[Fonts.type40, { textAlign: 'center' }]}>List</Text>
         </TouchableOpacity>
       );
-    } else if (this.props.pdp.pdpDisplay === 'line') {
+    } else if (this.state.layout === 'line') {
       iconFilter = (
-        <TouchableOpacity onPress={() => this.props.pdpChangeDisplay('grid')}>
+        <TouchableOpacity
+          onPress={() =>
+            this.toParentFunction({ type: 'layout', data: 'grid' })
+          }
+        >
           <Image
             source={require('../../assets/icons/pdp/line.png')}
             style={styles.imageIcon}
@@ -64,39 +113,16 @@ class PdpFilterView extends Component {
         </TouchableOpacity>
       );
     }
-
-    return (
-      <View>
-        <View style={styles.boxContent}>{iconFilter}</View>
-      </View>
-    );
+    return <View style={{ alignItems: 'center' }}>{iconFilter}</View>;
   }
-
-  renderFilter() {
-    return (
-      <View>
-        <TouchableOpacity
-          style={styles.boxContent}
-          onPress={() => this.openFilter()}
-        >
-          <View>
-            <Image
-              source={require('../../assets/icons/pdp/filter.png')}
-              style={styles.imageIcon}
-            />
-            <Text style={[Fonts.type40, { textAlign: 'center' }]}>Filter</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-
+  /** === MAIN === */
   render() {
     return (
       <View style={[styles.mainContainer, GlobalStyle.shadowForBox10]}>
         <View style={styles.boxContent}>{this.renderSort()}</View>
         <View style={styles.boxContent}>{this.renderFilter()}</View>
         <View style={styles.boxContent}>{this.renderLayout()}</View>
+        <View style={styles.boxContent}>{this.renderCategory()}</View>
       </View>
     );
   }
@@ -106,6 +132,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     backgroundColor: masterColor.backgroundWhite,
     height: 55,
+    paddingHorizontal: 40,
     flexDirection: 'row',
     alignItems: 'center'
   },

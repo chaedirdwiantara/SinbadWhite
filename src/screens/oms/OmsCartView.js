@@ -49,10 +49,10 @@ class OmsCartView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    if (this.props.oms.dataCart.length > 0) {
+    if (this.props.permanent.dataCart.length > 0) {
       this.props.omsGetCartItemProcess({
         storeId: this.props.merchant.selectedMerchant.storeId,
-        catalogues: this.props.oms.dataCart
+        catalogues: this.props.permanent.dataCart
       });
     }
   }
@@ -87,12 +87,11 @@ class OmsCartView extends Component {
   }
 
   forCartData(method, catalogueId, qty) {
-    const data = {
+    this.props.omsAddToCart({
       method,
-      catalogueId: parseInt(catalogueId, 10),
+      catalogueId,
       qty
-    };
-    this.props.omsAddToCart(data);
+    });
   }
 
   parentFunctionFromOrderButton(data) {
@@ -731,7 +730,7 @@ class OmsCartView extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        {this.props.oms.dataCart.length > 0
+        {this.props.permanent.dataCart.length > 0
           ? this.renderMainContent()
           : this.renderEmpty()}
         {/* modal */}
@@ -984,8 +983,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ merchant, oms }) => {
-  return { merchant, oms };
+const mapStateToProps = ({ merchant, oms, permanent }) => {
+  return { merchant, oms, permanent };
 };
 
 const mapDispatchToProps = dispatch => {

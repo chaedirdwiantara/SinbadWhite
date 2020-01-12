@@ -58,6 +58,11 @@ const styles = StyleSheet.create({
     width: undefined,
     aspectRatio: 1 / 1
   },
+  image65: {
+    height: 65,
+    width: undefined,
+    aspectRatio: 1 / 1
+  },
   image74: {
     height: 74,
     width: undefined,

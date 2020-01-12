@@ -18,7 +18,7 @@ import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import { MoneyFormat } from '../../helpers/NumberFormater';
 import GlobalStyles from '../../helpers/GlobalStyle';
-import SkeletonType4 from '../../components/skeleton/SkeletonType4';
+import SkeletonType7 from '../../components/skeleton/SkeletonType7';
 import { LoadingLoadMore } from '../../components/Loading';
 import Address from '../../components/Address';
 import Fonts from '../../helpers/GlobalFont';
@@ -35,6 +35,10 @@ class PdpLineDataView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  toParentFunction(data) {
+    this.props.parentFunction(data);
+  }
+
   onHandleRefresh = () => {
     this.props.pdpGetRefresh();
     this.props.pdpGetProcess({
@@ -72,14 +76,12 @@ class PdpLineDataView extends Component {
    */
   /** === RENDER SKELETON === */
   renderSkeleton() {
-    return <SkeletonType4 />;
+    return <SkeletonType7 />;
   }
   /** === RENDER LOADMORE === */
   renderLoadMore() {
     return this.props.pdp.loadingLoadMoreGetPdp ? (
-      <View style={{ marginBottom: '12%' }}>
-        <LoadingLoadMore />
-      </View>
+      <LoadingLoadMore />
     ) : (
       <View />
     );
@@ -90,7 +92,7 @@ class PdpLineDataView extends Component {
     return (item.stock > 0 && item.stock >= item.minQty) ||
       item.unlimitedStock ? (
       <TouchableOpacity
-        onPress={() => this.props.pdpOpenOrder(item)}
+        onPress={() => this.toParentFunction({ type: 'order', data: item })}
         style={[styles.pesanButton, { backgroundColor: '#f0444c' }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>
@@ -104,23 +106,31 @@ class PdpLineDataView extends Component {
 
   renderItem({ item, index }) {
     return (
-      <View style={styles.boxContentList} key={index}>
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-          <Text style={Fonts.type42}>SKU : {item.externalId}</Text>
+      <View key={index}>
+        <View style={styles.boxContentList}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'flex-start'
+            }}
+          >
+            <Text style={Fonts.type16}>SKU : {item.externalId}</Text>
+          </View>
+          <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 10 }}>
+            <Text style={Fonts.type24}>
+              {MoneyFormat(
+                item.discountedRetailBuyingPrice !== null
+                  ? item.discountedRetailBuyingPrice
+                  : item.retailBuyingPrice
+              )}
+            </Text>
+          </View>
+          <View>{this.renderButton(item)}</View>
         </View>
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-          <Text style={Fonts.type41}>
-            {MoneyFormat(item.retailBuyingPrice)}
-          </Text>
-        </View>
-        <View style={{ flex: 1 }}>{this.renderButton(item)}</View>
+        <View style={[GlobalStyles.lines, { marginLeft: 10 }]} />
       </View>
     );
-  }
-
-  /** === SEPARATOR FLATLIST === */
-  renderSeparator() {
-    return <View style={[GlobalStyles.lines, { marginLeft: 50 }]} />;
   }
   /** === RENDER DATA === */
   renderData() {
@@ -131,9 +141,9 @@ class PdpLineDataView extends Component {
   /** === RENDER DATA CONTENT === */
   renderContent() {
     return (
-      <View style={{ flex: 1, paddingBottom: '7%' }}>
+      <View style={{ flex: 1 }}>
         <FlatList
-          contentContainerStyle={styles.boxFlatlist}
+          contentContainerStyle={styles.flatListContainer}
           data={this.props.pdp.dataGetPdp}
           renderItem={this.renderItem.bind(this)}
           numColumns={1}
@@ -143,7 +153,6 @@ class PdpLineDataView extends Component {
           onRefresh={this.onHandleRefresh}
           onEndReachedThreshold={0.1}
           onEndReached={this.onHandleLoadMore.bind(this)}
-          ItemSeparatorComponent={this.renderSeparator}
         />
       </View>
     );
@@ -170,7 +179,7 @@ class PdpLineDataView extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    height: '100%',
+    flex: 1,
     backgroundColor: masterColor.backgroundWhite
   },
   boxContentList: {
@@ -178,15 +187,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 16
   },
+  flatListContainer: {
+    paddingBottom: 30
+  },
   /** button */
   pesanButton: {
-    height: 25,
-    width: 118,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 15,
-    marginTop: 10,
-    marginBottom: 5
+    borderRadius: 4,
+    paddingVertical: 7,
+    paddingHorizontal: 20,
+    marginVertical: 10
   }
 });
 
