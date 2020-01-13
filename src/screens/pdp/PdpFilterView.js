@@ -25,13 +25,23 @@ class PdpFilterView extends Component {
   renderSort() {
     return (
       <TouchableOpacity onPress={() => this.toParentFunction({ type: 'sort' })}>
-        <View style={{ alignItems: 'center' }}>
-          <Image
-            source={require('../../assets/icons/pdp/short.png')}
-            style={styles.imageIcon}
-          />
-          <Text style={[Fonts.type40, { textAlign: 'center' }]}>Urutkan</Text>
-        </View>
+        {this.props.sort === null ? (
+          <View style={{ alignItems: 'center' }}>
+            <Image
+              source={require('../../assets/icons/pdp/short.png')}
+              style={styles.imageIcon}
+            />
+            <Text style={[Fonts.type40, { textAlign: 'center' }]}>Urutkan</Text>
+          </View>
+        ) : (
+          <View style={{ alignItems: 'center' }}>
+            <Image
+              source={require('../../assets/icons/pdp/short-red.png')}
+              style={styles.imageIcon}
+            />
+            <Text style={[Fonts.type28, { textAlign: 'center' }]}>Urutkan</Text>
+          </View>
+        )}
       </TouchableOpacity>
     );
   }
@@ -120,9 +130,9 @@ class PdpFilterView extends Component {
     return (
       <View style={[styles.mainContainer, GlobalStyle.shadowForBox10]}>
         <View style={styles.boxContent}>{this.renderSort()}</View>
-        <View style={styles.boxContent}>{this.renderFilter()}</View>
+        {/* <View style={styles.boxContent}>{this.renderFilter()}</View> */}
         <View style={styles.boxContent}>{this.renderLayout()}</View>
-        <View style={styles.boxContent}>{this.renderCategory()}</View>
+        {/* <View style={styles.boxContent}>{this.renderCategory()}</View> */}
       </View>
     );
   }

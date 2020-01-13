@@ -1,18 +1,19 @@
 import ApiRest from '../apiRest';
 
 function getPdp(data) {
-  let newPath;
-  if (data.searchText) {
-    newPath = `catalogues?searchName=${data.searchText}&`;
-  } else {
-    newPath = `catalogues?`;
-  }
-
+  console.log(
+    `catalogues?$skip=${data.page}&$limit=10&supplierIds=${JSON.stringify(
+      data.supplierId
+    )}&searchName=${data.search}&status=active&sort=${data.sort}&sortby=${
+      data.sortBy
+    }`
+  );
   return ApiRest({
-    path: `${newPath}$skip=${data.page}&$limit=10&supplierId=${parseInt(
-      data.supplierId,
-      10
-    )}`,
+    path: `catalogues?$skip=${data.page}&$limit=10&supplierIds=${JSON.stringify(
+      data.supplierId
+    )}&searchName=${data.search}&status=active&sort=${data.sort}&sortby=${
+      data.sortBy
+    }`,
     method: 'GET'
   });
 }

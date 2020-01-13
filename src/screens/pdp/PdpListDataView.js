@@ -37,7 +37,9 @@ class PdpListDataView extends Component {
     this.props.pdpGetProcess({
       page: 0,
       loading: true,
-      searchText: this.props.global.search,
+      sort: this.props.sort,
+      sortBy: this.props.sortBy,
+      search: this.props.global.search,
       supplierId: this.props.user.userSuppliers[0].supplierId
     });
   };
@@ -50,7 +52,9 @@ class PdpListDataView extends Component {
         this.props.pdpGetProcess({
           page,
           loading: false,
-          searchText: this.props.global.search,
+          sort: this.props.sort,
+          sortBy: this.props.sortBy,
+          search: this.props.global.search,
           supplierId: this.props.user.userSuppliers[0].supplierId
         });
       }

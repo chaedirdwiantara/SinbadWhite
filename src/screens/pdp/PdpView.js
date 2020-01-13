@@ -19,16 +19,24 @@ import PdpOrderView from './PdpOrderView';
 import CartGlobal from '../../components/CartGlobal';
 import ModalBottomType3 from '../../components/modal_bottom/ModalBottomType3';
 import ToastType1 from '../../components/toast/ToastType1';
+import PdpFilterSortView from './PdpFitlerSortView';
 
 class PdpView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      layout: 'grid',
+      /** for modal */
       openOrder: false,
+      openModalSort: false,
+      /** data */
+      layout: 'grid',
       addProductNotif: false,
       addProductNotifText: '',
-      selectedProduct: null
+      selectedProduct: null,
+      /** sort */
+      sort: '',
+      sortBy: '',
+      sortIndex: null
     };
   }
 
@@ -43,7 +51,10 @@ class PdpView extends Component {
     this.props.pdpGetProcess({
       page: 0,
       loading: true,
-      supplierId: this.props.user.userSuppliers[0].supplierId
+      sort: 'asc',
+      sortBy: 'name',
+      search: this.props.global.search,
+      supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
     });
   }
   /** === DID UPDATE */
@@ -54,8 +65,10 @@ class PdpView extends Component {
         this.props.pdpGetProcess({
           page: 0,
           loading: true,
-          searchText: this.props.global.search,
-          supplierId: this.props.user.userSuppliers[0].supplierId
+          sort: 'asc',
+          sortBy: 'name',
+          search: this.props.global.search,
+          supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
         });
       }
     }
@@ -67,7 +80,7 @@ class PdpView extends Component {
         this.setState({ layout: data.data });
         break;
       case 'sort':
-        console.log('filter');
+        this.setState({ openModalSort: true });
         break;
       case 'filter':
         console.log('filter');
@@ -88,6 +101,23 @@ class PdpView extends Component {
           this.setState({ addProductNotif: false });
         }, 3000);
         break;
+      case 'sortSelected':
+        this.setState({
+          openModalSort: false,
+          sortIndex: data.data.sortIndex,
+          sort: data.data.sort,
+          sortBy: data.data.sortBy
+        });
+        this.props.pdpGetReset();
+        this.props.pdpGetProcess({
+          page: 0,
+          loading: true,
+          sort: data.data.sort,
+          sortBy: data.data.sortBy,
+          search: this.props.global.search,
+          supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
+        });
+        break;
       default:
         break;
     }
@@ -106,6 +136,8 @@ class PdpView extends Component {
           <PdpGridDataView
             onRef={ref => (this.parentFunction = ref)}
             parentFunction={this.parentFunction.bind(this)}
+            sort={this.state.sort}
+            sortBy={this.state.sortBy}
           />
         );
       case 'list':
@@ -113,6 +145,8 @@ class PdpView extends Component {
           <PdpListDataView
             onRef={ref => (this.parentFunction = ref)}
             parentFunction={this.parentFunction.bind(this)}
+            sort={this.state.sort}
+            sortBy={this.state.sortBy}
           />
         );
       case 'line':
@@ -120,6 +154,8 @@ class PdpView extends Component {
           <PdpLineDataView
             onRef={ref => (this.parentFunction = ref)}
             parentFunction={this.parentFunction.bind(this)}
+            sort={this.state.sort}
+            sortBy={this.state.sortBy}
           />
         );
       default:
@@ -182,6 +218,7 @@ class PdpView extends Component {
       <PdpFilterView
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
+        sort={this.state.sortIndex}
       />
     );
   }
@@ -198,6 +235,30 @@ class PdpView extends Component {
       <View />
     );
   }
+  /**
+   * =====================
+   * MODAL
+   * =====================
+   */
+  renderModalSort() {
+    return this.state.openModalSort ? (
+      <ModalBottomType3
+        open={this.state.openModalSort}
+        title={'Urutkan'}
+        typeClose={'cancel'}
+        content={
+          <PdpFilterSortView
+            sortIndex={this.state.sortIndex}
+            onRef={ref => (this.parentFunction = ref)}
+            parentFunction={this.parentFunction.bind(this)}
+          />
+        }
+        close={() => this.setState({ openModalSort: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
 
   /** MAIN */
   render() {
@@ -209,6 +270,8 @@ class PdpView extends Component {
         {/* order bottom */}
         {this.renderModalOrder()}
         {this.renderToast()}
+        {/* filter */}
+        {this.renderModalSort()}
       </SafeAreaView>
     );
   }
