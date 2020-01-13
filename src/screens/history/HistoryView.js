@@ -6,7 +6,10 @@ import * as ActionCreators from '../../state/actions';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
-import { StatusBarWhite } from '../../components/StatusBarGlobal';
+import {
+  StatusBarWhite,
+  StatusBarBlackOP40
+} from '../../components/StatusBarGlobal';
 import HistoryTabView from './HistoryTabView';
 import SearchBarType1 from '../../components/search_bar/SearchBarType1';
 import HistoryOrderView from './HistoryOrderView';
@@ -15,15 +18,18 @@ import ModalBottomType3 from '../../components/modal_bottom/ModalBottomType3';
 import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
 import HistoryFilterView from './HistoryFilterView';
 import HistoryPortfolioFilterView from './HistoryPortfolioFilterView';
+import HistoryDateFilterView from './HistoryDateFilterView';
+import DatePickerSpinner from '../../components/DatePickerSpinner';
 
 class HistoryView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       activeTab: 'payment',
+      typeDate: 'startDate',
+      startDate: '',
+      endDate: '',
       searchText: '',
-      dateGte: '',
-      dateLte: '',
       dateFilter: {
         dateGte: '',
         dateLte: ''
@@ -32,7 +38,8 @@ class HistoryView extends Component {
       portfolioId: [],
       openMainFilter: false,
       openPortfolioFilter: false,
-      openDateFilter: false
+      openDateFilter: false,
+      openDateSelect: false
     };
   }
   /**
@@ -78,10 +85,44 @@ class HistoryView extends Component {
     } else if (data.type === 'doFilter') {
       this.setState({
         openMainFilter: false,
+        startDate: data.data.startDate,
+        endDate: data.data.endDate,
         portfolioId: data.data.portfolio,
         dateFilter: data.data.dateFilter
       });
+    } else if (data.type === 'dateType') {
+      this.setState({
+        typeDate: data.data,
+        openDateSelect: true,
+        openDateFilter: false
+      });
+    } else if (data.type === 'datePicker') {
+      this.setState({ openDateSelect: false, openDateFilter: true });
+      if (this.state.typeDate === 'startDate') {
+        this.setState({ startDate: data.data, endDate: '' });
+      } else {
+        this.setState({ endDate: data.data });
+      }
+    } else if (data.type === 'selectDate') {
+      if (data.data.type === 'selectedDate') {
+        this.setState({ openDateFilter: false, openMainFilter: true });
+      }
+      this.setState({
+        startDate: data.data.startDate,
+        endDate: data.data.endDate
+      });
     }
+  }
+  /** SAVE DATE FILTER */
+  saveDatePicker(date) {
+    if (this.state.typeDate === 'startDate') {
+      this.setState({ startDate: date });
+    } else {
+      this.setState({ endDate: date });
+    }
+    setTimeout(() => {
+      this.setState({ openModalFilterDate: true, openModalDatePicker: false });
+    }, 100);
   }
   /**
    * ========================
@@ -139,8 +180,8 @@ class HistoryView extends Component {
             onPress={() => this.setState({ openMainFilter: true })}
           >
             {this.state.portfolioId.length > 0 ||
-            this.state.dateGte !== '' ||
-            this.state.dateLte !== '' ? (
+            this.state.dateFilter.dateGte !== '' ||
+            this.state.dateFilter.dateLte !== '' ? (
               <View style={styles.circleFilter} />
             ) : (
               <View />
@@ -172,8 +213,8 @@ class HistoryView extends Component {
         content={
           <HistoryFilterView
             portfolio={this.state.portfolio}
-            dateGte={this.state.dateGte}
-            dateLte={this.state.dateLte}
+            dateGte={this.state.startDate}
+            dateLte={this.state.endDate}
             onRef={ref => (this.parentFunction = ref)}
             parentFunction={this.parentFunction.bind(this)}
           />
@@ -214,7 +255,9 @@ class HistoryView extends Component {
           this.setState({ openMainFilter: true, openDateFilter: false })
         }
         content={
-          <HistoryFilterView
+          <HistoryDateFilterView
+            startDate={this.state.startDate}
+            endDate={this.state.endDate}
             onRef={ref => (this.parentFunction = ref)}
             parentFunction={this.parentFunction.bind(this)}
           />
@@ -224,6 +267,32 @@ class HistoryView extends Component {
       <View />
     );
   }
+
+  renderModalSelectDate() {
+    return this.state.openDateSelect ? (
+      <ModalBottomType4
+        open={this.state.openDateSelect}
+        title={
+          this.state.typeDate === 'startDate' ? 'Tanggal Awal' : 'Tanggal Akhir'
+        }
+        close={() =>
+          this.setState({ openDateFilter: true, openDateSelect: false })
+        }
+        content={
+          <View>
+            <StatusBarBlackOP40 />
+            <DatePickerSpinner
+              onRef={ref => (this.parentFunction = ref)}
+              parentFunction={this.parentFunction.bind(this)}
+            />
+          </View>
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
+
   /** === MAIN === */
   render() {
     return (
@@ -236,6 +305,7 @@ class HistoryView extends Component {
         {this.renderModalFilterMain()}
         {this.renderModalFitlerPortfolio()}
         {this.renderModalFitlerDate()}
+        {this.renderModalSelectDate()}
       </View>
     );
   }

@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { bindActionCreators } from 'redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux';
+import * as ActionCreators from '../../state/actions';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
 import { StatusBarBlackOP40 } from '../../components/StatusBarGlobal';
 import ButtonSingle from '../../components/button/ButtonSingle';
+import SkeletonType6 from '../../components/skeleton/SkeletonType6';
 
-class HistoryFilterView extends Component {
+class HistoryDateFilterView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      portfolio: this.props.portfolio,
-      dateGte: this.props.dateGte,
-      dateLte: this.props.dateLte
+      startDate: this.props.startDate,
+      endDate: this.props.endDate
     };
   }
   /**
@@ -28,47 +30,30 @@ class HistoryFilterView extends Component {
 
   clearFilter() {
     this.setState({
-      portfolio: [],
-      dateGte: '',
-      dateLte: ''
+      startDate: '',
+      endDate: ''
     });
     this.props.parentFunction({
-      type: 'doFilter',
+      type: 'selectDate',
       data: {
-        portfolio: [],
+        type: 'clearDate',
         startDate: '',
-        endDate: '',
-        dateFilter: {
-          dateGte: '',
-          dateLte: ''
-        }
+        endDate: ''
       }
     });
-  }
-
-  modifyPorfolio() {
-    let portfolio = '';
-    this.state.portfolio.map((item, index) => {
-      const name = this.props.merchant.dataGetPortfolio.find(
-        itemPortfolio => itemPortfolio.id === item
-      ).name;
-      portfolio =
-        portfolio +
-        name +
-        (index + 1 === this.state.portfolio.length ? '' : ', ');
-    });
-    return portfolio;
   }
   /**
    * ========================
    * RENDER VIEW
    * =======================
    */
-  /** RENDER CONTENT PORTFOLIO */
-  renderPortfolio() {
+  /** RENDER TANGGAL AWAL */
+  renderStartDate() {
     return (
       <TouchableOpacity
-        onPress={() => this.parentFunction({ type: 'portfolio' })}
+        onPress={() =>
+          this.parentFunction({ type: 'dateType', data: 'startDate' })
+        }
       >
         <View
           style={{
@@ -79,16 +64,12 @@ class HistoryFilterView extends Component {
           }}
         >
           <View>
-            <Text style={[Fonts.type42, { marginBottom: 5 }]}>Portfolio</Text>
-            {this.state.portfolio.length > 0 ? (
-              <Text style={Fonts.type23}>
-                {this.modifyPorfolio().length >= 55
-                  ? this.modifyPorfolio().substring(0, 55) + '...'
-                  : this.modifyPorfolio()}
-              </Text>
-            ) : (
-              <Text style={Fonts.type23}>(Semua)</Text>
-            )}
+            <Text style={[Fonts.type42, { marginBottom: 5 }]}>
+              Tanggal Awal{' '}
+            </Text>
+            <Text style={Fonts.type23}>
+              {this.state.startDate !== '' ? this.state.startDate : '(Semua)'}
+            </Text>
           </View>
           <View style={{ justifyContent: 'center' }}>
             <MaterialIcons
@@ -102,10 +83,14 @@ class HistoryFilterView extends Component {
       </TouchableOpacity>
     );
   }
-  /** RENDER CONTENT PORTFOLIO */
-  renderDate() {
+  /** RENDER TANGGAL AKHIR */
+  renderEndDate() {
     return (
-      <TouchableOpacity onPress={() => this.parentFunction({ type: 'date' })}>
+      <TouchableOpacity
+        onPress={() =>
+          this.parentFunction({ type: 'dateType', data: 'endDate' })
+        }
+      >
         <View
           style={{
             flexDirection: 'row',
@@ -116,12 +101,10 @@ class HistoryFilterView extends Component {
         >
           <View>
             <Text style={[Fonts.type42, { marginBottom: 5 }]}>
-              Tanggal Order{' '}
+              Tanggal Akhir{' '}
             </Text>
             <Text style={Fonts.type23}>
-              {this.state.dateGte !== '' && this.state.dateLte !== ''
-                ? this.state.dateGte + ' - ' + this.state.dateLte
-                : '(Semua)'}
+              {this.state.endDate !== '' ? this.state.endDate : '(Semua)'}
             </Text>
           </View>
           <View style={{ justifyContent: 'center' }}>
@@ -141,13 +124,15 @@ class HistoryFilterView extends Component {
     return (
       <View>
         <View style={styles.boxSubTitle}>
-          <Text style={Fonts.type61}>Pilih filter sesuai preferensi Anda</Text>
+          <Text style={Fonts.type61}>
+            Silahkan input rentang tanggal ketika order dibuat
+          </Text>
           <TouchableOpacity onPress={() => this.clearFilter()}>
             <Text style={Fonts.type62}>Hapus</Text>
           </TouchableOpacity>
         </View>
-        {this.renderPortfolio()}
-        {this.renderDate()}
+        {this.renderStartDate()}
+        {this.renderEndDate()}
       </View>
     );
   }
@@ -155,23 +140,16 @@ class HistoryFilterView extends Component {
   renderButton() {
     return (
       <ButtonSingle
-        disabled={
-          this.state.portfolio.length === 0 &&
-          (this.state.dateGte === '' || this.state.dateLte === '')
-        }
+        disabled={this.state.startDate === '' || this.state.endDate === ''}
         title={'Terapkan'}
         borderRadius={4}
         onPress={() =>
           this.parentFunction({
-            type: 'doFilter',
+            type: 'selectDate',
             data: {
-              portfolio: this.state.portfolio,
-              startDate: this.state.dateGte,
-              endDate: this.state.dateLte,
-              dateFilter: {
-                dateGte: this.state.dateGte,
-                dateLte: this.state.dateLte
-              }
+              type: 'selectedDate',
+              startDate: this.state.startDate,
+              endDate: this.state.endDate
             }
           })
         }
@@ -198,13 +176,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 5
+    paddingTop: 5,
+    paddingBottom: 10
   }
 });
 
-const mapStateToProps = ({ merchant }) => {
-  return { merchant };
+const mapStateToProps = ({ merchant, user }) => {
+  return { merchant, user };
 };
 
-// eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, {})(HistoryFilterView);
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HistoryDateFilterView);

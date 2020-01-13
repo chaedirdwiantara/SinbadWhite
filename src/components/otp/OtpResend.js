@@ -63,7 +63,7 @@ class OtpResend extends Component {
         ) : (
           <View style={styles.contentContainer}>
             <View>
-              <Text style={Fonts.type23}>Ingin login dengan kode sales ? </Text>
+              <Text style={Fonts.type23}>Tidak mendapatkan kode ? </Text>
             </View>
             <TouchableOpacity onPress={() => this.resend()}>
               <Text style={Fonts.type21}>Klik disini</Text>
