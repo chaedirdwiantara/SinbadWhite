@@ -27,7 +27,7 @@ class CartGlobal extends Component {
     return (
       <TouchableOpacity onPress={() => this.goToOmsCartView()}>
         <Badge
-          value={this.props.permanent.dataCart.length}
+          value={this.props.oms.dataCart.length}
           containerStyle={styles.badgeContainer}
           badgeStyle={styles.badge}
           textStyle={Fonts.type19}
@@ -51,7 +51,7 @@ class CartGlobal extends Component {
     );
   }
   render() {
-    return this.props.permanent.dataCart.length > 0
+    return this.props.oms.dataCart.length > 0
       ? this.renderCartNotEmpty()
       : this.renderCartEmpty();
   }
@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ permanent }) => {
-  return { permanent };
+const mapStateToProps = ({ oms }) => {
+  return { oms };
 };
 
 const mapDispatchToProps = dispatch => {

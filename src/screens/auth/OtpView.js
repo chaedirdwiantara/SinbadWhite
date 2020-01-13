@@ -19,6 +19,7 @@ import GlobalStyle from '../../helpers/GlobalStyle';
 import OtpInput from '../../components/otp/OtpInput';
 import NavigationService from '../../navigation/NavigationService';
 import { StatusBarRed } from '../../components/StatusBarGlobal';
+import OtpResend from '../../components/otp/OtpResend';
 
 class OtpView extends Component {
   constructor(props) {
@@ -27,7 +28,8 @@ class OtpView extends Component {
     this.state = {
       phoneNumber: navigation.state.params.phoneNumber,
       errorOTP: false,
-      otpInput: []
+      otpInput: [],
+      otpErrorText: 'Pastikan kode verifikasi yang anda masukan benar'
     };
   }
   /**
@@ -41,6 +43,15 @@ class OtpView extends Component {
     if (prevProps.auth.dataSignIn !== this.props.auth.dataSignIn) {
       if (this.props.auth.dataSignIn !== null) {
         NavigationService.navigate('Home');
+      }
+    }
+    /** IF ERROR OTP */
+    if (prevProps.auth.errorSignIn !== this.props.auth.errorSignIn) {
+      if (this.props.auth.errorSignIn !== null) {
+        this.setState({
+          errorOTP: true,
+          otpErrorText: 'Kode verifikasi Anda telah expired'
+        });
       }
     }
   }
@@ -166,6 +177,12 @@ class OtpView extends Component {
       </View>
     );
   }
+  /** RENDER RESEND */
+  renderResend() {
+    return (
+      <OtpResend phoneNumber={'0' + this.state.phoneNumber} from={'login'} />
+    );
+  }
   /** === MAIN === */
   render() {
     return (
@@ -176,6 +193,7 @@ class OtpView extends Component {
           <View style={styles.mainContainer}>
             {this.renderTitle()}
             {this.renderContent()}
+            {this.renderResend()}
           </View>
         </View>
       </SafeAreaView>

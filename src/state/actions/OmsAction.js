@@ -130,7 +130,7 @@ export function saveChecklistCart(data) {
  */
 export function omsAddToCart(data) {
   const allPropsData = Store.getState();
-  const dataCart = allPropsData.permanent.dataCart;
+  const dataCart = allPropsData.oms.dataCart;
   const dataCheckBoxlistCart = allPropsData.oms.dataCheckBoxlistCart;
   /**
    * ===============================================================
@@ -154,7 +154,7 @@ export function omsAddToCart(data) {
     }
   }
   /** =============================================================== */
-  if (allPropsData.permanent.dataCart.length > 0) {
+  if (allPropsData.oms.dataCart.length > 0) {
     const indexDataCart = dataCart.findIndex(
       itemCart => itemCart.catalogueId === data.catalogueId
     );

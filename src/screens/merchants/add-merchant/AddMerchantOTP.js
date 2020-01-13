@@ -19,6 +19,7 @@ import ProgressBarType1 from '../../../components/progress_bar/ProgressBarType1'
 import OtpInput from '../../../components/otp/OtpInput';
 import Fonts from '../../../helpers/GlobalFont';
 import GlobalStyles from '../../../helpers/GlobalStyle';
+import OtpResend from '../../../components/otp/OtpResend';
 
 class AddMerchantOTP extends Component {
   constructor(props) {
@@ -28,7 +29,8 @@ class AddMerchantOTP extends Component {
       phoneNumber: navigation.state.params.phoneNumber,
       otp: navigation.state.params.otp,
       errorOTP: false,
-      otpInput: []
+      otpInput: [],
+      otpErrorText: 'Pastikan kode verifikasi yang anda masukan benar'
     };
   }
   /**
@@ -125,12 +127,16 @@ class AddMerchantOTP extends Component {
   renderErrorOTP() {
     return this.state.errorOTP ? (
       <View style={{ alignItems: 'center', marginTop: 7 }}>
-        <Text style={Fonts.type14}>
-          Pastikan kode verifikasi yang anda masukan benar
-        </Text>
+        <Text style={Fonts.type14}>{this.state.otpErrorText}</Text>
       </View>
     ) : (
       <View />
+    );
+  }
+  /** RENDER RESEND */
+  renderResend() {
+    return (
+      <OtpResend phoneNumber={this.state.phoneNumber} from={'addMerchant'} />
     );
   }
   /** === RENDER CONTENT === */
@@ -140,6 +146,7 @@ class AddMerchantOTP extends Component {
         {this.renderHeaderImage()}
         {this.renderHeaderText()}
         {this.renderOtpInput()}
+        {this.renderResend()}
       </View>
     );
   }

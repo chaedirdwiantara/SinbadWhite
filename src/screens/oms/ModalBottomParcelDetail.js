@@ -16,6 +16,8 @@ import { Button } from 'react-native-elements';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Fonts from '../../utils/Fonts';
 import { MoneyFormat } from '../../helpers/NumberFormater';
+import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
+import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
 
 const { height } = Dimensions.get('window');
 
@@ -162,57 +164,37 @@ class ModalBottomParcelDetail extends Component {
     );
   }
 
-  render() {
+  renderContent() {
     return (
-      <Modal
-        isVisible={this.props.open}
-        useNativeDriver={true}
-        hasBackdrop={true}
-        coverScreen={true}
-        backdropColor="black"
-        deviceHeight={height}
-        backdropOpacity={0.4}
-        style={styles.modalPosition}
-      >
-        <StatusBar
-          backgroundColor="rgba(144, 39, 44, 1)"
-          barStyle="light-content"
-        />
+      <View>
+        <StatusBarRedOP50 />
         <View style={styles.container}>
-          <View style={{ height: 60 }}>
-            <View style={styles.closeContainer}>
-              <TouchableOpacity
-                onPress={this.props.close}
-                style={styles.closeBox}
-              >
-                <Image
-                  source={require('../../assets/icons/close.png')}
-                  style={styles.icons}
-                />
-              </TouchableOpacity>
-              <Text style={styles.titleModalBottom}>Detail Pesanan</Text>
-            </View>
-          </View>
           <View style={styles.contentContainer}>
             <ScrollView>{this.renderData()}</ScrollView>
           </View>
         </View>
-      </Modal>
+      </View>
+    );
+  }
+
+  render() {
+    return (
+      <ModalBottomType4
+        typeClose={'cancel'}
+        title={'Detail Pesanan'}
+        open={this.props.open}
+        close={this.props.close}
+        content={this.renderContent()}
+      />
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
     height: 0.9 * height,
     backgroundColor: 'white',
     flexDirection: 'column',
-    position: 'absolute',
-    width: '100%',
-    bottom: 0,
-    zIndex: 1000,
     paddingBottom: 0.01 * height
   },
   modalPosition: {

@@ -25,19 +25,33 @@ class MerchantMapView extends Component {
       longitudeDelta: 0.01
     };
   }
-
+  /**
+   * =====================
+   * FUNCTIONAL
+   * ======================
+   */
   componentDidMount() {
-    Geolocation.getCurrentPosition(
-      success => {
-        this.setState({
-          longitude: success.coords.longitude,
-          latitude: success.coords.latitude
-        });
-      },
-      () => {
-        this.setState({ openErrorGeolocation: true });
-      }
-    );
+    this.getCurrentLocation();
+  }
+  /** === GET CURRENT LOCATION === */
+  successMaps = success => {
+    this.setState({
+      longitude: success.coords.longitude,
+      latitude: success.coords.latitude
+    });
+  };
+  errorMaps = () => {
+    this.setState({ openErrorGeolocation: true });
+  };
+  getCurrentLocation() {
+    this.setState({ reRender: true });
+    setTimeout(() => {
+      this.setState({ reRender: false });
+    }, 100);
+    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
+      maximumAge: 0,
+      enableHighAccuracy: true
+    });
   }
 
   parentFunction(data) {
@@ -119,16 +133,57 @@ class MerchantMapView extends Component {
     );
   }
   /** === MAPS === */
-  checkRenderMaps() {
+  renderMaps() {
     return this.props.merchant.dataGetPortfolio.length > 0
       ? this.renderMapsContent()
-      : this.renderMerchantEmpty();
+      : this.renderMapsContentEmpty();
   }
-  renderMaps() {
-    return this.props.merchant.dataGetPortfolio !== null
-      ? this.checkRenderMaps()
-      : this.renderMapsContent();
+
+  renderMapsContentEmpty() {
+    return (
+      <MapView
+        ref={ref => (this.mapRef = ref)}
+        style={{ flex: 1, width: '100%' }}
+        initialRegion={{
+          latitude: this.state.latitude,
+          longitude: this.state.longitude,
+          latitudeDelta: this.state.latitudeDelta,
+          longitudeDelta: this.state.longitudeDelta
+        }}
+        onLayout={() =>
+          setTimeout(() => {
+            this.mapRef.fitToCoordinates(
+              [
+                {
+                  latitude: this.state.latitude,
+                  longitude: this.state.longitude
+                }
+              ],
+              {
+                edgePadding: {
+                  top: 16,
+                  right: 16,
+                  bottom: 0.45 * height,
+                  left: 16
+                },
+                animated: true
+              }
+            );
+          }, 500)
+        }
+      >
+        <Marker
+          image={require('../../assets/icons/maps/my_location.png')}
+          coordinate={{
+            latitude: this.state.latitude,
+            longitude: this.state.longitude
+          }}
+          title={'Anda'}
+        />
+      </MapView>
+    );
   }
+
   renderMapsContent() {
     return (
       <MapView
@@ -214,9 +269,9 @@ class MerchantMapView extends Component {
           {this.renderSearchBar()}
           {this.renderTags()}
         </View>
-        {!this.props.merchant.loadingGetMerchant
-          ? this.renderMaps()
-          : this.renderLoading()}
+        {this.props.merchant.loadingGetMerchant
+          ? this.renderLoading()
+          : this.renderMaps()}
         {/* {this.renderModal()} */}
         {this.renderBottomList()}
       </View>

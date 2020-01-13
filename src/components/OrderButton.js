@@ -113,18 +113,34 @@ class OrderButton extends Component {
     );
   }
 
+  modifyStockQty() {
+    if (this.state.stock <= this.state.qty) {
+      const valueAfterMinimum = this.state.stock - this.state.minQty;
+      return (
+        Math.floor(valueAfterMinimum / this.state.multipleQty) *
+          this.state.multipleQty +
+        this.state.minQty
+      );
+    }
+  }
+
   checkQtyAfterEnter() {
     if (this.state.qty === '' || this.state.qty < this.state.minQty) {
       this.sendValueToParent(this.state.minQty);
       this.setState({ qty: this.state.minQty });
     }
     if (!this.state.unlimitedStock) {
-      if (this.modifyQty() <= this.state.stock) {
+      if (this.modifyQty() < this.state.stock) {
         if (this.state.stock - this.modifyQty() <= this.state.multipleQty) {
           this.setState({ plusButtonDisable: true });
+        } else {
+          this.sendValueToParent(this.modifyQty());
+          this.setState({ qty: this.modifyQty() });
         }
-        this.sendValueToParent(this.modifyQty());
-        this.setState({ qty: this.modifyQty() });
+      } else {
+        this.sendValueToParent(this.modifyStockQty());
+        this.setState({ qty: this.modifyStockQty() });
+        this.setState({ plusButtonDisable: true });
       }
     } else {
       this.sendValueToParent(this.modifyQty());
@@ -170,7 +186,8 @@ class OrderButton extends Component {
             style={[styles.input, Fonts.type8]}
           />
         </View>
-        {this.state.plusButtonDisable ? (
+        {this.state.plusButtonDisable ||
+        this.state.stock <= this.state.minQty ? (
           <View style={styles.plusButtonDisabled}>
             <Text style={styles.plusTextDisabled}>+</Text>
           </View>

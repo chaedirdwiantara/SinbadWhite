@@ -25,6 +25,9 @@ import GlobalStyles from '../../helpers/GlobalStyle';
 import { MoneyFormat } from '../../helpers/NumberFormater';
 import OrderButton from '../../components/OrderButton';
 import EmptyData from '../../components/empty_state/EmptyData';
+import ModalBottomErrorRespons from '../../components/error/ModalBottomErrorRespons';
+import ErrorPage from '../../components/error/ErrorPage';
+import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
 
 const { width, height } = Dimensions.get('window');
 
@@ -32,14 +35,17 @@ class OmsCartView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      buttonCheckoutDisabled: false,
-      modalDeleteConfirmation: false,
+      /** modal */
       openModalToCheckoutConfirmation: false,
-      modalStockConfirmation: false,
+      openModalStockConfirmation: false,
+      openModalErrorGlobal: false,
+      openModalDeleteConfirmation: false,
+      /** data */
+      buttonCheckoutDisabled: false,
       productWantToDelete: null,
-      modalErrorGlobal: false,
       productCartArray: [],
-      loading: false
+      /** error */
+      errorOmsGetCartItem: false
     };
   }
   /**
@@ -49,15 +55,24 @@ class OmsCartView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    if (this.props.permanent.dataCart.length > 0) {
+    if (this.props.oms.dataCart.length > 0) {
       this.props.omsGetCartItemProcess({
         storeId: this.props.merchant.selectedMerchant.storeId,
-        catalogues: this.props.permanent.dataCart
+        catalogues: this.props.oms.dataCart
       });
     }
   }
   /** === DID UPDATE */
   componentDidUpdate(prevProps) {
+    /**
+     * ========================
+     * SUCCESS RESPONS
+     * =======================
+     */
+    /**
+     * ===== SUCCESS POST CART ====
+     * after success get list of product by dataCart
+     */
     if (
       prevProps.oms.dataOmsGetCartItem !== this.props.oms.dataOmsGetCartItem
     ) {
@@ -65,7 +80,10 @@ class OmsCartView extends Component {
         this.convertListProductToLocalState();
       }
     }
-    /** GO TO OMS */
+    /**
+     * ===== SUCCESS POST CHECKOUT ITEM ====
+     * after success get item checkout go to checkout page
+     */
     if (
       prevProps.oms.dataOmsGetCheckoutItem !==
       this.props.oms.dataOmsGetCheckoutItem
@@ -74,14 +92,123 @@ class OmsCartView extends Component {
         NavigationService.navigate('OmsCheckoutView');
       }
     }
+    /**
+     * ==============================
+     * ERROR RESPONS
+     * ==============================
+     */
+    /** ERROR GET CHECKOUT LIST */
+    if (
+      prevProps.oms.errorOmsGetCheckoutItem !==
+      this.props.oms.errorOmsGetCheckoutItem
+    ) {
+      if (this.props.oms.errorOmsGetCheckoutItem !== null) {
+        if (this.props.oms.errorOmsGetCheckoutItem.code === 400) {
+          this.setState({ openModalStockConfirmation: true });
+          this.modifyProductCartArrayWhenError();
+        } else {
+          this.setState({ openModalErrorGlobal: true });
+        }
+      }
+    }
   }
+  /**
+   * ==========================================
+   * ALL FUNCTION IN COMPONENT DID UPDATE START
+   * ==========================================
+   * note:
+   * statusInCart:
+   *  - 'available' = no error for product
+   *  - 'outStock' = stok habis
+   *  - 'unavailable' = tidak tersedia
+   */
+
+  convertListProductToLocalState() {
+    const productCartArray = [];
+    this.props.oms.dataOmsGetCartItem.cartParcels.forEach(item => {
+      item.cartBrands.forEach(itemBrand => {
+        for (let i = 0; i < itemBrand.cartBrandCatalogues.length; i++) {
+          const productItem = itemBrand.cartBrandCatalogues[i];
+          productItem.checkBox = true;
+          if (
+            !productItem.catalogue.unlimitedStock &&
+            productItem.catalogue.stock < productItem.catalogue.minQty
+          ) {
+            productItem.statusInCart = 'outStock';
+          } else {
+            productItem.statusInCart = 'available';
+          }
+          if (this.props.oms.dataCheckBoxlistCart.length > 0) {
+            const indexDataCheckBoxlistCart = this.props.oms.dataCheckBoxlistCart.findIndex(
+              itemDataCheckBoxlistCart =>
+                itemDataCheckBoxlistCart.catalogue.id ===
+                itemBrand.cartBrandCatalogues[i].catalogue.id
+            );
+            if (indexDataCheckBoxlistCart > -1) {
+              productItem.checkBox = this.props.oms.dataCheckBoxlistCart[
+                indexDataCheckBoxlistCart
+              ].checkBox;
+              productItem.statusInCart =
+                !productItem.catalogue.unlimitedStock &&
+                productItem.catalogue.stock < productItem.catalogue.minQty
+                  ? 'outStock'
+                  : this.props.oms.dataCheckBoxlistCart[
+                      indexDataCheckBoxlistCart
+                    ].statusInCart;
+            }
+          }
+          productCartArray.push(productItem);
+        }
+      });
+    });
+    this.setState({ productCartArray });
+  }
+
+  modifyProductCartArrayWhenError() {
+    /** function for edit productCartArray */
+    const productCartArray = this.state.productCartArray;
+    /** modification for checklist */
+    this.props.oms.errorCheckout.data.forEach(item => {
+      const indexProductCartArray = productCartArray.findIndex(
+        itemProductCartArray =>
+          itemProductCartArray.catalogueId === item.catalogue.id
+      );
+      if (indexProductCartArray > -1) {
+        switch (item.errorCode) {
+          case 'ERR-STOCK':
+            productCartArray[indexProductCartArray].qty = item.suggestedStock;
+            productCartArray[indexProductCartArray].catalogue.stock =
+              item.catalogueStock;
+            break;
+          case 'ERR-STATUS':
+            productCartArray[indexProductCartArray].statusInCart =
+              'unavailable';
+            productCartArray[indexProductCartArray].checkBox = true;
+            break;
+          case 'ERR-RUN-OUT':
+            productCartArray[indexProductCartArray].statusInCart = 'outStock';
+            productCartArray[indexProductCartArray].checkBox = true;
+            break;
+          default:
+            break;
+        }
+        this.setState({ productCartArray });
+      }
+    });
+  }
+
+  /**
+   * ==========================================
+   * ALL FUNCTION IN COMPONENT DID UPDATE END
+   * ==========================================
+   */
   wantToGoCheckout() {
     this.setState({ openModalToCheckoutConfirmation: true });
   }
 
   wantDelete(item) {
     this.setState({
-      modalDeleteConfirmation: true,
+      openModalDeleteConfirmation: true,
       productWantToDelete: item
     });
   }
@@ -217,7 +344,7 @@ class OmsCartView extends Component {
       }
       /** close modal delete */
       this.setState({
-        modalDeleteConfirmation: false
+        openModalDeleteConfirmation: false
       });
       /** delete item for global cart data, product list, product details */
       setTimeout(() => {
@@ -239,48 +366,6 @@ class OmsCartView extends Component {
    *  - 'outStock' = stok habis
    *  - 'unavailable' = tidak tersedia
    */
-
-  convertListProductToLocalState() {
-    const productCartArray = [];
-    this.props.oms.dataOmsGetCartItem.cartParcels.forEach(item => {
-      item.cartBrands.forEach(itemBrand => {
-        for (let i = 0; i < itemBrand.cartBrandCatalogues.length; i++) {
-          const productItem = itemBrand.cartBrandCatalogues[i];
-          productItem.checkBox = true;
-          if (
-            !productItem.catalogue.unlimitedStock &&
-            productItem.catalogue.stock < productItem.catalogue.minQty
-          ) {
-            productItem.statusInCart = 'outStock';
-          } else {
-            productItem.statusInCart = 'available';
-          }
-          if (this.props.oms.dataCheckBoxlistCart.length > 0) {
-            const indexDataCheckBoxlistCart = this.props.oms.dataCheckBoxlistCart.findIndex(
-              itemDataCheckBoxlistCart =>
-                itemDataCheckBoxlistCart.catalogue.id ===
-                itemBrand.cartBrandCatalogues[i].catalogue.id
-            );
-            if (indexDataCheckBoxlistCart > -1) {
-              productItem.checkBox = this.props.oms.dataCheckBoxlistCart[
-                indexDataCheckBoxlistCart
-              ].checkBox;
-              productItem.statusInCart =
-                !productItem.catalogue.unlimitedStock &&
-                productItem.catalogue.stock < productItem.catalogue.minQty
-                  ? 'outStock'
-                  : this.props.oms.dataCheckBoxlistCart[
-                      indexDataCheckBoxlistCart
-                    ].statusInCart;
-            }
-          }
-          productCartArray.push(productItem);
-        }
-      });
-    });
-    console.log(productCartArray);
-    this.setState({ productCartArray });
-  }
   /**
    * === GO TO CHECKOUT ===
    * - check cart first
@@ -640,12 +725,11 @@ class OmsCartView extends Component {
       <ButtonSingleSmall
         disabled={
           this.props.oms.loadingOmsGetCheckoutItem ||
-          this.state.loading ||
           this.state.productCartArray.find(
             item => item.checkBox && item.statusInCart === 'available'
           ) === undefined
         }
-        loading={this.props.oms.loadingOmsGetCheckoutItem || this.state.loading}
+        loading={this.props.oms.loadingOmsGetCheckoutItem}
         loadingPadding={20}
         onPress={() => this.wantToGoCheckout()}
         title={'Checkout'}
@@ -675,10 +759,7 @@ class OmsCartView extends Component {
         content={'Konfirmasi order dan lanjut ke Checkout ?'}
         type={'okeRed'}
         ok={() => {
-          this.setState({
-            openModalToCheckoutConfirmation: false,
-            loading: true
-          });
+          this.setState({ openModalToCheckoutConfirmation: false });
           this.checkCart();
         }}
         cancel={() => this.setState({ openModalToCheckoutConfirmation: false })}
@@ -691,16 +772,16 @@ class OmsCartView extends Component {
   renderModalDeleteProductConfirmation() {
     return (
       <View>
-        {this.state.modalDeleteConfirmation ? (
+        {this.state.openModalDeleteConfirmation ? (
           <ModalConfirmation
-            open={this.state.modalDeleteConfirmation}
+            open={this.state.openModalDeleteConfirmation}
             content={'Apakah Anda yakin untuk menghapus barang ?'}
             type={'okeNotRed'}
             ok={() => {
-              this.setState({ modalDeleteConfirmation: false });
+              this.setState({ openModalDeleteConfirmation: false });
               this.deleteProductInCart();
             }}
-            cancel={() => this.setState({ modalDeleteConfirmation: false })}
+            cancel={() => this.setState({ openModalDeleteConfirmation: false })}
           />
         ) : (
           <View />
@@ -714,13 +795,61 @@ class OmsCartView extends Component {
         {!this.props.oms.loadingOmsGetCartItem &&
         this.props.oms.dataOmsGetCartItem !== null
           ? this.renderContent()
-          : this.renderSkeleton()}
+          : this.renderCheckIfErrorGetCartList()}
       </View>
+    );
+  }
+
+  renderCheckIfErrorGetCartList() {
+    return this.props.oms.errorOmsGetCartItem !== null
+      ? this.renderErrorGetCartList()
+      : this.renderSkeleton();
+  }
+
+  renderModalStockConfirmation() {
+    return (
+      <View>
+        {this.state.openModalStockConfirmation ? (
+          <ModalBottomStockConfirmation
+            open={this.state.openModalStockConfirmation}
+            close={() => this.setState({ openModalStockConfirmation: false })}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+  renderModalErrorRespons() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        open={this.state.openModalErrorGlobal}
+        onPress={() => {
+          this.setState({ openModalErrorGlobal: false });
+          this.checkCart();
+        }}
+      />
+    ) : (
+      <View />
     );
   }
 
   renderEmpty() {
     return <EmptyData title={'Keranjang Kosong'} />;
+  }
+  /**
+   * ===================
+   * ERROR
+   * ===================
+   */
+  renderErrorGetCartList() {
+    return (
+      <ErrorPage
+        title={'Terjadi Kesalahan'}
+        description={'Silahkan mencoba kembali'}
+      />
+    );
   }
   /**
    * ====================
@@ -730,12 +859,15 @@ class OmsCartView extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        {this.props.permanent.dataCart.length > 0
+        {this.props.oms.dataCart.length > 0
           ? this.renderMainContent()
           : this.renderEmpty()}
         {/* modal */}
         {this.renderModalConfirmationCheckout()}
         {this.renderModalDeleteProductConfirmation()}
+        {this.renderModalStockConfirmation()}
+        {this.renderModalErrorRespons()}
+        {/* errr */}
       </View>
     );
   }
@@ -983,8 +1115,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ merchant, oms, permanent }) => {
-  return { merchant, oms, permanent };
+const mapStateToProps = ({ merchant, oms }) => {
+  return { merchant, oms };
 };
 
 const mapDispatchToProps = dispatch => {

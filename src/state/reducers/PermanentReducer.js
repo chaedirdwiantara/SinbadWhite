@@ -4,8 +4,7 @@ import createReducer from './createReducer';
 const INITIAL_STATE = {
   /** data */
   token: null,
-  newOrderSuccessPerMerchant: [],
-  dataCart: []
+  newOrderSuccessPerMerchant: []
 };
 
 export const permanent = createReducer(INITIAL_STATE, {
@@ -47,17 +46,6 @@ export const permanent = createReducer(INITIAL_STATE, {
     return {
       ...state,
       newOrderSuccessPerMerchant: action.payload
-    };
-  },
-  /**
-   * ===================
-   * FOR OMS CART
-   * ===================
-   */
-  [types.OMS_ITEM_FOR_CART](state, action) {
-    return {
-      ...state,
-      dataCart: action.payload
     };
   }
 });
