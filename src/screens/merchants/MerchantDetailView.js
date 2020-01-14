@@ -18,6 +18,7 @@ import { StatusBarWhite } from '../../components/StatusBarGlobal';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import { MoneyFormat } from '../../helpers/NumberFormater';
 import { LoadingPage } from '../../components/Loading';
+import NavigationService from '../../navigation/NavigationService.js';
 
 const { width } = Dimensions.get('window');
 
@@ -79,6 +80,18 @@ class MerchantDetailView extends Component {
     });
     return hierarchy;
   }
+
+  toMapDetail() {
+    NavigationService.navigate('MerchantDetailMapView', {
+      latitude: this.props.merchant.dataGetMerchantDetail.latitude,
+      longitude: this.props.merchant.dataGetMerchantDetail.longitude,
+      name: this.props.merchant.dataGetMerchantDetail.name,
+      storeCode: this.props.merchant.dataGetMerchantDetail.storeCode,
+      address: this.props.merchant.dataGetMerchantDetail.address,
+      urban: this.props.merchant.dataGetMerchantDetail.urban,
+      province: this.props.merchant.dataGetMerchantDetail.urban.province
+    });
+  }
   /**
    * ==============================
    * RENDER VIEW
@@ -130,6 +143,15 @@ class MerchantDetailView extends Component {
         ]}
       >
         <View>
+          <TouchableOpacity
+            style={[styles.boxMaps, GlobalStyle.shadowForBox5]}
+            onPress={() => this.toMapDetail()}
+          >
+            <Image
+              source={require('../../assets/icons/maps/map.png')}
+              style={styles.mapImage}
+            />
+          </TouchableOpacity>
           {this.props.merchant.dataGetMerchantDetail.imageUrl ? (
             <Image
               source={{
@@ -346,6 +368,20 @@ const styles = StyleSheet.create({
   imageHeader: {
     height: 169,
     width: '100%'
+  },
+  boxMaps: {
+    width: 60,
+    height: 60,
+    borderRadius: 5,
+    position: 'absolute',
+    right: 16,
+    zIndex: 1000,
+    bottom: -30
+  },
+  mapImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 5
   }
 });
 

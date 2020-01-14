@@ -15,6 +15,7 @@ import Fonts from '../../../helpers/GlobalFont';
 import ModalBottomType2 from '../../../components/modal_bottom/ModalBottomType2';
 import Address from '../../../components/Address';
 import ButtonSingle from '../../../components/button/ButtonSingle';
+import { LoadingPage } from '../../../components/Loading';
 
 const { height } = Dimensions.get('window');
 
@@ -24,8 +25,8 @@ class MerchantCheckinView extends Component {
     this.state = {
       latitude: this.props.merchant.selectedMerchant.store.latitude,
       longitude: this.props.merchant.selectedMerchant.store.longitude,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
+      latitudeDelta: 0.02,
+      longitudeDelta: 0.02,
       reRender: false
     };
   }
@@ -58,19 +59,18 @@ class MerchantCheckinView extends Component {
   successMaps = success => {
     this.setState({
       longitude: success.coords.longitude,
-      latitude: success.coords.latitude
+      latitude: success.coords.latitude,
+      reRender: false
     });
   };
   errorMaps = () => {
-    this.setState({ openErrorGeolocation: true });
+    this.setState({ openErrorGeolocation: true, reRender: false });
   };
   getCurrentLocation() {
     this.setState({ reRender: true });
-    setTimeout(() => {
-      this.setState({ reRender: false });
-    }, 100);
     Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
-      maximumAge: 0,
+      timeout: 20000,
+      maximumAge: 1000,
       enableHighAccuracy: true
     });
   }
@@ -103,6 +103,8 @@ class MerchantCheckinView extends Component {
       <MapView
         ref={ref => (this.mapRef = ref)}
         style={{ flex: 1, width: '100%' }}
+        showsUserLocation={true}
+        maxZoomLevel={16}
         initialRegion={{
           latitude: this.state.latitude,
           longitude: this.state.longitude,
@@ -116,13 +118,18 @@ class MerchantCheckinView extends Component {
                 {
                   latitude: this.state.latitude,
                   longitude: this.state.longitude
+                },
+                {
+                  latitude: this.props.merchant.selectedMerchant.store.latitude,
+                  longitude: this.props.merchant.selectedMerchant.store
+                    .longitude
                 }
               ],
               {
                 edgePadding: {
                   top: 16,
                   right: 16,
-                  bottom: 0.9 * height,
+                  bottom: 16,
                   left: 16
                 },
                 animated: true
@@ -132,19 +139,12 @@ class MerchantCheckinView extends Component {
         }
       >
         <Marker
-          draggable
-          onDragEnd={event => {
-            this.setState({
-              latitude: event.nativeEvent.coordinate.latitude,
-              longitude: event.nativeEvent.coordinate.longitude
-            });
-          }}
           image={require('../../../assets/icons/maps/drop_pin.png')}
           coordinate={{
-            latitude: this.state.latitude,
-            longitude: this.state.longitude
+            latitude: this.props.merchant.selectedMerchant.store.latitude,
+            longitude: this.props.merchant.selectedMerchant.store.longitude
           }}
-          title={'Anda'}
+          title={this.props.merchant.selectedMerchant.store.name}
         />
       </MapView>
     );
@@ -186,7 +186,7 @@ class MerchantCheckinView extends Component {
   }
   /** === RENDER LOADING === */
   renderLoading() {
-    return <View />;
+    return <LoadingPage />;
   }
   /** === RENDER MAP === */
   renderMaps() {

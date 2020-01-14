@@ -6,7 +6,25 @@ import { Store } from '../Store';
  * ====================================
  */
 export function omsResetData() {
+  const allPropsData = Store.getState();
+  allPropsData.oms.dataCart = [];
   return { type: types.OMS_RESET_DATA };
+}
+/**
+ * =================================
+ * ADD CHECKOUT ITEM
+ * =================================
+ */
+export function omsCheckoutItem(data) {
+  return { type: types.OMS_CHECKOUT_ITEM, payload: data };
+}
+/**
+ * =================================
+ * MODIFY CHECK LIST ITEM
+ * =================================
+ */
+export function omsCheckListCart(data) {
+  return { type: types.OMS_CHECKLIST_ITEM_CART, payload: data };
 }
 /**
  * ====================================

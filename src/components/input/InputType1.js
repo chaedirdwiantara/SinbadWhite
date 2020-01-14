@@ -41,6 +41,7 @@ class InputType1 extends Component {
             placeholderTextColor={masterColor.fontBlack40}
             onChangeText={this.props.text}
             keyboardType={this.props.keyboardType}
+            maxLength={this.props.maxLength}
             style={[
               Fonts.type24,
               styles.input,

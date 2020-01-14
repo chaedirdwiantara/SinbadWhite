@@ -20,10 +20,12 @@ import SearchBarType3 from '../../components/search_bar/SearchBarType3';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import ButtonSingle from '../../components/button/ButtonSingle';
 import { LoadingPage } from '../../components/Loading';
+import Address from '../../components/Address';
+import Fonts from '../../helpers/GlobalFont';
 
 const { height } = Dimensions.get('window');
 
-class MapsView extends Component {
+class MerchantDetailMapView extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -97,7 +99,8 @@ class MapsView extends Component {
       <MapView
         ref={ref => (this.mapRef = ref)}
         style={{ flex: 1, width: '100%' }}
-        maxZoomLevel={16}
+        maxZoomLevel={17}
+        showsUserLocation={true}
         initialRegion={{
           latitude: this.state.latitude,
           longitude: this.state.longitude,
@@ -111,11 +114,15 @@ class MapsView extends Component {
                 {
                   latitude: this.state.latitude,
                   longitude: this.state.longitude
+                },
+                {
+                  latitude: this.props.navigation.state.params.latitude,
+                  longitude: this.props.navigation.state.params.longitude
                 }
               ],
               {
                 edgePadding: {
-                  top: 16,
+                  top: 0.1 * height,
                   right: 16,
                   bottom: 16,
                   left: 16
@@ -127,19 +134,12 @@ class MapsView extends Component {
         }
       >
         <Marker
-          draggable
-          onDragEnd={event => {
-            this.setState({
-              latitude: event.nativeEvent.coordinate.latitude,
-              longitude: event.nativeEvent.coordinate.longitude
-            });
-          }}
           image={require('../../assets/icons/maps/drop_pin.png')}
           coordinate={{
-            latitude: this.state.latitude,
-            longitude: this.state.longitude
+            latitude: this.props.navigation.state.params.latitude,
+            longitude: this.props.navigation.state.params.longitude
           }}
-          title={'Anda'}
+          title={this.props.navigation.state.params.name}
         />
       </MapView>
     );
@@ -191,11 +191,17 @@ class MapsView extends Component {
   renderButton() {
     return (
       <View style={styles.boxButtonBottom}>
-        <ButtonSingle
-          disabled={false}
-          title={'Pilih Lokasi Ini'}
-          borderRadius={4}
-          onPress={() => this.addLongLat()}
+        <Text style={[Fonts.type7, { marginBottom: 5 }]}>
+          [{this.props.navigation.state.params.storeCode}]
+        </Text>
+        <Text style={[Fonts.type7, { marginBottom: 10 }]}>
+          {this.props.navigation.state.params.name}
+        </Text>
+        <Address
+          font={Fonts.type17}
+          address={this.props.navigation.state.params.address}
+          urban={this.props.navigation.state.params.urban}
+          province={this.props.navigation.state.params.province}
         />
       </View>
     );
@@ -250,6 +256,9 @@ const styles = StyleSheet.create({
   boxButtonBottom: {
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
+    paddingHorizontal: 16,
+    paddingBottom: 50,
+    paddingTop: 30,
     backgroundColor: masterColor.backgroundWhite,
     position: 'absolute',
     width: '100%',
@@ -266,4 +275,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(MapsView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MerchantDetailMapView);

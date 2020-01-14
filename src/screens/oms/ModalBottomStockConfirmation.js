@@ -16,12 +16,14 @@ import { Button } from 'react-native-elements';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Fonts from '../../utils/Fonts';
 import * as ActionCreators from '../../state/actions';
+import ModalBottomType1 from '../../components/modal_bottom/ModalBottomType1';
+import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
 
 const { height } = Dimensions.get('window');
 
 class ModalBottomStockConfirmation extends Component {
   renderPerubahanStockContent() {
-    return this.props.cart.errorCheckout.data.map((item, index) => {
+    return this.props.oms.errorOmsGetCheckoutItem.data.map((item, index) => {
       return item.errorCode === 'ERR-STOCK' ? (
         <View style={styles.boxPerContent} key={index}>
           <View
@@ -70,7 +72,7 @@ class ModalBottomStockConfirmation extends Component {
   }
 
   renderProductErrorBarangHabis() {
-    return this.props.cart.errorCheckout.data.map((item, index) => {
+    return this.props.oms.errorOmsGetCheckoutItem.data.map((item, index) => {
       return item.errorCode === 'ERR-RUN-OUT' ? (
         <View style={styles.boxPerContent} key={index}>
           <View
@@ -117,7 +119,7 @@ class ModalBottomStockConfirmation extends Component {
   }
 
   renderProductErrorTidakTersedia() {
-    return this.props.cart.errorCheckout.data.map((item, index) => {
+    return this.props.oms.errorOmsGetCheckoutItem.data.map((item, index) => {
       return item.errorCode === 'ERR-STATUS' ? (
         <View style={styles.boxPerContent} key={index}>
           <View
@@ -164,7 +166,7 @@ class ModalBottomStockConfirmation extends Component {
   }
 
   renderPerubahanStock() {
-    return this.props.cart.errorCheckout.data.find(
+    return this.props.oms.errorOmsGetCheckoutItem.data.find(
       item => item.errorCode === 'ERR-STOCK'
     ) !== undefined ? (
       <View style={styles.boxHeaderContent}>
@@ -182,7 +184,7 @@ class ModalBottomStockConfirmation extends Component {
   }
 
   renderBarangHabis() {
-    return this.props.cart.errorCheckout.data.find(
+    return this.props.oms.errorOmsGetCheckoutItem.data.find(
       item => item.errorCode === 'ERR-RUN-OUT'
     ) !== undefined ? (
       <View style={styles.boxHeaderContent}>
@@ -200,7 +202,7 @@ class ModalBottomStockConfirmation extends Component {
   }
 
   renderProductTidakTersedia() {
-    return this.props.cart.errorCheckout.data.find(
+    return this.props.oms.errorOmsGetCheckoutItem.data.find(
       item => item.errorCode === 'ERR-STATUS'
     ) !== undefined ? (
       <View style={styles.boxHeaderContent}>
@@ -217,75 +219,46 @@ class ModalBottomStockConfirmation extends Component {
     );
   }
 
-  renderButton() {
+  renderContent() {
     return (
-      <Button
-        onPress={this.props.close}
-        title="Tinjau Keranjang"
-        titleStyle={styles.titleButton}
-        buttonStyle={styles.button}
-      />
+      <View style={styles.container}>
+        <StatusBarRedOP50 />
+        <View style={{ paddingHorizontal: 10, paddingBottom: 10 }}>
+          <Text style={styles.titleDescription}>
+            Beberapa informasi produk pada pesanan Anda telah diperbaharui mohon
+            tinjau ulang keranjang dan coba lagi
+          </Text>
+        </View>
+        <View style={styles.contentContainer}>
+          <ScrollView>
+            {this.renderPerubahanStock()}
+            {this.renderBarangHabis()}
+            {this.renderProductTidakTersedia()}
+          </ScrollView>
+        </View>
+      </View>
     );
   }
 
   render() {
     return (
-      <Modal
-        isVisible={this.props.open}
-        animationIn="slideInUp"
-        animationOut="slideOutDown"
-        avoidKeyboard
-        coverScreen
-        animationInTiming={500}
-        animationOutTiming={100}
-        backdropTransitionOutTiming={10}
-        backdropColor="black"
-        deviceHeight={height}
-        backdropOpacity={0.4}
-        style={styles.modalPosition}
-      >
-        <StatusBar
-          backgroundColor="rgba(144, 39, 44, 1)"
-          barStyle="light-content"
-        />
-        <View style={styles.container}>
-          <View style={{ height: 50 }}>
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>Konfirmasi Stock</Text>
-            </View>
-          </View>
-          <View style={{ paddingHorizontal: 10, paddingBottom: 10 }}>
-            <Text style={styles.titleDescription}>
-              Beberapa informasi produk pada pesanan Anda telah diperbaharui
-              mohon tinjau ulang keranjang dan coba lagi
-            </Text>
-          </View>
-          <View style={styles.contentContainer}>
-            <ScrollView>
-              {this.renderPerubahanStock()}
-              {this.renderBarangHabis()}
-              {this.renderProductTidakTersedia()}
-            </ScrollView>
-          </View>
-          <View style={styles.buttonContainer}>{this.renderButton()}</View>
-        </View>
-      </Modal>
+      <ModalBottomType1
+        open={this.props.open}
+        onPress={this.props.close}
+        title={'Konfirmasi Stock'}
+        buttonTitle={'Tinjau Keranjang'}
+        content={this.renderContent()}
+      />
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    height: 0.7 * height,
+    height: 0.6 * height,
     backgroundColor: 'white',
     flexDirection: 'column',
-    position: 'absolute',
-    width: '100%',
-    bottom: 0,
-    zIndex: 1000,
-    paddingBottom: 0.01 * height
+    width: '100%'
   },
   modalPosition: {
     marginBottom: 0,

@@ -135,6 +135,8 @@ class OmsCartView extends Component {
             productItem.catalogue.stock < productItem.catalogue.minQty
           ) {
             productItem.statusInCart = 'outStock';
+          } else if (productItem.catalogue.status === 'inactive') {
+            productItem.statusInCart = 'unavailable';
           } else {
             productItem.statusInCart = 'available';
           }
@@ -168,7 +170,7 @@ class OmsCartView extends Component {
     /** function for edit productCartArray */
     const productCartArray = this.state.productCartArray;
     /** modification for checklist */
-    this.props.oms.errorCheckout.data.forEach(item => {
+    this.props.oms.errorOmsGetCheckoutItem.data.forEach(item => {
       const indexProductCartArray = productCartArray.findIndex(
         itemProductCartArray =>
           itemProductCartArray.catalogueId === item.catalogue.id
@@ -546,6 +548,200 @@ class OmsCartView extends Component {
       );
     });
   }
+
+  /** Error Product Tidak Tersedia */
+
+  renderProductTidakTersedia() {
+    return this.state.productCartArray.filter(
+      item => item.statusInCart === 'unavailable'
+    ).length > 0 ? (
+      <View>
+        <View style={styles.boxMargin} />
+        <View style={styles.boxErrorProduct}>
+          <View style={styles.boxTitle}>
+            <Text style={styles.titleBoxText}>Produk Tidak Tersedia</Text>
+          </View>
+          <View style={styles.lines} />
+          {this.renderProductContentErrorTidakTersedia()}
+        </View>
+      </View>
+    ) : (
+      <View />
+    );
+  }
+
+  /** list error product (tidak tersedia and out of stock) */
+  renderForErrorProduct() {
+    return this.state.productCartArray.filter(
+      item =>
+        item.statusInCart === 'unavailable' || item.statusInCart === 'outStock'
+    ).length > 0 ? (
+      <View>
+        {this.renderProductTidakTersedia()}
+        {this.renderProductHabis()}
+      </View>
+    ) : (
+      <View />
+    );
+  }
+
+  /** Error Product Habis */
+
+  renderProductHabis() {
+    return this.state.productCartArray.filter(
+      item => item.statusInCart === 'outStock'
+    ).length > 0 ? (
+      <View>
+        <View style={styles.boxMargin} />
+        <View style={styles.boxErrorProduct}>
+          <View style={styles.boxTitle}>
+            <Text style={styles.titleBoxText}>Produk Habis</Text>
+          </View>
+          <View style={styles.lines} />
+          {this.renderProductContentErrorProductHabis()}
+        </View>
+      </View>
+    ) : (
+      <View />
+    );
+  }
+
+  renderProductContentErrorProductHabis() {
+    return this.state.productCartArray.map((item, index) => {
+      return item.statusInCart === 'outStock' ? (
+        <View style={styles.boxContent} key={index}>
+          <View style={[styles.boxContentItem, { width: '30%' }]}>
+            <Image
+              defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
+              source={{
+                uri: item.catalogue.catalogueImages[0].imageUrl
+              }}
+              style={[styles.productImage, { opacity: 0.5 }]}
+            />
+          </View>
+          <View style={styles.boxContentProductHabis}>
+            <View>
+              <Text style={[styles.nameProductText, { opacity: 0.5 }]}>
+                {item.catalogue.name}
+              </Text>
+            </View>
+            {/* <View>
+              <Text
+                style={[
+                  styles.variationProductText,
+                  { color: 'rgba(130, 130, 130, 0.5)' }
+                ]}
+              >
+                variasi
+              </Text>
+            </View> */}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 10
+              }}
+            >
+              {item.catalogue.discountedRetailBuyingPrice !== null ? (
+                <View>
+                  <Text style={[styles.priceTextCross, { opacity: 0.5 }]}>
+                    {MoneyFormat(item.catalogue.retailBuyingPrice)}
+                  </Text>
+                  <Text style={[styles.priceTextRed, { opacity: 0.5 }]}>
+                    {MoneyFormat(item.catalogue.discountedRetailBuyingPrice)}
+                  </Text>
+                </View>
+              ) : (
+                <Text style={[styles.priceTextRed, { opacity: 0.5 }]}>
+                  {MoneyFormat(item.catalogue.retailBuyingPrice)}
+                </Text>
+              )}
+            </View>
+          </View>
+          <TouchableOpacity
+            onPress={() => this.wantDelete(item)}
+            style={[styles.boxContentItem, { width: '20%' }]}
+          >
+            <Image
+              source={require('../../assets/icons/oms/delete.png')}
+              style={{ height: 24, width: 24 }}
+            />
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View key={index} />
+      );
+    });
+  }
+
+  renderProductContentErrorTidakTersedia() {
+    return this.state.productCartArray.map((item, index) => {
+      return item.statusInCart === 'unavailable' ? (
+        <View style={styles.boxContent} key={index}>
+          <View style={[styles.boxContentItem, { width: '30%' }]}>
+            <Image
+              defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
+              source={{
+                uri: item.catalogue.catalogueImages[0].imageUrl
+              }}
+              style={[styles.productImage, { opacity: 0.5 }]}
+            />
+          </View>
+          <View style={styles.boxContentProductHabis}>
+            <View>
+              <Text style={[styles.nameProductText, { opacity: 0.5 }]}>
+                {item.catalogue.name}
+              </Text>
+            </View>
+            {/* <View>
+              <Text
+                style={[
+                  styles.variationProductText,
+                  { color: 'rgba(130, 130, 130, 0.5)' }
+                ]}
+              >
+                variasi
+              </Text>
+            </View> */}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 10
+              }}
+            >
+              {item.catalogue.discountedRetailBuyingPrice !== null ? (
+                <View>
+                  <Text style={[styles.priceTextCross, { opacity: 0.5 }]}>
+                    {MoneyFormat(item.catalogue.retailBuyingPrice)}
+                  </Text>
+                  <Text style={[styles.priceTextRed, { opacity: 0.5 }]}>
+                    {MoneyFormat(item.catalogue.discountedRetailBuyingPrice)}
+                  </Text>
+                </View>
+              ) : (
+                <Text style={[styles.priceTextRed, { opacity: 0.5 }]}>
+                  {MoneyFormat(item.catalogue.retailBuyingPrice)}
+                </Text>
+              )}
+            </View>
+          </View>
+          <TouchableOpacity
+            onPress={() => this.wantDelete(item)}
+            style={[styles.boxContentItem, { width: '20%' }]}
+          >
+            <Image
+              source={require('../../assets/icons/oms/delete.png')}
+              style={{ height: 24, width: 24 }}
+            />
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View key={index} />
+      );
+    });
+  }
+
   renderListBrand(itemBrand) {
     return itemBrand.cartBrands.map((item, index) => {
       return (
@@ -634,20 +830,15 @@ class OmsCartView extends Component {
   renderContent() {
     return (
       <View style={styles.contentContainer}>
-        {this.renderData()}
-        {this.renderTotalBottom()}
-      </View>
-    );
-  }
-  /** === RENDER DATA === */
-  renderData() {
-    return (
-      <View style={styles.contentContainer}>
         <ScrollView>
           {this.renderAddress()}
           {this.renderListCart()}
+          {this.renderForErrorProduct()}
+
           <View style={{ paddingBottom: 50 }} />
         </ScrollView>
+
+        {this.renderTotalBottom()}
       </View>
     );
   }

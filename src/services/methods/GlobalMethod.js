@@ -45,9 +45,6 @@ function getLocation(data) {
     default:
       break;
   }
-  console.log(
-    `${getLocationApi}$skip=${data.page}&$limit=20&keyword=${data.search}`
-  );
   return ApiRest({
     path: `${getLocationApi}$skip=${data.page}&$limit=20&keyword=${data.search}`,
     method: 'GET'

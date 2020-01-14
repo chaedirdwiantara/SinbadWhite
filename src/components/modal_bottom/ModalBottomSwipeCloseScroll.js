@@ -25,9 +25,6 @@ class ModalBottomSwipeCloseScroll extends Component {
     };
     this.scrollViewRef = React.createRef();
   }
-  test(persent) {
-    console.log(persent);
-  }
 
   handleOnScroll = event => {
     this.setState({

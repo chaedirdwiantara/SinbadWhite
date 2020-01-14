@@ -13,8 +13,8 @@ import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 import { Button } from 'react-native-elements';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import { Fonts } from '../../utils/Fonts';
-import { MoneyFormat } from '../../helpers';
+import Fonts from '../../utils/Fonts';
+import { MoneyFormat } from '../../helpers/NumberFormater';
 
 const { height, width } = Dimensions.get('window');
 
@@ -48,7 +48,7 @@ class ModalBottomErrorMinimumOrder extends Component {
       return index < 3 ? (
         <View key={index} style={{ paddingHorizontal: 5 }}>
           <Image
-            defaultSource={require('../../assets/icons/sinbadopacity.png')}
+            defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
             source={{
               uri: item.catalogue.catalogueImages[0].imageUrl
             }}
@@ -62,82 +62,84 @@ class ModalBottomErrorMinimumOrder extends Component {
   }
 
   renderData() {
-    return this.props.cart.dataCheckout.orderParcels.map((item, index) => {
-      return (
-        <View key={index}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              paddingHorizontal: 10
-            }}
-          >
-            <View style={{ alignItems: 'center' }}>
-              <Text style={styles.parcelName}>{item.invoiceGroup.name}</Text>
-            </View>
-            <View>
-              {this.props.cart.errorConfirmOrder.data.errorData.find(
-                itemErrorConfirmOrder =>
-                  itemErrorConfirmOrder.parcelId === item.id
-              ) === undefined ? (
-                <Image
-                  source={require('../../assets/icons/cart/sukses.png')}
-                  style={{ height: 24, width: 24 }}
-                />
-              ) : (
-                <Image
-                  source={require('../../assets/icons/cart/fail.png')}
-                  style={{ height: 24, width: 24 }}
-                />
-              )}
-            </View>
-          </View>
-          <View style={styles.lines} />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              paddingHorizontal: 10
-            }}
-          >
+    return this.props.oms.dataOmsGetCheckoutItem.orderParcels.map(
+      (item, index) => {
+        return (
+          <View key={index}>
             <View
               style={{
-                paddingHorizontal: 10,
                 flexDirection: 'row',
-                paddingBottom: 10
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingHorizontal: 10
               }}
             >
-              {this.renderListProductImage(item)}
+              <View style={{ alignItems: 'center' }}>
+                <Text style={styles.parcelName}>{item.invoiceGroup.name}</Text>
+              </View>
+              <View>
+                {this.props.oms.errorOmsConfirmOrder.data.errorData.find(
+                  itemErrorConfirmOrder =>
+                    itemErrorConfirmOrder.parcelId === item.id
+                ) === undefined ? (
+                  <Image
+                    source={require('../../assets/icons/oms/sukses.png')}
+                    style={{ height: 24, width: 24 }}
+                  />
+                ) : (
+                  <Image
+                    source={require('../../assets/icons/oms/fail.png')}
+                    style={{ height: 24, width: 24 }}
+                  />
+                )}
+              </View>
             </View>
-            <View style={{ justifyContent: 'center' }}>
-              {this.renderPlusProduct(item)}
+            <View style={styles.lines} />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingHorizontal: 10
+              }}
+            >
+              <View
+                style={{
+                  paddingHorizontal: 10,
+                  flexDirection: 'row',
+                  paddingBottom: 10
+                }}
+              >
+                {this.renderListProductImage(item)}
+              </View>
+              <View style={{ justifyContent: 'center' }}>
+                {this.renderPlusProduct(item)}
+              </View>
             </View>
-          </View>
 
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              paddingHorizontal: 10
-            }}
-          >
-            <View>
-              <Text style={styles.totalPembelian}>
-                Total Pembelian :{' '}
-                {MoneyFormat(item.parcelDetails.totalNettPrice)}
-              </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingHorizontal: 10
+              }}
+            >
+              <View>
+                <Text style={styles.totalPembelian}>
+                  Total Pembelian :{' '}
+                  {MoneyFormat(item.parcelDetails.totalNettPrice)}
+                </Text>
+              </View>
+              <View>
+                <Text style={styles.totalPembelian}>
+                  Min. Transaksi : {MoneyFormat(item.invoiceGroup.minimumOrder)}
+                </Text>
+              </View>
             </View>
-            <View>
-              <Text style={styles.totalPembelian}>
-                Min. Transaksi : {MoneyFormat(item.invoiceGroup.minimumOrder)}
-              </Text>
-            </View>
+            <View style={styles.lines} />
           </View>
-          <View style={styles.lines} />
-        </View>
-      );
-    });
+        );
+      }
+    );
   }
 
   renderButton() {
@@ -150,7 +152,7 @@ class ModalBottomErrorMinimumOrder extends Component {
           buttonStyle={styles.buttonWhite}
         />
         <Button
-          disabled={!this.props.cart.errorConfirmOrder.data.confirmOrder}
+          disabled={!this.props.oms.errorOmsConfirmOrder.data.confirmOrder}
           onPress={this.props.confirmation}
           title="Konfirmasi"
           titleStyle={styles.titleButton}
@@ -166,13 +168,9 @@ class ModalBottomErrorMinimumOrder extends Component {
     return (
       <Modal
         isVisible={this.props.open}
-        animationIn="slideInUp"
-        animationOut="slideOutDown"
-        avoidKeyboard
-        coverScreen
-        animationInTiming={500}
-        animationOutTiming={100}
-        backdropTransitionOutTiming={10}
+        useNativeDriver={true}
+        hasBackdrop={true}
+        coverScreen={true}
         backdropColor="black"
         deviceHeight={height}
         backdropOpacity={0.4}
@@ -319,8 +317,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ cart }) => {
-  return { cart };
+const mapStateToProps = ({ oms }) => {
+  return { oms };
 };
 
 export default connect(mapStateToProps, {})(ModalBottomErrorMinimumOrder);

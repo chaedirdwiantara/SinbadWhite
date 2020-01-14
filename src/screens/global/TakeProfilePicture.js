@@ -27,7 +27,6 @@ class TakeProfilePicture extends Component {
   }
 
   takePicture = async () => {
-    console.log('lalalal');
     const cropData = {
       offset: { x: 0, y: 100 },
       size: { width: 100, height: 100 },
@@ -38,10 +37,10 @@ class TakeProfilePicture extends Component {
     if (this.camera) {
       const options = { quality: 0.5, base64: true };
       const data = await this.camera.takePictureAsync(options);
-      console.log(data);
-      ImageEditor.cropImage(data.uri, cropData).then(url => {
-        console.log(url);
-      });
+      
+      // ImageEditor.cropImage(data.uri, cropData).then(url => {
+      //   console.log(url);
+      // });
       // ImageEditor.cropImage(data.uri, cropData).then(url => {
       //   console.log('Cropped image uri', url);
       // });

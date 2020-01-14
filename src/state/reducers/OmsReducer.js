@@ -15,6 +15,7 @@ const INITIAL_STATE = {
   dataOmsGetPayment: null,
   dataOmsDeleteCartItem: null,
   dataCart: [],
+  dataCheckout: [],
   dataCheckBoxlistCart: [],
   /** error */
   errorOmsGetCartItem: null,
@@ -32,6 +33,24 @@ export const oms = createReducer(INITIAL_STATE, {
    */
   [types.OMS_RESET_DATA](state, action) {
     return INITIAL_STATE;
+  },
+  /**
+   * =================================
+   * ADD CHECKOUT ITEM
+   * =================================
+   */
+  [types.OMS_CHECKOUT_ITEM](state, action) {
+    return {
+      ...state,
+      dataCart: action.payload
+    };
+  },
+
+  [types.OMS_COMPARE_CART](state, action) {
+    return {
+      ...state,
+      dataCheckout: action.payload
+    };
   },
   /**
    * ==================================

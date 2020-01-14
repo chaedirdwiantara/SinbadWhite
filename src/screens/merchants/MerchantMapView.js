@@ -49,7 +49,8 @@ class MerchantMapView extends Component {
       this.setState({ reRender: false });
     }, 100);
     Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
-      maximumAge: 0,
+      timeout: 20000,
+      maximumAge: 1000,
       enableHighAccuracy: true
     });
   }
@@ -73,6 +74,7 @@ class MerchantMapView extends Component {
         title={`${this.props.merchant.totalDataGetMerchant} List Store`}
         body={
           <MerchantListDataView
+            type={this.props.type}
             search={this.props.searchText}
             portfolioIndex={this.props.portfolio}
           />
@@ -144,6 +146,7 @@ class MerchantMapView extends Component {
       <MapView
         ref={ref => (this.mapRef = ref)}
         style={{ flex: 1, width: '100%' }}
+        maxZoomLevel={16}
         initialRegion={{
           latitude: this.state.latitude,
           longitude: this.state.longitude,
@@ -163,7 +166,7 @@ class MerchantMapView extends Component {
                 edgePadding: {
                   top: 16,
                   right: 16,
-                  bottom: 0.45 * height,
+                  bottom: 16,
                   left: 16
                 },
                 animated: true
@@ -188,6 +191,7 @@ class MerchantMapView extends Component {
     return (
       <MapView
         ref={ref => (this.mapRef = ref)}
+        maxZoomLevel={11}
         style={{ flex: 1, width: '100%' }}
         initialRegion={{
           latitude: this.state.latitude,
@@ -204,7 +208,7 @@ class MerchantMapView extends Component {
                   edgePadding: {
                     top: 16,
                     right: 16,
-                    bottom: 0.45 * height,
+                    bottom: 16,
                     left: 16
                   },
                   animated: true

@@ -33,6 +33,7 @@ class MerchantListDataView extends Component {
   onHandleRefresh = () => {
     this.props.merchantGetRefresh();
     this.props.merchantGetProcess({
+      type: this.props.type,
       page: 0,
       loading: true,
       portfolioId: this.props.merchant.dataGetPortfolio[
@@ -53,6 +54,7 @@ class MerchantListDataView extends Component {
         this.props.merchantGetProcess({
           page,
           loading: false,
+          type: this.props.type,
           portfolioId: this.props.merchant.dataGetPortfolio[
             this.props.portfolioIndex
           ].id,

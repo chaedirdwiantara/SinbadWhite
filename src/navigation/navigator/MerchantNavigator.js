@@ -4,6 +4,7 @@ import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 import MerchantView from '../../screens/merchants/MerchantView';
 import MerchantDetailView from '../../screens/merchants/MerchantDetailView';
+import MerchantDetailMapView from '../../screens/merchants/MerchantDetailMapView';
 /** add merchant */
 import AddMerchantPhoneNumber from '../../screens/merchants/add-merchant/AddMerchantPhoneNumber';
 import AddMerchantOTP from '../../screens/merchants/add-merchant/AddMerchantOTP';
@@ -189,6 +190,13 @@ const MerchantNavigator = {
         backgroundColor: masterColor.backgroundWhite
       },
       headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  MerchantDetailMapView: {
+    screen: MerchantDetailMapView,
+    navigationOptions: {
+      headerShown: false,
       gesturesEnabled: false
     }
   }

@@ -100,6 +100,7 @@ class AddMerchantOwnerInformation extends Component {
       <InputType1
         title={'Nomor Kartu Tanda Penduduk (KTP)'}
         value={this.state.idNo}
+        maxLength={16}
         placeholder={'Masukan No KTP Anda'}
         keyboardType={'numeric'}
         text={text => this.setState({ idNo: text })}
@@ -131,6 +132,7 @@ class AddMerchantOwnerInformation extends Component {
         title={'Nomor Pokok Wajib Pajak (NPWP)'}
         value={this.state.taxNo}
         placeholder={'Masukan NPWP pemilik'}
+        maxLength={15}
         keyboardType={'numeric'}
         text={text => this.setState({ taxNo: text })}
         error={false}

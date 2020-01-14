@@ -187,7 +187,8 @@ class OrderButton extends Component {
           />
         </View>
         {this.state.plusButtonDisable ||
-        this.state.stock <= this.state.minQty ? (
+        this.state.stock <= this.state.minQty ||
+        this.state.stock <= this.state.qty ? (
           <View style={styles.plusButtonDisabled}>
             <Text style={styles.plusTextDisabled}>+</Text>
           </View>

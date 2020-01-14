@@ -93,6 +93,7 @@ class MerchantListView extends Component {
 
         <MerchantListDataView
           portfolioIndex={this.props.portfolio}
+          type={this.props.type}
           search={this.props.searchText}
         />
       </View>

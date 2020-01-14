@@ -28,7 +28,6 @@ class TestModal extends Component {
   }
 
   finish(dir) {
-    console.log(dir);
     if (dir.swipingDirection === 'up') {
       if (this.state.initialHeight + this.state.heightModal >= 0.45 * height) {
         this.setState({

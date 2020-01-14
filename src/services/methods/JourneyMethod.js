@@ -17,7 +17,7 @@ function saveMerchantToJourneyPlan(data) {
 /** GET JOUNEY PLAN REPORT VISIT AND TOTAL PRICE ORDER */
 function getJourneyPlanReport(supplierIds) {
   return ApiRest({
-    path: `journey-reports?supplierIds=${supplierIds}`,
+    path: `journey-reports?supplierIds=${JSON.stringify(supplierIds)}`,
     method: 'GET'
   });
 }

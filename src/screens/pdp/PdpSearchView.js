@@ -33,8 +33,10 @@ class PdpSearchView extends Component {
     this.props.pdpGetProcess({
       page: 0,
       loading: true,
-      searchText: this.props.global.search,
-      supplierId: this.props.user.userSuppliers[0].supplierId
+      sort: 'asc',
+      sortBy: 'name',
+      search: this.props.global.search,
+      supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
     });
   }
 
@@ -44,8 +46,10 @@ class PdpSearchView extends Component {
       this.props.pdpGetProcess({
         page: 0,
         loading: true,
-        searchText: this.props.global.search,
-        supplierId: this.props.user.userSuppliers[0].supplierId
+        sort: 'asc',
+        sortBy: 'name',
+        search: this.props.global.search,
+        supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
       });
     }
   }

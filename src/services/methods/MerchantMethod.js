@@ -2,11 +2,8 @@ import ApiRest from '../apiRest';
 
 /** === MERCHANT LIST === */
 function getMerchant(data) {
-  console.log(
-    `agent-stores?$skip=${data.page}&$limit=10&portfolioId=${data.portfolioId}&keyword=${data.search}`
-  );
   return ApiRest({
-    path: `agent-stores?$skip=${data.page}&$limit=10&portfolioId=${data.portfolioId}&keyword=${data.search}`,
+    path: `portfolio-lists?type=${data.type}&portfolioId=${data.portfolioId}&$skip=${data.page}&$limit=10&keyword=${data.search}`,
     method: 'GET'
   });
 }

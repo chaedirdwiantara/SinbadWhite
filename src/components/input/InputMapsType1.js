@@ -41,7 +41,8 @@ class InputMapsType1 extends Component {
         {!this.props.refresh ? (
           <MapView
             ref={ref => (this.mapRef = ref)}
-            style={{ flex: 1, width: '100%', borderRadius: 10 }}
+            style={{ flex: 1, width: '100%' }}
+            maxZoomLevel={15}
             initialRegion={{
               latitude: this.props.selectedMapLat,
               longitude: this.props.selectedMapLong,

@@ -34,7 +34,7 @@ class JourneyView extends Component {
     this.props.journeyPlanGetReset();
     this.props.journeyPlanGetProcess({ page: 0, loading: true });
     this.props.getJourneyPlanReportProcess(
-      this.props.user.userSuppliers.map(item => item.id)
+      this.props.user.userSuppliers.map(item => item.supplierId)
     );
   }
   /** === DID UPDATE === */

@@ -93,6 +93,7 @@ class AddMerchantInformation extends Component {
         value={this.state.taxNo}
         placeholder={'Masukan NPWP Toko'}
         keyboardType={'numeric'}
+        maxLength={15}
         text={text => this.setState({ taxNo: text })}
         error={false}
         errorText={''}
