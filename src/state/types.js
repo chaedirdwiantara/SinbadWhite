@@ -136,6 +136,9 @@ export const OMS_ADD_TO_CART = 'OmsAddToCart';
 // INI SEMENTARA HARUS DI GANTI
 export const OMS_ITEM_FOR_CART = 'omsAddToCart';
 export const OMS_CHECKLIST_ITEM_CART = 'omsCheckListItemCart';
+export const OMS_CHECKOUT_ITEM = 'omsCheckoutItem';
+export const OMS_DELETE_ALL_ITEM_CART = 'omsDeleteAllItemCart';
+export const OMS_COMPARE_CART = 'omsCompareCart';
 /** GET CART ITEM */
 export const OMS_GET_CART_ITEM_PROCESS = 'OmsGetCartItemProcess';
 export const OMS_GET_CART_ITEM_SUCCESS = 'OmsGetCartItemSuccess';

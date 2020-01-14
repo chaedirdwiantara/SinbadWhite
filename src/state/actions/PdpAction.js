@@ -62,7 +62,6 @@ export function pdpModifyProductListData(data) {
     product => parseInt(product.id, 10) === data.catalogueId
   );
   if (findProductById !== undefined) {
-    console.log(data, findProductById, 'ini apa');
     switch (data.method) {
       case 'add':
         findProductById.addToCart = true;

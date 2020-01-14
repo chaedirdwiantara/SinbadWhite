@@ -28,6 +28,8 @@ import ModalBottomPaymentMethodDetail from './ModalBottomPaymentMethodDetail';
 import ModalBottomListProduct from './ModalBottomListProduct';
 import ModalBottomParcelDetail from './ModalBottomParcelDetail';
 import ModalWarning from './ModalWarning';
+import ModalBottomStockConfirmationConfirmOrder from './ModalBottomStockConfirmationConfirmOrder';
+import ModalBottomErrorMinimumOrder from './ModalBottomErrorMinimumOrder';
 
 const { width, height } = Dimensions.get('window');
 
@@ -37,7 +39,7 @@ class OmsCheckoutView extends Component {
     this.state = {
       /** data */
       parcels: [],
-      productOrder: [],
+      orderProduct: [],
       dataOmsGetCheckoutItem: this.props.oms.dataOmsGetCheckoutItem,
       selectedParcelIdForPayment: null,
       selectedParcel: null,
@@ -63,7 +65,6 @@ class OmsCheckoutView extends Component {
       modalErrorPayment: false,
       modalErrorGlobal: false,
       orderPerParcel: null,
-      orderProduct: [],
       makeConfirmOrder: false,
       selectedParcelDetail: null,
       selectedPaymentType: null,
@@ -101,8 +102,11 @@ class OmsCheckoutView extends Component {
   /** DID MOUNT */
   componentDidMount() {
     this.navigationFunction();
-    this.modifyParcel();
-    this.productOrderList();
+    // this.modifyParcel();
+    // this.orderProductList();
+    if (this.state.dataOmsGetCheckoutItem !== null) {
+      this.modifyDataForList();
+    }
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
@@ -113,6 +117,53 @@ class OmsCheckoutView extends Component {
         this.backToMerchantHomeView(
           this.props.merchant.selectedMerchant.store.name
         );
+      }
+    }
+    /** ERROR */
+    if (
+      prevProps.oms.errorOmsConfirmOrder !== this.props.oms.errorOmsConfirmOrder
+    ) {
+      if (this.props.oms.errorOmsConfirmOrder !== null) {
+        this.setState({ loading: false });
+        if (
+          this.props.oms.errorOmsConfirmOrder.code === 400 &&
+          this.props.oms.errorOmsConfirmOrder.data
+        ) {
+          if (
+            this.props.oms.errorOmsConfirmOrder.data.errorCode === 'ERR-STATUS'
+          ) {
+            this.setState({ modalStockConfirmationConfirmOrder: true });
+            this.modifyDataCheckBoxlistCart();
+          }
+          if (
+            this.props.oms.errorOmsConfirmOrder.data.errorCode ===
+            'ERR-MIN-ORDER'
+          ) {
+            this.setState({ modalErrorMinimumOrder: true });
+            this.modifyItemCataloguesCheckout();
+          }
+          if (
+            this.props.oms.errorOmsConfirmOrder.data.errorCode === 'ERR-BALANCE'
+          ) {
+            this.modifyParcelData();
+            this.setState({ modalErrorBalance: true });
+            setTimeout(() => {
+              this.setState({ modalErrorBalance: false });
+            }, 3000);
+          }
+          if (
+            this.props.oms.errorOmsConfirmOrder.data.errorCode ===
+            'ERR-PAYMENT-STATUS'
+          ) {
+            this.modifyParcelData();
+            this.setState({ modalErrorPayment: true });
+            setTimeout(() => {
+              this.setState({ modalErrorPayment: false });
+            }, 2000);
+          }
+        } else {
+          this.setState({ modalErrorGlobal: true });
+        }
       }
     }
   }
@@ -164,6 +215,125 @@ class OmsCheckoutView extends Component {
       }
     );
     this.setState({ parcels });
+  }
+
+  modifyParcelData() {
+    const parcels = this.state.parcels;
+    this.props.oms.errorOmsConfirmOrder.data.errorData.map(item => {
+      const indexParcels = parcels.findIndex(
+        itemParcels => itemParcels.orderParcelId === item.parcelId
+      );
+      if (indexParcels > -1) {
+        parcels[indexParcels].error = true;
+      }
+    });
+    this.setState({ parcels });
+  }
+
+  /**
+   * global function for componentDidMount and componentDidUpdate
+   * modifikasi data untuk render data parcel dan image
+   */
+  modifyDataForList() {
+    const orderProduct = [];
+    const parcels = [];
+    this.state.dataOmsGetCheckoutItem.orderParcels.forEach(item => {
+      let paymentTypeSupplierMethodId = null;
+      let paymentMethodDetail = null;
+      let paymentTypeDetail = null;
+      let error = false;
+      if (this.state.parcels.length > 0) {
+        const itemParcelFind = this.state.parcels.find(
+          itemParcel => itemParcel.orderParcelId === parseInt(item.id, 10)
+        );
+        if (itemParcelFind !== undefined) {
+          paymentTypeSupplierMethodId =
+            itemParcelFind.paymentTypeSupplierMethodId;
+          paymentMethodDetail = itemParcelFind.paymentMethodDetail;
+          paymentTypeDetail = itemParcelFind.paymentTypeDetail;
+          error = itemParcelFind.error;
+        }
+      }
+      const data = {
+        orderParcelId: parseInt(item.id, 10),
+        paymentTypeSupplierMethodId,
+        paymentMethodDetail,
+        paymentTypeDetail,
+        error
+      };
+      parcels.push(data);
+      item.orderBrands.forEach(itemBrand => {
+        for (let i = 0; i < itemBrand.orderBrandCatalogues.length; i++) {
+          const productItem = itemBrand.orderBrandCatalogues[i];
+          orderProduct.push(productItem);
+        }
+      });
+    });
+    this.setState({ orderProduct, parcels });
+  }
+
+  /**
+   * jika terjadi error status (product habis saat confirm order)
+   * product tersebut harus di modif pada reducer dataCheckBoxlistCart
+   * agar saat kembali ke cart, data tersebut berada pada list error product
+   */
+  modifyDataCheckBoxlistCart() {
+    const dataCheckBoxlistCart = this.props.oms.dataCheckBoxlistCart;
+    if (this.props.oms.errorOmsConfirmOrder.data.orderData !== null) {
+      this.props.oms.errorOmsConfirmOrder.data.errorData.map(
+        itemOrderBrandCatalogues => {
+          const indexDataCheckBoxlistCart = dataCheckBoxlistCart.findIndex(
+            itemDataCheckBoxlistCart =>
+              itemDataCheckBoxlistCart.catalogue.id ===
+              itemOrderBrandCatalogues.catalogue.id
+          );
+          if (indexDataCheckBoxlistCart > -1) {
+            dataCheckBoxlistCart[indexDataCheckBoxlistCart].statusInCart =
+              'unavailable';
+            dataCheckBoxlistCart[indexDataCheckBoxlistCart].checkBox = true;
+          }
+        }
+      );
+      // this.props.omsCheckListCart(dataCheckBoxlistCart);
+    } else {
+      dataCheckBoxlistCart.map(item => {
+        item.statusInCart = 'unavailable';
+        item.checkBox = true;
+      });
+      // this.props.omsCheckListCart(dataCheckBoxlistCart);
+    }
+  }
+
+  /**
+   * fungsi ini berfungsi untuk modif data itemCataloguesCheckout
+   * data tersebut harus sesuai dengan data catalogue yang berhasil di order
+   * agar data tersebut dapat dibandingkan dengan data global.cartData
+   * sisa dari order yang masih tersisa di keranjang
+   */
+  modifyItemCataloguesCheckout() {
+    const itemCataloguesCheckout = [];
+    if (this.props.oms.errorOmsConfirmOrder.data.orderData !== null) {
+      this.props.oms.errorOmsConfirmOrder.data.orderData.orderParcels.forEach(
+        item => {
+          item.orderBrands.forEach(itemOrderBrands => {
+            itemOrderBrands.orderBrandCatalogues.map(
+              itemOrderBrandCatalogues => {
+                const data = {
+                  catalogueId: parseInt(
+                    itemOrderBrandCatalogues.catalogue.id,
+                    10
+                  ),
+                  qty: parseInt(itemOrderBrandCatalogues.qty, 10)
+                };
+                itemCataloguesCheckout.push(data);
+              }
+            );
+          });
+        }
+      );
+    } else {
+      this.props.omsCheckoutItem(itemCataloguesCheckout);
+    }
   }
 
   checkTerm(selectedPaymentType) {
@@ -245,17 +415,17 @@ class OmsCheckoutView extends Component {
     }
   }
   /** MODIFY STATE DATA FUNCTION (PRODUCT LIST) */
-  productOrderList() {
-    const productOrder = [];
+  orderProductList() {
+    const orderProduct = [];
     this.props.oms.dataOmsGetCheckoutItem.orderParcels.map(item => {
       item.orderBrands.forEach(itemBrand => {
         for (let i = 0; i < itemBrand.orderBrandCatalogues.length; i++) {
           const productItem = itemBrand.orderBrandCatalogues[i];
-          productOrder.push(productItem);
+          orderProduct.push(productItem);
         }
       });
     });
-    this.setState({ productOrder });
+    this.setState({ orderProduct });
   }
   /** ======= DID UPDATE FUNCTION ==== */
   backToMerchantHomeView(storeName) {
@@ -297,7 +467,7 @@ class OmsCheckoutView extends Component {
       this.setState({ modalWarningNotSelectPayment: true });
       setTimeout(() => {
         this.setState({ modalWarningNotSelectPayment: false });
-      }, 1250);
+      }, 2000);
     }
   }
   /** CONFIRM ORDER */
@@ -313,7 +483,7 @@ class OmsCheckoutView extends Component {
    * ==========================
    */
   renderImageContent(itemParcel) {
-    return this.state.productOrder.filter(
+    return this.state.orderProduct.filter(
       item => item.parcelId === itemParcel.id
     );
   }
@@ -337,7 +507,7 @@ class OmsCheckoutView extends Component {
             <Text style={Fonts.type17}>
               Total Barang (
               {
-                this.state.productOrder.filter(
+                this.state.orderProduct.filter(
                   itemOrderProduct => itemOrderProduct.parcelId === item.id
                 ).length
               }
@@ -390,13 +560,13 @@ class OmsCheckoutView extends Component {
   }
 
   renderPlusProduct(itemParcel) {
-    return this.state.productOrder.filter(
+    return this.state.orderProduct.filter(
       item => item.parcelId === itemParcel.id
     ).length > 3 ? (
       <View>
         <Text style={Fonts.type49}>
           (+
-          {this.state.productOrder.filter(
+          {this.state.orderProduct.filter(
             item => item.parcelId === itemParcel.id
           ).length - 3}{' '}
           Produk Lain)
@@ -637,7 +807,6 @@ class OmsCheckoutView extends Component {
                 {this.renderSelectedPayment(item)}
               </View>
             )}
-
             {this.state.makeConfirmOrder &&
             this.state.parcels.findIndex(
               itemParcel =>
@@ -904,6 +1073,90 @@ class OmsCheckoutView extends Component {
     );
   }
 
+  renderModalErrorPayment() {
+    return (
+      <View>
+        {this.state.modalErrorPayment ? (
+          <ModalWarning
+            open={this.state.modalErrorPayment}
+            content={'Metode pembayaran yang Anda pilih tidak tersedia'}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+  renderModalBottomStockConfirmationConfirmOrder() {
+    return (
+      <View>
+        {this.state.modalStockConfirmationConfirmOrder ? (
+          <ModalBottomStockConfirmationConfirmOrder
+            open={this.state.modalStockConfirmationConfirmOrder}
+            backToCart={() => this.backToCartItemView()}
+            confirmation={() => {
+              this.setState({
+                modalStockConfirmationConfirmOrder: false,
+                dataOmsGetCheckoutItem: this.props.oms.errorOmsConfirmOrder.data
+                  .orderData
+              });
+              setTimeout(() => {
+                this.modifyDataForList();
+              }, 100);
+            }}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+  renderModalBottomErrorMinimumOrder() {
+    return (
+      <View>
+        {this.state.modalErrorMinimumOrder &&
+        this.state.orderProduct.length > 0 ? (
+          <ModalBottomErrorMinimumOrder
+            open={this.state.modalErrorMinimumOrder}
+            orderProduct={this.state.orderProduct}
+            backToCart={() => this.backToCartItemView()}
+            confirmation={() => {
+              this.setState({
+                modalErrorMinimumOrder: false,
+                dataOmsGetCheckoutItem: this.props.oms.errorOmsConfirmOrder.data
+                  .orderData
+              });
+              setTimeout(() => {
+                this.modifyDataForList();
+              }, 100);
+            }}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+  renderModalErrorBalance() {
+    return (
+      <View>
+        {this.state.modalErrorBalance ? (
+          <ModalWarning
+            open={this.state.modalErrorBalance}
+            content={
+              'Credit Limit Anda telah sampai ke batas maksimum, Silahkan pilih metode pembayaran lain'
+            }
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
   render() {
     return (
       <View style={styles.mainContainer}>
@@ -918,7 +1171,11 @@ class OmsCheckoutView extends Component {
         {this.renderModalPaymentMethodDetail()}
         {this.renderModalListProduct()}
         {this.renderModalParcelDetail()}
+        {this.renderModalErrorPayment()}
         {this.renderWarningNotSelectPayment()}
+        {this.renderModalBottomErrorMinimumOrder()}
+        {this.renderModalErrorBalance()}
+        {this.renderModalBottomStockConfirmationConfirmOrder()}
       </View>
     );
   }

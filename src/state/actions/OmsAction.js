@@ -9,6 +9,42 @@ export function omsResetData() {
   return { type: types.OMS_RESET_DATA };
 }
 /**
+ * =================================
+ * ADD CHECKOUT ITEM
+ * =================================
+ */
+export function omsCheckoutItem(data) {
+  return { type: types.OMS_CHECKOUT_ITEM, payload: data };
+}
+/**
+ * =================================
+ * COMPARE CART
+ * =================================
+ */
+export function omsCompare(dataCart, dataCheckout) {
+  
+  // const data = dataCart;
+  // dataCheckout.forEach(item => {
+  //   const index = dataCart.findIndex(
+  //     itemCart => parseInt(itemCart.catalogueId, 10) === item.catalogueId
+  //   );
+  //   console.log(index);
+  //   if (index > -1) {
+  //     data.splice(index, 1);
+  //   }
+  // });
+  // console.log(data);
+  // return { type: types.OMS_COMPARE_CART, payload: data };
+}
+/**
+ * =================================
+ * MODIFY CHECK LIST ITEM
+ * =================================
+ */
+export function omsCheckListCart(data) {
+  return { type: types.OMS_CHECKLIST_ITEM_CART, payload: data };
+}
+/**
  * ====================================
  * GET CART ITEM
  * ====================================

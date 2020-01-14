@@ -32,6 +32,7 @@ class ModalMerchantListDataView extends Component {
   onHandleRefresh = () => {
     this.props.merchantGetRefresh();
     this.props.merchantGetProcess({
+      type: this.props.type,
       page: 0,
       loading: true,
       portfolioId: this.props.merchant.dataGetPortfolio[
@@ -50,6 +51,7 @@ class ModalMerchantListDataView extends Component {
         const page = this.props.merchant.pageGetMerchant + 10;
         this.props.merchantGetLoadMore(page);
         this.props.merchantGetProcess({
+          type: this.props.type,
           page,
           loading: false,
           portfolioId: this.props.merchant.dataGetPortfolio[

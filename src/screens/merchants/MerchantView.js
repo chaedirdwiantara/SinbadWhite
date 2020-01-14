@@ -17,7 +17,8 @@ class MerchantView extends Component {
     this.state = {
       activeTab: 'list',
       search: '',
-      portfolio: 0
+      portfolio: 0,
+      type: 'direct'
     };
   }
   /**
@@ -39,7 +40,7 @@ class MerchantView extends Component {
         this.props.merchant.dataGetPortfolio !== null &&
         this.props.merchant.dataGetPortfolio.length > 0
       ) {
-        this.getMerchant(0, '');
+        this.getMerchant('direct', 0, '');
       }
     }
   }
@@ -48,17 +49,26 @@ class MerchantView extends Component {
     if (data.type === 'section') {
       this.setState({ activeTab: data.data });
     } else if (data.type === 'search') {
-      this.getMerchant(this.state.portfolio, data.data);
+      this.getMerchant(
+        this.state.portfolio === 0 ? 'direct' : 'group',
+        this.state.portfolio,
+        data.data
+      );
       this.setState({ search: data.data });
     } else if (data.type === 'portfolio') {
-      this.getMerchant(data.data, this.state.search);
+      this.getMerchant(
+        data.data === 0 ? 'direct' : 'group',
+        data.data,
+        this.state.search
+      );
       this.setState({ portfolio: data.data });
     }
   }
   /** === CALL GET FUNCTION === */
-  getMerchant(portfolioIndex, search) {
+  getMerchant(type, portfolioIndex, search) {
     this.props.merchantGetReset();
     this.props.merchantGetProcess({
+      type,
       page: 0,
       loading: true,
       portfolioId: this.props.merchant.dataGetPortfolio[portfolioIndex].id,
@@ -99,12 +109,14 @@ class MerchantView extends Component {
           <MerchantListView
             searchText={this.state.search}
             portfolio={this.state.portfolio}
+            type={this.state.type}
             onRef={ref => (this.parentFunction = ref)}
             parentFunction={this.parentFunction.bind(this)}
           />
         ) : (
           <MerchantMapView
             searchText={this.state.search}
+            type={this.state.type}
             portfolio={this.state.portfolio}
             onRef={ref => (this.parentFunction = ref)}
             parentFunction={this.parentFunction.bind(this)}

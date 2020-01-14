@@ -13,13 +13,13 @@ import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
 import { Button } from 'react-native-elements';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import { Fonts } from '../../utils/Fonts';
+import Fonts from '../../utils/Fonts';
 
 const { height, width } = Dimensions.get('window');
 
 class ModalBottomStockConfirmationConfirmOrder extends Component {
   renderProductErrorTidakTersedia() {
-    return this.props.cart.errorConfirmOrder.data.errorData.map(
+    return this.props.oms.errorOmsConfirmOrder.data.errorData.map(
       (item, index) => {
         return (
           <View style={styles.boxPerContent} key={index}>
@@ -31,7 +31,7 @@ class ModalBottomStockConfirmationConfirmOrder extends Component {
               }}
             >
               <Image
-                defaultSource={require('../../assets/icons/sinbadopacity.png')}
+                defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
                 source={{
                   uri: item.catalogue.catalogueImages[0].imageUrl
                 }}
@@ -84,7 +84,7 @@ class ModalBottomStockConfirmationConfirmOrder extends Component {
           buttonStyle={styles.buttonWhite}
         />
         <Button
-          disabled={!this.props.cart.errorConfirmOrder.data.confirmOrder}
+          disabled={!this.props.oms.errorOmsConfirmOrder.data.confirmOrder}
           onPress={this.props.confirmation}
           title="Konfirmasi"
           titleStyle={styles.titleButton}
@@ -100,13 +100,9 @@ class ModalBottomStockConfirmationConfirmOrder extends Component {
     return (
       <Modal
         isVisible={this.props.open}
-        animationIn="slideInUp"
-        animationOut="slideOutDown"
-        avoidKeyboard
-        coverScreen
-        animationInTiming={500}
-        animationOutTiming={100}
-        backdropTransitionOutTiming={10}
+        useNativeDriver={true}
+        hasBackdrop={true}
+        coverScreen={true}
         backdropColor="black"
         deviceHeight={height}
         backdropOpacity={0.4}
@@ -258,8 +254,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ cart }) => {
-  return { cart };
+const mapStateToProps = ({ oms }) => {
+  return { oms };
 };
 
 export default connect(

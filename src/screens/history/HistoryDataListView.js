@@ -81,20 +81,37 @@ class HistoryDataListView extends Component {
     });
   }
   /** CHECK STATUS */
+  checkpayment(item) {
+    const data = this.props.history.dataGetPaymentStatus.find(
+      itemPayment => itemPayment.status === item
+    );
+    if (data) {
+      return data.title;
+    } else {
+      return '';
+    }
+  }
+
+  checkorder(item) {
+    const data = this.props.history.dataGetOrderStatus.find(
+      itemPayment => itemPayment.status === item
+    );
+    if (data) {
+      return data.title;
+    } else {
+      return '';
+    }
+  }
   /** payment */
   statusPayment(item) {
     return this.props.history.dataGetPaymentStatus !== null
-      ? this.props.history.dataGetPaymentStatus.find(
-          itemPayment => itemPayment.status === item
-        ).title
+      ? this.checkpayment(item)
       : '';
   }
   /** order */
   statusOrder(item) {
     return this.props.history.dataGetOrderStatus !== null
-      ? this.props.history.dataGetOrderStatus.find(
-          itemPayment => itemPayment.status === item
-        ).title
+      ? this.checkorder(item)
       : '';
   }
   /**
