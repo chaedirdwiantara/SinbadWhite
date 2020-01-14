@@ -97,7 +97,7 @@ class MapsView extends Component {
       <MapView
         ref={ref => (this.mapRef = ref)}
         style={{ flex: 1, width: '100%' }}
-        maxZoomLevel={16}
+        maxZoomLevel={18}
         initialRegion={{
           latitude: this.state.latitude,
           longitude: this.state.longitude,

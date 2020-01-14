@@ -191,7 +191,7 @@ class MerchantMapView extends Component {
     return (
       <MapView
         ref={ref => (this.mapRef = ref)}
-        maxZoomLevel={11}
+        maxZoomLevel={18}
         style={{ flex: 1, width: '100%' }}
         initialRegion={{
           latitude: this.state.latitude,
@@ -208,7 +208,7 @@ class MerchantMapView extends Component {
                   edgePadding: {
                     top: 16,
                     right: 16,
-                    bottom: 16,
+                    bottom: 0.45 * height,
                     left: 16
                   },
                   animated: true
