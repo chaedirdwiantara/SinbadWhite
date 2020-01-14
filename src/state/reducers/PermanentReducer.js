@@ -17,7 +17,8 @@ export const permanent = createReducer(INITIAL_STATE, {
   [types.DELETE_ALL_DATA](state, action) {
     return {
       ...state,
-      token: null
+      token: null,
+      newOrderSuccessPerMerchant: []
     };
   },
   /**

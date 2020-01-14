@@ -22,6 +22,14 @@ const INITIAL_STATE = {
 
 export const history = createReducer(INITIAL_STATE, {
   /**
+   * ==================================
+   * DELETE ALL DATA
+   * ==================================
+   */
+  [types.DELETE_ALL_DATA](state, action) {
+    return INITIAL_STATE;
+  },
+  /**
    * ==========================
    * GET PAYMENT STATUS
    * ==========================

@@ -31,6 +31,9 @@ export const oms = createReducer(INITIAL_STATE, {
    * WARNING, THIS TYPE FOR DELETE ALL DATA
    * ================================
    */
+  [types.DELETE_ALL_DATA](state, action) {
+    return INITIAL_STATE;
+  },
   [types.OMS_RESET_DATA](state, action) {
     return INITIAL_STATE;
   },
