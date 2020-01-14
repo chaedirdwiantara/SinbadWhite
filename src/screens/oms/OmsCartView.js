@@ -324,6 +324,7 @@ class OmsCartView extends Component {
         qty: item.qty
       };
     });
+    this.props.omsCheckoutItem(mapProduct);
     setTimeout(() => {
       this.props.omsGetCheckoutItemProcess({
         storeId: this.props.merchant.selectedMerchant.storeId,
