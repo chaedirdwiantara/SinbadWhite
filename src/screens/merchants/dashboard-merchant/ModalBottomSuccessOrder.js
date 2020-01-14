@@ -21,7 +21,6 @@ class ModalBottomSuccessOrder extends Component {
    */
   clearOmsData() {
     this.props.omsResetData();
-    this.props.omsCompare(this.props.oms.dataCart, this.props.oms.dataCheckout);
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
       this.props.merchant.selectedMerchant.store.id

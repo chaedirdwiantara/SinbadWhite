@@ -34,8 +34,8 @@ class PdpView extends Component {
       addProductNotifText: '',
       selectedProduct: null,
       /** sort */
-      sort: '',
-      sortBy: '',
+      sort: 'asc',
+      sortBy: 'name',
       sortIndex: null
     };
   }
@@ -51,8 +51,8 @@ class PdpView extends Component {
     this.props.pdpGetProcess({
       page: 0,
       loading: true,
-      sort: 'asc',
-      sortBy: 'name',
+      sort: this.state.sort,
+      sortBy: this.state.sortBy,
       search: this.props.global.search,
       supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
     });
