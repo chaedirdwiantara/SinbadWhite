@@ -40,7 +40,7 @@ class PdpListDataView extends Component {
       sort: this.props.sort,
       sortBy: this.props.sortBy,
       search: this.props.global.search,
-      supplierId: this.props.user.userSuppliers[0].supplierId
+      supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
     });
   };
 
@@ -55,7 +55,7 @@ class PdpListDataView extends Component {
           sort: this.props.sort,
           sortBy: this.props.sortBy,
           search: this.props.global.search,
-          supplierId: this.props.user.userSuppliers[0].supplierId
+          supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
         });
       }
     }

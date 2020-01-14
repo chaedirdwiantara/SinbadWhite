@@ -139,14 +139,14 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderStyle: 'dashed',
     backgroundColor: masterColor.fontBlack05,
-    height: 90,
+    height: 150,
     borderRadius: 10,
     borderColor: masterColor.fontBlack60,
     justifyContent: 'center',
     alignItems: 'center'
   },
   boxMaps: {
-    height: 90,
+    height: 150,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center'

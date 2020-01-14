@@ -17,7 +17,14 @@ class InputType1 extends Component {
   renderTitle() {
     return (
       <View style={styles.boxTitle}>
-        <Text style={Fonts.type32}>{this.props.title}</Text>
+        <Text>
+          <Text style={Fonts.type32}>{this.props.title}</Text>
+          {this.props.optional ? (
+            <Text style={Fonts.type71}> (opsional)</Text>
+          ) : (
+            <Text>{''}</Text>
+          )}
+        </Text>
       </View>
     );
   }
@@ -25,24 +32,38 @@ class InputType1 extends Component {
   inputText() {
     return (
       <View style={styles.boxInput}>
-        <TextInput
-          editable={this.props.editable}
-          value={this.props.value}
-          selectionColor={masterColor.mainColor}
-          placeholder={this.props.placeholder}
-          placeholderTextColor={masterColor.fontBlack40}
-          onChangeText={this.props.text}
-          keyboardType={this.props.keyboardType}
-          style={[
-            Fonts.type24,
-            styles.input,
-            {
-              borderBottomColor: this.props.error
-                ? masterColor.fontRed50
-                : masterColor.fontBlack40
-            }
-          ]}
-        />
+        <View style={{ flex: 1 }}>
+          <TextInput
+            editable={this.props.editable}
+            value={this.props.value}
+            selectionColor={masterColor.mainColor}
+            placeholder={this.props.placeholder}
+            placeholderTextColor={masterColor.fontBlack40}
+            onChangeText={this.props.text}
+            keyboardType={this.props.keyboardType}
+            style={[
+              Fonts.type24,
+              styles.input,
+              {
+                borderBottomColor: this.props.error
+                  ? masterColor.fontRed50
+                  : masterColor.fontBlack40
+              }
+            ]}
+          />
+        </View>
+
+        <View
+          style={{
+            justifyContent: 'center',
+            borderBottomWidth: 1,
+            borderBottomColor: this.props.error
+              ? masterColor.fontRed50
+              : masterColor.fontBlack40
+          }}
+        >
+          <Text style={Fonts.type24}>{this.props.rightText}</Text>
+        </View>
       </View>
     );
   }
@@ -82,6 +103,10 @@ const styles = StyleSheet.create({
   },
   boxTitle: {
     paddingBottom: 10
+  },
+  boxInput: {
+    width: '100%',
+    flexDirection: 'row'
   },
   boxInputError: {
     paddingTop: 8

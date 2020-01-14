@@ -16,7 +16,10 @@ class AddMerchantOwnerInformation extends Component {
     super(props);
     this.state = {
       fullName: this.props.merchant.dataAddMerchantVolatile.user.fullName,
-      phone: this.props.merchant.dataAddMerchantVolatile.user.phone
+      phone: this.props.merchant.dataAddMerchantVolatile.user.phone,
+      idNo: this.props.merchant.dataAddMerchantVolatile.user.idNo,
+      email: this.props.merchant.dataAddMerchantVolatile.user.email,
+      taxNo: this.props.merchant.dataAddMerchantVolatile.user.taxNo
     };
   }
   /**
@@ -61,7 +64,7 @@ class AddMerchantOwnerInformation extends Component {
   }
   /** CHECK IF BUTTON DISABLE */
   buttonDisable() {
-    return this.state.fullName !== '';
+    return this.state.fullName !== '' && this.state.idNo !== '';
   }
   /**
    * ====================
@@ -91,9 +94,60 @@ class AddMerchantOwnerInformation extends Component {
       />
     );
   }
+
+  renderIdNo() {
+    return (
+      <InputType1
+        title={'Nomor Kartu Tanda Penduduk (KTP)'}
+        value={this.state.idNo}
+        placeholder={'Masukan No KTP Anda'}
+        keyboardType={'numeric'}
+        text={text => this.setState({ idNo: text })}
+        error={false}
+        errorText={''}
+      />
+    );
+  }
+
+  renderEmail() {
+    return (
+      <InputType1
+        optional
+        title={'Email'}
+        value={this.state.email}
+        placeholder={'Masukan email pemilik'}
+        keyboardType={'email-address'}
+        text={text => this.setState({ email: text })}
+        error={false}
+        errorText={''}
+      />
+    );
+  }
+
+  renderTaxNo() {
+    return (
+      <InputType1
+        optional
+        title={'Nomor Pokok Wajib Pajak (NPWP)'}
+        value={this.state.taxNo}
+        placeholder={'Masukan NPWP pemilik'}
+        keyboardType={'numeric'}
+        text={text => this.setState({ taxNo: text })}
+        error={false}
+        errorText={''}
+      />
+    );
+  }
   /** === RENDER CONTENT === */
   renderContent() {
-    return <View style={{ flex: 1, marginTop: 20 }}>{this.renderName()}</View>;
+    return (
+      <View style={{ flex: 1, marginTop: 20 }}>
+        {this.renderName()}
+        {this.renderIdNo()}
+        {this.renderEmail()}
+        {this.renderTaxNo()}
+      </View>
+    );
   }
   /** === RENDER BUTTON === */
   renderButton() {

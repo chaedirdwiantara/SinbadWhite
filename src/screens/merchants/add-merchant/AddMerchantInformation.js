@@ -16,6 +16,8 @@ class AddMerchantInformation extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      largerAreaIsFilled: false,
+      taxNo: this.props.merchant.dataAddMerchantVolatile.taxNo,
       name: this.props.merchant.dataAddMerchantVolatile.name,
       largeArea: this.props.merchant.dataAddMerchantVolatile.largeArea,
       numberOfEmployee: this.props.merchant.dataAddMerchantVolatile
@@ -27,10 +29,6 @@ class AddMerchantInformation extends Component {
    * FUNCTIONAL
    * =====================
    */
-  componentDidMount() {
-    console.log('alal');
-    console.log(this.state.name);
-  }
   nextStep() {
     this.props.saveVolatileDataAddMerchant({
       name: this.state.name,
@@ -51,8 +49,6 @@ class AddMerchantInformation extends Component {
     const data = this.props.merchant.dataAddMerchantVolatile;
     return (
       this.state.name !== '' &&
-      this.state.largeArea !== '' &&
-      this.state.numberOfEmployee !== '' &&
       data.storeTypeId !== '' &&
       data.storeGroupId !== '' &&
       data.cluster.clusterId !== '' &&
@@ -88,22 +84,41 @@ class AddMerchantInformation extends Component {
       />
     );
   }
+
+  renderTaxId() {
+    return (
+      <InputType1
+        optional
+        title={'Nomor Pokok Wajib Pajak (NPWP) Toko'}
+        value={this.state.taxNo}
+        placeholder={'Masukan NPWP Toko'}
+        keyboardType={'numeric'}
+        text={text => this.setState({ taxNo: text })}
+        error={false}
+        errorText={''}
+      />
+    );
+  }
+
   renderMerchanSize() {
     return (
       <InputType1
+        optional
         title={'Ukuran Toko'}
         value={this.state.largeArea}
-        placeholder={'0 M2'}
+        placeholder={'10'}
         keyboardType={'numeric'}
         text={text => this.setState({ largeArea: text })}
         error={false}
         errorText={''}
+        rightText={'M²'}
       />
     );
   }
   renderEmployeeTotal() {
     return (
       <InputType1
+        optional
         title={'Jumlah Karyawan'}
         value={this.state.numberOfEmployee}
         placeholder={'Jumlah Karyawan'}
@@ -204,6 +219,7 @@ class AddMerchantInformation extends Component {
     return (
       <View style={{ flex: 1, marginTop: 20 }}>
         {this.renderNameMerchant()}
+        {this.renderTaxId()}
         {this.renderMerchantType()}
         {this.renderMerchantGroup()}
         {this.renderMerchantCluster()}
