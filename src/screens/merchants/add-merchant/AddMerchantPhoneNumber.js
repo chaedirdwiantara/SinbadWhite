@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { View, SafeAreaView, StyleSheet, Keyboard } from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  StyleSheet,
+  Keyboard,
+  ScrollView
+} from 'react-native';
 import Text from 'react-native-text';
 import NavigationService from '../../../navigation/NavigationService';
 import { bindActionCreators } from 'redux';
@@ -119,8 +125,11 @@ class AddMerchantPhoneNumber extends Component {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarWhite />
-        {this.renderProgressHeader()}
-        {this.renderContent()}
+        <ScrollView>
+          {this.renderProgressHeader()}
+          {this.renderContent()}
+        </ScrollView>
+
         {this.renderButton()}
       </SafeAreaView>
     );
