@@ -79,19 +79,19 @@ class OtpView extends Component {
    * HEADER MODIFY
    * ========================
    */
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerRight: () => (
-        <TouchableOpacity style={{ marginRight: 16 }}>
-          <IconsAntDesign
-            color={masterColor.backButtonWhite}
-            name={'questioncircleo'}
-            size={24}
-          />
-        </TouchableOpacity>
-      )
-    };
-  };
+  // static navigationOptions = ({ navigation }) => {
+  //   return {
+  //     headerRight: () => (
+  //       <TouchableOpacity style={{ marginRight: 16 }}>
+  //         <IconsAntDesign
+  //           color={masterColor.backButtonWhite}
+  //           name={'questioncircleo'}
+  //           size={24}
+  //         />
+  //       </TouchableOpacity>
+  //     )
+  //   };
+  // };
   /**
    * ==============================
    * RENDER VIEW
