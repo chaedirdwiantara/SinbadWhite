@@ -6,8 +6,6 @@ import { Store } from '../Store';
  * ====================================
  */
 export function omsResetData() {
-  const allPropsData = Store.getState();
-  allPropsData.oms.dataCart = [];
   return { type: types.OMS_RESET_DATA };
 }
 /**
@@ -174,7 +172,7 @@ export function omsAddToCart(data) {
   /** =============================================================== */
   if (allPropsData.oms.dataCart.length > 0) {
     const indexDataCart = dataCart.findIndex(
-      itemCart => itemCart.catalogueId === data.catalogueId
+      itemCart => itemCart.catalogueId === parseInt(data.catalogueId, 10)
     );
 
     switch (data.method) {
@@ -183,7 +181,7 @@ export function omsAddToCart(data) {
           dataCart[indexDataCart].qty = data.qty;
         } else {
           dataCart.push({
-            catalogueId: data.catalogueId,
+            catalogueId: parseInt(data.catalogueId, 10),
             qty: data.qty
           });
         }
@@ -198,7 +196,10 @@ export function omsAddToCart(data) {
         break;
     }
   } else {
-    dataCart.push({ catalogueId: data.catalogueId, qty: data.qty });
+    dataCart.push({
+      catalogueId: parseInt(data.catalogueId, 10),
+      qty: data.qty
+    });
   }
   return { type: types.OMS_ITEM_FOR_CART, payload: dataCart };
 }

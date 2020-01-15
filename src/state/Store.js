@@ -11,7 +11,7 @@ const config = {
   key: 'root',
   storage,
   whitelist: ['permanent', 'user'],
-  blacklist: ['auth'],
+  blacklist: ['auth', 'global', 'merchant', 'journey', 'pdp', 'oms', 'history'],
   debug: true
 };
 

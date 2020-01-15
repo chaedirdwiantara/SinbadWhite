@@ -193,8 +193,8 @@ class MerchantDetailView extends Component {
         {this.renderTitleSection('Informasi Profil')}
         <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
         {this.renderContentSection(
-          'Nomor Telepon',
-          this.props.merchant.dataGetMerchantDetail.phoneNo,
+          'Nomor Telepon Pemilik',
+          this.props.merchant.dataGetMerchantDetail.owner.mobilePhoneNo,
           true,
           true
         )}
@@ -218,6 +218,12 @@ class MerchantDetailView extends Component {
         {this.renderContentSection(
           'Nama Toko',
           this.props.merchant.dataGetMerchantDetail.name
+        )}
+        {this.renderContentSection(
+          'Nomor Telepon Toko',
+          this.props.merchant.dataGetMerchantDetail.phoneNo,
+          true,
+          true
         )}
         {this.renderContentSection(
           'Alamat',

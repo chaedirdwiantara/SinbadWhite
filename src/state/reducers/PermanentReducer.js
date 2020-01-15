@@ -34,12 +34,17 @@ export const permanent = createReducer(INITIAL_STATE, {
   },
   /** SAVE NEW ORDER PER MERCHANT */
   [types.OMS_CONFIRM_ORDER_SUCCESS](state, action) {
+    /** this for make notification in pesanan */
+    let newOrder = state.newOrderSuccessPerMerchant;
+    const indexOrder = state.newOrderSuccessPerMerchant.indexOf(
+      action.payload.storeId
+    );
+    if (indexOrder === -1) {
+      newOrder.push(action.payload.storeId);
+    }
     return {
       ...state,
-      newOrderSuccessPerMerchant: [
-        ...state.newOrderSuccessPerMerchant,
-        ...action.payload.storeId
-      ]
+      newOrderSuccessPerMerchant: newOrder
     };
   },
   /** DELETE NEW ORDER PER MERCHANT */

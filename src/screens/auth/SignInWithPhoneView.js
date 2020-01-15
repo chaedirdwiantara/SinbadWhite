@@ -49,7 +49,7 @@ class SignInWithPhoneView extends Component {
         });
         setTimeout(() => {
           this.setState({ phoneNumber: '', correctFormatPhoneNumber: false });
-        }, 100);
+        }, 1000);
       }
     }
     /** CHECK IF ERROR */
