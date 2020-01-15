@@ -56,6 +56,15 @@ class JourneyListDataView extends Component {
   }
   /** go to merchant dashboard */
   goToMerchantDashboard(storeName, data) {
+    /** FOR RESET OMS DATA (CART ETC)
+     * if agent change store
+     */
+    if (this.props.merchant.selectedMerchant !== null) {
+      if (this.props.merchant.selectedMerchant.store.id !== data.store.id) {
+        this.props.omsResetData();
+      }
+    }
+    /** GO TO SELECTED STORE */
     this.props.merchantSelected(data);
     NavigationService.navigate('MerchantHomeView', {
       storeName
@@ -308,8 +317,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, journey }) => {
-  return { user, journey };
+const mapStateToProps = ({ user, journey, merchant }) => {
+  return { user, journey, merchant };
 };
 
 const mapDispatchToProps = dispatch => {

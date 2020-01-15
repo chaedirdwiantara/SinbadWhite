@@ -57,6 +57,7 @@ class ProductListType1 extends Component {
   /** LIST ALL PRODUCT */
   renderListProductImage(itemBrand, indexCounter) {
     return itemBrand.map((item, index) => {
+      indexCounter++;
       return (
         <View key={index} style={{ flexDirection: 'row' }}>
           {this.renderListProductImageContent(

@@ -49,7 +49,7 @@ class MerchantMapView extends Component {
       this.setState({ reRender: false });
     }, 100);
     Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
-      timeout: 20000,
+      timeout: 50000,
       maximumAge: 1000,
       enableHighAccuracy: true
     });
