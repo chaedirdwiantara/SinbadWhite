@@ -148,6 +148,17 @@ class OrderButton extends Component {
     }
   }
 
+  /** FOR DISABLE PLUS BUTTON */
+  checkDisablePlusButton() {
+    if (!this.state.unlimitedStock) {
+      if (this.state.stock <= this.state.minQty) {
+        return true;
+      } else if (this.state.stock <= this.state.qty) {
+        return true;
+      }
+    }
+  }
+
   /**
    * this for calculator end
    */
@@ -186,9 +197,7 @@ class OrderButton extends Component {
             style={[styles.input, Fonts.type8]}
           />
         </View>
-        {this.state.plusButtonDisable ||
-        this.state.stock <= this.state.minQty ||
-        this.state.stock <= this.state.qty ? (
+        {this.state.plusButtonDisable || this.checkDisablePlusButton() ? (
           <View style={styles.plusButtonDisabled}>
             <Text style={styles.plusTextDisabled}>+</Text>
           </View>
