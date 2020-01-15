@@ -65,6 +65,7 @@ class ListAndSearchType1 extends Component {
       page,
       type: this.props.navigation.state.params.type,
       provinceId: this.props.global.dataLocationVolatile.provinceId,
+      supplierId: this.props.user.userSuppliers.map(item => item.supplierId),
       cityName: this.props.global.dataLocationVolatile.cityName,
       districName: this.props.global.dataLocationVolatile.districName,
       search: this.props.global.search,

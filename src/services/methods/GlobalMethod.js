@@ -28,7 +28,9 @@ function getLocation(data) {
       getLocationApi = 'hierarchies?';
       break;
     case 'clusterMerchant':
-      getLocationApi = 'clusters?';
+      getLocationApi = `clusters?supplierIds=${JSON.stringify(
+        data.supplierId
+      )}`;
       break;
     case 'typeMerchant':
       getLocationApi = 'store-types?';
