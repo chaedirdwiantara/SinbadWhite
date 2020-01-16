@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StatusBar, StyleSheet } from 'react-native';
+import { View, StatusBar, StyleSheet, Image } from 'react-native';
+import Text from 'react-native-text';
 import { connect } from 'react-redux';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
@@ -15,11 +16,11 @@ class FirstView extends Component {
    * ==============================
    */
   componentDidMount() {
-    setTimeout(() => {
-      this.props.navigation.navigate(
-        this.props.permanent.token !== null ? 'App' : 'Auth'
-      );
-    }, 1000);
+    // setTimeout(() => {
+    //   this.props.navigation.navigate(
+    //     this.props.permanent.token !== null ? 'App' : 'Auth'
+    //   );
+    // }, 1000);
   }
   /**
    * ==============================
@@ -39,8 +40,11 @@ class FirstView extends Component {
   renderContent() {
     return (
       <View style={styles.boxContent}>
-        <Text style={[Fonts.type15, { marginBottom: 10 }]}>Agent App</Text>
-        <Text style={Fonts.type8}>version 1.0</Text>
+        <Image
+          source={require('../../assets/icons/sinbad/sinbad.png')}
+          style={styles.boxImage}
+        />
+        <Text style={[Fonts.type72, { marginTop: 16 }]}>AGENT SINBAD</Text>
       </View>
     );
   }
@@ -64,6 +68,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  boxImage: {
+    height: 100,
+    width: 100
   }
 });
 

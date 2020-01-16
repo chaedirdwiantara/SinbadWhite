@@ -84,7 +84,7 @@ class OrderButton extends Component {
       this.sendValueToParent(this.state.minQty);
       this.setState({ qty: this.state.minQty });
     } else {
-      this.sendValueToParent(this.state.minQty);
+      this.sendValueToParent(qty);
       this.setState({ qty });
     }
   }
