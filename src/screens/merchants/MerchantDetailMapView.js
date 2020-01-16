@@ -191,7 +191,11 @@ class MerchantDetailMapView extends Component {
     return (
       <View style={styles.boxButtonBottom}>
         <Text style={[Fonts.type7, { marginBottom: 5 }]}>
-          [{this.props.navigation.state.params.storeCode}]
+          {this.props.navigation.state.params.externalId
+            ? this.props.navigation.state.params.externalId
+            : this.props.navigation.state.params.storeCode
+            ? this.props.navigation.state.params.storeCode
+            : '-'}
         </Text>
         <Text style={[Fonts.type7, { marginBottom: 10 }]}>
           {this.props.navigation.state.params.name}
@@ -200,7 +204,6 @@ class MerchantDetailMapView extends Component {
           font={Fonts.type17}
           address={this.props.navigation.state.params.address}
           urban={this.props.navigation.state.params.urban}
-          province={this.props.navigation.state.params.province}
         />
       </View>
     );

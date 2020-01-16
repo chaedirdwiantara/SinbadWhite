@@ -76,11 +76,17 @@ class ModalBottomMerchantCheckout extends Component {
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            paddingVertical: 11
+            paddingVertical: 11,
+            paddingHorizontal: 16
           }}
         >
           <Text style={Fonts.type8}>
-            ID {store.storeCode} - {store.name}
+            {store.externalId
+              ? store.externalId
+              : store.storeCode
+              ? store.storeCode
+              : '-'}{' '}
+            - {store.name}
           </Text>
         </View>
         <View style={GlobalStyle.lines} />

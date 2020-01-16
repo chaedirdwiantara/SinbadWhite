@@ -609,7 +609,6 @@ class OmsCheckoutView extends Component {
               font={Fonts.type46}
               address={store.address}
               urban={store.urban}
-              province={store.province}
             />
           </View>
         </View>

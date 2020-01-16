@@ -122,7 +122,6 @@ class ModalMerchantListDataView extends Component {
               font={Fonts.type17}
               address={item.address}
               urban={item.urban}
-              province={item.province}
             />
           </View>
         </View>

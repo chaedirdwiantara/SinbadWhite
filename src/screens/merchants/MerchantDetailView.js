@@ -87,9 +87,9 @@ class MerchantDetailView extends Component {
       longitude: this.props.merchant.dataGetMerchantDetail.longitude,
       name: this.props.merchant.dataGetMerchantDetail.name,
       storeCode: this.props.merchant.dataGetMerchantDetail.storeCode,
+      externalId: this.props.merchant.dataGetMerchantDetail.externalId,
       address: this.props.merchant.dataGetMerchantDetail.address,
-      urban: this.props.merchant.dataGetMerchantDetail.urban,
-      province: this.props.merchant.dataGetMerchantDetail.urban.province
+      urban: this.props.merchant.dataGetMerchantDetail.urban
     });
   }
   /**
@@ -174,7 +174,11 @@ class MerchantDetailView extends Component {
           }}
         >
           <Text style={Fonts.type7}>
-            [{this.props.merchant.dataGetMerchantDetail.storeCode}]
+            {this.props.merchant.dataGetMerchantDetail.externalId
+              ? this.props.merchant.dataGetMerchantDetail.externalId
+              : this.props.merchant.dataGetMerchantDetail.storeCode
+              ? this.props.merchant.dataGetMerchantDetail.storeCode
+              : '-'}
           </Text>
           <Text style={Fonts.type7}>
             {this.props.merchant.dataGetMerchantDetail.name}

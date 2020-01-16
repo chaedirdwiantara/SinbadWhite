@@ -94,7 +94,6 @@ class MerchantListDataView extends Component {
 
   /** === RENDER ITEM === */
   renderItem({ item, index }) {
-    console.log(item);
     return (
       <View key={index} style={styles.boxItem}>
         <View>
@@ -115,7 +114,13 @@ class MerchantListDataView extends Component {
           }}
         >
           <View>
-            <Text style={Fonts.type16}>[ID {item.storeCode}]</Text>
+            <Text style={Fonts.type16}>
+              {item.externalId
+                ? item.externalId
+                : item.storeCode
+                ? item.storeCode
+                : '-'}
+            </Text>
             <Text style={Fonts.type16}>{item.name}</Text>
           </View>
           <View>
@@ -124,7 +129,6 @@ class MerchantListDataView extends Component {
               font={Fonts.type17}
               address={item.address}
               urban={item.urban}
-              province={item.province}
             />
           </View>
         </View>

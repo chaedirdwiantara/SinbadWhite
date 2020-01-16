@@ -152,7 +152,11 @@ class JourneyListDataView extends Component {
                 item.storeType === 'exist_store' ? Fonts.type16 : Fonts.type29
               }
             >
-              [ ID {item.store.storeCode ? item.store.storeCode : '-'} ]
+              {item.store.externalId
+                ? item.store.externalId
+                : item.store.storeCode
+                ? item.store.storeCode
+                : '-'}
             </Text>
             <Text
               style={
@@ -170,7 +174,6 @@ class JourneyListDataView extends Component {
               }
               address={item.store.address}
               urban={item.store.urban}
-              province={item.store.province}
             />
           </View>
         </TouchableOpacity>

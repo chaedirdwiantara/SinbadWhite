@@ -203,7 +203,13 @@ class MerchantCheckinView extends Component {
     const store = this.props.merchant.selectedMerchant.store;
     return (
       <ModalBottomType2
-        title={`ID ${store.storeCode} - ${store.name}`}
+        title={`${
+          store.externalId
+            ? store.externalId
+            : store.storeCode
+            ? store.storeCode
+            : '-'
+        } - ${store.name}`}
         body={
           <View style={{ flex: 1 }}>
             <View
@@ -213,7 +219,6 @@ class MerchantCheckinView extends Component {
                 font={Fonts.type17}
                 address={store.address}
                 urban={store.urban}
-                province={store.province}
               />
             </View>
             <View>
