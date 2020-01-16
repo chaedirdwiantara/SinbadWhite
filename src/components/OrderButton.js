@@ -185,15 +185,16 @@ class OrderButton extends Component {
             selectionColor={masterColor.mainColor}
             returnKeyType="done"
             value={this.state.qty.toString()}
-            keyboardType="number-pad"
+            keyboardType="numeric"
             maxLength={6}
             enablesReturnKeyAutomatically
             onFocus={this.props.onFocus}
             onBlur={this.props.onBlur}
             onEndEditing={() => this.checkQtyAfterEnter()}
-            onChangeText={qty =>
-              this.setState({ qty, plusButtonDisable: false })
-            }
+            onChangeText={qty => {
+              const cleanNumber = qty.replace(/[^0-9]/g, '');
+              this.setState({ qty: cleanNumber, plusButtonDisable: false });
+            }}
             style={[styles.input, Fonts.type8]}
           />
         </View>

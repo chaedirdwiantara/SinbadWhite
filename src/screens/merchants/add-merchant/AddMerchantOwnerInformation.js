@@ -64,7 +64,7 @@ class AddMerchantOwnerInformation extends Component {
   }
   /** CHECK IF BUTTON DISABLE */
   buttonDisable() {
-    return this.state.fullName !== '' && this.state.idNo !== '';
+    return this.state.fullName !== '';
   }
   /**
    * ====================
@@ -98,6 +98,7 @@ class AddMerchantOwnerInformation extends Component {
   renderIdNo() {
     return (
       <InputType1
+        optional
         title={'Nomor Kartu Tanda Penduduk (KTP)'}
         value={this.state.idNo}
         maxLength={16}

@@ -127,7 +127,7 @@ class ModalBottomMerchantCheckout extends Component {
             this.checkDisableButton() ||
             this.props.merchant.loadingPostActivity
           }
-          title={'Check-out'}
+          title={'Keluar Toko'}
           loading={
             this.props.merchant.loadingGetLogPerActivity ||
             this.props.merchant.loadingPostActivity
@@ -151,7 +151,7 @@ class ModalBottomMerchantCheckout extends Component {
         <StatusBarRedOP50 />
         <ModalBottomWithClose
           open={this.props.open}
-          title={'Check-out'}
+          title={'Keluar Toko'}
           close={this.props.close}
           content={this.renderContentBody()}
         />

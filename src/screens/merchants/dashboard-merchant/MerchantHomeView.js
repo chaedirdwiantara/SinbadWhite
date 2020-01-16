@@ -48,19 +48,19 @@ class MerchantHomeView extends Component {
           goTo: 'history'
         },
         {
-          menuName: 'Check-in',
+          menuName: 'Masuk Toko',
           icon: require('../../../assets/icons/merchant/check-in.png'),
           goTo: 'checkIn'
         },
         {
-          menuName: 'Check-out',
+          menuName: 'Keluar Toko',
           icon: require('../../../assets/icons/merchant/check-out.png'),
           goTo: 'checkOut'
         }
       ],
       task: [
         {
-          name: 'Check-in',
+          name: 'Masuk Toko',
           activity: 'check_in'
         },
         {
@@ -68,7 +68,7 @@ class MerchantHomeView extends Component {
           activity: 'order'
         },
         {
-          name: 'Check-out',
+          name: 'Keluar Toko',
           activity: 'check_out'
         }
       ]
@@ -102,7 +102,7 @@ class MerchantHomeView extends Component {
           this.setState({
             openModalCheckout: false,
             showToast: true,
-            notifToast: 'Check-out Berhasil'
+            notifToast: 'Keluar Toko Berhasil'
           });
           setTimeout(() => {
             this.setState({ showToast: false });
@@ -118,7 +118,7 @@ class MerchantHomeView extends Component {
           this.setState({
             openModalCheckout: false,
             showToast: true,
-            notifToast: 'Check-in Berhasil'
+            notifToast: 'Masuk Toko Berhasil'
           });
           setTimeout(() => {
             this.setState({ showToast: false });

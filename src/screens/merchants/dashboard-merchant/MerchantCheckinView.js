@@ -70,8 +70,7 @@ class MerchantCheckinView extends Component {
     this.setState({ reRender: true });
     Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
       timeout: 50000,
-      maximumAge: 1000,
-      enableHighAccuracy: true
+      maximumAge: 1000
     });
   }
   /**
@@ -220,7 +219,7 @@ class MerchantCheckinView extends Component {
             <View>
               <ButtonSingle
                 disabled={this.props.merchant.loadingPostActivity}
-                title={'Check-in'}
+                title={'Masuk Toko'}
                 loading={this.props.merchant.loadingPostActivity}
                 borderRadius={4}
                 onPress={() =>

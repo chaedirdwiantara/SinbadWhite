@@ -32,7 +32,29 @@ export const oms = createReducer(INITIAL_STATE, {
    * ================================
    */
   [types.DELETE_ALL_DATA](state, action) {
-    return INITIAL_STATE;
+    return {
+      /** loading */
+      loadingOmsGetCartItem: false,
+      loadingOmsGetCheckoutItem: false,
+      loadingOmsConfirmOrder: false,
+      loadingOmsGetPayment: false,
+      loadingOmsDeleteCartItem: false,
+      /** data */
+      dataOmsGetCartItem: null,
+      dataOmsGetCheckoutItem: null,
+      dataOmsConfirmOrder: null,
+      dataOmsGetPayment: null,
+      dataOmsDeleteCartItem: null,
+      dataCart: [],
+      dataCheckout: [],
+      dataCheckBoxlistCart: [],
+      /** error */
+      errorOmsGetCartItem: null,
+      errorOmsGetCheckoutItem: null,
+      errorOmsConfirmOrder: null,
+      errorOmsGetPayment: null,
+      errorOmsDeleteCartItem: null
+    };
   },
   [types.OMS_RESET_DATA](state, action) {
     return {

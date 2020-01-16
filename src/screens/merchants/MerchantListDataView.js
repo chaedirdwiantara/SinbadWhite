@@ -94,6 +94,7 @@ class MerchantListDataView extends Component {
 
   /** === RENDER ITEM === */
   renderItem({ item, index }) {
+    console.log(item);
     return (
       <View key={index} style={styles.boxItem}>
         <View>

@@ -50,8 +50,7 @@ class MerchantMapView extends Component {
     }, 100);
     Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
       timeout: 50000,
-      maximumAge: 1000,
-      enableHighAccuracy: true
+      maximumAge: 1000
     });
   }
 
