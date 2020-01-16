@@ -188,12 +188,24 @@ class PdpOrderView extends Component {
           <View style={{ justifyContent: 'center' }}>
             <Text style={Fonts.type10}>Jumlah/pcs</Text>
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ flex: 1 }}>
-              <Text style={Fonts.type38}>
-                Tersisa {this.props.data.stock} pcs
-              </Text>
-            </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}
+          >
+            {this.props.data.displayStock &&
+            this.props.data.stock >= this.props.data.minQty ? (
+              <View style={{ flex: 1 }}>
+                <Text style={Fonts.type38}>
+                  Tersisa {this.props.data.stock} pcs
+                </Text>
+              </View>
+            ) : (
+              <View />
+            )}
+
             {this.renderButtonOrder()}
           </View>
         </View>

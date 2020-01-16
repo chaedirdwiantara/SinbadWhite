@@ -16,15 +16,23 @@ import masterColor from '../../config/masterColor.json';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import GlobalFont from '../../helpers/GlobalFont';
 import NavigationService from '../../navigation/NavigationService';
+import ModalBottomSwipeCloseNotScroll from '../../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
+import ModalContentMenuAddMerchant from '../journey/ModalContentMenuAddMerchant';
+import CallCS from '../../screens/global/CallCS';
 
 class ProfileView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      openModalCS: false,
       menu: [
         {
           name: 'Data Diri',
           goTo: 'data_diri'
+        },
+        {
+          name: 'Hubungi Customer Services',
+          goTo: 'call_cs'
         }
       ]
     };
@@ -46,6 +54,9 @@ class ProfileView extends Component {
     switch (page) {
       case 'data_diri':
         NavigationService.navigate('ProfileDataView');
+        break;
+      case 'call_cs':
+        this.setState({ openModalCS: true });
         break;
       default:
         break;
@@ -85,7 +96,7 @@ class ProfileView extends Component {
   renderMenu() {
     return this.state.menu.map((item, index) => {
       return (
-        <View key={index} style={styles.menuContainer}>
+        <View key={index}>
           <TouchableOpacity
             style={styles.boxMenu}
             onPress={() => this.goTo(item.goTo)}
@@ -104,6 +115,14 @@ class ProfileView extends Component {
       );
     });
   }
+
+  renderVersion() {
+    return (
+      <View style={{ paddingLeft: 16, paddingVertical: 16 }}>
+        <Text style={GlobalFont.type9}>Versi 1.0</Text>
+      </View>
+    );
+  }
   /** === RENDER SIGNOUT === */
   renderSignOut() {
     return (
@@ -115,6 +134,23 @@ class ProfileView extends Component {
       </TouchableOpacity>
     );
   }
+  /** MENU CALL */
+  /** MODAL MENU ADD MERCHANT */
+  renderModalCallCS() {
+    return this.state.openModalCS ? (
+      <View>
+        <ModalBottomSwipeCloseNotScroll
+          open={this.state.openModalCS}
+          closeButton
+          title={'Hubungi CS'}
+          close={() => this.setState({ openModalCS: false })}
+          content={<CallCS />}
+        />
+      </View>
+    ) : (
+      <View />
+    );
+  }
   /** === MAIN === */
   render() {
     return (
@@ -122,7 +158,9 @@ class ProfileView extends Component {
         <StatusBarWhite />
         {this.renderHeader()}
         {this.renderMenu()}
+        {this.renderVersion()}
         {this.renderSignOut()}
+        {this.renderModalCallCS()}
       </SafeAreaView>
     );
   }
@@ -146,9 +184,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderTopWidth: 1,
     borderColor: masterColor.fontBlack10
-  },
-  menuContainer: {
-    marginBottom: 16
   },
   boxMenu: {
     paddingHorizontal: 16,
