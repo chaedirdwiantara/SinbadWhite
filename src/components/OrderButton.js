@@ -128,11 +128,12 @@ class OrderButton extends Component {
     if (this.state.qty === '' || this.state.qty < this.state.minQty) {
       this.sendValueToParent(this.state.minQty);
       this.setState({ qty: this.state.minQty });
+      return true;
     }
     if (!this.state.unlimitedStock) {
       if (this.modifyQty() < this.state.stock) {
         if (this.state.stock - this.modifyQty() <= this.state.multipleQty) {
-          this.setState({ plusButtonDisable: true });
+          this.setState({ plusButtonDisable: true, qty: this.modifyQty() });
         } else {
           this.sendValueToParent(this.modifyQty());
           this.setState({ qty: this.modifyQty() });
