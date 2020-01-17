@@ -65,8 +65,8 @@ class AddMerchantInformation extends Component {
   renderProgressHeader() {
     return (
       <ProgressBarType1
-        totalStep={5}
-        currentStep={4}
+        totalStep={4}
+        currentStep={3}
         title={'Langkah melengkapi profil'}
       />
     );

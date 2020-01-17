@@ -39,10 +39,23 @@ class AddMerchantPhoneNumber extends Component {
       this.props.auth.dataCheckPhoneAvailble
     ) {
       if (this.props.auth.dataCheckPhoneAvailble !== null) {
-        NavigationService.navigate('AddMerchant2', {
-          phoneNumber: this.state.phoneNumber,
-          otp: this.props.auth.dataCheckPhoneAvailble
+        NavigationService.navigate('AddMerchant3');
+        this.props.saveVolatileDataAddMerchant({
+          user: {
+            phone: this.state.phoneNumber,
+            fullName: '',
+            idNo: '',
+            taxNo: '',
+            email: '',
+            password: 'sinbad',
+            status: 'inactive',
+            roles: [1]
+          }
         });
+        // NavigationService.navigate('AddMerchant2', {
+        //   phoneNumber: this.state.phoneNumber,
+        //   otp: this.props.auth.dataCheckPhoneAvailble
+        // });
       }
     }
     /** IF ERROR */
