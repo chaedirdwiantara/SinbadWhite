@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import Text from 'react-native-text';
 import { connect } from 'react-redux';
+import Geolocation from '@react-native-community/geolocation';
+import OpenAppSettings from 'react-native-app-settings';
 import { bindActionCreators } from 'redux';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
@@ -19,13 +21,16 @@ import GlobalStyle from '../../helpers/GlobalStyle';
 import { MoneyFormat } from '../../helpers/NumberFormater';
 import { LoadingPage } from '../../components/Loading';
 import NavigationService from '../../navigation/NavigationService.js';
+import ErrorPageNoGPS from '../../components/error/ErrorPageNoGPS';
 
 const { width } = Dimensions.get('window');
 
 class MerchantDetailView extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      openModalNoGPS: false
+    };
   }
   /**
    * ===============================
@@ -79,6 +84,19 @@ class MerchantDetailView extends Component {
       }
     });
     return hierarchy;
+  }
+
+  /** FOR GEOLOCATION */
+  /** === GET CURRENT LOCATION === */
+  successMaps = success => {
+    this.setState({ openModalNoGPS: false });
+    this.toMapDetail();
+  };
+  errorMaps = () => {
+    this.setState({ openModalNoGPS: true });
+  };
+  getCurrentLocation() {
+    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
   }
 
   toMapDetail() {
@@ -145,7 +163,7 @@ class MerchantDetailView extends Component {
         <View>
           <TouchableOpacity
             style={[styles.boxMaps, GlobalStyle.shadowForBox5]}
-            onPress={() => this.toMapDetail()}
+            onPress={() => this.getCurrentLocation()}
           >
             <Image
               source={require('../../assets/icons/maps/map.png')}
@@ -343,13 +361,28 @@ class MerchantDetailView extends Component {
       </ScrollView>
     );
   }
+  /** NO GPS */
+  renderNoGps() {
+    return this.state.openModalNoGPS ? (
+      <ErrorPageNoGPS
+        onPress={() => {
+          this.setState({ openModalNoGPS: false });
+          OpenAppSettings.open();
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === MAIN === */
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarWhite />
-        {!this.props.merchant.loadingGetMerchantDetail &&
-        this.props.merchant.dataGetMerchantDetail !== null ? (
+        {this.state.openModalNoGPS ? (
+          this.renderNoGps()
+        ) : !this.props.merchant.loadingGetMerchantDetail &&
+          this.props.merchant.dataGetMerchantDetail !== null ? (
           this.renderData()
         ) : (
           <LoadingPage />
