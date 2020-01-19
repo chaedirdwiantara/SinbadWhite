@@ -22,7 +22,8 @@ class MerchantMapView extends Component {
       latitude: -6.25511,
       longitude: 106.808,
       latitudeDelta: 0.01,
-      longitudeDelta: 0.01
+      longitudeDelta: 0.01,
+      noGPS: false
     };
   }
   /**
@@ -41,7 +42,7 @@ class MerchantMapView extends Component {
     });
   };
   errorMaps = () => {
-    this.setState({ openErrorGeolocation: true });
+    this.setState({ noGPS: true });
   };
   getCurrentLocation() {
     this.setState({ reRender: true });
@@ -174,14 +175,18 @@ class MerchantMapView extends Component {
           }, 500)
         }
       >
-        <Marker
-          image={require('../../assets/icons/maps/my_location.png')}
-          coordinate={{
-            latitude: this.state.latitude,
-            longitude: this.state.longitude
-          }}
-          title={'Anda'}
-        />
+        {!this.state.noGPS ? (
+          <Marker
+            image={require('../../assets/icons/maps/my_location.png')}
+            coordinate={{
+              latitude: this.state.latitude,
+              longitude: this.state.longitude
+            }}
+            title={'Anda'}
+          />
+        ) : (
+          <View />
+        )}
       </MapView>
     );
   }
@@ -217,14 +222,19 @@ class MerchantMapView extends Component {
           }, 500)
         }
       >
-        <Marker
-          image={require('../../assets/icons/maps/my_location.png')}
-          coordinate={{
-            latitude: this.state.latitude,
-            longitude: this.state.longitude
-          }}
-          title={'Anda'}
-        />
+        {!this.state.noGPS ? (
+          <Marker
+            image={require('../../assets/icons/maps/my_location.png')}
+            coordinate={{
+              latitude: this.state.latitude,
+              longitude: this.state.longitude
+            }}
+            title={'Anda'}
+          />
+        ) : (
+          <View />
+        )}
+
         {this.props.merchant.dataGetMerchant.map((marker, index) => (
           <Marker
             key={index}
