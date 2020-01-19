@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
+import OpenAppSettings from 'react-native-app-settings';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
@@ -14,6 +15,7 @@ import GlobalStyles from '../../helpers/GlobalStyle';
 import ButtonSingle from '../../components/button/ButtonSingle';
 import { LoadingPage } from '../../components/Loading';
 import ModalBottomErrorResponsWhite from '../../components/error/ModalBottomErrorResponsWhite';
+import ErrorPageNoGPS from '../../components/error/ErrorPageNoGPS';
 
 class MapsView extends Component {
   constructor(props) {
@@ -24,7 +26,8 @@ class MapsView extends Component {
       latitudeDelta: 0.02,
       longitudeDelta: 0.02,
       reRender: false,
-      openErrorGlobalLongLatToAddress: false
+      openErrorGlobalLongLatToAddress: false,
+      openModalNoGPS: false
     };
   }
   /**
@@ -65,7 +68,7 @@ class MapsView extends Component {
     });
   };
   errorMaps = () => {
-    this.setState({ openErrorGeolocation: true, reRender: false });
+    this.setState({ openModalNoGPS: true, reRender: false });
   };
   getCurrentLocation() {
     this.setState({ reRender: true });
@@ -234,17 +237,40 @@ class MapsView extends Component {
       <View />
     );
   }
-  /** === MAIN === */
-  render() {
+  /** NO GPS */
+  renderNoGps() {
+    return this.state.openModalNoGPS ? (
+      <ErrorPageNoGPS
+        onPress={() => {
+          OpenAppSettings.open();
+          setTimeout(() => {
+            NavigationService.goBack(this.props.navigation.state.key);
+          }, 100);
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** RENDER CONTENT */
+  renderContent() {
     return (
       <View style={styles.mainContainer}>
-        <StatusBarWhite />
         {this.renderHeaderLeft()}
         {this.renderHeaderRight()}
         {this.renderMaps()}
         {this.renderButton()}
         {/* modal */}
         {this.renderError()}
+      </View>
+    );
+  }
+  /** === MAIN === */
+  render() {
+    return (
+      <View style={styles.mainContainer}>
+        <StatusBarWhite />
+        {this.state.openModalNoGPS ? this.renderNoGps() : this.renderContent()}
       </View>
     );
   }

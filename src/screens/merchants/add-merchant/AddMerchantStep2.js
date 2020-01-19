@@ -6,8 +6,6 @@ import {
   ScrollView,
   Keyboard
 } from 'react-native';
-import Geolocation from '@react-native-community/geolocation';
-import OpenAppSettings from 'react-native-app-settings';
 import NavigationService from '../../../navigation/NavigationService';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -21,7 +19,6 @@ import InputType2 from '../../../components/input/InputType2';
 import InputType1 from '../../../components/input/InputType1';
 import InputMapsType1 from '../../../components/input/InputMapsType1';
 import ModalBottomErrorResponsWhite from '../../../components/error/ModalBottomErrorResponsWhite';
-import ErrorPageNoGPS from '../../../components/error/ErrorPageNoGPS';
 
 class AddMerchantStep2 extends Component {
   constructor(props) {
@@ -44,8 +41,7 @@ class AddMerchantStep2 extends Component {
       longitude: this.props.merchant.dataAddMerchantVolatile.longitude,
       latitude: this.props.merchant.dataAddMerchantVolatile.latitude,
       refreshLocation: false,
-      openErrorAddMerchant: false,
-      openModalNoGPS: false
+      openErrorAddMerchant: false
     };
   }
   /**
@@ -98,18 +94,6 @@ class AddMerchantStep2 extends Component {
       );
     }, 100);
   }
-  /** FOR GEOLOCATION */
-  /** === GET CURRENT LOCATION === */
-  successMaps = success => {
-    this.setState({ openModalNoGPS: false });
-    NavigationService.navigate('MapsView');
-  };
-  errorMaps = () => {
-    this.setState({ openModalNoGPS: true });
-  };
-  getCurrentLocation() {
-    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
-  }
   /** GO TO DROPDOWN LIST */
   goToDropdown(data) {
     NavigationService.navigate('ListAndSearchType1', {
@@ -130,7 +114,7 @@ class AddMerchantStep2 extends Component {
   }
   /** GO TO MAPS */
   goToMaps() {
-    this.getCurrentLocation();
+    NavigationService.navigate('MapsView');
   }
   /**
    * ====================
@@ -277,19 +261,6 @@ class AddMerchantStep2 extends Component {
       </View>
     );
   }
-  /** NO GPS */
-  renderNoGps() {
-    return this.state.openModalNoGPS ? (
-      <ErrorPageNoGPS
-        onPress={() => {
-          this.setState({ openModalNoGPS: false });
-          OpenAppSettings.open();
-        }}
-      />
-    ) : (
-      <View />
-    );
-  }
   /** === RENDER BUTTON === */
   renderButton() {
     return (
@@ -317,9 +288,11 @@ class AddMerchantStep2 extends Component {
       <View />
     );
   }
-  renderData() {
+  /** === MAIN === */
+  render() {
     return (
-      <View>
+      <SafeAreaView style={styles.mainContainer}>
+        <StatusBarWhite />
         <ScrollView>
           {this.renderProgressHeader()}
           {this.renderContent()}
@@ -327,15 +300,6 @@ class AddMerchantStep2 extends Component {
         {this.renderButton()}
         {/* modal */}
         {this.renderModalErrorAdd()}
-      </View>
-    );
-  }
-  /** === MAIN === */
-  render() {
-    return (
-      <SafeAreaView style={styles.mainContainer}>
-        <StatusBarWhite />
-        {this.state.openModalNoGPS ? this.renderNoGps() : this.renderData()}
       </SafeAreaView>
     );
   }

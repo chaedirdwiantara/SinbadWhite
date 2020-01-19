@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
+import OpenAppSettings from 'react-native-app-settings';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import ComingSoon from '../../components/empty_state/ComingSoon';
@@ -22,6 +23,7 @@ import ButtonSingle from '../../components/button/ButtonSingle';
 import { LoadingPage } from '../../components/Loading';
 import Address from '../../components/Address';
 import Fonts from '../../helpers/GlobalFont';
+import ErrorPageNoGPS from '../../components/error/ErrorPageNoGPS';
 
 const { height } = Dimensions.get('window');
 
@@ -33,7 +35,8 @@ class MerchantDetailMapView extends Component {
       longitude: 106.808,
       latitudeDelta: 0.02,
       longitudeDelta: 0.02,
-      reRender: false
+      reRender: false,
+      openModalNoGPS: false
     };
   }
   /**
@@ -53,7 +56,7 @@ class MerchantDetailMapView extends Component {
     });
   };
   errorMaps = () => {
-    this.setState({ openErrorGeolocation: true, reRender: false });
+    this.setState({ openModalNoGPS: true, reRender: false });
   };
   getCurrentLocation() {
     this.setState({ reRender: true });
@@ -208,15 +211,38 @@ class MerchantDetailMapView extends Component {
       </View>
     );
   }
+  /** NO GPS */
+  renderNoGps() {
+    return this.state.openModalNoGPS ? (
+      <ErrorPageNoGPS
+        onPress={() => {
+          OpenAppSettings.open();
+          setTimeout(() => {
+            NavigationService.goBack(this.props.navigation.state.key);
+          }, 100);
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** RENDER COTENT */
+  renderContent() {
+    return (
+      <View style={styles.mainContainer}>
+        {this.renderHeaderLeft()}
+        {this.renderHeaderRight()}
+        {this.renderMaps()}
+        {this.renderButton()}
+      </View>
+    );
+  }
   /** === MAIN === */
   render() {
     return (
       <View style={styles.mainContainer}>
         <StatusBarWhite />
-        {this.renderHeaderLeft()}
-        {this.renderHeaderRight()}
-        {this.renderMaps()}
-        {this.renderButton()}
+        {this.state.openModalNoGPS ? this.renderNoGps() : this.renderContent()}
       </View>
     );
   }
