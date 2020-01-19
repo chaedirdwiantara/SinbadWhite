@@ -20,6 +20,12 @@ export const LOCATION_GET_FAILED = 'LocationGetFailed';
 export const LOCATION_GET_RESET = 'LocationGetReset';
 export const LOCATION_GET_REFRESH = 'LocationGetRefresh';
 export const LOCATION_GET_LOADMORE = 'LocationGetLoadMore';
+/** GOOGLE MAPS SERVICE (GET ADDRESS FROM LONG LAT) */
+export const GLOBAL_LONGLAT_TO_ADDRESS_PROCESS =
+  'GlobalLonglatToAddressProcess';
+export const GLOBAL_LONGLAT_TO_ADDRESS_SUCCESS =
+  'GlobalLonglatToAddressSuccess';
+export const GLOBAL_LONGLAT_TO_ADDRESS_FAILED = 'GlobalLonglatToAddressFailed';
 /** =======================
  * AUTH
  * ========================
@@ -88,6 +94,8 @@ export const MERCHANT_GET_LOG_PER_ACTIVITY_FAILED =
   'MerchantGetLogPerActivityFailed';
 /** SELECTED MERCHANT === */
 export const MERCHANT_SELECTED = 'MerchantSelected';
+/** MAPS MERCHANT */
+export const MERCHANT_MAPS = 'MerchantMaps';
 /** =======================
  * JOURNEY
  * ========================

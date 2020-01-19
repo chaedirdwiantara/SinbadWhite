@@ -6,6 +6,8 @@ import MerchantView from '../../screens/merchants/MerchantView';
 import MerchantDetailView from '../../screens/merchants/MerchantDetailView';
 import MerchantDetailMapView from '../../screens/merchants/MerchantDetailMapView';
 /** add merchant */
+import AddMerchantStep1 from '../../screens/merchants/add-merchant/AddMerchantStep1';
+import AddMerchantStep2 from '../../screens/merchants/add-merchant/AddMerchantStep2';
 import AddMerchantPhoneNumber from '../../screens/merchants/add-merchant/AddMerchantPhoneNumber';
 import AddMerchantOTP from '../../screens/merchants/add-merchant/AddMerchantOTP';
 import AddMerchantAddress from '../../screens/merchants/add-merchant/AddMerchantAddress';
@@ -67,6 +69,42 @@ const MerchantNavigator = {
     }
   },
   /** === ADD MERCHANT === */
+  AddMerchantStep1: {
+    screen: AddMerchantStep1,
+    navigationOptions: {
+      headerTitle: 'Nomor Handphone',
+      headerTitleStyle: [
+        GlobalFont.type5,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  AddMerchantStep2: {
+    screen: AddMerchantStep2,
+    navigationOptions: {
+      headerTitle: 'Data Pokok',
+      headerTitleStyle: [
+        GlobalFont.type5,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
   AddMerchant1: {
     screen: AddMerchantPhoneNumber,
     navigationOptions: {

@@ -90,6 +90,7 @@ function* getLogPerActivity(actions) {
     yield put(ActionCreators.merchantGetLogPerActivityFailed(error));
   }
 }
+
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_GET_PROCESS, getMerchant);

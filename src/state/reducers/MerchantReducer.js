@@ -24,38 +24,25 @@ const INITIAL_STATE = {
   dataGetMerchantLastOrder: null,
   dataAddMerchantVolatile: {
     name: '',
-    taxNo: '',
     address: '',
     longitude: '',
     latitude: '',
-    phoneNo: '',
-    numberOfEmployee: '',
-    largeArea: '',
-    status: 'inactive',
-    storeTypeId: '',
-    storeTypeName: '',
-    storeGroupId: '',
-    storeGroupName: '',
-    storeSegmentId: '',
-    storeSegmentName: '',
-    urbanId: '',
     user: {
       fullName: '',
       idNo: '',
       taxNo: '',
       phone: '',
-      email: '',
-      password: 'sinbad',
-      status: 'inactive',
       roles: [1]
-    },
-    cluster: {
-      clusterId: '',
-      clusterName: ''
     },
     supplier: {
       supplierId: '',
       supplierName: ''
+    },
+    detailAddress: {
+      province: '',
+      city: '',
+      district: '',
+      urban: ''
     }
   },
   totalDataGetMerchant: 0,
@@ -101,8 +88,31 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       dataAddMerchantVolatile: {
-        ...state.dataAddMerchantVolatile,
-        ...action.payload
+        name: action.payload.name ? action.payload.name : '',
+        address: action.payload.address ? action.payload.address : '',
+        longitude: action.payload.longitude ? action.payload.longitude : '',
+        latitude: action.payload.latitude ? action.payload.latitude : '',
+        user: {
+          fullName: action.payload.fullName ? action.payload.fullName : '',
+          idNo: action.payload.idNo ? action.payload.idNo : '',
+          taxNo: action.payload.taxNo ? action.payload.taxNo : '',
+          phone: action.payload.phone ? action.payload.phone : '',
+          roles: [1]
+        },
+        supplier: {
+          supplierId: action.payload.supplierId
+            ? action.payload.supplierId
+            : '',
+          supplierName: action.payload.supplierName
+            ? action.payload.supplierName
+            : ''
+        },
+        detailAddress: {
+          province: action.payload.province ? action.payload.province : '',
+          city: action.payload.city ? action.payload.city : '',
+          district: action.payload.district ? action.payload.district : '',
+          urban: action.payload.urban ? action.payload.urban : ''
+        }
       }
     };
   },

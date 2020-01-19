@@ -17,7 +17,7 @@ import masterColor from '../../../config/masterColor';
 import ProgressBarType1 from '../../../components/progress_bar/ProgressBarType1';
 import InputType1 from '../../../components/input/InputType1';
 
-class AddMerchantPhoneNumber extends Component {
+class AddMerchantStep1 extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,14 +39,10 @@ class AddMerchantPhoneNumber extends Component {
       this.props.auth.dataCheckPhoneAvailble
     ) {
       if (this.props.auth.dataCheckPhoneAvailble !== null) {
-        NavigationService.navigate('AddMerchant3');
+        NavigationService.navigate('AddMerchantStep2');
         this.props.saveVolatileDataAddMerchant({
           phone: this.state.phoneNumber
         });
-        // NavigationService.navigate('AddMerchant2', {
-        //   phoneNumber: this.state.phoneNumber,
-        //   otp: this.props.auth.dataCheckPhoneAvailble
-        // });
       }
     }
     /** IF ERROR */
@@ -118,7 +114,7 @@ class AddMerchantPhoneNumber extends Component {
   renderProgressHeader() {
     return (
       <ProgressBarType1
-        totalStep={5}
+        totalStep={2}
         currentStep={1}
         title={'Langkah melengkapi profil'}
       />
@@ -155,7 +151,5 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AddMerchantPhoneNumber);
+// eslint-disable-next-line prettier/prettier
+export default connect(mapStateToProps, mapDispatchToProps)(AddMerchantStep1);

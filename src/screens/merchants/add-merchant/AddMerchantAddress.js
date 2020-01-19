@@ -20,7 +20,7 @@ class AddMerchantAddress extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      address: this.props.global.dataLocationVolatile.address,
+      // address: this.props.global.dataLocationVolatile.address,
       refreshLocation: false
     };
   }
@@ -30,20 +30,24 @@ class AddMerchantAddress extends Component {
    * =====================
    */
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.global.dataLocationVolatile.longitude !==
-        this.props.global.dataLocationVolatile.longitude ||
-      prevProps.global.dataLocationVolatile.latitude !==
-        this.props.global.dataLocationVolatile.latitude
-    ) {
-      this.setState({ refreshLocation: true });
-      setTimeout(() => {
-        this.setState({ refreshLocation: false });
-      }, 100);
-    }
+    // if (
+    //   prevProps.global.dataLocationVolatile.longitude !==
+    //     this.props.global.dataLocationVolatile.longitude ||
+    //   prevProps.global.dataLocationVolatile.latitude !==
+    //     this.props.global.dataLocationVolatile.latitude
+    // ) {
+    //   this.setState({ refreshLocation: true });
+    //   setTimeout(() => {
+    //     this.setState({ refreshLocation: false });
+    //   }, 100);
+    // }
   }
   /** NEXT STEP MULTI STEP FORM */
   nextStep() {
+    // this.props.longlatToAddressGetProcess({
+    //   longitude: this.props.global.dataLocationVolatile.longitude,
+    //   latitude: this.props.global.dataLocationVolatile.latitude
+    // });
     this.props.saveLocationDataVolatile({
       address: this.state.address
     });
@@ -207,8 +211,8 @@ class AddMerchantAddress extends Component {
     return (
       <InputMapsType1
         title={'Koordinat Lokasi'}
-        selectedMapLong={this.props.global.dataLocationVolatile.longitude}
-        selectedMapLat={this.props.global.dataLocationVolatile.latitude}
+        selectedMapLong={this.props.merchant.dataAddMerchantVolatile.longitude}
+        selectedMapLat={this.props.merchant.dataAddMerchantVolatile.latitude}
         refresh={this.state.refreshLocation}
         openMaps={() => this.goToMaps('maps')}
       />
@@ -218,12 +222,12 @@ class AddMerchantAddress extends Component {
   renderContent() {
     return (
       <View style={{ flex: 1 }}>
-        {this.renderProvince()}
+        {/* {this.renderProvince()}
         {this.renderCity()}
         {this.renderDistric()}
         {this.renderUrban()}
         {this.renderZipCode()}
-        {this.renderAddress()}
+        {this.renderAddress()} */}
         {this.renderMaps()}
         <View style={{ paddingBottom: 50 }} />
       </View>
@@ -231,24 +235,24 @@ class AddMerchantAddress extends Component {
   }
   /** === RENDER BUTTON === */
   renderButton() {
-    const {
-      provinceName,
-      cityName,
-      districName,
-      urbanName,
-      longitude,
-      latitude
-    } = this.props.global.dataLocationVolatile;
+    // const {
+    //   provinceName,
+    //   cityName,
+    //   districName,
+    //   urbanName,
+    //   longitude,
+    //   latitude
+    // } = this.props.global.dataLocationVolatile;
     return (
       <ButtonSingle
         disabled={
-          provinceName === '' ||
-          cityName === '' ||
-          districName === '' ||
-          urbanName === '' ||
-          longitude === '' ||
-          latitude === '' ||
-          this.state.address === ''
+          false
+          // provinceName === '' ||
+          // cityName === '' ||
+          // districName === '' ||
+          // urbanName === '' ||
+          // this.state.address === '' ||
+          // longitude === '' || latitude === ''
         }
         title={'Lanjutkan'}
         borderRadius={4}
@@ -279,8 +283,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, global }) => {
-  return { auth, global };
+const mapStateToProps = ({ auth, global, merchant }) => {
+  return { auth, global, merchant };
 };
 
 const mapDispatchToProps = dispatch => {

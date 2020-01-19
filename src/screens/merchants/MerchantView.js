@@ -91,7 +91,7 @@ class MerchantView extends Component {
       headerRight: () => (
         <TouchableOpacity
           style={{ marginRight: 16 }}
-          onPress={() => NavigationService.navigate('AddMerchant1')}
+          onPress={() => NavigationService.navigate('AddMerchantStep1')}
         >
           <AntDesignIcon
             color={masterColor.mainColor}

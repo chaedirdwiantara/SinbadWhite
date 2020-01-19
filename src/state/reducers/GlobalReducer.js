@@ -6,25 +6,16 @@ const INITIAL_STATE = {
   loadingGetLocation: false,
   refreshGetLocation: false,
   loadingLoadMoreGetLocation: false,
+  loadingGlobalLongLatToAddress: false,
   /** data */
   search: '',
   dataGetLocation: [],
   totalDataGetLocation: 0,
   pageGetLocation: 0,
-  dataLocationVolatile: {
-    provinceName: '',
-    provinceId: '',
-    cityName: '',
-    districName: '',
-    urbanName: '',
-    urbanId: '',
-    zipCode: '',
-    address: '',
-    latitude: '',
-    longitude: ''
-  },
+  dataGlobalLongLatToAddress: null,
   /** error */
-  errorGetLocation: null
+  errorGetLocation: null,
+  errorGlobalLongLatToAddress: null
 };
 
 export const global = createReducer(INITIAL_STATE, {
@@ -136,6 +127,38 @@ export const global = createReducer(INITIAL_STATE, {
     return {
       ...state,
       dataLocationVolatile: INITIAL_STATE.dataLocationVolatile
+    };
+  },
+  /**
+   * ================================================
+   * THIS FOR GET ADDRESS FROM LONG LAT GOOGLE MAPS
+   * ================================================
+   */
+  [types.GLOBAL_LONGLAT_TO_ADDRESS_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGlobalLongLatToAddress: true,
+      dataGlobalLongLatToAddress: null,
+      errorGlobalLongLatToAddress: null
+    };
+  },
+  [types.GLOBAL_LONGLAT_TO_ADDRESS_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGlobalLongLatToAddress: false,
+      dataGlobalLongLatToAddress: {
+        province: action.payload.province,
+        city: action.payload.city,
+        district: action.payload.district,
+        urban: action.payload.urban
+      }
+    };
+  },
+  [types.GLOBAL_LONGLAT_TO_ADDRESS_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGlobalLongLatToAddress: false,
+      errorGlobalLongLatToAddress: action.payload
     };
   }
 });

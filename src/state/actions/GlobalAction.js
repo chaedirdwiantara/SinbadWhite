@@ -44,3 +44,64 @@ export function locationGetReset() {
 export function locationGetLoadMore(page) {
   return { type: types.LOCATION_GET_LOADMORE, payload: page };
 }
+/**
+ * =========================
+ * GET ADDRESS FROM LONG LAT
+ * ==========================
+ */
+/** === GET ADDRESS FROM LONG LAT PROCESS ==== */
+export function longlatToAddressGetProcess(data) {
+  return { type: types.GLOBAL_LONGLAT_TO_ADDRESS_PROCESS, payload: data };
+}
+/** === GET ADDRESS FROM LONG LAT SUCCESS === */
+export function longlatToAddressGetSuccess(data) {
+  if (data.result === 'Ok' && data.data.results.length > 0) {
+    return {
+      type: types.GLOBAL_LONGLAT_TO_ADDRESS_SUCCESS,
+      payload: modifyDataAddressFromGmaps(
+        data.data.results[0].address_components
+      )
+    };
+  }
+  return { type: types.GLOBAL_LONGLAT_TO_ADDRESS_FAILED, payload: data };
+}
+/** === GET ADDRESS FROM LONG LAT === */
+export function longlatToAddressGetFailed(data) {
+  return { type: types.GLOBAL_LONGLAT_TO_ADDRESS_FAILED, payload: data };
+}
+
+function modifyDataAddressFromGmaps(data) {
+  const dataAddress = {
+    province: '',
+    city: '',
+    district: '',
+    urban: ''
+  };
+
+  data.map((item, index) => {
+    if (item.types.indexOf('administrative_area_level_4') > -1) {
+      dataAddress.urban = item.long_name;
+    }
+    if (item.types.indexOf('administrative_area_level_3') > -1) {
+      dataAddress.district = item.long_name;
+    }
+    if (item.types.indexOf('administrative_area_level_2') > -1) {
+      dataAddress.city = item.long_name;
+    }
+    if (item.types.indexOf('administrative_area_level_1') > -1) {
+      dataAddress.province = item.long_name;
+    }
+  });
+  return dataAddress;
+}
+
+/**
+ * ========================
+ * NOTE
+ * ========================
+ * - FOR GOOGLE MAPS
+ * urban : 'administrative_area_level_4'
+ * district: 'administrative_area_level_3'
+ * city: 'administrative_area_level_2'
+ * province: 'administrative_area_level_1'
+ */

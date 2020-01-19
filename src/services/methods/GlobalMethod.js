@@ -1,4 +1,5 @@
 import ApiRest from '../apiRest';
+import ApiRestMap from '../apiRestMap';
 
 function getLocation(data) {
   /**
@@ -52,7 +53,20 @@ function getLocation(data) {
     method: 'GET'
   });
 }
+/**
+ * ============================
+ * GET ADDRESSS FROM LONG LAT
+ * ============================
+ */
+/** === TES MAPS  */
+function getAddressFromLongLat(data) {
+  return ApiRestMap({
+    path: `&latlng=${data.latitude},${data.longitude}`,
+    method: 'GET'
+  });
+}
 
 export const GlobalMethod = {
-  getLocation
+  getLocation,
+  getAddressFromLongLat
 };

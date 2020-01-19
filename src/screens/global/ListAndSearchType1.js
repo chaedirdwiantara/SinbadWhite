@@ -149,10 +149,8 @@ class ListAndSearchType1 extends Component {
         break;
       case 'suplierMerchant':
         this.props.saveVolatileDataAddMerchant({
-          supplier: {
-            supplierId: parseInt(item.id, 10),
-            supplierName: item.name
-          }
+          supplierId: parseInt(item.id, 10),
+          supplierName: item.name
         });
         NavigationService.goBack(this.props.navigation.state.key);
         break;

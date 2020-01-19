@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Dimensions,
-  TouchableOpacity
-} from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -13,15 +7,13 @@ import MapView, { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
-import ComingSoon from '../../components/empty_state/ComingSoon';
 import masterColor from '../../config/masterColor.json';
 import { StatusBarWhite } from '../../components/StatusBarGlobal';
 import SearchBarType3 from '../../components/search_bar/SearchBarType3';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import ButtonSingle from '../../components/button/ButtonSingle';
 import { LoadingPage } from '../../components/Loading';
-
-const { height } = Dimensions.get('window');
+import ModalBottomErrorResponsWhite from '../../components/error/ModalBottomErrorResponsWhite';
 
 class MapsView extends Component {
   constructor(props) {
@@ -31,7 +23,8 @@ class MapsView extends Component {
       longitude: 106.808,
       latitudeDelta: 0.02,
       longitudeDelta: 0.02,
-      reRender: false
+      reRender: false,
+      openErrorGlobalLongLatToAddress: false
     };
   }
   /**
@@ -41,6 +34,27 @@ class MapsView extends Component {
    */
   componentDidMount() {
     this.getCurrentLocation();
+  }
+
+  componentDidUpdate(prevProps) {
+    /** IF SUCCESS */
+    if (
+      prevProps.global.dataGlobalLongLatToAddress !==
+      this.props.global.dataGlobalLongLatToAddress
+    ) {
+      if (this.props.global.dataGlobalLongLatToAddress !== null) {
+        NavigationService.goBack(this.props.navigation.state.key);
+      }
+    }
+    /** IF ERROR */
+    if (
+      prevProps.global.errorGlobalLongLatToAddress !==
+      this.props.global.errorGlobalLongLatToAddress
+    ) {
+      if (this.props.global.errorGlobalLongLatToAddress !== null) {
+        this.setState({ openErrorGlobalLongLatToAddress: true });
+      }
+    }
   }
   /** === GET CURRENT LOCATION === */
   successMaps = success => {
@@ -61,11 +75,14 @@ class MapsView extends Component {
     });
   }
   addLongLat() {
-    this.props.saveLocationDataVolatile({
+    this.props.saveVolatileDataAddMerchant({
       latitude: this.state.latitude,
       longitude: this.state.longitude
     });
-    NavigationService.goBack(this.props.navigation.state.key);
+    this.props.longlatToAddressGetProcess({
+      longitude: this.state.longitude,
+      latitude: this.state.latitude
+    });
   }
   /**
    * ========================
@@ -191,12 +208,30 @@ class MapsView extends Component {
     return (
       <View style={styles.boxButtonBottom}>
         <ButtonSingle
-          disabled={false}
+          disabled={
+            this.state.reRender ||
+            this.props.global.loadingGlobalLongLatToAddress
+          }
+          loading={this.props.global.loadingGlobalLongLatToAddress}
           title={'Pilih Lokasi Ini'}
           borderRadius={4}
           onPress={() => this.addLongLat()}
         />
       </View>
+    );
+  }
+  /** MODAL */
+  renderError() {
+    return this.state.openErrorGlobalLongLatToAddress ? (
+      <ModalBottomErrorResponsWhite
+        open={this.state.openErrorGlobalLongLatToAddress}
+        onPress={() => {
+          this.setState({ openErrorGlobalLongLatToAddress: false });
+          this.addLongLat();
+        }}
+      />
+    ) : (
+      <View />
     );
   }
   /** === MAIN === */
@@ -208,6 +243,8 @@ class MapsView extends Component {
         {this.renderHeaderRight()}
         {this.renderMaps()}
         {this.renderButton()}
+        {/* modal */}
+        {this.renderError()}
       </View>
     );
   }
@@ -256,8 +293,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ global }) => {
+  return { global };
 };
 
 const mapDispatchToProps = dispatch => {
