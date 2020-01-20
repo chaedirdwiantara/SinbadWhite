@@ -30,6 +30,7 @@ import ModalBottomParcelDetail from './ModalBottomParcelDetail';
 import ModalWarning from './ModalWarning';
 import ModalBottomStockConfirmationConfirmOrder from './ModalBottomStockConfirmationConfirmOrder';
 import ModalBottomErrorMinimumOrder from './ModalBottomErrorMinimumOrder';
+import SelectedMerchantName from '../../components/SelectedMerchantName';
 
 const { width, height } = Dimensions.get('window');
 
@@ -840,6 +841,7 @@ class OmsCheckoutView extends Component {
     return (
       <View style={styles.contentContainer}>
         <ScrollView>
+          {this.renderMerchantName()}
           {this.renderAddress()}
           {this.renderListOrder()}
         </ScrollView>
@@ -899,6 +901,10 @@ class OmsCheckoutView extends Component {
         {this.renderCheckoutButton()}
       </View>
     );
+  }
+  /** RENDER HEADER NAME OF MERCHANT */
+  renderMerchantName() {
+    return <SelectedMerchantName shadow />;
   }
   /**
    * ========================

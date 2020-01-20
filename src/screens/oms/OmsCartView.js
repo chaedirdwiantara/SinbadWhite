@@ -28,6 +28,7 @@ import EmptyData from '../../components/empty_state/EmptyData';
 import ModalBottomErrorRespons from '../../components/error/ModalBottomErrorRespons';
 import ErrorPage from '../../components/error/ErrorPage';
 import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
+import SelectedMerchantName from '../../components/SelectedMerchantName';
 
 const { width, height } = Dimensions.get('window');
 
@@ -831,6 +832,7 @@ class OmsCartView extends Component {
     return (
       <View style={styles.contentContainer}>
         <ScrollView>
+          {this.renderMerchantName()}
           {this.renderAddress()}
           {this.renderListCart()}
           {this.renderForErrorProduct()}
@@ -1041,6 +1043,10 @@ class OmsCartView extends Component {
         description={'Silahkan mencoba kembali'}
       />
     );
+  }
+  /** RENDER HEADER NAME OF MERCHANT */
+  renderMerchantName() {
+    return <SelectedMerchantName shadow />;
   }
   /**
    * ====================

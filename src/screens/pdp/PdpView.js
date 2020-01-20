@@ -20,6 +20,7 @@ import CartGlobal from '../../components/CartGlobal';
 import ModalBottomType3 from '../../components/modal_bottom/ModalBottomType3';
 import ToastType1 from '../../components/toast/ToastType1';
 import PdpFilterSortView from './PdpFitlerSortView';
+import SelectedMerchantName from '../../components/SelectedMerchantName';
 
 class PdpView extends Component {
   constructor(props) {
@@ -259,12 +260,17 @@ class PdpView extends Component {
       <View />
     );
   }
+  /** RENDER HEADER NAME OF MERCHANT */
+  renderMerchantName() {
+    return <SelectedMerchantName lines />;
+  }
 
   /** MAIN */
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarRed />
+        {this.renderMerchantName()}
         <View style={styles.contentContainer}>{this.renderPdpData()}</View>
         {this.renderFilterSection()}
         {/* order bottom */}
