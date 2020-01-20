@@ -96,6 +96,8 @@ export const MERCHANT_GET_LOG_PER_ACTIVITY_FAILED =
 export const MERCHANT_SELECTED = 'MerchantSelected';
 /** MAPS MERCHANT */
 export const MERCHANT_MAPS = 'MerchantMaps';
+/** MERHCHANT CHANGED */
+export const MERCHANT_CHANGED = 'MerchantChanged';
 /** =======================
  * JOURNEY
  * ========================

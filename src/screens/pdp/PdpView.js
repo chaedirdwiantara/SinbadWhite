@@ -20,6 +20,8 @@ import CartGlobal from '../../components/CartGlobal';
 import ModalBottomType3 from '../../components/modal_bottom/ModalBottomType3';
 import ToastType1 from '../../components/toast/ToastType1';
 import PdpFilterSortView from './PdpFitlerSortView';
+import SelectedMerchantName from '../../components/SelectedMerchantName';
+import ModalConfirmation from '../../components/modal/ModalConfirmation';
 
 class PdpView extends Component {
   constructor(props) {
@@ -28,6 +30,7 @@ class PdpView extends Component {
       /** for modal */
       openOrder: false,
       openModalSort: false,
+      openModalConfirmRemoveCart: false,
       /** data */
       layout: 'grid',
       addProductNotif: false,
@@ -89,7 +92,17 @@ class PdpView extends Component {
         console.log('filter');
         break;
       case 'order':
-        this.setState({ openOrder: true, selectedProduct: data.data });
+        if (
+          this.props.merchant.merchantChanged &&
+          this.props.oms.dataCart.length > 0
+        ) {
+          this.setState({
+            openModalConfirmRemoveCart: true,
+            selectedProduct: data.data
+          });
+        } else {
+          this.setState({ openOrder: true, selectedProduct: data.data });
+        }
         break;
       case 'addProduct':
         this.setState({
@@ -240,6 +253,28 @@ class PdpView extends Component {
    * MODAL
    * =====================
    */
+  /** RENDER MODAL CONFIRM DELETE CART */
+  renderModalConfirmDelete() {
+    return this.state.openModalConfirmRemoveCart ? (
+      <ModalConfirmation
+        title={'Lanjutkan membuat keranjang baru?'}
+        open={this.state.openModalConfirmRemoveCart}
+        content={
+          'Menambahkan produk ini akan menghapus keranjang Anda sebelumnya. Apakah Anda Setuju ?'
+        }
+        type={'okeRed'}
+        ok={() => {
+          this.setState({ openModalConfirmRemoveCart: false, openOrder: true });
+          this.props.omsResetData();
+          this.props.merchantChanged(false);
+        }}
+        cancel={() => this.setState({ openModalConfirmRemoveCart: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
+
   renderModalSort() {
     return this.state.openModalSort ? (
       <ModalBottomType3
@@ -259,16 +294,22 @@ class PdpView extends Component {
       <View />
     );
   }
+  /** RENDER HEADER NAME OF MERCHANT */
+  renderMerchantName() {
+    return <SelectedMerchantName lines />;
+  }
 
   /** MAIN */
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarRed />
+        {this.renderMerchantName()}
         <View style={styles.contentContainer}>{this.renderPdpData()}</View>
         {this.renderFilterSection()}
         {/* order bottom */}
         {this.renderModalOrder()}
+        {this.renderModalConfirmDelete()}
         {this.renderToast()}
         {/* filter */}
         {this.renderModalSort()}
@@ -287,8 +328,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ pdp, user, global }) => {
-  return { pdp, user, global };
+const mapStateToProps = ({ pdp, user, global, merchant, oms }) => {
+  return { pdp, user, global, merchant, oms };
 };
 
 const mapDispatchToProps = dispatch => {

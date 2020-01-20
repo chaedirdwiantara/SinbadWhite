@@ -30,6 +30,7 @@ import ModalBottomParcelDetail from './ModalBottomParcelDetail';
 import ModalWarning from './ModalWarning';
 import ModalBottomStockConfirmationConfirmOrder from './ModalBottomStockConfirmationConfirmOrder';
 import ModalBottomErrorMinimumOrder from './ModalBottomErrorMinimumOrder';
+import SelectedMerchantName from '../../components/SelectedMerchantName';
 
 const { width, height } = Dimensions.get('window');
 
@@ -840,6 +841,7 @@ class OmsCheckoutView extends Component {
     return (
       <View style={styles.contentContainer}>
         <ScrollView>
+          {this.renderMerchantName()}
           {this.renderAddress()}
           {this.renderListOrder()}
         </ScrollView>
@@ -900,6 +902,10 @@ class OmsCheckoutView extends Component {
       </View>
     );
   }
+  /** RENDER HEADER NAME OF MERCHANT */
+  renderMerchantName() {
+    return <SelectedMerchantName shadow />;
+  }
   /**
    * ========================
    * MODAL
@@ -909,6 +915,7 @@ class OmsCheckoutView extends Component {
   renderModalConfirmationBackToCart() {
     return this.state.openModalBackToCartItem ? (
       <ModalConfirmation
+        title={'Konfirmasi'}
         open={this.state.openModalBackToCartItem}
         content={'Yakin ingin kembali ke keranjang dan membatalkan checkout ?'}
         type={'okeNotRed'}
@@ -928,6 +935,7 @@ class OmsCheckoutView extends Component {
   renderModalConfirmationConfirmOrder() {
     return this.state.openModalConfirmOrder ? (
       <ModalConfirmation
+        title={'Konfirmasi'}
         open={this.state.openModalConfirmOrder}
         content={'Lanjutkan untuk buat Pesanan Anda sekarang ?'}
         type={'okeRed'}

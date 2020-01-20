@@ -14,7 +14,7 @@ import SearchBarType3 from '../../components/search_bar/SearchBarType3';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import ButtonSingle from '../../components/button/ButtonSingle';
 import { LoadingPage } from '../../components/Loading';
-import ModalBottomErrorResponsWhite from '../../components/error/ModalBottomErrorResponsWhite';
+import ModalBottomErrorPinMap from '../../components/error/ModalBottomErrorPinMap';
 import ErrorPageNoGPS from '../../components/error/ErrorPageNoGPS';
 
 class MapsView extends Component {
@@ -226,11 +226,11 @@ class MapsView extends Component {
   /** MODAL */
   renderError() {
     return this.state.openErrorGlobalLongLatToAddress ? (
-      <ModalBottomErrorResponsWhite
+      <ModalBottomErrorPinMap
         open={this.state.openErrorGlobalLongLatToAddress}
         onPress={() => {
           this.setState({ openErrorGlobalLongLatToAddress: false });
-          this.addLongLat();
+          // this.addLongLat();
         }}
       />
     ) : (

@@ -68,6 +68,18 @@ class AddMerchantStep2 extends Component {
         this.setState({ openErrorAddMerchant: true });
       }
     }
+    /** UPDATE LONGLAT */
+    if (
+      prevProps.merchant.dataAddMerchantVolatile.longitude !==
+        this.props.merchant.dataAddMerchantVolatile.longitude ||
+      prevProps.merchant.dataAddMerchantVolatile.latitude !==
+        this.props.merchant.dataAddMerchantVolatile.latitude
+    ) {
+      this.setState({ refreshLocation: true });
+      setTimeout(() => {
+        this.setState({ refreshLocation: false });
+      }, 100);
+    }
   }
   /** SEND DATA ADD MERCHANT */
   finalStep() {

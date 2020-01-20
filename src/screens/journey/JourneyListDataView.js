@@ -61,7 +61,7 @@ class JourneyListDataView extends Component {
      */
     if (this.props.merchant.selectedMerchant !== null) {
       if (this.props.merchant.selectedMerchant.store.id !== data.store.id) {
-        this.props.omsResetData();
+        this.props.merchantChanged(true);
       }
     }
     /** GO TO SELECTED STORE */

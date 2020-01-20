@@ -16,6 +16,14 @@ export function saveVolatileDataAddMerchant(data) {
   return { type: types.MERCHANT_ADD_DATA_VOLATILE, payload: data };
 }
 /**
+ * ====================================
+ * FLAG CHANGE MERCHANT FOR ORDER CHECK
+ * ====================================
+ */
+export function merchantChanged(data) {
+  return { type: types.MERCHANT_CHANGED, payload: data };
+}
+/**
  * ==============================
  * GET MERCHANT BY PORTFOLIO
  * ==============================

@@ -48,6 +48,7 @@ const INITIAL_STATE = {
   totalDataGetMerchant: 0,
   pageGetMerchant: 0,
   dataGetPortfolio: null,
+  merchantChanged: false,
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
@@ -77,6 +78,17 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       selectedMerchant: action.payload
+    };
+  },
+  /**
+   * ====================================
+   * FLAG CHANGE MERCHANT FOR ORDER CHECK
+   * ====================================
+   */
+  [types.MERCHANT_CHANGED](state, action) {
+    return {
+      ...state,
+      merchantChanged: action.payload
     };
   },
   /**

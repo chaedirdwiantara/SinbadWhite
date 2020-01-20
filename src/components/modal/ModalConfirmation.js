@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Modal,
-  TouchableOpacity
-} from 'react-native';
+import { View, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import Text from 'react-native-text';
 import { connect } from 'react-redux';
-import { StatusBarRedOP40 } from '../StatusBarGlobal';
+import { StatusBarRedOP50 } from '../StatusBarGlobal';
 import Fonts from '../../helpers/GlobalFont';
 import masterColor from '../../config/masterColor.json';
-
-const { height } = Dimensions.get('window');
 
 class ModalConfirmation extends Component {
   constructor(props) {
@@ -27,12 +19,14 @@ class ModalConfirmation extends Component {
         animationType="fade"
         onRequestClose={() => {}}
       >
-        <StatusBarRedOP40 />
-        <View style={styles.container}>
+        <StatusBarRedOP50 />
+        <View style={styles.mainContainer}>
           <View style={styles.card}>
             <View style={styles.boxCard}>
               <View style={styles.containerTitle}>
-                <Text style={Fonts.type43}>Konfirmasi</Text>
+                <Text style={[Fonts.type43, { textAlign: 'center' }]}>
+                  {this.props.title}
+                </Text>
               </View>
               <View style={styles.contentContainer}>
                 <Text style={[Fonts.type17, { textAlign: 'center' }]}>
@@ -86,59 +80,52 @@ class ModalConfirmation extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  mainContainer: {
+    backgroundColor: masterColor.fontBlack100OP40,
     position: 'relative',
     height: '100%',
     justifyContent: 'center'
   },
   card: {
-    backgroundColor: '#ffffff',
-    height: 0.25 * height,
-    borderRadius: 20,
+    backgroundColor: masterColor.backgroundWhite,
+    borderRadius: 12,
     marginHorizontal: '18%'
   },
   boxCard: {
-    paddingBottom: 20,
-    paddingTop: 20,
-    paddingHorizontal: '5%',
-    height: '100%'
+    paddingVertical: 16,
+    paddingHorizontal: 16
   },
   containerTitle: {
     justifyContent: 'center',
     alignItems: 'center'
   },
   contentContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: '10%'
+    marginTop: 16
   },
   contentSubContainer: {
-    marginBottom: 10,
-    flex: 1,
+    marginTop: 10,
     justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: '10%'
+    alignItems: 'center'
   },
   buttonContainer: {
+    marginTop: 16,
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'space-between'
   },
   boxRed: {
-    marginHorizontal: 5,
+    width: '47%',
     alignItems: 'center',
-    borderRadius: 20,
-    paddingVertical: 13,
-    width: '45%',
+    borderRadius: 8,
+    paddingVertical: 12,
     backgroundColor: masterColor.mainColor
   },
   boxGrey: {
+    width: '47%',
     alignItems: 'center',
-    marginHorizontal: 5,
-    borderRadius: 20,
-    paddingVertical: 13,
-    width: '45%',
+    borderRadius: 8,
+    paddingVertical: 12,
     backgroundColor: masterColor.fontBlack40
   }
 });
