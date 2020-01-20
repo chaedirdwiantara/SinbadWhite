@@ -22,17 +22,17 @@ class ModalBottomErrorPinMap extends Component {
           }}
         >
           <Image
-            source={require('../../assets/images/sinbad_image/cry_sinbad.png')}
+            source={require('../../assets/images/sinbad_image/no_gps.png')}
             style={GlobalStyle.fullImage}
           />
           <View style={{ marginBottom: 20 }}>
             <Text
               style={[Fonts.type7, { textAlign: 'center', marginBottom: 10 }]}
             >
-              Terjadi Kesalahan
+              Lokasi yang Anda pilih tidak terdaftar
             </Text>
             <Text style={[Fonts.type17, { textAlign: 'center' }]}>
-              Silahkan Mencoba Kembali
+              Silahkan ubah lokasi Anda
             </Text>
           </View>
         </View>
