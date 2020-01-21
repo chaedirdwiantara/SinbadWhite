@@ -6,8 +6,6 @@ import {
   Image,
   SafeAreaView,
   FlatList,
-  BackHandler,
-  ToastAndroid,
   Dimensions
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -20,7 +18,6 @@ import masterColor from '../../config/masterColor';
 import Fonts from '../../helpers/GlobalFont';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import { StatusBarWhite } from '../../components/StatusBarGlobal';
-import ToastType1 from '../../components/toast/ToastType1';
 import BackHandlerCloseApp from '../../components/BackHandlerCloseApp';
 
 const { width } = Dimensions.get('window');
@@ -29,8 +26,6 @@ class HomeView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showToast: false,
-      notifToast: '',
       menu: [
         {
           title1: 'Journey',
@@ -63,24 +58,6 @@ class HomeView extends Component {
       fullName: this.props.user.fullName,
       imageUrl: this.props.user.imageUrl
     });
-  }
-  /** === DID UPDATE === */
-  componentDidUpdate(prevProps) {
-    /** IF ADD MERCHANT SUCCESS */
-    if (
-      prevProps.merchant.dataAddMerchant !== this.props.merchant.dataAddMerchant
-    ) {
-      if (this.props.merchant.dataAddMerchant !== null) {
-        this.setState({
-          openModalCheckout: false,
-          showToast: true,
-          notifToast: 'Tambah Toko Berhasil'
-        });
-        setTimeout(() => {
-          this.setState({ showToast: false });
-        }, 3000);
-      }
-    }
   }
   /** === GO TO PAGE === */
   goToPage(item) {
@@ -255,18 +232,6 @@ class HomeView extends Component {
       </View>
     );
   }
-  /**
-   * ==================
-   * MODAL
-   * =================
-   */
-  renderToast() {
-    return this.state.showToast ? (
-      <ToastType1 margin={30} content={this.state.notifToast} />
-    ) : (
-      <View />
-    );
-  }
   /** === RENDER MAIN === */
   render() {
     return (
@@ -274,7 +239,6 @@ class HomeView extends Component {
         <BackHandlerCloseApp navigation={this.props.navigation} />
         <StatusBarWhite />
         {this.renderData()}
-        {this.renderToast()}
       </SafeAreaView>
     );
   }

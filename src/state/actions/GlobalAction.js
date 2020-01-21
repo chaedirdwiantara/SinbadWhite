@@ -8,9 +8,23 @@ import * as types from '../types';
 export function saveSearch(text) {
   return { type: types.SEARCH_TEXT, payload: text };
 }
+/**
+ * ==============================
+ * LOCATION (FROM LONGLAT TO ADDRESS)
+ * ==============================
+ */
 /** === SAVE LOCATION VOLATILE DATA === */
 export function saveLocationDataVolatile(data) {
   return { type: types.LOCATION_SAVE_DATA_VOLATILE, payload: data };
+}
+/**
+ * ==============================
+ * SAVE PAGE THAT ADD MERCHANT BEGIN
+ * ==============================
+ */
+/** === SAVE LOCATION VOLATILE DATA === */
+export function savePageAddMerchantFrom(data) {
+  return { type: types.SAVE_PAGE_ADD_MERCHANT_FROM, payload: data };
 }
 /**
  * ============================

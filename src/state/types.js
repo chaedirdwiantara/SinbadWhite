@@ -13,6 +13,8 @@ export const DELETE_ALL_DATA = 'DeleteAllData';
 export const SEARCH_TEXT = 'SearchText';
 /** FOR SAVE LOCATION VOLATILE DATA */
 export const LOCATION_SAVE_DATA_VOLATILE = 'LocationSaveDataVolatile';
+/** FOR FLAG MERCHANT ADD PUSHED */
+export const SAVE_PAGE_ADD_MERCHANT_FROM = 'SavePageAddMerchantFrom';
 /** FOR GET LOCATION */
 export const LOCATION_GET_PROCESS = 'LocationGetProcess';
 export const LOCATION_GET_SUCCESS = 'LocationGetSuccess';

@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, SafeAreaView } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  BackHandler
+} from 'react-native';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -10,6 +17,7 @@ import masterColor from '../../config/masterColor';
 import Fonts from '../../helpers/GlobalFont';
 import ButtonFloatType1 from '../../components/button/ButtonFloatType1';
 import { StatusBarWhite } from '../../components/StatusBarGlobal';
+import ToastType1 from '../../components/toast/ToastType1';
 import ModalBottomSwipeCloseNotScroll from '../../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalContentMenuAddMerchant from './ModalContentMenuAddMerchant';
 import ModalBottomMerchantList from '../merchants/ModalBottomMerchantList';
@@ -21,9 +29,33 @@ class JourneyView extends Component {
     super(props);
     this.state = {
       openModalAddMerchant: false,
-      openModalMerchantList: false
+      openModalMerchantList: false,
+      showToast: false,
+      notifToast: ''
     };
   }
+  /**
+   * ========================
+   * HEADER MODIFY
+   * ========================
+   */
+  static navigationOptions = ({ navigation }) => {
+    const { state } = navigation;
+    return {
+      headerLeft: () => (
+        <TouchableOpacity
+          style={{ marginLeft: 16 }}
+          onPress={() => state.params.handleBackPressFromRN()}
+        >
+          <MaterialIcon
+            color={masterColor.fontBlack50}
+            name={'arrow-back'}
+            size={24}
+          />
+        </TouchableOpacity>
+      )
+    };
+  };
   /**
    * ================
    * FUNCTIONAL
@@ -31,6 +63,7 @@ class JourneyView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
+    this.navigationFunction();
     this.props.journeyPlanGetReset();
     this.props.journeyPlanGetProcess({ page: 0, loading: true });
     this.props.getJourneyPlanReportProcess(
@@ -49,10 +82,43 @@ class JourneyView extends Component {
         this.setState({ openModalMerchantList: false });
       }
     }
+    /** IF ADD MERCHANT SUCCESS */
+    if (
+      prevProps.merchant.dataAddMerchant !== this.props.merchant.dataAddMerchant
+    ) {
+      if (this.props.merchant.dataAddMerchant !== null) {
+        this.setState({
+          openModalCheckout: false,
+          showToast: true,
+          notifToast: 'Tambah Toko Berhasil'
+        });
+        setTimeout(() => {
+          this.setState({ showToast: false });
+        }, 3000);
+      }
+    }
+  }
+  /** WILL UNMOUNT */
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleHardwareBackPress
+    );
   }
   /** === ADD MERCHANT TO JOURNEY === */
   addMerchant() {
     this.setState({ openModalAddMerchant: true });
+  }
+  /** ====== DID MOUNT FUNCTION ========== */
+  /** NAVIGATION FUNCTION */
+  navigationFunction() {
+    this.props.navigation.setParams({
+      handleBackPressFromRN: () => this.handleBackPress()
+    });
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleHardwareBackPress
+    );
   }
   /** go to page */
   goTo(type) {
@@ -65,6 +131,7 @@ class JourneyView extends Component {
         break;
       case 'new_merchant':
         this.setState({ openModalAddMerchant: false });
+        this.props.savePageAddMerchantFrom('JourneyView');
         setTimeout(() => {
           NavigationService.navigate('AddMerchantStep1');
         }, 100);
@@ -73,6 +140,15 @@ class JourneyView extends Component {
         break;
     }
   }
+  /** BACK BUTTON RN PRESS HANDLING */
+  handleBackPress = () => {
+    NavigationService.navigate('HomeView');
+  };
+  /** BACK BUTTON HARDWARE PRESS HANDLING */
+  handleHardwareBackPress = () => {
+    NavigationService.navigate('HomeView');
+    return true;
+  };
   /**
    * =================
    * RENDER VIEW
@@ -127,6 +203,14 @@ class JourneyView extends Component {
    * MODAL
    * ======================
    */
+  /** TOAST */
+  renderToast() {
+    return this.state.showToast ? (
+      <ToastType1 margin={30} content={this.state.notifToast} />
+    ) : (
+      <View />
+    );
+  }
   /** MODAL MENU ADD MERCHANT */
   renderModalAddMerchant() {
     return this.state.openModalAddMerchant ? (
@@ -171,6 +255,7 @@ class JourneyView extends Component {
         {/* modal */}
         {this.renderModalAddMerchant()}
         {this.renderModalMerchantList()}
+        {this.renderToast()}
       </SafeAreaView>
     );
   }
@@ -199,8 +284,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ journey, user }) => {
-  return { journey, user };
+const mapStateToProps = ({ journey, user, merchant }) => {
+  return { journey, user, merchant };
 };
 
 const mapDispatchToProps = dispatch => {

@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  BackHandler,
+  SafeAreaView
+} from 'react-native';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
+import ToastType1 from '../../components/toast/ToastType1';
 import masterColor from '../../config/masterColor';
 import MerchantTabView from './MerchantTabView';
 import MerchantListView from './MerchantListView';
@@ -18,9 +26,46 @@ class MerchantView extends Component {
       activeTab: 'list',
       search: '',
       portfolio: 0,
-      type: 'direct'
+      type: 'direct',
+      showToast: false,
+      notifToast: ''
     };
   }
+  /**
+   * ========================
+   * HEADER MODIFY
+   * ========================
+   */
+  static navigationOptions = ({ navigation }) => {
+    const { state } = navigation;
+    return {
+      headerLeft: () => (
+        <TouchableOpacity
+          style={{ marginLeft: 16 }}
+          onPress={() => state.params.handleBackPressFromRN()}
+        >
+          <MaterialIcon
+            color={masterColor.fontBlack50}
+            name={'arrow-back'}
+            size={24}
+          />
+        </TouchableOpacity>
+      ),
+      headerRight: () => (
+        <TouchableOpacity
+          style={{ marginRight: 16 }}
+          // onPress={() => NavigationService.navigate('AddMerchantStep1')}
+          onPress={() => state.params.goToAddFunction()}
+        >
+          <AntDesignIcon
+            color={masterColor.mainColor}
+            name={'pluscircle'}
+            size={24}
+          />
+        </TouchableOpacity>
+      )
+    };
+  };
   /**
    * =======================
    * FUNCTIONAL
@@ -28,6 +73,7 @@ class MerchantView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
+    this.navigationFunction();
     this.props.portfolioGetProcess(this.props.user.id);
   }
   /** === DID UPDATE === */
@@ -43,7 +89,55 @@ class MerchantView extends Component {
         this.getMerchant('direct', 0, '');
       }
     }
+    /** IF ADD MERCHANT SUCCESS */
+    if (
+      prevProps.merchant.dataAddMerchant !== this.props.merchant.dataAddMerchant
+    ) {
+      if (this.props.merchant.dataAddMerchant !== null) {
+        this.setState({
+          openModalCheckout: false,
+          showToast: true,
+          notifToast: 'Tambah Toko Berhasil'
+        });
+        setTimeout(() => {
+          this.setState({ showToast: false });
+        }, 3000);
+      }
+    }
   }
+  /** WILL UNMOUNT */
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleHardwareBackPress
+    );
+  }
+  /** ====== DID MOUNT FUNCTION ========== */
+  /** NAVIGATION FUNCTION */
+  navigationFunction() {
+    this.props.navigation.setParams({
+      handleBackPressFromRN: () => this.handleBackPress(),
+      goToAddFunction: () => this.goToAdd()
+    });
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleHardwareBackPress
+    );
+  }
+  /** HANDLE ADD BUTTON FROM HEADER */
+  goToAdd = () => {
+    this.props.savePageAddMerchantFrom('MerchantView');
+    NavigationService.navigate('AddMerchantStep1');
+  };
+  /** BACK BUTTON RN PRESS HANDLING */
+  handleBackPress = () => {
+    NavigationService.navigate('HomeView');
+  };
+  /** BACK BUTTON HARDWARE PRESS HANDLING */
+  handleHardwareBackPress = () => {
+    NavigationService.navigate('HomeView');
+    return true;
+  };
   /** === FROM CHILD FUNCTION === */
   parentFunction(data) {
     if (data.type === 'section') {
@@ -81,27 +175,6 @@ class MerchantView extends Component {
       search
     });
   }
-  /**
-   * ========================
-   * HEADER MODIFY
-   * ========================
-   */
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerRight: () => (
-        <TouchableOpacity
-          style={{ marginRight: 16 }}
-          onPress={() => NavigationService.navigate('AddMerchantStep1')}
-        >
-          <AntDesignIcon
-            color={masterColor.mainColor}
-            name={'pluscircle'}
-            size={24}
-          />
-        </TouchableOpacity>
-      )
-    };
-  };
   /**
    * ======================
    * RENDER VIEW
@@ -142,14 +215,28 @@ class MerchantView extends Component {
       </View>
     );
   }
+  /**
+   * ====================
+   * MODAL
+   * ====================
+   */
+  /** TOAST */
+  renderToast() {
+    return this.state.showToast ? (
+      <ToastType1 margin={30} content={this.state.notifToast} />
+    ) : (
+      <View />
+    );
+  }
   /** === MAIN === */
   render() {
     return (
-      <View style={styles.mainContainer}>
+      <SafeAreaView style={styles.mainContainer}>
         <StatusBarWhite />
         {this.renderHeaderTabs()}
         {this.renderContent()}
-      </View>
+        {this.renderToast()}
+      </SafeAreaView>
     );
   }
 }

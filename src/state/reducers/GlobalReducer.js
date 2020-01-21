@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   loadingGlobalLongLatToAddress: false,
   /** data */
   search: '',
+  pageAddMerchantFrom: '',
   dataGetLocation: [],
   totalDataGetLocation: 0,
   pageGetLocation: 0,
@@ -37,6 +38,17 @@ export const global = createReducer(INITIAL_STATE, {
     return {
       ...state,
       token: action.payload.token
+    };
+  },
+  /**
+   * ==================================
+   * SAVE PAGE THAT ADD MERCHANT BEGIN
+   * ==================================
+   */
+  [types.SAVE_PAGE_ADD_MERCHANT_FROM](state, action) {
+    return {
+      ...state,
+      pageAddMerchantFrom: action.payload
     };
   },
   /**
