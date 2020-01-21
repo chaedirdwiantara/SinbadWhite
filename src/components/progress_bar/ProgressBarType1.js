@@ -50,7 +50,7 @@ class ProgressBarType1 extends Component {
   renderContent() {
     return (
       <View style={styles.contentContainer}>
-        {this.renderTitle()}
+        {this.props.title ? this.renderTitle() : <View />}
         {this.renderBar()}
       </View>
     );
@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
     backgroundColor: masterColor.backgroundWhite
   },
   contentContainer: {
-    paddingTop: 20,
     paddingHorizontal: 16
   },
   fullBar: {

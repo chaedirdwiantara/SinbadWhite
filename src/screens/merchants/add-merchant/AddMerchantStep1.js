@@ -113,11 +113,13 @@ class AddMerchantStep1 extends Component {
   /** === RENDER STEP HEADER === */
   renderProgressHeader() {
     return (
-      <ProgressBarType1
-        totalStep={2}
-        currentStep={1}
-        title={'Langkah melengkapi profil'}
-      />
+      <View style={{ paddingTop: 20 }}>
+        <ProgressBarType1
+          totalStep={2}
+          currentStep={1}
+          title={'Langkah melengkapi profil'}
+        />
+      </View>
     );
   }
   /** === MAIN === */

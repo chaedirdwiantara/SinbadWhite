@@ -15,10 +15,11 @@ import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import Fonts from '../../helpers/GlobalFont';
 import { StatusBarWhite } from '../../components/StatusBarGlobal';
+import ProgressBarType1 from '../../components/progress_bar/ProgressBarType1';
 import GlobalStyle from '../../helpers/GlobalStyle';
-import { MoneyFormat } from '../../helpers/NumberFormater';
 import { LoadingPage } from '../../components/Loading';
 import NavigationService from '../../navigation/NavigationService.js';
+import ButtonMenuType1 from '../../components/button/ButtonMenuType1';
 
 const { width } = Dimensions.get('window');
 
@@ -33,9 +34,9 @@ class MerchantDetailView extends Component {
    * ==============================
    */
   componentDidMount() {
-    this.props.merchantGetDetailProcess(
-      this.props.navigation.state.params.storeId
-    );
+    // this.props.merchantGetDetailProcess(
+    //   this.props.navigation.state.params.storeId
+    // );
   }
   /** === COMBINE ADDRESS === */
   combineAddress(item) {
@@ -91,6 +92,24 @@ class MerchantDetailView extends Component {
       address: this.props.merchant.dataGetMerchantDetail.address,
       urban: this.props.merchant.dataGetMerchantDetail.urban
     });
+  }
+  /** GO TO PAGE */
+  goTo(page) {
+    switch (page) {
+      case 'profileInformation':
+        NavigationService.navigate('MerchantDetailProfileView');
+        break;
+      case 'merchantInformation':
+        NavigationService.navigate('MerchantDetailInformationView');
+        break;
+      case 'merchantPayment':
+        NavigationService.navigate('MerchantDetailPaymentView');
+        break;
+
+      default:
+        break;
+    }
+    console.log(page);
   }
   /**
    * ==============================
@@ -190,143 +209,87 @@ class MerchantDetailView extends Component {
       </View>
     );
   }
-  /** === MERCHANT PROFILE === */
-  renderMerchantProfile() {
+  /**
+   * =============================
+   * NEW DESIGN PROFILE MERCHANT
+   * =============================
+   */
+  /** PROFILE BAR */
+  renderMerchantProfileBar() {
     return (
-      <View style={[styles.contentContainer, GlobalStyle.shadowForBox]}>
-        {this.renderTitleSection('Informasi Profil')}
-        <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
-        {this.renderContentSection(
-          'Nomor Telepon Pemilik',
-          this.props.merchant.dataGetMerchantDetail.owner.mobilePhoneNo,
-          true,
-          true
-        )}
-        {this.renderContentSection(
-          'Nomor NPWP',
-          this.props.merchant.dataGetMerchantDetail.taxNo
-        )}
+      <View
+        style={[
+          GlobalStyle.shadowForBox,
+          { paddingVertical: 16, marginBottom: 16 }
+        ]}
+      >
+        <View style={{ paddingHorizontal: 16, marginBottom: 8 }}>
+          <Text style={Fonts.type42}>Kelengkapan Profil</Text>
+        </View>
+        <ProgressBarType1 totalStep={9} currentStep={2} />
       </View>
     );
   }
-  /** === MERCHANT INFORMATION === */
-  renderMerchantInformation() {
+  /** MERCHANT INFORMATION */
+  renderMerchantInformationList() {
     return (
-      <View style={[styles.contentContainer, GlobalStyle.shadowForBox]}>
-        {this.renderTitleSection('Informasi Toko')}
-        <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
-        {this.renderContentSection(
-          'ID Toko',
-          this.props.merchant.dataGetMerchantDetail.storeCode
-        )}
-        {this.renderContentSection(
-          'Nama Toko',
-          this.props.merchant.dataGetMerchantDetail.name
-        )}
-        {this.renderContentSection(
-          'Nomor Telepon Toko',
-          this.props.merchant.dataGetMerchantDetail.phoneNo,
-          true,
-          true
-        )}
-        {this.renderContentSection(
-          'Alamat',
-          this.combineAddress(this.props.merchant.dataGetMerchantDetail)
-        )}
+      <View>
+        {this.renderMerchantInformationOwner()}
+        {this.renderMerchantInformationMerchant()}
+        {this.renderMerchantInformationPayment()}
       </View>
     );
   }
-  /** === MERCHANT INFORMATION PHISYCAL === */
-  renderMerchantInformationPhisycal() {
+  /** MERCHANT INFORMATION OWNER */
+  renderMerchantInformationOwner() {
     return (
-      <View style={[styles.contentContainer, GlobalStyle.shadowForBox]}>
-        {this.renderTitleSection('Informasi Fisik Toko')}
-        <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
-        {this.renderContentSection(
-          'Jumlah Pegawai',
-          this.props.merchant.dataGetMerchantDetail.numberOfEmployee,
-          true
-        )}
-        {this.renderContentSection(
-          'Akses Kendaraan',
-          this.props.merchant.dataGetMerchantDetail.vehicleAccessibility !==
-            null
-            ? this.props.merchant.dataGetMerchantDetail.vehicleAccessibility
-                .name
-            : null,
-          true
-        )}
+      <View>
+        <View style={styles.boxContentHeader}>
+          <Text style={Fonts.type42}>Data Pemilik</Text>
+          <Text style={Fonts.type59}>1/5 Selesai</Text>
+        </View>
+        <ButtonMenuType1
+          child
+          title={'Informasi  Profil'}
+          onPress={() => this.goTo('profileInformation')}
+        />
       </View>
     );
   }
-  /** === MERCHANT CLASIFICATION === */
-  renderMerchantClasification() {
+  /** MERCHANT INFORMATION MERCHANT */
+  renderMerchantInformationMerchant() {
     return (
-      <View style={[styles.contentContainer, GlobalStyle.shadowForBox]}>
-        {this.renderTitleSection('Klasifikasi Toko')}
-        <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
-        {this.renderContentSection(
-          'Tipe Toko',
-          this.props.merchant.dataGetMerchantDetail.storeType !== null
-            ? this.props.merchant.dataGetMerchantDetail.storeType.name
-            : null
-        )}
-        {this.renderContentSection(
-          'Group Toko',
-          this.props.merchant.dataGetMerchantDetail.storeGroup !== null
-            ? this.props.merchant.dataGetMerchantDetail.storeGroup.name
-            : null
-        )}
-        {this.renderContentSection(
-          'Cluster Toko',
-          this.props.merchant.dataGetMerchantDetail.storeClusters.length > 0
-            ? this.modifyCluster(
-                this.props.merchant.dataGetMerchantDetail.storeClusters
-              )
-            : null
-        )}
-        {this.renderContentSection(
-          'Hierarchy',
-          this.props.merchant.dataGetMerchantDetail.customerHierarchies.length >
-            0
-            ? this.modifyHierarchy(
-                this.props.merchant.dataGetMerchantDetail.customerHierarchies
-              )
-            : null
-        )}
+      <View>
+        <View style={styles.boxContentHeader}>
+          <Text style={Fonts.type42}>Data Toko</Text>
+          <Text style={Fonts.type59}>1/5 Selesai</Text>
+        </View>
+        <ButtonMenuType1
+          child
+          title={'Informasi Toko'}
+          onPress={() => this.goTo('merchantInformation')}
+        />
+        <ButtonMenuType1
+          child
+          title={'Alamat Toko'}
+          onPress={() => this.goTo('merchantAddress')}
+        />
       </View>
     );
   }
-  /** === MERHCANT PAYMENT === */
-  renderMerchantPayment() {
-    return this.props.merchant.dataGetMerchantDetail.creditLimitStores.map(
-      (item, index) => {
-        return (
-          <View
-            style={[styles.contentContainer, GlobalStyle.shadowForBox]}
-            key={index}
-          >
-            {this.renderTitleSection(item.invoiceGroup.name)}
-            <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
-            {this.renderContentSection(
-              'Kredit',
-              item.allowCreditLimit ? 'Ya' : 'Tidak'
-            )}
-            {this.renderContentSection(
-              'Kredit Limit',
-              MoneyFormat(parseInt(item.creditLimit, 10))
-            )}
-            {this.renderContentSection(
-              'Balance',
-              MoneyFormat(parseInt(item.balanceAmount, 10))
-            )}
-            {this.renderContentSection(
-              'Account Receiveable',
-              MoneyFormat(parseInt(item.accountReceivable, 10))
-            )}
-          </View>
-        );
-      }
+  /** MERCHANT INFORMATION PAYMENT */
+  renderMerchantInformationPayment() {
+    return (
+      <View>
+        <View style={styles.boxContentHeader}>
+          <Text style={Fonts.type42}>Pengaturan Pembayaran</Text>
+        </View>
+        <ButtonMenuType1
+          child
+          title={'Faktur'}
+          onPress={() => this.goTo('merchantPayment')}
+        />
+      </View>
     );
   }
   /** === RENDER CONTENT DATA === */
@@ -334,11 +297,8 @@ class MerchantDetailView extends Component {
     return (
       <ScrollView>
         {this.renderHeaderMerchant()}
-        {this.renderMerchantProfile()}
-        {this.renderMerchantInformation()}
-        {this.renderMerchantInformationPhisycal()}
-        {this.renderMerchantClasification()}
-        {this.renderMerchantPayment()}
+        {this.renderMerchantProfileBar()}
+        {this.renderMerchantInformationList()}
         <View style={{ paddingBottom: 50 }} />
       </ScrollView>
     );
@@ -366,12 +326,18 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     backgroundColor: masterColor.backgroundWhite,
-    marginBottom: 10,
+    marginBottom: 16,
     paddingVertical: 6
   },
   boxContent: {
     paddingHorizontal: 16,
     paddingVertical: 6,
+    justifyContent: 'space-between',
+    flexDirection: 'row'
+  },
+  boxContentHeader: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
     justifyContent: 'space-between',
     flexDirection: 'row'
   },

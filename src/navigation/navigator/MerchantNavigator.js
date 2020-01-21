@@ -18,6 +18,12 @@ import AddMerchantSelfiePhoto from '../../screens/merchants/add-merchant/AddMerc
 /** merchant dashboard */
 import MerchantHomeView from '../../screens/merchants/dashboard-merchant/MerchantHomeView';
 import MerchantCheckinView from '../../screens/merchants/dashboard-merchant/MerchantCheckinView';
+/** merchant detail */
+import MerchantDetailProfileView from '../../screens/merchants/details-merchant/MerchantDetailProfileView';
+import MerchantDetailInformationView from '../../screens/merchants/details-merchant/MerchantDetailInformationView';
+import MerchantDetailPaymentView from '../../screens/merchants/details-merchant/MerchantDetailPaymentView';
+/** merchant edit */
+import MerchantEditView from '../../screens/merchants/edit-merchant/MerchantEditView';
 
 const MerchantNavigator = {
   MerchantView: {
@@ -235,6 +241,71 @@ const MerchantNavigator = {
     screen: MerchantDetailMapView,
     navigationOptions: {
       headerShown: false,
+      gesturesEnabled: false
+    }
+  },
+  /** DETAIL */
+  MerchantDetailProfileView: {
+    screen: MerchantDetailProfileView,
+    navigationOptions: {
+      headerTitle: 'Information Profil',
+      headerTitleStyle: [
+        GlobalFont.type5,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  MerchantDetailInformationView: {
+    screen: MerchantDetailInformationView,
+    navigationOptions: {
+      headerTitle: 'Information Toko',
+      headerTitleStyle: [
+        GlobalFont.type5,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  MerchantDetailPaymentView: {
+    screen: MerchantDetailPaymentView,
+    navigationOptions: {
+      headerTitle: 'Faktur',
+      headerTitleStyle: [
+        GlobalFont.type5,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  /** === EDIT MERCHANT ==== */
+  MerchantEditView: {
+    screen: MerchantEditView,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
       gesturesEnabled: false
     }
   }
