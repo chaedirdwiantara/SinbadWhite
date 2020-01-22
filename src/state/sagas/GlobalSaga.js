@@ -3,14 +3,14 @@ import { GlobalMethod } from '../../services/methods';
 import * as ActionCreators from '../actions';
 import * as types from '../types';
 /** === MERCHANT LIST === */
-function* getLocation(actions) {
+function* getListAndSearch(actions) {
   try {
     const response = yield call(() => {
-      return GlobalMethod.getLocation(actions.payload);
+      return GlobalMethod.getListAndSearch(actions.payload);
     });
-    yield put(ActionCreators.locationGetSuccess(response));
+    yield put(ActionCreators.listAndSearchGetSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.locationGetFailed(error));
+    yield put(ActionCreators.listAndSearchGetFailed(error));
   }
 }
 /** === THIS FOR GET ADDRESS FROM LONG LAT GOOGLE MAPS === */
@@ -26,7 +26,7 @@ function* getAddressFromLongLat(actions) {
 }
 /** === SAGA FUNCTION === */
 function* GlobalSaga() {
-  yield takeEvery(types.LOCATION_GET_PROCESS, getLocation);
+  yield takeEvery(types.LIST_AND_SEARCH_GET_PROCESS, getListAndSearch);
   yield takeEvery(
     types.GLOBAL_LONGLAT_TO_ADDRESS_PROCESS,
     getAddressFromLongLat

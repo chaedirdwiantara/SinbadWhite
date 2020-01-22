@@ -34,9 +34,9 @@ class MerchantDetailView extends Component {
    * ==============================
    */
   componentDidMount() {
-    // this.props.merchantGetDetailProcess(
-    //   this.props.navigation.state.params.storeId
-    // );
+    this.props.merchantGetDetailProcess(
+      this.props.navigation.state.params.storeId
+    );
   }
   /** === COMBINE ADDRESS === */
   combineAddress(item) {
@@ -103,13 +103,20 @@ class MerchantDetailView extends Component {
         NavigationService.navigate('MerchantDetailInformationView');
         break;
       case 'merchantPayment':
-        NavigationService.navigate('MerchantDetailPaymentView');
+        NavigationService.navigate('MerchantEditView', {
+          title: 'Faktur',
+          type: 'merchantPayment'
+        });
         break;
-
+      case 'merchantAddress':
+        NavigationService.navigate('MerchantEditView', {
+          title: 'Alamat Toko',
+          type: 'merchantAddress'
+        });
+        break;
       default:
         break;
     }
-    console.log(page);
   }
   /**
    * ==============================
@@ -132,22 +139,6 @@ class MerchantDetailView extends Component {
           <Text style={[Fonts.type31, { marginBottom: 6 }]}>{key}</Text>
           <Text style={Fonts.type8}>{value ? value : '-'}</Text>
         </View>
-        {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {change ? (
-            <TouchableOpacity>
-              <Text style={Fonts.type22}>Ubah</Text>
-            </TouchableOpacity>
-          ) : (
-            <View />
-          )}
-          {call ? (
-            <TouchableOpacity style={{ marginLeft: 16 }}>
-              <Text style={Fonts.type22}>Hubungi</Text>
-            </TouchableOpacity>
-          ) : (
-            <View />
-          )}
-        </View> */}
       </View>
     );
   }
@@ -226,7 +217,10 @@ class MerchantDetailView extends Component {
         <View style={{ paddingHorizontal: 16, marginBottom: 8 }}>
           <Text style={Fonts.type42}>Kelengkapan Profil</Text>
         </View>
-        <ProgressBarType1 totalStep={9} currentStep={2} />
+        <ProgressBarType1
+          totalStep={this.props.merchant.dataGetMerchantDetail.progress.total}
+          currentStep={this.props.merchant.dataGetMerchantDetail.progress.done}
+        />
       </View>
     );
   }
@@ -246,7 +240,11 @@ class MerchantDetailView extends Component {
       <View>
         <View style={styles.boxContentHeader}>
           <Text style={Fonts.type42}>Data Pemilik</Text>
-          <Text style={Fonts.type59}>1/5 Selesai</Text>
+          <Text style={Fonts.type59}>
+            {this.props.merchant.dataGetMerchantDetail.progress.ownerData.done}/
+            {this.props.merchant.dataGetMerchantDetail.progress.ownerData.total}{' '}
+            Selesai
+          </Text>
         </View>
         <ButtonMenuType1
           child
@@ -262,7 +260,11 @@ class MerchantDetailView extends Component {
       <View>
         <View style={styles.boxContentHeader}>
           <Text style={Fonts.type42}>Data Toko</Text>
-          <Text style={Fonts.type59}>1/5 Selesai</Text>
+          <Text style={Fonts.type59}>
+            {this.props.merchant.dataGetMerchantDetail.progress.storeData.done}/
+            {this.props.merchant.dataGetMerchantDetail.progress.storeData.total}{' '}
+            Selesai
+          </Text>
         </View>
         <ButtonMenuType1
           child

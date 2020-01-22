@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { View, BackHandler, ToastAndroid } from 'react-native';
+import { View, BackHandler } from 'react-native';
+import NavigationService from '../navigation/NavigationService';
 
-class BackHandlerCloseApp extends Component {
+class BackHandlerBackSpecific extends Component {
   constructor(props) {
     super(props);
     this.didFocus = props.navigation.addListener('didFocus', payload =>
       BackHandler.addEventListener('hardwareBackPress', this.handleBackPress)
     );
-    this.state = {
-      backPressCount: 0
-    };
+    this.state = {};
   }
   /**
    * ========================
@@ -30,23 +29,7 @@ class BackHandlerCloseApp extends Component {
   }
   /** === HARDWARE BACK BUTTON === */
   handleBackPress = () => {
-    const count = this.state.backPressCount;
-    this.setState({ backPressCount: count + 1 });
-    if (count > 0) {
-      BackHandler.exitApp();
-    } else {
-      ToastAndroid.showWithGravityAndOffset(
-        'Tekan sekali lagi untuk keluar',
-        ToastAndroid.SHORT,
-        ToastAndroid.BOTTOM,
-        25,
-        200
-      );
-    }
-    setTimeout(() => {
-      this.setState({ backPressCount: 0 });
-    }, 3000);
-
+    NavigationService.navigate(this.props.page);
     return true;
   };
   /**
@@ -60,4 +43,4 @@ class BackHandlerCloseApp extends Component {
   }
 }
 
-export default BackHandlerCloseApp;
+export default BackHandlerBackSpecific;

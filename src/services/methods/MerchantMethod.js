@@ -29,6 +29,14 @@ function addMerchant(params) {
     params
   });
 }
+/** === EDIT MERCHANT === */
+function editMerchant(data) {
+  return ApiRest({
+    path: `agent-stores/${data.storeId}`,
+    method: 'PATCH',
+    params: data.params
+  });
+}
 /** === MERCHANT LAST ORDER === */
 function getMerchantLastOrder(storeId) {
   return ApiRest({
@@ -64,6 +72,7 @@ export const MerchantMethod = {
   getMerchantDetail,
   getPortfolioByUserId,
   addMerchant,
+  editMerchant,
   getMerchantLastOrder,
   postActivity,
   getLogAllActivity,

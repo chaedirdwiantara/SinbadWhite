@@ -18,6 +18,7 @@ import MerchantTabView from './MerchantTabView';
 import MerchantListView from './MerchantListView';
 import MerchantMapView from './MerchantMapView';
 import { StatusBarWhite } from '../../components/StatusBarGlobal';
+import BackHandlerBackSpecific from '../../components/BackHandlerBackSpecific';
 
 class MerchantView extends Component {
   constructor(props) {
@@ -105,38 +106,18 @@ class MerchantView extends Component {
       }
     }
   }
-  /** WILL UNMOUNT */
-  componentWillUnmount() {
-    BackHandler.removeEventListener(
-      'hardwareBackPress',
-      this.handleHardwareBackPress
-    );
-  }
   /** ====== DID MOUNT FUNCTION ========== */
   /** NAVIGATION FUNCTION */
   navigationFunction() {
     this.props.navigation.setParams({
-      handleBackPressFromRN: () => this.handleBackPress(),
+      handleBackPressFromRN: () => NavigationService.navigate('HomeView'),
       goToAddFunction: () => this.goToAdd()
     });
-    BackHandler.addEventListener(
-      'hardwareBackPress',
-      this.handleHardwareBackPress
-    );
   }
   /** HANDLE ADD BUTTON FROM HEADER */
   goToAdd = () => {
     this.props.savePageAddMerchantFrom('MerchantView');
     NavigationService.navigate('AddMerchantStep1');
-  };
-  /** BACK BUTTON RN PRESS HANDLING */
-  handleBackPress = () => {
-    NavigationService.navigate('HomeView');
-  };
-  /** BACK BUTTON HARDWARE PRESS HANDLING */
-  handleHardwareBackPress = () => {
-    NavigationService.navigate('HomeView');
-    return true;
   };
   /** === FROM CHILD FUNCTION === */
   parentFunction(data) {
@@ -232,6 +213,10 @@ class MerchantView extends Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
+        <BackHandlerBackSpecific
+          navigation={this.props.navigation}
+          page={'HomeView'}
+        />
         <StatusBarWhite />
         {this.renderHeaderTabs()}
         {this.renderContent()}

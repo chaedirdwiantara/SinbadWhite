@@ -15,13 +15,13 @@ export const SEARCH_TEXT = 'SearchText';
 export const LOCATION_SAVE_DATA_VOLATILE = 'LocationSaveDataVolatile';
 /** FOR FLAG MERCHANT ADD PUSHED */
 export const SAVE_PAGE_ADD_MERCHANT_FROM = 'SavePageAddMerchantFrom';
-/** FOR GET LOCATION */
-export const LOCATION_GET_PROCESS = 'LocationGetProcess';
-export const LOCATION_GET_SUCCESS = 'LocationGetSuccess';
-export const LOCATION_GET_FAILED = 'LocationGetFailed';
-export const LOCATION_GET_RESET = 'LocationGetReset';
-export const LOCATION_GET_REFRESH = 'LocationGetRefresh';
-export const LOCATION_GET_LOADMORE = 'LocationGetLoadMore';
+/** FOR GET LIST AND SEARCH */
+export const LIST_AND_SEARCH_GET_PROCESS = 'ListAndSearchGetProcess';
+export const LIST_AND_SEARCH_GET_SUCCESS = 'ListAndSearchGetSuccess';
+export const LIST_AND_SEARCH_GET_FAILED = 'ListAndSearchGetFailed';
+export const LIST_AND_SEARCH_GET_RESET = 'ListAndSearchGetReset';
+export const LIST_AND_SEARCH_GET_REFRESH = 'ListAndSearchGetRefresh';
+export const LIST_AND_SEARCH_GET_LOADMORE = 'ListAndSearchGetLoadMore';
 /** GOOGLE MAPS SERVICE (GET ADDRESS FROM LONG LAT) */
 export const GLOBAL_LONGLAT_TO_ADDRESS_PROCESS =
   'GlobalLonglatToAddressProcess';
@@ -70,8 +70,14 @@ export const MERCHANT_GET_DETAIL_FAILED = 'MerchantGetDetailFailed';
 export const MERCHANT_ADD_PROCESS = 'MerchantAddProcess';
 export const MERCHANT_ADD_SUCCESS = 'MerchantAddSuccess';
 export const MERCHANT_ADD_FAILED = 'MerchantAddFailed';
+/** FOR EDIT MERCHANT */
+export const MERCHANT_EDIT_PROCESS = 'MerchantEditProcess';
+export const MERCHANT_EDIT_SUCCESS = 'MerchantEditSuccess';
+export const MERCHANT_EDIT_FAILED = 'MerchantEditFailed';
 /** FOR ADD MERCHANT */
 export const MERCHANT_ADD_DATA_VOLATILE = 'MerchantAddDataVolatile';
+/** FOR EDIT MERCHANT */
+export const MERCHANT_EDIT_DATA_VOLATILE = 'MerchantEditDataVolatile';
 /** FOR GET MERCHANT LAST ORDER */
 export const MERCHANT_GET_LAST_ORDER_PROCESS = 'MerchantGetLastOrderProcess';
 export const MERCHANT_GET_LAST_ORDER_SUCCESS = 'MerchantGetLastOrderSuccess';

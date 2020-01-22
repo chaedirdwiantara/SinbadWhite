@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   /** loading */
   loadingGetMerchant: false,
   loadingAddMerchant: false,
+  loadingEditMerchant: false,
   refreshGetMerchant: false,
   loadingLoadMoreGetMerchant: false,
   loadingGetPortfolio: false,
@@ -20,6 +21,21 @@ const INITIAL_STATE = {
   selectedMerchant: null,
   dataGetMerchant: [],
   dataAddMerchant: null,
+  dataEditMerchant: null,
+  dataEditMerchantVolatile: {
+    vehicleAccessibilityId: '',
+    vehicleAccessibilityName: '',
+    storeTypeId: '',
+    storeTypeName: '',
+    storeGroupId: '',
+    storeGroupName: '',
+    storeClustersId: '',
+    storeClustersName: '',
+    storeSegmentId: '',
+    storeSegmentName: '',
+    customerHierarchiesId: '',
+    customerHierarchiesName: ''
+  },
   dataGetMerchantDetail: null,
   dataGetMerchantLastOrder: null,
   dataAddMerchantVolatile: {
@@ -52,6 +68,7 @@ const INITIAL_STATE = {
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
+  errorEditMerchant: null,
   errorGetPortfolio: null,
   errorGetMerchantDetail: null,
   errorGetMerchantLastOrder: null,
@@ -89,6 +106,54 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       merchantChanged: action.payload
+    };
+  },
+  /**
+   * ==================================
+   * SAVE VOLATILE DATA TO EDIT MERCHANT
+   * =================================
+   */
+  [types.MERCHANT_EDIT_DATA_VOLATILE](state, action) {
+    return {
+      ...state,
+      dataEditMerchantVolatile: {
+        vehicleAccessibilityId: action.payload.vehicleAccessibilityId
+          ? action.payload.vehicleAccessibilityId
+          : state.dataEditMerchantVolatile.vehicleAccessibilityId,
+        vehicleAccessibilityName: action.payload.vehicleAccessibilityName
+          ? action.payload.vehicleAccessibilityName
+          : state.dataEditMerchantVolatile.vehicleAccessibilityName,
+        storeTypeId: action.payload.storeTypeId
+          ? action.payload.storeTypeId
+          : state.dataEditMerchantVolatile.storeTypeId,
+        storeTypeName: action.payload.storeTypeName
+          ? action.payload.storeTypeName
+          : state.dataEditMerchantVolatile.storeTypeName,
+        storeGroupId: action.payload.storeGroupId
+          ? action.payload.storeGroupId
+          : state.dataEditMerchantVolatile.storeGroupId,
+        storeGroupName: action.payload.storeGroupName
+          ? action.payload.storeGroupName
+          : state.dataEditMerchantVolatile.storeGroupName,
+        storeClustersId: action.payload.storeClustersId
+          ? action.payload.storeClustersId
+          : state.dataEditMerchantVolatile.storeClustersId,
+        storeClustersName: action.payload.storeClustersName
+          ? action.payload.storeClustersName
+          : state.dataEditMerchantVolatile.storeClustersName,
+        storeSegmentId: action.payload.storeSegmentId
+          ? action.payload.storeSegmentId
+          : state.dataEditMerchantVolatile.storeSegmentId,
+        storeSegmentName: action.payload.storeSegmentName
+          ? action.payload.storeSegmentName
+          : state.dataEditMerchantVolatile.storeSegmentName,
+        customerHierarchiesId: action.payload.customerHierarchiesId
+          ? action.payload.customerHierarchiesId
+          : state.dataEditMerchantVolatile.customerHierarchiesId,
+        customerHierarchiesName: action.payload.customerHierarchiesName
+          ? action.payload.customerHierarchiesName
+          : state.dataEditMerchantVolatile.customerHierarchiesName
+      }
     };
   },
   /**
@@ -201,7 +266,39 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetMerchantDetail: false,
-      dataGetMerchantDetail: action.payload
+      dataGetMerchantDetail: action.payload,
+      dataEditMerchantVolatile: {
+        vehicleAccessibilityId:
+          action.payload.vehicleAccessibilityId !== null
+            ? action.payload.vehicleAccessibilityId
+            : '',
+        vehicleAccessibilityName:
+          action.payload.vehicleAccessibility !== null
+            ? action.payload.vehicleAccessibility.name
+            : '',
+        storeTypeId:
+          action.payload.storeTypeId !== null ? action.payload.storeTypeId : '',
+        storeTypeName:
+          action.payload.storeType !== null
+            ? action.payload.storeType.name
+            : '',
+        storeGroupId:
+          action.payload.storeGroupId !== null
+            ? action.payload.storeGroupId
+            : '',
+        storeGroupName:
+          action.payload.storeGroup !== null
+            ? action.payload.storeGroup.name
+            : '',
+        storeSegmentId:
+          action.payload.storeSegmentId !== null
+            ? action.payload.storeSegmentId
+            : '',
+        storeSegmentName:
+          action.payload.storeSegment !== null
+            ? action.payload.storeSegment.name
+            : ''
+      }
     };
   },
   [types.MERCHANT_GET_DETAIL_FAILED](state, action) {
@@ -267,6 +364,34 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingAddMerchant: false,
       errorAddMerchant: action.payload
+    };
+  },
+  /**
+   * =============================
+   * EDIT MERCHANT
+   * =============================
+   */
+  [types.MERCHANT_EDIT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingEditMerchant: true,
+      dataEditMerchant: null,
+      errorEditMerchant: null
+    };
+  },
+  [types.MERCHANT_EDIT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingEditMerchant: false,
+      dataGetMerchantDetail: action.payload,
+      dataEditMerchant: action.payload
+    };
+  },
+  [types.MERCHANT_EDIT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingEditMerchant: false,
+      errorEditMerchant: action.payload
     };
   },
   /**

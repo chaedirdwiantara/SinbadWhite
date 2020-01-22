@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  Keyboard
+} from 'react-native';
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -23,6 +29,7 @@ class ModalBottomMerchantList extends Component {
     this.state = {
       search: '',
       portfolio: 0,
+      heightList: 0.93 * height,
       selectedMerchant: [],
       dataForAddJourney: []
     };
@@ -34,6 +41,14 @@ class ModalBottomMerchantList extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this.keyboardDidShow
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this.keyboardDidHide
+    );
     this.props.portfolioGetProcess(this.props.user.id);
   }
   /** === DID UPDATE === */
@@ -50,6 +65,18 @@ class ModalBottomMerchantList extends Component {
       }
     }
   }
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+  }
+
+  keyboardDidShow = () => {
+    this.setState({ heightList: 0.2 * height });
+  };
+
+  keyboardDidHide = () => {
+    this.setState({ heightList: 0.93 * height });
+  };
   /** === CALL GET FUNCTION === */
   getMerchant(type, portfolioIndex, search) {
     this.props.merchantGetReset();
@@ -226,7 +253,9 @@ class ModalBottomMerchantList extends Component {
         deviceHeight={height}
         style={styles.mainContainer}
       >
-        <View style={styles.contentContainer}>
+        <View
+          style={[styles.contentContainer, { height: this.state.heightList }]}
+        >
           {this.renderContentTitle()}
           {this.renderContentBody()}
         </View>
@@ -253,7 +282,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    height: 0.93 * height,
     backgroundColor: masterColor.backgroundWhite,
     flexDirection: 'column',
     position: 'absolute',

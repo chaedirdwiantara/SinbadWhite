@@ -23,6 +23,7 @@ import ModalContentMenuAddMerchant from './ModalContentMenuAddMerchant';
 import ModalBottomMerchantList from '../merchants/ModalBottomMerchantList';
 import JourneyListDataView from './JourneyListDataView';
 import { MoneyFormat } from '../../helpers/NumberFormater';
+import BackHandlerBackSpecific from '../../components/BackHandlerBackSpecific';
 
 class JourneyView extends Component {
   constructor(props) {
@@ -98,13 +99,6 @@ class JourneyView extends Component {
       }
     }
   }
-  /** WILL UNMOUNT */
-  componentWillUnmount() {
-    BackHandler.removeEventListener(
-      'hardwareBackPress',
-      this.handleHardwareBackPress
-    );
-  }
   /** === ADD MERCHANT TO JOURNEY === */
   addMerchant() {
     this.setState({ openModalAddMerchant: true });
@@ -113,12 +107,8 @@ class JourneyView extends Component {
   /** NAVIGATION FUNCTION */
   navigationFunction() {
     this.props.navigation.setParams({
-      handleBackPressFromRN: () => this.handleBackPress()
+      handleBackPressFromRN: () => NavigationService.navigate('HomeView')
     });
-    BackHandler.addEventListener(
-      'hardwareBackPress',
-      this.handleHardwareBackPress
-    );
   }
   /** go to page */
   goTo(type) {
@@ -140,15 +130,6 @@ class JourneyView extends Component {
         break;
     }
   }
-  /** BACK BUTTON RN PRESS HANDLING */
-  handleBackPress = () => {
-    NavigationService.navigate('HomeView');
-  };
-  /** BACK BUTTON HARDWARE PRESS HANDLING */
-  handleHardwareBackPress = () => {
-    NavigationService.navigate('HomeView');
-    return true;
-  };
   /**
    * =================
    * RENDER VIEW
@@ -248,6 +229,10 @@ class JourneyView extends Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
+        <BackHandlerBackSpecific
+          navigation={this.props.navigation}
+          page={'HomeView'}
+        />
         <StatusBarWhite />
         {this.renderHeader()}
         {this.renderButtonAddJourney()}

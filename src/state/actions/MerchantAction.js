@@ -16,6 +16,14 @@ export function saveVolatileDataAddMerchant(data) {
   return { type: types.MERCHANT_ADD_DATA_VOLATILE, payload: data };
 }
 /**
+ * ==================================
+ * SAVE VOLATILE DATA TO EDIT MERCHANT
+ * =================================
+ */
+export function saveVolatileDataEditMerchant(data) {
+  return { type: types.MERCHANT_EDIT_DATA_VOLATILE, payload: data };
+}
+/**
  * ====================================
  * FLAG CHANGE MERCHANT FOR ORDER CHECK
  * ====================================
@@ -108,19 +116,19 @@ export function portfolioGetFailed(data) {
  * ==================================
  */
 /** PORTFOLIO GET PROCESS */
-export function merchantAddProcess(data) {
-  return { type: types.MERCHANT_ADD_PROCESS, payload: data };
+export function merchantEditProcess(data) {
+  return { type: types.MERCHANT_EDIT_PROCESS, payload: data };
 }
 /** PORTFOLIO GET SUCCESS */
-export function merchantAddSuccess(data) {
+export function merchantEditSuccess(data) {
   if (data.result === 'Ok') {
-    return { type: types.MERCHANT_ADD_SUCCESS, payload: data.data };
+    return { type: types.MERCHANT_EDIT_SUCCESS, payload: data.data };
   }
-  return { type: types.MERCHANT_ADD_FAILED, payload: data };
+  return { type: types.MERCHANT_EDIT_FAILED, payload: data };
 }
 /** PORTFOLIO GET FAILED */
-export function merchantAddFailed(data) {
-  return { type: types.MERCHANT_ADD_FAILED, payload: data };
+export function merchantEditFailed(data) {
+  return { type: types.MERCHANT_EDIT_FAILED, payload: data };
 }
 
 /**
@@ -208,4 +216,25 @@ export function merchantGetLogPerActivitySuccess(data) {
 /** GET LOG PER ACTIVITY MERCHANT FAILED */
 export function merchantGetLogPerActivityFailed(data) {
   return { type: types.MERCHANT_GET_LOG_PER_ACTIVITY_FAILED, payload: data };
+}
+
+/**
+ * ==================================
+ * EDIT MERCHANT
+ * ==================================
+ */
+/** PORTFOLIO GET PROCESS */
+export function merchantAddProcess(data) {
+  return { type: types.MERCHANT_ADD_PROCESS, payload: data };
+}
+/** PORTFOLIO GET SUCCESS */
+export function merchantAddSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.MERCHANT_ADD_SUCCESS, payload: data.data };
+  }
+  return { type: types.MERCHANT_ADD_FAILED, payload: data };
+}
+/** PORTFOLIO GET FAILED */
+export function merchantAddFailed(data) {
+  return { type: types.MERCHANT_ADD_FAILED, payload: data };
 }

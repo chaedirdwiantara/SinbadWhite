@@ -46,6 +46,17 @@ function* addMerchant(actions) {
     yield put(ActionCreators.merchantAddFailed(error));
   }
 }
+/** === EDIT MERCHANT === */
+function* editMerchant(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.editMerchant(actions.payload);
+    });
+    yield put(ActionCreators.merchantEditSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantEditFailed(error));
+  }
+}
 /** === MERCHANT DETAIL === */
 function* getMerchantLastOrder(actions) {
   try {
@@ -97,6 +108,7 @@ function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_GET_DETAIL_PROCESS, getMerchantDetail);
   yield takeEvery(types.PORTFOLIO_GET_PROCESS, getPortfolio);
   yield takeEvery(types.MERCHANT_ADD_PROCESS, addMerchant);
+  yield takeEvery(types.MERCHANT_EDIT_PROCESS, editMerchant);
   yield takeEvery(types.MERCHANT_GET_LAST_ORDER_PROCESS, getMerchantLastOrder);
   yield takeEvery(types.MERCHANT_POST_ACTIVITY_PROCESS, postActivity);
   yield takeEvery(

@@ -9,10 +9,9 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../../state/actions';
-import GlobalStyle from '../../../helpers/GlobalStyle';
 import masterColor from '../../../config/masterColor.json';
 import Fonts from '../../../helpers/GlobalFont';
-import ComingSoon from '../../../components/empty_state/ComingSoon';
+import NavigationService from '../../../navigation/NavigationService';
 
 class MerchantDetailProfileView extends Component {
   constructor(props) {
@@ -24,29 +23,60 @@ class MerchantDetailProfileView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  /** === GO TO PAGE === */
+  goTo(data) {
+    switch (data.type) {
+      case 'merchantOwnerIdNo':
+        NavigationService.navigate('MerchantEditView', {
+          title: data.title,
+          type: data.type
+        });
+        break;
+      case 'merchantOwnerTaxNo':
+        NavigationService.navigate('MerchantEditView', {
+          title: data.title,
+          type: data.type
+        });
+        break;
+      case 'merchantOwnerImageId':
+        NavigationService.navigate('MerchantEditView', {
+          title: data.title,
+          type: data.type
+        });
+        break;
+      case 'merchantOwnerImageSelfie':
+        NavigationService.navigate('MerchantEditView', {
+          title: data.title,
+          type: data.type
+        });
+        break;
+      default:
+        break;
+    }
+  }
   /**
    * ========================
    * RENDER VIEW
    * =======================
    */
   /** === RENDER CONTENT SECTION === */
-  renderContentSection(key, value, action) {
+  renderContentSection(data) {
     return (
       <View style={styles.boxContent}>
         <View>
-          <Text style={[Fonts.type9, { marginBottom: 6 }]}>{key}</Text>
-          <Text style={Fonts.type24}>{value ? value : '-'}</Text>
+          <Text style={[Fonts.type9, { marginBottom: 6 }]}>{data.key}</Text>
+          <Text style={Fonts.type24}>{data.value ? data.value : '-'}</Text>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {action === 'tambah' ? (
-            <TouchableOpacity>
+          {data.action === 'tambah' ? (
+            <TouchableOpacity onPress={() => this.goTo(data)}>
               <Text style={Fonts.type22}>Tambah</Text>
             </TouchableOpacity>
           ) : (
             <View />
           )}
-          {action === 'ubah' ? (
-            <TouchableOpacity>
+          {data.action === 'ubah' ? (
+            <TouchableOpacity onPress={() => this.goTo(data)}>
               <Text style={Fonts.type22}>Ubah</Text>
             </TouchableOpacity>
           ) : (
@@ -60,43 +90,50 @@ class MerchantDetailProfileView extends Component {
   renderContent() {
     return (
       <View>
-        {this.renderContentSection(
-          'Nomor Handphone',
-          this.props.merchant.dataGetMerchantDetail.userStores[0].user
-            .mobilePhoneNo
-        )}
-        {this.renderContentSection(
-          'Nomor Kartu Tanda Penduduk (KTP)',
-          this.props.merchant.dataGetMerchantDetail.userStores[0].user.idNo,
-          this.props.merchant.dataGetMerchantDetail.userStores[0].user.idNo
+        {this.renderContentSection({
+          key: 'Nomor Handphone',
+          value: this.props.merchant.dataGetMerchantDetail.owner.mobilePhoneNo
+        })}
+        {this.renderContentSection({
+          key: 'Nomor Kartu Tanda Penduduk (KTP)',
+          value: this.props.merchant.dataGetMerchantDetail.owner.idNo,
+          action: this.props.merchant.dataGetMerchantDetail.owner.idNo
             ? 'ubah'
-            : 'tambah'
-        )}
-        {this.renderContentSection(
-          'Nomor Pokok Wajib Pajak (NPWP)',
-          this.props.merchant.dataGetMerchantDetail.userStores[0].user.taxNo,
-          this.props.merchant.dataGetMerchantDetail.userStores[0].user.taxNo
+            : 'tambah',
+          type: 'merchantOwnerIdNo',
+          title: this.props.merchant.dataGetMerchantDetail.owner.idNo
+            ? 'Ubah KTP'
+            : 'Tambah KTP'
+        })}
+        {this.renderContentSection({
+          key: 'Nomor Pokok Wajib Pajak (NPWP)',
+          value: this.props.merchant.dataGetMerchantDetail.owner.taxNo,
+          action: this.props.merchant.dataGetMerchantDetail.owner.taxNo
             ? 'ubah'
-            : 'tambah'
-        )}
-        {this.renderContentSection(
-          'Foto KTP',
-          this.props.merchant.dataGetMerchantDetail.userStores[0].user
-            .idImageUrl,
-          this.props.merchant.dataGetMerchantDetail.userStores[0].user
-            .idImageUrl
+            : 'tambah',
+          type: 'merchantOwnerTaxNo',
+          title: this.props.merchant.dataGetMerchantDetail.owner.taxNo
+            ? 'Ubah NPWP'
+            : 'Tambah NPWP'
+        })}
+        {this.renderContentSection({
+          key: 'Foto KTP',
+          value: this.props.merchant.dataGetMerchantDetail.owner.idImageUrl,
+          action: this.props.merchant.dataGetMerchantDetail.owner.idImageUrl
             ? 'ubah'
-            : 'tambah'
-        )}
-        {this.renderContentSection(
-          'Foto Selfie + KTP',
-          this.props.merchant.dataGetMerchantDetail.userStores[0].user
-            .selfieImageUrl,
-          this.props.merchant.dataGetMerchantDetail.userStores[0].user
-            .selfieImageUrl
+            : 'tambah',
+          type: 'merchantOwnerImageId',
+          title: 'Foto KTP'
+        })}
+        {this.renderContentSection({
+          key: 'Foto Selfie + KTP',
+          value: this.props.merchant.dataGetMerchantDetail.owner.selfieImageUrl,
+          action: this.props.merchant.dataGetMerchantDetail.owner.selfieImageUrl
             ? 'ubah'
-            : 'tambah'
-        )}
+            : 'tambah',
+          type: 'merchantOwnerImageSelfie',
+          title: 'Foto Selfie + KTP'
+        })}
       </View>
     );
   }

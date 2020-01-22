@@ -30,44 +30,40 @@ class ListAndSearchType1 extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    this.props.locationGetReset();
-    this.getLocation(0, true);
+    this.props.listAndSearchGetReset();
+    this.getListAndSearch(0, true);
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
     if (prevProps.global.search !== this.props.global.search) {
-      this.props.locationGetReset();
-      this.getLocation(0, true);
+      this.props.listAndSearchGetReset();
+      this.getListAndSearch(0, true);
     }
   }
   /** REFRESH LIST VIEW */
   onHandleRefresh = () => {
-    this.props.locationGetRefresh();
-    this.getLocation(0, true);
+    this.props.listAndSearchGetRefresh();
+    this.getListAndSearch(0, true);
   };
   /** LOAD MORE LIST VIEW */
   onHandleLoadMore = () => {
-    if (this.props.global.dataGetLocation) {
+    if (this.props.global.dataGetListAndSearch) {
       if (
-        this.props.global.dataGetLocation.length <
-        this.props.global.totalDataGetLocation
+        this.props.global.dataGetListAndSearch.length <
+        this.props.global.totalDataGetListAndSearch
       ) {
-        const page = this.props.global.pageGetLocation + 20;
-        this.props.locationGetLoadMore(page);
-        this.getLocation(page, false);
+        const page = this.props.global.pageGetListAndSearch + 20;
+        this.props.listAndSearchGetLoadMore(page);
+        this.getListAndSearch(page, false);
       }
     }
   };
   /** === GET LOCATION === */
-  getLocation(page, loading) {
-    this.props.locationGetProcess({
+  getListAndSearch(page, loading) {
+    this.props.listAndSearchGetProcess({
       loading,
       page,
       type: this.props.navigation.state.params.type,
-      provinceId: this.props.global.dataLocationVolatile.provinceId,
-      supplierId: this.props.user.userSuppliers.map(item => item.supplierId),
-      cityName: this.props.global.dataLocationVolatile.cityName,
-      districName: this.props.global.dataLocationVolatile.districName,
       search: this.props.global.search,
       userId: this.props.user.id
     });
@@ -75,82 +71,32 @@ class ListAndSearchType1 extends Component {
   /** === SAVE DATA === */
   saveData(item) {
     switch (this.props.navigation.state.params.type) {
-      /** === FOR LOCATION === */
-      case 'province':
-        this.props.saveLocationDataVolatile({
-          provinceName: item.name,
-          provinceId: parseInt(item.id, 10),
-          cityName: '',
-          districName: '',
-          urbanName: '',
-          zipCode: '',
-          address: ''
-        });
-        NavigationService.goBack(this.props.navigation.state.key);
-        break;
-      case 'city':
-        this.props.saveLocationDataVolatile({
-          cityName: item.city,
-          districName: '',
-          urbanName: '',
-          zipCode: '',
-          address: ''
-        });
-        NavigationService.goBack(this.props.navigation.state.key);
-        break;
-      case 'distric':
-        this.props.saveLocationDataVolatile({
-          districName: item.district,
-          urbanName: '',
-          zipCode: '',
-          address: ''
-        });
-        NavigationService.goBack(this.props.navigation.state.key);
-        break;
-      case 'urban':
-        this.props.saveLocationDataVolatile({
-          urbanName: item.urban,
-          urbanId: parseInt(item.id, 10),
-          zipCode: item.zipCode,
-          address: ''
-        });
-        NavigationService.goBack(this.props.navigation.state.key);
-        break;
       /** === FOR MERCHANT === */
       case 'typeMerchant':
-        this.props.saveVolatileDataAddMerchant({
-          storeTypeId: parseInt(item.id, 10),
+        this.props.saveVolatileDataEditMerchant({
+          storeTypeId: item.id,
           storeTypeName: item.name
         });
         NavigationService.goBack(this.props.navigation.state.key);
         break;
       case 'groupMerchant':
-        this.props.saveVolatileDataAddMerchant({
-          storeGroupId: parseInt(item.id, 10),
+        this.props.saveVolatileDataEditMerchant({
+          storeGroupId: item.id,
           storeGroupName: item.name
         });
         NavigationService.goBack(this.props.navigation.state.key);
         break;
-      case 'clusterMerchant':
-        this.props.saveVolatileDataAddMerchant({
-          cluster: {
-            clusterId: parseInt(item.id, 10),
-            clusterName: item.name
-          }
-        });
-        NavigationService.goBack(this.props.navigation.state.key);
-        break;
       case 'segmentMerchant':
-        this.props.saveVolatileDataAddMerchant({
-          storeSegmentId: parseInt(item.id, 10),
+        this.props.saveVolatileDataEditMerchant({
+          storeSegmentId: item.id,
           storeSegmentName: item.name
         });
         NavigationService.goBack(this.props.navigation.state.key);
         break;
-      case 'suplierMerchant':
-        this.props.saveVolatileDataAddMerchant({
-          supplierId: parseInt(item.id, 10),
-          supplierName: item.name
+      case 'vehicleMerchant':
+        this.props.saveVolatileDataEditMerchant({
+          vehicleAccessibilityId: item.id,
+          vehicleAccessibilityName: item.name
         });
         NavigationService.goBack(this.props.navigation.state.key);
         break;
@@ -161,15 +107,6 @@ class ListAndSearchType1 extends Component {
   /** === MODIFY ITEM === */
   modifyItem(item) {
     switch (this.props.navigation.state.params.type) {
-      /** === THIS FOR LOCATION === */
-      case 'province':
-        return item.name;
-      case 'city':
-        return item.city;
-      case 'distric':
-        return item.district;
-      case 'urban':
-        return item.urban;
       /** === THIS FOR MERCHANT === */
       case 'typeMerchant':
       case 'groupMerchant':
@@ -177,6 +114,7 @@ class ListAndSearchType1 extends Component {
       case 'suplierMerchant':
       case 'segmentMerchant':
       case 'hierarchyMerchant':
+      case 'vehicleMerchant':
         return item.name;
       default:
         break;
@@ -222,10 +160,10 @@ class ListAndSearchType1 extends Component {
       <View style={{ flex: 1 }}>
         <FlatList
           contentContainerStyle={styles.flatListContainer}
-          data={this.props.global.dataGetLocation}
+          data={this.props.global.dataGetListAndSearch}
           renderItem={this.renderItem.bind(this)}
           keyExtractor={(item, index) => index.toString()}
-          refreshing={this.props.global.refreshGetLocation}
+          refreshing={this.props.global.refreshGetListAndSearch}
           onRefresh={this.onHandleRefresh}
           onEndReachedThreshold={0.1}
           onEndReached={this.onHandleLoadMore.bind(this)}
@@ -235,7 +173,7 @@ class ListAndSearchType1 extends Component {
   }
   /** === RENDER LOADMORE === */
   renderLoadMore() {
-    return this.props.global.loadingLoadMoreGetLocation ? (
+    return this.props.global.loadingLoadMoreGetListAndSearch ? (
       <LoadingLoadMore />
     ) : (
       <View />
@@ -250,7 +188,7 @@ class ListAndSearchType1 extends Component {
     return (
       <View style={styles.mainContainer}>
         <StatusBarRed />
-        {this.props.global.loadingGetLocation
+        {this.props.global.loadingGetListAndSearch
           ? this.renderSkeleton()
           : this.renderContent()}
         {this.renderLoadMore()}
