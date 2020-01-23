@@ -4,7 +4,9 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  Image,
+  Dimensions
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -20,14 +22,18 @@ import DropdownType1 from '../../../components/input/DropdownType1';
 import NavigationService from '../../../navigation/NavigationService';
 import InputMapsType1 from '../../../components/input/InputMapsType1';
 
+const { width, height } = Dimensions.get('window');
+
 class MerchantEditPartialView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showButton: this.props.showButton,
+      showButtonOpenCamera: this.props.showButtonOpenCamera,
       merchantAccountEdit: false,
       merchantAccountEditField: '',
       refreshLocation: false,
+      typeCamera: this.props.typeCamera,
       /** all data need */
       storeId: this.props.merchant.dataGetMerchantDetail.id,
       ownerId: this.props.merchant.dataGetMerchantDetail.owner.id,
@@ -46,6 +52,7 @@ class MerchantEditPartialView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
     /** UPDATE LONGLAT */
     if (
@@ -58,18 +65,19 @@ class MerchantEditPartialView extends Component {
       }, 100);
     }
   }
-
+  /** === DID UNMOUNT */
   componentWillUnmount() {
+    /** make long lat null, for re render maps page before */
     this.props.saveLongLatForEdit({
       latitude: '',
       longitude: ''
     });
   }
-  /** GO TO MAPS */
+  /** === GO TO MAPS === */
   goToMaps() {
     NavigationService.navigate('MapsView');
   }
-  /** EDIT */
+  /** === EDIT === */
   edit() {
     if (
       this.props.type === 'merchantOwnerIdNo' ||
@@ -139,14 +147,33 @@ class MerchantEditPartialView extends Component {
         }
       };
       this.props.merchantEditProcess(data);
+    } else if (this.props.type === 'merchantOwnerImageId') {
+      const data = {
+        storeId: this.state.storeId,
+        params: {
+          owner: {
+            id: this.state.ownerId,
+            idImage: `data:image/gif;base64,${this.props.global.imageBase64}`
+          }
+        }
+      };
+      this.props.merchantEditProcess(data);
     }
   }
-
-  /**
-   * =========================
-   * FOR EDIT ACCOUNT SECTION
-   * =========================
-   */
+  /** === OPEN CAMERA === */
+  openCamera() {
+    switch (this.state.typeCamera) {
+      case 'id':
+        NavigationService.navigate('TakeIdPicture');
+        break;
+      case 'selfie':
+        NavigationService.navigate('TakeIdPlusSelfiePicture');
+        break;
+      default:
+        break;
+    }
+  }
+  /** === FOR EDIT ACCOUNT SECTION (GLOBAL USED) === */
   editData(data) {
     switch (data.type) {
       case 'merchantAccount':
@@ -160,7 +187,7 @@ class MerchantEditPartialView extends Component {
         break;
     }
   }
-  /** CHECK BUTTON */
+  /** === CHECK BUTTON (CHECK BUTTON SAVE DISBALE OR NOT) === */
   checkButton() {
     /** ID NO */
     if (this.props.type === 'merchantOwnerIdNo') {
@@ -231,10 +258,17 @@ class MerchantEditPartialView extends Component {
       ) {
         return false;
       }
+    } else if (
+      this.props.type === 'merchantOwnerImageId' ||
+      this.props.type === 'merchantOwnerImageSelfie'
+    ) {
+      if (this.props.global.imageBase64 !== '') {
+        return false;
+      }
     }
     return true;
   }
-  /** GO TO LIST AND SEARCH PAGE */
+  /** === GO TO LIST AND SEARCH PAGE (GLOBAL USED) === */
   goToDropdown(data) {
     NavigationService.navigate('ListAndSearchType1', {
       placeholder: data.placeholder,
@@ -256,6 +290,10 @@ class MerchantEditPartialView extends Component {
         return this.renderAccountMerchant();
       case 'merchantAddress':
         return this.renderAddressMerchant();
+      case 'merchantOwnerImageId':
+        return this.renderOwnerImageId();
+      case 'merchantOwnerImageSelfie':
+        return this.renderOwnerImageSelfie();
       default:
         break;
     }
@@ -265,7 +303,7 @@ class MerchantEditPartialView extends Component {
    * RENDER VIEW
    * =======================
    */
-  /** === RENDER CONTENT SECTION === */
+  /** === RENDER CONTENT SECTION (GLOBAL USED) === */
   renderContentSection(data) {
     return (
       <View style={styles.boxContent}>
@@ -289,6 +327,40 @@ class MerchantEditPartialView extends Component {
             <View />
           )}
         </View>
+      </View>
+    );
+  }
+  /** === RENDER OWNER IMAGE SELFIE === */
+  renderOwnerImageSelfie() {
+    return (
+      <View>
+        <Text>lalalala</Text>
+      </View>
+    );
+  }
+  /** === RENDER OWNER IMAGE ID === */
+  renderOwnerImageId() {
+    return this.props.global.imageBase64 !== '' ? (
+      <View>
+        <Image
+          source={{
+            uri: `data:image/gif;base64,${this.props.global.imageBase64}`
+          }}
+          style={styles.idImage}
+        />
+        <TouchableOpacity
+          onPress={() => this.openCamera()}
+          style={{ justifyContent: 'center', alignItems: 'center' }}
+        >
+          <Text style={Fonts.type21}>ULANGI FOTO</Text>
+        </TouchableOpacity>
+      </View>
+    ) : (
+      <View style={{ paddingHorizontal: 16, flex: 1, paddingVertical: 16 }}>
+        <Image
+          source={require('../../../assets/images/merchant/ktp_rule.png')}
+          style={styles.idImageRule}
+        />
       </View>
     );
   }
@@ -442,6 +514,7 @@ class MerchantEditPartialView extends Component {
     );
   }
   /** === RENDER ACCOUNT MERCHANT === */
+  /** RENDER ACCOUNT MERCHANT EDIT */
   renderAccountMerchantEdit() {
     if (this.state.merchantAccountEditField === 'merchantName') {
       return (
@@ -469,7 +542,7 @@ class MerchantEditPartialView extends Component {
       );
     }
   }
-
+  /** RENDER ACCOUNT MERCHANT */
   renderAccountMerchant() {
     return (
       <View style={{ marginTop: 16 }}>
@@ -504,7 +577,7 @@ class MerchantEditPartialView extends Component {
       </View>
     );
   }
-  /** RENDER ADDRESS */
+  /** === RENDER ADDRESS === */
   renderAddressMerchant() {
     return (
       <View style={{ marginTop: 16 }}>
@@ -528,15 +601,28 @@ class MerchantEditPartialView extends Component {
       </View>
     );
   }
-  /** RENDER BUTTON */
+  /** === RENDER BUTTON === */
   renderButton() {
-    return this.state.showButton ? (
+    return this.state.showButton || this.props.global.imageBase64 ? (
       <ButtonSingle
         disabled={this.checkButton() || this.props.merchant.loadingEditMerchant}
         loading={this.props.merchant.loadingEditMerchant}
         title={'Simpan'}
         borderRadius={4}
         onPress={() => this.edit()}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** === RENDER BUTTON FOR OPEN CAMERA === */
+  renderButtonOpenCamera() {
+    return this.state.showButtonOpenCamera && !this.props.global.imageBase64 ? (
+      <ButtonSingle
+        disabled={false}
+        title={'Upload Foto'}
+        borderRadius={4}
+        onPress={() => this.openCamera()}
       />
     ) : (
       <View />
@@ -551,6 +637,7 @@ class MerchantEditPartialView extends Component {
           <View style={{ paddingBottom: 50 }} />
         </ScrollView>
         {this.renderButton()}
+        {this.renderButtonOpenCamera()}
       </View>
     );
   }
@@ -571,6 +658,19 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     justifyContent: 'space-between',
     flexDirection: 'row'
+  },
+  idImage: {
+    transform: [{ rotate: '270deg' }],
+    resizeMode: 'contain',
+    width,
+    height: undefined,
+    aspectRatio: 1 / 1
+  },
+  idImageRule: {
+    resizeMode: 'contain',
+    width: undefined,
+    height: '100%',
+    aspectRatio: 2 / 1
   }
 });
 

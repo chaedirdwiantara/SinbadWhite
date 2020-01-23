@@ -12,6 +12,7 @@ const INITIAL_STATE = {
   longitude: '',
   latitude: '',
   pageAddMerchantFrom: '',
+  imageBase64: '',
   dataGetListAndSearch: [],
   totalDataGetListAndSearch: 0,
   pageGetListAndSearch: 0,
@@ -40,6 +41,17 @@ export const global = createReducer(INITIAL_STATE, {
     return {
       ...state,
       token: action.payload.token
+    };
+  },
+  /**
+   * ==============================
+   * SAVE IMAGE BASE64
+   * ==============================
+   */
+  [types.SAVE_IMAGE_BASE64](state, action) {
+    return {
+      ...state,
+      imageBase64: action.payload
     };
   },
   /**

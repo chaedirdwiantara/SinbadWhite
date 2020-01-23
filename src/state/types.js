@@ -15,6 +15,8 @@ export const SEARCH_TEXT = 'SearchText';
 export const LOCATION_SAVE_DATA_VOLATILE = 'LocationSaveDataVolatile';
 /** FOR FLAG MERCHANT ADD PUSHED */
 export const SAVE_PAGE_ADD_MERCHANT_FROM = 'SavePageAddMerchantFrom';
+/** FOR SAVE IMAGE BASE 64 */
+export const SAVE_IMAGE_BASE64 = 'saveImageBase64';
 /** FOR GET LIST AND SEARCH */
 export const LIST_AND_SEARCH_GET_PROCESS = 'ListAndSearchGetProcess';
 export const LIST_AND_SEARCH_GET_SUCCESS = 'ListAndSearchGetSuccess';

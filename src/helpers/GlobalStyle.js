@@ -48,6 +48,11 @@ const styles = StyleSheet.create({
     width: undefined,
     aspectRatio: 1 / 1
   },
+  fullWidthDeviceImage: {
+    height,
+    width: undefined,
+    aspectRatio: 1 / 1
+  },
   image46: {
     height: 46,
     width: undefined,

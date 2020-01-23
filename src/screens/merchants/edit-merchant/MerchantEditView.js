@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import * as ActionCreators from '../../../state/actions';
 import masterColor from '../../../config/masterColor.json';
 import Fonts from '../../../helpers/GlobalFont';
 import NavigationService from '../../../navigation/NavigationService';
@@ -41,6 +43,11 @@ class MerchantEditView extends Component {
       this.props.merchant.dataEditMerchant
     ) {
       if (this.props.merchant.dataEditMerchant !== null) {
+        if (
+          this.props.navigation.state.params.type === 'merchantOwnerImageId'
+        ) {
+          this.props.saveImageBase64('');
+        }
         NavigationService.goBack(this.props.navigation.state.key);
       }
     }
@@ -68,6 +75,24 @@ class MerchantEditView extends Component {
             showButton={false}
           />
         );
+      case 'merchantOwnerImageId':
+        return (
+          <MerchantEditPartialView
+            type={this.props.navigation.state.params.type}
+            showButton={false}
+            showButtonOpenCamera
+            typeCamera={'id'}
+          />
+        );
+      case 'merchantOwnerImageSelfie':
+        return (
+          <MerchantEditPartialView
+            type={this.props.navigation.state.params.type}
+            showButton={false}
+            showButtonOpenCamera
+            typeCamera={'selfie'}
+          />
+        );
       default:
         break;
     }
@@ -93,8 +118,12 @@ const mapStateToProps = ({ merchant }) => {
   return { merchant };
 };
 
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
+
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, {})(MerchantEditView);
+export default connect(mapStateToProps, mapDispatchToProps)(MerchantEditView);
 
 /**
  * =======================

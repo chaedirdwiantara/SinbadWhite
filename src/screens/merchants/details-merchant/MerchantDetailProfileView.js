@@ -118,7 +118,9 @@ class MerchantDetailProfileView extends Component {
         })}
         {this.renderContentSection({
           key: 'Foto KTP',
-          value: this.props.merchant.dataGetMerchantDetail.owner.idImageUrl,
+          value: this.props.merchant.dataGetMerchantDetail.owner.idImageUrl
+            ? 'Sudah diupload'
+            : '-',
           action: this.props.merchant.dataGetMerchantDetail.owner.idImageUrl
             ? 'ubah'
             : 'tambah',
@@ -127,7 +129,9 @@ class MerchantDetailProfileView extends Component {
         })}
         {this.renderContentSection({
           key: 'Foto Selfie + KTP',
-          value: this.props.merchant.dataGetMerchantDetail.owner.selfieImageUrl,
+          value: this.props.merchant.dataGetMerchantDetail.owner.selfieImageUrl
+            ? 'Sudah diupload'
+            : '-',
           action: this.props.merchant.dataGetMerchantDetail.owner.selfieImageUrl
             ? 'ubah'
             : 'tambah',

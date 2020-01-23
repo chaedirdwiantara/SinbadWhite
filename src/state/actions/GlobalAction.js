@@ -10,6 +10,14 @@ export function saveSearch(text) {
 }
 /**
  * ==============================
+ * SAVE IMAGE BASE64
+ * ==============================
+ */
+export function saveImageBase64(image) {
+  return { type: types.SAVE_IMAGE_BASE64, payload: image };
+}
+/**
+ * ==============================
  * SAVE PAGE THAT ADD MERCHANT BEGIN
  * ==============================
  */
