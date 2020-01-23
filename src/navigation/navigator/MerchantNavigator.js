@@ -22,6 +22,7 @@ import MerchantCheckinView from '../../screens/merchants/dashboard-merchant/Merc
 import MerchantDetailProfileView from '../../screens/merchants/details-merchant/MerchantDetailProfileView';
 import MerchantDetailInformationView from '../../screens/merchants/details-merchant/MerchantDetailInformationView';
 import MerchantDetailPaymentView from '../../screens/merchants/details-merchant/MerchantDetailPaymentView';
+import MerchantDetailAddressView from '../../screens/merchants/details-merchant/MerchantDetailAddressView';
 /** merchant edit */
 import MerchantEditView from '../../screens/merchants/edit-merchant/MerchantEditView';
 
@@ -281,21 +282,14 @@ const MerchantNavigator = {
       gesturesEnabled: false
     }
   },
-  MerchantDetailPaymentView: {
-    screen: MerchantDetailPaymentView,
+  MerchantDetailAddressView: {
+    screen: MerchantDetailAddressView,
     navigationOptions: {
-      headerTitle: 'Faktur',
-      headerTitleStyle: [
-        GlobalFont.type5,
-        {
-          textAlign: 'center',
-          flex: 1
-        }
-      ],
+      headerTitle: 'Alamat Toko',
+      headerTitleStyle: GlobalFont.type5,
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
-      headerRight: <View />,
       gesturesEnabled: false
     }
   },

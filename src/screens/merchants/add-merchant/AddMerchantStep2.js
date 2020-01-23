@@ -38,8 +38,8 @@ class AddMerchantStep2 extends Component {
       idNo: this.props.merchant.dataAddMerchantVolatile.user.idNo,
       taxNo: this.props.merchant.dataAddMerchantVolatile.user.taxNo,
       address: this.props.merchant.dataAddMerchantVolatile.address,
-      longitude: this.props.merchant.dataAddMerchantVolatile.longitude,
-      latitude: this.props.merchant.dataAddMerchantVolatile.latitude,
+      longitude: this.props.global.longitude,
+      latitude: this.props.global.latitude,
       refreshLocation: false,
       openErrorAddMerchant: false
     };
@@ -92,10 +92,8 @@ class AddMerchantStep2 extends Component {
     }
     /** UPDATE LONGLAT */
     if (
-      prevProps.merchant.dataAddMerchantVolatile.longitude !==
-        this.props.merchant.dataAddMerchantVolatile.longitude ||
-      prevProps.merchant.dataAddMerchantVolatile.latitude !==
-        this.props.merchant.dataAddMerchantVolatile.latitude
+      prevProps.global.longitude !== this.props.global.longitude ||
+      prevProps.global.latitude !== this.props.global.latitude
     ) {
       this.setState({ refreshLocation: true });
       setTimeout(() => {
@@ -115,8 +113,8 @@ class AddMerchantStep2 extends Component {
       taxNo: this.state.taxNo,
       phone: this.state.phone,
       address: this.state.address,
-      longitude: this.props.merchant.dataAddMerchantVolatile.longitude,
-      latitude: this.props.merchant.dataAddMerchantVolatile.latitude,
+      longitude: this.props.global.longitude,
+      latitude: this.props.global.latitude,
       province: this.props.global.dataGlobalLongLatToAddress.province,
       city: this.props.global.dataGlobalLongLatToAddress.city,
       district: this.props.global.dataGlobalLongLatToAddress.district,
@@ -142,8 +140,8 @@ class AddMerchantStep2 extends Component {
       this.state.name !== '' &&
       this.state.supplier !== '' &&
       this.state.address !== '' &&
-      this.props.merchant.dataAddMerchantVolatile.longitude !== '' &&
-      this.props.merchant.dataAddMerchantVolatile.latitude !== ''
+      this.props.global.longitude !== '' &&
+      this.props.global.latitude !== ''
     );
   }
   /** GO TO MAPS */
@@ -274,11 +272,12 @@ class AddMerchantStep2 extends Component {
   renderMaps() {
     return (
       <InputMapsType1
+        change
         title={'*Koordinat Lokasi'}
-        selectedMapLong={this.props.merchant.dataAddMerchantVolatile.longitude}
-        selectedMapLat={this.props.merchant.dataAddMerchantVolatile.latitude}
+        selectedMapLong={this.props.global.longitude}
+        selectedMapLat={this.props.global.latitude}
         refresh={this.state.refreshLocation}
-        openMaps={() => this.goToMaps('maps')}
+        openMaps={() => this.goToMaps()}
       />
     );
   }

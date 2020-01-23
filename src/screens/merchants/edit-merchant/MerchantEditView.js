@@ -54,6 +54,7 @@ class MerchantEditView extends Component {
       case 'merchantClassification':
       case 'merchantOwnerIdNo':
       case 'merchantOwnerTaxNo':
+      case 'merchantAddress':
         return (
           <MerchantEditPartialView
             type={this.props.navigation.state.params.type}

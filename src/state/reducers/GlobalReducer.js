@@ -9,6 +9,8 @@ const INITIAL_STATE = {
   loadingGlobalLongLatToAddress: false,
   /** data */
   search: '',
+  longitude: '',
+  latitude: '',
   pageAddMerchantFrom: '',
   dataGetListAndSearch: [],
   totalDataGetListAndSearch: 0,
@@ -48,7 +50,10 @@ export const global = createReducer(INITIAL_STATE, {
   [types.SAVE_PAGE_ADD_MERCHANT_FROM](state, action) {
     return {
       ...state,
-      pageAddMerchantFrom: action.payload
+      pageAddMerchantFrom: action.payload,
+      longitude: '',
+      latitude: '',
+      dataGlobalLongLatToAddress: null
     };
   },
   /**
@@ -60,6 +65,18 @@ export const global = createReducer(INITIAL_STATE, {
     return {
       ...state,
       search: action.payload
+    };
+  },
+  /**
+   * =====================
+   * SAVE LONG LAT FROM ADDRESS DETAIL MERCHANT (FOR EDIT)
+   * ====================
+   */
+  [types.LOCATION_SAVE_DATA_VOLATILE](state, action) {
+    return {
+      ...state,
+      longitude: action.payload.longitude,
+      latitude: action.payload.latitude
     };
   },
   /**
@@ -129,6 +146,8 @@ export const global = createReducer(INITIAL_STATE, {
   [types.GLOBAL_LONGLAT_TO_ADDRESS_PROCESS](state, action) {
     return {
       ...state,
+      latitude: action.payload.latitude,
+      longitude: action.payload.longitude,
       loadingGlobalLongLatToAddress: true,
       dataGlobalLongLatToAddress: null,
       errorGlobalLongLatToAddress: null

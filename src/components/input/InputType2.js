@@ -26,6 +26,7 @@ class InputType2 extends Component {
     return (
       <View style={styles.boxInput}>
         <TextInput
+          editable={this.props.editable}
           selectionColor={masterColor.mainColor}
           placeholder={this.props.placeholder}
           value={this.props.value}

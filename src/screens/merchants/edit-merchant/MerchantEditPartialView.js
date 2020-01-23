@@ -15,8 +15,10 @@ import { MoneyFormat } from '../../../helpers/NumberFormater';
 import Fonts from '../../../helpers/GlobalFont';
 import ButtonSingle from '../../../components/button/ButtonSingle';
 import InputType1 from '../../../components/input/InputType1';
+import InputType2 from '../../../components/input/InputType2';
 import DropdownType1 from '../../../components/input/DropdownType1';
 import NavigationService from '../../../navigation/NavigationService';
+import InputMapsType1 from '../../../components/input/InputMapsType1';
 
 class MerchantEditPartialView extends Component {
   constructor(props) {
@@ -24,6 +26,7 @@ class MerchantEditPartialView extends Component {
     this.state = {
       showButton: this.props.showButton,
       merchantAccountEdit: false,
+      refreshLocation: false,
       /** all data need */
       storeId: this.props.merchant.dataGetMerchantDetail.id,
       ownerId: this.props.merchant.dataGetMerchantDetail.owner.id,
@@ -32,7 +35,8 @@ class MerchantEditPartialView extends Component {
       name: this.props.merchant.dataGetMerchantDetail.name,
       numberOfEmployee: this.props.merchant.dataGetMerchantDetail
         .numberOfEmployee,
-      largeArea: this.props.merchant.dataGetMerchantDetail.largeArea
+      largeArea: this.props.merchant.dataGetMerchantDetail.largeArea,
+      address: this.props.merchant.dataGetMerchantDetail.address
     };
   }
   /**
@@ -40,6 +44,29 @@ class MerchantEditPartialView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  componentDidUpdate(prevProps) {
+    /** UPDATE LONGLAT */
+    if (
+      prevProps.global.longitude !== this.props.global.longitude ||
+      prevProps.global.latitude !== this.props.global.latitude
+    ) {
+      this.setState({ refreshLocation: true });
+      setTimeout(() => {
+        this.setState({ refreshLocation: false });
+      }, 100);
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.saveLongLatForEdit({
+      latitude: '',
+      longitude: ''
+    });
+  }
+  /** GO TO MAPS */
+  goToMaps() {
+    NavigationService.navigate('MapsView');
+  }
   /** EDIT */
   edit() {
     if (
@@ -94,7 +121,20 @@ class MerchantEditPartialView extends Component {
           largeArea: this.state.largeArea
         }
       };
-      console.log(data);
+      this.props.merchantEditProcess(data);
+    } else if (this.props.type === 'merchantAddress') {
+      const data = {
+        storeId: this.state.storeId,
+        params: {
+          address: this.state.address,
+          longitude: this.props.global.longitude,
+          latitude: this.props.global.latitude,
+          detailAddress:
+            this.props.global.dataGlobalLongLatToAddress !== null
+              ? this.props.global.dataGlobalLongLatToAddress
+              : null
+        }
+      };
       this.props.merchantEditProcess(data);
     }
   }
@@ -165,6 +205,16 @@ class MerchantEditPartialView extends Component {
       ) {
         return false;
       }
+    } else if (this.props.type === 'merchantAddress') {
+      if (
+        this.props.global.longitude !==
+          this.props.merchant.dataGetMerchantDetail.longitude ||
+        this.props.global.latitude !==
+          this.props.merchant.dataGetMerchantDetail.latitude ||
+        this.state.address !== this.props.merchant.dataGetMerchantDetail.address
+      ) {
+        return false;
+      }
     }
     return true;
   }
@@ -188,6 +238,8 @@ class MerchantEditPartialView extends Component {
         return this.renderClassificationMerchant();
       case 'merchantAccount':
         return this.renderAccountMerchant();
+      case 'merchantAddress':
+        return this.renderAddressMerchant();
       default:
         break;
     }
@@ -406,6 +458,30 @@ class MerchantEditPartialView extends Component {
       </View>
     );
   }
+  /** RENDER ADDRESS */
+  renderAddressMerchant() {
+    return (
+      <View style={{ marginTop: 16 }}>
+        <InputMapsType1
+          change
+          title={'Koordinat Lokasi'}
+          selectedMapLong={this.props.global.longitude}
+          selectedMapLat={this.props.global.latitude}
+          refresh={this.state.refreshLocation}
+          openMaps={() => this.goToMaps()}
+        />
+        <InputType2
+          title={'Alamat'}
+          value={this.state.address}
+          placeholder={'Alamat Lengkap'}
+          keyboardType={'default'}
+          text={text => this.setState({ address: text })}
+          error={false}
+          errorText={''}
+        />
+      </View>
+    );
+  }
   /** RENDER BUTTON */
   renderButton() {
     return this.state.showButton ? (
@@ -452,8 +528,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ merchant }) => {
-  return { merchant };
+const mapStateToProps = ({ merchant, global }) => {
+  return { merchant, global };
 };
 
 const mapDispatchToProps = dispatch => {

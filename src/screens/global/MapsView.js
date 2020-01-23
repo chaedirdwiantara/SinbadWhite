@@ -62,8 +62,10 @@ class MapsView extends Component {
   /** === GET CURRENT LOCATION === */
   successMaps = success => {
     this.setState({
-      longitude: success.coords.longitude,
-      latitude: success.coords.latitude,
+      longitude:
+        Math.round(success.coords.longitude * 1000000000000) / 1000000000000,
+      latitude:
+        Math.round(success.coords.latitude * 1000000000000) / 1000000000000,
       reRender: false
     });
   };
@@ -78,10 +80,6 @@ class MapsView extends Component {
     });
   }
   addLongLat() {
-    this.props.saveVolatileDataAddMerchant({
-      latitude: this.state.latitude,
-      longitude: this.state.longitude
-    });
     this.props.longlatToAddressGetProcess({
       longitude: this.state.longitude,
       latitude: this.state.latitude
@@ -114,6 +112,7 @@ class MapsView extends Component {
   renderMapsContent() {
     return (
       <MapView
+        showsUserLocation
         ref={ref => (this.mapRef = ref)}
         style={{ flex: 1, width: '100%' }}
         maxZoomLevel={18}
@@ -158,7 +157,7 @@ class MapsView extends Component {
             latitude: this.state.latitude,
             longitude: this.state.longitude
           }}
-          title={'Anda'}
+          title={'Toko'}
         />
       </MapView>
     );

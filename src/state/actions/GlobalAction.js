@@ -13,9 +13,16 @@ export function saveSearch(text) {
  * SAVE PAGE THAT ADD MERCHANT BEGIN
  * ==============================
  */
-/** === SAVE LOCATION VOLATILE DATA === */
 export function savePageAddMerchantFrom(data) {
   return { type: types.SAVE_PAGE_ADD_MERCHANT_FROM, payload: data };
+}
+/**
+ * ==============================
+ * SAVE LONG LAT FROM ADDRESS DETAIL MERCHANT (FOR EDIT)
+ * ==============================
+ */
+export function saveLongLatForEdit(data) {
+  return { type: types.LOCATION_SAVE_DATA_VOLATILE, payload: data };
 }
 /**
  * ============================

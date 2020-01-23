@@ -22,7 +22,8 @@ class InputMapsType1 extends Component {
       <View style={styles.boxTitle}>
         <Text style={Fonts.type32}>{this.props.title}</Text>
         {this.props.selectedMapLat !== '' &&
-        this.props.selectedMapLong !== '' ? (
+        this.props.selectedMapLong !== '' &&
+        this.props.change ? (
           <TouchableOpacity
             onPress={() => NavigationServices.navigate('MapsView')}
           >

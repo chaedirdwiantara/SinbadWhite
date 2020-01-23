@@ -109,10 +109,7 @@ class MerchantDetailView extends Component {
         });
         break;
       case 'merchantAddress':
-        NavigationService.navigate('MerchantEditView', {
-          title: 'Alamat Toko',
-          type: 'merchantAddress'
-        });
+        NavigationService.navigate('MerchantDetailAddressView');
         break;
       default:
         break;
