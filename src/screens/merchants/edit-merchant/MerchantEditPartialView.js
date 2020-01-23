@@ -26,6 +26,7 @@ class MerchantEditPartialView extends Component {
     this.state = {
       showButton: this.props.showButton,
       merchantAccountEdit: false,
+      merchantAccountEditField: '',
       refreshLocation: false,
       /** all data need */
       storeId: this.props.merchant.dataGetMerchantDetail.id,
@@ -36,7 +37,8 @@ class MerchantEditPartialView extends Component {
       numberOfEmployee: this.props.merchant.dataGetMerchantDetail
         .numberOfEmployee,
       largeArea: this.props.merchant.dataGetMerchantDetail.largeArea,
-      address: this.props.merchant.dataGetMerchantDetail.address
+      address: this.props.merchant.dataGetMerchantDetail.address,
+      phoneNo: this.props.merchant.dataGetMerchantDetail.phoneNo
     };
   }
   /**
@@ -88,7 +90,8 @@ class MerchantEditPartialView extends Component {
       const data = {
         storeId: this.state.storeId,
         params: {
-          name: this.state.name
+          name: this.state.name,
+          phoneNo: this.state.phoneNo
         }
       };
       this.props.merchantEditProcess(data);
@@ -138,10 +141,20 @@ class MerchantEditPartialView extends Component {
       this.props.merchantEditProcess(data);
     }
   }
+
+  /**
+   * =========================
+   * FOR EDIT ACCOUNT SECTION
+   * =========================
+   */
   editData(data) {
     switch (data.type) {
       case 'merchantAccount':
-        this.setState({ merchantAccountEdit: true, showButton: true });
+        this.setState({
+          merchantAccountEdit: true,
+          showButton: true,
+          merchantAccountEditField: data.field
+        });
         break;
       default:
         break;
@@ -170,8 +183,11 @@ class MerchantEditPartialView extends Component {
     } else if (this.props.type === 'merchantAccount') {
       /** TAX NO */
       if (
-        this.state.name !== this.props.merchant.dataGetMerchantDetail.name &&
-        this.state.name !== ''
+        (this.state.name !== this.props.merchant.dataGetMerchantDetail.name &&
+          this.state.name !== '') ||
+        (this.state.phoneNo !==
+          this.props.merchant.dataGetMerchantDetail.phoneNo &&
+          this.state.phoneNo !== '')
       ) {
         return false;
       }
@@ -426,6 +442,34 @@ class MerchantEditPartialView extends Component {
     );
   }
   /** === RENDER ACCOUNT MERCHANT === */
+  renderAccountMerchantEdit() {
+    if (this.state.merchantAccountEditField === 'merchantName') {
+      return (
+        <InputType1
+          title={'Nama Toko'}
+          value={this.state.name}
+          placeholder={'Masukan Nama Toko Anda'}
+          keyboardType={'default'}
+          text={text => this.setState({ name: text })}
+          error={false}
+          errorText={''}
+        />
+      );
+    } else if (this.state.merchantAccountEditField === 'merchantPhoneNumber') {
+      return (
+        <InputType1
+          title={'Nomor Handphone Toko'}
+          value={this.state.phoneNo}
+          placeholder={'Masukan Nomor Handphone Toko'}
+          keyboardType={'numeric'}
+          text={text => this.setState({ phoneNo: text })}
+          error={false}
+          errorText={''}
+        />
+      );
+    }
+  }
+
   renderAccountMerchant() {
     return (
       <View style={{ marginTop: 16 }}>
@@ -441,19 +485,21 @@ class MerchantEditPartialView extends Component {
               action: this.props.merchant.dataGetMerchantDetail.name
                 ? 'ubah'
                 : 'tambah',
+              field: 'merchantName',
+              type: 'merchantAccount'
+            })}
+            {this.renderContentSection({
+              key: 'Nomor Handphone Toko',
+              value: this.props.merchant.dataGetMerchantDetail.phoneNo,
+              action: this.props.merchant.dataGetMerchantDetail.phoneNo
+                ? 'ubah'
+                : 'tambah',
+              field: 'merchantPhoneNumber',
               type: 'merchantAccount'
             })}
           </View>
         ) : (
-          <InputType1
-            title={'Nama Toko'}
-            value={this.state.name}
-            placeholder={'Masukan Nama Toko Anda'}
-            keyboardType={'default'}
-            text={text => this.setState({ name: text })}
-            error={false}
-            errorText={''}
-          />
+          this.renderAccountMerchantEdit()
         )}
       </View>
     );
