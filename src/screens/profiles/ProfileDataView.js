@@ -100,10 +100,9 @@ class ProfileDataView extends Component {
     return (
       <View style={styles.headerContainer}>
         <View style={styles.boxHeader}>
-          {!this.props.profile.loadingEditProfile &&
-          this.props.profile.dataEditProfile !== null
-            ? this.renderImage()
-            : this.renderSkeletonImageUpload()}
+          {this.props.profile.loadingEditProfile
+            ? this.renderSkeletonImageUpload()
+            : this.renderImage()}
         </View>
       </View>
     );
