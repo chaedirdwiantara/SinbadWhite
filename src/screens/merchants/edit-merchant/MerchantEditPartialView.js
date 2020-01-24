@@ -72,6 +72,7 @@ class MerchantEditPartialView extends Component {
       latitude: '',
       longitude: ''
     });
+    this.props.saveImageBase64('');
   }
   /** === GO TO MAPS === */
   goToMaps() {
@@ -154,6 +155,17 @@ class MerchantEditPartialView extends Component {
           owner: {
             id: this.state.ownerId,
             idImage: `data:image/gif;base64,${this.props.global.imageBase64}`
+          }
+        }
+      };
+      this.props.merchantEditProcess(data);
+    } else if (this.props.type === 'merchantOwnerImageSelfie') {
+      const data = {
+        storeId: this.state.storeId,
+        params: {
+          owner: {
+            id: this.state.ownerId,
+            selfieImage: `data:image/gif;base64,${this.props.global.imageBase64}`
           }
         }
       };
@@ -333,8 +345,45 @@ class MerchantEditPartialView extends Component {
   /** === RENDER OWNER IMAGE SELFIE === */
   renderOwnerImageSelfie() {
     return (
-      <View>
-        <Text>lalalala</Text>
+      <View style={{ height, paddingHorizontal: 16, paddingTop: 16 }}>
+        {this.props.global.imageBase64 !== '' ? (
+          <View>
+            <Image
+              source={{
+                uri: `data:image/gif;base64,${this.props.global.imageBase64}`
+              }}
+              style={styles.selfieImage}
+            />
+            <TouchableOpacity
+              onPress={() => this.openCamera()}
+              style={{ justifyContent: 'center', alignItems: 'center' }}
+            >
+              <Text style={Fonts.type21}>ULANGI FOTO</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View>
+            <Image
+              source={require('../../../assets/images/merchant/foto_diri_rule.png')}
+              style={styles.idImageRule}
+            />
+            <View>
+              <Text style={Fonts.type42}>Tata Cara Foto :</Text>
+              <Text style={[Fonts.type23, { marginTop: 10 }]}>
+                1. Berdiri secara tegap
+              </Text>
+              <Text style={[Fonts.type23, { marginTop: 10 }]}>
+                2. Hindari tangan menutupi KTP
+              </Text>
+              <Text style={[Fonts.type23, { marginTop: 10 }]}>
+                3. Pastikan tulisan data diri kamu terbaca
+              </Text>
+              <Text style={[Fonts.type23, { marginTop: 10 }]}>
+                4. Jangan foto bersama keluarga
+              </Text>
+            </View>
+          </View>
+        )}
       </View>
     );
   }
@@ -681,9 +730,15 @@ const styles = StyleSheet.create({
   idImage: {
     transform: [{ rotate: '270deg' }],
     resizeMode: 'contain',
-    width,
+    width: '100%',
     height: undefined,
     aspectRatio: 1 / 1
+  },
+  selfieImage: {
+    resizeMode: 'contain',
+    width: undefined,
+    height: 0.6 * height,
+    marginBottom: 20
   },
   idImageRule: {
     resizeMode: 'contain',

@@ -4,9 +4,11 @@ import {
   StyleSheet,
   Text,
   Dimensions,
+  ImageStore,
   Image,
   TouchableOpacity
 } from 'react-native';
+var RNFS = require('react-native-fs');
 import { RNCamera } from 'react-native-camera';
 import { bindActionCreators } from 'redux';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -23,27 +25,40 @@ const { width, height } = Dimensions.get('window');
 class TakeIdPlusSelfiePicture extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loading: false
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.global.imageBase64 !== this.props.global.imageBase64) {
+      if (this.props.global.imageBase64 !== '') {
+        NavigationService.goBack(this.props.navigation.state.key);
+      }
+    }
   }
 
   takePicture = async () => {
+    this.setState({ loading: true });
     const cropData = {
-      offset: { x: 0, y: 100 },
-      size: { width: 100, height: 100 },
-      displaySize: { width: 100, height: 100 },
-      resizeMode: 'contain'
+      offset: { x: 600, y: 400 },
+      size: { width: 1850, height: 2900 }
     };
 
     if (this.camera) {
-      const options = { quality: 0.5, base64: true };
+      const options = {
+        quality: 0.2,
+        base64: true,
+        pauseAfterCapture: true,
+        fixOrientation: true
+      };
       const data = await this.camera.takePictureAsync(options);
-
-      // ImageEditor.cropImage(data.uri, cropData).then(url => {
-      //   console.log(url);
-      // });
-      // ImageEditor.cropImage(data.uri, cropData).then(url => {
-      //   console.log('Cropped image uri', url);
-      // });
+      ImageEditor.cropImage(data.uri, cropData).then(url => {
+        RNFS.readFile(url, 'base64').then(dataImage => {
+          this.props.saveImageBase64(dataImage);
+        });
+        RNFS.unlink(data.uri);
+      });
     }
   };
 
@@ -57,10 +72,10 @@ class TakeIdPlusSelfiePicture extends Component {
           }}
           aspect={1}
           style={styles.preview}
-          type={RNCamera.Constants.Type.front}
+          type={RNCamera.Constants.Type.back}
           captureAudio={false}
           defaultTouchToFocus
-          flashMode={RNCamera.Constants.FlashMode.on}
+          flashMode={RNCamera.Constants.FlashMode.off}
           clearWindowBackground={false}
           androidCameraPermissionOptions={{
             title: 'Permission to use camera',
@@ -68,23 +83,34 @@ class TakeIdPlusSelfiePicture extends Component {
             buttonPositive: 'Ok',
             buttonNegative: 'Cancel'
           }}
-          onGoogleVisionBarcodesDetected={({ barcodes }) => {
-            console.log(barcodes);
-          }}
         >
-          <View style={styles.overlayCamera} />
-          <View>
-            <Image
-              source={require('../../assets/images/background/take_profile_marker.png')}
-              style={{
-                width: '100%',
-                resizeMode: 'cover',
-                height: undefined,
-                aspectRatio: 1 / 1
-              }}
-            />
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              width
+            }}
+          >
+            <View style={styles.markerSelfie}>
+              {this.state.loading ? (
+                <Image
+                  source={require('../../assets/gif/loading/load_triagle.gif')}
+                  style={{ height: 80, width: 80 }}
+                />
+              ) : (
+                <View />
+              )}
+            </View>
+            <View style={styles.markerId} />
           </View>
-          <View style={styles.overlayCamera}>
+          <View
+            style={{
+              height: 0.15 * height,
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
             <TouchableOpacity
               style={styles.boxCircleCamera}
               onPress={this.takePicture.bind(this)}
@@ -112,12 +138,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  overlayCamera: {
-    flex: 1,
-    width,
+  markerId: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: masterColor.fontBlack100
+    width: 0.45 * height,
+    height: 0.2 * height,
+    borderWidth: 5,
+    borderRadius: 0.05 * width,
+    borderColor: masterColor.fontGreen50,
+    borderStyle: 'dashed'
+  },
+  markerSelfie: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 0.45 * height,
+    height: 0.55 * height,
+    marginBottom: 10,
+    borderWidth: 5,
+    borderRadius: 0.05 * width,
+    borderColor: masterColor.fontGreen50,
+    borderStyle: 'dashed'
   },
   boxCircleCamera: {
     borderWidth: 2,
@@ -127,15 +167,14 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ global }) => {
+  return { global };
 };
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
-// eslint-disable-next-line prettier/prettier
 export default connect(
   mapStateToProps,
   mapDispatchToProps

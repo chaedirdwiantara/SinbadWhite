@@ -50,7 +50,8 @@ class TakeIdPicture extends Component {
         quality: 0.2,
         base64: true,
         pauseAfterCapture: true,
-        fixOrientation: true
+        fixOrientation: true,
+        orientation: 'portrait'
       };
       const data = await this.camera.takePictureAsync(options);
       ImageEditor.cropImage(data.uri, cropData).then(url => {
