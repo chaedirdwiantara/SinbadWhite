@@ -75,12 +75,12 @@ class ProfileView extends Component {
           {this.props.user.imageUrl !== null ? (
             <Image
               source={{ uri: this.props.user.imageUrl }}
-              style={GlobalStyle.image46}
+              style={[GlobalStyle.image46, { borderRadius: 46 }]}
             />
           ) : (
             <Image
               source={require('../../assets/images/profile/avatar.png')}
-              style={GlobalStyle.image46}
+              style={[GlobalStyle.image46, { borderRadius: 46 }]}
             />
           )}
         </View>

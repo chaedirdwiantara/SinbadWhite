@@ -10,6 +10,7 @@ import Text from 'react-native-text';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import * as ActionCreators from '../../state/actions';
 import { StatusBarWhite } from '../../components/StatusBarGlobal';
 import masterColor from '../../config/masterColor.json';
@@ -24,7 +25,7 @@ class ProfileDataView extends Component {
       data: [
         {
           section: 'Name',
-          edit: false,
+          edit: true,
           goTo: 'edit_name',
           data: this.props.user.fullName
         },
@@ -41,6 +42,11 @@ class ProfileDataView extends Component {
    * FUNCTIONAL
    * =====================
    */
+  /** === DID UNMOUNT */
+  componentWillUnmount() {
+    this.props.saveImageBase64('');
+  }
+
   goTo(page) {
     switch (page) {
       case 'edit_name':
@@ -58,32 +64,46 @@ class ProfileDataView extends Component {
    * RENDER VIEW
    * ======================
    */
+  renderSkeletonImageUpload() {
+    return (
+      <SkeletonPlaceholder>
+        <View style={styles.imageUploadSkeleton} />
+      </SkeletonPlaceholder>
+    );
+  }
+
+  renderImage() {
+    return (
+      <View>
+        {this.props.user.imageUrl !== null ? (
+          <Image
+            source={{ uri: this.props.user.imageUrl }}
+            style={[GlobalStyle.image74, { borderRadius: 74 }]}
+          />
+        ) : (
+          <Image
+            source={require('../../assets/images/profile/avatar.png')}
+            style={[GlobalStyle.image74, { borderRadius: 74 }]}
+          />
+        )}
+        <TouchableOpacity
+          style={styles.boxEditIcon}
+          onPress={() => this.goTo('take_profile_photo')}
+        >
+          <MaterialIcon name="edit" color={masterColor.fontBlack80} size={18} />
+        </TouchableOpacity>
+      </View>
+    );
+  }
   /** === RENDER HEADER IMAGE === */
   renderHeaderImage() {
     return (
       <View style={styles.headerContainer}>
         <View style={styles.boxHeader}>
-          {this.props.user.imageUrl !== null ? (
-            <Image
-              source={{ uri: this.props.user.imageUrl }}
-              style={GlobalStyle.image46}
-            />
-          ) : (
-            <Image
-              source={require('../../assets/images/profile/avatar.png')}
-              style={GlobalStyle.image74}
-            />
-          )}
-          {/* <TouchableOpacity
-            style={styles.boxEditIcon}
-            onPress={() => this.goTo('take_profile_photo')}
-          >
-            <MaterialIcon
-              name="edit"
-              color={masterColor.fontBlack80}
-              size={18}
-            />
-          </TouchableOpacity> */}
+          {!this.props.profile.loadingEditProfile &&
+          this.props.profile.dataEditProfile !== null
+            ? this.renderImage()
+            : this.renderSkeletonImageUpload()}
         </View>
       </View>
     );
@@ -92,28 +112,28 @@ class ProfileDataView extends Component {
   renderProfileInformation() {
     return (
       <View style={styles.informationContainer}>
-        {this.state.data.map((item, index) => {
-          return (
-            <View style={styles.boxInformation} key={index}>
-              <View>
-                <Text style={[GlobalFont.type23, { marginBottom: 5 }]}>
-                  {item.section}
-                </Text>
-                <Text style={GlobalFont.type24}>{item.data}</Text>
-              </View>
-              {item.edit ? (
-                <TouchableOpacity
-                  style={styles.boxUbah}
-                  onPress={() => this.goTo(item.goTo)}
-                >
-                  <Text style={GlobalFont.type22}>Ubah</Text>
-                </TouchableOpacity>
-              ) : (
-                <View />
-              )}
-            </View>
-          );
-        })}
+        <View style={styles.boxInformation}>
+          <View>
+            <Text style={[GlobalFont.type23, { marginBottom: 5 }]}>Name</Text>
+            <Text style={GlobalFont.type24}>{this.props.user.fullName}</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.boxUbah}
+            onPress={() => this.goTo('edit_name')}
+          >
+            <Text style={GlobalFont.type22}>Ubah</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.boxInformation}>
+          <View>
+            <Text style={[GlobalFont.type23, { marginBottom: 5 }]}>
+              Nomor Handphone
+            </Text>
+            <Text style={GlobalFont.type24}>
+              {this.props.user.mobilePhoneNo}
+            </Text>
+          </View>
+        </View>
       </View>
     );
   }
@@ -143,10 +163,15 @@ const styles = StyleSheet.create({
     height: 76,
     width: 76
   },
+  imageUploadSkeleton: {
+    height: 76,
+    width: 76,
+    borderRadius: 76
+  },
   boxEditIcon: {
     position: 'absolute',
-    right: 2,
-    bottom: 2
+    right: 0,
+    bottom: 0
   },
   informationContainer: {
     paddingHorizontal: 20
@@ -161,8 +186,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user }) => {
-  return { user };
+const mapStateToProps = ({ user, global, profile }) => {
+  return { user, global, profile };
 };
 
 const mapDispatchToProps = dispatch => {

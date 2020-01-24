@@ -2,19 +2,18 @@ import React, { Component } from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   Dimensions,
   Image,
   TouchableOpacity
 } from 'react-native';
 import { RNCamera } from 'react-native-camera';
+var RNFS = require('react-native-fs');
 import { bindActionCreators } from 'redux';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import ImageEditor from '@react-native-community/image-editor';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
-import ComingSoon from '../../components/empty_state/ComingSoon';
 import masterColor from '../../config/masterColor.json';
 import { StatusBarBlack } from '../../components/StatusBarGlobal';
 
@@ -23,27 +22,47 @@ const { width, height } = Dimensions.get('window');
 class TakeProfilePicture extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loading: false
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.global.imageBase64 !== this.props.global.imageBase64) {
+      if (this.props.global.imageBase64 !== '') {
+        this.props.profileEditProcess({
+          agentId: this.props.user.id,
+          params: {
+            image: `data:image/gif;base64,${this.props.global.imageBase64}`
+          }
+        });
+        NavigationService.goBack(this.props.navigation.state.key);
+      }
+    }
   }
 
   takePicture = async () => {
+    this.setState({ loading: true });
     const cropData = {
-      offset: { x: 0, y: 100 },
-      size: { width: 100, height: 100 },
-      displaySize: { width: 100, height: 100 },
-      resizeMode: 'contain'
+      offset: { x: 100, y: 300 },
+      size: { width: 1700, height: 1200 }
     };
 
     if (this.camera) {
-      const options = { quality: 0.5, base64: true };
+      const options = {
+        quality: 0.2,
+        base64: true,
+        pauseAfterCapture: true,
+        fixOrientation: true,
+        orientation: 'portrait'
+      };
       const data = await this.camera.takePictureAsync(options);
-      
-      // ImageEditor.cropImage(data.uri, cropData).then(url => {
-      //   console.log(url);
-      // });
-      // ImageEditor.cropImage(data.uri, cropData).then(url => {
-      //   console.log('Cropped image uri', url);
-      // });
+      ImageEditor.cropImage(data.uri, cropData).then(url => {
+        RNFS.readFile(url, 'base64').then(dataImage => {
+          this.props.saveImageBase64(dataImage);
+        });
+        RNFS.unlink(data.uri);
+      });
     }
   };
 
@@ -73,6 +92,16 @@ class TakeProfilePicture extends Component {
           }}
         >
           <View style={styles.overlayCamera} />
+          <View style={{ position: 'absolute' }}>
+            {this.state.loading ? (
+              <Image
+                source={require('../../assets/gif/loading/load_triagle.gif')}
+                style={{ height: 80, width: 80 }}
+              />
+            ) : (
+              <View />
+            )}
+          </View>
           <View>
             <Image
               source={require('../../assets/images/background/take_profile_marker.png')}
@@ -127,8 +156,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ global, user }) => {
+  return { global, user };
 };
 
 const mapDispatchToProps = dispatch => {

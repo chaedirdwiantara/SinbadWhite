@@ -17,5 +17,13 @@ export const user = createReducer(INITIAL_STATE, {
    */
   [types.SIGN_IN_SUCCESS](state, action) {
     return action.payload.user;
+  },
+  /** IF EDIT PROFILE SUCCESS */
+  [types.PROFILE_EDIT_SUCCESS](state, action) {
+    return {
+      ...state,
+      imageUrl: action.payload.imageUrl,
+      fullName: action.payload.fullName
+    };
   }
 });
