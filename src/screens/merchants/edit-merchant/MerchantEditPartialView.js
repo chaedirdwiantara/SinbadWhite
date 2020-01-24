@@ -340,27 +340,46 @@ class MerchantEditPartialView extends Component {
   }
   /** === RENDER OWNER IMAGE ID === */
   renderOwnerImageId() {
-    return this.props.global.imageBase64 !== '' ? (
-      <View>
-        <Image
-          source={{
-            uri: `data:image/gif;base64,${this.props.global.imageBase64}`
-          }}
-          style={styles.idImage}
-        />
-        <TouchableOpacity
-          onPress={() => this.openCamera()}
-          style={{ justifyContent: 'center', alignItems: 'center' }}
-        >
-          <Text style={Fonts.type21}>ULANGI FOTO</Text>
-        </TouchableOpacity>
-      </View>
-    ) : (
-      <View style={{ paddingHorizontal: 16, flex: 1, paddingVertical: 16 }}>
-        <Image
-          source={require('../../../assets/images/merchant/ktp_rule.png')}
-          style={styles.idImageRule}
-        />
+    return (
+      <View style={{ height, paddingHorizontal: 16, paddingTop: 16 }}>
+        {this.props.global.imageBase64 !== '' ? (
+          <View>
+            <Image
+              source={{
+                uri: `data:image/gif;base64,${this.props.global.imageBase64}`
+              }}
+              style={styles.idImage}
+            />
+            <TouchableOpacity
+              onPress={() => this.openCamera()}
+              style={{ justifyContent: 'center', alignItems: 'center' }}
+            >
+              <Text style={Fonts.type21}>ULANGI FOTO</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View>
+            <Image
+              source={require('../../../assets/images/merchant/ktp_rule.png')}
+              style={styles.idImageRule}
+            />
+            <View>
+              <Text style={Fonts.type42}>Tata Cara Foto :</Text>
+              <Text style={[Fonts.type23, { marginTop: 10 }]}>
+                1. Berdiri secara tegap
+              </Text>
+              <Text style={[Fonts.type23, { marginTop: 10 }]}>
+                2. Hindari tangan menutupi KTP
+              </Text>
+              <Text style={[Fonts.type23, { marginTop: 10 }]}>
+                3. Pastikan tulisan data diri kamu terbaca
+              </Text>
+              <Text style={[Fonts.type23, { marginTop: 10 }]}>
+                4. Jangan foto bersama keluarga
+              </Text>
+            </View>
+          </View>
+        )}
       </View>
     );
   }
@@ -668,8 +687,8 @@ const styles = StyleSheet.create({
   },
   idImageRule: {
     resizeMode: 'contain',
-    width: undefined,
-    height: '100%',
+    width: '100%',
+    height: undefined,
     aspectRatio: 2 / 1
   }
 });
