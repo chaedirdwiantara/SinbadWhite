@@ -29,10 +29,13 @@ class ModalBottomErrorPinMap extends Component {
             <Text
               style={[Fonts.type7, { textAlign: 'center', marginBottom: 10 }]}
             >
-              Lokasi yang Anda pilih tidak terdaftar
+              Area Pin-Point Terlalu Luas
             </Text>
             <Text style={[Fonts.type17, { textAlign: 'center' }]}>
-              Silahkan ubah lokasi Anda
+              Perbesar peta dengan
+            </Text>
+            <Text style={[Fonts.type17, { textAlign: 'center' }]}>
+              dua jari pada layar Anda
             </Text>
           </View>
         </View>
