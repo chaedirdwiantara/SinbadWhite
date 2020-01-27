@@ -18,9 +18,22 @@ class FirstView extends Component {
   componentDidMount() {
     setTimeout(() => {
       this.props.navigation.navigate(
-        this.props.permanent.token !== null ? 'App' : 'Auth'
+        this.props.permanent.token !== null ? 'App' : this.checkIFOTPexist()
       );
     }, 1000);
+    /** OLD LOGIN DONT REMOVE */
+    // setTimeout(() => {
+    //   this.props.navigation.navigate(
+    //     this.props.permanent.token !== null ? 'App' : 'Auth'
+    //   );
+    // }, 1000);
+  }
+  /** CHECK IF OTP ALREADY SEND */
+  checkIFOTPexist() {
+    if (this.props.permanent.otpAgentSignIn !== null) {
+      return 'OtpView';
+    }
+    return 'Auth';
   }
   /**
    * ==============================

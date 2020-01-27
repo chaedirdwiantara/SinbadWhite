@@ -26,7 +26,7 @@ class OtpView extends Component {
     super(props);
     const { navigation } = this.props;
     this.state = {
-      phoneNumber: navigation.state.params.phoneNumber,
+      // phoneNumber: navigation.state.params.phoneNumber,
       errorOTP: false,
       otpInput: [],
       otpErrorText: 'Pastikan kode verifikasi yang anda masukan benar'
@@ -65,11 +65,20 @@ class OtpView extends Component {
   checkOtp() {
     Keyboard.dismiss();
     this.setState({ errorOTP: false });
-    if (this.props.auth.dataGetOTP !== this.state.otpInput.join('')) {
+    /** OLD LOGIN (DONT REMOVE */
+    // if (this.props.auth.dataGetOTP !== this.state.otpInput.join('')) {
+    //   this.setState({ errorOTP: true });
+    // } else {
+    //   this.props.signInProcess({
+    //     mobilePhoneNo: '0' + this.state.phoneNumber,
+    //     otpCode: this.state.otpInput.join('')
+    //   });
+    // }
+    if (this.props.permanent.otpAgentSignIn !== this.state.otpInput.join('')) {
       this.setState({ errorOTP: true });
     } else {
       this.props.signInProcess({
-        mobilePhoneNo: '0' + this.state.phoneNumber,
+        mobilePhoneNo: '0' + this.props.permanent.phoneNumberAgentSignIn,
         otpCode: this.state.otpInput.join('')
       });
     }
@@ -124,7 +133,10 @@ class OtpView extends Component {
           style={{ paddingRight: '30%', paddingBottom: 20, paddingTop: 10 }}
         >
           <Text style={Fonts.type2}>Kami telah mengirimi Anda SMS di</Text>
-          <Text style={Fonts.type2}>+62{this.state.phoneNumber}</Text>
+          {/* <Text style={Fonts.type2}>+62{this.state.phoneNumber}</Text> */}
+          <Text style={Fonts.type2}>
+            +62{this.props.permanent.phoneNumberAgentSignIn}
+          </Text>
         </View>
       </View>
     );
@@ -180,7 +192,11 @@ class OtpView extends Component {
   /** RENDER RESEND */
   renderResend() {
     return (
-      <OtpResend phoneNumber={'0' + this.state.phoneNumber} from={'login'} />
+      // <OtpResend phoneNumber={'0' + this.state.phoneNumber} from={'login'} />
+      <OtpResend
+        phoneNumber={'0' + this.props.permanent.phoneNumberAgentSignIn}
+        from={'login'}
+      />
     );
   }
   /** === MAIN === */
@@ -228,8 +244,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ auth, permanent }) => {
+  return { auth, permanent };
 };
 
 const mapDispatchToProps = dispatch => {
