@@ -126,7 +126,9 @@ class PdpListDataView extends Component {
           <View style={styles.boxContentDesc}>
             <View style={styles.boxTitleAndSku}>
               <View style={styles.boxName}>
-                <Text style={Fonts.type16}>{item.name}</Text>
+                <Text style={[Fonts.type16, { textTransform: 'capitalize' }]}>
+                  {item.name}
+                </Text>
               </View>
               <View style={styles.boxSku}>
                 <Text style={[Fonts.type8, { textAlign: 'right' }]}>

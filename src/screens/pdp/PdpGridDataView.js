@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import {
   View,
   StyleSheet,
+  ScrollView,
   FlatList,
+  RefreshControl,
   Image,
   TouchableOpacity,
   Dimensions
@@ -10,19 +12,15 @@ import {
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Card } from 'react-native-elements';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Octicons from 'react-native-vector-icons/Octicons';
 import * as ActionCreators from '../../state/actions';
-import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import { MoneyFormat } from '../../helpers/NumberFormater';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import SkeletonType4 from '../../components/skeleton/SkeletonType4';
 import { LoadingLoadMore } from '../../components/Loading';
-import Address from '../../components/Address';
 import Fonts from '../../helpers/GlobalFont';
 import EmptyData from '../../components/empty_state/EmptyData';
+
 const { width, height } = Dimensions.get('window');
 
 class PdpGridDataView extends Component {
@@ -30,6 +28,13 @@ class PdpGridDataView extends Component {
     super(props);
     this.state = {};
   }
+
+  scrollEndReach = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    return (
+      Math.round(layoutMeasurement.height + contentOffset.y) ===
+      contentSize.height
+    );
+  };
   /** === FUNCTIONAL === */
   toParentFunction(data) {
     this.props.parentFunction(data);
@@ -114,7 +119,7 @@ class PdpGridDataView extends Component {
     );
   }
 
-  renderItem({ item, index }) {
+  renderItem(item, index) {
     const productImage = (
       <Image
         defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
@@ -132,7 +137,9 @@ class PdpGridDataView extends Component {
             <View>{productImage}</View>
             <View style={{ paddingHorizontal: 11, paddingVertical: 10 }}>
               <View>
-                <Text style={Fonts.type37}>{item.name}</Text>
+                <Text style={[Fonts.type37, { textTransform: 'capitalize' }]}>
+                  {item.name}
+                </Text>
               </View>
               <View style={{ marginTop: 5 }}>
                 <Text style={Fonts.type36}>
@@ -211,19 +218,61 @@ class PdpGridDataView extends Component {
   /** === RENDER DATA CONTENT === */
   renderContent() {
     return (
-      <FlatList
-        contentContainerStyle={styles.flatListContainer}
-        data={this.props.pdp.dataGetPdp}
-        renderItem={this.renderItem.bind(this)}
-        numColumns={2}
-        extraData={this.state}
-        keyExtractor={(item, index) => index.toString()}
-        refreshing={this.props.pdp.refreshGetPdp}
-        onRefresh={this.onHandleRefresh}
-        onEndReachedThreshold={0.2}
-        onEndReached={this.onHandleLoadMore.bind(this)}
-        showsVerticalScrollIndicator
-      />
+      <View
+        style={{
+          flexDirection: 'row',
+          height: '100%'
+        }}
+      >
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.props.pdp.refreshGetPdp}
+              onRefresh={this.onHandleRefresh}
+            />
+          }
+          onScroll={({ nativeEvent }) => {
+            if (this.scrollEndReach(nativeEvent)) {
+              this.onHandleLoadMore();
+            }
+          }}
+          scrollEventThrottle={10}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingBottom: 30,
+              paddingTop: 16,
+              paddingHorizontal: 11
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              {this.props.pdp.dataGetPdp.map((item, index) => {
+                return index % 2 === 0 ? this.renderItem(item, index) : null;
+              })}
+            </View>
+            <View style={{ flex: 1 }}>
+              {this.props.pdp.dataGetPdp.map((item, index) => {
+                return index % 2 !== 0 ? this.renderItem(item, index) : null;
+              })}
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+
+      // <FlatList
+      //   contentContainerStyle={styles.flatListContainer}
+      //   data={this.props.pdp.dataGetPdp}
+      //   renderItem={this.renderItem.bind(this)}
+      //   numColumns={2}
+      //   extraData={this.state}
+      //   keyExtractor={(item, index) => index.toString()}
+      //   refreshing={this.props.pdp.refreshGetPdp}
+      //   onRefresh={this.onHandleRefresh}
+      //   onEndReachedThreshold={0.2}
+      //   onEndReached={this.onHandleLoadMore.bind(this)}
+      //   showsVerticalScrollIndicator
+      // />
     );
   }
   /** === RENDER EMPTY === */
@@ -257,7 +306,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30
   },
   mainContent: {
-    width: '50%',
+    // width: '50%',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -301,4 +350,5 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
+// eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(PdpGridDataView);
