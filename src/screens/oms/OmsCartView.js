@@ -10,7 +10,6 @@ import {
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { RFPercentage } from 'react-native-responsive-fontsize';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -20,7 +19,6 @@ import ModalConfirmation from '../../components/modal/ModalConfirmation';
 import { LoadingPage } from '../../components/Loading';
 import Address from '../../components/Address';
 import Fonts from '../../helpers/GlobalFont';
-import Font from '../../utils/Fonts';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import { MoneyFormat } from '../../helpers/NumberFormater';
 import OrderButton from '../../components/OrderButton';
@@ -403,7 +401,9 @@ class OmsCartView extends Component {
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
           >
             <View>
-              <Text style={Fonts.type16}>{store.name}</Text>
+              <Text style={[Fonts.type16, { textTransform: 'capitalize' }]}>
+                {store.name}
+              </Text>
             </View>
             {/* <View>
             <Text style={Fonts.type28}>Ganti Alamat</Text>
@@ -423,25 +423,30 @@ class OmsCartView extends Component {
       </View>
     );
   }
-  renderPriceProduct(item) {
+  renderPriceProduct(item, opacity) {
     return (
       <View>
         {item.catalogue.discountedRetailBuyingPrice !== null ? (
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View style={{ marginRight: 5 }}>
-              <Text style={styles.priceTextCross}>
+              <Text
+                style={[
+                  Fonts.type31,
+                  { textDecorationLine: 'line-through', opacity }
+                ]}
+              >
                 {MoneyFormat(item.catalogue.retailBuyingPrice)}
               </Text>
             </View>
             <View>
-              <Text style={styles.priceTextRed}>
+              <Text style={[Fonts.type36, { opacity }]}>
                 {MoneyFormat(item.catalogue.discountedRetailBuyingPrice)}
               </Text>
             </View>
           </View>
         ) : (
           <View>
-            <Text style={styles.priceTextRed}>
+            <Text style={[Fonts.type36, { opacity }]}>
               {MoneyFormat(item.catalogue.retailBuyingPrice)}
             </Text>
           </View>
@@ -466,10 +471,14 @@ class OmsCartView extends Component {
                 itemProductCartArray.catalogueId === item.catalogue.id &&
                 item.checkBox
             ) > -1 ? (
-              <Icons color="#f1414c" name="checkbox-marked" size={24} />
+              <Icons
+                color={masterColor.mainColor}
+                name="checkbox-marked"
+                size={24}
+              />
             ) : (
               <Icons
-                color="rgba(1,1,1,0.54)"
+                color={masterColor.fontBlack40}
                 name="checkbox-blank-outline"
                 size={24}
               />
@@ -494,7 +503,7 @@ class OmsCartView extends Component {
               </View>
               <View style={{ flex: 1 }}>
                 <View>
-                  <Text style={styles.nameProductText}>
+                  <Text style={[Fonts.type16, { textTransform: 'capitalize' }]}>
                     {item.catalogue.name}
                   </Text>
                 </View>
@@ -502,7 +511,7 @@ class OmsCartView extends Component {
                   <Text style={styles.variationProductText}>variasi</Text>
                 </View> */}
                 <View style={{ marginVertical: 10 }}>
-                  {this.renderPriceProduct(item)}
+                  {this.renderPriceProduct(item, 1)}
                 </View>
                 <View>
                   <OrderButton
@@ -528,7 +537,7 @@ class OmsCartView extends Component {
                 </TouchableOpacity>
                 <View style={{ alignItems: 'flex-end' }}>
                   {item.catalogue.displayStock ? (
-                    <Text style={styles.tersisaText}>
+                    <Text style={Fonts.type22}>
                       Tersisa {item.catalogue.stock} Pcs
                     </Text>
                   ) : (
@@ -560,7 +569,7 @@ class OmsCartView extends Component {
         <View style={styles.boxMargin} />
         <View style={styles.boxErrorProduct}>
           <View style={styles.boxTitle}>
-            <Text style={styles.titleBoxText}>Produk Tidak Tersedia</Text>
+            <Text style={Fonts.type48}>Produk Tidak Tersedia</Text>
           </View>
           <View style={styles.lines} />
           {this.renderProductContentErrorTidakTersedia()}
@@ -596,7 +605,7 @@ class OmsCartView extends Component {
         <View style={styles.boxMargin} />
         <View style={styles.boxErrorProduct}>
           <View style={styles.boxTitle}>
-            <Text style={styles.titleBoxText}>Produk Habis</Text>
+            <Text style={Fonts.type48}>Produk Habis</Text>
           </View>
           <View style={styles.lines} />
           {this.renderProductContentErrorProductHabis()}
@@ -622,7 +631,7 @@ class OmsCartView extends Component {
           </View>
           <View style={styles.boxContentProductHabis}>
             <View>
-              <Text style={[styles.nameProductText, { opacity: 0.5 }]}>
+              <Text style={[Fonts.type16, { opacity: 0.5 }]}>
                 {item.catalogue.name}
               </Text>
             </View>
@@ -643,20 +652,7 @@ class OmsCartView extends Component {
                 paddingVertical: 10
               }}
             >
-              {item.catalogue.discountedRetailBuyingPrice !== null ? (
-                <View>
-                  <Text style={[styles.priceTextCross, { opacity: 0.5 }]}>
-                    {MoneyFormat(item.catalogue.retailBuyingPrice)}
-                  </Text>
-                  <Text style={[styles.priceTextRed, { opacity: 0.5 }]}>
-                    {MoneyFormat(item.catalogue.discountedRetailBuyingPrice)}
-                  </Text>
-                </View>
-              ) : (
-                <Text style={[styles.priceTextRed, { opacity: 0.5 }]}>
-                  {MoneyFormat(item.catalogue.retailBuyingPrice)}
-                </Text>
-              )}
+              {this.renderPriceProduct(item, 0.5)}
             </View>
           </View>
           <TouchableOpacity
@@ -690,7 +686,12 @@ class OmsCartView extends Component {
           </View>
           <View style={styles.boxContentProductHabis}>
             <View>
-              <Text style={[styles.nameProductText, { opacity: 0.5 }]}>
+              <Text
+                style={[
+                  Fonts.type16,
+                  { opacity: 0.5, textTransform: 'capitalize' }
+                ]}
+              >
                 {item.catalogue.name}
               </Text>
             </View>
@@ -711,20 +712,7 @@ class OmsCartView extends Component {
                 paddingVertical: 10
               }}
             >
-              {item.catalogue.discountedRetailBuyingPrice !== null ? (
-                <View>
-                  <Text style={[styles.priceTextCross, { opacity: 0.5 }]}>
-                    {MoneyFormat(item.catalogue.retailBuyingPrice)}
-                  </Text>
-                  <Text style={[styles.priceTextRed, { opacity: 0.5 }]}>
-                    {MoneyFormat(item.catalogue.discountedRetailBuyingPrice)}
-                  </Text>
-                </View>
-              ) : (
-                <Text style={[styles.priceTextRed, { opacity: 0.5 }]}>
-                  {MoneyFormat(item.catalogue.retailBuyingPrice)}
-                </Text>
-              )}
+              {this.renderPriceProduct(item, 0.5)}
             </View>
           </View>
           <TouchableOpacity
@@ -774,17 +762,21 @@ class OmsCartView extends Component {
                       !itemProductCartArray.checkBox &&
                       itemProductCartArray.statusInCart === 'available'
                   ).length === 0 ? (
-                    <Icons color="#f1414c" name="checkbox-marked" size={24} />
+                    <Icons
+                      color={masterColor.mainColor}
+                      name="checkbox-marked"
+                      size={24}
+                    />
                   ) : (
                     <Icons
-                      color="rgba(1,1,1,0.54)"
+                      color={masterColor.fontBlack40}
                       name="checkbox-blank-outline"
                       size={24}
                     />
                   )}
                 </TouchableOpacity>
                 <View style={{ flex: 1, justifyContent: 'center' }}>
-                  <Text style={styles.brandTitle}>{item.brand.name}</Text>
+                  <Text style={Fonts.type16}>{item.brand.name}</Text>
                 </View>
               </View>
               <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
@@ -863,14 +855,14 @@ class OmsCartView extends Component {
         >
           <View>
             <Text>
-              <Text style={styles.pilihSemuaText}>Total: </Text>
-              <Text style={styles.totalPriceText}>
+              <Text style={Fonts.type9}>Total: </Text>
+              <Text style={Fonts.type53}>
                 {MoneyFormat(this.totalPriceValue())}
               </Text>
             </Text>
           </View>
           <View>
-            <Text style={styles.taxText}>Belum termasuk PPN 10%</Text>
+            <Text style={Fonts.type74}>Belum termasuk PPN 10%</Text>
           </View>
         </View>
       </View>
@@ -897,17 +889,21 @@ class OmsCartView extends Component {
           this.state.productCartArray.filter(
             item => item.statusInCart === 'available'
           ).length > 0 ? (
-            <Icons color="#f1414c" name="checkbox-marked" size={24} />
+            <Icons
+              color={masterColor.mainColor}
+              name="checkbox-marked"
+              size={24}
+            />
           ) : (
             <Icons
-              color="rgba(1,1,1,0.54)"
+              color={masterColor.fontBlack40}
               name="checkbox-blank-outline"
               size={24}
             />
           )}
         </TouchableOpacity>
         <View style={{ justifyContent: 'center' }}>
-          <Text style={styles.pilihSemuaText}>Pilih Semua</Text>
+          <Text style={Fonts.type9}>Pilih Semua</Text>
         </View>
       </View>
     );
@@ -1124,19 +1120,6 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: '#f2f2f2'
   },
-  boxProduct: {
-    height: 0.2 * height,
-    backgroundColor: '#ffffff',
-    borderWidth: 0,
-    elevation: 2,
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowColor: '#777777',
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22
-  },
   boxErrorProduct: {
     flex: 1,
     backgroundColor: '#ffffff',
@@ -1149,14 +1132,6 @@ const styles = StyleSheet.create({
     shadowColor: '#777777',
     shadowOpacity: 0.22,
     shadowRadius: 2.22
-  },
-  boxTotalPrice: {
-    height: 0.09 * height,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    borderTopWidth: 1,
-    borderColor: '#f2f2f2'
   },
   boxContentProductHabis: {
     flex: 1,
@@ -1188,129 +1163,6 @@ const styles = StyleSheet.create({
     width: 77,
     height: undefined,
     aspectRatio: 1 / 1
-  },
-  /** text */
-  titleBoxText: {
-    color: '#333333',
-    fontSize: RFPercentage(1.7),
-    fontFamily: Font.MontserratBold
-  },
-  textGantiAlamat: {
-    color: '#f0444c',
-    fontSize: RFPercentage(1.4),
-    fontFamily: Font.MontserratSemiBold
-  },
-  textAlamatTitle: {
-    color: '#4f4f4f',
-    fontSize: RFPercentage(1.5),
-    fontFamily: Font.MontserratSemiBold
-  },
-  textAlamat: {
-    color: '#4f4f4f',
-    fontSize: RFPercentage(1.4),
-    fontFamily: Font.MontserratMedium,
-    lineHeight: RFPercentage(1.7),
-    textTransform: 'capitalize'
-  },
-  textName: {
-    color: '#333333',
-    fontSize: RFPercentage(1.6),
-    fontFamily: Font.MontserratSemiBold
-  },
-  potonganText: {
-    color: '#4f4f4f',
-    fontSize: RFPercentage(1.5),
-    fontFamily: Font.MontserratRegular
-  },
-  supplierTitle: {
-    color: '#333333',
-    fontSize: RFPercentage(1.7),
-    fontFamily: Font.MontserratBold
-  },
-  brandTitle: {
-    color: '#333333',
-    fontSize: RFPercentage(1.7),
-    fontFamily: Font.MontserratSemiBold
-  },
-  discountText: {
-    marginTop: 5,
-    color: '#828282',
-    fontSize: RFPercentage(1.2),
-    fontFamily: Font.MontserratItalic
-  },
-  emptyCartTitle: {
-    color: '#4f4f4f',
-    fontSize: RFPercentage(1.8),
-    lineHeight: 18,
-    fontFamily: Font.MontserratBold,
-    textAlign: 'center'
-  },
-  emptyCartDesc: {
-    color: '#4f4f4f',
-    fontSize: RFPercentage(1.5),
-    lineHeight: 14,
-    fontFamily: Font.MontserratMedium,
-    textAlign: 'center'
-  },
-  nameProductText: {
-    color: '#4f4f4f',
-    fontSize: RFPercentage(1.5),
-    fontFamily: Font.MontserratMedium
-  },
-  variationProductText: {
-    color: '#828282',
-    fontSize: RFPercentage(1.4),
-    fontFamily: Font.MontserratMedium
-  },
-  priceTextRed: {
-    color: '#f0444c',
-    fontSize: RFPercentage(1.8),
-    fontFamily: Font.MontserratSemiBold
-  },
-  priceTextCross: {
-    color: '#bdbdbd',
-    textDecorationLine: 'line-through',
-    fontSize: RFPercentage(1.7),
-    fontFamily: Font.MontserratMedium,
-    marginRight: 10
-  },
-  tersisaText: {
-    color: '#f0444c',
-    fontSize: RFPercentage(1.5),
-    fontFamily: Font.MontserratMedium
-  },
-  pilihSemuaText: {
-    color: '#828282',
-    fontSize: RFPercentage(1.7),
-    fontFamily: Font.MontserratMedium
-  },
-  taxText: {
-    color: '#f57423',
-    fontSize: RFPercentage(1.6),
-    fontFamily: Font.MontserratMedium
-  },
-  totalPriceText: {
-    color: '#f0444c',
-    fontSize: RFPercentage(1.8),
-    fontFamily: Font.MontserratBold
-  },
-  /** for button */
-  titleButton: {
-    fontFamily: Font.MontserratBold,
-    fontSize: 12,
-    color: '#ffffff'
-  },
-  button: {
-    backgroundColor: '#f0444c',
-    borderRadius: 5,
-    width: 80,
-    height: 41
-  },
-  buttonDisabled: {
-    backgroundColor: 'rgba(240,68,76, 0.5)',
-    borderRadius: 5,
-    width: 80,
-    height: 41
   }
 });
 
