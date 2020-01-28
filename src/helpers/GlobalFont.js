@@ -441,12 +441,17 @@ const styles = StyleSheet.create({
     letterSpacing: 3.2,
     color: masterColor.fontBlack50
   },
+  type73: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 9,
+    lineHeight: 11,
+    color: masterColor.fontWhite
+  },
   forCompare: {
-    fontFamily: Fonts.MontserratBold,
-    fontSize: 32,
-    lineHeight: 41,
-    letterSpacing: 3.2,
-    color: masterColor.fontBlack50
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 9,
+    lineHeight: 11,
+    color: masterColor.fontWhite
   },
   /** === bottom nav ==== */
   bottomNav: {

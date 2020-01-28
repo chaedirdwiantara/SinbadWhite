@@ -63,6 +63,14 @@ class PdpGridDataView extends Component {
       }
     }
   };
+  /** DISCOUNT VALUE (CALCULATE DISCOUNT) */
+  calculateDiscount(item) {
+    return (
+      ((item.retailBuyingPrice - item.discountedRetailBuyingPrice) /
+        item.retailBuyingPrice) *
+      100
+    ).toFixed(1);
+  }
 
   /**
    * ======================
@@ -135,6 +143,48 @@ class PdpGridDataView extends Component {
                   )}
                 </Text>
               </View>
+              {item.discountedRetailBuyingPrice !== null ? (
+                <View style={{ marginTop: 5, flexDirection: 'row' }}>
+                  <View>
+                    <Text
+                      style={[
+                        Fonts.type31,
+                        { textDecorationLine: 'line-through' }
+                      ]}
+                    >
+                      {MoneyFormat(item.retailBuyingPrice)}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 15,
+                      justifyContent: 'center',
+                      width: 40
+                    }}
+                  >
+                    <Image
+                      source={require('../../assets/icons/pdp/discount.png')}
+                      style={{
+                        height: 16,
+                        position: 'absolute'
+                      }}
+                    />
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Text style={Fonts.type73}>
+                        -{this.calculateDiscount(item)}%
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              ) : (
+                <View />
+              )}
               {item.displayStock && item.stock >= item.minQty ? (
                 <View style={{ marginTop: 5 }}>
                   <Text style={Fonts.type38}>{`${item.stock} Tersisa`} </Text>
