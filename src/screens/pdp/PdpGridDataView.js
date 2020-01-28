@@ -32,7 +32,7 @@ class PdpGridDataView extends Component {
   scrollEndReach = ({ layoutMeasurement, contentOffset, contentSize }) => {
     return (
       Math.round(layoutMeasurement.height + contentOffset.y) ===
-      contentSize.height
+      Math.round(contentSize.height)
     );
   };
   /** === FUNCTIONAL === */
