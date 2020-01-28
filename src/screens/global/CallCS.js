@@ -27,7 +27,15 @@ class CallCS extends Component {
    * FUNCTIONAL
    * ====================
    */
+  /** TO PARENT FUNCTION */
+  toParentFunction(data) {
+    this.props.parentFunction(data);
+  }
+
   toWhatsAppWithContact() {
+    this.toParentFunction({
+      type: 'close'
+    });
     Linking.openURL(`whatsapp://send?phone=${this.state.phoneNumber}`).catch(
       err => {
         if (err) {
@@ -38,6 +46,9 @@ class CallCS extends Component {
   }
 
   toPhoneCall() {
+    this.toParentFunction({
+      type: 'close'
+    });
     let noPhone = '';
     if (Platform.OS === 'android') {
       noPhone = `tel:${this.state.phoneNumber}`;

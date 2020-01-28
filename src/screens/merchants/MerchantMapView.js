@@ -72,6 +72,7 @@ class MerchantMapView extends Component {
     return !this.props.merchant.loadingGetMerchant ? (
       <ModalBottomType2
         title={`${this.props.merchant.totalDataGetMerchant} List Store`}
+        height={0.35 * height}
         body={
           <MerchantListDataView
             type={this.props.type}

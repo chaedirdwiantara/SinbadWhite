@@ -41,14 +41,7 @@ class ModalBottomMerchantList extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    this.keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      this.keyboardDidShow
-    );
-    this.keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      this.keyboardDidHide
-    );
+    this.keyboardListener();
     this.props.portfolioGetProcess(this.props.user.id);
   }
   /** === DID UPDATE === */
@@ -67,16 +60,37 @@ class ModalBottomMerchantList extends Component {
   }
 
   componentWillUnmount() {
-    this.keyboardDidShowListener.remove();
+    this.keyboardRemove();
   }
-
+  /**
+   * ========================
+   * FOR KEYBOARD
+   * ========================
+   */
+  /** KEYBOARD LISTENER */
+  keyboardListener() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this.keyboardDidShow
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this.keyboardDidHide
+    );
+  }
+  /** KEYBOARD SHOW */
   keyboardDidShow = () => {
     this.setState({ heightList: 0.2 * height });
   };
-
+  /** KEYBOARD HIDE */
   keyboardDidHide = () => {
     this.setState({ heightList: 0.93 * height });
   };
+  /** KEYBOARD REMOVE */
+  keyboardRemove() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
   /** === CALL GET FUNCTION === */
   getMerchant(type, portfolioIndex, search) {
     this.props.merchantGetReset();

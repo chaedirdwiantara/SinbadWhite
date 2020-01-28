@@ -17,7 +17,6 @@ import GlobalStyle from '../../helpers/GlobalStyle';
 import GlobalFont from '../../helpers/GlobalFont';
 import NavigationService from '../../navigation/NavigationService';
 import ModalBottomSwipeCloseNotScroll from '../../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
-import ModalContentMenuAddMerchant from '../journey/ModalContentMenuAddMerchant';
 import CallCS from '../../screens/global/CallCS';
 
 class ProfileView extends Component {
@@ -42,6 +41,16 @@ class ProfileView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  /** CALLED FROM CHILD */
+  parentFunction(data) {
+    switch (data.type) {
+      case 'close':
+        this.setState({ openModalCS: false });
+        break;
+      default:
+        break;
+    }
+  }
   /** === SIGN OUT === */
   signOut() {
     this.props.navigation.navigate('Auth');
@@ -144,7 +153,12 @@ class ProfileView extends Component {
           closeButton
           title={'Hubungi CS'}
           close={() => this.setState({ openModalCS: false })}
-          content={<CallCS />}
+          content={
+            <CallCS
+              onRef={ref => (this.parentFunction = ref)}
+              parentFunction={this.parentFunction.bind(this)}
+            />
+          }
         />
       </View>
     ) : (

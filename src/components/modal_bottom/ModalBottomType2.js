@@ -17,19 +17,47 @@ class ModalBottomType2 extends Component {
       showList: true
     };
   }
+  /**
+   * ======================
+   * FUNCTIONAL
+   * ======================
+   */
+  /** DID MOUNT */
   componentDidMount() {
+    this.keyboardListener();
+  }
+  /** WILL UNMOUNT */
+  componentWillUnmount() {
+    this.keyboardRemove();
+  }
+  /**
+   * ========================
+   * FOR KEYBOARD
+   * ========================
+   */
+  /** KEYBOARD LISTENER */
+  keyboardListener() {
     this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       this.keyboardDidShow
     );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this.keyboardDidHide
+    );
   }
-
+  /** KEYBOARD SHOW */
   keyboardDidShow = () => {
     this.setState({ showList: false });
   };
-
-  componentWillUnmount() {
+  /** KEYBOARD HIDE */
+  keyboardDidHide = () => {
+    this.setState({ showList: true });
+  };
+  /** KEYBOARD REMOVE */
+  keyboardRemove() {
     this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
   }
   /**
    * ==================
@@ -63,7 +91,14 @@ class ModalBottomType2 extends Component {
   /** RENDER CONTENT LIST */
   renderContentList() {
     return this.state.showList ? (
-      <View style={{ flex: 1, height: 0.35 * height }}>{this.props.body}</View>
+      <View
+        style={{
+          flex: 1,
+          height: this.props.height ? this.props.height : null
+        }}
+      >
+        {this.props.body}
+      </View>
     ) : (
       <View />
     );
