@@ -18,6 +18,7 @@ import AddMerchantSelfiePhoto from '../../screens/merchants/add-merchant/AddMerc
 /** merchant dashboard */
 import MerchantHomeView from '../../screens/merchants/dashboard-merchant/MerchantHomeView';
 import MerchantCheckinView from '../../screens/merchants/dashboard-merchant/MerchantCheckinView';
+import MerchantNoOrderReason from '../../screens/merchants/dashboard-merchant/MerchantNoOrderReason';
 /** merchant detail */
 import MerchantDetailProfileView from '../../screens/merchants/details-merchant/MerchantDetailProfileView';
 import MerchantDetailInformationView from '../../screens/merchants/details-merchant/MerchantDetailInformationView';
@@ -300,6 +301,24 @@ const MerchantNavigator = {
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
+      gesturesEnabled: false
+    }
+  },
+  MerchantNoOrderReason: {
+    screen: MerchantNoOrderReason,
+    navigationOptions: {
+      headerTitle: 'Alasan Tidak ada Order',
+      headerTitleStyle: [
+        GlobalFont.type5,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
       gesturesEnabled: false
     }
   }
