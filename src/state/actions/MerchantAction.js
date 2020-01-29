@@ -238,3 +238,26 @@ export function merchantAddSuccess(data) {
 export function merchantAddFailed(data) {
   return { type: types.MERCHANT_ADD_FAILED, payload: data };
 }
+/**
+ * ====================================
+ * GET MERCHANT DETAIL
+ * ====================================
+ */
+/** === MERCHANT GET DETAIL PROCESS === */
+export function merchantGetNoOrderReasonProcess(data) {
+  return { type: types.MERCHANT_NO_ORDER_REASON_GET_PROCESS, payload: data };
+}
+/** === MERCHANT GET DETAIL SUCCESS === */
+export function merchantGetNoOrderReasonSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_NO_ORDER_REASON_GET_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_NO_ORDER_REASON_GET_FAILED, payload: data };
+}
+/** === MERCHANT GET DETAIL FAILED === */
+export function merchantGetNoOrderReasonFailed(data) {
+  return { type: types.MERCHANT_NO_ORDER_REASON_GET_FAILED, payload: data };
+}

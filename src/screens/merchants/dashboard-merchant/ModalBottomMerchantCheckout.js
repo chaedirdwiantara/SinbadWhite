@@ -16,19 +16,40 @@ const { height } = Dimensions.get('window');
 class ModalBottomMerchantCheckout extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      checkInTime: null
+    };
+  }
+  /** DID UPDATE */
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.merchant.dataGetLogPerActivity !==
+      this.props.merchant.dataGetLogPerActivity
+    ) {
+      if (this.props.merchant.dataGetLogPerActivity !== null) {
+        if (this.props.merchant.dataGetLogPerActivity.length > 0) {
+          if (
+            this.props.merchant.dataGetLogPerActivity[0].activity === 'check_in'
+          ) {
+            this.setState({
+              checkInTime: this.props.merchant.dataGetLogPerActivity[0]
+                .createdAt
+            });
+          }
+        }
+      }
+    }
   }
 
   /** CHECK CHECK IN */
   checkCheckIn() {
     if (
-      !this.props.merchant.loadingGetLogPerActivity &&
-      this.props.merchant.dataGetLogPerActivity !== null
+      (!this.props.merchant.loadingGetLogPerActivity &&
+        this.props.merchant.dataGetLogPerActivity !== null) ||
+      this.state.checkInTime !== null
     ) {
-      if (this.props.merchant.dataGetLogPerActivity.length > 0) {
-        return moment(
-          this.props.merchant.dataGetLogPerActivity[0].createdAt
-        ).format('HH:mm:ss');
+      if (this.state.checkInTime !== null) {
+        return moment(this.state.checkInTime).format('HH:mm:ss');
       }
       return 'Anda belum check-in';
     }
@@ -50,16 +71,10 @@ class ModalBottomMerchantCheckout extends Component {
   /** FIND DIFF KUNJUNGAN */
   findDiffVisit() {
     const a = moment();
-    const b = moment(this.props.merchant.dataGetLogPerActivity[0].createdAt);
+    const b = this.state.checkInTime
+      ? moment(this.state.checkInTime)
+      : moment();
     return a.diff(b, 'minutes');
-  }
-
-  checkout() {
-    let storeLogCheckout = {
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
-      activity: 'check_out'
-    };
-    this.props.merchantCheckoutProcess(storeLogCheckout);
   }
   /**
    * ==================
@@ -113,7 +128,7 @@ class ModalBottomMerchantCheckout extends Component {
             </View>
           </View>
           <View>
-            {!this.checkDisableButton() ? (
+            {this.state.checkInTime !== null ? (
               <View style={styles.cirlce}>
                 <Text>
                   <Text style={Fonts.type66}>{this.findDiffVisit()}</Text>

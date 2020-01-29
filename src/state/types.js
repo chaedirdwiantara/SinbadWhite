@@ -76,6 +76,13 @@ export const MERCHANT_ADD_FAILED = 'MerchantAddFailed';
 export const MERCHANT_EDIT_PROCESS = 'MerchantEditProcess';
 export const MERCHANT_EDIT_SUCCESS = 'MerchantEditSuccess';
 export const MERCHANT_EDIT_FAILED = 'MerchantEditFailed';
+/** FOR REASON NO ORDER */
+export const MERCHANT_NO_ORDER_REASON_GET_PROCESS =
+  'MerchantNoOrderReasonGetProcess';
+export const MERCHANT_NO_ORDER_REASON_GET_SUCCESS =
+  'MerchantNoOrderReasonGetSuccess';
+export const MERCHANT_NO_ORDER_REASON_GET_FAILED =
+  'MerchantNoOrderReasonGetFailed';
 /** FOR ADD MERCHANT */
 export const MERCHANT_ADD_DATA_VOLATILE = 'MerchantAddDataVolatile';
 /** FOR EDIT MERCHANT */

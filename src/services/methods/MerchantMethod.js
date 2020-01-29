@@ -66,6 +66,13 @@ function getLogPerActivity(data) {
     method: 'GET'
   });
 }
+/** === GET NO ORDER REASON === */
+function getNoOrderReason() {
+  return ApiRest({
+    path: 'no-order-reasons',
+    method: 'GET'
+  });
+}
 
 export const MerchantMethod = {
   getMerchant,
@@ -76,5 +83,6 @@ export const MerchantMethod = {
   getMerchantLastOrder,
   postActivity,
   getLogAllActivity,
-  getLogPerActivity
+  getLogPerActivity,
+  getNoOrderReason
 };

@@ -101,6 +101,17 @@ function* getLogPerActivity(actions) {
     yield put(ActionCreators.merchantGetLogPerActivityFailed(error));
   }
 }
+/** === GET NO ORDER REASON === */
+function* getNoOrderReason(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getNoOrderReason(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetNoOrderReasonSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetNoOrderReasonFailed(error));
+  }
+}
 
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
@@ -111,6 +122,7 @@ function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_EDIT_PROCESS, editMerchant);
   yield takeEvery(types.MERCHANT_GET_LAST_ORDER_PROCESS, getMerchantLastOrder);
   yield takeEvery(types.MERCHANT_POST_ACTIVITY_PROCESS, postActivity);
+  yield takeEvery(types.MERCHANT_NO_ORDER_REASON_GET_PROCESS, getNoOrderReason);
   yield takeEvery(
     types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS,
     getLogAllActivity

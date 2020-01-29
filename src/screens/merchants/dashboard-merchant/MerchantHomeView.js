@@ -26,6 +26,8 @@ import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
 import ProductListType1 from '../../../components/list/ProductListType1';
 import { LoadingPage } from '../../../components/Loading';
 import ToastType1 from '../../../components/toast/ToastType1';
+import ModalConfirmation from '../../../components/modal/ModalConfirmation';
+import ModalBottomErrorRespons from '../../../components/error/ModalBottomErrorRespons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -34,7 +36,11 @@ class MerchantHomeView extends Component {
     super(props);
     this.state = {
       openModalCheckout: false,
+      openModalConfirmNoOrder: false,
+      openModalErrorGlobal: false,
+      checkNoOrder: false,
       showToast: false,
+      loadingPostForCheckoutNoOrder: false,
       notifToast: '',
       menu: [
         {
@@ -101,6 +107,8 @@ class MerchantHomeView extends Component {
         if (this.props.merchant.dataPostActivity.activity === 'check_out') {
           this.setState({
             openModalCheckout: false,
+            loadingPostForCheckoutNoOrder: false,
+            checkNoOrder: false,
             showToast: true,
             notifToast: 'Keluar Toko Berhasil'
           });
@@ -130,6 +138,56 @@ class MerchantHomeView extends Component {
         }
       }
     }
+    if (
+      prevProps.merchant.dataGetLogPerActivity !==
+      this.props.merchant.dataGetLogPerActivity
+    ) {
+      if (this.props.merchant.dataGetLogPerActivity !== null) {
+        if (this.props.merchant.dataGetLogPerActivity.length > 0) {
+          if (
+            this.props.merchant.dataGetLogPerActivity[0].activity === 'order'
+          ) {
+            this.checkoutProcess();
+          }
+        } else {
+          if (this.state.checkNoOrder) {
+            this.setState({
+              openModalCheckout: false,
+              checkNoOrder: false,
+              openModalConfirmNoOrder: true
+            });
+          }
+        }
+      }
+    }
+    /** FOR ERROR */
+    /** error post */
+    if (
+      prevProps.merchant.errorPostActivity !==
+      this.props.merchant.errorPostActivity
+    ) {
+      if (this.props.merchant.errorPostActivity !== null) {
+        this.doError();
+      }
+    }
+    /** error get per activity */
+    if (
+      prevProps.merchant.errorGetLogPerActivity !==
+      this.props.merchant.errorGetLogPerActivity
+    ) {
+      if (this.props.merchant.errorGetLogPerActivity !== null) {
+        this.doError();
+      }
+    }
+    /** error get per activity */
+    if (
+      prevProps.merchant.errorGetLogAllActivity !==
+      this.props.merchant.errorGetLogAllActivity
+    ) {
+      if (this.props.merchant.errorGetLogAllActivity !== null) {
+        this.doError();
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -138,6 +196,23 @@ class MerchantHomeView extends Component {
     this.props.getJourneyPlanReportProcess(
       this.props.user.userSuppliers.map(item => item.supplierId)
     );
+  }
+  /** CHECKOUT PROCESS */
+  checkoutProcess() {
+    this.props.merchantPostActivityProcess({
+      journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+      activity: 'check_out'
+    });
+  }
+  /** FOR ERROR FUNCTION (FROM DID UPDATE) */
+  doError() {
+    /** Close all modal and open modal error respons */
+    this.setState({
+      openModalErrorGlobal: true,
+      openModalCheckout: false,
+      openModalConfirmNoOrder: false,
+      loadingPostForCheckoutNoOrder: false
+    });
   }
   /** === GO TO (MENU PRESS) */
   goTo(page) {
@@ -502,12 +577,58 @@ class MerchantHomeView extends Component {
       <ModalBottomMerchantCheckout
         open={this.state.openModalCheckout}
         close={() => this.setState({ openModalCheckout: false })}
-        onPress={() =>
-          this.props.merchantPostActivityProcess({
-            journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
-            activity: 'check_out'
-          })
+        onPress={
+          () => {
+            this.setState({ checkNoOrder: true });
+            this.props.merchantGetLogPerActivityProcess({
+              journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+              activity: 'order'
+            });
+          }
+          // this.props.merchantPostActivityProcess({
+          //   journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+          //   activity: 'check_out'
+          // })
         }
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** RENDER MODAL CONFIRM DELETE CART */
+  renderModalNoOrderConfirmation() {
+    return this.state.openModalConfirmNoOrder ? (
+      <ModalConfirmation
+        title={'Konfirmasi'}
+        open={this.state.openModalConfirmNoOrder}
+        content={'Apakah Anda yakin tidak ada order dan keluar toko ?'}
+        type={'okeNotRed'}
+        ok={() => {
+          this.setState({
+            openModalConfirmNoOrder: false,
+            loadingPostForCheckoutNoOrder: true
+          });
+          setTimeout(() => {
+            this.checkoutProcess();
+          }, 100);
+        }}
+        cancel={() => {
+          NavigationService.navigate('MerchantNoOrderReason');
+          this.setState({ openModalConfirmNoOrder: false });
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** MODAL ERROR RESPONS */
+  renderModalErrorRespons() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        open={this.state.openModalErrorGlobal}
+        onPress={() => {
+          this.setState({ openModalErrorGlobal: false });
+        }}
       />
     ) : (
       <View />
@@ -525,7 +646,8 @@ class MerchantHomeView extends Component {
         {!this.props.merchant.loadingGetMerchantLastOrder &&
         this.props.merchant.dataGetMerchantLastOrder !== null &&
         !this.props.merchant.loadingGetLogAllActivity &&
-        this.props.merchant.dataGetLogAllActivity !== null ? (
+        this.props.merchant.dataGetLogAllActivity !== null &&
+        !this.state.loadingPostForCheckoutNoOrder ? (
           <View style={{ height: '100%' }}>
             {this.renderBackground()}
             {this.renderContent()}
@@ -535,8 +657,11 @@ class MerchantHomeView extends Component {
             <LoadingPage />
           </View>
         )}
+        {/* modal */}
         {this.renderModalCheckout()}
+        {this.renderModalNoOrderConfirmation()}
         {this.renderToast()}
+        {this.renderModalErrorRespons()}
         <ModalBottomSuccessOrder />
       </SafeAreaView>
     );

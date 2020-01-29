@@ -14,6 +14,7 @@ const INITIAL_STATE = {
   loadingPostActivity: false,
   loadingGetLogAllActivity: false,
   loadingGetLogPerActivity: false,
+  loadingGetNoOrderReason: false,
   /** data */
   dataPostActivity: null,
   dataGetLogAllActivity: null,
@@ -65,6 +66,7 @@ const INITIAL_STATE = {
   pageGetMerchant: 0,
   dataGetPortfolio: null,
   merchantChanged: false,
+  dataGetNoOrderReason: null,
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
@@ -74,7 +76,8 @@ const INITIAL_STATE = {
   errorGetMerchantLastOrder: null,
   errorPostActivity: null,
   errorGetLogAllActivity: null,
-  errorGetLogPerActivity: null
+  errorGetLogPerActivity: null,
+  errorGetNoOrderReason: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -500,6 +503,33 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetLogPerActivity: false,
       errorGetLogPerActivity: action.payload
+    };
+  },
+  /**
+   * =============================
+   * GET LOG PER ACTIVITY MERCHANT
+   * =============================
+   */
+  [types.MERCHANT_NO_ORDER_REASON_GET_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetNoOrderReason: true,
+      dataGetNoOrderReason: null,
+      errorGetNoOrderReason: null
+    };
+  },
+  [types.MERCHANT_NO_ORDER_REASON_GET_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetNoOrderReason: false,
+      dataGetNoOrderReason: action.payload.data
+    };
+  },
+  [types.MERCHANT_NO_ORDER_REASON_GET_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetNoOrderReason: false,
+      errorGetNoOrderReason: action.payload
     };
   }
 });
