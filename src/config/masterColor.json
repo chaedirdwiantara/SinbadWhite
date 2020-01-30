@@ -44,5 +44,6 @@
   "fontBlack05": "#fafafa",
   "fontBlack10OP50": "rgba(232, 232, 232, 0.5)",
   "fontBlack80OP90": "rgba(82, 87, 92, 0.9)",
-  "fontBlack100OP40": "rgba(0, 0, 0, 0.4)"
+  "fontBlack100OP40": "rgba(0, 0, 0, 0.4)",
+  "fontBlack100OP60": "rgba(0, 0, 0, 0.6)"
 }

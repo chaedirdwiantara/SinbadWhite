@@ -16,6 +16,7 @@ import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import GlobalStyleHtml from '../../helpers/GlobalStyleHtml';
 import Fonts from '../../helpers/GlobalFont';
+import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
 
 const { height } = Dimensions.get('window');
 
@@ -134,7 +135,7 @@ class ModalBottomPaymentMethodDetail extends Component {
     );
   }
   /** MAIN */
-  render() {
+  renderContent() {
     return (
       <View style={styles.mainContainer}>
         <StatusBarRedOP50 />
@@ -146,6 +147,18 @@ class ModalBottomPaymentMethodDetail extends Component {
           <View>{this.renderButton()}</View>
         </View>
       </View>
+    );
+  }
+  /** MAIN */
+  render() {
+    return (
+      <ModalBottomType4
+        open={this.props.open}
+        onPress={this.props.close}
+        close={this.props.close}
+        title={this.props.title}
+        content={this.renderContent()}
+      />
     );
   }
 }

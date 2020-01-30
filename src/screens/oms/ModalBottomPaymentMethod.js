@@ -13,6 +13,7 @@ import masterColor from '../../config/masterColor.json';
 import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import Fonts from '../../helpers/GlobalFont';
+import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
 
 const { height } = Dimensions.get('window');
 
@@ -90,8 +91,8 @@ class ModalBottomPaymentMethod extends Component {
       }
     );
   }
-  /** MAIN */
-  render() {
+  /** RENDER CONTENT */
+  renderContent() {
     return (
       <View style={styles.mainContainer}>
         <StatusBarRedOP50 />
@@ -105,6 +106,18 @@ class ModalBottomPaymentMethod extends Component {
           </ScrollView>
         </View>
       </View>
+    );
+  }
+  /** MAIN */
+  render() {
+    return (
+      <ModalBottomType4
+        open={this.props.open}
+        onPress={this.props.close}
+        close={this.props.close}
+        title={'Metode Pembayaran'}
+        content={this.renderContent()}
+      />
     );
   }
 }

@@ -17,6 +17,7 @@ import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import SkeletonType8 from '../../components/skeleton/SkeletonType8';
 import Fonts from '../../helpers/GlobalFont';
+import ModalBottomType3 from '../../components/modal_bottom/ModalBottomType3';
 
 const { height } = Dimensions.get('window');
 
@@ -115,8 +116,8 @@ class ModalBottomPaymentType extends Component {
   renderSkeleton() {
     return <SkeletonType8 />;
   }
-  /** MAIN */
-  render() {
+  /** RENDER CONTENT */
+  renderContent() {
     return (
       <View style={styles.mainContainer}>
         <StatusBarRedOP50 />
@@ -129,6 +130,18 @@ class ModalBottomPaymentType extends Component {
           )}
         </View>
       </View>
+    );
+  }
+  /** MAIN */
+  render() {
+    return (
+      <ModalBottomType3
+        open={this.props.open}
+        onPress={this.props.close}
+        close={this.props.close}
+        title={'Tipe Pembayaran'}
+        content={this.renderContent()}
+      />
     );
   }
 }

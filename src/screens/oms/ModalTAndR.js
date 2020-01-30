@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   Dimensions,
   Modal,
-  StatusBar,
-  TouchableOpacity,
-  Image
+  TouchableOpacity
 } from 'react-native';
+import Text from 'react-native-text';
 import { Button } from 'react-native-elements';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HTMLView from 'react-native-htmlview';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import Fonts from '../../utils/Fonts';
+import masterColor from '../../config/masterColor.json';
+import GlobalStyleHtml from '../../helpers/GlobalStyleHtml';
+import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
+import Fonts from '../../helpers/GlobalFont';
 
 const { width, height } = Dimensions.get('window');
 
@@ -32,10 +34,10 @@ class ModalTAndR extends Component {
         disabled={!this.state.tAndRCheck}
         onPress={() => this.props.agreeTAndR(this.props.data)}
         title="Lanjutkan"
-        titleStyle={styles.titleButton}
+        titleStyle={Fonts.textButtonSmallRedActive}
         buttonStyle={styles.button}
         disabledStyle={styles.buttonDisabled}
-        disabledTitleStyle={styles.titleButton}
+        disabledTitleStyle={Fonts.textButtonSmallRedActive}
       />
     );
   }
@@ -48,10 +50,7 @@ class ModalTAndR extends Component {
         animationType="fade"
         onRequestClose={() => {}}
       >
-        <StatusBar
-          backgroundColor="rgba(94, 28, 30, 1)"
-          barStyle="light-content"
-        />
+        <StatusBarRedOP50 />
         <View style={styles.container}>
           <View style={styles.boxModal}>
             <View style={{ height: 60 }}>
@@ -60,12 +59,13 @@ class ModalTAndR extends Component {
                   onPress={this.props.close}
                   style={styles.closeBox}
                 >
-                  <Image
-                    source={require('../../assets/icons/close.png')}
-                    style={styles.icons}
+                  <MaterialIcon
+                    name="close"
+                    color={masterColor.fontBlack50}
+                    size={24}
                   />
                 </TouchableOpacity>
-                <Text style={styles.titleModalBottom}>
+                <Text style={Fonts.type30}>
                   {this.props.data.paymentType.name}
                 </Text>
               </View>
@@ -73,7 +73,7 @@ class ModalTAndR extends Component {
             <View style={styles.contentContainer}>
               <HTMLView
                 value={this.props.data.paymentType.terms}
-                stylesheet={stylesHTML}
+                stylesheet={GlobalStyleHtml}
               />
             </View>
             <View style={styles.tAndRContainer}>
@@ -83,20 +83,24 @@ class ModalTAndR extends Component {
                 }
               >
                 {this.state.tAndRCheck ? (
-                  <Icons color="#f1414c" name="checkbox-marked" size={24} />
+                  <Icons
+                    color={masterColor.mainColor}
+                    name="checkbox-marked"
+                    size={24}
+                  />
                 ) : (
                   <Icons
-                    color="rgba(1,1,1,0.54)"
+                    color={masterColor.fontBlack40}
                     name="checkbox-blank-outline"
                     size={24}
                   />
                 )}
               </TouchableOpacity>
               <View style={{ marginLeft: 5, marginRight: 5 }}>
-                <Text style={styles.textTAndR}>
+                <Text style={Fonts.type38}>
                   Dengan ini saya menyetujui{' '}
-                  <Text style={styles.textTAndRred}>Syarat & Ketentuan</Text>{' '}
-                  yang berlaku
+                  <Text style={Fonts.type28}>Syarat & Ketentuan</Text> yang
+                  berlaku
                 </Text>
               </View>
             </View>
@@ -108,20 +112,9 @@ class ModalTAndR extends Component {
   }
 }
 
-const stylesHTML = StyleSheet.create({
-  li: {
-    fontFamily: Fonts.MontserratMedium,
-    fontSize: RFPercentage(1.5),
-    color: '#333333'
-  },
-  ul: {
-    color: '#f0444c'
-  }
-});
-
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    backgroundColor: masterColor.fontBlack100OP40,
     position: 'relative',
     height: '100%',
     alignItems: 'center',
@@ -145,7 +138,7 @@ const styles = StyleSheet.create({
   boxModal: {
     backgroundColor: '#ffffff',
     height: 0.46 * height,
-    borderRadius: 20,
+    borderRadius: 12,
     width: 0.86 * width
   },
   closeContainer: {
@@ -161,46 +154,16 @@ const styles = StyleSheet.create({
     width: '15%',
     height: '100%'
   },
-  icons: {
-    width: 24,
-    height: 24
-  },
-  titleModalBottom: {
-    marginTop: 0.03 * height,
-    marginBottom: 0.03 * height,
-    fontFamily: Fonts.MontserratBold,
-    fontSize: RFPercentage(1.8),
-    color: '#333333'
-  },
-  textTAndR: {
-    fontFamily: Fonts.MontserratMedium,
-    fontSize: RFPercentage(1.4),
-    color: '#575757',
-    flexWrap: 'wrap',
-    lineHeight: 14
-  },
-  textTAndRred: {
-    fontFamily: Fonts.MontserratSemiBold,
-    fontSize: RFPercentage(1.4),
-    flexWrap: 'wrap',
-    color: '#f0444c',
-    lineHeight: 14
-  },
   /** for button */
-  titleButton: {
-    fontFamily: Fonts.MontserratExtraBold,
-    fontSize: 12,
-    color: '#ffffff'
-  },
   button: {
-    backgroundColor: '#f0444c',
-    borderRadius: 10,
+    backgroundColor: masterColor.mainColor,
+    borderRadius: 8,
     width: 258,
     height: 41
   },
   buttonDisabled: {
-    backgroundColor: '#bdbdbd',
-    borderRadius: 10,
+    backgroundColor: masterColor.fontBlack40,
+    borderRadius: 8,
     width: 258,
     height: 41
   }
