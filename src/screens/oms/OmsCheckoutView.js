@@ -968,21 +968,6 @@ class OmsCheckoutView extends Component {
     );
   }
 
-  renderModalParcelDetail() {
-    return (
-      <View>
-        {this.state.modalParcelDetail ? (
-          <ModalBottomParcelDetail
-            open={this.state.modalParcelDetail}
-            data={this.state.selectedParcelDetail}
-            close={() => this.setState({ modalParcelDetail: false })}
-          />
-        ) : (
-          <View />
-        )}
-      </View>
-    );
-  }
   renderWarningNotSelectPayment() {
     return (
       <View>
@@ -1074,6 +1059,27 @@ class OmsCheckoutView extends Component {
             content={
               'Credit Limit Anda telah sampai ke batas maksimum, Silahkan pilih metode pembayaran lain'
             }
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+  /**
+   * ====================================
+   * RENDER ORDER DETAIL
+   * ====================================
+   */
+  /** RENDER ORDER PARCEL DETAIL */
+  renderModalParcelDetail() {
+    return (
+      <View>
+        {this.state.modalParcelDetail ? (
+          <ModalBottomParcelDetail
+            open={this.state.modalParcelDetail}
+            data={this.state.selectedParcelDetail}
+            close={() => this.setState({ modalParcelDetail: false })}
           />
         ) : (
           <View />

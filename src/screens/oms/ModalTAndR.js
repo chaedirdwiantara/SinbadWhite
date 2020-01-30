@@ -11,7 +11,6 @@ import { Button } from 'react-native-elements';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HTMLView from 'react-native-htmlview';
-import { RFPercentage } from 'react-native-responsive-fontsize';
 import masterColor from '../../config/masterColor.json';
 import GlobalStyleHtml from '../../helpers/GlobalStyleHtml';
 import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';

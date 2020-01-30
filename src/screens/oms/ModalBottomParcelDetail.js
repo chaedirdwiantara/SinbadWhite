@@ -4,20 +4,16 @@ import {
   StyleSheet,
   Text,
   Dimensions,
-  StatusBar,
-  Image,
   TouchableOpacity,
   ScrollView
 } from 'react-native';
-import { connect } from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-import Modal from 'react-native-modal';
-import { Button } from 'react-native-elements';
-import { RFPercentage } from 'react-native-responsive-fontsize';
-import Fonts from '../../utils/Fonts';
+import Fonts from '../../helpers/GlobalFont';
+import GlobalStyle from '../../helpers/GlobalStyle';
 import { MoneyFormat } from '../../helpers/NumberFormater';
 import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
 import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
+import masterColor from '../../config/masterColor.json';
 
 const { height } = Dimensions.get('window');
 
@@ -37,14 +33,15 @@ class ModalBottomParcelDetail extends Component {
         <View
           style={{
             flexDirection: 'row',
+            marginBottom: 5,
             justifyContent: 'space-between'
           }}
         >
           <View>
-            <Text style={styles.productText}>Total Produk</Text>
+            <Text style={Fonts.type17}>Total Produk</Text>
           </View>
           <View>
-            <Text style={styles.productText}>
+            <Text style={Fonts.type17}>
               {MoneyFormat(this.state.data.parcelDetails.totalGrossPrice)}
             </Text>
           </View>
@@ -56,10 +53,10 @@ class ModalBottomParcelDetail extends Component {
           }}
         >
           <View>
-            <Text style={styles.productText}>PPN 10%</Text>
+            <Text style={Fonts.type17}>PPN 10%</Text>
           </View>
           <View>
-            <Text style={styles.productText}>
+            <Text style={Fonts.type17}>
               {MoneyFormat(this.state.data.parcelDetails.tax)}
             </Text>
           </View>
@@ -81,10 +78,10 @@ class ModalBottomParcelDetail extends Component {
             <Icons name="keyboard-arrow-down" size={24} />
           )}
 
-          <Text style={[styles.title, { marginLeft: 5 }]}>Total</Text>
+          <Text style={[Fonts.type7, { marginLeft: 5 }]}>Total</Text>
         </View>
         <View>
-          <Text style={styles.title}>
+          <Text style={Fonts.type7}>
             {MoneyFormat(this.state.data.parcelDetails.totalNettPrice)}
           </Text>
         </View>
@@ -99,19 +96,18 @@ class ModalBottomParcelDetail extends Component {
           key={index}
           style={{
             flexDirection: 'row',
+            marginBottom: 5,
             justifyContent: 'space-between',
-            paddingHorizontal: 10
+            paddingHorizontal: 16
           }}
         >
           <View style={{ flex: 1 }}>
-            <Text style={styles.productText}>
+            <Text style={Fonts.type17}>
               {item.catalogue.name} ({item.qty}pcs)
             </Text>
           </View>
           <View style={{ width: '40%', alignItems: 'flex-end' }}>
-            <Text style={styles.productText}>
-              {MoneyFormat(item.grossPrice)}
-            </Text>
+            <Text style={Fonts.type17}>{MoneyFormat(item.grossPrice)}</Text>
           </View>
         </View>
       );
@@ -127,25 +123,27 @@ class ModalBottomParcelDetail extends Component {
   renderProduct() {
     return (
       <View>
-        <View style={{ paddingHorizontal: 10 }}>
-          <Text style={styles.title}>Produk</Text>
+        <View style={{ paddingHorizontal: 16 }}>
+          <Text style={Fonts.type7}>Produk</Text>
         </View>
-        <View style={styles.lines} />
+        <View
+          style={[GlobalStyle.lines, { marginLeft: 16, marginVertical: 10 }]}
+        />
         <View>{this.renderProductList()}</View>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            paddingHorizontal: 10,
+            paddingHorizontal: 16,
             marginTop: 10,
             marginBottom: 20
           }}
         >
           <View>
-            <Text style={styles.subTotalText}>Total Order</Text>
+            <Text style={Fonts.type75}>Total Order</Text>
           </View>
           <View>
-            <Text style={styles.subTotalText}>
+            <Text style={Fonts.type75}>
               {MoneyFormat(this.state.data.parcelDetails.totalGrossPrice)}
             </Text>
           </View>
@@ -153,7 +151,7 @@ class ModalBottomParcelDetail extends Component {
       </View>
     );
   }
-
+  /** RENDER DATA */
   renderData() {
     return (
       <View>
@@ -163,7 +161,7 @@ class ModalBottomParcelDetail extends Component {
       </View>
     );
   }
-
+  /** RENDER CONTENT */
   renderContent() {
     return (
       <View>
@@ -176,7 +174,7 @@ class ModalBottomParcelDetail extends Component {
       </View>
     );
   }
-
+  /** MAIN */
   render() {
     return (
       <ModalBottomType4
@@ -193,7 +191,7 @@ class ModalBottomParcelDetail extends Component {
 const styles = StyleSheet.create({
   container: {
     height: 0.9 * height,
-    backgroundColor: 'white',
+    backgroundColor: masterColor.backgroundWhite,
     flexDirection: 'column',
     paddingBottom: 0.01 * height
   },
@@ -206,86 +204,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: 'rgba(103, 186, 237, 0.1)'
+    backgroundColor: masterColor.fontBlue100OP10
   },
   boxOpenTotal: {
     paddingLeft: 40,
-    paddingRight: 10,
+    paddingRight: 16,
     paddingTop: 5,
-    backgroundColor: 'rgba(103, 186, 237, 0.1)'
+    backgroundColor: masterColor.fontBlue100OP10
   },
   contentContainer: {
     flex: 1
-  },
-  lines: {
-    marginLeft: 10,
-    borderTopWidth: 1,
-    marginVertical: 10,
-    borderColor: '#f2f2f2'
-  },
-  /** text */
-  productText: {
-    color: '#333333',
-    fontSize: RFPercentage(1.5),
-    fontFamily: Fonts.MontserratMedium,
-    lineHeight: 14,
-    marginBottom: 5
-  },
-  subTotalText: {
-    color: '#4f4f4f',
-    fontSize: RFPercentage(1.5),
-    fontFamily: Fonts.MontserratBold
-  },
-  title: {
-    color: '#333333',
-    fontSize: RFPercentage(2),
-    fontFamily: Fonts.MontserratBold
-  },
-
-  /** for button */
-  buttonContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 10,
-    backgroundColor: '#ffffff'
-  },
-  titleButton: {
-    fontFamily: Fonts.MontserratBold,
-    fontSize: 13,
-    color: '#ffffff'
-  },
-  button: {
-    backgroundColor: '#f0444c',
-    borderRadius: 10,
-    width: 282,
-    height: 41
-  },
-  /**close */
-  titleModalBottom: {
-    marginTop: 0.03 * height,
-    marginBottom: 0.03 * height,
-    fontFamily: Fonts.MontserratBold,
-    fontSize: RFPercentage(2),
-    color: '#333333'
-  },
-  closeContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  closeBox: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    left: 0,
-    width: '15%',
-    height: '100%'
-  },
-  icons: {
-    width: 24,
-    height: 24
   }
 });
 

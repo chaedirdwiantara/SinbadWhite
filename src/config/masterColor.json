@@ -35,6 +35,7 @@
   "fontBlue50": "#388bf2",
   "fontBlue40": "#5ba0f5",
   "fontBlue10": "#dbebff",
+  "fontBlue100OP10": "rgba(103, 186, 237, 0.1)",
   "fontBlack100": "#000000",
   "fontBlack80": "#52575c",
   "fontBlack60": "#a0a4a8",
