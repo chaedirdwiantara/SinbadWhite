@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import masterColor from '../../config/masterColor';
 import GlobalStyles from '../../helpers/GlobalStyle';
+
+const { height } = Dimensions.get('window');
 
 /**
  * =============================
@@ -11,11 +13,11 @@ import GlobalStyles from '../../helpers/GlobalStyle';
  * this skeleton for "JOURNEY PLAN"
  */
 
-class SkeletonType3 extends Component {
+class SkeletonType8 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [1, 2, 3, 4, 5, 6, 7]
+      data: [1, 2, 3]
     };
   }
   /** === RENDER ITEM SKELETON === */
@@ -30,7 +32,7 @@ class SkeletonType3 extends Component {
 
         <View
           style={{
-            paddingHorizontal: 16,
+            paddingHorizontal: 10,
             flex: 1
           }}
         >
@@ -40,22 +42,27 @@ class SkeletonType3 extends Component {
                 style={{
                   width: '50%',
                   height: 12,
-                  marginBottom: 5,
                   borderRadius: 10
                 }}
               />
-              <View style={{ width: '80%', height: 12, borderRadius: 10 }} />
             </View>
-            <View style={{ flex: 1, marginTop: 10 }}>
+            <View style={{ flex: 1 }}>
               <View
                 style={{
-                  width: '50%',
+                  width: '90%',
                   height: 10,
                   borderRadius: 10,
-                  marginBottom: 5
+                  marginTop: 8
                 }}
               />
-              <View style={{ width: '80%', height: 10, borderRadius: 10 }} />
+              <View
+                style={{
+                  width: '90%',
+                  height: 10,
+                  borderRadius: 10,
+                  marginTop: 8
+                }}
+              />
             </View>
           </SkeletonPlaceholder>
         </View>
@@ -64,7 +71,11 @@ class SkeletonType3 extends Component {
   }
   /** === RENDER SEPARATOR === */
   renderSeparator() {
-    return <View style={[GlobalStyles.lines, { marginLeft: 9 }]} />;
+    return (
+      <View
+        style={[GlobalStyles.lines, { marginLeft: 16, marginVertical: 10 }]}
+      />
+    );
   }
   /** === RENDER SKELETON === */
   renderSkeleton() {
@@ -94,17 +105,16 @@ const styles = StyleSheet.create({
     backgroundColor: masterColor.backgroundWhite
   },
   flatListContainer: {
-    paddingTop: 10,
     paddingBottom: 16
   },
   boxItem: {
     flexDirection: 'row',
-    paddingVertical: 13,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
+    paddingVertical: 10
   },
   boxIcon: {
-    height: 65,
     width: 24,
+    marginLeft: 5,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -115,4 +125,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SkeletonType3;
+export default SkeletonType8;

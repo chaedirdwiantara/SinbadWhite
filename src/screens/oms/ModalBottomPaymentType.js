@@ -2,23 +2,21 @@ import React, { Component } from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   Dimensions,
-  StatusBar,
   Image,
   TouchableOpacity,
   ScrollView
 } from 'react-native';
+import Text from 'react-native-text';
 import { connect } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { bindActionCreators } from 'redux';
-import Modal from 'react-native-modal';
-import { RFPercentage } from 'react-native-responsive-fontsize';
-import Fonts from '../../utils/Fonts';
 import * as ActionCreators from '../../state/actions';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import masterColor from '../../config/masterColor.json';
+import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
+import GlobalStyles from '../../helpers/GlobalStyle';
+import SkeletonType8 from '../../components/skeleton/SkeletonType8';
+import Fonts from '../../helpers/GlobalFont';
 
 const { height } = Dimensions.get('window');
 
@@ -40,6 +38,7 @@ class ModalBottomPaymentType extends Component {
       <View
         style={{
           flexDirection: 'row',
+          alignItems: 'center',
           paddingHorizontal: 20,
           height: 0.09 * height
         }}
@@ -57,12 +56,12 @@ class ModalBottomPaymentType extends Component {
           />
         </View>
         <View style={{ flex: 1 }}>
-          <View>
+          <View style={{ marginBottom: 5 }}>
             <Text
               style={
                 !item.availableStatus
-                  ? [styles.title, { opacity: 0.5 }]
-                  : styles.title
+                  ? [Fonts.type16, { opacity: 0.5 }]
+                  : Fonts.type16
               }
             >
               {item.paymentType.name}
@@ -72,8 +71,8 @@ class ModalBottomPaymentType extends Component {
             <Text
               style={
                 !item.availableStatus
-                  ? [styles.description, { opacity: 0.5 }]
-                  : styles.description
+                  ? [Fonts.type17, { opacity: 0.5 }]
+                  : Fonts.type17
               }
             >
               {item.paymentType.description}
@@ -105,173 +104,42 @@ class ModalBottomPaymentType extends Component {
             </TouchableOpacity>
           )}
 
-          <View style={styles.lines} />
+          <View
+            style={[GlobalStyles.lines, { marginLeft: 16, marginVertical: 10 }]}
+          />
         </View>
       );
     });
   }
 
   renderSkeleton() {
-    const paymentTypeSkeleton = [];
-    for (let i = 0; i < 3; i++) {
-      paymentTypeSkeleton.push(
-        <View key={i}>
-          <View
-            style={{
-              flexDirection: 'row',
-              paddingHorizontal: 20,
-              height: 0.09 * height
-            }}
-          >
-            <View style={{ width: '10%', justifyContent: 'center' }}>
-              <SkeletonPlaceholder>
-                <View style={{ justifyContent: 'center' }}>
-                  <View style={{ width: 24, height: 24, borderRadius: 50 }} />
-                </View>
-              </SkeletonPlaceholder>
-            </View>
-            <View style={{ flex: 1 }}>
-              <SkeletonPlaceholder>
-                <View style={{ justifyContent: 'center', height: '100%' }}>
-                  <View
-                    style={{
-                      height: RFPercentage(1.7),
-                      width: '50%',
-                      borderRadius: 10
-                    }}
-                  />
-                  <View
-                    style={{
-                      height: RFPercentage(1.7),
-                      width: '90%',
-                      borderRadius: 10,
-                      marginTop: 8
-                    }}
-                  />
-                  <View
-                    style={{
-                      height: RFPercentage(1.7),
-                      width: '80%',
-                      borderRadius: 10,
-                      marginTop: 5
-                    }}
-                  />
-                </View>
-              </SkeletonPlaceholder>
-            </View>
-          </View>
-          <View style={styles.lines} />
-        </View>
-      );
-    }
-    return <View>{paymentTypeSkeleton}</View>;
+    return <SkeletonType8 />;
   }
-
+  /** MAIN */
   render() {
     return (
-      <Modal
-        isVisible={this.props.open}
-        useNativeDriver={true}
-        hasBackdrop={true}
-        coverScreen={true}
-        backdropColor="black"
-        deviceHeight={height}
-        backdropOpacity={0.4}
-        style={styles.modalPosition}
-      >
-        <StatusBar
-          backgroundColor="rgba(144, 39, 44, 1)"
-          barStyle="light-content"
-        />
+      <View style={styles.mainContainer}>
+        <StatusBarRedOP50 />
         <View style={styles.container}>
-          <View style={{ height: 60 }}>
-            <View style={styles.closeContainer}>
-              <TouchableOpacity
-                onPress={this.props.close}
-                style={styles.closeBox}
-              >
-                <Ionicons
-                  name="ios-arrow-back"
-                  size={24}
-                  color={masterColor.fontBlack50}
-                />
-              </TouchableOpacity>
-              <Text style={styles.titleModalBottom}>Tipe Pembayaran</Text>
-            </View>
-          </View>
-          <View style={styles.contentContainer}>
-            {!this.props.oms.loadingOmsGetPayment &&
-            this.props.oms.dataOmsGetPayment !== null ? (
-              <ScrollView>{this.renderListPaymentType()}</ScrollView>
-            ) : (
-              this.renderSkeleton()
-            )}
-          </View>
+          {!this.props.oms.loadingOmsGetPayment &&
+          this.props.oms.dataOmsGetPayment !== null ? (
+            <ScrollView>{this.renderListPaymentType()}</ScrollView>
+          ) : (
+            this.renderSkeleton()
+          )}
         </View>
-      </Modal>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    height: 0.6 * height,
-    backgroundColor: 'white',
-    flexDirection: 'column',
-    position: 'absolute',
-    width: '100%',
-    bottom: 0,
-    zIndex: 1000,
-    paddingBottom: 0.01 * height
-  },
-  modalPosition: {
-    marginBottom: 0,
-    marginLeft: 0,
-    marginRight: 0
-  },
-  contentContainer: {
-    flex: 1
-  },
-  lines: {
-    marginLeft: 10,
-    borderTopWidth: 1,
-    marginVertical: 10,
-    borderColor: '#f2f2f2'
-  },
-  /**close */
-  titleModalBottom: {
-    marginTop: 0.03 * height,
-    marginBottom: 0.03 * height,
-    fontFamily: Fonts.MontserratBold,
-    fontSize: RFPercentage(1.8),
-    color: '#333333'
-  },
-  title: {
-    fontFamily: Fonts.MontserratSemiBold,
-    fontSize: RFPercentage(1.7),
-    color: '#333333',
-    marginBottom: 5
-  },
-  description: {
-    fontFamily: Fonts.MontserratMedium,
-    fontSize: RFPercentage(1.6),
-    color: '#333333',
-    lineHeight: 16
-  },
-  closeContainer: {
+  mainContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    backgroundColor: masterColor.backgroundWhite
   },
-  closeBox: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    left: 0,
-    width: '15%',
-    height: '100%'
+  container: {
+    height: 0.4 * height
   },
   icons: {
     width: 24,
@@ -287,7 +155,6 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
-// eslint-disable-next-line prettier/prettier
 export default connect(
   mapStateToProps,
   mapDispatchToProps

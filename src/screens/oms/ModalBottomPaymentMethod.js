@@ -76,9 +76,9 @@ class ModalBottomPaymentMethod extends Component {
           <View key={index}>
             <ScrollView>
               <View
-                style={{ paddingLeft: 10, marginBottom: 10, marginTop: 20 }}
+                style={{ paddingLeft: 16, marginBottom: 10, marginTop: 20 }}
               >
-                <Text style={Fonts.type42}>{item.name}</Text>
+                <Text style={Fonts.type16}>{item.name}</Text>
               </View>
               <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
               <View>{this.renderListPaymentMethodContent(item)}</View>

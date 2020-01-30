@@ -954,24 +954,6 @@ class OmsCheckoutView extends Component {
       <View />
     );
   }
-  /** PAYMENT TYPE */
-  renderModalListPaymentType() {
-    return (
-      <View>
-        {this.state.modalPaymentTypeList ? (
-          <ModalBottomPaymentType
-            open={this.state.modalPaymentTypeList}
-            parcelId={this.state.selectedParcelIdForPayment}
-            close={() => this.setState({ modalPaymentTypeList: false })}
-            onRef={ref => (this.selectPaymentType = ref)}
-            selectPaymentType={this.checkTerm.bind(this)}
-          />
-        ) : (
-          <View />
-        )}
-      </View>
-    );
-  }
 
   renderModalTAndR() {
     return (
@@ -988,54 +970,6 @@ class OmsCheckoutView extends Component {
           <View />
         )}
       </View>
-    );
-  }
-  /** === RENDER PAYMENT MENTHOD LIST (30012020) === */
-  renderModalListPaymentMethod() {
-    return this.state.modalPaymentTypeMethod ? (
-      <ModalBottomType4
-        open={this.state.modalPaymentTypeMethod}
-        title={'Metode Pembayaran'}
-        close={() =>
-          this.setState({
-            modalPaymentTypeMethod: false,
-            modalPaymentTypeList: true
-          })
-        }
-        content={
-          <ModalBottomPaymentMethod
-            paymentType={this.state.selectedPaymentType}
-            onRef={ref => (this.selectPaymentMethod = ref)}
-            selectPaymentMethod={this.openPaymentMethodDetail.bind(this)}
-          />
-        }
-      />
-    ) : (
-      <View />
-    );
-  }
-  /** === RENDER PAYMENT MENTHOD DETAIL (30012020) === */
-  renderModalPaymentMethodDetail() {
-    return this.state.modalPaymentMethodDetail ? (
-      <ModalBottomType4
-        open={this.state.modalPaymentMethodDetail}
-        title={this.state.paymentMethodDetail.paymentMethod.paymentGroup.name}
-        close={() =>
-          this.setState({
-            modalPaymentMethodDetail: false,
-            modalPaymentTypeMethod: true
-          })
-        }
-        content={
-          <ModalBottomPaymentMethodDetail
-            paymentMethodDetail={this.state.paymentMethodDetail}
-            onRef={ref => (this.selectedPayment = ref)}
-            selectedPayment={this.selectedPayment.bind(this)}
-          />
-        }
-      />
-    ) : (
-      <View />
     );
   }
 
@@ -1168,7 +1102,87 @@ class OmsCheckoutView extends Component {
       </View>
     );
   }
-
+  /**
+   * =====================================
+   * RENDER ALL MODAL PAYMENT
+   * =====================================
+   */
+  /** RENDER PAYMENT TYPE LIST (30012020) */
+  renderModalListPaymentType() {
+    return this.state.modalPaymentTypeList ? (
+      <ModalBottomType3
+        open={this.state.modalPaymentTypeList}
+        title={'Tipe Pembayaran'}
+        close={() =>
+          this.setState({
+            modalPaymentTypeList: false
+          })
+        }
+        content={
+          <ModalBottomPaymentType
+            parcelId={this.state.selectedParcelIdForPayment}
+            onRef={ref => (this.selectPaymentType = ref)}
+            selectPaymentType={this.checkTerm.bind(this)}
+          />
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** === RENDER PAYMENT MENTHOD LIST (30012020) === */
+  renderModalListPaymentMethod() {
+    return this.state.modalPaymentTypeMethod ? (
+      <ModalBottomType4
+        open={this.state.modalPaymentTypeMethod}
+        title={'Metode Pembayaran'}
+        close={() =>
+          this.setState({
+            modalPaymentTypeMethod: false,
+            modalPaymentTypeList: true
+          })
+        }
+        content={
+          <ModalBottomPaymentMethod
+            paymentType={this.state.selectedPaymentType}
+            onRef={ref => (this.selectPaymentMethod = ref)}
+            selectPaymentMethod={this.openPaymentMethodDetail.bind(this)}
+          />
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** === RENDER PAYMENT MENTHOD DETAIL (30012020) === */
+  renderModalPaymentMethodDetail() {
+    return this.state.modalPaymentMethodDetail ? (
+      <ModalBottomType4
+        open={this.state.modalPaymentMethodDetail}
+        title={this.state.paymentMethodDetail.paymentMethod.paymentGroup.name}
+        close={() =>
+          this.setState({
+            modalPaymentMethodDetail: false,
+            modalPaymentTypeMethod: true
+          })
+        }
+        content={
+          <ModalBottomPaymentMethodDetail
+            paymentMethodDetail={this.state.paymentMethodDetail}
+            onRef={ref => (this.selectedPayment = ref)}
+            selectedPayment={this.selectedPayment.bind(this)}
+          />
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
+  /**
+   * =======================
+   * RENDER MAIN
+   * =======================
+   */
   render() {
     return (
       <View style={styles.mainContainer}>

@@ -69,7 +69,7 @@ class ModalBottomPaymentMethodDetail extends Component {
           ]}
         >
           <View>
-            <Text style={Fonts.type42}>
+            <Text style={Fonts.type16}>
               {this.props.paymentMethodDetail.paymentMethod.paymentGroup
                 .name === 'Tunai'
                 ? 'Syarat dan Ketentuan'
@@ -106,7 +106,7 @@ class ModalBottomPaymentMethodDetail extends Component {
     return (
       <View>
         <View style={styles.boxTitle}>
-          <Text style={Fonts.type42}>Panduan Pembayaran</Text>
+          <Text style={Fonts.type16}>Panduan Pembayaran</Text>
         </View>
         <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
         <TouchableOpacity
