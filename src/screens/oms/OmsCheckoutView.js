@@ -31,6 +31,9 @@ import ModalWarning from './ModalWarning';
 import ModalBottomStockConfirmationConfirmOrder from './ModalBottomStockConfirmationConfirmOrder';
 import ModalBottomErrorMinimumOrder from './ModalBottomErrorMinimumOrder';
 import SelectedMerchantName from '../../components/SelectedMerchantName';
+/** new code */
+import ModalBottomType3 from '../../components/modal_bottom/ModalBottomType3';
+import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
 
 const { width, height } = Dimensions.get('window');
 
@@ -1012,27 +1015,51 @@ class OmsCheckoutView extends Component {
   }
 
   renderModalPaymentMethodDetail() {
-    return (
-      <View>
-        {this.state.modalPaymentMethodDetail ? (
+    return this.state.modalPaymentMethodDetail ? (
+      <ModalBottomType4
+        open={this.state.modalPaymentMethodDetail}
+        title={this.state.paymentMethodDetail.paymentMethod.paymentGroup.name}
+        close={() =>
+          this.setState({
+            modalPaymentMethodDetail: false,
+            modalPaymentTypeMethod: true
+          })
+        }
+        content={
           <ModalBottomPaymentMethodDetail
-            open={this.state.modalPaymentMethodDetail}
             paymentMethodDetail={this.state.paymentMethodDetail}
-            close={() =>
-              this.setState({
-                modalPaymentMethodDetail: false,
-                modalPaymentTypeMethod: true
-              })
-            }
             onRef={ref => (this.selectedPayment = ref)}
             selectedPayment={this.selectedPayment.bind(this)}
           />
-        ) : (
-          <View />
-        )}
-      </View>
+        }
+      />
+    ) : (
+      <View />
     );
   }
+
+  // renderModalPaymentMethodDetail() {
+  //   return (
+  //     <View>
+  //       {this.state.modalPaymentMethodDetail ? (
+  //         <ModalBottomPaymentMethodDetail
+  //           open={this.state.modalPaymentMethodDetail}
+  //           paymentMethodDetail={this.state.paymentMethodDetail}
+  //           close={() =>
+  //             this.setState({
+  //               modalPaymentMethodDetail: false,
+  //               modalPaymentTypeMethod: true
+  //             })
+  //           }
+  //           onRef={ref => (this.selectedPayment = ref)}
+  //           selectedPayment={this.selectedPayment.bind(this)}
+  //         />
+  //       ) : (
+  //         <View />
+  //       )}
+  //     </View>
+  //   );
+  // }
 
   renderModalListProduct() {
     return (
