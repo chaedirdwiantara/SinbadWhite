@@ -1,5 +1,5 @@
 const ApiHost = {
-  url: 'https://kong.sinbad.web.id/',
+  url: 'https://kong-dev.sinbad.web.id/',
   urlDev: 'https://kong-dev.sinbad.web.id/',
   urlStg: 'https://kong-stg.sinbad.web.id/',
   urlProd: 'https://kong.sinbad.web.id/',

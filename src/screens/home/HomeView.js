@@ -127,8 +127,8 @@ class HomeView extends Component {
             <Text style={Fonts.type5}>
               Hello{' '}
               {navigation.state.params
-                ? navigation.state.params.fullName.length >= 15
-                  ? navigation.state.params.fullName.substring(0, 15) + '...'
+                ? navigation.state.params.fullName.length >= 20
+                  ? navigation.state.params.fullName.substring(0, 20) + '...'
                   : navigation.state.params.fullName
                 : ''}{' '}
               !
