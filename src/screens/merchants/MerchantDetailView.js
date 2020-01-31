@@ -190,7 +190,9 @@ class MerchantDetailView extends Component {
           <Text style={Fonts.type7}>
             {this.props.merchant.dataGetMerchantDetail.name}
           </Text>
-          <Text style={[Fonts.type8, { marginTop: 5 }]}>
+          <Text
+            style={[Fonts.type8, { marginTop: 5, textTransform: 'capitalize' }]}
+          >
             {this.combineAddress(this.props.merchant.dataGetMerchantDetail)}
           </Text>
         </View>

@@ -126,7 +126,11 @@ class HomeView extends Component {
           <View style={{ marginLeft: 12 }}>
             <Text style={Fonts.type5}>
               Hello{' '}
-              {navigation.state.params ? navigation.state.params.fullName : ''}{' '}
+              {navigation.state.params
+                ? navigation.state.params.fullName.length >= 20
+                  ? navigation.state.params.fullName.substring(0, 20) + '...'
+                  : navigation.state.params.fullName
+                : ''}{' '}
               !
             </Text>
           </View>

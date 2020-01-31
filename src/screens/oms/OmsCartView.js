@@ -1061,8 +1061,8 @@ class OmsCartView extends Component {
         {this.renderModalConfirmationCheckout()}
         {this.renderModalDeleteProductConfirmation()}
         {this.renderModalStockConfirmation()}
-        {this.renderModalErrorRespons()}
         {/* errr */}
+        {this.renderModalErrorRespons()}
       </View>
     );
   }

@@ -2,29 +2,32 @@ import React, { Component } from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   Dimensions,
-  StatusBar,
   Image,
   TouchableOpacity,
   ScrollView
 } from 'react-native';
+import Text from 'react-native-text';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Modal from 'react-native-modal';
-import { RFPercentage } from 'react-native-responsive-fontsize';
-import Fonts from '../../utils/Fonts';
 import masterColor from '../../config/masterColor.json';
+import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
+import GlobalStyle from '../../helpers/GlobalStyle';
+import Fonts from '../../helpers/GlobalFont';
+import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
 
 const { height } = Dimensions.get('window');
 
 class ModalBottomPaymentMethod extends Component {
   constructor(props) {
     super(props);
-
     this.state = {};
   }
-
+  /**
+   * ====================
+   * RENDER
+   * ====================
+   */
+  /** RENDER PAYMENT LIST CONTENT */
   renderListPaymentMethodContent(item) {
     return item.paymentMethods.map((itemPaymnetMethod, index) => {
       return itemPaymnetMethod.paymentMethod.status === 'active' ? (
@@ -43,7 +46,7 @@ class ModalBottomPaymentMethod extends Component {
                   source={{
                     uri: itemPaymnetMethod.paymentMethod.iconUrl
                   }}
-                  style={styles.Imageicons}
+                  style={{ width: 50, height: 20 }}
                 />
               </View>
             ) : (
@@ -51,7 +54,7 @@ class ModalBottomPaymentMethod extends Component {
             )}
 
             <View style={{ flex: 1, justifyContent: 'center' }}>
-              <Text style={styles.subTitle}>
+              <Text style={Fonts.type8}>
                 {itemPaymnetMethod.paymentMethod.name}
               </Text>
             </View>
@@ -59,14 +62,14 @@ class ModalBottomPaymentMethod extends Component {
               <Icons name="navigate-next" size={24} />
             </View>
           </TouchableOpacity>
-          <View style={styles.lines} />
+          <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
         </View>
       ) : (
         <View key={index} />
       );
     });
   }
-
+  /** RENDER PAYMENT LIST */
   renderListPaymentMethod() {
     return this.props.paymentType.paymentType.paymentGroups.map(
       (item, index) => {
@@ -74,11 +77,11 @@ class ModalBottomPaymentMethod extends Component {
           <View key={index}>
             <ScrollView>
               <View
-                style={{ paddingLeft: 10, marginBottom: 10, marginTop: 20 }}
+                style={{ paddingLeft: 16, marginBottom: 10, marginTop: 20 }}
               >
-                <Text style={styles.title}>{item.name}</Text>
+                <Text style={Fonts.type16}>{item.name}</Text>
               </View>
-              <View style={styles.lines} />
+              <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
               <View>{this.renderListPaymentMethodContent(item)}</View>
             </ScrollView>
           </View>
@@ -88,114 +91,44 @@ class ModalBottomPaymentMethod extends Component {
       }
     );
   }
-
-  render() {
+  /** RENDER CONTENT */
+  renderContent() {
     return (
-      <Modal
-        isVisible={this.props.open}
-        useNativeDriver={true}
-        hasBackdrop={true}
-        coverScreen={true}
-        backdropColor="black"
-        deviceHeight={height}
-        backdropOpacity={0.4}
-        style={styles.modalPosition}
-      >
-        <StatusBar
-          backgroundColor="rgba(144, 39, 44, 1)"
-          barStyle="light-content"
-        />
+      <View style={styles.mainContainer}>
+        <StatusBarRedOP50 />
         <View style={styles.container}>
-          <View style={{ height: 60 }}>
-            <View style={styles.closeContainer}>
-              <TouchableOpacity
-                onPress={this.props.close}
-                style={styles.closeBox}
-              >
-                <Ionicons
-                  name="ios-arrow-back"
-                  size={24}
-                  color={masterColor.fontBlack50}
-                />
-              </TouchableOpacity>
-              <Text style={styles.titleModalBottom}>Metode Pembayaran</Text>
-            </View>
-          </View>
-          <View style={styles.contentContainer}>
+          <ScrollView>
             {this.props.paymentType !== null ? (
               this.renderListPaymentMethod()
             ) : (
               <View />
             )}
-          </View>
+          </ScrollView>
         </View>
-      </Modal>
+      </View>
+    );
+  }
+  /** MAIN */
+  render() {
+    return (
+      <ModalBottomType4
+        open={this.props.open}
+        onPress={this.props.close}
+        close={this.props.close}
+        title={'Metode Pembayaran'}
+        content={this.renderContent()}
+      />
     );
   }
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: masterColor.backgroundWhite
+  },
   container: {
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    height: 0.7 * height,
-    backgroundColor: 'white',
-    flexDirection: 'column',
-    position: 'absolute',
-    width: '100%',
-    bottom: 0,
-    zIndex: 1000,
-    paddingBottom: 0.01 * height
-  },
-  modalPosition: {
-    marginBottom: 0,
-    marginLeft: 0,
-    marginRight: 0
-  },
-  contentContainer: {
-    flex: 1,
-    marginTop: -20
-  },
-  lines: {
-    marginLeft: 10,
-    borderTopWidth: 1,
-    borderColor: '#f2f2f2'
-  },
-  /**close */
-  titleModalBottom: {
-    marginTop: 0.03 * height,
-    marginBottom: 0.03 * height,
-    fontFamily: Fonts.MontserratBold,
-    fontSize: RFPercentage(1.8),
-    color: '#333333'
-  },
-  title: {
-    fontFamily: Fonts.MontserratSemiBold,
-    fontSize: RFPercentage(1.7),
-    color: '#333333'
-  },
-  subTitle: {
-    fontFamily: Fonts.MontserratMedium,
-    fontSize: RFPercentage(1.6),
-    color: '#333333',
-    lineHeight: 16
-  },
-  closeContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  closeBox: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    left: 0,
-    width: '15%',
-    height: '100%'
-  },
-  Imageicons: {
-    width: 50,
-    height: 20
+    height: 0.6 * height
   }
 });
 

@@ -601,16 +601,15 @@ class MerchantHomeView extends Component {
       <ModalConfirmation
         title={'Konfirmasi'}
         open={this.state.openModalConfirmNoOrder}
-        content={'Apakah Anda yakin tidak ada order dan keluar toko ?'}
-        type={'okeNotRed'}
+        content={'Apakah ada order di toko ini pada hari ini ?'}
+        type={'okeRed'}
         ok={() => {
           this.setState({
-            openModalConfirmNoOrder: false,
-            loadingPostForCheckoutNoOrder: true
+            openModalConfirmNoOrder: false
           });
           setTimeout(() => {
-            this.checkoutProcess();
-          }, 100);
+            NavigationService.navigate('PdpView');
+          }, 10);
         }}
         cancel={() => {
           NavigationService.navigate('MerchantNoOrderReason');

@@ -257,10 +257,10 @@ class PdpView extends Component {
   renderModalConfirmDelete() {
     return this.state.openModalConfirmRemoveCart ? (
       <ModalConfirmation
-        title={'Lanjutkan membuat keranjang baru?'}
+        title={'Anda telah berpindah toko'}
         open={this.state.openModalConfirmRemoveCart}
         content={
-          'Menambahkan produk ini akan menghapus keranjang Anda sebelumnya. Apakah Anda Setuju ?'
+          'Menambahkan produk ini ke keranjang akan menghapus SKU sebelumnya. Apakah Anda Setuju ?'
         }
         type={'okeRed'}
         ok={() => {
