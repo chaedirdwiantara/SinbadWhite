@@ -838,7 +838,7 @@ class OmsCartView extends Component {
   }
   /**
    * ====================
-   * TOTAL BOTTOM
+   * TOTAL ORDER VALUE BOTTOM
    * ====================
    */
   /** === RENDER TOTAL BOTTOM VALUE === */
