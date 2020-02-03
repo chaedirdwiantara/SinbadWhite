@@ -80,6 +80,9 @@ class JourneyView extends Component {
       if (this.props.journey.dataSaveMerchantToJourneyPlan !== null) {
         this.props.journeyPlanGetReset();
         this.props.journeyPlanGetProcess({ page: 0, loading: true });
+        this.props.getJourneyPlanReportProcess(
+          this.props.user.userSuppliers.map(item => item.supplierId)
+        );
         this.setState({ openModalMerchantList: false });
       }
     }
