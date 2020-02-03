@@ -838,7 +838,7 @@ class OmsCartView extends Component {
   }
   /**
    * ====================
-   * TOTAL BOTTOM
+   * TOTAL ORDER VALUE BOTTOM
    * ====================
    */
   /** === RENDER TOTAL BOTTOM VALUE === */
@@ -854,7 +854,7 @@ class OmsCartView extends Component {
           }}
         >
           <View>
-            <Text>
+            <Text style={{ textAlign: 'right' }}>
               <Text style={Fonts.type9}>Total: </Text>
               <Text style={Fonts.type53}>
                 {MoneyFormat(this.totalPriceValue())}
@@ -862,7 +862,9 @@ class OmsCartView extends Component {
             </Text>
           </View>
           <View>
-            <Text style={Fonts.type74}>Belum termasuk PPN 10%</Text>
+            <Text style={[Fonts.type74, { textAlign: 'right' }]}>
+              Belum termasuk PPN 10%
+            </Text>
           </View>
         </View>
       </View>
