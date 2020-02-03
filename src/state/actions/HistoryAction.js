@@ -85,3 +85,11 @@ export function historyGetReset() {
 export function historyGetLoadMore(page) {
   return { type: types.HISTORY_GET_LOADMORE, payload: page };
 }
+/**
+ * ============================
+ * HISTORY DETAIL
+ * ==========================
+ */
+export function historyDetail(data) {
+  return { type: types.HISTORY_DETAIL, payload: data };
+}

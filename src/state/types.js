@@ -212,6 +212,8 @@ export const HISTORY_GET_LOADMORE = 'HistoryGetLoadMore';
 /** DELETE NEW ORDER PER MERCHANT */
 export const HISTORY_DELETE_NEW_ORDER_NOTIF_PER_MERCHANT =
   'HistoryDeleteNewOrderNotifPerMerchant';
+/** DETAIL HISTORY */
+export const HISTORY_DETAIL = 'historyDetail';
 /**
  * ========================
  * PROFILE

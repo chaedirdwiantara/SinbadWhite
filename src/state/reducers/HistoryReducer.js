@@ -12,6 +12,7 @@ const INITIAL_STATE = {
   dataGetHistory: [],
   dataGetOrderStatus: null,
   dataGetPaymentStatus: null,
+  dataDetailHistory: null,
   totalDataGetHistory: 0,
   pageGetHistory: 0,
   /** error */

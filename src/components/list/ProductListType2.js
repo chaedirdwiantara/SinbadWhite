@@ -2,13 +2,12 @@
  * this product list for history order
  */
 import React, { Component } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
-import Text from 'react-native-text';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
 
-class ProductListType1 extends Component {
+class ProductListType2 extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -92,4 +91,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ProductListType1;
+export default ProductListType2;

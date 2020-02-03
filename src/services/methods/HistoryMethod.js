@@ -1,6 +1,15 @@
 import ApiRest from '../apiRest';
 /** GET CART ITEM */
 function getHistory(data) {
+  console.log(
+    `get-parcel?userId=${data.userId}&storeId=${data.storeId}&$limit=10&$skip=${
+      data.page
+    }&status=${data.statusOrder}&statusPayment=${data.statusPayment}&orderGte=${
+      data.dateGte
+    }&orderLte=${data.dateLte}&portfolioIds=${JSON.stringify(
+      data.portfolioId
+    )}&searchKey=${data.search}`
+  );
   return ApiRest({
     path: `get-parcel?userId=${data.userId}&storeId=${
       data.storeId

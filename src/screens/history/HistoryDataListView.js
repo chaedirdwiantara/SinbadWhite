@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, Image, StyleSheet, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
@@ -12,6 +19,7 @@ import EmptyData from '../../components/empty_state/EmptyData';
 import ProductListType1 from '../../components/list/ProductListType1';
 import { LoadingLoadMore } from '../../components/Loading';
 import { MoneyFormat } from '../../helpers/NumberFormater';
+import NavigationService from '../../navigation/NavigationService';
 
 class HistoryDataListView extends Component {
   constructor(props) {
@@ -114,11 +122,27 @@ class HistoryDataListView extends Component {
       ? this.checkorder(item)
       : '';
   }
+  /** go to detail */
+  goToDetail(item) {
+    this.props.historyDetail(item);
+    NavigationService.navigate('HistoryDetailView');
+  }
   /**
    * ========================
    * RENDER VIEW
    * =======================
    */
+  /** ITEM BUTTON */
+  renderButtonDetail(item) {
+    return (
+      <TouchableOpacity
+        style={styles.buttonDetail}
+        onPress={() => this.goToDetail(item)}
+      >
+        <Text style={Fonts.type39}>Detail</Text>
+      </TouchableOpacity>
+    );
+  }
   /** ITEM PRODUCT SECTION */
   renderProductSection(data) {
     return <ProductListType1 data={data} />;
@@ -157,7 +181,7 @@ class HistoryDataListView extends Component {
                 {item.parcelDetails.totalQty} Qty, Total:{' '}
                 {MoneyFormat(item.parcelDetails.totalNettPrice)}
               </Text>
-              <Text>{''}</Text>
+              {this.renderButtonDetail(item)}
             </View>
           </View>
         </View>
@@ -233,6 +257,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
+  },
+  buttonDetail: {
+    backgroundColor: masterColor.mainColor,
+    paddingVertical: 9,
+    paddingHorizontal: 16,
+    borderRadius: 4
   }
 });
 
