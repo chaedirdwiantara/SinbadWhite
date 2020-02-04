@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  TouchableWithoutFeedback
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import Text from 'react-native-text';
@@ -13,6 +19,7 @@ import { StatusBarRed } from '../../components/StatusBarGlobal';
 import ProductListType2 from '../../components/list/ProductListType2';
 import Address from '../../components/Address';
 import { MoneyFormat } from '../../helpers/NumberFormater';
+import NavigationService from '../../navigation/NavigationService';
 
 class HistoryDetailView extends Component {
   constructor(props) {
@@ -60,6 +67,10 @@ class HistoryDetailView extends Component {
     });
     return totalProduct;
   }
+  /** GO TO LOG */
+  goToDetailStatus() {
+    NavigationService.navigate('HistoryDetailStatusView');
+  }
   /**
    * ========================
    * RENDER VIEW
@@ -88,31 +99,35 @@ class HistoryDetailView extends Component {
   renderHeaderStatus() {
     return (
       <View style={{ margin: 16 }}>
-        <View
-          style={[
-            GlobalStyle.shadowForBox,
-            {
-              padding: 16,
-              borderRadius: 5,
-              flexDirection: 'row',
-              justifyContent: 'space-between'
-            }
-          ]}
-        >
-          <View>
-            <Text style={Fonts.type48}>Status: {this.checkStatus().title}</Text>
-            <Text style={[Fonts.type59, { marginTop: 8 }]}>
-              {this.checkStatus().desc}
-            </Text>
+        <TouchableWithoutFeedback onPress={() => this.goToDetailStatus()}>
+          <View
+            style={[
+              GlobalStyle.shadowForBox,
+              {
+                padding: 16,
+                borderRadius: 5,
+                flexDirection: 'row',
+                justifyContent: 'space-between'
+              }
+            ]}
+          >
+            <View>
+              <Text style={Fonts.type48}>
+                Status: {this.checkStatus().title}
+              </Text>
+              <Text style={[Fonts.type59, { marginTop: 8 }]}>
+                {this.checkStatus().desc}
+              </Text>
+            </View>
+            <View style={{ justifyContent: 'center' }}>
+              <MaterialIcon
+                name="chevron-right"
+                color={masterColor.fontBlack60}
+                size={24}
+              />
+            </View>
           </View>
-          <View style={{ justifyContent: 'center' }}>
-            <MaterialIcon
-              name="chevron-right"
-              color={masterColor.fontBlack60}
-              size={24}
-            />
-          </View>
-        </View>
+        </TouchableWithoutFeedback>
       </View>
     );
   }
