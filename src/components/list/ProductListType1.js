@@ -38,7 +38,7 @@ class ProductListType1 extends Component {
   /** ITEM LIST PRODUCT */
   renderListProductImageContent(itemProduct, indexCounter) {
     return itemProduct.map((item, index) => {
-      return indexCounter++ < 3 ? (
+      return indexCounter++ < 4 ? (
         <View key={index} style={{ paddingHorizontal: 5 }}>
           <Image
             defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}

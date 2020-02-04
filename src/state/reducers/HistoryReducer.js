@@ -31,6 +31,17 @@ export const history = createReducer(INITIAL_STATE, {
     return INITIAL_STATE;
   },
   /**
+   * ==================================
+   * HISTORY DETAILS
+   * ==================================
+   */
+  [types.HISTORY_DETAIL](state, action) {
+    return {
+      ...state,
+      dataDetailHistory: action.payload
+    };
+  },
+  /**
    * ==========================
    * GET PAYMENT STATUS
    * ==========================

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
+import Text from 'react-native-text';
 
 /**
  * ===================
@@ -54,11 +55,21 @@ class Address extends Component {
     return (
       <View>
         {this.combineAddress().length >= 55 ? (
-          <Text style={[this.props.font, { textTransform: 'capitalize' }]}>
+          <Text
+            style={[
+              this.props.font,
+              { textTransform: 'capitalize', textAlign: this.props.position }
+            ]}
+          >
             {this.combineAddress().substring(0, 55)}...
           </Text>
         ) : (
-          <Text style={[this.props.font, { textTransform: 'capitalize' }]}>
+          <Text
+            style={[
+              this.props.font,
+              { textTransform: 'capitalize', textAlign: this.props.position }
+            ]}
+          >
             {this.combineAddress()}
           </Text>
         )}
@@ -69,7 +80,12 @@ class Address extends Component {
   renderNotSubstring() {
     return (
       <View>
-        <Text style={[this.props.font, { textTransform: 'capitalize' }]}>
+        <Text
+          style={[
+            this.props.font,
+            { textTransform: 'capitalize', textAlign: this.props.position }
+          ]}
+        >
           {this.combineAddress()}
         </Text>
       </View>
