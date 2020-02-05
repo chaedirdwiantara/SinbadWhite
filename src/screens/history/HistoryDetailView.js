@@ -4,7 +4,8 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  TouchableOpacity
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
@@ -20,11 +21,16 @@ import ProductListType2 from '../../components/list/ProductListType2';
 import Address from '../../components/Address';
 import { MoneyFormat } from '../../helpers/NumberFormater';
 import NavigationService from '../../navigation/NavigationService';
+import CallCS from '../../screens/global/CallCS';
+import ModalConfirmation from '../../components/modal/ModalConfirmation';
+import { LoadingPage } from '../../components/Loading';
 
 class HistoryDetailView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      openModalCS: false,
+      openModalCancelOrderConfirmation: false,
       section: this.props.navigation.state.params.section
     };
   }
@@ -33,6 +39,16 @@ class HistoryDetailView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  /** CALLED FROM CHILD */
+  parentFunction(data) {
+    switch (data.type) {
+      case 'close':
+        this.setState({ openModalCS: false });
+        break;
+      default:
+        break;
+    }
+  }
   /** CHECK STATUS */
   checkStatus() {
     let data = null;
@@ -70,6 +86,15 @@ class HistoryDetailView extends Component {
   /** GO TO LOG */
   goToDetailStatus() {
     NavigationService.navigate('HistoryDetailStatusView');
+  }
+  /** CANCEL ORDER */
+  cancelOrder() {
+    this.props.historyEditProcess({
+      parcelId: this.props.history.dataDetailHistory.id,
+      params: {
+        status: 'cancel'
+      }
+    });
   }
   /**
    * ========================
@@ -288,7 +313,7 @@ class HistoryDetailView extends Component {
   /** RENDER CONTENT */
   renderContent() {
     return (
-      <View style={styles.contentContainer}>
+      <View style={{ flex: 1 }}>
         <ScrollView>
           {this.renderHeaderStatus()}
           {this.renderRingkasanPesanan()}
@@ -300,11 +325,53 @@ class HistoryDetailView extends Component {
       </View>
     );
   }
+  /**
+   * ====================
+   * RENDER MODAL
+   * ====================
+   */
+  /** CALL CS */
+  renderModalCallCS() {
+    return this.state.openModalCS ? (
+      <View>
+        <CallCS
+          statusBarRed
+          open={this.state.openModalCS}
+          close={() => this.setState({ openModalCS: false })}
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
+        />
+      </View>
+    ) : (
+      <View />
+    );
+  }
+  /** RENDER CANCEL BUTTON */
+  renderCancelButton() {
+    return (
+      <TouchableOpacity
+        style={styles.buttonCancel}
+        onPress={() =>
+          this.setState({ openModalCancelOrderConfirmation: true })
+        }
+      >
+        <Text style={Fonts.type11}>Batal</Text>
+      </TouchableOpacity>
+    );
+  }
   /** RENDER BOTTOM ACTION */
   renderBottomAction() {
     return (
-      <View style={{ backgroundColor: 'red', bottom: 0 }}>
-        <Text>llalalala</Text>
+      <View style={styles.boxBottomAction}>
+        <TouchableOpacity onPress={() => this.setState({ openModalCS: true })}>
+          <Text style={Fonts.type22}>Butuh Bantuan ?</Text>
+        </TouchableOpacity>
+        {this.state.section === 'order' &&
+        this.props.history.dataDetailHistory.status === 'confirm' ? (
+          this.renderCancelButton()
+        ) : (
+          <View />
+        )}
       </View>
     );
   }
@@ -312,14 +379,52 @@ class HistoryDetailView extends Component {
   renderBackground() {
     return <View style={styles.backgroundRed} />;
   }
+  /**
+   * ======================
+   * MODAL
+   * ======================
+   */
+  renderModalCancelOrderConfirmation() {
+    return (
+      <View>
+        {this.state.openModalCancelOrderConfirmation ? (
+          <ModalConfirmation
+            title={'Konfirmasi'}
+            open={this.state.openModalCancelOrderConfirmation}
+            content={'Yakin ingin membatalkan pesanan Anda ?'}
+            type={'okeNotRed'}
+            ok={() => {
+              this.setState({ openModalCancelOrderConfirmation: false });
+              this.cancelOrder();
+            }}
+            cancel={() =>
+              this.setState({ openModalCancelOrderConfirmation: false })
+            }
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
   /** MAIN */
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarRed />
-        {this.renderBackground()}
-        {this.renderContent()}
-        {this.renderBottomAction()}
+        {!this.props.history.loadingDetailHistory &&
+        this.props.history.dataDetailHistory !== null ? (
+          <View style={styles.mainContainer}>
+            {this.renderBackground()}
+            {this.renderContent()}
+            {this.renderBottomAction()}
+          </View>
+        ) : (
+          <LoadingPage />
+        )}
+        {/* modal */}
+        {this.renderModalCallCS()}
+        {this.renderModalCancelOrderConfirmation()}
       </SafeAreaView>
     );
   }
@@ -330,15 +435,29 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: masterColor.backgroundWhite
   },
-  contentContainer: {
-    width: '100%',
-    height: '100%'
-    // position: 'absolute',
-    // zIndex: 1000
-  },
   backgroundRed: {
+    width: '100%',
     backgroundColor: masterColor.mainColor,
+    position: 'absolute',
+    zIndex: 0,
     height: 50
+  },
+  boxBottomAction: {
+    borderTopWidth: 1,
+    paddingHorizontal: 16,
+    borderTopColor: masterColor.fontBlack10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 64
+  },
+  buttonCancel: {
+    backgroundColor: masterColor.backgroundWhite,
+    borderWidth: 1,
+    borderColor: masterColor.mainColor,
+    paddingVertical: 9,
+    paddingHorizontal: 16,
+    borderRadius: 4
   }
 });
 

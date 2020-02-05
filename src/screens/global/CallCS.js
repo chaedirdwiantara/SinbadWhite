@@ -13,7 +13,11 @@ import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
-import { StatusBarBlackOP40 } from '../../components/StatusBarGlobal';
+import {
+  StatusBarBlackOP40,
+  StatusBarRedOP50
+} from '../../components/StatusBarGlobal';
+import ModalBottomSwipeCloseNotScroll from '../../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 
 class CallCS extends Component {
   constructor(props) {
@@ -63,7 +67,7 @@ class CallCS extends Component {
    * =======================
    */
   /** === CONTENT === */
-  renderContent() {
+  renderContentItem() {
     return (
       <View style={styles.contentContainer}>
         <TouchableOpacity
@@ -91,13 +95,30 @@ class CallCS extends Component {
       </View>
     );
   }
+  /** RENDER DATA */
+  renderContent() {
+    return (
+      <View style={styles.mainContainer}>
+        {this.props.statusBarRed ? (
+          <StatusBarRedOP50 />
+        ) : (
+          <StatusBarBlackOP40 />
+        )}
+
+        {this.renderContentItem()}
+      </View>
+    );
+  }
   /** === MAIN === */
   render() {
     return (
-      <View style={styles.mainContainer}>
-        <StatusBarBlackOP40 />
-        {this.renderContent()}
-      </View>
+      <ModalBottomSwipeCloseNotScroll
+        closeButton
+        open={this.props.open}
+        close={this.props.close}
+        title={'Hubungi CS'}
+        content={this.renderContent()}
+      />
     );
   }
 }

@@ -62,7 +62,11 @@ class AddMerchantStep1 extends Component {
   checkPhone() {
     Keyboard.dismiss();
     const reg = /^08[0-9]{8,12}$/;
-    const checkFormat = reg.test(this.state.phoneNumber);
+    const regPhone = /^0[0-9]{7,10}$/;
+    let checkFormat = reg.test(this.state.phoneNumber);
+    if (!checkFormat) {
+      checkFormat = regPhone.test(this.state.phoneNumber);
+    }
     this.setState({
       correctFormatPhoneNumber: checkFormat
     });

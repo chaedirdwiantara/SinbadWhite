@@ -26,22 +26,19 @@ class HistoryDetailStatusView extends Component {
     if (item.type === 'order') {
       if (this.props.history.dataGetOrderStatus !== null) {
         data = this.props.history.dataGetOrderStatus.find(
-          itemOrder =>
-            itemOrder.status === this.props.history.dataDetailHistory.status
+          itemOrder => itemOrder.status === item.status
         );
       }
     } else {
       if (this.props.history.dataGetPaymentStatus !== null) {
         data = this.props.history.dataGetPaymentStatus.find(
-          itemPayment =>
-            itemPayment.status ===
-            this.props.history.dataDetailHistory.statusPayment
+          itemPayment => itemPayment.status === item.status
         );
       }
     }
     return {
-      title: data !== null ? data.title : '-',
-      desc: data !== null ? data.detail : '-'
+      title: data ? data.title : '-',
+      desc: data ? data.detail : '-'
     };
   }
   /**

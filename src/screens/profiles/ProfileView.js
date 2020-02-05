@@ -16,7 +16,6 @@ import masterColor from '../../config/masterColor.json';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import GlobalFont from '../../helpers/GlobalFont';
 import NavigationService from '../../navigation/NavigationService';
-import ModalBottomSwipeCloseNotScroll from '../../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import CallCS from '../../screens/global/CallCS';
 
 class ProfileView extends Component {
@@ -148,17 +147,11 @@ class ProfileView extends Component {
   renderModalCallCS() {
     return this.state.openModalCS ? (
       <View>
-        <ModalBottomSwipeCloseNotScroll
+        <CallCS
           open={this.state.openModalCS}
-          closeButton
-          title={'Hubungi CS'}
           close={() => this.setState({ openModalCS: false })}
-          content={
-            <CallCS
-              onRef={ref => (this.parentFunction = ref)}
-              parentFunction={this.parentFunction.bind(this)}
-            />
-          }
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
         />
       </View>
     ) : (

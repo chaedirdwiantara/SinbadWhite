@@ -124,7 +124,7 @@ class HistoryDataListView extends Component {
   }
   /** go to detail */
   goToDetail(item) {
-    this.props.historyDetail(item);
+    this.props.historyGetDetailProcess(item.id);
     NavigationService.navigate('HistoryDetailView', {
       section: this.props.section
     });
