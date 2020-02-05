@@ -300,6 +300,14 @@ class HistoryDetailView extends Component {
       </View>
     );
   }
+  /** RENDER BOTTOM ACTION */
+  renderBottomAction() {
+    return (
+      <View style={{ backgroundColor: 'red', bottom: 0 }}>
+        <Text>llalalala</Text>
+      </View>
+    );
+  }
   /** BACKGROUND */
   renderBackground() {
     return <View style={styles.backgroundRed} />;
@@ -311,6 +319,7 @@ class HistoryDetailView extends Component {
         <StatusBarRed />
         {this.renderBackground()}
         {this.renderContent()}
+        {this.renderBottomAction()}
       </SafeAreaView>
     );
   }
@@ -323,9 +332,9 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     width: '100%',
-    height: '100%',
-    position: 'absolute',
-    zIndex: 1000
+    height: '100%'
+    // position: 'absolute',
+    // zIndex: 1000
   },
   backgroundRed: {
     backgroundColor: masterColor.mainColor,
