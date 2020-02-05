@@ -1,24 +1,14 @@
 import React, { Component } from 'react';
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  TouchableWithoutFeedback
-} from 'react-native';
+import { View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import Text from 'react-native-text';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
 import { StatusBarRed } from '../../components/StatusBarGlobal';
-import ProductListType2 from '../../components/list/ProductListType2';
-import Address from '../../components/Address';
-import { MoneyFormat } from '../../helpers/NumberFormater';
 
 class HistoryDetailStatusView extends Component {
   constructor(props) {
@@ -31,21 +21,21 @@ class HistoryDetailStatusView extends Component {
    * =======================
    */
   /** CHECK STATUS */
-  checkStatus() {
+  checkStatus(item) {
     let data = null;
-    if (this.state.section === 'payment') {
+    if (item.type === 'order') {
+      if (this.props.history.dataGetOrderStatus !== null) {
+        data = this.props.history.dataGetOrderStatus.find(
+          itemOrder =>
+            itemOrder.status === this.props.history.dataDetailHistory.status
+        );
+      }
+    } else {
       if (this.props.history.dataGetPaymentStatus !== null) {
         data = this.props.history.dataGetPaymentStatus.find(
           itemPayment =>
             itemPayment.status ===
             this.props.history.dataDetailHistory.statusPayment
-        );
-      }
-    } else {
-      if (this.props.history.dataGetOrderStatus !== null) {
-        data = this.props.history.dataGetOrderStatus.find(
-          itemOrder =>
-            itemOrder.status === this.props.history.dataDetailHistory.status
         );
       }
     }
@@ -54,27 +44,13 @@ class HistoryDetailStatusView extends Component {
       desc: data !== null ? data.detail : '-'
     };
   }
-  /** CALCULATE TOTAL SKU */
-  totalSKU() {
-    let totalProduct = 0;
-    this.props.history.dataDetailHistory.orderBrands.forEach(item => {
-      item.orderBrandCatalogues.map(itemProduct => {
-        totalProduct = totalProduct + itemProduct.qty;
-      });
-    });
-    return totalProduct;
-  }
-  /** GO TO LOG */
-  goToLog() {
-    console.log('iaiaiaiai');
-  }
   /**
    * ========================
    * RENDER VIEW
    * =======================
    */
   /** RENDER CONTENT LIST GLOBAL */
-  renderContentListGlobal(key, value, green) {
+  renderContentListGlobal(key, value) {
     return (
       <View
         style={{
@@ -84,7 +60,7 @@ class HistoryDetailStatusView extends Component {
         }}
       >
         <View style={{ flex: 1, alignItems: 'flex-start' }}>
-          <Text style={green ? Fonts.type51 : Fonts.type17}>{key}</Text>
+          <Text style={Fonts.type17}>{key}</Text>
         </View>
         <View style={{ flex: 1, alignItems: 'flex-end' }}>
           <Text style={Fonts.type17}>{value}</Text>
@@ -148,7 +124,9 @@ class HistoryDetailStatusView extends Component {
                 <View
                   style={{ marginBottom: 15, marginLeft: 10, marginTop: -5 }}
                 >
-                  <Text style={Fonts.type10}>Detail</Text>
+                  <Text style={Fonts.type10}>
+                    {this.checkStatus(item).desc}
+                  </Text>
                   <Text style={[Fonts.type76, { marginTop: 5 }]}>
                     {moment(new Date(item.createdAt)).format(
                       'DD-MM-YYYY HH:mm:ss'

@@ -22,10 +22,6 @@ class HistoryOrderView extends Component {
    * FUNCTIONAL
    * =======================
    */
-  componentDidMount() {
-    this.props.historyGetOrderStatusProcess();
-  }
-
   parentFunction(data) {
     if (data.type === 'status') {
       this.setState({ selectedOrderStatus: data.data });

@@ -50,6 +50,8 @@ class HistoryView extends Component {
   /** === DID MOUNT FUNCTION === */
   componentDidMount() {
     this.checkNewOrderNotif();
+    this.props.historyGetOrderStatusProcess();
+    this.props.historyGetPaymentStatusProcess();
   }
 
   /** CHECK NEW ORDER NOTIF */

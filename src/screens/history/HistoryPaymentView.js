@@ -22,10 +22,6 @@ class HistoryPaymentView extends Component {
    * FUNCTIONAL
    * =======================
    */
-  componentDidMount() {
-    this.props.historyGetPaymentStatusProcess();
-  }
-
   parentFunction(data) {
     if (data.type === 'status') {
       this.setState({ selectedPaymentStatus: data.data });
