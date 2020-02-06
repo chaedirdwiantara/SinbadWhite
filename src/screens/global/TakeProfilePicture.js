@@ -44,8 +44,8 @@ class TakeProfilePicture extends Component {
   takePicture = async () => {
     this.setState({ loading: true });
     const cropData = {
-      offset: { x: 100, y: 300 },
-      size: { width: 1700, height: 1200 }
+      offset: { x: 200, y: 500 },
+      size: { width: 1700, height: 1700 }
     };
 
     if (this.camera) {
@@ -86,9 +86,6 @@ class TakeProfilePicture extends Component {
             message: 'We need your permission to use your camera',
             buttonPositive: 'Ok',
             buttonNegative: 'Cancel'
-          }}
-          onGoogleVisionBarcodesDetected={({ barcodes }) => {
-            console.log(barcodes);
           }}
         >
           <View style={styles.overlayCamera} />
