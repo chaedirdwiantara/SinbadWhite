@@ -167,10 +167,19 @@ class MerchantDetailView extends Component {
               style={styles.imageHeader}
             />
           ) : (
-            <Image
-              source={require('../../assets/images/merchant/store.png')}
-              style={styles.imageHeader}
-            />
+            <View
+              style={{
+                height: 169,
+                backgroundColor: masterColor.fontBlack05,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Image
+                source={require('../../assets/images/merchant/store.png')}
+                style={styles.imageHeader}
+              />
+            </View>
           )}
         </View>
         <View
@@ -343,8 +352,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   imageHeader: {
-    height: 169,
-    width: '100%'
+    height: 120,
+    width: 120
   },
   boxMaps: {
     width: 60,
