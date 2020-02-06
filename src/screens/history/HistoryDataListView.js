@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   FlatList,
   TouchableOpacity
@@ -20,12 +19,16 @@ import ProductListType1 from '../../components/list/ProductListType1';
 import { LoadingLoadMore } from '../../components/Loading';
 import { MoneyFormat } from '../../helpers/NumberFormater';
 import NavigationService from '../../navigation/NavigationService';
+import ModalConfirmation from '../../components/modal/ModalConfirmation';
 
 class HistoryDataListView extends Component {
   constructor(props) {
     super(props);
     this.renderItem = this.renderItem.bind(this);
-    this.state = {};
+    this.state = {
+      openModalCancelOrderConfirmation: false,
+      wantDeleteItem: null
+    };
   }
   /**
    * =======================
@@ -53,6 +56,14 @@ class HistoryDataListView extends Component {
     if (prevProps.dateFilter !== this.props.dateFilter) {
       this.props.historyGetReset();
       this.getHistory(true, 0);
+    }
+    if (
+      prevProps.history.dataEditHistory !== this.props.history.dataEditHistory
+    ) {
+      if (this.props.history.dataEditHistory !== null) {
+        this.props.historyGetReset();
+        this.getHistory(true, 0);
+      }
     }
   }
   /** REFRESH LIST VIEW */
@@ -129,12 +140,21 @@ class HistoryDataListView extends Component {
       section: this.props.section
     });
   }
+  /** CANCEL ORDER */
+  cancelOrder() {
+    this.props.historyEditProcess({
+      parcelId: this.state.wantDeleteItem.id,
+      params: {
+        status: 'cancel'
+      }
+    });
+  }
   /**
    * ========================
    * RENDER VIEW
    * =======================
    */
-  /** ITEM BUTTON */
+  /** ITEM BUTTON DETAIL*/
   renderButtonDetail(item) {
     return (
       <TouchableOpacity
@@ -142,6 +162,22 @@ class HistoryDataListView extends Component {
         onPress={() => this.goToDetail(item)}
       >
         <Text style={Fonts.type39}>Detail</Text>
+      </TouchableOpacity>
+    );
+  }
+  /** ITEM BUTTON CANCEL */
+  renderButtonCancel(item) {
+    return (
+      <TouchableOpacity
+        style={styles.buttonCancel}
+        onPress={() =>
+          this.setState({
+            openModalCancelOrderConfirmation: true,
+            wantDeleteItem: item
+          })
+        }
+      >
+        <Text style={Fonts.type11}>Batal</Text>
       </TouchableOpacity>
     );
   }
@@ -183,7 +219,14 @@ class HistoryDataListView extends Component {
                 {item.parcelDetails.totalQty} Qty, Total:{' '}
                 {MoneyFormat(item.parcelDetails.totalNettPrice)}
               </Text>
-              {this.renderButtonDetail(item)}
+              <View style={{ flexDirection: 'row' }}>
+                {this.props.section === 'order' && item.status === 'confirm' ? (
+                  this.renderButtonCancel(item)
+                ) : (
+                  <View />
+                )}
+                {this.renderButtonDetail(item)}
+              </View>
             </View>
           </View>
         </View>
@@ -229,15 +272,47 @@ class HistoryDataListView extends Component {
       <View />
     );
   }
+  /**
+   * ======================
+   * MODAL
+   * ======================
+   */
+  renderModalCancelOrderConfirmation() {
+    return (
+      <View>
+        {this.state.openModalCancelOrderConfirmation ? (
+          <ModalConfirmation
+            statusBarWhite
+            title={'Konfirmasi'}
+            open={this.state.openModalCancelOrderConfirmation}
+            content={'Yakin ingin membatalkan pesanan Anda ?'}
+            type={'okeNotRed'}
+            ok={() => {
+              this.setState({ openModalCancelOrderConfirmation: false });
+              this.cancelOrder();
+            }}
+            cancel={() =>
+              this.setState({ openModalCancelOrderConfirmation: false })
+            }
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
   /** === MAIN === */
   render() {
     return (
       <View style={styles.mainContainer}>
-        {this.props.history.loadingGetHistory
+        {this.props.history.loadingGetHistory ||
+        this.props.history.loadingEditHistory
           ? this.renderSkeleton()
           : this.renderData()}
         {/* for loadmore */}
         {this.renderLoadMore()}
+        {/* modal */}
+        {this.renderModalCancelOrderConfirmation()}
       </View>
     );
   }
@@ -262,7 +337,16 @@ const styles = StyleSheet.create({
   },
   buttonDetail: {
     backgroundColor: masterColor.mainColor,
-    paddingVertical: 9,
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    borderRadius: 4,
+    marginLeft: 8
+  },
+  buttonCancel: {
+    backgroundColor: masterColor.backgroundWhite,
+    borderWidth: 1,
+    borderColor: masterColor.mainColor,
+    paddingVertical: 6,
     paddingHorizontal: 16,
     borderRadius: 4
   }

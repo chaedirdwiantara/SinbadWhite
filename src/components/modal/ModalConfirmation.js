@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import Text from 'react-native-text';
 import { connect } from 'react-redux';
-import { StatusBarRedOP50 } from '../StatusBarGlobal';
+import { StatusBarRedOP50, StatusBarBlackOP40 } from '../StatusBarGlobal';
 import Fonts from '../../helpers/GlobalFont';
 import masterColor from '../../config/masterColor.json';
 
@@ -19,7 +19,11 @@ class ModalConfirmation extends Component {
         animationType="fade"
         onRequestClose={() => {}}
       >
-        <StatusBarRedOP50 />
+        {this.props.statusBarWhite ? (
+          <StatusBarBlackOP40 />
+        ) : (
+          <StatusBarRedOP50 />
+        )}
         <View style={styles.mainContainer}>
           <View style={styles.card}>
             <View style={styles.boxCard}>

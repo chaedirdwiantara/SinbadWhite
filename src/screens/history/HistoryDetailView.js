@@ -39,6 +39,35 @@ class HistoryDetailView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  /** DID UPDATE */
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.history.dataEditHistory !== this.props.history.dataEditHistory
+    ) {
+      if (this.props.history.dataEditHistory !== null) {
+        this.props.historyGetDetailProcess(
+          this.props.history.dataEditHistory.id
+        );
+        this.props.historyGetReset();
+        this.getHistory();
+      }
+    }
+  }
+  /** REFRESH LIST HISTORY AFTER EDIT HISTORY STATUS */
+  getHistory() {
+    this.props.historyGetProcess({
+      loading: true,
+      userId: this.props.user.id,
+      storeId: this.props.merchant.selectedMerchant.storeId,
+      page: 0,
+      statusOrder: '',
+      statusPayment: '',
+      dateGte: '',
+      dateLte: '',
+      portfolioId: [],
+      search: ''
+    });
+  }
   /** CALLED FROM CHILD */
   parentFunction(data) {
     switch (data.type) {
@@ -413,6 +442,7 @@ class HistoryDetailView extends Component {
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarRed />
         {!this.props.history.loadingDetailHistory &&
+        !this.props.history.loadingEditHistory &&
         this.props.history.dataDetailHistory !== null ? (
           <View style={styles.mainContainer}>
             {this.renderBackground()}
@@ -461,8 +491,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ history }) => {
-  return { history };
+const mapStateToProps = ({ history, user, merchant }) => {
+  return { history, user, merchant };
 };
 
 const mapDispatchToProps = dispatch => {
