@@ -31,7 +31,8 @@ class HistoryDetailView extends Component {
     this.state = {
       openModalCS: false,
       openModalCancelOrderConfirmation: false,
-      section: this.props.navigation.state.params.section
+      section: this.props.navigation.state.params.section,
+      storeId: this.props.navigation.state.params.storeId
     };
   }
   /**

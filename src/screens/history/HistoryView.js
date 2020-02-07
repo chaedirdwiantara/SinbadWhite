@@ -137,6 +137,7 @@ class HistoryView extends Component {
       <View style={styles.containerContent}>
         {this.state.activeTab === 'payment' ? (
           <HistoryPaymentView
+            storeId={this.props.navigation.state.params.storeId}
             section={this.state.activeTab}
             search={this.state.searchText}
             dateFilter={this.state.dateFilter}
@@ -144,6 +145,7 @@ class HistoryView extends Component {
           />
         ) : (
           <HistoryOrderView
+            storeId={this.props.navigation.state.params.storeId}
             section={this.state.activeTab}
             search={this.state.searchText}
             dateFilter={this.state.dateFilter}

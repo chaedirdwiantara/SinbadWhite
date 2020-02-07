@@ -221,7 +221,9 @@ class MerchantHomeView extends Component {
         NavigationService.navigate('PdpView');
         break;
       case 'history':
-        NavigationService.navigate('HistoryView');
+        NavigationService.navigate('HistoryView', {
+          storeId: this.props.merchant.selectedMerchant.store.id
+        });
         break;
       case 'checkIn':
         NavigationService.navigate('MerchantCheckinView');

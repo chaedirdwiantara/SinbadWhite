@@ -114,6 +114,11 @@ class MerchantDetailView extends Component {
       case 'merchantAddress':
         NavigationService.navigate('MerchantDetailAddressView');
         break;
+      case 'merchantOrderHistory':
+        NavigationService.navigate('HistoryView', {
+          storeId: this.props.merchant.dataGetMerchantDetail.id
+        });
+        break;
       default:
         break;
     }
@@ -323,6 +328,21 @@ class MerchantDetailView extends Component {
       </View>
     );
   }
+  /** MERCHANT HISTORY ORDER */
+  renderMerchantOrderHistory() {
+    return (
+      <View>
+        <View style={styles.boxContentHeader}>
+          <Text style={Fonts.type42}>Pesanan</Text>
+        </View>
+        <ButtonMenuType1
+          child
+          title={'Pesanan'}
+          onPress={() => this.goTo('merchantOrderHistory')}
+        />
+      </View>
+    );
+  }
   /** === RENDER CONTENT DATA === */
   renderData() {
     return (
@@ -330,6 +350,7 @@ class MerchantDetailView extends Component {
         {this.renderHeaderMerchant()}
         {this.renderMerchantProfileBar()}
         {this.renderMerchantInformationList()}
+        {this.renderMerchantOrderHistory()}
         <View style={{ paddingBottom: 50 }} />
       </ScrollView>
     );

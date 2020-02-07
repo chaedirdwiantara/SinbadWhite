@@ -38,9 +38,6 @@ function getListAndSearch(data) {
     default:
       break;
   }
-  console.log(
-    `${listAndSearchApi}$skip=${data.page}&$limit=20&keyword=${data.search}`
-  );
   return ApiRest({
     path: `${listAndSearchApi}$skip=${data.page}&$limit=20&keyword=${data.search}`,
     method: 'GET'

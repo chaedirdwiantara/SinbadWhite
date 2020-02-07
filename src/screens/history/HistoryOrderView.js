@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
 import TagListType2 from '../../components/tag/TagListType2';
 import SkeletonType2 from '../../components/skeleton/SkeletonType2';
 import HistoryDataListView from './HistoryDataListView';
@@ -36,6 +35,7 @@ class HistoryOrderView extends Component {
   renderContent() {
     return (
       <HistoryDataListView
+        storeId={this.props.storeId}
         section={this.props.section}
         portfolio={this.props.portfolio}
         dateFilter={this.props.dateFilter}

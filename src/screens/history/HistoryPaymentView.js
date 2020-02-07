@@ -36,6 +36,7 @@ class HistoryPaymentView extends Component {
   renderContent() {
     return (
       <HistoryDataListView
+        storeId={this.props.storeId}
         section={this.props.section}
         portfolio={this.props.portfolio}
         dateFilter={this.props.dateFilter}

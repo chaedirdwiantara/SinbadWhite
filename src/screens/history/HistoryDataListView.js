@@ -89,7 +89,7 @@ class HistoryDataListView extends Component {
     this.props.historyGetProcess({
       loading,
       userId: this.props.user.id,
-      storeId: this.props.merchant.selectedMerchant.storeId,
+      storeId: this.props.storeId,
       page,
       statusOrder: this.props.section === 'order' ? this.props.status : '',
       statusPayment: this.props.section === 'payment' ? this.props.status : '',
@@ -137,7 +137,8 @@ class HistoryDataListView extends Component {
   goToDetail(item) {
     this.props.historyGetDetailProcess(item.id);
     NavigationService.navigate('HistoryDetailView', {
-      section: this.props.section
+      section: this.props.section,
+      storeId: item.store.id
     });
   }
   /** CANCEL ORDER */
