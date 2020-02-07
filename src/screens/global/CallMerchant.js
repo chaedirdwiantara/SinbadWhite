@@ -38,7 +38,7 @@ class CallMerchant extends Component {
       type: 'close'
     });
     Linking.openURL(
-      `whatsapp://send?phone=+62${this.props.phoneNumber.substring(1)}`
+      `whatsapp://send?phone=+62${this.props.phoneNumber.slice(1)}`
     ).catch(err => {
       if (err) {
         Linking.openURL('market://details?id=com.whatsapp');
