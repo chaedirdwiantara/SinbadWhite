@@ -150,6 +150,22 @@ class HistoryDataListView extends Component {
       }
     });
   }
+  /** ORDER VIA */
+  orderVia(item) {
+    if (item.order !== null) {
+      switch (item.order.orderVia) {
+        case null:
+          return '';
+        case 'sales':
+          return 'Sales Rep Order';
+        case 'store':
+          return 'Toko Order';
+        default:
+          break;
+      }
+    }
+    return '';
+  }
   /**
    * ========================
    * RENDER VIEW
@@ -210,7 +226,7 @@ class HistoryDataListView extends Component {
                   'DD MMM YYYY HH:mm:ss'
                 )}
               </Text>
-              <Text>{''}</Text>
+              <Text style={Fonts.type57}>{this.orderVia(item)}</Text>
             </View>
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             {this.renderProductSection(item.orderBrands)}

@@ -126,6 +126,22 @@ class HistoryDetailView extends Component {
       }
     });
   }
+  /** ORDER VIA */
+  orderVia() {
+    if (this.props.history.dataDetailHistory.order !== null) {
+      switch (this.props.history.dataDetailHistory.order.orderVia) {
+        case null:
+          return '-';
+        case 'sales':
+          return 'Sales Rep';
+        case 'store':
+          return 'Toko';
+        default:
+          break;
+      }
+    }
+    return '-';
+  }
   /**
    * ========================
    * RENDER VIEW
@@ -197,6 +213,7 @@ class HistoryDetailView extends Component {
         </View>
         <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
         <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+          {this.renderContentListGlobal('Order Via', this.orderVia())}
           {this.renderContentListGlobal(
             'Tanggal Pembelian',
             moment(
