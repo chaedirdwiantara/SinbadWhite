@@ -29,7 +29,7 @@ class OtpView extends Component {
       // phoneNumber: navigation.state.params.phoneNumber,
       errorOTP: false,
       otpInput: [],
-      otpErrorText: 'Pastikan kode verifikasi yang anda masukan benar'
+      otpErrorText: ''
     };
   }
   /**
@@ -75,7 +75,10 @@ class OtpView extends Component {
     //   });
     // }
     if (this.props.permanent.otpAgentSignIn !== this.state.otpInput.join('')) {
-      this.setState({ errorOTP: true });
+      this.setState({
+        errorOTP: true,
+        otpErrorText: 'Pastikan kode verifikasi yang anda masukan benar'
+      });
     } else {
       this.props.signInProcess({
         mobilePhoneNo: '0' + this.props.permanent.phoneNumberAgentSignIn,
@@ -156,9 +159,7 @@ class OtpView extends Component {
   renderErrorOTP() {
     return this.state.errorOTP ? (
       <View style={{ alignItems: 'center' }}>
-        <Text style={Fonts.type14}>
-          Pastikan kode verifikasi yang anda masukan benar
-        </Text>
+        <Text style={Fonts.type14}>{this.state.otpErrorText}</Text>
       </View>
     ) : (
       <View />
