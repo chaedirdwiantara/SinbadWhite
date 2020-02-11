@@ -1,6 +1,7 @@
 import { set, isEmpty } from 'lodash';
 import apiHost from './apiHost';
 import { Store } from '../state/Store';
+import firestore from '@react-native-firebase/firestore';
 
 export default async function endpoint({ path, method, params }) {
   const stateData = Store.getState();
@@ -35,6 +36,18 @@ export default async function endpoint({ path, method, params }) {
         });
       } else {
         return response.json().then(data => {
+          const ref = firestore().collection('error-reports');
+          ref.add({
+            endpoint: path,
+            method,
+            payload: params,
+            token:
+              stateData.permanent.token !== null
+                ? stateData.permanent.token
+                : 'not login',
+            error: data,
+            time: new Date()
+          });
           return {
             result: 'Error',
             data: data.data,
