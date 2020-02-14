@@ -3,8 +3,8 @@ import {
   View,
   StyleSheet,
   Image,
-  Dimensions,
   TextInput,
+  SafeAreaView,
   TouchableOpacity,
   Keyboard
 } from 'react-native';
@@ -13,7 +13,6 @@ import Text from 'react-native-text';
 import { connect } from 'react-redux';
 import IconsMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconsAntDesign from 'react-native-vector-icons/AntDesign';
-import { SafeAreaView } from 'react-navigation';
 import * as ActionCreators from '../../state/actions';
 import Fonts from '../../helpers/GlobalFont';
 import masterColor from '../../config/masterColor.json';
@@ -22,8 +21,6 @@ import GlobalStyle from '../../helpers/GlobalStyle';
 import NavigationService from '../../navigation/NavigationService';
 import { StatusBarRed } from '../../components/StatusBarGlobal';
 import BackHandlerCloseApp from '../../components/BackHandlerCloseApp';
-
-const { width, height } = Dimensions.get('window');
 
 class SignInWithPhoneView extends Component {
   constructor(props) {
@@ -311,7 +308,6 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
-// eslint-disable-next-line prettier/prettier
 export default connect(
   mapStateToProps,
   mapDispatchToProps

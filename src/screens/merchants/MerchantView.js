@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  BackHandler,
-  SafeAreaView
-} from 'react-native';
+import { View, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -43,7 +37,7 @@ class MerchantView extends Component {
       headerLeft: () => (
         <TouchableOpacity
           style={{ marginLeft: 16 }}
-          onPress={() => state.params.handleBackPressFromRN()}
+          onPress={() => NavigationService.navigate('HomeView')}
         >
           <MaterialIcon
             color={masterColor.fontBlack50}
@@ -55,7 +49,6 @@ class MerchantView extends Component {
       headerRight: () => (
         <TouchableOpacity
           style={{ marginRight: 16 }}
-          // onPress={() => NavigationService.navigate('AddMerchantStep1')}
           onPress={() => state.params.goToAddFunction()}
         >
           <AntDesignIcon
@@ -110,7 +103,6 @@ class MerchantView extends Component {
   /** NAVIGATION FUNCTION */
   navigationFunction() {
     this.props.navigation.setParams({
-      handleBackPressFromRN: () => NavigationService.navigate('HomeView'),
       goToAddFunction: () => this.goToAdd()
     });
   }
