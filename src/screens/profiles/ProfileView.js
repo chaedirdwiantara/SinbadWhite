@@ -7,6 +7,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { bindActionCreators } from 'redux';
+import DeviceInfo from 'react-native-device-info';
 import { connect } from 'react-redux';
 import Text from 'react-native-text';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -127,7 +128,9 @@ class ProfileView extends Component {
   renderVersion() {
     return (
       <View style={{ paddingLeft: 16, paddingVertical: 16 }}>
-        <Text style={GlobalFont.type9}>Versi 1.0</Text>
+        <Text style={GlobalFont.type9}>
+          Versi {DeviceInfo.getVersion()} ({DeviceInfo.getBuildNumber()})
+        </Text>
       </View>
     );
   }
