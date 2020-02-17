@@ -605,6 +605,8 @@ class MerchantHomeView extends Component {
         open={this.state.openModalConfirmNoOrder}
         content={'Apakah ada order di toko ini pada hari ini ?'}
         type={'okeRed'}
+        okText={'Ya'}
+        cancelText={'Tidak'}
         ok={() => {
           this.setState({
             openModalConfirmNoOrder: false

@@ -7,6 +7,7 @@ const INITIAL_STATE = {
   refreshGetListAndSearch: false,
   loadingLoadMoreGetListAndSearch: false,
   loadingGlobalLongLatToAddress: false,
+  loadingGetVersion: false,
   /** data */
   search: '',
   longitude: '',
@@ -17,8 +18,10 @@ const INITIAL_STATE = {
   totalDataGetListAndSearch: 0,
   pageGetListAndSearch: 0,
   dataGlobalLongLatToAddress: null,
+  dataGetVersion: null,
   /** error */
   errorGetListAndSearch: null,
+  errorGetVersion: null,
   errorGlobalLongLatToAddress: null
 };
 
@@ -182,6 +185,33 @@ export const global = createReducer(INITIAL_STATE, {
       ...state,
       loadingGlobalLongLatToAddress: false,
       errorGlobalLongLatToAddress: action.payload
+    };
+  },
+  /**
+   * ===================================
+   * GET VERSION
+   * ===================================
+   */
+  [types.APP_VERSION_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetVersion: true,
+      dataGetVersion: null,
+      errorGetVersion: null
+    };
+  },
+  [types.APP_VERSION_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetVersion: false,
+      dataGetVersion: action.payload
+    };
+  },
+  [types.APP_VERSION_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetVersion: false,
+      errorGetVersion: action.payload
     };
   }
 });

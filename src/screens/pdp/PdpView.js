@@ -258,6 +258,8 @@ class PdpView extends Component {
     return this.state.openModalConfirmRemoveCart ? (
       <ModalConfirmation
         title={'Anda telah berpindah toko'}
+        okText={'Ya'}
+        cancelText={'Tidak'}
         open={this.state.openModalConfirmRemoveCart}
         content={
           'Menambahkan produk ini ke keranjang akan menghapus SKU sebelumnya. Apakah Anda Setuju ?'

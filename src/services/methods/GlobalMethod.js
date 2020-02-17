@@ -48,15 +48,23 @@ function getListAndSearch(data) {
  * GET ADDRESSS FROM LONG LAT
  * ============================
  */
-/** === TES MAPS  */
+/** === GET MAP GOOGLE === */
 function getAddressFromLongLat(data) {
   return ApiRestMap({
     path: `&latlng=${data.latitude},${data.longitude}`,
     method: 'GET'
   });
 }
+/** === GET VERSION === */
+function getVersion() {
+  return ApiRest({
+    path: 'check-version',
+    method: 'GET'
+  });
+}
 
 export const GlobalMethod = {
   getListAndSearch,
-  getAddressFromLongLat
+  getAddressFromLongLat,
+  getVersion
 };

@@ -52,12 +52,6 @@ class ModalConfirmation extends Component {
                   >
                     <Text style={Fonts.type45}>{this.props.okText}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.boxRed}
-                    onPress={this.props.cancel}
-                  >
-                    <Text style={Fonts.type45}>{this.props.cancelText}</Text>
-                  </TouchableOpacity>
                 </View>
               ) : (
                 <View style={styles.buttonContainer}>
@@ -66,12 +60,6 @@ class ModalConfirmation extends Component {
                     onPress={this.props.ok}
                   >
                     <Text style={Fonts.type45}>{this.props.okText}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.boxGrey}
-                    onPress={this.props.cancel}
-                  >
-                    <Text style={Fonts.type45}>{this.props.cancelText}</Text>
                   </TouchableOpacity>
                 </View>
               )}
@@ -116,7 +104,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 16,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'center'
   },
   boxRed: {
     width: '47%',

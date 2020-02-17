@@ -440,6 +440,8 @@ class HistoryDetailView extends Component {
             open={this.state.openModalCancelOrderConfirmation}
             content={'Yakin ingin membatalkan pesanan Anda ?'}
             type={'okeNotRed'}
+            okText={'Ya'}
+            cancelText={'Tidak'}
             ok={() => {
               this.setState({ openModalCancelOrderConfirmation: false });
               this.cancelOrder();

@@ -3,12 +3,15 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
+  Linking,
+  BackHandler,
   Image,
   SafeAreaView,
   FlatList,
   Dimensions
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import DeviceInfo from 'react-native-device-info';
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -19,6 +22,8 @@ import Fonts from '../../helpers/GlobalFont';
 import GlobalStyles from '../../helpers/GlobalStyle';
 import { StatusBarWhite } from '../../components/StatusBarGlobal';
 import BackHandlerCloseApp from '../../components/BackHandlerCloseApp';
+import ModalConfirmation from '../../components/modal/ModalConfirmation';
+import ModalConfirmationType2 from '../../components/modal/ModalConfirmationType2';
 
 const { width } = Dimensions.get('window');
 
@@ -26,6 +31,8 @@ class HomeView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      openModalUpdateApp: false,
+      openModalForceUpdateApp: false,
       menu: [
         {
           title1: 'Journey',
@@ -54,10 +61,27 @@ class HomeView extends Component {
    * =======================
    */
   componentDidMount() {
+    this.props.versionsGetProcess();
     this.props.navigation.setParams({
       fullName: this.props.user.fullName,
       imageUrl: this.props.user.imageUrl
     });
+  }
+  /** DID UPDATE */
+  componentDidUpdate(prevProps) {
+    if (prevProps.global.dataGetVersion !== this.props.global.dataGetVersion) {
+      if (this.props.global.dataGetVersion !== null) {
+        if (
+          this.props.global.dataGetVersion.version !== DeviceInfo.getVersion()
+        ) {
+          if (this.props.global.dataGetVersion.isForce) {
+            this.setState({ openModalForceUpdateApp: true });
+          } else {
+            this.setState({ openModalUpdateApp: true });
+          }
+        }
+      }
+    }
   }
   /** === GO TO PAGE === */
   goToPage(item) {
@@ -236,6 +260,55 @@ class HomeView extends Component {
       </View>
     );
   }
+  /**
+   * =====================
+   * MODAL
+   * =====================
+   */
+  /** RENDER MODAL FORCE UPDATE */
+  renderModalForceUpdate() {
+    return this.state.openModalForceUpdateApp ? (
+      <ModalConfirmationType2
+        title={'Update Aplikasi'}
+        statusBarWhite
+        okText={'Update'}
+        open={this.state.openModalForceUpdateApp}
+        content={
+          'Update aplikasi sekarang dan nikmati performa yang lebih stabil.'
+        }
+        type={'okeRed'}
+        ok={() => {
+          BackHandler.exitApp();
+          Linking.openURL('market://details?id=com.sinbad.agent');
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** RENDER MODAL UPDATE */
+  renderModalUpdate() {
+    return this.state.openModalUpdateApp ? (
+      <ModalConfirmation
+        title={'Update Aplikasi'}
+        statusBarWhite
+        okText={'Update'}
+        cancelText={'Nanti'}
+        open={this.state.openModalUpdateApp}
+        content={
+          'Update aplikasi sekarang dan nikmati performa yang lebih stabil.'
+        }
+        type={'okeRed'}
+        ok={() => {
+          this.setState({ openModalUpdateApp: false });
+          Linking.openURL('market://details?id=com.sinbad.agent');
+        }}
+        cancel={() => this.setState({ openModalUpdateApp: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === RENDER MAIN === */
   render() {
     return (
@@ -243,6 +316,9 @@ class HomeView extends Component {
         <BackHandlerCloseApp navigation={this.props.navigation} />
         <StatusBarWhite />
         {this.renderData()}
+        {/* modal */}
+        {this.renderModalUpdate()}
+        {this.renderModalForceUpdate()}
       </SafeAreaView>
     );
   }
@@ -286,8 +362,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, merchant }) => {
-  return { user, merchant };
+const mapStateToProps = ({ user, merchant, global }) => {
+  return { user, merchant, global };
 };
 
 const mapDispatchToProps = dispatch => {

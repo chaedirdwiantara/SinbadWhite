@@ -948,6 +948,8 @@ class OmsCartView extends Component {
       <ModalConfirmation
         title={'Konfirmasi'}
         open={this.state.openModalToCheckoutConfirmation}
+        okText={'Ya'}
+        cancelText={'Tidak'}
         content={'Konfirmasi order dan lanjut ke Checkout ?'}
         type={'okeRed'}
         ok={() => {
@@ -968,6 +970,8 @@ class OmsCartView extends Component {
           <ModalConfirmation
             title={'Konfirmasi'}
             open={this.state.openModalDeleteConfirmation}
+            okText={'Ya'}
+            cancelText={'Tidak'}
             content={'Apakah Anda yakin untuk menghapus barang ?'}
             type={'okeNotRed'}
             ok={() => {
