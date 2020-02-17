@@ -114,6 +114,26 @@ function modifyDataAddressFromGmaps(data) {
   });
   return dataAddress;
 }
+/**
+ * ======================================
+ * CHECK VERSION
+ * ======================================
+ */
+/** === VERSION GET PROCESS === */
+export function versionsGetProcess(data) {
+  return { type: types.APP_VERSION_PROCESS, payload: data };
+}
+/** === VERSION GET SUCCESS === */
+export function versionsGetSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.APP_VERSION_SUCCESS, payload: data.data };
+  }
+  return { type: types.APP_VERSION_FAILED, payload: data };
+}
+/** === VERSION GET FAILED === */
+export function versionsGetFailed(data) {
+  return { type: types.APP_VERSION_FAILED, payload: data };
+}
 
 /**
  * ========================

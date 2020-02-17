@@ -24,9 +24,21 @@ function* getAddressFromLongLat(actions) {
     yield put(ActionCreators.longlatToAddressGetFailed(error));
   }
 }
+/** === THIS FOR GET VERSION === */
+function* getVersion(actions) {
+  try {
+    const response = yield call(() => {
+      return GlobalMethod.getVersion(actions.payload);
+    });
+    yield put(ActionCreators.versionsGetSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.versionsGetFailed(error));
+  }
+}
 /** === SAGA FUNCTION === */
 function* GlobalSaga() {
   yield takeEvery(types.LIST_AND_SEARCH_GET_PROCESS, getListAndSearch);
+  yield takeEvery(types.APP_VERSION_PROCESS, getVersion);
   yield takeEvery(
     types.GLOBAL_LONGLAT_TO_ADDRESS_PROCESS,
     getAddressFromLongLat
