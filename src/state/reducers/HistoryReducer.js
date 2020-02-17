@@ -4,20 +4,26 @@ import createReducer from './createReducer';
 const INITIAL_STATE = {
   /** loading */
   loadingGetHistory: false,
+  loadingEditHistory: false,
+  loadingDetailHistory: false,
   refreshGetHistory: false,
   loadingLoadMoreGetHistory: false,
   loadingGetOrderStatus: false,
   loadingGetPaymentStatus: false,
   /** data */
   dataGetHistory: [],
+  dataEditHistory: null,
   dataGetOrderStatus: null,
   dataGetPaymentStatus: null,
+  dataDetailHistory: null,
   totalDataGetHistory: 0,
   pageGetHistory: 0,
   /** error */
   errorGetHistory: null,
   errorGetOrderStatus: null,
-  errorGetPaymentStatus: null
+  errorGetPaymentStatus: null,
+  errorEditHistory: null,
+  errorHistoryDetail: null
 };
 
 export const history = createReducer(INITIAL_STATE, {
@@ -28,6 +34,33 @@ export const history = createReducer(INITIAL_STATE, {
    */
   [types.DELETE_ALL_DATA](state, action) {
     return INITIAL_STATE;
+  },
+  /**
+   * ==================================
+   * HISTORY DETAILS
+   * ==================================
+   */
+  [types.HISTORY_GET_DETAIL_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingDetailHistory: true,
+      dataDetailHistory: null,
+      errorHistoryDetail: null
+    };
+  },
+  [types.HISTORY_GET_DETAIL_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingDetailHistory: false,
+      dataDetailHistory: action.payload
+    };
+  },
+  [types.HISTORY_GET_DETAIL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingDetailHistory: false,
+      errorHistoryDetail: action.payload
+    };
   },
   /**
    * ==========================
@@ -137,6 +170,33 @@ export const history = createReducer(INITIAL_STATE, {
       ...state,
       loadingLoadMoreGetHistory: true,
       pageGetHistory: action.payload
+    };
+  },
+  /**
+   * =============================
+   * EDIT HISTORY
+   * =============================
+   */
+  [types.HISTORY_EDIT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingEditHistory: true,
+      dataEditHistory: null,
+      errorEditHistory: null
+    };
+  },
+  [types.HISTORY_EDIT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingEditHistory: false,
+      dataEditHistory: action.payload
+    };
+  },
+  [types.HISTORY_EDIT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingEditHistory: false,
+      errorEditHistory: action.payload
     };
   }
 });

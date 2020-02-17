@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, Image, StyleSheet, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity
+} from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
@@ -12,12 +18,17 @@ import EmptyData from '../../components/empty_state/EmptyData';
 import ProductListType1 from '../../components/list/ProductListType1';
 import { LoadingLoadMore } from '../../components/Loading';
 import { MoneyFormat } from '../../helpers/NumberFormater';
+import NavigationService from '../../navigation/NavigationService';
+import ModalConfirmation from '../../components/modal/ModalConfirmation';
 
 class HistoryDataListView extends Component {
   constructor(props) {
     super(props);
     this.renderItem = this.renderItem.bind(this);
-    this.state = {};
+    this.state = {
+      openModalCancelOrderConfirmation: false,
+      wantDeleteItem: null
+    };
   }
   /**
    * =======================
@@ -46,6 +57,14 @@ class HistoryDataListView extends Component {
       this.props.historyGetReset();
       this.getHistory(true, 0);
     }
+    if (
+      prevProps.history.dataEditHistory !== this.props.history.dataEditHistory
+    ) {
+      if (this.props.history.dataEditHistory !== null) {
+        this.props.historyGetReset();
+        this.getHistory(true, 0);
+      }
+    }
   }
   /** REFRESH LIST VIEW */
   onHandleRefresh = () => {
@@ -70,7 +89,7 @@ class HistoryDataListView extends Component {
     this.props.historyGetProcess({
       loading,
       userId: this.props.user.id,
-      storeId: this.props.merchant.selectedMerchant.storeId,
+      storeId: this.props.storeId,
       page,
       statusOrder: this.props.section === 'order' ? this.props.status : '',
       statusPayment: this.props.section === 'payment' ? this.props.status : '',
@@ -114,11 +133,71 @@ class HistoryDataListView extends Component {
       ? this.checkorder(item)
       : '';
   }
+  /** go to detail */
+  goToDetail(item) {
+    this.props.historyGetDetailProcess(item.id);
+    NavigationService.navigate('HistoryDetailView', {
+      section: this.props.section,
+      storeId: item.store.id
+    });
+  }
+  /** CANCEL ORDER */
+  cancelOrder() {
+    this.props.historyEditProcess({
+      parcelId: this.state.wantDeleteItem.id,
+      params: {
+        status: 'cancel'
+      }
+    });
+  }
+  /** ORDER VIA */
+  orderVia(item) {
+    if (item.order !== null) {
+      switch (item.order.orderVia) {
+        case null:
+          return '';
+        case 'sales':
+          return 'Sales Rep Order';
+        case 'store':
+          return 'Toko Order';
+        default:
+          break;
+      }
+    }
+    return '';
+  }
   /**
    * ========================
    * RENDER VIEW
    * =======================
    */
+  /** ITEM BUTTON DETAIL*/
+  renderButtonDetail(item) {
+    return (
+      <TouchableOpacity
+        style={styles.buttonDetail}
+        onPress={() => this.goToDetail(item)}
+      >
+        <Text style={Fonts.type39}>Detail</Text>
+      </TouchableOpacity>
+    );
+  }
+  /** ITEM BUTTON CANCEL */
+  renderButtonCancel(item) {
+    return (
+      <TouchableOpacity
+        style={styles.buttonCancel}
+        onPress={() =>
+          this.setState({
+            openModalCancelOrderConfirmation: true,
+            wantDeleteItem: item
+          })
+        }
+      >
+        <Text style={Fonts.type11}>Batal</Text>
+      </TouchableOpacity>
+    );
+  }
   /** ITEM PRODUCT SECTION */
   renderProductSection(data) {
     return <ProductListType1 data={data} />;
@@ -147,7 +226,7 @@ class HistoryDataListView extends Component {
                   'DD MMM YYYY HH:mm:ss'
                 )}
               </Text>
-              <Text>{''}</Text>
+              <Text style={Fonts.type57}>{this.orderVia(item)}</Text>
             </View>
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             {this.renderProductSection(item.orderBrands)}
@@ -157,7 +236,14 @@ class HistoryDataListView extends Component {
                 {item.parcelDetails.totalQty} Qty, Total:{' '}
                 {MoneyFormat(item.parcelDetails.totalNettPrice)}
               </Text>
-              <Text>{''}</Text>
+              <View style={{ flexDirection: 'row' }}>
+                {this.props.section === 'order' && item.status === 'confirm' ? (
+                  this.renderButtonCancel(item)
+                ) : (
+                  <View />
+                )}
+                {this.renderButtonDetail(item)}
+              </View>
             </View>
           </View>
         </View>
@@ -203,15 +289,47 @@ class HistoryDataListView extends Component {
       <View />
     );
   }
+  /**
+   * ======================
+   * MODAL
+   * ======================
+   */
+  renderModalCancelOrderConfirmation() {
+    return (
+      <View>
+        {this.state.openModalCancelOrderConfirmation ? (
+          <ModalConfirmation
+            statusBarWhite
+            title={'Konfirmasi'}
+            open={this.state.openModalCancelOrderConfirmation}
+            content={'Yakin ingin membatalkan pesanan Anda ?'}
+            type={'okeNotRed'}
+            ok={() => {
+              this.setState({ openModalCancelOrderConfirmation: false });
+              this.cancelOrder();
+            }}
+            cancel={() =>
+              this.setState({ openModalCancelOrderConfirmation: false })
+            }
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
   /** === MAIN === */
   render() {
     return (
       <View style={styles.mainContainer}>
-        {this.props.history.loadingGetHistory
+        {this.props.history.loadingGetHistory ||
+        this.props.history.loadingEditHistory
           ? this.renderSkeleton()
           : this.renderData()}
         {/* for loadmore */}
         {this.renderLoadMore()}
+        {/* modal */}
+        {this.renderModalCancelOrderConfirmation()}
       </View>
     );
   }
@@ -233,6 +351,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
+  },
+  buttonDetail: {
+    backgroundColor: masterColor.mainColor,
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    borderRadius: 4,
+    marginLeft: 8
+  },
+  buttonCancel: {
+    backgroundColor: masterColor.backgroundWhite,
+    borderWidth: 1,
+    borderColor: masterColor.mainColor,
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    borderRadius: 4
   }
 });
 

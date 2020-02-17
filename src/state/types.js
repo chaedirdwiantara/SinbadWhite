@@ -212,6 +212,14 @@ export const HISTORY_GET_LOADMORE = 'HistoryGetLoadMore';
 /** DELETE NEW ORDER PER MERCHANT */
 export const HISTORY_DELETE_NEW_ORDER_NOTIF_PER_MERCHANT =
   'HistoryDeleteNewOrderNotifPerMerchant';
+/** DETAIL HISTORY */
+export const HISTORY_GET_DETAIL_PROCESS = 'historyGetDetailProcess';
+export const HISTORY_GET_DETAIL_SUCCESS = 'historyGetDetailSuccess';
+export const HISTORY_GET_DETAIL_FAILED = 'historyGetDetailFailed';
+/** EDIT HISTORY DATA */
+export const HISTORY_EDIT_PROCESS = 'HistoryEditProcess';
+export const HISTORY_EDIT_SUCCESS = 'HistoryEditSuccess';
+export const HISTORY_EDIT_FAILED = 'HistoryEditFailed';
 /**
  * ========================
  * PROFILE

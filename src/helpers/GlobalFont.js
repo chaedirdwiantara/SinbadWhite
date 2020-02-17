@@ -459,10 +459,16 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: masterColor.fontBlack80
   },
-  forCompare: {
-    fontFamily: Fonts.MontserratBold,
+  type76: {
+    fontFamily: Fonts.MontserratSemiBold,
     fontSize: 11,
-    lineHeight: 16,
+    lineHeight: 14,
+    color: masterColor.fontBlack80
+  },
+  forCompare: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 11,
+    lineHeight: 14,
     color: masterColor.fontBlack80
   },
   /** === bottom nav ==== */

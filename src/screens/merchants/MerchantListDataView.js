@@ -96,7 +96,7 @@ class MerchantListDataView extends Component {
   renderItem({ item, index }) {
     return (
       <View key={index} style={styles.boxItem}>
-        <View>
+        <TouchableOpacity onPress={() => this.goToDetailMerchant(item.id)}>
           {item.imageUrl !== null ? (
             <Image source={{ uri: item.imageUrl }} style={styles.boxImage} />
           ) : (
@@ -105,8 +105,9 @@ class MerchantListDataView extends Component {
               style={styles.boxImage}
             />
           )}
-        </View>
-        <View
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => this.goToDetailMerchant(item.id)}
           style={{
             paddingHorizontal: 16,
             justifyContent: 'space-between',
@@ -131,7 +132,7 @@ class MerchantListDataView extends Component {
               urban={item.urban}
             />
           </View>
-        </View>
+        </TouchableOpacity>
         <View style={{ justifyContent: 'flex-end' }}>
           <TouchableOpacity
             style={styles.boxButtonDetail}

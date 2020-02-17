@@ -3,13 +3,13 @@ import {
   View,
   StyleSheet,
   Image,
+  SafeAreaView,
   TouchableOpacity,
   Keyboard
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import Text from 'react-native-text';
 import { connect } from 'react-redux';
-import { SafeAreaView } from 'react-navigation';
 import IconsAntDesign from 'react-native-vector-icons/AntDesign';
 import * as ActionCreators from '../../state/actions';
 import Fonts from '../../helpers/GlobalFont';
@@ -24,12 +24,10 @@ import OtpResend from '../../components/otp/OtpResend';
 class OtpView extends Component {
   constructor(props) {
     super(props);
-    const { navigation } = this.props;
     this.state = {
-      // phoneNumber: navigation.state.params.phoneNumber,
       errorOTP: false,
       otpInput: [],
-      otpErrorText: 'Pastikan kode verifikasi yang anda masukan benar'
+      otpErrorText: ''
     };
   }
   /**
@@ -42,7 +40,7 @@ class OtpView extends Component {
     /** IF SUCCESS OTP */
     if (prevProps.auth.dataSignIn !== this.props.auth.dataSignIn) {
       if (this.props.auth.dataSignIn !== null) {
-        NavigationService.navigate('Home');
+        NavigationService.navigate('HomeView');
       }
     }
     /** IF ERROR OTP */
@@ -65,17 +63,11 @@ class OtpView extends Component {
   checkOtp() {
     Keyboard.dismiss();
     this.setState({ errorOTP: false });
-    /** OLD LOGIN (DONT REMOVE */
-    // if (this.props.auth.dataGetOTP !== this.state.otpInput.join('')) {
-    //   this.setState({ errorOTP: true });
-    // } else {
-    //   this.props.signInProcess({
-    //     mobilePhoneNo: '0' + this.state.phoneNumber,
-    //     otpCode: this.state.otpInput.join('')
-    //   });
-    // }
     if (this.props.permanent.otpAgentSignIn !== this.state.otpInput.join('')) {
-      this.setState({ errorOTP: true });
+      this.setState({
+        errorOTP: true,
+        otpErrorText: 'Pastikan kode verifikasi yang anda masukan benar'
+      });
     } else {
       this.props.signInProcess({
         mobilePhoneNo: '0' + this.props.permanent.phoneNumberAgentSignIn,
@@ -133,7 +125,6 @@ class OtpView extends Component {
           style={{ paddingRight: '30%', paddingBottom: 20, paddingTop: 10 }}
         >
           <Text style={Fonts.type2}>Kami telah mengirimi Anda SMS di</Text>
-          {/* <Text style={Fonts.type2}>+62{this.state.phoneNumber}</Text> */}
           <Text style={Fonts.type2}>
             +62{this.props.permanent.phoneNumberAgentSignIn}
           </Text>
@@ -156,9 +147,7 @@ class OtpView extends Component {
   renderErrorOTP() {
     return this.state.errorOTP ? (
       <View style={{ alignItems: 'center' }}>
-        <Text style={Fonts.type14}>
-          Pastikan kode verifikasi yang anda masukan benar
-        </Text>
+        <Text style={Fonts.type14}>{this.state.otpErrorText}</Text>
       </View>
     ) : (
       <View />
@@ -192,7 +181,6 @@ class OtpView extends Component {
   /** RENDER RESEND */
   renderResend() {
     return (
-      // <OtpResend phoneNumber={'0' + this.state.phoneNumber} from={'login'} />
       <OtpResend
         phoneNumber={'0' + this.props.permanent.phoneNumberAgentSignIn}
         from={'login'}

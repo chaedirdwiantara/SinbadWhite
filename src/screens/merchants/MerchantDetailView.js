@@ -20,13 +20,16 @@ import GlobalStyle from '../../helpers/GlobalStyle';
 import { LoadingPage } from '../../components/Loading';
 import NavigationService from '../../navigation/NavigationService.js';
 import ButtonMenuType1 from '../../components/button/ButtonMenuType1';
+import CallMerchant from '../../screens/global/CallMerchant';
 
 const { width } = Dimensions.get('window');
 
 class MerchantDetailView extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      openModalCallMerchant: false
+    };
   }
   /**
    * ===============================
@@ -111,6 +114,21 @@ class MerchantDetailView extends Component {
       case 'merchantAddress':
         NavigationService.navigate('MerchantDetailAddressView');
         break;
+      case 'merchantOrderHistory':
+        NavigationService.navigate('HistoryView', {
+          storeId: this.props.merchant.dataGetMerchantDetail.id
+        });
+        break;
+      default:
+        break;
+    }
+  }
+  /** CALLED FROM CHILD */
+  parentFunction(data) {
+    switch (data.type) {
+      case 'close':
+        this.setState({ openModalCallMerchant: false });
+        break;
       default:
         break;
     }
@@ -167,10 +185,19 @@ class MerchantDetailView extends Component {
               style={styles.imageHeader}
             />
           ) : (
-            <Image
-              source={require('../../assets/images/merchant/store.png')}
-              style={styles.imageHeader}
-            />
+            <View
+              style={{
+                height: 169,
+                backgroundColor: masterColor.fontBlack05,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Image
+                source={require('../../assets/images/merchant/store.png')}
+                style={styles.imageHeader}
+              />
+            </View>
           )}
         </View>
         <View
@@ -195,6 +222,14 @@ class MerchantDetailView extends Component {
           >
             {this.combineAddress(this.props.merchant.dataGetMerchantDetail)}
           </Text>
+          <TouchableOpacity
+            style={{ marginTop: 8 }}
+            onPress={() => this.setState({ openModalCallMerchant: true })}
+          >
+            <Text style={[Fonts.type62, { textDecorationLine: 'underline' }]}>
+              Hubungi Toko
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -293,6 +328,21 @@ class MerchantDetailView extends Component {
       </View>
     );
   }
+  /** MERCHANT HISTORY ORDER */
+  renderMerchantOrderHistory() {
+    return (
+      <View>
+        <View style={styles.boxContentHeader}>
+          <Text style={Fonts.type42}>Pesanan</Text>
+        </View>
+        <ButtonMenuType1
+          child
+          title={'Pesanan'}
+          onPress={() => this.goTo('merchantOrderHistory')}
+        />
+      </View>
+    );
+  }
   /** === RENDER CONTENT DATA === */
   renderData() {
     return (
@@ -300,8 +350,32 @@ class MerchantDetailView extends Component {
         {this.renderHeaderMerchant()}
         {this.renderMerchantProfileBar()}
         {this.renderMerchantInformationList()}
+        {this.renderMerchantOrderHistory()}
         <View style={{ paddingBottom: 50 }} />
       </ScrollView>
+    );
+  }
+  /**
+   * =====================
+   * MODAL
+   * =====================
+   */
+  /** MODAL CALL */
+  renderModalCallMerchant() {
+    return this.state.openModalCallMerchant ? (
+      <View>
+        <CallMerchant
+          phoneNumber={
+            this.props.merchant.dataGetMerchantDetail.owner.mobilePhoneNo
+          }
+          open={this.state.openModalCallMerchant}
+          close={() => this.setState({ openModalCallMerchant: false })}
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
+        />
+      </View>
+    ) : (
+      <View />
     );
   }
   /** === MAIN === */
@@ -315,6 +389,8 @@ class MerchantDetailView extends Component {
         ) : (
           <LoadingPage />
         )}
+        {/* modal */}
+        {this.renderModalCallMerchant()}
       </SafeAreaView>
     );
   }
@@ -343,8 +419,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   imageHeader: {
-    height: 169,
-    width: '100%'
+    height: 120,
+    width: 120
   },
   boxMaps: {
     width: 60,

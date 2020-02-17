@@ -2,9 +2,8 @@
  * this product list for history order
  */
 import React, { Component } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { View, Image, StyleSheet } from 'react-native';
+import Text from 'react-native-text';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
@@ -39,7 +38,7 @@ class ProductListType1 extends Component {
   /** ITEM LIST PRODUCT */
   renderListProductImageContent(itemProduct, indexCounter) {
     return itemProduct.map((item, index) => {
-      return indexCounter++ < 3 ? (
+      return indexCounter++ < 4 ? (
         <View key={index} style={{ paddingHorizontal: 5 }}>
           <Image
             defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}

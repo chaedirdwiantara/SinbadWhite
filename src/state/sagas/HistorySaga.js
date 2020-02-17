@@ -35,8 +35,33 @@ function* getHistoryPaymentStatus(actions) {
     yield put(ActionCreators.historyGetPaymentStatusFailed(error));
   }
 }
+/** EDIT HISTORY */
+function* editHistory(actions) {
+  try {
+    const response = yield call(() => {
+      return HistoryMethod.editHistory(actions.payload);
+    });
+    yield put(ActionCreators.historyEditSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.historyEditFailed(error));
+  }
+}
+/** DETAIL HISTORY */
+function* getDetailHistory(actions) {
+  try {
+    const response = yield call(() => {
+      return HistoryMethod.getDetailHistory(actions.payload);
+    });
+    yield put(ActionCreators.historyGetDetailSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.historyGetDetailFailed(error));
+  }
+}
+
 function* HistorySaga() {
   yield takeEvery(types.HISTORY_GET_PROCESS, getHistory);
+  yield takeEvery(types.HISTORY_GET_DETAIL_PROCESS, getDetailHistory);
+  yield takeEvery(types.HISTORY_EDIT_PROCESS, editHistory);
   yield takeEvery(
     types.HISTORY_GET_ORDER_STATUS_PROCESS,
     getHistoryOrderStatus

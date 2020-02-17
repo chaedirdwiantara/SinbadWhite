@@ -28,9 +28,26 @@ function getHistoryPaymentStatus(data) {
     method: 'GET'
   });
 }
+/** EDIT HISTORY */
+function editHistory(data) {
+  return ApiRest({
+    path: `order-parcels/${data.parcelId}`,
+    method: 'PATCH',
+    params: data.params
+  });
+}
+/** EDIT HISTORY */
+function getDetailHistory(parcelId) {
+  return ApiRest({
+    path: `order-parcels/${parcelId}`,
+    method: 'GET'
+  });
+}
 
 export const HistoryMethod = {
   getHistory,
   getHistoryOrderStatus,
-  getHistoryPaymentStatus
+  getHistoryPaymentStatus,
+  editHistory,
+  getDetailHistory
 };

@@ -85,3 +85,43 @@ export function historyGetReset() {
 export function historyGetLoadMore(page) {
   return { type: types.HISTORY_GET_LOADMORE, payload: page };
 }
+/**
+ * ============================
+ * HISTORY DETAIL
+ * ==========================
+ */
+/** HISTORY GET DETAILS PROCESS */
+export function historyGetDetailProcess(data) {
+  return { type: types.HISTORY_GET_DETAIL_PROCESS, payload: data };
+}
+/** HISTORY GET DETAILS SUCCESS */
+export function historyGetDetailSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.HISTORY_GET_DETAIL_SUCCESS, payload: data.data };
+  }
+  return { type: types.HISTORY_GET_DETAIL_FAILED, payload: data };
+}
+/** HISTORY GET DETAILS FAILED */
+export function historyGetDetailFailed(data) {
+  return { type: types.HISTORY_GET_DETAIL_FAILED, payload: data };
+}
+/**
+ * ============================
+ * HISTORY EDIT
+ * ==========================
+ */
+/** HISTORY EDIT PROCESS */
+export function historyEditProcess(data) {
+  return { type: types.HISTORY_EDIT_PROCESS, payload: data };
+}
+/** HISTORY EDIT SUCCESS */
+export function historyEditSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.HISTORY_EDIT_SUCCESS, payload: data.data };
+  }
+  return { type: types.HISTORY_EDIT_FAILED, payload: data };
+}
+/** HISTORY EDIT FAILED */
+export function historyEditFailed(data) {
+  return { type: types.HISTORY_EDIT_FAILED, payload: data };
+}

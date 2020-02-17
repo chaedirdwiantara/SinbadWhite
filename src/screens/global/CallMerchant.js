@@ -8,9 +8,6 @@ import {
   Linking,
   Platform
 } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
 import {
@@ -19,11 +16,11 @@ import {
 } from '../../components/StatusBarGlobal';
 import ModalBottomSwipeCloseNotScroll from '../../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 
-class CallCS extends Component {
+class CallMerchant extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      phoneNumber: '+628988386606'
+      parsingPhone: this.props.phoneNumber.split('')
     };
   }
   /**
@@ -40,13 +37,13 @@ class CallCS extends Component {
     this.toParentFunction({
       type: 'close'
     });
-    Linking.openURL(`whatsapp://send?phone=${this.state.phoneNumber}`).catch(
-      err => {
-        if (err) {
-          Linking.openURL('market://details?id=com.whatsapp');
-        }
+    Linking.openURL(
+      `whatsapp://send?phone=+62${this.props.phoneNumber.slice(1)}`
+    ).catch(err => {
+      if (err) {
+        Linking.openURL('market://details?id=com.whatsapp');
       }
-    );
+    });
   }
 
   toPhoneCall() {
@@ -55,9 +52,9 @@ class CallCS extends Component {
     });
     let noPhone = '';
     if (Platform.OS === 'android') {
-      noPhone = `tel:${this.state.phoneNumber}`;
+      noPhone = `tel:${this.props.phoneNumber}`;
     } else {
-      noPhone = `telprompt:${this.state.phoneNumber}`;
+      noPhone = `telprompt:${this.props.phoneNumber}`;
     }
     Linking.openURL(noPhone);
   }
@@ -70,17 +67,29 @@ class CallCS extends Component {
   renderContentItem() {
     return (
       <View style={styles.contentContainer}>
-        <TouchableOpacity
-          style={styles.boxMenu}
-          onPress={() => this.toWhatsAppWithContact()}
-        >
-          <Image
-            source={require('../../assets/icons/profile/whatsapp.png')}
-            style={styles.menuCircleImage}
-          />
-          <Text style={Fonts.type8}>Chat</Text>
-          <Text style={Fonts.type8}>Whatsapp</Text>
-        </TouchableOpacity>
+        {this.state.parsingPhone[1] === '8' ? (
+          <TouchableOpacity
+            style={styles.boxMenu}
+            onPress={() => this.toWhatsAppWithContact()}
+          >
+            <Image
+              source={require('../../assets/icons/profile/whatsapp.png')}
+              style={styles.menuCircleImage}
+            />
+            <Text style={Fonts.type8}>Chat</Text>
+            <Text style={Fonts.type8}>Whatsapp</Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.boxMenu}>
+            <Image
+              source={require('../../assets/icons/profile/whatsapp.png')}
+              style={[styles.menuCircleImage, { opacity: 0.3 }]}
+            />
+            <Text style={[Fonts.type8, { opacity: 0.5 }]}>Chat</Text>
+            <Text style={[Fonts.type8, { opacity: 0.5 }]}>Whatsapp</Text>
+          </View>
+        )}
+
         <TouchableOpacity
           style={styles.boxMenu}
           onPress={() => this.toPhoneCall()}
@@ -116,7 +125,7 @@ class CallCS extends Component {
         closeButton
         open={this.props.open}
         close={this.props.close}
-        title={'Hubungi CS'}
+        title={'Hubungi Toko'}
         content={this.renderContent()}
       />
     );
@@ -145,12 +154,4 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
-};
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(ActionCreators, dispatch);
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CallCS);
+export default CallMerchant;

@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  BackHandler
-} from 'react-native';
+import { StyleSheet, View, SafeAreaView, TouchableOpacity } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
@@ -41,12 +35,11 @@ class JourneyView extends Component {
    * ========================
    */
   static navigationOptions = ({ navigation }) => {
-    const { state } = navigation;
     return {
       headerLeft: () => (
         <TouchableOpacity
           style={{ marginLeft: 16 }}
-          onPress={() => state.params.handleBackPressFromRN()}
+          onPress={() => NavigationService.navigate('HomeView')}
         >
           <MaterialIcon
             color={masterColor.fontBlack50}
@@ -64,7 +57,6 @@ class JourneyView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    this.navigationFunction();
     this.props.journeyPlanGetReset();
     this.props.journeyPlanGetProcess({ page: 0, loading: true });
     this.props.getJourneyPlanReportProcess(
@@ -105,13 +97,6 @@ class JourneyView extends Component {
   /** === ADD MERCHANT TO JOURNEY === */
   addMerchant() {
     this.setState({ openModalAddMerchant: true });
-  }
-  /** ====== DID MOUNT FUNCTION ========== */
-  /** NAVIGATION FUNCTION */
-  navigationFunction() {
-    this.props.navigation.setParams({
-      handleBackPressFromRN: () => NavigationService.navigate('HomeView')
-    });
   }
   /** go to page */
   goTo(type) {
