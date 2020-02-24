@@ -50,7 +50,7 @@ class InputMapsType1 extends Component {
               latitudeDelta: 0.05,
               longitudeDelta: 0.05
             }}
-            onLayout={() =>
+            onLayout={() => {
               setTimeout(() => {
                 this.mapRef.fitToCoordinates(
                   [
@@ -69,8 +69,8 @@ class InputMapsType1 extends Component {
                     animated: true
                   }
                 );
-              }, 500)
-            }
+              }, 0);
+            }}
           >
             <Marker
               image={require('../../assets/icons/maps/drop_pin.png')}

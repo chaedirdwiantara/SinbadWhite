@@ -122,7 +122,7 @@ class MapsView extends Component {
           latitudeDelta: this.state.latitudeDelta,
           longitudeDelta: this.state.longitudeDelta
         }}
-        onLayout={() =>
+        onLayout={() => {
           setTimeout(() => {
             this.mapRef.fitToCoordinates(
               [
@@ -133,16 +133,16 @@ class MapsView extends Component {
               ],
               {
                 edgePadding: {
-                  top: 16,
-                  right: 16,
-                  bottom: 16,
-                  left: 16
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  left: 0
                 },
                 animated: true
               }
             );
-          }, 500)
-        }
+          }, 0);
+        }}
       >
         <Marker
           draggable
