@@ -27,6 +27,7 @@ import ModalBottomErrorRespons from '../../components/error/ModalBottomErrorResp
 import ErrorPage from '../../components/error/ErrorPage';
 import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
 import SelectedMerchantName from '../../components/SelectedMerchantName';
+import ModalBottomInputOwnerId from './ModalBottomInputOwnerId';
 
 const { width, height } = Dimensions.get('window');
 
@@ -39,6 +40,7 @@ class OmsCartView extends Component {
       openModalStockConfirmation: false,
       openModalErrorGlobal: false,
       openModalDeleteConfirmation: false,
+      openModalInputOwnerId: false,
       /** data */
       buttonCheckoutDisabled: false,
       productWantToDelete: null,
@@ -63,6 +65,20 @@ class OmsCartView extends Component {
   }
   /** === DID UPDATE */
   componentDidUpdate(prevProps) {
+    /**
+     * ======================
+     * FOR INPUT ID SUCCESS
+     * ======================
+     */
+    if (
+      prevProps.merchant.dataGetMerchantDetail !==
+      this.props.merchant.dataGetMerchantDetail
+    ) {
+      if (this.props.merchant.dataGetMerchantDetail !== null) {
+        this.checkCart();
+        this.setState({ openModalInputOwnerId: false });
+      }
+    }
     /**
      * ========================
      * SUCCESS RESPONS
@@ -105,6 +121,13 @@ class OmsCartView extends Component {
         if (this.props.oms.errorOmsGetCheckoutItem.code === 400) {
           this.setState({ openModalStockConfirmation: true });
           this.modifyProductCartArrayWhenError();
+        } else if (this.props.oms.errorOmsGetCheckoutItem.code === 406) {
+          if (
+            this.props.oms.errorOmsGetCheckoutItem.data.errorCode ===
+            'ERR-VERIFIED'
+          ) {
+            this.setState({ openModalInputOwnerId: true });
+          }
         } else {
           this.setState({ openModalErrorGlobal: true });
         }
@@ -1031,6 +1054,21 @@ class OmsCartView extends Component {
       <View />
     );
   }
+  /** === RENDER MODAL INPUT OWNER ID === */
+  renderModalInputOwnerId() {
+    return this.state.openModalInputOwnerId ? (
+      <ModalBottomInputOwnerId
+        open={this.state.openModalInputOwnerId}
+        close={() =>
+          this.setState({
+            openModalInputOwnerId: false
+          })
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
 
   renderEmpty() {
     return <EmptyData title={'Keranjang Kosong'} />;
@@ -1067,6 +1105,7 @@ class OmsCartView extends Component {
         {this.renderModalConfirmationCheckout()}
         {this.renderModalDeleteProductConfirmation()}
         {this.renderModalStockConfirmation()}
+        {this.renderModalInputOwnerId()}
         {/* errr */}
         {this.renderModalErrorRespons()}
       </View>

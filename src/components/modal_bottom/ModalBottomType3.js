@@ -6,7 +6,6 @@ import {
   Dimensions,
   TouchableOpacity
 } from 'react-native';
-import { connect } from 'react-redux';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Modal from 'react-native-modal';
 import masterColor from '../../config/masterColor.json';

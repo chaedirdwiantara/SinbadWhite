@@ -87,7 +87,7 @@ class MerchantEditPartialView extends Component {
       const data = {
         storeId: this.state.storeId,
         params: {
-          owner: {
+          user: {
             id: this.state.ownerId,
             idNo: this.state.idNo,
             taxNo: this.state.taxNo
@@ -152,7 +152,7 @@ class MerchantEditPartialView extends Component {
       const data = {
         storeId: this.state.storeId,
         params: {
-          owner: {
+          user: {
             id: this.state.ownerId,
             idImage: `data:image/gif;base64,${this.props.global.imageBase64}`
           }
@@ -163,7 +163,7 @@ class MerchantEditPartialView extends Component {
       const data = {
         storeId: this.state.storeId,
         params: {
-          owner: {
+          user: {
             id: this.state.ownerId,
             selfieImage: `data:image/gif;base64,${this.props.global.imageBase64}`
           }

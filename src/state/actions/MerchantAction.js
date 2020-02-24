@@ -99,7 +99,7 @@ export function portfolioGetSuccess(data) {
     const dataResult = data.data;
     const addingData = {
       id: '',
-      name: 'Portfolio Direct'
+      name: 'Toko Baru'
     };
     dataResult.unshift(addingData);
     return { type: types.PORTFOLIO_GET_SUCCESS, payload: dataResult };
