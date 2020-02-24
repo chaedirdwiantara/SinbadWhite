@@ -31,6 +31,7 @@ import ModalWarning from './ModalWarning';
 import ModalBottomStockConfirmationConfirmOrder from './ModalBottomStockConfirmationConfirmOrder';
 import ModalBottomErrorMinimumOrder from './ModalBottomErrorMinimumOrder';
 import SelectedMerchantName from '../../components/SelectedMerchantName';
+import ModalBottomInputOwnerId from './ModalBottomInputOwnerId';
 
 const { width, height } = Dimensions.get('window');
 
@@ -111,6 +112,11 @@ class OmsCheckoutView extends Component {
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
+    /**
+     * ========================
+     * SUCCESS RESPONS
+     * =======================
+     */
     if (
       prevProps.oms.dataOmsConfirmOrder !== this.props.oms.dataOmsConfirmOrder
     ) {
@@ -161,6 +167,13 @@ class OmsCheckoutView extends Component {
             setTimeout(() => {
               this.setState({ modalErrorPayment: false });
             }, 2000);
+          }
+        } else if (this.props.oms.errorOmsConfirmOrder.code === 406) {
+          if (
+            this.props.oms.errorOmsConfirmOrder.data.errorCode ===
+            'ERR-VERIFIED'
+          ) {
+            this.setState({ openModalInputOwnerId: true });
           }
         } else {
           this.setState({ modalErrorGlobal: true });
