@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import {
   View,
-  Text,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   Image,
   Dimensions
 } from 'react-native';
+import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../../state/actions';
-import GlobalStyle from '../../../helpers/GlobalStyle';
 import masterColor from '../../../config/masterColor.json';
-import { MoneyFormat } from '../../../helpers/NumberFormater';
 import Fonts from '../../../helpers/GlobalFont';
 import ButtonSingle from '../../../components/button/ButtonSingle';
 import InputType1 from '../../../components/input/InputType1';
