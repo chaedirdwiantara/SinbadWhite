@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Dimensions,
-  TouchableOpacity
-} from 'react-native';
+import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import Text from 'react-native-text';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Modal from 'react-native-modal';
 import masterColor from '../../config/masterColor.json';

@@ -2,7 +2,8 @@
  * THIS MODAL FOR SWIPE TO BOTTOM
  */
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Dimensions, Keyboard } from 'react-native';
+import { View, StyleSheet, Dimensions, Keyboard } from 'react-native';
+import Text from 'react-native-text';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
