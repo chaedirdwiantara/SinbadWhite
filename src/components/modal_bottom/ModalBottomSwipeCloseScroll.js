@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   Dimensions,
   TouchableOpacity,
   ScrollView
 } from 'react-native';
 import { connect } from 'react-redux';
+import Text from 'react-native-text';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Modal from 'react-native-modal';
 import masterColor from '../../config/masterColor.json';

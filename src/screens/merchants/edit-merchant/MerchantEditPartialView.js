@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import {
   View,
-  Text,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   Image,
   Dimensions
 } from 'react-native';
+import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../../state/actions';
-import GlobalStyle from '../../../helpers/GlobalStyle';
 import masterColor from '../../../config/masterColor.json';
-import { MoneyFormat } from '../../../helpers/NumberFormater';
 import Fonts from '../../../helpers/GlobalFont';
 import ButtonSingle from '../../../components/button/ButtonSingle';
 import InputType1 from '../../../components/input/InputType1';
@@ -205,7 +203,7 @@ class MerchantEditPartialView extends Component {
     if (this.props.type === 'merchantOwnerIdNo') {
       if (
         this.state.idNo !==
-          this.props.merchant.dataGetMerchantDetail.userStores[0].user.idNo &&
+          this.props.merchant.dataGetMerchantDetail.owner.idNo &&
         this.state.idNo.length === 16
       ) {
         return false;
@@ -214,7 +212,7 @@ class MerchantEditPartialView extends Component {
       /** TAX NO */
       if (
         this.state.taxNo !==
-          this.props.merchant.dataGetMerchantDetail.userStores[0].user.taxNo &&
+          this.props.merchant.dataGetMerchantDetail.owner.taxNo &&
         this.state.taxNo.length === 15
       ) {
         return false;

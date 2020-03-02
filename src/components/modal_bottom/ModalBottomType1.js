@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import Text from 'react-native-text';
 import Modal from 'react-native-modal';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
