@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity
-} from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
+import Text from 'react-native-text';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
