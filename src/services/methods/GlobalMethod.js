@@ -1,7 +1,9 @@
 import ApiRest from '../apiRest';
 import ApiRestMap from '../apiRestMap';
+import { Store } from '../../state/Store';
 
 function getListAndSearch(data) {
+  const stateData = Store.getState();
   /**
    * PROPS
    * data.type =  'vehicleMerchant' / 'hierarchyMerchant' / 'clusterMerchant' / 'typeMerchant' / 'groupMerchant' / 'segmentMerchant'
@@ -34,6 +36,18 @@ function getListAndSearch(data) {
       break;
     case 'vehicleMerchant':
       listAndSearchApi = 'vehicle-accessibilities?';
+      break;
+    case 'province':
+      listAndSearchApi = 'provinces?';
+      break;
+    case 'city':
+      listAndSearchApi = `locations?type=city&provinceId=${stateData.global.dataLocationVolatile.provinceId}&`;
+      break;
+    case 'district':
+      listAndSearchApi = `locations?type=district&city=${stateData.global.dataLocationVolatile.cityName}&`;
+      break;
+    case 'urban':
+      listAndSearchApi = `locations?type=urban&district=${stateData.global.dataLocationVolatile.districtName}&`;
       break;
     default:
       break;

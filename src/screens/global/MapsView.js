@@ -15,6 +15,7 @@ import GlobalStyles from '../../helpers/GlobalStyle';
 import ButtonSingle from '../../components/button/ButtonSingle';
 import { LoadingPage } from '../../components/Loading';
 import ModalBottomErrorPinMap from '../../components/error/ModalBottomErrorPinMap';
+import ModalBottomManualLocation from '../../screens/global/ModalBottomManualLocation';
 import ErrorPageNoGPS from '../../components/error/ErrorPageNoGPS';
 
 class MapsView extends Component {
@@ -58,6 +59,16 @@ class MapsView extends Component {
         this.setState({ openErrorGlobalLongLatToAddress: true });
       }
     }
+  }
+  /** === CLEAR VOLATLE MANUAL INPUT LOCATION == */
+  clearDataManualInputLocation() {
+    this.props.saveDataManualInputLocation({
+      provinceId: '',
+      provinceName: '',
+      cityName: '',
+      districtName: '',
+      urbanName: ''
+    });
   }
   /** === GET CURRENT LOCATION === */
   successMaps = success => {
@@ -212,7 +223,8 @@ class MapsView extends Component {
         <ButtonSingle
           disabled={
             this.state.reRender ||
-            this.props.global.loadingGlobalLongLatToAddress
+            this.props.global.loadingGlobalLongLatToAddress ||
+            this.props.global.dataOpenModalManualInputLocation
           }
           loading={this.props.global.loadingGlobalLongLatToAddress}
           title={'Pilih Lokasi Ini'}
@@ -227,9 +239,40 @@ class MapsView extends Component {
     return this.state.openErrorGlobalLongLatToAddress ? (
       <ModalBottomErrorPinMap
         open={this.state.openErrorGlobalLongLatToAddress}
-        onPress={() => {
+        ok={() => {
           this.setState({ openErrorGlobalLongLatToAddress: false });
-          // this.addLongLat();
+        }}
+        manualInput={() => {
+          this.setState({ openErrorGlobalLongLatToAddress: false });
+          this.props.modalManualInputLocation(true);
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** === RENDER MODAL BOTTOM INPUT MANUAL LOCATION === */
+  renderModalInputManualLocation() {
+    return this.props.global.dataOpenModalManualInputLocation ? (
+      <ModalBottomManualLocation
+        statusBarWhite
+        open={this.props.global.dataOpenModalManualInputLocation}
+        close={() => {
+          this.props.modalManualInputLocation(false);
+          this.clearDataManualInputLocation();
+        }}
+        onPress={() => {
+          this.props.modalManualInputLocation(false);
+          NavigationService.goBack(this.props.navigation.state.key);
+          this.props.saveManualToLongLat({
+            province: this.props.global.dataLocationVolatile.provinceName,
+            city: this.props.global.dataLocationVolatile.cityName,
+            district: this.props.global.dataLocationVolatile.districtName,
+            urban: this.props.global.dataLocationVolatile.urbanName
+          });
+          setTimeout(() => {
+            this.clearDataManualInputLocation();
+          }, 100);
         }}
       />
     ) : (
@@ -261,6 +304,7 @@ class MapsView extends Component {
         {this.renderButton()}
         {/* modal */}
         {this.renderError()}
+        {this.renderModalInputManualLocation()}
       </View>
     );
   }

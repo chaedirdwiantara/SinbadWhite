@@ -1,5 +1,25 @@
 import * as types from '../types';
 /**
+ * ===========================
+ * MODAL MANUAL INPUT LOCATION
+ * ============================
+ */
+/** === FLAG FOR MODAL SHOW OR NOT === */
+export function modalManualInputLocation(data) {
+  return { type: types.GLOBAL_MANUAL_INPUT_LOCATION, payload: data };
+}
+/** === SAVE VOLATILE DATA === */
+export function saveDataManualInputLocation(data) {
+  return {
+    type: types.GLOBAL_MANUAL_INPUT_LOCATION_DATA_VOLATILE,
+    payload: data
+  };
+}
+/** === SAVE TO LONGLAT === */
+export function saveManualToLongLat(data) {
+  return { type: types.GLOBAL_LONGLAT_TO_ADDRESS_SUCCESS, payload: data };
+}
+/**
  * ==============================
  * SEARCH TEXT GLOBAL
  * ==============================

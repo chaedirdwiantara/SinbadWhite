@@ -30,6 +30,10 @@ export const GLOBAL_LONGLAT_TO_ADDRESS_PROCESS =
 export const GLOBAL_LONGLAT_TO_ADDRESS_SUCCESS =
   'GlobalLonglatToAddressSuccess';
 export const GLOBAL_LONGLAT_TO_ADDRESS_FAILED = 'GlobalLonglatToAddressFailed';
+/** MODAL MANUAL INPUT */
+export const GLOBAL_MANUAL_INPUT_LOCATION = 'GlobalManualInputLocation';
+export const GLOBAL_MANUAL_INPUT_LOCATION_DATA_VOLATILE =
+  'GlobalManualInputLocationDataVolatile';
 /** CHECK VERSION OF APP */
 export const APP_VERSION_PROCESS = 'appVersionProcess';
 export const APP_VERSION_SUCCESS = 'appVersionSuccess';

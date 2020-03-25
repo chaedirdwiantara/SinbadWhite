@@ -40,6 +40,22 @@ class ListAndSearchType1 extends Component {
       this.getListAndSearch(0, true);
     }
   }
+
+  componentWillUnmount() {
+    switch (this.props.navigation.state.params.type) {
+      case 'province':
+      case 'city':
+      case 'district':
+      case 'urban':
+        if (!this.props.global.dataOpenModalManualInputLocation) {
+          this.props.modalManualInputLocation(true);
+        }
+        break;
+
+      default:
+        break;
+    }
+  }
   /** REFRESH LIST VIEW */
   onHandleRefresh = () => {
     this.props.listAndSearchGetRefresh();
@@ -100,6 +116,41 @@ class ListAndSearchType1 extends Component {
         });
         NavigationService.goBack(this.props.navigation.state.key);
         break;
+      case 'province':
+        NavigationService.goBack(this.props.navigation.state.key);
+        this.props.modalManualInputLocation(true);
+        this.props.saveDataManualInputLocation({
+          provinceId: item.id,
+          provinceName: item.name,
+          cityName: '',
+          districtName: '',
+          urbanName: ''
+        });
+        break;
+      case 'city':
+        NavigationService.goBack(this.props.navigation.state.key);
+        this.props.modalManualInputLocation(true);
+        this.props.saveDataManualInputLocation({
+          cityName: item.city,
+          districtName: '',
+          urbanName: ''
+        });
+        break;
+      case 'district':
+        NavigationService.goBack(this.props.navigation.state.key);
+        this.props.modalManualInputLocation(true);
+        this.props.saveDataManualInputLocation({
+          districtName: item.district,
+          urbanName: ''
+        });
+        break;
+      case 'urban':
+        NavigationService.goBack(this.props.navigation.state.key);
+        this.props.modalManualInputLocation(true);
+        this.props.saveDataManualInputLocation({
+          urbanName: item.urban
+        });
+        break;
       default:
         break;
     }
@@ -115,7 +166,14 @@ class ListAndSearchType1 extends Component {
       case 'segmentMerchant':
       case 'hierarchyMerchant':
       case 'vehicleMerchant':
+      case 'province':
         return item.name;
+      case 'city':
+        return item.city;
+      case 'district':
+        return item.district;
+      case 'urban':
+        return item.urban;
       default:
         break;
     }

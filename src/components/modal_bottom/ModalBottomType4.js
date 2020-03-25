@@ -7,6 +7,7 @@ import Modal from 'react-native-modal';
 import masterColor from '../../config/masterColor.json';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import Fonts from '../../helpers/GlobalFont';
+import ButtonSingle from '../../components/button/ButtonSingle';
 
 const { width, height } = Dimensions.get('window');
 
@@ -20,6 +21,19 @@ class ModalBottomType4 extends Component {
    * RENDER VIEW
    * ==================
    */
+  /** === RENDER BUTTON === */
+  renderButton() {
+    return this.props.buttonTitle ? (
+      <ButtonSingle
+        disabled={this.props.buttonDisabled}
+        title={this.props.buttonTitle}
+        borderRadius={4}
+        onPress={this.props.onPress}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === RENDER TITLE === */
   renderContentTitle() {
     return (
@@ -70,6 +84,7 @@ class ModalBottomType4 extends Component {
         <View style={styles.contentContainer}>
           {this.renderContentTitle()}
           {this.renderContentBody()}
+          {this.renderButton()}
         </View>
       </Modal>
     );

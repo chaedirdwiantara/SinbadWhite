@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import masterColor from '../../config/masterColor.json';
@@ -19,40 +18,74 @@ class ButtonSingleSmall extends Component {
   constructor(props) {
     super(props);
   }
-  /** MAIN */
+  /** === MAIN === */
   render() {
+    let modifyFonts = '';
+    let modifyDisabledFonts = '';
+    let modifyDisabledButtonColor = '';
+    let modifyButtonColor = '';
+    if (this.props.white) {
+      modifyFonts = Fonts.textButtonSmallWhiteActive;
+      modifyDisabledFonts = Fonts.textButtonSmallWhiteDisabled;
+      modifyDisabledButtonColor = [
+        styles.buttonWhiteDisabled,
+        {
+          borderRadius: this.props.borderRadius,
+          width: this.props.flex ? '100%' : null
+        }
+      ];
+      modifyButtonColor = [
+        styles.buttonWhite,
+        {
+          borderRadius: this.props.borderRadius,
+          width: this.props.flex ? '100%' : null
+        }
+      ];
+    } else if (this.props.disabledGrey) {
+      modifyFonts = Fonts.textButtonSmallRedActive;
+      modifyDisabledFonts = Fonts.textButtonSmallRedDisabled;
+      modifyDisabledButtonColor = [
+        styles.buttonGreyDisabled,
+        {
+          borderRadius: this.props.borderRadius,
+          width: this.props.flex ? '100%' : null
+        }
+      ];
+      modifyButtonColor = [
+        styles.buttonRed,
+        {
+          borderRadius: this.props.borderRadius,
+          width: this.props.flex ? '100%' : null
+        }
+      ];
+    } else {
+      modifyFonts = Fonts.textButtonSmallRedActive;
+      modifyDisabledFonts = Fonts.textButtonSmallRedDisabled;
+      modifyDisabledButtonColor = [
+        styles.buttonRedDisabled,
+        {
+          borderRadius: this.props.borderRadius,
+          width: this.props.flex ? '100%' : null
+        }
+      ];
+      modifyButtonColor = [
+        styles.buttonRed,
+        {
+          borderRadius: this.props.borderRadius,
+          width: this.props.flex ? '100%' : null
+        }
+      ];
+    }
     return (
       <View>
         <Button
           disabled={this.props.disabled ? this.props.disabled : false}
           onPress={this.props.onPress}
           title={this.props.title}
-          titleStyle={
-            this.props.white
-              ? Fonts.textButtonSmallWhiteActive
-              : Fonts.textButtonSmallRedActive
-          }
-          buttonStyle={
-            this.props.white
-              ? [styles.buttonWhite, { borderRadius: this.props.borderRadius }]
-              : [styles.buttonRed, { borderRadius: this.props.borderRadius }]
-          }
-          disabledStyle={
-            this.props.white
-              ? [
-                  styles.buttonWhiteDisabled,
-                  { borderRadius: this.props.borderRadius }
-                ]
-              : [
-                  styles.buttonRedDisabled,
-                  { borderRadius: this.props.borderRadius }
-                ]
-          }
-          disabledTitleStyle={
-            this.props.white
-              ? Fonts.textButtonSmallWhiteDisabled
-              : Fonts.textButtonSmallRedDisabled
-          }
+          titleStyle={modifyFonts}
+          buttonStyle={modifyButtonColor}
+          disabledStyle={modifyDisabledButtonColor}
+          disabledTitleStyle={modifyDisabledFonts}
           type={'solid'}
           loading={this.props.loading}
           loadingStyle={{ paddingHorizontal: this.props.loadingPadding }}
@@ -85,7 +118,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 7,
     backgroundColor: masterColor.buttonRedDisableColor,
     height: 41
+  },
+  buttonGreyDisabled: {
+    paddingHorizontal: 7,
+    backgroundColor: masterColor.fontBlack40,
+    height: 41
   }
 });
 
-export default connect()(ButtonSingleSmall);
+export default ButtonSingleSmall;
