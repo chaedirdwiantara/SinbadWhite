@@ -58,13 +58,16 @@ class ModalBottomErrorPinMap extends Component {
             <Text
               style={[Fonts.type7, { textAlign: 'center', marginBottom: 10 }]}
             >
-              Area Pin-Point Terlalu Luas
+              Area tidak ditemukan
             </Text>
             <Text style={[Fonts.type17, { textAlign: 'center' }]}>
               Perbesar peta dengan
             </Text>
             <Text style={[Fonts.type17, { textAlign: 'center' }]}>
               dua jari pada layar Anda
+            </Text>
+            <Text style={[Fonts.type17, { textAlign: 'center' }]}>
+              atau input alamat manual
             </Text>
           </View>
         </View>
