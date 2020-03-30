@@ -465,10 +465,88 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     color: masterColor.fontBlack80
   },
-  forCompare: {
+  type77: {
+    fontFamily: Fonts.MontserratExtraBold,
+    fontSize: 45,
+    lineHeight: 55,
+    color: masterColor.fontBlack50
+  },
+  type78: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 16,
+    lineHeight: 19,
+    color: masterColor.fontBlack50
+  },
+  type79: {
+    fontFamily: Fonts.MontserratBlack,
+    fontSize: 14,
+    lineHeight: 18,
+    color: masterColor.fontWhite
+  },
+  type80: {
+    fontFamily: Fonts.MontserratExtraBold,
+    fontSize: 12,
+    lineHeight: 15,
+    color: masterColor.fontWhite
+  },
+  type81: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 19,
+    lineHeight: 23,
+    color: masterColor.fontWhite
+  },
+  type82: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 15,
+    lineHeight: 25,
+    color: masterColor.fontWhite
+  },
+  type83: {
     fontFamily: Fonts.MontserratSemiBold,
-    fontSize: 11,
-    lineHeight: 14,
+    fontSize: 12,
+    lineHeight: 15,
+    color: masterColor.fontBlack80
+  },
+  type84: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 13,
+    lineHeight: 16,
+    color: masterColor.mainColor
+  },
+  type85: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 12,
+    lineHeight: 15,
+    color: masterColor.fontBlack40
+  },
+  type86: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 15,
+    lineHeight: 19,
+    color: masterColor.mainColor
+  },
+  type87: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 9,
+    lineHeight: 11,
+    color: masterColor.fontWhite
+  },
+  type88: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 12,
+    lineHeight: 15,
+    color: masterColor.fontBlack80
+  },
+  type89: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 14,
+    lineHeight: 18,
+    color: masterColor.fontWhite
+  },
+  forCompare: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 14,
+    lineHeight: 15,
     color: masterColor.fontBlack80
   },
   /** === bottom nav ==== */

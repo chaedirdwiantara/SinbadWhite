@@ -93,18 +93,15 @@ class PdpLineDataView extends Component {
 
   /** === RENDER ITEM === */
   renderButton(item) {
-    return (item.stock > 0 && item.stock >= item.minQty) ||
-      item.unlimitedStock ? (
+    return (
       <TouchableOpacity
-        onPress={() => this.toParentFunction({ type: 'order', data: item })}
-        style={[styles.pesanButton, { backgroundColor: '#f0444c' }]}
+        onPress={() =>
+          this.toParentFunction({ type: 'openModalOrder', data: item.id })
+        }
+        style={[styles.pesanButton, { backgroundColor: masterColor.mainColor }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>
       </TouchableOpacity>
-    ) : (
-      <View style={[styles.pesanButton, { backgroundColor: '#bdbdbd' }]}>
-        <Text style={Fonts.type39}>Stok habis</Text>
-      </View>
     );
   }
 

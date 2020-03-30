@@ -76,9 +76,26 @@ function getVersion() {
     method: 'GET'
   });
 }
+/**
+ * =========================================
+ * THIS CODE IS NOT FETCHING (ONLY FUNCTION)
+ * =========================================
+ */
+/** USER STORE URBAN */
+function userStoreUrban() {
+  const stateData = Store.getState();
+  if (stateData.merchant.selectedMerchant !== null) {
+    if (stateData.merchant.selectedMerchant.store.urbanId !== null) {
+      return `?urbanId=${stateData.merchant.selectedMerchant.store.urbanId}`;
+    }
+    return '';
+  }
+  return '';
+}
 
 export const GlobalMethod = {
   getListAndSearch,
   getAddressFromLongLat,
-  getVersion
+  getVersion,
+  userStoreUrban
 };

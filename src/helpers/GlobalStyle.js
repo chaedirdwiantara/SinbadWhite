@@ -1,5 +1,4 @@
-import { StyleSheet } from 'react-native';
-import { Dimensions } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import masterColor from '../config/masterColor.json';
 
 const { width, height } = Dimensions.get('window');
@@ -10,6 +9,19 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     backgroundColor: masterColor.backgroundWhite,
     borderRadius: 12,
+    shadowColor: masterColor.shadow,
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 2
+  },
+  cardContainerRadius15: {
+    borderWidth: 0,
+    backgroundColor: masterColor.backgroundWhite,
+    borderRadius: 15,
     shadowColor: masterColor.shadow,
     shadowOffset: {
       width: 0,
@@ -42,6 +54,10 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: masterColor.fontBlack05
   },
+  boxPaddingOms: {
+    height: 10,
+    backgroundColor: masterColor.fontBlack10
+  },
   /** IMAGE SINBAD */
   fullImage: {
     height: 190,
@@ -52,6 +68,20 @@ const styles = StyleSheet.create({
     height,
     width: undefined,
     aspectRatio: 1 / 1
+  },
+  fullWidthRatioContainImage: {
+    resizeMode: 'contain',
+    height: undefined,
+    width: '100%',
+    aspectRatio: 1 / 1
+  },
+  fullWidthRatioContainRadius5Image: {
+    resizeMode: 'contain',
+    height: undefined,
+    width: '100%',
+    aspectRatio: 1 / 1,
+    borderTopRightRadius: 5,
+    borderTopLeftRadius: 5
   },
   image46: {
     height: 46,
@@ -68,14 +98,69 @@ const styles = StyleSheet.create({
     width: undefined,
     aspectRatio: 1 / 1
   },
+  image54Contain: {
+    height: 54,
+    width: undefined,
+    aspectRatio: 1 / 1,
+    resizeMode: 'contain'
+  },
+  image65Contain: {
+    height: 65,
+    width: undefined,
+    aspectRatio: 1 / 1,
+    resizeMode: 'contain'
+  },
+  image70Contain: {
+    height: 70,
+    width: undefined,
+    aspectRatio: 1 / 1,
+    resizeMode: 'contain'
+  },
+  image77Contain: {
+    height: 77,
+    width: undefined,
+    aspectRatio: 1 / 1,
+    resizeMode: 'contain'
+  },
+  image70ContainRadius5: {
+    height: 70,
+    width: undefined,
+    aspectRatio: 1 / 1,
+    resizeMode: 'contain',
+    borderRadius: 5
+  },
+  image80ContainRadius4: {
+    height: 80,
+    width: undefined,
+    aspectRatio: 1 / 1,
+    resizeMode: 'contain',
+    borderRadius: 4
+  },
+  image145Contain: {
+    height: 145,
+    width: undefined,
+    aspectRatio: 1 / 1,
+    resizeMode: 'contain'
+  },
   image74: {
     height: 74,
+    width: undefined,
+    aspectRatio: 1 / 1
+  },
+  image100: {
+    height: 100,
     width: undefined,
     aspectRatio: 1 / 1
   },
   image77: {
     resizeMode: 'contain',
     width: 77,
+    height: undefined,
+    aspectRatio: 1 / 1
+  },
+  image24: {
+    resizeMode: 'contain',
+    width: 24,
     height: undefined,
     aspectRatio: 1 / 1
   },

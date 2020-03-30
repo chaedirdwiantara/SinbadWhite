@@ -20,18 +20,16 @@ class OrderButton extends Component {
       multipleQty: this.props.item.multipleQty,
       minQty: this.props.item.minQty,
       packagedQty: this.props.item.packagedQty,
-      stock: this.props.item.stock,
+      stock: this.props.item.warehouseCatalogues[0].stock,
       qtyToCart: this.props.item.qtyToCart
         ? this.props.item.qtyToCart
         : this.props.item.minQty,
       qty: this.props.item.addToCart
         ? this.props.item.qtyToCart
         : this.props.item.minQty,
-      unlimitedStock: this.props.item.unlimitedStock,
+      unlimitedStock: this.props.item.warehouseCatalogues[0].unlimitedStock,
       plusButtonDisable: false
     };
-    this.timerUp = null;
-    this.timerDown = null;
   }
 
   componentDidUpdate() {
