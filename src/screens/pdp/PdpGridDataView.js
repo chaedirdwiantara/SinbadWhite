@@ -104,18 +104,15 @@ class PdpGridDataView extends Component {
 
   /** === RENDER ITEM === */
   renderButton(item) {
-    return (item.stock > 0 && item.stock >= item.minQty) ||
-      item.unlimitedStock ? (
+    return (
       <TouchableOpacity
-        onPress={() => this.toParentFunction({ type: 'order', data: item })}
-        style={[styles.pesanButton, { backgroundColor: '#f0444c' }]}
+        onPress={() =>
+          this.toParentFunction({ type: 'openModalOrder', data: item.id })
+        }
+        style={[styles.pesanButton, { backgroundColor: masterColor.mainColor }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>
       </TouchableOpacity>
-    ) : (
-      <View style={[styles.pesanButton, { backgroundColor: '#bdbdbd' }]}>
-        <Text style={Fonts.type39}>Stok habis</Text>
-      </View>
     );
   }
 
@@ -126,7 +123,7 @@ class PdpGridDataView extends Component {
         source={{
           uri: item.catalogueImages[0].imageUrl
         }}
-        style={styles.productImage}
+        style={GlobalStyles.fullWidthRatioContainRadius5Image}
       />
     );
 
@@ -150,55 +147,6 @@ class PdpGridDataView extends Component {
                   )}
                 </Text>
               </View>
-              {item.discountedRetailBuyingPrice !== null ? (
-                <View style={{ marginTop: 5, flexDirection: 'row' }}>
-                  <View>
-                    <Text
-                      style={[
-                        Fonts.type31,
-                        { textDecorationLine: 'line-through' }
-                      ]}
-                    >
-                      {MoneyFormat(item.retailBuyingPrice)}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      marginLeft: 15,
-                      justifyContent: 'center',
-                      width: 40
-                    }}
-                  >
-                    <Image
-                      source={require('../../assets/icons/pdp/discount.png')}
-                      style={{
-                        height: 16,
-                        position: 'absolute'
-                      }}
-                    />
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    >
-                      <Text style={Fonts.type73}>
-                        -{this.calculateDiscount(item)}%
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              ) : (
-                <View />
-              )}
-              {item.displayStock && item.stock >= item.minQty ? (
-                <View style={{ marginTop: 5 }}>
-                  <Text style={Fonts.type38}>{`${item.stock} Tersisa`} </Text>
-                </View>
-              ) : (
-                <View />
-              )}
               <View style={{ alignItems: 'center', marginTop: 10 }}>
                 {this.renderButton(item)}
               </View>

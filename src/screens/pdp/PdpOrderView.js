@@ -1,26 +1,22 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-  Image,
-  StatusBar
-} from 'react-native';
+import { View, StyleSheet, Image, Dimensions } from 'react-native';
+import Text from 'react-native-text';
 import { connect } from 'react-redux';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import { Tooltip } from 'react-native-elements';
 import { bindActionCreators } from 'redux';
-import { Button } from 'react-native-elements';
-// import { RFPercentage } from 'react-native-responsive-fontsize';
-import ModalBottom from 'react-native-modal';
 import * as ActionCreators from '../../state/actions';
 import OrderButton from '../../components/OrderButton';
-import { MoneyFormat } from '../../helpers/NumberFormater';
-import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
+import { MoneyFormat, NumberFormat } from '../../helpers/NumberFormater';
+import {
+  StatusBarRedOP50,
+  StatusBarBlackOP40
+} from '../../components/StatusBarGlobal';
 import masterColor from '../../config/masterColor.json';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import ButtonSingleSmall from '../../components/button/ButtonSingleSmall';
 import Fonts from '../../helpers/GlobalFont';
+import SkeletonType18 from '../../components/skeleton/SkeletonType18';
 
 const { width, height } = Dimensions.get('window');
 
@@ -28,12 +24,107 @@ class PdpOrderView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      questionMarkShow: true,
       buttonAddDisabled: false,
-      qtyFromChild: this.props.data.minQty,
-      catalogueId: this.props.data.id
+      qtyFromChild:
+        this.props.pdp.dataDetailPdp !== null
+          ? this.props.pdp.dataDetailPdp.minQty
+          : 0
     };
   }
-
+  /**
+   * =============================
+   * FUNCTIONAL
+   * ============================
+   */
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    /** => IF SKU NOT AVAILABLE */
+    if (prevProps.pdp.dataDetailPdp !== this.props.pdp.dataDetailPdp) {
+      if (this.props.pdp.dataDetailPdp !== null) {
+        this.setState({
+          qtyFromChild: this.props.pdp.dataDetailPdp.minQty
+        });
+        if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length === 0) {
+          this.toParentFunction({
+            type: 'skuNotAvailable'
+          });
+        }
+      }
+    }
+  }
+  /** === SEND DATA TO PARENT (PdpView) */
+  toParentFunction(data) {
+    this.props.parentFunction(data);
+  }
+  /** === BUTTON TITLE ===  */
+  buttonTitle() {
+    if (
+      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock ||
+      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
+        this.props.pdp.dataDetailPdp.minQty
+    ) {
+      return 'Tambah ke Keranjang';
+    }
+    return 'Stock Habis';
+  }
+  /** === BUTTON DISABLED ===  */
+  buttonDisabled() {
+    if (
+      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock ||
+      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
+        this.props.pdp.dataDetailPdp.minQty
+    ) {
+      return false;
+    }
+    return true;
+  }
+  /** === CALCUATION TOTAL === */
+  calTotal() {
+    if (
+      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock ||
+      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
+        this.props.pdp.dataDetailPdp.minQty
+    ) {
+      if (this.props.pdp.dataDetailPdp.discountedRetailBuyingPrice !== null) {
+        return (
+          this.props.pdp.dataDetailPdp.discountedRetailBuyingPrice *
+          this.state.qtyFromChild
+        );
+      }
+      return (
+        this.props.pdp.dataDetailPdp.retailBuyingPrice * this.state.qtyFromChild
+      );
+    }
+    return 0;
+  }
+  /** === CHECK TERSISA TEXT === */
+  checkTersisa() {
+    if (
+      !this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock &&
+      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
+        this.props.pdp.dataDetailPdp.minQty
+    ) {
+      return `Tersisa ${NumberFormat(
+        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock
+      )} Pcs`;
+    }
+    return '';
+  }
+  /** === CHECK INPUT QTY SECTION === */
+  checkInputQtySection() {
+    if (!this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock) {
+      if (
+        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
+        this.props.pdp.dataDetailPdp.minQty
+      ) {
+        return true;
+      }
+      return false;
+    } else {
+      return true;
+    }
+  }
   /**
    * ========================================
    * beberapa penjelasan fungsi
@@ -49,15 +140,7 @@ class PdpOrderView extends Component {
       qtyFromChild: data.qty
     });
   }
-  /** === CALCUATION TOTAL */
-  calTotal() {
-    if (this.props.data.discountedRetailBuyingPrice !== null) {
-      return (
-        this.props.data.discountedRetailBuyingPrice * this.state.qtyFromChild
-      );
-    }
-    return this.props.data.retailBuyingPrice * this.state.qtyFromChild;
-  }
+
   /**
    * =======================
    * RENDER VIEW
@@ -88,12 +171,12 @@ class PdpOrderView extends Component {
       </View>
     );
   }
-  /** RENDER BUTTON ORDER */
+  /** === RENDER BUTTON ORDER === */
   renderButtonOrder() {
     return (
       <View style={styles.boxPesan}>
         <OrderButton
-          item={this.props.data}
+          item={this.props.pdp.dataDetailPdp}
           onRef={ref => (this.parentFunctionFromOrderButton = ref)}
           parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
             this
@@ -104,26 +187,36 @@ class PdpOrderView extends Component {
       </View>
     );
   }
-  /** RENDER BUTTON */
+  /** === RENDER BUTTON === */
   renderButton() {
     return (
       <ButtonSingleSmall
-        disabled={this.state.buttonAddDisabled}
-        title={'Tambah ke Keranjang'}
+        disabledGrey
+        disabled={this.buttonDisabled()}
+        title={this.buttonTitle()}
         borderRadius={4}
-        onPress={() => {
-          this.props.omsAddToCart({
-            method: 'add',
-            catalogueId: this.state.catalogueId,
-            qty: this.state.qtyFromChild
-          });
-          this.props.parentFunction({ type: 'addProduct' });
-        }}
+        onPress={() =>
+          this.toParentFunction({
+            type: 'addSkuToCart',
+            data: {
+              catalogueId: this.props.pdp.dataDetailPdp.id,
+              qty: this.state.qtyFromChild
+            }
+          })
+        }
       />
     );
   }
-  /** RENDER TOTAL */
-  renderTotal() {
+  /** === RENDER TERSISA TEXT === */
+  renderRemainingStock() {
+    return (
+      <View style={{ flex: 1 }}>
+        <Text style={Fonts.type22}>{this.checkTersisa()}</Text>
+      </View>
+    );
+  }
+  /** === RENDER TOTAL BOTTOM === */
+  renderBottomSection() {
     return (
       <View style={[styles.boxTotalPrice, GlobalStyle.shadowForBox10]}>
         <View style={{ flex: 1 }}>{this.renderBottomValue()}</View>
@@ -131,39 +224,72 @@ class PdpOrderView extends Component {
       </View>
     );
   }
-  /** RENDER DATA */
+  /** === RENDER TOOLTIP === */
+  renderTooltip() {
+    return (
+      <Tooltip
+        backgroundColor={masterColor.fontBlack50OP80}
+        height={55}
+        withOverlay={false}
+        withPointer={false}
+        onOpen={() => this.setState({ questionMarkShow: false })}
+        onClose={() => this.setState({ questionMarkShow: true })}
+        containerStyle={{
+          padding: 8,
+          width: 0.4 * width
+        }}
+        popover={
+          <Text style={Fonts.type87}>
+            Harga ini mungkin berubah mempertimbangkan lokasi gudang
+          </Text>
+        }
+      >
+        {this.state.questionMarkShow ? (
+          <MaterialIcon name="help" size={18} color={masterColor.fontBlack40} />
+        ) : (
+          <View />
+        )}
+      </Tooltip>
+    );
+  }
+  /** === RENDER DATA === */
   renderData() {
     return (
       <View style={styles.boxItem}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', paddingBottom: 25 }}>
           <View
-            style={[
-              GlobalStyle.shadowForBox,
-              { backgroundColor: masterColor.backgroudWhite }
-            ]}
+            style={{
+              backgroundColor: masterColor.backgroudWhite
+            }}
           >
             <Image
               defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
               source={{
-                uri: this.props.data.catalogueImages[0].imageUrl
+                uri: this.props.pdp.dataDetailPdp.catalogueImages[0].imageUrl
               }}
-              style={GlobalStyle.image65}
+              style={GlobalStyle.image70ContainRadius5}
             />
           </View>
           <View style={{ paddingLeft: 16 }}>
             <View style={{ width: '80%', marginBottom: 5 }}>
-              <Text style={Fonts.type10}>{this.props.data.name}</Text>
+              <Text style={Fonts.type10}>
+                {this.props.pdp.dataDetailPdp.name}
+              </Text>
             </View>
-            <Text style={Fonts.type70}>
-              {MoneyFormat(
-                this.props.data.discountedRetailBuyingPrice !== null
-                  ? this.props.data.discountedRetailBuyingPrice
-                  : this.props.data.retailBuyingPrice
-              )}
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={[Fonts.type70, { marginRight: 10 }]}>
+                {MoneyFormat(
+                  this.props.pdp.dataDetailPdp.discountedRetailBuyingPrice !==
+                    null
+                    ? this.props.pdp.dataDetailPdp.discountedRetailBuyingPrice
+                    : this.props.pdp.dataDetailPdp.retailBuyingPrice
+                )}
+              </Text>
+              {this.renderTooltip()}
+            </View>
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={[Fonts.type38, { marginRight: 10 }]}>
-                per-Dus {this.props.data.packagedQty} pcs
+                per-Dus {this.props.pdp.dataDetailPdp.packagedQty} pcs
               </Text>
               <View
                 style={{
@@ -172,53 +298,55 @@ class PdpOrderView extends Component {
                 }}
               />
               <Text style={[Fonts.type38, { marginLeft: 10 }]}>
-                min.pembelian {this.props.data.minQty} pcs
+                min.pembelian {this.props.pdp.dataDetailPdp.minQty} pcs
               </Text>
             </View>
           </View>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            flex: 1,
-            paddingTop: 25
-          }}
-        >
-          <View style={{ justifyContent: 'center' }}>
-            <Text style={Fonts.type10}>Jumlah/pcs</Text>
+        {this.checkInputQtySection() ? (
+          <View style={styles.boxInputQty}>
+            <View style={{ justifyContent: 'center' }}>
+              <Text style={Fonts.type10}>Jumlah/pcs</Text>
+            </View>
+            <View style={styles.boxRemainingStockOrderButton}>
+              {this.renderRemainingStock()}
+              {this.renderButtonOrder()}
+            </View>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}
-          >
-            {this.props.data.displayStock &&
-            this.props.data.stock >= this.props.data.minQty ? (
-              <View style={{ flex: 1 }}>
-                <Text style={Fonts.type38}>
-                  Tersisa {this.props.data.stock} pcs
-                </Text>
-              </View>
-            ) : (
-              <View />
-            )}
-
-            {this.renderButtonOrder()}
-          </View>
-        </View>
+        ) : (
+          <View />
+        )}
       </View>
     );
   }
-  /** MAIN */
+  /** === RENDER CONTENT === */
+  renderContent() {
+    return this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0 ? (
+      <View>
+        {this.renderData()}
+        {this.renderBottomSection()}
+      </View>
+    ) : (
+      <View />
+    );
+  }
+  /** === RENDER SKELETON === */
+  renderSkeleton() {
+    return <SkeletonType18 />;
+  }
+  /** RENDER STATUS BAR === */
+  renderStatusBar() {
+    return this.props.white ? <StatusBarBlackOP40 /> : <StatusBarRedOP50 />;
+  }
+  /** === MAIN === */
   render() {
     return (
       <View style={styles.mainContainer}>
-        <StatusBarRedOP50 />
-        {this.renderData()}
-        {this.renderTotal()}
+        {this.renderStatusBar()}
+        {!this.props.pdp.loadingDetailPdp &&
+        this.props.pdp.dataDetailPdp !== null
+          ? this.renderContent()
+          : this.renderSkeleton()}
       </View>
     );
   }
@@ -234,21 +362,27 @@ const styles = StyleSheet.create({
     paddingBottom: 16
   },
   boxTotalPrice: {
+    marginTop: 0.14 * height,
     flexDirection: 'row',
     paddingVertical: 11,
     paddingLeft: 20,
     paddingRight: 10,
     height: 63
   },
+  boxRemainingStockOrderButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  boxInputQty: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flex: 1
+  },
   boxPesan: {
+    marginLeft: 5,
     flexDirection: 'row',
     width: '55%'
-  },
-  productImage: {
-    resizeMode: 'contain',
-    height: '100%',
-    width: undefined,
-    aspectRatio: 1 / 1
   }
 });
 
@@ -260,6 +394,7 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
+// eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(PdpOrderView);
 
 /**

@@ -86,23 +86,15 @@ class PdpListDataView extends Component {
 
   /** === RENDER ITEM === */
   renderButton(item) {
-    return (item.stock > 0 && item.stock >= item.minQty) ||
-      item.unlimitedStock ? (
+    return (
       <TouchableOpacity
-        onPress={() => this.toParentFunction({ type: 'order', data: item })}
+        onPress={() =>
+          this.toParentFunction({ type: 'openModalOrder', data: item.id })
+        }
         style={[styles.pesanButton, { backgroundColor: masterColor.mainColor }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>
       </TouchableOpacity>
-    ) : (
-      <View
-        style={[
-          styles.pesanButton,
-          { backgroundColor: masterColor.fontBlack40 }
-        ]}
-      >
-        <Text style={Fonts.type39}>Stok habis</Text>
-      </View>
     );
   }
 

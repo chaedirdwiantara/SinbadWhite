@@ -1,4 +1,5 @@
 import ApiRest from '../apiRest';
+import { GlobalMethod } from '../methods/GlobalMethod';
 
 function getPdp(data) {
   return ApiRest({
@@ -10,7 +11,15 @@ function getPdp(data) {
     method: 'GET'
   });
 }
+/** GET PDP SKU DETAIL */
+function getDetailPdp(pdpId) {
+  return ApiRest({
+    path: `catalogues/${pdpId}${GlobalMethod.userStoreUrban()}`,
+    method: 'GET'
+  });
+}
 
 export const PdpMethod = {
-  getPdp
+  getPdp,
+  getDetailPdp
 };

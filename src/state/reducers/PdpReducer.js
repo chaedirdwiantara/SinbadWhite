@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   /** loading */
   loadingGetPdp: false,
   refreshGetPdp: false,
+  loadingDetailPdp: false,
   loadingLoadMoreGetPdp: false,
   /** data */
   dataGetPdp: [],
@@ -13,8 +14,10 @@ const INITIAL_STATE = {
   pdpDisplay: 'grid',
   pdpOpenModalOrder: false,
   pdpOrderData: null,
+  dataDetailPdp: null,
   /** error */
-  errorGetPdp: null
+  errorGetPdp: null,
+  errorDetailPdp: null
 };
 
 export const pdp = createReducer(INITIAL_STATE, {
@@ -25,6 +28,33 @@ export const pdp = createReducer(INITIAL_STATE, {
    */
   [types.DELETE_ALL_DATA](state, action) {
     return INITIAL_STATE;
+  },
+  /**
+   * ==================================
+   * PDP DETAILS
+   * ==================================
+   */
+  [types.PDP_GET_DETAIL_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingDetailPdp: true,
+      dataDetailPdp: null,
+      errorDetailPdp: null
+    };
+  },
+  [types.PDP_GET_DETAIL_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingDetailPdp: false,
+      dataDetailPdp: action.payload
+    };
+  },
+  [types.PDP_GET_DETAIL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingDetailPdp: false,
+      errorDetailPdp: action.payload
+    };
   },
   /**
    * ===================

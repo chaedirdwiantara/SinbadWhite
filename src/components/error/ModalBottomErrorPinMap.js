@@ -3,18 +3,47 @@ import { View, StyleSheet, Text, Dimensions, Image } from 'react-native';
 import ModalBottomType1 from '../modal_bottom/ModalBottomType1';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import Fonts from '../../helpers/GlobalFont';
-import { StatusBarBlackOP40 } from '../StatusBarGlobal';
+import ButtonSingleSmall from '../../components/button/ButtonSingleSmall';
+import { StatusBarBlack } from '../StatusBarGlobal';
 
 const { height, width } = Dimensions.get('window');
 
 class ModalBottomErrorPinMap extends Component {
+  /** === RENDER BUTTON === */
+  renderButton() {
+    return (
+      <View style={styles.buttonContainer}>
+        <View style={{ padding: 16, flex: 1 }}>
+          <ButtonSingleSmall
+            flex
+            disabled={false}
+            loading={false}
+            onPress={this.props.ok}
+            title={'Ok'}
+            borderRadius={4}
+          />
+        </View>
+        <View style={{ padding: 16, flex: 1 }}>
+          <ButtonSingleSmall
+            flex
+            white
+            disabled={false}
+            loading={false}
+            onPress={this.props.manualInput}
+            title={'Manual Input'}
+            borderRadius={4}
+          />
+        </View>
+      </View>
+    );
+  }
   /**
    * RENDER CONTENT
    */
   renderContent() {
     return (
       <View>
-        <StatusBarBlackOP40 />
+        <StatusBarBlack />
         <View
           style={{
             justifyContent: 'center',
@@ -29,7 +58,7 @@ class ModalBottomErrorPinMap extends Component {
             <Text
               style={[Fonts.type7, { textAlign: 'center', marginBottom: 10 }]}
             >
-              Area Pin-Point Terlalu Luas
+              Area tidak ditemukan
             </Text>
             <Text style={[Fonts.type17, { textAlign: 'center' }]}>
               Perbesar peta dengan
@@ -37,8 +66,12 @@ class ModalBottomErrorPinMap extends Component {
             <Text style={[Fonts.type17, { textAlign: 'center' }]}>
               dua jari pada layar Anda
             </Text>
+            <Text style={[Fonts.type17, { textAlign: 'center' }]}>
+              atau input alamat manual
+            </Text>
           </View>
         </View>
+        {this.renderButton()}
       </View>
     );
   }
@@ -47,14 +80,19 @@ class ModalBottomErrorPinMap extends Component {
       <ModalBottomType1
         open={this.props.open}
         content={this.renderContent()}
-        onPress={this.props.onPress}
         title={''}
-        buttonTitle={'Ok'}
       />
     );
   }
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  /** for button */
+  buttonContainer: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center'
+  }
+});
 
 export default ModalBottomErrorPinMap;

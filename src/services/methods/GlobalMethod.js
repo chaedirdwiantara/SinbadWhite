@@ -1,7 +1,9 @@
 import ApiRest from '../apiRest';
 import ApiRestMap from '../apiRestMap';
+import { Store } from '../../state/Store';
 
 function getListAndSearch(data) {
+  const stateData = Store.getState();
   /**
    * PROPS
    * data.type =  'vehicleMerchant' / 'hierarchyMerchant' / 'clusterMerchant' / 'typeMerchant' / 'groupMerchant' / 'segmentMerchant'
@@ -35,6 +37,18 @@ function getListAndSearch(data) {
     case 'vehicleMerchant':
       listAndSearchApi = 'vehicle-accessibilities?';
       break;
+    case 'province':
+      listAndSearchApi = 'provinces?';
+      break;
+    case 'city':
+      listAndSearchApi = `locations?type=city&provinceId=${stateData.global.dataLocationVolatile.provinceId}&`;
+      break;
+    case 'district':
+      listAndSearchApi = `locations?type=district&city=${stateData.global.dataLocationVolatile.cityName}&`;
+      break;
+    case 'urban':
+      listAndSearchApi = `locations?type=urban&district=${stateData.global.dataLocationVolatile.districtName}&`;
+      break;
     default:
       break;
   }
@@ -62,9 +76,26 @@ function getVersion() {
     method: 'GET'
   });
 }
+/**
+ * =========================================
+ * THIS CODE IS NOT FETCHING (ONLY FUNCTION)
+ * =========================================
+ */
+/** USER STORE URBAN */
+function userStoreUrban() {
+  const stateData = Store.getState();
+  if (stateData.merchant.selectedMerchant !== null) {
+    if (stateData.merchant.selectedMerchant.store.urbanId !== null) {
+      return `?urbanId=${stateData.merchant.selectedMerchant.store.urbanId}`;
+    }
+    return '';
+  }
+  return '';
+}
 
 export const GlobalMethod = {
   getListAndSearch,
   getAddressFromLongLat,
-  getVersion
+  getVersion,
+  userStoreUrban
 };

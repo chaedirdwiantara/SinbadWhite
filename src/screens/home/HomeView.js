@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import DeviceInfo from 'react-native-device-info';
+import { NavigationEvents } from 'react-navigation';
 import Text from 'react-native-text';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';

@@ -28,6 +28,8 @@ import ErrorPage from '../../components/error/ErrorPage';
 import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
 import SelectedMerchantName from '../../components/SelectedMerchantName';
 import ModalBottomInputOwnerId from './ModalBottomInputOwnerId';
+import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
+import CallCS from '../../screens/global/CallCS';
 
 const { width, height } = Dimensions.get('window');
 
@@ -41,6 +43,8 @@ class OmsCartView extends Component {
       openModalErrorGlobal: false,
       openModalDeleteConfirmation: false,
       openModalInputOwnerId: false,
+      openModalErrorNoUrban: false,
+      openModalCS: false,
       /** data */
       buttonCheckoutDisabled: false,
       productWantToDelete: null,
@@ -113,6 +117,17 @@ class OmsCartView extends Component {
      * ==============================
      */
     /** ERROR GET CHECKOUT LIST */
+    /**
+     * === ERROR RESPONS ===
+     * ==> ERROR CODE 400
+     * 1. 'ERR-STOCK'
+     * 2. 'ERR-STATUS'
+     * 3. 'ERR-WAREHOUSE'
+     * 4. 'ERR-RUN-OUT'
+     * ==> ERROR CODE 406
+     * 1. 'ERR-URBAN'
+     * 2. 'ERR-VERIFIED'
+     */
     if (
       prevProps.oms.errorOmsGetCheckoutItem !==
       this.props.oms.errorOmsGetCheckoutItem
@@ -121,17 +136,47 @@ class OmsCartView extends Component {
         if (this.props.oms.errorOmsGetCheckoutItem.code === 400) {
           this.setState({ openModalStockConfirmation: true });
           this.modifyProductCartArrayWhenError();
-        } else if (this.props.oms.errorOmsGetCheckoutItem.code === 406) {
-          if (
-            this.props.oms.errorOmsGetCheckoutItem.data.errorCode ===
-            'ERR-VERIFIED'
-          ) {
-            this.setState({ openModalInputOwnerId: true });
-          }
+        } else if (
+          this.props.oms.errorOmsGetCheckoutItem.code === 406 &&
+          this.props.oms.errorOmsGetCheckoutItem.data
+        ) {
+          this.manageError();
         } else {
           this.setState({ openModalErrorGlobal: true });
         }
       }
+    }
+  }
+  /**
+   * =============================
+   * ERROR FUNCTION
+   * ============================
+   */
+  manageError() {
+    switch (this.props.oms.errorOmsGetCheckoutItem.data.errorCode) {
+      case 'ERR-URBAN':
+        this.setState({ openModalErrorNoUrban: true });
+        break;
+      case 'ERR-VERIFIED':
+        this.setState({ openModalInputOwnerId: true });
+        break;
+      default:
+        break;
+    }
+  }
+  /**
+   * =====================
+   * CALLED FROM CHILD
+   * =======================
+   * - call cs
+   */
+  parentFunction(data) {
+    switch (data.type) {
+      case 'close':
+        this.setState({ openModalCS: false });
+        break;
+      default:
+        break;
     }
   }
   /**
@@ -205,6 +250,7 @@ class OmsCartView extends Component {
               item.catalogueStock;
             break;
           case 'ERR-STATUS':
+          case 'ERR-WAREHOUSE':
             productCartArray[indexProductCartArray].statusInCart =
               'unavailable';
             productCartArray[indexProductCartArray].checkBox = true;
@@ -347,13 +393,11 @@ class OmsCartView extends Component {
       };
     });
     this.props.omsCheckoutItem(mapProduct);
-    setTimeout(() => {
-      this.props.omsGetCheckoutItemProcess({
-        storeId: this.props.merchant.selectedMerchant.storeId,
-        cartId: this.props.oms.dataOmsGetCartItem.id,
-        catalogues: mapProduct
-      });
-    }, 100);
+    this.props.omsGetCheckoutItemProcess({
+      storeId: this.props.merchant.selectedMerchant.storeId,
+      cartId: this.props.oms.dataOmsGetCartItem.id,
+      catalogues: mapProduct
+    });
   }
 
   deleteProductInCart() {
@@ -1069,6 +1113,39 @@ class OmsCartView extends Component {
       <View />
     );
   }
+  /** === MODAL CALL CS === */
+  renderModalCallCS() {
+    return this.state.openModalCS ? (
+      <View>
+        <CallCS
+          statusBarRed
+          open={this.state.openModalCS}
+          close={() => this.setState({ openModalCS: false })}
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
+        />
+      </View>
+    ) : (
+      <View />
+    );
+  }
+  /** ===> RENDER MODAL ERROR NO URBAN ===  */
+  renderModalErrorNoUrban() {
+    return this.state.openModalErrorNoUrban ? (
+      <ModalBottomErrorNoUrban
+        open={this.state.openModalErrorNoUrban}
+        backToHome={() => {
+          this.setState({ openModalErrorNoUrban: false });
+          NavigationService.navigate('MerchantHomeView');
+        }}
+        callCS={() => {
+          this.setState({ openModalErrorNoUrban: false, openModalCS: true });
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
 
   renderEmpty() {
     return <EmptyData title={'Keranjang Kosong'} />;
@@ -1105,9 +1182,11 @@ class OmsCartView extends Component {
         {this.renderModalConfirmationCheckout()}
         {this.renderModalDeleteProductConfirmation()}
         {this.renderModalStockConfirmation()}
-        {this.renderModalInputOwnerId()}
+        {this.renderModalCallCS()}
         {/* errr */}
         {this.renderModalErrorRespons()}
+        {this.renderModalErrorNoUrban()}
+        {this.renderModalInputOwnerId()}
       </View>
     );
   }

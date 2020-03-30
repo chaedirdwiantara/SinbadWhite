@@ -30,6 +30,10 @@ export const GLOBAL_LONGLAT_TO_ADDRESS_PROCESS =
 export const GLOBAL_LONGLAT_TO_ADDRESS_SUCCESS =
   'GlobalLonglatToAddressSuccess';
 export const GLOBAL_LONGLAT_TO_ADDRESS_FAILED = 'GlobalLonglatToAddressFailed';
+/** MODAL MANUAL INPUT */
+export const GLOBAL_MANUAL_INPUT_LOCATION = 'GlobalManualInputLocation';
+export const GLOBAL_MANUAL_INPUT_LOCATION_DATA_VOLATILE =
+  'GlobalManualInputLocationDataVolatile';
 /** CHECK VERSION OF APP */
 export const APP_VERSION_PROCESS = 'appVersionProcess';
 export const APP_VERSION_SUCCESS = 'appVersionSuccess';
@@ -152,6 +156,10 @@ export const PDP_GET_FAILED = 'PdpGetFailed';
 export const PDP_GET_RESET = 'PdpGetReset';
 export const PDP_GET_REFRESH = 'PdpGetRefresh';
 export const PDP_GET_LOADMORE = 'PdpGetLoadMore';
+/** DETAIL PDP */
+export const PDP_GET_DETAIL_PROCESS = 'PdpGetDetailProcess';
+export const PDP_GET_DETAIL_SUCCESS = 'PdpGetDetailSuccess';
+export const PDP_GET_DETAIL_FAILED = 'PdpGetDetailFailed';
 /** FOR GET PDP LIST */
 export const PDP_CHANGE_DISPLAY = 'PdpChangeDisplay';
 /** FOR ORDER PDP */

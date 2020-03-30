@@ -19,6 +19,14 @@ const INITIAL_STATE = {
   pageGetListAndSearch: 0,
   dataGlobalLongLatToAddress: null,
   dataGetVersion: null,
+  dataOpenModalManualInputLocation: false,
+  dataLocationVolatile: {
+    provinceId: '',
+    provinceName: '',
+    cityName: '',
+    districtName: '',
+    urbanName: ''
+  },
   /** error */
   errorGetListAndSearch: null,
   errorGetVersion: null,
@@ -92,6 +100,49 @@ export const global = createReducer(INITIAL_STATE, {
       ...state,
       longitude: action.payload.longitude,
       latitude: action.payload.latitude
+    };
+  },
+  /**
+   * ================================
+   * OPEN MODAL MANUAL INPUT LOCATION
+   * ================================
+   */
+  [types.GLOBAL_MANUAL_INPUT_LOCATION](state, action) {
+    return {
+      ...state,
+      dataOpenModalManualInputLocation: action.payload
+    };
+  },
+  /**
+   * ============================
+   * SAVE MANUAL INPUT LOCATION
+   * =============================
+   */
+  [types.GLOBAL_MANUAL_INPUT_LOCATION_DATA_VOLATILE](state, action) {
+    return {
+      ...state,
+      dataLocationVolatile: {
+        provinceId:
+          action.payload.provinceId || action.payload.provinceId === ''
+            ? action.payload.provinceId
+            : state.dataLocationVolatile.provinceId,
+        provinceName:
+          action.payload.provinceName || action.payload.provinceName === ''
+            ? action.payload.provinceName
+            : state.dataLocationVolatile.provinceName,
+        cityName:
+          action.payload.cityName || action.payload.cityName === ''
+            ? action.payload.cityName
+            : state.dataLocationVolatile.cityName,
+        districtName:
+          action.payload.districtName || action.payload.districtName === ''
+            ? action.payload.districtName
+            : state.dataLocationVolatile.districtName,
+        urbanName:
+          action.payload.urbanName || action.payload.urbanName === ''
+            ? action.payload.urbanName
+            : state.dataLocationVolatile.urbanName
+      }
     };
   },
   /**

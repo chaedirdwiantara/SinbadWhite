@@ -1,3 +1,10 @@
+function NumberFormat(number) {
+  return `${number
+    .toFixed(2)
+    .replace(/\d(?=(\d{3})+\.)/g, '$&.')
+    .slice(0, -3)}`;
+}
+
 function MoneyFormat(money) {
   return `Rp${money
     .toFixed(2)
@@ -16,4 +23,4 @@ function MoneyFormatShort(number) {
   return `Rp${number.toString().slice(0, -3)} rb`;
 }
 
-export { MoneyFormat, MoneyFormatShort };
+export { NumberFormat, MoneyFormat, MoneyFormatShort };

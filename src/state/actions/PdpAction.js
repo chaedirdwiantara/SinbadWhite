@@ -1,6 +1,25 @@
 import * as types from '../types';
 import { Store } from '../Store';
-
+/**
+ * ===========================
+ * GET DETAIL PDP
+ * ===========================
+ */
+/** PDP SKU GET DETAILS PROCESS */
+export function pdpGetDetailProcess(data) {
+  return { type: types.PDP_GET_DETAIL_PROCESS, payload: data };
+}
+/** PDP SKU GET DETAILS SUCCESS */
+export function pdpGetDetailSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.PDP_GET_DETAIL_SUCCESS, payload: data.data };
+  }
+  return { type: types.PDP_GET_DETAIL_FAILED, payload: data };
+}
+/** PDP SKU GET DETAILS FAILED */
+export function pdpGetDetailFailed(data) {
+  return { type: types.PDP_GET_DETAIL_FAILED, payload: data };
+}
 /**
  * ==============================
  * GET PDP BY SUPPLIER ID

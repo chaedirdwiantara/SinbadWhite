@@ -21,11 +21,9 @@ class ModalBottomType1 extends Component {
   /** === RENDER TITLE === */
   renderContentTitle() {
     return (
-      <View>
-        <View style={styles.boxContentTitle}>
-          <View>
-            <Text style={Fonts.type7}>{this.props.title}</Text>
-          </View>
+      <View style={styles.boxContentTitle}>
+        <View>
+          <Text style={Fonts.type7}>{this.props.title}</Text>
         </View>
       </View>
     );
@@ -36,13 +34,15 @@ class ModalBottomType1 extends Component {
   }
   /** === RENDER BUTTON === */
   renderButton() {
-    return (
+    return this.props.buttonTitle ? (
       <ButtonSingle
         disabled={false}
         title={this.props.buttonTitle}
         borderRadius={4}
         onPress={this.props.onPress}
       />
+    ) : (
+      <View />
     );
   }
   /** === RENDER STATUS BAR === */
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    maxHeight: 0.8 * height,
+    maxHeight: 0.9 * height,
     backgroundColor: masterColor.backgroundWhite,
     flexDirection: 'column',
     position: 'absolute',
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     paddingTop: 20
   },
   boxContentTitle: {
-    marginTop: 18,
+    marginTop: 30,
     justifyContent: 'center',
     flexDirection: 'row'
   },

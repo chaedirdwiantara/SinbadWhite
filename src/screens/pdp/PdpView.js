@@ -22,12 +22,15 @@ import ToastType1 from '../../components/toast/ToastType1';
 import PdpFilterSortView from './PdpFitlerSortView';
 import SelectedMerchantName from '../../components/SelectedMerchantName';
 import ModalConfirmation from '../../components/modal/ModalConfirmation';
+import ModalBottomSkuNotAvailable from '../../components/error/ModalBottomSkuNotAvailable';
 
 class PdpView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       /** for modal */
+      openModalOrder: false,
+      openModalSkuNotAvailable: false,
       openOrder: false,
       openModalSort: false,
       openModalConfirmRemoveCart: false,
@@ -131,6 +134,39 @@ class PdpView extends Component {
           supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
         });
         break;
+      /** => 'pesan' buttom press (from child) */
+      case 'openModalOrder':
+        if (this.props.user === null) {
+          NavigationService.navigate('Auth');
+        } else {
+          this.props.pdpGetDetailProcess(data.data);
+          this.setState({ openModalOrder: true });
+        }
+        break;
+      /** => sku not available (from child pdpOrderView) */
+      case 'skuNotAvailable':
+        this.setState({
+          openModalOrder: false,
+          openModalSkuNotAvailable: true
+        });
+        break;
+      /** => 'tambah keranjang' button press */
+      case 'addSkuToCart':
+        /** >>> save sku to permanent cart */
+        this.props.omsAddToCart({
+          method: 'add',
+          catalogueId: data.data.catalogueId,
+          qty: data.data.qty
+        });
+        this.setState({
+          openModalOrder: false,
+          addProductNotif: true,
+          addProductNotifText: 'Produk berhasil ditambahkan ke keranjang'
+        });
+        setTimeout(() => {
+          this.setState({ addProductNotif: false });
+        }, 3000);
+        break;
       default:
         break;
     }
@@ -206,25 +242,56 @@ class PdpView extends Component {
     };
   };
 
+  /** === RENDER MODAL ORDER === */
   renderModalOrder() {
-    return this.state.openOrder ? (
+    return this.state.openModalOrder ? (
       <ModalBottomType3
-        open={this.state.openOrder}
+        open={this.state.openModalOrder}
         title={'Masukan Jumlah'}
         content={
           <PdpOrderView
-            data={this.state.selectedProduct}
             onRef={ref => (this.parentFunction = ref)}
             parentFunction={this.parentFunction.bind(this)}
           />
         }
-        close={() => this.setState({ openOrder: false })}
+        close={() => this.setState({ openModalOrder: false })}
         typeClose={'cancel'}
       />
     ) : (
       <View />
     );
   }
+  /** === RENDER MODAL SKU NOT AVAILABLE === */
+  renderModalSkuNotAvailable() {
+    return this.state.openModalSkuNotAvailable ? (
+      <ModalBottomSkuNotAvailable
+        open={this.state.openModalSkuNotAvailable}
+        onPress={() => this.setState({ openModalSkuNotAvailable: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
+
+  // renderModalOrder() {
+  //   return this.state.openOrder ? (
+  //     <ModalBottomType3
+  //       open={this.state.openOrder}
+  //       title={'Masukan Jumlah'}
+  //       content={
+  //         <PdpOrderView
+  //           data={this.state.selectedProduct}
+  //           onRef={ref => (this.parentFunction = ref)}
+  //           parentFunction={this.parentFunction.bind(this)}
+  //         />
+  //       }
+  //       close={() => this.setState({ openOrder: false })}
+  //       typeClose={'cancel'}
+  //     />
+  //   ) : (
+  //     <View />
+  //   );
+  // }
 
   renderFilterSection() {
     return (
@@ -315,6 +382,8 @@ class PdpView extends Component {
         {this.renderToast()}
         {/* filter */}
         {this.renderModalSort()}
+        {/* modal */}
+        {this.renderModalSkuNotAvailable()}
       </SafeAreaView>
     );
   }
