@@ -1,5 +1,5 @@
 import { set, isEmpty } from 'lodash';
-import firestore from '@react-native-firebase/firestore';
+import firebase from 'react-native-firebase';
 import DeviceInfo from 'react-native-device-info';
 import apiHost from './apiHost';
 import { Store } from '../state/Store';
@@ -44,7 +44,7 @@ export default async function endpoint({ path, method, params }) {
             brand: DeviceInfo.getBrand(),
             deviceId: DeviceInfo.getDeviceId()
           };
-          const ref = firestore().collection('error-reports');
+          const ref = firebase.firestore().collection('error-reports');
           ref.add({
             endpoint: path,
             method,

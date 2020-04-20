@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, StatusBar, StyleSheet, Image } from 'react-native';
-import Crashlytics from '@react-native-firebase/crashlytics';
+import firebase from 'react-native-firebase';
 import Text from 'react-native-text';
 import { connect } from 'react-redux';
 import masterColor from '../../config/masterColor.json';
@@ -17,7 +17,7 @@ class FirstView extends Component {
    * ==============================
    */
   componentDidMount() {
-    Crashlytics().setCrashlyticsCollectionEnabled(true);
+    firebase.crashlytics().enableCrashlyticsCollection();
     setTimeout(() => {
       this.props.navigation.navigate(
         this.props.permanent.token !== null ? 'App' : this.checkIFOTPexist()
