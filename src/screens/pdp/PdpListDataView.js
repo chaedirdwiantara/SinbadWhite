@@ -28,63 +28,43 @@ class PdpListDataView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  /** === SEND DATA TO PARENT === */
   toParentFunction(data) {
     this.props.parentFunction(data);
   }
-
+  /** === REFRESH PAGE === */
   onHandleRefresh = () => {
-    this.props.pdpGetRefresh();
-    this.props.pdpGetProcess({
-      page: 0,
-      loading: true,
-      sort: this.props.sort,
-      sortBy: this.props.sortBy,
-      search: this.props.global.search,
-      supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
+    this.toParentFunction({ type: 'refresh' });
+  };
+  /** === LOAD MORE DATA === */
+  onHandleLoadMore = () => {
+    this.toParentFunction({
+      type: 'loadMore'
     });
   };
-
-  onHandleLoadMore = () => {
-    if (this.props.pdp.dataGetPdp) {
-      if (this.props.pdp.dataGetPdp.length < this.props.pdp.totalDataGetPdp) {
-        const page = this.props.pdp.pageGetPdp + 10;
-        this.props.pdpGetLoadMore(page);
-        this.props.pdpGetProcess({
-          page,
-          loading: false,
-          sort: this.props.sort,
-          sortBy: this.props.sortBy,
-          search: this.props.global.search,
-          supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
-        });
+  /** === CHECK PRICE ==== */
+  checkPrice(item) {
+    if (item.maxPriceRange === null && item.minPriceRange === null) {
+      return MoneyFormat(item.retailBuyingPrice);
+    } else if (item.maxPriceRange !== null && item.minPriceRange !== null) {
+      if (item.maxPriceRange === item.minPriceRange) {
+        return MoneyFormat(item.maxPriceRange);
       }
+      return `${MoneyFormat(item.minPriceRange)} - ${MoneyFormat(
+        item.maxPriceRange
+      )}`;
+    } else if (item.maxPriceRange !== null && item.minPriceRange === null) {
+      return MoneyFormat(item.maxPriceRange);
+    } else if (item.maxPriceRange === null && item.minPriceRange !== null) {
+      return MoneyFormat(item.minPriceRange);
     }
-  };
-
+  }
   /**
    * ======================
    * RENDER VIEW
    * ======================
    */
-  /**
-   * =====================
-   * LOADING
-   * =====================
-   */
-  /** === RENDER SKELETON === */
-  renderSkeleton() {
-    return <SkeletonType1 />;
-  }
-  /** === RENDER LOADMORE === */
-  renderLoadMore() {
-    return this.props.pdp.loadingLoadMoreGetPdp ? (
-      <LoadingLoadMore />
-    ) : (
-      <View />
-    );
-  }
-
-  /** === RENDER ITEM === */
+  /** === RENDER BUTTON PESAN === */
   renderButton(item) {
     return (
       <TouchableOpacity
@@ -97,7 +77,7 @@ class PdpListDataView extends Component {
       </TouchableOpacity>
     );
   }
-
+  /** === RENDER ITEM === */
   renderItem({ item, index }) {
     const productImage = (
       <Image
@@ -105,10 +85,9 @@ class PdpListDataView extends Component {
         source={{
           uri: item.catalogueImages[0].imageUrl
         }}
-        style={GlobalStyles.image65}
+        style={GlobalStyles.image65Contain}
       />
     );
-
     return (
       <View style={styles.boxContentList} key={index}>
         <View style={styles.boxContentListItem}>
@@ -130,13 +109,7 @@ class PdpListDataView extends Component {
             </View>
             <View style={styles.boxOrderedAndButton}>
               <View style={styles.boxPrice}>
-                <Text style={Fonts.type24}>
-                  {MoneyFormat(
-                    item.discountedRetailBuyingPrice !== null
-                      ? item.discountedRetailBuyingPrice
-                      : item.retailBuyingPrice
-                  )}
-                </Text>
+                <Text style={Fonts.type24}>{this.checkPrice(item)}</Text>
               </View>
               <View style={styles.boxButton}>{this.renderButton(item)}</View>
             </View>
@@ -146,7 +119,6 @@ class PdpListDataView extends Component {
       </View>
     );
   }
-
   /** === RENDER DATA === */
   renderData() {
     return this.props.pdp.dataGetPdp.length > 0
@@ -177,6 +149,23 @@ class PdpListDataView extends Component {
   renderEmpty() {
     return (
       <EmptyData title={'Product Kosong'} description={'Maaf Product kosong'} />
+    );
+  }
+  /**
+   * =====================
+   * LOADING
+   * =====================
+   */
+  /** === RENDER SKELETON === */
+  renderSkeleton() {
+    return <SkeletonType1 />;
+  }
+  /** === RENDER LOADMORE === */
+  renderLoadMore() {
+    return this.props.pdp.loadingLoadMoreGetPdp ? (
+      <LoadingLoadMore />
+    ) : (
+      <View />
     );
   }
   /** === MAIN === */
@@ -211,12 +200,12 @@ const styles = StyleSheet.create({
   },
   boxContentImage: {
     justifyContent: 'center',
-    marginRight: 10,
     height: 65,
     alignItems: 'center',
     width: 65
   },
   boxContentDesc: {
+    paddingLeft: 10,
     flex: 1
   },
   boxTitleAndSku: {
@@ -268,4 +257,7 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PdpListDataView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PdpListDataView);

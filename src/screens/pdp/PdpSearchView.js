@@ -19,76 +19,11 @@ class PdpSearchView extends Component {
       openOrder: false,
       addProductNotif: false,
       addProductNotifText: '',
-      selectedProduct: null
-    };
-  }
-  /**
-   * =======================
-   * FUNCTIONAL
-   * =======================
-   */
-
-  componentDidMount() {
-    this.props.pdpGetReset();
-    this.props.pdpGetProcess({
-      page: 0,
-      loading: true,
+      selectedProduct: null,
+      /** sort */
       sort: 'asc',
-      sortBy: 'name',
-      search: this.props.global.search,
-      supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
-    });
-  }
-
-  componentDidUpdate(prevState) {
-    if (prevState.global.search !== this.props.global.search) {
-      this.props.pdpGetReset();
-      this.props.pdpGetProcess({
-        page: 0,
-        loading: true,
-        sort: 'asc',
-        sortBy: 'name',
-        search: this.props.global.search,
-        supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
-      });
-    }
-  }
-
-  /** CALLED FROM CHILD */
-  parentFunction(data) {
-    switch (data.type) {
-      case 'order':
-        this.setState({ openOrder: true, selectedProduct: data.data });
-        break;
-      case 'addProduct':
-        this.setState({
-          openOrder: false,
-          addProductNotif: true,
-          addProductNotifText: 'Produk berhasil ditambahkan ke keranjang'
-        });
-        setTimeout(() => {
-          this.setState({ addProductNotif: false });
-        }, 3000);
-        break;
-      default:
-        break;
-    }
-  }
-
-  /**
-   * ========================
-   * RENDER VIEW
-   * =======================
-   */
-  renderPdpData() {
-    return this.props.global.search !== '' ? (
-      <PdpListDataView
-        onRef={ref => (this.parentFunction = ref)}
-        parentFunction={this.parentFunction.bind(this)}
-      />
-    ) : (
-      <View />
-    );
+      sortBy: 'name'
+    };
   }
   /**
    * ========================
@@ -109,7 +44,87 @@ class PdpSearchView extends Component {
       )
     };
   };
-  /** MODAL */
+  /**
+   * =======================
+   * FUNCTIONAL
+   * =======================
+   */
+  /** === DID MOUNT === */
+  componentDidMount() {
+    this.props.pdpGetReset();
+    this.getPdp({ page: 0, loading: true });
+  }
+  /** === DID UPDATE */
+  componentDidUpdate(prevState) {
+    if (prevState.global.search !== this.props.global.search) {
+      this.props.pdpGetReset();
+      this.getPdp({ page: 0, loading: true });
+    }
+  }
+  /** === FETCH DATA (THIS FOR ALL FITLER) === */
+  getPdp(data) {
+    this.props.pdpGetProcess({
+      page: data.page,
+      loading: data.loading,
+      sort: data.sort !== undefined ? data.sort : this.state.sort,
+      sortBy: data.sortBy !== undefined ? data.sortBy : this.state.sortBy,
+      search: this.props.global.search
+    });
+  }
+  /**  === CALLED FROM CHILD === */
+  parentFunction(data) {
+    switch (data.type) {
+      case 'order':
+        this.setState({ openOrder: true, selectedProduct: data.data });
+        break;
+      case 'addProduct':
+        this.setState({
+          openOrder: false,
+          addProductNotif: true,
+          addProductNotifText: 'Produk berhasil ditambahkan ke keranjang'
+        });
+        setTimeout(() => {
+          this.setState({ addProductNotif: false });
+        }, 3000);
+        break;
+      default:
+        break;
+    }
+  }
+  /**
+   * ========================
+   * RENDER VIEW
+   * =======================
+   */
+  renderPdpData() {
+    return this.props.global.search !== '' ? (
+      <PdpListDataView
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+        sort={this.state.sort}
+        sortBy={this.state.sortBy}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /**
+   * ===================
+   * TOAST
+   * ====================
+   */
+  renderToast() {
+    return this.state.addProductNotif ? (
+      <ToastType1 margin={10} content={this.state.addProductNotifText} />
+    ) : (
+      <View />
+    );
+  }
+  /**
+   * ====================
+   * MODAL
+   * ====================
+   */
   renderModalOrder() {
     return this.state.openOrder ? (
       <ModalBottomType3
@@ -129,19 +144,7 @@ class PdpSearchView extends Component {
       <View />
     );
   }
-  /**
-   * ===================
-   * TOAST
-   * ====================
-   */
-  renderToast() {
-    return this.state.addProductNotif ? (
-      <ToastType1 margin={10} content={this.state.addProductNotifText} />
-    ) : (
-      <View />
-    );
-  }
-  /** MAIN */
+  /** ==== MAIN === */
   render() {
     return (
       <View style={styles.mainContainer}>
