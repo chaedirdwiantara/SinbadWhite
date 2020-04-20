@@ -85,6 +85,7 @@ class SearchBarType3 extends Component {
     return (
       <View style={{ flex: 1 }}>
         <TextInput
+          autoFocus
           selectionColor={masterColor.mainColor}
           onEndEditing={() => this.searchText()}
           value={this.state.search}
