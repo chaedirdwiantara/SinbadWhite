@@ -29,7 +29,6 @@ class PdpView extends Component {
       /** for modal */
       openModalOrder: false,
       openModalSkuNotAvailable: false,
-      openOrder: false,
       openModalSort: false,
       openModalConfirmRemoveCart: false,
       /** data */
@@ -112,29 +111,6 @@ class PdpView extends Component {
       case 'category':
         console.log('filter');
         break;
-      case 'order':
-        if (
-          this.props.merchant.merchantChanged &&
-          this.props.oms.dataCart.length > 0
-        ) {
-          this.setState({
-            openModalConfirmRemoveCart: true,
-            selectedProduct: data.data
-          });
-        } else {
-          this.setState({ openOrder: true, selectedProduct: data.data });
-        }
-        break;
-      case 'addProduct':
-        this.setState({
-          openOrder: false,
-          addProductNotif: true,
-          addProductNotifText: 'Produk berhasil ditambahkan ke keranjang'
-        });
-        setTimeout(() => {
-          this.setState({ addProductNotif: false });
-        }, 3000);
-        break;
       case 'sortSelected':
         this.setState({
           openModalSort: false,
@@ -152,8 +128,14 @@ class PdpView extends Component {
         break;
       /** => 'pesan' buttom press (from child) */
       case 'openModalOrder':
-        if (this.props.user === null) {
-          NavigationService.navigate('Auth');
+        if (
+          this.props.merchant.merchantChanged &&
+          this.props.oms.dataCart.length > 0
+        ) {
+          this.setState({
+            openModalConfirmRemoveCart: true,
+            selectedProduct: data.data
+          });
         } else {
           this.props.pdpGetDetailProcess(data.data);
           this.setState({ openModalOrder: true });
@@ -298,9 +280,14 @@ class PdpView extends Component {
         }
         type={'okeRed'}
         ok={() => {
-          this.setState({ openModalConfirmRemoveCart: false, openOrder: true });
+          this.setState({
+            openModalConfirmRemoveCart: false,
+            openModalOrder: true
+          });
           this.props.omsResetData();
           this.props.merchantChanged(false);
+          this.props.pdpGetDetailProcess(this.state.selectedProduct);
+          this.setState({ openModalOrder: true });
         }}
         cancel={() => this.setState({ openModalConfirmRemoveCart: false })}
       />
