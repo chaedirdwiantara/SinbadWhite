@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, Image, Dimensions, Keyboard } from 'react-native';
 import Text from 'react-native-text';
 import { connect } from 'react-redux';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -24,6 +24,7 @@ class PdpOrderView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      showKeyboard: false,
       questionMarkShow: true,
       buttonAddDisabled: false,
       qtyFromChild:
@@ -37,6 +38,14 @@ class PdpOrderView extends Component {
    * FUNCTIONAL
    * ============================
    */
+  /** DID MOUNT */
+  componentDidMount() {
+    this.keyboardListener();
+  }
+  /** WILL UNMOUNT */
+  componentWillUnmount() {
+    this.keyboardRemove();
+  }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
     /** => IF SKU NOT AVAILABLE */
@@ -52,6 +61,35 @@ class PdpOrderView extends Component {
         }
       }
     }
+  }
+  /**
+   * ========================
+   * FOR KEYBOARD
+   * ========================
+   */
+  /** KEYBOARD LISTENER */
+  keyboardListener() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this.keyboardDidShow
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this.keyboardDidHide
+    );
+  }
+  /** KEYBOARD SHOW */
+  keyboardDidShow = () => {
+    this.setState({ showKeyboard: true });
+  };
+  /** KEYBOARD HIDE */
+  keyboardDidHide = () => {
+    this.setState({ showKeyboard: false });
+  };
+  /** KEYBOARD REMOVE */
+  keyboardRemove() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
   }
   /** === SEND DATA TO PARENT (PdpView) */
   toParentFunction(data) {
@@ -176,6 +214,7 @@ class PdpOrderView extends Component {
     return (
       <View style={styles.boxPesan}>
         <OrderButton
+          disabledAllButton={this.state.showKeyboard}
           item={this.props.pdp.dataDetailPdp}
           onRef={ref => (this.parentFunctionFromOrderButton = ref)}
           parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
@@ -191,8 +230,8 @@ class PdpOrderView extends Component {
   renderButton() {
     return (
       <ButtonSingleSmall
-        disabledGrey
-        disabled={this.buttonDisabled()}
+        disabledGrey={!this.state.showKeyboard}
+        disabled={this.buttonDisabled() || this.state.showKeyboard}
         title={this.buttonTitle()}
         borderRadius={4}
         onPress={() =>
@@ -218,7 +257,13 @@ class PdpOrderView extends Component {
   /** === RENDER TOTAL BOTTOM === */
   renderBottomSection() {
     return (
-      <View style={[styles.boxTotalPrice, GlobalStyle.shadowForBox10]}>
+      <View
+        style={[
+          styles.boxTotalPrice,
+          GlobalStyle.shadowForBox10,
+          { marginTop: !this.state.showKeyboard ? 0.14 * height : 0 }
+        ]}
+      >
         <View style={{ flex: 1 }}>{this.renderBottomValue()}</View>
         <View style={{ flex: 1 }}>{this.renderButton()}</View>
       </View>

@@ -165,7 +165,7 @@ class OrderButton extends Component {
   render() {
     return (
       <View style={[styles.containerInputQty, GlobalStyle.shadowForBox]}>
-        {this.state.qty <= this.state.minQty ? (
+        {this.state.qty <= this.state.minQty || this.props.disabledAllButton ? (
           <View style={styles.minusButtonDisabled}>
             <Text style={styles.minusTextDisabled}>-</Text>
           </View>
@@ -197,7 +197,9 @@ class OrderButton extends Component {
             style={[styles.input, Fonts.type8]}
           />
         </View>
-        {this.state.plusButtonDisable || this.checkDisablePlusButton() ? (
+        {this.state.plusButtonDisable ||
+        this.checkDisablePlusButton() ||
+        this.props.disabledAllButton ? (
           <View style={styles.plusButtonDisabled}>
             <Text style={styles.plusTextDisabled}>+</Text>
           </View>
