@@ -41,19 +41,27 @@ function getListAndSearch(data) {
       listAndSearchApi = 'provinces?';
       break;
     case 'city':
-      listAndSearchApi = `locations?type=city&provinceId=${stateData.global.dataLocationVolatile.provinceId}&`;
+      listAndSearchApi = `locations?type=city&provinceId=${
+        stateData.global.dataLocationVolatile.provinceId
+      }&`;
       break;
     case 'district':
-      listAndSearchApi = `locations?type=district&city=${stateData.global.dataLocationVolatile.cityName}&`;
+      listAndSearchApi = `locations?type=district&city=${
+        stateData.global.dataLocationVolatile.cityName
+      }&`;
       break;
     case 'urban':
-      listAndSearchApi = `locations?type=urban&district=${stateData.global.dataLocationVolatile.districtName}&`;
+      listAndSearchApi = `locations?type=urban&district=${
+        stateData.global.dataLocationVolatile.districtName
+      }&`;
       break;
     default:
       break;
   }
   return ApiRest({
-    path: `${listAndSearchApi}$skip=${data.page}&$limit=20&keyword=${data.search}`,
+    path: `${listAndSearchApi}$skip=${data.page}&$limit=20&keyword=${
+      data.search
+    }`,
     method: 'GET'
   });
 }
@@ -81,12 +89,41 @@ function getVersion() {
  * THIS CODE IS NOT FETCHING (ONLY FUNCTION)
  * =========================================
  */
-/** USER STORE URBAN */
-function userStoreUrban() {
+/** MAPPING SUPPLIER MERCHANT */
+function merchantSupplierMapping() {
+  const stateData = Store.getState();
+  return stateData.merchant.selectedMerchant !== null
+    ? JSON.stringify(
+        stateData.merchant.selectedMerchant.store.supplierStores.map(
+          item => item.supplierId
+        )
+      )
+    : '';
+}
+/** MAPPING SUPPLIER AGENT */
+function userSupplierMapping() {
+  const stateData = Store.getState();
+  return stateData.user !== null
+    ? JSON.stringify(stateData.user.userSuppliers.map(item => item.supplierId))
+    : '';
+}
+/** MERCHANT STORE URBAN */
+function merchantStoreUrban() {
   const stateData = Store.getState();
   if (stateData.merchant.selectedMerchant !== null) {
     if (stateData.merchant.selectedMerchant.store.urbanId !== null) {
-      return `?urbanId=${stateData.merchant.selectedMerchant.store.urbanId}`;
+      return stateData.merchant.selectedMerchant.store.urbanId;
+    }
+    return '';
+  }
+  return '';
+}
+/** MERCHAN STORE ID */
+function merchantStoreId() {
+  const stateData = Store.getState();
+  if (stateData.merchant.selectedMerchant !== null) {
+    if (stateData.merchant.selectedMerchant.store.id !== null) {
+      return stateData.merchant.selectedMerchant.store.id;
     }
     return '';
   }
@@ -97,5 +134,8 @@ export const GlobalMethod = {
   getListAndSearch,
   getAddressFromLongLat,
   getVersion,
-  userStoreUrban
+  merchantStoreUrban,
+  merchantStoreId,
+  merchantSupplierMapping,
+  userSupplierMapping
 };
