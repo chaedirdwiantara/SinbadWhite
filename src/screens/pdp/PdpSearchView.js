@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../state/actions';
@@ -235,7 +235,7 @@ class PdpSearchView extends Component {
   /** ==== MAIN === */
   render() {
     return (
-      <View style={styles.mainContainer}>
+      <SafeAreaView style={styles.mainContainer}>
         <StatusBarRed />
         {this.renderPdpData()}
         {/* toast */}
@@ -244,7 +244,7 @@ class PdpSearchView extends Component {
         {this.renderModalSkuNotAvailable()}
         {this.renderModalOrder()}
         {this.renderModalConfirmDelete()}
-      </View>
+      </SafeAreaView>
     );
   }
 }
