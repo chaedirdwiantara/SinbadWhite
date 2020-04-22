@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   Dimensions,
   TouchableOpacity,
   ScrollView
 } from 'react-native';
+import Text from 'react-native-text';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import Fonts from '../../helpers/GlobalFont';
 import GlobalStyle from '../../helpers/GlobalStyle';
@@ -42,7 +42,23 @@ class ModalBottomParcelDetail extends Component {
           </View>
           <View>
             <Text style={Fonts.type17}>
-              {MoneyFormat(this.state.data.parcelDetails.totalGrossPrice)}
+              {MoneyFormat(this.state.data.parcelGrossPrice)}
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginBottom: 5,
+            justifyContent: 'space-between'
+          }}
+        >
+          <View>
+            <Text style={Fonts.type51}>Total Potongan Harga</Text>
+          </View>
+          <View>
+            <Text style={Fonts.type51}>
+              - {MoneyFormat(this.state.data.parcelPromo)}
             </Text>
           </View>
         </View>
@@ -57,7 +73,7 @@ class ModalBottomParcelDetail extends Component {
           </View>
           <View>
             <Text style={Fonts.type17}>
-              {MoneyFormat(this.state.data.parcelDetails.tax)}
+              {MoneyFormat(this.state.data.parcelTaxes)}
             </Text>
           </View>
         </View>
@@ -82,7 +98,7 @@ class ModalBottomParcelDetail extends Component {
         </View>
         <View>
           <Text style={Fonts.type7}>
-            {MoneyFormat(this.state.data.parcelDetails.totalNettPrice)}
+            {MoneyFormat(this.state.data.parcelFinalPrice)}
           </Text>
         </View>
       </TouchableOpacity>
@@ -107,7 +123,9 @@ class ModalBottomParcelDetail extends Component {
             </Text>
           </View>
           <View style={{ width: '40%', alignItems: 'flex-end' }}>
-            <Text style={Fonts.type17}>{MoneyFormat(item.grossPrice)}</Text>
+            <Text style={Fonts.type17}>
+              {MoneyFormat(item.catalogueGrossPrice)}
+            </Text>
           </View>
         </View>
       );
@@ -117,6 +135,37 @@ class ModalBottomParcelDetail extends Component {
   renderProductList() {
     return this.state.data.orderBrands.map((item, index) => {
       return <View key={index}>{this.renderProductListContent(item)}</View>;
+    });
+  }
+
+  renderPromoList() {
+    return this.state.data.promoList.map((item, index) => {
+      return (
+        <View
+          key={index}
+          style={{
+            flexDirection: 'row',
+            marginBottom: 5,
+            justifyContent: 'space-between',
+            paddingHorizontal: 16
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <Text style={Fonts.type51}>
+              {item.promoValue !== null
+                ? item.promoName
+                : `${item.catalogueName} (${item.promoQty} Pcs)`}
+            </Text>
+          </View>
+          <View style={{ width: '40%', alignItems: 'flex-end' }}>
+            <Text style={Fonts.type51}>
+              {item.promoValue !== null
+                ? `- ${MoneyFormat(item.promoValue)}`
+                : 'FREE'}
+            </Text>
+          </View>
+        </View>
+      );
     });
   }
 
@@ -144,11 +193,45 @@ class ModalBottomParcelDetail extends Component {
           </View>
           <View>
             <Text style={Fonts.type75}>
-              {MoneyFormat(this.state.data.parcelDetails.totalGrossPrice)}
+              {MoneyFormat(this.state.data.parcelGrossPrice)}
             </Text>
           </View>
         </View>
       </View>
+    );
+  }
+
+  renderPromo() {
+    return this.state.data.promoList.length > 0 ? (
+      <View>
+        <View style={{ paddingHorizontal: 16 }}>
+          <Text style={Fonts.type7}>Potongan Harga</Text>
+        </View>
+        <View
+          style={[GlobalStyle.lines, { marginLeft: 16, marginVertical: 10 }]}
+        />
+        <View>{this.renderPromoList()}</View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 16,
+            marginTop: 10,
+            marginBottom: 20
+          }}
+        >
+          <View>
+            <Text style={Fonts.type75}>Total Potongan</Text>
+          </View>
+          <View>
+            <Text style={Fonts.type75}>
+              - {MoneyFormat(this.state.data.parcelPromo)}
+            </Text>
+          </View>
+        </View>
+      </View>
+    ) : (
+      <View />
     );
   }
   /** RENDER DATA */
@@ -156,6 +239,7 @@ class ModalBottomParcelDetail extends Component {
     return (
       <View>
         {this.renderProduct()}
+        {this.renderPromo()}
         {this.state.openTotal ? this.renderOpenTotal() : <View />}
         {this.renderTotal()}
       </View>

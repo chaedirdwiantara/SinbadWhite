@@ -4,6 +4,7 @@ import Text from 'react-native-text';
 import { connect } from 'react-redux';
 import Fonts from '../../helpers/GlobalFont';
 import ModalBottomType1 from '../../components/modal_bottom/ModalBottomType1';
+import { MoneyFormat } from '../../helpers/NumberFormater';
 import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
 import masterColor from '../../config/masterColor.json';
 import GlobalStyles from '../../helpers/GlobalStyle';
@@ -26,7 +27,15 @@ class ModalBottomStockConfirmation extends Component {
           source={{
             uri: item.catalogue.catalogueImages[0].imageUrl
           }}
-          style={[GlobalStyles.image54Contain, { opacity: 0.5 }]}
+          style={[
+            GlobalStyles.image54Contain,
+            {
+              opacity:
+                item.errorCode === 'ERR-STOCK' || item.errorCode === 'ERR-PRICE'
+                  ? 1
+                  : 0.5
+            }
+          ]}
         />
       </View>
     );
@@ -39,7 +48,10 @@ class ModalBottomStockConfirmation extends Component {
           style={[
             Fonts.type16,
             {
-              opacity: item.errorCode === 'ERR-STOCK' ? 1 : 0.5,
+              opacity:
+                item.errorCode === 'ERR-STOCK' || item.errorCode === 'ERR-PRICE'
+                  ? 1
+                  : 0.5,
               textTransform: 'capitalize'
             }
           ]}
@@ -72,12 +84,55 @@ class ModalBottomStockConfirmation extends Component {
                 marginTop: 8
               }}
             >
-              <Text style={Fonts.type23}>{item.requestStock} pcs</Text>
+              <Text style={Fonts.type83}>
+                {item.requestStock} {item.catalogue.minQtyType}
+              </Text>
               <Image
                 source={require('../../assets/icons/global/arrow_right.png')}
                 style={{ height: 18, width: 18, marginHorizontal: 5 }}
               />
-              <Text style={Fonts.type23}>{item.suggestedStock} pcs</Text>
+              <Text style={Fonts.type83}>
+                {item.suggestedStock} {item.catalogue.minQtyType}
+              </Text>
+            </View>
+          </View>
+        </View>
+      ) : (
+        <View key={index} />
+      );
+    });
+  }
+  /** === RENDER CHANGE PRICE === */
+  renderPerubahanHargaContent() {
+    return this.props.oms.errorOmsGetCheckoutItem.data.map((item, index) => {
+      return item.errorCode === 'ERR-PRICE' ? (
+        <View style={{ flexDirection: 'row' }} key={index}>
+          {this.renderImage(item)}
+          <View style={styles.boxNameAndInfo}>
+            {this.renderSkuName(item)}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 8
+              }}
+            >
+              <Text style={Fonts.type83}>
+                {MoneyFormat(item.oldCatalogueGrossPrice)}
+              </Text>
+              <Image
+                source={require('../../assets/icons/global/arrow_right.png')}
+                style={{ height: 18, width: 18, marginHorizontal: 5 }}
+              />
+              <Text
+                style={
+                  item.oldCatalogueGrossPrice < item.newCatalogueGrossPrice
+                    ? Fonts.type29
+                    : Fonts.type95
+                }
+              >
+                {MoneyFormat(item.newCatalogueGrossPrice)}
+              </Text>
             </View>
           </View>
         </View>
@@ -118,6 +173,24 @@ class ModalBottomStockConfirmation extends Component {
         <View key={index} />
       );
     });
+  }
+  /** === RENDER PRODUCT CHANGE PRICE === */
+  renderPerubahanHarga() {
+    return this.props.oms.errorOmsGetCheckoutItem.data.find(
+      item => item.errorCode === 'ERR-PRICE'
+    ) !== undefined ? (
+      <View>
+        <View style={{ paddingTop: 10, paddingLeft: 16 }}>
+          <Text style={Fonts.type42}>Perubahan Harga</Text>
+        </View>
+        <View style={[GlobalStyles.lines, { marginTop: 8, marginLeft: 16 }]} />
+        <View style={{ paddingHorizontal: 16 }}>
+          {this.renderPerubahanHargaContent()}
+        </View>
+      </View>
+    ) : (
+      <View />
+    );
   }
   /** === RENDER PRODUCT CHANGE STOCK === */
   renderPerubahanStock() {
@@ -187,6 +260,7 @@ class ModalBottomStockConfirmation extends Component {
         </View>
         <View style={styles.contentContainer}>
           <ScrollView>
+            {this.renderPerubahanHarga()}
             {this.renderPerubahanStock()}
             {this.renderBarangHabis()}
             {this.renderProductTidakTersedia()}
@@ -201,7 +275,7 @@ class ModalBottomStockConfirmation extends Component {
       <ModalBottomType1
         open={this.props.open}
         onPress={this.props.close}
-        title={'Konfirmasi Stock'}
+        title={'Konfirmasi'}
         buttonTitle={'Tinjau Keranjang'}
         content={this.renderContent()}
       />

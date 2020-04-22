@@ -20,7 +20,7 @@ import { LoadingPage } from '../../components/Loading';
 import Address from '../../components/Address';
 import Fonts from '../../helpers/GlobalFont';
 import GlobalStyles from '../../helpers/GlobalStyle';
-import { MoneyFormat } from '../../helpers/NumberFormater';
+import { MoneyFormat, NumberFormat } from '../../helpers/NumberFormater';
 import OrderButton from '../../components/OrderButton';
 import EmptyData from '../../components/empty_state/EmptyData';
 import ModalBottomErrorRespons from '../../components/error/ModalBottomErrorRespons';
@@ -39,16 +39,18 @@ class OmsCartView extends Component {
     this.state = {
       /** modal */
       openModalToCheckoutConfirmation: false,
-      openModalStockConfirmation: false,
+      openModalSkuStatusConfirmation: false,
       openModalErrorGlobal: false,
       openModalDeleteConfirmation: false,
-      openModalInputOwnerId: false,
       openModalErrorNoUrban: false,
       openModalCS: false,
+      openModalInputOwnerId: false,
       /** data */
       buttonCheckoutDisabled: false,
       productWantToDelete: null,
       productCartArray: [],
+      loading: false,
+      cartId: null,
       /** error */
       errorOmsGetCartItem: false
     };
@@ -61,14 +63,17 @@ class OmsCartView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     if (this.props.oms.dataCart.length > 0) {
-      this.props.omsGetCartItemProcess({
-        storeId: this.props.merchant.selectedMerchant.storeId,
-        catalogues: this.props.oms.dataCart
-      });
+      this.loading(true);
+      this.getCartItem(this.props.oms.dataCart);
     }
   }
   /** === DID UPDATE */
   componentDidUpdate(prevProps) {
+    /**
+     * ========================
+     * SUCCESS RESPONS
+     * =======================
+     */
     /**
      * ======================
      * FOR INPUT ID SUCCESS
@@ -79,28 +84,24 @@ class OmsCartView extends Component {
       this.props.merchant.dataGetMerchantDetail
     ) {
       if (this.props.merchant.dataGetMerchantDetail !== null) {
-        this.checkCart();
+        this.checkCartBeforeCheckout();
         this.setState({ openModalInputOwnerId: false });
       }
     }
     /**
-     * ========================
-     * SUCCESS RESPONS
-     * =======================
-     */
-    /**
-     * ===== SUCCESS POST CART ====
+     * === SUCCESS GET CART ====
      * after success get list of product by dataCart
      */
     if (
       prevProps.oms.dataOmsGetCartItem !== this.props.oms.dataOmsGetCartItem
     ) {
       if (this.props.oms.dataOmsGetCartItem !== null) {
+        this.loading(false);
         this.convertListProductToLocalState();
       }
     }
     /**
-     * ===== SUCCESS POST CHECKOUT ITEM ====
+     * === SUCCESS POST CHECKOUT ITEM ====
      * after success get item checkout go to checkout page
      */
     if (
@@ -112,10 +113,32 @@ class OmsCartView extends Component {
       }
     }
     /**
+     * === SUCCESS GET CART FROM CHECKOUT ====
+     * after success get list of product by dataCart
+     */
+    if (
+      prevProps.oms.dataOmsGetCartItemFromCheckout !==
+      this.props.oms.dataOmsGetCartItemFromCheckout
+    ) {
+      if (this.props.oms.dataOmsGetCartItemFromCheckout !== null) {
+        this.setState({
+          cartId: this.props.oms.dataOmsGetCartItemFromCheckout.id
+        });
+      }
+    }
+    /**
      * ==============================
      * ERROR RESPONS
      * ==============================
      */
+    /** ERROR GET CART LIST */
+    if (
+      prevProps.oms.errorOmsGetCartItem !== this.props.oms.errorOmsGetCartItem
+    ) {
+      if (this.props.oms.errorOmsGetCartItem !== null) {
+        this.setState({ loading: false });
+      }
+    }
     /** ERROR GET CHECKOUT LIST */
     /**
      * === ERROR RESPONS ===
@@ -134,7 +157,6 @@ class OmsCartView extends Component {
     ) {
       if (this.props.oms.errorOmsGetCheckoutItem !== null) {
         if (this.props.oms.errorOmsGetCheckoutItem.code === 400) {
-          this.setState({ openModalStockConfirmation: true });
           this.modifyProductCartArrayWhenError();
         } else if (
           this.props.oms.errorOmsGetCheckoutItem.code === 406 &&
@@ -146,6 +168,34 @@ class OmsCartView extends Component {
         }
       }
     }
+  }
+  /**
+   * =====================
+   * CALLED FROM CHILD
+   * =======================
+   * - call cs
+   */
+  parentFunction(data) {
+    switch (data.type) {
+      case 'close':
+        this.setState({ openModalCS: false });
+        break;
+      default:
+        break;
+    }
+  }
+  /**
+   * =========================
+   * GLOBAL FUNCTION
+   * ========================
+   */
+  /** => get cart item */
+  getCartItem(catalogues) {
+    this.props.omsGetCartItemProcess({ catalogues });
+  }
+  /** => start loading */
+  loading(loading) {
+    this.setState({ loading });
   }
   /**
    * =============================
@@ -165,21 +215,6 @@ class OmsCartView extends Component {
     }
   }
   /**
-   * =====================
-   * CALLED FROM CHILD
-   * =======================
-   * - call cs
-   */
-  parentFunction(data) {
-    switch (data.type) {
-      case 'close':
-        this.setState({ openModalCS: false });
-        break;
-      default:
-        break;
-    }
-  }
-  /**
    * ==========================================
    * ALL FUNCTION IN COMPONENT DID UPDATE START
    * ==========================================
@@ -189,51 +224,74 @@ class OmsCartView extends Component {
    *  - 'outStock' = stok habis
    *  - 'unavailable' = tidak tersedia
    */
-
+  /**
+   * => THIS FUNCTION MODIFY ALL DATA CART (CHECKLIST AND STATUS)
+   * => LAST EDIT 22042020 (FIX FOR WAREHOUSE LOGIC)
+   */
   convertListProductToLocalState() {
     const productCartArray = [];
     this.props.oms.dataOmsGetCartItem.cartParcels.forEach(item => {
       item.cartBrands.forEach(itemBrand => {
         for (let i = 0; i < itemBrand.cartBrandCatalogues.length; i++) {
           const productItem = itemBrand.cartBrandCatalogues[i];
+          /** => makes all sku check (choose) */
           productItem.checkBox = true;
-          if (
-            !productItem.catalogue.unlimitedStock &&
-            productItem.catalogue.stock < productItem.catalogue.minQty
-          ) {
-            productItem.statusInCart = 'outStock';
-          } else if (productItem.catalogue.status === 'inactive') {
+          /** => grouping all sku (available, out of stock, and unavailable) */
+          if (productItem.catalogue.status === 'inactive') {
             productItem.statusInCart = 'unavailable';
           } else {
-            productItem.statusInCart = 'available';
+            if (productItem.catalogue.warehouseCatalogues.length > 0) {
+              const warehouseCatalogues =
+                productItem.catalogue.warehouseCatalogues[0];
+              if (
+                !warehouseCatalogues.unlimitedStock &&
+                warehouseCatalogues.stock < productItem.catalogue.minQty
+              ) {
+                productItem.statusInCart = 'outStock';
+              } else {
+                productItem.statusInCart = 'available';
+              }
+            } else {
+              productItem.statusInCart = 'unavailable';
+            }
           }
+          /** => this for record checklist per sku */
           if (this.props.oms.dataCheckBoxlistCart.length > 0) {
+            /** => find if sku already in dataCheckBoxlistCart */
             const indexDataCheckBoxlistCart = this.props.oms.dataCheckBoxlistCart.findIndex(
               itemDataCheckBoxlistCart =>
                 itemDataCheckBoxlistCart.catalogue.id ===
                 itemBrand.cartBrandCatalogues[i].catalogue.id
             );
+            /** => if sku already in dataCheckBoxlistCart, make checkBox same with sku in dataCheckBoxlistCart */
             if (indexDataCheckBoxlistCart > -1) {
               productItem.checkBox = this.props.oms.dataCheckBoxlistCart[
                 indexDataCheckBoxlistCart
               ].checkBox;
-              productItem.statusInCart =
-                !productItem.catalogue.unlimitedStock &&
-                productItem.catalogue.stock < productItem.catalogue.minQty
-                  ? 'outStock'
-                  : this.props.oms.dataCheckBoxlistCart[
-                      indexDataCheckBoxlistCart
-                    ].statusInCart;
             }
           }
+          /** => push to array productCartArray  */
           productCartArray.push(productItem);
         }
       });
     });
-    this.setState({ productCartArray });
+    /** => save to oms.dataCheckBoxlistCart */
+    this.props.omsCheckListCart(productCartArray);
+    /** => save to local state */
+    this.setState({
+      productCartArray,
+      cartId: this.props.oms.dataOmsGetCartItem.id
+    });
   }
-
+  /**
+   * => THIS FUNCTION FOR MODIFY ALL DATA IN this.state.productCartArray
+   * => IF there is error from BE
+   */
   modifyProductCartArrayWhenError() {
+    /** => open modal */
+    this.setState({
+      openModalSkuStatusConfirmation: true
+    });
     /** function for edit productCartArray */
     const productCartArray = this.state.productCartArray;
     /** modification for checklist */
@@ -245,17 +303,33 @@ class OmsCartView extends Component {
       if (indexProductCartArray > -1) {
         switch (item.errorCode) {
           case 'ERR-STOCK':
+            this.setState({
+              cartId: item.cartId
+            });
             productCartArray[indexProductCartArray].qty = item.suggestedStock;
             productCartArray[indexProductCartArray].catalogue.stock =
               item.catalogueStock;
             break;
+          case 'ERR-PRICE':
+            this.setState({
+              cartId: item.cartId
+            });
+            productCartArray[indexProductCartArray].grossPrice =
+              item.newCatalogueGrossPrice;
+            break;
           case 'ERR-STATUS':
           case 'ERR-WAREHOUSE':
+            this.setState({
+              cartId: item.cartId
+            });
             productCartArray[indexProductCartArray].statusInCart =
               'unavailable';
             productCartArray[indexProductCartArray].checkBox = true;
             break;
           case 'ERR-RUN-OUT':
+            this.setState({
+              cartId: item.cartId
+            });
             productCartArray[indexProductCartArray].statusInCart = 'outStock';
             productCartArray[indexProductCartArray].checkBox = true;
             break;
@@ -266,7 +340,6 @@ class OmsCartView extends Component {
       }
     });
   }
-
   /**
    * ==========================================
    * ALL FUNCTION IN COMPONENT DID UPDATE END
@@ -306,9 +379,7 @@ class OmsCartView extends Component {
      * this.forCartData('update', data.catalogueId, data.qty);
      */
   }
-
-  /** check box */
-
+  /** === CHECK LIST SKU LEVEL */
   checkBoxProduct(productId) {
     const productCartArray = this.state.productCartArray;
     const indexProductCartArray = productCartArray.findIndex(
@@ -324,7 +395,7 @@ class OmsCartView extends Component {
       }
     }
   }
-
+  /** === CHECK LIST BRAND LEVEL */
   checkBoxBrand(brandId) {
     const productCartArray = this.state.productCartArray;
     const productCartArrayAllboxCheck = productCartArray.find(
@@ -348,7 +419,7 @@ class OmsCartView extends Component {
       this.setState({ productCartArray });
     }
   }
-
+  /** === CHECK LIST ALL SKU === */
   checkBoxAll() {
     const productCartArray = this.state.productCartArray;
     const productCartArrayAllboxCheck = productCartArray.find(
@@ -366,23 +437,18 @@ class OmsCartView extends Component {
       this.setState({ productCartArray });
     }
   }
-
-  /** for total price all product in cart */
+  /** === TOTAL PRICE === */
   totalPriceValue() {
+    /** => only calculate available and checklist sku */
     const productCheckBox = this.state.productCartArray.filter(
       item => item.checkBox && item.statusInCart === 'available'
     );
-    const mapProduct = productCheckBox.map(
-      item =>
-        (item.catalogue.discountedRetailBuyingPrice !== null
-          ? item.catalogue.discountedRetailBuyingPrice
-          : item.catalogue.retailBuyingPrice) * item.qty
-    );
+    const mapProduct = productCheckBox.map(item => item.grossPrice * item.qty);
     return mapProduct.reduce((a, b) => a + b, 0);
   }
-
-  /** check cart before go to checkout */
-  checkCart() {
+  /** === CHECK SKU IN CART BEFORE GO TO CHECKOUT === */
+  checkCartBeforeCheckout() {
+    /** => only take available sku and checklist sku */
     const productCheckBox = this.state.productCartArray.filter(
       item => item.checkBox && item.statusInCart === 'available'
     );
@@ -392,18 +458,19 @@ class OmsCartView extends Component {
         qty: item.qty
       };
     });
+    /** => save to oms.dataCheckout */
     this.props.omsCheckoutItem(mapProduct);
+    /** => checkout */
     this.props.omsGetCheckoutItemProcess({
-      storeId: this.props.merchant.selectedMerchant.storeId,
-      cartId: this.props.oms.dataOmsGetCartItem.id,
+      cartId: this.state.cartId,
       catalogues: mapProduct
     });
   }
-
+  /** === DELETE SKU IN CART === */
   deleteProductInCart() {
     if (this.state.productWantToDelete !== null) {
       const productCartArray = this.state.productCartArray;
-      /** delete item for check list */
+      /** => delete sku from productCartArray */
       const indexProductCartArray = productCartArray.findIndex(
         item => item.catalogueId === this.state.productWantToDelete.catalogueId
       );
@@ -411,50 +478,127 @@ class OmsCartView extends Component {
         productCartArray.splice(indexProductCartArray, 1);
         this.setState({ productCartArray });
       }
-      /** close modal delete */
-      this.setState({
-        openModalDeleteConfirmation: false
-      });
-      /** delete item for global cart data, product list, product details */
-      setTimeout(() => {
-        this.forCartData(
-          'delete',
-          this.state.productWantToDelete.catalogueId,
-          this.state.productWantToDelete.qty
-        );
-      }, 1000);
+      /** => delete sku in cart */
+      this.forCartData(
+        'delete',
+        this.state.productWantToDelete.catalogueId,
+        this.state.productWantToDelete.qty
+      );
     }
   }
   /**
-   * ==========================================
-   * ALL FUNCTION IN COMPONENT DID UPDATE START
-   * ==========================================
-   * note:
-   * statusInCart:
-   *  - 'available' = no error for product
-   *  - 'outStock' = stok habis
-   *  - 'unavailable' = tidak tersedia
+   * *********************************
+   * RENDER VIEW
+   * *********************************
    */
   /**
-   * === GO TO CHECKOUT ===
-   * - check cart first
+   * ===========================
+   * RENDER GLOBAL USED
+   * ==========================
    */
+  /** === RENDER IMAGE GLOBAL === */
+  renderImageGlobal(item) {
+    return (
+      <View
+        style={{
+          paddingHorizontal: 8,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Image
+          defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
+          source={{
+            uri: item.catalogue.catalogueImages[0].imageUrl
+          }}
+          style={[
+            GlobalStyles.image77Contain,
+            { opacity: item.statusInCart === 'available' ? 1 : 0.5 }
+          ]}
+        />
+      </View>
+    );
+  }
+  /** === RENDER NAME GLOBAL === */
+  renderNameGlobal(item) {
+    return (
+      <View>
+        <Text
+          style={[
+            Fonts.type16,
+            {
+              textTransform: 'capitalize',
+              opacity: item.statusInCart === 'available' ? 1 : 0.5
+            }
+          ]}
+        >
+          {item.catalogue.name}
+        </Text>
+      </View>
+    );
+  }
+  /** === RENDER PRICE PER SKU GLOBAL === */
+  renderPriceProductGlobal(item) {
+    const opacity = item.statusInCart === 'available' ? 1 : 0.5;
+    return (
+      <View style={{ paddingVertical: 10 }}>
+        <View>
+          <Text style={[Fonts.type36, { opacity }]}>
+            {MoneyFormat(item.grossPrice)}
+          </Text>
+        </View>
+      </View>
+    );
+  }
+  /** === RENDER DELETE ICON === */
+  renderDeleteIcon(item) {
+    return (
+      <TouchableOpacity
+        style={{ alignItems: 'flex-end' }}
+        onPress={() => this.wantDelete(item)}
+      >
+        <Image
+          source={require('../../assets/icons/oms/delete.png')}
+          style={{ height: 24, width: 24 }}
+        />
+      </TouchableOpacity>
+    );
+  }
+  /**
+   * ==================================
+   * RENDER CONTENT DATA (MAIN VIEW)
+   * ==================================
+   * - Address (+++RENDER ADDRESS)
+   * - list sku (+++RENDER SKU LIST SECTION)
+   * - total price (+++RENDER BOTTOM SECTION)
+   */
+  renderContentItem() {
+    return (
+      <View style={styles.contentContainer}>
+        <ScrollView>
+          {this.renderMerchantName()}
+          {this.renderAddress()}
+          {this.renderListCart()}
+          {this.renderForErrorProduct()}
+          <View style={{ paddingBottom: 50 }} />
+        </ScrollView>
+        {this.renderBottomSection()}
+      </View>
+    );
+  }
   /**
    * =============================
-   * RENDER VIEW
-   * ============================
+   * +++RENDER MERCHANT NAME
+   * =============================
    */
-  /**
-   * ==========================
-   * MAIN CONTENT
-   * ==========================
-   */
-  /** === RENDER ADDRESS === */
-  /** RENDER SKELETON */
-  renderSkeleton() {
-    return <LoadingPage />;
+  renderMerchantName() {
+    return <SelectedMerchantName shadow />;
   }
-  /** === RENDER ADDRESS === */
+  /**
+   * =============================
+   * +++RENDER ADDRESS
+   * =============================
+   */
   renderAddress() {
     const store = this.props.merchant.selectedMerchant.store;
     return (
@@ -490,37 +634,106 @@ class OmsCartView extends Component {
       </View>
     );
   }
-  renderPriceProduct(item, opacity) {
-    return (
-      <View>
-        {item.catalogue.discountedRetailBuyingPrice !== null ? (
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ marginRight: 5 }}>
-              <Text
+  /**
+   * ==================================
+   * +++RENDER SKU LIST SECTION
+   * ==================================
+   * - list brand (===> RENDER LIST BRAND)
+   * - estimation 3PL section ()
+   * - discount section ()
+   */
+  renderListCart() {
+    return this.props.oms.dataOmsGetCartItem.cartParcels.map((item, index) => {
+      return (
+        <View key={index}>
+          {this.state.productCartArray.find(
+            itemProductCartArray =>
+              itemProductCartArray.parcelId === item.id &&
+              itemProductCartArray.statusInCart === 'available'
+          ) !== undefined ? (
+            <View style={GlobalStyles.shadowForBox}>
+              <View style={GlobalStyles.boxPaddingOms} />
+              <View style={styles.boxListProductInCart}>
+                <View style={{ paddingBottom: 8, paddingHorizontal: 16 }}>
+                  <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <Text style={Fonts.type48}>{item.invoiceGroup.name}</Text>
+                  </View>
+                </View>
+                {this.renderListBrand(item)}
+                {/* {this.renderEstimasiSection(item)} */}
+                {/* {this.renderPotonganSection()} */}
+              </View>
+            </View>
+          ) : (
+            <View />
+          )}
+        </View>
+      );
+    });
+  }
+  /**
+   * ===> RENDER LIST BRAND =====
+   * - list cart item per brand (===> RENDER LIST CART ITEM)
+   * */
+  renderListBrand(itemBrand) {
+    return itemBrand.cartBrands.map((item, index) => {
+      return (
+        <View key={index}>
+          {this.state.productCartArray.filter(
+            itemProductCartArray =>
+              itemProductCartArray.brandId === item.brandId &&
+              itemProductCartArray.statusInCart === 'available'
+          ).length > 0 ? (
+            <View>
+              <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+              <View
                 style={[
-                  Fonts.type31,
-                  { textDecorationLine: 'line-through', opacity }
+                  styles.boxListItemProductInCart,
+                  { paddingVertical: 8, paddingHorizontal: 16 }
                 ]}
               >
-                {MoneyFormat(item.catalogue.retailBuyingPrice)}
-              </Text>
+                <TouchableOpacity
+                  style={styles.boxChecklist}
+                  onPress={() => this.checkBoxBrand(item.brandId)}
+                >
+                  {this.state.productCartArray.filter(
+                    itemProductCartArray =>
+                      itemProductCartArray.brandId === item.brandId &&
+                      !itemProductCartArray.checkBox &&
+                      itemProductCartArray.statusInCart === 'available'
+                  ).length === 0 ? (
+                    <Icons
+                      color={masterColor.mainColor}
+                      name="checkbox-marked"
+                      size={24}
+                    />
+                  ) : (
+                    <Icons
+                      color={masterColor.fontBlack40}
+                      name="checkbox-blank-outline"
+                      size={24}
+                    />
+                  )}
+                </TouchableOpacity>
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+                  <Text style={Fonts.type16}>{item.brand.name}</Text>
+                </View>
+              </View>
+              <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
             </View>
-            <View>
-              <Text style={[Fonts.type36, { opacity }]}>
-                {MoneyFormat(item.catalogue.discountedRetailBuyingPrice)}
-              </Text>
-            </View>
-          </View>
-        ) : (
-          <View>
-            <Text style={[Fonts.type36, { opacity }]}>
-              {MoneyFormat(item.catalogue.retailBuyingPrice)}
-            </Text>
-          </View>
-        )}
-      </View>
-    );
+          ) : (
+            <View />
+          )}
+          {this.renderListCartItem(item)}
+        </View>
+      );
+    });
   }
+  /**
+   * ===> RENDER LIST CART ITEM ===
+   * - price per item product (===> RENDER PRICE PER SKU)
+   * - stock (===> RENDER STOCK PER SKU)
+   */
   renderListCartItem(productItem) {
     return this.state.productCartArray.map((item, index) => {
       const itemForOrderButton = item.catalogue;
@@ -553,33 +766,10 @@ class OmsCartView extends Component {
           </TouchableOpacity>
           <View style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row' }}>
-              <View
-                style={{
-                  width: '30%',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-              >
-                <Image
-                  defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
-                  source={{
-                    uri: item.catalogue.catalogueImages[0].imageUrl
-                  }}
-                  style={styles.productImage}
-                />
-              </View>
+              {this.renderImageGlobal(item)}
               <View style={{ flex: 1 }}>
-                <View>
-                  <Text style={[Fonts.type16, { textTransform: 'capitalize' }]}>
-                    {item.catalogue.name}
-                  </Text>
-                </View>
-                {/* <View style={{ marginVertical: 5 }}>
-                  <Text style={styles.variationProductText}>variasi</Text>
-                </View> */}
-                <View style={{ marginVertical: 10 }}>
-                  {this.renderPriceProduct(item, 1)}
-                </View>
+                {this.renderNameGlobal(item)}
+                {this.renderPriceProductGlobal(item)}
                 <View>
                   <OrderButton
                     item={itemForOrderButton}
@@ -592,32 +782,18 @@ class OmsCartView extends Component {
                   />
                 </View>
               </View>
-              <View style={{ width: '30%', justifyContent: 'space-between' }}>
-                <TouchableOpacity
-                  style={{ alignItems: 'flex-end' }}
-                  onPress={() => this.wantDelete(item)}
-                >
-                  <Image
-                    source={require('../../assets/icons/oms/delete.png')}
-                    style={{ height: 24, width: 24 }}
-                  />
-                </TouchableOpacity>
+              <View
+                style={{
+                  justifyContent: 'space-between',
+                  width: '25%'
+                }}
+              >
+                {this.renderDeleteIcon(item)}
                 <View style={{ alignItems: 'flex-end' }}>
-                  {item.catalogue.displayStock ? (
-                    <Text style={Fonts.type22}>
-                      Tersisa {item.catalogue.stock} Pcs
-                    </Text>
-                  ) : (
-                    <Text>{''}</Text>
-                  )}
+                  {this.renderStock(item.catalogue)}
                 </View>
               </View>
             </View>
-            {/* <View>
-              <Text style={styles.discountText}>
-                *Beli 2 untuk dapatkan diskon Rp 5000
-              </Text>
-            </View> */}
           </View>
         </View>
       ) : (
@@ -625,29 +801,31 @@ class OmsCartView extends Component {
       );
     });
   }
-
-  /** Error Product Tidak Tersedia */
-
-  renderProductTidakTersedia() {
-    return this.state.productCartArray.filter(
-      item => item.statusInCart === 'unavailable'
-    ).length > 0 ? (
+  /** ===> RENDER STOCK PER SKU === */
+  renderStock(item) {
+    let stock = '';
+    if (item.warehouseCatalogues.length > 0) {
+      if (
+        item.warehouseCatalogues[0].stock > 0 &&
+        !item.warehouseCatalogues[0].unlimitedStock
+      ) {
+        stock = `Tersisa ${NumberFormat(
+          item.warehouseCatalogues[0].stock
+        )} Pcs`;
+      }
+    }
+    return (
       <View>
-        <View style={styles.boxMargin} />
-        <View style={styles.boxErrorProduct}>
-          <View style={styles.boxTitle}>
-            <Text style={Fonts.type48}>Produk Tidak Tersedia</Text>
-          </View>
-          <View style={styles.lines} />
-          {this.renderProductContentErrorTidakTersedia()}
-        </View>
+        <Text style={[Fonts.type22, { textAlign: 'right' }]}>{stock}</Text>
       </View>
-    ) : (
-      <View />
     );
   }
-
-  /** list error product (tidak tersedia and out of stock) */
+  /**
+   * ============================
+   * RENDER SKU ERROR SECTION
+   * ============================
+   */
+  /** === RENDER MAIN ERROR === */
   renderForErrorProduct() {
     return this.state.productCartArray.filter(
       item =>
@@ -661,20 +839,37 @@ class OmsCartView extends Component {
       <View />
     );
   }
-
-  /** Error Product Habis */
-
+  /** === RENDER MAIN PRODUCT TIDAK TERSEDIA === */
+  renderProductTidakTersedia() {
+    return this.state.productCartArray.filter(
+      item => item.statusInCart === 'unavailable'
+    ).length > 0 ? (
+      <View>
+        <View style={GlobalStyles.boxPaddingOms} />
+        <View style={GlobalStyles.shadowForBox}>
+          <View style={styles.boxTitle}>
+            <Text style={Fonts.type48}>Produk Tidak Tersedia</Text>
+          </View>
+          <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+          {this.renderProductContentErrorTidakTersedia()}
+        </View>
+      </View>
+    ) : (
+      <View />
+    );
+  }
+  /** === RENDER MAIN PRODUCT HABIS === */
   renderProductHabis() {
     return this.state.productCartArray.filter(
       item => item.statusInCart === 'outStock'
     ).length > 0 ? (
       <View>
-        <View style={styles.boxMargin} />
-        <View style={styles.boxErrorProduct}>
+        <View style={GlobalStyles.boxPaddingOms} />
+        <View style={GlobalStyles.shadowForBox}>
           <View style={styles.boxTitle}>
             <Text style={Fonts.type48}>Produk Habis</Text>
           </View>
-          <View style={styles.lines} />
+          <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
           {this.renderProductContentErrorProductHabis()}
         </View>
       </View>
@@ -682,271 +877,63 @@ class OmsCartView extends Component {
       <View />
     );
   }
-
+  /** === RENDER PRODUCT HABIS === */
   renderProductContentErrorProductHabis() {
     return this.state.productCartArray.map((item, index) => {
       return item.statusInCart === 'outStock' ? (
         <View style={styles.boxContent} key={index}>
-          <View style={[styles.boxContentItem, { width: '30%' }]}>
-            <Image
-              defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
-              source={{
-                uri: item.catalogue.catalogueImages[0].imageUrl
-              }}
-              style={[styles.productImage, { opacity: 0.5 }]}
-            />
-          </View>
+          {this.renderImageGlobal(item)}
           <View style={styles.boxContentProductHabis}>
-            <View>
-              <Text style={[Fonts.type16, { opacity: 0.5 }]}>
-                {item.catalogue.name}
-              </Text>
-            </View>
-            {/* <View>
-              <Text
-                style={[
-                  styles.variationProductText,
-                  { color: 'rgba(130, 130, 130, 0.5)' }
-                ]}
-              >
-                variasi
-              </Text>
-            </View> */}
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: 10
-              }}
-            >
-              {this.renderPriceProduct(item, 0.5)}
-            </View>
+            {this.renderNameGlobal(item)}
+            {this.renderPriceProductGlobal(item)}
           </View>
-          <TouchableOpacity
-            onPress={() => this.wantDelete(item)}
-            style={[styles.boxContentItem, { width: '20%' }]}
-          >
-            <Image
-              source={require('../../assets/icons/oms/delete.png')}
-              style={{ height: 24, width: 24 }}
-            />
-          </TouchableOpacity>
+          {this.renderDeleteIcon(item)}
         </View>
       ) : (
         <View key={index} />
       );
     });
   }
-
+  /** === RENDER PRODUCT TIDAK TERSEDIA === */
   renderProductContentErrorTidakTersedia() {
     return this.state.productCartArray.map((item, index) => {
       return item.statusInCart === 'unavailable' ? (
         <View style={styles.boxContent} key={index}>
-          <View style={[styles.boxContentItem, { width: '30%' }]}>
-            <Image
-              defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
-              source={{
-                uri: item.catalogue.catalogueImages[0].imageUrl
-              }}
-              style={[styles.productImage, { opacity: 0.5 }]}
-            />
-          </View>
+          {this.renderImageGlobal(item)}
           <View style={styles.boxContentProductHabis}>
-            <View>
-              <Text
-                style={[
-                  Fonts.type16,
-                  { opacity: 0.5, textTransform: 'capitalize' }
-                ]}
-              >
-                {item.catalogue.name}
-              </Text>
-            </View>
-            {/* <View>
-              <Text
-                style={[
-                  styles.variationProductText,
-                  { color: 'rgba(130, 130, 130, 0.5)' }
-                ]}
-              >
-                variasi
-              </Text>
-            </View> */}
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: 10
-              }}
-            >
-              {this.renderPriceProduct(item, 0.5)}
-            </View>
+            {this.renderNameGlobal(item)}
+            {this.renderPriceProductGlobal(item)}
           </View>
-          <TouchableOpacity
-            onPress={() => this.wantDelete(item)}
-            style={[styles.boxContentItem, { width: '20%' }]}
-          >
-            <Image
-              source={require('../../assets/icons/oms/delete.png')}
-              style={{ height: 24, width: 24 }}
-            />
-          </TouchableOpacity>
+          {this.renderDeleteIcon(item)}
         </View>
       ) : (
         <View key={index} />
       );
     });
   }
-
-  renderListBrand(itemBrand) {
-    return itemBrand.cartBrands.map((item, index) => {
-      return (
-        <View key={index}>
-          {this.state.productCartArray.filter(
-            itemProductCartArray =>
-              itemProductCartArray.brandId === item.brandId &&
-              itemProductCartArray.statusInCart === 'available'
-          ).length > 0 ? (
-            <View>
-              <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
-              <View
-                style={[
-                  styles.boxListItemProductInCart,
-                  { paddingVertical: 8, paddingHorizontal: 16 }
-                ]}
-              >
-                <TouchableOpacity
-                  style={{
-                    width: 30,
-                    justifyContent: 'center',
-                    alignItems: 'flex-start'
-                  }}
-                  onPress={() => this.checkBoxBrand(item.brandId)}
-                >
-                  {this.state.productCartArray.filter(
-                    itemProductCartArray =>
-                      itemProductCartArray.brandId === item.brandId &&
-                      !itemProductCartArray.checkBox &&
-                      itemProductCartArray.statusInCart === 'available'
-                  ).length === 0 ? (
-                    <Icons
-                      color={masterColor.mainColor}
-                      name="checkbox-marked"
-                      size={24}
-                    />
-                  ) : (
-                    <Icons
-                      color={masterColor.fontBlack40}
-                      name="checkbox-blank-outline"
-                      size={24}
-                    />
-                  )}
-                </TouchableOpacity>
-                <View style={{ flex: 1, justifyContent: 'center' }}>
-                  <Text style={Fonts.type16}>{item.brand.name}</Text>
-                </View>
-              </View>
-              <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
-            </View>
-          ) : (
-            <View />
-          )}
-
-          {this.renderListCartItem(item)}
-        </View>
-      );
-    });
-  }
-  renderListCart() {
-    return this.props.oms.dataOmsGetCartItem.cartParcels.map((item, index) => {
-      return (
-        <View key={index}>
-          {this.state.productCartArray.find(
-            itemProductCartArray =>
-              itemProductCartArray.parcelId === item.id &&
-              itemProductCartArray.statusInCart === 'available'
-          ) !== undefined ? (
-            <View>
-              <View style={GlobalStyles.boxPadding} />
-              <View style={styles.boxListProductInCart}>
-                <View style={{ paddingBottom: 8, paddingHorizontal: 16 }}>
-                  <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <Text style={Fonts.type48}>{item.invoiceGroup.name}</Text>
-                  </View>
-                </View>
-                {this.renderListBrand(item)}
-                {/* {this.renderEstimasiSection(item)} */}
-                {/* {this.renderPotonganSection()} */}
-              </View>
-            </View>
-          ) : (
-            <View />
-          )}
-        </View>
-      );
-    });
-  }
-  /** RENDER MAIN CONTENT */
-  renderContent() {
-    return (
-      <View style={styles.contentContainer}>
-        <ScrollView>
-          {this.renderMerchantName()}
-          {this.renderAddress()}
-          {this.renderListCart()}
-          {this.renderForErrorProduct()}
-
-          <View style={{ paddingBottom: 50 }} />
-        </ScrollView>
-
-        {this.renderTotalBottom()}
-      </View>
-    );
-  }
   /**
-   * ====================
-   * TOTAL ORDER VALUE BOTTOM
-   * ====================
+   * ===============================
+   * +++RENDER BOTTOM SECTION
+   * ===============================
+   * - checklist bottom (===> RENDER TOTAL BOTTOM CHECK LIST)
+   * - total value bottom (===> RENDER TOTAL BOTTOM VALUE)
+   * - checkout button bottom (===> RENDER BUTTON CHECKOUT)
    */
-  /** === RENDER TOTAL BOTTOM VALUE === */
-  renderBottomValue() {
+  renderBottomSection() {
     return (
-      <View style={{ flex: 1 }}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            paddingRight: 10
-          }}
-        >
-          <View>
-            <Text style={{ textAlign: 'right' }}>
-              <Text style={Fonts.type9}>Total: </Text>
-              <Text style={Fonts.type53}>
-                {MoneyFormat(this.totalPriceValue())}
-              </Text>
-            </Text>
-          </View>
-          <View>
-            <Text style={[Fonts.type74, { textAlign: 'right' }]}>
-              Belum termasuk PPN 10%
-            </Text>
-          </View>
-        </View>
+      <View style={styles.bottomContainer}>
+        {this.renderBottomCheckList()}
+        {this.renderBottomValue()}
+        {this.renderCheckoutButton()}
       </View>
     );
   }
-  /** === RENDER TOTAL BOTTOM CHECK LIST === */
+  /** ===> RENDER TOTAL BOTTOM CHECK LIST === */
   renderBottomCheckList() {
     return (
       <View style={{ flexDirection: 'row' }}>
         <TouchableOpacity
-          style={{
-            width: 30,
-            justifyContent: 'center',
-            alignItems: 'flex-start'
-          }}
+          style={styles.boxChecklist}
           onPress={() => this.checkBoxAll()}
         >
           {this.state.productCartArray.filter(
@@ -977,17 +964,41 @@ class OmsCartView extends Component {
       </View>
     );
   }
-  /** === RENDER BUTTON CHECKOUT === */
+  /** ===> RENDER TOTAL BOTTOM VALUE === */
+  renderBottomValue() {
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={styles.boxBottomValue}>
+          <View>
+            <Text>
+              <Text style={Fonts.type9}>Total: </Text>
+              <Text style={Fonts.type53}>
+                {MoneyFormat(this.totalPriceValue())}
+              </Text>
+            </Text>
+          </View>
+          <View>
+            <Text style={Fonts.type74}>Belum termasuk PPN 10%</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+  /** ===> RENDER BUTTON CHECKOUT === */
   renderCheckoutButton() {
     return (
       <ButtonSingleSmall
         disabled={
           this.props.oms.loadingOmsGetCheckoutItem ||
+          this.props.oms.loadingOmsGetCartItemFromCheckout ||
           this.state.productCartArray.find(
             item => item.checkBox && item.statusInCart === 'available'
           ) === undefined
         }
-        loading={this.props.oms.loadingOmsGetCheckoutItem}
+        loading={
+          this.props.oms.loadingOmsGetCheckoutItem ||
+          this.props.oms.loadingOmsGetCartItemFromCheckout
+        }
         loadingPadding={20}
         onPress={() => this.wantToGoCheckout()}
         title={'Checkout'}
@@ -995,21 +1006,61 @@ class OmsCartView extends Component {
       />
     );
   }
-  /** === RENDER TOTAL BOTTOM === */
-  renderTotalBottom() {
+  /**
+   * =======>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>S.>S>S>S>S>S>SS>>SS
+   */
+  /**
+   * ==========================
+   * MAIN CONTENT
+   * ==========================
+   */
+  /** === RENDER ADDRESS === */
+  /** RENDER SKELETON */
+  renderSkeleton() {
+    return <LoadingPage />;
+  }
+
+  renderPriceProduct(item, opacity) {
     return (
-      <View style={styles.totalContainer}>
-        {this.renderBottomCheckList()}
-        {this.renderBottomValue()}
-        {this.renderCheckoutButton()}
+      <View>
+        {item.catalogue.discountedRetailBuyingPrice !== null ? (
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ marginRight: 5 }}>
+              <Text
+                style={[
+                  Fonts.type31,
+                  { textDecorationLine: 'line-through', opacity }
+                ]}
+              >
+                {MoneyFormat(item.catalogue.retailBuyingPrice)}
+              </Text>
+            </View>
+            <View>
+              <Text style={[Fonts.type36, { opacity }]}>
+                {MoneyFormat(item.catalogue.discountedRetailBuyingPrice)}
+              </Text>
+            </View>
+          </View>
+        ) : (
+          <View>
+            <Text style={[Fonts.type36, { opacity }]}>
+              {MoneyFormat(item.catalogue.retailBuyingPrice)}
+            </Text>
+          </View>
+        )}
       </View>
     );
   }
   /**
-   * ==================
+   * ===================================
    * MODAL
-   * ===================
+   * ===================================
+   * - delete sku (===> RENDER MODAL DELETE SKU CONFIRMATION)
+   * - go to checkout (===> RENDER MODAL CHECKOUT CONFIRMATION)
+   * - stock confirmation (===> RENDER MODAL SKU STATUS CONFIRMATION)
+   * - error respons from BE (===> RENDER MODAL ERROR RESPONS FROM BE)
    */
+  /** ===> RENDER MODAL CHECKOUT CONFIRMATION === */
   renderModalConfirmationCheckout() {
     return this.state.openModalToCheckoutConfirmation ? (
       <ModalConfirmation
@@ -1021,7 +1072,7 @@ class OmsCartView extends Component {
         type={'okeRed'}
         ok={() => {
           this.setState({ openModalToCheckoutConfirmation: false });
-          this.checkCart();
+          this.checkCartBeforeCheckout();
         }}
         cancel={() => this.setState({ openModalToCheckoutConfirmation: false })}
       />
@@ -1029,8 +1080,8 @@ class OmsCartView extends Component {
       <View />
     );
   }
-
-  renderModalDeleteProductConfirmation() {
+  /** ===> RENDER MODAL DELETE SKU CONFIRMATION === */
+  renderModalDeleteSKUConfirmation() {
     return (
       <View>
         {this.state.openModalDeleteConfirmation ? (
@@ -1053,30 +1104,16 @@ class OmsCartView extends Component {
       </View>
     );
   }
-  renderMainContent() {
-    return (
-      <View style={styles.mainContainer}>
-        {!this.props.oms.loadingOmsGetCartItem &&
-        this.props.oms.dataOmsGetCartItem !== null
-          ? this.renderContent()
-          : this.renderCheckIfErrorGetCartList()}
-      </View>
-    );
-  }
-
-  renderCheckIfErrorGetCartList() {
-    return this.props.oms.errorOmsGetCartItem !== null
-      ? this.renderErrorGetCartList()
-      : this.renderSkeleton();
-  }
-
-  renderModalStockConfirmation() {
+  /** ===> RENDER MODAL SKU STATUS CONFIRMATION === */
+  renderModalSkuStatusConfirmation() {
     return (
       <View>
-        {this.state.openModalStockConfirmation ? (
+        {this.state.openModalSkuStatusConfirmation ? (
           <ModalBottomStockConfirmation
-            open={this.state.openModalStockConfirmation}
-            close={() => this.setState({ openModalStockConfirmation: false })}
+            open={this.state.openModalSkuStatusConfirmation}
+            close={() =>
+              this.setState({ openModalSkuStatusConfirmation: false })
+            }
           />
         ) : (
           <View />
@@ -1084,14 +1121,14 @@ class OmsCartView extends Component {
       </View>
     );
   }
-
+  /** ===> RENDER MODAL ERROR RESPONS FROM BE ===  */
   renderModalErrorRespons() {
     return this.state.openModalErrorGlobal ? (
       <ModalBottomErrorRespons
         open={this.state.openModalErrorGlobal}
         onPress={() => {
           this.setState({ openModalErrorGlobal: false });
-          this.checkCart();
+          // this.checkCartBeforeCheckout();
         }}
       />
     ) : (
@@ -1146,7 +1183,12 @@ class OmsCartView extends Component {
       <View />
     );
   }
-
+  /**
+   * ====================
+   * EMPTY STATE
+   * ====================
+   */
+  /** === RENDER EMPTY STATE === */
   renderEmpty() {
     return <EmptyData title={'Keranjang Kosong'} />;
   }
@@ -1163,9 +1205,22 @@ class OmsCartView extends Component {
       />
     );
   }
-  /** RENDER HEADER NAME OF MERCHANT */
-  renderMerchantName() {
-    return <SelectedMerchantName shadow />;
+  /** === RENDER CONTENT === */
+  renderContent() {
+    return (
+      <View style={styles.mainContainer}>
+        {!this.props.oms.loadingOmsGetCartItem &&
+        this.props.oms.dataOmsGetCartItem !== null
+          ? this.renderContentItem()
+          : this.renderCheckIfErrorGetCartList()}
+      </View>
+    );
+  }
+  /** === RENDER IF ERROR BE === */
+  renderCheckIfErrorGetCartList() {
+    return this.props.oms.errorOmsGetCartItem !== null
+      ? this.renderErrorGetCartList()
+      : this.renderSkeleton();
   }
   /**
    * ====================
@@ -1176,12 +1231,12 @@ class OmsCartView extends Component {
     return (
       <View style={styles.mainContainer}>
         {this.props.oms.dataCart.length > 0
-          ? this.renderMainContent()
+          ? this.renderContent()
           : this.renderEmpty()}
         {/* modal */}
         {this.renderModalConfirmationCheckout()}
-        {this.renderModalDeleteProductConfirmation()}
-        {this.renderModalStockConfirmation()}
+        {this.renderModalDeleteSKUConfirmation()}
+        {this.renderModalSkuStatusConfirmation()}
         {this.renderModalCallCS()}
         {/* errr */}
         {this.renderModalErrorRespons()}
@@ -1200,10 +1255,9 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1
   },
-  totalContainer: {
-    height: 0.09 * height,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+  bottomContainer: {
+    paddingVertical: 16,
+    paddingHorizontal: 8,
     flexDirection: 'row',
     borderTopWidth: 1,
     borderColor: masterColor.fontBlack10
@@ -1212,14 +1266,6 @@ const styles = StyleSheet.create({
   boxListProductInCart: {
     backgroundColor: masterColor.backgroundWhite,
     paddingVertical: 10
-  },
-  /** for sub total */
-  boxSubTotal: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 10
   },
   /** for address */
   boxAddress: {
@@ -1233,29 +1279,17 @@ const styles = StyleSheet.create({
   boxListItemProductInCart: {
     flexDirection: 'row'
   },
-  container: {
+  /** bottom bar */
+  boxBottomValue: {
     flex: 1,
-    backgroundColor: '#ffffff'
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    paddingRight: 10
   },
-  boxSpaceBottom: {
-    height: 0.07 * height
-  },
-  boxMargin: {
-    height: 10,
-    backgroundColor: '#f2f2f2'
-  },
-  boxErrorProduct: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    borderWidth: 0,
-    elevation: 2,
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowColor: '#777777',
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22
+  boxChecklist: {
+    width: 30,
+    justifyContent: 'center',
+    alignItems: 'flex-start'
   },
   boxContentProductHabis: {
     flex: 1,
@@ -1276,17 +1310,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     flexDirection: 'row'
-  },
-  lines: {
-    marginLeft: 10,
-    borderTopWidth: 1,
-    borderColor: '#f2f2f2'
-  },
-  productImage: {
-    resizeMode: 'contain',
-    width: 77,
-    height: undefined,
-    aspectRatio: 1 / 1
   }
 });
 
