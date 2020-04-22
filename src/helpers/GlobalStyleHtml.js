@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     color: masterColor.fontBlack50
   },
   p: {
-    fontFamily: Fonts.MontserratSemiBold,
+    fontFamily: Fonts.MontserratMedium,
     fontSize: 11,
     color: masterColor.fontBlack50,
     marginBottom: -20
