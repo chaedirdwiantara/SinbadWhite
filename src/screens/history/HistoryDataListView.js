@@ -228,8 +228,8 @@ class HistoryDataListView extends Component {
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             <View style={styles.boxItemContent}>
               <Text style={Fonts.type17}>
-                {item.parcelDetails.totalQty} Qty, Total:{' '}
-                {MoneyFormat(item.parcelDetails.totalNettPrice)}
+                {item.parcelQty} Qty, Total:{' '}
+                {MoneyFormat(item.parcelFinalPrice)}
               </Text>
               <View style={{ flexDirection: 'row' }}>
                 {this.props.section === 'order' && item.status === 'confirm' ? (

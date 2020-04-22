@@ -1,5 +1,7 @@
 /**
- * this product list for history order
+ * - this product list for history order
+ * - modal minimum order
+ * - oms checkout view
  */
 import React, { Component } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
@@ -45,7 +47,7 @@ class ProductListType1 extends Component {
             source={{
               uri: item.catalogue.catalogueImages[0].imageUrl
             }}
-            style={GlobalStyle.image60}
+            style={GlobalStyle.image54Contain}
           />
         </View>
       ) : (

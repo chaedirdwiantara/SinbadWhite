@@ -64,9 +64,7 @@ class ProductListType2 extends Component {
             <Text style={[Fonts.type10, { textTransform: 'capitalize' }]}>
               {item.catalogue.name}
             </Text>
-            <Text style={Fonts.type10}>
-              {MoneyFormat(item.grossPrice / item.qty)}
-            </Text>
+            <Text style={Fonts.type10}>{MoneyFormat(item.grossPrice)}</Text>
           </View>
           <View
             style={{
@@ -79,9 +77,9 @@ class ProductListType2 extends Component {
           </View>
         </View>
         <View style={GlobalStyle.lines} />
-        <View style={{ paddingHorizontal: 10, paddingTop: 16 }}>
+        <View style={styles.boxButtonAndPriceTotal}>
           <Text style={Fonts.type10}>
-            Total Harga: {MoneyFormat(item.grossPrice)}
+            Total Harga: {MoneyFormat(item.catalogueGrossPrice)}
           </Text>
         </View>
       </View>
@@ -167,6 +165,13 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     marginBottom: 8,
     borderRadius: 4
+  },
+  boxButtonAndPriceTotal: {
+    paddingHorizontal: 10,
+    paddingTop: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   }
 });
 
