@@ -163,7 +163,9 @@ class MerchantEditPartialView extends Component {
         params: {
           user: {
             id: this.state.ownerId,
-            selfieImage: `data:image/gif;base64,${this.props.global.imageBase64}`
+            selfieImage: `data:image/gif;base64,${
+              this.props.global.imageBase64
+            }`
           }
         }
       };
@@ -499,83 +501,46 @@ class MerchantEditPartialView extends Component {
   renderClassificationMerchant() {
     return (
       <View style={{ marginTop: 16 }}>
-        <DropdownType1
-          title={'Tipe Toko'}
-          placeholder={'Pilih Tipe Toko'}
-          selectedDropdownText={
-            this.props.merchant.dataEditMerchantVolatile.storeTypeName
-          }
-          openDropdown={() =>
-            this.goToDropdown({
-              type: 'typeMerchant',
-              placeholder: 'Cari Tipe Toko'
-            })
-          }
-        />
-        <DropdownType1
-          title={'Group Toko'}
-          placeholder={'Pilih Group Toko'}
-          selectedDropdownText={
-            this.props.merchant.dataEditMerchantVolatile.storeGroupName
-          }
-          openDropdown={() =>
-            this.goToDropdown({
-              type: 'groupMerchant',
-              placeholder: 'Cari Group Toko'
-            })
-          }
-        />
-        {/* <DropdownType1
-          title={'Cluster Toko'}
-          placeholder={'Pilih Cluster Toko'}
-          selectedDropdownText={
-            this.props.merchant.dataEditMerchantVolatile
-              .vehicleAccessibilityName
-          }
-          openDropdown={() =>
-            this.goToDropdown({
-              type: 'vehicleMerchant',
-              placeholder: 'Cari Akses Kendaraan'
-            })
-          }
-        /> */}
-        <DropdownType1
-          title={'Segment Toko'}
-          placeholder={'Pilih Segment Toko'}
-          selectedDropdownText={
-            this.props.merchant.dataEditMerchantVolatile.storeSegmentName
-          }
-          openDropdown={() =>
-            this.goToDropdown({
-              type: 'segmentMerchant',
-              placeholder: 'Cari Segment Toko'
-            })
-          }
-        />
-        <InputType1
-          title={'Ukuran Toko'}
-          value={this.state.largeArea}
-          placeholder={'Ukuran Toko'}
-          keyboardType={'numeric'}
-          text={text => this.setState({ largeArea: text })}
-          error={false}
-          errorText={''}
-          rightText={'M²'}
-        />
-        {/* <DropdownType1
-          title={'Hierarchy'}
-          placeholder={'Pilih Hierarchy Toko'}
-          selectedDropdownText={
-            this.props.merchant.dataEditMerchantVolatile
-              .vehicleAccessibilityName
-          }
-          openDropdown={() =>
-            this.goToDropdown({
-              type: 'vehicleMerchant',
-              placeholder: 'Cari Akses Kendaraan'
-            })
-          }
-        /> */}
+        {this.renderContentSection({
+          key: 'Tipe Toko',
+          value:
+            this.props.merchant.dataEditMerchantVolatile.storeTypeName !== ''
+              ? this.props.merchant.dataEditMerchantVolatile.storeTypeName
+              : '-'
+        })}
+        {this.renderContentSection({
+          key: 'Group Toko',
+          value:
+            this.props.merchant.dataEditMerchantVolatile.storeGroupName !== ''
+              ? this.props.merchant.dataEditMerchantVolatile.storeGroupName
+              : '-'
+        })}
+        {this.renderContentSection({
+          key: 'Cluster Toko',
+          value:
+            this.props.merchant.dataEditMerchantVolatile.storeClusterName !== ''
+              ? this.props.merchant.dataEditMerchantVolatile.storeClusterName
+              : '-'
+        })}
+        {this.renderContentSection({
+          key: 'Channel Toko',
+          value:
+            this.props.merchant.dataEditMerchantVolatile.storeChannelName !== ''
+              ? this.props.merchant.dataEditMerchantVolatile.storeChannelName
+              : '-'
+        })}
+        <View style={{ marginTop: 6 }}>
+          <InputType1
+            title={'Ukuran Toko'}
+            value={this.state.largeArea}
+            placeholder={'Ukuran Toko'}
+            keyboardType={'numeric'}
+            text={text => this.setState({ largeArea: text })}
+            error={false}
+            errorText={''}
+            rightText={'M²'}
+          />
+        </View>
       </View>
     );
   }

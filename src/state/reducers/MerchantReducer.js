@@ -144,18 +144,12 @@ export const merchant = createReducer(INITIAL_STATE, {
         storeClustersName: action.payload.storeClustersName
           ? action.payload.storeClustersName
           : state.dataEditMerchantVolatile.storeClustersName,
-        storeSegmentId: action.payload.storeSegmentId
-          ? action.payload.storeSegmentId
-          : state.dataEditMerchantVolatile.storeSegmentId,
-        storeSegmentName: action.payload.storeSegmentName
-          ? action.payload.storeSegmentName
-          : state.dataEditMerchantVolatile.storeSegmentName,
-        customerHierarchiesId: action.payload.customerHierarchiesId
-          ? action.payload.customerHierarchiesId
-          : state.dataEditMerchantVolatile.customerHierarchiesId,
-        customerHierarchiesName: action.payload.customerHierarchiesName
-          ? action.payload.customerHierarchiesName
-          : state.dataEditMerchantVolatile.customerHierarchiesName
+        storeChannelId: action.payload.storeChannelId
+          ? action.payload.storeChannelId
+          : state.dataEditMerchantVolatile.storeChannelId,
+        storeChannelName: action.payload.storeChannelName
+          ? action.payload.storeChannelName
+          : state.dataEditMerchantVolatile.storeChannelName
       }
     };
   },
@@ -280,26 +274,36 @@ export const merchant = createReducer(INITIAL_STATE, {
             ? action.payload.vehicleAccessibility.name
             : '',
         storeTypeId:
-          action.payload.storeTypeId !== null ? action.payload.storeTypeId : '',
+          action.payload.storeTypes.length > 0
+            ? action.payload.storeTypes[0].type.id
+            : '',
         storeTypeName:
-          action.payload.storeType !== null
-            ? action.payload.storeType.name
+          action.payload.storeTypes.length > 0
+            ? action.payload.storeTypes[0].type.name
             : '',
         storeGroupId:
-          action.payload.storeGroupId !== null
-            ? action.payload.storeGroupId
+          action.payload.storeGroups.length > 0
+            ? action.payload.storeGroups[0].group.id
             : '',
         storeGroupName:
-          action.payload.storeGroup !== null
-            ? action.payload.storeGroup.name
+          action.payload.storeGroups.length > 0
+            ? action.payload.storeGroups[0].group.name
             : '',
-        storeSegmentId:
-          action.payload.storeSegmentId !== null
-            ? action.payload.storeSegmentId
+        storeClusterId:
+          action.payload.storeClusters.length > 0
+            ? action.payload.storeClusters[0].cluster.id
             : '',
-        storeSegmentName:
-          action.payload.storeSegment !== null
-            ? action.payload.storeSegment.name
+        storeClusterName:
+          action.payload.storeClusters.length > 0
+            ? action.payload.storeClusters[0].cluster.name
+            : '',
+        storeChannelId:
+          action.payload.storeChannels.length > 0
+            ? action.payload.storeChannels[0].channel.id
+            : '',
+        storeChannelName:
+          action.payload.storeChannels.length > 0
+            ? action.payload.storeChannels[0].channel.name
             : ''
       }
     };
