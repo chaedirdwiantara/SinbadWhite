@@ -45,6 +45,29 @@ export function omsGetCartItemFailed(data) {
   return { type: types.OMS_GET_CART_ITEM_FAILED, payload: data };
 }
 /**
+ * ====================================
+ * GET CART ITEM FROM CHECKOUT
+ * ====================================
+ */
+/** === CART ITEM PROCESS === */
+export function omsGetCartItemFromCheckoutProcess(data) {
+  return { type: types.OMS_GET_CART_ITEM_FROM_CHECKOUT_PROCESS, payload: data };
+}
+/** === CART ITEM SUCCESS === */
+export function omsGetCartItemFromCheckoutSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_GET_CART_ITEM_FROM_CHECKOUT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_GET_CART_ITEM_FROM_CHECKOUT_FAILED, payload: data };
+}
+/** === CART ITEM FAILED === */
+export function omsGetCartItemFromCheckoutFailed(data) {
+  return { type: types.OMS_GET_CART_ITEM_FROM_CHECKOUT_FAILED, payload: data };
+}
+/**
  * ===========================
  * CONFIRM ORDER
  * ===========================
@@ -123,15 +146,6 @@ export function omsGetPaymentSuccess(data) {
 /** === GET PAYMENT FAILED === */
 export function omsGetPaymentFailed(data) {
   return { type: types.OMS_GET_PAYMENT_FAILED, payload: data };
-}
-
-/** MUST CHANGE */
-/** save checklist item cart */
-export function saveChecklistCart(data) {
-  return {
-    type: types.CHECKLIST_ITEM_CART,
-    payload: data
-  };
 }
 /**
  * ==============================

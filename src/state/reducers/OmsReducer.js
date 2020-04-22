@@ -8,8 +8,10 @@ const INITIAL_STATE = {
   loadingOmsConfirmOrder: false,
   loadingOmsGetPayment: false,
   loadingOmsDeleteCartItem: false,
+  loadingOmsGetCartItemFromCheckout: false,
   /** data */
   dataOmsGetCartItem: null,
+  dataOmsGetCartItemFromCheckout: null,
   dataOmsGetCheckoutItem: null,
   dataOmsConfirmOrder: null,
   dataOmsGetPayment: null,
@@ -22,7 +24,8 @@ const INITIAL_STATE = {
   errorOmsGetCheckoutItem: null,
   errorOmsConfirmOrder: null,
   errorOmsGetPayment: null,
-  errorOmsDeleteCartItem: null
+  errorOmsDeleteCartItem: null,
+  errorOmsGetCartItemFromCheckout: null
 };
 
 export const oms = createReducer(INITIAL_STATE, {
@@ -39,8 +42,10 @@ export const oms = createReducer(INITIAL_STATE, {
       loadingOmsConfirmOrder: false,
       loadingOmsGetPayment: false,
       loadingOmsDeleteCartItem: false,
+      loadingOmsGetCartItemFromCheckout: false,
       /** data */
       dataOmsGetCartItem: null,
+      dataOmsGetCartItemFromCheckout: null,
       dataOmsGetCheckoutItem: null,
       dataOmsConfirmOrder: null,
       dataOmsGetPayment: null,
@@ -53,7 +58,8 @@ export const oms = createReducer(INITIAL_STATE, {
       errorOmsGetCheckoutItem: null,
       errorOmsConfirmOrder: null,
       errorOmsGetPayment: null,
-      errorOmsDeleteCartItem: null
+      errorOmsDeleteCartItem: null,
+      errorOmsGetCartItemFromCheckout: null
     };
   },
   [types.OMS_RESET_DATA](state, action) {
@@ -64,8 +70,10 @@ export const oms = createReducer(INITIAL_STATE, {
       loadingOmsConfirmOrder: false,
       loadingOmsGetPayment: false,
       loadingOmsDeleteCartItem: false,
+      loadingOmsGetCartItemFromCheckout: false,
       /** data */
       dataOmsGetCartItem: null,
+      dataOmsGetCartItemFromCheckout: null,
       dataOmsGetCheckoutItem: null,
       dataOmsConfirmOrder: null,
       dataOmsGetPayment: null,
@@ -78,7 +86,8 @@ export const oms = createReducer(INITIAL_STATE, {
       errorOmsGetCheckoutItem: null,
       errorOmsConfirmOrder: null,
       errorOmsGetPayment: null,
-      errorOmsDeleteCartItem: null
+      errorOmsDeleteCartItem: null,
+      errorOmsGetCartItemFromCheckout: null
     };
   },
   /**
@@ -225,6 +234,33 @@ export const oms = createReducer(INITIAL_STATE, {
       ...state,
       loadingOmsGetCartItem: false,
       errorOmsGetCartItem: action.payload
+    };
+  },
+  /**
+   * ==================================
+   * GET CART LIST FROM CHECKOUT
+   * =================================
+   */
+  [types.OMS_GET_CART_ITEM_FROM_CHECKOUT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetCartItemFromCheckout: true,
+      dataOmsGetCartItemFromCheckout: null,
+      errorOmsGetCartItemFromCheckout: null
+    };
+  },
+  [types.OMS_GET_CART_ITEM_FROM_CHECKOUT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetCartItemFromCheckout: false,
+      dataOmsGetCartItemFromCheckout: action.payload
+    };
+  },
+  [types.OMS_GET_CART_ITEM_FROM_CHECKOUT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsGetCartItemFromCheckout: false,
+      errorOmsGetCartItemFromCheckout: action.payload
     };
   },
   // SEMENTARA

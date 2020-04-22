@@ -4,7 +4,7 @@
  */
 export const OMS_ADD_TO_CART = 'OmsAddToCart';
 // INI SEMENTARA HARUS DI GANTI
-export const OMS_ITEM_FOR_CART = 'omsAddToCart';
+export const OMS_ITEM_FOR_CART = 'omsMagementSkuItem';
 export const OMS_CHECKLIST_ITEM_CART = 'omsCheckListItemCart';
 export const OMS_CHECKOUT_ITEM = 'omsCheckoutItem';
 export const OMS_DELETE_ALL_ITEM_CART = 'omsDeleteAllItemCart';
@@ -12,6 +12,13 @@ export const OMS_DELETE_ALL_ITEM_CART = 'omsDeleteAllItemCart';
 export const OMS_GET_CART_ITEM_PROCESS = 'OmsGetCartItemProcess';
 export const OMS_GET_CART_ITEM_SUCCESS = 'OmsGetCartItemSuccess';
 export const OMS_GET_CART_ITEM_FAILED = 'OmsGetCartItemFailed';
+/** GET CART ITEM */
+export const OMS_GET_CART_ITEM_FROM_CHECKOUT_PROCESS =
+  'OmsGetCartItemFromCheckoutProcess';
+export const OMS_GET_CART_ITEM_FROM_CHECKOUT_SUCCESS =
+  'OmsGetCartItemFromCheckoutSuccess';
+export const OMS_GET_CART_ITEM_FROM_CHECKOUT_FAILED =
+  'OmsGetCartItemFromCheckoutFailed';
 /** GET CHECKOUT DATA */
 export const OMS_GET_CHECKOUT_ITEM_PROCESS = 'OmsGetCheckoutItemProcess';
 export const OMS_GET_CHECKOUT_ITEM_SUCCESS = 'OmsGetCheckoutItemSuccess';

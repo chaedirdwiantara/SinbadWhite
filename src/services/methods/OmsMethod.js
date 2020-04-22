@@ -1,11 +1,12 @@
 import ApiRest from '../apiRest';
+import { GlobalMethod } from './GlobalMethod';
 /** GET CART ITEM */
 function getCartItem(data) {
   return ApiRest({
     path: 'add-cart',
     method: 'POST',
     params: {
-      storeId: data.storeId,
+      storeId: GlobalMethod.merchantStoreId(),
       cartId: null,
       catalogues: data.catalogues
     }
@@ -17,7 +18,7 @@ function getCheckoutItem(data) {
     path: 'checkout',
     method: 'POST',
     params: {
-      storeId: data.storeId,
+      storeId: GlobalMethod.merchantStoreId(),
       cartId: data.cartId,
       catalogues: data.catalogues
     }
