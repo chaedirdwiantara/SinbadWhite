@@ -3,7 +3,7 @@ import { View, StyleSheet, Dimensions } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MapView, { Marker } from 'react-native-maps';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor';
 import TagListType1 from '../../components/tag/TagListType1';
@@ -49,10 +49,7 @@ class MerchantMapView extends Component {
     setTimeout(() => {
       this.setState({ reRender: false });
     }, 100);
-    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
-      timeout: 50000,
-      maximumAge: 1000
-    });
+    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
   }
 
   parentFunction(data) {

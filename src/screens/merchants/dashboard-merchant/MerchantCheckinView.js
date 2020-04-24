@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MapView, { Marker } from 'react-native-maps';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import OpenAppSettings from 'react-native-app-settings';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
@@ -71,10 +71,7 @@ class MerchantCheckinView extends Component {
   };
   getCurrentLocation() {
     this.setState({ reRender: true });
-    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
-      timeout: 50000,
-      maximumAge: 1000
-    });
+    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
   }
   /**
    * ========================
