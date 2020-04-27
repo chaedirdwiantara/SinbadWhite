@@ -47,6 +47,7 @@ export default async function endpoint({ path, method, params }) {
           const ref = firebase.firestore().collection('error-reports');
           ref.add({
             endpoint: path,
+            userId: stateData.user !== null ? stateData.user.id : 'not login',
             method,
             payload: params,
             token:
