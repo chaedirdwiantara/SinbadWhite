@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import moment from 'moment';
 import { WheelPicker } from 'react-native-wheel-picker-android';
-import { Button } from 'react-native-elements';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Fonts from '../utils/Fonts';
 import ButtonSingle from './button/ButtonSingle';
@@ -23,6 +22,22 @@ const monthsData = [
   'November',
   'Desember'
 ];
+
+const monthsDataEng = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+];
+
 const yearsData = [
   '2018',
   '2019',
@@ -61,10 +76,12 @@ class DatePickerSpinner extends Component {
     const dayData = [];
     const totalDays = moment(
       `${yearsData[this.state.selectedYearsIndex]}-${
-        monthsData[selectedMonthsIndex]
+        monthsDataEng[selectedMonthsIndex]
       }`,
       'YYYY-MMM'
-    ).daysInMonth();
+    )
+      .locale('en')
+      .daysInMonth();
     for (let i = 0; i < totalDays; i++) {
       dayData.push(i < 9 ? `0${(i + 1).toString()}` : (i + 1).toString());
     }
@@ -75,10 +92,12 @@ class DatePickerSpinner extends Component {
     const dayData = [];
     const totalDays = moment(
       `${yearsData[selectedYearsIndex]}-${
-        monthsData[this.state.selectedMonthsIndex]
+        monthsDataEng[this.state.selectedMonthsIndex]
       }`,
       'YYYY-MMM'
-    ).daysInMonth();
+    )
+      .locale('en')
+      .daysInMonth();
     for (let i = 0; i < totalDays; i++) {
       dayData.push(i < 9 ? `0${(i + 1).toString()}` : (i + 1).toString());
     }
