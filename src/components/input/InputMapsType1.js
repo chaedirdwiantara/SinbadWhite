@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import Text from 'react-native-text';
 import MapView, { Marker } from 'react-native-maps';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import masterColor from '../../config/masterColor.json';

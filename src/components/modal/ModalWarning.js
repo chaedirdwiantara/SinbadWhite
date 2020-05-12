@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions, Modal, Image } from 'react-native';
+import { View, StyleSheet, Dimensions, Modal, Image } from 'react-native';
+import Text from 'react-native-text';
 import { StatusBarRedOP50 } from '../StatusBarGlobal';
 import masterColor from '../../config/masterColor.json';
 import Fonts from '../../helpers/GlobalFont';
