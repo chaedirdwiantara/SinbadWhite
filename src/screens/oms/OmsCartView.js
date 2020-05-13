@@ -1025,38 +1025,6 @@ class OmsCartView extends Component {
   renderSkeleton() {
     return <LoadingPage />;
   }
-
-  renderPriceProduct(item, opacity) {
-    return (
-      <View>
-        {item.catalogue.discountedRetailBuyingPrice !== null ? (
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ marginRight: 5 }}>
-              <Text
-                style={[
-                  Fonts.type31,
-                  { textDecorationLine: 'line-through', opacity }
-                ]}
-              >
-                {MoneyFormat(item.catalogue.retailBuyingPrice)}
-              </Text>
-            </View>
-            <View>
-              <Text style={[Fonts.type36, { opacity }]}>
-                {MoneyFormat(item.catalogue.discountedRetailBuyingPrice)}
-              </Text>
-            </View>
-          </View>
-        ) : (
-          <View>
-            <Text style={[Fonts.type36, { opacity }]}>
-              {MoneyFormat(item.catalogue.retailBuyingPrice)}
-            </Text>
-          </View>
-        )}
-      </View>
-    );
-  }
   /**
    * ===================================
    * MODAL
