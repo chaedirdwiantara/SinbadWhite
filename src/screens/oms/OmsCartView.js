@@ -205,10 +205,16 @@ class OmsCartView extends Component {
   manageError() {
     switch (this.props.oms.errorOmsGetCheckoutItem.data.errorCode) {
       case 'ERR-URBAN':
-        this.setState({ openModalErrorNoUrban: true });
+        this.setState({
+          openModalErrorNoUrban: true,
+          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
+        });
         break;
       case 'ERR-VERIFIED':
-        this.setState({ openModalInputOwnerId: true });
+        this.setState({
+          openModalInputOwnerId: true,
+          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
+        });
         break;
       default:
         break;
