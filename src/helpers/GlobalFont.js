@@ -591,10 +591,22 @@ const styles = StyleSheet.create({
     lineHeight: 11,
     color: masterColor.fontBlack60
   },
-  forCompare: {
-    fontFamily: Fonts.MontserratSemiBold,
-    fontSize: 9,
+  type98: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 11,
     lineHeight: 16,
+    color: masterColor.fontWhite
+  },
+  type99: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10,
+    lineHeight: 13,
+    color: masterColor.fontGreen50
+  },
+  forCompare: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10,
+    lineHeight: 13,
     color: masterColor.fontGreen50
   },
   /** === bottom nav ==== */
