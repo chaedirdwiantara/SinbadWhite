@@ -17,6 +17,7 @@ import GlobalStyle from '../../helpers/GlobalStyle';
 import ButtonSingleSmall from '../../components/button/ButtonSingleSmall';
 import Fonts from '../../helpers/GlobalFont';
 import SkeletonType18 from '../../components/skeleton/SkeletonType18';
+// import PdpPromoListView from './PdpPromoListView';
 
 const { width, height } = Dimensions.get('window');
 
@@ -62,6 +63,7 @@ class PdpOrderView extends Component {
       }
     }
   }
+
   /**
    * ========================
    * FOR KEYBOARD
@@ -124,14 +126,8 @@ class PdpOrderView extends Component {
       this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
         this.props.pdp.dataDetailPdp.minQty
     ) {
-      if (this.props.pdp.dataDetailPdp.discountedRetailBuyingPrice !== null) {
-        return (
-          this.props.pdp.dataDetailPdp.discountedRetailBuyingPrice *
-          this.state.qtyFromChild
-        );
-      }
       return (
-        this.props.pdp.dataDetailPdp.retailBuyingPrice * this.state.qtyFromChild
+        this.props.pdp.dataDetailPdp.warehousePrice * this.state.qtyFromChild
       );
     }
     return 0;
@@ -323,18 +319,14 @@ class PdpOrderView extends Component {
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={[Fonts.type70, { marginRight: 10 }]}>
-                {MoneyFormat(
-                  this.props.pdp.dataDetailPdp.discountedRetailBuyingPrice !==
-                    null
-                    ? this.props.pdp.dataDetailPdp.discountedRetailBuyingPrice
-                    : this.props.pdp.dataDetailPdp.retailBuyingPrice
-                )}
+                {MoneyFormat(this.props.pdp.dataDetailPdp.warehousePrice)}
               </Text>
               {this.renderTooltip()}
             </View>
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={[Fonts.type38, { marginRight: 10 }]}>
-                per-Dus {this.props.pdp.dataDetailPdp.packagedQty} pcs
+                per-Dus {this.props.pdp.dataDetailPdp.packagedQty}{' '}
+                {this.props.pdp.dataDetailPdp.catalogueUnit.unit}
               </Text>
               <View
                 style={{
@@ -343,7 +335,8 @@ class PdpOrderView extends Component {
                 }}
               />
               <Text style={[Fonts.type38, { marginLeft: 10 }]}>
-                min.pembelian {this.props.pdp.dataDetailPdp.minQty} pcs
+                min.pembelian {this.props.pdp.dataDetailPdp.minQty}{' '}
+                {this.props.pdp.dataDetailPdp.catalogueUnit.unit}
               </Text>
             </View>
           </View>
@@ -351,7 +344,7 @@ class PdpOrderView extends Component {
         {this.checkInputQtySection() ? (
           <View style={styles.boxInputQty}>
             <View style={{ justifyContent: 'center' }}>
-              <Text style={Fonts.type10}>Jumlah/pcs</Text>
+              <Text style={Fonts.type96}>Jumlah/pcs</Text>
             </View>
             <View style={styles.boxRemainingStockOrderButton}>
               {this.renderRemainingStock()}
@@ -407,7 +400,6 @@ const styles = StyleSheet.create({
     paddingBottom: 16
   },
   boxTotalPrice: {
-    marginTop: 0.14 * height,
     flexDirection: 'row',
     paddingVertical: 11,
     paddingLeft: 20,
