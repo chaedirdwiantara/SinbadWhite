@@ -138,6 +138,7 @@ class AddMerchantStep2 extends Component {
     return (
       this.state.fullName !== '' &&
       this.state.name !== '' &&
+      this.state.idNo.length === 16 &&
       this.state.supplier !== '' &&
       this.state.address !== '' &&
       this.props.global.longitude !== '' &&
@@ -242,8 +243,7 @@ class AddMerchantStep2 extends Component {
   renderIdNo() {
     return (
       <InputType1
-        optional
-        title={'Nomor Kartu Tanda Penduduk (KTP)'}
+        title={'*Nomor Kartu Tanda Penduduk (KTP)'}
         value={this.state.idNo}
         maxLength={16}
         placeholder={'Masukan No KTP pemilik'}
