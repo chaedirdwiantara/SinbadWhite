@@ -108,7 +108,7 @@ class AddMerchantStep1 extends Component {
           this.props.auth.loadingCheckPhoneAvailble
         }
         loading={this.props.auth.loadingCheckPhoneAvailble}
-        title={'Lanjutnya'}
+        title={'Lanjutkan'}
         borderRadius={4}
         onPress={() => this.checkPhone()}
       />
