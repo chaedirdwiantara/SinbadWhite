@@ -1,4 +1,4 @@
-import Fonts from '../utils/Fonts';
+import Fonts from '../config/Fonts';
 import { StyleSheet } from 'react-native';
 import masterColor from '../config/masterColor.json';
 

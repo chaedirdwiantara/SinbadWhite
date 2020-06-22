@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, Dimensions } from 'react-native';
 import moment from 'moment';
 import { WheelPicker } from 'react-native-wheel-picker-android';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import Fonts from '../utils/Fonts';
+import Fonts from '../config/Fonts';
 import ButtonSingle from './button/ButtonSingle';
 
 const { height } = Dimensions.get('window');
