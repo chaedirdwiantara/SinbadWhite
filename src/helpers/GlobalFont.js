@@ -615,32 +615,41 @@ const styles = StyleSheet.create({
     fontSize: 10.5,
     lineHeight: 16
   },
+  /** === text input === */
+  textInputField: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: RFPercentage(2.1), //13
+    letterSpacing: 0.2,
+    color: Color.fontBlack50
+  },
+  textInputFieldDisabled: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: RFPercentage(2.1), //13
+    letterSpacing: 0.2,
+    color: Color.fontBlack40
+  },
   /** === button text === */
   textButtonRedActive: {
     fontFamily: Fonts.MontserratSemiBold,
     fontSize: RFPercentage(2.1), //13
-    lineHeight: 18,
     textAlign: 'center',
     color: Color.fontWhite
   },
   textButtonRedDisabled: {
     fontFamily: Fonts.MontserratSemiBold,
     fontSize: RFPercentage(2.1), //13,
-    lineHeight: 18,
     textAlign: 'center',
     color: Color.buttonActiveColorWhite
   },
   textButtonWhiteActive: {
     fontFamily: Fonts.MontserratSemiBold,
     fontSize: RFPercentage(2.1), //13,
-    lineHeight: 18,
     textAlign: 'center',
     color: Color.mainColor
   },
   textButtonWhiteDisabled: {
     fontFamily: Fonts.MontserratSemiBold,
     fontSize: RFPercentage(2.1), //13,
-    lineHeight: 18,
     textAlign: 'center',
     color: Color.buttonRedDisableColor
   },
