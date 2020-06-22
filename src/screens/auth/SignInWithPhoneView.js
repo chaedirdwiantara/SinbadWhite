@@ -1,26 +1,29 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   Image,
   TextInput,
   SafeAreaView,
-  TouchableOpacity,
-  Keyboard
-} from 'react-native';
-import { bindActionCreators } from 'redux';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
-import IconsMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconsAntDesign from 'react-native-vector-icons/AntDesign';
+  Keyboard,
+  Text
+} from '../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect,
+  MaterialCommunityIcons
+} from '../../library/thirdPartyPackage';
+import {
+  ButtonSingle,
+  StatusBarRed,
+  BackHandlerCloseApp,
+  InputType4
+} from '../../library/component';
+import { Fonts, GlobalStyle } from '../../helpers';
+import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
-import Fonts from '../../helpers/GlobalFont';
-import masterColor from '../../config/masterColor.json';
-import ButtonSingle from '../../components/button/ButtonSingle';
-import GlobalStyle from '../../helpers/GlobalStyle';
 import NavigationService from '../../navigation/NavigationService';
-import { StatusBarRed } from '../../components/StatusBarGlobal';
-import BackHandlerCloseApp from '../../components/BackHandlerCloseApp';
 
 class SignInWithPhoneView extends Component {
   constructor(props) {
@@ -80,24 +83,6 @@ class SignInWithPhoneView extends Component {
     });
   }
   /**
-   * ========================
-   * HEADER MODIFY
-   * ========================
-   */
-  // static navigationOptions = ({ navigation }) => {
-  //   return {
-  //     headerRight: () => (
-  //       <TouchableOpacity style={{ marginRight: 16 }}>
-  //         <IconsAntDesign
-  //           color={masterColor.backButtonWhite}
-  //           name={'questioncircleo'}
-  //           size={24}
-  //         />
-  //       </TouchableOpacity>
-  //     )
-  //   };
-  // };
-  /**
    * ==============================
    * RENDER VIEW
    * ==============================
@@ -137,58 +122,113 @@ class SignInWithPhoneView extends Component {
   /** CONTENT */
   renderContentPhoneNumberInput() {
     return (
-      <View style={styles.boxPhoneInput}>
+      <View style={{ flexDirection: 'row' }}>
         <View
           style={[
             styles.boxPhoneNumberAreaCode,
             {
               borderColor: this.state.errorPhoneNumber
-                ? masterColor.fontRed50
-                : masterColor.fontBlack10
+                ? Color.fontRed50
+                : Color.fontBlack40
             }
           ]}
         >
           <Text style={Fonts.type3}>+62</Text>
         </View>
-        <View
+        <View style={{ flex: 1 }}>
+          <InputType4
+            error={this.state.errorPhoneNumber}
+            errorText={'No. HP yang anda masukan salah'}
+            value={this.state.phoneNumber}
+            onChangeText={phoneNumber => {
+              const cleanNumber = phoneNumber.replace(/[^0-9]/g, '');
+              this.phoneModify(cleanNumber);
+            }}
+            placeholder={'Masukan No.Handphone'}
+            keyboardType={'numeric'}
+            maxLength={13}
+            suffix
+            suffixContent={
+              this.state.errorPhoneNumber ? (
+                <MaterialCommunityIcons
+                  color={Color.fontRed50}
+                  name={'close-circle'}
+                  size={18}
+                />
+              ) : (
+                this.renderCheckInputIcon()
+              )
+            }
+            marginBottom={0}
+          />
+        </View>
+
+        {/* <View
           style={[
-            styles.boxPhoneNumber,
+            styles.boxPhoneNumberAreaCode,
             {
               borderColor: this.state.errorPhoneNumber
-                ? masterColor.fontRed50
-                : masterColor.fontBlack10
+                ? Color.fontRed50
+                : Color.fontBlack10
             }
           ]}
         >
-          <TextInput
-            selectionColor={masterColor.mainColor}
-            placeholder="Masukan No.Handphone"
-            value={this.state.phoneNumber}
-            maxLength={13}
-            keyboardType="numeric"
-            onChangeText={phoneNumber => this.phoneModify(phoneNumber)}
-            style={[styles.textInput, Fonts.type3]}
-          />
-          <View style={{ justifyContent: 'center', height: '100%' }}>
-            {this.state.errorPhoneNumber ? (
-              <IconsMaterial
-                color={masterColor.fontRed50}
-                name={'close-circle'}
-                size={24}
-              />
-            ) : (
-              this.renderCheckInputIcon()
-            )}
-          </View>
-        </View>
+          <Text style={Fonts.type3}>+62</Text>
+        </View> */}
       </View>
+
+      // <View style={styles.boxPhoneInput}>
+      //   <View
+      //     style={[
+      //       styles.boxPhoneNumberAreaCode,
+      //       {
+      //         borderColor: this.state.errorPhoneNumber
+      //           ? Color.fontRed50
+      //           : Color.fontBlack10
+      //       }
+      //     ]}
+      //   >
+      //     <Text style={Fonts.type3}>+62</Text>
+      //   </View>
+      //   <View
+      //     style={[
+      //       styles.boxPhoneNumber,
+      //       {
+      //         borderColor: this.state.errorPhoneNumber
+      //           ? Color.fontRed50
+      //           : Color.fontBlack10
+      //       }
+      //     ]}
+      //   >
+      //     <TextInput
+      //       selectionColor={Color.mainColor}
+      //       placeholder="Masukan No.Handphone"
+      //       value={this.state.phoneNumber}
+      //       maxLength={13}
+      //       keyboardType="numeric"
+      //       onChangeText={phoneNumber => this.phoneModify(phoneNumber)}
+      //       style={[styles.textInput, Fonts.type3]}
+      //     />
+      //     <View style={{ justifyContent: 'center', height: '100%' }}>
+      //       {this.state.errorPhoneNumber ? (
+      //         <MaterialCommunityIcons
+      //           color={Color.fontRed50}
+      //           name={'close-circle'}
+      //           size={24}
+      //         />
+      //       ) : (
+      //         this.renderCheckInputIcon()
+      //       )}
+      //     </View>
+      //   </View>
+      // </View>
     );
   }
   /** CHECK ICON INPUT */
   renderCheckInputIcon() {
     return this.state.correctFormatPhoneNumber ? (
-      <IconsMaterial
-        color={masterColor.fontGreen50}
+      <MaterialCommunityIcons
+        color={Color.fontGreen50}
         name={'check-circle'}
         size={24}
       />
@@ -259,7 +299,7 @@ const styles = StyleSheet.create({
     zIndex: 1000
   },
   backgroundLogin: {
-    backgroundColor: masterColor.mainColor,
+    backgroundColor: Color.mainColor,
     height: 210
   },
   imageBackground: {
@@ -271,28 +311,13 @@ const styles = StyleSheet.create({
     paddingTop: 42,
     paddingBottom: 26
   },
-  boxPhoneInput: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    height: 46,
-    marginBottom: 15
-  },
   boxPhoneNumberAreaCode: {
     width: 52,
+    marginLeft: 16,
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8
-  },
-  boxPhoneNumber: {
-    flex: 1,
-    flexDirection: 'row',
-    borderWidth: 1,
-    marginLeft: 12,
-    borderRadius: 8,
-    paddingHorizontal: 13,
-    justifyContent: 'center',
-    alignItems: 'flex-start'
   },
   /** for textInput */
   textInput: {
