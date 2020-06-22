@@ -14,6 +14,7 @@ import {
 } from '../components/StatusBarGlobal';
 /** INPUT */
 import InputType2 from '../components/input/InputType2';
+import InputType4 from '../components/input/inputType4';
 /** INPUT MAPS (PIN POINT) */
 import InputMapsType1 from '../components/input/InputMapsType1';
 /** DROPDOWN */
@@ -56,6 +57,7 @@ export {
   StatusBarBlackOP40,
   /** INPUT */
   InputType2,
+  InputType4,
   /** INPUT MAPS (PIN POINT) */
   InputMapsType1,
   /** DROPDOWN */
