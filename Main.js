@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import { Provider } from 'react-redux';
+import { React, Component } from './src/library/reactPackage';
+import { Provider, PersistGate } from './src/library/thirdPartyPackage';
 import Navigator from './src/navigation';
-import { PersistGate } from 'redux-persist/integration/react';
 import { Store, Persistor } from './src/state/Store';
 
 class Main extends Component {
