@@ -11,6 +11,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import OcticonsIcon from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 /** MAPS */
 import MapView, { Marker } from 'react-native-maps';
 /** GEOLOCATION */
@@ -23,6 +24,8 @@ import OpenAppSettings from 'react-native-app-settings';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 /** SKELETON */
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+/** TEXT */
+import { RFPercentage } from 'react-native-responsive-fontsize';
 
 export {
   /** REDUX */
@@ -36,6 +39,7 @@ export {
   MaterialCommunityIcons,
   OcticonsIcon,
   Ionicons,
+  AntDesignIcon,
   /** MAPS */
   MapView,
   Marker,
@@ -49,5 +53,7 @@ export {
   Carousel,
   Pagination,
   /** SKELETON */
-  SkeletonPlaceholder
+  SkeletonPlaceholder,
+  /** TEXT */
+  RFPercentage
 };
