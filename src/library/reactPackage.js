@@ -3,6 +3,7 @@
  */
 import React, { Component } from 'react';
 import {
+  AppRegistry,
   View,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -22,6 +23,7 @@ import Text from 'react-native-text';
 const { width, height } = Dimensions.get('window');
 
 export {
+  AppRegistry,
   React,
   Component,
   View,
