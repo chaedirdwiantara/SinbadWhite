@@ -81,14 +81,14 @@ class InputType4 extends Component {
           />
         </View>
         <View
-          style={[
-            styles.boxSuffix,
-            {
-              borderColor: this.props.error
-                ? Color.fontRed50
-                : Color.fontBlack40
-            }
-          ]}
+          style={{
+            justifyContent: 'center',
+            marginLeft: -1,
+            borderBottomWidth: 1,
+            borderBottomColor: this.props.error
+              ? Color.fontRed50
+              : Color.fontBlack40
+          }}
         >
           {this.props.suffix ? this.renderCheckSuffix() : <View />}
         </View>
@@ -109,7 +109,7 @@ class InputType4 extends Component {
   renderContent() {
     return (
       <View style={styles.contentContainer}>
-        {this.props.title ? this.renderTitle() : <View />}
+        {this.renderTitle()}
         {this.renderInput()}
         {this.renderError()}
         <View style={{ marginBottom: this.props.marginBottom }} />
@@ -138,21 +138,9 @@ const styles = StyleSheet.create({
   },
   boxInput: {
     borderBottomWidth: 1,
-    borderTopWidth: 1,
-    borderLeftWidth: 1,
-    padding: 13,
-    borderTopLeftRadius: 8,
-    borderBottomLeftRadius: 8,
-    borderColor: Color.fontBlack40
-  },
-  boxSuffix: {
-    justifyContent: 'center',
-    borderTopRightRadius: 8,
-    borderBottomRightRadius: 8,
-    paddingRight: 13,
-    borderTopWidth: 1,
-    borderRightWidth: 1,
-    borderBottomWidth: 1
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    borderBottomColor: Color.fontBlack40
   },
   boxError: {
     paddingTop: 8
@@ -162,9 +150,9 @@ const styles = StyleSheet.create({
 export default InputType4;
 
 /**
- * ==============================
- * NOTE (28052020), HOW TO USE
- * ==============================
+ * =========================================================
+ * NOTE (28052020 - copy from red input type 6), HOW TO USE
+ * ========================================================
  * <InputType4
         title={'Nomor Handphone'}
         error={this.state.errorPhoneNumber}
