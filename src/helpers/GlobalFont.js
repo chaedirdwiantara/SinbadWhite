@@ -609,10 +609,15 @@ const styles = StyleSheet.create({
     lineHeight: 13,
     color: Color.fontGreen50
   },
+  /** === text for haader page === */
+  textHeaderPage: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: RFPercentage(2.4)
+  },
   /** === bottom nav ==== */
   bottomNav: {
-    fontFamily: Fonts.MontserratMedium,
-    fontSize: 10.5,
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: RFPercentage(1.7),
     lineHeight: 16
   },
   /** === text input === */
@@ -627,6 +632,11 @@ const styles = StyleSheet.create({
     fontSize: RFPercentage(2.1), //13
     letterSpacing: 0.2,
     color: Color.fontBlack40
+  },
+  textInputSearch: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: RFPercentage(1.9), //12
+    color: Color.fontBlack50
   },
   /** === button text === */
   textButtonRedActive: {
