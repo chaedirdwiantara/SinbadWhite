@@ -85,7 +85,7 @@ class SearchBarType1 extends Component {
           returnKeyType={'search'}
           placeholder={this.props.placeholder}
           onChangeText={search => this.setState({ search })}
-          style={[Fonts.type8, styles.inputBox]}
+          style={[Fonts.textInputSearch, styles.inputBox]}
         />
       </View>
     );
