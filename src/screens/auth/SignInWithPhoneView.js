@@ -4,7 +4,6 @@ import {
   View,
   StyleSheet,
   Image,
-  TextInput,
   SafeAreaView,
   Keyboard,
   Text
@@ -66,18 +65,14 @@ class SignInWithPhoneView extends Component {
   checkPhoneExist() {
     Keyboard.dismiss();
     this.setState({ errorPhoneNumber: false });
-    this.props.otpGetProcess('0' + this.state.phoneNumber);
+    this.props.otpGetProcess(this.state.phoneNumber);
   }
   /** === PHONE NUMBER MODIFY === */
-  phoneModify(phoneNumber) {
-    let phone = phoneNumber.split('');
-    if (phone[0] === '0') {
-      phone.splice(0, 1);
-    }
-    const reg = /^8[0-9]{8,12}$/;
-    const checkFormat = reg.test(phone.join(''));
+  checkPhoneFormat(phoneNumber) {
+    const reg = /^08[0-9]{8,12}$/;
+    const checkFormat = reg.test(phoneNumber);
     this.setState({
-      phoneNumber: phone.join(''),
+      phoneNumber,
       correctFormatPhoneNumber: checkFormat,
       errorPhoneNumber: false
     });
@@ -87,22 +82,20 @@ class SignInWithPhoneView extends Component {
    * RENDER VIEW
    * ==============================
    */
-  /** === RENDER BUTTON === */
-  renderButton() {
+  /** === RENDER BACKGROUND === */
+  renderBackground() {
     return (
-      <ButtonSingle
-        disabled={
-          !this.state.correctFormatPhoneNumber || this.props.auth.loadingGetOTP
-        }
-        title={'Lanjutkan'}
-        borderRadius={50}
-        onPress={() => this.checkPhoneExist()}
-        loading={this.props.auth.loadingGetOTP}
-      />
+      <View>
+        <View style={styles.backgroundLogin} />
+        <Image
+          source={require('../../assets/images/background/login_backgroud.png')}
+          style={styles.imageBackground}
+        />
+        <View style={{ height: 100 }} />
+      </View>
     );
   }
-  /** === RENDER CONTENT === */
-  /** TITLE */
+  /** === RENDER TITLE === */
   renderTitle() {
     return (
       <View>
@@ -119,155 +112,67 @@ class SignInWithPhoneView extends Component {
       </View>
     );
   }
-  /** CONTENT */
+  /** === RENDER PHONE NUMBER INPUT === */
   renderContentPhoneNumberInput() {
     return (
-      <View style={{ flexDirection: 'row' }}>
-        <View
-          style={[
-            styles.boxPhoneNumberAreaCode,
-            {
-              borderColor: this.state.errorPhoneNumber
-                ? Color.fontRed50
-                : Color.fontBlack40
-            }
-          ]}
-        >
-          <Text style={Fonts.type3}>+62</Text>
-        </View>
-        <View style={{ flex: 1 }}>
-          <InputType4
-            error={this.state.errorPhoneNumber}
-            errorText={'No. HP yang anda masukan salah'}
-            value={this.state.phoneNumber}
-            onChangeText={phoneNumber => {
-              const cleanNumber = phoneNumber.replace(/[^0-9]/g, '');
-              this.phoneModify(cleanNumber);
-            }}
-            placeholder={'Masukan No.Handphone'}
-            keyboardType={'numeric'}
-            maxLength={13}
-            suffix
-            suffixContent={
-              this.state.errorPhoneNumber ? (
-                <MaterialCommunityIcons
-                  color={Color.fontRed50}
-                  name={'close-circle'}
-                  size={18}
-                />
-              ) : (
-                this.renderCheckInputIcon()
-              )
-            }
-            marginBottom={0}
-          />
-        </View>
-
-        {/* <View
-          style={[
-            styles.boxPhoneNumberAreaCode,
-            {
-              borderColor: this.state.errorPhoneNumber
-                ? Color.fontRed50
-                : Color.fontBlack10
-            }
-          ]}
-        >
-          <Text style={Fonts.type3}>+62</Text>
-        </View> */}
-      </View>
-
-      // <View style={styles.boxPhoneInput}>
-      //   <View
-      //     style={[
-      //       styles.boxPhoneNumberAreaCode,
-      //       {
-      //         borderColor: this.state.errorPhoneNumber
-      //           ? Color.fontRed50
-      //           : Color.fontBlack10
-      //       }
-      //     ]}
-      //   >
-      //     <Text style={Fonts.type3}>+62</Text>
-      //   </View>
-      //   <View
-      //     style={[
-      //       styles.boxPhoneNumber,
-      //       {
-      //         borderColor: this.state.errorPhoneNumber
-      //           ? Color.fontRed50
-      //           : Color.fontBlack10
-      //       }
-      //     ]}
-      //   >
-      //     <TextInput
-      //       selectionColor={Color.mainColor}
-      //       placeholder="Masukan No.Handphone"
-      //       value={this.state.phoneNumber}
-      //       maxLength={13}
-      //       keyboardType="numeric"
-      //       onChangeText={phoneNumber => this.phoneModify(phoneNumber)}
-      //       style={[styles.textInput, Fonts.type3]}
-      //     />
-      //     <View style={{ justifyContent: 'center', height: '100%' }}>
-      //       {this.state.errorPhoneNumber ? (
-      //         <MaterialCommunityIcons
-      //           color={Color.fontRed50}
-      //           name={'close-circle'}
-      //           size={24}
-      //         />
-      //       ) : (
-      //         this.renderCheckInputIcon()
-      //       )}
-      //     </View>
-      //   </View>
-      // </View>
-    );
-  }
-  /** CHECK ICON INPUT */
-  renderCheckInputIcon() {
-    return this.state.correctFormatPhoneNumber ? (
-      <MaterialCommunityIcons
-        color={Color.fontGreen50}
-        name={'check-circle'}
-        size={24}
+      <InputType4
+        title={'Nomor Handphone'}
+        error={this.state.errorPhoneNumber}
+        errorText={'No. HP yang anda masukan salah'}
+        value={this.state.phoneNumber}
+        onChangeText={phoneNumber => {
+          const cleanNumber = phoneNumber.replace(/[^0-9]/g, '');
+          this.checkPhoneFormat(cleanNumber);
+        }}
+        placeholder={'Masukan nomor handphone anda'}
+        keyboardType={'numeric'}
+        maxLength={13}
+        suffix
+        suffixForPush
+        suffixPush={() =>
+          this.setState({
+            phoneNumber: '',
+            errorPhoneNumber: false,
+            correctFormatPhoneNumber: false
+          })
+        }
+        suffixContent={
+          this.state.phoneNumber !== '' ? (
+            <MaterialCommunityIcons
+              color={Color.fontBlack60}
+              name={'close-circle'}
+              size={18}
+            />
+          ) : (
+            <View />
+          )
+        }
+        marginBottom={30}
       />
-    ) : (
-      <View />
     );
   }
-  /** ERROR LOGIN */
-  renderErrorSignIn() {
-    return this.state.errorPhoneNumber ? (
-      <View style={{ paddingHorizontal: 16 }}>
-        <Text style={Fonts.type13}>No. HP yang anda masukan salah</Text>
-      </View>
-    ) : (
-      <View />
+  /** === RENDER BUTTON === */
+  renderButton() {
+    return (
+      <ButtonSingle
+        disabled={
+          !this.state.correctFormatPhoneNumber || this.props.auth.loadingGetOTP
+        }
+        title={'Lanjutkan'}
+        borderRadius={50}
+        onPress={() => this.checkPhoneExist()}
+        loading={this.props.auth.loadingGetOTP}
+      />
     );
   }
-  /** MAIN CONTENT */
+  /** === RENDER CONTENT === */
   renderContent() {
     return (
       <View style={GlobalStyle.cardContainerRadius12}>
         <View style={styles.boxContent}>
           {this.renderContentPhoneNumberInput()}
-          {this.renderErrorSignIn()}
           {this.renderButton()}
         </View>
-      </View>
-    );
-  }
-  /** BACKGROUND */
-  renderBackground() {
-    return (
-      <View>
-        <View style={styles.backgroundLogin} />
-        <Image
-          source={require('../../assets/images/background/login_backgroud.png')}
-          style={styles.imageBackground}
-        />
-        <View style={{ height: 100 }} />
       </View>
     );
   }
@@ -310,18 +215,6 @@ const styles = StyleSheet.create({
   boxContent: {
     paddingTop: 42,
     paddingBottom: 26
-  },
-  boxPhoneNumberAreaCode: {
-    width: 52,
-    marginLeft: 16,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8
-  },
-  /** for textInput */
-  textInput: {
-    flex: 1
   }
 });
 
