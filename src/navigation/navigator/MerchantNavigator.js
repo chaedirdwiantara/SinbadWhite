@@ -32,7 +32,7 @@ const MerchantNavigator = {
     screen: MerchantView,
     navigationOptions: {
       headerTitle: 'List Toko',
-      headerTitleStyle: GlobalFont.type5,
+      headerTitleStyle: GlobalFont.textHeaderPage,
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
@@ -44,7 +44,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Profil Toko',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -82,7 +82,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Nomor Handphone',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -100,7 +100,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Data Pokok',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -118,7 +118,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Nomor Handphone',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -136,7 +136,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'OTP',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -154,7 +154,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Alamat Lengkap',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -172,7 +172,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Foto KTP',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -190,7 +190,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Foto Diri',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -208,7 +208,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Data Toko',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -226,7 +226,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Data Diri',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -252,7 +252,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Information Profil',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -270,7 +270,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Information Toko',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -287,7 +287,7 @@ const MerchantNavigator = {
     screen: MerchantDetailAddressView,
     navigationOptions: {
       headerTitle: 'Alamat Toko',
-      headerTitleStyle: GlobalFont.type5,
+      headerTitleStyle: GlobalFont.textHeaderPage,
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
@@ -309,7 +309,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Alasan Tidak ada Order',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1

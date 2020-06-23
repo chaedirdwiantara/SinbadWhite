@@ -7,7 +7,7 @@ const JourneyNavigator = {
     screen: JourneyView,
     navigationOptions: {
       headerTitle: 'Journey Plan',
-      headerTitleStyle: GlobalFont.type5,
+      headerTitleStyle: GlobalFont.textHeaderPage,
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },

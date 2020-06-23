@@ -10,7 +10,7 @@ const NotificationNavigator = {
     navigationOptions: {
       headerTitle: 'Notifikasi',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1

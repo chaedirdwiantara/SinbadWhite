@@ -12,7 +12,7 @@ const HistoryNavigator = {
     navigationOptions: {
       headerTitle: 'Pesanan',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1

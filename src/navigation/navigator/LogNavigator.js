@@ -10,7 +10,7 @@ const LogNavigator = {
     navigationOptions: {
       headerTitle: 'Detail Log',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
