@@ -135,7 +135,10 @@ export const history = createReducer(INITIAL_STATE, {
       loadingLoadMoreGetHistory: false,
       refreshGetHistory: false,
       totalDataGetHistory: action.payload.total,
-      dataGetHistory: [...state.dataGetHistory, ...action.payload.data]
+      dataGetHistory: removeDuplicateData(
+        state.dataGetHistory,
+        action.payload.data
+      )
     };
   },
   [types.HISTORY_GET_FAILED](state, action) {
@@ -200,3 +203,16 @@ export const history = createReducer(INITIAL_STATE, {
     };
   }
 });
+/**
+ * ======================
+ * FUNCTION SERVICE
+ * ======================
+ */
+function removeDuplicateData(existingData, newData) {
+  let dataArray = [...existingData, ...newData];
+  return dataArray
+    .map(data => data.id)
+    .map((data, index, fixData) => fixData.indexOf(data) === index && index)
+    .filter(data => dataArray[data])
+    .map(data => dataArray[data]);
+}
