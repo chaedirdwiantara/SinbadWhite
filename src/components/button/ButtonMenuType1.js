@@ -1,11 +1,14 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import Text from 'react-native-text';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import {
+  React,
+  Component,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage';
+import { MaterialIcon } from '../../library/thirdPartyPackage';
+import { Fonts, GlobalStyle } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import GlobalStyle from '../../helpers/GlobalStyle';
 
 class ButtonMenuType1 extends Component {
   /**
@@ -22,7 +25,13 @@ class ButtonMenuType1 extends Component {
           onPress={this.props.onPress}
         >
           <Text style={Fonts.type8}>{this.props.title}</Text>
+
           <View style={styles.boxArrow}>
+            {this.props.notification ? (
+              <View style={styles.cirleRed} />
+            ) : (
+              <View />
+            )}
             <MaterialIcon
               name="chevron-right"
               color={masterColor.fontBlack40}
@@ -49,14 +58,18 @@ const styles = StyleSheet.create({
     paddingVertical: 16
   },
   boxArrow: {
+    alignItems: 'center',
+    flexDirection: 'row',
     position: 'absolute',
     right: 10
+  },
+  cirleRed: {
+    marginRight: 8,
+    height: 10,
+    width: 10,
+    borderRadius: 10,
+    backgroundColor: masterColor.mainColor
   }
 });
 
-const mapStateToProps = ({}) => {
-  return {};
-};
-
-// eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, {})(ButtonMenuType1);
+export default ButtonMenuType1;
