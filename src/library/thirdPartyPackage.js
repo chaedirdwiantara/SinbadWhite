@@ -26,6 +26,8 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 /** TEXT */
 import { RFPercentage } from 'react-native-responsive-fontsize';
+/** SETTING */
+import DeviceInfo from 'react-native-device-info';
 
 export {
   /** REDUX */
@@ -55,5 +57,7 @@ export {
   /** SKELETON */
   SkeletonPlaceholder,
   /** TEXT */
-  RFPercentage
+  RFPercentage,
+  /** SETTING */
+  DeviceInfo
 };
