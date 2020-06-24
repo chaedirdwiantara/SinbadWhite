@@ -7,13 +7,12 @@ const LogTabNavigator = {
     screen: LogView,
     navigationOptions: {
       headerTitle: 'Log',
-      headerTitleStyle: GlobalFont.type5,
+      headerTitleStyle: GlobalFont.textHeaderPage,
       headerTitleContainerStyle: {
         width: '100%',
         justifyContent: 'center'
       },
       headerStyle: {
-        elevation: 0,
         backgroundColor: masterColor.backgroundWhite
       },
       gesturesEnabled: false

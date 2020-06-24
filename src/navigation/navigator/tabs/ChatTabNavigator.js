@@ -7,7 +7,7 @@ const ChatTabNavigator = {
     screen: ChatView,
     navigationOptions: {
       headerTitle: 'Chat',
-      headerTitleStyle: GlobalFont.type5,
+      headerTitleStyle: GlobalFont.textHeaderPage,
       headerTitleContainerStyle: {
         width: '100%',
         justifyContent: 'center'
