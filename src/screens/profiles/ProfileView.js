@@ -1,21 +1,23 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   SafeAreaView,
   StyleSheet,
   Image,
-  TouchableOpacity
-} from 'react-native';
-import { bindActionCreators } from 'redux';
-import DeviceInfo from 'react-native-device-info';
-import { connect } from 'react-redux';
-import Text from 'react-native-text';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon,
+  DeviceInfo
+} from '../../library/thirdPartyPackage';
+import { StatusBarWhite } from '../../library/component';
+import { Color } from '../../config';
+import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
-import { StatusBarWhite } from '../../components/StatusBarGlobal';
-import masterColor from '../../config/masterColor.json';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import GlobalFont from '../../helpers/GlobalFont';
 import NavigationService from '../../navigation/NavigationService';
 import CallCS from '../../screens/global/CallCS';
 
@@ -94,8 +96,8 @@ class ProfileView extends Component {
           )}
         </View>
         <View style={styles.boxHeaderNamePhone}>
-          <Text style={GlobalFont.type19}>{this.props.user.fullName}</Text>
-          <Text style={GlobalFont.type20}>{this.props.user.mobilePhoneNo}</Text>
+          <Text style={Fonts.type19}>{this.props.user.fullName}</Text>
+          <Text style={Fonts.type20}>{this.props.user.mobilePhoneNo}</Text>
         </View>
         <View />
       </View>
@@ -110,11 +112,11 @@ class ProfileView extends Component {
             style={styles.boxMenu}
             onPress={() => this.goTo(item.goTo)}
           >
-            <Text style={GlobalFont.type8}>{item.name}</Text>
+            <Text style={Fonts.type8}>{item.name}</Text>
             <View style={{ position: 'absolute', right: 16 }}>
               <MaterialIcon
                 name="chevron-right"
-                color={masterColor.fontBlack40}
+                color={Color.fontBlack40}
                 size={24}
               />
             </View>
@@ -128,7 +130,7 @@ class ProfileView extends Component {
   renderVersion() {
     return (
       <View style={{ paddingLeft: 16, paddingVertical: 16 }}>
-        <Text style={GlobalFont.type9}>
+        <Text style={Fonts.type9}>
           Versi {DeviceInfo.getVersion()} ({DeviceInfo.getBuildNumber()})
         </Text>
       </View>
@@ -141,7 +143,7 @@ class ProfileView extends Component {
         style={styles.signOutContainer}
         onPress={() => this.signOut()}
       >
-        <Text style={GlobalFont.type21}>LOGOUT</Text>
+        <Text style={Fonts.type21}>LOGOUT</Text>
       </TouchableOpacity>
     );
   }
@@ -179,10 +181,10 @@ class ProfileView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   headerContainer: {
-    backgroundColor: masterColor.mainColor,
+    backgroundColor: Color.mainColor,
     flexDirection: 'row',
     paddingVertical: 18,
     paddingHorizontal: 16
@@ -193,7 +195,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
     borderTopWidth: 1,
-    borderColor: masterColor.fontBlack10
+    borderColor: Color.fontBlack10
   },
   boxMenu: {
     paddingHorizontal: 16,

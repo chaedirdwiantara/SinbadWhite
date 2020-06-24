@@ -1,21 +1,23 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   StyleSheet,
   View,
   SafeAreaView,
   TouchableOpacity,
-  Image
-} from 'react-native';
-import Text from 'react-native-text';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+  Image,
+  Text
+} from '../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon,
+  SkeletonPlaceholder
+} from '../../library/thirdPartyPackage';
+import { StatusBarWhite } from '../../library/component';
+import { Fonts, GlobalStyle } from '../../helpers';
+import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
-import { StatusBarWhite } from '../../components/StatusBarGlobal';
-import masterColor from '../../config/masterColor.json';
-import GlobalFont from '../../helpers/GlobalFont';
-import GlobalStyle from '../../helpers/GlobalStyle';
 import NavigationService from '../../navigation/NavigationService';
 
 class ProfileDataView extends Component {
@@ -90,7 +92,7 @@ class ProfileDataView extends Component {
           style={styles.boxEditIcon}
           onPress={() => this.goTo('take_profile_photo')}
         >
-          <MaterialIcon name="edit" color={masterColor.fontBlack80} size={18} />
+          <MaterialIcon name="edit" color={Color.fontBlack80} size={18} />
         </TouchableOpacity>
       </View>
     );
@@ -113,24 +115,22 @@ class ProfileDataView extends Component {
       <View style={styles.informationContainer}>
         <View style={styles.boxInformation}>
           <View>
-            <Text style={[GlobalFont.type23, { marginBottom: 5 }]}>Name</Text>
-            <Text style={GlobalFont.type24}>{this.props.user.fullName}</Text>
+            <Text style={[Fonts.type23, { marginBottom: 5 }]}>Name</Text>
+            <Text style={Fonts.type24}>{this.props.user.fullName}</Text>
           </View>
           <TouchableOpacity
             style={styles.boxUbah}
             onPress={() => this.goTo('edit_name')}
           >
-            <Text style={GlobalFont.type22}>Ubah</Text>
+            <Text style={Fonts.type22}>Ubah</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.boxInformation}>
           <View>
-            <Text style={[GlobalFont.type23, { marginBottom: 5 }]}>
+            <Text style={[Fonts.type23, { marginBottom: 5 }]}>
               Nomor Handphone
             </Text>
-            <Text style={GlobalFont.type24}>
-              {this.props.user.mobilePhoneNo}
-            </Text>
+            <Text style={Fonts.type24}>{this.props.user.mobilePhoneNo}</Text>
           </View>
         </View>
       </View>
@@ -151,7 +151,7 @@ class ProfileDataView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   headerContainer: {
     justifyContent: 'center',

@@ -1,13 +1,9 @@
-import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { React, Component, View, StyleSheet } from '../../library/reactPackage';
+import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
+import { InputType4, ButtonSingle } from '../../library/component';
+import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
-import InputType1 from '../../components/input/InputType1';
-import masterColor from '../../config/masterColor.json';
-import ButtonSingle from '../../components/button/ButtonSingle';
 
 class ProfileDataNameEdit extends Component {
   constructor(props) {
@@ -46,14 +42,12 @@ class ProfileDataNameEdit extends Component {
   renderContent() {
     return (
       <View style={{ marginTop: 16, flex: 1 }}>
-        <InputType1
+        <InputType4
           title={'Nama'}
           value={this.state.fullName}
           placeholder={'Nama'}
           keyboardType={'default'}
-          text={text => this.setState({ fullName: text })}
-          error={false}
-          errorText={''}
+          text={fullName => this.setState({ fullName })}
         />
       </View>
     );
@@ -86,10 +80,10 @@ class ProfileDataNameEdit extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     marginBottom: 16,
     paddingVertical: 6
   }
