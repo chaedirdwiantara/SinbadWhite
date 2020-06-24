@@ -1,16 +1,19 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView
-} from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+} from '../../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect
+} from '../../../library/thirdPartyPackage';
+import { Fonts } from '../../../helpers';
+import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
-import masterColor from '../../../config/masterColor.json';
-import Fonts from '../../../helpers/GlobalFont';
 import NavigationService from '../../../navigation/NavigationService';
 
 class MerchantDetailProfileView extends Component {
@@ -154,7 +157,7 @@ class MerchantDetailProfileView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxContent: {
     paddingHorizontal: 16,
