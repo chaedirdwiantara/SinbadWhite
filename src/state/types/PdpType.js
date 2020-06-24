@@ -9,6 +9,13 @@ export const PDP_GET_FAILED = 'PdpGetFailed';
 export const PDP_GET_RESET = 'PdpGetReset';
 export const PDP_GET_REFRESH = 'PdpGetRefresh';
 export const PDP_GET_LOADMORE = 'PdpGetLoadMore';
+/** FOR GET PDP SEARCH LIST */
+export const PDP_SEARCH_GET_PROCESS = 'PdpSearchGetProcess';
+export const PDP_SEARCH_GET_SUCCESS = 'PdpSearchGetSuccess';
+export const PDP_SEARCH_GET_FAILED = 'PdpSearchGetFailed';
+export const PDP_SEARCH_GET_RESET = 'PdpSearchGetReset';
+export const PDP_SEARCH_GET_REFRESH = 'PdpSearchGetRefresh';
+export const PDP_SEARCH_GET_LOADMORE = 'PdpSearchGetLoadMore';
 /** DETAIL PDP */
 export const PDP_GET_DETAIL_PROCESS = 'PdpGetDetailProcess';
 export const PDP_GET_DETAIL_SUCCESS = 'PdpGetDetailSuccess';

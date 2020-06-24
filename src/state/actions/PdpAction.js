@@ -52,7 +52,38 @@ export function pdpGetReset() {
 export function pdpGetLoadMore(page) {
   return { type: types.PDP_GET_LOADMORE, payload: page };
 }
-
+/**
+ * ==============================
+ * GET SEARCH PDP BY SUPPLIER ID
+ * ==============================
+ */
+/** === PDP SEARCH GET PROCESS ==== */
+export function pdpSearchGetProcess(data) {
+  return { type: types.PDP_SEARCH_GET_PROCESS, payload: data };
+}
+/** === PDP SEARCH GET SUCCESS === */
+export function pdpSearchGetSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.PDP_SEARCH_GET_SUCCESS, payload: data.data };
+  }
+  return { type: types.PDP_SEARCH_GET_FAILED, payload: data };
+}
+/** === PDP SEARCH GET FAILED === */
+export function pdpSearchGetFailed(data) {
+  return { type: types.PDP_SEARCH_GET_FAILED, payload: data };
+}
+/** === REFRESH GET SEARCH PDP === */
+export function pdpSearchGetRefresh() {
+  return { type: types.PDP_SEARCH_GET_REFRESH };
+}
+/** === RESET GET  SEARCH PDP === */
+export function pdpSearchGetReset() {
+  return { type: types.PDP_SEARCH_GET_RESET };
+}
+/** === LOAD MORE SEARCH GET PDP === */
+export function pdpSearchGetLoadMore(page) {
+  return { type: types.PDP_SEARCH_GET_LOADMORE, payload: page };
+}
 /**
  * ==============================
  * FILTER & DISPLAY PDP

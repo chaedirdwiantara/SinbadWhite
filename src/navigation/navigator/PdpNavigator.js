@@ -1,7 +1,7 @@
 import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 import PdpView from '../../screens/pdp/PdpView';
-import PdpSearchView from '../../screens/pdp/PdpSearchView';
+import PdpSearchView from '../../screens/search/PdpSearchView';
 
 const PdpNavigator = {
   PdpView: {

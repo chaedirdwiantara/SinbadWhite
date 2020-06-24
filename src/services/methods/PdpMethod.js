@@ -11,6 +11,17 @@ function getPdp(data) {
     method: 'GET'
   });
 }
+/** GET SEARCH PDP */
+function getSearchPdp(data) {
+  return ApiRest({
+    path: `catalogues?$skip=${
+      data.page
+    }&$limit=10&supplierIds=${GlobalMethod.merchantSupplierMapping()}&searchName=${
+      data.search
+    }&status=active&sort=${data.sort}&sortby=${data.sortBy}`,
+    method: 'GET'
+  });
+}
 /** GET PDP SKU DETAIL */
 function getDetailPdp(pdpId) {
   return ApiRest({
@@ -21,5 +32,6 @@ function getDetailPdp(pdpId) {
 
 export const PdpMethod = {
   getPdp,
-  getDetailPdp
+  getDetailPdp,
+  getSearchPdp
 };
