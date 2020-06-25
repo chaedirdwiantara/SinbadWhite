@@ -1,8 +1,13 @@
-import React, { Component } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
-import Text from 'react-native-text';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  View,
+  Text,
+  TextInput,
+  StyleSheet
+} from '../../library/reactPackage';
+import { Fonts } from '../../helpers';
+import { Color } from '../../config';
 
 class InputType2 extends Component {
   constructor(props) {
@@ -28,21 +33,23 @@ class InputType2 extends Component {
       <View style={styles.boxInput}>
         <TextInput
           editable={this.props.editable}
-          selectionColor={masterColor.mainColor}
+          selectionColor={Color.mainColor}
           placeholder={this.props.placeholder}
           value={this.props.value}
-          placeholderTextColor={masterColor.fontBlack40}
+          placeholderTextColor={Color.fontBlack40}
           onChangeText={this.props.text}
           keyboardType={this.props.keyboardType}
           multiline={true}
-          numberOfLines={4}
+          numberOfLines={3}
           style={[
-            Fonts.type24,
+            this.props.editable === false
+              ? Fonts.textInputFieldDisabled
+              : Fonts.textInputField,
             styles.input,
             {
               borderBottomColor: this.props.error
-                ? masterColor.fontRed50
-                : masterColor.fontBlack40,
+                ? Color.fontRed50
+                : Color.fontBlack40,
               textAlignVertical: 'top'
             }
           ]}
@@ -67,7 +74,11 @@ class InputType2 extends Component {
         {this.renderTitle()}
         {this.inputText()}
         {this.inputTextError()}
-        <View style={styles.spacing} />
+        <View
+          style={{
+            marginBottom: this.props.marginBottom ? this.props.marginBottom : 16
+          }}
+        />
       </View>
     );
   }
@@ -79,7 +90,7 @@ class InputType2 extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
     paddingHorizontal: 16
@@ -94,10 +105,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingHorizontal: 0,
     paddingBottom: 8,
-    borderBottomColor: masterColor.fontBlack40
-  },
-  spacing: {
-    marginBottom: 12
+    borderBottomColor: Color.fontBlack40
   }
 });
 
