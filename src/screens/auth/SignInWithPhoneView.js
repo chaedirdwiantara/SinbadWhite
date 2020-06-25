@@ -67,7 +67,7 @@ class SignInWithPhoneView extends Component {
     this.setState({ errorPhoneNumber: false });
     this.props.otpGetProcess(this.state.phoneNumber);
   }
-  /** === PHONE NUMBER MODIFY === */
+  /** === PHONE NUMBER CHECK === */
   checkPhoneFormat(phoneNumber) {
     const reg = /^08[0-9]{8,12}$/;
     const checkFormat = reg.test(phoneNumber);
