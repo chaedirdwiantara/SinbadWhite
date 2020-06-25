@@ -58,11 +58,33 @@ const StatusBarRedOP50 = () => {
   );
 };
 
+const StatusBarTransparent = () => {
+  return (
+    <StatusBar
+      barStyle="light-content"
+      backgroundColor="transparent"
+      translucent={true}
+    />
+  );
+};
+
+const StatusBarTransparentBlack = () => {
+  return (
+    <StatusBar
+      barStyle="dark-content"
+      backgroundColor="transparent"
+      translucent={true}
+    />
+  );
+};
+
 export {
   StatusBarWhite,
   StatusBarRed,
   StatusBarBlack,
   StatusBarBlackOP40,
   StatusBarRedOP40,
-  StatusBarRedOP50
+  StatusBarRedOP50,
+  StatusBarTransparent,
+  StatusBarTransparentBlack
 };
