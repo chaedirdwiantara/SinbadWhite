@@ -29,6 +29,10 @@ export const GLOBAL_LONGLAT_TO_ADDRESS_FAILED = 'GlobalLonglatToAddressFailed';
 export const GLOBAL_MANUAL_INPUT_LOCATION = 'GlobalManualInputLocation';
 export const GLOBAL_MANUAL_INPUT_LOCATION_DATA_VOLATILE =
   'GlobalManualInputLocationDataVolatile';
+/** GE URBAN_ID FROM DB, BASED ON GOOGLE DATA */
+export const GET_URBAN_ID_PROCESS = 'getUrbanIdProcess';
+export const GET_URBAN_ID_SUCCESS = 'getUrbanIdSuccess';
+export const GET_URBAN_ID_FAILED = 'getUrbanIdFailed';
 /** CHECK VERSION OF APP */
 export const APP_VERSION_PROCESS = 'appVersionProcess';
 export const APP_VERSION_SUCCESS = 'appVersionSuccess';

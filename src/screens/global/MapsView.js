@@ -1,22 +1,31 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import MapView, { Marker } from 'react-native-maps';
-import Geolocation from 'react-native-geolocation-service';
-import OpenAppSettings from 'react-native-app-settings';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  TouchableOpacity
+} from '../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon,
+  MapView,
+  Marker,
+  Geolocation,
+  OpenAppSettings
+} from '../../library/thirdPartyPackage';
+import {
+  StatusBarTransparentBlack,
+  ButtonSingle,
+  LoadingPage,
+  ModalBottomErrorPinMap,
+  ErrorPageNoGPS,
+  ModalBottomErrorRespons
+} from '../../library/component';
+import { GlobalStyle } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
-import { StatusBarWhite } from '../../components/StatusBarGlobal';
-import SearchBarType3 from '../../components/search_bar/SearchBarType3';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import ButtonSingle from '../../components/button/ButtonSingle';
-import { LoadingPage } from '../../components/Loading';
-import ModalBottomErrorPinMap from '../../components/error/ModalBottomErrorPinMap';
-import ModalBottomManualLocation from '../../screens/global/ModalBottomManualLocation';
-import ErrorPageNoGPS from '../../components/error/ErrorPageNoGPS';
 
 class MapsView extends Component {
   constructor(props) {
@@ -28,7 +37,8 @@ class MapsView extends Component {
       longitudeDelta: 0.02,
       reRender: false,
       openErrorGlobalLongLatToAddress: false,
-      openModalNoGPS: false
+      openModalNoGPS: false,
+      openModalErrorGlobal: false
     };
   }
   /**
@@ -41,34 +51,55 @@ class MapsView extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    /** IF SUCCESS */
+    /** === IF SUCCESS === */
+    /** => if success get location from google maps */
     if (
       prevProps.global.dataGlobalLongLatToAddress !==
       this.props.global.dataGlobalLongLatToAddress
     ) {
       if (this.props.global.dataGlobalLongLatToAddress !== null) {
-        NavigationService.goBack(this.props.navigation.state.key);
+        this.getUrbanId();
       }
     }
-    /** IF ERROR */
+    /** => if success get data urban id (data from google maps) */
+    if (prevProps.global.dataGetUrbanId !== this.props.global.dataGetUrbanId) {
+      if (this.props.global.dataGetUrbanId !== null) {
+        this.checkDataUrbanId();
+      }
+    }
+    /** === IF ERROR === */
+    /** => if failed get location from google maps */
     if (
       prevProps.global.errorGlobalLongLatToAddress !==
       this.props.global.errorGlobalLongLatToAddress
     ) {
       if (this.props.global.errorGlobalLongLatToAddress !== null) {
+        /** => clear get data urban Id */
+        this.props.clearDataGetUrbanId();
         this.setState({ openErrorGlobalLongLatToAddress: true });
       }
     }
+    /** => if failed get urban id from BE */
+    if (
+      prevProps.global.errorGetUrbanId !== this.props.global.errorGetUrbanId
+    ) {
+      if (this.props.global.errorGetUrbanId !== null) {
+        this.setState({ openModalErrorGlobal: true });
+      }
+    }
   }
-  /** === CLEAR VOLATLE MANUAL INPUT LOCATION == */
-  clearDataManualInputLocation() {
-    this.props.saveDataManualInputLocation({
-      provinceId: '',
-      provinceName: '',
-      cityName: '',
-      districtName: '',
-      urbanName: ''
-    });
+  /** === GET URBAN ID FROM DB === */
+  getUrbanId() {
+    this.setState({ openErrorGlobalLongLatToAddress: false });
+    this.props.getUrbanIdProcess(this.props.global.dataGlobalLongLatToAddress);
+  }
+  /** === CHECK DATA URBAN ID === */
+  checkDataUrbanId() {
+    if (this.props.global.dataGetUrbanId.length > 0) {
+      NavigationService.goBack(this.props.navigation.state.key);
+    } else {
+      this.setState({ openErrorGlobalLongLatToAddress: true });
+    }
   }
   /** === GET CURRENT LOCATION === */
   successMaps = success => {
@@ -98,24 +129,6 @@ class MapsView extends Component {
    * RENDER VIEW
    * =======================
    */
-  /**
-   * ========================
-   * HEADER MODIFY
-   * ========================
-   */
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerTitle: () => (
-        <View style={{ width: '100%' }}>
-          <SearchBarType3
-            placeholder={
-              navigation.state.params ? navigation.state.params.placeholder : ''
-            }
-          />
-        </View>
-      )
-    };
-  };
   /** === MAPS === */
   renderMapsContent() {
     return (
@@ -175,7 +188,7 @@ class MapsView extends Component {
     return (
       <View style={styles.containerHeaderLeft}>
         <TouchableOpacity
-          style={[styles.boxButton, GlobalStyles.shadow]}
+          style={[styles.boxButton, GlobalStyle.shadow]}
           onPress={() =>
             NavigationService.goBack(this.props.navigation.state.key)
           }
@@ -193,7 +206,7 @@ class MapsView extends Component {
     return (
       <View style={styles.containerHeaderRight}>
         <TouchableOpacity
-          style={[styles.boxButton, GlobalStyles.shadow]}
+          style={[styles.boxButton, GlobalStyle.shadow]}
           onPress={() => this.getCurrentLocation()}
         >
           <MaterialIcon
@@ -221,9 +234,12 @@ class MapsView extends Component {
           disabled={
             this.state.reRender ||
             this.props.global.loadingGlobalLongLatToAddress ||
-            this.props.global.dataOpenModalManualInputLocation
+            this.props.global.loadingGetUrbanId
           }
-          loading={this.props.global.loadingGlobalLongLatToAddress}
+          loading={
+            this.props.global.loadingGlobalLongLatToAddress ||
+            this.props.global.loadingGetUrbanId
+          }
           title={'Pilih Lokasi Ini'}
           borderRadius={4}
           onPress={() => this.addLongLat()}
@@ -231,52 +247,33 @@ class MapsView extends Component {
       </View>
     );
   }
-  /** MODAL */
+  /** === MODAL ==== */
   renderError() {
     return this.state.openErrorGlobalLongLatToAddress ? (
       <ModalBottomErrorPinMap
         open={this.state.openErrorGlobalLongLatToAddress}
-        ok={() => {
-          this.setState({ openErrorGlobalLongLatToAddress: false });
-        }}
-        manualInput={() => {
-          this.setState({ openErrorGlobalLongLatToAddress: false });
-          this.props.modalManualInputLocation(true);
-        }}
-      />
-    ) : (
-      <View />
-    );
-  }
-  /** === RENDER MODAL BOTTOM INPUT MANUAL LOCATION === */
-  renderModalInputManualLocation() {
-    return this.props.global.dataOpenModalManualInputLocation ? (
-      <ModalBottomManualLocation
-        statusBarWhite
-        open={this.props.global.dataOpenModalManualInputLocation}
-        close={() => {
-          this.props.modalManualInputLocation(false);
-          this.clearDataManualInputLocation();
-        }}
+        close={() => this.setState({ openErrorGlobalLongLatToAddress: false })}
         onPress={() => {
-          this.props.modalManualInputLocation(false);
-          NavigationService.goBack(this.props.navigation.state.key);
-          this.props.saveManualToLongLat({
-            province: this.props.global.dataLocationVolatile.provinceName,
-            city: this.props.global.dataLocationVolatile.cityName,
-            district: this.props.global.dataLocationVolatile.districtName,
-            urban: this.props.global.dataLocationVolatile.urbanName
-          });
-          setTimeout(() => {
-            this.clearDataManualInputLocation();
-          }, 100);
+          this.setState({ openErrorGlobalLongLatToAddress: false });
+          NavigationService.navigate('InputManualLocation');
         }}
       />
     ) : (
       <View />
     );
   }
-  /** NO GPS */
+  /** ===> RENDER MODAL ERROR RESPONS FROM BE ===  */
+  renderModalErrorRespons() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        open={this.state.openModalErrorGlobal}
+        onPress={() => this.setState({ openModalErrorGlobal: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** === ERROR PAGE NO GPS === */
   renderNoGps() {
     return this.state.openModalNoGPS ? (
       <ErrorPageNoGPS
@@ -291,7 +288,7 @@ class MapsView extends Component {
       <View />
     );
   }
-  /** RENDER CONTENT */
+  /** === RENDER CONTENT === */
   renderContent() {
     return (
       <View style={styles.mainContainer}>
@@ -301,7 +298,7 @@ class MapsView extends Component {
         {this.renderButton()}
         {/* modal */}
         {this.renderError()}
-        {this.renderModalInputManualLocation()}
+        {this.renderModalErrorRespons()}
       </View>
     );
   }
@@ -309,7 +306,7 @@ class MapsView extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        <StatusBarWhite />
+        <StatusBarTransparentBlack />
         {this.state.openModalNoGPS ? this.renderNoGps() : this.renderContent()}
       </View>
     );
@@ -325,7 +322,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    top: 0,
+    top: 20,
     left: 16,
     width: 40,
     height: 55,
@@ -335,7 +332,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    top: 0,
+    top: 20,
     right: 16,
     width: 40,
     height: 55,

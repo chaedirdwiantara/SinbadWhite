@@ -8,6 +8,7 @@ const INITIAL_STATE = {
   loadingLoadMoreGetListAndSearch: false,
   loadingGlobalLongLatToAddress: false,
   loadingGetVersion: false,
+  loadingGetUrbanId: false,
   /** data */
   search: '',
   longitude: '',
@@ -27,9 +28,11 @@ const INITIAL_STATE = {
     districtName: '',
     urbanName: ''
   },
+  dataGetUrbanId: null,
   /** error */
   errorGetListAndSearch: null,
   errorGetVersion: null,
+  errorGetUrbanId: null,
   errorGlobalLongLatToAddress: null
 };
 
@@ -143,6 +146,33 @@ export const global = createReducer(INITIAL_STATE, {
             ? action.payload.urbanName
             : state.dataLocationVolatile.urbanName
       }
+    };
+  },
+  /**
+   * ===================================
+   * GET URBAN ID
+   * ===================================
+   */
+  [types.GET_URBAN_ID_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetUrbanId: true,
+      dataGetUrbanId: null,
+      errorGetUrbanId: null
+    };
+  },
+  [types.GET_URBAN_ID_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetUrbanId: false,
+      dataGetUrbanId: action.payload.data
+    };
+  },
+  [types.GET_URBAN_ID_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetUrbanId: false,
+      errorGetUrbanId: action.payload
     };
   },
   /**

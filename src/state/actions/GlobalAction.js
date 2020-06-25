@@ -86,6 +86,26 @@ export function listAndSearchGetLoadMore(page) {
 }
 /**
  * =========================
+ * GET URBAN ID
+ * =========================
+ */
+/** === GET URBAN ID PROCESS === */
+export function getUrbanIdProcess(data) {
+  return { type: types.GET_URBAN_ID_PROCESS, payload: data };
+}
+/** === GET URBAN ID SUCCESS === */
+export function getUrbanIdSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.GET_URBAN_ID_SUCCESS, payload: data.data };
+  }
+  return { type: types.GET_URBAN_ID_FAILED, payload: data };
+}
+/** === GET URBAN ID FAILED === */
+export function getUrbanIdFailed(data) {
+  return { type: types.GET_URBAN_ID_FAILED, payload: data };
+}
+/**
+ * =========================
  * GET ADDRESS FROM LONG LAT
  * ==========================
  */
