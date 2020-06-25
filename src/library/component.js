@@ -10,7 +10,9 @@ import {
   StatusBarRed,
   StatusBarWhite,
   StatusBarRedOP50,
-  StatusBarBlackOP40
+  StatusBarBlackOP40,
+  StatusBarTransparent,
+  StatusBarTransparentBlack
 } from '../components/StatusBarGlobal';
 /** INPUT */
 import InputType2 from '../components/input/InputType2';
@@ -55,6 +57,8 @@ export {
   StatusBarWhite,
   StatusBarRedOP50,
   StatusBarBlackOP40,
+  StatusBarTransparent,
+  StatusBarTransparentBlack,
   /** INPUT */
   InputType2,
   InputType4,
