@@ -1,29 +1,37 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   SafeAreaView,
   StyleSheet,
   ScrollView,
   Keyboard
-} from 'react-native';
+} from '../../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect
+} from '../../../library/thirdPartyPackage';
+import {
+  ButtonSingle,
+  StatusBarWhite,
+  ProgressBarType1,
+  DropdownType1,
+  InputType2,
+  InputType4,
+  InputMapsType1
+} from '../../../library/component';
+import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import * as ActionCreators from '../../../state/actions';
-import ButtonSingle from '../../../components/button/ButtonSingle';
-import { StatusBarWhite } from '../../../components/StatusBarGlobal';
-import masterColor from '../../../config/masterColor';
-import ProgressBarType1 from '../../../components/progress_bar/ProgressBarType1';
-import DropdownType1 from '../../../components/input/DropdownType1';
-import InputType2 from '../../../components/input/InputType2';
 import InputType1 from '../../../components/input/InputType1';
-import InputMapsType1 from '../../../components/input/InputMapsType1';
 import ModalBottomErrorResponsWhite from '../../../components/error/ModalBottomErrorResponsWhite';
 
 class AddMerchantStep2 extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      errorIdNumber: false,
+      errorTaxNumber: false,
       fullName: this.props.merchant.dataAddMerchantVolatile.user.fullName,
       name: this.props.merchant.dataAddMerchantVolatile.name,
       phone: this.props.merchant.dataAddMerchantVolatile.user.phone,
@@ -149,6 +157,24 @@ class AddMerchantStep2 extends Component {
   goToMaps() {
     NavigationService.navigate('MapsView');
   }
+  /** === CHECK ID NUMBER FORMAT === */
+  checkIdNoFormat(idNumber) {
+    this.setState({ idNo: idNumber });
+    if (idNumber === '' || idNumber.length === 16) {
+      this.setState({ errorIdNumber: false });
+    } else {
+      this.setState({ errorIdNumber: true });
+    }
+  }
+  /** === CHECK TAX NUMBER FORMAT === */
+  checkTaxNoFormat(taxNumber) {
+    this.setState({ taxNo: taxNumber });
+    if (taxNumber === '' || taxNumber.length === 15) {
+      this.setState({ errorTaxNumber: false });
+    } else {
+      this.setState({ errorTaxNumber: true });
+    }
+  }
   /**
    * ====================
    * RENDER VIEW
@@ -170,28 +196,29 @@ class AddMerchantStep2 extends Component {
   /** owner name */
   renderNameOwner() {
     return (
-      <InputType1
-        title={'*Nama Lengkap Pemilik'}
+      <InputType4
+        title={'*Nama Pemilik Toko'}
         value={this.state.fullName}
-        placeholder={'Nama Lengkap Pemilik'}
+        onChangeText={fullName => {
+          const cleanNameFormat = fullName.replace(/[^\w\s]|[0-9]|[_]/g, '');
+          this.setState({ fullName: cleanNameFormat });
+        }}
+        placeholder={'Masukan Nama Pemilik Toko'}
         keyboardType={'default'}
-        text={text => this.setState({ fullName: text })}
-        error={false}
-        errorText={''}
+        marginBottom={16}
       />
     );
   }
   /** merchant name */
   renderNameMerchant() {
     return (
-      <InputType1
+      <InputType4
         title={'*Nama Toko'}
         value={this.state.name}
-        placeholder={'Masukan Nama Toko Anda'}
+        onChangeText={name => this.setState({ name })}
+        placeholder={'Masukan Nama Toko'}
         keyboardType={'default'}
-        text={text => this.setState({ name: text })}
-        error={false}
-        errorText={''}
+        marginBottom={16}
       />
     );
   }
@@ -226,31 +253,38 @@ class AddMerchantStep2 extends Component {
   /** tax Owner */
   renderTaxId() {
     return (
-      <InputType1
-        optional
+      <InputType4
         title={'Nomor Pokok Wajib Pajak (NPWP)'}
         value={this.state.taxNo}
-        placeholder={'Masukan NPWP pemilik'}
+        onChangeText={taxNo => {
+          const cleanNumber = taxNo.replace(/[^0-9]/g, '');
+          this.checkTaxNoFormat(cleanNumber);
+        }}
+        placeholder={'Masukan NPWP pemilik maks.15 Digit'}
         keyboardType={'numeric'}
+        error={this.state.errorTaxNumber}
+        errorText={'Pastikan No.NPWP maks. 15 Digit'}
         maxLength={15}
-        text={text => this.setState({ taxNo: text })}
-        error={false}
-        errorText={''}
+        marginBottom={16}
       />
     );
   }
   /** id owner */
   renderIdNo() {
     return (
-      <InputType1
-        title={'*Nomor Kartu Tanda Penduduk (KTP)'}
+      <InputType4
+        title={'Nomor Kartu Tanda Penduduk (KTP)'}
         value={this.state.idNo}
-        maxLength={16}
-        placeholder={'Masukan No KTP pemilik'}
+        onChangeText={idNo => {
+          const cleanNumber = idNo.replace(/[^0-9]/g, '');
+          this.checkIdNoFormat(cleanNumber);
+        }}
+        placeholder={'Masukan KTP pemilik maks. 16 Digit'}
         keyboardType={'numeric'}
-        text={text => this.setState({ idNo: text })}
-        error={false}
-        errorText={''}
+        error={this.state.errorIdNumber}
+        errorText={'Pastikan No.KTP maks. 16 Digit'}
+        maxLength={16}
+        marginBottom={16}
       />
     );
   }
@@ -258,9 +292,9 @@ class AddMerchantStep2 extends Component {
   renderAddress() {
     return (
       <InputType2
-        title={'*Alamat'}
+        title={'*Detail Alamat'}
         value={this.state.address}
-        placeholder={'Masukan Alamat lengkap Anda'}
+        placeholder={'Masukkan Alamat lengkap Toko'}
         keyboardType={'default'}
         text={text => this.setState({ address: text })}
         error={false}
@@ -287,7 +321,7 @@ class AddMerchantStep2 extends Component {
       <View style={{ flex: 1, paddingTop: 20 }}>
         {this.renderNameOwner()}
         {this.renderNameMerchant()}
-        {this.renderSupplier()}
+        {/* {this.renderSupplier()} */}
         {this.renderIdNo()}
         {this.renderTaxId()}
         {this.renderMaps()}
@@ -343,7 +377,7 @@ class AddMerchantStep2 extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   }
 });
 
