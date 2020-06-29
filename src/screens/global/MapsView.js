@@ -266,6 +266,7 @@ class MapsView extends Component {
   renderModalErrorRespons() {
     return this.state.openModalErrorGlobal ? (
       <ModalBottomErrorRespons
+        statusBarType={'transparent'}
         open={this.state.openModalErrorGlobal}
         onPress={() => this.setState({ openModalErrorGlobal: false })}
       />

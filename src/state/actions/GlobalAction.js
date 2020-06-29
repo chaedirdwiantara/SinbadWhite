@@ -106,6 +106,14 @@ export function getUrbanIdFailed(data) {
 }
 /**
  * =========================
+ * CLEAR DATA GET URBAN ID
+ * =========================
+ */
+export function clearDataGetUrbanId() {
+  return { type: types.GET_URBAN_ID_SUCCESS, payload: { data: null } };
+}
+/**
+ * =========================
  * GET ADDRESS FROM LONG LAT
  * ==========================
  */

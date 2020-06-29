@@ -26,14 +26,15 @@ const INITIAL_STATE = {
     provinceName: '',
     cityName: '',
     districtName: '',
-    urbanName: ''
+    urbanName: '',
+    zipCode: ''
   },
   dataGetUrbanId: null,
   /** error */
   errorGetListAndSearch: null,
+  errorGlobalLongLatToAddress: null,
   errorGetVersion: null,
-  errorGetUrbanId: null,
-  errorGlobalLongLatToAddress: null
+  errorGetUrbanId: null
 };
 
 export const global = createReducer(INITIAL_STATE, {
@@ -122,29 +123,17 @@ export const global = createReducer(INITIAL_STATE, {
    * =============================
    */
   [types.GLOBAL_MANUAL_INPUT_LOCATION_DATA_VOLATILE](state, action) {
+    const dataUpdate = action.payload;
+    const dataPrevious = state.dataLocationVolatile;
     return {
       ...state,
       dataLocationVolatile: {
-        provinceId:
-          action.payload.provinceId || action.payload.provinceId === ''
-            ? action.payload.provinceId
-            : state.dataLocationVolatile.provinceId,
-        provinceName:
-          action.payload.provinceName || action.payload.provinceName === ''
-            ? action.payload.provinceName
-            : state.dataLocationVolatile.provinceName,
-        cityName:
-          action.payload.cityName || action.payload.cityName === ''
-            ? action.payload.cityName
-            : state.dataLocationVolatile.cityName,
-        districtName:
-          action.payload.districtName || action.payload.districtName === ''
-            ? action.payload.districtName
-            : state.dataLocationVolatile.districtName,
-        urbanName:
-          action.payload.urbanName || action.payload.urbanName === ''
-            ? action.payload.urbanName
-            : state.dataLocationVolatile.urbanName
+        provinceId: checkData('provinceId', dataUpdate, dataPrevious),
+        provinceName: checkData('provinceName', dataUpdate, dataPrevious),
+        cityName: checkData('cityName', dataUpdate, dataPrevious),
+        districtName: checkData('districtName', dataUpdate, dataPrevious),
+        urbanName: checkData('urbanName', dataUpdate, dataPrevious),
+        zipCode: checkData('zipCode', dataUpdate, dataPrevious)
       }
     };
   },
@@ -296,3 +285,12 @@ export const global = createReducer(INITIAL_STATE, {
     };
   }
 });
+/**
+ * ===========================
+ * FUNCTION SERVICE
+ * ============================
+ */
+/** === CHECK DATA EXIST OR NOT ===  */
+function checkData(key, dataUpdate, dataPrevious) {
+  return dataUpdate[key] ? dataUpdate[key] : dataPrevious[key];
+}

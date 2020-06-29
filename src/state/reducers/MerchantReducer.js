@@ -67,6 +67,46 @@ const INITIAL_STATE = {
   dataGetPortfolio: null,
   merchantChanged: false,
   dataGetNoOrderReason: null,
+  dataMerchantVolatile: {
+    /** profile information */
+    phone: null,
+    fullName: null,
+    name: null,
+    idNo: null,
+    taxNo: null,
+    idImageUrl: null,
+    taxImageUrl: null,
+    selfieImageUrl: null,
+    /** merchant information */
+    numberOfEmployee: null,
+    largeArea: null,
+    topSellingBrand: null,
+    mostWantedBrand: null,
+    vehicleAccessibilityName: null,
+    vehicleAccessibilityId: null,
+    vehicleAccessibilityAmount: null,
+    /** merchant address */
+    address: null,
+    noteAddress: null,
+    longitude: null,
+    latitude: null,
+    province: null,
+    city: null,
+    district: null,
+    urban: null,
+    zipCode: null,
+    urbanId: null,
+    /** merchant profile */
+    imageUrl: null,
+    ownerId: null,
+    storeCode: null,
+    phoneNo: null,
+    /** merchant classification */
+    storeType: null,
+    storeGroup: null,
+    storeCluster: null,
+    storeChannel: null
+  },
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,

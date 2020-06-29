@@ -24,7 +24,7 @@ import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
 import * as ActionCreators from '../../../state/actions';
 import InputType1 from '../../../components/input/InputType1';
-import ModalBottomErrorResponsWhite from '../../../components/error/ModalBottomErrorResponsWhite';
+import ModalBottomErrorRespons from '../../../components/error/ModalBottomErrorRespons';
 
 class AddMerchantStep2 extends Component {
   constructor(props) {
@@ -347,7 +347,8 @@ class AddMerchantStep2 extends Component {
   /** MODAL */
   renderModalErrorAdd() {
     return this.state.openErrorAddMerchant ? (
-      <ModalBottomErrorResponsWhite
+      <ModalBottomErrorRespons
+        statusBarType={'white'}
         open={this.state.openErrorAddMerchant}
         onPress={() => {
           this.setState({ openErrorAddMerchant: false });

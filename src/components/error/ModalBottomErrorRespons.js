@@ -1,20 +1,46 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Text, Dimensions, Image } from 'react-native';
-import ModalBottomType1 from '../modal_bottom/ModalBottomType1';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarRedOP50 } from '../StatusBarGlobal';
-
-const { height, width } = Dimensions.get('window');
+import {
+  React,
+  Component,
+  View,
+  Text,
+  Image
+} from '../../library/reactPackage';
+import {
+  ModalBottomType1,
+  StatusBarRedOP50,
+  StatusBarBlackOP40,
+  StatusBarBlackOP40Translucent
+} from '../../library/component';
+import { GlobalStyle, Fonts } from '../../helpers';
 
 class ModalBottomErrorRespons extends Component {
   /**
-   * RENDER CONTENT
+   * ========================
+   * FUNCTIONAL
+   * ========================
    */
+  checkStatusBar() {
+    switch (this.props.statusBarType) {
+      case 'red':
+        return <StatusBarRedOP50 />;
+      case 'white':
+        return <StatusBarBlackOP40 />;
+      case 'transparent':
+        return <StatusBarBlackOP40Translucent />;
+      default:
+        return <StatusBarRedOP50 />;
+    }
+  }
+  /**
+   * ========================
+   * RENDER VIEW
+   * ========================
+   */
+  /** === RENDER CONTENT === */
   renderContent() {
     return (
       <View>
-        <StatusBarRedOP50 />
+        {this.checkStatusBar()}
         <View
           style={{
             justifyContent: 'center',
@@ -39,6 +65,7 @@ class ModalBottomErrorRespons extends Component {
       </View>
     );
   }
+  /** === MAIN === */
   render() {
     return (
       <ModalBottomType1
@@ -51,7 +78,5 @@ class ModalBottomErrorRespons extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({});
 
 export default ModalBottomErrorRespons;
