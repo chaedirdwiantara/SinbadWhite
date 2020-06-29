@@ -28,6 +28,8 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 /** SETTING */
 import DeviceInfo from 'react-native-device-info';
+/** MOMENT */
+import moment from 'moment'
 
 export {
   /** REDUX */
@@ -59,5 +61,7 @@ export {
   /** TEXT */
   RFPercentage,
   /** SETTING */
-  DeviceInfo
+  DeviceInfo,
+  /** MOMENT */
+  moment
 };

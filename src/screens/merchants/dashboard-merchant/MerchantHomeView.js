@@ -1,33 +1,36 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   TouchableOpacity,
   FlatList,
   SafeAreaView,
   Dimensions,
-  Image
-} from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import moment from 'moment';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { RFPercentage } from 'react-native-responsive-fontsize';
+  Image,
+  Text
+} from '../../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect,
+  moment,
+  MaterialIcon,
+  RFPercentage,
+} from '../../../library/thirdPartyPackage'
+import {
+  StatusBarRed,
+  ProductListType1,
+  LoadingPage,
+  ToastType1,
+  ModalConfirmation,
+  ModalBottomErrorRespons
+} from '../../../library/component'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers'
+import { Color } from '../../../config'
 import * as ActionCreators from '../../../state/actions';
-import GlobalStyle from '../../../helpers/GlobalStyle';
-import masterColor from '../../../config/masterColor.json';
-import Fonts from '../../../helpers/GlobalFont';
-import { MoneyFormat } from '../../../helpers/NumberFormater';
-import { StatusBarRed } from '../../../components/StatusBarGlobal';
 import NavigationService from '../../../navigation/NavigationService';
 import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
 import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
-import ProductListType1 from '../../../components/list/ProductListType1';
-import { LoadingPage } from '../../../components/Loading';
-import ToastType1 from '../../../components/toast/ToastType1';
-import ModalConfirmation from '../../../components/modal/ModalConfirmation';
-import ModalBottomErrorRespons from '../../../components/error/ModalBottomErrorRespons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -446,15 +449,15 @@ class MerchantHomeView extends Component {
                 <View style={{ flexDirection: 'row' }}>
                   <View>
                     {this.checkCheckListTask(item.activity) ? (
-                      <MaterialIcons
+                      <MaterialIcon
                         name="check-circle"
-                        color={masterColor.fontGreen50}
+                        color={Color.fontGreen50}
                         size={24}
                       />
                     ) : (
-                      <MaterialIcons
+                      <MaterialIcon
                         name="radio-button-unchecked"
-                        color={masterColor.fontBlack40}
+                        color={Color.fontBlack40}
                         size={24}
                       />
                     )}
@@ -464,9 +467,9 @@ class MerchantHomeView extends Component {
                   </View>
                 </View>
                 {/* <View>
-                  <MaterialIcons
+                  <MaterialIcon
                     name="chevron-right"
-                    color={masterColor.fontBlack40}
+                    color={Color.fontBlack40}
                     size={24}
                   />
                 </View> */}
@@ -677,7 +680,7 @@ const styles = StyleSheet.create({
     zIndex: 1000
   },
   backgroundRed: {
-    backgroundColor: masterColor.mainColor,
+    backgroundColor: Color.mainColor,
     height: 85
   },
   containerSlider: {
@@ -778,7 +781,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 10,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxFaktur: {
     marginBottom: 8
@@ -787,7 +790,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 4,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   /** for menu */
   containerMenu: {
