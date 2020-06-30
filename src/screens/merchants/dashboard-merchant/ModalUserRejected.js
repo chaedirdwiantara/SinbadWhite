@@ -25,26 +25,9 @@ class ModalUserRejected extends Component {
   toParentFunction(data) {
     this.props.parentFunction(data);
   }
-  /** === RENDER MODAL === */
-  renderModal() {
-    return (
-      <ModalBottomType3
-        title={this.props.title || ''}
-        open={this.props.open}
-        content={this.renderModalContent()}
-        onPress={this.props.onPress}
-      />
-    );
-  }
-  /** === RENDER MODAL CONTENT === */
-  renderModalContent() {
-    return (
-      <View style={{ alignItems: 'center' }}>
-        {this.props.white ? <StatusBarBlackOP40 /> : <StatusBarRedOP50 />}
-        <Image
-          source={require('../../../assets/images/sinbad_image/failed_error.png')}
-          style={{ width: 208, height: 156 }}
-        />
+  modalSupplier(){
+    return(
+      <View style={{ alignItems: 'center', flex: 1, width: '100%' }}>
         <Text style={[Fonts.type7, { paddingVertical: 8 }]}>
           Akun kamu gagal ter-verifikasi
         </Text>
@@ -66,6 +49,60 @@ class ModalUserRejected extends Component {
             }
           />
         </View>
+      </View>
+    )
+  }
+  modalSinbad(){
+    return(
+      <View style={{ alignItems: 'center', flex: 1, width: '100%' }}>
+        <Text style={[Fonts.type7, { paddingVertical: 8 }]}>
+          Akun kamu gagal verifikasi nih
+        </Text>
+        <Text style={Fonts.type17}>
+          Maaf ya, akun kamu gagal diverifikasi oleh kami.
+        </Text>
+        <Text style={Fonts.type17}>
+          Kirim data ulang atau jika ada pertanyaan
+        </Text>
+        <Text style={Fonts.type17}>
+          telfon CS kami ya!
+        </Text>
+
+        <View style={{ width: '100%', paddingTop: 40 }}>
+          <ButtonSingle
+            borderRadius={4}
+            title={'Hubungi CS'}
+            onPress={() =>
+              this.toParentFunction({
+                type: 'goToProfile'
+              })
+            }
+          />
+        </View>
+      </View>
+    )
+  }
+  /** === RENDER MODAL === */
+  renderModal() {
+    return (
+      <ModalBottomType3
+        title={this.props.title || ''}
+        open={this.props.open}
+        content={this.renderModalContent()}
+        onPress={this.props.onPress}
+      />
+    );
+  }
+  /** === RENDER MODAL CONTENT === */
+  renderModalContent() {
+    return (
+      <View style={{ alignItems: 'center' }}>
+        {this.props.white ? <StatusBarBlackOP40 /> : <StatusBarRedOP50 />}
+        <Image
+          source={require('../../../assets/images/sinbad_image/failed_error.png')}
+          style={{ width: 208, height: 156 }}
+        />
+        {this.props.ModalType === 'sinbad' ? this.modalSinbad() : this.modalSupplier()}
       </View>
     );
   }
