@@ -14,13 +14,6 @@ import {
 import { Fonts } from '../../../helpers';
 
 class ModalUserRejected extends Component {
-  constructor(props){
-    super(props)
-    this.state = {
-      title: '',
-      subtitle: ''
-    }
-  }
   /** SEND TO PARENT */
   toParentFunction(data) {
     this.props.parentFunction(data);
