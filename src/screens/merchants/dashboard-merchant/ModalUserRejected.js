@@ -74,7 +74,7 @@ class ModalUserRejected extends Component {
             title={'Hubungi CS'}
             onPress={() =>
               this.toParentFunction({
-                type: 'goToProfile'
+                type: 'goToCallCS'
               })
             }
           />
