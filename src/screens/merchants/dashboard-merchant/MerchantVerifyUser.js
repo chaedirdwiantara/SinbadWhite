@@ -1,6 +1,12 @@
 import { React, Component, View } from '../../../library/reactPackage';
+import {
+  connect,
+  bindActionCreators
+} from '../../../library/thirdPartyPackage'
+import * as ActionCreators from '../../../state/actions';
 import ModalUserRejected from './ModalUserRejected';
 import CallCS from '../../global/CallCS';
+import NavigationService from '../../../navigation/NavigationService';
 
 class MerchantVerifyUser extends Component {
   constructor(props) {
@@ -20,6 +26,9 @@ class MerchantVerifyUser extends Component {
     switch (data.type) {
       case 'goToMerchantProfile':
         this.setState({ modalRejected: false });
+        NavigationService.navigate('MerchantDetailView', {
+          storeId: this.props.merchant.selectedMerchant.store.id
+        });
         break;
       case 'goToCallCS':
         this.setState({
@@ -139,4 +148,14 @@ class MerchantVerifyUser extends Component {
   }
 }
 
-export default MerchantVerifyUser;
+// export default MerchantVerifyUser;
+const mapStateToProps = ({ auth, merchant, user, permanent }) => {
+  return { auth, merchant, user, permanent };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
+
+// eslint-disable-next-line prettier/prettier
+export default connect(mapStateToProps, mapDispatchToProps)(MerchantVerifyUser)

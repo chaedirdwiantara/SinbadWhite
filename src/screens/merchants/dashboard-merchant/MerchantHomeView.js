@@ -85,7 +85,7 @@ class MerchantHomeView extends Component {
       ],
       data: {
         sinbad: 'rejected',
-        supplier: 'pending'
+        supplier: 'rejected'
       }
       
     };
