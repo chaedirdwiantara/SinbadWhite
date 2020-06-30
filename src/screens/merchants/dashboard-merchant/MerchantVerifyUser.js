@@ -148,14 +148,8 @@ class MerchantVerifyUser extends Component {
   }
 }
 
-// export default MerchantVerifyUser;
-const mapStateToProps = ({ auth, merchant, user, permanent }) => {
-  return { auth, merchant, user, permanent };
+const mapStateToProps = ({ merchant }) => {
+  return { merchant };
 };
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(ActionCreators, dispatch);
-};
-
-// eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(MerchantVerifyUser)
+export default connect(mapStateToProps)(MerchantVerifyUser)
