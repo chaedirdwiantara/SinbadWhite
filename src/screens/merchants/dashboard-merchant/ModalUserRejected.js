@@ -29,22 +29,22 @@ class ModalUserRejected extends Component {
     return(
       <View style={{ alignItems: 'center', flex: 1, width: '100%' }}>
         <Text style={[Fonts.type7, { paddingVertical: 8 }]}>
-          Akun kamu gagal ter-verifikasi
+          Akun Toko Gagal ter-Verifikasi
         </Text>
         <Text style={Fonts.type17}>
-          Data pada akun kamu gagal terverifikasi nih,
+          Data pada akun toko gagal terverifikasi nih,
         </Text>
         <Text style={Fonts.type17}>
-          Yuk, Periksa halaman profile dan lengkapi data Anda
+          Yuk, Periksa halaman profile dan lengkapi data toko
         </Text>
 
         <View style={{ width: '100%', paddingTop: 40 }}>
           <ButtonSingle
             borderRadius={4}
-            title={'Lengkapi Data Diri'}
+            title={'Lengkapi Data Toko'}
             onPress={() =>
               this.toParentFunction({
-                type: 'goToProfile'
+                type: 'goToMerchantProfile'
               })
             }
           />
