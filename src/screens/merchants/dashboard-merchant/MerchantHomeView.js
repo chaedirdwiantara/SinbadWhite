@@ -31,6 +31,7 @@ import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
 import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
 import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
+import MerchantVerifyUser from './MerchantVerifyUser'
 
 const { width, height } = Dimensions.get('window');
 
@@ -41,6 +42,7 @@ class MerchantHomeView extends Component {
       openModalCheckout: false,
       openModalConfirmNoOrder: false,
       openModalErrorGlobal: false,
+      openModalCheckUser: false,
       checkNoOrder: false,
       showToast: false,
       loadingPostForCheckoutNoOrder: false,
@@ -80,7 +82,12 @@ class MerchantHomeView extends Component {
           name: 'Keluar Toko',
           activity: 'check_out'
         }
-      ]
+      ],
+      data: {
+        sinbad: 'rejected',
+        supplier: 'pending'
+      }
+      
     };
   }
   /**
@@ -221,7 +228,7 @@ class MerchantHomeView extends Component {
   goTo(page) {
     switch (page) {
       case 'pdp':
-        NavigationService.navigate('PdpView');
+        this.setState({ openModalCheckUser: true })
         break;
       case 'history':
         NavigationService.navigate('HistoryView', {
@@ -238,6 +245,17 @@ class MerchantHomeView extends Component {
         });
         this.setState({ openModalCheckout: true });
         break;
+      default:
+        break;
+    }
+  }
+  /** CALLED FROM CHILD */
+  parentFunction(data){
+    switch (data.type) {
+      case 'pdp':
+        NavigationService.navigate('PdpView');
+        break;
+    
       default:
         break;
     }
@@ -431,7 +449,7 @@ class MerchantHomeView extends Component {
               paddingBottom: 10
             }}
           >
-            <Text style={Fonts.type64}>Task List</Text>
+            <Text style={Fonts.type64}>Task List {this.state.data.sinbad}</Text>
             <Text style={Fonts.type31}>
               {this.checkTotalCompleteTask()}/{this.state.task.length} Selesai
             </Text>
@@ -639,6 +657,18 @@ class MerchantHomeView extends Component {
       <View />
     );
   }
+  /** RENDER MODAL REJECTED */
+  renderModalVerifyUser(){
+    return this.state.openModalCheckUser ? (
+      <MerchantVerifyUser 
+        data={this.state.data}
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+      />
+    ) : (
+      <View />
+    )
+  }
   /** BACKGROUND */
   renderBackground() {
     return <View style={styles.backgroundRed} />;
@@ -667,6 +697,7 @@ class MerchantHomeView extends Component {
         {this.renderModalNoOrderConfirmation()}
         {this.renderToast()}
         {this.renderModalErrorRespons()}
+        {this.renderModalVerifyUser()}
         <ModalBottomSuccessOrder />
       </SafeAreaView>
     );
