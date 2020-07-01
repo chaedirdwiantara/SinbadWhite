@@ -37,9 +37,7 @@ class MerchantDetailView extends Component {
    * ==============================
    */
   componentDidMount() {
-    this.props.merchantGetDetailProcess(
-      this.props.navigation.state.params.storeId
-    );
+    this.props.merchantGetDetailProcess(this.props.navigation.state.params.id);
   }
   /** === COMBINE ADDRESS === */
   combineAddress(item) {

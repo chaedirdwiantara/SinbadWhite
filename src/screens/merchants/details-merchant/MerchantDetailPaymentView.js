@@ -45,7 +45,7 @@ class MerchantDetailProfileView extends Component {
   }
   /** === RENDER CONTENT === */
   renderContent() {
-    return this.props.merchant.dataGetMerchantDetail.creditLimitStores.map(
+    return this.props.merchant.dataGetMerchantDetail.store.creditLimitStores.map(
       (item, index) => {
         return (
           <View
