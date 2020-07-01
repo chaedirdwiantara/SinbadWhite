@@ -39,7 +39,7 @@ class TakeMerchantPicture extends Component {
     this.setState({ loading: true });
     const cropData = {
       offset: { x: 400, y: 400 },
-      size: { width: 2300, height: 2900 }
+      size: { height: 2300, width: 2900 }
     };
 
     if (this.camera) {
@@ -48,7 +48,7 @@ class TakeMerchantPicture extends Component {
         base64: true,
         pauseAfterCapture: true,
         fixOrientation: true,
-        orientation: 'portrait'
+        orientation: 'landscapeLeft'
       };
       const data = await this.camera.takePictureAsync(options);
       ImageEditor.cropImage(data.uri, cropData).then(url => {

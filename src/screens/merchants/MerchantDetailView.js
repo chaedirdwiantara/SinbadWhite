@@ -180,7 +180,7 @@ class MerchantDetailView extends Component {
               source={{
                 uri: this.props.merchant.dataGetMerchantDetail.imageUrl
               }}
-              style={styles.imageHeader}
+              style={{ width: '100%', height: 169 }}
             />
           ) : (
             <View

@@ -338,9 +338,9 @@ class MerchantEditPartialView extends Component {
         ) : (
           this.renderUploadedImage({
             image: this.props.merchant.dataMerchantVolatile.imageUrl,
-            marginTop: -50,
+            marginTop: -40,
             marginTopRetakeText: -30,
-            rotate: true
+            rotate: false
           })
         )}
       </View>
