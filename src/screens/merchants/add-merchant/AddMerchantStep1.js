@@ -46,7 +46,7 @@ class AddMerchantStep1 extends Component {
     ) {
       if (this.props.auth.dataCheckPhoneAvailble !== null) {
         NavigationService.navigate('AddMerchantStep2');
-        this.props.saveVolatileDataAddMerchant({
+        this.props.saveVolatileDataMerchant({
           phone: this.state.phoneNumber
         });
       }

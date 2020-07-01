@@ -152,82 +152,33 @@ export const merchant = createReducer(INITIAL_STATE, {
     };
   },
   /**
-   * ==================================
-   * SAVE VOLATILE DATA TO EDIT MERCHANT
-   * =================================
+   * ==========================
+   * PORTFOLIO LIST
+   * ==========================
    */
-  [types.MERCHANT_EDIT_DATA_VOLATILE](state, action) {
+  [types.PORTFOLIO_GET_PROCESS](state, action) {
     return {
       ...state,
-      dataEditMerchantVolatile: {
-        vehicleAccessibilityId: action.payload.vehicleAccessibilityId
-          ? action.payload.vehicleAccessibilityId
-          : state.dataEditMerchantVolatile.vehicleAccessibilityId,
-        vehicleAccessibilityName: action.payload.vehicleAccessibilityName
-          ? action.payload.vehicleAccessibilityName
-          : state.dataEditMerchantVolatile.vehicleAccessibilityName,
-        storeTypeId: action.payload.storeTypeId
-          ? action.payload.storeTypeId
-          : state.dataEditMerchantVolatile.storeTypeId,
-        storeTypeName: action.payload.storeTypeName
-          ? action.payload.storeTypeName
-          : state.dataEditMerchantVolatile.storeTypeName,
-        storeGroupId: action.payload.storeGroupId
-          ? action.payload.storeGroupId
-          : state.dataEditMerchantVolatile.storeGroupId,
-        storeGroupName: action.payload.storeGroupName
-          ? action.payload.storeGroupName
-          : state.dataEditMerchantVolatile.storeGroupName,
-        storeClustersId: action.payload.storeClustersId
-          ? action.payload.storeClustersId
-          : state.dataEditMerchantVolatile.storeClustersId,
-        storeClustersName: action.payload.storeClustersName
-          ? action.payload.storeClustersName
-          : state.dataEditMerchantVolatile.storeClustersName,
-        storeChannelId: action.payload.storeChannelId
-          ? action.payload.storeChannelId
-          : state.dataEditMerchantVolatile.storeChannelId,
-        storeChannelName: action.payload.storeChannelName
-          ? action.payload.storeChannelName
-          : state.dataEditMerchantVolatile.storeChannelName
-      }
+      loadingGetPortfolio: true,
+      loadingGetMerchant: true,
+      dataGetPortfolio: null,
+      errorGetPortfolio: null
     };
   },
-  /**
-   * ==================================
-   * SAVE VOLATILE DATA TO ADD MERCHANT
-   * =================================
-   */
-  [types.MERCHANT_ADD_DATA_VOLATILE](state, action) {
+  [types.PORTFOLIO_GET_SUCCESS](state, action) {
     return {
       ...state,
-      dataAddMerchantVolatile: {
-        name: action.payload.name ? action.payload.name : '',
-        address: action.payload.address ? action.payload.address : '',
-        longitude: action.payload.longitude ? action.payload.longitude : '',
-        latitude: action.payload.latitude ? action.payload.latitude : '',
-        user: {
-          fullName: action.payload.fullName ? action.payload.fullName : '',
-          idNo: action.payload.idNo ? action.payload.idNo : '',
-          taxNo: action.payload.taxNo ? action.payload.taxNo : '',
-          phone: action.payload.phone ? action.payload.phone : '',
-          roles: [1]
-        },
-        supplier: {
-          supplierId: action.payload.supplierId
-            ? action.payload.supplierId
-            : '',
-          supplierName: action.payload.supplierName
-            ? action.payload.supplierName
-            : ''
-        },
-        detailAddress: {
-          province: action.payload.province ? action.payload.province : '',
-          city: action.payload.city ? action.payload.city : '',
-          district: action.payload.district ? action.payload.district : '',
-          urban: action.payload.urban ? action.payload.urban : ''
-        }
-      }
+      loadingGetPortfolio: false,
+      loadingGetMerchant: false,
+      dataGetPortfolio: action.payload
+    };
+  },
+  [types.PORTFOLIO_GET_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetPortfolio: false,
+      loadingGetMerchant: false,
+      errorGetPortfolio: action.payload
     };
   },
   /**
@@ -304,48 +255,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetMerchantDetail: false,
       dataGetMerchantDetail: action.payload,
-      dataEditMerchantVolatile: {
-        vehicleAccessibilityId:
-          action.payload.vehicleAccessibilityId !== null
-            ? action.payload.vehicleAccessibilityId
-            : '',
-        vehicleAccessibilityName:
-          action.payload.vehicleAccessibility !== null
-            ? action.payload.vehicleAccessibility.name
-            : '',
-        storeTypeId:
-          action.payload.storeTypes.length > 0
-            ? action.payload.storeTypes[0].type.id
-            : '',
-        storeTypeName:
-          action.payload.storeTypes.length > 0
-            ? action.payload.storeTypes[0].type.name
-            : '',
-        storeGroupId:
-          action.payload.storeGroups.length > 0
-            ? action.payload.storeGroups[0].group.id
-            : '',
-        storeGroupName:
-          action.payload.storeGroups.length > 0
-            ? action.payload.storeGroups[0].group.name
-            : '',
-        storeClusterId:
-          action.payload.storeClusters.length > 0
-            ? action.payload.storeClusters[0].cluster.id
-            : '',
-        storeClusterName:
-          action.payload.storeClusters.length > 0
-            ? action.payload.storeClusters[0].cluster.name
-            : '',
-        storeChannelId:
-          action.payload.storeChannels.length > 0
-            ? action.payload.storeChannels[0].channel.id
-            : '',
-        storeChannelName:
-          action.payload.storeChannels.length > 0
-            ? action.payload.storeChannels[0].channel.name
-            : ''
-      }
+      dataMerchantVolatile: saveDataMerchantVolatile(action.payload)
     };
   },
   [types.MERCHANT_GET_DETAIL_FAILED](state, action) {
@@ -356,33 +266,71 @@ export const merchant = createReducer(INITIAL_STATE, {
     };
   },
   /**
-   * ==========================
-   * PORTFOLIO LIST
-   * ==========================
+   * ==================================
+   * SAVE VOLATILE DATA MERCHANT
+   * =================================
    */
-  [types.PORTFOLIO_GET_PROCESS](state, action) {
+  [types.MERCHANT_SAVE_DATA_VOLATILE](state, action) {
+    const dataUpdate = action.payload;
+    const dataPrevious = state.dataMerchantVolatile;
     return {
       ...state,
-      loadingGetPortfolio: true,
-      loadingGetMerchant: true,
-      dataGetPortfolio: null,
-      errorGetPortfolio: null
-    };
-  },
-  [types.PORTFOLIO_GET_SUCCESS](state, action) {
-    return {
-      ...state,
-      loadingGetPortfolio: false,
-      loadingGetMerchant: false,
-      dataGetPortfolio: action.payload
-    };
-  },
-  [types.PORTFOLIO_GET_FAILED](state, action) {
-    return {
-      ...state,
-      loadingGetPortfolio: false,
-      loadingGetMerchant: false,
-      errorGetPortfolio: action.payload
+      dataMerchantVolatile: {
+        /** profile information */
+        phone: checkData('phone', dataUpdate, dataPrevious),
+        fullName: checkData('fullName', dataUpdate, dataPrevious),
+        name: checkData('name', dataUpdate, dataPrevious),
+        idNo: checkData('idNo', dataUpdate, dataPrevious),
+        taxNo: checkData('taxNo', dataUpdate, dataPrevious),
+        idImageUrl: checkData('idImageUrl', dataUpdate, dataPrevious),
+        taxImageUrl: checkData('taxImageUrl', dataUpdate, dataPrevious),
+        selfieImageUrl: checkData('selfieImageUrl', dataUpdate, dataPrevious),
+        /** merchant information */
+        numberOfEmployee: checkData(
+          'numberOfEmployee',
+          dataUpdate,
+          dataPrevious
+        ),
+        largeArea: checkData('largeArea', dataUpdate, dataPrevious),
+        topSellingBrand: checkData('topSellingBrand', dataUpdate, dataPrevious),
+        mostWantedBrand: checkData('mostWantedBrand', dataUpdate, dataPrevious),
+        vehicleAccessibilityName: checkData(
+          'vehicleAccessibilityName',
+          dataUpdate,
+          dataPrevious
+        ),
+        vehicleAccessibilityId: checkData(
+          'vehicleAccessibilityId',
+          dataUpdate,
+          dataPrevious
+        ),
+        vehicleAccessibilityAmount: checkData(
+          'vehicleAccessibilityAmount',
+          dataUpdate,
+          dataPrevious
+        ),
+        /** merchant address */
+        address: checkData('address', dataUpdate, dataPrevious),
+        noteAddress: checkData('noteAddress', dataUpdate, dataPrevious),
+        longitude: checkData('longitude', dataUpdate, dataPrevious),
+        latitude: checkData('latitude', dataUpdate, dataPrevious),
+        province: checkData('province', dataUpdate, dataPrevious),
+        city: checkData('city', dataUpdate, dataPrevious),
+        district: checkData('district', dataUpdate, dataPrevious),
+        urban: checkData('urban', dataUpdate, dataPrevious),
+        zipCode: checkData('zipCode', dataUpdate, dataPrevious),
+        urbanId: checkData('urbanId', dataUpdate, dataPrevious),
+        /** merchant profile */
+        imageUrl: checkData('imageUrl', dataUpdate, dataPrevious),
+        ownerId: checkData('ownerId', dataUpdate, dataPrevious),
+        storeCode: checkData('storeCode', dataUpdate, dataPrevious),
+        phoneNo: checkData('phoneNo', dataUpdate, dataPrevious),
+        /** merchant classification */
+        storeType: checkData('storeType', dataUpdate, dataPrevious),
+        storeGroup: checkData('storeGroup', dataUpdate, dataPrevious),
+        storeCluster: checkData('storeCluster', dataUpdate, dataPrevious),
+        storeChannel: checkData('storeChannel', dataUpdate, dataPrevious)
+      }
     };
   },
   /**
@@ -577,3 +525,60 @@ export const merchant = createReducer(INITIAL_STATE, {
     };
   }
 });
+/**
+ * ===========================
+ * FUNCTION SERVICE
+ * ============================
+ */
+/** === CHECK DATA UNDEFINED OR NOT === */
+function checkData(key, dataUpdate, dataPrevious) {
+  return dataUpdate[key] !== undefined ? dataUpdate[key] : dataPrevious[key];
+}
+/** === SAVE DATA VOLATILE MERCHANT === */
+function saveDataMerchantVolatile(data) {
+  return {
+    /** for owner data */
+    ownerId: data.owner.id,
+    fullName: data.owner.fullName,
+    email: data.owner.email,
+    phone: data.owner.mobilePhoneNo,
+    idNo: data.owner.idNo,
+    taxNo: data.owner.taxNo,
+    taxImageUrl: data.owner.taxImageUrl,
+    idImageUrl: data.owner.idImageUrl,
+    selfieImageUrl: data.owner.idImageUrl,
+    /** for merchant information */
+    storeCode: data.storeCode,
+    name: data.name,
+    phoneNo: data.phoneNo,
+    imageUrl: data.imageUrl,
+    /** for merchant completeness information */
+    numberOfEmployee: data.numberOfEmployee,
+    largeArea: data.largeArea,
+    topSellingBrand: data.topSellingBrand,
+    mostWantedBrand: data.mostWantedBrand,
+    vehicleAccessibilityId: data.vehicleAccessibilityId,
+    vehicleAccessibilityName:
+      data.vehicleAccessibility !== null ? data.vehicleAccessibility.name : '',
+    vehicleAccessibilityAmount: data.vehicleAccessibilityAmount,
+    /** for address */
+    address: data.address,
+    noteAddress: data.noteAddress,
+    longitude: data.longitude,
+    latitude: data.latitude,
+    urbanId: data.urbanId,
+    province: data.urban !== null ? data.urban.province.name : '',
+    city: data.urban !== null ? data.urban.city : '',
+    district: data.urban !== null ? data.urban.district : '',
+    urban: data.urban !== null ? data.urban.urban : '',
+    zipCode: data.urban !== null ? data.urban.zipCode : '',
+    /** for store clasification */
+    storeType: data.storeTypes.length > 0 ? data.storeTypes[0].type.name : '',
+    storeGroup:
+      data.storeGroups.length > 0 ? data.storeGroups[0].group.name : '',
+    storeCluster:
+      data.storeClusters.length > 0 ? data.storeClusters[0].cluster.name : '',
+    storeChannel:
+      data.storeChannels.length > 0 ? data.storeChannels[0].channel.name : ''
+  };
+}

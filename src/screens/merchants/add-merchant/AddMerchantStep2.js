@@ -15,7 +15,6 @@ import {
   ButtonSingle,
   StatusBarWhite,
   ProgressBarType1,
-  DropdownType1,
   InputType2,
   InputType4,
   InputMapsType1
@@ -23,33 +22,34 @@ import {
 import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
 import * as ActionCreators from '../../../state/actions';
-import InputType1 from '../../../components/input/InputType1';
 import ModalBottomErrorRespons from '../../../components/error/ModalBottomErrorRespons';
 
 class AddMerchantStep2 extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      /** error */
       errorIdNumber: false,
       errorTaxNumber: false,
-      fullName: this.props.merchant.dataAddMerchantVolatile.user.fullName,
-      name: this.props.merchant.dataAddMerchantVolatile.name,
-      phone: this.props.merchant.dataAddMerchantVolatile.user.phone,
+      openErrorAddMerchant: false,
+      /** for maps refresh */
+      refreshLocation: false,
+      /** supplier */
       supplier:
         this.props.user.userSuppliers.length === 1
           ? this.props.user.userSuppliers[0].supplier.id
-          : this.props.merchant.dataAddMerchantVolatile.supplier.supplierId,
+          : '',
       supplierName:
         this.props.user.userSuppliers.length === 1
           ? this.props.user.userSuppliers[0].supplier.name
-          : this.props.merchant.dataAddMerchantVolatile.supplier.supplierName,
-      idNo: this.props.merchant.dataAddMerchantVolatile.user.idNo,
-      taxNo: this.props.merchant.dataAddMerchantVolatile.user.taxNo,
-      address: this.props.merchant.dataAddMerchantVolatile.address,
-      longitude: this.props.global.longitude,
-      latitude: this.props.global.latitude,
-      refreshLocation: false,
-      openErrorAddMerchant: false
+          : '',
+      /** field data */
+      fullName: this.props.merchant.dataMerchantVolatile.fullName,
+      name: this.props.merchant.dataMerchantVolatile.name,
+      idNo: this.props.merchant.dataMerchantVolatile.idNo,
+      taxNo: this.props.merchant.dataMerchantVolatile.taxNo,
+      address: this.props.merchant.dataMerchantVolatile.address,
+      noteAddress: this.props.merchant.dataMerchantVolatile.noteAddress
     };
   }
   /**
@@ -112,26 +112,23 @@ class AddMerchantStep2 extends Component {
   /** SEND DATA ADD MERCHANT */
   finalStep() {
     Keyboard.dismiss();
-    this.props.saveVolatileDataAddMerchant({
+    this.props.saveVolatileDataMerchant({
       fullName: this.state.fullName,
       name: this.state.name,
-      supplierId: this.state.supplier,
-      supplierName: this.state.supplierName,
       idNo: this.state.idNo,
       taxNo: this.state.taxNo,
-      phone: this.state.phone,
-      address: this.state.address,
       longitude: this.props.global.longitude,
       latitude: this.props.global.latitude,
-      province: this.props.global.dataGlobalLongLatToAddress.province,
-      city: this.props.global.dataGlobalLongLatToAddress.city,
-      district: this.props.global.dataGlobalLongLatToAddress.district,
-      urban: this.props.global.dataGlobalLongLatToAddress.urban
+      address: this.state.address,
+      noteAddress: this.state.noteAddress,
+      vehicleAccessibilityAmount: this.state.vehicleAccessibilityAmount,
+      urbanId: this.props.global.dataGetUrbanId[0].id
     });
     setTimeout(() => {
-      this.props.merchantAddProcess(
-        this.props.merchant.dataAddMerchantVolatile
-      );
+      console.log('addd merchant');
+      // this.props.merchantAddProcess(
+      //   this.props.merchant.dataAddMerchantVolatile
+      // );
     }, 100);
   }
   /** GO TO DROPDOWN LIST */
@@ -144,13 +141,16 @@ class AddMerchantStep2 extends Component {
   /** disable button */
   buttonDisable() {
     return (
-      this.state.fullName !== '' &&
-      this.state.name !== '' &&
-      this.state.idNo.length === 16 &&
-      this.state.supplier !== '' &&
-      this.state.address !== '' &&
-      this.props.global.longitude !== '' &&
-      this.props.global.latitude !== ''
+      this.state.fullName === null ||
+      this.state.name === null ||
+      this.state.idNo === null ||
+      this.state.taxNo === null ||
+      this.state.errorIdNumber ||
+      this.state.errorTaxNumber ||
+      this.state.address === null ||
+      this.props.global.longitude === '' ||
+      this.props.global.latitude === '' ||
+      this.props.global.dataGetUrbanId === null
     );
   }
   /** GO TO MAPS */
@@ -192,8 +192,7 @@ class AddMerchantStep2 extends Component {
       </View>
     );
   }
-  /** === RENDER CONTENT === */
-  /** owner name */
+  /** === OWNER NAME === */
   renderNameOwner() {
     return (
       <InputType4
@@ -209,7 +208,7 @@ class AddMerchantStep2 extends Component {
       />
     );
   }
-  /** merchant name */
+  /** === MERCHANT NAME === */
   renderNameMerchant() {
     return (
       <InputType4
@@ -222,58 +221,23 @@ class AddMerchantStep2 extends Component {
       />
     );
   }
-  /** supplier */
+  /** === SUPPLIER === */
   renderSupplier() {
-    return this.props.user.userSuppliers.length === 1 ? (
-      <InputType1
-        title={'*Supplier'}
-        editable={false}
-        placeholder={this.props.user.userSuppliers[0].supplier.name}
-        keyboardType={'default'}
-        text={text => this.setState({ supplier: text })}
-        error={false}
-        errorText={''}
-      />
-    ) : (
-      <DropdownType1
-        title={'Suplier Toko'}
-        placeholder={'Pilih Suplier Toko'}
-        selectedDropdownText={
-          this.props.merchant.dataAddMerchantVolatile.supplier.supplierName
-        }
-        openDropdown={() =>
-          this.goToDropdown({
-            type: 'suplierMerchant',
-            placeholder: 'Cari Suplier Toko'
-          })
-        }
-      />
-    );
-  }
-  /** tax Owner */
-  renderTaxId() {
     return (
       <InputType4
-        title={'Nomor Pokok Wajib Pajak (NPWP)'}
-        value={this.state.taxNo}
-        onChangeText={taxNo => {
-          const cleanNumber = taxNo.replace(/[^0-9]/g, '');
-          this.checkTaxNoFormat(cleanNumber);
-        }}
-        placeholder={'Masukan NPWP pemilik maks.15 Digit'}
-        keyboardType={'numeric'}
-        error={this.state.errorTaxNumber}
-        errorText={'Pastikan No.NPWP maks. 15 Digit'}
-        maxLength={15}
+        title={'*Supplier'}
+        editable={false}
+        placeholder={this.state.supplierName}
+        keyboardType={'default'}
         marginBottom={16}
       />
     );
   }
-  /** id owner */
+  /** === OWNER ID NO === */
   renderIdNo() {
     return (
       <InputType4
-        title={'Nomor Kartu Tanda Penduduk (KTP)'}
+        title={'*Nomor Kartu Tanda Penduduk (KTP)'}
         value={this.state.idNo}
         onChangeText={idNo => {
           const cleanNumber = idNo.replace(/[^0-9]/g, '');
@@ -288,30 +252,65 @@ class AddMerchantStep2 extends Component {
       />
     );
   }
-  /** address */
-  renderAddress() {
+  /** === OWNER TAX NO === */
+  renderTaxId() {
     return (
-      <InputType2
-        title={'*Detail Alamat'}
-        value={this.state.address}
-        placeholder={'Masukkan Alamat lengkap Toko'}
-        keyboardType={'default'}
-        text={text => this.setState({ address: text })}
-        error={false}
-        errorText={''}
+      <InputType4
+        title={'*Nomor Pokok Wajib Pajak (NPWP)'}
+        value={this.state.taxNo}
+        onChangeText={taxNo => {
+          const cleanNumber = taxNo.replace(/[^0-9]/g, '');
+          this.checkTaxNoFormat(cleanNumber);
+        }}
+        placeholder={'Masukan NPWP pemilik maks.15 Digit'}
+        keyboardType={'numeric'}
+        error={this.state.errorTaxNumber}
+        errorText={'Pastikan No.NPWP maks. 15 Digit'}
+        maxLength={15}
+        marginBottom={16}
       />
     );
   }
-  /** maps */
+  /** === LONG LAT MAPS === */
   renderMaps() {
     return (
       <InputMapsType1
         change
         title={'*Koordinat Lokasi'}
+        urbanId={this.props.global.dataGetUrbanId}
         selectedMapLong={this.props.global.longitude}
         selectedMapLat={this.props.global.latitude}
-        refresh={this.state.refreshLocation}
+        refresh={this.state.refreshLongLat}
+        marginBottom={50}
         openMaps={() => this.goToMaps()}
+      />
+    );
+  }
+  /** === MERCHANT ADDRESS === */
+  renderAddress() {
+    return (
+      <InputType2
+        title={'*Detail Alamat'}
+        value={this.state.address}
+        placeholder={'Contoh : Jl. Kemang Raya No.58, RT.8/RW…'}
+        keyboardType={'default'}
+        text={address => this.setState({ address })}
+        error={false}
+        errorText={''}
+      />
+    );
+  }
+  /** === MERCHANT NOTE ADDRESS === */
+  renderNoteAddress() {
+    return (
+      <InputType2
+        title={'Catatan Alamat'}
+        value={this.state.noteAddress}
+        placeholder={'Contoh : Masuk Gang arjuna depan toko cilok'}
+        keyboardType={'default'}
+        text={noteAddress => this.setState({ noteAddress })}
+        error={false}
+        errorText={''}
       />
     );
   }
@@ -321,11 +320,12 @@ class AddMerchantStep2 extends Component {
       <View style={{ flex: 1, paddingTop: 20 }}>
         {this.renderNameOwner()}
         {this.renderNameMerchant()}
-        {/* {this.renderSupplier()} */}
+        {this.renderSupplier()}
         {this.renderIdNo()}
         {this.renderTaxId()}
         {this.renderMaps()}
         {this.renderAddress()}
+        {this.renderNoteAddress()}
         <View style={{ paddingBottom: 50 }} />
       </View>
     );
@@ -335,7 +335,7 @@ class AddMerchantStep2 extends Component {
     return (
       <ButtonSingle
         disabled={
-          !this.buttonDisable() || this.props.merchant.loadingAddMerchant
+          this.buttonDisable() || this.props.merchant.loadingAddMerchant
         }
         title={'Lanjutkan'}
         loading={this.props.merchant.loadingAddMerchant}
