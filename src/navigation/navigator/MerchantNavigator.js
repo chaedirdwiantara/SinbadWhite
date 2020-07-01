@@ -14,6 +14,7 @@ import MerchantCheckinView from '../../screens/merchants/dashboard-merchant/Merc
 import MerchantNoOrderReason from '../../screens/merchants/dashboard-merchant/MerchantNoOrderReason';
 /** merchant detail */
 import MerchantDetailProfileView from '../../screens/merchants/details-merchant/MerchantDetailProfileView';
+import MerchantDetailAccountView from '../../screens/merchants/details-merchant/MerchantDetailAccountView';
 import MerchantDetailInformationView from '../../screens/merchants/details-merchant/MerchantDetailInformationView';
 import MerchantDetailPaymentView from '../../screens/merchants/details-merchant/MerchantDetailPaymentView';
 import MerchantDetailAddressView from '../../screens/merchants/details-merchant/MerchantDetailAddressView';
@@ -118,6 +119,24 @@ const MerchantNavigator = {
     screen: MerchantDetailProfileView,
     navigationOptions: {
       headerTitle: 'Information Profil',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  MerchantDetailAccountView: {
+    screen: MerchantDetailAccountView,
+    navigationOptions: {
+      headerTitle: 'Akun Toko',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
