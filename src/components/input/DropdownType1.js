@@ -1,9 +1,14 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import Text from 'react-native-text';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import {
+  React,
+  Component,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity
+} from '../../library/reactPackage';
+import { MaterialIcon } from '../../library/thirdPartyPackage';
+import { Fonts } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
 
 class DropdownType1 extends Component {
   constructor(props) {
@@ -23,15 +28,21 @@ class DropdownType1 extends Component {
       </View>
     );
   }
-  /** === RENDER BAR === */
+  /** === RENDER INPUT === */
   selectedDropdown() {
     return (
       <TouchableOpacity
         style={styles.boxInput}
         onPress={this.props.openDropdown}
       >
-        <View>
-          {this.props.selectedDropdownText !== '' ? (
+        {this.props.prefixes ? (
+          <View style={styles.boxPrefixes}>{this.props.prefixes}</View>
+        ) : (
+          <View />
+        )}
+        <View style={{ marginLeft: this.props.prefixes ? 40 : 0 }}>
+          {this.props.selectedDropdownText !== '' &&
+          this.props.selectedDropdownText !== null ? (
             <Text style={Fonts.type24}>{this.props.selectedDropdownText}</Text>
           ) : (
             <Text style={Fonts.type33}>{this.props.placeholder}</Text>
@@ -47,12 +58,34 @@ class DropdownType1 extends Component {
       </TouchableOpacity>
     );
   }
+  /** === RENDER INPUT DISABLED === */
+  selectedDropdownDisabled() {
+    return (
+      <View style={styles.boxInput}>
+        {this.props.prefixes ? (
+          <View style={styles.boxPrefixes}>{this.props.prefixes}</View>
+        ) : (
+          <View />
+        )}
+        <View style={{ marginLeft: this.props.prefixes ? 40 : 0 }}>
+          {this.props.selectedDropdownText !== '' &&
+          this.props.selectedDropdownText !== null ? (
+            <Text style={Fonts.type33}>{this.props.selectedDropdownText}</Text>
+          ) : (
+            <Text style={Fonts.type33}>{this.props.placeholder}</Text>
+          )}
+        </View>
+      </View>
+    );
+  }
   /** === RENDER CONTENT === */
   renderContent() {
     return (
       <View style={styles.contentContainer}>
         {this.renderTitle()}
-        {this.selectedDropdown()}
+        {this.props.disabled
+          ? this.selectedDropdownDisabled()
+          : this.selectedDropdown()}
         <View style={styles.spacing} />
       </View>
     );
@@ -82,6 +115,11 @@ const styles = StyleSheet.create({
   boxArrow: {
     position: 'absolute',
     right: 0,
+    bottom: 4
+  },
+  boxPrefixes: {
+    position: 'absolute',
+    left: 0,
     bottom: 4
   },
   spacing: {
