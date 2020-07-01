@@ -39,34 +39,22 @@ const INITIAL_STATE = {
   },
   dataGetMerchantDetail: null,
   dataGetMerchantLastOrder: null,
-  dataAddMerchantVolatile: {
-    name: '',
-    address: '',
-    longitude: '',
-    latitude: '',
-    user: {
-      fullName: '',
-      idNo: '',
-      taxNo: '',
-      phone: '',
-      roles: [1]
-    },
-    supplier: {
-      supplierId: '',
-      supplierName: ''
-    },
-    detailAddress: {
-      province: '',
-      city: '',
-      district: '',
-      urban: ''
-    }
-  },
   totalDataGetMerchant: 0,
   pageGetMerchant: 0,
   dataGetPortfolio: null,
   merchantChanged: false,
   dataGetNoOrderReason: null,
+  dataMerchantRejected: {
+    fullName: null,
+    name: null,
+    phoneNo: null,
+    taxNo: null,
+    idNo: null,
+    imageUrl: null,
+    idImageUrl: null,
+    selfieImageUrl: null,
+    taxImageUrl: null
+  },
   dataMerchantVolatile: {
     /** profile information */
     phone: null,
