@@ -70,6 +70,28 @@ export const global = createReducer(INITIAL_STATE, {
     };
   },
   /**
+   * ================================
+   * ADD DATA IF PHONE EXIST
+   * ================================
+   */
+  [types.CHECK_PHONE_NUMBER_AVAILABLE_SUCCESS](state, action) {
+    return {
+      ...state,
+      longitude:
+        action.payload.store !== null ? action.payload.store.longitude : '',
+      latitude:
+        action.payload.store !== null ? action.payload.store.latitude : '',
+      dataGetUrbanId:
+        action.payload.store !== null
+          ? [
+              {
+                id: action.payload.store.urbanId
+              }
+            ]
+          : null
+    };
+  },
+  /**
    * ==================================
    * SAVE PAGE THAT ADD MERCHANT BEGIN
    * ==================================

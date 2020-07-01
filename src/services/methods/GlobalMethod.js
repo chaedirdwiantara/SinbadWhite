@@ -119,7 +119,7 @@ function merchantSupplierMapping() {
 function userSupplierMapping() {
   const stateData = Store.getState();
   return stateData.user !== null
-    ? JSON.stringify(stateData.user.userSuppliers.map(item => item.supplierId))
+    ? stateData.user.userSuppliers.map(item => parseInt(item.supplierId, 10))
     : '';
 }
 /** MERCHANT STORE URBAN */
