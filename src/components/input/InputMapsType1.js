@@ -1,10 +1,15 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import Text from 'react-native-text';
-import MapView, { Marker } from 'react-native-maps';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import {
+  React,
+  Component,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  width
+} from '../../library/reactPackage';
+import { MapView, Marker } from '../../library/thirdPartyPackage';
+import { Fonts } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
 import NavigationServices from '../../navigation/NavigationService';
 
 class InputMapsType1 extends Component {
@@ -24,6 +29,7 @@ class InputMapsType1 extends Component {
         <Text style={Fonts.type32}>{this.props.title}</Text>
         {this.props.selectedMapLat !== '' &&
         this.props.selectedMapLong !== '' &&
+        this.props.urbanId !== null &&
         this.props.change ? (
           <TouchableOpacity
             onPress={() => NavigationServices.navigate('MapsView')}
@@ -94,12 +100,14 @@ class InputMapsType1 extends Component {
         style={styles.boxMapsEmpty}
         onPress={this.props.openMaps}
       >
-        <Text style={Fonts.type34}>Pin Lokasi Anda</Text>
+        <Text style={Fonts.type34}>Pin Lokasi Toko</Text>
       </TouchableOpacity>
     );
   }
   renderMaps() {
-    return this.props.selectedMapLong !== '' && this.props.selectedMapLat !== ''
+    return this.props.selectedMapLong !== '' &&
+      this.props.selectedMapLat !== '' &&
+      this.props.urbanId !== null
       ? this.renderSelectedMaps()
       : this.renderMapView();
   }
@@ -109,7 +117,11 @@ class InputMapsType1 extends Component {
       <View style={styles.contentContainer}>
         {this.renderTitle()}
         {this.renderMaps()}
-        <View style={styles.spacing} />
+        <View
+          style={{
+            marginBottom: this.props.marginBottom ? this.props.marginBottom : 16
+          }}
+        />
       </View>
     );
   }
@@ -142,20 +154,18 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderStyle: 'dashed',
     backgroundColor: masterColor.fontBlack05,
-    height: 150,
+    height: 0.7 * width,
     borderRadius: 10,
     borderColor: masterColor.fontBlack60,
     justifyContent: 'center',
     alignItems: 'center'
   },
   boxMaps: {
-    height: 150,
+    height: 0.7 * width,
+    zIndex: 1000,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  spacing: {
-    marginBottom: 12
   }
 });
 

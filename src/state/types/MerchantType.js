@@ -33,7 +33,7 @@ export const MERCHANT_NO_ORDER_REASON_GET_SUCCESS =
 export const MERCHANT_NO_ORDER_REASON_GET_FAILED =
   'MerchantNoOrderReasonGetFailed';
 /** FOR ADD MERCHANT */
-export const MERCHANT_ADD_DATA_VOLATILE = 'MerchantAddDataVolatile';
+export const MERCHANT_SAVE_DATA_VOLATILE = 'MerchantAddDataVolatile';
 /** FOR EDIT MERCHANT */
 export const MERCHANT_EDIT_DATA_VOLATILE = 'MerchantEditDataVolatile';
 /** FOR GET MERCHANT LAST ORDER */

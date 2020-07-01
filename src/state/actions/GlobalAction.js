@@ -15,9 +15,12 @@ export function saveDataManualInputLocation(data) {
     payload: data
   };
 }
-/** === SAVE TO LONGLAT === */
-export function saveManualToLongLat(data) {
-  return { type: types.GLOBAL_LONGLAT_TO_ADDRESS_SUCCESS, payload: data };
+/** === SAVE MANUAL INPUT LOCATION TO LONG LAT INPUT  */
+export function saveDataManualInputLocationToLongLat(data) {
+  return {
+    type: types.GLOBAL_LONGLAT_TO_ADDRESS_SUCCESS,
+    payload: data
+  };
 }
 /**
  * ==============================
@@ -103,6 +106,14 @@ export function getUrbanIdSuccess(data) {
 /** === GET URBAN ID FAILED === */
 export function getUrbanIdFailed(data) {
   return { type: types.GET_URBAN_ID_FAILED, payload: data };
+}
+/**
+ * =========================
+ * CLEAR DATA GET URBAN ID
+ * =========================
+ */
+export function clearDataGetUrbanId() {
+  return { type: types.GET_URBAN_ID_SUCCESS, payload: { data: null } };
 }
 /**
  * =========================

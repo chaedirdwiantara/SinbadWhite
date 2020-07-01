@@ -20,15 +20,12 @@ class MerchantDetailInformationView extends Component {
   goTo(page) {
     switch (page) {
       case 'merchantAccount':
-        NavigationService.navigate('MerchantEditView', {
-          title: 'Akun Toko',
-          type: 'merchantAccount'
-        });
+        NavigationService.navigate('MerchantDetailAccountView');
         break;
-      case 'merchantPhysical':
+      case 'merchantCompletenessInformation':
         NavigationService.navigate('MerchantEditView', {
-          title: 'Informasi Fisik Toko',
-          type: 'merchantPhysical'
+          title: 'Kelengkapan Informasi Toko',
+          type: 'merchantCompletenessInformation'
         });
         break;
       case 'merchantClassification':
@@ -37,6 +34,16 @@ class MerchantDetailInformationView extends Component {
           type: 'merchantClassification'
         });
         break;
+      default:
+        break;
+    }
+  }
+  /** === CHECK REJECTION === */
+  checkRejection(field) {
+    const data = this.props.merchant.dataMerchantRejected;
+    switch (field) {
+      case 'detailMerchantAccount':
+        return data.name || data.imageUrl || data.phoneNo;
       default:
         break;
     }
@@ -51,12 +58,13 @@ class MerchantDetailInformationView extends Component {
     return (
       <View>
         <ButtonMenuType1
+          notification={this.checkRejection('detailMerchantAccount')}
           title={'Akun Toko'}
           onPress={() => this.goTo('merchantAccount')}
         />
         <ButtonMenuType1
-          title={'Informasi Fisik Toko'}
-          onPress={() => this.goTo('merchantPhysical')}
+          title={'Kelengkapan Informasi Toko'}
+          onPress={() => this.goTo('merchantCompletenessInformation')}
         />
         <ButtonMenuType1
           title={'Klasifikasi Toko'}

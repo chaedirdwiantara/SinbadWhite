@@ -1,49 +1,34 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Text, Dimensions, Image } from 'react-native';
-import ModalBottomType1 from '../modal_bottom/ModalBottomType1';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import Fonts from '../../helpers/GlobalFont';
-import ButtonSingleSmall from '../../components/button/ButtonSingleSmall';
-import { StatusBarBlack } from '../StatusBarGlobal';
-
-const { height, width } = Dimensions.get('window');
+import {
+  React,
+  Component,
+  View,
+  Image,
+  Text
+} from '../../library/reactPackage';
+import {
+  StatusBarBlackOP40,
+  StatusBarTransparentBlack,
+  StatusBarBlackOP40Translucent,
+  ModalBottomSwipeCloseNotScroll,
+  ButtonSingle
+} from '../../library/component';
+import { GlobalStyle, Fonts } from '../../helpers';
 
 class ModalBottomErrorPinMap extends Component {
-  /** === RENDER BUTTON === */
-  renderButton() {
-    return (
-      <View style={styles.buttonContainer}>
-        <View style={{ padding: 16, flex: 1 }}>
-          <ButtonSingleSmall
-            flex
-            disabled={false}
-            loading={false}
-            onPress={this.props.ok}
-            title={'Ok'}
-            borderRadius={4}
-          />
-        </View>
-        <View style={{ padding: 16, flex: 1 }}>
-          <ButtonSingleSmall
-            flex
-            white
-            disabled={false}
-            loading={false}
-            onPress={this.props.manualInput}
-            title={'Manual Input'}
-            borderRadius={4}
-          />
-        </View>
-      </View>
-    );
+  constructor(props) {
+    super(props);
+    this.state = {};
   }
   /**
-   * RENDER CONTENT
+   * ========================
+   * RENDER VIEW
+   * =======================
    */
-  renderContent() {
+  /** === RENDER CONTENT ITEM === */
+  renderContentItem() {
     return (
       <View>
-        <StatusBarBlack />
+        <StatusBarBlackOP40Translucent />
         <View
           style={{
             justifyContent: 'center',
@@ -64,35 +49,46 @@ class ModalBottomErrorPinMap extends Component {
               Perbesar peta dengan
             </Text>
             <Text style={[Fonts.type17, { textAlign: 'center' }]}>
-              dua jari pada layar Anda
-            </Text>
-            <Text style={[Fonts.type17, { textAlign: 'center' }]}>
-              atau input alamat manual
+              dua jari pada layar Anda atau input alamat manual
             </Text>
           </View>
         </View>
+      </View>
+    );
+  }
+  /** === RENDER BUTTON === */
+  renderButton() {
+    return (
+      <ButtonSingle
+        disabled={false}
+        loading={false}
+        title={'Input Manual'}
+        borderRadius={4}
+        onPress={this.props.onPress}
+      />
+    );
+  }
+  /** === RENDER CONTENT === */
+  renderContent() {
+    return (
+      <View>
+        {this.renderContentItem()}
         {this.renderButton()}
       </View>
     );
   }
+  /** === MAIN === */
   render() {
     return (
-      <ModalBottomType1
+      <ModalBottomSwipeCloseNotScroll
         open={this.props.open}
+        close={this.props.close}
         content={this.renderContent()}
+        onPress={this.props.onPress}
         title={''}
       />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  /** for button */
-  buttonContainer: {
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignItems: 'center'
-  }
-});
 
 export default ModalBottomErrorPinMap;

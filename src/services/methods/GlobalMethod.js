@@ -37,6 +37,9 @@ function getListAndSearch(data) {
     case 'vehicleMerchant':
       listAndSearchApi = 'vehicle-accessibilities?';
       break;
+    case 'numberOfEmployeeMerchant':
+      listAndSearchApi = 'number-of-employees?';
+      break;
     case 'province':
       listAndSearchApi = 'provinces?';
       break;
@@ -75,6 +78,18 @@ function getAddressFromLongLat(data) {
   return ApiRestMap({
     path: `&latlng=${data.latitude},${data.longitude}`,
     method: 'GET'
+  });
+}
+/**
+ * ============================
+ * GET URBAN ID
+ * ============================
+ */
+function getUrbanId(data) {
+  return ApiRest({
+    path: 'location-search',
+    method: 'POST',
+    params: data
   });
 }
 /** === GET VERSION === */
@@ -133,6 +148,7 @@ function merchantStoreId() {
 export const GlobalMethod = {
   getListAndSearch,
   getAddressFromLongLat,
+  getUrbanId,
   getVersion,
   merchantStoreUrban,
   merchantStoreId,
