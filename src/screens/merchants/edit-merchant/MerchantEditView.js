@@ -59,39 +59,30 @@ class MerchantEditView extends Component {
       case 'merchantPayment':
         return <MerchantDetailPaymentView />;
       case 'merchantPhysical':
-      case 'merchantClassification':
-      case 'merchantOwnerIdNo':
-      case 'merchantOwnerTaxNo':
       case 'merchantAddress':
+      case 'merchantCompletenessInformation':
+      case 'merchantAccountName':
+      case 'merchantAccountPhoneNo':
         return (
           <MerchantEditPartialView
             type={this.props.navigation.state.params.type}
             showButton
           />
         );
-      case 'merchantAccount':
+      case 'merchantClassification':
         return (
           <MerchantEditPartialView
             type={this.props.navigation.state.params.type}
             showButton={false}
           />
         );
-      case 'merchantOwnerImageId':
+      case 'merchantAccountImage':
         return (
           <MerchantEditPartialView
             type={this.props.navigation.state.params.type}
             showButton={false}
             showButtonOpenCamera
-            typeCamera={'id'}
-          />
-        );
-      case 'merchantOwnerImageSelfie':
-        return (
-          <MerchantEditPartialView
-            type={this.props.navigation.state.params.type}
-            showButton={false}
-            showButtonOpenCamera
-            typeCamera={'selfie'}
+            typeCamera={'merchant'}
           />
         );
       default:

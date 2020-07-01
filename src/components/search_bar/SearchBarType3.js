@@ -1,16 +1,19 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   TouchableOpacity,
   TextInput,
   Keyboard
-} from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+} from '../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon
+} from '../../library/thirdPartyPackage';
+import { Fonts } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
 import * as ActionCreators from '../../state/actions';
 
 /**
@@ -85,7 +88,7 @@ class SearchBarType3 extends Component {
     return (
       <View style={{ flex: 1 }}>
         <TextInput
-          autoFocus
+          autoFocus={this.props.focus}
           selectionColor={masterColor.mainColor}
           onEndEditing={() => this.searchText()}
           value={this.state.search}
@@ -99,7 +102,9 @@ class SearchBarType3 extends Component {
   }
   /** === SEARCH BAR === */
   renderSearchBar() {
-    return (
+    return this.props.hide ? (
+      <View />
+    ) : (
       <View style={styles.boxSearchBar}>
         {this.renderSearchIcon()}
         {this.renderInput()}
@@ -119,7 +124,7 @@ const styles = StyleSheet.create({
   },
   boxSearchBar: {
     height: 32,
-    borderRadius: 20,
+    borderRadius: 10,
     alignItems: 'center',
     backgroundColor: masterColor.backgroundWhite,
     flexDirection: 'row'
