@@ -15,9 +15,12 @@ export function saveDataManualInputLocation(data) {
     payload: data
   };
 }
-/** === SAVE TO LONGLAT === */
-export function saveManualToLongLat(data) {
-  return { type: types.GLOBAL_LONGLAT_TO_ADDRESS_SUCCESS, payload: data };
+/** === SAVE MANUAL INPUT LOCATION TO LONG LAT INPUT  */
+export function saveDataManualInputLocationToLongLat(data) {
+  return {
+    type: types.GLOBAL_LONGLAT_TO_ADDRESS_SUCCESS,
+    payload: data
+  };
 }
 /**
  * ==============================

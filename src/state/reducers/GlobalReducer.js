@@ -254,7 +254,8 @@ export const global = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGlobalLongLatToAddress: false,
-      errorGlobalLongLatToAddress: action.payload
+      errorGlobalLongLatToAddress: action.payload,
+      dataLocationVolatile: INITIAL_STATE.dataLocationVolatile
     };
   },
   /**
@@ -292,5 +293,5 @@ export const global = createReducer(INITIAL_STATE, {
  */
 /** === CHECK DATA EXIST OR NOT ===  */
 function checkData(key, dataUpdate, dataPrevious) {
-  return dataUpdate[key] ? dataUpdate[key] : dataPrevious[key];
+  return dataUpdate[key] !== undefined ? dataUpdate[key] : dataPrevious[key];
 }

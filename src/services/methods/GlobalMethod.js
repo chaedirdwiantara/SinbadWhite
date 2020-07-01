@@ -77,6 +77,18 @@ function getAddressFromLongLat(data) {
     method: 'GET'
   });
 }
+/**
+ * ============================
+ * GET URBAN ID
+ * ============================
+ */
+function getUrbanId(data) {
+  return ApiRest({
+    path: 'location-search',
+    method: 'POST',
+    params: data
+  });
+}
 /** === GET VERSION === */
 function getVersion() {
   return ApiRest({
@@ -133,6 +145,7 @@ function merchantStoreId() {
 export const GlobalMethod = {
   getListAndSearch,
   getAddressFromLongLat,
+  getUrbanId,
   getVersion,
   merchantStoreUrban,
   merchantStoreId,
