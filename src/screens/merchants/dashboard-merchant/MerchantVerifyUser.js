@@ -1,9 +1,7 @@
 import { React, Component, View } from '../../../library/reactPackage';
 import {
-  connect,
-  bindActionCreators
+  connect
 } from '../../../library/thirdPartyPackage'
-import * as ActionCreators from '../../../state/actions';
 import ModalUserRejected from './ModalUserRejected';
 import CallCS from '../../global/CallCS';
 import NavigationService from '../../../navigation/NavigationService';
@@ -153,3 +151,16 @@ const mapStateToProps = ({ merchant }) => {
 };
 
 export default connect(mapStateToProps)(MerchantVerifyUser)
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: Tatas
+* createdDate: 30062020
+* updatedBy: 
+* updatedDate: 
+* updatedFunction:
+* -> 
+* 
+*/
