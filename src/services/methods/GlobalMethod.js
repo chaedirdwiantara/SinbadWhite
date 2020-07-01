@@ -37,6 +37,9 @@ function getListAndSearch(data) {
     case 'vehicleMerchant':
       listAndSearchApi = 'vehicle-accessibilities?';
       break;
+    case 'numberOfEmployeeMerchant':
+      listAndSearchApi = 'number-of-employees?';
+      break;
     case 'province':
       listAndSearchApi = 'provinces?';
       break;

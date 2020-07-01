@@ -366,6 +366,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingEditMerchant: false,
+      dataMerchantVolatile: saveDataMerchantVolatile(action.payload),
       dataGetMerchantDetail: action.payload,
       dataEditMerchant: action.payload
     };

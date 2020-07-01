@@ -4,6 +4,7 @@ import { Color } from '../../config';
 import TakeProfilePicture from '../../screens/global/TakeProfilePicture';
 import TakeIdPlusSelfiePicture from '../../screens/global/TakeIdPlusSelfiePicture';
 import TakeIdPicture from '../../screens/global/TakeIdPicture';
+import TakeMerchantPicture from '../../screens/global/TakeMerchantPicture';
 import ListAndSearchType1 from '../../screens/global/ListAndSearchType1';
 import MapsView from '../../screens/global/MapsView';
 import InputManualLocation from '../../screens/global/InputManualLocation';
@@ -28,6 +29,14 @@ const GlobalNavigator = {
   /** === PAGE CAMERA FOR ID PICTURE === */
   TakeIdPicture: {
     screen: TakeIdPicture,
+    navigationOptions: {
+      headerShown: false,
+      gesturesEnabled: false
+    }
+  },
+  /** === PAGE CAMERA FOR MERCHANT PICTURE === */
+  TakeMerchantPicture: {
+    screen: TakeMerchantPicture,
     navigationOptions: {
       headerShown: false,
       gesturesEnabled: false
