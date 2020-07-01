@@ -73,6 +73,13 @@ function getNoOrderReason() {
     method: 'GET'
   });
 }
+/** === GET STORE STATUS === */
+function getStoreStatus(){
+  return ApiRest({
+    path: 'store-status',
+    method: 'POST'
+  })
+}
 
 export const MerchantMethod = {
   getMerchant,
@@ -84,5 +91,6 @@ export const MerchantMethod = {
   postActivity,
   getLogAllActivity,
   getLogPerActivity,
-  getNoOrderReason
+  getNoOrderReason,
+  getStoreStatus
 };
