@@ -64,9 +64,9 @@ class MerchantListDataView extends Component {
     }
   };
   /** GO TO MERCHANT DETAIL */
-  goToDetailMerchant(storeId) {
+  goToDetailMerchant(id) {
     NavigationService.navigate('MerchantDetailView', {
-      storeId
+      id
     });
   }
   /**

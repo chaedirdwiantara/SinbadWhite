@@ -2,17 +2,22 @@ import ApiRest from '../apiRest';
 
 /** === MERCHANT LIST === */
 function getMerchant(data) {
+  console.log(
+    `agent-stores?type=${data.type}&portfolioId=${data.portfolioId}&$skip=${
+      data.page
+    }&$limit=10&keyword=${data.search}`
+  );
   return ApiRest({
-    path: `portfolio-lists?type=${data.type}&portfolioId=${
+    path: `agent-stores?type=${data.type}&portfolioId=${
       data.portfolioId
     }&$skip=${data.page}&$limit=10&keyword=${data.search}`,
     method: 'GET'
   });
 }
 /** === MERCHANT DETAIL === */
-function getMerchantDetail(storeId) {
+function getMerchantDetail(id) {
   return ApiRest({
-    path: `supplier-store-profile/${storeId}`,
+    path: `supplier-store-profile/${id}`,
     method: 'GET'
   });
 }
@@ -34,7 +39,7 @@ function addMerchant(params) {
 /** === EDIT MERCHANT === */
 function editMerchant(data) {
   return ApiRest({
-    path: `agent-stores/${data.storeId}`,
+    path: `supplier-store-profile/${data.id}`,
     method: 'PATCH',
     params: data.params
   });
