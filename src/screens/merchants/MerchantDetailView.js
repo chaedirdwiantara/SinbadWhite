@@ -28,7 +28,8 @@ class MerchantDetailView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openModalCallMerchant: false
+      openModalCallMerchant: false,
+      showToast: false
     };
   }
   /**
@@ -36,6 +37,7 @@ class MerchantDetailView extends Component {
    * FUNCTIONAL
    * ==============================
    */
+  /** === DID MOUNT === */
   componentDidMount() {
     this.props.merchantGetDetailProcess(this.props.navigation.state.params.id);
   }
@@ -369,6 +371,7 @@ class MerchantDetailView extends Component {
    * MODAL
    * =====================
    */
+
   /** MODAL CALL */
   renderModalCallMerchant() {
     return this.state.openModalCallMerchant ? (
