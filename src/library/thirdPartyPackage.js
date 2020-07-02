@@ -28,6 +28,8 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 /** SETTING */
 import DeviceInfo from 'react-native-device-info';
+/** TOAST */
+import Toast, { DURATION } from 'react-native-easy-toast';
 
 export {
   /** REDUX */
@@ -59,5 +61,8 @@ export {
   /** TEXT */
   RFPercentage,
   /** SETTING */
-  DeviceInfo
+  DeviceInfo,
+  /** TOAST */
+  Toast,
+  DURATION
 };
