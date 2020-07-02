@@ -82,11 +82,7 @@ class MerchantHomeView extends Component {
           name: 'Keluar Toko',
           activity: 'check_out'
         }
-      ],
-      data: {
-        sinbad: 'rejected',
-        supplier: 'rejected'
-      }
+      ]
       
     };
   }
@@ -449,7 +445,7 @@ class MerchantHomeView extends Component {
               paddingBottom: 10
             }}
           >
-            <Text style={Fonts.type64}>Task List {this.state.data.sinbad}</Text>
+            <Text style={Fonts.type64}>Task List</Text>
             <Text style={Fonts.type31}>
               {this.checkTotalCompleteTask()}/{this.state.task.length} Selesai
             </Text>
@@ -661,7 +657,6 @@ class MerchantHomeView extends Component {
   renderModalVerifyUser(){
     return this.state.openModalCheckUser ? (
       <MerchantVerifyUser 
-        data={this.state.data}
         pageFocus={this.props.navigation.isFocused()}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
