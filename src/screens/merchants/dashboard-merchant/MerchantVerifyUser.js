@@ -35,7 +35,7 @@ class MerchantVerifyUser extends Component {
     switch (data.type) {
       case 'goToMerchantProfile':
 
-        this.toParentFunction('Close')
+        this.toParentFunction({ type: 'close'})
         this.setState({ modalRejected: false });
         NavigationService.navigate('MerchantDetailView', {
           storeId: this.props.merchant.selectedMerchant.store.id
