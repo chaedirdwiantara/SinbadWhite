@@ -871,5 +871,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
 * updatedDate: 01072020
 * updatedFunction:
 * -> Add checking user status
-* 
+* updatedDate: 02072020
+* updatedFunction:
+* -> Remove unused state
 */

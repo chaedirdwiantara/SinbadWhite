@@ -174,9 +174,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantVerifyUser)
 * ============================
 * createdBy: Tatas
 * createdDate: 30062020
-* updatedBy: 
-* updatedDate: 
+* updatedBy: Tatas
+* updatedDate: 02072020
 * updatedFunction:
-* -> 
+* -> Create action to merchant method to get store status
 * 
 */

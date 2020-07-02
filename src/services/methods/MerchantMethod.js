@@ -103,3 +103,16 @@ export const MerchantMethod = {
   getNoOrderReason,
   getStoreStatus
 };
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: tatas
+* updatedDate: 01072020
+* updatedFunction:
+* -> add fucntion to get store status
+* 
+*/
