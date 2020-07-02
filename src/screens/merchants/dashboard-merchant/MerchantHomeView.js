@@ -249,7 +249,12 @@ class MerchantHomeView extends Component {
   parentFunction(data){
     switch (data.type) {
       case 'pdp':
+        this.setState({ openModalCheckUser: false })
         NavigationService.navigate('PdpView');
+        break;
+      case 'close':
+        console.log('change status')
+        this.setState({ openModalCheckUser: false })
         break;
     
       default:
@@ -874,4 +879,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
 * updatedDate: 02072020
 * updatedFunction:
 * -> Remove unused state
+* -> Add function to change modal check status False after navigate
 */
