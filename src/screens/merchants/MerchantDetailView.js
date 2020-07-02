@@ -131,6 +131,16 @@ class MerchantDetailView extends Component {
         break;
     }
   }
+  /** === CHECK REJECTION === */
+  checkRejection(field) {
+    const data = this.props.merchant.dataMerchantRejected;
+    switch (field) {
+      case 'merchantInformation':
+        return data.name || data.imageUrl || data.phoneNo;
+      default:
+        break;
+    }
+  }
   /**
    * ==============================
    * RENDER VIEW
@@ -300,6 +310,7 @@ class MerchantDetailView extends Component {
         </View>
         <ButtonMenuType1
           child
+          notification={this.checkRejection('merchantInformation')}
           title={'Informasi Toko'}
           onPress={() => this.goTo('merchantInformation')}
         />
