@@ -159,8 +159,8 @@ class MerchantVerifyUser extends Component {
   }
 }
 
-const mapStateToProps = ({ merchant, user, permanent }) => {
-  return { merchant, user, permanent };
+const mapStateToProps = ({ merchant }) => {
+  return { merchant };
 };
 
 const mapDispatchToProps = dispatch => {
