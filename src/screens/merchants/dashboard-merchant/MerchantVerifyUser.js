@@ -24,7 +24,9 @@ class MerchantVerifyUser extends Component {
 
   componentDidUpdate(prevProps) {
     if ( prevProps.merchant.dataStoreStatus !== this.props.merchant.dataStoreStatus ){
-      this.checkUser()
+      if (this.props.merchant.dataStoreStatus !== null && this.props.pageFocus){
+        this.checkUser()
+      }
     }
   }
 
