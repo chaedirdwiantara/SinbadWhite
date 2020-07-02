@@ -46,6 +46,8 @@ import ErrorPageNoGPS from '../components/error/ErrorPageNoGPS';
 import ToastType1 from '../components/toast/ToastType1';
 /** LIST */
 import ProductListType1 from '../components/list/ProductListType1'
+/** EMPTY DATA */
+import EmptyData from '../components/empty_state/EmptyData';
 
 export {
   CartGlobal,
@@ -94,5 +96,7 @@ export {
   /** TOAST */
   ToastType1,
   /** LIST */
-  ProductListType1
+  ProductListType1,
+  /** EMPTY DATA */
+  EmptyData
 };

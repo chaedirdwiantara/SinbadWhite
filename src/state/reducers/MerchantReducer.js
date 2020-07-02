@@ -55,7 +55,17 @@ const INITIAL_STATE = {
     selfieImageUrl: null,
     taxImageUrl: null
   },
+  dataMerchantDisabledField: {
+    fullName: false,
+    idNo: false,
+    taxNo: false,
+    longLat: false,
+    address: false,
+    noteAddress: false
+  },
   dataMerchantVolatile: {
+    storeId: null,
+    externalId: null,
     /** profile information */
     phone: null,
     fullName: null,
@@ -264,6 +274,8 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       dataMerchantVolatile: {
+        storeId: checkData('storeId', dataUpdate, dataPrevious),
+        externalId: checkData('externalId', dataUpdate, dataPrevious),
         /** profile information */
         phone: checkData('phone', dataUpdate, dataPrevious),
         fullName: checkData('fullName', dataUpdate, dataPrevious),
@@ -322,6 +334,46 @@ export const merchant = createReducer(INITIAL_STATE, {
     };
   },
   /**
+   * ================================
+   * ADD DATA IF PHONE EXIST
+   * ================================
+   */
+  [types.CHECK_PHONE_NUMBER_AVAILABLE_SUCCESS](state, action) {
+    return {
+      ...state,
+      dataMerchantVolatile:
+        action.payload.store === null
+          ? INITIAL_STATE.dataMerchantVolatile
+          : saveDataMerchantVolatile(action.payload.store),
+      dataMerchantDisabledField: {
+        fullName:
+          action.payload.store !== null
+            ? action.payload.store.owner.fullName !== null
+            : false,
+        idNo:
+          action.payload.store !== null
+            ? action.payload.store.owner.idNo !== null
+            : false,
+        taxNo:
+          action.payload.store !== null
+            ? action.payload.store.owner.taxNo !== null
+            : false,
+        longLat:
+          action.payload.store !== null
+            ? action.payload.store.latitude !== null
+            : false,
+        address:
+          action.payload.store !== null
+            ? action.payload.store.address !== null
+            : false,
+        noteAddress:
+          action.payload.store !== null
+            ? action.payload.store.noteAddress !== null
+            : false
+      }
+    };
+  },
+  /**
    * =============================
    * ADD MERCHANT
    * =============================
@@ -339,7 +391,8 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingAddMerchant: false,
       dataAddMerchant: action.payload,
-      dataAddMerchantVolatile: INITIAL_STATE.dataAddMerchantVolatile
+      dataMerchantVolatile: INITIAL_STATE.dataMerchantVolatile,
+      dataMerchantDisabledField: INITIAL_STATE.dataMerchantDisabledField
     };
   },
   [types.MERCHANT_ADD_FAILED](state, action) {
@@ -526,6 +579,8 @@ function checkData(key, dataUpdate, dataPrevious) {
 /** === SAVE DATA VOLATILE MERCHANT === */
 function saveDataMerchantVolatile(data) {
   return {
+    storeId: data.id,
+    externalId: data.externalId,
     /** for owner data */
     ownerId: data.owner.id,
     fullName: data.owner.fullName,
@@ -562,12 +617,9 @@ function saveDataMerchantVolatile(data) {
     urban: data.urban !== null ? data.urban.urban : '',
     zipCode: data.urban !== null ? data.urban.zipCode : '',
     /** for store clasification */
-    storeType: data.storeTypes.length > 0 ? data.storeTypes[0].type.name : '',
-    storeGroup:
-      data.storeGroups.length > 0 ? data.storeGroups[0].group.name : '',
-    storeCluster:
-      data.storeClusters.length > 0 ? data.storeClusters[0].cluster.name : '',
-    storeChannel:
-      data.storeChannels.length > 0 ? data.storeChannels[0].channel.name : ''
+    storeType: data.storeType ? data.storeType.name : '',
+    storeGroup: data.storeGroup ? data.storeGroup.name : '',
+    storeCluster: data.storeCluster ? data.storeCluster.name : '',
+    storeChannel: data.storeChannel ? data.storeChannel.name : ''
   };
 }

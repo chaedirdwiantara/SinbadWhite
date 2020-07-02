@@ -45,7 +45,7 @@ export function checkPhoneNumberAvailableSuccess(data) {
   if (data.result === 'Ok') {
     return {
       type: types.CHECK_PHONE_NUMBER_AVAILABLE_SUCCESS,
-      payload: data.data.otp
+      payload: data.data
     };
   }
   return { type: types.CHECK_PHONE_NUMBER_AVAILABLE_FAILED, payload: data };

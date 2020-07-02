@@ -32,10 +32,11 @@ class AddMerchantStep2 extends Component {
       errorIdNumber: false,
       errorTaxNumber: false,
       openErrorAddMerchant: false,
+      addStoreProcess: false,
       /** for maps refresh */
       refreshLocation: false,
       /** supplier */
-      supplier:
+      supplierId:
         this.props.user.userSuppliers.length === 1
           ? this.props.user.userSuppliers[0].supplier.id
           : '',
@@ -111,6 +112,7 @@ class AddMerchantStep2 extends Component {
   }
   /** SEND DATA ADD MERCHANT */
   finalStep() {
+    this.setState({ addStoreProcess: true });
     Keyboard.dismiss();
     this.props.saveVolatileDataMerchant({
       fullName: this.state.fullName,
@@ -125,10 +127,30 @@ class AddMerchantStep2 extends Component {
       urbanId: this.props.global.dataGetUrbanId[0].id
     });
     setTimeout(() => {
-      console.log('addd merchant');
-      // this.props.merchantAddProcess(
-      //   this.props.merchant.dataAddMerchantVolatile
-      // );
+      this.setState({ addStoreProcess: false });
+      const data = this.props.merchant.dataMerchantVolatile;
+      this.props.merchantAddProcess({
+        storeId: data.storeId,
+        externalId: data.externalId,
+        name: data.name,
+        address: data.address,
+        longitude: data.longitude,
+        latitude: data.latitude,
+        noteAddress: data.noteAddress,
+        urbanId: data.urbanId,
+        status: 'active',
+        user: {
+          fullName: data.fullName,
+          idNo: data.idNo,
+          taxNo: data.taxNo,
+          phone: data.phone,
+          status: 'active',
+          roles: [1]
+        },
+        supplier: {
+          supplierId: this.state.supplierId
+        }
+      });
     }, 100);
   }
   /** GO TO DROPDOWN LIST */
@@ -196,6 +218,7 @@ class AddMerchantStep2 extends Component {
   renderNameOwner() {
     return (
       <InputType4
+        editable={!this.props.merchant.dataMerchantDisabledField.fullName}
         title={'*Nama Pemilik Toko'}
         value={this.state.fullName}
         onChangeText={fullName => {
@@ -237,6 +260,7 @@ class AddMerchantStep2 extends Component {
   renderIdNo() {
     return (
       <InputType4
+        editable={!this.props.merchant.dataMerchantDisabledField.idNo}
         title={'*Nomor Kartu Tanda Penduduk (KTP)'}
         value={this.state.idNo}
         onChangeText={idNo => {
@@ -256,6 +280,7 @@ class AddMerchantStep2 extends Component {
   renderTaxId() {
     return (
       <InputType4
+        editable={!this.props.merchant.dataMerchantDisabledField.taxNo}
         title={'*Nomor Pokok Wajib Pajak (NPWP)'}
         value={this.state.taxNo}
         onChangeText={taxNo => {
@@ -275,7 +300,7 @@ class AddMerchantStep2 extends Component {
   renderMaps() {
     return (
       <InputMapsType1
-        change
+        change={!this.props.merchant.dataMerchantDisabledField.longLat}
         title={'*Koordinat Lokasi'}
         urbanId={this.props.global.dataGetUrbanId}
         selectedMapLong={this.props.global.longitude}
@@ -290,6 +315,7 @@ class AddMerchantStep2 extends Component {
   renderAddress() {
     return (
       <InputType2
+        editable={!this.props.merchant.dataMerchantDisabledField.address}
         title={'*Detail Alamat'}
         value={this.state.address}
         placeholder={'Contoh : Jl. Kemang Raya No.58, RT.8/RW…'}
@@ -304,6 +330,7 @@ class AddMerchantStep2 extends Component {
   renderNoteAddress() {
     return (
       <InputType2
+        editable={!this.props.merchant.dataMerchantDisabledField.noteAddress}
         title={'Catatan Alamat'}
         value={this.state.noteAddress}
         placeholder={'Contoh : Masuk Gang arjuna depan toko cilok'}
@@ -335,10 +362,14 @@ class AddMerchantStep2 extends Component {
     return (
       <ButtonSingle
         disabled={
-          this.buttonDisable() || this.props.merchant.loadingAddMerchant
+          this.buttonDisable() ||
+          this.props.merchant.loadingAddMerchant ||
+          this.state.addStoreProcess
         }
         title={'Lanjutkan'}
-        loading={this.props.merchant.loadingAddMerchant}
+        loading={
+          this.props.merchant.loadingAddMerchant || this.state.addStoreProcess
+        }
         borderRadius={4}
         onPress={() => this.finalStep()}
       />

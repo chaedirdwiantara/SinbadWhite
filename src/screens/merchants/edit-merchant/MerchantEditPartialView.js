@@ -33,7 +33,7 @@ class MerchantEditPartialView extends Component {
       refreshLocation: false,
       typeCamera: this.props.typeCamera,
       /** all data need */
-      storeId: this.props.merchant.dataGetMerchantDetail.id,
+      id: this.props.merchant.dataGetMerchantDetail.id,
       /** for merchant information */
       name: this.props.merchant.dataMerchantVolatile.name,
       phoneNo: this.props.merchant.dataMerchantVolatile.phoneNo,
@@ -94,7 +94,7 @@ class MerchantEditPartialView extends Component {
       this.props.type === 'merchantAccountPhoneNo'
     ) {
       const data = {
-        storeId: this.state.storeId,
+        id: this.state.id,
         params: {
           name: this.state.name,
           phoneNo: this.state.phoneNo
@@ -103,7 +103,7 @@ class MerchantEditPartialView extends Component {
       this.props.merchantEditProcess(data);
     } else if (this.props.type === 'merchantCompletenessInformation') {
       const data = {
-        storeId: this.state.storeId,
+        id: this.state.id,
         params: {
           numberOfEmployee: this.props.merchant.dataMerchantVolatile
             .numberOfEmployee,
@@ -118,7 +118,7 @@ class MerchantEditPartialView extends Component {
       this.props.merchantEditProcess(data);
     } else if (this.props.type === 'merchantAddress') {
       const data = {
-        storeId: this.state.storeId,
+        id: this.state.id,
         params: {
           address: this.state.address,
           noteAddress: this.state.noteAddress,
@@ -133,7 +133,7 @@ class MerchantEditPartialView extends Component {
       this.props.merchantEditProcess(data);
     } else if (this.props.type === 'merchantAccountImage') {
       const data = {
-        storeId: this.state.storeId,
+        id: this.state.id,
         params: {
           image: `data:image/gif;base64,${this.props.global.imageBase64}`
         }
@@ -338,9 +338,9 @@ class MerchantEditPartialView extends Component {
         ) : (
           this.renderUploadedImage({
             image: this.props.merchant.dataMerchantVolatile.imageUrl,
-            marginTop: -50,
+            marginTop: -40,
             marginTopRetakeText: -30,
-            rotate: true
+            rotate: false
           })
         )}
       </View>
