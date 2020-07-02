@@ -12,18 +12,14 @@ class MerchantVerifyUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: this.props.data,
       modalRejected: false,
       modalRejectedType: '',
       modalCallCS: false
     };
   }
   componentDidMount() {
-    console.log(this.props.user.userSuppliers)
-    this.props.merchantGetStoreStatusProcess({
-      storeId: this.props.merchant.selectedMerchant.store.id,
-      supplierId: 1
-    })
+    // console.log(this.props.user.userSuppliers)
+    this.props.merchantGetStoreStatusProcess()
   }
 
   componentDidUpdate(prevProps) {
@@ -61,7 +57,10 @@ class MerchantVerifyUser extends Component {
   }
   /** CHECK USER */
   checkUser() {
-    const { sinbadStoreStatus, supplierStoreStatus } = this.props.merchant.dataStoreStatus
+    const { 
+      sinbadStoreStatus, 
+      supplierStoreStatus 
+    } = this.props.merchant.dataStoreStatus
     switch (sinbadStoreStatus) {
       case 'verified':
         this.userVerified(supplierStoreStatus);

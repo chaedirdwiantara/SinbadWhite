@@ -1,4 +1,5 @@
 import ApiRest from '../apiRest';
+import { GlobalMethod } from './GlobalMethod';
 
 /** === MERCHANT LIST === */
 function getMerchant(data) {
@@ -78,11 +79,14 @@ function getNoOrderReason() {
   });
 }
 /** === GET STORE STATUS === */
-function getStoreStatus(params){
+function getStoreStatus(){
   return ApiRest({
     path: 'store-status',
     method: 'POST',
-    params
+    params: {
+      storeId: GlobalMethod.merchantStoreId(),
+      supplierId: GlobalMethod.merchantSupplierMapping()
+    }
   })
 }
 
