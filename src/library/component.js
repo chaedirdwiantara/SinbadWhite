@@ -39,7 +39,7 @@ import OtpResend from '../components/otp/OtpResend';
 /** PROGRESS BAR */
 import ProgressBarType1 from '../components/progress_bar/ProgressBarType1';
 /** LOADING */
-import { LoadingPage, LoadingLoadMore } from '../components/Loading';
+import { LoadingPage, LoadingLoadMore, LoadingHorizontal } from '../components/Loading';
 /** ERROR PAGE */
 import ErrorPageNoGPS from '../components/error/ErrorPageNoGPS';
 /** TOAST */
@@ -91,6 +91,7 @@ export {
   /** LOADING */
   LoadingPage,
   LoadingLoadMore,
+  LoadingHorizontal,
   /** ERROR PAGE */
   ErrorPageNoGPS,
   /** TOAST */
