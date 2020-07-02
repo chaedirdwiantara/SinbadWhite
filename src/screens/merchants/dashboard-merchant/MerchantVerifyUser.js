@@ -152,6 +152,7 @@ class MerchantVerifyUser extends Component {
   renderModalCallCS() {
     return (
       <CallCS
+        statusBarRed
         open={this.state.modalCallCS}
         close={() => {
           this.toChangeParentModal()

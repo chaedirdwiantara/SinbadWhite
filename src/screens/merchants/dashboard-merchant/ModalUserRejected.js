@@ -81,6 +81,8 @@ class ModalUserRejected extends Component {
       <ModalBottomType3
         title={this.props.title || ''}
         open={this.props.open}
+        close={this.props.close}
+        typeClose={'cancel'}
         content={this.renderModalContent()}
         onPress={this.props.onPress}
       />
