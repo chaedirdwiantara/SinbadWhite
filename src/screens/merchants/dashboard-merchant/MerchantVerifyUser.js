@@ -1,10 +1,12 @@
 import { React, Component, View } from '../../../library/reactPackage';
 import {
-  connect
+  connect,
+  bindActionCreators
 } from '../../../library/thirdPartyPackage'
 import ModalUserRejected from './ModalUserRejected';
 import CallCS from '../../global/CallCS';
 import NavigationService from '../../../navigation/NavigationService';
+import * as ActionCreators from '../../../state/actions';
 
 class MerchantVerifyUser extends Component {
   constructor(props) {
@@ -17,8 +19,19 @@ class MerchantVerifyUser extends Component {
     };
   }
   componentDidMount() {
-    this.checkUser();
+    console.log(this.props.user.userSuppliers)
+    this.props.merchantGetStoreStatusProcess({
+      storeId: this.props.merchant.selectedMerchant.store.id,
+      supplierId: 1
+    })
   }
+
+  componentDidUpdate(prevProps) {
+    if ( prevProps.merchant.dataStoreStatus !== this.props.merchant.dataStoreStatus ){
+      this.checkUser()
+    }
+  }
+
   /** CALLED FROM CHILD */
   parentFunction(data) {
     switch (data.type) {
@@ -48,22 +61,22 @@ class MerchantVerifyUser extends Component {
   }
   /** CHECK USER */
   checkUser() {
-    const { sinbad, supplier } = this.state.data;
-    switch (sinbad) {
+    const { sinbadStoreStatus, supplierStoreStatus } = this.props.merchant.dataStoreStatus
+    switch (sinbadStoreStatus) {
       case 'verified':
-        this.userVerified(supplier);
+        this.userVerified(supplierStoreStatus);
         break;
       case 'rejected':
-        this.userRejected(supplier);
+        this.userRejected(supplierStoreStatus);
         break;
       case 'updating':
-        this.userUpdating(supplier);
+        this.userUpdating(supplierStoreStatus);
         break;
       case 'pending':
-        this.userPending(supplier);
+        this.userPending(supplierStoreStatus);
         break;
       case 'guest':
-        this.userGuest(supplier);
+        this.userGuest(supplierStoreStatus);
         break;
 
       default:
@@ -146,11 +159,15 @@ class MerchantVerifyUser extends Component {
   }
 }
 
-const mapStateToProps = ({ merchant }) => {
-  return { merchant };
+const mapStateToProps = ({ merchant, user, permanent }) => {
+  return { merchant, user, permanent };
 };
 
-export default connect(mapStateToProps)(MerchantVerifyUser)
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MerchantVerifyUser)
 
 /**
 * ============================

@@ -662,6 +662,7 @@ class MerchantHomeView extends Component {
     return this.state.openModalCheckUser ? (
       <MerchantVerifyUser 
         data={this.state.data}
+        pageFocus={this.props.navigation.isFocused()}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
       />
