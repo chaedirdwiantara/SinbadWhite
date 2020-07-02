@@ -108,10 +108,8 @@ function getVersion() {
 function merchantSupplierMapping() {
   const stateData = Store.getState();
   return stateData.merchant.selectedMerchant !== null
-    ? JSON.stringify(
-        stateData.merchant.selectedMerchant.store.supplierStores.map(
-          item => item.supplierId
-        )
+    ? stateData.merchant.selectedMerchant.store.supplierStores.map(
+        item => item.supplierId
       )
     : '';
 }
