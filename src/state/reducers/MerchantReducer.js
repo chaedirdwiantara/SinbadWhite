@@ -24,6 +24,7 @@ const INITIAL_STATE = {
   dataGetMerchant: [],
   dataAddMerchant: null,
   dataEditMerchant: null,
+  dataStoreStatus: {},
   dataEditMerchantVolatile: {
     vehicleAccessibilityId: '',
     vehicleAccessibilityName: '',

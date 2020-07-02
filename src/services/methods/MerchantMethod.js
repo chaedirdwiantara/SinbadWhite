@@ -74,10 +74,11 @@ function getNoOrderReason() {
   });
 }
 /** === GET STORE STATUS === */
-function getStoreStatus(){
+function getStoreStatus(params){
   return ApiRest({
     path: 'store-status',
-    method: 'POST'
+    method: 'POST',
+    params
   })
 }
 
