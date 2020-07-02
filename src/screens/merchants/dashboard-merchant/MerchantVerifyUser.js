@@ -18,7 +18,6 @@ class MerchantVerifyUser extends Component {
     };
   }
   componentDidMount() {
-    // console.log(this.props.user.userSuppliers)
     this.props.merchantGetStoreStatusProcess()
   }
 
