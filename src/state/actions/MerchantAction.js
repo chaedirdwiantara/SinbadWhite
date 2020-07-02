@@ -261,3 +261,23 @@ export function merchantGetNoOrderReasonSuccess(data) {
 export function merchantGetNoOrderReasonFailed(data) {
   return { type: types.MERCHANT_NO_ORDER_REASON_GET_FAILED, payload: data };
 }
+/**
+ * =====================================
+ * GET STORE STATUS
+ * =====================================
+ */
+export function merchantGetStoreStatusProcess(data){
+  return { type: types.MERCHANT_STORE_STATUS_PROCESS, payload: data}
+}
+export function merchantGetStoreStatusSuccess(data){
+  if (data.result === 'Ok'){
+    return {
+      type: types.MERCHANT_STORE_STATUS_SUCCESS,
+      payload: data
+    }
+  }
+  return { type: types.MERCHANT_STORE_STATUS_FAILED, payload: data }
+}
+export function merchantGetStoreStatusFailed(data){
+  return { type: types.MERCHANT_STORE_STATUS_FAILED, payload: data }
+}

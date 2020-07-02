@@ -64,3 +64,7 @@ export const MERCHANT_SELECTED = 'MerchantSelected';
 export const MERCHANT_MAPS = 'MerchantMaps';
 /** MERHCHANT CHANGED */
 export const MERCHANT_CHANGED = 'MerchantChanged';
+/** MERCHANT STORE STATUS */
+export const MERCHANT_STORE_STATUS_PROCESS = 'MerchantStoreStatusProcess'
+export const MERCHANT_STORE_STATUS_SUCCESS = 'MerchantStoreStatusSuccess'
+export const MERCHANT_STORE_STATUS_FAILED = 'MerchantStoreStatusFailed'

@@ -112,6 +112,17 @@ function* getNoOrderReason(actions) {
     yield put(ActionCreators.merchantGetNoOrderReasonFailed(error));
   }
 }
+/** === GET STORE STATUS === */
+function* getStoreStatus(actions){
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getStoreStatus(actions.payload)
+    })
+    yield put(ActionCreators.merchantGetStoreStatusSuccess(response))
+  } catch (error) {
+    yield put(ActionCreators.merchantGetStoreStatusFailed(error))
+  }
+}
 
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
@@ -131,6 +142,7 @@ function* MerchantSaga() {
     types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS,
     getLogPerActivity
   );
+  yield takeEvery(types.MERCHANT_STORE_STATUS_PROCESS, getStoreStatus)
 }
 
 export default MerchantSaga;

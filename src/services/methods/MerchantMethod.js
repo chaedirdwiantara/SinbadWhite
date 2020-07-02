@@ -1,4 +1,5 @@
 import ApiRest from '../apiRest';
+import { GlobalMethod } from './GlobalMethod';
 
 /** === MERCHANT LIST === */
 function getMerchant(data) {
@@ -77,6 +78,17 @@ function getNoOrderReason() {
     method: 'GET'
   });
 }
+/** === GET STORE STATUS === */
+function getStoreStatus(){
+  return ApiRest({
+    path: 'store-status',
+    method: 'POST',
+    params: {
+      storeId: GlobalMethod.merchantStoreId(),
+      supplierId: GlobalMethod.merchantSupplierMapping()
+    }
+  })
+}
 
 export const MerchantMethod = {
   getMerchant,
@@ -88,5 +100,19 @@ export const MerchantMethod = {
   postActivity,
   getLogAllActivity,
   getLogPerActivity,
-  getNoOrderReason
+  getNoOrderReason,
+  getStoreStatus
 };
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: tatas
+* updatedDate: 01072020
+* updatedFunction:
+* -> add fucntion to get store status
+* 
+*/

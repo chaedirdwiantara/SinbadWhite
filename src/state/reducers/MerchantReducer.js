@@ -15,6 +15,7 @@ const INITIAL_STATE = {
   loadingGetLogAllActivity: false,
   loadingGetLogPerActivity: false,
   loadingGetNoOrderReason: false,
+  loadingGetStoreStatus: false,
   /** data */
   dataPostActivity: null,
   dataGetLogAllActivity: null,
@@ -23,6 +24,7 @@ const INITIAL_STATE = {
   dataGetMerchant: [],
   dataAddMerchant: null,
   dataEditMerchant: null,
+  dataStoreStatus: {},
   dataEditMerchantVolatile: {
     vehicleAccessibilityId: '',
     vehicleAccessibilityName: '',
@@ -109,7 +111,8 @@ const INITIAL_STATE = {
   errorPostActivity: null,
   errorGetLogAllActivity: null,
   errorGetLogPerActivity: null,
-  errorGetNoOrderReason: null
+  errorGetNoOrderReason: null,
+  errorGetStoreStatus: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -567,6 +570,33 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingGetNoOrderReason: false,
       errorGetNoOrderReason: action.payload
     };
+  },
+  /**
+   * ============================
+   * GET STORE STATUS
+   * ============================
+   */
+  [types.MERCHANT_STORE_STATUS_PROCESS](state, action){
+    return {
+      ...state,
+      loadingGetStoreStatus: true,
+      dataStoreStatus: {},
+      errorGetStoreStatus: null
+    }
+  },
+  [types.MERCHANT_STORE_STATUS_SUCCESS](state, action){
+    return {
+      ...state,
+      loadingGetStoreStatus: false,
+      dataStoreStatus: action.payload.data
+    }
+  },
+  [types.MERCHANT_STORE_STATUS_FAILED](state, action){
+    return {
+      ...state,
+      loadingGetStoreStatus: false,
+      errorGetStoreStatus: action.payload
+    }
   }
 });
 /**
