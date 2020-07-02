@@ -15,6 +15,7 @@ import { Fonts } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
+import ToastSuccessUpdate from '../reusable-view/ToastSuccessUpdate';
 
 class MerchantDetailAccountView extends Component {
   constructor(props) {
@@ -150,6 +151,7 @@ class MerchantDetailAccountView extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
+        <ToastSuccessUpdate />
         <ScrollView>{this.renderContent()}</ScrollView>
       </View>
     );

@@ -1,17 +1,14 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   TouchableOpacity,
   Text,
-  Dimensions,
   StyleSheet
-} from 'react-native';
-import Icons from 'react-native-vector-icons/Octicons';
-import Toast, { DURATION } from 'react-native-easy-toast';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-
-const { width, height } = Dimensions.get('window');
+} from '../../library/reactPackage';
+import { OcticonsIcon, Toast, DURATION } from '../../library/thirdPartyPackage';
+import { Fonts } from '../../helpers';
+import { Color } from '../../config';
 
 class ToastType1 extends Component {
   componentDidMount() {
@@ -23,7 +20,7 @@ class ToastType1 extends Component {
       <View style={styles.contentRow}>
         <View style={styles.circleNotif}>
           <TouchableOpacity>
-            <Icons name="check" size={12} color={masterColor.fontWhite} />
+            <OcticonsIcon name="check" size={12} color={Color.fontWhite} />
           </TouchableOpacity>
         </View>
         <Text style={Fonts.type25}>{this.props.content}</Text>
@@ -57,7 +54,7 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   containerCard: {
-    backgroundColor: masterColor.fontBlack80OP90,
+    backgroundColor: Color.fontBlack80OP90,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
@@ -74,7 +71,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 20,
-    backgroundColor: masterColor.fontGreen50,
+    backgroundColor: Color.fontGreen50,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10
