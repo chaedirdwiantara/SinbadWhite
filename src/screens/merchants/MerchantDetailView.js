@@ -1,16 +1,20 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
   ScrollView,
-  Image
-} from 'react-native';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+  Image,
+  Text
+} from '../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon
+} from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import Fonts from '../../helpers/GlobalFont';
@@ -148,6 +152,28 @@ class MerchantDetailView extends Component {
    * RENDER VIEW
    * ==============================
    */
+  /** === RENDER VERIFIED ICON === */
+  renderVerifiedIcon() {
+    return this.props.merchant.dataGetMerchantDetail.approvalStatus ===
+      'rejected' ||
+      this.props.merchant.dataGetMerchantDetail.approvalStatus ===
+        'verified' ? (
+      <View style={{ paddingRight: 8 }}>
+        {this.props.merchant.dataGetMerchantDetail.approvalStatus ===
+        'rejected' ? (
+          <MaterialIcon name="cancel" color={masterColor.mainColor} size={24} />
+        ) : (
+          <MaterialIcon
+            name="verified-user"
+            color={masterColor.fontGreen50}
+            size={24}
+          />
+        )}
+      </View>
+    ) : (
+      <View />
+    );
+  }
   /** === RENDER TTILE SECTION === */
   renderTitleSection(title) {
     return (
@@ -217,13 +243,17 @@ class MerchantDetailView extends Component {
             width: 0.8 * width
           }}
         >
-          <Text style={Fonts.type7}>
-            {this.props.merchant.dataGetMerchantDetail.externalId
-              ? this.props.merchant.dataGetMerchantDetail.externalId
-              : this.props.merchant.dataGetMerchantDetail.storeCode
-              ? this.props.merchant.dataGetMerchantDetail.storeCode
-              : '-'}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {this.renderVerifiedIcon()}
+            <Text style={Fonts.type7}>
+              {this.props.merchant.dataGetMerchantDetail.externalId
+                ? this.props.merchant.dataGetMerchantDetail.externalId
+                : this.props.merchant.dataGetMerchantDetail.storeCode
+                ? this.props.merchant.dataGetMerchantDetail.storeCode
+                : '-'}
+            </Text>
+          </View>
+
           <Text style={Fonts.type7}>
             {this.props.merchant.dataGetMerchantDetail.name}
           </Text>
