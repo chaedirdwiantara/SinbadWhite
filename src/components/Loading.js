@@ -23,6 +23,17 @@ const LoadingPage = () => {
   );
 };
 
+const LoadingHorizontal = () => {
+  return (
+    <View style={styles.loadingPage}>
+      <Image
+        source={require('../assets/gif/loading/load-horizontal.gif')}
+        style={{ height: 2 }}
+      />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   loadMoreContainer: {
     width: '100%',
@@ -38,4 +49,18 @@ const styles = StyleSheet.create({
   }
 });
 
-export { LoadingLoadMore, LoadingPage };
+export { LoadingLoadMore, LoadingPage, LoadingHorizontal };
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 02072020
+* updatedFunction:
+* -> Add component LoadingHorizontal
+* 
+*/
+

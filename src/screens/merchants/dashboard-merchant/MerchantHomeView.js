@@ -32,6 +32,7 @@ import NavigationService from '../../../navigation/NavigationService';
 import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
 import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
 import MerchantVerifyUser from './MerchantVerifyUser'
+import ModalBottomProgressChecking from '../../global/ModalBottomProgressChecking'
 
 const { width, height } = Dimensions.get('window');
 
@@ -43,6 +44,7 @@ class MerchantHomeView extends Component {
       openModalConfirmNoOrder: false,
       openModalErrorGlobal: false,
       openModalCheckUser: false,
+      openModalProgressChecking: false,
       checkNoOrder: false,
       showToast: false,
       loadingPostForCheckoutNoOrder: false,
@@ -249,7 +251,17 @@ class MerchantHomeView extends Component {
   parentFunction(data){
     switch (data.type) {
       case 'pdp':
+        this.setState({ openModalCheckUser: false })
         NavigationService.navigate('PdpView');
+        break;
+      case 'close':
+        this.setState({ openModalCheckUser: false })
+        break;
+      case 'progress-on':
+        this.setState({ openModalProgressChecking: true })
+        break;
+      case 'progress-off':
+        this.setState({ openModalProgressChecking: false })
         break;
     
       default:
@@ -560,6 +572,17 @@ class MerchantHomeView extends Component {
       </View>
     );
   }
+  /** RENDER MODAL PROGRESS CHECKING */
+  renderModalProgressChecking(){
+    return this.state.openModalProgressChecking ? (
+      <ModalBottomProgressChecking 
+        open={this.state.openModalProgressChecking}
+        progress={'Mohon tunggu'}
+      />
+    ) : (
+      <View />
+    )
+  }
   /** === RENDER CONTENT === */
   renderContent() {
     return (
@@ -694,6 +717,7 @@ class MerchantHomeView extends Component {
         {this.renderToast()}
         {this.renderModalErrorRespons()}
         {this.renderModalVerifyUser()}
+        {this.renderModalProgressChecking()}
         <ModalBottomSuccessOrder />
       </SafeAreaView>
     );
@@ -874,4 +898,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
 * updatedDate: 02072020
 * updatedFunction:
 * -> Remove unused state
+* -> Add function to change modal check status False after navigate
 */
