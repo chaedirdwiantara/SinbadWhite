@@ -1,4 +1,5 @@
 import ApiRest from '../apiRest';
+import { GlobalMethod } from './GlobalMethod';
 
 function getOTP(phoneNumber) {
   return ApiRest({
@@ -15,7 +16,8 @@ function checkPhoneNumberAvailable(phoneNumber) {
     path: 'auth/check-phone-available',
     method: 'POST',
     params: {
-      mobilePhoneNo: phoneNumber
+      mobilePhoneNo: phoneNumber,
+      supplierIds: GlobalMethod.userSupplierMapping()
     }
   });
 }

@@ -58,7 +58,6 @@ class MerchantEditView extends Component {
     switch (this.props.navigation.state.params.type) {
       case 'merchantPayment':
         return <MerchantDetailPaymentView />;
-      case 'merchantPhysical':
       case 'merchantAddress':
       case 'merchantCompletenessInformation':
       case 'merchantAccountName':

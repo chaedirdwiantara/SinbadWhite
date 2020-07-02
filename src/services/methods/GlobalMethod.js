@@ -108,10 +108,8 @@ function getVersion() {
 function merchantSupplierMapping() {
   const stateData = Store.getState();
   return stateData.merchant.selectedMerchant !== null
-    ? JSON.stringify(
-        stateData.merchant.selectedMerchant.store.supplierStores.map(
-          item => item.supplierId
-        )
+    ? stateData.merchant.selectedMerchant.store.supplierStores.map(
+        item => item.supplierId
       )
     : '';
 }
@@ -119,7 +117,7 @@ function merchantSupplierMapping() {
 function userSupplierMapping() {
   const stateData = Store.getState();
   return stateData.user !== null
-    ? JSON.stringify(stateData.user.userSuppliers.map(item => item.supplierId))
+    ? stateData.user.userSuppliers.map(item => parseInt(item.supplierId, 10))
     : '';
 }
 /** MERCHANT STORE URBAN */

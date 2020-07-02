@@ -70,7 +70,7 @@ class AddMerchantStep1 extends Component {
   /** === DID UPDATE FUNCTION === */
   /** === CHECK ERROR MESSAGE === */
   checkErrorMessage(error) {
-    if (error.code === 404) {
+    if (error.code === 400) {
       return 'No. HP yang anda masukan sudah terdaftar';
     }
     return 'Terjadi kesalahan server, silahkan coba lagi';
@@ -113,10 +113,10 @@ class AddMerchantStep1 extends Component {
           value={this.state.phoneNumber}
           onChangeText={phoneNumber => {
             const cleanNumber = phoneNumber.replace(/[^0-9]/g, '');
-            if (cleanNumber === '') {
-              this.setState({ errorPhoneNumber: false });
-            }
-            this.setState({ phoneNumber: cleanNumber });
+            this.setState({
+              phoneNumber: cleanNumber,
+              errorPhoneNumber: false
+            });
           }}
           placeholder={'Masukan nomor handphone anda'}
           keyboardType={'numeric'}
@@ -152,7 +152,8 @@ class AddMerchantStep1 extends Component {
       <ButtonSingle
         disabled={
           this.state.phoneNumber === '' ||
-          this.props.auth.loadingCheckPhoneAvailble
+          this.props.auth.loadingCheckPhoneAvailble ||
+          this.state.errorPhoneNumber
         }
         loading={this.props.auth.loadingCheckPhoneAvailble}
         title={'Lanjutkan'}

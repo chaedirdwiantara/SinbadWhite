@@ -97,7 +97,7 @@ class ModalMerchantListDataView extends Component {
       >
         <View>
           {item.imageUrl !== null ? (
-            <Image source={item.imageUrl} style={styles.boxImage} />
+            <Image source={{ uri: item.imageUrl }} style={styles.boxImage} />
           ) : (
             <Image
               source={require('../../assets/images/merchant/store.png')}
@@ -113,7 +113,13 @@ class ModalMerchantListDataView extends Component {
           }}
         >
           <View>
-            <Text style={Fonts.type16}>[ID {item.storeCode}]</Text>
+            <Text style={Fonts.type16}>
+              {item.externalId
+                ? item.externalId
+                : item.storeCode
+                ? item.storeCode
+                : '-'}
+            </Text>
             <Text style={Fonts.type16}>{item.name}</Text>
           </View>
           <View>

@@ -8,6 +8,7 @@ import GlobalStyle from '../../../helpers/GlobalStyle';
 import masterColor from '../../../config/masterColor.json';
 import { MoneyFormat } from '../../../helpers/NumberFormater';
 import Fonts from '../../../helpers/GlobalFont';
+import { EmptyData } from '../../../library/component';
 
 class MerchantDetailProfileView extends Component {
   constructor(props) {
@@ -43,9 +44,9 @@ class MerchantDetailProfileView extends Component {
       </View>
     );
   }
-  /** === RENDER CONTENT === */
-  renderContent() {
-    return this.props.merchant.dataGetMerchantDetail.creditLimitStores.map(
+  /** === RENDER PAYMENT LIST === */
+  renderPaymentList() {
+    return this.props.merchant.dataGetMerchantDetail.store.creditLimitStores.map(
       (item, index) => {
         return (
           <View
@@ -75,14 +76,27 @@ class MerchantDetailProfileView extends Component {
       }
     );
   }
+  /** === RENDER EMPTY === */
+  renderEmpty() {
+    return <EmptyData title={'Tidak ada list faktur'} description={''} />;
+  }
+  /** === RENDER CONTENT === */
+  renderContent() {
+    return (
+      <ScrollView>
+        {this.renderPaymentList()}
+        <View style={{ paddingBottom: 50 }} />
+      </ScrollView>
+    );
+  }
   /** === MAIN === */
   render() {
     return (
       <View style={styles.mainContainer}>
-        <ScrollView>
-          {this.renderContent()}
-          <View style={{ paddingBottom: 50 }} />
-        </ScrollView>
+        {this.props.merchant.dataGetMerchantDetail.store.creditLimitStores
+          .length > 0
+          ? this.renderContent()
+          : this.renderEmpty()}
       </View>
     );
   }
