@@ -32,6 +32,7 @@ import NavigationService from '../../../navigation/NavigationService';
 import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
 import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
 import MerchantVerifyUser from './MerchantVerifyUser'
+import ModalBottomProgressChecking from '../../global/ModalBottomProgressChecking'
 
 const { width, height } = Dimensions.get('window');
 
@@ -43,6 +44,7 @@ class MerchantHomeView extends Component {
       openModalConfirmNoOrder: false,
       openModalErrorGlobal: false,
       openModalCheckUser: false,
+      openModalProgressChecking: false,
       checkNoOrder: false,
       showToast: false,
       loadingPostForCheckoutNoOrder: false,
@@ -253,8 +255,13 @@ class MerchantHomeView extends Component {
         NavigationService.navigate('PdpView');
         break;
       case 'close':
-        console.log('change status')
         this.setState({ openModalCheckUser: false })
+        break;
+      case 'progress-on':
+        this.setState({ openModalProgressChecking: true })
+        break;
+      case 'progress-off':
+        this.setState({ openModalProgressChecking: false })
         break;
     
       default:
@@ -565,6 +572,17 @@ class MerchantHomeView extends Component {
       </View>
     );
   }
+  /** RENDER MODAL PROGRESS CHECKING */
+  renderModalProgressChecking(){
+    return this.state.openModalProgressChecking ? (
+      <ModalBottomProgressChecking 
+        open={this.state.openModalProgressChecking}
+        progress={'Please wait..'}
+      />
+    ) : (
+      <View />
+    )
+  }
   /** === RENDER CONTENT === */
   renderContent() {
     return (
@@ -699,6 +717,7 @@ class MerchantHomeView extends Component {
         {this.renderToast()}
         {this.renderModalErrorRespons()}
         {this.renderModalVerifyUser()}
+        {this.renderModalProgressChecking()}
         <ModalBottomSuccessOrder />
       </SafeAreaView>
     );

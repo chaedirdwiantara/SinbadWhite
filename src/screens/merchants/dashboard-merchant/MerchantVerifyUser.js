@@ -18,6 +18,7 @@ class MerchantVerifyUser extends Component {
     };
   }
   componentDidMount() {
+    this.toParentFunction({type: 'progress-on'})
     this.props.merchantGetStoreStatusProcess()
   }
 
@@ -88,6 +89,7 @@ class MerchantVerifyUser extends Component {
   }
   /** CHECK USER MATRIX */
   userVerified(supplierStatus) {
+    this.toChangeProgressModal()
     if (supplierStatus === 'rejected') {
       this.showModalSupplier();
     } else {
@@ -95,6 +97,7 @@ class MerchantVerifyUser extends Component {
     }
   }
   userRejected(supplierStatus) {
+    this.toChangeProgressModal()
     if (supplierStatus === 'rejected') {
       this.showModalSupplier();
     } else {
@@ -102,6 +105,7 @@ class MerchantVerifyUser extends Component {
     }
   }
   userUpdating(supplierStatus) {
+    this.toChangeProgressModal()
     if (supplierStatus === 'rejected') {
       this.showModalSupplier();
     } else {
@@ -109,6 +113,7 @@ class MerchantVerifyUser extends Component {
     }
   }
   userPending(supplierStatus) {
+    this.toChangeProgressModal()
     if (supplierStatus === 'rejected') {
       this.showModalSupplier();
     } else {
@@ -116,6 +121,7 @@ class MerchantVerifyUser extends Component {
     }
   }
   userGuest(supplierStatus) {
+    this.toChangeProgressModal()
     if (supplierStatus === 'rejected') {
       this.showModalSupplier();
     } else {
@@ -129,9 +135,13 @@ class MerchantVerifyUser extends Component {
   showModalSinbad() {
     this.setState({ modalRejected: true, modalRejectedType: 'sinbad' });
   }
-  /** CHANGE STATUS MODAL AT PARENT */
+  /** CHANGE STATUS MODAL STORE CHECK AT PARENT */
   toChangeParentModal(){
     this.toParentFunction({ type: 'close' })
+  }
+  /** CHANGE STATUS MODAL PROGRESS CHECK AT PARENT */
+  toChangeProgressModal(){
+    this.toParentFunction({type: 'progress-off'})
   }
   /** RENDER MODAL REJECTED */
   renderModalRejected() {
