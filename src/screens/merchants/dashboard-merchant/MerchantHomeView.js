@@ -577,7 +577,7 @@ class MerchantHomeView extends Component {
     return this.state.openModalProgressChecking ? (
       <ModalBottomProgressChecking 
         open={this.state.openModalProgressChecking}
-        progress={'Please wait..'}
+        progress={'Mohon tunggu'}
       />
     ) : (
       <View />
