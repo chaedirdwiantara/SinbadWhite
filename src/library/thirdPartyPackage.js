@@ -30,6 +30,8 @@ import { RFPercentage } from 'react-native-responsive-fontsize';
 import DeviceInfo from 'react-native-device-info';
 /** MOMENT */
 import moment from 'moment'
+/** TOAST */
+import Toast, { DURATION } from 'react-native-easy-toast';
 
 export {
   /** REDUX */
@@ -63,5 +65,8 @@ export {
   /** SETTING */
   DeviceInfo,
   /** MOMENT */
-  moment
+  moment,
+  /** TOAST */
+  Toast,
+  DURATION
 };

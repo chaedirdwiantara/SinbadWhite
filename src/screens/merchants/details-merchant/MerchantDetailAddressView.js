@@ -20,6 +20,7 @@ import { Fonts } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
+import ToastSuccessUpdate from '../reusable-view/ToastSuccessUpdate';
 
 class MerchantDetailAddressView extends Component {
   constructor(props) {
@@ -146,7 +147,12 @@ class MerchantDetailAddressView extends Component {
   }
   /** === MAIN === */
   render() {
-    return <View style={styles.mainContainer}>{this.renderContent()}</View>;
+    return (
+      <View style={styles.mainContainer}>
+        <ToastSuccessUpdate />
+        {this.renderContent()}
+      </View>
+    );
   }
 }
 

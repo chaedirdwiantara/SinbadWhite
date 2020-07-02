@@ -28,7 +28,8 @@ class MerchantDetailView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openModalCallMerchant: false
+      openModalCallMerchant: false,
+      showToast: false
     };
   }
   /**
@@ -36,6 +37,7 @@ class MerchantDetailView extends Component {
    * FUNCTIONAL
    * ==============================
    */
+  /** === DID MOUNT === */
   componentDidMount() {
     this.props.merchantGetDetailProcess(this.props.navigation.state.params.id);
   }
@@ -127,6 +129,16 @@ class MerchantDetailView extends Component {
       case 'close':
         this.setState({ openModalCallMerchant: false });
         break;
+      default:
+        break;
+    }
+  }
+  /** === CHECK REJECTION === */
+  checkRejection(field) {
+    const data = this.props.merchant.dataMerchantRejected;
+    switch (field) {
+      case 'merchantInformation':
+        return data.name || data.imageUrl || data.phoneNo;
       default:
         break;
     }
@@ -300,6 +312,7 @@ class MerchantDetailView extends Component {
         </View>
         <ButtonMenuType1
           child
+          notification={this.checkRejection('merchantInformation')}
           title={'Informasi Toko'}
           onPress={() => this.goTo('merchantInformation')}
         />
@@ -358,6 +371,7 @@ class MerchantDetailView extends Component {
    * MODAL
    * =====================
    */
+
   /** MODAL CALL */
   renderModalCallMerchant() {
     return this.state.openModalCallMerchant ? (

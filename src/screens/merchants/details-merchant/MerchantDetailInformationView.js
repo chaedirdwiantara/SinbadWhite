@@ -6,6 +6,7 @@ import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
 import masterColor from '../../../config/masterColor.json';
 import ButtonMenuType1 from '../../../components/button/ButtonMenuType1';
+import ToastSuccessUpdate from '../reusable-view/ToastSuccessUpdate';
 
 class MerchantDetailInformationView extends Component {
   constructor(props) {
@@ -75,7 +76,12 @@ class MerchantDetailInformationView extends Component {
   }
   /** === MAIN === */
   render() {
-    return <View style={styles.mainContainer}>{this.renderContent()}</View>;
+    return (
+      <View style={styles.mainContainer}>
+        <ToastSuccessUpdate />
+        {this.renderContent()}
+      </View>
+    );
   }
 }
 

@@ -45,15 +45,9 @@ const INITIAL_STATE = {
   merchantChanged: false,
   dataGetNoOrderReason: null,
   dataMerchantRejected: {
-    fullName: null,
     name: null,
     phoneNo: null,
-    taxNo: null,
-    idNo: null,
-    imageUrl: null,
-    idImageUrl: null,
-    selfieImageUrl: null,
-    taxImageUrl: null
+    imageUrl: null
   },
   dataMerchantDisabledField: {
     fullName: false,
@@ -253,7 +247,11 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetMerchantDetail: false,
       dataGetMerchantDetail: action.payload,
-      dataMerchantVolatile: saveDataMerchantVolatile(action.payload)
+      dataMerchantVolatile: saveDataMerchantVolatile(action.payload),
+      dataMerchantRejected:
+        action.payload.rejectedFields !== null
+          ? action.payload.rejectedFields
+          : INITIAL_STATE.dataMerchantRejected
     };
   },
   [types.MERCHANT_GET_DETAIL_FAILED](state, action) {
@@ -421,7 +419,11 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingEditMerchant: false,
       dataMerchantVolatile: saveDataMerchantVolatile(action.payload),
       dataGetMerchantDetail: action.payload,
-      dataEditMerchant: action.payload
+      dataEditMerchant: action.payload,
+      dataMerchantRejected:
+        action.payload.rejectedFields !== null
+          ? action.payload.rejectedFields
+          : INITIAL_STATE.dataMerchantRejected
     };
   },
   [types.MERCHANT_EDIT_FAILED](state, action) {
