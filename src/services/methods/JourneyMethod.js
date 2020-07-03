@@ -2,7 +2,7 @@ import ApiRest from '../apiRest';
 /** GET JOURNEY PLAN LIST BY USER ID */
 function getJourneyPlan(data) {
   return ApiRest({
-    path: `journey-plan-list?$skip=${data.page}&$limit=10`,
+    path: `journey-list?$skip=${data.page}&$limit=10`,
     method: 'GET'
   });
 }
@@ -27,3 +27,16 @@ export const JourneyMethod = {
   saveMerchantToJourneyPlan,
   getJourneyPlanReport
 };
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: tatas
+* updatedDate: 03072020
+* updatedFunction:
+* -> Change endpoint getJourneyPlan
+* 
+*/
