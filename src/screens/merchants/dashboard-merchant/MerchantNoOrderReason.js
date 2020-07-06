@@ -51,7 +51,7 @@ class MerchantNoOrderReason extends Component {
         if (this.props.merchant.dataPostActivity.activity === 'check_out') {
           NavigationService.goBack(this.props.navigation.state.key);
           this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.id
+            this.props.merchant.selectedMerchant.journeyPlanSaleId
           );
           this.setState({
             showToast: true,
@@ -59,7 +59,7 @@ class MerchantNoOrderReason extends Component {
           });
           /** FOR GET LOG ALL ACTIVITY */
           this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.id
+            this.props.merchant.selectedMerchant.journeyPlanSaleId
           );
         }
       }
@@ -77,7 +77,7 @@ class MerchantNoOrderReason extends Component {
   checkOut() {
     Keyboard.dismiss();
     this.props.merchantPostActivityProcess({
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
       activity: 'check_out',
       noOrderReasonId: this.state.selectedReason,
       noOrderNotes: this.state.reason
@@ -228,3 +228,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(MerchantNoOrderReason);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Change key
+* 
+*/
