@@ -66,11 +66,11 @@ class JourneyListDataView extends Component {
     }
     /** GO TO SELECTED STORE */
     this.props.merchantSelected(data);
-    setTimeout(()=> {
+    setTimeout(() => {
       NavigationService.navigate('MerchantHomeView', {
         storeName
       });
-    }, 1000)
+    }, 100);
   }
   /** go to chat */
   goToChat() {
@@ -154,9 +154,7 @@ class JourneyListDataView extends Component {
                 item.storeType === 'exist_store' ? Fonts.type16 : Fonts.type29
               }
             >
-              {item.externalId
-                ? item.externalId
-                : '-'}
+              {item.externalId ? item.externalId : '-'}
             </Text>
             <Text
               style={
@@ -334,14 +332,14 @@ export default connect(
 )(JourneyListDataView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Change key
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Change key
+ *
+ */
