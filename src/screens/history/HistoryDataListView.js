@@ -1,20 +1,28 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect,
+  moment,
+} from '../../library/thirdPartyPackage'
+import {
+  SkeletonType5,
+  EmptyData,
+  ProductListType1,
+  LoadingLoadMore,
+  ModalConfirmation
+} from '../../library/component'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import moment from 'moment';
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import SkeletonType5 from '../../components/skeleton/SkeletonType5';
-import EmptyData from '../../components/empty_state/EmptyData';
-import ProductListType1 from '../../components/list/ProductListType1';
-import { LoadingLoadMore } from '../../components/Loading';
-import { MoneyFormat } from '../../helpers/NumberFormater';
 import NavigationService from '../../navigation/NavigationService';
-import ModalConfirmation from '../../components/modal/ModalConfirmation';
 
 class HistoryDataListView extends Component {
   constructor(props) {
@@ -378,3 +386,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(HistoryDataListView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

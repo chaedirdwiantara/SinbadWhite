@@ -1,29 +1,32 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   SafeAreaView,
   ScrollView,
   TouchableWithoutFeedback,
-  TouchableOpacity
-} from 'react-native';
-import { bindActionCreators } from 'redux';
-import moment from 'moment';
-import Text from 'react-native-text';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  moment,
+  MaterialIcon,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarRed,
+  ProductListType2,
+  Address,
+  ModalConfirmation,
+  LoadingPage
+} from '../../library/component'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
-import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarRed } from '../../components/StatusBarGlobal';
-import ProductListType2 from '../../components/list/ProductListType2';
-import Address from '../../components/Address';
-import { MoneyFormat } from '../../helpers/NumberFormater';
 import NavigationService from '../../navigation/NavigationService';
 import CallCS from '../../screens/global/CallCS';
-import ModalConfirmation from '../../components/modal/ModalConfirmation';
-import { LoadingPage } from '../../components/Loading';
 
 class HistoryDetailView extends Component {
   constructor(props) {
@@ -535,3 +538,16 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(HistoryDetailView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

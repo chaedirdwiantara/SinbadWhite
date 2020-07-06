@@ -1,26 +1,33 @@
-import React, { Component } from 'react';
-import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as ActionCreators from '../../state/actions';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
 import {
   StatusBarWhite,
-  StatusBarBlackOP40
-} from '../../components/StatusBarGlobal';
+  StatusBarBlackOP40,
+  SearchBarType1,
+  ModalBottomType3,
+  ModalBottomType4,
+  DatePickerSpinner
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
+import * as ActionCreators from '../../state/actions';
+import masterColor from '../../config/masterColor.json';
 import HistoryTabView from './HistoryTabView';
-import SearchBarType1 from '../../components/search_bar/SearchBarType1';
 import HistoryOrderView from './HistoryOrderView';
 import HistoryPaymentView from './HistoryPaymentView';
-import ModalBottomType3 from '../../components/modal_bottom/ModalBottomType3';
-import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
 import HistoryFilterView from './HistoryFilterView';
 import HistoryPortfolioFilterView from './HistoryPortfolioFilterView';
 import HistoryDateFilterView from './HistoryDateFilterView';
-import DatePickerSpinner from '../../components/DatePickerSpinner';
 
 class HistoryView extends Component {
   constructor(props) {
@@ -346,3 +353,16 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(HistoryView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

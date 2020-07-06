@@ -1,13 +1,21 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import Text from 'react-native-text';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
-import GlobalStyle from '../../helpers/GlobalStyle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  MaterialIcon,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarBlackOP40,
+  ButtonSingle
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarBlackOP40 } from '../../components/StatusBarGlobal';
-import ButtonSingle from '../../components/button/ButtonSingle';
 
 class HistoryFilterView extends Component {
   constructor(props) {
@@ -88,11 +96,11 @@ class HistoryFilterView extends Component {
                   : this.modifyPorfolio()}
               </Text>
             ) : (
-              <Text style={Fonts.type23}>(Semua)</Text>
+              <Text style={Fonts.type23}>Semua</Text>
             )}
           </View>
           <View style={{ justifyContent: 'center' }}>
-            <MaterialIcons
+            <MaterialIcon
               name="chevron-right"
               color={masterColor.fontBlack40}
               size={24}
@@ -126,7 +134,7 @@ class HistoryFilterView extends Component {
             </Text>
           </View>
           <View style={{ justifyContent: 'center' }}>
-            <MaterialIcons
+            <MaterialIcon
               name="chevron-right"
               color={masterColor.fontBlack40}
               size={24}
@@ -209,3 +217,16 @@ const mapStateToProps = ({ merchant }) => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, {})(HistoryFilterView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

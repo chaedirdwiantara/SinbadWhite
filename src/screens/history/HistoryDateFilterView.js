@@ -1,15 +1,23 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  MaterialIcon,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarBlackOP40,
+  ButtonSingle
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
-import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarBlackOP40 } from '../../components/StatusBarGlobal';
-import ButtonSingle from '../../components/button/ButtonSingle';
 
 class HistoryDateFilterView extends Component {
   constructor(props) {
@@ -72,7 +80,7 @@ class HistoryDateFilterView extends Component {
             </Text>
           </View>
           <View style={{ justifyContent: 'center' }}>
-            <MaterialIcons
+            <MaterialIcon
               name="chevron-right"
               color={masterColor.fontBlack40}
               size={24}
@@ -108,7 +116,7 @@ class HistoryDateFilterView extends Component {
             </Text>
           </View>
           <View style={{ justifyContent: 'center' }}>
-            <MaterialIcons
+            <MaterialIcon
               name="chevron-right"
               color={masterColor.fontBlack40}
               size={24}
@@ -193,3 +201,17 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(HistoryDateFilterView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

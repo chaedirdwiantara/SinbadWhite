@@ -1,9 +1,16 @@
-import React, { Component } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Text
+} from '../../library/reactPackage'
+import {
+  connect
+} from '../../library/thirdPartyPackage'
+import { Fonts } from '../../helpers'
 import masterColor from '../../config/masterColor';
-import Fonts from '../../helpers/GlobalFont';
 
 class HistoryTabView extends Component {
   constructor(props) {
@@ -139,3 +146,16 @@ const mapStateToProps = ({ auth }) => {
 };
 
 export default connect(mapStateToProps)(HistoryTabView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
