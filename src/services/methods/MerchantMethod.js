@@ -85,7 +85,7 @@ function getStoreStatus(){
     method: 'POST',
     params: {
       storeId: GlobalMethod.merchantStoreId(),
-      supplierId: GlobalMethod.merchantSupplierMapping()
+      supplierId: GlobalMethod.userSupplierMapping()
     }
   })
 }
@@ -114,5 +114,8 @@ export const MerchantMethod = {
 * updatedDate: 01072020
 * updatedFunction:
 * -> add fucntion to get store status
-* 
+* updatedBy: tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Change global method to get userId and supplierId
 */

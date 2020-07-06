@@ -83,7 +83,7 @@ class ModalBottomMerchantCheckout extends Component {
    */
   /** RENDER CONTENT LIST */
   renderContentList() {
-    const store = this.props.merchant.selectedMerchant.store;
+    const store = this.props.merchant.selectedMerchant;
     return (
       <View>
         <View style={GlobalStyle.lines} />
@@ -98,8 +98,6 @@ class ModalBottomMerchantCheckout extends Component {
           <Text style={Fonts.type8}>
             {store.externalId
               ? store.externalId
-              : store.storeCode
-              ? store.storeCode
               : '-'}{' '}
             - {store.name}
           </Text>
@@ -244,3 +242,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ModalBottomMerchantCheckout);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Change key
+* 
+*/

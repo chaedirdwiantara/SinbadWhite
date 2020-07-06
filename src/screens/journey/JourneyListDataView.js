@@ -49,9 +49,9 @@ class JourneyListDataView extends Component {
     }
   };
   /** go to detail merchant */
-  goToDetailMerchant(storeId) {
+  goToDetailMerchant(id) {
     NavigationService.navigate('MerchantDetailView', {
-      storeId
+      id
     });
   }
   /** go to merchant dashboard */
@@ -60,15 +60,17 @@ class JourneyListDataView extends Component {
      * if agent change store
      */
     if (this.props.merchant.selectedMerchant !== null) {
-      if (this.props.merchant.selectedMerchant.store.id !== data.store.id) {
+      if (this.props.merchant.selectedMerchant.storeId !== data.storeId) {
         this.props.merchantChanged(true);
       }
     }
     /** GO TO SELECTED STORE */
     this.props.merchantSelected(data);
-    NavigationService.navigate('MerchantHomeView', {
-      storeName
-    });
+    setTimeout(()=> {
+      NavigationService.navigate('MerchantHomeView', {
+        storeName
+      });
+    }, 1000)
   }
   /** go to chat */
   goToChat() {
@@ -138,7 +140,7 @@ class JourneyListDataView extends Component {
           )}
         </View>
         <TouchableOpacity
-          onPress={() => this.goToMerchantDashboard(item.store.name, item)}
+          onPress={() => this.goToMerchantDashboard(item.name, item)}
           style={{
             paddingHorizontal: 10,
             paddingVertical: 13,
@@ -152,10 +154,8 @@ class JourneyListDataView extends Component {
                 item.storeType === 'exist_store' ? Fonts.type16 : Fonts.type29
               }
             >
-              {item.store.externalId
-                ? item.store.externalId
-                : item.store.storeCode
-                ? item.store.storeCode
+              {item.externalId
+                ? item.externalId
                 : '-'}
             </Text>
             <Text
@@ -163,7 +163,7 @@ class JourneyListDataView extends Component {
                 item.storeType === 'exist_store' ? Fonts.type16 : Fonts.type29
               }
             >
-              {item.store.name}
+              {item.name}
             </Text>
           </View>
           <View>
@@ -172,8 +172,8 @@ class JourneyListDataView extends Component {
               font={
                 item.storeType === 'exist_store' ? Fonts.type17 : Fonts.type22
               }
-              address={item.store.address}
-              urban={item.store.urban}
+              address={item.address}
+              urban={item.urban}
             />
           </View>
         </TouchableOpacity>
@@ -227,7 +227,7 @@ class JourneyListDataView extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.boxButtonDetail}
-              onPress={() => this.goToDetailMerchant(item.store.id)}
+              onPress={() => this.goToDetailMerchant(item.id)}
             >
               <Text style={Fonts.type18}>Detail</Text>
             </TouchableOpacity>
@@ -332,3 +332,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(JourneyListDataView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Change key
+* 
+*/

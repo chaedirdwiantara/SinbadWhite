@@ -23,11 +23,11 @@ class ModalBottomSuccessOrder extends Component {
     this.props.omsResetData();
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
-      this.props.merchant.selectedMerchant.store.id
+      this.props.merchant.selectedMerchant.storeId
     );
     /** FOR GET LOG ALL ACTIVITY */
     this.props.merchantGetLogAllActivityProcess(
-      this.props.merchant.selectedMerchant.id
+      this.props.merchant.selectedMerchant.journeyPlanSaleId
     );
   }
 
@@ -72,3 +72,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ModalBottomSuccessOrder);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Change key
+* 
+*/

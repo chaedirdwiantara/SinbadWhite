@@ -104,15 +104,6 @@ function getVersion() {
  * THIS CODE IS NOT FETCHING (ONLY FUNCTION)
  * =========================================
  */
-/** MAPPING SUPPLIER MERCHANT */
-function merchantSupplierMapping() {
-  const stateData = Store.getState();
-  return stateData.merchant.selectedMerchant !== null
-    ? stateData.merchant.selectedMerchant.store.supplierStores.map(
-        item => item.supplierId
-      )
-    : '';
-}
 /** MAPPING SUPPLIER AGENT */
 function userSupplierMapping() {
   const stateData = Store.getState();
@@ -124,8 +115,8 @@ function userSupplierMapping() {
 function merchantStoreUrban() {
   const stateData = Store.getState();
   if (stateData.merchant.selectedMerchant !== null) {
-    if (stateData.merchant.selectedMerchant.store.urbanId !== null) {
-      return stateData.merchant.selectedMerchant.store.urbanId;
+    if (stateData.merchant.selectedMerchant.urbanId !== null) {
+      return stateData.merchant.selectedMerchant.urbanId;
     }
     return '';
   }
@@ -135,8 +126,8 @@ function merchantStoreUrban() {
 function merchantStoreId() {
   const stateData = Store.getState();
   if (stateData.merchant.selectedMerchant !== null) {
-    if (stateData.merchant.selectedMerchant.store.id !== null) {
-      return stateData.merchant.selectedMerchant.store.id;
+    if (stateData.merchant.selectedMerchant.storeId !== null) {
+      return stateData.merchant.selectedMerchant.storeId;
     }
     return '';
   }
@@ -150,6 +141,19 @@ export const GlobalMethod = {
   getVersion,
   merchantStoreUrban,
   merchantStoreId,
-  merchantSupplierMapping,
   userSupplierMapping
 };
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Remove unused function
+* 
+*/
+

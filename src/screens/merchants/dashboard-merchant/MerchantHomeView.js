@@ -97,11 +97,11 @@ class MerchantHomeView extends Component {
   componentDidMount() {
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
-      this.props.merchant.selectedMerchant.store.id
+      this.props.merchant.selectedMerchant.storeId
     );
     /** FOR GET LOG ALL ACTIVITY */
     this.props.merchantGetLogAllActivityProcess(
-      this.props.merchant.selectedMerchant.id
+      this.props.merchant.selectedMerchant.journeyPlanSaleId
     );
   }
 
@@ -125,7 +125,7 @@ class MerchantHomeView extends Component {
           }, 3000);
           /** FOR GET LOG ALL ACTIVITY */
           this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.id
+            this.props.merchant.selectedMerchant.journeyPlanSaleId
           );
         } else if (
           /** IF CHECK OUT SUCCESS */
@@ -141,7 +141,7 @@ class MerchantHomeView extends Component {
           }, 3000);
           /** FOR GET LOG ALL ACTIVITY */
           this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.id
+            this.props.merchant.selectedMerchant.journeyPlanSaleId
           );
         }
       }
@@ -208,7 +208,7 @@ class MerchantHomeView extends Component {
   /** CHECKOUT PROCESS */
   checkoutProcess() {
     this.props.merchantPostActivityProcess({
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
       activity: 'check_out'
     });
   }
@@ -230,7 +230,7 @@ class MerchantHomeView extends Component {
         break;
       case 'history':
         NavigationService.navigate('HistoryView', {
-          storeId: this.props.merchant.selectedMerchant.store.id
+          storeId: this.props.merchant.selectedMerchant.storeId
         });
         break;
       case 'checkIn':
@@ -238,7 +238,7 @@ class MerchantHomeView extends Component {
         break;
       case 'checkOut':
         this.props.merchantGetLogPerActivityProcess({
-          journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+          journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
           activity: 'check_in'
         });
         this.setState({ openModalCheckout: true });
@@ -336,7 +336,7 @@ class MerchantHomeView extends Component {
     let tempCount = count - 3 < 0 ? 0 : count - 3;
     return tempCount > 0 ? (
       <View>
-        <Text style={styles.textPlusProduct}>(+{tempCount} } Produk Lain)</Text>
+        <Text style={styles.textPlusProduct}>(+{tempCount}  Produk Lain)</Text>
       </View>
     ) : (
       <View />
@@ -622,12 +622,12 @@ class MerchantHomeView extends Component {
           () => {
             this.setState({ checkNoOrder: true });
             this.props.merchantGetLogPerActivityProcess({
-              journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+              journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
               activity: 'order'
             });
           }
           // this.props.merchantPostActivityProcess({
-          //   journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+          //   journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
           //   activity: 'check_out'
           // })
         }
@@ -899,4 +899,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
 * updatedFunction:
 * -> Remove unused state
 * -> Add function to change modal check status False after navigate
+* updatedDate: 03072020
+* updatedFunction:
+* -> Change key
 */
