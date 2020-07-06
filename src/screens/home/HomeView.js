@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   TouchableOpacity,
   StyleSheet,
@@ -8,23 +9,25 @@ import {
   Image,
   SafeAreaView,
   FlatList,
-  Dimensions
-} from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import DeviceInfo from 'react-native-device-info';
-import { NavigationEvents } from 'react-navigation';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+  Dimensions,
+  Text
+} from '../../library/reactPackage'
+import {
+  MaterialIcon,
+  DeviceInfo,
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarWhite,
+  BackHandlerCloseApp,
+  ModalConfirmation,
+  ModalConfirmationType2
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
-import Fonts from '../../helpers/GlobalFont';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import { StatusBarWhite } from '../../components/StatusBarGlobal';
-import BackHandlerCloseApp from '../../components/BackHandlerCloseApp';
-import ModalConfirmation from '../../components/modal/ModalConfirmation';
-import ModalConfirmationType2 from '../../components/modal/ModalConfirmationType2';
 
 const { width } = Dimensions.get('window');
 
@@ -224,7 +227,7 @@ class HomeView extends Component {
           <Text style={Fonts.type7}>Last Actvity</Text>
         </View>
         <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 16 }}>
-          <View style={GlobalStyles.lines} />
+          <View style={GlobalStyle.lines} />
         </View>
       </View>
     );
@@ -373,3 +376,16 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
