@@ -66,9 +66,11 @@ class JourneyListDataView extends Component {
     }
     /** GO TO SELECTED STORE */
     this.props.merchantSelected(data);
-    NavigationService.navigate('MerchantHomeView', {
-      storeName
-    });
+    setTimeout(()=> {
+      NavigationService.navigate('MerchantHomeView', {
+        storeName
+      });
+    }, 1000)
   }
   /** go to chat */
   goToChat() {

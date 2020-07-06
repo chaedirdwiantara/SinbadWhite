@@ -126,7 +126,7 @@ function merchantStoreUrban() {
 function merchantStoreId() {
   const stateData = Store.getState();
   if (stateData.merchant.selectedMerchant !== null) {
-    if (stateData.merchant.selectedMerchant.storeId!== null) {
+    if (stateData.merchant.selectedMerchant.storeId !== null) {
       return stateData.merchant.selectedMerchant.storeId;
     }
     return '';

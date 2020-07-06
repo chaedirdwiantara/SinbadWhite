@@ -336,7 +336,7 @@ class MerchantHomeView extends Component {
     let tempCount = count - 3 < 0 ? 0 : count - 3;
     return tempCount > 0 ? (
       <View>
-        <Text style={styles.textPlusProduct}>(+{tempCount} } Produk Lain)</Text>
+        <Text style={styles.textPlusProduct}>(+{tempCount}  Produk Lain)</Text>
       </View>
     ) : (
       <View />
