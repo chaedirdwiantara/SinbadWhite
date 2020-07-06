@@ -25,8 +25,8 @@ class MerchantCheckinView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      latitude: this.props.merchant.selectedMerchant.store.latitude,
-      longitude: this.props.merchant.selectedMerchant.store.longitude,
+      latitude: this.props.merchant.selectedMerchant.latitude,
+      longitude: this.props.merchant.selectedMerchant.longitude,
       latitudeDelta: 0.02,
       longitudeDelta: 0.02,
       reRender: false,
@@ -52,7 +52,7 @@ class MerchantCheckinView extends Component {
       if (this.props.merchant.dataPostActivity !== null) {
         /** get log all activity */
         this.props.merchantGetLogAllActivityProcess(
-          this.props.merchant.selectedMerchant.id
+          this.props.merchant.selectedMerchant.journeyPlanSaleId
         );
         NavigationService.goBack(this.props.navigation.state.key);
       }
@@ -119,9 +119,8 @@ class MerchantCheckinView extends Component {
                   longitude: this.state.longitude
                 },
                 {
-                  latitude: this.props.merchant.selectedMerchant.store.latitude,
-                  longitude: this.props.merchant.selectedMerchant.store
-                    .longitude
+                  latitude: this.props.merchant.selectedMerchant.latitude,
+                  longitude: this.props.merchant.selectedMerchant.longitude
                 }
               ],
               {
@@ -140,10 +139,10 @@ class MerchantCheckinView extends Component {
         <Marker
           image={require('../../../assets/icons/maps/drop_pin.png')}
           coordinate={{
-            latitude: this.props.merchant.selectedMerchant.store.latitude,
-            longitude: this.props.merchant.selectedMerchant.store.longitude
+            latitude: this.props.merchant.selectedMerchant.latitude,
+            longitude: this.props.merchant.selectedMerchant.longitude
           }}
-          title={this.props.merchant.selectedMerchant.store.name}
+          title={this.props.merchant.selectedMerchant.name}
         />
       </MapView>
     );
@@ -199,15 +198,13 @@ class MerchantCheckinView extends Component {
    * ====================
    */
   renderModalBottom() {
-    const journeyPlanSaleId = this.props.merchant.selectedMerchant.id;
-    const store = this.props.merchant.selectedMerchant.store;
+    const journeyPlanSaleId = this.props.merchant.selectedMerchant.journeyPlanSaleId;
+    const store = this.props.merchant.selectedMerchant;
     return (
       <ModalBottomType2
         title={`${
           store.externalId
             ? store.externalId
-            : store.storeCode
-            ? store.storeCode
             : '-'
         } - ${store.name}`}
         body={
@@ -335,3 +332,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(MerchantCheckinView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Change Key
+* 
+*/
