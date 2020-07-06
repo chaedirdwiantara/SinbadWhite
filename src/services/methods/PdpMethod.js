@@ -4,7 +4,7 @@ import { GlobalMethod } from '../methods/GlobalMethod';
 function getPdp(data) {
   return ApiRest({
     path: `catalogues?$skip=${data.page}&$limit=10&supplierIds=${JSON.stringify(
-      GlobalMethod.merchantSupplierMapping()
+      GlobalMethod.userSupplierMapping()
     )}&searchName=${data.search}&status=active&sort=${data.sort}&sortby=${
       data.sortBy
     }`,
@@ -15,7 +15,7 @@ function getPdp(data) {
 function getSearchPdp(data) {
   return ApiRest({
     path: `catalogues?$skip=${data.page}&$limit=10&supplierIds=${JSON.stringify(
-      GlobalMethod.merchantSupplierMapping()
+      GlobalMethod.userSupplierMapping()
     )}&searchName=${data.search}&status=active&sort=${data.sort}&sortby=${
       data.sortBy
     }`,
@@ -35,3 +35,16 @@ export const PdpMethod = {
   getDetailPdp,
   getSearchPdp
 };
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Change global method
+*/
+
