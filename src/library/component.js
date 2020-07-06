@@ -13,7 +13,8 @@ import {
   StatusBarBlackOP40,
   StatusBarTransparent,
   StatusBarTransparentBlack,
-  StatusBarBlackOP40Translucent
+  StatusBarBlackOP40Translucent,
+  StatusBarBlack
 } from '../components/StatusBarGlobal';
 /** INPUT */
 import InputType2 from '../components/input/InputType2';
@@ -23,14 +24,17 @@ import InputMapsType1 from '../components/input/InputMapsType1';
 /** DROPDOWN */
 import DropdownType1 from '../components/input/DropdownType1';
 /** BUTTON */
+import ButtonFloatType1 from '../components/button/ButtonFloatType1'
 import ButtonSingle from '../components/button/ButtonSingle';
 import ButtonMenuType1 from '../components/button/ButtonMenuType1';
 /** MODAL */
 import ModalConfirmation from '../components/modal/ModalConfirmation';
+import ModalConfirmationType2 from '../components/modal/ModalConfirmationType2'
 import ModalBottomErrorPinMap from '../components/error/ModalBottomErrorPinMap';
 import ModalBottomSwipeCloseNotScroll from '../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalBottomType1 from '../components/modal_bottom/ModalBottomType1';
 import ModalBottomType3 from '../components/modal_bottom/ModalBottomType3';
+import ModalBottomType4 from '../components/modal_bottom/ModalBottomType4'
 /** ERROR MODAL */
 import ModalBottomErrorRespons from '../components/error/ModalBottomErrorRespons';
 /** OTP */
@@ -46,8 +50,21 @@ import ErrorPageNoGPS from '../components/error/ErrorPageNoGPS';
 import ToastType1 from '../components/toast/ToastType1';
 /** LIST */
 import ProductListType1 from '../components/list/ProductListType1'
+import ProductListType2 from '../components/list/ProductListType2'
 /** EMPTY DATA */
+import ComingSoon from '../components/empty_state/ComingSoon'
 import EmptyData from '../components/empty_state/EmptyData';
+/** SKELETON */
+import SkeletonType2 from '../components/skeleton/SkeletonType2'
+import SkeletonType3 from '../components/skeleton/SkeletonType3'
+import SkeletonType5 from '../components/skeleton/SkeletonType5'
+import SkeletonType6 from '../components/skeleton/SkeletonType6'
+/** ADDRESS */
+import Address from '../components/Address'
+/** TAG */
+import TagListType2 from '../components/tag/TagListType2'
+/** DATE PICKER SPINNER */
+import DatePickerSpinner from '../components/DatePickerSpinner'
 
 export {
   CartGlobal,
@@ -65,6 +82,7 @@ export {
   StatusBarTransparent,
   StatusBarTransparentBlack,
   StatusBarBlackOP40Translucent,
+  StatusBarBlack,
   /** INPUT */
   InputType2,
   InputType4,
@@ -73,14 +91,17 @@ export {
   /** DROPDOWN */
   DropdownType1,
   /** BUTTON */
+  ButtonFloatType1,
   ButtonSingle,
   ButtonMenuType1,
   /** MODAL */
   ModalConfirmation,
+  ModalConfirmationType2,
   ModalBottomErrorPinMap,
   ModalBottomSwipeCloseNotScroll,
   ModalBottomType1,
   ModalBottomType3,
+  ModalBottomType4,
   /** ERROR MODAL */
   ModalBottomErrorRespons,
   /** OTP */
@@ -98,6 +119,32 @@ export {
   ToastType1,
   /** LIST */
   ProductListType1,
+  ProductListType2,
   /** EMPTY DATA */
-  EmptyData
+  ComingSoon,
+  EmptyData,
+  /** SKELETON */
+  SkeletonType2,
+  SkeletonType3,
+  SkeletonType5,
+  SkeletonType6,
+  /** ADDRESS */
+  Address,
+  /** TAG */
+  TagListType2,
+  /** DATE PICKER SPINNER */
+  DatePickerSpinner
 };
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Add new component
+* 
+*/

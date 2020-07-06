@@ -32,6 +32,14 @@ import DeviceInfo from 'react-native-device-info';
 import moment from 'moment'
 /** TOAST */
 import Toast, { DURATION } from 'react-native-easy-toast';
+/** RNFS */
+var RNFS = require('react-native-fs');
+/** RN CAMERA */
+import { RNCamera } from 'react-native-camera';
+/** IMAGE EDITOR */
+import ImageEditor from '@react-native-community/image-editor';
+/** FIREBASE */
+import firebase from 'react-native-firebase';
 
 export {
   /** REDUX */
@@ -68,5 +76,27 @@ export {
   moment,
   /** TOAST */
   Toast,
-  DURATION
+  DURATION,
+  /** RNFS */
+  RNFS,
+  /** RN CAMERA */
+  RNCamera,
+  /** IMAGE EDITOR */
+  ImageEditor,
+  /** FIREBASE */
+  firebase,
 };
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Add new third party component
+* 
+*/
+
