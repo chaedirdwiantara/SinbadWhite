@@ -1,21 +1,26 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   Dimensions,
   Image,
   TouchableOpacity
-} from 'react-native';
-var RNFS = require('react-native-fs');
-import { RNCamera } from 'react-native-camera';
-import { bindActionCreators } from 'redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import ImageEditor from '@react-native-community/image-editor';
-import { connect } from 'react-redux';
+} from '../../library/reactPackage'
+import {
+  RNFS,
+  RNCamera,
+  bindActionCreators,
+  connect,
+  MaterialIcon,
+  ImageEditor
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarBlack
+} from '../../library/component'
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
-import { StatusBarBlack } from '../../components/StatusBarGlobal';
 
 const { width, height } = Dimensions.get('window');
 
@@ -164,3 +169,16 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(TakeIdPicture);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

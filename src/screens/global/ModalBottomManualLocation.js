@@ -1,17 +1,23 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import Fonts from '../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Dimensions,
+  ScrollView
+} from '../../library/reactPackage'
+import {
+  connect,
+  bindActionCreators
+} from '../../library/thirdPartyPackage'
+import {
+  DropdownType1,
+  StatusBarRedOP50,
+  StatusBarBlack,
+  ModalBottomType4
+} from '../../library/component'
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
-import DropdownType1 from '../../components/input/DropdownType1';
-import {
-  StatusBarRedOP50,
-  StatusBarBlack
-} from '../../components/StatusBarGlobal';
-import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
 import masterColor from '../../config/masterColor.json';
 
 const { height } = Dimensions.get('window');
@@ -206,3 +212,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ModalBottomManualLocation);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
