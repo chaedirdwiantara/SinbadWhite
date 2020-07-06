@@ -32,14 +32,14 @@ class SelectedMerchantName extends Component {
             source={require('../assets/icons/merchant/store.png')}
             style={{ height: 24, width: 24, marginRight: 8 }}
           />
-          {this.props.merchant.selectedMerchant.store.name.length >= 60 ? (
+          {this.props.merchant.selectedMerchant.name.length >= 60 ? (
             <Text style={[Fonts.type16, { textTransform: 'capitalize' }]}>
-              {this.props.merchant.selectedMerchant.store.name.substring(0, 60)}
+              {this.props.merchant.selectedMerchant.name.substring(0, 60)}
               ...
             </Text>
           ) : (
             <Text style={[Fonts.type16, { textTransform: 'capitalize' }]}>
-              {this.props.merchant.selectedMerchant.store.name}
+              {this.props.merchant.selectedMerchant.name}
             </Text>
           )}
         </View>
