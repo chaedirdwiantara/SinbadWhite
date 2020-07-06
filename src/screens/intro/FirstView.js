@@ -1,10 +1,18 @@
-import React, { Component } from 'react';
-import { View, StatusBar, StyleSheet, Image } from 'react-native';
-import firebase from 'react-native-firebase';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  StatusBar,
+  StyleSheet,
+  Image,
+  Text
+} from '../../library/reactPackage'
+import {
+  connect,
+  firebase
+} from '../../library/thirdPartyPackage'
+import { Fonts } from '../../helpers'
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
 
 class FirstView extends Component {
   constructor(props) {
@@ -95,3 +103,16 @@ const mapStateToProps = ({ permanent }) => {
 };
 
 export default connect(mapStateToProps)(FirstView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
