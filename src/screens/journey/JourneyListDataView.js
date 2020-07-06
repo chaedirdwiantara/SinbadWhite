@@ -49,9 +49,9 @@ class JourneyListDataView extends Component {
     }
   };
   /** go to detail merchant */
-  goToDetailMerchant(storeId) {
+  goToDetailMerchant(id) {
     NavigationService.navigate('MerchantDetailView', {
-      storeId
+      id
     });
   }
   /** go to merchant dashboard */
@@ -225,7 +225,7 @@ class JourneyListDataView extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.boxButtonDetail}
-              onPress={() => this.goToDetailMerchant(item.storeId)}
+              onPress={() => this.goToDetailMerchant(item.id)}
             >
               <Text style={Fonts.type18}>Detail</Text>
             </TouchableOpacity>
@@ -330,3 +330,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(JourneyListDataView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Change key
+* 
+*/

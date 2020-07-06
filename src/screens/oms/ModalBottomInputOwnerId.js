@@ -15,8 +15,8 @@ class ModalBottomInputOwnerId extends Component {
     super(props);
     this.state = {
       idNo: '',
-      storeId: this.props.merchant.selectedMerchant.store.id,
-      ownerId: this.props.merchant.selectedMerchant.store.owner.id
+      storeId: this.props.merchant.selectedMerchant.storeId,
+      ownerId: this.props.merchant.selectedMerchant.owner.id
     };
   }
   /**
@@ -147,3 +147,17 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ModalBottomInputOwnerId);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Change key
+* 
+*/
+

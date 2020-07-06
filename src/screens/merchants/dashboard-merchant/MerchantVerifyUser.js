@@ -17,7 +17,7 @@ class MerchantVerifyUser extends Component {
       modalCallCS: false
     };
   }
-  componentDidMount() {
+  async componentDidMount() {
     this.toParentFunction({type: 'progress-on'})
     this.props.merchantGetStoreStatusProcess()
   }
@@ -38,7 +38,7 @@ class MerchantVerifyUser extends Component {
         this.toParentFunction({ type: 'close'})
         this.setState({ modalRejected: false });
         NavigationService.navigate('MerchantDetailView', {
-          storeId: this.props.merchant.selectedMerchant.store.id
+          storeId: this.props.merchant.selectedMerchant.storeId
         });
         break;
       case 'goToCallCS':
@@ -205,4 +205,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantVerifyUser)
 * updatedFunction:
 * -> Create action to merchant method to get store status
 * -> Create function to change parent modal status
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Change key
 */

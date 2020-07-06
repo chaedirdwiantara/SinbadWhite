@@ -116,7 +116,7 @@ class OmsCheckoutView extends Component {
     ) {
       if (this.props.oms.dataOmsConfirmOrder !== null) {
         this.backToMerchantHomeView(
-          this.props.merchant.selectedMerchant.store.name
+          this.props.merchant.selectedMerchant.name
         );
       }
     }
@@ -205,7 +205,7 @@ class OmsCheckoutView extends Component {
   backToMerchantHomeView(storeName) {
     /** UPDATE TASK ORDER */
     this.props.merchantPostActivityProcess({
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
       activity: 'order'
     });
     NavigationService.navigate('MerchantHomeView', {
@@ -540,7 +540,7 @@ class OmsCheckoutView extends Component {
    * =============================
    */
   renderAddress() {
-    const store = this.props.merchant.selectedMerchant.store;
+    const store = this.props.merchant.selectedMerchant;
     return (
       <View style={[styles.boxAddress, GlobalStyles.shadowBottom]}>
         <View style={styles.boxTitle}>
@@ -1280,3 +1280,17 @@ export default connect(mapStateToProps, mapDispatchToProps)(OmsCheckoutView);
  *  }
  * ]
  */
+
+ /**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy: 
+ * createdDate: 
+ * updatedBy: tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Change key
+ * 
+ */
+ 

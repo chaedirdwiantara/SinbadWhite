@@ -606,7 +606,7 @@ class OmsCartView extends Component {
    * =============================
    */
   renderAddress() {
-    const store = this.props.merchant.selectedMerchant.store;
+    const store = this.props.merchant.selectedMerchant;
     return (
       <View style={[styles.boxAddress, GlobalStyles.shadowBottom]}>
         <View style={styles.boxTitle}>
@@ -1297,3 +1297,16 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(OmsCartView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Change key
+* 
+*/
