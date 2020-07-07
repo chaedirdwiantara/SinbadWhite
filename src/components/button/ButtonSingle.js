@@ -1,8 +1,12 @@
-import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-elements';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  StyleSheet,
+  View
+} from '../../library/reactPackage'
+import { Button } from '../../library/thirdPartyPackage'
+import { Color } from '../../config'
+import { Fonts } from '../../helpers'
 
 /**
  * HOW TO USE
@@ -22,7 +26,7 @@ class ButtonSingle extends Component {
     let modifyButtonColor = '';
     let color = '';
     if (this.props.white) {
-      color = masterColor.mainColor;
+      color = Color.mainColor;
       modifyFonts = Fonts.textButtonWhiteActive;
       modifyDisabledFonts = Fonts.textButtonWhiteDisabled;
       modifyDisabledButtonColor = [
@@ -34,7 +38,7 @@ class ButtonSingle extends Component {
         { borderRadius: this.props.borderRadius }
       ];
     } else if (this.props.disabledGrey) {
-      color = masterColor.fontWhite;
+      color = Color.fontWhite;
       modifyFonts = Fonts.textButtonRedActive;
       modifyDisabledFonts = Fonts.textButtonRedDisabled;
       modifyDisabledButtonColor = [
@@ -46,7 +50,7 @@ class ButtonSingle extends Component {
         { borderRadius: this.props.borderRadius }
       ];
     } else {
-      color = masterColor.fontWhite;
+      color = Color.fontWhite;
       modifyFonts = Fonts.textButtonRedActive;
       modifyDisabledFonts = Fonts.textButtonRedDisabled;
       modifyDisabledButtonColor = [
@@ -81,32 +85,46 @@ const styles = StyleSheet.create({
     padding: 16
   },
   buttonRed: {
-    backgroundColor: masterColor.buttonActiveColorRed,
+    backgroundColor: Color.buttonActiveColorRed,
     width: '100%',
     paddingVertical: 16
   },
   buttonWhite: {
-    backgroundColor: masterColor.buttonActiveColorWhite,
+    backgroundColor: Color.buttonActiveColorWhite,
     borderWidth: 1.5,
-    borderColor: masterColor.buttonWhiteBorderRed,
+    borderColor: Color.buttonWhiteBorderRed,
     width: '100%',
     paddingVertical: 16
   },
   buttonWhiteDisabled: {
-    backgroundColor: masterColor.buttonActiveColorWhite,
+    backgroundColor: Color.buttonActiveColorWhite,
     borderWidth: 1.5,
-    borderColor: masterColor.buttonRedDisableColor
+    borderColor: Color.buttonRedDisableColor
   },
   buttonRedDisabled: {
-    backgroundColor: masterColor.buttonRedDisableColor,
+    backgroundColor: Color.buttonRedDisableColor,
     width: '100%',
     paddingVertical: 16
   },
   buttonGreyDisabled: {
-    backgroundColor: masterColor.fontBlack40,
+    backgroundColor: Color.fontBlack40,
     width: '100%',
     paddingVertical: 16
   }
 });
 
 export default ButtonSingle;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

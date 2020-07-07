@@ -8,7 +8,7 @@ import {
 } from '../../library/reactPackage';
 import { MaterialIcon } from '../../library/thirdPartyPackage';
 import { Fonts, GlobalStyle } from '../../helpers';
-import masterColor from '../../config/masterColor.json';
+import { Color } from '../../config'
 
 class ButtonMenuType1 extends Component {
   /**
@@ -34,7 +34,7 @@ class ButtonMenuType1 extends Component {
             )}
             <MaterialIcon
               name="chevron-right"
-              color={masterColor.fontBlack40}
+              color={Color.fontBlack40}
               size={24}
             />
           </View>
@@ -68,8 +68,22 @@ const styles = StyleSheet.create({
     height: 10,
     width: 10,
     borderRadius: 10,
-    backgroundColor: masterColor.mainColor
+    backgroundColor: Color.mainColor
   }
 });
 
 export default ButtonMenuType1;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+
