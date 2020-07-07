@@ -1,10 +1,13 @@
-import React, { Component } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
-import Text from 'react-native-text';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-
+import {
+  React,
+  Component,
+  View,
+  Image,
+  StyleSheet,
+  Text
+} from '../../library/reactPackage'
+import { GlobalStyle, Fonts } from '../../helpers'
+import { Color } from '../../config'
 /**
  * Props
  * - title = '',
@@ -44,7 +47,7 @@ class ErrorPage extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxEmpty: {
     flex: 1,
@@ -67,3 +70,17 @@ const styles = StyleSheet.create({
 });
 
 export default ErrorPage;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+
