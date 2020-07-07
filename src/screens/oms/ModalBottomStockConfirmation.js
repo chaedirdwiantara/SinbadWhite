@@ -1,13 +1,22 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView } from 'react-native';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
-import Fonts from '../../helpers/GlobalFont';
-import ModalBottomType1 from '../../components/modal_bottom/ModalBottomType1';
-import { MoneyFormat } from '../../helpers/NumberFormater';
-import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
-import masterColor from '../../config/masterColor.json';
-import GlobalStyles from '../../helpers/GlobalStyle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Dimensions,
+  Image,
+  ScrollView,
+  Text
+} from '../../library/reactPackage'
+import {
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  ModalBottomType1,
+  StatusBarRedOP50
+} from '../../library/component'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
+import { Color } from '../../config'
 
 const { height } = Dimensions.get('window');
 
@@ -28,7 +37,7 @@ class ModalBottomStockConfirmation extends Component {
             uri: item.catalogue.catalogueImages[0].imageUrl
           }}
           style={[
-            GlobalStyles.image54Contain,
+            GlobalStyle.image54Contain,
             {
               opacity:
                 item.errorCode === 'ERR-STOCK' || item.errorCode === 'ERR-PRICE'
@@ -183,7 +192,7 @@ class ModalBottomStockConfirmation extends Component {
         <View style={{ paddingTop: 10, paddingLeft: 16 }}>
           <Text style={Fonts.type42}>Perubahan Harga</Text>
         </View>
-        <View style={[GlobalStyles.lines, { marginTop: 8, marginLeft: 16 }]} />
+        <View style={[GlobalStyle.lines, { marginTop: 8, marginLeft: 16 }]} />
         <View style={{ paddingHorizontal: 16 }}>
           {this.renderPerubahanHargaContent()}
         </View>
@@ -201,7 +210,7 @@ class ModalBottomStockConfirmation extends Component {
         <View style={{ paddingTop: 10, paddingLeft: 16 }}>
           <Text style={Fonts.type42}>Perubahan Stock</Text>
         </View>
-        <View style={[GlobalStyles.lines, { marginTop: 8, marginLeft: 16 }]} />
+        <View style={[GlobalStyle.lines, { marginTop: 8, marginLeft: 16 }]} />
         <View style={{ paddingHorizontal: 16 }}>
           {this.renderPerubahanStockContent()}
         </View>
@@ -219,7 +228,7 @@ class ModalBottomStockConfirmation extends Component {
         <View style={{ paddingTop: 10, paddingLeft: 16 }}>
           <Text style={Fonts.type42}>Barang Habis</Text>
         </View>
-        <View style={[GlobalStyles.lines, { marginTop: 8, marginLeft: 16 }]} />
+        <View style={[GlobalStyle.lines, { marginTop: 8, marginLeft: 16 }]} />
         <View style={{ paddingHorizontal: 16 }}>
           {this.renderProductErrorBarangHabis()}
         </View>
@@ -238,7 +247,7 @@ class ModalBottomStockConfirmation extends Component {
         <View style={{ paddingTop: 10, paddingLeft: 16 }}>
           <Text style={Fonts.type42}>Produk Tidak Tersedia</Text>
         </View>
-        <View style={[GlobalStyles.lines, { marginTop: 8, marginLeft: 16 }]} />
+        <View style={[GlobalStyle.lines, { marginTop: 8, marginLeft: 16 }]} />
         <View style={{ paddingHorizontal: 16 }}>
           {this.renderProductErrorTidakTersedia()}
         </View>
@@ -286,7 +295,7 @@ class ModalBottomStockConfirmation extends Component {
 const styles = StyleSheet.create({
   container: {
     height: 0.6 * height,
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     flexDirection: 'column',
     width: '100%'
   },
@@ -306,3 +315,16 @@ const mapStateToProps = ({ oms }) => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, {})(ModalBottomStockConfirmation);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

@@ -1,35 +1,38 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   BackHandler,
   TouchableOpacity,
   ScrollView,
-  Image
-} from 'react-native';
-import Text from 'react-native-text';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+  Image,
+  Text
+} from '../../library/reactPackage'
+import {
+  MaterialIcon,
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  ModalConfirmation,
+  ButtonSingleSmall,
+  Address,
+  ModalWarning,
+  ProductListType1
+} from '../../library/component'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
-import ModalConfirmation from '../../components/modal/ModalConfirmation';
-import ButtonSingleSmall from '../../components/button/ButtonSingleSmall';
-import Address from '../../components/Address';
-import Fonts from '../../helpers/GlobalFont';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import { MoneyFormat } from '../../helpers/NumberFormater';
 import ModalBottomPaymentType from './ModalBottomPaymentType';
 import ModalTAndR from './ModalTAndR';
 import ModalBottomPaymentMethod from './ModalBottomPaymentMethod';
 import ModalBottomPaymentMethodDetail from './ModalBottomPaymentMethodDetail';
 import ModalBottomListProduct from './ModalBottomListProduct';
 import ModalBottomParcelDetail from './ModalBottomParcelDetail';
-import ModalWarning from '../../components/modal/ModalWarning';
 import ModalBottomStockConfirmationConfirmOrder from './ModalBottomStockConfirmationConfirmOrder';
 import ModalBottomErrorMinimumOrder from './ModalBottomErrorMinimumOrder';
-import ProductListType1 from '../../components/list/ProductListType1';
 
 class OmsCheckoutView extends Component {
   constructor(props) {
@@ -542,11 +545,11 @@ class OmsCheckoutView extends Component {
   renderAddress() {
     const store = this.props.merchant.selectedMerchant;
     return (
-      <View style={[styles.boxAddress, GlobalStyles.shadowBottom]}>
+      <View style={[styles.boxAddress, GlobalStyle.shadowBottom]}>
         <View style={styles.boxTitle}>
           <Text style={Fonts.type48}>Alamat Pengiriman</Text>
         </View>
-        <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+        <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
         <View style={{ paddingVertical: 10, paddingHorizontal: 16 }}>
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
@@ -716,8 +719,8 @@ class OmsCheckoutView extends Component {
   renderListOrder() {
     return this.state.dataOmsGetCheckoutItem.orderParcels.map((item, index) => {
       return (
-        <View key={index} style={GlobalStyles.shadowForBox}>
-          <View style={GlobalStyles.boxPaddingOms} />
+        <View key={index} style={GlobalStyle.shadowForBox}>
+          <View style={GlobalStyle.boxPaddingOms} />
           <View style={styles.boxListProductInCart}>
             <View style={{ paddingBottom: 8, paddingHorizontal: 16 }}>
               <View
@@ -766,7 +769,7 @@ class OmsCheckoutView extends Component {
           <Text style={Fonts.type50}>Rincian Pengiriman</Text>
         </View>
 
-        <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+        <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
         <View
           style={{
             paddingTop: 10,
@@ -827,7 +830,7 @@ class OmsCheckoutView extends Component {
         <View style={{ paddingLeft: 16, paddingBottom: 5, paddingTop: 10 }}>
           <Text style={Fonts.type50}>Tipe Pembayaran</Text>
         </View>
-        <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+        <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
         <TouchableOpacity
           style={[
             styles.boxPayment,
@@ -881,7 +884,7 @@ class OmsCheckoutView extends Component {
             <MaterialIcon name="keyboard-arrow-right" size={24} />
           </View>
         </TouchableOpacity>
-        <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+        <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
       </View>
     );
   }
@@ -1291,6 +1294,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(OmsCheckoutView);
  * updatedDate: 06072020
  * updatedFunction:
  * -> Change key
- * 
+ * updatedDate: 07072020
+ * UpdatedFunction:
+ * -> Refactoring Module Import
  */
  

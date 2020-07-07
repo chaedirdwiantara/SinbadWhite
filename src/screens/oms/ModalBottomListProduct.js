@@ -1,11 +1,18 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView } from 'react-native';
-import Text from 'react-native-text';
-import { MoneyFormat } from '../../helpers/NumberFormater';
-import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
-import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
-import Fonts from '../../helpers/GlobalFont';
-import GlobalStyles from '../../helpers/GlobalStyle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Dimensions,
+  Image,
+  ScrollView,
+  Text
+} from '../../library/reactPackage'
+import {
+  ModalBottomType4,
+  StatusBarRedOP50
+} from '../../library/component'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
 import masterColor from '../../config/masterColor.json';
 
 const { height } = Dimensions.get('window');
@@ -27,7 +34,7 @@ class ModalBottomListProduct extends Component {
     return item.map((itemProduct, index) => {
       return (
         <View key={index}>
-          <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+          <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
           <View style={styles.boxContentProductList}>
             <View
               style={{
@@ -41,7 +48,7 @@ class ModalBottomListProduct extends Component {
                 source={{
                   uri: itemProduct.catalogue.catalogueImages[0].imageUrl
                 }}
-                style={GlobalStyles.image70Contain}
+                style={GlobalStyle.image70Contain}
               />
             </View>
             <View
@@ -131,3 +138,16 @@ const styles = StyleSheet.create({
 });
 
 export default ModalBottomListProduct;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

@@ -1,13 +1,23 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView } from 'react-native';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
-import Fonts from '../../helpers/GlobalFont';
-import ModalBottomType1 from '../../components/modal_bottom/ModalBottomType1';
-import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
-import masterColor from '../../config/masterColor.json';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import ButtonSingleSmall from '../../components/button/ButtonSingleSmall';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Dimensions,
+  Image,
+  ScrollView,
+  Text
+} from '../../library/reactPackage'
+import {
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  ModalBottomType1,
+  StatusBarRedOP50,
+  ButtonSingleSmall
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
+import { Color } from '../../config'
 
 const { height } = Dimensions.get('window');
 
@@ -27,7 +37,7 @@ class ModalBottomStockConfirmationConfirmOrder extends Component {
           source={{
             uri: item.catalogue.catalogueImages[0].imageUrl
           }}
-          style={[GlobalStyles.image54Contain, { opacity: 0.5 }]}
+          style={[GlobalStyle.image54Contain, { opacity: 0.5 }]}
         />
       </View>
     );
@@ -81,7 +91,7 @@ class ModalBottomStockConfirmationConfirmOrder extends Component {
         <View style={{ paddingTop: 10, paddingLeft: 16 }}>
           <Text style={Fonts.type42}>Produk Tidak Tersedia</Text>
         </View>
-        <View style={[GlobalStyles.lines, { marginTop: 8, marginLeft: 16 }]} />
+        <View style={[GlobalStyle.lines, { marginTop: 8, marginLeft: 16 }]} />
         <View style={{ paddingHorizontal: 16 }}>
           {this.renderProductErrorTidakTersedia()}
         </View>
@@ -149,7 +159,7 @@ class ModalBottomStockConfirmationConfirmOrder extends Component {
 const styles = StyleSheet.create({
   container: {
     height: 0.6 * height,
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     flexDirection: 'column',
     width: '100%'
   },
@@ -177,3 +187,17 @@ export default connect(
   mapStateToProps,
   {}
 )(ModalBottomStockConfirmationConfirmOrder);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

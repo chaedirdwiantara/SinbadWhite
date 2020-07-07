@@ -17,6 +17,7 @@ import {
   StatusBarBlack
 } from '../components/StatusBarGlobal';
 /** INPUT */
+import InputType1 from '../components/input/InputType1'
 import InputType2 from '../components/input/InputType2';
 import InputType4 from '../components/input/inputType4';
 /** INPUT MAPS (PIN POINT) */
@@ -24,10 +25,13 @@ import InputMapsType1 from '../components/input/InputMapsType1';
 /** DROPDOWN */
 import DropdownType1 from '../components/input/DropdownType1';
 /** BUTTON */
+import OrderButton from '../components/OrderButton'
 import ButtonFloatType1 from '../components/button/ButtonFloatType1'
 import ButtonSingle from '../components/button/ButtonSingle';
 import ButtonMenuType1 from '../components/button/ButtonMenuType1';
+import ButtonSingleSmall from '../components/button/ButtonSingleSmall'
 /** MODAL */
+import ModalWarning from '../components/modal/ModalWarning'
 import ModalConfirmation from '../components/modal/ModalConfirmation';
 import ModalConfirmationType2 from '../components/modal/ModalConfirmationType2'
 import ModalBottomErrorPinMap from '../components/error/ModalBottomErrorPinMap';
@@ -46,6 +50,7 @@ import ProgressBarType1 from '../components/progress_bar/ProgressBarType1';
 import { LoadingPage, LoadingLoadMore, LoadingHorizontal } from '../components/Loading';
 /** ERROR PAGE */
 import ErrorPageNoGPS from '../components/error/ErrorPageNoGPS';
+import ErrorPage from '../components/error/ErrorPage'
 /** TOAST */
 import ToastType1 from '../components/toast/ToastType1';
 /** LIST */
@@ -59,12 +64,15 @@ import SkeletonType2 from '../components/skeleton/SkeletonType2'
 import SkeletonType3 from '../components/skeleton/SkeletonType3'
 import SkeletonType5 from '../components/skeleton/SkeletonType5'
 import SkeletonType6 from '../components/skeleton/SkeletonType6'
+import SkeletonType8 from '../components/skeleton/SkeletonType8'
 /** ADDRESS */
 import Address from '../components/Address'
 /** TAG */
 import TagListType2 from '../components/tag/TagListType2'
 /** DATE PICKER SPINNER */
 import DatePickerSpinner from '../components/DatePickerSpinner'
+/** SELECTED MERCHANT */
+import SelectedMerchantName from '../components/SelectedMerchantName'
 
 export {
   CartGlobal,
@@ -84,6 +92,7 @@ export {
   StatusBarBlackOP40Translucent,
   StatusBarBlack,
   /** INPUT */
+  InputType1,
   InputType2,
   InputType4,
   /** INPUT MAPS (PIN POINT) */
@@ -91,10 +100,13 @@ export {
   /** DROPDOWN */
   DropdownType1,
   /** BUTTON */
+  OrderButton,
   ButtonFloatType1,
   ButtonSingle,
   ButtonMenuType1,
+  ButtonSingleSmall,
   /** MODAL */
+  ModalWarning,
   ModalConfirmation,
   ModalConfirmationType2,
   ModalBottomErrorPinMap,
@@ -115,6 +127,7 @@ export {
   LoadingHorizontal,
   /** ERROR PAGE */
   ErrorPageNoGPS,
+  ErrorPage,
   /** TOAST */
   ToastType1,
   /** LIST */
@@ -128,12 +141,15 @@ export {
   SkeletonType3,
   SkeletonType5,
   SkeletonType6,
+  SkeletonType8,
   /** ADDRESS */
   Address,
   /** TAG */
   TagListType2,
   /** DATE PICKER SPINNER */
-  DatePickerSpinner
+  DatePickerSpinner,
+  /** SELECTED MERCHANT NAME */
+  SelectedMerchantName
 };
 
 /**

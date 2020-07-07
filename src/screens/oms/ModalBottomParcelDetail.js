@@ -1,18 +1,21 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  ScrollView
-} from 'react-native';
-import Text from 'react-native-text';
-import Icons from 'react-native-vector-icons/MaterialIcons';
-import Fonts from '../../helpers/GlobalFont';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import { MoneyFormat } from '../../helpers/NumberFormater';
-import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
-import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
+  ScrollView,
+  Text
+} from '../../library/reactPackage'
+import {
+  MaterialIcon
+} from '../../library/thirdPartyPackage'
+import {
+  ModalBottomType4,
+  StatusBarRedOP50
+} from '../../library/component'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
 import masterColor from '../../config/masterColor.json';
 
 const { height } = Dimensions.get('window');
@@ -89,9 +92,9 @@ class ModalBottomParcelDetail extends Component {
       >
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {this.state.openTotal ? (
-            <Icons name="keyboard-arrow-up" size={24} />
+            <MaterialIcon name="keyboard-arrow-up" size={24} />
           ) : (
-            <Icons name="keyboard-arrow-down" size={24} />
+            <MaterialIcon name="keyboard-arrow-down" size={24} />
           )}
 
           <Text style={[Fonts.type7, { marginLeft: 5 }]}>Total</Text>
@@ -304,3 +307,16 @@ const styles = StyleSheet.create({
 });
 
 export default ModalBottomParcelDetail;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

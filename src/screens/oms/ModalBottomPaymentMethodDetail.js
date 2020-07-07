@@ -1,22 +1,25 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   Dimensions,
   Image,
   TouchableOpacity,
-  ScrollView
-} from 'react-native';
-import Text from 'react-native-text';
-import Icons from 'react-native-vector-icons/MaterialIcons';
-import HTMLView from 'react-native-htmlview';
+  ScrollView,
+  Text
+} from '../../library/reactPackage'
+import {
+  MaterialIcon,
+  HTMLView
+} from '../../library/thirdPartyPackage'
+import {
+  ButtonSingle,
+  StatusBarRedOP50,
+  ModalBottomType4
+} from '../../library/component'
+import { GlobalStyle, Fonts, GlobalStyleHtml } from '../../helpers'
 import masterColor from '../../config/masterColor.json';
-import ButtonSingle from '../../components/button/ButtonSingle';
-import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import GlobalStyleHtml from '../../helpers/GlobalStyleHtml';
-import Fonts from '../../helpers/GlobalFont';
-import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
 
 const { height } = Dimensions.get('window');
 
@@ -123,9 +126,9 @@ class ModalBottomPaymentMethodDetail extends Component {
           </View>
           <View>
             {!this.state.openCollapse ? (
-              <Icons name="keyboard-arrow-down" size={24} />
+              <MaterialIcon name="keyboard-arrow-down" size={24} />
             ) : (
-              <Icons name="keyboard-arrow-up" size={24} />
+              <MaterialIcon name="keyboard-arrow-up" size={24} />
             )}
           </View>
         </TouchableOpacity>
@@ -192,3 +195,16 @@ const styles = StyleSheet.create({
 });
 
 export default ModalBottomPaymentMethodDetail;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

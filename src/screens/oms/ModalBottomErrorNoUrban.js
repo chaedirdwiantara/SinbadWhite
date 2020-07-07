@@ -1,12 +1,18 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Image } from 'react-native';
-import Text from 'react-native-text';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
-import ButtonSingleSmall from '../../components/button/ButtonSingleSmall';
-import ModalBottomType1 from '../../components/modal_bottom/ModalBottomType1';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Image,
+  Text
+} from '../../library/reactPackage'
+import { GlobalStyle, Fonts } from '../../helpers'
+import {
+  StatusBarRedOP50,
+  ButtonSingleSmall,
+  ModalBottomType1
+} from '../../library/component'
 import masterColor from '../../config/masterColor.json';
-import GlobalStyle from '../../helpers/GlobalStyle';
 
 class ModalBottomErrorNoUrban extends Component {
   /**
@@ -114,3 +120,16 @@ const styles = StyleSheet.create({
 });
 
 export default ModalBottomErrorNoUrban;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

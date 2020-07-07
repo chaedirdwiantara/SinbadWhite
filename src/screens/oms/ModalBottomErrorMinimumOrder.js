@@ -1,14 +1,23 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
-import Fonts from '../../helpers/GlobalFont';
-import { MoneyFormat } from '../../helpers/NumberFormater';
-import ProductListType1 from '../../components/list/ProductListType1';
-import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
-import ButtonSingleSmall from '../../components/button/ButtonSingleSmall';
-import ModalBottomType1 from '../../components/modal_bottom/ModalBottomType1';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  Text
+} from '../../library/reactPackage'
+import {
+  MaterialCommunityIcons,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  ProductListType1,
+  StatusBarRedOP50,
+  ButtonSingleSmall,
+  ModalBottomType1
+} from '../../library/component'
+import { Fonts, MoneyFormat } from '../../helpers'
 import masterColor from '../../config/masterColor.json';
 
 const { height } = Dimensions.get('window');
@@ -167,3 +176,16 @@ const mapStateToProps = ({ oms }) => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, {})(ModalBottomErrorMinimumOrder);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

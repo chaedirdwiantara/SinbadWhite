@@ -40,6 +40,11 @@ import { RNCamera } from 'react-native-camera';
 import ImageEditor from '@react-native-community/image-editor';
 /** FIREBASE */
 import firebase from 'react-native-firebase';
+/** HTML VIEW */
+import HTMLView from 'react-native-htmlview'
+/** REACT NATIVE ELEMENTS */
+import { Button } from 'react-native-elements';
+
 
 export {
   /** REDUX */
@@ -85,6 +90,10 @@ export {
   ImageEditor,
   /** FIREBASE */
   firebase,
+  /** HTML VIEW */
+  HTMLView,
+  /** REACT NATIVE ELEMENTS */
+  Button
 };
 
 /**

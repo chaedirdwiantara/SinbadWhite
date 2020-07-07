@@ -19,7 +19,8 @@ import {
   BackHandler,
   Linking,
   Platform,
-  StatusBar
+  StatusBar,
+  Modal as ModalPopUp
 } from 'react-native';
 import Text from 'react-native-text';
 /** FOR DIMENSIONS */
@@ -47,7 +48,8 @@ export {
   BackHandler,
   Linking,
   Platform,
-  StatusBar
+  StatusBar,
+  ModalPopUp
 };
 
 /**
