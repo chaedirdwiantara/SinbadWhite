@@ -1,6 +1,7 @@
 import CartGlobal from '../components/CartGlobal';
 /** SEARCH BAR */
 import SearchBarType1 from '../components/search_bar/SearchBarType1';
+import SearchBarType2 from '../components/search_bar/SearchBarType2'
 import SearchBarType3 from '../components/search_bar/SearchBarType3';
 /** BACK HANDLER */
 import BackHandlerCloseApp from '../components/BackHandlerCloseApp';
@@ -38,6 +39,7 @@ import ModalConfirmationType2 from '../components/modal/ModalConfirmationType2'
 import ModalBottomErrorPinMap from '../components/error/ModalBottomErrorPinMap';
 import ModalBottomSwipeCloseNotScroll from '../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalBottomType1 from '../components/modal_bottom/ModalBottomType1';
+import ModalBottomType2 from '../components/modal_bottom/ModalBottomType2'
 import ModalBottomType3 from '../components/modal_bottom/ModalBottomType3';
 import ModalBottomType4 from '../components/modal_bottom/ModalBottomType4'
 /** ERROR MODAL */
@@ -73,6 +75,7 @@ import SkeletonType18 from '../components/skeleton/SkeletonType18'
 /** ADDRESS */
 import Address from '../components/Address'
 /** TAG */
+import TagListType1 from '../components/tag/TagListType1'
 import TagListType2 from '../components/tag/TagListType2'
 /** DATE PICKER SPINNER */
 import DatePickerSpinner from '../components/DatePickerSpinner'
@@ -83,6 +86,7 @@ export {
   CartGlobal,
   /** SEARCH BAR */
   SearchBarType1,
+  SearchBarType2,
   SearchBarType3,
   /** BACK HANDLER */
   BackHandlerCloseApp,
@@ -118,6 +122,7 @@ export {
   ModalBottomErrorPinMap,
   ModalBottomSwipeCloseNotScroll,
   ModalBottomType1,
+  ModalBottomType2,
   ModalBottomType3,
   ModalBottomType4,
   /** ERROR MODAL */
@@ -155,6 +160,7 @@ export {
   /** ADDRESS */
   Address,
   /** TAG */
+  TagListType1,
   TagListType2,
   /** DATE PICKER SPINNER */
   DatePickerSpinner,

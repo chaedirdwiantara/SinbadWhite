@@ -1,25 +1,29 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
   ScrollView,
-  Image
-} from 'react-native';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import masterColor from '../../config/masterColor.json';
+  Image,
+  Text
+} from '../../library/reactPackage'
+import {
+  connect,
+  bindActionCreators
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarWhite,
+  ProgressBarType1,
+  LoadingPage,
+  ButtonMenuType1,
+} from '../../library/component'
+import { Color } from '../../config'
+import { GlobalStyle, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarWhite } from '../../components/StatusBarGlobal';
-import ProgressBarType1 from '../../components/progress_bar/ProgressBarType1';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import { LoadingPage } from '../../components/Loading';
 import NavigationService from '../../navigation/NavigationService.js';
-import ButtonMenuType1 from '../../components/button/ButtonMenuType1';
 import CallMerchant from '../../screens/global/CallMerchant';
 
 const { width } = Dimensions.get('window');
@@ -198,7 +202,7 @@ class MerchantDetailView extends Component {
             <View
               style={{
                 height: 169,
-                backgroundColor: masterColor.fontBlack05,
+                backgroundColor: Color.fontBlack05,
                 justifyContent: 'center',
                 alignItems: 'center'
               }}
@@ -411,10 +415,10 @@ class MerchantDetailView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     marginBottom: 16,
     paddingVertical: 6
   },
@@ -459,3 +463,16 @@ const mapDispatchToProps = dispatch => {
 };
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(MerchantDetailView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

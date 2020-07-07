@@ -44,6 +44,8 @@ import firebase from 'react-native-firebase';
 import HTMLView from 'react-native-htmlview'
 /** REACT NATIVE ELEMENTS */
 import { Button, Tooltip } from 'react-native-elements';
+/** MODAL */
+import Modal from 'react-native-modal'
 
 
 export {
@@ -94,7 +96,9 @@ export {
   HTMLView,
   /** REACT NATIVE ELEMENTS */
   Button,
-  Tooltip
+  Tooltip,
+  /** MODAL */
+  Modal
 };
 
 /**

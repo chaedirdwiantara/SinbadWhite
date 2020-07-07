@@ -1,23 +1,27 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   FlatList,
   Image,
-  TouchableOpacity
-} from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  MaterialIcon,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  SkeletonType1,
+  LoadingLoadMore,
+  Address,
+  EmptyData
+} from '../../library/component'
+import { Color } from '../../config'
+import { GlobalStyle, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
-import masterColor from '../../config/masterColor';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import SkeletonType1 from '../../components/skeleton/SkeletonType1';
-import { LoadingLoadMore } from '../../components/Loading';
-import Address from '../../components/Address';
-import Fonts from '../../helpers/GlobalFont';
-import EmptyData from '../../components/empty_state/EmptyData';
 
 class ModalMerchantListDataView extends Component {
   constructor(props) {
@@ -132,12 +136,12 @@ class ModalMerchantListDataView extends Component {
           </View>
         </View>
         <View style={{ justifyContent: 'center' }}>
-          <MaterialIcons
+          <MaterialIcon
             name="check-circle"
             color={
               this.props.selectedMerchant.indexOf(item.id) > -1
-                ? masterColor.fontGreen50
-                : masterColor.fontBlack40
+                ? Color.fontGreen50
+                : Color.fontBlack40
             }
             size={24}
           />
@@ -147,7 +151,7 @@ class ModalMerchantListDataView extends Component {
   }
   /** === SEPARATOR FLATLIST === */
   renderSeparator() {
-    return <View style={[GlobalStyles.lines, { marginLeft: 9 }]} />;
+    return <View style={[GlobalStyle.lines, { marginLeft: 9 }]} />;
   }
   /** === RENDER DATA === */
   renderData() {
@@ -164,7 +168,7 @@ class ModalMerchantListDataView extends Component {
             {this.props.merchant.totalDataGetMerchant} List Store
           </Text>
         </View>
-        <View style={GlobalStyles.lines} />
+        <View style={GlobalStyle.lines} />
         <FlatList
           contentContainerStyle={styles.flatListContainer}
           data={this.props.merchant.dataGetMerchant}
@@ -205,7 +209,7 @@ class ModalMerchantListDataView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     height: '100%',
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   flatListContainer: {
     paddingBottom: 26
@@ -234,3 +238,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ModalMerchantListDataView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

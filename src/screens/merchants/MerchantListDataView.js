@@ -1,22 +1,26 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   FlatList,
   Image,
-  TouchableOpacity
-} from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  SkeletonType1,
+  LoadingLoadMore,
+  Address,
+  EmptyData
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
+import { Color } from '../../config'
 import * as ActionCreators from '../../state/actions';
-import masterColor from '../../config/masterColor';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import SkeletonType1 from '../../components/skeleton/SkeletonType1';
-import { LoadingLoadMore } from '../../components/Loading';
-import Address from '../../components/Address';
-import Fonts from '../../helpers/GlobalFont';
-import EmptyData from '../../components/empty_state/EmptyData';
 import NavigationService from '../../navigation/NavigationService';
 
 class MerchantListDataView extends Component {
@@ -146,7 +150,7 @@ class MerchantListDataView extends Component {
   }
   /** === SEPARATOR FLATLIST === */
   renderSeparator() {
-    return <View style={[GlobalStyles.lines, { marginLeft: 9 }]} />;
+    return <View style={[GlobalStyle.lines, { marginLeft: 9 }]} />;
   }
   /** === RENDER DATA === */
   renderData() {
@@ -198,7 +202,7 @@ class MerchantListDataView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   flatListContainer: {
     paddingBottom: 26
@@ -217,7 +221,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 22,
     borderRadius: 4,
-    backgroundColor: masterColor.mainColor
+    backgroundColor: Color.mainColor
   }
 });
 
@@ -233,3 +237,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(MerchantListDataView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
