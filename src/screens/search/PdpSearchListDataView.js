@@ -1,22 +1,25 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   FlatList,
   Image,
-  TouchableOpacity
-} from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  SkeletonType1,
+  LoadingLoadMore,
+  EmptyData
+} from '../../library/component'
+import { Color } from '../../config'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
-import masterColor from '../../config/masterColor';
-import { MoneyFormat } from '../../helpers/NumberFormater';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import SkeletonType1 from '../../components/skeleton/SkeletonType1';
-import { LoadingLoadMore } from '../../components/Loading';
-import Fonts from '../../helpers/GlobalFont';
-import EmptyData from '../../components/empty_state/EmptyData';
 
 class PdpListDataView extends Component {
   constructor(props) {
@@ -71,7 +74,7 @@ class PdpListDataView extends Component {
         onPress={() =>
           this.toParentFunction({ type: 'openModalOrder', data: item.id })
         }
-        style={[styles.pesanButton, { backgroundColor: masterColor.mainColor }]}
+        style={[styles.pesanButton, { backgroundColor: Color.mainColor }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>
       </TouchableOpacity>
@@ -85,7 +88,7 @@ class PdpListDataView extends Component {
         source={{
           uri: item.catalogueImages[0].imageUrl
         }}
-        style={GlobalStyles.image65Contain}
+        style={GlobalStyle.image65Contain}
       />
     );
     return (
@@ -115,7 +118,7 @@ class PdpListDataView extends Component {
             </View>
           </View>
         </View>
-        <View style={[GlobalStyles.lines, { marginLeft: 10 }]} />
+        <View style={[GlobalStyle.lines, { marginLeft: 10 }]} />
       </View>
     );
   }
@@ -185,7 +188,7 @@ class PdpListDataView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     height: '100%',
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxContentList: {
     width: '100%'
@@ -261,3 +264,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(PdpListDataView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
