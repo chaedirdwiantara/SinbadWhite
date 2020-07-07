@@ -20,6 +20,7 @@ import {
 /** INPUT */
 import InputType1 from '../components/input/InputType1'
 import InputType2 from '../components/input/InputType2';
+import InputType3 from '../components/input/InputType3'
 import InputType4 from '../components/input/inputType4';
 /** INPUT MAPS (PIN POINT) */
 import InputMapsType1 from '../components/input/InputMapsType1';
@@ -32,6 +33,7 @@ import ButtonSingle from '../components/button/ButtonSingle';
 import ButtonMenuType1 from '../components/button/ButtonMenuType1';
 import ButtonSingleSmall from '../components/button/ButtonSingleSmall'
 /** MODAL */
+import ModalBottomWithClose from '../components/modal_bottom/ModalBottomSwipeCloseNotScroll'
 import ModalBottomSkuNotAvailable from '../components/error/ModalBottomSkuNotAvailable'
 import ModalWarning from '../components/modal/ModalWarning'
 import ModalConfirmation from '../components/modal/ModalConfirmation';
@@ -103,6 +105,7 @@ export {
   /** INPUT */
   InputType1,
   InputType2,
+  InputType3,
   InputType4,
   /** INPUT MAPS (PIN POINT) */
   InputMapsType1,
@@ -115,6 +118,7 @@ export {
   ButtonMenuType1,
   ButtonSingleSmall,
   /** MODAL */
+  ModalBottomWithClose,
   ModalBottomSkuNotAvailable,
   ModalWarning,
   ModalConfirmation,

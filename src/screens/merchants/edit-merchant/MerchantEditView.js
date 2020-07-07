@@ -1,11 +1,17 @@
-import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Text
+} from '../../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../../library/thirdPartyPackage'
+import { Fonts } from '../../../helpers'
+import { Color } from '../../../config'
 import * as ActionCreators from '../../../state/actions';
-import masterColor from '../../../config/masterColor.json';
-import Fonts from '../../../helpers/GlobalFont';
 import NavigationService from '../../../navigation/NavigationService';
 /** MODULE PAGE */
 import MerchantDetailPaymentView from '../details-merchant/MerchantDetailPaymentView';
@@ -101,7 +107,7 @@ class MerchantEditView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   }
 });
 
@@ -131,3 +137,15 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantEditView);
  * 8. merchantOwnerImageId = Foto KTP
  * 9. merchantOwnerImageSelfie = Foto Selfie + KTP
  */
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
