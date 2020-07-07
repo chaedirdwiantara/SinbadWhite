@@ -1,16 +1,25 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, Modal, Image } from 'react-native';
-import Text from 'react-native-text';
-import { StatusBarRedOP50 } from '../StatusBarGlobal';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Dimensions,
+  ModalPopUp,
+  Image,
+  Text
+} from '../../library/reactPackage'
+import {
+  StatusBarRedOP50
+} from '../../library/component'
+import { Fonts } from '../../helpers'
+import { Color } from '../../config'
 
 const { width } = Dimensions.get('window');
 
 class ModalWarning extends Component {
   render() {
     return (
-      <Modal
+      <ModalPopUp
         visible={this.props.open}
         transparent
         animationType="fade"
@@ -34,21 +43,21 @@ class ModalWarning extends Component {
             </View>
           </View>
         </View>
-      </Modal>
+      </ModalPopUp>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: masterColor.fontBlack100OP40,
+    backgroundColor: Color.fontBlack100OP40,
     position: 'relative',
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center'
   },
   card: {
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     borderRadius: 20,
     width: 0.62 * width
   },
@@ -70,3 +79,17 @@ const styles = StyleSheet.create({
 });
 
 export default ModalWarning;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+
