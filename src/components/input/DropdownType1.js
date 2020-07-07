@@ -8,7 +8,7 @@ import {
 } from '../../library/reactPackage';
 import { MaterialIcon } from '../../library/thirdPartyPackage';
 import { Fonts } from '../../helpers';
-import masterColor from '../../config/masterColor.json';
+import { Color } from '../../config'
 
 class DropdownType1 extends Component {
   constructor(props) {
@@ -51,7 +51,7 @@ class DropdownType1 extends Component {
         <View style={styles.boxArrow}>
           <MaterialIcon
             name="chevron-right"
-            color={masterColor.fontBlack60}
+            color={Color.fontBlack60}
             size={24}
           />
         </View>
@@ -98,7 +98,7 @@ class DropdownType1 extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
     paddingHorizontal: 16
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     flexDirection: 'row',
     paddingBottom: 8,
-    borderBottomColor: masterColor.fontBlack40
+    borderBottomColor: Color.fontBlack40
   },
   boxArrow: {
     position: 'absolute',
@@ -128,3 +128,16 @@ const styles = StyleSheet.create({
 });
 
 export default DropdownType1;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
