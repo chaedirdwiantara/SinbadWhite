@@ -1,11 +1,19 @@
-import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet
+} from '../../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../../library/thirdPartyPackage'
+import {
+  ButtonMenuType1,
+} from '../../../library/component'
+import { Color } from '../../../config'
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
-import masterColor from '../../../config/masterColor.json';
-import ButtonMenuType1 from '../../../components/button/ButtonMenuType1';
 import ToastSuccessUpdate from '../reusable-view/ToastSuccessUpdate';
 
 class MerchantDetailInformationView extends Component {
@@ -88,7 +96,7 @@ class MerchantDetailInformationView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   }
 });
 
@@ -104,3 +112,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(MerchantDetailInformationView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
