@@ -3,12 +3,16 @@
  * - modal minimum order
  * - oms checkout view
  */
-import React, { Component } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
-import Text from 'react-native-text';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  View,
+  Image,
+  StyleSheet,
+  Text
+} from '../../library/reactPackage'
+import { GlobalStyle, Fonts } from '../../helpers'
+import { Color } from '../../config'
 
 class ProductListType1 extends Component {
   constructor(props) {
@@ -89,9 +93,23 @@ const styles = StyleSheet.create({
   boxListProduct: {
     paddingVertical: 5,
     flexDirection: 'row',
-    backgroundColor: masterColor.fontBlack05,
+    backgroundColor: Color.fontBlack05,
     justifyContent: 'space-between'
   }
 });
 
 export default ProductListType1;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+
