@@ -1,26 +1,35 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  MaterialIcon,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarRed,
+  CartGlobal,
+  ModalBottomType3,
+  ToastType1,
+  SelectedMerchantName,
+  ModalConfirmation,
+  ModalBottomSkuNotAvailable
+} from '../../library/component'
+import { Fonts } from '../../helpers'
+import { Color } from '../../config'
 import * as ActionCreators from '../../state/actions';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarRed } from '../../components/StatusBarGlobal';
 import NavigationService from '../../navigation/NavigationService';
 import PdpGridDataView from './PdpGridDataView';
 import PdpListDataView from './PdpListDataView';
 import PdpLineDataView from './PdpLineDataView';
 import PdpFilterView from './PdpFilterView';
 import PdpOrderView from './PdpOrderView';
-import CartGlobal from '../../components/CartGlobal';
-import ModalBottomType3 from '../../components/modal_bottom/ModalBottomType3';
-import ToastType1 from '../../components/toast/ToastType1';
-import PdpFilterSortView from './PdpFitlerSortView';
-import SelectedMerchantName from '../../components/SelectedMerchantName';
-import ModalConfirmation from '../../components/modal/ModalConfirmation';
-import ModalBottomSkuNotAvailable from '../../components/error/ModalBottomSkuNotAvailable';
 
 class PdpView extends Component {
   constructor(props) {
@@ -60,7 +69,7 @@ class PdpView extends Component {
             onPress={() => NavigationService.navigate('PdpSearchView')}
           >
             <MaterialIcon
-              color={masterColor.fontWhite}
+              color={Color.fontWhite}
               name={'search'}
               size={24}
             />
@@ -369,7 +378,7 @@ class PdpView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
     flex: 1
@@ -386,3 +395,16 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(PdpView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

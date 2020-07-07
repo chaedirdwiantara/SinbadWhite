@@ -1,18 +1,27 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  SafeAreaView
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarRed,
+  SearchBarType3,
+  CartGlobal,
+  ModalBottomType3,
+  ToastType1,
+  ModalConfirmation,
+  ModalBottomSkuNotAvailable
+} from '../../library/component'
+import { Color } from '../../config'
 import * as ActionCreators from '../../state/actions';
-import masterColor from '../../config/masterColor.json';
-import { StatusBarRed } from '../../components/StatusBarGlobal';
-import SearchBarType3 from '../../components/search_bar/SearchBarType3';
-import CartGlobal from '../../components/CartGlobal';
 import PdpListDataView from './PdpListDataView';
 import PdpOrderView from './PdpOrderView';
-import ModalBottomType3 from '../../components/modal_bottom/ModalBottomType3';
-import ToastType1 from '../../components/toast/ToastType1';
-import ModalConfirmation from '../../components/modal/ModalConfirmation';
-import ModalBottomSkuNotAvailable from '../../components/error/ModalBottomSkuNotAvailable';
 
 class PdpSearchView extends Component {
   constructor(props) {
@@ -252,7 +261,7 @@ class PdpSearchView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   }
 });
 
@@ -266,3 +275,16 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(PdpSearchView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

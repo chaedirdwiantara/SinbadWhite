@@ -43,7 +43,7 @@ import firebase from 'react-native-firebase';
 /** HTML VIEW */
 import HTMLView from 'react-native-htmlview'
 /** REACT NATIVE ELEMENTS */
-import { Button } from 'react-native-elements';
+import { Button, Tooltip } from 'react-native-elements';
 
 
 export {
@@ -93,7 +93,8 @@ export {
   /** HTML VIEW */
   HTMLView,
   /** REACT NATIVE ELEMENTS */
-  Button
+  Button,
+  Tooltip
 };
 
 /**

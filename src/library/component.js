@@ -31,6 +31,7 @@ import ButtonSingle from '../components/button/ButtonSingle';
 import ButtonMenuType1 from '../components/button/ButtonMenuType1';
 import ButtonSingleSmall from '../components/button/ButtonSingleSmall'
 /** MODAL */
+import ModalBottomSkuNotAvailable from '../components/error/ModalBottomSkuNotAvailable'
 import ModalWarning from '../components/modal/ModalWarning'
 import ModalConfirmation from '../components/modal/ModalConfirmation';
 import ModalConfirmationType2 from '../components/modal/ModalConfirmationType2'
@@ -60,11 +61,15 @@ import ProductListType2 from '../components/list/ProductListType2'
 import ComingSoon from '../components/empty_state/ComingSoon'
 import EmptyData from '../components/empty_state/EmptyData';
 /** SKELETON */
+import SkeletonType1 from '../components/skeleton/SkeletonType1'
 import SkeletonType2 from '../components/skeleton/SkeletonType2'
 import SkeletonType3 from '../components/skeleton/SkeletonType3'
+import SkeletonType4 from '../components/skeleton/SkeletonType4'
 import SkeletonType5 from '../components/skeleton/SkeletonType5'
 import SkeletonType6 from '../components/skeleton/SkeletonType6'
+import SkeletonType7 from '../components/skeleton/SkeletonType7'
 import SkeletonType8 from '../components/skeleton/SkeletonType8'
+import SkeletonType18 from '../components/skeleton/SkeletonType18'
 /** ADDRESS */
 import Address from '../components/Address'
 /** TAG */
@@ -106,6 +111,7 @@ export {
   ButtonMenuType1,
   ButtonSingleSmall,
   /** MODAL */
+  ModalBottomSkuNotAvailable,
   ModalWarning,
   ModalConfirmation,
   ModalConfirmationType2,
@@ -137,11 +143,15 @@ export {
   ComingSoon,
   EmptyData,
   /** SKELETON */
+  SkeletonType1,
   SkeletonType2,
   SkeletonType3,
+  SkeletonType4,
   SkeletonType5,
   SkeletonType6,
+  SkeletonType7,
   SkeletonType8,
+  SkeletonType18,
   /** ADDRESS */
   Address,
   /** TAG */

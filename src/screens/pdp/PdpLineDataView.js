@@ -1,16 +1,24 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  SkeletonType7,
+  LoadingLoadMore,
+  EmptyData
+} from '../../library/component'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
+import { Color } from '../../config'
 import * as ActionCreators from '../../state/actions';
-import masterColor from '../../config/masterColor';
-import { MoneyFormat } from '../../helpers/NumberFormater';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import SkeletonType7 from '../../components/skeleton/SkeletonType7';
-import { LoadingLoadMore } from '../../components/Loading';
-import Fonts from '../../helpers/GlobalFont';
-import EmptyData from '../../components/empty_state/EmptyData';
 
 class PdpLineDataView extends Component {
   constructor(props) {
@@ -65,7 +73,7 @@ class PdpLineDataView extends Component {
         onPress={() =>
           this.toParentFunction({ type: 'openModalOrder', data: item.id })
         }
-        style={[styles.pesanButton, { backgroundColor: masterColor.mainColor }]}
+        style={[styles.pesanButton, { backgroundColor: Color.mainColor }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>
       </TouchableOpacity>
@@ -90,7 +98,7 @@ class PdpLineDataView extends Component {
           </View>
           <View>{this.renderButton(item)}</View>
         </View>
-        <View style={[GlobalStyles.lines, { marginLeft: 10 }]} />
+        <View style={[GlobalStyle.lines, { marginLeft: 10 }]} />
       </View>
     );
   }
@@ -159,7 +167,7 @@ class PdpLineDataView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxContentList: {
     flex: 1,
@@ -190,3 +198,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(PdpLineDataView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
