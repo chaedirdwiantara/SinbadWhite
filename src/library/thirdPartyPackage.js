@@ -43,7 +43,7 @@ import firebase from 'react-native-firebase';
 /** HTML VIEW */
 import HTMLView from 'react-native-htmlview'
 /** REACT NATIVE ELEMENTS */
-import { Button, Tooltip } from 'react-native-elements';
+import { Button, Tooltip, Badge } from 'react-native-elements';
 /** MODAL */
 import Modal from 'react-native-modal'
 /** GESTURE RECOGNIZER */
@@ -99,6 +99,7 @@ export {
   /** REACT NATIVE ELEMENTS */
   Button,
   Tooltip,
+  Badge,
   /** MODAL */
   Modal,
   /** GESTURE RECOGNIZER */

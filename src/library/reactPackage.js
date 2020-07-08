@@ -20,7 +20,8 @@ import {
   Linking,
   Platform,
   StatusBar,
-  Modal as ModalPopUp
+  Modal as ModalPopUp,
+  ToastAndroid
 } from 'react-native';
 import Text from 'react-native-text';
 /** FOR DIMENSIONS */
@@ -49,7 +50,8 @@ export {
   Linking,
   Platform,
   StatusBar,
-  ModalPopUp
+  ModalPopUp,
+  ToastAndroid
 };
 
 /**
