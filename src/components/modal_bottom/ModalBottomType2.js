@@ -1,13 +1,20 @@
 /**
  * THIS MODAL FOR SWIPE TO BOTTOM
  */
-import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, Keyboard } from 'react-native';
-import Text from 'react-native-text';
-import GestureRecognizer from 'react-native-swipe-gestures';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import GlobalStyle from '../../helpers/GlobalStyle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Dimensions,
+  Keyboard,
+  Text
+} from '../../library/reactPackage'
+import {
+  GestureRecognizer
+} from '../../library/thirdPartyPackage'
+import { GlobalStyle, Fonts } from '../../helpers'
+import { Color } from '../../config'
 
 const { height } = Dimensions.get('window');
 
@@ -136,7 +143,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderBottomWidth: 0,
     maxHeight: 0.45 * height,
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     flexDirection: 'column',
     position: 'absolute',
     width: '100%',
@@ -160,3 +167,17 @@ const styles = StyleSheet.create({
 });
 
 export default ModalBottomType2;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

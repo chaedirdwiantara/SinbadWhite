@@ -46,6 +46,8 @@ import HTMLView from 'react-native-htmlview'
 import { Button, Tooltip } from 'react-native-elements';
 /** MODAL */
 import Modal from 'react-native-modal'
+/** GESTURE RECOGNIZER */
+import GestureRecognizer from 'react-native-swipe-gestures'
 
 
 export {
@@ -98,7 +100,9 @@ export {
   Button,
   Tooltip,
   /** MODAL */
-  Modal
+  Modal,
+  /** GESTURE RECOGNIZER */
+  GestureRecognizer
 };
 
 /**
