@@ -1,5 +1,9 @@
-import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import {
+  React,
+  View,
+  StyleSheet,
+  Image
+} from '../library/reactPackage'
 
 const LoadingLoadMore = () => {
   return (
@@ -61,6 +65,9 @@ export { LoadingLoadMore, LoadingPage, LoadingHorizontal };
 * updatedDate: 02072020
 * updatedFunction:
 * -> Add component LoadingHorizontal
-* 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
 */
 
