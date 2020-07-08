@@ -10,7 +10,6 @@ import {
 } from '../../library/thirdPartyPackage'
 import { Color } from '../../config'
 import { Fonts } from '../../helpers'
-import Fonts from '../../helpers/GlobalFont';
 
 class OtpInput extends Component {
   constructor(props) {

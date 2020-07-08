@@ -14,7 +14,7 @@ import {
 import {
   ButtonSingle
 } from '../library/component'
-import { Fonts } from '../../helpers'
+import { Fonts } from '../helpers'
 
 const { height } = Dimensions.get('window');
 
