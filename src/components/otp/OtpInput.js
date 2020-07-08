@@ -1,7 +1,15 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { StyleSheet, View, TextInput, Text } from 'react-native';
-import masterColor from '../../config/masterColor.json';
+import {
+  React,
+  Component,
+  StyleSheet,
+  View,
+  TextInput
+} from '../../library/reactPackage'
+import {
+  connect
+} from '../../library/thirdPartyPackage'
+import { Color } from '../../config'
+import { Fonts } from '../../helpers'
 import Fonts from '../../helpers/GlobalFont';
 
 class OtpInput extends Component {
@@ -34,7 +42,7 @@ class OtpInput extends Component {
       <View style={styles.boxInputPartial}>
         <View style={styles.boxInput}>
           <TextInput
-            selectionColor={masterColor.mainColor}
+            selectionColor={Color.mainColor}
             autoFocus={this.state.input1 === ''}
             ref={ref => {
               this.input1 = ref;
@@ -63,7 +71,7 @@ class OtpInput extends Component {
       <View style={styles.boxInputPartial}>
         <View style={styles.boxInput}>
           <TextInput
-            selectionColor={masterColor.mainColor}
+            selectionColor={Color.mainColor}
             ref={ref => {
               this.input2 = ref;
             }}
@@ -97,7 +105,7 @@ class OtpInput extends Component {
       <View style={styles.boxInputPartial}>
         <View style={styles.boxInput}>
           <TextInput
-            selectionColor={masterColor.mainColor}
+            selectionColor={Color.mainColor}
             ref={ref => {
               this.input3 = ref;
             }}
@@ -131,7 +139,7 @@ class OtpInput extends Component {
       <View style={styles.boxInputPartial}>
         <View style={styles.boxInput}>
           <TextInput
-            selectionColor={masterColor.mainColor}
+            selectionColor={Color.mainColor}
             ref={ref => {
               this.input4 = ref;
             }}
@@ -165,7 +173,7 @@ class OtpInput extends Component {
       <View style={styles.boxInputPartial}>
         <View style={styles.boxInput}>
           <TextInput
-            selectionColor={masterColor.mainColor}
+            selectionColor={Color.mainColor}
             ref={ref => {
               this.input5 = ref;
             }}
@@ -227,7 +235,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderColor: masterColor.fontBlack10,
+    borderColor: Color.fontBlack10,
     width: '80%'
   }
 });
@@ -238,3 +246,17 @@ const mapStateToProps = ({}) => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, {})(OtpInput);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+
