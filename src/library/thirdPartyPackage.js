@@ -48,6 +48,8 @@ import { Button, Tooltip, Badge } from 'react-native-elements';
 import Modal from 'react-native-modal'
 /** GESTURE RECOGNIZER */
 import GestureRecognizer from 'react-native-swipe-gestures'
+/** WHEEL PICKER */
+import { WheelPicker } from 'react-native-wheel-picker-android'
 
 
 export {
@@ -103,7 +105,9 @@ export {
   /** MODAL */
   Modal,
   /** GESTURE RECOGNIZER */
-  GestureRecognizer
+  GestureRecognizer,
+  /** WHEEL PICKER */
+  WheelPicker
 };
 
 /**

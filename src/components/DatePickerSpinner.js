@@ -1,10 +1,20 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Text, Dimensions } from 'react-native';
-import moment from 'moment';
-import { WheelPicker } from 'react-native-wheel-picker-android';
-import { RFPercentage } from 'react-native-responsive-fontsize';
-import Fonts from '../config/Fonts';
-import ButtonSingle from './button/ButtonSingle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Text,
+  Dimensions
+} from '../library/reactPackage'
+import {
+  moment,
+  WheelPicker,
+  RFPercentage
+} from '../library/thirdPartyPackage'
+import {
+  ButtonSingle
+} from '../library/component'
+import { Fonts } from '../../helpers'
 
 const { height } = Dimensions.get('window');
 
@@ -309,3 +319,17 @@ const styles = StyleSheet.create({
 });
 
 export default DatePickerSpinner;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+
