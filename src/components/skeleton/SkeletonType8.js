@@ -1,8 +1,16 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import masterColor from '../../config/masterColor';
-import GlobalStyles from '../../helpers/GlobalStyle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  FlatList,
+  Dimensions
+} from '../../library/reactPackage'
+import {
+  SkeletonPlaceholder
+} from '../../library/thirdPartyPackage'
+import { Color } from '../../config'
+import { GlobalStyle } from '../../helpers'
 
 const { height } = Dimensions.get('window');
 
@@ -73,7 +81,7 @@ class SkeletonType8 extends Component {
   renderSeparator() {
     return (
       <View
-        style={[GlobalStyles.lines, { marginLeft: 16, marginVertical: 10 }]}
+        style={[GlobalStyle.lines, { marginLeft: 16, marginVertical: 10 }]}
       />
     );
   }
@@ -102,7 +110,7 @@ class SkeletonType8 extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     height: '100%',
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   flatListContainer: {
     paddingBottom: 16
@@ -126,3 +134,17 @@ const styles = StyleSheet.create({
 });
 
 export default SkeletonType8;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

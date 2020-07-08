@@ -1,7 +1,14 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import GlobalStyle from '../../helpers/GlobalStyle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  FlatList
+} from '../../library/reactPackage'
+import {
+  SkeletonPlaceholder
+} from '../../library/thirdPartyPackage'
+import { GlobalStyle } from '../../helpers'
 /**
  * ==========================
  * NOTE
@@ -85,3 +92,17 @@ const styles = StyleSheet.create({
 });
 
 export default SkeletonType7;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+
