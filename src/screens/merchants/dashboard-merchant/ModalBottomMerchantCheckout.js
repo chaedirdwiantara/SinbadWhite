@@ -1,15 +1,24 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Text, Dimensions } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import moment from 'moment';
-import masterColor from '../../../config/masterColor.json';
-import { StatusBarRedOP50 } from '../../../components/StatusBarGlobal';
-import Fonts from '../../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Text,
+  Dimensions
+} from '../../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect,
+  moment
+} from '../../../library/thirdPartyPackage'
+import {
+  StatusBarRedOP50,
+  ButtonSingle,
+  ModalBottomWithClose
+} from '../../../library/component'
+import { GlobalStyle, Fonts } from '../../../helpers'
+import { Color } from '../../../config'
 import * as ActionCreators from '../../../state/actions';
-import ButtonSingle from '../../../components/button/ButtonSingle';
-import GlobalStyle from '../../../helpers/GlobalStyle';
-import ModalBottomWithClose from '../../../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 
 const { height } = Dimensions.get('window');
 
@@ -190,7 +199,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderBottomWidth: 0,
     maxHeight: 0.5 * height,
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     flexDirection: 'column',
     position: 'absolute',
     width: '100%',
@@ -217,7 +226,7 @@ const styles = StyleSheet.create({
   cirlce: {
     width: 85,
     height: 85,
-    borderColor: masterColor.fontRed40,
+    borderColor: Color.fontRed40,
     borderWidth: 2,
     borderRadius: 85,
     justifyContent: 'center',
@@ -253,5 +262,8 @@ export default connect(
 * updatedDate: 06072020
 * updatedFunction:
 * -> Change key
-* 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
 */

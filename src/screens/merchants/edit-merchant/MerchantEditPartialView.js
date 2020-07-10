@@ -18,8 +18,8 @@ import {
   InputType2
 } from '../../../library/component';
 import { Fonts } from '../../../helpers';
+import { Color } from '../../../config'
 import * as ActionCreators from '../../../state/actions';
-import masterColor from '../../../config/masterColor.json';
 import NavigationService from '../../../navigation/NavigationService';
 import MerchantPhotoUploadRules from '../reusable-view/MerchantPhotoUploadRules';
 import PhotoUploaded from '../reusable-view/PhotoUploaded';
@@ -505,10 +505,10 @@ class MerchantEditPartialView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     marginBottom: 16,
     paddingVertical: 6
   },
@@ -532,3 +532,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(MerchantEditPartialView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

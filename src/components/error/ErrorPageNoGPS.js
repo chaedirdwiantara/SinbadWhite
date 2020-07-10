@@ -1,10 +1,16 @@
-import React, { Component } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
-import Text from 'react-native-text';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import ButtonSingle from '../../components/button/ButtonSingle';
+import {
+  React,
+  Component,
+  View,
+  Image,
+  StyleSheet,
+  Text
+} from '../../library/reactPackage'
+import {
+  ButtonSingle
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
+import { Color } from '../../config'
 
 /**
  * Props
@@ -62,7 +68,7 @@ class ErrorPageNoGPS extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxEmpty: {
     flex: 1,
@@ -85,3 +91,16 @@ const styles = StyleSheet.create({
 });
 
 export default ErrorPageNoGPS;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

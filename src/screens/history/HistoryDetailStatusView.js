@@ -1,14 +1,23 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
-import { bindActionCreators } from 'redux';
-import moment from 'moment';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  moment,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarRed
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
-import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarRed } from '../../components/StatusBarGlobal';
 
 class HistoryDetailStatusView extends Component {
   constructor(props) {
@@ -202,3 +211,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(HistoryDetailStatusView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

@@ -6,8 +6,6 @@ import {
   Text
 } from '../../library/reactPackage';
 import {
-  StatusBarBlackOP40,
-  StatusBarTransparentBlack,
   StatusBarBlackOP40Translucent,
   ModalBottomSwipeCloseNotScroll,
   ButtonSingle
@@ -92,3 +90,16 @@ class ModalBottomErrorPinMap extends Component {
 }
 
 export default ModalBottomErrorPinMap;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   StyleSheet,
   View,
   Text,
@@ -7,13 +8,13 @@ import {
   TouchableOpacity,
   Linking,
   Platform
-} from 'react-native';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
+} from '../../library/reactPackage'
 import {
   StatusBarBlackOP40,
   StatusBarRedOP50
-} from '../../components/StatusBarGlobal';
+} from '../../library/component'
+import { Fonts } from '../../helpers'
+import masterColor from '../../config/masterColor.json';
 import ModalBottomSwipeCloseNotScroll from '../../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 
 class CallMerchant extends Component {
@@ -155,3 +156,17 @@ const styles = StyleSheet.create({
 });
 
 export default CallMerchant;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

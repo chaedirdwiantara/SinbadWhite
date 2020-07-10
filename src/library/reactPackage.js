@@ -16,7 +16,12 @@ import {
   Keyboard,
   Image,
   FlatList,
-  BackHandler
+  BackHandler,
+  Linking,
+  Platform,
+  StatusBar,
+  Modal as ModalPopUp,
+  ToastAndroid
 } from 'react-native';
 import Text from 'react-native-text';
 /** FOR DIMENSIONS */
@@ -41,5 +46,23 @@ export {
   height,
   Image,
   FlatList,
-  BackHandler
+  BackHandler,
+  Linking,
+  Platform,
+  StatusBar,
+  ModalPopUp,
+  ToastAndroid
 };
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Add new react native package
+* 
+*/

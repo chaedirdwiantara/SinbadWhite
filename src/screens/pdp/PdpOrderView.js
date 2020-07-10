@@ -1,22 +1,29 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Image, Dimensions, Keyboard } from 'react-native';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { Tooltip } from 'react-native-elements';
-import { bindActionCreators } from 'redux';
-import * as ActionCreators from '../../state/actions';
-import OrderButton from '../../components/OrderButton';
-import { MoneyFormat, NumberFormat } from '../../helpers/NumberFormater';
 import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Image,
+  Dimensions,
+  Keyboard,
+  Text
+} from '../../library/reactPackage'
+import {
+  connect,
+  MaterialIcon,
+  Tooltip,
+  bindActionCreators
+} from '../../library/thirdPartyPackage'
+import {
+  OrderButton,
   StatusBarRedOP50,
-  StatusBarBlackOP40
-} from '../../components/StatusBarGlobal';
-import masterColor from '../../config/masterColor.json';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import ButtonSingleSmall from '../../components/button/ButtonSingleSmall';
-import Fonts from '../../helpers/GlobalFont';
-import SkeletonType18 from '../../components/skeleton/SkeletonType18';
+  StatusBarBlackOP40,
+  ButtonSingleSmall,
+  SkeletonType18
+} from '../../library/component'
+import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers'
+import { Color } from '../../config'
+import * as ActionCreators from '../../state/actions';
 // import PdpPromoListView from './PdpPromoListView';
 
 const { width, height } = Dimensions.get('window');
@@ -269,7 +276,7 @@ class PdpOrderView extends Component {
   renderTooltip() {
     return (
       <Tooltip
-        backgroundColor={masterColor.fontBlack50OP80}
+        backgroundColor={Color.fontBlack50OP80}
         height={55}
         withOverlay={false}
         withPointer={false}
@@ -286,7 +293,7 @@ class PdpOrderView extends Component {
         }
       >
         {this.state.questionMarkShow ? (
-          <MaterialIcon name="help" size={18} color={masterColor.fontBlack40} />
+          <MaterialIcon name="help" size={18} color={Color.fontBlack40} />
         ) : (
           <View />
         )}
@@ -300,7 +307,7 @@ class PdpOrderView extends Component {
         <View style={{ flexDirection: 'row', paddingBottom: 25 }}>
           <View
             style={{
-              backgroundColor: masterColor.backgroudWhite
+              backgroundColor: Color.backgroudWhite
             }}
           >
             <Image
@@ -331,7 +338,7 @@ class PdpOrderView extends Component {
               <View
                 style={{
                   borderRightWidth: 1,
-                  borderRightColor: masterColor.fontBlack40
+                  borderRightColor: Color.fontBlack40
                 }}
               />
               <Text style={[Fonts.type38, { marginLeft: 10 }]}>
@@ -393,7 +400,7 @@ class PdpOrderView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroudWhite
+    backgroundColor: Color.backgroudWhite
   },
   boxItem: {
     paddingHorizontal: 16,
@@ -446,3 +453,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(PdpOrderView);
  *  qty: 1 (number)
  * }
  */
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

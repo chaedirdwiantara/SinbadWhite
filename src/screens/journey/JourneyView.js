@@ -1,23 +1,32 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, SafeAreaView, TouchableOpacity } from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {
+  React,
+  Component,
+  StyleSheet,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  MaterialIcon,
+  bindActionCreators,
+  connect,
+  SkeletonPlaceholder
+} from '../../library/thirdPartyPackage'
+import {
+  ButtonFloatType1,
+  StatusBarWhite,
+  ToastType1,
+  ModalBottomSwipeCloseNotScroll,
+  BackHandlerBackSpecific
+} from '../../library/component'
+import { MoneyFormat, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
-import Fonts from '../../helpers/GlobalFont';
-import ButtonFloatType1 from '../../components/button/ButtonFloatType1';
-import { StatusBarWhite } from '../../components/StatusBarGlobal';
-import ToastType1 from '../../components/toast/ToastType1';
-import ModalBottomSwipeCloseNotScroll from '../../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalContentMenuAddMerchant from './ModalContentMenuAddMerchant';
 import ModalBottomMerchantList from '../merchants/ModalBottomMerchantList';
 import JourneyListDataView from './JourneyListDataView';
-import { MoneyFormat } from '../../helpers/NumberFormater';
-import BackHandlerBackSpecific from '../../components/BackHandlerBackSpecific';
 
 class JourneyView extends Component {
   constructor(props) {
@@ -267,3 +276,16 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(JourneyView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

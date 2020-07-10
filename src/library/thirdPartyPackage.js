@@ -32,6 +32,25 @@ import DeviceInfo from 'react-native-device-info';
 import moment from 'moment'
 /** TOAST */
 import Toast, { DURATION } from 'react-native-easy-toast';
+/** RNFS */
+var RNFS = require('react-native-fs');
+/** RN CAMERA */
+import { RNCamera } from 'react-native-camera';
+/** IMAGE EDITOR */
+import ImageEditor from '@react-native-community/image-editor';
+/** FIREBASE */
+import firebase from 'react-native-firebase';
+/** HTML VIEW */
+import HTMLView from 'react-native-htmlview'
+/** REACT NATIVE ELEMENTS */
+import { Button, Tooltip, Badge } from 'react-native-elements';
+/** MODAL */
+import Modal from 'react-native-modal'
+/** GESTURE RECOGNIZER */
+import GestureRecognizer from 'react-native-swipe-gestures'
+/** WHEEL PICKER */
+import { WheelPicker } from 'react-native-wheel-picker-android'
+
 
 export {
   /** REDUX */
@@ -68,5 +87,39 @@ export {
   moment,
   /** TOAST */
   Toast,
-  DURATION
+  DURATION,
+  /** RNFS */
+  RNFS,
+  /** RN CAMERA */
+  RNCamera,
+  /** IMAGE EDITOR */
+  ImageEditor,
+  /** FIREBASE */
+  firebase,
+  /** HTML VIEW */
+  HTMLView,
+  /** REACT NATIVE ELEMENTS */
+  Button,
+  Tooltip,
+  Badge,
+  /** MODAL */
+  Modal,
+  /** GESTURE RECOGNIZER */
+  GestureRecognizer,
+  /** WHEEL PICKER */
+  WheelPicker
 };
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Add new third party component
+* 
+*/
+

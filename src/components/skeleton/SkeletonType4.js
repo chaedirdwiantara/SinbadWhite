@@ -1,8 +1,16 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import masterColor from '../../config/masterColor';
-import GlobalStyles from '../../helpers/GlobalStyle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  FlatList,
+  Dimensions
+} from '../../library/reactPackage'
+import {
+  SkeletonPlaceholder
+} from '../../library/thirdPartyPackage'
+import { Color } from '../../config'
+import { GlobalStyle } from '../../helpers'
 
 /**
  * =============================
@@ -24,7 +32,7 @@ class SkeletonType4 extends Component {
     return (
       <View style={styles.mainContent} key={index}>
         <View style={styles.boxMainContent}>
-          <View style={[GlobalStyles.shadow5, styles.cardMainContent]}>
+          <View style={[GlobalStyle.shadow5, styles.cardMainContent]}>
             <SkeletonPlaceholder>
               <View style={{ alignItems: 'center', width: '100%' }}>
                 <View style={{ width: '100%', height: 135 }} />
@@ -101,7 +109,7 @@ class SkeletonType4 extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   flatListContainer: {
     paddingTop: 16,
@@ -120,8 +128,22 @@ const styles = StyleSheet.create({
   },
   cardMainContent: {
     borderRadius: 5,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   }
 });
 
 export default SkeletonType4;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

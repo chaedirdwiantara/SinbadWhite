@@ -1,8 +1,15 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import masterColor from '../../config/masterColor';
-import GlobalStyles from '../../helpers/GlobalStyle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Dimensions
+} from '../../library/reactPackage'
+import {
+  SkeletonPlaceholder
+} from '../../library/thirdPartyPackage'
+import { Color } from '../../config'
+import { GlobalStyle } from '../../helpers'
 
 const { width, height } = Dimensions.get('window');
 
@@ -154,7 +161,7 @@ class SkeletonType18 extends Component {
   /** === RENDER TOTAL SKELETON === */
   renderTotalSkeleton() {
     return (
-      <View style={[styles.boxTotalPriceSkeleton, GlobalStyles.shadowForBox10]}>
+      <View style={[styles.boxTotalPriceSkeleton, GlobalStyle.shadowForBox10]}>
         <View style={{ flex: 1 }}>{this.renderBottomValueSkeleton()}</View>
         <View style={{ flex: 1 }}>{this.renderButtonSkeleton()}</View>
       </View>
@@ -174,7 +181,7 @@ class SkeletonType18 extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxSkeleton: {
     width: '100%',
@@ -201,3 +208,17 @@ const styles = StyleSheet.create({
 });
 
 export default SkeletonType18;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

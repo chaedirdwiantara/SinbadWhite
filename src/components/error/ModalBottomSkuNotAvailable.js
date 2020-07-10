@@ -1,10 +1,15 @@
-import React, { Component } from 'react';
-import { View, Image } from 'react-native';
-import Text from 'react-native-text';
-import ModalBottomType1 from '../modal_bottom/ModalBottomType1';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarRedOP50 } from '../StatusBarGlobal';
+import {
+  React,
+  Component,
+  View,
+  Image,
+  Text
+} from '../../library/reactPackage'
+import {
+  ModalBottomType1,
+  StatusBarRedOP50
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
 
 class ModalBottomSkuNotAvailable extends Component {
   /** === RENDER CONTENT === */
@@ -54,3 +59,17 @@ class ModalBottomSkuNotAvailable extends Component {
 }
 
 export default ModalBottomSkuNotAvailable;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

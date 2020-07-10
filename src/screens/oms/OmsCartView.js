@@ -1,32 +1,40 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   Dimensions,
   ScrollView,
   TouchableOpacity,
-  Image
-} from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+  Image,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect,
+  MaterialCommunityIcons
+} from '../../library/thirdPartyPackage'
+import {
+  ButtonSingleSmall,
+  ModalConfirmation,
+  LoadingPage,
+  Address,
+  OrderButton,
+  EmptyData,
+  ModalBottomErrorRespons,
+  ErrorPage,
+  SelectedMerchantName
+} from '../../library/component'
+import { Color } from '../../config'
+import { 
+  GlobalStyle, 
+  Fonts,
+  MoneyFormat,
+  NumberFormat
+} from '../../helpers'
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import masterColor from '../../config/masterColor.json';
-import ButtonSingleSmall from '../../components/button/ButtonSingleSmall';
-import ModalConfirmation from '../../components/modal/ModalConfirmation';
-import { LoadingPage } from '../../components/Loading';
-import Address from '../../components/Address';
-import Fonts from '../../helpers/GlobalFont';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import { MoneyFormat, NumberFormat } from '../../helpers/NumberFormater';
-import OrderButton from '../../components/OrderButton';
-import EmptyData from '../../components/empty_state/EmptyData';
-import ModalBottomErrorRespons from '../../components/error/ModalBottomErrorRespons';
-import ErrorPage from '../../components/error/ErrorPage';
 import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
-import SelectedMerchantName from '../../components/SelectedMerchantName';
 import ModalBottomInputOwnerId from './ModalBottomInputOwnerId';
 import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
 import CallCS from '../../screens/global/CallCS';
@@ -518,7 +526,7 @@ class OmsCartView extends Component {
             uri: item.catalogue.catalogueImages[0].imageUrl
           }}
           style={[
-            GlobalStyles.image77Contain,
+            GlobalStyle.image77Contain,
             { opacity: item.statusInCart === 'available' ? 1 : 0.5 }
           ]}
         />
@@ -608,11 +616,11 @@ class OmsCartView extends Component {
   renderAddress() {
     const store = this.props.merchant.selectedMerchant;
     return (
-      <View style={[styles.boxAddress, GlobalStyles.shadowBottom]}>
+      <View style={[styles.boxAddress, GlobalStyle.shadowBottom]}>
         <View style={styles.boxTitle}>
           <Text style={Fonts.type48}>Alamat Pengiriman</Text>
         </View>
-        <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+        <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
         <View style={{ paddingVertical: 10, paddingHorizontal: 16 }}>
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
@@ -657,8 +665,8 @@ class OmsCartView extends Component {
               itemProductCartArray.parcelId === item.id &&
               itemProductCartArray.statusInCart === 'available'
           ) !== undefined ? (
-            <View style={GlobalStyles.shadowForBox}>
-              <View style={GlobalStyles.boxPaddingOms} />
+            <View style={GlobalStyle.shadowForBox}>
+              <View style={GlobalStyle.boxPaddingOms} />
               <View style={styles.boxListProductInCart}>
                 <View style={{ paddingBottom: 8, paddingHorizontal: 16 }}>
                   <View style={{ flex: 1, justifyContent: 'center' }}>
@@ -691,7 +699,7 @@ class OmsCartView extends Component {
               itemProductCartArray.statusInCart === 'available'
           ).length > 0 ? (
             <View>
-              <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+              <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
               <View
                 style={[
                   styles.boxListItemProductInCart,
@@ -708,14 +716,14 @@ class OmsCartView extends Component {
                       !itemProductCartArray.checkBox &&
                       itemProductCartArray.statusInCart === 'available'
                   ).length === 0 ? (
-                    <Icons
-                      color={masterColor.mainColor}
+                    <MaterialCommunityIcons
+                      color={Color.mainColor}
                       name="checkbox-marked"
                       size={24}
                     />
                   ) : (
-                    <Icons
-                      color={masterColor.fontBlack40}
+                    <MaterialCommunityIcons
+                      color={Color.fontBlack40}
                       name="checkbox-blank-outline"
                       size={24}
                     />
@@ -725,7 +733,7 @@ class OmsCartView extends Component {
                   <Text style={Fonts.type16}>{item.brand.name}</Text>
                 </View>
               </View>
-              <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+              <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
             </View>
           ) : (
             <View />
@@ -757,14 +765,14 @@ class OmsCartView extends Component {
                 itemProductCartArray.catalogueId === item.catalogue.id &&
                 item.checkBox
             ) > -1 ? (
-              <Icons
-                color={masterColor.mainColor}
+              <MaterialCommunityIcons
+                color={Color.mainColor}
                 name="checkbox-marked"
                 size={24}
               />
             ) : (
-              <Icons
-                color={masterColor.fontBlack40}
+              <MaterialCommunityIcons
+                color={Color.fontBlack40}
                 name="checkbox-blank-outline"
                 size={24}
               />
@@ -851,12 +859,12 @@ class OmsCartView extends Component {
       item => item.statusInCart === 'unavailable'
     ).length > 0 ? (
       <View>
-        <View style={GlobalStyles.boxPaddingOms} />
-        <View style={GlobalStyles.shadowForBox}>
+        <View style={GlobalStyle.boxPaddingOms} />
+        <View style={GlobalStyle.shadowForBox}>
           <View style={styles.boxTitle}>
             <Text style={Fonts.type48}>Produk Tidak Tersedia</Text>
           </View>
-          <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+          <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
           {this.renderProductContentErrorTidakTersedia()}
         </View>
       </View>
@@ -870,12 +878,12 @@ class OmsCartView extends Component {
       item => item.statusInCart === 'outStock'
     ).length > 0 ? (
       <View>
-        <View style={GlobalStyles.boxPaddingOms} />
-        <View style={GlobalStyles.shadowForBox}>
+        <View style={GlobalStyle.boxPaddingOms} />
+        <View style={GlobalStyle.shadowForBox}>
           <View style={styles.boxTitle}>
             <Text style={Fonts.type48}>Produk Habis</Text>
           </View>
-          <View style={[GlobalStyles.lines, { marginLeft: 16 }]} />
+          <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
           {this.renderProductContentErrorProductHabis()}
         </View>
       </View>
@@ -951,14 +959,14 @@ class OmsCartView extends Component {
           this.state.productCartArray.filter(
             item => item.statusInCart === 'available'
           ).length > 0 ? (
-            <Icons
-              color={masterColor.mainColor}
+            <MaterialCommunityIcons
+              color={Color.mainColor}
               name="checkbox-marked"
               size={24}
             />
           ) : (
-            <Icons
-              color={masterColor.fontBlack40}
+            <MaterialCommunityIcons
+              color={Color.fontBlack40}
               name="checkbox-blank-outline"
               size={24}
             />
@@ -1224,7 +1232,7 @@ class OmsCartView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
     flex: 1
@@ -1234,17 +1242,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     flexDirection: 'row',
     borderTopWidth: 1,
-    borderColor: masterColor.fontBlack10
+    borderColor: Color.fontBlack10
   },
   /** for list order */
   boxListProductInCart: {
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     paddingVertical: 10
   },
   /** for address */
   boxAddress: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxTitle: {
     paddingLeft: 16,

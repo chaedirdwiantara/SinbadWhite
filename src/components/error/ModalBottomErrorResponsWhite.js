@@ -1,9 +1,17 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Text, Dimensions, Image } from 'react-native';
-import ModalBottomType1 from '../modal_bottom/ModalBottomType1';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarBlackOP40 } from '../StatusBarGlobal';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+  Image
+} from '../../library/reactPackage'
+import {
+  ModalBottomType1,
+  StatusBarBlackOP40
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
 
 const { height, width } = Dimensions.get('window');
 
@@ -55,3 +63,17 @@ class ModalBottomErrorResponsWhite extends Component {
 const styles = StyleSheet.create({});
 
 export default ModalBottomErrorResponsWhite;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

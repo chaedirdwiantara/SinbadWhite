@@ -1,11 +1,19 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Image } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import {
+  React,
+  Component,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text,
+  Image
+} from '../../library/reactPackage'
+import {
+  connect,
+  bindActionCreators
+} from '../../library/thirdPartyPackage'
+import { GlobalStyle, Fonts } from '../../helpers'
+import { Color } from '../../config'
 import * as ActionCreators from '../../state/actions';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
 
 class PdpFilterView extends Component {
   constructor(props) {
@@ -140,7 +148,7 @@ class PdpFilterView extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     height: 55,
     paddingHorizontal: 40,
     flexDirection: 'row',
@@ -166,3 +174,16 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PdpFilterView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

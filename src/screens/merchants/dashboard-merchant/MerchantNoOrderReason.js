@@ -1,25 +1,29 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
-  Keyboard
-} from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
+  Keyboard,
+  Text
+} from '../../../library/reactPackage'
+import {
+  bindActionCreators,
+  MaterialIcon,
+  connect
+} from '../../../library/thirdPartyPackage'
+import {
+  StatusBarWhite,
+  ButtonSingle,
+  LoadingPage,
+  InputType3,
+  ToastType1
+} from '../../../library/component'
+import { GlobalStyle, Fonts } from '../../../helpers'
+import { Color } from '../../../config'
 import * as ActionCreators from '../../../state/actions';
-import GlobalStyle from '../../../helpers/GlobalStyle';
-import masterColor from '../../../config/masterColor.json';
-import Fonts from '../../../helpers/GlobalFont';
-import { StatusBarWhite } from '../../../components/StatusBarGlobal';
-import ButtonSingle from '../../../components/button/ButtonSingle';
-import { LoadingPage } from '../../../components/Loading';
-import InputType3 from '../../../components/input/InputType3';
-import ToastType1 from '../../../components/toast/ToastType1';
 import NavigationService from '../../../navigation/NavigationService';
 
 class MerchantNoOrderReason extends Component {
@@ -98,9 +102,9 @@ class MerchantNoOrderReason extends Component {
           </View>
           <View style={styles.boxIconRight}>
             {this.state.selectedReason === item.id ? (
-              <MaterialIcons
+              <MaterialIcon
                 name="check-circle"
-                color={masterColor.mainColor}
+                color={Color.mainColor}
                 size={24}
               />
             ) : (
@@ -195,7 +199,7 @@ class MerchantNoOrderReason extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxContentItem: {
     paddingHorizontal: 20,
@@ -212,7 +216,7 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     borderRadius: 22,
-    backgroundColor: masterColor.fontBlack40
+    backgroundColor: Color.fontBlack40
   }
 });
 
@@ -239,5 +243,8 @@ export default connect(
 * updatedDate: 06072020
 * updatedFunction:
 * -> Change key
-* 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
 */

@@ -1,23 +1,27 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   Dimensions,
   Image,
   TouchableOpacity,
-  ScrollView
-} from 'react-native';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { bindActionCreators } from 'redux';
+  ScrollView,
+  Text
+} from '../../library/reactPackage'
+import {
+  connect,
+  MaterialIcon,
+  bindActionCreators
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarRedOP50,
+  SkeletonType8,
+  ModalBottomType3
+} from '../../library/component'
+import { Color } from '../../config'
+import { GlobalStyle, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
-import masterColor from '../../config/masterColor.json';
-import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import SkeletonType8 from '../../components/skeleton/SkeletonType8';
-import Fonts from '../../helpers/GlobalFont';
-import ModalBottomType3 from '../../components/modal_bottom/ModalBottomType3';
 
 const { height } = Dimensions.get('window');
 
@@ -81,7 +85,7 @@ class ModalBottomPaymentType extends Component {
           </View>
         </View>
         <View style={{ width: '5%', justifyContent: 'center' }}>
-          <MaterialIcons
+          <MaterialIcon
             name="navigate-next"
             size={24}
             style={!item.availableStatus ? { opacity: 0.5 } : {}}
@@ -106,7 +110,7 @@ class ModalBottomPaymentType extends Component {
           )}
 
           <View
-            style={[GlobalStyles.lines, { marginLeft: 16, marginVertical: 10 }]}
+            style={[GlobalStyle.lines, { marginLeft: 16, marginVertical: 10 }]}
           />
         </View>
       );
@@ -149,7 +153,7 @@ class ModalBottomPaymentType extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   container: {
     height: 0.4 * height
@@ -172,3 +176,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ModalBottomPaymentType);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

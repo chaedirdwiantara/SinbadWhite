@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
-import Text from 'react-native-text';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Text
+} from '../../library/reactPackage'
+import { Color } from '../../config'
+import { Fonts } from '../../helpers'
 
 class ProgressBarType1 extends Component {
   constructor(props) {
@@ -64,7 +67,7 @@ class ProgressBarType1 extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
     paddingHorizontal: 16
@@ -72,7 +75,7 @@ const styles = StyleSheet.create({
   fullBar: {
     height: 8,
     flex: 1,
-    backgroundColor: masterColor.fontBlack10,
+    backgroundColor: Color.fontBlack10,
     borderRadius: 8
   },
   boxBar: {
@@ -87,8 +90,22 @@ const styles = StyleSheet.create({
     height: '100%',
     left: 0,
     borderRadius: 8,
-    backgroundColor: masterColor.mainColor
+    backgroundColor: Color.mainColor
   }
 });
 
 export default ProgressBarType1;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

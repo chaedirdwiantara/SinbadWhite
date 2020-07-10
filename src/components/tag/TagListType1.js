@@ -1,10 +1,17 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { connect } from 'react-redux';
-import Text from 'react-native-text';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  connect
+} from '../../library/thirdPartyPackage'
+import { GlobalStyle, Fonts } from '../../helpers'
+import { Color } from '../../config'
 
 /**
  * =====================
@@ -42,10 +49,10 @@ class TagList extends Component {
     return this.props.shadow
       ? [
           styles.boxChip,
-          { backgroundColor: masterColor.mainColor },
+          { backgroundColor: Color.mainColor },
           GlobalStyle.shadow
         ]
-      : [styles.boxChip, { backgroundColor: masterColor.mainColor }];
+      : [styles.boxChip, { backgroundColor: Color.mainColor }];
   }
   /** === ACTIVE TAG VIEW === */
   renderTagActive(item) {
@@ -61,17 +68,17 @@ class TagList extends Component {
       ? [
           styles.boxChip,
           {
-            backgroundColor: masterColor.backgroundWhite,
-            borderColor: masterColor.fontBlack60
+            backgroundColor: Color.backgroundWhite,
+            borderColor: Color.fontBlack60
           },
           GlobalStyle.shadow
         ]
       : [
           styles.boxChip,
           {
-            backgroundColor: masterColor.backgroundWhite,
+            backgroundColor: Color.backgroundWhite,
             borderWidth: 1,
-            borderColor: masterColor.fontBlack60
+            borderColor: Color.fontBlack60
           }
         ];
   }
@@ -145,3 +152,17 @@ const mapStateToProps = ({}) => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, {})(TagList);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

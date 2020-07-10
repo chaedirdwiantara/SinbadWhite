@@ -1,6 +1,9 @@
-import React, { Component } from 'react';
-import { View } from 'react-native';
-import Text from 'react-native-text';
+import {
+  React,
+  Component,
+  View,
+  Text
+} from '../library/reactPackage'
 
 /**
  * ===================
@@ -104,3 +107,17 @@ class Address extends Component {
 }
 
 export default Address;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

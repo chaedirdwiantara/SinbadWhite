@@ -1,5 +1,10 @@
-import React, { Component } from 'react';
-import { View, BackHandler, ToastAndroid } from 'react-native';
+import {
+  React,
+  Component,
+  View,
+  BackHandler,
+  ToastAndroid
+} from '../library/reactPackage'
 
 class BackHandlerCloseApp extends Component {
   constructor(props) {
@@ -61,3 +66,17 @@ class BackHandlerCloseApp extends Component {
 }
 
 export default BackHandlerCloseApp;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

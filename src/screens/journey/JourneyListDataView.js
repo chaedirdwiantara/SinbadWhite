@@ -1,25 +1,28 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   FlatList,
-  Image,
-  TouchableOpacity
-} from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Octicons from 'react-native-vector-icons/Octicons';
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon,
+  OcticonsIcon
+} from '../../library/thirdPartyPackage'
+import {
+  SkeletonType3,
+  LoadingLoadMore,
+  Address,
+  EmptyData
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import SkeletonType3 from '../../components/skeleton/SkeletonType3';
-import { LoadingLoadMore } from '../../components/Loading';
-import Address from '../../components/Address';
-import Fonts from '../../helpers/GlobalFont';
-import EmptyData from '../../components/empty_state/EmptyData';
 
 class JourneyListDataView extends Component {
   constructor(props) {
@@ -122,7 +125,7 @@ class JourneyListDataView extends Component {
       <View key={index} style={styles.boxItem}>
         <View style={{ justifyContent: 'center' }}>
           {item.journeyPlanSaleLogs.length !== 0 ? (
-            <MaterialIcons
+            <MaterialIcon
               name="check-circle"
               color={
                 this.checkCheckListActivity(item.journeyPlanSaleLogs) > 1
@@ -132,7 +135,7 @@ class JourneyListDataView extends Component {
               size={24}
             />
           ) : (
-            <MaterialIcons
+            <MaterialIcon
               name="radio-button-unchecked"
               color={masterColor.fontBlack40}
               size={24}
@@ -188,7 +191,7 @@ class JourneyListDataView extends Component {
               marginBottom: 17
             }}
           >
-            <MaterialIcons
+            <MaterialIcon
               name="motorcycle"
               color={
                 item.journeyPlanSaleLogs.findIndex(
@@ -200,7 +203,7 @@ class JourneyListDataView extends Component {
               size={24}
             />
             <View style={{ marginLeft: 10 }} />
-            <Octicons
+            <OcticonsIcon
               name="package"
               color={
                 item.journeyPlanSaleLogs.findIndex(
@@ -236,7 +239,7 @@ class JourneyListDataView extends Component {
   }
   /** === SEPARATOR FLATLIST === */
   renderSeparator() {
-    return <View style={[GlobalStyles.lines, { marginLeft: 50 }]} />;
+    return <View style={[GlobalStyle.lines, { marginLeft: 50 }]} />;
   }
   /** === RENDER DATA === */
   renderData() {

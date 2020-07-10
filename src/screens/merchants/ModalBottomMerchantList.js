@@ -1,26 +1,30 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  Keyboard
-} from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import Modal from 'react-native-modal';
-import masterColor from '../../config/masterColor.json';
-import { StatusBarBlackOP40 } from '../../components/StatusBarGlobal';
-import Fonts from '../../helpers/GlobalFont';
+  Keyboard,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon,
+  Modal
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarBlackOP40,
+  SearchBarType1,
+  TagListType1,
+  SkeletonType2,
+  ButtonSingle
+} from '../../library/component'
+import { Color } from '../../config'
+import { Fonts } from '../../helpers'
 import ModalBottomMerchantListDataView from './ModalMerchantListDataView';
-import SearchBarType1 from '../../components/search_bar/SearchBarType1';
 import * as ActionCreators from '../../state/actions';
-import TagListType1 from '../../components/tag/TagListType1';
-import SkeletonType2 from '../../components/skeleton/SkeletonType2';
-import ButtonSingle from '../../components/button/ButtonSingle';
-
 const { height } = Dimensions.get('window');
 
 class ModalBottomMerchantList extends Component {
@@ -163,7 +167,7 @@ class ModalBottomMerchantList extends Component {
           <TouchableOpacity style={styles.boxClose} onPress={this.props.close}>
             <MaterialIcon
               name="close"
-              color={masterColor.fontBlack50}
+              color={Color.fontBlack50}
               size={24}
             />
           </TouchableOpacity>
@@ -262,7 +266,7 @@ class ModalBottomMerchantList extends Component {
         useNativeDriver={true}
         hasBackdrop={true}
         coverScreen={true}
-        backdropColor={masterColor.fontBlack100}
+        backdropColor={Color.fontBlack100}
         backdropOpacity={0.4}
         deviceHeight={height}
         style={styles.mainContainer}
@@ -296,7 +300,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     flexDirection: 'column',
     position: 'absolute',
     width: '100%',
@@ -332,3 +336,17 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ModalBottomMerchantList);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

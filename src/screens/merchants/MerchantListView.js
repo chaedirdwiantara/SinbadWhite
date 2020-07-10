@@ -1,16 +1,23 @@
-import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { bindActionCreators } from 'redux';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  TagListType1,
+  SearchBarType1,
+  SkeletonType2
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
+import { Color } from '../../config'
 import * as ActionCreators from '../../state/actions';
-import masterColor from '../../config/masterColor';
-import TagListType1 from '../../components/tag/TagListType1';
-import SearchBarType1 from '../../components/search_bar/SearchBarType1';
 import MerchantListDataView from './MerchantListDataView';
-import SkeletonType2 from '../../components/skeleton/SkeletonType2';
-import Fonts from '../../helpers/GlobalFont';
-import GlobalStyles from '../../helpers/GlobalStyle';
 
 class MerchantListView extends Component {
   constructor(props) {
@@ -85,7 +92,7 @@ class MerchantListView extends Component {
                 {this.props.merchant.totalDataGetMerchant} List Store
               </Text>
             </View>
-            <View style={GlobalStyles.lines} />
+            <View style={GlobalStyle.lines} />
           </View>
         ) : (
           <View />
@@ -125,7 +132,7 @@ class MerchantListView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxTabs: {
     height: 44
@@ -147,3 +154,17 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(MerchantListView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

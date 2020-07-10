@@ -1,23 +1,26 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   ScrollView,
   RefreshControl,
   Image,
-  TouchableOpacity
-} from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  SkeletonType4,
+  LoadingLoadMore,
+  EmptyData
+} from '../../library/component'
+import { Color } from '../../config'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
-import masterColor from '../../config/masterColor';
-import { MoneyFormat } from '../../helpers/NumberFormater';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import SkeletonType4 from '../../components/skeleton/SkeletonType4';
-import { LoadingLoadMore } from '../../components/Loading';
-import Fonts from '../../helpers/GlobalFont';
-import EmptyData from '../../components/empty_state/EmptyData';
 
 class PdpGridDataView extends Component {
   constructor(props) {
@@ -83,7 +86,7 @@ class PdpGridDataView extends Component {
         onPress={() =>
           this.toParentFunction({ type: 'openModalOrder', data: item.id })
         }
-        style={[styles.pesanButton, { backgroundColor: masterColor.mainColor }]}
+        style={[styles.pesanButton, { backgroundColor: Color.mainColor }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>
       </TouchableOpacity>
@@ -97,13 +100,13 @@ class PdpGridDataView extends Component {
         source={{
           uri: item.catalogueImages[0].imageUrl
         }}
-        style={GlobalStyles.fullWidthRatioContainRadius5Image}
+        style={GlobalStyle.fullWidthRatioContainRadius5Image}
       />
     );
     return (
       <View style={styles.mainContent} key={index}>
         <View style={styles.boxMainContent}>
-          <View style={[GlobalStyles.shadow5, styles.cardMainContent]}>
+          <View style={[GlobalStyle.shadow5, styles.cardMainContent]}>
             <View>{productImage}</View>
             <View style={{ paddingHorizontal: 11, paddingVertical: 10 }}>
               <View>
@@ -217,7 +220,7 @@ class PdpGridDataView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   flatListContainer: {
     paddingTop: 16,
@@ -236,7 +239,7 @@ const styles = StyleSheet.create({
   },
   cardMainContent: {
     borderRadius: 5,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxFlatlist: {
     paddingTop: 10,
@@ -271,3 +274,16 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(PdpGridDataView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

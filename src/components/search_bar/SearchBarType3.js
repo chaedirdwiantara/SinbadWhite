@@ -13,7 +13,7 @@ import {
   MaterialIcon
 } from '../../library/thirdPartyPackage';
 import { Fonts } from '../../helpers';
-import masterColor from '../../config/masterColor.json';
+import { Color } from '../../config'
 import * as ActionCreators from '../../state/actions';
 
 /**
@@ -59,7 +59,7 @@ class SearchBarType3 extends Component {
     return (
       <View style={{ paddingHorizontal: 11 }}>
         <MaterialIcon
-          color={masterColor.fontBlack60}
+          color={Color.fontBlack60}
           name={'search'}
           size={24}
         />
@@ -74,7 +74,7 @@ class SearchBarType3 extends Component {
         onPress={() => this.clearSearch()}
       >
         <MaterialIcon
-          color={masterColor.fontBlack60}
+          color={Color.fontBlack60}
           name={'cancel'}
           size={24}
         />
@@ -89,7 +89,7 @@ class SearchBarType3 extends Component {
       <View style={{ flex: 1 }}>
         <TextInput
           autoFocus={this.props.focus}
-          selectionColor={masterColor.mainColor}
+          selectionColor={Color.mainColor}
           onEndEditing={() => this.searchText()}
           value={this.state.search}
           returnKeyType={'search'}
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 10,
     alignItems: 'center',
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     flexDirection: 'row'
   },
   inputBox: {
@@ -144,3 +144,17 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(SearchBarType3);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

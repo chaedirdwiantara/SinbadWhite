@@ -1,9 +1,16 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import Text from 'react-native-text';
-import Fonts from '../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  connect,
+  bindActionCreators
+} from '../../library/thirdPartyPackage'
+import { Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
 
 class OtpResend extends Component {
@@ -97,3 +104,16 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(OtpResend);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

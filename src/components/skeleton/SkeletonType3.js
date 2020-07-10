@@ -1,8 +1,15 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import masterColor from '../../config/masterColor';
-import GlobalStyles from '../../helpers/GlobalStyle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  FlatList
+} from '../../library/reactPackage'
+import {
+  SkeletonPlaceholder
+} from '../../library/thirdPartyPackage'
+import { Color } from '../../config'
+import { GlobalStyle, Fonts } from '../../helpers'
 
 /**
  * =============================
@@ -64,7 +71,7 @@ class SkeletonType3 extends Component {
   }
   /** === RENDER SEPARATOR === */
   renderSeparator() {
-    return <View style={[GlobalStyles.lines, { marginLeft: 9 }]} />;
+    return <View style={[GlobalStyle.lines, { marginLeft: 9 }]} />;
   }
   /** === RENDER SKELETON === */
   renderSkeleton() {
@@ -91,7 +98,7 @@ class SkeletonType3 extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     height: '100%',
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   flatListContainer: {
     paddingTop: 10,
@@ -116,3 +123,17 @@ const styles = StyleSheet.create({
 });
 
 export default SkeletonType3;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

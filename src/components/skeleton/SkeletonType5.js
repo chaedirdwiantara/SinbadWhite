@@ -1,8 +1,15 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import masterColor from '../../config/masterColor';
-import GlobalStyles from '../../helpers/GlobalStyle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  FlatList
+} from '../../library/reactPackage'
+import {
+  SkeletonPlaceholder
+} from '../../library/thirdPartyPackage'
+import { Color } from '../../config'
+import { GlobalStyle } from '../../helpers'
 
 /**
  * =============================
@@ -20,12 +27,12 @@ class SkeletonType5 extends Component {
   }
 
   renderSeparator() {
-    return <View style={GlobalStyles.boxPadding} />;
+    return <View style={GlobalStyle.boxPadding} />;
   }
   /** === RENDER ITEM SKELETON === */
   renderItem({ item, index }) {
     return (
-      <View style={GlobalStyles.shadowForBox} key={index}>
+      <View style={GlobalStyle.shadowForBox} key={index}>
         <View style={styles.boxContent}>
           <View>
             <SkeletonPlaceholder>
@@ -74,30 +81,30 @@ class SkeletonType5 extends Component {
               </View>
             </SkeletonPlaceholder>
           </View>
-          <View style={[GlobalStyles.lines, { marginVertical: 10 }]} />
+          <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
           <SkeletonPlaceholder>
             <View style={{ flexDirection: 'row', paddingVertical: 5 }}>
               <View
                 style={[
-                  GlobalStyles.image60,
+                  GlobalStyle.image60,
                   { borderRadius: 10, marginHorizontal: 5 }
                 ]}
               />
               <View
                 style={[
-                  GlobalStyles.image60,
+                  GlobalStyle.image60,
                   { borderRadius: 10, marginHorizontal: 5 }
                 ]}
               />
               <View
                 style={[
-                  GlobalStyles.image60,
+                  GlobalStyle.image60,
                   { borderRadius: 10, marginHorizontal: 5 }
                 ]}
               />
             </View>
           </SkeletonPlaceholder>
-          <View style={[GlobalStyles.lines, { marginVertical: 10 }]} />
+          <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
           <SkeletonPlaceholder>
             <View
               style={{
@@ -135,7 +142,7 @@ class SkeletonType5 extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     height: '100%',
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   flatListContainer: {
     paddingBottom: 16
@@ -148,3 +155,16 @@ const styles = StyleSheet.create({
 });
 
 export default SkeletonType5;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

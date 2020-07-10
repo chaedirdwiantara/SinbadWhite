@@ -1,7 +1,13 @@
-import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-elements';
-import masterColor from '../../config/masterColor.json';
+import {
+  React,
+  Component,
+  StyleSheet,
+  View
+} from '../../library/reactPackage'
+import {
+  Button
+} from '../../library/thirdPartyPackage'
+import { Color } from '../../config'
 import Fonts from '../../helpers/GlobalFont';
 
 /**
@@ -98,32 +104,45 @@ class ButtonSingleSmall extends Component {
 const styles = StyleSheet.create({
   buttonRed: {
     paddingHorizontal: 7,
-    backgroundColor: masterColor.buttonActiveColorRed,
+    backgroundColor: Color.buttonActiveColorRed,
     height: 41
   },
   buttonWhite: {
     paddingHorizontal: 7,
-    backgroundColor: masterColor.buttonActiveColorWhite,
+    backgroundColor: Color.buttonActiveColorWhite,
     borderWidth: 1.5,
-    borderColor: masterColor.buttonWhiteBorderRed,
+    borderColor: Color.buttonWhiteBorderRed,
     height: 41
   },
   buttonWhiteDisabled: {
     paddingHorizontal: 7,
-    backgroundColor: masterColor.buttonActiveColorWhite,
+    backgroundColor: Color.buttonActiveColorWhite,
     borderWidth: 1.5,
-    borderColor: masterColor.buttonRedDisableColor
+    borderColor: Color.buttonRedDisableColor
   },
   buttonRedDisabled: {
     paddingHorizontal: 7,
-    backgroundColor: masterColor.buttonRedDisableColor,
+    backgroundColor: Color.buttonRedDisableColor,
     height: 41
   },
   buttonGreyDisabled: {
     paddingHorizontal: 7,
-    backgroundColor: masterColor.fontBlack40,
+    backgroundColor: Color.fontBlack40,
     height: 41
   }
 });
 
 export default ButtonSingleSmall;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

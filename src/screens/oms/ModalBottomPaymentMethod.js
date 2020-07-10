@@ -1,19 +1,23 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   Dimensions,
   Image,
   TouchableOpacity,
-  ScrollView
-} from 'react-native';
-import Text from 'react-native-text';
-import Icons from 'react-native-vector-icons/MaterialIcons';
+  ScrollView,
+  Text
+} from '../../library/reactPackage'
+import {
+  MaterialIcon
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarRedOP50,
+  ModalBottomType4
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
 import masterColor from '../../config/masterColor.json';
-import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import Fonts from '../../helpers/GlobalFont';
-import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
 
 const { height } = Dimensions.get('window');
 
@@ -59,7 +63,7 @@ class ModalBottomPaymentMethod extends Component {
               </Text>
             </View>
             <View style={{ width: '5%', justifyContent: 'center' }}>
-              <Icons name="navigate-next" size={24} />
+              <MaterialIcon name="navigate-next" size={24} />
             </View>
           </TouchableOpacity>
           <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
@@ -133,3 +137,16 @@ const styles = StyleSheet.create({
 });
 
 export default ModalBottomPaymentMethod;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

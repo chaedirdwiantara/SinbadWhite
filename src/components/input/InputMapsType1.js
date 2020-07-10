@@ -9,6 +9,7 @@ import {
 } from '../../library/reactPackage';
 import { MapView, Marker } from '../../library/thirdPartyPackage';
 import { Fonts } from '../../helpers';
+import { Color } from '../../config'
 import masterColor from '../../config/masterColor.json';
 import NavigationServices from '../../navigation/NavigationService';
 
@@ -133,7 +134,7 @@ class InputMapsType1 extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
     paddingHorizontal: 16
@@ -148,15 +149,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 10,
     paddingBottom: 8,
-    borderBottomColor: masterColor.fontBlack40
+    borderBottomColor: Color.fontBlack40
   },
   boxMapsEmpty: {
     borderWidth: 2,
     borderStyle: 'dashed',
-    backgroundColor: masterColor.fontBlack05,
+    backgroundColor: Color.fontBlack05,
     height: 0.7 * width,
     borderRadius: 10,
-    borderColor: masterColor.fontBlack60,
+    borderColor: Color.fontBlack60,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -170,3 +171,17 @@ const styles = StyleSheet.create({
 });
 
 export default InputMapsType1;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

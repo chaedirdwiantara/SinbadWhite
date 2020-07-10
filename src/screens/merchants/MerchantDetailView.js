@@ -11,19 +11,20 @@ import {
   Text
 } from '../../library/reactPackage';
 import {
-  bindActionCreators,
   connect,
+  bindActionCreators,
   MaterialIcon
 } from '../../library/thirdPartyPackage';
-import masterColor from '../../config/masterColor.json';
+import {
+  StatusBarWhite,
+  ProgressBarType1,
+  LoadingPage,
+  ButtonMenuType1
+} from '../../library/component';
+import { Color } from '../../config';
+import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarWhite } from '../../components/StatusBarGlobal';
-import ProgressBarType1 from '../../components/progress_bar/ProgressBarType1';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import { LoadingPage } from '../../components/Loading';
 import NavigationService from '../../navigation/NavigationService.js';
-import ButtonMenuType1 from '../../components/button/ButtonMenuType1';
 import CallMerchant from '../../screens/global/CallMerchant';
 
 const { width } = Dimensions.get('window');
@@ -161,11 +162,11 @@ class MerchantDetailView extends Component {
       <View style={{ paddingRight: 8 }}>
         {this.props.merchant.dataGetMerchantDetail.approvalStatus ===
         'rejected' ? (
-          <MaterialIcon name="cancel" color={masterColor.mainColor} size={24} />
+          <MaterialIcon name="cancel" color={Color.mainColor} size={24} />
         ) : (
           <MaterialIcon
             name="verified-user"
-            color={masterColor.fontGreen50}
+            color={Color.fontGreen50}
             size={24}
           />
         )}
@@ -224,7 +225,7 @@ class MerchantDetailView extends Component {
             <View
               style={{
                 height: 169,
-                backgroundColor: masterColor.fontBlack05,
+                backgroundColor: Color.fontBlack05,
                 justifyContent: 'center',
                 alignItems: 'center'
               }}
@@ -441,10 +442,10 @@ class MerchantDetailView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     marginBottom: 16,
     paddingVertical: 6
   },
@@ -489,3 +490,16 @@ const mapDispatchToProps = dispatch => {
 };
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(MerchantDetailView);
+
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

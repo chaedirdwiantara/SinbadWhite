@@ -1,20 +1,24 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   Dimensions,
-  Modal,
-  TouchableOpacity
-} from 'react-native';
-import Text from 'react-native-text';
-import { Button } from 'react-native-elements';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import HTMLView from 'react-native-htmlview';
-import masterColor from '../../config/masterColor.json';
-import GlobalStyleHtml from '../../helpers/GlobalStyleHtml';
-import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
-import Fonts from '../../helpers/GlobalFont';
+  ModalPopUp,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  Button,
+  MaterialIcon,
+  MaterialCommunityIcons,
+  HTMLView,
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarRedOP50
+} from '../../library/component'
+import { Fonts, GlobalStyleHtml } from '../../helpers'
+import { Color } from '../../config'
 
 const { width, height } = Dimensions.get('window');
 
@@ -43,7 +47,7 @@ class ModalTAndR extends Component {
 
   render() {
     return (
-      <Modal
+      <ModalPopUp
         visible={this.props.open}
         transparent
         animationType="fade"
@@ -60,7 +64,7 @@ class ModalTAndR extends Component {
                 >
                   <MaterialIcon
                     name="close"
-                    color={masterColor.fontBlack50}
+                    color={Color.fontBlack50}
                     size={24}
                   />
                 </TouchableOpacity>
@@ -82,14 +86,14 @@ class ModalTAndR extends Component {
                 }
               >
                 {this.state.tAndRCheck ? (
-                  <Icons
-                    color={masterColor.mainColor}
+                  <MaterialCommunityIcons
+                    color={Color.mainColor}
                     name="checkbox-marked"
                     size={24}
                   />
                 ) : (
-                  <Icons
-                    color={masterColor.fontBlack40}
+                  <MaterialCommunityIcons
+                    color={Color.fontBlack40}
                     name="checkbox-blank-outline"
                     size={24}
                   />
@@ -106,14 +110,14 @@ class ModalTAndR extends Component {
             <View style={styles.buttonContainer}>{this.renderButton()}</View>
           </View>
         </View>
-      </Modal>
+      </ModalPopUp>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: masterColor.fontBlack100OP40,
+    backgroundColor: Color.fontBlack100OP40,
     position: 'relative',
     height: '100%',
     alignItems: 'center',
@@ -155,13 +159,13 @@ const styles = StyleSheet.create({
   },
   /** for button */
   button: {
-    backgroundColor: masterColor.mainColor,
+    backgroundColor: Color.mainColor,
     borderRadius: 8,
     width: 258,
     height: 41
   },
   buttonDisabled: {
-    backgroundColor: masterColor.fontBlack40,
+    backgroundColor: Color.fontBlack40,
     borderRadius: 8,
     width: 258,
     height: 41
@@ -169,3 +173,17 @@ const styles = StyleSheet.create({
 });
 
 export default ModalTAndR;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+
