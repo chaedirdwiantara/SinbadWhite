@@ -9,19 +9,20 @@ import {
   ScrollView,
   Image,
   Text
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   connect,
-  bindActionCreators
-} from '../../library/thirdPartyPackage'
+  bindActionCreators,
+  MaterialIcon
+} from '../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
   ProgressBarType1,
   LoadingPage,
-  ButtonMenuType1,
-} from '../../library/component'
-import { Color } from '../../config'
-import { GlobalStyle, Fonts } from '../../helpers'
+  ButtonMenuType1
+} from '../../library/component';
+import { Color } from '../../config';
+import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService.js';
 import CallMerchant from '../../screens/global/CallMerchant';
@@ -152,6 +153,28 @@ class MerchantDetailView extends Component {
    * RENDER VIEW
    * ==============================
    */
+  /** === RENDER VERIFIED ICON === */
+  renderVerifiedIcon() {
+    return this.props.merchant.dataGetMerchantDetail.approvalStatus ===
+      'rejected' ||
+      this.props.merchant.dataGetMerchantDetail.approvalStatus ===
+        'verified' ? (
+      <View style={{ paddingRight: 8 }}>
+        {this.props.merchant.dataGetMerchantDetail.approvalStatus ===
+        'rejected' ? (
+          <MaterialIcon name="cancel" color={Color.mainColor} size={24} />
+        ) : (
+          <MaterialIcon
+            name="verified-user"
+            color={Color.fontGreen50}
+            size={24}
+          />
+        )}
+      </View>
+    ) : (
+      <View />
+    );
+  }
   /** === RENDER TTILE SECTION === */
   renderTitleSection(title) {
     return (
@@ -221,13 +244,17 @@ class MerchantDetailView extends Component {
             width: 0.8 * width
           }}
         >
-          <Text style={Fonts.type7}>
-            {this.props.merchant.dataGetMerchantDetail.externalId
-              ? this.props.merchant.dataGetMerchantDetail.externalId
-              : this.props.merchant.dataGetMerchantDetail.storeCode
-              ? this.props.merchant.dataGetMerchantDetail.storeCode
-              : '-'}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {this.renderVerifiedIcon()}
+            <Text style={Fonts.type7}>
+              {this.props.merchant.dataGetMerchantDetail.externalId
+                ? this.props.merchant.dataGetMerchantDetail.externalId
+                : this.props.merchant.dataGetMerchantDetail.storeCode
+                ? this.props.merchant.dataGetMerchantDetail.storeCode
+                : '-'}
+            </Text>
+          </View>
+
           <Text style={Fonts.type7}>
             {this.props.merchant.dataGetMerchantDetail.name}
           </Text>
@@ -465,14 +492,14 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(MerchantDetailView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

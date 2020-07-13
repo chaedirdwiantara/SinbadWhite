@@ -131,7 +131,8 @@ class ProfileView extends Component {
     return (
       <View style={{ paddingLeft: 16, paddingVertical: 16 }}>
         <Text style={Fonts.type9}>
-          Versi {DeviceInfo.getVersion()} ({DeviceInfo.getBuildNumber()})
+          Development Versi {DeviceInfo.getVersion()} (
+          {DeviceInfo.getBuildNumber()})
         </Text>
       </View>
     );
