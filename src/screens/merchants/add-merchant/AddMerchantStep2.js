@@ -181,7 +181,7 @@ class AddMerchantStep2 extends Component {
   }
   /** === CHECK ID NUMBER FORMAT === */
   checkIdNoFormat(idNumber) {
-    this.setState({ idNo: idNumber });
+    this.setState({ idNo: idNumber === '' ? null : idNumber });
     if (idNumber === '' || idNumber.length === 16) {
       this.setState({ errorIdNumber: false });
     } else {
@@ -190,7 +190,7 @@ class AddMerchantStep2 extends Component {
   }
   /** === CHECK TAX NUMBER FORMAT === */
   checkTaxNoFormat(taxNumber) {
-    this.setState({ taxNo: taxNumber });
+    this.setState({ taxNo: taxNumber === '' ? null : taxNumber });
     if (taxNumber === '' || taxNumber.length === 15) {
       this.setState({ errorTaxNumber: false });
     } else {
@@ -223,7 +223,9 @@ class AddMerchantStep2 extends Component {
         value={this.state.fullName}
         onChangeText={fullName => {
           const cleanNameFormat = fullName.replace(/[^\w\s]|[0-9]|[_]/g, '');
-          this.setState({ fullName: cleanNameFormat });
+          this.setState({
+            fullName: cleanNameFormat === '' ? null : cleanNameFormat
+          });
         }}
         placeholder={'Masukan Nama Pemilik Toko'}
         keyboardType={'default'}
@@ -237,7 +239,9 @@ class AddMerchantStep2 extends Component {
       <InputType4
         title={'*Nama Toko'}
         value={this.state.name}
-        onChangeText={name => this.setState({ name })}
+        onChangeText={name =>
+          this.setState({ name: name === '' ? null : name })
+        }
         placeholder={'Masukan Nama Toko'}
         keyboardType={'default'}
         marginBottom={16}
@@ -320,7 +324,9 @@ class AddMerchantStep2 extends Component {
         value={this.state.address}
         placeholder={'Contoh : Jl. Kemang Raya No.58, RT.8/RW…'}
         keyboardType={'default'}
-        text={address => this.setState({ address })}
+        text={address =>
+          this.setState({ address: address === '' ? null : address })
+        }
         error={false}
         errorText={''}
       />
