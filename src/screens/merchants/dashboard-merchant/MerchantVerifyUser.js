@@ -38,7 +38,7 @@ class MerchantVerifyUser extends Component {
         this.toParentFunction({ type: 'close'})
         this.setState({ modalRejected: false });
         NavigationService.navigate('MerchantDetailView', {
-          storeId: this.props.merchant.selectedMerchant.id
+          id: this.props.merchant.selectedMerchant.id
         });
         break;
       case 'goToCallCS':
