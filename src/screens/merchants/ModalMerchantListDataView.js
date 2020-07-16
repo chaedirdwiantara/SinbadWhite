@@ -96,7 +96,7 @@ class ModalMerchantListDataView extends Component {
         key={index}
         style={styles.boxItem}
         onPress={() =>
-          this.props.parentFunction({ type: 'merchant', data: item.id })
+          this.props.parentFunction({ type: 'merchant', data: item.storeId })
         }
       >
         <View>
@@ -139,7 +139,7 @@ class ModalMerchantListDataView extends Component {
           <MaterialIcon
             name="check-circle"
             color={
-              this.props.selectedMerchant.indexOf(item.id) > -1
+              this.props.selectedMerchant.indexOf(item.storeId) > -1
                 ? Color.fontGreen50
                 : Color.fontBlack40
             }
