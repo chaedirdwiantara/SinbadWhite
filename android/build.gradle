@@ -9,7 +9,7 @@ buildscript {
         supportLibVersion = "28.0.0"
         googlePlayServicesVersion = "16.0.0"
         googlePlayServicesIidVersion = "16.0.1"
-        googlePlayServicesVisionVersion = "15.0.2"
+        googlePlayServicesVisionVersion = "16.2.0"
         androidMapsUtilsVersion = "0.5+"
     }
     repositories {
