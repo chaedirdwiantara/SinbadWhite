@@ -121,7 +121,7 @@ class MerchantDetailView extends Component {
         break;
       case 'merchantOrderHistory':
         NavigationService.navigate('HistoryView', {
-          storeId: this.props.merchant.dataGetMerchantDetail.id
+          storeId: this.props.merchant.dataGetMerchantDetail.storeId
         });
         break;
       default:

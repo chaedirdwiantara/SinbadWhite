@@ -9,14 +9,14 @@ import {
   Dimensions,
   Image,
   Text
-} from '../../../library/reactPackage'
+} from '../../../library/reactPackage';
 import {
   bindActionCreators,
   connect,
   moment,
   MaterialIcon,
-  RFPercentage,
-} from '../../../library/thirdPartyPackage'
+  RFPercentage
+} from '../../../library/thirdPartyPackage';
 import {
   StatusBarRed,
   ProductListType1,
@@ -24,15 +24,15 @@ import {
   ToastType1,
   ModalConfirmation,
   ModalBottomErrorRespons
-} from '../../../library/component'
-import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers'
-import { Color } from '../../../config'
+} from '../../../library/component';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers';
+import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
 import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
 import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
-import MerchantVerifyUser from './MerchantVerifyUser'
-import ModalBottomProgressChecking from '../../global/ModalBottomProgressChecking'
+import MerchantVerifyUser from './MerchantVerifyUser';
+import ModalBottomProgressChecking from '../../global/ModalBottomProgressChecking';
 
 const { width, height } = Dimensions.get('window');
 
@@ -85,7 +85,6 @@ class MerchantHomeView extends Component {
           activity: 'check_out'
         }
       ]
-      
     };
   }
   /**
@@ -226,7 +225,7 @@ class MerchantHomeView extends Component {
   goTo(page) {
     switch (page) {
       case 'pdp':
-        this.setState({ openModalCheckUser: true })
+        this.setState({ openModalCheckUser: true });
         break;
       case 'history':
         NavigationService.navigate('HistoryView', {
@@ -238,7 +237,8 @@ class MerchantHomeView extends Component {
         break;
       case 'checkOut':
         this.props.merchantGetLogPerActivityProcess({
-          journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
+          journeyPlanSaleId: this.props.merchant.selectedMerchant
+            .journeyPlanSaleId,
           activity: 'check_in'
         });
         this.setState({ openModalCheckout: true });
@@ -248,22 +248,22 @@ class MerchantHomeView extends Component {
     }
   }
   /** CALLED FROM CHILD */
-  parentFunction(data){
+  parentFunction(data) {
     switch (data.type) {
       case 'pdp':
-        this.setState({ openModalCheckUser: false })
+        this.setState({ openModalCheckUser: false });
         NavigationService.navigate('PdpView');
         break;
       case 'close':
-        this.setState({ openModalCheckUser: false })
+        this.setState({ openModalCheckUser: false });
         break;
       case 'progress-on':
-        this.setState({ openModalProgressChecking: true })
+        this.setState({ openModalProgressChecking: true });
         break;
       case 'progress-off':
-        this.setState({ openModalProgressChecking: false })
+        this.setState({ openModalProgressChecking: false });
         break;
-    
+
       default:
         break;
     }
@@ -336,7 +336,7 @@ class MerchantHomeView extends Component {
     let tempCount = count - 3 < 0 ? 0 : count - 3;
     return tempCount > 0 ? (
       <View>
-        <Text style={styles.textPlusProduct}>(+{tempCount}  Produk Lain)</Text>
+        <Text style={styles.textPlusProduct}>(+{tempCount} Produk Lain)</Text>
       </View>
     ) : (
       <View />
@@ -519,18 +519,17 @@ class MerchantHomeView extends Component {
         key={index}
         onPress={() => this.goTo(item.goTo)}
       >
-        {item.menuName === 'Pesanan' &&
-        this.props.permanent.newOrderSuccessPerMerchant.indexOf(
-          this.props.merchant.selectedMerchant.storeId
-        ) > -1 ? (
-          <View style={styles.boxNotification}>
-            <View style={GlobalStyle.circleRedNotification16} />
-          </View>
-        ) : (
-          <View />
-        )}
-
         <View>
+          {item.menuName === 'Pesanan' &&
+          this.props.permanent.newOrderSuccessPerMerchant.indexOf(
+            this.props.merchant.selectedMerchant.storeId
+          ) > -1 ? (
+            <View style={styles.boxNotification}>
+              <View style={GlobalStyle.circleRedNotification16} />
+            </View>
+          ) : (
+            <View />
+          )}
           <Image source={item.icon} style={styles.iconSize} />
         </View>
         <View style={{ marginTop: 5 }}>
@@ -573,15 +572,15 @@ class MerchantHomeView extends Component {
     );
   }
   /** RENDER MODAL PROGRESS CHECKING */
-  renderModalProgressChecking(){
+  renderModalProgressChecking() {
     return this.state.openModalProgressChecking ? (
-      <ModalBottomProgressChecking 
+      <ModalBottomProgressChecking
         open={this.state.openModalProgressChecking}
         progress={'Mohon tunggu'}
       />
     ) : (
       <View />
-    )
+    );
   }
   /** === RENDER CONTENT === */
   renderContent() {
@@ -622,7 +621,8 @@ class MerchantHomeView extends Component {
           () => {
             this.setState({ checkNoOrder: true });
             this.props.merchantGetLogPerActivityProcess({
-              journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
+              journeyPlanSaleId: this.props.merchant.selectedMerchant
+                .journeyPlanSaleId,
               activity: 'order'
             });
           }
@@ -677,16 +677,16 @@ class MerchantHomeView extends Component {
     );
   }
   /** RENDER MODAL REJECTED */
-  renderModalVerifyUser(){
+  renderModalVerifyUser() {
     return this.state.openModalCheckUser ? (
-      <MerchantVerifyUser 
+      <MerchantVerifyUser
         pageFocus={this.props.navigation.isFocused()}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
       />
     ) : (
       <View />
-    )
+    );
   }
   /** BACKGROUND */
   renderBackground() {
@@ -868,8 +868,8 @@ const styles = StyleSheet.create({
   },
   boxNotification: {
     position: 'absolute',
-    top: 2,
-    right: 2,
+    top: -5,
+    right: -5,
     zIndex: 1000
   }
 });
@@ -886,20 +886,20 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: tatas
-* updatedDate: 01072020
-* updatedFunction:
-* -> Add checking user status
-* updatedDate: 02072020
-* updatedFunction:
-* -> Remove unused state
-* -> Add function to change modal check status False after navigate
-* updatedDate: 03072020
-* updatedFunction:
-* -> Change key
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: tatas
+ * updatedDate: 01072020
+ * updatedFunction:
+ * -> Add checking user status
+ * updatedDate: 02072020
+ * updatedFunction:
+ * -> Remove unused state
+ * -> Add function to change modal check status False after navigate
+ * updatedDate: 03072020
+ * updatedFunction:
+ * -> Change key
+ */
