@@ -8,21 +8,21 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Text
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   bindActionCreators,
   moment,
   MaterialIcon,
   connect
-} from '../../library/thirdPartyPackage'
+} from '../../library/thirdPartyPackage';
 import {
   StatusBarRed,
   ProductListType2,
   Address,
   ModalConfirmation,
   LoadingPage
-} from '../../library/component'
-import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
+} from '../../library/component';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
@@ -150,6 +150,42 @@ class HistoryDetailView extends Component {
    * RENDER VIEW
    * =======================
    */
+  /** === RENDER VOUCHER LIST ==== */
+  renderVoucherList(data) {
+    return data.map((item, index) => {
+      return (
+        <View key={index}>
+          {this.renderContentListGlobal(
+            item.voucherValue !== null
+              ? item.voucherName
+              : `${item.catalogueName} (${item.voucherQty} Pcs)`,
+            item.voucherValue !== null
+              ? `- ${MoneyFormat(item.voucherValue)}`
+              : 'FREE',
+            true
+          )}
+        </View>
+      );
+    });
+  }
+  /** === RENDER PROMO LIST ==== */
+  renderPromoList(data) {
+    return data.map((item, index) => {
+      return (
+        <View key={index}>
+          {this.renderContentListGlobal(
+            item.promoValue !== null
+              ? item.promoName
+              : `${item.catalogueName} (${item.promoQty} Pcs)`,
+            item.promoValue !== null
+              ? `- ${MoneyFormat(item.promoValue)}`
+              : 'FREE',
+            true
+          )}
+        </View>
+      );
+    });
+  }
   /** RENDER CONTENT LIST GLOBAL */
   renderContentListGlobal(key, value, green) {
     return (
@@ -339,12 +375,18 @@ class HistoryDetailView extends Component {
               `Total Barang (${this.totalSKU()})`,
               MoneyFormat(this.props.history.dataDetailHistory.parcelGrossPrice)
             )}
-            {this.renderContentListGlobal(
+            {/* {this.renderContentListGlobal(
               'Potongan Harga',
               `- ${MoneyFormat(
                 this.props.history.dataDetailHistory.parcelPromo
               )}`,
               true
+            )} */}
+            {this.renderPromoList(
+              this.props.history.dataDetailHistory.promoList
+            )}
+            {this.renderVoucherList(
+              this.props.history.dataDetailHistory.voucherList
             )}
             {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
             {this.renderContentListGlobal(
@@ -540,14 +582,14 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(HistoryDetailView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
