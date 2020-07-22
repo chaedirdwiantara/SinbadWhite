@@ -11,6 +11,7 @@ import {
 } from '../../library/thirdPartyPackage'
 import {
   StatusBarRed,
+  SearchBarType3,
   CartGlobal,
   ModalBottomType3,
   ToastType1,
