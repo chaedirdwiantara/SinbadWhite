@@ -83,6 +83,8 @@ import TagListType2 from '../components/tag/TagListType2'
 import DatePickerSpinner from '../components/DatePickerSpinner'
 /** SELECTED MERCHANT */
 import SelectedMerchantName from '../components/SelectedMerchantName'
+/** ERROR BOUNDARY */
+import ErrorBoundary from '../components/error/ErrorBoundary'
 
 export {
   CartGlobal,
@@ -169,7 +171,9 @@ export {
   /** DATE PICKER SPINNER */
   DatePickerSpinner,
   /** SELECTED MERCHANT NAME */
-  SelectedMerchantName
+  SelectedMerchantName,
+  /** Error Boundary */
+  ErrorBoundary
 };
 
 /**
