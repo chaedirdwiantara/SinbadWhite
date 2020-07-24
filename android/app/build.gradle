@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.sinbad.agentstaging"
+        applicationId "com.sinbad.agentdevelopment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 8
