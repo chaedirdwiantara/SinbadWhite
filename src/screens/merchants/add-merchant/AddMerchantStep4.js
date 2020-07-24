@@ -119,21 +119,6 @@ class AddMerchantStep4 extends Component {
       </View>
     );
   }
-  /** === LONG LAT MAPS === */
-  renderMaps() {
-    return (
-      <InputMapsType2
-        change={!this.props.merchant.dataMerchantDisabledField.longLat}
-        title={'*Koordinat Lokasi'}
-        urbanId={this.props.global.dataGetUrbanId}
-        selectedMapLong={this.props.global.longitude}
-        selectedMapLat={this.props.global.latitude}
-        refresh={this.state.refreshLongLat}
-        marginBottom={50}
-        openMaps={() => this.goToMaps()}
-      />
-    );
-  }
   /** STORE TYPE */
   renderStoreType(){
     return (
