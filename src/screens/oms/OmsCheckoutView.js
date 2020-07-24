@@ -45,6 +45,10 @@ class OmsCheckoutView extends Component {
       selectedParcelIdForPayment: null,
       selectedParcel: null,
       openSubTotal: null,
+      paymentMethodDetail: null,
+      paymentMethod: null,
+      paymentMethodSelected: [],
+      dataPaymentMethod: null,
       /** modal */
       openModalBackToCartItem: false,
       openModalConfirmOrder: false,
@@ -145,6 +149,17 @@ class OmsCheckoutView extends Component {
         }
       }
     }
+
+    if (
+      prevProps.oms.dataOmsGetPaymentChannel !==
+      this.props.oms.dataOmsGetPaymentChannel
+    ) {
+      if (this.props.oms.dataOmsGetPaymentChannel !== null) {
+        this.setState({
+          paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
+        });
+      }
+    }
   }
   /** === WILL UNMOUNT === */
   componentWillUnmount() {
@@ -237,6 +252,20 @@ class OmsCheckoutView extends Component {
   }
   /** === MODIFY DATA FOR SELECTED PAYMENT === */
   selectedPayment(item) {
+    const itemIndex = this.state.dataOmsGetCheckoutItem.orderParcels
+      .map(e => e.id)
+      .indexOf(this.state.selectedParcel);
+    const paymentMethodSelected = Array.isArray(
+      this.state.paymentMethodSelected
+    )
+      ? [...this.state.paymentMethodSelected]
+      : [];
+    paymentMethodSelected[itemIndex] = parseInt(item.id, 10);
+    this.setState({
+      paymentMethodSelected,
+      modalPaymentTypeMethod: false
+    });
+
     const parcels = this.state.parcels;
     if (this.state.parcels.length > 0 && this.state.selectedParcel !== null) {
       const indexParcel = parcels.findIndex(
@@ -250,9 +279,16 @@ class OmsCheckoutView extends Component {
         );
         parcels[indexParcel].paymentTypeDetail = this.state.selectedPaymentType;
         parcels[indexParcel].paymentMethodDetail = item;
+        parcels[
+          indexParcel
+        ].paymentChannel = this.props.oms.dataOmsGetPaymentChannel.data;
         parcels[indexParcel].error = false;
       }
-      this.setState({ parcels, modalPaymentMethodDetail: false });
+      this.setState({
+        parcels,
+        modalPaymentTypeMethod: false,
+        usingDefault: false
+      });
     }
   }
   /** === CHECK PAYMENT ALREADY SELECTED === */
@@ -458,16 +494,16 @@ class OmsCheckoutView extends Component {
   }
   /** === FOR OPEN MODAL TERM AND REFRENCE ===  */
   checkTerm(selectedPaymentType) {
-    if (selectedPaymentType.paymentType.terms !== null) {
-      this.setState({
-        modalPaymentTypeList: false,
-        modalTAndR: true,
-        selectedPaymentType
-      });
-    } else {
+    // if (selectedPaymentType.paymentType.terms !== null) {
+    //   this.setState({
+    //     modalPaymentTypeList: false,
+    //     modalTAndR: true,
+    //     selectedPaymentType
+    //   });
+    // } else {
       this.setState({ modalPaymentTypeList: false, selectedPaymentType });
       this.openPaymentMethod(selectedPaymentType);
-    }
+    // }
   }
   /** === FOR BACK TO CART VIEW ==== */
   backToCartItemView() {
@@ -498,9 +534,15 @@ class OmsCheckoutView extends Component {
   }
   /** === FOR OPEN MODAL PAYMENT METHOD === */
   openPaymentMethod(selectedPaymentType) {
+    const params = {
+      supplierId: parseInt(selectedPaymentType.supplierId, 10),
+      orderParcelId: parseInt(this.state.selectedParcel, 10),
+      paymentTypeId: parseInt(selectedPaymentType.paymentTypeId, 10)
+    };
+    this.props.OmsGetPaymentChannelProcess(params);
     this.setState({
       modalTAndR: false,
-      selectedPaymentType,
+      selectedPaymentType: selectedPaymentType,
       modalPaymentTypeMethod: true
     });
   }
@@ -509,7 +551,7 @@ class OmsCheckoutView extends Component {
     this.setState({
       paymentMethodDetail,
       modalPaymentTypeMethod: false,
-      modalPaymentMethodDetail: true
+      // modalPaymentMethodDetail: true
     });
   }
   /**
@@ -798,25 +840,44 @@ class OmsCheckoutView extends Component {
     );
     return indexParcel > -1 ? (
       <View>
-        {this.state.parcels[indexParcel].paymentMethodDetail.paymentMethod
-          .name === 'Tunai' ? (
-          <Text style={Fonts.type17}>
-            {this.state.parcels[indexParcel].paymentTypeDetail.paymentType.name}{' '}
-            -{' '}
-            {
-              this.state.parcels[indexParcel].paymentMethodDetail.paymentMethod
-                .name
-            }
-          </Text>
+        {this.state.parcels[indexParcel].paymentMethodDetail.name ===
+        'Tunai' ? (
+          <View style={{ flexDirection: 'row' }}>
+            <Image
+              source={{
+                uri: this.state.parcels[indexParcel].paymentTypeDetail
+                  .paymentType.iconUrl
+              }}
+              style={{ height: 20, width: 20, marginRight: 10 }}
+            />
+            <Text style={[Fonts.type8, {alignSelf:"center"}]}>
+              {
+                this.state.parcels[indexParcel].paymentTypeDetail.paymentType
+                  .name
+              }{' '}
+              - {this.state.parcels[indexParcel].paymentMethodDetail.name}
+            </Text>
+          </View>
         ) : (
-          <Text style={Fonts.type17}>
-            {this.state.parcels[indexParcel].paymentTypeDetail.paymentType.name}{' '}
-            -{' '}
-            {
-              this.state.parcels[indexParcel].paymentMethodDetail.paymentMethod
-                .name
-            }
-          </Text>
+          (this.state.parcels[indexParcel].paymentTypeDetail.paymentType)?
+            <View style={{ flexDirection: 'row' }}>
+              <Image
+                source={{
+                  uri: this.state.parcels[indexParcel].paymentTypeDetail
+                    .paymentType.iconUrl
+                }}
+                style={{ height: 20, width: 20, marginRight: 10 }}
+              />
+              <Text style={Fonts.type8}>
+                {
+                  this.state.parcels[indexParcel].paymentTypeDetail.paymentType
+                    .name
+                }{' '}
+                - {this.state.parcels[indexParcel].paymentMethodDetail.name}
+              </Text>
+            </View>
+          :
+            <View/>
         )}
       </View>
     ) : (
@@ -843,19 +904,19 @@ class OmsCheckoutView extends Component {
           onPress={() => this.openPaymentType(item)}
         >
           <View style={{ flexDirection: 'row' }}>
-            <View style={{ justifyContent: 'center', marginRight: 20 }}>
+            {/* <View style={{ justifyContent: 'center', marginRight: 20 }}>
               <Image
                 source={require('../../assets/icons/oms/money.png')}
                 style={{ height: 24, width: 24 }}
               />
-            </View>
+            </View> */}
             {this.state.parcels.findIndex(
               itemParcel =>
                 itemParcel.orderParcelId === parseInt(item.id, 10) &&
                 itemParcel.paymentTypeSupplierMethodId === null
             ) > -1 ? (
-              <View style={{ paddingVertical: 15 }}>
-                <Text style={Fonts.type17}>Pilih Tipe</Text>
+              <View style={{ flexDirection: 'row', paddingVertical: 15 }}>
+                <Text style={Fonts.type14}>Pilih Tipe & Metode pembayaran</Text>
               </View>
             ) : (
               <View style={{ paddingVertical: 15 }}>
@@ -1152,9 +1213,11 @@ class OmsCheckoutView extends Component {
             modalPaymentTypeList: true
           })
         }
+        paymentMethod={this.state.paymentMethod}
         paymentType={this.state.selectedPaymentType}
+        orderPrice={this.calTotalPrice()}
         onRef={ref => (this.selectPaymentMethod = ref)}
-        selectPaymentMethod={this.openPaymentMethodDetail.bind(this)}
+        selectPaymentMethod={this.selectedPayment.bind(this)}
       />
     ) : (
       <View />
