@@ -167,7 +167,7 @@ class AddMerchantStep1 extends Component {
     return (
       <View style={{ paddingTop: 20 }}>
         <ProgressBarType1
-          totalStep={2}
+          totalStep={4}
           currentStep={1}
           title={'Langkah melengkapi profil'}
         />
