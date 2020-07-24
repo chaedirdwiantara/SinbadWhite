@@ -127,6 +127,24 @@ const MerchantNavigator = {
       gesturesEnabled: false
     }
   },
+  AddMerchantStep4: {
+    screen: AddMerchantStep4,
+    navigationOptions: {
+      headerTitle: 'Klasifikasi Toko',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
   MerchantDetailMapView: {
     screen: MerchantDetailMapView,
     navigationOptions: {
