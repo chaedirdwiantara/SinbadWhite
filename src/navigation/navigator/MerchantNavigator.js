@@ -8,6 +8,8 @@ import MerchantDetailMapView from '../../screens/merchants/MerchantDetailMapView
 /** add merchant */
 import AddMerchantStep1 from '../../screens/merchants/add-merchant/AddMerchantStep1';
 import AddMerchantStep2 from '../../screens/merchants/add-merchant/AddMerchantStep2';
+import AddMerchantStep3 from '../../screens/merchants/add-merchant/AddMerchantStep3';
+import AddMerchantStep4 from '../../screens/merchants/add-merchant/AddMerchantStep4';
 /** merchant dashboard */
 import MerchantHomeView from '../../screens/merchants/dashboard-merchant/MerchantHomeView';
 import MerchantCheckinView from '../../screens/merchants/dashboard-merchant/MerchantCheckinView';
@@ -93,6 +95,24 @@ const MerchantNavigator = {
     screen: AddMerchantStep2,
     navigationOptions: {
       headerTitle: 'Data Pokok',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  AddMerchantStep3: {
+    screen: AddMerchantStep3,
+    navigationOptions: {
+      headerTitle: 'Alamat Toko',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
