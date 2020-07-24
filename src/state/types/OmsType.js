@@ -37,3 +37,7 @@ export const OMS_GET_PAYMENT_SUCCESS = 'OmsGetPaymentSuccess';
 export const OMS_GET_PAYMENT_FAILED = 'OmsGetPaymentFailed';
 /** DELETE ALL DATA IN OMS */
 export const OMS_RESET_DATA = 'OmsResetData';
+/** GET PAYMENT CHANNELS */
+export const OMS_GET_PAYMENT_CHANNEL_PROCESS = 'OmsGetPaymentChannelProcess';
+export const OMS_GET_PAYMENT_CHANNEL_SUCCESS = 'OmsGetPaymentChannelSuccess';
+export const OMS_GET_PAYMENT_CHANNEL_FAILED = 'OmsGetPaymentChannelFailed';

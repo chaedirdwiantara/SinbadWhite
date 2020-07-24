@@ -217,3 +217,29 @@ export function omsAddToCart(data) {
   }
   return { type: types.OMS_ITEM_FOR_CART, payload: dataCart };
 }
+
+/**
+ * ====================================
+ * GET PAYMENT CHANNEL
+ * ====================================
+ */
+/** === GET PAYMENT CHANNEL PROCESS === */
+export function OmsGetPaymentChannelProcess(data) {
+  return { type: types.OMS_GET_PAYMENT_CHANNEL_PROCESS, payload: data };
+}
+
+/** === GET PAYMENT CHANNEL SUCCESS === */
+export function OmsGetPaymentChannelSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_GET_PAYMENT_CHANNEL_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_GET_PAYMENT_CHANNEL_FAILED, payload: data };
+}
+
+/** === GET PAYMENT CHANNEL FAILED === */
+export function OmsGetPaymentChannelFailed(data) {
+  return { type: types.OMS_GET_PAYMENT_CHANNEL_FAILED, payload: data };
+}

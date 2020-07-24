@@ -49,11 +49,24 @@ function deleteOrder(data) {
     method: 'DELETE'
   });
 }
+/** GET PAYMENT CHANNEL */
+function getPaymentChannel(data) {
+  return ApiRest({
+    path: 'payment/v1/channels',
+    method: 'POST',
+    params: {
+      supplierId: data.supplierId,
+      paymentTypeId: data.paymentTypeId,
+      orderParcelId: data.orderParcelId
+    }
+  });
+}
 
 export const OmsMethod = {
   getCartItem,
   getCheckoutItem,
   getPayment,
   confirmOrder,
-  deleteOrder
+  deleteOrder,
+  getPaymentChannel
 };

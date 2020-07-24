@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   loadingOmsGetPayment: false,
   loadingOmsDeleteCartItem: false,
   loadingOmsGetCartItemFromCheckout: false,
+  loadingOmsGetPaymentChannel: false,
   /** data */
   dataOmsGetCartItem: null,
   dataOmsGetCartItemFromCheckout: null,
@@ -19,13 +20,15 @@ const INITIAL_STATE = {
   dataCart: [],
   dataCheckout: [],
   dataCheckBoxlistCart: [],
+  dataOmsGetPaymentChannel: null,
   /** error */
   errorOmsGetCartItem: null,
   errorOmsGetCheckoutItem: null,
   errorOmsConfirmOrder: null,
   errorOmsGetPayment: null,
   errorOmsDeleteCartItem: null,
-  errorOmsGetCartItemFromCheckout: null
+  errorOmsGetCartItemFromCheckout: null,
+  errorOmsGetPaymentChannel: null,
 };
 
 export const oms = createReducer(INITIAL_STATE, {
@@ -43,6 +46,7 @@ export const oms = createReducer(INITIAL_STATE, {
       loadingOmsGetPayment: false,
       loadingOmsDeleteCartItem: false,
       loadingOmsGetCartItemFromCheckout: false,
+      loadingOmsGetPaymentChannel: false,
       /** data */
       dataOmsGetCartItem: null,
       dataOmsGetCartItemFromCheckout: null,
@@ -53,13 +57,15 @@ export const oms = createReducer(INITIAL_STATE, {
       dataCart: [],
       dataCheckout: [],
       dataCheckBoxlistCart: [],
+      dataOmsGetPaymentChannel: null,
       /** error */
       errorOmsGetCartItem: null,
       errorOmsGetCheckoutItem: null,
       errorOmsConfirmOrder: null,
       errorOmsGetPayment: null,
       errorOmsDeleteCartItem: null,
-      errorOmsGetCartItemFromCheckout: null
+      errorOmsGetCartItemFromCheckout: null,
+      errorOmsGetPaymentChannel: null
     };
   },
   [types.OMS_RESET_DATA](state, action) {
@@ -234,6 +240,33 @@ export const oms = createReducer(INITIAL_STATE, {
       ...state,
       loadingOmsGetCartItem: false,
       errorOmsGetCartItem: action.payload
+    };
+  },
+  /**
+   * ==================================
+   * GET PAYMENT CHANNEL
+   * =================================
+   */
+  [types.OMS_GET_PAYMENT_CHANNEL_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetPaymentChannel: true,
+      dataOmsGetPaymentChannel: null,
+      errorOmsGetPaymentChannel: null
+    };
+  },
+  [types.OMS_GET_PAYMENT_CHANNEL_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetPaymentChannel: false,
+      dataOmsGetPaymentChannel: action.payload
+    };
+  },
+  [types.OMS_GET_PAYMENT_CHANNEL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsGetPaymentChannel: false,
+      errorOmsGetPaymentChannel: action.payload
     };
   },
   /**
