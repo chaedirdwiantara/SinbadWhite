@@ -15,7 +15,6 @@ import {
   ButtonSingle,
   StatusBarWhite,
   ProgressBarType1,
-  InputType2,
   InputType4,
   InputMapsType2,
   DropdownType1
@@ -81,6 +80,7 @@ class AddMerchantStep3 extends Component {
     });
     setTimeout(() => {
       this.setState({ addStoreProcess: false });
+      NavigationService.navigate('AddMerchantStep4')
     }, 100);
   }
   /** GO TO DROPDOWN LIST */
