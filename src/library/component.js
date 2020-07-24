@@ -24,6 +24,7 @@ import InputType3 from '../components/input/InputType3'
 import InputType4 from '../components/input/inputType4';
 /** INPUT MAPS (PIN POINT) */
 import InputMapsType1 from '../components/input/InputMapsType1';
+import InputMapsType2 from '../components/input/InputMapsType2'
 /** DROPDOWN */
 import DropdownType1 from '../components/input/DropdownType1';
 /** BUTTON */
@@ -111,6 +112,7 @@ export {
   InputType4,
   /** INPUT MAPS (PIN POINT) */
   InputMapsType1,
+  InputMapsType2,
   /** DROPDOWN */
   DropdownType1,
   /** BUTTON */
