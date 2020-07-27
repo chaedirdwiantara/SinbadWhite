@@ -151,17 +151,16 @@ class OmsCheckoutView extends Component {
     }
 
     if (this.props.oms.dataOmsGetPaymentChannel !== undefined){
-    if (
-      prevProps.oms.dataOmsGetPaymentChannel !==
-      this.props.oms.dataOmsGetPaymentChannel
-    ) {
-      if (this.props.oms.dataOmsGetPaymentChannel !== null) {
-        // console.log("iniii:", this.props.oms.dataOmsGetPaymentChannel); 
-        this.setState({
-          paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
-        });
+      if (
+        prevProps.oms.dataOmsGetPaymentChannel !==
+        this.props.oms.dataOmsGetPaymentChannel
+      ) {
+        if (this.props.oms.dataOmsGetPaymentChannel !== null) {
+          this.setState({
+            paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
+          });
+        }
       }
-    }
   }
   }
   /** === WILL UNMOUNT === */
