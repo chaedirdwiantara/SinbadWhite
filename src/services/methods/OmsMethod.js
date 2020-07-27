@@ -32,12 +32,23 @@ function getPayment(data) {
   });
 }
 /** POST CONFIRM ORDER */
+// function confirmOrder(data) {
+//   return ApiRest({
+//     path: 'confirm-order',
+//     method: 'POST',
+//     params: {
+//       orderId: data.orderId,
+//       parcels: data.parcels
+//     }
+//   });
+// }
 function confirmOrder(data) {
   return ApiRest({
-    path: 'confirm-order',
+    path: 'payment/v1/order/confirm',
     method: 'POST',
     params: {
       orderId: data.orderId,
+      storeId: data.storeId,
       parcels: data.parcels
     }
   });
