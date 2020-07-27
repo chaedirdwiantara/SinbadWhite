@@ -150,16 +150,19 @@ class OmsCheckoutView extends Component {
       }
     }
 
+    if (this.props.oms.dataOmsGetPaymentChannel !== undefined){
     if (
       prevProps.oms.dataOmsGetPaymentChannel !==
       this.props.oms.dataOmsGetPaymentChannel
     ) {
       if (this.props.oms.dataOmsGetPaymentChannel !== null) {
+        // console.log("iniii:", this.props.oms.dataOmsGetPaymentChannel); 
         this.setState({
           paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
         });
       }
     }
+  }
   }
   /** === WILL UNMOUNT === */
   componentWillUnmount() {
@@ -933,7 +936,7 @@ class OmsCheckoutView extends Component {
                 itemParcel.paymentTypeSupplierMethodId === null
             ) > -1 ? (
               <View style={{ flexDirection: 'row', paddingVertical: 15 }}>
-                <Text style={Fonts.type14}>Pilih Tipe & Metode pembayaran</Text>
+                <Text style={[Fonts.type100, {fontStyle: "italic"}]}>Pilih Tipe & Metode pembayaran</Text>
               </View>
             ) : (
               <View style={{ paddingVertical: 15 }}>
