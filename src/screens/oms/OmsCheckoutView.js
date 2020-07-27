@@ -150,16 +150,19 @@ class OmsCheckoutView extends Component {
       }
     }
 
+    if (this.props.oms.dataOmsGetPaymentChannel !== undefined){
     if (
       prevProps.oms.dataOmsGetPaymentChannel !==
       this.props.oms.dataOmsGetPaymentChannel
     ) {
       if (this.props.oms.dataOmsGetPaymentChannel !== null) {
+        // console.log("iniii:", this.props.oms.dataOmsGetPaymentChannel); 
         this.setState({
           paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
         });
       }
     }
+  }
   }
   /** === WILL UNMOUNT === */
   componentWillUnmount() {
@@ -214,10 +217,27 @@ class OmsCheckoutView extends Component {
   }
   /** === CONFIRM ORDER === */
   confirmOrder() {
+    const storeId = parseInt(this.state.dataOmsGetCheckoutItem.storeId, 10);
+    const orderId = parseInt(this.props.oms.dataOmsGetCheckoutItem.id, 10);
+    const parcels = this.state.parcels.map((e, i) => ({
+      orderParcelId: e.orderParcelId,
+      paymentTypeSupplierMethodId: e.hasOwnProperty('paymentChannel')
+        ? e.paymentChannel.paymentTypeSupplierMethodId
+        : e.paymentTypeSupplierMethodId,
+      paymentTypeId: e.paymentTypeDetail.hasOwnProperty('paymentTypeId')
+        ? parseInt(e.paymentTypeDetail.paymentTypeId, 10)
+        : parseInt(e.paymentTypeDetail.id, 10),
+      paymentChannelId: e.paymentMethodDetail.id
+    }));
     this.props.omsConfirmOrderProcess({
-      orderId: this.props.oms.dataOmsGetCheckoutItem.id,
-      parcels: this.state.parcels
+      orderId,
+      storeId,
+      parcels
     });
+    // this.props.omsConfirmOrderProcess({
+    //   orderId: this.props.oms.dataOmsGetCheckoutItem.id,
+    //   parcels: this.state.parcels
+    // });
   }
   /** ======= DID UPDATE FUNCTION ==== */
   backToMerchantHomeView(storeName) {
@@ -916,7 +936,7 @@ class OmsCheckoutView extends Component {
                 itemParcel.paymentTypeSupplierMethodId === null
             ) > -1 ? (
               <View style={{ flexDirection: 'row', paddingVertical: 15 }}>
-                <Text style={Fonts.type14}>Pilih Tipe & Metode pembayaran</Text>
+                <Text style={[Fonts.type100, {fontStyle: "italic"}]}>Pilih Tipe & Metode pembayaran</Text>
               </View>
             ) : (
               <View style={{ paddingVertical: 15 }}>
