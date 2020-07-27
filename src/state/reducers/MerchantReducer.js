@@ -16,12 +16,14 @@ const INITIAL_STATE = {
   loadingGetLogPerActivity: false,
   loadingGetNoOrderReason: false,
   loadingGetStoreStatus: false,
+  loadingGetWarehouse: false,
   /** data */
   dataPostActivity: null,
   dataGetLogAllActivity: null,
   dataGetLogPerActivity: null,
   selectedMerchant: null,
   dataGetMerchant: [],
+  dataGetWarehouse: [],
   dataAddMerchant: null,
   dataEditMerchant: null,
   dataStoreStatus: {},
@@ -112,7 +114,8 @@ const INITIAL_STATE = {
   errorGetLogAllActivity: null,
   errorGetLogPerActivity: null,
   errorGetNoOrderReason: null,
-  errorGetStoreStatus: null
+  errorGetStoreStatus: null,
+  errorGetWarehouse: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -597,6 +600,33 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingGetStoreStatus: false,
       errorGetStoreStatus: action.payload
     }
+  },
+  /** 
+   * ============================
+   * GET WAREHOUSE
+   * ============================
+   */
+  [types.MERCHANT_GET_WAREHOUSE_PROCESS](state, action){
+    return {
+      ...state,
+      loadingGetWarehouse: true,
+      dataGetWarehouse:[],
+      errorGetWarehouse: null
+    }
+  },
+  [types.MERCHANT_GET_WAREHOUSE_SUCCESS](state, action){
+    return {
+      ...state,
+      loadingGetWarehouse: false,
+      dataGetWarehouse: action.payload.data
+    }
+  },
+  [types.MERCHANT_GET_WAREHOUSE_FAILED](state, action){
+    return {
+      ...state,
+      loadingGetWarehouse: false,
+      errorGetWarehouse: action.payload
+    }
   }
 });
 /**
@@ -637,6 +667,7 @@ function saveDataMerchantVolatile(data) {
     vehicleAccessibilityName:
       data.vehicleAccessibility !== null ? data.vehicleAccessibility.name : '',
     vehicleAccessibilityAmount: data.vehicleAccessibilityAmount,
+    warehouse: data.warehouse,
     /** for address */
     address: data.address,
     noteAddress: data.noteAddress,
