@@ -214,10 +214,27 @@ class OmsCheckoutView extends Component {
   }
   /** === CONFIRM ORDER === */
   confirmOrder() {
+    const storeId = parseInt(this.state.dataOmsGetCheckoutItem.storeId, 10);
+    const orderId = parseInt(this.props.oms.dataOmsGetCheckoutItem.id, 10);
+    const parcels = this.state.parcels.map((e, i) => ({
+      orderParcelId: e.orderParcelId,
+      paymentTypeSupplierMethodId: e.hasOwnProperty('paymentChannel')
+        ? e.paymentChannel.paymentTypeSupplierMethodId
+        : e.paymentTypeSupplierMethodId,
+      paymentTypeId: e.paymentTypeDetail.hasOwnProperty('paymentTypeId')
+        ? parseInt(e.paymentTypeDetail.paymentTypeId, 10)
+        : parseInt(e.paymentTypeDetail.id, 10),
+      paymentChannelId: e.paymentMethodDetail.id
+    }));
     this.props.omsConfirmOrderProcess({
-      orderId: this.props.oms.dataOmsGetCheckoutItem.id,
-      parcels: this.state.parcels
+      orderId,
+      storeId,
+      parcels
     });
+    // this.props.omsConfirmOrderProcess({
+    //   orderId: this.props.oms.dataOmsGetCheckoutItem.id,
+    //   parcels: this.state.parcels
+    // });
   }
   /** ======= DID UPDATE FUNCTION ==== */
   backToMerchantHomeView(storeName) {
