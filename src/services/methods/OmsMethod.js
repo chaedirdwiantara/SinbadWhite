@@ -72,6 +72,17 @@ function getPaymentChannel(data) {
     }
   });
 }
+/** GET TERMS AND CONDITIONS */
+function getTermsConditions(data) {
+  return ApiRest({
+    path: 'payment/v1/channel/terms-conditions',
+    method: 'POST',
+    params: {
+      storeId: data.storeId,
+      orderParcels: data.orderParcels
+    }
+  });
+}
 
 export const OmsMethod = {
   getCartItem,
@@ -79,5 +90,6 @@ export const OmsMethod = {
   getPayment,
   confirmOrder,
   deleteOrder,
-  getPaymentChannel
+  getPaymentChannel,
+  getTermsConditions
 };

@@ -41,3 +41,7 @@ export const OMS_RESET_DATA = 'OmsResetData';
 export const OMS_GET_PAYMENT_CHANNEL_PROCESS = 'OmsGetPaymentChannelProcess';
 export const OMS_GET_PAYMENT_CHANNEL_SUCCESS = 'OmsGetPaymentChannelSuccess';
 export const OMS_GET_PAYMENT_CHANNEL_FAILED = 'OmsGetPaymentChannelFailed';
+/** GET TERMS AND CONDITION */
+export const OMS_GET_TERMS_CONDITIONS_PROCESS = 'OmsGetTermsConditionsProcess';
+export const OMS_GET_TERMS_CONDITIONS_SUCCESS = 'OmsGetTermsConditionsSuccess';
+export const OMS_GET_TERMS_CONDITIONS_FAILED = 'OmsGetTermsConditionsFailed';

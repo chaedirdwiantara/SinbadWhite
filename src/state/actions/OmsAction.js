@@ -243,3 +243,29 @@ export function OmsGetPaymentChannelSuccess(data) {
 export function OmsGetPaymentChannelFailed(data) {
   return { type: types.OMS_GET_PAYMENT_CHANNEL_FAILED, payload: data };
 }
+
+/**
+ * ====================================
+ * GET TERMS AND CONDITONS
+ * ====================================
+ */
+/** === GET TERMS AND CONDITONS PROCESS === */
+export function OmsGetTermsConditionsProcess(data) {
+  return { type: types.OMS_GET_TERMS_CONDITIONS_PROCESS, payload: data };
+}
+
+/** === GET TERMS AND CONDITONS SUCCESS === */
+export function OmsGetTermsConditionsSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_GET_TERMS_CONDITIONS_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_GET_TERMS_CONDITIONS_FAILED, payload: data };
+}
+
+/** === GET TERMS AND CONDITONS FAILED === */
+export function OmsGetTermsConditionsFailed(data) {
+  return { type: types.OMS_GET_TERMS_CONDITIONS_FAILED, payload: data };
+}
