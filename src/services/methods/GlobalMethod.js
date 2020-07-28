@@ -3,7 +3,9 @@ import ApiRestMap from '../apiRestMap';
 import { Store } from '../../state/Store';
 
 function getListAndSearch(data) {
+  
   const stateData = Store.getState();
+  
   /**
    * PROPS
    * data.type =  'vehicleMerchant' / 'hierarchyMerchant' / 'clusterMerchant' / 'typeMerchant' / 'groupMerchant' / 'segmentMerchant'
@@ -133,6 +135,11 @@ function merchantStoreId() {
   }
   return '';
 }
+/** USER STORE */
+function userStoreId() {
+  const stateData = Store.getState();
+  return stateData.user !== null ? stateData.user.userStores[0].storeId : '';
+}
 
 export const GlobalMethod = {
   getListAndSearch,
@@ -141,7 +148,8 @@ export const GlobalMethod = {
   getVersion,
   merchantStoreUrban,
   merchantStoreId,
-  userSupplierMapping
+  userSupplierMapping,
+  userStoreId
 };
 
 /**
