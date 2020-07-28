@@ -17,7 +17,7 @@ import {
   ProgressBarType1,
   InputType4,
   InputMapsType2,
-  DropdownType1
+  DropdownType2
 } from '../../../library/component';
 import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
@@ -32,13 +32,18 @@ class AddMerchantStep3 extends Component {
       errorDetailLocation: false,
       errorUrbanId: false,
       errorWarehouse: false,
-      getWarehouse: false,
+      disabledDropdown: true,
+      disabledAction: true,
+      disableButton: true,
       /** for maps refresh */
       refreshLocation: false,
       /** field data */
       address: this.props.merchant.dataMerchantVolatile.address,
       noteAddress: this.props.merchant.dataMerchantVolatile.noteAddress,
-      warehouse: this.props.merchant.dataMerchantVolatile.warehouse
+      /** for warehouse check */
+      warehouseFound: null,
+      warehouse: '',
+      warehouseTitle: 'Warehouse'
     };
   }
   /**
@@ -59,13 +64,45 @@ class AddMerchantStep3 extends Component {
       }, 100);
     }
 
-    /** GET WAREHOUSE */
-    if (
-      prevProps.global.dataGetUrbanId !== this.props.global.dataGetUrbanId
-    ) {
-      // GET Warehouse in urban coverage
-      console.log('Warehouse updated!')
-    }
+    /** CHECK URBAN ID */
+    if (prevProps.global.dataGetUrbanId !== this.props.global.dataGetUrbanId ) {    
+      /** GET WAREHOUSE */  
+      if (this.props.global.dataGetUrbanId !== null && this.props.global.dataGetUrbanId.length !== 0) {
+        setTimeout(() => {
+          this.props.merchantGetWarehouseProcess(this.props.global.dataGetUrbanId[0].id)
+        }, 100)
+      }
+      
+      /** CHECK WAREHOUSE */
+      setTimeout(() => {
+        const warehouse = this.props.merchant.dataGetWarehouse
+        if (warehouse.total === 0){
+          this.setState({
+            warehouse: 'Not found', 
+            disableButton: false,
+            warehouseFound: 0
+          })
+        } else if (warehouse.total === 1) {
+          this.setState({
+            warehouseTitle: '*Warehouse',
+            disableButton: false
+          })
+          this.props.saveVolatileDataMerchant({
+            warehouse: warehouse.data[0].name, 
+          })
+        } else {
+          this.setState({
+            warehouse: 'Pilih Warehouse', 
+            disabledDropdown: false,
+            disabledAction: false,
+            disableButton: false,
+            warehouseTitle: '*Warehouse'
+          })
+        }
+      }, 100)
+      
+      
+    } 
   }
   /** SEND DATA ADD MERCHANT */
   nextStep() {
@@ -76,7 +113,8 @@ class AddMerchantStep3 extends Component {
       latitude: this.props.global.latitude,
       address: this.state.address,
       noteAddress: this.state.noteAddress,
-      urbanId: this.props.global.dataGetUrbanId[0].id
+      urbanId: this.props.global.dataGetUrbanId[0].id,
+      warehouse: this.props.merchant.dataMerchantVolatile.warehouse
     });
     setTimeout(() => {
       this.setState({ addStoreProcess: false });
@@ -96,8 +134,8 @@ class AddMerchantStep3 extends Component {
       this.state.address === null ||
       this.props.global.longitude === '' ||
       this.props.global.latitude === '' ||
-      this.props.global.dataGetUrbanId === null
-      // Add condition for Warehouse later
+      this.props.global.dataGetUrbanId === null &&
+      this.state.disableButton
     );
   }
   /** GO TO MAPS */
@@ -173,14 +211,18 @@ class AddMerchantStep3 extends Component {
   /** MERCHANT WAREHOUSE */
   renderWarehouse(){
     return (
-      <DropdownType1 
-        title={'*Warehouse'}
+      <DropdownType2 
+        title={this.state.warehouseTitle}
         placeholder={'Masukan Warehouse'}
-        selectedDropdownText={''}
+        selectedDropdownText={this.props.merchant.dataMerchantVolatile.warehouse}
+        disabledDropdown={this.state.disabledDropdown}
+        disabledAction={this.state.disabledAction}
         openDropdown={() => this.goToDropdown({
           type: 'warehouse',
           placeholder: 'Pilih Warehouse'
         })}
+        errorText={this.state.warehouseFound === 0 ?
+          'Lokasi toko tidak dalam area jangkauan warehouse tertentu.' : ''}
       />
     )
   }
@@ -201,9 +243,7 @@ class AddMerchantStep3 extends Component {
     return (
       <ButtonSingle
         disabled={
-          this.buttonDisable() ||
-          this.props.merchant.loadingAddMerchant ||
-          this.state.addStoreProcess
+          this.buttonDisable()
         }
         title={'Lanjutkan'}
         loading={
