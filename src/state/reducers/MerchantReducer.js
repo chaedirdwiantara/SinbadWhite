@@ -81,6 +81,7 @@ const INITIAL_STATE = {
     vehicleAccessibilityName: null,
     vehicleAccessibilityId: null,
     vehicleAccessibilityAmount: null,
+    warehouse: null,
     /** merchant address */
     address: null,
     noteAddress: null,
