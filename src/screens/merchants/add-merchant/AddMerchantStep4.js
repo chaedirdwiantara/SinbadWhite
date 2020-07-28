@@ -28,7 +28,11 @@ class AddMerchantStep4 extends Component {
     super(props);
     this.state = {
       /** error */
-      errorAddMerchant: false
+      errorAddMerchant: false,
+      supplierId:
+        this.props.user.userSuppliers.length === 1
+          ? this.props.user.userSuppliers[0].supplier.id
+          : '',
     };
   }
   /**
@@ -82,8 +86,40 @@ class AddMerchantStep4 extends Component {
   finalStep() {
     this.setState({ addStoreProcess: true });
     Keyboard.dismiss();
-    this.props.saveVolatileDataMerchant({
-      // Save something
+    const data = this.props.merchant.dataMerchantVolatile
+    this.props.merchantAddProcess({
+      storeId: data.storeId,
+      externalId: data.externalId,
+      name: data.name,
+      address: data.address,
+      longitude: data.longitude,
+      latitude: data.latitude,
+      noteAddress: data.noteAddress,
+      urbanId: data.urbanId,
+      status: 'active',
+      user: {
+        fullName: data.fullName,
+        idNo: data.idNo,
+        taxNo: data.taxNo,
+        phone: data.phone,
+        status: 'active',
+        roles: [1]
+      },
+      supplier: {
+        supplierId: this.state.supplierId
+      },
+      type: {
+        typeId: data.typeId
+      },
+      group: {
+        groupId: data.groupdId
+      },
+      cluster: {
+        clusterId: data.clusterId
+      },
+      channel: {
+        channelId: data.channelId
+      }
     });
     setTimeout(() => {
       this.setState({ addStoreProcess: false });
