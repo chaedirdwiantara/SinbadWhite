@@ -58,6 +58,21 @@ function getListAndSearch(data) {
         stateData.global.dataLocationVolatile.districtName
       }&`;
       break;
+    case 'warehouse':
+      listAndSearchApi = `warehouses?supplierId=${parseInt(userSupplierMapping())}&urbanId=${parseInt(stateData.global.dataGetUrbanId[0].id)}&`
+      break;
+    case 'storeType':
+      listAndSearchApi = `types?supplierId=${parseInt(userSupplierMapping())}&`;
+      break;
+    case 'storeGroup':
+      listAndSearchApi = `groups?supplierId=${parseInt(userSupplierMapping())}&`
+      break;
+    case 'storeCluster':
+      listAndSearchApi = `clusters?supplierId=${parseInt(userSupplierMapping())}&`
+      break;
+    case 'storeChannel':
+      listAndSearchApi = `channels?supplierId=${parseInt(userSupplierMapping())}&`
+      break;
     default:
       break;
   }
