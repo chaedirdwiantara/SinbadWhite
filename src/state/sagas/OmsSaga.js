@@ -79,6 +79,17 @@ function* getPaymentChannel(actions) {
     yield put(ActionCreators.OmsGetPaymentChannelFailed(error));
   }
 }
+/** === GET TERMS AND CONDITIONS === */
+function* getTermsConditions(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.getTermsConditions(actions.payload);
+    });
+    yield put(ActionCreators.OmsGetTermsConditionsSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.OmsGetTermsConditionsFailed(error));
+  }
+}
 /** === SAGA FUNCTION === */
 function* OmsSaga() {
   yield takeEvery(types.OMS_GET_CART_ITEM_PROCESS, getCartItem);
@@ -91,6 +102,7 @@ function* OmsSaga() {
   yield takeEvery(types.OMS_CONFIRM_ORDER_PROCESS, confirmOrder);
   yield takeEvery(types.OMS_GET_PAYMENT_PROCESS, getPayment);
   yield takeEvery(types.OMS_GET_PAYMENT_CHANNEL_PROCESS, getPaymentChannel);
+  yield takeEvery(types.OMS_GET_TERMS_CONDITIONS_PROCESS, getTermsConditions);
 }
 
 export default OmsSaga;
