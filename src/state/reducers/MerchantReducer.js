@@ -99,10 +99,14 @@ const INITIAL_STATE = {
     storeCode: null,
     phoneNo: null,
     /** merchant classification */
-    storeType: null,
-    storeGroup: null,
-    storeCluster: null,
-    storeChannel: null
+    storeType: '',
+    typeId: null,
+    storeGroup: '',
+    groupId: null,
+    storeCluster: '',
+    clusterId: null,
+    storeChannel: '',
+    channelId: null
   },
   /** error */
   errorGetMerchant: null,
@@ -314,6 +318,8 @@ export const merchant = createReducer(INITIAL_STATE, {
           dataUpdate,
           dataPrevious
         ),
+        warehouse: checkData('warehouse', dataUpdate, dataPrevious) ,
+        warehouseId: checkData('warehouseId', dataUpdate, dataPrevious),
         /** merchant address */
         address: checkData('address', dataUpdate, dataPrevious),
         noteAddress: checkData('noteAddress', dataUpdate, dataPrevious),
@@ -332,9 +338,13 @@ export const merchant = createReducer(INITIAL_STATE, {
         phoneNo: checkData('phoneNo', dataUpdate, dataPrevious),
         /** merchant classification */
         storeType: checkData('storeType', dataUpdate, dataPrevious),
+        typeId: checkData('typeId', dataUpdate, dataPrevious),
         storeGroup: checkData('storeGroup', dataUpdate, dataPrevious),
+        groupId: checkData('groupId', dataUpdate, dataPrevious),
         storeCluster: checkData('storeCluster', dataUpdate, dataPrevious),
-        storeChannel: checkData('storeChannel', dataUpdate, dataPrevious)
+        clusterId: checkData('clusterId', dataUpdate, dataPrevious),
+        storeChannel: checkData('storeChannel', dataUpdate, dataPrevious),
+        channelId: checkData('channelId', dataUpdate, dataPrevious)
       }
     };
   },
@@ -669,6 +679,7 @@ function saveDataMerchantVolatile(data) {
       data.vehicleAccessibility !== null ? data.vehicleAccessibility.name : '',
     vehicleAccessibilityAmount: data.vehicleAccessibilityAmount,
     warehouse: data.warehouse,
+    warehouseId: data.warehouseId,
     /** for address */
     address: data.address,
     noteAddress: data.noteAddress,
