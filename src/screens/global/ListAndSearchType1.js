@@ -145,6 +145,36 @@ class ListAndSearchType1 extends Component {
           zipCode: item.zipCode
         });
         break;
+      case 'warehouse':
+        NavigationService.goBack(this.props.navigation.state.key)
+        this.props.saveVolatileDataMerchant({
+          warehouse: item.name
+        })
+        break;
+      case 'storeType':
+        NavigationService.goBack(this.props.navigation.state.key)
+        this.props.saveVolatileDataMerchant({
+          storeType: item.name
+        })
+        break;
+      case 'storeGroup':
+        NavigationService.goBack(this.props.navigation.state.key)
+        this.props.saveVolatileDataMerchant({
+          storeGroup: item.name
+        })
+        break
+      case 'storeCluster':
+        NavigationService.goBack(this.props.navigation.state.key)
+        this.props.saveVolatileDataMerchant({
+          storeCluster: item.name
+        })
+        break;
+      case 'storeChannel':
+        NavigationService.goBack(this.props.navigation.state.key)
+        this.props.saveVolatileDataMerchant({
+          storeChannel: item.name
+        })
+        break
       default:
         break;
     }
@@ -164,9 +194,36 @@ class ListAndSearchType1 extends Component {
         return item.urban;
       case 'numberOfEmployeeMerchant':
         return item.amount;
+      case 'storeType':
+        return item.name;
+      case 'storeGroup':
+        return item.name;
+      case 'storeCluster':
+        return item.name;
+      case 'storeChannel':
+        return item.name;
+      case 'warehouse':
+        return item.name;
       default:
         break;
     }
+  }
+  /** === MODIFY ITEM TYPE */
+  modifyItemType(item){
+    switch (this.props.navigation.state.params.type) {
+      /** === THIS FOR MERCHANT === */
+      case 'storeType':
+        return item.id;
+      case 'storeGroup':
+        return item.id;
+      case 'storeCluster':
+        return item.id;
+      case 'storeChannel':
+        return item.id;
+      default:
+        break;
+    }
+
   }
   /**
    * ========================
@@ -175,13 +232,29 @@ class ListAndSearchType1 extends Component {
    */
   /** === RENDER CONTENT ITEM === */
   renderItem({ item, index }) {
+    const type = this.props.navigation.state.params.type
     return (
       <View key={index}>
         <TouchableOpacity
           style={styles.boxContent}
           onPress={() => this.saveData(item)}
-        >
+        > 
+        {type === 'storeType' 
+        || type === 'storeGroup' 
+        || type === 'storeCluster' 
+        || type === 'storeChannel' 
+        ? (
+          <View style={{flex: 1, flexDirection: 'row'}}>
+          <View><Text style={[Fonts.type8, {color: 'orange'}]}>{this.modifyItemType(item)}</Text></View>
+          <View style={{paddingHorizontal: 10}}/>
+          <View><Text style={Fonts.type8}>{this.modifyItem(item)}</Text></View>
+          
+          
+          </View>
+        ) : (
           <Text style={Fonts.type8}>{this.modifyItem(item)}</Text>
+        )}
+          
         </TouchableOpacity>
         <View style={GlobalStyle.lines} />
       </View>
