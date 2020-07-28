@@ -271,6 +271,33 @@ export const oms = createReducer(INITIAL_STATE, {
   },
   /**
    * ==================================
+   * GET TERMS AND CONDITIONS
+   * =================================
+   */
+  [types.OMS_GET_TERMS_CONDITIONS_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetTermsConditions: true,
+      dataOmsGetTermsConditions: null,
+      errorOmsGetTermsConditions: null
+    };
+  },
+  [types.OMS_GET_TERMS_CONDITIONS_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetTermsConditions: false,
+      dataOmsGetTermsConditions: action.payload
+    };
+  },
+  [types.OMS_GET_TERMS_CONDITIONS_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsGetTermsConditions: false,
+      errorOmsGetTermsConditions: action.payload
+    };
+  },
+  /**
+   * ==================================
    * GET CART LIST FROM CHECKOUT
    * =================================
    */

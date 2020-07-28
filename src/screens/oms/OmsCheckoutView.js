@@ -73,7 +73,10 @@ class OmsCheckoutView extends Component {
       makeConfirmOrder: false,
       selectedParcelDetail: null,
       selectedPaymentType: null,
-      paymentMethodDetail: null
+      paymentMethodDetail: null,
+      tAndRDetail: null,
+      tAndRLoading: false,
+      alreadyFetchTAndR: false,
     };
   }
   /**
@@ -112,6 +115,18 @@ class OmsCheckoutView extends Component {
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
+    if (this.props.oms.dataOmsGetTermsConditions !== undefined){
+      if (
+        prevProps.oms.dataOmsGetTermsConditions !==
+        this.props.oms.dataOmsGetTermsConditions
+      ) {
+        if (this.props.oms.dataOmsGetTermsConditions !== null) {
+          this.setState({
+            tAndRDetail: this.props.oms.dataOmsGetTermsConditions.data
+          });
+        }
+      }
+    }
     /**
      * === SUCCESS RESPONS ===
      * after confirm order success
@@ -151,18 +166,38 @@ class OmsCheckoutView extends Component {
     }
 
     if (this.props.oms.dataOmsGetPaymentChannel !== undefined){
-    if (
-      prevProps.oms.dataOmsGetPaymentChannel !==
-      this.props.oms.dataOmsGetPaymentChannel
-    ) {
-      if (this.props.oms.dataOmsGetPaymentChannel !== null) {
-        // console.log("iniii:", this.props.oms.dataOmsGetPaymentChannel); 
-        this.setState({
-          paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
-        });
+      if (
+        prevProps.oms.dataOmsGetPaymentChannel !==
+        this.props.oms.dataOmsGetPaymentChannel
+      ) {
+        if (this.props.oms.dataOmsGetPaymentChannel !== null) {
+          this.setState({
+            paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
+          });
+        }
       }
     }
-  }
+
+    if (this.props.oms.dataOmsGetTermsConditions !== undefined){
+      if (
+        prevProps.oms.dataOmsGetTermsConditions !==
+        this.props.oms.dataOmsGetTermsConditions
+      ) {
+        this.setState({ tAndRLoading: false, alreadyFetchTAndR: true });
+        const tAndR = this.props.oms.dataOmsGetTermsConditions;
+        if (tAndR !== null) {
+          if (
+            tAndR.data.paymentChannels == null &&
+            tAndR.data.paymentTypes == null
+          ) {
+            this.confirmOrder();
+            this.setState({ tAndRDetail: true });
+          } else {
+            this.setState({ modalTAndR: true });
+          }
+        }
+      }
+    }
   }
   /** === WILL UNMOUNT === */
   componentWillUnmount() {
@@ -201,19 +236,50 @@ class OmsCheckoutView extends Component {
    */
   /** === CHECKOUT BUTTON PRESS === */
   wantToConfirmOrder() {
-    this.setState({ makeConfirmOrder: true });
-    if (
-      this.state.parcels.find(
-        item => item.paymentTypeSupplierMethodId === null
-      ) === undefined
-    ) {
-      this.setState({ openModalConfirmOrder: true });
+    const checker = x =>
+      x.filter(e => e.paymentTypeDetail && e.paymentMethodDetail).length ===
+      x.length;
+    if (checker(this.state.parcels)) {
+      const data = {
+        storeId: parseInt(this.state.dataOmsGetCheckoutItem.storeId, 10),
+        orderParcels: this.state.dataOmsGetCheckoutItem.orderParcels.map(
+          (item, index) => ({
+            invoiceGroupId: parseInt(item.invoiceGroupId, 10),
+            paymentTypeId: parseInt(
+              this.state.parcels[index].paymentTypeDetail.hasOwnProperty(
+                'paymentType'
+              )
+                ? this.state.parcels[index].paymentTypeDetail.paymentType.id
+                : this.state.parcels[index].paymentTypeDetail.id,
+              10
+            ),
+            paymentChannelId: parseInt(
+              this.state.parcels[index].paymentMethodDetail.id,
+              10
+            )
+          })
+        )
+      };
+      this.props.OmsGetTermsConditionsProcess(data);
     } else {
       this.setState({ modalWarningNotSelectPayment: true });
       setTimeout(() => {
         this.setState({ modalWarningNotSelectPayment: false });
       }, 2000);
     }
+    // this.setState({ makeConfirmOrder: true });
+    // if (
+    //   this.state.parcels.find(
+    //     item => item.paymentTypeSupplierMethodId === null
+    //   ) === undefined
+    // ) {
+    //   this.setState({ openModalConfirmOrder: true });
+    // } else {
+    //   this.setState({ modalWarningNotSelectPayment: true });
+    //   setTimeout(() => {
+    //     this.setState({ modalWarningNotSelectPayment: false });
+    //   }, 2000);
+    // }
   }
   /** === CONFIRM ORDER === */
   confirmOrder() {
@@ -234,6 +300,7 @@ class OmsCheckoutView extends Component {
       storeId,
       parcels
     });
+    this.setState({ modalTAndR: false });
     // this.props.omsConfirmOrderProcess({
     //   orderId: this.props.oms.dataOmsGetCheckoutItem.id,
     //   parcels: this.state.parcels
@@ -1193,10 +1260,12 @@ class OmsCheckoutView extends Component {
         {this.state.modalTAndR && this.state.selectedPaymentType !== null ? (
           <ModalTAndR
             open={this.state.modalTAndR}
-            data={this.state.selectedPaymentType}
+            data={[this.state.tAndRDetail]}
             close={() => this.setState({ modalTAndR: false })}
             onRef={ref => (this.agreeTAndR = ref)}
             agreeTAndR={this.openPaymentMethod.bind(this)}
+            confirmOrder={this.confirmOrder.bind(this)}
+            loadingConfirmOrder={this.props.oms.loadingOmsConfirmOrder}
           />
         ) : (
           <View />

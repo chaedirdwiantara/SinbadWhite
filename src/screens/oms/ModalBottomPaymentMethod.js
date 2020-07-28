@@ -15,7 +15,8 @@ import {
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import {
   StatusBarRedOP50,
-  ModalBottomType4
+  ModalBottomType4,
+  SkeletonType8
 } from '../../library/component'
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
 import masterColor from '../../config/masterColor.json';
@@ -37,7 +38,7 @@ class ModalBottomPaymentMethod extends Component {
   /** RENDER PAYMENT LIST CONTENT */
   renderListPaymentMethodContent(item) {
     return item.map((itemPaymnetMethod, index) => {
-      return itemPaymnetMethod.status === 'enabled' ? (
+      return itemPaymnetMethod.status !== 'disabled' ? (
         <View key={index}>
           <TouchableOpacity
             style={{
@@ -103,7 +104,8 @@ class ModalBottomPaymentMethod extends Component {
                 {itemPaymnetMethod.name}
               </Text>
               <Text style={[Fonts.type28, {opacity: 0.5}]}>
-                Tidak tersedia untuk transaksi ini
+                Dalam Perbaikan
+                {/* Tidak tersedia untuk transaksi ini */}
               </Text>
             </View>
             <View style={{ width: '5%', justifyContent: 'center' }}>
@@ -178,6 +180,9 @@ class ModalBottomPaymentMethod extends Component {
       </View>
     )
   }
+  renderSkeleton() {
+    return <SkeletonType8 />;
+  }
   /** RENDER CONTENT */
   renderContent() {
     return (
@@ -190,7 +195,7 @@ class ModalBottomPaymentMethod extends Component {
             {this.props.paymentType !== null ? (
               this.renderPaymentMethod()
             ) : (
-              <View />
+              this.renderSkeleton()
             )}
           </ScrollView>
         </View>
