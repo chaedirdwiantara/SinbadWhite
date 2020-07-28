@@ -89,6 +89,7 @@ class AddMerchantStep3 extends Component {
           })
           this.props.saveVolatileDataMerchant({
             warehouse: warehouse.data[0].name, 
+            warehouseId: warehouse.data[0].id,
           })
         } else {
           this.setState({
@@ -114,7 +115,8 @@ class AddMerchantStep3 extends Component {
       address: this.state.address,
       noteAddress: this.state.noteAddress,
       urbanId: this.props.global.dataGetUrbanId[0].id,
-      warehouse: this.props.merchant.dataMerchantVolatile.warehouse
+      warehouse: this.props.merchant.dataMerchantVolatile.warehouse,
+      warehouseId: this.props.merchant.dataMerchantVolatile.warehouseId
     });
     setTimeout(() => {
       this.setState({ addStoreProcess: false });
