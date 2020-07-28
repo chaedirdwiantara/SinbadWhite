@@ -148,31 +148,36 @@ class ListAndSearchType1 extends Component {
       case 'warehouse':
         NavigationService.goBack(this.props.navigation.state.key)
         this.props.saveVolatileDataMerchant({
-          warehouse: item.name
+          warehouse: item.name,
+          warehouseId: item.id
         })
         break;
       case 'storeType':
         NavigationService.goBack(this.props.navigation.state.key)
         this.props.saveVolatileDataMerchant({
-          storeType: item.name
+          storeType: item.name,
+          typeId: item.id
         })
         break;
       case 'storeGroup':
         NavigationService.goBack(this.props.navigation.state.key)
         this.props.saveVolatileDataMerchant({
-          storeGroup: item.name
+          storeGroup: item.name,
+          groupId: item.id
         })
         break
       case 'storeCluster':
         NavigationService.goBack(this.props.navigation.state.key)
         this.props.saveVolatileDataMerchant({
-          storeCluster: item.name
+          storeCluster: item.name,
+          clusterId: item.id
         })
         break;
       case 'storeChannel':
         NavigationService.goBack(this.props.navigation.state.key)
         this.props.saveVolatileDataMerchant({
-          storeChannel: item.name
+          storeChannel: item.name,
+          channelId: item.id
         })
         break
       default:
