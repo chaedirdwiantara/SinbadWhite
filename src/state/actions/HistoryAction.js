@@ -125,3 +125,29 @@ export function historyEditSuccess(data) {
 export function historyEditFailed(data) {
   return { type: types.HISTORY_EDIT_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * AKTIFKAN VA
+ * ===========================
+ */
+/** === AKTIFKAN VA PROCESS === */
+export function historyActivateVAProcess(data) {
+  return { type: types.HISTORY_ACTIVATE_VA_PROCESS, payload: data };
+}
+
+/** === ACTIVATE VA SUCCESS === */
+export function historyActivateVASuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.HISTORY_ACTIVATE_VA_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.HISTORY_ACTIVATE_VA_FAILED, payload: data };
+}
+
+/** === ACTIVATE VA FAILED === */
+export function historyActivateVAFailed(data) {
+  return { type: types.HISTORY_ACTIVATE_VA_FAILED, payload: data };
+}

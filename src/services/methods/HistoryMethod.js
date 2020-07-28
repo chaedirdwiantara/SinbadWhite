@@ -36,11 +36,23 @@ function editHistory(data) {
     params: data.params
   });
 }
-/** EDIT HISTORY */
+/** DETAIL HISTORY */
 function getDetailHistory(parcelId) {
   return ApiRest({
-    path: `order-parcels/${parcelId}`,
+    // path: `payment/v1/order/parcel/119`,
+    path: `payment/v1/order/parcel/${parcelId}`,
     method: 'GET'
+  });
+}
+
+/** ACTIVATE VA */
+function activateVA(data) {
+  return ApiRest({
+    path: 'payment/v1/billing/update',
+    method: 'POST',
+    params: {
+      billingID: data.billingID
+    }
   });
 }
 
@@ -49,5 +61,6 @@ export const HistoryMethod = {
   getHistoryOrderStatus,
   getHistoryPaymentStatus,
   editHistory,
-  getDetailHistory
+  getDetailHistory,
+  activateVA
 };

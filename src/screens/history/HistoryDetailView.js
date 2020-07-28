@@ -27,6 +27,7 @@ import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import CallCS from '../../screens/global/CallCS';
+import DetailView from './HistoryPaymentInformation/DetailView'
 
 class HistoryDetailView extends Component {
   constructor(props) {
@@ -248,7 +249,7 @@ class HistoryDetailView extends Component {
         <View
           style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
         >
-          <Text style={Fonts.type48}>Ringkasan Pesanan</Text>
+          <Text style={Fonts.type48}>Catatan Pesanan</Text>
         </View>
         <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
         <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
@@ -344,77 +345,85 @@ class HistoryDetailView extends Component {
   }
   /** RENDER PRODUCT LIST */
   renderPaymentInformation() {
-    return (
-      <View>
-        <View style={GlobalStyle.boxPadding} />
-        <View style={GlobalStyle.shadowForBox}>
-          <View
-            style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
-          >
-            <Text style={Fonts.type48}>Informasi Pembayaran</Text>
-          </View>
-          <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-          <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-            {this.renderContentListGlobal(
-              'Tipe Pembayaran',
-              this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
-                null
-                ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
-                    .paymentTypeSupplier.paymentType.name
-                : '-'
-            )}
-            {this.renderContentListGlobal(
-              'Metode Pembayaran',
-              this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
-                null
-                ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
-                    .paymentMethod.name
-                : '-'
-            )}
-            {this.renderContentListGlobal(
-              `Total Barang (${this.totalSKU()})`,
-              MoneyFormat(this.props.history.dataDetailHistory.parcelGrossPrice)
-            )}
-            {/* {this.renderContentListGlobal(
-              'Potongan Harga',
-              `- ${MoneyFormat(
-                this.props.history.dataDetailHistory.parcelPromo
-              )}`,
-              true
-            )} */}
-            {this.renderPromoList(
-              this.props.history.dataDetailHistory.promoList
-            )}
-            {this.renderVoucherList(
-              this.props.history.dataDetailHistory.voucherList
-            )}
-            {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
-            {this.renderContentListGlobal(
-              'PPN 10%',
-              MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
-            )}
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginTop: 16
-              }}
-            >
-              <View style={{ flex: 1, alignItems: 'flex-start' }}>
-                <Text style={Fonts.type50}>Sub Total</Text>
-              </View>
-              <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                <Text style={Fonts.type21}>
-                  {MoneyFormat(
-                    this.props.history.dataDetailHistory.parcelFinalPrice
-                  )}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      </View>
-    );
+    if (this.props.history.dataDetailHistory !== null) {
+      return (
+        <DetailView
+          data={this.props.history.dataDetailHistory}
+          section={this.state.section}
+        />
+      );
+    }
+    // return (
+    //   <View>
+    //     <View style={GlobalStyle.boxPadding} />
+    //     <View style={GlobalStyle.shadowForBox}>
+    //       <View
+    //         style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
+    //       >
+    //         <Text style={Fonts.type48}>Informasi Pembayaran</Text>
+    //       </View>
+    //       <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
+    //       <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+    //         {this.renderContentListGlobal(
+    //           'Tipe Pembayaran',
+    //           this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
+    //             null
+    //             ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
+    //                 .paymentTypeSupplier.paymentType.name
+    //             : '-'
+    //         )}
+    //         {this.renderContentListGlobal(
+    //           'Metode Pembayaran',
+    //           this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
+    //             null
+    //             ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
+    //                 .paymentMethod.name
+    //             : '-'
+    //         )}
+    //         {this.renderContentListGlobal(
+    //           `Total Barang (${this.totalSKU()})`,
+    //           MoneyFormat(this.props.history.dataDetailHistory.parcelGrossPrice)
+    //         )}
+    //         {/* {this.renderContentListGlobal(
+    //           'Potongan Harga',
+    //           `- ${MoneyFormat(
+    //             this.props.history.dataDetailHistory.parcelPromo
+    //           )}`,
+    //           true
+    //         )} */}
+    //         {this.renderPromoList(
+    //           this.props.history.dataDetailHistory.promoList
+    //         )}
+    //         {this.renderVoucherList(
+    //           this.props.history.dataDetailHistory.voucherList
+    //         )}
+    //         {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
+    //         {this.renderContentListGlobal(
+    //           'PPN 10%',
+    //           MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
+    //         )}
+    //         <View
+    //           style={{
+    //             flexDirection: 'row',
+    //             justifyContent: 'space-between',
+    //             marginTop: 16
+    //           }}
+    //         >
+    //           <View style={{ flex: 1, alignItems: 'flex-start' }}>
+    //             <Text style={Fonts.type50}>Sub Total</Text>
+    //           </View>
+    //           <View style={{ flex: 1, alignItems: 'flex-end' }}>
+    //             <Text style={Fonts.type21}>
+    //               {MoneyFormat(
+    //                 this.props.history.dataDetailHistory.parcelFinalPrice
+    //               )}
+    //             </Text>
+    //           </View>
+    //         </View>
+    //       </View>
+    //     </View>
+    //   </View>
+    // );
   }
   /** RENDER CONTENT */
   renderContent() {
@@ -422,10 +431,19 @@ class HistoryDetailView extends Component {
       <View style={{ flex: 1 }}>
         <ScrollView>
           {this.renderHeaderStatus()}
+          {this.state.section === 'payment' ? (
+            this.renderPaymentInformation()
+          ) : (
+            <View />
+          )}
           {this.renderRingkasanPesanan()}
           {this.renderProductList()}
           {this.renderDeliveryDetail()}
-          {this.renderPaymentInformation()}
+          {this.state.section === 'order' ? (
+            this.renderPaymentInformation()
+          ) : (
+            <View />
+          )}
           <View style={{ paddingBottom: 50 }} />
         </ScrollView>
       </View>
