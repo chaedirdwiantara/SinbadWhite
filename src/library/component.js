@@ -27,6 +27,7 @@ import InputMapsType1 from '../components/input/InputMapsType1';
 import InputMapsType2 from '../components/input/InputMapsType2'
 /** DROPDOWN */
 import DropdownType1 from '../components/input/DropdownType1';
+import DropdownType2 from '../components/input/DropdownType2';
 /** BUTTON */
 import OrderButton from '../components/OrderButton'
 import ButtonFloatType1 from '../components/button/ButtonFloatType1'
@@ -115,6 +116,7 @@ export {
   InputMapsType2,
   /** DROPDOWN */
   DropdownType1,
+  DropdownType2,
   /** BUTTON */
   OrderButton,
   ButtonFloatType1,
