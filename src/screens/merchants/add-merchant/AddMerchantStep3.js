@@ -33,7 +33,7 @@ class AddMerchantStep3 extends Component {
       errorUrbanId: false,
       errorWarehouse: false,
       disabledDropdown: true,
-      disabledAction: true,
+      disabledAction: false,
       disableButton: true,
       /** for maps refresh */
       refreshLocation: false,
@@ -65,48 +65,60 @@ class AddMerchantStep3 extends Component {
     }
 
     /** CHECK URBAN ID */
-    if (prevProps.global.dataGetUrbanId !== this.props.global.dataGetUrbanId ) {    
-      /** GET WAREHOUSE */  
-      if (this.props.global.dataGetUrbanId !== null && this.props.global.dataGetUrbanId.length !== 0) {
+    if (prevProps.global.dataGetUrbanId !== this.props.global.dataGetUrbanId) {
+      /** GET WAREHOUSE */
+
+      if (
+        this.props.global.dataGetUrbanId !== null &&
+        this.props.global.dataGetUrbanId.length !== 0
+      ) {
         setTimeout(() => {
-          this.props.merchantGetWarehouseProcess(this.props.global.dataGetUrbanId[0].id)
-        }, 100)
+          this.props.merchantGetWarehouseProcess(
+            this.props.global.dataGetUrbanId[0].id
+          );
+        }, 100);
       }
-      
-      /** CHECK WAREHOUSE */
-      setTimeout(() => {
-        const warehouse = this.props.merchant.dataGetWarehouse
-        if (warehouse.total === 0){
-          this.setState({
-            warehouse: 'Not found', 
-            disableButton: false,
-            warehouseFound: 0
-          })
+    }
+
+    /** CHECK WAREHOUSE */
+    if (
+      prevProps.merchant.dataGetWarehouse !==
+      this.props.merchant.dataGetWarehouse
+    ) {
+      if (this.props.merchant.dataGetWarehouse !== null) {
+        const warehouse = this.props.merchant.dataGetWarehouse;
+        if (warehouse.total === 0) {
           this.props.saveVolatileDataMerchant({
-            warehouse: 'Not Found' 
-          })
+            warehouse:
+              'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
+          });
+            this.setState({
+              warehouseTitle: '*Warehouse',
+              disabledAction: true,
+              warehouseFound: 0
+            });
         } else if (warehouse.total === 1) {
-          this.setState({
-            warehouseTitle: '*Warehouse',
-            disableButton: false
-          })
           this.props.saveVolatileDataMerchant({
-            warehouse: warehouse.data[0].name, 
-            warehouseId: warehouse.data[0].id,
-          })
-        } else {
+            warehouse: warehouse.data[0].name,
+            warehouseId: warehouse.data[0].id
+          });
+            this.setState({
+              warehouseTitle: '*Warehouse',
+              disabledAction: true
+            });
+        } else if (warehouse.total > 1) {
+          this.props.saveVolatileDataMerchant({
+            warehouse:
+              'Pilih Warehouse'
+          });
           this.setState({
-            warehouse: 'Pilih Warehouse', 
             disabledDropdown: false,
             disabledAction: false,
-            disableButton: false,
             warehouseTitle: '*Warehouse'
-          })
+          });
         }
-      }, 100)
-      
-      
-    } 
+      }
+    }
   }
   /** SEND DATA ADD MERCHANT */
   nextStep() {
@@ -123,7 +135,7 @@ class AddMerchantStep3 extends Component {
     });
     setTimeout(() => {
       this.setState({ addStoreProcess: false });
-      NavigationService.navigate('AddMerchantStep4')
+      NavigationService.navigate('AddMerchantStep4');
     }, 100);
   }
   /** GO TO DROPDOWN LIST */
@@ -214,22 +226,29 @@ class AddMerchantStep3 extends Component {
     );
   }
   /** MERCHANT WAREHOUSE */
-  renderWarehouse(){
+  renderWarehouse() {
     return (
-      <DropdownType2 
+      <DropdownType2
         title={this.state.warehouseTitle}
         placeholder={'Masukan Warehouse'}
-        selectedDropdownText={this.props.merchant.dataMerchantVolatile.warehouse}
+        selectedDropdownText={
+          this.props.merchant.dataMerchantVolatile.warehouse
+        }
         disabledDropdown={this.state.disabledDropdown}
         disabledAction={this.state.disabledAction}
-        openDropdown={() => this.goToDropdown({
-          type: 'warehouse',
-          placeholder: 'Pilih Warehouse'
-        })}
-        errorText={this.state.warehouseFound === 0 ?
-          'Lokasi toko tidak dalam area jangkauan warehouse tertentu.' : ''}
+        openDropdown={() =>
+          this.goToDropdown({
+            type: 'warehouse',
+            placeholder: 'Pilih Warehouse'
+          })
+        }
+        errorText={
+          this.state.warehouseFound === 1
+            ? 'Lokasi toko berada dalam area jangkauan warehouse tertentu dan tidak dapat diubah.'
+            : ''
+        }
       />
-    )
+    );
   }
   /** main content */
   renderContent() {
@@ -247,9 +266,7 @@ class AddMerchantStep3 extends Component {
   renderButton() {
     return (
       <ButtonSingle
-        disabled={
-          this.buttonDisable()
-        }
+        disabled={this.buttonDisable()}
         title={'Lanjutkan'}
         loading={
           this.props.merchant.loadingAddMerchant || this.state.addStoreProcess
@@ -290,4 +307,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(AddMerchantStep3);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddMerchantStep3);

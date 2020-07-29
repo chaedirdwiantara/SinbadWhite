@@ -10,7 +10,7 @@ import { MaterialIcon } from '../../library/thirdPartyPackage';
 import { Fonts } from '../../helpers';
 import { Color } from '../../config'
 
-class DropdownType1 extends Component {
+class DropdownType2 extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default DropdownType1;
+export default DropdownType2;
 
 /**
 * ============================
