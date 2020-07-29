@@ -107,6 +107,9 @@ class AddMerchantStep3 extends Component {
               disabledAction: true
             });
         } else if (warehouse.total > 1) {
+          this.props.saveVolatileDataMerchant({
+            warehouse: ''
+          });
           this.setState({
             disabledDropdown: false,
             disabledAction: false,
