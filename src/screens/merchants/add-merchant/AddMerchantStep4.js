@@ -47,9 +47,6 @@ class AddMerchantStep4 extends Component {
       prevProps.merchant.dataAddMerchant !== this.props.merchant.dataAddMerchant
     ) {
         if (this.props.merchant.dataAddMerchant !== null) {
-
-          console.log(this.props.merchant.dataAddMerchant)
-          console.log(this.props.global.pageAddMerchantFrom)
           switch (this.props.global.pageAddMerchantFrom) {
             case 'MerchantView':
               this.props.merchantGetReset();
