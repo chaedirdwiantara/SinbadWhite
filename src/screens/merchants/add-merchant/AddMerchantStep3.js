@@ -155,10 +155,6 @@ class AddMerchantStep3 extends Component {
       this.props.merchant.dataMerchantVolatile.warehouse === null
     );
   }
-  /** disablefield */
-  fieldDisable() {
-    return this.props.merchant.dataMerchantVolatile.warehouse;
-  }
   /** GO TO MAPS */
   goToMaps() {
     NavigationService.navigate('MapsView');
