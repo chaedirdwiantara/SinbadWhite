@@ -191,7 +191,7 @@ class OmsCheckoutView extends Component {
             tAndR.data.paymentTypes == null
           ) {
             this.confirmOrder();
-            this.setState({ tAndRDetail: true });
+            // this.setState({ tAndRDetail: true });
           } else {
             this.setState({ modalTAndR: true });
           }
@@ -1338,6 +1338,7 @@ class OmsCheckoutView extends Component {
    * =======================
    */
   render() {
+    console.log("iniii:", this.state.tAndRDetail);
     return (
       <View style={styles.mainContainer}>
         {this.renderContent()}
