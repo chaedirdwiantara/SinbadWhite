@@ -82,6 +82,9 @@ class AddMerchantStep3 extends Component {
             disableButton: false,
             warehouseFound: 0
           })
+          this.props.saveVolatileDataMerchant({
+            warehouse: 'Not Found' 
+          })
         } else if (warehouse.total === 1) {
           this.setState({
             warehouseTitle: '*Warehouse',
@@ -136,8 +139,8 @@ class AddMerchantStep3 extends Component {
       this.state.address === null ||
       this.props.global.longitude === '' ||
       this.props.global.latitude === '' ||
-      this.props.global.dataGetUrbanId === null &&
-      this.state.disableButton
+      this.props.global.dataGetUrbanId === null ||
+      this.props.merchant.dataMerchantVolatile.warehouse === null
     );
   }
   /** GO TO MAPS */
