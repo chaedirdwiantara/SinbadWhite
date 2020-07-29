@@ -46,31 +46,31 @@ class AddMerchantStep4 extends Component {
     if (
       prevProps.merchant.dataAddMerchant !== this.props.merchant.dataAddMerchant
     ) {
-      if (this.props.merchant.dataAddMerchant !== null) {
-        switch (this.props.global.pageAddMerchantFrom) {
-          case 'MerchantView':
-            this.props.merchantGetReset();
-            this.props.merchantGetProcess({
-              type: 'direct',
-              page: 0,
-              loading: true,
-              portfolioId: '',
-              search: ''
-            });
-            break;
-          case 'JourneyView':
-            this.props.journeyPlanGetReset();
-            this.props.journeyPlanGetProcess({ page: 0, loading: true });
-            this.props.getJourneyPlanReportProcess(
-              this.props.user.userSuppliers.map(item => item.supplierId)
-            );
-            break;
-
-          default:
-            break;
-        }
-        NavigationService.navigate(this.props.global.pageAddMerchantFrom);
-      }
+        if (this.props.merchant.dataAddMerchant !== null) {
+          switch (this.props.global.pageAddMerchantFrom) {
+            case 'MerchantView':
+              this.props.merchantGetReset();
+              this.props.merchantGetProcess({
+                type: 'direct',
+                page: 0,
+                loading: true,
+                portfolioId: '',
+                search: ''
+              });
+              break;
+            case 'JourneyView':
+              this.props.journeyPlanGetReset();
+              this.props.journeyPlanGetProcess({ page: 0, loading: true });
+              this.props.getJourneyPlanReportProcess(
+                this.props.user.userSuppliers.map(item => item.supplierId)
+              );
+              break;
+  
+            default:
+              break;
+          }
+          NavigationService.navigate(this.props.global.pageAddMerchantFrom);
+        }      
     }
     /** IF ERROR ADD MERCHANT */
     if (
@@ -124,7 +124,6 @@ class AddMerchantStep4 extends Component {
     });
     setTimeout(() => {
       this.setState({ addStoreProcess: false });
-      NavigationService.navigate(this.props.global.pageAddMerchantFrom)
     }, 100);
   }
   /** GO TO DROPDOWN LIST */
