@@ -2,7 +2,7 @@ import { React, Component } from './src/library/reactPackage';
 import { Provider, PersistGate } from './src/library/thirdPartyPackage';
 import Navigator from './src/navigation';
 import { Store, Persistor } from './src/state/Store';
-import { ErrorBoundary } from './src/library/component'
+import { ErrorBoundary } from './src/library/component';
 
 class Main extends Component {
   render() {
@@ -20,14 +20,14 @@ class Main extends Component {
 
 export default Main;
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 23072020
-* updatedFunction:
-* -> Add ErrorBoundary for logging
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 23072020
+ * updatedFunction:
+ * -> Add ErrorBoundary for logging
+ *
+ */
