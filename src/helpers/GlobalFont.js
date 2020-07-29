@@ -599,7 +599,7 @@ const styles = StyleSheet.create({
   },
   type99: {
     fontFamily: Fonts.MontserratSemiBold,
-    fontSize: 13,
+    fontSize: 12,
     lineHeight: 16,
     color: Color.fontBlack40
   },
