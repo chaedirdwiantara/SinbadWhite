@@ -124,7 +124,6 @@ class AddMerchantStep4 extends Component {
     });
     setTimeout(() => {
       this.setState({ addStoreProcess: false });
-      // Test to Journey Plan
       NavigationService.navigate(this.props.global.pageAddMerchantFrom)
     }, 100);
   }
