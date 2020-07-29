@@ -97,6 +97,7 @@ class AddMerchantStep4 extends Component {
       noteAddress: data.noteAddress,
       urbanId: data.urbanId,
       status: 'active',
+      warehouseId: data.warehouseId,
       user: {
         fullName: data.fullName,
         idNo: data.idNo,
