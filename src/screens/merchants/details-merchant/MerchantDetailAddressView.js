@@ -95,41 +95,6 @@ class MerchantDetailAddressView extends Component {
             selectedMapLat={this.props.merchant.dataMerchantVolatile.latitude}
             refresh={this.state.refreshLocation}
           />
-          {/* <InputType4
-            title={'Provinsi'}
-            editable={false}
-            value={this.props.merchant.dataMerchantVolatile.province}
-            placeholder={'-'}
-            marginBottom={16}
-          />
-          <InputType4
-            title={'Kota'}
-            editable={false}
-            value={this.props.merchant.dataMerchantVolatile.city}
-            placeholder={'-'}
-            marginBottom={16}
-          />
-          <InputType4
-            title={'Kecamatan'}
-            editable={false}
-            value={this.props.merchant.dataMerchantVolatile.district}
-            placeholder={'-'}
-            marginBottom={16}
-          />
-          <InputType4
-            title={'Kelurahan'}
-            editable={false}
-            value={this.props.merchant.dataMerchantVolatile.urban}
-            placeholder={'-'}
-            marginBottom={16}
-          />
-          <InputType4
-            title={'Kodepos'}
-            editable={false}
-            value={this.props.merchant.dataMerchantVolatile.zipCode}
-            placeholder={'-'}
-            marginBottom={16}
-          /> */}
           <InputType4
             title={'Alamat'}
             editable={false}
