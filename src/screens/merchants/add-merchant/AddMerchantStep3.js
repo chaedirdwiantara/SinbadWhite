@@ -104,7 +104,8 @@ class AddMerchantStep3 extends Component {
           });
             this.setState({
               warehouseTitle: '*Warehouse',
-              disabledAction: true
+              disabledAction: true,
+              warehouseFound: 1
             });
         } else if (warehouse.total > 1) {
           this.props.saveVolatileDataMerchant({
