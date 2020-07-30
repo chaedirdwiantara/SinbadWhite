@@ -36,13 +36,7 @@ class MerchantEditView extends Component {
           <Text style={Fonts.type5}>{state.params.title}</Text>
         </View>
       ),
-      headerRight: () => (
-        <TouchableOpacity
-          style={{ marginRight: 16, alignItems: 'center' }}
-        >
-          <Text style={Fonts.type29}>Simpan</Text>
-        </TouchableOpacity>
-      )
+      headerRight: <View />
     };
   };
   /**
