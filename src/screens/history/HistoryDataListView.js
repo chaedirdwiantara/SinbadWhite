@@ -23,6 +23,7 @@ import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
+import CountDown from '../../components/CountDown';
 
 class HistoryDataListView extends Component {
   constructor(props) {
@@ -136,6 +137,16 @@ class HistoryDataListView extends Component {
       ? this.checkorder(item)
       : '';
   }
+
+  /** === RENDER ITEM (STATUS PAYMENT) === */
+  renderItemStatusOrder(item) {
+    return (
+      <View>
+        <Text style={Fonts.type10}>{this.statusOrder(item.status)}</Text>
+      </View>
+    );
+  }
+
   /** go to detail */
   goToDetail(item) {
     this.props.historyGetDetailProcess(item.id);
@@ -209,6 +220,94 @@ class HistoryDataListView extends Component {
   renderSeparator() {
     return <View style={GlobalStyle.boxPadding} />;
   }
+
+  /** RENDER COUNTDOWN */
+  renderCountDown(item) {
+    const timeNow = new Date();
+    const expiredTime = new Date(item.billing.expiredPaymentTime);
+    const timeDiffInSecond = (timeNow.getTime() - expiredTime.getTime()) / 1000;
+    return (
+      <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+        <Text style={Fonts.type10}>Waktu Bayar: </Text>
+        <CountDown expiredTimer={Math.abs(timeDiffInSecond)} />
+      </View>
+    );
+  }
+
+  /** === RENDER ITEM (STATUS PAYMENT INFORMATION) === */
+  renderItemStatusPaymentInformation(item) {
+    let statusPaymentInformation = '';
+    const diff = moment(new Date(item.dueDate)).diff(new Date(), 'days');
+    if (diff === 0) {
+      statusPaymentInformation = <Text style={Fonts.type59}>jatuh tempo</Text>;
+    } else if (diff > 0) {
+      statusPaymentInformation = (
+        <Text>
+          <Text style={Fonts.type22}>{diff} hari</Text>
+          <Text style={Fonts.type59}> menuju pembayaran</Text>
+        </Text>
+      );
+    } else if (diff < 0) {
+      statusPaymentInformation = (
+        <Text>
+          <Text style={Fonts.type22}>{diff * -1} hari</Text>
+          <Text style={Fonts.type59}> diluar batas pembayaran</Text>
+        </Text>
+      );
+    }
+    return item.dueDate !== null ? statusPaymentInformation : null;
+  }
+
+  /** === RENDER ITEM (STATUS PAYMENT) === */
+  renderItemStatusPayment(item) {
+    let textStyle = Fonts.type10;
+    switch (item.statusPayment) {
+      case 'payment_failed':
+      case 'overdue':
+        textStyle = Fonts.type11;
+        break;
+      case 'waiting_for_payment':
+        textStyle = { ...Fonts.type11, color: masterColor.fontRed50 };
+        break;
+      default:
+        break;
+    }
+    return (
+      <View>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={{ ...textStyle, textAlign: 'right' }}>
+            {this.statusPayment(item.statusPayment)}
+          </Text>
+          {item.statusPayment === 'overdue' ? (
+            <View style={{ marginLeft: 5 }}>
+              <MaterialIcon name="error" size={15} color={'#f0444c'} />
+            </View>
+          ) : (
+              <View />
+            )}
+        </View>
+        {item.statusPayment !== 'paid'
+          ? item.statusPayment !== 'payment_failed' &&
+            // item.billing.billingStatus !== 'expired' &&
+            item.billing && item.billing.billingStatus !== 'paid' &&
+            item.billing.expiredPaymentTime &&
+            item.paymentChannel &&
+            item.paymentChannel.id === 2
+            ? this.renderCountDown(item)
+            : null
+          : null}
+      </View>
+    );
+  }
+/** === RENDER BUTTON FOR PAYMENT === */
+renderButtonForPayment(item) {
+  switch (item.statusPayment) {
+    case 'confirm':
+      return this.renderButtonCancel(item);
+    default:
+      return <View />;
+  }
+}
   /** ITEM */
   renderItem({ item, index }) {
     return (
@@ -217,22 +316,45 @@ class HistoryDataListView extends Component {
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
               <Text style={Fonts.type42}>{item.orderCode}</Text>
-              <Text style={Fonts.type10}>
-                {this.props.section === 'payment'
-                  ? this.statusPayment(item.statusPayment)
-                  : this.statusOrder(item.status)}
-              </Text>
+              {this.props.section === 'payment'
+                ? this.renderItemStatusPayment(item)
+                : this.renderItemStatusOrder(item)
+              }
             </View>
             <View style={styles.boxItemContent}>
-              <Text style={Fonts.type57}>
-                {moment(new Date(item.createdAt)).format(
-                  'DD MMM YYYY HH:mm:ss'
+              {this.props.section === 'payment' ? (
+                <Text style={Fonts.type57}>
+                  {moment(new Date(item.createdAt)).format(
+                    'DD MMM YYYY HH:mm:ss'
+                  )}
+                </Text>
+              ) : (
+                  <View />
                 )}
-              </Text>
-              <Text style={Fonts.type57}>{this.orderVia(item)}</Text>
+              {this.props.section === 'payment' &&
+                item.statusPayment !== 'payment_failed' &&
+                item.statusPayment !== 'paid' ? (
+                  <Text style={Fonts.type57}>
+                    {this.renderItemStatusPaymentInformation(item)}
+                  </Text>
+                ) : (
+                  <View />
+                )}
             </View>
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             {this.renderProductSection(item.orderBrands)}
+            {this.props.section === 'order' ? (
+              <View style={{ marginTop: 8, alignItems: 'flex-end' }}>
+                <Text style={Fonts.type17}>
+                  Dipesan pada{' '}
+                  {moment(new Date(item.createdAt)).format(
+                    'DD MMM YYYY HH:mm:ss'
+                  )}
+                </Text>
+              </View>
+            ) : (
+              <View />
+            )}
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             <View style={styles.boxItemContent}>
               <Text style={Fonts.type17}>
@@ -243,8 +365,8 @@ class HistoryDataListView extends Component {
                 {this.props.section === 'order' && item.status === 'confirm' ? (
                   this.renderButtonCancel(item)
                 ) : (
-                  <View />
-                )}
+                  this.renderButtonForPayment(item)
+                  )}
                 {this.renderButtonDetail(item)}
               </View>
             </View>
@@ -280,6 +402,7 @@ class HistoryDataListView extends Component {
       this.renderEmpty()
     );
   }
+
   /** SKELETON */
   renderSkeleton() {
     return <SkeletonType5 />;
@@ -289,8 +412,8 @@ class HistoryDataListView extends Component {
     return this.props.history.loadingLoadMoreGetHistory ? (
       <LoadingLoadMore />
     ) : (
-      <View />
-    );
+        <View />
+      );
   }
   /**
    * ======================
@@ -318,8 +441,8 @@ class HistoryDataListView extends Component {
             }
           />
         ) : (
-          <View />
-        )}
+            <View />
+          )}
       </View>
     );
   }
@@ -328,7 +451,7 @@ class HistoryDataListView extends Component {
     return (
       <View style={styles.mainContainer}>
         {this.props.history.loadingGetHistory ||
-        this.props.history.loadingEditHistory
+          this.props.history.loadingEditHistory
           ? this.renderSkeleton()
           : this.renderData()}
         {/* for loadmore */}
@@ -371,6 +494,20 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 16,
     borderRadius: 4
+  },
+  countDownText: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 11,
+    lineHeight: 14,
+    color: masterColor.fontWhite
+  },
+  countDownTextContainer: {
+    backgroundColor: masterColor.fontRed50,
+    borderRadius: 2,
+    minWidth: 20,
+    textAlign: 'center',
+    alignContent: 'center',
+    justifyContent: 'center'
   }
 });
 
@@ -391,11 +528,11 @@ export default connect(
 * ============================
 * NOTES
 * ============================
-* createdBy: 
-* createdDate: 
+* createdBy:
+* createdDate:
 * updatedBy: Tatas
 * updatedDate: 06072020
 * updatedFunction:
 * -> Refactoring Module Import
-* 
+*
 */

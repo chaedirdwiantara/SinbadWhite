@@ -37,3 +37,19 @@ export const OMS_GET_PAYMENT_SUCCESS = 'OmsGetPaymentSuccess';
 export const OMS_GET_PAYMENT_FAILED = 'OmsGetPaymentFailed';
 /** DELETE ALL DATA IN OMS */
 export const OMS_RESET_DATA = 'OmsResetData';
+/** GET PAYMENT CHANNELS */
+export const OMS_GET_PAYMENT_CHANNEL_PROCESS = 'OmsGetPaymentChannelProcess';
+export const OMS_GET_PAYMENT_CHANNEL_SUCCESS = 'OmsGetPaymentChannelSuccess';
+export const OMS_GET_PAYMENT_CHANNEL_FAILED = 'OmsGetPaymentChannelFailed';
+/** GET TERMS AND CONDITION */
+export const OMS_GET_TERMS_CONDITIONS_PROCESS = 'OmsGetTermsConditionsProcess';
+export const OMS_GET_TERMS_CONDITIONS_SUCCESS = 'OmsGetTermsConditionsSuccess';
+export const OMS_GET_TERMS_CONDITIONS_FAILED = 'OmsGetTermsConditionsFailed';
+/** LAST PAYMENT CHANNEL */
+export const OMS_GET_LAST_PAYMENT_CHANNEL_PROCESS =
+  'omsGetLastPaymentChannelProcess';
+export const OMS_GET_LAST_PAYMENT_CHANNEL_SUCCESS =
+  'omsGetLastPaymentChannelSuccess';
+export const OMS_GET_LAST_PAYMENT_CHANNEL_FAILED =
+  'omsGetLastPaymentChannelFailed';
+export const OMS_GET_LAST_PAYMENT_CHANNEL = 'omsGetLastPaymentChannel';
