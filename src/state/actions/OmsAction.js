@@ -269,3 +269,29 @@ export function OmsGetTermsConditionsSuccess(data) {
 export function OmsGetTermsConditionsFailed(data) {
   return { type: types.OMS_GET_TERMS_CONDITIONS_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * LAST PAYMENT CHANNEL
+ * ===========================
+ */
+/** === GET LAST PAYMENT CHANNEL SUCCESS === */
+export function omsGetLastPaymentChannelProcess(data) {
+  return { type: types.OMS_GET_LAST_PAYMENT_CHANNEL_PROCESS, payload: data };
+}
+
+/** === GET LAST PAYMENT CHANNEL SUCCESS === */
+export function omsGetLastPaymentChannelSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_GET_LAST_PAYMENT_CHANNEL_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_GET_LAST_PAYMENT_CHANNEL_FAILED, payload: data };
+}
+
+/** === GET LAST PAYMENT CHANNEL FAILED === */
+export function omsGetLastPaymentChannelFailed(data) {
+  return { type: types.OMS_GET_LAST_PAYMENT_CHANNEL_FAILED, payload: data };
+}

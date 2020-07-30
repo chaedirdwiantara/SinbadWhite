@@ -41,10 +41,11 @@ export const permanent = createReducer(INITIAL_STATE, {
     /** this for make notification in pesanan */
     let newOrder = state.newOrderSuccessPerMerchant;
     const indexOrder = state.newOrderSuccessPerMerchant.indexOf(
-      action.payload.storeId
+      action.payload.data.storeId
     );
+    // console.log("ini indexOrder: ", indexOrder);
     if (indexOrder === -1) {
-      newOrder.push(action.payload.storeId);
+      newOrder.push(action.payload.data.storeId);
     }
     return {
       ...state,
