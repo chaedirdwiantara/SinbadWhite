@@ -323,6 +323,39 @@ export const oms = createReducer(INITIAL_STATE, {
       errorOmsGetCartItemFromCheckout: action.payload
     };
   },
+  /**
+   * ==================================
+   * GET LAST PAYMENT CHANNEL
+   * =================================
+   */
+  [types.OMS_GET_LAST_PAYMENT_CHANNEL_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingLastPaymentChannel: true,
+      dataLastPaymentChannel: null,
+      errorLastPaymentChannel: null
+    };
+  },
+  [types.OMS_GET_LAST_PAYMENT_CHANNEL_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingLastPaymentChannel: false,
+      dataLastPaymentChannel: action.payload
+    };
+  },
+  [types.OMS_GET_LAST_PAYMENT_CHANNEL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingLastPaymentChannel: false,
+      errorLastPaymentChannel: action.payload
+    };
+  },
+  [types.OMS_GET_LAST_PAYMENT_CHANNEL](state, action) {
+    return {
+      ...state,
+      dataLastPaymentChannel: action.payload
+    };
+  },
   // SEMENTARA
   /**
    * ==================================

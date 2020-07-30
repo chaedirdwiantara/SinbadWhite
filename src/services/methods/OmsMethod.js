@@ -84,6 +84,18 @@ function getTermsConditions(data) {
   });
 }
 
+/** LAST PAYMENT CHANNEL */
+function getLastPaymentChannel({ invoiceGroupIds }) {
+  return ApiRest({
+    path: 'payment/v1/channel/last',
+    method: 'POST',
+    params: {
+      storeId: parseInt(GlobalMethod.merchantStoreId(), 10),
+      invoiceGroupIds
+    }
+  });
+}
+
 export const OmsMethod = {
   getCartItem,
   getCheckoutItem,
@@ -91,5 +103,6 @@ export const OmsMethod = {
   confirmOrder,
   deleteOrder,
   getPaymentChannel,
-  getTermsConditions
+  getTermsConditions,
+  getLastPaymentChannel
 };

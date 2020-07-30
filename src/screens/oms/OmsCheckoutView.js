@@ -12,14 +12,16 @@ import {
 import {
   MaterialIcon,
   bindActionCreators,
-  connect
+  connect,
+  Button
 } from '../../library/thirdPartyPackage'
 import {
   ModalConfirmation,
   ButtonSingleSmall,
   Address,
   ModalWarning,
-  ProductListType1
+  ProductListType1,
+  ModalBottomErrorRespons
 } from '../../library/component'
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
@@ -40,6 +42,7 @@ class OmsCheckoutView extends Component {
     this.state = {
       /** data */
       parcels: [],
+      alreadyFetchLastPayment: false,
       orderProduct: [],
       dataOmsGetCheckoutItem: this.props.oms.dataOmsGetCheckoutItem,
       selectedParcelIdForPayment: null,
@@ -49,6 +52,8 @@ class OmsCheckoutView extends Component {
       paymentMethod: null,
       paymentMethodSelected: [],
       dataPaymentMethod: null,
+      usingDefault: false,
+      changedIndex: [],
       /** modal */
       openModalBackToCartItem: false,
       openModalConfirmOrder: false,
@@ -68,6 +73,9 @@ class OmsCheckoutView extends Component {
       modalWarningNotSelectPayment: false,
       modalErrorBalance: false,
       modalErrorPayment: false,
+      modalWarningMinimumQty: false,
+      modalWarningCheckoutIsExpired: false,
+      modalErrorResponse: false,
       openModalErrorGlobal: false,
       orderPerParcel: null,
       makeConfirmOrder: false,
@@ -111,6 +119,19 @@ class OmsCheckoutView extends Component {
     this.navigationFunction();
     if (this.state.dataOmsGetCheckoutItem !== null) {
       this.modifyDataForList();
+      if (
+        this.props.oms.dataOmsGetCartItem &&
+        !this.state.alreadyFetchLastPayment
+      ) {
+        const invoiceGroupIds = this.props.oms.dataOmsGetCartItem.cartParcels.map(
+          e => parseInt(e.invoiceGroupId, 10)
+        );
+        this.props.omsGetLastPaymentChannelProcess({ invoiceGroupIds });
+        if (this.props.oms.loadingLastPaymentChannel) {
+          this.setState({disabled: true});
+        }
+        // this.setState({disabled: true});
+      }
     }
   }
   /** === DID UPDATE === */
@@ -176,6 +197,76 @@ class OmsCheckoutView extends Component {
           });
         }
       }
+    }
+
+    if (
+      prevProps.oms.errorOmsConfirmOrder !== this.props.oms.errorOmsConfirmOrder
+    ) {
+      if (this.props.oms.errorOmsConfirmOrder) {
+        if (
+          this.props.oms.errorOmsConfirmOrder.message ===
+          'Your Parcels is less than minimum order'
+        ) {
+          this.setState({ modalWarningMinimumQty: true });
+          setTimeout(() => {
+            this.setState({ modalWarningMinimumQty: false });
+          }, 2000);
+        } else if (
+          this.props.oms.errorOmsConfirmOrder.message ===
+          'Order Status must be checkout'
+        ) {
+          this.setState({ modalWarningCheckoutIsExpired: true });
+          setTimeout(() => {
+            this.setState({ modalWarningCheckoutIsExpired: false });
+            NavigationService.navigate('Home');
+          }, 2000);
+        } else {
+          this.setState({ modalErrorResponse: true });
+        }
+      }
+    }
+
+    if (
+      this.props.oms.dataLastPaymentChannel !==
+        prevProps.oms.dataLastPaymentChannel &&
+      this.props.oms.dataLastPaymentChannel &&
+      this.props.oms.dataLastPaymentChannel.data &&
+      this.props.oms.dataLastPaymentChannel.data.paymentTypeChannels
+    ) {
+      const paymentMethodSelected = this.props.oms.dataLastPaymentChannel.data.paymentTypeChannels.map(
+        e => e.paymentType.id
+      );
+      const groupIdFromCheckoutItem = this.props.oms.dataOmsGetCheckoutItem.orderParcels.map(
+        e => parseInt(e.invoiceGroupId)
+      );
+      const lastPayemntGroupInvoice = this.props.oms.dataLastPaymentChannel.data.paymentTypeChannels.map(
+        e => e.invoiceGroupId
+      );
+      const parcels = this.state.parcels.map((e, i) => {
+        const invoiceGrouId = groupIdFromCheckoutItem[i];
+        const lastPaymentIndex = lastPayemntGroupInvoice.indexOf(invoiceGrouId);
+        const lastPayment = this.props.oms.dataLastPaymentChannel.data
+          .paymentTypeChannels[lastPaymentIndex];
+        return lastPaymentIndex > -1
+          ? {
+              ...e,
+              paymentMethodDetail: e.paymentMethodDetail
+                ? { ...e.paymentMethodDetail }
+                : {
+                    ...lastPayment.PaymentChannel
+                  },
+              paymentTypeDetail: e.paymentTypeDetail
+                ? { ...e.paymentTypeDetail }
+                : {
+                    ...lastPayment.paymentType
+                  },
+              paymentTypeSupplierMethodId:
+                lastPayment.paymentTypeSupplierMethodId,
+            }
+          : { ...e };
+      });
+
+      this.setState({disabled: false, usingDefault: true, paymentMethodSelected, parcels });
     }
 
     if (this.props.oms.dataOmsGetTermsConditions !== undefined){
@@ -579,6 +670,12 @@ class OmsCheckoutView extends Component {
       this.setState({ modalErrorPayment: false });
     }, 2000);
   }
+
+  closeErrorResponse() {
+    this.setState({ modalErrorResponse: false });
+    NavigationService.navigate('Home');
+  }
+
   /** === FOR OPEN MODAL TERM AND REFRENCE ===  */
   checkTerm(selectedPaymentType) {
     // if (selectedPaymentType.paymentType.terms !== null) {
@@ -613,11 +710,15 @@ class OmsCheckoutView extends Component {
   }
   /** === FOR OPEN MODAL PAYMENT TYPE === */
   openPaymentType(item) {
-    this.setState({
-      modalPaymentTypeList: true,
-      selectedParcel: item.id,
-      selectedParcelIdForPayment: item.id
-    });
+    if (!this.props.oms.loadingOmsGetOrderParcelList) {
+      const changedIndex = [...this.state.changedIndex, item.id];
+      this.setState({
+        modalPaymentTypeList: true,
+        selectedParcel: item.id,
+        selectedParcelIdForPayment: item.id,
+        changedIndex
+      });
+    }
   }
   /** === FOR OPEN MODAL PAYMENT METHOD === */
   openPaymentMethod(selectedPaymentType) {
@@ -971,6 +1072,76 @@ class OmsCheckoutView extends Component {
       <View />
     );
   }
+
+  renderIsPaymentMethodDefault(item) {
+    const parcelIndex = this.state.parcels.findIndex(
+      itemParcel =>
+        itemParcel.orderParcelId === parseInt(item.id, 10) &&
+        itemParcel.paymentTypeSupplierMethodId === null
+    );
+    return this.props.oms.dataLastPaymentChannel &&
+      this.props.oms.dataLastPaymentChannel.data.paymentTypeChannels &&
+      (this.state.usingDefault ||
+        this.state.changedIndex.indexOf(item.id) === -1)
+      ? this.renderPaymentMethodDefault(item)
+      : this.renderAfterSelectPaymentMethod(parcelIndex, item);
+  }
+
+  renderPaymentMethodDefault(item) {
+    const indexPayment = this.props.oms.dataLastPaymentChannel.data.paymentTypeChannels
+      .map(e => e.invoiceGroupId)
+      .indexOf(parseInt(item.invoiceGroupId));
+
+    const paymentMethod =
+      indexPayment > -1
+        ? this.props.oms.dataLastPaymentChannel.data.paymentTypeChannels[
+            indexPayment
+          ]
+        : null;
+    return paymentMethod ? (
+      <View style={{ flexDirection: 'row', paddingVertical: 15 }}>
+        <Image
+          source={{
+            uri: this.props.oms.dataLastPaymentChannel.data.paymentTypeChannels[indexPayment].paymentType.iconUrl
+          }}
+          style={{ height: 20, width: 20, marginRight: 10 }}
+        />
+        <Text style={[Fonts.type8, {alignSelf:"center"}]}>
+          {paymentMethod.paymentType.name} - {paymentMethod.PaymentChannel.name}{' '}
+        </Text>
+      </View>
+    ) : (
+      <View style={{ flexDirection: 'row', paddingVertical: 15 }}>
+        <Text style={[Fonts.type101, {fontStyle: 'italic', alignSelf:"center"}]}>Pilih Tipe & Metode pembayaran</Text>
+      </View>
+    );
+  }
+
+  renderAfterSelectPaymentMethod(index, item) {
+    return index > -1 ? (
+      <View>
+        {this.props.oms.loadingLastPaymentChannel ? (
+          <Button
+            loadingProps={{ color: masterColor.fontRed50 }}
+            type={'clear'}
+            title=""
+            titleStyle={Fonts.type14}
+            buttonStyle={{ paddingVertical: 16 }}
+            loading
+          />
+        ) : (
+          <View style={{ paddingVertical: 16 }}>
+            <Text style={Fonts.type101}>Pilih Tipe & Metode pembayaran</Text>
+          </View>
+        )}
+      </View>
+    ) : (
+      <View style={{ paddingVertical: 15 }}>
+        {this.renderSelectedPayment(item)}
+      </View>
+    );
+  }
+
   /** === TIPE PEMBAYARAN === */
   renderMetodePembayaran(item) {
     return (
@@ -980,6 +1151,7 @@ class OmsCheckoutView extends Component {
         </View>
         <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
         <TouchableOpacity
+        disabled={this.state.disabled}
           style={[
             styles.boxPayment,
             {
@@ -991,25 +1163,7 @@ class OmsCheckoutView extends Component {
           onPress={() => this.openPaymentType(item)}
         >
           <View style={{ flexDirection: 'row' }}>
-            {/* <View style={{ justifyContent: 'center', marginRight: 20 }}>
-              <Image
-                source={require('../../assets/icons/oms/money.png')}
-                style={{ height: 24, width: 24 }}
-              />
-            </View> */}
-            {this.state.parcels.findIndex(
-              itemParcel =>
-                itemParcel.orderParcelId === parseInt(item.id, 10) &&
-                itemParcel.paymentTypeSupplierMethodId === null
-            ) > -1 ? (
-              <View style={{ flexDirection: 'row', paddingVertical: 15 }}>
-                <Text style={[Fonts.type100, {fontStyle: "italic"}]}>Pilih Tipe & Metode pembayaran</Text>
-              </View>
-            ) : (
-              <View style={{ paddingVertical: 15 }}>
-                {this.renderSelectedPayment(item)}
-              </View>
-            )}
+            {this.renderIsPaymentMethodDefault(item)}
             {this.checkPaymentSelected(item) ? (
               <View
                 style={{
@@ -1027,10 +1181,15 @@ class OmsCheckoutView extends Component {
               <View />
             )}
           </View>
-
-          <View>
-            <MaterialIcon name="keyboard-arrow-right" size={24} />
-          </View>
+          
+          {(this.props.oms.loadingLastPaymentChannel) ?
+            <View />
+          :
+            <View>
+              <MaterialIcon name="keyboard-arrow-right" size={24} />
+            </View>
+          }
+          
         </TouchableOpacity>
         <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
       </View>
@@ -1121,6 +1280,53 @@ class OmsCheckoutView extends Component {
           <ModalWarning
             open={this.state.modalWarningNotSelectPayment}
             content={'Anda belum memilih metode pembayaran'}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+  renderWarningCheckoutIsExpired() {
+    return (
+      <View>
+        {this.state.modalWarningCheckoutIsExpired ? (
+          <ModalWarning
+            open={this.state.modalWarningCheckoutIsExpired}
+            content={
+              'Anda berada terlalu lama di halaman checkout silakan melakukan checkout ulang'
+            }
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+  renderWarningMinimumQty() {
+    return (
+      <View>
+        {this.state.modalWarningMinimumQty ? (
+          <ModalWarning
+            open={this.state.modalWarningMinimumQty}
+            content={'Qty anda blm mencukupi standar pemesanan'}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+  renderErrorResponse() {
+    return (
+      <View>
+        {this.state.modalErrorResponse ? (
+          <ModalBottomErrorRespons
+            open={this.state.modalErrorResponse}
+            onPress={() => this.closeErrorResponse()}
           />
         ) : (
           <View />
@@ -1355,6 +1561,9 @@ class OmsCheckoutView extends Component {
         {this.renderModalBottomErrorMinimumOrder()}
         {this.renderModalErrorBalance()}
         {this.renderModalSkuStatusConfirmation()}
+        {this.renderWarningCheckoutIsExpired()}
+        {this.renderWarningMinimumQty()}
+        {this.renderErrorResponse()}
       </View>
     );
   }
