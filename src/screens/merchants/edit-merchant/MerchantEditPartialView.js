@@ -46,6 +46,7 @@ class MerchantEditPartialView extends Component {
       urbanId: this.props.merchant.dataMerchantVolatile.urbanId,
       zipCode: this.props.merchant.dataMerchantVolatile.zipCode,
       urban: this.props.merchant.dataMerchantVolatile.urban,
+      warehouse: true,
       /** for merchant completeness information */
       largeArea: this.props.merchant.dataMerchantVolatile.largeArea,
       topSellingBrand: this.props.merchant.dataMerchantVolatile.topSellingBrand,
@@ -141,6 +142,10 @@ class MerchantEditPartialView extends Component {
           });
         }
       }
+    }
+
+    if (prevProps.merchant.dataMerchantVolatile.warehouse !== this.props.merchant.dataMerchantVolatile.warehouse){
+      this.setState({warehouse: false})
     }
   }
   /** === DID UNMOUNT */
@@ -250,7 +255,8 @@ class MerchantEditPartialView extends Component {
           this.props.global.latitude ===
             this.props.merchant.dataGetMerchantDetail.latitude &&
           this.state.address === data.address &&
-          this.state.noteAddress === data.noteAddress
+          this.state.noteAddress === data.noteAddress &&
+          this.state.warehouse
         );
       default:
         break;
