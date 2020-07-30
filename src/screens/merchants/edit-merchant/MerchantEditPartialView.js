@@ -67,6 +67,15 @@ class MerchantEditPartialView extends Component {
       latitude: this.props.merchant.dataMerchantVolatile.latitude,
       longitude: this.props.merchant.dataMerchantVolatile.longitude
     });
+    this.props.getUrbanIdProcess({
+      province: this.props.merchant.dataMerchantVolatile.province ,
+      city: this.props.merchant.dataMerchantVolatile.city,
+      district: this.props.merchant.dataMerchantVolatile.district,
+      urban: this.props.merchant.dataMerchantVolatile.urban
+    })
+    this.props.merchantGetWarehouseProcess(
+      this.props.merchant.dataMerchantVolatile.urbanId
+    );
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
@@ -329,48 +338,7 @@ class MerchantEditPartialView extends Component {
           refresh={this.state.refreshLocation}
           openMaps={() => this.goToMaps()}
         />
-        <DropdownType1
-          disabled={true}
-          title={'Provinsi'}
-          placeholder={this.props.merchant.dataMerchantVolatile.province}
-          selectedDropdownText={
-            this.props.global.dataLocationVolatile.provinceName
-          }
-        />
-        <DropdownType1
-          disabled={true}
-          title={'Kota'}
-          placeholder={this.props.merchant.dataMerchantVolatile.city}
-          selectedDropdownText={this.props.global.dataLocationVolatile.cityName}
-        />
-        <DropdownType1
-          disabled={true}
-          title={'Kecamatan'}
-          placeholder={this.props.merchant.dataMerchantVolatile.district}
-          selectedDropdownText={
-            this.props.global.dataLocationVolatile.districtName
-          }
-          />
-        <DropdownType1
-        disabled={true}
-          title={'Kelurahan'}
-          placeholder={this.props.merchant.dataMerchantVolatile.urban}
-          selectedDropdownText={
-            this.props.global.dataLocationVolatile.urbanName
-          }
-          />
-        <InputType4
-          title={'Kode Pos'}
-          value={this.state.zipCode}
-          placeholder={this.state.zipCode}
-          keyboardType={'numeric'}
-          text={value => this.setState({ zipCode: value })}
-          error={false}
-          errorText={''}
-          marginBottom={16}
-          editable={false}
-        />
-
+        
         <InputType2
           title={'Detail Alamat'}
           value={this.state.address}
@@ -391,7 +359,7 @@ class MerchantEditPartialView extends Component {
         />
         <DropdownType2
           title={'Warehouse'}
-          placeholder={this.props.merchant.dataMerchantVolatile.warehouse}
+          placeholder={this.props.merchant.dataMerchantVolatile.warehouse === null ? 'Pilih Warehouse' : this.props.merchant.dataMerchantVolatile.warehouse}
           selectedDropdownText={
             this.props.merchant.dataMerchantVolatile.warehouse
           }
