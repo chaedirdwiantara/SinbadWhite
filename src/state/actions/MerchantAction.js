@@ -281,3 +281,23 @@ export function merchantGetStoreStatusSuccess(data){
 export function merchantGetStoreStatusFailed(data){
   return { type: types.MERCHANT_STORE_STATUS_FAILED, payload: data }
 }
+/**
+ * ===========================================
+ * GET WAREHOSUE
+ * ===========================================
+ */
+export function merchantGetWarehouseProcess(data){
+  return { type: types.MERCHANT_GET_WAREHOUSE_PROCESS, payload: data}
+}
+export function merchantGetWarehouseSuccess(data){
+  if (data.result === 'Ok'){
+    return {
+      type: types.MERCHANT_GET_WAREHOUSE_SUCCESS,
+      payload: data
+    }
+  }
+  return { type: types.MERCHANT_GET_WAREHOUSE_FAILED, payload: data}
+}
+export function merchantGetWarehouseFailed(data){
+  return { type: types.MERCHANT_GET_WAREHOUSE_FAILED, payload: data}
+}

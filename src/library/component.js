@@ -24,8 +24,10 @@ import InputType3 from '../components/input/InputType3'
 import InputType4 from '../components/input/inputType4';
 /** INPUT MAPS (PIN POINT) */
 import InputMapsType1 from '../components/input/InputMapsType1';
+import InputMapsType2 from '../components/input/InputMapsType2'
 /** DROPDOWN */
 import DropdownType1 from '../components/input/DropdownType1';
+import DropdownType2 from '../components/input/DropdownType2';
 /** BUTTON */
 import OrderButton from '../components/OrderButton'
 import ButtonFloatType1 from '../components/button/ButtonFloatType1'
@@ -83,6 +85,8 @@ import TagListType2 from '../components/tag/TagListType2'
 import DatePickerSpinner from '../components/DatePickerSpinner'
 /** SELECTED MERCHANT */
 import SelectedMerchantName from '../components/SelectedMerchantName'
+/** ERROR BOUNDARY */
+import ErrorBoundary from '../components/error/ErrorBoundary'
 
 export {
   CartGlobal,
@@ -109,8 +113,10 @@ export {
   InputType4,
   /** INPUT MAPS (PIN POINT) */
   InputMapsType1,
+  InputMapsType2,
   /** DROPDOWN */
   DropdownType1,
+  DropdownType2,
   /** BUTTON */
   OrderButton,
   ButtonFloatType1,
@@ -169,7 +175,9 @@ export {
   /** DATE PICKER SPINNER */
   DatePickerSpinner,
   /** SELECTED MERCHANT NAME */
-  SelectedMerchantName
+  SelectedMerchantName,
+  /** Error Boundary */
+  ErrorBoundary
 };
 
 /**

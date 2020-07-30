@@ -68,3 +68,7 @@ export const MERCHANT_CHANGED = 'MerchantChanged';
 export const MERCHANT_STORE_STATUS_PROCESS = 'MerchantStoreStatusProcess'
 export const MERCHANT_STORE_STATUS_SUCCESS = 'MerchantStoreStatusSuccess'
 export const MERCHANT_STORE_STATUS_FAILED = 'MerchantStoreStatusFailed'
+/** MERCHANT GET WAREHOUSE */
+export const MERCHANT_GET_WAREHOUSE_PROCESS = 'MerchantGetWarehouseProcess'
+export const MERCHANT_GET_WAREHOUSE_SUCCESS = 'MerchantGetWarehouseSuccess'
+export const MERCHANT_GET_WAREHOUSE_FAILED = 'MerchantGetWarehouseFailed'
