@@ -89,6 +89,13 @@ function getStoreStatus(){
     }
   })
 }
+/** GET WAREHOUSE */
+function getWarehouse(urbanId){
+  return ApiRest({
+    path: `warehouses?supplierId=${parseInt(GlobalMethod.userSupplierMapping())}&urbanId=${parseInt(urbanId)}`,
+    method: 'GET'
+  })
+}
 
 export const MerchantMethod = {
   getMerchant,
@@ -101,7 +108,8 @@ export const MerchantMethod = {
   getLogAllActivity,
   getLogPerActivity,
   getNoOrderReason,
-  getStoreStatus
+  getStoreStatus,
+  getWarehouse
 };
 
 /**

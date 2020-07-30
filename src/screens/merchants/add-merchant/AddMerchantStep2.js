@@ -33,13 +33,7 @@ class AddMerchantStep2 extends Component {
       errorTaxNumber: false,
       openErrorAddMerchant: false,
       addStoreProcess: false,
-      /** for maps refresh */
-      refreshLocation: false,
       /** supplier */
-      supplierId:
-        this.props.user.userSuppliers.length === 1
-          ? this.props.user.userSuppliers[0].supplier.id
-          : '',
       supplierName:
         this.props.user.userSuppliers.length === 1
           ? this.props.user.userSuppliers[0].supplier.name
@@ -48,9 +42,7 @@ class AddMerchantStep2 extends Component {
       fullName: this.props.merchant.dataMerchantVolatile.fullName,
       name: this.props.merchant.dataMerchantVolatile.name,
       idNo: this.props.merchant.dataMerchantVolatile.idNo,
-      taxNo: this.props.merchant.dataMerchantVolatile.taxNo,
-      address: this.props.merchant.dataMerchantVolatile.address,
-      noteAddress: this.props.merchant.dataMerchantVolatile.noteAddress
+      taxNo: this.props.merchant.dataMerchantVolatile.taxNo
     };
   }
   /**
@@ -58,107 +50,20 @@ class AddMerchantStep2 extends Component {
    * FUNCTIONAL
    * =====================
    */
-  /** DID UPDATE */
-  componentDidUpdate(prevProps) {
-    /** IF ADD MERCHANT SUCCESS */
-    if (
-      prevProps.merchant.dataAddMerchant !== this.props.merchant.dataAddMerchant
-    ) {
-      if (this.props.merchant.dataAddMerchant !== null) {
-        switch (this.props.global.pageAddMerchantFrom) {
-          case 'MerchantView':
-            this.props.merchantGetReset();
-            this.props.merchantGetProcess({
-              type: 'direct',
-              page: 0,
-              loading: true,
-              portfolioId: '',
-              search: ''
-            });
-            break;
-          case 'JourneyView':
-            this.props.journeyPlanGetReset();
-            this.props.journeyPlanGetProcess({ page: 0, loading: true });
-            this.props.getJourneyPlanReportProcess(
-              this.props.user.userSuppliers.map(item => item.supplierId)
-            );
-            break;
-
-          default:
-            break;
-        }
-        NavigationService.navigate(this.props.global.pageAddMerchantFrom);
-      }
-    }
-    /** IF ERROR ADD MERCHANT */
-    if (
-      prevProps.merchant.errorAddMerchant !==
-      this.props.merchant.errorAddMerchant
-    ) {
-      if (this.props.merchant.errorAddMerchant !== null) {
-        this.setState({ openErrorAddMerchant: true });
-      }
-    }
-    /** UPDATE LONGLAT */
-    if (
-      prevProps.global.longitude !== this.props.global.longitude ||
-      prevProps.global.latitude !== this.props.global.latitude
-    ) {
-      this.setState({ refreshLocation: true });
-      setTimeout(() => {
-        this.setState({ refreshLocation: false });
-      }, 100);
-    }
-  }
   /** SEND DATA ADD MERCHANT */
-  finalStep() {
+  nextStep() {
     this.setState({ addStoreProcess: true });
     Keyboard.dismiss();
     this.props.saveVolatileDataMerchant({
       fullName: this.state.fullName,
       name: this.state.name,
       idNo: this.state.idNo,
-      taxNo: this.state.taxNo,
-      longitude: this.props.global.longitude,
-      latitude: this.props.global.latitude,
-      address: this.state.address,
-      noteAddress: this.state.noteAddress,
-      vehicleAccessibilityAmount: this.state.vehicleAccessibilityAmount,
-      urbanId: this.props.global.dataGetUrbanId[0].id
+      taxNo: this.state.taxNo
     });
     setTimeout(() => {
       this.setState({ addStoreProcess: false });
-      const data = this.props.merchant.dataMerchantVolatile;
-      this.props.merchantAddProcess({
-        storeId: data.storeId,
-        externalId: data.externalId,
-        name: data.name,
-        address: data.address,
-        longitude: data.longitude,
-        latitude: data.latitude,
-        noteAddress: data.noteAddress,
-        urbanId: data.urbanId,
-        status: 'active',
-        user: {
-          fullName: data.fullName,
-          idNo: data.idNo,
-          taxNo: data.taxNo,
-          phone: data.phone,
-          status: 'active',
-          roles: [1]
-        },
-        supplier: {
-          supplierId: this.state.supplierId
-        }
-      });
+      NavigationService.navigate('AddMerchantStep3')
     }, 100);
-  }
-  /** GO TO DROPDOWN LIST */
-  goToDropdown(data) {
-    NavigationService.navigate('ListAndSearchType1', {
-      placeholder: data.placeholder,
-      type: data.type
-    });
   }
   /** disable button */
   buttonDisable() {
@@ -168,16 +73,8 @@ class AddMerchantStep2 extends Component {
       this.state.idNo === null ||
       this.state.taxNo === null ||
       this.state.errorIdNumber ||
-      this.state.errorTaxNumber ||
-      this.state.address === null ||
-      this.props.global.longitude === '' ||
-      this.props.global.latitude === '' ||
-      this.props.global.dataGetUrbanId === null
+      this.state.errorTaxNumber
     );
-  }
-  /** GO TO MAPS */
-  goToMaps() {
-    NavigationService.navigate('MapsView');
   }
   /** === CHECK ID NUMBER FORMAT === */
   checkIdNoFormat(idNumber) {
@@ -207,7 +104,7 @@ class AddMerchantStep2 extends Component {
     return (
       <View style={{ paddingTop: 20 }}>
         <ProgressBarType1
-          totalStep={2}
+          totalStep={4}
           currentStep={2}
           title={'Langkah melengkapi profil'}
         />
@@ -300,53 +197,6 @@ class AddMerchantStep2 extends Component {
       />
     );
   }
-  /** === LONG LAT MAPS === */
-  renderMaps() {
-    return (
-      <InputMapsType1
-        change={!this.props.merchant.dataMerchantDisabledField.longLat}
-        title={'*Koordinat Lokasi'}
-        urbanId={this.props.global.dataGetUrbanId}
-        selectedMapLong={this.props.global.longitude}
-        selectedMapLat={this.props.global.latitude}
-        refresh={this.state.refreshLongLat}
-        marginBottom={50}
-        openMaps={() => this.goToMaps()}
-      />
-    );
-  }
-  /** === MERCHANT ADDRESS === */
-  renderAddress() {
-    return (
-      <InputType2
-        editable={!this.props.merchant.dataMerchantDisabledField.address}
-        title={'*Detail Alamat'}
-        value={this.state.address}
-        placeholder={'Contoh : Jl. Kemang Raya No.58, RT.8/RW…'}
-        keyboardType={'default'}
-        text={address =>
-          this.setState({ address: address === '' ? null : address })
-        }
-        error={false}
-        errorText={''}
-      />
-    );
-  }
-  /** === MERCHANT NOTE ADDRESS === */
-  renderNoteAddress() {
-    return (
-      <InputType2
-        editable={!this.props.merchant.dataMerchantDisabledField.noteAddress}
-        title={'Catatan Alamat'}
-        value={this.state.noteAddress}
-        placeholder={'Contoh : Masuk Gang arjuna depan toko cilok'}
-        keyboardType={'default'}
-        text={noteAddress => this.setState({ noteAddress })}
-        error={false}
-        errorText={''}
-      />
-    );
-  }
   /** main content */
   renderContent() {
     return (
@@ -356,9 +206,6 @@ class AddMerchantStep2 extends Component {
         {this.renderSupplier()}
         {this.renderIdNo()}
         {this.renderTaxId()}
-        {this.renderMaps()}
-        {this.renderAddress()}
-        {this.renderNoteAddress()}
         <View style={{ paddingBottom: 50 }} />
       </View>
     );
@@ -377,7 +224,7 @@ class AddMerchantStep2 extends Component {
           this.props.merchant.loadingAddMerchant || this.state.addStoreProcess
         }
         borderRadius={4}
-        onPress={() => this.finalStep()}
+        onPress={() => this.nextStep()}
       />
     );
   }
