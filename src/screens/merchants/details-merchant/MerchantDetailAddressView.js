@@ -96,7 +96,42 @@ class MerchantDetailAddressView extends Component {
             refresh={this.state.refreshLocation}
           />
           <InputType4
-            title={'Alamat'}
+            title={'Provinsi'}
+            editable={false}
+            value={this.props.merchant.dataMerchantVolatile.province}
+            placeholder={'-'}
+            marginBottom={16}
+          />
+          <InputType4
+            title={'Kota'}
+            editable={false}
+            value={this.props.merchant.dataMerchantVolatile.city}
+            placeholder={'-'}
+            marginBottom={16}
+          />
+          <InputType4
+            title={'Kecamatan'}
+            editable={false}
+            value={this.props.merchant.dataMerchantVolatile.district}
+            placeholder={'-'}
+            marginBottom={16}
+          />
+          <InputType4
+            title={'Kelurahan'}
+            editable={false}
+            value={this.props.merchant.dataMerchantVolatile.urban}
+            placeholder={'-'}
+            marginBottom={16}
+          />
+          <InputType4
+            title={'Kodepos'}
+            editable={false}
+            value={this.props.merchant.dataMerchantVolatile.zipCode}
+            placeholder={'-'}
+            marginBottom={16}
+          />
+          <InputType4
+            title={'Detail Alamat'}
             editable={false}
             value={this.props.merchant.dataMerchantVolatile.address}
             placeholder={'-'}
@@ -109,11 +144,11 @@ class MerchantDetailAddressView extends Component {
             placeholder={'-'}
             marginBottom={16}
           />
-          <InputType4
+          <InputType2
             title={'Warehouse'}
             editable={false}
             value={this.props.merchant.dataMerchantVolatile.warehouse}
-            placeholder={'-'}
+            placeholder={'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'}
             marginBottom={16}
           />
         </View>
