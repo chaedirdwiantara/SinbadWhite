@@ -113,7 +113,7 @@ class AddMerchantStep4 extends Component {
         typeId: data.typeId
       },
       group: {
-        groupId: data.groupdId
+        groupId: data.groupId
       },
       cluster: {
         clusterId: data.clusterId
