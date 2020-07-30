@@ -12,9 +12,10 @@ import {
   connect
 } from '../../../library/thirdPartyPackage';
 import {
-  InputMapsType1,
+  InputMapsType2,
   InputType2,
-  InputType4
+  InputType4,
+  DropdownType2
 } from '../../../library/component';
 import { Fonts } from '../../../helpers';
 import { Color } from '../../../config';
@@ -88,13 +89,13 @@ class MerchantDetailAddressView extends Component {
     return (
       <ScrollView>
         <View style={{ paddingTop: 16, paddingBottom: 50 }}>
-          <InputMapsType1
+          <InputMapsType2
             title={'Koordinat Lokasi'}
             selectedMapLong={this.props.merchant.dataMerchantVolatile.longitude}
             selectedMapLat={this.props.merchant.dataMerchantVolatile.latitude}
             refresh={this.state.refreshLocation}
           />
-          <InputType4
+          {/* <InputType4
             title={'Provinsi'}
             editable={false}
             value={this.props.merchant.dataMerchantVolatile.province}
@@ -128,18 +129,27 @@ class MerchantDetailAddressView extends Component {
             value={this.props.merchant.dataMerchantVolatile.zipCode}
             placeholder={'-'}
             marginBottom={16}
-          />
-          <InputType2
+          /> */}
+          <InputType4
             title={'Alamat'}
             editable={false}
             value={this.props.merchant.dataMerchantVolatile.address}
             placeholder={'-'}
+            marginBottom={16}
           />
-          <InputType2
+          <InputType4
             title={'Catatan Alamat'}
             editable={false}
             value={this.props.merchant.dataMerchantVolatile.noteAddress}
             placeholder={'-'}
+            marginBottom={16}
+          />
+          <InputType4
+            title={'Warehouse'}
+            editable={false}
+            value={this.props.merchant.dataMerchantVolatile.warehouse}
+            placeholder={'-'}
+            marginBottom={16}
           />
         </View>
       </ScrollView>
