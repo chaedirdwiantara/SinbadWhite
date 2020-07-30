@@ -399,9 +399,10 @@ renderButtonForPayment(item) {
         />
       </View>
     ) : (
-        this.renderEmpty()
-      );
+      this.renderEmpty()
+    );
   }
+
   /** SKELETON */
   renderSkeleton() {
     return <SkeletonType5 />;
