@@ -1112,7 +1112,7 @@ class OmsCheckoutView extends Component {
       </View>
     ) : (
       <View style={{ flexDirection: 'row', paddingVertical: 15 }}>
-        <Text style={[Fonts.type101, {fontStyle: 'italic', alignSelf:"center"}]}>Pilih Tipe & Metode pembayaran</Text>
+        <Text style={[Fonts.type100, {fontStyle: 'italic', alignSelf:"center"}]}>Pilih Tipe & Metode pembayaran</Text>
       </View>
     );
   }
@@ -1130,8 +1130,8 @@ class OmsCheckoutView extends Component {
             loading
           />
         ) : (
-          <View style={{ paddingVertical: 16 }}>
-            <Text style={Fonts.type101}>Pilih Tipe & Metode pembayaran</Text>
+          <View style={{ flexDirection: 'row', paddingVertical: 15 }}>
+            <Text style={[Fonts.type100, {fontStyle: 'italic', alignSelf:"center"}]}>Pilih Tipe & Metode pembayaran</Text>
           </View>
         )}
       </View>

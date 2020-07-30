@@ -65,10 +65,12 @@ class HistoryDetailView extends Component {
         this.getHistory();
       }
     }
-    if (this.props.oms.dataOmsGetPaymentChannel !== null) {
-      this.setState({
-        paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
-      });
+    if (this.props.oms.dataOmsGetPaymentChannel !== undefined){
+      if (this.props.oms.dataOmsGetPaymentChannel !== null) {
+        this.setState({
+          paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
+        });
+      }
     }
     if (
       prevProps.oms.dataOmsGetTermsConditions !==
@@ -301,47 +303,50 @@ class HistoryDetailView extends Component {
   /** RENDER RINGKASAN PESANAN */
   renderRingkasanPesanan() {
     return (
-      <View style={[GlobalStyle.shadowForBox, { marginBottom: 16 }]}>
-        <View
-          style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
-        >
-          <Text style={Fonts.type48}>Catatan Pesanan</Text>
-        </View>
-        <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-        <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-          {this.renderContentListGlobal('Order Via', this.orderVia())}
-          {this.renderContentListGlobal(
-            'Tanggal Pembelian',
-            moment(
-              new Date(this.props.history.dataDetailHistory.createdAt)
-            ).format('DD MMM YYYY HH:mm:ss')
-          )}
-          {this.renderContentListGlobal(
-            this.props.history.dataDetailHistory.deliveredDate !== null
-              ? 'Tanggal Pengiriman'
-              : 'Estimasi Tanggal Pengiriman',
-            this.props.history.dataDetailHistory.deliveredDate !== null
-              ? moment(
-                  new Date(this.props.history.dataDetailHistory.deliveredDate)
-                ).format('DD MMM YYYY HH:mm:ss')
-              : moment(
-                  new Date(
-                    this.props.history.dataDetailHistory.estDeliveredDate
-                  )
-                ).format('DD MMM YYYY HH:mm:ss')
-          )}
-          {this.renderContentListGlobal(
-            this.props.history.dataDetailHistory.dueDate !== null
-              ? 'Jatuh Tempo'
-              : 'Estimasi Jatuh Tempo',
-            this.props.history.dataDetailHistory.dueDate !== null
-              ? moment(
-                  new Date(this.props.history.dataDetailHistory.dueDate)
-                ).format('DD MMM YYYY HH:mm:ss')
-              : moment(
-                  new Date(this.props.history.dataDetailHistory.estDueDate)
-                ).format('DD MMM YYYY HH:mm:ss')
-          )}
+      <View>
+        {/* <View style={GlobalStyle.boxPadding} /> */}
+        <View style={GlobalStyle.shadowForBox}>
+          <View
+            style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
+          >
+            <Text style={Fonts.type48}>Catatan Pesanan</Text>
+          </View>
+          <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
+          <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+            {this.renderContentListGlobal('Order Via', this.orderVia())}
+            {this.renderContentListGlobal(
+              'Tanggal Pembelian',
+              moment(
+                new Date(this.props.history.dataDetailHistory.createdAt)
+              ).format('DD MMM YYYY HH:mm:ss')
+            )}
+            {this.renderContentListGlobal(
+              this.props.history.dataDetailHistory.deliveredDate !== null
+                ? 'Tanggal Pengiriman'
+                : 'Estimasi Tanggal Pengiriman',
+              this.props.history.dataDetailHistory.deliveredDate !== null
+                ? moment(
+                    new Date(this.props.history.dataDetailHistory.deliveredDate)
+                  ).format('DD MMM YYYY HH:mm:ss')
+                : moment(
+                    new Date(
+                      this.props.history.dataDetailHistory.estDeliveredDate
+                    )
+                  ).format('DD MMM YYYY HH:mm:ss')
+            )}
+            {this.renderContentListGlobal(
+              this.props.history.dataDetailHistory.dueDate !== null
+                ? 'Jatuh Tempo'
+                : 'Estimasi Jatuh Tempo',
+              this.props.history.dataDetailHistory.dueDate !== null
+                ? moment(
+                    new Date(this.props.history.dataDetailHistory.dueDate)
+                  ).format('DD MMM YYYY HH:mm:ss')
+                : moment(
+                    new Date(this.props.history.dataDetailHistory.estDueDate)
+                  ).format('DD MMM YYYY HH:mm:ss')
+            )}
+          </View>
         </View>
       </View>
     );
@@ -367,50 +372,59 @@ class HistoryDetailView extends Component {
   /** RENDER PRODUCT LIST */
   renderProductList() {
     return (
-      <View style={[GlobalStyle.shadowForBox, { marginBottom: 16 }]}>
-        <View
-          style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
-        >
-          <Text style={Fonts.type48}>Daftar Produk</Text>
+      <View>
+        <View style={GlobalStyle.boxPadding} />
+        <View style={GlobalStyle.shadowForBox}>
+          <View
+            style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
+          >
+            <Text style={Fonts.type48}>Daftar Produk</Text>
+          </View>
+          <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
+          <ProductListType2
+            onRef={ref => (this.parentFunction = ref)}
+            parentFunction={this.parentFunction.bind(this)}
+            status={this.props.history.dataDetailHistory.status}
+            data={this.props.history.dataDetailHistory.orderBrands}
+          />
         </View>
-        <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-        <ProductListType2
-          data={this.props.history.dataDetailHistory.orderBrands}
-        />
       </View>
     );
   }
   /** RENDER DELIVERY DETAIL */
   renderDeliveryDetail() {
     return (
-      <View style={[GlobalStyle.shadowForBox, { marginBottom: 16 }]}>
-        <View
-          style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
-        >
-          <Text style={Fonts.type48}>Detail Pengiriman</Text>
-        </View>
-        <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-        <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-          {this.renderContentListGlobal('Kurir Pengiriman', 'Self Delivery')}
+      <View>
+        <View style={GlobalStyle.boxPadding} />
+        <View style={GlobalStyle.shadowForBox}>
           <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: 8
-            }}
+            style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
           >
-            <View style={{ flex: 1 }}>
-              <Text style={Fonts.type17}>Alamat Pengiriman</Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Address
-                position={'right'}
-                font={Fonts.type17}
-                address={
-                  this.props.history.dataDetailHistory.order.store.address
-                }
-                urban={this.props.history.dataDetailHistory.order.store.urban}
-              />
+            <Text style={Fonts.type48}>Detail Pengiriman</Text>
+          </View>
+          <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
+          <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+            {this.renderContentListGlobal('Kurir Pengiriman', 'Self Delivery')}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 8
+              }}
+            >
+              <View style={{ flex: 1 }}>
+                <Text style={Fonts.type17}>Alamat Pengiriman</Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <Address
+                  position={'right'}
+                  font={Fonts.type17}
+                  address={
+                    this.props.history.dataDetailHistory.order.store.address
+                  }
+                  urban={this.props.history.dataDetailHistory.order.store.urban}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -643,11 +657,11 @@ renderButtonChangePayment() {
           ) : (
             <View />
           )}
-           {this.state.section === 'payment' ? (
+           {/* {this.state.section === 'payment' ? (
             this.renderSelectPaymentMethod()
           ) : (
             <View />
-          )}
+          )} */}
           <View style={{ paddingBottom: 50 }} />
         </ScrollView>
       </View>
@@ -794,7 +808,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ history, user, merchant }) => {
+const mapStateToProps = ({ oms, history, user, merchant }) => {
   return { oms, history, user, merchant };
 };
 
