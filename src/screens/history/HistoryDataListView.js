@@ -289,7 +289,7 @@ class HistoryDataListView extends Component {
         {item.statusPayment !== 'paid'
           ? item.statusPayment !== 'payment_failed' &&
             // item.billing.billingStatus !== 'expired' &&
-            item.billing &&
+            item.billing && item.billing.billingStatus !== 'paid' &&
             item.billing.expiredPaymentTime &&
             item.paymentChannel &&
             item.paymentChannel.id === 2
@@ -399,9 +399,10 @@ renderButtonForPayment(item) {
         />
       </View>
     ) : (
-        this.renderEmpty()
-      );
+      this.renderEmpty()
+    );
   }
+
   /** SKELETON */
   renderSkeleton() {
     return <SkeletonType5 />;
