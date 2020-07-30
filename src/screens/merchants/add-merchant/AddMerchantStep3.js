@@ -92,21 +92,21 @@ class AddMerchantStep3 extends Component {
             warehouse:
               'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
           });
-            this.setState({
-              warehouseTitle: '*Warehouse',
-              disabledAction: true,
-              warehouseFound: 0
-            });
+          this.setState({
+            warehouseTitle: 'Warehouse',
+            disabledAction: true,
+            warehouseFound: 0
+          });
         } else if (warehouse.total === 1) {
           this.props.saveVolatileDataMerchant({
             warehouse: warehouse.data[0].name,
             warehouseId: warehouse.data[0].id
           });
-            this.setState({
-              warehouseTitle: '*Warehouse',
-              disabledAction: true,
-              warehouseFound: 1
-            });
+          this.setState({
+            warehouseTitle: '*Warehouse',
+            disabledAction: true,
+            warehouseFound: 1
+          });
         } else if (warehouse.total > 1) {
           this.props.saveVolatileDataMerchant({
             warehouse: null

@@ -59,19 +59,34 @@ function getListAndSearch(data) {
       }&`;
       break;
     case 'warehouse':
-      listAndSearchApi = `warehouses?supplierIds=${JSON.stringify(userSupplierMapping())}&urbanId=${parseInt(stateData.global.dataGetUrbanId[0].id)}&`
+      listAndSearchApi = `warehouses?supplierIds=${JSON.stringify(
+        userSupplierMapping()
+      )}&urbanId=${parseInt(
+        stateData.global.dataGetUrbanId !== null
+          ? stateData.global.dataGetUrbanId[0].id
+          : stateData.merchant.dataMerchantVolatile.urbanId,
+        10
+      )}&`;
       break;
     case 'storeType':
-      listAndSearchApi = `types?supplierIds=${JSON.stringify(userSupplierMapping())}&`;
+      listAndSearchApi = `types?supplierIds=${JSON.stringify(
+        userSupplierMapping()
+      )}&`;
       break;
     case 'storeGroup':
-      listAndSearchApi = `groups?supplierIds=${JSON.stringify(userSupplierMapping())}&`
+      listAndSearchApi = `groups?supplierIds=${JSON.stringify(
+        userSupplierMapping()
+      )}&`;
       break;
     case 'storeCluster':
-      listAndSearchApi = `clusters?supplierIds=${JSON.stringify(userSupplierMapping())}&`
+      listAndSearchApi = `clusters?supplierIds=${JSON.stringify(
+        userSupplierMapping()
+      )}&`;
       break;
     case 'storeChannel':
-      listAndSearchApi = `channels?supplierIds=${JSON.stringify(userSupplierMapping())}&`
+      listAndSearchApi = `channels?supplierIds=${JSON.stringify(
+        userSupplierMapping()
+      )}&`;
       break;
     default:
       break;
@@ -160,15 +175,14 @@ export const GlobalMethod = {
 };
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Remove unused function
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Remove unused function
+ *
+ */

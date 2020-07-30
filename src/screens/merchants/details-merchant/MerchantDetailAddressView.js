@@ -144,13 +144,25 @@ class MerchantDetailAddressView extends Component {
             placeholder={'-'}
             marginBottom={16}
           />
-          <InputType2
-            title={'Warehouse'}
-            editable={false}
-            value={this.props.merchant.dataMerchantVolatile.warehouse}
-            placeholder={'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'}
-            marginBottom={16}
-          />
+          {this.props.merchant.dataMerchantVolatile.warehouseId !== null ? (
+            <InputType4
+              title={'Warehouse'}
+              editable={false}
+              value={this.props.merchant.dataMerchantVolatile.warehouse}
+              placeholder={''}
+              marginBottom={16}
+            />
+          ) : (
+            <InputType2
+              title={'Warehouse'}
+              editable={false}
+              value={this.props.merchant.dataMerchantVolatile.warehouse}
+              placeholder={
+                'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
+              }
+              marginBottom={16}
+            />
+          )}
         </View>
       </ScrollView>
     );

@@ -53,8 +53,8 @@ class MerchantEditPartialView extends Component {
       mostWantedBrand: this.props.merchant.dataMerchantVolatile.mostWantedBrand,
       vehicleAccessibilityAmount: this.props.merchant.dataMerchantVolatile
         .vehicleAccessibilityAmount,
-        /** for warehouse check */
-      warehouseFound: null,
+      /** for warehouse check */
+      warehouseFound: null
     };
   }
   /**
@@ -68,12 +68,12 @@ class MerchantEditPartialView extends Component {
       latitude: this.props.merchant.dataMerchantVolatile.latitude,
       longitude: this.props.merchant.dataMerchantVolatile.longitude
     });
-    this.props.getUrbanIdProcess({
-      province: this.props.merchant.dataMerchantVolatile.province ,
-      city: this.props.merchant.dataMerchantVolatile.city,
-      district: this.props.merchant.dataMerchantVolatile.district,
-      urban: this.props.merchant.dataMerchantVolatile.urban
-    })
+    // this.props.getUrbanIdProcess({
+    //   province: this.props.merchant.dataMerchantVolatile.province,
+    //   city: this.props.merchant.dataMerchantVolatile.city,
+    //   district: this.props.merchant.dataMerchantVolatile.district,
+    //   urban: this.props.merchant.dataMerchantVolatile.urban
+    // });
     this.props.merchantGetWarehouseProcess(
       this.props.merchant.dataMerchantVolatile.urbanId
     );
@@ -91,7 +91,7 @@ class MerchantEditPartialView extends Component {
       }, 100);
     }
 
-    /** CHECK URBAN ID */
+    /** GET WAREHOUSE BY URBAN ID */
     if (prevProps.global.dataGetUrbanId !== this.props.global.dataGetUrbanId) {
       /** GET WAREHOUSE */
 
@@ -106,47 +106,69 @@ class MerchantEditPartialView extends Component {
         }, 100);
       }
     }
-
     /** CHECK WAREHOUSE */
     if (
       prevProps.merchant.dataGetWarehouse !==
       this.props.merchant.dataGetWarehouse
     ) {
       if (this.props.merchant.dataGetWarehouse !== null) {
-        const warehouse = this.props.merchant.dataGetWarehouse;
-        if (warehouse.total === 0) {
+        if (this.props.merchant.dataGetWarehouse.total === 0) {
           this.props.saveVolatileDataMerchant({
-            warehouse:
-              'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
+            warehouse: null,
+            warehouseId: null
           });
-            this.setState({
-              disabledAction: true,
-              warehouseFound: 0
-            });
-        } else if (warehouse.total === 1) {
+        } else if (this.props.merchant.dataGetWarehouse.total === 1) {
           this.props.saveVolatileDataMerchant({
-            warehouse: warehouse.data[0].name,
-            warehouseId: warehouse.data[0].id
-          });
-            this.setState({
-              disabledAction: true,
-              warehouseFound: 1
-            });
-        } else if (warehouse.total > 1) {
-          this.props.saveVolatileDataMerchant({
-            warehouse: null
-          });
-          this.setState({
-            disabledDropdown: false,
-            disabledAction: false
+            warehouse: this.props.merchant.dataGetWarehouse.data[0].name,
+            warehouseId: this.props.merchant.dataGetWarehouse.data[0].id
           });
         }
       }
     }
 
-    if (prevProps.merchant.dataMerchantVolatile.warehouse !== this.props.merchant.dataMerchantVolatile.warehouse){
-      this.setState({warehouse: false})
-    }
+    /** CHECK WAREHOUSE */
+    // if (
+    //   prevProps.merchant.dataGetWarehouse !==
+    //   this.props.merchant.dataGetWarehouse
+    // ) {
+    //   if (this.props.merchant.dataGetWarehouse !== null) {
+    //     const warehouse = this.props.merchant.dataGetWarehouse;
+    //     if (warehouse.total === 0) {
+    //       this.props.saveVolatileDataMerchant({
+    //         warehouse:
+    //           'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
+    //       });
+    //       this.setState({
+    //         disabledAction: true,
+    //         warehouseFound: 0
+    //       });
+    //     } else if (warehouse.total === 1) {
+    //       this.props.saveVolatileDataMerchant({
+    //         warehouse: warehouse.data[0].name,
+    //         warehouseId: warehouse.data[0].id
+    //       });
+    //       this.setState({
+    //         disabledAction: true,
+    //         warehouseFound: 1
+    //       });
+    //     } else if (warehouse.total > 1) {
+    //       this.props.saveVolatileDataMerchant({
+    //         warehouse: null
+    //       });
+    //       this.setState({
+    //         disabledDropdown: false,
+    //         disabledAction: false
+    //       });
+    //     }
+    //   }
+    // }
+
+    // if (
+    //   prevProps.merchant.dataMerchantVolatile.warehouse !==
+    //   this.props.merchant.dataMerchantVolatile.warehouse
+    // ) {
+    //   this.setState({ warehouse: false });
+    // }
   }
   /** === DID UNMOUNT */
   componentWillUnmount() {
@@ -226,6 +248,26 @@ class MerchantEditPartialView extends Component {
         break;
     }
   }
+  /** === CHECK BUTTON FOR URBAN WAREHOUSE === */
+  checkButtonForUrbanWarehouse() {
+    if (this.props.merchant.dataGetWarehouse.total === 0) {
+      return (
+        this.props.global.longitude ===
+          this.props.merchant.dataGetMerchantDetail.longitude &&
+        this.props.global.latitude ===
+          this.props.merchant.dataGetMerchantDetail.latitude
+      );
+    } else {
+      if (this.props.merchant.dataGetMerchantDetail.warehouse) {
+        return (
+          this.props.merchant.dataGetMerchantDetail.warehouse.name ===
+          this.props.merchant.dataMerchantVolatile.warehouse
+        );
+      } else {
+        return this.props.merchant.dataMerchantVolatile.warehouse === null;
+      }
+    }
+  }
   /** === CHECK BUTTON (CHECK BUTTON SAVE DISBALE OR NOT) === */
   checkButton() {
     const data = this.props.merchant.dataMerchantVolatile;
@@ -250,13 +292,9 @@ class MerchantEditPartialView extends Component {
         );
       case 'merchantAddress':
         return (
-          this.props.global.longitude ===
-            this.props.merchant.dataGetMerchantDetail.longitude &&
-          this.props.global.latitude ===
-            this.props.merchant.dataGetMerchantDetail.latitude &&
+          this.checkButtonForUrbanWarehouse() &&
           this.state.address === data.address &&
-          this.state.noteAddress === data.noteAddress &&
-          this.state.warehouse
+          this.state.noteAddress === data.noteAddress
         );
       default:
         break;
@@ -344,7 +382,7 @@ class MerchantEditPartialView extends Component {
           refresh={this.state.refreshLocation}
           openMaps={() => this.goToMaps()}
         />
-        
+
         <InputType2
           title={'Detail Alamat'}
           value={this.state.address}
@@ -364,21 +402,29 @@ class MerchantEditPartialView extends Component {
           errorText={''}
         />
         <DropdownType2
-          title={'Warehouse'}
-          placeholder={this.props.merchant.dataMerchantVolatile.warehouse === null ? 'Pilih Warehouse' : this.props.merchant.dataMerchantVolatile.warehouse}
+          title={
+            this.props.merchant.dataGetWarehouse.total !== 0
+              ? '*Warehouse'
+              : 'Warehouse'
+          }
+          placeholder={
+            this.props.merchant.dataGetWarehouse.total !== 0
+              ? 'Masukan Warehouse'
+              : 'Lokasi toko tidak dalam area jangkauan warehouse tertentu'
+          }
           selectedDropdownText={
             this.props.merchant.dataMerchantVolatile.warehouse
           }
-          disabledDropdown={this.state.disabledDropdown}
-          disabledAction={this.state.disabledAction}
+          disabledDropdown={this.props.merchant.dataGetWarehouse.total <= 1}
+          disabledAction={this.props.merchant.dataGetWarehouse.total <= 1}
           openDropdown={() =>
             this.goToDropdown({
               type: 'warehouse',
-              placeholder: 'Pilih Warehouse'
+              placeholder: 'Cari Warehouse'
             })
           }
           errorText={
-            this.state.warehouseFound === 1
+            this.props.merchant.dataGetWarehouse.total === 1
               ? 'Lokasi toko berada dalam area jangkauan warehouse tertentu dan tidak dapat diubah.'
               : ''
           }
