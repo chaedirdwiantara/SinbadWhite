@@ -92,7 +92,7 @@ function getStoreStatus(){
 /** GET WAREHOUSE */
 function getWarehouse(urbanId){
   return ApiRest({
-    path: `warehouses?supplierId=${parseInt(GlobalMethod.userSupplierMapping())}&urbanId=${parseInt(urbanId)}`,
+    path: `warehouses?supplierIds=${JSON.stringify(GlobalMethod.userSupplierMapping())}&urbanId=${parseInt(urbanId)}`,
     method: 'GET'
   })
 }
