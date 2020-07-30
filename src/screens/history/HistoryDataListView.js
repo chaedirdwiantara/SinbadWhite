@@ -316,11 +316,10 @@ renderButtonForPayment(item) {
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
               <Text style={Fonts.type42}>{item.orderCode}</Text>
-              <Text style={Fonts.type10}>
-                {this.props.section === 'payment'
-                  ? this.renderItemStatusPayment(item)
-                  : this.renderItemStatusOrder(item)}
-              </Text>
+              {this.props.section === 'payment'
+                ? this.renderItemStatusPayment(item)
+                : this.renderItemStatusOrder(item)
+              }
             </View>
             <View style={styles.boxItemContent}>
               {this.props.section === 'payment' ? (
