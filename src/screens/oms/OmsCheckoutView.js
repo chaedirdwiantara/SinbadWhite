@@ -20,7 +20,8 @@ import {
   ButtonSingleSmall,
   Address,
   ModalWarning,
-  ProductListType1
+  ProductListType1,
+  ModalBottomErrorRespons
 } from '../../library/component'
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
@@ -72,6 +73,9 @@ class OmsCheckoutView extends Component {
       modalWarningNotSelectPayment: false,
       modalErrorBalance: false,
       modalErrorPayment: false,
+      modalWarningMinimumQty: false,
+      modalWarningCheckoutIsExpired: false,
+      modalErrorResponse: false,
       openModalErrorGlobal: false,
       orderPerParcel: null,
       makeConfirmOrder: false,
@@ -191,6 +195,33 @@ class OmsCheckoutView extends Component {
           this.setState({
             paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
           });
+        }
+      }
+    }
+
+    if (
+      prevProps.oms.errorOmsConfirmOrder !== this.props.oms.errorOmsConfirmOrder
+    ) {
+      if (this.props.oms.errorOmsConfirmOrder) {
+        if (
+          this.props.oms.errorOmsConfirmOrder.message ===
+          'Your Parcels is less than minimum order'
+        ) {
+          this.setState({ modalWarningMinimumQty: true });
+          setTimeout(() => {
+            this.setState({ modalWarningMinimumQty: false });
+          }, 2000);
+        } else if (
+          this.props.oms.errorOmsConfirmOrder.message ===
+          'Order Status must be checkout'
+        ) {
+          this.setState({ modalWarningCheckoutIsExpired: true });
+          setTimeout(() => {
+            this.setState({ modalWarningCheckoutIsExpired: false });
+            NavigationService.navigate('Home');
+          }, 2000);
+        } else {
+          this.setState({ modalErrorResponse: true });
         }
       }
     }
@@ -639,6 +670,12 @@ class OmsCheckoutView extends Component {
       this.setState({ modalErrorPayment: false });
     }, 2000);
   }
+
+  closeErrorResponse() {
+    this.setState({ modalErrorResponse: false });
+    NavigationService.navigate('Home');
+  }
+
   /** === FOR OPEN MODAL TERM AND REFRENCE ===  */
   checkTerm(selectedPaymentType) {
     // if (selectedPaymentType.paymentType.terms !== null) {
@@ -1250,6 +1287,53 @@ class OmsCheckoutView extends Component {
       </View>
     );
   }
+
+  renderWarningCheckoutIsExpired() {
+    return (
+      <View>
+        {this.state.modalWarningCheckoutIsExpired ? (
+          <ModalWarning
+            open={this.state.modalWarningCheckoutIsExpired}
+            content={
+              'Anda berada terlalu lama di halaman checkout silakan melakukan checkout ulang'
+            }
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+  renderWarningMinimumQty() {
+    return (
+      <View>
+        {this.state.modalWarningMinimumQty ? (
+          <ModalWarning
+            open={this.state.modalWarningMinimumQty}
+            content={'Qty anda blm mencukupi standar pemesanan'}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+  renderErrorResponse() {
+    return (
+      <View>
+        {this.state.modalErrorResponse ? (
+          <ModalBottomErrorRespons
+            open={this.state.modalErrorResponse}
+            onPress={() => this.closeErrorResponse()}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
   /**
    * ===========================================================
    * &&paymentNotAvailable RENDER MODAL ERROR PAYMENT NOT AVAILABLE
@@ -1477,6 +1561,9 @@ class OmsCheckoutView extends Component {
         {this.renderModalBottomErrorMinimumOrder()}
         {this.renderModalErrorBalance()}
         {this.renderModalSkuStatusConfirmation()}
+        {this.renderWarningCheckoutIsExpired()}
+        {this.renderWarningMinimumQty()}
+        {this.renderErrorResponse()}
       </View>
     );
   }
