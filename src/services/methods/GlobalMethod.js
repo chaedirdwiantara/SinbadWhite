@@ -3,7 +3,9 @@ import ApiRestMap from '../apiRestMap';
 import { Store } from '../../state/Store';
 
 function getListAndSearch(data) {
+  
   const stateData = Store.getState();
+  
   /**
    * PROPS
    * data.type =  'vehicleMerchant' / 'hierarchyMerchant' / 'clusterMerchant' / 'typeMerchant' / 'groupMerchant' / 'segmentMerchant'
@@ -59,19 +61,19 @@ function getListAndSearch(data) {
       }&`;
       break;
     case 'warehouse':
-      listAndSearchApi = `warehouses?supplierId=${parseInt(userSupplierMapping())}&urbanId=${parseInt(stateData.global.dataGetUrbanId[0].id)}&`
+      listAndSearchApi = `warehouses?supplierIds=${JSON.stringify(userSupplierMapping())}&urbanId=${parseInt(stateData.global.dataGetUrbanId[0].id)}&`
       break;
     case 'storeType':
-      listAndSearchApi = `types?supplierId=${parseInt(userSupplierMapping())}&`;
+      listAndSearchApi = `types?supplierIds=${JSON.stringify(userSupplierMapping())}&`;
       break;
     case 'storeGroup':
-      listAndSearchApi = `groups?supplierId=${parseInt(userSupplierMapping())}&`
+      listAndSearchApi = `groups?supplierIds=${JSON.stringify(userSupplierMapping())}&`
       break;
     case 'storeCluster':
-      listAndSearchApi = `clusters?supplierId=${parseInt(userSupplierMapping())}&`
+      listAndSearchApi = `clusters?supplierIds=${JSON.stringify(userSupplierMapping())}&`
       break;
     case 'storeChannel':
-      listAndSearchApi = `channels?supplierId=${parseInt(userSupplierMapping())}&`
+      listAndSearchApi = `channels?supplierIds=${JSON.stringify(userSupplierMapping())}&`
       break;
     default:
       break;
@@ -148,6 +150,11 @@ function merchantStoreId() {
   }
   return '';
 }
+/** USER STORE */
+function userStoreId() {
+  const stateData = Store.getState();
+  return stateData.user !== null ? stateData.user.userStores[0].storeId : '';
+}
 
 export const GlobalMethod = {
   getListAndSearch,
@@ -156,7 +163,8 @@ export const GlobalMethod = {
   getVersion,
   merchantStoreUrban,
   merchantStoreId,
-  userSupplierMapping
+  userSupplierMapping,
+  userStoreId
 };
 
 /**

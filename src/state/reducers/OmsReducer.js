@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   loadingOmsGetPayment: false,
   loadingOmsDeleteCartItem: false,
   loadingOmsGetCartItemFromCheckout: false,
+  loadingOmsGetPaymentChannel: false,
   /** data */
   dataOmsGetCartItem: null,
   dataOmsGetCartItemFromCheckout: null,
@@ -19,13 +20,15 @@ const INITIAL_STATE = {
   dataCart: [],
   dataCheckout: [],
   dataCheckBoxlistCart: [],
+  dataOmsGetPaymentChannel: null,
   /** error */
   errorOmsGetCartItem: null,
   errorOmsGetCheckoutItem: null,
   errorOmsConfirmOrder: null,
   errorOmsGetPayment: null,
   errorOmsDeleteCartItem: null,
-  errorOmsGetCartItemFromCheckout: null
+  errorOmsGetCartItemFromCheckout: null,
+  errorOmsGetPaymentChannel: null,
 };
 
 export const oms = createReducer(INITIAL_STATE, {
@@ -43,6 +46,7 @@ export const oms = createReducer(INITIAL_STATE, {
       loadingOmsGetPayment: false,
       loadingOmsDeleteCartItem: false,
       loadingOmsGetCartItemFromCheckout: false,
+      loadingOmsGetPaymentChannel: false,
       /** data */
       dataOmsGetCartItem: null,
       dataOmsGetCartItemFromCheckout: null,
@@ -53,13 +57,15 @@ export const oms = createReducer(INITIAL_STATE, {
       dataCart: [],
       dataCheckout: [],
       dataCheckBoxlistCart: [],
+      dataOmsGetPaymentChannel: null,
       /** error */
       errorOmsGetCartItem: null,
       errorOmsGetCheckoutItem: null,
       errorOmsConfirmOrder: null,
       errorOmsGetPayment: null,
       errorOmsDeleteCartItem: null,
-      errorOmsGetCartItemFromCheckout: null
+      errorOmsGetCartItemFromCheckout: null,
+      errorOmsGetPaymentChannel: null
     };
   },
   [types.OMS_RESET_DATA](state, action) {
@@ -238,6 +244,60 @@ export const oms = createReducer(INITIAL_STATE, {
   },
   /**
    * ==================================
+   * GET PAYMENT CHANNEL
+   * =================================
+   */
+  [types.OMS_GET_PAYMENT_CHANNEL_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetPaymentChannel: true,
+      dataOmsGetPaymentChannel: null,
+      errorOmsGetPaymentChannel: null
+    };
+  },
+  [types.OMS_GET_PAYMENT_CHANNEL_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetPaymentChannel: false,
+      dataOmsGetPaymentChannel: action.payload
+    };
+  },
+  [types.OMS_GET_PAYMENT_CHANNEL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsGetPaymentChannel: false,
+      errorOmsGetPaymentChannel: action.payload
+    };
+  },
+  /**
+   * ==================================
+   * GET TERMS AND CONDITIONS
+   * =================================
+   */
+  [types.OMS_GET_TERMS_CONDITIONS_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetTermsConditions: true,
+      dataOmsGetTermsConditions: null,
+      errorOmsGetTermsConditions: null
+    };
+  },
+  [types.OMS_GET_TERMS_CONDITIONS_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetTermsConditions: false,
+      dataOmsGetTermsConditions: action.payload
+    };
+  },
+  [types.OMS_GET_TERMS_CONDITIONS_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsGetTermsConditions: false,
+      errorOmsGetTermsConditions: action.payload
+    };
+  },
+  /**
+   * ==================================
    * GET CART LIST FROM CHECKOUT
    * =================================
    */
@@ -261,6 +321,39 @@ export const oms = createReducer(INITIAL_STATE, {
       ...state,
       loadingOmsGetCartItemFromCheckout: false,
       errorOmsGetCartItemFromCheckout: action.payload
+    };
+  },
+  /**
+   * ==================================
+   * GET LAST PAYMENT CHANNEL
+   * =================================
+   */
+  [types.OMS_GET_LAST_PAYMENT_CHANNEL_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingLastPaymentChannel: true,
+      dataLastPaymentChannel: null,
+      errorLastPaymentChannel: null
+    };
+  },
+  [types.OMS_GET_LAST_PAYMENT_CHANNEL_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingLastPaymentChannel: false,
+      dataLastPaymentChannel: action.payload
+    };
+  },
+  [types.OMS_GET_LAST_PAYMENT_CHANNEL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingLastPaymentChannel: false,
+      errorLastPaymentChannel: action.payload
+    };
+  },
+  [types.OMS_GET_LAST_PAYMENT_CHANNEL](state, action) {
+    return {
+      ...state,
+      dataLastPaymentChannel: action.payload
     };
   },
   // SEMENTARA
