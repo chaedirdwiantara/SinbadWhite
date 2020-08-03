@@ -5,34 +5,27 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
-  TouchableOpacity,
   TouchableWithoutFeedback,
-  RefreshControl,
+  TouchableOpacity,
   Text
 } from '../../library/reactPackage';
 import {
   bindActionCreators,
-  connect,
   moment,
-  MaterialIcon
+  MaterialIcon,
+  connect
 } from '../../library/thirdPartyPackage';
 import {
   StatusBarRed,
   ProductListType2,
   Address,
   ModalConfirmation,
-  ToastType1,
-  ModalBottomType3,
   LoadingPage
-} from '../../library/component'
-import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
+} from '../../library/component';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
-import CallCS from '../../screens/global/CallCS';
-import HistoryReturnReasonView from './HistoryReturnReasonView';
-import HistoryReturnSkuDetailView from './HistoryReturnSkuDetailView';
-import ButtonSingle from '../../components/button/ButtonSingle';
 import ModalChangePaymentMethod from './ModalChangePaymentMethod';
 import ModalWarning from '../../components/modal/ModalWarning';
 import ModalTAndR from './ModalTAndC';
@@ -44,57 +37,11 @@ class HistoryDetailView extends Component {
     super(props);
     this.state = {
       openModalCS: false,
-      refreshing: false,
-      showToast: false,
-      showToastError: false,
-      toastNotifText: '',
       openModalCancelOrderConfirmation: false,
-      openModalReturnReason: false,
-      openModalReturnDetail: false,
-      selectedReturnReason: null,
-      returnItem: null,
-      openModalDeliveredOrderConfirmation: false,
-      openModalReOrderConfirmation: false,
-      item: null,
-      modalPaymentTypeMethod: false,
-      modalPaymentTypeList: false,
-      selectedPaymentType: [],
-      paymentMethod: null,
       section: this.props.navigation.state.params.section,
-      modalWarningChangePayment: false,
-      tAndRDetail: null,
-      tAndRLoading: false,
-      changePaymentMethod: null,
-      modalTAndR: false,
-      warningChangePayment: null
+      storeId: this.props.navigation.state.params.storeId
     };
   }
-
-  /* ========================
-   * HEADER MODIFY
-   * ========================
-   */
-  static navigationOptions = ({ navigation }) => {
-    const { params } = navigation.state;
-    return {
-      headerTitle:
-        params.section === 'payment' ? 'Detail Tagihan' : 'Detail Pesanan',
-      headerTitleStyle: [
-        Fonts.type35,
-        {
-          textAlign: 'center',
-          flex: 1
-        }
-      ],
-      headerTintColor: masterColor.backButtonWhite,
-      headerStyle: {
-        elevation: 0,
-        backgroundColor: masterColor.mainColor
-      },
-      headerRight: <View />,
-      gesturesEnabled: false
-    };
-  };
   /**
    * =======================
    * FUNCTIONAL
@@ -102,8 +49,6 @@ class HistoryDetailView extends Component {
    */
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
-    /** SUCCESS */
-    /** => if edit success */
     if (
       prevProps.history.dataEditHistory !== this.props.history.dataEditHistory
     ) {
@@ -115,121 +60,20 @@ class HistoryDetailView extends Component {
         this.getHistory();
       }
     }
-    /** => if return success */
-    if (
-      prevProps.history.dataSaveHistoryReturn !==
-      this.props.history.dataSaveHistoryReturn
-    ) {
-      if (this.props.history.dataSaveHistoryReturn !== null) {
-        this.setState({
-          openModalReturnDetail: false,
-          toastNotifText: 'Retur produk berhasil dikirim',
-          showToast: true
-        });
-        setTimeout(() => {
-          this.setState({ showToast: false });
-        }, 3000);
-      }
-    }
-    /** ERROR */
-    /** => if error return */
-    if (
-      prevProps.history.errorSaveHistoryReturn !==
-      this.props.history.errorSaveHistoryReturn
-    ) {
-      if (this.props.history.errorSaveHistoryReturn !== null) {
-        this.setState({
-          openModalReturnDetail: false,
-          toastNotifText: 'Maaf, Retur produk gagal',
-          showToast: true,
-          showToastError: true
-        });
-        setTimeout(() => {
-          this.setState({ showToast: false, showToastError: false });
-        }, 3000);
-      }
-      if (this.props.oms.dataOmsGetPaymentChannel !== null) {
-        this.setState({
-          paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
-        });
-      }
-    }
-
-    if (
-      prevProps.oms.dataOmsGetTermsConditions !==
-      this.props.oms.dataOmsGetTermsConditions
-    ) {
-      if (this.props.oms.dataOmsGetTermsConditions !== null) {
-        this.setState({
-          tAndRDetail: this.props.oms.dataOmsGetTermsConditions.data
-        });
-      }
-    }
-
-    if (
-      prevProps.oms.dataOmsGetTermsConditions !==
-      this.props.oms.dataOmsGetTermsConditions
-    ) {
-      this.setState({ tAndRLoading: false, alreadyFetchTAndR: true });
-      const tAndR = this.props.oms.dataOmsGetTermsConditions;
-      if (tAndR !== null) {
-        if (
-          tAndR.data.paymentChannels == null &&
-          tAndR.data.paymentTypes == null
-        ) {
-          this.renderChangePaymentMethod();
-        } else {
-          this.setState({ modalTAndR: true });
-        }
-      }
-    }
-
-    if (
-      prevProps.history.errorHistoryChangePaymentMethod !==
-      this.props.history.errorHistoryChangePaymentMethod
-    ) {
-      if (this.props.history.errorHistoryChangePaymentMethod !== null) {
-        this.setState({
-          warningChangePayment: this.props.history
-            .errorHistoryChangePaymentMethod.message,
-          modalWarningChangePayment: true
-        });
-        setTimeout(() => {
-          this.setState({ modalWarningChangePayment: false });
-        }, 3000);
-      }
-    }
-
-    // if (prevProps.history.dataDetailHistory !== this.props.history.dataDetailHistory){
-    //   if (this.props.history.dataDetailHistory.billing !== null) {
-    //     if (prevProps.history.dataDetailHistory.billing.expiredPaymentTime !== this.props.history.dataDetailHistory.billing.expiredPaymentTime){
-    //       this.onRefresh()
-    //     }
-    //   }
-    // }
   }
-  /** === ON REFRESH === */
-  onRefresh = () => {
-    this.props.historyGetDetailProcess(this.props.history.dataDetailHistory.id);
-    /** SET PAGE REFRESH */
-    this.setState({ refreshing: true });
-    setTimeout(() => {
-      this.setState({ refreshing: false });
-    }, 10);
-  };
   /** REFRESH LIST HISTORY AFTER EDIT HISTORY STATUS */
   getHistory() {
     this.props.historyGetProcess({
       loading: true,
-      userId: '',
+      userId: this.props.user.id,
+      storeId: this.props.merchant.selectedMerchant.storeId,
       page: 0,
       statusOrder: '',
       statusPayment: '',
       dateGte: '',
       dateLte: '',
       portfolioId: [],
-      search: '',
-      openPaymentMethod: false
+      search: ''
     });
   }
   /** CALLED FROM CHILD */
@@ -237,25 +81,6 @@ class HistoryDetailView extends Component {
     switch (data.type) {
       case 'close':
         this.setState({ openModalCS: false });
-        break;
-      case 'return':
-        this.setState({ openModalReturnReason: true, returnItem: data.data });
-        break;
-      case 'addReturnReason':
-        this.setState({
-          selectedReturnReason: data.data,
-          openModalReturnDetail: true,
-          openModalReturnReason: false
-        });
-        break;
-      case 'createReturn':
-        /** => save data return */
-        this.props.historyReturnSaveProcess({
-          catalogueId: this.state.returnItem.catalogueId,
-          returnReasonId: this.state.selectedReturnReason,
-          orderParcelId: this.props.history.dataDetailHistory.orderId,
-          qty: data.data
-        });
         break;
       default:
         break;
@@ -299,12 +124,12 @@ class HistoryDetailView extends Component {
   goToDetailStatus() {
     NavigationService.navigate('HistoryDetailStatusView');
   }
-  /** CHANGE ORDER STATUS */
-  changeOrderStatus(status) {
+  /** CANCEL ORDER */
+  cancelOrder() {
     this.props.historyEditProcess({
       parcelId: this.props.history.dataDetailHistory.id,
       params: {
-        status
+        status: 'cancel'
       }
     });
   }
@@ -324,85 +149,46 @@ class HistoryDetailView extends Component {
     }
     return '-';
   }
-  /** === RE ORDER === */
-  reOrder() {
-    /** => save to dataCart */
-    this.props.omsReOrderModifyDataCart(this.state.item.orderBrands);
-    this.setState({
-      toastNotifText: 'Produk berhasil ditambahkan ke keranjang',
-      showToast: true
-    });
-    setTimeout(() => {
-      this.setState({ showToast: false });
-    }, 3000);
-  }
   /**
    * ========================
    * RENDER VIEW
    * =======================
    */
-  /** === RENDER BUTTON FOR ORDER === */
-  renderButtonForOrder(item) {
-    switch (item.status) {
-      case 'confirm':
-        return this.renderButtonCancel(item);
-      case 'shipping':
-        return this.renderButtonDelivered(item);
-      case 'done':
-        return this.renderButtonReOrder(item, 'red');
-      default:
-        return <View />;
-    }
+  /** === RENDER VOUCHER LIST ==== */
+  renderVoucherList(data) {
+    return data.map((item, index) => {
+      return (
+        <View key={index}>
+          {this.renderContentListGlobal(
+            item.voucherValue !== null
+              ? item.voucherName
+              : `${item.catalogueName} (${item.voucherQty} Pcs)`,
+            item.voucherValue !== null
+              ? `- ${MoneyFormat(item.voucherValue)}`
+              : 'FREE',
+            true
+          )}
+        </View>
+      );
+    });
   }
-  /** ITEM BUTTON CANCEL */
-  renderButtonCancel(item) {
-    return (
-      <TouchableOpacity
-        style={styles.buttonWhite}
-        onPress={() =>
-          this.setState({
-            openModalCancelOrderConfirmation: true,
-            item
-          })
-        }
-      >
-        <Text style={Fonts.type11}>Batal</Text>
-      </TouchableOpacity>
-    );
-  }
-  /** ITEM BUTTON DELIVER */
-  renderButtonDelivered(item) {
-    return (
-      <TouchableOpacity
-        style={styles.buttonRed}
-        onPress={() =>
-          this.setState({
-            openModalDeliveredOrderConfirmation: true,
-            item
-          })
-        }
-      >
-        <Text style={Fonts.type39}>Diterima</Text>
-      </TouchableOpacity>
-    );
-  }
-  /** ITEM BUTTON RE ORDER */
-  renderButtonReOrder(item, type) {
-    return (
-      <TouchableOpacity
-        style={type === 'red' ? styles.buttonRed : styles.buttonWhite}
-        onPress={() =>
-          this.setState({
-            openModalReOrderConfirmation: true,
-            item
-          })
-        }
-      >
-        <Text style={type === 'red' ? Fonts.type39 : Fonts.type11}>
-          Beli Lagi
-        </Text>
-      </TouchableOpacity>
-    );
+  /** === RENDER PROMO LIST ==== */
+  renderPromoList(data) {
+    return data.map((item, index) => {
+      return (
+        <View key={index}>
+          {this.renderContentListGlobal(
+            item.promoValue !== null
+              ? item.promoName
+              : `${item.catalogueName} (${item.promoQty} Pcs)`,
+            item.promoValue !== null
+              ? `- ${MoneyFormat(item.promoValue)}`
+              : 'FREE',
+            true
+          )}
+        </View>
+      );
+    });
   }
   /** RENDER CONTENT LIST GLOBAL */
   renderContentListGlobal(key, value, green) {
@@ -463,7 +249,6 @@ class HistoryDetailView extends Component {
   renderRingkasanPesanan() {
     return (
       <View>
-        <View style={GlobalStyle.boxPadding} />
         <View style={GlobalStyle.shadowForBox}>
           <View
             style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
@@ -513,22 +298,16 @@ class HistoryDetailView extends Component {
   /** RENDER PRODUCT LIST */
   renderProductList() {
     return (
-      <View>
-        <View style={GlobalStyle.boxPadding} />
-        <View style={GlobalStyle.shadowForBox}>
-          <View
-            style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
-          >
-            <Text style={Fonts.type48}>Daftar Produk</Text>
-          </View>
-          <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-          <ProductListType2
-            onRef={ref => (this.parentFunction = ref)}
-            parentFunction={this.parentFunction.bind(this)}
-            status={this.props.history.dataDetailHistory.status}
-            data={this.props.history.dataDetailHistory.orderBrands}
-          />
+      <View style={GlobalStyle.shadowForBox}>
+        <View
+          style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
+        >
+          <Text style={Fonts.type48}>Daftar Produk</Text>
         </View>
+        <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
+        <ProductListType2
+          data={this.props.history.dataDetailHistory.orderBrands}
+        />
       </View>
     );
   }
@@ -572,210 +351,7 @@ class HistoryDetailView extends Component {
       </View>
     );
   }
-  /** === RENDER PAYMENT NOTIFICATION ITEM CONTENT DIFF DAY === */
-  renderDateDiff(item) {
-    let notifDay = '';
-    const diff = moment(new Date(item.dueDate)).diff(new Date(), 'days');
-    if (diff === 0) {
-      notifDay = <Text style={Fonts.type18}>Hari ini</Text>;
-    } else if (diff > 0) {
-      notifDay = <Text style={Fonts.type18}>{diff} Hari</Text>;
-    } else if (diff < 0) {
-      notifDay = <Text style={Fonts.type18}>{diff * -1} Hari</Text>;
-    }
-    return item.dueDate !== null ? notifDay : null;
-  }
-  /** === RENDER PAYMENT NOTIFICATION ITEM CONTENT === */
-  renderPaymentNotificationItemContent() {
-    return this.props.history.dataDetailHistory.statusPayment === 'overdue'
-      ? 'Pesanan Overdue selama'
-      : 'Selesaikan pembayaran dalam';
-  }
-  /** === RENDER PAYMENT NOTIFICATION ITEM DIFF DAY === */
-  renderPaymentNotificationItemDiffDay() {
-    return (
-      <View
-        style={{
-          paddingHorizontal: 16,
-          borderRadius: 4,
-          paddingVertical: 8,
-          backgroundColor:
-            this.props.history.dataDetailHistory.statusPayment === 'overdue'
-              ? masterColor.mainColor
-              : masterColor.fontYellow50
-        }}
-      >
-        {this.renderDateDiff(this.props.history.dataDetailHistory)}
-      </View>
-    );
-  }
-  /** === RENDER PAYMENT NOTIFICATION === */
-  renderPaymentNotification() {
-    return this.props.history.dataDetailHistory.statusPayment !== 'paid' &&
-      this.props.history.dataDetailHistory.statusPayment !== 'payment_failed' &&
-      this.state.section === 'payment' ? (
-      <View style={[GlobalStyle.shadowForBox, styles.boxPaymentNotification]}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <MaterialIcon
-            name="timer"
-            color={masterColor.fontBlack50}
-            size={24}
-          />
-          <Text style={[Fonts.type8, { marginLeft: 10 }]}>
-            {this.renderPaymentNotificationItemContent()}
-          </Text>
-        </View>
-        {this.renderPaymentNotificationItemDiffDay()}
-      </View>
-    ) : (
-      <View />
-    );
-  }
-  /** RENDER PAYMENT TERM AND REFRENCE (30012020) */
-  renderModalTAndR() {
-    return (
-      <View>
-        {this.state.modalTAndR ? (
-          <ModalTAndR
-            open={this.state.modalTAndR}
-            data={[this.state.tAndRDetail]}
-            close={() => this.setState({ modalTAndR: false })}
-            onRef={ref => (this.agreeTAndR = ref)}
-            confirmOrder={this.renderChangePaymentMethod.bind(this)}
-          />
-        ) : (
-          <View />
-        )}
-      </View>
-    );
-  }
-  /**RENDER OPEN MODAL PAYMENT METHOD */
-  async renderOpenModalPaymentMethod() {
-    const selectedPaymentType = this.props.history.dataDetailHistory;
-    const params = {
-      supplierId: parseInt(selectedPaymentType.supplierId, 10),
-      orderParcelId: parseInt(
-        selectedPaymentType.orderBrands
-          .map(item => item.orderParcelId)
-          .toString(),
-        10
-      ),
-      paymentTypeId: parseInt(selectedPaymentType.paymentType.id, 10)
-    };
-    await this.props.OmsGetPaymentChannelProcess(params);
-    this.setState({
-      selectedPaymentType: this.props.oms.dataOmsGetPaymentChannel,
-      openPaymentMethod: true
-    });
-  }
-  //RENDER MODAL CHANGE PAYMENT
-  renderModalWarningChangePayment() {
-    return (
-      <View>
-        {this.state.modalWarningChangePayment ? (
-          <ModalWarning
-            open={this.state.modalWarningChangePayment}
-            content={`${this.state.warningChangePayment}`}
-          />
-        ) : (
-          <View />
-        )}
-      </View>
-    );
-  }
-  /**RENDER WANT TO CONFIRM*/
-  renderWantToConfirm(item) {
-    const params = {
-      billingID: parseInt(this.props.history.dataDetailHistory.billing.id, 10),
-      newPaymentChannelId: parseInt(item, 10)
-    };
-    this.setState({
-      changePaymentMethod: params
-    });
-    const data = {
-      storeId: parseInt(this.props.history.dataDetailHistory.store.id, 10),
-      orderParcels: [
-        {
-          invoiceGroupId: parseInt(
-            this.props.history.dataDetailHistory.invoiceGroupId,
-            10
-          ),
-          paymentChannelId: parseInt(params.newPaymentChannelId, 10),
-          paymentTypeId: parseInt(
-            this.props.history.dataDetailHistory.paymentType.id,
-            10
-          )
-        }
-      ]
-    };
-    this.props.OmsGetTermsConditionsProcess(data);
-  }
-  /**RENDER CHANGE PAYMENT METHOD */
-  async renderChangePaymentMethod() {
-    this.props.historyChangePaymentMethodProcess(
-      this.state.changePaymentMethod
-    );
-    this.setState({ openPaymentMethod: false, modalTAndR: false });
-  }
-
-  /**RENDER MODAL PAYMENT METHOD */
-  renderModalChangePaymentMethod() {
-    return this.state.openPaymentMethod ? (
-      <ModalChangePaymentMethod
-        open={this.state.openPaymentMethod}
-        close={() =>
-          this.setState({
-            openPaymentMethod: false
-          })
-        }
-        paymentMethod={this.props.oms.dataOmsGetPaymentChannel}
-        paymentType={this.props.history.dataDetailHistory.paymentType}
-        billingID={this.props.history.dataDetailHistory.billing.id}
-        total={this.props.history.dataDetailHistory.parcelFinalPrice}
-        loading={this.props.oms.loadingOmsGetPaymentChannel}
-        actionChange={this.renderWantToConfirm.bind(this)} // orderPrice={this.calTotalPrice()}
-        // onRef={ref => (this.selectPaymentMethod = ref)}
-        // selectPaymentMethod={this.selectedPayment.bind(this)}
-      />
-    ) : (
-      <View />
-    );
-  }
-  //**RENDER BUTTON UBAH METODE PEMBAYARAN */
-  renderButtonChangePayment() {
-    if (this.props.history.dataDetailHistory.paymentType.id === 2) {
-      return (
-        <View>
-          <View style={GlobalStyle.boxPadding} />
-          <View style={GlobalStyle.shadowForBox}>
-            <ButtonSingle
-              white
-              disabled={false}
-              title={'Ubah Metode Pembayaran'}
-              borderRadius={0}
-              onPress={() => this.renderOpenModalPaymentMethod()}
-            />
-          </View>
-        </View>
-      );
-    }
-  }
-  /** === RENDER PAYMENT INFORMATION === */
-  renderDetailPayment() {
-    if (this.props.history.dataDetailHistory !== null) {
-      return(
-      // {this.renderPaymentInformationA()}
-      // return (
-        
-        <HistoryDetailPayment
-          data={this.props.history.dataDetailHistory}
-          section={this.state.section}
-        />)
-      // );
-    }
-  }
-
-
+  /** RENDER PAYMENT INFORMATION */
   renderPaymentInformation(){
     if (this.props.history.dataDetailHistory !== null) {
       return (
@@ -786,38 +362,98 @@ class HistoryDetailView extends Component {
       );
     }
   }
-  /** === RENDER BUTTON CHANGE PAYMENT === */
-  renderSelectPaymentMethod() {
-    return (
-      <View>
-        {this.props.history.dataDetailHistory.statusPayment === 'paid' ? (
-          <View />
-        ) : (
-          this.renderButtonChangePayment()
-        )}
-        {this.renderModalChangePaymentMethod()}
-      </View>
-    );
+    // return (
+    //   <View>
+    //     <View style={GlobalStyle.boxPadding} />
+    //     <View style={GlobalStyle.shadowForBox}>
+    //       <View
+    //         style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
+    //       >
+    //         <Text style={Fonts.type48}>Informasi Pembayaran</Text>
+    //       </View>
+    //       <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
+    //       <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+    //         {this.renderContentListGlobal(
+    //           'Tipe Pembayaran',
+    //           this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
+    //             null
+    //             ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
+    //                 .paymentTypeSupplier.paymentType.name
+    //             : '-'
+    //         )}
+    //         {this.renderContentListGlobal(
+    //           'Metode Pembayaran',
+    //           this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
+    //             null
+    //             ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
+    //                 .paymentMethod.name
+    //             : '-'
+    //         )}
+    //         {this.renderContentListGlobal(
+    //           `Total Barang (${this.totalSKU()})`,
+    //           MoneyFormat(this.props.history.dataDetailHistory.parcelGrossPrice)
+    //         )}
+    //         {/* {this.renderContentListGlobal(
+    //           'Potongan Harga',
+    //           `- ${MoneyFormat(
+    //             this.props.history.dataDetailHistory.parcelPromo
+    //           )}`,
+    //           true
+    //         )} */}
+    //         {this.renderPromoList(
+    //           this.props.history.dataDetailHistory.promoList
+    //         )}
+    //         {this.renderVoucherList(
+    //           this.props.history.dataDetailHistory.voucherList
+    //         )}
+    //         {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
+    //         {this.renderContentListGlobal(
+    //           'PPN 10%',
+    //           MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
+    //         )}
+    //         <View
+    //           style={{
+    //             flexDirection: 'row',
+    //             justifyContent: 'space-between',
+    //             marginTop: 16
+    //           }}
+    //         >
+    //           <View style={{ flex: 1, alignItems: 'flex-start' }}>
+    //             <Text style={Fonts.type50}>Sub Total</Text>
+    //           </View>
+    //           <View style={{ flex: 1, alignItems: 'flex-end' }}>
+    //             <Text style={Fonts.type21}>
+    //               {MoneyFormat(
+    //                 this.props.history.dataDetailHistory.parcelFinalPrice
+    //               )}
+    //             </Text>
+    //           </View>
+    //         </View>
+    //       </View>
+    //     </View>
+    //   </View>
+    // );
+  // }
+/** RENDER DETAIL PAYMENT */
+renderDetailPayment() {
+  if (this.props.history.dataDetailHistory !== null) {
+    return(
+      <HistoryDetailPayment
+        data={this.props.history.dataDetailHistory}
+        section={this.state.section}
+      />)
+    
   }
+}
 
   /** RENDER CONTENT */
   renderContent() {
     return (
       <View style={{ flex: 1 }}>
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh}
-            />
-          }
-        >
+        <ScrollView>
           {this.renderHeaderStatus()}
-          {/* {this.renderPaymentNotification()} */}
           {this.state.section === 'payment' ? (
-            
             this.renderDetailPayment()
-            
           ) : (
             <View />
           )}
@@ -825,15 +461,15 @@ class HistoryDetailView extends Component {
           {this.renderProductList()}
           {this.renderDeliveryDetail()}
           {this.state.section === 'order' ? (
-            this.renderPaymentInformation2()
+            this.renderPaymentInformation()
           ) : (
             <View />
           )}
-          {this.state.section === 'payment' ? (
+           {/* {this.state.section === 'payment' ? (
             this.renderSelectPaymentMethod()
           ) : (
             <View />
-          )}
+          )} */}
           <View style={{ paddingBottom: 50 }} />
         </ScrollView>
       </View>
@@ -844,7 +480,6 @@ class HistoryDetailView extends Component {
    * RENDER MODAL
    * ====================
    */
-
   /** CALL CS */
   renderModalCallCS() {
     return this.state.openModalCS ? (
@@ -861,6 +496,19 @@ class HistoryDetailView extends Component {
       <View />
     );
   }
+  /** RENDER CANCEL BUTTON */
+  renderCancelButton() {
+    return (
+      <TouchableOpacity
+        style={styles.buttonCancel}
+        onPress={() =>
+          this.setState({ openModalCancelOrderConfirmation: true })
+        }
+      >
+        <Text style={Fonts.type11}>Batal</Text>
+      </TouchableOpacity>
+    );
+  }
   /** RENDER BOTTOM ACTION */
   renderBottomAction() {
     return (
@@ -868,8 +516,9 @@ class HistoryDetailView extends Component {
         <TouchableOpacity onPress={() => this.setState({ openModalCS: true })}>
           <Text style={Fonts.type22}>Butuh Bantuan ?</Text>
         </TouchableOpacity>
-        {this.state.section === 'order' ? (
-          this.renderButtonForOrder(this.props.history.dataDetailHistory)
+        {this.state.section === 'order' &&
+        this.props.history.dataDetailHistory.status === 'confirm' ? (
+          this.renderCancelButton()
         ) : (
           <View />
         )}
@@ -885,7 +534,6 @@ class HistoryDetailView extends Component {
    * MODAL
    * ======================
    */
-  /** === RENDER MODAL CANCEL ORDER CONFIRMATION === */
   renderModalCancelOrderConfirmation() {
     return (
       <View>
@@ -895,9 +543,11 @@ class HistoryDetailView extends Component {
             open={this.state.openModalCancelOrderConfirmation}
             content={'Yakin ingin membatalkan pesanan Anda ?'}
             type={'okeNotRed'}
+            okText={'Ya'}
+            cancelText={'Tidak'}
             ok={() => {
               this.setState({ openModalCancelOrderConfirmation: false });
-              this.changeOrderStatus('cancel');
+              this.cancelOrder();
             }}
             cancel={() =>
               this.setState({ openModalCancelOrderConfirmation: false })
@@ -909,119 +559,6 @@ class HistoryDetailView extends Component {
       </View>
     );
   }
-  /** === RENDER MODAL DELIVERED ORDER CONFIRMATION ===  */
-  renderModalDeliveredOrderConfirmation() {
-    return (
-      <View>
-        {this.state.openModalDeliveredOrderConfirmation ? (
-          <ModalConfirmation
-            title={'Konfirmasi'}
-            open={this.state.openModalDeliveredOrderConfirmation}
-            content={'Apakah Anda yakin order Anda sudah diterima ?'}
-            type={'okeRed'}
-            ok={() => {
-              this.setState({ openModalDeliveredOrderConfirmation: false });
-              this.changeOrderStatus('delivered');
-            }}
-            cancel={() =>
-              this.setState({ openModalDeliveredOrderConfirmation: false })
-            }
-          />
-        ) : (
-          <View />
-        )}
-      </View>
-    );
-  }
-  /** === RENDER MODAL RE ORDER CONFIRMATION ===  */
-  renderModalReOrderConfirmation() {
-    return (
-      <View>
-        {this.state.openModalReOrderConfirmation ? (
-          <ModalConfirmation
-            title={'Konfirmasi'}
-            open={this.state.openModalReOrderConfirmation}
-            content={'Apakah Anda ingin membeli produk ini lagi ?'}
-            type={'okeRed'}
-            ok={() => {
-              this.setState({ openModalReOrderConfirmation: false });
-              this.reOrder();
-            }}
-            cancel={() =>
-              this.setState({ openModalReOrderConfirmation: false })
-            }
-          />
-        ) : (
-          <View />
-        )}
-      </View>
-    );
-  }
-  /** === RENDER MODAL RETURN REASON === */
-  renderModalReturnReason() {
-    return this.state.openModalReturnReason ? (
-      <ModalBottomType3
-        open={this.state.openModalReturnReason}
-        typeClose={'cancel'}
-        close={() =>
-          this.setState({
-            openModalReturnReason: false,
-            selectedReturnReason: null
-          })
-        }
-        title={'Alasan Retur'}
-        content={
-          <HistoryReturnReasonView
-            selectedReturnReason={this.state.selectedReturnReason}
-            onRef={ref => (this.parentFunction = ref)}
-            parentFunction={this.parentFunction.bind(this)}
-          />
-        }
-      />
-    ) : (
-      <View />
-    );
-  }
-  /** === RENDER MODAL RETURN DETAIL === */
-  renderModalReturnDetail() {
-    return this.state.openModalReturnDetail ? (
-      <ModalBottomType3
-        open={this.state.openModalReturnDetail}
-        title={'Detail Retur Produk'}
-        content={
-          <HistoryReturnSkuDetailView
-            data={this.state.returnItem}
-            onRef={ref => (this.parentFunction = ref)}
-            parentFunction={this.parentFunction.bind(this)}
-          />
-        }
-        close={() =>
-          this.setState({
-            openModalReturnDetail: false,
-            openModalReturnReason: true
-          })
-        }
-      />
-    ) : (
-      <View />
-    );
-  }
-  /**
-   * ===================
-   * TOAST
-   * ====================
-   */
-  renderToast() {
-    return this.state.showToast ? (
-      <ToastType1
-        margin={10}
-        content={this.state.toastNotifText}
-        error={this.state.showToastError}
-      />
-    ) : (
-      <View />
-    );
-  }
   /** MAIN */
   render() {
     return (
@@ -1029,8 +566,6 @@ class HistoryDetailView extends Component {
         <StatusBarRed />
         {!this.props.history.loadingDetailHistory &&
         !this.props.history.loadingEditHistory &&
-        !this.props.history.loadingHistoryChangePaymentMethod &&
-        !this.props.history.loadingHistoryActivateVA &&
         this.props.history.dataDetailHistory !== null ? (
           <View style={styles.mainContainer}>
             {this.renderBackground()}
@@ -1043,14 +578,6 @@ class HistoryDetailView extends Component {
         {/* modal */}
         {this.renderModalCallCS()}
         {this.renderModalCancelOrderConfirmation()}
-        {this.renderModalDeliveredOrderConfirmation()}
-        {this.renderModalReOrderConfirmation()}
-        {this.renderModalReturnReason()}
-        {this.renderModalReturnDetail()}
-        {this.renderModalTAndR()}
-        {/* toast */}
-        {this.renderToast()}
-        {this.renderModalWarningChangePayment()}
       </SafeAreaView>
     );
   }
@@ -1077,23 +604,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 64
   },
-  boxPaymentNotification: {
-    marginBottom: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  /** BUTTON */
-  buttonRed: {
-    backgroundColor: masterColor.mainColor,
-    paddingVertical: 9,
-    paddingHorizontal: 16,
-    borderRadius: 4,
-    marginLeft: 8
-  },
-  buttonWhite: {
+  buttonCancel: {
     backgroundColor: masterColor.backgroundWhite,
     borderWidth: 1,
     borderColor: masterColor.mainColor,
@@ -1103,8 +614,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ oms, history, user, merchant }) => {
-  return { oms, history, user, merchant };
+const mapStateToProps = ({ history, user, merchant }) => {
+  return { history, user, merchant };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -1118,11 +629,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(HistoryDetailView);
  * ============================
  * NOTES
  * ============================
- * createdBy: 
- * createdDate: 
- * updatedBy: tatas
- * updatedDate: 22062020
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
  * updatedFunction:
  * -> Refactoring Module Import
- * 
+ *
  */
