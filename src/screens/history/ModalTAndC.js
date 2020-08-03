@@ -1,25 +1,32 @@
-import React, { Component } from 'react';
 import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Modal,
-  TouchableOpacity,
-  ScrollView
-} from 'react-native';
-import Text from 'react-native-text';
-import { Button } from 'react-native-elements';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import HTMLView from 'react-native-htmlview';
-import masterColor from '../../../config/masterColor.json';
-import GlobalStyleHtml from '../../../helpers/GlobalStyleHtml';
-import { StatusBarRedOP50 } from '../../../components/StatusBarGlobal';
-import Fonts from '../../../helpers/GlobalFont';
-import ModalBottomType4 from '../../../components/modal_bottom/ModalBottomType4';
-// import { ScrollView } from 'react-native-gesture-handler';
-import GlobalStyle from '../../../helpers/GlobalStyle';
-import ButtonSingle from '../../../components/button/ButtonSingle';
+    React,
+    Component,
+    View,
+    StyleSheet,
+    Dimensions,
+    Modal,
+    ScrollView,
+    ModalPopUp,
+    TouchableOpacity,
+    Text
+  } from '../../library/reactPackage'
+  
+  import {
+    Button,
+    MaterialIcon,
+    MaterialCommunityIcons,
+    HTMLView
+  } from '../../library/thirdPartyPackage'
+  import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+  import masterColor from '../../config/masterColor.json';
+  import {
+    StatusBarRedOP50
+  } from '../../library/component';
+  import { Fonts, GlobalStyle, GlobalStyleHtml } from '../../helpers'
+  import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
+  // import { ScrollView } from 'react-native-gesture-handler';
+  // import GlobalStyle from '../../helpers/GlobalStyle';
+  import ButtonSingle from '../../components/button/ButtonSingle';
 
 const { width, height } = Dimensions.get('window');
 
