@@ -33,7 +33,6 @@ class ProfileAreaMapping extends Component {
       )
     }
   }
-
   renderTitle() {
     return (
       <View>
