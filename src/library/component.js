@@ -87,6 +87,8 @@ import DatePickerSpinner from '../components/DatePickerSpinner'
 import SelectedMerchantName from '../components/SelectedMerchantName'
 /** ERROR BOUNDARY */
 import ErrorBoundary from '../components/error/ErrorBoundary'
+/** CARD */
+import CardType1 from '../components/card/CardType1'
 
 export {
   CartGlobal,
@@ -177,7 +179,9 @@ export {
   /** SELECTED MERCHANT NAME */
   SelectedMerchantName,
   /** Error Boundary */
-  ErrorBoundary
+  ErrorBoundary,
+  /** CARD */
+  CardType1
 };
 
 /**
