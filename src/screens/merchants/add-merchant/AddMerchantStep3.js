@@ -90,7 +90,8 @@ class AddMerchantStep3 extends Component {
         if (warehouse.total === 0) {
           this.props.saveVolatileDataMerchant({
             warehouse:
-              'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
+              'Lokasi toko tidak dalam area jangkauan warehouse tertentu.',
+            warehouseId: null
           });
           this.setState({
             warehouseTitle: 'Warehouse',
