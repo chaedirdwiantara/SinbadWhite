@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
 
-const ShadowComponent = ({ children, radius, elevation }) => {
+const ShadowComponent = ({ children, radius, elevation, style, margin }) => {
   return (
     <View
       style={{
@@ -15,10 +15,11 @@ const ShadowComponent = ({ children, radius, elevation }) => {
         shadowRadius: 4.65,
         elevation: elevation,
         borderWidth: 0,
-        borderRadius: radius
+        borderRadius: radius,
+        margin: margin
       }}
     >
-      {children}
+      <View style={{ ...style, borderRadius: radius }}>{children}</View>
     </View>
   );
 };
@@ -26,13 +27,29 @@ const ShadowComponent = ({ children, radius, elevation }) => {
 ShadowComponent.propTypes = {
   children: PropTypes.node,
   radius: PropTypes.number,
-  elevation: PropTypes.number
+  margin: PropTypes.number,
+  elevation: PropTypes.number,
+  style: PropTypes.object
 };
 
 ShadowComponent.defaultProps = {
   children: <View />,
   radius: 0,
-  elevation: 4
+  margin: 0,
+  elevation: 4,
+  style: {}
 };
 
 export default ShadowComponent;
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy: Erik
+ * createdDate: 03082020
+ * updatedBy: Dyah
+ * updatedDate: 04082020
+ * updatedFunction:
+ * -> Add view & margin
+ *
+ */

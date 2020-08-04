@@ -10,26 +10,86 @@ import {
   SafeAreaView,
   FlatList,
   Dimensions,
-  Text
-} from '../../library/reactPackage'
+  Text,
+  ScrollView
+} from '../../library/reactPackage';
 import {
   MaterialIcon,
   DeviceInfo,
   bindActionCreators,
   connect
-} from '../../library/thirdPartyPackage'
+} from '../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
   BackHandlerCloseApp,
   ModalConfirmation,
-  ModalConfirmationType2
-} from '../../library/component'
-import { GlobalStyle, Fonts } from '../../helpers'
+  ModalConfirmationType2,
+  ProgressBarType2,
+  Shadow
+} from '../../library/component';
+import { GlobalStyle, Fonts, MoneyFormatShort } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
+import { Color } from '../../config';
+
+import Tab from '../../components/tabs/tabsCustom';
 
 const { width } = Dimensions.get('window');
+const defaultImage = require('../../assets/images/sinbad_image/sinbadopacity.png');
+
+const tabDashboard = [
+  {
+    title: 'Harian',
+    value: 'day'
+  },
+  {
+    title: 'Mingguan',
+    value: 'week'
+  },
+  {
+    title: 'Bulanan',
+    value: 'month'
+  }
+];
+
+const kpiDashboardDummy = () => [
+  {
+    id: 'order',
+    data: {
+      achieved: 12,
+      target: 20
+    }
+  },
+  {
+    id: 'sell',
+    data: {
+      achieved: 2300000,
+      target: 4600000
+    }
+  },
+  {
+    id: 'visit',
+    data: {
+      achieved: 12,
+      target: 20
+    }
+  },
+  {
+    id: 'new',
+    data: {
+      achieved: 10,
+      target: 20
+    }
+  },
+  {
+    id: 'orderCreated',
+    data: {
+      achieved: 10,
+      target: 20
+    }
+  }
+];
 
 class HomeView extends Component {
   constructor(props) {
@@ -49,14 +109,63 @@ class HomeView extends Component {
           title2: 'Toko',
           image: require('../../assets/images/menu/list_toko.png'),
           goTo: 'list_toko'
+        }
+        // {
+        //   title1: 'Dashboard',
+        //   title2: '',
+        //   image: require('../../assets/images/menu/dashboard.png'),
+        //   goTo: 'dashboard'
+        // }
+      ],
+      kpiDashboard: [
+        {
+          title: 'T. Order',
+          id: 'order',
+          image: require('../../assets/images/menu_dashboard/order.png'),
+          data: {
+            achieved: 0,
+            target: 0
+          }
         },
         {
-          title1: 'Dashboard',
-          title2: '',
-          image: require('../../assets/images/menu/dashboard.png'),
-          goTo: 'dashboard'
-        }
-      ]
+          title: 'T. Baru',
+          id: 'new',
+          image: require('../../assets/images/menu_dashboard/new.png'),
+          data: {
+            achieved: 0,
+            target: 0
+          }
+        },
+        {
+          title: 'Total Penjualan',
+          id: 'sell',
+          image: require('../../assets/images/menu_dashboard/sell.png'),
+          data: {
+            achieved: 0,
+            target: 0
+          }
+        },
+        {
+          title: 'Total Pesanan',
+          id: 'orderCreated',
+          image: require('../../assets/images/menu_dashboard/orderCreated.png'),
+          data: {
+            achieved: 0,
+            target: 0
+          }
+        },
+        {
+          title: 'T. Dikunjungi',
+          id: 'visit',
+          image: require('../../assets/images/menu_dashboard/visit.png'),
+          data: {
+            achieved: 0,
+            target: 0
+          }
+        },
+      ],
+      pageOne: 0,
+      tabValue: tabDashboard[0].value
     };
   }
   /**
@@ -66,6 +175,7 @@ class HomeView extends Component {
    */
   componentDidMount() {
     this.props.versionsGetProcess();
+    this.getKpiData();
     this.props.navigation.setParams({
       fullName: this.props.user.fullName,
       imageUrl: this.props.user.imageUrl
@@ -86,6 +196,23 @@ class HomeView extends Component {
         }
       }
     }
+  }
+  /** === GET KPI DATA === */
+  getKpiData() {
+    const newData = kpiDashboardDummy();
+    let newKpiDashboard = [...this.state.kpiDashboard];
+    newData.map(item => {
+      const index = newKpiDashboard.findIndex(
+        newitem => newitem.id === item.id
+      );
+      newKpiDashboard[index].data = item.data;
+    });
+    this.setState({ kpiDashboard: newKpiDashboard });
+  }
+  /** === ON CHANGE TAB === */
+  onChangeTab(value) {
+    console.log(value)
+    this.setState({ tabValue: value });
   }
   /** === GO TO PAGE === */
   goToPage(item) {
@@ -189,6 +316,162 @@ class HomeView extends Component {
       </View>
     );
   }
+  /** === RENDER KPI DASHBOARD === */
+  renderKpiDashboard() {
+    return (
+      <View style={{ paddingVertical: 10 }}>
+        <Text style={Fonts.type7}>Your Dashboard</Text>
+        <Tab
+          listMenu={tabDashboard}
+          onChange={value => this.onChangeTab(value)}
+          value={this.state.tabValue}
+        />
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          decelerationRate={0}
+          snapToInterval={width - 90}
+          snapToAlignment={'center'}
+          contentInset={{
+            top: 0,
+            left: 30,
+            bottom: 0,
+            right: 30
+          }}
+          onScroll={data => {
+            this.setState({ pageOne: data.nativeEvent.contentOffset.x });
+          }}
+        >
+          <FlatList
+            data={this.state.kpiDashboard}
+            contentContainerStyle={{ alignSelf: 'flex-start' }}
+            show={false}
+            style={{ marginBottom: 10 }}
+            numColumns={2}
+            listKey={(item, index) => index.toString()}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => (
+              <Shadow
+                key={index}
+                radius={10}
+                elevation={1}
+                margin={5}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  margin: 2,
+                  padding: 10,
+                  width: 320,
+                  backgroundColor: 'white'
+                }}
+              >
+                <Image
+                  source={item.image ? item.image : defaultImage}
+                  style={styles.menuCircleImage}
+                />
+                <View style={{ marginLeft: 10 }}>
+                  <Text style={[Fonts.type97, { color: Color.fontBlack50 }]}>
+                    {item.title}
+                  </Text>
+                  <ProgressBarType2
+                    target={item.data.target}
+                    achieved={item.data.achieved}
+                  />
+                  {item.data.target === 0 ? (
+                    <Text style={[Fonts.type65, { color: Color.fontRed50 }]}>
+                      {' '}
+                      Sedang tidak ada target{' '}
+                    </Text>
+                  ) : (
+                    <Text style={[Fonts.type65, { color: Color.fontRed50 }]}>
+                      {item.title === 'Total Penjualan'
+                        ? MoneyFormatShort(
+                            item.data.target - item.data.achieved
+                          )
+                        : item.data.target - item.data.achieved}{' '}
+                      {item.title === 'Total Penjualan' ? null : 'Toko'} lagi
+                      mencapai target
+                    </Text>
+                  )}
+                  <View style={{ flexDirection: 'row', marginVertical: 4 }}>
+                    <View style={{ width: '50%' }}>
+                      <Text
+                        style={[Fonts.type44, { color: Color.fontBlack50 }]}
+                      >
+                        Pencapaian
+                      </Text>
+                      <Text
+                        style={[Fonts.type44, { color: Color.fontBlack50 }]}
+                      >
+                        {item.title === 'Total Penjualan'
+                          ? MoneyFormatShort(item.data.achieved)
+                          : item.data.achieved}{' '}
+                        {item.title === 'Total Penjualan' ? null : 'Toko'}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        borderRightWidth: 1,
+                        borderColor: Color.fontBlack40,
+                        marginRight: 20
+                      }}
+                    />
+                    <View>
+                      <Text
+                        style={[Fonts.type44, { color: Color.fontBlack50 }]}
+                      >
+                        Target
+                      </Text>
+                      <Text
+                        style={[Fonts.type44, { color: Color.fontBlack50 }]}
+                      >
+                        {item.title === 'Total Penjualan'
+                          ? MoneyFormatShort(item.data.target)
+                          : item.data.target}{' '}
+                        {item.title === 'Total Penjualan' ? null : 'Toko'}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </Shadow>
+            )}
+          />
+        </ScrollView>
+        <View style={{ alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row' }}>
+            <View
+              style={[
+                styles.miniCircle,
+                {
+                  backgroundColor:
+                    this.state.pageOne === 0
+                      ? Color.mainColor
+                      : Color.fontBlack60
+                }
+              ]}
+            />
+            <View
+              style={[
+                styles.miniCircle,
+                {
+                  backgroundColor:
+                    this.state.pageOne === 0
+                      ? Color.fontBlack60
+                      : Color.mainColor
+                }
+              ]}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() => this.goToPage({ goTo: 'dashboard' })}
+            style={{ marginTop: 8 }}
+          >
+            <Text style={Fonts.type11}>Lihat Detail Dashboard</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
   /** === RENDER MENU === */
   renderMenu() {
     return (
@@ -244,7 +527,8 @@ class HomeView extends Component {
   renderItem({ item, index }) {
     return (
       <View style={styles.mainContainer} key={index}>
-        {this.renderBanner()}
+        {/* {this.renderBanner()} */}
+        {this.renderKpiDashboard()}
         {this.renderMenu()}
         {/* {this.renderLastActivity()} */}
         {/* {this.renderLastActivityItem()} */}
@@ -321,7 +605,7 @@ class HomeView extends Component {
         <StatusBarWhite />
         {this.renderData()}
         {/* modal */}
-        {this.renderModalUpdate()}
+        {/* {this.renderModalUpdate()} */}
         {this.renderModalForceUpdate()}
       </SafeAreaView>
     );
@@ -363,6 +647,12 @@ const styles = StyleSheet.create({
   menuBoxPerItem: {
     alignItems: 'center',
     marginRight: 5
+  },
+  miniCircle: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 5
   }
 });
 
@@ -378,14 +668,14 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Dyah
+ * updatedDate: 04082020
+ * updatedFunction:
+ * -> Add KPI dashboard and Comment dashboard menu icon
+ *
+ */
