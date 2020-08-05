@@ -7,6 +7,7 @@ import {
   Text
 } from '../../library/reactPackage';
 import { Color } from '../../config';
+import { Fonts } from '../../helpers'
 
 class CardType1 extends Component {
   renderCard() {
@@ -26,10 +27,27 @@ class CardType1 extends Component {
           backgroundColor: '#fffff',
           height: '100%',
           width: '100%',
-          flex: 1
+          flex: 1,
+          flexDirection: 'row'
         }}
       >
-
+      <View style={{flex: 7}}>
+        <View style={{flex: 1, marginLeft: 16, flexDirection: 'column-reverse'}}>
+          <Text style={[Fonts.type63, {marginBottom: 4}]}>
+            Sales Area Mapping
+          </Text>
+        </View>
+        <View style={{flex: 1, marginLeft: 16}}>
+          <Text style={[Fonts.type100, {marginTop: 4}]}>
+            {this.props.warehouse}
+          </Text>
+        </View>
+      </View>
+      <View style={{flex: 3, flexDirection: 'row-reverse', marginLeft: 16, alignItems: 'center'}}>
+        <Text style={[Fonts.type1]}>
+          0{this.props.number}
+        </Text>
+      </View>
       </View>
         <View
           style={{
@@ -46,7 +64,7 @@ class CardType1 extends Component {
   }
   renderContent() {
     return (
-      <View style={{ margin: 16 }}>
+      <View style={{ marginHorizontal: 16, marginTop: 4, marginBottom: 4 }}>
         {this.renderCard()}
       </View>
     );
