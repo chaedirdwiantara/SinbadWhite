@@ -1,19 +1,35 @@
 import {
   React,
   Component,
-  View,
-  Text,
   SafeAreaView,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList,
+  View
 } from '../../library/reactPackage';
 import { MaterialIcon } from '../../library/thirdPartyPackage';
 import { StatusBarWhite, CardType1 } from '../../library/component';
 import { Color } from '../../config';
-import { Fonts } from '../../helpers';
 import NavigationService from '../../navigation/NavigationService';
 
 class ProfileAreaMapping extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data : [
+        {
+          warehouse: 'DC Serang'
+        },
+        {
+          warehouse: 'DC Balaraja'
+        },
+        {
+          warehouse: 'DC Rangkas Bitung'
+        }
+      ]
+    };
+  }
+
   static navigationOptions = ({ navigation }) => {
     return {
       headerLeft: () => (
@@ -30,23 +46,31 @@ class ProfileAreaMapping extends Component {
       )
     };
   };
-  renderCard() {
+  renderCard({item, index}) {
     return (
-      <CardType1>
-        <View>
-          <Text>
-            Hello
-          </Text>
-        </View>
-      </CardType1>
+        <CardType1 
+        warehouse={item.warehouse}
+        number={index+1}
+      />     
     )      
+  }
+
+  renderContent(){  
+    return(
+        <FlatList
+          contentContainerStyle={{marginBottom: 50}}
+          data={this.state.data}
+          renderItem={this.renderCard.bind(this)}
+          keyExtractor={(item, index) => index.toString()}
+        />
+    )
   }
   
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarWhite />
-        {this.renderCard()}
+        {this.renderContent()}
       </SafeAreaView>
     );
   }
