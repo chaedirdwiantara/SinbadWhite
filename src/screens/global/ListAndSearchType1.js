@@ -19,7 +19,8 @@ import {
   StatusBarRed,
   LoadingPage,
   LoadingLoadMore,
-  SearchBarType3
+  SearchBarType3,
+  EmptyData
 } from '../../library/component';
 import { Fonts, GlobalStyle } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
@@ -294,8 +295,8 @@ class ListAndSearchType1 extends Component {
   renderSkeleton() {
     return <LoadingPage />;
   }
-  /** === MAIN === */
-  render() {
+  /** RENDER DATA */
+  renderData() {
     return (
       <View style={styles.mainContainer}>
         <StatusBarRed />
@@ -305,6 +306,20 @@ class ListAndSearchType1 extends Component {
         {this.renderLoadMore()}
       </View>
     );
+  }
+  /** RENDER EMPTY */
+  renderEmpty() {
+    return (
+      <EmptyData
+        title={'Maaf, data tidak ditemukan'}
+      />
+    )
+  }
+  /** === MAIN === */
+  render(){
+    return this.props.global.dataGetListAndSearch === 0 
+    ? this.renderEmpty()
+    : this.renderData()
   }
 }
 
