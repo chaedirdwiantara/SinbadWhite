@@ -26,8 +26,11 @@ import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
-import CallCS from '../../screens/global/CallCS';
-import DetailView from './HistoryPaymentInformation/DetailView'
+import ModalChangePaymentMethod from './ModalChangePaymentMethod';
+import ModalWarning from '../../components/modal/ModalWarning';
+import ModalTAndR from './ModalTAndC';
+import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation'
+import HistoryDetailPayment from './HistoryDetailPayment'
 
 class HistoryDetailView extends Component {
   constructor(props) {
@@ -36,15 +39,7 @@ class HistoryDetailView extends Component {
       openModalCS: false,
       openModalCancelOrderConfirmation: false,
       section: this.props.navigation.state.params.section,
-      storeId: this.props.navigation.state.params.storeId,
-      selectedPaymentType: [],
-      openPaymentMethod: false,
-      modalWarningChangePayment: false,
-      tAndRDetail: null,
-      tAndRLoading: false,
-      changePaymentMethod: null,
-      modalTAndR: false,
-      warningChangePayment: null
+      storeId: this.props.navigation.state.params.storeId
     };
   }
   /**
@@ -65,56 +60,6 @@ class HistoryDetailView extends Component {
         this.getHistory();
       }
     }
-    if (this.props.oms.dataOmsGetPaymentChannel !== undefined){
-      if (this.props.oms.dataOmsGetPaymentChannel !== null) {
-        this.setState({
-          paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
-        });
-      }
-    }
-    if (
-      prevProps.oms.dataOmsGetTermsConditions !==
-      this.props.oms.dataOmsGetTermsConditions
-    ) {
-      if (this.props.oms.dataOmsGetTermsConditions !== null) {
-        this.setState({
-          tAndRDetail: this.props.oms.dataOmsGetTermsConditions.data
-        });
-      }
-    }
-    if (
-      prevProps.oms.dataOmsGetTermsConditions !==
-      this.props.oms.dataOmsGetTermsConditions
-    ) {
-      this.setState({ tAndRLoading: false, alreadyFetchTAndR: true });
-      const tAndR = this.props.oms.dataOmsGetTermsConditions;
-      if (tAndR !== null) {
-        if (
-          tAndR.data.paymentChannels == null &&
-          tAndR.data.paymentTypes == null
-        ) {
-          this.renderChangePaymentMethod();
-        } else {
-          this.setState({ modalTAndR: true });
-        }
-      }
-    }
-
-    if (
-      prevProps.history.errorHistoryChangePaymentMethod !==
-      this.props.history.errorHistoryChangePaymentMethod
-    ) {
-      if (this.props.history.errorHistoryChangePaymentMethod !== null) {
-        this.setState({
-          warningChangePayment: this.props.history
-            .errorHistoryChangePaymentMethod.message,
-          modalWarningChangePayment: true
-        });
-        setTimeout(() => {
-          this.setState({ modalWarningChangePayment: false });
-        }, 3000);
-      }
-    } 
   }
   /** REFRESH LIST HISTORY AFTER EDIT HISTORY STATUS */
   getHistory() {
@@ -304,7 +249,6 @@ class HistoryDetailView extends Component {
   renderRingkasanPesanan() {
     return (
       <View>
-        {/* <View style={GlobalStyle.boxPadding} /> */}
         <View style={GlobalStyle.shadowForBox}>
           <View
             style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
@@ -351,43 +295,19 @@ class HistoryDetailView extends Component {
       </View>
     );
   }
-    /** RENDER PAYMENT TERM AND REFRENCE (30012020) */
-    renderModalTAndR() {
-      return (
-        <View>
-          {this.state.modalTAndR ? (
-            <ModalTAndR
-              open={this.state.modalTAndR}
-              data={[this.state.tAndRDetail]}
-              close={() => this.setState({ modalTAndR: false })}
-              onRef={ref => (this.agreeTAndR = ref)}
-              confirmOrder={this.renderChangePaymentMethod.bind(this)}
-            />
-          ) : (
-            <View />
-          )}
-        </View>
-      );
-    }
   /** RENDER PRODUCT LIST */
   renderProductList() {
     return (
-      <View>
-        <View style={GlobalStyle.boxPadding} />
-        <View style={GlobalStyle.shadowForBox}>
-          <View
-            style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
-          >
-            <Text style={Fonts.type48}>Daftar Produk</Text>
-          </View>
-          <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-          <ProductListType2
-            onRef={ref => (this.parentFunction = ref)}
-            parentFunction={this.parentFunction.bind(this)}
-            status={this.props.history.dataDetailHistory.status}
-            data={this.props.history.dataDetailHistory.orderBrands}
-          />
+      <View style={GlobalStyle.shadowForBox}>
+        <View
+          style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
+        >
+          <Text style={Fonts.type48}>Daftar Produk</Text>
         </View>
+        <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
+        <ProductListType2
+          data={this.props.history.dataDetailHistory.orderBrands}
+        />
       </View>
     );
   }
@@ -431,16 +351,17 @@ class HistoryDetailView extends Component {
       </View>
     );
   }
-  /** RENDER PRODUCT LIST */
-  renderPaymentInformation() {
+  /** RENDER PAYMENT INFORMATION */
+  renderPaymentInformation(){
     if (this.props.history.dataDetailHistory !== null) {
       return (
-        <DetailView
+        <HistoryDetailPaymentInformation
           data={this.props.history.dataDetailHistory}
           section={this.state.section}
         />
       );
     }
+  }
     // return (
     //   <View>
     //     <View style={GlobalStyle.boxPadding} />
@@ -512,132 +433,19 @@ class HistoryDetailView extends Component {
     //     </View>
     //   </View>
     // );
-  }
-    //RENDER MODAL CHANGE PAYMENT
-    renderModalWarningChangePayment() {
-      return (
-        <View>
-          {this.state.modalWarningChangePayment ? (
-            <ModalWarning
-              open={this.state.modalWarningChangePayment}
-              content={`${this.state.warningChangePayment}`}
-            />
-          ) : (
-            <View />
-          )}
-        </View>
-      );
-    }
-  /**RENDER WANT TO CONFIRM*/
-  renderWantToConfirm(item) {
-    const params = {
-      billingID: parseInt(this.props.history.dataDetailHistory.billing.id, 10),
-      newPaymentChannelId: parseInt(item, 10)
-    };
-    this.setState({
-      changePaymentMethod: params
-    });
-    const data = {
-      storeId: parseInt(this.props.history.dataDetailHistory.store.id, 10),
-      orderParcels: [
-        {
-          invoiceGroupId: parseInt(
-            this.props.history.dataDetailHistory.invoiceGroupId,
-            10
-          ),
-          paymentChannelId: parseInt(params.newPaymentChannelId, 10),
-          paymentTypeId: parseInt(
-            this.props.history.dataDetailHistory.paymentType.id,
-            10
-          )
-        }
-      ]
-    };
-    this.props.OmsGetTermsConditionsProcess(data);
-  }
-
-
-   /**RENDER MODAL PAYMENT METHOD */
-   renderModalChangePaymentMethod() {
-    return this.state.openPaymentMethod ? (
-      <ModalChangePaymentMethod
-        open={this.state.openPaymentMethod}
-        close={() =>
-          this.setState({
-            openPaymentMethod: false
-          })
-        }
-        paymentMethod={this.props.oms.dataOmsGetPaymentChannel}
-        paymentType={this.props.history.dataDetailHistory.paymentType}
-        billingID={this.props.history.dataDetailHistory.billing.id}
-        total={this.props.history.dataDetailHistory.parcelFinalPrice}
-        loading={this.props.oms.loadingOmsGetPaymentChannel}
-        actionChange={this.renderWantToConfirm.bind(this)} // orderPrice={this.calTotalPrice()}
-        // onRef={ref => (this.selectPaymentMethod = ref)}
-        // selectPaymentMethod={this.selectedPayment.bind(this)}
-      />
-    ) : (
-      <View />
-    );
-  }
-  /**RENDER OPEN MODAL PAYMENT METHOD */
-  async renderOpenModalPaymentMethod() {
-    const selectedPaymentType = this.props.history.dataDetailHistory;
-    const params = {
-      supplierId: parseInt(selectedPaymentType.supplierId, 10),
-      orderParcelId: parseInt(
-        selectedPaymentType.orderBrands
-          .map(item => item.orderParcelId)
-          .toString(),
-        10
-      ),
-      paymentTypeId: parseInt(selectedPaymentType.paymentType.id, 10)
-    };
-    await this.props.OmsGetPaymentChannelProcess(params);
-    this.setState({
-      selectedPaymentType: this.props.oms.dataOmsGetPaymentChannel,
-      openPaymentMethod: true
-    });
-  }
-//**RENDER BUTTON UBAH METODE PEMBAYARAN */
-renderButtonChangePayment() {
-  if (this.props.history.dataDetailHistory.paymentType.id === 2) {
-    return (
-      <View>
-        <View style={GlobalStyle.boxPadding} />
-        <View style={GlobalStyle.shadowForBox}>
-          <ButtonSingle
-            white
-            disabled={false}
-            title={'Ubah Metode Pembayaran'}
-            borderRadius={0}
-            onPress={() => this.renderOpenModalPaymentMethod()}
-          />
-        </View>
-      </View>
-    );
+  // }
+/** RENDER DETAIL PAYMENT */
+renderDetailPayment() {
+  if (this.props.history.dataDetailHistory !== null) {
+    return(
+      <HistoryDetailPayment
+        data={this.props.history.dataDetailHistory}
+        section={this.state.section}
+      />)
+    
   }
 }
-   /** === RENDER BUTTON CHANGE PAYMENT === */
-   renderSelectPaymentMethod() {
-    return (
-      <View>
-        {this.props.history.dataDetailHistory.statusPayment === 'paid' ? (
-          <View />
-        ) : (
-          this.renderButtonChangePayment()
-        )}
-        {this.renderModalChangePaymentMethod()}
-      </View>
-    );
-  }
- /**RENDER CHANGE PAYMENT METHOD */
-  async renderChangePaymentMethod() {
-    this.props.historyChangePaymentMethodProcess(
-      this.state.changePaymentMethod
-    );
-    this.setState({ openPaymentMethod: false, modalTAndR: false });
-  }
+
   /** RENDER CONTENT */
   renderContent() {
     return (
@@ -645,7 +453,7 @@ renderButtonChangePayment() {
         <ScrollView>
           {this.renderHeaderStatus()}
           {this.state.section === 'payment' ? (
-            this.renderPaymentInformation()
+            this.renderDetailPayment()
           ) : (
             <View />
           )}
@@ -770,8 +578,6 @@ renderButtonChangePayment() {
         {/* modal */}
         {this.renderModalCallCS()}
         {this.renderModalCancelOrderConfirmation()}
-        {this.renderModalTAndR()}
-        {this.renderModalWarningChangePayment()}
       </SafeAreaView>
     );
   }
@@ -808,8 +614,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ oms, history, user, merchant }) => {
-  return { oms, history, user, merchant };
+const mapStateToProps = ({ history, user, merchant }) => {
+  return { history, user, merchant };
 };
 
 const mapDispatchToProps = dispatch => {

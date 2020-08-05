@@ -1513,6 +1513,7 @@ class OmsCheckoutView extends Component {
         orderPrice={this.calTotalPrice()}
         onRef={ref => (this.selectPaymentMethod = ref)}
         selectPaymentMethod={this.selectedPayment.bind(this)}
+        loading={this.props.oms.loadingOmsGetPaymentChannel}
       />
     ) : (
       <View />
