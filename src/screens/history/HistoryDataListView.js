@@ -287,7 +287,6 @@ class HistoryDataListView extends Component {
       default:
         break;
     }
-    console.log(moment.utc(item.billing.expiredPaymentTime).local(), 'item')
     return (
       <View>
         <View style={{ flexDirection: 'row' }}>
