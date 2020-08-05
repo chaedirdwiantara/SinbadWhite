@@ -4,18 +4,21 @@ import {
   View,
   StyleSheet,
   Text,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from '../../library/reactPackage';
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
-import MenuHorizontal from '../../components/tabs/tabsHorizontal';
-import TabsLightHorizontal from '../../components/tabs/tabsLightHorizontal';
 import { Fonts } from '../../helpers';
-import ShadowComponent from '../../components/card/shadow';
-import TabsCustom from '../../components/tabs/tabsCustom';
-import TabsCenter from '../../components/tabs/tabsCenter';
-import TargetCard from '../../components/card/target';
+import {
+  Shadow as ShadowComponent,
+  TabsCustom,
+  typeCustomTabs,
+  LoadingPage
+} from '../../library/component';
+import TargetCard from './target';
+// import moment from 'moment';
 // import NavigationService from '../../navigation/NavigationService';
 
 const listMenu = [
@@ -47,8 +50,12 @@ const listMenuWhite = [
     value: 'tDikunjungi'
   },
   {
-    title: 'T. Barang',
-    value: 'tBarang'
+    title: 'T. Baru',
+    value: 'tBaru'
+  },
+  {
+    title: 'Total Pesanan',
+    value: 'tPesanan'
   }
 ];
 
@@ -74,33 +81,6 @@ const listTarget = [
   }
 ];
 
-const dummyDataTarget = [
-  {
-    target: 10,
-    date: '14/06/2020',
-    achieve: 12,
-    status: true
-  },
-  {
-    target: 10,
-    date: '15/06/2020',
-    achieve: 9,
-    status: false
-  },
-  {
-    target: 10,
-    date: '16/06/2020',
-    achieve: 1,
-    status: false
-  },
-  {
-    target: 10,
-    date: '17/06/2020',
-    achieve: 20,
-    status: true
-  }
-];
-
 class DashboardView extends Component {
   constructor(props) {
     super(props);
@@ -108,9 +88,54 @@ class DashboardView extends Component {
       tabsTime: listMenu[0].value,
       tabsWhite: listMenuWhite[0].value,
       tabsTimeTarget: listTimeTarget[0].value,
-      tabsTarget: listTarget[0].value
+      tabsTarget: listTarget[0].value,
+      data: false,
+      tOrder: false,
+      tPenjualan: false,
+      tDikunjungi: false,
+      tBaru: false,
+      tPesanan: false
     };
   }
+
+  componentDidMount() {
+    this.getData();
+  }
+
+  getData = async () => {
+    try {
+      console.log('fetching ...');
+      this.setState({
+        load: true
+      });
+      let response = await fetch(
+        'https://cantik-app.herokuapp.com/dummy/detail-dashboard'
+      );
+      let json = await response.json();
+      if (json) {
+        this.setState({
+          load: false
+        });
+        console.log('fetching DONE');
+        if (!json.error) {
+          this.setState({
+            load: false,
+            data: json.data.order,
+            tOrder: json.data.order,
+            tPenjualan: json.data.sold,
+            tDikunjungi: json.data.visited,
+            tBaru: json.data.new,
+            tPesanan: json.data.newOrder
+          });
+        }
+      }
+    } catch (error) {
+      this.setState({
+        load: false
+      });
+      console.error(error);
+    }
+  };
 
   tabsTimeChanged = value => {
     this.setState({
@@ -122,6 +147,36 @@ class DashboardView extends Component {
     this.setState({
       tabsWhite: value
     });
+
+    switch (value) {
+      case 'tOrder':
+        this.setState({
+          data: this.state.tOrder
+        });
+        break;
+      case 'tPenjualan':
+        this.setState({
+          data: this.state.tPenjualan
+        });
+        break;
+      case 'tDikunjungi':
+        this.setState({
+          data: this.state.tDikunjungi
+        });
+        break;
+      case 'tBaru':
+        this.setState({
+          data: this.state.tBaru
+        });
+        break;
+      case 'tPesanan':
+        this.setState({
+          data: this.state.tPesanan
+        });
+        break;
+      default:
+        break;
+    }
   };
 
   tabsTargetChanged = value => {
@@ -131,11 +186,24 @@ class DashboardView extends Component {
   };
 
   render() {
-    const { tabsTime, tabsWhite, tabsTimeTarget, tabsTarget } = this.state;
+    const {
+      tabsTime,
+      tabsWhite,
+      tabsTimeTarget,
+      tabsTarget,
+      data,
+      load
+    } = this.state;
     return (
-      <ScrollView>
+      <ScrollView scrollEnabled={!load}>
+        {load ? (
+          <View style={styles.loadingContainer}>
+            <LoadingPage />
+          </View>
+        ) : null}
         <View style={styles.mainContainer}>
-          <MenuHorizontal
+          <TabsCustom
+            type={typeCustomTabs.redScroll}
             listMenu={listMenu}
             onChange={this.tabsTimeChanged}
             value={tabsTime}
@@ -156,7 +224,8 @@ class DashboardView extends Component {
             </ShadowComponent>
           </View>
           <View style={styles.sparator} />
-          <TabsLightHorizontal
+          <TabsCustom
+            type={typeCustomTabs.whiteScroll}
             listMenu={listMenuWhite}
             onChange={this.tabsWhiteChanged}
             value={tabsWhite}
@@ -171,7 +240,23 @@ class DashboardView extends Component {
           >
             <View style={styles.targetHeader}>
               <Text style={[Fonts.textHeaderPage]}>Target Saat Ini</Text>
-              <TabsCustom listMenu={listTimeTarget} value={tabsTimeTarget} />
+              <View
+                style={{
+                  flex: 1,
+                  paddingLeft: 50
+                }}
+              >
+                <TabsCustom
+                  listMenu={listTimeTarget}
+                  value={tabsTimeTarget}
+                  onChange={value => {
+                    console.log(data);
+                    this.setState({
+                      tabsTimeTarget: value
+                    });
+                  }}
+                />
+              </View>
             </View>
             <ShadowComponent radius={12}>
               <View
@@ -196,41 +281,25 @@ class DashboardView extends Component {
                     Pencapaian
                   </Text>
                 </View>
-                <View>
-                  <Text
-                    style={[
-                      Fonts.type13,
-                      styles.textContent,
-                      {
-                        color: '#757575'
-                      }
-                    ]}
-                  >
-                    10 Toko
-                  </Text>
-                  <Text
-                    style={[
-                      Fonts.type13,
-                      styles.textContent,
-                      {
-                        color: '#757575'
-                      }
-                    ]}
-                  >
-                    15/06/2020
-                  </Text>
-                  <Text
-                    style={[
-                      Fonts.type13,
-                      styles.textContent,
-                      {
-                        color: '#757575'
-                      }
-                    ]}
-                  >
-                    8 Toko
-                  </Text>
-                </View>
+                {data ? (
+                  <View>
+                    <Text style={[Fonts.type13, styles.textContent]}>
+                      {data[tabsTimeTarget].now
+                        ? data[tabsTimeTarget].now.target
+                        : '0'}
+                    </Text>
+                    <Text style={[Fonts.type13, styles.textContent]}>
+                      {data[tabsTimeTarget].now
+                        ? data[tabsTimeTarget].now.date
+                        : ''}
+                    </Text>
+                    <Text style={[Fonts.type13, styles.textContent]}>
+                      {data[tabsTimeTarget].now
+                        ? data[tabsTimeTarget].now.achieve
+                        : '0'}
+                    </Text>
+                  </View>
+                ) : null}
               </View>
             </ShadowComponent>
           </View>
@@ -239,23 +308,28 @@ class DashboardView extends Component {
               padding: 20
             }}
           >
-            <TabsCenter
+            <TabsCustom
+              type={typeCustomTabs.round}
               listMenu={listTarget}
               value={tabsTarget}
               onChange={this.tabsTargetChanged}
             />
           </View>
-          {dummyDataTarget.map((row, i) => (
-            <View
-              key={i.toString()}
-              style={{
-                paddingHorizontal: 20,
-                paddingVertical: 5
-              }}
-            >
-              <TargetCard data={row} />
-            </View>
-          ))}
+          {data[tabsTimeTarget]
+            ? data[tabsTimeTarget][tabsTarget]
+              ? data[tabsTimeTarget][tabsTarget].map((row, i) => (
+                  <View
+                    key={i.toString()}
+                    style={{
+                      paddingHorizontal: 20,
+                      paddingVertical: 5
+                    }}
+                  >
+                    <TargetCard type={tabsTarget} data={row} />
+                  </View>
+                ))
+              : null
+            : null}
           <View
             style={{
               height: 20
@@ -296,7 +370,16 @@ const styles = StyleSheet.create({
   },
   textContent: {
     fontSize: 16,
-    marginVertical: 5
+    marginVertical: 5,
+    color: '#000',
+    lineHeight: 16
+  },
+  loadingContainer: {
+    height: Dimensions.get('screen').height - 120,
+    width: '100%',
+    position: 'absolute',
+    zIndex: 2,
+    backgroundColor: 'rgba(250,250,250 ,0.8)'
   }
 });
 
