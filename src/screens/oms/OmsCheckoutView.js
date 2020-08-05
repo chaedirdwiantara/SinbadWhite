@@ -844,8 +844,8 @@ class OmsCheckoutView extends Component {
   renderConfirmButton() {
     return (
       <ButtonSingleSmall
-        disabled={this.props.oms.loadingOmsConfirmOrder}
-        loading={this.props.oms.loadingOmsConfirmOrder}
+        disabled={this.props.oms.loadingOmsConfirmOrder || this.props.oms.loadingOmsGetTermsConditions}
+        loading={this.props.oms.loadingOmsConfirmOrder || this.props.oms.loadingOmsGetTermsConditions}
         loadingPadding={33}
         onPress={() => this.wantToConfirmOrder()}
         title={'Buat Pesanan'}

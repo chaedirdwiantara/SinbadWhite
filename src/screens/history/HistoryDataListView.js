@@ -70,6 +70,13 @@ class HistoryDataListView extends Component {
       }
     }
   }
+
+  /** CALL FROM CHILD */
+ parentFunction(data) {
+  if (data.type === 'countdown') {
+    this.onHandleRefresh();
+  }
+}
   /** REFRESH LIST VIEW */
   onHandleRefresh = () => {
     this.props.historyGetRefresh();
@@ -149,7 +156,7 @@ class HistoryDataListView extends Component {
 
   /** go to detail */
   goToDetail(item) {
-    this.props.historyGetDetailProcess(item.id);
+    this.props.historyGetDetailProcess(item.billing.orderParcelId);
     NavigationService.navigate('HistoryDetailView', {
       section: this.props.section,
       storeId: item.store.id
@@ -229,10 +236,18 @@ class HistoryDataListView extends Component {
     return (
       <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
         <Text style={Fonts.type10}>Waktu Bayar: </Text>
-        <CountDown expiredTimer={Math.abs(timeDiffInSecond)} />
+        <CountDown
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
+          fontPrimer={Fonts.type18}
+          backgroundColor={masterColor.mainColor}
+          type={'small'}
+          expiredTimer={Math.abs(timeDiffInSecond)}
+        />
       </View>
     );
   }
+
 
   /** === RENDER ITEM (STATUS PAYMENT INFORMATION) === */
   renderItemStatusPaymentInformation(item) {
@@ -272,6 +287,7 @@ class HistoryDataListView extends Component {
       default:
         break;
     }
+    console.log(item, 'item')
     return (
       <View>
         <View style={{ flexDirection: 'row' }}>

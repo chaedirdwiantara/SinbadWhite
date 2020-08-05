@@ -250,7 +250,7 @@ class HistoryDetailPayment extends Component {
 
     renderActivateVA() {
         const params = {
-            billingID: this.props.data.billing.id
+            billingID: this.props.data.billing.orderParcelId
         };
 
         this.props.historyActivateVAProcess(params);
