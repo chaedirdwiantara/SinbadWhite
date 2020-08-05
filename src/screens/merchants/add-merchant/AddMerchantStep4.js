@@ -86,6 +86,7 @@ class AddMerchantStep4 extends Component {
   finalStep() {
     this.setState({ addStoreProcess: true });
     Keyboard.dismiss();
+    const warehouse = this.props.merchant.dataGetWarehouse
     const data = this.props.merchant.dataMerchantVolatile
     this.props.merchantAddProcess({
       storeId: data.storeId,
@@ -97,7 +98,7 @@ class AddMerchantStep4 extends Component {
       noteAddress: data.noteAddress,
       urbanId: data.urbanId,
       status: 'active',
-      warehouseId: data.warehouseId,
+      warehouseId: warehouse.total === 0 || warehouse.total === 1 ? null : data.warehouseId,
       user: {
         fullName: data.fullName,
         idNo: data.idNo,
