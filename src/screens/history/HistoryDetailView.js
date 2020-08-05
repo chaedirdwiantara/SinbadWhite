@@ -7,7 +7,8 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Text
+  Text,
+  RefreshControl
 } from '../../library/reactPackage';
 import {
   bindActionCreators,
@@ -89,7 +90,12 @@ class HistoryDetailView extends Component {
   /** CHECK STATUS */
   checkStatus() {
     let data = null;
-    if (this.state.section === 'payment') {
+    if (this.props.history.dataDetailHistory.billing.paymentChannelId === 2 && this.props.history.dataDetailHistory.statusPayment === "waiting_for_payment" && moment.utc(new Date()).local() > moment.utc(this.props.history.dataDetailHistory.billing.expiredPaymentTime).local()){
+      return {
+      title : 'Tidak Dibayar',
+      desc: 'Pesanan Tidak Dibayar'
+      }
+    } else if (this.state.section === 'payment') {
       if (this.props.history.dataGetPaymentStatus !== null) {
         data = this.props.history.dataGetPaymentStatus.find(
           itemPayment =>
@@ -149,6 +155,15 @@ class HistoryDetailView extends Component {
     }
     return '-';
   }
+  /** === ON REFRESH === */
+  onRefresh = () => {
+    this.props.historyGetDetailProcess(this.props.history.dataDetailHistory.id);
+    /** SET PAGE REFRESH */
+    this.setState({ refreshing: true });
+    setTimeout(() => {
+      this.setState({ refreshing: false });
+    }, 10);
+  };
   /**
    * ========================
    * RENDER VIEW
@@ -450,7 +465,14 @@ renderDetailPayment() {
   renderContent() {
     return (
       <View style={{ flex: 1 }}>
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh}
+            />
+          }
+        >
           {this.renderHeaderStatus()}
           {this.state.section === 'payment' ? (
             this.renderDetailPayment()

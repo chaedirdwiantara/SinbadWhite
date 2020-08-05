@@ -140,6 +140,7 @@ class ModalBottomPaymentType extends Component {
   render() {
     return (
       <ModalBottomType3
+        typeClose={"cancel"}
         open={this.props.open}
         onPress={this.props.close}
         close={this.props.close}
