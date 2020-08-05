@@ -10,6 +10,8 @@ export const SEARCH_TEXT = 'SearchText';
 export const LOCATION_SAVE_DATA_VOLATILE = 'LocationSaveDataVolatile';
 /** FOR FLAG MERCHANT ADD PUSHED */
 export const SAVE_PAGE_ADD_MERCHANT_FROM = 'SavePageAddMerchantFrom';
+/** FOR FLAG AREA MAPPING */
+export const SAVE_PAGE_AREA_MAPPING_FROM = 'SavePageAreaMappingFrom'
 /** FOR SAVE IMAGE BASE 64 */
 export const SAVE_IMAGE_BASE64 = 'saveImageBase64';
 /** FOR GET LIST AND SEARCH */
