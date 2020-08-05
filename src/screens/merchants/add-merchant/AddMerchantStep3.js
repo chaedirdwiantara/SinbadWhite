@@ -89,19 +89,21 @@ class AddMerchantStep3 extends Component {
         const warehouse = this.props.merchant.dataGetWarehouse;
         if (warehouse.total === 0) {
           this.props.saveVolatileDataMerchant({
-            warehouse:
-              'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
+            warehouse: 'Lokasi toko tidak dalam area jangkauan warehouse tertentu.',
+            warehouseId: null
           });
           this.setState({
-            disabledAction: true
+            disabledAction: true,
+            warehouseFound: 0
           });
         } else if (warehouse.total === 1) {
           this.props.saveVolatileDataMerchant({
             warehouse: warehouse.data[0].name,
-            warehouseId: warehouse.data[0].id
+            warehouseId: null
           });
           this.setState({
-            disabledAction: true
+            disabledAction: true,
+            warehouseFound: 1
           });
         } else if (warehouse.total > 1) {
           this.props.saveVolatileDataMerchant({
@@ -224,13 +226,16 @@ class AddMerchantStep3 extends Component {
   renderWarehouse() {
     return (
       <DropdownType2
-        title={this.props.merchant.dataGetWarehouse.total !== 0
-        ? '*Warehouse'
-        : 'Warehouse'
+        title={
+          this.props.merchant.dataGetWarehouse.total !== 0
+            ? '*Warehouse'
+            : 'Warehouse'
         }
-        placeholder={this.props.merchant.dataGetWarehouse.total !== 0
-        ? 'Masukan Warehouse'
-        : 'Lokasi toko tidak dalam are jangkauan warehouse tertentu'}
+        placeholder={
+          this.props.merchant.dataGetWarehouse.total !== 0
+          ? 'Masukan Warehouse'
+          : 'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
+          }
         selectedDropdownText={
           this.props.merchant.dataMerchantVolatile.warehouse
         }
