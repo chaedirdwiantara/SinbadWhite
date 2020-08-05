@@ -90,6 +90,8 @@ import SelectedMerchantName from '../components/SelectedMerchantName'
 import ErrorBoundary from '../components/error/ErrorBoundary'
 /** CARD */
 import Shadow from '../components/card/shadow';
+/** TABS */
+import TabsCustom, { typeCustomTabs } from '../components/tabs/tabsCustom';
 
 export {
   CartGlobal,
@@ -183,7 +185,10 @@ export {
   /** Error Boundary */
   ErrorBoundary,
   /** CARD */
-  Shadow
+  Shadow,
+  /** TABS */
+  TabsCustom,
+  typeCustomTabs
 };
 
 /**
