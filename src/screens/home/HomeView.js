@@ -25,15 +25,14 @@ import {
   ModalConfirmation,
   ModalConfirmationType2,
   ProgressBarType2,
-  Shadow
+  Shadow,
+  TabsCustom
 } from '../../library/component';
 import { GlobalStyle, Fonts, MoneyFormatShort } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import { Color } from '../../config';
-
-import Tab from '../../components/tabs/tabsCustom';
 
 const { width } = Dimensions.get('window');
 const defaultImage = require('../../assets/images/sinbad_image/sinbadopacity.png');
@@ -162,7 +161,7 @@ class HomeView extends Component {
             achieved: 0,
             target: 0
           }
-        },
+        }
       ],
       pageOne: 0,
       tabValue: tabDashboard[0].value
@@ -211,7 +210,6 @@ class HomeView extends Component {
   }
   /** === ON CHANGE TAB === */
   onChangeTab(value) {
-    console.log(value)
     this.setState({ tabValue: value });
   }
   /** === GO TO PAGE === */
@@ -320,8 +318,10 @@ class HomeView extends Component {
   renderKpiDashboard() {
     return (
       <View style={{ paddingVertical: 10 }}>
+        <View style={{ width: '100%', height: 15 }} />
         <Text style={Fonts.type7}>Your Dashboard</Text>
-        <Tab
+        <View style={{ width: '100%', height: 8 }} />
+        <TabsCustom
           listMenu={tabDashboard}
           onChange={value => this.onChangeTab(value)}
           value={this.state.tabValue}
@@ -330,6 +330,7 @@ class HomeView extends Component {
           horizontal
           showsHorizontalScrollIndicator={false}
           decelerationRate={0}
+          style={{ marginTop: 8 }}
           snapToInterval={width - 90}
           snapToAlignment={'center'}
           contentInset={{
