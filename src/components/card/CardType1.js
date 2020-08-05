@@ -64,7 +64,7 @@ class CardType1 extends Component {
   }
   renderContent() {
     return (
-      <View style={{ marginHorizontal: 16, marginTop: 4, marginBottom: 4 }}>
+      <View style={{ marginHorizontal: 16, marginTop: 8 }}>
         {this.renderCard()}
       </View>
     );
