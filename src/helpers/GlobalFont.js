@@ -603,6 +603,12 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: Color.fontBlack40
   },
+  type100: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 13,
+    lineHeight: 16,
+    color: Color.fontWhite
+  },
   forCompare: {
     fontFamily: Fonts.MontserratMedium,
     fontSize: 10,
