@@ -388,7 +388,6 @@ class HistoryDetailPayment extends Component {
         const localTime = toLocalTime(expired);
         const expiredTime = moment(localTime);
         const a = this.props.history.dataDetailHistory
-        console.log("data:", this.props.data);
         // const localTime = moment(expired);
         if (this.props.data.statusPayment === "waiting_for_payment" && moment.utc(new Date()).local() > moment.utc(this.props.data.billing.expiredPaymentTime).local()){
          null   
