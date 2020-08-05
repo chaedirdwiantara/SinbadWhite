@@ -287,13 +287,20 @@ class HistoryDataListView extends Component {
       default:
         break;
     }
-    console.log(item, 'item')
+    console.log(moment.utc(item.billing.expiredPaymentTime).local(), 'item')
     return (
       <View>
         <View style={{ flexDirection: 'row' }}>
+        {
+          item.paymentChannel.id === 2 && moment.utc(new Date()).local() > moment.utc(item.billing.expiredPaymentTime).local() && item.statusPayment === "waiting_for_payment"?
+          <Text style={{ ...textStyle, textAlign: 'right' }}>
+            Tidak Dibayar
+          </Text>
+          :
           <Text style={{ ...textStyle, textAlign: 'right' }}>
             {this.statusPayment(item.statusPayment)}
           </Text>
+        }
           {item.statusPayment === 'overdue' ? (
             <View style={{ marginLeft: 5 }}>
               <MaterialIcon name="error" size={15} color={'#f0444c'} />
@@ -308,8 +315,11 @@ class HistoryDataListView extends Component {
             item.billing && item.billing.billingStatus !== 'paid' &&
             item.billing.expiredPaymentTime &&
             item.paymentChannel &&
-            item.paymentChannel.id === 2
-            ? this.renderCountDown(item)
+            item.paymentChannel.id === 2 ? 
+              moment.utc(new Date()).local() > moment.utc(item.billing.expiredPaymentTime).local() && item.statusPayment === "waiting_for_payment"?
+              null
+              :
+              this.renderCountDown(item)
             : null
           : null}
       </View>
