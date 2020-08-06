@@ -279,10 +279,8 @@ class HistoryDataListView extends Component {
     switch (item.statusPayment) {
       case 'payment_failed':
       case 'overdue':
-        textStyle = Fonts.type11;
-        break;
       case 'waiting_for_payment':
-        textStyle = { ...Fonts.type11, color: masterColor.fontRed50 };
+        textStyle = Fonts.type11
         break;
       default:
         break;
@@ -296,7 +294,7 @@ class HistoryDataListView extends Component {
             Tidak Dibayar
           </Text>
           :
-          <Text style={{ ...textStyle, textAlign: 'right' }}>
+          <Text style={{ ...textStyle, textAlign: 'right', marginLeft: 15 }}>
             {this.statusPayment(item.statusPayment)}
           </Text>
         }
@@ -340,7 +338,7 @@ renderButtonForPayment(item) {
         <View style={GlobalStyle.shadowForBox}>
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
-              <Text style={Fonts.type42}>{item.orderCode}</Text>
+              <Text style={Fonts.type10}>{item.orderCode}</Text>
               {this.props.section === 'payment'
                 ? this.renderItemStatusPayment(item)
                 : this.renderItemStatusOrder(item)
