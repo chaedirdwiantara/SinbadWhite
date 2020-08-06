@@ -174,6 +174,7 @@ class HomeView extends Component {
    */
   componentDidMount() {
     this.props.versionsGetProcess();
+    this.props.getKpiDashboardProcess({});
     this.getKpiData();
     this.props.navigation.setParams({
       fullName: this.props.user.fullName,
@@ -657,8 +658,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, merchant, global }) => {
-  return { user, merchant, global };
+const mapStateToProps = ({ user, merchant, global, salesmanKpi }) => {
+  return { user, merchant, global, salesmanKpi };
 };
 
 const mapDispatchToProps = dispatch => {
