@@ -310,16 +310,19 @@ class ListAndSearchType1 extends Component {
   /** RENDER EMPTY */
   renderEmpty() {
     return (
+      <View style={styles.mainContainer}>
+      <StatusBarRed />
       <EmptyData
         title={'Maaf, data tidak ditemukan'}
       />
+      </View>
     )
   }
   /** === MAIN === */
   render(){
-    return this.props.global.dataGetListAndSearch === 0 
-    ? this.renderEmpty()
-    : this.renderData()
+    return this.props.global.dataGetListAndSearch.length !== 0 
+    ? this.renderData()
+    : this.renderEmpty()
   }
 }
 
