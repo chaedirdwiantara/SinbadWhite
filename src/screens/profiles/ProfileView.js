@@ -74,6 +74,7 @@ class ProfileView extends Component {
         this.setState({ openModalCS: true });
         break;
       case 'area_mapping':
+        this.props.savePageAddMerchantFrom('ProfileView')
         NavigationService.navigate('ProfileAreaMapping')
         break;
       default:
