@@ -33,6 +33,7 @@ import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import { Color } from '../../config';
+import { KpiDashboardMethod } from '../../services/methods';
 
 const { width } = Dimensions.get('window');
 const defaultImage = require('../../assets/images/sinbad_image/sinbadopacity.png');
@@ -49,44 +50,6 @@ const tabDashboard = [
   {
     title: 'Bulanan',
     value: 'month'
-  }
-];
-
-const kpiDashboardDummy = () => [
-  {
-    id: 'order',
-    data: {
-      achieved: 12,
-      target: 20
-    }
-  },
-  {
-    id: 'sell',
-    data: {
-      achieved: 2300000,
-      target: 4600000
-    }
-  },
-  {
-    id: 'visit',
-    data: {
-      achieved: 12,
-      target: 20
-    }
-  },
-  {
-    id: 'new',
-    data: {
-      achieved: 10,
-      target: 20
-    }
-  },
-  {
-    id: 'orderCreated',
-    data: {
-      achieved: 10,
-      target: 20
-    }
   }
 ];
 
@@ -197,8 +160,8 @@ class HomeView extends Component {
     }
   }
   /** === GET KPI DATA === */
-  getKpiData() {
-    const newData = kpiDashboardDummy();
+  async getKpiData() {
+    const newData = await KpiDashboardMethod.getKpiData();
     let newKpiDashboard = [...this.state.kpiDashboard];
     newData.map(item => {
       const index = newKpiDashboard.findIndex(
