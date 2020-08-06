@@ -99,6 +99,7 @@ class DashboardView extends Component {
   }
 
   componentDidMount() {
+    this.props.this.props.getKpiDashboardProcess({});
     this.getData();
   }
 
@@ -383,8 +384,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ auth, salesmanKpi }) => {
+  return { auth, salesmanKpi };
 };
 
 const mapDispatchToProps = dispatch => {
