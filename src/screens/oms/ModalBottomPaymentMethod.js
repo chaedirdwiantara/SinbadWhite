@@ -206,7 +206,7 @@ class ModalBottomPaymentMethod extends Component {
   render() {
     return (
       <ModalBottomType4
-        typeClose={"cancel"}
+        typeClose={"close"}
         open={this.props.open}
         onPress={this.props.close}
         close={this.props.close}
