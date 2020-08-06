@@ -78,6 +78,7 @@ class AddMerchantStep4 extends Component {
       this.props.merchant.errorAddMerchant
     ) {
       if (this.props.merchant.errorAddMerchant !== null) {
+        this.props.volatileResetMerchant()
         this.setState({ openErrorAddMerchant: true });
       }
     }
