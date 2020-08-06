@@ -300,9 +300,7 @@ class ListAndSearchType1 extends Component {
     return (
       <View style={styles.mainContainer}>
         <StatusBarRed />
-        {this.props.global.loadingGetListAndSearch
-          ? this.renderSkeleton()
-          : this.renderContent()}
+        {this.renderContent()}
         {this.renderLoadMore()}
       </View>
     );
@@ -318,11 +316,16 @@ class ListAndSearchType1 extends Component {
       </View>
     )
   }
-  /** === MAIN === */
-  render(){
+  renderMainContent(){
     return this.props.global.dataGetListAndSearch.length !== 0 
     ? this.renderData()
     : this.renderEmpty()
+  }
+  /** === MAIN === */
+  render(){
+    return this.props.global.loadingGetListAndSearch
+    ? this.renderSkeleton()
+    : this.renderMainContent()
   }
 }
 
