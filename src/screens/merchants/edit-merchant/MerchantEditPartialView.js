@@ -12,13 +12,14 @@ import {
 } from '../../../library/thirdPartyPackage';
 import {
   ButtonSingle,
-  InputMapsType1,
+  InputMapsType2,
   DropdownType1,
   InputType4,
-  InputType2
+  InputType2,
+  DropdownType2
 } from '../../../library/component';
 import { Fonts } from '../../../helpers';
-import { Color } from '../../../config'
+import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
 import MerchantPhotoUploadRules from '../reusable-view/MerchantPhotoUploadRules';
@@ -32,6 +33,8 @@ class MerchantEditPartialView extends Component {
       showButtonOpenCamera: this.props.showButtonOpenCamera,
       refreshLocation: false,
       typeCamera: this.props.typeCamera,
+      disabledDropdown: true,
+      disabledAction: false,
       /** all data need */
       id: this.props.merchant.dataGetMerchantDetail.id,
       /** for merchant information */
@@ -41,12 +44,17 @@ class MerchantEditPartialView extends Component {
       address: this.props.merchant.dataMerchantVolatile.address,
       noteAddress: this.props.merchant.dataMerchantVolatile.noteAddress,
       urbanId: this.props.merchant.dataMerchantVolatile.urbanId,
+      zipCode: this.props.merchant.dataMerchantVolatile.zipCode,
+      urban: this.props.merchant.dataMerchantVolatile.urban,
+      warehouse: true,
       /** for merchant completeness information */
       largeArea: this.props.merchant.dataMerchantVolatile.largeArea,
       topSellingBrand: this.props.merchant.dataMerchantVolatile.topSellingBrand,
       mostWantedBrand: this.props.merchant.dataMerchantVolatile.mostWantedBrand,
       vehicleAccessibilityAmount: this.props.merchant.dataMerchantVolatile
-        .vehicleAccessibilityAmount
+        .vehicleAccessibilityAmount,
+      /** for warehouse check */
+      warehouseFound: null
     };
   }
   /**
@@ -60,6 +68,15 @@ class MerchantEditPartialView extends Component {
       latitude: this.props.merchant.dataMerchantVolatile.latitude,
       longitude: this.props.merchant.dataMerchantVolatile.longitude
     });
+    // this.props.getUrbanIdProcess({
+    //   province: this.props.merchant.dataMerchantVolatile.province,
+    //   city: this.props.merchant.dataMerchantVolatile.city,
+    //   district: this.props.merchant.dataMerchantVolatile.district,
+    //   urban: this.props.merchant.dataMerchantVolatile.urban
+    // });
+    this.props.merchantGetWarehouseProcess(
+      this.props.merchant.dataMerchantVolatile.urbanId
+    );
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
@@ -73,6 +90,85 @@ class MerchantEditPartialView extends Component {
         this.setState({ refreshLocation: false });
       }, 100);
     }
+
+    /** GET WAREHOUSE BY URBAN ID */
+    if (prevProps.global.dataGetUrbanId !== this.props.global.dataGetUrbanId) {
+      /** GET WAREHOUSE */
+
+      if (
+        this.props.global.dataGetUrbanId !== null &&
+        this.props.global.dataGetUrbanId.length !== 0
+      ) {
+        setTimeout(() => {
+          this.props.merchantGetWarehouseProcess(
+            this.props.global.dataGetUrbanId[0].id
+          );
+        }, 100);
+      }
+    }
+    /** CHECK WAREHOUSE */
+    if (
+      prevProps.merchant.dataGetWarehouse !==
+      this.props.merchant.dataGetWarehouse
+    ) {
+      if (this.props.merchant.dataGetWarehouse !== null) {
+        if (this.props.merchant.dataGetWarehouse.total === 0) {
+          this.props.saveVolatileDataMerchant({
+            warehouse: null,
+            warehouseId: null
+          });
+        } else if (this.props.merchant.dataGetWarehouse.total === 1) {
+          this.props.saveVolatileDataMerchant({
+            warehouse: this.props.merchant.dataGetWarehouse.data[0].name,
+            warehouseId: this.props.merchant.dataGetWarehouse.data[0].id
+          });
+        }
+      }
+    }
+
+    /** CHECK WAREHOUSE */
+    // if (
+    //   prevProps.merchant.dataGetWarehouse !==
+    //   this.props.merchant.dataGetWarehouse
+    // ) {
+    //   if (this.props.merchant.dataGetWarehouse !== null) {
+    //     const warehouse = this.props.merchant.dataGetWarehouse;
+    //     if (warehouse.total === 0) {
+    //       this.props.saveVolatileDataMerchant({
+    //         warehouse:
+    //           'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
+    //       });
+    //       this.setState({
+    //         disabledAction: true,
+    //         warehouseFound: 0
+    //       });
+    //     } else if (warehouse.total === 1) {
+    //       this.props.saveVolatileDataMerchant({
+    //         warehouse: warehouse.data[0].name,
+    //         warehouseId: warehouse.data[0].id
+    //       });
+    //       this.setState({
+    //         disabledAction: true,
+    //         warehouseFound: 1
+    //       });
+    //     } else if (warehouse.total > 1) {
+    //       this.props.saveVolatileDataMerchant({
+    //         warehouse: null
+    //       });
+    //       this.setState({
+    //         disabledDropdown: false,
+    //         disabledAction: false
+    //       });
+    //     }
+    //   }
+    // }
+
+    // if (
+    //   prevProps.merchant.dataMerchantVolatile.warehouse !==
+    //   this.props.merchant.dataMerchantVolatile.warehouse
+    // ) {
+    //   this.setState({ warehouse: false });
+    // }
   }
   /** === DID UNMOUNT */
   componentWillUnmount() {
@@ -124,6 +220,7 @@ class MerchantEditPartialView extends Component {
           noteAddress: this.state.noteAddress,
           longitude: this.props.global.longitude,
           latitude: this.props.global.latitude,
+          warehouseId: this.props.merchant.dataMerchantVolatile.warehouseId,
           urbanId:
             this.props.global.dataGetUrbanId !== null
               ? this.props.global.dataGetUrbanId[0].id
@@ -151,6 +248,26 @@ class MerchantEditPartialView extends Component {
         break;
     }
   }
+  /** === CHECK BUTTON FOR URBAN WAREHOUSE === */
+  checkButtonForUrbanWarehouse() {
+    if (this.props.merchant.dataGetWarehouse.total === 0) {
+      return (
+        this.props.global.longitude ===
+          this.props.merchant.dataGetMerchantDetail.longitude &&
+        this.props.global.latitude ===
+          this.props.merchant.dataGetMerchantDetail.latitude
+      );
+    } else {
+      if (this.props.merchant.dataGetMerchantDetail.warehouse) {
+        return (
+          this.props.merchant.dataGetMerchantDetail.warehouse.name ===
+          this.props.merchant.dataMerchantVolatile.warehouse
+        );
+      } else {
+        return this.props.merchant.dataMerchantVolatile.warehouse === null;
+      }
+    }
+  }
   /** === CHECK BUTTON (CHECK BUTTON SAVE DISBALE OR NOT) === */
   checkButton() {
     const data = this.props.merchant.dataMerchantVolatile;
@@ -175,10 +292,7 @@ class MerchantEditPartialView extends Component {
         );
       case 'merchantAddress':
         return (
-          this.props.global.longitude ===
-            this.props.merchant.dataGetMerchantDetail.longitude &&
-          this.props.global.latitude ===
-            this.props.merchant.dataGetMerchantDetail.latitude &&
+          this.checkButtonForUrbanWarehouse() &&
           this.state.address === data.address &&
           this.state.noteAddress === data.noteAddress
         );
@@ -260,7 +374,7 @@ class MerchantEditPartialView extends Component {
   renderAddressMerchant() {
     return (
       <View style={{ marginTop: 16 }}>
-        <InputMapsType1
+        <InputMapsType2
           change
           title={'Koordinat Lokasi'}
           selectedMapLong={this.props.global.longitude}
@@ -268,6 +382,7 @@ class MerchantEditPartialView extends Component {
           refresh={this.state.refreshLocation}
           openMaps={() => this.goToMaps()}
         />
+
         <InputType2
           title={'Detail Alamat'}
           value={this.state.address}
@@ -285,6 +400,34 @@ class MerchantEditPartialView extends Component {
           text={text => this.setState({ noteAddress: text })}
           error={false}
           errorText={''}
+        />
+        <DropdownType2
+          title={
+            this.props.merchant.dataGetWarehouse.total !== 0
+              ? '*Warehouse'
+              : 'Warehouse'
+          }
+          placeholder={
+            this.props.merchant.dataGetWarehouse.total !== 0
+              ? 'Masukan Warehouse'
+              : 'Lokasi toko tidak dalam area jangkauan warehouse tertentu'
+          }
+          selectedDropdownText={
+            this.props.merchant.dataMerchantVolatile.warehouse
+          }
+          disabledDropdown={this.props.merchant.dataGetWarehouse.total <= 1}
+          disabledAction={this.props.merchant.dataGetWarehouse.total <= 1}
+          openDropdown={() =>
+            this.goToDropdown({
+              type: 'warehouse',
+              placeholder: 'Cari Warehouse'
+            })
+          }
+          errorText={
+            this.props.merchant.dataGetWarehouse.total === 1
+              ? 'Lokasi toko berada dalam area jangkauan warehouse tertentu dan tidak dapat diubah.'
+              : ''
+          }
         />
       </View>
     );
@@ -534,14 +677,14 @@ export default connect(
 )(MerchantEditPartialView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

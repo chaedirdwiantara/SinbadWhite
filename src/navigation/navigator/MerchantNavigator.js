@@ -222,6 +222,7 @@ const MerchantNavigator = {
   MerchantEditView: {
     screen: MerchantEditView,
     navigationOptions: {
+      headerTitleStyle: GlobalFont.textHeaderPage,
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
