@@ -9,7 +9,8 @@ import {
   ModalBottomType3,
   ButtonSingle,
   StatusBarRedOP50,
-  StatusBarBlackOP40
+  StatusBarBlackOP40,
+  StatusBarBlackOP40Translucent
 } from '../../library/component';
 import { Fonts } from '../../helpers';
 
@@ -65,7 +66,7 @@ class ModalFailedCreateStore extends Component {
   renderModalContent() {
     return (
       <View style={{ alignItems: 'center' }}>
-        {this.props.white ? <StatusBarBlackOP40 /> : <StatusBarRedOP50 />}
+        {this.props.white ? <StatusBarBlackOP40 /> : <StatusBarBlackOP40Translucent />}
         <Image
           source={require('../../assets/images/sinbad_image/cry_sinbad.png')}
           style={{ width: 208, height: 156 }}
