@@ -7,10 +7,11 @@ import {
   FlatList,
   View
 } from '../../library/reactPackage';
-import { MaterialIcon } from '../../library/thirdPartyPackage';
-import { StatusBarWhite, CardType1 } from '../../library/component';
+import { MaterialIcon, connect, bindActionCreators } from '../../library/thirdPartyPackage';
+import { StatusBarWhite, CardType1, BackHandlerBackSpecific } from '../../library/component';
 import { Color } from '../../config';
 import NavigationService from '../../navigation/NavigationService';
+import * as ActionCreators from '../../state/actions'
 
 class ProfileAreaMapping extends Component {
   constructor(props) {
@@ -25,27 +26,28 @@ class ProfileAreaMapping extends Component {
         },
         {
           warehouse: 'DC Rangkas Bitung'
-        }
-      ]
+        }        
+      ],
+      // navigateBack: this.props.global.pageAddMerchantFrom
     };
   }
 
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerLeft: () => (
-        <TouchableOpacity
-          style={{ marginLeft: 16 }}
-          onPress={() => NavigationService.navigate('ProfileView')}
-        >
-          <MaterialIcon
-            color={Color.fontBlack50}
-            name={'arrow-back'}
-            size={24}
-          />
-        </TouchableOpacity>
-      )
-    };
-  };
+  // static navigationOptions = ({ navigation }) => {
+  //   return {
+  //     headerLeft: () => (
+  //       <TouchableOpacity
+  //         style={{ marginLeft: 16 }}
+  //         onPress={() => NavigationService.navigate(this.props.global.pageAddMerchantFrom)}
+  //       >
+  //         <MaterialIcon
+  //           color={Color.fontBlack50}
+  //           name={'arrow-back'}
+  //           size={24}
+  //         />
+  //       </TouchableOpacity>
+  //     )
+  //   };
+  // };
   renderCard({item, index}) {
     return (
         <CardType1 
@@ -69,6 +71,10 @@ class ProfileAreaMapping extends Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
+      <BackHandlerBackSpecific 
+        navigation={this.props.navigation}
+        page={this.props.global.pageAddMerchantFrom}
+      />
         <StatusBarWhite />
         {this.renderContent()}
       </SafeAreaView>
@@ -83,4 +89,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ProfileAreaMapping;
+const mapStateToProps = ({ global }) => {
+  return { global };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
+
+// eslint-disable-next-line prettier/prettier
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileAreaMapping);
