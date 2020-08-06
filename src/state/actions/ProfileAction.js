@@ -19,3 +19,20 @@ export function profileEditSuccess(data) {
 export function profileEditFailed(data) {
   return { type: types.PROFILE_EDIT_FAILED, payload: data };
 }
+/**
+ * =================================
+ * PROFILE GET WAREHOUSE
+ * =================================
+ */
+export function profileGetWarehouseProcess(data){
+  return { type: types.PROFILE_GET_WAREHOUSE_PROCESS, payload: data }
+}
+export function profileGetWarehouseSuccess(data){
+  if (data.result === 'Ok'){
+    return { type: types.PROFILE_GET_WAREHOUSE_SUCCESS, payload: data.data}
+  }
+  return { type: types.PROFILE_GET_WAREHOUSE_FAILED, payload: data}
+}
+export function profileGetWarehouseFailed(data) {
+  return { type: types.PROFILE_GET_WAREHOUSE_FAILED, payload: data}
+}
