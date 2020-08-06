@@ -79,7 +79,7 @@ class AddMerchantStep4 extends Component {
     ) {
       if (this.props.merchant.errorAddMerchant !== null) {
         if(this.props.merchant.errorAddMerchant.data.errorCode === "ERR-AREA-MAPPING"){
-        this.props.volatileResetMerchant()
+        // this.props.volatileResetMerchant()
           this.setState({
             modalFailedCreateStore: true 
           });
