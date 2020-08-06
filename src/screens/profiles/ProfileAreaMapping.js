@@ -32,22 +32,26 @@ class ProfileAreaMapping extends Component {
     };
   }
 
-  // static navigationOptions = ({ navigation }) => {
-  //   return {
-  //     headerLeft: () => (
-  //       <TouchableOpacity
-  //         style={{ marginLeft: 16 }}
-  //         onPress={() => NavigationService.navigate(this.props.global.pageAddMerchantFrom)}
-  //       >
-  //         <MaterialIcon
-  //           color={Color.fontBlack50}
-  //           name={'arrow-back'}
-  //           size={24}
-  //         />
-  //       </TouchableOpacity>
-  //     )
-  //   };
-  // };
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerLeft: () => (
+        <TouchableOpacity
+          style={{ marginLeft: 16 }}
+          onPress={() => NavigationService.navigate(this.props.global.pageAddMerchantFrom)}
+        >
+          <MaterialIcon
+            color={Color.fontBlack50}
+            name={'arrow-back'}
+            size={24}
+          />
+        </TouchableOpacity>
+      )
+    };
+  };
+
+  componentDidMount(){
+    this.props.profileGetWarehouseProcess()
+  }
   renderCard({item, index}) {
     return (
         <CardType1 
@@ -89,8 +93,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ global }) => {
-  return { global };
+const mapStateToProps = ({ global, profile }) => {
+  return { global, profile };
 };
 
 const mapDispatchToProps = dispatch => {
