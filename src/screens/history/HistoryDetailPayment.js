@@ -274,6 +274,8 @@ class HistoryDetailPayment extends Component {
               </Text>
                         </View>
                         <ButtonSingle
+                            loading = {this.props.history.loadingHistoryActivateVA }
+                            dissabled = {this.props.history.loadingHistoryActivateVA}
                             white
                             disabled={false}
                             title={'AKTIFKAN VIRTUAL ACCOUNT'}
