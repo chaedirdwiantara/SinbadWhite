@@ -8,7 +8,7 @@ import {
   View
 } from '../../library/reactPackage';
 import { MaterialIcon, connect, bindActionCreators } from '../../library/thirdPartyPackage';
-import { StatusBarWhite, CardType1, BackHandlerBackSpecific } from '../../library/component';
+import { StatusBarWhite, CardType1, BackHandlerBackSpecific, LoadingPage } from '../../library/component';
 import { Color } from '../../config';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions'
@@ -55,35 +55,46 @@ class ProfileAreaMapping extends Component {
   renderCard({item, index}) {
     return (
         <CardType1 
-        warehouse={item.warehouse}
+        warehouse={item.name}
         number={index+1}
       />     
     )      
   }
 
-  renderContent(){  
+  renderData(){
     return(
         <FlatList
           contentContainerStyle={{marginBottom: 50}}
-          data={this.state.data}
+          data={this.props.profile.dataGetWarehouse.data}
           renderItem={this.renderCard.bind(this)}
           keyExtractor={(item, index) => index.toString()}
         />
     )
   }
+
+  renderContent(){
+      return (
+        <SafeAreaView style={styles.mainContainer}>
+        <BackHandlerBackSpecific 
+          navigation={this.props.navigation}
+          page={this.props.global.pageAddMerchantFrom}
+        />
+          <StatusBarWhite />
+          {this.renderData()}
+        </SafeAreaView>
+      );
+    }
+  
+
+  renderSkeleton(){
+    return <LoadingPage />
+  }
   
   render() {
-    return (
-      <SafeAreaView style={styles.mainContainer}>
-      <BackHandlerBackSpecific 
-        navigation={this.props.navigation}
-        page={this.props.global.pageAddMerchantFrom}
-      />
-        <StatusBarWhite />
-        {this.renderContent()}
-      </SafeAreaView>
-    );
-  }
+    return this.props.profile.loadingGetWarehouse
+    ? this.renderSkeleton()
+    : this.renderContent()
+}
 }
 
 const styles = StyleSheet.create({
