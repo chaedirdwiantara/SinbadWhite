@@ -15,13 +15,12 @@ import {
   ButtonSingle,
   StatusBarWhite,
   ProgressBarType1,
-  InputType4,
-  InputMapsType2,
   DropdownType1
 } from '../../../library/component';
 import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
 import * as ActionCreators from '../../../state/actions';
+import ModalFailedCreateStore from '../../global/ModalFailedCreateStore'
 
 class AddMerchantStep4 extends Component {
   constructor(props) {
@@ -33,6 +32,7 @@ class AddMerchantStep4 extends Component {
         this.props.user.userSuppliers.length === 1
           ? this.props.user.userSuppliers[0].supplier.id
           : '',
+      modalFailedCreateStore: false
     };
   }
   /**
@@ -78,9 +78,26 @@ class AddMerchantStep4 extends Component {
       this.props.merchant.errorAddMerchant
     ) {
       if (this.props.merchant.errorAddMerchant !== null) {
+        if(this.props.merchant.errorAddMerchant.data.errorCode === "ERR-AREA-MAPPING"){
         this.props.volatileResetMerchant()
-        this.setState({ openErrorAddMerchant: true });
+          this.setState({
+            modalFailedCreateStore: true 
+          });
+        } else {
+            this.setState({ openErrorAddMerchant: true });         
+        }
+        
       }
+    }
+  }
+  parentFunction(data){
+    switch (data.type) {
+      case 'goToAreaMapping':
+        this.setState({modalFailedCreateStore: false})
+        NavigationService.navigate('ProfileAreaMapping')
+        break;    
+      default:
+        break;
     }
   }
   /** SEND DATA ADD MERCHANT */
@@ -212,6 +229,20 @@ class AddMerchantStep4 extends Component {
       />
     )
   }
+  /** RENDER MODAL FAILED CREATE STORE */
+  renderModalFailed(){
+    return(
+      <ModalFailedCreateStore
+        open={this.state.modalFailedCreateStore}
+        close={() => {
+          this.setState({modalFailedCreateStore: false})
+          NavigationService.navigate(this.props.global.pageAddMerchantFrom )
+          }}
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+      />
+    )
+  }
   /** main content */
   renderContent() {
     return (
@@ -248,6 +279,7 @@ class AddMerchantStep4 extends Component {
           {this.renderContent()}
         </ScrollView>
         {this.renderButton()}
+        {this.renderModalFailed()}
       </SafeAreaView>
     );
   }
