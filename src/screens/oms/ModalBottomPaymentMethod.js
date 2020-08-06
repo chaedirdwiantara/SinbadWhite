@@ -109,7 +109,7 @@ class ModalBottomPaymentMethod extends Component {
               </Text>
             </View>
             <View style={{ width: '5%', justifyContent: 'center' }}>
-              <Icons name="navigate-next" size={24} />
+              <Icons style={{opacity: 0.5}} name="navigate-next" size={24} />
             </View>
           </TouchableOpacity>
           <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
@@ -192,7 +192,7 @@ class ModalBottomPaymentMethod extends Component {
           <ScrollView>
             <View>{this.renderPaymentType()}</View>
             {/* {this.renderPaymentType()} */}
-            {this.props.paymentType !== null ? (
+            {!this.props.loading && this.props.paymentType !== null ? (
               this.renderPaymentMethod()
             ) : (
               this.renderSkeleton()
