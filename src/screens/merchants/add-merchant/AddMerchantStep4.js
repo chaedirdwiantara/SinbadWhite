@@ -231,6 +231,7 @@ class AddMerchantStep4 extends Component {
         loading={
           this.props.merchant.loadingAddMerchant || this.state.addStoreProcess
         }
+        disabled={this.props.merchant.loadingAddMerchant || this.state.addStoreProcess}
         borderRadius={4}
         onPress={() => this.finalStep()}
       />
