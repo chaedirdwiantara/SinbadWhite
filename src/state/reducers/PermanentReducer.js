@@ -43,7 +43,6 @@ export const permanent = createReducer(INITIAL_STATE, {
     const indexOrder = state.newOrderSuccessPerMerchant.indexOf(
       action.payload.data.storeId
     );
-    // console.log("ini indexOrder: ", indexOrder);
     if (indexOrder === -1) {
       newOrder.push(action.payload.data.storeId);
     }
