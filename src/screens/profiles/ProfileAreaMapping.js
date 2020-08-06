@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  View
+  BackHandler
 } from '../../library/reactPackage';
 import { MaterialIcon, connect, bindActionCreators } from '../../library/thirdPartyPackage';
 import { StatusBarWhite, CardType1, BackHandlerBackSpecific, LoadingPage } from '../../library/component';
@@ -18,25 +18,34 @@ class ProfileAreaMapping extends Component {
     super(props);
   }
 
-  // static navigationOptions = ({ navigation }) => {
-  //   return {
-  //     headerLeft: () => (
-  //       <TouchableOpacity
-  //         style={{ marginLeft: 16 }}
-  //         onPress={() => NavigationService.navigate(this.props.global.pageAddMerchantFrom)}
-  //       >
-  //         <MaterialIcon
-  //           color={Color.fontBlack50}
-  //           name={'arrow-back'}
-  //           size={24}
-  //         />
-  //       </TouchableOpacity>
-  //     )
-  //   };
-  // };
+  static navigationOptions = ({ navigation }) => {
+    const { state } = navigation
+    return {
+      headerLeft: () => (
+        <TouchableOpacity
+          style={{ marginLeft: 16 }}
+          onPress={() => state.params.handleBackPressFromRN()}
+        >
+          <MaterialIcon
+            color={Color.fontBlack50}
+            name={'arrow-back'}
+            size={24}
+          />
+        </TouchableOpacity>
+      )
+    };
+  };
 
   componentDidMount(){
     this.props.profileGetWarehouseProcess()
+    this.navigationFunction()
+  }
+  /** === WILL UNMOUNT === */
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleHardwareBackPress
+    );
   }
   renderCard({item, index}) {
     return (
@@ -46,6 +55,29 @@ class ProfileAreaMapping extends Component {
       />     
     )      
   }
+    /**
+   * =======================
+   * NAVIGATION FUNCTION
+   * ======================
+   */
+  navigationFunction() {
+    this.props.navigation.setParams({
+      handleBackPressFromRN: () => this.handleBackPress()
+    });
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleHardwareBackPress
+    );
+  }
+  /** === BACK BUTTON RN PRESS HANDLING === */
+  handleBackPress = () => {
+    NavigationService.navigate(this.props.global.pageAddMerchantFrom);
+  };
+  /** === BACK BUTTON HARDWARE PRESS HANDLING === */
+  handleHardwareBackPress = () => {
+    NavigationService.navigate(this.props.global.pageAddMerchantFrom);
+    return true;
+  };
 
   renderData(){
     return(
