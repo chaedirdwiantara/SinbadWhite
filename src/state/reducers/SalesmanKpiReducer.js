@@ -5,7 +5,8 @@ const INITIAL_STATE = {
   isLoadingKpiDashboard: false,
   isLoadingKpiDashboardDetail: false,
   kpiDashboardData: {},
-  kpiDashboardDetailData: {}
+  kpiDashboardDetailData: {},
+  errorKpiDashboard: ''
 };
 
 export const salesmanKpi = createReducer(INITIAL_STATE, {
@@ -18,13 +19,15 @@ export const salesmanKpi = createReducer(INITIAL_STATE, {
   [types.KPI_DASHBOARD_GET_SUCCESS](state, action) {
     return {
       ...state,
-      isLoadingKpiDashboard: false
+      isLoadingKpiDashboard: false,
+      kpiDashboardData: action.payload
     };
   },
   [types.KPI_DASHBOARD_GET_FAILED](state, action) {
     return {
       ...state,
-      isLoadingKpiDashboard: false
+      isLoadingKpiDashboard: false,
+      errorKpiDashboard: action.payload
     };
   },
 
