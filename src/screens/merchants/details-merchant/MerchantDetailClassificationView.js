@@ -50,13 +50,7 @@ class MerchantDetailClassificationView extends Component {
         }
       };
       this.props.merchantEditProcess(data);
-      this.setState({
-        showToast: true,
-        notifToast: 'Berhasil Update Data'
-      })
-      setTimeout(() => {
-        this.setState({ showToast: false });
-      }, 3000);
+      this.showToast()
     }
     /** CHANGE STORE GROUP */
     if (
@@ -72,6 +66,7 @@ class MerchantDetailClassificationView extends Component {
         }
       };
       this.props.merchantEditProcess(data);
+      this.showToast()
     }
     /** CHANGE STORE CLUSTER */
     if (
@@ -87,6 +82,7 @@ class MerchantDetailClassificationView extends Component {
         }
       };
       this.props.merchantEditProcess(data);
+      this.showToast()
     }
     /** CHANGE STORE CHANNEL */
     if (
@@ -102,8 +98,19 @@ class MerchantDetailClassificationView extends Component {
         }
       };
       this.props.merchantEditProcess(data);
+      this.showToast()
     }
 
+  }
+
+  showToast(){
+    this.setState({
+      showToast: true,
+      notifToast: 'Berhasil Update Data'
+    })
+    setTimeout(() => {
+      this.setState({ showToast: false });
+    }, 3000);
   }
 
    /** === GO TO LIST AND SEARCH PAGE (GLOBAL USED) === */
