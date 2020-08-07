@@ -10,7 +10,8 @@ import {
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
-import { Fonts } from '../../helpers';
+import { Color } from '../../config';
+import { Fonts, Scale } from '../../helpers';
 import {
   Shadow as ShadowComponent,
   TabsCustom,
@@ -206,8 +207,68 @@ class DashboardView extends Component {
   };
 
   renderChart = () => {
+    let graphList = [
+      {
+        title: 'T.Order',
+        data: {}
+      },
+      {
+        title: 'Total Penjualan',
+        data: {}
+      },
+      {
+        title: 'T.Dikunjungi',
+        data: {}
+      },
+      {
+        title: 'T.Baru',
+        data: {}
+      },
+      {
+        title: 'Total Pesanan',
+        data: {}
+      }
+    ];
+
+    // prettier-ignore
     return <View style={styles.chartContainer}>
-             <Charts />
+             <ScrollView style={{ width: '100%', }} horizontal showsHorizontalScrollIndicator={false}
+                         decelerationRate={0}
+                         snapToInterval={Scale(360)}
+                         snapToAlignment={'center'} >
+               {
+                 graphList.map((graph, index) => {
+                   return <View style={{ width: Scale(360), height: '100%', }}>
+                            {/* Chart Title */}
+                            <Text>{graph.title}</Text>
+
+                            {/* Chart Component */}
+                            <Charts />
+                          </View>;
+                 })
+               }
+             </ScrollView>
+             {/* TODO: create this as component */}
+             <View style={{ alignItems: 'center', }}>
+               <View style={{ flexDirection: 'row' }}>
+                 <View
+                   style={[
+                     styles.miniCircle,
+                     {
+                       backgroundColor: Color.mainColor
+                     }
+                   ]}
+                 />
+                 <View
+                   style={[
+                     styles.miniCircle,
+                     {
+                       backgroundColor: Color.fontBlack60
+                     },
+                   ]}
+                 />
+               </View>
+             </View>
            </View>;
   };
 
@@ -406,6 +467,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 2,
     backgroundColor: 'rgba(250,250,250 ,0.8)'
+  },
+  miniCircle: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 5
   }
 });
 
