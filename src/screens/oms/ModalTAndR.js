@@ -129,7 +129,7 @@ class ModalTAndR extends Component {
                   loading={this.props.loadingConfirmOrder}
                   loadingPadding={33}
                   onPress={() => this.props.confirmOrder()}
-                  title={'Bayar'}
+                  title={'Buat Pesanan'}
                   borderRadius={4}
                   style={{ width: '50%' }}
                 />
