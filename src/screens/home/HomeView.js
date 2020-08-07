@@ -146,6 +146,8 @@ class HomeView extends Component {
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
+    console.log('this.props.salesmanKpi', this.props.salesmanKpi);
+
     if (prevProps.global.dataGetVersion !== this.props.global.dataGetVersion) {
       if (this.props.global.dataGetVersion !== null) {
         if (
