@@ -319,7 +319,7 @@ export const merchant = createReducer(INITIAL_STATE, {
           dataUpdate,
           dataPrevious
         ),
-        warehouse: checkData('warehouse', dataUpdate, dataPrevious) ,
+        warehouse: checkData('warehouse', dataUpdate, dataPrevious),
         warehouseId: checkData('warehouseId', dataUpdate, dataPrevious),
         /** merchant address */
         address: checkData('address', dataUpdate, dataPrevious),
@@ -591,54 +591,54 @@ export const merchant = createReducer(INITIAL_STATE, {
    * GET STORE STATUS
    * ============================
    */
-  [types.MERCHANT_STORE_STATUS_PROCESS](state, action){
+  [types.MERCHANT_STORE_STATUS_PROCESS](state, action) {
     return {
       ...state,
       loadingGetStoreStatus: true,
       dataStoreStatus: {},
       errorGetStoreStatus: null
-    }
+    };
   },
-  [types.MERCHANT_STORE_STATUS_SUCCESS](state, action){
+  [types.MERCHANT_STORE_STATUS_SUCCESS](state, action) {
     return {
       ...state,
       loadingGetStoreStatus: false,
       dataStoreStatus: action.payload.data
-    }
+    };
   },
-  [types.MERCHANT_STORE_STATUS_FAILED](state, action){
+  [types.MERCHANT_STORE_STATUS_FAILED](state, action) {
     return {
       ...state,
       loadingGetStoreStatus: false,
       errorGetStoreStatus: action.payload
-    }
+    };
   },
-  /** 
+  /**
    * ============================
    * GET WAREHOUSE
    * ============================
    */
-  [types.MERCHANT_GET_WAREHOUSE_PROCESS](state, action){
+  [types.MERCHANT_GET_WAREHOUSE_PROCESS](state, action) {
     return {
       ...state,
       loadingGetWarehouse: true,
-      dataGetWarehouse:[],
+      dataGetWarehouse: [],
       errorGetWarehouse: null
-    }
+    };
   },
-  [types.MERCHANT_GET_WAREHOUSE_SUCCESS](state, action){
+  [types.MERCHANT_GET_WAREHOUSE_SUCCESS](state, action) {
     return {
       ...state,
       loadingGetWarehouse: false,
       dataGetWarehouse: action.payload.data
-    }
+    };
   },
-  [types.MERCHANT_GET_WAREHOUSE_FAILED](state, action){
+  [types.MERCHANT_GET_WAREHOUSE_FAILED](state, action) {
     return {
       ...state,
       loadingGetWarehouse: false,
       errorGetWarehouse: action.payload
-    }
+    };
   }
 });
 /**
@@ -679,7 +679,7 @@ function saveDataMerchantVolatile(data) {
     vehicleAccessibilityName:
       data.vehicleAccessibility !== null ? data.vehicleAccessibility.name : '',
     vehicleAccessibilityAmount: data.vehicleAccessibilityAmount,
-    warehouse: data.warehouse,
+    warehouse: data.warehouse ? data.warehouse.name : null,
     warehouseId: data.warehouseId,
     /** for address */
     address: data.address,

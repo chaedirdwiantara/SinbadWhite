@@ -89,23 +89,22 @@ class AddMerchantStep3 extends Component {
         const warehouse = this.props.merchant.dataGetWarehouse;
         if (warehouse.total === 0) {
           this.props.saveVolatileDataMerchant({
-            warehouse:
-              'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
+            warehouse: 'Lokasi toko tidak dalam area jangkauan warehouse tertentu.',
+            warehouseId: null
           });
-            this.setState({
-              warehouseTitle: '*Warehouse',
-              disabledAction: true,
-              warehouseFound: 0
-            });
+          this.setState({
+            disabledAction: true,
+            warehouseFound: 0
+          });
         } else if (warehouse.total === 1) {
           this.props.saveVolatileDataMerchant({
             warehouse: warehouse.data[0].name,
             warehouseId: warehouse.data[0].id
           });
-            this.setState({
-              warehouseTitle: '*Warehouse',
-              disabledAction: true
-            });
+          this.setState({
+            disabledAction: true,
+            warehouseFound: 1
+          });
         } else if (warehouse.total > 1) {
           this.props.saveVolatileDataMerchant({
             warehouse: null
@@ -113,7 +112,6 @@ class AddMerchantStep3 extends Component {
           this.setState({
             disabledDropdown: false,
             disabledAction: false,
-            warehouseTitle: '*Warehouse'
           });
         }
       }
@@ -228,8 +226,16 @@ class AddMerchantStep3 extends Component {
   renderWarehouse() {
     return (
       <DropdownType2
-        title={this.state.warehouseTitle}
-        placeholder={'Masukan Warehouse'}
+        title={
+          this.props.merchant.dataGetWarehouse.total !== 0
+            ? '*Warehouse'
+            : 'Warehouse'
+        }
+        placeholder={
+          this.props.merchant.dataGetWarehouse.total !== 0
+          ? 'Masukan Warehouse'
+          : 'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
+          }
         selectedDropdownText={
           this.props.merchant.dataMerchantVolatile.warehouse
         }
