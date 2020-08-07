@@ -31,7 +31,9 @@ import ModalChangePaymentMethod from './ModalChangePaymentMethod';
 import ModalWarning from '../../components/modal/ModalWarning';
 import ModalTAndR from './ModalTAndC';
 import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation'
-import HistoryDetailPayment from './HistoryDetailPayment'
+import HistoryDetailPayment from './HistoryDetailPayment';
+import CallCS from '../../screens/global/CallCS';
+
 class HistoryDetailView extends Component {
   constructor(props) {
     super(props);
