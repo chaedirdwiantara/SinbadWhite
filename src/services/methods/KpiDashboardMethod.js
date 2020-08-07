@@ -43,6 +43,17 @@ function getKpiData() {
   return kpiDashboardDummy();
 }
 
+const getKpiDataDetail = async params => {
+  console.log('============== params ================');
+  console.log(params);
+  let response = await fetch(
+    'https://cantik-app.herokuapp.com/dummy/new-detail-dashboard'
+  );
+  let json = await response.json();
+  return json;
+};
+
 export const KpiDashboardMethod = {
-  getKpiData
+  getKpiData,
+  getKpiDataDetail
 };
