@@ -28,7 +28,7 @@ const HistoryNavigator = {
   HistoryDetailView: {
     screen: HistoryDetailView,
     navigationOptions: {
-      headerTitle: 'Detail Pesanan',
+      // headerTitle: 'Detail Pesanan',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
