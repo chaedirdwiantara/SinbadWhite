@@ -21,7 +21,6 @@ import {
 import TargetCard from './target';
 // import moment from 'moment';
 // import NavigationService from '../../navigation/NavigationService';
-import { ECharts } from 'react-native-echarts-wrapper';
 
 const listMenu = [
   {
