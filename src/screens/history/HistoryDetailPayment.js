@@ -361,9 +361,10 @@ class HistoryDetailPayment extends Component {
                            <View>
                             <View style={GlobalStyle.boxPadding} />
                             <View style={GlobalStyle.shadowForBox}>
-                                <View style={{ paddingHorizontal: 16, paddingTop: 8 }}>
+                                <View style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}>
                                     <Text style={Fonts.type48}>Panduan Pembayaran</Text>
                                 </View>
+                                <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
                                 <View
                                     style={{ paddingHorizontal: 16, paddingBottom: 16, paddingTop: 16 }}
                                 >
