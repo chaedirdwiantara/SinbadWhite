@@ -32,7 +32,6 @@ import ModalWarning from '../../components/modal/ModalWarning';
 import ModalTAndR from './ModalTAndC';
 import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation'
 import HistoryDetailPayment from './HistoryDetailPayment'
-
 class HistoryDetailView extends Component {
   constructor(props) {
     super(props);
@@ -43,6 +42,31 @@ class HistoryDetailView extends Component {
       storeId: this.props.navigation.state.params.storeId
     };
   }
+   /* ========================
+   * HEADER MODIFY
+   * ========================
+   */
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state;
+    return {
+      headerTitle:
+        params.section === 'payment' ? 'Detail Tagihan' : 'Detail Pesanan',
+      headerTitleStyle: [
+        Fonts.type35,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.backButtonWhite,
+      headerStyle: {
+        elevation: 0,
+        backgroundColor: masterColor.mainColor
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    };
+  };
   /**
    * =======================
    * FUNCTIONAL
