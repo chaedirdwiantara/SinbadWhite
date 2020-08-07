@@ -75,13 +75,6 @@ class MerchantEditView extends Component {
             showButton
           />
         );
-      case 'merchantClassification':
-        return (
-          <MerchantEditPartialView
-            type={this.props.navigation.state.params.type}
-            showButton={false}
-          />
-        );
       case 'merchantAccountImage':
         return (
           <MerchantEditPartialView

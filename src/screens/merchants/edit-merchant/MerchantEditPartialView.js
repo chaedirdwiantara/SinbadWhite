@@ -120,71 +120,6 @@ class MerchantEditPartialView extends Component {
         }
       }
     }
-    /**
-     * ====================================
-     * STORE SEGMENTATION
-     * ====================================
-     */
-    /** CHANGE STORE TYPE */
-    if (
-      prevProps.merchant.dataMerchantVolatile.storeType !== 
-      this.props.merchant.dataMerchantVolatile.storeType
-    ){
-      const data = {
-        id: this.state.id,
-        params: {
-          type: {
-            typeId: this.props.merchant.dataMerchantVolatile.typeId
-          }
-        }
-      };
-      this.props.merchantEditProcess(data);
-    }
-    /** CHANGE STORE GROUP */
-    if (
-      prevProps.merchant.dataMerchantVolatile.storeGroup !== 
-      this.props.merchant.dataMerchantVolatile.storeGroup
-    ){
-      const data = {
-        id: this.state.id,
-        params: {
-          group: {
-            groupId: this.props.merchant.dataMerchantVolatile.groupId
-          }
-        }
-      };
-      this.props.merchantEditProcess(data);
-    }
-    /** CHANGE STORE CLUSTER */
-    if (
-      prevProps.merchant.dataMerchantVolatile.storeCluster !== 
-      this.props.merchant.dataMerchantVolatile.storeCluster
-    ){
-      const data = {
-        id: this.state.id,
-        params: {
-          cluster: {
-            clusterId: this.props.merchant.dataMerchantVolatile.clusterId
-          }
-        }
-      };
-      this.props.merchantEditProcess(data);
-    }
-    /** CHANGE STORE CHANNEL */
-    if (
-      prevProps.merchant.dataMerchantVolatile.storeChannel !== 
-      this.props.merchant.dataMerchantVolatile.storeChannel
-    ){
-      const data = {
-        id: this.state.id,
-        params: {
-          channel: {
-            channelId: this.props.merchant.dataMerchantVolatile.channelId
-          }
-        }
-      };
-      this.props.merchantEditProcess(data);
-    }
   }
   /** === DID UNMOUNT */
   componentWillUnmount() {
@@ -328,8 +263,6 @@ class MerchantEditPartialView extends Component {
   /** SWITCH VIEW */
   switchView() {
     switch (this.props.type) {
-      case 'merchantClassification':
-        return this.renderClassificationMerchant();
       case 'merchantAddress':
         return this.renderAddressMerchant();
       case 'merchantCompletenessInformation':
@@ -611,41 +544,6 @@ class MerchantEditPartialView extends Component {
           }
           marginBottom={16}
         />
-      </View>
-    );
-  }
-  /**
-   * ================================
-   * RENDER MERCHANT CLASSIFICATION
-   * ================================
-   */
-  renderClassificationMerchant() {
-    return (
-      <View style={{ marginTop: 16 }}>
-        {this.renderContentSection({
-          key: 'Tipe Toko',
-          value: this.props.merchant.dataMerchantVolatile.storeType,
-          type: 'storeType',
-          placeholder: 'Masukan tipe toko'
-        })}
-        {this.renderContentSection({
-          key: 'Group Toko',
-          value: this.props.merchant.dataMerchantVolatile.storeGroup,
-          type: 'storeGroup',
-          placeholder: 'Masukan group toko'
-        })}
-        {this.renderContentSection({
-          key: 'Cluster Toko',
-          value: this.props.merchant.dataMerchantVolatile.storeCluster,
-          type: 'storeCluster',
-          placeholder: 'Masukan cluster toko'
-        })}
-        {this.renderContentSection({
-          key: 'Channel Toko',
-          value: this.props.merchant.dataMerchantVolatile.storeChannel,
-          type: 'storeChannel',
-          placeholder: 'Masukan channel toko'
-        })}
       </View>
     );
   }
