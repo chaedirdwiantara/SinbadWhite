@@ -4,7 +4,8 @@ import {
   View,
   ScrollView,
   StyleSheet,
-  Text
+  Text,
+  TouchableOpacity
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
@@ -68,12 +69,6 @@ class MerchantEditPartialView extends Component {
       latitude: this.props.merchant.dataMerchantVolatile.latitude,
       longitude: this.props.merchant.dataMerchantVolatile.longitude
     });
-    // this.props.getUrbanIdProcess({
-    //   province: this.props.merchant.dataMerchantVolatile.province,
-    //   city: this.props.merchant.dataMerchantVolatile.city,
-    //   district: this.props.merchant.dataMerchantVolatile.district,
-    //   urban: this.props.merchant.dataMerchantVolatile.urban
-    // });
     this.props.merchantGetWarehouseProcess(
       this.props.merchant.dataMerchantVolatile.urbanId
     );
@@ -125,50 +120,71 @@ class MerchantEditPartialView extends Component {
         }
       }
     }
-
-    /** CHECK WAREHOUSE */
-    // if (
-    //   prevProps.merchant.dataGetWarehouse !==
-    //   this.props.merchant.dataGetWarehouse
-    // ) {
-    //   if (this.props.merchant.dataGetWarehouse !== null) {
-    //     const warehouse = this.props.merchant.dataGetWarehouse;
-    //     if (warehouse.total === 0) {
-    //       this.props.saveVolatileDataMerchant({
-    //         warehouse:
-    //           'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
-    //       });
-    //       this.setState({
-    //         disabledAction: true,
-    //         warehouseFound: 0
-    //       });
-    //     } else if (warehouse.total === 1) {
-    //       this.props.saveVolatileDataMerchant({
-    //         warehouse: warehouse.data[0].name,
-    //         warehouseId: warehouse.data[0].id
-    //       });
-    //       this.setState({
-    //         disabledAction: true,
-    //         warehouseFound: 1
-    //       });
-    //     } else if (warehouse.total > 1) {
-    //       this.props.saveVolatileDataMerchant({
-    //         warehouse: null
-    //       });
-    //       this.setState({
-    //         disabledDropdown: false,
-    //         disabledAction: false
-    //       });
-    //     }
-    //   }
-    // }
-
-    // if (
-    //   prevProps.merchant.dataMerchantVolatile.warehouse !==
-    //   this.props.merchant.dataMerchantVolatile.warehouse
-    // ) {
-    //   this.setState({ warehouse: false });
-    // }
+    /**
+     * ====================================
+     * STORE SEGMENTATION
+     * ====================================
+     */
+    /** CHANGE STORE TYPE */
+    if (
+      prevProps.merchant.dataMerchantVolatile.storeType !== 
+      this.props.merchant.dataMerchantVolatile.storeType
+    ){
+      const data = {
+        id: this.state.id,
+        params: {
+          type: {
+            typeId: this.props.merchant.dataMerchantVolatile.typeId
+          }
+        }
+      };
+      this.props.merchantEditProcess(data);
+    }
+    /** CHANGE STORE GROUP */
+    if (
+      prevProps.merchant.dataMerchantVolatile.storeGroup !== 
+      this.props.merchant.dataMerchantVolatile.storeGroup
+    ){
+      const data = {
+        id: this.state.id,
+        params: {
+          group: {
+            groupId: this.props.merchant.dataMerchantVolatile.groupId
+          }
+        }
+      };
+      this.props.merchantEditProcess(data);
+    }
+    /** CHANGE STORE CLUSTER */
+    if (
+      prevProps.merchant.dataMerchantVolatile.storeCluster !== 
+      this.props.merchant.dataMerchantVolatile.storeCluster
+    ){
+      const data = {
+        id: this.state.id,
+        params: {
+          cluster: {
+            clusterId: this.props.merchant.dataMerchantVolatile.clusterId
+          }
+        }
+      };
+      this.props.merchantEditProcess(data);
+    }
+    /** CHANGE STORE CHANNEL */
+    if (
+      prevProps.merchant.dataMerchantVolatile.storeChannel !== 
+      this.props.merchant.dataMerchantVolatile.storeChannel
+    ){
+      const data = {
+        id: this.state.id,
+        params: {
+          channel: {
+            channelId: this.props.merchant.dataMerchantVolatile.channelId
+          }
+        }
+      };
+      this.props.merchantEditProcess(data);
+    }
   }
   /** === DID UNMOUNT */
   componentWillUnmount() {
@@ -341,11 +357,33 @@ class MerchantEditPartialView extends Component {
   /** === RENDER CONTENT SECTION === */
   renderContentSection(data) {
     return (
-      <View style={styles.boxContent}>
-        <View>
-          <Text style={[Fonts.type9, { marginBottom: 6 }]}>{data.key}</Text>
-          <Text style={Fonts.type24}>{data.value ? data.value : '-'}</Text>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          marginHorizontal: 16,
+          marginBottom: 28
+        }}
+      >
+        <View style={{ flex: 7, flexDirection: 'column' }} >
+          <View style={{flex: 1}}>
+            <Text style={[Fonts.type9, { marginBottom: 6 }]}>{data.key}</Text>
+          </View> 
+          <View style={{flex: 1}}>
+            <Text style={Fonts.type24}>{data.value ? data.value : '-'}</Text>
+          </View>
         </View>
+        <View style={{ flex: 3, justifyContent: 'center', alignItems: 'flex-end', flexDirection: 'column'}} >
+          <TouchableOpacity
+            onPress={() => this.goToDropdown({
+              type: data.type,
+              placeholder: data.placeholder
+            })}
+          >
+            <Text style={[Fonts.type11, {marginLeft: 0}]}>Ubah</Text>
+          </TouchableOpacity>
+        </View>
+
       </View>
     );
   }
@@ -586,19 +624,27 @@ class MerchantEditPartialView extends Component {
       <View style={{ marginTop: 16 }}>
         {this.renderContentSection({
           key: 'Tipe Toko',
-          value: this.props.merchant.dataMerchantVolatile.storeType
+          value: this.props.merchant.dataMerchantVolatile.storeType,
+          type: 'storeType',
+          placeholder: 'Masukan tipe toko'
         })}
         {this.renderContentSection({
           key: 'Group Toko',
-          value: this.props.merchant.dataMerchantVolatile.storeGroup
+          value: this.props.merchant.dataMerchantVolatile.storeGroup,
+          type: 'storeGroup',
+          placeholder: 'Masukan group toko'
         })}
         {this.renderContentSection({
           key: 'Cluster Toko',
-          value: this.props.merchant.dataMerchantVolatile.storeCluster
+          value: this.props.merchant.dataMerchantVolatile.storeCluster,
+          type: 'storeCluster',
+          placeholder: 'Masukan cluster toko'
         })}
         {this.renderContentSection({
           key: 'Channel Toko',
-          value: this.props.merchant.dataMerchantVolatile.storeChannel
+          value: this.props.merchant.dataMerchantVolatile.storeChannel,
+          type: 'storeChannel',
+          placeholder: 'Masukan channel toko'
         })}
       </View>
     );
