@@ -98,8 +98,26 @@ class DashboardView extends Component {
     };
   }
 
+  getInitialDetailKpi = () => {
+    this.props.getKpiDashboardDetailProcess({
+      type: 'typooo'
+    });
+  };
+
+  componentDidUpdate(prevProps) {
+    console.log(prevProps.salesmanKpi);
+    console.log(this.props.salesmanKpi);
+    // if (
+    //   prevProps.profile.dataEditProfile !== this.props.profile.dataEditProfile
+    // ) {
+    //   if (this.props.profile.dataEditProfile !== null) {
+    //     NavigationService.goBack(this.props.navigation.state.key);
+    //   }
+    // }
+  }
+
   componentDidMount() {
-    this.props.this.props.getKpiDashboardProcess({});
+    // this.getInitialDetailKpi();
     this.getData();
   }
 
@@ -394,6 +412,7 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardView);
+// export default DashboardView;
 
 /**
  * ============================

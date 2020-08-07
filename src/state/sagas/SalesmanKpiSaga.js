@@ -1,6 +1,7 @@
-import { put, takeLatest } from 'redux-saga/effects';
+import { put, takeLatest, call } from 'redux-saga/effects';
 import * as ActionCreators from '../actions';
 import * as types from '../types';
+import { KpiDashboardMethod } from '../../services/methods';
 
 function* getKpiDashboardProcess(actions) {
   try {
@@ -14,9 +15,10 @@ function* getKpiDashboardProcess(actions) {
 
 function* getKpiDashboardDetailProcess(actions) {
   try {
-    let data = {};
-
-    yield put(ActionCreators.getKpiDashboardDetailSuccess(data));
+    const response = yield call(() => {
+      return KpiDashboardMethod.getKpiDataDetail(actions.payload);
+    });
+    yield put(ActionCreators.getKpiDashboardDetailSuccess(response));
   } catch (error) {
     yield put(ActionCreators.getKpiDashboardDetailFailed(error));
   }
@@ -24,7 +26,10 @@ function* getKpiDashboardDetailProcess(actions) {
 
 function* SalesmanKpiSaga() {
   // yield takeLatest(types.KPI_DASHBOARD_GET_PROCESS, getKpiDashboardProcess);
-  // yield takeLatest(types.KPI_DASHBOARD_DETAIL_GET_PROCESS, getKpiDashboardDetailProcess);
+  yield takeLatest(
+    types.KPI_DASHBOARD_DETAIL_GET_PROCESS,
+    getKpiDashboardDetailProcess
+  );
 }
 
 export default SalesmanKpiSaga;

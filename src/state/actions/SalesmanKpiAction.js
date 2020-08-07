@@ -13,14 +13,14 @@ export const getKpiDashboardProcess = params => {
 
 export const getKpiDashboardSuccess = data => {
   return {
-    type: types.KPI_DASHBOARD_GET_PROCESS,
+    type: types.KPI_DASHBOARD_GET_SUCCESS,
     payload: data
   };
 };
 
 export const getKpiDashboardFailed = data => {
   return {
-    type: types.KPI_DASHBOARD_GET_PROCESS,
+    type: types.KPI_DASHBOARD_GET_FAILED,
     payload: data
   };
 };
@@ -36,15 +36,17 @@ export const getKpiDashboardDetailProcess = params => {
 };
 
 export const getKpiDashboardDetailSuccess = data => {
+  console.log('+++++++++++++++++++++++++++');
+  console.log(data);
   return {
-    type: types.KPI_DASHBOARD_DETAIL_GET_PROCESS,
+    type: types.KPI_DASHBOARD_DETAIL_GET_SUCCESS,
     payload: data
   };
 };
 
 export const getKpiDashboardDetailFailed = data => {
   return {
-    type: types.KPI_DASHBOARD_DETAIL_GET_PROCESS,
+    type: types.KPI_DASHBOARD_DETAIL_GET_FAILED,
     payload: data
   };
 };
