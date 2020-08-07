@@ -25,7 +25,7 @@ function* getKpiDashboardDetailProcess(actions) {
 }
 
 function* SalesmanKpiSaga() {
-  // yield takeLatest(types.KPI_DASHBOARD_GET_PROCESS, getKpiDashboardProcess);
+  yield takeLatest(types.KPI_DASHBOARD_GET_PROCESS, getKpiDashboardProcess);
   yield takeLatest(
     types.KPI_DASHBOARD_DETAIL_GET_PROCESS,
     getKpiDashboardDetailProcess
