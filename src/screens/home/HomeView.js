@@ -33,7 +33,6 @@ import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import { Color } from '../../config';
-import { KpiDashboardMethod } from '../../services/methods';
 
 const { width } = Dimensions.get('window');
 const defaultImage = require('../../assets/images/sinbad_image/sinbadopacity.png');
@@ -137,7 +136,6 @@ class HomeView extends Component {
    */
   componentDidMount() {
     this.props.versionsGetProcess();
-    this.props.getKpiDashboardProcess({});
     this.getKpiData();
     this.props.navigation.setParams({
       fullName: this.props.user.fullName,
@@ -146,8 +144,6 @@ class HomeView extends Component {
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
-    console.log('this.props.salesmanKpi', this.props.salesmanKpi);
-
     if (prevProps.global.dataGetVersion !== this.props.global.dataGetVersion) {
       if (this.props.global.dataGetVersion !== null) {
         if (
@@ -164,9 +160,9 @@ class HomeView extends Component {
   }
   /** === GET KPI DATA === */
   async getKpiData() {
-    const newData = await KpiDashboardMethod.getKpiData();
+    await this.props.getKpiDashboardProcess();
     let newKpiDashboard = [...this.state.kpiDashboard];
-    newData.map(item => {
+    this.props.salesmanKpi.kpiDashboardData.map(item => {
       const index = newKpiDashboard.findIndex(
         newitem => newitem.id === item.id
       );
@@ -641,8 +637,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 04082020
+ * updatedDate: 07082020
  * updatedFunction:
- * -> Add KPI dashboard and Comment dashboard menu icon
+ * -> Add dispatch Kpi dashboard data and use props.salesmanKpi
  *
  */
