@@ -5,9 +5,10 @@ import { KpiDashboardMethod } from '../../services/methods';
 
 function* getKpiDashboardProcess(actions) {
   try {
-    let data = {};
-
-    yield put(ActionCreators.getKpiDashboardSuccess(data));
+    const response = yield call(() => {
+      return KpiDashboardMethod.getKpiData();
+    });
+    yield put(ActionCreators.getKpiDashboardSuccess(response));
   } catch (error) {
     yield put(ActionCreators.getKpiDashboardFailed(error));
   }
