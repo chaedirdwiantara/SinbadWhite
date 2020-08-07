@@ -15,11 +15,13 @@ import {
   Shadow as ShadowComponent,
   TabsCustom,
   typeCustomTabs,
-  LoadingPage
+  LoadingPage,
+  Charts
 } from '../../library/component';
 import TargetCard from './target';
 // import moment from 'moment';
 // import NavigationService from '../../navigation/NavigationService';
+import { ECharts } from 'react-native-echarts-wrapper';
 
 const listMenu = [
   {
@@ -204,6 +206,12 @@ class DashboardView extends Component {
     });
   };
 
+  renderChart = () => {
+    return <View style={styles.chartContainer}>
+             <Charts />
+           </View>;
+  };
+
   render() {
     const {
       tabsTime,
@@ -239,7 +247,7 @@ class DashboardView extends Component {
               T. Order
             </Text>
             <ShadowComponent>
-              <View style={styles.chartContainer} />
+              {this.renderChart()}
             </ShadowComponent>
           </View>
           <View style={styles.sparator} />

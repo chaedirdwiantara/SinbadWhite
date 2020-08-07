@@ -92,6 +92,7 @@ import ErrorBoundary from '../components/error/ErrorBoundary'
 import Shadow from '../components/card/shadow';
 /** TABS */
 import TabsCustom, { typeCustomTabs } from '../components/tabs/tabsCustom';
+import Charts from '../components/charts';
 
 export {
   CartGlobal,
@@ -188,7 +189,8 @@ export {
   Shadow,
   /** TABS */
   TabsCustom,
-  typeCustomTabs
+  typeCustomTabs,
+  Charts
 };
 
 /**
