@@ -8,7 +8,7 @@ import {
 } from '../../library/reactPackage';
 import { MaterialIcon } from '../../library/thirdPartyPackage';
 import { Fonts } from '../../helpers';
-import { Color } from '../../config'
+import { Color } from '../../config';
 
 class DropdownType2 extends Component {
   constructor(props) {
@@ -24,7 +24,9 @@ class DropdownType2 extends Component {
   renderTitle() {
     return (
       <View style={styles.boxTitle}>
-        <Text style={this.props.disabledAction ? Fonts.type99 : Fonts.type32}>{this.props.title}</Text>
+        <Text style={this.props.disabledAction ? Fonts.type99 : Fonts.type32}>
+          {this.props.title}
+        </Text>
       </View>
     );
   }
@@ -75,7 +77,6 @@ class DropdownType2 extends Component {
             <Text style={Fonts.type33}>{this.props.placeholder}</Text>
           )}
         </View>
-        
       </View>
     );
   }
@@ -98,10 +99,10 @@ class DropdownType2 extends Component {
         {this.renderTitle()}
         {this.selectedDropdownDisabled()}
         {this.props.errorText ? (
-          <View style={{ marginLeft: this.props.prefixes ? 40 : 0 }}>
-            <Text style={Fonts.type24}>
-              {this.props.errorText}
-            </Text> 
+          <View
+            style={{ marginLeft: this.props.prefixes ? 40 : 0, marginTop: 7 }}
+          >
+            <Text style={Fonts.type17}>{this.props.errorText}</Text>
           </View>
         ) : (
           <View />
@@ -112,9 +113,9 @@ class DropdownType2 extends Component {
   }
   /** === RENDER CONTENT === */
   renderContent() {
-    return this.props.disabledAction 
-    ? ( this.renderContentDisabled()) 
-    : ( this.renderContentActive())
+    return this.props.disabledAction
+      ? this.renderContentDisabled()
+      : this.renderContentActive();
   }
   /** === MAIN VIEW === */
   render() {
@@ -156,14 +157,14 @@ const styles = StyleSheet.create({
 export default DropdownType2;
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

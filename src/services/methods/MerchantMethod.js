@@ -79,7 +79,7 @@ function getNoOrderReason() {
   });
 }
 /** === GET STORE STATUS === */
-function getStoreStatus(){
+function getStoreStatus() {
   return ApiRest({
     path: 'store-status',
     method: 'POST',
@@ -87,14 +87,16 @@ function getStoreStatus(){
       storeId: GlobalMethod.merchantStoreId(),
       supplierId: GlobalMethod.userSupplierMapping()
     }
-  })
+  });
 }
 /** GET WAREHOUSE */
-function getWarehouse(urbanId){
+function getWarehouse(urbanId) {
   return ApiRest({
-    path: `warehouses?supplierIds=${JSON.stringify(GlobalMethod.userSupplierMapping())}&urbanId=${parseInt(urbanId)}`,
+    path: `warehouses?supplierIds=${JSON.stringify(
+      GlobalMethod.userSupplierMapping()
+    )}&urbanId=${parseInt(urbanId, 10)}`,
     method: 'GET'
-  })
+  });
 }
 
 export const MerchantMethod = {
@@ -113,17 +115,17 @@ export const MerchantMethod = {
 };
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: tatas
-* updatedDate: 01072020
-* updatedFunction:
-* -> add fucntion to get store status
-* updatedBy: tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Change global method to get userId and supplierId
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: tatas
+ * updatedDate: 01072020
+ * updatedFunction:
+ * -> add fucntion to get store status
+ * updatedBy: tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Change global method to get userId and supplierId
+ */
