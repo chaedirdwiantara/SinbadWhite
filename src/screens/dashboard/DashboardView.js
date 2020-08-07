@@ -238,7 +238,7 @@ class DashboardView extends Component {
                          snapToAlignment={'center'} >
                {
                  graphList.map((graph, index) => {
-                   return <View style={{ width: Scale(360), height: '100%', }}>
+                   return <View key={index} style={{ width: Scale(360), height: '100%', }}>
                             {/* Chart Title */}
                             <Text>{graph.title}</Text>
 
