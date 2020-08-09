@@ -3,6 +3,13 @@ import GlobalStyle from './GlobalStyle';
 import GlobalStyleHtml from './GlobalStyleHtml';
 import { NumberFormat, MoneyFormat, MoneyFormatShort } from './NumberFormater';
 import Scale from './Scale';
+import {
+  getDateNow,
+  getMonthNow,
+  getYearNow,
+  getStartDateMonth,
+  getEndDateMonth
+} from './TimeHelper';
 
 export {
   Fonts,
@@ -11,5 +18,10 @@ export {
   NumberFormat,
   MoneyFormat,
   MoneyFormatShort,
-  Scale
+  Scale,
+  getDateNow,
+  getMonthNow,
+  getYearNow,
+  getStartDateMonth,
+  getEndDateMonth
 };

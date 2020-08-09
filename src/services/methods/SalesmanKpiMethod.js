@@ -1,3 +1,5 @@
+import ApiRest from '../apiRest';
+
 const kpiDashboardDummy = () =>
   new Promise(function(resolve) {
     resolve([
@@ -39,8 +41,13 @@ const kpiDashboardDummy = () =>
     ]);
   });
 
-function getKpiData() {
-  return kpiDashboardDummy();
+function getKpiData(data) {
+  return ApiRest({
+    path: `supplier/salesmankpi/v1/mobile/all?startDate=${
+      data.startDate
+    }&endDate=${data.endDate}&period=${data.period}&userId=${data.userId}`,
+    method: 'GET'
+  });
 }
 
 const getKpiDataDetail = async params => {
@@ -53,7 +60,7 @@ const getKpiDataDetail = async params => {
   return json;
 };
 
-export const KpiDashboardMethod = {
+export const SalesmanKpiMethod = {
   getKpiData,
   getKpiDataDetail
 };

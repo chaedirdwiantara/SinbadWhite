@@ -20,6 +20,9 @@ class ProgressBarType2 extends Component {
   /** === RENDER BAR === */
   renderBar() {
     let percentage = (this.props.achieved / this.props.target) * 100;
+    if (percentage.toString() === 'Infinity') {
+      percentage = 100;
+    }
     return (
       <View style={styles.boxBar}>
         <View style={styles.fullBar}>
@@ -79,7 +82,7 @@ export default ProgressBarType2;
  * createdBy: Dyah
  * createdDate: 04082020
  * updatedBy: Dyah
- * updatedDate: 04082020
+ * updatedDate: 09082020
  * updatedFunction:
  * -> New Component ProgressBarType2 for KPIDashboard
  *

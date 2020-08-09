@@ -27,3 +27,27 @@ const unitDivision = units => {
       return 1;
   }
 };
+
+// for kpi dashboard
+export const getDateNow = () => moment().format('YYYY-MM-DD');
+export const getMonthNow = () => moment().month();
+export const getYearNow = () => moment().year();
+export const getStartDateMonth = () =>
+  moment([getYearNow(), getMonthNow()]).format('YYYY-MM-DD');
+export const getEndDateMonth = () =>
+  moment(getStartDateMonth())
+    .endOf('month')
+    .format('YYYY-MM-DD');
+
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy: Ayu
+ * createdDate:
+ * updatedBy: Dyah
+ * updatedDate: 09082020
+ * updatedFunction:
+ * -> New time helper for kpi dashboard.
+ *
+ */

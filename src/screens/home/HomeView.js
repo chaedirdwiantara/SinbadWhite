@@ -28,7 +28,14 @@ import {
   Shadow,
   TabsCustom
 } from '../../library/component';
-import { GlobalStyle, Fonts, MoneyFormatShort } from '../../helpers';
+import {
+  GlobalStyle,
+  Fonts,
+  MoneyFormatShort,
+  getDateNow,
+  getStartDateMonth,
+  getEndDateMonth
+} from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
@@ -40,15 +47,15 @@ const defaultImage = require('../../assets/images/sinbad_image/sinbadopacity.png
 const tabDashboard = [
   {
     title: 'Harian',
-    value: 'day'
+    value: 'daily'
   },
-  {
-    title: 'Mingguan',
-    value: 'week'
-  },
+  // {
+  //   title: 'Mingguan',
+  //   value: 'weekly'
+  // },
   {
     title: 'Bulanan',
-    value: 'month'
+    value: 'monthly'
   }
 ];
 
@@ -81,7 +88,7 @@ class HomeView extends Component {
       kpiDashboard: [
         {
           title: 'T. Order',
-          id: 'order',
+          id: 'countOrders',
           image: require('../../assets/images/menu_dashboard/order.png'),
           data: {
             achieved: 0,
@@ -90,7 +97,7 @@ class HomeView extends Component {
         },
         {
           title: 'T. Baru',
-          id: 'new',
+          id: 'newStores',
           image: require('../../assets/images/menu_dashboard/new.png'),
           data: {
             achieved: 0,
@@ -99,7 +106,7 @@ class HomeView extends Component {
         },
         {
           title: 'Total Penjualan',
-          id: 'sell',
+          id: 'totalSales',
           image: require('../../assets/images/menu_dashboard/sell.png'),
           data: {
             achieved: 0,
@@ -108,7 +115,7 @@ class HomeView extends Component {
         },
         {
           title: 'Total Pesanan',
-          id: 'orderCreated',
+          id: 'orderedStores',
           image: require('../../assets/images/menu_dashboard/orderCreated.png'),
           data: {
             achieved: 0,
@@ -117,7 +124,7 @@ class HomeView extends Component {
         },
         {
           title: 'T. Dikunjungi',
-          id: 'visit',
+          id: 'visitedStores',
           image: require('../../assets/images/menu_dashboard/visit.png'),
           data: {
             achieved: 0,
@@ -136,7 +143,7 @@ class HomeView extends Component {
    */
   componentDidMount() {
     this.props.versionsGetProcess();
-    this.getKpiData();
+    this.getKpiData(this.state.tabValue);
     this.props.navigation.setParams({
       fullName: this.props.user.fullName,
       imageUrl: this.props.user.imageUrl
@@ -144,6 +151,19 @@ class HomeView extends Component {
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
+    if (
+      prevProps.salesmanKpi.kpiDashboardData !==
+      this.props.salesmanKpi.kpiDashboardData
+    ) {
+      let newKpiDashboard = [...this.state.kpiDashboard];
+      Object.keys(this.props.salesmanKpi.kpiDashboardData).map((key, i) => {
+        const index = newKpiDashboard.findIndex(item => item.id === key);
+        const newData = this.props.salesmanKpi.kpiDashboardData[key][0];
+        newKpiDashboard[index].data.target = newData.target;
+        newKpiDashboard[index].data.achieved = newData.achieved;
+      });
+      this.setState({ kpiDashboard: newKpiDashboard });
+    }
     if (prevProps.global.dataGetVersion !== this.props.global.dataGetVersion) {
       if (this.props.global.dataGetVersion !== null) {
         if (
@@ -159,20 +179,39 @@ class HomeView extends Component {
     }
   }
   /** === GET KPI DATA === */
-  async getKpiData() {
-    await this.props.getKpiDashboardProcess();
-    let newKpiDashboard = [...this.state.kpiDashboard];
-    this.props.salesmanKpi.kpiDashboardData.map(item => {
-      const index = newKpiDashboard.findIndex(
-        newitem => newitem.id === item.id
-      );
-      newKpiDashboard[index].data = item.data;
-    });
-    this.setState({ kpiDashboard: newKpiDashboard });
+  getKpiData(period) {
+    let params = {
+      startDate: '',
+      endDate: '',
+      period,
+      userId: this.props.user.id
+    };
+    switch (period) {
+      case 'daily':
+        params.startDate = getDateNow();
+        params.endDate = getDateNow();
+        break;
+
+      case 'weekly':
+        params.startDate = getDateNow();
+        params.endDate = getDateNow();
+        break;
+
+      case 'monthly':
+        params.startDate = getStartDateMonth();
+        params.endDate = getEndDateMonth();
+        break;
+
+      default:
+        break;
+    }
+    this.props.getKpiDashboardProcess(params);
   }
   /** === ON CHANGE TAB === */
   onChangeTab(value) {
-    this.setState({ tabValue: value });
+    this.setState({ tabValue: value }, () =>
+      this.getKpiData(this.state.tabValue)
+    );
   }
   /** === GO TO PAGE === */
   goToPage(item) {
@@ -637,8 +676,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 07082020
+ * updatedDate: 09082020
  * updatedFunction:
- * -> Add dispatch Kpi dashboard data and use props.salesmanKpi
+ * -> Integrate API kpi dashboard.
  *
  */
