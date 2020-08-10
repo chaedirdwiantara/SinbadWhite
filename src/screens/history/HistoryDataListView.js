@@ -70,6 +70,13 @@ class HistoryDataListView extends Component {
       }
     }
   }
+
+  /** CALL FROM CHILD */
+ parentFunction(data) {
+  if (data.type === 'countdown') {
+    this.onHandleRefresh();
+  }
+}
   /** REFRESH LIST VIEW */
   onHandleRefresh = () => {
     this.props.historyGetRefresh();
@@ -149,7 +156,7 @@ class HistoryDataListView extends Component {
 
   /** go to detail */
   goToDetail(item) {
-    this.props.historyGetDetailProcess(item.id);
+    this.props.historyGetDetailProcess(item.billing.orderParcelId);
     NavigationService.navigate('HistoryDetailView', {
       section: this.props.section,
       storeId: item.store.id
@@ -229,10 +236,18 @@ class HistoryDataListView extends Component {
     return (
       <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
         <Text style={Fonts.type10}>Waktu Bayar: </Text>
-        <CountDown expiredTimer={Math.abs(timeDiffInSecond)} />
+        <CountDown
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
+          fontPrimer={Fonts.type18}
+          backgroundColor={masterColor.mainColor}
+          type={'small'}
+          expiredTimer={Math.abs(timeDiffInSecond)}
+        />
       </View>
     );
   }
+
 
   /** === RENDER ITEM (STATUS PAYMENT INFORMATION) === */
   renderItemStatusPaymentInformation(item) {
@@ -264,10 +279,8 @@ class HistoryDataListView extends Component {
     switch (item.statusPayment) {
       case 'payment_failed':
       case 'overdue':
-        textStyle = Fonts.type11;
-        break;
       case 'waiting_for_payment':
-        textStyle = { ...Fonts.type11, color: masterColor.fontRed50 };
+        textStyle = Fonts.type11
         break;
       default:
         break;
@@ -275,9 +288,16 @@ class HistoryDataListView extends Component {
     return (
       <View>
         <View style={{ flexDirection: 'row' }}>
+        {
+          item.paymentChannel.id === 2 && moment.utc(new Date()).local() > moment.utc(item.billing.expiredPaymentTime).local() && item.statusPayment === "waiting_for_payment"?
           <Text style={{ ...textStyle, textAlign: 'right' }}>
+            Tidak Dibayar
+          </Text>
+          :
+          <Text style={{ ...textStyle, textAlign: 'right', marginLeft: 15 }}>
             {this.statusPayment(item.statusPayment)}
           </Text>
+        }
           {item.statusPayment === 'overdue' ? (
             <View style={{ marginLeft: 5 }}>
               <MaterialIcon name="error" size={15} color={'#f0444c'} />
@@ -292,8 +312,11 @@ class HistoryDataListView extends Component {
             item.billing && item.billing.billingStatus !== 'paid' &&
             item.billing.expiredPaymentTime &&
             item.paymentChannel &&
-            item.paymentChannel.id === 2
-            ? this.renderCountDown(item)
+            item.paymentChannel.id === 2 ? 
+              moment.utc(new Date()).local() > moment.utc(item.billing.expiredPaymentTime).local() && item.statusPayment === "waiting_for_payment"?
+              null
+              :
+              this.renderCountDown(item)
             : null
           : null}
       </View>
@@ -315,7 +338,7 @@ renderButtonForPayment(item) {
         <View style={GlobalStyle.shadowForBox}>
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
-              <Text style={Fonts.type42}>{item.orderCode}</Text>
+              <Text style={Fonts.type10}>{item.orderCode}</Text>
               {this.props.section === 'payment'
                 ? this.renderItemStatusPayment(item)
                 : this.renderItemStatusOrder(item)

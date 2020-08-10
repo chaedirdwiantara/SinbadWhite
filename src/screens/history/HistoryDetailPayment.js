@@ -274,6 +274,8 @@ class HistoryDetailPayment extends Component {
               </Text>
                         </View>
                         <ButtonSingle
+                            loading = {this.props.history.loadingHistoryActivateVA }
+                            dissabled = {this.props.history.loadingHistoryActivateVA}
                             white
                             disabled={false}
                             title={'AKTIFKAN VIRTUAL ACCOUNT'}
@@ -359,9 +361,10 @@ class HistoryDetailPayment extends Component {
                            <View>
                             <View style={GlobalStyle.boxPadding} />
                             <View style={GlobalStyle.shadowForBox}>
-                                <View style={{ paddingHorizontal: 16, paddingTop: 8 }}>
+                                <View style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}>
                                     <Text style={Fonts.type48}>Panduan Pembayaran</Text>
                                 </View>
+                                <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
                                 <View
                                     style={{ paddingHorizontal: 16, paddingBottom: 16, paddingTop: 16 }}
                                 >
@@ -389,7 +392,9 @@ class HistoryDetailPayment extends Component {
         const expiredTime = moment(localTime);
         const a = this.props.history.dataDetailHistory
         // const localTime = moment(expired);
-        if (this.props.data.statusPayment !== "payment_failed") {
+        if (this.props.data.statusPayment === "waiting_for_payment" && moment.utc(new Date()).local() > moment.utc(this.props.data.billing.expiredPaymentTime).local()){
+         null   
+        } else if (this.props.data.statusPayment !== "payment_failed") {
             return (
                 <View>
                     {((a.paymentType.id === 1 &&
@@ -410,7 +415,7 @@ class HistoryDetailPayment extends Component {
                                             style={[Fonts.type5, { textAlign: 'center', paddingBottom: 8 }]}
                                         >
                                             SEGERA LAKUKAN PEMBAYARAN DALAM WAKTU
-                    </Text>
+                                        </Text>
                                         <View style={styles.headerContainer}>
                                             {this.state.expiredTime ?
                                                 this.renderTimeCountDown() : null
@@ -426,7 +431,8 @@ class HistoryDetailPayment extends Component {
                             </View>
                         ) : (
                             <View />
-                        )}
+                        )
+                    }
 
                 </View>
             );
@@ -436,32 +442,36 @@ class HistoryDetailPayment extends Component {
     /** RENDER VIRTUAL ACCOUNT */
     renderVirtualAccount() {
         const a = this.props.history.dataDetailHistory
-        return (
-            <View>
-                {((a.paymentType.id === 1 &&
-                    a.paymentChannel.id === 2) ||
-                    (a.paymentType.id === 2 &&
-                        a.paymentChannel.id === 2 &&
-                        a.billing.expiredPaymentTime !== null)) &&
-                    (a.billing.billingStatus !== 'paid' &&
-                        // this.props.history.dataDetailHistory.billing.billingStatus !== 'expired' &&
-                        a.statusPayment === 'waiting_for_payment' &&
-                        a.billing.billingStatus !== 'cancel') ? (
-                        this.renderVirtualAccountNumber()
-                    ) : a.paymentType.id === 2 &&
-                        a.paymentChannel.id === 2 &&
-                        a.billing.expiredPaymentTime === null &&
+        if (this.props.data.statusPayment === "waiting_for_payment" && moment.utc(new Date()).local() > moment.utc(this.props.data.billing.expiredPaymentTime).local()){
+            null 
+        } else {
+            return (
+                <View>
+                    {((a.paymentType.id === 1 &&
+                        a.paymentChannel.id === 2) ||
+                        (a.paymentType.id === 2 &&
+                            a.paymentChannel.id === 2 &&
+                            a.billing.expiredPaymentTime !== null)) &&
                         (a.billing.billingStatus !== 'paid' &&
                             // this.props.history.dataDetailHistory.billing.billingStatus !== 'expired' &&
                             a.statusPayment === 'waiting_for_payment' &&
                             a.billing.billingStatus !== 'cancel') ? (
-                            this.renderButtonAktifkanVA()
-                        ) : (
-                            <View />
-                        )}
-            </View>
+                            this.renderVirtualAccountNumber()
+                        ) : a.paymentType.id === 2 &&
+                            a.paymentChannel.id === 2 &&
+                            a.billing.expiredPaymentTime === null &&
+                            (a.billing.billingStatus !== 'paid' &&
+                                // this.props.history.dataDetailHistory.billing.billingStatus !== 'expired' &&
+                                a.statusPayment === 'waiting_for_payment' &&
+                                a.billing.billingStatus !== 'cancel') ? (
+                                this.renderButtonAktifkanVA()
+                            ) : (
+                                <View />
+                            )}
+                </View>
 
-        )
+            )
+        }
     }
 
     /** RENDER DETAIL INFORMASI PEMBAYARAN */

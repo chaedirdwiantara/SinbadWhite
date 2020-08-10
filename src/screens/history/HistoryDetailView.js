@@ -7,7 +7,8 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Text
+  Text,
+  RefreshControl
 } from '../../library/reactPackage';
 import {
   bindActionCreators,
@@ -30,7 +31,8 @@ import ModalChangePaymentMethod from './ModalChangePaymentMethod';
 import ModalWarning from '../../components/modal/ModalWarning';
 import ModalTAndR from './ModalTAndC';
 import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation'
-import HistoryDetailPayment from './HistoryDetailPayment'
+import HistoryDetailPayment from './HistoryDetailPayment';
+import CallCS from '../../screens/global/CallCS';
 
 class HistoryDetailView extends Component {
   constructor(props) {
@@ -42,6 +44,31 @@ class HistoryDetailView extends Component {
       storeId: this.props.navigation.state.params.storeId
     };
   }
+   /* ========================
+   * HEADER MODIFY
+   * ========================
+   */
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state;
+    return {
+      headerTitle:
+        params.section === 'payment' ? 'Detail Tagihan' : 'Detail Pesanan',
+      headerTitleStyle: [
+        Fonts.type35,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.backButtonWhite,
+      headerStyle: {
+        elevation: 0,
+        backgroundColor: masterColor.mainColor
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    };
+  };
   /**
    * =======================
    * FUNCTIONAL
@@ -89,7 +116,12 @@ class HistoryDetailView extends Component {
   /** CHECK STATUS */
   checkStatus() {
     let data = null;
-    if (this.state.section === 'payment') {
+    if (this.props.history.dataDetailHistory.billing.paymentChannelId === 2 && this.props.history.dataDetailHistory.statusPayment === "waiting_for_payment" && moment.utc(new Date()).local() > moment.utc(this.props.history.dataDetailHistory.billing.expiredPaymentTime).local()){
+      return {
+      title : 'Tidak Dibayar',
+      desc: 'Pesanan Tidak Dibayar'
+      }
+    } else if (this.state.section === 'payment') {
       if (this.props.history.dataGetPaymentStatus !== null) {
         data = this.props.history.dataGetPaymentStatus.find(
           itemPayment =>
@@ -149,6 +181,15 @@ class HistoryDetailView extends Component {
     }
     return '-';
   }
+  /** === ON REFRESH === */
+  onRefresh = () => {
+    this.props.historyGetDetailProcess(this.props.history.dataDetailHistory.id);
+    /** SET PAGE REFRESH */
+    this.setState({ refreshing: true });
+    setTimeout(() => {
+      this.setState({ refreshing: false });
+    }, 10);
+  };
   /**
    * ========================
    * RENDER VIEW
@@ -272,11 +313,17 @@ class HistoryDetailView extends Component {
                 ? moment(
                     new Date(this.props.history.dataDetailHistory.deliveredDate)
                   ).format('DD MMM YYYY HH:mm:ss')
-                : moment(
-                    new Date(
-                      this.props.history.dataDetailHistory.estDeliveredDate
-                    )
-                  ).format('DD MMM YYYY HH:mm:ss')
+                : (this.props.history.dataDetailHistory.estDeliveredDate !== null ? moment(
+                      new Date(
+                        this.props.history.dataDetailHistory.estDeliveredDate
+                      )
+                    ).format('DD MMM YYYY HH:mm:ss') : '-'
+                  )
+                // moment(
+                //     new Date(
+                //       this.props.history.dataDetailHistory.estDeliveredDate
+                //     )
+                //   ).format('DD MMM YYYY HH:mm:ss')
             )}
             {this.renderContentListGlobal(
               this.props.history.dataDetailHistory.dueDate !== null
@@ -286,9 +333,9 @@ class HistoryDetailView extends Component {
                 ? moment(
                     new Date(this.props.history.dataDetailHistory.dueDate)
                   ).format('DD MMM YYYY HH:mm:ss')
-                : moment(
-                    new Date(this.props.history.dataDetailHistory.estDueDate)
-                  ).format('DD MMM YYYY HH:mm:ss')
+                : ( this.props.history.dataDetailHistory.estDueDate !==null ? moment(
+                  new Date(this.props.history.dataDetailHistory.estDueDate)
+                ).format('DD MMM YYYY HH:mm:ss') : '-')
             )}
           </View>
         </View>
@@ -450,7 +497,14 @@ renderDetailPayment() {
   renderContent() {
     return (
       <View style={{ flex: 1 }}>
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh}
+            />
+          }
+        >
           {this.renderHeaderStatus()}
           {this.state.section === 'payment' ? (
             this.renderDetailPayment()

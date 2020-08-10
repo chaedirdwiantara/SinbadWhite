@@ -213,6 +213,7 @@ class MerchantEditPartialView extends Component {
       };
       this.props.merchantEditProcess(data);
     } else if (this.props.type === 'merchantAddress') {
+      const warehouse = this.props.merchant.dataGetWarehouse
       const data = {
         id: this.state.id,
         params: {
@@ -220,7 +221,7 @@ class MerchantEditPartialView extends Component {
           noteAddress: this.state.noteAddress,
           longitude: this.props.global.longitude,
           latitude: this.props.global.latitude,
-          warehouseId: this.props.merchant.dataMerchantVolatile.warehouseId,
+          warehouseId: warehouse.total === 0 || warehouse.total === 1 ? null : this.props.merchant.dataMerchantVolatile.warehouseId,
           urbanId:
             this.props.global.dataGetUrbanId !== null
               ? this.props.global.dataGetUrbanId[0].id
