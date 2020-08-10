@@ -53,6 +53,7 @@ import OtpInput from '../components/otp/OtpInput';
 import OtpResend from '../components/otp/OtpResend';
 /** PROGRESS BAR */
 import ProgressBarType1 from '../components/progress_bar/ProgressBarType1';
+import ProgressBarType2 from '../components/progress_bar/ProgressBarType2';
 /** LOADING */
 import { LoadingPage, LoadingLoadMore, LoadingHorizontal } from '../components/Loading';
 /** ERROR PAGE */
@@ -87,6 +88,11 @@ import DatePickerSpinner from '../components/DatePickerSpinner'
 import SelectedMerchantName from '../components/SelectedMerchantName'
 /** ERROR BOUNDARY */
 import ErrorBoundary from '../components/error/ErrorBoundary'
+/** CARD */
+import Shadow from '../components/card/shadow';
+/** TABS */
+import TabsCustom, { typeCustomTabs } from '../components/tabs/tabsCustom';
+import Charts from '../components/charts';
 
 export {
   CartGlobal,
@@ -142,6 +148,7 @@ export {
   OtpResend,
   /** PROGRESS BAR */
   ProgressBarType1,
+  ProgressBarType2,
   /** LOADING */
   LoadingPage,
   LoadingLoadMore,
@@ -177,18 +184,24 @@ export {
   /** SELECTED MERCHANT NAME */
   SelectedMerchantName,
   /** Error Boundary */
-  ErrorBoundary
+  ErrorBoundary,
+  /** CARD */
+  Shadow,
+  /** TABS */
+  TabsCustom,
+  typeCustomTabs,
+  Charts
 };
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Add new component
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Dyah
+ * updatedDate: 04082020
+ * updatedFunction:
+ * -> Add new component (Shadow, ProgressBarType2)
+ *
+ */
