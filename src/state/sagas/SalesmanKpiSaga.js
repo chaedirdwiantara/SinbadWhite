@@ -19,7 +19,9 @@ function* getKpiDashboardDetailProcess(actions) {
     const response = yield call(() => {
       return SalesmanKpiMethod.getKpiDataDetail(actions.payload);
     });
-    yield put(ActionCreators.getKpiDashboardDetailSuccess(response));
+    yield put(
+      ActionCreators.getKpiDashboardDetailSuccess(response.data.payload)
+    );
   } catch (error) {
     yield put(ActionCreators.getKpiDashboardDetailFailed(error));
   }

@@ -4,9 +4,23 @@ import masterColor from '../../config/masterColor.json';
 import { Fonts } from '../../helpers';
 import ShadowComponent from '../../components/card/shadow';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 // import { Color } from '../../config';
 
-const TargetCard = ({ data: { target, achieve, date, status }, type }) => {
+const TargetCard = ({
+  data: { target, achieved, date },
+  type,
+  tabsTimeTarget
+}) => {
+  const parseDate = ({ day, month, year }) => {
+    if (tabsTimeTarget === 'monthly') {
+      return month;
+    }
+    return moment(new Date(year, month - 1, day, 0, 0, 0, 0)).format(
+      'DD/MM/YYYY'
+    );
+  };
+
   return (
     <ShadowComponent radius={12}>
       <View
@@ -35,7 +49,7 @@ const TargetCard = ({ data: { target, achieve, date, status }, type }) => {
               type === 'prev' ? styles.textContentPrev : styles.textContent
             ]}
           >
-            Tanggal
+            {tabsTimeTarget === 'monthly' ? 'Bulan' : 'Tanggal'}
           </Text>
           <Text
             style={[
@@ -75,7 +89,7 @@ const TargetCard = ({ data: { target, achieve, date, status }, type }) => {
               type === 'prev' ? styles.textContentPrev : styles.textContent
             ]}
           >
-            {date}
+            {parseDate(date)}
           </Text>
           <Text
             style={[
@@ -83,21 +97,19 @@ const TargetCard = ({ data: { target, achieve, date, status }, type }) => {
               type === 'prev' ? styles.textContentPrev : styles.textContent
             ]}
           >
-            {achieve}
+            {achieved}
           </Text>
-          {type === 'prev' ? (
-            <Text
-              style={[
-                Fonts.type13,
-                type === 'prev' ? styles.textContentPrev : styles.textContent,
-                {
-                  color: status ? '#81C784' : '#ef9a9a'
-                }
-              ]}
-            >
-              {status ? 'Achieved' : 'Not Achieved'}
-            </Text>
-          ) : null}
+          <Text
+            style={[
+              Fonts.type13,
+              type === 'prev' ? styles.textContentPrev : styles.textContent,
+              {
+                color: achieved >= target ? '#81C784' : '#ef9a9a'
+              }
+            ]}
+          >
+            {achieved >= target ? 'Achieved' : 'Not Achieved'}
+          </Text>
         </View>
       </View>
     </ShadowComponent>
@@ -147,17 +159,18 @@ const styles = StyleSheet.create({
 
 TargetCard.propTypes = {
   data: PropTypes.object,
-  type: PropTypes.string
+  type: PropTypes.string,
+  tabsTimeTarget: PropTypes.string
 };
 
 TargetCard.defaultProps = {
   data: {
     date: 'loading',
     target: 0,
-    achieve: 0,
-    status: true
+    achieve: 0
   },
-  type: 'prev'
+  type: 'prev',
+  tabsTimeTarget: 'daily'
 };
 
 export default TargetCard;

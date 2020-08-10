@@ -20,7 +20,7 @@ import {
   Charts
 } from '../../library/component';
 import TargetCard from './target';
-// import moment from 'moment';
+import moment from 'moment';
 // import NavigationService from '../../navigation/NavigationService';
 
 const listMenu = [
@@ -41,34 +41,34 @@ const listMenu = [
 const listMenuWhite = [
   {
     title: 'T Order',
-    value: 'tOrder'
+    value: 'countOrders'
   },
   {
     title: 'Total Penjualan',
-    value: 'tPenjualan'
+    value: 'totalSales'
   },
   {
     title: 'T. Dikunjungi',
-    value: 'tDikunjungi'
+    value: 'visitedStores'
   },
   {
     title: 'T. Baru',
-    value: 'tBaru'
+    value: 'newStores'
   },
   {
     title: 'Total Pesanan',
-    value: 'tPesanan'
+    value: 'orderedStores'
   }
 ];
 
 const listTimeTarget = [
   {
     title: 'Harian',
-    value: 'day'
+    value: 'daily'
   },
   {
     title: 'Bulanan',
-    value: 'month'
+    value: 'monthly'
   }
 ];
 
@@ -91,7 +91,11 @@ class DashboardView extends Component {
       tabsWhite: listMenuWhite[0].value,
       tabsTimeTarget: listTimeTarget[0].value,
       tabsTarget: listTarget[0].value,
-      data: false,
+      data: {
+        now: false,
+        daily: false,
+        monthly: false
+      },
       tOrder: false,
       tPenjualan: false,
       tDikunjungi: false,
@@ -100,62 +104,156 @@ class DashboardView extends Component {
     };
   }
 
+  /** === GET KPI DATA === */
+  getKpiData({ period, startDate, endDate }) {
+    let params = {
+      startDate: '',
+      endDate: '',
+      period: period === 'now' ? 'daily' : period,
+      userId: this.props.user.id
+    };
+    switch (period) {
+      case 'now':
+        params.startDate = startDate;
+        params.endDate = endDate;
+        break;
+
+      case 'daily':
+        params.startDate = startDate;
+        params.endDate = endDate;
+        break;
+
+      case 'weekly':
+        params.startDate = startDate;
+        params.endDate = endDate;
+        break;
+
+      case 'monthly':
+        params.startDate = startDate;
+        params.endDate = endDate;
+        break;
+
+      default:
+        break;
+    }
+    console.log('fetching START');
+    this.setState({
+      load: period
+    });
+    console.log({ period, startDate, endDate });
+    console.log(period);
+    this.props.getKpiDashboardDetailProcess(params);
+  }
+
+  getNowDetailKpi = () => {
+    this.getKpiData({
+      period: 'now',
+      startDate: moment(new Date()).format('YYYY-MM-DD'),
+      endDate: moment(new Date()).format('YYYY-MM-DD')
+    });
+  };
+
   getInitialDetailKpi = () => {
-    this.props.getKpiDashboardDetailProcess({
-      type: 'typooo'
+    this.getKpiData({
+      period: 'daily',
+      startDate: moment()
+        .subtract(3, 'day')
+        .format('YYYY-MM-DD'),
+      endDate: moment()
+        .add(3, 'day')
+        .format('YYYY-MM-DD')
+    });
+  };
+
+  getMonthlyDetailKpi = () => {
+    this.getKpiData({
+      period: 'monthly',
+      startDate: moment()
+        .subtract(3, 'month')
+        .format('YYYY-MM-DD'),
+      endDate: moment()
+        .add(3, 'month')
+        .format('YYYY-MM-DD')
     });
   };
 
   componentDidUpdate(prevProps) {
-    console.log(prevProps.salesmanKpi);
-    console.log(this.props.salesmanKpi);
-    // if (
-    //   prevProps.profile.dataEditProfile !== this.props.profile.dataEditProfile
-    // ) {
-    //   if (this.props.profile.dataEditProfile !== null) {
-    //     NavigationService.goBack(this.props.navigation.state.key);
-    //   }
-    // }
-  }
-
-  componentDidMount() {
-    // this.getInitialDetailKpi();
-    this.getData();
-  }
-
-  getData = async () => {
-    try {
-      console.log('fetching ...');
-      this.setState({
-        load: true
-      });
-      let response = await fetch(
-        'https://cantik-app.herokuapp.com/dummy/detail-dashboard'
-      );
-      let json = await response.json();
-      if (json) {
+    if (
+      this.props.salesmanKpi.kpiDashboardDetailData !==
+      prevProps.salesmanKpi.kpiDashboardDetailData
+    ) {
+      if (this.state.load === 'now') {
+        let newData = { ...this.state.data };
+        newData.now = this.props.salesmanKpi.kpiDashboardDetailData;
+        this.setState({
+          load: false,
+          data: newData
+        });
+        this.getInitialDetailKpi();
+      } else if (this.state.load === 'daily') {
+        let newData = { ...this.state.data };
+        newData.daily = this.props.salesmanKpi.kpiDashboardDetailData;
+        this.setState({
+          load: false,
+          data: newData
+        });
+      } else if (this.state.load === 'monthly') {
+        let newData = { ...this.state.data };
+        newData.monthly = this.props.salesmanKpi.kpiDashboardDetailData;
+        this.setState({
+          load: false,
+          data: newData
+        });
+      } else {
         this.setState({
           load: false
         });
-        console.log('fetching DONE');
-        if (!json.error) {
-          this.setState({
-            load: false,
-            data: json.data.order,
-            tOrder: json.data.order,
-            tPenjualan: json.data.sold,
-            tDikunjungi: json.data.visited,
-            tBaru: json.data.new,
-            tPesanan: json.data.newOrder
-          });
-        }
       }
-    } catch (error) {
-      this.setState({
-        load: false
-      });
-      console.error(error);
+      console.log('=========== FLAG ============');
+      console.log(this.state.load);
+      console.log('fetching DONE');
+      console.log(prevProps.salesmanKpi);
+      console.log(this.props.salesmanKpi);
     }
+  }
+
+  componentDidMount() {
+    this.getNowDetailKpi();
+  }
+
+  parseDate = ({ day, month, year }) => {
+    if (this.state.tabsTimeTarget === 'monthly') {
+      return month;
+    }
+    return moment(new Date(year, month - 1, day, 0, 0, 0, 0)).format(
+      'DD/MM/YYYY'
+    );
+  };
+
+  parsePrevNext = data => {
+    console.log(data);
+    if (this.state.tabsTarget === 'prev') {
+      const newData = data.filter(function(rows) {
+        return moment(
+          new Date(
+            rows.date.year,
+            rows.date.month - 1,
+            rows.date.day,
+            0,
+            0,
+            0,
+            0
+          )
+        ).isBefore(moment(new Date()).subtract(1, 'day'));
+      });
+      return newData;
+    }
+    const newData = data.filter(function(rows) {
+      return moment(
+        new Date(rows.date.year, rows.date.month - 1, rows.date.day, 0, 0, 0, 0)
+      ).isAfter(new Date());
+    });
+    return newData;
   };
 
   tabsTimeChanged = value => {
@@ -165,6 +263,7 @@ class DashboardView extends Component {
   };
 
   tabsWhiteChanged = value => {
+    console.log(value);
     this.setState({
       tabsWhite: value
     });
@@ -232,44 +331,44 @@ class DashboardView extends Component {
 
     // prettier-ignore
     return <View style={styles.chartContainer}>
-             <ScrollView style={{ width: '100%', }} horizontal showsHorizontalScrollIndicator={false}
-                         decelerationRate={0}
-                         snapToInterval={Scale(360)}
-                         snapToAlignment={'center'} >
-               {
-                 graphList.map((graph, index) => {
-                   return <View key={index} style={{ width: Scale(360), height: '100%', }}>
-                            {/* Chart Title */}
-                            <Text>{graph.title}</Text>
+      <ScrollView style={{ width: '100%', }} horizontal showsHorizontalScrollIndicator={false}
+        decelerationRate={0}
+        snapToInterval={Scale(360)}
+        snapToAlignment={'center'} >
+        {
+          graphList.map((graph, index) => {
+            return <View key={index} style={{ width: Scale(360), height: '100%', }}>
+              {/* Chart Title */}
+              <Text>{graph.title}</Text>
 
-                            {/* Chart Component */}
-                            <Charts />
-                          </View>;
-                 })
-               }
-             </ScrollView>
-             {/* TODO: create this as component */}
-             <View style={{ alignItems: 'center', }}>
-               <View style={{ flexDirection: 'row' }}>
-                 <View
-                   style={[
-                     styles.miniCircle,
-                     {
-                       backgroundColor: Color.mainColor
-                     }
-                   ]}
-                 />
-                 <View
-                   style={[
-                     styles.miniCircle,
-                     {
-                       backgroundColor: Color.fontBlack60
-                     },
-                   ]}
-                 />
-               </View>
-             </View>
-           </View>;
+              {/* Chart Component */}
+              <Charts />
+            </View>;
+          })
+        }
+      </ScrollView>
+      {/* TODO: create this as component */}
+      <View style={{ alignItems: 'center', }}>
+        <View style={{ flexDirection: 'row' }}>
+          <View
+            style={[
+              styles.miniCircle,
+              {
+                backgroundColor: Color.mainColor
+              }
+            ]}
+          />
+          <View
+            style={[
+              styles.miniCircle,
+              {
+                backgroundColor: Color.fontBlack60
+              },
+            ]}
+          />
+        </View>
+      </View>
+    </View>;
   };
 
   render() {
@@ -306,9 +405,7 @@ class DashboardView extends Component {
             >
               T. Order
             </Text>
-            <ShadowComponent>
-              {this.renderChart()}
-            </ShadowComponent>
+            <ShadowComponent>{this.renderChart()}</ShadowComponent>
           </View>
           <View style={styles.sparator} />
           <TabsCustom
@@ -341,6 +438,9 @@ class DashboardView extends Component {
                     this.setState({
                       tabsTimeTarget: value
                     });
+                    if (!data.monthly) {
+                      this.getMonthlyDetailKpi();
+                    }
                   }}
                 />
               </View>
@@ -362,27 +462,53 @@ class DashboardView extends Component {
                     Target
                   </Text>
                   <Text style={[Fonts.textHeaderPage, styles.textContent]}>
-                    Tanggal
+                    {this.state.tabsTimeTarget === 'monthly'
+                      ? 'Bulan'
+                      : 'Tanggal'}
                   </Text>
                   <Text style={[Fonts.textHeaderPage, styles.textContent]}>
                     Pencapaian
                   </Text>
+                  <Text style={[Fonts.textHeaderPage, styles.textContent]}>
+                    Target Status
+                  </Text>
                 </View>
-                {data ? (
+                {data.now ? (
                   <View>
+                    {/* <Text>{JSON.stringify(data.now[tabsWhite][0])}</Text> */}
                     <Text style={[Fonts.type13, styles.textContent]}>
-                      {data[tabsTimeTarget].now
-                        ? data[tabsTimeTarget].now.target
+                      {data.now[tabsWhite]
+                        ? data.now[tabsWhite][0].target
                         : '0'}
                     </Text>
                     <Text style={[Fonts.type13, styles.textContent]}>
-                      {data[tabsTimeTarget].now
-                        ? data[tabsTimeTarget].now.date
-                        : ''}
+                      {data.now[tabsWhite]
+                        ? this.parseDate(data.now[tabsWhite][0].date)
+                        : '0'}
                     </Text>
                     <Text style={[Fonts.type13, styles.textContent]}>
-                      {data[tabsTimeTarget].now
-                        ? data[tabsTimeTarget].now.achieve
+                      {data.now[tabsWhite]
+                        ? data.now[tabsWhite][0].achieved
+                        : '0'}
+                    </Text>
+                    <Text
+                      style={[
+                        Fonts.type13,
+                        styles.textContent,
+                        {
+                          color:
+                            data.now[tabsWhite][0].achieved >=
+                            data.now[tabsWhite][0].target
+                              ? '#81C784'
+                              : '#ef9a9a'
+                        }
+                      ]}
+                    >
+                      {data.now[tabsWhite]
+                        ? data.now[tabsWhite][0].achieved >=
+                          data.now[tabsWhite][0].target
+                          ? 'Achieved'
+                          : 'Not Achieved'
                         : '0'}
                     </Text>
                   </View>
@@ -403,18 +529,24 @@ class DashboardView extends Component {
             />
           </View>
           {data[tabsTimeTarget]
-            ? data[tabsTimeTarget][tabsTarget]
-              ? data[tabsTimeTarget][tabsTarget].map((row, i) => (
-                  <View
-                    key={i.toString()}
-                    style={{
-                      paddingHorizontal: 20,
-                      paddingVertical: 5
-                    }}
-                  >
-                    <TargetCard type={tabsTarget} data={row} />
-                  </View>
-                ))
+            ? data[tabsTimeTarget][tabsWhite]
+              ? this.parsePrevNext(data[tabsTimeTarget][tabsWhite]).map(
+                  (row, i) => (
+                    <View
+                      key={i.toString()}
+                      style={{
+                        paddingHorizontal: 20,
+                        paddingVertical: 5
+                      }}
+                    >
+                      <TargetCard
+                        type={tabsTarget}
+                        data={row}
+                        tabsTimeTarget={this.state.tabsTimeTarget}
+                      />
+                    </View>
+                  )
+                )
               : null
             : null}
           <View
@@ -476,8 +608,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, salesmanKpi }) => {
-  return { auth, salesmanKpi };
+const mapStateToProps = ({ user, auth, salesmanKpi }) => {
+  return { user, auth, salesmanKpi };
 };
 
 const mapDispatchToProps = dispatch => {

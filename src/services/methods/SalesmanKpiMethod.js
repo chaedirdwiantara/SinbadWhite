@@ -50,15 +50,15 @@ function getKpiData(data) {
   });
 }
 
-const getKpiDataDetail = async params => {
-  console.log('============== params ================');
-  console.log(params);
-  let response = await fetch(
-    'https://cantik-app.herokuapp.com/dummy/new-detail-dashboard'
-  );
-  let json = await response.json();
-  return json;
-};
+async function getKpiDataDetail(data) {
+  const response = await ApiRest({
+    path: `supplier/salesmankpi/v1/mobile/all?startDate=${
+      data.startDate
+    }&endDate=${data.endDate}&period=${data.period}&userId=${data.userId}`,
+    method: 'GET'
+  });
+  return response;
+}
 
 export const SalesmanKpiMethod = {
   getKpiData,
