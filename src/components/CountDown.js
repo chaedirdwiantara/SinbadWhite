@@ -27,6 +27,15 @@ class CountDown extends Component {
       }
     }, 1000);
   }
+
+   /** === SEND DATA TO PARENT (PdpView) */
+   toParentFunction() {
+    this.props.parentFunction({
+      type: 'countdown',
+      status : 'false'
+    });
+  }
+
   timeConverter(time) {
     // Time from state will convert to become HH:MM:SS
     const h = Math.abs(
@@ -47,7 +56,6 @@ class CountDown extends Component {
 
     return { h, m, s };
   }
-
   /**
    * ========================
    * RENDER VIEW
@@ -64,8 +72,12 @@ class CountDown extends Component {
     );
   }
 
+
   renderTimeCountDownSmallRed() {
     const { h, m, s } = this.timeConverter(this.state.expiredTime);
+    if (h + m + s === 0) {
+      this.toParentFunction();
+    }
     return (
       <View style={{ flexDirection: 'row' }}>
         <Text

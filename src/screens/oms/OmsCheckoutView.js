@@ -85,6 +85,7 @@ class OmsCheckoutView extends Component {
       tAndRDetail: null,
       tAndRLoading: false,
       alreadyFetchTAndR: false,
+      modalWarningAllCondition: false
     };
   }
   /**
@@ -207,9 +208,9 @@ class OmsCheckoutView extends Component {
           this.props.oms.errorOmsConfirmOrder.message ===
           'Your Parcels is less than minimum order'
         ) {
-          this.setState({ modalWarningMinimumQty: true });
+          this.setState({ modalWarningMinimumQty: false });
           setTimeout(() => {
-            this.setState({ modalWarningMinimumQty: false });
+            this.setState({ modalWarningMinimumQty: false , disabled: false});
           }, 2000);
         } else if (
           this.props.oms.errorOmsConfirmOrder.message ===
@@ -220,8 +221,29 @@ class OmsCheckoutView extends Component {
             this.setState({ modalWarningCheckoutIsExpired: false });
             NavigationService.navigate('Home');
           }, 2000);
+        } else if (
+          this.props.oms.errorOmsConfirmOrder.message ===
+          'Payment Channel atau Payment Method tidak didukung'
+        ) {
+          this.setState({ modalWarningPaymentNotSupport: true });
+          setTimeout(() => {
+            this.setState({ modalWarningPaymentNotSupport: false, disabled: false });
+          }, 2000);
+        } else if (
+          this.props.oms.errorOmsConfirmOrder.message ===
+          "Your Balance is not enough / your credit is freezed / you not allowed for credit."
+        ) {
+          this.setState({ modalErrorBalance: true });
+          setTimeout(() => {
+            this.setState({ modalErrorBalance: false });
+            NavigationService.navigate('Home');
+          }, 2000);
         } else {
-          this.setState({ modalErrorResponse: true });
+          this.setState({ modalWarningAllCondition: true });
+          setTimeout(() => {
+            this.setState({ modalWarningAllCondition: false , disabled: false, modalErrorResponse: true});
+          }, 2000);
+          // this.setState({ modalErrorResponse: true });
         }
       }
     }
@@ -250,6 +272,11 @@ class OmsCheckoutView extends Component {
         return lastPaymentIndex > -1
           ? {
               ...e,
+              paymentChannel: e.paymentMethodDetail
+              ? { ...e.paymentMethodDetail}
+              : {
+                ...lastPayment
+              },
               paymentMethodDetail: e.paymentMethodDetail
                 ? { ...e.paymentMethodDetail }
                 : {
@@ -513,7 +540,7 @@ class OmsCheckoutView extends Component {
         );
         if (itemParcelFind !== undefined) {
           paymentTypeSupplierMethodId =
-            itemParcelFind.paymentTypeSupplierMethodId;
+            itemParcelFind.paymentChannel.paymentTypeSupplierMethodId;
           paymentMethodDetail = itemParcelFind.paymentMethodDetail;
           paymentTypeDetail = itemParcelFind.paymentTypeDetail;
           error = itemParcelFind.error;
@@ -693,6 +720,7 @@ class OmsCheckoutView extends Component {
   backToCartItemView() {
     /** => this is for back to cart (dont delete) */
     // NavigationService.navigate('OmsCartView');
+    this.setState({modalErrorMinimumOrder : false});
     NavigationService.goBack(this.props.navigation.state.key);
     this.props.omsGetCartItemFromCheckoutProcess({
       catalogues: this.props.oms.dataCart
@@ -741,6 +769,22 @@ class OmsCheckoutView extends Component {
       modalPaymentTypeMethod: false,
       // modalPaymentMethodDetail: true
     });
+  }
+
+  /** MODAL WARNING FAILED CONFIRM ORDER */
+  renderModalWarningAllCondition() {
+    return (
+      <View>
+        {this.state.modalWarningAllCondition ? (
+          <ModalWarning
+            open={this.state.modalWarningAllCondition}
+            content={this.props.oms.errorOmsConfirmOrder.message}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
   }
   /**
    * *********************************
@@ -844,8 +888,8 @@ class OmsCheckoutView extends Component {
   renderConfirmButton() {
     return (
       <ButtonSingleSmall
-        disabled={this.props.oms.loadingOmsConfirmOrder}
-        loading={this.props.oms.loadingOmsConfirmOrder}
+        disabled={this.props.oms.loadingOmsConfirmOrder || this.props.oms.loadingOmsGetTermsConditions}
+        loading={this.props.oms.loadingOmsConfirmOrder || this.props.oms.loadingOmsGetTermsConditions}
         loadingPadding={33}
         onPress={() => this.wantToConfirmOrder()}
         title={'Buat Pesanan'}
@@ -1562,6 +1606,7 @@ class OmsCheckoutView extends Component {
         {this.renderModalBottomErrorMinimumOrder()}
         {this.renderModalErrorBalance()}
         {this.renderModalSkuStatusConfirmation()}
+        {this.renderModalWarningAllCondition()}
         {this.renderWarningCheckoutIsExpired()}
         {this.renderWarningMinimumQty()}
         {this.renderErrorResponse()}
