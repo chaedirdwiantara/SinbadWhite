@@ -39,7 +39,6 @@ import {
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
-import { Color } from '../../config';
 
 const { width } = Dimensions.get('window');
 const defaultImage = require('../../assets/images/sinbad_image/sinbadopacity.png');
@@ -331,7 +330,7 @@ class HomeView extends Component {
           horizontal
           showsHorizontalScrollIndicator={false}
           decelerationRate={0}
-          style={{ marginTop: 8 }}
+          style={{ marginTop: 8, marginHorizontal: -16 }}
           snapToInterval={width - 90}
           snapToAlignment={'center'}
           contentInset={{
@@ -348,7 +347,7 @@ class HomeView extends Component {
             data={this.state.kpiDashboard}
             contentContainerStyle={{ alignSelf: 'flex-start' }}
             show={false}
-            style={{ marginBottom: 10 }}
+            style={{ marginBottom: 10, paddingHorizontal: 16 }}
             numColumns={2}
             listKey={(item, index) => index.toString()}
             keyExtractor={(item, index) => index.toString()}
@@ -372,7 +371,9 @@ class HomeView extends Component {
                   style={styles.menuCircleImage}
                 />
                 <View style={{ marginLeft: 10 }}>
-                  <Text style={[Fonts.type97, { color: Color.fontBlack50 }]}>
+                  <Text
+                    style={[Fonts.type97, { color: masterColor.fontBlack50 }]}
+                  >
                     {item.title}
                   </Text>
                   <ProgressBarType2
@@ -380,12 +381,16 @@ class HomeView extends Component {
                     achieved={item.data.achieved}
                   />
                   {item.data.target === 0 ? (
-                    <Text style={[Fonts.type65, { color: Color.fontRed50 }]}>
+                    <Text
+                      style={[Fonts.type65, { color: masterColor.fontRed50 }]}
+                    >
                       {' '}
                       Sedang tidak ada target{' '}
                     </Text>
                   ) : (
-                    <Text style={[Fonts.type65, { color: Color.fontRed50 }]}>
+                    <Text
+                      style={[Fonts.type65, { color: masterColor.fontRed50 }]}
+                    >
                       {item.title === 'Total Penjualan'
                         ? MoneyFormatShort(
                             item.data.target - item.data.achieved
@@ -398,12 +403,18 @@ class HomeView extends Component {
                   <View style={{ flexDirection: 'row', marginVertical: 4 }}>
                     <View style={{ width: '50%' }}>
                       <Text
-                        style={[Fonts.type44, { color: Color.fontBlack50 }]}
+                        style={[
+                          Fonts.type44,
+                          { color: masterColor.fontBlack50 }
+                        ]}
                       >
                         Pencapaian
                       </Text>
                       <Text
-                        style={[Fonts.type44, { color: Color.fontBlack50 }]}
+                        style={[
+                          Fonts.type44,
+                          { color: masterColor.fontBlack50 }
+                        ]}
                       >
                         {item.title === 'Total Penjualan'
                           ? MoneyFormatShort(item.data.achieved)
@@ -414,18 +425,24 @@ class HomeView extends Component {
                     <View
                       style={{
                         borderRightWidth: 1,
-                        borderColor: Color.fontBlack40,
+                        borderColor: masterColor.fontBlack40,
                         marginRight: 20
                       }}
                     />
                     <View>
                       <Text
-                        style={[Fonts.type44, { color: Color.fontBlack50 }]}
+                        style={[
+                          Fonts.type44,
+                          { color: masterColor.fontBlack50 }
+                        ]}
                       >
                         Target
                       </Text>
                       <Text
-                        style={[Fonts.type44, { color: Color.fontBlack50 }]}
+                        style={[
+                          Fonts.type44,
+                          { color: masterColor.fontBlack50 }
+                        ]}
                       >
                         {item.title === 'Total Penjualan'
                           ? MoneyFormatShort(item.data.target)
@@ -447,8 +464,8 @@ class HomeView extends Component {
                 {
                   backgroundColor:
                     this.state.pageOne === 0
-                      ? Color.mainColor
-                      : Color.fontBlack60
+                      ? masterColor.mainColor
+                      : masterColor.fontBlack60
                 }
               ]}
             />
@@ -458,19 +475,27 @@ class HomeView extends Component {
                 {
                   backgroundColor:
                     this.state.pageOne === 0
-                      ? Color.fontBlack60
-                      : Color.mainColor
+                      ? masterColor.fontBlack60
+                      : masterColor.mainColor
                 }
               ]}
             />
           </View>
           <TouchableOpacity
             onPress={() => this.goToPage({ goTo: 'dashboard' })}
-            style={{ marginTop: 8 }}
+            style={{ marginTop: 16 }}
           >
             <Text style={Fonts.type11}>Lihat Detail Dashboard</Text>
           </TouchableOpacity>
         </View>
+        <View
+          style={{
+            backgroundColor: masterColor.fontBlack10,
+            height: 8,
+            marginHorizontal: -16,
+            marginVertical: 16
+          }}
+        />
       </View>
     );
   }
@@ -485,6 +510,7 @@ class HomeView extends Component {
           renderItem={this.renderMenuItem.bind(this)}
           keyExtractor={(item, index) => index.toString()}
         />
+        <View style={{ height: 20 }} />
       </View>
     );
   }
@@ -676,7 +702,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 09082020
+ * updatedDate: 10082020
  * updatedFunction:
  * -> Integrate API kpi dashboard.
  *
