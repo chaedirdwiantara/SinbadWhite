@@ -208,7 +208,7 @@ class OmsCheckoutView extends Component {
           this.props.oms.errorOmsConfirmOrder.message ===
           'Your Parcels is less than minimum order'
         ) {
-          this.setState({ modalWarningMinimumQty: true });
+          this.setState({ modalWarningMinimumQty: false });
           setTimeout(() => {
             this.setState({ modalWarningMinimumQty: false , disabled: false});
           }, 2000);
@@ -272,6 +272,11 @@ class OmsCheckoutView extends Component {
         return lastPaymentIndex > -1
           ? {
               ...e,
+              paymentChannel: e.paymentMethodDetail
+              ? { ...e.paymentMethodDetail}
+              : {
+                ...lastPayment
+              },
               paymentMethodDetail: e.paymentMethodDetail
                 ? { ...e.paymentMethodDetail }
                 : {
@@ -535,7 +540,7 @@ class OmsCheckoutView extends Component {
         );
         if (itemParcelFind !== undefined) {
           paymentTypeSupplierMethodId =
-            itemParcelFind.paymentTypeSupplierMethodId;
+            itemParcelFind.paymentChannel.paymentTypeSupplierMethodId;
           paymentMethodDetail = itemParcelFind.paymentMethodDetail;
           paymentTypeDetail = itemParcelFind.paymentTypeDetail;
           error = itemParcelFind.error;
@@ -715,6 +720,7 @@ class OmsCheckoutView extends Component {
   backToCartItemView() {
     /** => this is for back to cart (dont delete) */
     // NavigationService.navigate('OmsCartView');
+    this.setState({modalErrorMinimumOrder : false});
     NavigationService.goBack(this.props.navigation.state.key);
     this.props.omsGetCartItemFromCheckoutProcess({
       catalogues: this.props.oms.dataCart
