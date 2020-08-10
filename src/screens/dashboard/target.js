@@ -29,6 +29,9 @@ const TargetCard = ({
       }
       return MoneyFormatShort(value);
     }
+    if (typeValue === 'countOrders') {
+      return `${value} Order`;
+    }
     return `${value} Toko`;
   };
 
