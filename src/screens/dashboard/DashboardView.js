@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-update-set-state */
 import {
   React,
   Component,
@@ -95,12 +96,7 @@ class DashboardView extends Component {
         now: false,
         daily: false,
         monthly: false
-      },
-      tOrder: false,
-      tPenjualan: false,
-      tDikunjungi: false,
-      tBaru: false,
-      tPesanan: false
+      }
     };
   }
 
@@ -145,6 +141,7 @@ class DashboardView extends Component {
     this.props.getKpiDashboardDetailProcess(params);
   }
 
+  /** === KPI DATA BY DATE NOW === */
   getNowDetailKpi = () => {
     this.getKpiData({
       period: 'now',
@@ -153,6 +150,7 @@ class DashboardView extends Component {
     });
   };
 
+  /** === KPI DATA BY DAILY === */
   getInitialDetailKpi = () => {
     this.getKpiData({
       period: 'daily',
@@ -165,6 +163,7 @@ class DashboardView extends Component {
     });
   };
 
+  /** === KPI DATA BY MONTH === */
   getMonthlyDetailKpi = () => {
     this.getKpiData({
       period: 'monthly',
@@ -183,6 +182,7 @@ class DashboardView extends Component {
       prevProps.salesmanKpi.kpiDashboardDetailData
     ) {
       if (this.state.load === 'now') {
+        /** === UPDATE STATE WHEN FLAG IS NOW === */
         let newData = { ...this.state.data };
         newData.now = this.props.salesmanKpi.kpiDashboardDetailData;
         this.setState({
@@ -191,6 +191,7 @@ class DashboardView extends Component {
         });
         this.getInitialDetailKpi();
       } else if (this.state.load === 'daily') {
+        /** === UPDATE STATE WHEN FLAG IS DAILY === */
         let newData = { ...this.state.data };
         newData.daily = this.props.salesmanKpi.kpiDashboardDetailData;
         this.setState({
@@ -198,6 +199,7 @@ class DashboardView extends Component {
           data: newData
         });
       } else if (this.state.load === 'monthly') {
+        /** === UPDATE STATE WHEN FLAG IS MONTHLY === */
         let newData = { ...this.state.data };
         newData.monthly = this.props.salesmanKpi.kpiDashboardDetailData;
         this.setState({
@@ -217,10 +219,12 @@ class DashboardView extends Component {
     }
   }
 
+  /** === INITIAL LIFESYCLE GET KPI DATA BY DATE NOW === */
   componentDidMount() {
     this.getNowDetailKpi();
   }
 
+  /** === FOR PARSE DATE === */
   parseDate = ({ day, month, year }) => {
     if (this.state.tabsTimeTarget === 'monthly') {
       return month;
@@ -230,8 +234,8 @@ class DashboardView extends Component {
     );
   };
 
+  /** === GET DATA BY PREV OR NEXT === */
   parsePrevNext = data => {
-    console.log(data);
     if (this.state.tabsTarget === 'prev') {
       const newData = data.filter(function(rows) {
         return moment(
@@ -253,15 +257,18 @@ class DashboardView extends Component {
         new Date(rows.date.year, rows.date.month - 1, rows.date.day, 0, 0, 0, 0)
       ).isAfter(new Date());
     });
+    console.log(newData);
     return newData;
   };
 
+  /** === TABS PREV NEXT ON CHANGED === */
   tabsTimeChanged = value => {
     this.setState({
       tabsTime: value
     });
   };
 
+  /** === TABS TYPE OF KEY OBJECT CHANGED === */
   tabsWhiteChanged = value => {
     console.log(value);
     this.setState({
@@ -299,12 +306,14 @@ class DashboardView extends Component {
     }
   };
 
+  /** === TABS TARGET ON CHANGED === */
   tabsTargetChanged = value => {
     this.setState({
       tabsTarget: value
     });
   };
 
+  /** === CART COMPONENT === */
   renderChart = () => {
     let graphList = [
       {
@@ -475,7 +484,6 @@ class DashboardView extends Component {
                 </View>
                 {data.now ? (
                   <View>
-                    {/* <Text>{JSON.stringify(data.now[tabsWhite][0])}</Text> */}
                     <Text style={[Fonts.type13, styles.textContent]}>
                       {data.now[tabsWhite]
                         ? data.now[tabsWhite][0].target
