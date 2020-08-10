@@ -26,7 +26,8 @@ import {
   ModalConfirmationType2,
   ProgressBarType2,
   Shadow,
-  TabsCustom
+  TabsCustom,
+  SlideIndicator
 } from '../../library/component';
 import {
   GlobalStyle,
@@ -339,8 +340,13 @@ class HomeView extends Component {
             bottom: 0,
             right: 30
           }}
-          onScroll={data => {
-            this.setState({ pageOne: data.nativeEvent.contentOffset.x });
+          onScroll={event => {
+            let horizontalLimit = 100;
+            if (event.nativeEvent.contentOffset.x % horizontalLimit === 0) {
+              this.setState({
+                pageOne: event.nativeEvent.contentOffset.x / horizontalLimit
+              });
+            }
           }}
         >
           <FlatList
@@ -457,30 +463,10 @@ class HomeView extends Component {
           />
         </ScrollView>
         <View style={{ alignItems: 'center' }}>
-          <View style={{ flexDirection: 'row' }}>
-            <View
-              style={[
-                styles.miniCircle,
-                {
-                  backgroundColor:
-                    this.state.pageOne === 0
-                      ? masterColor.mainColor
-                      : masterColor.fontBlack60
-                }
-              ]}
-            />
-            <View
-              style={[
-                styles.miniCircle,
-                {
-                  backgroundColor:
-                    this.state.pageOne === 0
-                      ? masterColor.fontBlack60
-                      : masterColor.mainColor
-                }
-              ]}
-            />
-          </View>
+          <SlideIndicator
+            indicators={[0, 1]}
+            activeIndex={this.state.pageOne}
+          />
           <TouchableOpacity
             onPress={() => this.goToPage({ goTo: 'dashboard' })}
             style={{ marginTop: 16 }}
