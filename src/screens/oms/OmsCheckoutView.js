@@ -720,6 +720,7 @@ class OmsCheckoutView extends Component {
   backToCartItemView() {
     /** => this is for back to cart (dont delete) */
     // NavigationService.navigate('OmsCartView');
+    this.setState({modalErrorMinimumOrder : false});
     NavigationService.goBack(this.props.navigation.state.key);
     this.props.omsGetCartItemFromCheckoutProcess({
       catalogues: this.props.oms.dataCart
