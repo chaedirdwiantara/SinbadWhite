@@ -11,7 +11,7 @@ import {
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
-import { Fonts, Scale } from '../../helpers';
+import { Fonts, Scale, MoneyFormatShort } from '../../helpers';
 import {
   Shadow as ShadowComponent,
   TabsCustom,
@@ -233,6 +233,17 @@ class DashboardView extends Component {
     return moment(new Date(year, month - 1, day, 0, 0, 0, 0)).format(
       'DD/MM/YYYY'
     );
+  };
+
+  /** === FOR PARSE VALUE === */
+  parseValue = (value, type) => {
+    if (type === 'totalSales') {
+      if (value === 0) {
+        return '-';
+      }
+      return MoneyFormatShort(value);
+    }
+    return `${value} Toko`;
   };
 
   /** === GET DATA BY PREV OR NEXT === */
@@ -467,57 +478,38 @@ class DashboardView extends Component {
                 ]}
               >
                 <View>
-                  <Text style={[Fonts.textHeaderPage, styles.textContent]}>
-                    Target
-                  </Text>
-                  <Text style={[Fonts.textHeaderPage, styles.textContent]}>
+                  <Text style={[Fonts.type15, styles.textContent]}>Target</Text>
+                  <Text style={[Fonts.type15, styles.textContent]}>
                     {this.state.tabsTimeTarget === 'monthly'
                       ? 'Bulan'
                       : 'Tanggal'}
                   </Text>
-                  <Text style={[Fonts.textHeaderPage, styles.textContent]}>
+                  <Text style={[Fonts.type15, styles.textContent]}>
                     Pencapaian
-                  </Text>
-                  <Text style={[Fonts.textHeaderPage, styles.textContent]}>
-                    Target Status
                   </Text>
                 </View>
                 {data.now ? (
                   <View>
                     <Text style={[Fonts.type13, styles.textContent]}>
                       {data.now[tabsWhite]
-                        ? data.now[tabsWhite][0].target
-                        : '0'}
+                        ? this.parseValue(
+                            data.now[tabsWhite][0].target,
+                            tabsWhite
+                          )
+                        : '-'}
                     </Text>
                     <Text style={[Fonts.type13, styles.textContent]}>
                       {data.now[tabsWhite]
-                        ? this.parseDate(data.now[tabsWhite][0].date)
-                        : '0'}
+                        ? this.parseDate(data.now[tabsWhite][0].date, tabsWhite)
+                        : '-'}
                     </Text>
                     <Text style={[Fonts.type13, styles.textContent]}>
                       {data.now[tabsWhite]
-                        ? data.now[tabsWhite][0].achieved
-                        : '0'}
-                    </Text>
-                    <Text
-                      style={[
-                        Fonts.type13,
-                        styles.textContent,
-                        {
-                          color:
-                            data.now[tabsWhite][0].achieved >=
-                            data.now[tabsWhite][0].target
-                              ? '#81C784'
-                              : '#ef9a9a'
-                        }
-                      ]}
-                    >
-                      {data.now[tabsWhite]
-                        ? data.now[tabsWhite][0].achieved >=
-                          data.now[tabsWhite][0].target
-                          ? 'Achieved'
-                          : 'Not Achieved'
-                        : '0'}
+                        ? this.parseValue(
+                            data.now[tabsWhite][0].achieved,
+                            tabsWhite
+                          )
+                        : '-'}
                     </Text>
                   </View>
                 ) : null}
@@ -550,6 +542,7 @@ class DashboardView extends Component {
                       <TargetCard
                         type={tabsTarget}
                         data={row}
+                        typeValue={tabsWhite}
                         tabsTimeTarget={this.state.tabsTimeTarget}
                       />
                     </View>
