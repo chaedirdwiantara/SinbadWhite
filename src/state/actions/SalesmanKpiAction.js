@@ -40,7 +40,7 @@ export const getKpiDashboardDetailSuccess = data => {
   console.log(data);
   return {
     type: types.KPI_DASHBOARD_DETAIL_GET_SUCCESS,
-    payload: data
+    payload: data ? data : 'gak ada data cukk'
   };
 };
 
