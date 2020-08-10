@@ -1175,7 +1175,9 @@ class OmsCheckoutView extends Component {
           />
         ) : (
           <View style={{ flexDirection: 'row', paddingVertical: 15 }}>
-            <Text style={[Fonts.type101, {alignSelf:"center"}]}>Pilih Tipe & Metode pembayaran</Text>
+            <Text style={[Fonts.type101, {alignSelf:"center"}]}>
+              Pilih Tipe & Metode pembayaran
+              </Text>
           </View>
         )}
       </View>
