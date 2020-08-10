@@ -313,11 +313,17 @@ class HistoryDetailView extends Component {
                 ? moment(
                     new Date(this.props.history.dataDetailHistory.deliveredDate)
                   ).format('DD MMM YYYY HH:mm:ss')
-                : moment(
-                    new Date(
-                      this.props.history.dataDetailHistory.estDeliveredDate
-                    )
-                  ).format('DD MMM YYYY HH:mm:ss')
+                : (this.props.history.dataDetailHistory.estDeliveredDate !== null ? moment(
+                      new Date(
+                        this.props.history.dataDetailHistory.estDeliveredDate
+                      )
+                    ).format('DD MMM YYYY HH:mm:ss') : '-'
+                  )
+                // moment(
+                //     new Date(
+                //       this.props.history.dataDetailHistory.estDeliveredDate
+                //     )
+                //   ).format('DD MMM YYYY HH:mm:ss')
             )}
             {this.renderContentListGlobal(
               this.props.history.dataDetailHistory.dueDate !== null
@@ -327,9 +333,9 @@ class HistoryDetailView extends Component {
                 ? moment(
                     new Date(this.props.history.dataDetailHistory.dueDate)
                   ).format('DD MMM YYYY HH:mm:ss')
-                : moment(
-                    new Date(this.props.history.dataDetailHistory.estDueDate)
-                  ).format('DD MMM YYYY HH:mm:ss')
+                : ( this.props.history.dataDetailHistory.estDueDate !==null ? moment(
+                  new Date(this.props.history.dataDetailHistory.estDueDate)
+                ).format('DD MMM YYYY HH:mm:ss') : '-')
             )}
           </View>
         </View>
