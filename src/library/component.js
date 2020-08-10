@@ -93,6 +93,7 @@ import Shadow from '../components/card/shadow';
 /** TABS */
 import TabsCustom, { typeCustomTabs } from '../components/tabs/tabsCustom';
 import Charts from '../components/charts';
+import SlideIndicator from '../components/slide_indicator';
 
 export {
   CartGlobal,
@@ -190,7 +191,8 @@ export {
   /** TABS */
   TabsCustom,
   typeCustomTabs,
-  Charts
+  Charts,
+  SlideIndicator
 };
 
 /**
