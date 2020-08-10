@@ -42,7 +42,7 @@ const listMenu = [
 const listMenuWhite = [
   {
     title: 'T Order',
-    value: 'countOrders'
+    value: 'orderedStores'
   },
   {
     title: 'Total Penjualan',
@@ -58,7 +58,7 @@ const listMenuWhite = [
   },
   {
     title: 'Total Pesanan',
-    value: 'orderedStores'
+    value: 'countOrders'
   }
 ];
 
@@ -241,6 +241,9 @@ class DashboardView extends Component {
         return '-';
       }
       return MoneyFormatShort(value);
+    }
+    if (type === 'countOrders') {
+      return `${value} Order`;
     }
     return `${value} Toko`;
   };
