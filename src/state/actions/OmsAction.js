@@ -74,7 +74,6 @@ export function omsGetCartItemFromCheckoutFailed(data) {
  */
 /** === CONFIRM ORDER PROCESS === */
 export function omsConfirmOrderProcess(data) {
-  console.log(data, 'data confirm order')
   return { type: types.OMS_CONFIRM_ORDER_PROCESS, payload: data };
 }
 /** === CONFIRM ORDER SUCCESS === */
