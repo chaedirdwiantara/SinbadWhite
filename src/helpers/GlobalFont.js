@@ -608,6 +608,35 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 16,
     color: Color.fontRed50
+  },type101: {
+    fontFamily: Fonts.MontserratItalic,
+    fontSize: 11,
+    lineHeight: 16,
+    color: Color.fontRed50
+  },
+  type102: {
+    fontFamily: Fonts.MontserratItalic,
+    fontSize: 10,
+    lineHeight: 13,
+    color: Color.fontBlack80
+  },
+  type103: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 14,
+    lineHeight: 13,
+    color: Color.fontYellow50
+  },
+  type104: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 11,
+    lineHeight: 13,
+    color: Color.fontYellow50
+  },
+  forCompare: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 14,
+    lineHeight: 16,
+    color: Color.fontGreen50
   },
   forCompare: {
     fontFamily: Fonts.MontserratMedium,
