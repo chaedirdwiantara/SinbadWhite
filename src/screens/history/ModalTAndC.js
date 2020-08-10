@@ -123,6 +123,7 @@ class ModalTAndC extends Component {
               <View style={styles.backgroundDetail}>
                 {this.renderTAndRItem()}
               </View>
+              </ScrollView>
               <View>
                 <ButtonSingle
                   loading={this.props.loadingConfirmOrder}
@@ -133,7 +134,7 @@ class ModalTAndC extends Component {
                   style={{ width: '50%' }}
                 />
               </View>
-            </ScrollView>
+           
           </View>
         </View>
         {/* <View style={styles.container}>
