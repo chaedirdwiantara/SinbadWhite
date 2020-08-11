@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text } from '../../library/reactPackage';
 import masterColor from '../../config/masterColor.json';
-import { Fonts } from '../../helpers';
+import { Fonts, MoneyFormatShort } from '../../helpers';
 import ShadowComponent from '../../components/card/shadow';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -10,6 +10,7 @@ import moment from 'moment';
 const TargetCard = ({
   data: { target, achieved, date },
   type,
+  typeValue,
   tabsTimeTarget
 }) => {
   const parseDate = ({ day, month, year }) => {
@@ -19,6 +20,19 @@ const TargetCard = ({
     return moment(new Date(year, month - 1, day, 0, 0, 0, 0)).format(
       'DD/MM/YYYY'
     );
+  };
+
+  const parseValue = value => {
+    if (typeValue === 'totalSales') {
+      if (value === 0) {
+        return '-';
+      }
+      return MoneyFormatShort(value);
+    }
+    if (typeValue === 'countOrders') {
+      return `${value} Order`;
+    }
+    return `${value} Toko`;
   };
 
   return (
@@ -37,7 +51,7 @@ const TargetCard = ({
         <View>
           <Text
             style={[
-              Fonts.textHeaderPage,
+              Fonts.type15,
               type === 'prev' ? styles.textContentPrev : styles.textContent
             ]}
           >
@@ -45,7 +59,7 @@ const TargetCard = ({
           </Text>
           <Text
             style={[
-              Fonts.textHeaderPage,
+              Fonts.type15,
               type === 'prev' ? styles.textContentPrev : styles.textContent
             ]}
           >
@@ -53,7 +67,7 @@ const TargetCard = ({
           </Text>
           <Text
             style={[
-              Fonts.textHeaderPage,
+              Fonts.type15,
               type === 'prev' ? styles.textContentPrev : styles.textContent
             ]}
           >
@@ -62,7 +76,7 @@ const TargetCard = ({
           {type === 'prev' ? (
             <Text
               style={[
-                Fonts.textHeaderPage,
+                Fonts.type15,
                 type === 'prev' ? styles.textContentPrev : styles.textContent
               ]}
             >
@@ -81,7 +95,7 @@ const TargetCard = ({
               type === 'prev' ? styles.textContentPrev : styles.textContent
             ]}
           >
-            {target}
+            {parseValue(target)}
           </Text>
           <Text
             style={[
@@ -97,19 +111,21 @@ const TargetCard = ({
               type === 'prev' ? styles.textContentPrev : styles.textContent
             ]}
           >
-            {achieved}
+            {parseValue(achieved)}
           </Text>
-          <Text
-            style={[
-              Fonts.type13,
-              type === 'prev' ? styles.textContentPrev : styles.textContent,
-              {
-                color: achieved >= target ? '#81C784' : '#ef9a9a'
-              }
-            ]}
-          >
-            {achieved >= target ? 'Achieved' : 'Not Achieved'}
-          </Text>
+          {type === 'prev' ? (
+            <Text
+              style={[
+                Fonts.type13,
+                type === 'prev' ? styles.textContentPrev : styles.textContent,
+                {
+                  color: achieved >= target ? '#81C784' : '#ef9a9a'
+                }
+              ]}
+            >
+              {achieved >= target ? 'Achieved' : 'Not Achieved'}
+            </Text>
+          ) : null}
         </View>
       </View>
     </ShadowComponent>
@@ -160,6 +176,7 @@ const styles = StyleSheet.create({
 TargetCard.propTypes = {
   data: PropTypes.object,
   type: PropTypes.string,
+  typeValue: PropTypes.string,
   tabsTimeTarget: PropTypes.string
 };
 

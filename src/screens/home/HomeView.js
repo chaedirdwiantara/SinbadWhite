@@ -26,7 +26,8 @@ import {
   ModalConfirmationType2,
   ProgressBarType2,
   Shadow,
-  TabsCustom
+  TabsCustom,
+  SlideIndicator
 } from '../../library/component';
 import {
   GlobalStyle,
@@ -87,7 +88,7 @@ class HomeView extends Component {
       kpiDashboard: [
         {
           title: 'T. Order',
-          id: 'countOrders',
+          id: 'orderedStores',
           image: require('../../assets/images/menu_dashboard/order.png'),
           data: {
             achieved: 0,
@@ -114,7 +115,7 @@ class HomeView extends Component {
         },
         {
           title: 'Total Pesanan',
-          id: 'orderedStores',
+          id: 'countOrders',
           image: require('../../assets/images/menu_dashboard/orderCreated.png'),
           data: {
             achieved: 0,
@@ -154,14 +155,16 @@ class HomeView extends Component {
       prevProps.salesmanKpi.kpiDashboardData !==
       this.props.salesmanKpi.kpiDashboardData
     ) {
-      let newKpiDashboard = [...this.state.kpiDashboard];
-      Object.keys(this.props.salesmanKpi.kpiDashboardData).map((key, i) => {
-        const index = newKpiDashboard.findIndex(item => item.id === key);
-        const newData = this.props.salesmanKpi.kpiDashboardData[key][0];
-        newKpiDashboard[index].data.target = newData.target;
-        newKpiDashboard[index].data.achieved = newData.achieved;
-      });
-      this.setState({ kpiDashboard: newKpiDashboard });
+      if (Object.keys(this.props.salesmanKpi.kpiDashboardData).length !== 0) {
+        let newKpiDashboard = [...this.state.kpiDashboard];
+        Object.keys(this.props.salesmanKpi.kpiDashboardData).map((key, i) => {
+          const index = newKpiDashboard.findIndex(item => item.id === key);
+          const newData = this.props.salesmanKpi.kpiDashboardData[key][0];
+          newKpiDashboard[index].data.target = newData.target;
+          newKpiDashboard[index].data.achieved = newData.achieved;
+        });
+        this.setState({ kpiDashboard: newKpiDashboard });
+      }
     }
     if (prevProps.global.dataGetVersion !== this.props.global.dataGetVersion) {
       if (this.props.global.dataGetVersion !== null) {
@@ -206,6 +209,19 @@ class HomeView extends Component {
     }
     this.props.getKpiDashboardProcess(params);
   }
+  /** === FOR PARSE VALUE === */
+  parseValue = (value, type) => {
+    if (type === 'totalSales') {
+      if (value === 0) {
+        return '-';
+      }
+      return MoneyFormatShort(value);
+    }
+    if (type === 'countOrders') {
+      return `${value} Order`;
+    }
+    return `${value} Toko`;
+  };
   /** === ON CHANGE TAB === */
   onChangeTab(value) {
     this.setState({ tabValue: value }, () =>
@@ -318,9 +334,9 @@ class HomeView extends Component {
   renderKpiDashboard() {
     return (
       <View style={{ paddingVertical: 10 }}>
-        <View style={{ width: '100%', height: 15 }} />
+        <View style={{ height: 15 }} />
         <Text style={Fonts.type7}>Your Dashboard</Text>
-        <View style={{ width: '100%', height: 8 }} />
+        <View style={{ height: 8 }} />
         <TabsCustom
           listMenu={tabDashboard}
           onChange={value => this.onChangeTab(value)}
@@ -333,14 +349,13 @@ class HomeView extends Component {
           style={{ marginTop: 8, marginHorizontal: -16 }}
           snapToInterval={width - 90}
           snapToAlignment={'center'}
-          contentInset={{
-            top: 0,
-            left: 30,
-            bottom: 0,
-            right: 30
-          }}
-          onScroll={data => {
-            this.setState({ pageOne: data.nativeEvent.contentOffset.x });
+          onScroll={event => {
+            let horizontalLimit = 100;
+            if (event.nativeEvent.contentOffset.x % horizontalLimit === 0) {
+              this.setState({
+                pageOne: event.nativeEvent.contentOffset.x / horizontalLimit
+              });
+            }
           }}
         >
           <FlatList
@@ -350,137 +365,14 @@ class HomeView extends Component {
             style={{ marginBottom: 10, paddingHorizontal: 16 }}
             numColumns={2}
             listKey={(item, index) => index.toString()}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item, index }) => (
-              <Shadow
-                key={index}
-                radius={10}
-                elevation={1}
-                margin={5}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  margin: 2,
-                  padding: 10,
-                  width: 320,
-                  backgroundColor: 'white'
-                }}
-              >
-                <Image
-                  source={item.image ? item.image : defaultImage}
-                  style={styles.menuCircleImage}
-                />
-                <View style={{ marginLeft: 10 }}>
-                  <Text
-                    style={[Fonts.type97, { color: masterColor.fontBlack50 }]}
-                  >
-                    {item.title}
-                  </Text>
-                  <ProgressBarType2
-                    target={item.data.target}
-                    achieved={item.data.achieved}
-                  />
-                  {item.data.target === 0 ? (
-                    <Text
-                      style={[Fonts.type65, { color: masterColor.fontRed50 }]}
-                    >
-                      {' '}
-                      Sedang tidak ada target{' '}
-                    </Text>
-                  ) : (
-                    <Text
-                      style={[Fonts.type65, { color: masterColor.fontRed50 }]}
-                    >
-                      {item.title === 'Total Penjualan'
-                        ? MoneyFormatShort(
-                            item.data.target - item.data.achieved
-                          )
-                        : item.data.target - item.data.achieved}{' '}
-                      {item.title === 'Total Penjualan' ? null : 'Toko'} lagi
-                      mencapai target
-                    </Text>
-                  )}
-                  <View style={{ flexDirection: 'row', marginVertical: 4 }}>
-                    <View style={{ width: '50%' }}>
-                      <Text
-                        style={[
-                          Fonts.type44,
-                          { color: masterColor.fontBlack50 }
-                        ]}
-                      >
-                        Pencapaian
-                      </Text>
-                      <Text
-                        style={[
-                          Fonts.type44,
-                          { color: masterColor.fontBlack50 }
-                        ]}
-                      >
-                        {item.title === 'Total Penjualan'
-                          ? MoneyFormatShort(item.data.achieved)
-                          : item.data.achieved}{' '}
-                        {item.title === 'Total Penjualan' ? null : 'Toko'}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        borderRightWidth: 1,
-                        borderColor: masterColor.fontBlack40,
-                        marginRight: 20
-                      }}
-                    />
-                    <View>
-                      <Text
-                        style={[
-                          Fonts.type44,
-                          { color: masterColor.fontBlack50 }
-                        ]}
-                      >
-                        Target
-                      </Text>
-                      <Text
-                        style={[
-                          Fonts.type44,
-                          { color: masterColor.fontBlack50 }
-                        ]}
-                      >
-                        {item.title === 'Total Penjualan'
-                          ? MoneyFormatShort(item.data.target)
-                          : item.data.target}{' '}
-                        {item.title === 'Total Penjualan' ? null : 'Toko'}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </Shadow>
-            )}
+            renderItem={this.renderKpiDashboardItem.bind(this)}
           />
         </ScrollView>
         <View style={{ alignItems: 'center' }}>
-          <View style={{ flexDirection: 'row' }}>
-            <View
-              style={[
-                styles.miniCircle,
-                {
-                  backgroundColor:
-                    this.state.pageOne === 0
-                      ? masterColor.mainColor
-                      : masterColor.fontBlack60
-                }
-              ]}
-            />
-            <View
-              style={[
-                styles.miniCircle,
-                {
-                  backgroundColor:
-                    this.state.pageOne === 0
-                      ? masterColor.fontBlack60
-                      : masterColor.mainColor
-                }
-              ]}
-            />
-          </View>
+          <SlideIndicator
+            indicators={[0, 1]}
+            activeIndex={this.state.pageOne}
+          />
           <TouchableOpacity
             onPress={() => this.goToPage({ goTo: 'dashboard' })}
             style={{ marginTop: 16 }}
@@ -488,17 +380,79 @@ class HomeView extends Component {
             <Text style={Fonts.type11}>Lihat Detail Dashboard</Text>
           </TouchableOpacity>
         </View>
-        <View
-          style={{
-            backgroundColor: masterColor.fontBlack10,
-            height: 8,
-            marginHorizontal: -16,
-            marginVertical: 16
-          }}
-        />
+        <View style={styles.divider} />
       </View>
     );
   }
+  /** === RENDER KPI DASHBOARD ITEM === */
+  renderKpiDashboardItem = ({ item, index }) => {
+    return (
+      <Shadow
+        key={index}
+        radius={10}
+        elevation={1}
+        margin={5}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          margin: 2,
+          padding: 16,
+          width: width * 0.77,
+          backgroundColor: 'white'
+        }}
+      >
+        <Image
+          source={item.image ? item.image : defaultImage}
+          style={styles.menuCircleImage}
+        />
+        <View>
+          <Text style={[Fonts.type97, { color: masterColor.fontBlack50 }]}>
+            {item.title}
+          </Text>
+          <ProgressBarType2
+            target={item.data.target}
+            achieved={item.data.achieved}
+          />
+          {item.data.target === 0 ? (
+            <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
+              {' '}
+              Sedang tidak ada target{' '}
+            </Text>
+          ) : (
+            <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
+              {this.parseValue(item.data.target - item.data.achieved, item.id)}{' '}
+              lagi target
+            </Text>
+          )}
+          <View style={{ flexDirection: 'row', marginVertical: 4 }}>
+            <View style={{ width: '50%' }}>
+              <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
+                Pencapaian
+              </Text>
+              <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
+                {this.parseValue(item.data.achieved, item.id)}
+              </Text>
+            </View>
+            <View
+              style={{
+                borderRightWidth: 1,
+                borderColor: masterColor.fontBlack40,
+                marginRight: 20
+              }}
+            />
+            <View>
+              <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
+                Target
+              </Text>
+              <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
+                {this.parseValue(item.data.target, item.id)}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </Shadow>
+    );
+  };
   /** === RENDER MENU === */
   renderMenu() {
     return (
@@ -681,6 +635,12 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
     marginRight: 5
+  },
+  divider: {
+    backgroundColor: masterColor.fontBlack10,
+    height: 8,
+    marginHorizontal: -16,
+    marginVertical: 16
   }
 });
 
@@ -702,8 +662,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 10082020
+ * updatedDate: 11082020
  * updatedFunction:
- * -> Integrate API kpi dashboard.
+ * -> Fix kpi dashboard's style.
  *
  */

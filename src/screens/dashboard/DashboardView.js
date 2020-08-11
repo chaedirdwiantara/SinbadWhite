@@ -11,14 +11,14 @@ import {
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
-import { Color } from '../../config';
-import { Fonts, Scale } from '../../helpers';
+import { Fonts, Scale, MoneyFormatShort } from '../../helpers';
 import {
   Shadow as ShadowComponent,
   TabsCustom,
   typeCustomTabs,
   LoadingPage,
-  Charts
+  Charts,
+  SlideIndicator
 } from '../../library/component';
 import TargetCard from './target';
 import moment from 'moment';
@@ -42,7 +42,7 @@ const listMenu = [
 const listMenuWhite = [
   {
     title: 'T Order',
-    value: 'countOrders'
+    value: 'orderedStores'
   },
   {
     title: 'Total Penjualan',
@@ -58,7 +58,7 @@ const listMenuWhite = [
   },
   {
     title: 'Total Pesanan',
-    value: 'orderedStores'
+    value: 'countOrders'
   }
 ];
 
@@ -96,7 +96,8 @@ class DashboardView extends Component {
         now: false,
         daily: false,
         monthly: false
-      }
+      },
+      currentSlideIndex: 0
     };
   }
 
@@ -234,6 +235,20 @@ class DashboardView extends Component {
     );
   };
 
+  /** === FOR PARSE VALUE === */
+  parseValue = (value, type) => {
+    if (type === 'totalSales') {
+      if (value === 0) {
+        return '-';
+      }
+      return MoneyFormatShort(value);
+    }
+    if (type === 'countOrders') {
+      return `${value} Order`;
+    }
+    return `${value} Toko`;
+  };
+
   /** === GET DATA BY PREV OR NEXT === */
   parsePrevNext = data => {
     if (this.state.tabsTarget === 'prev') {
@@ -339,45 +354,44 @@ class DashboardView extends Component {
     ];
 
     // prettier-ignore
-    return <View style={styles.chartContainer}>
-      <ScrollView style={{ width: '100%', }} horizontal showsHorizontalScrollIndicator={false}
-        decelerationRate={0}
-        snapToInterval={Scale(360)}
-        snapToAlignment={'center'} >
-        {
-          graphList.map((graph, index) => {
-            return <View key={index} style={{ width: Scale(360), height: '100%', }}>
-              {/* Chart Title */}
-              <Text>{graph.title}</Text>
+    return (
+      <View style={styles.chartContainer}>
+        {/* combine these scroll with bottom indicator */}
+        <ScrollView
+          style={{ width: '100%', }}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          decelerationRate={0}
+          snapToInterval={Scale(360)}
+          snapToAlignment={'center'}
+          onScroll={(event) => {
+            let horizontalLimit = Scale(360);
+            if (event.nativeEvent.contentOffset.x % horizontalLimit === 0) {
+              this.setState({
+                currentSlideIndex: event.nativeEvent.contentOffset.x / horizontalLimit
+              });
+            }
+          }}
+        >
+          {
+            graphList.map((graph, index) => {
+              return <View key={index} style={{ width: Scale(360), height: '100%', }}>
+                         {/* Chart Title */}
+                         <Text>{graph.title}</Text>
 
-              {/* Chart Component */}
-              <Charts />
-            </View>;
-          })
-        }
-      </ScrollView>
-      {/* TODO: create this as component */}
-      <View style={{ alignItems: 'center', }}>
-        <View style={{ flexDirection: 'row' }}>
-          <View
-            style={[
-              styles.miniCircle,
-              {
-                backgroundColor: Color.mainColor
-              }
-            ]}
-          />
-          <View
-            style={[
-              styles.miniCircle,
-              {
-                backgroundColor: Color.fontBlack60
-              },
-            ]}
-          />
-        </View>
+                         {/* Chart Component */}
+                         <Charts />
+                       </View>;
+            })
+          }
+        </ScrollView>
+        {/* slide indicator */}
+        <SlideIndicator
+          indicators={graphList}
+          activeIndex={this.state.currentSlideIndex}
+        />
       </View>
-    </View>;
+    );
   };
 
   render() {
@@ -467,57 +481,38 @@ class DashboardView extends Component {
                 ]}
               >
                 <View>
-                  <Text style={[Fonts.textHeaderPage, styles.textContent]}>
-                    Target
-                  </Text>
-                  <Text style={[Fonts.textHeaderPage, styles.textContent]}>
+                  <Text style={[Fonts.type15, styles.textContent]}>Target</Text>
+                  <Text style={[Fonts.type15, styles.textContent]}>
                     {this.state.tabsTimeTarget === 'monthly'
                       ? 'Bulan'
                       : 'Tanggal'}
                   </Text>
-                  <Text style={[Fonts.textHeaderPage, styles.textContent]}>
+                  <Text style={[Fonts.type15, styles.textContent]}>
                     Pencapaian
-                  </Text>
-                  <Text style={[Fonts.textHeaderPage, styles.textContent]}>
-                    Target Status
                   </Text>
                 </View>
                 {data.now ? (
                   <View>
                     <Text style={[Fonts.type13, styles.textContent]}>
                       {data.now[tabsWhite]
-                        ? data.now[tabsWhite][0].target
-                        : '0'}
+                        ? this.parseValue(
+                            data.now[tabsWhite][0].target,
+                            tabsWhite
+                          )
+                        : '-'}
                     </Text>
                     <Text style={[Fonts.type13, styles.textContent]}>
                       {data.now[tabsWhite]
-                        ? this.parseDate(data.now[tabsWhite][0].date)
-                        : '0'}
+                        ? this.parseDate(data.now[tabsWhite][0].date, tabsWhite)
+                        : '-'}
                     </Text>
                     <Text style={[Fonts.type13, styles.textContent]}>
                       {data.now[tabsWhite]
-                        ? data.now[tabsWhite][0].achieved
-                        : '0'}
-                    </Text>
-                    <Text
-                      style={[
-                        Fonts.type13,
-                        styles.textContent,
-                        {
-                          color:
-                            data.now[tabsWhite][0].achieved >=
-                            data.now[tabsWhite][0].target
-                              ? '#81C784'
-                              : '#ef9a9a'
-                        }
-                      ]}
-                    >
-                      {data.now[tabsWhite]
-                        ? data.now[tabsWhite][0].achieved >=
-                          data.now[tabsWhite][0].target
-                          ? 'Achieved'
-                          : 'Not Achieved'
-                        : '0'}
+                        ? this.parseValue(
+                            data.now[tabsWhite][0].achieved,
+                            tabsWhite
+                          )
+                        : '-'}
                     </Text>
                   </View>
                 ) : null}
@@ -550,6 +545,7 @@ class DashboardView extends Component {
                       <TargetCard
                         type={tabsTarget}
                         data={row}
+                        typeValue={tabsWhite}
                         tabsTimeTarget={this.state.tabsTimeTarget}
                       />
                     </View>
