@@ -88,7 +88,7 @@ class HomeView extends Component {
       kpiDashboard: [
         {
           title: 'T. Order',
-          id: 'countOrders',
+          id: 'orderedStores',
           image: require('../../assets/images/menu_dashboard/order.png'),
           data: {
             achieved: 0,
@@ -115,7 +115,7 @@ class HomeView extends Component {
         },
         {
           title: 'Total Pesanan',
-          id: 'orderedStores',
+          id: 'countOrders',
           image: require('../../assets/images/menu_dashboard/orderCreated.png'),
           data: {
             achieved: 0,
@@ -209,6 +209,19 @@ class HomeView extends Component {
     }
     this.props.getKpiDashboardProcess(params);
   }
+  /** === FOR PARSE VALUE === */
+  parseValue = (value, type) => {
+    if (type === 'totalSales') {
+      if (value === 0) {
+        return '-';
+      }
+      return MoneyFormatShort(value);
+    }
+    if (type === 'countOrders') {
+      return `${value} Order`;
+    }
+    return `${value} Toko`;
+  };
   /** === ON CHANGE TAB === */
   onChangeTab(value) {
     this.setState({ tabValue: value }, () =>
@@ -392,7 +405,7 @@ class HomeView extends Component {
           source={item.image ? item.image : defaultImage}
           style={styles.menuCircleImage}
         />
-        <View style={{ marginLeft: 10 }}>
+        <View>
           <Text style={[Fonts.type97, { color: masterColor.fontBlack50 }]}>
             {item.title}
           </Text>
@@ -407,10 +420,8 @@ class HomeView extends Component {
             </Text>
           ) : (
             <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
-              {item.title === 'Total Penjualan'
-                ? MoneyFormatShort(item.data.target - item.data.achieved)
-                : item.data.target - item.data.achieved}{' '}
-              {item.title === 'Total Penjualan' ? null : 'Toko'} lagi target
+              {this.parseValue(item.data.target - item.data.achieved, item.id)}{' '}
+              lagi target
             </Text>
           )}
           <View style={{ flexDirection: 'row', marginVertical: 4 }}>
@@ -419,10 +430,7 @@ class HomeView extends Component {
                 Pencapaian
               </Text>
               <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
-                {item.title === 'Total Penjualan'
-                  ? MoneyFormatShort(item.data.achieved)
-                  : item.data.achieved}{' '}
-                {item.title === 'Total Penjualan' ? null : 'Toko'}
+                {this.parseValue(item.data.achieved, item.id)}
               </Text>
             </View>
             <View
@@ -437,10 +445,7 @@ class HomeView extends Component {
                 Target
               </Text>
               <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
-                {item.title === 'Total Penjualan'
-                  ? MoneyFormatShort(item.data.target)
-                  : item.data.target}{' '}
-                {item.title === 'Total Penjualan' ? null : 'Toko'}
+                {this.parseValue(item.data.target, item.id)}
               </Text>
             </View>
           </View>
@@ -657,7 +662,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 10082020
+ * updatedDate: 11082020
  * updatedFunction:
  * -> Fix kpi dashboard's style.
  *
