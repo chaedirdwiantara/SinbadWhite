@@ -19,6 +19,7 @@ class CardType1 extends Component {
           borderRadius: 12,
           alignContent: 'center',
           alignItems: 'center',
+          flexDirection: 'column'
         }}
       >
       <View
@@ -56,7 +57,8 @@ class CardType1 extends Component {
             height: 120,
             width: 150,
             opacity: 0.1,
-            marginLeft: 300
+            marginRight: -50,
+            alignSelf: 'flex-end'
           }}
         />
       </View>
