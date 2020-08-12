@@ -158,7 +158,6 @@ class DashboardView extends Component {
       userId: this.props.user.id,
       supplierId
     };
-    console.log('------------------||-------------', params);
 
     switch (period) {
       case 'now':
@@ -192,7 +191,6 @@ class DashboardView extends Component {
 
   /** === KPI DATA BY DATE NOW === */
   getNowDetailKpi = () => {
-    console.log('********************', this.props);
     this.getKpiData({
       period: 'now',
       startDate: moment(new Date()).format('YYYY-MM-DD'),
