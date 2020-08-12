@@ -122,7 +122,7 @@ class DashboardView extends Component {
 
       default:
         var subtractValue = 7;
-        var subtractPeriod = 'days';
+        var subtractPeriod = 'day';
     }
 
     let startDate = moment()
@@ -134,7 +134,7 @@ class DashboardView extends Component {
     let params = {
       startDate,
       endDate,
-      period: this.state.tabsTime.period,
+      period: this.state.tabsTime.period ? this.state.tabsTime.period : 'last7Days',
       userId: this.props.user.id
     };
 
@@ -379,29 +379,6 @@ class DashboardView extends Component {
 
   /** === CART COMPONENT === */
   renderChart = () => {
-    let graphList = [
-      {
-        title: 'T.Order',
-        data: {}
-      },
-      {
-        title: 'Total Penjualan',
-        data: {}
-      },
-      {
-        title: 'T.Dikunjungi',
-        data: {}
-      },
-      {
-        title: 'T.Baru',
-        data: {}
-      },
-      {
-        title: 'Total Pesanan',
-        data: {}
-      }
-    ];
-
     // prettier-ignore
     return (
       <View style={styles.chartContainer}>
@@ -423,20 +400,41 @@ class DashboardView extends Component {
           }}
         >
           {
-            graphList.map((graph, index) => {
-              return <View key={index} style={{ width: Scale(360), height: '100%', }}>
-                         {/* Chart Title */}
-                         <Text>{graph.title}</Text>
+            Object.keys(this.props.salesmanKpi.kpiGraphData).map((property, index) => {
+              let item = this.props.salesmanKpi.kpiGraphData[property];
 
-                         {/* Chart Component */}
-                         <Charts />
-                       </View>;
+              if (!item) return null;
+
+              let chartOption = {
+                xAxis: {
+                  type: 'category',
+                  data: item.data.data[0].names.data,
+                },
+                yAxis: {
+                  type: 'value'
+                },
+                series: item.data.data[0].series.map((seri) => {
+                  return {
+                    type: 'line',
+                    data: seri.data
+                  };
+                }),
+              };
+
+              return <View key={index} style={{ width: Scale(360), height: '100%', }}>
+                       {/* Chart Title */}
+                       <Text>{item.title}</Text>
+
+                       {/* Chart Component */}
+                       <Charts
+                         option={chartOption}
+                       />
+                     </View>;
             })
           }
         </ScrollView>
         {/* slide indicator */}
         <SlideIndicator
-          indicators={graphList}
           activeIndex={this.state.currentSlideIndex}
         />
       </View>
