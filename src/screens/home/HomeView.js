@@ -182,12 +182,20 @@ class HomeView extends Component {
   }
   /** === GET KPI DATA === */
   getKpiData(period) {
+    let supplierId = 1;
+    try {
+      supplierId = this.props.user.userSuppliers[0].supplierId;
+    } catch (error) {
+      console.log(error);
+    }
     let params = {
       startDate: '',
       endDate: '',
       period,
-      userId: this.props.user.id
+      userId: this.props.user.id,
+      supplierId
     };
+
     switch (period) {
       case 'daily':
         params.startDate = getDateNow();

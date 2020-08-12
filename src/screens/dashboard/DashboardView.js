@@ -145,12 +145,21 @@ class DashboardView extends Component {
 
   /** === GET KPI DATA === */
   getKpiData({ period, startDate, endDate }) {
+    let supplierId = 1;
+    try {
+      supplierId = this.props.user.userSuppliers[0].supplierId;
+    } catch (error) {
+      console.log(error);
+    }
     let params = {
       startDate: '',
       endDate: '',
       period: period === 'now' ? 'daily' : period,
-      userId: this.props.user.id
+      userId: this.props.user.id,
+      supplierId
     };
+    console.log('------------------||-------------', params);
+
     switch (period) {
       case 'now':
         params.startDate = startDate;
@@ -183,6 +192,7 @@ class DashboardView extends Component {
 
   /** === KPI DATA BY DATE NOW === */
   getNowDetailKpi = () => {
+    console.log('********************', this.props);
     this.getKpiData({
       period: 'now',
       startDate: moment(new Date()).format('YYYY-MM-DD'),
@@ -257,7 +267,6 @@ class DashboardView extends Component {
   /** === INITIAL LIFESYCLE GET KPI DATA BY DATE NOW === */
   componentDidMount() {
     this.getNowDetailKpi();
-
     this.getKpiGraphData();
   }
 
