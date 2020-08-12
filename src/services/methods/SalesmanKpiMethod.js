@@ -66,35 +66,65 @@ async function getKpiDataDetail(data) {
 
 function getKpiDataGraphTotalSales({ startDate, endDate, period, userId }) {
   return ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/totalsalesgraph?startDate=${startDate}&endDate=${endDate}&period=${period}&userIds=${userId}`,
+    path: `supplier/salesmankpi/v1/mobile/totalsalesgraph?startDate=${encodeURIComponent(
+      startDate
+    )}&endDate=${encodeURIComponent(
+      endDate
+    )}&period=${period}&userIds=${userId}`,
     method: 'GET'
   });
 }
 
 function getKpiDataGraphCountOrder({ startDate, endDate, period, userId }) {
   return ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/countordergraph?startDate=${startDate}&endDate=${endDate}&period=${period}&userIds=${userId}`,
+    path: `supplier/salesmankpi/v1/mobile/countordergraph?startDate=${encodeURIComponent(
+      startDate
+    )}&endDate=${encodeURIComponent(
+      endDate
+    )}&period=${period}&userIds=${userId}`,
     method: 'GET'
   });
 }
 
 function getKpiDataGraphCountStore({ startDate, endDate, period, userId }) {
   return ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/countstoregraph?startDate=${startDate}&endDate=${endDate}&period=${period}&userIds=${userId}`,
+    path: `supplier/salesmankpi/v1/mobile/countstoregraph?startDate=${encodeURIComponent(
+      startDate
+    )}&endDate=${encodeURIComponent(
+      endDate
+    )}&period=${period}&userIds=${userId}`,
     method: 'GET'
   });
 }
 
-function getKpiDataGraphCountStoreOrder({ startDate, endDate, period, userId }) {
+function getKpiDataGraphCountStoreOrder({
+  startDate,
+  endDate,
+  period,
+  userId
+}) {
   return ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/countstoreordergraph?startDate=${startDate}&endDate=${endDate}&period=${period}&userIds=${userId}`,
+    path: `supplier/salesmankpi/v1/mobile/countstoreordergraph?startDate=${encodeURIComponent(
+      startDate
+    )}&endDate=${encodeURIComponent(
+      endDate
+    )}&period=${period}&userIds=${userId}`,
     method: 'GET'
   });
 }
 
-function getKpiDataGraphCountVisitedStore({ startDate, endDate, period, userId }) {
+function getKpiDataGraphCountVisitedStore({
+  startDate,
+  endDate,
+  period,
+  userId
+}) {
   return ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/countvisitedstoregraph?startDate=${startDate}&endDate=${endDate}&period=${period}&userIds=${userId}`,
+    path: `supplier/salesmankpi/v1/mobile/countvisitedstoregraph?startDate=${encodeURIComponent(
+      startDate
+    )}&endDate=${encodeURIComponent(
+      endDate
+    )}&period=${period}&userIds=${userId}`,
     method: 'GET'
   });
 }
@@ -106,5 +136,5 @@ export const SalesmanKpiMethod = {
   getKpiDataGraphCountOrder,
   getKpiDataGraphCountStore,
   getKpiDataGraphCountStoreOrder,
-  getKpiDataGraphCountVisitedStore,
+  getKpiDataGraphCountVisitedStore
 };

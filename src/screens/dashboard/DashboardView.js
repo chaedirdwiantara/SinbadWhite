@@ -395,7 +395,7 @@ class DashboardView extends Component {
             Object.keys(this.props.salesmanKpi.kpiGraphData).map((property, index) => {
               let item = this.props.salesmanKpi.kpiGraphData[property];
 
-              if (!item) {return null;}
+              if (!item) { return null; }
 
               let chartOption = {
                 xAxis: {
@@ -414,14 +414,23 @@ class DashboardView extends Component {
               };
 
               return <View key={index} style={{ width: Scale(360), height: '100%', }}>
-                       {/* Chart Title */}
-                       <Text>{item.title}</Text>
-
-                       {/* Chart Component */}
-                       <Charts
-                         option={chartOption}
-                       />
-                     </View>;
+                {/* Chart Title */}
+                <Text
+                  style={[
+                    Fonts.textHeaderPage,
+                    {
+                      paddingLeft: 20,
+                      paddingTop: 20
+                    }
+                  ]}
+                >
+                  {item.title}
+                </Text>
+                {/* Chart Component */}
+                <Charts
+                  option={chartOption}
+                />
+              </View>;
             })
           }
         </ScrollView>
@@ -458,16 +467,6 @@ class DashboardView extends Component {
             value={tabsTime}
           />
           <View style={styles.containerList}>
-            <Text
-              style={[
-                Fonts.textHeaderPage,
-                {
-                  marginBottom: 15
-                }
-              ]}
-            >
-              T. Order
-            </Text>
             <ShadowComponent>{this.renderChart()}</ShadowComponent>
           </View>
           <View style={styles.sparator} />
