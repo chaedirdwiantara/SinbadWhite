@@ -1,60 +1,21 @@
 import ApiRest from '../apiRest';
 
-const kpiDashboardDummy = () =>
-  new Promise(function(resolve) {
-    resolve([
-      {
-        id: 'order',
-        data: {
-          achieved: 12,
-          target: 20
-        }
-      },
-      {
-        id: 'sell',
-        data: {
-          achieved: 2300000,
-          target: 4600000
-        }
-      },
-      {
-        id: 'visit',
-        data: {
-          achieved: 12,
-          target: 20
-        }
-      },
-      {
-        id: 'new',
-        data: {
-          achieved: 10,
-          target: 20
-        }
-      },
-      {
-        id: 'orderCreated',
-        data: {
-          achieved: 10,
-          target: 20
-        }
-      }
-    ]);
-  });
-
-function getKpiData(data) {
+function getKpiData({ startDate, endDate, period, userId, supplierId }) {
   return ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/all?startDate=${
-      data.startDate
-    }&endDate=${data.endDate}&period=${data.period}&userId=${data.userId}`,
+    path: `supplier/salesmankpi/v1/mobile/all?startDate=${startDate}&endDate=${endDate}&period=${period}&userId=${userId}&supplierId=${supplierId}`,
     method: 'GET'
   });
 }
 
-async function getKpiDataDetail(data) {
+async function getKpiDataDetail({
+  startDate,
+  endDate,
+  period,
+  userId,
+  supplierId
+}) {
   const response = await ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/all?startDate=${
-      data.startDate
-    }&endDate=${data.endDate}&period=${data.period}&userId=${data.userId}`,
+    path: `supplier/salesmankpi/v1/mobile/all?startDate=${startDate}&endDate=${endDate}&period=${period}&userId=${userId}&supplierId=${supplierId}`,
     method: 'GET'
   });
   return response;
@@ -66,35 +27,65 @@ async function getKpiDataDetail(data) {
 
 function getKpiDataGraphTotalSales({ startDate, endDate, period, userId }) {
   return ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/totalsalesgraph?startDate=${startDate}&endDate=${endDate}&period=${period}&userIds=${userId}`,
+    path: `supplier/salesmankpi/v1/mobile/totalsalesgraph?startDate=${encodeURIComponent(
+      startDate
+    )}&endDate=${encodeURIComponent(
+      endDate
+    )}&period=${period}&userIds=${userId}`,
     method: 'GET'
   });
 }
 
 function getKpiDataGraphCountOrder({ startDate, endDate, period, userId }) {
   return ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/countordergraph?startDate=${startDate}&endDate=${endDate}&period=${period}&userIds=${userId}`,
+    path: `supplier/salesmankpi/v1/mobile/countordergraph?startDate=${encodeURIComponent(
+      startDate
+    )}&endDate=${encodeURIComponent(
+      endDate
+    )}&period=${period}&userIds=${userId}`,
     method: 'GET'
   });
 }
 
 function getKpiDataGraphCountStore({ startDate, endDate, period, userId }) {
   return ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/countstoregraph?startDate=${startDate}&endDate=${endDate}&period=${period}&userIds=${userId}`,
+    path: `supplier/salesmankpi/v1/mobile/countstoregraph?startDate=${encodeURIComponent(
+      startDate
+    )}&endDate=${encodeURIComponent(
+      endDate
+    )}&period=${period}&userIds=${userId}`,
     method: 'GET'
   });
 }
 
-function getKpiDataGraphCountStoreOrder({ startDate, endDate, period, userId }) {
+function getKpiDataGraphCountStoreOrder({
+  startDate,
+  endDate,
+  period,
+  userId
+}) {
   return ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/countstoreordergraph?startDate=${startDate}&endDate=${endDate}&period=${period}&userIds=${userId}`,
+    path: `supplier/salesmankpi/v1/mobile/countstoreordergraph?startDate=${encodeURIComponent(
+      startDate
+    )}&endDate=${encodeURIComponent(
+      endDate
+    )}&period=${period}&userIds=${userId}`,
     method: 'GET'
   });
 }
 
-function getKpiDataGraphCountVisitedStore({ startDate, endDate, period, userId }) {
+function getKpiDataGraphCountVisitedStore({
+  startDate,
+  endDate,
+  period,
+  userId
+}) {
   return ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/countvisitedstoregraph?startDate=${startDate}&endDate=${endDate}&period=${period}&userIds=${userId}`,
+    path: `supplier/salesmankpi/v1/mobile/countvisitedstoregraph?startDate=${encodeURIComponent(
+      startDate
+    )}&endDate=${encodeURIComponent(
+      endDate
+    )}&period=${period}&userIds=${userId}`,
     method: 'GET'
   });
 }
@@ -106,5 +97,5 @@ export const SalesmanKpiMethod = {
   getKpiDataGraphCountOrder,
   getKpiDataGraphCountStore,
   getKpiDataGraphCountStoreOrder,
-  getKpiDataGraphCountVisitedStore,
+  getKpiDataGraphCountVisitedStore
 };

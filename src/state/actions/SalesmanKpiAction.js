@@ -36,11 +36,9 @@ export const getKpiDashboardDetailProcess = params => {
 };
 
 export const getKpiDashboardDetailSuccess = data => {
-  console.log('+++++++++++++++++++++++++++');
-  console.log(data);
   return {
     type: types.KPI_DASHBOARD_DETAIL_GET_SUCCESS,
-    payload: data ? data : 'gak ada data cukk'
+    payload: data
   };
 };
 
@@ -62,8 +60,6 @@ export const getKpiGraphDataProcess = params => {
 };
 
 export const getKpiGraphDataSuccess = data => {
-  console.log('+++++++++++++++++++++++++++');
-  console.log(data);
   return {
     type: types.KPI_GRAPH_DATA_GET_SUCCESS,
     payload: data ? data : 'gak ada data cukk'

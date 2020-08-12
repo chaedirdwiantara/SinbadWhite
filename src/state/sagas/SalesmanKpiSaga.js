@@ -32,27 +32,42 @@ function* getKpiGraphDataProcess(actions) {
     /*
      * Request total sales
      */
-    const totalSales = yield call(SalesmanKpiMethod.getKpiDataGraphTotalSales, actions.payload);
+    const totalSales = yield call(
+      SalesmanKpiMethod.getKpiDataGraphTotalSales,
+      actions.payload
+    );
 
     /*
      * Request count order
      */
-    const countOrder = yield call(SalesmanKpiMethod.getKpiDataGraphCountOrder, actions.payload);
+    const countOrder = yield call(
+      SalesmanKpiMethod.getKpiDataGraphCountOrder,
+      actions.payload
+    );
 
     /*
      * Request count store
      */
-    const countStore = yield call(SalesmanKpiMethod.getKpiDataGraphCountStore, actions.payload);
+    const countStore = yield call(
+      SalesmanKpiMethod.getKpiDataGraphCountStore,
+      actions.payload
+    );
 
     /*
      * Request count store order
      */
-    const countStoreOrder = yield call(SalesmanKpiMethod.getKpiDataGraphCountStoreOrder, actions.payload);
+    const countStoreOrder = yield call(
+      SalesmanKpiMethod.getKpiDataGraphCountStoreOrder,
+      actions.payload
+    );
 
     /*
      * Request count visited store
      */
-    const countVisitedStore = yield call(SalesmanKpiMethod.getKpiDataGraphCountVisitedStore, actions.payload);
+    const countVisitedStore = yield call(
+      SalesmanKpiMethod.getKpiDataGraphCountVisitedStore,
+      actions.payload
+    );
 
     let data = {};
 

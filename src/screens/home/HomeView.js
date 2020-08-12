@@ -182,12 +182,20 @@ class HomeView extends Component {
   }
   /** === GET KPI DATA === */
   getKpiData(period) {
+    let supplierId = 1;
+    try {
+      supplierId = this.props.user.userSuppliers[0].supplierId;
+    } catch (error) {
+      console.log(error);
+    }
     let params = {
       startDate: '',
       endDate: '',
       period,
-      userId: this.props.user.id
+      userId: this.props.user.id,
+      supplierId
     };
+
     switch (period) {
       case 'daily':
         params.startDate = getDateNow();
@@ -350,11 +358,16 @@ class HomeView extends Component {
           snapToInterval={width - 90}
           snapToAlignment={'center'}
           onScroll={event => {
-            let horizontalLimit = 100;
-            if (event.nativeEvent.contentOffset.x % horizontalLimit === 0) {
-              this.setState({
-                pageOne: event.nativeEvent.contentOffset.x / horizontalLimit
-              });
+            let horizontalLimit = width - 90;
+            if (event.nativeEvent.contentOffset.x % horizontalLimit) {
+              const newPage = Math.round(
+                event.nativeEvent.contentOffset.x / horizontalLimit
+              );
+              if (this.state.pageOne !== newPage) {
+                this.setState({
+                  pageOne: newPage
+                });
+              }
             }
           }}
         >
@@ -369,10 +382,7 @@ class HomeView extends Component {
           />
         </ScrollView>
         <View style={{ alignItems: 'center' }}>
-          <SlideIndicator
-            indicators={[0, 1]}
-            activeIndex={this.state.pageOne}
-          />
+          <SlideIndicator totalItem={2} activeIndex={this.state.pageOne} />
           <TouchableOpacity
             onPress={() => this.goToPage({ goTo: 'dashboard' })}
             style={{ marginTop: 16 }}

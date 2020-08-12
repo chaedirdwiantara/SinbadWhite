@@ -125,14 +125,18 @@ class DashboardView extends Component {
         var subtractPeriod = 'day';
     }
 
-    let startDate = moment().subtract(subtractValue, subtractPeriod).format();
+    let startDate = moment()
+      .subtract(subtractValue, subtractPeriod)
+      .format();
 
     let endDate = moment().format();
 
     let params = {
       startDate,
       endDate,
-      period: this.state.tabsTime.period ? this.state.tabsTime.period : 'last7Days',
+      period: this.state.tabsTime.period
+        ? this.state.tabsTime.period
+        : 'last7Days',
       userId: this.props.user.id
     };
 
@@ -141,12 +145,20 @@ class DashboardView extends Component {
 
   /** === GET KPI DATA === */
   getKpiData({ period, startDate, endDate }) {
+    let supplierId = 1;
+    try {
+      supplierId = this.props.user.userSuppliers[0].supplierId;
+    } catch (error) {
+      console.log(error);
+    }
     let params = {
       startDate: '',
       endDate: '',
       period: period === 'now' ? 'daily' : period,
-      userId: this.props.user.id
+      userId: this.props.user.id,
+      supplierId
     };
+
     switch (period) {
       case 'now':
         params.startDate = startDate;
@@ -171,12 +183,9 @@ class DashboardView extends Component {
       default:
         break;
     }
-    console.log('fetching START');
     this.setState({
       load: period
     });
-    console.log({ period, startDate, endDate });
-    console.log(period);
     this.props.getKpiDashboardDetailProcess(params);
   }
 
@@ -250,18 +259,12 @@ class DashboardView extends Component {
           load: false
         });
       }
-      console.log('=========== FLAG ============');
-      console.log(this.state.load);
-      console.log('fetching DONE');
-      console.log(prevProps.salesmanKpi);
-      console.log(this.props.salesmanKpi);
     }
   }
 
   /** === INITIAL LIFESYCLE GET KPI DATA BY DATE NOW === */
   componentDidMount() {
     this.getNowDetailKpi();
-
     this.getKpiGraphData();
   }
 
@@ -312,24 +315,25 @@ class DashboardView extends Component {
         new Date(rows.date.year, rows.date.month - 1, rows.date.day, 0, 0, 0, 0)
       ).isAfter(new Date());
     });
-    console.log(newData);
     return newData;
   };
 
   /** === TABS PREV NEXT ON CHANGED === */
   tabsTimeChanged = value => {
     if (this.state.tabsTime !== value) {
-      this.setState({
-        tabsTime: value
-      }, () => {
-        this.getKpiGraphData();
-      });
+      this.setState(
+        {
+          tabsTime: value
+        },
+        () => {
+          this.getKpiGraphData();
+        }
+      );
     }
   };
 
   /** === TABS TYPE OF KEY OBJECT CHANGED === */
   tabsWhiteChanged = value => {
-    console.log(value);
     this.setState({
       tabsWhite: value
     });
@@ -398,7 +402,7 @@ class DashboardView extends Component {
             Object.keys(this.props.salesmanKpi.kpiGraphData).map((property, index) => {
               let item = this.props.salesmanKpi.kpiGraphData[property];
 
-              if (!item) return null;
+              if (!item) { return null; }
 
               let chartOption = {
                 xAxis: {
@@ -417,19 +421,29 @@ class DashboardView extends Component {
               };
 
               return <View key={index} style={{ width: Scale(360), height: '100%', }}>
-                       {/* Chart Title */}
-                       <Text>{item.title}</Text>
-
-                       {/* Chart Component */}
-                       <Charts
-                         option={chartOption}
-                       />
-                     </View>;
+                {/* Chart Title */}
+                <Text
+                  style={[
+                    Fonts.textHeaderPage,
+                    {
+                      paddingLeft: 20,
+                      paddingTop: 20
+                    }
+                  ]}
+                >
+                  {item.title}
+                </Text>
+                {/* Chart Component */}
+                <Charts
+                  option={chartOption}
+                />
+              </View>;
             })
           }
         </ScrollView>
         {/* slide indicator */}
         <SlideIndicator
+          totalItem={Object.keys(this.props.salesmanKpi.kpiGraphData).length}
           activeIndex={this.state.currentSlideIndex}
         />
       </View>
@@ -460,16 +474,6 @@ class DashboardView extends Component {
             value={tabsTime}
           />
           <View style={styles.containerList}>
-            <Text
-              style={[
-                Fonts.textHeaderPage,
-                {
-                  marginBottom: 15
-                }
-              ]}
-            >
-              T. Order
-            </Text>
             <ShadowComponent>{this.renderChart()}</ShadowComponent>
           </View>
           <View style={styles.sparator} />
@@ -499,7 +503,6 @@ class DashboardView extends Component {
                   listMenu={listTimeTarget}
                   value={tabsTimeTarget}
                   onChange={value => {
-                    console.log(data);
                     this.setState({
                       tabsTimeTarget: value
                     });
