@@ -24,18 +24,24 @@ import TargetCard from './target';
 import moment from 'moment';
 // import NavigationService from '../../navigation/NavigationService';
 
+/*
+ * period is used for request parameter
+ */
 const listMenu = [
   {
     title: '7 Hari Terakhir',
-    value: '7Day'
+    value: '7Day',
+    period: 'last7Days'
   },
   {
     title: 'Bulan Ini',
-    value: 'thisMonth'
+    value: 'thisMonth',
+    period: 'thisMonth'
   },
   {
     title: '6 Bulan Terakhir',
-    value: '6Month'
+    value: '6Month',
+    period: 'last3Month'
   }
 ];
 
@@ -99,6 +105,38 @@ class DashboardView extends Component {
       },
       currentSlideIndex: 0
     };
+  }
+
+  /** === GET KPI GRAPH === */
+  getKpiGraphData() {
+    switch (this.state.tabsWhite.period) {
+      case 'thisMonth':
+        subtractValue = 1;
+        subtractPeriod = 'month';
+        break;
+
+      case 'last3Month':
+        subtractValue = 3;
+        subtractPeriod = 'month';
+        break;
+
+      default:
+        var subtractValue = 7;
+        var subtractPeriod = 'days';
+    }
+
+    let startDate = moment().subtract(subtractValue, subtractPeriod).format();
+
+    let endDate = moment().format();
+
+    let params = {
+      startDate,
+      endDate,
+      period: this.state.tabsTime.period,
+      userId: this.props.user.id
+    };
+
+    this.props.getKpiGraphDataProcess(params);
   }
 
   /** === GET KPI DATA === */
@@ -223,6 +261,8 @@ class DashboardView extends Component {
   /** === INITIAL LIFESYCLE GET KPI DATA BY DATE NOW === */
   componentDidMount() {
     this.getNowDetailKpi();
+
+    this.getKpiGraphData();
   }
 
   /** === FOR PARSE DATE === */
@@ -278,9 +318,13 @@ class DashboardView extends Component {
 
   /** === TABS PREV NEXT ON CHANGED === */
   tabsTimeChanged = value => {
-    this.setState({
-      tabsTime: value
-    });
+    if (this.state.tabsTime !== value) {
+      this.setState({
+        tabsTime: value
+      }, () => {
+        this.getKpiGraphData();
+      });
+    }
   };
 
   /** === TABS TYPE OF KEY OBJECT CHANGED === */
