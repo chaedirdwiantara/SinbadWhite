@@ -125,7 +125,9 @@ class DashboardView extends Component {
         var subtractPeriod = 'days';
     }
 
-    let startDate = moment().subtract(subtractValue, subtractPeriod).format();
+    let startDate = moment()
+      .subtract(subtractValue, subtractPeriod)
+      .format();
 
     let endDate = moment().format();
 
@@ -171,12 +173,12 @@ class DashboardView extends Component {
       default:
         break;
     }
-    console.log('fetching START');
+    // console.log('fetching START');
     this.setState({
       load: period
     });
-    console.log({ period, startDate, endDate });
-    console.log(period);
+    // console.log({ period, startDate, endDate });
+    // console.log(period);
     this.props.getKpiDashboardDetailProcess(params);
   }
 
@@ -250,11 +252,11 @@ class DashboardView extends Component {
           load: false
         });
       }
-      console.log('=========== FLAG ============');
-      console.log(this.state.load);
-      console.log('fetching DONE');
-      console.log(prevProps.salesmanKpi);
-      console.log(this.props.salesmanKpi);
+      // console.log('=========== FLAG ============');
+      // console.log(this.state.load);
+      // console.log('fetching DONE');
+      // console.log(prevProps.salesmanKpi);
+      // console.log(this.props.salesmanKpi);
     }
   }
 
@@ -312,24 +314,27 @@ class DashboardView extends Component {
         new Date(rows.date.year, rows.date.month - 1, rows.date.day, 0, 0, 0, 0)
       ).isAfter(new Date());
     });
-    console.log(newData);
+    // console.log(newData);
     return newData;
   };
 
   /** === TABS PREV NEXT ON CHANGED === */
   tabsTimeChanged = value => {
     if (this.state.tabsTime !== value) {
-      this.setState({
-        tabsTime: value
-      }, () => {
-        this.getKpiGraphData();
-      });
+      this.setState(
+        {
+          tabsTime: value
+        },
+        () => {
+          this.getKpiGraphData();
+        }
+      );
     }
   };
 
   /** === TABS TYPE OF KEY OBJECT CHANGED === */
   tabsWhiteChanged = value => {
-    console.log(value);
+    // console.log(value);
     this.setState({
       tabsWhite: value
     });
@@ -501,7 +506,7 @@ class DashboardView extends Component {
                   listMenu={listTimeTarget}
                   value={tabsTimeTarget}
                   onChange={value => {
-                    console.log(data);
+                    // console.log(data);
                     this.setState({
                       tabsTimeTarget: value
                     });

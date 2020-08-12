@@ -14,6 +14,11 @@ const styles = StyleSheet.create({
 
 // prettier-ignore
 class SlideIndicator extends React.Component {
+
+  // componentWillReceiveProps(){
+  //   console.log(
+  //     this.props.activeIndex);
+  // }
   render() {
     return (
       <View style={{ alignItems: 'center' }}>

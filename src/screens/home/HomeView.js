@@ -350,11 +350,16 @@ class HomeView extends Component {
           snapToInterval={width - 90}
           snapToAlignment={'center'}
           onScroll={event => {
-            let horizontalLimit = 100;
-            if (event.nativeEvent.contentOffset.x % horizontalLimit === 0) {
-              this.setState({
-                pageOne: event.nativeEvent.contentOffset.x / horizontalLimit
-              });
+            let horizontalLimit = width - 90;
+            if (event.nativeEvent.contentOffset.x % horizontalLimit) {
+              const newPage = Math.round(
+                event.nativeEvent.contentOffset.x / horizontalLimit
+              );
+              if (this.state.pageOne !== newPage) {
+                this.setState({
+                  pageOne: newPage
+                });
+              }
             }
           }}
         >
