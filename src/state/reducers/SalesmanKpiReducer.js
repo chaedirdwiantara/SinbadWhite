@@ -4,10 +4,19 @@ import createReducer from './createReducer';
 const INITIAL_STATE = {
   isLoadingKpiDashboard: false,
   isLoadingKpiDashboardDetail: false,
+  isLoadingKpiGraphData: false,
   kpiDashboardData: {},
   kpiDashboardDetailData: {},
   errorKpiDashboard: '',
-  errorDetailKpiDashboard: ''
+  errorDetailKpiDashboard: '',
+  errorKpiGraphData: '',
+  kpiGraphData: {
+    totalSales: null,
+    countOrder: null,
+    countStore: null,
+    countStoreOrder: null,
+    countVisitedStore: null
+  }
 };
 
 export const salesmanKpi = createReducer(INITIAL_STATE, {
@@ -50,6 +59,28 @@ export const salesmanKpi = createReducer(INITIAL_STATE, {
       ...state,
       isLoadingKpiDashboardDetail: false,
       errorDetailKpiDashboard: action.payload
+    };
+  },
+
+  [types.KPI_GRAPH_DATA_GET_PROCESS](state, action) {
+    return {
+      ...state,
+      isLoadingKpiGraphData: true,
+      errorKpiGraphData: ''
+    };
+  },
+  [types.KPI_GRAPH_DATA_GET_SUCCESS](state, action) {
+    return {
+      ...state,
+      isLoadingKpiGraphData: false,
+      kpiGraphData: action.payload
+    };
+  },
+  [types.KPI_GRAPH_DATA_GET_FAILED](state, action) {
+    return {
+      ...state,
+      isLoadingKpiGraphData: false,
+      errorKpiGraphData: action.payload
     };
   }
 });

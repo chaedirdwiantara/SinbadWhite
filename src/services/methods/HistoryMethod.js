@@ -4,8 +4,7 @@ import { GlobalMethod } from './GlobalMethod';
 function getHistory(data) {
   return ApiRest({
     path: `payment/v1/order/get-parcels?userId=${
-      data.userId
-    }&storeId=${data.storeId}&$limit=10&$skip=${
+      data.userId}&storeId=${data.storeId}&$limit=10&$skip=${
       data.page
     }&status=${data.statusOrder}&statusPayment=${data.statusPayment}&orderGte=${
       data.dateGte
