@@ -5,20 +5,20 @@ import { ECharts } from 'react-native-echarts-wrapper';
 const defaultOption = {
   xAxis: {
     type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    data: []
   },
   yAxis: {
     type: 'value'
   },
   series: [
     {
-      data: [100, 100, 100, 100, 100, 100, 100],
+      data: [],
       type: 'line'
     },
     {
-      data: [200, 200, 200, 200, 200, 200, 200],
+      data: [],
       type: 'line'
-    },
+    }
   ]
 };
 

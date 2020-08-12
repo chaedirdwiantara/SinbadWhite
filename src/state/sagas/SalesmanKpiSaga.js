@@ -56,11 +56,26 @@ function* getKpiGraphDataProcess(actions) {
 
     let data = {};
 
-    data.totalSales = totalSales.data.payload;
-    data.countOrder = countOrder.data.payload;
-    data.countStore = countStore.data.payload;
-    data.countStoreOrder = countStoreOrder.data.payload;
-    data.countVisitedStore = countVisitedStore.data.payload;
+    data.totalSales = {
+      title: 'Total Penjualan',
+      data: totalSales.data.payload
+    };
+    data.countOrder = {
+      title: 'Total Order',
+      data: countOrder.data.payload
+    };
+    data.countStore = {
+      title: 'Toko Baru',
+      data: countStore.data.payload
+    };
+    data.countStoreOrder = {
+      title: 'Toko Order',
+      data: countStoreOrder.data.payload
+    };
+    data.countVisitedStore = {
+      title: 'Toko Dikunjungi',
+      data: countVisitedStore.data.payload
+    };
 
     yield put(ActionCreators.getKpiGraphDataSuccess(data));
   } catch (error) {
