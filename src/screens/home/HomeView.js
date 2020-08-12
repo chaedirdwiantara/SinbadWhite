@@ -374,10 +374,7 @@ class HomeView extends Component {
           />
         </ScrollView>
         <View style={{ alignItems: 'center' }}>
-          <SlideIndicator
-            indicators={[0, 1]}
-            activeIndex={this.state.pageOne}
-          />
+          <SlideIndicator totalItem={2} activeIndex={this.state.pageOne} />
           <TouchableOpacity
             onPress={() => this.goToPage({ goTo: 'dashboard' })}
             style={{ marginTop: 16 }}

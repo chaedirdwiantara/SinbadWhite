@@ -134,7 +134,9 @@ class DashboardView extends Component {
     let params = {
       startDate,
       endDate,
-      period: this.state.tabsTime.period ? this.state.tabsTime.period : 'last7Days',
+      period: this.state.tabsTime.period
+        ? this.state.tabsTime.period
+        : 'last7Days',
       userId: this.props.user.id
     };
 
@@ -173,12 +175,9 @@ class DashboardView extends Component {
       default:
         break;
     }
-    // console.log('fetching START');
     this.setState({
       load: period
     });
-    // console.log({ period, startDate, endDate });
-    // console.log(period);
     this.props.getKpiDashboardDetailProcess(params);
   }
 
@@ -252,11 +251,6 @@ class DashboardView extends Component {
           load: false
         });
       }
-      // console.log('=========== FLAG ============');
-      // console.log(this.state.load);
-      // console.log('fetching DONE');
-      // console.log(prevProps.salesmanKpi);
-      // console.log(this.props.salesmanKpi);
     }
   }
 
@@ -314,7 +308,6 @@ class DashboardView extends Component {
         new Date(rows.date.year, rows.date.month - 1, rows.date.day, 0, 0, 0, 0)
       ).isAfter(new Date());
     });
-    // console.log(newData);
     return newData;
   };
 
@@ -334,7 +327,6 @@ class DashboardView extends Component {
 
   /** === TABS TYPE OF KEY OBJECT CHANGED === */
   tabsWhiteChanged = value => {
-    // console.log(value);
     this.setState({
       tabsWhite: value
     });
@@ -403,7 +395,7 @@ class DashboardView extends Component {
             Object.keys(this.props.salesmanKpi.kpiGraphData).map((property, index) => {
               let item = this.props.salesmanKpi.kpiGraphData[property];
 
-              if (!item) return null;
+              if (!item) {return null;}
 
               let chartOption = {
                 xAxis: {
@@ -435,6 +427,7 @@ class DashboardView extends Component {
         </ScrollView>
         {/* slide indicator */}
         <SlideIndicator
+          totalItem={Object.keys(this.props.salesmanKpi.kpiGraphData).length}
           activeIndex={this.state.currentSlideIndex}
         />
       </View>
@@ -504,7 +497,6 @@ class DashboardView extends Component {
                   listMenu={listTimeTarget}
                   value={tabsTimeTarget}
                   onChange={value => {
-                    // console.log(data);
                     this.setState({
                       tabsTimeTarget: value
                     });
