@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Text,
   ScrollView,
-  Dimensions
+  Dimensions,
+  RefreshControl
 } from '../../library/reactPackage';
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import * as ActionCreators from '../../state/actions';
@@ -110,7 +111,8 @@ class DashboardView extends Component {
         daily: false,
         monthly: false
       },
-      currentSlideIndex: 0
+      currentSlideIndex: 0,
+      refreshing: false
     };
   }
 
@@ -204,8 +206,8 @@ class DashboardView extends Component {
   getNowDetailKpi = () => {
     this.getKpiData({
       period: 'now',
-      startDate: moment(new Date()).format('YYYY-MM-DD'),
-      endDate: moment(new Date()).format('YYYY-MM-DD')
+      startDate: moment(new Date()).format(),
+      endDate: moment(new Date()).format()
     });
   };
 
@@ -215,10 +217,10 @@ class DashboardView extends Component {
       period: 'daily',
       startDate: moment()
         .subtract(3, 'day')
-        .format('YYYY-MM-DD'),
+        .format(),
       endDate: moment()
         .add(3, 'day')
-        .format('YYYY-MM-DD')
+        .format()
     });
   };
 
@@ -228,10 +230,10 @@ class DashboardView extends Component {
       period: 'monthly',
       startDate: moment()
         .subtract(3, 'month')
-        .format('YYYY-MM-DD'),
+        .format(),
       endDate: moment()
         .add(3, 'month')
-        .format('YYYY-MM-DD')
+        .format()
     });
   };
 
@@ -344,16 +346,21 @@ class DashboardView extends Component {
     }
   }
 
-  /** === INITIAL LIFESYCLE GET KPI DATA BY DATE NOW === */
-  componentDidMount() {
+  /** === GET INITIAL DATA === */
+  getInitialData = () => {
     this.getNowDetailKpi();
     this.getKpiGraphData();
+  };
+
+  /** === INITIAL LIFESYCLE GET KPI DATA BY DATE NOW === */
+  componentDidMount() {
+    this.getInitialData();
   }
 
   /** === FOR PARSE DATE === */
   parseDate = ({ day, month, year }) => {
     if (this.state.tabsTimeTarget === 'monthly') {
-      return month;
+      return moment(new Date(year, month - 1, day, 0, 0, 0, 0)).format('MMMM');
     }
     return moment(new Date(year, month - 1, day, 0, 0, 0, 0)).format(
       'DD/MM/YYYY'
@@ -361,11 +368,11 @@ class DashboardView extends Component {
   };
 
   /** === FOR PARSE VALUE === */
-  parseValue = (value, type) => {
+  parseValue = (value, type, exeption) => {
+    if (value === 0 && !exeption) {
+      return '-';
+    }
     if (type === 'totalSales') {
-      if (value === 0) {
-        return '-';
-      }
       return MoneyFormatShort(value);
     }
     if (type === 'countOrders') {
@@ -458,6 +465,15 @@ class DashboardView extends Component {
     });
   };
 
+  /** === PULL TO REFRESH === */
+  _onRefresh() {
+    this.setState({ refreshing: true });
+    this.getInitialData();
+    setTimeout(() => {
+      this.setState({ refreshing: false });
+    }, 1000);
+  }
+
   /** === CART COMPONENT === */
   renderChart = () => {
     // prettier-ignore
@@ -465,12 +481,16 @@ class DashboardView extends Component {
       <View style={styles.chartContainer}>
         {/* combine these scroll with bottom indicator */}
         <ScrollView
-          style={{ width: '100%', }}
+          style={{ width: '100%' }}
           horizontal
           showsHorizontalScrollIndicator={false}
           decelerationRate={0}
           snapToInterval={Scale(360)}
           snapToAlignment={'center'}
+          contentContainerStyle={{
+            paddingTop: 20,
+            paddingHorizontal: 5
+          }}
           onScroll={(event) => {
             let horizontalLimit = Scale(360);
             if (event.nativeEvent.contentOffset.x % horizontalLimit === 0) {
@@ -480,91 +500,98 @@ class DashboardView extends Component {
             }
           }}
         >
-          {
-            Object.keys(this.props.salesmanKpi.kpiGraphData).map((property, index) => {
-              let item = this.props.salesmanKpi.kpiGraphData[property];
+         {
+           this.props.salesmanKpi.kpiGraphData.countOrder ? this.props.salesmanKpi.kpiGraphData.countOrder.data ? (
 
-              if (!item || !item.data || !item.data.data) return;
+              Object.keys(this.props.salesmanKpi.kpiGraphData).map((property, index) => {
+                let item = this.props.salesmanKpi.kpiGraphData[property];
 
-              let legend = [];
+                if (!item || !item.data || !item.data.data) return;
 
-              let chartOption = {
-                xAxis: {
-                  type: 'category',
-                  data: item.data.data[0].names.data,
-                  axisLabel: {
-                    rotate: 30,
-                  }
-                },
-                yAxis: {
-                  type: 'value',
-                  axisLabel: {
-                    rotate: 30,
-                    formatter: value => {
-                      /*
-                       * TODO: inject this js into webview
-                       */
-                      const jsNumberFormat = (num, digits) => {
-                        var si = [
-                          { value: 1, symbol: '' },
-                          { value: 1e3, symbol: 'Rb' },
-                          { value: 1e6, symbol: 'Jt' },
-                          { value: 1e9, symbol: 'M' },
-                          { value: 1e12, symbol: 'T' },
-                          { value: 1e15, symbol: 'P' },
-                          { value: 1e18, symbol: 'E' }
-                        ];
-                        var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-                        var i;
-                        for (i = si.length - 1; i > 0; i--) {
-                          if (num >= si[i].value) {
-                            break;
+                let legend = [];
+
+                let chartOption = {
+                  xAxis: {
+                    type: 'category',
+                    data: item.data.data[0].names.data,
+                    axisLabel: {
+                      rotate: 30,
+                    }
+                  },
+                  yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                      rotate: 30,
+                      formatter: value => {
+                        /*
+                         * TODO: inject this js into webview
+                         */
+                        const jsNumberFormat = (num, digits) => {
+                          var si = [
+                            { value: 1, symbol: '' },
+                            { value: 1e3, symbol: 'Rb' },
+                            { value: 1e6, symbol: 'Jt' },
+                            { value: 1e9, symbol: 'M' },
+                            { value: 1e12, symbol: 'T' },
+                            { value: 1e15, symbol: 'P' },
+                            { value: 1e18, symbol: 'E' }
+                          ];
+                          var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+                          var i;
+                          for (i = si.length - 1; i > 0; i--) {
+                            if (num >= si[i].value) {
+                              break;
+                            }
                           }
-                        }
-                        return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
-                      };
+                          return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
+                        };
 
-                      return jsNumberFormat(value, 1);
+                        return jsNumberFormat(value, 1);
+                      }
                     }
-                  }
-                },
-                series: item.data.data[0].series.map((seri) => {
-                  legend.push(seri.name);
+                  },
+                  series: item.data.data[0].series.map((seri) => {
+                    legend.push(seri.name);
 
-                  return {
-                    type: 'line',
-                    data: seri.data,
-                    smooth: true,
-                    name: seri.name
-                  };
-                })
-              }
+                    return {
+                      type: 'line',
+                      data: seri.data,
+                      smooth: true,
+                      name: seri.name
+                    };
+                  })
+                }
 
-              chartOption.legend = {
-                data: legend
-              };
+                chartOption.legend = {
+                  data: legend
+                };
 
-              return <View key={index} style={{ width: Scale(360), height: '100%', }}>
-                {/* Chart Title */}
-                <Text
-                  style={[
-                    Fonts.textHeaderPage,
-                    {
-                      paddingLeft: 20,
-                      paddingTop: 20
-                    }
-                  ]}
-                >
-                  {item.title}
-                </Text>
-                {/* Chart Component */}
-                <Charts
-                  option={chartOption}
-                  ref={this.onRef}
-                />
-              </View>;
-            })
-          }
+                return <View key={index} style={{ width: Scale(360), height: '100%', }}>
+                  {/* Chart Title */}
+                  <Text
+                    style={[
+                      Fonts.textHeaderPage,
+                      {
+                        paddingLeft: 10
+                      }
+                    ]}
+                  >
+                    {item.title}
+                  </Text>
+                  {/* Chart Component */}
+                  <View style={{
+                    width: '92%',
+                    height: '92%',
+                  }}>
+                  <Charts
+                    option={chartOption}
+                    ref={this.onRef}
+                  />
+                  </View>
+                </View>;
+              })
+           ) : (null) : (null)
+         }
         </ScrollView>
         {/* slide indicator */}
         <SlideIndicator
@@ -585,7 +612,15 @@ class DashboardView extends Component {
       load
     } = this.state;
     return (
-      <ScrollView scrollEnabled={!load}>
+      <ScrollView
+        scrollEnabled={!load}
+        refreshControl={
+          <RefreshControl
+            onRefresh={() => this._onRefresh()}
+            refreshing={this.state.refreshing}
+          />
+        }
+      >
         {load ? (
           <View style={styles.loadingContainer}>
             <LoadingPage />
@@ -680,7 +715,8 @@ class DashboardView extends Component {
                       {data.now[tabsWhite]
                         ? this.parseValue(
                             data.now[tabsWhite][0].achieved,
-                            tabsWhite
+                            tabsWhite,
+                            true
                           )
                         : '-'}
                     </Text>

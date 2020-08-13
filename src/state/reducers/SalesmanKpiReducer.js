@@ -37,6 +37,7 @@ export const salesmanKpi = createReducer(INITIAL_STATE, {
     return {
       ...state,
       isLoadingKpiDashboard: false,
+      kpiDashboardData: {},
       errorKpiDashboard: action.payload
     };
   },
