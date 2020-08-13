@@ -244,6 +244,8 @@ class DashboardView extends Component {
 
         if (!item || !item.data || !item.data.data) return;
 
+        let legend = [];
+
         let chartOption = {
           xAxis: {
             type: 'category',
@@ -253,11 +255,18 @@ class DashboardView extends Component {
             type: 'value'
           },
           series: item.data.data[0].series.map(seri => {
+            legend.push(seri.name);
+
             return {
               type: 'line',
+              smooth: true,
               data: seri.data
             };
           })
+        };
+
+        chartOption.legend = {
+          data: legend
         };
 
         if (this.charts.length > index)
@@ -444,6 +453,8 @@ class DashboardView extends Component {
 
               if (!item || !item.data || !item.data.data) return;
 
+              let legend = [];
+
               let chartOption = {
                 xAxis: {
                   type: 'category',
@@ -453,11 +464,19 @@ class DashboardView extends Component {
                   type: 'value'
                 },
                 series: item.data.data[0].series.map((seri) => {
+                  legend.push(seri.name);
+
                   return {
                     type: 'line',
-                    data: seri.data
+                    data: seri.data,
+                    smooth: true,
+                    name: seri.name
                   };
                 }),
+              };
+
+              chartOption.legend = {
+                data: legend
               };
 
               return <View key={index} style={{ width: Scale(360), height: '100%', }}>
