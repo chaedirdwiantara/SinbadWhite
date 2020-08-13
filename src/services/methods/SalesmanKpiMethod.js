@@ -11,6 +11,23 @@ function getKpiData({ startDate, endDate, period, userId, supplierId }) {
   });
 }
 
+function getKpiSalesPending({
+  startDate,
+  endDate,
+  period,
+  userId,
+  supplierId
+}) {
+  return ApiRest({
+    path: `supplier/salesmankpi/v1/mobile/achieved/totalsalespending?startDate=${encodeURIComponent(
+      startDate
+    )}&endDate=${encodeURIComponent(
+      endDate
+    )}&period=${period}&userId=${userId}&supplierId=${supplierId}`,
+    method: 'GET'
+  });
+}
+
 async function getKpiDataDetail({
   startDate,
   endDate,
@@ -100,6 +117,7 @@ function getKpiDataGraphCountVisitedStore({
 
 export const SalesmanKpiMethod = {
   getKpiData,
+  getKpiSalesPending,
   getKpiDataDetail,
   getKpiDataGraphTotalSales,
   getKpiDataGraphCountOrder,

@@ -41,6 +41,8 @@ import {
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
+import _ from 'lodash';
+import { SalesmanKpiMethod } from '../../services/methods';
 
 const { width } = Dimensions.get('window');
 const defaultImage = require('../../assets/images/sinbad_image/sinbadopacity.png');
@@ -135,7 +137,8 @@ class HomeView extends Component {
       ],
       pageOne: 0,
       tabValue: tabDashboard[0].value,
-      refreshing: false
+      refreshing: false,
+      totalSalesPending: 0
     };
   }
   /**
@@ -192,11 +195,13 @@ class HomeView extends Component {
   }
   /** === GET KPI DATA === */
   getKpiData(period) {
+    if (_.isNil(this.props.user)) return;
+
     let supplierId = 1;
     try {
       supplierId = this.props.user.userSuppliers[0].supplierId;
     } catch (error) {
-      console.log(error);
+      return;
     }
     let params = {
       startDate: '',
@@ -226,6 +231,13 @@ class HomeView extends Component {
         break;
     }
     this.props.getKpiDashboardProcess(params);
+    SalesmanKpiMethod.getKpiSalesPending(params).then(response => {
+      if (response.code === 200) {
+        this.setState({
+          totalSalesPending: response.data.payload.data[0].achieved
+        });
+      }
+    });
     this.setState({ refreshing: false });
   }
   /** === FOR PARSE VALUE === */
@@ -452,6 +464,12 @@ class HomeView extends Component {
               lagi untuk mencapai target
             </Text>
           )}
+          {this.state.totalSalesPending !== 0 && item.id === 'totalSales' ? (
+            <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
+              (Total pesanan dalam proses{' '}
+              {MoneyFormatShort(this.state.totalSalesPending)})
+            </Text>
+          ) : null}
           <View style={{ flexDirection: 'row', marginVertical: 4 }}>
             <View style={{ width: '50%' }}>
               <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
@@ -698,6 +716,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * updatedBy: Dyah
  * updatedDate: 13082020
  * updatedFunction:
- * -> Fix bugs kpi dashboard's no connection & parseValue function.
+ * -> delete console from kpi dashboard & integrate services (totalsalespending).
  *
  */
