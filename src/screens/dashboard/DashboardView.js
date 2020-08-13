@@ -251,13 +251,40 @@ class DashboardView extends Component {
             type: 'category',
             data: item.data.data[0].names.data,
             axisLabel: {
-              rotate: 30,
+              rotate: 30
             }
           },
           yAxis: {
             type: 'value',
             axisLabel: {
-              rotate: 30
+              rotate: 30,
+              formatter: value => {
+                /*
+                 * TODO: inject this js into webview
+                 */
+                const jsNumberFormat = (num, digits) => {
+                  var si = [
+                    { value: 1, symbol: '' },
+                    { value: 1e3, symbol: 'Rb' },
+                    { value: 1e6, symbol: 'Jt' },
+                    { value: 1e9, symbol: 'M' },
+                    { value: 1e12, symbol: 'T' },
+                    { value: 1e15, symbol: 'P' },
+                    { value: 1e18, symbol: 'E' }
+                  ];
+                  var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+                  var i;
+                  for (i = si.length - 1; i > 0; i--) {
+                    if (num >= si[i].value) {
+                      break;
+                    }
+                  }
+
+                  return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
+                };
+
+                return jsNumberFormat(value, 1);
+              }
             }
           },
           series: item.data.data[0].series.map(seri => {
@@ -473,6 +500,32 @@ class DashboardView extends Component {
                   type: 'value',
                   axisLabel: {
                     rotate: 30,
+                    formatter: value => {
+                      /*
+                       * TODO: inject this js into webview
+                       */
+                      const jsNumberFormat = (num, digits) => {
+                        var si = [
+                          { value: 1, symbol: '' },
+                          { value: 1e3, symbol: 'Rb' },
+                          { value: 1e6, symbol: 'Jt' },
+                          { value: 1e9, symbol: 'M' },
+                          { value: 1e12, symbol: 'T' },
+                          { value: 1e15, symbol: 'P' },
+                          { value: 1e18, symbol: 'E' }
+                        ];
+                        var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+                        var i;
+                        for (i = si.length - 1; i > 0; i--) {
+                          if (num >= si[i].value) {
+                            break;
+                          }
+                        }
+                        return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
+                      };
+
+                      return jsNumberFormat(value, 1);
+                    }
                   }
                 },
                 series: item.data.data[0].series.map((seri) => {
@@ -484,8 +537,8 @@ class DashboardView extends Component {
                     smooth: true,
                     name: seri.name
                   };
-                }),
-              };
+                })
+              }
 
               chartOption.legend = {
                 data: legend
