@@ -244,22 +244,64 @@ class DashboardView extends Component {
       Object.keys(salesmanKpi.kpiGraphData).map((property, index) => {
         let item = this.props.salesmanKpi.kpiGraphData[property];
 
-        if (!item) return null;
+        if (!item || !item.data || !item.data.data) return;
+
+        let legend = [];
 
         let chartOption = {
           xAxis: {
             type: 'category',
-            data: item.data.data[0].names.data
+            data: item.data.data[0].names.data,
+            axisLabel: {
+              rotate: 30
+            }
           },
           yAxis: {
-            type: 'value'
+            type: 'value',
+            axisLabel: {
+              rotate: 30,
+              formatter: value => {
+                /*
+                 * TODO: inject this js into webview
+                 */
+                const jsNumberFormat = (num, digits) => {
+                  var si = [
+                    { value: 1, symbol: '' },
+                    { value: 1e3, symbol: 'Rb' },
+                    { value: 1e6, symbol: 'Jt' },
+                    { value: 1e9, symbol: 'M' },
+                    { value: 1e12, symbol: 'T' },
+                    { value: 1e15, symbol: 'P' },
+                    { value: 1e18, symbol: 'E' }
+                  ];
+                  var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+                  var i;
+                  for (i = si.length - 1; i > 0; i--) {
+                    if (num >= si[i].value) {
+                      break;
+                    }
+                  }
+
+                  return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
+                };
+
+                return jsNumberFormat(value, 1);
+              }
+            }
           },
           series: item.data.data[0].series.map(seri => {
+            legend.push(seri.name);
+
             return {
               type: 'line',
+              smooth: true,
               data: seri.data
             };
           })
+        };
+
+        chartOption.legend = {
+          data: legend
         };
 
         if (this.charts.length > index)
@@ -464,22 +506,64 @@ class DashboardView extends Component {
               Object.keys(this.props.salesmanKpi.kpiGraphData).map((property, index) => {
                 let item = this.props.salesmanKpi.kpiGraphData[property];
 
-                if (!item) { return null; }
+                if (!item || !item.data || !item.data.data) return;
+
+                let legend = [];
 
                 let chartOption = {
                   xAxis: {
                     type: 'category',
                     data: item.data.data[0].names.data,
+                    axisLabel: {
+                      rotate: 30,
+                    }
                   },
                   yAxis: {
-                    type: 'value'
+                    type: 'value',
+                    axisLabel: {
+                      rotate: 30,
+                      formatter: value => {
+                        /*
+                         * TODO: inject this js into webview
+                         */
+                        const jsNumberFormat = (num, digits) => {
+                          var si = [
+                            { value: 1, symbol: '' },
+                            { value: 1e3, symbol: 'Rb' },
+                            { value: 1e6, symbol: 'Jt' },
+                            { value: 1e9, symbol: 'M' },
+                            { value: 1e12, symbol: 'T' },
+                            { value: 1e15, symbol: 'P' },
+                            { value: 1e18, symbol: 'E' }
+                          ];
+                          var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+                          var i;
+                          for (i = si.length - 1; i > 0; i--) {
+                            if (num >= si[i].value) {
+                              break;
+                            }
+                          }
+                          return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
+                        };
+
+                        return jsNumberFormat(value, 1);
+                      }
+                    }
                   },
                   series: item.data.data[0].series.map((seri) => {
+                    legend.push(seri.name);
+
                     return {
                       type: 'line',
-                      data: seri.data
+                      data: seri.data,
+                      smooth: true,
+                      name: seri.name
                     };
-                  }),
+                  })
+                }
+
+                chartOption.legend = {
+                  data: legend
                 };
 
                 return <View key={index} style={{ width: Scale(360), height: '100%', }}>
