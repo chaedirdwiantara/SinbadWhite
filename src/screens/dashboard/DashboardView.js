@@ -164,7 +164,7 @@ class DashboardView extends Component {
     try {
       supplierId = this.props.user.userSuppliers[0].supplierId;
     } catch (error) {
-      return console.warn(error);
+      return;
     }
     let params = {
       startDate: '',
