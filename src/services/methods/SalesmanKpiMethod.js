@@ -2,7 +2,11 @@ import ApiRest from '../apiRest';
 
 function getKpiData({ startDate, endDate, period, userId, supplierId }) {
   return ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/all?startDate=${startDate}&endDate=${endDate}&period=${period}&userId=${userId}&supplierId=${supplierId}`,
+    path: `supplier/salesmankpi/v1/mobile/all?startDate=${encodeURIComponent(
+      startDate
+    )}&endDate=${encodeURIComponent(
+      endDate
+    )}&period=${period}&userId=${userId}&supplierId=${supplierId}`,
     method: 'GET'
   });
 }
@@ -15,7 +19,11 @@ async function getKpiDataDetail({
   supplierId
 }) {
   const response = await ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/all?startDate=${startDate}&endDate=${endDate}&period=${period}&userId=${userId}&supplierId=${supplierId}`,
+    path: `supplier/salesmankpi/v1/mobile/all?startDate=${encodeURIComponent(
+      startDate
+    )}&endDate=${encodeURIComponent(
+      endDate
+    )}&period=${period}&userId=${userId}&supplierId=${supplierId}`,
     method: 'GET'
   });
   return response;

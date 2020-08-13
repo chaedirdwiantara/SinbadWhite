@@ -11,7 +11,8 @@ import {
   FlatList,
   Dimensions,
   Text,
-  ScrollView
+  ScrollView,
+  RefreshControl
 } from '../../library/reactPackage';
 import {
   MaterialIcon,
@@ -133,7 +134,8 @@ class HomeView extends Component {
         }
       ],
       pageOne: 0,
-      tabValue: tabDashboard[0].value
+      tabValue: tabDashboard[0].value,
+      refreshing: false
     };
   }
   /**
@@ -180,6 +182,12 @@ class HomeView extends Component {
       }
     }
   }
+  /** === PULL TO REFRESH === */
+  _onRefresh() {
+    this.setState({ refreshing: true }, () =>
+      this.getKpiData(this.state.tabValue)
+    );
+  }
   /** === GET KPI DATA === */
   getKpiData(period) {
     let supplierId = 1;
@@ -216,17 +224,24 @@ class HomeView extends Component {
         break;
     }
     this.props.getKpiDashboardProcess(params);
+    this.setState({ refreshing: false });
   }
   /** === FOR PARSE VALUE === */
   parseValue = (value, type) => {
     if (type === 'totalSales') {
-      if (value === 0) {
+      if (value === 0 || value === '0') {
         return '-';
       }
       return MoneyFormatShort(value);
     }
     if (type === 'countOrders') {
+      if (value === 0 || value === '0') {
+        return '-';
+      }
       return `${value} Order`;
+    }
+    if (value === 0 || value === '0') {
+      return '-';
     }
     return `${value} Toko`;
   };
@@ -423,7 +438,8 @@ class HomeView extends Component {
             target={item.data.target}
             achieved={item.data.achieved}
           />
-          {item.data.target === 0 ? (
+          {item.data.target === 0 ||
+          item.data.target - item.data.achieved < 0 ? (
             <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
               {' '}
               Sedang tidak ada target{' '}
@@ -431,7 +447,7 @@ class HomeView extends Component {
           ) : (
             <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
               {this.parseValue(item.data.target - item.data.achieved, item.id)}{' '}
-              lagi target
+              lagi untuk mencapai target
             </Text>
           )}
           <View style={{ flexDirection: 'row', marginVertical: 4 }}>
@@ -534,6 +550,12 @@ class HomeView extends Component {
         <FlatList
           showsVerticalScrollIndicator
           data={[1]}
+          refreshControl={
+            <RefreshControl
+              onRefresh={() => this._onRefresh()}
+              refreshing={this.state.refreshing}
+            />
+          }
           renderItem={this.renderItem.bind(this)}
           keyExtractor={(data, index) => index.toString()}
         />
@@ -674,6 +696,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * updatedBy: Dyah
  * updatedDate: 11082020
  * updatedFunction:
- * -> Fix kpi dashboard's style.
+ * -> Fix kpi dashboard's notes & parseValue function.
  *
  */
