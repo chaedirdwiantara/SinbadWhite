@@ -399,12 +399,16 @@ class DashboardView extends Component {
       <View style={styles.chartContainer}>
         {/* combine these scroll with bottom indicator */}
         <ScrollView
-          style={{ width: '100%', }}
+          style={{ width: '100%' }}
           horizontal
           showsHorizontalScrollIndicator={false}
           decelerationRate={0}
           snapToInterval={Scale(360)}
           snapToAlignment={'center'}
+          contentContainerStyle={{
+            paddingTop: 20,
+            paddingHorizontal: 5
+          }}
           onScroll={(event) => {
             let horizontalLimit = Scale(360);
             if (event.nativeEvent.contentOffset.x % horizontalLimit === 0) {
@@ -442,17 +446,21 @@ class DashboardView extends Component {
                   style={[
                     Fonts.textHeaderPage,
                     {
-                      paddingLeft: 20,
-                      paddingTop: 20
+                      paddingLeft: 10
                     }
                   ]}
                 >
                   {item.title}
                 </Text>
                 {/* Chart Component */}
+                <View style={{
+                  width: '92%',
+                  height: '92%',
+                }}>
                 <Charts
                   option={chartOption}
                 />
+                </View>
               </View>;
             })
           }
