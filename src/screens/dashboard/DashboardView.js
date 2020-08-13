@@ -242,7 +242,7 @@ class DashboardView extends Component {
       Object.keys(salesmanKpi.kpiGraphData).map((property, index) => {
         let item = this.props.salesmanKpi.kpiGraphData[property];
 
-        if (!item) return null;
+        if (!item || !item.data || !item.data.data) return;
 
         let chartOption = {
           xAxis: {
@@ -442,7 +442,7 @@ class DashboardView extends Component {
             Object.keys(this.props.salesmanKpi.kpiGraphData).map((property, index) => {
               let item = this.props.salesmanKpi.kpiGraphData[property];
 
-              if (!item) { return null; }
+              if (!item || !item.data || !item.data.data) return;
 
               let chartOption = {
                 xAxis: {
