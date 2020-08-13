@@ -120,7 +120,7 @@ const TargetCard = ({
                 type === 'prev' ? styles.textContentPrev : styles.textContent,
                 {
                   color:
-                    target !== '0'
+                    Number(target) !== 0
                       ? achieved >= target
                         ? '#81C784'
                         : '#ef9a9a'
@@ -128,11 +128,11 @@ const TargetCard = ({
                 }
               ]}
             >
-              {target !== '0'
+              {Number(target) !== 0
                 ? achieved >= target
                   ? 'Achieved'
                   : 'Not Achieved'
-                : 'Target Not Set'}
+                : 'Not Set'}
             </Text>
           ) : null}
         </View>
