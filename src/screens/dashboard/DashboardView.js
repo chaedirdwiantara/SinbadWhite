@@ -156,7 +156,9 @@ class DashboardView extends Component {
 
   /** === GET KPI DATA === */
   getKpiData({ period, startDate, endDate }) {
-    if (_.isNil(this.props.user)) return;
+    if (_.isNil(this.props.user)) {
+      return;
+    }
 
     let supplierId = 1;
     try {
@@ -244,7 +246,9 @@ class DashboardView extends Component {
       Object.keys(salesmanKpi.kpiGraphData).map((property, index) => {
         let item = this.props.salesmanKpi.kpiGraphData[property];
 
-        if (!item || !item.data || !item.data.data) return;
+        if (!item || !item.data || !item.data.data) {
+          return;
+        }
 
         let legend = [];
 
@@ -282,7 +286,10 @@ class DashboardView extends Component {
                     }
                   }
 
-                  return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
+                  return (
+                    (num / si[i].value).toFixed(digits).replace(rx, '$1') +
+                    si[i].symbol
+                  );
                 };
 
                 return jsNumberFormat(value, 1);
@@ -304,8 +311,9 @@ class DashboardView extends Component {
           data: legend
         };
 
-        if (this.charts.length > index)
+        if (this.charts.length > index) {
           this.charts[index].setOption(chartOption);
+        }
       });
     }
 
@@ -493,20 +501,25 @@ class DashboardView extends Component {
           }}
           onScroll={(event) => {
             let horizontalLimit = Scale(360);
-            if (event.nativeEvent.contentOffset.x % horizontalLimit === 0) {
-              this.setState({
-                currentSlideIndex: event.nativeEvent.contentOffset.x / horizontalLimit
-              });
+            if (event.nativeEvent.contentOffset.x % horizontalLimit) {
+              const newPage = Math.round(
+                event.nativeEvent.contentOffset.x / horizontalLimit
+              );
+              if (this.state.currentSlideIndex !== newPage) {
+                this.setState({
+                  currentSlideIndex: newPage
+                });
+              }
             }
           }}
         >
-         {
-           this.props.salesmanKpi.kpiGraphData.countOrder ? this.props.salesmanKpi.kpiGraphData.countOrder.data ? (
+          {
+            this.props.salesmanKpi.kpiGraphData.countOrder ? this.props.salesmanKpi.kpiGraphData.countOrder.data ? (
 
               Object.keys(this.props.salesmanKpi.kpiGraphData).map((property, index) => {
                 let item = this.props.salesmanKpi.kpiGraphData[property];
 
-                if (!item || !item.data || !item.data.data) return;
+                if (!item || !item.data || !item.data.data) { return; }
 
                 let legend = [];
 
@@ -543,7 +556,7 @@ class DashboardView extends Component {
                               break;
                             }
                           }
-                          return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
+                          return (num / si[i].value).toFixed(digits).replace(rx, '$1') + si[i].symbol;
                         };
 
                         return jsNumberFormat(value, 1);
@@ -560,7 +573,7 @@ class DashboardView extends Component {
                       name: seri.name
                     };
                   })
-                }
+                };
 
                 chartOption.legend = {
                   data: legend
@@ -583,15 +596,15 @@ class DashboardView extends Component {
                     width: '92%',
                     height: '92%',
                   }}>
-                  <Charts
-                    option={chartOption}
-                    ref={this.onRef}
-                  />
+                    <Charts
+                      option={chartOption}
+                      ref={this.onRef}
+                    />
                   </View>
                 </View>;
               })
-           ) : (null) : (null)
-         }
+            ) : (null) : (null)
+          }
         </ScrollView>
         {/* slide indicator */}
         <SlideIndicator
@@ -601,6 +614,8 @@ class DashboardView extends Component {
       </View>
     );
   };
+
+  // Details = React.lazy(() => import('./containers/Details'));
 
   render() {
     const {
@@ -652,11 +667,16 @@ class DashboardView extends Component {
             ]}
           >
             <View style={styles.targetHeader}>
-              <Text style={[Fonts.textHeaderPage]}>Target Saat Ini</Text>
               <View
                 style={{
-                  flex: 1,
-                  paddingLeft: 50
+                  flex: 1
+                }}
+              >
+                <Text style={[Fonts.textHeaderPage]}>Target Saat Ini</Text>
+              </View>
+              <View
+                style={{
+                  flex: 1
                 }}
               >
                 <TabsCustom
