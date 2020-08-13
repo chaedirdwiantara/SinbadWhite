@@ -418,52 +418,55 @@ class DashboardView extends Component {
             }
           }}
         >
-          {
-            Object.keys(this.props.salesmanKpi.kpiGraphData).map((property, index) => {
-              let item = this.props.salesmanKpi.kpiGraphData[property];
+         {
+           this.props.salesmanKpi.kpiGraphData.countOrder ? this.props.salesmanKpi.kpiGraphData.countOrder.data ? (
 
-              if (!item) { return null; }
+              Object.keys(this.props.salesmanKpi.kpiGraphData).map((property, index) => {
+                let item = this.props.salesmanKpi.kpiGraphData[property];
 
-              let chartOption = {
-                xAxis: {
-                  type: 'category',
-                  data: item.data.data[0].names.data,
-                },
-                yAxis: {
-                  type: 'value'
-                },
-                series: item.data.data[0].series.map((seri) => {
-                  return {
-                    type: 'line',
-                    data: seri.data
-                  };
-                }),
-              };
+                if (!item) { return null; }
 
-              return <View key={index} style={{ width: Scale(360), height: '100%', }}>
-                {/* Chart Title */}
-                <Text
-                  style={[
-                    Fonts.textHeaderPage,
-                    {
-                      paddingLeft: 10
-                    }
-                  ]}
-                >
-                  {item.title}
-                </Text>
-                {/* Chart Component */}
-                <View style={{
-                  width: '92%',
-                  height: '92%',
-                }}>
-                <Charts
-                  option={chartOption}
-                />
-                </View>
-              </View>;
-            })
-          }
+                let chartOption = {
+                  xAxis: {
+                    type: 'category',
+                    data: item.data.data[0].names.data,
+                  },
+                  yAxis: {
+                    type: 'value'
+                  },
+                  series: item.data.data[0].series.map((seri) => {
+                    return {
+                      type: 'line',
+                      data: seri.data
+                    };
+                  }),
+                };
+
+                return <View key={index} style={{ width: Scale(360), height: '100%', }}>
+                  {/* Chart Title */}
+                  <Text
+                    style={[
+                      Fonts.textHeaderPage,
+                      {
+                        paddingLeft: 10
+                      }
+                    ]}
+                  >
+                    {item.title}
+                  </Text>
+                  {/* Chart Component */}
+                  <View style={{
+                    width: '92%',
+                    height: '92%',
+                  }}>
+                  <Charts
+                    option={chartOption}
+                  />
+                  </View>
+                </View>;
+              })
+           ) : (null) : (null)
+         }
         </ScrollView>
         {/* slide indicator */}
         <SlideIndicator
