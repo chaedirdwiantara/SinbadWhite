@@ -23,26 +23,25 @@ import {
 } from '../../library/component';
 import TargetCard from './target';
 import moment from 'moment';
+import _ from 'lodash';
 // import NavigationService from '../../navigation/NavigationService';
 
 /*
  * period is used for request parameter
  */
+
 const listMenu = [
   {
     title: '7 Hari Terakhir',
-    value: '7Day',
-    period: 'last7Days'
+    value: '7Day'
   },
   {
     title: 'Bulan Ini',
-    value: 'thisMonth',
-    period: 'thisMonth'
+    value: 'thisMonth'
   },
   {
     title: '6 Bulan Terakhir',
-    value: '6Month',
-    period: 'last3Month'
+    value: '6Month'
   }
 ];
 
@@ -92,6 +91,14 @@ const listTarget = [
 ];
 
 class DashboardView extends Component {
+  onRef = ref => {
+    if (ref) {
+      this.charts.push(ref);
+    }
+  };
+
+  charts = [];
+
   constructor(props) {
     super(props);
     this.state = {
@@ -111,20 +118,24 @@ class DashboardView extends Component {
 
   /** === GET KPI GRAPH === */
   getKpiGraphData() {
-    switch (this.state.tabsWhite.period) {
+    switch (this.state.tabsTime) {
       case 'thisMonth':
         subtractValue = 1;
         subtractPeriod = 'month';
+        period = 'thisMonth';
         break;
 
-      case 'last3Month':
-        subtractValue = 3;
+      case '6Month':
+        subtractValue = 6;
         subtractPeriod = 'month';
+        period = 'last3Month';
         break;
 
+      // default last 7 days
       default:
         var subtractValue = 7;
         var subtractPeriod = 'day';
+        var period = 'last7Days';
     }
 
     let startDate = moment()
@@ -136,9 +147,7 @@ class DashboardView extends Component {
     let params = {
       startDate,
       endDate,
-      period: this.state.tabsTime.period
-        ? this.state.tabsTime.period
-        : 'last7Days',
+      period,
       userId: this.props.user.id
     };
 
@@ -147,11 +156,13 @@ class DashboardView extends Component {
 
   /** === GET KPI DATA === */
   getKpiData({ period, startDate, endDate }) {
+    if (_.isNil(this.props.user)) return;
+
     let supplierId = 1;
     try {
       supplierId = this.props.user.userSuppliers[0].supplierId;
     } catch (error) {
-      console.log(error);
+      return console.warn(error);
     }
     let params = {
       startDate: '',
@@ -227,6 +238,35 @@ class DashboardView extends Component {
   };
 
   componentDidUpdate(prevProps) {
+    const { salesmanKpi } = this.props;
+
+    if (!_.isNil(salesmanKpi.kpiGraphData)) {
+      Object.keys(salesmanKpi.kpiGraphData).map((property, index) => {
+        let item = this.props.salesmanKpi.kpiGraphData[property];
+
+        if (!item) return null;
+
+        let chartOption = {
+          xAxis: {
+            type: 'category',
+            data: item.data.data[0].names.data
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: item.data.data[0].series.map(seri => {
+            return {
+              type: 'line',
+              data: seri.data
+            };
+          })
+        };
+
+        if (this.charts.length > index)
+          this.charts[index].setOption(chartOption);
+      });
+    }
+
     if (
       this.props.salesmanKpi.kpiDashboardDetailData !==
       prevProps.salesmanKpi.kpiDashboardDetailData
@@ -461,6 +501,7 @@ class DashboardView extends Component {
                   }}>
                   <Charts
                     option={chartOption}
+                    ref={this.onRef}
                   />
                   </View>
                 </View>;
