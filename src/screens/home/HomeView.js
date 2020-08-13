@@ -153,19 +153,21 @@ class HomeView extends Component {
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.salesmanKpi.kpiDashboardData !==
-      this.props.salesmanKpi.kpiDashboardData
-    ) {
-      if (Object.keys(this.props.salesmanKpi.kpiDashboardData).length !== 0) {
-        let newKpiDashboard = [...this.state.kpiDashboard];
-        Object.keys(this.props.salesmanKpi.kpiDashboardData).map((key, i) => {
-          const index = newKpiDashboard.findIndex(item => item.id === key);
-          const newData = this.props.salesmanKpi.kpiDashboardData[key][0];
-          newKpiDashboard[index].data.target = newData.target;
-          newKpiDashboard[index].data.achieved = newData.achieved;
-        });
-        this.setState({ kpiDashboard: newKpiDashboard });
+    if (this.props.salesmanKpi.kpiDashboardData) {
+      if (
+        prevProps.salesmanKpi.kpiDashboardData !==
+        this.props.salesmanKpi.kpiDashboardData
+      ) {
+        if (Object.keys(this.props.salesmanKpi.kpiDashboardData).length !== 0) {
+          let newKpiDashboard = [...this.state.kpiDashboard];
+          Object.keys(this.props.salesmanKpi.kpiDashboardData).map((key, i) => {
+            const index = newKpiDashboard.findIndex(item => item.id === key);
+            const newData = this.props.salesmanKpi.kpiDashboardData[key][0];
+            newKpiDashboard[index].data.target = newData.target;
+            newKpiDashboard[index].data.achieved = newData.achieved;
+          });
+          this.setState({ kpiDashboard: newKpiDashboard });
+        }
       }
     }
     if (prevProps.global.dataGetVersion !== this.props.global.dataGetVersion) {
@@ -227,7 +229,12 @@ class HomeView extends Component {
     this.setState({ refreshing: false });
   }
   /** === FOR PARSE VALUE === */
-  parseValue = (value, type) => {
+  parseValue = (value, type, target) => {
+    if (target) {
+      if (value === 0 || value === '0') {
+        return '-';
+      }
+    }
     if (type === 'totalSales') {
       if (value === 0 || value === '0') {
         return '-';
@@ -235,14 +242,9 @@ class HomeView extends Component {
       return MoneyFormatShort(value);
     }
     if (type === 'countOrders') {
-      if (value === 0 || value === '0') {
-        return '-';
-      }
       return `${value} Order`;
     }
-    if (value === 0 || value === '0') {
-      return '-';
-    }
+
     return `${value} Toko`;
   };
   /** === ON CHANGE TAB === */
@@ -471,7 +473,7 @@ class HomeView extends Component {
                 Target
               </Text>
               <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
-                {this.parseValue(item.data.target, item.id)}
+                {this.parseValue(item.data.target, item.id, true)}
               </Text>
             </View>
           </View>
@@ -694,8 +696,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 11082020
+ * updatedDate: 13082020
  * updatedFunction:
- * -> Fix kpi dashboard's notes & parseValue function.
+ * -> Fix bugs kpi dashboard's no connection & parseValue function.
  *
  */
