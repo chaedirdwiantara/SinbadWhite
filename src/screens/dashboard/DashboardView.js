@@ -249,10 +249,16 @@ class DashboardView extends Component {
         let chartOption = {
           xAxis: {
             type: 'category',
-            data: item.data.data[0].names.data
+            data: item.data.data[0].names.data,
+            axisLabel: {
+              rotate: 30,
+            }
           },
           yAxis: {
-            type: 'value'
+            type: 'value',
+            axisLabel: {
+              rotate: 30
+            }
           },
           series: item.data.data[0].series.map(seri => {
             legend.push(seri.name);
@@ -459,9 +465,15 @@ class DashboardView extends Component {
                 xAxis: {
                   type: 'category',
                   data: item.data.data[0].names.data,
+                  axisLabel: {
+                    rotate: 30,
+                  }
                 },
                 yAxis: {
-                  type: 'value'
+                  type: 'value',
+                  axisLabel: {
+                    rotate: 30,
+                  }
                 },
                 series: item.data.data[0].series.map((seri) => {
                   legend.push(seri.name);
