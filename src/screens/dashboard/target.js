@@ -15,7 +15,7 @@ const TargetCard = ({
 }) => {
   const parseDate = ({ day, month, year }) => {
     if (tabsTimeTarget === 'monthly') {
-      return month;
+      return moment(new Date(year, month - 1, day, 0, 0, 0, 0)).format('MMMM');
     }
     return moment(new Date(year, month - 1, day, 0, 0, 0, 0)).format(
       'DD/MM/YYYY'
@@ -119,11 +119,20 @@ const TargetCard = ({
                 Fonts.type13,
                 type === 'prev' ? styles.textContentPrev : styles.textContent,
                 {
-                  color: achieved >= target ? '#81C784' : '#ef9a9a'
+                  color:
+                    target !== '0'
+                      ? achieved >= target
+                        ? '#81C784'
+                        : '#ef9a9a'
+                      : '#BDBDBD'
                 }
               ]}
             >
-              {achieved >= target ? 'Achieved' : 'Not Achieved'}
+              {target !== '0'
+                ? achieved >= target
+                  ? 'Achieved'
+                  : 'Not Achieved'
+                : 'Target Not Set'}
             </Text>
           ) : null}
         </View>

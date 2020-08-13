@@ -278,7 +278,7 @@ class DashboardView extends Component {
   /** === FOR PARSE DATE === */
   parseDate = ({ day, month, year }) => {
     if (this.state.tabsTimeTarget === 'monthly') {
-      return month;
+      return moment(new Date(year, month - 1, day, 0, 0, 0, 0)).format('MMMM');
     }
     return moment(new Date(year, month - 1, day, 0, 0, 0, 0)).format(
       'DD/MM/YYYY'
