@@ -489,7 +489,8 @@ class DashboardView extends Component {
           snapToAlignment={'center'}
           contentContainerStyle={{
             paddingTop: 20,
-            paddingHorizontal: 5
+            paddingBottom: 20,
+            paddingHorizontal: 4
           }}
           onScroll={(event) => {
             let horizontalLimit = Scale(360);
@@ -580,8 +581,8 @@ class DashboardView extends Component {
                   </Text>
                   {/* Chart Component */}
                   <View style={{
-                    width: '92%',
-                    height: '92%',
+                    width: '100%',
+                    height: '100%',
                   }}>
                   <Charts
                     option={chartOption}
@@ -788,7 +789,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 300,
     backgroundColor: masterColor.backgroundWhite,
-    borderRadius: 7
+    borderRadius: 7,
+    paddingVertical: 16
   },
   targetHeader: {
     flexDirection: 'row',
