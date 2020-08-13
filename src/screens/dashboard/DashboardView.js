@@ -286,11 +286,11 @@ class DashboardView extends Component {
   };
 
   /** === FOR PARSE VALUE === */
-  parseValue = (value, type) => {
+  parseValue = (value, type, exeption) => {
+    if (value === 0 && !exeption) {
+      return '-';
+    }
     if (type === 'totalSales') {
-      if (value === 0) {
-        return '-';
-      }
       return MoneyFormatShort(value);
     }
     if (type === 'countOrders') {
@@ -587,7 +587,8 @@ class DashboardView extends Component {
                       {data.now[tabsWhite]
                         ? this.parseValue(
                             data.now[tabsWhite][0].achieved,
-                            tabsWhite
+                            tabsWhite,
+                            true
                           )
                         : '-'}
                     </Text>

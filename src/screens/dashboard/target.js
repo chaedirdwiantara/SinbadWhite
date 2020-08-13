@@ -22,11 +22,11 @@ const TargetCard = ({
     );
   };
 
-  const parseValue = value => {
+  const parseValue = (value, exeption) => {
+    if (value === 0 && !exeption) {
+      return '-';
+    }
     if (typeValue === 'totalSales') {
-      if (value === 0) {
-        return '-';
-      }
       return MoneyFormatShort(value);
     }
     if (typeValue === 'countOrders') {
@@ -111,7 +111,7 @@ const TargetCard = ({
               type === 'prev' ? styles.textContentPrev : styles.textContent
             ]}
           >
-            {parseValue(achieved)}
+            {parseValue(achieved, true)}
           </Text>
           {type === 'prev' ? (
             <Text
