@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Text,
   ScrollView,
-  Dimensions
+  Dimensions,
+  RefreshControl
 } from '../../library/reactPackage';
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import * as ActionCreators from '../../state/actions';
@@ -103,7 +104,8 @@ class DashboardView extends Component {
         daily: false,
         monthly: false
       },
-      currentSlideIndex: 0
+      currentSlideIndex: 0,
+      refreshing: false
     };
   }
 
@@ -193,8 +195,8 @@ class DashboardView extends Component {
   getNowDetailKpi = () => {
     this.getKpiData({
       period: 'now',
-      startDate: moment(new Date()).format('YYYY-MM-DD'),
-      endDate: moment(new Date()).format('YYYY-MM-DD')
+      startDate: moment(new Date()).format(),
+      endDate: moment(new Date()).format()
     });
   };
 
@@ -204,10 +206,10 @@ class DashboardView extends Component {
       period: 'daily',
       startDate: moment()
         .subtract(3, 'day')
-        .format('YYYY-MM-DD'),
+        .format(),
       endDate: moment()
         .add(3, 'day')
-        .format('YYYY-MM-DD')
+        .format()
     });
   };
 
@@ -217,10 +219,10 @@ class DashboardView extends Component {
       period: 'monthly',
       startDate: moment()
         .subtract(3, 'month')
-        .format('YYYY-MM-DD'),
+        .format(),
       endDate: moment()
         .add(3, 'month')
-        .format('YYYY-MM-DD')
+        .format()
     });
   };
 
@@ -262,10 +264,15 @@ class DashboardView extends Component {
     }
   }
 
-  /** === INITIAL LIFESYCLE GET KPI DATA BY DATE NOW === */
-  componentDidMount() {
+  /** === GET INITIAL DATA === */
+  getInitialData = () => {
     this.getNowDetailKpi();
     this.getKpiGraphData();
+  };
+
+  /** === INITIAL LIFESYCLE GET KPI DATA BY DATE NOW === */
+  componentDidMount() {
+    this.getInitialData();
   }
 
   /** === FOR PARSE DATE === */
@@ -376,6 +383,15 @@ class DashboardView extends Component {
     });
   };
 
+  /** === PULL TO REFRESH === */
+  _onRefresh() {
+    this.setState({ refreshing: true });
+    this.getInitialData();
+    setTimeout(() => {
+      this.setState({ refreshing: false });
+    }, 1000);
+  }
+
   /** === CART COMPONENT === */
   renderChart = () => {
     // prettier-ignore
@@ -460,7 +476,15 @@ class DashboardView extends Component {
       load
     } = this.state;
     return (
-      <ScrollView scrollEnabled={!load}>
+      <ScrollView
+        scrollEnabled={!load}
+        refreshControl={
+          <RefreshControl
+            onRefresh={() => this._onRefresh()}
+            refreshing={this.state.refreshing}
+          />
+        }
+      >
         {load ? (
           <View style={styles.loadingContainer}>
             <LoadingPage />
