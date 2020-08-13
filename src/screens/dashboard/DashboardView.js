@@ -252,41 +252,11 @@ class DashboardView extends Component {
           xAxis: {
             type: 'category',
             data: item.data.data[0].names.data,
-            axisLabel: {
-              rotate: 30
-            }
           },
           yAxis: {
             type: 'value',
             axisLabel: {
               rotate: 30,
-              formatter: value => {
-                /*
-                 * TODO: inject this js into webview
-                 */
-                const jsNumberFormat = (num, digits) => {
-                  var si = [
-                    { value: 1, symbol: '' },
-                    { value: 1e3, symbol: 'Rb' },
-                    { value: 1e6, symbol: 'Jt' },
-                    { value: 1e9, symbol: 'M' },
-                    { value: 1e12, symbol: 'T' },
-                    { value: 1e15, symbol: 'P' },
-                    { value: 1e18, symbol: 'E' }
-                  ];
-                  var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-                  var i;
-                  for (i = si.length - 1; i > 0; i--) {
-                    if (num >= si[i].value) {
-                      break;
-                    }
-                  }
-
-                  return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
-                };
-
-                return jsNumberFormat(value, 1);
-              }
             }
           },
           series: item.data.data[0].series.map(seri => {
@@ -517,7 +487,14 @@ class DashboardView extends Component {
                     data: item.data.data[0].names.data,
                     axisLabel: {
                       rotate: 30,
-                    }
+                      formatter: (value) => {
+                        var match = value.match(/-([0-9]{1,2}$)/);
+
+                        if (match && match.length === 2) return match[1];
+
+                        return value;
+                      }
+                    },
                   },
                   yAxis: {
                     type: 'value',
@@ -530,12 +507,12 @@ class DashboardView extends Component {
                         const jsNumberFormat = (num, digits) => {
                           var si = [
                             { value: 1, symbol: '' },
-                            { value: 1e3, symbol: 'Rb' },
-                            { value: 1e6, symbol: 'Jt' },
-                            { value: 1e9, symbol: 'M' },
-                            { value: 1e12, symbol: 'T' },
-                            { value: 1e15, symbol: 'P' },
-                            { value: 1e18, symbol: 'E' }
+                            { value: 1E3, symbol: 'Rb' },
+                            { value: 1E6, symbol: 'Jt' },
+                            { value: 1E9, symbol: 'M' },
+                            { value: 1E12, symbol: 'T' },
+                            { value: 1E15, symbol: 'P' },
+                            { value: 1E18, symbol: 'E' }
                           ];
                           var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
                           var i;
@@ -544,7 +521,7 @@ class DashboardView extends Component {
                               break;
                             }
                           }
-                          return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
+                          return (num / si[i].value).toFixed(digits).replace(rx, '$1') + si[i].symbol;
                         };
 
                         return jsNumberFormat(value, 1);
