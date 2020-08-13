@@ -11,7 +11,8 @@ import {
   FlatList,
   Dimensions,
   Text,
-  ScrollView
+  ScrollView,
+  RefreshControl
 } from '../../library/reactPackage';
 import {
   MaterialIcon,
@@ -133,7 +134,8 @@ class HomeView extends Component {
         }
       ],
       pageOne: 0,
-      tabValue: tabDashboard[0].value
+      tabValue: tabDashboard[0].value,
+      refreshing: false
     };
   }
   /**
@@ -180,6 +182,12 @@ class HomeView extends Component {
       }
     }
   }
+  /** === PULL TO REFRESH === */
+  _onRefresh() {
+    this.setState({ refreshing: true }, () =>
+      this.getKpiData(this.state.tabValue)
+    );
+  }
   /** === GET KPI DATA === */
   getKpiData(period) {
     let supplierId = 1;
@@ -216,6 +224,7 @@ class HomeView extends Component {
         break;
     }
     this.props.getKpiDashboardProcess(params);
+    this.setState({ refreshing: false });
   }
   /** === FOR PARSE VALUE === */
   parseValue = (value, type) => {
@@ -541,6 +550,12 @@ class HomeView extends Component {
         <FlatList
           showsVerticalScrollIndicator
           data={[1]}
+          refreshControl={
+            <RefreshControl
+              onRefresh={() => this._onRefresh()}
+              refreshing={this.state.refreshing}
+            />
+          }
           renderItem={this.renderItem.bind(this)}
           keyExtractor={(data, index) => index.toString()}
         />
