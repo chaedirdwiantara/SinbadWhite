@@ -12,7 +12,7 @@ import {
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
-import { Fonts, Scale, MoneyFormatShort } from '../../helpers';
+import { Fonts, Scale, MoneyFormatShort, getStartDateNow } from '../../helpers';
 import {
   Shadow as ShadowComponent,
   TabsCustom,
@@ -203,8 +203,8 @@ class DashboardView extends Component {
   getNowDetailKpi = () => {
     this.getKpiData({
       period: 'now',
-      startDate: moment(new Date()).format(),
-      endDate: moment(new Date()).format()
+      startDate: getStartDateNow(),
+      endDate: moment().format()
     });
   };
 
@@ -212,7 +212,7 @@ class DashboardView extends Component {
   getInitialDetailKpi = () => {
     this.getKpiData({
       period: 'daily',
-      startDate: moment()
+      startDate: moment(getStartDateNow())
         .subtract(3, 'day')
         .format(),
       endDate: moment()
