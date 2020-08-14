@@ -118,31 +118,26 @@ class DashboardView extends Component {
 
   /** === GET KPI GRAPH === */
   getKpiGraphData() {
+    let startDate;
+    let endDate = moment().format();
+
     switch (this.state.tabsTime) {
       case 'thisMonth':
-        subtractValue = 1;
-        subtractPeriod = 'month';
+        startDate = moment().startOf('month').format();
         period = 'thisMonth';
         break;
 
       case '6Month':
-        subtractValue = 6;
-        subtractPeriod = 'month';
+        startDate = moment().subtract(5, 'month').startOf('month').format();
+        endDate = moment().add(1, 'month').format();
         period = 'last3Month';
         break;
 
       // default last 7 days
       default:
-        var subtractValue = 7;
-        var subtractPeriod = 'day';
+        startDate = moment().subtract(7, 'day').format();
         var period = 'last7Days';
     }
-
-    let startDate = moment()
-      .subtract(subtractValue, subtractPeriod)
-      .format();
-
-    let endDate = moment().format();
 
     let params = {
       startDate,
@@ -251,7 +246,7 @@ class DashboardView extends Component {
         let chartOption = {
           xAxis: {
             type: 'category',
-            data: item.data.data[0].names.data,
+            data: this.state.tabsTime === 'thisMonth' ? item.data.data[0].names.data.map(name => name.slice(name.length - 2, name.length)) : item.data.data[0].names.data,
           },
           yAxis: {
             type: 'value',
