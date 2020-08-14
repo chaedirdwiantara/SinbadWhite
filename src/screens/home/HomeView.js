@@ -34,6 +34,7 @@ import {
   GlobalStyle,
   Fonts,
   MoneyFormatShort,
+  getStartDateNow,
   getDateNow,
   getStartDateMonth,
   getEndDateMonth
@@ -213,12 +214,12 @@ class HomeView extends Component {
 
     switch (period) {
       case 'daily':
-        params.startDate = getDateNow();
+        params.startDate = getStartDateNow();
         params.endDate = getDateNow();
         break;
 
       case 'weekly':
-        params.startDate = getDateNow();
+        params.startDate = getStartDateNow();
         params.endDate = getDateNow();
         break;
 
@@ -714,8 +715,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 13082020
+ * updatedDate: 14082020
  * updatedFunction:
- * -> delete console from kpi dashboard & integrate services (totalsalespending).
+ * -> update kpi dashboard (progress bar & integration)
  *
  */
