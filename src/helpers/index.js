@@ -4,6 +4,7 @@ import GlobalStyleHtml from './GlobalStyleHtml';
 import { NumberFormat, MoneyFormat, MoneyFormatShort } from './NumberFormater';
 import Scale from './Scale';
 import {
+  getStartDateNow,
   getDateNow,
   getMonthNow,
   getYearNow,
@@ -19,6 +20,7 @@ export {
   MoneyFormat,
   MoneyFormatShort,
   Scale,
+  getStartDateNow,
   getDateNow,
   getMonthNow,
   getYearNow,
