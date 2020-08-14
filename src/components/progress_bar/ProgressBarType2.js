@@ -28,6 +28,9 @@ class ProgressBarType2 extends Component {
     if (percentage > 100) {
       percentage = 100;
     }
+    if (value % 1 !== 0) {
+      value = Math.round(value * 100) / 100;
+    }
     return (
       <View style={styles.boxBar}>
         <View style={styles.fullBar}>

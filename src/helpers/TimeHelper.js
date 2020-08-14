@@ -29,6 +29,12 @@ const unitDivision = units => {
 };
 
 // for kpi dashboard
+export const getStartDateNow = () => {
+  let m = moment();
+  m.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+  m.toISOString();
+  return m.format();
+};
 export const getDateNow = () => moment().format();
 export const getMonthNow = () => moment().month();
 export const getYearNow = () => moment().year();
@@ -46,8 +52,8 @@ export const getEndDateMonth = () =>
  * createdBy: Ayu
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 13082020
+ * updatedDate: 14082020
  * updatedFunction:
- * -> update time helper for kpi dashboard (getDateNow).
+ * -> update time helper for kpi dashboard (getStartDateNow).
  *
  */
