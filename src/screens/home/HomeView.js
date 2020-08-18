@@ -196,7 +196,9 @@ class HomeView extends Component {
   }
   /** === GET KPI DATA === */
   getKpiData(period) {
-    if (_.isNil(this.props.user)) return;
+    if (_.isNil(this.props.user)) {
+      return;
+    }
 
     let supplierId = 1;
     try {
@@ -427,78 +429,90 @@ class HomeView extends Component {
   /** === RENDER KPI DASHBOARD ITEM === */
   renderKpiDashboardItem = ({ item, index }) => {
     return (
-      <Shadow
-        key={index}
-        radius={10}
-        elevation={1}
-        margin={5}
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          margin: 2,
-          padding: 16,
-          width: width * 0.77,
-          backgroundColor: 'white'
-        }}
-      >
-        <Image
-          source={item.image ? item.image : defaultImage}
-          style={styles.menuDashboardImage}
-        />
-        <View style={{ width: '78%' }}>
-          <Text style={[Fonts.type97, { color: masterColor.fontBlack50 }]}>
-            {item.title}
-          </Text>
-          <ProgressBarType2
-            target={item.data.target}
-            achieved={item.data.achieved}
+      <View key={index}>
+        <Shadow
+          radius={10}
+          elevation={1}
+          margin={5}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            margin: 2,
+            padding: 16,
+            width: width * 0.77,
+            backgroundColor: 'white'
+          }}
+        >
+          <Image
+            source={item.image ? item.image : defaultImage}
+            style={styles.menuDashboardImage}
           />
-          {item.data.target === 0 ||
-          item.data.target - item.data.achieved < 0 ? (
-            <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
-              {item.data.target === 0
-                ? 'Sedang tidak ada target'
-                : 'Anda sudah mencapai target'}
+          <View style={{ width: '78%' }}>
+            <Text style={[Fonts.type97, { color: masterColor.fontBlack50 }]}>
+              {item.title}
             </Text>
-          ) : (
-            <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
-              {this.parseValue(item.data.target - item.data.achieved, item.id)}{' '}
-              lagi untuk mencapai target
-            </Text>
-          )}
-          {this.state.totalSalesPending !== 0 && item.id === 'totalSales' ? (
-            <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
-              (Total pesanan dalam proses{' '}
-              {MoneyFormatShort(this.state.totalSalesPending)})
-            </Text>
-          ) : null}
-          <View style={{ flexDirection: 'row', marginVertical: 4 }}>
-            <View style={{ width: '50%' }}>
-              <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
-                Pencapaian
-              </Text>
-              <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
-                {this.parseValue(item.data.achieved, item.id)}
-              </Text>
-            </View>
-            <View
-              style={{
-                borderRightWidth: 1,
-                borderColor: masterColor.fontBlack40,
-                marginRight: 20
-              }}
+            <ProgressBarType2
+              target={item.data.target}
+              achieved={item.data.achieved}
             />
-            <View>
-              <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
-                Target
+            {item.data.target === 0 ||
+            item.data.target - item.data.achieved < 0 ? (
+              <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
+                {item.data.target === 0
+                  ? 'Sedang tidak ada target'
+                  : 'Anda sudah mencapai target'}
               </Text>
-              <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
-                {this.parseValue(item.data.target, item.id, true)}
+            ) : (
+              <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
+                {this.parseValue(
+                  item.data.target - item.data.achieved,
+                  item.id
+                )}{' '}
+                lagi untuk mencapai target
               </Text>
+            )}
+            {this.state.totalSalesPending !== 0 && item.id === 'totalSales' ? (
+              <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
+                (Total pesanan dalam proses{' '}
+                {MoneyFormatShort(this.state.totalSalesPending)})
+              </Text>
+            ) : null}
+            <View style={{ flexDirection: 'row', marginVertical: 4 }}>
+              <View style={{ width: '50%' }}>
+                <Text
+                  style={[Fonts.type44, { color: masterColor.fontBlack50 }]}
+                >
+                  Pencapaian
+                </Text>
+                <Text
+                  style={[Fonts.type44, { color: masterColor.fontBlack50 }]}
+                >
+                  {this.parseValue(item.data.achieved, item.id)}
+                </Text>
+              </View>
+              <View
+                style={{
+                  borderRightWidth: 1,
+                  borderColor: masterColor.fontBlack40,
+                  marginRight: 20
+                }}
+              />
+              <View>
+                <Text
+                  style={[Fonts.type44, { color: masterColor.fontBlack50 }]}
+                >
+                  Target
+                </Text>
+                <Text
+                  style={[Fonts.type44, { color: masterColor.fontBlack50 }]}
+                >
+                  {this.parseValue(item.data.target, item.id, true)}
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
-      </Shadow>
+        </Shadow>
+      </View>
     );
   };
   /** === RENDER MENU === */
