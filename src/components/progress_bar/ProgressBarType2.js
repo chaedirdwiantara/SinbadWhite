@@ -29,7 +29,7 @@ class ProgressBarType2 extends Component {
       percentage = 100;
     }
     if (value % 1 !== 0) {
-      value = Math.round(value * 100) / 100;
+      value = parseInt(value, 10);
     }
     return (
       <View style={styles.boxBar}>
@@ -92,6 +92,6 @@ export default ProgressBarType2;
  * updatedBy: Dyah
  * updatedDate: 18082020
  * updatedFunction:
- * -> Decrease padding left for text.
+ * -> Delete value with coma.
  *
  */
