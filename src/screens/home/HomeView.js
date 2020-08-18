@@ -35,6 +35,7 @@ import {
   Fonts,
   MoneyFormatShort,
   getStartDateNow,
+  getStartDateMinHour,
   getDateNow,
   getStartDateMonth,
   getEndDateMonth
@@ -216,7 +217,7 @@ class HomeView extends Component {
 
     switch (period) {
       case 'daily':
-        params.startDate = getStartDateNow();
+        params.startDate = getStartDateMinHour();
         params.endDate = getDateNow();
         break;
 
