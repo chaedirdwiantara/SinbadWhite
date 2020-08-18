@@ -126,19 +126,28 @@ class DashboardView extends Component {
 
     switch (this.state.tabsTime) {
       case 'thisMonth':
-        startDate = moment().startOf('month').format();
+        startDate = moment()
+          .startOf('month')
+          .format();
         period = 'thisMonth';
         break;
 
       case '6Month':
-        startDate = moment().subtract(5, 'month').startOf('month').format();
-        endDate = moment().add(1, 'month').format();
+        startDate = moment()
+          .subtract(5, 'month')
+          .startOf('month')
+          .format();
+        endDate = moment()
+          .add(1, 'month')
+          .format();
         period = 'last3Month';
         break;
 
       // default last 7 days
       default:
-        startDate = moment().subtract(7, 'day').format();
+        startDate = moment()
+          .subtract(7, 'day')
+          .format();
         var period = 'last7Days';
     }
 
@@ -276,12 +285,17 @@ class DashboardView extends Component {
         let chartOption = {
           xAxis: {
             type: 'category',
-            data: this.state.tabsTime === 'thisMonth' ? item.data.data[0].names.data.map(name => name.slice(name.length - 2, name.length)) : item.data.data[0].names.data,
+            data:
+              this.state.tabsTime === 'thisMonth'
+                ? item.data.data[0].names.data.map(name =>
+                    name.slice(name.length - 2, name.length)
+                  )
+                : item.data.data[0].names.data
           },
           yAxis: {
             type: 'value',
             axisLabel: {
-              rotate: 30,
+              rotate: 30
             }
           },
           series: item.data.data[0].series.map(seri => {
