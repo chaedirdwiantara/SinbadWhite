@@ -118,31 +118,26 @@ class DashboardView extends Component {
 
   /** === GET KPI GRAPH === */
   getKpiGraphData() {
+    let startDate;
+    let endDate = moment().format();
+
     switch (this.state.tabsTime) {
       case 'thisMonth':
-        subtractValue = 1;
-        subtractPeriod = 'month';
+        startDate = moment().startOf('month').format();
         period = 'thisMonth';
         break;
 
       case '6Month':
-        subtractValue = 6;
-        subtractPeriod = 'month';
+        startDate = moment().subtract(5, 'month').startOf('month').format();
+        endDate = moment().add(1, 'month').format();
         period = 'last3Month';
         break;
 
       // default last 7 days
       default:
-        var subtractValue = 7;
-        var subtractPeriod = 'day';
+        startDate = moment().subtract(7, 'day').format();
         var period = 'last7Days';
     }
-
-    let startDate = moment()
-      .subtract(subtractValue, subtractPeriod)
-      .format();
-
-    let endDate = moment().format();
 
     let params = {
       startDate,
@@ -255,45 +250,12 @@ class DashboardView extends Component {
         let chartOption = {
           xAxis: {
             type: 'category',
-            data: item.data.data[0].names.data,
-            axisLabel: {
-              rotate: 30
-            }
+            data: this.state.tabsTime === 'thisMonth' ? item.data.data[0].names.data.map(name => name.slice(name.length - 2, name.length)) : item.data.data[0].names.data,
           },
           yAxis: {
             type: 'value',
             axisLabel: {
               rotate: 30,
-              formatter: value => {
-                /*
-                 * TODO: inject this js into webview
-                 */
-                const jsNumberFormat = (num, digits) => {
-                  var si = [
-                    { value: 1, symbol: '' },
-                    { value: 1e3, symbol: 'Rb' },
-                    { value: 1e6, symbol: 'Jt' },
-                    { value: 1e9, symbol: 'M' },
-                    { value: 1e12, symbol: 'T' },
-                    { value: 1e15, symbol: 'P' },
-                    { value: 1e18, symbol: 'E' }
-                  ];
-                  var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-                  var i;
-                  for (i = si.length - 1; i > 0; i--) {
-                    if (num >= si[i].value) {
-                      break;
-                    }
-                  }
-
-                  return (
-                    (num / si[i].value).toFixed(digits).replace(rx, '$1') +
-                    si[i].symbol
-                  );
-                };
-
-                return jsNumberFormat(value, 1);
-              }
             }
           },
           series: item.data.data[0].series.map(seri => {
@@ -497,7 +459,8 @@ class DashboardView extends Component {
           snapToAlignment={'center'}
           contentContainerStyle={{
             paddingTop: 20,
-            paddingHorizontal: 5
+            paddingBottom: 20,
+            paddingHorizontal: 4
           }}
           onScroll={(event) => {
             let horizontalLimit = Scale(360);
@@ -529,38 +492,12 @@ class DashboardView extends Component {
                     data: item.data.data[0].names.data,
                     axisLabel: {
                       rotate: 30,
-                    }
+                    },
                   },
                   yAxis: {
                     type: 'value',
                     axisLabel: {
                       rotate: 30,
-                      formatter: value => {
-                        /*
-                         * TODO: inject this js into webview
-                         */
-                        const jsNumberFormat = (num, digits) => {
-                          var si = [
-                            { value: 1, symbol: '' },
-                            { value: 1e3, symbol: 'Rb' },
-                            { value: 1e6, symbol: 'Jt' },
-                            { value: 1e9, symbol: 'M' },
-                            { value: 1e12, symbol: 'T' },
-                            { value: 1e15, symbol: 'P' },
-                            { value: 1e18, symbol: 'E' }
-                          ];
-                          var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-                          var i;
-                          for (i = si.length - 1; i > 0; i--) {
-                            if (num >= si[i].value) {
-                              break;
-                            }
-                          }
-                          return (num / si[i].value).toFixed(digits).replace(rx, '$1') + si[i].symbol;
-                        };
-
-                        return jsNumberFormat(value, 1);
-                      }
                     }
                   },
                   series: item.data.data[0].series.map((seri) => {
@@ -593,8 +530,8 @@ class DashboardView extends Component {
                   </Text>
                   {/* Chart Component */}
                   <View style={{
-                    width: '92%',
-                    height: '92%',
+                    width: '100%',
+                    height: '100%',
                   }}>
                     <Charts
                       option={chartOption}
@@ -808,7 +745,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 300,
     backgroundColor: masterColor.backgroundWhite,
-    borderRadius: 7
+    borderRadius: 7,
+    paddingVertical: 16
   },
   targetHeader: {
     flexDirection: 'row',
