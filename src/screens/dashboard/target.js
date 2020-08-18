@@ -27,6 +27,9 @@ const TargetCard = ({
       return '-';
     }
     if (typeValue === 'totalSales') {
+      if (value === 0) {
+        return 'Rp. 0';
+      }
       return MoneyFormatShort(value);
     }
     if (typeValue === 'countOrders') {

@@ -35,12 +35,14 @@ async function getKpiDataDetail({
   userId,
   supplierId
 }) {
+  let path = `supplier/salesmankpi/v1/mobile/all?startDate=${encodeURIComponent(
+    startDate
+  )}&endDate=${encodeURIComponent(
+    endDate
+  )}&period=${period}&userId=${userId}&supplierId=${supplierId}`;
+  console.log('--------------------', path);
   const response = await ApiRest({
-    path: `supplier/salesmankpi/v1/mobile/all?startDate=${encodeURIComponent(
-      startDate
-    )}&endDate=${encodeURIComponent(
-      endDate
-    )}&period=${period}&userId=${userId}&supplierId=${supplierId}`,
+    path,
     method: 'GET'
   });
   return response;

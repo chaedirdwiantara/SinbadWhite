@@ -107,7 +107,10 @@ class DashboardView extends Component {
       tabsTimeTarget: listTimeTarget[0].value,
       tabsTarget: listTarget[0].value,
       data: {
-        now: false,
+        now: {
+          daily: false,
+          monthly: false
+        },
         daily: false,
         monthly: false
       },
@@ -123,19 +126,28 @@ class DashboardView extends Component {
 
     switch (this.state.tabsTime) {
       case 'thisMonth':
-        startDate = moment().startOf('month').format();
+        startDate = moment()
+          .startOf('month')
+          .format();
         period = 'thisMonth';
         break;
 
       case '6Month':
-        startDate = moment().subtract(5, 'month').startOf('month').format();
-        endDate = moment().add(1, 'month').format();
+        startDate = moment()
+          .subtract(5, 'month')
+          .startOf('month')
+          .format();
+        endDate = moment()
+          .add(1, 'month')
+          .format();
         period = 'last3Month';
         break;
 
       // default last 7 days
       default:
-        startDate = moment().subtract(7, 'day').format();
+        startDate = moment()
+          .subtract(7, 'day')
+          .format();
         var period = 'last7Days';
     }
 
@@ -164,13 +176,23 @@ class DashboardView extends Component {
     let params = {
       startDate: '',
       endDate: '',
-      period: period === 'now' ? 'daily' : period,
+      period:
+        period === 'nowDaily'
+          ? 'daily'
+          : period === 'nowMonthly'
+          ? 'daily'
+          : period,
       userId: this.props.user.id,
       supplierId
     };
 
     switch (period) {
-      case 'now':
+      case 'nowDaily':
+        params.startDate = startDate;
+        params.endDate = endDate;
+        break;
+
+      case 'nowMonthly':
         params.startDate = startDate;
         params.endDate = endDate;
         break;
@@ -199,11 +221,23 @@ class DashboardView extends Component {
     this.props.getKpiDashboardDetailProcess(params);
   }
 
-  /** === KPI DATA BY DATE NOW === */
+  /** === KPI DATA BY DATE NOW DAILY === */
   getNowDetailKpi = () => {
     this.getKpiData({
-      period: 'now',
+      period: 'nowDaily',
       startDate: getStartDateNow(),
+      endDate: moment().format()
+    });
+  };
+
+  /** === KPI DATA BY DATE NOW MONTHLY === */
+  getNowDetailKpiMonthly = () => {
+    let date = new Date();
+    this.getKpiData({
+      period: 'nowMonthly',
+      startDate: moment(
+        new Date(date.getFullYear(), date.getMonth(), 1)
+      ).format(),
       endDate: moment().format()
     });
   };
@@ -223,9 +257,10 @@ class DashboardView extends Component {
 
   /** === KPI DATA BY MONTH === */
   getMonthlyDetailKpi = () => {
+    let date = new Date();
     this.getKpiData({
       period: 'monthly',
-      startDate: moment()
+      startDate: moment(new Date(date.getFullYear(), date.getMonth(), 1))
         .subtract(3, 'month')
         .format(),
       endDate: moment()
@@ -250,12 +285,17 @@ class DashboardView extends Component {
         let chartOption = {
           xAxis: {
             type: 'category',
-            data: this.state.tabsTime === 'thisMonth' ? item.data.data[0].names.data.map(name => name.slice(name.length - 2, name.length)) : item.data.data[0].names.data,
+            data:
+              this.state.tabsTime === 'thisMonth'
+                ? item.data.data[0].names.data.map(name =>
+                    name.slice(name.length - 2, name.length)
+                  )
+                : item.data.data[0].names.data
           },
           yAxis: {
             type: 'value',
             axisLabel: {
-              rotate: 30,
+              rotate: 30
             }
           },
           series: item.data.data[0].series.map(seri => {
@@ -283,15 +323,24 @@ class DashboardView extends Component {
       this.props.salesmanKpi.kpiDashboardDetailData !==
       prevProps.salesmanKpi.kpiDashboardDetailData
     ) {
-      if (this.state.load === 'now') {
-        /** === UPDATE STATE WHEN FLAG IS NOW === */
+      if (this.state.load === 'nowDaily') {
+        /** === UPDATE STATE WHEN FLAG IS nowDaily === */
         let newData = { ...this.state.data };
-        newData.now = this.props.salesmanKpi.kpiDashboardDetailData;
+        newData.now.daily = this.props.salesmanKpi.kpiDashboardDetailData;
         this.setState({
           load: false,
           data: newData
         });
         this.getInitialDetailKpi();
+      } else if (this.state.load === 'nowMonthly') {
+        /** === UPDATE STATE WHEN FLAG IS nowMonthly === */
+        let newData = { ...this.state.data };
+        newData.now.monthly = this.props.salesmanKpi.kpiDashboardDetailData;
+        this.setState({
+          load: false,
+          data: newData
+        });
+        this.getMonthlyDetailKpi();
       } else if (this.state.load === 'daily') {
         /** === UPDATE STATE WHEN FLAG IS DAILY === */
         let newData = { ...this.state.data };
@@ -343,6 +392,9 @@ class DashboardView extends Component {
       return '-';
     }
     if (type === 'totalSales') {
+      if (value === 0) {
+        return 'Rp. 0';
+      }
       return MoneyFormatShort(value);
     }
     if (type === 'countOrders') {
@@ -624,7 +676,7 @@ class DashboardView extends Component {
                       tabsTimeTarget: value
                     });
                     if (!data.monthly) {
-                      this.getMonthlyDetailKpi();
+                      this.getNowDetailKpiMonthly();
                     }
                   }}
                 />
@@ -653,25 +705,28 @@ class DashboardView extends Component {
                     Pencapaian
                   </Text>
                 </View>
-                {data.now ? (
+                {data.now[tabsTimeTarget] ? (
                   <View>
                     <Text style={[Fonts.type13, styles.textContent]}>
-                      {data.now[tabsWhite]
+                      {data.now[tabsTimeTarget][tabsWhite]
                         ? this.parseValue(
-                            data.now[tabsWhite][0].target,
+                            data.now[tabsTimeTarget][tabsWhite][0].target,
                             tabsWhite
                           )
                         : '-'}
                     </Text>
                     <Text style={[Fonts.type13, styles.textContent]}>
-                      {data.now[tabsWhite]
-                        ? this.parseDate(data.now[tabsWhite][0].date, tabsWhite)
+                      {data.now[tabsTimeTarget][tabsWhite]
+                        ? this.parseDate(
+                            data.now[tabsTimeTarget][tabsWhite][0].date,
+                            tabsWhite
+                          )
                         : '-'}
                     </Text>
                     <Text style={[Fonts.type13, styles.textContent]}>
-                      {data.now[tabsWhite]
+                      {data.now[tabsTimeTarget][tabsWhite]
                         ? this.parseValue(
-                            data.now[tabsWhite][0].achieved,
+                            data.now[tabsTimeTarget][tabsWhite][0].achieved,
                             tabsWhite,
                             true
                           )
