@@ -29,21 +29,24 @@ const unitDivision = units => {
 };
 
 // for kpi dashboard
-export const getStartDateNow = () => {
-  let m = moment();
-  m.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-  m.toISOString();
-  return m.format();
+export const changeStartDateFormat = date => {
+  date.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+  date.toISOString();
+  return date.format();
 };
+export const changeEndDateFormat = date => {
+  date.set({ hour: 23, minute: 59, second: 59 });
+  date.toISOString();
+  return date.format();
+};
+export const getStartDateNow = () => changeStartDateFormat(moment());
 export const getDateNow = () => moment().format();
 export const getMonthNow = () => moment().month();
 export const getYearNow = () => moment().year();
 export const getStartDateMonth = () =>
-  moment([getYearNow(), getMonthNow()]).format('YYYY-MM-DD');
+  changeStartDateFormat(moment([getYearNow(), getMonthNow()]));
 export const getEndDateMonth = () =>
-  moment(getStartDateMonth())
-    .endOf('month')
-    .format('YYYY-MM-DD');
+  changeEndDateFormat(moment(getStartDateMonth()).endOf('month'));
 
 /**
  * ============================
@@ -52,8 +55,8 @@ export const getEndDateMonth = () =>
  * createdBy: Ayu
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 14082020
+ * updatedDate: 18082020
  * updatedFunction:
- * -> update time helper for kpi dashboard (getStartDateNow).
+ * -> update time helper for kpi dashboard (changeStartDateFormat & changeEndDateFormat).
  *
  */
