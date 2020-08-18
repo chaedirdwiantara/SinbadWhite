@@ -443,9 +443,9 @@ class HomeView extends Component {
       >
         <Image
           source={item.image ? item.image : defaultImage}
-          style={styles.menuCircleImage}
+          style={styles.menuDashboardImage}
         />
-        <View>
+        <View style={{ width: '78%' }}>
           <Text style={[Fonts.type97, { color: masterColor.fontBlack50 }]}>
             {item.title}
           </Text>
@@ -456,8 +456,9 @@ class HomeView extends Component {
           {item.data.target === 0 ||
           item.data.target - item.data.achieved < 0 ? (
             <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
-              {' '}
-              Sedang tidak ada target{' '}
+              {item.data.target === 0
+                ? 'Sedang tidak ada target'
+                : 'Anda sudah mencapai target'}
             </Text>
           ) : (
             <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
@@ -694,6 +695,12 @@ const styles = StyleSheet.create({
     height: 8,
     marginHorizontal: -16,
     marginVertical: 16
+  },
+  menuDashboardImage: {
+    height: 50,
+    width: 50,
+    borderRadius: 50,
+    marginRight: 16
   }
 });
 
@@ -715,8 +722,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 14082020
+ * updatedDate: 18082020
  * updatedFunction:
- * -> update kpi dashboard (progress bar & integration)
+ * -> update kpi dashboard (progress bar & notes)
  *
  */
