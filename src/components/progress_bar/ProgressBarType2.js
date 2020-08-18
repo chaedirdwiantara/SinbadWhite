@@ -43,7 +43,7 @@ class ProgressBarType2 extends Component {
             ]}
           />
         </View>
-        <View style={{ paddingLeft: 16 }}>
+        <View style={{ paddingLeft: 8 }}>
           <Text style={Fonts.type38}>{value ? value : '0'} %</Text>
         </View>
       </View>
@@ -90,8 +90,8 @@ export default ProgressBarType2;
  * createdBy: Dyah
  * createdDate: 04082020
  * updatedBy: Dyah
- * updatedDate: 13082020
+ * updatedDate: 18082020
  * updatedFunction:
- * -> New Component ProgressBarType2 for KPIDashboard
+ * -> Decrease padding left for text.
  *
  */
