@@ -180,7 +180,7 @@ class DashboardView extends Component {
         period === 'nowDaily'
           ? 'daily'
           : period === 'nowMonthly'
-          ? 'daily'
+          ? 'monthly'
           : period,
       userId: this.props.user.id,
       supplierId
@@ -357,6 +357,7 @@ class DashboardView extends Component {
           load: false,
           data: newData
         });
+        console.log('FINAL', newData);
       } else {
         this.setState({
           load: false
