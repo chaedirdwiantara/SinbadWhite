@@ -40,6 +40,10 @@ export const changeEndDateFormat = date => {
   return date.format();
 };
 export const getStartDateNow = () => changeStartDateFormat(moment());
+/*
+ * TODO: DO NOT USE THIS FUNCTION
+ */
+export const getStartDateMinHour = () => moment().startOf('day').subtract(1, 'hour').format();
 export const getDateNow = () => moment().format();
 export const getMonthNow = () => moment().month();
 export const getYearNow = () => moment().year();

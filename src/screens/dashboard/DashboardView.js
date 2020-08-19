@@ -12,7 +12,7 @@ import {
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
-import { Fonts, Scale, MoneyFormatShort, getStartDateNow } from '../../helpers';
+import { Fonts, Scale, MoneyFormatShort, getStartDateNow, getStartDateMinHour } from '../../helpers';
 import {
   Shadow as ShadowComponent,
   TabsCustom,
@@ -225,7 +225,7 @@ class DashboardView extends Component {
   getNowDetailKpi = () => {
     this.getKpiData({
       period: 'nowDaily',
-      startDate: getStartDateNow(),
+      startDate: getStartDateMinHour(),
       endDate: moment().format()
     });
   };

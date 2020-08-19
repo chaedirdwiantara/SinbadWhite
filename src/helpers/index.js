@@ -9,7 +9,8 @@ import {
   getMonthNow,
   getYearNow,
   getStartDateMonth,
-  getEndDateMonth
+  getEndDateMonth,
+  getStartDateMinHour
 } from './TimeHelper';
 
 export {
@@ -25,5 +26,6 @@ export {
   getMonthNow,
   getYearNow,
   getStartDateMonth,
-  getEndDateMonth
+  getEndDateMonth,
+  getStartDateMinHour
 };
