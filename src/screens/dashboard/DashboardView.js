@@ -47,7 +47,7 @@ const listMenu = [
 
 const listMenuWhite = [
   {
-    title: 'T Order',
+    title: 'T. Order',
     value: 'orderedStores'
   },
   {
@@ -407,6 +407,10 @@ class DashboardView extends Component {
   /** === GET DATA BY PREV OR NEXT === */
   parsePrevNext = data => {
     if (this.state.tabsTarget === 'prev') {
+      let range = 'day';
+      if (this.state.tabsTimeTarget !== 'daily') {
+        range = 'month';
+      }
       const newData = data.filter(function(rows) {
         return moment(
           new Date(
@@ -418,7 +422,7 @@ class DashboardView extends Component {
             0,
             0
           )
-        ).isBefore(moment(new Date()).subtract(1, 'day'));
+        ).isBefore(moment(new Date()).subtract(1, range));
       });
       return newData;
     }
