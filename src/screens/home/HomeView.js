@@ -459,7 +459,7 @@ class HomeView extends Component {
             {item.data.target === 0 ||
             item.data.target - item.data.achieved < 0 ? (
               <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
-                {item.data.target === 0
+                {Number(item.data.target) === 0
                   ? 'Sedang tidak ada target'
                   : 'Anda sudah mencapai target'}
               </Text>
