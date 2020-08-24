@@ -1,3 +1,32 @@
+import numeral from 'numeral';
+
+numeral.register('locale', 'id', {
+  delimiters: {
+    thousands: '.',
+    decimal: ','
+  },
+  abbreviations: {
+    thousand: 'ribu',
+    million: 'juta',
+    billion: 'milyar',
+    trillion: 'triliun'
+  },
+  currency: {
+    symbol: 'Rp'
+  }
+});
+
+numeral.locale('id');
+
+/**
+ * Convert number to short form rupiah currency
+ * @param {number|string} number
+ * @returns {string} - currency.
+ */
+const toCurrencyShort = number => {
+  return numeral(number).format('$ 0.00 a');
+};
+
 function NumberFormat(number) {
   return `${number
     .toFixed(2)
@@ -13,14 +42,7 @@ function MoneyFormat(money) {
 }
 
 function MoneyFormatShort(number) {
-  if (number.toString().length > 6) {
-    const money = number.toString().slice(0, -5);
-    if (money[1] === '0') {
-      return `Rp${money.slice(0, -1)} jt`;
-    }
-    return `Rp${money[0]}.${money[1]} jt`;
-  }
-  return `Rp${number.toString().slice(0, -3)} rb`;
+  return toCurrencyShort(number);
 }
 
 export { NumberFormat, MoneyFormat, MoneyFormatShort };
