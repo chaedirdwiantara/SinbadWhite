@@ -1,12 +1,20 @@
-import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  TagListType2,
+  SkeletonType2
+} from '../../library/component'
+import { GlobalStyle } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
-import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
-import TagListType2 from '../../components/tag/TagListType2';
-import SkeletonType2 from '../../components/skeleton/SkeletonType2';
 import HistoryDataListView from './HistoryDataListView';
 
 class HistoryOrderView extends Component {
@@ -108,3 +116,16 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(HistoryOrderView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

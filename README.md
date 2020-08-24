@@ -1,3 +1,5 @@
-# agent-v1.0
+<!-- ===================================== -->
+AGENT APP
+core created by hasapu
+<!-- ===================================== -->
 
-this repo for agent app mobile v.10

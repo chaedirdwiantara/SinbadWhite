@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   StyleSheet,
   View,
   Text,
@@ -7,16 +8,18 @@ import {
   TouchableOpacity,
   Linking,
   Platform
-} from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as ActionCreators from '../../state/actions';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
 import {
   StatusBarBlackOP40,
   StatusBarRedOP50
-} from '../../components/StatusBarGlobal';
+} from '../../library/component'
+import { Fonts } from '../../helpers'
+import * as ActionCreators from '../../state/actions';
+import masterColor from '../../config/masterColor.json';
 import ModalBottomSwipeCloseNotScroll from '../../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 
 class CallCS extends Component {
@@ -154,3 +157,16 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CallCS);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

@@ -1,20 +1,27 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   TouchableOpacity,
   Text,
   ScrollView
-} from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+} from '../../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect
+} from '../../../library/thirdPartyPackage';
+import {
+  InputMapsType2,
+  InputType2,
+  InputType4,
+  DropdownType2
+} from '../../../library/component';
+import { Fonts } from '../../../helpers';
+import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
-import masterColor from '../../../config/masterColor.json';
-import InputType1 from '../../../components/input/InputType1';
-import InputType2 from '../../../components/input/InputType2';
-import InputMapsType1 from '../../../components/input/InputMapsType1';
-import Fonts from '../../../helpers/GlobalFont';
+import ToastSuccessUpdate from '../reusable-view/ToastSuccessUpdate';
 
 class MerchantDetailAddressView extends Component {
   constructor(props) {
@@ -32,7 +39,7 @@ class MerchantDetailAddressView extends Component {
     return {
       headerRight: () => (
         <TouchableOpacity
-          style={{ marginRight: 16 }}
+          style={{ marginRight: 16, alignItems: 'center' }}
           onPress={() =>
             NavigationService.navigate('MerchantEditView', {
               title: 'Alamat Toko',
@@ -52,8 +59,8 @@ class MerchantDetailAddressView extends Component {
    */
   componentDidMount() {
     this.props.saveLongLatForEdit({
-      latitude: this.props.merchant.dataGetMerchantDetail.latitude,
-      longitude: this.props.merchant.dataGetMerchantDetail.longitude
+      latitude: this.props.merchant.dataMerchantVolatile.latitude,
+      longitude: this.props.merchant.dataMerchantVolatile.longitude
     });
     this.setState({ refreshLocation: true });
     setTimeout(() => {
@@ -82,106 +89,99 @@ class MerchantDetailAddressView extends Component {
     return (
       <ScrollView>
         <View style={{ paddingTop: 16, paddingBottom: 50 }}>
-          <InputMapsType1
+          <InputMapsType2
             title={'Koordinat Lokasi'}
-            selectedMapLong={
-              this.props.merchant.dataGetMerchantDetail.longitude
-            }
-            selectedMapLat={this.props.merchant.dataGetMerchantDetail.latitude}
+            selectedMapLong={this.props.merchant.dataMerchantVolatile.longitude}
+            selectedMapLat={this.props.merchant.dataMerchantVolatile.latitude}
             refresh={this.state.refreshLocation}
           />
-          <InputType1
+          <InputType4
             title={'Provinsi'}
             editable={false}
-            placeholder={
-              this.props.merchant.dataGetMerchantDetail.urban
-                ? this.props.merchant.dataGetMerchantDetail.urban.province.name
-                : 'Provinsi'
-            }
-            keyboardType={'default'}
-            text={text => {}}
-            error={false}
-            errorText={''}
+            value={this.props.merchant.dataMerchantVolatile.province}
+            placeholder={'-'}
+            marginBottom={16}
           />
-          <InputType1
+          <InputType4
             title={'Kota'}
             editable={false}
-            placeholder={
-              this.props.merchant.dataGetMerchantDetail.urban
-                ? this.props.merchant.dataGetMerchantDetail.urban.city
-                : 'Kota'
-            }
-            keyboardType={'default'}
-            text={text => {}}
-            error={false}
-            errorText={''}
+            value={this.props.merchant.dataMerchantVolatile.city}
+            placeholder={'-'}
+            marginBottom={16}
           />
-          <InputType1
+          <InputType4
             title={'Kecamatan'}
             editable={false}
-            placeholder={
-              this.props.merchant.dataGetMerchantDetail.urban
-                ? this.props.merchant.dataGetMerchantDetail.urban.district
-                : 'Kecamatan'
-            }
-            keyboardType={'default'}
-            text={text => {}}
-            error={false}
-            errorText={''}
+            value={this.props.merchant.dataMerchantVolatile.district}
+            placeholder={'-'}
+            marginBottom={16}
           />
-          <InputType1
+          <InputType4
             title={'Kelurahan'}
             editable={false}
-            placeholder={
-              this.props.merchant.dataGetMerchantDetail.urban
-                ? this.props.merchant.dataGetMerchantDetail.urban.urban
-                : 'Kelurahan'
-            }
-            keyboardType={'default'}
-            text={text => {}}
-            error={false}
-            errorText={''}
+            value={this.props.merchant.dataMerchantVolatile.urban}
+            placeholder={'-'}
+            marginBottom={16}
           />
-          <InputType1
+          <InputType4
             title={'Kodepos'}
             editable={false}
-            placeholder={
-              this.props.merchant.dataGetMerchantDetail.urban
-                ? this.props.merchant.dataGetMerchantDetail.urban.zipCode
-                : 'Kodepos'
-            }
-            keyboardType={'default'}
-            text={text => {}}
-            error={false}
-            errorText={''}
+            value={this.props.merchant.dataMerchantVolatile.zipCode}
+            placeholder={'-'}
+            marginBottom={16}
           />
-          <InputType2
-            title={'Alamat'}
+          <InputType4
+            title={'Detail Alamat'}
             editable={false}
-            placeholder={
-              this.props.merchant.dataGetMerchantDetail.address
-                ? this.props.merchant.dataGetMerchantDetail.address
-                : 'Alamat Lengkap'
-            }
-            keyboardType={'default'}
-            text={text => {}}
-            error={false}
-            errorText={''}
+            value={this.props.merchant.dataMerchantVolatile.address}
+            placeholder={'-'}
+            marginBottom={16}
           />
+          <InputType4
+            title={'Catatan Alamat'}
+            editable={false}
+            value={this.props.merchant.dataMerchantVolatile.noteAddress}
+            placeholder={'-'}
+            marginBottom={16}
+          />
+          {this.props.merchant.dataMerchantVolatile.warehouseId !== null ? (
+            <InputType4
+              title={'Warehouse'}
+              editable={false}
+              value={this.props.merchant.dataMerchantVolatile.warehouse}
+              placeholder={''}
+              marginBottom={16}
+            />
+          ) : (
+            <InputType2
+              title={'Warehouse'}
+              editable={false}
+              value={this.props.merchant.dataMerchantVolatile.warehouse}
+              placeholder={
+                'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
+              }
+              marginBottom={16}
+            />
+          )}
         </View>
       </ScrollView>
     );
   }
   /** === MAIN === */
   render() {
-    return <View style={styles.mainContainer}>{this.renderContent()}</View>;
+    return (
+      <View style={styles.mainContainer}>
+        <ToastSuccessUpdate />
+        {this.renderContent()}
+      </View>
+    );
   }
 }
 
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   }
 });
 

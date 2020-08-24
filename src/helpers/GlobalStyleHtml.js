@@ -1,4 +1,4 @@
-import Fonts from '../utils/Fonts';
+import Fonts from '../config/Fonts';
 import { StyleSheet } from 'react-native';
 import masterColor from '../config/masterColor.json';
 
@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     color: masterColor.fontBlack50
   },
   p: {
-    fontFamily: Fonts.MontserratSemiBold,
+    fontFamily: Fonts.MontserratMedium,
     fontSize: 11,
     color: masterColor.fontBlack50,
     marginBottom: -20

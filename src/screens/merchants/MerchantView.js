@@ -1,18 +1,28 @@
-import React, { Component } from 'react';
-import { View, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import {
+  React,
+  Component,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView
+} from '../../library/reactPackage'
+import {
+  MaterialIcon,
+  bindActionCreators,
+  connect,
+  AntDesignIcon
+} from '../../library/thirdPartyPackage'
+import {
+  ToastType1,
+  StatusBarWhite,
+  BackHandlerBackSpecific
+} from '../../library/component'
+import { Color } from '../../config'
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
-import ToastType1 from '../../components/toast/ToastType1';
-import masterColor from '../../config/masterColor';
 import MerchantTabView from './MerchantTabView';
 import MerchantListView from './MerchantListView';
 import MerchantMapView from './MerchantMapView';
-import { StatusBarWhite } from '../../components/StatusBarGlobal';
-import BackHandlerBackSpecific from '../../components/BackHandlerBackSpecific';
 
 class MerchantView extends Component {
   constructor(props) {
@@ -40,7 +50,7 @@ class MerchantView extends Component {
           onPress={() => NavigationService.navigate('HomeView')}
         >
           <MaterialIcon
-            color={masterColor.fontBlack50}
+            color={Color.fontBlack50}
             name={'arrow-back'}
             size={24}
           />
@@ -52,7 +62,7 @@ class MerchantView extends Component {
           onPress={() => state.params.goToAddFunction()}
         >
           <AntDesignIcon
-            color={masterColor.mainColor}
+            color={Color.mainColor}
             name={'pluscircle'}
             size={24}
           />
@@ -221,7 +231,7 @@ class MerchantView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   containerTabs: {
     height: 44
@@ -241,3 +251,17 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(MerchantView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

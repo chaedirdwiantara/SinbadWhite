@@ -1,68 +1,44 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
-  Text,
   Dimensions,
-  StatusBar,
   Image,
-  TouchableOpacity,
-  ScrollView
-} from 'react-native';
-import Modal from 'react-native-modal';
-import { RFPercentage } from 'react-native-responsive-fontsize';
-import Fonts from '../../utils/Fonts';
-import { MoneyFormat } from '../../helpers/NumberFormater';
-import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
-import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
+  ScrollView,
+  Text
+} from '../../library/reactPackage'
+import {
+  ModalBottomType4,
+  StatusBarRedOP50
+} from '../../library/component'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
+import masterColor from '../../config/masterColor.json';
 
 const { height } = Dimensions.get('window');
 
 class ModalBottomListProduct extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      data: this.props.data.orderBrands
-    };
   }
-
+  /** === RENDER SKU PRICE === */
   renderPriceProduct(item) {
     return (
       <View>
-        {item.catalogue.discountedRetailBuyingPrice !== null ? (
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ marginRight: 5 }}>
-              <Text style={styles.priceTextCross}>
-                {MoneyFormat(item.catalogue.retailBuyingPrice)}
-              </Text>
-            </View>
-            <View>
-              <Text style={styles.priceTextRed}>
-                {MoneyFormat(item.catalogue.discountedRetailBuyingPrice)}
-              </Text>
-            </View>
-          </View>
-        ) : (
-          <View>
-            <Text style={styles.priceTextRed}>
-              {MoneyFormat(item.catalogue.retailBuyingPrice)}
-            </Text>
-          </View>
-        )}
+        <Text style={Fonts.type36}>{MoneyFormat(item.grossPrice)}</Text>
       </View>
     );
   }
-
+  /** === RENDER CONTENT ITEM SKU LIST === */
   renderProductList(item) {
     return item.map((itemProduct, index) => {
       return (
         <View key={index}>
-          <View style={styles.boxPerContent}>
+          <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
+          <View style={styles.boxContentProductList}>
             <View
               style={{
-                width: '25%',
-                marginRight: 10,
+                marginRight: 8,
                 justifyContent: 'center',
                 alignItems: 'center'
               }}
@@ -72,18 +48,17 @@ class ModalBottomListProduct extends Component {
                 source={{
                   uri: itemProduct.catalogue.catalogueImages[0].imageUrl
                 }}
-                style={styles.productImage}
+                style={GlobalStyle.image70Contain}
               />
             </View>
             <View
               style={{
-                width: '60%',
-                justifyContent: 'space-between',
-                paddingVertical: 10
+                width: '70%',
+                justifyContent: 'space-between'
               }}
             >
               <View>
-                <Text style={styles.productNameText}>
+                <Text style={[Fonts.type16, { textTransform: 'capitalize' }]}>
                   {itemProduct.catalogue.name}
                 </Text>
               </View>
@@ -91,30 +66,29 @@ class ModalBottomListProduct extends Component {
                 {this.renderPriceProduct(itemProduct)}
               </View>
               <View>
-                <Text style={styles.textPcs}>x{itemProduct.qty} Pcs</Text>
+                <Text style={Fonts.type10}>x{itemProduct.qty} Pcs</Text>
               </View>
             </View>
           </View>
-          <View style={styles.lines} />
         </View>
       );
     });
   }
-
+  /** === RENDER CONTENT ITEM BRAND LIST === */
   renderBrandList() {
-    return this.state.data.map((item, index) => {
+    return this.props.data.orderBrands.map((item, index) => {
       return (
         <View key={index}>
-          <View style={{ paddingHorizontal: 10, marginTop: 10 }}>
-            <Text style={styles.textBrandName}>{item.brand.name}</Text>
+          <View style={{ paddingHorizontal: 16, marginVertical: 10 }}>
+            <Text style={Fonts.type48}>{item.brand.name}</Text>
           </View>
-          <View style={styles.lines} />
           <View>{this.renderProductList(item.orderBrandCatalogues)}</View>
+          <View style={{ paddingBottom: 0.1 * height }} />
         </View>
       );
     });
   }
-
+  /** === RENDER CONTENT === */
   renderContent() {
     return (
       <View>
@@ -127,7 +101,7 @@ class ModalBottomListProduct extends Component {
       </View>
     );
   }
-
+  /** === MAIN === */
   render() {
     return (
       <ModalBottomType4
@@ -143,145 +117,37 @@ class ModalBottomListProduct extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: 0.75 * height,
-    backgroundColor: 'white',
+    height: 0.7 * height,
+    backgroundColor: masterColor.backgroundWhite,
     flexDirection: 'column',
     width: '100%',
     paddingBottom: 0.01 * height
   },
-  modalPosition: {
-    marginBottom: 0,
-    marginLeft: 0,
-    marginRight: 0
-  },
-  titleContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  title: {
-    marginTop: 10,
-    fontFamily: Fonts.MontserratBold,
-    fontSize: RFPercentage(1.8),
-    color: '#333333'
-  },
-  textBrandName: {
-    fontFamily: Fonts.MontserratSemiBold,
-    fontSize: RFPercentage(1.7),
-    color: '#333333'
-  },
-  subTitle: {
-    fontFamily: Fonts.MontserratSemiBold,
-    fontSize: RFPercentage(1.7),
-    color: '#333333'
-  },
-  productNameText: {
-    fontFamily: Fonts.MontserratMedium,
-    fontSize: RFPercentage(1.5),
-    color: '#4f4f4f',
-    lineHeight: 14
-  },
-  priceTextRed: {
-    color: '#f0444c',
-    fontSize: RFPercentage(1.7),
-    fontFamily: Fonts.MontserratSemiBold
-  },
-  priceTextCross: {
-    color: '#bdbdbd',
-    textDecorationLine: 'line-through',
-    fontSize: RFPercentage(1.6),
-    fontFamily: Fonts.MontserratMedium,
-    marginRight: 10
-  },
-  textPcs: {
-    fontFamily: Fonts.MontserratSemiBold,
-    fontSize: RFPercentage(1.5),
-    color: '#4f4f4f'
-  },
-  stockChangeText: {
-    fontFamily: Fonts.MontserratMedium,
-    fontSize: RFPercentage(1.6),
-    color: '#4f4f4f'
-  },
-  stockError: {
-    fontFamily: Fonts.MontserratMedium,
-    fontSize: RFPercentage(1.3),
-    color: 'rgba(79, 79, 79, 0.5)'
-  },
-  titleDescription: {
-    fontFamily: Fonts.MontserratMedium,
-    fontSize: RFPercentage(1.6),
-    color: '#333333',
-    lineHeight: 15,
-    textAlign: 'center'
-  },
   contentContainer: {
     flex: 1
   },
-  lines: {
-    marginLeft: 10,
-    borderTopWidth: 1,
-    marginVertical: 10,
-    borderColor: '#f2f2f2'
-  },
-  productImage: {
-    resizeMode: 'contain',
-    width: 77,
-    height: undefined,
-    aspectRatio: 1 / 1
-  },
   /**for content */
-  boxPerContent: {
+  boxContentProductList: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    height: 0.11 * height
+    paddingHorizontal: 16,
+    paddingVertical: 8
   },
   boxHeaderContent: {
     flex: 1
-  },
-  /** for button */
-  buttonContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 10,
-    backgroundColor: '#ffffff'
-  },
-  titleButton: {
-    fontFamily: Fonts.MontserratBold,
-    fontSize: 13,
-    color: '#ffffff'
-  },
-  button: {
-    backgroundColor: '#f0444c',
-    borderRadius: 10,
-    width: 282,
-    height: 41
-  },
-  /**close */
-  titleModalBottom: {
-    marginTop: 0.03 * height,
-    marginBottom: 0.03 * height,
-    fontFamily: Fonts.MontserratBold,
-    fontSize: RFPercentage(1.8),
-    color: '#333333'
-  },
-  closeContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  closeBox: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    left: 0,
-    width: '15%',
-    height: '100%'
-  },
-  icons: {
-    width: 24,
-    height: 24
   }
 });
 
 export default ModalBottomListProduct;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

@@ -1,11 +1,14 @@
-import React from 'react';
-import { StatusBar } from 'react-native';
-import masterColor from '../config/masterColor.json';
+import {
+  React,
+  StatusBar
+} from '../library/reactPackage'
+import { Color } from '../config'
 
 const StatusBarRed = () => {
   return (
     <StatusBar
-      backgroundColor={masterColor.statusBarDefault}
+      translucent={false}
+      backgroundColor={Color.statusBarDefault}
       barStyle={'light-content'}
     />
   );
@@ -14,7 +17,8 @@ const StatusBarRed = () => {
 const StatusBarWhite = () => {
   return (
     <StatusBar
-      backgroundColor={masterColor.statusBarWhite}
+      translucent={false}
+      backgroundColor={Color.statusBarWhite}
       barStyle={'dark-content'}
     />
   );
@@ -23,7 +27,8 @@ const StatusBarWhite = () => {
 const StatusBarBlack = () => {
   return (
     <StatusBar
-      backgroundColor={masterColor.statusBarBlack}
+      translucent={false}
+      backgroundColor={Color.statusBarBlack}
       barStyle={'light-content'}
     />
   );
@@ -34,7 +39,18 @@ const StatusBarBlack = () => {
 const StatusBarBlackOP40 = () => {
   return (
     <StatusBar
-      backgroundColor={masterColor.statusBarBlackOP40}
+      translucent={false}
+      backgroundColor={Color.statusBarBlackOP40}
+      barStyle={'light-content'}
+    />
+  );
+};
+
+const StatusBarBlackOP40Translucent = () => {
+  return (
+    <StatusBar
+      translucent={true}
+      backgroundColor={Color.statusBarBlackOP40}
       barStyle={'light-content'}
     />
   );
@@ -43,7 +59,8 @@ const StatusBarBlackOP40 = () => {
 const StatusBarRedOP40 = () => {
   return (
     <StatusBar
-      backgroundColor={masterColor.statusBarRedOP40}
+      translucent={false}
+      backgroundColor={Color.statusBarRedOP40}
       barStyle={'light-content'}
     />
   );
@@ -52,8 +69,29 @@ const StatusBarRedOP40 = () => {
 const StatusBarRedOP50 = () => {
   return (
     <StatusBar
-      backgroundColor={masterColor.statusBarRedOP50}
+      translucent={false}
+      backgroundColor={Color.statusBarRedOP50}
       barStyle={'light-content'}
+    />
+  );
+};
+
+const StatusBarTransparent = () => {
+  return (
+    <StatusBar
+      barStyle="light-content"
+      backgroundColor="transparent"
+      translucent={true}
+    />
+  );
+};
+
+const StatusBarTransparentBlack = () => {
+  return (
+    <StatusBar
+      barStyle="dark-content"
+      backgroundColor="transparent"
+      translucent={true}
     />
   );
 };
@@ -64,5 +102,22 @@ export {
   StatusBarBlack,
   StatusBarBlackOP40,
   StatusBarRedOP40,
-  StatusBarRedOP50
+  StatusBarRedOP50,
+  StatusBarTransparent,
+  StatusBarTransparentBlack,
+  StatusBarBlackOP40Translucent
 };
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

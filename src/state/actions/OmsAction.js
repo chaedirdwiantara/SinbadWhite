@@ -45,6 +45,29 @@ export function omsGetCartItemFailed(data) {
   return { type: types.OMS_GET_CART_ITEM_FAILED, payload: data };
 }
 /**
+ * ====================================
+ * GET CART ITEM FROM CHECKOUT
+ * ====================================
+ */
+/** === CART ITEM PROCESS === */
+export function omsGetCartItemFromCheckoutProcess(data) {
+  return { type: types.OMS_GET_CART_ITEM_FROM_CHECKOUT_PROCESS, payload: data };
+}
+/** === CART ITEM SUCCESS === */
+export function omsGetCartItemFromCheckoutSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_GET_CART_ITEM_FROM_CHECKOUT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_GET_CART_ITEM_FROM_CHECKOUT_FAILED, payload: data };
+}
+/** === CART ITEM FAILED === */
+export function omsGetCartItemFromCheckoutFailed(data) {
+  return { type: types.OMS_GET_CART_ITEM_FROM_CHECKOUT_FAILED, payload: data };
+}
+/**
  * ===========================
  * CONFIRM ORDER
  * ===========================
@@ -124,15 +147,6 @@ export function omsGetPaymentSuccess(data) {
 export function omsGetPaymentFailed(data) {
   return { type: types.OMS_GET_PAYMENT_FAILED, payload: data };
 }
-
-/** MUST CHANGE */
-/** save checklist item cart */
-export function saveChecklistCart(data) {
-  return {
-    type: types.CHECKLIST_ITEM_CART,
-    payload: data
-  };
-}
 /**
  * ==============================
  * ADD TO CART GLOBAL
@@ -202,4 +216,82 @@ export function omsAddToCart(data) {
     });
   }
   return { type: types.OMS_ITEM_FOR_CART, payload: dataCart };
+}
+
+/**
+ * ====================================
+ * GET PAYMENT CHANNEL
+ * ====================================
+ */
+/** === GET PAYMENT CHANNEL PROCESS === */
+export function OmsGetPaymentChannelProcess(data) {
+  return { type: types.OMS_GET_PAYMENT_CHANNEL_PROCESS, payload: data };
+}
+
+/** === GET PAYMENT CHANNEL SUCCESS === */
+export function OmsGetPaymentChannelSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_GET_PAYMENT_CHANNEL_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_GET_PAYMENT_CHANNEL_FAILED, payload: data };
+}
+
+/** === GET PAYMENT CHANNEL FAILED === */
+export function OmsGetPaymentChannelFailed(data) {
+  return { type: types.OMS_GET_PAYMENT_CHANNEL_FAILED, payload: data };
+}
+
+/**
+ * ====================================
+ * GET TERMS AND CONDITONS
+ * ====================================
+ */
+/** === GET TERMS AND CONDITONS PROCESS === */
+export function OmsGetTermsConditionsProcess(data) {
+  return { type: types.OMS_GET_TERMS_CONDITIONS_PROCESS, payload: data };
+}
+
+/** === GET TERMS AND CONDITONS SUCCESS === */
+export function OmsGetTermsConditionsSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_GET_TERMS_CONDITIONS_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_GET_TERMS_CONDITIONS_FAILED, payload: data };
+}
+
+/** === GET TERMS AND CONDITONS FAILED === */
+export function OmsGetTermsConditionsFailed(data) {
+  return { type: types.OMS_GET_TERMS_CONDITIONS_FAILED, payload: data };
+}
+
+/**
+ * ===========================
+ * LAST PAYMENT CHANNEL
+ * ===========================
+ */
+/** === GET LAST PAYMENT CHANNEL SUCCESS === */
+export function omsGetLastPaymentChannelProcess(data) {
+  return { type: types.OMS_GET_LAST_PAYMENT_CHANNEL_PROCESS, payload: data };
+}
+
+/** === GET LAST PAYMENT CHANNEL SUCCESS === */
+export function omsGetLastPaymentChannelSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_GET_LAST_PAYMENT_CHANNEL_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_GET_LAST_PAYMENT_CHANNEL_FAILED, payload: data };
+}
+
+/** === GET LAST PAYMENT CHANNEL FAILED === */
+export function omsGetLastPaymentChannelFailed(data) {
+  return { type: types.OMS_GET_LAST_PAYMENT_CHANNEL_FAILED, payload: data };
 }

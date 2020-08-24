@@ -3,7 +3,9 @@ import ApiRestMap from '../apiRestMap';
 import { Store } from '../../state/Store';
 
 function getListAndSearch(data) {
+  
   const stateData = Store.getState();
+  
   /**
    * PROPS
    * data.type =  'vehicleMerchant' / 'hierarchyMerchant' / 'clusterMerchant' / 'typeMerchant' / 'groupMerchant' / 'segmentMerchant'
@@ -37,23 +39,64 @@ function getListAndSearch(data) {
     case 'vehicleMerchant':
       listAndSearchApi = 'vehicle-accessibilities?';
       break;
+    case 'numberOfEmployeeMerchant':
+      listAndSearchApi = 'number-of-employees?';
+      break;
     case 'province':
       listAndSearchApi = 'provinces?';
       break;
     case 'city':
-      listAndSearchApi = `locations?type=city&provinceId=${stateData.global.dataLocationVolatile.provinceId}&`;
+      listAndSearchApi = `locations?type=city&provinceId=${
+        stateData.global.dataLocationVolatile.provinceId
+      }&`;
       break;
     case 'district':
-      listAndSearchApi = `locations?type=district&city=${stateData.global.dataLocationVolatile.cityName}&`;
+      listAndSearchApi = `locations?type=district&city=${
+        stateData.global.dataLocationVolatile.cityName
+      }&`;
       break;
     case 'urban':
-      listAndSearchApi = `locations?type=urban&district=${stateData.global.dataLocationVolatile.districtName}&`;
+      listAndSearchApi = `locations?type=urban&district=${
+        stateData.global.dataLocationVolatile.districtName
+      }&`;
+      break;
+    case 'warehouse':
+      listAndSearchApi = `warehouses?supplierIds=${JSON.stringify(
+        userSupplierMapping()
+      )}&urbanId=${parseInt(
+        stateData.global.dataGetUrbanId !== null
+          ? stateData.global.dataGetUrbanId[0].id
+          : stateData.merchant.dataMerchantVolatile.urbanId,
+        10
+      )}&`;
+      break;
+    case 'storeType':
+      listAndSearchApi = `types?supplierIds=${JSON.stringify(
+        userSupplierMapping()
+      )}&`;
+      break;
+    case 'storeGroup':
+      listAndSearchApi = `groups?supplierIds=${JSON.stringify(
+        userSupplierMapping()
+      )}&`;
+      break;
+    case 'storeCluster':
+      listAndSearchApi = `clusters?supplierIds=${JSON.stringify(
+        userSupplierMapping()
+      )}&`;
+      break;
+    case 'storeChannel':
+      listAndSearchApi = `channels?supplierIds=${JSON.stringify(
+        userSupplierMapping()
+      )}&`;
       break;
     default:
       break;
   }
   return ApiRest({
-    path: `${listAndSearchApi}$skip=${data.page}&$limit=20&keyword=${data.search}`,
+    path: `${listAndSearchApi}$skip=${data.page}&$limit=20&keyword=${
+      data.search
+    }`,
     method: 'GET'
   });
 }
@@ -69,6 +112,18 @@ function getAddressFromLongLat(data) {
     method: 'GET'
   });
 }
+/**
+ * ============================
+ * GET URBAN ID
+ * ============================
+ */
+function getUrbanId(data) {
+  return ApiRest({
+    path: 'location-search',
+    method: 'POST',
+    params: data
+  });
+}
 /** === GET VERSION === */
 function getVersion() {
   return ApiRest({
@@ -81,21 +136,61 @@ function getVersion() {
  * THIS CODE IS NOT FETCHING (ONLY FUNCTION)
  * =========================================
  */
-/** USER STORE URBAN */
-function userStoreUrban() {
+/** MAPPING SUPPLIER AGENT */
+function userSupplierMapping() {
+  const stateData = Store.getState();
+  return stateData.user !== null
+    ? stateData.user.userSuppliers.map(item => parseInt(item.supplierId, 10))
+    : '';
+}
+/** MERCHANT STORE URBAN */
+function merchantStoreUrban() {
   const stateData = Store.getState();
   if (stateData.merchant.selectedMerchant !== null) {
-    if (stateData.merchant.selectedMerchant.store.urbanId !== null) {
-      return `?urbanId=${stateData.merchant.selectedMerchant.store.urbanId}`;
+    if (stateData.merchant.selectedMerchant.urbanId !== null) {
+      return stateData.merchant.selectedMerchant.urbanId;
     }
     return '';
   }
   return '';
 }
+/** MERCHAN STORE ID */
+function merchantStoreId() {
+  const stateData = Store.getState();
+  if (stateData.merchant.selectedMerchant !== null) {
+    if (stateData.merchant.selectedMerchant.storeId !== null) {
+      return stateData.merchant.selectedMerchant.storeId;
+    }
+    return '';
+  }
+  return '';
+}
+/** USER STORE */
+function userStoreId() {
+  const stateData = Store.getState();
+  return stateData.user !== null ? stateData.user.userStores[0].storeId : '';
+}
 
 export const GlobalMethod = {
   getListAndSearch,
   getAddressFromLongLat,
+  getUrbanId,
   getVersion,
-  userStoreUrban
+  merchantStoreUrban,
+  merchantStoreId,
+  userSupplierMapping,
+  userStoreId
 };
+
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Remove unused function
+ *
+ */

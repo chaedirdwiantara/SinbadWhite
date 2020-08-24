@@ -1,8 +1,16 @@
-import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { connect } from 'react-redux';
-import masterColor from '../../config/masterColor';
-import Fonts from '../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Text
+} from '../../library/reactPackage'
+import {
+  connect
+} from '../../library/thirdPartyPackage'
+import { Fonts } from '../../helpers'
+import { Color } from '../../config'
 
 class MerchantTabView extends Component {
   constructor(props) {
@@ -37,14 +45,14 @@ class MerchantTabView extends Component {
           styles.boxTabItem,
           {
             borderBottomWidth: 2,
-            borderBottomColor: masterColor.mainColor
+            borderBottomColor: Color.mainColor
           }
         ]
       : [
           styles.boxTabItem,
           {
             borderBottomWidth: 1,
-            borderBottomColor: masterColor.fontBlack10
+            borderBottomColor: Color.fontBlack10
           }
         ];
   }
@@ -138,3 +146,16 @@ const mapStateToProps = ({ auth }) => {
 };
 
 export default connect(mapStateToProps)(MerchantTabView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

@@ -1,33 +1,38 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   TouchableOpacity,
   FlatList,
   SafeAreaView,
   Dimensions,
-  Image
-} from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import moment from 'moment';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { RFPercentage } from 'react-native-responsive-fontsize';
+  Image,
+  Text
+} from '../../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect,
+  moment,
+  MaterialIcon,
+  RFPercentage
+} from '../../../library/thirdPartyPackage';
+import {
+  StatusBarRed,
+  ProductListType1,
+  LoadingPage,
+  ToastType1,
+  ModalConfirmation,
+  ModalBottomErrorRespons
+} from '../../../library/component';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers';
+import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
-import GlobalStyle from '../../../helpers/GlobalStyle';
-import masterColor from '../../../config/masterColor.json';
-import Fonts from '../../../helpers/GlobalFont';
-import { MoneyFormat } from '../../../helpers/NumberFormater';
-import { StatusBarRed } from '../../../components/StatusBarGlobal';
 import NavigationService from '../../../navigation/NavigationService';
 import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
 import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
-import ProductListType1 from '../../../components/list/ProductListType1';
-import { LoadingPage } from '../../../components/Loading';
-import ToastType1 from '../../../components/toast/ToastType1';
-import ModalConfirmation from '../../../components/modal/ModalConfirmation';
-import ModalBottomErrorRespons from '../../../components/error/ModalBottomErrorRespons';
+import MerchantVerifyUser from './MerchantVerifyUser';
+import ModalBottomProgressChecking from '../../global/ModalBottomProgressChecking';
 
 const { width, height } = Dimensions.get('window');
 
@@ -38,6 +43,8 @@ class MerchantHomeView extends Component {
       openModalCheckout: false,
       openModalConfirmNoOrder: false,
       openModalErrorGlobal: false,
+      openModalCheckUser: false,
+      openModalProgressChecking: false,
       checkNoOrder: false,
       showToast: false,
       loadingPostForCheckoutNoOrder: false,
@@ -89,11 +96,11 @@ class MerchantHomeView extends Component {
   componentDidMount() {
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
-      this.props.merchant.selectedMerchant.store.id
+      this.props.merchant.selectedMerchant.storeId
     );
     /** FOR GET LOG ALL ACTIVITY */
     this.props.merchantGetLogAllActivityProcess(
-      this.props.merchant.selectedMerchant.id
+      this.props.merchant.selectedMerchant.journeyPlanSaleId
     );
   }
 
@@ -117,7 +124,7 @@ class MerchantHomeView extends Component {
           }, 3000);
           /** FOR GET LOG ALL ACTIVITY */
           this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.id
+            this.props.merchant.selectedMerchant.journeyPlanSaleId
           );
         } else if (
           /** IF CHECK OUT SUCCESS */
@@ -133,7 +140,7 @@ class MerchantHomeView extends Component {
           }, 3000);
           /** FOR GET LOG ALL ACTIVITY */
           this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.id
+            this.props.merchant.selectedMerchant.journeyPlanSaleId
           );
         }
       }
@@ -200,7 +207,7 @@ class MerchantHomeView extends Component {
   /** CHECKOUT PROCESS */
   checkoutProcess() {
     this.props.merchantPostActivityProcess({
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
       activity: 'check_out'
     });
   }
@@ -218,11 +225,11 @@ class MerchantHomeView extends Component {
   goTo(page) {
     switch (page) {
       case 'pdp':
-        NavigationService.navigate('PdpView');
+        this.setState({ openModalCheckUser: true });
         break;
       case 'history':
         NavigationService.navigate('HistoryView', {
-          storeId: this.props.merchant.selectedMerchant.store.id
+          storeId: this.props.merchant.selectedMerchant.storeId
         });
         break;
       case 'checkIn':
@@ -230,11 +237,33 @@ class MerchantHomeView extends Component {
         break;
       case 'checkOut':
         this.props.merchantGetLogPerActivityProcess({
-          journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+          journeyPlanSaleId: this.props.merchant.selectedMerchant
+            .journeyPlanSaleId,
           activity: 'check_in'
         });
         this.setState({ openModalCheckout: true });
         break;
+      default:
+        break;
+    }
+  }
+  /** CALLED FROM CHILD */
+  parentFunction(data) {
+    switch (data.type) {
+      case 'pdp':
+        this.setState({ openModalCheckUser: false });
+        NavigationService.navigate('PdpView');
+        break;
+      case 'close':
+        this.setState({ openModalCheckUser: false });
+        break;
+      case 'progress-on':
+        this.setState({ openModalProgressChecking: true });
+        break;
+      case 'progress-off':
+        this.setState({ openModalProgressChecking: false });
+        break;
+
       default:
         break;
     }
@@ -307,7 +336,7 @@ class MerchantHomeView extends Component {
     let tempCount = count - 3 < 0 ? 0 : count - 3;
     return tempCount > 0 ? (
       <View>
-        <Text style={styles.textPlusProduct}>(+{tempCount} } Produk Lain)</Text>
+        <Text style={styles.textPlusProduct}>(+{tempCount} Produk Lain)</Text>
       </View>
     ) : (
       <View />
@@ -334,7 +363,7 @@ class MerchantHomeView extends Component {
           >
             <Text style={Fonts.type59}>{order.orderParcels[0].orderCode}</Text>
             <Text style={Fonts.type59}>
-              {order.orderParcels[0].parcelDetails.totalQty} Qty
+              {order.orderParcels[0].parcelQty} Qty
             </Text>
           </View>
           <View
@@ -349,8 +378,7 @@ class MerchantHomeView extends Component {
               )}
             </Text>
             <Text style={Fonts.type59}>
-              Total:{' '}
-              {MoneyFormat(order.orderParcels[0].parcelDetails.totalNettPrice)}
+              Total: {MoneyFormat(order.orderParcels[0].parcelFinalPrice)}
             </Text>
           </View>
         </View>
@@ -447,15 +475,15 @@ class MerchantHomeView extends Component {
                 <View style={{ flexDirection: 'row' }}>
                   <View>
                     {this.checkCheckListTask(item.activity) ? (
-                      <MaterialIcons
+                      <MaterialIcon
                         name="check-circle"
-                        color={masterColor.fontGreen50}
+                        color={Color.fontGreen50}
                         size={24}
                       />
                     ) : (
-                      <MaterialIcons
+                      <MaterialIcon
                         name="radio-button-unchecked"
-                        color={masterColor.fontBlack40}
+                        color={Color.fontBlack40}
                         size={24}
                       />
                     )}
@@ -465,9 +493,9 @@ class MerchantHomeView extends Component {
                   </View>
                 </View>
                 {/* <View>
-                  <MaterialIcons
+                  <MaterialIcon
                     name="chevron-right"
-                    color={masterColor.fontBlack40}
+                    color={Color.fontBlack40}
                     size={24}
                   />
                 </View> */}
@@ -491,18 +519,17 @@ class MerchantHomeView extends Component {
         key={index}
         onPress={() => this.goTo(item.goTo)}
       >
-        {item.menuName === 'Pesanan' &&
-        this.props.permanent.newOrderSuccessPerMerchant.indexOf(
-          this.props.merchant.selectedMerchant.storeId
-        ) > -1 ? (
-          <View style={styles.boxNotification}>
-            <View style={GlobalStyle.circleRedNotification16} />
-          </View>
-        ) : (
-          <View />
-        )}
-
         <View>
+          {item.menuName === 'Pesanan' &&
+          this.props.permanent.newOrderSuccessPerMerchant.indexOf(
+            parseInt(this.props.merchant.selectedMerchant.storeId, 10)
+          ) > -1 ? (
+            <View style={styles.boxNotification}>
+              <View style={GlobalStyle.circleRedNotification16} />
+            </View>
+          ) : (
+            <View />
+          )}
           <Image source={item.icon} style={styles.iconSize} />
         </View>
         <View style={{ marginTop: 5 }}>
@@ -544,6 +571,17 @@ class MerchantHomeView extends Component {
       </View>
     );
   }
+  /** RENDER MODAL PROGRESS CHECKING */
+  renderModalProgressChecking() {
+    return this.state.openModalProgressChecking ? (
+      <ModalBottomProgressChecking
+        open={this.state.openModalProgressChecking}
+        progress={'Mohon tunggu'}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === RENDER CONTENT === */
   renderContent() {
     return (
@@ -583,12 +621,13 @@ class MerchantHomeView extends Component {
           () => {
             this.setState({ checkNoOrder: true });
             this.props.merchantGetLogPerActivityProcess({
-              journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+              journeyPlanSaleId: this.props.merchant.selectedMerchant
+                .journeyPlanSaleId,
               activity: 'order'
             });
           }
           // this.props.merchantPostActivityProcess({
-          //   journeyPlanSaleId: this.props.merchant.selectedMerchant.id,
+          //   journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
           //   activity: 'check_out'
           // })
         }
@@ -637,6 +676,18 @@ class MerchantHomeView extends Component {
       <View />
     );
   }
+  /** RENDER MODAL REJECTED */
+  renderModalVerifyUser() {
+    return this.state.openModalCheckUser ? (
+      <MerchantVerifyUser
+        pageFocus={this.props.navigation.isFocused()}
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** BACKGROUND */
   renderBackground() {
     return <View style={styles.backgroundRed} />;
@@ -665,6 +716,8 @@ class MerchantHomeView extends Component {
         {this.renderModalNoOrderConfirmation()}
         {this.renderToast()}
         {this.renderModalErrorRespons()}
+        {this.renderModalVerifyUser()}
+        {this.renderModalProgressChecking()}
         <ModalBottomSuccessOrder />
       </SafeAreaView>
     );
@@ -678,7 +731,7 @@ const styles = StyleSheet.create({
     zIndex: 1000
   },
   backgroundRed: {
-    backgroundColor: masterColor.mainColor,
+    backgroundColor: Color.mainColor,
     height: 85
   },
   containerSlider: {
@@ -779,7 +832,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 10,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxFaktur: {
     marginBottom: 8
@@ -788,7 +841,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 4,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   /** for menu */
   containerMenu: {
@@ -815,8 +868,8 @@ const styles = StyleSheet.create({
   },
   boxNotification: {
     position: 'absolute',
-    top: 2,
-    right: 2,
+    top: -5,
+    right: -5,
     zIndex: 1000
   }
 });
@@ -831,3 +884,22 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
+
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: tatas
+ * updatedDate: 01072020
+ * updatedFunction:
+ * -> Add checking user status
+ * updatedDate: 02072020
+ * updatedFunction:
+ * -> Remove unused state
+ * -> Add function to change modal check status False after navigate
+ * updatedDate: 03072020
+ * updatedFunction:
+ * -> Change key
+ */

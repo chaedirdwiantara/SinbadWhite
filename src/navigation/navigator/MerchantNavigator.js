@@ -8,19 +8,15 @@ import MerchantDetailMapView from '../../screens/merchants/MerchantDetailMapView
 /** add merchant */
 import AddMerchantStep1 from '../../screens/merchants/add-merchant/AddMerchantStep1';
 import AddMerchantStep2 from '../../screens/merchants/add-merchant/AddMerchantStep2';
-import AddMerchantPhoneNumber from '../../screens/merchants/add-merchant/AddMerchantPhoneNumber';
-import AddMerchantOTP from '../../screens/merchants/add-merchant/AddMerchantOTP';
-import AddMerchantAddress from '../../screens/merchants/add-merchant/AddMerchantAddress';
-import AddMerchantIDPhoto from '../../screens/merchants/add-merchant/AddMerchantIDPhoto';
-import AddMerchantInformation from '../../screens/merchants/add-merchant/AddMerchantInformation';
-import AddMerchantOwnerInformation from '../../screens/merchants/add-merchant/AddMerchantOwnerInformation';
-import AddMerchantSelfiePhoto from '../../screens/merchants/add-merchant/AddMerchantSelfiePhoto';
+import AddMerchantStep3 from '../../screens/merchants/add-merchant/AddMerchantStep3';
+import AddMerchantStep4 from '../../screens/merchants/add-merchant/AddMerchantStep4';
 /** merchant dashboard */
 import MerchantHomeView from '../../screens/merchants/dashboard-merchant/MerchantHomeView';
 import MerchantCheckinView from '../../screens/merchants/dashboard-merchant/MerchantCheckinView';
 import MerchantNoOrderReason from '../../screens/merchants/dashboard-merchant/MerchantNoOrderReason';
 /** merchant detail */
 import MerchantDetailProfileView from '../../screens/merchants/details-merchant/MerchantDetailProfileView';
+import MerchantDetailAccountView from '../../screens/merchants/details-merchant/MerchantDetailAccountView';
 import MerchantDetailInformationView from '../../screens/merchants/details-merchant/MerchantDetailInformationView';
 import MerchantDetailPaymentView from '../../screens/merchants/details-merchant/MerchantDetailPaymentView';
 import MerchantDetailAddressView from '../../screens/merchants/details-merchant/MerchantDetailAddressView';
@@ -32,7 +28,7 @@ const MerchantNavigator = {
     screen: MerchantView,
     navigationOptions: {
       headerTitle: 'List Toko',
-      headerTitleStyle: GlobalFont.type5,
+      headerTitleStyle: GlobalFont.textHeaderPage,
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
@@ -44,7 +40,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Profil Toko',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -82,7 +78,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Nomor Handphone',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -100,7 +96,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Data Pokok',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -113,12 +109,12 @@ const MerchantNavigator = {
       gesturesEnabled: false
     }
   },
-  AddMerchant1: {
-    screen: AddMerchantPhoneNumber,
+  AddMerchantStep3: {
+    screen: AddMerchantStep3,
     navigationOptions: {
-      headerTitle: 'Nomor Handphone',
+      headerTitle: 'Alamat Toko',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -131,102 +127,12 @@ const MerchantNavigator = {
       gesturesEnabled: false
     }
   },
-  AddMerchant2: {
-    screen: AddMerchantOTP,
+  AddMerchantStep4: {
+    screen: AddMerchantStep4,
     navigationOptions: {
-      headerTitle: 'OTP',
+      headerTitle: 'Klasifikasi Toko',
       headerTitleStyle: [
-        GlobalFont.type5,
-        {
-          textAlign: 'center',
-          flex: 1
-        }
-      ],
-      headerStyle: {
-        backgroundColor: masterColor.backgroundWhite
-      },
-      headerRight: <View />,
-      gesturesEnabled: false
-    }
-  },
-  AddMerchant3: {
-    screen: AddMerchantAddress,
-    navigationOptions: {
-      headerTitle: 'Alamat Lengkap',
-      headerTitleStyle: [
-        GlobalFont.type5,
-        {
-          textAlign: 'center',
-          flex: 1
-        }
-      ],
-      headerStyle: {
-        backgroundColor: masterColor.backgroundWhite
-      },
-      headerRight: <View />,
-      gesturesEnabled: false
-    }
-  },
-  AddMerchant4: {
-    screen: AddMerchantIDPhoto,
-    navigationOptions: {
-      headerTitle: 'Foto KTP',
-      headerTitleStyle: [
-        GlobalFont.type5,
-        {
-          textAlign: 'center',
-          flex: 1
-        }
-      ],
-      headerStyle: {
-        backgroundColor: masterColor.backgroundWhite
-      },
-      headerRight: <View />,
-      gesturesEnabled: false
-    }
-  },
-  AddMerchant5: {
-    screen: AddMerchantSelfiePhoto,
-    navigationOptions: {
-      headerTitle: 'Foto Diri',
-      headerTitleStyle: [
-        GlobalFont.type5,
-        {
-          textAlign: 'center',
-          flex: 1
-        }
-      ],
-      headerStyle: {
-        backgroundColor: masterColor.backgroundWhite
-      },
-      headerRight: <View />,
-      gesturesEnabled: false
-    }
-  },
-  AddMerchant6: {
-    screen: AddMerchantInformation,
-    navigationOptions: {
-      headerTitle: 'Data Toko',
-      headerTitleStyle: [
-        GlobalFont.type5,
-        {
-          textAlign: 'center',
-          flex: 1
-        }
-      ],
-      headerStyle: {
-        backgroundColor: masterColor.backgroundWhite
-      },
-      headerRight: <View />,
-      gesturesEnabled: false
-    }
-  },
-  AddMerchant7: {
-    screen: AddMerchantOwnerInformation,
-    navigationOptions: {
-      headerTitle: 'Data Diri',
-      headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -252,7 +158,25 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Information Profil',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  MerchantDetailAccountView: {
+    screen: MerchantDetailAccountView,
+    navigationOptions: {
+      headerTitle: 'Akun Toko',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -270,7 +194,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Information Toko',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -287,7 +211,7 @@ const MerchantNavigator = {
     screen: MerchantDetailAddressView,
     navigationOptions: {
       headerTitle: 'Alamat Toko',
-      headerTitleStyle: GlobalFont.type5,
+      headerTitleStyle: GlobalFont.textHeaderPage,
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
@@ -298,6 +222,7 @@ const MerchantNavigator = {
   MerchantEditView: {
     screen: MerchantEditView,
     navigationOptions: {
+      headerTitleStyle: GlobalFont.textHeaderPage,
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
@@ -309,7 +234,7 @@ const MerchantNavigator = {
     navigationOptions: {
       headerTitle: 'Alasan Tidak ada Order',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1

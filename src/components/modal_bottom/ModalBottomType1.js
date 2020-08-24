@@ -1,10 +1,19 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import Text from 'react-native-text';
-import Modal from 'react-native-modal';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import ButtonSingle from '../../components/button/ButtonSingle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Dimensions,
+  Text
+} from '../../library/reactPackage'
+import {
+  Modal
+} from '../../library/thirdPartyPackage'
+import {
+  ButtonSingle
+} from '../../library/component'
+import { Fonts } from '../../helpers'
+import { Color } from '../../config'
 
 const { width, height } = Dimensions.get('window');
 
@@ -53,7 +62,7 @@ class ModalBottomType1 extends Component {
         useNativeDriver={true}
         hasBackdrop={true}
         coverScreen={true}
-        backdropColor={masterColor.fontBlack100}
+        backdropColor={Color.fontBlack100}
         backdropOpacity={0.4}
         deviceHeight={height}
         style={styles.mainContainer}
@@ -82,7 +91,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     maxHeight: 0.9 * height,
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     flexDirection: 'column',
     position: 'absolute',
     width: '100%',
@@ -107,3 +116,17 @@ const styles = StyleSheet.create({
 });
 
 export default ModalBottomType1;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

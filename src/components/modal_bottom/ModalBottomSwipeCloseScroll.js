@@ -1,19 +1,23 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  ScrollView
-} from 'react-native';
-import { connect } from 'react-redux';
-import Text from 'react-native-text';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import Modal from 'react-native-modal';
-import masterColor from '../../config/masterColor.json';
-import { StatusBarBlackOP40 } from '../StatusBarGlobal';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import Fonts from '../../helpers/GlobalFont';
+  ScrollView,
+  Text
+} from '../../library/reactPackage'
+import {
+  connect,
+  MaterialIcon,
+  Modal
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarBlackOP40
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
+import { Color } from '../../config'
 
 const { width, height } = Dimensions.get('window');
 
@@ -57,7 +61,7 @@ class ModalBottomSwipeCloseScroll extends Component {
             >
               <MaterialIcon
                 name="close"
-                color={masterColor.fontBlack50}
+                color={Color.fontBlack50}
                 size={24}
               />
             </TouchableOpacity>
@@ -128,7 +132,7 @@ class ModalBottomSwipeCloseScroll extends Component {
         scrollOffset={this.state.scrollOffset}
         scrollOffsetMax={0.2 * height} // content height - ScrollView height
         swipeDirection={['down']}
-        backdropColor={masterColor.fontBlack100}
+        backdropColor={Color.fontBlack100}
         backdropOpacity={0.4}
         onSwipeMove={this.props.close}
         deviceHeight={height}
@@ -162,7 +166,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     maxHeight: 0.3 * height,
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     flexDirection: 'column',
     position: 'absolute',
     width: '100%',
@@ -191,3 +195,17 @@ const mapStateToProps = ({ auth }) => {
 };
 
 export default connect(mapStateToProps)(ModalBottomSwipeCloseScroll);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

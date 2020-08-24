@@ -1,29 +1,24 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   FlatList,
-  Image,
   TouchableOpacity,
-  Dimensions
-} from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { Card } from 'react-native-elements';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Octicons from 'react-native-vector-icons/Octicons';
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  SkeletonType7,
+  LoadingLoadMore,
+  EmptyData
+} from '../../library/component'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
+import { Color } from '../../config'
 import * as ActionCreators from '../../state/actions';
-import NavigationService from '../../navigation/NavigationService';
-import masterColor from '../../config/masterColor';
-import { MoneyFormat } from '../../helpers/NumberFormater';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import SkeletonType7 from '../../components/skeleton/SkeletonType7';
-import { LoadingLoadMore } from '../../components/Loading';
-import Address from '../../components/Address';
-import Fonts from '../../helpers/GlobalFont';
-import EmptyData from '../../components/empty_state/EmptyData';
-const { width, height } = Dimensions.get('window');
 
 class PdpLineDataView extends Component {
   constructor(props) {
@@ -35,76 +30,56 @@ class PdpLineDataView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  /** === SEND DATA TO PARENT === */
   toParentFunction(data) {
     this.props.parentFunction(data);
   }
-
+  /** === REFRESH PAGE === */
   onHandleRefresh = () => {
-    this.props.pdpGetRefresh();
-    this.props.pdpGetProcess({
-      page: 0,
-      loading: true,
-      sort: this.props.sort,
-      sortBy: this.props.sortBy,
-      search: this.props.global.search,
-      supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
+    this.toParentFunction({ type: 'refresh' });
+  };
+  /** === LOAD MORE DATA === */
+  onHandleLoadMore = () => {
+    this.toParentFunction({
+      type: 'loadMore'
     });
   };
-
-  onHandleLoadMore = () => {
-    if (this.props.pdp.dataGetPdp) {
-      if (this.props.pdp.dataGetPdp.length < this.props.pdp.totalDataGetPdp) {
-        const page = this.props.pdp.pageGetPdp + 10;
-        this.props.pdpGetLoadMore(page);
-        this.props.pdpGetProcess({
-          page,
-          loading: false,
-          sort: this.props.sort,
-          sortBy: this.props.sortBy,
-          search: this.props.global.search,
-          supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
-        });
+  /** === CHECK PRICE ==== */
+  checkPrice(item) {
+    if (item.maxPriceRange === null && item.minPriceRange === null) {
+      return MoneyFormat(item.retailBuyingPrice);
+    } else if (item.maxPriceRange !== null && item.minPriceRange !== null) {
+      if (item.maxPriceRange === item.minPriceRange) {
+        return MoneyFormat(item.maxPriceRange);
       }
+      return `${MoneyFormat(item.minPriceRange)} - ${MoneyFormat(
+        item.maxPriceRange
+      )}`;
+    } else if (item.maxPriceRange !== null && item.minPriceRange === null) {
+      return MoneyFormat(item.maxPriceRange);
+    } else if (item.maxPriceRange === null && item.minPriceRange !== null) {
+      return MoneyFormat(item.minPriceRange);
     }
-  };
-
+  }
   /**
    * ======================
    * RENDER VIEW
    * ======================
    */
-  /**
-   * =====================
-   * LOADING
-   * =====================
-   */
-  /** === RENDER SKELETON === */
-  renderSkeleton() {
-    return <SkeletonType7 />;
-  }
-  /** === RENDER LOADMORE === */
-  renderLoadMore() {
-    return this.props.pdp.loadingLoadMoreGetPdp ? (
-      <LoadingLoadMore />
-    ) : (
-      <View />
-    );
-  }
-
-  /** === RENDER ITEM === */
+  /** === RENDER BUTTON PESAN === */
   renderButton(item) {
     return (
       <TouchableOpacity
         onPress={() =>
           this.toParentFunction({ type: 'openModalOrder', data: item.id })
         }
-        style={[styles.pesanButton, { backgroundColor: masterColor.mainColor }]}
+        style={[styles.pesanButton, { backgroundColor: Color.mainColor }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>
       </TouchableOpacity>
     );
   }
-
+  /** === RENDER ITEM === */
   renderItem({ item, index }) {
     return (
       <View key={index}>
@@ -119,17 +94,11 @@ class PdpLineDataView extends Component {
             <Text style={Fonts.type16}>SKU : {item.externalId}</Text>
           </View>
           <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 10 }}>
-            <Text style={Fonts.type24}>
-              {MoneyFormat(
-                item.discountedRetailBuyingPrice !== null
-                  ? item.discountedRetailBuyingPrice
-                  : item.retailBuyingPrice
-              )}
-            </Text>
+            <Text style={Fonts.type24}>{this.checkPrice(item)}</Text>
           </View>
           <View>{this.renderButton(item)}</View>
         </View>
-        <View style={[GlobalStyles.lines, { marginLeft: 10 }]} />
+        <View style={[GlobalStyle.lines, { marginLeft: 10 }]} />
       </View>
     );
   }
@@ -164,6 +133,23 @@ class PdpLineDataView extends Component {
       <EmptyData title={'Product Kosong'} description={'Maaf Product kosong'} />
     );
   }
+  /**
+   * =====================
+   * LOADING
+   * =====================
+   */
+  /** === RENDER SKELETON === */
+  renderSkeleton() {
+    return <SkeletonType7 />;
+  }
+  /** === RENDER LOADMORE === */
+  renderLoadMore() {
+    return this.props.pdp.loadingLoadMoreGetPdp ? (
+      <LoadingLoadMore />
+    ) : (
+      <View />
+    );
+  }
   /** === MAIN === */
   render() {
     return (
@@ -181,7 +167,7 @@ class PdpLineDataView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxContentList: {
     flex: 1,
@@ -208,4 +194,20 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(PdpLineDataView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PdpLineDataView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

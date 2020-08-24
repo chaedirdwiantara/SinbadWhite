@@ -1,23 +1,33 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import MapView, { Marker } from 'react-native-maps';
-import Geolocation from '@react-native-community/geolocation';
-import OpenAppSettings from 'react-native-app-settings';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity
+} from '../../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon,
+  MapView,
+  Marker,
+  Geolocation,
+  OpenAppSettings
+} from '../../../library/thirdPartyPackage'
+import {
+  StatusBarWhite,
+  SearchBarType3,
+  ModalBottomType2,
+  Address,
+  ButtonSingle,
+  LoadingPage,
+  ErrorPageNoGPS
+} from '../../../library/component'
+import { GlobalStyle, Fonts } from '../../../helpers'
+import { Color } from '../../../config'
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
-import masterColor from '../../../config/masterColor.json';
-import { StatusBarWhite } from '../../../components/StatusBarGlobal';
-import SearchBarType3 from '../../../components/search_bar/SearchBarType3';
-import GlobalStyles from '../../../helpers/GlobalStyle';
-import Fonts from '../../../helpers/GlobalFont';
-import ModalBottomType2 from '../../../components/modal_bottom/ModalBottomType2';
-import Address from '../../../components/Address';
-import ButtonSingle from '../../../components/button/ButtonSingle';
-import { LoadingPage } from '../../../components/Loading';
-import ErrorPageNoGPS from '../../../components/error/ErrorPageNoGPS';
 
 const { height } = Dimensions.get('window');
 
@@ -25,8 +35,8 @@ class MerchantCheckinView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      latitude: this.props.merchant.selectedMerchant.store.latitude,
-      longitude: this.props.merchant.selectedMerchant.store.longitude,
+      latitude: this.props.merchant.selectedMerchant.latitude,
+      longitude: this.props.merchant.selectedMerchant.longitude,
       latitudeDelta: 0.02,
       longitudeDelta: 0.02,
       reRender: false,
@@ -52,7 +62,7 @@ class MerchantCheckinView extends Component {
       if (this.props.merchant.dataPostActivity !== null) {
         /** get log all activity */
         this.props.merchantGetLogAllActivityProcess(
-          this.props.merchant.selectedMerchant.id
+          this.props.merchant.selectedMerchant.journeyPlanSaleId
         );
         NavigationService.goBack(this.props.navigation.state.key);
       }
@@ -71,10 +81,7 @@ class MerchantCheckinView extends Component {
   };
   getCurrentLocation() {
     this.setState({ reRender: true });
-    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
-      timeout: 50000,
-      maximumAge: 1000
-    });
+    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
   }
   /**
    * ========================
@@ -122,9 +129,8 @@ class MerchantCheckinView extends Component {
                   longitude: this.state.longitude
                 },
                 {
-                  latitude: this.props.merchant.selectedMerchant.store.latitude,
-                  longitude: this.props.merchant.selectedMerchant.store
-                    .longitude
+                  latitude: this.props.merchant.selectedMerchant.latitude,
+                  longitude: this.props.merchant.selectedMerchant.longitude
                 }
               ],
               {
@@ -143,10 +149,10 @@ class MerchantCheckinView extends Component {
         <Marker
           image={require('../../../assets/icons/maps/drop_pin.png')}
           coordinate={{
-            latitude: this.props.merchant.selectedMerchant.store.latitude,
-            longitude: this.props.merchant.selectedMerchant.store.longitude
+            latitude: this.props.merchant.selectedMerchant.latitude,
+            longitude: this.props.merchant.selectedMerchant.longitude
           }}
-          title={this.props.merchant.selectedMerchant.store.name}
+          title={this.props.merchant.selectedMerchant.name}
         />
       </MapView>
     );
@@ -156,14 +162,14 @@ class MerchantCheckinView extends Component {
     return (
       <View style={styles.containerHeaderLeft}>
         <TouchableOpacity
-          style={[styles.boxButton, GlobalStyles.shadow]}
+          style={[styles.boxButton, GlobalStyle.shadow]}
           onPress={() =>
             NavigationService.goBack(this.props.navigation.state.key)
           }
         >
           <MaterialIcon
             name="arrow-back"
-            color={masterColor.fontBlack80}
+            color={Color.fontBlack80}
             size={24}
           />
         </TouchableOpacity>
@@ -174,12 +180,12 @@ class MerchantCheckinView extends Component {
     return (
       <View style={styles.containerHeaderRight}>
         <TouchableOpacity
-          style={[styles.boxButton, GlobalStyles.shadow]}
+          style={[styles.boxButton, GlobalStyle.shadow]}
           onPress={() => this.getCurrentLocation()}
         >
           <MaterialIcon
             name="near-me"
-            color={masterColor.fontBlue50}
+            color={Color.fontBlue50}
             size={24}
           />
         </TouchableOpacity>
@@ -202,15 +208,13 @@ class MerchantCheckinView extends Component {
    * ====================
    */
   renderModalBottom() {
-    const journeyPlanSaleId = this.props.merchant.selectedMerchant.id;
-    const store = this.props.merchant.selectedMerchant.store;
+    const journeyPlanSaleId = this.props.merchant.selectedMerchant.journeyPlanSaleId;
+    const store = this.props.merchant.selectedMerchant;
     return (
       <ModalBottomType2
         title={`${
           store.externalId
             ? store.externalId
-            : store.storeCode
-            ? store.storeCode
             : '-'
         } - ${store.name}`}
         body={
@@ -285,7 +289,7 @@ class MerchantCheckinView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   containerHeaderLeft: {
     justifyContent: 'center',
@@ -308,7 +312,7 @@ const styles = StyleSheet.create({
     zIndex: 1000
   },
   boxButton: {
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 20,
@@ -318,7 +322,7 @@ const styles = StyleSheet.create({
   boxButtonBottom: {
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     position: 'absolute',
     width: '100%',
     bottom: 0
@@ -338,3 +342,20 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(MerchantCheckinView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Change Key
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

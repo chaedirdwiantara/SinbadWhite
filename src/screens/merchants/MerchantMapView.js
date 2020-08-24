@@ -1,17 +1,27 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import MapView, { Marker } from 'react-native-maps';
-import Geolocation from '@react-native-community/geolocation';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Dimensions
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect,
+  MapView,
+  Marker,
+  Geolocation
+} from '../../library/thirdPartyPackage'
+import {
+  TagListType1,
+  SearchBarType2,
+  EmptyData,
+  LoadingPage,
+  ModalBottomType2
+} from '../../library/component'
+import { Color } from '../../config'
 import * as ActionCreators from '../../state/actions';
-import masterColor from '../../config/masterColor';
-import TagListType1 from '../../components/tag/TagListType1';
-import SearchBarType2 from '../../components/search_bar/SearchBarType2';
-import EmptyData from '../../components/empty_state/EmptyData';
-import { LoadingPage } from '../../components/Loading';
 import MerchantListDataView from './MerchantListDataView';
-import ModalBottomType2 from '../../components/modal_bottom/ModalBottomType2';
 
 const { height } = Dimensions.get('window');
 
@@ -49,10 +59,7 @@ class MerchantMapView extends Component {
     setTimeout(() => {
       this.setState({ reRender: false });
     }, 100);
-    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
-      timeout: 50000,
-      maximumAge: 1000
-    });
+    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
   }
 
   parentFunction(data) {
@@ -296,7 +303,7 @@ class MerchantMapView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxTabs: {
     height: 44
@@ -310,7 +317,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     borderWidth: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   }
 });
 
@@ -324,3 +331,16 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(MerchantMapView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

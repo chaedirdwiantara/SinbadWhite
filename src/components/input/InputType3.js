@@ -1,7 +1,14 @@
-import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import {
+  React,
+  Component,
+  View,
+  TextInput,
+  StyleSheet,
+  Text
+} from '../../library/reactPackage'
+import { Fonts } from '../../helpers'
+import { Color } from '../../config'
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
 
 class InputType3 extends Component {
   constructor(props) {
@@ -27,10 +34,10 @@ class InputType3 extends Component {
       <View style={styles.boxInput}>
         <TextInput
           editable={this.props.editable}
-          selectionColor={masterColor.mainColor}
+          selectionColor={Color.mainColor}
           placeholder={this.props.placeholder}
           value={this.props.value}
-          placeholderTextColor={masterColor.fontBlack40}
+          placeholderTextColor={Color.fontBlack40}
           onChangeText={this.props.text}
           keyboardType={this.props.keyboardType}
           multiline={true}
@@ -75,7 +82,7 @@ class InputType3 extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
     paddingHorizontal: 16
@@ -90,9 +97,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     paddingHorizontal: 8,
-    backgroundColor: masterColor.fontBlack05,
+    backgroundColor: Color.fontBlack05,
     paddingBottom: 8,
-    borderColor: masterColor.fontBlack10
+    borderColor: Color.fontBlack10
   },
   spacing: {
     marginBottom: 12

@@ -1,22 +1,30 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Image, Dimensions } from 'react-native';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { Tooltip } from 'react-native-elements';
-import { bindActionCreators } from 'redux';
-import * as ActionCreators from '../../state/actions';
-import OrderButton from '../../components/OrderButton';
-import { MoneyFormat, NumberFormat } from '../../helpers/NumberFormater';
 import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Image,
+  Dimensions,
+  Keyboard,
+  Text
+} from '../../library/reactPackage'
+import {
+  connect,
+  MaterialIcon,
+  Tooltip,
+  bindActionCreators
+} from '../../library/thirdPartyPackage'
+import {
+  OrderButton,
   StatusBarRedOP50,
-  StatusBarBlackOP40
-} from '../../components/StatusBarGlobal';
-import masterColor from '../../config/masterColor.json';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import ButtonSingleSmall from '../../components/button/ButtonSingleSmall';
-import Fonts from '../../helpers/GlobalFont';
-import SkeletonType18 from '../../components/skeleton/SkeletonType18';
+  StatusBarBlackOP40,
+  ButtonSingleSmall,
+  SkeletonType18
+} from '../../library/component'
+import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers'
+import { Color } from '../../config'
+import * as ActionCreators from '../../state/actions';
+// import PdpPromoListView from './PdpPromoListView';
 
 const { width, height } = Dimensions.get('window');
 
@@ -24,6 +32,7 @@ class PdpOrderView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      showKeyboard: false,
       questionMarkShow: true,
       buttonAddDisabled: false,
       qtyFromChild:
@@ -37,6 +46,14 @@ class PdpOrderView extends Component {
    * FUNCTIONAL
    * ============================
    */
+  /** DID MOUNT */
+  componentDidMount() {
+    this.keyboardListener();
+  }
+  /** WILL UNMOUNT */
+  componentWillUnmount() {
+    this.keyboardRemove();
+  }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
     /** => IF SKU NOT AVAILABLE */
@@ -52,6 +69,36 @@ class PdpOrderView extends Component {
         }
       }
     }
+  }
+
+  /**
+   * ========================
+   * FOR KEYBOARD
+   * ========================
+   */
+  /** KEYBOARD LISTENER */
+  keyboardListener() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this.keyboardDidShow
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this.keyboardDidHide
+    );
+  }
+  /** KEYBOARD SHOW */
+  keyboardDidShow = () => {
+    this.setState({ showKeyboard: true });
+  };
+  /** KEYBOARD HIDE */
+  keyboardDidHide = () => {
+    this.setState({ showKeyboard: false });
+  };
+  /** KEYBOARD REMOVE */
+  keyboardRemove() {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
   }
   /** === SEND DATA TO PARENT (PdpView) */
   toParentFunction(data) {
@@ -86,14 +133,8 @@ class PdpOrderView extends Component {
       this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
         this.props.pdp.dataDetailPdp.minQty
     ) {
-      if (this.props.pdp.dataDetailPdp.discountedRetailBuyingPrice !== null) {
-        return (
-          this.props.pdp.dataDetailPdp.discountedRetailBuyingPrice *
-          this.state.qtyFromChild
-        );
-      }
       return (
-        this.props.pdp.dataDetailPdp.retailBuyingPrice * this.state.qtyFromChild
+        this.props.pdp.dataDetailPdp.warehousePrice * this.state.qtyFromChild
       );
     }
     return 0;
@@ -176,6 +217,7 @@ class PdpOrderView extends Component {
     return (
       <View style={styles.boxPesan}>
         <OrderButton
+          disabledAllButton={this.state.showKeyboard}
           item={this.props.pdp.dataDetailPdp}
           onRef={ref => (this.parentFunctionFromOrderButton = ref)}
           parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
@@ -191,8 +233,8 @@ class PdpOrderView extends Component {
   renderButton() {
     return (
       <ButtonSingleSmall
-        disabledGrey
-        disabled={this.buttonDisabled()}
+        disabledGrey={!this.state.showKeyboard}
+        disabled={this.buttonDisabled() || this.state.showKeyboard}
         title={this.buttonTitle()}
         borderRadius={4}
         onPress={() =>
@@ -218,7 +260,13 @@ class PdpOrderView extends Component {
   /** === RENDER TOTAL BOTTOM === */
   renderBottomSection() {
     return (
-      <View style={[styles.boxTotalPrice, GlobalStyle.shadowForBox10]}>
+      <View
+        style={[
+          styles.boxTotalPrice,
+          GlobalStyle.shadowForBox10,
+          { marginTop: !this.state.showKeyboard ? 0.14 * height : 0 }
+        ]}
+      >
         <View style={{ flex: 1 }}>{this.renderBottomValue()}</View>
         <View style={{ flex: 1 }}>{this.renderButton()}</View>
       </View>
@@ -228,7 +276,7 @@ class PdpOrderView extends Component {
   renderTooltip() {
     return (
       <Tooltip
-        backgroundColor={masterColor.fontBlack50OP80}
+        backgroundColor={Color.fontBlack50OP80}
         height={55}
         withOverlay={false}
         withPointer={false}
@@ -245,7 +293,7 @@ class PdpOrderView extends Component {
         }
       >
         {this.state.questionMarkShow ? (
-          <MaterialIcon name="help" size={18} color={masterColor.fontBlack40} />
+          <MaterialIcon name="help" size={18} color={Color.fontBlack40} />
         ) : (
           <View />
         )}
@@ -259,7 +307,7 @@ class PdpOrderView extends Component {
         <View style={{ flexDirection: 'row', paddingBottom: 25 }}>
           <View
             style={{
-              backgroundColor: masterColor.backgroudWhite
+              backgroundColor: Color.backgroudWhite
             }}
           >
             <Image
@@ -278,27 +326,24 @@ class PdpOrderView extends Component {
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={[Fonts.type70, { marginRight: 10 }]}>
-                {MoneyFormat(
-                  this.props.pdp.dataDetailPdp.discountedRetailBuyingPrice !==
-                    null
-                    ? this.props.pdp.dataDetailPdp.discountedRetailBuyingPrice
-                    : this.props.pdp.dataDetailPdp.retailBuyingPrice
-                )}
+                {MoneyFormat(this.props.pdp.dataDetailPdp.warehousePrice)}
               </Text>
               {this.renderTooltip()}
             </View>
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={[Fonts.type38, { marginRight: 10 }]}>
-                per-Dus {this.props.pdp.dataDetailPdp.packagedQty} pcs
+                per-Dus {this.props.pdp.dataDetailPdp.packagedQty}{' '}
+                {this.props.pdp.dataDetailPdp.catalogueUnit.unit}
               </Text>
               <View
                 style={{
                   borderRightWidth: 1,
-                  borderRightColor: masterColor.fontBlack40
+                  borderRightColor: Color.fontBlack40
                 }}
               />
               <Text style={[Fonts.type38, { marginLeft: 10 }]}>
-                min.pembelian {this.props.pdp.dataDetailPdp.minQty} pcs
+                min.pembelian {this.props.pdp.dataDetailPdp.minQty}{' '}
+                {this.props.pdp.dataDetailPdp.catalogueUnit.unit}
               </Text>
             </View>
           </View>
@@ -306,7 +351,7 @@ class PdpOrderView extends Component {
         {this.checkInputQtySection() ? (
           <View style={styles.boxInputQty}>
             <View style={{ justifyContent: 'center' }}>
-              <Text style={Fonts.type10}>Jumlah/pcs</Text>
+              <Text style={Fonts.type96}>Jumlah/pcs</Text>
             </View>
             <View style={styles.boxRemainingStockOrderButton}>
               {this.renderRemainingStock()}
@@ -355,14 +400,13 @@ class PdpOrderView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroudWhite
+    backgroundColor: Color.backgroudWhite
   },
   boxItem: {
     paddingHorizontal: 16,
     paddingBottom: 16
   },
   boxTotalPrice: {
-    marginTop: 0.14 * height,
     flexDirection: 'row',
     paddingVertical: 11,
     paddingLeft: 20,
@@ -409,3 +453,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(PdpOrderView);
  *  qty: 1 (number)
  * }
  */
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-elements';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  StyleSheet,
+  View
+} from '../../library/reactPackage'
+import { Button } from '../../library/thirdPartyPackage'
+import { Color } from '../../config'
+import { Fonts } from '../../helpers'
 
 /**
  * HOW TO USE
@@ -17,39 +20,59 @@ import Fonts from '../../helpers/GlobalFont';
 
 class ButtonSingle extends Component {
   render() {
+    let modifyFonts = '';
+    let modifyDisabledFonts = '';
+    let modifyDisabledButtonColor = '';
+    let modifyButtonColor = '';
+    let color = '';
+    if (this.props.white) {
+      color = Color.mainColor;
+      modifyFonts = Fonts.textButtonWhiteActive;
+      modifyDisabledFonts = Fonts.textButtonWhiteDisabled;
+      modifyDisabledButtonColor = [
+        styles.buttonWhiteDisabled,
+        { borderRadius: this.props.borderRadius }
+      ];
+      modifyButtonColor = [
+        styles.buttonWhite,
+        { borderRadius: this.props.borderRadius }
+      ];
+    } else if (this.props.disabledGrey) {
+      color = Color.fontWhite;
+      modifyFonts = Fonts.textButtonRedActive;
+      modifyDisabledFonts = Fonts.textButtonRedDisabled;
+      modifyDisabledButtonColor = [
+        styles.buttonGreyDisabled,
+        { borderRadius: this.props.borderRadius }
+      ];
+      modifyButtonColor = [
+        styles.buttonRed,
+        { borderRadius: this.props.borderRadius }
+      ];
+    } else {
+      color = Color.fontWhite;
+      modifyFonts = Fonts.textButtonRedActive;
+      modifyDisabledFonts = Fonts.textButtonRedDisabled;
+      modifyDisabledButtonColor = [
+        styles.buttonRedDisabled,
+        { borderRadius: this.props.borderRadius }
+      ];
+      modifyButtonColor = [
+        styles.buttonRed,
+        { borderRadius: this.props.borderRadius }
+      ];
+    }
     return (
       <View style={styles.boxButton}>
         <Button
           disabled={this.props.disabled ? this.props.disabled : false}
           onPress={this.props.onPress}
           title={this.props.title}
-          titleStyle={
-            this.props.white
-              ? Fonts.textButtonWhiteActive
-              : Fonts.textButtonRedActive
-          }
-          buttonStyle={
-            this.props.white
-              ? [styles.buttonWhite, { borderRadius: this.props.borderRadius }]
-              : [styles.buttonRed, { borderRadius: this.props.borderRadius }]
-          }
-          disabledStyle={
-            this.props.white
-              ? [
-                  styles.buttonWhiteDisabled,
-                  { borderRadius: this.props.borderRadius }
-                ]
-              : [
-                  styles.buttonRedDisabled,
-                  { borderRadius: this.props.borderRadius }
-                ]
-          }
-          disabledTitleStyle={
-            this.props.white
-              ? Fonts.textButtonWhiteDisabled
-              : Fonts.textButtonRedDisabled
-          }
-          type={'solid'}
+          titleStyle={modifyFonts}
+          buttonStyle={modifyButtonColor}
+          disabledStyle={modifyDisabledButtonColor}
+          disabledTitleStyle={modifyDisabledFonts}
+          loadingProps={{ color }}
           loading={this.props.loading}
         />
       </View>
@@ -62,32 +85,46 @@ const styles = StyleSheet.create({
     padding: 16
   },
   buttonRed: {
-    backgroundColor: masterColor.buttonActiveColorRed,
+    backgroundColor: Color.buttonActiveColorRed,
     width: '100%',
-    height: 46
+    paddingVertical: 16
   },
   buttonWhite: {
-    backgroundColor: masterColor.buttonActiveColorWhite,
+    backgroundColor: Color.buttonActiveColorWhite,
     borderWidth: 1.5,
-    borderColor: masterColor.buttonWhiteBorderRed,
+    borderColor: Color.buttonWhiteBorderRed,
     width: '100%',
-    height: 46
+    paddingVertical: 16
   },
   buttonWhiteDisabled: {
-    backgroundColor: masterColor.buttonActiveColorWhite,
+    backgroundColor: Color.buttonActiveColorWhite,
     borderWidth: 1.5,
-    borderColor: masterColor.buttonRedDisableColor
+    borderColor: Color.buttonRedDisableColor
   },
   buttonRedDisabled: {
-    backgroundColor: masterColor.buttonRedDisableColor,
+    backgroundColor: Color.buttonRedDisableColor,
     width: '100%',
-    height: 46
+    paddingVertical: 16
+  },
+  buttonGreyDisabled: {
+    backgroundColor: Color.fontBlack40,
+    width: '100%',
+    paddingVertical: 16
   }
 });
 
-const mapStateToProps = ({}) => {
-  return {};
-};
+export default ButtonSingle;
 
-// eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, {})(ButtonSingle);
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

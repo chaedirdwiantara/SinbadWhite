@@ -1,13 +1,20 @@
-import React, { Component } from 'react';
-import { View, Image } from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  Image,
+  Text
+} from '../../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../../library/thirdPartyPackage'
+import {
+  ModalBottomType1,
+  StatusBarRedOP50
+} from '../../../library/component'
+import { GlobalStyle, Fonts } from '../../../helpers'
 import * as ActionCreators from '../../../state/actions';
-import GlobalStyle from '../../../helpers/GlobalStyle';
-import Fonts from '../../../helpers/GlobalFont';
-import ModalBottomType1 from '../../../components/modal_bottom/ModalBottomType1';
-import { StatusBarRedOP50 } from '../../../components/StatusBarGlobal';
 
 class ModalBottomSuccessOrder extends Component {
   constructor(props) {
@@ -23,11 +30,11 @@ class ModalBottomSuccessOrder extends Component {
     this.props.omsResetData();
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
-      this.props.merchant.selectedMerchant.store.id
+      this.props.merchant.selectedMerchant.storeId
     );
     /** FOR GET LOG ALL ACTIVITY */
     this.props.merchantGetLogAllActivityProcess(
-      this.props.merchant.selectedMerchant.id
+      this.props.merchant.selectedMerchant.journeyPlanSaleId
     );
   }
 
@@ -72,3 +79,19 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ModalBottomSuccessOrder);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Change key
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+*/

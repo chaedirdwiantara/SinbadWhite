@@ -1,25 +1,28 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   FlatList,
-  Image,
-  TouchableOpacity
-} from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Octicons from 'react-native-vector-icons/Octicons';
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon,
+  OcticonsIcon
+} from '../../library/thirdPartyPackage'
+import {
+  SkeletonType3,
+  LoadingLoadMore,
+  Address,
+  EmptyData
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import SkeletonType3 from '../../components/skeleton/SkeletonType3';
-import { LoadingLoadMore } from '../../components/Loading';
-import Address from '../../components/Address';
-import Fonts from '../../helpers/GlobalFont';
-import EmptyData from '../../components/empty_state/EmptyData';
 
 class JourneyListDataView extends Component {
   constructor(props) {
@@ -49,9 +52,9 @@ class JourneyListDataView extends Component {
     }
   };
   /** go to detail merchant */
-  goToDetailMerchant(storeId) {
+  goToDetailMerchant(id) {
     NavigationService.navigate('MerchantDetailView', {
-      storeId
+      id
     });
   }
   /** go to merchant dashboard */
@@ -60,15 +63,17 @@ class JourneyListDataView extends Component {
      * if agent change store
      */
     if (this.props.merchant.selectedMerchant !== null) {
-      if (this.props.merchant.selectedMerchant.store.id !== data.store.id) {
+      if (this.props.merchant.selectedMerchant.storeId !== data.storeId) {
         this.props.merchantChanged(true);
       }
     }
     /** GO TO SELECTED STORE */
     this.props.merchantSelected(data);
-    NavigationService.navigate('MerchantHomeView', {
-      storeName
-    });
+    setTimeout(() => {
+      NavigationService.navigate('MerchantHomeView', {
+        storeName
+      });
+    }, 100);
   }
   /** go to chat */
   goToChat() {
@@ -120,7 +125,7 @@ class JourneyListDataView extends Component {
       <View key={index} style={styles.boxItem}>
         <View style={{ justifyContent: 'center' }}>
           {item.journeyPlanSaleLogs.length !== 0 ? (
-            <MaterialIcons
+            <MaterialIcon
               name="check-circle"
               color={
                 this.checkCheckListActivity(item.journeyPlanSaleLogs) > 1
@@ -130,7 +135,7 @@ class JourneyListDataView extends Component {
               size={24}
             />
           ) : (
-            <MaterialIcons
+            <MaterialIcon
               name="radio-button-unchecked"
               color={masterColor.fontBlack40}
               size={24}
@@ -138,7 +143,7 @@ class JourneyListDataView extends Component {
           )}
         </View>
         <TouchableOpacity
-          onPress={() => this.goToMerchantDashboard(item.store.name, item)}
+          onPress={() => this.goToMerchantDashboard(item.name, item)}
           style={{
             paddingHorizontal: 10,
             paddingVertical: 13,
@@ -152,18 +157,14 @@ class JourneyListDataView extends Component {
                 item.storeType === 'exist_store' ? Fonts.type16 : Fonts.type29
               }
             >
-              {item.store.externalId
-                ? item.store.externalId
-                : item.store.storeCode
-                ? item.store.storeCode
-                : '-'}
+              {item.externalId ? item.externalId : '-'}
             </Text>
             <Text
               style={
                 item.storeType === 'exist_store' ? Fonts.type16 : Fonts.type29
               }
             >
-              {item.store.name}
+              {item.name}
             </Text>
           </View>
           <View>
@@ -172,8 +173,8 @@ class JourneyListDataView extends Component {
               font={
                 item.storeType === 'exist_store' ? Fonts.type17 : Fonts.type22
               }
-              address={item.store.address}
-              urban={item.store.urban}
+              address={item.address}
+              urban={item.urban}
             />
           </View>
         </TouchableOpacity>
@@ -190,7 +191,7 @@ class JourneyListDataView extends Component {
               marginBottom: 17
             }}
           >
-            <MaterialIcons
+            <MaterialIcon
               name="motorcycle"
               color={
                 item.journeyPlanSaleLogs.findIndex(
@@ -202,7 +203,7 @@ class JourneyListDataView extends Component {
               size={24}
             />
             <View style={{ marginLeft: 10 }} />
-            <Octicons
+            <OcticonsIcon
               name="package"
               color={
                 item.journeyPlanSaleLogs.findIndex(
@@ -227,7 +228,7 @@ class JourneyListDataView extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.boxButtonDetail}
-              onPress={() => this.goToDetailMerchant(item.store.id)}
+              onPress={() => this.goToDetailMerchant(item.id)}
             >
               <Text style={Fonts.type18}>Detail</Text>
             </TouchableOpacity>
@@ -238,7 +239,7 @@ class JourneyListDataView extends Component {
   }
   /** === SEPARATOR FLATLIST === */
   renderSeparator() {
-    return <View style={[GlobalStyles.lines, { marginLeft: 50 }]} />;
+    return <View style={[GlobalStyle.lines, { marginLeft: 50 }]} />;
   }
   /** === RENDER DATA === */
   renderData() {
@@ -332,3 +333,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(JourneyListDataView);
+
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Change key
+ *
+ */

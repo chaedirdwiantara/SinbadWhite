@@ -1,121 +1,98 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   ScrollView,
-  FlatList,
   RefreshControl,
   Image,
   TouchableOpacity,
-  Dimensions
-} from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  SkeletonType4,
+  LoadingLoadMore,
+  EmptyData
+} from '../../library/component'
+import { Color } from '../../config'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
-import masterColor from '../../config/masterColor';
-import { MoneyFormat } from '../../helpers/NumberFormater';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import SkeletonType4 from '../../components/skeleton/SkeletonType4';
-import { LoadingLoadMore } from '../../components/Loading';
-import Fonts from '../../helpers/GlobalFont';
-import EmptyData from '../../components/empty_state/EmptyData';
-
-const { width, height } = Dimensions.get('window');
 
 class PdpGridDataView extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
-
+  /**
+   * =======================
+   * CORE SCROLL DOWN
+   * =======================
+   */
   scrollEndReach = ({ layoutMeasurement, contentOffset, contentSize }) => {
     return (
       Math.round(layoutMeasurement.height + contentOffset.y) ===
       Math.round(contentSize.height)
     );
   };
-  /** === FUNCTIONAL === */
+  /**
+   * =======================
+   * FUNCTIONAL
+   * =======================
+   */
+  /** === SEND DATA TO PARENT === */
   toParentFunction(data) {
     this.props.parentFunction(data);
   }
-
+  /** === REFRESH PAGE === */
   onHandleRefresh = () => {
-    this.props.pdpGetRefresh();
-    this.props.pdpGetProcess({
-      page: 0,
-      loading: true,
-      search: this.props.global.search,
-      sort: this.props.sort,
-      sortBy: this.props.sortBy,
-      supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
+    this.toParentFunction({ type: 'refresh' });
+  };
+  /** === LOAD MORE DATA === */
+  onHandleLoadMore = () => {
+    this.toParentFunction({
+      type: 'loadMore'
     });
   };
-
-  onHandleLoadMore = () => {
-    if (this.props.pdp.dataGetPdp) {
-      if (this.props.pdp.dataGetPdp.length < this.props.pdp.totalDataGetPdp) {
-        const page = this.props.pdp.pageGetPdp + 10;
-        this.props.pdpGetLoadMore(page);
-        this.props.pdpGetProcess({
-          page,
-          loading: false,
-          sort: this.props.sort,
-          sortBy: this.props.sortBy,
-          search: this.props.global.search,
-          supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
-        });
+  /** === CHECK PRICE ==== */
+  checkPrice(item) {
+    if (item.maxPriceRange === null && item.minPriceRange === null) {
+      return MoneyFormat(item.retailBuyingPrice);
+    } else if (item.maxPriceRange !== null && item.minPriceRange !== null) {
+      if (item.maxPriceRange === item.minPriceRange) {
+        return MoneyFormat(item.maxPriceRange);
       }
+      return `${MoneyFormat(item.minPriceRange)} - ${MoneyFormat(
+        item.maxPriceRange
+      )}`;
+    } else if (item.maxPriceRange !== null && item.minPriceRange === null) {
+      return MoneyFormat(item.maxPriceRange);
+    } else if (item.maxPriceRange === null && item.minPriceRange !== null) {
+      return MoneyFormat(item.minPriceRange);
     }
-  };
-  /** DISCOUNT VALUE (CALCULATE DISCOUNT) */
-  calculateDiscount(item) {
-    return (
-      ((item.retailBuyingPrice - item.discountedRetailBuyingPrice) /
-        item.retailBuyingPrice) *
-      100
-    ).toFixed(1);
   }
-
   /**
    * ======================
    * RENDER VIEW
    * ======================
    */
-  /**
-   * =====================
-   * LOADING
-   * =====================
-   */
-  /** === RENDER SKELETON === */
-  renderSkeleton() {
-    return <SkeletonType4 />;
-  }
-  /** === RENDER LOADMORE === */
-  renderLoadMore() {
-    return this.props.pdp.loadingLoadMoreGetPdp ? (
-      <View>
-        <LoadingLoadMore />
-      </View>
-    ) : (
-      <View />
-    );
-  }
-
-  /** === RENDER ITEM === */
+  /** === RENDER BUTTON PESAN === */
   renderButton(item) {
     return (
       <TouchableOpacity
         onPress={() =>
           this.toParentFunction({ type: 'openModalOrder', data: item.id })
         }
-        style={[styles.pesanButton, { backgroundColor: masterColor.mainColor }]}
+        style={[styles.pesanButton, { backgroundColor: Color.mainColor }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>
       </TouchableOpacity>
     );
   }
-
+  /** === RENDER ITEM === */
   renderItem(item, index) {
     const productImage = (
       <Image
@@ -123,14 +100,13 @@ class PdpGridDataView extends Component {
         source={{
           uri: item.catalogueImages[0].imageUrl
         }}
-        style={GlobalStyles.fullWidthRatioContainRadius5Image}
+        style={GlobalStyle.fullWidthRatioContainRadius5Image}
       />
     );
-
     return (
       <View style={styles.mainContent} key={index}>
         <View style={styles.boxMainContent}>
-          <View style={[GlobalStyles.shadow5, styles.cardMainContent]}>
+          <View style={[GlobalStyle.shadow5, styles.cardMainContent]}>
             <View>{productImage}</View>
             <View style={{ paddingHorizontal: 11, paddingVertical: 10 }}>
               <View>
@@ -139,13 +115,7 @@ class PdpGridDataView extends Component {
                 </Text>
               </View>
               <View style={{ marginTop: 5 }}>
-                <Text style={Fonts.type36}>
-                  {MoneyFormat(
-                    item.discountedRetailBuyingPrice !== null
-                      ? item.discountedRetailBuyingPrice
-                      : item.retailBuyingPrice
-                  )}
-                </Text>
+                <Text style={Fonts.type36}>{this.checkPrice(item)}</Text>
               </View>
               <View style={{ alignItems: 'center', marginTop: 10 }}>
                 {this.renderButton(item)}
@@ -156,7 +126,6 @@ class PdpGridDataView extends Component {
       </View>
     );
   }
-
   /** === RENDER DATA === */
   renderData() {
     return this.props.pdp.dataGetPdp.length > 0
@@ -207,26 +176,31 @@ class PdpGridDataView extends Component {
           </View>
         </ScrollView>
       </View>
-
-      // <FlatList
-      //   contentContainerStyle={styles.flatListContainer}
-      //   data={this.props.pdp.dataGetPdp}
-      //   renderItem={this.renderItem.bind(this)}
-      //   numColumns={2}
-      //   extraData={this.state}
-      //   keyExtractor={(item, index) => index.toString()}
-      //   refreshing={this.props.pdp.refreshGetPdp}
-      //   onRefresh={this.onHandleRefresh}
-      //   onEndReachedThreshold={0.2}
-      //   onEndReached={this.onHandleLoadMore.bind(this)}
-      //   showsVerticalScrollIndicator
-      // />
     );
   }
   /** === RENDER EMPTY === */
   renderEmpty() {
     return (
       <EmptyData title={'Product Kosong'} description={'Maaf Product kosong'} />
+    );
+  }
+  /**
+   * =====================
+   * LOADING
+   * =====================
+   */
+  /** === RENDER SKELETON === */
+  renderSkeleton() {
+    return <SkeletonType4 />;
+  }
+  /** === RENDER LOADMORE === */
+  renderLoadMore() {
+    return this.props.pdp.loadingLoadMoreGetPdp ? (
+      <View>
+        <LoadingLoadMore />
+      </View>
+    ) : (
+      <View />
     );
   }
   /** === MAIN === */
@@ -246,7 +220,7 @@ class PdpGridDataView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   flatListContainer: {
     paddingTop: 16,
@@ -265,7 +239,7 @@ const styles = StyleSheet.create({
   },
   cardMainContent: {
     borderRadius: 5,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxFlatlist: {
     paddingTop: 10,
@@ -300,3 +274,16 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(PdpGridDataView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

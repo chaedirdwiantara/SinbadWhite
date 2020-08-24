@@ -1,14 +1,19 @@
 /**
  * this product list for history order
  */
-import React, { Component } from 'react';
-import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import Text from 'react-native-text';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import { MoneyFormat } from '../../helpers/NumberFormater';
+import {
+  React,
+  Component,
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  MaterialIcon
+} from '../../library/thirdPartyPackage'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
 
 class ProductListType2 extends Component {
   constructor(props) {
@@ -64,9 +69,7 @@ class ProductListType2 extends Component {
             <Text style={[Fonts.type10, { textTransform: 'capitalize' }]}>
               {item.catalogue.name}
             </Text>
-            <Text style={Fonts.type10}>
-              {MoneyFormat(item.grossPrice / item.qty)}
-            </Text>
+            <Text style={Fonts.type10}>{MoneyFormat(item.grossPrice)}</Text>
           </View>
           <View
             style={{
@@ -79,9 +82,9 @@ class ProductListType2 extends Component {
           </View>
         </View>
         <View style={GlobalStyle.lines} />
-        <View style={{ paddingHorizontal: 10, paddingTop: 16 }}>
+        <View style={styles.boxButtonAndPriceTotal}>
           <Text style={Fonts.type10}>
-            Total Harga: {MoneyFormat(item.grossPrice)}
+            Total Harga: {MoneyFormat(item.catalogueGrossPrice)}
           </Text>
         </View>
       </View>
@@ -129,12 +132,12 @@ class ProductListType2 extends Component {
       >
         {this.state.showMore ? (
           <View style={styles.boxSeeMore}>
-            <MaterialIcons name="keyboard-arrow-up" size={24} />
+            <MaterialIcon name="keyboard-arrow-up" size={24} />
             <Text style={Fonts.type10}>Lihat Ringkas</Text>
           </View>
         ) : (
           <View style={styles.boxSeeMore}>
-            <MaterialIcons name="keyboard-arrow-down" size={24} />
+            <MaterialIcon name="keyboard-arrow-down" size={24} />
             <Text style={Fonts.type10}>Lihat Lebih</Text>
           </View>
         )}
@@ -167,7 +170,28 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     marginBottom: 8,
     borderRadius: 4
+  },
+  boxButtonAndPriceTotal: {
+    paddingHorizontal: 10,
+    paddingTop: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
   }
 });
 
 export default ProductListType2;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

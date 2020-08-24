@@ -1,15 +1,24 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { bindActionCreators } from 'redux';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  MaterialIcon,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarBlackOP40,
+  ButtonSingle,
+  SkeletonType6
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
-import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarBlackOP40 } from '../../components/StatusBarGlobal';
-import ButtonSingle from '../../components/button/ButtonSingle';
-import SkeletonType6 from '../../components/skeleton/SkeletonType6';
 
 class HistoryPortfolioFilterView extends Component {
   constructor(props) {
@@ -78,7 +87,7 @@ class HistoryPortfolioFilterView extends Component {
                   right: 16
                 }}
               >
-                <MaterialIcons
+                <MaterialIcon
                   name="check-circle"
                   color={
                     this.state.portfolio.indexOf(item.id) > -1
@@ -156,3 +165,17 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(HistoryPortfolioFilterView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

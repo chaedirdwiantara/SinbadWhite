@@ -1,10 +1,14 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Image } from 'react-native';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
-import masterColor from '../config/masterColor.json';
-import Fonts from '../helpers/GlobalFont';
-import GlobalStyles from '../helpers/GlobalStyle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Image,
+  Text
+} from '../library/reactPackage'
+import { connect } from '../library/thirdPartyPackage'
+import { Color } from '../config'
+import { GlobalStyle, Fonts } from '../helpers'
 
 class SelectedMerchantName extends Component {
   constructor(props) {
@@ -25,28 +29,28 @@ class SelectedMerchantName extends Component {
         <View
           style={[
             styles.contentContainer,
-            this.props.shadow ? GlobalStyles.shadowForBox : null
+            this.props.shadow ? GlobalStyle.shadowForBox : null
           ]}
         >
           <Image
             source={require('../assets/icons/merchant/store.png')}
             style={{ height: 24, width: 24, marginRight: 8 }}
           />
-          {this.props.merchant.selectedMerchant.store.name.length >= 60 ? (
+          {this.props.merchant.selectedMerchant.name.length >= 60 ? (
             <Text style={[Fonts.type16, { textTransform: 'capitalize' }]}>
-              {this.props.merchant.selectedMerchant.store.name.substring(0, 60)}
+              {this.props.merchant.selectedMerchant.name.substring(0, 60)}
               ...
             </Text>
           ) : (
             <Text style={[Fonts.type16, { textTransform: 'capitalize' }]}>
-              {this.props.merchant.selectedMerchant.store.name}
+              {this.props.merchant.selectedMerchant.name}
             </Text>
           )}
         </View>
         {this.props.lines ? (
-          <View style={GlobalStyles.lines} />
+          <View style={GlobalStyle.lines} />
         ) : (
-          <View style={GlobalStyles.boxPadding} />
+          <View style={GlobalStyle.boxPadding} />
         )}
       </View>
     );
@@ -55,7 +59,7 @@ class SelectedMerchantName extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
     flexDirection: 'row',
@@ -71,3 +75,17 @@ const mapStateToProps = ({ merchant }) => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, {})(SelectedMerchantName);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

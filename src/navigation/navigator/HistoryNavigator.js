@@ -12,7 +12,7 @@ const HistoryNavigator = {
     navigationOptions: {
       headerTitle: 'Pesanan',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -28,9 +28,9 @@ const HistoryNavigator = {
   HistoryDetailView: {
     screen: HistoryDetailView,
     navigationOptions: {
-      headerTitle: 'Detail Pesanan',
+      // headerTitle: 'Detail Pesanan',
       headerTitleStyle: [
-        GlobalFont.type35,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -50,7 +50,7 @@ const HistoryNavigator = {
     navigationOptions: {
       headerTitle: 'Detail Status',
       headerTitleStyle: [
-        GlobalFont.type35,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1

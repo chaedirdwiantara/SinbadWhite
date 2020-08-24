@@ -1,26 +1,28 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   Image,
-  TextInput,
   SafeAreaView,
-  TouchableOpacity,
-  Keyboard
-} from 'react-native';
-import { bindActionCreators } from 'redux';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
-import IconsMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconsAntDesign from 'react-native-vector-icons/AntDesign';
+  Keyboard,
+  Text
+} from '../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect,
+  MaterialCommunityIcons
+} from '../../library/thirdPartyPackage';
+import {
+  ButtonSingle,
+  StatusBarRed,
+  BackHandlerCloseApp,
+  InputType4
+} from '../../library/component';
+import { Fonts, GlobalStyle } from '../../helpers';
+import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
-import Fonts from '../../helpers/GlobalFont';
-import masterColor from '../../config/masterColor.json';
-import ButtonSingle from '../../components/button/ButtonSingle';
-import GlobalStyle from '../../helpers/GlobalStyle';
 import NavigationService from '../../navigation/NavigationService';
-import { StatusBarRed } from '../../components/StatusBarGlobal';
-import BackHandlerCloseApp from '../../components/BackHandlerCloseApp';
 
 class SignInWithPhoneView extends Component {
   constructor(props) {
@@ -63,61 +65,37 @@ class SignInWithPhoneView extends Component {
   checkPhoneExist() {
     Keyboard.dismiss();
     this.setState({ errorPhoneNumber: false });
-    this.props.otpGetProcess('0' + this.state.phoneNumber);
+    this.props.otpGetProcess(this.state.phoneNumber);
   }
-  /** === PHONE NUMBER MODIFY === */
-  phoneModify(phoneNumber) {
-    let phone = phoneNumber.split('');
-    if (phone[0] === '0') {
-      phone.splice(0, 1);
-    }
-    const reg = /^8[0-9]{8,12}$/;
-    const checkFormat = reg.test(phone.join(''));
+  /** === PHONE NUMBER CHECK === */
+  checkPhoneFormat(phoneNumber) {
+    const reg = /^08[0-9]{8,12}$/;
+    const checkFormat = reg.test(phoneNumber);
     this.setState({
-      phoneNumber: phone.join(''),
+      phoneNumber,
       correctFormatPhoneNumber: checkFormat,
       errorPhoneNumber: false
     });
   }
   /**
-   * ========================
-   * HEADER MODIFY
-   * ========================
-   */
-  // static navigationOptions = ({ navigation }) => {
-  //   return {
-  //     headerRight: () => (
-  //       <TouchableOpacity style={{ marginRight: 16 }}>
-  //         <IconsAntDesign
-  //           color={masterColor.backButtonWhite}
-  //           name={'questioncircleo'}
-  //           size={24}
-  //         />
-  //       </TouchableOpacity>
-  //     )
-  //   };
-  // };
-  /**
    * ==============================
    * RENDER VIEW
    * ==============================
    */
-  /** === RENDER BUTTON === */
-  renderButton() {
+  /** === RENDER BACKGROUND === */
+  renderBackground() {
     return (
-      <ButtonSingle
-        disabled={
-          !this.state.correctFormatPhoneNumber || this.props.auth.loadingGetOTP
-        }
-        title={'Lanjutkan'}
-        borderRadius={50}
-        onPress={() => this.checkPhoneExist()}
-        loading={this.props.auth.loadingGetOTP}
-      />
+      <View>
+        <View style={styles.backgroundLogin} />
+        <Image
+          source={require('../../assets/images/background/login_backgroud.png')}
+          style={styles.imageBackground}
+        />
+        <View style={{ height: 100 }} />
+      </View>
     );
   }
-  /** === RENDER CONTENT === */
-  /** TITLE */
+  /** === RENDER TITLE === */
   renderTitle() {
     return (
       <View>
@@ -134,100 +112,67 @@ class SignInWithPhoneView extends Component {
       </View>
     );
   }
-  /** CONTENT */
+  /** === RENDER PHONE NUMBER INPUT === */
   renderContentPhoneNumberInput() {
     return (
-      <View style={styles.boxPhoneInput}>
-        <View
-          style={[
-            styles.boxPhoneNumberAreaCode,
-            {
-              borderColor: this.state.errorPhoneNumber
-                ? masterColor.fontRed50
-                : masterColor.fontBlack10
-            }
-          ]}
-        >
-          <Text style={Fonts.type3}>+62</Text>
-        </View>
-        <View
-          style={[
-            styles.boxPhoneNumber,
-            {
-              borderColor: this.state.errorPhoneNumber
-                ? masterColor.fontRed50
-                : masterColor.fontBlack10
-            }
-          ]}
-        >
-          <TextInput
-            selectionColor={masterColor.mainColor}
-            placeholder="Masukan No.Handphone"
-            value={this.state.phoneNumber}
-            maxLength={13}
-            keyboardType="numeric"
-            onChangeText={phoneNumber => this.phoneModify(phoneNumber)}
-            style={[styles.textInput, Fonts.type3]}
-          />
-          <View style={{ justifyContent: 'center', height: '100%' }}>
-            {this.state.errorPhoneNumber ? (
-              <IconsMaterial
-                color={masterColor.fontRed50}
-                name={'close-circle'}
-                size={24}
-              />
-            ) : (
-              this.renderCheckInputIcon()
-            )}
-          </View>
-        </View>
-      </View>
-    );
-  }
-  /** CHECK ICON INPUT */
-  renderCheckInputIcon() {
-    return this.state.correctFormatPhoneNumber ? (
-      <IconsMaterial
-        color={masterColor.fontGreen50}
-        name={'check-circle'}
-        size={24}
+      <InputType4
+        title={'Nomor Handphone'}
+        error={this.state.errorPhoneNumber}
+        errorText={'No. HP yang anda masukan salah'}
+        value={this.state.phoneNumber}
+        onChangeText={phoneNumber => {
+          const cleanNumber = phoneNumber.replace(/[^0-9]/g, '');
+          this.checkPhoneFormat(cleanNumber);
+        }}
+        placeholder={'Masukan nomor handphone anda'}
+        keyboardType={'numeric'}
+        maxLength={13}
+        suffix
+        suffixForPush
+        suffixPush={() =>
+          this.setState({
+            phoneNumber: '',
+            errorPhoneNumber: false,
+            correctFormatPhoneNumber: false
+          })
+        }
+        suffixContent={
+          this.state.phoneNumber !== '' ? (
+            <MaterialCommunityIcons
+              color={Color.fontBlack60}
+              name={'close-circle'}
+              size={18}
+            />
+          ) : (
+            <View />
+          )
+        }
+        marginBottom={30}
       />
-    ) : (
-      <View />
     );
   }
-  /** ERROR LOGIN */
-  renderErrorSignIn() {
-    return this.state.errorPhoneNumber ? (
-      <View style={{ paddingHorizontal: 16 }}>
-        <Text style={Fonts.type13}>No. HP yang anda masukan salah</Text>
-      </View>
-    ) : (
-      <View />
+  /** === RENDER BUTTON === */
+  renderButton() {
+    return (
+      <ButtonSingle
+        disabled={
+          !this.state.correctFormatPhoneNumber || this.props.auth.loadingGetOTP
+        }
+        title={'Lanjutkan'}
+        borderRadius={50}
+        onPress={() => this.checkPhoneExist()}
+        loading={this.props.auth.loadingGetOTP}
+      />
     );
   }
-  /** MAIN CONTENT */
+  /** === RENDER CONTENT === */
   renderContent() {
     return (
       <View style={GlobalStyle.cardContainerRadius12}>
         <View style={styles.boxContent}>
           {this.renderContentPhoneNumberInput()}
-          {this.renderErrorSignIn()}
           {this.renderButton()}
         </View>
-      </View>
-    );
-  }
-  /** BACKGROUND */
-  renderBackground() {
-    return (
-      <View>
-        <View style={styles.backgroundLogin} />
-        <Image
-          source={require('../../assets/images/background/login_backgroud.png')}
-          style={styles.imageBackground}
-        />
-        <View style={{ height: 100 }} />
       </View>
     );
   }
@@ -259,7 +204,7 @@ const styles = StyleSheet.create({
     zIndex: 1000
   },
   backgroundLogin: {
-    backgroundColor: masterColor.mainColor,
+    backgroundColor: Color.mainColor,
     height: 210
   },
   imageBackground: {
@@ -270,33 +215,6 @@ const styles = StyleSheet.create({
   boxContent: {
     paddingTop: 42,
     paddingBottom: 26
-  },
-  boxPhoneInput: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    height: 46,
-    marginBottom: 15
-  },
-  boxPhoneNumberAreaCode: {
-    width: 52,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8
-  },
-  boxPhoneNumber: {
-    flex: 1,
-    flexDirection: 'row',
-    borderWidth: 1,
-    marginLeft: 12,
-    borderRadius: 8,
-    paddingHorizontal: 13,
-    justifyContent: 'center',
-    alignItems: 'flex-start'
-  },
-  /** for textInput */
-  textInput: {
-    flex: 1
   }
 });
 

@@ -7,16 +7,23 @@ const INITIAL_STATE = {
   refreshGetPdp: false,
   loadingDetailPdp: false,
   loadingLoadMoreGetPdp: false,
+  loadingGetSearchPdp: false,
+  refreshGetSearchPdp: false,
+  loadingLoadMoreGetSearchPdp: false,
   /** data */
   dataGetPdp: [],
   totalDataGetPdp: 0,
   pageGetPdp: 0,
+  dataGetSearchPdp: [],
+  totalDataGetSearchPdp: 0,
+  pageGetSearchPdp: 0,
   pdpDisplay: 'grid',
   pdpOpenModalOrder: false,
   pdpOrderData: null,
   dataDetailPdp: null,
   /** error */
   errorGetPdp: null,
+  errorGetSearchPdp: null,
   errorDetailPdp: null
 };
 
@@ -110,6 +117,62 @@ export const pdp = createReducer(INITIAL_STATE, {
       ...state,
       loadingLoadMoreGetPdp: true,
       pageGetPdp: action.payload
+    };
+  },
+  /**
+   * ===================
+   * PDP SEARCH LIST
+   * ===================
+   */
+  [types.PDP_SEARCH_GET_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSearchPdp: action.payload.loading,
+      errorGetSearchPdp: null
+    };
+  },
+  [types.PDP_SEARCH_GET_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSearchPdp: false,
+      loadingLoadMoreGetSearchPdp: false,
+      refreshGetSearchPdp: false,
+      totalDataGetSearchPdp: action.payload.total,
+      dataGetSearchPdp: [...state.dataGetSearchPdp, ...action.payload.data]
+    };
+  },
+  [types.PDP_SEARCH_GET_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetSearchPdp: false,
+      loadingLoadMoreGetSearchPdp: false,
+      refreshGetSearchPdp: false,
+      errorGetSearchPdp: action.payload
+    };
+  },
+  [types.PDP_SEARCH_GET_RESET](state, action) {
+    return {
+      ...state,
+      pageGetSearchPdp: 0,
+      totalDataGetSearchPdp: 0,
+      dataGetSearchPdp: []
+    };
+  },
+  [types.PDP_SEARCH_GET_REFRESH](state, action) {
+    return {
+      ...state,
+      refreshGetSearchPdp: true,
+      loadingGetSearchPdp: true,
+      pageGetSearchPdp: 0,
+      totalDataGetSearchPdp: 0,
+      dataGetSearchPdp: []
+    };
+  },
+  [types.PDP_SEARCH_GET_LOADMORE](state, action) {
+    return {
+      ...state,
+      loadingLoadMoreGetSearchPdp: true,
+      pageGetSearchPdp: action.payload
     };
   },
   /**

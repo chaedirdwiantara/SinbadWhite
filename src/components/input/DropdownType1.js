@@ -1,9 +1,14 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import Text from 'react-native-text';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity
+} from '../../library/reactPackage';
+import { MaterialIcon } from '../../library/thirdPartyPackage';
+import { Fonts } from '../../helpers';
+import { Color } from '../../config'
 
 class DropdownType1 extends Component {
   constructor(props) {
@@ -23,15 +28,21 @@ class DropdownType1 extends Component {
       </View>
     );
   }
-  /** === RENDER BAR === */
+  /** === RENDER INPUT === */
   selectedDropdown() {
     return (
       <TouchableOpacity
         style={styles.boxInput}
         onPress={this.props.openDropdown}
       >
-        <View>
-          {this.props.selectedDropdownText !== '' ? (
+        {this.props.prefixes ? (
+          <View style={styles.boxPrefixes}>{this.props.prefixes}</View>
+        ) : (
+          <View />
+        )}
+        <View style={{ marginLeft: this.props.prefixes ? 40 : 0 }}>
+          {this.props.selectedDropdownText !== '' &&
+          this.props.selectedDropdownText !== null ? (
             <Text style={Fonts.type24}>{this.props.selectedDropdownText}</Text>
           ) : (
             <Text style={Fonts.type33}>{this.props.placeholder}</Text>
@@ -40,11 +51,31 @@ class DropdownType1 extends Component {
         <View style={styles.boxArrow}>
           <MaterialIcon
             name="chevron-right"
-            color={masterColor.fontBlack60}
+            color={Color.fontBlack60}
             size={24}
           />
         </View>
       </TouchableOpacity>
+    );
+  }
+  /** === RENDER INPUT DISABLED === */
+  selectedDropdownDisabled() {
+    return (
+      <View style={styles.boxInput}>
+        {this.props.prefixes ? (
+          <View style={styles.boxPrefixes}>{this.props.prefixes}</View>
+        ) : (
+          <View />
+        )}
+        <View style={{ marginLeft: this.props.prefixes ? 40 : 0 }}>
+          {this.props.selectedDropdownText !== '' &&
+          this.props.selectedDropdownText !== null ? (
+            <Text style={Fonts.type33}>{this.props.selectedDropdownText}</Text>
+          ) : (
+            <Text style={Fonts.type33}>{this.props.placeholder}</Text>
+          )}
+        </View>
+      </View>
     );
   }
   /** === RENDER CONTENT === */
@@ -52,7 +83,9 @@ class DropdownType1 extends Component {
     return (
       <View style={styles.contentContainer}>
         {this.renderTitle()}
-        {this.selectedDropdown()}
+        {this.props.disabled
+          ? this.selectedDropdownDisabled()
+          : this.selectedDropdown()}
         <View style={styles.spacing} />
       </View>
     );
@@ -65,7 +98,7 @@ class DropdownType1 extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
     paddingHorizontal: 16
@@ -77,11 +110,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     flexDirection: 'row',
     paddingBottom: 8,
-    borderBottomColor: masterColor.fontBlack40
+    borderBottomColor: Color.fontBlack40
   },
   boxArrow: {
     position: 'absolute',
     right: 0,
+    bottom: 4
+  },
+  boxPrefixes: {
+    position: 'absolute',
+    left: 0,
     bottom: 4
   },
   spacing: {
@@ -90,3 +128,16 @@ const styles = StyleSheet.create({
 });
 
 export default DropdownType1;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

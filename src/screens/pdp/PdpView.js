@@ -1,28 +1,35 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { connect } from 'react-redux';
-import { FlatList } from 'react-native-gesture-handler';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  SafeAreaView,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  MaterialIcon,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarRed,
+  CartGlobal,
+  ModalBottomType3,
+  ToastType1,
+  SelectedMerchantName,
+  ModalConfirmation,
+  ModalBottomSkuNotAvailable
+} from '../../library/component'
+import { Fonts } from '../../helpers'
+import { Color } from '../../config'
 import * as ActionCreators from '../../state/actions';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarRed } from '../../components/StatusBarGlobal';
 import NavigationService from '../../navigation/NavigationService';
 import PdpGridDataView from './PdpGridDataView';
 import PdpListDataView from './PdpListDataView';
 import PdpLineDataView from './PdpLineDataView';
 import PdpFilterView from './PdpFilterView';
 import PdpOrderView from './PdpOrderView';
-import CartGlobal from '../../components/CartGlobal';
-import ModalBottomType3 from '../../components/modal_bottom/ModalBottomType3';
-import ToastType1 from '../../components/toast/ToastType1';
-import PdpFilterSortView from './PdpFitlerSortView';
-import SelectedMerchantName from '../../components/SelectedMerchantName';
-import ModalConfirmation from '../../components/modal/ModalConfirmation';
-import ModalBottomSkuNotAvailable from '../../components/error/ModalBottomSkuNotAvailable';
 
 class PdpView extends Component {
   constructor(props) {
@@ -31,7 +38,6 @@ class PdpView extends Component {
       /** for modal */
       openModalOrder: false,
       openModalSkuNotAvailable: false,
-      openOrder: false,
       openModalSort: false,
       openModalConfirmRemoveCart: false,
       /** data */
@@ -45,7 +51,36 @@ class PdpView extends Component {
       sortIndex: null
     };
   }
-
+  /**
+   * ========================
+   * HEADER MODIFY
+   * ========================
+   */
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerTitle: () => (
+        <View>
+          <Text style={Fonts.type35}>Cari Produk</Text>
+        </View>
+      ),
+      headerRight: () => (
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableOpacity
+            onPress={() => NavigationService.navigate('PdpSearchView')}
+          >
+            <MaterialIcon
+              color={Color.fontWhite}
+              name={'search'}
+              size={24}
+            />
+          </TouchableOpacity>
+          <View style={{ marginRight: 16, marginLeft: 12 }}>
+            <CartGlobal />
+          </View>
+        </View>
+      )
+    };
+  };
   /**
    * =======================
    * FUNCTIONAL
@@ -54,27 +89,18 @@ class PdpView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.props.pdpGetReset();
-    this.props.pdpGetProcess({
-      page: 0,
-      loading: true,
-      sort: this.state.sort,
-      sortBy: this.state.sortBy,
-      search: this.props.global.search,
-      supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
-    });
+    this.getPdp({ page: 0, loading: true });
   }
   /** === DID UPDATE */
   componentDidUpdate(prevState) {
     if (prevState.global.search !== this.props.global.search) {
       if (this.props.global.search === '') {
         this.props.pdpGetReset();
-        this.props.pdpGetProcess({
+        this.getPdp({
           page: 0,
           loading: true,
           sort: 'asc',
-          sortBy: 'name',
-          search: this.props.global.search,
-          supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
+          sortBy: 'name'
         });
       }
     }
@@ -94,29 +120,6 @@ class PdpView extends Component {
       case 'category':
         console.log('filter');
         break;
-      case 'order':
-        if (
-          this.props.merchant.merchantChanged &&
-          this.props.oms.dataCart.length > 0
-        ) {
-          this.setState({
-            openModalConfirmRemoveCart: true,
-            selectedProduct: data.data
-          });
-        } else {
-          this.setState({ openOrder: true, selectedProduct: data.data });
-        }
-        break;
-      case 'addProduct':
-        this.setState({
-          openOrder: false,
-          addProductNotif: true,
-          addProductNotifText: 'Produk berhasil ditambahkan ke keranjang'
-        });
-        setTimeout(() => {
-          this.setState({ addProductNotif: false });
-        }, 3000);
-        break;
       case 'sortSelected':
         this.setState({
           openModalSort: false,
@@ -125,19 +128,23 @@ class PdpView extends Component {
           sortBy: data.data.sortBy
         });
         this.props.pdpGetReset();
-        this.props.pdpGetProcess({
+        this.getPdp({
           page: 0,
           loading: true,
           sort: data.data.sort,
-          sortBy: data.data.sortBy,
-          search: this.props.global.search,
-          supplierId: this.props.user.userSuppliers.map(item => item.supplierId)
+          sortBy: data.data.sortBy
         });
         break;
       /** => 'pesan' buttom press (from child) */
       case 'openModalOrder':
-        if (this.props.user === null) {
-          NavigationService.navigate('Auth');
+        if (
+          this.props.merchant.merchantChanged &&
+          this.props.oms.dataCart.length > 0
+        ) {
+          this.setState({
+            openModalConfirmRemoveCart: true,
+            selectedProduct: data.data
+          });
         } else {
           this.props.pdpGetDetailProcess(data.data);
           this.setState({ openModalOrder: true });
@@ -167,9 +174,36 @@ class PdpView extends Component {
           this.setState({ addProductNotif: false });
         }, 3000);
         break;
+      /** => refresh page (from child) */
+      case 'refresh':
+        this.props.pdpGetRefresh();
+        this.getPdp({ page: 0, loading: true });
+        break;
+      /** => load more (from child) */
+      case 'loadMore':
+        if (this.props.pdp.dataGetPdp) {
+          if (
+            this.props.pdp.dataGetPdp.length < this.props.pdp.totalDataGetPdp
+          ) {
+            const page = this.props.pdp.pageGetPdp + 10;
+            this.props.pdpGetLoadMore(page);
+            this.getPdp({ page, loading: false });
+          }
+        }
+        break;
       default:
         break;
     }
+  }
+  /** === FETCH DATA (THIS FOR ALL FITLER) === */
+  getPdp(data) {
+    this.props.pdpGetProcess({
+      page: data.page,
+      loading: data.loading,
+      sort: data.sort !== undefined ? data.sort : this.state.sort,
+      sortBy: data.sortBy !== undefined ? data.sortBy : this.state.sortBy,
+      search: this.props.global.search
+    });
   }
 
   /**
@@ -177,7 +211,11 @@ class PdpView extends Component {
    * RENDER VIEW
    * =======================
    */
-  /** === EMPTY PDP === */
+  /** === RENDER HEADER NAME OF MERCHANT === */
+  renderMerchantName() {
+    return <SelectedMerchantName lines />;
+  }
+  /** === RENDER PDP LAYOUT === */
   renderPdpData() {
     switch (this.state.layout) {
       case 'grid':
@@ -211,37 +249,61 @@ class PdpView extends Component {
         break;
     }
   }
+  /** === RENDER FILTER BOTTOM SECTION === */
+  renderFilterSection() {
+    return (
+      <PdpFilterView
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+        sort={this.state.sortIndex}
+      />
+    );
+  }
   /**
-   * ========================
-   * HEADER MODIFY
-   * ========================
+   * ===================
+   * TOAST
+   * ====================
    */
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerTitle: () => (
-        <View>
-          <Text style={Fonts.type35}>Cari Produk</Text>
-        </View>
-      ),
-      headerRight: () => (
-        <View style={{ flexDirection: 'row' }}>
-          <TouchableOpacity
-            onPress={() => NavigationService.navigate('PdpSearchView')}
-          >
-            <MaterialIcon
-              color={masterColor.fontWhite}
-              name={'search'}
-              size={24}
-            />
-          </TouchableOpacity>
-          <View style={{ marginRight: 16, marginLeft: 12 }}>
-            <CartGlobal />
-          </View>
-        </View>
-      )
-    };
-  };
-
+  renderToast() {
+    return this.state.addProductNotif ? (
+      <ToastType1 margin={10} content={this.state.addProductNotifText} />
+    ) : (
+      <View />
+    );
+  }
+  /**
+   * =====================
+   * MODAL
+   * =====================
+   */
+  /** === RENDER MODAL CONFIRM DELETE CART === */
+  renderModalConfirmDelete() {
+    return this.state.openModalConfirmRemoveCart ? (
+      <ModalConfirmation
+        title={'Anda telah berpindah toko'}
+        okText={'Ya'}
+        cancelText={'Tidak'}
+        open={this.state.openModalConfirmRemoveCart}
+        content={
+          'Menambahkan produk ini ke keranjang akan menghapus SKU sebelumnya. Apakah Anda Setuju ?'
+        }
+        type={'okeRed'}
+        ok={() => {
+          this.setState({
+            openModalConfirmRemoveCart: false,
+            openModalOrder: true
+          });
+          this.props.omsResetData();
+          this.props.merchantChanged(false);
+          this.props.pdpGetDetailProcess(this.state.selectedProduct);
+          this.setState({ openModalOrder: true });
+        }}
+        cancel={() => this.setState({ openModalConfirmRemoveCart: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === RENDER MODAL ORDER === */
   renderModalOrder() {
     return this.state.openModalOrder ? (
@@ -272,78 +334,7 @@ class PdpView extends Component {
       <View />
     );
   }
-
-  // renderModalOrder() {
-  //   return this.state.openOrder ? (
-  //     <ModalBottomType3
-  //       open={this.state.openOrder}
-  //       title={'Masukan Jumlah'}
-  //       content={
-  //         <PdpOrderView
-  //           data={this.state.selectedProduct}
-  //           onRef={ref => (this.parentFunction = ref)}
-  //           parentFunction={this.parentFunction.bind(this)}
-  //         />
-  //       }
-  //       close={() => this.setState({ openOrder: false })}
-  //       typeClose={'cancel'}
-  //     />
-  //   ) : (
-  //     <View />
-  //   );
-  // }
-
-  renderFilterSection() {
-    return (
-      <PdpFilterView
-        onRef={ref => (this.parentFunction = ref)}
-        parentFunction={this.parentFunction.bind(this)}
-        sort={this.state.sortIndex}
-      />
-    );
-  }
-
-  /**
-   * ===================
-   * TOAST
-   * ====================
-   */
-  renderToast() {
-    return this.state.addProductNotif ? (
-      <ToastType1 margin={10} content={this.state.addProductNotifText} />
-    ) : (
-      <View />
-    );
-  }
-  /**
-   * =====================
-   * MODAL
-   * =====================
-   */
-  /** RENDER MODAL CONFIRM DELETE CART */
-  renderModalConfirmDelete() {
-    return this.state.openModalConfirmRemoveCart ? (
-      <ModalConfirmation
-        title={'Anda telah berpindah toko'}
-        okText={'Ya'}
-        cancelText={'Tidak'}
-        open={this.state.openModalConfirmRemoveCart}
-        content={
-          'Menambahkan produk ini ke keranjang akan menghapus SKU sebelumnya. Apakah Anda Setuju ?'
-        }
-        type={'okeRed'}
-        ok={() => {
-          this.setState({ openModalConfirmRemoveCart: false, openOrder: true });
-          this.props.omsResetData();
-          this.props.merchantChanged(false);
-        }}
-        cancel={() => this.setState({ openModalConfirmRemoveCart: false })}
-      />
-    ) : (
-      <View />
-    );
-  }
-
+  /** === RENDER MODAL FITLER SORT === */
   renderModalSort() {
     return this.state.openModalSort ? (
       <ModalBottomType3
@@ -363,12 +354,7 @@ class PdpView extends Component {
       <View />
     );
   }
-  /** RENDER HEADER NAME OF MERCHANT */
-  renderMerchantName() {
-    return <SelectedMerchantName lines />;
-  }
-
-  /** MAIN */
+  /** === MAIN === */
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
@@ -392,7 +378,7 @@ class PdpView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
     flex: 1
@@ -409,3 +395,16 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(PdpView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

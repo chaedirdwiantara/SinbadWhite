@@ -10,12 +10,14 @@ const INITIAL_STATE = {
   loadingLoadMoreGetHistory: false,
   loadingGetOrderStatus: false,
   loadingGetPaymentStatus: false,
+  loadingHistoryActivateVA: false,
   /** data */
   dataGetHistory: [],
   dataEditHistory: null,
   dataGetOrderStatus: null,
   dataGetPaymentStatus: null,
   dataDetailHistory: null,
+  dataHistoryActivateVA: null,
   totalDataGetHistory: 0,
   pageGetHistory: 0,
   /** error */
@@ -23,7 +25,8 @@ const INITIAL_STATE = {
   errorGetOrderStatus: null,
   errorGetPaymentStatus: null,
   errorEditHistory: null,
-  errorHistoryDetail: null
+  errorHistoryDetail: null,
+  errorHistoryActivateVA: null
 };
 
 export const history = createReducer(INITIAL_STATE, {
@@ -52,7 +55,7 @@ export const history = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingDetailHistory: false,
-      dataDetailHistory: action.payload
+      dataDetailHistory: action.payload.data
     };
   },
   [types.HISTORY_GET_DETAIL_FAILED](state, action) {
@@ -135,7 +138,10 @@ export const history = createReducer(INITIAL_STATE, {
       loadingLoadMoreGetHistory: false,
       refreshGetHistory: false,
       totalDataGetHistory: action.payload.total,
-      dataGetHistory: [...state.dataGetHistory, ...action.payload.data]
+      dataGetHistory: removeDuplicateData(
+        state.dataGetHistory,
+        action.payload.data
+      )
     };
   },
   [types.HISTORY_GET_FAILED](state, action) {
@@ -172,6 +178,41 @@ export const history = createReducer(INITIAL_STATE, {
       pageGetHistory: action.payload
     };
   },
+
+   /**
+   * ==================================
+   * ACTIVATE VA
+   * =================================
+   */
+  [types.HISTORY_ACTIVATE_VA_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingHistoryActivateVA: true,
+      dataHistoryActivateVA: null,
+      errorHistoryActivateVA: null
+    };
+  },
+  [types.HISTORY_ACTIVATE_VA_SUCCESS](state, action) {
+    let dataDetailHistory = { ...state.dataDetailHistory };
+    dataDetailHistory.billing.accountVaNo = action.payload.data.accountVaNo;
+    dataDetailHistory.billing.accountVaType = action.payload.data.accountVaType;
+    dataDetailHistory.billing.expiredPaymentTime =
+      action.payload.data.expiredPaymentTime;
+    return {
+      ...state,
+      loadingHistoryActivateVA: false,
+      dataHistoryActivateVA: action.payload,
+      dataDetailHistory
+    };
+  },
+  [types.HISTORY_ACTIVATE_VA_FAILED](state, action) {
+    return {
+      ...state,
+      loadingHistoryActivateVA: false,
+      errorHistoryActivateVA: action.payload
+    };
+  },
+
   /**
    * =============================
    * EDIT HISTORY
@@ -200,3 +241,17 @@ export const history = createReducer(INITIAL_STATE, {
     };
   }
 });
+
+/**
+ * ======================
+ * FUNCTION SERVICE
+ * ======================
+ */
+function removeDuplicateData(existingData, newData) {
+  let dataArray = [...existingData, ...newData];
+  return dataArray
+    .map(data => data.id)
+    .map((data, index, fixData) => fixData.indexOf(data) === index && index)
+    .filter(data => dataArray[data])
+    .map(data => dataArray[data]);
+}

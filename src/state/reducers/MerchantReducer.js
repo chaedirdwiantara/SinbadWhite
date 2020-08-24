@@ -15,14 +15,18 @@ const INITIAL_STATE = {
   loadingGetLogAllActivity: false,
   loadingGetLogPerActivity: false,
   loadingGetNoOrderReason: false,
+  loadingGetStoreStatus: false,
+  loadingGetWarehouse: false,
   /** data */
   dataPostActivity: null,
   dataGetLogAllActivity: null,
   dataGetLogPerActivity: null,
   selectedMerchant: null,
   dataGetMerchant: [],
+  dataGetWarehouse: [],
   dataAddMerchant: null,
   dataEditMerchant: null,
+  dataStoreStatus: {},
   dataEditMerchantVolatile: {
     vehicleAccessibilityId: '',
     vehicleAccessibilityName: '',
@@ -39,34 +43,72 @@ const INITIAL_STATE = {
   },
   dataGetMerchantDetail: null,
   dataGetMerchantLastOrder: null,
-  dataAddMerchantVolatile: {
-    name: '',
-    address: '',
-    longitude: '',
-    latitude: '',
-    user: {
-      fullName: '',
-      idNo: '',
-      taxNo: '',
-      phone: '',
-      roles: [1]
-    },
-    supplier: {
-      supplierId: '',
-      supplierName: ''
-    },
-    detailAddress: {
-      province: '',
-      city: '',
-      district: '',
-      urban: ''
-    }
-  },
   totalDataGetMerchant: 0,
   pageGetMerchant: 0,
   dataGetPortfolio: null,
   merchantChanged: false,
   dataGetNoOrderReason: null,
+  dataMerchantRejected: {
+    name: null,
+    phoneNo: null,
+    imageUrl: null
+  },
+  dataMerchantDisabledField: {
+    fullName: false,
+    idNo: false,
+    taxNo: false,
+    longLat: false,
+    address: false,
+    noteAddress: false
+  },
+  dataMerchantVolatile: {
+    storeId: null,
+    externalId: null,
+    /** profile information */
+    phone: null,
+    fullName: null,
+    name: null,
+    idNo: null,
+    taxNo: null,
+    idImageUrl: null,
+    taxImageUrl: null,
+    selfieImageUrl: null,
+    /** merchant information */
+    numberOfEmployee: null,
+    largeArea: null,
+    topSellingBrand: null,
+    mostWantedBrand: null,
+    vehicleAccessibilityName: null,
+    vehicleAccessibilityId: null,
+    vehicleAccessibilityAmount: null,
+    warehouse: null,
+    warehouseId: null,
+    /** merchant address */
+    address: null,
+    noteAddress: null,
+    longitude: null,
+    latitude: null,
+    province: null,
+    city: null,
+    district: null,
+    urban: null,
+    zipCode: null,
+    urbanId: null,
+    /** merchant profile */
+    imageUrl: null,
+    ownerId: null,
+    storeCode: null,
+    phoneNo: null,
+    /** merchant classification */
+    storeType: '',
+    typeId: null,
+    storeGroup: '',
+    groupId: null,
+    storeCluster: '',
+    clusterId: null,
+    storeChannel: '',
+    channelId: null
+  },
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
@@ -77,7 +119,9 @@ const INITIAL_STATE = {
   errorPostActivity: null,
   errorGetLogAllActivity: null,
   errorGetLogPerActivity: null,
-  errorGetNoOrderReason: null
+  errorGetNoOrderReason: null,
+  errorGetStoreStatus: null,
+  errorGetWarehouse: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -112,88 +156,33 @@ export const merchant = createReducer(INITIAL_STATE, {
     };
   },
   /**
-   * ==================================
-   * SAVE VOLATILE DATA TO EDIT MERCHANT
-   * =================================
+   * ==========================
+   * PORTFOLIO LIST
+   * ==========================
    */
-  [types.MERCHANT_EDIT_DATA_VOLATILE](state, action) {
+  [types.PORTFOLIO_GET_PROCESS](state, action) {
     return {
       ...state,
-      dataEditMerchantVolatile: {
-        vehicleAccessibilityId: action.payload.vehicleAccessibilityId
-          ? action.payload.vehicleAccessibilityId
-          : state.dataEditMerchantVolatile.vehicleAccessibilityId,
-        vehicleAccessibilityName: action.payload.vehicleAccessibilityName
-          ? action.payload.vehicleAccessibilityName
-          : state.dataEditMerchantVolatile.vehicleAccessibilityName,
-        storeTypeId: action.payload.storeTypeId
-          ? action.payload.storeTypeId
-          : state.dataEditMerchantVolatile.storeTypeId,
-        storeTypeName: action.payload.storeTypeName
-          ? action.payload.storeTypeName
-          : state.dataEditMerchantVolatile.storeTypeName,
-        storeGroupId: action.payload.storeGroupId
-          ? action.payload.storeGroupId
-          : state.dataEditMerchantVolatile.storeGroupId,
-        storeGroupName: action.payload.storeGroupName
-          ? action.payload.storeGroupName
-          : state.dataEditMerchantVolatile.storeGroupName,
-        storeClustersId: action.payload.storeClustersId
-          ? action.payload.storeClustersId
-          : state.dataEditMerchantVolatile.storeClustersId,
-        storeClustersName: action.payload.storeClustersName
-          ? action.payload.storeClustersName
-          : state.dataEditMerchantVolatile.storeClustersName,
-        storeSegmentId: action.payload.storeSegmentId
-          ? action.payload.storeSegmentId
-          : state.dataEditMerchantVolatile.storeSegmentId,
-        storeSegmentName: action.payload.storeSegmentName
-          ? action.payload.storeSegmentName
-          : state.dataEditMerchantVolatile.storeSegmentName,
-        customerHierarchiesId: action.payload.customerHierarchiesId
-          ? action.payload.customerHierarchiesId
-          : state.dataEditMerchantVolatile.customerHierarchiesId,
-        customerHierarchiesName: action.payload.customerHierarchiesName
-          ? action.payload.customerHierarchiesName
-          : state.dataEditMerchantVolatile.customerHierarchiesName
-      }
+      loadingGetPortfolio: true,
+      loadingGetMerchant: true,
+      dataGetPortfolio: null,
+      errorGetPortfolio: null
     };
   },
-  /**
-   * ==================================
-   * SAVE VOLATILE DATA TO ADD MERCHANT
-   * =================================
-   */
-  [types.MERCHANT_ADD_DATA_VOLATILE](state, action) {
+  [types.PORTFOLIO_GET_SUCCESS](state, action) {
     return {
       ...state,
-      dataAddMerchantVolatile: {
-        name: action.payload.name ? action.payload.name : '',
-        address: action.payload.address ? action.payload.address : '',
-        longitude: action.payload.longitude ? action.payload.longitude : '',
-        latitude: action.payload.latitude ? action.payload.latitude : '',
-        user: {
-          fullName: action.payload.fullName ? action.payload.fullName : '',
-          idNo: action.payload.idNo ? action.payload.idNo : '',
-          taxNo: action.payload.taxNo ? action.payload.taxNo : '',
-          phone: action.payload.phone ? action.payload.phone : '',
-          roles: [1]
-        },
-        supplier: {
-          supplierId: action.payload.supplierId
-            ? action.payload.supplierId
-            : '',
-          supplierName: action.payload.supplierName
-            ? action.payload.supplierName
-            : ''
-        },
-        detailAddress: {
-          province: action.payload.province ? action.payload.province : '',
-          city: action.payload.city ? action.payload.city : '',
-          district: action.payload.district ? action.payload.district : '',
-          urban: action.payload.urban ? action.payload.urban : ''
-        }
-      }
+      loadingGetPortfolio: false,
+      loadingGetMerchant: false,
+      dataGetPortfolio: action.payload
+    };
+  },
+  [types.PORTFOLIO_GET_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetPortfolio: false,
+      loadingGetMerchant: false,
+      errorGetPortfolio: action.payload
     };
   },
   /**
@@ -270,38 +259,11 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetMerchantDetail: false,
       dataGetMerchantDetail: action.payload,
-      dataEditMerchantVolatile: {
-        vehicleAccessibilityId:
-          action.payload.vehicleAccessibilityId !== null
-            ? action.payload.vehicleAccessibilityId
-            : '',
-        vehicleAccessibilityName:
-          action.payload.vehicleAccessibility !== null
-            ? action.payload.vehicleAccessibility.name
-            : '',
-        storeTypeId:
-          action.payload.storeTypeId !== null ? action.payload.storeTypeId : '',
-        storeTypeName:
-          action.payload.storeType !== null
-            ? action.payload.storeType.name
-            : '',
-        storeGroupId:
-          action.payload.storeGroupId !== null
-            ? action.payload.storeGroupId
-            : '',
-        storeGroupName:
-          action.payload.storeGroup !== null
-            ? action.payload.storeGroup.name
-            : '',
-        storeSegmentId:
-          action.payload.storeSegmentId !== null
-            ? action.payload.storeSegmentId
-            : '',
-        storeSegmentName:
-          action.payload.storeSegment !== null
-            ? action.payload.storeSegment.name
-            : ''
-      }
+      dataMerchantVolatile: saveDataMerchantVolatile(action.payload),
+      dataMerchantRejected:
+        action.payload.rejectedFields !== null
+          ? action.payload.rejectedFields
+          : INITIAL_STATE.dataMerchantRejected
     };
   },
   [types.MERCHANT_GET_DETAIL_FAILED](state, action) {
@@ -312,33 +274,119 @@ export const merchant = createReducer(INITIAL_STATE, {
     };
   },
   /**
-   * ==========================
-   * PORTFOLIO LIST
-   * ==========================
+   * ==================================
+   * SAVE VOLATILE DATA MERCHANT
+   * =================================
    */
-  [types.PORTFOLIO_GET_PROCESS](state, action) {
+  [types.MERCHANT_SAVE_DATA_VOLATILE](state, action) {
+    const dataUpdate = action.payload;
+    const dataPrevious = state.dataMerchantVolatile;
     return {
       ...state,
-      loadingGetPortfolio: true,
-      loadingGetMerchant: true,
-      dataGetPortfolio: null,
-      errorGetPortfolio: null
+      dataMerchantVolatile: {
+        storeId: checkData('storeId', dataUpdate, dataPrevious),
+        externalId: checkData('externalId', dataUpdate, dataPrevious),
+        /** profile information */
+        phone: checkData('phone', dataUpdate, dataPrevious),
+        fullName: checkData('fullName', dataUpdate, dataPrevious),
+        name: checkData('name', dataUpdate, dataPrevious),
+        idNo: checkData('idNo', dataUpdate, dataPrevious),
+        taxNo: checkData('taxNo', dataUpdate, dataPrevious),
+        idImageUrl: checkData('idImageUrl', dataUpdate, dataPrevious),
+        taxImageUrl: checkData('taxImageUrl', dataUpdate, dataPrevious),
+        selfieImageUrl: checkData('selfieImageUrl', dataUpdate, dataPrevious),
+        /** merchant information */
+        numberOfEmployee: checkData(
+          'numberOfEmployee',
+          dataUpdate,
+          dataPrevious
+        ),
+        largeArea: checkData('largeArea', dataUpdate, dataPrevious),
+        topSellingBrand: checkData('topSellingBrand', dataUpdate, dataPrevious),
+        mostWantedBrand: checkData('mostWantedBrand', dataUpdate, dataPrevious),
+        vehicleAccessibilityName: checkData(
+          'vehicleAccessibilityName',
+          dataUpdate,
+          dataPrevious
+        ),
+        vehicleAccessibilityId: checkData(
+          'vehicleAccessibilityId',
+          dataUpdate,
+          dataPrevious
+        ),
+        vehicleAccessibilityAmount: checkData(
+          'vehicleAccessibilityAmount',
+          dataUpdate,
+          dataPrevious
+        ),
+        warehouse: checkData('warehouse', dataUpdate, dataPrevious),
+        warehouseId: checkData('warehouseId', dataUpdate, dataPrevious),
+        /** merchant address */
+        address: checkData('address', dataUpdate, dataPrevious),
+        noteAddress: checkData('noteAddress', dataUpdate, dataPrevious),
+        longitude: checkData('longitude', dataUpdate, dataPrevious),
+        latitude: checkData('latitude', dataUpdate, dataPrevious),
+        province: checkData('province', dataUpdate, dataPrevious),
+        city: checkData('city', dataUpdate, dataPrevious),
+        district: checkData('district', dataUpdate, dataPrevious),
+        urban: checkData('urban', dataUpdate, dataPrevious),
+        zipCode: checkData('zipCode', dataUpdate, dataPrevious),
+        urbanId: checkData('urbanId', dataUpdate, dataPrevious),
+        /** merchant profile */
+        imageUrl: checkData('imageUrl', dataUpdate, dataPrevious),
+        ownerId: checkData('ownerId', dataUpdate, dataPrevious),
+        storeCode: checkData('storeCode', dataUpdate, dataPrevious),
+        phoneNo: checkData('phoneNo', dataUpdate, dataPrevious),
+        /** merchant classification */
+        storeType: checkData('storeType', dataUpdate, dataPrevious),
+        typeId: checkData('typeId', dataUpdate, dataPrevious),
+        storeGroup: checkData('storeGroup', dataUpdate, dataPrevious),
+        groupId: checkData('groupId', dataUpdate, dataPrevious),
+        storeCluster: checkData('storeCluster', dataUpdate, dataPrevious),
+        clusterId: checkData('clusterId', dataUpdate, dataPrevious),
+        storeChannel: checkData('storeChannel', dataUpdate, dataPrevious),
+        channelId: checkData('channelId', dataUpdate, dataPrevious)
+      }
     };
   },
-  [types.PORTFOLIO_GET_SUCCESS](state, action) {
+  /**
+   * ================================
+   * ADD DATA IF PHONE EXIST
+   * ================================
+   */
+  [types.CHECK_PHONE_NUMBER_AVAILABLE_SUCCESS](state, action) {
     return {
       ...state,
-      loadingGetPortfolio: false,
-      loadingGetMerchant: false,
-      dataGetPortfolio: action.payload
-    };
-  },
-  [types.PORTFOLIO_GET_FAILED](state, action) {
-    return {
-      ...state,
-      loadingGetPortfolio: false,
-      loadingGetMerchant: false,
-      errorGetPortfolio: action.payload
+      dataMerchantVolatile:
+        action.payload.store === null
+          ? INITIAL_STATE.dataMerchantVolatile
+          : saveDataMerchantVolatile(action.payload.store),
+      dataMerchantDisabledField: {
+        fullName:
+          action.payload.store !== null
+            ? action.payload.store.owner.fullName !== null
+            : false,
+        idNo:
+          action.payload.store !== null
+            ? action.payload.store.owner.idNo !== null
+            : false,
+        taxNo:
+          action.payload.store !== null
+            ? action.payload.store.owner.taxNo !== null
+            : false,
+        longLat:
+          action.payload.store !== null
+            ? action.payload.store.latitude !== null
+            : false,
+        address:
+          action.payload.store !== null
+            ? action.payload.store.address !== null
+            : false,
+        noteAddress:
+          action.payload.store !== null
+            ? action.payload.store.noteAddress !== null
+            : false
+      }
     };
   },
   /**
@@ -359,7 +407,8 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingAddMerchant: false,
       dataAddMerchant: action.payload,
-      dataAddMerchantVolatile: INITIAL_STATE.dataAddMerchantVolatile
+      dataMerchantVolatile: INITIAL_STATE.dataMerchantVolatile,
+      dataMerchantDisabledField: INITIAL_STATE.dataMerchantDisabledField
     };
   },
   [types.MERCHANT_ADD_FAILED](state, action) {
@@ -386,8 +435,13 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingEditMerchant: false,
+      dataMerchantVolatile: saveDataMerchantVolatile(action.payload),
       dataGetMerchantDetail: action.payload,
-      dataEditMerchant: action.payload
+      dataEditMerchant: action.payload,
+      dataMerchantRejected:
+        action.payload.rejectedFields !== null
+          ? action.payload.rejectedFields
+          : INITIAL_STATE.dataMerchantRejected
     };
   },
   [types.MERCHANT_EDIT_FAILED](state, action) {
@@ -531,5 +585,117 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingGetNoOrderReason: false,
       errorGetNoOrderReason: action.payload
     };
+  },
+  /**
+   * ============================
+   * GET STORE STATUS
+   * ============================
+   */
+  [types.MERCHANT_STORE_STATUS_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetStoreStatus: true,
+      dataStoreStatus: {},
+      errorGetStoreStatus: null
+    };
+  },
+  [types.MERCHANT_STORE_STATUS_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetStoreStatus: false,
+      dataStoreStatus: action.payload.data
+    };
+  },
+  [types.MERCHANT_STORE_STATUS_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetStoreStatus: false,
+      errorGetStoreStatus: action.payload
+    };
+  },
+  /**
+   * ============================
+   * GET WAREHOUSE
+   * ============================
+   */
+  [types.MERCHANT_GET_WAREHOUSE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetWarehouse: true,
+      dataGetWarehouse: [],
+      errorGetWarehouse: null
+    };
+  },
+  [types.MERCHANT_GET_WAREHOUSE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetWarehouse: false,
+      dataGetWarehouse: action.payload.data
+    };
+  },
+  [types.MERCHANT_GET_WAREHOUSE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetWarehouse: false,
+      errorGetWarehouse: action.payload
+    };
   }
 });
+/**
+ * ===========================
+ * FUNCTION SERVICE
+ * ============================
+ */
+/** === CHECK DATA UNDEFINED OR NOT === */
+function checkData(key, dataUpdate, dataPrevious) {
+  return dataUpdate[key] !== undefined ? dataUpdate[key] : dataPrevious[key];
+}
+/** === SAVE DATA VOLATILE MERCHANT === */
+function saveDataMerchantVolatile(data) {
+  return {
+    storeId: data.id,
+    externalId: data.externalId,
+    /** for owner data */
+    ownerId: data.owner.id,
+    fullName: data.owner.fullName,
+    email: data.owner.email,
+    phone: data.owner.mobilePhoneNo,
+    idNo: data.owner.idNo,
+    taxNo: data.owner.taxNo,
+    taxImageUrl: data.owner.taxImageUrl,
+    idImageUrl: data.owner.idImageUrl,
+    selfieImageUrl: data.owner.idImageUrl,
+    /** for merchant information */
+    storeCode: data.storeCode,
+    name: data.name,
+    phoneNo: data.phoneNo,
+    imageUrl: data.imageUrl,
+    /** for merchant completeness information */
+    numberOfEmployee: data.numberOfEmployee,
+    largeArea: data.largeArea,
+    topSellingBrand: data.topSellingBrand,
+    mostWantedBrand: data.mostWantedBrand,
+    vehicleAccessibilityId: data.vehicleAccessibilityId,
+    vehicleAccessibilityName:
+      data.vehicleAccessibility !== null ? data.vehicleAccessibility.name : '',
+    vehicleAccessibilityAmount: data.vehicleAccessibilityAmount,
+    warehouse: data.warehouse ? data.warehouse.name : null,
+    warehouseId: data.warehouseId,
+    /** for address */
+    address: data.address,
+    noteAddress: data.noteAddress,
+    longitude: data.longitude,
+    latitude: data.latitude,
+    urbanId: data.urbanId,
+    province: data.urban !== null ? data.urban.province.name : '',
+    city: data.urban !== null ? data.urban.city : '',
+    district: data.urban !== null ? data.urban.district : '',
+    urban: data.urban !== null ? data.urban.urban : '',
+    zipCode: data.urban !== null ? data.urban.zipCode : '',
+    /** for store clasification */
+    storeType: data.storeType ? data.storeType.name : '',
+    storeGroup: data.storeGroup ? data.storeGroup.name : '',
+    storeCluster: data.storeCluster ? data.storeCluster.name : '',
+    storeChannel: data.storeChannel ? data.storeChannel.name : ''
+  };
+}

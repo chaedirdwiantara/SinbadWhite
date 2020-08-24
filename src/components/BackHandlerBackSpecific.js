@@ -1,5 +1,9 @@
-import React, { Component } from 'react';
-import { View, BackHandler } from 'react-native';
+import {
+  React,
+  Component,
+  View,
+  BackHandler
+} from '../library/reactPackage'
 import NavigationService from '../navigation/NavigationService';
 
 class BackHandlerBackSpecific extends Component {
@@ -44,3 +48,17 @@ class BackHandlerBackSpecific extends Component {
 }
 
 export default BackHandlerBackSpecific;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

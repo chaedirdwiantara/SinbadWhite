@@ -13,6 +13,17 @@ function* getCartItem(actions) {
     yield put(ActionCreators.omsGetCartItemFailed(error));
   }
 }
+/** === CART ITEM LIST FROM CHECKOUT === */
+function* getCartItemFromCheckout(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.getCartItem(actions.payload);
+    });
+    yield put(ActionCreators.omsGetCartItemFromCheckoutSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.omsGetCartItemFromCheckoutFailed(error));
+  }
+}
 /** === CHECKOUT ITEM LIST === */
 function* getCheckoutItem(actions) {
   try {
@@ -57,13 +68,53 @@ function* getPayment(actions) {
     yield put(ActionCreators.omsGetPaymentFailed(error));
   }
 }
+/** === GET PAYMENT CHANNEL === */
+function* getPaymentChannel(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.getPaymentChannel(actions.payload);
+    });
+    yield put(ActionCreators.OmsGetPaymentChannelSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.OmsGetPaymentChannelFailed(error));
+  }
+}
+/** === GET TERMS AND CONDITIONS === */
+function* getTermsConditions(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.getTermsConditions(actions.payload);
+    });
+    yield put(ActionCreators.OmsGetTermsConditionsSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.OmsGetTermsConditionsFailed(error));
+  }
+}
+/** === LAST PAYMENT CHANNEL === */
+function* getLastPaymentChannel(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.getLastPaymentChannel(actions.payload);
+    });
+    yield put(ActionCreators.omsGetLastPaymentChannelSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.omsGetLastPaymentChannelFailed(error));
+  }
+}
 /** === SAGA FUNCTION === */
 function* OmsSaga() {
   yield takeEvery(types.OMS_GET_CART_ITEM_PROCESS, getCartItem);
+  yield takeEvery(
+    types.OMS_GET_CART_ITEM_FROM_CHECKOUT_PROCESS,
+    getCartItemFromCheckout
+  );
   yield takeEvery(types.OMS_GET_CHECKOUT_ITEM_PROCESS, getCheckoutItem);
   yield takeEvery(types.OMS_DELETE_CART_ITEM_PROCESS, deleteOrder);
   yield takeEvery(types.OMS_CONFIRM_ORDER_PROCESS, confirmOrder);
   yield takeEvery(types.OMS_GET_PAYMENT_PROCESS, getPayment);
+  yield takeEvery(types.OMS_GET_PAYMENT_CHANNEL_PROCESS, getPaymentChannel);
+  yield takeEvery(types.OMS_GET_TERMS_CONDITIONS_PROCESS, getTermsConditions);
+  yield takeEvery(types.OMS_GET_LAST_PAYMENT_CHANNEL_PROCESS, getLastPaymentChannel);
 }
 
 export default OmsSaga;

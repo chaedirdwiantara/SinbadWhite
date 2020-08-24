@@ -1,10 +1,17 @@
-import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  ComingSoon
+} from '../../library/component'
 import * as ActionCreators from '../../state/actions';
-import NavigationService from '../../navigation/NavigationService';
-import ComingSoon from '../../components/empty_state/ComingSoon';
 import masterColor from '../../config/masterColor.json';
 
 class LogView extends Component {

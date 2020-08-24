@@ -1,12 +1,19 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import { connect } from 'react-redux';
-import Text from 'react-native-text';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import Modal from 'react-native-modal';
-import masterColor from '../../config/masterColor.json';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import Fonts from '../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  connect,
+  MaterialIcon,
+  Modal
+} from '../../library/thirdPartyPackage'
+import { GlobalStyle, Fonts } from '../../helpers'
+import { Color } from '../../config'
 
 const { width, height } = Dimensions.get('window');
 
@@ -31,7 +38,7 @@ class ModalBottomWithClose extends Component {
           <TouchableOpacity style={styles.boxClose} onPress={this.props.close}>
             <MaterialIcon
               name="close"
-              color={masterColor.fontBlack50}
+              color={Color.fontBlack50}
               size={24}
             />
           </TouchableOpacity>
@@ -55,7 +62,7 @@ class ModalBottomWithClose extends Component {
         hasBackdrop={true}
         coverScreen={true}
         swipeDirection={['down']}
-        backdropColor={masterColor.fontBlack100}
+        backdropColor={Color.fontBlack100}
         backdropOpacity={0.4}
         onSwipeMove={this.props.close}
         deviceHeight={height}
@@ -84,7 +91,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     maxHeight: 0.8 * height,
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     flexDirection: 'column',
     position: 'absolute',
     width: '100%',
@@ -113,3 +120,16 @@ const mapStateToProps = ({ auth }) => {
 };
 
 export default connect(mapStateToProps)(ModalBottomWithClose);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

@@ -13,6 +13,17 @@ function* getPdp(actions) {
     yield put(ActionCreators.pdpGetFailed(error));
   }
 }
+/** GET SEARCH PDP */
+function* getSearchPdp(actions) {
+  try {
+    const response = yield call(() => {
+      return PdpMethod.getSearchPdp(actions.payload);
+    });
+    yield put(ActionCreators.pdpSearchGetSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.pdpSearchGetFailed(error));
+  }
+}
 /** GET PDP DETAIL */
 function* getDetailPdp(actions) {
   try {
@@ -27,6 +38,7 @@ function* getDetailPdp(actions) {
 
 function* PdpSaga() {
   yield takeEvery(types.PDP_GET_PROCESS, getPdp);
+  yield takeEvery(types.PDP_SEARCH_GET_PROCESS, getSearchPdp);
   yield takeEvery(types.PDP_GET_DETAIL_PROCESS, getDetailPdp);
 }
 

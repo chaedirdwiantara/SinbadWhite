@@ -1,17 +1,18 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
   ScrollView
-} from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+} from '../../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect
+} from '../../../library/thirdPartyPackage';
+import { Fonts } from '../../../helpers';
+import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
-import masterColor from '../../../config/masterColor.json';
-import Fonts from '../../../helpers/GlobalFont';
-import NavigationService from '../../../navigation/NavigationService';
 
 class MerchantDetailProfileView extends Component {
   constructor(props) {
@@ -23,36 +24,22 @@ class MerchantDetailProfileView extends Component {
    * FUNCTIONAL
    * =======================
    */
-  /** === GO TO PAGE === */
-  goTo(data) {
-    switch (data.type) {
-      case 'merchantOwnerIdNo':
-        NavigationService.navigate('MerchantEditView', {
-          title: data.title,
-          type: data.type
-        });
-        break;
-      case 'merchantOwnerTaxNo':
-        NavigationService.navigate('MerchantEditView', {
-          title: data.title,
-          type: data.type
-        });
-        break;
-      case 'merchantOwnerImageId':
-        NavigationService.navigate('MerchantEditView', {
-          title: data.title,
-          type: data.type
-        });
-        break;
-      case 'merchantOwnerImageSelfie':
-        NavigationService.navigate('MerchantEditView', {
-          title: data.title,
-          type: data.type
-        });
-        break;
-      default:
-        break;
+  /** === CHECK REJECTION === */
+  checkRejectionStatus(field) {
+    if (this.props.merchant.dataMerchantRejected[field]) {
+      return true;
     }
+    return false;
+  }
+  /** === CHECK REJECTION VALUE === */
+  checkRejectionValue(data) {
+    if (data.value) {
+      if (data.failed) {
+        return 'Gagal Verifikasi';
+      }
+      return data.value;
+    }
+    return '-';
   }
   /**
    * ========================
@@ -65,23 +52,7 @@ class MerchantDetailProfileView extends Component {
       <View style={styles.boxContent}>
         <View>
           <Text style={[Fonts.type9, { marginBottom: 6 }]}>{data.key}</Text>
-          <Text style={Fonts.type24}>{data.value ? data.value : '-'}</Text>
-        </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          {data.action === 'tambah' ? (
-            <TouchableOpacity onPress={() => this.goTo(data)}>
-              <Text style={Fonts.type22}>Tambah</Text>
-            </TouchableOpacity>
-          ) : (
-            <View />
-          )}
-          {data.action === 'ubah' ? (
-            <TouchableOpacity onPress={() => this.goTo(data)}>
-              <Text style={Fonts.type22}>Ubah</Text>
-            </TouchableOpacity>
-          ) : (
-            <View />
-          )}
+          <Text style={data.fontType}>{this.checkRejectionValue(data)}</Text>
         </View>
       </View>
     );
@@ -91,52 +62,60 @@ class MerchantDetailProfileView extends Component {
     return (
       <View>
         {this.renderContentSection({
+          key: 'Nama Lengkap Pemilik',
+          failed: this.checkRejectionStatus('fullName'),
+          fontType: this.checkRejectionStatus('fullName')
+            ? Fonts.type84
+            : Fonts.type24,
+          value: this.props.merchant.dataMerchantVolatile.fullName
+        })}
+        {this.renderContentSection({
           key: 'Nomor Handphone',
-          value: this.props.merchant.dataGetMerchantDetail.owner.mobilePhoneNo
+          fontType: Fonts.type24,
+          value: this.props.merchant.dataMerchantVolatile.phone
         })}
         {this.renderContentSection({
           key: 'Nomor Kartu Tanda Penduduk (KTP)',
-          value: this.props.merchant.dataGetMerchantDetail.owner.idNo,
-          action: this.props.merchant.dataGetMerchantDetail.owner.idNo
-            ? 'ubah'
-            : 'tambah',
-          type: 'merchantOwnerIdNo',
-          title: this.props.merchant.dataGetMerchantDetail.owner.idNo
-            ? 'Ubah KTP'
-            : 'Tambah KTP'
+          failed: this.checkRejectionStatus('idNo'),
+          fontType: this.checkRejectionStatus('idNo')
+            ? Fonts.type84
+            : Fonts.type24,
+          value: this.props.merchant.dataMerchantVolatile.idNo
         })}
         {this.renderContentSection({
           key: 'Nomor Pokok Wajib Pajak (NPWP)',
-          value: this.props.merchant.dataGetMerchantDetail.owner.taxNo,
-          action: this.props.merchant.dataGetMerchantDetail.owner.taxNo
-            ? 'ubah'
-            : 'tambah',
-          type: 'merchantOwnerTaxNo',
-          title: this.props.merchant.dataGetMerchantDetail.owner.taxNo
-            ? 'Ubah NPWP'
-            : 'Tambah NPWP'
+          failed: this.checkRejectionStatus('taxNo'),
+          fontType: this.checkRejectionStatus('taxNo')
+            ? Fonts.type84
+            : Fonts.type24,
+          value: this.props.merchant.dataMerchantVolatile.taxNo
+        })}
+        {this.renderContentSection({
+          key: 'Foto Nomor Pokok Wajib Pajak (NPWP)',
+          failed: this.checkRejectionStatus('taxImageUrl'),
+          fontType: this.checkRejectionStatus('taxImageUrl')
+            ? Fonts.type84
+            : Fonts.type98
         })}
         {this.renderContentSection({
           key: 'Foto KTP',
-          value: this.props.merchant.dataGetMerchantDetail.owner.idImageUrl
+          failed: this.checkRejectionStatus('idImageUrl'),
+          fontType: this.checkRejectionStatus('idImageUrl')
+            ? Fonts.type84
+            : Fonts.type98,
+          value: this.props.merchant.dataMerchantVolatile.idImageUrl
             ? 'Sudah diupload'
-            : '-',
-          action: this.props.merchant.dataGetMerchantDetail.owner.idImageUrl
-            ? 'ubah'
-            : 'tambah',
-          type: 'merchantOwnerImageId',
-          title: 'Foto KTP'
+            : '-'
         })}
         {this.renderContentSection({
           key: 'Foto Selfie + KTP',
-          value: this.props.merchant.dataGetMerchantDetail.owner.selfieImageUrl
+          failed: this.checkRejectionStatus('selfieImageUrl'),
+          fontType: this.checkRejectionStatus('selfieImageUrl')
+            ? Fonts.type84
+            : Fonts.type98,
+          value: this.props.merchant.dataMerchantVolatile.selfieImageUrl
             ? 'Sudah diupload'
-            : '-',
-          action: this.props.merchant.dataGetMerchantDetail.owner.selfieImageUrl
-            ? 'ubah'
-            : 'tambah',
-          type: 'merchantOwnerImageSelfie',
-          title: 'Foto Selfie + KTP'
+            : '-'
         })}
       </View>
     );
@@ -154,7 +133,7 @@ class MerchantDetailProfileView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxContent: {
     paddingHorizontal: 16,

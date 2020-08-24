@@ -1,11 +1,22 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  StyleSheet,
+  View,
+  Image,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarBlackOP40
+} from '../../library/component'
+import { Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarBlackOP40 } from '../../components/StatusBarGlobal';
 
 class ModalContentMenuAddMerchant extends Component {
   constructor(props) {
@@ -92,3 +103,16 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ModalContentMenuAddMerchant);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

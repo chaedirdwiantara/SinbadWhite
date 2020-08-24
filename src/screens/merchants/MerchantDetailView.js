@@ -1,25 +1,30 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
   ScrollView,
-  Image
-} from 'react-native';
-import Text from 'react-native-text';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import masterColor from '../../config/masterColor.json';
+  Image,
+  Text
+} from '../../library/reactPackage';
+import {
+  connect,
+  bindActionCreators,
+  MaterialIcon
+} from '../../library/thirdPartyPackage';
+import {
+  StatusBarWhite,
+  ProgressBarType1,
+  LoadingPage,
+  ButtonMenuType1
+} from '../../library/component';
+import { Color } from '../../config';
+import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarWhite } from '../../components/StatusBarGlobal';
-import ProgressBarType1 from '../../components/progress_bar/ProgressBarType1';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import { LoadingPage } from '../../components/Loading';
 import NavigationService from '../../navigation/NavigationService.js';
-import ButtonMenuType1 from '../../components/button/ButtonMenuType1';
 import CallMerchant from '../../screens/global/CallMerchant';
 
 const { width } = Dimensions.get('window');
@@ -28,7 +33,8 @@ class MerchantDetailView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openModalCallMerchant: false
+      openModalCallMerchant: false,
+      showToast: false
     };
   }
   /**
@@ -36,10 +42,9 @@ class MerchantDetailView extends Component {
    * FUNCTIONAL
    * ==============================
    */
+  /** === DID MOUNT === */
   componentDidMount() {
-    this.props.merchantGetDetailProcess(
-      this.props.navigation.state.params.storeId
-    );
+    this.props.merchantGetDetailProcess(this.props.navigation.state.params.id);
   }
   /** === COMBINE ADDRESS === */
   combineAddress(item) {
@@ -116,7 +121,7 @@ class MerchantDetailView extends Component {
         break;
       case 'merchantOrderHistory':
         NavigationService.navigate('HistoryView', {
-          storeId: this.props.merchant.dataGetMerchantDetail.id
+          storeId: this.props.merchant.dataGetMerchantDetail.storeId
         });
         break;
       default:
@@ -133,11 +138,43 @@ class MerchantDetailView extends Component {
         break;
     }
   }
+  /** === CHECK REJECTION === */
+  checkRejection(field) {
+    const data = this.props.merchant.dataMerchantRejected;
+    switch (field) {
+      case 'merchantInformation':
+        return data.name || data.imageUrl || data.phoneNo;
+      default:
+        break;
+    }
+  }
   /**
    * ==============================
    * RENDER VIEW
    * ==============================
    */
+  /** === RENDER VERIFIED ICON === */
+  renderVerifiedIcon() {
+    return this.props.merchant.dataGetMerchantDetail.approvalStatus ===
+      'rejected' ||
+      this.props.merchant.dataGetMerchantDetail.approvalStatus ===
+        'verified' ? (
+      <View style={{ paddingRight: 8 }}>
+        {this.props.merchant.dataGetMerchantDetail.approvalStatus ===
+        'rejected' ? (
+          <MaterialIcon name="cancel" color={Color.mainColor} size={24} />
+        ) : (
+          <MaterialIcon
+            name="verified-user"
+            color={Color.fontGreen50}
+            size={24}
+          />
+        )}
+      </View>
+    ) : (
+      <View />
+    );
+  }
   /** === RENDER TTILE SECTION === */
   renderTitleSection(title) {
     return (
@@ -182,13 +219,13 @@ class MerchantDetailView extends Component {
               source={{
                 uri: this.props.merchant.dataGetMerchantDetail.imageUrl
               }}
-              style={styles.imageHeader}
+              style={{ width: '100%', height: 169 }}
             />
           ) : (
             <View
               style={{
                 height: 169,
-                backgroundColor: masterColor.fontBlack05,
+                backgroundColor: Color.fontBlack05,
                 justifyContent: 'center',
                 alignItems: 'center'
               }}
@@ -207,13 +244,17 @@ class MerchantDetailView extends Component {
             width: 0.8 * width
           }}
         >
-          <Text style={Fonts.type7}>
-            {this.props.merchant.dataGetMerchantDetail.externalId
-              ? this.props.merchant.dataGetMerchantDetail.externalId
-              : this.props.merchant.dataGetMerchantDetail.storeCode
-              ? this.props.merchant.dataGetMerchantDetail.storeCode
-              : '-'}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {this.renderVerifiedIcon()}
+            <Text style={Fonts.type7}>
+              {this.props.merchant.dataGetMerchantDetail.externalId
+                ? this.props.merchant.dataGetMerchantDetail.externalId
+                : this.props.merchant.dataGetMerchantDetail.storeCode
+                ? this.props.merchant.dataGetMerchantDetail.storeCode
+                : '-'}
+            </Text>
+          </View>
+
           <Text style={Fonts.type7}>
             {this.props.merchant.dataGetMerchantDetail.name}
           </Text>
@@ -302,6 +343,7 @@ class MerchantDetailView extends Component {
         </View>
         <ButtonMenuType1
           child
+          notification={this.checkRejection('merchantInformation')}
           title={'Informasi Toko'}
           onPress={() => this.goTo('merchantInformation')}
         />
@@ -360,6 +402,7 @@ class MerchantDetailView extends Component {
    * MODAL
    * =====================
    */
+
   /** MODAL CALL */
   renderModalCallMerchant() {
     return this.state.openModalCallMerchant ? (
@@ -399,10 +442,10 @@ class MerchantDetailView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     marginBottom: 16,
     paddingVertical: 6
   },
@@ -447,3 +490,16 @@ const mapDispatchToProps = dispatch => {
 };
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(MerchantDetailView);
+
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

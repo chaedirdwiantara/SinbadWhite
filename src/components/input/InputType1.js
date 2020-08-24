@@ -1,7 +1,14 @@
-import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import {
+  React,
+  Component,
+  View,
+  TextInput,
+  StyleSheet,
+  Text
+} from '../../library/reactPackage'
+import { Fonts } from '../../helpers'
+import { Color } from '../../config'
 import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
 
 class InputType1 extends Component {
   constructor(props) {
@@ -36,9 +43,9 @@ class InputType1 extends Component {
           <TextInput
             editable={this.props.editable}
             value={this.props.value}
-            selectionColor={masterColor.mainColor}
+            selectionColor={Color.mainColor}
             placeholder={this.props.placeholder}
-            placeholderTextColor={masterColor.fontBlack40}
+            placeholderTextColor={Color.fontBlack40}
             onChangeText={this.props.text}
             keyboardType={this.props.keyboardType}
             maxLength={this.props.maxLength}
@@ -47,8 +54,8 @@ class InputType1 extends Component {
               styles.input,
               {
                 borderBottomColor: this.props.error
-                  ? masterColor.fontRed50
-                  : masterColor.fontBlack40
+                  ? Color.fontRed50
+                  : Color.fontBlack40
               }
             ]}
           />
@@ -59,8 +66,8 @@ class InputType1 extends Component {
             justifyContent: 'center',
             borderBottomWidth: 1,
             borderBottomColor: this.props.error
-              ? masterColor.fontRed50
-              : masterColor.fontBlack40
+              ? Color.fontRed50
+              : Color.fontBlack40
           }}
         >
           <Text style={Fonts.type24}>{this.props.rightText}</Text>
@@ -97,7 +104,7 @@ class InputType1 extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
     paddingHorizontal: 16
@@ -116,7 +123,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingHorizontal: 0,
     paddingVertical: 0,
-    borderBottomColor: masterColor.fontBlack40
+    borderBottomColor: Color.fontBlack40
   },
   spacing: {
     marginBottom: 12
@@ -124,3 +131,16 @@ const styles = StyleSheet.create({
 });
 
 export default InputType1;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

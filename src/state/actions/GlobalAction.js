@@ -15,9 +15,12 @@ export function saveDataManualInputLocation(data) {
     payload: data
   };
 }
-/** === SAVE TO LONGLAT === */
-export function saveManualToLongLat(data) {
-  return { type: types.GLOBAL_LONGLAT_TO_ADDRESS_SUCCESS, payload: data };
+/** === SAVE MANUAL INPUT LOCATION TO LONG LAT INPUT  */
+export function saveDataManualInputLocationToLongLat(data) {
+  return {
+    type: types.GLOBAL_LONGLAT_TO_ADDRESS_SUCCESS,
+    payload: data
+  };
 }
 /**
  * ==============================
@@ -83,6 +86,34 @@ export function listAndSearchGetReset() {
 /** === LOAD MORE GET LOCATION === */
 export function listAndSearchGetLoadMore(page) {
   return { type: types.LIST_AND_SEARCH_GET_LOADMORE, payload: page };
+}
+/**
+ * =========================
+ * GET URBAN ID
+ * =========================
+ */
+/** === GET URBAN ID PROCESS === */
+export function getUrbanIdProcess(data) {
+  return { type: types.GET_URBAN_ID_PROCESS, payload: data };
+}
+/** === GET URBAN ID SUCCESS === */
+export function getUrbanIdSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.GET_URBAN_ID_SUCCESS, payload: data.data };
+  }
+  return { type: types.GET_URBAN_ID_FAILED, payload: data };
+}
+/** === GET URBAN ID FAILED === */
+export function getUrbanIdFailed(data) {
+  return { type: types.GET_URBAN_ID_FAILED, payload: data };
+}
+/**
+ * =========================
+ * CLEAR DATA GET URBAN ID
+ * =========================
+ */
+export function clearDataGetUrbanId() {
+  return { type: types.GET_URBAN_ID_SUCCESS, payload: { data: null } };
 }
 /**
  * =========================

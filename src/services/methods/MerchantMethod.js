@@ -1,16 +1,19 @@
 import ApiRest from '../apiRest';
+import { GlobalMethod } from './GlobalMethod';
 
 /** === MERCHANT LIST === */
 function getMerchant(data) {
   return ApiRest({
-    path: `portfolio-lists?type=${data.type}&portfolioId=${data.portfolioId}&$skip=${data.page}&$limit=10&keyword=${data.search}`,
+    path: `agent-stores?type=${data.type}&portfolioId=${
+      data.portfolioId
+    }&$skip=${data.page}&$limit=10&keyword=${data.search}`,
     method: 'GET'
   });
 }
 /** === MERCHANT DETAIL === */
-function getMerchantDetail(storeId) {
+function getMerchantDetail(id) {
   return ApiRest({
-    path: `agent-stores/${storeId}`,
+    path: `supplier-store-profile/${id}`,
     method: 'GET'
   });
 }
@@ -32,7 +35,7 @@ function addMerchant(params) {
 /** === EDIT MERCHANT === */
 function editMerchant(data) {
   return ApiRest({
-    path: `agent-stores/${data.storeId}`,
+    path: `supplier-store-profile/${data.id}`,
     method: 'PATCH',
     params: data.params
   });
@@ -62,7 +65,9 @@ function getLogAllActivity(journeyPlanSaleId) {
 /** === GET LOG PER ACTIVITY === */
 function getLogPerActivity(data) {
   return ApiRest({
-    path: `journey-plan-sale-logs?journeyPlanSaleId=${data.journeyPlanSaleId}&activity=${data.activity}&$limit=1&$skip=0&sort=asc&sortby=created_at`,
+    path: `journey-plan-sale-logs?journeyPlanSaleId=${
+      data.journeyPlanSaleId
+    }&activity=${data.activity}&$limit=1&$skip=0&sort=asc&sortby=created_at`,
     method: 'GET'
   });
 }
@@ -70,6 +75,26 @@ function getLogPerActivity(data) {
 function getNoOrderReason() {
   return ApiRest({
     path: 'no-order-reasons',
+    method: 'GET'
+  });
+}
+/** === GET STORE STATUS === */
+function getStoreStatus() {
+  return ApiRest({
+    path: 'store-status',
+    method: 'POST',
+    params: {
+      storeId: GlobalMethod.merchantStoreId(),
+      supplierId: GlobalMethod.userSupplierMapping()
+    }
+  });
+}
+/** GET WAREHOUSE */
+function getWarehouse(urbanId) {
+  return ApiRest({
+    path: `warehouses?supplierIds=${JSON.stringify(
+      GlobalMethod.userSupplierMapping()
+    )}&urbanId=${parseInt(urbanId, 10)}`,
     method: 'GET'
   });
 }
@@ -84,5 +109,23 @@ export const MerchantMethod = {
   postActivity,
   getLogAllActivity,
   getLogPerActivity,
-  getNoOrderReason
+  getNoOrderReason,
+  getStoreStatus,
+  getWarehouse
 };
+
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: tatas
+ * updatedDate: 01072020
+ * updatedFunction:
+ * -> add fucntion to get store status
+ * updatedBy: tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Change global method to get userId and supplierId
+ */

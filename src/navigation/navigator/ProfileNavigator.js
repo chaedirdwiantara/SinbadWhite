@@ -11,7 +11,7 @@ const ProfileNavigator = {
     navigationOptions: {
       headerTitle: 'Data Diri',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -29,7 +29,7 @@ const ProfileNavigator = {
     navigationOptions: {
       headerTitle: 'Ubah Nama',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1

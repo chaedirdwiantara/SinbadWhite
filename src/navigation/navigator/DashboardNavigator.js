@@ -10,7 +10,7 @@ const DashboardNavigator = {
     navigationOptions: {
       headerTitle: 'Dashboard',
       headerTitleStyle: [
-        GlobalFont.type5,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1

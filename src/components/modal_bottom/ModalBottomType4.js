@@ -1,13 +1,21 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import { connect } from 'react-redux';
-import Text from 'react-native-text';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import Modal from 'react-native-modal';
-import masterColor from '../../config/masterColor.json';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import Fonts from '../../helpers/GlobalFont';
-import ButtonSingle from '../../components/button/ButtonSingle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  MaterialIcon,
+  Modal
+} from '../../library/thirdPartyPackage'
+import {
+  ButtonSingle
+} from '../../library/component'
+import { Color } from '../../config'
+import { Fonts } from '../../helpers'
 
 const { width, height } = Dimensions.get('window');
 
@@ -46,13 +54,13 @@ class ModalBottomType4 extends Component {
             {this.props.typeClose === 'cancel' ? (
               <MaterialIcon
                 name="close"
-                color={masterColor.fontBlack50}
+                color={Color.fontBlack50}
                 size={24}
               />
             ) : (
               <MaterialIcon
                 name="keyboard-arrow-left"
-                color={masterColor.fontBlack50}
+                color={Color.fontBlack50}
                 size={32}
               />
             )}
@@ -76,7 +84,7 @@ class ModalBottomType4 extends Component {
         useNativeDriver={true}
         hasBackdrop={true}
         coverScreen={true}
-        backdropColor={masterColor.fontBlack100}
+        backdropColor={Color.fontBlack100}
         backdropOpacity={0.4}
         deviceHeight={height}
         style={styles.mainContainer}
@@ -105,7 +113,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     maxHeight: 0.8 * height,
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     flexDirection: 'column',
     position: 'absolute',
     width: '100%',
@@ -130,3 +138,17 @@ const styles = StyleSheet.create({
 });
 
 export default ModalBottomType4;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

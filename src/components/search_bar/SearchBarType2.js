@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
-  Text,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
   TextInput,
   Keyboard
-} from 'react-native';
-import { connect } from 'react-redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
+} from '../../library/reactPackage'
+import {
+  connect,
+  MaterialIcon
+} from '../../library/thirdPartyPackage'
+import { GlobalStyle, Fonts } from '../../helpers'
+import { Color } from '../../config'
 
 /**
  * =====================
@@ -53,7 +53,7 @@ class SearchBarType2 extends Component {
     return (
       <View style={{ paddingHorizontal: 11 }}>
         <MaterialIcon
-          color={masterColor.fontBlack60}
+          color={Color.fontBlack60}
           name={'search'}
           size={24}
         />
@@ -68,7 +68,7 @@ class SearchBarType2 extends Component {
         onPress={() => this.clearSearch()}
       >
         <MaterialIcon
-          color={masterColor.fontBlack60}
+          color={Color.fontBlack60}
           name={'cancel'}
           size={24}
         />
@@ -82,13 +82,13 @@ class SearchBarType2 extends Component {
     return (
       <View style={{ flex: 1 }}>
         <TextInput
-          selectionColor={masterColor.mainColor}
+          selectionColor={Color.mainColor}
           onEndEditing={() => this.searchText()}
           value={this.state.search}
           returnKeyType={'search'}
           placeholder={'Cari nama / id toko disini'}
           onChangeText={search => this.setState({ search })}
-          style={[Fonts.type8, styles.inputBox]}
+          style={[Fonts.textInputSearch, styles.inputBox]}
         />
       </View>
     );
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     height: 41,
     borderRadius: 4,
     alignItems: 'center',
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     flexDirection: 'row'
   },
   inputBox: {
@@ -132,3 +132,17 @@ const mapStateToProps = ({}) => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, {})(SearchBarType2);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

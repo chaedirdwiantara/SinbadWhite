@@ -1,28 +1,34 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   SafeAreaView,
   StyleSheet,
   Keyboard,
   ScrollView
-} from 'react-native';
-import Text from 'react-native-text';
+} from '../../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect,
+  MaterialCommunityIcons
+} from '../../../library/thirdPartyPackage';
+import {
+  ButtonSingle,
+  StatusBarWhite,
+  InputType4,
+  ProgressBarType1
+} from '../../../library/component';
+import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import * as ActionCreators from '../../../state/actions';
-import ButtonSingle from '../../../components/button/ButtonSingle';
-import { StatusBarWhite } from '../../../components/StatusBarGlobal';
-import masterColor from '../../../config/masterColor';
-import ProgressBarType1 from '../../../components/progress_bar/ProgressBarType1';
-import InputType1 from '../../../components/input/InputType1';
 
 class AddMerchantStep1 extends Component {
   constructor(props) {
     super(props);
     this.state = {
       phoneNumber: '',
-      errorText: 'No. HP yang anda masukan salah',
+      errorPhoneNumber: false,
+      errorText: '',
       correctFormatPhoneNumber: true
     };
   }
@@ -40,7 +46,7 @@ class AddMerchantStep1 extends Component {
     ) {
       if (this.props.auth.dataCheckPhoneAvailble !== null) {
         NavigationService.navigate('AddMerchantStep2');
-        this.props.saveVolatileDataAddMerchant({
+        this.props.saveVolatileDataMerchant({
           phone: this.state.phoneNumber
         });
       }
@@ -52,11 +58,22 @@ class AddMerchantStep1 extends Component {
     ) {
       if (this.props.auth.errorCheckPhoneAvailble !== null) {
         this.setState({
-          correctFormatPhoneNumber: false,
-          errorText: 'No. HP yang anda masukan sudah terdaftar'
+          errorPhoneNumber: true,
+          correctFormatPhoneNumber: true,
+          errorText: this.checkErrorMessage(
+            this.props.auth.errorCheckPhoneAvailble
+          )
         });
       }
     }
+  }
+  /** === DID UPDATE FUNCTION === */
+  /** === CHECK ERROR MESSAGE === */
+  checkErrorMessage(error) {
+    if (error.code === 400) {
+      return 'No. HP yang anda masukan sudah terdaftar';
+    }
+    return 'Terjadi kesalahan server, silahkan coba lagi';
   }
   /** === PHONE NUMBER MODIFY === */
   checkPhone() {
@@ -66,6 +83,12 @@ class AddMerchantStep1 extends Component {
     let checkFormat = reg.test(this.state.phoneNumber);
     if (!checkFormat) {
       checkFormat = regPhone.test(this.state.phoneNumber);
+      if (!checkFormat) {
+        this.setState({
+          errorPhoneNumber: true,
+          errorText: 'Format No. HP yang anda masukkan salah'
+        });
+      }
     }
     this.setState({
       correctFormatPhoneNumber: checkFormat
@@ -79,22 +102,46 @@ class AddMerchantStep1 extends Component {
    * RENDER VIEW
    * ===================
    */
-  /** === RENDER CONTENT === */
-  renderContent() {
+  /** === RENDER INPUT PHONE NUMBER === */
+  renderInputPhoneNumber() {
     return (
       <View style={{ flex: 1, marginTop: 20 }}>
-        <InputType1
+        <InputType4
           title={'Nomor Handphone'}
-          placeholder={'Masukkan Nomor Handphone'}
-          keyboardType={'numeric'}
-          text={text =>
+          error={this.state.errorPhoneNumber}
+          errorText={this.state.errorText}
+          value={this.state.phoneNumber}
+          onChangeText={phoneNumber => {
+            const cleanNumber = phoneNumber.replace(/[^0-9]/g, '');
             this.setState({
-              phoneNumber: text,
-              correctFormatPhoneNumber: true
+              phoneNumber: cleanNumber,
+              errorPhoneNumber: false
+            });
+          }}
+          placeholder={'Masukan nomor handphone anda'}
+          keyboardType={'numeric'}
+          maxLength={13}
+          suffix
+          suffixForPush
+          suffixPush={() =>
+            this.setState({
+              phoneNumber: '',
+              errorPhoneNumber: false,
+              correctFormatPhoneNumber: false
             })
           }
-          error={!this.state.correctFormatPhoneNumber}
-          errorText={this.state.errorText}
+          suffixContent={
+            this.state.phoneNumber !== '' ? (
+              <MaterialCommunityIcons
+                color={Color.fontBlack60}
+                name={'close-circle'}
+                size={20}
+              />
+            ) : (
+              <View />
+            )
+          }
+          marginBottom={30}
         />
       </View>
     );
@@ -105,10 +152,11 @@ class AddMerchantStep1 extends Component {
       <ButtonSingle
         disabled={
           this.state.phoneNumber === '' ||
-          this.props.auth.loadingCheckPhoneAvailble
+          this.props.auth.loadingCheckPhoneAvailble ||
+          this.state.errorPhoneNumber
         }
         loading={this.props.auth.loadingCheckPhoneAvailble}
-        title={'Lanjutnya'}
+        title={'Lanjutkan'}
         borderRadius={4}
         onPress={() => this.checkPhone()}
       />
@@ -119,7 +167,7 @@ class AddMerchantStep1 extends Component {
     return (
       <View style={{ paddingTop: 20 }}>
         <ProgressBarType1
-          totalStep={2}
+          totalStep={4}
           currentStep={1}
           title={'Langkah melengkapi profil'}
         />
@@ -133,7 +181,7 @@ class AddMerchantStep1 extends Component {
         <StatusBarWhite />
         <ScrollView>
           {this.renderProgressHeader()}
-          {this.renderContent()}
+          {this.renderInputPhoneNumber()}
         </ScrollView>
 
         {this.renderButton()}
@@ -145,7 +193,7 @@ class AddMerchantStep1 extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   }
 });
 

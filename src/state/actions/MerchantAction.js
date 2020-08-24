@@ -12,8 +12,8 @@ export function merchantSelected(data) {
  * SAVE VOLATILE DATA TO ADD MERCHANT
  * =================================
  */
-export function saveVolatileDataAddMerchant(data) {
-  return { type: types.MERCHANT_ADD_DATA_VOLATILE, payload: data };
+export function saveVolatileDataMerchant(data) {
+  return { type: types.MERCHANT_SAVE_DATA_VOLATILE, payload: data };
 }
 /**
  * ==================================
@@ -260,4 +260,44 @@ export function merchantGetNoOrderReasonSuccess(data) {
 /** === MERCHANT GET DETAIL FAILED === */
 export function merchantGetNoOrderReasonFailed(data) {
   return { type: types.MERCHANT_NO_ORDER_REASON_GET_FAILED, payload: data };
+}
+/**
+ * =====================================
+ * GET STORE STATUS
+ * =====================================
+ */
+export function merchantGetStoreStatusProcess(data){
+  return { type: types.MERCHANT_STORE_STATUS_PROCESS, payload: data}
+}
+export function merchantGetStoreStatusSuccess(data){
+  if (data.result === 'Ok'){
+    return {
+      type: types.MERCHANT_STORE_STATUS_SUCCESS,
+      payload: data
+    }
+  }
+  return { type: types.MERCHANT_STORE_STATUS_FAILED, payload: data }
+}
+export function merchantGetStoreStatusFailed(data){
+  return { type: types.MERCHANT_STORE_STATUS_FAILED, payload: data }
+}
+/**
+ * ===========================================
+ * GET WAREHOSUE
+ * ===========================================
+ */
+export function merchantGetWarehouseProcess(data){
+  return { type: types.MERCHANT_GET_WAREHOUSE_PROCESS, payload: data}
+}
+export function merchantGetWarehouseSuccess(data){
+  if (data.result === 'Ok'){
+    return {
+      type: types.MERCHANT_GET_WAREHOUSE_SUCCESS,
+      payload: data
+    }
+  }
+  return { type: types.MERCHANT_GET_WAREHOUSE_FAILED, payload: data}
+}
+export function merchantGetWarehouseFailed(data){
+  return { type: types.MERCHANT_GET_WAREHOUSE_FAILED, payload: data}
 }

@@ -11,7 +11,7 @@ const OmsNavigator = {
     navigationOptions: {
       headerTitle: 'Keranjang',
       headerTitleStyle: [
-        GlobalFont.type35,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1
@@ -30,7 +30,7 @@ const OmsNavigator = {
     navigationOptions: {
       headerTitle: 'Checkout',
       headerTitleStyle: [
-        GlobalFont.type35,
+        GlobalFont.textHeaderPage,
         {
           textAlign: 'center',
           flex: 1

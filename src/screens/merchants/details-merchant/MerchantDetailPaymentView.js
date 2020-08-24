@@ -1,12 +1,21 @@
-import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {
+  React,
+  Component,
+  View,
+  ScrollView,
+  StyleSheet,
+  Text
+} from '../../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../../library/thirdPartyPackage'
+import {
+  EmptyData
+} from '../../../library/component'
+import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers'
+import { Color } from '../../../config'
 import * as ActionCreators from '../../../state/actions';
-import GlobalStyle from '../../../helpers/GlobalStyle';
-import masterColor from '../../../config/masterColor.json';
-import { MoneyFormat } from '../../../helpers/NumberFormater';
-import Fonts from '../../../helpers/GlobalFont';
 
 class MerchantDetailProfileView extends Component {
   constructor(props) {
@@ -42,9 +51,9 @@ class MerchantDetailProfileView extends Component {
       </View>
     );
   }
-  /** === RENDER CONTENT === */
-  renderContent() {
-    return this.props.merchant.dataGetMerchantDetail.creditLimitStores.map(
+  /** === RENDER PAYMENT LIST === */
+  renderPaymentList() {
+    return this.props.merchant.dataGetMerchantDetail.store.creditLimitStores.map(
       (item, index) => {
         return (
           <View
@@ -74,14 +83,27 @@ class MerchantDetailProfileView extends Component {
       }
     );
   }
+  /** === RENDER EMPTY === */
+  renderEmpty() {
+    return <EmptyData title={'Tidak ada list faktur'} description={''} />;
+  }
+  /** === RENDER CONTENT === */
+  renderContent() {
+    return (
+      <ScrollView>
+        {this.renderPaymentList()}
+        <View style={{ paddingBottom: 50 }} />
+      </ScrollView>
+    );
+  }
   /** === MAIN === */
   render() {
     return (
       <View style={styles.mainContainer}>
-        <ScrollView>
-          {this.renderContent()}
-          <View style={{ paddingBottom: 50 }} />
-        </ScrollView>
+        {this.props.merchant.dataGetMerchantDetail.store.creditLimitStores
+          .length > 0
+          ? this.renderContent()
+          : this.renderEmpty()}
       </View>
     );
   }
@@ -90,10 +112,10 @@ class MerchantDetailProfileView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   contentContainer: {
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     marginBottom: 16,
     paddingVertical: 6
   },
@@ -117,3 +139,17 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(MerchantDetailProfileView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

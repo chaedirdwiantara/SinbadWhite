@@ -1,29 +1,32 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   Text,
   Dimensions,
   TouchableOpacity
-} from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import MapView, { Marker } from 'react-native-maps';
-import Geolocation from '@react-native-community/geolocation';
-import OpenAppSettings from 'react-native-app-settings';
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon,
+  MapView,
+  Marker,
+  Geolocation,
+  OpenAppSettings
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarWhite,
+  SearchBarType3,
+  LoadingPage,
+  Address,
+  ErrorPageNoGPS
+} from '../../library/component'
+import { Color } from '../../config'
+import { GlobalStyle, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
-import ComingSoon from '../../components/empty_state/ComingSoon';
-import masterColor from '../../config/masterColor.json';
-import { StatusBarWhite } from '../../components/StatusBarGlobal';
-import SearchBarType3 from '../../components/search_bar/SearchBarType3';
-import GlobalStyles from '../../helpers/GlobalStyle';
-import ButtonSingle from '../../components/button/ButtonSingle';
-import { LoadingPage } from '../../components/Loading';
-import Address from '../../components/Address';
-import Fonts from '../../helpers/GlobalFont';
-import ErrorPageNoGPS from '../../components/error/ErrorPageNoGPS';
 
 const { height } = Dimensions.get('window');
 
@@ -60,10 +63,7 @@ class MerchantDetailMapView extends Component {
   };
   getCurrentLocation() {
     this.setState({ reRender: true });
-    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
-      timeout: 50000,
-      maximumAge: 1000
-    });
+    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
   }
   addLongLat() {
     this.props.saveLocationDataVolatile({
@@ -151,14 +151,14 @@ class MerchantDetailMapView extends Component {
     return (
       <View style={styles.containerHeaderLeft}>
         <TouchableOpacity
-          style={[styles.boxButton, GlobalStyles.shadow]}
+          style={[styles.boxButton, GlobalStyle.shadow]}
           onPress={() =>
             NavigationService.goBack(this.props.navigation.state.key)
           }
         >
           <MaterialIcon
             name="arrow-back"
-            color={masterColor.fontBlack80}
+            color={Color.fontBlack80}
             size={24}
           />
         </TouchableOpacity>
@@ -169,12 +169,12 @@ class MerchantDetailMapView extends Component {
     return (
       <View style={styles.containerHeaderRight}>
         <TouchableOpacity
-          style={[styles.boxButton, GlobalStyles.shadow]}
+          style={[styles.boxButton, GlobalStyle.shadow]}
           onPress={() => this.getCurrentLocation()}
         >
           <MaterialIcon
             name="near-me"
-            color={masterColor.fontBlue50}
+            color={Color.fontBlue50}
             size={24}
           />
         </TouchableOpacity>
@@ -251,7 +251,7 @@ class MerchantDetailMapView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   containerHeaderLeft: {
     justifyContent: 'center',
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
     zIndex: 1000
   },
   boxButton: {
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 20,
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 50,
     paddingTop: 30,
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     position: 'absolute',
     width: '100%',
     bottom: 0
@@ -307,3 +307,17 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(MerchantDetailMapView);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

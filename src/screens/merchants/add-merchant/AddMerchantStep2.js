@@ -1,47 +1,48 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   SafeAreaView,
   StyleSheet,
   ScrollView,
   Keyboard
-} from 'react-native';
+} from '../../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect
+} from '../../../library/thirdPartyPackage';
+import {
+  ButtonSingle,
+  StatusBarWhite,
+  ProgressBarType1,
+  InputType2,
+  InputType4,
+  InputMapsType1
+} from '../../../library/component';
+import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import * as ActionCreators from '../../../state/actions';
-import ButtonSingle from '../../../components/button/ButtonSingle';
-import { StatusBarWhite } from '../../../components/StatusBarGlobal';
-import masterColor from '../../../config/masterColor';
-import ProgressBarType1 from '../../../components/progress_bar/ProgressBarType1';
-import DropdownType1 from '../../../components/input/DropdownType1';
-import InputType2 from '../../../components/input/InputType2';
-import InputType1 from '../../../components/input/InputType1';
-import InputMapsType1 from '../../../components/input/InputMapsType1';
-import ModalBottomErrorResponsWhite from '../../../components/error/ModalBottomErrorResponsWhite';
+import ModalBottomErrorRespons from '../../../components/error/ModalBottomErrorRespons';
 
 class AddMerchantStep2 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fullName: this.props.merchant.dataAddMerchantVolatile.user.fullName,
-      name: this.props.merchant.dataAddMerchantVolatile.name,
-      phone: this.props.merchant.dataAddMerchantVolatile.user.phone,
-      supplier:
-        this.props.user.userSuppliers.length === 1
-          ? this.props.user.userSuppliers[0].supplier.id
-          : this.props.merchant.dataAddMerchantVolatile.supplier.supplierId,
+      /** error */
+      errorIdNumber: false,
+      errorTaxNumber: false,
+      openErrorAddMerchant: false,
+      addStoreProcess: false,
+      /** supplier */
       supplierName:
         this.props.user.userSuppliers.length === 1
           ? this.props.user.userSuppliers[0].supplier.name
-          : this.props.merchant.dataAddMerchantVolatile.supplier.supplierName,
-      idNo: this.props.merchant.dataAddMerchantVolatile.user.idNo,
-      taxNo: this.props.merchant.dataAddMerchantVolatile.user.taxNo,
-      address: this.props.merchant.dataAddMerchantVolatile.address,
-      longitude: this.props.global.longitude,
-      latitude: this.props.global.latitude,
-      refreshLocation: false,
-      openErrorAddMerchant: false
+          : '',
+      /** field data */
+      fullName: this.props.merchant.dataMerchantVolatile.fullName,
+      name: this.props.merchant.dataMerchantVolatile.name,
+      idNo: this.props.merchant.dataMerchantVolatile.idNo,
+      taxNo: this.props.merchant.dataMerchantVolatile.taxNo
     };
   }
   /**
@@ -49,104 +50,49 @@ class AddMerchantStep2 extends Component {
    * FUNCTIONAL
    * =====================
    */
-  /** DID UPDATE */
-  componentDidUpdate(prevProps) {
-    /** IF ADD MERCHANT SUCCESS */
-    if (
-      prevProps.merchant.dataAddMerchant !== this.props.merchant.dataAddMerchant
-    ) {
-      if (this.props.merchant.dataAddMerchant !== null) {
-        switch (this.props.global.pageAddMerchantFrom) {
-          case 'MerchantView':
-            this.props.merchantGetReset();
-            this.props.merchantGetProcess({
-              type: 'direct',
-              page: 0,
-              loading: true,
-              portfolioId: '',
-              search: ''
-            });
-            break;
-          case 'JourneyView':
-            this.props.journeyPlanGetReset();
-            this.props.journeyPlanGetProcess({ page: 0, loading: true });
-            this.props.getJourneyPlanReportProcess(
-              this.props.user.userSuppliers.map(item => item.supplierId)
-            );
-            break;
-
-          default:
-            break;
-        }
-        NavigationService.navigate(this.props.global.pageAddMerchantFrom);
-      }
-    }
-    /** IF ERROR ADD MERCHANT */
-    if (
-      prevProps.merchant.errorAddMerchant !==
-      this.props.merchant.errorAddMerchant
-    ) {
-      if (this.props.merchant.errorAddMerchant !== null) {
-        this.setState({ openErrorAddMerchant: true });
-      }
-    }
-    /** UPDATE LONGLAT */
-    if (
-      prevProps.global.longitude !== this.props.global.longitude ||
-      prevProps.global.latitude !== this.props.global.latitude
-    ) {
-      this.setState({ refreshLocation: true });
-      setTimeout(() => {
-        this.setState({ refreshLocation: false });
-      }, 100);
-    }
-  }
   /** SEND DATA ADD MERCHANT */
-  finalStep() {
+  nextStep() {
+    this.setState({ addStoreProcess: true });
     Keyboard.dismiss();
-    this.props.saveVolatileDataAddMerchant({
+    this.props.saveVolatileDataMerchant({
       fullName: this.state.fullName,
       name: this.state.name,
-      supplierId: this.state.supplier,
-      supplierName: this.state.supplierName,
       idNo: this.state.idNo,
-      taxNo: this.state.taxNo,
-      phone: this.state.phone,
-      address: this.state.address,
-      longitude: this.props.global.longitude,
-      latitude: this.props.global.latitude,
-      province: this.props.global.dataGlobalLongLatToAddress.province,
-      city: this.props.global.dataGlobalLongLatToAddress.city,
-      district: this.props.global.dataGlobalLongLatToAddress.district,
-      urban: this.props.global.dataGlobalLongLatToAddress.urban
+      taxNo: this.state.taxNo
     });
     setTimeout(() => {
-      this.props.merchantAddProcess(
-        this.props.merchant.dataAddMerchantVolatile
-      );
+      this.setState({ addStoreProcess: false });
+      NavigationService.navigate('AddMerchantStep3')
     }, 100);
-  }
-  /** GO TO DROPDOWN LIST */
-  goToDropdown(data) {
-    NavigationService.navigate('ListAndSearchType1', {
-      placeholder: data.placeholder,
-      type: data.type
-    });
   }
   /** disable button */
   buttonDisable() {
     return (
-      this.state.fullName !== '' &&
-      this.state.name !== '' &&
-      this.state.supplier !== '' &&
-      this.state.address !== '' &&
-      this.props.global.longitude !== '' &&
-      this.props.global.latitude !== ''
+      this.state.fullName === null ||
+      this.state.name === null ||
+      this.state.idNo === null ||
+      this.state.taxNo === null ||
+      this.state.errorIdNumber ||
+      this.state.errorTaxNumber
     );
   }
-  /** GO TO MAPS */
-  goToMaps() {
-    NavigationService.navigate('MapsView');
+  /** === CHECK ID NUMBER FORMAT === */
+  checkIdNoFormat(idNumber) {
+    this.setState({ idNo: idNumber === '' ? null : idNumber });
+    if (idNumber === '' || idNumber.length === 16) {
+      this.setState({ errorIdNumber: false });
+    } else {
+      this.setState({ errorIdNumber: true });
+    }
+  }
+  /** === CHECK TAX NUMBER FORMAT === */
+  checkTaxNoFormat(taxNumber) {
+    this.setState({ taxNo: taxNumber === '' ? null : taxNumber });
+    if (taxNumber === '' || taxNumber.length === 15) {
+      this.setState({ errorTaxNumber: false });
+    } else {
+      this.setState({ errorTaxNumber: true });
+    }
   }
   /**
    * ====================
@@ -158,126 +104,96 @@ class AddMerchantStep2 extends Component {
     return (
       <View style={{ paddingTop: 20 }}>
         <ProgressBarType1
-          totalStep={2}
+          totalStep={4}
           currentStep={2}
           title={'Langkah melengkapi profil'}
         />
       </View>
     );
   }
-  /** === RENDER CONTENT === */
-  /** owner name */
+  /** === OWNER NAME === */
   renderNameOwner() {
     return (
-      <InputType1
-        title={'*Nama Lengkap Pemilik'}
+      <InputType4
+        editable={!this.props.merchant.dataMerchantDisabledField.fullName}
+        title={'*Nama Pemilik Toko'}
         value={this.state.fullName}
-        placeholder={'Nama Lengkap Pemilik'}
+        onChangeText={fullName => {
+          const cleanNameFormat = fullName.replace(/[^\w\s]|[0-9]|[_]/g, '');
+          this.setState({
+            fullName: cleanNameFormat === '' ? null : cleanNameFormat
+          });
+        }}
+        placeholder={'Masukan Nama Pemilik Toko'}
         keyboardType={'default'}
-        text={text => this.setState({ fullName: text })}
-        error={false}
-        errorText={''}
+        marginBottom={16}
       />
     );
   }
-  /** merchant name */
+  /** === MERCHANT NAME === */
   renderNameMerchant() {
     return (
-      <InputType1
+      <InputType4
         title={'*Nama Toko'}
         value={this.state.name}
-        placeholder={'Masukan Nama Toko Anda'}
+        onChangeText={name =>
+          this.setState({ name: name === '' ? null : name })
+        }
+        placeholder={'Masukan Nama Toko'}
         keyboardType={'default'}
-        text={text => this.setState({ name: text })}
-        error={false}
-        errorText={''}
+        marginBottom={16}
       />
     );
   }
-  /** supplier */
+  /** === SUPPLIER === */
   renderSupplier() {
-    return this.props.user.userSuppliers.length === 1 ? (
-      <InputType1
+    return (
+      <InputType4
         title={'*Supplier'}
         editable={false}
-        placeholder={this.props.user.userSuppliers[0].supplier.name}
+        placeholder={this.state.supplierName}
         keyboardType={'default'}
-        text={text => this.setState({ supplier: text })}
-        error={false}
-        errorText={''}
-      />
-    ) : (
-      <DropdownType1
-        title={'Suplier Toko'}
-        placeholder={'Pilih Suplier Toko'}
-        selectedDropdownText={
-          this.props.merchant.dataAddMerchantVolatile.supplier.supplierName
-        }
-        openDropdown={() =>
-          this.goToDropdown({
-            type: 'suplierMerchant',
-            placeholder: 'Cari Suplier Toko'
-          })
-        }
+        marginBottom={16}
       />
     );
   }
-  /** tax Owner */
-  renderTaxId() {
-    return (
-      <InputType1
-        optional
-        title={'Nomor Pokok Wajib Pajak (NPWP)'}
-        value={this.state.taxNo}
-        placeholder={'Masukan NPWP pemilik'}
-        keyboardType={'numeric'}
-        maxLength={15}
-        text={text => this.setState({ taxNo: text })}
-        error={false}
-        errorText={''}
-      />
-    );
-  }
-  /** id owner */
+  /** === OWNER ID NO === */
   renderIdNo() {
     return (
-      <InputType1
-        optional
-        title={'Nomor Kartu Tanda Penduduk (KTP)'}
+      <InputType4
+        editable={!this.props.merchant.dataMerchantDisabledField.idNo}
+        title={'*Nomor Kartu Tanda Penduduk (KTP)'}
         value={this.state.idNo}
-        maxLength={16}
-        placeholder={'Masukan No KTP pemilik'}
+        onChangeText={idNo => {
+          const cleanNumber = idNo.replace(/[^0-9]/g, '');
+          this.checkIdNoFormat(cleanNumber);
+        }}
+        placeholder={'Masukan KTP pemilik maks. 16 Digit'}
         keyboardType={'numeric'}
-        text={text => this.setState({ idNo: text })}
-        error={false}
-        errorText={''}
+        error={this.state.errorIdNumber}
+        errorText={'Pastikan No.KTP maks. 16 Digit'}
+        maxLength={16}
+        marginBottom={16}
       />
     );
   }
-  /** address */
-  renderAddress() {
+  /** === OWNER TAX NO === */
+  renderTaxId() {
     return (
-      <InputType2
-        title={'*Alamat'}
-        value={this.state.address}
-        placeholder={'Masukan Alamat lengkap Anda'}
-        keyboardType={'default'}
-        text={text => this.setState({ address: text })}
-        error={false}
-        errorText={''}
-      />
-    );
-  }
-  /** maps */
-  renderMaps() {
-    return (
-      <InputMapsType1
-        change
-        title={'*Koordinat Lokasi'}
-        selectedMapLong={this.props.global.longitude}
-        selectedMapLat={this.props.global.latitude}
-        refresh={this.state.refreshLocation}
-        openMaps={() => this.goToMaps()}
+      <InputType4
+        editable={!this.props.merchant.dataMerchantDisabledField.taxNo}
+        title={'*Nomor Pokok Wajib Pajak (NPWP)'}
+        value={this.state.taxNo}
+        onChangeText={taxNo => {
+          const cleanNumber = taxNo.replace(/[^0-9]/g, '');
+          this.checkTaxNoFormat(cleanNumber);
+        }}
+        placeholder={'Masukan NPWP pemilik maks.15 Digit'}
+        keyboardType={'numeric'}
+        error={this.state.errorTaxNumber}
+        errorText={'Pastikan No.NPWP maks. 15 Digit'}
+        maxLength={15}
+        marginBottom={16}
       />
     );
   }
@@ -290,8 +206,6 @@ class AddMerchantStep2 extends Component {
         {this.renderSupplier()}
         {this.renderIdNo()}
         {this.renderTaxId()}
-        {this.renderMaps()}
-        {this.renderAddress()}
         <View style={{ paddingBottom: 50 }} />
       </View>
     );
@@ -301,19 +215,24 @@ class AddMerchantStep2 extends Component {
     return (
       <ButtonSingle
         disabled={
-          !this.buttonDisable() || this.props.merchant.loadingAddMerchant
+          this.buttonDisable() ||
+          this.props.merchant.loadingAddMerchant ||
+          this.state.addStoreProcess
         }
         title={'Lanjutkan'}
-        loading={this.props.merchant.loadingAddMerchant}
+        loading={
+          this.props.merchant.loadingAddMerchant || this.state.addStoreProcess
+        }
         borderRadius={4}
-        onPress={() => this.finalStep()}
+        onPress={() => this.nextStep()}
       />
     );
   }
   /** MODAL */
   renderModalErrorAdd() {
     return this.state.openErrorAddMerchant ? (
-      <ModalBottomErrorResponsWhite
+      <ModalBottomErrorRespons
+        statusBarType={'white'}
         open={this.state.openErrorAddMerchant}
         onPress={() => {
           this.setState({ openErrorAddMerchant: false });
@@ -343,7 +262,7 @@ class AddMerchantStep2 extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   }
 });
 

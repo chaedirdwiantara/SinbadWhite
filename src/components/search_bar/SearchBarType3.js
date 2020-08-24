@@ -1,16 +1,19 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   TouchableOpacity,
   TextInput,
   Keyboard
-} from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
+} from '../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon
+} from '../../library/thirdPartyPackage';
+import { Fonts } from '../../helpers';
+import { Color } from '../../config'
 import * as ActionCreators from '../../state/actions';
 
 /**
@@ -56,7 +59,7 @@ class SearchBarType3 extends Component {
     return (
       <View style={{ paddingHorizontal: 11 }}>
         <MaterialIcon
-          color={masterColor.fontBlack60}
+          color={Color.fontBlack60}
           name={'search'}
           size={24}
         />
@@ -71,7 +74,7 @@ class SearchBarType3 extends Component {
         onPress={() => this.clearSearch()}
       >
         <MaterialIcon
-          color={masterColor.fontBlack60}
+          color={Color.fontBlack60}
           name={'cancel'}
           size={24}
         />
@@ -85,20 +88,23 @@ class SearchBarType3 extends Component {
     return (
       <View style={{ flex: 1 }}>
         <TextInput
-          selectionColor={masterColor.mainColor}
+          autoFocus={this.props.focus}
+          selectionColor={Color.mainColor}
           onEndEditing={() => this.searchText()}
           value={this.state.search}
           returnKeyType={'search'}
           placeholder={this.props.placeholder}
           onChangeText={search => this.setState({ search })}
-          style={[Fonts.type8, styles.inputBox]}
+          style={[Fonts.textInputSearch, styles.inputBox]}
         />
       </View>
     );
   }
   /** === SEARCH BAR === */
   renderSearchBar() {
-    return (
+    return this.props.hide ? (
+      <View />
+    ) : (
       <View style={styles.boxSearchBar}>
         {this.renderSearchIcon()}
         {this.renderInput()}
@@ -118,9 +124,9 @@ const styles = StyleSheet.create({
   },
   boxSearchBar: {
     height: 32,
-    borderRadius: 20,
+    borderRadius: 10,
     alignItems: 'center',
-    backgroundColor: masterColor.backgroundWhite,
+    backgroundColor: Color.backgroundWhite,
     flexDirection: 'row'
   },
   inputBox: {
@@ -138,3 +144,17 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(SearchBarType3);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

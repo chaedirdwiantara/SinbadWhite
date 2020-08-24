@@ -58,6 +58,33 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: masterColor.fontBlack10
   },
+  /** ICON MENU */
+  icon54Box: {
+    borderRadius: 16,
+    height: 54,
+    marginHorizontal: 15,
+    width: 54
+  },
+  icon54Title: {
+    flex: 1,
+    marginTop: 8,
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    justifyContent: 'center'
+  },
+  icon44Box: {
+    borderRadius: 16,
+    height: 44,
+    marginHorizontal: 15,
+    width: 44
+  },
+  icon44Title: {
+    flex: 1,
+    marginTop: 8,
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    justifyContent: 'center'
+  },
   /** IMAGE SINBAD */
   fullImage: {
     height: 190,
@@ -82,6 +109,18 @@ const styles = StyleSheet.create({
     aspectRatio: 1 / 1,
     borderTopRightRadius: 5,
     borderTopLeftRadius: 5
+  },
+  image34Contain: {
+    height: 34,
+    width: undefined,
+    aspectRatio: 1 / 1,
+    resizeMode: 'contain'
+  },
+  image44Contain: {
+    height: 44,
+    width: undefined,
+    aspectRatio: 1 / 1,
+    resizeMode: 'contain'
   },
   image46: {
     height: 46,

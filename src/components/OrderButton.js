@@ -1,16 +1,14 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   TouchableOpacity,
   Text,
   TextInput
-} from 'react-native';
-import { connect } from 'react-redux';
-// import { RFPercentage } from 'react-native-responsive-fontsize';
-import Fonts from '../helpers/GlobalFont';
-import masterColor from '../config/masterColor.json';
-import GlobalStyle from '../helpers/GlobalStyle';
+} from '../library/reactPackage'
+import { GlobalStyle, Fonts } from '../helpers'
+import { Color } from '../config'
 
 class OrderButton extends Component {
   constructor(props) {
@@ -165,7 +163,7 @@ class OrderButton extends Component {
   render() {
     return (
       <View style={[styles.containerInputQty, GlobalStyle.shadowForBox]}>
-        {this.state.qty <= this.state.minQty ? (
+        {this.state.qty <= this.state.minQty || this.props.disabledAllButton ? (
           <View style={styles.minusButtonDisabled}>
             <Text style={styles.minusTextDisabled}>-</Text>
           </View>
@@ -181,7 +179,7 @@ class OrderButton extends Component {
         <View style={{ width: '30%', backgroundColor: '#f0444c' }} />
         <View style={styles.inputList}>
           <TextInput
-            selectionColor={masterColor.mainColor}
+            selectionColor={Color.mainColor}
             returnKeyType="done"
             value={this.state.qty.toString()}
             keyboardType="numeric"
@@ -197,7 +195,9 @@ class OrderButton extends Component {
             style={[styles.input, Fonts.type8]}
           />
         </View>
-        {this.state.plusButtonDisable || this.checkDisablePlusButton() ? (
+        {this.state.plusButtonDisable ||
+        this.checkDisablePlusButton() ||
+        this.props.disabledAllButton ? (
           <View style={styles.plusButtonDisabled}>
             <Text style={styles.plusTextDisabled}>+</Text>
           </View>
@@ -228,22 +228,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: masterColor.backgroundColorWhite
+    backgroundColor: Color.backgroundColorWhite
   },
   minusButtonDisabled: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: masterColor.backgroundColorWhite
+    backgroundColor: Color.backgroundColorWhite
   },
   minusText: {
-    color: masterColor.mainColor,
+    color: Color.mainColor,
     fontSize: 18,
     marginBottom: 3,
     marginRight: '10%'
   },
   minusTextDisabled: {
-    color: masterColor.fontBlack40,
+    color: Color.fontBlack40,
     fontSize: 18,
     marginBottom: 3,
     marginRight: '10%'
@@ -253,22 +253,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: masterColor.backgroundColorWhite
+    backgroundColor: Color.backgroundColorWhite
   },
   plusButtonDisabled: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: masterColor.backgroundColorWhite
+    backgroundColor: Color.backgroundColorWhite
   },
   plusText: {
-    color: masterColor.mainColor,
+    color: Color.mainColor,
     fontSize: 18,
     marginBottom: 3,
     marginLeft: '10%'
   },
   plusTextDisabled: {
-    color: masterColor.fontBlack40,
+    color: Color.fontBlack40,
     fontSize: 18,
     marginBottom: 3,
     marginLeft: '10%'
@@ -304,3 +304,17 @@ export default OrderButton;
  * jika order > dari minQty, maka minQty di hilangkan, yang dihitung multipleQty nya
  * jika multipleQty < minQty maka multipleQty x 2
  */
+
+ /**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy: 
+ * createdDate: 
+ * updatedBy: Tatas
+ * updatedDate: 08072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ * 
+ */
+ 

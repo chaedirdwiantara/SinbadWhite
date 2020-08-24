@@ -1,11 +1,20 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import GlobalStyle from '../../helpers/GlobalStyle';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
-import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
-import ButtonSingle from '../../components/button/ButtonSingle';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text
+} from '../../library/reactPackage'
+import {
+  MaterialIcon
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarRedOP50,
+  ButtonSingle
+} from '../../library/component'
+import { GlobalStyle, Fonts } from '../../helpers'
+import { Color } from '../../config'
 
 class PdpFilterSortView extends Component {
   constructor(props) {
@@ -67,15 +76,15 @@ class PdpFilterSortView extends Component {
             </View>
             <View style={styles.boxIconRight}>
               {this.state.sortIndex === index ? (
-                <MaterialIcons
+                <MaterialIcon
                   name="radio-button-checked"
-                  color={masterColor.mainColor}
+                  color={Color.mainColor}
                   size={24}
                 />
               ) : (
-                <MaterialIcons
+                <MaterialIcon
                   name="radio-button-unchecked"
-                  color={masterColor.fontBlack40}
+                  color={Color.fontBlack40}
                   size={24}
                 />
               )}
@@ -111,7 +120,7 @@ class PdpFilterSortView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: masterColor.backgroundWhite
+    backgroundColor: Color.backgroundWhite
   },
   boxContentItem: {
     paddingHorizontal: 20,
@@ -127,3 +136,16 @@ const styles = StyleSheet.create({
 });
 
 export default PdpFilterSortView;
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 07072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/

@@ -7,7 +7,7 @@ const ProfileTabNavigator = {
     screen: ProfileView,
     navigationOptions: {
       headerTitle: 'Profil',
-      headerTitleStyle: GlobalFont.type5,
+      headerTitleStyle: GlobalFont.textHeaderPage,
       headerTitleContainerStyle: {
         width: '100%',
         justifyContent: 'center'

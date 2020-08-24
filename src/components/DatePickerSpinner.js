@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Text, Dimensions } from 'react-native';
-import moment from 'moment';
-import { WheelPicker } from 'react-native-wheel-picker-android';
-import { Button } from 'react-native-elements';
-import { RFPercentage } from 'react-native-responsive-fontsize';
-import Fonts from '../utils/Fonts';
-import ButtonSingle from './button/ButtonSingle';
-
-const { height } = Dimensions.get('window');
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Text
+} from '../library/reactPackage';
+import { moment, WheelPicker } from '../library/thirdPartyPackage';
+import { ButtonSingle } from '../library/component';
+import { Fonts } from '../helpers';
 
 const monthsData = [
   'Januari',
@@ -23,6 +23,22 @@ const monthsData = [
   'November',
   'Desember'
 ];
+
+const monthsDataEng = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+];
+
 const yearsData = [
   '2018',
   '2019',
@@ -57,14 +73,24 @@ class DatePickerSpinner extends Component {
     this.setState({ selectedDaysIndex });
   };
 
+  /** MONTH TO INDEX */
+  monthToIndex(index) {
+    if (index < 9) {
+      return `${'0' + (index + 1).toString()}`;
+    }
+    return (index + 1).toString();
+  }
+
   onItemSelectedMonths = selectedMonthsIndex => {
     const dayData = [];
     const totalDays = moment(
-      `${yearsData[this.state.selectedYearsIndex]}-${
-        monthsData[selectedMonthsIndex]
-      }`,
-      'YYYY-MMM'
-    ).daysInMonth();
+      `${yearsData[this.state.selectedYearsIndex]}-${this.monthToIndex(
+        this.state.selectedMonthsIndex
+      )}`,
+      'YYYY-MM'
+    )
+      .locale('en')
+      .daysInMonth();
     for (let i = 0; i < totalDays; i++) {
       dayData.push(i < 9 ? `0${(i + 1).toString()}` : (i + 1).toString());
     }
@@ -74,11 +100,13 @@ class DatePickerSpinner extends Component {
   onItemSelectedYears = selectedYearsIndex => {
     const dayData = [];
     const totalDays = moment(
-      `${yearsData[selectedYearsIndex]}-${
-        monthsData[this.state.selectedMonthsIndex]
-      }`,
-      'YYYY-MMM'
-    ).daysInMonth();
+      `${yearsData[this.state.selectedYearsIndex]}-${this.monthToIndex(
+        this.state.selectedMonthsIndex
+      )}`,
+      'YYYY-MM'
+    )
+      .locale('en')
+      .daysInMonth();
     for (let i = 0; i < totalDays; i++) {
       dayData.push(i < 9 ? `0${(i + 1).toString()}` : (i + 1).toString());
     }
@@ -143,7 +171,7 @@ class DatePickerSpinner extends Component {
     return (
       <View style={[styles.boxContentItem, { width: '20%' }]}>
         <View style={{ marginBottom: 40 }}>
-          <Text style={styles.titleContentItem}>Tanggal</Text>
+          <Text style={Fonts.type16}>Tanggal</Text>
         </View>
         <View>
           <WheelPicker
@@ -160,7 +188,7 @@ class DatePickerSpinner extends Component {
     return (
       <View style={[styles.boxContentItem, { flex: 1, zIndex: 1000 }]}>
         <View style={{ marginBottom: 40 }}>
-          <Text style={styles.titleContentItem}>Bulan</Text>
+          <Text style={Fonts.type16}>Bulan</Text>
         </View>
         <View>
           <WheelPicker
@@ -177,7 +205,7 @@ class DatePickerSpinner extends Component {
     return (
       <View style={[styles.boxContentItem, { width: '20%' }]}>
         <View style={{ marginBottom: 40 }}>
-          <Text style={styles.titleContentItem}>Tahun</Text>
+          <Text style={Fonts.type16}>Tahun</Text>
         </View>
         <View>
           <WheelPicker
@@ -233,60 +261,20 @@ const styles = StyleSheet.create({
   },
   boxContentItem: {
     alignItems: 'center'
-  },
-  modalPosition: {
-    marginBottom: 0,
-    marginLeft: 0,
-    marginRight: 0
-  },
-  closeContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  closeBox: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    left: 0,
-    width: '15%',
-    height: '100%'
-  },
-  icons: {
-    width: 24,
-    height: 24
-  },
-  /** text */
-  titleModalBottom: {
-    marginTop: 0.03 * height,
-    marginBottom: 0.03 * height,
-    fontFamily: Fonts.MontserratBold,
-    fontSize: RFPercentage(1.8),
-    color: '#333333'
-  },
-  titleContentItem: {
-    fontFamily: Fonts.MontserratSemiBold,
-    fontSize: RFPercentage(1.6),
-    color: '#4f4f4f'
-  },
-  /** for button */
-  buttonContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 10,
-    backgroundColor: '#ffffff'
-  },
-  titleButton: {
-    fontFamily: Fonts.MontserratBold,
-    fontSize: 12,
-    color: '#ffffff'
-  },
-  button: {
-    backgroundColor: '#f0444c',
-    borderRadius: 10,
-    width: 278,
-    height: 42
   }
 });
 
 export default DatePickerSpinner;
+
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: tatas
+ * updatedDate: 24062020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

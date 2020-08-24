@@ -1,22 +1,31 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Keyboard } from 'react-native';
-import Text from 'react-native-text';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { StatusBarRedOP50 } from '../../components/StatusBarGlobal';
-import Fonts from '../../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Keyboard,
+  Text
+} from '../../library/reactPackage'
+import {
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage'
+import {
+  StatusBarRedOP50,
+  ButtonSingle,
+  ModalBottomType3,
+  InputType1
+} from '../../library/component'
+import { Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
-import ButtonSingle from '../../components/button/ButtonSingle';
-import ModalBottomType3 from '../../components/modal_bottom/ModalBottomType3';
-import InputType1 from '../../components/input/InputType1';
 
 class ModalBottomInputOwnerId extends Component {
   constructor(props) {
     super(props);
     this.state = {
       idNo: '',
-      storeId: this.props.merchant.selectedMerchant.store.id,
-      ownerId: this.props.merchant.selectedMerchant.store.owner.id
+      storeId: this.props.merchant.selectedMerchant.storeId,
+      ownerId: this.props.merchant.selectedMerchant.owner.id
     };
   }
   /**
@@ -147,3 +156,17 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(ModalBottomInputOwnerId);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: tatas
+* updatedDate: 06072020
+* updatedFunction:
+* -> Change key
+* -> Refactor module import
+*/
+

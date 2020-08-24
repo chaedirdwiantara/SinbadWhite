@@ -1,12 +1,19 @@
-import React, { Component } from 'react';
-import { StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { Badge } from 'react-native-elements';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import Fonts from '../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  StyleSheet,
+  Image,
+  TouchableOpacity
+} from '../library/reactPackage'
+import {
+  Badge,
+  bindActionCreators,
+  connect
+} from '../library/thirdPartyPackage'
+import { Fonts } from '../helpers'
+import { Color } from '../config'
 import * as ActionCreators from '../state/actions';
 import NavigationServices from '../navigation/NavigationService';
-import masterColor from '../config/masterColor.json';
 
 class CartGlobal extends Component {
   /**
@@ -68,7 +75,7 @@ const styles = StyleSheet.create({
   },
   badge: {
     borderWidth: 0,
-    backgroundColor: masterColor.fontYellow50
+    backgroundColor: Color.fontYellow50
   },
   cartIcon: {
     justifyContent: 'center',
@@ -88,3 +95,17 @@ const mapDispatchToProps = dispatch => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, mapDispatchToProps)(CartGlobal);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+

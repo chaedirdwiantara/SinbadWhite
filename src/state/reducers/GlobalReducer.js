@@ -8,6 +8,7 @@ const INITIAL_STATE = {
   loadingLoadMoreGetListAndSearch: false,
   loadingGlobalLongLatToAddress: false,
   loadingGetVersion: false,
+  loadingGetUrbanId: false,
   /** data */
   search: '',
   longitude: '',
@@ -25,12 +26,15 @@ const INITIAL_STATE = {
     provinceName: '',
     cityName: '',
     districtName: '',
-    urbanName: ''
+    urbanName: '',
+    zipCode: ''
   },
+  dataGetUrbanId: null,
   /** error */
   errorGetListAndSearch: null,
+  errorGlobalLongLatToAddress: null,
   errorGetVersion: null,
-  errorGlobalLongLatToAddress: null
+  errorGetUrbanId: null
 };
 
 export const global = createReducer(INITIAL_STATE, {
@@ -63,6 +67,28 @@ export const global = createReducer(INITIAL_STATE, {
     return {
       ...state,
       imageBase64: action.payload
+    };
+  },
+  /**
+   * ================================
+   * ADD DATA IF PHONE EXIST
+   * ================================
+   */
+  [types.CHECK_PHONE_NUMBER_AVAILABLE_SUCCESS](state, action) {
+    return {
+      ...state,
+      longitude:
+        action.payload.store !== null ? action.payload.store.longitude : '',
+      latitude:
+        action.payload.store !== null ? action.payload.store.latitude : '',
+      dataGetUrbanId:
+        action.payload.store !== null
+          ? [
+              {
+                id: action.payload.store.urbanId
+              }
+            ]
+          : null
     };
   },
   /**
@@ -119,30 +145,45 @@ export const global = createReducer(INITIAL_STATE, {
    * =============================
    */
   [types.GLOBAL_MANUAL_INPUT_LOCATION_DATA_VOLATILE](state, action) {
+    const dataUpdate = action.payload;
+    const dataPrevious = state.dataLocationVolatile;
     return {
       ...state,
       dataLocationVolatile: {
-        provinceId:
-          action.payload.provinceId || action.payload.provinceId === ''
-            ? action.payload.provinceId
-            : state.dataLocationVolatile.provinceId,
-        provinceName:
-          action.payload.provinceName || action.payload.provinceName === ''
-            ? action.payload.provinceName
-            : state.dataLocationVolatile.provinceName,
-        cityName:
-          action.payload.cityName || action.payload.cityName === ''
-            ? action.payload.cityName
-            : state.dataLocationVolatile.cityName,
-        districtName:
-          action.payload.districtName || action.payload.districtName === ''
-            ? action.payload.districtName
-            : state.dataLocationVolatile.districtName,
-        urbanName:
-          action.payload.urbanName || action.payload.urbanName === ''
-            ? action.payload.urbanName
-            : state.dataLocationVolatile.urbanName
+        provinceId: checkData('provinceId', dataUpdate, dataPrevious),
+        provinceName: checkData('provinceName', dataUpdate, dataPrevious),
+        cityName: checkData('cityName', dataUpdate, dataPrevious),
+        districtName: checkData('districtName', dataUpdate, dataPrevious),
+        urbanName: checkData('urbanName', dataUpdate, dataPrevious),
+        zipCode: checkData('zipCode', dataUpdate, dataPrevious)
       }
+    };
+  },
+  /**
+   * ===================================
+   * GET URBAN ID
+   * ===================================
+   */
+  [types.GET_URBAN_ID_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetUrbanId: true,
+      dataGetUrbanId: null,
+      errorGetUrbanId: null
+    };
+  },
+  [types.GET_URBAN_ID_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetUrbanId: false,
+      dataGetUrbanId: action.payload.data
+    };
+  },
+  [types.GET_URBAN_ID_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetUrbanId: false,
+      errorGetUrbanId: action.payload
     };
   },
   /**
@@ -235,7 +276,8 @@ export const global = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGlobalLongLatToAddress: false,
-      errorGlobalLongLatToAddress: action.payload
+      errorGlobalLongLatToAddress: action.payload,
+      dataLocationVolatile: INITIAL_STATE.dataLocationVolatile
     };
   },
   /**
@@ -266,3 +308,12 @@ export const global = createReducer(INITIAL_STATE, {
     };
   }
 });
+/**
+ * ===========================
+ * FUNCTION SERVICE
+ * ============================
+ */
+/** === CHECK DATA EXIST OR NOT ===  */
+function checkData(key, dataUpdate, dataPrevious) {
+  return dataUpdate[key] !== undefined ? dataUpdate[key] : dataPrevious[key];
+}

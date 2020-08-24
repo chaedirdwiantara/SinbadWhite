@@ -1,15 +1,18 @@
-import React, { Component } from 'react';
 import {
+  React,
+  Component,
   View,
   StyleSheet,
   TouchableOpacity,
   TextInput,
   Keyboard
-} from 'react-native';
-import { connect } from 'react-redux';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import masterColor from '../../config/masterColor.json';
-import Fonts from '../../helpers/GlobalFont';
+} from '../../library/reactPackage'
+import {
+  connect,
+  MaterialIcon
+} from '../../library/thirdPartyPackage'
+import { Fonts } from '../../helpers'
+import { Color } from '../../config'
 
 /**
  * =====================
@@ -50,7 +53,7 @@ class SearchBarType1 extends Component {
     return (
       <View style={{ paddingHorizontal: 11 }}>
         <MaterialIcon
-          color={masterColor.fontBlack60}
+          color={Color.fontBlack60}
           name={'search'}
           size={24}
         />
@@ -65,7 +68,7 @@ class SearchBarType1 extends Component {
         onPress={() => this.clearSearch()}
       >
         <MaterialIcon
-          color={masterColor.fontBlack60}
+          color={Color.fontBlack60}
           name={'cancel'}
           size={24}
         />
@@ -79,13 +82,13 @@ class SearchBarType1 extends Component {
     return (
       <View style={{ flex: 1 }}>
         <TextInput
-          selectionColor={masterColor.mainColor}
+          selectionColor={Color.mainColor}
           onEndEditing={() => this.searchText()}
           value={this.state.search}
           returnKeyType={'search'}
           placeholder={this.props.placeholder}
           onChangeText={search => this.setState({ search })}
-          style={[Fonts.type8, styles.inputBox]}
+          style={[Fonts.textInputSearch, styles.inputBox]}
         />
       </View>
     );
@@ -115,7 +118,7 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 20,
     alignItems: 'center',
-    backgroundColor: masterColor.fontBlack10OP50,
+    backgroundColor: Color.fontBlack10OP50,
     flexDirection: 'row'
   },
   inputBox: {
@@ -129,3 +132,17 @@ const mapStateToProps = ({}) => {
 
 // eslint-disable-next-line prettier/prettier
 export default connect(mapStateToProps, {})(SearchBarType1);
+
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: Tatas
+* updatedDate: 08072020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
+
