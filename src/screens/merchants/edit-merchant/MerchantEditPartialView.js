@@ -4,7 +4,8 @@ import {
   View,
   ScrollView,
   StyleSheet,
-  Text
+  Text,
+  TouchableOpacity
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
@@ -68,12 +69,6 @@ class MerchantEditPartialView extends Component {
       latitude: this.props.merchant.dataMerchantVolatile.latitude,
       longitude: this.props.merchant.dataMerchantVolatile.longitude
     });
-    // this.props.getUrbanIdProcess({
-    //   province: this.props.merchant.dataMerchantVolatile.province,
-    //   city: this.props.merchant.dataMerchantVolatile.city,
-    //   district: this.props.merchant.dataMerchantVolatile.district,
-    //   urban: this.props.merchant.dataMerchantVolatile.urban
-    // });
     this.props.merchantGetWarehouseProcess(
       this.props.merchant.dataMerchantVolatile.urbanId
     );
@@ -125,50 +120,6 @@ class MerchantEditPartialView extends Component {
         }
       }
     }
-
-    /** CHECK WAREHOUSE */
-    // if (
-    //   prevProps.merchant.dataGetWarehouse !==
-    //   this.props.merchant.dataGetWarehouse
-    // ) {
-    //   if (this.props.merchant.dataGetWarehouse !== null) {
-    //     const warehouse = this.props.merchant.dataGetWarehouse;
-    //     if (warehouse.total === 0) {
-    //       this.props.saveVolatileDataMerchant({
-    //         warehouse:
-    //           'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
-    //       });
-    //       this.setState({
-    //         disabledAction: true,
-    //         warehouseFound: 0
-    //       });
-    //     } else if (warehouse.total === 1) {
-    //       this.props.saveVolatileDataMerchant({
-    //         warehouse: warehouse.data[0].name,
-    //         warehouseId: warehouse.data[0].id
-    //       });
-    //       this.setState({
-    //         disabledAction: true,
-    //         warehouseFound: 1
-    //       });
-    //     } else if (warehouse.total > 1) {
-    //       this.props.saveVolatileDataMerchant({
-    //         warehouse: null
-    //       });
-    //       this.setState({
-    //         disabledDropdown: false,
-    //         disabledAction: false
-    //       });
-    //     }
-    //   }
-    // }
-
-    // if (
-    //   prevProps.merchant.dataMerchantVolatile.warehouse !==
-    //   this.props.merchant.dataMerchantVolatile.warehouse
-    // ) {
-    //   this.setState({ warehouse: false });
-    // }
   }
   /** === DID UNMOUNT */
   componentWillUnmount() {
@@ -312,8 +263,6 @@ class MerchantEditPartialView extends Component {
   /** SWITCH VIEW */
   switchView() {
     switch (this.props.type) {
-      case 'merchantClassification':
-        return this.renderClassificationMerchant();
       case 'merchantAddress':
         return this.renderAddressMerchant();
       case 'merchantCompletenessInformation':
@@ -341,11 +290,33 @@ class MerchantEditPartialView extends Component {
   /** === RENDER CONTENT SECTION === */
   renderContentSection(data) {
     return (
-      <View style={styles.boxContent}>
-        <View>
-          <Text style={[Fonts.type9, { marginBottom: 6 }]}>{data.key}</Text>
-          <Text style={Fonts.type24}>{data.value ? data.value : '-'}</Text>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          marginHorizontal: 16,
+          marginBottom: 28
+        }}
+      >
+        <View style={{ flex: 7, flexDirection: 'column' }} >
+          <View style={{flex: 1}}>
+            <Text style={[Fonts.type9, { marginBottom: 6 }]}>{data.key}</Text>
+          </View> 
+          <View style={{flex: 1}}>
+            <Text style={Fonts.type24}>{data.value ? data.value : '-'}</Text>
+          </View>
         </View>
+        <View style={{ flex: 3, justifyContent: 'center', alignItems: 'flex-end', flexDirection: 'column'}} >
+          <TouchableOpacity
+            onPress={() => this.goToDropdown({
+              type: data.type,
+              placeholder: data.placeholder
+            })}
+          >
+            <Text style={[Fonts.type11, {marginLeft: 0}]}>Ubah</Text>
+          </TouchableOpacity>
+        </View>
+
       </View>
     );
   }
@@ -573,33 +544,6 @@ class MerchantEditPartialView extends Component {
           }
           marginBottom={16}
         />
-      </View>
-    );
-  }
-  /**
-   * ================================
-   * RENDER MERCHANT CLASSIFICATION
-   * ================================
-   */
-  renderClassificationMerchant() {
-    return (
-      <View style={{ marginTop: 16 }}>
-        {this.renderContentSection({
-          key: 'Tipe Toko',
-          value: this.props.merchant.dataMerchantVolatile.storeType
-        })}
-        {this.renderContentSection({
-          key: 'Group Toko',
-          value: this.props.merchant.dataMerchantVolatile.storeGroup
-        })}
-        {this.renderContentSection({
-          key: 'Cluster Toko',
-          value: this.props.merchant.dataMerchantVolatile.storeCluster
-        })}
-        {this.renderContentSection({
-          key: 'Channel Toko',
-          value: this.props.merchant.dataMerchantVolatile.storeChannel
-        })}
       </View>
     );
   }

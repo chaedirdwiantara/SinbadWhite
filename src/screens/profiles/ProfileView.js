@@ -32,9 +32,13 @@ class ProfileView extends Component {
           goTo: 'data_diri'
         },
         {
+          name: 'Area Mapping',
+          goTo: 'area_mapping'
+        },
+        {
           name: 'Hubungi Customer Services',
           goTo: 'call_cs'
-        }
+        }        
       ]
     };
   }
@@ -68,6 +72,10 @@ class ProfileView extends Component {
         break;
       case 'call_cs':
         this.setState({ openModalCS: true });
+        break;
+      case 'area_mapping':
+        this.props.savePageAddMerchantFrom('ProfileView')
+        NavigationService.navigate('ProfileAreaMapping')
         break;
       default:
         break;

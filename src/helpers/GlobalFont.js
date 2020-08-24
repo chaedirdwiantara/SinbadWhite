@@ -608,7 +608,8 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 16,
     color: Color.fontRed50
-  },type101: {
+  },
+  type101: {
     fontFamily: Fonts.MontserratItalic,
     fontSize: 11,
     lineHeight: 16,
@@ -636,12 +637,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.MontserratBold,
     fontSize: 14,
     lineHeight: 16,
-    color: Color.fontGreen50
-  },
-  forCompare: {
-    fontFamily: Fonts.MontserratMedium,
-    fontSize: 10,
-    lineHeight: 13,
     color: Color.fontGreen50
   },
   /** === text for haader page === */

@@ -14,6 +14,7 @@ const INITIAL_STATE = {
   longitude: '',
   latitude: '',
   pageAddMerchantFrom: '',
+  pageAreaMappingFrom: '',
   imageBase64: '',
   dataGetListAndSearch: [],
   totalDataGetListAndSearch: 0,
@@ -306,6 +307,12 @@ export const global = createReducer(INITIAL_STATE, {
       loadingGetVersion: false,
       errorGetVersion: action.payload
     };
+  },
+  [types.SAVE_PAGE_AREA_MAPPING_FROM](state, action){
+    return {
+      ...state,
+      pageAreaMappingFrom: action.payload
+    }
   }
 });
 /**

@@ -48,6 +48,14 @@ export function savePageAddMerchantFrom(data) {
   return { type: types.SAVE_PAGE_ADD_MERCHANT_FROM, payload: data };
 }
 /**
+ * ===============================
+ * SAVE PAGE THAT AREA MAPPING BEGIN
+ * ===============================
+ */
+export function savePageAreaMappingFrom(data) {
+  return { type: types.SAVE_PAGE_AREA_MAPPING_FROM, payload: data}
+}
+/**
  * ==============================
  * SAVE LONG LAT FROM ADDRESS DETAIL MERCHANT (FOR EDIT)
  * ==============================

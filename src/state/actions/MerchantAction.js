@@ -25,6 +25,14 @@ export function saveVolatileDataEditMerchant(data) {
 }
 /**
  * ====================================
+ * SAVE VOLATILE DATA TO RESET MERCHANT
+ * ====================================
+ */
+export function volatileResetMerchant(){
+  return { type: types.MERCHANT_RESET_DATA_VOLATILE }
+}
+/**
+ * ====================================
  * FLAG CHANGE MERCHANT FOR ORDER CHECK
  * ====================================
  */
