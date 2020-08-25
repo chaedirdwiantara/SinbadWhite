@@ -39,7 +39,7 @@ class CardType1 extends Component {
           </Text>
         </View>
         <View style={{flex: 1, marginLeft: 16}}>
-          <Text style={[Fonts.type100, {marginTop: 4}]}>
+          <Text style={[Fonts.type106, {marginTop: 4}]}>
             {this.props.warehouse}
           </Text>
         </View>
