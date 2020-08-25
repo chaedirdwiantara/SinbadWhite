@@ -20,8 +20,16 @@ class ProgressBarType2 extends Component {
   /** === RENDER BAR === */
   renderBar() {
     let percentage = (this.props.achieved / this.props.target) * 100;
+    let value = percentage;
     if (percentage.toString() === 'Infinity') {
+      percentage = 0;
+      value = 0;
+    }
+    if (percentage > 100) {
       percentage = 100;
+    }
+    if (value % 1 !== 0) {
+      value = parseInt(value, 10);
     }
     return (
       <View style={styles.boxBar}>
@@ -35,8 +43,8 @@ class ProgressBarType2 extends Component {
             ]}
           />
         </View>
-        <View style={{ paddingLeft: 16 }}>
-          <Text style={Fonts.type38}>{percentage ? percentage : '0'} %</Text>
+        <View style={{ paddingLeft: 8 }}>
+          <Text style={Fonts.type38}>{value ? value : '0'} %</Text>
         </View>
       </View>
     );
@@ -82,8 +90,8 @@ export default ProgressBarType2;
  * createdBy: Dyah
  * createdDate: 04082020
  * updatedBy: Dyah
- * updatedDate: 09082020
+ * updatedDate: 18082020
  * updatedFunction:
- * -> New Component ProgressBarType2 for KPIDashboard
+ * -> Delete value with coma.
  *
  */

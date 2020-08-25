@@ -11,7 +11,8 @@ import {
   FlatList,
   Dimensions,
   Text,
-  ScrollView
+  ScrollView,
+  RefreshControl
 } from '../../library/reactPackage';
 import {
   MaterialIcon,
@@ -33,6 +34,8 @@ import {
   GlobalStyle,
   Fonts,
   MoneyFormatShort,
+  getStartDateNow,
+  getStartDateMinHour,
   getDateNow,
   getStartDateMonth,
   getEndDateMonth
@@ -40,6 +43,8 @@ import {
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
+import _ from 'lodash';
+import { SalesmanKpiMethod } from '../../services/methods';
 
 const { width } = Dimensions.get('window');
 const defaultImage = require('../../assets/images/sinbad_image/sinbadopacity.png');
@@ -133,7 +138,9 @@ class HomeView extends Component {
         }
       ],
       pageOne: 0,
-      tabValue: tabDashboard[0].value
+      tabValue: tabDashboard[0].value,
+      refreshing: false,
+      totalSalesPending: 0
     };
   }
   /**
@@ -151,19 +158,21 @@ class HomeView extends Component {
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.salesmanKpi.kpiDashboardData !==
-      this.props.salesmanKpi.kpiDashboardData
-    ) {
-      if (Object.keys(this.props.salesmanKpi.kpiDashboardData).length !== 0) {
-        let newKpiDashboard = [...this.state.kpiDashboard];
-        Object.keys(this.props.salesmanKpi.kpiDashboardData).map((key, i) => {
-          const index = newKpiDashboard.findIndex(item => item.id === key);
-          const newData = this.props.salesmanKpi.kpiDashboardData[key][0];
-          newKpiDashboard[index].data.target = newData.target;
-          newKpiDashboard[index].data.achieved = newData.achieved;
-        });
-        this.setState({ kpiDashboard: newKpiDashboard });
+    if (this.props.salesmanKpi.kpiDashboardData) {
+      if (
+        prevProps.salesmanKpi.kpiDashboardData !==
+        this.props.salesmanKpi.kpiDashboardData
+      ) {
+        if (Object.keys(this.props.salesmanKpi.kpiDashboardData).length !== 0) {
+          let newKpiDashboard = [...this.state.kpiDashboard];
+          Object.keys(this.props.salesmanKpi.kpiDashboardData).map((key, i) => {
+            const index = newKpiDashboard.findIndex(item => item.id === key);
+            const newData = this.props.salesmanKpi.kpiDashboardData[key][0];
+            newKpiDashboard[index].data.target = newData.target;
+            newKpiDashboard[index].data.achieved = newData.achieved;
+          });
+          this.setState({ kpiDashboard: newKpiDashboard });
+        }
       }
     }
     if (prevProps.global.dataGetVersion !== this.props.global.dataGetVersion) {
@@ -180,22 +189,40 @@ class HomeView extends Component {
       }
     }
   }
+  /** === PULL TO REFRESH === */
+  _onRefresh() {
+    this.setState({ refreshing: true }, () =>
+      this.getKpiData(this.state.tabValue)
+    );
+  }
   /** === GET KPI DATA === */
   getKpiData(period) {
+    if (_.isNil(this.props.user)) {
+      return;
+    }
+
+    let supplierId = 1;
+    try {
+      supplierId = this.props.user.userSuppliers[0].supplierId;
+    } catch (error) {
+      return;
+    }
     let params = {
       startDate: '',
       endDate: '',
       period,
-      userId: this.props.user.id
+      userId: this.props.user.id,
+      supplierId
     };
+
     switch (period) {
       case 'daily':
-        params.startDate = getDateNow();
+        params.startDate = getStartDateMinHour();
         params.endDate = getDateNow();
         break;
 
       case 'weekly':
-        params.startDate = getDateNow();
+        params.startDate = getStartDateNow();
         params.endDate = getDateNow();
         break;
 
@@ -208,11 +235,24 @@ class HomeView extends Component {
         break;
     }
     this.props.getKpiDashboardProcess(params);
+    SalesmanKpiMethod.getKpiSalesPending(params).then(response => {
+      if (response.code === 200) {
+        this.setState({
+          totalSalesPending: response.data.payload.data[0].achieved
+        });
+      }
+    });
+    this.setState({ refreshing: false });
   }
   /** === FOR PARSE VALUE === */
-  parseValue = (value, type) => {
+  parseValue = (value, type, target) => {
+    if (target) {
+      if (value === 0 || value === '0') {
+        return '-';
+      }
+    }
     if (type === 'totalSales') {
-      if (value === 0) {
+      if (value === 0 || value === '0') {
         return '-';
       }
       return MoneyFormatShort(value);
@@ -220,6 +260,7 @@ class HomeView extends Component {
     if (type === 'countOrders') {
       return `${value} Order`;
     }
+
     return `${value} Toko`;
   };
   /** === ON CHANGE TAB === */
@@ -350,11 +391,16 @@ class HomeView extends Component {
           snapToInterval={width - 90}
           snapToAlignment={'center'}
           onScroll={event => {
-            let horizontalLimit = 100;
-            if (event.nativeEvent.contentOffset.x % horizontalLimit === 0) {
-              this.setState({
-                pageOne: event.nativeEvent.contentOffset.x / horizontalLimit
-              });
+            let horizontalLimit = width - 90;
+            if (event.nativeEvent.contentOffset.x % horizontalLimit) {
+              const newPage = Math.round(
+                event.nativeEvent.contentOffset.x / horizontalLimit
+              );
+              if (this.state.pageOne !== newPage) {
+                this.setState({
+                  pageOne: newPage
+                });
+              }
             }
           }}
         >
@@ -369,10 +415,7 @@ class HomeView extends Component {
           />
         </ScrollView>
         <View style={{ alignItems: 'center' }}>
-          <SlideIndicator
-            indicators={[0, 1]}
-            activeIndex={this.state.pageOne}
-          />
+          <SlideIndicator totalItem={2} activeIndex={this.state.pageOne} />
           <TouchableOpacity
             onPress={() => this.goToPage({ goTo: 'dashboard' })}
             style={{ marginTop: 16 }}
@@ -387,70 +430,90 @@ class HomeView extends Component {
   /** === RENDER KPI DASHBOARD ITEM === */
   renderKpiDashboardItem = ({ item, index }) => {
     return (
-      <Shadow
-        key={index}
-        radius={10}
-        elevation={1}
-        margin={5}
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          margin: 2,
-          padding: 16,
-          width: width * 0.77,
-          backgroundColor: 'white'
-        }}
-      >
-        <Image
-          source={item.image ? item.image : defaultImage}
-          style={styles.menuCircleImage}
-        />
-        <View>
-          <Text style={[Fonts.type97, { color: masterColor.fontBlack50 }]}>
-            {item.title}
-          </Text>
-          <ProgressBarType2
-            target={item.data.target}
-            achieved={item.data.achieved}
+      <View key={index}>
+        <Shadow
+          radius={10}
+          elevation={1}
+          margin={5}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            margin: 2,
+            padding: 16,
+            width: width * 0.77,
+            backgroundColor: 'white'
+          }}
+        >
+          <Image
+            source={item.image ? item.image : defaultImage}
+            style={styles.menuDashboardImage}
           />
-          {item.data.target === 0 ? (
-            <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
-              {' '}
-              Sedang tidak ada target{' '}
+          <View style={{ width: '78%' }}>
+            <Text style={[Fonts.type97, { color: masterColor.fontBlack50 }]}>
+              {item.title}
             </Text>
-          ) : (
-            <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
-              {this.parseValue(item.data.target - item.data.achieved, item.id)}{' '}
-              lagi target
-            </Text>
-          )}
-          <View style={{ flexDirection: 'row', marginVertical: 4 }}>
-            <View style={{ width: '50%' }}>
-              <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
-                Pencapaian
-              </Text>
-              <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
-                {this.parseValue(item.data.achieved, item.id)}
-              </Text>
-            </View>
-            <View
-              style={{
-                borderRightWidth: 1,
-                borderColor: masterColor.fontBlack40,
-                marginRight: 20
-              }}
+            <ProgressBarType2
+              target={item.data.target}
+              achieved={item.data.achieved}
             />
-            <View>
-              <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
-                Target
+            {item.data.target === 0 ||
+            item.data.target - item.data.achieved < 0 ? (
+              <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
+                {Number(item.data.target) === 0
+                  ? 'Sedang tidak ada target'
+                  : 'Anda sudah mencapai target'}
               </Text>
-              <Text style={[Fonts.type44, { color: masterColor.fontBlack50 }]}>
-                {this.parseValue(item.data.target, item.id)}
+            ) : (
+              <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
+                {this.parseValue(
+                  item.data.target - item.data.achieved,
+                  item.id
+                )}{' '}
+                lagi untuk mencapai target
               </Text>
+            )}
+            {this.state.totalSalesPending !== 0 && item.id === 'totalSales' ? (
+              <Text style={[Fonts.type65, { color: masterColor.fontRed50 }]}>
+                (Total pesanan dalam proses{' '}
+                {MoneyFormatShort(this.state.totalSalesPending)})
+              </Text>
+            ) : null}
+            <View style={{ flexDirection: 'row', marginVertical: 4 }}>
+              <View style={{ width: '50%' }}>
+                <Text
+                  style={[Fonts.type44, { color: masterColor.fontBlack50 }]}
+                >
+                  Pencapaian
+                </Text>
+                <Text
+                  style={[Fonts.type44, { color: masterColor.fontBlack50 }]}
+                >
+                  {this.parseValue(item.data.achieved, item.id)}
+                </Text>
+              </View>
+              <View
+                style={{
+                  borderRightWidth: 1,
+                  borderColor: masterColor.fontBlack40,
+                  marginRight: 20
+                }}
+              />
+              <View>
+                <Text
+                  style={[Fonts.type44, { color: masterColor.fontBlack50 }]}
+                >
+                  Target
+                </Text>
+                <Text
+                  style={[Fonts.type44, { color: masterColor.fontBlack50 }]}
+                >
+                  {this.parseValue(item.data.target, item.id, true)}
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
-      </Shadow>
+        </Shadow>
+      </View>
     );
   };
   /** === RENDER MENU === */
@@ -524,6 +587,12 @@ class HomeView extends Component {
         <FlatList
           showsVerticalScrollIndicator
           data={[1]}
+          refreshControl={
+            <RefreshControl
+              onRefresh={() => this._onRefresh()}
+              refreshing={this.state.refreshing}
+            />
+          }
           renderItem={this.renderItem.bind(this)}
           keyExtractor={(data, index) => index.toString()}
         />
@@ -641,6 +710,12 @@ const styles = StyleSheet.create({
     height: 8,
     marginHorizontal: -16,
     marginVertical: 16
+  },
+  menuDashboardImage: {
+    height: 50,
+    width: 50,
+    borderRadius: 50,
+    marginRight: 16
   }
 });
 
@@ -662,8 +737,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 11082020
+ * updatedDate: 18082020
  * updatedFunction:
- * -> Fix kpi dashboard's style.
+ * -> update kpi dashboard (progress bar & notes)
  *
  */

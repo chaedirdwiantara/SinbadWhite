@@ -6,12 +6,19 @@ import {
   StyleSheet,
   Text,
   ScrollView,
-  Dimensions
+  Dimensions,
+  RefreshControl
 } from '../../library/reactPackage';
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
-import { Fonts, Scale, MoneyFormatShort } from '../../helpers';
+import {
+  Fonts,
+  Scale,
+  MoneyFormatShort,
+  getStartDateNow,
+  getStartDateMinHour
+} from '../../helpers';
 import {
   Shadow as ShadowComponent,
   TabsCustom,
@@ -22,7 +29,12 @@ import {
 } from '../../library/component';
 import TargetCard from './target';
 import moment from 'moment';
+import _ from 'lodash';
 // import NavigationService from '../../navigation/NavigationService';
+
+/*
+ * period is used for request parameter
+ */
 
 const listMenu = [
   {
@@ -41,7 +53,7 @@ const listMenu = [
 
 const listMenuWhite = [
   {
-    title: 'T Order',
+    title: 'T. Order',
     value: 'orderedStores'
   },
   {
@@ -85,6 +97,14 @@ const listTarget = [
 ];
 
 class DashboardView extends Component {
+  onRef = ref => {
+    if (ref) {
+      this.charts.push(ref);
+    }
+  };
+
+  charts = [];
+
   constructor(props) {
     super(props);
     this.state = {
@@ -93,24 +113,92 @@ class DashboardView extends Component {
       tabsTimeTarget: listTimeTarget[0].value,
       tabsTarget: listTarget[0].value,
       data: {
-        now: false,
+        now: {
+          daily: false,
+          monthly: false
+        },
         daily: false,
         monthly: false
       },
-      currentSlideIndex: 0
+      currentSlideIndex: 0,
+      refreshing: false
     };
+  }
+
+  /** === GET KPI GRAPH === */
+  getKpiGraphData() {
+    let startDate;
+    let endDate = moment().format();
+
+    switch (this.state.tabsTime) {
+      case 'thisMonth':
+        startDate = moment()
+          .startOf('month')
+          .format();
+        period = 'thisMonth';
+        break;
+
+      case '6Month':
+        startDate = moment()
+          .subtract(5, 'month')
+          .startOf('month')
+          .format();
+        endDate = moment()
+          .add(1, 'month')
+          .format();
+        period = 'last3Month';
+        break;
+
+      // default last 7 days
+      default:
+        startDate = moment()
+          .subtract(7, 'day')
+          .format();
+        var period = 'last7Days';
+    }
+
+    let params = {
+      startDate,
+      endDate,
+      period,
+      userId: this.props.user.id
+    };
+
+    this.props.getKpiGraphDataProcess(params);
   }
 
   /** === GET KPI DATA === */
   getKpiData({ period, startDate, endDate }) {
+    if (_.isNil(this.props.user)) {
+      return;
+    }
+
+    let supplierId = 1;
+    try {
+      supplierId = this.props.user.userSuppliers[0].supplierId;
+    } catch (error) {
+      return;
+    }
     let params = {
       startDate: '',
       endDate: '',
-      period: period === 'now' ? 'daily' : period,
-      userId: this.props.user.id
+      period:
+        period === 'nowDaily'
+          ? 'daily'
+          : period === 'nowMonthly'
+          ? 'monthly'
+          : period,
+      userId: this.props.user.id,
+      supplierId
     };
+
     switch (period) {
-      case 'now':
+      case 'nowDaily':
+        params.startDate = startDate;
+        params.endDate = endDate;
+        break;
+
+      case 'nowMonthly':
         params.startDate = startDate;
         params.endDate = endDate;
         break;
@@ -133,21 +221,30 @@ class DashboardView extends Component {
       default:
         break;
     }
-    console.log('fetching START');
     this.setState({
       load: period
     });
-    console.log({ period, startDate, endDate });
-    console.log(period);
     this.props.getKpiDashboardDetailProcess(params);
   }
 
-  /** === KPI DATA BY DATE NOW === */
+  /** === KPI DATA BY DATE NOW DAILY === */
   getNowDetailKpi = () => {
     this.getKpiData({
-      period: 'now',
-      startDate: moment(new Date()).format('YYYY-MM-DD'),
-      endDate: moment(new Date()).format('YYYY-MM-DD')
+      period: 'nowDaily',
+      startDate: getStartDateMinHour(),
+      endDate: moment().format()
+    });
+  };
+
+  /** === KPI DATA BY DATE NOW MONTHLY === */
+  getNowDetailKpiMonthly = () => {
+    let date = new Date();
+    this.getKpiData({
+      period: 'nowMonthly',
+      startDate: moment(
+        new Date(date.getFullYear(), date.getMonth(), 1)
+      ).format(),
+      endDate: moment().format()
     });
   };
 
@@ -155,42 +252,101 @@ class DashboardView extends Component {
   getInitialDetailKpi = () => {
     this.getKpiData({
       period: 'daily',
-      startDate: moment()
+      startDate: moment(getStartDateNow())
         .subtract(3, 'day')
-        .format('YYYY-MM-DD'),
+        .format(),
       endDate: moment()
         .add(3, 'day')
-        .format('YYYY-MM-DD')
+        .format()
     });
   };
 
   /** === KPI DATA BY MONTH === */
   getMonthlyDetailKpi = () => {
+    let date = new Date();
     this.getKpiData({
       period: 'monthly',
-      startDate: moment()
+      startDate: moment(new Date(date.getFullYear(), date.getMonth(), 1))
         .subtract(3, 'month')
-        .format('YYYY-MM-DD'),
+        .format(),
       endDate: moment()
         .add(3, 'month')
-        .format('YYYY-MM-DD')
+        .format()
     });
   };
 
   componentDidUpdate(prevProps) {
+    const { salesmanKpi } = this.props;
+
+    if (!_.isNil(salesmanKpi.kpiGraphData)) {
+      Object.keys(salesmanKpi.kpiGraphData).map((property, index) => {
+        let item = this.props.salesmanKpi.kpiGraphData[property];
+
+        if (!item || !item.data || !item.data.data) {
+          return;
+        }
+
+        let legend = [];
+
+        let chartOption = {
+          xAxis: {
+            type: 'category',
+            data:
+              this.state.tabsTime === 'thisMonth'
+                ? item.data.data[0].names.data.map(name =>
+                    name.slice(name.length - 2, name.length)
+                  )
+                : item.data.data[0].names.data
+          },
+          yAxis: {
+            type: 'value',
+            axisLabel: {
+              rotate: 30
+            }
+          },
+          series: item.data.data[0].series.map(seri => {
+            legend.push(seri.name);
+
+            return {
+              type: 'line',
+              smooth: true,
+              data: seri.data
+            };
+          })
+        };
+
+        chartOption.legend = {
+          data: legend
+        };
+
+        if (this.charts.length > index) {
+          this.charts[index].setOption(chartOption);
+        }
+      });
+    }
+
     if (
       this.props.salesmanKpi.kpiDashboardDetailData !==
       prevProps.salesmanKpi.kpiDashboardDetailData
     ) {
-      if (this.state.load === 'now') {
-        /** === UPDATE STATE WHEN FLAG IS NOW === */
+      if (this.state.load === 'nowDaily') {
+        /** === UPDATE STATE WHEN FLAG IS nowDaily === */
         let newData = { ...this.state.data };
-        newData.now = this.props.salesmanKpi.kpiDashboardDetailData;
+        newData.now.daily = this.props.salesmanKpi.kpiDashboardDetailData;
         this.setState({
           load: false,
           data: newData
         });
         this.getInitialDetailKpi();
+      } else if (this.state.load === 'nowMonthly') {
+        /** === UPDATE STATE WHEN FLAG IS nowMonthly === */
+        let newData = { ...this.state.data };
+        newData.now.monthly = this.props.salesmanKpi.kpiDashboardDetailData;
+        this.setState({
+          load: false,
+          data: newData
+        });
+        this.getMonthlyDetailKpi();
       } else if (this.state.load === 'daily') {
         /** === UPDATE STATE WHEN FLAG IS DAILY === */
         let newData = { ...this.state.data };
@@ -207,28 +363,30 @@ class DashboardView extends Component {
           load: false,
           data: newData
         });
+        console.log('FINAL', newData);
       } else {
         this.setState({
           load: false
         });
       }
-      console.log('=========== FLAG ============');
-      console.log(this.state.load);
-      console.log('fetching DONE');
-      console.log(prevProps.salesmanKpi);
-      console.log(this.props.salesmanKpi);
     }
   }
 
+  /** === GET INITIAL DATA === */
+  getInitialData = () => {
+    this.getNowDetailKpi();
+    this.getKpiGraphData();
+  };
+
   /** === INITIAL LIFESYCLE GET KPI DATA BY DATE NOW === */
   componentDidMount() {
-    this.getNowDetailKpi();
+    this.getInitialData();
   }
 
   /** === FOR PARSE DATE === */
   parseDate = ({ day, month, year }) => {
     if (this.state.tabsTimeTarget === 'monthly') {
-      return month;
+      return moment(new Date(year, month - 1, day, 0, 0, 0, 0)).format('MMMM');
     }
     return moment(new Date(year, month - 1, day, 0, 0, 0, 0)).format(
       'DD/MM/YYYY'
@@ -236,10 +394,13 @@ class DashboardView extends Component {
   };
 
   /** === FOR PARSE VALUE === */
-  parseValue = (value, type) => {
+  parseValue = (value, type, exeption) => {
+    if (value === 0 && !exeption) {
+      return '-';
+    }
     if (type === 'totalSales') {
       if (value === 0) {
-        return '-';
+        return 'Rp. 0';
       }
       return MoneyFormatShort(value);
     }
@@ -252,6 +413,10 @@ class DashboardView extends Component {
   /** === GET DATA BY PREV OR NEXT === */
   parsePrevNext = data => {
     if (this.state.tabsTarget === 'prev') {
+      let range = 'day';
+      if (this.state.tabsTimeTarget !== 'daily') {
+        range = 'month';
+      }
       const newData = data.filter(function(rows) {
         return moment(
           new Date(
@@ -263,29 +428,39 @@ class DashboardView extends Component {
             0,
             0
           )
-        ).isBefore(moment(new Date()).subtract(1, 'day'));
+        ).isBefore(moment(new Date()).subtract(1, range));
       });
-      return newData;
+      let reverseData = [];
+      // eslint-disable-next-line no-unused-vars
+      for (let row of newData) {
+        reverseData.unshift(row);
+      }
+      return reverseData;
     }
     const newData = data.filter(function(rows) {
       return moment(
         new Date(rows.date.year, rows.date.month - 1, rows.date.day, 0, 0, 0, 0)
       ).isAfter(new Date());
     });
-    console.log(newData);
     return newData;
   };
 
   /** === TABS PREV NEXT ON CHANGED === */
   tabsTimeChanged = value => {
-    this.setState({
-      tabsTime: value
-    });
+    if (this.state.tabsTime !== value) {
+      this.setState(
+        {
+          tabsTime: value
+        },
+        () => {
+          this.getKpiGraphData();
+        }
+      );
+    }
   };
 
   /** === TABS TYPE OF KEY OBJECT CHANGED === */
   tabsWhiteChanged = value => {
-    console.log(value);
     this.setState({
       tabsWhite: value
     });
@@ -328,71 +503,124 @@ class DashboardView extends Component {
     });
   };
 
+  /** === PULL TO REFRESH === */
+  _onRefresh() {
+    this.setState({ refreshing: true });
+    this.getInitialData();
+    setTimeout(() => {
+      this.setState({ refreshing: false });
+    }, 1000);
+  }
+
   /** === CART COMPONENT === */
   renderChart = () => {
-    let graphList = [
-      {
-        title: 'T.Order',
-        data: {}
-      },
-      {
-        title: 'Total Penjualan',
-        data: {}
-      },
-      {
-        title: 'T.Dikunjungi',
-        data: {}
-      },
-      {
-        title: 'T.Baru',
-        data: {}
-      },
-      {
-        title: 'Total Pesanan',
-        data: {}
-      }
-    ];
-
     // prettier-ignore
     return (
       <View style={styles.chartContainer}>
         {/* combine these scroll with bottom indicator */}
         <ScrollView
-          style={{ width: '100%', }}
+          style={{ width: '100%' }}
           horizontal
           showsHorizontalScrollIndicator={false}
           decelerationRate={0}
           snapToInterval={Scale(360)}
           snapToAlignment={'center'}
+          contentContainerStyle={{
+            paddingTop: 20,
+            paddingBottom: 20,
+            paddingHorizontal: 4
+          }}
           onScroll={(event) => {
             let horizontalLimit = Scale(360);
-            if (event.nativeEvent.contentOffset.x % horizontalLimit === 0) {
-              this.setState({
-                currentSlideIndex: event.nativeEvent.contentOffset.x / horizontalLimit
-              });
+            if (event.nativeEvent.contentOffset.x % horizontalLimit) {
+              const newPage = Math.round(
+                event.nativeEvent.contentOffset.x / horizontalLimit
+              );
+              if (this.state.currentSlideIndex !== newPage) {
+                this.setState({
+                  currentSlideIndex: newPage
+                });
+              }
             }
           }}
         >
           {
-            graphList.map((graph, index) => {
-              return <View key={index} style={{ width: Scale(360), height: '100%', }}>
-                         {/* Chart Title */}
-                         <Text>{graph.title}</Text>
+            this.props.salesmanKpi.kpiGraphData.countOrder ? this.props.salesmanKpi.kpiGraphData.countOrder.data ? (
 
-                         {/* Chart Component */}
-                         <Charts />
-                       </View>;
-            })
+              Object.keys(this.props.salesmanKpi.kpiGraphData).map((property, index) => {
+                let item = this.props.salesmanKpi.kpiGraphData[property];
+
+                if (!item || !item.data || !item.data.data) { return; }
+
+                let legend = [];
+
+                let chartOption = {
+                  xAxis: {
+                    type: 'category',
+                    data: item.data.data[0].names.data,
+                    axisLabel: {
+                      rotate: 30,
+                    },
+                  },
+                  yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                      rotate: 30,
+                    }
+                  },
+                  series: item.data.data[0].series.map((seri) => {
+                    legend.push(seri.name);
+
+                    return {
+                      type: 'line',
+                      data: seri.data,
+                      smooth: true,
+                      name: seri.name
+                    };
+                  })
+                };
+
+                chartOption.legend = {
+                  data: legend
+                };
+
+                return <View key={index} style={{ width: Scale(360), height: '100%', }}>
+                  {/* Chart Title */}
+                  <Text
+                    style={[
+                      Fonts.type7,
+                      {
+                        paddingLeft: 10
+                      }
+                    ]}
+                  >
+                    {item.title}
+                  </Text>
+                  {/* Chart Component */}
+                  <View style={{
+                    width: '100%',
+                    height: '100%',
+                  }}>
+                    <Charts
+                      option={chartOption}
+                      ref={this.onRef}
+                    />
+                  </View>
+                </View>;
+              })
+            ) : (null) : (null)
           }
         </ScrollView>
         {/* slide indicator */}
         <SlideIndicator
-          indicators={graphList}
+          totalItem={Object.keys(this.props.salesmanKpi.kpiGraphData).length}
           activeIndex={this.state.currentSlideIndex}
         />
       </View>
     );
   };
+
+  // Details = React.lazy(() => import('./containers/Details'));
 
   render() {
     const {
@@ -404,7 +632,15 @@ class DashboardView extends Component {
       load
     } = this.state;
     return (
-      <ScrollView scrollEnabled={!load}>
+      <ScrollView
+        scrollEnabled={!load}
+        refreshControl={
+          <RefreshControl
+            onRefresh={() => this._onRefresh()}
+            refreshing={this.state.refreshing}
+          />
+        }
+      >
         {load ? (
           <View style={styles.loadingContainer}>
             <LoadingPage />
@@ -418,16 +654,6 @@ class DashboardView extends Component {
             value={tabsTime}
           />
           <View style={styles.containerList}>
-            <Text
-              style={[
-                Fonts.textHeaderPage,
-                {
-                  marginBottom: 15
-                }
-              ]}
-            >
-              T. Order
-            </Text>
             <ShadowComponent>{this.renderChart()}</ShadowComponent>
           </View>
           <View style={styles.sparator} />
@@ -446,23 +672,27 @@ class DashboardView extends Component {
             ]}
           >
             <View style={styles.targetHeader}>
-              <Text style={[Fonts.textHeaderPage]}>Target Saat Ini</Text>
               <View
                 style={{
-                  flex: 1,
-                  paddingLeft: 50
+                  flex: 4
+                }}
+              >
+                <Text style={[Fonts.type7]}>Target Saat Ini</Text>
+              </View>
+              <View
+                style={{
+                  flex: 5
                 }}
               >
                 <TabsCustom
                   listMenu={listTimeTarget}
                   value={tabsTimeTarget}
                   onChange={value => {
-                    console.log(data);
                     this.setState({
                       tabsTimeTarget: value
                     });
                     if (!data.monthly) {
-                      this.getMonthlyDetailKpi();
+                      this.getNowDetailKpiMonthly();
                     }
                   }}
                 />
@@ -475,42 +705,46 @@ class DashboardView extends Component {
                   {
                     backgroundColor: masterColor.backgroundWhite,
                     marginBottom: 0,
-                    padding: 20,
+                    padding: 16,
                     borderRadius: 12
                   }
                 ]}
               >
                 <View>
-                  <Text style={[Fonts.type15, styles.textContent]}>Target</Text>
-                  <Text style={[Fonts.type15, styles.textContent]}>
+                  <Text style={[Fonts.type16, styles.textContent]}>Target</Text>
+                  <Text style={[Fonts.type16, styles.textContent]}>
                     {this.state.tabsTimeTarget === 'monthly'
                       ? 'Bulan'
                       : 'Tanggal'}
                   </Text>
-                  <Text style={[Fonts.type15, styles.textContent]}>
+                  <Text style={[Fonts.type16, styles.textContent]}>
                     Pencapaian
                   </Text>
                 </View>
-                {data.now ? (
+                {data.now[tabsTimeTarget] ? (
                   <View>
                     <Text style={[Fonts.type13, styles.textContent]}>
-                      {data.now[tabsWhite]
+                      {data.now[tabsTimeTarget][tabsWhite]
                         ? this.parseValue(
-                            data.now[tabsWhite][0].target,
+                            data.now[tabsTimeTarget][tabsWhite][0].target,
                             tabsWhite
                           )
                         : '-'}
                     </Text>
                     <Text style={[Fonts.type13, styles.textContent]}>
-                      {data.now[tabsWhite]
-                        ? this.parseDate(data.now[tabsWhite][0].date, tabsWhite)
+                      {data.now[tabsTimeTarget][tabsWhite]
+                        ? this.parseDate(
+                            data.now[tabsTimeTarget][tabsWhite][0].date,
+                            tabsWhite
+                          )
                         : '-'}
                     </Text>
                     <Text style={[Fonts.type13, styles.textContent]}>
-                      {data.now[tabsWhite]
+                      {data.now[tabsTimeTarget][tabsWhite]
                         ? this.parseValue(
-                            data.now[tabsWhite][0].achieved,
-                            tabsWhite
+                            data.now[tabsTimeTarget][tabsWhite][0].achieved,
+                            tabsWhite,
+                            true
                           )
                         : '-'}
                     </Text>
@@ -519,11 +753,7 @@ class DashboardView extends Component {
               </View>
             </ShadowComponent>
           </View>
-          <View
-            style={{
-              padding: 20
-            }}
-          >
+          <View>
             <TabsCustom
               type={typeCustomTabs.round}
               listMenu={listTarget}
@@ -582,7 +812,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 300,
     backgroundColor: masterColor.backgroundWhite,
-    borderRadius: 7
+    borderRadius: 7,
+    paddingVertical: 16
   },
   targetHeader: {
     flexDirection: 'row',
@@ -592,7 +823,6 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   textContent: {
-    fontSize: 16,
     marginVertical: 5,
     color: '#000',
     lineHeight: 16

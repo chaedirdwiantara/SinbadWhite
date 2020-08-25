@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import { Color } from '../../config';
@@ -13,42 +13,55 @@ const styles = StyleSheet.create({
 });
 
 // prettier-ignore
-class SlideIndicator extends React.Component {
-  render() {
-    return (
-      <View style={{ alignItems: 'center' }}>
-        <View style={{ flexDirection: 'row' }}>
-          {
-            this.props.indicators.map((item, index) => {
-              return (
-                <View
-                  key={index}
-                  style={[
-                    styles.miniCircle,
-                    {
-                      backgroundColor: this.props.activeIndex === index ? this.props.activeColor : this.props.disactiveColor
-                    }
-                  ]}
-                />
-              );
-            })
-          }
-        </View>
+const SlideIndicator = ({
+  totalItem,
+  activeIndex,
+  activeColor,
+  disactiveColor
+}) => {
+
+  const [indicators, setIndicators] = useState([]);
+
+  useEffect(() => {
+    let newIndicator = [];
+    for (let i = 0; i < totalItem; i++){
+      newIndicator.push(i);
+    }
+    setIndicators(newIndicator);
+  }, [totalItem]);
+
+  return (
+    <View style={{ alignItems: 'center' }}>
+      <View style={{ flexDirection: 'row' }}>
+        {
+          indicators.map((item, index) => {
+            return (
+              <View
+                key={index}
+                style={[
+                  styles.miniCircle,
+                  {
+                    backgroundColor: activeIndex === index ? activeColor : disactiveColor
+                  }
+                ]}
+              />
+            );
+          })
+        }
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
 
 SlideIndicator.propTypes = {
-  // node, array, func, bool, object, string, oneOfType([x,y,z])
-  indicators: PropTypes.array,
+  totalItem: PropTypes.number,
   activeIndex: PropTypes.number,
   activeColor: PropTypes.string,
   disactiveColor: PropTypes.string
 };
 
 SlideIndicator.defaultProps = {
-  indicators: [],
+  totalItem: 0,
   activeIndex: 0,
   activeColor: Color.mainColor,
   disactiveColor: Color.fontBlack60

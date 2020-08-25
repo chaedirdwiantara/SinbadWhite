@@ -4,11 +4,13 @@ import GlobalStyleHtml from './GlobalStyleHtml';
 import { NumberFormat, MoneyFormat, MoneyFormatShort } from './NumberFormater';
 import Scale from './Scale';
 import {
+  getStartDateNow,
   getDateNow,
   getMonthNow,
   getYearNow,
   getStartDateMonth,
-  getEndDateMonth
+  getEndDateMonth,
+  getStartDateMinHour
 } from './TimeHelper';
 
 export {
@@ -19,9 +21,11 @@ export {
   MoneyFormat,
   MoneyFormatShort,
   Scale,
+  getStartDateNow,
   getDateNow,
   getMonthNow,
   getYearNow,
   getStartDateMonth,
-  getEndDateMonth
+  getEndDateMonth,
+  getStartDateMinHour
 };

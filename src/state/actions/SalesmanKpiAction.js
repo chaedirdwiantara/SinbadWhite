@@ -36,17 +36,39 @@ export const getKpiDashboardDetailProcess = params => {
 };
 
 export const getKpiDashboardDetailSuccess = data => {
-  console.log('+++++++++++++++++++++++++++');
-  console.log(data);
   return {
     type: types.KPI_DASHBOARD_DETAIL_GET_SUCCESS,
-    payload: data ? data : 'gak ada data cukk'
+    payload: data
   };
 };
 
 export const getKpiDashboardDetailFailed = data => {
   return {
     type: types.KPI_DASHBOARD_DETAIL_GET_FAILED,
+    payload: data
+  };
+};
+
+/*
+ * FOR KPI GRAPH DATA
+ */
+export const getKpiGraphDataProcess = params => {
+  return {
+    type: types.KPI_GRAPH_DATA_GET_PROCESS,
+    payload: params
+  };
+};
+
+export const getKpiGraphDataSuccess = data => {
+  return {
+    type: types.KPI_GRAPH_DATA_GET_SUCCESS,
+    payload: data ? data : 'gak ada data cukk'
+  };
+};
+
+export const getKpiGraphDataFailed = data => {
+  return {
+    type: types.KPI_GRAPH_DATA_GET_FAILED,
     payload: data
   };
 };
