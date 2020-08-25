@@ -7,7 +7,8 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Text
+  Text,
+  RefreshControl
 } from '../../library/reactPackage';
 import {
   bindActionCreators,
@@ -26,6 +27,11 @@ import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
+import ModalChangePaymentMethod from './ModalChangePaymentMethod';
+import ModalWarning from '../../components/modal/ModalWarning';
+import ModalTAndR from './ModalTAndC';
+import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation'
+import HistoryDetailPayment from './HistoryDetailPayment';
 import CallCS from '../../screens/global/CallCS';
 
 class HistoryDetailView extends Component {
@@ -38,6 +44,31 @@ class HistoryDetailView extends Component {
       storeId: this.props.navigation.state.params.storeId
     };
   }
+   /* ========================
+   * HEADER MODIFY
+   * ========================
+   */
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state;
+    return {
+      headerTitle:
+        params.section === 'payment' ? 'Detail Tagihan' : 'Detail Pesanan',
+      headerTitleStyle: [
+        Fonts.type35,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.backButtonWhite,
+      headerStyle: {
+        elevation: 0,
+        backgroundColor: masterColor.mainColor
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    };
+  };
   /**
    * =======================
    * FUNCTIONAL
@@ -85,7 +116,12 @@ class HistoryDetailView extends Component {
   /** CHECK STATUS */
   checkStatus() {
     let data = null;
-    if (this.state.section === 'payment') {
+    if (this.props.history.dataDetailHistory.billing.paymentChannelId === 2 && this.props.history.dataDetailHistory.statusPayment === "waiting_for_payment" && moment.utc(new Date()).local() > moment.utc(this.props.history.dataDetailHistory.billing.expiredPaymentTime).local()){
+      return {
+      title : 'Tidak Dibayar',
+      desc: 'Pesanan Tidak Dibayar'
+      }
+    } else if (this.state.section === 'payment') {
       if (this.props.history.dataGetPaymentStatus !== null) {
         data = this.props.history.dataGetPaymentStatus.find(
           itemPayment =>
@@ -145,6 +181,15 @@ class HistoryDetailView extends Component {
     }
     return '-';
   }
+  /** === ON REFRESH === */
+  onRefresh = () => {
+    this.props.historyGetDetailProcess(this.props.history.dataDetailHistory.id);
+    /** SET PAGE REFRESH */
+    this.setState({ refreshing: true });
+    setTimeout(() => {
+      this.setState({ refreshing: false });
+    }, 10);
+  };
   /**
    * ========================
    * RENDER VIEW
@@ -244,47 +289,55 @@ class HistoryDetailView extends Component {
   /** RENDER RINGKASAN PESANAN */
   renderRingkasanPesanan() {
     return (
-      <View style={[GlobalStyle.shadowForBox, { marginBottom: 16 }]}>
-        <View
-          style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
-        >
-          <Text style={Fonts.type48}>Ringkasan Pesanan</Text>
-        </View>
-        <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-        <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-          {this.renderContentListGlobal('Order Via', this.orderVia())}
-          {this.renderContentListGlobal(
-            'Tanggal Pembelian',
-            moment(
-              new Date(this.props.history.dataDetailHistory.createdAt)
-            ).format('DD MMM YYYY HH:mm:ss')
-          )}
-          {this.renderContentListGlobal(
-            this.props.history.dataDetailHistory.deliveredDate !== null
-              ? 'Tanggal Pengiriman'
-              : 'Estimasi Tanggal Pengiriman',
-            this.props.history.dataDetailHistory.deliveredDate !== null
-              ? moment(
-                  new Date(this.props.history.dataDetailHistory.deliveredDate)
-                ).format('DD MMM YYYY HH:mm:ss')
-              : moment(
-                  new Date(
-                    this.props.history.dataDetailHistory.estDeliveredDate
+      <View>
+        <View style={GlobalStyle.shadowForBox}>
+          <View
+            style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
+          >
+            <Text style={Fonts.type48}>Catatan Pesanan</Text>
+          </View>
+          <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
+          <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+            {this.renderContentListGlobal('Order Via', this.orderVia())}
+            {this.renderContentListGlobal(
+              'Tanggal Pembelian',
+              moment(
+                new Date(this.props.history.dataDetailHistory.createdAt)
+              ).format('DD MMM YYYY HH:mm:ss')
+            )}
+            {this.renderContentListGlobal(
+              this.props.history.dataDetailHistory.deliveredDate !== null
+                ? 'Tanggal Pengiriman'
+                : 'Estimasi Tanggal Pengiriman',
+              this.props.history.dataDetailHistory.deliveredDate !== null
+                ? moment(
+                    new Date(this.props.history.dataDetailHistory.deliveredDate)
+                  ).format('DD MMM YYYY HH:mm:ss')
+                : (this.props.history.dataDetailHistory.estDeliveredDate !== null ? moment(
+                      new Date(
+                        this.props.history.dataDetailHistory.estDeliveredDate
+                      )
+                    ).format('DD MMM YYYY HH:mm:ss') : '-'
                   )
-                ).format('DD MMM YYYY HH:mm:ss')
-          )}
-          {this.renderContentListGlobal(
-            this.props.history.dataDetailHistory.dueDate !== null
-              ? 'Jatuh Tempo'
-              : 'Estimasi Jatuh Tempo',
-            this.props.history.dataDetailHistory.dueDate !== null
-              ? moment(
-                  new Date(this.props.history.dataDetailHistory.dueDate)
-                ).format('DD MMM YYYY HH:mm:ss')
-              : moment(
+                // moment(
+                //     new Date(
+                //       this.props.history.dataDetailHistory.estDeliveredDate
+                //     )
+                //   ).format('DD MMM YYYY HH:mm:ss')
+            )}
+            {this.renderContentListGlobal(
+              this.props.history.dataDetailHistory.dueDate !== null
+                ? 'Jatuh Tempo'
+                : 'Estimasi Jatuh Tempo',
+              this.props.history.dataDetailHistory.dueDate !== null
+                ? moment(
+                    new Date(this.props.history.dataDetailHistory.dueDate)
+                  ).format('DD MMM YYYY HH:mm:ss')
+                : ( this.props.history.dataDetailHistory.estDueDate !==null ? moment(
                   new Date(this.props.history.dataDetailHistory.estDueDate)
-                ).format('DD MMM YYYY HH:mm:ss')
-          )}
+                ).format('DD MMM YYYY HH:mm:ss') : '-')
+            )}
+          </View>
         </View>
       </View>
     );
@@ -292,7 +345,7 @@ class HistoryDetailView extends Component {
   /** RENDER PRODUCT LIST */
   renderProductList() {
     return (
-      <View style={[GlobalStyle.shadowForBox, { marginBottom: 16 }]}>
+      <View style={GlobalStyle.shadowForBox}>
         <View
           style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
         >
@@ -308,107 +361,36 @@ class HistoryDetailView extends Component {
   /** RENDER DELIVERY DETAIL */
   renderDeliveryDetail() {
     return (
-      <View style={[GlobalStyle.shadowForBox, { marginBottom: 16 }]}>
-        <View
-          style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
-        >
-          <Text style={Fonts.type48}>Detail Pengiriman</Text>
-        </View>
-        <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-        <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-          {this.renderContentListGlobal('Kurir Pengiriman', 'Self Delivery')}
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: 8
-            }}
-          >
-            <View style={{ flex: 1 }}>
-              <Text style={Fonts.type17}>Alamat Pengiriman</Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Address
-                position={'right'}
-                font={Fonts.type17}
-                address={
-                  this.props.history.dataDetailHistory.order.store.address
-                }
-                urban={this.props.history.dataDetailHistory.order.store.urban}
-              />
-            </View>
-          </View>
-        </View>
-      </View>
-    );
-  }
-  /** RENDER PRODUCT LIST */
-  renderPaymentInformation() {
-    return (
       <View>
         <View style={GlobalStyle.boxPadding} />
         <View style={GlobalStyle.shadowForBox}>
           <View
             style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
           >
-            <Text style={Fonts.type48}>Informasi Pembayaran</Text>
+            <Text style={Fonts.type48}>Detail Pengiriman</Text>
           </View>
           <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
           <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-            {this.renderContentListGlobal(
-              'Tipe Pembayaran',
-              this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
-                null
-                ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
-                    .paymentTypeSupplier.paymentType.name
-                : '-'
-            )}
-            {this.renderContentListGlobal(
-              'Metode Pembayaran',
-              this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
-                null
-                ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
-                    .paymentMethod.name
-                : '-'
-            )}
-            {this.renderContentListGlobal(
-              `Total Barang (${this.totalSKU()})`,
-              MoneyFormat(this.props.history.dataDetailHistory.parcelGrossPrice)
-            )}
-            {/* {this.renderContentListGlobal(
-              'Potongan Harga',
-              `- ${MoneyFormat(
-                this.props.history.dataDetailHistory.parcelPromo
-              )}`,
-              true
-            )} */}
-            {this.renderPromoList(
-              this.props.history.dataDetailHistory.promoList
-            )}
-            {this.renderVoucherList(
-              this.props.history.dataDetailHistory.voucherList
-            )}
-            {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
-            {this.renderContentListGlobal(
-              'PPN 10%',
-              MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
-            )}
+            {this.renderContentListGlobal('Kurir Pengiriman', 'Self Delivery')}
             <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                marginTop: 16
+                marginTop: 8
               }}
             >
-              <View style={{ flex: 1, alignItems: 'flex-start' }}>
-                <Text style={Fonts.type50}>Sub Total</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={Fonts.type17}>Alamat Pengiriman</Text>
               </View>
-              <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                <Text style={Fonts.type21}>
-                  {MoneyFormat(
-                    this.props.history.dataDetailHistory.parcelFinalPrice
-                  )}
-                </Text>
+              <View style={{ flex: 1 }}>
+                <Address
+                  position={'right'}
+                  font={Fonts.type17}
+                  address={
+                    this.props.history.dataDetailHistory.order.store.address
+                  }
+                  urban={this.props.history.dataDetailHistory.order.store.urban}
+                />
               </View>
             </View>
           </View>
@@ -416,16 +398,132 @@ class HistoryDetailView extends Component {
       </View>
     );
   }
+  /** RENDER PAYMENT INFORMATION */
+  renderPaymentInformation(){
+    if (this.props.history.dataDetailHistory !== null) {
+      return (
+        <HistoryDetailPaymentInformation
+          data={this.props.history.dataDetailHistory}
+          section={this.state.section}
+        />
+      );
+    }
+  }
+    // return (
+    //   <View>
+    //     <View style={GlobalStyle.boxPadding} />
+    //     <View style={GlobalStyle.shadowForBox}>
+    //       <View
+    //         style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
+    //       >
+    //         <Text style={Fonts.type48}>Informasi Pembayaran</Text>
+    //       </View>
+    //       <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
+    //       <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+    //         {this.renderContentListGlobal(
+    //           'Tipe Pembayaran',
+    //           this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
+    //             null
+    //             ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
+    //                 .paymentTypeSupplier.paymentType.name
+    //             : '-'
+    //         )}
+    //         {this.renderContentListGlobal(
+    //           'Metode Pembayaran',
+    //           this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
+    //             null
+    //             ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
+    //                 .paymentMethod.name
+    //             : '-'
+    //         )}
+    //         {this.renderContentListGlobal(
+    //           `Total Barang (${this.totalSKU()})`,
+    //           MoneyFormat(this.props.history.dataDetailHistory.parcelGrossPrice)
+    //         )}
+    //         {/* {this.renderContentListGlobal(
+    //           'Potongan Harga',
+    //           `- ${MoneyFormat(
+    //             this.props.history.dataDetailHistory.parcelPromo
+    //           )}`,
+    //           true
+    //         )} */}
+    //         {this.renderPromoList(
+    //           this.props.history.dataDetailHistory.promoList
+    //         )}
+    //         {this.renderVoucherList(
+    //           this.props.history.dataDetailHistory.voucherList
+    //         )}
+    //         {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
+    //         {this.renderContentListGlobal(
+    //           'PPN 10%',
+    //           MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
+    //         )}
+    //         <View
+    //           style={{
+    //             flexDirection: 'row',
+    //             justifyContent: 'space-between',
+    //             marginTop: 16
+    //           }}
+    //         >
+    //           <View style={{ flex: 1, alignItems: 'flex-start' }}>
+    //             <Text style={Fonts.type50}>Sub Total</Text>
+    //           </View>
+    //           <View style={{ flex: 1, alignItems: 'flex-end' }}>
+    //             <Text style={Fonts.type21}>
+    //               {MoneyFormat(
+    //                 this.props.history.dataDetailHistory.parcelFinalPrice
+    //               )}
+    //             </Text>
+    //           </View>
+    //         </View>
+    //       </View>
+    //     </View>
+    //   </View>
+    // );
+  // }
+/** RENDER DETAIL PAYMENT */
+renderDetailPayment() {
+  if (this.props.history.dataDetailHistory !== null) {
+    return(
+      <HistoryDetailPayment
+        data={this.props.history.dataDetailHistory}
+        section={this.state.section}
+      />)
+    
+  }
+}
+
   /** RENDER CONTENT */
   renderContent() {
     return (
       <View style={{ flex: 1 }}>
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh}
+            />
+          }
+        >
           {this.renderHeaderStatus()}
+          {this.state.section === 'payment' ? (
+            this.renderDetailPayment()
+          ) : (
+            <View />
+          )}
           {this.renderRingkasanPesanan()}
           {this.renderProductList()}
           {this.renderDeliveryDetail()}
-          {this.renderPaymentInformation()}
+          {this.state.section === 'order' ? (
+            this.renderPaymentInformation()
+          ) : (
+            <View />
+          )}
+           {/* {this.state.section === 'payment' ? (
+            this.renderSelectPaymentMethod()
+          ) : (
+            <View />
+          )} */}
           <View style={{ paddingBottom: 50 }} />
         </ScrollView>
       </View>

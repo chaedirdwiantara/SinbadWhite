@@ -522,7 +522,7 @@ class MerchantHomeView extends Component {
         <View>
           {item.menuName === 'Pesanan' &&
           this.props.permanent.newOrderSuccessPerMerchant.indexOf(
-            this.props.merchant.selectedMerchant.storeId
+            parseInt(this.props.merchant.selectedMerchant.storeId, 10)
           ) > -1 ? (
             <View style={styles.boxNotification}>
               <View style={GlobalStyle.circleRedNotification16} />

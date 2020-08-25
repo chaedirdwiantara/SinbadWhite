@@ -8,6 +8,7 @@ import PdpSaga from './PdpSaga';
 import OmsSaga from './OmsSaga';
 import HistorySaga from './HistorySaga';
 import ProfileSaga from './ProfileSaga';
+import SalesmanKpiSaga from './SalesmanKpiSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -18,6 +19,7 @@ export default function* rootSaga() {
     fork(PdpSaga),
     fork(OmsSaga),
     fork(HistorySaga),
-    fork(ProfileSaga)
+    fork(ProfileSaga),
+    fork(SalesmanKpiSaga)
   ]);
 }

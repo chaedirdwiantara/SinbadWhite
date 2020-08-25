@@ -1,9 +1,4 @@
-import {
-  React,
-  View,
-  StyleSheet,
-  Image
-} from '../library/reactPackage'
+import { React, View, StyleSheet, Image } from '../library/reactPackage';
 
 const LoadingLoadMore = () => {
   return (
@@ -36,7 +31,7 @@ const LoadingHorizontal = () => {
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   loadMoreContainer: {
@@ -49,25 +44,26 @@ const styles = StyleSheet.create({
   loadingPage: {
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1
+    flex: 1,
+    height: '100%',
+    width: '100%'
   }
 });
 
 export { LoadingLoadMore, LoadingPage, LoadingHorizontal };
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 02072020
-* updatedFunction:
-* -> Add component LoadingHorizontal
-* updatedBy: Tatas
-* updatedDate: 08072020
-* updatedFunction:
-* -> Refactoring Module Import
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 02072020
+ * updatedFunction:
+ * -> Add component LoadingHorizontal
+ * updatedBy: Tatas
+ * updatedDate: 08072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ */

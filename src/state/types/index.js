@@ -12,3 +12,4 @@ export * from './PdpType';
 export * from './ProfileType';
 export * from './SearchType';
 export * from './JourneyType';
+export * from './SalesmanKpi';

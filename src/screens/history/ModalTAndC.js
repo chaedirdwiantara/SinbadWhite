@@ -1,34 +1,36 @@
 import {
-  React,
-  Component,
-  View,
-  StyleSheet,
-  Dimensions,
-  Modal,
-  ScrollView,
-  ModalPopUp,
-  TouchableOpacity,
-  Text
-} from '../../library/reactPackage'
-
-import {
-  Button,
-  MaterialIcon,
-  MaterialCommunityIcons,
-  HTMLView
-} from '../../library/thirdPartyPackage'
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import masterColor from '../../config/masterColor.json';
-import {
-  StatusBarRedOP50
-} from '../../library/component';
-import { Fonts, GlobalStyle, GlobalStyleHtml } from '../../helpers'
-import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
-import ButtonSingle from '../../components/button/ButtonSingle';
+    React,
+    Component,
+    View,
+    StyleSheet,
+    Dimensions,
+    Modal,
+    ScrollView,
+    ModalPopUp,
+    TouchableOpacity,
+    Text
+  } from '../../library/reactPackage'
+  
+  import {
+    Button,
+    MaterialIcon,
+    MaterialCommunityIcons,
+    HTMLView
+  } from '../../library/thirdPartyPackage'
+  import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+  import masterColor from '../../config/masterColor.json';
+  import {
+    StatusBarRedOP50
+  } from '../../library/component';
+  import { Fonts, GlobalStyle, GlobalStyleHtml } from '../../helpers'
+  import ModalBottomType4 from '../../components/modal_bottom/ModalBottomType4';
+  // import { ScrollView } from 'react-native-gesture-handler';
+  // import GlobalStyle from '../../helpers/GlobalStyle';
+  import ButtonSingle from '../../components/button/ButtonSingle';
 
 const { width, height } = Dimensions.get('window');
 
-class ModalTAndR extends Component {
+class ModalTAndC extends Component {
   constructor(props) {
     super(props);
 
@@ -62,9 +64,7 @@ class ModalTAndR extends Component {
             </View>
           );
         })
-      ) : (
-        <View />
-      )
+      ) : <View />
     ) : (
       <View />
     );
@@ -81,9 +81,8 @@ class ModalTAndR extends Component {
             </View>
           );
         })
-      ) : (
-        <View />
-      )
+      ) : <View />
+
     ) : (
       <View />
     );
@@ -130,14 +129,22 @@ class ModalTAndR extends Component {
                   loading={this.props.loadingConfirmOrder}
                   loadingPadding={33}
                   onPress={() => this.props.confirmOrder()}
-                  title={'Buat Pesanan'}
+                  title={'Ubah'}
                   borderRadius={4}
                   style={{ width: '50%' }}
                 />
               </View>
-            
+           
           </View>
         </View>
+        {/* <View style={styles.container}>
+          {!this.props.oms.loadingOmsGetPayment &&
+          this.props.oms.dataOmsGetPayment !== null ? (
+            <ScrollView>{this.renderListPaymentType()}</ScrollView>
+          ) : (
+            this.renderSkeleton()
+          )}
+        </View> */}
       </View>
     );
   }
@@ -152,6 +159,70 @@ class ModalTAndR extends Component {
         title={'Syarat & Ketentuan'}
         content={this.renderContent()}
       />
+      // <Modal
+      //   visible={this.props.open}
+      //   transparent
+      //   animationType="fade"
+      //   onRequestClose={() => {}}
+      // >
+      //   <StatusBarRedOP50 />
+      //   <View style={styles.container}>
+      //     <View style={styles.boxModal}>
+      //       <View style={{ height: 60 }}>
+      //         <View style={styles.closeContainer}>
+      //           <TouchableOpacity
+      //             onPress={this.props.close}
+      //             style={styles.closeBox}
+      //           >
+      //             <MaterialIcon
+      //               name="close"
+      //               color={masterColor.fontBlack50}
+      //               size={24}
+      //             />
+      //           </TouchableOpacity>
+      //           <Text style={Fonts.type30}>
+      //             {this.props.data.paymentType.name}
+      //           </Text>
+      //         </View>
+      //       </View>
+      //       <View style={styles.contentContainer}>
+      //         <HTMLView
+      //           value={this.props.data.paymentType.terms}
+      //           stylesheet={GlobalStyleHtml}
+      //         />
+      //       </View>
+      //       <View style={styles.tAndRContainer}>
+      //         <TouchableOpacity
+      //           onPress={() =>
+      //             this.setState({ tAndRCheck: !this.state.tAndRCheck })
+      //           }
+      //         >
+      //           {this.state.tAndRCheck ? (
+      //             <Icons
+      //               color={masterColor.mainColor}
+      //               name="checkbox-marked"
+      //               size={24}
+      //             />
+      //           ) : (
+      //             <Icons
+      //               color={masterColor.fontBlack40}
+      //               name="checkbox-blank-outline"
+      //               size={24}
+      //             />
+      //           )}
+      //         </TouchableOpacity>
+      //         <View style={{ marginLeft: 5, marginRight: 5 }}>
+      //           <Text style={Fonts.type38}>
+      //             Dengan ini saya menyetujui{' '}
+      //             <Text style={Fonts.type28}>Syarat & Ketentuan</Text> yang
+      //             berlaku
+      //           </Text>
+      //         </View>
+      //       </View>
+      //       <View style={styles.buttonContainer}>{this.renderButton()}</View>
+      //     </View>
+      //   </View>
+      // </Modal>
     );
   }
 }
@@ -219,17 +290,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ModalTAndR;
-
-/**
- * ============================
- * NOTES
- * ============================
- * createdBy:
- * createdDate:
- * updatedBy: Tatas
- * updatedDate: 15072020
- * updatedFunction:
- * -> Refactoring Module Import
- *
- */
+export default ModalTAndC;

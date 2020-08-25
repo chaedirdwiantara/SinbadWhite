@@ -31,3 +31,7 @@ export const HISTORY_GET_DETAIL_FAILED = 'historyGetDetailFailed';
 export const HISTORY_EDIT_PROCESS = 'HistoryEditProcess';
 export const HISTORY_EDIT_SUCCESS = 'HistoryEditSuccess';
 export const HISTORY_EDIT_FAILED = 'HistoryEditFailed';
+/** ACTIVATE VA */
+export const HISTORY_ACTIVATE_VA_PROCESS = 'HistoryActivateVAProcess';
+export const HISTORY_ACTIVATE_VA_SUCCESS = 'HistoryActivateVASuccess';
+export const HISTORY_ACTIVATE_VA_FAILED = 'HistoryActivateVAFailed';
