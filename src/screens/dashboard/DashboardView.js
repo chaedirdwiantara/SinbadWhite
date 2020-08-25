@@ -753,7 +753,12 @@ class DashboardView extends Component {
               </View>
             </ShadowComponent>
           </View>
-          <View>
+          <View
+            style={{
+              paddingHorizontal: 20,
+              paddingBottom: 15
+            }}
+          >
             <TabsCustom
               type={typeCustomTabs.round}
               listMenu={listTarget}
