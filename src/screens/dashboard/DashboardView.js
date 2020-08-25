@@ -583,7 +583,7 @@ class DashboardView extends Component {
                   {/* Chart Title */}
                   <Text
                     style={[
-                      Fonts.textHeaderPage,
+                      Fonts.type7,
                       {
                         paddingLeft: 10
                       }
@@ -669,14 +669,14 @@ class DashboardView extends Component {
             <View style={styles.targetHeader}>
               <View
                 style={{
-                  flex: 1
+                  flex: 4
                 }}
               >
-                <Text style={[Fonts.textHeaderPage]}>Target Saat Ini</Text>
+                <Text style={[Fonts.type7]}>Target Saat Ini</Text>
               </View>
               <View
                 style={{
-                  flex: 1
+                  flex: 5
                 }}
               >
                 <TabsCustom
@@ -700,19 +700,19 @@ class DashboardView extends Component {
                   {
                     backgroundColor: masterColor.backgroundWhite,
                     marginBottom: 0,
-                    padding: 20,
+                    padding: 16,
                     borderRadius: 12
                   }
                 ]}
               >
                 <View>
-                  <Text style={[Fonts.type15, styles.textContent]}>Target</Text>
-                  <Text style={[Fonts.type15, styles.textContent]}>
+                  <Text style={[Fonts.type16, styles.textContent]}>Target</Text>
+                  <Text style={[Fonts.type16, styles.textContent]}>
                     {this.state.tabsTimeTarget === 'monthly'
                       ? 'Bulan'
                       : 'Tanggal'}
                   </Text>
-                  <Text style={[Fonts.type15, styles.textContent]}>
+                  <Text style={[Fonts.type16, styles.textContent]}>
                     Pencapaian
                   </Text>
                 </View>
@@ -822,7 +822,6 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   textContent: {
-    fontSize: 16,
     marginVertical: 5,
     color: '#000',
     lineHeight: 16
