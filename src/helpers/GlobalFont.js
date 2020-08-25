@@ -633,6 +633,18 @@ const styles = StyleSheet.create({
     lineHeight: 13,
     color: Color.fontYellow50
   },
+  type105: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 12,
+    lineHeight: 16,
+    color: Color.fontBlack40
+  },
+  type106: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 13,
+    lineHeight: 16,
+    color: Color.fontWhite
+  },
   forCompare: {
     fontFamily: Fonts.MontserratBold,
     fontSize: 14,
