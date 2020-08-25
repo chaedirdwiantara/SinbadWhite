@@ -430,7 +430,12 @@ class DashboardView extends Component {
           )
         ).isBefore(moment(new Date()).subtract(1, range));
       });
-      return newData;
+      let reverseData = [];
+      // eslint-disable-next-line no-unused-vars
+      for (let row of newData) {
+        reverseData.unshift(row);
+      }
+      return reverseData;
     }
     const newData = data.filter(function(rows) {
       return moment(
@@ -748,11 +753,7 @@ class DashboardView extends Component {
               </View>
             </ShadowComponent>
           </View>
-          <View
-            style={{
-              padding: 20
-            }}
-          >
+          <View>
             <TabsCustom
               type={typeCustomTabs.round}
               listMenu={listTarget}
