@@ -46,7 +46,7 @@ const TargetCard = ({
           {
             backgroundColor: masterColor.backgroundWhite,
             marginBottom: 0,
-            padding: 20,
+            padding: 16,
             borderRadius: 12
           }
         ]}
@@ -54,7 +54,7 @@ const TargetCard = ({
         <View>
           <Text
             style={[
-              Fonts.type15,
+              Fonts.type16,
               type === 'prev' ? styles.textContentPrev : styles.textContent
             ]}
           >
@@ -62,7 +62,7 @@ const TargetCard = ({
           </Text>
           <Text
             style={[
-              Fonts.type15,
+              Fonts.type16,
               type === 'prev' ? styles.textContentPrev : styles.textContent
             ]}
           >
@@ -70,7 +70,7 @@ const TargetCard = ({
           </Text>
           <Text
             style={[
-              Fonts.type15,
+              Fonts.type16,
               type === 'prev' ? styles.textContentPrev : styles.textContent
             ]}
           >
@@ -79,7 +79,7 @@ const TargetCard = ({
           {type === 'prev' ? (
             <Text
               style={[
-                Fonts.type15,
+                Fonts.type16,
                 type === 'prev' ? styles.textContentPrev : styles.textContent
               ]}
             >
@@ -172,13 +172,11 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   textContent: {
-    fontSize: 16,
     marginVertical: 5,
     color: '#000',
     lineHeight: 16
   },
   textContentPrev: {
-    fontSize: 16,
     marginVertical: 5,
     color: '#BDBDBD',
     lineHeight: 16

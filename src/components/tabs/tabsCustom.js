@@ -37,7 +37,7 @@ const TabsCustom = ({ listMenu, onChange, value, type }) => {
               }}
               title={row.title}
               titleStyle={[
-                Fonts.textButtonRedActive,
+                Fonts.type16,
                 {
                   color:
                     active === row.value
@@ -54,7 +54,7 @@ const TabsCustom = ({ listMenu, onChange, value, type }) => {
                 borderWidth: 1,
                 borderColor:
                   active === row.value ? 'transparent' : Color.fontBlack40,
-                paddingHorizontal: 30
+                paddingHorizontal: 15
               }}
             />
           );
@@ -81,7 +81,7 @@ const TabsCustom = ({ listMenu, onChange, value, type }) => {
               }}
               title={row.title}
               titleStyle={[
-                Fonts.textButtonRedActive,
+                Fonts.type16,
                 {
                   color:
                     active === row.value
@@ -97,7 +97,7 @@ const TabsCustom = ({ listMenu, onChange, value, type }) => {
                   active === row.value
                     ? Color.buttonActiveColorRed
                     : Color.fontBlack10,
-                paddingHorizontal: 30,
+                paddingHorizontal: 15,
                 paddingTop: 20,
                 paddingBottom: active === row.value ? 18 : 20
               }}
@@ -123,13 +123,7 @@ const TabsCustom = ({ listMenu, onChange, value, type }) => {
               onChange(row.value);
             }}
             title={row.title}
-            titleStyle={[
-              Fonts.textButtonRedActive,
-              {
-                color:
-                  active === row.value ? Color.fontBlack100 : Color.fontBlack60
-              }
-            ]}
+            titleStyle={[Fonts.type16]}
             buttonStyle={{
               backgroundColor:
                 active === row.value ? Color.backgroundWhite : 'transparent',
@@ -157,7 +151,7 @@ const TabsCustom = ({ listMenu, onChange, value, type }) => {
           }}
           title={row.title}
           titleStyle={[
-            Fonts.textButtonRedActive,
+            Fonts.type11,
             {
               color:
                 active === row.value
