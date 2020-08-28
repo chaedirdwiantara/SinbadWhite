@@ -92,7 +92,7 @@ import ErrorBoundary from '../components/error/ErrorBoundary'
 import Shadow from '../components/card/shadow';
 /** TABS */
 import TabsCustom, { typeCustomTabs } from '../components/tabs/tabsCustom';
-import Charts from '../components/charts';
+import SalesmanChart from '../components/SalesmanChart';
 import SlideIndicator from '../components/slide_indicator';
 
 export {
@@ -191,7 +191,7 @@ export {
   /** TABS */
   TabsCustom,
   typeCustomTabs,
-  Charts,
+  SalesmanChart,
   SlideIndicator
 };
 
