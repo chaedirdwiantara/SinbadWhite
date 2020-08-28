@@ -24,7 +24,7 @@ import {
   TabsCustom,
   typeCustomTabs,
   LoadingPage,
-  Charts,
+  SalesmanChart,
   SlideIndicator
 } from '../../library/component';
 import TargetCard from './target';
@@ -93,6 +93,24 @@ const listTarget = [
   {
     title: 'Target Selanjutnya',
     value: 'next'
+  }
+];
+
+const listGraphContentTypes = [
+  {
+    graphContentType: 'total.order'
+  },
+  {
+    graphContentType: 'total.penjualan'
+  },
+  {
+    graphContentType: 'toko.dikunjungi'
+  },
+  {
+    graphContentType: 'toko.baru'
+  },
+  {
+    graphContentType: 'total.pesanan'
   }
 ];
 
@@ -523,15 +541,12 @@ class DashboardView extends Component {
           horizontal
           showsHorizontalScrollIndicator={false}
           decelerationRate={0}
-          snapToInterval={Scale(360)}
+          snapToInterval={Scale(320)}
           snapToAlignment={'center'}
           contentContainerStyle={{
-            paddingTop: 20,
-            paddingBottom: 20,
-            paddingHorizontal: 4
           }}
           onScroll={(event) => {
-            let horizontalLimit = Scale(360);
+            let horizontalLimit = Scale(320);
             if (event.nativeEvent.contentOffset.x % horizontalLimit) {
               const newPage = Math.round(
                 event.nativeEvent.contentOffset.x / horizontalLimit
@@ -545,75 +560,19 @@ class DashboardView extends Component {
           }}
         >
           {
-            this.props.salesmanKpi.kpiGraphData.countOrder ? this.props.salesmanKpi.kpiGraphData.countOrder.data ? (
-
-              Object.keys(this.props.salesmanKpi.kpiGraphData).map((property, index) => {
-                let item = this.props.salesmanKpi.kpiGraphData[property];
-
-                if (!item || !item.data || !item.data.data) { return; }
-
-                let legend = [];
-
-                let chartOption = {
-                  xAxis: {
-                    type: 'category',
-                    data: item.data.data[0].names.data,
-                    axisLabel: {
-                      rotate: 30,
-                    },
-                  },
-                  yAxis: {
-                    type: 'value',
-                    axisLabel: {
-                      rotate: 30,
-                    }
-                  },
-                  series: item.data.data[0].series.map((seri) => {
-                    legend.push(seri.name);
-
-                    return {
-                      type: 'line',
-                      data: seri.data,
-                      smooth: true,
-                      name: seri.name
-                    };
-                  })
-                };
-
-                chartOption.legend = {
-                  data: legend
-                };
-
-                return <View key={index} style={{ width: Scale(360), height: '100%', }}>
-                  {/* Chart Title */}
-                  <Text
-                    style={[
-                      Fonts.type7,
-                      {
-                        paddingLeft: 10
-                      }
-                    ]}
-                  >
-                    {item.title}
-                  </Text>
-                  {/* Chart Component */}
-                  <View style={{
-                    width: '100%',
-                    height: '100%',
-                  }}>
-                    <Charts
-                      option={chartOption}
-                      ref={this.onRef}
-                    />
-                  </View>
-                </View>;
-              })
-            ) : (null) : (null)
+            listGraphContentTypes.map((item, index) => {
+              return <SalesmanChart
+                       key={index}
+                       isVisible={true}
+                       style={{ height: '100%', width: Scale(320) }}
+                       graphContentType={item.graphContentType}
+                     />;
+            })
           }
         </ScrollView>
         {/* slide indicator */}
         <SlideIndicator
-          totalItem={Object.keys(this.props.salesmanKpi.kpiGraphData).length}
+          totalItem={listGraphContentTypes.length}
           activeIndex={this.state.currentSlideIndex}
         />
       </View>
