@@ -62,7 +62,7 @@ export const getKpiGraphDataProcess = params => {
 export const getKpiGraphDataSuccess = data => {
   return {
     type: types.KPI_GRAPH_DATA_GET_SUCCESS,
-    payload: data ? data : 'gak ada data cukk'
+    payload: data
   };
 };
 
