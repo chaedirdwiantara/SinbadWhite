@@ -105,14 +105,6 @@ const listTarget = [
 ];
 
 class DashboardView extends Component {
-  onRef = ref => {
-    if (ref) {
-      this.charts.push(ref);
-    }
-  };
-
-  charts = [];
-
   constructor(props) {
     super(props);
     this.state = {
