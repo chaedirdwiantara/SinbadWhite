@@ -17,7 +17,8 @@ import {
   Scale,
   MoneyFormatShort,
   getStartDateNow,
-  getStartDateMinHour
+  getStartDateMinHour,
+  generateGraphUri
 } from '../../helpers';
 import {
   Shadow as ShadowComponent,
@@ -31,6 +32,13 @@ import TargetCard from './target';
 import moment from 'moment';
 import _ from 'lodash';
 // import NavigationService from '../../navigation/NavigationService';
+import {
+  TOKO_ORDER,
+  TOTAL_PENJUALAN,
+  TOKO_DIKUNJUNGI,
+  TOKO_BARU,
+  TOTAL_PESANAN
+} from '../../constants';
 
 /*
  * period is used for request parameter
@@ -96,24 +104,6 @@ const listTarget = [
   }
 ];
 
-const listGraphContentTypes = [
-  {
-    graphContentType: 'total.order'
-  },
-  {
-    graphContentType: 'total.penjualan'
-  },
-  {
-    graphContentType: 'toko.dikunjungi'
-  },
-  {
-    graphContentType: 'toko.baru'
-  },
-  {
-    graphContentType: 'total.pesanan'
-  }
-];
-
 class DashboardView extends Component {
   onRef = ref => {
     if (ref) {
@@ -139,15 +129,38 @@ class DashboardView extends Component {
         monthly: false
       },
       currentSlideIndex: 0,
-      refreshing: false
+      refreshing: false,
+      graphicDataList: [
+        {
+          graphContentType: TOKO_ORDER,
+          uri: '',
+        },
+        {
+          graphContentType: TOTAL_PENJUALAN,
+          uri: '',
+        },
+        {
+          graphContentType: TOKO_DIKUNJUNGI,
+          uri: '',
+        },
+        {
+          graphContentType: TOKO_BARU,
+          uri: '',
+        },
+        {
+          graphContentType: TOTAL_PESANAN,
+          uri: '',
+        }
+      ],
     };
   }
 
-  /** === GET KPI GRAPH === */
-  getKpiGraphData() {
+  /** === UPDATE KPI GRAPH === */
+  updateKpiGraph() {
     let startDate;
     let endDate = moment().format();
 
+    /* eslint-disable indent */
     switch (this.state.tabsTime) {
       case 'thisMonth':
         startDate = moment()
@@ -174,15 +187,18 @@ class DashboardView extends Component {
           .format();
         var period = 'last7Days';
     }
+    /* eslint-enable indent */
 
-    let params = {
-      startDate,
-      endDate,
-      period,
-      userId: this.props.user.id
-    };
+    let graphicDataList = this.state.graphicDataList.map((item, index) => {
+      return {
+        ...item,
+        uri: generateGraphUri({ graphContentType: item.graphContentType, startDate, endDate, userId: this.props.user.id, period, })
+      };
+    });
 
-    this.props.getKpiGraphDataProcess(params);
+    this.setState({
+      graphicDataList
+    });
   }
 
   /** === GET KPI DATA === */
@@ -294,55 +310,6 @@ class DashboardView extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { salesmanKpi } = this.props;
-
-    if (!_.isNil(salesmanKpi.kpiGraphData)) {
-      Object.keys(salesmanKpi.kpiGraphData).map((property, index) => {
-        let item = this.props.salesmanKpi.kpiGraphData[property];
-
-        if (!item || !item.data || !item.data.data) {
-          return;
-        }
-
-        let legend = [];
-
-        let chartOption = {
-          xAxis: {
-            type: 'category',
-            data:
-              this.state.tabsTime === 'thisMonth'
-                ? item.data.data[0].names.data.map(name =>
-                    name.slice(name.length - 2, name.length)
-                  )
-                : item.data.data[0].names.data
-          },
-          yAxis: {
-            type: 'value',
-            axisLabel: {
-              rotate: 30
-            }
-          },
-          series: item.data.data[0].series.map(seri => {
-            legend.push(seri.name);
-
-            return {
-              type: 'line',
-              smooth: true,
-              data: seri.data
-            };
-          })
-        };
-
-        chartOption.legend = {
-          data: legend
-        };
-
-        if (this.charts.length > index) {
-          this.charts[index].setOption(chartOption);
-        }
-      });
-    }
-
     if (
       this.props.salesmanKpi.kpiDashboardDetailData !==
       prevProps.salesmanKpi.kpiDashboardDetailData
@@ -393,7 +360,7 @@ class DashboardView extends Component {
   /** === GET INITIAL DATA === */
   getInitialData = () => {
     this.getNowDetailKpi();
-    this.getKpiGraphData();
+    this.updateKpiGraph();
   };
 
   /** === INITIAL LIFESYCLE GET KPI DATA BY DATE NOW === */
@@ -471,7 +438,7 @@ class DashboardView extends Component {
           tabsTime: value
         },
         () => {
-          this.getKpiGraphData();
+          this.updateKpiGraph();
         }
       );
     }
@@ -483,6 +450,7 @@ class DashboardView extends Component {
       tabsWhite: value
     });
 
+    /* eslint-disable indent */
     switch (value) {
       case 'tOrder':
         this.setState({
@@ -512,6 +480,7 @@ class DashboardView extends Component {
       default:
         break;
     }
+    /* eslint-enable indent */
   };
 
   /** === TABS TARGET ON CHANGED === */
@@ -532,21 +501,20 @@ class DashboardView extends Component {
 
   /** === CART COMPONENT === */
   renderChart = () => {
-    // prettier-ignore
     return (
       <View style={styles.chartContainer}>
         {/* combine these scroll with bottom indicator */}
         <ScrollView
-          style={{ width: '100%' }}
+          style={{ width: '100%', marginBottom: 8 }}
           horizontal
           showsHorizontalScrollIndicator={false}
           decelerationRate={0}
-          snapToInterval={Scale(320)}
+          snapToInterval={styles.chartContainer.width}
           snapToAlignment={'center'}
           contentContainerStyle={{
           }}
           onScroll={(event) => {
-            let horizontalLimit = Scale(320);
+            let horizontalLimit = styles.chartContainer.width;
             if (event.nativeEvent.contentOffset.x % horizontalLimit) {
               const newPage = Math.round(
                 event.nativeEvent.contentOffset.x / horizontalLimit
@@ -560,19 +528,22 @@ class DashboardView extends Component {
           }}
         >
           {
-            listGraphContentTypes.map((item, index) => {
+            /* eslint-disable indent */
+            this.state.graphicDataList.map((item, index) => {
               return <SalesmanChart
                        key={index}
                        isVisible={true}
-                       style={{ height: '100%', width: Scale(320) }}
-                       graphContentType={item.graphContentType}
+                       style={{ width: styles.chartContainer.width, }}
+                       uri={item.uri}
+                       token={this.props.permanent.token}
                      />;
             })
+            /* eslint-enable */
           }
         </ScrollView>
         {/* slide indicator */}
         <SlideIndicator
-          totalItem={listGraphContentTypes.length}
+          totalItem={this.state.graphicDataList.length}
           activeIndex={this.state.currentSlideIndex}
         />
       </View>
@@ -768,11 +739,11 @@ const styles = StyleSheet.create({
     backgroundColor: masterColor.fontBlack10
   },
   chartContainer: {
-    width: '100%',
+    width: Scale(320),
     height: 300,
-    backgroundColor: masterColor.backgroundWhite,
     borderRadius: 7,
-    paddingVertical: 16
+    paddingVertical: 16,
+    paddingHorizontal: 8
   },
   targetHeader: {
     flexDirection: 'row',
@@ -801,8 +772,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, auth, salesmanKpi }) => {
-  return { user, auth, salesmanKpi };
+const mapStateToProps = ({ user, auth, salesmanKpi, permanent }) => {
+  return { user, auth, salesmanKpi, permanent };
 };
 
 const mapDispatchToProps = dispatch => {

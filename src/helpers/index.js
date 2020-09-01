@@ -12,6 +12,7 @@ import {
   getEndDateMonth,
   getStartDateMinHour
 } from './TimeHelper';
+import { generateGraphUri } from './Graph';
 
 export {
   Fonts,
@@ -27,5 +28,6 @@ export {
   getYearNow,
   getStartDateMonth,
   getEndDateMonth,
-  getStartDateMinHour
+  getStartDateMinHour,
+  generateGraphUri
 };
