@@ -1,21 +1,9 @@
 import React from 'react';
 import { View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-class SalesmanGraph extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isVisible: false
-    };
-
-    this._checkFlag = null;
-    this._isRequesting = false;
-  }
-
+class SalesmanGraph extends React.Component {
   componentWillUnmount() {
     this.props.onExit();
   }
@@ -26,23 +14,17 @@ class SalesmanGraph extends React.PureComponent {
     /* eslint-disable indent */
     switch (data) {
       case 'FINISH':
-        // navigation.goBack()
         this.props.onExit();
-        this.setState({ isVisible: false });
         break;
 
       case 'EXIT':
-        // navigation.goBack()
         this.props.onExit();
-        this.setState({ isVisible: false });
         break;
     }
     /* eslint-enable indent */
   };
 
   render() {
-    const { token } = this.props;
-
     /* eslint-disable indent */
     return (
       <React.Fragment>
@@ -50,12 +32,8 @@ class SalesmanGraph extends React.PureComponent {
           <View style={this.props.style}>
             <WebView
               source={{
-                uri:
-                  'https://kong-dev.sinbad.web.id/supplier/salesmankpi' +
-                  `/v1/mobile/page/graph?graphContentType=${
-                    this.props.graphContentType
-                  }`,
-                headers: { Authorization: 'Bearer ' + token }
+                uri: this.props.uri,
+                headers: { Authorization: 'Bearer ' + this.props.token }
               }}
               javaScriptEnabled={true}
               domStorageEnabled={true}
@@ -77,7 +55,7 @@ SalesmanGraph.propTypes = {
   style: PropTypes.object,
   isVisible: PropTypes.bool,
   token: PropTypes.string,
-  graphContentType: PropTypes.string
+  uri: PropTypes.string
 };
 
 SalesmanGraph.defaultProps = {
@@ -86,16 +64,7 @@ SalesmanGraph.defaultProps = {
   style: {},
   isVisible: false,
   token: '',
-  graphContentType: ''
+  uri: ''
 };
 
-const mapStateToProps = state => ({});
-
-const mapDispatchToProps = dispatch => {
-  return {};
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SalesmanGraph);
+export default SalesmanGraph;
