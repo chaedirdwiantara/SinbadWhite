@@ -46,18 +46,25 @@ class SalesmanGraph extends React.PureComponent {
     /* eslint-disable indent */
     return (
       <React.Fragment>
-        {
-          this.props.isVisible ? <View style={this.props.style}>
-                                     <WebView
-                                       source={{ uri: 'https://kong-dev.sinbad.web.id/supplier/salesmankpi' + `/v1/mobile/page/graph?graphContentType=${this.props.graphContentType}`, headers: { Authorization: 'Bearer ' + token } }}
-                                       javaScriptEnabled={true}
-                                       domStorageEnabled={true}
-                                       scalesPageToFit={true}
-                                       scrollEnabled={false}
-                                       onMessage={this._onPostMessage}
-                                     />
-                                   </View> : null
-        }
+        {this.props.isVisible ? (
+          <View style={this.props.style}>
+            <WebView
+              source={{
+                uri:
+                  'https://kong-dev.sinbad.web.id/supplier/salesmankpi' +
+                  `/v1/mobile/page/graph?graphContentType=${
+                    this.props.graphContentType
+                  }`,
+                headers: { Authorization: 'Bearer ' + token }
+              }}
+              javaScriptEnabled={true}
+              domStorageEnabled={true}
+              scalesPageToFit={true}
+              scrollEnabled={false}
+              onMessage={this._onPostMessage}
+            />
+          </View>
+        ) : null}
       </React.Fragment>
     );
     /* eslint-enable indent */
@@ -70,7 +77,7 @@ SalesmanGraph.propTypes = {
   style: PropTypes.object,
   isVisible: PropTypes.bool,
   token: PropTypes.string,
-  graphContentType: PropTypes.string,
+  graphContentType: PropTypes.string
 };
 
 SalesmanGraph.defaultProps = {
@@ -79,12 +86,10 @@ SalesmanGraph.defaultProps = {
   style: {},
   isVisible: false,
   token: '',
-  graphContentType: '',
+  graphContentType: ''
 };
 
-const mapStateToProps = state => ({
-
-});
+const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => {
   return {};
