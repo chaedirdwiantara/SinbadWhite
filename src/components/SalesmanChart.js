@@ -22,6 +22,10 @@ const LoadingView = () => {
 };
 
 class SalesmanGraph extends React.Component {
+  state = {
+    load: true
+  };
+
   componentWillUnmount() {
     this.props.onExit();
   }
@@ -70,6 +74,7 @@ class SalesmanGraph extends React.Component {
                 }
               ]}
             >
+              {this.state.load ? <LoadingView /> : null}
               <WebView
                 source={{
                   uri: this.props.uri,
@@ -82,6 +87,19 @@ class SalesmanGraph extends React.Component {
                 domStorageEnabled={true}
                 scalesPageToFit={true}
                 scrollEnabled={false}
+                startInLoadingState
+                onLoadEnd={() => {
+                  setTimeout(() => {
+                    this.setState({
+                      load: false
+                    });
+                  }, 2000);
+                }}
+                onLoadStart={() => {
+                  this.setState({
+                    load: true
+                  });
+                }}
                 renderLoading={() => <LoadingView />}
                 onMessage={this._onPostMessage}
               />
