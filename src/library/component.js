@@ -96,7 +96,7 @@ import ErrorBoundary from '../components/error/ErrorBoundary';
 import Shadow from '../components/card/shadow';
 /** TABS */
 import TabsCustom, { typeCustomTabs } from '../components/tabs/tabsCustom';
-import Charts from '../components/charts';
+import SalesmanChart from '../components/SalesmanChart';
 import SlideIndicator from '../components/slide_indicator';
 import CardType1 from '../components/card/CardType1';
 
@@ -196,9 +196,9 @@ export {
   /** TABS */
   TabsCustom,
   typeCustomTabs,
-  Charts,
-  SlideIndicator,
-  CardType1
+  CardType1,
+  SalesmanChart,
+  SlideIndicator
 };
 
 /**
