@@ -12,4 +12,7 @@ export const generateGraphUri = ({
   }supplier/salesmankpi/v1/mobile/page/graph?graphContentType=${graphContentType}&userIds=${userId}&period=${period}&startDate=${encodeURIComponent(
     startDate
   )}&endDate=${encodeURIComponent(endDate)}`;
+  // return `http://192.168.88.173:8080/v1/mobile/page/graph?graphContentType=${graphContentType}&userIds=${userId}&period=${period}&startDate=${encodeURIComponent(
+  //   startDate
+  // )}&endDate=${encodeURIComponent(endDate)}`;
 };
