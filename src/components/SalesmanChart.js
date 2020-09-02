@@ -11,8 +11,8 @@ const LoadingView = () => {
       style={{
         height: '100%',
         width: '100%',
-        position: 'absolute',
         zIndex: 2,
+        position: 'absolute',
         backgroundColor: 'rgba(250,250,250 ,0.8)'
       }}
     >
@@ -70,35 +70,46 @@ class SalesmanGraph extends React.Component {
                 }
               ]}
             >
-              {this.state.load ? <LoadingView /> : null}
-              <WebView
-                source={{
-                  uri: this.props.uri,
-                  headers: { Authorization: 'Bearer ' + this.props.token }
+              <View
+                style={{
+                  zIndex: -1,
+                  width: '100%',
+                  height: '100%'
                 }}
-                containerStyle={{
-                  borderRadius: 7
-                }}
-                javaScriptEnabled={true}
-                domStorageEnabled={true}
-                scalesPageToFit={true}
-                scrollEnabled={false}
-                startInLoadingState
-                onLoadEnd={() => {
-                  setTimeout(() => {
+              >
+                {this.state.load ? <LoadingView /> : null}
+                <WebView
+                  source={{
+                    uri: this.props.uri,
+                    headers: { Authorization: 'Bearer ' + this.props.token }
+                  }}
+                  style={{
+                    zIndex: 1
+                  }}
+                  containerStyle={{
+                    borderRadius: 7
+                  }}
+                  javaScriptEnabled={true}
+                  domStorageEnabled={true}
+                  scalesPageToFit={true}
+                  scrollEnabled={false}
+                  startInLoadingState
+                  onLoadEnd={() => {
+                    setTimeout(() => {
+                      this.setState({
+                        load: false
+                      });
+                    }, 2000);
+                  }}
+                  onLoadStart={() => {
                     this.setState({
-                      load: false
+                      load: true
                     });
-                  }, 2000);
-                }}
-                onLoadStart={() => {
-                  this.setState({
-                    load: true
-                  });
-                }}
-                renderLoading={() => <LoadingView />}
-                onMessage={this._onPostMessage}
-              />
+                  }}
+                  renderLoading={() => <LoadingView />}
+                  onMessage={this._onPostMessage}
+                />
+              </View>
             </View>
           </View>
         ) : null}
