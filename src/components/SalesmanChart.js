@@ -52,24 +52,20 @@ class SalesmanGraph extends React.Component {
       <React.Fragment>
         {this.props.isVisible ? (
           <View>
-            <Text style={[Fonts.type7]}>{this.props.title}</Text>
+            <Text
+              style={[
+                Fonts.type7,
+                {
+                  marginLeft: 10
+                }
+              ]}
+            >
+              {this.props.title}
+            </Text>
             <View
               style={[
                 this.props.style,
                 {
-                  shadowColor: '#000',
-                  shadowOffset: {
-                    width: 0,
-                    height: 4
-                  },
-                  shadowOpacity: 0.3,
-                  shadowRadius: 4.65,
-                  elevation: 2,
-                  borderWidth: 0,
-                  borderRadius: 7,
-                  marginHorizontal: 0,
-                  marginVertical: 5,
-                  padding: 2,
                   height: 250
                 }
               ]}
