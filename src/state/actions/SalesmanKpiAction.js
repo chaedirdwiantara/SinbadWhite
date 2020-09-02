@@ -48,27 +48,3 @@ export const getKpiDashboardDetailFailed = data => {
     payload: data
   };
 };
-
-/*
- * FOR KPI GRAPH DATA
- */
-export const getKpiGraphDataProcess = params => {
-  return {
-    type: types.KPI_GRAPH_DATA_GET_PROCESS,
-    payload: params
-  };
-};
-
-export const getKpiGraphDataSuccess = data => {
-  return {
-    type: types.KPI_GRAPH_DATA_GET_SUCCESS,
-    payload: data
-  };
-};
-
-export const getKpiGraphDataFailed = data => {
-  return {
-    type: types.KPI_GRAPH_DATA_GET_FAILED,
-    payload: data
-  };
-};

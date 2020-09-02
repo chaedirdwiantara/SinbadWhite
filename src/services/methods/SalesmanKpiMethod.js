@@ -40,7 +40,6 @@ async function getKpiDataDetail({
   )}&endDate=${encodeURIComponent(
     endDate
   )}&period=${period}&userId=${userId}&supplierId=${supplierId}`;
-  console.log('--------------------', path);
   const response = await ApiRest({
     path,
     method: 'GET'

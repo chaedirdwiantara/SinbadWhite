@@ -186,7 +186,7 @@ TabsCustom.defaultProps = {
   listMenu: [],
   value: '',
   onChange: () => {
-    console.log('update');
+    console.log('no action found');
   },
   type: 'default'
 };
