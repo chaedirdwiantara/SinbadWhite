@@ -1,9 +1,31 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 import PropTypes from 'prop-types';
+import { LoadingPage } from '../library/component';
+import { Fonts } from '../helpers';
+
+const LoadingView = () => {
+  return (
+    <View
+      style={{
+        height: '100%',
+        width: '100%',
+        zIndex: 2,
+        position: 'absolute',
+        backgroundColor: 'rgba(250,250,250 ,0.8)'
+      }}
+    >
+      <LoadingPage />
+    </View>
+  );
+};
 
 class SalesmanGraph extends React.Component {
+  state = {
+    load: true
+  };
+
   componentWillUnmount() {
     this.props.onExit();
   }
@@ -28,18 +50,69 @@ class SalesmanGraph extends React.Component {
     /* eslint-disable indent */
     return (
       <React.Fragment>
-        {
-          this.props.isVisible ? <View style={this.props.style}>
-                                     <WebView
-                                       source={{ uri: this.props.uri, headers: { Authorization: 'Bearer ' + this.props.token } }}
-                                       javaScriptEnabled={true}
-                                       domStorageEnabled={true}
-                                       scalesPageToFit={true}
-                                       scrollEnabled={false}
-                                       onMessage={this._onPostMessage}
-                                     />
-                                   </View> : null
-        }
+        {this.props.isVisible ? (
+          <View>
+            <Text
+              style={[
+                Fonts.type7,
+                {
+                  marginLeft: 10
+                }
+              ]}
+            >
+              {this.props.title}
+            </Text>
+            <View
+              style={[
+                this.props.style,
+                {
+                  height: 250
+                }
+              ]}
+            >
+              <View
+                style={{
+                  zIndex: -1,
+                  width: '100%',
+                  height: '100%'
+                }}
+              >
+                {this.state.load ? <LoadingView /> : null}
+                <WebView
+                  source={{
+                    uri: this.props.uri,
+                    headers: { Authorization: 'Bearer ' + this.props.token }
+                  }}
+                  style={{
+                    zIndex: 1
+                  }}
+                  containerStyle={{
+                    borderRadius: 7
+                  }}
+                  javaScriptEnabled={true}
+                  domStorageEnabled={true}
+                  scalesPageToFit={true}
+                  scrollEnabled={false}
+                  startInLoadingState
+                  onLoadEnd={() => {
+                    setTimeout(() => {
+                      this.setState({
+                        load: false
+                      });
+                    }, 2000);
+                  }}
+                  onLoadStart={() => {
+                    this.setState({
+                      load: true
+                    });
+                  }}
+                  renderLoading={() => <LoadingView />}
+                  onMessage={this._onPostMessage}
+                />
+              </View>
+            </View>
+          </View>
+        ) : null}
       </React.Fragment>
     );
     /* eslint-enable indent */
@@ -53,6 +126,7 @@ SalesmanGraph.propTypes = {
   isVisible: PropTypes.bool,
   token: PropTypes.string,
   uri: PropTypes.string,
+  title: PropTypes.string
 };
 
 SalesmanGraph.defaultProps = {
@@ -62,6 +136,7 @@ SalesmanGraph.defaultProps = {
   isVisible: false,
   token: '',
   uri: '',
+  title: 'Title Chart'
 };
 
 export default SalesmanGraph;

@@ -126,24 +126,29 @@ class DashboardView extends Component {
         {
           graphContentType: TOKO_ORDER,
           uri: '',
+          title: 'T. Order'
         },
         {
           graphContentType: TOTAL_PENJUALAN,
           uri: '',
+          title: 'Total Penjualan'
         },
         {
           graphContentType: TOKO_DIKUNJUNGI,
           uri: '',
+          title: 'T. Dikunjingi'
         },
         {
           graphContentType: TOKO_BARU,
           uri: '',
+          title: 'T. Baru'
         },
         {
           graphContentType: TOTAL_PESANAN,
           uri: '',
+          title: 'Total Pesanan'
         }
-      ],
+      ]
     };
   }
 
@@ -184,7 +189,13 @@ class DashboardView extends Component {
     let graphicDataList = this.state.graphicDataList.map((item, index) => {
       return {
         ...item,
-        uri: generateGraphUri({ graphContentType: item.graphContentType, startDate, endDate, userId: this.props.user.id, period, })
+        uri: generateGraphUri({
+          graphContentType: item.graphContentType,
+          startDate,
+          endDate,
+          userId: this.props.user.id,
+          period
+        })
       };
     });
 
@@ -340,7 +351,6 @@ class DashboardView extends Component {
           load: false,
           data: newData
         });
-        console.log('FINAL', newData);
       } else {
         this.setState({
           load: false
@@ -503,9 +513,9 @@ class DashboardView extends Component {
           decelerationRate={0}
           snapToInterval={styles.chartContainer.width}
           snapToAlignment={'center'}
-          contentContainerStyle={{
-          }}
-          onScroll={(event) => {
+          // contentContainerStyle={{
+          // }}
+          onScroll={event => {
             let horizontalLimit = styles.chartContainer.width;
             if (event.nativeEvent.contentOffset.x % horizontalLimit) {
               const newPage = Math.round(
@@ -519,19 +529,18 @@ class DashboardView extends Component {
             }
           }}
         >
-          {
-            /* eslint-disable indent */
-            this.state.graphicDataList.map((item, index) => {
-              return <SalesmanChart
-                       key={index}
-                       isVisible={true}
-                       style={{ width: styles.chartContainer.width, }}
-                       uri={item.uri}
-                       token={this.props.permanent.token}
-                     />;
-            })
-            /* eslint-enable */
-          }
+          {this.state.graphicDataList.map((item, index) => (
+            <SalesmanChart
+              key={index}
+              title={item.title}
+              isVisible={true}
+              style={{
+                width: styles.chartContainer.width
+              }}
+              uri={item.uri}
+              token={this.props.permanent.token}
+            />
+          ))}
         </ScrollView>
         {/* slide indicator */}
         <SlideIndicator
@@ -575,9 +584,7 @@ class DashboardView extends Component {
             onChange={this.tabsTimeChanged}
             value={tabsTime}
           />
-          <View style={styles.containerList}>
-            <ShadowComponent>{this.renderChart()}</ShadowComponent>
-          </View>
+          <View style={styles.containerList}>{this.renderChart()}</View>
           <View style={styles.sparator} />
           <TabsCustom
             type={typeCustomTabs.whiteScroll}
@@ -738,9 +745,7 @@ const styles = StyleSheet.create({
   chartContainer: {
     width: Scale(320),
     height: 300,
-    borderRadius: 7,
-    paddingVertical: 16,
-    paddingHorizontal: 8
+    borderRadius: 7
   },
   targetHeader: {
     flexDirection: 'row',
