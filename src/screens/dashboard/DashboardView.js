@@ -351,7 +351,6 @@ class DashboardView extends Component {
           load: false,
           data: newData
         });
-        console.log('FINAL', newData);
       } else {
         this.setState({
           load: false
