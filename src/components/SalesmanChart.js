@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { LoadingPage } from '../library/component';
 import { Fonts } from '../helpers';
 
-const LoadingView = () => {
+const LoadingView = ({ solid }) => {
   return (
     <View
       style={{
@@ -13,7 +13,7 @@ const LoadingView = () => {
         width: '100%',
         zIndex: 2,
         position: 'absolute',
-        backgroundColor: 'rgba(250,250,250 ,0.8)'
+        backgroundColor: solid ? '#FFFFFF' : 'rgba(250,250,250 ,0.8)'
       }}
     >
       <LoadingPage />
@@ -89,6 +89,11 @@ class SalesmanGraph extends React.Component {
                   containerStyle={{
                     borderRadius: 7
                   }}
+                  onError={e => {
+                    if (e.nativeEvent.code < 0) {
+                      console.log(e.nativeEvent);
+                    }
+                  }}
                   javaScriptEnabled={true}
                   domStorageEnabled={true}
                   scalesPageToFit={true}
@@ -106,6 +111,7 @@ class SalesmanGraph extends React.Component {
                       load: true
                     });
                   }}
+                  renderError={() => <LoadingView solid />}
                   renderLoading={() => <LoadingView />}
                   onMessage={this._onPostMessage}
                 />
