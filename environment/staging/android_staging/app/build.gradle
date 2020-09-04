@@ -136,7 +136,7 @@ android {
         versionCode 12
         versionName "1.0.11"
         missingDimensionStrategy 'react-native-camera', 'general', 'mlkit'
-        multiDexEnabled true 
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -189,7 +189,7 @@ dependencies {
         exclude group: 'com.google.android.gms', module: 'play-services-base'
         exclude group: 'com.google.android.gms', module: 'play-services-maps'
     }
-    implementation(project(':react-native-firebase')) {   
+    implementation(project(':react-native-firebase')) {
        transitive = false
     }
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
