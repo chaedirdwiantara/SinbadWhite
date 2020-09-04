@@ -34,11 +34,9 @@ build_development:
     - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
     - ./build.sh development
-    - cd ..
     - mkdir -p $DIRECTORY
 #    - tar czf $DIRECTORY/$FILENAME -C ./android/app/build/outputs/apk/release/ .
-    - ls -lah
-    - ls -lah ./android/*
+    - ls -lah *
     - tar czf $DIRECTORY/development.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY
   only:
@@ -60,9 +58,9 @@ build_staging:
     - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
     - ./build.sh staging
-    - cd ..
     - mkdir -p $DIRECTORY
-    - tar czf $DIRECTORY/$FILENAME -C ./android/app/build/outputs/apk/release/ .
+    - ls -lah *
+    - tar czf $DIRECTORY/staging.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY
   only:
     refs:
@@ -84,9 +82,9 @@ build_master:
     - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
     - ./build.sh master
-    - cd ..
     - mkdir -p $DIRECTORY
-    - tar czf $DIRECTORY/$FILENAME -C ./android/app/build/outputs/apk/release/ .
+    - ls -lah *
+    - tar czf $DIRECTORY/master.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY
   only:
     refs:
