@@ -33,12 +33,7 @@ build_development:
   before_script:
     - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
-    - rm -rf node_modules
-    - npm install
-    - yarn add react-native-firebase
-    - yarn add @react-native-community/toolbar-android
-    - cd android && chmod +x gradlew && rm -rf ./.gradle && ./gradlew clean && ./gradlew app:assembleRelease
-#    - ./build.sh development
+    - ./build.sh development
     - cd ..
     - mkdir -p $DIRECTORY
     - tar czf $DIRECTORY/$FILENAME -C ./android/app/build/outputs/apk/release/ .
@@ -61,11 +56,6 @@ build_staging:
   before_script:
     - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
-    #    - rm -rf node_modules
-    #    - npm install
-    #    - yarn add react-native-firebase
-    #    - yarn add @react-native-community/toolbar-android
-    #    - cd android && chmod +x gradlew && rm -rf ./.gradle && ./gradlew clean && ./gradlew app:assembleRelease
     - ./build.sh staging
     - cd ..
     - mkdir -p $DIRECTORY
@@ -81,7 +71,7 @@ build_staging:
     name: $DIRECTORY
     paths:
       - $DIRECTORY/
-    expire_in: 3 days
+    expire_in: 7 days
 
 
 build_master:
@@ -90,11 +80,6 @@ build_master:
   before_script:
     - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
-    #    - rm -rf node_modules
-    #    - npm install
-    #    - yarn add react-native-firebase
-    #    - yarn add @react-native-community/toolbar-android
-    #    - cd android && chmod +x gradlew && rm -rf ./.gradle && ./gradlew clean && ./gradlew app:assembleRelease
     - ./build.sh master
     - cd ..
     - mkdir -p $DIRECTORY
@@ -110,6 +95,6 @@ build_master:
     name: $DIRECTORY
     paths:
       - $DIRECTORY/
-    expire_in: 3 days
+    expire_in: 7 days
 
 
