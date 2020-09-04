@@ -1,0 +1,57 @@
+stages:
+  - init
+  - build
+
+variables:
+  PLATFORM: 'red'
+  DIRECTORY: "${PLATFORM}_${CI_COMMIT_SHORT_SHA}_2020"
+
+onbuild-docker:
+  image: docker:git
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+  after_script:
+    - docker logout
+  services:
+    - docker:dind
+  stage: init
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:onbuild -f Dockerfile.onbuild --build-arg GIT_USER="gitlab-ci-token" --build-arg GIT_TOKEN="${CI_JOB_TOKEN}" .
+    - docker push $CI_REGISTRY_IMAGE:onbuild
+    - docker rmi $CI_REGISTRY_IMAGE:onbuild
+  tags:
+    - docker
+  only:
+    refs:
+      - branches
+    variables:
+      - $ONBUILD_RUN == "OK"
+
+build_development_payment:
+  image: $CI_REGISTRY_IMAGE:onbuild
+  stage: build
+  before_script:
+    - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
+  script:
+#    - rm -rf node_modules
+#    - npm install
+#    - yarn add react-native-firebase
+#    - yarn add @react-native-community/toolbar-android
+#    - cd android && chmod +x gradlew && rm -rf ./.gradle && ./gradlew clean && ./gradlew app:assembleRelease
+    - ./build.sh development
+    - cd ..
+    - mkdir -p $DIRECTORY
+    - tar czf $DIRECTORY/$FILENAME -C ./android/app/build/outputs/apk/release/ .
+    - ls $DIRECTORY
+  only:
+    refs:
+      - development
+    variables:
+      - $DEVELOPMENT == "DEVELOPMENT"
+
+  artifacts:
+    name: $DIRECTORY
+    paths:
+      - $DIRECTORY/
+    expire_in: 3 days
+
