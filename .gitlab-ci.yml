@@ -36,7 +36,10 @@ build_development:
     - ./build.sh development
     - cd ..
     - mkdir -p $DIRECTORY
-    - tar czf $DIRECTORY/$FILENAME -C ./android/app/build/outputs/apk/release/ .
+#    - tar czf $DIRECTORY/$FILENAME -C ./android/app/build/outputs/apk/release/ .
+    - ls -lah
+    - ls -lah ./android/*
+    - tar czf $DIRECTORY/development.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY
   only:
     refs:
