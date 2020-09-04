@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "783388879929",
+    "firebase_url": "https://sinbad-agent-8aa3d.firebaseio.com",
+    "project_id": "sinbad-agent-8aa3d",
+    "storage_bucket": "sinbad-agent-8aa3d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:783388879929:android:d3f5a373aed3df8b99b1e8",
+        "android_client_info": {
+          "package_name": "com.sinbad.agent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "783388879929-jonecp1n8eonntp1rgs4kcvqkj9u8lq3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdAKcysfMIyFVweO2AY2nNhSiSWnsgoNk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "783388879929-jonecp1n8eonntp1rgs4kcvqkj9u8lq3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
