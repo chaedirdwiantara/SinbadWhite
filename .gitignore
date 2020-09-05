@@ -77,3 +77,5 @@ android/
 ios/
 index.js
 package.json
+src/services/apiHost.js
+
