@@ -4,7 +4,9 @@ stages:
 
 variables:
   PLATFORM: 'agent'
-  DIRECTORY: "${PLATFORM}_${CI_COMMIT_SHORT_SHA}_2020"
+  DIRECTORY_DEV: "${PLATFORM}_${CI_COMMIT_SHORT_SHA}_development_2020"
+  DIRECTORY_STG: "${PLATFORM}_${CI_COMMIT_SHORT_SHA}_staging_2020"
+  DIRECTORY_MST: "${PLATFORM}_${CI_COMMIT_SHORT_SHA}_master_2020"
 
 onbuild-docker:
   image: docker:git
@@ -34,11 +36,11 @@ build_development:
     - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
     - ./build.sh development
-    - mkdir -p $DIRECTORY_development
-#    - tar czf $DIRECTORY/$FILENAME -C ./android/app/build/outputs/apk/release/ .
+    - mkdir -p $DIRECTORY_DEV
+#    - tar czf $DIRECTORY_DEV/$FILENAME -C ./android/app/build/outputs/apk/release/ .
     - ls -lah *
-    - tar czf $DIRECTORY_development/development.tar.gz -C ./android/app/build/outputs/apk/release/ .
-    - ls $DIRECTORY_development
+    - tar czf $DIRECTORY_DEV/development.tar.gz -C ./android/app/build/outputs/apk/release/ .
+    - ls $DIRECTORY_DEV
   only:
     refs:
       - development
@@ -46,9 +48,9 @@ build_development:
       - $DEVELOPMENT == "DEVELOPMENT"
 
   artifacts:
-    name: $DIRECTORY_development
+    name: $DIRECTORY_DEV
     paths:
-      - $DIRECTORY_development/
+      - $DIRECTORY_DEV/
     expire_in: 3 days
 
 build_staging:
@@ -58,10 +60,10 @@ build_staging:
     - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
     - ./build.sh staging
-    - mkdir -p $DIRECTORY_staging
+    - mkdir -p $DIRECTORY_STG
     - ls -lah *
-    - tar czf $DIRECTORY_staging/staging.tar.gz -C ./android/app/build/outputs/apk/release/ .
-    - ls $DIRECTORY_staging
+    - tar czf $DIRECTORY_STG/staging.tar.gz -C ./android/app/build/outputs/apk/release/ .
+    - ls $DIRECTORY_STG
   only:
     refs:
       - staging
@@ -69,9 +71,9 @@ build_staging:
       - $STAGING == "STAGING"
 
   artifacts:
-    name: $DIRECTORY_staging
+    name: $DIRECTORY_STG
     paths:
-      - $DIRECTORY_staging/
+      - $DIRECTORY_STG/
     expire_in: 7 days
 
 
@@ -82,10 +84,10 @@ build_master:
     - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
     - ./build.sh master
-    - mkdir -p $DIRECTORY_master
+    - mkdir -p $DIRECTORY_MST
     - ls -lah *
-    - tar czf $DIRECTORY_master/master.tar.gz -C ./android/app/build/outputs/apk/release/ .
-    - ls $DIRECTORY_master
+    - tar czf $DIRECTORY_MST/master.tar.gz -C ./android/app/build/outputs/apk/release/ .
+    - ls $DIRECTORY_MST
   only:
     refs:
       - master
@@ -93,9 +95,9 @@ build_master:
       - $MASTER == "MASTER"
 
   artifacts:
-    name: $DIRECTORY_master
+    name: $DIRECTORY_MST
     paths:
-      - $DIRECTORY_master/
+      - $DIRECTORY_MST/
     expire_in: 7 days
 
 
