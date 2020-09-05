@@ -17,13 +17,14 @@ then
 		cp -rf ./environment/$1/ios_$1 ./ios
 		cp -f ./environment/$1/index_$1.js ./index.js
 		cp -f ./environment/$1/package_$1.json ./package.json
+		cp -f ./environment/$1/apiHost_$1.json ./src/services/apiHost.js
 
 		rm -rf node_modules
-	    npm install
-	    npm add react-native-firebase
+	    	npm install
+	    	npm add react-native-firebase
 	   	yarn add @react-native-community/toolbar-android
-	    cd android && chmod +x gradlew && rm -rf ./.gradle && ./gradlew clean && ./gradlew cleanBuildCache && ./gradlew app:assembleRelease
-	    # npm run build
+	    	cd android && chmod +x gradlew && rm -rf ./.gradle && ./gradlew clean && ./gradlew cleanBuildCache && ./gradlew app:assembleRelease
+	    	# npm run build
 
 	fi
 
