@@ -34,11 +34,11 @@ build_development:
     - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
     - ./build.sh development
-    - mkdir -p $DIRECTORY
+    - mkdir -p $DIRECTORY_development
 #    - tar czf $DIRECTORY/$FILENAME -C ./android/app/build/outputs/apk/release/ .
     - ls -lah *
-    - tar czf $DIRECTORY/development.tar.gz -C ./android/app/build/outputs/apk/release/ .
-    - ls $DIRECTORY
+    - tar czf $DIRECTORY_development/development.tar.gz -C ./android/app/build/outputs/apk/release/ .
+    - ls $DIRECTORY_development
   only:
     refs:
       - development
@@ -46,9 +46,9 @@ build_development:
       - $DEVELOPMENT == "DEVELOPMENT"
 
   artifacts:
-    name: $DIRECTORY
+    name: $DIRECTORY_development
     paths:
-      - $DIRECTORY/
+      - $DIRECTORY_development/
     expire_in: 3 days
 
 build_staging:
@@ -58,10 +58,10 @@ build_staging:
     - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
     - ./build.sh staging
-    - mkdir -p $DIRECTORY
+    - mkdir -p $DIRECTORY_staging
     - ls -lah *
-    - tar czf $DIRECTORY/staging.tar.gz -C ./android/app/build/outputs/apk/release/ .
-    - ls $DIRECTORY
+    - tar czf $DIRECTORY_staging/staging.tar.gz -C ./android/app/build/outputs/apk/release/ .
+    - ls $DIRECTORY_staging
   only:
     refs:
       - staging
@@ -69,9 +69,9 @@ build_staging:
       - $STAGING == "STAGING"
 
   artifacts:
-    name: $DIRECTORY
+    name: $DIRECTORY_staging
     paths:
-      - $DIRECTORY/
+      - $DIRECTORY_staging/
     expire_in: 7 days
 
 
@@ -82,10 +82,10 @@ build_master:
     - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
     - ./build.sh master
-    - mkdir -p $DIRECTORY
+    - mkdir -p $DIRECTORY_master
     - ls -lah *
-    - tar czf $DIRECTORY/master.tar.gz -C ./android/app/build/outputs/apk/release/ .
-    - ls $DIRECTORY
+    - tar czf $DIRECTORY_master/master.tar.gz -C ./android/app/build/outputs/apk/release/ .
+    - ls $DIRECTORY_master
   only:
     refs:
       - master
@@ -93,9 +93,9 @@ build_master:
       - $MASTER == "MASTER"
 
   artifacts:
-    name: $DIRECTORY
+    name: $DIRECTORY_master
     paths:
-      - $DIRECTORY/
+      - $DIRECTORY_master/
     expire_in: 7 days
 
 
