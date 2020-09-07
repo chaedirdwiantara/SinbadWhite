@@ -22,7 +22,7 @@ onbuild-docker:
     - docker push $CI_REGISTRY_IMAGE:onbuild
     - docker rmi $CI_REGISTRY_IMAGE:onbuild
   tags:
-    - docker
+    - sinbad-aws-docker-runner-2
   only:
     refs:
       - branches
@@ -41,6 +41,8 @@ build_development:
     - ls -lah *
     - tar czf $DIRECTORY_DEV/development.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY_DEV
+  tags:
+    - sinbad-aws-docker-runner-2
   only:
     refs:
       - development
@@ -64,6 +66,8 @@ build_staging:
     - ls -lah *
     - tar czf $DIRECTORY_STG/staging.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY_STG
+  tags:
+    - sinbad-aws-docker-runner-2
   only:
     refs:
       - staging
@@ -88,6 +92,8 @@ build_master:
     - ls -lah *
     - tar czf $DIRECTORY_MST/master.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY_MST
+  tags:
+    - sinbad-aws-docker-runner-2
   only:
     refs:
       - master
@@ -99,5 +105,3 @@ build_master:
     paths:
       - $DIRECTORY_MST/
     expire_in: 7 days
-
-
