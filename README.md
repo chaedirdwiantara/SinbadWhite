@@ -12,6 +12,15 @@ core created by hasapu
 - Make sure the package.json in ./environment/{environment}/package_{environment}.json is set accordingly
 - Don't update ./android or ./ios, instead update the configuration in ./environment folders
 
+## Running in simulator in windows
+```bash
+./sim_windows.sh {environment}
+npm install
+cd android && ./gradlew clean
+cd ..
+npx react-native run-android
+```
+
 ## Running in simulator
 ```bash
 rm -rf $TMPDIR/react-* && rm -rf $TMPDIR/metro-* && rm -rf $TMPDIR/haste-* && watchman watch-del-all && rm -rf node_modules/ && npm install && npm start -- --reset-cache
