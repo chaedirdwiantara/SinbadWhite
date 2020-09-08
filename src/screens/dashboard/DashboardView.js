@@ -154,6 +154,10 @@ class DashboardView extends Component {
 
   /** === UPDATE KPI GRAPH === */
   updateKpiGraph() {
+    if (_.isNil(this.props.user)) {
+      return;
+    }
+
     let startDate;
     let endDate = moment().format();
 
@@ -194,6 +198,7 @@ class DashboardView extends Component {
           startDate,
           endDate,
           userId: this.props.user.id,
+          supplierId: this.props.user.userSuppliers[0].supplierId,
           period
         })
       };

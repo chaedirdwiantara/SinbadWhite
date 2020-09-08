@@ -5,13 +5,14 @@ export const generateGraphUri = ({
   startDate,
   endDate,
   userId,
-  period
+  period,
+  supplierId
 }) => {
   return `${
     ApiHost.url
   }supplier/salesmankpi/v1/mobile/page/graph?graphContentType=${graphContentType}&userIds=${userId}&period=${period}&startDate=${encodeURIComponent(
     startDate
-  )}&endDate=${encodeURIComponent(endDate)}`;
+  )}&endDate=${encodeURIComponent(endDate)}&supplierId=${supplierId}`;
   // return `http://192.168.88.173:8080/v1/mobile/page/graph?graphContentType=${graphContentType}&userIds=${userId}&period=${period}&startDate=${encodeURIComponent(
   //   startDate
   // )}&endDate=${encodeURIComponent(endDate)}`;
