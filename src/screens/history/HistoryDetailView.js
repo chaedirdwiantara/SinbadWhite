@@ -137,9 +137,10 @@ class HistoryDetailView extends Component {
         );
       }
     }
+    
     return {
-      title: data !== null ? data.title : '-',
-      desc: data !== null ? data.detail : '-'
+      title: data? data.title : '-',
+      desc: data? data.detail : '-'
     };
   }
   /** CALCULATE TOTAL SKU */
