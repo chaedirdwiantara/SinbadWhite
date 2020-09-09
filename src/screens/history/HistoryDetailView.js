@@ -33,7 +33,7 @@ import ModalTAndR from './ModalTAndC';
 import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation'
 import HistoryDetailPayment from './HistoryDetailPayment';
 import CallCS from '../../screens/global/CallCS';
-
+import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment'
 class HistoryDetailView extends Component {
   constructor(props) {
     super(props);
@@ -41,7 +41,8 @@ class HistoryDetailView extends Component {
       openModalCS: false,
       openModalCancelOrderConfirmation: false,
       section: this.props.navigation.state.params.section,
-      storeId: this.props.navigation.state.params.storeId
+      storeId: this.props.navigation.state.params.storeId,
+      openModalFailActivateVA: false
     };
   }
    /* ========================
@@ -86,6 +87,11 @@ class HistoryDetailView extends Component {
         this.props.historyGetReset();
         this.getHistory();
       }
+    }
+    if (
+      prevProps.history.errorHistoryActivateVA !== this.props.history.errorHistoryActivateVA
+    ){
+      this.setState({openModalFailActivateVA: true})
     }
   }
   /** REFRESH LIST HISTORY AFTER EDIT HISTORY STATUS */
@@ -551,6 +557,21 @@ renderDetailPayment() {
       <View />
     );
   }
+  /** MODAL FAIL ACTIVATE VA */
+  renderModalFailActivateVA(){
+    return this.state.openModalFailActivateVA ? (
+      <View>
+      <ModalBottomFailPayment 
+        open={this.state.openModalFailActivateVA}
+        onPress={() => this.setState({ openModalFailActivateVA: false })}
+        text={'Aktifkan Virtual Account gagal. Silahkan mencoba beberapa saat lagi atau hubungi Customer Service'}
+      />
+      </View>
+    ) : (
+      <View />
+    )
+  }
+ 
   /** RENDER CANCEL BUTTON */
   renderCancelButton() {
     return (
@@ -564,6 +585,7 @@ renderDetailPayment() {
       </TouchableOpacity>
     );
   }
+
   /** RENDER BOTTOM ACTION */
   renderBottomAction() {
     return (
@@ -633,6 +655,7 @@ renderDetailPayment() {
         {/* modal */}
         {this.renderModalCallCS()}
         {this.renderModalCancelOrderConfirmation()}
+        {this.renderModalFailActivateVA()}
       </SafeAreaView>
     );
   }

@@ -21,6 +21,7 @@ import { ButtonSingle, ToastType1 } from '../../library/component';
 import CountDown from '../../components/CountDown';
 import { timeDiff, toLocalTime } from '../../helpers/TimeHelper';
 import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation';
+import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 
 class HistoryDetailPayment extends Component {
     constructor(props) {
@@ -30,7 +31,7 @@ class HistoryDetailPayment extends Component {
             expiredTime: null,
             showToast: false,
             accordionOpen: -1,
-            toastText: '',
+            toastText: ''
         };
     }
 
@@ -252,7 +253,6 @@ class HistoryDetailPayment extends Component {
         const params = {
             billingID: this.props.data.billing.id
         };
-
         this.props.historyActivateVAProcess(params);
     }
 
@@ -509,7 +509,7 @@ class HistoryDetailPayment extends Component {
         if (this.state.data !== null) {
             return (
                 <SafeAreaView style={styles.mainContainer}>
-                    {this.renderContent()}
+                    {this.renderContent()} 
                 </SafeAreaView>
             );
         }
