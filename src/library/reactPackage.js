@@ -21,7 +21,8 @@ import {
   Platform,
   StatusBar,
   Modal as ModalPopUp,
-  ToastAndroid
+  ToastAndroid,
+  LayoutAnimation
 } from 'react-native';
 import Text from 'react-native-text';
 /** FOR DIMENSIONS */
@@ -51,7 +52,8 @@ export {
   Platform,
   StatusBar,
   ModalPopUp,
-  ToastAndroid
+  ToastAndroid,
+  LayoutAnimation
 };
 
 /**
