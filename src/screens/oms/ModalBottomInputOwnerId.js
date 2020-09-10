@@ -35,7 +35,6 @@ class ModalBottomInputOwnerId extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    console.log('lalala');
   }
   /** === SAVE ID NO === */
   saveIdno() {
