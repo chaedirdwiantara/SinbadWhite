@@ -1,12 +1,19 @@
 stages:
   - init
+  - start_instance
   - build
+  - upload
 
 variables:
   PLATFORM: 'agent'
   DIRECTORY_DEV: "${PLATFORM}_${CI_COMMIT_SHORT_SHA}_development_2020"
   DIRECTORY_STG: "${PLATFORM}_${CI_COMMIT_SHORT_SHA}_staging_2020"
   DIRECTORY_MST: "${PLATFORM}_${CI_COMMIT_SHORT_SHA}_master_2020"
+  DIRECTORY_DEMO: "${PLATFORM}_${CI_COMMIT_SHORT_SHA}_demo_2020"
+  FILENAME_DEV: "${PLATFORM}_development_${CI_COMMIT_SHORT_SHA}.tar.gz"
+  FILENAME_STG: "${PLATFORM}_staging_${CI_COMMIT_SHORT_SHA}.tar.gz"
+  FILENAME_MST: "${PLATFORM}_production_${CI_COMMIT_SHORT_SHA}.tar.gz"
+  FILENAME_DEMO: "${PLATFORM}_demo_${CI_COMMIT_SHORT_SHA}.tar.gz"
 
 onbuild-docker:
   image: docker:git
@@ -29,20 +36,102 @@ onbuild-docker:
     variables:
       - $ONBUILD_RUN == "OK"
 
+start_runner_development:
+  stage: start_instance
+  image: mikesir87/aws-cli:latest
+  script:
+    - echo "Starting the instance"
+    - mkdir ~/.aws/
+    - touch ~/.aws/credentials
+    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
+    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
+    - aws ec2 start-instances --instance-ids i-0b5d8441ab6417b2f
+    - rm -rf ~/.aws/
+    - sleep 30
+  tags:
+    - sinbad-aws-docker-runner-2
+  only:
+    refs:
+      - development
+    variables:
+      - $DEVELOPMENT == "DEVELOPMENT"
+
+
+start_runner_staging:
+  stage: start_instance
+  image: mikesir87/aws-cli:latest
+  script:
+    - echo "Starting the instance"
+    - mkdir ~/.aws/
+    - touch ~/.aws/credentials
+    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
+    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
+    - aws ec2 start-instances --instance-ids i-0b5d8441ab6417b2f
+    - rm -rf ~/.aws/
+    - sleep 30
+  tags:
+    - sinbad-aws-docker-runner-2
+  only:
+    refs:
+      - staging
+    variables:
+      - $STAGING == "STAGING"
+
+start_runner_master:
+  stage: start_instance
+  image: mikesir87/aws-cli:latest
+  script:
+    - echo "Starting the instance"
+    - mkdir ~/.aws/
+    - touch ~/.aws/credentials
+    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
+    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
+    - aws ec2 start-instances --instance-ids i-0b5d8441ab6417b2f
+    - rm -rf ~/.aws/
+    - sleep 30
+  tags:
+    - sinbad-aws-docker-runner-2
+  only:
+    refs:
+      - master
+    variables:
+      - $MASTER == "MASTER"
+
+start_runner_demo:
+  stage: start_instance
+  image: mikesir87/aws-cli:latest
+  script:
+    - echo "Starting the instance"
+    - mkdir ~/.aws/
+    - touch ~/.aws/credentials
+    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
+    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
+    - aws ec2 start-instances --instance-ids i-0b5d8441ab6417b2f
+    - rm -rf ~/.aws/
+    - sleep 30
+  tags:
+    - sinbad-aws-docker-runner-2
+  only:
+    refs:
+      - demo
+    variables:
+      - $DEMO == "DEMO"
+
 build_development:
   image: $CI_REGISTRY_IMAGE:onbuild
   stage: build
-  before_script:
-    - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
+  #before_script:
+  #  - export FILENAME=${PLATFORM}_development_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
     - ./build.sh development
     - mkdir -p $DIRECTORY_DEV
-#    - tar czf $DIRECTORY_DEV/$FILENAME -C ./android/app/build/outputs/apk/release/ .
     - ls -lah *
-    - tar czf $DIRECTORY_DEV/development.tar.gz -C ./android/app/build/outputs/apk/release/ .
+    - tar czf $DIRECTORY_DEV/$FILENAME_DEV -C ./android/app/build/outputs/apk/release/ .
+    #    - ls -lah *
+    #    - tar czf $DIRECTORY_DEV/development.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY_DEV
   tags:
-    - sinbad-aws-docker-runner-2
+    - sinbad-aws-docker-runner
   only:
     refs:
       - development
@@ -53,21 +142,23 @@ build_development:
     name: $DIRECTORY_DEV
     paths:
       - $DIRECTORY_DEV/
-    expire_in: 3 days
+    expire_in: 2 days
 
 build_staging:
   image: $CI_REGISTRY_IMAGE:onbuild
   stage: build
-  before_script:
-    - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
+  #before_script:
+  #  - export FILENAME=${PLATFORM}_staging_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
     - ./build.sh staging
     - mkdir -p $DIRECTORY_STG
     - ls -lah *
-    - tar czf $DIRECTORY_STG/staging.tar.gz -C ./android/app/build/outputs/apk/release/ .
+    - tar czf $DIRECTORY_DEV/$FILENAME_STG -C ./android/app/build/outputs/apk/release/ .
+    #    - ls -lah *
+    #    - tar czf $DIRECTORY_STG/staging.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY_STG
   tags:
-    - sinbad-aws-docker-runner-2
+    - sinbad-aws-docker-runner
   only:
     refs:
       - staging
@@ -78,22 +169,23 @@ build_staging:
     name: $DIRECTORY_STG
     paths:
       - $DIRECTORY_STG/
-    expire_in: 7 days
-
+    expire_in: 3 days
 
 build_master:
   image: $CI_REGISTRY_IMAGE:onbuild
   stage: build
-  before_script:
-    - export FILENAME=${PLATFORM}_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
+  #before_script:
+  #  - export FILENAME=${PLATFORM}_production_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
     - ./build.sh master
     - mkdir -p $DIRECTORY_MST
     - ls -lah *
-    - tar czf $DIRECTORY_MST/master.tar.gz -C ./android/app/build/outputs/apk/release/ .
+    - tar czf $DIRECTORY_DEV/$FILENAME_MST -C ./android/app/build/outputs/apk/release/ .
+    #    - ls -lah *
+    #    - tar czf $DIRECTORY_MST/master.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY_MST
   tags:
-    - sinbad-aws-docker-runner-2
+    - sinbad-aws-docker-runner
   only:
     refs:
       - master
@@ -105,3 +197,110 @@ build_master:
     paths:
       - $DIRECTORY_MST/
     expire_in: 7 days
+
+build_demo:
+  image: $CI_REGISTRY_IMAGE:onbuild
+  stage: build
+  #before_script:
+  #  - export FILENAME=${PLATFORM}_demo_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
+  script:
+    - ./build.sh demo
+    - mkdir -p $DIRECTORY_MST
+    - ls -lah *
+    - tar czf $DIRECTORY_DEV/$FILENAME -C ./android/app/build/outputs/apk/release/ .
+    #    - ls -lah *
+    #    - tar czf $DIRECTORY_MST/master.tar.gz -C ./android/app/build/outputs/apk/release/ .
+    - ls $DIRECTORY_MST
+  tags:
+    - sinbad-aws-docker-runner
+  only:
+    refs:
+      - demo
+    variables:
+      - $DEMO == "DEMO"
+
+  artifacts:
+    name: $DIRECTORY_MST
+    paths:
+      - $DIRECTORY_MST/
+    expire_in: 7 days
+
+upload_to_S3_development:
+  stage: upload
+  image: mikesir87/aws-cli:latest
+  before_script:
+    - mkdir ~/.aws/
+    - touch ~/.aws/credentials
+    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
+    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
+  script:
+    - aws s3 cp $DIRECTORY_DEV/$FILENAME_DEV s3://sinbad-apk/development/
+  after_script:
+    - rm -rf ~/.aws/
+  tags:
+    - sinbad-aws-docker-runner-2
+  only:
+    refs:
+      - development
+    variables:
+      - $DEVELOPMENT == "DEVELOPMENT"
+
+upload_to_S3_staging:
+  stage: upload
+  image: mikesir87/aws-cli:latest
+  before_script:
+    - mkdir ~/.aws/
+    - touch ~/.aws/credentials
+    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
+    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
+  script:
+    - aws s3 cp $DIRECTORY_STG/$FILENAME_STG s3://sinbad-apk/staging/
+  after_script:
+    - rm -rf ~/.aws/
+  tags:
+    - sinbad-aws-docker-runner-2
+  only:
+    refs:
+      - staging
+    variables:
+      - $STAGING == "STAGING"
+
+upload_to_S3_master:
+  stage: upload
+  image: mikesir87/aws-cli:latest
+  before_script:
+    - mkdir ~/.aws/
+    - touch ~/.aws/credentials
+    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
+    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
+  script:
+    - aws s3 cp $DIRECTORY_MST/$FILENAME_MST s3://sinbad-apk/production/
+  after_script:
+    - rm -rf ~/.aws/
+  tags:
+    - sinbad-aws-docker-runner-2
+  only:
+    refs:
+      - master
+    variables:
+      - $MASTER == "MASTER"
+
+upload_to_S3_demo:
+  stage: upload
+  image: mikesir87/aws-cli:latest
+  before_script:
+    - mkdir ~/.aws/
+    - touch ~/.aws/credentials
+    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
+    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
+  script:
+    - aws s3 cp $DIRECTORY_DEMO/$FILENAME_DEMO s3://sinbad-apk/demo/
+  after_script:
+    - rm -rf ~/.aws/
+  tags:
+    - sinbad-aws-docker-runner-2
+  only:
+    refs:
+      - demo
+    variables:
+      - $DEMO == "DEMO"
