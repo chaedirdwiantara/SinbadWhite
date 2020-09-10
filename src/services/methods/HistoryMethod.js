@@ -60,7 +60,7 @@ function getDetailHistory(parcelId) {
 /** ACTIVATE VA */
 function activateVA(data) {
   return ApiRest({
-    path: 'payment/v1/billing/update',
+    path: 'payment/v1-1/billing/update',
     method: 'POST',
     params: {
       billingID: data.billingID

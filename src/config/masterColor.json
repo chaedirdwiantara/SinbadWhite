@@ -10,6 +10,7 @@
   "buttonActiveColorWhite": "#ffffff",
   "buttonWhiteBorderRed": "#f0444c",
   "buttonRedDisableColor": "rgba(240, 68, 76, 0.5)",
+  "buttonGreyWhiteDisabled": "#cacccf",
   "statusBarDefault": "#f0444c",
   "statusBarWhite": "#ffffff",
   "statusBarModal": "#f0444c",

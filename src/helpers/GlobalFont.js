@@ -705,6 +705,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: Color.buttonRedDisableColor
   },
+  textButtonGreyWhiteDisabled: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: RFPercentage(2.1), //13,
+    textAlign: 'center',
+    color: Color.fontBlack40
+  },
   /** === button small text === */
   textButtonSmallRedActive: {
     fontFamily: Fonts.MontserratSemiBold,
