@@ -43,7 +43,9 @@ class HistoryDetailView extends Component {
       openModalCancelOrderConfirmation: false,
       section: this.props.navigation.state.params.section,
       storeId: this.props.navigation.state.params.storeId,
-      openModalFailActivateVA: false
+      openModalFailActivateVA: false,
+      openPaymentMethod: false,
+      selectedPaymentType: []
     };
   }
    /* ========================
@@ -107,7 +109,8 @@ class HistoryDetailView extends Component {
       dateGte: '',
       dateLte: '',
       portfolioId: [],
-      search: ''
+      search: '',
+      changePaymentMethod: null
     });
   }
   /** CALLED FROM CHILD */
@@ -587,7 +590,7 @@ renderDetailPayment() {
     );
   }
 
-  /** RENDER CHANGE PAYMENT METHOD  */
+  /** === RENDER BUTTON CHANGE PAYMENT === */
   renderSelectPaymentMethod() {
     return (
       <View>
@@ -601,7 +604,7 @@ renderDetailPayment() {
     );
   }
 
-  /** RENDER BUTTON CHANGE PAYMENT */
+  //**RENDER BUTTON UBAH METODE PEMBAYARAN */
   renderButtonChangePayment() {
     if (this.props.history.dataDetailHistory.paymentType.id === 2) {
       return (
@@ -620,27 +623,6 @@ renderDetailPayment() {
       );
     }
   }
-
-   /**RENDER OPEN MODAL PAYMENT METHOD */
-   async renderOpenModalPaymentMethod() {
-    const selectedPaymentType = this.props.history.dataDetailHistory;
-    const params = {
-      supplierId: parseInt(selectedPaymentType.supplierId, 10),
-      orderParcelId: parseInt(
-        selectedPaymentType.orderBrands
-          .map(item => item.orderParcelId)
-          .toString(),
-        10
-      ),
-      paymentTypeId: parseInt(selectedPaymentType.paymentType.id, 10)
-    };
-    await this.props.OmsGetPaymentChannelProcess(params);
-    this.setState({
-      selectedPaymentType: this.props.oms.dataOmsGetPaymentChannel,
-      openPaymentMethod: true
-    });
-  }
-
 
 
   /** RENDER BOTTOM ACTION */
@@ -668,31 +650,6 @@ renderDetailPayment() {
    * MODAL
    * ======================
    */
-
-   /**RENDER MODAL PAYMENT METHOD */
-  renderModalChangePaymentMethod() {
-    return this.state.openPaymentMethod ? (
-      <ModalChangePaymentMethod
-        open={this.state.openPaymentMethod}
-        close={() =>
-          this.setState({
-            openPaymentMethod: false
-          })
-        }
-        paymentMethod={this.props.oms.dataOmsGetPaymentChannel}
-        paymentType={this.props.history.dataDetailHistory.paymentType}
-        billingID={this.props.history.dataDetailHistory.billing.id}
-        total={this.props.history.dataDetailHistory.parcelFinalPrice}
-        loading={this.props.oms.loadingOmsGetPaymentChannel}
-        actionChange={this.renderWantToConfirm.bind(this)} // orderPrice={this.calTotalPrice()}
-        // onRef={ref => (this.selectPaymentMethod = ref)}
-        // selectPaymentMethod={this.selectedPayment.bind(this)}
-      />
-    ) : (
-      <View />
-    );
-  }
-
   renderModalCancelOrderConfirmation() {
     return (
       <View>
@@ -718,8 +675,88 @@ renderDetailPayment() {
       </View>
     );
   }
+
+    /**RENDER OPEN MODAL PAYMENT METHOD */
+    async renderOpenModalPaymentMethod() {
+      const selectedPaymentType = this.props.history.dataDetailHistory;
+      const params = {
+        supplierId: parseInt(selectedPaymentType.supplierId, 10),
+        orderParcelId: parseInt(
+          selectedPaymentType.orderBrands
+            .map(item => item.orderParcelId)
+            .toString(),
+          10
+        ),
+        paymentTypeId: parseInt(selectedPaymentType.paymentType.id, 10)
+      };
+      await this.props.OmsGetPaymentChannelProcess(params);
+      console.log(this.props.oms, 'oms');
+      console.log(this.props, 'lala');
+      
+        this.setState({
+          selectedPaymentType: this.props.oms.dataOmsGetPaymentChannel,
+          openPaymentMethod: true
+        });
+      
+    }
+  
+     /**RENDER MODAL PAYMENT METHOD */
+  renderModalChangePaymentMethod() {
+    return this.state.openPaymentMethod ? (
+      <ModalChangePaymentMethod
+        open={this.state.openPaymentMethod}
+        close={() =>
+          this.setState({
+            openPaymentMethod: false
+          })
+        }
+        paymentMethod={this.props.oms.dataOmsGetPaymentChannel}
+        paymentType={this.props.history.dataDetailHistory.paymentType}
+        billingID={this.props.history.dataDetailHistory.billing.id}
+        total={this.props.history.dataDetailHistory.parcelFinalPrice}
+        loading={this.props.oms.loadingOmsGetPaymentChannel}
+        // actionChange={this.renderWantToConfirm.bind(this)} // orderPrice={this.calTotalPrice()}
+        // onRef={ref => (this.selectPaymentMethod = ref)}
+        // selectPaymentMethod={this.selectedPayment.bind(this)}
+      />
+    ) : (
+      <View />
+    );
+  }
+
+  /**RENDER WANT TO CONFIRM*/
+  renderWantToConfirm(item) {
+    const params = {
+      billingID: parseInt(this.props.history.dataDetailHistory.billing.id, 10),
+      newPaymentChannelId: parseInt(item, 10)
+    };
+    this.setState({
+      changePaymentMethod: params
+    });
+    const data = {
+      storeId: parseInt(this.props.history.dataDetailHistory.store.id, 10),
+      orderParcels: [
+        {
+          invoiceGroupId: parseInt(
+            this.props.history.dataDetailHistory.invoiceGroupId,
+            10
+          ),
+          paymentChannelId: parseInt(params.newPaymentChannelId, 10),
+          paymentTypeId: parseInt(
+            this.props.history.dataDetailHistory.paymentType.id,
+            10
+          )
+        }
+      ]
+    };
+    this.props.OmsGetTermsConditionsProcess(data);
+  }
+
+
   /** MAIN */
   render() {
+    console.log(this.state.openPaymentMethod);
+    
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarRed />
@@ -774,8 +811,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ history, user, merchant }) => {
-  return { history, user, merchant };
+const mapStateToProps = ({ history, user, merchant, oms }) => {
+  return { history, user, merchant, oms };
 };
 
 const mapDispatchToProps = dispatch => {

@@ -175,6 +175,8 @@ import {
     }
   
     render() {
+      
+  console.log('di modal');
       return (
         <ModalBottomType4
           typeClose={'cancel'}
