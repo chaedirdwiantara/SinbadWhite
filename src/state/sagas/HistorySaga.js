@@ -35,6 +35,20 @@ function* getHistoryPaymentStatus(actions) {
     yield put(ActionCreators.historyGetPaymentStatusFailed(error));
   }
 }
+
+/** === CHANGE PAYMENT METHOD === */
+function* changePaymentMethod(actions) {
+  try {
+    const response = yield call(() => {
+      return HistoryMethod.changePaymentMethod(actions.payload);
+    });
+    yield put(ActionCreators.historyChangePaymentMethodSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.historyChangePaymentMethodFailed(error));
+  }
+}
+
+
 /** EDIT HISTORY */
 function* editHistory(actions) {
   try {
@@ -80,6 +94,10 @@ function* HistorySaga() {
   yield takeEvery(
     types.HISTORY_GET_PAYMENT_STATUS_PROCESS,
     getHistoryPaymentStatus
+  );
+  yield takeEvery(
+    types.HISTORY_CHANGE_PAYMENT_METHOD_PROCESS,
+    changePaymentMethod
   );
   yield takeEvery(types.HISTORY_ACTIVATE_VA_PROCESS, activateVA);
 }

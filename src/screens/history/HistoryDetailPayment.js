@@ -519,24 +519,23 @@ class HistoryDetailPayment extends Component {
     } else {
       return (
         <View>
-          {((paymentTypeId === 1 && paymentChannelId === 2) ||
+          {((paymentTypeId === 1 && paymentChannelId === 2 && accountVaNo !== null) ||
             (paymentTypeId === 2 &&
               paymentChannelId === 2 &&
               expiredPaymentTime !== null)) &&
-          billingStatus !== 'paid' &&
-          // this.props.history.dataDetailHistory.billing.billingStatus !== 'expired' &&
-          statusPayment === 'waiting_for_payment' &&
-          accountVaNo !== null &&
-          billingStatus !== 'cancel' ? (
-            this.renderVirtualAccountNumber()
-          ) : //  paymentTypeId === 2 &&
-          paymentChannelId === 2 &&
-            expiredPaymentTime === null &&
-            accountVaNo === null &&
-            billingStatus !== 'paid' &&
+          (billingStatus !== 'paid' &&
             // this.props.history.dataDetailHistory.billing.billingStatus !== 'expired' &&
             statusPayment === 'waiting_for_payment' &&
-            billingStatus !== 'cancel' ? (
+            billingStatus !== 'cancel') ? (
+            this.renderVirtualAccountNumber()
+          ) : 
+          // a.paymentType.id === 2 &&
+            accountVaNo === null &&
+            paymentChannelId === 2 &&
+            expiredPaymentTime === null &&
+            (billingStatus !== 'paid' &&
+              statusPayment === 'waiting_for_payment' &&
+              billingStatus !== 'cancel') ? (
             this.renderButtonAktifkanVA()
           ) : (
             <View />

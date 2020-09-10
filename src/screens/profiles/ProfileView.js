@@ -136,8 +136,6 @@ class ProfileView extends Component {
   }
 
   renderVersion() {
-    console.log(DeviceInfo.getApplicationName());
-    
     const envName = (w = DeviceInfo.getApplicationName()) => {
       let words = w.split(" ");
       if (words.length == 3) {

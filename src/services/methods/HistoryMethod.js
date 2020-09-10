@@ -57,6 +57,18 @@ function getDetailHistory(parcelId) {
   });
 }
 
+/** CHANGE PAYMENT METHOD */
+function changePaymentMethod(data) {
+  return ApiRest({
+    path: 'payment/v1-1/billing/update',
+    method: 'POST',
+    params: {
+      billingID: data.billingID,
+      newPaymentChannelId: data.newPaymentChannelId
+    }
+  });
+}
+
 /** ACTIVATE VA */
 function activateVA(data) {
   return ApiRest({
@@ -74,5 +86,6 @@ export const HistoryMethod = {
   getHistoryPaymentStatus,
   editHistory,
   getDetailHistory,
-  activateVA
+  activateVA,
+  changePaymentMethod
 };

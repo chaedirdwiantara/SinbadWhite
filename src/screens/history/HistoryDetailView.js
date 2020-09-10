@@ -45,7 +45,13 @@ class HistoryDetailView extends Component {
       storeId: this.props.navigation.state.params.storeId,
       openModalFailActivateVA: false,
       openPaymentMethod: false,
-      selectedPaymentType: []
+      selectedPaymentType: [],
+      changePaymentMethod: null,
+      modalTAndR: false,
+      tAndRLoading: false, 
+      alreadyFetchTAndR: false,
+      warningChangePayment: null,
+      modalWarningChangePayment: false
     };
   }
    /* ========================
@@ -96,6 +102,55 @@ class HistoryDetailView extends Component {
     ){
       this.setState({openModalFailActivateVA: true})
     }
+    // if (this.props.oms.dataOmsGetPaymentChannel !== null) {
+    //   this.setState({
+    //     paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
+    //   });
+    // }
+
+    if (
+      prevProps.oms.dataOmsGetTermsConditions !==
+      this.props.oms.dataOmsGetTermsConditions
+    ) {
+      if (this.props.oms.dataOmsGetTermsConditions !== null) {
+        this.setState({
+          tAndRDetail: this.props.oms.dataOmsGetTermsConditions.data
+        });
+      }
+    }
+    if (
+      prevProps.oms.dataOmsGetTermsConditions !==
+      this.props.oms.dataOmsGetTermsConditions
+    ) {
+      this.setState({ tAndRLoading: false, alreadyFetchTAndR: true });
+      const tAndR = this.props.oms.dataOmsGetTermsConditions;
+      if (tAndR !== null) {
+        if (
+          tAndR.data.paymentChannels == null &&
+          tAndR.data.paymentTypes == null
+        ) {
+          this.renderChangePaymentMethod();
+        } else {
+          this.setState({ modalTAndR: true });
+        }
+      }
+    }
+    if (
+      prevProps.history.errorHistoryChangePaymentMethod !==
+      this.props.history.errorHistoryChangePaymentMethod
+    ) {
+      if (this.props.history.errorHistoryChangePaymentMethod !== null) {
+        this.setState({
+          warningChangePayment: this.props.history
+            .errorHistoryChangePaymentMethod.message,
+          modalWarningChangePayment: true
+        });
+        setTimeout(() => {
+          this.setState({ modalWarningChangePayment: false });
+        }, 3000);
+      }
+    }
+
   }
   /** REFRESH LIST HISTORY AFTER EDIT HISTORY STATUS */
   getHistory() {
@@ -561,6 +616,33 @@ renderDetailPayment() {
       <View />
     );
   }
+  /** RENDER PAYMENT TERM AND REFRENCE (30012020) */
+  renderModalTAndR() {
+    return (
+      <View>
+        {this.state.modalTAndR ? (
+          <ModalTAndR
+            open={this.state.modalTAndR}
+            data={[this.state.tAndRDetail]}
+            close={() => this.setState({ modalTAndR: false })}
+            onRef={ref => (this.agreeTAndR = ref)}
+            confirmOrder={this.renderChangePaymentMethod.bind(this)}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+  /**RENDER CHANGE PAYMENT METHOD */
+renderChangePaymentMethod() {
+    this.props.historyChangePaymentMethodProcess(
+      this.state.changePaymentMethod
+    );
+    this.setState({ openPaymentMethod: false, modalTAndR: false });
+  }
+
+
   /** MODAL FAIL ACTIVATE VA */
   renderModalFailActivateVA(){
     return this.state.openModalFailActivateVA ? (
@@ -575,6 +657,22 @@ renderDetailPayment() {
       <View />
     )
   }
+  //RENDER MODAL CHANGE PAYMENT
+  renderModalWarningChangePayment() {
+    return (
+      <View>
+        {this.state.modalWarningChangePayment ? (
+          <ModalWarning
+            open={this.state.modalWarningChangePayment}
+            content={`${this.state.warningChangePayment}`}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
  
   /** RENDER CANCEL BUTTON */
   renderCancelButton() {
@@ -690,9 +788,6 @@ renderDetailPayment() {
         paymentTypeId: parseInt(selectedPaymentType.paymentType.id, 10)
       };
       await this.props.OmsGetPaymentChannelProcess(params);
-      console.log(this.props.oms, 'oms');
-      console.log(this.props, 'lala');
-      
         this.setState({
           selectedPaymentType: this.props.oms.dataOmsGetPaymentChannel,
           openPaymentMethod: true
@@ -715,7 +810,7 @@ renderDetailPayment() {
         billingID={this.props.history.dataDetailHistory.billing.id}
         total={this.props.history.dataDetailHistory.parcelFinalPrice}
         loading={this.props.oms.loadingOmsGetPaymentChannel}
-        // actionChange={this.renderWantToConfirm.bind(this)} // orderPrice={this.calTotalPrice()}
+        actionChange={this.renderWantToConfirm.bind(this)} // orderPrice={this.calTotalPrice()}
         // onRef={ref => (this.selectPaymentMethod = ref)}
         // selectPaymentMethod={this.selectedPayment.bind(this)}
       />
@@ -755,8 +850,6 @@ renderDetailPayment() {
 
   /** MAIN */
   render() {
-    console.log(this.state.openPaymentMethod);
-    
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarRed />
@@ -775,6 +868,7 @@ renderDetailPayment() {
         {this.renderModalCallCS()}
         {this.renderModalCancelOrderConfirmation()}
         {this.renderModalFailActivateVA()}
+        {this.renderModalTAndR()}
       </SafeAreaView>
     );
   }

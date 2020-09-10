@@ -123,7 +123,7 @@ import {
                 </Text>
               </View>
               <View style={{ width: '5%', justifyContent: 'center' }}>
-                <Icons name="navigate-next" size={24} />
+                <MaterialIcon name="navigate-next" size={24} />
               </View>
             </TouchableOpacity>
             <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
@@ -175,8 +175,6 @@ import {
     }
   
     render() {
-      
-  console.log('di modal');
       return (
         <ModalBottomType4
           typeClose={'cancel'}
