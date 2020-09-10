@@ -8,13 +8,13 @@ import {
   ScrollView,
   Image,
   Text
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   MaterialIcon,
   bindActionCreators,
   connect,
   Button
-} from '../../library/thirdPartyPackage'
+} from '../../library/thirdPartyPackage';
 import {
   ModalConfirmation,
   ButtonSingleSmall,
@@ -22,8 +22,8 @@ import {
   ModalWarning,
   ProductListType1,
   ModalBottomErrorRespons
-} from '../../library/component'
-import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
+} from '../../library/component';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
@@ -129,7 +129,7 @@ class OmsCheckoutView extends Component {
         );
         this.props.omsGetLastPaymentChannelProcess({ invoiceGroupIds });
         if (this.props.oms.loadingLastPaymentChannel) {
-          this.setState({disabled: true});
+          this.setState({ disabled: true });
         }
         // this.setState({disabled: true});
       }
@@ -137,7 +137,7 @@ class OmsCheckoutView extends Component {
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
-    if (this.props.oms.dataOmsGetTermsConditions !== undefined){
+    if (this.props.oms.dataOmsGetTermsConditions !== undefined) {
       if (
         prevProps.oms.dataOmsGetTermsConditions !==
         this.props.oms.dataOmsGetTermsConditions
@@ -159,9 +159,7 @@ class OmsCheckoutView extends Component {
       prevProps.oms.dataOmsConfirmOrder !== this.props.oms.dataOmsConfirmOrder
     ) {
       if (this.props.oms.dataOmsConfirmOrder !== null) {
-        this.backToMerchantHomeView(
-          this.props.merchant.selectedMerchant.name
-        );
+        this.backToMerchantHomeView(this.props.merchant.selectedMerchant.name);
       }
     }
     /**
@@ -187,7 +185,7 @@ class OmsCheckoutView extends Component {
       }
     }
 
-    if (this.props.oms.dataOmsGetPaymentChannel !== undefined){
+    if (this.props.oms.dataOmsGetPaymentChannel !== undefined) {
       if (
         prevProps.oms.dataOmsGetPaymentChannel !==
         this.props.oms.dataOmsGetPaymentChannel
@@ -199,55 +197,6 @@ class OmsCheckoutView extends Component {
         }
       }
     }
-
-    if (
-      prevProps.oms.errorOmsConfirmOrder !== this.props.oms.errorOmsConfirmOrder
-    ) {
-      if (this.props.oms.errorOmsConfirmOrder) {
-        if (
-          this.props.oms.errorOmsConfirmOrder.message ===
-          'Your Parcels is less than minimum order'
-        ) {
-          this.setState({ modalWarningMinimumQty: false });
-          setTimeout(() => {
-            this.setState({ modalWarningMinimumQty: false , disabled: false});
-          }, 2000);
-        } else if (
-          this.props.oms.errorOmsConfirmOrder.message ===
-          'Order Status must be checkout'
-        ) {
-          this.setState({ modalWarningCheckoutIsExpired: true });
-          setTimeout(() => {
-            this.setState({ modalWarningCheckoutIsExpired: false });
-            NavigationService.navigate('Home');
-          }, 2000);
-        } else if (
-          this.props.oms.errorOmsConfirmOrder.message ===
-          'Payment Channel atau Payment Method tidak didukung'
-        ) {
-          this.setState({ modalWarningPaymentNotSupport: true });
-          setTimeout(() => {
-            this.setState({ modalWarningPaymentNotSupport: false, disabled: false });
-          }, 2000);
-        } else if (
-          this.props.oms.errorOmsConfirmOrder.message ===
-          "Your Balance is not enough / your credit is freezed / you not allowed for credit."
-        ) {
-          this.setState({ modalErrorBalance: true });
-          setTimeout(() => {
-            this.setState({ modalErrorBalance: false });
-            NavigationService.navigate('Home');
-          }, 2000);
-        } else {
-          this.setState({ modalWarningAllCondition: true });
-          setTimeout(() => {
-            this.setState({ modalWarningAllCondition: false , disabled: false, modalErrorResponse: true});
-          }, 2000);
-          // this.setState({ modalErrorResponse: true });
-        }
-      }
-    }
-
     if (
       this.props.oms.dataLastPaymentChannel !==
         prevProps.oms.dataLastPaymentChannel &&
@@ -273,10 +222,10 @@ class OmsCheckoutView extends Component {
           ? {
               ...e,
               paymentChannel: e.paymentMethodDetail
-              ? { ...e.paymentMethodDetail}
-              : {
-                ...lastPayment
-              },
+                ? { ...e.paymentMethodDetail }
+                : {
+                    ...lastPayment
+                  },
               paymentMethodDetail: e.paymentMethodDetail
                 ? { ...e.paymentMethodDetail }
                 : {
@@ -288,15 +237,20 @@ class OmsCheckoutView extends Component {
                     ...lastPayment.paymentType
                   },
               paymentTypeSupplierMethodId:
-                lastPayment.paymentTypeSupplierMethodId,
+                lastPayment.paymentTypeSupplierMethodId
             }
           : { ...e };
       });
 
-      this.setState({disabled: false, usingDefault: true, paymentMethodSelected, parcels });
+      this.setState({
+        disabled: false,
+        usingDefault: true,
+        paymentMethodSelected,
+        parcels
+      });
     }
 
-    if (this.props.oms.dataOmsGetTermsConditions !== undefined){
+    if (this.props.oms.dataOmsGetTermsConditions !== undefined) {
       if (
         prevProps.oms.dataOmsGetTermsConditions !==
         this.props.oms.dataOmsGetTermsConditions
@@ -712,15 +666,15 @@ class OmsCheckoutView extends Component {
     //     selectedPaymentType
     //   });
     // } else {
-      this.setState({ modalPaymentTypeList: false, selectedPaymentType });
-      this.openPaymentMethod(selectedPaymentType);
+    this.setState({ modalPaymentTypeList: false, selectedPaymentType });
+    this.openPaymentMethod(selectedPaymentType);
     // }
   }
   /** === FOR BACK TO CART VIEW ==== */
   backToCartItemView() {
     /** => this is for back to cart (dont delete) */
     // NavigationService.navigate('OmsCartView');
-    this.setState({modalErrorMinimumOrder : false});
+    this.setState({ modalErrorMinimumOrder: false });
     NavigationService.goBack(this.props.navigation.state.key);
     this.props.omsGetCartItemFromCheckoutProcess({
       catalogues: this.props.oms.dataCart
@@ -766,7 +720,7 @@ class OmsCheckoutView extends Component {
   openPaymentMethodDetail(paymentMethodDetail) {
     this.setState({
       paymentMethodDetail,
-      modalPaymentTypeMethod: false,
+      modalPaymentTypeMethod: false
       // modalPaymentMethodDetail: true
     });
   }
@@ -888,8 +842,14 @@ class OmsCheckoutView extends Component {
   renderConfirmButton() {
     return (
       <ButtonSingleSmall
-        disabled={this.props.oms.loadingOmsConfirmOrder || this.props.oms.loadingOmsGetTermsConditions}
-        loading={this.props.oms.loadingOmsConfirmOrder || this.props.oms.loadingOmsGetTermsConditions}
+        disabled={
+          this.props.oms.loadingOmsConfirmOrder ||
+          this.props.oms.loadingOmsGetTermsConditions
+        }
+        loading={
+          this.props.oms.loadingOmsConfirmOrder ||
+          this.props.oms.loadingOmsGetTermsConditions
+        }
         loadingPadding={33}
         onPress={() => this.wantToConfirmOrder()}
         title={'Buat Pesanan'}
@@ -1082,7 +1042,24 @@ class OmsCheckoutView extends Component {
               }}
               style={{ height: 20, width: 20, marginRight: 10 }}
             />
-            <Text style={[Fonts.type8, {alignSelf:"center"}]}>
+            <Text style={[Fonts.type8, { alignSelf: 'center' }]}>
+              {
+                this.state.parcels[indexParcel].paymentTypeDetail.paymentType
+                  .name
+              }{' '}
+              - {this.state.parcels[indexParcel].paymentMethodDetail.name}
+            </Text>
+          </View>
+        ) : this.state.parcels[indexParcel].paymentTypeDetail.paymentType ? (
+          <View style={{ flexDirection: 'row' }}>
+            <Image
+              source={{
+                uri: this.state.parcels[indexParcel].paymentTypeDetail
+                  .paymentType.iconUrl
+              }}
+              style={{ height: 20, width: 20, marginRight: 10 }}
+            />
+            <Text style={Fonts.type8}>
               {
                 this.state.parcels[indexParcel].paymentTypeDetail.paymentType
                   .name
@@ -1091,25 +1068,7 @@ class OmsCheckoutView extends Component {
             </Text>
           </View>
         ) : (
-          (this.state.parcels[indexParcel].paymentTypeDetail.paymentType)?
-            <View style={{ flexDirection: 'row' }}>
-              <Image
-                source={{
-                  uri: this.state.parcels[indexParcel].paymentTypeDetail
-                    .paymentType.iconUrl
-                }}
-                style={{ height: 20, width: 20, marginRight: 10 }}
-              />
-              <Text style={Fonts.type8}>
-                {
-                  this.state.parcels[indexParcel].paymentTypeDetail.paymentType
-                    .name
-                }{' '}
-                - {this.state.parcels[indexParcel].paymentMethodDetail.name}
-              </Text>
-            </View>
-          :
-            <View/>
+          <View />
         )}
       </View>
     ) : (
@@ -1146,17 +1105,21 @@ class OmsCheckoutView extends Component {
       <View style={{ flexDirection: 'row', paddingVertical: 15 }}>
         <Image
           source={{
-            uri: this.props.oms.dataLastPaymentChannel.data.paymentTypeChannels[indexPayment].paymentType.iconUrl
+            uri: this.props.oms.dataLastPaymentChannel.data.paymentTypeChannels[
+              indexPayment
+            ].paymentType.iconUrl
           }}
           style={{ height: 20, width: 20, marginRight: 10 }}
         />
-        <Text style={[Fonts.type8, {alignSelf:"center"}]}>
+        <Text style={[Fonts.type8, { alignSelf: 'center' }]}>
           {paymentMethod.paymentType.name} - {paymentMethod.PaymentChannel.name}{' '}
         </Text>
       </View>
     ) : (
       <View style={{ flexDirection: 'row', paddingVertical: 15 }}>
-        <Text style={[Fonts.type101, {alignSelf:"center"}]}>Pilih Tipe & Metode pembayaran</Text>
+        <Text style={[Fonts.type101, { alignSelf: 'center' }]}>
+          Pilih Tipe & Metode pembayaran
+        </Text>
       </View>
     );
   }
@@ -1175,9 +1138,9 @@ class OmsCheckoutView extends Component {
           />
         ) : (
           <View style={{ flexDirection: 'row', paddingVertical: 15 }}>
-            <Text style={[Fonts.type101, {alignSelf:"center"}]}>
+            <Text style={[Fonts.type101, { alignSelf: 'center' }]}>
               Pilih Tipe & Metode pembayaran
-              </Text>
+            </Text>
           </View>
         )}
       </View>
@@ -1197,7 +1160,7 @@ class OmsCheckoutView extends Component {
         </View>
         <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
         <TouchableOpacity
-        disabled={this.state.disabled}
+          disabled={this.state.disabled}
           style={[
             styles.boxPayment,
             {
@@ -1227,15 +1190,14 @@ class OmsCheckoutView extends Component {
               <View />
             )}
           </View>
-          
-          {(this.props.oms.loadingLastPaymentChannel) ?
+
+          {this.props.oms.loadingLastPaymentChannel ? (
             <View />
-          :
+          ) : (
             <View>
               <MaterialIcon name="keyboard-arrow-right" size={24} />
             </View>
-          }
-          
+          )}
         </TouchableOpacity>
         <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
       </View>
@@ -1693,12 +1655,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(OmsCheckoutView);
  * ]
  */
 
- /**
+/**
  * ============================
  * NOTES
  * ============================
- * createdBy: 
- * createdDate: 
+ * createdBy:
+ * createdDate:
  * updatedBy: tatas
  * updatedDate: 06072020
  * updatedFunction:
@@ -1707,4 +1669,3 @@ export default connect(mapStateToProps, mapDispatchToProps)(OmsCheckoutView);
  * UpdatedFunction:
  * -> Refactoring Module Import
  */
- 

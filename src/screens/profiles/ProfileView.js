@@ -136,10 +136,18 @@ class ProfileView extends Component {
   }
 
   renderVersion() {
+    const envName = (w = DeviceInfo.getApplicationName()) => {
+      let words = w.split(" ");
+      if (words.length == 3) {
+        return words[2]; // return Development, Staging, ""
+      } else {
+        return ""
+      }
+    }
     return (
       <View style={{ paddingLeft: 16, paddingVertical: 16 }}>
         <Text style={Fonts.type9}>
-          Development Versi {DeviceInfo.getVersion()} (
+          {envName()} Versi {DeviceInfo.getVersion()} (
           {DeviceInfo.getBuildNumber()})
         </Text>
       </View>

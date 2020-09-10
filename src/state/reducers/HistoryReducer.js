@@ -11,6 +11,7 @@ const INITIAL_STATE = {
   loadingGetOrderStatus: false,
   loadingGetPaymentStatus: false,
   loadingHistoryActivateVA: false,
+  loadingHistoryChangePaymentMethod: false,
   /** data */
   dataGetHistory: [],
   dataEditHistory: null,
@@ -18,6 +19,7 @@ const INITIAL_STATE = {
   dataGetPaymentStatus: null,
   dataDetailHistory: null,
   dataHistoryActivateVA: null,
+  dataHistoryChangePaymentMethod: null,
   totalDataGetHistory: 0,
   pageGetHistory: 0,
   /** error */
@@ -26,7 +28,8 @@ const INITIAL_STATE = {
   errorGetPaymentStatus: null,
   errorEditHistory: null,
   errorHistoryDetail: null,
-  errorHistoryActivateVA: null
+  errorHistoryActivateVA: null,
+  errorHistoryChangePaymentMethod: null
 };
 
 export const history = createReducer(INITIAL_STATE, {
@@ -210,6 +213,45 @@ export const history = createReducer(INITIAL_STATE, {
       ...state,
       loadingHistoryActivateVA: false,
       errorHistoryActivateVA: action.payload
+    };
+  },
+    /**
+   * ==================================
+   * CHANGE PAYMENT METHOD
+   * =================================
+   */
+  [types.HISTORY_CHANGE_PAYMENT_METHOD_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingHistoryChangePaymentMethod: true,
+      dataHistoryChangePaymentMethod: null,
+      errorHistoryChangePaymentMethod: null
+    };
+  },
+  [types.HISTORY_CHANGE_PAYMENT_METHOD_SUCCESS](state, action) {
+    let dataDetailHistory = { ...state.dataDetailHistory };
+    dataDetailHistory.billing.paymentChannelId = action.payload.data.paymentChannelID;
+    dataDetailHistory.billing.paymentTypeId = action.payload.data.paymentTypeID;
+    dataDetailHistory.paymentType.id = action.payload.data.paymentTypeID;
+    dataDetailHistory.paymentChannel.id = action.payload.data.paymentChannelID;
+    dataDetailHistory.paymentChannel.name = action.payload.data.paymentChannelName;
+    dataDetailHistory.paymentChannel.description = action.payload.data.paymentDescription;
+    dataDetailHistory.billing.accountVaNo = action.payload.data.accountVaNo;
+    dataDetailHistory.billing.expiredPaymentTime = action.payload.data.expiredPaymentTime;
+    dataDetailHistory.paymentChannel.iconUrl = action.payload.data.paymentIconUrl;
+    dataDetailHistory.billing.totalPayment = action.payload.data.totalPayment;
+     return {
+      ...state,
+      loadingHistoryChangePaymentMethod: false,
+      dataHistoryChangePaymentMethod: action.payload,
+      dataDetailHistory
+    };
+  },
+  [types.HISTORY_CHANGE_PAYMENT_METHOD_FAILED](state, action) {
+    return {
+      ...state,
+      loadingHistoryChangePaymentMethod: false,
+      errorHistoryChangePaymentMethod: action.payload
     };
   },
 

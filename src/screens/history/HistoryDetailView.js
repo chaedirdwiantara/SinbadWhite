@@ -21,7 +21,8 @@ import {
   ProductListType2,
   Address,
   ModalConfirmation,
-  LoadingPage
+  LoadingPage,
+  ButtonSingle
 } from '../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
@@ -33,7 +34,7 @@ import ModalTAndR from './ModalTAndC';
 import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation'
 import HistoryDetailPayment from './HistoryDetailPayment';
 import CallCS from '../../screens/global/CallCS';
-
+import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment'
 class HistoryDetailView extends Component {
   constructor(props) {
     super(props);
@@ -41,7 +42,16 @@ class HistoryDetailView extends Component {
       openModalCS: false,
       openModalCancelOrderConfirmation: false,
       section: this.props.navigation.state.params.section,
-      storeId: this.props.navigation.state.params.storeId
+      storeId: this.props.navigation.state.params.storeId,
+      openModalFailActivateVA: false,
+      openPaymentMethod: false,
+      selectedPaymentType: [],
+      changePaymentMethod: null,
+      modalTAndR: false,
+      tAndRLoading: false, 
+      alreadyFetchTAndR: false,
+      warningChangePayment: null,
+      modalWarningChangePayment: false
     };
   }
    /* ========================
@@ -87,6 +97,60 @@ class HistoryDetailView extends Component {
         this.getHistory();
       }
     }
+    if (
+      prevProps.history.errorHistoryActivateVA !== this.props.history.errorHistoryActivateVA
+    ){
+      this.setState({openModalFailActivateVA: true})
+    }
+    // if (this.props.oms.dataOmsGetPaymentChannel !== null) {
+    //   this.setState({
+    //     paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
+    //   });
+    // }
+
+    if (
+      prevProps.oms.dataOmsGetTermsConditions !==
+      this.props.oms.dataOmsGetTermsConditions
+    ) {
+      if (this.props.oms.dataOmsGetTermsConditions !== null) {
+        this.setState({
+          tAndRDetail: this.props.oms.dataOmsGetTermsConditions.data
+        });
+      }
+    }
+    if (
+      prevProps.oms.dataOmsGetTermsConditions !==
+      this.props.oms.dataOmsGetTermsConditions
+    ) {
+      this.setState({ tAndRLoading: false, alreadyFetchTAndR: true });
+      const tAndR = this.props.oms.dataOmsGetTermsConditions;
+      if (tAndR !== null) {
+        if (
+          tAndR.data.paymentChannels == null &&
+          tAndR.data.paymentTypes == null
+        ) {
+          this.renderChangePaymentMethod();
+        } else {
+          this.setState({ modalTAndR: true });
+        }
+      }
+    }
+    if (
+      prevProps.history.errorHistoryChangePaymentMethod !==
+      this.props.history.errorHistoryChangePaymentMethod
+    ) {
+      if (this.props.history.errorHistoryChangePaymentMethod !== null) {
+        this.setState({
+          warningChangePayment: this.props.history
+            .errorHistoryChangePaymentMethod.message,
+          modalWarningChangePayment: true
+        });
+        setTimeout(() => {
+          this.setState({ modalWarningChangePayment: false });
+        }, 3000);
+      }
+    }
+
   }
   /** REFRESH LIST HISTORY AFTER EDIT HISTORY STATUS */
   getHistory() {
@@ -100,7 +164,8 @@ class HistoryDetailView extends Component {
       dateGte: '',
       dateLte: '',
       portfolioId: [],
-      search: ''
+      search: '',
+      changePaymentMethod: null
     });
   }
   /** CALLED FROM CHILD */
@@ -137,9 +202,10 @@ class HistoryDetailView extends Component {
         );
       }
     }
+    
     return {
-      title: data !== null ? data.title : '-',
-      desc: data !== null ? data.detail : '-'
+      title: data? data.title : '-',
+      desc: data? data.detail : '-'
     };
   }
   /** CALCULATE TOTAL SKU */
@@ -519,11 +585,11 @@ renderDetailPayment() {
           ) : (
             <View />
           )}
-           {/* {this.state.section === 'payment' ? (
+           {this.state.section === 'payment' ? (
             this.renderSelectPaymentMethod()
           ) : (
             <View />
-          )} */}
+          )}
           <View style={{ paddingBottom: 50 }} />
         </ScrollView>
       </View>
@@ -550,6 +616,64 @@ renderDetailPayment() {
       <View />
     );
   }
+  /** RENDER PAYMENT TERM AND REFRENCE (30012020) */
+  renderModalTAndR() {
+    return (
+      <View>
+        {this.state.modalTAndR ? (
+          <ModalTAndR
+            open={this.state.modalTAndR}
+            data={[this.state.tAndRDetail]}
+            close={() => this.setState({ modalTAndR: false })}
+            onRef={ref => (this.agreeTAndR = ref)}
+            confirmOrder={this.renderChangePaymentMethod.bind(this)}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+  /**RENDER CHANGE PAYMENT METHOD */
+renderChangePaymentMethod() {
+    this.props.historyChangePaymentMethodProcess(
+      this.state.changePaymentMethod
+    );
+    this.setState({ openPaymentMethod: false, modalTAndR: false });
+  }
+
+
+  /** MODAL FAIL ACTIVATE VA */
+  renderModalFailActivateVA(){
+    return this.state.openModalFailActivateVA ? (
+      <View>
+      <ModalBottomFailPayment 
+        open={this.state.openModalFailActivateVA}
+        onPress={() => this.setState({ openModalFailActivateVA: false })}
+        text={'Aktifkan Virtual Account gagal. Silahkan mencoba beberapa saat lagi atau hubungi Customer Service'}
+      />
+      </View>
+    ) : (
+      <View />
+    )
+  }
+  //RENDER MODAL CHANGE PAYMENT
+  renderModalWarningChangePayment() {
+    return (
+      <View>
+        {this.state.modalWarningChangePayment ? (
+          <ModalWarning
+            open={this.state.modalWarningChangePayment}
+            content={`${this.state.warningChangePayment}`}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
+ 
   /** RENDER CANCEL BUTTON */
   renderCancelButton() {
     return (
@@ -563,6 +687,42 @@ renderDetailPayment() {
       </TouchableOpacity>
     );
   }
+
+  /** === RENDER BUTTON CHANGE PAYMENT === */
+  renderSelectPaymentMethod() {
+    return (
+      <View>
+        {this.props.history.dataDetailHistory.statusPayment === 'paid' ? (
+          <View />
+        ) : (
+          this.renderButtonChangePayment()
+        )}
+        {this.renderModalChangePaymentMethod()}
+      </View>
+    );
+  }
+
+  //**RENDER BUTTON UBAH METODE PEMBAYARAN */
+  renderButtonChangePayment() {
+    if (this.props.history.dataDetailHistory.paymentType.id === 2) {
+      return (
+        <View>
+          <View style={GlobalStyle.boxPadding} />
+          <View style={GlobalStyle.shadowForBox}>
+            <ButtonSingle
+              white
+              disabled={false}
+              title={'Ubah Metode Pembayaran'}
+              borderRadius={0}
+              onPress={() => this.renderOpenModalPaymentMethod()}
+            />
+          </View>
+        </View>
+      );
+    }
+  }
+
+
   /** RENDER BOTTOM ACTION */
   renderBottomAction() {
     return (
@@ -613,6 +773,81 @@ renderDetailPayment() {
       </View>
     );
   }
+
+    /**RENDER OPEN MODAL PAYMENT METHOD */
+    async renderOpenModalPaymentMethod() {
+      const selectedPaymentType = this.props.history.dataDetailHistory;
+      const params = {
+        supplierId: parseInt(selectedPaymentType.supplierId, 10),
+        orderParcelId: parseInt(
+          selectedPaymentType.orderBrands
+            .map(item => item.orderParcelId)
+            .toString(),
+          10
+        ),
+        paymentTypeId: parseInt(selectedPaymentType.paymentType.id, 10)
+      };
+      await this.props.OmsGetPaymentChannelProcess(params);
+        this.setState({
+          selectedPaymentType: this.props.oms.dataOmsGetPaymentChannel,
+          openPaymentMethod: true
+        });
+      
+    }
+  
+     /**RENDER MODAL PAYMENT METHOD */
+  renderModalChangePaymentMethod() {
+    return this.state.openPaymentMethod ? (
+      <ModalChangePaymentMethod
+        open={this.state.openPaymentMethod}
+        close={() =>
+          this.setState({
+            openPaymentMethod: false
+          })
+        }
+        paymentMethod={this.props.oms.dataOmsGetPaymentChannel}
+        paymentType={this.props.history.dataDetailHistory.paymentType}
+        billingID={this.props.history.dataDetailHistory.billing.id}
+        total={this.props.history.dataDetailHistory.parcelFinalPrice}
+        loading={this.props.oms.loadingOmsGetPaymentChannel}
+        actionChange={this.renderWantToConfirm.bind(this)} // orderPrice={this.calTotalPrice()}
+        // onRef={ref => (this.selectPaymentMethod = ref)}
+        // selectPaymentMethod={this.selectedPayment.bind(this)}
+      />
+    ) : (
+      <View />
+    );
+  }
+
+  /**RENDER WANT TO CONFIRM*/
+  renderWantToConfirm(item) {
+    const params = {
+      billingID: parseInt(this.props.history.dataDetailHistory.billing.id, 10),
+      newPaymentChannelId: parseInt(item, 10)
+    };
+    this.setState({
+      changePaymentMethod: params
+    });
+    const data = {
+      storeId: parseInt(this.props.history.dataDetailHistory.store.id, 10),
+      orderParcels: [
+        {
+          invoiceGroupId: parseInt(
+            this.props.history.dataDetailHistory.invoiceGroupId,
+            10
+          ),
+          paymentChannelId: parseInt(params.newPaymentChannelId, 10),
+          paymentTypeId: parseInt(
+            this.props.history.dataDetailHistory.paymentType.id,
+            10
+          )
+        }
+      ]
+    };
+    this.props.OmsGetTermsConditionsProcess(data);
+  }
+
+
   /** MAIN */
   render() {
     return (
@@ -632,6 +867,8 @@ renderDetailPayment() {
         {/* modal */}
         {this.renderModalCallCS()}
         {this.renderModalCancelOrderConfirmation()}
+        {this.renderModalFailActivateVA()}
+        {this.renderModalTAndR()}
       </SafeAreaView>
     );
   }
@@ -668,8 +905,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ history, user, merchant }) => {
-  return { history, user, merchant };
+const mapStateToProps = ({ history, user, merchant, oms }) => {
+  return { history, user, merchant, oms };
 };
 
 const mapDispatchToProps = dispatch => {
