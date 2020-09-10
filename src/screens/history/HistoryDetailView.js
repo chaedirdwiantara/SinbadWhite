@@ -21,7 +21,8 @@ import {
   ProductListType2,
   Address,
   ModalConfirmation,
-  LoadingPage
+  LoadingPage,
+  ButtonSingle
 } from '../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
@@ -526,11 +527,11 @@ renderDetailPayment() {
           ) : (
             <View />
           )}
-           {/* {this.state.section === 'payment' ? (
+           {this.state.section === 'payment' ? (
             this.renderSelectPaymentMethod()
           ) : (
             <View />
-          )} */}
+          )}
           <View style={{ paddingBottom: 50 }} />
         </ScrollView>
       </View>
@@ -586,6 +587,62 @@ renderDetailPayment() {
     );
   }
 
+  /** RENDER CHANGE PAYMENT METHOD  */
+  renderSelectPaymentMethod() {
+    return (
+      <View>
+        {this.props.history.dataDetailHistory.statusPayment === 'paid' ? (
+          <View />
+        ) : (
+          this.renderButtonChangePayment()
+        )}
+        {this.renderModalChangePaymentMethod()}
+      </View>
+    );
+  }
+
+  /** RENDER BUTTON CHANGE PAYMENT */
+  renderButtonChangePayment() {
+    if (this.props.history.dataDetailHistory.paymentType.id === 2) {
+      return (
+        <View>
+          <View style={GlobalStyle.boxPadding} />
+          <View style={GlobalStyle.shadowForBox}>
+            <ButtonSingle
+              white
+              disabled={false}
+              title={'Ubah Metode Pembayaran'}
+              borderRadius={0}
+              onPress={() => this.renderOpenModalPaymentMethod()}
+            />
+          </View>
+        </View>
+      );
+    }
+  }
+
+   /**RENDER OPEN MODAL PAYMENT METHOD */
+   async renderOpenModalPaymentMethod() {
+    const selectedPaymentType = this.props.history.dataDetailHistory;
+    const params = {
+      supplierId: parseInt(selectedPaymentType.supplierId, 10),
+      orderParcelId: parseInt(
+        selectedPaymentType.orderBrands
+          .map(item => item.orderParcelId)
+          .toString(),
+        10
+      ),
+      paymentTypeId: parseInt(selectedPaymentType.paymentType.id, 10)
+    };
+    await this.props.OmsGetPaymentChannelProcess(params);
+    this.setState({
+      selectedPaymentType: this.props.oms.dataOmsGetPaymentChannel,
+      openPaymentMethod: true
+    });
+  }
+
+
+
   /** RENDER BOTTOM ACTION */
   renderBottomAction() {
     return (
@@ -611,6 +668,31 @@ renderDetailPayment() {
    * MODAL
    * ======================
    */
+
+   /**RENDER MODAL PAYMENT METHOD */
+  renderModalChangePaymentMethod() {
+    return this.state.openPaymentMethod ? (
+      <ModalChangePaymentMethod
+        open={this.state.openPaymentMethod}
+        close={() =>
+          this.setState({
+            openPaymentMethod: false
+          })
+        }
+        paymentMethod={this.props.oms.dataOmsGetPaymentChannel}
+        paymentType={this.props.history.dataDetailHistory.paymentType}
+        billingID={this.props.history.dataDetailHistory.billing.id}
+        total={this.props.history.dataDetailHistory.parcelFinalPrice}
+        loading={this.props.oms.loadingOmsGetPaymentChannel}
+        actionChange={this.renderWantToConfirm.bind(this)} // orderPrice={this.calTotalPrice()}
+        // onRef={ref => (this.selectPaymentMethod = ref)}
+        // selectPaymentMethod={this.selectedPayment.bind(this)}
+      />
+    ) : (
+      <View />
+    );
+  }
+
   renderModalCancelOrderConfirmation() {
     return (
       <View>
