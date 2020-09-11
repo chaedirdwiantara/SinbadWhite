@@ -29,7 +29,8 @@ const INITIAL_STATE = {
   errorEditHistory: null,
   errorHistoryDetail: null,
   errorHistoryActivateVA: null,
-  errorHistoryChangePaymentMethod: null
+  errorHistoryChangePaymentMethod: null,
+  errorHistoryDetail: null,
 };
 
 export const history = createReducer(INITIAL_STATE, {
@@ -212,7 +213,8 @@ export const history = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingHistoryActivateVA: false,
-      errorHistoryActivateVA: action.payload
+      errorHistoryActivateVA: action.payload,
+      errorHistoryDetail: action.payload
     };
   },
     /**
@@ -251,7 +253,8 @@ export const history = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingHistoryChangePaymentMethod: false,
-      errorHistoryChangePaymentMethod: action.payload
+      errorHistoryChangePaymentMethod: action.payload,
+      errorHistoryDetail: action.payload
     };
   },
 
