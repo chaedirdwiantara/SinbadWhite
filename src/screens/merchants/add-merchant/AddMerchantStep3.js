@@ -248,7 +248,7 @@ class AddMerchantStep3 extends Component {
           })
         }
         errorText={
-          this.state.warehouseFound === 1
+          this.props.merchant.dataGetWarehouse.total === 1
             ? 'Lokasi toko berada dalam area jangkauan warehouse tertentu dan tidak dapat diubah.'
             : ''
         }

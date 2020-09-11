@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Agent Sinbad Staging</string>
+    <string name="CodePushDeploymentKey" moduleConfig="true" translatable="false">wDJrYApFFiZk96ePra3WWWhRBg83oKcIbspM7</string>
+</resources>

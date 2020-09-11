@@ -8,6 +8,14 @@ function editProfile(data) {
   });
 }
 
+function getWarehouse(data){
+  return ApiRest({
+    path: `sales-warehouses?$skip=0&$limit=20`,
+    method: 'GET'
+  })
+}
+
 export const ProfileMethod = {
-  editProfile
+  editProfile,
+  getWarehouse
 };

@@ -31,6 +31,13 @@ export const HISTORY_GET_DETAIL_FAILED = 'historyGetDetailFailed';
 export const HISTORY_EDIT_PROCESS = 'HistoryEditProcess';
 export const HISTORY_EDIT_SUCCESS = 'HistoryEditSuccess';
 export const HISTORY_EDIT_FAILED = 'HistoryEditFailed';
+/** HISTORY CHANGE PAYMENT */
+export const HISTORY_CHANGE_PAYMENT_METHOD_PROCESS =
+  'HistoryChangePaymentMethodProcess';
+export const HISTORY_CHANGE_PAYMENT_METHOD_SUCCESS =
+  'HistoryChangePaymentMethodSuccess';
+export const HISTORY_CHANGE_PAYMENT_METHOD_FAILED =
+  'HistoryChangePaymentMethodFailed';
 /** ACTIVATE VA */
 export const HISTORY_ACTIVATE_VA_PROCESS = 'HistoryActivateVAProcess';
 export const HISTORY_ACTIVATE_VA_SUCCESS = 'HistoryActivateVASuccess';

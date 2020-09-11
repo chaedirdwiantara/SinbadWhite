@@ -608,7 +608,8 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 16,
     color: Color.fontRed50
-  },type101: {
+  },
+  type101: {
     fontFamily: Fonts.MontserratItalic,
     fontSize: 11,
     lineHeight: 16,
@@ -632,16 +633,22 @@ const styles = StyleSheet.create({
     lineHeight: 13,
     color: Color.fontYellow50
   },
+  type105: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 12,
+    lineHeight: 16,
+    color: Color.fontBlack40
+  },
+  type106: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 13,
+    lineHeight: 16,
+    color: Color.fontWhite
+  },
   forCompare: {
     fontFamily: Fonts.MontserratBold,
     fontSize: 14,
     lineHeight: 16,
-    color: Color.fontGreen50
-  },
-  forCompare: {
-    fontFamily: Fonts.MontserratMedium,
-    fontSize: 10,
-    lineHeight: 13,
     color: Color.fontGreen50
   },
   /** === text for haader page === */
@@ -697,6 +704,12 @@ const styles = StyleSheet.create({
     fontSize: RFPercentage(2.1), //13,
     textAlign: 'center',
     color: Color.buttonRedDisableColor
+  },
+  textButtonGreyWhiteDisabled: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: RFPercentage(2.1), //13,
+    textAlign: 'center',
+    color: Color.fontBlack40
   },
   /** === button small text === */
   textButtonSmallRedActive: {

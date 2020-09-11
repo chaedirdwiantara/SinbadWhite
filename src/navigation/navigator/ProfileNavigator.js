@@ -4,6 +4,7 @@ import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 import ProfileDataView from '../../screens/profiles/ProfileDataView';
 import ProfileDataNameEdit from '../../screens/profiles/ProfileDataNameEdit';
+import ProfileAreaMapping from '../../screens/profiles/ProfileAreaMapping'
 
 const ProfileNavigator = {
   ProfileDataView: {
@@ -28,6 +29,24 @@ const ProfileNavigator = {
     screen: ProfileDataNameEdit,
     navigationOptions: {
       headerTitle: 'Ubah Nama',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  ProfileAreaMapping: {
+    screen: ProfileAreaMapping,
+    navigationOptions: {
+      headerTitle: 'Area Mapping',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {

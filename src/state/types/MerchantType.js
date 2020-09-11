@@ -36,6 +36,8 @@ export const MERCHANT_NO_ORDER_REASON_GET_FAILED =
 export const MERCHANT_SAVE_DATA_VOLATILE = 'MerchantAddDataVolatile';
 /** FOR EDIT MERCHANT */
 export const MERCHANT_EDIT_DATA_VOLATILE = 'MerchantEditDataVolatile';
+/** FOR RESET MERCHANT */
+export const MERCHANT_RESET_DATA_VOLATILE = 'MerchantResetDataVolatile'
 /** FOR GET MERCHANT LAST ORDER */
 export const MERCHANT_GET_LAST_ORDER_PROCESS = 'MerchantGetLastOrderProcess';
 export const MERCHANT_GET_LAST_ORDER_SUCCESS = 'MerchantGetLastOrderSuccess';

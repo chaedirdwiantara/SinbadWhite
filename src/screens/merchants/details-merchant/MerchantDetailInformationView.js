@@ -38,10 +38,7 @@ class MerchantDetailInformationView extends Component {
         });
         break;
       case 'merchantClassification':
-        NavigationService.navigate('MerchantEditView', {
-          title: 'Klasifikasi Toko',
-          type: 'merchantClassification'
-        });
+        NavigationService.navigate('MerchantDetailClassificationView')
         break;
       default:
         break;

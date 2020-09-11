@@ -151,3 +151,29 @@ export function historyActivateVASuccess(data) {
 export function historyActivateVAFailed(data) {
   return { type: types.HISTORY_ACTIVATE_VA_FAILED, payload: data };
 }
+
+/**
+ * ====================================
+ * CHANGE PAYMENT METHOD
+ * ====================================
+ */
+/** === CHANGE PAYMENT METHOD PROCESS === */
+export function historyChangePaymentMethodProcess(data) {
+  return { type: types.HISTORY_CHANGE_PAYMENT_METHOD_PROCESS, payload: data };
+}
+
+/** === CHANGE PAYMENT METHOD SUCCESS === */
+export function historyChangePaymentMethodSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.HISTORY_CHANGE_PAYMENT_METHOD_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.HISTORY_CHANGE_PAYMENT_METHOD_FAILED, payload: data };
+}
+
+/** === CHANGE PAYMENT METHOD FAILED === */
+export function historyChangePaymentMethodFailed(data) {
+  return { type: types.HISTORY_CHANGE_PAYMENT_METHOD_FAILED, payload: data };
+}

@@ -11,6 +11,7 @@ import {
   bindActionCreators,
   connect,
   moment,
+  MaterialIcon
 } from '../../library/thirdPartyPackage'
 import {
   SkeletonType5,

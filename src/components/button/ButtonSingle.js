@@ -49,6 +49,18 @@ class ButtonSingle extends Component {
         styles.buttonRed,
         { borderRadius: this.props.borderRadius }
       ];
+    }else if (this.props.disabledGreyWhite) {
+      color = Color.mainColor;
+      modifyFonts = Fonts.textButtonWhiteActive;
+      modifyDisabledFonts = Fonts.textButtonGreyWhiteDisabled;
+      modifyDisabledButtonColor = [
+        styles.buttonGreyWhiteDisabled,
+        { borderRadius: this.props.borderRadius }
+      ];
+      modifyButtonColor = [
+        styles.buttonWhite,
+        { borderRadius: this.props.borderRadius }
+      ];
     } else {
       color = Color.fontWhite;
       modifyFonts = Fonts.textButtonRedActive;
@@ -110,7 +122,15 @@ const styles = StyleSheet.create({
     backgroundColor: Color.fontBlack40,
     width: '100%',
     paddingVertical: 16
-  }
+  },
+  buttonGreyWhiteDisabled: {
+    backgroundColor: Color.buttonActiveColorWhite,
+    borderWidth: 1.5,
+    borderColor: Color.buttonGreyWhiteDisabled,
+    width: '100%',
+    paddingVertical: 16
+  },
+
 });
 
 export default ButtonSingle;

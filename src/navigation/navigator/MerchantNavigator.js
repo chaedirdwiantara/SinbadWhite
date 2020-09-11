@@ -20,6 +20,7 @@ import MerchantDetailAccountView from '../../screens/merchants/details-merchant/
 import MerchantDetailInformationView from '../../screens/merchants/details-merchant/MerchantDetailInformationView';
 import MerchantDetailPaymentView from '../../screens/merchants/details-merchant/MerchantDetailPaymentView';
 import MerchantDetailAddressView from '../../screens/merchants/details-merchant/MerchantDetailAddressView';
+import MerchantDetailClassificationView from '../../screens/merchants/details-merchant/MerchantDetailClassificationView'
 /** merchant edit */
 import MerchantEditView from '../../screens/merchants/edit-merchant/MerchantEditView';
 
@@ -215,6 +216,24 @@ const MerchantNavigator = {
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
+      gesturesEnabled: false
+    }
+  },
+  MerchantDetailClassificationView: {
+    screen: MerchantDetailClassificationView,
+    navigationOptions: {
+      headerTitle: 'Klasifikasi Toko',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
       gesturesEnabled: false
     }
   },

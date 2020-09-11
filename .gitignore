@@ -71,3 +71,11 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+#environment
+android/
+ios/
+index.js
+package.json
+src/services/apiHost.js
+

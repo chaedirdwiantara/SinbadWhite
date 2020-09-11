@@ -24,7 +24,7 @@ class DropdownType2 extends Component {
   renderTitle() {
     return (
       <View style={styles.boxTitle}>
-        <Text style={this.props.disabledAction ? Fonts.type99 : Fonts.type32}>
+        <Text style={this.props.disabledAction ? Fonts.type105 : Fonts.type32}>
           {this.props.title}
         </Text>
       </View>

@@ -639,7 +639,20 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingGetWarehouse: false,
       errorGetWarehouse: action.payload
     };
+  },
+
+/**
+ * =============================
+ * MERCHANT VOLATILE RESET
+ * =============================
+ */
+[types.MERCHANT_RESET_DATA_VOLATILE](state, action){
+  return {
+    ...state,
+    dataMerchantVolatile: INITIAL_STATE.dataMerchantVolatile,
+    dataMerchantDisabledField: INITIAL_STATE.dataMerchantDisabledField
   }
+}
 });
 /**
  * ===========================
