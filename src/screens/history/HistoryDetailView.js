@@ -31,10 +31,10 @@ import NavigationService from '../../navigation/NavigationService';
 import ModalChangePaymentMethod from './ModalChangePaymentMethod';
 import ModalWarning from '../../components/modal/ModalWarning';
 import ModalTAndR from './ModalTAndC';
-import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation'
+import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation';
 import HistoryDetailPayment from './HistoryDetailPayment';
 import CallCS from '../../screens/global/CallCS';
-import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment'
+import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 class HistoryDetailView extends Component {
   constructor(props) {
     super(props);
@@ -43,18 +43,18 @@ class HistoryDetailView extends Component {
       openModalCancelOrderConfirmation: false,
       section: this.props.navigation.state.params.section,
       storeId: this.props.navigation.state.params.storeId,
-      openModalFailActivateVA: false,
+      openModalErrorGlobal: false,
       openPaymentMethod: false,
       selectedPaymentType: [],
       changePaymentMethod: null,
       modalTAndR: false,
-      tAndRLoading: false, 
+      tAndRLoading: false,
       alreadyFetchTAndR: false,
       warningChangePayment: null,
       modalWarningChangePayment: false
     };
   }
-   /* ========================
+  /* ========================
    * HEADER MODIFY
    * ========================
    */
@@ -97,17 +97,32 @@ class HistoryDetailView extends Component {
         this.getHistory();
       }
     }
-    if (
-      prevProps.history.errorHistoryActivateVA !== this.props.history.errorHistoryActivateVA
-    ){
-      this.setState({openModalFailActivateVA: true})
-    }
-    // if (this.props.oms.dataOmsGetPaymentChannel !== null) {
-    //   this.setState({
-    //     paymentMethod: this.props.oms.dataOmsGetPaymentChannel.data
-    //   });
+    // if(
+    //   prevProps.history.dataHistoryChangePaymentMethod !== this.props.history.dataHistoryChangePaymentMethody
+    // ){
+    //   console.log('ubah');
+      
+    //   this.getHistory()
     // }
-
+    if (
+      prevProps.history.errorHistoryDetail !==
+      this.props.history.errorHistoryDetail
+    ) {
+      if (this.props.history.errorHistoryDetail.data !== null) {
+        this.manageError();
+      }
+      // if (
+      //   prevProps.history.errorHistoryChangePaymentMethod !==
+      //   this.props.history.errorHistoryChangePaymentMethod
+      // ) {
+      //   if (this.props.history.errorHistoryChangePaymentMethod !== null) {
+      //     // this.setState({
+      //     //   openModalErrorGlobal : true
+      //     // });
+      //     this.manageError();
+      //   }
+      // }
+    }
     if (
       prevProps.oms.dataOmsGetTermsConditions !==
       this.props.oms.dataOmsGetTermsConditions
@@ -135,22 +150,6 @@ class HistoryDetailView extends Component {
         }
       }
     }
-    if (
-      prevProps.history.errorHistoryChangePaymentMethod !==
-      this.props.history.errorHistoryChangePaymentMethod
-    ) {
-      if (this.props.history.errorHistoryChangePaymentMethod !== null) {
-        this.setState({
-          warningChangePayment: this.props.history
-            .errorHistoryChangePaymentMethod.message,
-          modalWarningChangePayment: true
-        });
-        setTimeout(() => {
-          this.setState({ modalWarningChangePayment: false });
-        }, 3000);
-      }
-    }
-
   }
   /** REFRESH LIST HISTORY AFTER EDIT HISTORY STATUS */
   getHistory() {
@@ -181,11 +180,19 @@ class HistoryDetailView extends Component {
   /** CHECK STATUS */
   checkStatus() {
     let data = null;
-    if (this.props.history.dataDetailHistory.billing.paymentChannelId === 2 && this.props.history.dataDetailHistory.statusPayment === "waiting_for_payment" && moment.utc(new Date()).local() > moment.utc(this.props.history.dataDetailHistory.billing.expiredPaymentTime).local()){
+    if (
+      this.props.history.dataDetailHistory.billing.paymentChannelId === 2 &&
+      this.props.history.dataDetailHistory.statusPayment ===
+        'waiting_for_payment' &&
+      moment.utc(new Date()).local() >
+        moment
+          .utc(this.props.history.dataDetailHistory.billing.expiredPaymentTime)
+          .local()
+    ) {
       return {
-      title : 'Tidak Dibayar',
-      desc: 'Pesanan Tidak Dibayar'
-      }
+        title: 'Tidak Dibayar',
+        desc: 'Pesanan Tidak Dibayar'
+      };
     } else if (this.state.section === 'payment') {
       if (this.props.history.dataGetPaymentStatus !== null) {
         data = this.props.history.dataGetPaymentStatus.find(
@@ -202,10 +209,10 @@ class HistoryDetailView extends Component {
         );
       }
     }
-    
+
     return {
-      title: data? data.title : '-',
-      desc: data? data.detail : '-'
+      title: data ? data.title : '-',
+      desc: data ? data.detail : '-'
     };
   }
   /** CALCULATE TOTAL SKU */
@@ -379,17 +386,18 @@ class HistoryDetailView extends Component {
                 ? moment(
                     new Date(this.props.history.dataDetailHistory.deliveredDate)
                   ).format('DD MMM YYYY HH:mm:ss')
-                : (this.props.history.dataDetailHistory.estDeliveredDate !== null ? moment(
-                      new Date(
-                        this.props.history.dataDetailHistory.estDeliveredDate
-                      )
-                    ).format('DD MMM YYYY HH:mm:ss') : '-'
-                  )
-                // moment(
-                //     new Date(
-                //       this.props.history.dataDetailHistory.estDeliveredDate
-                //     )
-                //   ).format('DD MMM YYYY HH:mm:ss')
+                : this.props.history.dataDetailHistory.estDeliveredDate !== null
+                ? moment(
+                    new Date(
+                      this.props.history.dataDetailHistory.estDeliveredDate
+                    )
+                  ).format('DD MMM YYYY HH:mm:ss')
+                : '-'
+              // moment(
+              //     new Date(
+              //       this.props.history.dataDetailHistory.estDeliveredDate
+              //     )
+              //   ).format('DD MMM YYYY HH:mm:ss')
             )}
             {this.renderContentListGlobal(
               this.props.history.dataDetailHistory.dueDate !== null
@@ -399,9 +407,11 @@ class HistoryDetailView extends Component {
                 ? moment(
                     new Date(this.props.history.dataDetailHistory.dueDate)
                   ).format('DD MMM YYYY HH:mm:ss')
-                : ( this.props.history.dataDetailHistory.estDueDate !==null ? moment(
-                  new Date(this.props.history.dataDetailHistory.estDueDate)
-                ).format('DD MMM YYYY HH:mm:ss') : '-')
+                : this.props.history.dataDetailHistory.estDueDate !== null
+                ? moment(
+                    new Date(this.props.history.dataDetailHistory.estDueDate)
+                  ).format('DD MMM YYYY HH:mm:ss')
+                : '-'
             )}
           </View>
         </View>
@@ -465,7 +475,7 @@ class HistoryDetailView extends Component {
     );
   }
   /** RENDER PAYMENT INFORMATION */
-  renderPaymentInformation(){
+  renderPaymentInformation() {
     if (this.props.history.dataDetailHistory !== null) {
       return (
         <HistoryDetailPaymentInformation
@@ -475,89 +485,89 @@ class HistoryDetailView extends Component {
       );
     }
   }
-    // return (
-    //   <View>
-    //     <View style={GlobalStyle.boxPadding} />
-    //     <View style={GlobalStyle.shadowForBox}>
-    //       <View
-    //         style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
-    //       >
-    //         <Text style={Fonts.type48}>Informasi Pembayaran</Text>
-    //       </View>
-    //       <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-    //       <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-    //         {this.renderContentListGlobal(
-    //           'Tipe Pembayaran',
-    //           this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
-    //             null
-    //             ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
-    //                 .paymentTypeSupplier.paymentType.name
-    //             : '-'
-    //         )}
-    //         {this.renderContentListGlobal(
-    //           'Metode Pembayaran',
-    //           this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
-    //             null
-    //             ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
-    //                 .paymentMethod.name
-    //             : '-'
-    //         )}
-    //         {this.renderContentListGlobal(
-    //           `Total Barang (${this.totalSKU()})`,
-    //           MoneyFormat(this.props.history.dataDetailHistory.parcelGrossPrice)
-    //         )}
-    //         {/* {this.renderContentListGlobal(
-    //           'Potongan Harga',
-    //           `- ${MoneyFormat(
-    //             this.props.history.dataDetailHistory.parcelPromo
-    //           )}`,
-    //           true
-    //         )} */}
-    //         {this.renderPromoList(
-    //           this.props.history.dataDetailHistory.promoList
-    //         )}
-    //         {this.renderVoucherList(
-    //           this.props.history.dataDetailHistory.voucherList
-    //         )}
-    //         {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
-    //         {this.renderContentListGlobal(
-    //           'PPN 10%',
-    //           MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
-    //         )}
-    //         <View
-    //           style={{
-    //             flexDirection: 'row',
-    //             justifyContent: 'space-between',
-    //             marginTop: 16
-    //           }}
-    //         >
-    //           <View style={{ flex: 1, alignItems: 'flex-start' }}>
-    //             <Text style={Fonts.type50}>Sub Total</Text>
-    //           </View>
-    //           <View style={{ flex: 1, alignItems: 'flex-end' }}>
-    //             <Text style={Fonts.type21}>
-    //               {MoneyFormat(
-    //                 this.props.history.dataDetailHistory.parcelFinalPrice
-    //               )}
-    //             </Text>
-    //           </View>
-    //         </View>
-    //       </View>
-    //     </View>
-    //   </View>
-    // );
+  // return (
+  //   <View>
+  //     <View style={GlobalStyle.boxPadding} />
+  //     <View style={GlobalStyle.shadowForBox}>
+  //       <View
+  //         style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
+  //       >
+  //         <Text style={Fonts.type48}>Informasi Pembayaran</Text>
+  //       </View>
+  //       <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
+  //       <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+  //         {this.renderContentListGlobal(
+  //           'Tipe Pembayaran',
+  //           this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
+  //             null
+  //             ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
+  //                 .paymentTypeSupplier.paymentType.name
+  //             : '-'
+  //         )}
+  //         {this.renderContentListGlobal(
+  //           'Metode Pembayaran',
+  //           this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
+  //             null
+  //             ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
+  //                 .paymentMethod.name
+  //             : '-'
+  //         )}
+  //         {this.renderContentListGlobal(
+  //           `Total Barang (${this.totalSKU()})`,
+  //           MoneyFormat(this.props.history.dataDetailHistory.parcelGrossPrice)
+  //         )}
+  //         {/* {this.renderContentListGlobal(
+  //           'Potongan Harga',
+  //           `- ${MoneyFormat(
+  //             this.props.history.dataDetailHistory.parcelPromo
+  //           )}`,
+  //           true
+  //         )} */}
+  //         {this.renderPromoList(
+  //           this.props.history.dataDetailHistory.promoList
+  //         )}
+  //         {this.renderVoucherList(
+  //           this.props.history.dataDetailHistory.voucherList
+  //         )}
+  //         {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
+  //         {this.renderContentListGlobal(
+  //           'PPN 10%',
+  //           MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
+  //         )}
+  //         <View
+  //           style={{
+  //             flexDirection: 'row',
+  //             justifyContent: 'space-between',
+  //             marginTop: 16
+  //           }}
+  //         >
+  //           <View style={{ flex: 1, alignItems: 'flex-start' }}>
+  //             <Text style={Fonts.type50}>Sub Total</Text>
+  //           </View>
+  //           <View style={{ flex: 1, alignItems: 'flex-end' }}>
+  //             <Text style={Fonts.type21}>
+  //               {MoneyFormat(
+  //                 this.props.history.dataDetailHistory.parcelFinalPrice
+  //               )}
+  //             </Text>
+  //           </View>
+  //         </View>
+  //       </View>
+  //     </View>
+  //   </View>
+  // );
   // }
-/** RENDER DETAIL PAYMENT */
-renderDetailPayment() {
-  if (this.props.history.dataDetailHistory !== null) {
-    return(
-      <HistoryDetailPayment
-        data={this.props.history.dataDetailHistory}
-        section={this.state.section}
-      />)
-    
+  /** RENDER DETAIL PAYMENT */
+  renderDetailPayment() {
+    if (this.props.history.dataDetailHistory !== null) {
+      return (
+        <HistoryDetailPayment
+          data={this.props.history.dataDetailHistory}
+          section={this.state.section}
+        />
+      );
+    }
   }
-}
 
   /** RENDER CONTENT */
   renderContent() {
@@ -585,7 +595,7 @@ renderDetailPayment() {
           ) : (
             <View />
           )}
-           {this.state.section === 'payment' ? (
+          {this.state.section === 'payment' ? (
             this.renderSelectPaymentMethod()
           ) : (
             <View />
@@ -595,6 +605,39 @@ renderDetailPayment() {
       </View>
     );
   }
+  /**
+   * =============================
+   * ERROR FUNCTION
+   * ============================
+   */
+  manageError() {
+    switch (this.props.history.errorHistoryDetail.data.errorCode) {
+      case 'ERR_APP_UPDATE_BILLING':
+       this.errorUpdateBilling();
+        break;
+      case 'ERR_APP_CREATE_VA':
+        this.errorCreateVA();
+        break;
+      default:
+        this.setState({
+          openModalErrorGlobal: true
+        });
+        break;
+    }
+  }
+
+  errorUpdateBilling() {
+    this.setState({
+      openModalErrorGlobal: true
+    });
+  }
+
+  errorCreateVA() {
+    this.setState({
+      openModalErrorGlobal: true
+    });
+  }
+
   /**
    * ====================
    * RENDER MODAL
@@ -635,27 +678,26 @@ renderDetailPayment() {
     );
   }
   /**RENDER CHANGE PAYMENT METHOD */
-renderChangePaymentMethod() {
+  renderChangePaymentMethod() {
     this.props.historyChangePaymentMethodProcess(
       this.state.changePaymentMethod
     );
     this.setState({ openPaymentMethod: false, modalTAndR: false });
   }
 
-
   /** MODAL FAIL ACTIVATE VA */
-  renderModalFailActivateVA(){
-    return this.state.openModalFailActivateVA ? (
+  renderModalErrorGlobal() {
+    return this.state.openModalErrorGlobal ? (
       <View>
-      <ModalBottomFailPayment 
-        open={this.state.openModalFailActivateVA}
-        onPress={() => this.setState({ openModalFailActivateVA: false })}
-        text={'Aktifkan Virtual Account gagal. Silahkan mencoba beberapa saat lagi atau hubungi Customer Service'}
-      />
+        <ModalBottomFailPayment
+          open={this.state.openModalErrorGlobal}
+          onPress={() => this.setState({ openModalErrorGlobal: false })}
+          text={this.props.history.errorHistoryDetail.message}
+        />
       </View>
     ) : (
       <View />
-    )
+    );
   }
   //RENDER MODAL CHANGE PAYMENT
   renderModalWarningChangePayment() {
@@ -673,7 +715,6 @@ renderChangePaymentMethod() {
     );
   }
 
- 
   /** RENDER CANCEL BUTTON */
   renderCancelButton() {
     return (
@@ -721,7 +762,6 @@ renderChangePaymentMethod() {
       );
     }
   }
-
 
   /** RENDER BOTTOM ACTION */
   renderBottomAction() {
@@ -774,28 +814,27 @@ renderChangePaymentMethod() {
     );
   }
 
-    /**RENDER OPEN MODAL PAYMENT METHOD */
-    async renderOpenModalPaymentMethod() {
-      const selectedPaymentType = this.props.history.dataDetailHistory;
-      const params = {
-        supplierId: parseInt(selectedPaymentType.supplierId, 10),
-        orderParcelId: parseInt(
-          selectedPaymentType.orderBrands
-            .map(item => item.orderParcelId)
-            .toString(),
-          10
-        ),
-        paymentTypeId: parseInt(selectedPaymentType.paymentType.id, 10)
-      };
-      await this.props.OmsGetPaymentChannelProcess(params);
-        this.setState({
-          selectedPaymentType: this.props.oms.dataOmsGetPaymentChannel,
-          openPaymentMethod: true
-        });
-      
-    }
-  
-     /**RENDER MODAL PAYMENT METHOD */
+  /**RENDER OPEN MODAL PAYMENT METHOD */
+  async renderOpenModalPaymentMethod() {
+    const selectedPaymentType = this.props.history.dataDetailHistory;
+    const params = {
+      supplierId: parseInt(selectedPaymentType.supplierId, 10),
+      orderParcelId: parseInt(
+        selectedPaymentType.orderBrands
+          .map(item => item.orderParcelId)
+          .toString(),
+        10
+      ),
+      paymentTypeId: parseInt(selectedPaymentType.paymentType.id, 10)
+    };
+    await this.props.OmsGetPaymentChannelProcess(params);
+    this.setState({
+      selectedPaymentType: this.props.oms.dataOmsGetPaymentChannel,
+      openPaymentMethod: true
+    });
+  }
+
+  /**RENDER MODAL PAYMENT METHOD */
   renderModalChangePaymentMethod() {
     return this.state.openPaymentMethod ? (
       <ModalChangePaymentMethod
@@ -847,7 +886,6 @@ renderChangePaymentMethod() {
     this.props.OmsGetTermsConditionsProcess(data);
   }
 
-
   /** MAIN */
   render() {
     return (
@@ -867,7 +905,7 @@ renderChangePaymentMethod() {
         {/* modal */}
         {this.renderModalCallCS()}
         {this.renderModalCancelOrderConfirmation()}
-        {this.renderModalFailActivateVA()}
+        {this.renderModalErrorGlobal()}
         {this.renderModalTAndR()}
       </SafeAreaView>
     );
