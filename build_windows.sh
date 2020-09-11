@@ -23,9 +23,7 @@ if [ ! -z "$1" ]; then
     npm install
     cd android && chmod +x gradlew && rm -rf ./.gradle && ./gradlew clean && ./gradlew cleanBuildCache && ./gradlew app:assembleRelease
     # npm run build
-
   fi
-
 else
   echo "usage: build.sh [development | staging | master] "
 fi
