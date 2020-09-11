@@ -101,7 +101,7 @@ class HistoryDetailView extends Component {
     //   prevProps.history.dataHistoryChangePaymentMethod !== this.props.history.dataHistoryChangePaymentMethody
     // ){
     //   console.log('ubah');
-      
+
     //   this.getHistory()
     // }
     if (
@@ -613,7 +613,7 @@ class HistoryDetailView extends Component {
   manageError() {
     switch (this.props.history.errorHistoryDetail.data.errorCode) {
       case 'ERR_APP_UPDATE_BILLING':
-       this.errorUpdateBilling();
+        this.errorUpdateBilling();
         break;
       case 'ERR_APP_CREATE_VA':
         this.errorCreateVA();
