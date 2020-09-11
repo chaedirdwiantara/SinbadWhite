@@ -21,8 +21,6 @@ then
 
 		rm -rf node_modules
 	    	npm install
-	    	npm add react-native-firebase
-	   	yarn add @react-native-community/toolbar-android
 	    	cd android && chmod +x gradlew && rm -rf ./.gradle && ./gradlew clean && ./gradlew cleanBuildCache && ./gradlew app:assembleRelease
 	    	# npm run build
 
