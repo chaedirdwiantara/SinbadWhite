@@ -19,10 +19,8 @@ then
 		cp -f ./environment/$1/package_$1.json ./package.json
 		cp -f ./environment/$1/apiHost_$1.js ./src/services/apiHost.js
 
-		# npm install
-		# npm add react-native-firebase
-		# yarn add @react-native-community/toolbar-android
-    	# npm run build
+	  rm -rf $TMPDIR/react-* ; rm -rf $TMPDIR/metro-* ; rm -rf $TMPDIR/haste-* ; watchman watch-del-all ; rm -rf node_modules/ ; npm install
+    npx jetifyd
 
 	fi
 
