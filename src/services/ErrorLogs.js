@@ -1,11 +1,7 @@
-// import { DeviceInfo} from '../library/thirdPartyPackage';
-import { GlobalMethod } from '../services/methods';
-import firebase from 'react-native-firebase';
-import DeviceInfo from 'react-native-device-info';
+import { firebase, DeviceInfo } from '../library/thirdPartyPackage';
 import { Store } from '../state/Store';
 export default async function logger(error, info) { 
   const stateData = Store.getState();
-  
   let deviceData = {
     uniqueId: DeviceInfo.getUniqueId(),
     systemVersion: DeviceInfo.getSystemVersion(),
