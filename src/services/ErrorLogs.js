@@ -13,7 +13,6 @@ export default async function logger(error, info) {
     brand: DeviceInfo.getBrand(),
     deviceId: DeviceInfo.getDeviceId()
   };
-  // let userStoreId = GlobalMethod.userStoreId();
   const ref = firebase.firestore().collection('error-mobile');
   await ref.add({
     platform: 'White',
