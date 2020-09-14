@@ -893,6 +893,8 @@ class HistoryDetailView extends Component {
         <StatusBarRed />
         {!this.props.history.loadingDetailHistory &&
         !this.props.history.loadingEditHistory &&
+        !this.props.history.loadingHistoryChangePaymentMethod &&
+        !this.props.history.loadingHistoryActivateVA &&
         this.props.history.dataDetailHistory !== null ? (
           <View style={styles.mainContainer}>
             {this.renderBackground()}
