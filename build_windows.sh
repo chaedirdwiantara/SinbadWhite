@@ -19,15 +19,11 @@ if [ ! -z "$1" ]; then
     cp -f ./environment/$1/package_$1.json ./package.json
     cp -f ./environment/$1/apiHost_$1.js ./src/services/apiHost.js
 
-    rm -rf node_modules
-    npm install
-    npm add react-native-firebase
-    yarn add @react-native-community/toolbar-android
-    cd android && chmod +x gradlew && rm -rf ./.gradle && ./gradlew clean && ./gradlew cleanBuildCache && ./gradlew app:assembleRelease
-    # npm run build
+    rm -rf $TMPDIR/react-* ; rm -rf $TMPDIR/metro-* ; rm -rf $TMPDIR/haste-* ; watchman watch-del-all ; rm -rf node_modules/ ; npm install
+    npx jetify
+    cd android ; chmod +x gradlew ; rm -rf ./.gradle ; ./gradlew clean ; ./gradlew cleanBuildCache ; ./gradlew app:assembleRelease
 
   fi
-
 else
   echo "usage: build.sh [development | staging | master] "
 fi
