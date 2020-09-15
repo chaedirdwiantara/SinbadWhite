@@ -6,21 +6,21 @@ import {
   FlatList,
   TouchableOpacity,
   Text
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   bindActionCreators,
   connect,
   moment,
   MaterialIcon
-} from '../../library/thirdPartyPackage'
+} from '../../library/thirdPartyPackage';
 import {
   SkeletonType5,
   EmptyData,
   ProductListType1,
   LoadingLoadMore,
   ModalConfirmation
-} from '../../library/component'
-import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
+} from '../../library/component';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
@@ -73,11 +73,11 @@ class HistoryDataListView extends Component {
   }
 
   /** CALL FROM CHILD */
- parentFunction(data) {
-  if (data.type === 'countdown') {
-    this.onHandleRefresh();
+  parentFunction(data) {
+    if (data.type === 'countdown') {
+      this.onHandleRefresh();
+    }
   }
-}
   /** REFRESH LIST VIEW */
   onHandleRefresh = () => {
     this.props.historyGetRefresh();
@@ -249,7 +249,6 @@ class HistoryDataListView extends Component {
     );
   }
 
-
   /** === RENDER ITEM (STATUS PAYMENT INFORMATION) === */
   renderItemStatusPaymentInformation(item) {
     let statusPaymentInformation = '';
@@ -281,7 +280,7 @@ class HistoryDataListView extends Component {
       case 'payment_failed':
       case 'overdue':
       case 'waiting_for_payment':
-        textStyle = Fonts.type11
+        textStyle = Fonts.type11;
         break;
       default:
         break;
@@ -289,49 +288,53 @@ class HistoryDataListView extends Component {
     return (
       <View>
         <View style={{ flexDirection: 'row' }}>
-        {
-          item.paymentChannel.id === 2 && moment.utc(new Date()).local() > moment.utc(item.billing.expiredPaymentTime).local() && item.statusPayment === "waiting_for_payment"?
-          <Text style={{ ...textStyle, textAlign: 'right' }}>
-            Tidak Dibayar
-          </Text>
-          :
-          <Text style={{ ...textStyle, textAlign: 'right', marginLeft: 15 }}>
-            {this.statusPayment(item.statusPayment)}
-          </Text>
-        }
-          {item.statusPayment === 'overdue' ? (
+          {item.paymentChannel.id === 2 &&
+          moment.utc(new Date()).local() >
+            moment.utc(item.billing.expiredPaymentTime).local() &&
+          item.statusPayment === 'waiting_for_payment' ? (
+            <Text style={{ ...textStyle, textAlign: 'right' }}>
+              Tidak Dibayar
+            </Text>
+          ) : ( 
+            <Text style={{ ...textStyle, textAlign: 'right', marginLeft: 15 }}>
+              {this.statusPayment(item.statusPayment)}
+            </Text>
+          )}
+          {item.statusPayment === 'overdue'? (
             <View style={{ marginLeft: 5 }}>
               <MaterialIcon name="error" size={15} color={'#f0444c'} />
             </View>
           ) : (
-              <View />
-            )}
+            <View />
+          )}
         </View>
         {item.statusPayment !== 'paid'
           ? item.statusPayment !== 'payment_failed' &&
             // item.billing.billingStatus !== 'expired' &&
-            item.billing && item.billing.billingStatus !== 'paid' &&
+            item.billing &&
+            item.billing.billingStatus !== 'paid' &&
             item.billing.expiredPaymentTime &&
             item.paymentChannel &&
-            item.paymentChannel.id === 2 ? 
-              moment.utc(new Date()).local() > moment.utc(item.billing.expiredPaymentTime).local() && item.statusPayment === "waiting_for_payment"?
-              null
-              :
-              this.renderCountDown(item)
+            item.paymentChannel.id === 2
+            ? moment.utc(new Date()).local() >
+                moment.utc(item.billing.expiredPaymentTime).local() &&
+              item.statusPayment === 'waiting_for_payment' 
+              ? null
+              : this.renderCountDown(item)
             : null
           : null}
       </View>
     );
   }
-/** === RENDER BUTTON FOR PAYMENT === */
-renderButtonForPayment(item) {
-  switch (item.statusPayment) {
-    case 'confirm':
-      return this.renderButtonCancel(item);
-    default:
-      return <View />;
+  /** === RENDER BUTTON FOR PAYMENT === */
+  renderButtonForPayment(item) {
+    switch (item.statusPayment) {
+      case 'confirm':
+        return this.renderButtonCancel(item);
+      default:
+        return <View />;
+    }
   }
-}
   /** ITEM */
   renderItem({ item, index }) {
     return (
@@ -342,8 +345,7 @@ renderButtonForPayment(item) {
               <Text style={Fonts.type10}>{item.orderCode}</Text>
               {this.props.section === 'payment'
                 ? this.renderItemStatusPayment(item)
-                : this.renderItemStatusOrder(item)
-              }
+                : this.renderItemStatusOrder(item)}
             </View>
             <View style={styles.boxItemContent}>
               {this.props.section === 'payment' ? (
@@ -353,17 +355,17 @@ renderButtonForPayment(item) {
                   )}
                 </Text>
               ) : (
-                  <View />
-                )}
+                <View />
+              )}
               {this.props.section === 'payment' &&
-                item.statusPayment !== 'payment_failed' &&
-                item.statusPayment !== 'paid' ? (
-                  <Text style={Fonts.type57}>
-                    {this.renderItemStatusPaymentInformation(item)}
-                  </Text>
-                ) : (
-                  <View />
-                )}
+              item.statusPayment !== 'payment_failed' &&
+              item.statusPayment !== 'paid' ? (
+                <Text style={Fonts.type57}>
+                  {this.renderItemStatusPaymentInformation(item)}
+                </Text>
+              ) : (
+                <View />
+              )}
             </View>
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             {this.renderProductSection(item.orderBrands)}
@@ -386,11 +388,9 @@ renderButtonForPayment(item) {
                 {MoneyFormat(item.parcelFinalPrice)}
               </Text>
               <View style={{ flexDirection: 'row' }}>
-                {this.props.section === 'order' && item.status === 'confirm' ? (
-                  this.renderButtonCancel(item)
-                ) : (
-                  this.renderButtonForPayment(item)
-                  )}
+                {this.props.section === 'order' && item.status === 'confirm'
+                  ? this.renderButtonCancel(item)
+                  : this.renderButtonForPayment(item)}
                 {this.renderButtonDetail(item)}
               </View>
             </View>
@@ -436,8 +436,8 @@ renderButtonForPayment(item) {
     return this.props.history.loadingLoadMoreGetHistory ? (
       <LoadingLoadMore />
     ) : (
-        <View />
-      );
+      <View />
+    );
   }
   /**
    * ======================
@@ -465,8 +465,8 @@ renderButtonForPayment(item) {
             }
           />
         ) : (
-            <View />
-          )}
+          <View />
+        )}
       </View>
     );
   }
@@ -475,7 +475,7 @@ renderButtonForPayment(item) {
     return (
       <View style={styles.mainContainer}>
         {this.props.history.loadingGetHistory ||
-          this.props.history.loadingEditHistory
+        this.props.history.loadingEditHistory
           ? this.renderSkeleton()
           : this.renderData()}
         {/* for loadmore */}
@@ -549,14 +549,14 @@ export default connect(
 )(HistoryDataListView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy:
-* createdDate:
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-*
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

@@ -461,7 +461,7 @@ class HistoryDetailPayment extends Component {
               expiredPaymentTime !== null)) &&
           accountVaNo !== null &&
           billingStatus !== 'paid' &&
-          a.statusPayment === 'waiting_for_payment' &&
+         ( a.statusPayment === 'waiting_for_payment' || (a.statusPayment === 'overdue' && expiredPaymentTime !== null )) &&
           billingStatus !== 'cancel' ? (
             <View>
               <View style={GlobalStyle.boxPadding} />
@@ -511,7 +511,7 @@ class HistoryDetailPayment extends Component {
     const accountVaNo = a.billing.accountVaNo;
 
     if (
-      this.props.data.statusPayment === 'waiting_for_payment' &&
+      statusPayment === 'waiting_for_payment' &&
       moment.utc(new Date()).local() >
         moment.utc(this.props.data.billing.expiredPaymentTime).local()
     ) {
@@ -525,16 +525,16 @@ class HistoryDetailPayment extends Component {
               expiredPaymentTime !== null)) &&
           (billingStatus !== 'paid' &&
             // this.props.history.dataDetailHistory.billing.billingStatus !== 'expired' &&
-            statusPayment === 'waiting_for_payment' &&
+            (statusPayment === 'waiting_for_payment' || statusPayment === 'overdue') &&
             billingStatus !== 'cancel') ? (
             this.renderVirtualAccountNumber()
           ) : 
           // a.paymentType.id === 2 &&
-            accountVaNo === null &&
+            // accountVaNo === null &&
             paymentChannelId === 2 &&
             expiredPaymentTime === null &&
             (billingStatus !== 'paid' &&
-              statusPayment === 'waiting_for_payment' &&
+              (statusPayment === 'waiting_for_payment' || statusPayment === 'overdue') &&
               billingStatus !== 'cancel') ? (
             this.renderButtonAktifkanVA()
           ) : (
