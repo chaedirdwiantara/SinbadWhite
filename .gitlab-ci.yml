@@ -29,93 +29,93 @@ onbuild-docker:
     - docker push $CI_REGISTRY_IMAGE:onbuild
     - docker rmi $CI_REGISTRY_IMAGE:onbuild
   tags:
-    - docker
+    - sinbad-aws-docker-runner-2
   only:
     refs:
       - branches
     variables:
       - $ONBUILD_RUN == "OK"
 
-#start_runner_development:
-#  stage: start_instance
-#  image: mikesir87/aws-cli:latest
-#  script:
-#    - echo "Starting the instance"
-#    - mkdir ~/.aws/
-#    - touch ~/.aws/credentials
-#    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
-#    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
-#    - aws ec2 start-instances --instance-ids i-0b5d8441ab6417b2f
-#    - rm -rf ~/.aws/
-#    - sleep 30
-#  tags:
-#    - docker
-#  only:
-#    refs:
-#      - development
-#    variables:
-#      - $DEVELOPMENT == "DEVELOPMENT"
-#
+start_runner_development:
+  stage: start_instance
+  image: mikesir87/aws-cli:latest
+  script:
+    - echo "Starting the instance"
+    - mkdir ~/.aws/
+    - touch ~/.aws/credentials
+    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
+    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
+    - aws ec2 start-instances --instance-ids i-0b5d8441ab6417b2f
+    - rm -rf ~/.aws/
+    - sleep 30
+  tags:
+    - sinbad-aws-docker-runner-2
+  only:
+    refs:
+      - development
+    variables:
+      - $DEVELOPMENT == "DEVELOPMENT"
 
-#start_runner_staging:
-#  stage: start_instance
-#  image: mikesir87/aws-cli:latest
-#  script:
-#    - echo "Starting the instance"
-#    - mkdir ~/.aws/
-#    - touch ~/.aws/credentials
-#    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
-#    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
-#    - aws ec2 start-instances --instance-ids i-0b5d8441ab6417b2f
-#    - rm -rf ~/.aws/
-#    - sleep 30
-#  tags:
-#    - docker
-#  only:
-#    refs:
-#      - staging
-#    variables:
-#      - $STAGING == "STAGING"
 
-#start_runner_master:
-#  stage: start_instance
-#  image: mikesir87/aws-cli:latest
-#  script:
-#    - echo "Starting the instance"
-#    - mkdir ~/.aws/
-#    - touch ~/.aws/credentials
-#    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
-#    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
-#    - aws ec2 start-instances --instance-ids i-0b5d8441ab6417b2f
-#    - rm -rf ~/.aws/
-#    - sleep 30
-#  tags:
-#    - docker
-#  only:
-#    refs:
-#      - master
-#    variables:
-#      - $MASTER == "MASTER"
+start_runner_staging:
+  stage: start_instance
+  image: mikesir87/aws-cli:latest
+  script:
+    - echo "Starting the instance"
+    - mkdir ~/.aws/
+    - touch ~/.aws/credentials
+    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
+    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
+    - aws ec2 start-instances --instance-ids i-0b5d8441ab6417b2f
+    - rm -rf ~/.aws/
+    - sleep 30
+  tags:
+    - sinbad-aws-docker-runner-2
+  only:
+    refs:
+      - staging
+    variables:
+      - $STAGING == "STAGING"
 
-#start_runner_demo:
-#  stage: start_instance
-#  image: mikesir87/aws-cli:latest
-#  script:
-#    - echo "Starting the instance"
-#    - mkdir ~/.aws/
-#    - touch ~/.aws/credentials
-#    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
-#    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
-#    - aws ec2 start-instances --instance-ids i-0b5d8441ab6417b2f
-#    - rm -rf ~/.aws/
-#    - sleep 30
-#  tags:
-#    - docker
-#  only:
-#    refs:
-#      - demo
-#    variables:
-#      - $DEMO == "DEMO"
+start_runner_master:
+  stage: start_instance
+  image: mikesir87/aws-cli:latest
+  script:
+    - echo "Starting the instance"
+    - mkdir ~/.aws/
+    - touch ~/.aws/credentials
+    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
+    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
+    - aws ec2 start-instances --instance-ids i-0b5d8441ab6417b2f
+    - rm -rf ~/.aws/
+    - sleep 30
+  tags:
+    - sinbad-aws-docker-runner-2
+  only:
+    refs:
+      - master
+    variables:
+      - $MASTER == "MASTER"
+
+start_runner_demo:
+  stage: start_instance
+  image: mikesir87/aws-cli:latest
+  script:
+    - echo "Starting the instance"
+    - mkdir ~/.aws/
+    - touch ~/.aws/credentials
+    - printf "[default]\naws_access_key_id = %s\naws_secret_access_key = %s\n" "$access_key_ID" "$secret_access_key" >> ~/.aws/credentials
+    - printf "[default]\nregion = %s\noutput = %s\n" "$region" "json" >> ~/.aws/config
+    - aws ec2 start-instances --instance-ids i-0b5d8441ab6417b2f
+    - rm -rf ~/.aws/
+    - sleep 30
+  tags:
+    - sinbad-aws-docker-runner-2
+  only:
+    refs:
+      - demo
+    variables:
+      - $DEMO == "DEMO"
 
 build_development:
   image: $CI_REGISTRY_IMAGE:onbuild
@@ -131,7 +131,7 @@ build_development:
     #    - tar czf $DIRECTORY_DEV/development.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY_DEV
   tags:
-    - docker
+    - sinbad-aws-docker-runner
   only:
     refs:
       - development
@@ -158,7 +158,7 @@ build_staging:
     #    - tar czf $DIRECTORY_STG/staging.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY_STG
   tags:
-    - docker
+    - sinbad-aws-docker-runner
   only:
     refs:
       - staging
@@ -185,7 +185,7 @@ build_master:
     #    - tar czf $DIRECTORY_MST/master.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY_MST
   tags:
-    - docker
+    - sinbad-aws-docker-runner
   only:
     refs:
       - master
@@ -212,7 +212,7 @@ build_demo:
     #    - tar czf $DIRECTORY_MST/master.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY_MST
   tags:
-    - docker
+    - sinbad-aws-docker-runner
   only:
     refs:
       - demo
@@ -238,7 +238,7 @@ upload_to_S3_development:
   after_script:
     - rm -rf ~/.aws/
   tags:
-    - docker
+    - sinbad-aws-docker-runner-2
   only:
     refs:
       - development
@@ -258,7 +258,7 @@ upload_to_S3_staging:
   after_script:
     - rm -rf ~/.aws/
   tags:
-    - docker
+    - sinbad-aws-docker-runner-2
   only:
     refs:
       - staging
@@ -278,7 +278,7 @@ upload_to_S3_master:
   after_script:
     - rm -rf ~/.aws/
   tags:
-    - docker
+    - sinbad-aws-docker-runner-2
   only:
     refs:
       - master
@@ -298,7 +298,7 @@ upload_to_S3_demo:
   after_script:
     - rm -rf ~/.aws/
   tags:
-    - docker
+    - sinbad-aws-docker-runner-2
   only:
     refs:
       - demo
