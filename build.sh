@@ -19,6 +19,8 @@ then
 		cp -f ./environment/$1/package_$1.json ./package.json
 		cp -f ./environment/$1/apiHost_$1.js ./src/services/apiHost.js
 
+#    cp /home/bondhan/sinbad/keystore/Keystore/Keystore/Agent/mykeystore.keystore /home/bondhan/workspace/mobile/agent-v1.0/android/app/
+
     rm -rf $TMPDIR/react-* ; rm -rf $TMPDIR/metro-* ; rm -rf $TMPDIR/haste-* ; watchman watch-del-all ; rm -rf node_modules/ ; npm install
     npx jetify
     cd android ; chmod +x gradlew ; rm -rf ./.gradle ; ./gradlew clean ; ./gradlew cleanBuildCache ; ./gradlew app:assembleRelease

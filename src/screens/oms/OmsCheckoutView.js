@@ -1034,21 +1034,30 @@ class OmsCheckoutView extends Component {
       <View>
         {this.state.parcels[indexParcel].paymentMethodDetail.name ===
         'Tunai' ? (
-          <View style={{ flexDirection: 'row' }}>
-            <Image
-              source={{
-                uri: this.state.parcels[indexParcel].paymentTypeDetail
-                  .paymentType.iconUrl
-              }}
-              style={{ height: 20, width: 20, marginRight: 10 }}
-            />
-            <Text style={[Fonts.type8, { alignSelf: 'center' }]}>
-              {
-                this.state.parcels[indexParcel].paymentTypeDetail.paymentType
-                  .name
-              }{' '}
-              - {this.state.parcels[indexParcel].paymentMethodDetail.name}
-            </Text>
+          <View>
+            { 
+            this.state.parcels[indexParcel].paymentTypeDetail.paymentType ? 
+            <View style={{ flexDirection: 'row' }}>
+              <Image
+                source={{
+                  uri: this.state.parcels[indexParcel].paymentTypeDetail
+                    .paymentType.iconUrl
+                }}
+                style={{ height: 20, width: 20, marginRight: 10 }}
+              />
+              <Text style={[Fonts.type8, { alignSelf: 'center' }]}>
+                {
+                  this.state.parcels[indexParcel].paymentTypeDetail.paymentType
+                    .name
+                }{' '}
+                - {this.state.parcels[indexParcel].paymentMethodDetail.name}
+              </Text>
+            </View>
+            :
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={[Fonts.type101, {alignSelf:"center"}]}>Pilih Tipe & Metode pembayaran</Text>
+            </View>
+         }
           </View>
         ) : this.state.parcels[indexParcel].paymentTypeDetail.paymentType ? (
           <View style={{ flexDirection: 'row' }}>
