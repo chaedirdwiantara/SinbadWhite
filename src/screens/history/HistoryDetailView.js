@@ -229,6 +229,10 @@ class HistoryDetailView extends Component {
   goToDetailStatus() {
     NavigationService.navigate('HistoryDetailStatusView');
   }
+  /** GO TO INVOICE */
+  goToInvoice() {
+    NavigationService.navigate('HistoryPaymentInvoiceView');
+  }
   /** CANCEL ORDER */
   cancelOrder() {
     this.props.historyEditProcess({
@@ -587,7 +591,8 @@ class HistoryDetailView extends Component {
             <Text style={Fonts.type48}>Informasi Faktur</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={()=>this.goToInvoice()
+              }>
 
               <Text style={Fonts.type107}>Lihat Faktur</Text>
               </TouchableOpacity>
