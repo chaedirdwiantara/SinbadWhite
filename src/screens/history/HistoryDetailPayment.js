@@ -586,6 +586,8 @@ class HistoryDetailPayment extends Component {
     }
   }
 
+ 
+
   /** RENDER CONTENT */
   renderContent() {
     return (
