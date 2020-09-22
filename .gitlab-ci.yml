@@ -153,7 +153,7 @@ build_staging:
     - ./build.sh staging
     - mkdir -p $DIRECTORY_STG
     - ls -lah *
-    - tar czf $DIRECTORY_DEV/$FILENAME_STG -C ./android/app/build/outputs/apk/release/ .
+    - tar czf $DIRECTORY_STG/$FILENAME_STG -C ./android/app/build/outputs/apk/release/ .
     #    - ls -lah *
     #    - tar czf $DIRECTORY_STG/staging.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY_STG
@@ -180,7 +180,7 @@ build_master:
     - ./build.sh master
     - mkdir -p $DIRECTORY_MST
     - ls -lah *
-    - tar czf $DIRECTORY_DEV/$FILENAME_MST -C ./android/app/build/outputs/apk/release/ .
+    - tar czf $DIRECTORY_MST/$FILENAME_MST -C ./android/app/build/outputs/apk/release/ .
     #    - ls -lah *
     #    - tar czf $DIRECTORY_MST/master.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY_MST
@@ -205,9 +205,9 @@ build_demo:
   #  - export FILENAME=${PLATFORM}_demo_${CI_COMMIT_SHORT_SHA}_$(TZ=GMT-7 date +%Y%m%d).tar.gz
   script:
     - ./build.sh demo
-    - mkdir -p $DIRECTORY_MST
+    - mkdir -p $DIRECTORY_DEMO
     - ls -lah *
-    - tar czf $DIRECTORY_DEV/$FILENAME -C ./android/app/build/outputs/apk/release/ .
+    - tar czf $DIRECTORY_DEMO/$FILENAME -C ./android/app/build/outputs/apk/release/ .
     #    - ls -lah *
     #    - tar czf $DIRECTORY_MST/master.tar.gz -C ./android/app/build/outputs/apk/release/ .
     - ls $DIRECTORY_MST
