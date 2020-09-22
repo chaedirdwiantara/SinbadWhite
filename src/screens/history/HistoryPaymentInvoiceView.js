@@ -18,7 +18,7 @@ import {
       return {
         headerRight: (
           <View style={{ flex: 1, marginRight: 20 }}>
-            <TouchableOpacity onPress={() => this.renderCek()}>
+            <TouchableOpacity onPress={() => this.requestWritePermission()}>
               <MaterialIcon
                 name="get-app"
                 size={24}
@@ -29,10 +29,6 @@ import {
         )
       };
     };
-    renderCek(){
-        console.log('cek');
-        
-    }
     renderInvoice() {
       const source = {
         uri: 'http://www.africau.edu/images/default/sample.pdf',
@@ -51,10 +47,10 @@ import {
         </View>
       );
     }
-    extention(filename){
+  static extention(filename){
         return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename) : undefined;
       }
-    requestWritePermission = async () => {
+   static requestWritePermission = async () => {
         try {
           const granted = await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -78,7 +74,7 @@ import {
           console.warn(err);
         }
       };
-    download(){
+   static download(){
         var date      = new Date();
         var url       = "http://www.africau.edu/images/default/sample.pdf";
         var ext       = this.extention(url);
