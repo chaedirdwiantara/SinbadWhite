@@ -40,7 +40,7 @@ import {
       };
       return (
         <View style={{ flex: 1 }}>
-           <TouchableOpacity onPress={()=> this.renderCek()
+           <TouchableOpacity onPress={()=> this.requestWritePermission()
            }><Text>Klik</Text></TouchableOpacity> 
           <Pdf
             source={source}
