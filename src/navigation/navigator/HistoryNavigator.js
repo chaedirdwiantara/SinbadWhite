@@ -82,7 +82,7 @@ const HistoryNavigator = {
         elevation: 0,
         backgroundColor: masterColor.mainColor
       },
-      headerRight: <View />,
+      // headerRight: <View />,
       gesturesEnabled: false
     }
   },
