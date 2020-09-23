@@ -24,7 +24,8 @@ import {
   ToastAndroid,
   LayoutAnimation,
   Clipboard,
-  ActivityIndicator
+  ActivityIndicator,
+  PermissionsAndroid
 } from 'react-native';
 import Text from 'react-native-text';
 /** FOR DIMENSIONS */
@@ -57,7 +58,8 @@ export {
   ToastAndroid,
   LayoutAnimation, 
   Clipboard,
-  ActivityIndicator
+  ActivityIndicator,
+  PermissionsAndroid
 };
 
 /**

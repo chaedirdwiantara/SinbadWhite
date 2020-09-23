@@ -50,6 +50,10 @@ import Modal from 'react-native-modal'
 import GestureRecognizer from 'react-native-swipe-gestures'
 /** WHEEL PICKER */
 import { WheelPicker } from 'react-native-wheel-picker-android'
+/** RN FETCH BLOB */
+import RNFetchBlob from 'rn-fetch-blob';
+/** PDF */
+import Pdf from 'react-native-pdf';
 
 
 export {
@@ -107,7 +111,11 @@ export {
   /** GESTURE RECOGNIZER */
   GestureRecognizer,
   /** WHEEL PICKER */
-  WheelPicker
+  WheelPicker,
+  /** RN FETCH BLOB */
+  RNFetchBlob,
+  /** PDF */
+  Pdf
 };
 
 /**

@@ -3,24 +3,24 @@ import {
   Component,
   View,
   Text,
+  PermissionsAndroid,
   ActivityIndicator,
   TouchableOpacity,
   StyleSheet,
   Dimensions
 } from '../../library/reactPackage';
-import RNFetchBlob from 'rn-fetch-blob';
-import { MaterialIcon } from '../../library/thirdPartyPackage';
+import { MaterialIcon, RNFetchBlob, Pdf } from '../../library/thirdPartyPackage';
+import {ModalBottomErrorRespons} from '../../library/component'
 import NavigationService from '../../navigation/NavigationService';
-import Pdf from 'react-native-pdf';
 import { Fonts } from '../../helpers';
 import { Color } from '../../config';
-import { PermissionsAndroid, Alert } from 'react-native';
 class HistoryPaymentInvoiceView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       source: 'http://www.africau.edu/images/default/sample.pdf',
-      loadingDownload: false
+      loadingDownload: false,
+      openModalErrorGlobal: false
     };
   }
   /** HEADER MODIFICATION */
@@ -55,6 +55,7 @@ class HistoryPaymentInvoiceView extends Component {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         this.download();
       } else {
+        //will update to modal error soon
         console.log('permission denied');
       }
     } catch (err) {
@@ -71,7 +72,6 @@ class HistoryPaymentInvoiceView extends Component {
     const { config, fs, android } = RNFetchBlob;
     let downloadDir = fs.dirs.DownloadDir;
     let options = {
-      fileCache: true,
       addAndroidDownloads: {
         useDownloadManager: true,
         notification: true,
@@ -89,7 +89,13 @@ class HistoryPaymentInvoiceView extends Component {
       .then(res => {
         android.actionViewIntent(res.path(), 'application/pdf');
         this.setState({loadingDownload: false})
-      });
+      }
+      )
+      .catch(error => {
+        this.setState({
+          openModalErrorGlobal: true
+        })
+    })
   }
   extention(filename) {
     return /[.]/.exec(filename) ? /[^.]+$/.exec(filename) : undefined;
@@ -99,7 +105,8 @@ class HistoryPaymentInvoiceView extends Component {
   renderInvoice() {
     const source = {
       uri: this.state.source,
-      cache: true
+      cache: true,
+      expiration:86400
     };
     return (
       <View style={{ flex: 1 }}>
@@ -146,26 +153,26 @@ class HistoryPaymentInvoiceView extends Component {
     );
   }
 
+  /**MODAL ERROR DOWNLOAD */
+  renderModalErrorDownload() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={() => this.setState({ openModalErrorGlobal: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
   render() {
     return (
       <>
         {this.renderHeader()}
         {this.renderContent()}
+        {this.renderModalErrorDownload()}
       </>
     );
   }
 }
 export default HistoryPaymentInvoiceView;
-//   const styles = StyleSheet.create({
-//     container: {
-//       flex: 1,
-//       justifyContent: 'flex-start',
-//       alignItems: 'center',
-//       marginTop: 25
-//     },
-//     pdf: {
-//       flex: 1,
-//       width: Dimensions.get('window').width,
-//       height: Dimensions.get('window').height
-//     }
-//   });
