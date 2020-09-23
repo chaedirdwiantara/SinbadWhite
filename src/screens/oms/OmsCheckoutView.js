@@ -35,7 +35,7 @@ import ModalBottomListProduct from './ModalBottomListProduct';
 import ModalBottomParcelDetail from './ModalBottomParcelDetail';
 import ModalBottomStockConfirmationConfirmOrder from './ModalBottomStockConfirmationConfirmOrder';
 import ModalBottomErrorMinimumOrder from './ModalBottomErrorMinimumOrder';
-
+import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 class OmsCheckoutView extends Component {
   constructor(props) {
     super(props);
@@ -85,7 +85,8 @@ class OmsCheckoutView extends Component {
       tAndRDetail: null,
       tAndRLoading: false,
       alreadyFetchTAndR: false,
-      modalWarningAllCondition: false
+      modalWarningAllCondition: false,
+      openModalPaymentNotAllowed: false
     };
   }
   /**
@@ -620,7 +621,10 @@ class OmsCheckoutView extends Component {
       case 'ERR-PAYMENT-STATUS':
         this.errorPaymentStatus();
         break;
+      case 'ERR-APP-NOT-ALLOW':
+        this.errorPaymentNotAllowed()
       default:
+        this.errorPaymentGlobal()
         break;
     }
   }
@@ -650,6 +654,14 @@ class OmsCheckoutView extends Component {
     setTimeout(() => {
       this.setState({ modalErrorPayment: false });
     }, 2000);
+  }
+  /** ERROR PAYMENT NOT ALLOWED */
+  errorPaymentNotAllowed(){
+    this.setState({ openModalPaymentNotAllowed : true})
+  }
+  /** ERROR PAYMENT GLOBAL */
+  errorPaymentGlobal(){
+    this.setState({openModalPaymentNotAllowed : true})
   }
 
   closeErrorResponse() {
@@ -1035,29 +1047,30 @@ class OmsCheckoutView extends Component {
         {this.state.parcels[indexParcel].paymentMethodDetail.name ===
         'Tunai' ? (
           <View>
-            { 
-            this.state.parcels[indexParcel].paymentTypeDetail.paymentType ? 
-            <View style={{ flexDirection: 'row' }}>
-              <Image
-                source={{
-                  uri: this.state.parcels[indexParcel].paymentTypeDetail
-                    .paymentType.iconUrl
-                }}
-                style={{ height: 20, width: 20, marginRight: 10 }}
-              />
-              <Text style={[Fonts.type8, { alignSelf: 'center' }]}>
-                {
-                  this.state.parcels[indexParcel].paymentTypeDetail.paymentType
-                    .name
-                }{' '}
-                - {this.state.parcels[indexParcel].paymentMethodDetail.name}
-              </Text>
-            </View>
-            :
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={[Fonts.type101, {alignSelf:"center"}]}>Pilih Tipe & Metode pembayaran</Text>
-            </View>
-         }
+            {this.state.parcels[indexParcel].paymentTypeDetail.paymentType ? (
+              <View style={{ flexDirection: 'row' }}>
+                <Image
+                  source={{
+                    uri: this.state.parcels[indexParcel].paymentTypeDetail
+                      .paymentType.iconUrl
+                  }}
+                  style={{ height: 20, width: 20, marginRight: 10 }}
+                />
+                <Text style={[Fonts.type8, { alignSelf: 'center' }]}>
+                  {
+                    this.state.parcels[indexParcel].paymentTypeDetail
+                      .paymentType.name
+                  }{' '}
+                  - {this.state.parcels[indexParcel].paymentMethodDetail.name}
+                </Text>
+              </View>
+            ) : (
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[Fonts.type101, { alignSelf: 'center' }]}>
+                  Pilih Tipe & Metode pembayaran
+                </Text>
+              </View>
+            )}
           </View>
         ) : this.state.parcels[indexParcel].paymentTypeDetail.paymentType ? (
           <View style={{ flexDirection: 'row' }}>
@@ -1556,6 +1569,20 @@ class OmsCheckoutView extends Component {
       <View />
     );
   }
+  /** RENDER MODAL FAIL PAYMENT */
+  renderModalPaymentNotAllowed() {
+    return (
+      <View>
+        {this.state.openModalPaymentNotAllowed ? (
+          <ModalBottomFailPayment
+            open={this.state.openModalPaymentNotAllowed}
+            onPress={() => this.setState({ openModalPaymentNotAllowed: false })}
+            text={this.props.oms.errorOmsConfirmOrder.message? this.props.oms.errorOmsConfirmOrder.message : ''}
+          />
+        ) : null}
+      </View>
+    );
+  }
   /**
    * =======================
    * RENDER MAIN
@@ -1583,6 +1610,7 @@ class OmsCheckoutView extends Component {
         {this.renderWarningCheckoutIsExpired()}
         {this.renderWarningMinimumQty()}
         {this.renderErrorResponse()}
+        {this.renderModalPaymentNotAllowed()}
       </View>
     );
   }
