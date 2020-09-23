@@ -151,7 +151,7 @@ class HistoryDetailView extends Component {
       }
     }
   }
- 
+
   /** REFRESH LIST HISTORY AFTER EDIT HISTORY STATUS */
   getHistory() {
     this.props.historyGetProcess({
@@ -229,10 +229,6 @@ class HistoryDetailView extends Component {
   /** GO TO LOG */
   goToDetailStatus() {
     NavigationService.navigate('HistoryDetailStatusView');
-  }
-  /** GO TO INVOICE */
-  goToInvoice() {
-    NavigationService.navigate('HistoryPaymentInvoiceView');
   }
   /** CANCEL ORDER */
   cancelOrder() {
@@ -428,18 +424,18 @@ class HistoryDetailView extends Component {
   renderProductList() {
     return (
       <>
-      <View style={GlobalStyle.boxPadding} />
-      <View style={GlobalStyle.shadowForBox}>
-        <View
-          style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
-        >
-          <Text style={Fonts.type48}>Daftar Produk</Text>
+        <View style={GlobalStyle.boxPadding} />
+        <View style={GlobalStyle.shadowForBox}>
+          <View
+            style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
+          >
+            <Text style={Fonts.type48}>Daftar Produk</Text>
+          </View>
+          <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
+          <ProductListType2
+            data={this.props.history.dataDetailHistory.orderBrands}
+          />
         </View>
-        <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-        <ProductListType2
-          data={this.props.history.dataDetailHistory.orderBrands}
-        />
-      </View>
       </>
     );
   }
@@ -577,43 +573,7 @@ class HistoryDetailView extends Component {
       );
     }
   }
-  /**RENDER FAKTUR */
-  renderInvoice() {
-    return (
-      <>
-        <View style={GlobalStyle.boxPadding} />
-        <View style={GlobalStyle.shadowForBox}>
-          <View
-            style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8,  flexDirection: 'row',
-            justifyContent: 'space-between' }}
-          >
-            <View style={{ flex: 1, alignItems: 'flex-start' }}>
-
-            <Text style={Fonts.type48}>Informasi Faktur</Text>
-            </View>
-            <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <TouchableOpacity onPress={()=>this.goToInvoice()
-              }>
-
-              <Text style={Fonts.type107}>Lihat Faktur</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-          <View style={{ paddingHorizontal: 16, paddingBottom: 16, marginTop: 8, flexDirection: 'row',
-            justifyContent: 'space-between' }}>
-               <View style={{ flex: 1, alignItems: 'flex-start' }}>
-               <Text style={Fonts.type17}>Nomor Faktur</Text>
-               </View>
-               <View style={{ flex: 1, alignItems: 'flex-end' }}> 
-               <Text style={Fonts.type17}> SNB19050014818</Text>
-               </View>
-            </View>
-        </View>
-      </>
-    );
-  }
-
+  
   /** RENDER CONTENT */
   renderContent() {
     return (
@@ -627,13 +587,7 @@ class HistoryDetailView extends Component {
           }
         >
           {this.renderHeaderStatus()}
-
-          {this.renderInvoice()}
-          {this.state.section === 'payment' ? (
-            this.renderDetailPayment()
-          ) : (
-            <View />
-          )}
+          {this.renderDetailPayment()}
           {this.renderRingkasanPesanan()}
           {this.renderProductList()}
           {this.renderDeliveryDetail()}
