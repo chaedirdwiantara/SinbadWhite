@@ -35,6 +35,7 @@ import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation';
 import HistoryDetailPayment from './HistoryDetailPayment';
 import CallCS from '../../screens/global/CallCS';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
+import ModalBottomProgressChecking from '../global/ModalBottomProgressChecking'
 class HistoryDetailView extends Component {
   constructor(props) {
     super(props);
@@ -151,6 +152,7 @@ class HistoryDetailView extends Component {
       }
     }
   }
+ 
   /** REFRESH LIST HISTORY AFTER EDIT HISTORY STATUS */
   getHistory() {
     this.props.historyGetProcess({

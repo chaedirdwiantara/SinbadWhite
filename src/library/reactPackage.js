@@ -23,7 +23,8 @@ import {
   Modal as ModalPopUp,
   ToastAndroid,
   LayoutAnimation,
-  Clipboard
+  Clipboard,
+  ActivityIndicator
 } from 'react-native';
 import Text from 'react-native-text';
 /** FOR DIMENSIONS */
@@ -55,7 +56,8 @@ export {
   ModalPopUp,
   ToastAndroid,
   LayoutAnimation, 
-  Clipboard
+  Clipboard,
+  ActivityIndicator
 };
 
 /**

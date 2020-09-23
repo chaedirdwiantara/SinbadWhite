@@ -1,110 +1,161 @@
 import {
-    React,
-    Component,
-    View,
-    Text,
-    TouchableOpacity,
-    StyleSheet,
-    Dimensions
-  } from '../../library/reactPackage';
-  import RNFetchBlob from 'rn-fetch-blob'
-  import { MaterialIcon } from '../../library/thirdPartyPackage';
-  import { LoadingPage } from '../../library/component';
-  import Pdf from 'react-native-pdf';
-  import { Color } from '../../config';
-  import { PermissionsAndroid, Alert } from 'react-native';
-  class HistoryPaymentInvoiceView extends Component {
-    static navigationOptions = ({ navigation }) => {
-      return {
-        headerRight: (
-          <View style={{ flex: 1, marginRight: 20 }}>
-            <TouchableOpacity onPress={() => this.requestWritePermission()}>
-              <MaterialIcon
-                name="get-app"
-                size={24}
-                color={Color.backButtonWhite}
-              />
-            </TouchableOpacity>
-          </View>
-        )
-      };
+  React,
+  Component,
+  View,
+  Text,
+  ActivityIndicator,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions
+} from '../../library/reactPackage';
+import RNFetchBlob from 'rn-fetch-blob';
+import { MaterialIcon } from '../../library/thirdPartyPackage';
+import NavigationService from '../../navigation/NavigationService';
+import Pdf from 'react-native-pdf';
+import { Fonts } from '../../helpers';
+import { Color } from '../../config';
+import { PermissionsAndroid, Alert } from 'react-native';
+class HistoryPaymentInvoiceView extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      source: 'http://www.africau.edu/images/default/sample.pdf',
+      loadingDownload: false
     };
-    renderInvoice() {
-      const source = {
-        uri: 'http://www.africau.edu/images/default/sample.pdf',
-        cache: true
-      };
-      return (
-        <View style={{ flex: 1 }}>
-           <TouchableOpacity onPress={()=> this.requestWritePermission()
-           }><Text>Klik</Text></TouchableOpacity> 
-          <Pdf
-            source={source}
-            style={{ flex: 1 }}
-            // onLoadProgress={() => (this.showLoadingPage())}
-            // onLoadComplete={() => (this.hideLoadingPage())}
+  }
+  /** HEADER MODIFICATION */
+  static navigationOptions = ({ navigation }) => {
+    return {
+      header: null
+    };
+  };
+
+  /**PROGRESS DOWNLOAD */
+  progressDownload(){
+    this.setState({
+      loadingDownload : true
+    })
+    this.requestWritePermission()
+  }
+  /**ANDROID REQUEST WRITE PERMISSION */
+  requestWritePermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Sinbad Agent App Permission',
+          message:
+            'Sinbad Agent App needs access to your file ' +
+            'so you can download the invoice file.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK'
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        this.download();
+      } else {
+        console.log('permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  /** DOWNLOAD INVOICE */
+  download() {
+    var date = new Date();
+    var url = this.state.source;
+    var ext = this.extention(url);
+    ext = '.' + ext[0];
+    const { config, fs, android } = RNFetchBlob;
+    let downloadDir = fs.dirs.DownloadDir;
+    let options = {
+      fileCache: true,
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
+        mime: 'application/pdf',
+        path:
+          downloadDir +
+          '/Sinbad_' +
+          Math.floor(date.getTime() + date.getSeconds() / 2) +
+          ext,
+        description: 'Sinbad'
+      }
+    };
+    config(options)
+      .fetch('GET', url)
+      .then(res => {
+        android.actionViewIntent(res.path(), 'application/pdf');
+        this.setState({loadingDownload: false})
+      });
+  }
+  extention(filename) {
+    return /[.]/.exec(filename) ? /[^.]+$/.exec(filename) : undefined;
+  }
+
+  /** RENDER SHOW INVOICE */
+  renderInvoice() {
+    const source = {
+      uri: this.state.source,
+      cache: true
+    };
+    return (
+      <View style={{ flex: 1 }}>
+        <Pdf
+          source={source}
+          style={{ flex: 1 }}
+        />
+      </View>
+    );
+  }
+  /** RENDER CONTENT */
+  renderContent() {
+    return <>{this.renderInvoice()}</>;
+  }
+
+  /**RENDER HEADER */
+  renderHeader() {
+    return (
+      <View
+        style={{
+          backgroundColor: '#f0444c',
+          height: 56,
+          alignItems: 'center',
+          flexDirection: 'row'
+        }}
+      >
+        <View style={{flex: 1, alignItems:'flex-start', flexDirection:'row'}}>
+        <View style={{ marginHorizontal: 16 }}>
+          <MaterialIcon
+            name="arrow-back"
+            size={24}
+            color={Color.backButtonWhite}
+            onPress={()=>NavigationService.goBack(null)}
           />
         </View>
-      );
-    }
-  static extention(filename){
-        return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename) : undefined;
-      }
-   static requestWritePermission = async () => {
-        try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-            {
-              title: "Cool Photo App Camera Permission",
-              message:
-                "Cool Photo App needs access to your camera " +
-                "so you can take awesome pictures.",
-              buttonNeutral: "Ask Me Later",
-              buttonNegative: "Cancel",
-              buttonPositive: "OK"
-            }
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            console.log("You can use the camera");
-            this.download()
-          } else {
-            console.log("Camera permission denied");
-          }
-        } catch (err) {
-          console.warn(err);
-        }
-      };
-   static download(){
-        var date      = new Date();
-        var url       = "http://www.africau.edu/images/default/sample.pdf";
-        var ext       = this.extention(url);
-        ext = "."+ext[0];
-        const { config, fs } = RNFetchBlob
-        let PictureDir = fs.dirs.DownloadDir
-        let options = {
-          fileCache: true,
-          addAndroidDownloads : {
-            useDownloadManager : true,
-            notification : true,
-            path:  PictureDir + "/Sinbad_"+Math.floor(date.getTime() + date.getSeconds() / 2)+ext,
-            description : 'Sinbad'
-          }
-        }
-        config(options).fetch('GET', url).then((res) => {
-          Alert.alert("Success Downloaded");
-        });
-      }
-    renderContent() {
-      return <>{this.renderInvoice()}</>;
-    }
-    render() {
-      return <>{
-        // this.loading? <LoadingPage/>:
-        this.renderContent()
-        }</>;
-    }
+        <Text style={Fonts.type35}>Faktur</Text>
+        </View>
+        <View style={{flex:1, alignItems:'flex-end', marginRight:16}}>
+          {this.state.loadingDownload === false? 
+        <MaterialIcon onPress={()=>this.progressDownload()} name="get-app" size={24} color={Color.backButtonWhite} /> :
+        <ActivityIndicator size="small" color="#ffffff" />}
+        </View>
+      </View>
+    );
   }
-  export default HistoryPaymentInvoiceView;
+
+  render() {
+    return (
+      <>
+        {this.renderHeader()}
+        {this.renderContent()}
+      </>
+    );
+  }
+}
+export default HistoryPaymentInvoiceView;
 //   const styles = StyleSheet.create({
 //     container: {
 //       flex: 1,
@@ -118,4 +169,3 @@ import {
 //       height: Dimensions.get('window').height
 //     }
 //   });
-  

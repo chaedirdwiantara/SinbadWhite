@@ -68,23 +68,6 @@ const HistoryNavigator = {
   },
   HistoryPaymentInvoiceView: {
     screen: HistoryPaymentInvoiceView,
-    navigationOptions: {
-      headerTitle: 'Faktur',
-      headerTitleStyle: [
-        GlobalFont.textHeaderPage,
-        {
-          textAlign: 'left',
-          flex: 1
-        }
-      ],
-      headerTintColor: masterColor.backButtonWhite,
-      headerStyle: {
-        elevation: 0,
-        backgroundColor: masterColor.mainColor
-      },
-      // headerRight: <View />,
-      gesturesEnabled: false
-    }
   },
 };
 
