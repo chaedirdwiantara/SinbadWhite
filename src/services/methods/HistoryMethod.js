@@ -80,6 +80,17 @@ function activateVA(data) {
   });
 }
 
+/** VIEW INVOICE */
+function viewInvoice(data) {
+  return ApiRest({
+    path: 'pyment/v1-1/billing/update',
+    method: 'POST',
+    params: {
+      billingID: data.billingID
+    }
+  });
+}
+
 export const HistoryMethod = {
   getHistory,
   getHistoryOrderStatus,
@@ -87,5 +98,6 @@ export const HistoryMethod = {
   editHistory,
   getDetailHistory,
   activateVA,
-  changePaymentMethod
+  changePaymentMethod,
+  viewInvoice
 };

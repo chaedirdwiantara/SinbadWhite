@@ -177,3 +177,29 @@ export function historyChangePaymentMethodSuccess(data) {
 export function historyChangePaymentMethodFailed(data) {
   return { type: types.HISTORY_CHANGE_PAYMENT_METHOD_FAILED, payload: data };
 }
+
+/**
+ * ====================================
+ * VIEW INVOICE
+ * ====================================
+ */
+/** === VIEW INVOICE PROCESS === */
+export function historyViewInvoiceProcess(data) {
+  return { type: types.HISTORY_VIEW_INVOICE_PROCESS, payload: data };
+}
+
+/** === VIEW INVOICE SUCCESS === */
+export function historyViewInvoiceSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.HISTORY_VIEW_INVOICE_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.HISTORY_VIEW_INVOICE_FAILED, payload: data };
+}
+
+/** === VIEW INVOICE FAILED === */
+export function historyViewInvoiceFailed(data) {
+  return { type: types.HISTORY_VIEW_INVOICE_FAILED, payload: data };
+}
