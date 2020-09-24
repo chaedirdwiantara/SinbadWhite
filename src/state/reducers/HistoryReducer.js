@@ -32,7 +32,6 @@ const INITIAL_STATE = {
   errorHistoryDetail: null,
   errorHistoryActivateVA: null,
   errorHistoryChangePaymentMethod: null,
-  errorHistoryDetail: null,
   errorViewInvoice: null
 };
 
@@ -285,9 +284,10 @@ export const history = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingEditHistory: false,
-      errorEditHistory: action.payload
+      errorEditHistory: action.payload,
+      errorHistoryDetail: action.payload
     };
-  }
+  },
 
   /**
    * =============================

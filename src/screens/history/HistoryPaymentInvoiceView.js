@@ -93,7 +93,8 @@ class HistoryPaymentInvoiceView extends Component {
       )
       .catch(error => {
         this.setState({
-          openModalErrorGlobal: true
+          openModalErrorGlobal: true,
+          loadingDownload: false
         })
     })
   }
