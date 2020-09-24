@@ -82,6 +82,17 @@ function* activateVA(actions) {
     yield put(ActionCreators.historyActivateVAFailed(error));
   }
 }
+/** === VIEW INVOICE === */
+function* viewInvoice(actions) {
+  try {
+    const response = yield call(() => {
+      return HistoryMethod.viewInvoice(actions.payload);
+    });
+    yield put(ActionCreators.historyViewInvoiceSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.historyViewInvoiceFailed(error));
+  }
+}
 
 function* HistorySaga() {
   yield takeEvery(types.HISTORY_GET_PROCESS, getHistory);
@@ -99,7 +110,10 @@ function* HistorySaga() {
     types.HISTORY_CHANGE_PAYMENT_METHOD_PROCESS,
     changePaymentMethod
   );
-  yield takeEvery(types.HISTORY_ACTIVATE_VA_PROCESS, activateVA);
+  yield takeEvery(types.HISTORY_ACTIVATE_VA_PROCESS, 
+    activateVA);
+    yield takeEvery(types.HISTORY_VIEW_INVOICE_PROCESS, 
+      viewInvoice);
 }
 
 export default HistorySaga;

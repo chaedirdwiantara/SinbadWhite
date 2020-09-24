@@ -29,6 +29,7 @@ import {
   Fonts,
   MoneyFormat
 } from '../../helpers';
+import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
 import { ButtonSingle, ToastType1 } from '../../library/component';
 import CountDown from '../../components/CountDown';
