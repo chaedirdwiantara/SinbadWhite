@@ -316,15 +316,7 @@ export const history = createReducer(INITIAL_STATE, {
       errorViewInvoice: action.payload,
       errorHistoryDetail: action.payload
     };
-  },
-  [types.HISTORY_VIEW_INVOICE_RESET](state, action) {
-    return {
-      ...state,
-      loadingViewInvoice: false,
-      errorViewInvoice: null,
-      dataViewInvoice: null
-    };
-  },
+  }
 });
 
 /**

@@ -33,8 +33,7 @@ import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
 import {
   ButtonSingle,
-  ToastType1,
-  LoadingLoadMore
+  ToastType1
 } from '../../library/component';
 import CountDown from '../../components/CountDown';
 import { timeDiff, toLocalTime } from '../../helpers/TimeHelper';
@@ -107,8 +106,6 @@ class HistoryDetailPayment extends Component {
       if (
         prevProps.history.dataViewInvoice !== this.props.history.dataViewInvoice
       ) {
-        console.log('disini pindah');
-
         NavigationService.navigate('HistoryPaymentInvoiceView');
       }
     }
@@ -216,21 +213,19 @@ class HistoryDetailPayment extends Component {
             <View style={{ flex: 1, alignItems: 'flex-start' }}>
               <Text style={Fonts.type48}>Informasi Faktur</Text>
             </View>
-            <View style={{ flex: 1, alignItems: 'flex-end'}}>
-              {this.props.history.loadingViewInvoice === true ?
-              <View>
-              <Image
-        source={require('../../assets/gif/loading/load_more.gif')}
-        style={{ height: 16, width: 50 }}
-      />
-              {/* <LoadingLoadMore /> */}
-              </View>
-              // <LoadingLoadMore />
-               : 
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              {this.props.history.loadingViewInvoice === true ? (
+                <View>
+                  <Image
+                    source={require('../../assets/gif/loading/load_more.gif')}
+                    style={{ height: 16, width: 50 }}
+                  />
+                </View>
+              ) : (
                 <TouchableOpacity onPress={() => this.goToInvoice()}>
                   <Text style={Fonts.type107}>Lihat Faktur</Text>
                 </TouchableOpacity>
-              }
+              )}
             </View>
           </View>
           <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
@@ -258,8 +253,7 @@ class HistoryDetailPayment extends Component {
   goToInvoice() {
     const orderParcelId = this.props.history.dataDetailHistory.billing
       .orderParcelId;
-    // this.props.historyViewInvoiceProcess(orderParcelId)
-    this.props.historyViewInvoiceProcess(2222);
+    this.props.historyViewInvoiceProcess(orderParcelId);
   }
 
   /**RENDER SENDDATATOCLIPBOARD */
@@ -606,19 +600,19 @@ class HistoryDetailPayment extends Component {
               paymentChannelId === 2 &&
               expiredPaymentTime !== null)) &&
           billingStatus !== 'paid' &&
-            // this.props.history.dataDetailHistory.billing.billingStatus !== 'expired' &&
-            (statusPayment === 'waiting_for_payment' ||
-              statusPayment === 'overdue') &&
-            billingStatus !== 'cancel' ? (
+          // this.props.history.dataDetailHistory.billing.billingStatus !== 'expired' &&
+          (statusPayment === 'waiting_for_payment' ||
+            statusPayment === 'overdue') &&
+          billingStatus !== 'cancel' ? (
             this.renderVirtualAccountNumber()
           ) : // a.paymentType.id === 2 &&
           // accountVaNo === null &&
           paymentChannelId === 2 &&
             expiredPaymentTime === null &&
             billingStatus !== 'paid' &&
-              (statusPayment === 'waiting_for_payment' ||
-                statusPayment === 'overdue') &&
-              billingStatus !== 'cancel' ? (
+            (statusPayment === 'waiting_for_payment' ||
+              statusPayment === 'overdue') &&
+            billingStatus !== 'cancel' ? (
             this.renderButtonAktifkanVA()
           ) : (
             <View />
