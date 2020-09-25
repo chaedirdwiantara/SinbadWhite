@@ -203,3 +203,7 @@ export function historyViewInvoiceSuccess(data) {
 export function historyViewInvoiceFailed(data) {
   return { type: types.HISTORY_VIEW_INVOICE_FAILED, payload: data };
 }
+/** === RESET VIEW INVOICE === */
+export function historyViewGetReset() {
+  return { type: types.HISTORY_VIEW_INVOICE_RESET };
+}

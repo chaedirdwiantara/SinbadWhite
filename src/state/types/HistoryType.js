@@ -46,3 +46,4 @@ export const HISTORY_ACTIVATE_VA_FAILED = 'HistoryActivateVAFailed';
 export const HISTORY_VIEW_INVOICE_PROCESS = 'HistoryViewInvoiceProcess';
 export const HISTORY_VIEW_INVOICE_SUCCESS = 'HistoryViewInvoiceSuccess';
 export const HISTORY_VIEW_INVOICE_FAILED = 'HistoryViewInvoiceFailed';
+export const HISTORY_VIEW_INVOICE_RESET = 'HistoryViewInvoiceReset';

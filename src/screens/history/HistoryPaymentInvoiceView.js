@@ -4,13 +4,17 @@ import {
   View,
   Text,
   PermissionsAndroid,
-  ActivityIndicator,
-  TouchableOpacity,
-  StyleSheet,
-  Dimensions
+  ActivityIndicator
 } from '../../library/reactPackage';
-import { MaterialIcon, RNFetchBlob, Pdf } from '../../library/thirdPartyPackage';
-import {ModalBottomErrorRespons} from '../../library/component'
+import {
+  MaterialIcon,
+  RNFetchBlob,
+  Pdf,
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage';
+import * as ActionCreators from '../../state/actions';
+import { ModalBottomErrorRespons } from '../../library/component';
 import NavigationService from '../../navigation/NavigationService';
 import { Fonts } from '../../helpers';
 import { Color } from '../../config';
@@ -18,7 +22,8 @@ class HistoryPaymentInvoiceView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      source: 'http://www.africau.edu/images/default/sample.pdf',
+      source:
+        'https://sinbad-payment.s3-ap-southeast-1.amazonaws.com/development/payment/invoice/1601003440_3qGOPc_result_1601003439.pdf',
       loadingDownload: false,
       openModalErrorGlobal: false
     };
@@ -31,11 +36,11 @@ class HistoryPaymentInvoiceView extends Component {
   };
 
   /**PROGRESS DOWNLOAD */
-  progressDownload(){
+  progressDownload() {
     this.setState({
-      loadingDownload : true
-    })
-    this.requestWritePermission()
+      loadingDownload: true
+    });
+    this.requestWritePermission();
   }
   /**ANDROID REQUEST WRITE PERMISSION */
   requestWritePermission = async () => {
@@ -88,15 +93,14 @@ class HistoryPaymentInvoiceView extends Component {
       .fetch('GET', url)
       .then(res => {
         android.actionViewIntent(res.path(), 'application/pdf');
-        this.setState({loadingDownload: false})
-      }
-      )
+        this.setState({ loadingDownload: false });
+      })
       .catch(error => {
         this.setState({
           openModalErrorGlobal: true,
           loadingDownload: false
-        })
-    })
+        });
+      });
   }
   extention(filename) {
     return /[.]/.exec(filename) ? /[^.]+$/.exec(filename) : undefined;
@@ -107,14 +111,11 @@ class HistoryPaymentInvoiceView extends Component {
     const source = {
       uri: this.state.source,
       cache: true,
-      expiration:86400
+      expiration: 86400
     };
     return (
       <View style={{ flex: 1 }}>
-        <Pdf
-          source={source}
-          style={{ flex: 1 }}
-        />
+        <Pdf source={source} style={{ flex: 1 }} />
       </View>
     );
   }
@@ -134,21 +135,30 @@ class HistoryPaymentInvoiceView extends Component {
           flexDirection: 'row'
         }}
       >
-        <View style={{flex: 1, alignItems:'flex-start', flexDirection:'row'}}>
-        <View style={{ marginHorizontal: 16 }}>
-          <MaterialIcon
-            name="arrow-back"
-            size={24}
-            color={Color.backButtonWhite}
-            onPress={()=>NavigationService.goBack(null)}
-          />
+        <View
+          style={{ flex: 1, alignItems: 'flex-start', flexDirection: 'row' }}
+        >
+          <View style={{ marginHorizontal: 16 }}>
+            <MaterialIcon
+              name="arrow-back"
+              size={24}
+              color={Color.backButtonWhite}
+              onPress={() => NavigationService.goBack(null)}
+            />
+          </View>
+          <Text style={Fonts.type35}>Faktur</Text>
         </View>
-        <Text style={Fonts.type35}>Faktur</Text>
-        </View>
-        <View style={{flex:1, alignItems:'flex-end', marginRight:16}}>
-          {this.state.loadingDownload === false? 
-        <MaterialIcon onPress={()=>this.progressDownload()} name="get-app" size={24} color={Color.backButtonWhite} /> :
-        <ActivityIndicator size="small" color="#ffffff" />}
+        <View style={{ flex: 1, alignItems: 'flex-end', marginRight: 16 }}>
+          {this.state.loadingDownload === false ? (
+            <MaterialIcon
+              onPress={() => this.progressDownload()}
+              name="get-app"
+              size={24}
+              color={Color.backButtonWhite}
+            />
+          ) : (
+            <ActivityIndicator size="small" color="#ffffff" />
+          )}
         </View>
       </View>
     );
@@ -176,4 +186,16 @@ class HistoryPaymentInvoiceView extends Component {
     );
   }
 }
-export default HistoryPaymentInvoiceView;
+const mapStateToProps = ({ history, user, merchant, oms }) => {
+  return { history, user, merchant, oms };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
+
+// eslint-disable-next-line prettier/prettier
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HistoryPaymentInvoiceView);

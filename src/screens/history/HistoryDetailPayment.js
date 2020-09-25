@@ -99,6 +99,10 @@ class HistoryDetailPayment extends Component {
         }, 1000);
       }
     }
+    if(this.props.history.dataViewInvoice){
+      if(prevProps.history.dataViewInvoice !== this.props.history.dataViewInvoice){
+      NavigationService.navigate('HistoryPaymentInvoiceView');}
+    }
   }
 
   decrementClock = () => {
@@ -223,7 +227,7 @@ class HistoryDetailPayment extends Component {
   }
    /** GO TO INVOICE */
    goToInvoice() {
-    NavigationService.navigate('HistoryPaymentInvoiceView');
+    this.props.historyViewInvoiceProcess(2222)
   }
 
   /**RENDER SENDDATATOCLIPBOARD */
