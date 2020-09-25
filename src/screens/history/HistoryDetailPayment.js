@@ -232,19 +232,36 @@ class HistoryDetailPayment extends Component {
           <View
             style={{
               paddingHorizontal: 16,
-              paddingBottom: 16,
+              paddingBottom: 8,
               marginTop: 8,
               flexDirection: 'row',
               justifyContent: 'space-between'
             }}
           >
+           
             <View style={{ flex: 1, alignItems: 'flex-start' }}>
-              <Text style={Fonts.type17}>Nomor Faktur</Text>
+              <Text style={Fonts.type17}>Nomor Pesanan</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <Text style={Fonts.type17}> SNB19050014818</Text>
+              <Text style={Fonts.type17}>{this.props.history.dataDetailHistory.orderCode? this.props.history.dataDetailHistory.orderCode : '-'}</Text>
             </View>
-          </View>
+            </View>
+            <View
+            style={{
+              paddingHorizontal: 16,
+              paddingBottom: 16,
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}
+          >
+           
+            <View style={{ flex: 1, alignItems: 'flex-start' }}>
+              <Text style={Fonts.type17}>Nomor Referensi</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              <Text style={Fonts.type17}>{this.props.history.dataDetailHistory.orderRef? this.props.history.dataDetailHistory.orderRef : '-'}</Text>
+            </View>
+            </View>
         </View>
       </>
     );
@@ -254,6 +271,7 @@ class HistoryDetailPayment extends Component {
     const orderParcelId = this.props.history.dataDetailHistory.billing
       .orderParcelId;
     this.props.historyViewInvoiceProcess(orderParcelId);
+    // this.props.historyViewInvoiceProcess(2);
   }
 
   /**RENDER SENDDATATOCLIPBOARD */
