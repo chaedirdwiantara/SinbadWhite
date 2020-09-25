@@ -81,13 +81,11 @@ function activateVA(data) {
 }
 
 /** VIEW INVOICE */
-function viewInvoice(data) {
+function viewInvoice(id) {
   return ApiRest({
-    path: 'pyment/v1-1/billing/update',
-    method: 'POST',
-    params: {
-      billingID: data.billingID
-    }
+    path: `payment/v1/invoice/${id}`,
+    // path: 'payment/v1/invoice/1',
+    method: 'GET'
   });
 }
 

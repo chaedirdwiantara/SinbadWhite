@@ -313,7 +313,8 @@ export const history = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingViewInvoice: false,
-      errorViewInvoice: action.payload
+      errorViewInvoice: action.payload,
+      errorHistoryDetail: action.payload
     };
   }
 });
