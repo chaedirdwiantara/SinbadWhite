@@ -31,7 +31,11 @@ import {
 } from '../../helpers';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
-import { ButtonSingle, ToastType1 } from '../../library/component';
+import {
+  ButtonSingle,
+  ToastType1,
+  LoadingLoadMore
+} from '../../library/component';
 import CountDown from '../../components/CountDown';
 import { timeDiff, toLocalTime } from '../../helpers/TimeHelper';
 import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation';
@@ -99,9 +103,14 @@ class HistoryDetailPayment extends Component {
         }, 1000);
       }
     }
-    if(this.props.history.dataViewInvoice){
-      if(prevProps.history.dataViewInvoice !== this.props.history.dataViewInvoice){
-      NavigationService.navigate('HistoryPaymentInvoiceView');}
+    if (this.props.history.dataViewInvoice) {
+      if (
+        prevProps.history.dataViewInvoice !== this.props.history.dataViewInvoice
+      ) {
+        console.log('disini pindah');
+
+        NavigationService.navigate('HistoryPaymentInvoiceView');
+      }
     }
   }
 
@@ -196,38 +205,61 @@ class HistoryDetailPayment extends Component {
         <View style={GlobalStyle.boxPadding} />
         <View style={GlobalStyle.shadowForBox}>
           <View
-            style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8,  flexDirection: 'row',
-            justifyContent: 'space-between' }}
+            style={{
+              paddingHorizontal: 16,
+              paddingTop: 16,
+              paddingBottom: 8,
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}
           >
             <View style={{ flex: 1, alignItems: 'flex-start' }}>
-
-            <Text style={Fonts.type48}>Informasi Faktur</Text>
+              <Text style={Fonts.type48}>Informasi Faktur</Text>
             </View>
-            <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <TouchableOpacity onPress={()=>this.goToInvoice()
-              }>
-
-              <Text style={Fonts.type107}>Lihat Faktur</Text>
-              </TouchableOpacity>
+            <View style={{ flex: 1, alignItems: 'flex-end'}}>
+              {this.props.history.loadingViewInvoice === true ?
+              <View>
+              <Image
+        source={require('../../assets/gif/loading/load_more.gif')}
+        style={{ height: 16, width: 50 }}
+      />
+              {/* <LoadingLoadMore /> */}
+              </View>
+              // <LoadingLoadMore />
+               : 
+                <TouchableOpacity onPress={() => this.goToInvoice()}>
+                  <Text style={Fonts.type107}>Lihat Faktur</Text>
+                </TouchableOpacity>
+              }
             </View>
           </View>
           <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-          <View style={{ paddingHorizontal: 16, paddingBottom: 16, marginTop: 8, flexDirection: 'row',
-            justifyContent: 'space-between' }}>
-               <View style={{ flex: 1, alignItems: 'flex-start' }}>
-               <Text style={Fonts.type17}>Nomor Faktur</Text>
-               </View>
-               <View style={{ flex: 1, alignItems: 'flex-end' }}> 
-               <Text style={Fonts.type17}> SNB19050014818</Text>
-               </View>
+          <View
+            style={{
+              paddingHorizontal: 16,
+              paddingBottom: 16,
+              marginTop: 8,
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}
+          >
+            <View style={{ flex: 1, alignItems: 'flex-start' }}>
+              <Text style={Fonts.type17}>Nomor Faktur</Text>
             </View>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              <Text style={Fonts.type17}> SNB19050014818</Text>
+            </View>
+          </View>
         </View>
       </>
     );
   }
-   /** GO TO INVOICE */
-   goToInvoice() {
-    this.props.historyViewInvoiceProcess(2222)
+  /** GO TO INVOICE */
+  goToInvoice() {
+    const orderParcelId = this.props.history.dataDetailHistory.billing
+      .orderParcelId;
+    // this.props.historyViewInvoiceProcess(orderParcelId)
+    this.props.historyViewInvoiceProcess(2222);
   }
 
   /**RENDER SENDDATATOCLIPBOARD */
@@ -508,7 +540,8 @@ class HistoryDetailPayment extends Component {
               expiredPaymentTime !== null)) &&
           accountVaNo !== null &&
           billingStatus !== 'paid' &&
-         ( a.statusPayment === 'waiting_for_payment' || (a.statusPayment === 'overdue' && expiredPaymentTime !== null )) &&
+          (a.statusPayment === 'waiting_for_payment' ||
+            (a.statusPayment === 'overdue' && expiredPaymentTime !== null)) &&
           billingStatus !== 'cancel' ? (
             <View>
               <View style={GlobalStyle.boxPadding} />
@@ -566,23 +599,26 @@ class HistoryDetailPayment extends Component {
     } else {
       return (
         <View>
-          {((paymentTypeId === 1 && paymentChannelId === 2 && accountVaNo !== null) ||
+          {((paymentTypeId === 1 &&
+            paymentChannelId === 2 &&
+            accountVaNo !== null) ||
             (paymentTypeId === 2 &&
               paymentChannelId === 2 &&
               expiredPaymentTime !== null)) &&
-          (billingStatus !== 'paid' &&
+          billingStatus !== 'paid' &&
             // this.props.history.dataDetailHistory.billing.billingStatus !== 'expired' &&
-            (statusPayment === 'waiting_for_payment' || statusPayment === 'overdue') &&
-            billingStatus !== 'cancel') ? (
+            (statusPayment === 'waiting_for_payment' ||
+              statusPayment === 'overdue') &&
+            billingStatus !== 'cancel' ? (
             this.renderVirtualAccountNumber()
-          ) : 
-          // a.paymentType.id === 2 &&
-            // accountVaNo === null &&
-            paymentChannelId === 2 &&
+          ) : // a.paymentType.id === 2 &&
+          // accountVaNo === null &&
+          paymentChannelId === 2 &&
             expiredPaymentTime === null &&
-            (billingStatus !== 'paid' &&
-              (statusPayment === 'waiting_for_payment' || statusPayment === 'overdue') &&
-              billingStatus !== 'cancel') ? (
+            billingStatus !== 'paid' &&
+              (statusPayment === 'waiting_for_payment' ||
+                statusPayment === 'overdue') &&
+              billingStatus !== 'cancel' ? (
             this.renderButtonAktifkanVA()
           ) : (
             <View />
@@ -633,20 +669,20 @@ class HistoryDetailPayment extends Component {
     }
   }
 
- /** RENDER CONTENT DETAIL */
- renderContentDetail(){
-   if(this.state.section === 'payment'){
-    this.renderPaymentInformationDetail()
-    this.renderVirtualAccount()
-    this.renderPanduanPembayaran()
-   }
- }
+  /** RENDER CONTENT DETAIL */
+  renderContentDetail() {
+    if (this.state.section === 'payment') {
+      this.renderPaymentInformationDetail();
+      this.renderVirtualAccount();
+      this.renderPanduanPembayaran();
+    }
+  }
 
   /** RENDER CONTENT */
   renderContent() {
     return (
       <View style={{ flex: 1 }}>
-        {this.state.section === 'payment'? this.renderWaktuPembayaran() : null}
+        {this.state.section === 'payment' ? this.renderWaktuPembayaran() : null}
         {this.renderInvoice()}
         {this.renderContentDetail()}
         {this.renderToast()}

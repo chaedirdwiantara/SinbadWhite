@@ -22,12 +22,14 @@ class HistoryPaymentInvoiceView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      source:
-        'https://sinbad-payment.s3-ap-southeast-1.amazonaws.com/development/payment/invoice/1601003440_3qGOPc_result_1601003439.pdf',
       loadingDownload: false,
-      openModalErrorGlobal: false
+      openModalErrorGlobal: false,
+      url: this.props.history.dataViewInvoice.data.url,
+      filename: this.props.history.dataViewInvoice.data.fileName
     };
   }
+ 
+  
   /** HEADER MODIFICATION */
   static navigationOptions = ({ navigation }) => {
     return {
@@ -70,9 +72,9 @@ class HistoryPaymentInvoiceView extends Component {
 
   /** DOWNLOAD INVOICE */
   download() {
-    var date = new Date();
-    var url = this.state.source;
+    var url = this.state.url;
     var ext = this.extention(url);
+    const filename = this.state.filename
     ext = '.' + ext[0];
     const { config, fs, android } = RNFetchBlob;
     let downloadDir = fs.dirs.DownloadDir;
@@ -82,10 +84,8 @@ class HistoryPaymentInvoiceView extends Component {
         notification: true,
         mime: 'application/pdf',
         path:
-          downloadDir +
-          '/Sinbad_' +
-          Math.floor(date.getTime() + date.getSeconds() / 2) +
-          ext,
+          downloadDir + '/'+
+          filename,
         description: 'Sinbad'
       }
     };
@@ -109,7 +109,7 @@ class HistoryPaymentInvoiceView extends Component {
   /** RENDER SHOW INVOICE */
   renderInvoice() {
     const source = {
-      uri: this.state.source,
+      uri: this.state.url,
       cache: true,
       expiration: 86400
     };

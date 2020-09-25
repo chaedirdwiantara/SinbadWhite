@@ -619,6 +619,10 @@ class HistoryDetailView extends Component {
       case 'ERR_APP_CREATE_VA':
         this.errorCreateVA();
         break;
+      case 'ERR_APP_INVOICE_NOT_FOUND':
+        this.errorInvoicENotFound();
+      case 'ERR_APP_INVOICE_ON_PROGRESS':
+        this.errorInvoiceOnProgress();
       default:
         this.setState({
           openModalErrorGlobal: true
@@ -626,14 +630,26 @@ class HistoryDetailView extends Component {
         break;
     }
   }
-
+// ERROR UPDATE BILLING
   errorUpdateBilling() {
     this.setState({
       openModalErrorGlobal: true
     });
   }
-
+//ERROR CREATE VA
   errorCreateVA() {
+    this.setState({
+      openModalErrorGlobal: true
+    });
+  }
+//ERROR INVOICE ON PROGRESS
+  errorInvoiceOnProgress(){
+    this.setState({
+      openModalErrorGlobal: true
+    });
+  }
+//ERROR INVOICE NOT FOUND  
+  errorInvoicENotFound(){
     this.setState({
       openModalErrorGlobal: true
     });
@@ -896,6 +912,7 @@ class HistoryDetailView extends Component {
         !this.props.history.loadingEditHistory &&
         !this.props.history.loadingHistoryChangePaymentMethod &&
         !this.props.history.loadingHistoryActivateVA &&
+        //  !this.props.history.loadingViewInvoice &&
         this.props.history.dataDetailHistory !== null ? (
           <View style={styles.mainContainer}>
             {this.renderBackground()}
