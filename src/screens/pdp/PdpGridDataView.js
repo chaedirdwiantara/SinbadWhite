@@ -84,7 +84,11 @@ class PdpGridDataView extends Component {
     return (
       <TouchableOpacity
         onPress={() =>
-          this.toParentFunction({ type: 'openModalOrder', data: item.id })
+          this.toParentFunction({ 
+            type: 'openModalOrder', 
+            data: item.id,
+            bundle: true
+          })
         }
         style={[styles.pesanButton, { backgroundColor: Color.mainColor }]}
       >
