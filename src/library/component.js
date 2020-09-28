@@ -83,6 +83,7 @@ import SkeletonType7 from '../components/skeleton/SkeletonType7';
 import SkeletonType8 from '../components/skeleton/SkeletonType8';
 import SkeletonType11 from '../components/skeleton/SkeletonType11';
 import SkeletonType18 from '../components/skeleton/SkeletonType18';
+import SkeletonType21 from '../components/skeleton/SkeletonType21'
 /** ADDRESS */
 import Address from '../components/Address';
 /** TAG */
@@ -101,6 +102,8 @@ import TabsCustom, { typeCustomTabs } from '../components/tabs/tabsCustom';
 import SalesmanChart from '../components/SalesmanChart';
 import SlideIndicator from '../components/slide_indicator';
 import CardType1 from '../components/card/CardType1';
+/** TEMPLATE */
+import PdpGrid from '../components/template/PdpGrid'
 
 export {
   CartGlobal,
@@ -184,6 +187,7 @@ export {
   SkeletonType8,
   SkeletonType11,
   SkeletonType18,
+  SkeletonType21,
   /** ADDRESS */
   Address,
   /** TAG */
@@ -202,7 +206,9 @@ export {
   typeCustomTabs,
   CardType1,
   SalesmanChart,
-  SlideIndicator
+  SlideIndicator,
+  /** TEMPLATE */
+  PdpGrid
 };
 
 /**
