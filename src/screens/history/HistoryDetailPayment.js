@@ -31,10 +31,7 @@ import {
 } from '../../helpers';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
-import {
-  ButtonSingle,
-  ToastType1
-} from '../../library/component';
+import { ButtonSingle, ToastType1 } from '../../library/component';
 import CountDown from '../../components/CountDown';
 import { timeDiff, toLocalTime } from '../../helpers/TimeHelper';
 import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation';
@@ -238,15 +235,18 @@ class HistoryDetailPayment extends Component {
               justifyContent: 'space-between'
             }}
           >
-           
             <View style={{ flex: 1, alignItems: 'flex-start' }}>
               <Text style={Fonts.type17}>Nomor Pesanan</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <Text style={Fonts.type17}>{this.props.history.dataDetailHistory.orderCode? this.props.history.dataDetailHistory.orderCode : '-'}</Text>
+              <Text style={Fonts.type17}>
+                {this.props.history.dataDetailHistory.orderCode
+                  ? this.props.history.dataDetailHistory.orderCode
+                  : '-'}
+              </Text>
             </View>
-            </View>
-            <View
+          </View>
+          <View
             style={{
               paddingHorizontal: 16,
               paddingBottom: 16,
@@ -254,14 +254,17 @@ class HistoryDetailPayment extends Component {
               justifyContent: 'space-between'
             }}
           >
-           
             <View style={{ flex: 1, alignItems: 'flex-start' }}>
               <Text style={Fonts.type17}>Nomor Referensi</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <Text style={Fonts.type17}>{this.props.history.dataDetailHistory.orderRef? this.props.history.dataDetailHistory.orderRef : '-'}</Text>
+              <Text style={Fonts.type17}>
+                {this.props.history.dataDetailHistory.orderRef
+                  ? this.props.history.dataDetailHistory.orderRef
+                  : '-'}
+              </Text>
             </View>
-            </View>
+          </View>
         </View>
       </>
     );
@@ -270,8 +273,8 @@ class HistoryDetailPayment extends Component {
   goToInvoice() {
     const orderParcelId = this.props.history.dataDetailHistory.billing
       .orderParcelId;
-    this.props.historyViewInvoiceProcess(orderParcelId);
-    // this.props.historyViewInvoiceProcess(2);
+    // this.props.historyViewInvoiceProcess(orderParcelId);
+    this.props.historyViewInvoiceProcess(2222);
   }
 
   /**RENDER SENDDATATOCLIPBOARD */
@@ -684,9 +687,13 @@ class HistoryDetailPayment extends Component {
   /** RENDER CONTENT DETAIL */
   renderContentDetail() {
     if (this.state.section === 'payment') {
-      this.renderPaymentInformationDetail();
-      this.renderVirtualAccount();
-      this.renderPanduanPembayaran();
+      return (
+        <View>
+          {this.renderPaymentInformationDetail()}
+          {this.renderVirtualAccount()}
+          {this.renderPanduanPembayaran()}
+        </View>
+      );
     }
   }
 
@@ -696,6 +703,7 @@ class HistoryDetailPayment extends Component {
       <View style={{ flex: 1 }}>
         {this.state.section === 'payment' ? this.renderWaktuPembayaran() : null}
         {this.renderInvoice()}
+        {/* {this.renderPaymentInformationDetail()} */}
         {this.renderContentDetail()}
         {this.renderToast()}
       </View>

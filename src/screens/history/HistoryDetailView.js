@@ -108,9 +108,9 @@ class HistoryDetailView extends Component {
       prevProps.history.errorHistoryDetail !==
       this.props.history.errorHistoryDetail
     ) {
-      if (this.props.history.errorHistoryDetail.data !== null) {
-        this.manageError();
-      }
+      if (this.props.history.errorHistoryDetail && this.props.history.errorHistoryDetail.data !== null) {
+        this.manageError();}
+      
       // if (
       //   prevProps.history.errorHistoryChangePaymentMethod !==
       //   this.props.history.errorHistoryChangePaymentMethod
@@ -912,7 +912,6 @@ class HistoryDetailView extends Component {
         !this.props.history.loadingEditHistory &&
         !this.props.history.loadingHistoryChangePaymentMethod &&
         !this.props.history.loadingHistoryActivateVA &&
-        //  !this.props.history.loadingViewInvoice &&
         this.props.history.dataDetailHistory !== null ? (
           <View style={styles.mainContainer}>
             {this.renderBackground()}
@@ -928,7 +927,7 @@ class HistoryDetailView extends Component {
         {this.renderModalErrorGlobal()}
         {this.renderModalTAndR()}
       </SafeAreaView>
-    );
+    )
   }
 }
 
