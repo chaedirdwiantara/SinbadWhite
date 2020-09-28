@@ -273,8 +273,8 @@ class HistoryDetailPayment extends Component {
   goToInvoice() {
     const orderParcelId = this.props.history.dataDetailHistory.billing
       .orderParcelId;
-    // this.props.historyViewInvoiceProcess(orderParcelId);
-    this.props.historyViewInvoiceProcess(2222);
+    this.props.historyViewInvoiceProcess(orderParcelId);
+    // this.props.historyViewInvoiceProcess(2222);
   }
 
   /**RENDER SENDDATATOCLIPBOARD */
