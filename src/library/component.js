@@ -68,6 +68,7 @@ import ToastType1 from '../components/toast/ToastType1';
 /** LIST */
 import ProductListType1 from '../components/list/ProductListType1';
 import ProductListType2 from '../components/list/ProductListType2';
+import ProductListType3 from '../components/list/ProductListType3'
 /** EMPTY DATA */
 import ComingSoon from '../components/empty_state/ComingSoon';
 import EmptyData from '../components/empty_state/EmptyData';
@@ -168,6 +169,7 @@ export {
   /** LIST */
   ProductListType1,
   ProductListType2,
+  ProductListType3,
   /** EMPTY DATA */
   ComingSoon,
   EmptyData,
