@@ -80,6 +80,7 @@ import SkeletonType5 from '../components/skeleton/SkeletonType5';
 import SkeletonType6 from '../components/skeleton/SkeletonType6';
 import SkeletonType7 from '../components/skeleton/SkeletonType7';
 import SkeletonType8 from '../components/skeleton/SkeletonType8';
+import SkeletonType11 from '../components/skeleton/SkeletonType11';
 import SkeletonType18 from '../components/skeleton/SkeletonType18';
 /** ADDRESS */
 import Address from '../components/Address';
@@ -179,6 +180,7 @@ export {
   SkeletonType6,
   SkeletonType7,
   SkeletonType8,
+  SkeletonType11,
   SkeletonType18,
   /** ADDRESS */
   Address,
