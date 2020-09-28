@@ -5,27 +5,39 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
-  ScrollView
+  ScrollView,
+  Image,
+  Dimensions
 } from '../../../library/reactPackage'
 import {
   connect,
-  bindActionCreators
+  bindActionCreators,
+  Tooltip,
+  MaterialIcon
 } from '../../../library/thirdPartyPackage'
 import {
   CartGlobal,
   StatusBarRed,
-  ButtonSingle
+  ButtonSingle,
+  OrderButton
 } from '../../../library/component'
-import { Fonts } from '../../../helpers'
+import { Fonts, GlobalStyle, MoneyFormat, NumberFormat } from '../../../helpers'
 import * as ActionCreators from '../../../state/actions'
 import NavigationService from '../../../navigation/NavigationService'
 import { Color } from '../../../config'
+
+const { width, height } = Dimensions.get('window');
 
 class PdpBundleView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      skuEmpty: true
+      skuEmpty: true,
+      questionMarkShow: true,
+      qtyFromChild:
+        this.props.pdp.dataDetailPdp !== null
+          ? this.props.pdp.dataDetailPdp.minQty
+          : 0
     }
   }
   /**
@@ -54,14 +66,64 @@ class PdpBundleView extends Component {
    * FUNCTIONAL SECTION
    * ====================
    */
+  /**
+   * BUTTON TITLE
+   */
   buttonTitle(){
     if (this.state.skuEmpty) return 'Stock Habis'
     return 'Tambah ke Kranjang'
   }
 
+  /**
+   * BUTTON DISABLED
+   */
   buttonDisabled(){
     if (this.state.skuEmpty) return true
     return false
+  }
+
+   /** === CHECK INPUT QTY SECTION === */
+   checkInputQtySection() {
+    if (!this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock) {
+      if (
+        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
+        this.props.pdp.dataDetailPdp.minQty
+      ) {
+        return true;
+      }
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+   /** === RENDER TERSISA TEXT === */
+   renderRemainingStock() {
+    return (
+      <View style={{ flex: 1 }}>
+        <Text style={Fonts.type22}>{this.checkTersisa()}</Text>
+      </View>
+    );
+  }
+
+  checkTersisa() {
+    if (
+      !this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock &&
+      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
+        this.props.pdp.dataDetailPdp.minQty
+    ) {
+      return `Tersisa ${NumberFormat(
+        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock
+      )} Pcs`;
+    }
+    return '';
+  }
+
+  parentFunctionFromOrderButton(data) {
+    /** NOTE 1 */
+    this.setState({
+      qtyFromChild: data.qty
+    });
   }
 
   /**
@@ -109,6 +171,117 @@ class PdpBundleView extends Component {
     )
   }
 
+  /** === RENDER TOOLTIP === */
+  renderTooltip() {
+    return (
+      <Tooltip
+        backgroundColor={Color.fontBlack50OP80}
+        height={55}
+        withOverlay={false}
+        withPointer={false}
+        onOpen={() => this.setState({ questionMarkShow: false })}
+        onClose={() => this.setState({ questionMarkShow: true })}
+        containerStyle={{
+          padding: 8,
+          width: 0.4 * width
+        }}
+        popover={
+          <Text style={Fonts.type87}>
+            Harga ini mungkin berubah mempertimbangkan lokasi gudang
+          </Text>
+        }
+      >
+        {this.state.questionMarkShow ? (
+          <MaterialIcon name="help" size={18} color={Color.fontBlack40} />
+        ) : (
+          <View />
+        )}
+      </Tooltip>
+    );
+  }
+
+    /** === RENDER BUTTON ORDER === */
+    renderButtonOrder() {
+      return (
+        <View style={styles.boxPesan}>
+          <OrderButton
+            disabledAllButton={this.state.showKeyboard}
+            item={this.props.pdp.dataDetailPdp}
+            onRef={ref => (this.parentFunctionFromOrderButton = ref)}
+            parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
+              this
+            )}
+            onFocus={() => this.setState({ buttonAddDisabled: true })}
+            onBlur={() => this.setState({ buttonAddDisabled: false })}
+          />
+        </View>
+      );
+    }
+
+
+  /**
+   * ===================
+   * RENDER DATA
+   * ===================
+   */
+  renderData(){
+    return(
+      <View style={styles.boxItem}>
+        <View style={{ flexDirection: 'row', paddingBottom: 25}}>
+          <View style={{ backgroundColor: Color.backgroundWhite}}>
+            <Image 
+              defaultSource={require('../../../assets/images/sinbad_image/sinbadopacity.png')}
+              source={{
+                uri: this.props.pdp.dataDetailPdp.catalogueImages[0].imageUrl
+              }}
+              style={GlobalStyle.image100ContainRadius8}
+            />
+          </View>
+          <View style={{ paddingLeft: 16}}>
+            <View style={{ width: '80%', marginBottom: 5 }}>
+              <Text style={Fonts.type10}>
+                {this.props.pdp.dataDetailPdp.name}
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={[Fonts.type70, { marginRight: 10 }]}>
+                {MoneyFormat(this.props.pdp.dataDetailPdp.warehousePrice)}
+              </Text>
+              {this.renderTooltip()}
+            </View>
+            <View style={{ flexDirection: 'row', marginTop: 5 }}>
+              <Text style={[Fonts.type38, { marginRight: 10}]}>
+                per-Dus {this.props.pdp.dataDetailPdp.packagedQty}{' '}{ this.props.pdp.dataDetailPdp.catalogueUnit.unit}
+              </Text>
+              <View style={{
+                borderRightWidth: 1,
+                borderRightColor: Color.fontBlack40
+              }} />
+              <Text style={[ Fonts.type38, { marginLeft: 10 }]}>
+                min.pembelian {this.props.pdp.dataDetailPdp.minQty}{' '}{this.props.pdp.dataDetailPdp.catalogueUnit.unit}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {this.checkInputQtySection() ? (
+          <View style={styles.boxInputQty}>
+            <View style={{ justifyContent: 'center' }}>
+              <Text style={Fonts.type96}>Jumlah/pcs</Text>
+            </View>
+            <View style={styles.boxRemainingStockOrderButton}>
+              {this.renderRemainingStock()}
+              {this.renderButtonOrder()}
+            </View>
+          </View>
+        ) : (
+          <View />
+        )}
+      </View>
+    )
+  }
+
+    
   /**
    * ===================
    * DETAIL SKU
@@ -131,7 +304,7 @@ class PdpBundleView extends Component {
     return(
       <View style={{ flex: 1}}>
         {this.renderPromoHighlight()}
-        {this.renderDetailSKU()}
+        {this.renderData()}
       </View>
     )
   }
@@ -179,11 +352,31 @@ const styles = StyleSheet.create({
     height: 47, 
     width: '100%', 
     position: 'absolute'
+  },
+  boxItem: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    paddingTop: 10
+  },
+  boxInputQty: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flex: 1
+  },
+  boxRemainingStockOrderButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  boxPesan: {
+    marginLeft: 5,
+    flexDirection: 'row',
+    width: '55%'
   }
 })
 
-const mapStateToProps = ({ pdp, oms }) => {
-  return { pdp, oms }
+const mapStateToProps = ({ pdp }) => {
+  return { pdp }
 }
 
 const mapDispatchToProps = dispatch => {
