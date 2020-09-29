@@ -104,6 +104,8 @@ import SlideIndicator from '../components/slide_indicator';
 import CardType1 from '../components/card/CardType1';
 /** TEMPLATE */
 import PdpGrid from '../components/template/PdpGrid'
+/** ACCORDION */
+import Accordion from '../components/accordion/Accordion'
 
 export {
   CartGlobal,
@@ -208,7 +210,9 @@ export {
   SalesmanChart,
   SlideIndicator,
   /** TEMPLATE */
-  PdpGrid
+  PdpGrid,
+  /** Accordion */
+  Accordion
 };
 
 /**
