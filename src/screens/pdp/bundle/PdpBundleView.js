@@ -19,7 +19,9 @@ import {
   CartGlobal,
   StatusBarRed,
   ButtonSingle,
-  OrderButton
+  OrderButton,
+  SkeletonType18,
+  ProductListType3
 } from '../../../library/component'
 import { Fonts, GlobalStyle, MoneyFormat, NumberFormat } from '../../../helpers'
 import * as ActionCreators from '../../../state/actions'
@@ -37,7 +39,49 @@ class PdpBundleView extends Component {
       qtyFromChild:
         this.props.pdp.dataDetailPdp !== null
           ? this.props.pdp.dataDetailPdp.minQty
-          : 0
+          : 0,
+      affiliateSKU: [
+        {
+          id: 1,
+          name: "Product 1",
+          minPriceRange: 10000,
+          maxPriceRange: 15000,
+          catalogueImages: 'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
+          isBundle: true
+        },
+        {
+          id: 2,
+          name: "Product 2",
+          minPriceRange: 10000,
+          maxPriceRange: 15000,
+          catalogueImages: 'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
+          isBundle: true
+        },
+        {
+          id: 3,
+          name: "Product 3",
+          minPriceRange: 10000,
+          maxPriceRange: 15000,
+          catalogueImages: 'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
+          isBundle: true
+        },
+        {
+          id: 4,
+          name: "Product 4",
+          minPriceRange: 10000,
+          maxPriceRange: 15000,
+          catalogueImages: 'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
+          isBundle: true
+        },
+        {
+          id: 5,
+          name: "Product 5",
+          minPriceRange: 10000,
+          maxPriceRange: 15000,
+          catalogueImages: 'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
+          isBundle: true
+        }
+      ]
     }
   }
   /**
@@ -119,12 +163,18 @@ class PdpBundleView extends Component {
     return '';
   }
 
+  /** === PARENT FUNCTION FROM ORDER === */
   parentFunctionFromOrderButton(data) {
     /** NOTE 1 */
     this.setState({
       qtyFromChild: data.qty
     });
   }
+
+  /** === PARENT FUNCTION PROMO BUNDLE === */
+  parentFunction(item) {
+      console.log(item)
+   }
 
   /**
    * ===============
@@ -155,11 +205,7 @@ class PdpBundleView extends Component {
     )
   }
 
-  /**
-   * ===================
-   * BUTTON ADD TO CART
-   * ===================
-   */
+  /** === BUTTON ADD TO CART ===  */
   renderBottomButton(){
     return(
       <ButtonSingle
@@ -281,16 +327,50 @@ class PdpBundleView extends Component {
     )
   }
 
+  /** === RENDER SKELETON DETAIL SKU === */
+  renderSkeletonDetailSKU(){
+    return <SkeletonType18 />
+  }
+
     
   /**
    * ===================
-   * DETAIL SKU
+   * AFFILIATE SKU SECTION
    * ===================
    */
-  renderDetailSKU(){
+  renderAffiliateSection(){
     return(
       <View>
-        <Text>Detail SKU</Text>
+        <View style={{ marginHorizontal: 16, backgroundColor: Color.fontBlack10, height: 1, marginTop: 8}} />
+        <Text style={[ Fonts.type7, { marginVertical: 16, alignSelf: 'center' }]}>PRODUK TERKAIT</Text>
+        <View style={{ marginHorizontal: 16, backgroundColor: Color.fontBlack10, height: 1}} />
+      </View>      
+    )
+  }
+
+    /**
+   * ===================
+   * AFFILIATE PROMO SECTION
+   * ===================
+   */
+  renderPromoSection(){
+    return(
+      <View>
+        <View style={{ marginHorizontal: 16, backgroundColor: Color.fontBlack10, height: 1, marginTop: 8}} />
+        <Text style={[ Fonts.type7, { marginVertical: 16, alignSelf: 'center' }]}>PROMO BUNDLE TERKAIT</Text>
+        <View style={{ marginHorizontal: 16, backgroundColor: Color.fontBlack10, height: 1}} />
+      </View>      
+    )
+  }
+
+  renderAffiliateSKU(){
+    return(
+      <View style={{marginTop: 16}}>
+        <ProductListType3 
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
+          data={this.state.affiliateSKU}
+        />
       </View>
     )
   }
@@ -305,6 +385,9 @@ class PdpBundleView extends Component {
       <View style={{ flex: 1}}>
         {this.renderPromoHighlight()}
         {this.renderData()}
+        {this.renderAffiliateSection()}
+        {this.renderAffiliateSKU()}
+        {this.renderPromoSection()}
       </View>
     )
   }
