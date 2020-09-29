@@ -139,7 +139,11 @@ class PdpView extends Component {
       /** => 'pesan' buttom press (from child) */
       case 'openModalOrder':
         if (data.bundle){
-          NavigationService.navigate('PdpBundleView')
+          this.props.pdpGetDetailProcess(data.data)
+          setTimeout(() => (
+            NavigationService.navigate('PdpBundleView')
+          ), 2000)
+          
         } else {
           if (
             this.props.merchant.merchantChanged &&
