@@ -55,10 +55,11 @@ class ProductListType3 extends Component {
       <View key={index} style={{ width: 147 }}>
         <PdpGrid
           flex
-          promo={item.isPromo}
-          image={item.catalogueImages[0].imageUrl}
+          // promo={item.isBundle}
+          image={item.catalogueImages}
           name={item.name}
           price={this.checkPrice(item)}
+          orderButton={true}
           onPress={() => this.toParentFunction(item)}
         />
       </View>
