@@ -26,7 +26,7 @@ class PdpGrid extends Component {
   renderButton() {
     return (
       <TouchableOpacity
-        onPress={this.props.onPressPesan}
+        onPress={this.props.onPress}
         style={[styles.pesanButton, { backgroundColor: masterColor.mainColor }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>
@@ -55,7 +55,7 @@ class PdpGrid extends Component {
             borderBottomRightRadius: 2
           }}
         >
-          <Text style={Fonts.type94}>Promo</Text>
+          <Text style={Fonts.type94}>Bundle</Text>
         </LinearGradient>
       </View>
     );
@@ -94,7 +94,7 @@ class PdpGrid extends Component {
               <View style={{ marginTop: 5 }}>
                 <Text style={Fonts.type11}>{this.props.price}</Text>
               </View>
-              {this.props.pesanButton ? (
+              {this.props.orderButton ? (
                 <View
                   style={{
                     alignItems: 'center',
