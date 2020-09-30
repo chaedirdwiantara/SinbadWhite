@@ -21,7 +21,9 @@ import {
   ButtonSingle,
   OrderButton,
   SkeletonType18,
-  ProductListType3
+  ProductListType3,
+  Accordion,
+  LoadingPage
 } from '../../../library/component'
 import { Fonts, GlobalStyle, MoneyFormat, NumberFormat } from '../../../helpers'
 import * as ActionCreators from '../../../state/actions'
@@ -80,6 +82,28 @@ class PdpBundleView extends Component {
           maxPriceRange: 15000,
           catalogueImages: 'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
           isBundle: true
+        }
+      ],
+      affiliatePromo: [
+        {
+          id: 1,
+          title: 'Title 1',
+          description: 'This is description'
+        },
+        {
+          id: 2,
+          title: 'Title 2',
+          description: 'This is description'
+        },
+        {
+          id: 3,
+          title: 'Title 3',
+          description: 'This is description'
+        },
+        {
+          id: 4,
+          title: 'Title 4',
+          description: 'This is description'
         }
       ]
     }
@@ -327,9 +351,9 @@ class PdpBundleView extends Component {
     )
   }
 
-  /** === RENDER SKELETON DETAIL SKU === */
-  renderSkeletonDetailSKU(){
-    return <SkeletonType18 />
+  /** === RENDER PAGE === */
+  renderLoadingPage(){
+    return <LoadingPage />
   }
 
     
@@ -363,7 +387,8 @@ class PdpBundleView extends Component {
     )
   }
 
-  renderAffiliateSKU(){
+  /** === RENDER AFFILIATE SKU === */
+  renderAffiliateItem(){
     return(
       <View style={{marginTop: 16}}>
         <ProductListType3 
@@ -375,6 +400,33 @@ class PdpBundleView extends Component {
     )
   }
 
+  /** === RENDER ACCORDION === */
+  renderAccordion(){
+    return(
+      <View style={{ marginBottom: 100 }}>
+        <Accordion 
+          data={this.state.affiliatePromo}
+        />
+      </View>
+    )
+  }
+
+  renderDetailSKU(){
+    return this.props.pdp.loadingDetailPdp ? (
+      this.renderLoadingPage()
+    ) : (
+      this.renderData()
+    )
+  }
+
+  renderAffiliateSKU(){
+    return this.renderAffiliateItem()
+  }
+
+  renderPromoBundle(){
+    return this.renderAccordion()
+  }
+
   /**
    * =================
    * RENDER CONTENT
@@ -384,10 +436,11 @@ class PdpBundleView extends Component {
     return(
       <View style={{ flex: 1}}>
         {this.renderPromoHighlight()}
-        {this.renderData()}
+        {this.renderDetailSKU()}
         {this.renderAffiliateSection()}
         {this.renderAffiliateSKU()}
         {this.renderPromoSection()}
+        {this.renderPromoBundle()}
       </View>
     )
   }
