@@ -17,26 +17,32 @@ class Accordion extends Component{
   constructor(props){
     super(props)
     this.state = {
-      promoId: null
+      promoId: null,
+      expand: false
     }
   }
 
   toggleExpand(promoId){
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    this.setState({expanded: !this.state.expanded, promoId: promoId})
+    if (this.state.promoId === null) {
+      this.setState({ promoId, expand: !this.state.expand })
+    } else {
+      this.setState({ promoId: null, expand: false })
+    }
+    
   }
 
   renderItem({ item, index }){
     return(
       <View key={index} >
         <TouchableOpacity ref={this.accordion} style={styles.row} onPress={() => this.toggleExpand(item.id)}>
-          <Text style={Fonts.type8}>{item.title}</Text>
+          <Text style={Fonts.type8}>{item.name}</Text>
           <MaterialIcon name={item.id === this.state.promoId ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} />
         </TouchableOpacity>
-        <View style={{ backgroundColor: Color.fontBlack10, height: 1, marginTop: -10}} />
+        <View style={{ backgroundColor: Color.fontBlack10, height: 1, marginTop: -5}} />
         <View style={styles.parentHr}>
           {
-            item.id === this.state.promoId &&
+            item.id === this.state.promoId && this.state.expand &&
             <View style={styles.child}> 
               <Text style={[Fonts.type8, { marginHorizontal: 16, marginTop: 10 }]}>{item.description}</Text>
             </View>
@@ -47,6 +53,7 @@ class Accordion extends Component{
   }
 
   renderData(){
+    console.log(this.props.data)
     return(
       <View>
         {
@@ -75,9 +82,9 @@ const styles = StyleSheet.create({
   row:{
       flexDirection: 'row',
       justifyContent:'space-between',
-      height:56,
+      marginVertical: 10,
       paddingLeft:16,
-      paddingRight:18,
+      paddingRight:16,
       alignItems:'center',
       backgroundColor: Color.backgroundWhite,
       flex: 1
