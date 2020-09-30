@@ -29,65 +29,6 @@ import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
 import CallCS from '../../screens/global/CallCS';
 import ModalBottomInputOwnerId from './ModalBottomInputOwnerId';
 
-const dummies = {
-  grandTotalPotongan: 21000,
-  grandTotalTransaction: 900000,
-  bonusSku: [
-    {
-      name: 'LAKME EYESHADOW CRAZON BRONZE',
-      namePromo: 'Promo beli 50pcs Lakme bonus 5pcs Lakme',
-      qty: 5,
-      catalogueImages:
-        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png'
-    }
-  ],
-  promoSku: [
-    {
-      name: 'SGM EKSPLOR 1+ MADU 1200 GR GA',
-      catalogueImages:
-        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115822.png',
-      qty: 20,
-      price: 25000,
-      totalPrice: 500000,
-      totalPotongan: 21000,
-      listPromo: [
-        {
-          name: 'Promo 1',
-          value: 5000
-        },
-        {
-          name: 'Promo 2',
-          value: 6000
-        }
-      ],
-      listVoucher: [
-        {
-          name: 'Voucher A',
-          value: 10000
-        }
-      ]
-    }
-  ],
-  notPromoSku: [
-    {
-      name: 'CIP STRAW MUSHROOM PEELED 425 GR',
-      catalogueImages:
-        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/110049.png',
-      qty: 10,
-      price: 40000,
-      totalPrice: 400000
-    },
-    {
-      name: 'CIP CHAMPIGNON MUSHROOM WHOLE 425 GR',
-      catalogueImages:
-        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/110048.png',
-      qty: 10,
-      price: 40000,
-      totalPrice: 400000
-    }
-  ]
-};
-
 class OmsVerificationView extends Component {
   constructor(props) {
     super(props);
