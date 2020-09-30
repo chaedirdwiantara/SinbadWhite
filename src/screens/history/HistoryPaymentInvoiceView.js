@@ -79,6 +79,7 @@ class HistoryPaymentInvoiceView extends Component {
     const { config, fs, android } = RNFetchBlob;
     let downloadDir = fs.dirs.DownloadDir;
     let options = {
+      fileChace: false,
       addAndroidDownloads: {
         useDownloadManager: true,
         notification: true,
@@ -89,18 +90,59 @@ class HistoryPaymentInvoiceView extends Component {
         description: 'Sinbad'
       }
     };
-    config(options)
-      .fetch('GET', url)
-      .then(res => {
-        android.actionViewIntent(res.path(), 'application/pdf');
+    RNFetchBlob.fs.exists(downloadDir + '/'+
+    filename).then((exist) => {
+      if(exist === true){
+        console.log('ada');
+        
+        android.actionViewIntent(downloadDir + '/'+
+        filename, 'application/pdf');
         this.setState({ loadingDownload: false });
-      })
-      .catch(error => {
-        this.setState({
-          openModalErrorGlobal: true,
-          loadingDownload: false
+      }
+      else {
+        console.log('ga ada');
+        
+        config(options)
+        .fetch('GET', url)
+        .then(res => {
+        //   let pdfLocation = downloadDir + '/'+this.state.filename;
+        //   console.log(pdfLocation, 'pdf');
+          
+        // RNFetchBlob.fs.writeFile(pdfLocation);
+          android.actionViewIntent(res.path(), 'application/pdf');
+          this.setState({ loadingDownload: false });
+        })
+        .catch(error => {
+          console.log(error, 'error')
+          
+          this.setState({
+            openModalErrorGlobal: true,
+            loadingDownload: false
+          });
         });
-      });
+      }
+      console.log(`file ${exist ? '' : 'not'} exists`)
+    })
+    .catch((err) => { console.log(err) });
+
+    // config(options)
+    //   .fetch('GET', url)
+    //   .then(res => {
+    //   //   let pdfLocation = downloadDir + '/'+this.state.filename;
+    //   //   console.log(pdfLocation, 'pdf');
+        
+    //   // RNFetchBlob.fs.writeFile(pdfLocation);
+    //     android.actionViewIntent(res.path(), 'application/pdf');
+    //     this.setState({ loadingDownload: false });
+    //   })
+    //   .catch(error => {
+    //     console.log(error, 'error')
+        
+    //     this.setState({
+    //       openModalErrorGlobal: true,
+    //       loadingDownload: false
+    //     });
+    //   });
   }
   extention(filename) {
     return /[.]/.exec(filename) ? /[^.]+$/.exec(filename) : undefined;
@@ -176,7 +218,10 @@ class HistoryPaymentInvoiceView extends Component {
       <View />
     );
   }
+
   render() {
+    console.log(this.state.loadingDownload, 'download');
+    
     return (
       <>
         {this.renderHeader()}
