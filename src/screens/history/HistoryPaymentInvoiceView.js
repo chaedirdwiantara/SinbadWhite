@@ -28,8 +28,7 @@ class HistoryPaymentInvoiceView extends Component {
       filename: this.props.history.dataViewInvoice.data.fileName
     };
   }
- 
-  
+
   /** HEADER MODIFICATION */
   static navigationOptions = ({ navigation }) => {
     return {
@@ -74,7 +73,7 @@ class HistoryPaymentInvoiceView extends Component {
   download() {
     var url = this.state.url;
     var ext = this.extention(url);
-    const filename = this.state.filename
+    const filename = this.state.filename;
     ext = '.' + ext[0];
     const { config, fs, android } = RNFetchBlob;
     let downloadDir = fs.dirs.DownloadDir;
@@ -84,35 +83,37 @@ class HistoryPaymentInvoiceView extends Component {
         useDownloadManager: true,
         notification: true,
         mime: 'application/pdf',
-        path:
-          downloadDir + '/'+
-          filename,
+        path: downloadDir + '/' + filename,
         description: 'Sinbad'
       }
     };
-    RNFetchBlob.fs.exists(downloadDir + '/'+
-    filename).then((exist) => {
-      if(exist === true){
-        android.actionViewIntent(downloadDir + '/'+
-        filename, 'application/pdf');
-        this.setState({ loadingDownload: false });
-      }
-      else {
-        config(options)
-        .fetch('GET', url)
-        .then(res => {
-          android.actionViewIntent(res.path(), 'application/pdf');
+    RNFetchBlob.fs
+      .exists(downloadDir + '/' + filename)
+      .then(exist => {
+        if (exist === true) {
+          android.actionViewIntent(
+            downloadDir + '/' + filename,
+            'application/pdf'
+          );
           this.setState({ loadingDownload: false });
-        })
-        .catch(error => {
-          this.setState({
-            openModalErrorGlobal: true,
-            loadingDownload: false
-          });
-        });
-      }
-    })
-    .catch((err) => { console.log(err) });
+        } else {
+          config(options)
+            .fetch('GET', url)
+            .then(res => {
+              android.actionViewIntent(res.path(), 'application/pdf');
+              this.setState({ loadingDownload: false });
+            })
+            .catch(error => {
+              this.setState({
+                openModalErrorGlobal: true,
+                loadingDownload: false
+              });
+            });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
   extention(filename) {
     return /[.]/.exec(filename) ? /[^.]+$/.exec(filename) : undefined;
@@ -190,8 +191,6 @@ class HistoryPaymentInvoiceView extends Component {
   }
 
   render() {
-    console.log(this.state.loadingDownload, 'download');
-    
     return (
       <>
         {this.renderHeader()}
