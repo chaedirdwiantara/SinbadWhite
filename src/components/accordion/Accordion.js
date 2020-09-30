@@ -46,26 +46,6 @@ class Accordion extends Component{
     )
   }
 
-  renderAccordion(){
-    return(
-      <View style={{marginBottom: 16}}>
-        <TouchableOpacity ref={this.accordion} style={styles.row} onPress={() => this.toggleExpand()}>
-          <Text style={[Fonts.type8]}>{this.props.data[0].title}</Text>
-          <MaterialIcon name={this.state.expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} />
-        </TouchableOpacity>
-        <View style={{ backgroundColor: Color.fontBlack10, height: 1, marginTop: -10}} />
-        <View style={styles.parentHr}>
-          {
-            this.state.expanded && 
-            <View style={styles.child}> 
-              <Text style={Fonts.type8}>{this.props.data[0].description}</Text>
-            </View>
-          }
-        </View>
-      </View>
-    )
-  }
-
   renderData(){
     return(
       <View>
