@@ -9,10 +9,19 @@ import {
   ScrollView,
   TouchableOpacity
 } from '../../library/reactPackage';
-import { StatusBarRed, ButtonSingle } from '../../library/component';
+import {
+  StatusBarRed,
+  ButtonSingle,
+  ModalBottomErrorRespons
+} from '../../library/component';
 import { MaterialIcon } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
+import NavigationService from '../../navigation/NavigationService';
+import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
+import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
+import CallCS from '../../screens/global/CallCS';
+import ModalBottomInputOwnerId from './ModalBottomInputOwnerId';
 
 const dummies = {
   grandTotalPotongan: 21000,
@@ -77,7 +86,12 @@ class OmsVerificationView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openBenefitDetail: null
+      openBenefitDetail: null,
+      openModalSkuStatusConfirmation: false,
+      openModalErrorGlobal: false,
+      openModalErrorNoUrban: false,
+      openModalCS: false,
+      openModalInputOwnerId: false
     };
   }
 
@@ -317,6 +331,93 @@ class OmsVerificationView extends Component {
         {this.renderNonBenefitProductList()}
         <View style={{ paddingBottom: 50 }} />
       </ScrollView>
+    );
+  }
+
+  /**
+   * ===================================
+   * MODAL
+   * ===================================
+   * - stock confirmation (===> RENDER MODAL SKU STATUS CONFIRMATION)
+   * - error respons from BE (===> RENDER MODAL ERROR RESPONS FROM BE)
+   */
+  /** ===> RENDER MODAL SKU STATUS CONFIRMATION === */
+  renderModalSkuStatusConfirmation() {
+    return (
+      <View>
+        {this.state.openModalSkuStatusConfirmation ? (
+          <ModalBottomStockConfirmation
+            open={this.state.openModalSkuStatusConfirmation}
+            close={() =>
+              this.setState({ openModalSkuStatusConfirmation: false })
+            }
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+  /** ===> RENDER MODAL ERROR RESPONS FROM BE ===  */
+  renderModalErrorRespons() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        open={this.state.openModalErrorGlobal}
+        onPress={() => {
+          this.setState({ openModalErrorGlobal: false });
+          // this.checkCartBeforeCheckout();
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** === MODAL CALL CS === */
+  renderModalCallCS() {
+    return this.state.openModalCS ? (
+      <View>
+        <CallCS
+          statusBarRed
+          open={this.state.openModalCS}
+          close={() => this.setState({ openModalCS: false })}
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
+        />
+      </View>
+    ) : (
+      <View />
+    );
+  }
+  /** ===> RENDER MODAL ERROR NO URBAN ===  */
+  renderModalErrorNoUrban() {
+    return this.state.openModalErrorNoUrban ? (
+      <ModalBottomErrorNoUrban
+        open={this.state.openModalErrorNoUrban}
+        backToHome={() => {
+          this.setState({ openModalErrorNoUrban: false });
+          NavigationService.navigate('HomeView');
+        }}
+        callCS={() => {
+          this.setState({ openModalErrorNoUrban: false, openModalCS: true });
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** === RENDER MODAL INPUT OWNER ID === */
+  renderModalInputOwnerId() {
+    return this.state.openModalInputOwnerId ? (
+      <ModalBottomInputOwnerId
+        open={this.state.openModalInputOwnerId}
+        close={() =>
+          this.setState({
+            openModalInputOwnerId: false
+          })
+        }
+      />
+    ) : (
+      <View />
     );
   }
 
