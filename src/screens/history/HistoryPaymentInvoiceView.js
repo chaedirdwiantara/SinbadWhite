@@ -28,8 +28,7 @@ class HistoryPaymentInvoiceView extends Component {
       filename: this.props.history.dataViewInvoice.data.fileName
     };
   }
- 
-  
+
   /** HEADER MODIFICATION */
   static navigationOptions = ({ navigation }) => {
     return {
@@ -74,32 +73,46 @@ class HistoryPaymentInvoiceView extends Component {
   download() {
     var url = this.state.url;
     var ext = this.extention(url);
-    const filename = this.state.filename
+    const filename = this.state.filename;
     ext = '.' + ext[0];
     const { config, fs, android } = RNFetchBlob;
     let downloadDir = fs.dirs.DownloadDir;
     let options = {
+      fileCache: false,
       addAndroidDownloads: {
         useDownloadManager: true,
         notification: true,
         mime: 'application/pdf',
-        path:
-          downloadDir + '/'+
-          filename,
+        path: downloadDir + '/' + filename,
         description: 'Sinbad'
       }
     };
-    config(options)
-      .fetch('GET', url)
-      .then(res => {
-        android.actionViewIntent(res.path(), 'application/pdf');
-        this.setState({ loadingDownload: false });
+    RNFetchBlob.fs
+      .exists(downloadDir + '/' + filename)
+      .then(exist => {
+        if (exist === true) {
+          android.actionViewIntent(
+            downloadDir + '/' + filename,
+            'application/pdf'
+          );
+          this.setState({ loadingDownload: false });
+        } else {
+          config(options)
+            .fetch('GET', url)
+            .then(res => {
+              android.actionViewIntent(res.path(), 'application/pdf');
+              this.setState({ loadingDownload: false });
+            })
+            .catch(error => {
+              this.setState({
+                openModalErrorGlobal: true,
+                loadingDownload: false
+              });
+            });
+        }
       })
-      .catch(error => {
-        this.setState({
-          openModalErrorGlobal: true,
-          loadingDownload: false
-        });
+      .catch(err => {
+        console.log(err);
       });
   }
   extention(filename) {
@@ -176,6 +189,7 @@ class HistoryPaymentInvoiceView extends Component {
       <View />
     );
   }
+
   render() {
     return (
       <>
