@@ -113,25 +113,6 @@ class HistoryPaymentInvoiceView extends Component {
       }
     })
     .catch((err) => { console.log(err) });
-
-    // config(options)
-    //   .fetch('GET', url)
-    //   .then(res => {
-    //   //   let pdfLocation = downloadDir + '/'+this.state.filename;
-    //   //   console.log(pdfLocation, 'pdf');
-        
-    //   // RNFetchBlob.fs.writeFile(pdfLocation);
-    //     android.actionViewIntent(res.path(), 'application/pdf');
-    //     this.setState({ loadingDownload: false });
-    //   })
-    //   .catch(error => {
-    //     console.log(error, 'error')
-        
-    //     this.setState({
-    //       openModalErrorGlobal: true,
-    //       loadingDownload: false
-    //     });
-    //   });
   }
   extention(filename) {
     return /[.]/.exec(filename) ? /[^.]+$/.exec(filename) : undefined;
