@@ -53,3 +53,7 @@ export const OMS_GET_LAST_PAYMENT_CHANNEL_SUCCESS =
 export const OMS_GET_LAST_PAYMENT_CHANNEL_FAILED =
   'omsGetLastPaymentChannelFailed';
 export const OMS_GET_LAST_PAYMENT_CHANNEL = 'omsGetLastPaymentChannel';
+/** CHECK PROMO */
+export const OMS_CHECK_PROMO_PROCESS = 'OmsCheckPromoProcess';
+export const OMS_CHECK_PROMO_SUCCESS = 'OmsCheckPromoSuccess';
+export const OMS_CHECK_PROMO_FAILED = 'OmsCheckPromoFailed';
