@@ -12,12 +12,18 @@ import {
 import {
   StatusBarRed,
   ButtonSingle,
-  ModalBottomErrorRespons
+  ModalBottomErrorRespons,
+  LoadingPage
 } from '../../library/component';
-import { MaterialIcon } from '../../library/thirdPartyPackage';
+import {
+  connect,
+  MaterialIcon,
+  bindActionCreators
+} from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import NavigationService from '../../navigation/NavigationService';
+import * as ActionCreators from '../../state/actions';
 import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
 import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
 import CallCS from '../../screens/global/CallCS';
@@ -101,6 +107,11 @@ class OmsVerificationView extends Component {
    * =======================
    */
 
+  /** === DID MOUNT === */
+  componentDidMount() {
+    this.props.omsCheckPromoProcess();
+  }
+
   openBenefitDetail(index) {
     if (this.state.openBenefitDetail === index) {
       this.setState({ openBenefitDetail: null });
@@ -123,12 +134,13 @@ class OmsVerificationView extends Component {
   }
 
   renderPotonganProductList() {
-    if (dummies.promoSku.length > 0) {
+    const { promoSku } = this.props.oms.dataOmsCheckPromo;
+    if (promoSku.length > 0) {
       return (
         <View>
           <View style={styles.sectionHeaderContainer}>
             <Text style={Fonts.type16}>{`Potongan Harga (${
-              dummies.promoSku.length
+              promoSku.length
             } SKU)`}</Text>
           </View>
           {this.renderPotonganProductItem()}
@@ -138,7 +150,8 @@ class OmsVerificationView extends Component {
   }
 
   renderPotonganProductItem() {
-    return dummies.promoSku.map((item, index) => {
+    const { promoSku } = this.props.oms.dataOmsCheckPromo;
+    return promoSku.map((item, index) => {
       return (
         <View key={index}>
           <View style={styles.productListContainer}>
@@ -210,7 +223,8 @@ class OmsVerificationView extends Component {
   }
 
   renderBonusesProductList() {
-    if (dummies.bonusSku.length > 0) {
+    const { bonusSku } = this.props.oms.dataOmsCheckPromo;
+    if (bonusSku.length > 0) {
       return (
         <View>
           <View style={styles.sectionHeaderContainer}>
@@ -223,7 +237,8 @@ class OmsVerificationView extends Component {
   }
 
   renderBonusesProductItem() {
-    return dummies.bonusSku.map((item, index) => {
+    const { bonusSku } = this.props.oms.dataOmsCheckPromo;
+    return bonusSku.map((item, index) => {
       return (
         <View key={index} style={styles.productListContainer}>
           <View style={styles.productImageContainer}>
@@ -249,7 +264,8 @@ class OmsVerificationView extends Component {
   }
 
   renderNonBenefitProductList() {
-    if (dummies.notPromoSku.length > 0) {
+    const { notPromoSku } = this.props.oms.dataOmsCheckPromo;
+    if (notPromoSku.length > 0) {
       return (
         <View>
           <View style={styles.sectionHeaderContainer}>
@@ -262,7 +278,8 @@ class OmsVerificationView extends Component {
   }
 
   renderNonBenefitProductItem() {
-    return dummies.notPromoSku.map((item, index) => {
+    const { notPromoSku } = this.props.oms.dataOmsCheckPromo;
+    return notPromoSku.map((item, index) => {
       return (
         <View key={index}>
           <View style={styles.productListContainer}>
@@ -294,6 +311,7 @@ class OmsVerificationView extends Component {
   }
 
   renderBottomSection() {
+    const { dataOmsCheckPromo } = this.props.oms;
     return (
       <View style={styles.bottomContainer}>
         <View style={styles.bottomInformationContainer}>
@@ -305,13 +323,13 @@ class OmsVerificationView extends Component {
           >
             <Text style={Fonts.type8}>Total Transaksi</Text>
             <Text style={Fonts.type8}>
-              {MoneyFormat(dummies.grandTotalTransaction)}
+              {MoneyFormat(dataOmsCheckPromo.grandTotalTransaction)}
             </Text>
           </View>
           <View style={styles.bottomInformationTextContainer}>
             <Text style={Fonts.type8}>Total Potongan</Text>
             <Text style={Fonts.ryanNew01}>
-              {MoneyFormat(dummies.grandTotalPotongan)}
+              {MoneyFormat(dataOmsCheckPromo.grandTotalRebate)}
             </Text>
           </View>
         </View>
@@ -322,16 +340,30 @@ class OmsVerificationView extends Component {
     );
   }
 
-  renderContent() {
+  renderLoading() {
+    return <LoadingPage />;
+  }
+
+  renderMainContent() {
     return (
-      <ScrollView>
-        {this.renderHeader()}
-        {this.renderPotonganProductList()}
-        {this.renderBonusesProductList()}
-        {this.renderNonBenefitProductList()}
-        <View style={{ paddingBottom: 50 }} />
-      </ScrollView>
+      <>
+        <ScrollView>
+          {this.renderHeader()}
+          {this.renderPotonganProductList()}
+          {this.renderBonusesProductList()}
+          {this.renderNonBenefitProductList()}
+          <View style={{ paddingBottom: 50 }} />
+        </ScrollView>
+        {this.renderBottomSection()}
+      </>
     );
+  }
+
+  renderContent() {
+    const isReady =
+      !this.props.oms.loadingOmsCheckPromo &&
+      this.props.oms.dataOmsCheckPromo !== null;
+    return isReady ? this.renderMainContent() : this.renderLoading();
   }
 
   /**
@@ -426,7 +458,13 @@ class OmsVerificationView extends Component {
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarRed />
         {this.renderContent()}
-        {this.renderBottomSection()}
+        {/* modal */}
+        {this.renderModalSkuStatusConfirmation()}
+        {/* error */}
+        {this.renderModalErrorRespons()}
+        {this.renderModalErrorNoUrban()}
+        {this.renderModalCallCS()}
+        {this.renderModalInputOwnerId()}
       </SafeAreaView>
     );
   }
@@ -505,4 +543,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export default OmsVerificationView;
+const mapStateToProps = ({ oms }) => {
+  return { oms };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
+
+// eslint-disable-next-line prettier/prettier
+export default connect(mapStateToProps, mapDispatchToProps)(OmsVerificationView);
