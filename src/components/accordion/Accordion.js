@@ -18,17 +18,18 @@ class Accordion extends Component{
     super(props)
     this.state = {
       promoId: null,
-      expand: false
+      expand: false,
+      index: null
     }
   }
 
-  toggleExpand(promoId){
+  toggleExpand(index){
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    if (this.state.promoId !== promoId) {
-        this.setState({ promoId, expand: true })
+    if (this.state.index !== index) {
+        this.setState({ index, expand: true })
     } else {
       /** Back to Initial State */
-      this.setState({ promoId: null, expand: false })
+      this.setState({ index: null, expand: false })
     }
     
   }
@@ -36,14 +37,14 @@ class Accordion extends Component{
   renderItem({ item, index }){
     return(
       <View key={index} >
-        <TouchableOpacity ref={this.accordion} style={styles.row} onPress={() => this.toggleExpand(item.id)}>
+        <TouchableOpacity ref={this.accordion} style={styles.row} onPress={() => this.toggleExpand(index)}>
           <Text style={Fonts.type8}>{item.name}</Text>
-          <MaterialIcon name={item.id === this.state.promoId ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} />
+          <MaterialIcon name={index === this.state.index ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} />
         </TouchableOpacity>
         <View style={{ backgroundColor: Color.fontBlack10, height: 1, marginTop: -5}} />
         <View style={styles.parentHr}>
           {
-            item.id === this.state.promoId && this.state.expand &&
+            index === this.state.index && this.state.expand &&
             <View style={styles.child}> 
               <Text style={[Fonts.type8, { marginHorizontal: 16, marginTop: 10 }]}>{item.description}</Text>
             </View>
