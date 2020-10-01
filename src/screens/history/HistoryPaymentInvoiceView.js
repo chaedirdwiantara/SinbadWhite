@@ -19,6 +19,7 @@ import NavigationService from '../../navigation/NavigationService';
 import { Fonts } from '../../helpers';
 import { Color } from '../../config';
 import { file } from '@babel/types';
+
 class HistoryPaymentInvoiceView extends Component {
   constructor(props) {
     super(props);
@@ -44,6 +45,7 @@ class HistoryPaymentInvoiceView extends Component {
     });
     this.requestWritePermission();
   }
+
   /**ANDROID REQUEST WRITE PERMISSION */
   requestWritePermission = async () => {
     try {
@@ -71,41 +73,38 @@ class HistoryPaymentInvoiceView extends Component {
 
   /** DOWNLOAD INVOICE */
   async download() {
-
-    var url = this.state.url;
-    var ext = this.extention(url);
+    let url = this.state.url;
+    let ext = this.extention(url);
     let filename = this.state.filename.split('.')[0];
-
     ext = '.' + ext[0];
     const { config, fs, android } = RNFetchBlob;
     let downloadDir = fs.dirs.DownloadDir;
+
+    let completeFileName = downloadDir + '/' + filename + ext;
+    let counter = 1;
+    let exist = await RNFetchBlob.fs.exists(completeFileName);
+
+    while (exist) {
+      completeFileName =
+        downloadDir + '/' + filename + '(' + counter + ')' + ext;
+      exist = await RNFetchBlob.fs.exists(completeFileName);
+      counter++;
+    }
     let options = {
       fileCache: false,
       addAndroidDownloads: {
         useDownloadManager: true,
         notification: true,
         mime: 'application/pdf',
-        path: downloadDir + '/' + filename + ext,
+        path: completeFileName,
         description: 'Sinbad'
       }
     };
-    let counter = 1;
-    let isExist;
-    do {
-      filename = filename.split('(')[0];
-      isExist = await RNFetchBlob.fs.exists(
-        `${downloadDir}/${filename}${counter === 1 ? '' : `(${counter})`}${ext}`
-      );
-      filename = await `${filename}${counter === 1 ? '' : `(${counter})`}`;
-      counter++;
-    } while (isExist === true);
 
-    options.addAndroidDownloads.path = downloadDir + '/' + filename + ext;
-    config(options)
+    RNFetchBlob.config(options)
       .fetch('GET', url)
       .then(res => {
         android.actionViewIntent(res.path(), 'application/pdf');
-        counter = 0;
         this.setState({ loadingDownload: false });
       })
       .catch(error => {
@@ -115,6 +114,7 @@ class HistoryPaymentInvoiceView extends Component {
         });
       });
   }
+
   extention(filename) {
     return /[.]/.exec(filename) ? /[^.]+$/.exec(filename) : undefined;
   }
@@ -132,6 +132,7 @@ class HistoryPaymentInvoiceView extends Component {
       </View>
     );
   }
+
   /** RENDER CONTENT */
   renderContent() {
     return <>{this.renderInvoice()}</>;
@@ -200,6 +201,7 @@ class HistoryPaymentInvoiceView extends Component {
     );
   }
 }
+
 const mapStateToProps = ({ history, user, merchant, oms }) => {
   return { history, user, merchant, oms };
 };
