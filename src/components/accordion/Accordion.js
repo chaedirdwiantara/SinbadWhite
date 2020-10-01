@@ -54,7 +54,6 @@ class Accordion extends Component{
   }
 
   renderData(){
-    console.log(this.props.data)
     return(
       <View>
         {
