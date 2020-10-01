@@ -17,7 +17,6 @@ class Accordion extends Component{
   constructor(props){
     super(props)
     this.state = {
-      promoId: null,
       expand: false,
       index: null
     }
