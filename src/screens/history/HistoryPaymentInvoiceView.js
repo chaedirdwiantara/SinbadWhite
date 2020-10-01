@@ -18,6 +18,7 @@ import { ModalBottomErrorRespons } from '../../library/component';
 import NavigationService from '../../navigation/NavigationService';
 import { Fonts } from '../../helpers';
 import { Color } from '../../config';
+import { file } from '@babel/types';
 class HistoryPaymentInvoiceView extends Component {
   constructor(props) {
     super(props);
@@ -61,19 +62,20 @@ class HistoryPaymentInvoiceView extends Component {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         this.download();
       } else {
-        //will update to modal error soon
-        console.log('permission denied');
+        this.setState({ loadingDownload: false })
       }
     } catch (err) {
-      console.warn(err);
+      this.setState({ loadingDownload: false })
     }
   };
 
   /** DOWNLOAD INVOICE */
   download() {
+    console.log('donwload');
+    
     var url = this.state.url;
     var ext = this.extention(url);
-    const filename = this.state.filename;
+    let filename = this.state.filename.split('.')[0];
     ext = '.' + ext[0];
     const { config, fs, android } = RNFetchBlob;
     let downloadDir = fs.dirs.DownloadDir;
@@ -83,14 +85,40 @@ class HistoryPaymentInvoiceView extends Component {
         useDownloadManager: true,
         notification: true,
         mime: 'application/pdf',
-        path: downloadDir + '/' + filename,
+        path: downloadDir + '/' + filename + ext,
         description: 'Sinbad'
       }
     };
     RNFetchBlob.fs
-      .exists(downloadDir + '/' + filename)
+      .exists(downloadDir + '/' + filename + ext) // filename dari be
       .then(exist => {
-        if (exist === true) {
+        if (exist === true) // cek apakah file nama yg sama ada
+          const checking = filename.substr(filename.length - 3).substr(0,1) //ambil 3 char terakhir
+          let counter = filename.substr(filename.length - 3).substr(1,1) // ambil angka di dalam kurung (1) -> 1
+          if(checking === '('){ // cek apabila 3 char terakhir adalah ( -> untuk cek apakah hrs increment
+            counter ++
+            let increment = `(${counter})`
+            let basic = filename.split('(')[0];
+            filename = basic + increment // buat filename jadi increment (3)
+            config(options)
+            .fetch('GET', url)
+            .then(res => {
+              android.actionViewIntent(res.path(), 'application/pdf');
+              this.setState({ loadingDownload: false });
+            })
+            .catch(error => {
+              this.setState({
+                openModalErrorGlobal: true,
+                loadingDownload: false
+              });
+            });
+            
+          }
+          
+          
+          
+          
+          
           android.actionViewIntent(
             downloadDir + '/' + filename,
             'application/pdf'
