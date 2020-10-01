@@ -24,9 +24,10 @@ class Accordion extends Component{
 
   toggleExpand(promoId){
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    if (this.state.promoId === null) {
-      this.setState({ promoId, expand: !this.state.expand })
+    if (this.state.promoId !== promoId) {
+        this.setState({ promoId, expand: true })
     } else {
+      /** Back to Initial State */
       this.setState({ promoId: null, expand: false })
     }
     
@@ -90,7 +91,6 @@ const styles = StyleSheet.create({
       flex: 1
   },
   parentHr:{
-      height:1,
       color: Color.backgroundWhite,
       width:'100%',
       height: '100%',
