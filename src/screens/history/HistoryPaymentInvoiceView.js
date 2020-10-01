@@ -89,14 +89,14 @@ class HistoryPaymentInvoiceView extends Component {
         description: 'Sinbad'
       }
     };
-    let counter = 0;
+    let counter = 1;
     let isExist;
     do {
       filename = filename.split('(')[0];
       isExist = await RNFetchBlob.fs.exists(
-        `${downloadDir}/${filename}${counter === 0 ? '' : `(${counter})`}${ext}`
+        `${downloadDir}/${filename}${counter === 1 ? '' : `(${counter})`}${ext}`
       );
-      filename = await `${filename}${counter === 0 ? '' : `(${counter})`}`;
+      filename = await `${filename}${counter === 1 ? '' : `(${counter})`}`;
       counter++;
     } while (isExist === true);
 
