@@ -140,16 +140,28 @@ class PdpBundleView extends Component {
    * BUTTON TITLE
    */
   buttonTitle(){
-    if (this.state.skuEmpty) return 'Stock Habis'
-    return 'Tambah ke Kranjang'
+    if (
+      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock ||
+      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
+        this.props.pdp.dataDetailPdp.minQty
+    ) {
+      return 'Tambah ke Keranjang';
+    }
+    return 'Stock Habis';
   }
 
   /**
    * BUTTON DISABLED
    */
   buttonDisabled(){
-    if (this.state.skuEmpty) return true
-    return false
+    if (
+      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock ||
+      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
+        this.props.pdp.dataDetailPdp.minQty
+    ) {
+      return false;
+    }
+    return true;
   }
 
    /** === CHECK INPUT QTY SECTION === */
