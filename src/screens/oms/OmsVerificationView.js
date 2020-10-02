@@ -28,6 +28,7 @@ import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
 import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
 import CallCS from '../../screens/global/CallCS';
 import ModalBottomInputOwnerId from './ModalBottomInputOwnerId';
+import ModalBottomErrorPromo from './ModalBottomErrorPromo';
 
 class OmsVerificationView extends Component {
   constructor(props) {
@@ -38,7 +39,8 @@ class OmsVerificationView extends Component {
       openModalErrorGlobal: false,
       openModalErrorNoUrban: false,
       openModalCS: false,
-      openModalInputOwnerId: false
+      openModalInputOwnerId: false,
+      openModalErrorPromo: true
     };
   }
 
@@ -393,6 +395,21 @@ class OmsVerificationView extends Component {
       <View />
     );
   }
+  /** === RENDER MODAL ERROR PROMO === */
+  renderModalErrorPromo() {
+    return this.state.openModalErrorPromo ? (
+      <ModalBottomErrorPromo
+        open={this.state.openModalErrorPromo}
+        close={() =>
+          this.setState({
+            openModalErrorPromo: false
+          })
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
 
   render() {
     return (
@@ -406,6 +423,7 @@ class OmsVerificationView extends Component {
         {this.renderModalErrorNoUrban()}
         {this.renderModalCallCS()}
         {this.renderModalInputOwnerId()}
+        {this.renderModalErrorPromo()}
       </SafeAreaView>
     );
   }
