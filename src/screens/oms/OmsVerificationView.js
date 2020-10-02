@@ -86,14 +86,13 @@ class OmsVerificationView extends Component {
               promoSku.length
             } SKU)`}</Text>
           </View>
-          {this.renderPotonganProductItem()}
+          {this.renderPotonganProductItem(promoSku)}
         </View>
       );
     }
   }
 
-  renderPotonganProductItem() {
-    const { promoSku } = this.props.oms.dataOmsCheckPromo;
+  renderPotonganProductItem(promoSku) {
     return promoSku.map((item, index) => {
       return (
         <View key={index}>
@@ -173,14 +172,13 @@ class OmsVerificationView extends Component {
           <View style={styles.sectionHeaderContainer}>
             <Text style={Fonts.type16}>Bonus SKU</Text>
           </View>
-          {this.renderBonusesProductItem()}
+          {this.renderBonusesProductItem(bonusSku)}
         </View>
       );
     }
   }
 
-  renderBonusesProductItem() {
-    const { bonusSku } = this.props.oms.dataOmsCheckPromo;
+  renderBonusesProductItem(bonusSku) {
     return bonusSku.map((item, index) => {
       return (
         <View key={index} style={styles.productListContainer}>
@@ -214,14 +212,13 @@ class OmsVerificationView extends Component {
           <View style={styles.sectionHeaderContainer}>
             <Text style={Fonts.type16}>Produk Tidak Mendapatkan Promo</Text>
           </View>
-          {this.renderNonBenefitProductItem()}
+          {this.renderNonBenefitProductItem(notPromoSku)}
         </View>
       );
     }
   }
 
-  renderNonBenefitProductItem() {
-    const { notPromoSku } = this.props.oms.dataOmsCheckPromo;
+  renderNonBenefitProductItem(notPromoSku) {
     return notPromoSku.map((item, index) => {
       return (
         <View key={index}>
