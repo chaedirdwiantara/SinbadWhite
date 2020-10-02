@@ -20,7 +20,6 @@ import {
   StatusBarRed,
   ButtonSingle,
   OrderButton,
-  SkeletonType18,
   ProductListType3,
   Accordion,
   LoadingPage
@@ -36,7 +35,7 @@ class PdpBundleView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      skuEmpty: true,
+      skuEmpty: false,
       questionMarkShow: true,
       qtyFromChild:
         this.props.pdp.dataDetailPdp !== null
@@ -340,7 +339,7 @@ class PdpBundleView extends Component {
               <Text style={Fonts.type96}>Jumlah/pcs</Text>
             </View>
             <View style={styles.boxRemainingStockOrderButton}>
-              {this.renderRemainingStock()}
+              {/* {this.renderRemainingStock()}  */}
               {this.renderButtonOrder()}
             </View>
           </View>
@@ -394,7 +393,7 @@ class PdpBundleView extends Component {
         <ProductListType3 
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
-          data={this.state.affiliateSKU}
+          data={this.props.pdp.dataDetailPdp.affiliatedSKUs}
         />
       </View>
     )
@@ -405,7 +404,7 @@ class PdpBundleView extends Component {
     return(
       <View style={{ marginBottom: 100 }}>
         <Accordion 
-          data={this.state.affiliatePromo}
+          data={this.props.pdp.dataDetailPdp.affiliatedPromos}
         />
       </View>
     )
@@ -420,11 +419,19 @@ class PdpBundleView extends Component {
   }
 
   renderAffiliateSKU(){
-    return this.renderAffiliateItem()
+    return this.props.pdp.loadingDetailPdp ? (
+      this.renderLoadingPage()
+    ) : (
+      this.renderAffiliateItem()
+    )
   }
 
   renderPromoBundle(){
-    return this.renderAccordion()
+    return this.props.pdp.loadingDetailPdp ? (
+      this.renderLoadingPage()
+    ) : (
+      this.renderAccordion()
+    )
   }
 
   /**
