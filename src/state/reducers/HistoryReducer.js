@@ -12,6 +12,7 @@ const INITIAL_STATE = {
   loadingGetPaymentStatus: false,
   loadingHistoryActivateVA: false,
   loadingHistoryChangePaymentMethod: false,
+  loadingViewInvoice: false,
   /** data */
   dataGetHistory: [],
   dataEditHistory: null,
@@ -22,6 +23,7 @@ const INITIAL_STATE = {
   dataHistoryChangePaymentMethod: null,
   totalDataGetHistory: 0,
   pageGetHistory: 0,
+  dataViewInvoice: null,
   /** error */
   errorGetHistory: null,
   errorGetOrderStatus: null,
@@ -30,7 +32,7 @@ const INITIAL_STATE = {
   errorHistoryDetail: null,
   errorHistoryActivateVA: null,
   errorHistoryChangePaymentMethod: null,
-  errorHistoryDetail: null,
+  errorViewInvoice: null
 };
 
 export const history = createReducer(INITIAL_STATE, {
@@ -282,7 +284,37 @@ export const history = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingEditHistory: false,
-      errorEditHistory: action.payload
+      errorEditHistory: action.payload,
+      errorHistoryDetail: action.payload
+    };
+  },
+
+  /**
+   * =============================
+   * HISTORY INVOICE
+   * =============================
+   */
+  [types.HISTORY_VIEW_INVOICE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingViewInvoice: true,
+      dataViewInvoice: null,
+      errorViewInvoice: null
+    };
+  },
+  [types.HISTORY_VIEW_INVOICE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingViewInvoice: false,
+      dataViewInvoice: action.payload
+    };
+  },
+  [types.HISTORY_VIEW_INVOICE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingViewInvoice: false,
+      errorViewInvoice: action.payload,
+      errorHistoryDetail: action.payload
     };
   }
 });

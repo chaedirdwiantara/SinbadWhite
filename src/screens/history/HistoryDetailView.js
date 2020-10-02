@@ -108,9 +108,9 @@ class HistoryDetailView extends Component {
       prevProps.history.errorHistoryDetail !==
       this.props.history.errorHistoryDetail
     ) {
-      if (this.props.history.errorHistoryDetail.data !== null) {
-        this.manageError();
-      }
+      if (this.props.history.errorHistoryDetail && this.props.history.errorHistoryDetail.data !== null) {
+        this.manageError();}
+      
       // if (
       //   prevProps.history.errorHistoryChangePaymentMethod !==
       //   this.props.history.errorHistoryChangePaymentMethod
@@ -151,6 +151,7 @@ class HistoryDetailView extends Component {
       }
     }
   }
+
   /** REFRESH LIST HISTORY AFTER EDIT HISTORY STATUS */
   getHistory() {
     this.props.historyGetProcess({
@@ -363,6 +364,7 @@ class HistoryDetailView extends Component {
   renderRingkasanPesanan() {
     return (
       <View>
+        <View style={GlobalStyle.boxPadding} />
         <View style={GlobalStyle.shadowForBox}>
           <View
             style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
@@ -421,17 +423,20 @@ class HistoryDetailView extends Component {
   /** RENDER PRODUCT LIST */
   renderProductList() {
     return (
-      <View style={GlobalStyle.shadowForBox}>
-        <View
-          style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
-        >
-          <Text style={Fonts.type48}>Daftar Produk</Text>
+      <>
+        <View style={GlobalStyle.boxPadding} />
+        <View style={GlobalStyle.shadowForBox}>
+          <View
+            style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
+          >
+            <Text style={Fonts.type48}>Daftar Produk</Text>
+          </View>
+          <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
+          <ProductListType2
+            data={this.props.history.dataDetailHistory.orderBrands}
+          />
         </View>
-        <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-        <ProductListType2
-          data={this.props.history.dataDetailHistory.orderBrands}
-        />
-      </View>
+      </>
     );
   }
   /** RENDER DELIVERY DETAIL */
@@ -568,7 +573,7 @@ class HistoryDetailView extends Component {
       );
     }
   }
-
+  
   /** RENDER CONTENT */
   renderContent() {
     return (
@@ -582,11 +587,7 @@ class HistoryDetailView extends Component {
           }
         >
           {this.renderHeaderStatus()}
-          {this.state.section === 'payment' ? (
-            this.renderDetailPayment()
-          ) : (
-            <View />
-          )}
+          {this.renderDetailPayment()}
           {this.renderRingkasanPesanan()}
           {this.renderProductList()}
           {this.renderDeliveryDetail()}
@@ -618,6 +619,10 @@ class HistoryDetailView extends Component {
       case 'ERR_APP_CREATE_VA':
         this.errorCreateVA();
         break;
+      case 'ERR_APP_INVOICE_NOT_FOUND':
+        this.errorInvoicENotFound();
+      case 'ERR_APP_INVOICE_ON_PROGRESS':
+        this.errorInvoiceOnProgress();
       default:
         this.setState({
           openModalErrorGlobal: true
@@ -625,14 +630,26 @@ class HistoryDetailView extends Component {
         break;
     }
   }
-
+// ERROR UPDATE BILLING
   errorUpdateBilling() {
     this.setState({
       openModalErrorGlobal: true
     });
   }
-
+//ERROR CREATE VA
   errorCreateVA() {
+    this.setState({
+      openModalErrorGlobal: true
+    });
+  }
+//ERROR INVOICE ON PROGRESS
+  errorInvoiceOnProgress(){
+    this.setState({
+      openModalErrorGlobal: true
+    });
+  }
+//ERROR INVOICE NOT FOUND  
+  errorInvoicENotFound(){
     this.setState({
       openModalErrorGlobal: true
     });
@@ -910,7 +927,7 @@ class HistoryDetailView extends Component {
         {this.renderModalErrorGlobal()}
         {this.renderModalTAndR()}
       </SafeAreaView>
-    );
+    )
   }
 }
 
