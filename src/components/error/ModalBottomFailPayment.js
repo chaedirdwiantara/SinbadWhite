@@ -40,7 +40,7 @@ import {
                 Terjadi Kesalahan
               </Text>
               <Text style={[Fonts.type17, { textAlign: 'center', marginHorizontal: 20 }]}>
-                {this.props.text}
+                {this.props.text? this.props.text : 'Silahkan Mencoba Kembali'}
               </Text>
             </View>
           </View>

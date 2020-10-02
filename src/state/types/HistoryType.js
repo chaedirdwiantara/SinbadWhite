@@ -42,3 +42,7 @@ export const HISTORY_CHANGE_PAYMENT_METHOD_FAILED =
 export const HISTORY_ACTIVATE_VA_PROCESS = 'HistoryActivateVAProcess';
 export const HISTORY_ACTIVATE_VA_SUCCESS = 'HistoryActivateVASuccess';
 export const HISTORY_ACTIVATE_VA_FAILED = 'HistoryActivateVAFailed';
+/** VIEW INVOICE */
+export const HISTORY_VIEW_INVOICE_PROCESS = 'HistoryViewInvoiceProcess';
+export const HISTORY_VIEW_INVOICE_SUCCESS = 'HistoryViewInvoiceSuccess';
+export const HISTORY_VIEW_INVOICE_FAILED = 'HistoryViewInvoiceFailed';
