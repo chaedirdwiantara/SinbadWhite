@@ -22,7 +22,9 @@ import {
   OrderButton,
   ProductListType3,
   Accordion,
-  LoadingPage
+  LoadingPage,
+  SkeletonType21,
+  SkeletonType18
 } from '../../../library/component'
 import { Fonts, GlobalStyle, MoneyFormat, NumberFormat } from '../../../helpers'
 import * as ActionCreators from '../../../state/actions'
@@ -37,6 +39,7 @@ class PdpBundleView extends Component {
     this.state = {
       skuEmpty: false,
       questionMarkShow: true,
+      coverage: false,
       qtyFromChild:
         this.props.pdp.dataDetailPdp !== null
           ? this.props.pdp.dataDetailPdp.minQty
@@ -240,6 +243,19 @@ class PdpBundleView extends Component {
     )
   }
 
+    /** === RENDER PDP SKU NOT AVAILABLED === */
+    renderPdpNotAvailable() {
+      return (
+        <View style={styles.containerPdpNotifNotAvailabled}>
+          <MaterialIcon name="error" size={20} color={Color.mainColor} />
+          <Text style={[Fonts.type60, { paddingLeft: 8 }]}>
+            SKU tidak tersedia di lokasi Anda. Silahkan pilih SKU lain yang
+            tersedia
+          </Text>
+        </View>
+      );
+    }
+
   /** === RENDER TOOLTIP === */
   renderTooltip() {
     return (
@@ -339,7 +355,7 @@ class PdpBundleView extends Component {
               <Text style={Fonts.type96}>Jumlah/pcs</Text>
             </View>
             <View style={styles.boxRemainingStockOrderButton}>
-              {/* {this.renderRemainingStock()}  */}
+              {this.renderRemainingStock()} 
               {this.renderButtonOrder()}
             </View>
           </View>
@@ -394,6 +410,7 @@ class PdpBundleView extends Component {
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
           data={this.props.pdp.dataDetailPdp.affiliatedSKUs}
+          loading={this.props.pdp.loadingDetailPdp}
         />
       </View>
     )
@@ -412,7 +429,7 @@ class PdpBundleView extends Component {
 
   renderDetailSKU(){
     return this.props.pdp.loadingDetailPdp ? (
-      this.renderLoadingPage()
+      <SkeletonType18 />
     ) : (
       this.renderData()
     )
@@ -420,7 +437,7 @@ class PdpBundleView extends Component {
 
   renderAffiliateSKU(){
     return this.props.pdp.loadingDetailPdp ? (
-      this.renderLoadingPage()
+      <SkeletonType21 />
     ) : (
       this.renderAffiliateItem()
     )
@@ -431,6 +448,14 @@ class PdpBundleView extends Component {
       this.renderLoadingPage()
     ) : (
       this.renderAccordion()
+    )
+  }
+
+  renderButton(){
+    return !this.props.pdp.loadingDetailPdp ? (
+      this.renderButtonContent()
+    ) : (
+      <View />
     )
   }
 
@@ -452,6 +477,15 @@ class PdpBundleView extends Component {
     )
   }
 
+  /** === RENDER BUTTON CONTENT === */
+  /** this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0 */
+  renderButtonContent() {
+    return this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0 ? (
+      this.renderBottomButton()
+    ) : (
+      this.renderPdpNotAvailable()
+    );
+  }
 
   /**
    * ====================
@@ -466,7 +500,8 @@ class PdpBundleView extends Component {
           {this.renderContent()}
         </ScrollView>
         {/* Render Bottom Button */}
-        {this.renderBottomButton()}
+        {/* {this.renderBottomButton()} */}
+        {this.renderButton()}
       </SafeAreaView>
     )
   }
@@ -515,7 +550,14 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     flexDirection: 'row',
     width: '55%'
-  }
+  },
+  containerPdpNotifNotAvailabled: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: Color.fontYellow10,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
 })
 
 const mapStateToProps = ({ pdp }) => {
