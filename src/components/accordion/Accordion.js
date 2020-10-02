@@ -45,7 +45,7 @@ class Accordion extends Component{
           {
             index === this.state.index && this.state.expand &&
             <View style={styles.child}> 
-              <Text style={[Fonts.type8, { marginHorizontal: 16, marginTop: 10 }]}>{item.description}</Text>
+              <Text style={[Fonts.type8, { marginHorizontal: 16, marginTop: 10, marginBottom: 16 }]}>{item.description}</Text>
             </View>
           }
         </View>
