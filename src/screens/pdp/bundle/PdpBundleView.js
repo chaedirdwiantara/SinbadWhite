@@ -24,7 +24,7 @@ import {
   Accordion,
   LoadingPage,
   SkeletonType21,
-  SkeletonType18
+  SkeletonType23
 } from '../../../library/component'
 import { Fonts, GlobalStyle, MoneyFormat, NumberFormat } from '../../../helpers'
 import * as ActionCreators from '../../../state/actions'
@@ -429,7 +429,9 @@ class PdpBundleView extends Component {
 
   renderDetailSKU(){
     return this.props.pdp.loadingDetailPdp ? (
-      <SkeletonType18 />
+      <View style={{ marginTop: 10 }}>
+        <SkeletonType23 />
+      </View>
     ) : (
       this.renderData()
     )
