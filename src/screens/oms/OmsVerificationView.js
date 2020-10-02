@@ -157,7 +157,7 @@ class OmsVerificationView extends Component {
         <View key={index} style={[styles.benefitDetailContainer]}>
           <View style={styles.benefitListContainer}>
             <Text style={Fonts.type8}>{item.name}</Text>
-            <Text style={Fonts.ryanNew01}>{MoneyFormat(item.value)}</Text>
+            <Text style={Fonts.type107}>{MoneyFormat(item.value)}</Text>
           </View>
         </View>
       );
@@ -268,7 +268,7 @@ class OmsVerificationView extends Component {
           </View>
           <View style={styles.bottomInformationTextContainer}>
             <Text style={Fonts.type8}>Total Potongan</Text>
-            <Text style={Fonts.ryanNew01}>
+            <Text style={Fonts.type107}>
               {MoneyFormat(dataOmsCheckPromo.grandTotalRebate)}
             </Text>
           </View>

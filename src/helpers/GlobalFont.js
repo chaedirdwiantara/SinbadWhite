@@ -645,7 +645,7 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: Color.fontWhite
   },
-  ryanNew01: {
+  type107: {
     fontFamily: Fonts.MontserratMedium,
     fontSize: 12,
     lineHeight: 16,
