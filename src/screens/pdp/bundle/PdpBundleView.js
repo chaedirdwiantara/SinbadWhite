@@ -25,7 +25,8 @@ import {
   LoadingPage,
   SkeletonType21,
   SkeletonType23,
-  ModalBottomType3
+  ModalBottomType3,
+  ToastType1
 } from '../../../library/component';
 import {
   Fonts,
@@ -55,75 +56,8 @@ class PdpBundleView extends Component {
           ? this.props.pdp.dataDetailPdp.minQty
           : 0,
       openModalOrder: false,
-      affiliateSKU: [
-        {
-          id: 1,
-          name: 'Product 1',
-          minPriceRange: 10000,
-          maxPriceRange: 15000,
-          catalogueImages:
-            'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
-          isBundle: true
-        },
-        {
-          id: 2,
-          name: 'Product 2',
-          minPriceRange: 10000,
-          maxPriceRange: 15000,
-          catalogueImages:
-            'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
-          isBundle: true
-        },
-        {
-          id: 3,
-          name: 'Product 3',
-          minPriceRange: 10000,
-          maxPriceRange: 15000,
-          catalogueImages:
-            'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
-          isBundle: true
-        },
-        {
-          id: 4,
-          name: 'Product 4',
-          minPriceRange: 10000,
-          maxPriceRange: 15000,
-          catalogueImages:
-            'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
-          isBundle: true
-        },
-        {
-          id: 5,
-          name: 'Product 5',
-          minPriceRange: 10000,
-          maxPriceRange: 15000,
-          catalogueImages:
-            'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
-          isBundle: true
-        }
-      ],
-      affiliatePromo: [
-        {
-          id: 1,
-          title: 'Title 1',
-          description: 'This is description'
-        },
-        {
-          id: 2,
-          title: 'Title 2',
-          description: 'This is description'
-        },
-        {
-          id: 3,
-          title: 'Title 3',
-          description: 'This is description'
-        },
-        {
-          id: 4,
-          title: 'Title 4',
-          description: 'This is description'
-        }
-      ]
+      showToast: false,
+      notifToast: ''
     };
   }
   /**
@@ -254,10 +188,7 @@ class PdpBundleView extends Component {
         this.props.pdpGetDetailProcess(data.item.id);
         break;
       case 'addSkuToCart':
-        this.addToCart(data)
-        setTimeout(() => {
-          this.setState({ openModalOrder: false })
-        }, 100)
+        this.addToCart(data)        
         break;
       default:
         break;
@@ -271,6 +202,16 @@ class PdpBundleView extends Component {
       catalogueId: data.data.catalogueId,
       qty: data.data.qty
     });
+
+    this.setState({
+      showToast: true,
+      notifToast: 'Product berhasil ditambahkan ke keranjang',
+      openModalOrder: false
+    })   
+
+    setTimeout(() => {
+      this.setState({ showToast: false })
+    }, 3000)
   }
 
   /**
@@ -629,6 +570,20 @@ class PdpBundleView extends Component {
     );
   }
 
+    /**
+   * ======================
+   * MODAL
+   * ======================
+   */
+  /** TOAST */
+  renderToast() {
+    return this.state.showToast ? (
+      <ToastType1 margin={30} content={this.state.notifToast} />
+    ) : (
+      <View />
+    );
+  }
+
   /**
    * ====================
    * MAIN RENDER
@@ -643,6 +598,7 @@ class PdpBundleView extends Component {
         {this.renderButton()}
         {/* Render Modal Order */}
         {this.renderModalOrder()}
+        {this.renderToast()}
       </SafeAreaView>
     );
   }
@@ -701,8 +657,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ pdp }) => {
-  return { pdp };
+const mapStateToProps = ({ pdp, oms }) => {
+  return { pdp, oms };
 };
 
 const mapDispatchToProps = dispatch => {
