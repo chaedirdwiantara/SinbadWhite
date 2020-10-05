@@ -6,6 +6,7 @@ const INITIAL_STATE = {
   loadingGetPdp: false,
   refreshGetPdp: false,
   loadingDetailPdp: false,
+  loadingDetailBundlePdp: false,
   loadingLoadMoreGetPdp: false,
   loadingGetSearchPdp: false,
   refreshGetSearchPdp: false,
@@ -21,10 +22,12 @@ const INITIAL_STATE = {
   pdpOpenModalOrder: false,
   pdpOrderData: null,
   dataDetailPdp: null,
+  dataDetailBundlePdp: null,
   /** error */
   errorGetPdp: null,
   errorGetSearchPdp: null,
-  errorDetailPdp: null
+  errorDetailPdp: null,
+  errorDetailBundlePdp: null 
 };
 
 export const pdp = createReducer(INITIAL_STATE, {
@@ -61,6 +64,33 @@ export const pdp = createReducer(INITIAL_STATE, {
       ...state,
       loadingDetailPdp: false,
       errorDetailPdp: action.payload
+    };
+  },
+    /**
+   * ==================================
+   * PDP DETAILS
+   * ==================================
+   */
+  [types.PDP_GET_BUNDLE_DETAIL_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingDetailBundlePdp: true,
+      dataDetailBundlePdp: null,
+      errorDetailBundlePdp: null
+    };
+  },
+  [types.PDP_GET_BUNDLE_DETAIL_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingDetailBundlePdp: false,
+      dataDetailBundlePdp: action.payload
+    };
+  },
+  [types.PDP_GET_BUNDLE_DETAIL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingDetailBundlePdp: false,
+      errorDetailBundlePdp: action.payload
     };
   },
   /**
