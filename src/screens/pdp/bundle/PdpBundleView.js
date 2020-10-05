@@ -40,6 +40,7 @@ class PdpBundleView extends Component {
       skuEmpty: false,
       questionMarkShow: true,
       coverage: false,
+      buttonAddDisabled: false,
       qtyFromChild:
         this.props.pdp.dataDetailPdp !== null
           ? this.props.pdp.dataDetailPdp.minQty
@@ -140,43 +141,61 @@ class PdpBundleView extends Component {
    * BUTTON TITLE
    */
   buttonTitle(){
-    if (
-      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock ||
-      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
-        this.props.pdp.dataDetailPdp.minQty
-    ) {
-      return 'Tambah ke Keranjang';
+    if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0){
+      if (
+        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock ||
+        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
+          this.props.pdp.dataDetailPdp.minQty
+      ) {
+        return 'Tambah ke Keranjang';
+      }
+      return 'Stock Habis';
+    } else {
+      console.log('buttonTitle')
+      return ''
     }
-    return 'Stock Habis';
+    
   }
 
   /**
    * BUTTON DISABLED
    */
   buttonDisabled(){
-    if (
-      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock ||
-      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
-        this.props.pdp.dataDetailPdp.minQty
-    ) {
-      return false;
+    if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0){
+      if (
+        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock ||
+        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
+          this.props.pdp.dataDetailPdp.minQty
+      ) {
+        return false;
+      }
+      return true;
+    }else{
+      console.log('buttonDisabled')
+      return true
     }
-    return true;
+    
   }
 
    /** === CHECK INPUT QTY SECTION === */
    checkInputQtySection() {
-    if (!this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock) {
-      if (
-        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
-        this.props.pdp.dataDetailPdp.minQty
-      ) {
+    if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0){
+      if (!this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock) {
+        if (
+          this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
+          this.props.pdp.dataDetailPdp.minQty
+        ) {
+          return true;
+        }
+        return false;
+      } else {
         return true;
       }
-      return false;
-    } else {
-      return true;
+    }else{
+      console.log('checkInputQtySection')
+      return true
     }
+    
   }
 
    /** === RENDER TERSISA TEXT === */
@@ -189,16 +208,22 @@ class PdpBundleView extends Component {
   }
 
   checkTersisa() {
-    if (
-      !this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock &&
-      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
-        this.props.pdp.dataDetailPdp.minQty
-    ) {
-      return `Tersisa ${NumberFormat(
-        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock
-      )} Pcs`;
+    if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0){
+      if (
+        !this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock &&
+        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
+          this.props.pdp.dataDetailPdp.minQty
+      ) {
+        return `Tersisa ${NumberFormat(
+          this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock
+        )} Pcs`;
+      }
+      return '';
+    } else {
+      console.log('checkTersisa')
+      return ''
     }
-    return '';
+    
   }
 
   /** === PARENT FUNCTION FROM ORDER === */
@@ -210,8 +235,17 @@ class PdpBundleView extends Component {
   }
 
   /** === PARENT FUNCTION PROMO BUNDLE === */
-  parentFunction(item) {
-      console.log(item)
+  parentFunction(data) {
+      switch (data.type) {
+        case 'order':
+            console.log('Press Order')
+          break;
+        case 'detail':
+            this.props.pdpGetDetailProcess(data.item.id)
+          break;      
+        default:
+          break;
+      }
    }
 
   /**
@@ -370,7 +404,7 @@ class PdpBundleView extends Component {
               {this.renderRemainingStock()} 
               {this.renderButtonOrder()}
             </View>
-          </View>
+          </View> 
         ) : (
           <View />
         )}
