@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Text
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   bindActionCreators,
   MaterialIcon,
   connect
-} from '../../library/thirdPartyPackage'
+} from '../../library/thirdPartyPackage';
 import {
   StatusBarRed,
   CartGlobal,
@@ -20,9 +20,9 @@ import {
   SelectedMerchantName,
   ModalConfirmation,
   ModalBottomSkuNotAvailable
-} from '../../library/component'
-import { Fonts } from '../../helpers'
-import { Color } from '../../config'
+} from '../../library/component';
+import { Fonts } from '../../helpers';
+import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import PdpGridDataView from './PdpGridDataView';
@@ -68,11 +68,7 @@ class PdpView extends Component {
           <TouchableOpacity
             onPress={() => NavigationService.navigate('PdpSearchView')}
           >
-            <MaterialIcon
-              color={Color.fontWhite}
-              name={'search'}
-              size={24}
-            />
+            <MaterialIcon color={Color.fontWhite} name={'search'} size={24} />
           </TouchableOpacity>
           <View style={{ marginRight: 16, marginLeft: 12 }}>
             <CartGlobal />
@@ -134,6 +130,10 @@ class PdpView extends Component {
           sort: data.data.sort,
           sortBy: data.data.sortBy
         });
+        break;
+      /** => 'pesan' buttom press (from child) if bundle */
+      case 'goToBundlePage':
+        NavigationService.navigate('PdpBundleView');
         break;
       /** => 'pesan' buttom press (from child) */
       case 'openModalOrder':
@@ -397,14 +397,14 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(PdpView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
