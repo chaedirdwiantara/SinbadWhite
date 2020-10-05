@@ -123,13 +123,13 @@ class PdpBundleView extends Component {
           <Text style={Fonts.type35}>Bundle</Text>
         </View>
       ),
-      headerRight: () => {
+      headerRight: () => (
         <View style={{ flexDirection: 'row' }}>
           <View style={{ marginRight: 16, marginLeft: 12 }}>
             <CartGlobal />
           </View>
         </View>
-      }
+      )
     }
   }
   /**
@@ -248,6 +248,16 @@ class PdpBundleView extends Component {
       }
    }
 
+   addToCart(data){
+     console.log(data)
+     /** >>> save sku to permanent cart */
+     this.props.omsAddToCart({
+      method: 'add',
+      catalogueId: data.data.catalogueId,
+      qty: data.data.qty
+    });
+   }
+
   /**
    * ===============
    * VIEW SECTION
@@ -285,6 +295,12 @@ class PdpBundleView extends Component {
         borderRadius={4}
         disabled={this.buttonDisabled()}
         disabledGrey
+        onPress={() => this.addToCart({
+          data: {
+            catalogueId: this.props.pdp.dataDetailPdp.id,
+            qty: this.state.qtyFromChild
+          }
+        })}
       />
     )
   }
