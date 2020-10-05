@@ -8,13 +8,13 @@ import {
   ScrollView,
   Image,
   Dimensions
-} from '../../../library/reactPackage'
+} from '../../../library/reactPackage';
 import {
   connect,
   bindActionCreators,
   Tooltip,
   MaterialIcon
-} from '../../../library/thirdPartyPackage'
+} from '../../../library/thirdPartyPackage';
 import {
   CartGlobal,
   StatusBarRed,
@@ -24,18 +24,27 @@ import {
   Accordion,
   LoadingPage,
   SkeletonType21,
-  SkeletonType23
-} from '../../../library/component'
-import { Fonts, GlobalStyle, MoneyFormat, NumberFormat } from '../../../helpers'
-import * as ActionCreators from '../../../state/actions'
-import NavigationService from '../../../navigation/NavigationService'
-import { Color } from '../../../config'
+  SkeletonType23,
+  ModalBottomType3
+} from '../../../library/component';
+import {
+  Fonts,
+  GlobalStyle,
+  MoneyFormat,
+  NumberFormat
+} from '../../../helpers';
+import * as ActionCreators from '../../../state/actions';
+import NavigationService from '../../../navigation/NavigationService';
+import { Color } from '../../../config';
+
+// import PdpOrderView from '../PdpOrderView';
+import PdpBundleOrderView from './PdpBundleOrderView'
 
 const { width, height } = Dimensions.get('window');
 
 class PdpBundleView extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       skuEmpty: false,
       questionMarkShow: true,
@@ -45,45 +54,51 @@ class PdpBundleView extends Component {
         this.props.pdp.dataDetailPdp !== null
           ? this.props.pdp.dataDetailPdp.minQty
           : 0,
+      openModalOrder: false,
       affiliateSKU: [
         {
           id: 1,
-          name: "Product 1",
+          name: 'Product 1',
           minPriceRange: 10000,
           maxPriceRange: 15000,
-          catalogueImages: 'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
+          catalogueImages:
+            'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
           isBundle: true
         },
         {
           id: 2,
-          name: "Product 2",
+          name: 'Product 2',
           minPriceRange: 10000,
           maxPriceRange: 15000,
-          catalogueImages: 'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
+          catalogueImages:
+            'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
           isBundle: true
         },
         {
           id: 3,
-          name: "Product 3",
+          name: 'Product 3',
           minPriceRange: 10000,
           maxPriceRange: 15000,
-          catalogueImages: 'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
+          catalogueImages:
+            'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
           isBundle: true
         },
         {
           id: 4,
-          name: "Product 4",
+          name: 'Product 4',
           minPriceRange: 10000,
           maxPriceRange: 15000,
-          catalogueImages: 'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
+          catalogueImages:
+            'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
           isBundle: true
         },
         {
           id: 5,
-          name: "Product 5",
+          name: 'Product 5',
           minPriceRange: 10000,
           maxPriceRange: 15000,
-          catalogueImages: 'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
+          catalogueImages:
+            'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png',
           isBundle: true
         }
       ],
@@ -109,7 +124,7 @@ class PdpBundleView extends Component {
           description: 'This is description'
         }
       ]
-    }
+    };
   }
   /**
    * ====================
@@ -130,8 +145,8 @@ class PdpBundleView extends Component {
           </View>
         </View>
       )
-    }
-  }
+    };
+  };
   /**
    * ====================
    * FUNCTIONAL SECTION
@@ -140,8 +155,8 @@ class PdpBundleView extends Component {
   /**
    * BUTTON TITLE
    */
-  buttonTitle(){
-    if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0){
+  buttonTitle() {
+    if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0) {
       if (
         this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock ||
         this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
@@ -151,17 +166,16 @@ class PdpBundleView extends Component {
       }
       return 'Stock Habis';
     } else {
-      console.log('buttonTitle')
-      return ''
+      console.log('buttonTitle');
+      return '';
     }
-    
   }
 
   /**
    * BUTTON DISABLED
    */
-  buttonDisabled(){
-    if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0){
+  buttonDisabled() {
+    if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0) {
       if (
         this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock ||
         this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
@@ -170,16 +184,15 @@ class PdpBundleView extends Component {
         return false;
       }
       return true;
-    }else{
-      console.log('buttonDisabled')
-      return true
+    } else {
+      console.log('buttonDisabled');
+      return true;
     }
-    
   }
 
-   /** === CHECK INPUT QTY SECTION === */
-   checkInputQtySection() {
-    if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0){
+  /** === CHECK INPUT QTY SECTION === */
+  checkInputQtySection() {
+    if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0) {
       if (!this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock) {
         if (
           this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
@@ -191,15 +204,14 @@ class PdpBundleView extends Component {
       } else {
         return true;
       }
-    }else{
-      console.log('checkInputQtySection')
-      return true
+    } else {
+      console.log('checkInputQtySection');
+      return true;
     }
-    
   }
 
-   /** === RENDER TERSISA TEXT === */
-   renderRemainingStock() {
+  /** === RENDER TERSISA TEXT === */
+  renderRemainingStock() {
     return (
       <View style={{ flex: 1 }}>
         <Text style={Fonts.type22}>{this.checkTersisa()}</Text>
@@ -208,7 +220,7 @@ class PdpBundleView extends Component {
   }
 
   checkTersisa() {
-    if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0){
+    if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0) {
       if (
         !this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock &&
         this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
@@ -220,10 +232,9 @@ class PdpBundleView extends Component {
       }
       return '';
     } else {
-      console.log('checkTersisa')
-      return ''
+      console.log('checkTersisa');
+      return '';
     }
-    
   }
 
   /** === PARENT FUNCTION FROM ORDER === */
@@ -236,27 +247,38 @@ class PdpBundleView extends Component {
 
   /** === PARENT FUNCTION PROMO BUNDLE === */
   parentFunction(data) {
-      switch (data.type) {
-        case 'order':
-            console.log('Press Order')
-          break;
-        case 'detail':
-            this.props.pdpGetDetailProcess(data.item.id)
-          break;      
-        default:
-          break;
-      }
-   }
+    switch (data.type) {
+      case 'order':
+        console.log(data.item);
+        this.props.pdpGetBundleDetailProcess(data.item.id)
+        setTimeout(() => {
+          this.setState({ openModalOrder: true })          
+        }, 100)
+        break;
+      case 'detail':
+        this.props.pdpGetDetailProcess(data.item.id);
+        break;
+      case 'addSkuToCart':
+        console.log(data)
+        this.addToCart(data)
+        setTimeout(() => {
+          this.setState({ openModalOrder: false })
+        }, 100)
+        break;
+      default:
+        break;
+    }
+  }
 
-   addToCart(data){
-     console.log(data)
-     /** >>> save sku to permanent cart */
-     this.props.omsAddToCart({
+  addToCart(data) {
+    console.log(data);
+    /** >>> save sku to permanent cart */
+    this.props.omsAddToCart({
       method: 'add',
       catalogueId: data.data.catalogueId,
       qty: data.data.qty
     });
-   }
+  }
 
   /**
    * ===============
@@ -264,59 +286,72 @@ class PdpBundleView extends Component {
    * ===============
    */
 
-   /**
-    * ================
-    * PROMO HIGHLIGHT
-    * ================
-    */
-  renderPromoHighlight(){
+  /**
+   * ================
+   * PROMO HIGHLIGHT
+   * ================
+   */
+  renderPromoHighlight() {
     return (
       <View>
-        <View style={styles.highlightStyle} > 
+        <View style={styles.highlightStyle}>
           <View style={styles.iconHighlight}>
-              <Text style={{ fontSize: 40, fontWeight: 'bold', color: 'white', opacity: 1}}>!</Text>
-            </View>
+            <Text
+              style={{
+                fontSize: 40,
+                fontWeight: 'bold',
+                color: 'white',
+                opacity: 1
+              }}
+            >
+              !
+            </Text>
+          </View>
         </View>
         <View style={{ flex: 1, marginVertical: 8, flexDirection: 'row' }}>
-        <View style={{ flex: 1 }} />
-        <View style={{ flex: 9}}>
-          <Text style={[Fonts.type16, {marginLeft: 8}]}>Tambahkan produk terkait untuk mendapatkan bundle promosi !</Text>
-        </View>          
+          <View style={{ flex: 1 }} />
+          <View style={{ flex: 9 }}>
+            <Text style={[Fonts.type16, { marginLeft: 8 }]}>
+              Tambahkan produk terkait untuk mendapatkan bundle promosi !
+            </Text>
+          </View>
         </View>
-      </View>      
-    )
+      </View>
+    );
   }
 
   /** === BUTTON ADD TO CART ===  */
-  renderBottomButton(){
-    return(
+  renderBottomButton() {
+    return (
       <ButtonSingle
         title={this.buttonTitle()}
         borderRadius={4}
         disabled={this.buttonDisabled()}
         disabledGrey
-        onPress={() => this.addToCart({
-          data: {
-            catalogueId: this.props.pdp.dataDetailPdp.id,
-            qty: this.state.qtyFromChild
-          }
-        })}
+        onPress={() =>
+          this.addToCart({
+            data: {
+              catalogueId: this.props.pdp.dataDetailPdp.id,
+              qty: this.state.qtyFromChild
+            }
+          })
+        }
       />
-    )
+    );
   }
 
-    /** === RENDER PDP SKU NOT AVAILABLED === */
-    renderPdpNotAvailable() {
-      return (
-        <View style={styles.containerPdpNotifNotAvailabled}>
-          <MaterialIcon name="error" size={20} color={Color.mainColor} />
-          <Text style={[Fonts.type60, { paddingLeft: 8 }]}>
-            SKU tidak tersedia di lokasi Anda. Silahkan pilih SKU lain yang
-            tersedia
-          </Text>
-        </View>
-      );
-    }
+  /** === RENDER PDP SKU NOT AVAILABLED === */
+  renderPdpNotAvailable() {
+    return (
+      <View style={styles.containerPdpNotifNotAvailabled}>
+        <MaterialIcon name="error" size={20} color={Color.mainColor} />
+        <Text style={[Fonts.type60, { paddingLeft: 8 }]}>
+          SKU tidak tersedia di lokasi Anda. Silahkan pilih SKU lain yang
+          tersedia
+        </Text>
+      </View>
+    );
+  }
 
   /** === RENDER TOOLTIP === */
   renderTooltip() {
@@ -347,36 +382,35 @@ class PdpBundleView extends Component {
     );
   }
 
-    /** === RENDER BUTTON ORDER === */
-    renderButtonOrder() {
-      return (
-        <View style={styles.boxPesan}>
-          <OrderButton
-            disabledAllButton={this.state.showKeyboard}
-            item={this.props.pdp.dataDetailPdp}
-            onRef={ref => (this.parentFunctionFromOrderButton = ref)}
-            parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
-              this
-            )}
-            onFocus={() => this.setState({ buttonAddDisabled: true })}
-            onBlur={() => this.setState({ buttonAddDisabled: false })}
-          />
-        </View>
-      );
-    }
-
+  /** === RENDER BUTTON ORDER === */
+  renderButtonOrder() {
+    return (
+      <View style={styles.boxPesan}>
+        <OrderButton
+          disabledAllButton={this.state.showKeyboard}
+          item={this.props.pdp.dataDetailPdp}
+          onRef={ref => (this.parentFunctionFromOrderButton = ref)}
+          parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
+            this
+          )}
+          onFocus={() => this.setState({ buttonAddDisabled: true })}
+          onBlur={() => this.setState({ buttonAddDisabled: false })}
+        />
+      </View>
+    );
+  }
 
   /**
    * ===================
    * RENDER DATA
    * ===================
    */
-  renderData(){
-    return(
+  renderData() {
+    return (
       <View style={styles.boxItem}>
-        <View style={{ flexDirection: 'row', paddingBottom: 25}}>
-          <View style={{ backgroundColor: Color.backgroundWhite}}>
-            <Image 
+        <View style={{ flexDirection: 'row', paddingBottom: 25 }}>
+          <View style={{ backgroundColor: Color.backgroundWhite }}>
+            <Image
               defaultSource={require('../../../assets/images/sinbad_image/sinbadopacity.png')}
               source={{
                 uri: this.props.pdp.dataDetailPdp.catalogueImages[0].imageUrl
@@ -384,28 +418,32 @@ class PdpBundleView extends Component {
               style={GlobalStyle.image100ContainRadius8}
             />
           </View>
-          <View style={{ paddingLeft: 16}}>
+          <View style={{ paddingLeft: 16 }}>
             <View style={{ width: '80%', marginBottom: 5 }}>
               <Text style={Fonts.type10}>
                 {this.props.pdp.dataDetailPdp.name}
               </Text>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={[Fonts.type70, { marginRight: 10 }]}>
                 {MoneyFormat(this.props.pdp.dataDetailPdp.warehousePrice)}
               </Text>
               {this.renderTooltip()}
             </View>
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
-              <Text style={[Fonts.type38, { marginRight: 10}]}>
-                per-Dus {this.props.pdp.dataDetailPdp.packagedQty}{' '}{ this.props.pdp.dataDetailPdp.catalogueUnit.unit}
+              <Text style={[Fonts.type38, { marginRight: 10 }]}>
+                per-Dus {this.props.pdp.dataDetailPdp.packagedQty}{' '}
+                {this.props.pdp.dataDetailPdp.catalogueUnit.unit}
               </Text>
-              <View style={{
-                borderRightWidth: 1,
-                borderRightColor: Color.fontBlack40
-              }} />
-              <Text style={[ Fonts.type38, { marginLeft: 10 }]}>
-                min.pembelian {this.props.pdp.dataDetailPdp.minQty}{' '}{this.props.pdp.dataDetailPdp.catalogueUnit.unit}
+              <View
+                style={{
+                  borderRightWidth: 1,
+                  borderRightColor: Color.fontBlack40
+                }}
+              />
+              <Text style={[Fonts.type38, { marginLeft: 10 }]}>
+                min.pembelian {this.props.pdp.dataDetailPdp.minQty}{' '}
+                {this.props.pdp.dataDetailPdp.catalogueUnit.unit}
               </Text>
             </View>
           </View>
@@ -417,110 +455,139 @@ class PdpBundleView extends Component {
               <Text style={Fonts.type96}>Jumlah/pcs</Text>
             </View>
             <View style={styles.boxRemainingStockOrderButton}>
-              {this.renderRemainingStock()} 
+              {this.renderRemainingStock()}
               {this.renderButtonOrder()}
             </View>
-          </View> 
+          </View>
         ) : (
           <View />
         )}
       </View>
-    )
+    );
   }
 
   /** === RENDER PAGE === */
-  renderLoadingPage(){
-    return <LoadingPage />
+  renderLoadingPage() {
+    return <LoadingPage />;
   }
 
-    
   /**
    * ===================
    * AFFILIATE SKU SECTION
    * ===================
    */
-  renderAffiliateSection(){
-    return(
+  renderAffiliateSection() {
+    return (
       <View>
-        <View style={{ marginHorizontal: 16, backgroundColor: Color.fontBlack10, height: 1, marginTop: 8}} />
-        <Text style={[ Fonts.type7, { marginVertical: 16, alignSelf: 'center' }]}>PRODUK TERKAIT</Text>
-        <View style={{ marginHorizontal: 16, backgroundColor: Color.fontBlack10, height: 1}} />
-      </View>      
-    )
+        <View
+          style={{
+            marginHorizontal: 16,
+            backgroundColor: Color.fontBlack10,
+            height: 1,
+            marginTop: 8
+          }}
+        />
+        <Text
+          style={[Fonts.type7, { marginVertical: 16, alignSelf: 'center' }]}
+        >
+          PRODUK TERKAIT
+        </Text>
+        <View
+          style={{
+            marginHorizontal: 16,
+            backgroundColor: Color.fontBlack10,
+            height: 1
+          }}
+        />
+      </View>
+    );
   }
 
-    /**
+  /**
    * ===================
    * AFFILIATE PROMO SECTION
    * ===================
    */
-  renderPromoSection(){
-    return(
+  renderPromoSection() {
+    return (
       <View>
-        <View style={{ marginHorizontal: 16, backgroundColor: Color.fontBlack10, height: 1, marginTop: 8}} />
-        <Text style={[ Fonts.type7, { marginVertical: 16, alignSelf: 'center' }]}>PROMO BUNDLE TERKAIT</Text>
-        <View style={{ marginHorizontal: 16, backgroundColor: Color.fontBlack10, height: 1}} />
-      </View>      
-    )
+        <View
+          style={{
+            marginHorizontal: 16,
+            backgroundColor: Color.fontBlack10,
+            height: 1,
+            marginTop: 8
+          }}
+        />
+        <Text
+          style={[Fonts.type7, { marginVertical: 16, alignSelf: 'center' }]}
+        >
+          PROMO BUNDLE TERKAIT
+        </Text>
+        <View
+          style={{
+            marginHorizontal: 16,
+            backgroundColor: Color.fontBlack10,
+            height: 1
+          }}
+        />
+      </View>
+    );
   }
 
   /** === RENDER AFFILIATE SKU === */
-  renderAffiliateItem(){
-    return(
-      <View style={{marginTop: 16}}>
-        <ProductListType3 
+  renderAffiliateItem() {
+    return (
+      <View style={{ marginTop: 16 }}>
+        <ProductListType3
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
           data={this.props.pdp.dataDetailPdp.affiliatedSKUs}
           loading={this.props.pdp.loadingDetailPdp}
         />
       </View>
-    )
+    );
   }
 
   /** === RENDER ACCORDION === */
-  renderAccordion(){
-    return(
+  renderAccordion() {
+    return (
       <View style={{ marginBottom: 100 }}>
-        <Accordion 
-          data={this.props.pdp.dataDetailPdp.affiliatedPromos}
-        />
+        <Accordion data={this.props.pdp.dataDetailPdp.affiliatedPromos} />
       </View>
-    )
+    );
   }
 
-  renderDetailSKU(){
+  renderDetailSKU() {
     return this.props.pdp.loadingDetailPdp ? (
       <View style={{ marginTop: 10 }}>
         <SkeletonType23 />
       </View>
     ) : (
       this.renderData()
-    )
+    );
   }
 
-  renderAffiliateSKU(){
+  renderAffiliateSKU() {
     return this.props.pdp.loadingDetailPdp ? (
       <SkeletonType21 />
     ) : (
       this.renderAffiliateItem()
-    )
+    );
   }
 
-  renderPromoBundle(){
-    return this.props.pdp.loadingDetailPdp ? (
-      this.renderLoadingPage()
-    ) : (
-      this.renderAccordion()
-    )
+  renderPromoBundle() {
+    return this.props.pdp.loadingDetailPdp
+      ? this.renderLoadingPage()
+      : this.renderAccordion();
   }
 
-  renderButton(){
+  renderButton() {
     return !this.props.pdp.loadingDetailPdp ? (
       this.renderButtonContent()
     ) : (
       <View />
-    )
+    );
   }
 
   /**
@@ -529,8 +596,8 @@ class PdpBundleView extends Component {
    * =================
    */
   renderContent() {
-    return(
-      <View style={{ flex: 1}}>
+    return (
+      <View style={{ flex: 1 }}>
         {this.renderPromoHighlight()}
         {this.renderDetailSKU()}
         {this.renderAffiliateSection()}
@@ -538,16 +605,34 @@ class PdpBundleView extends Component {
         {this.renderPromoSection()}
         {this.renderPromoBundle()}
       </View>
-    )
+    );
   }
 
   /** === RENDER BUTTON CONTENT === */
   /** this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0 */
   renderButtonContent() {
-    return this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0 ? (
-      this.renderBottomButton()
+    return this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0
+      ? this.renderBottomButton()
+      : this.renderPdpNotAvailable();
+  }
+
+  /** === RENDER MODAL ORDER === */
+  renderModalOrder() {
+    return this.state.openModalOrder ? (
+      <ModalBottomType3
+        open={this.state.openModalOrder}
+        title={'Masukan Jumlah'}
+        content={
+          <PdpBundleOrderView
+            onRef={ref => (this.parentFunction = ref)}
+            parentFunction={this.parentFunction.bind(this)}
+          />
+        }
+        close={() => this.setState({ openModalOrder: false })}
+        typeClose={'cancel'}
+      />
     ) : (
-      this.renderPdpNotAvailable()
+      <View />
     );
   }
 
@@ -556,18 +641,17 @@ class PdpBundleView extends Component {
    * MAIN RENDER
    * ====================
    */
-  render(){
-    return(
+  render() {
+    return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarRed />
-        <ScrollView>
-          {this.renderContent()}
-        </ScrollView>
+        <ScrollView>{this.renderContent()}</ScrollView>
         {/* Render Bottom Button */}
-        {/* {this.renderBottomButton()} */}
         {this.renderButton()}
+        {/* Render Modal Order */}
+        {this.renderModalOrder()}
       </SafeAreaView>
-    )
+    );
   }
 }
 
@@ -578,21 +662,21 @@ const styles = StyleSheet.create({
   },
   iconHighlight: {
     marginTop: -10,
-    marginLeft: -10, 
-    width: 45, 
-    height: 45, 
-    borderRadius: 100, 
-    backgroundColor: Color.fontYellow40, 
+    marginLeft: -10,
+    width: 45,
+    height: 45,
+    borderRadius: 100,
+    backgroundColor: Color.fontYellow40,
     opacity: 0.6,
     alignContent: 'center',
     alignItems: 'center'
   },
-  highlightStyle: { 
-    backgroundColor: Color.fontYellow40, 
-    opacity: 0.4, 
-    flexDirection: 'row', 
-    height: 47, 
-    width: '100%', 
+  highlightStyle: {
+    backgroundColor: Color.fontYellow40,
+    opacity: 0.4,
+    flexDirection: 'row',
+    height: 47,
+    width: '100%',
     position: 'absolute'
   },
   boxItem: {
@@ -621,25 +705,28 @@ const styles = StyleSheet.create({
     backgroundColor: Color.fontYellow10,
     flexDirection: 'row',
     alignItems: 'center'
-  },
-})
+  }
+});
 
 const mapStateToProps = ({ pdp }) => {
-  return { pdp }
-}
+  return { pdp };
+};
 
 const mapDispatchToProps = dispatch => {
-  return bindActionCreators(ActionCreators, dispatch)
-}
+  return bindActionCreators(ActionCreators, dispatch);
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(PdpBundleView)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PdpBundleView);
 
 /**
  * ==============
  * NOTEs
  * ==============
- * 
+ *
  * createdBy: Tatas
  * createdDate: 28092020
- * 
+ *
  */
