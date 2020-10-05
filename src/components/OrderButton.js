@@ -4,11 +4,11 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  Text,
-  TextInput
+  TextInput,
+  Text
 } from '../library/reactPackage'
-import { GlobalStyle, Fonts } from '../helpers'
-import { Color } from '../config'
+import { Fonts } from '../helpers'
+import masterColor from '../config/masterColor.json';
 
 class OrderButton extends Component {
   constructor(props) {
@@ -29,7 +29,11 @@ class OrderButton extends Component {
       plusButtonDisable: false
     };
   }
-
+  /**
+   * =======================
+   * FUNCTIONAL
+   * =======================
+   */
   componentDidUpdate() {
     /**
      * this code for error status
@@ -84,7 +88,6 @@ class OrderButton extends Component {
       this.setState({ qty });
     }
   }
-
   /**
    * =======================================
    * function minus button end
@@ -162,10 +165,10 @@ class OrderButton extends Component {
 
   render() {
     return (
-      <View style={[styles.containerInputQty, GlobalStyle.shadowForBox]}>
+      <View style={styles.containerInputQty}>
         {this.state.qty <= this.state.minQty || this.props.disabledAllButton ? (
           <View style={styles.minusButtonDisabled}>
-            <Text style={styles.minusTextDisabled}>-</Text>
+            <Text style={styles.minusText}>-</Text>
           </View>
         ) : (
           <TouchableOpacity
@@ -175,11 +178,9 @@ class OrderButton extends Component {
             <Text style={styles.minusText}>-</Text>
           </TouchableOpacity>
         )}
-
-        <View style={{ width: '30%', backgroundColor: '#f0444c' }} />
         <View style={styles.inputList}>
           <TextInput
-            selectionColor={Color.mainColor}
+            selectionColor={masterColor.mainColor}
             returnKeyType="done"
             value={this.state.qty.toString()}
             keyboardType="numeric"
@@ -192,14 +193,14 @@ class OrderButton extends Component {
               const cleanNumber = qty.replace(/[^0-9]/g, '');
               this.setState({ qty: cleanNumber, plusButtonDisable: false });
             }}
-            style={[styles.input, Fonts.type8]}
+            style={[Fonts.type24, styles.input]}
           />
         </View>
         {this.state.plusButtonDisable ||
         this.checkDisablePlusButton() ||
         this.props.disabledAllButton ? (
           <View style={styles.plusButtonDisabled}>
-            <Text style={styles.plusTextDisabled}>+</Text>
+            <Text style={styles.plusText}>+</Text>
           </View>
         ) : (
           <TouchableOpacity
@@ -225,63 +226,54 @@ const styles = StyleSheet.create({
   },
   /** FOR MINUS BUTTON */
   minusButton: {
-    flex: 1,
+    width: 28,
+    height: 28,
+    borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Color.backgroundColorWhite
+    backgroundColor: masterColor.mainColor
   },
   minusButtonDisabled: {
-    flex: 1,
+    width: 28,
+    height: 28,
+    borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Color.backgroundColorWhite
+    backgroundColor: masterColor.fontBlack40
   },
   minusText: {
-    color: Color.mainColor,
-    fontSize: 18,
-    marginBottom: 3,
-    marginRight: '10%'
-  },
-  minusTextDisabled: {
-    color: Color.fontBlack40,
-    fontSize: 18,
-    marginBottom: 3,
-    marginRight: '10%'
+    color: masterColor.fontWhite,
+    fontSize: 18
   },
   /** FOR PLUS BUTTON */
   plusButton: {
-    flex: 1,
+    width: 28,
+    height: 28,
+    borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Color.backgroundColorWhite
+    backgroundColor: masterColor.mainColor
   },
   plusButtonDisabled: {
-    flex: 1,
+    width: 28,
+    height: 28,
+    borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Color.backgroundColorWhite
+    backgroundColor: masterColor.fontBlack40
   },
   plusText: {
-    color: Color.mainColor,
-    fontSize: 18,
-    marginBottom: 3,
-    marginLeft: '10%'
-  },
-  plusTextDisabled: {
-    color: Color.fontBlack40,
-    fontSize: 18,
-    marginBottom: 3,
-    marginLeft: '10%'
+    color: masterColor.fontWhite,
+    fontSize: 18
   },
   /** FOR INPUT  */
   inputList: {
-    zIndex: 1000,
+    borderBottomWidth: 1,
+    borderBottomColor: masterColor.fontBlack40,
+    marginHorizontal: 5,
     height: '100%',
-    backgroundColor: '#fff',
+    backgroundColor: masterColor.backgroundWhite,
     width: '30%',
-    borderRadius: 7,
-    marginLeft: '29%',
-    position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -304,17 +296,16 @@ export default OrderButton;
  * jika order > dari minQty, maka minQty di hilangkan, yang dihitung multipleQty nya
  * jika multipleQty < minQty maka multipleQty x 2
  */
+/**
+* ============================
+* NOTES
+* ============================
+* createdBy: 
+* createdDate: 
+* updatedBy: tatas
+* updatedDate: 24062020
+* updatedFunction:
+* -> Refactoring Module Import
+* 
+*/
 
- /**
- * ============================
- * NOTES
- * ============================
- * createdBy: 
- * createdDate: 
- * updatedBy: Tatas
- * updatedDate: 08072020
- * updatedFunction:
- * -> Refactoring Module Import
- * 
- */
- 

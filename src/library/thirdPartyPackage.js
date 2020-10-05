@@ -50,7 +50,8 @@ import Modal from 'react-native-modal'
 import GestureRecognizer from 'react-native-swipe-gestures'
 /** WHEEL PICKER */
 import { WheelPicker } from 'react-native-wheel-picker-android'
-
+/** LINEAR GRADIENT */
+import LinearGradient from 'react-native-linear-gradient'
 
 export {
   /** REDUX */
@@ -107,7 +108,9 @@ export {
   /** GESTURE RECOGNIZER */
   GestureRecognizer,
   /** WHEEL PICKER */
-  WheelPicker
+  WheelPicker,
+  /** LINEAR GRADIENT */
+  LinearGradient
 };
 
 /**

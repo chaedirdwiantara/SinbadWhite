@@ -45,6 +45,7 @@ class PdpView extends Component {
       addProductNotif: false,
       addProductNotifText: '',
       selectedProduct: null,
+      skuBundle: true,
       /** sort */
       sort: 'asc',
       sortBy: 'name',
@@ -133,21 +134,24 @@ class PdpView extends Component {
         break;
       /** => 'pesan' buttom press (from child) if bundle */
       case 'goToBundlePage':
-        NavigationService.navigate('PdpBundleView');
+        this.props.pdpGetDetailProcess(data.data)
+        setTimeout(() => (
+          NavigationService.navigate('PdpBundleView')
+        ), 100)
         break;
       /** => 'pesan' buttom press (from child) */
-      case 'openModalOrder':
-        if (
-          this.props.merchant.merchantChanged &&
-          this.props.oms.dataCart.length > 0
-        ) {
-          this.setState({
-            openModalConfirmRemoveCart: true,
-            selectedProduct: data.data
-          });
-        } else {
-          this.props.pdpGetDetailProcess(data.data);
-          this.setState({ openModalOrder: true });
+      case 'openModalOrder':        
+          if (
+            this.props.merchant.merchantChanged &&
+            this.props.oms.dataCart.length > 0
+          ) {
+            this.setState({
+              openModalConfirmRemoveCart: true,
+              selectedProduct: data.data
+            });
+          } else {
+            this.props.pdpGetDetailProcess(data.data);
+            this.setState({ openModalOrder: true });
         }
         break;
       /** => sku not available (from child pdpOrderView) */
