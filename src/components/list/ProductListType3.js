@@ -60,7 +60,8 @@ class ProductListType3 extends Component {
           name={item.name}
           price={this.checkPrice(item)}
           orderButton={true}
-          onPress={() => this.toParentFunction(item)}
+          onPressOrder={() => this.toParentFunction({type: 'order', item})}
+          onPressCard={() => this.toParentFunction({type: 'detail', item})}
         />
       </View>
     );

@@ -26,7 +26,7 @@ class PdpGrid extends Component {
   renderButton() {
     return (
       <TouchableOpacity
-        onPress={this.props.onPress}
+        onPress={this.props.onPressOrder}
         style={[styles.pesanButton, { backgroundColor: masterColor.mainColor }]}
       >
         <Text style={Fonts.type39}>Pesan</Text>
@@ -77,7 +77,7 @@ class PdpGrid extends Component {
         <View style={styles.boxMainContent}>
           <TouchableOpacity
             style={[GlobalStyle.shadow5, styles.cardMainContent]}
-            onPress={this.props.onPress}
+            onPress={this.props.onPressCard}
           >
             <View>
               {this.props.promo ? this.promoTag() : null}
