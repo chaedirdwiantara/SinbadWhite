@@ -166,7 +166,6 @@ class PdpBundleView extends Component {
       }
       return 'Stock Habis';
     } else {
-      console.log('buttonTitle');
       return '';
     }
   }
@@ -185,7 +184,6 @@ class PdpBundleView extends Component {
       }
       return true;
     } else {
-      console.log('buttonDisabled');
       return true;
     }
   }
@@ -205,7 +203,6 @@ class PdpBundleView extends Component {
         return true;
       }
     } else {
-      console.log('checkInputQtySection');
       return true;
     }
   }
@@ -232,7 +229,6 @@ class PdpBundleView extends Component {
       }
       return '';
     } else {
-      console.log('checkTersisa');
       return '';
     }
   }
@@ -249,7 +245,6 @@ class PdpBundleView extends Component {
   parentFunction(data) {
     switch (data.type) {
       case 'order':
-        console.log(data.item);
         this.props.pdpGetBundleDetailProcess(data.item.id)
         setTimeout(() => {
           this.setState({ openModalOrder: true })          
@@ -259,7 +254,6 @@ class PdpBundleView extends Component {
         this.props.pdpGetDetailProcess(data.item.id);
         break;
       case 'addSkuToCart':
-        console.log(data)
         this.addToCart(data)
         setTimeout(() => {
           this.setState({ openModalOrder: false })
@@ -271,7 +265,6 @@ class PdpBundleView extends Component {
   }
 
   addToCart(data) {
-    console.log(data);
     /** >>> save sku to permanent cart */
     this.props.omsAddToCart({
       method: 'add',
