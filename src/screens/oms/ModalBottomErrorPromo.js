@@ -8,7 +8,7 @@ import {
   height
 } from '../../library/reactPackage';
 import {
-  ModalBottomType4,
+  ModalBottomType1,
   StatusBarRedOP50,
   ButtonSingleSmall
 } from '../../library/component';
@@ -19,59 +19,39 @@ import masterColor from '../../config/masterColor.json';
 const dummies = {
   promoSku: [
     {
+      name: 'LAKME SKIN BRIGHTENING COMPACT',
       catalogueImages:
         'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115822.png',
-      name: 'LAKME SKIN BRIGHTENING COMPACT',
-      errors: [
+      listPromo: [
         {
-          message: 'Promo potongan harga Rp500 Lakme sudah Tidak Tersedia'
+          id: 1,
+          name: 'Promo potongan harga Rp500 Lakme'
         },
         {
-          message: 'Potongan Promo Lakme 01 Eyebrow Rp200 Tidak Tersedia'
+          id: 2,
+          name: 'Potongan Promo Lakme 01 Eyebrow Rp200'
         }
       ]
     },
     {
+      name: 'LAKME SKIN BRIGHTENING COMPACT',
       catalogueImages:
         'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115822.png',
-      name: 'LAKME EYESHADOW CRAYON BRONZE',
-      errors: [
+      listPromo: [
         {
-          message: 'Promo potongan harga Rp500 Lakme sudah Tidak Tersedia'
+          id: 1,
+          name: 'Promo potongan harga Rp500 Lakme'
         }
       ]
     }
   ],
   bonusSku: [
     {
-      catalogueImages:
-        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115822.png',
+      id: 3,
       name: 'LAKME EYESHADOW CRAYON BRONZE',
-      errors: [
-        {
-          message: 'Promo Bonus SKU Tidak Tersedia'
-        }
-      ]
-    },
-    {
+      namePromo: 'Promo Bonus SKU',
       catalogueImages:
-        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115822.png',
-      name: 'LAKME EYESHADOW CRAYON BRONZE',
-      errors: [
-        {
-          message: 'Promo Bonus SKU Tidak Tersedia'
-        }
-      ]
-    },
-    {
-      catalogueImages:
-        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115822.png',
-      name: 'LAKME EYESHADOW CRAYON BRONZE',
-      errors: [
-        {
-          message: 'Promo Bonus SKU Tidak Tersedia'
-        }
-      ]
+        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115822.png'
     }
   ]
 };
@@ -98,13 +78,18 @@ class ModalBottomErrorPromo extends Component {
           {this.renderErrorsBonusList()}
         </ScrollView>
         <View style={{ marginBottom: 16, marginTop: 16 }}>
-          <ButtonSingleSmall title={'Lanjut Ke Pembayaran'} borderRadius={4} />
+          <ButtonSingleSmall
+            title={'Lanjut Ke Pembayaran'}
+            borderRadius={4}
+            onPress={this.props.proceedToCheckout}
+          />
         </View>
         <View style={{ marginBottom: 16 }}>
           <ButtonSingleSmall
             white
             title={'Kembali Ke Keranjang'}
             borderRadius={4}
+            onPress={this.props.backToCart}
           />
         </View>
       </View>
@@ -112,7 +97,7 @@ class ModalBottomErrorPromo extends Component {
   }
 
   renderErrorsPromoList() {
-    return dummies.promoSku.length > 0 ? (
+    return (
       <View>
         <View style={styles.errorPromoHeaderContainer}>
           <Text style={Fonts.type16}>Potongan Harga</Text>
@@ -124,8 +109,6 @@ class ModalBottomErrorPromo extends Component {
         </View>
         {this.renderErrorsPromoItem(dummies.promoSku)}
       </View>
-    ) : (
-      <View />
     );
   }
 
@@ -143,7 +126,7 @@ class ModalBottomErrorPromo extends Component {
           </View>
           <View style={styles.errorPromoItemRightSection}>
             <Text style={[Fonts.type16, { marginBottom: 8 }]}>{item.name}</Text>
-            {this.renderErrorsMessageItem(item.errors)}
+            {this.renderErrorsMessageItem(item.listPromo)}
           </View>
         </View>
       );
@@ -151,7 +134,7 @@ class ModalBottomErrorPromo extends Component {
   }
 
   renderErrorsBonusList() {
-    return dummies.bonusSku.length > 0 ? (
+    return (
       <View>
         <View style={styles.errorPromoHeaderContainer}>
           <Text style={Fonts.type16}>Bonus SKU</Text>
@@ -163,8 +146,6 @@ class ModalBottomErrorPromo extends Component {
         </View>
         {this.renderErrorsBonusItem(dummies.bonusSku)}
       </View>
-    ) : (
-      <View />
     );
   }
 
@@ -182,7 +163,9 @@ class ModalBottomErrorPromo extends Component {
           </View>
           <View style={styles.errorPromoItemRightSection}>
             <Text style={[Fonts.type16, { marginBottom: 8 }]}>{item.name}</Text>
-            {this.renderErrorsMessageItem(item.errors)}
+            <Text key={index} style={[Fonts.type29]}>
+              {`${item.namePromo} Tidak Tersedia`}
+            </Text>
           </View>
         </View>
       );
@@ -197,7 +180,7 @@ class ModalBottomErrorPromo extends Component {
           key={index}
           style={[Fonts.type29, !isLast ? { marginBottom: 8 } : {}]}
         >
-          {item.message}
+          {`${item.name} Tidak Tersedia`}
         </Text>
       );
     });
@@ -206,7 +189,7 @@ class ModalBottomErrorPromo extends Component {
   render() {
     const { open, close } = this.props;
     return (
-      <ModalBottomType4
+      <ModalBottomType1
         open={open}
         content={this.renderContent()}
         close={() => close()}

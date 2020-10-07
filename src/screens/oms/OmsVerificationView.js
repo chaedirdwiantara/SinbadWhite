@@ -40,7 +40,7 @@ class OmsVerificationView extends Component {
       openModalErrorNoUrban: false,
       openModalCS: false,
       openModalInputOwnerId: false,
-      openModalErrorPromo: true
+      openModalErrorPromo: false
     };
   }
 
@@ -50,9 +50,39 @@ class OmsVerificationView extends Component {
    * =======================
    */
 
-  /** === DID MOUNT === */
-  componentDidMount() {
-    this.props.omsCheckPromoProcess();
+  /** === DID UPDATE */
+  componentDidUpdate(prevProps) {
+    /** === SUCCESS POST CHECKOUT ITEM ===
+     * after success fetch checkout item navigate to checkout page
+     */
+    if (
+      prevProps.oms.dataOmsGetCheckoutItem !==
+      this.props.oms.dataOmsGetCheckoutItem
+    ) {
+      if (this.props.oms.dataOmsGetCheckoutItem !== null) {
+        NavigationService.navigate('OmsCheckoutView');
+      }
+    }
+  }
+
+  /** === CALLBACK FOR ERROR PROMO MODAL ==== */
+  backToCartItemView() {
+    this.setState({ openModalErrorPromo: false });
+    NavigationService.navigate('OmsCartView');
+    // this.props.omsGetCartItemFromCheckoutProcess({
+    //   catalogues: this.props.permanent.dataSkuCart
+    // });
+    // this.props.omsDeleteCartItemProcess({
+    //   orderId: this.props.oms.dataOmsGetCheckoutItem.id
+    // });
+  }
+
+  /** ===  === */
+  getCheckoutItem() {
+    this.props.omsGetCheckoutItemProcess({
+      cartId: this.props.navigation.state.params.cartId,
+      catalogues: this.props.oms.dataCheckout
+    });
   }
 
   openBenefitDetail(index) {
@@ -274,7 +304,16 @@ class OmsVerificationView extends Component {
           </View>
         </View>
         <View>
-          <ButtonSingle title={'Lanjut Ke Pembayaran'} borderRadius={4} />
+          <ButtonSingle
+            disabled={this.props.oms.loadingOmsGetCartItemFromCheckout}
+            loading={this.props.oms.loadingOmsGetCartItemFromCheckout}
+            title={'Lanjut Ke Pembayaran'}
+            borderRadius={4}
+            onPress={() => {
+              this.setState({ openModalErrorPromo: true });
+              // NavigationService.navigate('OmsCheckoutView');
+            }}
+          />
         </View>
       </View>
     );
@@ -402,6 +441,11 @@ class OmsVerificationView extends Component {
             openModalErrorPromo: false
           })
         }
+        backToCart={() => this.backToCartItemView()}
+        proceedToCheckout={() => {
+          this.setState({ openModalErrorPromo: false });
+          this.getCheckoutItem();
+        }}
       />
     ) : (
       <View />
@@ -499,8 +543,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ oms }) => {
-  return { oms };
+const mapStateToProps = ({ oms, permanent }) => {
+  return { oms, permanent };
 };
 
 const mapDispatchToProps = dispatch => {
