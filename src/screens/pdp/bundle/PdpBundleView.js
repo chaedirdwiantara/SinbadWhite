@@ -26,7 +26,8 @@ import {
   SkeletonType21,
   SkeletonType23,
   ModalBottomType3,
-  ToastType1
+  ToastType1,
+  ModalBottomSkuNotAvailable
 } from '../../../library/component';
 import {
   Fonts,
@@ -39,7 +40,7 @@ import NavigationService from '../../../navigation/NavigationService';
 import { Color } from '../../../config';
 
 // import PdpOrderView from '../PdpOrderView';
-import PdpBundleOrderView from './PdpBundleOrderView'
+import PdpBundleOrderView from './PdpBundleOrderView';
 
 const { width, height } = Dimensions.get('window');
 
@@ -57,7 +58,8 @@ class PdpBundleView extends Component {
           : 0,
       openModalOrder: false,
       showToast: false,
-      notifToast: ''
+      notifToast: '',
+      openModalSkuNotAvailable: false
     };
   }
   /**
@@ -137,7 +139,7 @@ class PdpBundleView extends Component {
         return true;
       }
     } else {
-      return true;
+      return false;
     }
   }
 
@@ -179,16 +181,20 @@ class PdpBundleView extends Component {
   parentFunction(data) {
     switch (data.type) {
       case 'order':
-        this.props.pdpGetBundleDetailProcess(data.item.id)
-        setTimeout(() => {
-          this.setState({ openModalOrder: true })          
-        }, 100)
+        this.props.pdpGetBundleDetailProcess(data.item.id);
+        this.setState({ openModalOrder: true });
         break;
       case 'detail':
         this.props.pdpGetDetailProcess(data.item.id);
         break;
       case 'addSkuToCart':
-        this.addToCart(data)        
+        this.addToCart(data);
+        break;
+      case 'skuNotAvailable':
+        this.setState({
+          openModalOrder: false,
+          openModalSkuNotAvailable: true
+        });
         break;
       default:
         break;
@@ -207,11 +213,11 @@ class PdpBundleView extends Component {
       showToast: true,
       notifToast: 'Product berhasil ditambahkan ke keranjang',
       openModalOrder: false
-    })   
+    });
 
     setTimeout(() => {
-      this.setState({ showToast: false })
-    }, 3000)
+      this.setState({ showToast: false });
+    }, 3000);
   }
 
   /**
@@ -570,7 +576,7 @@ class PdpBundleView extends Component {
     );
   }
 
-    /**
+  /**
    * ======================
    * MODAL
    * ======================
@@ -579,6 +585,18 @@ class PdpBundleView extends Component {
   renderToast() {
     return this.state.showToast ? (
       <ToastType1 margin={30} content={this.state.notifToast} />
+    ) : (
+      <View />
+    );
+  }
+
+  /** === RENDER MODAL SKU NOT AVAILABLE === */
+  renderModalSkuNotAvailable() {
+    return this.state.openModalSkuNotAvailable ? (
+      <ModalBottomSkuNotAvailable
+        open={this.state.openModalSkuNotAvailable}
+        onPress={() => this.setState({ openModalSkuNotAvailable: false })}
+      />
     ) : (
       <View />
     );
@@ -599,6 +617,7 @@ class PdpBundleView extends Component {
         {/* Render Modal Order */}
         {this.renderModalOrder()}
         {this.renderToast()}
+        {this.renderModalSkuNotAvailable()}
       </SafeAreaView>
     );
   }
