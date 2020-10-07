@@ -182,9 +182,7 @@ class PdpBundleView extends Component {
     switch (data.type) {
       case 'order':
         this.props.pdpGetBundleDetailProcess(data.item.id);
-        setTimeout(() => {
-          this.setState({ openModalOrder: true });
-        }, 100);
+        this.setState({ openModalOrder: true });
         break;
       case 'detail':
         this.props.pdpGetDetailProcess(data.item.id);
