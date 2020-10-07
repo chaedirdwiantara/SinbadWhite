@@ -68,7 +68,7 @@ export const pdp = createReducer(INITIAL_STATE, {
   },
     /**
    * ==================================
-   * PDP DETAILS
+   * PDP BUNDLE DETAILS
    * ==================================
    */
   [types.PDP_GET_BUNDLE_DETAIL_PROCESS](state, action) {

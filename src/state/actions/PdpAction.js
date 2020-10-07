@@ -22,7 +22,7 @@ export function pdpGetDetailFailed(data) {
 }
 /**
  * ===========================
- * GET DETAIL PDP
+ * GET DETAIL BUNDLE PDP
  * ===========================
  */
 /** PDP SKU GET BUNDLE DETAILS PROCESS */
