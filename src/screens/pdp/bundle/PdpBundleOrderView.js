@@ -410,8 +410,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 11,
     paddingLeft: 20,
-    paddingRight: 10,
-    height: 63
+    paddingRight: 10
   },
   boxRemainingStockOrderButton: {
     flexDirection: 'row',
