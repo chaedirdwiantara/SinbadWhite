@@ -95,6 +95,19 @@ function getLastPaymentChannel({ invoiceGroupIds }) {
     }
   });
 }
+/** CHECK PROMO */
+function checkPromo(data) {
+  let params = {
+    storeId: GlobalMethod.merchantStoreId(),
+    cartId: data.cartId,
+    catalogues: data.catalogues
+  };
+  return ApiRest({
+    path: 'check-promo',
+    method: 'POST',
+    params
+  });
+}
 
 export const OmsMethod = {
   getCartItem,
@@ -104,5 +117,6 @@ export const OmsMethod = {
   deleteOrder,
   getPaymentChannel,
   getTermsConditions,
-  getLastPaymentChannel
+  getLastPaymentChannel,
+  checkPromo
 };

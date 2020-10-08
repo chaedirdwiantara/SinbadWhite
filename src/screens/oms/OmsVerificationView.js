@@ -9,75 +9,38 @@ import {
   ScrollView,
   TouchableOpacity
 } from '../../library/reactPackage';
-import { StatusBarRed, ButtonSingle } from '../../library/component';
-import { MaterialIcon } from '../../library/thirdPartyPackage';
+import {
+  StatusBarRed,
+  ButtonSingle,
+  ModalBottomErrorRespons,
+  LoadingPage
+} from '../../library/component';
+import {
+  connect,
+  MaterialIcon,
+  bindActionCreators
+} from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
-
-const dummies = {
-  grandTotalPotongan: 21000,
-  grandTotalTransaction: 900000,
-  bonusSku: [
-    {
-      name: 'LAKME EYESHADOW CRAZON BRONZE',
-      namePromo: 'Promo beli 50pcs Lakme bonus 5pcs Lakme',
-      qty: 5,
-      catalogueImages:
-        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/67842629.png'
-    }
-  ],
-  promoSku: [
-    {
-      name: 'SGM EKSPLOR 1+ MADU 1200 GR GA',
-      catalogueImages:
-        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115822.png',
-      qty: 20,
-      price: 25000,
-      totalPrice: 500000,
-      totalPotongan: 21000,
-      listPromo: [
-        {
-          name: 'Promo 1',
-          value: 5000
-        },
-        {
-          name: 'Promo 2',
-          value: 6000
-        }
-      ],
-      listVoucher: [
-        {
-          name: 'Voucher A',
-          value: 10000
-        }
-      ]
-    }
-  ],
-  notPromoSku: [
-    {
-      name: 'CIP STRAW MUSHROOM PEELED 425 GR',
-      catalogueImages:
-        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/110049.png',
-      qty: 10,
-      price: 40000,
-      totalPrice: 400000
-    },
-    {
-      name: 'CIP CHAMPIGNON MUSHROOM WHOLE 425 GR',
-      catalogueImages:
-        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/110048.png',
-      qty: 10,
-      price: 40000,
-      totalPrice: 400000
-    }
-  ]
-};
+import NavigationService from '../../navigation/NavigationService';
+import * as ActionCreators from '../../state/actions';
+import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
+import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
+import CallCS from '../../screens/global/CallCS';
+import ModalBottomInputOwnerId from './ModalBottomInputOwnerId';
+import ModalBottomErrorPromo from './ModalBottomErrorPromo';
 
 class OmsVerificationView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openBenefitDetail: null
+      openBenefitDetail: null,
+      openModalSkuStatusConfirmation: false,
+      openModalErrorGlobal: false,
+      openModalErrorNoUrban: false,
+      openModalCS: false,
+      openModalInputOwnerId: false,
+      openModalErrorPromo: false
     };
   }
 
@@ -86,6 +49,41 @@ class OmsVerificationView extends Component {
    * FUNCTIONAL
    * =======================
    */
+
+  /** === DID UPDATE */
+  componentDidUpdate(prevProps) {
+    /** === SUCCESS POST CHECKOUT ITEM ===
+     * after success fetch checkout item navigate to checkout page
+     */
+    if (
+      prevProps.oms.dataOmsGetCheckoutItem !==
+      this.props.oms.dataOmsGetCheckoutItem
+    ) {
+      if (this.props.oms.dataOmsGetCheckoutItem !== null) {
+        NavigationService.navigate('OmsCheckoutView');
+      }
+    }
+  }
+
+  /** === CALLBACK FOR ERROR PROMO MODAL ==== */
+  backToCartItemView() {
+    this.setState({ openModalErrorPromo: false });
+    NavigationService.navigate('OmsCartView');
+    // this.props.omsGetCartItemFromCheckoutProcess({
+    //   catalogues: this.props.permanent.dataSkuCart
+    // });
+    // this.props.omsDeleteCartItemProcess({
+    //   orderId: this.props.oms.dataOmsGetCheckoutItem.id
+    // });
+  }
+
+  /** ===  === */
+  getCheckoutItem() {
+    this.props.omsGetCheckoutItemProcess({
+      cartId: this.props.navigation.state.params.cartId,
+      catalogues: this.props.oms.dataCheckout
+    });
+  }
 
   openBenefitDetail(index) {
     if (this.state.openBenefitDetail === index) {
@@ -109,22 +107,23 @@ class OmsVerificationView extends Component {
   }
 
   renderPotonganProductList() {
-    if (dummies.promoSku.length > 0) {
+    const { promoSku } = this.props.oms.dataOmsCheckPromo;
+    if (promoSku.length > 0) {
       return (
         <View>
           <View style={styles.sectionHeaderContainer}>
             <Text style={Fonts.type16}>{`Potongan Harga (${
-              dummies.promoSku.length
+              promoSku.length
             } SKU)`}</Text>
           </View>
-          {this.renderPotonganProductItem()}
+          {this.renderPotonganProductItem(promoSku)}
         </View>
       );
     }
   }
 
-  renderPotonganProductItem() {
-    return dummies.promoSku.map((item, index) => {
+  renderPotonganProductItem(promoSku) {
+    return promoSku.map((item, index) => {
       return (
         <View key={index}>
           <View style={styles.productListContainer}>
@@ -188,7 +187,7 @@ class OmsVerificationView extends Component {
         <View key={index} style={[styles.benefitDetailContainer]}>
           <View style={styles.benefitListContainer}>
             <Text style={Fonts.type8}>{item.name}</Text>
-            <Text style={Fonts.ryanNew01}>{MoneyFormat(item.value)}</Text>
+            <Text style={Fonts.type107}>{MoneyFormat(item.value)}</Text>
           </View>
         </View>
       );
@@ -196,20 +195,21 @@ class OmsVerificationView extends Component {
   }
 
   renderBonusesProductList() {
-    if (dummies.bonusSku.length > 0) {
+    const { bonusSku } = this.props.oms.dataOmsCheckPromo;
+    if (bonusSku.length > 0) {
       return (
         <View>
           <View style={styles.sectionHeaderContainer}>
             <Text style={Fonts.type16}>Bonus SKU</Text>
           </View>
-          {this.renderBonusesProductItem()}
+          {this.renderBonusesProductItem(bonusSku)}
         </View>
       );
     }
   }
 
-  renderBonusesProductItem() {
-    return dummies.bonusSku.map((item, index) => {
+  renderBonusesProductItem(bonusSku) {
+    return bonusSku.map((item, index) => {
       return (
         <View key={index} style={styles.productListContainer}>
           <View style={styles.productImageContainer}>
@@ -235,20 +235,21 @@ class OmsVerificationView extends Component {
   }
 
   renderNonBenefitProductList() {
-    if (dummies.notPromoSku.length > 0) {
+    const { notPromoSku } = this.props.oms.dataOmsCheckPromo;
+    if (notPromoSku.length > 0) {
       return (
         <View>
           <View style={styles.sectionHeaderContainer}>
             <Text style={Fonts.type16}>Produk Tidak Mendapatkan Promo</Text>
           </View>
-          {this.renderNonBenefitProductItem()}
+          {this.renderNonBenefitProductItem(notPromoSku)}
         </View>
       );
     }
   }
 
-  renderNonBenefitProductItem() {
-    return dummies.notPromoSku.map((item, index) => {
+  renderNonBenefitProductItem(notPromoSku) {
+    return notPromoSku.map((item, index) => {
       return (
         <View key={index}>
           <View style={styles.productListContainer}>
@@ -280,6 +281,7 @@ class OmsVerificationView extends Component {
   }
 
   renderBottomSection() {
+    const { dataOmsCheckPromo } = this.props.oms;
     return (
       <View style={styles.bottomContainer}>
         <View style={styles.bottomInformationContainer}>
@@ -291,32 +293,162 @@ class OmsVerificationView extends Component {
           >
             <Text style={Fonts.type8}>Total Transaksi</Text>
             <Text style={Fonts.type8}>
-              {MoneyFormat(dummies.grandTotalTransaction)}
+              {MoneyFormat(dataOmsCheckPromo.grandTotalTransaction)}
             </Text>
           </View>
           <View style={styles.bottomInformationTextContainer}>
             <Text style={Fonts.type8}>Total Potongan</Text>
-            <Text style={Fonts.ryanNew01}>
-              {MoneyFormat(dummies.grandTotalPotongan)}
+            <Text style={Fonts.type107}>
+              {MoneyFormat(dataOmsCheckPromo.grandTotalRebate)}
             </Text>
           </View>
         </View>
         <View>
-          <ButtonSingle title={'Lanjut Ke Pembayaran'} borderRadius={4} />
+          <ButtonSingle
+            disabled={this.props.oms.loadingOmsGetCartItemFromCheckout}
+            loading={this.props.oms.loadingOmsGetCartItemFromCheckout}
+            title={'Lanjut Ke Pembayaran'}
+            borderRadius={4}
+            onPress={() => {
+              this.setState({ openModalErrorPromo: true });
+              // NavigationService.navigate('OmsCheckoutView');
+            }}
+          />
         </View>
       </View>
     );
   }
 
-  renderContent() {
+  renderLoading() {
+    return <LoadingPage />;
+  }
+
+  renderMainContent() {
     return (
-      <ScrollView>
-        {this.renderHeader()}
-        {this.renderPotonganProductList()}
-        {this.renderBonusesProductList()}
-        {this.renderNonBenefitProductList()}
-        <View style={{ paddingBottom: 50 }} />
-      </ScrollView>
+      <>
+        <ScrollView>
+          {this.renderHeader()}
+          {this.renderPotonganProductList()}
+          {this.renderBonusesProductList()}
+          {this.renderNonBenefitProductList()}
+          <View style={{ paddingBottom: 50 }} />
+        </ScrollView>
+        {this.renderBottomSection()}
+      </>
+    );
+  }
+
+  renderContent() {
+    const isReady =
+      !this.props.oms.loadingOmsCheckPromo &&
+      this.props.oms.dataOmsCheckPromo !== null;
+    return isReady ? this.renderMainContent() : this.renderLoading();
+  }
+
+  /**
+   * ===================================
+   * MODAL
+   * ===================================
+   * - stock confirmation (===> RENDER MODAL SKU STATUS CONFIRMATION)
+   * - error respons from BE (===> RENDER MODAL ERROR RESPONS FROM BE)
+   */
+  /** ===> RENDER MODAL SKU STATUS CONFIRMATION === */
+  renderModalSkuStatusConfirmation() {
+    return (
+      <View>
+        {this.state.openModalSkuStatusConfirmation ? (
+          <ModalBottomStockConfirmation
+            open={this.state.openModalSkuStatusConfirmation}
+            close={() =>
+              this.setState({ openModalSkuStatusConfirmation: false })
+            }
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+  /** ===> RENDER MODAL ERROR RESPONS FROM BE ===  */
+  renderModalErrorRespons() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        open={this.state.openModalErrorGlobal}
+        onPress={() => {
+          this.setState({ openModalErrorGlobal: false });
+          // this.checkCartBeforeCheckout();
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** === MODAL CALL CS === */
+  renderModalCallCS() {
+    return this.state.openModalCS ? (
+      <View>
+        <CallCS
+          statusBarRed
+          open={this.state.openModalCS}
+          close={() => this.setState({ openModalCS: false })}
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
+        />
+      </View>
+    ) : (
+      <View />
+    );
+  }
+  /** ===> RENDER MODAL ERROR NO URBAN ===  */
+  renderModalErrorNoUrban() {
+    return this.state.openModalErrorNoUrban ? (
+      <ModalBottomErrorNoUrban
+        open={this.state.openModalErrorNoUrban}
+        backToHome={() => {
+          this.setState({ openModalErrorNoUrban: false });
+          NavigationService.navigate('HomeView');
+        }}
+        callCS={() => {
+          this.setState({ openModalErrorNoUrban: false, openModalCS: true });
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** === RENDER MODAL INPUT OWNER ID === */
+  renderModalInputOwnerId() {
+    return this.state.openModalInputOwnerId ? (
+      <ModalBottomInputOwnerId
+        open={this.state.openModalInputOwnerId}
+        close={() =>
+          this.setState({
+            openModalInputOwnerId: false
+          })
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** === RENDER MODAL ERROR PROMO === */
+  renderModalErrorPromo() {
+    return this.state.openModalErrorPromo ? (
+      <ModalBottomErrorPromo
+        open={this.state.openModalErrorPromo}
+        close={() =>
+          this.setState({
+            openModalErrorPromo: false
+          })
+        }
+        backToCart={() => this.backToCartItemView()}
+        proceedToCheckout={() => {
+          this.setState({ openModalErrorPromo: false });
+          this.getCheckoutItem();
+        }}
+      />
+    ) : (
+      <View />
     );
   }
 
@@ -325,7 +457,14 @@ class OmsVerificationView extends Component {
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarRed />
         {this.renderContent()}
-        {this.renderBottomSection()}
+        {/* modal */}
+        {this.renderModalSkuStatusConfirmation()}
+        {/* error */}
+        {this.renderModalErrorRespons()}
+        {this.renderModalErrorNoUrban()}
+        {this.renderModalCallCS()}
+        {this.renderModalInputOwnerId()}
+        {this.renderModalErrorPromo()}
       </SafeAreaView>
     );
   }
@@ -404,4 +543,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export default OmsVerificationView;
+const mapStateToProps = ({ oms, permanent }) => {
+  return { oms, permanent };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
+
+// eslint-disable-next-line prettier/prettier
+export default connect(mapStateToProps, mapDispatchToProps)(OmsVerificationView);

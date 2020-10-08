@@ -8,12 +8,12 @@ import {
   TouchableOpacity,
   Image,
   Text
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   bindActionCreators,
   connect,
   MaterialCommunityIcons
-} from '../../library/thirdPartyPackage'
+} from '../../library/thirdPartyPackage';
 import {
   ButtonSingleSmall,
   ModalConfirmation,
@@ -24,14 +24,9 @@ import {
   ModalBottomErrorRespons,
   ErrorPage,
   SelectedMerchantName
-} from '../../library/component'
-import { Color } from '../../config'
-import { 
-  GlobalStyle, 
-  Fonts,
-  MoneyFormat,
-  NumberFormat
-} from '../../helpers'
+} from '../../library/component';
+import { Color } from '../../config';
+import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
@@ -118,6 +113,17 @@ class OmsCartView extends Component {
     ) {
       if (this.props.oms.dataOmsGetCheckoutItem !== null) {
         NavigationService.navigate('OmsCheckoutView');
+      }
+    }
+    /**
+     * === SUCCESS POST VERIFICATION ====
+     * after success get verification data go to verification page
+     */
+    if (prevProps.oms.dataOmsCheckPromo !== this.props.oms.dataOmsCheckPromo) {
+      if (this.props.oms.dataOmsCheckPromo !== null) {
+        NavigationService.navigate('OmsVerificationView', {
+          cartId: this.state.cartId
+        });
       }
     }
     /**
@@ -474,8 +480,8 @@ class OmsCartView extends Component {
     });
     /** => save to oms.dataCheckout */
     this.props.omsCheckoutItem(mapProduct);
-    /** => checkout */
-    this.props.omsGetCheckoutItemProcess({
+    /** => verification page */
+    this.props.omsCheckPromoProcess({
       cartId: this.state.cartId,
       catalogues: mapProduct
     });
@@ -1003,6 +1009,7 @@ class OmsCartView extends Component {
     return (
       <ButtonSingleSmall
         disabled={
+          this.props.oms.loadingOmsCheckPromo ||
           this.props.oms.loadingOmsGetCheckoutItem ||
           this.props.oms.loadingOmsGetCartItemFromCheckout ||
           this.state.productCartArray.find(
@@ -1010,6 +1017,7 @@ class OmsCartView extends Component {
           ) === undefined
         }
         loading={
+          this.props.oms.loadingOmsCheckPromo ||
           this.props.oms.loadingOmsGetCheckoutItem ||
           this.props.oms.loadingOmsGetCartItemFromCheckout
         }
@@ -1307,14 +1315,14 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(OmsCartView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Change key
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Change key
+ *
+ */

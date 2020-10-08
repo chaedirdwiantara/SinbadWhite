@@ -10,6 +10,7 @@ const INITIAL_STATE = {
   loadingOmsDeleteCartItem: false,
   loadingOmsGetCartItemFromCheckout: false,
   loadingOmsGetPaymentChannel: false,
+  loadingOmsCheckPromo: false,
   /** data */
   dataOmsGetCartItem: null,
   dataOmsGetCartItemFromCheckout: null,
@@ -21,6 +22,7 @@ const INITIAL_STATE = {
   dataCheckout: [],
   dataCheckBoxlistCart: [],
   dataOmsGetPaymentChannel: null,
+  dataOmsCheckPromo: null,
   /** error */
   errorOmsGetCartItem: null,
   errorOmsGetCheckoutItem: null,
@@ -29,6 +31,7 @@ const INITIAL_STATE = {
   errorOmsDeleteCartItem: null,
   errorOmsGetCartItemFromCheckout: null,
   errorOmsGetPaymentChannel: null,
+  errorOmsCheckPromo: null
 };
 
 export const oms = createReducer(INITIAL_STATE, {
@@ -47,6 +50,7 @@ export const oms = createReducer(INITIAL_STATE, {
       loadingOmsDeleteCartItem: false,
       loadingOmsGetCartItemFromCheckout: false,
       loadingOmsGetPaymentChannel: false,
+      loadingOmsCheckPromo: false,
       /** data */
       dataOmsGetCartItem: null,
       dataOmsGetCartItemFromCheckout: null,
@@ -58,6 +62,7 @@ export const oms = createReducer(INITIAL_STATE, {
       dataCheckout: [],
       dataCheckBoxlistCart: [],
       dataOmsGetPaymentChannel: null,
+      dataOmsCheckPromo: null,
       /** error */
       errorOmsGetCartItem: null,
       errorOmsGetCheckoutItem: null,
@@ -65,7 +70,8 @@ export const oms = createReducer(INITIAL_STATE, {
       errorOmsGetPayment: null,
       errorOmsDeleteCartItem: null,
       errorOmsGetCartItemFromCheckout: null,
-      errorOmsGetPaymentChannel: null
+      errorOmsGetPaymentChannel: null,
+      errorOmsCheckPromo: null
     };
   },
   [types.OMS_RESET_DATA](state, action) {
@@ -77,6 +83,7 @@ export const oms = createReducer(INITIAL_STATE, {
       loadingOmsGetPayment: false,
       loadingOmsDeleteCartItem: false,
       loadingOmsGetCartItemFromCheckout: false,
+      loadingOmsCheckPromo: false,
       /** data */
       dataOmsGetCartItem: null,
       dataOmsGetCartItemFromCheckout: null,
@@ -87,13 +94,15 @@ export const oms = createReducer(INITIAL_STATE, {
       dataCart: [],
       dataCheckout: [],
       dataCheckBoxlistCart: [],
+      dataOmsCheckPromo: null,
       /** error */
       errorOmsGetCartItem: null,
       errorOmsGetCheckoutItem: null,
       errorOmsConfirmOrder: null,
       errorOmsGetPayment: null,
       errorOmsDeleteCartItem: null,
-      errorOmsGetCartItemFromCheckout: null
+      errorOmsGetCartItemFromCheckout: null,
+      errorOmsCheckPromo: null
     };
   },
   /**
@@ -372,6 +381,34 @@ export const oms = createReducer(INITIAL_STATE, {
     return {
       ...state,
       dataCheckBoxlistCart: action.payload
+    };
+  },
+
+  /**
+   * ==================================
+   * ACTIVATE VA
+   * =================================
+   */
+  [types.OMS_CHECK_PROMO_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsCheckPromo: true,
+      dataOmsCheckPromo: null,
+      errorOmsCheckPromo: null
+    };
+  },
+  [types.OMS_CHECK_PROMO_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsCheckPromo: false,
+      dataOmsCheckPromo: action.payload
+    };
+  },
+  [types.OMS_CHECK_PROMO_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsCheckPromo: false,
+      errorOmsCheckPromo: action.payload
     };
   }
 });

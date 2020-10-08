@@ -295,3 +295,27 @@ export function omsGetLastPaymentChannelSuccess(data) {
 export function omsGetLastPaymentChannelFailed(data) {
   return { type: types.OMS_GET_LAST_PAYMENT_CHANNEL_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * CHECK PROMO
+ * ===========================
+ */
+/** === CHECK PROMO PROCESS === */
+export function omsCheckPromoProcess(data) {
+  return { type: types.OMS_CHECK_PROMO_PROCESS, payload: data };
+}
+/** === CHECK PROMO SUCCESS === */
+export function omsCheckPromoSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_CHECK_PROMO_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_CHECK_PROMO_FAILED, payload: data };
+}
+/** === CHECK PROMO FAILED === */
+export function omsCheckPromoFailed(data) {
+  return { type: types.OMS_CHECK_PROMO_FAILED, payload: data };
+}
