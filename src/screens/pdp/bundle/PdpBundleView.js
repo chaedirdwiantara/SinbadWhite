@@ -203,10 +203,11 @@ class PdpBundleView extends Component {
 
   addToCart(data) {
     /** >>> save sku to permanent cart */
+    console.log(data.data.qty)
     this.props.omsAddToCart({
       method: 'add',
       catalogueId: data.data.catalogueId,
-      qty: data.data.qty
+      qty: data.data.qty === 0 ? this.props.pdp.dataDetailPdp.minQty : data.data.qty
     });
 
     this.setState({
@@ -330,9 +331,7 @@ class PdpBundleView extends Component {
           disabledAllButton={this.state.showKeyboard}
           item={this.props.pdp.dataDetailPdp}
           onRef={ref => (this.parentFunctionFromOrderButton = ref)}
-          parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
-            this
-          )}
+          parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(this)}
           onFocus={() => this.setState({ buttonAddDisabled: true })}
           onBlur={() => this.setState({ buttonAddDisabled: false })}
         />
