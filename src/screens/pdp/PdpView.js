@@ -135,9 +135,7 @@ class PdpView extends Component {
       /** => 'pesan' buttom press (from child) if bundle */
       case 'goToBundlePage':
         this.props.pdpGetDetailProcess(data.data)
-        setTimeout(() => (
           NavigationService.navigate('PdpBundleView')
-        ), 100)
         break;
       /** => 'pesan' buttom press (from child) */
       case 'openModalOrder':        
