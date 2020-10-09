@@ -145,8 +145,16 @@ class OmsVerificationView extends Component {
               </Text>
               <View style={styles.totalAndPriceContainer}>
                 <Text style={Fonts.type10}>Total</Text>
-                <Text style={Fonts.type10}>{MoneyFormat(item.totalPrice)}</Text>
               </View>
+            </View>
+            <View
+              style={{
+                justifyContent: 'flex-end',
+                width: '20%',
+                alignItems: 'flex-end'
+              }}
+            >
+              <Text style={Fonts.type10}>{MoneyFormat(item.totalPrice)}</Text>
             </View>
           </View>
           {this.state.openBenefitDetail === index ? (
@@ -271,8 +279,16 @@ class OmsVerificationView extends Component {
               </Text>
               <View style={styles.totalAndPriceContainer}>
                 <Text style={Fonts.type10}>Total</Text>
-                <Text style={Fonts.type10}>{MoneyFormat(item.totalPrice)}</Text>
               </View>
+            </View>
+            <View
+              style={{
+                justifyContent: 'flex-end',
+                width: '20%',
+                alignItems: 'flex-end'
+              }}
+            >
+              <Text style={Fonts.type10}>{MoneyFormat(item.totalPrice)}</Text>
             </View>
           </View>
         </View>
