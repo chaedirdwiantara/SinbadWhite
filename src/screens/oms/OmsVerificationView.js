@@ -158,7 +158,7 @@ class OmsVerificationView extends Component {
             </View>
           </View>
           {this.state.openBenefitDetail === index ? (
-            this.renderBenefitDetail([...item.listPromo, ...item.listVoucher])
+            this.renderBenefitDetail(item.listPromo)
           ) : (
             <View />
           )}
