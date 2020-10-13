@@ -80,6 +80,15 @@ function activateVA(data) {
   });
 }
 
+/** VIEW INVOICE */
+function viewInvoice(id) {
+  return ApiRest({
+    path: `payment/v1/invoice/${id}`,
+    // path: 'payment/v1/invoice/1',
+    method: 'GET'
+  });
+}
+
 export const HistoryMethod = {
   getHistory,
   getHistoryOrderStatus,
@@ -87,5 +96,6 @@ export const HistoryMethod = {
   editHistory,
   getDetailHistory,
   activateVA,
-  changePaymentMethod
+  changePaymentMethod,
+  viewInvoice
 };

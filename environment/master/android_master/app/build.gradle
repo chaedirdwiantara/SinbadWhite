@@ -133,8 +133,8 @@ android {
         applicationId "com.sinbad.agent"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 6100000
-        versionName "1.1.0"
+        versionCode 6100001
+        versionName "1.1.1"
         missingDimensionStrategy 'react-native-camera', 'general', 'mlkit'
         multiDexEnabled true
     }
@@ -179,6 +179,14 @@ android {
 
         }
     }
+     packagingOptions {
+       pickFirst 'lib/x86/libc++_shared.so'
+       pickFirst 'lib/x86_64/libjsc.so'
+       pickFirst 'lib/arm64-v8a/libjsc.so'
+       pickFirst 'lib/arm64-v8a/libc++_shared.so'
+       pickFirst 'lib/x86_64/libc++_shared.so'
+       pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+     }
 }
 
 dependencies {

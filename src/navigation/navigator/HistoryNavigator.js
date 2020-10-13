@@ -5,6 +5,7 @@ import GlobalFont from '../../helpers/GlobalFont';
 import HistoryView from '../../screens/history/HistoryView';
 import HistoryDetailView from '../../screens/history/HistoryDetailView';
 import HistoryDetailStatusView from '../../screens/history/HistoryDetailStatusView';
+import HistoryPaymentInvoiceView from '../../screens/history/HistoryPaymentInvoiceView';
 
 const HistoryNavigator = {
   HistoryView: {
@@ -64,7 +65,10 @@ const HistoryNavigator = {
       headerRight: <View />,
       gesturesEnabled: false
     }
-  }
+  },
+  HistoryPaymentInvoiceView: {
+    screen: HistoryPaymentInvoiceView,
+  },
 };
 
 export default HistoryNavigator;
