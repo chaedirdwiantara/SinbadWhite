@@ -114,7 +114,7 @@ class HistoryDetailView extends Component {
         this.props.history.errorHistoryDetail &&
         this.props.history.errorHistoryDetail.data !== null
       ) {
-        if (this.props.history.errorHistoryDetail.code === 400) {
+        if (this.props.history.errorHistoryDetail.code >= 400 && this.props.history.errorHistoryDetail.code <500 ) {
           this.manageError();
         } else {
           this.setState({ openModalError: true });
