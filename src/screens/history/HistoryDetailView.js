@@ -35,6 +35,7 @@ import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation';
 import HistoryDetailPayment from './HistoryDetailPayment';
 import CallCS from '../../screens/global/CallCS';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
+import ModalBottomErrorResponsWhite from '../../components/error/ModalBottomErrorResponsWhite';
 class HistoryDetailView extends Component {
   constructor(props) {
     super(props);
@@ -51,7 +52,8 @@ class HistoryDetailView extends Component {
       tAndRLoading: false,
       alreadyFetchTAndR: false,
       warningChangePayment: null,
-      modalWarningChangePayment: false
+      modalWarningChangePayment: false,
+      openModalError: false
     };
   }
   /* ========================
@@ -108,9 +110,17 @@ class HistoryDetailView extends Component {
       prevProps.history.errorHistoryDetail !==
       this.props.history.errorHistoryDetail
     ) {
-      if (this.props.history.errorHistoryDetail && this.props.history.errorHistoryDetail.data !== null) {
-        this.manageError();}
-      
+      if (
+        this.props.history.errorHistoryDetail &&
+        this.props.history.errorHistoryDetail.data !== null
+      ) {
+        if (this.props.history.errorHistoryDetail.code === 400) {
+          this.manageError();
+        } else {
+          this.setState({ openModalError: true });
+        }
+      }
+
       // if (
       //   prevProps.history.errorHistoryChangePaymentMethod !==
       //   this.props.history.errorHistoryChangePaymentMethod
@@ -573,7 +583,7 @@ class HistoryDetailView extends Component {
       );
     }
   }
-  
+
   /** RENDER CONTENT */
   renderContent() {
     return (
@@ -630,26 +640,26 @@ class HistoryDetailView extends Component {
         break;
     }
   }
-// ERROR UPDATE BILLING
+  // ERROR UPDATE BILLING
   errorUpdateBilling() {
     this.setState({
       openModalErrorGlobal: true
     });
   }
-//ERROR CREATE VA
+  //ERROR CREATE VA
   errorCreateVA() {
     this.setState({
       openModalErrorGlobal: true
     });
   }
-//ERROR INVOICE ON PROGRESS
-  errorInvoiceOnProgress(){
+  //ERROR INVOICE ON PROGRESS
+  errorInvoiceOnProgress() {
     this.setState({
       openModalErrorGlobal: true
     });
   }
-//ERROR INVOICE NOT FOUND  
-  errorInvoicENotFound(){
+  //ERROR INVOICE NOT FOUND
+  errorInvoicENotFound() {
     this.setState({
       openModalErrorGlobal: true
     });
@@ -702,7 +712,7 @@ class HistoryDetailView extends Component {
     this.setState({ openPaymentMethod: false, modalTAndR: false });
   }
 
-  /** MODAL FAIL ACTIVATE VA */
+  /** MODAL ERROR PAYMENT GLOBAL */
   renderModalErrorGlobal() {
     return this.state.openModalErrorGlobal ? (
       <View>
@@ -710,6 +720,19 @@ class HistoryDetailView extends Component {
           open={this.state.openModalErrorGlobal}
           onPress={() => this.setState({ openModalErrorGlobal: false })}
           text={this.props.history.errorHistoryDetail.message}
+        />
+      </View>
+    ) : (
+      <View />
+    );
+  }
+  /** MODAL ERROR GLOBAL TERJADI KESALAHAN */
+  renderModalError() {
+    return this.state.openModalError ? (
+      <View>
+        <ModalBottomErrorResponsWhite
+          open={this.state.openModalError}
+          onPress={() => this.setState({ openModalError: false })}
         />
       </View>
     ) : (
@@ -926,8 +949,9 @@ class HistoryDetailView extends Component {
         {this.renderModalCancelOrderConfirmation()}
         {this.renderModalErrorGlobal()}
         {this.renderModalTAndR()}
+        {this.renderModalError()}
       </SafeAreaView>
-    )
+    );
   }
 }
 
