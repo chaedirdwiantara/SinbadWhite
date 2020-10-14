@@ -134,22 +134,22 @@ class PdpView extends Component {
         break;
       /** => 'pesan' buttom press (from child) if bundle */
       case 'goToBundlePage':
-        this.props.pdpGetDetailProcess(data.data)
-          NavigationService.navigate('PdpBundleView')
+        this.props.pdpGetDetailProcess(data.data);
+        NavigationService.navigate('PdpBundleView');
         break;
       /** => 'pesan' buttom press (from child) */
-      case 'openModalOrder':        
-          if (
-            this.props.merchant.merchantChanged &&
-            this.props.oms.dataCart.length > 0
-          ) {
-            this.setState({
-              openModalConfirmRemoveCart: true,
-              selectedProduct: data.data
-            });
-          } else {
-            this.props.pdpGetDetailProcess(data.data);
-            this.setState({ openModalOrder: true });
+      case 'openModalOrder':
+        if (
+          this.props.merchant.merchantChanged &&
+          this.props.oms.dataCart.length > 0
+        ) {
+          this.setState({
+            openModalConfirmRemoveCart: true,
+            selectedProduct: data.data
+          });
+        } else {
+          this.props.pdpGetDetailProcess(data.data);
+          this.setState({ openModalOrder: true });
         }
         break;
       /** => sku not available (from child pdpOrderView) */
