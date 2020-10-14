@@ -63,18 +63,75 @@ class OmsVerificationView extends Component {
         NavigationService.navigate('OmsCheckoutView');
       }
     }
+    /** ERROR GET CHECKOUT LIST */
+    /**
+     * === ERROR RESPONS ===
+     * ==> ERROR CODE 400
+     * 1. 'ERR-STOCK'
+     * 2. 'ERR-STATUS'
+     * 3. 'ERR-WAREHOUSE'
+     * 4. 'ERR-RUN-OUT'
+     * ==> ERROR CODE 406
+     * 1. 'ERR-URBAN'
+     * 2. 'ERR-VERIFIED'
+     */
+    if (
+      prevProps.oms.errorOmsGetCheckoutItem !==
+      this.props.oms.errorOmsGetCheckoutItem
+    ) {
+      if (this.props.oms.errorOmsGetCheckoutItem !== null) {
+        if (this.props.oms.errorOmsGetCheckoutItem.code === 400) {
+          this.setState({ openModalSkuStatusConfirmation: true });
+        } else if (
+          this.props.oms.errorOmsGetCheckoutItem.code === 406 &&
+          this.props.oms.errorOmsGetCheckoutItem.data
+        ) {
+          this.manageError();
+        } else {
+          this.setState({ openModalErrorGlobal: true });
+        }
+      }
+    }
+  }
+
+  /**
+   * =============================
+   * ERROR FUNCTION
+   * ============================
+   */
+  manageError() {
+    switch (this.props.oms.errorOmsGetCheckoutItem.data.errorCode) {
+      case 'ERR-URBAN':
+        this.setState({
+          openModalErrorNoUrban: true,
+          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
+        });
+        break;
+      case 'ERR-VERIFIED':
+        this.setState({
+          openModalInputOwnerId: true,
+          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
+        });
+        break;
+      default:
+        break;
+    }
   }
 
   /** === CALLBACK FOR ERROR PROMO MODAL ==== */
   backToCartItemView() {
+    // close error promo modal
     this.setState({ openModalErrorPromo: false });
+    // back to cart view
     NavigationService.navigate('OmsCartView');
-    // this.props.omsGetCartItemFromCheckoutProcess({
-    //   catalogues: this.props.permanent.dataSkuCart
-    // });
-    // this.props.omsDeleteCartItemProcess({
-    //   orderId: this.props.oms.dataOmsGetCheckoutItem.id
-    // });
+    // re-fetch the cart
+    this.props.omsGetCartItemFromCheckoutProcess({
+      catalogues: this.props.permanent.dataSkuCart
+    });
+    // delete the cart
+    this.props.omsDeleteCartItemProcess({
+      orderId: this.props.navigation.state.params.cartId
+    });
   }
 
   /** ===  === */
@@ -321,13 +378,12 @@ class OmsVerificationView extends Component {
         </View>
         <View>
           <ButtonSingle
-            disabled={this.props.oms.loadingOmsGetCartItemFromCheckout}
-            loading={this.props.oms.loadingOmsGetCartItemFromCheckout}
+            disabled={this.props.oms.loadingOmsGetCheckoutItem}
+            loading={this.props.oms.loadingOmsGetCheckoutItem}
             title={'Lanjut Ke Pembayaran'}
             borderRadius={4}
             onPress={() => {
-              this.setState({ openModalErrorPromo: true });
-              // NavigationService.navigate('OmsCheckoutView');
+              this.getCheckoutItem();
             }}
           />
         </View>
@@ -375,9 +431,10 @@ class OmsVerificationView extends Component {
         {this.state.openModalSkuStatusConfirmation ? (
           <ModalBottomStockConfirmation
             open={this.state.openModalSkuStatusConfirmation}
-            close={() =>
-              this.setState({ openModalSkuStatusConfirmation: false })
-            }
+            close={() => {
+              this.setState({ openModalSkuStatusConfirmation: false });
+              NavigationService.navigate('OmsCartView');
+            }}
           />
         ) : (
           <View />
