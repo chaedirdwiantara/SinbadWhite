@@ -21,7 +21,6 @@ import {
   Address,
   OrderButton,
   EmptyData,
-  ModalBottomErrorRespons,
   ErrorPage,
   SelectedMerchantName
 } from '../../library/component';
@@ -39,7 +38,6 @@ class OmsCartView extends Component {
     this.state = {
       /** modal */
       openModalToCheckoutConfirmation: false,
-      openModalErrorGlobal: false,
       openModalDeleteConfirmation: false,
       openModalCS: false,
       /** data */
@@ -1031,20 +1029,6 @@ class OmsCartView extends Component {
       </View>
     );
   }
-  /** ===> RENDER MODAL ERROR RESPONS FROM BE ===  */
-  renderModalErrorRespons() {
-    return this.state.openModalErrorGlobal ? (
-      <ModalBottomErrorRespons
-        open={this.state.openModalErrorGlobal}
-        onPress={() => {
-          this.setState({ openModalErrorGlobal: false });
-          // this.checkCartBeforeCheckout();
-        }}
-      />
-    ) : (
-      <View />
-    );
-  }
   /** === MODAL CALL CS === */
   renderModalCallCS() {
     return this.state.openModalCS ? (
@@ -1115,8 +1099,6 @@ class OmsCartView extends Component {
         {this.renderModalConfirmationCheckout()}
         {this.renderModalDeleteSKUConfirmation()}
         {this.renderModalCallCS()}
-        {/* errr */}
-        {this.renderModalErrorRespons()}
       </View>
     );
   }
