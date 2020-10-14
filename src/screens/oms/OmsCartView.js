@@ -22,7 +22,8 @@ import {
   OrderButton,
   EmptyData,
   ErrorPage,
-  SelectedMerchantName
+  SelectedMerchantName,
+  ModalBottomErrorRespons
 } from '../../library/component';
 import { Color } from '../../config';
 import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers';
@@ -40,6 +41,7 @@ class OmsCartView extends Component {
       openModalToCheckoutConfirmation: false,
       openModalDeleteConfirmation: false,
       openModalCS: false,
+      openModalErrorGlobal: false,
       /** data */
       buttonCheckoutDisabled: false,
       productWantToDelete: null,
@@ -141,6 +143,22 @@ class OmsCartView extends Component {
       if (this.props.oms.errorOmsGetCheckoutItem !== null) {
         if (this.props.oms.errorOmsGetCheckoutItem.code === 400) {
           this.modifyProductCartArrayWhenError();
+        }
+      }
+    }
+    /** ERROR CHECK PROMO */
+    if (
+      prevProps.oms.errorOmsCheckPromo !== this.props.oms.errorOmsCheckPromo
+    ) {
+      if (this.props.oms.errorOmsCheckPromo !== null) {
+        if (this.props.oms.errorOmsCheckPromo.code === 400) {
+          /** This for check promo error, open modal error global */
+          if (
+            this.props.oms.errorOmsCheckPromo.data.errorCode ===
+            'ERR-CHECK-PROMO'
+          ) {
+            this.setState({ openModalErrorGlobal: true });
+          }
         }
       }
     }
@@ -1045,6 +1063,19 @@ class OmsCartView extends Component {
       <View />
     );
   }
+  /** ===> RENDER MODAL ERROR RESPONS FROM BE ===  */
+  renderModalErrorRespons() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        open={this.state.openModalErrorGlobal}
+        onPress={() => {
+          this.setState({ openModalErrorGlobal: false });
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
   /**
    * ====================
    * EMPTY STATE
@@ -1099,6 +1130,7 @@ class OmsCartView extends Component {
         {this.renderModalConfirmationCheckout()}
         {this.renderModalDeleteSKUConfirmation()}
         {this.renderModalCallCS()}
+        {this.renderModalErrorRespons()}
       </View>
     );
   }
