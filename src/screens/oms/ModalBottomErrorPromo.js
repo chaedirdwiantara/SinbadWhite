@@ -12,49 +12,12 @@ import {
   StatusBarRedOP50,
   ButtonSingleSmall
 } from '../../library/component';
-import { MaterialCommunityIcons } from '../../library/thirdPartyPackage';
+import {
+  connect,
+  MaterialCommunityIcons
+} from '../../library/thirdPartyPackage';
 import { Fonts, GlobalStyle } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
-
-const dummies = {
-  promoSku: [
-    {
-      name: 'LAKME SKIN BRIGHTENING COMPACT',
-      catalogueImages:
-        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115822.png',
-      listPromo: [
-        {
-          id: 1,
-          name: 'Promo potongan harga Rp500 Lakme'
-        },
-        {
-          id: 2,
-          name: 'Potongan Promo Lakme 01 Eyebrow Rp200'
-        }
-      ]
-    },
-    {
-      name: 'LAKME SKIN BRIGHTENING COMPACT',
-      catalogueImages:
-        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115822.png',
-      listPromo: [
-        {
-          id: 1,
-          name: 'Promo potongan harga Rp500 Lakme'
-        }
-      ]
-    }
-  ],
-  bonusSku: [
-    {
-      id: 3,
-      name: 'LAKME EYESHADOW CRAYON BRONZE',
-      namePromo: 'Promo Bonus SKU',
-      catalogueImages:
-        'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115822.png'
-    }
-  ]
-};
 
 class ModalBottomErrorPromo extends Component {
   constructor(props) {
@@ -107,7 +70,9 @@ class ModalBottomErrorPromo extends Component {
             size={24}
           />
         </View>
-        {this.renderErrorsPromoItem(dummies.promoSku)}
+        {this.renderErrorsPromoItem(
+          this.props.oms.errorOmsGetCheckoutItem.data.error.promoSku
+        )}
       </View>
     );
   }
@@ -144,7 +109,9 @@ class ModalBottomErrorPromo extends Component {
             size={24}
           />
         </View>
-        {this.renderErrorsBonusItem(dummies.bonusSku)}
+        {this.renderErrorsBonusItem(
+          this.props.oms.errorOmsGetCheckoutItem.data.error.bonusSku
+        )}
       </View>
     );
   }
@@ -226,4 +193,9 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ModalBottomErrorPromo;
+const mapStateToProps = ({ oms }) => {
+  return { oms };
+};
+
+// eslint-disable-next-line prettier/prettier
+export default connect(mapStateToProps, {})(ModalBottomErrorPromo);

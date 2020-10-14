@@ -21,7 +21,6 @@ import {
   Address,
   OrderButton,
   EmptyData,
-  ModalBottomErrorRespons,
   ErrorPage,
   SelectedMerchantName
 } from '../../library/component';
@@ -29,9 +28,6 @@ import { Color } from '../../config';
 import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
-import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
-import ModalBottomInputOwnerId from './ModalBottomInputOwnerId';
-import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
 import CallCS from '../../screens/global/CallCS';
 
 const { width, height } = Dimensions.get('window');
@@ -42,12 +38,8 @@ class OmsCartView extends Component {
     this.state = {
       /** modal */
       openModalToCheckoutConfirmation: false,
-      openModalSkuStatusConfirmation: false,
-      openModalErrorGlobal: false,
       openModalDeleteConfirmation: false,
-      openModalErrorNoUrban: false,
       openModalCS: false,
-      openModalInputOwnerId: false,
       /** data */
       buttonCheckoutDisabled: false,
       productWantToDelete: null,
@@ -77,20 +69,6 @@ class OmsCartView extends Component {
      * SUCCESS RESPONS
      * =======================
      */
-    /**
-     * ======================
-     * FOR INPUT ID SUCCESS
-     * ======================
-     */
-    if (
-      prevProps.merchant.dataGetMerchantDetail !==
-      this.props.merchant.dataGetMerchantDetail
-    ) {
-      if (this.props.merchant.dataGetMerchantDetail !== null) {
-        this.checkCartBeforeCheckout();
-        this.setState({ openModalInputOwnerId: false });
-      }
-    }
     /**
      * === SUCCESS GET CART ====
      * after success get list of product by dataCart
@@ -153,17 +131,8 @@ class OmsCartView extends Component {
         this.setState({ loading: false });
       }
     }
-    /** ERROR GET CHECKOUT LIST */
-    /**
-     * === ERROR RESPONS ===
-     * ==> ERROR CODE 400
-     * 1. 'ERR-STOCK'
-     * 2. 'ERR-STATUS'
-     * 3. 'ERR-WAREHOUSE'
-     * 4. 'ERR-RUN-OUT'
-     * ==> ERROR CODE 406
-     * 1. 'ERR-URBAN'
-     * 2. 'ERR-VERIFIED'
+    /** ERROR GET CHECKOUT LIST
+     * => moved to OmsVerificationPage
      */
     if (
       prevProps.oms.errorOmsGetCheckoutItem !==
@@ -172,13 +141,6 @@ class OmsCartView extends Component {
       if (this.props.oms.errorOmsGetCheckoutItem !== null) {
         if (this.props.oms.errorOmsGetCheckoutItem.code === 400) {
           this.modifyProductCartArrayWhenError();
-        } else if (
-          this.props.oms.errorOmsGetCheckoutItem.code === 406 &&
-          this.props.oms.errorOmsGetCheckoutItem.data
-        ) {
-          this.manageError();
-        } else {
-          this.setState({ openModalErrorGlobal: true });
         }
       }
     }
@@ -210,29 +172,6 @@ class OmsCartView extends Component {
   /** => start loading */
   loading(loading) {
     this.setState({ loading });
-  }
-  /**
-   * =============================
-   * ERROR FUNCTION
-   * ============================
-   */
-  manageError() {
-    switch (this.props.oms.errorOmsGetCheckoutItem.data.errorCode) {
-      case 'ERR-URBAN':
-        this.setState({
-          openModalErrorNoUrban: true,
-          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
-        });
-        break;
-      case 'ERR-VERIFIED':
-        this.setState({
-          openModalInputOwnerId: true,
-          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
-        });
-        break;
-      default:
-        break;
-    }
   }
   /**
    * ==========================================
@@ -308,10 +247,6 @@ class OmsCartView extends Component {
    * => IF there is error from BE
    */
   modifyProductCartArrayWhenError() {
-    /** => open modal */
-    this.setState({
-      openModalSkuStatusConfirmation: true
-    });
     /** function for edit productCartArray */
     const productCartArray = this.state.productCartArray;
     /** modification for checklist */
@@ -1094,52 +1029,6 @@ class OmsCartView extends Component {
       </View>
     );
   }
-  /** ===> RENDER MODAL SKU STATUS CONFIRMATION === */
-  renderModalSkuStatusConfirmation() {
-    return (
-      <View>
-        {this.state.openModalSkuStatusConfirmation ? (
-          <ModalBottomStockConfirmation
-            open={this.state.openModalSkuStatusConfirmation}
-            close={() =>
-              this.setState({ openModalSkuStatusConfirmation: false })
-            }
-          />
-        ) : (
-          <View />
-        )}
-      </View>
-    );
-  }
-  /** ===> RENDER MODAL ERROR RESPONS FROM BE ===  */
-  renderModalErrorRespons() {
-    return this.state.openModalErrorGlobal ? (
-      <ModalBottomErrorRespons
-        open={this.state.openModalErrorGlobal}
-        onPress={() => {
-          this.setState({ openModalErrorGlobal: false });
-          // this.checkCartBeforeCheckout();
-        }}
-      />
-    ) : (
-      <View />
-    );
-  }
-  /** === RENDER MODAL INPUT OWNER ID === */
-  renderModalInputOwnerId() {
-    return this.state.openModalInputOwnerId ? (
-      <ModalBottomInputOwnerId
-        open={this.state.openModalInputOwnerId}
-        close={() =>
-          this.setState({
-            openModalInputOwnerId: false
-          })
-        }
-      />
-    ) : (
-      <View />
-    );
-  }
   /** === MODAL CALL CS === */
   renderModalCallCS() {
     return this.state.openModalCS ? (
@@ -1152,23 +1041,6 @@ class OmsCartView extends Component {
           parentFunction={this.parentFunction.bind(this)}
         />
       </View>
-    ) : (
-      <View />
-    );
-  }
-  /** ===> RENDER MODAL ERROR NO URBAN ===  */
-  renderModalErrorNoUrban() {
-    return this.state.openModalErrorNoUrban ? (
-      <ModalBottomErrorNoUrban
-        open={this.state.openModalErrorNoUrban}
-        backToHome={() => {
-          this.setState({ openModalErrorNoUrban: false });
-          NavigationService.navigate('MerchantHomeView');
-        }}
-        callCS={() => {
-          this.setState({ openModalErrorNoUrban: false, openModalCS: true });
-        }}
-      />
     ) : (
       <View />
     );
@@ -1226,12 +1098,7 @@ class OmsCartView extends Component {
         {/* modal */}
         {this.renderModalConfirmationCheckout()}
         {this.renderModalDeleteSKUConfirmation()}
-        {this.renderModalSkuStatusConfirmation()}
         {this.renderModalCallCS()}
-        {/* errr */}
-        {this.renderModalErrorRespons()}
-        {this.renderModalErrorNoUrban()}
-        {this.renderModalInputOwnerId()}
       </View>
     );
   }

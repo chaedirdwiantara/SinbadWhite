@@ -27,7 +27,6 @@ import * as ActionCreators from '../../state/actions';
 import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
 import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
 import CallCS from '../../screens/global/CallCS';
-import ModalBottomInputOwnerId from './ModalBottomInputOwnerId';
 import ModalBottomErrorPromo from './ModalBottomErrorPromo';
 
 class OmsVerificationView extends Component {
@@ -39,7 +38,6 @@ class OmsVerificationView extends Component {
       openModalErrorGlobal: false,
       openModalErrorNoUrban: false,
       openModalCS: false,
-      openModalInputOwnerId: false,
       openModalErrorPromo: false
     };
   }
@@ -63,18 +61,75 @@ class OmsVerificationView extends Component {
         NavigationService.navigate('OmsCheckoutView');
       }
     }
+    /** ERROR GET CHECKOUT LIST */
+    /**
+     * === ERROR RESPONS ===
+     * ==> ERROR CODE 400
+     * 1. 'ERR-STOCK'
+     * 2. 'ERR-STATUS'
+     * 3. 'ERR-WAREHOUSE'
+     * 4. 'ERR-RUN-OUT'
+     * ==> ERROR CODE 406
+     * 1. 'ERR-URBAN'
+     * 2. 'ERR-VERIFIED'
+     */
+    if (
+      prevProps.oms.errorOmsGetCheckoutItem !==
+      this.props.oms.errorOmsGetCheckoutItem
+    ) {
+      if (this.props.oms.errorOmsGetCheckoutItem !== null) {
+        if (this.props.oms.errorOmsGetCheckoutItem.code === 400) {
+          this.setState({ openModalSkuStatusConfirmation: true });
+        } else if (
+          this.props.oms.errorOmsGetCheckoutItem.code === 406 &&
+          this.props.oms.errorOmsGetCheckoutItem.data
+        ) {
+          this.manageError();
+        } else {
+          this.setState({ openModalErrorGlobal: true });
+        }
+      }
+    }
+  }
+
+  /**
+   * =============================
+   * ERROR FUNCTION
+   * ============================
+   */
+  manageError() {
+    switch (this.props.oms.errorOmsGetCheckoutItem.data.errorCode) {
+      case 'ERR-URBAN':
+        this.setState({
+          openModalErrorNoUrban: true,
+          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
+        });
+        break;
+      case 'ERR-PROMO':
+        this.setState({
+          openModalErrorPromo: true,
+          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
+        });
+        break;
+      default:
+        break;
+    }
   }
 
   /** === CALLBACK FOR ERROR PROMO MODAL ==== */
   backToCartItemView() {
+    // close error promo modal
     this.setState({ openModalErrorPromo: false });
+    // back to cart view
     NavigationService.navigate('OmsCartView');
-    // this.props.omsGetCartItemFromCheckoutProcess({
-    //   catalogues: this.props.permanent.dataSkuCart
-    // });
-    // this.props.omsDeleteCartItemProcess({
-    //   orderId: this.props.oms.dataOmsGetCheckoutItem.id
-    // });
+    // re-fetch the cart
+    this.props.omsGetCartItemFromCheckoutProcess({
+      catalogues: this.props.permanent.dataSkuCart
+    });
+    // delete the cart
+    this.props.omsDeleteCartItemProcess({
+      orderId: this.props.navigation.state.params.cartId
+    });
   }
 
   /** ===  === */
@@ -141,7 +196,7 @@ class OmsVerificationView extends Component {
                 item.qty
               } Pcs`}</Text>
               <Text style={[Fonts.type22, { marginBottom: 4 }]}>
-                {MoneyFormat(item.price)}
+                {MoneyFormat(parseInt(item.price))}
               </Text>
               <View style={styles.totalAndPriceContainer}>
                 <Text style={Fonts.type10}>Total</Text>
@@ -154,11 +209,11 @@ class OmsVerificationView extends Component {
                 alignItems: 'flex-end'
               }}
             >
-              <Text style={Fonts.type10}>{MoneyFormat(item.totalPrice)}</Text>
+              <Text style={Fonts.type10}>{MoneyFormat(parseInt(item.totalPrice))}</Text>
             </View>
           </View>
           {this.state.openBenefitDetail === index ? (
-            this.renderBenefitDetail([...item.listPromo, ...item.listVoucher])
+            this.renderBenefitDetail(item.listPromo)
           ) : (
             <View />
           )}
@@ -183,7 +238,7 @@ class OmsVerificationView extends Component {
           <Text style={[Fonts.type50, { marginLeft: 8 }]}>Total Potongan</Text>
         </View>
         <View>
-          <Text style={Fonts.type50}>{MoneyFormat(item.totalPotongan)}</Text>
+          <Text style={Fonts.type50}>{MoneyFormat(parseInt(item.totalPotongan))}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -195,7 +250,7 @@ class OmsVerificationView extends Component {
         <View key={index} style={[styles.benefitDetailContainer]}>
           <View style={styles.benefitListContainer}>
             <Text style={Fonts.type8}>{item.name}</Text>
-            <Text style={Fonts.type107}>{MoneyFormat(item.value)}</Text>
+            <Text style={Fonts.type107}>{MoneyFormat(parseInt(item.value))}</Text>
           </View>
         </View>
       );
@@ -275,7 +330,7 @@ class OmsVerificationView extends Component {
                 item.qty
               } Pcs`}</Text>
               <Text style={[Fonts.type22, { marginBottom: 4 }]}>
-                {MoneyFormat(item.price)}
+                {MoneyFormat(parseInt(item.price))}
               </Text>
               <View style={styles.totalAndPriceContainer}>
                 <Text style={Fonts.type10}>Total</Text>
@@ -288,7 +343,7 @@ class OmsVerificationView extends Component {
                 alignItems: 'flex-end'
               }}
             >
-              <Text style={Fonts.type10}>{MoneyFormat(item.totalPrice)}</Text>
+              <Text style={Fonts.type10}>{MoneyFormat(parseInt(item.totalPrice))}</Text>
             </View>
           </View>
         </View>
@@ -309,26 +364,23 @@ class OmsVerificationView extends Component {
           >
             <Text style={Fonts.type8}>Total Transaksi</Text>
             <Text style={Fonts.type8}>
-              {MoneyFormat(dataOmsCheckPromo.grandTotalTransaction)}
+              {MoneyFormat(parseInt(dataOmsCheckPromo.grandTotalTransaction))}
             </Text>
           </View>
           <View style={styles.bottomInformationTextContainer}>
             <Text style={Fonts.type8}>Total Potongan</Text>
             <Text style={Fonts.type107}>
-              {MoneyFormat(dataOmsCheckPromo.grandTotalRebate)}
+              {MoneyFormat(parseInt(dataOmsCheckPromo.grandTotalRebate))}
             </Text>
           </View>
         </View>
         <View>
           <ButtonSingle
-            disabled={this.props.oms.loadingOmsGetCartItemFromCheckout}
-            loading={this.props.oms.loadingOmsGetCartItemFromCheckout}
+            disabled={this.props.oms.loadingOmsGetCheckoutItem}
+            loading={this.props.oms.loadingOmsGetCheckoutItem}
             title={'Lanjut Ke Pembayaran'}
             borderRadius={4}
-            onPress={() => {
-              this.setState({ openModalErrorPromo: true });
-              // NavigationService.navigate('OmsCheckoutView');
-            }}
+            onPress={() => this.getCheckoutItem()}
           />
         </View>
       </View>
@@ -375,9 +427,10 @@ class OmsVerificationView extends Component {
         {this.state.openModalSkuStatusConfirmation ? (
           <ModalBottomStockConfirmation
             open={this.state.openModalSkuStatusConfirmation}
-            close={() =>
-              this.setState({ openModalSkuStatusConfirmation: false })
-            }
+            close={() => {
+              this.setState({ openModalSkuStatusConfirmation: false });
+              NavigationService.navigate('OmsCartView');
+            }}
           />
         ) : (
           <View />
@@ -422,26 +475,11 @@ class OmsVerificationView extends Component {
         open={this.state.openModalErrorNoUrban}
         backToHome={() => {
           this.setState({ openModalErrorNoUrban: false });
-          NavigationService.navigate('HomeView');
+          NavigationService.navigate('MerchantHomeView');
         }}
         callCS={() => {
           this.setState({ openModalErrorNoUrban: false, openModalCS: true });
         }}
-      />
-    ) : (
-      <View />
-    );
-  }
-  /** === RENDER MODAL INPUT OWNER ID === */
-  renderModalInputOwnerId() {
-    return this.state.openModalInputOwnerId ? (
-      <ModalBottomInputOwnerId
-        open={this.state.openModalInputOwnerId}
-        close={() =>
-          this.setState({
-            openModalInputOwnerId: false
-          })
-        }
       />
     ) : (
       <View />
@@ -460,7 +498,9 @@ class OmsVerificationView extends Component {
         backToCart={() => this.backToCartItemView()}
         proceedToCheckout={() => {
           this.setState({ openModalErrorPromo: false });
-          this.getCheckoutItem();
+          this.props.omsReplaceCheckoutItem(
+            this.props.oms.errorOmsGetCheckoutItem.data.dataCheckout
+          );
         }}
       />
     ) : (
@@ -479,7 +519,6 @@ class OmsVerificationView extends Component {
         {this.renderModalErrorRespons()}
         {this.renderModalErrorNoUrban()}
         {this.renderModalCallCS()}
-        {this.renderModalInputOwnerId()}
         {this.renderModalErrorPromo()}
       </SafeAreaView>
     );

@@ -218,10 +218,25 @@ export const oms = createReducer(INITIAL_STATE, {
     };
   },
   [types.OMS_GET_CHECKOUT_ITEM_FAILED](state, action) {
-    return {
+    const updatedState = {
       ...state,
       loadingOmsGetCheckoutItem: false,
       errorOmsGetCheckoutItem: action.payload
+    };
+    // if the error is promo, then update the dataCheckPromo
+    if (action.payload.data.errorCode === 'ERR-PROMO') {
+      return {
+        ...updatedState,
+        dataOmsCheckPromo: action.payload.data.data
+      };
+    } else {
+      return updatedState;
+    }
+  },
+  [types.OMS_REPLACE_CHECKOUT_ITEM](state, action) {
+    return {
+      ...state,
+      dataOmsGetCheckoutItem: action.payload
     };
   },
   /**

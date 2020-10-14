@@ -23,6 +23,7 @@ export const OMS_GET_CART_ITEM_FROM_CHECKOUT_FAILED =
 export const OMS_GET_CHECKOUT_ITEM_PROCESS = 'OmsGetCheckoutItemProcess';
 export const OMS_GET_CHECKOUT_ITEM_SUCCESS = 'OmsGetCheckoutItemSuccess';
 export const OMS_GET_CHECKOUT_ITEM_FAILED = 'OmsGetCheckoutItemFailed';
+export const OMS_REPLACE_CHECKOUT_ITEM = 'OmsReplaceCheckoutItem';
 /** CONFIRM ORDER */
 export const OMS_CONFIRM_ORDER_PROCESS = 'OmsConfirmOrderProcess';
 export const OMS_CONFIRM_ORDER_SUCCESS = 'OmsConfirmOrderSuccess';
