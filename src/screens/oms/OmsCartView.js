@@ -29,7 +29,6 @@ import { Color } from '../../config';
 import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
-import ModalBottomInputOwnerId from './ModalBottomInputOwnerId';
 import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
 import CallCS from '../../screens/global/CallCS';
 
@@ -45,7 +44,6 @@ class OmsCartView extends Component {
       openModalDeleteConfirmation: false,
       openModalErrorNoUrban: false,
       openModalCS: false,
-      openModalInputOwnerId: false,
       /** data */
       buttonCheckoutDisabled: false,
       productWantToDelete: null,
@@ -75,20 +73,6 @@ class OmsCartView extends Component {
      * SUCCESS RESPONS
      * =======================
      */
-    /**
-     * ======================
-     * FOR INPUT ID SUCCESS
-     * ======================
-     */
-    if (
-      prevProps.merchant.dataGetMerchantDetail !==
-      this.props.merchant.dataGetMerchantDetail
-    ) {
-      if (this.props.merchant.dataGetMerchantDetail !== null) {
-        this.checkCartBeforeCheckout();
-        this.setState({ openModalInputOwnerId: false });
-      }
-    }
     /**
      * === SUCCESS GET CART ====
      * after success get list of product by dataCart
@@ -203,12 +187,6 @@ class OmsCartView extends Component {
       case 'ERR-URBAN':
         this.setState({
           openModalErrorNoUrban: true,
-          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
-        });
-        break;
-      case 'ERR-VERIFIED':
-        this.setState({
-          openModalInputOwnerId: true,
           cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
         });
         break;
@@ -1086,21 +1064,6 @@ class OmsCartView extends Component {
       <View />
     );
   }
-  /** === RENDER MODAL INPUT OWNER ID === */
-  renderModalInputOwnerId() {
-    return this.state.openModalInputOwnerId ? (
-      <ModalBottomInputOwnerId
-        open={this.state.openModalInputOwnerId}
-        close={() =>
-          this.setState({
-            openModalInputOwnerId: false
-          })
-        }
-      />
-    ) : (
-      <View />
-    );
-  }
   /** === MODAL CALL CS === */
   renderModalCallCS() {
     return this.state.openModalCS ? (
@@ -1191,7 +1154,6 @@ class OmsCartView extends Component {
         {/* errr */}
         {this.renderModalErrorRespons()}
         {this.renderModalErrorNoUrban()}
-        {this.renderModalInputOwnerId()}
       </View>
     );
   }

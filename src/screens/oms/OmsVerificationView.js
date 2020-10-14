@@ -27,7 +27,6 @@ import * as ActionCreators from '../../state/actions';
 import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
 import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
 import CallCS from '../../screens/global/CallCS';
-import ModalBottomInputOwnerId from './ModalBottomInputOwnerId';
 import ModalBottomErrorPromo from './ModalBottomErrorPromo';
 
 class OmsVerificationView extends Component {
@@ -39,7 +38,6 @@ class OmsVerificationView extends Component {
       openModalErrorGlobal: false,
       openModalErrorNoUrban: false,
       openModalCS: false,
-      openModalInputOwnerId: false,
       openModalErrorPromo: false
     };
   }
@@ -104,12 +102,6 @@ class OmsVerificationView extends Component {
       case 'ERR-URBAN':
         this.setState({
           openModalErrorNoUrban: true,
-          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
-        });
-        break;
-      case 'ERR-VERIFIED':
-        this.setState({
-          openModalInputOwnerId: true,
           cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
         });
         break;
@@ -489,21 +481,6 @@ class OmsVerificationView extends Component {
       <View />
     );
   }
-  /** === RENDER MODAL INPUT OWNER ID === */
-  renderModalInputOwnerId() {
-    return this.state.openModalInputOwnerId ? (
-      <ModalBottomInputOwnerId
-        open={this.state.openModalInputOwnerId}
-        close={() =>
-          this.setState({
-            openModalInputOwnerId: false
-          })
-        }
-      />
-    ) : (
-      <View />
-    );
-  }
   /** === RENDER MODAL ERROR PROMO === */
   renderModalErrorPromo() {
     return this.state.openModalErrorPromo ? (
@@ -536,7 +513,6 @@ class OmsVerificationView extends Component {
         {this.renderModalErrorRespons()}
         {this.renderModalErrorNoUrban()}
         {this.renderModalCallCS()}
-        {this.renderModalInputOwnerId()}
         {this.renderModalErrorPromo()}
       </SafeAreaView>
     );
