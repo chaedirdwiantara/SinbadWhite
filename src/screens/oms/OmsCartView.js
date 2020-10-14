@@ -29,7 +29,6 @@ import { Color } from '../../config';
 import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
-import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
 import CallCS from '../../screens/global/CallCS';
 
 const { width, height } = Dimensions.get('window');
@@ -42,7 +41,6 @@ class OmsCartView extends Component {
       openModalToCheckoutConfirmation: false,
       openModalErrorGlobal: false,
       openModalDeleteConfirmation: false,
-      openModalErrorNoUrban: false,
       openModalCS: false,
       /** data */
       buttonCheckoutDisabled: false,
@@ -176,23 +174,6 @@ class OmsCartView extends Component {
   /** => start loading */
   loading(loading) {
     this.setState({ loading });
-  }
-  /**
-   * =============================
-   * ERROR FUNCTION
-   * ============================
-   */
-  manageError() {
-    switch (this.props.oms.errorOmsGetCheckoutItem.data.errorCode) {
-      case 'ERR-URBAN':
-        this.setState({
-          openModalErrorNoUrban: true,
-          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
-        });
-        break;
-      default:
-        break;
-    }
   }
   /**
    * ==========================================
@@ -1080,23 +1061,6 @@ class OmsCartView extends Component {
       <View />
     );
   }
-  /** ===> RENDER MODAL ERROR NO URBAN ===  */
-  renderModalErrorNoUrban() {
-    return this.state.openModalErrorNoUrban ? (
-      <ModalBottomErrorNoUrban
-        open={this.state.openModalErrorNoUrban}
-        backToHome={() => {
-          this.setState({ openModalErrorNoUrban: false });
-          NavigationService.navigate('MerchantHomeView');
-        }}
-        callCS={() => {
-          this.setState({ openModalErrorNoUrban: false, openModalCS: true });
-        }}
-      />
-    ) : (
-      <View />
-    );
-  }
   /**
    * ====================
    * EMPTY STATE
@@ -1153,7 +1117,6 @@ class OmsCartView extends Component {
         {this.renderModalCallCS()}
         {/* errr */}
         {this.renderModalErrorRespons()}
-        {this.renderModalErrorNoUrban()}
       </View>
     );
   }

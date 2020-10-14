@@ -471,7 +471,7 @@ class OmsVerificationView extends Component {
         open={this.state.openModalErrorNoUrban}
         backToHome={() => {
           this.setState({ openModalErrorNoUrban: false });
-          NavigationService.navigate('HomeView');
+          NavigationService.navigate('MerchantHomeView');
         }}
         callCS={() => {
           this.setState({ openModalErrorNoUrban: false, openModalCS: true });
