@@ -203,7 +203,6 @@ class PdpBundleView extends Component {
 
   addToCart(data) {
     /** >>> save sku to permanent cart */
-    console.log(data.data.qty)
     this.props.omsAddToCart({
       method: 'add',
       catalogueId: data.data.catalogueId,
