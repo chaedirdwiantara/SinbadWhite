@@ -107,6 +107,11 @@ export function omsGetCheckoutItemSuccess(data) {
 export function omsGetCheckoutItemFailed(data) {
   return { type: types.OMS_GET_CHECKOUT_ITEM_FAILED, payload: data };
 }
+/** === REPLACE CHECKOUT ITEM === */
+export function omsReplaceCheckoutItem(data) {
+  return { type: types.OMS_REPLACE_CHECKOUT_ITEM, payload: data };
+}
+
 /**
  * ===========================
  * DELETE CART ITEM

@@ -105,6 +105,12 @@ class OmsVerificationView extends Component {
           cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
         });
         break;
+      case 'ERR-PROMO':
+        this.setState({
+          openModalErrorPromo: true,
+          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
+        });
+        break;
       default:
         break;
     }
@@ -190,7 +196,7 @@ class OmsVerificationView extends Component {
                 item.qty
               } Pcs`}</Text>
               <Text style={[Fonts.type22, { marginBottom: 4 }]}>
-                {MoneyFormat(item.price)}
+                {MoneyFormat(parseInt(item.price))}
               </Text>
               <View style={styles.totalAndPriceContainer}>
                 <Text style={Fonts.type10}>Total</Text>
@@ -203,7 +209,7 @@ class OmsVerificationView extends Component {
                 alignItems: 'flex-end'
               }}
             >
-              <Text style={Fonts.type10}>{MoneyFormat(item.totalPrice)}</Text>
+              <Text style={Fonts.type10}>{MoneyFormat(parseInt(item.totalPrice))}</Text>
             </View>
           </View>
           {this.state.openBenefitDetail === index ? (
@@ -232,7 +238,7 @@ class OmsVerificationView extends Component {
           <Text style={[Fonts.type50, { marginLeft: 8 }]}>Total Potongan</Text>
         </View>
         <View>
-          <Text style={Fonts.type50}>{MoneyFormat(item.totalPotongan)}</Text>
+          <Text style={Fonts.type50}>{MoneyFormat(parseInt(item.totalPotongan))}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -244,7 +250,7 @@ class OmsVerificationView extends Component {
         <View key={index} style={[styles.benefitDetailContainer]}>
           <View style={styles.benefitListContainer}>
             <Text style={Fonts.type8}>{item.name}</Text>
-            <Text style={Fonts.type107}>{MoneyFormat(item.value)}</Text>
+            <Text style={Fonts.type107}>{MoneyFormat(parseInt(item.value))}</Text>
           </View>
         </View>
       );
@@ -324,7 +330,7 @@ class OmsVerificationView extends Component {
                 item.qty
               } Pcs`}</Text>
               <Text style={[Fonts.type22, { marginBottom: 4 }]}>
-                {MoneyFormat(item.price)}
+                {MoneyFormat(parseInt(item.price))}
               </Text>
               <View style={styles.totalAndPriceContainer}>
                 <Text style={Fonts.type10}>Total</Text>
@@ -337,7 +343,7 @@ class OmsVerificationView extends Component {
                 alignItems: 'flex-end'
               }}
             >
-              <Text style={Fonts.type10}>{MoneyFormat(item.totalPrice)}</Text>
+              <Text style={Fonts.type10}>{MoneyFormat(parseInt(item.totalPrice))}</Text>
             </View>
           </View>
         </View>
@@ -358,13 +364,13 @@ class OmsVerificationView extends Component {
           >
             <Text style={Fonts.type8}>Total Transaksi</Text>
             <Text style={Fonts.type8}>
-              {MoneyFormat(dataOmsCheckPromo.grandTotalTransaction)}
+              {MoneyFormat(parseInt(dataOmsCheckPromo.grandTotalTransaction))}
             </Text>
           </View>
           <View style={styles.bottomInformationTextContainer}>
             <Text style={Fonts.type8}>Total Potongan</Text>
             <Text style={Fonts.type107}>
-              {MoneyFormat(dataOmsCheckPromo.grandTotalRebate)}
+              {MoneyFormat(parseInt(dataOmsCheckPromo.grandTotalRebate))}
             </Text>
           </View>
         </View>
@@ -374,9 +380,7 @@ class OmsVerificationView extends Component {
             loading={this.props.oms.loadingOmsGetCheckoutItem}
             title={'Lanjut Ke Pembayaran'}
             borderRadius={4}
-            onPress={() => {
-              this.getCheckoutItem();
-            }}
+            onPress={() => this.getCheckoutItem()}
           />
         </View>
       </View>
@@ -494,7 +498,9 @@ class OmsVerificationView extends Component {
         backToCart={() => this.backToCartItemView()}
         proceedToCheckout={() => {
           this.setState({ openModalErrorPromo: false });
-          this.getCheckoutItem();
+          this.props.omsReplaceCheckoutItem(
+            this.props.oms.errorOmsGetCheckoutItem.data.dataCheckout
+          );
         }}
       />
     ) : (
