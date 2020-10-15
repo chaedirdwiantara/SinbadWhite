@@ -209,7 +209,9 @@ class OmsVerificationView extends Component {
                 alignItems: 'flex-end'
               }}
             >
-              <Text style={Fonts.type10}>{MoneyFormat(parseInt(item.totalPrice))}</Text>
+              <Text style={Fonts.type10}>
+                {MoneyFormat(parseInt(item.totalPrice))}
+              </Text>
             </View>
           </View>
           {this.state.openBenefitDetail === index ? (
@@ -238,7 +240,9 @@ class OmsVerificationView extends Component {
           <Text style={[Fonts.type50, { marginLeft: 8 }]}>Total Potongan</Text>
         </View>
         <View>
-          <Text style={Fonts.type50}>{MoneyFormat(parseInt(item.totalPotongan))}</Text>
+          <Text style={Fonts.type50}>
+            {MoneyFormat(parseInt(item.totalPotongan))}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -250,7 +254,9 @@ class OmsVerificationView extends Component {
         <View key={index} style={[styles.benefitDetailContainer]}>
           <View style={styles.benefitListContainer}>
             <Text style={Fonts.type8}>{item.name}</Text>
-            <Text style={Fonts.type107}>{MoneyFormat(parseInt(item.value))}</Text>
+            <Text style={Fonts.type107}>
+              {MoneyFormat(parseInt(item.value))}
+            </Text>
           </View>
         </View>
       );
@@ -286,7 +292,7 @@ class OmsVerificationView extends Component {
           <View style={styles.productDetailContainer}>
             <Text style={[Fonts.type16, { marginBottom: 4 }]}>{item.name}</Text>
             <Text style={[Fonts.type17, { marginBottom: 4 }]}>
-              {item.namePromo}
+              {item.promoName}
             </Text>
             <Text style={[Fonts.type10, { marginBottom: 4 }]}>{`x${
               item.qty
@@ -343,7 +349,9 @@ class OmsVerificationView extends Component {
                 alignItems: 'flex-end'
               }}
             >
-              <Text style={Fonts.type10}>{MoneyFormat(parseInt(item.totalPrice))}</Text>
+              <Text style={Fonts.type10}>
+                {MoneyFormat(parseInt(item.totalPrice))}
+              </Text>
             </View>
           </View>
         </View>
