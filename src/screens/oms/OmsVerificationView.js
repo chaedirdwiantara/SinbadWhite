@@ -241,7 +241,7 @@ class OmsVerificationView extends Component {
         </View>
         <View>
           <Text style={Fonts.type50}>
-            {MoneyFormat(parseInt(item.totalPotongan))}
+            {MoneyFormat(parseInt(item.totalRebate))}
           </Text>
         </View>
       </TouchableOpacity>
@@ -296,7 +296,7 @@ class OmsVerificationView extends Component {
               </Text>
             </View>
             <Text style={[Fonts.type17, { marginBottom: 4 }]}>
-              {item.namePromo}
+              {item.promoName}
             </Text>
             <Text style={[Fonts.type10, { marginBottom: 4 }]}>{`x${
               item.qty
