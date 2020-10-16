@@ -167,7 +167,7 @@ class OmsVerificationView extends Component {
       return (
         <View>
           <View style={styles.sectionHeaderContainer}>
-            <Text style={Fonts.type16}>{`Potongan Harga (${
+            <Text style={Fonts.type16}>{`Produk Mendapatkan Potongan Harga (${
               promoSku.length
             } SKU)`}</Text>
           </View>
@@ -212,6 +212,17 @@ class OmsVerificationView extends Component {
                   </Text>
                 </View>
               </View>
+            </View>
+            <View
+              style={{
+                justifyContent: 'flex-end',
+                width: '20%',
+                alignItems: 'flex-end'
+              }}
+            >
+              <Text style={Fonts.type10}>
+                {MoneyFormat(parseInt(item.totalPrice))}
+              </Text>
             </View>
           </View>
           {this.state.openBenefitDetail === index ? (
@@ -296,7 +307,7 @@ class OmsVerificationView extends Component {
               </Text>
             </View>
             <Text style={[Fonts.type17, { marginBottom: 4 }]}>
-              {item.namePromo}
+              {item.promoName}
             </Text>
             <Text style={[Fonts.type10, { marginBottom: 4 }]}>{`x${
               item.qty
@@ -313,7 +324,9 @@ class OmsVerificationView extends Component {
       return (
         <View>
           <View style={styles.sectionHeaderContainer}>
-            <Text style={Fonts.type16}>Produk Tidak Mendapatkan Promo</Text>
+            <Text style={Fonts.type16}>
+              Produk Tidak Mendapatkan Potongan Harga
+            </Text>
           </View>
           {this.renderNonBenefitProductItem(notPromoSku)}
         </View>
@@ -360,6 +373,17 @@ class OmsVerificationView extends Component {
                   </Text>
                 </View>
               </View>
+            </View>
+            <View
+              style={{
+                justifyContent: 'flex-end',
+                width: '20%',
+                alignItems: 'flex-end'
+              }}
+            >
+              <Text style={Fonts.type10}>
+                {MoneyFormat(parseInt(item.totalPrice))}
+              </Text>
             </View>
           </View>
         </View>
