@@ -309,7 +309,9 @@ class OmsVerificationView extends Component {
       return (
         <View>
           <View style={styles.sectionHeaderContainer}>
-            <Text style={Fonts.type16}>Produk Tidak Mendapatkan Promo</Text>
+            <Text style={Fonts.type16}>
+              Produk Tidak Mendapatkan Potongan Harga
+            </Text>
           </View>
           {this.renderNonBenefitProductItem(notPromoSku)}
         </View>
