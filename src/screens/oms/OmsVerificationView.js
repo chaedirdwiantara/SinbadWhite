@@ -189,27 +189,29 @@ class OmsVerificationView extends Component {
               />
             </View>
             <View style={styles.productDetailContainer}>
-              <Text style={[Fonts.type16, { marginBottom: 4 }]}>
-                {item.name}
-              </Text>
-              <Text style={[Fonts.type17, { marginBottom: 4 }]}>{`x${
-                item.qty
-              } Pcs`}</Text>
-              <Text style={[Fonts.type22, { marginBottom: 4 }]}>
-                {MoneyFormat(parseInt(item.price))}
-              </Text>
-              <View style={styles.totalAndPriceContainer}>
-                <Text style={Fonts.type10}>Total</Text>
+              <View style={{ width: '75%' }}>
+                <Text style={[Fonts.type16, { marginBottom: 4 }]}>
+                  {item.name}
+                </Text>
               </View>
-            </View>
-            <View
-              style={{
-                justifyContent: 'flex-end',
-                width: '20%',
-                alignItems: 'flex-end'
-              }}
-            >
-              <Text style={Fonts.type10}>{MoneyFormat(parseInt(item.totalPrice))}</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ flex: 1 }}>
+                  <Text style={[Fonts.type17, { marginBottom: 4 }]}>{`x${
+                    item.qty
+                  } Pcs`}</Text>
+                  <Text style={[Fonts.type22, { marginBottom: 4 }]}>
+                    {MoneyFormat(parseInt(item.price))}
+                  </Text>
+                  <View style={styles.totalAndPriceContainer}>
+                    <Text style={Fonts.type10}>Total</Text>
+                  </View>
+                </View>
+                <View style={{ justifyContent: 'flex-end' }}>
+                  <Text style={Fonts.type10}>
+                    {MoneyFormat(parseInt(item.totalPrice))}
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
           {this.state.openBenefitDetail === index ? (
@@ -238,7 +240,9 @@ class OmsVerificationView extends Component {
           <Text style={[Fonts.type50, { marginLeft: 8 }]}>Total Potongan</Text>
         </View>
         <View>
-          <Text style={Fonts.type50}>{MoneyFormat(parseInt(item.totalPotongan))}</Text>
+          <Text style={Fonts.type50}>
+            {MoneyFormat(parseInt(item.totalPotongan))}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -250,7 +254,9 @@ class OmsVerificationView extends Component {
         <View key={index} style={[styles.benefitDetailContainer]}>
           <View style={styles.benefitListContainer}>
             <Text style={Fonts.type8}>{item.name}</Text>
-            <Text style={Fonts.type107}>{MoneyFormat(parseInt(item.value))}</Text>
+            <Text style={Fonts.type107}>
+              {MoneyFormat(parseInt(item.value))}
+            </Text>
           </View>
         </View>
       );
@@ -284,7 +290,11 @@ class OmsVerificationView extends Component {
             />
           </View>
           <View style={styles.productDetailContainer}>
-            <Text style={[Fonts.type16, { marginBottom: 4 }]}>{item.name}</Text>
+            <View style={{ width: '75%' }}>
+              <Text style={[Fonts.type16, { marginBottom: 4 }]}>
+                {item.name}
+              </Text>
+            </View>
             <Text style={[Fonts.type17, { marginBottom: 4 }]}>
               {item.namePromo}
             </Text>
@@ -323,27 +333,33 @@ class OmsVerificationView extends Component {
               />
             </View>
             <View style={styles.productDetailContainer}>
-              <Text style={[Fonts.type16, { marginBottom: 4 }]}>
-                {item.name}
-              </Text>
-              <Text style={[Fonts.type17, { marginBottom: 4 }]}>{`x${
-                item.qty
-              } Pcs`}</Text>
-              <Text style={[Fonts.type22, { marginBottom: 4 }]}>
-                {MoneyFormat(parseInt(item.price))}
-              </Text>
-              <View style={styles.totalAndPriceContainer}>
-                <Text style={Fonts.type10}>Total</Text>
+              <View style={{ width: '75%' }}>
+                <Text style={[Fonts.type16, { marginBottom: 4 }]}>
+                  {item.name}
+                </Text>
               </View>
-            </View>
-            <View
-              style={{
-                justifyContent: 'flex-end',
-                width: '20%',
-                alignItems: 'flex-end'
-              }}
-            >
-              <Text style={Fonts.type10}>{MoneyFormat(parseInt(item.totalPrice))}</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ flex: 1 }}>
+                  <Text style={[Fonts.type17, { marginBottom: 4 }]}>{`x${
+                    item.qty
+                  } Pcs`}</Text>
+                  <Text style={[Fonts.type22, { marginBottom: 4 }]}>
+                    {MoneyFormat(parseInt(item.price))}
+                  </Text>
+                  <View style={styles.totalAndPriceContainer}>
+                    <Text style={Fonts.type10}>Total</Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    justifyContent: 'flex-end'
+                  }}
+                >
+                  <Text style={Fonts.type10}>
+                    {MoneyFormat(parseInt(item.totalPrice))}
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
         </View>
