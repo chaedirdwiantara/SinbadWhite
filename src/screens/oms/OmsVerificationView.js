@@ -167,7 +167,7 @@ class OmsVerificationView extends Component {
       return (
         <View>
           <View style={styles.sectionHeaderContainer}>
-            <Text style={Fonts.type16}>{`Potongan Harga (${
+            <Text style={Fonts.type16}>{`Produk Mendapatkan Potongan Harga (${
               promoSku.length
             } SKU)`}</Text>
           </View>
