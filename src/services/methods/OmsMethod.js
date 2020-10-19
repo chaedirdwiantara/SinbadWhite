@@ -126,7 +126,9 @@ function promoData() {
     if (stateData.oms.dataOmsCheckPromo.promoSku.length > 0) {
       stateData.oms.dataOmsCheckPromo.promoSku.map(sku => {
         sku.listPromo.map(promo => {
-          promos.push(promo.id);
+          if (!promos.includes(promo.id)) {
+            promos.push(promo.id);
+          }
         });
       });
     }
