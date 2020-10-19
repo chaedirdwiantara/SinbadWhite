@@ -1,5 +1,6 @@
 import ApiRest from '../apiRest';
 import { GlobalMethod } from './GlobalMethod';
+import { Store } from '../../state/Store';
 /** GET CART ITEM */
 function getCartItem(data) {
   return ApiRest({
@@ -14,14 +15,17 @@ function getCartItem(data) {
 }
 /** GET CHECKOUT ITEM */
 function getCheckoutItem(data) {
+  let params = {
+    storeId: GlobalMethod.merchantStoreId(),
+    cartId: data.cartId,
+    catalogues: data.catalogues
+  };
+  // promo
+  params.promos = promoData();
   return ApiRest({
     path: 'checkout',
     method: 'POST',
-    params: {
-      storeId: GlobalMethod.merchantStoreId(),
-      cartId: data.cartId,
-      catalogues: data.catalogues
-    }
+    params
   });
 }
 /** GET PAYMENT */
@@ -107,6 +111,27 @@ function checkPromo(data) {
     method: 'POST',
     params
   });
+}
+
+/**
+ * =========================================
+ * THIS CODE IS NOT FETCHING (ONLY FUNCTION)
+ * =========================================
+ */
+/** === GET PROMO DATA === */
+function promoData() {
+  const promos = [];
+  const stateData = Store.getState();
+  if (stateData.oms.dataOmsCheckPromo !== null) {
+    if (stateData.oms.dataOmsCheckPromo.promoSku.length > 0) {
+      stateData.oms.dataOmsCheckPromo.promoSku.map(sku => {
+        sku.listPromo.map(promo => {
+          promos.push(promo.id);
+        });
+      });
+    }
+  }
+  return promos;
 }
 
 export const OmsMethod = {
