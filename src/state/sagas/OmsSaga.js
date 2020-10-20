@@ -101,6 +101,17 @@ function* getLastPaymentChannel(actions) {
     yield put(ActionCreators.omsGetLastPaymentChannelFailed(error));
   }
 }
+/** === CHECK PROMO VA === */
+function* checkPromo(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.checkPromo(actions.payload);
+    });
+    yield put(ActionCreators.omsCheckPromoSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.omsCheckPromoFailed(error));
+  }
+}
 /** === SAGA FUNCTION === */
 function* OmsSaga() {
   yield takeEvery(types.OMS_GET_CART_ITEM_PROCESS, getCartItem);
@@ -114,7 +125,11 @@ function* OmsSaga() {
   yield takeEvery(types.OMS_GET_PAYMENT_PROCESS, getPayment);
   yield takeEvery(types.OMS_GET_PAYMENT_CHANNEL_PROCESS, getPaymentChannel);
   yield takeEvery(types.OMS_GET_TERMS_CONDITIONS_PROCESS, getTermsConditions);
-  yield takeEvery(types.OMS_GET_LAST_PAYMENT_CHANNEL_PROCESS, getLastPaymentChannel);
+  yield takeEvery(
+    types.OMS_GET_LAST_PAYMENT_CHANNEL_PROCESS,
+    getLastPaymentChannel
+  );
+  yield takeEvery(types.OMS_CHECK_PROMO_PROCESS, checkPromo);
 }
 
 export default OmsSaga;

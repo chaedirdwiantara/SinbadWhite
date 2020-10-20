@@ -21,6 +21,26 @@ export function pdpGetDetailFailed(data) {
   return { type: types.PDP_GET_DETAIL_FAILED, payload: data };
 }
 /**
+ * ===========================
+ * GET DETAIL BUNDLE PDP
+ * ===========================
+ */
+/** PDP SKU GET BUNDLE DETAILS PROCESS */
+export function pdpGetBundleDetailProcess(data) {
+  return { type: types.PDP_GET_BUNDLE_DETAIL_PROCESS, payload: data };
+}
+/** PDP SKU GET DETAILS SUCCESS */
+export function pdpGetBundleDetailSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.PDP_GET_BUNDLE_DETAIL_SUCCESS, payload: data.data };
+  }
+  return { type: types.PDP_GET_BUNDLE_DETAIL_FAILED, payload: data };
+}
+/** PDP SKU GET DETAILS FAILED */
+export function pdpGetBundleDetailFailed(data) {
+  return { type: types.PDP_GET_BUNDLE_DETAIL_FAILED, payload: data };
+}
+/**
  * ==============================
  * GET PDP BY SUPPLIER ID
  * ==============================

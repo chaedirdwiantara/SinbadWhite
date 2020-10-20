@@ -6,18 +6,15 @@ import {
   FlatList,
   TouchableOpacity,
   Text
-} from '../../library/reactPackage'
-import {
-  bindActionCreators,
-  connect
-} from '../../library/thirdPartyPackage'
+} from '../../library/reactPackage';
+import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import {
   SkeletonType7,
   LoadingLoadMore,
   EmptyData
-} from '../../library/component'
-import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
-import { Color } from '../../config'
+} from '../../library/component';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
+import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
 
 class PdpLineDataView extends Component {
@@ -71,7 +68,10 @@ class PdpLineDataView extends Component {
     return (
       <TouchableOpacity
         onPress={() =>
-          this.toParentFunction({ type: 'openModalOrder', data: item.id })
+          this.toParentFunction({
+            type: item.isBundle ? 'goToBundlePage' : 'openModalOrder',
+            data: item.id
+          })
         }
         style={[styles.pesanButton, { backgroundColor: Color.mainColor }]}
       >
@@ -200,14 +200,14 @@ export default connect(
 )(PdpLineDataView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
