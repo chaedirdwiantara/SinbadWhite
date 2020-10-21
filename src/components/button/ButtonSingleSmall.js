@@ -103,32 +103,33 @@ class ButtonSingleSmall extends Component {
 
 const styles = StyleSheet.create({
   buttonRed: {
-    paddingHorizontal: 7,
-    backgroundColor: Color.buttonActiveColorRed,
-    height: 41
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    backgroundColor: Color.buttonActiveColorRed
   },
   buttonWhite: {
-    paddingHorizontal: 7,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
     backgroundColor: Color.buttonActiveColorWhite,
     borderWidth: 1.5,
-    borderColor: Color.buttonWhiteBorderRed,
-    height: 41
+    borderColor: Color.buttonWhiteBorderRed
   },
   buttonWhiteDisabled: {
-    paddingHorizontal: 7,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
     backgroundColor: Color.buttonActiveColorWhite,
     borderWidth: 1.5,
     borderColor: Color.buttonRedDisableColor
   },
   buttonRedDisabled: {
-    paddingHorizontal: 7,
-    backgroundColor: Color.buttonRedDisableColor,
-    height: 41
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    backgroundColor: Color.buttonRedDisableColor
   },
   buttonGreyDisabled: {
-    paddingHorizontal: 7,
-    backgroundColor: Color.fontBlack40,
-    height: 41
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    backgroundColor: Color.fontBlack40
   }
 });
 

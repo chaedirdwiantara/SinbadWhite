@@ -7,6 +7,18 @@ import { NavigationActions } from 'react-navigation';
 
 let navigator;
 
+/** === GET ACTIVE ROUTE NAME === */
+function getActiveRouteName(navigationState) {
+  if (!navigationState) {
+    return null;
+  }
+  const route = navigationState.routes[navigationState.index];
+  // dive to nested navigators
+  if (route.routes) {
+    return getActiveRouteName(route);
+  }
+  return route.routeName;
+}
 /** === TOP LEVEL NAVIGATOR === */
 function setTopLevelNavigator(navigatorRef) {
   navigator = navigatorRef;
@@ -32,5 +44,6 @@ function goBack(key) {
 export default {
   navigate,
   goBack,
-  setTopLevelNavigator
+  setTopLevelNavigator,
+  getActiveRouteName
 };

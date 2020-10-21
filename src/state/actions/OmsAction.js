@@ -107,6 +107,11 @@ export function omsGetCheckoutItemSuccess(data) {
 export function omsGetCheckoutItemFailed(data) {
   return { type: types.OMS_GET_CHECKOUT_ITEM_FAILED, payload: data };
 }
+/** === REPLACE CHECKOUT ITEM === */
+export function omsReplaceCheckoutItem(data) {
+  return { type: types.OMS_REPLACE_CHECKOUT_ITEM, payload: data };
+}
+
 /**
  * ===========================
  * DELETE CART ITEM
@@ -294,4 +299,28 @@ export function omsGetLastPaymentChannelSuccess(data) {
 /** === GET LAST PAYMENT CHANNEL FAILED === */
 export function omsGetLastPaymentChannelFailed(data) {
   return { type: types.OMS_GET_LAST_PAYMENT_CHANNEL_FAILED, payload: data };
+}
+
+/**
+ * ===========================
+ * CHECK PROMO
+ * ===========================
+ */
+/** === CHECK PROMO PROCESS === */
+export function omsCheckPromoProcess(data) {
+  return { type: types.OMS_CHECK_PROMO_PROCESS, payload: data };
+}
+/** === CHECK PROMO SUCCESS === */
+export function omsCheckPromoSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_CHECK_PROMO_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_CHECK_PROMO_FAILED, payload: data };
+}
+/** === CHECK PROMO FAILED === */
+export function omsCheckPromoFailed(data) {
+  return { type: types.OMS_CHECK_PROMO_FAILED, payload: data };
 }

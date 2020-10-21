@@ -4,6 +4,7 @@ import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 import OmsCartView from '../../screens/oms/OmsCartView';
 import OmsCheckoutView from '../../screens/oms/OmsCheckoutView';
+import OmsVerificationView from '../../screens/oms/OmsVerificationView';
 
 const OmsNavigator = {
   OmsCartView: {
@@ -29,6 +30,25 @@ const OmsNavigator = {
     screen: OmsCheckoutView,
     navigationOptions: {
       headerTitle: 'Checkout',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.backButtonWhite,
+      headerStyle: {
+        backgroundColor: masterColor.mainColor
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  OmsVerificationView: {
+    screen: OmsVerificationView,
+    navigationOptions: {
+      headerTitle: 'Verifikasi Order',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
