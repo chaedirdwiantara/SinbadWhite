@@ -20,6 +20,10 @@ export const PDP_SEARCH_GET_LOADMORE = 'PdpSearchGetLoadMore';
 export const PDP_GET_DETAIL_PROCESS = 'PdpGetDetailProcess';
 export const PDP_GET_DETAIL_SUCCESS = 'PdpGetDetailSuccess';
 export const PDP_GET_DETAIL_FAILED = 'PdpGetDetailFailed';
+/** DETAIL PROMO PDP */
+export const PDP_GET_BUNDLE_DETAIL_PROCESS = 'PdpGetBundleDetailProcess';
+export const PDP_GET_BUNDLE_DETAIL_SUCCESS = 'PdpGetBundleDetailSuccess';
+export const PDP_GET_BUNDLE_DETAIL_FAILED = 'PdpGetBundleDetailFailed';
 /** FOR GET PDP LIST */
 export const PDP_CHANGE_DISPLAY = 'PdpChangeDisplay';
 /** FOR ORDER PDP */

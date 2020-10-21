@@ -36,10 +36,23 @@ function* getDetailPdp(actions) {
   }
 }
 
+/** GET PDP BUNDLE DETAIL */
+function* getDetailBundlePdp(actions) {
+  try {
+    const response = yield call(() => {
+      return PdpMethod.getDetailPdp(actions.payload);
+    });
+    yield put(ActionCreators.pdpGetBundleDetailSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.pdpGetBundleDetailFailed(error));
+  }
+}
+
 function* PdpSaga() {
   yield takeEvery(types.PDP_GET_PROCESS, getPdp);
   yield takeEvery(types.PDP_SEARCH_GET_PROCESS, getSearchPdp);
   yield takeEvery(types.PDP_GET_DETAIL_PROCESS, getDetailPdp);
+  yield takeEvery(types.PDP_GET_BUNDLE_DETAIL_PROCESS, getDetailBundlePdp)
 }
 
 export default PdpSaga;

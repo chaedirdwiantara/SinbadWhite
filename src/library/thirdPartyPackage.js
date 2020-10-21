@@ -55,6 +55,8 @@ import RNFetchBlob from 'rn-fetch-blob';
 /** PDF */
 import Pdf from 'react-native-pdf';
 
+/** LINEAR GRADIENT */
+import LinearGradient from 'react-native-linear-gradient'
 
 export {
   /** REDUX */
@@ -115,7 +117,9 @@ export {
   /** RN FETCH BLOB */
   RNFetchBlob,
   /** PDF */
-  Pdf
+  Pdf,
+  /** LINEAR GRADIENT */
+  LinearGradient
 };
 
 /**

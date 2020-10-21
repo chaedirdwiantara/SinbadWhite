@@ -175,6 +175,14 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     borderRadius: 4
   },
+  image100ContainRadius8: {
+    height: 100,
+    width: undefined,
+    aspectRatio: 1 / 1,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: masterColor.fontBlack10
+  },
   image145Contain: {
     height: 145,
     width: undefined,
