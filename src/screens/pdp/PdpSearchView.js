@@ -4,11 +4,8 @@ import {
   View,
   StyleSheet,
   SafeAreaView
-} from '../../library/reactPackage'
-import {
-  bindActionCreators,
-  connect
-} from '../../library/thirdPartyPackage'
+} from '../../library/reactPackage';
+import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import {
   StatusBarRed,
   SearchBarType3,
@@ -17,8 +14,9 @@ import {
   ToastType1,
   ModalConfirmation,
   ModalBottomSkuNotAvailable
-} from '../../library/component'
-import { Color } from '../../config'
+} from '../../library/component';
+import { Color } from '../../config';
+import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
 import PdpListDataView from './PdpListDataView';
 import PdpOrderView from './PdpOrderView';
@@ -89,6 +87,10 @@ class PdpSearchView extends Component {
   /**  === CALLED FROM CHILD === */
   parentFunction(data) {
     switch (data.type) {
+      /** => 'pesan' buttom press (from child) if bundle */
+      case 'goToBundlePage':
+        NavigationService.navigate('PdpBundleView');
+        break;
       /** => 'pesan' buttom press (from child) */
       case 'openModalOrder':
         if (
@@ -277,14 +279,14 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(PdpSearchView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
