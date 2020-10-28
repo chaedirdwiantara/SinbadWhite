@@ -37,15 +37,11 @@ build/
 local.properties
 *.iml
 /android/app/build/
-/android/app/google-services.json
-/android/app/src/main/res/values/strings.xml
-/android/app/src/main/AndroidManifest.xml
 
 # node.js
 #
 node_modules/
 package-lock.json
-yarn.lock
 npm-debug.log
 yarn-error.log
 
@@ -73,9 +69,6 @@ buck-out/
 /ios/Pods/
 
 #environment
-android/
-ios/
-index.js
-package.json
 src/services/apiHost.js
-
+android/app/google-services.json
+android/app/mplus_sinbad.jks
