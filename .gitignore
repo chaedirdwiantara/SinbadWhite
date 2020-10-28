@@ -71,4 +71,4 @@ buck-out/
 #environment
 src/services/apiHost.js
 android/app/google-services.json
-android/app/mplus_sinbad.jks
+android/app/mykeystore.keystore
