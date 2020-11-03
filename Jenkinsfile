@@ -256,6 +256,7 @@ We have new APK Version
 
 Application: ${SINBAD_REPO}
 Environment: ${SINBAD_ENV}
+Commit ID: ${env.GIT_COMMIT}
 Changes Message: ${env.GIT_MESSAGE}
 
 You can download this application in here
