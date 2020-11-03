@@ -37,6 +37,7 @@ pipeline {
         AWS_CREDENTIAL = 'automation_aws'
         SINBAD_ENV = "${env.JOB_BASE_NAME}"
         WOKRSPACE = "${env.WORKSPACE}"
+        SINBAD_URI_DOWNLOAD = "https://app-download.sinbad.web.id/"
 
         // Andorid Lib
         SDK_URL = "https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip"
@@ -210,7 +211,7 @@ pipeline {
                     sh "tar czf ${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz -C ${WORKSPACE}/android/app/build/outputs/apk/release/ ."
                     withAWS(credentials: "${AWS_CREDENTIAL}") {
                         s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'sinbad-apk', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz")
-                        s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'sinbad-apk', path: "${SINBAD_ENV}/latest.tar.gz")
+                        s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'sinbad-apk', path: "${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz")
                     }
                     sh "rm ${SINBAD_REPO}*"
                 }
@@ -249,6 +250,20 @@ pipeline {
         always {
             // junit '**/target/*.xml'
             slackSend color: '#8cff00', message: "${SINBAD_REPO} (${SINBAD_ENV}) -> ${env.GIT_MESSAGE} by <${env.GIT_AUTHOR}>", channel: "#jenkins"
+            slackSend color: '#ffffff', channel: "#jenkins", message: """
+            Hi Sailors @here
+            We have new APK Version
+
+            Application: ${SINBAD_REPO}
+            Environment: ${SINBAD_ENV}
+            Changes Message: ${env.GIT_MESSAGE}
+
+            You can download this application in here
+            ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz
+
+            Or latest application for environment ${SINBAD_ENV} in here
+            ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
+            """
         }
         failure {
             slackSend color: '#ff0000', message: "(FAILED) ${SINBAD_REPO} (${SINBAD_ENV}) -> ${env.GIT_MESSAGE} by <${env.GIT_AUTHOR}>", channel: "#jenkins"
