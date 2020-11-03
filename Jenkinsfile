@@ -156,7 +156,7 @@ pipeline {
                                         find android/ -type f |
                                         while read file
                                         do
-                                            sed -i 's/agentdevelopment/agentpreproduction/g' $file
+                                            sed -i 's/agentdevelopment/agentsandbox/g' $file
                                         done
                                     '''
                                 } else if(SINBAD_ENV == 'demo') {
