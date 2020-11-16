@@ -168,8 +168,13 @@ class HomeView extends Component {
           Object.keys(this.props.salesmanKpi.kpiDashboardData).map((key, i) => {
             const index = newKpiDashboard.findIndex(item => item.id === key);
             const newData = this.props.salesmanKpi.kpiDashboardData[key][0];
-            newKpiDashboard[index].data.target = newData.target;
-            newKpiDashboard[index].data.achieved = newData.achieved;
+            if(this.props.salesmanKpi.kpiDashboardData[key].length === 0){
+              newKpiDashboard[index].data.target = 0;
+              newKpiDashboard[index].data.achieved = 0;
+            }else {
+              newKpiDashboard[index].data.target = newData.target;
+              newKpiDashboard[index].data.achieved = newData.achieved;
+            }
           });
           this.setState({ kpiDashboard: newKpiDashboard });
         }
@@ -236,9 +241,13 @@ class HomeView extends Component {
     }
     this.props.getKpiDashboardProcess(params);
     SalesmanKpiMethod.getKpiSalesPending(params).then(response => {
-      if (response.code === 200) {
+      if (response.code === 200 && response.data.payload.data.length !== 0 ) {
         this.setState({
           totalSalesPending: response.data.payload.data[0].achieved
+        });
+      } else {
+        this.setState({
+          totalSalesPending: 0
         });
       }
     });
