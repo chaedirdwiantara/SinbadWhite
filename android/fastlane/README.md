@@ -16,26 +16,51 @@ or alternatively using `brew install fastlane`
 
 # Available Actions
 ## Android
+### android apk
+```
+fastlane android apk
+```
+Generate APK files
+### android aab
+```
+fastlane android aab
+```
+Generate AAB files
+### android internal
+```
+fastlane android internal
+```
+Upload AAB Files to Internal Test Play Store
+### android staging
+```
+fastlane android staging
+```
+Upload AAB Files to Staging Play Store
+### android sandbox
+```
+fastlane android sandbox
+```
+Upload AAB Files to Sandbox Play Store
+### android demo
+```
+fastlane android demo
+```
+Upload AAB Files to Demo Play Store
 ### android alpha
 ```
 fastlane android alpha
 ```
-Submit a new Alpha Version
-### android test
-```
-fastlane android test
-```
-Runs all the tests
+Upload AAB Files to Alpha Play Store
 ### android beta
 ```
 fastlane android beta
 ```
-Submit a new Beta Build to Crashlytics Beta
-### android deploy
+Upload AAB Files to Beta Play Store
+### android production
 ```
-fastlane android deploy
+fastlane android production
 ```
-Deploy a new version to the Google Play
+Upload AAB Files to Production Play Store
 
 ----
 
