@@ -33,6 +33,7 @@ import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
 import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
 import MerchantVerifyUser from './MerchantVerifyUser';
 import ModalBottomProgressChecking from '../../global/ModalBottomProgressChecking';
+import { ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY, } from '../../../constants';
 
 const { width, height } = Dimensions.get('window');
 
@@ -76,6 +77,9 @@ class MerchantHomeView extends Component {
           goTo: 'checkOut'
         }
       ],
+      /**
+       * Tasks[index].activity is used to compare journey plan activity logs
+       */
       task: [
         {
           name: 'Masuk Toko',
@@ -87,7 +91,7 @@ class MerchantHomeView extends Component {
         },
         {
           name: 'Toko Survey',
-          activity: 'toko_survey'
+          activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
         },
         {
           name: 'Keluar Toko',
@@ -101,6 +105,13 @@ class MerchantHomeView extends Component {
    * FUNCTIONAL
    * =======================
    */
+
+  /** FOR GET LOG ALL ACTIVITY */
+  refreshMerchantGetLogAllActivityProcess() {
+    this.props.merchantGetLogAllActivityProcess(
+      this.props.merchant.selectedMerchant.journeyPlanSaleId
+    );
+  }
 
   componentDidMount() {
     /** FOR GET LAST ORDER */
@@ -220,6 +231,17 @@ class MerchantHomeView extends Component {
       activity: 'check_out'
     });
   }
+
+  /*
+   * Set sales activity survey_toko done
+   */
+  SurveyDone() {
+    this.props.merchantPostActivityProcess({
+      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
+      activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+    });
+  }
+
   /** FOR ERROR FUNCTION (FROM DID UPDATE) */
   doError() {
     /** Close all modal and open modal error respons */
@@ -251,6 +273,22 @@ class MerchantHomeView extends Component {
           activity: 'check_in'
         });
         this.setState({ openModalCheckout: true });
+        break;
+      case 'survey':
+        /*
+         * TODO: @DYAH go to survey page
+         * when success execute like this.SurveyDone();
+         */
+
+        /*
+         * FAKE survey done
+         */
+        this.SurveyDone();
+
+        /*
+         * FAKE refersh activity
+         */
+        setTimeout(() => this.refreshMerchantGetLogAllActivityProcess(), 2000);
         break;
       default:
         break;
