@@ -66,6 +66,11 @@ class MerchantHomeView extends Component {
           goTo: 'checkIn'
         },
         {
+          menuName: 'Toko Survey',
+          icon: require('../../../assets/icons/merchant/pesanan.png'),
+          goTo: 'survey'
+        },
+        {
           menuName: 'Keluar Toko',
           icon: require('../../../assets/icons/merchant/check-out.png'),
           goTo: 'checkOut'
@@ -79,6 +84,10 @@ class MerchantHomeView extends Component {
         {
           name: 'Order',
           activity: 'order'
+        },
+        {
+          name: 'Toko Survey',
+          activity: 'toko_survey'
         },
         {
           name: 'Keluar Toko',
