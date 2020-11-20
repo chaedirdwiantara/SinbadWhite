@@ -51,9 +51,9 @@ class MerchantSurveyView extends Component {
         <View style={[styles.card, GlobalStyle.shadowForBox5]}>
           <TouchableOpacity
             style={styles.cardInside}
-            // onPress={() =>
-            //   NavigationService.navigate('MerchantSurveyDisplayPhotoView')
-            // }
+            onPress={() =>
+              NavigationService.navigate('MerchantSurveyDisplayPhotoView')
+            }
           >
             <View style={styles.cameraBackground}>
               <AntDesignIcon
