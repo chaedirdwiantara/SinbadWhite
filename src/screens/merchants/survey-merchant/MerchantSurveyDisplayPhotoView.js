@@ -14,7 +14,6 @@ import {
   bindActionCreators,
   connect,
   MaterialIcon,
-  RFPercentage,
   RNFS,
   RNCamera,
   ImageEditor
@@ -24,7 +23,8 @@ import {
   ModalConfirmation,
   ButtonSingleSmall,
   ButtonSingle,
-  ModalBottomType3
+  ModalBottomType3,
+  BackHandlerBackSpecific
 } from '../../../library/component';
 import { GlobalStyle, Fonts } from '../../../helpers';
 import { Color } from '../../../config';
@@ -41,6 +41,8 @@ class MerchantSurveyDisplayPhotoView extends Component {
     this.state = {
       loading: false,
       active: 0,
+      backCamera: true,
+      flash: false,
       photo: [
         {
           name: 'photo1',
@@ -73,11 +75,37 @@ class MerchantSurveyDisplayPhotoView extends Component {
       },
       modalNextProcess: false,
       modalCompleted: false,
+      modalConfirmation: false,
       displayPhoto: false,
       photosDisplayBefore: [],
       photosDisplayAfter: []
     };
   }
+  /**
+   * =======================
+   * FUNCTIONAL
+   * =======================
+   */
+  /** === DID MOUNT === */
+  componentDidMount() {
+    this.navigationFunction();
+  }
+  goBack = () => {
+    if (
+      this.state.active === 0 &&
+      this.state.photosDisplayBefore.length === 0
+    ) {
+      this.setState({
+        modalConfirmation: true
+      });
+    }
+
+    if (this.state.active === 1 && this.state.photosDisplayAfter.length === 0) {
+      this.setState({
+        modalConfirmation: true
+      });
+    }
+  };
 
   takePicture = async () => {
     this.setState({ loading: true });
@@ -148,15 +176,43 @@ class MerchantSurveyDisplayPhotoView extends Component {
     });
   };
 
+  deletePhotoFromList = deleteUri => {
+    let newPhoto = this.state.photo;
+    let newData = [];
+    newPhoto.map((item, index) => {
+      if (index === deleteUri) {
+        return (item.uri = null);
+      } else {
+        return newData.push(item);
+      }
+    });
+    this.setState({ photo: newPhoto });
+  };
+  /** ====== DID MOUNT FUNCTION ========== */
+  /** NAVIGATION FUNCTION */
+  navigationFunction() {
+    this.props.navigation.setParams({
+      goBackFunction: () => this.goBack()
+    });
+  }
   /**
    * ========================
    * HEADER MODIFY
    * ========================
    */
-  static navigationOptions = () => {
+  static navigationOptions = ({ navigation }) => {
     let storeName = 'Display Toko Photo';
+    const { state } = navigation;
 
     return {
+      headerLeft: () => (
+        <TouchableOpacity
+          style={{ marginLeft: 16 }}
+          onPress={() => state.params.goBackFunction()}
+        >
+          <MaterialIcon color={Color.fontWhite} name={'arrow-back'} size={24} />
+        </TouchableOpacity>
+      ),
       headerTitle: () => (
         <View>
           <Text style={Fonts.type35}>{storeName}</Text>
@@ -167,14 +223,18 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === RENDER STEPS === */
   renderSteps() {
     return (
-      <View style={[styles.lastOrderContainer]}>
-        <View style={[styles.cardLastOrder, GlobalStyle.shadowForBox5]}>
+      <View style={[styles.cardContainer]}>
+        <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
           <FlatList
             horizontal={true}
             scrollEnabled={false}
             showsHorizontalScrollIndicator={false}
             data={steps}
-            contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: 'center',
+              paddingVertical: 8
+            }}
             keyExtractor={(data, index) => index.toString()}
             renderItem={({ item, index }) => (
               <View style={{ flexDirection: 'column' }}>
@@ -230,9 +290,9 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === RENDER DISPLAY PHOTO === */
   renderDisplayPhoto() {
     return (
-      <View style={[styles.lastOrderContainer]}>
+      <View style={[styles.cardContainer]}>
         {this.state.photosDisplayBefore.length !== 0 ? (
-          <View style={[styles.cardLastOrder, GlobalStyle.shadowForBox5]}>
+          <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
             <Text>Photos Display Before</Text>
             <FlatList
               data={this.state.photosDisplayBefore}
@@ -261,7 +321,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
         ) : null}
         <View style={{ height: 16 }} />
         {this.state.photosDisplayAfter.length !== 0 ? (
-          <View style={[styles.cardLastOrder, GlobalStyle.shadowForBox5]}>
+          <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
             <Text>Photos Display After</Text>
             <FlatList
               data={this.state.photosDisplayAfter}
@@ -317,11 +377,19 @@ class MerchantSurveyDisplayPhotoView extends Component {
           style={{
             flex: 1
           }}
-          type={RNCamera.Constants.Type.back}
+          type={
+            this.state.backCamera
+              ? RNCamera.Constants.Type.back
+              : RNCamera.Constants.Type.front
+          }
           captureAudio={false}
           ratio="1:1"
           defaultTouchToFocus
-          // flashMode={RNCamera.Constants.FlashMode.off}
+          flashMode={
+            this.state.flash
+              ? RNCamera.Constants.FlashMode.on
+              : RNCamera.Constants.FlashMode.off
+          }
           clearWindowBackground={false}
           androidCameraPermissionOptions={{
             title: 'Permission to use camera',
@@ -344,7 +412,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
                 padding: 6,
                 backgroundColor: masterColor.fontWhite
               }}
-              onPress={() => null}
+              onPress={() => this.setState({ flash: !this.state.flash })}
             >
               <MaterialIcon
                 name="flash-on"
@@ -375,7 +443,9 @@ class MerchantSurveyDisplayPhotoView extends Component {
                 padding: 6,
                 backgroundColor: masterColor.fontWhite
               }}
-              onPress={() => null}
+              onPress={() =>
+                this.setState({ backCamera: !this.state.backCamera })
+              }
             >
               <MaterialIcon
                 name="switch-camera"
@@ -398,12 +468,20 @@ class MerchantSurveyDisplayPhotoView extends Component {
             scrollEnabled={false}
             showsHorizontalScrollIndicator={false}
             data={this.state.photo}
-            contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
             keyExtractor={(data, index) => index.toString()}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
               <View>
                 {item.uri ? (
-                  <TouchableOpacity>
+                  <View
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 5,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginRight: 6
+                    }}
+                  >
                     <Image
                       source={{
                         isStatic: true,
@@ -412,11 +490,30 @@ class MerchantSurveyDisplayPhotoView extends Component {
                       style={{
                         height: 40,
                         width: 40,
-                        borderRadius: 5,
-                        marginHorizontal: 12
+                        borderRadius: 5
                       }}
                     />
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        width: 18,
+                        height: 18,
+                        borderRadius: 9,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: masterColor.fontBlack40
+                      }}
+                      onPress={() => this.deletePhotoFromList(index)}
+                    >
+                      <MaterialIcon
+                        name="delete"
+                        color={masterColor.fontWhite}
+                        size={15}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 ) : (
                   <View
                     style={{
@@ -506,11 +603,11 @@ class MerchantSurveyDisplayPhotoView extends Component {
       <View style={styles.contentContainer}>
         <View
           style={[
-            styles.lastOrderContainer,
+            styles.cardContainer,
             { height: '100%', justifyContent: 'space-between' }
           ]}
         >
-          <View style={[styles.cardLastOrder, GlobalStyle.shadowForBox5]}>
+          <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
             <Image
               source={{
                 isStatic: true,
@@ -577,15 +674,19 @@ class MerchantSurveyDisplayPhotoView extends Component {
       <ModalConfirmation
         statusBarWhite
         title={'Leave Task?'}
-        open={false}
+        open={this.state.modalConfirmation}
         content={
           'You have unsaved images. Do you still want to leave task without saving current images? '
         }
         type={'okeNotRed'}
         okText={'Leave'}
         cancelText={'Cancel'}
-        ok={() => null}
-        cancel={() => null}
+        ok={() =>
+          this.setState({ modalConfirmation: false }, () =>
+            NavigationService.navigate('MerchantSurveyView')
+          )
+        }
+        cancel={() => this.setState({ modalConfirmation: false })}
       />
     );
   }
@@ -705,6 +806,9 @@ class MerchantSurveyDisplayPhotoView extends Component {
   render() {
     return (
       <SafeAreaView>
+        <BackHandlerBackSpecific
+          navigation={this.props.navigation}
+        />
         <StatusBarRed />
         <View style={{ height: '100%' }}>
           {this.renderBackground()}
@@ -731,172 +835,21 @@ const styles = StyleSheet.create({
     backgroundColor: Color.mainColor,
     height: 85
   },
-  containerSlider: {
-    flex: 1,
-    paddingBottom: 5
-  },
-  inactiveDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 5,
-    backgroundColor: 'rgba(51,51,51, 0.2)'
-  },
-  activeDot: {
-    width: 20,
-    height: 6,
-    borderRadius: 5,
-    backgroundColor: 'red'
-  },
-  // CARD
-  cardPromo: {
-    borderRadius: 15,
-    borderWidth: 0,
-    height: 0.31 * height,
-    width: 0.9 * width,
-    elevation: 2,
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowColor: '#777777',
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-    alignItems: 'flex-start',
-    marginLeft: 0.015 * width,
-    marginTop: 2,
-    marginRight: 0.03 * width
-  },
-  productImage: {
-    resizeMode: 'contain',
-    width: 57,
-    height: undefined,
-    aspectRatio: 1 / 1
-  },
-  textPlusProduct: {
-    color: '#333333',
-    fontSize: RFPercentage(1.3),
-    fontFamily: Fonts.MontserratMedium
-  },
-  // SEMENTARA
-  cardTask: {
-    flex: 1,
-    flexDirection: 'column',
-    elevation: 2,
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowColor: '#777777',
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22
-  },
   containerTitle: {
     alignItems: 'center',
     flexDirection: 'row',
     height: 0.1 * width
   },
-  containerList: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingVertical: 10
-  },
-  checkBox: {
-    flex: 1,
-    justifyContent: 'flex-start'
-  },
-  taskBox: {
-    flex: 2,
-    justifyContent: 'center'
-  },
-  rightArrow: {
-    flex: 2,
-    alignItems: 'flex-end',
-    justifyContent: 'center'
-  },
-  wrapMenu: {
-    padding: 5,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  /** for content */
-  lastOrderContainer: {
+  cardContainer: {
     paddingHorizontal: 16,
     paddingTop: 11,
     paddingBottom: 5
   },
-  cardLastOrder: {
+  insideCard: {
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 10,
     backgroundColor: Color.backgroundWhite
-  },
-  boxFaktur: {
-    marginBottom: 8
-  },
-  cardTaskList: {
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderRadius: 4,
-    backgroundColor: Color.backgroundWhite
-  },
-  /** for menu */
-  containerMenu: {
-    paddingHorizontal: 16
-  },
-  taskListContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 16
-  },
-  boxMenu: {
-    width: '25%',
-    alignItems: 'center',
-    paddingVertical: 10
-  },
-  boxMainMenu: {
-    paddingTop: 10,
-    flexDirection: 'row',
-    width: '100%',
-    alignItems: 'center'
-  },
-  iconSize: {
-    height: 50,
-    width: 70
-  },
-  boxNotification: {
-    position: 'absolute',
-    top: -5,
-    right: -5,
-    zIndex: 1000
-  },
-  mainContainer: {
-    flex: 1,
-    backgroundColor: masterColor.backgroundWhite
-  },
-  preview: {
-    // flex: 1,
-    // maxWidth: 0.45 * height,
-    maxHeight: 0.45 * height,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  markerId: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 0.45 * height,
-    // height: 0.7 * height,
-    height: 0.45 * height,
-    borderWidth: 5,
-    borderRadius: 0.05 * width,
-    borderColor: masterColor.fontGreen50,
-    borderStyle: 'dashed'
-  },
-  boxCircleCamera: {
-    transform: [{ rotate: '90deg' }],
-    borderWidth: 2,
-    borderRadius: 40,
-    padding: 10,
-    borderColor: masterColor.fontWhite
   }
 });
 
@@ -915,17 +868,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * ============================
  * NOTES
  * ============================
- * createdBy:
- * createdDate:
- * updatedBy: tatas
- * updatedDate: 01072020
+ * createdBy: dyah
+ * createdDate: 20112020
+ * updatedBy: dyah
+ * updatedDate: 20112020
  * updatedFunction:
- * -> Add checking user status
- * updatedDate: 02072020
- * updatedFunction:
- * -> Remove unused state
- * -> Add function to change modal check status False after navigate
- * updatedDate: 03072020
- * updatedFunction:
- * -> Change key
+ * -> add new merchant survey display photo screen.
+ * -> add modal (leave task).
+ * -> add delete icon (render photo list).
  */
