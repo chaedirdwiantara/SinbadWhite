@@ -279,17 +279,19 @@ class MerchantHomeView extends Component {
          * TODO: @DYAH go to survey page
          * when success execute like this.SurveyDone();
          */
+        NavigationService.navigate('MerchantSurveyView');
+        break;
 
         /*
          * FAKE survey done
          */
-        this.SurveyDone();
+        // this.SurveyDone();
 
         /*
          * FAKE refersh activity
          */
-        setTimeout(() => this.refreshMerchantGetLogAllActivityProcess(), 2000);
-        break;
+        // setTimeout(() => this.refreshMerchantGetLogAllActivityProcess(), 2000);
+        // break;
       default:
         break;
     }
