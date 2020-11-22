@@ -21,64 +21,63 @@ import {
 import {
   StatusBarRed,
   ModalConfirmation,
-  ButtonSingleSmall,
   ButtonSingle,
-  ModalBottomType3,
   BackHandlerBackSpecific
 } from '../../../library/component';
 import { GlobalStyle, Fonts } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
-import masterColor from '../../../config/masterColor.json';
+import ModalCarousel from './ModalCarousel';
+import ModalBottomCompleted from './ModalBottomCompleted';
+import ModalBottomSubmit from './ModalBottomSubmit';
+import MerchantPhotoList from './MerchantPhotoList';
+import MerchantSurveySteps from './MerchantSurveySteps';
 
 const { width, height } = Dimensions.get('window');
-const steps = ['Before Display', 'After Display', 'Completed'];
 
 class MerchantSurveyDisplayPhotoView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      active: 0,
+      activeStep: 0,
       backCamera: true,
       flash: false,
       photo: [
         {
-          name: 'photo1',
           uri: null,
           base64: ''
         },
         {
-          name: 'photo2',
           uri: null,
           base64: ''
         },
         {
-          name: 'photo3',
           uri: null,
           base64: ''
         },
         {
-          name: 'photo4',
           uri: null,
           base64: ''
         },
         {
-          name: 'photo5',
           uri: null,
           base64: ''
         }
       ],
-      capturedPicture: {
+      capturedPhoto: {
         uri: null
       },
-      modalNextProcess: false,
+      modalSubmit: false,
       modalCompleted: false,
       modalConfirmation: false,
       displayPhoto: false,
       photosDisplayBefore: [],
-      photosDisplayAfter: []
+      photosDisplayAfter: [],
+      activeIndex: 0,
+      openCarousel: false,
+      dataCarousel: []
     };
   }
   /**
@@ -92,22 +91,27 @@ class MerchantSurveyDisplayPhotoView extends Component {
   }
   goBack = () => {
     if (
-      this.state.active === 0 &&
+      this.state.activeStep === 0 &&
       this.state.photosDisplayBefore.length === 0
     ) {
-      this.setState({
+      return this.setState({
         modalConfirmation: true
       });
     }
 
-    if (this.state.active === 1 && this.state.photosDisplayAfter.length === 0) {
-      this.setState({
+    if (
+      this.state.activeStep === 1 &&
+      this.state.photosDisplayAfter.length === 0
+    ) {
+      return this.setState({
         modalConfirmation: true
       });
     }
+
+    return NavigationService.navigate('MerchantSurveyView');
   };
 
-  takePicture = async () => {
+  takePhoto = async () => {
     this.setState({ loading: true });
     const cropData = {
       offset: { x: 600, y: 400 },
@@ -123,7 +127,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       const data = await this.camera.takePictureAsync(options);
       ImageEditor.cropImage(data.uri, cropData).then(url => {
         let newData = { ...data, uri: 'data:image/jpeg;base64,' + data.base64 };
-        this.setState({ capturedPicture: newData });
+        this.setState({ capturedPhoto: newData });
         RNFS.readFile(url, 'base64').then(dataImage => {
           // this.props.saveImageBase64(dataImage);
         });
@@ -132,7 +136,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     }
   };
 
-  savePicture = () => {
+  savePhoto = () => {
     let newPhoto = this.state.photo;
     let check = 0;
     newPhoto.map(item => {
@@ -140,28 +144,29 @@ class MerchantSurveyDisplayPhotoView extends Component {
         if (check === 0) {
           check = check + 1;
           return (item.uri =
-            'data:image/jpeg;base64,' + this.state.capturedPicture.base64);
+            'data:image/jpeg;base64,' + this.state.capturedPhoto.base64);
         }
         return;
       }
     });
-    this.setState({ photo: newPhoto, capturedPicture: { uri: null } });
+    this.setState({ photo: newPhoto, capturedPhoto: { uri: null } });
   };
 
-  submitPicture = () => {
-    if (this.state.active === 0) {
+  submitPhoto = () => {
+    const newPhoto = this.state.photo;
+    if (this.state.activeStep === 0) {
       this.setState({
-        modalNextProcess: false,
-        photosDisplayBefore: this.state.photo,
+        modalSubmit: false,
+        photosDisplayBefore: newPhoto,
         displayPhoto: true
       });
     } else {
       this.setState({
-        modalNextProcess: false,
+        modalSubmit: false,
         modalCompleted: true,
-        photosDisplayAfter: this.state.photo,
+        photosDisplayAfter: newPhoto,
         displayPhoto: true,
-        active: 2
+        activeStep: 2
       });
     }
   };
@@ -171,20 +176,21 @@ class MerchantSurveyDisplayPhotoView extends Component {
     newPhoto.map(item => (item.uri = null));
     this.setState({
       displayPhoto: false,
-      active: 1,
+      activeStep: 1,
       photo: newPhoto
     });
   };
 
   deletePhotoFromList = deleteUri => {
     let newPhoto = this.state.photo;
-    let newData = [];
     newPhoto.map((item, index) => {
       if (index === deleteUri) {
-        return (item.uri = null);
-      } else {
-        return newData.push(item);
+        newPhoto.splice(index, 1);
       }
+    });
+    newPhoto.push({
+      uri: null,
+      base64: ''
     });
     this.setState({ photo: newPhoto });
   };
@@ -225,64 +231,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     return (
       <View style={[styles.cardContainer]}>
         <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
-          <FlatList
-            horizontal={true}
-            scrollEnabled={false}
-            showsHorizontalScrollIndicator={false}
-            data={steps}
-            contentContainerStyle={{
-              flexGrow: 1,
-              justifyContent: 'center',
-              paddingVertical: 8
-            }}
-            keyExtractor={(data, index) => index.toString()}
-            renderItem={({ item, index }) => (
-              <View style={{ flexDirection: 'column' }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingLeft: 8
-                  }}
-                >
-                  <View
-                    style={{
-                      height: 22,
-                      width: 22,
-                      backgroundColor:
-                        index <= this.state.active
-                          ? masterColor.mainColor
-                          : masterColor.fontBlack10,
-                      borderRadius: 11,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      margin: 3
-                    }}
-                  >
-                    <Text style={Fonts.type2}>{index + 1}</Text>
-                  </View>
-                  {index !== steps.length - 1 && (
-                    <View
-                      style={{
-                        height: 6,
-                        width: 80,
-                        backgroundColor:
-                          index < this.state.active
-                            ? masterColor.mainColor
-                            : masterColor.fontBlack10,
-                        borderRadius: 2,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }}
-                    />
-                  )}
-                </View>
-                <View>
-                  <Text style={[Fonts.type57]}>{item}</Text>
-                </View>
-              </View>
-            )}
-          />
+          <MerchantSurveySteps active={this.state.activeStep} />
         </View>
       </View>
     );
@@ -300,19 +249,22 @@ class MerchantSurveyDisplayPhotoView extends Component {
               keyExtractor={(data, index) => 'Before' + index.toString()}
               listKey={(data, index) => 'Before' + index.toString()}
               renderItem={({ item, index }) => (
-                <TouchableOpacity key={index}>
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    this.setState({
+                      openCarousel: true,
+                      dataCarousel: this.state.photosDisplayBefore,
+                      activeIndex: index
+                    });
+                  }}
+                >
                   <Image
                     source={{
                       isStatic: true,
                       uri: item.uri
                     }}
-                    style={{
-                      borderRadius: 4,
-                      width: 51,
-                      height: 51,
-                      marginRight: 10,
-                      marginTop: 12
-                    }}
+                    style={styles.imageDisplayPhoto}
                   />
                 </TouchableOpacity>
               )}
@@ -329,19 +281,22 @@ class MerchantSurveyDisplayPhotoView extends Component {
               keyExtractor={(data, index) => 'After' + index.toString()}
               listKey={(data, index) => 'After' + index.toString()}
               renderItem={({ item, index }) => (
-                <TouchableOpacity key={index}>
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    this.setState({
+                      openCarousel: true,
+                      dataCarousel: this.state.photosDisplayAfter,
+                      activeIndex: index
+                    });
+                  }}
+                >
                   <Image
                     source={{
                       isStatic: true,
                       uri: item.uri
                     }}
-                    style={{
-                      borderRadius: 4,
-                      width: 51,
-                      height: 51,
-                      marginRight: 10,
-                      marginTop: 12
-                    }}
+                    style={styles.imageDisplayPhoto}
                   />
                 </TouchableOpacity>
               )}
@@ -363,20 +318,13 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === RENDER CAMERA === */
   renderCamera() {
     return (
-      <View
-        style={{
-          paddingTop: 165,
-          overflow: 'hidden'
-        }}
-      >
+      <View style={styles.cameraContainer}>
         <RNCamera
           ref={ref => {
             this.camera = ref;
           }}
           aspect={1}
-          style={{
-            flex: 1
-          }}
+          style={{ flex: 1 }}
           type={
             this.state.backCamera
               ? RNCamera.Constants.Type.back
@@ -398,58 +346,36 @@ class MerchantSurveyDisplayPhotoView extends Component {
             buttonNegative: 'Cancel'
           }}
         >
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}
-          >
+          <View style={styles.cameraButtonContainer}>
             <TouchableOpacity
-              style={{
-                borderRadius: 40,
-                marginLeft: 5,
-                padding: 6,
-                backgroundColor: masterColor.fontWhite
-              }}
+              style={styles.smallIcon}
               onPress={() => this.setState({ flash: !this.state.flash })}
             >
               <MaterialIcon
                 name="flash-on"
-                color={masterColor.fontBlack60}
+                color={Color.fontBlack60}
                 size={15}
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                borderWidth: 2,
-                borderRadius: 40,
-                borderColor: masterColor.fontWhite,
-                padding: 10,
-                backgroundColor: masterColor.fontWhite
-              }}
-              onPress={this.takePicture.bind(this)}
+              style={styles.mediumIcon}
+              onPress={this.takePhoto.bind(this)}
             >
               <MaterialIcon
                 name="photo-camera"
-                color={masterColor.fontBlack60}
+                color={Color.fontBlack60}
                 size={32}
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                borderRadius: 40,
-                marginRight: 5,
-                padding: 6,
-                backgroundColor: masterColor.fontWhite
-              }}
+              style={styles.smallIcon}
               onPress={() =>
                 this.setState({ backCamera: !this.state.backCamera })
               }
             >
               <MaterialIcon
                 name="switch-camera"
-                color={masterColor.fontBlack60}
+                color={Color.fontBlack60}
                 size={15}
               />
             </TouchableOpacity>
@@ -461,109 +387,21 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === RENDER PHOTO LIST === */
   renderPhotoList() {
     return (
-      <View style={{ backgroundColor: masterColor.fontWhite }}>
-        <View style={{ padding: 15 }}>
-          <FlatList
-            horizontal={true}
-            scrollEnabled={false}
-            showsHorizontalScrollIndicator={false}
-            data={this.state.photo}
-            keyExtractor={(data, index) => index.toString()}
-            renderItem={({ item, index }) => (
-              <View>
-                {item.uri ? (
-                  <View
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 5,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginRight: 6
-                    }}
-                  >
-                    <Image
-                      source={{
-                        isStatic: true,
-                        uri: item.uri
-                      }}
-                      style={{
-                        height: 40,
-                        width: 40,
-                        borderRadius: 5
-                      }}
-                    />
-                    <TouchableOpacity
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        right: 0,
-                        width: 18,
-                        height: 18,
-                        borderRadius: 9,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: masterColor.fontBlack40
-                      }}
-                      onPress={() => this.deletePhotoFromList(index)}
-                    >
-                      <MaterialIcon
-                        name="delete"
-                        color={masterColor.fontWhite}
-                        size={15}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                ) : (
-                  <View
-                    style={{
-                      height: 40,
-                      width: 40,
-                      borderWidth: 1,
-                      borderStyle: 'dashed',
-                      borderColor: masterColor.fontBlack10,
-                      borderRadius: 5,
-                      backgroundColor: masterColor.fontWhite,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginHorizontal: 12
-                    }}
-                  >
-                    <View
-                      style={{
-                        height: 20,
-                        width: 20,
-                        borderRadius: 10,
-                        borderWidth: 2,
-                        borderColor: masterColor.fontBlack10,
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}
-                    >
-                      <Text style={[Fonts.type34, { fontSize: 15 }]}>+</Text>
-                    </View>
-                  </View>
-                )}
-              </View>
-            )}
-          />
-        </View>
-      </View>
+      <MerchantPhotoList
+        data={this.state.photo}
+        onDelete={index => this.deletePhotoFromList(index)}
+      />
     );
   }
   /** === RENDER BUTTON SUBMIT === */
   renderSubmit() {
     return (
-      <View
-        style={{
-          backgroundColor: masterColor.fontWhite
-        }}
-      >
+      <View>
         <ButtonSingle
           title="Proceed"
           disabled={!this.state.photo[0].uri}
           borderRadius={5}
-          onPress={() => this.setState({ modalNextProcess: true })}
+          onPress={() => this.setState({ modalSubmit: true })}
         />
       </View>
     );
@@ -601,63 +439,38 @@ class MerchantSurveyDisplayPhotoView extends Component {
   renderReviewImage() {
     return (
       <View style={styles.contentContainer}>
-        <View
-          style={[
-            styles.cardContainer,
-            { height: '100%', justifyContent: 'space-between' }
-          ]}
-        >
+        <View style={[styles.cardContainer, styles.reviewContainer]}>
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
             <Image
               source={{
                 isStatic: true,
-                uri: this.state.capturedPicture.uri
+                uri: this.state.capturedPhoto.uri
               }}
-              style={{
-                height: 257
-              }}
+              style={{ height: 257 }}
             />
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              padding: 8
-            }}
-          >
+          <View style={styles.reviewButtonContainer}>
             <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                padding: 8,
-                alignItems: 'center',
-                width: 138,
-                justifyContent: 'center'
-              }}
-              onPress={() => this.setState({ capturedPicture: { uri: null } })}
+              style={styles.reviewButton}
+              onPress={() => this.setState({ capturedPhoto: { uri: null } })}
             >
               <MaterialIcon
                 name="delete-forever"
-                color={masterColor.fontBlack80}
+                color={Color.fontBlack80}
                 size={15}
                 style={{ marginRight: 4 }}
               />
-              <Text style={[Fonts.type31, { color: masterColor.fontBlack80 }]}>
+              <Text style={[Fonts.type31, { color: Color.fontBlack80 }]}>
                 Delete
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                padding: 8,
-                alignItems: 'center',
-                width: 138,
-                justifyContent: 'center'
-              }}
-              onPress={() => this.savePicture()}
+              style={styles.reviewButton}
+              onPress={() => this.savePhoto()}
             >
               <MaterialIcon
                 name="check"
-                color={masterColor.fontGreen50}
+                color={Color.fontGreen50}
                 size={15}
                 style={{ marginRight: 4 }}
               />
@@ -691,110 +504,46 @@ class MerchantSurveyDisplayPhotoView extends Component {
     );
   }
   /** === RENDER MODAL NEXT PROCESS === */
-  renderModalNextProcess() {
+  renderModalSubmit() {
     return (
-      <ModalBottomType3
-        open={this.state.modalNextProcess}
+      <ModalBottomSubmit
+        open={this.state.modalSubmit}
         title={`Submit the ${
-          this.state.active === 0 ? 'Before' : 'After'
+          this.state.activeStep === 0 ? 'Before' : 'After'
         } Photo`}
-        content={
-          <View>
-            <View
-              style={{
-                paddingHorizontal: 16,
-                paddingBottom: 16
-              }}
-            >
-              <Text style={Fonts.type12}>
-                You can only submit it once. After this you can proceed to the
-                next step.
-              </Text>
-            </View>
-            <FlatList
-              data={this.state.photo}
-              numColumns={3}
-              keyExtractor={(data, index) => index.toString()}
-              renderItem={({ item }) => (
-                <Image
-                  source={{
-                    isStatic: true,
-                    uri: item.uri
-                  }}
-                  style={{
-                    width: 99,
-                    height: 99,
-                    marginLeft: 16,
-                    marginBottom: 16,
-                    borderRadius: 5
-                  }}
-                />
-              )}
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <View style={{ padding: 16, flex: 1 }}>
-                <ButtonSingleSmall
-                  title="Cancel"
-                  white
-                  borderRadius={4}
-                  onPress={() => this.setState({ modalNextProcess: false })}
-                />
-              </View>
-              <View style={{ padding: 16, flex: 1 }}>
-                <ButtonSingleSmall
-                  title="Submit"
-                  borderRadius={4}
-                  onPress={this.submitPicture.bind(this)}
-                />
-              </View>
-            </View>
-          </View>
-        }
-        close={() => this.setState({ modalNextProcess: false })}
-        typeClose={'cancel'}
+        data={this.state.photo}
+        onClose={() => this.setState({ modalSubmit: false })}
+        onSubmit={this.submitPhoto.bind(this)}
       />
     );
   }
   /** === RENDER MODAL COMPLETED === */
   renderModalCompleted() {
     return (
-      <ModalBottomType3
+      <ModalBottomCompleted
         open={this.state.modalCompleted}
-        title={''}
-        content={
-          <View
-            style={{
-              paddingHorizontal: 16,
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <Image
-              source={require('../../../assets/images/sinbad_image/smile_sinbad.png')}
-              style={GlobalStyle.fullImage}
-            />
-            <Text style={Fonts.type7}>Task Successfully Completed</Text>
-            <Text style={[Fonts.type12, { textAlign: 'center', padding: 14 }]}>
-              You can view the photos later in the Toko Survey detail in Task
-              List
-            </Text>
-            <View style={{ width: '100%' }}>
-              <ButtonSingle
-                title="Return to task list"
-                borderRadius={4}
-                onPress={() => NavigationService.navigate('MerchantSurveyView')}
-              />
-            </View>
-          </View>
+        onReturnTaskList={() =>
+          NavigationService.navigate('MerchantSurveyView')
         }
-        close={() => this.setState({ modalCompleted: false })}
-        typeClose={'cancel'}
+        onClose={() => this.setState({ modalCompleted: false })}
+      />
+    );
+  }
+  /** === RENDER CAROUSEL === */
+  renderCarousel() {
+    return (
+      <ModalCarousel
+        isVisible={this.state.openCarousel}
+        onClose={() => this.setState({ openCarousel: false })}
+        data={this.state.dataCarousel}
+        onSnapToItem={index => this.setState({ activeIndex: index })}
+        activeIndex={this.state.activeIndex}
+        onPrevious={() =>
+          this.setState({ activeIndex: this.state.activeIndex - 1 })
+        }
+        onNext={() =>
+          this.setState({ activeIndex: this.state.activeIndex + 1 })
+        }
       />
     );
   }
@@ -806,19 +555,18 @@ class MerchantSurveyDisplayPhotoView extends Component {
   render() {
     return (
       <SafeAreaView>
-        <BackHandlerBackSpecific
-          navigation={this.props.navigation}
-        />
+        <BackHandlerBackSpecific navigation={this.props.navigation} />
         <StatusBarRed />
         <View style={{ height: '100%' }}>
           {this.renderBackground()}
-          {this.state.capturedPicture.uri
+          {this.state.capturedPhoto.uri
             ? this.renderReviewImage()
             : this.renderContent()}
         </View>
         {this.renderModalLeaveTask()}
-        {this.renderModalNextProcess()}
+        {this.renderModalSubmit()}
         {this.renderModalCompleted()}
+        {this.renderCarousel()}
       </SafeAreaView>
     );
   }
@@ -850,6 +598,51 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 10,
     backgroundColor: Color.backgroundWhite
+  },
+  imageDisplayPhoto: {
+    borderRadius: 4,
+    width: 51,
+    height: 51,
+    marginRight: 10,
+    marginTop: 12
+  },
+  cameraContainer: {
+    paddingTop: 165,
+    overflow: 'hidden'
+  },
+  cameraButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  smallIcon: {
+    borderRadius: 40,
+    marginLeft: 5,
+    padding: 6,
+    backgroundColor: Color.fontWhite
+  },
+  mediumIcon: {
+    borderWidth: 2,
+    borderRadius: 40,
+    borderColor: Color.fontWhite,
+    padding: 10,
+    backgroundColor: Color.fontWhite
+  },
+  reviewContainer: {
+    height: '100%',
+    justifyContent: 'space-between'
+  },
+  reviewButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 8
+  },
+  reviewButton: {
+    flexDirection: 'row',
+    padding: 8,
+    alignItems: 'center',
+    width: 138,
+    justifyContent: 'center'
   }
 });
 
@@ -871,9 +664,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 20112020
+ * updatedDate: 22112020
  * updatedFunction:
- * -> add new merchant survey display photo screen.
- * -> add modal (leave task).
- * -> add delete icon (render photo list).
+ * -> add modal for image carousel.
  */
