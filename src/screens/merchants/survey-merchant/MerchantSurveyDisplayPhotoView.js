@@ -34,7 +34,7 @@ import ModalBottomSubmit from './ModalBottomSubmit';
 import MerchantPhotoList from './MerchantPhotoList';
 import MerchantSurveySteps from './MerchantSurveySteps';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 class MerchantSurveyDisplayPhotoView extends Component {
   constructor(props) {
@@ -90,17 +90,30 @@ class MerchantSurveyDisplayPhotoView extends Component {
     this.navigationFunction();
   }
   goBack = () => {
+    let totalPhoto = 0;
+    this.state.photo.map(item => {
+      if (item.uri) {
+        totalPhoto = totalPhoto + 1;
+      }
+    });
+    if (this.state.capturedPhoto.uri) {
+      return this.setState({ capturedPhoto: { uri: null } });
+    }
+    if (this.state.activeStep === 1 && totalPhoto === 0) {
+      return this.setState({ activeStep: 0, displayPhoto: true });
+    }
     if (
       this.state.activeStep === 0 &&
+      totalPhoto >= 1 &&
       this.state.photosDisplayBefore.length === 0
     ) {
       return this.setState({
         modalConfirmation: true
       });
     }
-
     if (
       this.state.activeStep === 1 &&
+      totalPhoto >= 1 &&
       this.state.photosDisplayAfter.length === 0
     ) {
       return this.setState({
@@ -153,7 +166,12 @@ class MerchantSurveyDisplayPhotoView extends Component {
   };
 
   submitPhoto = () => {
-    const newPhoto = this.state.photo;
+    const newPhoto = [];
+    this.state.photo.map(item => {
+      if (item.uri) {
+        newPhoto.push(item);
+      }
+    });
     if (this.state.activeStep === 0) {
       this.setState({
         modalSubmit: false,
@@ -229,7 +247,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === RENDER STEPS === */
   renderSteps() {
     return (
-      <View style={[styles.cardContainer]}>
+      <View style={[styles.cardContainer, { paddingBottom: 16 }]}>
         <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
           <MerchantSurveySteps active={this.state.activeStep} />
         </View>
@@ -303,35 +321,25 @@ class MerchantSurveyDisplayPhotoView extends Component {
             />
           </View>
         ) : null}
-        {this.state.photosDisplayAfter.length === 0 ? (
-          <View style={{ width: '100%' }}>
-            <ButtonSingle
-              title="Continue"
-              borderRadius={4}
-              onPress={() => this.continueStep()}
-            />
-          </View>
-        ) : null}
       </View>
     );
   }
   /** === RENDER CAMERA === */
   renderCamera() {
     return (
-      <View style={styles.cameraContainer}>
+      <View>
         <RNCamera
           ref={ref => {
             this.camera = ref;
           }}
           aspect={1}
-          style={{ flex: 1 }}
+          style={styles.camera}
           type={
             this.state.backCamera
               ? RNCamera.Constants.Type.back
               : RNCamera.Constants.Type.front
           }
           captureAudio={false}
-          ratio="1:1"
           defaultTouchToFocus
           flashMode={
             this.state.flash
@@ -393,16 +401,26 @@ class MerchantSurveyDisplayPhotoView extends Component {
       />
     );
   }
-  /** === RENDER BUTTON SUBMIT === */
-  renderSubmit() {
+  /** === RENDER BUTTON === */
+  renderButton() {
     return (
-      <View>
-        <ButtonSingle
-          title="Proceed"
-          disabled={!this.state.photo[0].uri}
-          borderRadius={5}
-          onPress={() => this.setState({ modalSubmit: true })}
-        />
+      <View style={styles.buttonBottom}>
+        {this.state.displayPhoto &&
+        this.state.photosDisplayAfter.length === 0 ? (
+          <ButtonSingle
+            title="Continue"
+            borderRadius={4}
+            onPress={() => this.continueStep()}
+          />
+        ) : null}
+        {!this.state.displayPhoto && this.state.activeStep !== 2 ? (
+          <ButtonSingle
+            title="Proceed"
+            disabled={!this.state.photo[0].uri}
+            borderRadius={5}
+            onPress={() => this.setState({ modalSubmit: true })}
+          />
+        ) : null}
       </View>
     );
   }
@@ -418,7 +436,6 @@ class MerchantSurveyDisplayPhotoView extends Component {
         {this.renderSteps()}
         {this.renderCamera()}
         {this.renderPhotoList()}
-        {this.renderSubmit()}
       </View>
     );
   }
@@ -432,6 +449,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
           renderItem={this.renderContentItem.bind(this)}
           keyExtractor={(data, index) => index.toString()}
         />
+        {this.renderButton()}
       </View>
     );
   }
@@ -495,9 +513,13 @@ class MerchantSurveyDisplayPhotoView extends Component {
         okText={'Leave'}
         cancelText={'Cancel'}
         ok={() =>
-          this.setState({ modalConfirmation: false }, () =>
-            NavigationService.navigate('MerchantSurveyView')
-          )
+          this.setState({ modalConfirmation: false }, () => {
+            if (this.state.activeStep === 1) {
+              return this.setState({ activeStep: 0, displayPhoto: true });
+            } else {
+              return NavigationService.navigate('MerchantSurveyView');
+            }
+          })
         }
         cancel={() => this.setState({ modalConfirmation: false })}
       />
@@ -522,9 +544,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     return (
       <ModalBottomCompleted
         open={this.state.modalCompleted}
-        onReturnTaskList={() =>
-          NavigationService.navigate('MerchantSurveyView')
-        }
+        onReturnTaskList={() => NavigationService.navigate('MerchantHomeView')}
         onClose={() => this.setState({ modalCompleted: false })}
       />
     );
@@ -606,14 +626,18 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginTop: 12
   },
-  cameraContainer: {
-    paddingTop: 165,
+  camera: {
+    flex: 1,
+    height: 300,
+    width,
     overflow: 'hidden'
   },
   cameraButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'flex-end',
+    padding: 16,
+    height: 300
   },
   smallIcon: {
     borderRadius: 40,
@@ -643,6 +667,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 138,
     justifyContent: 'center'
+  },
+  buttonBottom: {
+    width: '100%',
+    bottom: 0,
+    position: 'absolute',
+    alignSelf: 'center'
   }
 });
 
@@ -664,7 +694,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 22112020
+ * updatedDate: 23112020
  * updatedFunction:
- * -> add modal for image carousel.
+ * -> fix navigation & ui.
  */

@@ -15,49 +15,55 @@ class MerchantSurveySteps extends Component {
   /** === RENDER MAIN === */
   render() {
     return (
-      <FlatList
-        horizontal={true}
-        scrollEnabled={false}
-        showsHorizontalScrollIndicator={false}
-        data={steps}
-        contentContainerStyle={styles.container}
-        keyExtractor={(data, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={{ flexDirection: 'column' }}>
-            <View style={styles.content}>
-              <View
-                style={[
-                  styles.numberContainer,
-                  {
-                    backgroundColor:
-                      index <= this.props.active
-                        ? Color.mainColor
-                        : Color.fontBlack10
-                  }
-                ]}
-              >
-                <Text style={Fonts.type2}>{index + 1}</Text>
-              </View>
-              {index !== steps.length - 1 && (
+      <View>
+        <FlatList
+          horizontal={true}
+          scrollEnabled={false}
+          showsHorizontalScrollIndicator={false}
+          data={steps}
+          contentContainerStyle={styles.container}
+          keyExtractor={(data, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <View style={{ flexDirection: 'column' }}>
+              <View style={styles.content}>
                 <View
                   style={[
-                    styles.line,
+                    styles.numberContainer,
                     {
                       backgroundColor:
-                        index < this.props.active
+                        index <= this.props.active
                           ? Color.mainColor
                           : Color.fontBlack10
                     }
                   ]}
-                />
-              )}
+                >
+                  <Text style={Fonts.type2}>{index + 1}</Text>
+                </View>
+                {index !== steps.length - 1 && (
+                  <View
+                    style={[
+                      styles.line,
+                      {
+                        backgroundColor:
+                          index < this.props.active
+                            ? Color.mainColor
+                            : Color.fontBlack10
+                      }
+                    ]}
+                  />
+                )}
+              </View>
             </View>
-            <View>
+          )}
+        />
+        <View style={styles.nameContainer}>
+          {steps.map((item, index) => (
+            <View key={index}>
               <Text style={[Fonts.type57]}>{item}</Text>
             </View>
-          </View>
-        )}
-      />
+          ))}
+        </View>
+      </View>
     );
   }
 }
@@ -66,12 +72,12 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     justifyContent: 'center',
-    paddingVertical: 8
+    paddingBottom: 5,
+    paddingTop: 8
   },
   content: {
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: 8
+    alignItems: 'center'
   },
   numberContainer: {
     height: 22,
@@ -87,6 +93,11 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  nameContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingBottom: 8
   }
 });
 
@@ -99,7 +110,7 @@ export default MerchantSurveySteps;
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 22112020
+ * updatedDate: 23112020
  * updatedFunction:
- * -> update step progress component.
+ * -> fix ui step component.
  */
