@@ -8,17 +8,15 @@ import {
   TouchableOpacity,
   ScrollView,
   Text
-} from '../../library/reactPackage'
-import {
-  MaterialIcon
-} from '../../library/thirdPartyPackage'
+} from '../../library/reactPackage';
+import { MaterialIcon } from '../../library/thirdPartyPackage';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import {
   StatusBarRedOP50,
   ModalBottomType4,
   SkeletonType8
-} from '../../library/component'
-import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
+} from '../../library/component';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 
 const { height } = Dimensions.get('window');
@@ -26,9 +24,7 @@ const { height } = Dimensions.get('window');
 class ModalBottomPaymentMethod extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    };
+    this.state = {};
   }
   /**
    * ====================
@@ -61,9 +57,7 @@ class ModalBottomPaymentMethod extends Component {
               <View />
             )}
             <View style={{ flex: 1, justifyContent: 'center' }}>
-              <Text style={Fonts.type8}>
-                {itemPaymnetMethod.name}
-              </Text>
+              <Text style={Fonts.type8}>{itemPaymnetMethod.name}</Text>
               <Text style={Fonts.type28}>
                 Total Biaya {MoneyFormat(itemPaymnetMethod.totalPayment)}
               </Text>
@@ -75,7 +69,7 @@ class ModalBottomPaymentMethod extends Component {
           <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
         </View>
       ) : (
-        <View key={index} style={{backgroundColor: masterColor.fontBlack10}}>
+        <View key={index} style={{ backgroundColor: masterColor.fontBlack10 }}>
           <TouchableOpacity
             disabled={true}
             style={{
@@ -87,7 +81,7 @@ class ModalBottomPaymentMethod extends Component {
           >
             {itemPaymnetMethod.image !== null ? (
               <View style={{ width: '17%', justifyContent: 'center' }}>
-                <View style={{opacity: 0.5}}>
+                <View style={{ opacity: 0.5 }}>
                   <Image
                     source={{
                       uri: itemPaymnetMethod.image
@@ -100,16 +94,16 @@ class ModalBottomPaymentMethod extends Component {
               <View />
             )}
             <View style={{ flex: 1, justifyContent: 'center' }}>
-              <Text style={[Fonts.type8, {opacity: 0.5}]}>
+              <Text style={[Fonts.type8, { opacity: 0.5 }]}>
                 {itemPaymnetMethod.name}
               </Text>
-              <Text style={[Fonts.type28, {opacity: 0.5}]}>
+              <Text style={[Fonts.type28, { opacity: 0.5 }]}>
                 Dalam Perbaikan
                 {/* Tidak tersedia untuk transaksi ini */}
               </Text>
             </View>
             <View style={{ width: '5%', justifyContent: 'center' }}>
-              <Icons style={{opacity: 0.5}} name="navigate-next" size={24} />
+              <Icons style={{ opacity: 0.5 }} name="navigate-next" size={24} />
             </View>
           </TouchableOpacity>
           <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
@@ -119,17 +113,24 @@ class ModalBottomPaymentMethod extends Component {
   }
   /** RENDER PAYMENT TYPE */
   renderPaymentType() {
-
     return (
       <View>
         <View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
-          <View style={{flexDirection:"row", justifyContent:"space-between"}}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+          >
             <Text style={Fonts.type48}>Tipe Pembayaran</Text>
             <TouchableOpacity onPress={this.props.close}>
               <Text style={Fonts.type11}>Ubah</Text>
             </TouchableOpacity>
           </View>
-          <View style={{marginRight: 20, paddingVertical: 16, flexDirection:"row" }}>
+          <View
+            style={{
+              marginRight: 20,
+              paddingVertical: 16,
+              flexDirection: 'row'
+            }}
+          >
             <Image
               source={{ uri: this.props.paymentType.paymentType.iconUrl }}
               style={{ height: 24, width: 24 }}
@@ -147,26 +148,25 @@ class ModalBottomPaymentMethod extends Component {
   }
   /** RENDER PAYMENT LIST */
   renderListPaymentMethod() {
-      return this.props.paymentMethod !== null ? (
-       this.props.paymentMethod.paymentChannels.map(
-        (item, index) => {
-          return (
+    return this.props.paymentMethod !== null ? (
+      this.props.paymentMethod.paymentChannels.map((item, index) => {
+        return (
           <View key={index}>
-              <ScrollView>
-                <View
-                  style={{ paddingLeft: 16, marginBottom: 10, marginTop: 20 }}
-                >
-                  <Text style={Fonts.type16}>{item.name}</Text>
-                </View>
-                <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
-                <View>{this.renderListPaymentMethodContent(item.type)}</View>
-              </ScrollView>
-            </View>
-          )
-        }
-       )
-    ):
-    <View />
+            <ScrollView>
+              <View
+                style={{ paddingLeft: 16, marginBottom: 10, marginTop: 20 }}
+              >
+                <Text style={Fonts.type16}>{item.name}</Text>
+              </View>
+              <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
+              <View>{this.renderListPaymentMethodContent(item.type)}</View>
+            </ScrollView>
+          </View>
+        );
+      })
+    ) : (
+      <View />
+    );
   }
 
   /**RENDER PAYMENT METHOD*/
@@ -178,7 +178,7 @@ class ModalBottomPaymentMethod extends Component {
         </View>
         {this.renderListPaymentMethod()}
       </View>
-    )
+    );
   }
   renderSkeleton() {
     return <SkeletonType8 />;
@@ -189,15 +189,13 @@ class ModalBottomPaymentMethod extends Component {
       <View style={styles.mainContainer}>
         <StatusBarRedOP50 />
         <View style={styles.container}>
-          <ScrollView>
-            <View>{this.renderPaymentType()}</View>
-            {/* {this.renderPaymentType()} */}
-            {!this.props.loading && this.props.paymentType !== null ? (
-              this.renderPaymentMethod()
-            ) : (
-              this.renderSkeleton()
-            )}
-          </ScrollView>
+          <View>{this.renderPaymentType()}</View>
+          {/* {this.renderPaymentType()} */}
+          {!this.props.loading && this.props.paymentType !== null ? (
+            <ScrollView>{this.renderPaymentMethod()}</ScrollView>
+          ) : (
+            this.renderSkeleton()
+          )}
         </View>
       </View>
     );
@@ -206,7 +204,7 @@ class ModalBottomPaymentMethod extends Component {
   render() {
     return (
       <ModalBottomType4
-        typeClose={"close"}
+        typeClose={'close'}
         open={this.props.open}
         onPress={this.props.close}
         close={this.props.close}
@@ -230,14 +228,14 @@ const styles = StyleSheet.create({
 export default ModalBottomPaymentMethod;
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
