@@ -112,7 +112,7 @@ class ModalChangePaymentMethod extends Component {
             <View style={{ flex: 1, justifyContent: 'center' }}>
               <Text style={Fonts.type8}>{itemPaymnetMethod.name}</Text>
               <Text style={Fonts.type28}>
-                Dalam Perbaikan
+                {itemPaymnetMethod.message}
                 {/* Tidak tersedia untuk transaksi ini */}
               </Text>
             </View>
