@@ -98,7 +98,7 @@ class ModalBottomPaymentMethod extends Component {
                 {itemPaymnetMethod.name}
               </Text>
               <Text style={[Fonts.type28, { opacity: 0.5 }]}>
-                Dalam Perbaikan
+                {itemPaymnetMethod.message}
                 {/* Tidak tersedia untuk transaksi ini */}
               </Text>
             </View>
