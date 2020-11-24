@@ -142,7 +142,7 @@ class ModalChangePaymentMethod extends Component {
     return this.props.paymentMethod.data !== null ? (
       this.props.paymentMethod.data.paymentChannels.map((item, index) => {
         return (
-          <View key={index}>
+          <View key={index} style={{marginBottom:16}}>
             <ScrollView>
               <View
                 style={{ paddingLeft: 16, marginBottom: 10, marginTop: 20 }}
