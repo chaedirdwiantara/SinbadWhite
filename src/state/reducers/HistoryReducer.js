@@ -234,16 +234,17 @@ export const history = createReducer(INITIAL_STATE, {
   },
   [types.HISTORY_CHANGE_PAYMENT_METHOD_SUCCESS](state, action) {
     let dataDetailHistory = { ...state.dataDetailHistory };
-    dataDetailHistory.billing.paymentChannelId = action.payload.data.paymentChannelID;
-    dataDetailHistory.billing.paymentTypeId = action.payload.data.paymentTypeID;
-    dataDetailHistory.paymentType.id = action.payload.data.paymentTypeID;
-    dataDetailHistory.paymentChannel.id = action.payload.data.paymentChannelID;
+    dataDetailHistory.billing.paymentChannelId = action.payload.data.paymentChannelId;
+    dataDetailHistory.billing.paymentTypeId = action.payload.data.paymentTypeId;
+    dataDetailHistory.paymentType.id = action.payload.data.paymentTypeId;
+    dataDetailHistory.paymentChannel.id = action.payload.data.paymentChannelId;
     dataDetailHistory.paymentChannel.name = action.payload.data.paymentChannelName;
     dataDetailHistory.paymentChannel.description = action.payload.data.paymentDescription;
     dataDetailHistory.billing.accountVaNo = action.payload.data.accountVaNo;
     dataDetailHistory.billing.expiredPaymentTime = action.payload.data.expiredPaymentTime;
     dataDetailHistory.paymentChannel.iconUrl = action.payload.data.paymentIconUrl;
     dataDetailHistory.billing.totalPayment = action.payload.data.totalPayment;
+    dataDetailHistory.paymentChannel.paymentChannelTypeId = action.payload.data.paymentChannelTypeId;
      return {
       ...state,
       loadingHistoryChangePaymentMethod: false,

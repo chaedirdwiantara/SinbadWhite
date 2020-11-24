@@ -301,6 +301,7 @@ class HistoryDetailPayment extends Component {
   renderVirtualAccountNumber() {
     const paymentTypeId = this.props.history.dataDetailHistory.paymentType.id;
     const orderStatus = this.props.history.dataDetailHistory.orderStatus;
+    const paymentChannelTypeId = this.props.history.dataDetailHistory.paymentChannel.paymentChannelTypeId
     return (
       <View>
         <View style={GlobalStyle.boxPadding} />
