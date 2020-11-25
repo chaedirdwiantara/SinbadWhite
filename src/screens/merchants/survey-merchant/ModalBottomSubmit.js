@@ -1,0 +1,110 @@
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  FlatList,
+  Image,
+  Text
+} from '../../../library/reactPackage';
+import {
+  ButtonSingleSmall,
+  ModalBottomType3
+} from '../../../library/component';
+import { Fonts } from '../../../helpers';
+
+class ModalBottomSubmit extends Component {
+  /** === RENDER CONTENT === */
+  renderContent() {
+    return (
+      <View>
+        <View style={styles.contentContainer}>
+          <Text style={Fonts.type12}>
+            You can only submit it once. After this you can proceed to the next
+            step.
+          </Text>
+        </View>
+        <FlatList
+          data={this.props.data}
+          numColumns={3}
+          keyExtractor={(data, index) => index.toString()}
+          renderItem={({ item }) => (
+            <Image
+              source={{
+                isStatic: true,
+                uri: item.uri
+              }}
+              style={styles.image}
+            />
+          )}
+        />
+        <View style={styles.buttonContainer}>
+          <View style={styles.button}>
+            <ButtonSingleSmall
+              title="Cancel"
+              white
+              borderRadius={4}
+              onPress={this.props.onClose}
+            />
+          </View>
+          <View style={styles.button}>
+            <ButtonSingleSmall
+              title="Submit"
+              borderRadius={4}
+              onPress={this.props.onSubmit}
+            />
+          </View>
+        </View>
+      </View>
+    );
+  }
+  /** === RENDER MAIN === */
+  render() {
+    return (
+      <ModalBottomType3
+        open={this.props.open}
+        title={this.props.title}
+        content={this.renderContent()}
+        close={this.props.onClose}
+        typeClose={'cancel'}
+      />
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  contentContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16
+  },
+  image: {
+    width: 99,
+    height: 99,
+    marginLeft: 16,
+    marginBottom: 16,
+    borderRadius: 5
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  button: {
+    padding: 16,
+    flex: 1
+  }
+});
+
+export default ModalBottomSubmit;
+
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy: dyah
+ * createdDate: 20112020
+ * updatedBy: dyah
+ * updatedDate: 22112020
+ * updatedFunction:
+ * -> add modal bottom submit.
+ */

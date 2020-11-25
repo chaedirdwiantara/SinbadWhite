@@ -1,0 +1,700 @@
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  SafeAreaView,
+  Dimensions,
+  Image,
+  Text
+} from '../../../library/reactPackage';
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon,
+  RNFS,
+  RNCamera,
+  ImageEditor
+} from '../../../library/thirdPartyPackage';
+import {
+  StatusBarRed,
+  ModalConfirmation,
+  ButtonSingle,
+  BackHandlerBackSpecific
+} from '../../../library/component';
+import { GlobalStyle, Fonts } from '../../../helpers';
+import { Color } from '../../../config';
+import * as ActionCreators from '../../../state/actions';
+import NavigationService from '../../../navigation/NavigationService';
+import ModalCarousel from './ModalCarousel';
+import ModalBottomCompleted from './ModalBottomCompleted';
+import ModalBottomSubmit from './ModalBottomSubmit';
+import MerchantPhotoList from './MerchantPhotoList';
+import MerchantSurveySteps from './MerchantSurveySteps';
+
+const { width } = Dimensions.get('window');
+
+class MerchantSurveyDisplayPhotoView extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      activeStep: 0,
+      backCamera: true,
+      flash: false,
+      photo: [
+        {
+          uri: null,
+          base64: ''
+        },
+        {
+          uri: null,
+          base64: ''
+        },
+        {
+          uri: null,
+          base64: ''
+        },
+        {
+          uri: null,
+          base64: ''
+        },
+        {
+          uri: null,
+          base64: ''
+        }
+      ],
+      capturedPhoto: {
+        uri: null
+      },
+      modalSubmit: false,
+      modalCompleted: false,
+      modalConfirmation: false,
+      displayPhoto: false,
+      photosDisplayBefore: [],
+      photosDisplayAfter: [],
+      activeIndex: 0,
+      openCarousel: false,
+      dataCarousel: []
+    };
+  }
+  /**
+   * =======================
+   * FUNCTIONAL
+   * =======================
+   */
+  /** === DID MOUNT === */
+  componentDidMount() {
+    this.navigationFunction();
+  }
+  goBack = () => {
+    let totalPhoto = 0;
+    this.state.photo.map(item => {
+      if (item.uri) {
+        totalPhoto = totalPhoto + 1;
+      }
+    });
+    if (this.state.capturedPhoto.uri) {
+      return this.setState({ capturedPhoto: { uri: null } });
+    }
+    if (this.state.activeStep === 1 && totalPhoto === 0) {
+      return this.setState({ activeStep: 0, displayPhoto: true });
+    }
+    if (
+      this.state.activeStep === 0 &&
+      totalPhoto >= 1 &&
+      this.state.photosDisplayBefore.length === 0
+    ) {
+      return this.setState({
+        modalConfirmation: true
+      });
+    }
+    if (
+      this.state.activeStep === 1 &&
+      totalPhoto >= 1 &&
+      this.state.photosDisplayAfter.length === 0
+    ) {
+      return this.setState({
+        modalConfirmation: true
+      });
+    }
+
+    return NavigationService.navigate('MerchantSurveyView');
+  };
+
+  takePhoto = async () => {
+    this.setState({ loading: true });
+    const cropData = {
+      offset: { x: 600, y: 400 },
+      size: { width: 1850, height: 1850 }
+    };
+
+    if (this.camera) {
+      let options = {
+        quality: 0.2,
+        base64: true,
+        fixOrientation: true
+      };
+      const data = await this.camera.takePictureAsync(options);
+      ImageEditor.cropImage(data.uri, cropData).then(url => {
+        let newData = { ...data, uri: 'data:image/jpeg;base64,' + data.base64 };
+        this.setState({ capturedPhoto: newData });
+        RNFS.readFile(url, 'base64').then(dataImage => {
+          // this.props.saveImageBase64(dataImage);
+        });
+        RNFS.unlink(data.uri);
+      });
+    }
+  };
+
+  savePhoto = () => {
+    let newPhoto = this.state.photo;
+    let check = 0;
+    newPhoto.map(item => {
+      if (!item.uri) {
+        if (check === 0) {
+          check = check + 1;
+          return (item.uri =
+            'data:image/jpeg;base64,' + this.state.capturedPhoto.base64);
+        }
+        return;
+      }
+    });
+    this.setState({ photo: newPhoto, capturedPhoto: { uri: null } });
+  };
+
+  submitPhoto = () => {
+    const newPhoto = [];
+    this.state.photo.map(item => {
+      if (item.uri) {
+        newPhoto.push(item);
+      }
+    });
+    if (this.state.activeStep === 0) {
+      this.setState({
+        modalSubmit: false,
+        photosDisplayBefore: newPhoto,
+        displayPhoto: true
+      });
+    } else {
+      this.setState({
+        modalSubmit: false,
+        modalCompleted: true,
+        photosDisplayAfter: newPhoto,
+        displayPhoto: true,
+        activeStep: 2
+      });
+    }
+  };
+
+  continueStep = () => {
+    let newPhoto = this.state.photo;
+    newPhoto.map(item => (item.uri = null));
+    this.setState({
+      displayPhoto: false,
+      activeStep: 1,
+      photo: newPhoto
+    });
+  };
+
+  deletePhotoFromList = deleteUri => {
+    let newPhoto = this.state.photo;
+    newPhoto.map((item, index) => {
+      if (index === deleteUri) {
+        newPhoto.splice(index, 1);
+      }
+    });
+    newPhoto.push({
+      uri: null,
+      base64: ''
+    });
+    this.setState({ photo: newPhoto });
+  };
+  /** ====== DID MOUNT FUNCTION ========== */
+  /** NAVIGATION FUNCTION */
+  navigationFunction() {
+    this.props.navigation.setParams({
+      goBackFunction: () => this.goBack()
+    });
+  }
+  /**
+   * ========================
+   * HEADER MODIFY
+   * ========================
+   */
+  static navigationOptions = ({ navigation }) => {
+    let storeName = 'Display Toko Photo';
+    const { state } = navigation;
+
+    return {
+      headerLeft: () => (
+        <TouchableOpacity
+          style={{ marginLeft: 16 }}
+          onPress={() => state.params.goBackFunction()}
+        >
+          <MaterialIcon color={Color.fontWhite} name={'arrow-back'} size={24} />
+        </TouchableOpacity>
+      ),
+      headerTitle: () => (
+        <View>
+          <Text style={Fonts.type35}>{storeName}</Text>
+        </View>
+      )
+    };
+  };
+  /** === RENDER STEPS === */
+  renderSteps() {
+    return (
+      <View style={[styles.cardContainer, { paddingBottom: 16 }]}>
+        <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
+          <MerchantSurveySteps active={this.state.activeStep} />
+        </View>
+      </View>
+    );
+  }
+  /** === RENDER DISPLAY PHOTO === */
+  renderDisplayPhoto() {
+    return (
+      <View style={[styles.cardContainer]}>
+        {this.state.photosDisplayBefore.length !== 0 ? (
+          <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
+            <Text>Photos Display Before</Text>
+            <FlatList
+              data={this.state.photosDisplayBefore}
+              numColumns={5}
+              keyExtractor={(data, index) => 'Before' + index.toString()}
+              listKey={(data, index) => 'Before' + index.toString()}
+              renderItem={({ item, index }) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    this.setState({
+                      openCarousel: true,
+                      dataCarousel: this.state.photosDisplayBefore,
+                      activeIndex: index
+                    });
+                  }}
+                >
+                  <Image
+                    source={{
+                      isStatic: true,
+                      uri: item.uri
+                    }}
+                    style={styles.imageDisplayPhoto}
+                  />
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        ) : null}
+        <View style={{ height: 16 }} />
+        {this.state.photosDisplayAfter.length !== 0 ? (
+          <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
+            <Text>Photos Display After</Text>
+            <FlatList
+              data={this.state.photosDisplayAfter}
+              numColumns={5}
+              keyExtractor={(data, index) => 'After' + index.toString()}
+              listKey={(data, index) => 'After' + index.toString()}
+              renderItem={({ item, index }) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    this.setState({
+                      openCarousel: true,
+                      dataCarousel: this.state.photosDisplayAfter,
+                      activeIndex: index
+                    });
+                  }}
+                >
+                  <Image
+                    source={{
+                      isStatic: true,
+                      uri: item.uri
+                    }}
+                    style={styles.imageDisplayPhoto}
+                  />
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        ) : null}
+      </View>
+    );
+  }
+  /** === RENDER CAMERA === */
+  renderCamera() {
+    return (
+      <View>
+        <RNCamera
+          ref={ref => {
+            this.camera = ref;
+          }}
+          aspect={1}
+          style={styles.camera}
+          type={
+            this.state.backCamera
+              ? RNCamera.Constants.Type.back
+              : RNCamera.Constants.Type.front
+          }
+          captureAudio={false}
+          defaultTouchToFocus
+          flashMode={
+            this.state.flash
+              ? RNCamera.Constants.FlashMode.on
+              : RNCamera.Constants.FlashMode.off
+          }
+          clearWindowBackground={false}
+          androidCameraPermissionOptions={{
+            title: 'Permission to use camera',
+            message: 'We need your permission to use your camera',
+            buttonPositive: 'Ok',
+            buttonNegative: 'Cancel'
+          }}
+        >
+          <View style={styles.cameraButtonContainer}>
+            <TouchableOpacity
+              style={styles.smallIcon}
+              onPress={() => this.setState({ flash: !this.state.flash })}
+            >
+              <MaterialIcon
+                name="flash-on"
+                color={Color.fontBlack60}
+                size={15}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.mediumIcon}
+              onPress={this.takePhoto.bind(this)}
+            >
+              <MaterialIcon
+                name="photo-camera"
+                color={Color.fontBlack60}
+                size={32}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.smallIcon}
+              onPress={() =>
+                this.setState({ backCamera: !this.state.backCamera })
+              }
+            >
+              <MaterialIcon
+                name="switch-camera"
+                color={Color.fontBlack60}
+                size={15}
+              />
+            </TouchableOpacity>
+          </View>
+        </RNCamera>
+      </View>
+    );
+  }
+  /** === RENDER PHOTO LIST === */
+  renderPhotoList() {
+    return (
+      <MerchantPhotoList
+        data={this.state.photo}
+        onDelete={index => this.deletePhotoFromList(index)}
+      />
+    );
+  }
+  /** === RENDER BUTTON === */
+  renderButton() {
+    return (
+      <View style={styles.buttonBottom}>
+        {this.state.displayPhoto &&
+        this.state.photosDisplayAfter.length === 0 ? (
+          <ButtonSingle
+            title="Continue"
+            borderRadius={4}
+            onPress={() => this.continueStep()}
+          />
+        ) : null}
+        {!this.state.displayPhoto && this.state.activeStep !== 2 ? (
+          <ButtonSingle
+            title="Proceed"
+            disabled={!this.state.photo[0].uri}
+            borderRadius={5}
+            onPress={() => this.setState({ modalSubmit: true })}
+          />
+        ) : null}
+      </View>
+    );
+  }
+  /** === RENDER CONTENT ITEM === */
+  renderContentItem() {
+    return this.state.displayPhoto ? (
+      <View>
+        {this.renderSteps()}
+        {this.renderDisplayPhoto()}
+      </View>
+    ) : (
+      <View>
+        {this.renderSteps()}
+        {this.renderCamera()}
+        {this.renderPhotoList()}
+      </View>
+    );
+  }
+  /** === RENDER CONTENT === */
+  renderContent() {
+    return (
+      <View style={styles.contentContainer}>
+        <FlatList
+          showsVerticalScrollIndicator
+          data={[1]}
+          renderItem={this.renderContentItem.bind(this)}
+          keyExtractor={(data, index) => index.toString()}
+        />
+        {this.renderButton()}
+      </View>
+    );
+  }
+  /** === RENDER REVIEW IMAGE === */
+  renderReviewImage() {
+    return (
+      <View style={styles.contentContainer}>
+        <View style={[styles.cardContainer, styles.reviewContainer]}>
+          <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
+            <Image
+              source={{
+                isStatic: true,
+                uri: this.state.capturedPhoto.uri
+              }}
+              style={{ height: 257 }}
+            />
+          </View>
+          <View style={styles.reviewButtonContainer}>
+            <TouchableOpacity
+              style={styles.reviewButton}
+              onPress={() => this.setState({ capturedPhoto: { uri: null } })}
+            >
+              <MaterialIcon
+                name="delete-forever"
+                color={Color.fontBlack80}
+                size={15}
+                style={{ marginRight: 4 }}
+              />
+              <Text style={[Fonts.type31, { color: Color.fontBlack80 }]}>
+                Delete
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.reviewButton}
+              onPress={() => this.savePhoto()}
+            >
+              <MaterialIcon
+                name="check"
+                color={Color.fontGreen50}
+                size={15}
+                style={{ marginRight: 4 }}
+              />
+              <Text style={Fonts.type98}>Save</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  }
+  /** === RENDER MODAL LEAVE TASK === */
+  renderModalLeaveTask() {
+    return (
+      <ModalConfirmation
+        statusBarWhite
+        title={'Leave Task?'}
+        open={this.state.modalConfirmation}
+        content={
+          'You have unsaved images. Do you still want to leave task without saving current images? '
+        }
+        type={'okeNotRed'}
+        okText={'Leave'}
+        cancelText={'Cancel'}
+        ok={() =>
+          this.setState({ modalConfirmation: false }, () => {
+            if (this.state.activeStep === 1) {
+              return this.setState({ activeStep: 0, displayPhoto: true });
+            } else {
+              return NavigationService.navigate('MerchantSurveyView');
+            }
+          })
+        }
+        cancel={() => this.setState({ modalConfirmation: false })}
+      />
+    );
+  }
+  /** === RENDER MODAL NEXT PROCESS === */
+  renderModalSubmit() {
+    return (
+      <ModalBottomSubmit
+        open={this.state.modalSubmit}
+        title={`Submit the ${
+          this.state.activeStep === 0 ? 'Before' : 'After'
+        } Photo`}
+        data={this.state.photo}
+        onClose={() => this.setState({ modalSubmit: false })}
+        onSubmit={this.submitPhoto.bind(this)}
+      />
+    );
+  }
+  /** === RENDER MODAL COMPLETED === */
+  renderModalCompleted() {
+    return (
+      <ModalBottomCompleted
+        open={this.state.modalCompleted}
+        onReturnTaskList={() => NavigationService.navigate('MerchantHomeView')}
+        onClose={() => this.setState({ modalCompleted: false })}
+      />
+    );
+  }
+  /** === RENDER CAROUSEL === */
+  renderCarousel() {
+    return (
+      <ModalCarousel
+        isVisible={this.state.openCarousel}
+        onClose={() => this.setState({ openCarousel: false })}
+        data={this.state.dataCarousel}
+        onSnapToItem={index => this.setState({ activeIndex: index })}
+        activeIndex={this.state.activeIndex}
+        onPrevious={() =>
+          this.setState({ activeIndex: this.state.activeIndex - 1 })
+        }
+        onNext={() =>
+          this.setState({ activeIndex: this.state.activeIndex + 1 })
+        }
+      />
+    );
+  }
+  /** BACKGROUND */
+  renderBackground() {
+    return <View style={styles.backgroundRed} />;
+  }
+  /** === RENDER MAIN === */
+  render() {
+    return (
+      <SafeAreaView>
+        <BackHandlerBackSpecific navigation={this.props.navigation} />
+        <StatusBarRed />
+        <View style={{ height: '100%' }}>
+          {this.renderBackground()}
+          {this.state.capturedPhoto.uri
+            ? this.renderReviewImage()
+            : this.renderContent()}
+        </View>
+        {this.renderModalLeaveTask()}
+        {this.renderModalSubmit()}
+        {this.renderModalCompleted()}
+        {this.renderCarousel()}
+      </SafeAreaView>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  contentContainer: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    zIndex: 1000
+  },
+  backgroundRed: {
+    backgroundColor: Color.mainColor,
+    height: 85
+  },
+  containerTitle: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 0.1 * width
+  },
+  cardContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 11,
+    paddingBottom: 5
+  },
+  insideCard: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    backgroundColor: Color.backgroundWhite
+  },
+  imageDisplayPhoto: {
+    borderRadius: 4,
+    width: 51,
+    height: 51,
+    marginRight: 10,
+    marginTop: 12
+  },
+  camera: {
+    flex: 1,
+    height: 300,
+    width,
+    overflow: 'hidden'
+  },
+  cameraButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    padding: 16,
+    height: 300
+  },
+  smallIcon: {
+    borderRadius: 40,
+    marginLeft: 5,
+    padding: 6,
+    backgroundColor: Color.fontWhite
+  },
+  mediumIcon: {
+    borderWidth: 2,
+    borderRadius: 40,
+    borderColor: Color.fontWhite,
+    padding: 10,
+    backgroundColor: Color.fontWhite
+  },
+  reviewContainer: {
+    height: '100%',
+    justifyContent: 'space-between'
+  },
+  reviewButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 8
+  },
+  reviewButton: {
+    flexDirection: 'row',
+    padding: 8,
+    alignItems: 'center',
+    width: 138,
+    justifyContent: 'center'
+  },
+  buttonBottom: {
+    width: '100%',
+    bottom: 0,
+    position: 'absolute',
+    alignSelf: 'center'
+  }
+});
+
+const mapStateToProps = ({ auth, merchant, user, permanent }) => {
+  return { auth, merchant, user, permanent };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
+
+// eslint-disable-next-line prettier/prettier
+export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDisplayPhotoView);
+
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy: dyah
+ * createdDate: 20112020
+ * updatedBy: dyah
+ * updatedDate: 23112020
+ * updatedFunction:
+ * -> fix navigation & ui.
+ */

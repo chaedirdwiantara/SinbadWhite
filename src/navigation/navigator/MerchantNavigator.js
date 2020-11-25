@@ -23,6 +23,9 @@ import MerchantDetailAddressView from '../../screens/merchants/details-merchant/
 import MerchantDetailClassificationView from '../../screens/merchants/details-merchant/MerchantDetailClassificationView'
 /** merchant edit */
 import MerchantEditView from '../../screens/merchants/edit-merchant/MerchantEditView';
+/** merchant survey */
+import MerchantSurveyView from '../../screens/merchants/survey-merchant/MerchantSurveyView';
+import MerchantSurveyDisplayPhotoView from '../../screens/merchants/survey-merchant/MerchantSurveyDisplayPhotoView';
 
 const MerchantNavigator = {
   MerchantView: {
@@ -263,6 +266,29 @@ const MerchantNavigator = {
         backgroundColor: masterColor.backgroundWhite
       },
       headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  /** === SURVEY MERCHANT ==== */
+  MerchantSurveyView: {
+    screen: MerchantSurveyView,
+    navigationOptions: {
+      headerTintColor: masterColor.backButtonWhite,
+      headerStyle: {
+        elevation: 0,
+        backgroundColor: masterColor.mainColor
+      },
+      gesturesEnabled: false
+    }
+  },
+  MerchantSurveyDisplayPhotoView: {
+    screen: MerchantSurveyDisplayPhotoView,
+    navigationOptions: {
+      headerTintColor: masterColor.backButtonWhite,
+      headerStyle: {
+        elevation: 0,
+        backgroundColor: masterColor.mainColor
+      },
       gesturesEnabled: false
     }
   }

@@ -152,7 +152,7 @@ pipeline {
                                             sed -i 's/agentdevelopment/agentstaging/g' $file
                                         done
                                     '''
-                                } else if(SINBAD_ENV == 'preproduction') {
+                                } else if(SINBAD_ENV == 'sandbox') {
                                     sh '''
                                         find android/ -type f |
                                         while read file
@@ -220,7 +220,7 @@ pipeline {
         stage('Upload to Play Store') {
             steps {
                 script {
-                    if(SINBAD_ENV == 'preproduction') {
+                    if(SINBAD_ENV == 'sandbox') {
                         androidApkUpload googleCredentialsId: 'Sinbad', apkFilesPattern: '**/*-release.apk', trackName: 'alpha'
                     }else if(SINBAD_ENV == 'production') {
                         androidApkUpload googleCredentialsId: 'Sinbad', apkFilesPattern: '**/*-release.apk', trackName: 'beta'
