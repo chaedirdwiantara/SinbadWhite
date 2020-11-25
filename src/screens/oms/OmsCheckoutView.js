@@ -57,6 +57,7 @@ class OmsCheckoutView extends Component {
       /** modal */
       openModalBackToCartItem: false,
       openModalConfirmOrder: false,
+      openModalErrorPaymentTryAgain: false,
       modalPaymentTypeList: false,
       buttonCheckoutDisabled: false,
       modalDeleteConfirmation: false,
@@ -624,7 +625,7 @@ class OmsCheckoutView extends Component {
       case 'ERR-APP-NOT-ALLOW':
         this.errorPaymentNotAllowed()
       default:
-        this.errorPaymentGlobal()
+        this.errorPaymentTryAgain()
         break;
     }
   }
@@ -663,7 +664,10 @@ class OmsCheckoutView extends Component {
   errorPaymentGlobal(){
     this.setState({openModalPaymentNotAllowed : true})
   }
-
+  /**ERROR PAYMENT TRY AGAIN */
+  errorPaymentTryAgain(){
+    this.setState({openModalErrorPaymentTryAgain : true})
+  }
   closeErrorResponse() {
     this.setState({ modalErrorResponse: false });
     NavigationService.navigate('Home');
@@ -1583,6 +1587,30 @@ class OmsCheckoutView extends Component {
       </View>
     );
   }
+   /** RENDER MODAL FAIL PAYMENT */
+   renderModalErrorPaymentTryAgain() {
+    return (
+      <View>
+        {this.state.openModalErrorPaymentTryAgain ? (
+          <ModalBottomFailPayment
+            open={this.state.openModalErrorPaymentTryAgain}
+            onPress={() => this.closeopenModalErrorPaymentTryAgain()}
+            text={'Silahkan Mencoba Kembali'}
+          />
+        ) : null}
+      </View>
+    );
+  }
+  closeopenModalErrorPaymentTryAgain (){
+    this.setState({ openMopenModalErrorPaymentTryAgain: false })
+    NavigationService.navigate('OmsCartView', this.props.navigation.state.key);
+    this.props.omsGetCartItemFromCheckoutProcess({
+      catalogues: this.props.oms.dataCart
+    });
+    this.props.omsDeleteCartItemProcess({
+      orderId: this.props.oms.dataOmsGetCheckoutItem.id
+    });
+  }
   /**
    * =======================
    * RENDER MAIN
@@ -1611,6 +1639,7 @@ class OmsCheckoutView extends Component {
         {this.renderWarningMinimumQty()}
         {this.renderErrorResponse()}
         {this.renderModalPaymentNotAllowed()}
+        {this.renderModalErrorPaymentTryAgain()}
       </View>
     );
   }
