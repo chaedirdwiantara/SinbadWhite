@@ -21,6 +21,11 @@ pipeline {
             description: 'Which git source?'
         )
         choice(
+            name: 'CI_IS_PLAYSTORE',
+            choices: ['No', 'Yes'],
+            description: 'Deployment To Google Play Store?'
+        )
+        choice(
             name: 'CI_IS_CODEPUSH',
             choices: ['No', 'Yes'],
             description: 'Deployment With Code Push?'
