@@ -167,11 +167,11 @@ class HomeView extends Component {
           let newKpiDashboard = [...this.state.kpiDashboard];
           Object.keys(this.props.salesmanKpi.kpiDashboardData).map((key, i) => {
             const index = newKpiDashboard.findIndex(item => item.id === key);
-            const newData = this.props.salesmanKpi.kpiDashboardData[key][0];
-            if(this.props.salesmanKpi.kpiDashboardData[key].length === 0){
+            if (_.isEmpty(this.props.salesmanKpi.kpiDashboardData[key])) {
               newKpiDashboard[index].data.target = 0;
               newKpiDashboard[index].data.achieved = 0;
-            }else {
+            } else {
+              const newData = this.props.salesmanKpi.kpiDashboardData[key][0];
               newKpiDashboard[index].data.target = newData.target;
               newKpiDashboard[index].data.achieved = newData.achieved;
             }
@@ -241,7 +241,7 @@ class HomeView extends Component {
     }
     this.props.getKpiDashboardProcess(params);
     SalesmanKpiMethod.getKpiSalesPending(params).then(response => {
-      if (response.code === 200 && response.data.payload.data.length !== 0 ) {
+      if (response.code === 200 && response.data.payload.data.length !== 0) {
         this.setState({
           totalSalesPending: response.data.payload.data[0].achieved
         });
@@ -746,8 +746,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 18082020
+ * updatedDate: 26112020
  * updatedFunction:
- * -> update kpi dashboard (progress bar & notes)
+ * -> update kpi dashboard (bug fix & array validation)
  *
  */
