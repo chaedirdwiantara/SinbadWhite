@@ -26,6 +26,7 @@ import {
 } from '../../../library/component';
 import { GlobalStyle, Fonts } from '../../../helpers';
 import { Color } from '../../../config';
+import _ from 'lodash';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
 import ModalCarousel from './ModalCarousel';
@@ -33,7 +34,6 @@ import ModalBottomCompleted from './ModalBottomCompleted';
 import ModalBottomSubmit from './ModalBottomSubmit';
 import MerchantPhotoList from './MerchantPhotoList';
 import MerchantSurveySteps from './MerchantSurveySteps';
-
 const { width } = Dimensions.get('window');
 
 class MerchantSurveyDisplayPhotoView extends Component {
@@ -105,7 +105,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     if (
       this.state.activeStep === 0 &&
       totalPhoto >= 1 &&
-      this.state.photosDisplayBefore.length === 0
+      _.isEmpty(this.state.photosDisplayBefore)
     ) {
       return this.setState({
         modalConfirmation: true
@@ -114,7 +114,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     if (
       this.state.activeStep === 1 &&
       totalPhoto >= 1 &&
-      this.state.photosDisplayAfter.length === 0
+      _.isEmpty(this.state.photosDisplayAfter)
     ) {
       return this.setState({
         modalConfirmation: true
@@ -128,7 +128,8 @@ class MerchantSurveyDisplayPhotoView extends Component {
     this.setState({ loading: true });
     const cropData = {
       offset: { x: 600, y: 400 },
-      size: { width: 1850, height: 1850 }
+      size: { width: 2900, height: 2900 },
+      resizeMode: 'contain'
     };
 
     if (this.camera) {
@@ -139,9 +140,9 @@ class MerchantSurveyDisplayPhotoView extends Component {
       };
       const data = await this.camera.takePictureAsync(options);
       ImageEditor.cropImage(data.uri, cropData).then(url => {
-        let newData = { ...data, uri: 'data:image/jpeg;base64,' + data.base64 };
-        this.setState({ capturedPhoto: newData });
         RNFS.readFile(url, 'base64').then(dataImage => {
+          let newData = { ...data, uri: 'data:image/jpeg;base64,' + dataImage };
+          this.setState({ capturedPhoto: newData });
           // this.props.saveImageBase64(dataImage);
         });
         RNFS.unlink(data.uri);
@@ -360,7 +361,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
               onPress={() => this.setState({ flash: !this.state.flash })}
             >
               <MaterialIcon
-                name="flash-on"
+                name={this.state.flash ? 'flash-on' : 'flash-off'}
                 color={Color.fontBlack60}
                 size={15}
               />
@@ -405,8 +406,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
   renderButton() {
     return (
       <View style={styles.buttonBottom}>
-        {this.state.displayPhoto &&
-        this.state.photosDisplayAfter.length === 0 ? (
+        {this.state.displayPhoto && _.isEmpty(this.state.photosDisplayAfter) ? (
           <ButtonSingle
             title="Continue"
             borderRadius={4}
@@ -478,7 +478,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
                 size={15}
                 style={{ marginRight: 4 }}
               />
-              <Text style={[Fonts.type31, { color: Color.fontBlack80 }]}>
+              <Text style={[Fonts.type98, { color: Color.fontBlack80 }]}>
                 Delete
               </Text>
             </TouchableOpacity>
@@ -671,7 +671,6 @@ const styles = StyleSheet.create({
   buttonBottom: {
     width: '100%',
     bottom: 0,
-    position: 'absolute',
     alignSelf: 'center'
   }
 });
@@ -694,7 +693,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 23112020
+ * updatedDate: 26112020
  * updatedFunction:
- * -> fix navigation & ui.
+ * -> update ui (flash button) & validation.
  */
