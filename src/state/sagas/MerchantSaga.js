@@ -134,6 +134,24 @@ function* getWarehouse(actions){
     yield put(ActionCreators.merchantGetWarehouseFailed(error))
   }
 }
+/** GET SURVEY */
+function* getSurvey(actions){
+  try {
+    // yield put(ActionCreators.merchantGetWarehouseSuccess(response))
+    yield put(ActionCreators.merchantGetSurveyFailed('error'));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetSurveyFailed(error));
+  }
+}
+/** SUBMIT SURVEY */
+function* submitSurvey(actions){
+  try {
+    // yield put(ActionCreators.merchantGetWarehouseSuccess(response))
+    yield put(ActionCreators.merchantSubmitSurveyFailed('error'));
+  } catch (error) {
+    yield put(ActionCreators.merchantSubmitSurveyFailed(error));
+  }
+}
 
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
@@ -154,7 +172,9 @@ function* MerchantSaga() {
     getLogPerActivity
   );
   yield takeEvery(types.MERCHANT_STORE_STATUS_PROCESS, getStoreStatus),
-  yield takeEvery(types.MERCHANT_GET_WAREHOUSE_PROCESS, getWarehouse)
+  yield takeEvery(types.MERCHANT_GET_WAREHOUSE_PROCESS, getWarehouse);
+  yield takeEvery(types.MERCHANT_GET_SURVEY_PROCESS, getSurvey);
+  yield takeEvery(types.MERCHANT_SUBMIT_SURVEY_PROCESS, submitSurvey);
 }
 
 export default MerchantSaga;
