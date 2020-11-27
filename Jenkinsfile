@@ -21,6 +21,11 @@ pipeline {
             description: 'Which git source?'
         )
         choice(
+            name: 'CI_IS_PLAYSTORE',
+            choices: ['No', 'Yes'],
+            description: 'Deployment To Google Play Store?'
+        )
+        choice(
             name: 'CI_IS_CODEPUSH',
             choices: ['No', 'Yes'],
             description: 'Deployment With Code Push?'
@@ -211,7 +216,7 @@ pipeline {
                             s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz")
                             s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz")
                         }
-                        slackSend color: '#ff0000', channel: "#apk", message: """
+                        slackSend color: '#FFFFFF', channel: "#download-apps-production", message: """
 Hi Sailors
 We have new APK Version
 
