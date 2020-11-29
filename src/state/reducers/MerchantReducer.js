@@ -17,6 +17,7 @@ const INITIAL_STATE = {
   loadingGetNoOrderReason: false,
   loadingGetStoreStatus: false,
   loadingGetWarehouse: false,
+  loadingGetListSurvey: false,
   loadingGetSurvey: false,
   loadingSubmitSurvey: false,
   /** data */
@@ -111,6 +112,13 @@ const INITIAL_STATE = {
     storeChannel: '',
     channelId: null
   },
+  surveyList: {
+    payload: {
+      data: []
+    },
+    success: null
+  },
+  newSurveyResponse: false,
   dataSurvey: {
     id: null,
     surveyId: null,
@@ -138,6 +146,7 @@ const INITIAL_STATE = {
   errorGetNoOrderReason: null,
   errorGetStoreStatus: null,
   errorGetWarehouse: null,
+  errorGetSurveyList: null,
   errorGetSurvey: null,
   errorSubmitSurvey: null
 };
@@ -659,18 +668,51 @@ export const merchant = createReducer(INITIAL_STATE, {
     };
   },
 
-/**
- * =============================
- * MERCHANT VOLATILE RESET
- * =============================
- */
-[types.MERCHANT_RESET_DATA_VOLATILE](state, action){
-  return {
-    ...state,
-    dataMerchantVolatile: INITIAL_STATE.dataMerchantVolatile,
-    dataMerchantDisabledField: INITIAL_STATE.dataMerchantDisabledField
-  }
-},
+  /**
+   * =============================
+   * MERCHANT VOLATILE RESET
+   * =============================
+   */
+  [types.MERCHANT_RESET_DATA_VOLATILE](state, action) {
+    return {
+      ...state,
+      dataMerchantVolatile: INITIAL_STATE.dataMerchantVolatile,
+      dataMerchantDisabledField: INITIAL_STATE.dataMerchantDisabledField
+    };
+  },
+
+  /**
+   * ============================
+   * GET SURVEY LIST
+   * ============================
+   */
+  [types.MERCHANT_GET_SURVEY_LIST_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyList: true,
+      surveyList: {
+        payload: {
+          data: []
+        },
+        success: false
+      },
+      errorGetSurveyList: null
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_LIST_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyList: false,
+      surveyList: action.payload
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_LIST_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyList: false,
+      errorGetSurveyList: action.payload
+    };
+  },
 
   /**
    * ============================
@@ -682,6 +724,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetSurvey: true,
       dataSurvey: {},
+      newSurveyResponse: false,
       errorGetSurvey: null
     };
   },
@@ -689,7 +732,8 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetSurvey: false,
-      dataSurvey: action.payload.data
+      dataSurvey: action.payload.data,
+      newSurveyResponse: false
     };
   },
   [types.MERCHANT_GET_SURVEY_FAILED](state, action) {
@@ -713,14 +757,15 @@ export const merchant = createReducer(INITIAL_STATE, {
       errorSubmitSurvey: null
     };
   },
-  [types.MERCHANT_GET_SURVEY_SUCCESS](state, action) {
+  [types.MERCHANT_SUBMIT_SURVEY_SUCCESS](state, action) {
     return {
       ...state,
       loadingSubmitSurvey: false,
-      dataSubmitSurvey: action.payload.data
+      dataSubmitSurvey: action.payload.data,
+      newSurveyResponse: true
     };
   },
-  [types.MERCHANT_GET_SURVEY_FAILED](state, action) {
+  [types.MERCHANT_SUBMIT_SURVEY_FAILED](state, action) {
     return {
       ...state,
       loadingSubmitSurvey: false,

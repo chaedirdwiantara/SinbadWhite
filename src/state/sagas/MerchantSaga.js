@@ -134,20 +134,35 @@ function* getWarehouse(actions){
     yield put(ActionCreators.merchantGetWarehouseFailed(error))
   }
 }
-/** GET SURVEY */
-function* getSurvey(actions){
+/** GET SURVEY LIST */
+function* getSurveyList(actions) {
   try {
-    // yield put(ActionCreators.merchantGetWarehouseSuccess(response))
-    yield put(ActionCreators.merchantGetSurveyFailed('error'));
+    const response = yield call(() => {
+      return MerchantMethod.getSurveyList(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetSurveyListSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetSurveyListFailed(error));
+  }
+}
+/** GET SURVEY RESPONSE */
+function* getSurvey(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getSurveyResponse(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetSurveyFailed(response));
   } catch (error) {
     yield put(ActionCreators.merchantGetSurveyFailed(error));
   }
 }
 /** SUBMIT SURVEY */
-function* submitSurvey(actions){
+function* submitSurvey(actions) {
   try {
-    // yield put(ActionCreators.merchantGetWarehouseSuccess(response))
-    yield put(ActionCreators.merchantSubmitSurveyFailed('error'));
+    const response = yield call(() => {
+      return MerchantMethod.submitSurvey(actions.payload);
+    });
+    yield put(ActionCreators.merchantSubmitSurveySuccess(response));
   } catch (error) {
     yield put(ActionCreators.merchantSubmitSurveyFailed(error));
   }
@@ -173,6 +188,7 @@ function* MerchantSaga() {
   );
   yield takeEvery(types.MERCHANT_STORE_STATUS_PROCESS, getStoreStatus),
   yield takeEvery(types.MERCHANT_GET_WAREHOUSE_PROCESS, getWarehouse);
+  yield takeEvery(types.MERCHANT_GET_SURVEY_LIST_PROCESS, getSurveyList);
   yield takeEvery(types.MERCHANT_GET_SURVEY_PROCESS, getSurvey);
   yield takeEvery(types.MERCHANT_SUBMIT_SURVEY_PROCESS, submitSurvey);
 }
