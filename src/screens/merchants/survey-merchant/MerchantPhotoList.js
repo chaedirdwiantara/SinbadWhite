@@ -31,7 +31,7 @@ class MerchantPhotoList extends Component {
                   <Image
                     source={{
                       isStatic: true,
-                      uri: item.uri
+                      uri: 'data:image/jpeg;base64,' + item.uri
                     }}
                     style={styles.image}
                   />

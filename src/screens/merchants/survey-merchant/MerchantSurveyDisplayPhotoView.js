@@ -89,6 +89,10 @@ class MerchantSurveyDisplayPhotoView extends Component {
   componentDidMount() {
     this.navigationFunction();
   }
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    // get survey response
+  }
   goBack = () => {
     let totalPhoto = 0;
     this.state.photo.map(item => {
@@ -127,7 +131,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
   takePhoto = async () => {
     this.setState({ loading: true });
     const cropData = {
-      offset: { x: 600, y: 400 },
+      offset: { x: 0, y: 0 },
       size: { width: 2900, height: 2900 },
       resizeMode: 'contain'
     };
@@ -141,9 +145,8 @@ class MerchantSurveyDisplayPhotoView extends Component {
       const data = await this.camera.takePictureAsync(options);
       ImageEditor.cropImage(data.uri, cropData).then(url => {
         RNFS.readFile(url, 'base64').then(dataImage => {
-          let newData = { ...data, uri: 'data:image/jpeg;base64,' + dataImage };
+          let newData = { ...data, uri: dataImage };
           this.setState({ capturedPhoto: newData });
-          // this.props.saveImageBase64(dataImage);
         });
         RNFS.unlink(data.uri);
       });
@@ -157,8 +160,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       if (!item.uri) {
         if (check === 0) {
           check = check + 1;
-          return (item.uri =
-            'data:image/jpeg;base64,' + this.state.capturedPhoto.base64);
+          return (item.uri = this.state.capturedPhoto.base64);
         }
         return;
       }
@@ -462,7 +464,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
             <Image
               source={{
                 isStatic: true,
-                uri: this.state.capturedPhoto.uri
+                uri: 'data:image/jpeg;base64,' + this.state.capturedPhoto.uri
               }}
               style={{ height: 257 }}
             />
@@ -530,6 +532,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     return (
       <ModalBottomSubmit
         open={this.state.modalSubmit}
+        loading={this.props.loadingSubmitSurvey}
         title={`Submit the ${
           this.state.activeStep === 0 ? 'Before' : 'After'
         } Photo`}

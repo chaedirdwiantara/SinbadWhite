@@ -311,7 +311,27 @@ export function merchantGetWarehouseFailed(data){
 }
 /**
  * ===========================================
- * GET SURVEY
+ * GET SURVEY LIST
+ * ===========================================
+ */
+export function merchantGetSurveyListProcess(data) {
+  return { type: types.MERCHANT_GET_SURVEY_LIST_PROCESS, payload: data };
+}
+export function merchantGetSurveyListSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_SURVEY_LIST_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_GET_SURVEY_LIST_FAILED, payload: data };
+}
+export function merchantGetSurveyListFailed(data) {
+  return { type: types.MERCHANT_GET_SURVEY_LIST_FAILED, payload: data };
+}
+/**
+ * ===========================================
+ * GET SURVEY RESPONSE
  * ===========================================
  */
 export function merchantGetSurveyProcess(data) {

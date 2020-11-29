@@ -98,6 +98,30 @@ function getWarehouse(urbanId) {
     method: 'GET'
   });
 }
+/** GET SURVEY LIST */
+function getSurveyList(params) {
+  return ApiRest({
+    path: `supplier/service-survey/v1/survey/mobile?storeId=${
+      params.storeId
+    }&page=${params.page}&length=${params.length}`,
+    method: 'GET'
+  });
+}
+/** GET SURVEY RESPONSE */
+function getSurveyResponse(id) {
+  return ApiRest({
+    path: `supplier/service-survey/v1/survey/response?id=${id}`,
+    method: 'GET'
+  });
+}
+/** SUBMIT SURVEY */
+function submitSurvey(params) {
+  return ApiRest({
+    path: 'supplier/service-survey/v1/survey/response',
+    method: 'POST',
+    params
+  });
+}
 
 export const MerchantMethod = {
   getMerchant,
@@ -111,7 +135,10 @@ export const MerchantMethod = {
   getLogPerActivity,
   getNoOrderReason,
   getStoreStatus,
-  getWarehouse
+  getWarehouse,
+  getSurveyList,
+  getSurveyResponse,
+  submitSurvey
 };
 
 /**
@@ -127,5 +154,9 @@ export const MerchantMethod = {
  * updatedBy: tatas
  * updatedDate: 06072020
  * updatedFunction:
- * -> Change global method to get userId and supplierId
+ * -> Change global method to get userId and supplierId\
+ * updatedBy: dyah
+ * updatedDate: 27112020
+ * updatedFunction:
+ * -> Add methods. (get survey list, get survey response, submit survey)
  */
