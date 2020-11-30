@@ -301,6 +301,8 @@ class HistoryDetailPayment extends Component {
   renderVirtualAccountNumber() {
     const paymentTypeId = this.props.history.dataDetailHistory.paymentType.id;
     const orderStatus = this.props.history.dataDetailHistory.orderStatus;
+    const paymentChannelTypeId = this.props.history.dataDetailHistory
+      .paymentChannel.paymentChannelTypeId;
     return (
       <View>
         <View style={GlobalStyle.boxPadding} />
@@ -320,7 +322,9 @@ class HistoryDetailPayment extends Component {
             >
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={Fonts.type50}>
-                  Transfer ke no. Virtual Account{' '}
+                  {paymentChannelTypeId === 2
+                    ? 'Transfer ke no. Virtual Account'
+                    : 'Kode Pembayaran'}
                 </Text>
                 {paymentTypeId === 2 && orderStatus !== 'delivered'
                   ? this.renderTooltip()
@@ -380,6 +384,8 @@ class HistoryDetailPayment extends Component {
   renderButtonAktifkanVA() {
     const loading = this.props.history.loadingHistoryActivateVA;
     const paymentTypeId = this.props.history.dataDetailHistory.paymentType.id;
+    const paymentChannelId = this.props.history.dataDetailHistory.paymentChannel
+      .paymentChannelTypeId;
     const orderStatus = this.props.history.dataDetailHistory.status;
     return (
       <View>
@@ -394,7 +400,9 @@ class HistoryDetailPayment extends Component {
             <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={Fonts.type50}>
-                  Transfer ke no. Virtual Account{' '}
+                  {paymentChannelId === 2
+                    ? 'Transfer ke no. Virtual Account'
+                    : 'Kode Pembayaran'}
                 </Text>
                 {paymentTypeId === 2 && orderStatus !== 'delivered'
                   ? this.renderTooltip()
@@ -410,7 +418,11 @@ class HistoryDetailPayment extends Component {
                   ? true
                   : false
               }
-              title={'AKTIFKAN VIRTUAL ACCOUNT'}
+              title={
+                paymentChannelId === 2
+                  ? 'AKTIFKAN VIRTUAL ACCOUNT'
+                  : 'AKTIFKAN KODE PEMBAYARAN'
+              }
               borderRadius={0}
               onPress={() => this.renderActivateVA()}
             />
@@ -467,7 +479,7 @@ class HistoryDetailPayment extends Component {
       </View>
     );
   }
-  renderPanduanPembayaranTunai() {
+  renderPanduanPembayaranRegular() {
     return (
       <View>
         <HTMLView
@@ -478,7 +490,7 @@ class HistoryDetailPayment extends Component {
     );
   }
   /** RENDER PANDUAN PEMBAYARAN VA*/
-  renderPanduanPembayaranVA() {
+  renderPanduanPembayaranList() {
     const instruction = this.props.data.paymentChannel.description;
     return instruction.map((e, i) => this.renderAccordion(e, i));
   }
@@ -486,7 +498,7 @@ class HistoryDetailPayment extends Component {
   renderPanduanPembayaran() {
     const billingStatus = this.props.history.dataDetailHistory.billing
       .billingStatus;
-    const paymentChannelId = this.props.data.paymentChannel.id;
+    const paymentChannelId = this.props.data.paymentChannel.paymentChannelTypeId;
     return (
       <View>
         {billingStatus !== 'paid' &&
@@ -512,10 +524,10 @@ class HistoryDetailPayment extends Component {
                   paddingTop: 16
                 }}
               >
-                {paymentChannelId === 1 ? (
-                  <View>{this.renderPanduanPembayaranTunai()}</View>
+                {paymentChannelId !== 2 ? (
+                  <View>{this.renderPanduanPembayaranRegular()}</View>
                 ) : (
-                  <View>{this.renderPanduanPembayaranVA()}</View>
+                  <View>{this.renderPanduanPembayaranList()}</View>
                 )}
               </View>
             </View>
@@ -556,7 +568,8 @@ class HistoryDetailPayment extends Component {
           accountVaNo !== null &&
           billingStatus !== 'paid' &&
           (a.statusPayment === 'waiting_for_payment' ||
-            (a.statusPayment === 'overdue' && expiredPaymentTime !== null)) &&
+            (a.statusPayment === 'overdue' &&
+              expiredPaymentTime !== null)) &&
           billingStatus !== 'cancel' ? (
             <View>
               <View style={GlobalStyle.boxPadding} />
@@ -577,7 +590,9 @@ class HistoryDetailPayment extends Component {
                     SEGERA LAKUKAN PEMBAYARAN DALAM WAKTU
                   </Text>
                   <View style={styles.headerContainer}>
-                    {this.state.expiredTime ? this.renderTimeCountDown() : null}
+                    {this.state.expiredTime
+                      ? this.renderTimeCountDown()
+                      : null}
 
                     <Text style={styles.unFocusedFont}>
                       {`(Sebelum ${expiredTime.format('LLLL')} WIB)`}
@@ -604,6 +619,7 @@ class HistoryDetailPayment extends Component {
     const billingStatus = a.billing.billingStatus;
     const statusPayment = a.statusPayment;
     const accountVaNo = a.billing.accountVaNo;
+    const paymentChannelTypeId = a.paymentChannel.paymentChannelTypeId;
 
     if (
       statusPayment === 'waiting_for_payment' &&
@@ -615,7 +631,7 @@ class HistoryDetailPayment extends Component {
       return (
         <View>
           {((paymentTypeId === 1 &&
-            paymentChannelId === 2 &&
+            paymentChannelTypeId !== 1 &&
             accountVaNo !== null) ||
             (paymentTypeId === 2 &&
               paymentChannelId === 2 &&
@@ -628,7 +644,7 @@ class HistoryDetailPayment extends Component {
             this.renderVirtualAccountNumber()
           ) : // a.paymentType.id === 2 &&
           // accountVaNo === null &&
-          paymentChannelId === 2 &&
+          paymentChannelTypeId !== 1 &&
             expiredPaymentTime === null &&
             billingStatus !== 'paid' &&
             (statusPayment === 'waiting_for_payment' ||
@@ -645,6 +661,9 @@ class HistoryDetailPayment extends Component {
 
   /** === RENDER TOOLTIP === */
   renderTooltip() {
+    const paymentChannelId = this.props.history.dataDetailHistory.paymentChannel
+      .paymentChannelTypeId;
+    // const paymentChannelId = 3;
     return (
       <Tooltip
         backgroundColor={Color.fontBlack50OP80}
@@ -659,7 +678,8 @@ class HistoryDetailPayment extends Component {
         }}
         popover={
           <Text style={Fonts.type87}>
-            Virtual Account hanya dapat diaktifkan setelah pesanan diterima
+            {paymentChannelId === 2 ? 'Virtual Account ' : 'Kode pembayaran '}
+            hanya dapat diaktifkan setelah pesanan diterima
           </Text>
         }
       >
