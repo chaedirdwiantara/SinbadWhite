@@ -90,31 +90,31 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.navigationFunction();
-    this.props.merchantGetSurveyProcess(
-      this.props.navigation.state.params.surveyId
-    );
+    const { surveyResponseId } = this.props.navigation.state.params;
+    if (surveyResponseId) {
+      this.props.merchantGetSurveyProcess(surveyResponseId);
+    }
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
     /**CHECK SURVEY RESPONSE */
     if (
-      prevProps.merchant.dataSurvey !== this.props.dataSurvey &&
+      prevProps.merchant.dataSurvey !== this.props.merchant.dataSurvey &&
       this.props.merchant.dataSurvey.success
     ) {
       this.checkResponsePhoto();
     }
+    /**CHECK AFTER SUBMIT */
     if (this.props.merchant.newSurveyResponse) {
-      this.props.merchantGetSurveyProcess(
-        this.props.navigation.state.params.surveyId
-      );
-      this.surveyDone();
+      const surveyResponseId = this.props.merchant.dataSubmitSurvey.payload.id;
+      this.props.merchantGetSurveyProcess(surveyResponseId);
     }
   }
   /** === CHECK RESPONSE PHOTO === */
   checkResponsePhoto = () => {
-    if (!_.isEmpty(this.props.dataSurvey.payload.responsePhoto)) {
+    if (!_.isEmpty(this.props.merchant.dataSurvey.payload.responsePhoto)) {
       const newSurveyResponse = _.orderBy(
-        this.props.dataSurvey.payload.responsePhoto,
+        this.props.merchant.dataSurvey.payload.responsePhoto,
         ['surveyStepId'],
         ['asc']
       );
@@ -122,26 +122,29 @@ class MerchantSurveyDisplayPhotoView extends Component {
         ...new Set(newSurveyResponse.map(item => item.surveyStepId))
       ];
       if (arraySurveyStepId.length === 2) {
-        this.setState({
-          photosDisplayBefore: newSurveyResponse.filter(
-            item => item.surveyStepId === arraySurveyStepId[0]
-          ),
-          photosDisplayAfter: newSurveyResponse.filter(
-            item => item.surveyStepId === arraySurveyStepId[1]
-          ),
-          displayPhoto: true,
-          activeStep: 2,
-          modalSubmit: false,
-          modalCompleted: true
-        });
+        this.setState(
+          {
+            modalSubmit: false,
+            photosDisplayBefore: newSurveyResponse.filter(
+              item => item.surveyStepId === arraySurveyStepId[0]
+            ),
+            photosDisplayAfter: newSurveyResponse.filter(
+              item => item.surveyStepId === arraySurveyStepId[1]
+            ),
+            displayPhoto: true,
+            modalCompleted: this.state.activeStep === 0 ? false : true,
+            activeStep: 2
+          },
+          () => this.surveyDone()
+        );
       } else {
         this.setState({
+          modalSubmit: false,
+          activeStep: 0,
           photosDisplayBefore: newSurveyResponse.filter(
             item => item.surveyStepId === arraySurveyStepId[0]
           ),
-          displayPhoto: true,
-          activeStep: 0,
-          modalSubmit: false
+          displayPhoto: true
         });
       }
     }
