@@ -323,8 +323,8 @@ class HistoryDetailPayment extends Component {
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={Fonts.type50}>
                   {paymentChannelTypeId === 2
-                    ? 'Transfer ke no. Virtual Account :'
-                    : 'Kode Pembayaran :'}
+                    ? 'Transfer ke no. Virtual Account'
+                    : 'Kode Pembayaran'}
                 </Text>
                 {paymentTypeId === 2 && orderStatus !== 'delivered'
                   ? this.renderTooltip()
