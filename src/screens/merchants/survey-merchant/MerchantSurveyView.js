@@ -96,6 +96,7 @@ class MerchantSurveyView extends Component {
             onPress={() =>
               NavigationService.navigate('MerchantSurveyDisplayPhotoView', {
                 surveyId: item.id,
+                surveyResponseId: item.surveyResponseId,
                 surveySteps: item.surveySteps
               })
             }

@@ -361,7 +361,7 @@ export function merchantSubmitSurveySuccess(data) {
   if (data.result === 'Ok') {
     return {
       type: types.MERCHANT_SUBMIT_SURVEY_SUCCESS,
-      payload: data
+      payload: data.data
     };
   }
   return { type: types.MERCHANT_SUBMIT_SURVEY_FAILED, payload: data };

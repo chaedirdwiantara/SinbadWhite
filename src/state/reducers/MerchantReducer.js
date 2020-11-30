@@ -763,7 +763,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingSubmitSurvey: false,
-      dataSubmitSurvey: action.payload.data,
+      dataSubmitSurvey: action.payload,
       newSurveyResponse: true
     };
   },
