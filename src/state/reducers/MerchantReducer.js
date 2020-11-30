@@ -121,9 +121,8 @@ const INITIAL_STATE = {
   newSurveyResponse: false,
   dataSurvey: {
     id: null,
-    surveyId: null,
-    surveyStepId: null,
-    status: ''
+    status: '',
+    responsePhoto: []
   },
   dataSubmitSurvey: {
     surveyId: null,
@@ -723,7 +722,11 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetSurvey: true,
-      dataSurvey: {},
+      dataSurvey: {
+        id: null,
+        status: '',
+        responsePhoto: []
+      },
       newSurveyResponse: false,
       errorGetSurvey: null
     };
@@ -732,8 +735,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetSurvey: false,
-      dataSurvey: action.payload.data,
-      newSurveyResponse: false
+      dataSurvey: action.payload
     };
   },
   [types.MERCHANT_GET_SURVEY_FAILED](state, action) {

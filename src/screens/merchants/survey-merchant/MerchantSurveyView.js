@@ -62,7 +62,7 @@ class MerchantSurveyView extends Component {
       _.isEmpty(this.props.merchant.surveyList.payload.data) &&
       this.props.merchant.surveyList.success
     ) {
-      // this.surveyDone();
+      this.surveyDone();
       NavigationService.goBack(this.props.navigation.state.key);
     }
   }
@@ -90,7 +90,9 @@ class MerchantSurveyView extends Component {
           <TouchableOpacity
             style={styles.cardInside}
             onPress={() =>
-              NavigationService.navigate('MerchantSurveyDisplayPhotoView')
+              NavigationService.navigate('MerchantSurveyDisplayPhotoView', {
+                surveyId: item.id
+              })
             }
           >
             <View style={styles.cameraBackground}>
