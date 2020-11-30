@@ -36,7 +36,7 @@ class ModalCarousel extends Component {
             <Image
               source={{
                 isStatic: true,
-                uri: this.props.data[this.props.activeIndex].uri
+                uri: this.props.data[this.props.activeIndex].fileUrl
               }}
               style={styles.image}
             />
