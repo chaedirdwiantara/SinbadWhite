@@ -148,6 +148,7 @@ pipeline {
                     }
                 }
                 stage('Change Environment') {
+                    when { expression { params.CI_IS_PLAYSTORE != "Yes" } }
                     steps {
                         script {
                             if(SINBAD_ENV != 'development') {
@@ -219,15 +220,12 @@ pipeline {
                         slackSend color: '#FFFFFF', channel: "#download-apps-production", message: """
 Hi Sailors
 We have new APK Version
-
 Application: ${SINBAD_REPO}
 Environment: ${SINBAD_ENV}
 Commit ID: ${env.GIT_COMMIT}
 Changes Message: ${env.GIT_MESSAGE}
-
 You can download this application in here
 ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz
-
 Or latest application for environment ${SINBAD_ENV} in here
 ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
             """
