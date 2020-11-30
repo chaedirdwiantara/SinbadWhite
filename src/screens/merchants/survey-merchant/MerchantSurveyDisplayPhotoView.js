@@ -238,14 +238,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === SUBMIT PHOTO === */
   submitPhoto = () => {
     const newPhoto = [];
-    const newSurveyResponse = _.orderBy(
-      this.props.dataSurvey.payload.responsePhoto,
-      ['surveyStepId'],
-      ['asc']
-    );
-    const arraySurveyStepId = [
-      ...new Set(newSurveyResponse.map(item => item.surveyStepId))
-    ];
+    const { surveySteps } = this.props.navigation.state.params;
     let params = {
       surveyId: this.props.navigation.state.params.surveyId,
       storeId: this.props.merchant.selectedMerchant.storeId,
@@ -261,14 +254,14 @@ class MerchantSurveyDisplayPhotoView extends Component {
         ...params,
         photos: newPhoto.map(item => item.uri),
         status: '',
-        surveyStepId: arraySurveyStepId[0]
+        surveyStepId: surveySteps.find(item => item.order === 1).surveyStepId
       };
     } else {
       params = {
         ...params,
         photos: newPhoto.map(item => item.uri),
         status: 'Completed',
-        surveyStepId: arraySurveyStepId[1]
+        surveyStepId: surveySteps.find(item => item.order === 2).surveyStepId
       };
     }
     this.props.merchantSubmitSurveyProcess(params);

@@ -26,6 +26,9 @@ import _ from 'lodash';
 class MerchantSurveyView extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      successSurveyList: false
+    };
   }
   /**
    * =======================
@@ -60,9 +63,10 @@ class MerchantSurveyView extends Component {
     /** IF NO SURVEY */
     if (
       _.isEmpty(this.props.merchant.surveyList.payload.data) &&
-      this.props.merchant.surveyList.success
+      this.props.merchant.surveyList.success &&
+      !this.state.successSurveyList
     ) {
-      this.surveyDone();
+      this.setState({ successSurveyList: true }, () => this.surveyDone());
       NavigationService.goBack(this.props.navigation.state.key);
     }
   }
@@ -91,7 +95,8 @@ class MerchantSurveyView extends Component {
             style={styles.cardInside}
             onPress={() =>
               NavigationService.navigate('MerchantSurveyDisplayPhotoView', {
-                surveyId: item.id
+                surveyId: item.id,
+                surveySteps: item.surveySteps
               })
             }
           >
