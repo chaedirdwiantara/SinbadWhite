@@ -22,6 +22,7 @@ import {
   StatusBarRed,
   ModalConfirmation,
   ButtonSingle,
+  LoadingPage,
   BackHandlerBackSpecific
 } from '../../../library/component';
 import { GlobalStyle, Fonts } from '../../../helpers';
@@ -34,6 +35,7 @@ import ModalBottomCompleted from './ModalBottomCompleted';
 import ModalBottomSubmit from './ModalBottomSubmit';
 import MerchantPhotoList from './MerchantPhotoList';
 import MerchantSurveySteps from './MerchantSurveySteps';
+import { ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY } from '../../../constants';
 const { width } = Dimensions.get('window');
 
 class MerchantSurveyDisplayPhotoView extends Component {
@@ -88,7 +90,77 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.navigationFunction();
+    this.props.merchantGetSurveyProcess(
+      this.props.navigation.state.params.surveyId
+    );
   }
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    /**CHECK SURVEY RESPONSE */
+    if (
+      prevProps.merchant.dataSurvey !== this.props.dataSurvey &&
+      this.props.merchant.dataSurvey.success
+    ) {
+      this.checkResponsePhoto();
+    }
+    if (this.props.merchant.newSurveyResponse) {
+      this.props.merchantGetSurveyProcess(
+        this.props.navigation.state.params.surveyId
+      );
+      this.surveyDone();
+    }
+  }
+  /** === CHECK RESPONSE PHOTO === */
+  checkResponsePhoto = () => {
+    if (!_.isEmpty(this.props.dataSurvey.payload.responsePhoto)) {
+      const newSurveyResponse = _.orderBy(
+        this.props.dataSurvey.payload.responsePhoto,
+        ['surveyStepId'],
+        ['asc']
+      );
+      const arraySurveyStepId = [
+        ...new Set(newSurveyResponse.map(item => item.surveyStepId))
+      ];
+      if (arraySurveyStepId.length === 2) {
+        this.setState({
+          photosDisplayBefore: newSurveyResponse.filter(
+            item => item.surveyStepId === arraySurveyStepId[0]
+          ),
+          photosDisplayAfter: newSurveyResponse.filter(
+            item => item.surveyStepId === arraySurveyStepId[1]
+          ),
+          displayPhoto: true,
+          activeStep: 2,
+          modalSubmit: false,
+          modalCompleted: true
+        });
+      } else {
+        this.setState({
+          photosDisplayBefore: newSurveyResponse.filter(
+            item => item.surveyStepId === arraySurveyStepId[0]
+          ),
+          displayPhoto: true,
+          activeStep: 0,
+          modalSubmit: false
+        });
+      }
+    }
+  };
+  /** === FOR GET LOG ALL ACTIVITY === */
+  refreshMerchantGetLogAllActivityProcess() {
+    this.props.merchantGetLogAllActivityProcess(
+      this.props.merchant.selectedMerchant.journeyPlanSaleId
+    );
+  }
+  /** === FOR SET SALES ACTIVITY SURVEY_TOKO DONE === */
+  surveyDone() {
+    this.props.merchantPostActivityProcess({
+      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
+      activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+    });
+    this.refreshMerchantGetLogAllActivityProcess();
+  }
+  /** === GO BACK FUNCTION === */
   goBack = () => {
     let totalPhoto = 0;
     this.state.photo.map(item => {
@@ -123,11 +195,11 @@ class MerchantSurveyDisplayPhotoView extends Component {
 
     return NavigationService.navigate('MerchantSurveyView');
   };
-
+  /** === TAKE PHOTO === */
   takePhoto = async () => {
     this.setState({ loading: true });
     const cropData = {
-      offset: { x: 600, y: 400 },
+      offset: { x: 0, y: 0 },
       size: { width: 2900, height: 2900 },
       resizeMode: 'contain'
     };
@@ -141,15 +213,14 @@ class MerchantSurveyDisplayPhotoView extends Component {
       const data = await this.camera.takePictureAsync(options);
       ImageEditor.cropImage(data.uri, cropData).then(url => {
         RNFS.readFile(url, 'base64').then(dataImage => {
-          let newData = { ...data, uri: 'data:image/jpeg;base64,' + dataImage };
+          let newData = { ...data, uri: dataImage };
           this.setState({ capturedPhoto: newData });
-          // this.props.saveImageBase64(dataImage);
         });
         RNFS.unlink(data.uri);
       });
     }
   };
-
+  /** === SAVE PHOTO TO PHOTO LIST === */
   savePhoto = () => {
     let newPhoto = this.state.photo;
     let check = 0;
@@ -157,39 +228,52 @@ class MerchantSurveyDisplayPhotoView extends Component {
       if (!item.uri) {
         if (check === 0) {
           check = check + 1;
-          return (item.uri =
-            'data:image/jpeg;base64,' + this.state.capturedPhoto.base64);
+          return (item.uri = this.state.capturedPhoto.base64);
         }
         return;
       }
     });
     this.setState({ photo: newPhoto, capturedPhoto: { uri: null } });
   };
-
+  /** === SUBMIT PHOTO === */
   submitPhoto = () => {
     const newPhoto = [];
+    const newSurveyResponse = _.orderBy(
+      this.props.dataSurvey.payload.responsePhoto,
+      ['surveyStepId'],
+      ['asc']
+    );
+    const arraySurveyStepId = [
+      ...new Set(newSurveyResponse.map(item => item.surveyStepId))
+    ];
+    let params = {
+      surveyId: this.props.navigation.state.params.surveyId,
+      storeId: this.props.merchant.selectedMerchant.storeId,
+      storeName: this.props.merchant.selectedMerchant.name
+    };
     this.state.photo.map(item => {
       if (item.uri) {
         newPhoto.push(item);
       }
     });
     if (this.state.activeStep === 0) {
-      this.setState({
-        modalSubmit: false,
-        photosDisplayBefore: newPhoto,
-        displayPhoto: true
-      });
+      params = {
+        ...params,
+        photos: newPhoto.map(item => item.uri),
+        status: '',
+        surveyStepId: arraySurveyStepId[0]
+      };
     } else {
-      this.setState({
-        modalSubmit: false,
-        modalCompleted: true,
-        photosDisplayAfter: newPhoto,
-        displayPhoto: true,
-        activeStep: 2
-      });
+      params = {
+        ...params,
+        photos: newPhoto.map(item => item.uri),
+        status: 'Completed',
+        surveyStepId: arraySurveyStepId[1]
+      };
     }
+    this.props.merchantSubmitSurveyProcess(params);
   };
-
+  /** === CONTINUE STEP === */
   continueStep = () => {
     let newPhoto = this.state.photo;
     newPhoto.map(item => (item.uri = null));
@@ -199,7 +283,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       photo: newPhoto
     });
   };
-
+  /** === DELETE PHOTO FROM PHOTO LIST === */
   deletePhotoFromList = deleteUri => {
     let newPhoto = this.state.photo;
     newPhoto.map((item, index) => {
@@ -281,7 +365,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
                   <Image
                     source={{
                       isStatic: true,
-                      uri: item.uri
+                      uri: item.fileUrl
                     }}
                     style={styles.imageDisplayPhoto}
                   />
@@ -313,7 +397,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
                   <Image
                     source={{
                       isStatic: true,
-                      uri: item.uri
+                      uri: item.fileUrl
                     }}
                     style={styles.imageDisplayPhoto}
                   />
@@ -462,7 +546,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
             <Image
               source={{
                 isStatic: true,
-                uri: this.state.capturedPhoto.uri
+                uri: 'data:image/jpeg;base64,' + this.state.capturedPhoto.uri
               }}
               style={{ height: 257 }}
             />
@@ -530,6 +614,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     return (
       <ModalBottomSubmit
         open={this.state.modalSubmit}
+        loading={this.props.loadingSubmitSurvey}
         title={`Submit the ${
           this.state.activeStep === 0 ? 'Before' : 'After'
         } Photo`}
@@ -577,12 +662,18 @@ class MerchantSurveyDisplayPhotoView extends Component {
       <SafeAreaView>
         <BackHandlerBackSpecific navigation={this.props.navigation} />
         <StatusBarRed />
-        <View style={{ height: '100%' }}>
-          {this.renderBackground()}
-          {this.state.capturedPhoto.uri
-            ? this.renderReviewImage()
-            : this.renderContent()}
-        </View>
+        {this.props.merchant.loadingGetSurvey ? (
+          <View style={{ height: '100%' }}>
+            <LoadingPage />
+          </View>
+        ) : (
+          <View style={{ height: '100%' }}>
+            {this.renderBackground()}
+            {this.state.capturedPhoto.uri
+              ? this.renderReviewImage()
+              : this.renderContent()}
+          </View>
+        )}
         {this.renderModalLeaveTask()}
         {this.renderModalSubmit()}
         {this.renderModalCompleted()}

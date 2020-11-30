@@ -33,7 +33,7 @@ import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
 import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
 import MerchantVerifyUser from './MerchantVerifyUser';
 import ModalBottomProgressChecking from '../../global/ModalBottomProgressChecking';
-import { ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY, } from '../../../constants';
+import { ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY } from '../../../constants';
 
 const { width, height } = Dimensions.get('window');
 
@@ -275,23 +275,8 @@ class MerchantHomeView extends Component {
         this.setState({ openModalCheckout: true });
         break;
       case 'survey':
-        /*
-         * TODO: @DYAH go to survey page
-         * when success execute like this.SurveyDone();
-         */
         NavigationService.navigate('MerchantSurveyView');
         break;
-
-        /*
-         * FAKE survey done
-         */
-        // this.SurveyDone();
-
-        /*
-         * FAKE refersh activity
-         */
-        // setTimeout(() => this.refreshMerchantGetLogAllActivityProcess(), 2000);
-        // break;
       default:
         break;
     }
