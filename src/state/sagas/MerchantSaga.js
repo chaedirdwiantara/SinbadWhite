@@ -151,7 +151,7 @@ function* getSurvey(actions) {
     const response = yield call(() => {
       return MerchantMethod.getSurveyResponse(actions.payload);
     });
-    yield put(ActionCreators.merchantGetSurveyFailed(response));
+    yield put(ActionCreators.merchantGetSurveySuccess(response));
   } catch (error) {
     yield put(ActionCreators.merchantGetSurveyFailed(error));
   }
