@@ -34,6 +34,7 @@ import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
 import MerchantVerifyUser from './MerchantVerifyUser';
 import ModalBottomProgressChecking from '../../global/ModalBottomProgressChecking';
 import { ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY } from '../../../constants';
+import _ from 'lodash';
 
 const { width, height } = Dimensions.get('window');
 
@@ -272,7 +273,14 @@ class MerchantHomeView extends Component {
             .journeyPlanSaleId,
           activity: 'check_in'
         });
-        this.setState({ openModalCheckout: true });
+        if (
+          _.isEmpty(this.props.merchant.surveyList.payload.data) ||
+          this.props.merchant.dataGetLogAllActivity.find(
+            item => item.activity === 'toko_survey'
+          )
+        ) {
+          this.setState({ openModalCheckout: true });
+        }
         break;
       case 'survey':
         NavigationService.navigate('MerchantSurveyView');
@@ -936,4 +944,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * updatedDate: 03072020
  * updatedFunction:
  * -> Change key
+ * updatedBy: dyah
+ * updatedDate: 02122020
+ * updatedFunction:
+ * -> Add validation for checkout.
  */
