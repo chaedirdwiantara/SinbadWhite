@@ -14,19 +14,61 @@ import {
   MaterialIcon,
   AntDesignIcon
 } from '../../../library/thirdPartyPackage';
-import { StatusBarRed } from '../../../library/component';
+import { LoadingPage, StatusBarRed } from '../../../library/component';
 import { GlobalStyle, Fonts } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
 import masterColor from '../../../config/masterColor.json';
+import { ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY } from '../../../constants';
+import _ from 'lodash';
 
 class MerchantSurveyView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      status: 'not completed'
+      successSurveyList: false
     };
+  }
+  /**
+   * =======================
+   * FUNCTIONAL
+   * =======================
+   */
+  /** FOR GET LOG ALL ACTIVITY */
+  refreshMerchantGetLogAllActivityProcess() {
+    this.props.merchantGetLogAllActivityProcess(
+      this.props.merchant.selectedMerchant.journeyPlanSaleId
+    );
+  }
+  /** FOR SET SALES ACTIVITY SURVEY_TOKO DONE */
+  surveyDone() {
+    this.props.merchantPostActivityProcess({
+      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
+      activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+    });
+    this.refreshMerchantGetLogAllActivityProcess();
+  }
+  /** === DID MOUNT === */
+  componentDidMount() {
+    const params = {
+      storeId: this.props.merchant.selectedMerchant.storeId,
+      page: 1,
+      length: 10
+    };
+    this.props.merchantGetSurveyListProcess(params);
+  }
+  /** === DID UPDATE === */
+  componentDidUpdate() {
+    /** IF NO SURVEY */
+    if (
+      _.isEmpty(this.props.merchant.surveyList.payload.data) &&
+      this.props.merchant.surveyList.success &&
+      !this.state.successSurveyList
+    ) {
+      this.setState({ successSurveyList: true }, () => this.surveyDone());
+      NavigationService.goBack(this.props.navigation.state.key);
+    }
   }
   /**
    * ========================
@@ -45,14 +87,18 @@ class MerchantSurveyView extends Component {
     };
   };
   /** === RENDER DISPLAY PHOTO MENU === */
-  renderDisplayPhotoMenu() {
+  renderDisplayPhotoMenu(item) {
     return (
       <View style={[styles.menuContainer]}>
         <View style={[styles.card, GlobalStyle.shadowForBox5]}>
           <TouchableOpacity
             style={styles.cardInside}
             onPress={() =>
-              NavigationService.navigate('MerchantSurveyDisplayPhotoView')
+              NavigationService.navigate('MerchantSurveyDisplayPhotoView', {
+                surveyId: item.id,
+                surveyResponseId: item.surveyResponseId,
+                surveySteps: item.surveySteps
+              })
             }
           >
             <View style={styles.cameraBackground}>
@@ -61,13 +107,13 @@ class MerchantSurveyView extends Component {
                 color={masterColor.fontWhite}
                 size={20}
               />
-              {this.state.status !== 'not completed' ? (
+              {item.responseStatus ? (
                 <View
                   style={[
                     styles.iconContainer,
                     {
                       backgroundColor:
-                        this.state.status === 'process'
+                        item.responseStatus === 'inProgress'
                           ? masterColor.fontYellow50
                           : masterColor.fontGreen50
                     }
@@ -75,7 +121,9 @@ class MerchantSurveyView extends Component {
                 >
                   <MaterialIcon
                     name={
-                      this.state.status === 'process' ? 'timelapse' : 'check'
+                      item.responseStatus === 'inProgress'
+                        ? 'timelapse'
+                        : 'check'
                     }
                     color={masterColor.fontWhite}
                     size={11}
@@ -98,7 +146,15 @@ class MerchantSurveyView extends Component {
   }
   /** === RENDER CONTENT ITEM === */
   renderContentItem() {
-    return <View>{this.renderDisplayPhotoMenu()}</View>;
+    return (
+      <View>
+        <FlatList
+          data={this.props.merchant.surveyList.payload.data}
+          keyExtractor={(data, index) => index.toString()}
+          renderItem={({ item }) => this.renderDisplayPhotoMenu(item)}
+        />
+      </View>
+    );
   }
   /** === RENDER CONTENT === */
   renderContent() {
@@ -122,10 +178,16 @@ class MerchantSurveyView extends Component {
     return (
       <SafeAreaView>
         <StatusBarRed />
-        <View style={{ height: '100%' }}>
-          {this.renderBackground()}
-          {this.renderContent()}
-        </View>
+        {this.props.merchant.loadingGetSurveyList ? (
+          <View style={{ height: '100%' }}>
+            <LoadingPage />
+          </View>
+        ) : (
+          <View style={{ height: '100%' }}>
+            {this.renderBackground()}
+            {this.renderContent()}
+          </View>
+        )}
       </SafeAreaView>
     );
   }

@@ -74,3 +74,15 @@ export const MERCHANT_STORE_STATUS_FAILED = 'MerchantStoreStatusFailed'
 export const MERCHANT_GET_WAREHOUSE_PROCESS = 'MerchantGetWarehouseProcess'
 export const MERCHANT_GET_WAREHOUSE_SUCCESS = 'MerchantGetWarehouseSuccess'
 export const MERCHANT_GET_WAREHOUSE_FAILED = 'MerchantGetWarehouseFailed'
+/** MERCHANT GET SURVEY LIST*/
+export const MERCHANT_GET_SURVEY_LIST_PROCESS = 'MerchantGetSurveyListProcess';
+export const MERCHANT_GET_SURVEY_LIST_SUCCESS = 'MerchantGetSurveyListSuccess';
+export const MERCHANT_GET_SURVEY_LIST_FAILED = 'MerchantGetSurveyListFailed';
+/** MERCHANT GET SURVEY RESPONSE*/
+export const MERCHANT_GET_SURVEY_PROCESS = 'MerchantGetSurveyProcess';
+export const MERCHANT_GET_SURVEY_SUCCESS = 'MerchantGetSurveySuccess';
+export const MERCHANT_GET_SURVEY_FAILED = 'MerchantGetSurveyFailed';
+/** MERCHANT SUBMIT SURVEY */
+export const MERCHANT_SUBMIT_SURVEY_PROCESS = 'MerchantSubmitSurveyProcess';
+export const MERCHANT_SUBMIT_SURVEY_SUCCESS = 'MerchantSubmitSurveySuccess';
+export const MERCHANT_SUBMIT_SURVEY_FAILED = 'MerchantSubmitSurveyFailed';

@@ -133,6 +133,7 @@ class MerchantHomeView extends Component {
       if (this.props.merchant.dataPostActivity !== null) {
         /** IF CHECK OUT SUCCESS */
         if (this.props.merchant.dataPostActivity.activity === 'check_out') {
+          // eslint-disable-next-line react/no-did-update-set-state
           this.setState({
             openModalCheckout: false,
             loadingPostForCheckoutNoOrder: false,
@@ -151,6 +152,7 @@ class MerchantHomeView extends Component {
           /** IF CHECK OUT SUCCESS */
           this.props.merchant.dataPostActivity.activity === 'check_in'
         ) {
+          // eslint-disable-next-line react/no-did-update-set-state
           this.setState({
             openModalCheckout: false,
             showToast: true,
@@ -179,6 +181,7 @@ class MerchantHomeView extends Component {
           }
         } else {
           if (this.state.checkNoOrder) {
+            // eslint-disable-next-line react/no-did-update-set-state
             this.setState({
               openModalCheckout: false,
               checkNoOrder: false,
@@ -276,23 +279,8 @@ class MerchantHomeView extends Component {
         this.setState({ openModalCheckout: true });
         break;
       case 'survey':
-        /*
-         * TODO: @DYAH go to survey page
-         * when success execute like this.SurveyDone();
-         */
         NavigationService.navigate('MerchantSurveyView');
         break;
-
-      /*
-       * FAKE survey done
-       */
-      // this.SurveyDone();
-
-      /*
-       * FAKE refersh activity
-       */
-      // setTimeout(() => this.refreshMerchantGetLogAllActivityProcess(), 2000);
-      // break;
       default:
         break;
     }

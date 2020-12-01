@@ -21,6 +21,7 @@ class MerchantPhotoList extends Component {
           horizontal={true}
           scrollEnabled={false}
           showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.containerFlatlistStyle}
           data={this.props.data}
           keyExtractor={(data, index) => index.toString()}
           renderItem={({ item, index }) => (
@@ -30,7 +31,7 @@ class MerchantPhotoList extends Component {
                   <Image
                     source={{
                       isStatic: true,
-                      uri: item.uri
+                      uri: 'data:image/jpeg;base64,' + item.uri
                     }}
                     style={styles.image}
                   />
@@ -69,7 +70,11 @@ const styles = StyleSheet.create({
     backgroundColor: Color.fontWhite
   },
   contentContainer: {
-    padding: 15
+    padding: 16
+  },
+  containerFlatlistStyle: {
+    justifyContent: 'space-between',
+    width: '100%'
   },
   imageContainer: {
     width: 50,
@@ -77,7 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 6
+    // marginRight: 6
   },
   image: {
     height: 40,
@@ -100,7 +105,7 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     borderColor: Color.fontBlack10,
     backgroundColor: Color.fontWhite,
-    marginHorizontal: 10
+    // marginHorizontal: 10
   },
   add: {
     height: 20,
@@ -122,7 +127,7 @@ export default MerchantPhotoList;
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 22112020
+ * updatedDate: 26112020
  * updatedFunction:
- * -> add merchant photo list.
+ * -> update ui merchant photo list.
  */

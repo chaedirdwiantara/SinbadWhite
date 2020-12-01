@@ -32,7 +32,7 @@ class ModalBottomSubmit extends Component {
             <Image
               source={{
                 isStatic: true,
-                uri: item.uri
+                uri: 'data:image/jpeg;base64,' + item.uri
               }}
               style={styles.image}
             />
@@ -50,6 +50,7 @@ class ModalBottomSubmit extends Component {
           <View style={styles.button}>
             <ButtonSingleSmall
               title="Submit"
+              loading={this.props.loading}
               borderRadius={4}
               onPress={this.props.onSubmit}
             />
