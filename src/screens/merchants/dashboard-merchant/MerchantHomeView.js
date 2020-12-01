@@ -33,7 +33,12 @@ import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
 import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
 import MerchantVerifyUser from './MerchantVerifyUser';
 import ModalBottomProgressChecking from '../../global/ModalBottomProgressChecking';
-import { ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY } from '../../../constants';
+import {
+  ACTIVITY_JOURNEY_PLAN_CHECK_IN,
+  ACTIVITY_JOURNEY_PLAN_CHECK_OUT,
+  ACTIVITY_JOURNEY_PLAN_ORDER,
+  ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+} from '../../../constants';
 
 const { width, height } = Dimensions.get('window');
 
@@ -83,11 +88,11 @@ class MerchantHomeView extends Component {
       task: [
         {
           name: 'Masuk Toko',
-          activity: 'check_in'
+          activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
         },
         {
           name: 'Order',
-          activity: 'order'
+          activity: ACTIVITY_JOURNEY_PLAN_ORDER
         },
         {
           name: 'Toko Survey',
@@ -95,7 +100,7 @@ class MerchantHomeView extends Component {
         },
         {
           name: 'Keluar Toko',
-          activity: 'check_out'
+          activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
         }
       ]
     };
@@ -114,7 +119,6 @@ class MerchantHomeView extends Component {
   }
 
   componentDidMount() {
-    alert('jaalabn');
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
       this.props.merchant.selectedMerchant.storeId
@@ -126,6 +130,7 @@ class MerchantHomeView extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log('OOOOOOOSSSSS', this.props.merchant);
     if (
       prevProps.merchant.dataPostActivity !==
       this.props.merchant.dataPostActivity
@@ -309,11 +314,13 @@ class MerchantHomeView extends Component {
   /** CHECK CHECK LIST TASK */
   checkCheckListTask(activity) {
     if (this.props.merchant.dataGetLogAllActivity !== null) {
-      const checkActivity = this.props.merchant.dataGetLogAllActivity.findIndex(
-        item => item.activity === activity
+      let checkActivity = this.props.merchant.dataGetLogAllActivity.filter(
+        function(rows) {
+          return rows.activity === activity;
+        }
       );
-      if (checkActivity > -1) {
-        return true;
+      if (checkActivity.length > 0) {
+        return checkActivity[0];
       }
       return false;
     }
@@ -386,8 +393,36 @@ class MerchantHomeView extends Component {
     return order !== undefined ? (
       <View style={styles.lastOrderContainer}>
         <View style={[styles.cardLastOrder, GlobalStyle.shadowForBox5]}>
-          <View style={{ paddingBottom: 8 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingBottom: 8
+            }}
+          >
             <Text style={Fonts.type42}>Last Order</Text>
+            <TouchableOpacity
+              onPress={() => {
+                this.goTo('history');
+              }}
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: -5
+              }}
+            >
+              <Text style={Fonts.type100}>See Order History</Text>
+              <MaterialIcon
+                style={{
+                  marginTop: 2,
+                  padding: 0
+                }}
+                name="chevron-right"
+                color={Color.fontRed50}
+                size={20}
+              />
+            </TouchableOpacity>
           </View>
           <View>
             <ProductListType1 data={order.orderParcels[0].orderBrands} />
@@ -501,6 +536,7 @@ class MerchantHomeView extends Component {
             </Text>
           </View>
           {this.state.task.map((item, index) => {
+            const taskList = this.checkCheckListTask(item.activity);
             return (
               <View
                 key={index}
@@ -512,7 +548,7 @@ class MerchantHomeView extends Component {
               >
                 <View style={{ flexDirection: 'row' }}>
                   <View>
-                    {this.checkCheckListTask(item.activity) ? (
+                    {taskList ? (
                       <MaterialIcon
                         name="check-circle"
                         color={Color.fontGreen50}
@@ -530,13 +566,13 @@ class MerchantHomeView extends Component {
                     <Text style={Fonts.type8}>{item.name}</Text>
                   </View>
                 </View>
-                {/* <View>
+                <View>
                   <MaterialIcon
                     name="chevron-right"
                     color={Color.fontBlack40}
                     size={24}
                   />
-                </View> */}
+                </View>
               </View>
             );
           })}
