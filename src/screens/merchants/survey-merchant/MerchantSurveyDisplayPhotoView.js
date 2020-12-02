@@ -50,22 +50,6 @@ class MerchantSurveyDisplayPhotoView extends Component {
         {
           uri: null,
           base64: ''
-        },
-        {
-          uri: null,
-          base64: ''
-        },
-        {
-          uri: null,
-          base64: ''
-        },
-        {
-          uri: null,
-          base64: ''
-        },
-        {
-          uri: null,
-          base64: ''
         }
       ],
       capturedPhoto: {
@@ -90,9 +74,25 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.navigationFunction();
-    const { surveyResponseId } = this.props.navigation.state.params;
+    const {
+      surveyResponseId,
+      surveySteps
+    } = this.props.navigation.state.params;
+    let newPhoto = [];
     if (surveyResponseId) {
       this.props.merchantGetSurveyProcess(surveyResponseId);
+    } else {
+      let array = _.range(
+        0,
+        surveySteps.find(item => item.order === 1).maxPhotos
+      );
+      _.each(array, () =>
+        newPhoto.push({
+          uri: null,
+          base64: ''
+        })
+      );
+      this.setState({ photo: newPhoto });
     }
   }
   /** === DID UPDATE === */
@@ -216,8 +216,10 @@ class MerchantSurveyDisplayPhotoView extends Component {
       const data = await this.camera.takePictureAsync(options);
       ImageEditor.cropImage(data.uri, cropData).then(url => {
         RNFS.readFile(url, 'base64').then(dataImage => {
-          let newData = { ...data, uri: dataImage };
-          this.setState({ capturedPhoto: newData });
+          if (this.state.photo.find(item => !item.uri)) {
+            let newData = { ...data, uri: dataImage };
+            this.setState({ capturedPhoto: newData });
+          }
         });
         RNFS.unlink(data.uri);
       });
@@ -271,8 +273,18 @@ class MerchantSurveyDisplayPhotoView extends Component {
   };
   /** === CONTINUE STEP === */
   continueStep = () => {
-    let newPhoto = this.state.photo;
-    newPhoto.map(item => (item.uri = null));
+    const { surveySteps } = this.props.navigation.state.params;
+    let newPhoto = [];
+    let array = _.range(
+      0,
+      surveySteps.find(item => item.order === 2).maxPhotos
+    );
+    _.each(array, () =>
+      newPhoto.push({
+        uri: null,
+        base64: ''
+      })
+    );
     this.setState({
       displayPhoto: false,
       activeStep: 1,
@@ -786,5 +798,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * updatedBy: dyah
  * updatedDate: 02122020
  * updatedFunction:
- * -> update loading modal submit & maximal display photo.
+ * -> update max photos for image series.
  */
