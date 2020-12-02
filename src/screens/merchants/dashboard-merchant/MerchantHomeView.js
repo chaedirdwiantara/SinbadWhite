@@ -15,7 +15,8 @@ import {
   connect,
   moment,
   MaterialIcon,
-  RFPercentage
+  RFPercentage,
+  Button
 } from '../../../library/thirdPartyPackage';
 import {
   StatusBarRed,
@@ -33,7 +34,13 @@ import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
 import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
 import MerchantVerifyUser from './MerchantVerifyUser';
 import ModalBottomProgressChecking from '../../global/ModalBottomProgressChecking';
-import { ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY } from '../../../constants';
+import {
+  ACTIVITY_JOURNEY_PLAN_CHECK_IN,
+  ACTIVITY_JOURNEY_PLAN_CHECK_OUT,
+  ACTIVITY_JOURNEY_PLAN_ORDER,
+  ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+} from '../../../constants';
+import _ from 'lodash';
 
 const { width, height } = Dimensions.get('window');
 
@@ -82,20 +89,28 @@ class MerchantHomeView extends Component {
        */
       task: [
         {
-          name: 'Masuk Toko',
-          activity: 'check_in'
+          name: 'Check-in Toko',
+          title: 'Check-in',
+          goTo: 'checkIn',
+          activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
         },
         {
           name: 'Order',
-          activity: 'order'
+          title: 'Order',
+          goTo: 'pdp',
+          activity: ACTIVITY_JOURNEY_PLAN_ORDER
         },
         {
           name: 'Toko Survey',
+          title: 'Fill',
+          goTo: 'survey',
           activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
         },
         {
-          name: 'Keluar Toko',
-          activity: 'check_out'
+          name: 'Check-out Toko',
+          title: 'Check-out',
+          goTo: 'checkOut',
+          activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
         }
       ]
     };
@@ -113,6 +128,28 @@ class MerchantHomeView extends Component {
     );
   }
 
+  /** === DID MOUNT === */
+  getSurvey = () => {
+    const params = {
+      storeId: this.props.merchant.selectedMerchant.storeId,
+      page: 1,
+      length: 10
+    };
+    this.props.merchantGetSurveyListProcess(params);
+  };
+  // /** === DID UPDATE === */
+  // componentDidUpdate() {
+  //   /** IF NO SURVEY */
+  //   if (
+  //     _.isEmpty(this.props.merchant.surveyList.payload.data) &&
+  //     this.props.merchant.surveyList.success &&
+  //     !this.state.successSurveyList
+  //   ) {
+  //     this.setState({ successSurveyList: true }, () => this.surveyDone());
+  //     NavigationService.goBack(this.props.navigation.state.key);
+  //   }
+  // }
+
   componentDidMount() {
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
@@ -122,9 +159,44 @@ class MerchantHomeView extends Component {
     this.props.merchantGetLogAllActivityProcess(
       this.props.merchant.selectedMerchant.journeyPlanSaleId
     );
+    /** FOR GET SURVEY LIST */
+    this.getSurvey();
   }
 
   componentDidUpdate(prevProps) {
+    /** IF NO SURVEY */
+    if (
+      _.isEmpty(this.props.merchant.surveyList.payload.data) &&
+      this.props.merchant.surveyList.success &&
+      !this.state.successSurveyList
+    ) {
+      if (this.state.task.length === 4) {
+        console.log('COMPONENT UPDATE', this.props.merchant);
+        // eslint-disable-next-line react/no-did-update-set-state
+        this.setState({
+          task: [
+            {
+              name: 'Check-in Toko',
+              title: 'Check-in',
+              goTo: 'checkIn',
+              activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+            },
+            {
+              name: 'Order',
+              title: 'Order',
+              goTo: 'pdp',
+              activity: ACTIVITY_JOURNEY_PLAN_ORDER
+            },
+            {
+              name: 'Check-out Toko',
+              title: 'Check-out',
+              goTo: 'checkOut',
+              activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+            }
+          ]
+        });
+      }
+    }
     if (
       prevProps.merchant.dataPostActivity !==
       this.props.merchant.dataPostActivity
@@ -132,6 +204,7 @@ class MerchantHomeView extends Component {
       if (this.props.merchant.dataPostActivity !== null) {
         /** IF CHECK OUT SUCCESS */
         if (this.props.merchant.dataPostActivity.activity === 'check_out') {
+          // eslint-disable-next-line react/no-did-update-set-state
           this.setState({
             openModalCheckout: false,
             loadingPostForCheckoutNoOrder: false,
@@ -150,6 +223,7 @@ class MerchantHomeView extends Component {
           /** IF CHECK OUT SUCCESS */
           this.props.merchant.dataPostActivity.activity === 'check_in'
         ) {
+          // eslint-disable-next-line react/no-did-update-set-state
           this.setState({
             openModalCheckout: false,
             showToast: true,
@@ -178,6 +252,7 @@ class MerchantHomeView extends Component {
           }
         } else {
           if (this.state.checkNoOrder) {
+            // eslint-disable-next-line react/no-did-update-set-state
             this.setState({
               openModalCheckout: false,
               checkNoOrder: false,
@@ -272,7 +347,14 @@ class MerchantHomeView extends Component {
             .journeyPlanSaleId,
           activity: 'check_in'
         });
-        this.setState({ openModalCheckout: true });
+        if (
+          _.isEmpty(this.props.merchant.surveyList.payload.data) ||
+          this.props.merchant.dataGetLogAllActivity.find(
+            item => item.activity === 'toko_survey'
+          )
+        ) {
+          this.setState({ openModalCheckout: true });
+        }
         break;
       case 'survey':
         NavigationService.navigate('MerchantSurveyView');
@@ -305,11 +387,27 @@ class MerchantHomeView extends Component {
   /** CHECK CHECK LIST TASK */
   checkCheckListTask(activity) {
     if (this.props.merchant.dataGetLogAllActivity !== null) {
-      const checkActivity = this.props.merchant.dataGetLogAllActivity.findIndex(
-        item => item.activity === activity
+      let checkActivity = this.props.merchant.dataGetLogAllActivity.filter(
+        function(rows) {
+          return rows.activity === activity;
+        }
       );
-      if (checkActivity > -1) {
-        return true;
+      if (activity === ACTIVITY_JOURNEY_PLAN_ORDER) {
+        let getOrderStatus = this.props.merchant.dataGetLogAllActivity.filter(
+          function(rows) {
+            return rows.activity === ACTIVITY_JOURNEY_PLAN_CHECK_OUT;
+          }
+        );
+        if (getOrderStatus.length > 0) {
+          let newOrderStatus = { ...getOrderStatus[0] };
+          newOrderStatus.activity = ACTIVITY_JOURNEY_PLAN_ORDER;
+          return newOrderStatus;
+        } else {
+          return false;
+        }
+      }
+      if (checkActivity.length > 0) {
+        return checkActivity[0];
       }
       return false;
     }
@@ -382,8 +480,36 @@ class MerchantHomeView extends Component {
     return order !== undefined ? (
       <View style={styles.lastOrderContainer}>
         <View style={[styles.cardLastOrder, GlobalStyle.shadowForBox5]}>
-          <View style={{ paddingBottom: 8 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingBottom: 8
+            }}
+          >
             <Text style={Fonts.type42}>Last Order</Text>
+            <TouchableOpacity
+              onPress={() => {
+                this.goTo('history');
+              }}
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: -5
+              }}
+            >
+              <Text style={Fonts.type100}>See Order History</Text>
+              <MaterialIcon
+                style={{
+                  marginTop: 2,
+                  padding: 0
+                }}
+                name="chevron-right"
+                color={Color.fontRed50}
+                size={20}
+              />
+            </TouchableOpacity>
           </View>
           <View>
             <ProductListType1 data={order.orderParcels[0].orderBrands} />
@@ -493,10 +619,12 @@ class MerchantHomeView extends Component {
           >
             <Text style={Fonts.type64}>Task List</Text>
             <Text style={Fonts.type31}>
-              {this.checkTotalCompleteTask()}/{this.state.task.length} Selesai
+              {this.checkTotalCompleteTask()}/{this.state.task.length} Complete
             </Text>
           </View>
           {this.state.task.map((item, index) => {
+            const taskList = this.checkCheckListTask(item.activity);
+            console.log('taskList', taskList);
             return (
               <View
                 key={index}
@@ -506,14 +634,25 @@ class MerchantHomeView extends Component {
                   paddingVertical: 8
                 }}
               >
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', flex: 5 }}>
                   <View>
-                    {this.checkCheckListTask(item.activity) ? (
-                      <MaterialIcon
-                        name="check-circle"
-                        color={Color.fontGreen50}
-                        size={24}
-                      />
+                    {taskList ? (
+                      taskList.activity === ACTIVITY_JOURNEY_PLAN_ORDER &&
+                      taskList.noOrderNotes ? (
+                        <MaterialIcon
+                          // name="check-circle"
+                          // name="timelapse"
+                          name="cancel"
+                          color={Color.fontRed50}
+                          size={24}
+                        />
+                      ) : (
+                        <MaterialIcon
+                          name="check-circle"
+                          color={Color.fontGreen50}
+                          size={24}
+                        />
+                      )
                     ) : (
                       <MaterialIcon
                         name="radio-button-unchecked"
@@ -526,13 +665,115 @@ class MerchantHomeView extends Component {
                     <Text style={Fonts.type8}>{item.name}</Text>
                   </View>
                 </View>
-                {/* <View>
-                  <MaterialIcon
-                    name="chevron-right"
-                    color={Color.fontBlack40}
-                    size={24}
-                  />
-                </View> */}
+                <View
+                  style={{
+                    flex: 3
+                  }}
+                >
+                  {taskList ? (
+                    taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN ||
+                    taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_OUT ? (
+                      // taskList.
+                      <Text style={Fonts.type107}>
+                        {taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                          ? `Check In ${moment(taskList.createdAt).format(
+                              'HH:mm'
+                            )}`
+                          : `Check Out ${moment(taskList.createdAt).format(
+                              'HH:mm'
+                            )}`}
+                      </Text>
+                    ) : taskList.activity === ACTIVITY_JOURNEY_PLAN_ORDER ? (
+                      taskList.noOrderNotes ? (
+                        <TouchableOpacity
+                          onPress={() => {
+                            alert('Reason: ' + taskList.noOrderNotes);
+                          }}
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: -5
+                          }}
+                        >
+                          <Text style={Fonts.type100}>See Reason</Text>
+                          <MaterialIcon
+                            style={{
+                              marginTop: 2,
+                              padding: 0
+                            }}
+                            name="chevron-right"
+                            color={Color.fontRed50}
+                            size={20}
+                          />
+                        </TouchableOpacity>
+                      ) : (
+                        <TouchableOpacity
+                          onPress={() => {
+                            this.goTo(item.goTo);
+                          }}
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: -5
+                          }}
+                        >
+                          <Text style={Fonts.type100}>Completed</Text>
+                          <MaterialIcon
+                            style={{
+                              marginTop: 2,
+                              padding: 0
+                            }}
+                            name="chevron-right"
+                            color={Color.fontGreen50}
+                            size={20}
+                          />
+                        </TouchableOpacity>
+                      )
+                    ) : (
+                      <Button
+                        onPress={() => {
+                          this.goTo(item.goTo);
+                        }}
+                        title={item.title}
+                        titleStyle={[
+                          Fonts.type16,
+                          {
+                            color: Color.fontWhite
+                          }
+                        ]}
+                        buttonStyle={{
+                          backgroundColor: Color.fontRed50,
+                          borderRadius: 7,
+                          paddingHorizontal: 20,
+                          paddingVertical: 5,
+                          width: '100%'
+                        }}
+                      />
+                    )
+                  ) : (
+                    <Button
+                      onPress={() => {
+                        this.goTo(item.goTo);
+                      }}
+                      title={item.title}
+                      titleStyle={[
+                        Fonts.type16,
+                        {
+                          color: Color.fontWhite
+                        }
+                      ]}
+                      buttonStyle={{
+                        backgroundColor: Color.fontRed50,
+                        borderRadius: 7,
+                        paddingHorizontal: 20,
+                        paddingVertical: 5,
+                        width: '100%'
+                      }}
+                    />
+                  )}
+                </View>
               </View>
             );
           })}
@@ -601,7 +842,7 @@ class MerchantHomeView extends Component {
         {/* {this.renderData()} */}
         {this.renderLastOrder()}
         {this.renderTastList()}
-        {this.renderMerchantMenu()}
+        {/* {this.renderMerchantMenu()} */}
       </View>
     );
   }
@@ -860,7 +1101,8 @@ const styles = StyleSheet.create({
   lastOrderContainer: {
     paddingHorizontal: 16,
     paddingTop: 11,
-    paddingBottom: 5
+    paddingBottom: 5,
+    width: width
   },
   cardLastOrder: {
     paddingVertical: 16,
@@ -936,4 +1178,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * updatedDate: 03072020
  * updatedFunction:
  * -> Change key
+ * updatedBy: dyah
+ * updatedDate: 02122020
+ * updatedFunction:
+ * -> Add validation for checkout.
  */
