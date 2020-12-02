@@ -357,7 +357,13 @@ class MerchantHomeView extends Component {
         }
         break;
       case 'survey':
-        NavigationService.navigate('MerchantSurveyView');
+        if (
+          this.props.merchant.dataGetLogAllActivity.find(
+            item => item.activity === 'check_in'
+          )
+        ) {
+          NavigationService.navigate('MerchantSurveyView');
+        }
         break;
       default:
         break;
