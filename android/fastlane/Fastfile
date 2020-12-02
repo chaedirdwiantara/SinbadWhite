@@ -1,0 +1,71 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Generate APK files"
+  lane :apk do
+    sh "chmod +x ../gradlew"
+    sh "rm -rf ../.gradle"
+    gradle(task: "clean")
+    gradle(task: "cleanBuildCache")
+    gradle(task: "app:assembleRelease")
+  end
+
+  desc "Generate AAB files"
+  lane :aab do
+    sh "chmod +x ../gradlew"
+    sh "rm -rf ../.gradle"
+    gradle(task: "clean")
+    gradle(task: "cleanBuildCache")
+    gradle(task: "app:bundleRelease")
+  end
+
+  desc "Upload AAB Files to Internal Test Play Store"
+  lane :internal do
+    supply(track: 'internal', aab: 'app/build/outputs/bundle/release/app.aab')
+  end
+
+  desc "Upload AAB Files to Staging Play Store"
+  lane :staging do
+    supply(track: 'Staging', aab: 'app/build/outputs/bundle/release/app.aab')
+  end
+
+  desc "Upload AAB Files to Sandbox Play Store"
+  lane :sandbox do
+    supply(track: 'Sandbox', aab: 'app/build/outputs/bundle/release/app.aab')
+  end
+
+  desc "Upload AAB Files to Demo Play Store"
+  lane :demo do
+    supply(track: 'Demo', aab: 'app/build/outputs/bundle/release/app.aab')
+  end
+
+  desc "Upload AAB Files to Alpha Play Store"
+  lane :alpha do
+    supply(track: 'alpha', aab: 'app/build/outputs/bundle/release/app.aab')
+  end
+
+  desc "Upload AAB Files to Beta Play Store"
+  lane :beta do
+    supply(track: 'beta', aab: 'app/build/outputs/bundle/release/app.aab')
+  end
+
+  desc "Upload AAB Files to Production Play Store"
+  lane :production do
+    supply(track: 'production', aab: 'app/build/outputs/bundle/release/app.aab')
+  end
+end

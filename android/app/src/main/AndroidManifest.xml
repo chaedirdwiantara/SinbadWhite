@@ -21,6 +21,8 @@
       android:icon="@mipmap/ic_launcher_dev"
       android:roundIcon="@mipmap/ic_launcher_round_dev"
       android:allowBackup="false"
+      android:hardwareAccelerated="true"
+      android:largeHeap="true"
       android:theme="@style/AppTheme">
 
       <meta-data
