@@ -21,13 +21,24 @@ class MerchantPhotoList extends Component {
           horizontal={true}
           scrollEnabled={false}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.containerFlatlistStyle}
+          contentContainerStyle={[
+            styles.containerFlatlistStyle,
+            {
+              justifyContent:
+                this.props.data.length < 4 ? 'flex-start' : 'space-between'
+            }
+          ]}
           data={this.props.data}
           keyExtractor={(data, index) => index.toString()}
           renderItem={({ item, index }) => (
             <View>
               {item.uri ? (
-                <View style={styles.imageContainer}>
+                <View
+                  style={[
+                    styles.imageContainer,
+                    { marginRight: this.props.data.length < 4 ? 20 : 0 }
+                  ]}
+                >
                   <Image
                     source={{
                       isStatic: true,
@@ -47,7 +58,13 @@ class MerchantPhotoList extends Component {
                   </TouchableOpacity>
                 </View>
               ) : (
-                <View style={[styles.imageContainer, styles.view]}>
+                <View
+                  style={[
+                    styles.imageContainer,
+                    styles.view,
+                    { marginRight: this.props.data.length < 4 ? 20 : 0 }
+                  ]}
+                >
                   <View style={styles.add}>
                     <Text style={[Fonts.type34, { fontSize: 15 }]}>+</Text>
                   </View>
@@ -73,7 +90,6 @@ const styles = StyleSheet.create({
     padding: 16
   },
   containerFlatlistStyle: {
-    justifyContent: 'space-between',
     width: '100%'
   },
   imageContainer: {
@@ -127,7 +143,7 @@ export default MerchantPhotoList;
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 26112020
+ * updatedDate: 02122020
  * updatedFunction:
- * -> update ui merchant photo list.
+ * -> update style merchant photo list.
  */
