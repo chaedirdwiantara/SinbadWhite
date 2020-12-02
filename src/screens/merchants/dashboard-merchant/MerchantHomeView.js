@@ -15,7 +15,8 @@ import {
   connect,
   moment,
   MaterialIcon,
-  RFPercentage
+  RFPercentage,
+  Button
 } from '../../../library/thirdPartyPackage';
 import {
   StatusBarRed,
@@ -87,19 +88,27 @@ class MerchantHomeView extends Component {
        */
       task: [
         {
-          name: 'Masuk Toko',
+          name: 'Check-in Toko',
+          title: 'Check-in',
+          goTo: 'checkIn',
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
         },
         {
           name: 'Order',
+          title: 'Order',
+          goTo: 'pdp',
           activity: ACTIVITY_JOURNEY_PLAN_ORDER
         },
         {
           name: 'Toko Survey',
+          title: 'Fill',
+          goTo: 'survey',
           activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
         },
         {
-          name: 'Keluar Toko',
+          name: 'Check-out Toko',
+          title: 'Check-out',
+          goTo: 'checkOut',
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
         }
       ]
@@ -532,7 +541,7 @@ class MerchantHomeView extends Component {
           >
             <Text style={Fonts.type64}>Task List</Text>
             <Text style={Fonts.type31}>
-              {this.checkTotalCompleteTask()}/{this.state.task.length} Selesai
+              {this.checkTotalCompleteTask()}/{this.state.task.length} Complete
             </Text>
           </View>
           {this.state.task.map((item, index) => {
@@ -546,11 +555,12 @@ class MerchantHomeView extends Component {
                   paddingVertical: 8
                 }}
               >
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', flex: 5 }}>
                   <View>
                     {taskList ? (
                       <MaterialIcon
                         name="check-circle"
+                        // name="timelapse"
                         color={Color.fontGreen50}
                         size={24}
                       />
@@ -566,11 +576,29 @@ class MerchantHomeView extends Component {
                     <Text style={Fonts.type8}>{item.name}</Text>
                   </View>
                 </View>
-                <View>
-                  <MaterialIcon
-                    name="chevron-right"
-                    color={Color.fontBlack40}
-                    size={24}
+                <View
+                  style={{
+                    flex: 3
+                  }}
+                >
+                  <Button
+                    onPress={() => {
+                      this.goTo(item.goTo);
+                    }}
+                    title={item.title}
+                    titleStyle={[
+                      Fonts.type16,
+                      {
+                        color: Color.fontWhite
+                      }
+                    ]}
+                    buttonStyle={{
+                      backgroundColor: Color.fontRed50,
+                      borderRadius: 7,
+                      paddingHorizontal: 20,
+                      paddingVertical: 5,
+                      width: '100%'
+                    }}
                   />
                 </View>
               </View>
