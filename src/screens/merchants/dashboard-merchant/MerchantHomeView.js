@@ -1125,7 +1125,8 @@ const styles = StyleSheet.create({
   },
   taskListContainer: {
     paddingHorizontal: 16,
-    paddingVertical: 16
+    paddingVertical: 16,
+    width: width
   },
   boxMenu: {
     width: '25%',
