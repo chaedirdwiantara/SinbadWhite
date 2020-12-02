@@ -357,7 +357,13 @@ class MerchantHomeView extends Component {
         }
         break;
       case 'survey':
-        NavigationService.navigate('MerchantSurveyView');
+        if (
+          this.props.merchant.dataGetLogAllActivity.find(
+            item => item.activity === 'check_in'
+          )
+        ) {
+          NavigationService.navigate('MerchantSurveyView');
+        }
         break;
       default:
         break;
@@ -1125,7 +1131,8 @@ const styles = StyleSheet.create({
   },
   taskListContainer: {
     paddingHorizontal: 16,
-    paddingVertical: 16
+    paddingVertical: 16,
+    width: width
   },
   boxMenu: {
     width: '25%',
