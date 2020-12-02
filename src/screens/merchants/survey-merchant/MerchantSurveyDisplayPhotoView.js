@@ -347,26 +347,28 @@ class MerchantSurveyDisplayPhotoView extends Component {
               numColumns={5}
               keyExtractor={(data, index) => 'Before' + index.toString()}
               listKey={(data, index) => 'Before' + index.toString()}
-              renderItem={({ item, index }) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    this.setState({
-                      openCarousel: true,
-                      dataCarousel: this.state.photosDisplayBefore,
-                      activeIndex: index
-                    });
-                  }}
-                >
-                  <Image
-                    source={{
-                      isStatic: true,
-                      uri: item.fileUrl
+              renderItem={({ item, index }) =>
+                index > 4 ? null : (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      this.setState({
+                        openCarousel: true,
+                        dataCarousel: this.state.photosDisplayBefore,
+                        activeIndex: index
+                      });
                     }}
-                    style={styles.imageDisplayPhoto}
-                  />
-                </TouchableOpacity>
-              )}
+                  >
+                    <Image
+                      source={{
+                        isStatic: true,
+                        uri: item.fileUrl
+                      }}
+                      style={styles.imageDisplayPhoto}
+                    />
+                  </TouchableOpacity>
+                )
+              }
             />
           </View>
         ) : null}
@@ -379,26 +381,28 @@ class MerchantSurveyDisplayPhotoView extends Component {
               numColumns={5}
               keyExtractor={(data, index) => 'After' + index.toString()}
               listKey={(data, index) => 'After' + index.toString()}
-              renderItem={({ item, index }) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    this.setState({
-                      openCarousel: true,
-                      dataCarousel: this.state.photosDisplayAfter,
-                      activeIndex: index
-                    });
-                  }}
-                >
-                  <Image
-                    source={{
-                      isStatic: true,
-                      uri: item.fileUrl
+              renderItem={({ item, index }) =>
+                index > 4 ? null : (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      this.setState({
+                        openCarousel: true,
+                        dataCarousel: this.state.photosDisplayAfter,
+                        activeIndex: index
+                      });
                     }}
-                    style={styles.imageDisplayPhoto}
-                  />
-                </TouchableOpacity>
-              )}
+                  >
+                    <Image
+                      source={{
+                        isStatic: true,
+                        uri: item.fileUrl
+                      }}
+                      style={styles.imageDisplayPhoto}
+                    />
+                  </TouchableOpacity>
+                )
+              }
             />
           </View>
         ) : null}
@@ -605,12 +609,12 @@ class MerchantSurveyDisplayPhotoView extends Component {
       />
     );
   }
-  /** === RENDER MODAL NEXT PROCESS === */
+  /** === RENDER MODAL NEXT PROCESS (MODAL SUBMIT)=== */
   renderModalSubmit() {
     return (
       <ModalBottomSubmit
         open={this.state.modalSubmit}
-        loading={this.props.loadingSubmitSurvey}
+        loading={this.props.merchant.loadingSubmitSurvey}
         title={`Submit the ${
           this.state.activeStep === 0 ? 'Before' : 'After'
         } Photo`}
@@ -780,7 +784,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 26112020
+ * updatedDate: 02122020
  * updatedFunction:
- * -> update ui (flash button) & validation.
+ * -> update loading modal submit & maximal display photo.
  */

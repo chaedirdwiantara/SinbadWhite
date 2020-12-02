@@ -45,12 +45,14 @@ class ModalBottomSubmit extends Component {
               white
               borderRadius={4}
               onPress={this.props.onClose}
+              disabled={this.props.loading}
             />
           </View>
           <View style={styles.button}>
             <ButtonSingleSmall
               title="Submit"
               loading={this.props.loading}
+              disabled={this.props.loading}
               borderRadius={4}
               onPress={this.props.onSubmit}
             />
@@ -66,7 +68,7 @@ class ModalBottomSubmit extends Component {
         open={this.props.open}
         title={this.props.title}
         content={this.renderContent()}
-        close={this.props.onClose}
+        close={this.props.loading ? null : this.props.onClose}
         typeClose={'cancel'}
       />
     );
@@ -105,7 +107,7 @@ export default ModalBottomSubmit;
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 22112020
+ * updatedDate: 02122020
  * updatedFunction:
- * -> add modal bottom submit.
+ * -> update loading & disable button.
  */
