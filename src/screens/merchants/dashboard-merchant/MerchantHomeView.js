@@ -128,6 +128,28 @@ class MerchantHomeView extends Component {
     );
   }
 
+  /** === DID MOUNT === */
+  getSurvey = () => {
+    const params = {
+      storeId: this.props.merchant.selectedMerchant.storeId,
+      page: 1,
+      length: 10
+    };
+    this.props.merchantGetSurveyListProcess(params);
+  };
+  // /** === DID UPDATE === */
+  // componentDidUpdate() {
+  //   /** IF NO SURVEY */
+  //   if (
+  //     _.isEmpty(this.props.merchant.surveyList.payload.data) &&
+  //     this.props.merchant.surveyList.success &&
+  //     !this.state.successSurveyList
+  //   ) {
+  //     this.setState({ successSurveyList: true }, () => this.surveyDone());
+  //     NavigationService.goBack(this.props.navigation.state.key);
+  //   }
+  // }
+
   componentDidMount() {
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
@@ -137,10 +159,44 @@ class MerchantHomeView extends Component {
     this.props.merchantGetLogAllActivityProcess(
       this.props.merchant.selectedMerchant.journeyPlanSaleId
     );
+    /** FOR GET SURVEY LIST */
+    this.getSurvey();
   }
 
   componentDidUpdate(prevProps) {
-    console.log('OOOOOOOSSSSS', this.props.merchant);
+    /** IF NO SURVEY */
+    if (
+      _.isEmpty(this.props.merchant.surveyList.payload.data) &&
+      this.props.merchant.surveyList.success &&
+      !this.state.successSurveyList
+    ) {
+      if (this.state.task.length === 4) {
+        console.log('COMPONENT UPDATE', this.props.merchant);
+        // eslint-disable-next-line react/no-did-update-set-state
+        this.setState({
+          task: [
+            {
+              name: 'Check-in Toko',
+              title: 'Check-in',
+              goTo: 'checkIn',
+              activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+            },
+            {
+              name: 'Order',
+              title: 'Order',
+              goTo: 'pdp',
+              activity: ACTIVITY_JOURNEY_PLAN_ORDER
+            },
+            {
+              name: 'Check-out Toko',
+              title: 'Check-out',
+              goTo: 'checkOut',
+              activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+            }
+          ]
+        });
+      }
+    }
     if (
       prevProps.merchant.dataPostActivity !==
       this.props.merchant.dataPostActivity
@@ -336,6 +392,20 @@ class MerchantHomeView extends Component {
           return rows.activity === activity;
         }
       );
+      if (activity === ACTIVITY_JOURNEY_PLAN_ORDER) {
+        let getOrderStatus = this.props.merchant.dataGetLogAllActivity.filter(
+          function(rows) {
+            return rows.activity === ACTIVITY_JOURNEY_PLAN_CHECK_OUT;
+          }
+        );
+        if (getOrderStatus.length > 0) {
+          let newOrderStatus = { ...getOrderStatus[0] };
+          newOrderStatus.activity = ACTIVITY_JOURNEY_PLAN_ORDER;
+          return newOrderStatus;
+        } else {
+          return false;
+        }
+      }
       if (checkActivity.length > 0) {
         return checkActivity[0];
       }
@@ -554,6 +624,7 @@ class MerchantHomeView extends Component {
           </View>
           {this.state.task.map((item, index) => {
             const taskList = this.checkCheckListTask(item.activity);
+            console.log('taskList', taskList);
             return (
               <View
                 key={index}
@@ -566,12 +637,22 @@ class MerchantHomeView extends Component {
                 <View style={{ flexDirection: 'row', flex: 5 }}>
                   <View>
                     {taskList ? (
-                      <MaterialIcon
-                        name="check-circle"
-                        // name="timelapse"
-                        color={Color.fontGreen50}
-                        size={24}
-                      />
+                      taskList.activity === ACTIVITY_JOURNEY_PLAN_ORDER &&
+                      taskList.noOrderNotes ? (
+                        <MaterialIcon
+                          // name="check-circle"
+                          // name="timelapse"
+                          name="cancel"
+                          color={Color.fontRed50}
+                          size={24}
+                        />
+                      ) : (
+                        <MaterialIcon
+                          name="check-circle"
+                          color={Color.fontGreen50}
+                          size={24}
+                        />
+                      )
                     ) : (
                       <MaterialIcon
                         name="radio-button-unchecked"
@@ -589,25 +670,109 @@ class MerchantHomeView extends Component {
                     flex: 3
                   }}
                 >
-                  <Button
-                    onPress={() => {
-                      this.goTo(item.goTo);
-                    }}
-                    title={item.title}
-                    titleStyle={[
-                      Fonts.type16,
-                      {
-                        color: Color.fontWhite
-                      }
-                    ]}
-                    buttonStyle={{
-                      backgroundColor: Color.fontRed50,
-                      borderRadius: 7,
-                      paddingHorizontal: 20,
-                      paddingVertical: 5,
-                      width: '100%'
-                    }}
-                  />
+                  {taskList ? (
+                    taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN ||
+                    taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_OUT ? (
+                      // taskList.
+                      <Text style={Fonts.type107}>
+                        {taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                          ? `Check In ${moment(taskList.createdAt).format(
+                              'HH:mm'
+                            )}`
+                          : `Check Out ${moment(taskList.createdAt).format(
+                              'HH:mm'
+                            )}`}
+                      </Text>
+                    ) : taskList.activity === ACTIVITY_JOURNEY_PLAN_ORDER ? (
+                      taskList.noOrderNotes ? (
+                        <TouchableOpacity
+                          onPress={() => {
+                            alert('Reason: ' + taskList.noOrderNotes);
+                          }}
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: -5
+                          }}
+                        >
+                          <Text style={Fonts.type100}>See Reason</Text>
+                          <MaterialIcon
+                            style={{
+                              marginTop: 2,
+                              padding: 0
+                            }}
+                            name="chevron-right"
+                            color={Color.fontRed50}
+                            size={20}
+                          />
+                        </TouchableOpacity>
+                      ) : (
+                        <TouchableOpacity
+                          onPress={() => {
+                            this.goTo(item.goTo);
+                          }}
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: -5
+                          }}
+                        >
+                          <Text style={Fonts.type100}>Completed</Text>
+                          <MaterialIcon
+                            style={{
+                              marginTop: 2,
+                              padding: 0
+                            }}
+                            name="chevron-right"
+                            color={Color.fontGreen50}
+                            size={20}
+                          />
+                        </TouchableOpacity>
+                      )
+                    ) : (
+                      <Button
+                        onPress={() => {
+                          this.goTo(item.goTo);
+                        }}
+                        title={item.title}
+                        titleStyle={[
+                          Fonts.type16,
+                          {
+                            color: Color.fontWhite
+                          }
+                        ]}
+                        buttonStyle={{
+                          backgroundColor: Color.fontRed50,
+                          borderRadius: 7,
+                          paddingHorizontal: 20,
+                          paddingVertical: 5,
+                          width: '100%'
+                        }}
+                      />
+                    )
+                  ) : (
+                    <Button
+                      onPress={() => {
+                        this.goTo(item.goTo);
+                      }}
+                      title={item.title}
+                      titleStyle={[
+                        Fonts.type16,
+                        {
+                          color: Color.fontWhite
+                        }
+                      ]}
+                      buttonStyle={{
+                        backgroundColor: Color.fontRed50,
+                        borderRadius: 7,
+                        paddingHorizontal: 20,
+                        paddingVertical: 5,
+                        width: '100%'
+                      }}
+                    />
+                  )}
                 </View>
               </View>
             );
@@ -677,7 +842,7 @@ class MerchantHomeView extends Component {
         {/* {this.renderData()} */}
         {this.renderLastOrder()}
         {this.renderTastList()}
-        {this.renderMerchantMenu()}
+        {/* {this.renderMerchantMenu()} */}
       </View>
     );
   }
@@ -936,7 +1101,8 @@ const styles = StyleSheet.create({
   lastOrderContainer: {
     paddingHorizontal: 16,
     paddingTop: 11,
-    paddingBottom: 5
+    paddingBottom: 5,
+    width: width
   },
   cardLastOrder: {
     paddingVertical: 16,
