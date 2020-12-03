@@ -21,7 +21,8 @@ import {
   Address,
   ModalWarning,
   ProductListType1,
-  ModalBottomErrorRespons
+  ModalBottomErrorRespons,
+  ModalBottomSkuNotAvailable
 } from '../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
@@ -86,7 +87,8 @@ class OmsCheckoutView extends Component {
       tAndRLoading: false,
       alreadyFetchTAndR: false,
       modalWarningAllCondition: false,
-      openModalPaymentNotAllowed: false
+      openModalPaymentNotAllowed: false,
+      openModalSKUNotAvailable: false
     };
   }
   /**
@@ -1583,6 +1585,18 @@ class OmsCheckoutView extends Component {
       </View>
     );
   }
+
+  /** RENDER MODAL SKU NOT AVAILABLE */
+  renderModalSKUNotAvailble() {
+    return this.state.openModalSKUNotAvailable ? (
+      <ModalBottomSkuNotAvailable 
+        open={this.state.openModalSKUNotAvailable}
+        onPress={() => this.setState({ openModalSKUNotAvailable: false })}
+      />
+    ) : (
+      <View />
+    )
+  }
   /**
    * =======================
    * RENDER MAIN
@@ -1611,6 +1625,7 @@ class OmsCheckoutView extends Component {
         {this.renderWarningMinimumQty()}
         {this.renderErrorResponse()}
         {this.renderModalPaymentNotAllowed()}
+        {this.renderModalSKUNotAvailble()}
       </View>
     );
   }
