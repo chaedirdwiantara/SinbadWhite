@@ -1625,6 +1625,7 @@ class OmsCheckoutView extends Component {
         {this.renderWarningMinimumQty()}
         {this.renderErrorResponse()}
         {this.renderModalPaymentNotAllowed()}
+        {this.renderModalSKUNotAvailble()}
       </View>
     );
   }
