@@ -731,7 +731,7 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
-    height: 300,
+    height: width,
     width,
     overflow: 'hidden'
   },
@@ -740,7 +740,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     padding: 16,
-    height: 300
+    height: width
   },
   smallIcon: {
     borderRadius: 40,
@@ -796,7 +796,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 02122020
+ * updatedDate: 03122020
  * updatedFunction:
- * -> update max photos for image series.
+ * -> update ui with ratio 1:1.
  */
