@@ -625,6 +625,9 @@ class OmsCheckoutView extends Component {
         break;
       case 'ERR-APP-NOT-ALLOW':
         this.errorPaymentNotAllowed()
+      case 'ERR-STOCK':
+         this.errorSKUNotAvailable()
+        break;  
       default:
         this.errorPaymentGlobal()
         break;
@@ -664,6 +667,10 @@ class OmsCheckoutView extends Component {
   /** ERROR PAYMENT GLOBAL */
   errorPaymentGlobal(){
     this.setState({openModalPaymentNotAllowed : true})
+  }
+  // === ERROR SKU NOT AVAILABLE ===
+  errorSKUNotAvailable() {
+    this.setState({ openModalSkuNotAvailable: true })
   }
 
   closeErrorResponse() {
