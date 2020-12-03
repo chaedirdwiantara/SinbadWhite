@@ -88,7 +88,7 @@ class OmsCheckoutView extends Component {
       alreadyFetchTAndR: false,
       modalWarningAllCondition: false,
       openModalPaymentNotAllowed: false,
-      openModalSKUNotAvailable: true
+      openModalSKUNotAvailable: false
     };
   }
   /**
