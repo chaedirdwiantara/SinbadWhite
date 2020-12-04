@@ -112,7 +112,8 @@ class MerchantHomeView extends Component {
           goTo: 'checkOut',
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
         }
-      ]
+      ],
+      successSurveyList: false
     };
   }
   /**
@@ -137,18 +138,6 @@ class MerchantHomeView extends Component {
     };
     this.props.merchantGetSurveyListProcess(params);
   };
-  // /** === DID UPDATE === */
-  // componentDidUpdate() {
-  //   /** IF NO SURVEY */
-  //   if (
-  //     _.isEmpty(this.props.merchant.surveyList.payload.data) &&
-  //     this.props.merchant.surveyList.success &&
-  //     !this.state.successSurveyList
-  //   ) {
-  //     this.setState({ successSurveyList: true }, () => this.surveyDone());
-  //     NavigationService.goBack(this.props.navigation.state.key);
-  //   }
-  // }
 
   componentDidMount() {
     /** FOR GET LAST ORDER */
@@ -170,6 +159,7 @@ class MerchantHomeView extends Component {
       this.props.merchant.surveyList.success &&
       !this.state.successSurveyList
     ) {
+      this.setState({ successSurveyList: true }, () => this.SurveyDone());
       if (this.state.task.length === 4) {
         console.log('COMPONENT UPDATE', this.props.merchant);
         // eslint-disable-next-line react/no-did-update-set-state
@@ -195,6 +185,22 @@ class MerchantHomeView extends Component {
             }
           ]
         });
+      }
+    }
+    /** IF ONE OF SURVEY LIST STATUS COMPLETED */
+    if (
+      !_.isEmpty(this.props.merchant.surveyList.payload.data) &&
+      this.props.merchant.surveyList.success &&
+      !this.state.successSurveyList
+    ) {
+      if (
+        !_.isEmpty(
+          this.props.merchant.surveyList.payload.data.filter(
+            item => item.responseStatus === 'completed'
+          )
+        )
+      ) {
+        this.setState({ successSurveyList: true }, () => this.SurveyDone());
       }
     }
     if (
