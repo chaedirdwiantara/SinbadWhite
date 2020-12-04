@@ -567,6 +567,9 @@ class DashboardView extends Component {
       data,
       load
     } = this.state;
+
+    const isValidData = data.now[tabsTimeTarget][tabsWhite] && data.now[tabsTimeTarget][tabsWhite].length > 0;
+
     return (
       <ScrollView
         scrollEnabled={!load}
@@ -658,7 +661,7 @@ class DashboardView extends Component {
                 {data.now[tabsTimeTarget] ? (
                   <View>
                     <Text style={[Fonts.type13, styles.textContent]}>
-                      {data.now[tabsTimeTarget][tabsWhite]
+                      {isValidData
                         ? this.parseValue(
                             data.now[tabsTimeTarget][tabsWhite][0].target,
                             tabsWhite
@@ -666,7 +669,7 @@ class DashboardView extends Component {
                         : '-'}
                     </Text>
                     <Text style={[Fonts.type13, styles.textContent]}>
-                      {data.now[tabsTimeTarget][tabsWhite]
+                      {isValidData
                         ? this.parseDate(
                             data.now[tabsTimeTarget][tabsWhite][0].date,
                             tabsWhite
@@ -674,7 +677,7 @@ class DashboardView extends Component {
                         : '-'}
                     </Text>
                     <Text style={[Fonts.type13, styles.textContent]}>
-                      {data.now[tabsTimeTarget][tabsWhite]
+                      {isValidData
                         ? this.parseValue(
                             data.now[tabsTimeTarget][tabsWhite][0].achieved,
                             tabsWhite,

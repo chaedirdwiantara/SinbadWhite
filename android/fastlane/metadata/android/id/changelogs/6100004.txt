@@ -3,3 +3,5 @@ Thank you for using Sinbad Agent!
 What's  new in this version 1.1.3:
 - Payment Methods Bank BNI, Bank BRI, Bank Mandiri, and Outlet Alfamart
 - Enhancement in Checkout and Transaction history
+- Survey now available in Sinbad!
+
