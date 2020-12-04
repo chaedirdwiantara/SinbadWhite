@@ -740,7 +740,7 @@ class MerchantHomeView extends Component {
                             marginTop: -5
                           }}
                         >
-                          <Text style={Fonts.type100}>Completed</Text>
+                          <Text style={Fonts.type51}>Completed</Text>
                           <MaterialIcon
                             style={{
                               marginTop: 2,
@@ -752,6 +752,30 @@ class MerchantHomeView extends Component {
                           />
                         </TouchableOpacity>
                       )
+                    ) : taskList.activity ===
+                      ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          // this.goTo(item.goTo);
+                        }}
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          marginTop: -5
+                        }}
+                      >
+                        <Text style={Fonts.type51}>Completed</Text>
+                        <MaterialIcon
+                          style={{
+                            marginTop: 2,
+                            padding: 0
+                          }}
+                          name="chevron-right"
+                          color={Color.fontGreen50}
+                          size={20}
+                        />
+                      </TouchableOpacity>
                     ) : (
                       <Button
                         onPress={() => {
