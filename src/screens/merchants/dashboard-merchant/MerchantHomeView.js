@@ -407,15 +407,24 @@ class MerchantHomeView extends Component {
       if (activity === ACTIVITY_JOURNEY_PLAN_ORDER) {
         let getOrderStatus = this.props.merchant.dataGetLogAllActivity.filter(
           function(rows) {
-            return rows.activity === ACTIVITY_JOURNEY_PLAN_CHECK_OUT;
+            return rows.activity === ACTIVITY_JOURNEY_PLAN_ORDER;
           }
         );
-        if (getOrderStatus.length > 0) {
-          let newOrderStatus = { ...getOrderStatus[0] };
-          newOrderStatus.activity = ACTIVITY_JOURNEY_PLAN_ORDER;
-          return newOrderStatus;
+        if (getOrderStatus.length < 1) {
+          let getNoOrder = this.props.merchant.dataGetLogAllActivity.filter(
+            function(rows) {
+              return rows.activity === ACTIVITY_JOURNEY_PLAN_CHECK_OUT;
+            }
+          );
+          if (getNoOrder.length > 0) {
+            let newOrderStatus = { ...getNoOrder[0] };
+            newOrderStatus.activity = ACTIVITY_JOURNEY_PLAN_ORDER;
+            return newOrderStatus;
+          } else {
+            return false;
+          }
         } else {
-          return false;
+          return getOrderStatus[0];
         }
       }
       if (checkActivity.length > 0) {
