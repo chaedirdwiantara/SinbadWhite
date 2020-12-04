@@ -326,7 +326,7 @@ class HistoryDetailPayment extends Component {
                     ? 'Transfer ke no. Virtual Account'
                     : 'Kode Pembayaran'}
                 </Text>
-                {paymentTypeId === 2 && orderStatus !== 'delivered'
+                {paymentChannelTypeId !== 1 && orderStatus !== 'delivered'
                   ? this.renderTooltip()
                   : false}
               </View>

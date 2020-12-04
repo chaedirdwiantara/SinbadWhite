@@ -625,7 +625,7 @@ class OmsCheckoutView extends Component {
       case 'ERR-APP-NOT-ALLOW':
         this.errorPaymentNotAllowed()
       default:
-        this.errorPaymentTryAgain()
+        // this.errorPaymentTryAgain()
         break;
     }
   }
