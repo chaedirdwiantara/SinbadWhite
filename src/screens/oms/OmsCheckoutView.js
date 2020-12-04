@@ -182,7 +182,7 @@ class OmsCheckoutView extends Component {
         ) {
           this.manageError();
         } else {
-          this.setState({ openModalErrorGlobal: true });
+          this.setState({modalErrorResponse : true});
         }
       }
     }
