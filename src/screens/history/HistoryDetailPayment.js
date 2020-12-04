@@ -614,7 +614,7 @@ class HistoryDetailPayment extends Component {
   renderVirtualAccount() {
     const a = this.props.history.dataDetailHistory;
     const paymentTypeId = a.paymentType.id;
-    const paymentChannelId = a.paymentChannel.id;
+    const paymentChannelId = a.paymentChannel.paymentChannelTypeId;
     const expiredPaymentTime = a.billing.expiredPaymentTime;
     const billingStatus = a.billing.billingStatus;
     const statusPayment = a.statusPayment;
@@ -634,7 +634,7 @@ class HistoryDetailPayment extends Component {
             paymentChannelTypeId !== 1 &&
             accountVaNo !== null) ||
             (paymentTypeId === 2 &&
-              paymentChannelId === 2 &&
+              paymentChannelTypeId !== 1 &&
               expiredPaymentTime !== null)) &&
           billingStatus !== 'paid' &&
           // this.props.history.dataDetailHistory.billing.billingStatus !== 'expired' &&

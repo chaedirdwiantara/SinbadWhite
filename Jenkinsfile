@@ -150,42 +150,53 @@ pipeline {
                 stage('Change Environment') {
                     steps {
                         script {
-                            if(SINBAD_ENV != 'development') {
-                                if(SINBAD_ENV == 'staging') {
-                                    sh '''
-                                        find android/ -type f |
-                                        while read file
-                                        do
-                                            sed -i 's/agentdevelopment/agentstaging/g' $file
-                                        done
-                                    '''
-                                } else if(SINBAD_ENV == 'sandbox') {
-                                    sh '''
-                                        find android/ -type f |
-                                        while read file
-                                        do
-                                            sed -i 's/agentdevelopment/agentsandbox/g' $file
-                                        done
-                                    '''
-                                } else if(SINBAD_ENV == 'demo') {
-                                    sh '''
-                                        find android/ -type f |
-                                        while read file
-                                        do
-                                            sed -i 's/agentdevelopment/agentdemo/g' $file
-                                        done
-                                    '''
-                                } else if(SINBAD_ENV == 'production') {
-                                    sh '''
-                                        find android/ -type f |
-                                        while read file
-                                        do
-                                            sed -i 's/agentdevelopment/agent/g' $file
-                                        done
-                                    '''
+                            if(params.CI_IS_PLAYSTORE == "Yes"){
+                                sh '''
+                                    find android/ -type f |
+                                    while read file
+                                    do
+                                        sed -i 's/agentdevelopment/agent/g' $file
+                                    done
+                                '''
+                            }else{
+                                if(SINBAD_ENV != 'development') {
+                                    if(SINBAD_ENV == 'staging') {
+                                        sh '''
+                                            find android/ -type f |
+                                            while read file
+                                            do
+                                                sed -i 's/agentdevelopment/agentstaging/g' $file
+                                            done
+                                        '''
+                                    } else if(SINBAD_ENV == 'sandbox') {
+                                        sh '''
+                                            find android/ -type f |
+                                            while read file
+                                            do
+                                                sed -i 's/agentdevelopment/agentsandbox/g' $file
+                                            done
+                                        '''
+                                    } else if(SINBAD_ENV == 'demo') {
+                                        sh '''
+                                            find android/ -type f |
+                                            while read file
+                                            do
+                                                sed -i 's/agentdevelopment/agentdemo/g' $file
+                                            done
+                                        '''
+                                    } else if(SINBAD_ENV == 'production') {
+                                        sh '''
+                                            find android/ -type f |
+                                            while read file
+                                            do
+                                                sed -i 's/agentdevelopment/agent/g' $file
+                                            done
+                                        '''
+                                    }
+                                    
                                 }
-                                sh "find android -type f -name '.!*!*' -delete"
                             }
+                            sh "find android -type f -name '.!*!*' -delete"
                         }
                     }
                 }
@@ -219,15 +230,12 @@ pipeline {
                         slackSend color: '#FFFFFF', channel: "#download-apps-production", message: """
 Hi Sailors
 We have new APK Version
-
 Application: ${SINBAD_REPO}
 Environment: ${SINBAD_ENV}
 Commit ID: ${env.GIT_COMMIT}
 Changes Message: ${env.GIT_MESSAGE}
-
 You can download this application in here
 ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz
-
 Or latest application for environment ${SINBAD_ENV} in here
 ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
             """
@@ -245,19 +253,6 @@ ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
                                 cd android && \
                                 fastlane aab
                             '''
-                            if(SINBAD_ENV != 'production') {
-                                sh '''
-                                    find android/ -type f |
-                                    while read file
-                                    do
-                                        sed -i 's/sinbaddev/sinbad/g' $file
-                                        sed -i 's/ic_launcher_pink/ic_launcher_green/g' $file
-                                        sed -i 's/ic_launcher_round_pink/ic_launcher_round_green/g' $file
-                                        sed -i 's/Sinbad Development/Sinbad Sandbox/g' $file
-                                    done
-                                    find android -type f -name '.!*!*' -delete
-                                '''
-                            }
                             if(SINBAD_ENV == 'development') {
                                 sh '''
                                     cd android && \
