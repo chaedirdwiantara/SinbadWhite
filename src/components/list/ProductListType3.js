@@ -7,12 +7,10 @@ import {
   View,
   StyleSheet,
   FlatList
-} from '../../library/reactPackage'
-import {
-  SkeletonType21,
-  PdpGrid
-} from '../../library/component'
-import { MoneyFormat} from '../../helpers'
+} from '../../library/reactPackage';
+import { SkeletonType21, PdpGrid } from '../../library/component';
+import { MoneyFormat } from '../../helpers';
+import Price from '../../functions/Price';
 
 class ProductListType3 extends Component {
   constructor(props) {
@@ -29,20 +27,7 @@ class ProductListType3 extends Component {
   }
   /** === CHECK PRICE ==== */
   checkPrice(item) {
-    if (item.maxPriceRange === null && item.minPriceRange === null) {
-      return MoneyFormat(item.retailBuyingPrice);
-    } else if (item.maxPriceRange !== null && item.minPriceRange !== null) {
-      if (item.maxPriceRange === item.minPriceRange) {
-        return MoneyFormat(item.maxPriceRange);
-      }
-      return `${MoneyFormat(item.minPriceRange)} - ${MoneyFormat(
-        item.maxPriceRange
-      )}`;
-    } else if (item.maxPriceRange !== null && item.minPriceRange === null) {
-      return MoneyFormat(item.maxPriceRange);
-    } else if (item.maxPriceRange === null && item.minPriceRange !== null) {
-      return MoneyFormat(item.minPriceRange);
-    }
+    return MoneyFormat(Price(item));
   }
   /**
    * =======================
@@ -60,8 +45,8 @@ class ProductListType3 extends Component {
           name={item.name}
           price={this.checkPrice(item)}
           orderButton={true}
-          onPressOrder={() => this.toParentFunction({type: 'order', item})}
-          onPressCard={() => this.toParentFunction({type: 'detail', item})}
+          onPressOrder={() => this.toParentFunction({ type: 'order', item })}
+          onPressCard={() => this.toParentFunction({ type: 'detail', item })}
         />
       </View>
     );
@@ -116,14 +101,14 @@ const styles = StyleSheet.create({
 export default ProductListType3;
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: tatas
-* updatedDate: 24062020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: tatas
+ * updatedDate: 24062020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

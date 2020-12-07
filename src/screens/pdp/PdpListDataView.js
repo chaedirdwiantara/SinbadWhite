@@ -17,6 +17,7 @@ import {
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
+import Price from '../../functions/Price';
 
 class PdpListDataView extends Component {
   constructor(props) {
@@ -44,20 +45,7 @@ class PdpListDataView extends Component {
   };
   /** === CHECK PRICE ==== */
   checkPrice(item) {
-    if (item.maxPriceRange === null && item.minPriceRange === null) {
-      return MoneyFormat(item.retailBuyingPrice);
-    } else if (item.maxPriceRange !== null && item.minPriceRange !== null) {
-      if (item.maxPriceRange === item.minPriceRange) {
-        return MoneyFormat(item.maxPriceRange);
-      }
-      return `${MoneyFormat(item.minPriceRange)} - ${MoneyFormat(
-        item.maxPriceRange
-      )}`;
-    } else if (item.maxPriceRange !== null && item.minPriceRange === null) {
-      return MoneyFormat(item.maxPriceRange);
-    } else if (item.maxPriceRange === null && item.minPriceRange !== null) {
-      return MoneyFormat(item.minPriceRange);
-    }
+    return MoneyFormat(Price(item));
   }
   /**
    * ======================
