@@ -174,6 +174,8 @@ pipeline {
                                             while read file
                                             do
                                                 sed -i 's/agentdevelopment/agentsandbox/g' $file
+                                                sed -i 's/ic_launcher_dev/ic_launcher_stg/g' $file
+                                                sed -i 's/ic_launcher_round_dev/ic_launcher_round_stg/g' $file
                                             done
                                         '''
                                     } else if(SINBAD_ENV == 'demo') {
@@ -182,6 +184,8 @@ pipeline {
                                             while read file
                                             do
                                                 sed -i 's/agentdevelopment/agentdemo/g' $file
+                                                sed -i 's/ic_launcher_dev/ic_launcher_stg/g' $file
+                                                sed -i 's/ic_launcher_round_dev/ic_launcher_round_stg/g' $file
                                             done
                                         '''
                                     } else if(SINBAD_ENV == 'production') {
@@ -190,6 +194,8 @@ pipeline {
                                             while read file
                                             do
                                                 sed -i 's/agentdevelopment/agent/g' $file
+                                                sed -i 's/ic_launcher_dev/ic_launcher/g' $file
+                                                sed -i 's/ic_launcher_round_dev/ic_launcher_round/g' $file
                                             done
                                         '''
                                     }
