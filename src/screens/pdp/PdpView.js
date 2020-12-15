@@ -30,6 +30,7 @@ import PdpListDataView from './PdpListDataView';
 import PdpLineDataView from './PdpLineDataView';
 import PdpFilterView from './PdpFilterView';
 import PdpOrderView from './PdpOrderView';
+import PdpFilterSortView from './PdpFitlerSortView';
 
 class PdpView extends Component {
   constructor(props) {
@@ -396,7 +397,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(PdpView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PdpView);
 
 /**
  * ============================
