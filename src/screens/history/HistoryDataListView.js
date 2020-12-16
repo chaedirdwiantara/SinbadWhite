@@ -315,7 +315,7 @@ class HistoryDataListView extends Component {
             item.billing.billingStatus !== 'paid' &&
             item.billing.expiredPaymentTime &&
             item.paymentChannel &&
-            item.paymentChannel.id === 2
+            item.paymentChannel.paymentChannelTypeId !== 1
             ? moment.utc(new Date()).local() >
                 moment.utc(item.billing.expiredPaymentTime).local() &&
               item.statusPayment === 'waiting_for_payment' 

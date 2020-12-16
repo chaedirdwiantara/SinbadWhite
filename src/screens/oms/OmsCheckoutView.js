@@ -58,6 +58,7 @@ class OmsCheckoutView extends Component {
       /** modal */
       openModalBackToCartItem: false,
       openModalConfirmOrder: false,
+      openModalErrorPaymentTryAgain: false,
       modalPaymentTypeList: false,
       buttonCheckoutDisabled: false,
       modalDeleteConfirmation: false,
@@ -183,7 +184,7 @@ class OmsCheckoutView extends Component {
         ) {
           this.manageError();
         } else {
-          this.setState({ openModalErrorGlobal: true });
+          this.setState({modalErrorResponse : true});
         }
       }
     }
@@ -629,7 +630,7 @@ class OmsCheckoutView extends Component {
          this.errorSKUNotAvailable()
         break;  
       default:
-        this.errorPaymentGlobal()
+        // this.errorPaymentTryAgain()
         break;
     }
   }
@@ -673,6 +674,10 @@ class OmsCheckoutView extends Component {
     this.setState({ openModalSkuNotAvailable: true })
   }
 
+  /**ERROR PAYMENT TRY AGAIN */
+  errorPaymentTryAgain(){
+    this.setState({openModalErrorPaymentTryAgain : true})
+  }
   closeErrorResponse() {
     this.setState({ modalErrorResponse: false });
     NavigationService.navigate('Home');
@@ -1604,6 +1609,30 @@ class OmsCheckoutView extends Component {
       <View />
     )
   }
+   /** RENDER MODAL FAIL PAYMENT */
+   renderModalErrorPaymentTryAgain() {
+    return (
+      <View>
+        {this.state.openModalErrorPaymentTryAgain ? (
+          <ModalBottomFailPayment
+            open={this.state.openModalErrorPaymentTryAgain}
+            onPress={() => this.closeopenModalErrorPaymentTryAgain()}
+            text={'Silahkan Mencoba Kembali'}
+          />
+        ) : null}
+      </View>
+    );
+  }
+  closeopenModalErrorPaymentTryAgain (){
+    this.setState({ openMopenModalErrorPaymentTryAgain: false })
+    NavigationService.navigate('OmsCartView', this.props.navigation.state.key);
+    this.props.omsGetCartItemFromCheckoutProcess({
+      catalogues: this.props.oms.dataCart
+    });
+    this.props.omsDeleteCartItemProcess({
+      orderId: this.props.oms.dataOmsGetCheckoutItem.id
+    });
+  }
   /**
    * =======================
    * RENDER MAIN
@@ -1633,6 +1662,7 @@ class OmsCheckoutView extends Component {
         {this.renderErrorResponse()}
         {this.renderModalPaymentNotAllowed()}
         {this.renderModalSKUNotAvailble()}
+        {this.renderModalErrorPaymentTryAgain()}
       </View>
     );
   }

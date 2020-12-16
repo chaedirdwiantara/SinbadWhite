@@ -7,7 +7,7 @@ function getPdp(data) {
       GlobalMethod.userSupplierMapping()
     )}&searchName=${data.search}&status=active&sort=${data.sort}&sortby=${
       data.sortBy
-    }`,
+    }&storeId=${GlobalMethod.merchantStoreId()}`,
     method: 'GET'
   });
 }
@@ -18,7 +18,7 @@ function getSearchPdp(data) {
       GlobalMethod.userSupplierMapping()
     )}&searchName=${data.search}&status=active&sort=${data.sort}&sortby=${
       data.sortBy
-    }`,
+    }&storeId=${GlobalMethod.merchantStoreId()}`,
     method: 'GET'
   });
 }
@@ -37,14 +37,13 @@ export const PdpMethod = {
 };
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Change global method
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Change global method
+ */

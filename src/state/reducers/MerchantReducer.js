@@ -17,6 +17,9 @@ const INITIAL_STATE = {
   loadingGetNoOrderReason: false,
   loadingGetStoreStatus: false,
   loadingGetWarehouse: false,
+  loadingGetListSurvey: false,
+  loadingGetSurvey: false,
+  loadingSubmitSurvey: false,
   /** data */
   dataPostActivity: null,
   dataGetLogAllActivity: null,
@@ -109,6 +112,26 @@ const INITIAL_STATE = {
     storeChannel: '',
     channelId: null
   },
+  surveyList: {
+    payload: {
+      data: []
+    },
+    success: null
+  },
+  newSurveyResponse: false,
+  dataSurvey: {
+    id: null,
+    status: '',
+    responsePhoto: []
+  },
+  dataSubmitSurvey: {
+    surveyId: null,
+    surveyStepId: null,
+    storeId: null,
+    storeName: '',
+    status: '',
+    photos: []
+  },
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
@@ -121,7 +144,10 @@ const INITIAL_STATE = {
   errorGetLogPerActivity: null,
   errorGetNoOrderReason: null,
   errorGetStoreStatus: null,
-  errorGetWarehouse: null
+  errorGetWarehouse: null,
+  errorGetSurveyList: null,
+  errorGetSurvey: null,
+  errorSubmitSurvey: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -641,18 +667,113 @@ export const merchant = createReducer(INITIAL_STATE, {
     };
   },
 
-/**
- * =============================
- * MERCHANT VOLATILE RESET
- * =============================
- */
-[types.MERCHANT_RESET_DATA_VOLATILE](state, action){
-  return {
-    ...state,
-    dataMerchantVolatile: INITIAL_STATE.dataMerchantVolatile,
-    dataMerchantDisabledField: INITIAL_STATE.dataMerchantDisabledField
+  /**
+   * =============================
+   * MERCHANT VOLATILE RESET
+   * =============================
+   */
+  [types.MERCHANT_RESET_DATA_VOLATILE](state, action) {
+    return {
+      ...state,
+      dataMerchantVolatile: INITIAL_STATE.dataMerchantVolatile,
+      dataMerchantDisabledField: INITIAL_STATE.dataMerchantDisabledField
+    };
+  },
+
+  /**
+   * ============================
+   * GET SURVEY LIST
+   * ============================
+   */
+  [types.MERCHANT_GET_SURVEY_LIST_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyList: true,
+      surveyList: {
+        payload: {
+          data: []
+        },
+        success: false
+      },
+      errorGetSurveyList: null
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_LIST_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyList: false,
+      surveyList: action.payload
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_LIST_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyList: false,
+      errorGetSurveyList: action.payload
+    };
+  },
+
+  /**
+   * ============================
+   * GET SURVEY
+   * ============================
+   */
+  [types.MERCHANT_GET_SURVEY_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurvey: true,
+      dataSurvey: {
+        id: null,
+        status: '',
+        responsePhoto: []
+      },
+      newSurveyResponse: false,
+      errorGetSurvey: null
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurvey: false,
+      dataSurvey: action.payload
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetSurvey: false,
+      errorGetSurvey: action.payload
+    };
+  },
+
+  /**
+   * ============================
+   * SUBMIT SURVEY
+   * ============================
+   */
+  [types.MERCHANT_SUBMIT_SURVEY_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSubmitSurvey: true,
+      dataSubmitSurvey: {},
+      errorSubmitSurvey: null
+    };
+  },
+  [types.MERCHANT_SUBMIT_SURVEY_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSubmitSurvey: false,
+      dataSubmitSurvey: action.payload,
+      newSurveyResponse: true
+    };
+  },
+  [types.MERCHANT_SUBMIT_SURVEY_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSubmitSurvey: false,
+      errorSubmitSurvey: action.payload
+    };
   }
-}
 });
 /**
  * ===========================
