@@ -7,23 +7,29 @@ import {
   Dimensions,
   Keyboard,
   Text
-} from '../../../library/reactPackage'
+} from '../../../library/reactPackage';
 import {
   connect,
   MaterialIcon,
   Tooltip,
   bindActionCreators
-} from '../../../library/thirdPartyPackage'
+} from '../../../library/thirdPartyPackage';
 import {
   OrderButton,
   StatusBarRedOP50,
   StatusBarBlackOP40,
   ButtonSingleSmall,
   SkeletonType18
-} from '../../../library/component'
-import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../../helpers'
-import { Color } from '../../../config'
+} from '../../../library/component';
+import {
+  GlobalStyle,
+  Fonts,
+  MoneyFormat,
+  NumberFormat
+} from '../../../helpers';
+import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
+import Price from '../../../functions/Price';
 // import PdpPromoListView from './PdpPromoListView';
 
 const { width, height } = Dimensions.get('window');
@@ -57,12 +63,16 @@ class PdpBundleOrderView extends Component {
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
     /** => IF SKU NOT AVAILABLE */
-    if (prevProps.pdp.dataDetailBundlePdp !== this.props.pdp.dataDetailBundlePdp) {
+    if (
+      prevProps.pdp.dataDetailBundlePdp !== this.props.pdp.dataDetailBundlePdp
+    ) {
       if (this.props.pdp.dataDetailBundlePdp !== null) {
         this.setState({
           qtyFromChild: this.props.pdp.dataDetailBundlePdp.minQty
         });
-        if (this.props.pdp.dataDetailBundlePdp.warehouseCatalogues.length === 0) {
+        if (
+          this.props.pdp.dataDetailBundlePdp.warehouseCatalogues.length === 0
+        ) {
           this.toParentFunction({
             type: 'skuNotAvailable'
           });
@@ -107,7 +117,8 @@ class PdpBundleOrderView extends Component {
   /** === BUTTON TITLE ===  */
   buttonTitle() {
     if (
-      this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0].unlimitedStock ||
+      this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0]
+        .unlimitedStock ||
       this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0].stock >
         this.props.pdp.dataDetailBundlePdp.minQty
     ) {
@@ -118,7 +129,8 @@ class PdpBundleOrderView extends Component {
   /** === BUTTON DISABLED ===  */
   buttonDisabled() {
     if (
-      this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0].unlimitedStock ||
+      this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0]
+        .unlimitedStock ||
       this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0].stock >
         this.props.pdp.dataDetailBundlePdp.minQty
     ) {
@@ -129,12 +141,13 @@ class PdpBundleOrderView extends Component {
   /** === CALCUATION TOTAL === */
   calTotal() {
     if (
-      this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0].unlimitedStock ||
+      this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0]
+        .unlimitedStock ||
       this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0].stock >
         this.props.pdp.dataDetailBundlePdp.minQty
     ) {
       return (
-        this.props.pdp.dataDetailBundlePdp.warehousePrice * this.state.qtyFromChild
+        Price(this.props.pdp.dataDetailBundlePdp) * this.state.qtyFromChild
       );
     }
     return 0;
@@ -142,7 +155,8 @@ class PdpBundleOrderView extends Component {
   /** === CHECK TERSISA TEXT === */
   checkTersisa() {
     if (
-      !this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0].unlimitedStock &&
+      !this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0]
+        .unlimitedStock &&
       this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0].stock >
         this.props.pdp.dataDetailBundlePdp.minQty
     ) {
@@ -154,7 +168,9 @@ class PdpBundleOrderView extends Component {
   }
   /** === CHECK INPUT QTY SECTION === */
   checkInputQtySection() {
-    if (!this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0].unlimitedStock) {
+    if (
+      !this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0].unlimitedStock
+    ) {
       if (
         this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0].stock >
         this.props.pdp.dataDetailBundlePdp.minQty
@@ -313,7 +329,8 @@ class PdpBundleOrderView extends Component {
             <Image
               defaultSource={require('../../../assets/images/sinbad_image/sinbadopacity.png')}
               source={{
-                uri: this.props.pdp.dataDetailBundlePdp.catalogueImages[0].imageUrl
+                uri: this.props.pdp.dataDetailBundlePdp.catalogueImages[0]
+                  .imageUrl
               }}
               style={GlobalStyle.image70ContainRadius5}
             />
@@ -326,7 +343,7 @@ class PdpBundleOrderView extends Component {
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={[Fonts.type70, { marginRight: 10 }]}>
-                {MoneyFormat(this.props.pdp.dataDetailBundlePdp.warehousePrice)}
+                {MoneyFormat(Price(this.props.pdp.dataDetailBundlePdp))}
               </Text>
               {this.renderTooltip()}
             </View>
@@ -438,7 +455,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(PdpBundleOrderView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PdpBundleOrderView);
 
 /**
  * ============================
@@ -453,15 +473,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(PdpBundleOrderView);
  * }
  */
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

@@ -7,23 +7,24 @@ import {
   Dimensions,
   Keyboard,
   Text
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   connect,
   MaterialIcon,
   Tooltip,
   bindActionCreators
-} from '../../library/thirdPartyPackage'
+} from '../../library/thirdPartyPackage';
 import {
   OrderButton,
   StatusBarRedOP50,
   StatusBarBlackOP40,
   ButtonSingleSmall,
   SkeletonType18
-} from '../../library/component'
-import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers'
-import { Color } from '../../config'
+} from '../../library/component';
+import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers';
+import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
+import Price from '../../functions/Price';
 // import PdpPromoListView from './PdpPromoListView';
 
 const { width, height } = Dimensions.get('window');
@@ -133,9 +134,7 @@ class PdpOrderView extends Component {
       this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
         this.props.pdp.dataDetailPdp.minQty
     ) {
-      return (
-        this.props.pdp.dataDetailPdp.warehousePrice * this.state.qtyFromChild
-      );
+      return Price(this.props.pdp.dataDetailPdp) * this.state.qtyFromChild;
     }
     return 0;
   }
@@ -326,7 +325,7 @@ class PdpOrderView extends Component {
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={[Fonts.type70, { marginRight: 10 }]}>
-                {MoneyFormat(this.props.pdp.dataDetailPdp.warehousePrice)}
+                {MoneyFormat(Price(this.props.pdp.dataDetailPdp))}
               </Text>
               {this.renderTooltip()}
             </View>
@@ -439,7 +438,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(PdpOrderView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PdpOrderView);
 
 /**
  * ============================
@@ -454,15 +456,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(PdpOrderView);
  * }
  */
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
