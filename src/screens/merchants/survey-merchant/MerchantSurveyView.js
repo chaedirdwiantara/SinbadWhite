@@ -97,6 +97,7 @@ class MerchantSurveyView extends Component {
               NavigationService.navigate('MerchantSurveyDisplayPhotoView', {
                 surveyId: item.id,
                 surveyResponseId: item.surveyResponseId,
+                surveySerialId: item.surveySerialId,
                 surveySteps: item.surveySteps
               })
             }
@@ -136,7 +137,7 @@ class MerchantSurveyView extends Component {
                 {item.surveyName}
               </Text>
               <Text style={[Fonts.type12, { color: masterColor.fontBlack80 }]}>
-                {item.SurveyDesc}
+                {item.SurveyDesc ? item.SurveyDesc : ''}
               </Text>
             </View>
           </TouchableOpacity>
@@ -263,7 +264,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyView);
  * createdBy: dyah
  * createdDate: 19112020
  * updatedBy: dyah
- * updatedDate: 03122020
+ * updatedDate: 16122020
  * updatedFunction:
- * -> update title & description survey list.
+ * -> add surveySerialId to param navigation.
  */

@@ -247,24 +247,29 @@ class MerchantSurveyDisplayPhotoView extends Component {
     let params = {
       surveyId: this.props.navigation.state.params.surveyId,
       storeId: this.props.merchant.selectedMerchant.storeId,
-      storeName: this.props.merchant.selectedMerchant.name
+      storeName: this.props.merchant.selectedMerchant.name,
+      surveySerialId: this.props.navigation.state.params.surveySerialId
     };
     this.state.photo.map(item => {
       if (item.uri) {
-        newPhoto.push(item);
+        newPhoto.push({
+          long: this.props.merchant.selectedMerchant.longitude,
+          lat: this.props.merchant.selectedMerchant.latitude,
+          file: item.uri
+        });
       }
     });
     if (this.state.activeStep === 0) {
       params = {
         ...params,
-        photos: newPhoto.map(item => item.uri),
+        photos: newPhoto,
         status: '',
         surveyStepId: surveySteps.find(item => item.order === 1).surveyStepId
       };
     } else {
       params = {
         ...params,
-        photos: newPhoto.map(item => item.uri),
+        photos: newPhoto,
         status: 'Completed',
         surveyStepId: surveySteps.find(item => item.order === 2).surveyStepId
       };
@@ -796,7 +801,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 03122020
+ * updatedDate: 16122020
  * updatedFunction:
- * -> update ui with ratio 1:1.
+ * -> additional params to submit survey response.
  */
