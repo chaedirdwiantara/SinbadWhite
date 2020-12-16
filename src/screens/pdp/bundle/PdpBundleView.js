@@ -38,6 +38,7 @@ import {
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
 import { Color } from '../../../config';
+import Price from '../../../functions/Price';
 
 // import PdpOrderView from '../PdpOrderView';
 import PdpBundleOrderView from './PdpBundleOrderView';
@@ -206,7 +207,10 @@ class PdpBundleView extends Component {
     this.props.omsAddToCart({
       method: 'add',
       catalogueId: data.data.catalogueId,
-      qty: data.data.qty === 0 ? this.props.pdp.dataDetailPdp.minQty : data.data.qty
+      qty:
+        data.data.qty === 0
+          ? this.props.pdp.dataDetailPdp.minQty
+          : data.data.qty
     });
 
     this.setState({
@@ -330,7 +334,9 @@ class PdpBundleView extends Component {
           disabledAllButton={this.state.showKeyboard}
           item={this.props.pdp.dataDetailPdp}
           onRef={ref => (this.parentFunctionFromOrderButton = ref)}
-          parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(this)}
+          parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
+            this
+          )}
           onFocus={() => this.setState({ buttonAddDisabled: true })}
           onBlur={() => this.setState({ buttonAddDisabled: false })}
         />
@@ -364,7 +370,7 @@ class PdpBundleView extends Component {
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={[Fonts.type70, { marginRight: 10 }]}>
-                {MoneyFormat(this.props.pdp.dataDetailPdp.warehousePrice)}
+                {MoneyFormat(Price(this.props.pdp.dataDetailPdp))}
               </Text>
               {this.renderTooltip()}
             </View>

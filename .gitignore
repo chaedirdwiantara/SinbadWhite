@@ -1,6 +1,7 @@
 # OSX
 #
 .DS_Store
+.vscode/
 
 # Gradle
 /build/
@@ -74,4 +75,5 @@ src/services/apiHost.js
 android/app/google-services.json
 android/app/mykeystore.keystore
 android/app/src/main/res/values/strings.xml
+yarn.lock
 android/fastlane/config/sinbad.json

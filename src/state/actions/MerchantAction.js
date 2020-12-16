@@ -309,3 +309,63 @@ export function merchantGetWarehouseSuccess(data){
 export function merchantGetWarehouseFailed(data){
   return { type: types.MERCHANT_GET_WAREHOUSE_FAILED, payload: data}
 }
+/**
+ * ===========================================
+ * GET SURVEY LIST
+ * ===========================================
+ */
+export function merchantGetSurveyListProcess(data) {
+  return { type: types.MERCHANT_GET_SURVEY_LIST_PROCESS, payload: data };
+}
+export function merchantGetSurveyListSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_SURVEY_LIST_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_GET_SURVEY_LIST_FAILED, payload: data };
+}
+export function merchantGetSurveyListFailed(data) {
+  return { type: types.MERCHANT_GET_SURVEY_LIST_FAILED, payload: data };
+}
+/**
+ * ===========================================
+ * GET SURVEY RESPONSE
+ * ===========================================
+ */
+export function merchantGetSurveyProcess(data) {
+  return { type: types.MERCHANT_GET_SURVEY_PROCESS, payload: data };
+}
+export function merchantGetSurveySuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_SURVEY_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_GET_SURVEY_FAILED, payload: data };
+}
+export function merchantGetSurveyFailed(data) {
+  return { type: types.MERCHANT_GET_SURVEY_FAILED, payload: data };
+}
+/**
+ * ===========================================
+ * SUBMIT SURVEY
+ * ===========================================
+ */
+export function merchantSubmitSurveyProcess(data) {
+  return { type: types.MERCHANT_SUBMIT_SURVEY_PROCESS, payload: data };
+}
+export function merchantSubmitSurveySuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_SUBMIT_SURVEY_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_SUBMIT_SURVEY_FAILED, payload: data };
+}
+export function merchantSubmitSurveyFailed(data) {
+  return { type: types.MERCHANT_SUBMIT_SURVEY_FAILED, payload: data };
+}
