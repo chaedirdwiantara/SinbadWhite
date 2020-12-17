@@ -85,11 +85,12 @@ const styles = StyleSheet.create({
     borderRadius: 11,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 3
+    // margin: 3
   },
   line: {
     height: 6,
-    width: 80,
+    marginHorizontal: 3,
+    width: 100,
     borderRadius: 2,
     justifyContent: 'center',
     alignItems: 'center'
@@ -110,7 +111,7 @@ export default MerchantSurveySteps;
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 23112020
+ * updatedDate: 03122020
  * updatedFunction:
- * -> fix ui step component.
+ * -> update ui step component.
  */

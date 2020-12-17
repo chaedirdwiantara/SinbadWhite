@@ -182,7 +182,7 @@ class OmsCheckoutView extends Component {
         ) {
           this.manageError();
         } else {
-          this.setState({ openModalErrorGlobal: true });
+          this.setState({modalErrorResponse : true});
         }
       }
     }
@@ -625,7 +625,7 @@ class OmsCheckoutView extends Component {
       case 'ERR-APP-NOT-ALLOW':
         this.errorPaymentNotAllowed()
       default:
-        this.errorPaymentTryAgain()
+        // this.errorPaymentTryAgain()
         break;
     }
   }

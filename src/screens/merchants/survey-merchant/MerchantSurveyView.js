@@ -97,6 +97,7 @@ class MerchantSurveyView extends Component {
               NavigationService.navigate('MerchantSurveyDisplayPhotoView', {
                 surveyId: item.id,
                 surveyResponseId: item.surveyResponseId,
+                surveySerialId: item.surveySerialId,
                 surveySteps: item.surveySteps
               })
             }
@@ -133,10 +134,10 @@ class MerchantSurveyView extends Component {
             </View>
             <View>
               <Text style={[Fonts.type12, { color: masterColor.fontBlack100 }]}>
-                Display Toko Photo
+                {item.surveyName}
               </Text>
               <Text style={[Fonts.type12, { color: masterColor.fontBlack80 }]}>
-                Before and after photo of Display Toko
+                {item.SurveyDesc ? item.SurveyDesc : ''}
               </Text>
             </View>
           </TouchableOpacity>
@@ -262,8 +263,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyView);
  * ============================
  * createdBy: dyah
  * createdDate: 19112020
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 16122020
  * updatedFunction:
- * -> Add menu for merchant survey.
+ * -> add surveySerialId to param navigation.
  */
