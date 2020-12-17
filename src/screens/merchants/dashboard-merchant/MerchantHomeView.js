@@ -112,7 +112,8 @@ class MerchantHomeView extends Component {
           goTo: 'checkOut',
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
         }
-      ]
+      ],
+      successSurveyList: false
     };
   }
   /**
@@ -137,18 +138,6 @@ class MerchantHomeView extends Component {
     };
     this.props.merchantGetSurveyListProcess(params);
   };
-  // /** === DID UPDATE === */
-  // componentDidUpdate() {
-  //   /** IF NO SURVEY */
-  //   if (
-  //     _.isEmpty(this.props.merchant.surveyList.payload.data) &&
-  //     this.props.merchant.surveyList.success &&
-  //     !this.state.successSurveyList
-  //   ) {
-  //     this.setState({ successSurveyList: true }, () => this.surveyDone());
-  //     NavigationService.goBack(this.props.navigation.state.key);
-  //   }
-  // }
 
   componentDidMount() {
     /** FOR GET LAST ORDER */
@@ -170,6 +159,7 @@ class MerchantHomeView extends Component {
       this.props.merchant.surveyList.success &&
       !this.state.successSurveyList
     ) {
+      this.setState({ successSurveyList: true }, () => this.SurveyDone());
       if (this.state.task.length === 4) {
         console.log('COMPONENT UPDATE', this.props.merchant);
         // eslint-disable-next-line react/no-did-update-set-state
@@ -195,6 +185,22 @@ class MerchantHomeView extends Component {
             }
           ]
         });
+      }
+    }
+    /** IF ONE OF SURVEY LIST STATUS COMPLETED */
+    if (
+      !_.isEmpty(this.props.merchant.surveyList.payload.data) &&
+      this.props.merchant.surveyList.success &&
+      !this.state.successSurveyList
+    ) {
+      if (
+        !_.isEmpty(
+          this.props.merchant.surveyList.payload.data.filter(
+            item => item.responseStatus === 'completed'
+          )
+        )
+      ) {
+        this.setState({ successSurveyList: true }, () => this.SurveyDone());
       }
     }
     if (
@@ -390,6 +396,14 @@ class MerchantHomeView extends Component {
         break;
     }
   }
+
+  /** CUSTOM NAVIGATE VIEW NO ORDER REASON PAGE */
+  navigateViewNoOrderReasonPage = data => {
+    NavigationService.navigate('MerchantNoOrderReason', {
+      noOrderReason: data
+    });
+  };
+
   /** CHECK CHECK LIST TASK */
   checkCheckListTask(activity) {
     if (this.props.merchant.dataGetLogAllActivity !== null) {
@@ -401,15 +415,24 @@ class MerchantHomeView extends Component {
       if (activity === ACTIVITY_JOURNEY_PLAN_ORDER) {
         let getOrderStatus = this.props.merchant.dataGetLogAllActivity.filter(
           function(rows) {
-            return rows.activity === ACTIVITY_JOURNEY_PLAN_CHECK_OUT;
+            return rows.activity === ACTIVITY_JOURNEY_PLAN_ORDER;
           }
         );
-        if (getOrderStatus.length > 0) {
-          let newOrderStatus = { ...getOrderStatus[0] };
-          newOrderStatus.activity = ACTIVITY_JOURNEY_PLAN_ORDER;
-          return newOrderStatus;
+        if (getOrderStatus.length < 1) {
+          let getNoOrder = this.props.merchant.dataGetLogAllActivity.filter(
+            function(rows) {
+              return rows.activity === ACTIVITY_JOURNEY_PLAN_CHECK_OUT;
+            }
+          );
+          if (getNoOrder.length > 0) {
+            let newOrderStatus = { ...getNoOrder[0] };
+            newOrderStatus.activity = ACTIVITY_JOURNEY_PLAN_ORDER;
+            return newOrderStatus;
+          } else {
+            return false;
+          }
         } else {
-          return false;
+          return getOrderStatus[0];
         }
       }
       if (checkActivity.length > 0) {
@@ -693,7 +716,7 @@ class MerchantHomeView extends Component {
                       taskList.noOrderNotes ? (
                         <TouchableOpacity
                           onPress={() => {
-                            alert('Reason: ' + taskList.noOrderNotes);
+                            this.navigateViewNoOrderReasonPage(taskList);
                           }}
                           style={{
                             flexDirection: 'row',
@@ -725,7 +748,7 @@ class MerchantHomeView extends Component {
                             marginTop: -5
                           }}
                         >
-                          <Text style={Fonts.type100}>Completed</Text>
+                          <Text style={Fonts.type51}>Completed</Text>
                           <MaterialIcon
                             style={{
                               marginTop: 2,
@@ -737,6 +760,30 @@ class MerchantHomeView extends Component {
                           />
                         </TouchableOpacity>
                       )
+                    ) : taskList.activity ===
+                      ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          // this.goTo(item.goTo);
+                        }}
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          marginTop: -5
+                        }}
+                      >
+                        <Text style={Fonts.type51}>Completed</Text>
+                        <MaterialIcon
+                          style={{
+                            marginTop: 2,
+                            padding: 0
+                          }}
+                          name="chevron-right"
+                          color={Color.fontGreen50}
+                          size={20}
+                        />
+                      </TouchableOpacity>
                     ) : (
                       <Button
                         onPress={() => {

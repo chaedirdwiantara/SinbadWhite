@@ -8,21 +8,21 @@ import {
   TouchableOpacity,
   Keyboard,
   Text
-} from '../../../library/reactPackage'
+} from '../../../library/reactPackage';
 import {
   bindActionCreators,
   MaterialIcon,
   connect
-} from '../../../library/thirdPartyPackage'
+} from '../../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
   ButtonSingle,
   LoadingPage,
   InputType3,
   ToastType1
-} from '../../../library/component'
-import { GlobalStyle, Fonts } from '../../../helpers'
-import { Color } from '../../../config'
+} from '../../../library/component';
+import { GlobalStyle, Fonts } from '../../../helpers';
+import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
 
@@ -33,7 +33,8 @@ class MerchantNoOrderReason extends Component {
       selectedReason: '',
       reason: '',
       showToast: false,
-      notifToast: ''
+      notifToast: '',
+      viewOnly: false
     };
   }
   /**
@@ -42,6 +43,7 @@ class MerchantNoOrderReason extends Component {
    * =======================
    */
   componentDidMount() {
+    this.prevReason();
     this.props.merchantGetNoOrderReasonProcess();
   }
   /** DID UPDATE */
@@ -57,6 +59,7 @@ class MerchantNoOrderReason extends Component {
           this.props.merchantGetLogAllActivityProcess(
             this.props.merchant.selectedMerchant.journeyPlanSaleId
           );
+          // eslint-disable-next-line react/no-did-update-set-state
           this.setState({
             showToast: true,
             notifToast: 'Keluar Toko Berhasil'
@@ -69,6 +72,23 @@ class MerchantNoOrderReason extends Component {
       }
     }
   }
+
+  /** INITIAL PREVIOUS REASON */
+  prevReason = () => {
+    try {
+      let payload = this.props.navigation.state.params.noOrderReason;
+      if (payload) {
+        this.setState({
+          viewOnly: true,
+          selectedReason: payload.noOrderReasonId,
+          reason: payload.noOrderNotes
+        });
+      }
+    } catch {
+      console.log('do noting');
+    }
+  };
+
   /** REASON SELECT */
   selectReason(id) {
     if (id === this.state.selectedReason) {
@@ -95,7 +115,13 @@ class MerchantNoOrderReason extends Component {
   /** RENDER CONTENT ITEM */
   renderContentItem(item, index) {
     return (
-      <TouchableOpacity key={index} onPress={() => this.selectReason(item.id)}>
+      <TouchableOpacity
+        key={index}
+        disabled={this.state.viewOnly}
+        onPress={() => {
+          this.selectReason(item.id);
+        }}
+      >
         <View style={styles.boxContentItem}>
           <View style={{ flex: 1 }}>
             <Text style={Fonts.type8}>{item.reason}</Text>
@@ -128,6 +154,7 @@ class MerchantNoOrderReason extends Component {
       <View style={{ marginTop: 20 }}>
         <InputType3
           title={'*Alasan'}
+          editable={!this.state.viewOnly}
           value={this.state.reason}
           placeholder={'Masukan alasan Anda'}
           keyboardType={'default'}
@@ -146,7 +173,7 @@ class MerchantNoOrderReason extends Component {
           {this.renderContent()}
           {this.renderContentReason()}
         </ScrollView>
-        {this.renderButton()}
+        {this.state.viewOnly ? null : this.renderButton()}
       </View>
     );
   }
@@ -234,17 +261,17 @@ export default connect(
 )(MerchantNoOrderReason);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Change key
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Change key
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ */
