@@ -270,7 +270,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       params = {
         ...params,
         photos: newPhoto,
-        status: 'Completed',
+        status: 'completed',
         surveyStepId: surveySteps.find(item => item.order === 2).surveyStepId
       };
     }
