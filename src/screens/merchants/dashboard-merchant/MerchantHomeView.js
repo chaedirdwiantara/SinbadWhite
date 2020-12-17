@@ -396,6 +396,14 @@ class MerchantHomeView extends Component {
         break;
     }
   }
+
+  /** CUSTOM NAVIGATE VIEW NO ORDER REASON PAGE */
+  navigateViewNoOrderReasonPage = data => {
+    NavigationService.navigate('MerchantNoOrderReason', {
+      noOrderReason: data
+    });
+  };
+
   /** CHECK CHECK LIST TASK */
   checkCheckListTask(activity) {
     if (this.props.merchant.dataGetLogAllActivity !== null) {
@@ -708,7 +716,7 @@ class MerchantHomeView extends Component {
                       taskList.noOrderNotes ? (
                         <TouchableOpacity
                           onPress={() => {
-                            alert('Reason: ' + taskList.noOrderNotes);
+                            this.navigateViewNoOrderReasonPage(taskList);
                           }}
                           style={{
                             flexDirection: 'row',
