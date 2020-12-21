@@ -9,7 +9,7 @@ import {
 } from '../../../library/reactPackage';
 import {
   ButtonSingleSmall,
-  ModalBottomType3
+  ModalBottomType5
 } from '../../../library/component';
 import { Fonts } from '../../../helpers';
 
@@ -64,7 +64,7 @@ class ModalBottomSubmit extends Component {
   /** === RENDER MAIN === */
   render() {
     return (
-      <ModalBottomType3
+      <ModalBottomType5
         open={this.props.open}
         title={this.props.title}
         content={this.renderContent()}
@@ -107,7 +107,7 @@ export default ModalBottomSubmit;
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 02122020
+ * updatedDate: 18122020
  * updatedFunction:
- * -> update loading & disable button.
+ * -> change modal submit component from type3 to type5.
  */
