@@ -51,6 +51,10 @@ class MerchantSurveyView extends Component {
   }
   /** === DID MOUNT === */
   componentDidMount() {
+    console.log(
+      'Flag nya disini dyah ambil object readOnly',
+      this.props.navigation.state.params
+    );
     const params = {
       storeId: this.props.merchant.selectedMerchant.storeId,
       page: 1,
