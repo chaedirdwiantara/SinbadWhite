@@ -161,8 +161,6 @@ class MerchantHomeView extends Component {
     ) {
       this.setState({ successSurveyList: true }, () => this.SurveyDone());
       if (this.state.task.length === 4) {
-        console.log('COMPONENT UPDATE', this.props.merchant);
-        // eslint-disable-next-line react/no-did-update-set-state
         this.setState({
           task: [
             {
@@ -401,6 +399,13 @@ class MerchantHomeView extends Component {
   navigateViewNoOrderReasonPage = data => {
     NavigationService.navigate('MerchantNoOrderReason', {
       noOrderReason: data
+    });
+  };
+
+  navigateSurveyReadOnly = data => {
+    NavigationService.navigate('MerchantSurveyView', {
+      readOnly: true,
+      data
     });
   };
 
@@ -653,7 +658,6 @@ class MerchantHomeView extends Component {
           </View>
           {this.state.task.map((item, index) => {
             const taskList = this.checkCheckListTask(item.activity);
-            console.log('taskList', taskList);
             return (
               <View
                 key={index}
@@ -764,7 +768,10 @@ class MerchantHomeView extends Component {
                       ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY ? (
                       <TouchableOpacity
                         onPress={() => {
-                          // this.goTo(item.goTo);
+                          this.navigateSurveyReadOnly({
+                            taskList,
+                            item
+                          });
                         }}
                         style={{
                           flexDirection: 'row',
