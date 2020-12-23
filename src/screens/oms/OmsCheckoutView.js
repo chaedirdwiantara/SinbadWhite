@@ -1603,7 +1603,10 @@ class OmsCheckoutView extends Component {
     return this.state.openModalSKUNotAvailable ? (
       <ModalBottomSkuNotAvailable 
         open={this.state.openModalSKUNotAvailable}
-        onPress={() => this.setState({ openModalSKUNotAvailable: false })}
+        onPress={() => {
+          this.setState({ openModalSKUNotAvailable: false })
+          this.backToCartItemView()
+          }}
       />
     ) : (
       <View />
