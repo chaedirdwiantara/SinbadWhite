@@ -204,7 +204,7 @@ class MerchantHomeView extends Component {
               item => item.activity === 'toko_survey'
             )
           ) {
-            this.setState({ successSurveyList: true }, () => this.surveyDone());
+            this.setState({ successSurveyList: true }, () => this.SurveyDone());
           }
         }
       }
