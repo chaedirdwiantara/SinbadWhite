@@ -671,7 +671,7 @@ class OmsCheckoutView extends Component {
   }
   // === ERROR SKU NOT AVAILABLE ===
   errorSKUNotAvailable() {
-    this.setState({ openModalSkuNotAvailable: true })
+    this.setState({ openModalSKUNotAvailable: true })
   }
 
   /**ERROR PAYMENT TRY AGAIN */
@@ -1599,7 +1599,7 @@ class OmsCheckoutView extends Component {
   }
 
   /** RENDER MODAL SKU NOT AVAILABLE */
-  renderModalSKUNotAvailble() {
+  renderModalSKUNotAvailable() {
     return this.state.openModalSKUNotAvailable ? (
       <ModalBottomSkuNotAvailable 
         open={this.state.openModalSKUNotAvailable}
@@ -1661,7 +1661,7 @@ class OmsCheckoutView extends Component {
         {this.renderWarningMinimumQty()}
         {this.renderErrorResponse()}
         {this.renderModalPaymentNotAllowed()}
-        {this.renderModalSKUNotAvailble()}
+        {this.renderModalSKUNotAvailable()}
         {this.renderModalErrorPaymentTryAgain()}
       </View>
     );
