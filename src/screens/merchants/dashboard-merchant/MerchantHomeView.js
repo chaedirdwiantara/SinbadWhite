@@ -148,6 +148,7 @@ class MerchantHomeView extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { surveyList } = this.props.merchant;
     /** IF NO SURVEY */
     if (
       _.isEmpty(this.props.merchant.surveyList.payload.data) &&
@@ -217,20 +218,27 @@ class MerchantHomeView extends Component {
         });
       }
     }
-    /** IF ONE OF SURVEY LIST STATUS COMPLETED */
+    /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
     if (
-      !_.isEmpty(this.props.merchant.surveyList.payload.data) &&
-      this.props.merchant.surveyList.success &&
+      !_.isEmpty(surveyList.payload.data) &&
+      surveyList.success &&
       !this.state.successSurveyList
     ) {
       if (
-        !_.isEmpty(
-          this.props.merchant.surveyList.payload.data.filter(
-            item => item.responseStatus === 'completed'
-          )
-        )
+        surveyList.payload.data.length ===
+        surveyList.payload.data.filter(
+          item => item.responseStatus === 'completed'
+        ).length
       ) {
-        this.setState({ successSurveyList: true }, () => this.SurveyDone());
+        if (this.props.merchant.dataGetLogAllActivity) {
+          if (
+            !this.props.merchant.dataGetLogAllActivity.find(
+              item => item.activity === 'toko_survey'
+            )
+          ) {
+            this.setState({ successSurveyList: true }, () => this.SurveyDone());
+          }
+        }
       }
     }
     if (
@@ -398,7 +406,7 @@ class MerchantHomeView extends Component {
             item => item.activity === 'check_in'
           )
         ) {
-          NavigationService.navigate('MerchantSurveyView');
+          NavigationService.navigate('MerchantSurveyView', { readOnly: false });
         }
         break;
       default:

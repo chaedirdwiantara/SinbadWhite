@@ -75,10 +75,14 @@ class MerchantSurveyDisplayPhotoView extends Component {
   componentDidMount() {
     this.navigationFunction();
     const {
+      readOnly,
       surveyResponseId,
       surveySteps
     } = this.props.navigation.state.params;
     let newPhoto = [];
+    if (readOnly && !surveyResponseId) {
+      return this.setState({ displayPhoto: true });
+    }
     if (surveyResponseId) {
       this.props.merchantGetSurveyProcess(surveyResponseId);
     } else {
@@ -109,6 +113,10 @@ class MerchantSurveyDisplayPhotoView extends Component {
       const surveyResponseId = this.props.merchant.dataSubmitSurvey.payload.id;
       this.props.merchantGetSurveyProcess(surveyResponseId);
     }
+    /**CHECK NAVIGATION FUNCTION */
+    if (!this.props.navigation.state.params.goBackFunction) {
+      this.navigationFunction();
+    }
   }
   /** === CHECK RESPONSE PHOTO === */
   checkResponsePhoto = () => {
@@ -135,7 +143,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
             modalCompleted: this.state.activeStep === 0 ? false : true,
             activeStep: 2
           },
-          () => this.surveyDone()
+          // () => this.surveyDone()
         );
       } else {
         this.setState({
@@ -330,7 +338,11 @@ class MerchantSurveyDisplayPhotoView extends Component {
       headerLeft: () => (
         <TouchableOpacity
           style={{ marginLeft: 16 }}
-          onPress={() => state.params.goBackFunction()}
+          onPress={() => {
+            if (state.params.goBackFunction) {
+              return state.params.goBackFunction();
+            }
+          }}
         >
           <MaterialIcon color={Color.fontWhite} name={'arrow-back'} size={24} />
         </TouchableOpacity>
@@ -505,12 +517,14 @@ class MerchantSurveyDisplayPhotoView extends Component {
   }
   /** === RENDER BUTTON === */
   renderButton() {
+    const { readOnly } = this.props.navigation.state.params;
     return (
       <View style={styles.buttonBottom}>
         {this.state.displayPhoto && _.isEmpty(this.state.photosDisplayAfter) ? (
           <ButtonSingle
             title="Continue"
             borderRadius={4}
+            disabled={readOnly}
             onPress={() => this.continueStep()}
           />
         ) : null}
