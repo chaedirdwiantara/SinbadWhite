@@ -331,8 +331,11 @@ class MerchantSurveyDisplayPhotoView extends Component {
    * ========================
    */
   static navigationOptions = ({ navigation }) => {
-    let storeName = 'Display Toko Photo';
     const { state } = navigation;
+    let surveyName = '';
+    if (state.params.surveyName) {
+      surveyName = state.params.surveyName;
+    }
 
     return {
       headerLeft: () => (
@@ -349,7 +352,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       ),
       headerTitle: () => (
         <View>
-          <Text style={Fonts.type35}>{storeName}</Text>
+          <Text style={Fonts.type35}>{surveyName}</Text>
         </View>
       )
     };
@@ -359,18 +362,24 @@ class MerchantSurveyDisplayPhotoView extends Component {
     return (
       <View style={[styles.cardContainer, { paddingBottom: 16 }]}>
         <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
-          <MerchantSurveySteps active={this.state.activeStep} />
+          <MerchantSurveySteps
+            active={this.state.activeStep}
+            surveySteps={this.props.navigation.state.params.surveySteps}
+          />
         </View>
       </View>
     );
   }
   /** === RENDER DISPLAY PHOTO === */
   renderDisplayPhoto() {
+    const { surveySteps } = this.props.navigation.state.params;
     return (
       <View style={[styles.cardContainer]}>
         {this.state.photosDisplayBefore.length !== 0 ? (
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
-            <Text>Photos Display Before</Text>
+            <Text>{`Photos ${
+              surveySteps.find(item => item.order === 1).title
+            }`}</Text>
             <FlatList
               data={this.state.photosDisplayBefore}
               numColumns={5}
@@ -404,7 +413,9 @@ class MerchantSurveyDisplayPhotoView extends Component {
         <View style={{ height: 16 }} />
         {this.state.photosDisplayAfter.length !== 0 ? (
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
-            <Text>Photos Display After</Text>
+            <Text>{`Photos ${
+              surveySteps.find(item => item.order === 2).title
+            }`}</Text>
             <FlatList
               data={this.state.photosDisplayAfter}
               numColumns={5}
@@ -642,13 +653,18 @@ class MerchantSurveyDisplayPhotoView extends Component {
   }
   /** === RENDER MODAL NEXT PROCESS (MODAL SUBMIT)=== */
   renderModalSubmit() {
+    const { surveySteps } = this.props.navigation.state.params;
+    let sectionName = '';
+    if (this.state.activeStep === 0) {
+      sectionName = surveySteps.find(item => item.order === 1).title;
+    } else {
+      sectionName = surveySteps.find(item => item.order === 2).title;
+    }
     return (
       <ModalBottomSubmit
         open={this.state.modalSubmit}
         loading={this.props.merchant.loadingSubmitSurvey}
-        title={`Submit the ${
-          this.state.activeStep === 0 ? 'Before' : 'After'
-        } Photo`}
+        title={`Submit the "${sectionName}"`}
         data={this.state.photo}
         onClose={() => this.setState({ modalSubmit: false })}
         onSubmit={this.submitPhoto.bind(this)}

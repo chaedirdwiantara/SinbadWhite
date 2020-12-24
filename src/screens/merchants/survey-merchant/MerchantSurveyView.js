@@ -129,6 +129,7 @@ class MerchantSurveyView extends Component {
               NavigationService.navigate('MerchantSurveyDisplayPhotoView', {
                 readOnly,
                 surveyId: item.id,
+                surveyName: item.surveyName,
                 surveyResponseId: item.surveyResponseId,
                 surveySerialId: item.surveySerialId,
                 surveySteps: item.surveySteps
