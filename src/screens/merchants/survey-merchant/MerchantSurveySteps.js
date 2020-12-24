@@ -8,10 +8,22 @@ import {
 } from '../../../library/reactPackage';
 import { Fonts } from '../../../helpers';
 import { Color } from '../../../config';
-
-const steps = ['Before Display', 'After Display', 'Completed'];
+import _ from 'lodash';
 
 class MerchantSurveySteps extends Component {
+  state = {
+    steps: []
+  };
+
+  componentDidMount() {
+    let steps = [];
+    _.orderBy(this.props.surveySteps, ['order'], ['asc']).map(item => {
+      steps.push(item.title);
+    });
+    steps.push('Completed');
+    this.setState({ steps });
+  }
+
   /** === RENDER MAIN === */
   render() {
     return (
@@ -20,7 +32,7 @@ class MerchantSurveySteps extends Component {
           horizontal={true}
           scrollEnabled={false}
           showsHorizontalScrollIndicator={false}
-          data={steps}
+          data={this.state.steps}
           contentContainerStyle={styles.container}
           keyExtractor={(data, index) => index.toString()}
           renderItem={({ item, index }) => (
@@ -39,7 +51,7 @@ class MerchantSurveySteps extends Component {
                 >
                   <Text style={Fonts.type2}>{index + 1}</Text>
                 </View>
-                {index !== steps.length - 1 && (
+                {index !== this.state.steps.length - 1 && (
                   <View
                     style={[
                       styles.line,
@@ -57,7 +69,7 @@ class MerchantSurveySteps extends Component {
           )}
         />
         <View style={styles.nameContainer}>
-          {steps.map((item, index) => (
+          {this.state.steps.map((item, index) => (
             <View key={index}>
               <Text style={[Fonts.type57]}>{item}</Text>
             </View>
