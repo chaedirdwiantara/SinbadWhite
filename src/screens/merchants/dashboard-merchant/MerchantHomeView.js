@@ -149,6 +149,7 @@ class MerchantHomeView extends Component {
 
   componentDidUpdate(prevProps) {
     const { surveyList } = this.props.merchant;
+    console.log('SURVEY LIST', surveyList, this.state.successSurveyList);
     /** IF NO SURVEY */
     if (
       _.isEmpty(this.props.merchant.surveyList.payload.data) &&
@@ -182,11 +183,7 @@ class MerchantHomeView extends Component {
       }
     }
     /** IF SURVEY LIST EXIST */
-    if (
-      !_.isEmpty(this.props.merchant.surveyList.payload.data) &&
-      this.props.merchant.surveyList.success &&
-      this.state.successSurveyList
-    ) {
+    if (!_.isEmpty(surveyList.payload.data) && surveyList.success) {
       if (this.state.task.length === 3) {
         this.setState({
           task: [
@@ -248,7 +245,6 @@ class MerchantHomeView extends Component {
       if (this.props.merchant.dataPostActivity !== null) {
         /** IF CHECK OUT SUCCESS */
         if (this.props.merchant.dataPostActivity.activity === 'check_out') {
-          // eslint-disable-next-line react/no-did-update-set-state
           this.setState({
             openModalCheckout: false,
             loadingPostForCheckoutNoOrder: false,
@@ -267,7 +263,6 @@ class MerchantHomeView extends Component {
           /** IF CHECK OUT SUCCESS */
           this.props.merchant.dataPostActivity.activity === 'check_in'
         ) {
-          // eslint-disable-next-line react/no-did-update-set-state
           this.setState({
             openModalCheckout: false,
             showToast: true,
@@ -296,7 +291,6 @@ class MerchantHomeView extends Component {
           }
         } else {
           if (this.state.checkNoOrder) {
-            // eslint-disable-next-line react/no-did-update-set-state
             this.setState({
               openModalCheckout: false,
               checkNoOrder: false,
