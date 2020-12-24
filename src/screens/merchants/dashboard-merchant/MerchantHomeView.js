@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-update-set-state */
 import {
   React,
   Component,
@@ -101,12 +102,6 @@ class MerchantHomeView extends Component {
           activity: ACTIVITY_JOURNEY_PLAN_ORDER
         },
         {
-          name: 'Toko Survey',
-          title: 'Fill',
-          goTo: 'survey',
-          activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-        },
-        {
           name: 'Check-out Toko',
           title: 'Check-out',
           goTo: 'checkOut',
@@ -175,6 +170,43 @@ class MerchantHomeView extends Component {
               title: 'Order',
               goTo: 'pdp',
               activity: ACTIVITY_JOURNEY_PLAN_ORDER
+            },
+            {
+              name: 'Check-out Toko',
+              title: 'Check-out',
+              goTo: 'checkOut',
+              activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+            }
+          ]
+        });
+      }
+    }
+    /** IF SURVEY LIST EXIST */
+    if (
+      !_.isEmpty(this.props.merchant.surveyList.payload.data) &&
+      this.props.merchant.surveyList.success &&
+      this.state.successSurveyList
+    ) {
+      if (this.state.task.length === 3) {
+        this.setState({
+          task: [
+            {
+              name: 'Check-in Toko',
+              title: 'Check-in',
+              goTo: 'checkIn',
+              activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+            },
+            {
+              name: 'Order',
+              title: 'Order',
+              goTo: 'pdp',
+              activity: ACTIVITY_JOURNEY_PLAN_ORDER
+            },
+            {
+              name: 'Toko Survey',
+              title: 'Fill',
+              goTo: 'survey',
+              activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
             },
             {
               name: 'Check-out Toko',
@@ -714,7 +746,6 @@ class MerchantHomeView extends Component {
                   {taskList ? (
                     taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN ||
                     taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_OUT ? (
-                      // taskList.
                       <Text style={Fonts.type107}>
                         {taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN
                           ? `Check In ${moment(taskList.createdAt).format(
