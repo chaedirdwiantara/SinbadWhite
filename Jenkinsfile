@@ -164,26 +164,25 @@ pipeline {
                 }
             }
         }
-        stage('Deployment') {
-            parallel {
-                agent {
-                    docker { 
-                            image "${SINBAD_IMAGE_ANDROID}"
-                        }
+        stage('Build APK'){
+            when { expression { params.CI_IS_PLAYSTORE == "No" && params.CI_IS_CODEPUSH == "No" } }
+            agent {
+                docker { 
+                    image "${SINBAD_IMAGE_ANDROID}"
                 }
-                stage("Upload to S3") {
-                    when { expression { params.CI_IS_PLAYSTORE == "No" && params.CI_IS_CODEPUSH == "No" } }
-                    steps {
-                        sh '''
-                            cd android && \
-                            fastlane apk
-                        '''
-                        sh "tar czf ${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz -C ${WORKSPACE}/android/app/build/outputs/apk/release/ ."
-                        withAWS(credentials: "${AWS_CREDENTIAL}") {
-                            s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz")
-                            s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz")
-                        }
-                        slackSend color: '#FFFFFF', channel: "#download-apps-production", message: """
+            }
+            steps {
+                script{
+                    sh '''
+                        cd android && \
+                        fastlane apk
+                    '''
+                    sh "tar czf ${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz -C ${WORKSPACE}/android/app/build/outputs/apk/release/ ."
+                    withAWS(credentials: "${AWS_CREDENTIAL}") {
+                        s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz")
+                        s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz")
+                    }
+                    slackSend color: '#FFFFFF', channel: "#download-apps-production", message: """
 Hi Sailors
 We have new APK Version
 Application: ${SINBAD_REPO}
@@ -194,10 +193,13 @@ You can download this application in here
 ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz
 Or latest application for environment ${SINBAD_ENV} in here
 ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
-            """
-                        sh "rm ${SINBAD_REPO}*"
-                    }
+        """
+                    sh "rm ${SINBAD_REPO}*"
                 }
+            }
+        }
+        stage('Deployment') {
+            parallel {
                 stage("Play Store") {
                     when { expression { params.CI_IS_PLAYSTORE == "Yes" } }
                     steps {
