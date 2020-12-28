@@ -274,15 +274,16 @@ class MerchantSurveyDisplayPhotoView extends Component {
         status: '',
         surveyStepId: surveySteps.find(item => item.order === 1).surveyStepId
       };
+      this.props.merchantSubmitSurveyProcess(params);
     } else {
       params = {
-        ...params,
         photos: newPhoto,
         status: 'completed',
         surveyStepId: surveySteps.find(item => item.order === 2).surveyStepId
       };
+      const surveyResponseId = this.props.merchant.dataSubmitSurvey.payload.id;
+      this.props.merchantUpdateSurveyProcess({ params, surveyResponseId });
     }
-    this.props.merchantSubmitSurveyProcess(params);
   };
   /** === CONTINUE STEP === */
   continueStep = () => {
