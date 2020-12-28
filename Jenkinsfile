@@ -161,7 +161,7 @@ pipeline {
             steps {
                 script {
                     sh "aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
-                    sh "dockuer pull ${SINBAD_IMAGE_ANDROID}"
+                    sh "docker pull ${SINBAD_IMAGE_ANDROID}"
                 }
             }
         }
