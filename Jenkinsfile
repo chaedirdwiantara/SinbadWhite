@@ -43,6 +43,7 @@ pipeline {
         SINBAD_ENV = "${env.JOB_BASE_NAME}"
         WOKRSPACE = "${env.WORKSPACE}"
         SINBAD_URI_DOWNLOAD = "http://app-download.sinbad.web.id"
+        ECR_REGISTRY = '815128449618.dkr.ecr.ap-southeast-1.amazonaws.com'
         SINBAD_IMAGE_ANDROID = "815128449618.dkr.ecr.ap-southeast-1.amazonaws.com/sinbad-react-native/android:latest"
     }
     stages {
