@@ -43,16 +43,7 @@ pipeline {
         SINBAD_ENV = "${env.JOB_BASE_NAME}"
         WOKRSPACE = "${env.WORKSPACE}"
         SINBAD_URI_DOWNLOAD = "http://app-download.sinbad.web.id"
-
-        // Andorid Lib
-        SDK_URL = "https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip"
-        ANDROID_HOME = "${WORKSPACE}/android-sdk"
-        ANDROID_VERSION = "29"
-        ANDROID_BUILD_TOOLS_VERSION = "29.0.2"
-        GRADLE_HOME = "${WORKSPACE}/android-gradle"
-        GRADLE_VERSION = "6.6.1"
-        MAVEN_HOME = "${WORKSPACE}/android-maven"
-        MAVEN_VERSION = "3.6.3"
+        SINBAD_IMAGE_ANDROID = "815128449618.dkr.ecr.ap-southeast-1.amazonaws.com/sinbad-react-native/android:latest"
     }
     stages {
         stage('Checkout') {
@@ -105,122 +96,81 @@ pipeline {
                 }
             }
         }
-        stage('Install Dependency') {
-            parallel {
-                stage('Install Android SDK') {
-                    steps {
-                        sh "if [ -d ${ANDROID_HOME} ]; then rm -rf ${ANDROID_HOME}; fi && mkdir ${ANDROID_HOME}"
+        stage('Change Environment') {
+            steps {
+                script {
+                    if(params.CI_IS_PLAYSTORE == "Yes"){
                         sh '''
-                            cd $ANDROID_HOME && \
-                            curl -sL -o android.zip $SDK_URL && unzip android.zip && rm android.zip && \
-                            mkdir -p cmdline-tools ; mv tools cmdline-tools && \
-                            yes | $ANDROID_HOME/cmdline-tools/tools/bin/sdkmanager --licenses
+                            find android/ -type f |
+                            while read file
+                            do
+                                sed -i 's/agentdevelopment/agent/g' $file
+                            done
                         '''
-                        sh '''
-                            $ANDROID_HOME/cmdline-tools/tools/bin/sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION" \
-                            "platforms;android-$ANDROID_VERSION" \
-                            "platform-tools"
-                        '''
-                    }
-                }
-                stage('Install Gradle & Maven') {
-                    steps {
-                        sh "if [ -d ${GRADLE_HOME} ]; then rm -rf ${GRADLE_HOME}; fi && mkdir ${GRADLE_HOME}"
-                        sh '''
-                            cd $GRADLE_HOME && \
-                            curl -sL -o gradle.zip https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip && \
-                            unzip -d $GRADLE_HOME gradle.zip && rm gradle.zip
-                        '''
-
-                        sh "if [ -d ${MAVEN_HOME} ]; then rm -rf ${MAVEN_HOME}; fi && mkdir ${MAVEN_HOME}"
-                        sh '''
-                            cd $MAVEN_HOME && \
-                            curl -sL -o maven.zip https://www-us.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.zip && \
-                            unzip -d $MAVEN_HOME maven.zip && rm maven.zip
-                        '''
-                    }
-                }
-                stage('Install Yarn & React') {
-                    steps {
-                        sh "yarn global add react-native-cli create-react-native-app expo-cli"
-                        sh "npm install"
-                        sh "npx jetify"
-                    }
-                }
-                stage('Change Environment') {
-                    steps {
-                        script {
-                            if(params.CI_IS_PLAYSTORE == "Yes"){
+                    }else{
+                        if(SINBAD_ENV != 'development') {
+                            if(SINBAD_ENV == 'staging') {
+                                sh '''
+                                    find android/ -type f |
+                                    while read file
+                                    do
+                                        sed -i 's/agentdevelopment/agentstaging/g' $file
+                                    done
+                                '''
+                            } else if(SINBAD_ENV == 'sandbox') {
+                                sh '''
+                                    find android/ -type f |
+                                    while read file
+                                    do
+                                        sed -i 's/agentdevelopment/agentsandbox/g' $file
+                                        sed -i 's/ic_launcher_dev/ic_launcher_stg/g' $file
+                                        sed -i 's/ic_launcher_round_dev/ic_launcher_round_stg/g' $file
+                                    done
+                                '''
+                            } else if(SINBAD_ENV == 'demo') {
+                                sh '''
+                                    find android/ -type f |
+                                    while read file
+                                    do
+                                        sed -i 's/agentdevelopment/agentdemo/g' $file
+                                        sed -i 's/ic_launcher_dev/ic_launcher_stg/g' $file
+                                        sed -i 's/ic_launcher_round_dev/ic_launcher_round_stg/g' $file
+                                    done
+                                '''
+                            } else if(SINBAD_ENV == 'production') {
                                 sh '''
                                     find android/ -type f |
                                     while read file
                                     do
                                         sed -i 's/agentdevelopment/agent/g' $file
+                                        sed -i 's/ic_launcher_dev/ic_launcher/g' $file
+                                        sed -i 's/ic_launcher_round_dev/ic_launcher_round/g' $file
                                     done
                                 '''
-                            }else{
-                                if(SINBAD_ENV != 'development') {
-                                    if(SINBAD_ENV == 'staging') {
-                                        sh '''
-                                            find android/ -type f |
-                                            while read file
-                                            do
-                                                sed -i 's/agentdevelopment/agentstaging/g' $file
-                                            done
-                                        '''
-                                    } else if(SINBAD_ENV == 'sandbox') {
-                                        sh '''
-                                            find android/ -type f |
-                                            while read file
-                                            do
-                                                sed -i 's/agentdevelopment/agentsandbox/g' $file
-                                                sed -i 's/ic_launcher_dev/ic_launcher_stg/g' $file
-                                                sed -i 's/ic_launcher_round_dev/ic_launcher_round_stg/g' $file
-                                            done
-                                        '''
-                                    } else if(SINBAD_ENV == 'demo') {
-                                        sh '''
-                                            find android/ -type f |
-                                            while read file
-                                            do
-                                                sed -i 's/agentdevelopment/agentdemo/g' $file
-                                                sed -i 's/ic_launcher_dev/ic_launcher_stg/g' $file
-                                                sed -i 's/ic_launcher_round_dev/ic_launcher_round_stg/g' $file
-                                            done
-                                        '''
-                                    } else if(SINBAD_ENV == 'production') {
-                                        sh '''
-                                            find android/ -type f |
-                                            while read file
-                                            do
-                                                sed -i 's/agentdevelopment/agent/g' $file
-                                                sed -i 's/ic_launcher_dev/ic_launcher/g' $file
-                                                sed -i 's/ic_launcher_round_dev/ic_launcher_round/g' $file
-                                            done
-                                        '''
-                                    }
-                                    
-                                }
                             }
-                            sh "find android -type f -name '.!*!*' -delete"
+                            
                         }
                     }
+                    sh "find android -type f -name '.!*!*' -delete"
                 }
             }
-
         }
-        stage('Export Path') {
+        stage('Pull Image') {
+            when { expression { params.CI_IS_PLAYSTORE == "No" && params.CI_IS_CODEPUSH == "No" } }
             steps {
-                sh "export PATH=$PATH:${ANDROID_HOME}/emulator"
-                sh "export PATH=$PATH:${ANDROID_HOME}/tools"
-                sh "export PATH=$PATH:${ANDROID_HOME}/tools/bin"
-                sh "export PATH=$PATH:${GRADLE_HOME}/gradle-${GRADLE_VERSION}/bin"
-                sh "export PATH=$PATH:${MAVEN_HOME}/apache-maven-${MAVEN_VERSION}/bin"
-                sh "echo PATH=$PATH:${ANDROID_HOME}/platform-tools>>/home/ubuntu/bash.bashrc"
+                script {
+                    sh "aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
+                    sh "dockuer pull ${SINBAD_IMAGE_ANDROID}"
+                }
             }
         }
         stage('Deployment') {
             parallel {
+                agent {
+                    docker { 
+                            image "${SINBAD_IMAGE_ANDROID}"
+                        }
+                }
                 stage("Upload to S3") {
                     when { expression { params.CI_IS_PLAYSTORE == "No" && params.CI_IS_CODEPUSH == "No" } }
                     steps {
