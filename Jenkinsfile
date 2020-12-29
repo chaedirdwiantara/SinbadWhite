@@ -156,22 +156,25 @@ pipeline {
                 }
             }
         }
-        stage('Build APK'){
+        stage('Pull Image') {
             when { expression { params.CI_IS_PLAYSTORE == "No" && params.CI_IS_CODEPUSH == "No" } }
-            agent {
-                docker { 
-                    image "${SINBAD_IMAGE_ANDROID}"
-                    registryUrl "https://${ECR_REGISTRY}"
-                    registryCredentialsId "automation_aws_ecr"
-                    args '--entrypoint= '
+            steps {
+                script {
+                    sh "aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
+                    sh "docker pull ${SINBAD_IMAGE_ANDROID}"
                 }
             }
+        }
+        stage('Build APK'){
+            when { expression { params.CI_IS_PLAYSTORE == "No" && params.CI_IS_CODEPUSH == "No" } }
             steps {
                 script{
-                    sh '''
-                        cd android && \
-                        fastlane apk
-                    '''
+                    docker.image("${SINBAD_IMAGE_ANDROID}").inside {
+                        sh '''
+                            cd android && \
+                            fastlane apk
+                        '''
+                    }
                     sh "tar czf ${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz -C ${WORKSPACE}/android/app/build/outputs/apk/release/ ."
                     withAWS(credentials: "${AWS_CREDENTIAL}") {
                         s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz")
