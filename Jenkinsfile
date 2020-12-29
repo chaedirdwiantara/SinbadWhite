@@ -162,7 +162,7 @@ pipeline {
                 docker { 
                     image "${SINBAD_IMAGE_ANDROID}"
                     registryUrl "https://${ECR_REGISTRY}"
-                    registryCredentialsId "automation_aws_ecr"
+                    registryCredentialsId "ecr:ap-southeast-1:automation_aws"
                     args '-v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
