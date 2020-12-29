@@ -161,7 +161,7 @@ pipeline {
             agent {
                 docker { 
                     image "${SINBAD_IMAGE_ANDROID}"
-                    registryUrl "${ECR_REGISTRY}"
+                    registryUrl "https://${ECR_REGISTRY}"
                     registryCredentialsId "automation_aws_ecr"
                     args '-v /var/run/docker.sock:/var/run/docker.sock'
                 }
