@@ -156,20 +156,14 @@ pipeline {
                 }
             }
         }
-        stage('Pull Image') {
-            when { expression { params.CI_IS_PLAYSTORE == "No" && params.CI_IS_CODEPUSH == "No" } }
-            steps {
-                script {
-                    sh "aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
-                    sh "docker pull ${SINBAD_IMAGE_ANDROID}"
-                }
-            }
-        }
         stage('Build APK'){
             when { expression { params.CI_IS_PLAYSTORE == "No" && params.CI_IS_CODEPUSH == "No" } }
             agent {
                 docker { 
                     image "${SINBAD_IMAGE_ANDROID}"
+                    registryUrl "${ECR_REGISTRY}"
+                    registryCredentialsId "automation_aws"
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
             steps {
