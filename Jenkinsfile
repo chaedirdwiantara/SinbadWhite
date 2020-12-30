@@ -95,6 +95,7 @@ pipeline {
                     s3Download(file: 'android/app/mykeystore.keystore', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/mykeystore.keystore", force: true)
                     s3Download(file: 'android/app/src/main/res/values/strings.xml', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/strings.xml", force: true)
                 }
+                sh "npm install"
             }
         }
         stage('Change Environment') {
@@ -171,7 +172,6 @@ pipeline {
                 script{
                     docker.image("${SINBAD_IMAGE_ANDROID}").inside {
                         sh '''
-                            npm install && \
                             cd android && \
                             bundle exec fastlane apk
                         '''
