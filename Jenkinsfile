@@ -171,7 +171,7 @@ pipeline {
                 script{
                     docker.image("${SINBAD_IMAGE_ANDROID}").inside {
                         sh '''
-                            npm ci && \
+                            npm install && \
                             cd android && \
                             bundle exec fastlane apk
                         '''
