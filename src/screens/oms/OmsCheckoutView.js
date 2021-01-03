@@ -21,7 +21,8 @@ import {
   Address,
   ModalWarning,
   ProductListType1,
-  ModalBottomErrorRespons
+  ModalBottomErrorRespons,
+  ModalBottomSkuNotAvailable
 } from '../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
@@ -87,7 +88,8 @@ class OmsCheckoutView extends Component {
       tAndRLoading: false,
       alreadyFetchTAndR: false,
       modalWarningAllCondition: false,
-      openModalPaymentNotAllowed: false
+      openModalPaymentNotAllowed: false,
+      openModalSKUNotAvailable: false
     };
   }
   /**
@@ -624,6 +626,9 @@ class OmsCheckoutView extends Component {
         break;
       case 'ERR-APP-NOT-ALLOW':
         this.errorPaymentNotAllowed()
+      case 'ERR-STOCK':
+         this.errorSKUNotAvailable()
+        break;  
       default:
         // this.errorPaymentTryAgain()
         break;
@@ -664,6 +669,11 @@ class OmsCheckoutView extends Component {
   errorPaymentGlobal(){
     this.setState({openModalPaymentNotAllowed : true})
   }
+  // === ERROR SKU NOT AVAILABLE ===
+  errorSKUNotAvailable() {
+    this.setState({ openModalSKUNotAvailable: true })
+  }
+
   /**ERROR PAYMENT TRY AGAIN */
   errorPaymentTryAgain(){
     this.setState({openModalErrorPaymentTryAgain : true})
@@ -1587,6 +1597,21 @@ class OmsCheckoutView extends Component {
       </View>
     );
   }
+
+  /** RENDER MODAL SKU NOT AVAILABLE */
+  renderModalSKUNotAvailable() {
+    return this.state.openModalSKUNotAvailable ? (
+      <ModalBottomSkuNotAvailable 
+        open={this.state.openModalSKUNotAvailable}
+        onPress={() => {
+          this.setState({ openModalSKUNotAvailable: false })
+          this.backToCartItemView()
+          }}
+      />
+    ) : (
+      <View />
+    )
+  }
    /** RENDER MODAL FAIL PAYMENT */
    renderModalErrorPaymentTryAgain() {
     return (
@@ -1639,6 +1664,7 @@ class OmsCheckoutView extends Component {
         {this.renderWarningMinimumQty()}
         {this.renderErrorResponse()}
         {this.renderModalPaymentNotAllowed()}
+        {this.renderModalSKUNotAvailable()}
         {this.renderModalErrorPaymentTryAgain()}
       </View>
     );
