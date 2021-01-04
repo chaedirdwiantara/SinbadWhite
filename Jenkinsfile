@@ -173,6 +173,7 @@ pipeline {
                     docker.image("${SINBAD_IMAGE_ANDROID}").inside {
                         sh '''
                             cd android && \
+                            bundle update --bundler && \
                             fastlane apk
                         '''
                     }
