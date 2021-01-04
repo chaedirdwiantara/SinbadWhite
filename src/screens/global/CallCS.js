@@ -26,7 +26,8 @@ class CallCS extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      phoneNumber: '+628988386606'
+      phoneNumber: '+6282260106010',
+      email: 'help@sinbad.co.id'
     };
   }
   /**
@@ -64,6 +65,16 @@ class CallCS extends Component {
     }
     Linking.openURL(noPhone);
   }
+  toSendMail() {
+    this.toParentFunction({
+      type: 'close'
+    });
+    Linking.openURL(`mailto:${this.state.email}`).catch(err => {
+      if (err) {
+        Linking.openURL('market://details?id=com.google.android.gm');
+      }
+    });
+  }
   /**
    * =======================
    * RENDER VIEW
@@ -86,14 +97,14 @@ class CallCS extends Component {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.boxMenu}
-          onPress={() => this.toPhoneCall()}
+          onPress={() => this.toSendMail()}
         >
           <Image
-            source={require('../../assets/icons/profile/telfon.png')}
+            source={require('../../assets/icons/profile/support-email.png')}
             style={styles.menuCircleImage}
           />
-          <Text style={Fonts.type8}>Call</Text>
-          <Text style={Fonts.type8}>Cellular</Text>
+          <Text style={Fonts.type8}>Kirim</Text>
+          <Text style={Fonts.type8}>Email</Text>
         </TouchableOpacity>
       </View>
     );
@@ -159,14 +170,14 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(CallCS);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Dyah
+ * updatedDate: 04012021
+ * updatedFunction:
+ * -> change phone call to email & change wa number.
+ *
+ */
