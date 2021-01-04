@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-update-set-state */
 import {
   React,
   Component,
@@ -101,12 +102,6 @@ class MerchantHomeView extends Component {
           activity: ACTIVITY_JOURNEY_PLAN_ORDER
         },
         {
-          name: 'Toko Survey',
-          title: 'Fill',
-          goTo: 'survey',
-          activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-        },
-        {
           name: 'Check-out Toko',
           title: 'Check-out',
           goTo: 'checkOut',
@@ -153,6 +148,8 @@ class MerchantHomeView extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { surveyList } = this.props.merchant;
+    console.log('SURVEY LIST', surveyList, this.state.successSurveyList);
     /** IF NO SURVEY */
     if (
       _.isEmpty(this.props.merchant.surveyList.payload.data) &&
@@ -161,8 +158,6 @@ class MerchantHomeView extends Component {
     ) {
       this.setState({ successSurveyList: true }, () => this.SurveyDone());
       if (this.state.task.length === 4) {
-        console.log('COMPONENT UPDATE', this.props.merchant);
-        // eslint-disable-next-line react/no-did-update-set-state
         this.setState({
           task: [
             {
@@ -187,20 +182,60 @@ class MerchantHomeView extends Component {
         });
       }
     }
-    /** IF ONE OF SURVEY LIST STATUS COMPLETED */
+    /** IF SURVEY LIST EXIST */
+    if (!_.isEmpty(surveyList.payload.data) && surveyList.success) {
+      if (this.state.task.length === 3) {
+        this.setState({
+          task: [
+            {
+              name: 'Check-in Toko',
+              title: 'Check-in',
+              goTo: 'checkIn',
+              activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+            },
+            {
+              name: 'Order',
+              title: 'Order',
+              goTo: 'pdp',
+              activity: ACTIVITY_JOURNEY_PLAN_ORDER
+            },
+            {
+              name: 'Toko Survey',
+              title: 'Fill',
+              goTo: 'survey',
+              activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+            },
+            {
+              name: 'Check-out Toko',
+              title: 'Check-out',
+              goTo: 'checkOut',
+              activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+            }
+          ]
+        });
+      }
+    }
+    /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
     if (
-      !_.isEmpty(this.props.merchant.surveyList.payload.data) &&
-      this.props.merchant.surveyList.success &&
+      !_.isEmpty(surveyList.payload.data) &&
+      surveyList.success &&
       !this.state.successSurveyList
     ) {
       if (
-        !_.isEmpty(
-          this.props.merchant.surveyList.payload.data.filter(
-            item => item.responseStatus === 'completed'
-          )
-        )
+        surveyList.payload.data.length ===
+        surveyList.payload.data.filter(
+          item => item.responseStatus === 'completed'
+        ).length
       ) {
-        this.setState({ successSurveyList: true }, () => this.SurveyDone());
+        if (this.props.merchant.dataGetLogAllActivity) {
+          if (
+            !this.props.merchant.dataGetLogAllActivity.find(
+              item => item.activity === 'toko_survey'
+            )
+          ) {
+            this.setState({ successSurveyList: true }, () => this.SurveyDone());
+          }
+        }
       }
     }
     if (
@@ -210,7 +245,6 @@ class MerchantHomeView extends Component {
       if (this.props.merchant.dataPostActivity !== null) {
         /** IF CHECK OUT SUCCESS */
         if (this.props.merchant.dataPostActivity.activity === 'check_out') {
-          // eslint-disable-next-line react/no-did-update-set-state
           this.setState({
             openModalCheckout: false,
             loadingPostForCheckoutNoOrder: false,
@@ -229,7 +263,6 @@ class MerchantHomeView extends Component {
           /** IF CHECK OUT SUCCESS */
           this.props.merchant.dataPostActivity.activity === 'check_in'
         ) {
-          // eslint-disable-next-line react/no-did-update-set-state
           this.setState({
             openModalCheckout: false,
             showToast: true,
@@ -258,7 +291,6 @@ class MerchantHomeView extends Component {
           }
         } else {
           if (this.state.checkNoOrder) {
-            // eslint-disable-next-line react/no-did-update-set-state
             this.setState({
               openModalCheckout: false,
               checkNoOrder: false,
@@ -368,7 +400,7 @@ class MerchantHomeView extends Component {
             item => item.activity === 'check_in'
           )
         ) {
-          NavigationService.navigate('MerchantSurveyView');
+          NavigationService.navigate('MerchantSurveyView', { readOnly: false });
         }
         break;
       default:
@@ -396,6 +428,21 @@ class MerchantHomeView extends Component {
         break;
     }
   }
+
+  /** CUSTOM NAVIGATE VIEW NO ORDER REASON PAGE */
+  navigateViewNoOrderReasonPage = data => {
+    NavigationService.navigate('MerchantNoOrderReason', {
+      noOrderReason: data
+    });
+  };
+
+  navigateSurveyReadOnly = data => {
+    NavigationService.navigate('MerchantSurveyView', {
+      readOnly: true,
+      data
+    });
+  };
+
   /** CHECK CHECK LIST TASK */
   checkCheckListTask(activity) {
     if (this.props.merchant.dataGetLogAllActivity !== null) {
@@ -645,7 +692,6 @@ class MerchantHomeView extends Component {
           </View>
           {this.state.task.map((item, index) => {
             const taskList = this.checkCheckListTask(item.activity);
-            console.log('taskList', taskList);
             return (
               <View
                 key={index}
@@ -694,7 +740,6 @@ class MerchantHomeView extends Component {
                   {taskList ? (
                     taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN ||
                     taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_OUT ? (
-                      // taskList.
                       <Text style={Fonts.type107}>
                         {taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN
                           ? `Check In ${moment(taskList.createdAt).format(
@@ -708,7 +753,7 @@ class MerchantHomeView extends Component {
                       taskList.noOrderNotes ? (
                         <TouchableOpacity
                           onPress={() => {
-                            alert('Reason: ' + taskList.noOrderNotes);
+                            this.navigateViewNoOrderReasonPage(taskList);
                           }}
                           style={{
                             flexDirection: 'row',
@@ -756,7 +801,10 @@ class MerchantHomeView extends Component {
                       ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY ? (
                       <TouchableOpacity
                         onPress={() => {
-                          // this.goTo(item.goTo);
+                          this.navigateSurveyReadOnly({
+                            taskList,
+                            item
+                          });
                         }}
                         style={{
                           flexDirection: 'row',
