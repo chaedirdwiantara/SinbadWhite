@@ -173,7 +173,7 @@ pipeline {
                     docker.image("${SINBAD_IMAGE_ANDROID}").inside {
                         sh '''
                             cd android && \
-                            bundle exec fastlane apk
+                            fastlane apk
                         '''
                     }
                     sh "tar czf ${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz -C ${WORKSPACE}/android/app/build/outputs/apk/release/ ."
