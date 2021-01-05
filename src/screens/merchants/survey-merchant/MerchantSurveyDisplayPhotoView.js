@@ -75,10 +75,14 @@ class MerchantSurveyDisplayPhotoView extends Component {
   componentDidMount() {
     this.navigationFunction();
     const {
+      readOnly,
       surveyResponseId,
       surveySteps
     } = this.props.navigation.state.params;
     let newPhoto = [];
+    if (readOnly && !surveyResponseId) {
+      return this.setState({ displayPhoto: true });
+    }
     if (surveyResponseId) {
       this.props.merchantGetSurveyProcess(surveyResponseId);
     } else {
@@ -109,6 +113,10 @@ class MerchantSurveyDisplayPhotoView extends Component {
       const surveyResponseId = this.props.merchant.dataSubmitSurvey.payload.id;
       this.props.merchantGetSurveyProcess(surveyResponseId);
     }
+    /**CHECK NAVIGATION FUNCTION */
+    if (!this.props.navigation.state.params.goBackFunction) {
+      this.navigationFunction();
+    }
   }
   /** === CHECK RESPONSE PHOTO === */
   checkResponsePhoto = () => {
@@ -135,7 +143,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
             modalCompleted: this.state.activeStep === 0 ? false : true,
             activeStep: 2
           },
-          () => this.surveyDone()
+          // () => this.surveyDone()
         );
       } else {
         this.setState({
@@ -247,29 +255,40 @@ class MerchantSurveyDisplayPhotoView extends Component {
     let params = {
       surveyId: this.props.navigation.state.params.surveyId,
       storeId: this.props.merchant.selectedMerchant.storeId,
-      storeName: this.props.merchant.selectedMerchant.name
+      storeName: this.props.merchant.selectedMerchant.name,
+      surveySerialId: this.props.navigation.state.params.surveySerialId
     };
     this.state.photo.map(item => {
       if (item.uri) {
-        newPhoto.push(item);
+        newPhoto.push({
+          long: this.props.merchant.selectedMerchant.longitude,
+          lat: this.props.merchant.selectedMerchant.latitude,
+          file: item.uri
+        });
       }
     });
     if (this.state.activeStep === 0) {
       params = {
         ...params,
-        photos: newPhoto.map(item => item.uri),
+        photos: newPhoto,
         status: '',
         surveyStepId: surveySteps.find(item => item.order === 1).surveyStepId
       };
+      this.props.merchantSubmitSurveyProcess(params);
     } else {
       params = {
-        ...params,
-        photos: newPhoto.map(item => item.uri),
-        status: 'Completed',
+        photos: newPhoto,
+        status: 'completed',
         surveyStepId: surveySteps.find(item => item.order === 2).surveyStepId
       };
+      let surveyResponseId = null;
+      if (this.props.merchant.dataSubmitSurvey.payload) {
+        surveyResponseId = this.props.merchant.dataSubmitSurvey.payload.id;
+      } else {
+        surveyResponseId = this.props.navigation.state.params.surveyResponseId;
+      }
+      this.props.merchantUpdateSurveyProcess({ params, surveyResponseId });
     }
-    this.props.merchantSubmitSurveyProcess(params);
   };
   /** === CONTINUE STEP === */
   continueStep = () => {
@@ -318,21 +337,28 @@ class MerchantSurveyDisplayPhotoView extends Component {
    * ========================
    */
   static navigationOptions = ({ navigation }) => {
-    let storeName = 'Display Toko Photo';
     const { state } = navigation;
+    let surveyName = '';
+    if (state.params.surveyName) {
+      surveyName = state.params.surveyName;
+    }
 
     return {
       headerLeft: () => (
         <TouchableOpacity
           style={{ marginLeft: 16 }}
-          onPress={() => state.params.goBackFunction()}
+          onPress={() => {
+            if (state.params.goBackFunction) {
+              return state.params.goBackFunction();
+            }
+          }}
         >
           <MaterialIcon color={Color.fontWhite} name={'arrow-back'} size={24} />
         </TouchableOpacity>
       ),
       headerTitle: () => (
         <View>
-          <Text style={Fonts.type35}>{storeName}</Text>
+          <Text style={Fonts.type35}>{surveyName}</Text>
         </View>
       )
     };
@@ -342,18 +368,24 @@ class MerchantSurveyDisplayPhotoView extends Component {
     return (
       <View style={[styles.cardContainer, { paddingBottom: 16 }]}>
         <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
-          <MerchantSurveySteps active={this.state.activeStep} />
+          <MerchantSurveySteps
+            active={this.state.activeStep}
+            surveySteps={this.props.navigation.state.params.surveySteps}
+          />
         </View>
       </View>
     );
   }
   /** === RENDER DISPLAY PHOTO === */
   renderDisplayPhoto() {
+    const { surveySteps } = this.props.navigation.state.params;
     return (
       <View style={[styles.cardContainer]}>
         {this.state.photosDisplayBefore.length !== 0 ? (
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
-            <Text>Photos Display Before</Text>
+            <Text>{`Photos ${
+              surveySteps.find(item => item.order === 1).title
+            }`}</Text>
             <FlatList
               data={this.state.photosDisplayBefore}
               numColumns={5}
@@ -387,7 +419,9 @@ class MerchantSurveyDisplayPhotoView extends Component {
         <View style={{ height: 16 }} />
         {this.state.photosDisplayAfter.length !== 0 ? (
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
-            <Text>Photos Display After</Text>
+            <Text>{`Photos ${
+              surveySteps.find(item => item.order === 2).title
+            }`}</Text>
             <FlatList
               data={this.state.photosDisplayAfter}
               numColumns={5}
@@ -500,12 +534,14 @@ class MerchantSurveyDisplayPhotoView extends Component {
   }
   /** === RENDER BUTTON === */
   renderButton() {
+    const { readOnly } = this.props.navigation.state.params;
     return (
       <View style={styles.buttonBottom}>
         {this.state.displayPhoto && _.isEmpty(this.state.photosDisplayAfter) ? (
           <ButtonSingle
             title="Continue"
             borderRadius={4}
+            disabled={readOnly}
             onPress={() => this.continueStep()}
           />
         ) : null}
@@ -623,13 +659,18 @@ class MerchantSurveyDisplayPhotoView extends Component {
   }
   /** === RENDER MODAL NEXT PROCESS (MODAL SUBMIT)=== */
   renderModalSubmit() {
+    const { surveySteps } = this.props.navigation.state.params;
+    let sectionName = '';
+    if (this.state.activeStep === 0) {
+      sectionName = surveySteps.find(item => item.order === 1).title;
+    } else {
+      sectionName = surveySteps.find(item => item.order === 2).title;
+    }
     return (
       <ModalBottomSubmit
         open={this.state.modalSubmit}
         loading={this.props.merchant.loadingSubmitSurvey}
-        title={`Submit the ${
-          this.state.activeStep === 0 ? 'Before' : 'After'
-        } Photo`}
+        title={`Submit the "${sectionName}"`}
         data={this.state.photo}
         onClose={() => this.setState({ modalSubmit: false })}
         onSubmit={this.submitPhoto.bind(this)}
@@ -796,7 +837,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 03122020
+ * updatedDate: 16122020
  * updatedFunction:
- * -> update ui with ratio 1:1.
+ * -> additional params to submit survey response.
  */
