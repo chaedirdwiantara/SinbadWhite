@@ -122,6 +122,14 @@ function submitSurvey(params) {
     params
   });
 }
+/** UPDATE SURVEY RESPONSE */
+function updateSurvey({ params, surveyResponseId }) {
+  return ApiRest({
+    path: `supplier/service-survey/v1/survey/response/${surveyResponseId}`,
+    method: 'PATCH',
+    params
+  });
+}
 
 export const MerchantMethod = {
   getMerchant,
@@ -138,7 +146,8 @@ export const MerchantMethod = {
   getWarehouse,
   getSurveyList,
   getSurveyResponse,
-  submitSurvey
+  submitSurvey,
+  updateSurvey
 };
 
 /**

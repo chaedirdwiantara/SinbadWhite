@@ -86,3 +86,5 @@ export const MERCHANT_GET_SURVEY_FAILED = 'MerchantGetSurveyFailed';
 export const MERCHANT_SUBMIT_SURVEY_PROCESS = 'MerchantSubmitSurveyProcess';
 export const MERCHANT_SUBMIT_SURVEY_SUCCESS = 'MerchantSubmitSurveySuccess';
 export const MERCHANT_SUBMIT_SURVEY_FAILED = 'MerchantSubmitSurveyFailed';
+/** MERCHANT UPDATE SURVEY RESPONSE */
+export const MERCHANT_UPDATE_SURVEY_PROCESS = 'MerchantUpdateSurveyProcess';
