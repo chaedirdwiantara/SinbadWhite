@@ -369,3 +369,11 @@ export function merchantSubmitSurveySuccess(data) {
 export function merchantSubmitSurveyFailed(data) {
   return { type: types.MERCHANT_SUBMIT_SURVEY_FAILED, payload: data };
 }
+/**
+ * ===========================================
+ * UPDATE SURVEY RESPONSE
+ * ===========================================
+ */
+export function merchantUpdateSurveyProcess(data) {
+  return { type: types.MERCHANT_UPDATE_SURVEY_PROCESS, payload: data };
+}

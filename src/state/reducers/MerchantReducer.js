@@ -773,6 +773,19 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingSubmitSurvey: false,
       errorSubmitSurvey: action.payload
     };
+  },
+  /**
+   * ============================
+   * UPDATE SURVEY
+   * ============================
+   */
+  [types.MERCHANT_UPDATE_SURVEY_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSubmitSurvey: true,
+      dataSubmitSurvey: {},
+      errorSubmitSurvey: null
+    };
   }
 });
 /**
