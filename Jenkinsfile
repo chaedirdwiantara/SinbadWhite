@@ -170,7 +170,7 @@ pipeline {
             when { expression { params.CI_IS_PLAYSTORE == "No" && params.CI_IS_CODEPUSH == "No" } }
             steps {
                 script{
-                    docker.image("${SINBAD_IMAGE_ANDROID}").withRun('-p 1000:1000', '-u root --privileged'){
+                    docker.image("${SINBAD_IMAGE_ANDROID}").withRun('-p 1000:1000', '-u root --privileged').inside {
                         sh '''
                             cd android && \
                             bundle update --bundler && \
