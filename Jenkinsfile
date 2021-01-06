@@ -219,98 +219,92 @@ pipeline {
                 sh "echo PATH=$PATH:${ANDROID_HOME}/platform-tools>>/home/ubuntu/bash.bashrc"
             }
         }
-        stage('Git Changes') {
-            steps {
-                sh "git status"
-                sh "git diff"
+        stage('Deployment') {
+            parallel {
+                stage("Upload to S3") {
+                    when { expression { params.CI_IS_PLAYSTORE == "No" && params.CI_IS_CODEPUSH == "No" } }
+                    steps {
+                        sh '''
+                            cd android && \
+                            fastlane apk
+                        '''
+                        sh "tar czf ${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz -C ${WORKSPACE}/android/app/build/outputs/apk/release/ ."
+                        withAWS(credentials: "${AWS_CREDENTIAL}") {
+                            s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz")
+                            s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz")
+                        }
+                        slackSend color: '#FFFFFF', channel: "#download-apps-production", message: """
+Hi Sailors
+We have new APK Version
+Application: ${SINBAD_REPO}
+Environment: ${SINBAD_ENV}
+Commit ID: ${env.GIT_COMMIT}
+Changes Message: ${env.GIT_MESSAGE}
+You can download this application in here
+${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz
+Or latest application for environment ${SINBAD_ENV} in here
+${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
+            """
+                        sh "rm ${SINBAD_REPO}*"
+                    }
+                }
+                stage("Play Store") {
+                    when { expression { params.CI_IS_PLAYSTORE == "Yes" } }
+                    steps {
+                        script {
+                            withAWS(credentials: "${AWS_CREDENTIAL}") {
+                                s3Download(file: 'android/fastlane/config/sinbad.json', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/sinbad.json", force: true)
+                            }
+                            sh '''
+                                cd android && \
+                                fastlane aab
+                            '''
+                            if(SINBAD_ENV == 'development') {
+                                sh '''
+                                    cd android && \
+                                    fastlane internal
+                                '''
+                            }else if(SINBAD_ENV == 'staging') {
+                                sh '''
+                                    cd android && \
+                                    fastlane staging
+                                '''
+                            }else if(SINBAD_ENV == 'sandbox') {
+                                sh '''
+                                    cd android && \
+                                    fastlane sandbox
+                                '''
+                            }else if(SINBAD_ENV == 'demo') {
+                                sh '''
+                                    cd android && \
+                                    fastlane demo
+                                '''
+                            }else if(SINBAD_ENV == 'production') {
+                                sh '''
+                                    cd android && \
+                                    fastlane beta
+                                '''
+                            }
+                        }
+                    }
+                }
+                stage("CodePush") {
+                    when { expression { params.CI_IS_CODEPUSH == "Yes" } }
+                    steps {
+                        script {
+                            withCredentials([usernamePassword(credentialsId: 'appcenter', usernameVariable: 'USERID', passwordVariable: 'USERTOKEN')]){
+                                sh "appcenter login --token ${USERTOKEN}"
+                                if(SINBAD_ENV == 'demo') {
+                                    sh "appcenter codepush release-react -a sinbad-app/Sinbad --description '${params.CI_CODEPUSH_MESSAGE}' -m -d Staging"
+                                }else if(SINBAD_ENV == 'production') {
+                                    sh "appcenter codepush release-react -a sinbad-app/Sinbad --description '${params.CI_CODEPUSH_MESSAGE}' -m -d Production"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-//         stage('Deployment') {
-//             parallel {
-//                 stage("Upload to S3") {
-//                     when { expression { params.CI_IS_PLAYSTORE == "No" && params.CI_IS_CODEPUSH == "No" } }
-//                     steps {
-//                         sh '''
-//                             cd android && \
-//                             fastlane apk
-//                         '''
-//                         sh "tar czf ${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz -C ${WORKSPACE}/android/app/build/outputs/apk/release/ ."
-//                         withAWS(credentials: "${AWS_CREDENTIAL}") {
-//                             s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz")
-//                             s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz")
-//                         }
-//                         slackSend color: '#FFFFFF', channel: "#download-apps-production", message: """
-// Hi Sailors
-// We have new APK Version
-// Application: ${SINBAD_REPO}
-// Environment: ${SINBAD_ENV}
-// Commit ID: ${env.GIT_COMMIT}
-// Changes Message: ${env.GIT_MESSAGE}
-// You can download this application in here
-// ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz
-// Or latest application for environment ${SINBAD_ENV} in here
-// ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
-//             """
-//                         sh "rm ${SINBAD_REPO}*"
-//                     }
-//                 }
-//                 stage("Play Store") {
-//                     when { expression { params.CI_IS_PLAYSTORE == "Yes" } }
-//                     steps {
-//                         script {
-//                             withAWS(credentials: "${AWS_CREDENTIAL}") {
-//                                 s3Download(file: 'android/fastlane/config/sinbad.json', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/sinbad.json", force: true)
-//                             }
-//                             sh '''
-//                                 cd android && \
-//                                 fastlane aab
-//                             '''
-//                             if(SINBAD_ENV == 'development') {
-//                                 sh '''
-//                                     cd android && \
-//                                     fastlane internal
-//                                 '''
-//                             }else if(SINBAD_ENV == 'staging') {
-//                                 sh '''
-//                                     cd android && \
-//                                     fastlane staging
-//                                 '''
-//                             }else if(SINBAD_ENV == 'sandbox') {
-//                                 sh '''
-//                                     cd android && \
-//                                     fastlane sandbox
-//                                 '''
-//                             }else if(SINBAD_ENV == 'demo') {
-//                                 sh '''
-//                                     cd android && \
-//                                     fastlane demo
-//                                 '''
-//                             }else if(SINBAD_ENV == 'production') {
-//                                 sh '''
-//                                     cd android && \
-//                                     fastlane beta
-//                                 '''
-//                             }
-//                         }
-//                     }
-//                 }
-//                 stage("CodePush") {
-//                     when { expression { params.CI_IS_CODEPUSH == "Yes" } }
-//                     steps {
-//                         script {
-//                             withCredentials([usernamePassword(credentialsId: 'appcenter', usernameVariable: 'USERID', passwordVariable: 'USERTOKEN')]){
-//                                 sh "appcenter login --token ${USERTOKEN}"
-//                                 if(SINBAD_ENV == 'demo') {
-//                                     sh "appcenter codepush release-react -a sinbad-app/Sinbad --description '${params.CI_CODEPUSH_MESSAGE}' -m -d Staging"
-//                                 }else if(SINBAD_ENV == 'production') {
-//                                     sh "appcenter codepush release-react -a sinbad-app/Sinbad --description '${params.CI_CODEPUSH_MESSAGE}' -m -d Production"
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         }
     }
 
     post {
