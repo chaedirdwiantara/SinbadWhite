@@ -46,7 +46,7 @@ platform :android do
 
   desc "Upload AAB Files to Sandbox Play Store"
   lane :sandbox do
-    supply(track: 'Sandbox', aab: 'app/build/outputs/bundle/release/app.aab')
+    supply(track: 'internal', aab: 'app/build/outputs/bundle/release/app.aab')
   end
 
   desc "Upload AAB Files to Demo Play Store"
