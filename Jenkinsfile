@@ -4,11 +4,9 @@ pipeline {
             label 'worker'
         }
     }
-
     options {
         timestamps()
     }
-
     parameters {
         choice(
             name: 'CI_GIT_TYPE',
@@ -36,15 +34,22 @@ pipeline {
             description: 'Code Push Message'
         )
     }
-
     environment {
-        SINBAD_REPO = 'mobile-sinbad-white'
+        SINBAD_REPO = 'mobile-sinbad-red'
         AWS_CREDENTIAL = 'automation_aws'
         SINBAD_ENV = "${env.JOB_BASE_NAME}"
         WOKRSPACE = "${env.WORKSPACE}"
         SINBAD_URI_DOWNLOAD = "http://app-download.sinbad.web.id"
-        ECR_REGISTRY = '815128449618.dkr.ecr.ap-southeast-1.amazonaws.com'
-        SINBAD_IMAGE_ANDROID = "815128449618.dkr.ecr.ap-southeast-1.amazonaws.com/sinbad-react-native/android:latest"
+
+        // Andorid Lib
+        SDK_URL = "https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip"
+        ANDROID_HOME = "${WORKSPACE}/android-sdk"
+        ANDROID_VERSION = "29"
+        ANDROID_BUILD_TOOLS_VERSION = "29.0.2"
+        GRADLE_HOME = "${WORKSPACE}/android-gradle"
+        GRADLE_VERSION = "6.6.1"
+        MAVEN_HOME = "${WORKSPACE}/android-maven"
+        MAVEN_VERSION = "3.6.3"
     }
     stages {
         stage('Checkout') {
@@ -92,97 +97,161 @@ pipeline {
                     s3Download(file: 'index.js', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/index.js", force: true)
                     s3Download(file: 'src/services/apiHost.js', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/apiHost.js", force: true)
                     s3Download(file: 'android/app/google-services.json', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/google-services.json", force: true)
-                    s3Download(file: 'android/app/mykeystore.keystore', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/mykeystore.keystore", force: true)
+                    s3Download(file: 'android/app/mplus_sinbad.jks', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/mplus_sinbad.jks", force: true)
                     s3Download(file: 'android/app/src/main/res/values/strings.xml', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/strings.xml", force: true)
                 }
-                sh "npm install"
             }
         }
-        stage('Change Environment') {
-            steps {
-                script {
-                    if(params.CI_IS_PLAYSTORE == "Yes"){
+        stage('Install Dependency') {
+            parallel {
+                stage('Install Android SDK') {
+                    steps {
+                        sh "if [ -d ${ANDROID_HOME} ]; then rm -rf ${ANDROID_HOME}; fi && mkdir ${ANDROID_HOME}"
                         sh '''
-                            find android/ -type f |
-                            while read file
-                            do
-                                sed -i 's/agentdevelopment/agent/g' $file
-                            done
+                            cd $ANDROID_HOME && \
+                            curl -sL -o android.zip $SDK_URL && unzip android.zip && rm android.zip && \
+                            mkdir -p cmdline-tools ; mv tools cmdline-tools && \
+                            yes | $ANDROID_HOME/cmdline-tools/tools/bin/sdkmanager --licenses
                         '''
-                    }else{
-                        if(SINBAD_ENV != 'development') {
-                            if(SINBAD_ENV == 'staging') {
-                                sh '''
-                                    find android/ -type f |
-                                    while read file
-                                    do
-                                        sed -i 's/agentdevelopment/agentstaging/g' $file
-                                    done
-                                '''
-                            } else if(SINBAD_ENV == 'sandbox') {
-                                sh '''
-                                    find android/ -type f |
-                                    while read file
-                                    do
-                                        sed -i 's/agentdevelopment/agentsandbox/g' $file
-                                        sed -i 's/ic_launcher_dev/ic_launcher_stg/g' $file
-                                        sed -i 's/ic_launcher_round_dev/ic_launcher_round_stg/g' $file
-                                    done
-                                '''
-                            } else if(SINBAD_ENV == 'demo') {
-                                sh '''
-                                    find android/ -type f |
-                                    while read file
-                                    do
-                                        sed -i 's/agentdevelopment/agentdemo/g' $file
-                                        sed -i 's/ic_launcher_dev/ic_launcher_stg/g' $file
-                                        sed -i 's/ic_launcher_round_dev/ic_launcher_round_stg/g' $file
-                                    done
-                                '''
-                            } else if(SINBAD_ENV == 'production') {
-                                sh '''
-                                    find android/ -type f |
-                                    while read file
-                                    do
-                                        sed -i 's/agentdevelopment/agent/g' $file
-                                        sed -i 's/ic_launcher_dev/ic_launcher/g' $file
-                                        sed -i 's/ic_launcher_round_dev/ic_launcher_round/g' $file
-                                    done
-                                '''
+                        sh '''
+                            $ANDROID_HOME/cmdline-tools/tools/bin/sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION" \
+                            "platforms;android-$ANDROID_VERSION" \
+                            "platform-tools"
+                        '''
+                    }
+                }
+                stage('Install Gradle & Maven') {
+                    steps {
+                        sh "if [ -d ${GRADLE_HOME} ]; then rm -rf ${GRADLE_HOME}; fi && mkdir ${GRADLE_HOME}"
+                        sh '''
+                            cd $GRADLE_HOME && \
+                            curl -sL -o gradle.zip https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip && \
+                            unzip -d $GRADLE_HOME gradle.zip && rm gradle.zip
+                        '''
+
+                        sh "if [ -d ${MAVEN_HOME} ]; then rm -rf ${MAVEN_HOME}; fi && mkdir ${MAVEN_HOME}"
+                        sh '''
+                            cd $MAVEN_HOME && \
+                            curl -sL -o maven.zip https://www-us.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.zip && \
+                            unzip -d $MAVEN_HOME maven.zip && rm maven.zip
+                        '''
+                    }
+                }
+                stage('Install Yarn & React') {
+                    steps {
+                        sh "yarn global add react-native-cli create-react-native-app expo-cli"
+                        sh "npm ci"
+                        sh "npx jetify"
+                    }
+                }
+                stage('Change Environment') {
+                    steps {
+                        script {
+                            if(params.CI_IS_PLAYSTORE == "Yes"){
+                                if(SINBAD_ENV == 'production') {
+                                    sh '''
+                                        find android/ -type f |
+                                        while read file
+                                        do
+                                            sed -i 's/sinbaddev/sinbad/g' $file
+                                            sed -i 's/ic_launcher_pink/ic_launcher/g' $file
+                                            sed -i 's/ic_launcher_round_pink/ic_launcher_round/g' $file
+                                            sed -i 's/Sinbad Development/Sinbad/g' $file
+                                        done
+                                    '''
+                                }else{
+                                    sh '''
+                                        find android/ -type f |
+                                        while read file
+                                        do
+                                            sed -i 's/sinbaddev/sinbad/g' $file
+                                            sed -i 's/ic_launcher_pink/ic_launcher_pink/g' $file
+                                            sed -i 's/ic_launcher_round_pink/ic_launcher_round_pink/g' $file
+                                            sed -i 's/Sinbad Development/Sinbad Testing/g' $file
+                                        done
+                                    '''
+                                }
+                            }else{
+                                if(SINBAD_ENV != 'development') {
+                                    if(SINBAD_ENV == 'staging') {
+                                        sh '''
+                                            find android/ -type f |
+                                            while read file
+                                            do
+                                                sed -i 's/sinbaddev/sinbadstaging/g' $file
+                                                sed -i 's/ic_launcher_pink/ic_launcher_green/g' $file
+                                                sed -i 's/ic_launcher_round_pink/ic_launcher_round_green/g' $file
+                                                sed -i 's/Sinbad Development/Sinbad Staging/g' $file
+                                            done
+                                        '''
+                                    } else if(SINBAD_ENV == 'sandbox') {
+                                        sh '''
+                                            find android/ -type f |
+                                            while read file
+                                            do
+                                                sed -i 's/sinbaddev/sinbadsandbox/g' $file
+                                                sed -i 's/ic_launcher_pink/ic_launcher_green/g' $file
+                                                sed -i 's/ic_launcher_round_pink/ic_launcher_round_green/g' $file
+                                                sed -i 's/Sinbad Development/Sinbad Sandbox/g' $file
+                                            done
+                                        '''
+                                    } else if(SINBAD_ENV == 'demo') {
+                                        sh '''
+                                            find android/ -type f |
+                                            while read file
+                                            do
+                                                sed -i 's/sinbaddev/sinbaddemo/g' $file
+                                                sed -i 's/ic_launcher_pink/ic_launcher_green/g' $file
+                                                sed -i 's/ic_launcher_round_pink/ic_launcher_round_green/g' $file
+                                                sed -i 's/Sinbad Development/Sinbad Demo/g' $file
+                                            done
+                                        '''
+                                    } else if(SINBAD_ENV == 'production') {
+                                        sh '''
+                                            find android/ -type f |
+                                            while read file
+                                            do
+                                                sed -i 's/sinbaddev/sinbad/g' $file
+                                                sed -i 's/ic_launcher_pink/ic_launcher/g' $file
+                                                sed -i 's/ic_launcher_round_pink/ic_launcher_round/g' $file
+                                                sed -i 's/Sinbad Development/Sinbad/g' $file
+                                            done
+                                        '''
+                                    }
+                                }
                             }
-                            
+                            sh "find android -type f -name '.!*!*' -delete"
                         }
                     }
-                    sh "find android -type f -name '.!*!*' -delete"
                 }
             }
+
         }
-        stage('Pull Image') {
-            when { expression { params.CI_IS_PLAYSTORE == "No" && params.CI_IS_CODEPUSH == "No" } }
+        stage('Export Path') {
             steps {
-                script {
-                    sh "aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin ${ECR_REGISTRY}"
-                    sh "docker pull ${SINBAD_IMAGE_ANDROID}"
-                }
+                sh "export PATH=$PATH:${ANDROID_HOME}/emulator"
+                sh "export PATH=$PATH:${ANDROID_HOME}/tools"
+                sh "export PATH=$PATH:${ANDROID_HOME}/tools/bin"
+                sh "export PATH=$PATH:${GRADLE_HOME}/gradle-${GRADLE_VERSION}/bin"
+                sh "export PATH=$PATH:${MAVEN_HOME}/apache-maven-${MAVEN_VERSION}/bin"
+                sh "echo PATH=$PATH:${ANDROID_HOME}/platform-tools>>/home/ubuntu/bash.bashrc"
             }
         }
-        stage('Build APK'){
-            when { expression { params.CI_IS_PLAYSTORE == "No" && params.CI_IS_CODEPUSH == "No" } }
-            steps {
-                script{
-                    docker.image("${SINBAD_IMAGE_ANDROID}").inside('-u root'){
+        stage('Deployment') {
+            parallel {
+                stage("Upload to S3") {
+                    when { expression { params.CI_IS_PLAYSTORE == "No" && params.CI_IS_CODEPUSH == "No" } }
+                    steps {
                         sh '''
                             cd android && \
-                            bundle update --bundler && \
                             fastlane apk
                         '''
-                    }
-                    sh "tar czf ${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz -C ${WORKSPACE}/android/app/build/outputs/apk/release/ ."
-                    withAWS(credentials: "${AWS_CREDENTIAL}") {
-                        s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz")
-                        s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz")
-                    }
-                    slackSend color: '#FFFFFF', channel: "#download-apps-production", message: """
+                        sh "tar czf ${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz -C ${WORKSPACE}/android/app/build/outputs/apk/release/ ."
+                        withAWS(credentials: "${AWS_CREDENTIAL}") {
+                            s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz")
+                            s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz")
+                        }
+                        slackSend color: '#ff0000', channel: "#download-apps-production", message: """
 Hi Sailors
 We have new APK Version
 Application: ${SINBAD_REPO}
@@ -193,13 +262,10 @@ You can download this application in here
 ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz
 Or latest application for environment ${SINBAD_ENV} in here
 ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
-        """
-                    sh "rm ${SINBAD_REPO}*"
+            """
+                        sh "rm ${SINBAD_REPO}*"
+                    }
                 }
-            }
-        }
-        stage('Deployment') {
-            parallel {
                 stage("Play Store") {
                     when { expression { params.CI_IS_PLAYSTORE == "Yes" } }
                     steps {
@@ -260,13 +326,29 @@ ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
     }
 
     post {
-        always {
-            // junit '**/target/*.xml'
-            deleteDir()
-            slackSend color: '#8cff00', message: "${SINBAD_REPO} (${SINBAD_ENV}) -> ${env.GIT_MESSAGE} by <${env.GIT_AUTHOR}>", channel: "#jenkins"
+        success {
+            script{
+                if(SINBAD_ENV == 'sandbox') {
+                    slackSend color: '#8cff00', message:  """
+Status : Deployment Success! :jkndance:
+Application : ${SINBAD_REPO}
+Version : ${env.GIT_TAG}
+Commit ID : ${env.GIT_COMMIT}
+Changes Message : ${env.GIT_MESSAGE}""", channel: "#alert-sandbox-ops"
+                }
+            }
         }
         failure {
-            slackSend color: '#ff0000', message: "(FAILED) ${SINBAD_REPO} (${SINBAD_ENV}) -> ${env.GIT_MESSAGE} by <${env.GIT_AUTHOR}>", channel: "#jenkins"
+            script{
+                if(SINBAD_ENV == 'sandbox') {
+                    slackSend color: '#ff0000', message:  """
+Status : Deployment Failed!!! :alertsirene:
+Application : ${SINBAD_REPO}
+Version : ${env.GIT_TAG}
+Commit ID : ${env.GIT_COMMIT}
+Changes Message : ${env.GIT_MESSAGE}""", channel: "#alert-sandbox-ops"
+                }
+            }
         }
     }
 }
