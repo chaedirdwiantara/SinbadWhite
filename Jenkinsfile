@@ -4,9 +4,11 @@ pipeline {
             label 'worker'
         }
     }
+
     options {
         timestamps()
     }
+
     parameters {
         choice(
             name: 'CI_GIT_TYPE',
@@ -34,8 +36,9 @@ pipeline {
             description: 'Code Push Message'
         )
     }
+
     environment {
-        SINBAD_REPO = 'mobile-sinbad-red'
+        SINBAD_REPO = 'mobile-sinbad-white'
         AWS_CREDENTIAL = 'automation_aws'
         SINBAD_ENV = "${env.JOB_BASE_NAME}"
         WOKRSPACE = "${env.WORKSPACE}"
@@ -97,7 +100,7 @@ pipeline {
                     s3Download(file: 'index.js', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/index.js", force: true)
                     s3Download(file: 'src/services/apiHost.js', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/apiHost.js", force: true)
                     s3Download(file: 'android/app/google-services.json', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/google-services.json", force: true)
-                    s3Download(file: 'android/app/mplus_sinbad.jks', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/mplus_sinbad.jks", force: true)
+                    s3Download(file: 'android/app/mykeystore.keystore', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/mykeystore.keystore", force: true)
                     s3Download(file: 'android/app/src/main/res/values/strings.xml', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/strings.xml", force: true)
                 }
             }
@@ -148,29 +151,13 @@ pipeline {
                     steps {
                         script {
                             if(params.CI_IS_PLAYSTORE == "Yes"){
-                                if(SINBAD_ENV == 'production') {
-                                    sh '''
-                                        find android/ -type f |
-                                        while read file
-                                        do
-                                            sed -i 's/sinbaddev/sinbad/g' $file
-                                            sed -i 's/ic_launcher_pink/ic_launcher/g' $file
-                                            sed -i 's/ic_launcher_round_pink/ic_launcher_round/g' $file
-                                            sed -i 's/Sinbad Development/Sinbad/g' $file
-                                        done
-                                    '''
-                                }else{
-                                    sh '''
-                                        find android/ -type f |
-                                        while read file
-                                        do
-                                            sed -i 's/sinbaddev/sinbad/g' $file
-                                            sed -i 's/ic_launcher_pink/ic_launcher_pink/g' $file
-                                            sed -i 's/ic_launcher_round_pink/ic_launcher_round_pink/g' $file
-                                            sed -i 's/Sinbad Development/Sinbad Testing/g' $file
-                                        done
-                                    '''
-                                }
+                                sh '''
+                                    find android/ -type f |
+                                    while read file
+                                    do
+                                        sed -i 's/agentdevelopment/agent/g' $file
+                                    done
+                                '''
                             }else{
                                 if(SINBAD_ENV != 'development') {
                                     if(SINBAD_ENV == 'staging') {
@@ -178,10 +165,7 @@ pipeline {
                                             find android/ -type f |
                                             while read file
                                             do
-                                                sed -i 's/sinbaddev/sinbadstaging/g' $file
-                                                sed -i 's/ic_launcher_pink/ic_launcher_green/g' $file
-                                                sed -i 's/ic_launcher_round_pink/ic_launcher_round_green/g' $file
-                                                sed -i 's/Sinbad Development/Sinbad Staging/g' $file
+                                                sed -i 's/agentdevelopment/agentstaging/g' $file
                                             done
                                         '''
                                     } else if(SINBAD_ENV == 'sandbox') {
@@ -189,10 +173,9 @@ pipeline {
                                             find android/ -type f |
                                             while read file
                                             do
-                                                sed -i 's/sinbaddev/sinbadsandbox/g' $file
-                                                sed -i 's/ic_launcher_pink/ic_launcher_green/g' $file
-                                                sed -i 's/ic_launcher_round_pink/ic_launcher_round_green/g' $file
-                                                sed -i 's/Sinbad Development/Sinbad Sandbox/g' $file
+                                                sed -i 's/agentdevelopment/agentsandbox/g' $file
+                                                sed -i 's/ic_launcher_dev/ic_launcher_stg/g' $file
+                                                sed -i 's/ic_launcher_round_dev/ic_launcher_round_stg/g' $file
                                             done
                                         '''
                                     } else if(SINBAD_ENV == 'demo') {
@@ -200,10 +183,9 @@ pipeline {
                                             find android/ -type f |
                                             while read file
                                             do
-                                                sed -i 's/sinbaddev/sinbaddemo/g' $file
-                                                sed -i 's/ic_launcher_pink/ic_launcher_green/g' $file
-                                                sed -i 's/ic_launcher_round_pink/ic_launcher_round_green/g' $file
-                                                sed -i 's/Sinbad Development/Sinbad Demo/g' $file
+                                                sed -i 's/agentdevelopment/agentdemo/g' $file
+                                                sed -i 's/ic_launcher_dev/ic_launcher_stg/g' $file
+                                                sed -i 's/ic_launcher_round_dev/ic_launcher_round_stg/g' $file
                                             done
                                         '''
                                     } else if(SINBAD_ENV == 'production') {
@@ -211,13 +193,13 @@ pipeline {
                                             find android/ -type f |
                                             while read file
                                             do
-                                                sed -i 's/sinbaddev/sinbad/g' $file
-                                                sed -i 's/ic_launcher_pink/ic_launcher/g' $file
-                                                sed -i 's/ic_launcher_round_pink/ic_launcher_round/g' $file
-                                                sed -i 's/Sinbad Development/Sinbad/g' $file
+                                                sed -i 's/agentdevelopment/agent/g' $file
+                                                sed -i 's/ic_launcher_dev/ic_launcher/g' $file
+                                                sed -i 's/ic_launcher_round_dev/ic_launcher_round/g' $file
                                             done
                                         '''
                                     }
+                                    
                                 }
                             }
                             sh "find android -type f -name '.!*!*' -delete"
@@ -251,7 +233,7 @@ pipeline {
                             s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz")
                             s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz")
                         }
-                        slackSend color: '#ff0000', channel: "#download-apps-production", message: """
+                        slackSend color: '#FFFFFF', channel: "#download-apps-production", message: """
 Hi Sailors
 We have new APK Version
 Application: ${SINBAD_REPO}
@@ -326,29 +308,12 @@ ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
     }
 
     post {
-        success {
-            script{
-                if(SINBAD_ENV == 'sandbox') {
-                    slackSend color: '#8cff00', message:  """
-Status : Deployment Success! :jkndance:
-Application : ${SINBAD_REPO}
-Version : ${env.GIT_TAG}
-Commit ID : ${env.GIT_COMMIT}
-Changes Message : ${env.GIT_MESSAGE}""", channel: "#alert-sandbox-ops"
-                }
-            }
+        always {
+            // junit '**/target/*.xml'
+            slackSend color: '#8cff00', message: "${SINBAD_REPO} (${SINBAD_ENV}) -> ${env.GIT_MESSAGE} by <${env.GIT_AUTHOR}>", channel: "#jenkins"
         }
         failure {
-            script{
-                if(SINBAD_ENV == 'sandbox') {
-                    slackSend color: '#ff0000', message:  """
-Status : Deployment Failed!!! :alertsirene:
-Application : ${SINBAD_REPO}
-Version : ${env.GIT_TAG}
-Commit ID : ${env.GIT_COMMIT}
-Changes Message : ${env.GIT_MESSAGE}""", channel: "#alert-sandbox-ops"
-                }
-            }
+            slackSend color: '#ff0000', message: "(FAILED) ${SINBAD_REPO} (${SINBAD_ENV}) -> ${env.GIT_MESSAGE} by <${env.GIT_AUTHOR}>", channel: "#jenkins"
         }
     }
 }
