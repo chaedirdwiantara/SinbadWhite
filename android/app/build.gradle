@@ -133,7 +133,7 @@ android {
         applicationId "com.sinbad.agentdevelopment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 6100004
+        versionCode 9245734
         versionName "1.1.4"
         missingDimensionStrategy 'react-native-camera', 'general'
         multiDexEnabled true
@@ -200,6 +200,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation(project(':react-native-maps')){
         exclude group: 'com.google.android.gms', module: 'play-services-base'
         exclude group: 'com.google.android.gms', module: 'play-services-maps'
@@ -216,11 +218,21 @@ dependencies {
     compile 'com.google.android.gms:play-services-base:+'
     compile 'com.google.android.gms:play-services-location:+'
     compile 'com.google.android.gms:play-services-maps:+'
-    implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation 'com.facebook.fresco:animated-gif:2.0.0'
     implementation "com.google.firebase:firebase-firestore:19.0.0"
     implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation "com.google.firebase:firebase-messaging:20.1.3"
+
+    debugImplementation("com.facebook.flipper:flipper:0.54.0") {
+      exclude group:'com.facebook.fbjni'
+    }
+    debugImplementation("com.facebook.flipper:flipper-network-plugin:0.54.0") {
+        exclude group:'com.facebook.flipper'
+        exclude group:'com.squareup.okhttp3', module:'okhttp'
+    }
+    debugImplementation("com.facebook.flipper:flipper-fresco-plugin:0.54.0") {
+        exclude group:'com.facebook.flipper'
+    }
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
