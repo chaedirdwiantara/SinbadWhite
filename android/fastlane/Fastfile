@@ -36,36 +36,36 @@ platform :android do
 
   desc "Upload AAB Files to Internal Test Play Store"
   lane :internal do
-    supply(track: 'internal', aab: 'app/build/outputs/bundle/release/app.aab')
+    supply(track: 'internal', aab: 'app/build/outputs/bundle/release/app-release.aab')
   end
 
   desc "Upload AAB Files to Staging Play Store"
   lane :staging do
-    supply(track: 'Staging', aab: 'app/build/outputs/bundle/release/app.aab')
+    supply(track: 'Staging', aab: 'app/build/outputs/bundle/release/app-release.aab')
   end
 
   desc "Upload AAB Files to Sandbox Play Store"
   lane :sandbox do
-    supply(track: 'internal', aab: 'app/build/outputs/bundle/release/app.aab')
+    supply(track: 'internal', aab: 'app/build/outputs/bundle/release/app-release.aab')
   end
 
   desc "Upload AAB Files to Demo Play Store"
   lane :demo do
-    supply(track: 'Demo', aab: 'app/build/outputs/bundle/release/app.aab')
+    supply(track: 'Demo', aab: 'app/build/outputs/bundle/release/app-release.aab')
   end
 
   desc "Upload AAB Files to Alpha Play Store"
   lane :alpha do
-    supply(track: 'alpha', aab: 'app/build/outputs/bundle/release/app.aab')
+    supply(track: 'alpha', aab: 'app/build/outputs/bundle/release/app-release.aab')
   end
 
   desc "Upload AAB Files to Beta Play Store"
   lane :beta do
-    supply(track: 'beta', aab: 'app/build/outputs/bundle/release/app.aab')
+    supply(track: 'beta', aab: 'app/build/outputs/bundle/release/app-release.aab')
   end
 
   desc "Upload AAB Files to Production Play Store"
   lane :production do
-    supply(track: 'production', aab: 'app/build/outputs/bundle/release/app.aab')
+    supply(track: 'production', aab: 'app/build/outputs/bundle/release/app-release.aab')
   end
 end
