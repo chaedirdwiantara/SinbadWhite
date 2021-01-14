@@ -1,3 +1,17 @@
+def getSlackChannel(env) {
+    if (env == 'production') {
+        return '#download-apps-production'
+    } else if (env == 'demo') {
+        return '#download-apps-demo'
+    } else if(env == 'sandbox') {
+        return '#download-apps-sandbox'
+    } else if(env == 'staging') {
+        return '#download-apps-staging'
+    } else {
+        return '#download-apps-development'
+    }
+}
+
 pipeline {
     agent {
         node {
@@ -43,6 +57,7 @@ pipeline {
         SINBAD_ENV = "${env.JOB_BASE_NAME}"
         WOKRSPACE = "${env.WORKSPACE}"
         SINBAD_URI_DOWNLOAD = "http://app-download.sinbad.web.id"
+        SLACK_CHANNEL = getSlackChannel(SINBAD_ENV)
 
         // Andorid Lib
         SDK_URL = "https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip"
@@ -233,7 +248,7 @@ pipeline {
                             s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz")
                             s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz")
                         }
-                        slackSend color: '#FFFFFF', channel: "#download-apps-production", message: """
+                        slackSend color: '#FFFFFF', channel: "${SLACK_CHANNEL}", message: """
 Hi Sailors
 We have new APK Version
 Application: ${SINBAD_REPO}
