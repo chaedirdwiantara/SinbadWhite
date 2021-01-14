@@ -1,6 +1,7 @@
 # OSX
 #
 .DS_Store
+.vscode/
 
 # Gradle
 /build/
@@ -41,9 +42,9 @@ local.properties
 # node.js
 #
 node_modules/
-package-lock.json
 npm-debug.log
 yarn-error.log
+yarn.lock
 
 # BUCK
 buck-out/
@@ -75,3 +76,5 @@ android/app/mykeystore.keystore
 android/app/src/main/res/values/strings.xml
 yarn.lock
 android/fastlane/config/sinbad.json
+
+google-services*
