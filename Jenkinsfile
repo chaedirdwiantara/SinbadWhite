@@ -323,12 +323,27 @@ ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
     }
 
     post {
-        always {
-            // junit '**/target/*.xml'
-            slackSend color: '#8cff00', message: "${SINBAD_REPO} (${SINBAD_ENV}) -> ${env.GIT_MESSAGE} by <${env.GIT_AUTHOR}>", channel: "#jenkins"
+        success {
+            script{
+                slackSend color: '#8cff00', message:  """
+Status : Deployment Success! :jkndance:
+Application : ${SINBAD_REPO}
+Version : ${env.GIT_TAG}
+Commit ID : ${env.GIT_COMMIT}
+Changes Message : ${env.GIT_MESSAGE}""", channel: "${SLACK_CHANNEL}"
+                }
         }
         failure {
-            slackSend color: '#ff0000', message: "(FAILED) ${SINBAD_REPO} (${SINBAD_ENV}) -> ${env.GIT_MESSAGE} by <${env.GIT_AUTHOR}>", channel: "#jenkins"
+            script{
+                if(SINBAD_ENV == 'sandbox') {
+                    slackSend color: '#ff0000', message:  """
+Status : Deployment Failed!!! :alertsirene:
+Application : ${SINBAD_REPO}
+Version : ${env.GIT_TAG}
+Commit ID : ${env.GIT_COMMIT}
+Changes Message : ${env.GIT_MESSAGE}""", channel: "${SLACK_CHANNEL}"
+                }
+            }
         }
     }
 }
