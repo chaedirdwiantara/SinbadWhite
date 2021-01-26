@@ -39,7 +39,8 @@ import {
   ACTIVITY_JOURNEY_PLAN_CHECK_IN,
   ACTIVITY_JOURNEY_PLAN_CHECK_OUT,
   ACTIVITY_JOURNEY_PLAN_ORDER,
-  ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+  ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY,
+  ACTIVITY_JOURNEY_PLAN_STOCK
 } from '../../../constants';
 import _ from 'lodash';
 
@@ -80,6 +81,10 @@ class MerchantHomeView extends Component {
           goTo: 'survey'
         },
         {
+          menuName: 'Catatan Stok',
+          goTo: 'stock'
+        },
+        {
           menuName: 'Keluar Toko',
           icon: require('../../../assets/icons/merchant/check-out.png'),
           goTo: 'checkOut'
@@ -90,7 +95,7 @@ class MerchantHomeView extends Component {
        */
       task: [
         {
-          name: 'Check-in Toko',
+          name: 'Masuk Toko',
           title: 'Check-in',
           goTo: 'checkIn',
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
@@ -102,7 +107,13 @@ class MerchantHomeView extends Component {
           activity: ACTIVITY_JOURNEY_PLAN_ORDER
         },
         {
-          name: 'Check-out Toko',
+          name: 'Catatan Stok',
+          title: 'Isi',
+          goTo: 'stock',
+          activity: ACTIVITY_JOURNEY_PLAN_STOCK
+        },
+        {
+          name: 'Keluar Toko',
           title: 'Check-out',
           goTo: 'checkOut',
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
@@ -161,8 +172,8 @@ class MerchantHomeView extends Component {
         this.setState({
           task: [
             {
-              name: 'Check-in Toko',
-              title: 'Check-in',
+              name: 'Masuk Toko',
+              title: 'Masuk',
               goTo: 'checkIn',
               activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
             },
@@ -173,8 +184,14 @@ class MerchantHomeView extends Component {
               activity: ACTIVITY_JOURNEY_PLAN_ORDER
             },
             {
-              name: 'Check-out Toko',
-              title: 'Check-out',
+              name: 'Catatan Stok',
+              title: 'Isi',
+              goTo: 'stock',
+              activity: ACTIVITY_JOURNEY_PLAN_STOCK
+            },
+            {
+              name: 'Keluar Toko',
+              title: 'Keluar',
               goTo: 'checkOut',
               activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
             }
@@ -184,12 +201,12 @@ class MerchantHomeView extends Component {
     }
     /** IF SURVEY LIST EXIST */
     if (!_.isEmpty(surveyList.payload.data) && surveyList.success) {
-      if (this.state.task.length === 3) {
+      if (this.state.task.length === 4) {
         this.setState({
           task: [
             {
-              name: 'Check-in Toko',
-              title: 'Check-in',
+              name: 'Masuk Toko',
+              title: 'Masuk',
               goTo: 'checkIn',
               activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
             },
@@ -200,14 +217,20 @@ class MerchantHomeView extends Component {
               activity: ACTIVITY_JOURNEY_PLAN_ORDER
             },
             {
+              name: 'Catatan Stok',
+              title: 'Isi',
+              goTo: 'stock',
+              activity: ACTIVITY_JOURNEY_PLAN_STOCK
+            },
+            {
               name: 'Toko Survey',
               title: 'Fill',
               goTo: 'survey',
               activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
             },
             {
-              name: 'Check-out Toko',
-              title: 'Check-out',
+              name: 'Keluar Toko',
+              title: 'Keluar',
               goTo: 'checkOut',
               activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
             }
@@ -402,6 +425,9 @@ class MerchantHomeView extends Component {
         ) {
           NavigationService.navigate('MerchantSurveyView', { readOnly: false });
         }
+        break;
+      case 'stock':
+        console.log('Go To Stock Management')
         break;
       default:
         break;
