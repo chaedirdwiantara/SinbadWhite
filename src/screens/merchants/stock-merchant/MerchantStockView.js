@@ -8,7 +8,9 @@ import {
 } from '../../../library/reactPackage'
 import {
     BackHandlerBackSpecific,
-    StatusBarWhite
+    StatusBarWhite,
+    EmptyData,
+    ButtonFloatType1
 } from '../../../library/component'
 import masterColor from '../../../config/masterColor.json'
 
@@ -18,6 +20,15 @@ class MerchantStockView extends Component {
         this.state = {
             mockData: false
         }
+    }
+    renderButtonAddStock(){
+        return (
+            <View style={styles.containerFloatButton}>
+                <ButtonFloatType1 
+                    title={'Tambah Produk'}
+                />
+            </View>
+        )
     }
     renderData(){
         return(
@@ -30,10 +41,14 @@ class MerchantStockView extends Component {
     }
     renderDataEmpty(){
         return(
-            <View>
-                <Text>
-                    Data Not Found
-                </Text>
+            <View style={styles.mainContainer}>
+                <EmptyData 
+                    title={'Tidak Ada Catatan Stok'}
+                    description={
+                        'Tambah produk untuk melakukan pencatatan stok'
+                    }
+                />
+                {this.renderButtonAddStock()}
             </View>
         )
     }
@@ -46,7 +61,7 @@ class MerchantStockView extends Component {
     }
     render(){
         return(
-            <SafeAreaView>
+            <SafeAreaView style={styles.mainContainer}>
                 <StatusBarWhite />
                 {this.renderContent()}
             </SafeAreaView>
@@ -58,7 +73,13 @@ const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
         backgroundColor: masterColor.backgroundWhite
-    }
+    },
+    containerFloatButton: {
+        width: '100%',
+        position: 'absolute',
+        bottom: 0,
+        zIndex: 1000
+    },
 })
 
 export default MerchantStockView
