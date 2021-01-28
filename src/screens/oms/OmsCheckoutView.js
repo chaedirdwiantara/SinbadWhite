@@ -37,6 +37,8 @@ import ModalBottomParcelDetail from './ModalBottomParcelDetail';
 import ModalBottomStockConfirmationConfirmOrder from './ModalBottomStockConfirmationConfirmOrder';
 import ModalBottomErrorMinimumOrder from './ModalBottomErrorMinimumOrder';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
+import ModalBottomPayLaterType from './ModalBottomPayLaterType';
+import ModalConfirmKUR from '../../components/modal/ModalConfirmationType3';
 class OmsCheckoutView extends Component {
   constructor(props) {
     super(props);
@@ -89,7 +91,9 @@ class OmsCheckoutView extends Component {
       alreadyFetchTAndR: false,
       modalWarningAllCondition: false,
       openModalPaymentNotAllowed: false,
-      openModalSKUNotAvailable: false
+      openModalSKUNotAvailable: false,
+      modalPayLaterType: false,
+      modalConfirmKUR: false
     };
   }
   /**
@@ -454,6 +458,14 @@ class OmsCheckoutView extends Component {
       });
     }
   }
+
+   /** === MODIFY DATA FOR PAYLATER KUR === */
+   selectedPaylaterType(item) {
+    this.setState({
+      modalConfirmKUR: true
+    })
+  }
+
   /** === CHECK PAYMENT ALREADY SELECTED === */
   checkPaymentSelected(item) {
     if (
@@ -693,9 +705,15 @@ class OmsCheckoutView extends Component {
     //   });
     // } else {
     this.setState({ modalPaymentTypeList: false, selectedPaymentType });
-    this.openPaymentMethod(selectedPaymentType);
+    if (selectedPaymentType.paymentTypeId === "2"){
+    this.openPaylaterType(selectedPaymentType)
+    } else {
+      this.openPaymentMethod(selectedPaymentType);
+    }
+   
     // }
   }
+
   /** === FOR BACK TO CART VIEW ==== */
   backToCartItemView() {
     /** => this is for back to cart (dont delete) */
@@ -766,6 +784,22 @@ class OmsCheckoutView extends Component {
       </View>
     );
   }
+
+   /** === FOR OPEN MODAL PAYLATER TYPE === */
+   openPaylaterType(selectedPaymentType) {
+    const params = {
+      supplierId: parseInt(selectedPaymentType.supplierId, 10),
+      orderParcelId: parseInt(this.state.selectedParcel, 10),
+      paymentTypeId: parseInt(selectedPaymentType.paymentTypeId, 10)
+    };
+    this.props.OmsGetPaymentChannelProcess(params);
+    this.setState({
+      modalTAndR: false,
+      selectedPaymentType: selectedPaymentType,
+      modalPaylaterType: true
+    });
+  }
+
   /**
    * *********************************
    * RENDER VIEW
@@ -1636,6 +1670,56 @@ class OmsCheckoutView extends Component {
       orderId: this.props.oms.dataOmsGetCheckoutItem.id
     });
   }
+
+  /** === RENDER MODAL PAY LATER TYPE === */
+  renderModalPaylaterType() {
+    return this.state.modalPaylaterType ? (
+      <ModalBottomPayLaterType
+        open={this.state.modalPaylaterType}
+        close={() =>
+          this.setState({
+            modalPaylaterType: false,
+            modalPaymentTypeList: true
+          })
+        }
+        paymentMethod={this.state.paymentMethod}
+        paymentType={this.state.selectedPaymentType}
+        orderPrice={this.calTotalPrice()}
+        loading={this.props.oms.loadingOmsGetPaymentChannel}
+        onRef={ref => (this.selectPaylaterType = ref)}
+        selectPaylaterType={this.selectedPaylaterType.bind(this)}
+      />
+    ) : (
+      <View />
+    );
+  }
+
+  /** === RENDER MODAL CONFIRM PAYLATER KUR === */
+  renderModalConfirmKUR() {
+    return (
+      <View>
+        {this.state.modalConfirmKUR ? (
+          <ModalConfirmKUR
+            open={this.state.modalConfirmKUR}
+            cancel={() => this.setState({modalConfirmKUR: false})}
+            title="Konfirmasi"
+            cancelText="Batal"
+            confirmText="Lanjut"
+            // content="Untuk menggunakan Bayar Nanti dengan KUR KlikACC, Anda akan diarahkan ke halaman klikACC untuk melanjutkan proses."
+            customContent={
+              <Text style={[Fonts.type17, { textAlign: 'center' }]}>
+                Untuk menggunakan <Text style={Fonts.type50}>Bayar Nanti dengan KUR KlikACC</Text>, Anda akan diarahkan ke <Text style={Fonts.type50}>halaman klikACC</Text> untuk melanjutkan proses.
+              </Text>
+            }
+            ok={() => alert("test")}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  }
+
   /**
    * =======================
    * RENDER MAIN
@@ -1666,6 +1750,8 @@ class OmsCheckoutView extends Component {
         {this.renderModalPaymentNotAllowed()}
         {this.renderModalSKUNotAvailable()}
         {this.renderModalErrorPaymentTryAgain()}
+        {this.renderModalPaylaterType()}
+        {this.renderModalConfirmKUR()}
       </View>
     );
   }
