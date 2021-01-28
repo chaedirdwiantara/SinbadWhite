@@ -297,7 +297,10 @@ const MerchantNavigator = {
   MerchantStockView: {
     screen: MerchantStockView,
     navigationOptions: {
-      headerTintColor: masterColor.backButtonWhite,
+      headerTitle: 'Catatan Stok',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage
+      ],
       gesturesEnabled: false
     }
   }
