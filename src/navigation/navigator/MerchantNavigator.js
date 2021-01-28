@@ -26,6 +26,7 @@ import MerchantEditView from '../../screens/merchants/edit-merchant/MerchantEdit
 /** merchant survey */
 import MerchantSurveyView from '../../screens/merchants/survey-merchant/MerchantSurveyView';
 import MerchantSurveyDisplayPhotoView from '../../screens/merchants/survey-merchant/MerchantSurveyDisplayPhotoView';
+import MerchantStockView from '../../screens/merchants/stock-merchant/MerchantStockView';
 
 const MerchantNavigator = {
   MerchantView: {
@@ -289,6 +290,17 @@ const MerchantNavigator = {
         elevation: 0,
         backgroundColor: masterColor.mainColor
       },
+      gesturesEnabled: false
+    }
+  },
+  /** === STOCK MERCHANT */
+  MerchantStockView: {
+    screen: MerchantStockView,
+    navigationOptions: {
+      headerTitle: 'Catatan Stok',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage
+      ],
       gesturesEnabled: false
     }
   }

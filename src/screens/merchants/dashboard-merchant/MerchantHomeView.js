@@ -428,6 +428,7 @@ class MerchantHomeView extends Component {
         break;
       case 'stock':
         console.log('Go To Stock Management')
+        NavigationService.navigate('MerchantStockView')
         break;
       default:
         break;
