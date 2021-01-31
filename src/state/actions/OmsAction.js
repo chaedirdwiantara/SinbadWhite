@@ -324,3 +324,28 @@ export function omsCheckPromoSuccess(data) {
 export function omsCheckPromoFailed(data) {
   return { type: types.OMS_CHECK_PROMO_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * GET PAY LATER TYPE
+ * ===========================
+ */
+/** === GET PAY LATER TYPE PROCESS === */
+export function omsGetPayLaterTypeProcess(data) {
+  return { type: types.OMS_GET_PAY_LATER_TYPE_PROCESS, payload: data };
+}
+
+/** === GET PAY LATER TYPE SUCCESS === */
+export function omsGetPayLaterTypeSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_GET_PAY_LATER_TYPE_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_GET_PAY_LATER_TYPE_FAILED, payload: data };
+}
+/** === GET PAY LATER TYPE FAILED === */
+export function omsGetPayLaterTypeFailed(data) {
+  return { type: types.OMS_GET_PAY_LATER_TYPE_FAILED, payload: data };
+}
