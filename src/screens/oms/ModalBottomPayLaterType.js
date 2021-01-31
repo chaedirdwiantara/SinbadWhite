@@ -13,11 +13,12 @@ import {
   import {
     StatusBarRedOP50,
     ModalBottomType3,
-    SkeletonType8
+    SkeletonType24
   } from '../../library/component';
   import { GlobalStyle, Fonts } from '../../helpers';
   import masterColor from '../../config/masterColor.json';
   import { MoneyFormat } from '../../helpers/NumberFormater';
+
 
   const { height } = Dimensions.get('window');
 

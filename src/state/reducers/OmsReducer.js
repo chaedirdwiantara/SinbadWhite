@@ -431,7 +431,7 @@ export const oms = createReducer(INITIAL_STATE, {
       loadingOmsCheckPromo: false,
       errorOmsCheckPromo: action.payload
     };
-  }
+  },
 
   /**
    * ==================================
