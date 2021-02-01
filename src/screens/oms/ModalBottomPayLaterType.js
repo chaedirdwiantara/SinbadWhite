@@ -24,37 +24,7 @@ const { height } = Dimensions.get('window');
 class ModalBottomPaylaterType extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loadingOmsGetPayLaterType: false,
-      dataPaylaterType: {
-        paymentTypeId: 3,
-        orderParcelId: 24,
-        paylaterType: [
-          {
-            id: 1,
-            name: 'Supplier',
-            image:
-              'https://sinbad-website-sg.s3-ap-southeast-1.amazonaws.com/dev/payment_method_icon/bca.png',
-            status: 'disabled',
-            description:
-              'Layanan Bayar Nanti yang langsung disediakan oleh supplier',
-            isRedirect: true,
-            redirectUrl: 'https://google.co.id'
-          },
-          {
-            id: 2,
-            name: 'KUR KlikACC',
-            image:
-              'https://sinbad-website-sg.s3-ap-southeast-1.amazonaws.com/dev/payment_method_icon/bca.png',
-            status: 'enabled',
-            description:
-              'Kredit Usaha Rakyat (KUR) merupakan sebuah layanan yang diberikan oleh pemerintah',
-            isRedirect: true,
-            redirectUrl: 'https://google.co.id'
-          }
-        ]
-      }
-    };
+    this.state = {};
   }
   /**
    * ====================
