@@ -17,7 +17,7 @@ import {
 import {
     StatusBarBlackOP40,
     SearchBarType4,
-    TagListType1,
+    TagListType3,
     SkeletonType2,
     ButtonSingle
 } from '../../../library/component'
@@ -39,16 +39,16 @@ class ModalBottomProductList extends Component {
                 {
                     id: 0,
                     name: 'All',
-                    code: 'ALL'
+                    type: 'ALL'
                 },{
                     id: 1,
                     name: 'Produk MSS',
-                    code: 'MSS'
+                    type: 'MSS'
                 },
                 {
                     id: 2,
                     name: 'Produk Non-MSS',
-                    code: 'NON-MSS'
+                    type: 'NON-MSS'
                 }
             ],
             tagType: 0
@@ -111,6 +111,7 @@ class ModalBottomProductList extends Component {
         return(
             <View style={styles.boxContentBody}>
                 {this.renderContentSearchBar()}
+                {this.renderContentTags()}
             </View>
         )
     }
@@ -128,7 +129,30 @@ class ModalBottomProductList extends Component {
             </View>
         )
     }
+    // RENDER TAGS SKELETON
+    renderSkeletonTags(){
+        return <SkeletonType2 />
+    }
 
+    // RENDER TAG
+    renderTags(){
+        return (
+            <TagListType3
+                selected={this.state.tagsType}
+                onRef={ref => (this.parentFunction = ref)}
+                parentFunction={this.parentFunction.bind(this)}
+                data={this.state.tagsTypeList}
+            />
+        )
+    }
+
+    // RENDER CONTENT TAGS
+    renderContentTags(){
+        return this.state.LoadingTags 
+            ? this.renderSkeletonTags() 
+            : this.renderTags()
+    }
+    
     // RENDER MAIN RENDER
     render(){
         return (
