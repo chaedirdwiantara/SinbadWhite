@@ -57,6 +57,8 @@ class OmsCheckoutView extends Component {
       dataPaymentMethod: null,
       usingDefault: false,
       changedIndex: [],
+      payLaterType: null,
+      payLaterTypeId: null,
       /** modal */
       openModalBackToCartItem: false,
       openModalConfirmOrder: false,
@@ -93,7 +95,7 @@ class OmsCheckoutView extends Component {
       openModalPaymentNotAllowed: false,
       openModalSKUNotAvailable: false,
       modalPayLaterType: false,
-      modalConfirmKUR: false
+      modalConfirmKUR: false,
     };
   }
   /**
@@ -245,7 +247,8 @@ class OmsCheckoutView extends Component {
                     ...lastPayment.paymentType
                   },
               paymentTypeSupplierMethodId:
-                lastPayment.paymentTypeSupplierMethodId
+                lastPayment.paymentTypeSupplierMethodId,
+              paylaterTypeId : this.state.payLaterTypeId? this.state.payLaterTypeId : null
             }
           : { ...e };
       });
@@ -275,6 +278,16 @@ class OmsCheckoutView extends Component {
           } else {
             this.setState({ modalTAndR: true });
           }
+        }
+      }
+    }
+
+    if (this.props.oms.dataOmsGetPayLaterType !== undefined){
+      if(prevProps.oms.dataOmsGetPayLaterType !== this.props.oms.dataOmsGetPayLaterType){
+        if(this.props.oms.dataOmsGetPayLaterType !== null){
+          this.setState({
+            payLaterType: this.props.oms.dataOmsGetPayLaterType.data
+          })
         }
       }
     }
@@ -373,7 +386,8 @@ class OmsCheckoutView extends Component {
       paymentTypeId: e.paymentTypeDetail.hasOwnProperty('paymentTypeId')
         ? parseInt(e.paymentTypeDetail.paymentTypeId, 10)
         : parseInt(e.paymentTypeDetail.id, 10),
-      paymentChannelId: e.paymentMethodDetail.id
+      paymentChannelId: e.paymentMethodDetail.id,
+      paylaterTypeId: this.state.payLaterTypeId? this.state.payLaterTypeId : null 
     }));
     this.props.omsConfirmOrderProcess({
       orderId,
@@ -461,9 +475,20 @@ class OmsCheckoutView extends Component {
 
    /** === MODIFY DATA FOR PAYLATER KUR === */
    selectedPaylaterType(item) {
+     this.setState({
+       payLaterTypeId : item.id
+     })
+   if (item.id === 2){
     this.setState({
       modalConfirmKUR: true
-    })
+    })} else {
+      this.setState({
+        modalPaylaterType: false,
+        modalPaymentTypeList: false,
+        modalPaymentTypeMethod: false,
+      })
+      this.openPaymentMethod(this.state.selectedPaymentType);
+    }
   }
 
   /** === CHECK PAYMENT ALREADY SELECTED === */
@@ -788,11 +813,10 @@ class OmsCheckoutView extends Component {
    /** === FOR OPEN MODAL PAYLATER TYPE === */
    openPaylaterType(selectedPaymentType) {
     const params = {
-      supplierId: parseInt(selectedPaymentType.supplierId, 10),
-      orderParcelId: parseInt(this.state.selectedParcel, 10),
-      paymentTypeId: parseInt(selectedPaymentType.paymentTypeId, 10)
+      paymentTypeId: 2,
+      orderParcelId: 24
     };
-    this.props.OmsGetPaymentChannelProcess(params);
+    this.props.omsGetPayLaterTypeProcess(params);
     this.setState({
       modalTAndR: false,
       selectedPaymentType: selectedPaymentType,
@@ -1684,8 +1708,9 @@ class OmsCheckoutView extends Component {
         }
         paymentMethod={this.state.paymentMethod}
         paymentType={this.state.selectedPaymentType}
+        payLaterType={ this.state.payLaterType}
         orderPrice={this.calTotalPrice()}
-        loading={this.props.oms.loadingOmsGetPaymentChannel}
+        loading={this.props.oms.loadingOmsGetPayLaterType}
         onRef={ref => (this.selectPaylaterType = ref)}
         selectPaylaterType={this.selectedPaylaterType.bind(this)}
       />

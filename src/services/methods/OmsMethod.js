@@ -112,7 +112,17 @@ function checkPromo(data) {
     params
   });
 }
-
+/** GET PAY LATER TYPE */
+function getPayLaterType(data) {
+  return ApiRest({
+    path: 'payment/v1/paylater-types',
+    method: 'POST',
+    params: {
+      paymentTypeId: data.paymentTypeId,
+      orderParcelId: data.orderParcelId
+    }
+  });
+}
 /**
  * =========================================
  * THIS CODE IS NOT FETCHING (ONLY FUNCTION)
@@ -145,5 +155,6 @@ export const OmsMethod = {
   getPaymentChannel,
   getTermsConditions,
   getLastPaymentChannel,
-  checkPromo
+  checkPromo,
+  getPayLaterType
 };

@@ -112,6 +112,19 @@ function* checkPromo(actions) {
     yield put(ActionCreators.omsCheckPromoFailed(error));
   }
 }
+
+/** === CHECK PROMO VA === */
+function* getPayLaterType(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.getPayLaterType(actions.payload);
+    });
+    yield put(ActionCreators.omsGetPayLaterTypeSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.omsGetPayLaterTypeFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* OmsSaga() {
   yield takeEvery(types.OMS_GET_CART_ITEM_PROCESS, getCartItem);
@@ -130,6 +143,7 @@ function* OmsSaga() {
     getLastPaymentChannel
   );
   yield takeEvery(types.OMS_CHECK_PROMO_PROCESS, checkPromo);
+  yield takeEvery(types.OMS_GET_PAY_LATER_TYPE_PROCESS, getPayLaterType)
 }
 
 export default OmsSaga;

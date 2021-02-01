@@ -11,6 +11,7 @@ const INITIAL_STATE = {
   loadingOmsGetCartItemFromCheckout: false,
   loadingOmsGetPaymentChannel: false,
   loadingOmsCheckPromo: false,
+  loadingOmsGetPayLaterType: false,
   /** data */
   dataOmsGetCartItem: null,
   dataOmsGetCartItemFromCheckout: null,
@@ -23,6 +24,7 @@ const INITIAL_STATE = {
   dataCheckBoxlistCart: [],
   dataOmsGetPaymentChannel: null,
   dataOmsCheckPromo: null,
+  dataOmsGetPayLaterType: null,
   /** error */
   errorOmsGetCartItem: null,
   errorOmsGetCheckoutItem: null,
@@ -31,7 +33,8 @@ const INITIAL_STATE = {
   errorOmsDeleteCartItem: null,
   errorOmsGetCartItemFromCheckout: null,
   errorOmsGetPaymentChannel: null,
-  errorOmsCheckPromo: null
+  errorOmsCheckPromo: null,
+  errorOmsGetPayLaterType: null,
 };
 
 export const oms = createReducer(INITIAL_STATE, {
@@ -51,6 +54,7 @@ export const oms = createReducer(INITIAL_STATE, {
       loadingOmsGetCartItemFromCheckout: false,
       loadingOmsGetPaymentChannel: false,
       loadingOmsCheckPromo: false,
+      loadingOmsGetPayLaterType: false,
       /** data */
       dataOmsGetCartItem: null,
       dataOmsGetCartItemFromCheckout: null,
@@ -63,6 +67,7 @@ export const oms = createReducer(INITIAL_STATE, {
       dataCheckBoxlistCart: [],
       dataOmsGetPaymentChannel: null,
       dataOmsCheckPromo: null,
+      dataOmsGetPayLaterType: null,
       /** error */
       errorOmsGetCartItem: null,
       errorOmsGetCheckoutItem: null,
@@ -71,7 +76,8 @@ export const oms = createReducer(INITIAL_STATE, {
       errorOmsDeleteCartItem: null,
       errorOmsGetCartItemFromCheckout: null,
       errorOmsGetPaymentChannel: null,
-      errorOmsCheckPromo: null
+      errorOmsCheckPromo: null,
+      errorOmsGetPayLaterType: null,
     };
   },
   [types.OMS_RESET_DATA](state, action) {
@@ -401,7 +407,7 @@ export const oms = createReducer(INITIAL_STATE, {
 
   /**
    * ==================================
-   * ACTIVATE VA
+   * CHECK PROMO
    * =================================
    */
   [types.OMS_CHECK_PROMO_PROCESS](state, action) {
@@ -424,6 +430,34 @@ export const oms = createReducer(INITIAL_STATE, {
       ...state,
       loadingOmsCheckPromo: false,
       errorOmsCheckPromo: action.payload
+    };
+  },
+
+  /**
+   * ==================================
+   * GET PAY LATER TYPE
+   * =================================
+   */
+  [types.OMS_GET_PAY_LATER_TYPE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetPayLaterType: true,
+      dataOmsGetPayLaterType: null,
+      errorOmsGetPayLaterType: null
+    };
+  },
+  [types.OMS_GET_PAY_LATER_TYPE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetPayLaterType: false,
+      dataOmsGetPayLaterType: action.payload
+    };
+  },
+  [types.OMS_GET_PAY_LATER_TYPE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsGetPayLaterType: false,
+      errorOmsGetPayLaterType: action.payload
     };
   }
 });
