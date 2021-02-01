@@ -92,6 +92,7 @@ import Address from '../components/Address';
 /** TAG */
 import TagListType1 from '../components/tag/TagListType1';
 import TagListType2 from '../components/tag/TagListType2';
+import TagListType3 from '../components/tag/TagListType3';
 /** DATE PICKER SPINNER */
 import DatePickerSpinner from '../components/DatePickerSpinner';
 /** SELECTED MERCHANT */
@@ -201,6 +202,7 @@ export {
   /** TAG */
   TagListType1,
   TagListType2,
+  TagListType3,
   /** DATE PICKER SPINNER */
   DatePickerSpinner,
   /** SELECTED MERCHANT NAME */
