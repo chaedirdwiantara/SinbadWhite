@@ -14,11 +14,14 @@ import {
 } from '../../../library/component'
 import masterColor from '../../../config/masterColor.json'
 
+import ModalBottomProductList from './ModalBottomProductList'
+
 class MerchantStockView extends Component {
     constructor(props){
         super(props)
         this.state = {
-            mockData: false
+            mockData: false,
+            openModalProductList: false
         }
     }
     renderButtonAddStock(){
@@ -26,6 +29,7 @@ class MerchantStockView extends Component {
             <View style={styles.containerFloatButton}>
                 <ButtonFloatType1 
                     title={'Tambah Produk'}
+                    push={() => this.setState({ openModalProductList: true })}
                 />
             </View>
         )
@@ -59,11 +63,24 @@ class MerchantStockView extends Component {
             this.renderDataEmpty()
         )
     }
+
+    renderModalProductList(){
+        return this.state.openModalProductList ? (
+            <ModalBottomProductList 
+                open={this.state.openModalProductList}
+                close={() => this.setState({ openModalProductList: false })}
+            />
+        ) : (
+            <View />
+        )
+    }
     render(){
         return(
             <SafeAreaView style={styles.mainContainer}>
                 <StatusBarWhite />
                 {this.renderContent()}
+                {/* Render Modal */}
+                {this.renderModalProductList()}
             </SafeAreaView>
         )
     }
