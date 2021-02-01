@@ -78,3 +78,5 @@ yarn.lock
 android/fastlane/config/sinbad.json
 
 google-services*
+
+contract/
