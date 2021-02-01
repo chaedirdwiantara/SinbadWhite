@@ -16,7 +16,7 @@ import {
 } from '../../../library/thirdPartyPackage'
 import {
     StatusBarBlackOP40,
-    SearchBarType1,
+    SearchBarType4,
     TagListType1,
     SkeletonType2,
     ButtonSingle
@@ -33,8 +33,30 @@ class ModalBottomProductList extends Component {
             search: '',
             heightList: 0.93 * height,
             selectedProduct: [],
-            dataForSaveStock: []
+            dataForSaveStock: [],
+            LoadingTags: false,
+            tagsTypeList: [
+                {
+                    id: 0,
+                    name: 'All',
+                    code: 'ALL'
+                },{
+                    id: 1,
+                    name: 'Produk MSS',
+                    code: 'MSS'
+                },
+                {
+                    id: 2,
+                    name: 'Produk Non-MSS',
+                    code: 'NON-MSS'
+                }
+            ],
+            tagType: 0
         }
+    }
+
+    parentFunction(data){
+
     }
 
     /**
@@ -57,11 +79,13 @@ class ModalBottomProductList extends Component {
             >
                 <View style={[styles.contentContainer, { height: this.state.heightList }]}>
                     {this.renderContentTitle()}
+                    {this.renderContentBody()}
                 </View>
             </Modal>
         )
     }
 
+    // RENDER MODAL TITLE
     renderContentTitle() {
         return (
           <View>
@@ -82,6 +106,30 @@ class ModalBottomProductList extends Component {
         );
       }
 
+    // RENDER CONTENT BODY
+    renderContentBody(){
+        return(
+            <View style={styles.boxContentBody}>
+                {this.renderContentSearchBar()}
+            </View>
+        )
+    }
+
+    // RENDER SEARCH BAR
+    renderContentSearchBar(){
+        return (
+            <View>
+                <SearchBarType4
+                    searchText={this.state.search}
+                    placeholder={'Cari disini'}
+                    onRef={ref => (this.parentFunction = ref)}
+                    parentFunction={this.parentFunction.bind(this)}
+                />
+            </View>
+        )
+    }
+
+    // RENDER MAIN RENDER
     render(){
         return (
             <View>
