@@ -119,7 +119,7 @@ function* getPayLaterType(actions) {
     const response = yield call(() => {
       return OmsMethod.getPayLaterType(actions.payload);
     });
-    yield put(ActionCreators.omsGetPayLaterTypeProcess(response));
+    yield put(ActionCreators.omsGetPayLaterTypeSuccess(response));
   } catch (error) {
     yield put(ActionCreators.omsGetPayLaterTypeFailed(error));
   }

@@ -63,7 +63,7 @@ class ModalBottomPaylaterType extends Component {
    */
   /** RENDER PAYMENT TYPE */
   renderPaylaterType() {
-    return this.state.dataPaylaterType.paylaterType.map((item, index) => {
+    return this.props.payLaterType.paylaterTypes.map((item, index) => {
       return (
         <View>
           <TouchableOpacity
@@ -109,44 +109,44 @@ class ModalBottomPaylaterType extends Component {
   /** RENDER CONTENT */
   renderModalContent() {
     return (
-      <View style={styles.mainContainer}>
-        <StatusBarRedOP50 />
-        <View style={styles.container}>
-          <View>{this.renderPaylaterType()}</View>
-        </View>
-      </View>
+      <View>{this.renderPaylaterType()}</View>
+      //   </View>
+      // </View>
     );
   }
 
   /** RENDER SKELETEON */
   renderSkeleton() {
-    return <SkeletonType24 />
+    return <SkeletonType24 />;
   }
 
   /** RENDER CONTENT */
   renderContent() {
     return (
       <>
- {!this.state.loadingOmsGetPayLaterType
-        ? this.renderModalContent()
-        : this.renderSkeleton()}
+        <View style={styles.mainContainer}>
+          <StatusBarRedOP50 />
+          <View style={styles.container}>
+            {!this.props.loading && this.props.payLaterType
+              ? this.renderModalContent()
+              : this.renderSkeleton()}
+          </View>
+        </View>
       </>
-     
     );
   }
   /** MAIN */
   render() {
     return (
       <>
-       <ModalBottomType3
-        typeClose={'close'}
-        open={this.props.open}
-        onPress={this.props.close}
-        close={this.props.close}
-        title={'Tipe Bayar Nanti'}
-        content={this.renderContent()}
-      />
-        
+        <ModalBottomType3
+          typeClose={'close'}
+          open={this.props.open}
+          onPress={this.props.close}
+          close={this.props.close}
+          title={'Tipe Bayar Nanti'}
+          content={this.renderContent()}
+        />
       </>
     );
   }
