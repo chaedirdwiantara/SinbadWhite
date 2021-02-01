@@ -24,6 +24,12 @@ class MerchantStockView extends Component {
             openModalProductList: false
         }
     }
+    /**
+     * =============
+     * RENDER VIEW
+     * =============
+     */
+    // Render Button
     renderButtonAddStock(){
         return (
             <View style={styles.containerFloatButton}>
@@ -77,6 +83,10 @@ class MerchantStockView extends Component {
     render(){
         return(
             <SafeAreaView style={styles.mainContainer}>
+                <BackHandlerBackSpecific 
+                    navigation={this.props.navigation}
+                    page={'MerchantStockView'}
+                />
                 <StatusBarWhite />
                 {this.renderContent()}
                 {/* Render Modal */}
