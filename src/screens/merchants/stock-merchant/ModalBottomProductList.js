@@ -25,6 +25,7 @@ import { Color } from '../../../config'
 import { Fonts } from '../../../helpers'
 import * as ActionCreators from '../../../state/actions'
 const { height } = Dimensions.get('window')
+import ModalBottomProductListView from './ModalBottomProductListView'
 
 class ModalBottomProductList extends Component {
     constructor(props){
@@ -51,7 +52,7 @@ class ModalBottomProductList extends Component {
                     type: 'NON-MSS'
                 }
             ],
-            tagType: 0
+            skuIndex: 0
         }
     }
 
@@ -112,6 +113,8 @@ class ModalBottomProductList extends Component {
             <View style={styles.boxContentBody}>
                 {this.renderContentSearchBar()}
                 {this.renderContentTags()}
+                {this.renderContentSKUList()}
+                {this.renderButton()}
             </View>
         )
     }
@@ -151,6 +154,29 @@ class ModalBottomProductList extends Component {
         return this.state.LoadingTags 
             ? this.renderSkeletonTags() 
             : this.renderTags()
+    }
+
+    renderContentSKUList(){
+        return (
+            <View style={{ flex: 1 }}>
+                <ModalBottomProductListView
+                    productIndex={this.state.skuIndex}
+                    search={this.state.search}
+                    selectedProduct={this.state.selectedProduct}
+                    onRef={ref => (this.parentFunction = ref)}
+                    parentFunction={this.parentFunction.bind(this)}
+                />
+            </View>
+        )
+    }
+
+    renderButton() {
+        return (
+            <ButtonSingle
+                title={'Tambah ke Catatan'}
+                borderRadius={4}
+            />
+        )
     }
     
     // RENDER MAIN RENDER

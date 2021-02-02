@@ -58,7 +58,20 @@ import {
     renderTagActive(item) {
       return (
         <View style={this.tagActiveStyle()}>
-          <Text style={Fonts.type2}>{item.name}</Text>
+          <Text style={Fonts.type2}>
+          {item.type === 'MSS'
+              ? (
+                <View style={{
+                  height: 8, 
+                  width: 8, 
+                  backgroundColor: Color.fontYellow40, 
+                  borderRadius: 100
+                }}
+                /> 
+              ) : (
+                <View />
+              )
+            } {item.name}</Text>
         </View>
       );
     }
