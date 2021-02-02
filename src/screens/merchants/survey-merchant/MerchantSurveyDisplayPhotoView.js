@@ -383,7 +383,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       <View style={[styles.cardContainer]}>
         {this.state.photosDisplayBefore.length !== 0 ? (
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
-            <Text>{`Photos ${
+            <Text>{`Foto ${
               surveySteps.find(item => item.order === 1).title
             }`}</Text>
             <FlatList
@@ -419,7 +419,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
         <View style={{ height: 16 }} />
         {this.state.photosDisplayAfter.length !== 0 ? (
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
-            <Text>{`Photos ${
+            <Text>{`Foto ${
               surveySteps.find(item => item.order === 2).title
             }`}</Text>
             <FlatList
@@ -547,7 +547,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
         ) : null}
         {!this.state.displayPhoto && this.state.activeStep !== 2 ? (
           <ButtonSingle
-            title="Proceed"
+            title="Lanjut"
             disabled={!this.state.photo[0].uri}
             borderRadius={5}
             onPress={() => this.setState({ modalSubmit: true })}
@@ -611,7 +611,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
                 style={{ marginRight: 4 }}
               />
               <Text style={[Fonts.type98, { color: Color.fontBlack80 }]}>
-                Delete
+                Hapus
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -624,7 +624,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
                 size={15}
                 style={{ marginRight: 4 }}
               />
-              <Text style={Fonts.type98}>Save</Text>
+              <Text style={Fonts.type98}>Simpan</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -636,14 +636,12 @@ class MerchantSurveyDisplayPhotoView extends Component {
     return (
       <ModalConfirmation
         statusBarWhite
-        title={'Leave Task?'}
+        title={'Leave Task'}
         open={this.state.modalConfirmation}
-        content={
-          'You have unsaved images. Do you still want to leave task without saving current images? '
-        }
+        content={'Jika keluar maka akan menghapus data yang tersimpan?'}
         type={'okeNotRed'}
-        okText={'Leave'}
-        cancelText={'Cancel'}
+        okText={'Keluar'}
+        cancelText={'Batal'}
         ok={() =>
           this.setState({ modalConfirmation: false }, () => {
             if (this.state.activeStep === 1) {
@@ -670,7 +668,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       <ModalBottomSubmit
         open={this.state.modalSubmit}
         loading={this.props.merchant.loadingSubmitSurvey}
-        title={`Submit the "${sectionName}"`}
+        title={`Kirim foto "${sectionName}"`}
         data={this.state.photo}
         onClose={() => this.setState({ modalSubmit: false })}
         onSubmit={this.submitPhoto.bind(this)}

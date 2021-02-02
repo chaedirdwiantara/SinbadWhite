@@ -201,7 +201,7 @@ class MerchantHomeView extends Component {
             },
             {
               name: 'Toko Survey',
-              title: 'Fill',
+              title: 'Isi',
               goTo: 'survey',
               activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
             },
