@@ -34,7 +34,7 @@ class ModalBottomProductList extends Component {
             search: '',
             heightList: 0.93 * height,
             selectedProduct: [],
-            dataForSaveStock: [],
+            dataForSaveProduct: [],
             LoadingTags: false,
             tagsTypeList: [
                 {
@@ -57,7 +57,31 @@ class ModalBottomProductList extends Component {
     }
 
     parentFunction(data){
-
+        switch (data.type) {
+            case 'stock':
+                console.log('Add SKU to Stock')
+                const selectedProduct = this.state.selectedProduct
+                const dataForSaveProduct = this.state.dataForSaveProduct
+                const indexSelectedProduct = selectedProduct.indexOf(data.data)
+                const dataObject = {
+                    id: parseInt(data.data, 10)
+                }
+                if (indexSelectedProduct > -1){
+                    selectedProduct.splice(indexSelectedProduct, 1)
+                    dataForSaveProduct.splice(indexSelectedProduct, 1)
+                } else {
+                    selectedProduct.push(data.data)
+                    dataForSaveProduct.push(dataObject)
+                }
+                this.setState({ selectedProduct, dataForSaveProduct })
+                break;
+            case 'search':
+                break;
+            case 'sku-tag':
+                break;        
+            default:
+                break;
+        }
     }
 
     /**
