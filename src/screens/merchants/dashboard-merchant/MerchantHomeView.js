@@ -17,6 +17,7 @@ import {
   moment,
   MaterialIcon,
   RFPercentage,
+  NavigationEvents,
   Button
 } from '../../../library/thirdPartyPackage';
 import {
@@ -152,8 +153,8 @@ class MerchantHomeView extends Component {
     console.log('SURVEY LIST', surveyList, this.state.successSurveyList);
     /** IF NO SURVEY */
     if (
-      _.isEmpty(this.props.merchant.surveyList.payload.data) &&
-      this.props.merchant.surveyList.success &&
+      _.isEmpty(surveyList.payload.data) &&
+      surveyList.success &&
       !this.state.successSurveyList
     ) {
       this.setState({ successSurveyList: true }, () => this.SurveyDone());
@@ -242,6 +243,16 @@ class MerchantHomeView extends Component {
       prevProps.merchant.dataPostActivity !==
       this.props.merchant.dataPostActivity
     ) {
+      if (this.props.merchant.dataPostActivity !== null) {
+        /** IF SURVEY DONE SUCCESS */
+        if (
+          this.props.merchant.dataPostActivity.activity ===
+          ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+        ) {
+          /** FOR GET LOG ALL ACTIVITY */
+          this.refreshMerchantGetLogAllActivityProcess();
+        }
+      }
       if (this.props.merchant.dataPostActivity !== null) {
         /** IF CHECK OUT SUCCESS */
         if (this.props.merchant.dataPostActivity.activity === 'check_out') {
@@ -1064,6 +1075,7 @@ class MerchantHomeView extends Component {
   render() {
     return (
       <SafeAreaView>
+        <NavigationEvents onDidFocus={() => this.getSurvey()} />
         <StatusBarRed />
         {!this.props.merchant.loadingGetMerchantLastOrder &&
         this.props.merchant.dataGetMerchantLastOrder !== null &&
