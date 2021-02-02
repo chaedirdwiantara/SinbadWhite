@@ -102,6 +102,9 @@ class ModalBottomProductListView extends Component {
             <TouchableOpacity
                 key={index}
                 style={styles.boxItem}
+                onPress={() =>
+                    this.props.parentFunction({ type: 'stock', data: item.id })
+                }
             >
                 <View 
                     style={{
@@ -125,7 +128,11 @@ class ModalBottomProductListView extends Component {
                     <MaterialIcon 
                         name="check-circle"
                         size={24}
-                        color={Color.fontBlack40}
+                        color={
+                            this.props.selectedProduct.indexOf(item.id) > -1
+                            ? Color.fontGreen50
+                            : Color.fontBlack40
+                        }
                     />
                 </View>
             </TouchableOpacity>
