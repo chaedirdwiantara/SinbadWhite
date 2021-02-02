@@ -29,8 +29,6 @@ export default async function endpoint({ path, method, params }) {
     .then(response => {
       if (response.status === 200 || response.status === 201) {
         return response.json().then(data => {
-          console.log(path)
-          console.log(reqBody.body)
           return {
             result: 'Ok',
             code: 200,
@@ -60,8 +58,6 @@ export default async function endpoint({ path, method, params }) {
             deviceData,
             time: new Date()
           });
-          console.log(path)
-          console.log(reqBody.body)
           return {
             result: 'Error',
             data: data.data,
@@ -73,8 +69,6 @@ export default async function endpoint({ path, method, params }) {
       }
     })
     .catch(err => {
-      console.log(path)
-      console.log(params)
       return {
         result: 'Error',
         code: 503,
