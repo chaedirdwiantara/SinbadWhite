@@ -37,7 +37,7 @@ import {
     /** === SEND DATA TO PARENT === */
     selectTag(index) {
       this.setState({ activeTag: index });
-      this.props.parentFunction({ type: 'portfolio', data: index });
+      this.props.parentFunction({ type: 'sku-tag', data: index });
     }
     /**
      * =======================
