@@ -20,11 +20,11 @@ class ModalBottomCompleted extends Component {
         />
         <Text style={Fonts.type7}>Task Successfully Completed</Text>
         <Text style={[Fonts.type12, styles.text]}>
-          You can view the photos later in the Toko Survey detail in Task List
+          Kamu masih dapat melihat foto di detail Toko Survey
         </Text>
         <View style={{ width: '100%' }}>
           <ButtonSingle
-            title="Return to task list"
+            title="Kembali ke Task List"
             borderRadius={4}
             onPress={this.props.onReturnTaskList}
           />

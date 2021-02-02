@@ -20,7 +20,7 @@ class MerchantSurveySteps extends Component {
     _.orderBy(this.props.surveySteps, ['order'], ['asc']).map(item => {
       steps.push(item.title);
     });
-    steps.push('Completed');
+    steps.push('Selesai');
     this.setState({ steps });
   }
 
