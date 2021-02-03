@@ -434,6 +434,7 @@ class HistoryDetailPayment extends Component {
   }
   /**RENDER PANDUAN PEMBAYARAN ACCORDION */
   renderAccordion(item, index) {
+    // console.log(item, 'item');
     const isVisible = this.state.accordionOpen === index;
     const rawHtml = isVisible ? (
       <HTMLView value={item.instruction} stylesheet={GlobalStyleHtml} />
@@ -524,11 +525,12 @@ class HistoryDetailPayment extends Component {
                   paddingTop: 16
                 }}
               >
-                {paymentChannelId !== 2 ? (
+                <View>{this.renderPanduanPembayaranList()}</View>
+                {/* {paymentChannelId !== 2 ? (
                   <View>{this.renderPanduanPembayaranRegular()}</View>
                 ) : (
                   <View>{this.renderPanduanPembayaranList()}</View>
-                )}
+                )} */}
               </View>
             </View>
             <View style={GlobalStyle.boxPadding} />
