@@ -69,6 +69,27 @@ class ModalTAndR extends Component {
       <View />
     );
   }
+
+ /** RENDER TAndR Paylater Type */
+ renderTAndRPaylaterType(item) {
+  return item !== null ? (
+    item.paylaterTypes !== null ? (
+      item.paylaterTypes.map((item, index) => {
+        return (
+          <View key={index} style={{ marginBottom: 10 }}>
+            <Text style={Fonts.type50}>{item.name}</Text>
+            <HTMLView value={item.term} stylesheet={GlobalStyleHtml} />
+          </View>
+        );
+      })
+    ) : (
+      <View />
+    )
+  ) : (
+    <View />
+  );
+}
+
   /** RENDER TAndR Payment Channel */
   renderTAndRPaymentChannel(item) {
     return item !== null ? (
@@ -94,6 +115,7 @@ class ModalTAndR extends Component {
       this.props.data.map((item, index) => {
         return (
           <View key={index} style={styles.mainContainer}>
+            {this.renderTAndRPaylaterType(item)}
             {this.renderTAndRPaymentType(item)}
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             {this.renderTAndRPaymentChannel(item)}
