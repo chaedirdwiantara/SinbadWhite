@@ -434,7 +434,6 @@ class HistoryDetailPayment extends Component {
   }
   /**RENDER PANDUAN PEMBAYARAN ACCORDION */
   renderAccordion(item, index) {
-    // console.log(item, 'item');
     const isVisible = this.state.accordionOpen === index;
     const rawHtml = isVisible ? (
       <HTMLView value={item.instruction} stylesheet={GlobalStyleHtml} />
