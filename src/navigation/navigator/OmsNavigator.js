@@ -5,7 +5,6 @@ import GlobalFont from '../../helpers/GlobalFont';
 import OmsCartView from '../../screens/oms/OmsCartView';
 import OmsCheckoutView from '../../screens/oms/OmsCheckoutView';
 import OmsVerificationView from '../../screens/oms/OmsVerificationView';
-
 const OmsNavigator = {
   OmsCartView: {
     screen: OmsCartView,
