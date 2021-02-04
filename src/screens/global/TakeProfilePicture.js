@@ -148,8 +148,7 @@ const styles = StyleSheet.create({
     width,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: masterColor.fontBlack100
-    backgroundColor: 'rgba(0,0,0,0.5)'
+    backgroundColor: masterColor.fontBlack100
   },
   boxCircleCamera: {
     borderWidth: 2,
