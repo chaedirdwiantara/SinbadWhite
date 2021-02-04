@@ -6,7 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   RNCamera,
   RNFS,
@@ -14,15 +14,13 @@ import {
   MaterialIcon,
   ImageEditor,
   connect
-} from '../../library/thirdPartyPackage'
-import {
-  StatusBarBlack
-} from '../../library/component'
+} from '../../library/thirdPartyPackage';
+import { StatusBarBlack } from '../../library/component';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 class TakeProfilePicture extends Component {
   constructor(props) {
@@ -48,9 +46,8 @@ class TakeProfilePicture extends Component {
 
   takePicture = async () => {
     this.setState({ loading: true });
-    const cropData = {
-      offset: { x: 200, y: 500 },
-      size: { width: 1700, height: 1700 }
+    let cropData = {
+      offset: { x: 0, y: 250 }
     };
 
     if (this.camera) {
@@ -62,6 +59,8 @@ class TakeProfilePicture extends Component {
         orientation: 'portrait'
       };
       const data = await this.camera.takePictureAsync(options);
+      let smallest = data.width < data.height ? data.width : data.height;
+      cropData.size = { width: smallest, height: smallest };
       ImageEditor.cropImage(data.uri, cropData).then(url => {
         RNFS.readFile(url, 'base64').then(dataImage => {
           this.props.saveImageBase64(dataImage);
@@ -83,6 +82,7 @@ class TakeProfilePicture extends Component {
           style={styles.preview}
           type={RNCamera.Constants.Type.front}
           captureAudio={false}
+          mir
           defaultTouchToFocus
           flashMode={RNCamera.Constants.FlashMode.on}
           clearWindowBackground={false}
@@ -148,7 +148,8 @@ const styles = StyleSheet.create({
     width,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: masterColor.fontBlack100
+    // backgroundColor: masterColor.fontBlack100
+    backgroundColor: 'rgba(0,0,0,0.5)'
   },
   boxCircleCamera: {
     borderWidth: 2,
@@ -170,15 +171,14 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(TakeProfilePicture);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

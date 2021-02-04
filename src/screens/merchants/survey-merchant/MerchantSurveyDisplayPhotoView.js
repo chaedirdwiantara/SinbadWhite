@@ -81,6 +81,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     } = this.props.navigation.state.params;
     let newPhoto = [];
     if (readOnly && !surveyResponseId) {
+      // eslint-disable-next-line react/no-did-mount-set-state
       return this.setState({ displayPhoto: true });
     }
     if (surveyResponseId) {
@@ -96,6 +97,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
           base64: ''
         })
       );
+      // eslint-disable-next-line react/no-did-mount-set-state
       this.setState({ photo: newPhoto });
     }
   }
@@ -142,7 +144,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
             displayPhoto: true,
             modalCompleted: this.state.activeStep === 0 ? false : true,
             activeStep: 2
-          },
+          }
           // () => this.surveyDone()
         );
       } else {
@@ -209,10 +211,8 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === TAKE PHOTO === */
   takePhoto = async () => {
     this.setState({ loading: true });
-    const cropData = {
-      offset: { x: 0, y: 0 },
-      size: { width: 2900, height: 2900 },
-      resizeMode: 'contain'
+    let cropData = {
+      offset: { x: 0, y: 250 }
     };
 
     if (this.camera) {
@@ -222,8 +222,13 @@ class MerchantSurveyDisplayPhotoView extends Component {
         fixOrientation: true
       };
       const data = await this.camera.takePictureAsync(options);
+      console.log('ORIGINAL IMAGE', data);
+      let smallest = data.width < data.height ? data.width : data.height;
+      cropData.size = { width: smallest, height: smallest };
+      console.log('CROP OPTIONS', JSON.stringify(cropData));
       ImageEditor.cropImage(data.uri, cropData).then(url => {
         RNFS.readFile(url, 'base64').then(dataImage => {
+          console.log('CROPED IMAGE', dataImage);
           if (this.state.photo.find(item => !item.uri)) {
             let newData = { ...data, uri: dataImage };
             this.setState({ capturedPhoto: newData });
