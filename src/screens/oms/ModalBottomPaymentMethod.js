@@ -113,7 +113,6 @@ class ModalBottomPaymentMethod extends Component {
   }
   /** RENDER PAYMENT TYPE */
   renderPaymentType() {
-    console.log(this.props, 'props');
     return (
       <View>
         <View style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
