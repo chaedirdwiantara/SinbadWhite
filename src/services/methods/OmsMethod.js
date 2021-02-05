@@ -146,6 +146,17 @@ function promoData() {
   return promos;
 }
 
+/** GET APPLICABLE PAY LATER */
+function getApplicablePaylater(data) {
+  return ApiRest({
+    path: 'payment/v1/loan-applicable',
+    method: 'POST',
+    params: {
+      storeCode: data
+    }
+  });
+}
+
 export const OmsMethod = {
   getCartItem,
   getCheckoutItem,
@@ -156,5 +167,6 @@ export const OmsMethod = {
   getTermsConditions,
   getLastPaymentChannel,
   checkPromo,
-  getPayLaterType
+  getPayLaterType,
+  getApplicablePaylater
 };

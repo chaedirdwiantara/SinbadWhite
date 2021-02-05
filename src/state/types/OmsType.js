@@ -62,3 +62,8 @@ export const OMS_CHECK_PROMO_FAILED = 'OmsCheckPromoFailed';
 export const OMS_GET_PAY_LATER_TYPE_PROCESS = 'OmsGetPayLaterTypeProcess';
 export const OMS_GET_PAY_LATER_TYPE_SUCCESS = 'OmsGetPayLaterTypeSuccess';
 export const OMS_GET_PAY_LATER_TYPE_FAILED = 'OmsGetPayLaterTypeFailed';
+
+/** GET APPLICABLE PAYLATER */
+export const OMS_APPLICABLE_PAYLATER_PROCESS = 'OmsApplicablePaylaterProcess';
+export const OMS_APPLICABLE_PAYLATER_SUCCESS = 'OmsApplicablePaylaterSuccess';
+export const OMS_APPLICABLE_PAYLATER_FAILED = 'OmsApplicablePaylaterFailed';
