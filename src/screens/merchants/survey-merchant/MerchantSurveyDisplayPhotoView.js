@@ -210,32 +210,37 @@ class MerchantSurveyDisplayPhotoView extends Component {
   };
   /** === TAKE PHOTO === */
   takePhoto = async () => {
-    this.setState({ loading: true });
-    let cropData = {
-      offset: { x: 0, y: 250 }
-    };
-
-    if (this.camera) {
-      let options = {
-        quality: 0.2,
-        base64: true,
-        fixOrientation: true
+    try {
+      this.setState({ loading: true });
+      let cropOptions = {
+        offset: { x: 0, y: 250 }
       };
-      const data = await this.camera.takePictureAsync(options);
-      console.log('ORIGINAL IMAGE', data);
-      let smallest = data.width < data.height ? data.width : data.height;
-      cropData.size = { width: smallest, height: smallest };
-      console.log('CROP OPTIONS', JSON.stringify(cropData));
-      ImageEditor.cropImage(data.uri, cropData).then(url => {
-        RNFS.readFile(url, 'base64').then(dataImage => {
-          console.log('CROPED IMAGE', dataImage);
-          if (this.state.photo.find(item => !item.uri)) {
-            let newData = { ...data, uri: dataImage };
-            this.setState({ capturedPhoto: newData });
-          }
-        });
-        RNFS.unlink(data.uri);
-      });
+
+      if (this.camera) {
+        let options = {
+          quality: 0.2,
+          base64: true,
+          fixOrientation: true
+        };
+
+        let data = await this.camera.takePictureAsync(options);
+        // console.log('ORIGINAL IMAGE', data);
+        let smallest = data.width < data.height ? data.width : data.height;
+        cropOptions.size = { width: smallest, height: smallest };
+        // console.log('CROP OPTIONS', JSON.stringify(cropOptions));
+        let cropedUri = await ImageEditor.cropImage(data.uri, cropOptions);
+        let dataImage = await RNFS.readFile(cropedUri, 'base64');
+        // console.log('CROPED IMAGE', JSON.stringify(dataImage));
+        this.props.saveImageBase64(dataImage);
+        if (this.state.photo.find(item => !item.uri)) {
+          let newData = { ...data, uri: dataImage };
+          this.setState({ capturedPhoto: newData });
+        }
+        RNFS.unlink(cropedUri);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert(error.message);
     }
   };
   /** === SAVE PHOTO TO PHOTO LIST === */
