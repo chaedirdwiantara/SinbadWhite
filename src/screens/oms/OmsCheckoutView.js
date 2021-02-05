@@ -1240,13 +1240,13 @@ class OmsCheckoutView extends Component {
               }}
               style={{ height: 20, width: 20, marginRight: 10 }}
             />
-            <Text style={Fonts.type8}>
-              {
-                this.state.parcels[indexParcel].paymentTypeDetail.paymentType
-                  .name
-              }{' '}
-              - {this.state.parcels[indexParcel].paymentMethodDetail.name}
-            </Text>
+            <Text style={[Fonts.type8, {alignSelf:"center", width: "88%"}]} numberOfLines={1}>
+                  {
+                    this.state.parcels[indexParcel].paymentTypeDetail.paymentType
+                      .name
+                  }{this.state.parcels[indexParcel].paylaterType !== null ? ` - ${this.state.parcels[indexParcel].paylaterType.name} ` : null}
+                  - {this.state.parcels[indexParcel].paymentMethodDetail.name}
+                </Text>
           </View>
         ) : (
           <View />
