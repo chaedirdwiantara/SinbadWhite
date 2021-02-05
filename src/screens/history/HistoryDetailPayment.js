@@ -479,16 +479,16 @@ class HistoryDetailPayment extends Component {
       </View>
     );
   }
-  renderPanduanPembayaranRegular() {
-    return (
-      <View>
-        <HTMLView
-          value={this.props.data.paymentChannel.description[0].instruction}
-          stylesheet={GlobalStyleHtml}
-        />
-      </View>
-    );
-  }
+  // renderPanduanPembayaranRegular() {
+  //   return (
+  //     <View>
+  //       <HTMLView
+  //         value={this.props.data.paymentChannel.description[0].instruction}
+  //         stylesheet={GlobalStyleHtml}
+  //       />
+  //     </View>
+  //   );
+  // }
   /** RENDER PANDUAN PEMBAYARAN VA*/
   renderPanduanPembayaranList() {
     const instruction = this.props.data.paymentChannel.description;

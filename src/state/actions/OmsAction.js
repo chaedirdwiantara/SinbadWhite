@@ -349,3 +349,29 @@ export function omsGetPayLaterTypeSuccess(data) {
 export function omsGetPayLaterTypeFailed(data) {
   return { type: types.OMS_GET_PAY_LATER_TYPE_FAILED, payload: data };
 }
+
+/**
+ * ====================================
+ * GET APPLICABLE PAYLATER
+ * ====================================
+ */
+/** === GET APPLICABLE PAYLATER PROCESS === */
+export function OmsApplicablePaylaterProcess(data) {
+  return { type: types.OMS_APPLICABLE_PAYLATER_PROCESS, payload: data };
+}
+
+/** === GET APPLICABLE PAYLATER SUCCESS === */
+export function OmsApplicablePaylaterSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_APPLICABLE_PAYLATER_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_APPLICABLE_PAYLATER_FAILED, payload: data };
+}
+
+/** === GET APPLICABLE PAYLATER FAILED === */
+export function OmsApplicablePaylaterFailed(data) {
+  return { type: types.OMS_APPLICABLE_PAYLATER_FAILED, payload: data };
+}

@@ -39,6 +39,7 @@ import ModalBottomErrorMinimumOrder from './ModalBottomErrorMinimumOrder';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 import ModalBottomPayLaterType from './ModalBottomPayLaterType';
 import ModalConfirmKUR from '../../components/modal/ModalConfirmationType3';
+import ModalOmsKurWebView from './ModalOmsKurWebView';
 class OmsCheckoutView extends Component {
   constructor(props) {
     super(props);
@@ -59,6 +60,8 @@ class OmsCheckoutView extends Component {
       changedIndex: [],
       payLaterType: null,
       payLaterTypeId: null,
+      selectedPaylaterType: null,
+      dataApplicable: null,
       /** modal */
       openModalBackToCartItem: false,
       openModalConfirmOrder: false,
@@ -96,6 +99,8 @@ class OmsCheckoutView extends Component {
       openModalSKUNotAvailable: false,
       modalPayLaterType: false,
       modalConfirmKUR: false,
+      openModalKurWebView: false,
+      openModalFailPaylater: false,
     };
   }
   /**
@@ -190,7 +195,7 @@ class OmsCheckoutView extends Component {
         ) {
           this.manageError();
         } else {
-          this.setState({modalErrorResponse : true});
+          this.setState({ modalErrorResponse: true });
         }
       }
     }
@@ -239,7 +244,7 @@ class OmsCheckoutView extends Component {
               paymentMethodDetail: e.paymentMethodDetail
                 ? { ...e.paymentMethodDetail }
                 : {
-                    ...lastPayment.PaymentChannel
+                    ...lastPayment.paymentChannel
                   },
               paymentTypeDetail: e.paymentTypeDetail
                 ? { ...e.paymentTypeDetail }
@@ -248,7 +253,9 @@ class OmsCheckoutView extends Component {
                   },
               paymentTypeSupplierMethodId:
                 lastPayment.paymentTypeSupplierMethodId,
-              paylaterTypeId : this.state.payLaterTypeId? this.state.payLaterTypeId : null
+              paylaterTypeId: this.state.payLaterTypeId
+                ? this.state.payLaterTypeId
+                : null
             }
           : { ...e };
       });
@@ -282,12 +289,15 @@ class OmsCheckoutView extends Component {
       }
     }
 
-    if (this.props.oms.dataOmsGetPayLaterType !== undefined){
-      if(prevProps.oms.dataOmsGetPayLaterType !== this.props.oms.dataOmsGetPayLaterType){
-        if(this.props.oms.dataOmsGetPayLaterType !== null){
+    if (this.props.oms.dataOmsGetPayLaterType !== undefined) {
+      if (
+        prevProps.oms.dataOmsGetPayLaterType !==
+        this.props.oms.dataOmsGetPayLaterType
+      ) {
+        if (this.props.oms.dataOmsGetPayLaterType !== null) {
           this.setState({
             payLaterType: this.props.oms.dataOmsGetPayLaterType.data
-          })
+          });
         }
       }
     }
@@ -349,6 +359,10 @@ class OmsCheckoutView extends Component {
             paymentChannelId: parseInt(
               this.state.parcels[index].paymentMethodDetail.id,
               10
+            ),
+            paylaterTypeId: parseInt(
+              this.state.parcels[index].paylaterType.id,
+              10
             )
           })
         )
@@ -387,7 +401,9 @@ class OmsCheckoutView extends Component {
         ? parseInt(e.paymentTypeDetail.paymentTypeId, 10)
         : parseInt(e.paymentTypeDetail.id, 10),
       paymentChannelId: e.paymentMethodDetail.id,
-      paylaterTypeId: this.state.payLaterTypeId? this.state.payLaterTypeId : null 
+      paylaterTypeId: this.state.payLaterTypeId
+        ? this.state.payLaterTypeId
+        : null
     }));
     this.props.omsConfirmOrderProcess({
       orderId,
@@ -464,6 +480,7 @@ class OmsCheckoutView extends Component {
           indexParcel
         ].paymentChannel = this.props.oms.dataOmsGetPaymentChannel.data;
         parcels[indexParcel].error = false;
+        parcels[indexParcel].paylaterType = this.state.selectedPaylaterType;
       }
       this.setState({
         parcels,
@@ -473,20 +490,22 @@ class OmsCheckoutView extends Component {
     }
   }
 
-   /** === MODIFY DATA FOR PAYLATER KUR === */
-   selectedPaylaterType(item) {
-     this.setState({
-       payLaterTypeId : item.id
-     })
-   if (item.id === 2){
+  /** === MODIFY DATA FOR PAYLATER KUR === */
+  selectedPaylaterType(item) {
     this.setState({
-      modalConfirmKUR: true
-    })} else {
+      payLaterTypeId: item.id,
+      selectedPaylaterType: item
+    });
+    if (item.id === 2) {
+      this.setState({
+        modalConfirmKUR: true
+      });
+    } else {
       this.setState({
         modalPaylaterType: false,
         modalPaymentTypeList: false,
-        modalPaymentTypeMethod: false,
-      })
+        modalPaymentTypeMethod: false
+      });
       this.openPaymentMethod(this.state.selectedPaymentType);
     }
   }
@@ -507,6 +526,25 @@ class OmsCheckoutView extends Component {
     }
     return false;
   }
+
+  //RENDER APPLICABLE PAYLATER
+  applicablePaylater(item) {
+    if (item.data.proceed === true) {
+      this.setState({
+        openModalKurWebView: false,
+        modalPaymentTypeMethod: true,
+        modalPaylaterType: false
+      })
+    } else {
+      this.setState({
+        openModalKurWebView: false,
+        modalPaymentTypeMethod: false,
+        modalPaylaterType: true,
+        openModalFailPaylater: true,
+        dataApplicable: item.data
+      })
+    }
+}
   /**
    * =====================
    * GLOBAL FUNCTION
@@ -662,10 +700,10 @@ class OmsCheckoutView extends Component {
         this.errorPaymentStatus();
         break;
       case 'ERR-APP-NOT-ALLOW':
-        this.errorPaymentNotAllowed()
+        this.errorPaymentNotAllowed();
       case 'ERR-STOCK':
-         this.errorSKUNotAvailable()
-        break;  
+        this.errorSKUNotAvailable();
+        break;
       default:
         // this.errorPaymentTryAgain()
         break;
@@ -699,21 +737,21 @@ class OmsCheckoutView extends Component {
     }, 2000);
   }
   /** ERROR PAYMENT NOT ALLOWED */
-  errorPaymentNotAllowed(){
-    this.setState({ openModalPaymentNotAllowed : true})
+  errorPaymentNotAllowed() {
+    this.setState({ openModalPaymentNotAllowed: true });
   }
   /** ERROR PAYMENT GLOBAL */
-  errorPaymentGlobal(){
-    this.setState({openModalPaymentNotAllowed : true})
+  errorPaymentGlobal() {
+    this.setState({ openModalPaymentNotAllowed: true });
   }
   // === ERROR SKU NOT AVAILABLE ===
   errorSKUNotAvailable() {
-    this.setState({ openModalSKUNotAvailable: true })
+    this.setState({ openModalSKUNotAvailable: true });
   }
 
   /**ERROR PAYMENT TRY AGAIN */
-  errorPaymentTryAgain(){
-    this.setState({openModalErrorPaymentTryAgain : true})
+  errorPaymentTryAgain() {
+    this.setState({ openModalErrorPaymentTryAgain: true });
   }
   closeErrorResponse() {
     this.setState({ modalErrorResponse: false });
@@ -730,12 +768,12 @@ class OmsCheckoutView extends Component {
     //   });
     // } else {
     this.setState({ modalPaymentTypeList: false, selectedPaymentType });
-    if (selectedPaymentType.paymentTypeId === "2"){
-    this.openPaylaterType(selectedPaymentType)
+    if (selectedPaymentType.paymentTypeId === '2') {
+      this.openPaylaterType(selectedPaymentType);
     } else {
       this.openPaymentMethod(selectedPaymentType);
     }
-   
+
     // }
   }
 
@@ -810,11 +848,11 @@ class OmsCheckoutView extends Component {
     );
   }
 
-   /** === FOR OPEN MODAL PAYLATER TYPE === */
-   openPaylaterType(selectedPaymentType) {
+  /** === FOR OPEN MODAL PAYLATER TYPE === */
+  openPaylaterType(selectedPaymentType) {
     const params = {
-      paymentTypeId: 2,
-      orderParcelId: 24
+      paymentTypeId: parseInt(selectedPaymentType.paymentTypeId),
+      orderParcelId: parseInt(this.state.selectedParcel)
     };
     this.props.omsGetPayLaterTypeProcess(params);
     this.setState({
@@ -823,6 +861,55 @@ class OmsCheckoutView extends Component {
       modalPaylaterType: true
     });
   }
+
+  /** === FOR OPEN MODAL FAIL PAYLATER === */
+  renderModalFailPaylater() {
+    return (
+      <View>
+        {this.state.openModalFailPaylater ? (
+          <ModalBottomFailPayment
+          open={this.state.openModalFailPaylater}
+          text={this.state.dataApplicable.message}
+          onPress={() => this.setState({
+            openModalFailPaylater: false,
+            dataApplicable: null
+          })}
+        />)
+        : null
+        }
+        
+      </View>
+    )
+  }
+
+  /** RENDER CONFIRM KUR */
+  renderConfirmKUR() {
+    this.setState({
+      modalPaylaterType: true,
+      modalConfirmKUR: false,
+      openModalKurWebView: true
+    })
+  }
+
+   /** === RENDER MODAL KUR WEB VIEW === */
+   renderModalKurWebview() {
+    return this.state.openModalKurWebView ? (
+      <ModalOmsKurWebView
+        open={this.state.openModalKurWebView}
+        close={() =>
+          this.setState({
+            openModalKurWebView: false,
+          })
+        }
+        url={this.state.selectedPaylaterType.redirectUrl}
+        onRef={ref => (this.applicablePaylater = ref)}
+        applicablePaylater={this.applicablePaylater.bind(this)}
+      />
+    ) : (
+      <View />
+    );
+  }
+  
 
   /**
    * *********************************
@@ -1128,11 +1215,11 @@ class OmsCheckoutView extends Component {
                   }}
                   style={{ height: 20, width: 20, marginRight: 10 }}
                 />
-                <Text style={[Fonts.type8, { alignSelf: 'center' }]}>
+               <Text style={[Fonts.type8, {alignSelf:"center", width: "88%"}]} numberOfLines={1}>
                   {
-                    this.state.parcels[indexParcel].paymentTypeDetail
-                      .paymentType.name
-                  }{' '}
+                    this.state.parcels[indexParcel].paymentTypeDetail.paymentType
+                      .name
+                  }{this.state.parcels[indexParcel].paylaterType !== null ? ` - ${this.state.parcels[indexParcel].paylaterType.name} ` : null}
                   - {this.state.parcels[indexParcel].paymentMethodDetail.name}
                 </Text>
               </View>
@@ -1195,6 +1282,7 @@ class OmsCheckoutView extends Component {
             indexPayment
           ]
         : null;
+
     return paymentMethod ? (
       <View style={{ flexDirection: 'row', paddingVertical: 15 }}>
         <Image
@@ -1205,8 +1293,12 @@ class OmsCheckoutView extends Component {
           }}
           style={{ height: 20, width: 20, marginRight: 10 }}
         />
-        <Text style={[Fonts.type8, { alignSelf: 'center' }]}>
-          {paymentMethod.paymentType.name} - {paymentMethod.PaymentChannel.name}{' '}
+        <Text style={[Fonts.type8, {alignSelf:"center", width: "88%"}]} numberOfLines={1}>
+          {paymentMethod.paymentType.name}{' '}
+          {paymentMethod.paylaterType !== null
+            ? `- ${paymentMethod.paylaterType.name}`
+            : null}{' '}
+          - {paymentMethod.paymentChannel.name}{' '}
         </Text>
       </View>
     ) : (
@@ -1649,7 +1741,11 @@ class OmsCheckoutView extends Component {
           <ModalBottomFailPayment
             open={this.state.openModalPaymentNotAllowed}
             onPress={() => this.setState({ openModalPaymentNotAllowed: false })}
-            text={this.props.oms.errorOmsConfirmOrder.message? this.props.oms.errorOmsConfirmOrder.message : ''}
+            text={
+              this.props.oms.errorOmsConfirmOrder.message
+                ? this.props.oms.errorOmsConfirmOrder.message
+                : ''
+            }
           />
         ) : null}
       </View>
@@ -1659,19 +1755,19 @@ class OmsCheckoutView extends Component {
   /** RENDER MODAL SKU NOT AVAILABLE */
   renderModalSKUNotAvailable() {
     return this.state.openModalSKUNotAvailable ? (
-      <ModalBottomSkuNotAvailable 
+      <ModalBottomSkuNotAvailable
         open={this.state.openModalSKUNotAvailable}
         onPress={() => {
-          this.setState({ openModalSKUNotAvailable: false })
-          this.backToCartItemView()
-          }}
+          this.setState({ openModalSKUNotAvailable: false });
+          this.backToCartItemView();
+        }}
       />
     ) : (
       <View />
-    )
+    );
   }
-   /** RENDER MODAL FAIL PAYMENT */
-   renderModalErrorPaymentTryAgain() {
+  /** RENDER MODAL FAIL PAYMENT */
+  renderModalErrorPaymentTryAgain() {
     return (
       <View>
         {this.state.openModalErrorPaymentTryAgain ? (
@@ -1684,8 +1780,8 @@ class OmsCheckoutView extends Component {
       </View>
     );
   }
-  closeopenModalErrorPaymentTryAgain (){
-    this.setState({ openMopenModalErrorPaymentTryAgain: false })
+  closeopenModalErrorPaymentTryAgain() {
+    this.setState({ openMopenModalErrorPaymentTryAgain: false });
     NavigationService.navigate('OmsCartView', this.props.navigation.state.key);
     this.props.omsGetCartItemFromCheckoutProcess({
       catalogues: this.props.oms.dataCart
@@ -1708,7 +1804,7 @@ class OmsCheckoutView extends Component {
         }
         paymentMethod={this.state.paymentMethod}
         paymentType={this.state.selectedPaymentType}
-        payLaterType={ this.state.payLaterType}
+        payLaterType={this.state.payLaterType}
         orderPrice={this.calTotalPrice()}
         loading={this.props.oms.loadingOmsGetPayLaterType}
         onRef={ref => (this.selectPaylaterType = ref)}
@@ -1726,17 +1822,21 @@ class OmsCheckoutView extends Component {
         {this.state.modalConfirmKUR ? (
           <ModalConfirmKUR
             open={this.state.modalConfirmKUR}
-            cancel={() => this.setState({modalConfirmKUR: false})}
+            cancel={() => this.setState({ modalConfirmKUR: false })}
             title="Konfirmasi"
             cancelText="Batal"
             confirmText="Lanjut"
             // content="Untuk menggunakan Bayar Nanti dengan KUR KlikACC, Anda akan diarahkan ke halaman klikACC untuk melanjutkan proses."
             customContent={
               <Text style={[Fonts.type17, { textAlign: 'center' }]}>
-                Untuk menggunakan <Text style={Fonts.type50}>Bayar Nanti dengan KUR KlikACC</Text>, Anda akan diarahkan ke <Text style={Fonts.type50}>halaman klikACC</Text> untuk melanjutkan proses.
+                Untuk menggunakan{' '}
+                <Text style={Fonts.type50}>Bayar Nanti dengan KUR KlikACC</Text>
+                , Anda akan diarahkan ke{' '}
+                <Text style={Fonts.type50}>halaman klikACC</Text> untuk
+                melanjutkan proses.
               </Text>
             }
-            ok={() => alert("test")}
+            ok={() => this.renderConfirmKUR()}
           />
         ) : (
           <View />
@@ -1744,6 +1844,9 @@ class OmsCheckoutView extends Component {
       </View>
     );
   }
+
+  /** CONFIRM KUR */
+
 
   /**
    * =======================
@@ -1777,6 +1880,8 @@ class OmsCheckoutView extends Component {
         {this.renderModalErrorPaymentTryAgain()}
         {this.renderModalPaylaterType()}
         {this.renderModalConfirmKUR()}
+        {this.renderModalKurWebview()}
+        {this.renderModalFailPaylater()}
       </View>
     );
   }
@@ -1843,7 +1948,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(OmsCheckoutView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OmsCheckoutView);
 
 /**
  * =====================

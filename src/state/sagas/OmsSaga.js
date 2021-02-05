@@ -125,6 +125,18 @@ function* getPayLaterType(actions) {
   }
 }
 
+/** === GET APPLICABLE PAYLATER === */
+function* getApplicablePaylater(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.getApplicablePaylater(actions.payload);
+    });
+    yield put(ActionCreators.OmsApplicablePaylaterSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.OmsApplicablePaylaterFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* OmsSaga() {
   yield takeEvery(types.OMS_GET_CART_ITEM_PROCESS, getCartItem);
@@ -143,7 +155,8 @@ function* OmsSaga() {
     getLastPaymentChannel
   );
   yield takeEvery(types.OMS_CHECK_PROMO_PROCESS, checkPromo);
-  yield takeEvery(types.OMS_GET_PAY_LATER_TYPE_PROCESS, getPayLaterType)
+  yield takeEvery(types.OMS_GET_PAY_LATER_TYPE_PROCESS, getPayLaterType);
+  yield takeEvery(types.OMS_APPLICABLE_PAYLATER_PROCESS, getApplicablePaylater);
 }
 
 export default OmsSaga;
