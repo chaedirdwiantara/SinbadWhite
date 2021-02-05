@@ -771,9 +771,10 @@ class HistoryDetailView extends Component {
 
   /** === RENDER BUTTON CHANGE PAYMENT === */
   renderSelectPaymentMethod() {
+    const statusPayment = this.props.history.dataDetailHistory.statusPayment
     return (
       <View>
-        {this.props.history.dataDetailHistory.statusPayment === 'paid' ? (
+        {statusPayment === 'paid' || statusPayment === 'payment_failed' ? (
           <View />
         ) : (
           this.renderButtonChangePayment()
