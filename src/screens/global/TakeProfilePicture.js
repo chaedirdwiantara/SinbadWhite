@@ -45,28 +45,31 @@ class TakeProfilePicture extends Component {
   }
 
   takePicture = async () => {
-    this.setState({ loading: true });
-    let cropData = {
-      offset: { x: 0, y: 250 }
-    };
-
-    if (this.camera) {
-      const options = {
-        quality: 0.2,
-        base64: true,
-        pauseAfterCapture: true,
-        fixOrientation: true,
-        orientation: 'portrait'
+    try {
+      this.setState({ loading: true });
+      let cropOptions = {
+        offset: { x: 0, y: 250 }
       };
-      const data = await this.camera.takePictureAsync(options);
-      let smallest = data.width < data.height ? data.width : data.height;
-      cropData.size = { width: smallest, height: smallest };
-      ImageEditor.cropImage(data.uri, cropData).then(url => {
-        RNFS.readFile(url, 'base64').then(dataImage => {
-          this.props.saveImageBase64(dataImage);
-        });
-        RNFS.unlink(data.uri);
-      });
+
+      if (this.camera) {
+        const options = {
+          quality: 0.2,
+          base64: true,
+          pauseAfterCapture: true,
+          fixOrientation: true,
+          orientation: 'portrait'
+        };
+        let data = await this.camera.takePictureAsync(options);
+        let smallest = data.width < data.height ? data.width : data.height;
+        cropOptions.size = { width: smallest, height: smallest };
+        let cropedUri = await ImageEditor.cropImage(data.uri, cropOptions);
+        let dataImage = await RNFS.readFile(cropedUri, 'base64');
+        this.props.saveImageBase64(dataImage);
+        RNFS.unlink(cropedUri);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert(error.message);
     }
   };
 
@@ -78,11 +81,9 @@ class TakeProfilePicture extends Component {
           ref={ref => {
             this.camera = ref;
           }}
-          aspect={1}
           style={styles.preview}
           type={RNCamera.Constants.Type.front}
           captureAudio={false}
-          mir
           defaultTouchToFocus
           flashMode={RNCamera.Constants.FlashMode.on}
           clearWindowBackground={false}
