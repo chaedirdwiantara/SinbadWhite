@@ -78,10 +78,8 @@ renderContent() {
           <WebView 
             originWhitelist={['*']}
             scalesPageToFit={true}
-            // style={{flex: 1}}
             javaScriptEnabled={true}
             domStorageEnabled={true}
-            // source={{ uri: 'https://sign-sandbox.privy.id/doc/d09ed395db72851826617f5047a45953189388e6f023ce543bdb6bf660743fe0-b2a1094c3515837a5f23c27991d9e3dab0d9cc2f7aaed6ab233e28050193ced3-868b68b8ac3c1fafd8c841f07a6020d9' }}
             source={{ uri: this.props.url }}
           />
         

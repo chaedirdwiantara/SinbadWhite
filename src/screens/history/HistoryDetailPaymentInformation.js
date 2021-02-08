@@ -76,13 +76,6 @@ class HistoryDetailPaymentInformation extends Component {
             {this.renderVoucherList(
               this.props.history.dataDetailHistory.voucherList
             )}
-            {/* {this.renderContentListGlobal(
-              'Potongan Harga',
-              `- ${MoneyFormat(
-                this.props.history.dataDetailHistory.parcelTotalRebate
-              )}`,
-              true
-            )} */}
             {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
             {this.renderContentListGlobal(
               'PPN 10%',
@@ -159,7 +152,6 @@ class HistoryDetailPaymentInformation extends Component {
     if (this.state.data !== null) {
       return (
         <SafeAreaView style={styles.mainContainer}>
-          {/* <View><Text>Informasi</Text></View> */}
           {this.renderContent()}
         </SafeAreaView>
       );
