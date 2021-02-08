@@ -518,25 +518,7 @@ class OmsCheckoutView extends Component {
         modalPaymentTypeMethod: true,
         modalPaylaterType: false
       });
-        //RENDER APPLICABLE PAYLATER
-  applicablePaylater(item) {
-     if (item.data.proceed === true) {
-       this.setState({
-         openModalKurWebView: false,
-         modalPaymentTypeMethod: true,
-         modalPaylaterType: false
-       })
-       this.openPaymentMethod(this.state.selectedPaymentType)
-     } else {
-       this.setState({
-         openModalKurWebView: false,
-         modalPaymentTypeMethod: false,
-         modalPaylaterType: true,
-         openModalFailPaylater: true,
-         dataApplicable: item.data
-       })
-     }
- }
+      this.openPaymentMethod(this.state.selectedPaymentType)
     } else {
       this.setState({
         openModalKurWebView: false,
