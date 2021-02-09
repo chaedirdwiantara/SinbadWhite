@@ -81,6 +81,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     } = this.props.navigation.state.params;
     let newPhoto = [];
     if (readOnly && !surveyResponseId) {
+      // eslint-disable-next-line react/no-did-mount-set-state
       return this.setState({ displayPhoto: true });
     }
     if (surveyResponseId) {
@@ -96,6 +97,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
           base64: ''
         })
       );
+      // eslint-disable-next-line react/no-did-mount-set-state
       this.setState({ photo: newPhoto });
     }
   }
@@ -142,7 +144,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
             displayPhoto: true,
             modalCompleted: this.state.activeStep === 0 ? false : true,
             activeStep: 2
-          },
+          }
           // () => this.surveyDone()
         );
       } else {
@@ -208,29 +210,37 @@ class MerchantSurveyDisplayPhotoView extends Component {
   };
   /** === TAKE PHOTO === */
   takePhoto = async () => {
-    this.setState({ loading: true });
-    const cropData = {
-      offset: { x: 0, y: 0 },
-      size: { width: 2900, height: 2900 },
-      resizeMode: 'contain'
-    };
-
-    if (this.camera) {
-      let options = {
-        quality: 0.2,
-        base64: true,
-        fixOrientation: true
+    try {
+      this.setState({ loading: true });
+      let cropOptions = {
+        offset: { x: 0, y: 250 }
       };
-      const data = await this.camera.takePictureAsync(options);
-      ImageEditor.cropImage(data.uri, cropData).then(url => {
-        RNFS.readFile(url, 'base64').then(dataImage => {
-          if (this.state.photo.find(item => !item.uri)) {
-            let newData = { ...data, uri: dataImage };
-            this.setState({ capturedPhoto: newData });
-          }
-        });
-        RNFS.unlink(data.uri);
-      });
+
+      if (this.camera) {
+        let options = {
+          quality: 0.2,
+          base64: true,
+          fixOrientation: true
+        };
+
+        let data = await this.camera.takePictureAsync(options);
+        // console.log('ORIGINAL IMAGE', data);
+        let smallest = data.width < data.height ? data.width : data.height;
+        cropOptions.size = { width: smallest, height: smallest };
+        // console.log('CROP OPTIONS', JSON.stringify(cropOptions));
+        let cropedUri = await ImageEditor.cropImage(data.uri, cropOptions);
+        let dataImage = await RNFS.readFile(cropedUri, 'base64');
+        // console.log('CROPED IMAGE', JSON.stringify(dataImage));
+        this.props.saveImageBase64(dataImage);
+        if (this.state.photo.find(item => !item.uri)) {
+          let newData = { ...data, uri: dataImage };
+          this.setState({ capturedPhoto: newData });
+        }
+        RNFS.unlink(cropedUri);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert(error.message);
     }
   };
   /** === SAVE PHOTO TO PHOTO LIST === */
@@ -383,7 +393,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       <View style={[styles.cardContainer]}>
         {this.state.photosDisplayBefore.length !== 0 ? (
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
-            <Text>{`Photos ${
+            <Text>{`Foto ${
               surveySteps.find(item => item.order === 1).title
             }`}</Text>
             <FlatList
@@ -419,7 +429,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
         <View style={{ height: 16 }} />
         {this.state.photosDisplayAfter.length !== 0 ? (
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
-            <Text>{`Photos ${
+            <Text>{`Foto ${
               surveySteps.find(item => item.order === 2).title
             }`}</Text>
             <FlatList
@@ -547,7 +557,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
         ) : null}
         {!this.state.displayPhoto && this.state.activeStep !== 2 ? (
           <ButtonSingle
-            title="Proceed"
+            title="Lanjut"
             disabled={!this.state.photo[0].uri}
             borderRadius={5}
             onPress={() => this.setState({ modalSubmit: true })}
@@ -611,7 +621,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
                 style={{ marginRight: 4 }}
               />
               <Text style={[Fonts.type98, { color: Color.fontBlack80 }]}>
-                Delete
+                Hapus
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -624,7 +634,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
                 size={15}
                 style={{ marginRight: 4 }}
               />
-              <Text style={Fonts.type98}>Save</Text>
+              <Text style={Fonts.type98}>Simpan</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -636,14 +646,12 @@ class MerchantSurveyDisplayPhotoView extends Component {
     return (
       <ModalConfirmation
         statusBarWhite
-        title={'Leave Task?'}
+        title={'Leave Task'}
         open={this.state.modalConfirmation}
-        content={
-          'You have unsaved images. Do you still want to leave task without saving current images? '
-        }
+        content={'Jika keluar maka akan menghapus data yang tersimpan?'}
         type={'okeNotRed'}
-        okText={'Leave'}
-        cancelText={'Cancel'}
+        okText={'Keluar'}
+        cancelText={'Batal'}
         ok={() =>
           this.setState({ modalConfirmation: false }, () => {
             if (this.state.activeStep === 1) {
@@ -670,7 +678,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       <ModalBottomSubmit
         open={this.state.modalSubmit}
         loading={this.props.merchant.loadingSubmitSurvey}
-        title={`Submit the "${sectionName}"`}
+        title={`Kirim foto "${sectionName}"`}
         data={this.state.photo}
         onClose={() => this.setState({ modalSubmit: false })}
         onSubmit={this.submitPhoto.bind(this)}
