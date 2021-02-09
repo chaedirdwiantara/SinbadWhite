@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import NavigationStack from './navigator';
 import NavigationService from './NavigationService';
 import { firebase } from '../library/thirdPartyPackage';
+import {
+  nrInteraction,
+  nrRecordMetric,
+} from '../../NewRelicRN.js';
 
 class Navigations extends Component {
   render() {
@@ -19,6 +23,11 @@ class Navigations extends Component {
           );
 
           if (previousRouteName !== currentRouteName) {
+            nrInteraction(currentRouteName);
+            nrRecordMetric("mobileWhiteNavigation",{
+              navigateFrom: previousRouteName,
+              navigateTo : currentRouteName
+            });
             firebase.crashlytics().log(`change screen to ${currentRouteName}`);
           }
         }}
