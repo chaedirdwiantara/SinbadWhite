@@ -157,9 +157,11 @@ pipeline {
                 }
                 stage('Install Yarn & React') {
                     steps {
-                        sh "yarn global add react-native-cli create-react-native-app expo-cli"
-                        sh "npm ci"
-                        sh "npx jetify"
+                        sshagent(credentials : ['ssh-sinbad']) {
+                            sh "yarn global add react-native-cli create-react-native-app expo-cli"
+                            sh "npm ci"
+                            sh "npx jetify"
+                        }
                     }
                 }
                 stage('Change Environment') {
