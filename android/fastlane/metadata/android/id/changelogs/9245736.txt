@@ -1,0 +1,6 @@
+We understand survey won’t be complete without see survey responses that already collected, now you can :
+
+* Access Action Response to see Response for each survey in SSC
+* Access Survey Response Detail in SSC
+* Do Mass Validation to validate all pending response so you can finish validation in one go
+* Also in Sinbad White we will improve the experience when visiting the stores and see the Journey Plan
