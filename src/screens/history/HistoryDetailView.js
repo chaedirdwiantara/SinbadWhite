@@ -782,6 +782,7 @@ class HistoryDetailView extends Component {
 
   /**RENDER MODAL PAYMENT METHOD */
   renderModalChangePaymentMethod() {
+     const paylaterType = this.props.history.dataDetailHistory.paylaterType
     return this.state.openPaymentMethod ? (
       <ModalChangePaymentMethod
         open={this.state.openPaymentMethod}
@@ -795,7 +796,8 @@ class HistoryDetailView extends Component {
         billingID={this.props.history.dataDetailHistory.billing.id}
         total={this.props.history.dataDetailHistory.parcelFinalPrice}
         loading={this.props.oms.loadingOmsGetPaymentChannel}
-        actionChange={this.renderWantToConfirm.bind(this)} // orderPrice={this.calTotalPrice()}
+        actionChange={this.renderWantToConfirm.bind(this)}
+        selectedPaylaterType = {paylaterType} // orderPrice={this.calTotalPrice()}
         // onRef={ref => (this.selectPaymentMethod = ref)}
         // selectPaymentMethod={this.selectedPayment.bind(this)}
       />

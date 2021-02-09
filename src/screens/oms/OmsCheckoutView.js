@@ -343,27 +343,28 @@ class OmsCheckoutView extends Component {
       x.filter(e => e.paymentTypeDetail && e.paymentMethodDetail).length ===
       x.length;
     if (checker(this.state.parcels)) {
+      const parcels = this.state.parcels
       const data = {
         storeId: parseInt(this.state.dataOmsGetCheckoutItem.storeId, 10),
         orderParcels: this.state.dataOmsGetCheckoutItem.orderParcels.map(
           (item, index) => ({
             invoiceGroupId: parseInt(item.invoiceGroupId, 10),
             paymentTypeId: parseInt(
-              this.state.parcels[index].paymentTypeDetail.hasOwnProperty(
+              parcels[index].paymentTypeDetail.hasOwnProperty(
                 'paymentType'
               )
-                ? this.state.parcels[index].paymentTypeDetail.paymentType.id
-                : this.state.parcels[index].paymentTypeDetail.id,
+                ? parcels[index].paymentTypeDetail.paymentType.id
+                : parcels[index].paymentTypeDetail.id,
               10
             ),
             paymentChannelId: parseInt(
-              this.state.parcels[index].paymentMethodDetail.id,
+             parcels[index].paymentMethodDetail.id,
               10
             ),
-            paylaterTypeId: parseInt(
-              this.state.parcels[index].paylaterType.id,
-              10
-            )
+            paylaterTypeId: parcels[index].paylaterType? parseInt(
+              parcels[index].paylaterType.id,
+              10 
+            ) : 0
           })
         )
       };
@@ -388,8 +389,8 @@ class OmsCheckoutView extends Component {
         ? parseInt(e.paymentTypeDetail.paymentTypeId, 10)
         : parseInt(e.paymentTypeDetail.id, 10),
       paymentChannelId: e.paymentMethodDetail.id,
-      paylaterTypeId: this.state.payLaterTypeId
-        ? this.state.payLaterTypeId
+      paylaterTypeId: this.state.selectedPaylaterType
+        ? this.state.selectedPaylaterType.id
         : null
     }));
     this.props.omsConfirmOrderProcess({
@@ -445,7 +446,6 @@ class OmsCheckoutView extends Component {
       paymentMethodSelected,
       modalPaymentTypeMethod: false
     });
-
     const parcels = this.state.parcels;
     if (this.state.parcels.length > 0 && this.state.selectedParcel !== null) {
       const indexParcel = parcels.findIndex(
@@ -550,6 +550,7 @@ class OmsCheckoutView extends Component {
       let paymentTypeSupplierMethodId = null;
       let paymentMethodDetail = null;
       let paymentTypeDetail = null;
+      let paylaterType = null;
       let error = false;
       if (this.state.parcels.length > 0) {
         const itemParcelFind = this.state.parcels.find(
@@ -560,6 +561,7 @@ class OmsCheckoutView extends Component {
             itemParcelFind.paymentChannel.paymentTypeSupplierMethodId;
           paymentMethodDetail = itemParcelFind.paymentMethodDetail;
           paymentTypeDetail = itemParcelFind.paymentTypeDetail;
+          paylaterType = itemParcelFind.paylaterType? itemParcelFind.paylaterType : null
           error = itemParcelFind.error;
         }
       }
@@ -568,6 +570,7 @@ class OmsCheckoutView extends Component {
         paymentTypeSupplierMethodId,
         paymentMethodDetail,
         paymentTypeDetail,
+        paylaterType,
         error
       };
       parcels.push(data);
@@ -782,6 +785,7 @@ class OmsCheckoutView extends Component {
         modalPaymentTypeList: true,
         selectedParcel: item.id,
         selectedParcelIdForPayment: item.id,
+        selectedPaylaterType: null,
         changedIndex
       });
     }
@@ -1196,7 +1200,7 @@ class OmsCheckoutView extends Component {
                     this.state.parcels[indexParcel].paymentTypeDetail
                       .paymentType.name
                   }
-                  {this.state.parcels[indexParcel].paylaterType !== null
+                  {this.state.parcels[indexParcel].paylaterType
                     ? ` - ${this.state.parcels[indexParcel].paylaterType.name} `
                     : null}
                   - {this.state.parcels[indexParcel].paymentMethodDetail.name}
