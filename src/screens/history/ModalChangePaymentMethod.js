@@ -19,6 +19,7 @@ import { MaterialIcon } from '../../library/thirdPartyPackage';
 const { height } = Dimensions.get('window');
 import masterColor from '../../config/masterColor.json';
 class ModalChangePaymentMethod extends Component {
+  
   renderPaymentType() {
     return (
       <View>
@@ -43,6 +44,12 @@ class ModalChangePaymentMethod extends Component {
               style={(Fonts.type8, { marginLeft: 10, alignSelf: 'center' })}
             >
               {this.props.paymentType.name}
+              {
+                this.props.selectedPaylaterType 
+                ?` - ${this.props.selectedPaylaterType.name}`
+                : null
+              }
+             
             </Text>
           </View>
         </View>
@@ -95,7 +102,6 @@ class ModalChangePaymentMethod extends Component {
               paddingHorizontal: 20,
               height: 48
             }}
-            // onPress={() => this.props.selectPaymentMethod(itemPaymnetMethod)}
           >
             {itemPaymnetMethod.image !== null ? (
               <View style={{ width: '17%', justifyContent: 'center' }}>
