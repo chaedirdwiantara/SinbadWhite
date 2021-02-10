@@ -60,6 +60,11 @@ class ModalBottomPaylaterType extends Component {
                 <View>
                   <Text style={Fonts.type8}>{item.description}</Text>
                 </View>
+                {item.message || item.message !== '' ? (
+                  <View style={{ marginTop: 8 }}>
+                    <Text style={Fonts.type28}>{item.message}</Text>
+                  </View>
+                ) : null}
               </View>
               <View style={{ justifyContent: 'center' }}>
                 <MaterialIcon
