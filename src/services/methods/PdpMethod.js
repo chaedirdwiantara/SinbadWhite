@@ -38,7 +38,7 @@ function getDetailPdp(pdpId) {
 /** GET MSS CATALOGUES */
 function getMSSCatalogues(data){
   return ApiRest({
-    path: `mss-catalogues?$skip=${data.page}&$limit=${data.limit}&mss=${data.mss}&keyword=${data.keyword}&storeId=${GlobalMethod.merchantStoreId}`,
+    path: `mss-catalogues?$skip=${data.page}&$limit=${data.limit}&mss=${data.mss}&keyword=${data.keyword}&storeId=${GlobalMethod.merchantStoreId()}`,
     method: 'GET'
   })
 }
