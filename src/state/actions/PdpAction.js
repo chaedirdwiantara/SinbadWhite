@@ -150,3 +150,35 @@ export function pdpModifyProductListData(data) {
   }
   return { type: types.PDP_MODIFY_PRODUCT_LIST_DATA };
 }
+/**
+ * ==============================
+ * MSS CATALOGUES
+ * ===============================
+ */
+/** MSS GET PROCESS */
+export function getMSSCataloguesProcess(data){
+  return { type: types.MSS_GET_CATALOGUES_PROCESS, payload: data}
+}
+/** MSS GET SUCCESS */
+export function getMSSCataloguesSuccess(data){
+  if (data.result === 'Ok') {
+    return { type: types.MSS_GET_CATALOGUES_SUCCESS, payload: data.data}
+  }
+  return { type: types.MSS_GET_CATALOGUES_FAILED, payload: data}
+}
+/** MSS GET FAILED */
+export function getMSSCataloguesFailed(data){
+  return { type: types.MSS_GET_CATALOGUES_FAILED, payload: data}
+}
+/** MSS REFRESH */
+export function getMSSCataloguesRefresh(){
+  return { type: types.MSS_GET_CATALOGUES_REFRESH}
+}
+/** MSS RESET */
+export function getMSSCataloguesReset(){
+  return { type: types.MSS_GET_CATALOGUES_RESET}
+}
+/** MSS LOAD MORE */
+export function getMSSCataloguesLoadMore(page){
+  return { type: types.MSS_GET_CATALOGUES_LOADMORE, payload: page}
+}
