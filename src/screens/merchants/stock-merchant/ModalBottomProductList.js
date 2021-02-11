@@ -52,8 +52,46 @@ class ModalBottomProductList extends Component {
                     type: 'NON-MSS'
                 }
             ],
+            tagsType: 0,
             skuIndex: 0
         }
+    }
+
+    componentDidMount() {
+        this.keyboardListener();
+      }
+
+    componentWillUnmount() {
+        this.keyboardRemove();
+      }
+    /**
+     * ========================
+     * FOR KEYBOARD
+     * ========================
+     */
+    /** KEYBOARD LISTENER */
+    keyboardListener() {
+        this.keyboardDidShowListener = Keyboard.addListener(
+        'keyboardDidShow',
+        this.keyboardDidShow
+        );
+        this.keyboardDidHideListener = Keyboard.addListener(
+        'keyboardDidHide',
+        this.keyboardDidHide
+        );
+    }
+    /** KEYBOARD SHOW */
+    keyboardDidShow = () => {
+        this.setState({ heightList: 0.2 * height });
+    };
+    /** KEYBOARD HIDE */
+    keyboardDidHide = () => {
+        this.setState({ heightList: 0.93 * height });
+    };
+    /** KEYBOARD REMOVE */
+    keyboardRemove() {
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
     }
 
     parentFunction(data){
@@ -76,8 +114,10 @@ class ModalBottomProductList extends Component {
                 this.setState({ selectedProduct, dataForSaveProduct })
                 break;
             case 'search':
+                console.log('Select Search ' + data.data)
                 break;
             case 'sku-tag':
+                console.log('Select Tag ' + data.data)
                 break;        
             default:
                 break;
