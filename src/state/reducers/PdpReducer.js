@@ -274,7 +274,7 @@ export const pdp = createReducer(INITIAL_STATE, {
       loadingGetMSSCatalogues: false,
       loadingLoadMoreMSSCatalogues: false,
       refreshMSSCatalogues: false,
-      dataGetMSSCatalogues: action.payload.data,
+      dataGetMSSCatalogues: [...state.dataGetMSSCatalogues, ...action.payload.data],
       totalDataGetMSSCatalogues: action.payload.total
     }
   },
@@ -309,7 +309,7 @@ export const pdp = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingLoadMoreMSSCatalogues: true,
-      pageGetMSSCatalogues: [...state.dataGetMSSCatalogues, ...action.payload.data]
+      pageGetMSSCatalogues: action.payload
     }
   }
 });
