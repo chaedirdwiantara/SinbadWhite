@@ -26,12 +26,15 @@ import { Fonts } from '../../../helpers'
 import * as ActionCreators from '../../../state/actions'
 const { height } = Dimensions.get('window')
 import ModalBottomProductListView from './ModalBottomProductListView'
+import { TextInputMaskMethods } from 'react-native-masked-text'
 
 class ModalBottomProductList extends Component {
     constructor(props){
         super(props)
         this.state = {
             search: '',
+            mssType: '',
+            pageLimit: 10,
             heightList: 0.93 * height,
             selectedProduct: [],
             dataForSaveProduct: [],
@@ -53,7 +56,6 @@ class ModalBottomProductList extends Component {
                 }
             ],
             tagsType: 0,
-            skuIndex: 0
         }
     }
 
@@ -94,6 +96,7 @@ class ModalBottomProductList extends Component {
         this.keyboardDidHideListener.remove();
     }
 
+    // Parent Function to get Data from child
     parentFunction(data){
         switch (data.type) {
             case 'stock':
@@ -114,16 +117,50 @@ class ModalBottomProductList extends Component {
                 this.setState({ selectedProduct, dataForSaveProduct })
                 break;
             case 'search':
-                console.log('Select Search ' + data.data)
+                this.setState({ search: data.data })
+                this.props.getMSSCataloguesProcess({
+                    page: 0,
+                    limit: this.state.pageLimit,
+                    keyword: data.data,
+                    mss: this.state.mssType
+                })
                 break;
             case 'sku-tag':
-                console.log('Select Tag ' + data.data)
+                this.props.getMSSCataloguesReset()       
+                this.mssType(data.data)
                 break;        
             default:
                 break;
         }
     }
 
+    /** TO GROUP BY MSS TYPE */
+    mssType(activeTags){
+        switch (activeTags) {
+            case 0:
+                this.getMssCatalogues(0, '')
+                break;
+            case 1:
+                this.getMssCatalogues(0, true)
+                break;
+            case 2:
+                this.getMssCatalogues(0, false)
+                break;
+        
+            default:
+                break;
+        }
+    }
+
+    getMssCatalogues(page, mssType){
+        this.setState({ mssType })
+        this.props.getMSSCataloguesProcess({
+            page,
+            limit: this.state.pageLimit,
+            mss: mssType,
+            keyword: this.state.search
+        })
+    }
     /**
      * =================
      * RENDER VIEW
@@ -203,6 +240,7 @@ class ModalBottomProductList extends Component {
 
     // RENDER TAG
     renderTags(){
+        console.log(this.state.tagsType)
         return (
             <TagListType3
                 selected={this.state.tagsType}
@@ -220,11 +258,12 @@ class ModalBottomProductList extends Component {
             : this.renderTags()
     }
 
+    // Render SKU List
     renderContentSKUList(){
         return (
             <View style={{ flex: 1 }}>
                 <ModalBottomProductListView
-                    productIndex={this.state.skuIndex}
+                    mssType={this.state.mssType}
                     search={this.state.search}
                     selectedProduct={this.state.selectedProduct}
                     onRef={ref => (this.parentFunction = ref)}
@@ -234,6 +273,7 @@ class ModalBottomProductList extends Component {
         )
     }
 
+    // Render Button
     renderButton() {
         return (
             <ButtonSingle

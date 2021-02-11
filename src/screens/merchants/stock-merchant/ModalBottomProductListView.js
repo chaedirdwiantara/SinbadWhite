@@ -63,12 +63,48 @@ class ModalBottomProductListView extends Component {
         }
     }
 
+    componentDidMount(){
+        this.getMSSCatalogues()
+    }
+
+    onHandleRefresh = () => {
+        this.props.getMSSCataloguesRefresh()
+        this.getMSSCatalogues()
+
+    }
+
+    onHandleLoadMore = () => {
+        if (this.props.pdp.dataGetMSSCatalogues) {
+            if (
+                this.props.pdp.dataGetMSSCatalogues <
+                this.props.pdp.pageGetMSSCatalogues
+            ){
+                const page = this.props.pageGetMSSCatalogues + 10
+                this.props.getMSSCataloguesLoadMore(page)
+                this.props.getMSSCataloguesProcess({
+                    page,
+                    mss: this.props.mssType,
+                    keyword: this.props.search
+                })
+            }
+        }
+    }
+
+    getMSSCatalogues(){
+        this.props.getMSSCataloguesProcess({
+            page: 0,
+            limit: 10,
+            mss: '',
+            keyword: ''
+        })
+    }
+
     renderSkeleton(){
         return <SkeletonType1 />
     }
 
     renderData(){
-        return this.state.data.length > 0
+        return this.props.pdp.dataGetMSSCatalogues.length > 0
         ? this.renderContent()
         : this.renderEmpty()
     }
@@ -83,15 +119,20 @@ class ModalBottomProductListView extends Component {
     }
 
     renderContent(){
+        console.log(this.props.pdp.dataGetMSSCatalogues)
         return (
             <View style={{ flex: 1 }}>
                 <View style={GlobalStyle.lines}/>
                 <FlatList
                     contentContainerStyle={styles.flatListContainer}
-                    data={this.state.data}
+                    data={this.props.pdp.dataGetMSSCatalogues}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item, index) => index.toString()}
                     ItemSeparatorComponent={this.renderSeparator}
+                    // refreshing={this.props.pdp.refreshGetMSSCatalogues}
+                    // onRefresh={this.onHandleRefresh}
+                    // onEndReachedThreshold={0.1}
+                    // onEndReached={this.onHandleLoadMore.bind(this)}
                 />
             </View>
         )
@@ -115,7 +156,7 @@ class ModalBottomProductListView extends Component {
                 >
                     <View style={{ marginBottom: 8 }}>
                         <Text style={[Fonts.type37]}>
-                            {item.code} {item.type === 'MSS' ? this.renderMSSType() : <View />}
+                            {item.skuCode} {item.mss ? this.renderMSSType() : <View />}
                         </Text>
                     </View>
                     <View>
