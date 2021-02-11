@@ -30,10 +30,24 @@ function getDetailPdp(pdpId) {
   });
 }
 
+/**
+ * =================
+ * STOCK MANAGEMENT
+ * =================
+ */
+/** GET MSS CATALOGUES */
+function getMSSCatalogues(data){
+  return ApiRest({
+    path: `mss-catalogues?$skip=${data.page}&$limit=${data.limit}&mss=${data.mss}&keyword=${data.keyword}&storeId=${GlobalMethod.merchantStoreId}`,
+    method: 'GET'
+  })
+}
+
 export const PdpMethod = {
   getPdp,
   getDetailPdp,
-  getSearchPdp
+  getSearchPdp,
+  getMSSCatalogues
 };
 
 /**
