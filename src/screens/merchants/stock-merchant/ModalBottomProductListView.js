@@ -64,6 +64,7 @@ class ModalBottomProductListView extends Component {
     }
 
     componentDidMount(){
+        this.props.getMSSCataloguesReset()
         this.getMSSCatalogues()
     }
 
@@ -76,13 +77,14 @@ class ModalBottomProductListView extends Component {
     onHandleLoadMore = () => {
         if (this.props.pdp.dataGetMSSCatalogues) {
             if (
-                this.props.pdp.dataGetMSSCatalogues <
-                this.props.pdp.pageGetMSSCatalogues
+                this.props.pdp.dataGetMSSCatalogues.length <
+                this.props.pdp.totalDataGetMSSCatalogues
             ){
-                const page = this.props.pageGetMSSCatalogues + 10
+                const page = this.props.pdp.pageGetMSSCatalogues + 1
                 this.props.getMSSCataloguesLoadMore(page)
                 this.props.getMSSCataloguesProcess({
                     page,
+                    limit: 10,
                     mss: this.props.mssType,
                     keyword: this.props.search
                 })
@@ -129,10 +131,10 @@ class ModalBottomProductListView extends Component {
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item, index) => index.toString()}
                     ItemSeparatorComponent={this.renderSeparator}
-                    // refreshing={this.props.pdp.refreshGetMSSCatalogues}
-                    // onRefresh={this.onHandleRefresh}
-                    // onEndReachedThreshold={0.1}
-                    // onEndReached={this.onHandleLoadMore.bind(this)}
+                    refreshing={this.props.pdp.refreshGetMSSCatalogues}
+                    onRefresh={this.onHandleRefresh}
+                    onEndReachedThreshold={0.1}
+                    onEndReached={this.onHandleLoadMore.bind(this)}
                 />
             </View>
         )
