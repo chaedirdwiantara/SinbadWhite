@@ -27,39 +27,7 @@ class ModalBottomProductListView extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            dataLoading: false,
-            data: [
-                {
-                    id: 0,
-                    name: 'SGM EKSPLORE SOY 1-5TH MADU 400GR GRD 2.0',
-                    code: 'SNB-CATALOGUE-22342',
-                    type: 'MSS'
-                },
-                {
-                    id: 1,
-                    name: 'SGM EKSPLORE SOY 1-5TH VAN 400GR GRD 2.0',
-                    code: 'SNB-CATALOGUE-22446',
-                    type: 'MSS'
-                },
-                {
-                    id: 2,
-                    name: 'SGM EKSPLORE SOY 1-5TH COK 400GR GRD 2.0',
-                    code: 'SNB-CATALOGUE-22741',
-                    type: 'MSS'
-                },
-                {
-                    id: 3,
-                    name: 'SUNLIGHT CUCI PIRING LEMON 1000GR GRD 2.0',
-                    code: 'SNB-CATALOGUE-21430',
-                    type: 'NON-MSS'
-                },
-                {
-                    id: 4,
-                    name: 'SUNLIGHT CUCI PIRING MANGGA 500GR GRD 2.0',
-                    code: 'SNB-CATALOGUE-25430',
-                    type: 'NON-MSS'
-                }
-            ]
+            dataLoading: false
         }
     }
 
