@@ -377,3 +377,25 @@ export function merchantSubmitSurveyFailed(data) {
 export function merchantUpdateSurveyProcess(data) {
   return { type: types.MERCHANT_UPDATE_SURVEY_PROCESS, payload: data };
 }
+/**
+ * ======================
+ * STOCK MANAGEMENT ADD RECORD STOCK
+ * ======================
+ */
+export function merchantAddStockRecordProcess(data){
+  return { type: type.MERCHANT_ADD_STOCK_RECORD_PROCESS, payload: data }
+}
+
+export function merchantAddStockRecordSuccess(data){
+  if (data.result === 'Ok'){
+    return {
+      type: types.MERCHANT_ADD_STOCK_RECORD_SUCCESS,
+      payload: data.data
+    }
+  }
+  return { type: types.MERCHANT_ADD_STOCK_RECORD_FAILED, payload: data}
+}
+
+export function merchantAddStockRecordFailed(data){
+  return { type: types.MERCHANT_ADD_STOCK_RECORD_FAILED, payload: data}
+}
