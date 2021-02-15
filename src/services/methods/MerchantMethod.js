@@ -136,7 +136,7 @@ function updateSurvey({ params, surveyResponseId }) {
  * STOCK MANAGEMENT
  * ==================
  */
-
+/** ADD RECORD STOCK */
  function addRecordStock(params){
    return ApiRest({
      path: `stock-record`,
