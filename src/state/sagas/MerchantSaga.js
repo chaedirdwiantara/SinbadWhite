@@ -178,6 +178,17 @@ function* updateSurvey(actions) {
     yield put(ActionCreators.merchantSubmitSurveyFailed(error));
   }
 }
+/** ADD RECORD STOCK */
+function* addRecordStock(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.addRecordStock(actions.payload)
+    })
+    yield put(ActionCreators.merchantAddStockRecordSuccess(response))
+  } catch (error) {
+    yield put(ActionCreators.merchantAddStockRecordFailed(error))
+  }
+}
 
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
@@ -203,6 +214,7 @@ function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_GET_SURVEY_PROCESS, getSurvey);
   yield takeEvery(types.MERCHANT_SUBMIT_SURVEY_PROCESS, submitSurvey);
   yield takeEvery(types.MERCHANT_UPDATE_SURVEY_PROCESS, updateSurvey);
+  yield takeEvery(types.MERCHANT_ADD_STOCK_RECORD_PROCESS, addRecordStock)
 }
 
 export default MerchantSaga;
