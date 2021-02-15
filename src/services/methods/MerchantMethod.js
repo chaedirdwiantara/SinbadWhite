@@ -131,6 +131,20 @@ function updateSurvey({ params, surveyResponseId }) {
   });
 }
 
+/**
+ * ==================
+ * STOCK MANAGEMENT
+ * ==================
+ */
+
+ function addRecordStock(params){
+   return ApiRest({
+     path: `stock-record`,
+     method: 'POST',
+     params
+   })
+ }
+
 export const MerchantMethod = {
   getMerchant,
   getMerchantDetail,
@@ -147,7 +161,8 @@ export const MerchantMethod = {
   getSurveyList,
   getSurveyResponse,
   submitSurvey,
-  updateSurvey
+  updateSurvey,
+  addRecordStock
 };
 
 /**
