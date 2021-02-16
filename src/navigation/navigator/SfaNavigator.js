@@ -5,23 +5,15 @@ import GlobalFont from '../../helpers/GlobalFont';
 import SfaView from '../../screens/sfa/SfaView';
 import SfaDetailView from '../../screens/sfa/SfaDetailView';
 
-const OmsNavigator = {
+const SfaNavigator = {
   SfaView: {
     screen: SfaView,
     navigationOptions: {
       headerTitle: 'Penagihan',
-      headerTitleStyle: [
-        GlobalFont.textHeaderPage,
-        {
-          textAlign: 'center',
-          flex: 1
-        }
-      ],
-      headerTintColor: masterColor.backButtonWhite,
+      headerTitleStyle: GlobalFont.textHeaderPage,
       headerStyle: {
-        backgroundColor: masterColor.mainColor
+        backgroundColor: masterColor.backgroundWhite
       },
-      headerRight: <View />,
       gesturesEnabled: false
     }
   },
@@ -47,4 +39,4 @@ const OmsNavigator = {
   
 };
 
-export default OmsNavigator;
+export default SfaNavigator;
