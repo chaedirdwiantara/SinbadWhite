@@ -153,6 +153,7 @@ class ModalBottomProductList extends Component {
         }
     }
 
+    /** FETCH API FOR MSS CATALOGUES */
     getMssCatalogues(page, mssType){
         this.setState({ mssType })
         this.props.getMSSCataloguesProcess({
@@ -163,6 +164,7 @@ class ModalBottomProductList extends Component {
         })
     }
 
+    /** ADD STOCK RECORD */
     addStockRecord(){
         console.log(this.state.dataForSaveProduct)
     }

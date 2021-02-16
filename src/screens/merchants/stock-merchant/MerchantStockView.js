@@ -10,24 +10,41 @@ import {
     BackHandlerBackSpecific,
     StatusBarWhite,
     EmptyData,
-    ButtonFloatType1
+    ButtonFloatType1,
+    SearchBarType4,
+    ButtonSingle
 } from '../../../library/component'
 import {
     bindActionCreators,
     connect
 } from '../../../library/thirdPartyPackage'
+import { Fonts } from '../../../helpers'
 import masterColor from '../../../config/masterColor.json'
 import * as ActionCreators from '../../../state/actions'
 import ModalBottomProductList from './ModalBottomProductList'
+import StockRecordListView from './StockRecordListView'
 
 class MerchantStockView extends Component {
     constructor(props){
         super(props)
         this.state = {
-            mockData: false,
-            openModalProductList: false
+            mockData: true,
+            openModalProductList: false,
+            search: ''
         }
     }
+
+    parentFunction(data){
+        switch (data.type) {
+            case 'search':
+                this.setState({ search: data.data })
+                console.log(data.data)
+                break;       
+            default:
+                break;
+        }
+    }
+
     /**
      * =============
      * RENDER VIEW
@@ -44,15 +61,41 @@ class MerchantStockView extends Component {
             </View>
         )
     }
+    // RENDER DATA
     renderData(){
         return(
-            <View>
-                <Text>
-                    Data Not Found
-                </Text>
+            <View style={{backgroundColor: masterColor.backgroundWhite, flex: 1}}>
+                {this.renderSearch()}
+                {this.renderCardView()}
+                {this.renderButtonEditStock()}
+                </View>
+        )
+    }
+    // RENDER SEARCH VIEW
+    renderSearch(){
+        return(
+            <View style={{ paddingVertical: 8 }}>
+                    <SearchBarType4 
+                        searchText={this.state.search}
+                        placeholder={'Cari Produk disini'}
+                        onRef={ref => (this.parentFunction = ref)}
+                        parentFunction={this.parentFunction.bind(this)}
+                    />
+            </View>    
+        )
+    }
+    // RENDER CARD View
+    renderCardView(){
+        return(
+            <View style={{
+                backgroundColor: masterColor.fontBlack05,
+                paddingTop: 8
+                }}>
+                <StockRecordListView />
             </View>
         )
     }
+    // RENDER EMPTY DATA
     renderDataEmpty(){
         return(
             <View style={styles.mainContainer}>
@@ -66,6 +109,7 @@ class MerchantStockView extends Component {
             </View>
         )
     }
+    // RENDER CONTENT
     renderContent(){
         return this.state.mockData ? (
             this.renderData()
@@ -73,7 +117,24 @@ class MerchantStockView extends Component {
             this.renderDataEmpty()
         )
     }
-
+    // Render Button
+    renderButtonEditStock() {
+        return (
+            <View style={styles.containerEditButton}>
+                <ButtonSingle
+                    title={'Ubah Catatan Stock'}
+                    borderRadius={8}
+                    onPress={() => console.log('Go To Edit Stock')}
+                />
+            </View>
+        )
+    }
+    /**
+     * ==============
+     * RENDER MODAL
+     * ==============
+     */
+    // RENDER MODAL PRODUCT LIST
     renderModalProductList(){
         return this.state.openModalProductList ? (
             <ModalBottomProductList 
@@ -106,7 +167,7 @@ class MerchantStockView extends Component {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: masterColor.backgroundWhite
+        backgroundColor: masterColor.fontBlack05
     },
     containerFloatButton: {
         width: '100%',
@@ -114,6 +175,15 @@ const styles = StyleSheet.create({
         bottom: 0,
         zIndex: 1000
     },
+    containerEditButton: {
+        backgroundColor: masterColor.backgroundWhite, 
+        position: 'absolute', 
+        bottom: 0, 
+        width: '100%', 
+        zIndex: 1000,
+        borderTopWidth: 1,
+        borderColor: masterColor.fontBlack10
+    }
 })
 
 const mapStateToProps = ({ pdp }) => {
