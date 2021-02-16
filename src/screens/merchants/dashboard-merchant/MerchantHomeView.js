@@ -40,7 +40,8 @@ import {
   ACTIVITY_JOURNEY_PLAN_CHECK_IN,
   ACTIVITY_JOURNEY_PLAN_CHECK_OUT,
   ACTIVITY_JOURNEY_PLAN_ORDER,
-  ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+  ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY,
+  ACTIVITY_JOURNEY_PLAN_COLLECTION
 } from '../../../constants';
 import _ from 'lodash';
 
@@ -101,6 +102,12 @@ class MerchantHomeView extends Component {
           title: 'Order',
           goTo: 'pdp',
           activity: ACTIVITY_JOURNEY_PLAN_ORDER
+        },
+        {
+          name: 'Penagihan',
+          title: 'Tagih',
+          goTo: 'collection',
+          activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
         },
         {
           name: 'Check-out Toko',
@@ -414,6 +421,9 @@ class MerchantHomeView extends Component {
           NavigationService.navigate('MerchantSurveyView', { readOnly: false });
         }
         break;
+      case 'collection':
+        NavigationService.navigate('SfaView');
+      break;
       default:
         break;
     }
