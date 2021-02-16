@@ -21,6 +21,7 @@ export const MERCHANT_GET_DETAIL_FAILED = 'MerchantGetDetailFailed';
 export const MERCHANT_ADD_PROCESS = 'MerchantAddProcess';
 export const MERCHANT_ADD_SUCCESS = 'MerchantAddSuccess';
 export const MERCHANT_ADD_FAILED = 'MerchantAddFailed';
+export const RESET_MERCHANT_ADD = 'ResetMerchantAdd';
 /** FOR EDIT MERCHANT */
 export const MERCHANT_EDIT_PROCESS = 'MerchantEditProcess';
 export const MERCHANT_EDIT_SUCCESS = 'MerchantEditSuccess';
@@ -88,3 +89,12 @@ export const MERCHANT_SUBMIT_SURVEY_SUCCESS = 'MerchantSubmitSurveySuccess';
 export const MERCHANT_SUBMIT_SURVEY_FAILED = 'MerchantSubmitSurveyFailed';
 /** MERCHANT UPDATE SURVEY RESPONSE */
 export const MERCHANT_UPDATE_SURVEY_PROCESS = 'MerchantUpdateSurveyProcess';
+/** MERCHANT VALIDATE AREA MAPPING */
+export const VALIDATE_AREA_MAPPING_PROCESS = 'ValidateAreaMappingProcess'
+export const VALIDATE_AREA_MAPPING_SUCCESS = 'ValidateAreaMappingSuccess'
+export const VALIDATE_AREA_MAPPING_FAILED = 'ValidateAreaMappingFailed'
+export const RESET_VALIDATE_AREA_MAPPING = 'ResetValidateAreaMapping'
+/** MERCHANT GET SALES SEGMENTATION */
+export const GET_SALES_SEGMENTATION_PROCESS = 'GetSalesSegmentationProcess'
+export const GET_SALES_SEGMENTATION_SUCCESS = 'GetSalesSegmentationSuccess'
+export const GET_SALES_SEGMENTATION_FAILED = 'GetSalesSegmentationFailed'
