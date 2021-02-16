@@ -12,8 +12,12 @@ import {
     EmptyData,
     ButtonFloatType1
 } from '../../../library/component'
+import {
+    bindActionCreators,
+    connect
+} from '../../../library/thirdPartyPackage'
 import masterColor from '../../../config/masterColor.json'
-
+import * as ActionCreators from '../../../state/actions'
 import ModalBottomProductList from './ModalBottomProductList'
 
 class MerchantStockView extends Component {
@@ -74,7 +78,10 @@ class MerchantStockView extends Component {
         return this.state.openModalProductList ? (
             <ModalBottomProductList 
                 open={this.state.openModalProductList}
-                close={() => this.setState({ openModalProductList: false })}
+                close={() => {
+                    this.setState({ openModalProductList: false })
+                    this.props.getMSSCataloguesReset()
+                }}
             />
         ) : (
             <View />
@@ -109,4 +116,12 @@ const styles = StyleSheet.create({
     },
 })
 
-export default MerchantStockView
+const mapStateToProps = ({ pdp }) => {
+    return { pdp }
+}
+
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators(ActionCreators, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MerchantStockView)

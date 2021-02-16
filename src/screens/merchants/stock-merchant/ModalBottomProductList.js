@@ -26,12 +26,15 @@ import { Fonts } from '../../../helpers'
 import * as ActionCreators from '../../../state/actions'
 const { height } = Dimensions.get('window')
 import ModalBottomProductListView from './ModalBottomProductListView'
+import { TextInputMaskMethods } from 'react-native-masked-text'
 
 class ModalBottomProductList extends Component {
     constructor(props){
         super(props)
         this.state = {
             search: '',
+            mssType: '',
+            pageLimit: 10,
             heightList: 0.93 * height,
             selectedProduct: [],
             dataForSaveProduct: [],
@@ -52,38 +55,117 @@ class ModalBottomProductList extends Component {
                     type: 'NON-MSS'
                 }
             ],
-            skuIndex: 0
+            tagsType: 0,
         }
     }
 
+    componentDidMount() {
+        this.keyboardListener();
+      }
+
+    componentWillUnmount() {
+        this.keyboardRemove();
+      }
+    /**
+     * ========================
+     * FOR KEYBOARD
+     * ========================
+     */
+    /** KEYBOARD LISTENER */
+    keyboardListener() {
+        this.keyboardDidShowListener = Keyboard.addListener(
+        'keyboardDidShow',
+        this.keyboardDidShow
+        );
+        this.keyboardDidHideListener = Keyboard.addListener(
+        'keyboardDidHide',
+        this.keyboardDidHide
+        );
+    }
+    /** KEYBOARD SHOW */
+    keyboardDidShow = () => {
+        this.setState({ heightList: 0.2 * height });
+    };
+    /** KEYBOARD HIDE */
+    keyboardDidHide = () => {
+        this.setState({ heightList: 0.93 * height });
+    };
+    /** KEYBOARD REMOVE */
+    keyboardRemove() {
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
+    }
+
+    // Parent Function to get Data from child
     parentFunction(data){
         switch (data.type) {
             case 'stock':
                 console.log('Add SKU to Stock')
                 const selectedProduct = this.state.selectedProduct
                 const dataForSaveProduct = this.state.dataForSaveProduct
-                const indexSelectedProduct = selectedProduct.indexOf(data.data)
+                const indexSelectedProduct = selectedProduct.indexOf(data.data.id)
                 const dataObject = {
-                    id: parseInt(data.data, 10)
+                    id: parseInt(data.data.id, 10),
+                    isMustSale: data.data.mss
                 }
                 if (indexSelectedProduct > -1){
                     selectedProduct.splice(indexSelectedProduct, 1)
                     dataForSaveProduct.splice(indexSelectedProduct, 1)
                 } else {
-                    selectedProduct.push(data.data)
+                    selectedProduct.push(data.data.id)
                     dataForSaveProduct.push(dataObject)
                 }
                 this.setState({ selectedProduct, dataForSaveProduct })
                 break;
             case 'search':
+                this.setState({ search: data.data })
+                this.props.getMSSCataloguesProcess({
+                    page: 0,
+                    limit: this.state.pageLimit,
+                    keyword: data.data,
+                    mss: this.state.mssType
+                })
                 break;
             case 'sku-tag':
+                this.props.getMSSCataloguesReset()       
+                this.mssType(data.data)
                 break;        
             default:
                 break;
         }
     }
 
+    /** TO GROUP BY MSS TYPE */
+    mssType(activeTags){
+        switch (activeTags) {
+            case 0:
+                this.getMssCatalogues(0, '')
+                break;
+            case 1:
+                this.getMssCatalogues(0, true)
+                break;
+            case 2:
+                this.getMssCatalogues(0, false)
+                break;
+        
+            default:
+                break;
+        }
+    }
+
+    getMssCatalogues(page, mssType){
+        this.setState({ mssType })
+        this.props.getMSSCataloguesProcess({
+            page,
+            limit: this.state.pageLimit,
+            mss: mssType,
+            keyword: this.state.search
+        })
+    }
+
+    addStockRecord(){
+        console.log(this.state.dataForSaveProduct)
+    }
     /**
      * =================
      * RENDER VIEW
@@ -163,6 +245,7 @@ class ModalBottomProductList extends Component {
 
     // RENDER TAG
     renderTags(){
+        console.log(this.state.tagsType)
         return (
             <TagListType3
                 selected={this.state.tagsType}
@@ -180,11 +263,12 @@ class ModalBottomProductList extends Component {
             : this.renderTags()
     }
 
+    // Render SKU List
     renderContentSKUList(){
         return (
             <View style={{ flex: 1 }}>
                 <ModalBottomProductListView
-                    productIndex={this.state.skuIndex}
+                    mssType={this.state.mssType}
                     search={this.state.search}
                     selectedProduct={this.state.selectedProduct}
                     onRef={ref => (this.parentFunction = ref)}
@@ -194,11 +278,13 @@ class ModalBottomProductList extends Component {
         )
     }
 
+    // Render Button
     renderButton() {
         return (
             <ButtonSingle
                 title={'Tambah ke Catatan'}
                 borderRadius={4}
+                onPress={() => this.addStockRecord()}
             />
         )
     }

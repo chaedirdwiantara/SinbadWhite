@@ -27,40 +27,46 @@ class ModalBottomProductListView extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            dataLoading: false,
-            data: [
-                {
-                    id: 0,
-                    name: 'SGM EKSPLORE SOY 1-5TH MADU 400GR GRD 2.0',
-                    code: 'SNB-CATALOGUE-22342',
-                    type: 'MSS'
-                },
-                {
-                    id: 1,
-                    name: 'SGM EKSPLORE SOY 1-5TH VAN 400GR GRD 2.0',
-                    code: 'SNB-CATALOGUE-22446',
-                    type: 'MSS'
-                },
-                {
-                    id: 2,
-                    name: 'SGM EKSPLORE SOY 1-5TH COK 400GR GRD 2.0',
-                    code: 'SNB-CATALOGUE-22741',
-                    type: 'MSS'
-                },
-                {
-                    id: 3,
-                    name: 'SUNLIGHT CUCI PIRING LEMON 1000GR GRD 2.0',
-                    code: 'SNB-CATALOGUE-21430',
-                    type: 'NON-MSS'
-                },
-                {
-                    id: 4,
-                    name: 'SUNLIGHT CUCI PIRING MANGGA 500GR GRD 2.0',
-                    code: 'SNB-CATALOGUE-25430',
-                    type: 'NON-MSS'
-                }
-            ]
+            dataLoading: false
         }
+    }
+
+    componentDidMount(){
+        this.props.getMSSCataloguesReset()
+        this.getMSSCatalogues()
+    }
+
+    onHandleRefresh = () => {
+        this.props.getMSSCataloguesRefresh()
+        this.getMSSCatalogues()
+
+    }
+
+    onHandleLoadMore = () => {
+        if (this.props.pdp.dataGetMSSCatalogues) {
+            if (
+                this.props.pdp.dataGetMSSCatalogues.length <
+                this.props.pdp.totalDataGetMSSCatalogues
+            ){
+                const page = this.props.pdp.pageGetMSSCatalogues + 1
+                this.props.getMSSCataloguesLoadMore(page)
+                this.props.getMSSCataloguesProcess({
+                    page,
+                    limit: 10,
+                    mss: this.props.mssType,
+                    keyword: this.props.search
+                })
+            }
+        }
+    }
+
+    getMSSCatalogues(){
+        this.props.getMSSCataloguesProcess({
+            page: 0,
+            limit: 10,
+            mss: '',
+            keyword: ''
+        })
     }
 
     renderSkeleton(){
@@ -68,7 +74,7 @@ class ModalBottomProductListView extends Component {
     }
 
     renderData(){
-        return this.state.data.length > 0
+        return this.props.pdp.dataGetMSSCatalogues.length > 0
         ? this.renderContent()
         : this.renderEmpty()
     }
@@ -83,15 +89,20 @@ class ModalBottomProductListView extends Component {
     }
 
     renderContent(){
+        console.log(this.props.pdp.dataGetMSSCatalogues)
         return (
             <View style={{ flex: 1 }}>
                 <View style={GlobalStyle.lines}/>
                 <FlatList
                     contentContainerStyle={styles.flatListContainer}
-                    data={this.state.data}
+                    data={this.props.pdp.dataGetMSSCatalogues}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={(item, index) => index.toString()}
                     ItemSeparatorComponent={this.renderSeparator}
+                    refreshing={this.props.pdp.refreshGetMSSCatalogues}
+                    onRefresh={this.onHandleRefresh}
+                    onEndReachedThreshold={0.1}
+                    onEndReached={this.onHandleLoadMore.bind(this)}
                 />
             </View>
         )
@@ -103,7 +114,10 @@ class ModalBottomProductListView extends Component {
                 key={index}
                 style={styles.boxItem}
                 onPress={() =>
-                    this.props.parentFunction({ type: 'stock', data: item.id })
+                    this.props.parentFunction({ type: 'stock', data: {
+                        id: item.id,
+                        mss: item.mss
+                    } })
                 }
             >
                 <View 
@@ -115,7 +129,7 @@ class ModalBottomProductListView extends Component {
                 >
                     <View style={{ marginBottom: 8 }}>
                         <Text style={[Fonts.type37]}>
-                            {item.code} {item.type === 'MSS' ? this.renderMSSType() : <View />}
+                            {item.skuCode} {item.mss ? this.renderMSSType() : <View />}
                         </Text>
                     </View>
                     <View>

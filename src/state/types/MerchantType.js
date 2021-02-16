@@ -88,3 +88,7 @@ export const MERCHANT_SUBMIT_SURVEY_SUCCESS = 'MerchantSubmitSurveySuccess';
 export const MERCHANT_SUBMIT_SURVEY_FAILED = 'MerchantSubmitSurveyFailed';
 /** MERCHANT UPDATE SURVEY RESPONSE */
 export const MERCHANT_UPDATE_SURVEY_PROCESS = 'MerchantUpdateSurveyProcess';
+/** MERCHANT ADD STOCK RECORD */
+export const MERCHANT_ADD_STOCK_RECORD_PROCESS = 'MerchantAddStockRecordProcess'
+export const MERCHANT_ADD_STOCK_RECORD_SUCCESS = 'MerchantAddStockRecordSuccess'
+export const MERCHANT_ADD_STOCK_RECORD_FAILED = 'MerchantAddStockRecordFailed'

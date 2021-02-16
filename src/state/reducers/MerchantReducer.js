@@ -1,3 +1,4 @@
+import { stat } from 'react-native-fs';
 import * as types from '../types';
 import createReducer from './createReducer';
 
@@ -20,6 +21,7 @@ const INITIAL_STATE = {
   loadingGetListSurvey: false,
   loadingGetSurvey: false,
   loadingSubmitSurvey: false,
+  loadingAddRecordStock: false,
   /** data */
   dataPostActivity: null,
   dataGetLogAllActivity: null,
@@ -132,6 +134,7 @@ const INITIAL_STATE = {
     status: '',
     photos: []
   },
+  dataAddRecordStock: {},
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
@@ -147,7 +150,8 @@ const INITIAL_STATE = {
   errorGetWarehouse: null,
   errorGetSurveyList: null,
   errorGetSurvey: null,
-  errorSubmitSurvey: null
+  errorSubmitSurvey: null,
+  errorAddRecordStock: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -786,6 +790,34 @@ export const merchant = createReducer(INITIAL_STATE, {
       dataSubmitSurvey: {},
       errorSubmitSurvey: null
     };
+  },
+  /**
+   * ======================
+   * ADD RECORD STOCK
+   * ======================
+   */
+  [types.MERCHANT_ADD_STOCK_RECORD_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingAddRecordStock: true,
+      dataAddRecordStock: {},
+      errorAddRecordStock: null
+    }
+  },
+  [types.MERCHANT_ADD_STOCK_RECORD_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingAddRecordStock: false,
+      dataAddRecordStock: action.payload,
+      errorAddRecordStock: null
+    }
+  },
+  [types.MERCHANT_ADD_STOCK_RECORD_FAILED](state, action) {
+    return {
+      ...state,
+      loadingAddRecordStock: false,
+      errorAddMerchant: action.payload
+    }
   }
 });
 /**
