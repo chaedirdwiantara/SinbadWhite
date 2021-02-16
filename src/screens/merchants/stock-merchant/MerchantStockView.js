@@ -11,7 +11,8 @@ import {
     StatusBarWhite,
     EmptyData,
     ButtonFloatType1,
-    SearchBarType4
+    SearchBarType4,
+    ButtonSingle
 } from '../../../library/component'
 import {
     bindActionCreators,
@@ -63,19 +64,34 @@ class MerchantStockView extends Component {
     // RENDER DATA
     renderData(){
         return(
-            <View style={{paddingTop: 8, backgroundColor: masterColor.backgroundWhite}}>
-                <SearchBarType4 
-                    searchText={this.state.search}
-                    placeholder={'Cari Produk disini'}
-                    onRef={ref => (this.parentFunction = ref)}
-                    parentFunction={this.parentFunction.bind(this)}
-                />
-                <View style={{
-                    backgroundColor: masterColor.fontBlack05,
-                    paddingTop: 8
-                    }}>
-                    <StockRecordListView />
+            <View style={{backgroundColor: masterColor.backgroundWhite, flex: 1}}>
+                {this.renderSearch()}
+                {this.renderCardView()}
+                {this.renderButtonEditStock()}
                 </View>
+        )
+    }
+    // RENDER SEARCH VIEW
+    renderSearch(){
+        return(
+            <View style={{ paddingVertical: 8 }}>
+                    <SearchBarType4 
+                        searchText={this.state.search}
+                        placeholder={'Cari Produk disini'}
+                        onRef={ref => (this.parentFunction = ref)}
+                        parentFunction={this.parentFunction.bind(this)}
+                    />
+            </View>    
+        )
+    }
+    // RENDER CARD View
+    renderCardView(){
+        return(
+            <View style={{
+                backgroundColor: masterColor.fontBlack05,
+                paddingTop: 8
+                }}>
+                <StockRecordListView />
             </View>
         )
     }
@@ -99,6 +115,18 @@ class MerchantStockView extends Component {
             this.renderData()
         ) : (
             this.renderDataEmpty()
+        )
+    }
+    // Render Button
+    renderButtonEditStock() {
+        return (
+            <View style={styles.containerEditButton}>
+                <ButtonSingle
+                    title={'Ubah Catatan Stock'}
+                    borderRadius={8}
+                    onPress={() => console.log('Go To Edit Stock')}
+                />
+            </View>
         )
     }
     /**
@@ -147,6 +175,15 @@ const styles = StyleSheet.create({
         bottom: 0,
         zIndex: 1000
     },
+    containerEditButton: {
+        backgroundColor: masterColor.backgroundWhite, 
+        position: 'absolute', 
+        bottom: 0, 
+        width: '100%', 
+        zIndex: 1000,
+        borderTopWidth: 1,
+        borderColor: masterColor.fontBlack10
+    }
 })
 
 const mapStateToProps = ({ pdp }) => {
