@@ -114,7 +114,10 @@ class ModalBottomProductListView extends Component {
                 key={index}
                 style={styles.boxItem}
                 onPress={() =>
-                    this.props.parentFunction({ type: 'stock', data: item.id })
+                    this.props.parentFunction({ type: 'stock', data: {
+                        id: item.id,
+                        mss: item.mss
+                    } })
                 }
             >
                 <View 

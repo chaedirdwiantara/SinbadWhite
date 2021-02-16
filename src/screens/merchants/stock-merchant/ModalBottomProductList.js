@@ -103,15 +103,16 @@ class ModalBottomProductList extends Component {
                 console.log('Add SKU to Stock')
                 const selectedProduct = this.state.selectedProduct
                 const dataForSaveProduct = this.state.dataForSaveProduct
-                const indexSelectedProduct = selectedProduct.indexOf(data.data)
+                const indexSelectedProduct = selectedProduct.indexOf(data.data.id)
                 const dataObject = {
-                    id: parseInt(data.data, 10)
+                    id: parseInt(data.data.id, 10),
+                    isMustSale: data.data.mss
                 }
                 if (indexSelectedProduct > -1){
                     selectedProduct.splice(indexSelectedProduct, 1)
                     dataForSaveProduct.splice(indexSelectedProduct, 1)
                 } else {
-                    selectedProduct.push(data.data)
+                    selectedProduct.push(data.data.id)
                     dataForSaveProduct.push(dataObject)
                 }
                 this.setState({ selectedProduct, dataForSaveProduct })
@@ -160,6 +161,10 @@ class ModalBottomProductList extends Component {
             mss: mssType,
             keyword: this.state.search
         })
+    }
+
+    addStockRecord(){
+        console.log(this.state.dataForSaveProduct)
     }
     /**
      * =================
@@ -279,6 +284,7 @@ class ModalBottomProductList extends Component {
             <ButtonSingle
                 title={'Tambah ke Catatan'}
                 borderRadius={4}
+                onPress={() => this.addStockRecord()}
             />
         )
     }
