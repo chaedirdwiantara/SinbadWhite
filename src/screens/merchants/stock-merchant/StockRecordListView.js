@@ -7,6 +7,7 @@ import {
     FlatList
 } from '../../../library/reactPackage'
 import { Fonts } from '../../../helpers'
+import { Color } from '../../../config'
 import masterColor from '../../../config/masterColor.json'
 
 class StockRecordListView extends Component {
@@ -16,7 +17,7 @@ class StockRecordListView extends Component {
             mockData: [
                 {
                     id: 1,
-                    catalogueCode: 'SNB-CATALOGUE-22342',
+                    catalogueCode: '1. SNB-CATALOGUE-22342',
                     name: 'SGM EKSPLORE SOY 1-5TH MADU 400GR',
                     showedStock: 400,
                     nonShowedStock: 10,
@@ -24,7 +25,7 @@ class StockRecordListView extends Component {
                 },
                 {
                     id: 2,
-                    catalogueCode: 'SNB-CATALOGUE-22321',
+                    catalogueCode: '2. SNB-CATALOGUE-22321',
                     name: 'SGM EKSPLORE SOY 1-5TH FNL 1000GR',
                     showedStock: 10,
                     nonShowedStock: 400,
@@ -32,7 +33,7 @@ class StockRecordListView extends Component {
                 },
                 {
                     id: 3,
-                    catalogueCode: 'SNB-CATALOGUE-22342',
+                    catalogueCode: '3. SNB-CATALOGUE-22342',
                     name: 'SGM EKSPLORE SOY 1-5TH MADU 400GR',
                     showedStock: 400,
                     nonShowedStock: 10,
@@ -40,7 +41,7 @@ class StockRecordListView extends Component {
                 },
                 {
                     id: 4,
-                    catalogueCode: 'SNB-CATALOGUE-22321',
+                    catalogueCode: '4. SNB-CATALOGUE-22321',
                     name: 'SGM EKSPLORE SOY 1-5TH FNL 1000GR',
                     showedStock: 10,
                     nonShowedStock: 400,
@@ -48,7 +49,7 @@ class StockRecordListView extends Component {
                 },
                 {
                     id: 5,
-                    catalogueCode: 'SNB-CATALOGUE-22342',
+                    catalogueCode: '5. SNB-CATALOGUE-22342',
                     name: 'SGM EKSPLORE SOY 1-5TH MADU 400GR',
                     showedStock: 400,
                     nonShowedStock: 10,
@@ -56,7 +57,7 @@ class StockRecordListView extends Component {
                 },
                 {
                     id: 6,
-                    catalogueCode: 'SNB-CATALOGUE-22321',
+                    catalogueCode: '6. SNB-CATALOGUE-22321',
                     name: 'SGM EKSPLORE SOY 1-5TH FNL 1000GR',
                     showedStock: 10,
                     nonShowedStock: 400,
@@ -129,7 +130,8 @@ class StockRecordListView extends Component {
     // RENDER CONTENT
     renderContent(){
         return (
-            <FlatList 
+            <FlatList
+                contentContainerStyle={styles.flatListContainer}
                 data={this.state.mockData}
                 renderItem={this.renderCardData.bind(this)}
                 keyExtractor={(item, index) => index.toString()}
@@ -140,21 +142,22 @@ class StockRecordListView extends Component {
     // RENDER MAIN CONTENT
     render(){
         return (
-            // this.renderCardData()
-            this.renderContent()
+            <View style={styles.mainContainer}>
+                {this.renderContent()}
+            </View>
+            
         )
     }
 }
 
 const styles = StyleSheet.create({
+    mainContainer: {
+        height: '100%',
+        backgroundColor: Color.backgroundWhite
+      },
     flatListContainer: {
-        backgroundColor: masterColor.backgroundWhite,
-        marginHorizontal: 16,
-        marginVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: 8,
-        elevation: 3
-    }
+        paddingBottom: 200
+      },
 })
 
 export default StockRecordListView
