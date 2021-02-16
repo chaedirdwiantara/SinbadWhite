@@ -10,21 +10,24 @@ import {
     BackHandlerBackSpecific,
     StatusBarWhite,
     EmptyData,
-    ButtonFloatType1
+    ButtonFloatType1,
+    SearchBarType4
 } from '../../../library/component'
 import {
     bindActionCreators,
     connect
 } from '../../../library/thirdPartyPackage'
+import { Fonts } from '../../../helpers'
 import masterColor from '../../../config/masterColor.json'
 import * as ActionCreators from '../../../state/actions'
 import ModalBottomProductList from './ModalBottomProductList'
+import StockRecordListView from './StockRecordListView'
 
 class MerchantStockView extends Component {
     constructor(props){
         super(props)
         this.state = {
-            mockData: false,
+            mockData: true,
             openModalProductList: false
         }
     }
@@ -44,15 +47,21 @@ class MerchantStockView extends Component {
             </View>
         )
     }
+    // RENDER DATA
     renderData(){
         return(
-            <View>
-                <Text>
-                    Data Not Found
-                </Text>
+            <View style={{paddingTop: 8, backgroundColor: masterColor.backgroundWhite}}>
+                <SearchBarType4 />
+                <View style={{
+                    backgroundColor: masterColor.fontBlack05,
+                    paddingTop: 8
+                    }}>
+                    <StockRecordListView />
+                </View>
             </View>
         )
     }
+    // RENDER EMPTY DATA
     renderDataEmpty(){
         return(
             <View style={styles.mainContainer}>
@@ -66,6 +75,7 @@ class MerchantStockView extends Component {
             </View>
         )
     }
+    // RENDER CONTENT
     renderContent(){
         return this.state.mockData ? (
             this.renderData()
@@ -73,7 +83,12 @@ class MerchantStockView extends Component {
             this.renderDataEmpty()
         )
     }
-
+    /**
+     * ==============
+     * RENDER MODAL
+     * ==============
+     */
+    // RENDER MODAL PRODUCT LIST
     renderModalProductList(){
         return this.state.openModalProductList ? (
             <ModalBottomProductList 
@@ -106,7 +121,7 @@ class MerchantStockView extends Component {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: masterColor.backgroundWhite
+        backgroundColor: masterColor.fontBlack05
     },
     containerFloatButton: {
         width: '100%',
