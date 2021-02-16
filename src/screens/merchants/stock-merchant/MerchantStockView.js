@@ -28,9 +28,22 @@ class MerchantStockView extends Component {
         super(props)
         this.state = {
             mockData: true,
-            openModalProductList: false
+            openModalProductList: false,
+            search: ''
         }
     }
+
+    parentFunction(data){
+        switch (data.type) {
+            case 'search':
+                this.setState({ search: data.data })
+                console.log(data.data)
+                break;       
+            default:
+                break;
+        }
+    }
+
     /**
      * =============
      * RENDER VIEW
@@ -51,7 +64,12 @@ class MerchantStockView extends Component {
     renderData(){
         return(
             <View style={{paddingTop: 8, backgroundColor: masterColor.backgroundWhite}}>
-                <SearchBarType4 />
+                <SearchBarType4 
+                    searchText={this.state.search}
+                    placeholder={'Cari Produk disini'}
+                    onRef={ref => (this.parentFunction = ref)}
+                    parentFunction={this.parentFunction.bind(this)}
+                />
                 <View style={{
                     backgroundColor: masterColor.fontBlack05,
                     paddingTop: 8

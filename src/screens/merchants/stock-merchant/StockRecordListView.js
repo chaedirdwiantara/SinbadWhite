@@ -29,6 +29,38 @@ class StockRecordListView extends Component {
                     showedStock: 10,
                     nonShowedStock: 400,
                     isExclusive: false
+                },
+                {
+                    id: 3,
+                    catalogueCode: 'SNB-CATALOGUE-22342',
+                    name: 'SGM EKSPLORE SOY 1-5TH MADU 400GR',
+                    showedStock: 400,
+                    nonShowedStock: 10,
+                    isExclusive: true
+                },
+                {
+                    id: 4,
+                    catalogueCode: 'SNB-CATALOGUE-22321',
+                    name: 'SGM EKSPLORE SOY 1-5TH FNL 1000GR',
+                    showedStock: 10,
+                    nonShowedStock: 400,
+                    isExclusive: false
+                },
+                {
+                    id: 5,
+                    catalogueCode: 'SNB-CATALOGUE-22342',
+                    name: 'SGM EKSPLORE SOY 1-5TH MADU 400GR',
+                    showedStock: 400,
+                    nonShowedStock: 10,
+                    isExclusive: true
+                },
+                {
+                    id: 6,
+                    catalogueCode: 'SNB-CATALOGUE-22321',
+                    name: 'SGM EKSPLORE SOY 1-5TH FNL 1000GR',
+                    showedStock: 10,
+                    nonShowedStock: 400,
+                    isExclusive: false
                 }
             ]
         }
