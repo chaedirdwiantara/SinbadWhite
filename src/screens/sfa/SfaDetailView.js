@@ -3,8 +3,7 @@ import {
   View,
   StyleSheet,
   Text,
-  SafeAreaView,
-  TouchableOpacity
+  SafeAreaView
 } from '../../library/reactPackage';
 
 import {
@@ -23,7 +22,7 @@ import * as ActionCreators from '../../state/actions';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { useDispatch, useSelector } from 'react-redux';
 
-function SfaView(props) {
+function SfaDetailView(props) {
   const dispatch = useDispatch();
 
   /**
@@ -41,9 +40,7 @@ function SfaView(props) {
   const renderHeader = () => {
     return (
         <View>
-            <TouchableOpacity onPress={() => NavigationService.navigate('SfaDetailView')}>
-                <Text>Header</Text>
-            </TouchableOpacity>
+            <Text>Header</Text>
         </View>
     )
   }
@@ -109,5 +106,5 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SfaView);
+)(SfaDetailView);
 // export default DMSView;
