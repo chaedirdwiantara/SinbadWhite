@@ -31,6 +31,22 @@ function SfaDetailView(props) {
         fakturName: "COMBINE",
         noPesanan: "S0100038289100137",
         noRef: "A75472883"
+      },
+      tagihanInfo : {
+        firstSaldo : 2000000,
+        sinbadBilling: 500000,
+        totalBilling: 0,
+        metodePenagihan: {
+          tunai: "", 
+          cek: "", 
+          giro: "", 
+          transfer: "", 
+          voucher: "", 
+          promotion: "", 
+          retur: "", 
+          materai: ""
+        },
+        outStanding: 1500000
       }
     }
     );
@@ -64,15 +80,15 @@ function SfaDetailView(props) {
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Nama Faktur</Text>
-          <Text style={Fonts.type17}>test</Text>
+          <Text style={Fonts.type17}>{data.fakturInfo.fakturName}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>No. Pesanan</Text>
-          <Text style={Fonts.type17}>test</Text>
+          <Text style={Fonts.type17}>{data.fakturInfo.noPesanan}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>No. Referensi</Text>
-          <Text style={Fonts.type17}>test</Text>
+          <Text style={Fonts.type17}>{data.fakturInfo.noRef}</Text>
         </View>
       </View>
     )
@@ -86,8 +102,82 @@ function SfaDetailView(props) {
               <Text style={Fonts.type48}>Informasi Tagihan</Text>
             </View>
             <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
+            {renderItemTagihanInfo()}
+            <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
+            {renderTagihanDetail()}
+            <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
+            {renderTagihanOutstanding()}
           </View>
         </View>
+    )
+  }
+
+  const renderItemTagihanInfo = () => {
+    return (
+      <View>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text style={Fonts.type17}>First Saldo</Text>
+          <Text style={Fonts.type17}>{data.tagihanInfo.firstSaldo}</Text>
+        </View>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text style={Fonts.type17}>Pembayaran Dari Toko</Text>
+          <Text style={Fonts.type17}>{data.tagihanInfo.sinbadBilling}</Text>
+        </View>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text style={Fonts.type17}>Total Penagihan</Text>
+          <Text style={Fonts.type17}>{data.tagihanInfo.totalBilling}</Text>
+        </View>
+      </View>
+    )
+  }
+
+  const renderTagihanDetail = () => {
+    return (
+      <View style={{marginLeft:8}}>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text style={Fonts.type17}>Tunai</Text>
+          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.tunai}</Text>
+        </View>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text style={Fonts.type17}>Cek</Text>
+          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.cek}</Text>
+        </View>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text style={Fonts.type17}>Giro</Text>
+          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.giro}</Text>
+        </View>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text style={Fonts.type17}>Transfer</Text>
+          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.transfer}</Text>
+        </View>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text style={Fonts.type17}>Voucher</Text>
+          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.voucher}</Text>
+        </View>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text style={Fonts.type17}>Promotion</Text>
+          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.promotion}</Text>
+        </View>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text style={Fonts.type17}>Retur</Text>
+          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.retur}</Text>
+        </View>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text style={Fonts.type17}>Meterai</Text>
+          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.materai}</Text>
+        </View>
+      </View>
+    )
+  }
+
+  const renderTagihanOutstanding = () => {
+    return(
+      <View>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text style={Fonts.type17}>Outstanding</Text>
+          <Text style={Fonts.type17}>{data.tagihanInfo.outStanding}</Text>
+        </View>
+      </View>
     )
   }
 
