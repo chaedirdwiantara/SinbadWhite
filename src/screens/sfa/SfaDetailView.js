@@ -175,7 +175,7 @@ function SfaDetailView(props) {
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Outstanding</Text>
-          <Text style={Fonts.type17}>{data.tagihanInfo.outStanding}</Text>
+          <Text style={Fonts.type22}>{data.tagihanInfo.outStanding}</Text>
         </View>
       </View>
     )
