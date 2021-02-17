@@ -14,6 +14,7 @@ import {
 } from '../../library/thirdPartyPackage';
 import {
   LoadingPage,
+  StatusBarWhite
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
@@ -30,25 +31,54 @@ function SfaDetailView(props) {
    * FUNCTIONAL
    * =======================
    */
-  
 
   /**
    * *********************************
    * RENDER VIEW
    * *********************************
    */
-  const renderHeader = () => {
+  const renderFakturInfo = () => {
     return (
-        <View>
-            <Text>Header</Text>
+        <View style={styles.container}>
+          <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
+            <View>
+              <Text style={Fonts.type48}>Informasi Faktur</Text>
+            </View>
+            <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
+            {renderItemFakturInfo()}
+          </View>
         </View>
     )
   }
 
-  const renderBody = () => {
+  const renderItemFakturInfo = () => {
     return (
-        <View>
-            <Text>Body</Text>
+      <View>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text>Nama Faktur</Text>
+          <Text>test</Text>
+        </View>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text >No. Pesanan</Text>
+          <Text >test</Text>
+        </View>
+        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text>No. Referensi</Text>
+          <Text>test</Text>
+        </View>
+      </View>
+    )
+  }
+
+  const renderTagihanInfo = () => {
+    return (
+        <View style={styles.container}>
+          <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
+            <View>
+              <Text style={Fonts.type48}>Informasi Tagihan</Text>
+            </View>
+            <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
+          </View>
         </View>
     )
   }
@@ -61,8 +91,8 @@ function SfaDetailView(props) {
   const renderContent = () => {
     return (
       <View style={{ flex: 1 }}>
-        {renderHeader()}
-        {renderBody()}
+        {renderFakturInfo()}
+        {renderTagihanInfo()}
       </View>
     );
   };
@@ -78,6 +108,7 @@ function SfaDetailView(props) {
     <>
       {/* {props.merchant.dataGetMerchantDetail ? ( */}
         <SafeAreaView style={styles.mainContainer}>
+          <StatusBarWhite />
           <View style={{ flex: 1 }}>
             {renderContent()}
           </View>
@@ -88,9 +119,37 @@ function SfaDetailView(props) {
     </>
   );
 }
+
+/**
+ * =======================
+ * HEADER MODIFY
+ * =======================
+ */
+export const NavOptionRight = props => {
+  return (
+    <View style={styles.navOption}>
+      <Text style={[Fonts.type21, {marginRight: 16}]}>Tagih</Text>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    backgroundColor: masterColor.backgroundWhite
+  },
+  container: {
+    marginHorizontal: 16,
+    marginTop: 16
+  },
+  navOption: {
+    flex: 1,
+    backgroundColor: masterColor.backgroundWhite
+  },
+  cardTaskList: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 4,
     backgroundColor: masterColor.backgroundWhite
   },
 });

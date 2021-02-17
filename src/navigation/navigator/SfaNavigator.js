@@ -3,9 +3,11 @@ import { View } from 'react-native';
 import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 import SfaView from '../../screens/sfa/SfaView';
-import SfaDetailView from '../../screens/sfa/SfaDetailView';
+import SfaDetailView, {
+  NavOptionRight
+} from '../../screens/sfa/SfaDetailView';
 
-const OmsNavigator = {
+const SfaNavigator = {
   SfaView: {
     screen: SfaView,
     navigationOptions: {
@@ -32,19 +34,19 @@ const OmsNavigator = {
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
-          textAlign: 'center',
+          textAlign: 'left',
           flex: 1
         }
       ],
-      headerTintColor: masterColor.backButtonWhite,
+      headerTintColor: masterColor.fontBlack50,
       headerStyle: {
-        backgroundColor: masterColor.mainColor
+        backgroundColor: masterColor.backgroundWhite
       },
-      headerRight: <View />,
+      headerRight: <NavOptionRight />,
       gesturesEnabled: false
     }
   },
   
 };
 
-export default OmsNavigator;
+export default SfaNavigator;
