@@ -25,7 +25,15 @@ import { useDispatch, useSelector } from 'react-redux';
 
 function SfaDetailView(props) {
   const dispatch = useDispatch();
-
+  const [data, setData] = useState(
+    {
+      fakturInfo : {
+        fakturName: "COMBINE",
+        noPesanan: "S0100038289100137",
+        noRef: "A75472883"
+      }
+    }
+    );
   /**
    * =======================
    * FUNCTIONAL
@@ -55,16 +63,16 @@ function SfaDetailView(props) {
     return (
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text>Nama Faktur</Text>
-          <Text>test</Text>
+          <Text style={Fonts.type17}>Nama Faktur</Text>
+          <Text style={Fonts.type17}>test</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text >No. Pesanan</Text>
-          <Text >test</Text>
+          <Text style={Fonts.type17}>No. Pesanan</Text>
+          <Text style={Fonts.type17}>test</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text>No. Referensi</Text>
-          <Text>test</Text>
+          <Text style={Fonts.type17}>No. Referensi</Text>
+          <Text style={Fonts.type17}>test</Text>
         </View>
       </View>
     )
