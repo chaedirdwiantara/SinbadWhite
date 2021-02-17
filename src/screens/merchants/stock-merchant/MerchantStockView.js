@@ -94,10 +94,7 @@ class MerchantStockView extends Component {
     // RENDER CARD View
     renderCardView(){
         return(
-            <View style={{
-                backgroundColor: masterColor.fontBlack05,
-                paddingTop: 8
-                }}>
+            <View>
                 <StockRecordListView />
             </View>
         )

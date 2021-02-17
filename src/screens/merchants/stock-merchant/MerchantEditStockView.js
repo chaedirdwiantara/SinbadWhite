@@ -20,6 +20,7 @@ import {
   import NavigationService from '../../../navigation/NavigationService'
   import masterColor from '../../../config/masterColor.json'
   import * as ActionCreators from '../../../state/actions'
+  import EditStockRecordListView from './EditStockRecordListView'
 
   class MerchantEditStockView extends Component {
       constructor(props){
@@ -57,14 +58,8 @@ import {
     // RENDER CARD View
     renderCardView(){
         return(
-            <View style={{
-                backgroundColor: masterColor.fontBlack05,
-                paddingTop: 8,
-                flex: 1
-                }}>
-                <Text>
-                    The Card should be here!
-                </Text>
+            <View>
+                <EditStockRecordListView />
             </View>
         )
     }

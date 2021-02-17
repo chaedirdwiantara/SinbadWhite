@@ -4,12 +4,15 @@ import {
     View,
     StyleSheet,
     Text, 
-    FlatList
+    FlatList,
 } from '../../../library/reactPackage'
-import { Fonts } from '../../../helpers'
+import {
+    MaterialIcon
+} from '../../../library/thirdPartyPackage'
+import { Fonts, GlobalStyle } from '../../../helpers'
 import { Color } from '../../../config'
 
-class StockRecordListView extends Component {
+class EditStockRecordListView extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -65,17 +68,17 @@ class StockRecordListView extends Component {
             ]
         }
     }
-
-    // RENDER CARD DATA
-    renderCardData({ item, index }){
+    /** FUNCTION */
+    /** RENDER VIEW */
+    renderCardData({item, index}){
         return(
-            <View 
+            <View
                 style={styles.cardContent}
                 key={index}
-                >
-                    <View style={{alignItems: 'baseline', flexDirection: 'row'}}>
+            >
+                <View style={{alignItems: 'baseline', flexDirection: 'row', marginHorizontal: 16}}>
                         <View>
-                            <Text style={[Fonts.type10, {marginTop: 20}]}>
+                            <Text style={[Fonts.type10, {marginTop: 20,}]}>
                                 {item.catalogueCode}
                             </Text>
                         </View>                         
@@ -89,40 +92,53 @@ class StockRecordListView extends Component {
                         </View>
                     </View>
                 
-                <Text style={[Fonts.type59, {marginTop: 11}]}>
+                <Text style={[Fonts.type59, {marginTop: 11, marginHorizontal: 16, marginBottom: 8}]}>
                     {item.name}
                 </Text>
-                <View style={{ 
-                        marginVertical: 16, 
-                        flexDirection: 'row', 
-                        backgroundColor: Color.fontBlack05,
-                        borderRadius: 6
-                    }}>
-                    <View style={{flex: 1, alignItems: 'center', marginVertical: 8}}>
-                        <Text style={[Fonts.type96]}>
-                            Shelf Produk
-                        </Text>
-                        <Text style={[Fonts.type10, { marginTop: 8 }]}>
-                            {item.showedStock}
-                        </Text>
+                {this.renderSeparator()}
+                <View style={styles.cardBodyShelf}>
+                    <View style={styles.shelfSection}>
+                        <View style={{flex: 1}}>
+                            <Text style={[Fonts.type96]}>Shelf Produk</Text>
+                        </View>
+                        <View style={{flex: 1}}>
+                            <View style={styles.inputBox}> 
+                                <Text style={[Fonts.type57, {textAlign: 'center'}]}>
+                                    {item.showedStock}
+                                </Text>
+                            </View>
+                        </View>
                     </View>
-                    <View style={{flex: 1, alignItems: 'center', marginVertical: 8}}>
-                        <Text style={[Fonts.type96]}>
-                            Non-Shelf Produk
-                        </Text>
-                        <Text style={[Fonts.type10, { marginTop: 8 }]}>
-                            {item.nonShowedStock}
-                        </Text>
+                    <View style={styles.shelfSection}>
+                        {this.renderSeparator()}
+                    </View>
+                    <View style={styles.shelfSection}>
+                        <View style={{flex: 1}}>
+                            <Text style={[Fonts.type96]}>Non-Shelf Produk</Text>
+                        </View>
+                        <View style={{flex: 1}}>
+                            <View style={styles.inputBox}>
+                                <Text style={[Fonts.type57, {textAlign: 'center'}]}>
+                                    {item.nonShowedStock}
+                                </Text>
+                            </View>
+                        </View>
                     </View>
                 </View>
+                <View style={{ position: 'absolute', marginTop: 16, right: 16}}>
+                    <MaterialIcon 
+                        name={'delete'}
+                        size={24}
+                    />
+                </View>
+
             </View>
         )
     }
 
-    // RENDER CONTENT
     renderContent(){
         return (
-            <FlatList
+            <FlatList 
                 contentContainerStyle={styles.flatListContainer}
                 data={this.state.mockData}
                 renderItem={this.renderCardData.bind(this)}
@@ -131,13 +147,22 @@ class StockRecordListView extends Component {
         )
     }
 
-    // RENDER MAIN CONTENT
+      /** RENDER SEPARATOR */
+    renderSeparator() {
+        return <View style={{
+            flex: 1,
+            height: 1,
+            backgroundColor: Color.fontBlack10,
+            marginVertical: 8
+        }} />;
+    }
+    /** RENDER MODAL */
+
     render(){
         return (
             <View style={styles.mainContainer}>
                 {this.renderContent()}
             </View>
-            
         )
     }
 }
@@ -151,14 +176,34 @@ const styles = StyleSheet.create({
         paddingTop: 8,
         paddingBottom: 200
       },
-    cardContent: {
+      cardContent: {
         backgroundColor: Color.backgroundWhite,
         marginHorizontal: 16,
         marginVertical: 8,
-        paddingHorizontal: 16,
         borderRadius: 8,
         elevation: 3
+    },
+    inputBox: {
+        borderRadius: 4, 
+        width: 50, 
+        height: 30, 
+        borderWidth: 1, 
+        alignSelf: 'flex-end',
+        borderColor: Color.fontBlack10,
+        justifyContent: 'center'
+    },
+    shelfSection: {
+        alignItems: 'center', 
+        flexDirection: 'row', 
+        flex: 1
+    },
+    cardBodyShelf: {
+        alignItems: 'center', 
+        flex: 1, 
+        flexDirection: 'column', 
+        marginVertical: 16, 
+        marginHorizontal: 16
     }
 })
 
-export default StockRecordListView
+export default EditStockRecordListView
