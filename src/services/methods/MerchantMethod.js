@@ -150,6 +150,15 @@ function updateSurvey({ params, surveyResponseId }) {
     }
    })
  }
+ /** GET RECORD STOCK */
+ function getRecordStock(data){
+  const storeId = GlobalMethod.merchantStoreId()
+  const supplierId = GlobalMethod.userSupplierMapping()
+   return ApiRest({
+     path: `stock-record?supplierId=${supplierId}&storeId=${storeId}&keyword=${data.search}`,
+     method: 'GET'
+   })
+ }
 
 export const MerchantMethod = {
   getMerchant,
@@ -168,7 +177,8 @@ export const MerchantMethod = {
   getSurveyResponse,
   submitSurvey,
   updateSurvey,
-  addRecordStock
+  addRecordStock,
+  getRecordStock
 };
 
 /**
