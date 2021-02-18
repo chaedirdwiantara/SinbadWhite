@@ -71,20 +71,22 @@ class AddMerchantStep2 extends Component {
   }
   /** === CHECK ID NUMBER FORMAT === */
   checkIdNoFormat(idNumber) {
+    idNumber = idNumber.substr(0, 16)
     const gaps = [6,12]
     const formatted = GlobalMethod.addGaps(idNumber, gaps, " ")
     this.setState({ 
       idNo: formatted,
-      errorIdNumber: !(formatted === '' || formatted.length === 18) 
+      errorIdNumber: !(formatted === '' || formatted.length >= 18) 
     });
   }
   /** === CHECK TAX NUMBER FORMAT === */
   checkTaxNoFormat(taxNumber) {
+    taxNumber = taxNumber.substr(0, 15)
     const gaps = [2,5,8,9,12,15]
     const formatted = GlobalMethod.addGaps(taxNumber, gaps, ".")
     this.setState({ 
       taxNo: formatted,
-      errorTaxNumber: !(formatted === '' || formatted.length === 20) 
+      errorTaxNumber: !(formatted === '' || formatted.length >= 20) 
     });
   }
   /**
