@@ -3,9 +3,7 @@ import { View } from 'react-native';
 import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 import SfaView from '../../screens/sfa/SfaView';
-import SfaDetailView, {
-  NavOptionRight
-} from '../../screens/sfa/SfaDetailView';
+import SfaDetailView from '../../screens/sfa/SfaDetailView';
 
 const SfaNavigator = {
   SfaView: {
@@ -42,7 +40,7 @@ const SfaNavigator = {
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
-      headerRight: <NavOptionRight />,
+      headerRight: <View />,
       gesturesEnabled: false
     }
   },

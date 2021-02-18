@@ -3,7 +3,8 @@ import {
   View,
   StyleSheet,
   Text,
-  SafeAreaView
+  SafeAreaView,
+  ScrollView
 } from '../../library/reactPackage';
 
 import {
@@ -14,7 +15,8 @@ import {
 } from '../../library/thirdPartyPackage';
 import {
   LoadingPage,
-  StatusBarWhite
+  StatusBarWhite,
+  ButtonSingle
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
@@ -55,6 +57,9 @@ function SfaDetailView(props) {
    * FUNCTIONAL
    * =======================
    */
+  const addCollection = () => {
+    alert("test")
+  }
 
   /**
    * *********************************
@@ -96,7 +101,7 @@ function SfaDetailView(props) {
 
   const renderTagihanInfo = () => {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {marginBottom:16}]}>
           <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
             <View>
               <Text style={Fonts.type48}>Informasi Tagihan</Text>
@@ -181,6 +186,17 @@ function SfaDetailView(props) {
     )
   }
 
+  const renderAddCollection= () => {
+    return (
+      <ButtonSingle
+        disabled={false}
+        title={'Tagih'}
+        borderRadius={4}
+        onPress={() => addCollection()}
+      />
+    );
+  }
+
   /**
    * ==================================
    * RENDER CONTENT DATA (MAIN VIEW)
@@ -207,9 +223,10 @@ function SfaDetailView(props) {
       {/* {props.merchant.dataGetMerchantDetail ? ( */}
         <SafeAreaView style={styles.mainContainer}>
           <StatusBarWhite />
-          <View style={{ flex: 1 }}>
+          <ScrollView style={{ flex: 1}}>
             {renderContent()}
-          </View>
+          </ScrollView>
+          {renderAddCollection()}
         </SafeAreaView>
       {/* ) : (
         <LoadingPage />
@@ -217,19 +234,6 @@ function SfaDetailView(props) {
     </>
   );
 }
-
-/**
- * =======================
- * HEADER MODIFY
- * =======================
- */
-export const NavOptionRight = props => {
-  return (
-    <View style={styles.navOption}>
-      <Text style={[Fonts.type21, {marginRight: 16}]}>Tagih</Text>
-    </View>
-  );
-};
 
 const styles = StyleSheet.create({
   mainContainer: {
