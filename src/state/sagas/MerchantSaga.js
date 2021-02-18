@@ -13,6 +13,17 @@ function* getMerchant(actions) {
     yield put(ActionCreators.merchantGetFailed(error));
   }
 }
+/** === MERCHANT LIST BY PORTFOLIO V2 === */
+function* getMerchantV2(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getMerchantV2(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetSuccessV2(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetFailedV2(error));
+  }
+}
 /** === MERCHANT DETAIL === */
 function* getMerchantDetail(actions) {
   try {
@@ -24,6 +35,17 @@ function* getMerchantDetail(actions) {
     yield put(ActionCreators.merchantGetDetailFailed(error));
   }
 }
+/** === MERCHANT DETAIL === */
+function* getMerchantDetailV2(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getMerchantDetailV2(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetDetailSuccessV2(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetDetailFailedV2(error));
+  }
+}
 /** === PORTFOLIO BY USERID === */
 function* getPortfolio(actions) {
   try {
@@ -33,6 +55,17 @@ function* getPortfolio(actions) {
     yield put(ActionCreators.portfolioGetSuccess(response));
   } catch (error) {
     yield put(ActionCreators.portfolioGetSuccess(error));
+  }
+}
+/** === PORTFOLIO BY USERID V2 === */
+function* getPortfolioV2(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getPortfolioByUserIdV2(actions.payload);
+    });
+    yield put(ActionCreators.portfolioGetSuccessV2(response));
+  } catch (error) {
+    yield put(ActionCreators.portfolioGetSuccessV2(error));
   }
 }
 /** === ADD MERCHANT === */
@@ -182,8 +215,11 @@ function* updateSurvey(actions) {
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_GET_PROCESS, getMerchant);
+  yield takeEvery(types.MERCHANT_GET_PROCESS_V2, getMerchantV2);
   yield takeEvery(types.MERCHANT_GET_DETAIL_PROCESS, getMerchantDetail);
+  yield takeEvery(types.MERCHANT_GET_DETAIL_PROCESS_V2, getMerchantDetailV2);
   yield takeEvery(types.PORTFOLIO_GET_PROCESS, getPortfolio);
+  yield takeEvery(types.PORTFOLIO_GET_PROCESS_V2, getPortfolioV2);
   yield takeEvery(types.MERCHANT_ADD_PROCESS, addMerchant);
   yield takeEvery(types.MERCHANT_EDIT_PROCESS, editMerchant);
   yield takeEvery(types.MERCHANT_GET_LAST_ORDER_PROCESS, getMerchantLastOrder);

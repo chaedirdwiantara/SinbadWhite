@@ -72,6 +72,38 @@ export function merchantGetLoadMore(page) {
   return { type: types.MERCHANT_GET_LOADMORE, payload: page };
 }
 /**
+ * ==============================
+ * GET MERCHANT LIST BY PORTFOLIO V2
+ * ==============================
+ */
+/** === MERCHANT GET PROCESS ==== */
+export function merchantGetProcessV2(data) {
+  return { type: types.MERCHANT_GET_PROCESS_V2, payload: data };
+}
+/** === MERCHANT GET SUCCESS === */
+export function merchantGetSuccessV2(data) {
+  if (data.result === 'Ok') {
+    return { type: types.MERCHANT_GET_SUCCESS_V2, payload: data.data };
+  }
+  return { type: types.MERCHANT_GET_FAILED_V2, payload: data };
+}
+/** === MERCHANT GET FAILED === */
+export function merchantGetFailedV2(data) {
+  return { type: types.MERCHANT_GET_FAILED_V2, payload: data };
+}
+/** === REFRESH GET MERCHANT === */
+export function merchantGetRefreshV2() {
+  return { type: types.MERCHANT_GET_REFRESH_V2 };
+}
+/** === RESET GET MERCHANT === */
+export function merchantGetResetV2() {
+  return { type: types.MERCHANT_GET_RESET_V2 };
+}
+/** === LOAD MORE GET MERCHANT === */
+export function merchantGetLoadMoreV2(page) {
+  return { type: types.MERCHANT_GET_LOADMORE_V2, payload: page };
+}
+/**
  * ====================================
  * GET MERCHANT DETAIL
  * ====================================
@@ -90,6 +122,26 @@ export function merchantGetDetailSuccess(data) {
 /** === MERCHANT GET DETAIL FAILED === */
 export function merchantGetDetailFailed(data) {
   return { type: types.MERCHANT_GET_DETAIL_FAILED, payload: data };
+}
+/**
+ * ====================================
+ * GET MERCHANT DETAIL V2
+ * ====================================
+ */
+/** === MERCHANT GET DETAIL PROCESS === */
+export function MerchantGetDetailProcessV2(data) {
+  return { type: types.MERCHANT_GET_DETAIL_PROCESS_V2, payload: data };
+}
+/** === MERCHANT GET DETAIL SUCCESS === */
+export function merchantGetDetailSuccessV2(data) {
+  if (data.result === 'Ok') {
+    return { type: types.MERCHANT_GET_DETAIL_SUCCESS_V2, payload: data.data };
+  }
+  return { type: types.MERCHANT_GET_DETAIL_FAILED_V2, payload: data };
+}
+/** === MERCHANT GET DETAIL FAILED === */
+export function merchantGetDetailFailedV2(data) {
+  return { type: types.MERCHANT_GET_DETAIL_FAILED_V2, payload: data };
 }
 /**
  * ====================================
@@ -117,6 +169,33 @@ export function portfolioGetSuccess(data) {
 /** PORTFOLIO GET FAILED */
 export function portfolioGetFailed(data) {
   return { type: types.PORTFOLIO_GET_FAILED, payload: data };
+}
+/**
+ * ====================================
+ * GET PORTFOLIO BY USERID V2
+ * ====================================
+ */
+/** PORTFOLIO GET PROCESS */
+export function portfolioGetProcessV2(userId) {
+  return { type: types.PORTFOLIO_GET_PROCESS_V2, payload: userId };
+}
+/** PORTFOLIO GET SUCCESS */
+export function portfolioGetSuccessV2(data) {
+  if (data.result === 'Ok') {
+    /** this for add default portfolio */
+    const dataResult = data.data;
+    const addingData = {
+      id: '',
+      name: 'Toko Baru'
+    };
+    dataResult.unshift(addingData);
+    return { type: types.PORTFOLIO_GET_SUCCESS_V2, payload: dataResult };
+  }
+  return { type: types.PORTFOLIO_GET_FAILED_V2, payload: data };
+}
+/** PORTFOLIO GET FAILED */
+export function portfolioGetFailedV2(data) {
+  return { type: types.PORTFOLIO_GET_FAILED_V2, payload: data };
 }
 /**
  * ==================================

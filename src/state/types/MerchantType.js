@@ -6,6 +6,10 @@
 export const PORTFOLIO_GET_PROCESS = 'PortfolioGetProcess';
 export const PORTFOLIO_GET_SUCCESS = 'PortfolioGetSuccess';
 export const PORTFOLIO_GET_FAILED = 'PortfolioGetFailed';
+/** PORTFOLIO BY USER ID V2*/
+export const PORTFOLIO_GET_PROCESS_V2 = 'PortfolioGetProcessV2';
+export const PORTFOLIO_GET_SUCCESS_V2 = 'PortfolioGetSuccessV2';
+export const PORTFOLIO_GET_FAILED_V2 = 'PortfolioGetFailedV2';
 /** FOR GET MERCHANT LIST */
 export const MERCHANT_GET_PROCESS = 'MerchantGetProcess';
 export const MERCHANT_GET_SUCCESS = 'MerchantGetSuccess';
@@ -13,10 +17,21 @@ export const MERCHANT_GET_FAILED = 'MerchantGetFailed';
 export const MERCHANT_GET_RESET = 'MerchantGetReset';
 export const MERCHANT_GET_REFRESH = 'MerchantGetRefresh';
 export const MERCHANT_GET_LOADMORE = 'MerchantGetLoadMore';
+/** FOR GET MERCHANT LIST BY PORTFOLIO V2*/
+export const MERCHANT_GET_PROCESS_V2 = 'MerchantGetProcessV2';
+export const MERCHANT_GET_SUCCESS_V2 = 'MerchantGetSuccessV2';
+export const MERCHANT_GET_FAILED_V2 = 'MerchantGetFailedV2';
+export const MERCHANT_GET_RESET_V2 = 'MerchantGetResetV2';
+export const MERCHANT_GET_REFRESH_V2 = 'MerchantGetRefreshV2';
+export const MERCHANT_GET_LOADMORE_V2 = 'MerchantGetLoadMoreV2';
 /** FOR GET MERCHANT DETAIL */
 export const MERCHANT_GET_DETAIL_PROCESS = 'MerchantGetDetailProcess';
 export const MERCHANT_GET_DETAIL_SUCCESS = 'MerchantGetDetailSuccess';
 export const MERCHANT_GET_DETAIL_FAILED = 'MerchantGetDetailFailed';
+/** FOR GET MERCHANT DETAIL V2*/
+export const MERCHANT_GET_DETAIL_PROCESS_V2 = 'MerchantGetDetailProcessV2';
+export const MERCHANT_GET_DETAIL_SUCCESS_V2 = 'MerchantGetDetailSuccessV2';
+export const MERCHANT_GET_DETAIL_FAILED_V2 = 'MerchantGetDetailFailedV2';
 /** FOR ADD MERCHANT */
 export const MERCHANT_ADD_PROCESS = 'MerchantAddProcess';
 export const MERCHANT_ADD_SUCCESS = 'MerchantAddSuccess';
