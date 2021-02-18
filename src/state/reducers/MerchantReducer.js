@@ -1,4 +1,3 @@
-import { stat } from 'react-native-fs';
 import * as types from '../types';
 import createReducer from './createReducer';
 
@@ -22,6 +21,7 @@ const INITIAL_STATE = {
   loadingGetSurvey: false,
   loadingSubmitSurvey: false,
   loadingAddRecordStock: false,
+  loadingGetRecordStock: false,
   /** data */
   dataPostActivity: null,
   dataGetLogAllActivity: null,
@@ -135,6 +135,7 @@ const INITIAL_STATE = {
     photos: []
   },
   dataAddRecordStock: {},
+  dataGetRecordStock: [],
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
@@ -151,7 +152,8 @@ const INITIAL_STATE = {
   errorGetSurveyList: null,
   errorGetSurvey: null,
   errorSubmitSurvey: null,
-  errorAddRecordStock: null
+  errorAddRecordStock: null,
+  errorGetRecordStock: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -817,6 +819,34 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingAddRecordStock: false,
       errorAddMerchant: action.payload
+    }
+  },
+  /**
+   * ========================
+   * GET RECORD STOCK
+   * ========================
+   */
+  [types.MERCHANT_GET_STOCK_RECORD_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetRecordStock: true,
+      dataGetRecordStock: [],
+      errorGetRecordStock: null
+    }
+  },
+  [types.MERCHANT_GET_STOCK_RECORD_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetRecordStock: false,
+      dataGetRecordStock: action.payload,
+      errorGetRecordStock: null
+    }
+  },
+  [types.MERCHANT_GET_STOCK_RECORD_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetRecordStock: false,
+      errorGetRecordStock: action.payload
     }
   }
 });

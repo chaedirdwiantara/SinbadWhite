@@ -27,6 +27,7 @@ import * as ActionCreators from '../../../state/actions'
 const { height } = Dimensions.get('window')
 import ModalBottomProductListView from './ModalBottomProductListView'
 import { TextInputMaskMethods } from 'react-native-masked-text'
+import NavigationService from '../../../navigation/NavigationService'
 
 class ModalBottomProductList extends Component {
     constructor(props){
@@ -62,6 +63,13 @@ class ModalBottomProductList extends Component {
     componentDidMount() {
         this.keyboardListener();
       }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock 
+            && this.props.merchant.dataAddRecordStock.success === true) {
+                NavigationService.navigate('MerchantStockView')
+            }
+    }
 
     componentWillUnmount() {
         this.keyboardRemove();
@@ -167,6 +175,7 @@ class ModalBottomProductList extends Component {
     /** ADD STOCK RECORD */
     addStockRecord(){
         console.log(this.state.dataForSaveProduct)
+        this.props.merchantAddStockRecordProcess({catalogues: this.state.dataForSaveProduct})
     }
     /**
      * =================
@@ -335,8 +344,8 @@ const styles = StyleSheet.create({
     }
   });
 
-const mapStateToProps = ({ pdp }) => {
-    return { pdp }
+const mapStateToProps = ({ pdp, merchant }) => {
+    return { pdp, merchant }
 }
 
 const mapDispatchToProps = dispatch => {

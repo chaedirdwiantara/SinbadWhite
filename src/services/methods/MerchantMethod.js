@@ -137,11 +137,26 @@ function updateSurvey({ params, surveyResponseId }) {
  * ==================
  */
 /** ADD RECORD STOCK */
- function addRecordStock(params){
+ function addRecordStock(data){
+   const storeId = GlobalMethod.merchantStoreId()
+   const supplierId = GlobalMethod.userSupplierMapping()
    return ApiRest({
      path: `stock-record`,
      method: 'POST',
-     params
+     params: {
+      storeId: parseInt(storeId),
+      supplierId: parseInt(supplierId[0]),
+      catalogues: data.catalogues
+    }
+   })
+ }
+ /** GET RECORD STOCK */
+ function getRecordStock(data){
+  const storeId = GlobalMethod.merchantStoreId()
+  const supplierId = GlobalMethod.userSupplierMapping()
+   return ApiRest({
+     path: `stock-record?supplierId=${supplierId}&storeId=${storeId}&keyword=${data.search}`,
+     method: 'GET'
    })
  }
 
@@ -162,7 +177,8 @@ export const MerchantMethod = {
   getSurveyResponse,
   submitSurvey,
   updateSurvey,
-  addRecordStock
+  addRecordStock,
+  getRecordStock
 };
 
 /**

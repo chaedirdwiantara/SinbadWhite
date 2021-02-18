@@ -92,3 +92,7 @@ export const MERCHANT_UPDATE_SURVEY_PROCESS = 'MerchantUpdateSurveyProcess';
 export const MERCHANT_ADD_STOCK_RECORD_PROCESS = 'MerchantAddStockRecordProcess'
 export const MERCHANT_ADD_STOCK_RECORD_SUCCESS = 'MerchantAddStockRecordSuccess'
 export const MERCHANT_ADD_STOCK_RECORD_FAILED = 'MerchantAddStockRecordFailed'
+/** MERCHANT GET STOCK RECORD */
+export const MERCHANT_GET_STOCK_RECORD_PROCESS = 'MerchantGetStockRecordProcess'
+export const MERCHANT_GET_STOCK_RECORD_SUCCESS = 'MerchantGetStockRecordSuccess'
+export const MERCHANT_GET_STOCK_RECORD_FAILED = 'MerchantGetStockRecordFailed'

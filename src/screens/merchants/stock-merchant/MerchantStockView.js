@@ -31,18 +31,30 @@ class MerchantStockView extends Component {
     constructor(props){
         super(props)
         this.state = {
-            mockData: true,
             openModalProductList: false,
             search: '',
             heightList: 0.93 * height
         }
     }
 
+    /**
+     * ================
+     * FUNCTION
+     * ================
+     */
+    componentDidMount(){
+        this.getRecordStock()
+    }
+
+    getRecordStock(keyword){
+        this.props.merchantGetStockRecordProcess({
+            search: keyword || ''
+        })
+    }
     parentFunction(data){
         switch (data.type) {
             case 'search':
-                this.setState({ search: data.data })
-                console.log(data.data)
+                this.getRecordStock(data.data)
                 break;       
             default:
                 break;
@@ -68,10 +80,7 @@ class MerchantStockView extends Component {
     // RENDER DATA
     renderData(){
         return(
-            <View style={{
-                backgroundColor: masterColor.backgroundWhite, 
-                flex: 1,
-                }}>
+            <View style={{backgroundColor: masterColor.fontBlack05, flex: 1}}>
                 {this.renderSearch()}
                 {this.renderCardView()}
                 {this.renderButtonEditStock()}
@@ -81,7 +90,7 @@ class MerchantStockView extends Component {
     // RENDER SEARCH VIEW
     renderSearch(){
         return(
-            <View style={{ paddingVertical: 8 }}>
+            <View style={{ paddingVertical: 8, backgroundColor: masterColor.backgroundWhite }}>
                     <SearchBarType4 
                         searchText={this.state.search}
                         placeholder={'Cari Produk disini'}
@@ -94,8 +103,13 @@ class MerchantStockView extends Component {
     // RENDER CARD View
     renderCardView(){
         return(
-            <View>
-                <StockRecordListView />
+            <View style={{
+                backgroundColor: masterColor.fontBlack05,
+                paddingTop: 8
+                }}>
+                <StockRecordListView 
+                    data={this.props.merchant.dataGetRecordStock}
+                />
             </View>
         )
     }
@@ -115,7 +129,7 @@ class MerchantStockView extends Component {
     }
     // RENDER CONTENT
     renderContent(){
-        return this.state.mockData ? (
+        return this.props.merchant.dataGetRecordStock ? (
             this.renderData()
         ) : (
             this.renderDataEmpty()
@@ -171,7 +185,7 @@ class MerchantStockView extends Component {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: masterColor.fontBlack05
+        backgroundColor: masterColor.mainColor
     },
     containerFloatButton: {
         width: '100%',
@@ -190,8 +204,8 @@ const styles = StyleSheet.create({
     }
 })
 
-const mapStateToProps = ({ pdp }) => {
-    return { pdp }
+const mapStateToProps = ({ pdp, merchant }) => {
+    return { pdp, merchant }
 }
 
 const mapDispatchToProps = dispatch => {
