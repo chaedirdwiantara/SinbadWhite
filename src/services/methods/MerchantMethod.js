@@ -10,6 +10,15 @@ function getMerchant(data) {
     method: 'GET'
   });
 }
+/** === MERCHANT LIST BY PORTFOLIO V2 === */
+function getMerchantV2(data) {
+  return ApiRest({
+    path: `agent-stores?type=${data.type}&portfolioId=${
+      data.portfolioId
+    }&$skip=${data.page}&$limit=10&keyword=${data.search}`,
+    method: 'GET'
+  });
+}
 /** === MERCHANT DETAIL === */
 function getMerchantDetail(id) {
   return ApiRest({
@@ -17,8 +26,22 @@ function getMerchantDetail(id) {
     method: 'GET'
   });
 }
+/** === MERCHANT DETAIL V2 === */
+function getMerchantDetailV2(id) {
+  return ApiRest({
+    path: `supplier-store-profile/${id}`,
+    method: 'GET'
+  });
+}
 /** === PORTFOLIO BY USERID === */
 function getPortfolioByUserId(userId) {
+  return ApiRest({
+    path: `portfolios?userId=${userId}&type=group&paginate=false`,
+    method: 'GET'
+  });
+}
+/** === PORTFOLIO BY USERID V2 === */
+function getPortfolioByUserIdV2(userId) {
   return ApiRest({
     path: `portfolios?userId=${userId}&type=group&paginate=false`,
     method: 'GET'
@@ -133,8 +156,11 @@ function updateSurvey({ params, surveyResponseId }) {
 
 export const MerchantMethod = {
   getMerchant,
+  getMerchantV2,
   getMerchantDetail,
+  getMerchantDetailV2,
   getPortfolioByUserId,
+  getPortfolioByUserIdV2,
   addMerchant,
   editMerchant,
   getMerchantLastOrder,
@@ -168,4 +194,8 @@ export const MerchantMethod = {
  * updatedDate: 27112020
  * updatedFunction:
  * -> Add methods. (get survey list, get survey response, submit survey)
+ * updatedBy: dyah
+ * updatedDate: 18022021
+ * updatedFunction:
+ * -> Add new methods. (getMerchantV2, getMerchantDetailV2, getPortfolioByUserIdV2)
  */
