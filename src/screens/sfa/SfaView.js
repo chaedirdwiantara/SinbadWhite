@@ -26,6 +26,8 @@ import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { useDispatch, useSelector } from 'react-redux';
+import SfaCollectionListView from './SfaCollectionListView';
+import { ScrollView } from 'react-native-gesture-handler';
 
 function SfaView(props) {
   const dispatch = useDispatch();
@@ -43,6 +45,7 @@ function SfaView(props) {
   const [data, setData] = useState({
     data: [
       {
+        invoice: 'COMBINE',
         orderCode: 'S0100042273101076686',
         orderRef: 'SNB1812/0002134',
         total: 670000,
@@ -51,6 +54,7 @@ function SfaView(props) {
         paidAmount: 0
       },
       {
+        invoice: 'TIGA RAKSA #2',
         orderCode: 'S0213042273101076686',
         orderRef: 'SNB1815/0002135',
         total: 700000,
@@ -58,13 +62,30 @@ function SfaView(props) {
         overdue: '28-02-2021',
         paidAmount: 0
       },
+      {
+        invoice: 'TIGA RAKSA #2',
+        orderCode: 'S0213042273101076686',
+        orderRef: 'SNB1815/0002135',
+        total: 700000,
+        debtDate: '26-02-2021',
+        overdue: '28-02-2021',
+        paidAmount: 0
+      },
+      {
+        invoice: 'TIGA RAKSA #2',
+        orderCode: 'S0213042273101076686',
+        orderRef: 'SNB1815/0002135',
+        total: 700000,
+        debtDate: '26-02-2021',
+        overdue: '28-02-2021',
+        paidAmount: 0
+      }
     ],
     totalInvoice: 3,
     invoiceAmount: 1625000,
     totalAmountPaid: 335000,
     outstanding: 1675000
   });
-
   /**
    * =======================
    * FUNCTIONAL
@@ -77,12 +98,8 @@ function SfaView(props) {
    * *********************************
    */
 
-  const renderBody = () => {
-    return (
-      <View>
-        <Text>Body</Text>
-      </View>
-    );
+  const renderCollectionList = () => {
+    return <SfaCollectionListView data={data} />;
   };
   /** === TAGS SECTION === */
   const renderTagsContent = () => {
@@ -98,6 +115,40 @@ function SfaView(props) {
       </View>
     );
   };
+  /** === RENDER FOOTER === */
+  const renderFooter = () => {
+    return (
+      <>
+        <View style={GlobalStyle.lines} />
+        <View style={styles.footer}>
+          <View style={styles.footer1}>
+            <View style={[styles.footerText, {marginBottom: 4}]}>
+              <Text style={Fonts.type44}>Total Faktur: </Text>
+              <Text style={Fonts.type108}>{data.totalInvoice}</Text>
+            </View>
+            <View style={styles.footerText}>
+              <Text style={Fonts.type44}>Jumlah Faktur: </Text>
+              <Text style={Fonts.type108}>
+                {MoneyFormat(data.invoiceAmount)}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.footer1}>
+            <View style={[styles.footerText, {marginBottom: 4}]}>
+              <Text style={Fonts.type44}>Total Terbayar: </Text>
+              <Text style={Fonts.type108}>
+                {MoneyFormat(data.totalAmountPaid)}
+              </Text>
+            </View>
+            <View style={styles.footerText}>
+              <Text style={Fonts.type44}>Sisa Tagihan: </Text>
+              <Text style={Fonts.type108}>{MoneyFormat(data.outstanding)}</Text>
+            </View>
+          </View>
+        </View>
+      </>
+    );
+  };
   /**
    * ==================================
    * RENDER CONTENT DATA (MAIN VIEW)
@@ -108,7 +159,9 @@ function SfaView(props) {
       <View style={{ flex: 1 }}>
         {renderSearchAndFilter()}
         {renderTagsContent()}
-        {renderBody()}
+        <ScrollView>{renderCollectionList()}</ScrollView>
+
+        {renderFooter()}
       </View>
     );
   };
@@ -173,6 +226,19 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: masterColor.backgroundWhite
+  },
+  footer: {
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  footer1: {
+    flex: 1
+  },
+  footerText: {
+    display: 'flex',
+    flexDirection: 'row'
   }
 });
 
