@@ -383,7 +383,7 @@ export function merchantUpdateSurveyProcess(data) {
  * ======================
  */
 export function merchantAddStockRecordProcess(data){
-  return { type: type.MERCHANT_ADD_STOCK_RECORD_PROCESS, payload: data }
+  return { type: types.MERCHANT_ADD_STOCK_RECORD_PROCESS, payload: data }
 }
 
 export function merchantAddStockRecordSuccess(data){
