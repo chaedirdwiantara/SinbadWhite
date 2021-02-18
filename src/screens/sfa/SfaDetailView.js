@@ -37,14 +37,14 @@ function SfaDetailView(props) {
         sinbadBilling: 500000,
         totalBilling: 0,
         metodePenagihan: {
-          tunai: "", 
-          cek: "", 
-          giro: "", 
-          transfer: "", 
-          voucher: "", 
-          promotion: "", 
-          retur: "", 
-          materai: ""
+          tunai: null, 
+          cek: null, 
+          giro: null, 
+          transfer: null, 
+          voucher: null, 
+          promotion: null, 
+          retur: null, 
+          materai: null
         },
         outStanding: 1500000
       }
@@ -117,15 +117,15 @@ function SfaDetailView(props) {
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>First Saldo</Text>
-          <Text style={Fonts.type17}>{data.tagihanInfo.firstSaldo}</Text>
+          <Text style={Fonts.type17}>{MoneyFormat(data.tagihanInfo.firstSaldo)}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Pembayaran Dari Toko</Text>
-          <Text style={Fonts.type17}>{data.tagihanInfo.sinbadBilling}</Text>
+          <Text style={Fonts.type17}>{MoneyFormat(data.tagihanInfo.sinbadBilling)}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Total Penagihan</Text>
-          <Text style={Fonts.type17}>{data.tagihanInfo.totalBilling}</Text>
+          <Text style={Fonts.type17}>{MoneyFormat(data.tagihanInfo.totalBilling)}</Text>
         </View>
       </View>
     )
@@ -175,7 +175,7 @@ function SfaDetailView(props) {
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Outstanding</Text>
-          <Text style={Fonts.type22}>{data.tagihanInfo.outStanding}</Text>
+          <Text style={Fonts.type22}>{MoneyFormat(data.tagihanInfo.outStanding)}</Text>
         </View>
       </View>
     )
