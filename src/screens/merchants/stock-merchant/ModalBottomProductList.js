@@ -67,7 +67,7 @@ class ModalBottomProductList extends Component {
     componentDidUpdate(prevProps) {
         if (prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock 
             && this.props.merchant.dataAddRecordStock.success === true) {
-                NavigationService.navigate('MerchantHomeView')
+                NavigationService.navigate('MerchantStockView')
             }
     }
 
