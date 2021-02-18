@@ -4,6 +4,7 @@ import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 import SfaView from '../../screens/sfa/SfaView';
 import SfaDetailView from '../../screens/sfa/SfaDetailView';
+import SfaAddTagihanView from '../../screens/sfa/SfaAddTagihanView'
 
 const SfaNavigator = {
   SfaView: {
@@ -29,6 +30,25 @@ const SfaNavigator = {
     screen: SfaDetailView,
     navigationOptions: {
       headerTitle: 'Detil Tagihan',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'left',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.fontBlack50,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  SfaAddTagihanView: {
+    screen: SfaAddTagihanView,
+    navigationOptions: {
+      headerTitle: 'Bayar Tagihan',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {

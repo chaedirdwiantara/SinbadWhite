@@ -58,7 +58,7 @@ function SfaDetailView(props) {
    * =======================
    */
   const addCollection = () => {
-    alert("test")
+    NavigationService.navigate('SfaAddTagihanView')
   }
 
   /**
