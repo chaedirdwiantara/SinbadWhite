@@ -181,6 +181,12 @@ class MerchantHomeView extends Component {
               activity: ACTIVITY_JOURNEY_PLAN_ORDER
             },
             {
+              name: 'Penagihan',
+              title: 'Tagih',
+              goTo: 'collection',
+              activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
+            },
+            {
               name: 'Check-out Toko',
               title: 'Check-out',
               goTo: 'checkOut',
@@ -206,6 +212,12 @@ class MerchantHomeView extends Component {
               title: 'Order',
               goTo: 'pdp',
               activity: ACTIVITY_JOURNEY_PLAN_ORDER
+            },
+            {
+              name: 'Penagihan',
+              title: 'Tagih',
+              goTo: 'collection',
+              activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
             },
             {
               name: 'Toko Survey',
