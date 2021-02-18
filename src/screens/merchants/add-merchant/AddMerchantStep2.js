@@ -16,14 +16,12 @@ import {
   ButtonSingle,
   StatusBarWhite,
   ProgressBarType1,
-  InputType2,
   InputType4,
-  InputMapsType1
 } from '../../../library/component';
 import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
 import * as ActionCreators from '../../../state/actions';
-import ModalBottomErrorRespons from '../../../components/error/ModalBottomErrorRespons';
+import { GlobalMethod } from '../../../services/methods';
 
 class AddMerchantStep2 extends Component {
   constructor(props) {
@@ -35,7 +33,7 @@ class AddMerchantStep2 extends Component {
       addStoreProcess: false,
       /** supplier */
       supplierName:
-        this.props.user.userSuppliers.length === 1
+        this.props.user?.userSuppliers.length === 1
           ? this.props.user.userSuppliers[0].supplier.name
           : '',
       /** field data */
@@ -56,8 +54,8 @@ class AddMerchantStep2 extends Component {
     this.props.saveVolatileDataMerchant({
       fullName: this.state.fullName,
       name: this.state.name,
-      idNo: this.state.idNo,
-      taxNo: this.state.taxNo
+      idNo: this.state.idNo.replace(/[^0-9]/g, ''),
+      taxNo: this.state.taxNo ? this.state.taxNo.replace(/[^0-9]/g, '') : ''
     });
     NavigationService.navigate('AddMerchantStep3')
   }
@@ -73,21 +71,21 @@ class AddMerchantStep2 extends Component {
   }
   /** === CHECK ID NUMBER FORMAT === */
   checkIdNoFormat(idNumber) {
-    this.setState({ idNo: idNumber === '' ? null : idNumber });
-    if (idNumber === '' || idNumber.length === 16) {
-      this.setState({ errorIdNumber: false });
-    } else {
-      this.setState({ errorIdNumber: true });
-    }
+    const gaps = [6,12]
+    const formatted = GlobalMethod.addGaps(idNumber, gaps, " ")
+    this.setState({ 
+      idNo: formatted,
+      errorIdNumber: !(formatted === '' || formatted.length === 18) 
+    });
   }
   /** === CHECK TAX NUMBER FORMAT === */
   checkTaxNoFormat(taxNumber) {
-    this.setState({ taxNo: taxNumber === '' ? null : taxNumber });
-    if (taxNumber === '' || taxNumber.length === 15) {
-      this.setState({ errorTaxNumber: false });
-    } else {
-      this.setState({ errorTaxNumber: true });
-    }
+    const gaps = [2,5,8,9,12,15]
+    const formatted = GlobalMethod.addGaps(taxNumber, gaps, ".")
+    this.setState({ 
+      taxNo: formatted,
+      errorTaxNumber: !(formatted === '' || formatted.length === 20) 
+    });
   }
   /**
    * ====================
@@ -192,7 +190,7 @@ class AddMerchantStep2 extends Component {
         keyboardType={'numeric'}
         error={this.state.errorIdNumber}
         errorText={'Pastikan No.KTP maksimal 16 Digit'}
-        maxLength={16}
+        maxLength={18}
         marginBottom={16}
         suffix={!this.props.merchant.dataMerchantDisabledField.idNo}
         suffixForPush
@@ -224,7 +222,7 @@ class AddMerchantStep2 extends Component {
         keyboardType={'numeric'}
         error={this.state.errorTaxNumber}
         errorText={'Pastikan No.NPWP maksimal 15 Digit'}
-        maxLength={15}
+        maxLength={20}
         marginBottom={16}
         suffix={!this.props.merchant.dataMerchantDisabledField.taxNo}
         suffixForPush
