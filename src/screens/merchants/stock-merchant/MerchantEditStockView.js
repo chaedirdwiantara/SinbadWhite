@@ -4,7 +4,8 @@ import {
     View,
     StyleSheet,
     Text,
-    SafeAreaView
+    SafeAreaView,
+    TouchableOpacity
  } from '../../../library/reactPackage';
  import { 
      BackHandlerBackSpecific,
@@ -14,11 +15,15 @@ import {
      LoadingPage
   } from '../../../library/component';
   import {
+      AntDesignIcon,
+      MaterialIcon,
       bindActionCreators,
       connect
   } from '../../../library/thirdPartyPackage';
   import NavigationService from '../../../navigation/NavigationService'
   import masterColor from '../../../config/masterColor.json'
+  import { Color, Fonts } from '../../../config'
+  import GlobalFont from '../../../helpers/GlobalFont'
   import * as ActionCreators from '../../../state/actions'
   import EditStockRecordListView from './EditStockRecordListView'
 
@@ -30,6 +35,40 @@ import {
               search: ''
           }
       }
+          /** HEADER CONFIG */
+    static navigationOptions = ({ navigation }) => {
+        return {
+            headerTitle: () => (
+                <View>
+                  <Text style={GlobalFont.textHeaderPage}>Catatan Stok</Text>
+                </View>
+            ),
+            headerLeft: () => (
+                <TouchableOpacity
+                  style={{ marginLeft: 16 }}
+                  onPress={() => console.log('Back Press')}
+                >
+                  <MaterialIcon
+                    color={masterColor.fontBlack50}
+                    name={'arrow-back'}
+                    size={24}
+                  />
+                </TouchableOpacity>
+            ),
+            headerRight: () => (
+                <TouchableOpacity onPress={() => console.log('Add stock')}>
+                    <View style={{ flexDirection: 'row', marginRight: 18}}>
+                        <AntDesignIcon 
+                            color={Color.mainColor}
+                            name={'pluscircle'}
+                            size={24}
+                        />
+                    </View>
+                </TouchableOpacity>
+                
+            )
+        }
+    }
       /** FUNCTION */
       /** PARENT FUNCTION */
       parentFunction(data){

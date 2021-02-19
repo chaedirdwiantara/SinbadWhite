@@ -5,11 +5,13 @@ import {
     StyleSheet,
     Text, 
     FlatList,
+    TextInput,
+    TouchableOpacity
 } from '../../../library/reactPackage'
 import {
     MaterialIcon
 } from '../../../library/thirdPartyPackage'
-import { Fonts, GlobalStyle } from '../../../helpers'
+import { Fonts } from '../../../helpers'
 import { Color } from '../../../config'
 
 class EditStockRecordListView extends Component {
@@ -102,10 +104,16 @@ class EditStockRecordListView extends Component {
                             <Text style={[Fonts.type96]}>Shelf Produk</Text>
                         </View>
                         <View style={{flex: 1}}>
-                            <View style={styles.inputBox}> 
-                                <Text style={[Fonts.type57, {textAlign: 'center'}]}>
-                                    {item.showedStock}
-                                </Text>
+                            <View 
+                                style={styles.inputBox}
+                            > 
+                            <TextInput 
+                                    style={[Fonts.type24, styles.textInput]}
+                                    value={item.showedStock.toString()}
+                                    keyboardType='numeric'
+                                    returnKeyType='done'
+                                    enablesReturnKeyAutomatically
+                                />
                             </View>
                         </View>
                     </View>
@@ -118,18 +126,24 @@ class EditStockRecordListView extends Component {
                         </View>
                         <View style={{flex: 1}}>
                             <View style={styles.inputBox}>
-                                <Text style={[Fonts.type57, {textAlign: 'center'}]}>
-                                    {item.nonShowedStock}
-                                </Text>
+                                <TextInput 
+                                    style={[Fonts.type24, styles.textInput]}
+                                    value={item.nonShowedStock.toString()}
+                                    keyboardType='numeric'
+                                    returnKeyType='done'
+                                    enablesReturnKeyAutomatically
+                                />
                             </View>
                         </View>
                     </View>
                 </View>
                 <View style={{ position: 'absolute', marginTop: 16, right: 16}}>
-                    <MaterialIcon 
-                        name={'delete'}
-                        size={24}
-                    />
+                    <TouchableOpacity onPress={() => console.log('Delete Catalogue')}>
+                        <MaterialIcon 
+                            name={'delete'}
+                            size={24}
+                        />
+                    </TouchableOpacity>
                 </View>
 
             </View>
@@ -203,6 +217,13 @@ const styles = StyleSheet.create({
         flexDirection: 'column', 
         marginVertical: 16, 
         marginHorizontal: 16
+    },
+    textInput: {
+        textAlign: 'center', 
+        padding: 0, 
+        height: '100%', 
+        width: '100%', 
+        alignItems: 'center' 
     }
 })
 

@@ -129,7 +129,7 @@ class MerchantStockView extends Component {
     }
     // RENDER CONTENT
     renderContent(){
-        return this.props.merchant.dataGetRecordStock ? (
+        return this.props.merchant.dataGetRecordStock.length > 0 ? (
             this.renderData()
         ) : (
             this.renderDataEmpty()

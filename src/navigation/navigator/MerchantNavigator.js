@@ -309,7 +309,6 @@ const MerchantNavigator = {
   MerchantEditStockView: {
     screen: MerchantEditStockView,
     navigationOptions: {
-      headerTitle: 'Catatan Stok',
       headerTitleStyle: [
         GlobalFont.textHeaderPage
       ],
