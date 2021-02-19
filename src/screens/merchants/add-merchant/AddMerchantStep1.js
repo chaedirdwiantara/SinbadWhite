@@ -8,7 +8,7 @@ import {
   ScrollView,
   Text,
   Image,
-  height
+  height,
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
@@ -36,7 +36,7 @@ class AddMerchantStep1 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      phoneNumber: '',
+      phoneNumber: '08966666603',
       errorPhoneNumber: '',
       correctFormatPhoneNumber: false,
       showStoreInformation: false,
@@ -269,7 +269,7 @@ class AddMerchantStep1 extends Component {
   /** RENDER STORE INFORMATION */
   renderStoreInformation(){
     return(
-      <View>
+      <View style={{height: .7 * height}}>
         <View style={{flex: 1}}>
           <ScrollView style={{paddingHorizontal: 16, paddingVertical: 8}}>
             <Text style={Fonts.type8}>Apakah toko ini yang akan anda tambahkan?</Text>
