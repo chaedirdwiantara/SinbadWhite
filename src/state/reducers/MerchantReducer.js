@@ -853,7 +853,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       errorGetSalesSegmentation: action.payload
     };
   },
-  [types.RESET_GET_SALES_SEGMENTATION](state) {
+  [types.RESET_SALES_SEGMENTATION](state) {
     return {
       ...state,
       loadingGetSalesSegmentation: false,

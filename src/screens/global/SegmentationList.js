@@ -86,35 +86,35 @@ class SegmentationList extends Component {
       case 'warehouses': {
         this.props.saveVolatileDataMerchant({
           warehouse: item.name,
-          warehouseId: item.id
+          warehouseId: item.warehouseId
         })
         break
       }
       case 'types': {
         this.props.saveVolatileDataMerchant({
           storeType: item.name,
-          typeId: item.id
+          typeId: item.typeId
         })
         break
       }
       case 'groups': {
         this.props.saveVolatileDataMerchant({
           storeGroup: item.name,
-          groupId: item.id
+          groupId: item.groupId
         })
         break
       }
       case 'clusters': {
         this.props.saveVolatileDataMerchant({
           storeCluster: item.name,
-          clusterId: item.id
+          clusterId: item.clusterId
         })
         break
       }
       case 'channels': {
         this.props.saveVolatileDataMerchant({
           storeChannel: item.name,
-          channelId: item.id
+          channelId: item.channelId
         })
         break
       }
@@ -144,7 +144,7 @@ class SegmentationList extends Component {
                 contentContainerStyle={styles.flatListContainer}
                 data={this.state.searchData || this.props.merchant.dataSalesSegmentation}
                 renderItem={(item) => this.renderItem(item, params?.type)}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={(_, index) => index.toString()}
               />
             : <EmptyData title={'Maaf, data tidak ditemukan'}/>
         }
@@ -156,7 +156,7 @@ class SegmentationList extends Component {
     return (
       <TouchableOpacity onPress={() => this.updateData(item, type)}> 
         <View style={{flex: 1, flexDirection: 'row', padding: 16}}>
-          <Text style={[Fonts.type8, {color: 'orange'}]}>{item.externalId}</Text>
+          {type !== 'warehouses' && <Text style={[Fonts.type8, {color: 'orange', width: 56}]}>{item.externalId}</Text>}
           <Text style={[Fonts.type8, {flex: 1, marginLeft: 24}]}>{item.name}</Text> 
         </View>
       </TouchableOpacity>

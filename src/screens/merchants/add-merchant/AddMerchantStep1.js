@@ -36,7 +36,7 @@ class AddMerchantStep1 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      phoneNumber: '08966666603',
+      phoneNumber: '',
       errorPhoneNumber: '',
       correctFormatPhoneNumber: false,
       showStoreInformation: false,

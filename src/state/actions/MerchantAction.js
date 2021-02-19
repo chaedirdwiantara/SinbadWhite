@@ -426,5 +426,5 @@ export function getSalesSegmentationFailed(data){
   return { type: types.GET_SALES_SEGMENTATION_FAILED, payload: data}
 }
 export function resetGetSalesSegmentation(){
-  return { type: types.RESET_GET_SALES_SEGMENTATION }
+  return { type: types.RESET_SALES_SEGMENTATION }
 }
