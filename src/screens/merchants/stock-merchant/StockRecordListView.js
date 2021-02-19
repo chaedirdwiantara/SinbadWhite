@@ -7,7 +7,7 @@ import {
     FlatList
 } from '../../../library/reactPackage'
 import { Fonts } from '../../../helpers'
-import masterColor from '../../../config/masterColor.json'
+import { Color } from '../../../config'
 
 class StockRecordListView extends Component {
     constructor(props){
@@ -19,14 +19,7 @@ class StockRecordListView extends Component {
     renderCardData({ item, index }){
         return(
             <View 
-                style={{
-                    backgroundColor: masterColor.backgroundWhite,
-                    marginHorizontal: 16,
-                    marginVertical: 8,
-                    paddingHorizontal: 16,
-                    borderRadius: 8,
-                    elevation: 3
-                }}
+                style={styles.cardContent}
                 key={index}
                 >
                     <View style={{alignItems: 'baseline', flexDirection: 'row'}}>
@@ -38,7 +31,7 @@ class StockRecordListView extends Component {
                         <View style={{
                                 marginLeft: 8,
                                 padding: 4, 
-                                backgroundColor: masterColor.fontYellow10, 
+                                backgroundColor: Color.fontYellow10, 
                                 borderRadius: 100,
                              }}>
                                     <Text style={Fonts.type108}>MSS</Text>
@@ -51,7 +44,7 @@ class StockRecordListView extends Component {
                 <View style={{ 
                         marginVertical: 16, 
                         flexDirection: 'row', 
-                        backgroundColor: masterColor.fontBlack05,
+                        backgroundColor: Color.fontBlack05,
                         borderRadius: 6
                     }}>
                     <View style={{flex: 1, alignItems: 'center', marginVertical: 8}}>
@@ -90,14 +83,25 @@ class StockRecordListView extends Component {
     // RENDER MAIN CONTENT
     render(){
         return (
-            this.renderContent()
+            <View style={styles.mainContainer}>
+                {this.renderContent()}
+            </View>
+            
         )
     }
 }
 
 const styles = StyleSheet.create({
+    mainContainer: {
+        height: '100%',
+        backgroundColor: Color.fontBlack05
+      },
     flatListContainer: {
-        backgroundColor: masterColor.backgroundWhite,
+        paddingTop: 8,
+        paddingBottom: 200
+      },
+    cardContent: {
+        backgroundColor: Color.backgroundWhite,
         marginHorizontal: 16,
         marginVertical: 8,
         paddingHorizontal: 16,

@@ -4,7 +4,8 @@ import {
     View,
     StyleSheet,
     Text,
-    SafeAreaView
+    SafeAreaView,
+    Dimensions
 } from '../../../library/reactPackage'
 import {
     BackHandlerBackSpecific,
@@ -19,6 +20,8 @@ import {
     connect
 } from '../../../library/thirdPartyPackage'
 import { Fonts } from '../../../helpers'
+const { height } = Dimensions.get('window')
+import NavigationService from '../../../navigation/NavigationService'
 import masterColor from '../../../config/masterColor.json'
 import * as ActionCreators from '../../../state/actions'
 import ModalBottomProductList from './ModalBottomProductList'
@@ -29,7 +32,8 @@ class MerchantStockView extends Component {
         super(props)
         this.state = {
             openModalProductList: false,
-            search: ''
+            search: '',
+            heightList: 0.93 * height
         }
     }
 
@@ -80,7 +84,7 @@ class MerchantStockView extends Component {
                 {this.renderSearch()}
                 {this.renderCardView()}
                 {this.renderButtonEditStock()}
-                </View>
+            </View>
         )
     }
     // RENDER SEARCH VIEW
@@ -125,7 +129,7 @@ class MerchantStockView extends Component {
     }
     // RENDER CONTENT
     renderContent(){
-        return this.props.merchant.dataGetRecordStock ? (
+        return this.props.merchant.dataGetRecordStock.length > 0 ? (
             this.renderData()
         ) : (
             this.renderDataEmpty()
@@ -138,7 +142,7 @@ class MerchantStockView extends Component {
                 <ButtonSingle
                     title={'Ubah Catatan Stock'}
                     borderRadius={8}
-                    onPress={() => console.log('Go To Edit Stock')}
+                    onPress={() => NavigationService.navigate('MerchantEditStockView')}
                 />
             </View>
         )
