@@ -29,29 +29,48 @@ function SfaDetailView(props) {
   const dispatch = useDispatch();
   const [data, setData] = useState(
     {
-      fakturInfo : {
-        fakturName: "COMBINE",
-        noPesanan: "S0100038289100137",
-        noRef: "A75472883"
-      },
-      tagihanInfo : {
-        firstSaldo : 2000000,
-        sinbadBilling: 500000,
-        totalBilling: 0,
-        metodePenagihan: {
-          tunai: null, 
-          cek: null, 
-          giro: null, 
-          transfer: null, 
-          voucher: null, 
-          promotion: null, 
-          retur: null, 
-          materai: null
-        },
-        outStanding: 1500000
+      "data": {
+        "id": 1,
+        "orderCode": "S010004232321231231",
+        "orderRef": "A754123131",
+        "invoiceGroupName": "COMBINE",
+        "totalBilling": 670000,
+        "totalInstorePayment": 335000,
+        "totalCollection": 0,
+        "remainingBilling": 335000,
+        "collections": [
+            {
+                "name": "Tunai",
+                "value": 0
+            },
+            {
+                "name": "Cek",
+                "value": 0
+            },
+            {
+                "name": "Giro",
+                "value": 0
+            },
+            {
+                "name": "Transfer",
+                "value": 0
+            },
+            {
+                "name": "Promo",
+                "value": 0
+            },
+            {
+                "name": "Retur",
+                "value": 0
+            },
+            {
+                "name": "Materai",
+                "value": 0
+            }
+        ]
       }
     }
-    );
+  );
   /**
    * =======================
    * FUNCTIONAL
@@ -85,15 +104,15 @@ function SfaDetailView(props) {
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Nama Faktur</Text>
-          <Text style={Fonts.type17}>{data.fakturInfo.fakturName}</Text>
+          <Text style={Fonts.type17}>{data.data.invoiceGroupName}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>No. Pesanan</Text>
-          <Text style={Fonts.type17}>{data.fakturInfo.noPesanan}</Text>
+          <Text style={Fonts.type17}>{data.data.orderCode}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>No. Referensi</Text>
-          <Text style={Fonts.type17}>{data.fakturInfo.noRef}</Text>
+          <Text style={Fonts.type17}>{data.data.orderRef}</Text>
         </View>
       </View>
     )
@@ -121,58 +140,38 @@ function SfaDetailView(props) {
     return (
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text style={Fonts.type17}>First Saldo</Text>
-          <Text style={Fonts.type17}>{MoneyFormat(data.tagihanInfo.firstSaldo)}</Text>
+          <Text style={Fonts.type17}>Total Tagihan</Text>
+          <Text style={Fonts.type17}>{MoneyFormat(data.data.totalBilling)}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Pembayaran Dari Toko</Text>
-          <Text style={Fonts.type17}>{MoneyFormat(data.tagihanInfo.sinbadBilling)}</Text>
+          <Text style={Fonts.type17}>{MoneyFormat(data.data.totalInstorePayment)}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Total Penagihan</Text>
-          <Text style={Fonts.type17}>{MoneyFormat(data.tagihanInfo.totalBilling)}</Text>
+          <Text style={Fonts.type17}>{MoneyFormat(data.data.totalCollection)}</Text>
         </View>
       </View>
     )
   }
 
   const renderTagihanDetail = () => {
-    return (
-      <View style={{marginLeft:8}}>
-        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text style={Fonts.type17}>Tunai</Text>
-          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.tunai}</Text>
+    return data.data.collections.map((item, index) => {
+      return (
+        <View key={index} style={{marginLeft:8}}>
+          <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+            <Text style={Fonts.type17}>{item.name}</Text>
+            <Text style={Fonts.type17}>
+              {
+                item.value === 0 
+                ? "-"
+                : MoneyFormat(item.value)
+              }
+            </Text>
+          </View>
         </View>
-        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text style={Fonts.type17}>Cek</Text>
-          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.cek}</Text>
-        </View>
-        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text style={Fonts.type17}>Giro</Text>
-          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.giro}</Text>
-        </View>
-        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text style={Fonts.type17}>Transfer</Text>
-          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.transfer}</Text>
-        </View>
-        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text style={Fonts.type17}>Voucher</Text>
-          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.voucher}</Text>
-        </View>
-        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text style={Fonts.type17}>Promotion</Text>
-          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.promotion}</Text>
-        </View>
-        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text style={Fonts.type17}>Retur</Text>
-          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.retur}</Text>
-        </View>
-        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text style={Fonts.type17}>Meterai</Text>
-          <Text style={Fonts.type17}>{data.tagihanInfo.metodePenagihan.materai}</Text>
-        </View>
-      </View>
-    )
+      )
+    })
   }
 
   const renderTagihanOutstanding = () => {
@@ -180,7 +179,7 @@ function SfaDetailView(props) {
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Outstanding</Text>
-          <Text style={Fonts.type22}>{MoneyFormat(data.tagihanInfo.outStanding)}</Text>
+          <Text style={Fonts.type22}>{MoneyFormat(data.data.remainingBilling)}</Text>
         </View>
       </View>
     )
