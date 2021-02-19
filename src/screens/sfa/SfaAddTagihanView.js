@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView
 } from '../../library/reactPackage';
 
 import {
@@ -15,6 +16,7 @@ import {
 } from '../../library/thirdPartyPackage';
 import {
   LoadingPage,
+  StatusBarWhite
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
@@ -38,18 +40,48 @@ function SfaAddTagihanView(props) {
    * RENDER VIEW
    * *********************************
    */
-  const renderHeader = () => {
+  const renderFakturInfo = () => {
     return (
-        <View>
-            <Text>Header</Text>
+        <View style={styles.container}>
+          <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
+            <View>
+              <Text style={Fonts.type48}>Informasi Faktur</Text>
+            </View>
+            <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
+            {/* {renderItemFakturInfo()} */}
+          </View>
         </View>
     )
   }
 
-  const renderBody = () => {
+  const renderCollectionInfo = () => {
     return (
-        <View>
-            <Text>Body</Text>
+        <View style={[styles.container, {marginBottom:16}]}>
+          <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
+            <View>
+              <Text style={Fonts.type48}>Informasi Tagihan</Text>
+            </View>
+            <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
+            {/* {renderItemTagihanInfo()} */}
+            <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
+            {/* {renderTagihanDetail()} */}
+            <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
+            {/* {renderTagihanOutstanding()} */}
+          </View>
+        </View>
+    )
+  }
+
+  const renderCollectionDetail = () => {
+    return (
+        <View style={styles.container}>
+          <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
+            <View>
+              <Text style={Fonts.type48}>Detail Penagihan</Text>
+            </View>
+            <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
+            {/* {renderItemFakturInfo()} */}
+          </View>
         </View>
     )
   }
@@ -62,8 +94,9 @@ function SfaAddTagihanView(props) {
   const renderContent = () => {
     return (
       <View style={{ flex: 1 }}>
-        {renderHeader()}
-        {renderBody()}
+        {renderFakturInfo()}
+        {renderCollectionInfo()}
+        {renderCollectionDetail()}
       </View>
     );
   };
@@ -79,9 +112,10 @@ function SfaAddTagihanView(props) {
     <>
       {/* {props.merchant.dataGetMerchantDetail ? ( */}
         <SafeAreaView style={styles.mainContainer}>
-          <View style={{ flex: 1 }}>
+          <StatusBarWhite />
+          <ScrollView style={{ flex: 1}}>
             {renderContent()}
-          </View>
+          </ScrollView>
         </SafeAreaView>
       {/* ) : (
         <LoadingPage />
@@ -92,6 +126,16 @@ function SfaAddTagihanView(props) {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    backgroundColor: masterColor.backgroundWhite
+  },
+  container: {
+    marginHorizontal: 16,
+    marginTop: 16
+  },
+  cardTaskList: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 4,
     backgroundColor: masterColor.backgroundWhite
   },
 });

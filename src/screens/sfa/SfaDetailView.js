@@ -118,7 +118,7 @@ function SfaDetailView(props) {
     )
   }
 
-  const renderTagihanInfo = () => {
+  const renderCollectionInfo = () => {
     return (
         <View style={[styles.container, {marginBottom:16}]}>
           <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
@@ -126,17 +126,17 @@ function SfaDetailView(props) {
               <Text style={Fonts.type48}>Informasi Tagihan</Text>
             </View>
             <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
-            {renderItemTagihanInfo()}
+            {renderItemCollectionInfo()}
             <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
-            {renderTagihanDetail()}
+            {renderCollectionDetail()}
             <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
-            {renderTagihanOutstanding()}
+            {renderCollectionOutstanding()}
           </View>
         </View>
     )
   }
 
-  const renderItemTagihanInfo = () => {
+  const renderItemCollectionInfo = () => {
     return (
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
@@ -155,7 +155,7 @@ function SfaDetailView(props) {
     )
   }
 
-  const renderTagihanDetail = () => {
+  const renderCollectionDetail = () => {
     return data.data.collections.map((item, index) => {
       return (
         <View key={index} style={{marginLeft:8}}>
@@ -174,7 +174,7 @@ function SfaDetailView(props) {
     })
   }
 
-  const renderTagihanOutstanding = () => {
+  const renderCollectionOutstanding = () => {
     return(
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
@@ -205,7 +205,7 @@ function SfaDetailView(props) {
     return (
       <View style={{ flex: 1 }}>
         {renderFakturInfo()}
-        {renderTagihanInfo()}
+        {renderCollectionInfo()}
       </View>
     );
   };
@@ -242,10 +242,6 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 16,
     marginTop: 16
-  },
-  navOption: {
-    flex: 1,
-    backgroundColor: masterColor.backgroundWhite
   },
   cardTaskList: {
     paddingVertical: 16,
