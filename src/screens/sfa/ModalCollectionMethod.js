@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
   Text,
-  SafeAreaView,
   TouchableOpacity
 } from '../../library/reactPackage';
 
@@ -11,21 +10,14 @@ import {
   bindActionCreators,
   connect,
   MaterialIcon,
-  moment,
   Modal,
 } from '../../library/thirdPartyPackage';
-import {
-  LoadingPage,
-  ModalBottomType1
-} from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
-import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-function SfaView(props) {
+function ModalCollectionMethod(props) {
   const dispatch = useDispatch();
   const [data, setData] = useState({
     data: [
@@ -95,7 +87,7 @@ function SfaView(props) {
             </TouchableOpacity>
           </View>
           <View style={{ alignItems: 'flex-start', flex: 1, alignSelf:"center" }}>
-            <Text style={[Fonts.textHeaderPage, {marginLeft: 16}]}>Metode Penagihan</Text>
+            <Text style={[Fonts.type5, {marginLeft: 16}]}>Metode Penagihan</Text>
           </View>
         </View>
         <View style={[GlobalStyle.lines, styles.shadowLine]} />
@@ -158,14 +150,6 @@ function SfaView(props) {
         >
           {renderHeader()}
           {renderContent()}
-          {/* {
-            this.props.oms.loadingOmsApplicablePaylater === false ?
-              null
-            :
-              <View style={{flex:1, position:"absolute", height:"100%", top: 0, left: 0, right: 0, bottom: 0, backgroundColor:"black", opacity: 0.5}}>
-                <LoadingPage/>
-              </View>
-          }  */}
         </Modal>
       </View>
   );
@@ -217,5 +201,5 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SfaView);
+)(ModalCollectionMethod);
 // export default DMSView;

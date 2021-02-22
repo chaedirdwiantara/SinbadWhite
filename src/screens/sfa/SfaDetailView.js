@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -9,12 +9,9 @@ import {
 
 import {
   bindActionCreators,
-  connect,
-  MaterialIcon,
-  moment
+  connect
 } from '../../library/thirdPartyPackage';
 import {
-  LoadingPage,
   StatusBarWhite,
   ButtonSingle
 } from '../../library/component';
@@ -22,8 +19,7 @@ import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 function SfaDetailView(props) {
   const dispatch = useDispatch();

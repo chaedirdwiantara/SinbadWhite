@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
   Text,
   SafeAreaView,
   TouchableOpacity,
-  ScrollView,
-  TextInput
+  ScrollView
 } from '../../library/reactPackage';
 
 import {
@@ -22,9 +21,8 @@ import {
 import { TextInputMask } from 'react-native-masked-text';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
-import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import ModalCollectionMethod from'./ModalCollectionMethod'
 
 function SfaAddTagihanView(props) {
@@ -314,4 +312,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(SfaAddTagihanView);
-// export default DMSView;
