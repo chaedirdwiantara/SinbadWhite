@@ -57,7 +57,7 @@ function SfaAddTagihanView(props) {
 
   const selectBilling = () => {
     if (collectionMethod !== null) {
-      if (collectionMethod.name === "Tunai") {
+      if (collectionMethod.code === "cash") {
         return renderBillingCash()
       }
     }

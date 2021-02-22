@@ -20,38 +20,44 @@ import { useDispatch } from 'react-redux';
 function ModalCollectionMethod(props) {
   const dispatch = useDispatch();
   const [data, setData] = useState({
-    data: [
+    "data": [
       {
-        id: 1, 
-        name: "Tunai",
-        balance: 0
+        "id": 1,
+        "name": "Tunai",
+        "code": "cash",
+        "saldo": 0
       },
       {
-        id: 2, 
-        name: "Cek",
-        balance: 1000000
+        "id": 2,
+        "name": "Cek",
+        "code": "check",
+        "saldo": 1000000
       },
       {
-        id: 3, 
-        name: "Giro",
-        balance: 0
+        "id": 3,
+        "name": "Giro",
+        "code": "giro",
+        "saldo": 0
       },
       {
-        id: 4, 
-        name: "Transfer",
-        balance: 0
+        "id": 4,
+        "name": "Transfer",
+        "code": "transfer",
+        "saldo": 0
       },
       {
-        id: 5, 
-        name: "Promo",
-        balance: 0
+        "id": 5,
+        "name": "Promo",
+        "code": "promo",
+        "saldo": 0
       },
       {
-        id: 6, 
-        name: "Retur",
-        balance: 0
-      },
-    ]
+        "id": 6,
+        "name": "Retur",
+        "code": "sales_return",
+        "saldo": 0
+      }
+	  ]
   })
 
   /**
@@ -103,8 +109,8 @@ function ModalCollectionMethod(props) {
             <View style={{margin: 16}}>
               <Text style={Fonts.type24}>{item.name}</Text>
               {
-                item.balance > 0 
-                ? <Text style={[Fonts.type22, {marginTop: 5}]}>Saldo: {MoneyFormat(item.balance)}</Text>
+                item.saldo > 0 
+                ? <Text style={[Fonts.type22, {marginTop: 5}]}>Saldo: {MoneyFormat(item.saldo)}</Text>
                 : null
               }
             </View>
