@@ -10,6 +10,7 @@ import {
 } from '../../library/reactPackage';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
+import { SkeletonType24 } from '../../library/component';
 
 function SfaCollectionListView(props) {
   /**
@@ -17,7 +18,9 @@ function SfaCollectionListView(props) {
    * RENDER VIEW
    * =======================
    */
-
+  const renderSkeleton = () => {
+    return <SkeletonType24 />;
+  };
   const renderData = () => {
     return (
       <View style={styles.flatListContainer}>
@@ -46,8 +49,10 @@ function SfaCollectionListView(props) {
           <View style={{ flex: 1 }}>
             <Text style={Fonts.type48}>{item.invoice}</Text>
           </View>
-          <View style={{ flex: 1, alignItems:'flex-end' }}>
-            <Text style={[Fonts.type22,{marginBottom:8}]}>{item.paymentStatus}</Text>
+          <View style={{ flex: 1, alignItems: 'flex-end' }}>
+            <Text style={[Fonts.type22, { marginBottom: 8 }]}>
+              {item.paymentStatus}
+            </Text>
             <View style={{ flexDirection: 'row' }}>
               <Text style={Fonts.type17}>Total: </Text>
               <Text style={Fonts.type37}>{MoneyFormat(item.total)}</Text>
@@ -57,11 +62,15 @@ function SfaCollectionListView(props) {
         <View style={GlobalStyle.lines} />
         <View style={styles.view2}>
           <View style={{ flex: 1 }}>
-            <Text style={[Fonts.type17, {marginBottom:8}]}>{item.orderCode}</Text>
+            <Text style={[Fonts.type17, { marginBottom: 8 }]}>
+              {item.orderCode}
+            </Text>
             <Text style={Fonts.type17}>{item.orderRef}</Text>
           </View>
-          <View style={{ flex: 1, alignItems:'flex-end' }}>
-            <Text style={[Fonts.type17, {marginBottom: 8}]}>{item.debtDate}</Text>
+          <View style={{ flex: 1, alignItems: 'flex-end' }}>
+            <Text style={[Fonts.type17, { marginBottom: 8 }]}>
+              {item.debtDate}
+            </Text>
             {/* <Text style={Fonts.type17}>{item.orderRef}</Text> */}
             <View style={{ flexDirection: 'row' }}>
               <Text style={Fonts.type22}>Jatuh Tempo: </Text>
@@ -72,7 +81,9 @@ function SfaCollectionListView(props) {
         <View style={GlobalStyle.lines} />
         <View style={styles.view3}>
           <View style={{ flex: 1 }}>
-            <Text style={[Fonts.type17, {marginBottom: 8}]}>Sisa Tagihan</Text>
+            <Text style={[Fonts.type17, { marginBottom: 8 }]}>
+              Sisa Tagihan
+            </Text>
             <Text style={Fonts.type109p}>{MoneyFormat(item.paidAmount)}</Text>
           </View>
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -89,7 +100,10 @@ function SfaCollectionListView(props) {
    * MAIN
    * =======================
    */
-  return <>{renderData()}</>;
+  return (
+    // <>{renderData()}</>
+    renderSkeleton()
+  )
 }
 
 export default SfaCollectionListView;
