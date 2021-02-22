@@ -24,9 +24,11 @@ import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { useDispatch, useSelector } from 'react-redux';
+import ModalCollectionMethod from'./ModalCollectionMethod'
 
 function SfaAddTagihanView(props) {
   const dispatch = useDispatch();
+  const [openCollectionMethod, setOpenCollectionMethod] = useState(false)
   const [data, setData] = useState(
     {
       "data": {
@@ -47,6 +49,9 @@ function SfaAddTagihanView(props) {
    * FUNCTIONAL
    * =======================
    */
+  const selectedCollectionMethod = (data) => {
+    alert(data.name)
+  }
   
 
   /**
@@ -118,7 +123,7 @@ function SfaAddTagihanView(props) {
             <View>
               <TouchableOpacity
                 style={styles.boxMenu}
-                onPress={() => alert("test")}
+                onPress={() => setOpenCollectionMethod(true)}
               >
                 <Text style={[Fonts.type17, {opacity: 0.5}]}>Pilih Metode Penagihan</Text>
                 <View style={{ position: 'absolute', right: 16 }}>
@@ -134,6 +139,29 @@ function SfaAddTagihanView(props) {
           </View>
         </View>
     )
+  }
+
+  /**
+   * =======================
+   * MODAL
+   * =======================
+   */
+  const renderModalCollectionMethod = () => {
+    console.log("disini:", openCollectionMethod);
+    return (
+      <View>
+        {openCollectionMethod ? (
+          <ModalCollectionMethod
+            open={openCollectionMethod}
+            close={() => setOpenCollectionMethod(false)}
+            onRef={ref => (selectCollection = ref)}
+            selectCollection={selectedCollectionMethod.bind(this)}
+            // onPress={() => setOpenCollectionMethod(false)}
+            // text={this.props.oms.errorOmsConfirmOrder.message? this.props.oms.errorOmsConfirmOrder.message : ''}
+          />
+        ) : null}
+      </View>
+    );
   }
 
   /**
@@ -166,6 +194,7 @@ function SfaAddTagihanView(props) {
           <ScrollView style={{ flex: 1}}>
             {renderContent()}
           </ScrollView>
+          {renderModalCollectionMethod()}
         </SafeAreaView>
       {/* ) : (
         <LoadingPage />
