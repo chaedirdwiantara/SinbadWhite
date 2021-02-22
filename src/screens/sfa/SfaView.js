@@ -28,6 +28,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { useDispatch, useSelector } from 'react-redux';
 import SfaCollectionListView from './SfaCollectionListView';
 import { ScrollView } from 'react-native-gesture-handler';
+import { sfaGetCollectionStatusProcess } from '../../state/actions/SfaAction';
 
 function SfaView(props) {
   const dispatch = useDispatch();
@@ -95,7 +96,16 @@ function SfaView(props) {
    * FUNCTIONAL
    * =======================
    */
+  useEffect(() => {
+    getCollectionStatus()
+  }, []);
 
+  const getCollectionStatus = () => {
+    console.log('get collectionlalla');
+    dispatch(
+      sfaGetCollectionStatusProcess()
+    );
+  }
   /**
    * *********************************
    * RENDER VIEW

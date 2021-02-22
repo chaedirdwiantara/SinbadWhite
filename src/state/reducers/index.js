@@ -14,3 +14,4 @@ export * from './PermanentReducer';
 export * from './HistoryReducer';
 export * from './ProfileReducer';
 export * from './SalesmanKpiReducer';
+export * from './SfaReducer';
