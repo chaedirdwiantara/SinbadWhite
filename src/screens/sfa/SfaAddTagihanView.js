@@ -5,32 +5,33 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  TextInput
 } from '../../library/reactPackage';
 
 import {
   bindActionCreators,
   connect,
   MaterialIcon,
-  moment
 } from '../../library/thirdPartyPackage';
 import {
   LoadingPage,
-  StatusBarWhite
+  StatusBarWhite,
+  ButtonSingle
 } from '../../library/component';
+import { TextInputMask } from 'react-native-masked-text';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { useDispatch, useSelector } from 'react-redux';
 import ModalCollectionMethod from'./ModalCollectionMethod'
-import { set } from 'react-native-reanimated';
 
 function SfaAddTagihanView(props) {
   const dispatch = useDispatch();
   const [collectionMethod, setCollectionMethod] = useState(null)
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false)
+  const [cash, setCash] = useState(0)
   const [data, setData] = useState(
     {
       "data": {
@@ -55,7 +56,26 @@ function SfaAddTagihanView(props) {
     setCollectionMethod(data)
     setOpenCollectionMethod(false)
   }
+
+  const selectBilling = () => {
+    if (collectionMethod !== null) {
+      if (collectionMethod.name === "Tunai") {
+        return renderBillingCash()
+      }
+    }
+  } 
   
+  const textBillingCash = (text) => {
+    if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(data.data.remainingBilling)) {
+      setCash(parseInt(data.data.remainingBilling))
+    } else {
+      setCash(parseInt(text.replace(/[Rp.]+/g, '')))
+    }
+  }
+
+  const saveCollection = () => {
+    alert(cash)
+  }
 
   /**
    * *********************************
@@ -121,7 +141,7 @@ function SfaAddTagihanView(props) {
             </View>
             <View style={[GlobalStyle.lines, { flex: 1, marginTop: 8, marginBottom: 16 }]} />
             <View>
-              <Text style={Fonts.type17}>MetodePenagihan</Text>
+              <Text style={Fonts.type17}>Metode Penagihan</Text>
             </View>
             <View>
               <TouchableOpacity
@@ -145,10 +165,42 @@ function SfaAddTagihanView(props) {
               </TouchableOpacity>
               <View style={[GlobalStyle.lines]} />
             </View>
+            {selectBilling()}
           </View>
         </View>
     )
   }
+
+  const renderBillingCash = () => {
+    return (
+      <View style={{marginTop:16}}>
+        <View>
+          <Text style={Fonts.type17}>Jumlah Penagihan</Text>
+        </View>
+        <View style={[styles.boxInput, {flexDirection:"row", alignItems:"center"}]}>
+          <TextInputMask
+            type={'money'}
+            options={{
+              precision: 0,
+              separator: ',',
+              delimiter: '.',
+              unit: 'Rp ',
+              suffixUnit: ''
+            }}
+            value={cash}
+            onChangeText={(text) => textBillingCash(text)}
+            style={[
+              Fonts.type17,
+              {
+                width:"95%",
+                borderBottomColor: masterColor.fontBlack10
+              }
+            ]}
+          />
+        </View>
+      </View>
+    )
+  } 
 
   /**
    * =======================
@@ -156,7 +208,6 @@ function SfaAddTagihanView(props) {
    * =======================
    */
   const renderModalCollectionMethod = () => {
-    console.log("disini:", openCollectionMethod);
     return (
       <View>
         {openCollectionMethod ? (
@@ -165,11 +216,20 @@ function SfaAddTagihanView(props) {
             close={() => setOpenCollectionMethod(false)}
             onRef={ref => (selectCollection = ref)}
             selectCollection={selectedCollectionMethod.bind(this)}
-            // onPress={() => setOpenCollectionMethod(false)}
-            // text={this.props.oms.errorOmsConfirmOrder.message? this.props.oms.errorOmsConfirmOrder.message : ''}
           />
         ) : null}
       </View>
+    );
+  }
+
+  const renderButtonSave= () => {
+    return (
+      <ButtonSingle
+        disabled={cash === 0 || cash === '' ? true : false}
+        title={'Simpan'}
+        borderRadius={4}
+        onPress={() => saveCollection()}
+      />
     );
   }
 
@@ -195,7 +255,6 @@ function SfaAddTagihanView(props) {
    * MAIN
    * =======================
    */
-  console.log("data:", collectionMethod)
   return (
     <>
       {/* {props.merchant.dataGetMerchantDetail ? ( */}
@@ -204,6 +263,7 @@ function SfaAddTagihanView(props) {
           <ScrollView style={{ flex: 1}}>
             {renderContent()}
           </ScrollView>
+          {renderButtonSave()}
           {renderModalCollectionMethod()}
         </SafeAreaView>
       {/* ) : (
@@ -233,6 +293,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
+  },
+  boxInput: {
+    borderBottomWidth: 1,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    borderBottomColor: masterColor.fontBlack10
   },
 });
 
