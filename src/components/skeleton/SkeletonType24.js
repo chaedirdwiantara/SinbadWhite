@@ -30,7 +30,7 @@ class SkeletonType24 extends Component {
   /** === RENDER ITEM SKELETON === */
   renderItem({ item, index }) {
     return (
-      <View style={GlobalStyle.shadowForBox} key={index}>
+      <View key={index}>
         <View style={styles.boxContent}>
           <View>
             <SkeletonPlaceholder>
@@ -192,7 +192,13 @@ const styles = StyleSheet.create({
   boxContent: {
     flex: 1,
     paddingVertical: 10,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
+    height: 190,
+    justifyContent:'center',
+    borderWidth: 1,
+    borderColor: Color.fontBlack10,
+    borderRadius: 8,
+    marginHorizontal: 16
   }
 });
 
