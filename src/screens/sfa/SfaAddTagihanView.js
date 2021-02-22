@@ -25,9 +25,11 @@ import * as ActionCreators from '../../state/actions';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { useDispatch, useSelector } from 'react-redux';
 import ModalCollectionMethod from'./ModalCollectionMethod'
+import { set } from 'react-native-reanimated';
 
 function SfaAddTagihanView(props) {
   const dispatch = useDispatch();
+  const [collectionMethod, setCollectionMethod] = useState(null)
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false)
   const [data, setData] = useState(
     {
@@ -50,7 +52,8 @@ function SfaAddTagihanView(props) {
    * =======================
    */
   const selectedCollectionMethod = (data) => {
-    alert(data.name)
+    setCollectionMethod(data)
+    setOpenCollectionMethod(false)
   }
   
 
@@ -125,7 +128,13 @@ function SfaAddTagihanView(props) {
                 style={styles.boxMenu}
                 onPress={() => setOpenCollectionMethod(true)}
               >
-                <Text style={[Fonts.type17, {opacity: 0.5}]}>Pilih Metode Penagihan</Text>
+                <Text style={[Fonts.type17, {opacity: collectionMethod === null ? 0.5 : null}]}>
+                  {
+                    collectionMethod === null 
+                    ? "Pilih Metode Penagihan"
+                    : collectionMethod.name
+                  }
+                </Text>
                 <View style={{ position: 'absolute', right: 16 }}>
                   <MaterialIcon
                     name="chevron-right"
@@ -186,6 +195,7 @@ function SfaAddTagihanView(props) {
    * MAIN
    * =======================
    */
+  console.log("data:", collectionMethod)
   return (
     <>
       {/* {props.merchant.dataGetMerchantDetail ? ( */}
