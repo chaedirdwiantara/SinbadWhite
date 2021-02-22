@@ -22,8 +22,11 @@ const INITIAL_STATE = {
   loadingSubmitSurvey: false,
   /** data */
   dataPostActivity: null,
+  dataPostActivityV2: null,
   dataGetLogAllActivity: null,
+  dataGetLogAllActivityV2: null,
   dataGetLogPerActivity: null,
+  dataGetLogPerActivityV2: null,
   selectedMerchant: null,
   dataGetMerchant: [],
   dataGetMerchantV2: [],
@@ -153,8 +156,11 @@ const INITIAL_STATE = {
   errorGetMerchantDetailV2: null,
   errorGetMerchantLastOrder: null,
   errorPostActivity: null,
+  errorPostActivityV2: null,
   errorGetLogAllActivity: null,
+  errorGetLogAllActivityV2: null,
   errorGetLogPerActivity: null,
+  errorGetLogPerActivityV2: null,
   errorGetNoOrderReason: null,
   errorGetStoreStatus: null,
   errorGetWarehouse: null,
@@ -664,6 +670,33 @@ export const merchant = createReducer(INITIAL_STATE, {
   },
   /**
    * =============================
+   * POST ACTIVITY V2
+   * =============================
+   */
+  [types.MERCHANT_POST_ACTIVITY_PROCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingPostActivity: true,
+      dataPostActivityV2: null,
+      errorPostActivityV2: null
+    };
+  },
+  [types.MERCHANT_POST_ACTIVITY_SUCCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingPostActivity: false,
+      dataPostActivityV2: action.payload
+    };
+  },
+  [types.MERCHANT_POST_ACTIVITY_FAILED_V2](state, action) {
+    return {
+      ...state,
+      loadingPostActivity: false,
+      errorPostActivityV2: action.payload
+    };
+  },
+  /**
+   * =============================
    * GET LOG ALL ACTIVITY MERCHANT
    * =============================
    */
@@ -687,6 +720,33 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetLogAllActivity: false,
       errorGetLogAllActivity: action.payload
+    };
+  },
+  /**
+   * =============================
+   * GET LOG ALL ACTIVITY MERCHANT V2
+   * =============================
+   */
+  [types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingGetLogAllActivity: true,
+      dataGetLogAllActivityV2: null,
+      errorGetLogAllActivityV2: null
+    };
+  },
+  [types.MERCHANT_GET_LOG_ALL_ACTIVITY_SUCCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingGetLogAllActivity: false,
+      dataGetLogAllActivityV2: action.payload
+    };
+  },
+  [types.MERCHANT_GET_LOG_ALL_ACTIVITY_FAILED_V2](state, action) {
+    return {
+      ...state,
+      loadingGetLogAllActivity: false,
+      errorGetLogAllActivityV2: action.payload
     };
   },
   /**
@@ -716,6 +776,34 @@ export const merchant = createReducer(INITIAL_STATE, {
       errorGetLogPerActivity: action.payload
     };
   },
+  /**
+   * =============================
+   * GET LOG PER ACTIVITY MERCHANT V2
+   * =============================
+   */
+  [types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingGetLogPerActivity: true,
+      dataGetLogPerActivityV2: null,
+      errorGetLogPerActivityV2: null
+    };
+  },
+  [types.MERCHANT_GET_LOG_PER_ACTIVITY_SUCCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingGetLogPerActivity: false,
+      dataGetLogPerActivityV2: action.payload.data
+    };
+  },
+  [types.MERCHANT_GET_LOG_PER_ACTIVITY_FAILED_V2](state, action) {
+    return {
+      ...state,
+      loadingGetLogPerActivity: false,
+      errorGetLogPerActivityV2: action.payload
+    };
+  },
+  /**
   /**
    * =============================
    * GET LOG PER ACTIVITY MERCHANT

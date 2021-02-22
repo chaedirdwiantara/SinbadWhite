@@ -78,6 +78,14 @@ function postActivity(params) {
     params
   });
 }
+/** === POST ACTIVITY V2 === */
+function postActivityV2(params) {
+  return ApiRest({
+    path: 'journey-plan-sale-logs',
+    method: 'POST',
+    params
+  });
+}
 /** === GET LOG ALL ACTIVITY === */
 function getLogAllActivity(journeyPlanSaleId) {
   return ApiRest({
@@ -85,8 +93,24 @@ function getLogAllActivity(journeyPlanSaleId) {
     method: 'GET'
   });
 }
+/** === GET LOG ALL ACTIVITY  V2 === */
+function getLogAllActivityV2(journeyPlanSaleId) {
+  return ApiRest({
+    path: `agent-activities?journeyPlanSaleId=${journeyPlanSaleId}`,
+    method: 'GET'
+  });
+}
 /** === GET LOG PER ACTIVITY === */
 function getLogPerActivity(data) {
+  return ApiRest({
+    path: `journey-plan-sale-logs?journeyPlanSaleId=${
+      data.journeyPlanSaleId
+    }&activity=${data.activity}&$limit=1&$skip=0&sort=asc&sortby=created_at`,
+    method: 'GET'
+  });
+}
+/** === GET LOG PER ACTIVITY V2 === */
+function getLogPerActivityV2(data) {
   return ApiRest({
     path: `journey-plan-sale-logs?journeyPlanSaleId=${
       data.journeyPlanSaleId
@@ -165,8 +189,11 @@ export const MerchantMethod = {
   editMerchant,
   getMerchantLastOrder,
   postActivity,
+  postActivityV2,
   getLogAllActivity,
+  getLogAllActivityV2,
   getLogPerActivity,
+  getLogPerActivityV2,
   getNoOrderReason,
   getStoreStatus,
   getWarehouse,
@@ -198,4 +225,8 @@ export const MerchantMethod = {
  * updatedDate: 18022021
  * updatedFunction:
  * -> Add new methods. (getMerchantV2, getMerchantDetailV2, getPortfolioByUserIdV2)
+ * updatedBy: dyah
+ * updatedDate: 22022021
+ * updatedFunction:
+ * -> Add new methods. (postActivityV2, getLogAllActivityV2, getLogPerActivityV2)
  */

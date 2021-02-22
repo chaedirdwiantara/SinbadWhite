@@ -129,7 +129,7 @@ export function merchantGetDetailFailed(data) {
  * ====================================
  */
 /** === MERCHANT GET DETAIL PROCESS === */
-export function MerchantGetDetailProcessV2(data) {
+export function merchantGetDetailProcessV2(data) {
   return { type: types.MERCHANT_GET_DETAIL_PROCESS_V2, payload: data };
 }
 /** === MERCHANT GET DETAIL SUCCESS === */
@@ -182,14 +182,7 @@ export function portfolioGetProcessV2(userId) {
 /** PORTFOLIO GET SUCCESS */
 export function portfolioGetSuccessV2(data) {
   if (data.result === 'Ok') {
-    /** this for add default portfolio */
-    const dataResult = data.data;
-    const addingData = {
-      id: '',
-      name: 'Toko Baru'
-    };
-    dataResult.unshift(addingData);
-    return { type: types.PORTFOLIO_GET_SUCCESS_V2, payload: dataResult };
+    return { type: types.PORTFOLIO_GET_SUCCESS_V2, payload: data.data };
   }
   return { type: types.PORTFOLIO_GET_FAILED_V2, payload: data };
 }
@@ -260,6 +253,29 @@ export function merchantPostActivityFailed(data) {
 }
 /**
  * ==================================
+ * POST ACTIVITY V2
+ * ==================================
+ */
+/** POST ACTIVITY PROCESS */
+export function merchantPostActivityProcessV2(data) {
+  return { type: types.MERCHANT_POST_ACTIVITY_PROCESS_V2, payload: data };
+}
+/** POST ACTIVITY SUCCESS */
+export function merchantPostActivitySuccessV2(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_POST_ACTIVITY_SUCCESS_V2,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_POST_ACTIVITY_FAILED_V2, payload: data };
+}
+/** POST ACTIVITY FAILED */
+export function merchantPostActivityFailedV2(data) {
+  return { type: types.MERCHANT_POST_ACTIVITY_FAILED_V2, payload: data };
+}
+/**
+ * ==================================
  * GET LOG ALL ACTIVITY MERCHANT
  * ==================================
  */
@@ -283,6 +299,32 @@ export function merchantGetLogAllActivityFailed(data) {
 }
 /**
  * ==================================
+ * GET LOG ALL ACTIVITY MERCHANT V2
+ * ==================================
+ */
+/** GET LOG ALL ACTIVITY MERCHANT PROCESS */
+export function merchantGetLogAllActivityProcessV2(data) {
+  return {
+    type: types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS_V2,
+    payload: data
+  };
+}
+/** GET LOG ALL ACTIVITY MERCHANT SUCCESS */
+export function merchantGetLogAllActivitySuccessV2(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_LOG_ALL_ACTIVITY_SUCCESS_V2,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_GET_LOG_ALL_ACTIVITY_FAILED_V2, payload: data };
+}
+/** GET LOG ALL ACTIVITY MERCHANT FAILED */
+export function merchantGetLogAllActivityFailedV2(data) {
+  return { type: types.MERCHANT_GET_LOG_ALL_ACTIVITY_FAILED_V2, payload: data };
+}
+/**
+ * ==================================
  * GET LOG PER ACTIVITY MERCHANT
  * ==================================
  */
@@ -303,6 +345,32 @@ export function merchantGetLogPerActivitySuccess(data) {
 /** GET LOG PER ACTIVITY MERCHANT FAILED */
 export function merchantGetLogPerActivityFailed(data) {
   return { type: types.MERCHANT_GET_LOG_PER_ACTIVITY_FAILED, payload: data };
+}
+/**
+ * ==================================
+ * GET LOG PER ACTIVITY MERCHANT V2
+ * ==================================
+ */
+/** GET LOG PER ACTIVITY MERCHANT PROCESS */
+export function merchantGetLogPerActivityProcessV2(data) {
+  return {
+    type: types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS_V2,
+    payload: data
+  };
+}
+/** GET LOG PER ACTIVITY MERCHANT SUCCESS */
+export function merchantGetLogPerActivitySuccessV2(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_LOG_PER_ACTIVITY_SUCCESS_V2,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_GET_LOG_PER_ACTIVITY_FAILED_V2, payload: data };
+}
+/** GET LOG PER ACTIVITY MERCHANT FAILED */
+export function merchantGetLogPerActivityFailedV2(data) {
+  return { type: types.MERCHANT_GET_LOG_PER_ACTIVITY_FAILED_V2, payload: data };
 }
 
 /**
