@@ -11,18 +11,10 @@ const SfaNavigator = {
     screen: SfaView,
     navigationOptions: {
       headerTitle: 'Penagihan',
-      headerTitleStyle: [
-        GlobalFont.textHeaderPage,
-        {
-          textAlign: 'center',
-          flex: 1
-        }
-      ],
-      headerTintColor: masterColor.backButtonWhite,
+      headerTitleStyle: GlobalFont.textHeaderPage,
       headerStyle: {
-        backgroundColor: masterColor.mainColor
+        backgroundColor: masterColor.backgroundWhite
       },
-      headerRight: <View />,
       gesturesEnabled: false
     }
   },
