@@ -27,7 +27,7 @@ function getPortfolioByUserId(userId) {
 /** === ADD MERCHANT === */
 function addMerchant(params) {
   return ApiRest({
-    path: 'journey-plan-list?storeType=new_store',
+    path: 'sales-supplier-store',
     method: 'POST',
     params
   });
@@ -130,6 +130,30 @@ function updateSurvey({ params, surveyResponseId }) {
     params
   });
 }
+/** VALIDATE MAPPING */
+function validateAreaMapping(params) {
+  return ApiRest({
+    path: 'validate-urban-segmentation',
+    method: 'POST',
+    params
+  });
+}
+/** GET SEGMENTATION LSIT */
+function getSalesSegmentation({type, supplierId, urbanId}){
+  if(urbanId){
+    const params = {urbanId, supplierId}
+    return ApiRest({
+      path: 'validate-urban-segmentation',
+      method: 'POST',
+      params
+    });
+  }
+  return ApiRest({
+    path: `sales-segmentation?type=${type}&supplierId=${supplierId}`,
+    method: 'GET'
+  })
+}
+
 
 export const MerchantMethod = {
   getMerchant,
@@ -147,7 +171,9 @@ export const MerchantMethod = {
   getSurveyList,
   getSurveyResponse,
   submitSurvey,
-  updateSurvey
+  updateSurvey,
+  validateAreaMapping,
+  getSalesSegmentation
 };
 
 /**

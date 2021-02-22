@@ -15,7 +15,15 @@ function getWarehouse(data){
   })
 }
 
+function getSalesSegementationTeam(data){
+  return ApiRest({
+    path: `sales-segmentation/2`,
+    method: 'GET'
+  })
+}
+
 export const ProfileMethod = {
   editProfile,
-  getWarehouse
+  getWarehouse,
+  getSalesSegementationTeam
 };
