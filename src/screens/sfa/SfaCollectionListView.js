@@ -9,6 +9,7 @@ import {
   FlatList
 } from '../../library/reactPackage';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
+import { moment } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import { SkeletonType24 } from '../../library/component';
 
@@ -43,6 +44,8 @@ function SfaCollectionListView(props) {
   };
 
   const renderItem = ({ item, index }) => {
+    const delivery = moment(new Date(item.debtDate)).format('Do MMM YYYY');
+    const dueDate = moment(new Date(item.overdue)).format('Do MMM YYYY');
     return (
       <View style={styles.listContainer}>
         <View style={styles.view1}>
@@ -68,13 +71,11 @@ function SfaCollectionListView(props) {
             <Text style={Fonts.type17}>{item.orderRef}</Text>
           </View>
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
-            <Text style={[Fonts.type17, { marginBottom: 8 }]}>
-              {item.debtDate}
-            </Text>
+            <Text style={[Fonts.type17, { marginBottom: 8 }]}>{delivery}</Text>
             {/* <Text style={Fonts.type17}>{item.orderRef}</Text> */}
             <View style={{ flexDirection: 'row' }}>
               <Text style={Fonts.type22}>Jatuh Tempo: </Text>
-              <Text style={Fonts.type22}>{item.overdue}</Text>
+              <Text style={Fonts.type22}>{dueDate}</Text>
             </View>
           </View>
         </View>
@@ -101,9 +102,9 @@ function SfaCollectionListView(props) {
    * =======================
    */
   return (
-    // <>{renderData()}</>
-    renderSkeleton()
-  )
+    <>{renderData()}</>
+    // renderSkeleton()
+  );
 }
 
 export default SfaCollectionListView;
