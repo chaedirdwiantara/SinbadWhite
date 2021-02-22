@@ -651,13 +651,13 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: Color.fontGreen50
   },
-  type108: {
+  type108p: {
     fontFamily: Fonts.MontserratMedium,
     fontSize: 9,
     lineHeight: 14,
     color: Color.mainColor
   },
-  type109: {
+  type109p: {
     fontFamily: Fonts.MontserratBold,
     fontSize: 11,
     lineHeight: 13,
