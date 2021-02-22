@@ -73,7 +73,7 @@ function SfaCollectionListView(props) {
         <View style={styles.view3}>
           <View style={{ flex: 1 }}>
             <Text style={[Fonts.type17, {marginBottom: 8}]}>Sisa Tagihan</Text>
-            <Text style={Fonts.type109}>{MoneyFormat(item.paidAmount)}</Text>
+            <Text style={Fonts.type109p}>{MoneyFormat(item.paidAmount)}</Text>
           </View>
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
             <TouchableOpacity style={styles.buttonDetail}>

@@ -18,7 +18,8 @@ import {
   LoadingPage,
   StatusBarWhite,
   SearchBarType1,
-  TagListType2
+  TagListType2,
+  SkeletonType2
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
@@ -33,6 +34,7 @@ import { sfaGetCollectionStatusProcess } from '../../state/actions/SfaAction';
 function SfaView(props) {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('');
+  const { loadingGetCollectionStatus, dataGetCollectionStatus } = useSelector(state => state.sfa);
   const [sfaTag, setSfaTag] = useState([
     { status: '', title: 'Semua', detail: '' },
     {
@@ -97,15 +99,13 @@ function SfaView(props) {
    * =======================
    */
   useEffect(() => {
-    getCollectionStatus()
+    getCollectionStatus();
   }, []);
+  
 
   const getCollectionStatus = () => {
-    console.log('get collectionlalla');
-    dispatch(
-      sfaGetCollectionStatusProcess()
-    );
-  }
+    dispatch(sfaGetCollectionStatusProcess());
+  };
   /**
    * *********************************
    * RENDER VIEW
@@ -115,18 +115,34 @@ function SfaView(props) {
   const renderCollectionList = () => {
     return <SfaCollectionListView data={data} />;
   };
-  /** === TAGS SECTION === */
-  const renderTagsContent = () => {
+  /** === RENDER SKELETON TAGS === */
+  const renderSkeletonTags = () => {
     return (
       <View>
-        <TagListType2
-          selected={selectedTagStatus}
-          // onRef={ref => (this.parentFunction = ref)}
-          // parentFunction={this.parentFunction.bind(this)}
-          data={sfaTag}
-        />
+        <SkeletonType2 />
         <View style={GlobalStyle.lines} />
       </View>
+    );
+  };
+  /** === TAGS SECTION === */
+  const renderTagsContent = () => {
+    const status = dataGetCollectionStatus
+    return (
+      <>
+        {!loadingGetCollectionStatus && dataGetCollectionStatus? (
+          <>
+            <TagListType2
+              selected={selectedTagStatus}
+              // onRef={ref => (this.parentFunction = ref)}
+              // parentFunction={this.parentFunction.bind(this)}
+              data={status.data}
+            />
+            <View style={GlobalStyle.lines} />
+          </>
+        ) : (
+          renderSkeletonTags()
+        )}
+      </>
     );
   };
   /** === RENDER FOOTER === */
@@ -138,11 +154,11 @@ function SfaView(props) {
           <View style={styles.footer1}>
             <View style={[styles.footerText, { marginBottom: 4 }]}>
               <Text style={Fonts.type44}>Total Faktur: </Text>
-              <Text style={Fonts.type108}>{data.totalInvoice}</Text>
+              <Text style={Fonts.type108p}>{data.totalInvoice}</Text>
             </View>
             <View style={styles.footerText}>
               <Text style={Fonts.type44}>Jumlah Faktur: </Text>
-              <Text style={Fonts.type108}>
+              <Text style={Fonts.type108p}>
                 {MoneyFormat(data.invoiceAmount)}
               </Text>
             </View>
@@ -150,13 +166,13 @@ function SfaView(props) {
           <View style={styles.footer1}>
             <View style={[styles.footerText, { marginBottom: 4 }]}>
               <Text style={Fonts.type44}>Total Terbayar: </Text>
-              <Text style={Fonts.type108}>
+              <Text style={Fonts.type108p}>
                 {MoneyFormat(data.totalAmountPaid)}
               </Text>
             </View>
             <View style={styles.footerText}>
               <Text style={Fonts.type44}>Sisa Tagihan: </Text>
-              <Text style={Fonts.type108}>{MoneyFormat(data.outstanding)}</Text>
+              <Text style={Fonts.type108p}>{MoneyFormat(data.outstanding)}</Text>
             </View>
           </View>
         </View>
