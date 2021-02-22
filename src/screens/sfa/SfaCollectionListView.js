@@ -10,6 +10,7 @@ import {
 } from '../../library/reactPackage';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
+import NavigationService from '../../navigation/NavigationService';
 
 function SfaCollectionListView(props) {
   /**
@@ -76,7 +77,7 @@ function SfaCollectionListView(props) {
             <Text style={Fonts.type109p}>{MoneyFormat(item.paidAmount)}</Text>
           </View>
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
-            <TouchableOpacity style={styles.buttonDetail}>
+            <TouchableOpacity style={styles.buttonDetail} onPress={() => NavigationService.navigate('SfaDetailView')}>
               <Text style={Fonts.type94}>Detail</Text>
             </TouchableOpacity>
           </View>
