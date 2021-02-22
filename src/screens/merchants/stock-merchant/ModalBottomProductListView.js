@@ -144,7 +144,7 @@ class ModalBottomProductListView extends Component {
                         size={24}
                         color={
                             this.props.selectedProduct.indexOf(item.id) > -1
-                            ? Color.fontGreen50
+                            ? Color.mainColor
                             : Color.fontBlack40
                         }
                     />
