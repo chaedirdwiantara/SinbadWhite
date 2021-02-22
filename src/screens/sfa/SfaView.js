@@ -51,7 +51,8 @@ function SfaView(props) {
         total: 670000,
         debtDate: '25-02-2021',
         overdue: '27-02-2021',
-        paidAmount: 0
+        paidAmount: 0,
+        paymentStatus: 'waiting_for_payment'
       },
       {
         invoice: 'TIGA RAKSA #2',
@@ -60,7 +61,8 @@ function SfaView(props) {
         total: 700000,
         debtDate: '26-02-2021',
         overdue: '28-02-2021',
-        paidAmount: 0
+        paidAmount: 0,
+        paymentStatus: 'overdue'
       },
       {
         invoice: 'TIGA RAKSA #2',
@@ -69,7 +71,8 @@ function SfaView(props) {
         total: 700000,
         debtDate: '26-02-2021',
         overdue: '28-02-2021',
-        paidAmount: 0
+        paidAmount: 0,
+        paymentStatus: 'waiting_for_payment'
       },
       {
         invoice: 'TIGA RAKSA #2',
@@ -78,7 +81,8 @@ function SfaView(props) {
         total: 700000,
         debtDate: '26-02-2021',
         overdue: '28-02-2021',
-        paidAmount: 0
+        paidAmount: 0,
+        paymentStatus: 'overdue'
       }
     ],
     totalInvoice: 3,
@@ -122,7 +126,7 @@ function SfaView(props) {
         <View style={GlobalStyle.lines} />
         <View style={styles.footer}>
           <View style={styles.footer1}>
-            <View style={[styles.footerText, {marginBottom: 4}]}>
+            <View style={[styles.footerText, { marginBottom: 4 }]}>
               <Text style={Fonts.type44}>Total Faktur: </Text>
               <Text style={Fonts.type108}>{data.totalInvoice}</Text>
             </View>
@@ -134,7 +138,7 @@ function SfaView(props) {
             </View>
           </View>
           <View style={styles.footer1}>
-            <View style={[styles.footerText, {marginBottom: 4}]}>
+            <View style={[styles.footerText, { marginBottom: 4 }]}>
               <Text style={Fonts.type44}>Total Terbayar: </Text>
               <Text style={Fonts.type108}>
                 {MoneyFormat(data.totalAmountPaid)}
