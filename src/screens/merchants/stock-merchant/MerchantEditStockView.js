@@ -5,14 +5,16 @@ import {
     StyleSheet,
     Text,
     SafeAreaView,
-    TouchableOpacity
+    TouchableOpacity,
+    BackHandler
  } from '../../../library/reactPackage';
  import { 
      BackHandlerBackSpecific,
      StatusBarWhite,
      SearchBarType4,
      ButtonSingle,
-     LoadingPage
+     LoadingPage,
+     ModalConfirmationType3
   } from '../../../library/component';
   import {
       AntDesignIcon,
@@ -32,11 +34,15 @@ import {
           super(props)
           this.state = {
               mockData: true,
+              openModalBackConfirmation: false,
+              openModalSaveConfirmation: false,
+              openModalProductList: false,
               search: ''
           }
       }
           /** HEADER CONFIG */
     static navigationOptions = ({ navigation }) => {
+        const { state } = navigation
         return {
             headerTitle: () => (
                 <View>
@@ -46,7 +52,7 @@ import {
             headerLeft: () => (
                 <TouchableOpacity
                   style={{ marginLeft: 16 }}
-                  onPress={() => console.log('Back Press')}
+                  onPress={() => state.params.handleBackPressFromRN()}
                 >
                   <MaterialIcon
                     color={masterColor.fontBlack50}
@@ -56,7 +62,7 @@ import {
                 </TouchableOpacity>
             ),
             headerRight: () => (
-                <TouchableOpacity onPress={() => console.log('Add stock')}>
+                <TouchableOpacity onPress={() => state.params.handleOpenProductList()}>
                     <View style={{ flexDirection: 'row', marginRight: 18}}>
                         <AntDesignIcon 
                             color={Color.mainColor}
@@ -69,9 +75,51 @@ import {
             )
         }
     }
-      /** FUNCTION */
-      /** PARENT FUNCTION */
-      parentFunction(data){
+    /**
+     * =======================
+     * NAVIGATION FUNCTION
+     * ======================
+     */
+    navigationFunction() {
+        this.props.navigation.setParams({
+            handleBackPressFromRN: () => this.handleBackPress(),
+            handleOpenProductList: () => this.openModalProductList()
+        });
+        BackHandler.addEventListener(
+        'hardwareBackPress',
+        this.handleHardwareBackPress
+        );
+    }
+
+    /** FUNCTION */
+    componentDidMount(){
+        this.navigationFunction()
+    }
+    componentWillUnmount(){
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackPress)
+    }
+    /** === BACK BUTTON RN PRESS HANDLING === */
+    handleBackPress = () => {
+        this.setState({ openModalBackConfirmation: true });
+    };
+    /** === BACK BUTTON HARDWARE PRESS HANDLING === */
+    handleHardwareBackPress = () => {
+        this.setState({ openModalBackConfirmation: true });
+        return true;
+    };
+    /** === OPEN MODAL PRODUCT LIST === */
+    openModalProductList = () => {
+        console.log('Open Modal Product List')
+        this.setState({ openModalProductList: true })
+    }
+    /** === OPEN MODAL SAVE STOCK */
+    openModalSaveStock() {
+        this.setState({ openModalSaveConfirmation: true })
+        this.saveStockRecord()
+    }
+    
+    /** PARENT FUNCTION */
+    parentFunction(data){
         switch (data.type) {
             case 'search':
                 this.setState({ search: data.data })
@@ -132,12 +180,62 @@ import {
                <ButtonSingle
                    title={'Simpan Catatan Stock'}
                    borderRadius={8}
-                   onPress={() => this.saveStockRecord()}
+                   onPress={() => this.openModalSaveStock()}
                />
            </View>
           )
         }
       /** RENDER MODAL */
+      /** RENDER MODAL BACK CONFIRMATION */
+      renderModalBackConfirmation(){
+        return this.state.openModalBackConfirmation ? (
+            <ModalConfirmationType3
+                statusBarWhite
+                title={'Catatan Belum Tersimpan'}
+                open={this.state.openModalBackConfirmation}
+                leftText={'Keluar'}
+                rightText={'Kembali'}
+                content={'Anda belum menyimpan catatan stok saat ini konfirmasi penyimpanan catatan sebelum meninggalkan halaman ini'}
+                type={'okeNotRed'}
+                leftAction={() => {
+                    console.log('Keluar')
+                    this.setState({ openModalBackConfirmation: false })
+                    // Some function to go back
+                }}
+                rightAction={() => {
+                    console.log('Kembali')
+                    this.setState({ openModalBackConfirmation: false })
+                }}
+            />
+        ) : (
+            <View />
+        )
+      }
+      /** RENDER MODAL SAVE CONFIRMATION */
+      renderModalSaveConfirmation(){
+          return this.state.openModalSaveConfirmation ? (
+              <ModalConfirmationType3
+                statusBarWhite
+                title={'Simpan Catatan Stock'}
+                open={this.state.openModalSaveConfirmation}
+                leftText={'Hapus dan keluar'}
+                rightText={'Ya, simpan'}
+                type={'okeNotRed'}
+                content={'Menyimpan perubahan record stock akan menghapus seluruh pengisian quesioner yang telah dilakukan \n \n Apakah anda ingin melanjutkan penyimpanan?'}
+                leftAction={() => {
+                    console.log('Hapus dan keluar')
+                    this.setState({ openModalSaveConfirmation: false })
+                    // Some function to save
+                }}
+                rightAction={() => {
+                    console.log('Ya, Simpan')
+                    this.setState({ openModalSaveConfirmation: false })
+                }}
+              />
+          ) : (
+              <View />
+          )
+      }
       /** MAIN RENDER */
       render(){
           return(
@@ -148,6 +246,9 @@ import {
                   />
                   <StatusBarWhite />
                   {this.renderContent()}
+                  {/* MODAL */}
+                  {this.renderModalBackConfirmation()}
+                  {this.renderModalSaveConfirmation()}
               </SafeAreaView>
           )
       }

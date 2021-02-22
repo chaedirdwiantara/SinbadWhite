@@ -55,7 +55,10 @@ class MerchantStockView extends Component {
         switch (data.type) {
             case 'search':
                 this.getRecordStock(data.data)
-                break;       
+                break;
+            case 'productList':
+                this.setState({ openModalProductList: data.data })
+                break; 
             default:
                 break;
         }
@@ -161,6 +164,8 @@ class MerchantStockView extends Component {
                     this.setState({ openModalProductList: false })
                     this.props.getMSSCataloguesReset()
                 }}
+                onRef={ref => (this.parentFunction = ref)}
+                parentFunction={this.parentFunction.bind(this)}
             />
         ) : (
             <View />
