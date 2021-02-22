@@ -23,6 +23,9 @@ import NavigationService from '../../../navigation/NavigationService';
 import * as ActionCreators from '../../../state/actions';
 import { GlobalMethod } from '../../../services/methods';
 
+const idNumberGaps = [6,12]
+const taxNoGaps = [2,5,8,9,12,15]
+
 class AddMerchantStep2 extends Component {
   constructor(props) {
     super(props);
@@ -39,8 +42,14 @@ class AddMerchantStep2 extends Component {
       /** field data */
       fullName: this.props.merchant.dataMerchantVolatile.fullName || '',
       name: this.props.merchant.dataMerchantVolatile.name || '',
-      idNo: this.props.merchant.dataMerchantVolatile.idNo || '',
-      taxNo: this.props.merchant.dataMerchantVolatile.taxNo || ''
+      idNo: 
+        this.props.merchant.dataMerchantVolatile.idNo 
+          ? GlobalMethod.addGaps(this.props.merchant.dataMerchantVolatile.idNo, idNumberGaps, " ") 
+          : '',
+      taxNo: 
+        this.props.merchant.dataMerchantVolatile.taxNo 
+          ? GlobalMethod.addGaps(this.props.merchant.dataMerchantVolatile.taxNo, taxNoGaps, ".") 
+          : ''
     };
   }
   /**
@@ -72,8 +81,7 @@ class AddMerchantStep2 extends Component {
   /** === CHECK ID NUMBER FORMAT === */
   checkIdNoFormat(idNumber) {
     idNumber = idNumber.substr(0, 16)
-    const gaps = [6,12]
-    const formatted = GlobalMethod.addGaps(idNumber, gaps, " ")
+    const formatted = GlobalMethod.addGaps(idNumber, idNumberGaps, " ")
     this.setState({ 
       idNo: formatted,
       errorIdNumber: !(formatted === '' || formatted.length >= 18) 
@@ -82,8 +90,7 @@ class AddMerchantStep2 extends Component {
   /** === CHECK TAX NUMBER FORMAT === */
   checkTaxNoFormat(taxNumber) {
     taxNumber = taxNumber.substr(0, 15)
-    const gaps = [2,5,8,9,12,15]
-    const formatted = GlobalMethod.addGaps(taxNumber, gaps, ".")
+    const formatted = GlobalMethod.addGaps(taxNumber, taxNoGaps, ".")
     this.setState({ 
       taxNo: formatted,
       errorTaxNumber: !(formatted === '' || formatted.length >= 20) 

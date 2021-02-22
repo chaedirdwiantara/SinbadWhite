@@ -63,7 +63,8 @@ class AddMerchantStep4 extends Component {
     let {
       storeId, name, address, longitude, latitude,
       urbanId, warehouseId, fullName, idNo, taxNo,
-      phone, clusterId, channelId, groupId, typeId
+      phone, clusterId, channelId, groupId, typeId,
+      noteAddress
     } = this.props.merchant.dataMerchantVolatile
     let supplierId = null
     if (this.props.user.userSuppliers !== null && this.props.user.userSuppliers.length > 0) {
@@ -81,6 +82,7 @@ class AddMerchantStep4 extends Component {
       registerData: {
         name,
         address,
+        noteAddress,
         longitude,
         latitude,
         urbanId,
