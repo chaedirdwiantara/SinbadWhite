@@ -26,7 +26,6 @@ import { Fonts } from '../../../helpers'
 import * as ActionCreators from '../../../state/actions'
 const { height } = Dimensions.get('window')
 import ModalBottomProductListView from './ModalBottomProductListView'
-import { TextInputMaskMethods } from 'react-native-masked-text'
 import NavigationService from '../../../navigation/NavigationService'
 
 class ModalBottomProductList extends Component {

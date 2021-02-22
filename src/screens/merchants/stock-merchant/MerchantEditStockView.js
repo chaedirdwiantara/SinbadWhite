@@ -28,6 +28,7 @@ import {
   import GlobalFont from '../../../helpers/GlobalFont'
   import * as ActionCreators from '../../../state/actions'
   import EditStockRecordListView from './EditStockRecordListView'
+  import ModalBottomProductList from './ModalBottomProductList'
 
   class MerchantEditStockView extends Component {
       constructor(props){
@@ -201,6 +202,7 @@ import {
                     console.log('Keluar')
                     this.setState({ openModalBackConfirmation: false })
                     // Some function to go back
+                    NavigationService.goBack()
                 }}
                 rightAction={() => {
                     console.log('Kembali')
@@ -236,6 +238,22 @@ import {
               <View />
           )
       }
+    // RENDER MODAL PRODUCT LIST
+    renderModalProductList(){
+        return this.state.openModalProductList ? (
+            <ModalBottomProductList 
+                open={this.state.openModalProductList}
+                close={() => {
+                    this.setState({ openModalProductList: false })
+                    this.props.getMSSCataloguesReset()
+                }}
+                onRef={ref => (this.parentFunction = ref)}
+                parentFunction={this.parentFunction.bind(this)}
+            />
+        ) : (
+            <View />
+        )
+    }
       /** MAIN RENDER */
       render(){
           return(
@@ -249,6 +267,7 @@ import {
                   {/* MODAL */}
                   {this.renderModalBackConfirmation()}
                   {this.renderModalSaveConfirmation()}
+                  {this.renderModalProductList()}
               </SafeAreaView>
           )
       }

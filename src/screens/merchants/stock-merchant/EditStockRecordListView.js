@@ -72,6 +72,20 @@ class EditStockRecordListView extends Component {
     }
     /** FUNCTION */
     /** RENDER VIEW */
+    /** RENDER MSS TYPE ICON */
+    renderMSSType(){
+        return(
+            <View style={{
+                marginLeft: 8,
+                padding: 4, 
+                backgroundColor: Color.fontYellow10, 
+                borderRadius: 100,
+             }}>
+                    <Text style={Fonts.type108}>MSS</Text>
+            </View>
+        )
+    }
+    /** RENDER CARD DATA */
     renderCardData({item, index}){
         return(
             <View
@@ -84,14 +98,7 @@ class EditStockRecordListView extends Component {
                                 {item.catalogueCode}
                             </Text>
                         </View>                         
-                        <View style={{
-                                marginLeft: 8,
-                                padding: 4, 
-                                backgroundColor: Color.fontYellow10, 
-                                borderRadius: 100,
-                             }}>
-                                    <Text style={Fonts.type108}>MSS</Text>
-                        </View>
+                        {item.isMustSale ? this.renderMSSType() : <View />}
                     </View>
                 
                 <Text style={[Fonts.type59, {marginTop: 11, marginHorizontal: 16, marginBottom: 8}]}>
