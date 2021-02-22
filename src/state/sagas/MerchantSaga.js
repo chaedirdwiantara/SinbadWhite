@@ -112,6 +112,17 @@ function* postActivity(actions) {
     yield put(ActionCreators.merchantPostActivityFailed(error));
   }
 }
+/** === POST ACTIVITY MERCHANT V2 === */
+function* postActivityV2(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.postActivityV2(actions.payload);
+    });
+    yield put(ActionCreators.merchantPostActivitySuccessV2(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantPostActivityFailedV2(error));
+  }
+}
 /** === CHECKOUT MERCHANT === */
 function* getLogAllActivity(actions) {
   try {
@@ -123,6 +134,17 @@ function* getLogAllActivity(actions) {
     yield put(ActionCreators.merchantGetLogAllActivityFailed(error));
   }
 }
+/** === GET ALL LOG ACTIVITY MERCHANT V2 === */
+function* getLogAllActivityV2(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getLogAllActivityV2(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetLogAllActivitySuccessV2(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetLogAllActivityFailedV2(error));
+  }
+}
 /** === GET LOG MERCHANT === */
 function* getLogPerActivity(actions) {
   try {
@@ -132,6 +154,17 @@ function* getLogPerActivity(actions) {
     yield put(ActionCreators.merchantGetLogPerActivitySuccess(response));
   } catch (error) {
     yield put(ActionCreators.merchantGetLogPerActivityFailed(error));
+  }
+}
+/** === GET LOG PER ACTIVITY MERCHANT === */
+function* getLogPerActivityV2(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getLogPerActivityV2(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetLogPerActivitySuccessV2(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetLogPerActivityFailedV2(error));
   }
 }
 /** === GET NO ORDER REASON === */
@@ -224,14 +257,23 @@ function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_EDIT_PROCESS, editMerchant);
   yield takeEvery(types.MERCHANT_GET_LAST_ORDER_PROCESS, getMerchantLastOrder);
   yield takeEvery(types.MERCHANT_POST_ACTIVITY_PROCESS, postActivity);
+  yield takeEvery(types.MERCHANT_POST_ACTIVITY_PROCESS_V2, postActivityV2);
   yield takeEvery(types.MERCHANT_NO_ORDER_REASON_GET_PROCESS, getNoOrderReason);
   yield takeEvery(
     types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS,
     getLogAllActivity
   );
   yield takeEvery(
+    types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS_V2,
+    getLogAllActivityV2
+  );
+  yield takeEvery(
     types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS,
     getLogPerActivity
+  );
+  yield takeEvery(
+    types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS_V2,
+    getLogPerActivityV2
   );
   yield takeEvery(types.MERCHANT_STORE_STATUS_PROCESS, getStoreStatus),
   yield takeEvery(types.MERCHANT_GET_WAREHOUSE_PROCESS, getWarehouse);

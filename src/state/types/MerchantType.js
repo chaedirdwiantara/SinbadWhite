@@ -61,6 +61,10 @@ export const MERCHANT_GET_LAST_ORDER_FAILED = 'MerchantGetLastOrderFailed';
 export const MERCHANT_POST_ACTIVITY_PROCESS = 'MerchantPostActivityProcess';
 export const MERCHANT_POST_ACTIVITY_SUCCESS = 'MerchantPostActivitySuccess';
 export const MERCHANT_POST_ACTIVITY_FAILED = 'MerchantPostActivityFailed';
+/** FOR POST MERCHANT ACTIVITY V2 */
+export const MERCHANT_POST_ACTIVITY_PROCESS_V2 = 'MerchantPostActivityProcessV2';
+export const MERCHANT_POST_ACTIVITY_SUCCESS_V2 = 'MerchantPostActivitySuccessV2';
+export const MERCHANT_POST_ACTIVITY_FAILED_V2 = 'MerchantPostActivityFailedV2';
 /** FOR CHECKOUT MERCHANT */
 export const MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS =
   'MerchantGetLogAllActivityProcess';
@@ -68,6 +72,13 @@ export const MERCHANT_GET_LOG_ALL_ACTIVITY_SUCCESS =
   'MerchantGetLogAllActivitySuccess';
 export const MERCHANT_GET_LOG_ALL_ACTIVITY_FAILED =
   'MerchantGetLogAllActivityFailed';
+/** FOR GET LOG ALL ACTIVITY MERCHANT V2 */
+export const MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS_V2 =
+  'MerchantGetLogAllActivityProcessV2';
+export const MERCHANT_GET_LOG_ALL_ACTIVITY_SUCCESS_V2 =
+  'MerchantGetLogAllActivitySuccessV2';
+export const MERCHANT_GET_LOG_ALL_ACTIVITY_FAILED_V2 =
+  'MerchantGetLogAllActivityFailedV2';
 /** FOR GET LOG MERCHANT */
 export const MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS =
   'MerchantGetLogPerActivityProcess';
@@ -75,6 +86,13 @@ export const MERCHANT_GET_LOG_PER_ACTIVITY_SUCCESS =
   'MerchantGetLogPerActivitySuccess';
 export const MERCHANT_GET_LOG_PER_ACTIVITY_FAILED =
   'MerchantGetLogPerActivityFailed';
+/** FOR GET LOG PER ACTIVITY MERCHANT V2 */
+export const MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS_V2 =
+  'MerchantGetLogPerActivityProcessV2';
+export const MERCHANT_GET_LOG_PER_ACTIVITY_SUCCESS_V2 =
+  'MerchantGetLogPerActivitySuccessV2';
+export const MERCHANT_GET_LOG_PER_ACTIVITY_FAILED_V2 =
+  'MerchantGetLogPerActivityFailedV2';
 /** SELECTED MERCHANT === */
 export const MERCHANT_SELECTED = 'MerchantSelected';
 /** MAPS MERCHANT */
