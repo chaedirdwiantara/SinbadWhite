@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -13,60 +13,21 @@ import {
 } from '../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
-  ButtonSingle
+  ButtonSingle, 
+  LoadingPage
 } from '../../library/component';
+import {
+  sfaGetDetailProcess,
+} from '../../state/actions';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch , useSelector} from 'react-redux';
 
 function SfaDetailView(props) {
   const dispatch = useDispatch();
-  const [data, setData] = useState(
-    {
-      "data": {
-        "id": 1,
-        "orderCode": "S010004232321231231",
-        "orderRef": "A754123131",
-        "invoiceGroupName": "COMBINE",
-        "totalBilling": 670000,
-        "totalInstorePayment": 335000,
-        "totalCollection": 0,
-        "remainingBilling": 335000,
-        "collections": [
-            {
-                "name": "Tunai",
-                "value": 0
-            },
-            {
-                "name": "Cek",
-                "value": 0
-            },
-            {
-                "name": "Giro",
-                "value": 0
-            },
-            {
-                "name": "Transfer",
-                "value": 0
-            },
-            {
-                "name": "Promo",
-                "value": 0
-            },
-            {
-                "name": "Retur",
-                "value": 0
-            },
-            {
-                "name": "Materai",
-                "value": 0
-            }
-        ]
-      }
-    }
-  );
+  const { dataSfaGetDetail } = useSelector(state => state.sfa);
   /**
    * =======================
    * FUNCTIONAL
@@ -75,6 +36,11 @@ function SfaDetailView(props) {
   const addCollection = () => {
     NavigationService.navigate('SfaAddTagihanView')
   }
+
+  useEffect(() => {
+    const orderParcelId = parseInt(props.navigation.state.params.orderParcelId);
+    dispatch(sfaGetDetailProcess(orderParcelId));
+  }, [dispatch]);
 
   /**
    * *********************************
@@ -96,19 +62,22 @@ function SfaDetailView(props) {
   }
 
   const renderItemFakturInfo = () => {
+    const detailSfa = dataSfaGetDetail.data
     return (
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Nama Faktur</Text>
-          <Text style={Fonts.type17}>{data.data.invoiceGroupName}</Text>
+          <Text style={Fonts.type17}>{detailSfa.invoiceGroupName}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>No. Pesanan</Text>
-          <Text style={Fonts.type17}>{data.data.orderCode}</Text>
+          <Text style={Fonts.type17}>{detailSfa.orderCode}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>No. Referensi</Text>
-          <Text style={Fonts.type17}>{data.data.orderRef}</Text>
+          <Text style={Fonts.type17}>
+            {detailSfa.orderRef === null || detailSfa.orderRef === "" ? "-" : detailSfa.orderRef}
+          </Text>
         </View>
       </View>
     )
@@ -133,26 +102,27 @@ function SfaDetailView(props) {
   }
 
   const renderItemCollectionInfo = () => {
+    const detailSfa = dataSfaGetDetail.data
     return (
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Total Tagihan</Text>
-          <Text style={Fonts.type17}>{MoneyFormat(data.data.totalBilling)}</Text>
+          <Text style={Fonts.type17}>{MoneyFormat(detailSfa.totalBilling)}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Pembayaran Dari Toko</Text>
-          <Text style={Fonts.type17}>{MoneyFormat(data.data.totalInstorePayment)}</Text>
+          <Text style={Fonts.type17}>{MoneyFormat(detailSfa.totalInStorePayment)}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Total Penagihan</Text>
-          <Text style={Fonts.type17}>{MoneyFormat(data.data.totalCollection)}</Text>
+          <Text style={Fonts.type17}>{MoneyFormat(detailSfa.totalCollection)}</Text>
         </View>
       </View>
     )
   }
 
   const renderCollectionDetail = () => {
-    return data.data.collections.map((item, index) => {
+    return dataSfaGetDetail.data.collections.map((item, index) => {
       return (
         <View key={index} style={{marginLeft:8}}>
           <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
@@ -175,7 +145,7 @@ function SfaDetailView(props) {
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Outstanding</Text>
-          <Text style={Fonts.type22}>{MoneyFormat(data.data.remainingBilling)}</Text>
+          <Text style={Fonts.type22}>{MoneyFormat(dataSfaGetDetail.data.remainingBilling)}</Text>
         </View>
       </View>
     )
@@ -215,7 +185,7 @@ function SfaDetailView(props) {
    */
   return (
     <>
-      {/* {props.merchant.dataGetMerchantDetail ? ( */}
+      {dataSfaGetDetail ? (
         <SafeAreaView style={styles.mainContainer}>
           <StatusBarWhite />
           <ScrollView style={{ flex: 1}}>
@@ -223,9 +193,9 @@ function SfaDetailView(props) {
           </ScrollView>
           {renderAddCollection()}
         </SafeAreaView>
-      {/* ) : (
+       ) : (
         <LoadingPage />
-      )} */}
+      )} 
     </>
   );
 }
@@ -247,16 +217,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ user, merchant }) => {
-  return { user, merchant };
-};
-
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
 export default connect(
-  mapStateToProps,
   mapDispatchToProps
 )(SfaDetailView);
 // export default DMSView;

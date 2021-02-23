@@ -9,6 +9,15 @@ function getCollectionStatus(data) {
     });
   }
 
+/** GET ORDER STATUS */
+function getSfaDetail(orderParcelId) {
+  return ApiRest({
+    path: `collection/v1/order-parcel/${orderParcelId}`,
+    method: 'GET'
+  });
+}
+
   export const SfaMethod = {
     getCollectionStatus,
+    getSfaDetail
   };

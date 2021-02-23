@@ -77,7 +77,7 @@ function SfaCollectionListView(props) {
             <Text style={Fonts.type109p}>{MoneyFormat(item.paidAmount)}</Text>
           </View>
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
-            <TouchableOpacity style={styles.buttonDetail} onPress={() => NavigationService.navigate('SfaDetailView')}>
+            <TouchableOpacity style={styles.buttonDetail} onPress={() => NavigationService.navigate('SfaDetailView', {orderParcelId: item.id})}>
               <Text style={Fonts.type94}>Detail</Text>
             </TouchableOpacity>
           </View>
