@@ -77,6 +77,31 @@ import {
             )
         }
     }
+    /** FUNCTION */
+    componentDidMount(){
+        this.navigationFunction()
+        this.getRecordStock()
+    }
+    componentWillUnmount(){
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackPress)
+    }
+    componentDidUpdate(prevProps){
+        // To Delete Catalogue
+        if(prevProps.merchant.dataDeleteRecordStock !== this.props.merchant.dataDeleteRecordStock
+            && this.props.merchant.dataDeleteRecordStock.hasOwnProperty('success')){
+            if(this.props.merchant.dataDeleteRecordStock.success ){
+                this.props.merchantDeleteStockRecordReset()
+                this.getRecordStock(this.state.search)
+            }
+        }
+        // To get Catalouge after add new Catalogue
+        if(prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock){
+            if(this.props.merchant.dataAddRecordStock.success){
+                this.getRecordStock(this.state.search)
+                this.setState({ openModalProductList: false })
+            }
+        }
+    }
     /**
      * =======================
      * NAVIGATION FUNCTION
@@ -93,29 +118,7 @@ import {
         );
     }
 
-    /** FUNCTION */
-    componentDidMount(){
-        this.navigationFunction()
-        this.getRecordStock()
-    }
-    componentWillUnmount(){
-        BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackPress)
-    }
-    componentDidUpdate(prevProps){
-        // To Delete Catalogue
-        if(prevProps.merchant.dataDeleteRecordStock !== this.props.merchant.dataDeleteRecordStock){
-            if(this.props.merchant.dataDeleteRecordStock !== null){
-                this.props.merchantDeleteStockRecordReset()
-                this.getRecordStock(this.state.search)
-            }
-        }
-        if(prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock){
-            if(this.props.merchant.dataAddRecordStock.success){
-                this.getRecordStock()
-                this.setState({ openModalProductList: false })
-            }
-        }
-    }
+    
     /** === BACK BUTTON RN PRESS HANDLING === */
     handleBackPress = () => {
         this.setState({ openModalBackConfirmation: true });
@@ -127,19 +130,11 @@ import {
     };
     /** === OPEN MODAL PRODUCT LIST === */
     openModalProductList = () => {
-        console.log('Open Modal Product List')
-        const { dataGetRecordStock } = this.props.merchant
-        const selectedProduct = []
-        dataGetRecordStock.map((data, index) => {
-            selectedProduct.push(data.id)
-        })
-        console.log(selectedProduct)
-        this.setState({ selectedProduct, openModalProductList: true })
+        this.setState({ openModalProductList: true })
     }
     /** === OPEN MODAL SAVE STOCK */
     openModalSaveStock() {
         this.setState({ openModalSaveConfirmation: true })
-        this.saveStockRecord()
     }
     /** GET RECORD LIST */
     getRecordStock(keyword){
@@ -170,7 +165,7 @@ import {
     // RENDER CONTENT
     renderContent(){
         return !this.props.merchant.loadingGetRecordStock 
-        || !this.props.merchant.loadingDeleteRecordStock  ? (
+            && !this.props.merchant.loadingDeleteRecordStock  ? (
             this.renderData()
         ) : (
             <LoadingPage />
@@ -191,7 +186,7 @@ import {
     }
     // RENDER DATA
     renderData(){
-        return(
+        return (
             <View style={{backgroundColor: masterColor.backgroundWhite, flex: 1}}>
                 {this.renderSearch()}
                 {this.renderCardView()}
@@ -264,11 +259,12 @@ import {
                 content={'Menyimpan perubahan record stock akan menghapus seluruh pengisian quesioner yang telah dilakukan \n \n Apakah anda ingin melanjutkan penyimpanan?'}
                 leftAction={() => {
                     console.log('Hapus dan keluar')
+                    NavigationService.goBack()
                     this.setState({ openModalSaveConfirmation: false })
                     // Some function to save
                 }}
                 rightAction={() => {
-                    console.log('Ya, Simpan')
+                    this.saveStockRecord()
                     this.setState({ openModalSaveConfirmation: false })
                 }}
               />
@@ -288,7 +284,6 @@ import {
                 }}
                 onRef={ref => (this.parentFunction = ref)}
                 parentFunction={this.parentFunction.bind(this)}
-                selectedProduct={this.state.selectedProduct}
             />
         ) : (
             <View />

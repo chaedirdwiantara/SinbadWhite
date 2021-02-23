@@ -136,8 +136,8 @@ const INITIAL_STATE = {
     photos: []
   },
   dataAddRecordStock: {},
-  dataGetRecordStock: null,
-  dataDeleteRecordStock: null,
+  dataGetRecordStock: [],
+  dataDeleteRecordStock: {},
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
@@ -833,7 +833,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetRecordStock: true,
-      dataGetRecordStock: null,
+      dataGetRecordStock: [],
       errorGetRecordStock: null
     }
   },
@@ -883,7 +883,7 @@ export const merchant = createReducer(INITIAL_STATE, {
   [types.MERCHANT_DELETE_STOCK_RECORD_RESET](state, action) {
     return {
       ...state,
-      dataDeleteRecordStock: null
+      dataDeleteRecordStock: {}
     }
   }
 });

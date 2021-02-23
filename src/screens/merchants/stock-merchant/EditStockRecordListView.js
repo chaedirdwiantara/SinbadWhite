@@ -17,7 +17,9 @@ import { Color } from '../../../config'
 class EditStockRecordListView extends Component {
     constructor(props){
         super(props)
-        this.state = {}
+        this.state = {
+            data: this.props.data
+        }
     }
     /** FUNCTION */
     deleteStockRecord(id){
@@ -113,7 +115,7 @@ class EditStockRecordListView extends Component {
         return (
             <FlatList 
                 contentContainerStyle={styles.flatListContainer}
-                data={this.props.data}
+                data={this.state.data}
                 renderItem={this.renderCardData.bind(this)}
                 keyExtractor={(item, index) => index.toString()}
             />

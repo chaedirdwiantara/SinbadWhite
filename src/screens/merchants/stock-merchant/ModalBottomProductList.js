@@ -108,7 +108,6 @@ class ModalBottomProductList extends Component {
     parentFunction(data){
         switch (data.type) {
             case 'stock':
-                console.log('Add SKU to Stock')
                 const selectedProduct = this.state.selectedProduct
                 const dataForSaveProduct = this.state.dataForSaveProduct
                 const indexSelectedProduct = selectedProduct.indexOf(data.data.id)
@@ -123,6 +122,7 @@ class ModalBottomProductList extends Component {
                     selectedProduct.push(data.data.id)
                     dataForSaveProduct.push(dataObject)
                 }
+                console.log('selectedProduct ' + selectedProduct)
                 this.setState({ selectedProduct, dataForSaveProduct })
                 break;
             case 'search':
