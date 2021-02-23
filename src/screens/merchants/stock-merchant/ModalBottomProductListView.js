@@ -129,7 +129,7 @@ class ModalBottomProductListView extends Component {
                 >
                     <View style={{ marginBottom: 8 }}>
                         <Text style={[Fonts.type37]}>
-                            {item.skuCode} {item.mss ? this.renderMSSType() : <View />}
+                            {item.skucode} {item.mss ? this.renderMSSType() : <View />}
                         </Text>
                     </View>
                     <View>
