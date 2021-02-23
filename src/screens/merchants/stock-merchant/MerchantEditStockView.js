@@ -38,6 +38,7 @@ import {
               openModalBackConfirmation: false,
               openModalSaveConfirmation: false,
               openModalProductList: false,
+              selectedProduct: [],
               search: ''
           }
       }
@@ -95,9 +96,25 @@ import {
     /** FUNCTION */
     componentDidMount(){
         this.navigationFunction()
+        this.getRecordStock()
     }
     componentWillUnmount(){
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackPress)
+    }
+    componentDidUpdate(prevProps){
+        // To Delete Catalogue
+        if(prevProps.merchant.dataDeleteRecordStock !== this.props.merchant.dataDeleteRecordStock){
+            if(this.props.merchant.dataDeleteRecordStock !== null){
+                this.props.merchantDeleteStockRecordReset()
+                this.getRecordStock(this.state.search)
+            }
+        }
+        if(prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock){
+            if(this.props.merchant.dataAddRecordStock.success){
+                this.getRecordStock()
+                this.setState({ openModalProductList: false })
+            }
+        }
     }
     /** === BACK BUTTON RN PRESS HANDLING === */
     handleBackPress = () => {
@@ -111,12 +128,24 @@ import {
     /** === OPEN MODAL PRODUCT LIST === */
     openModalProductList = () => {
         console.log('Open Modal Product List')
-        this.setState({ openModalProductList: true })
+        const { dataGetRecordStock } = this.props.merchant
+        const selectedProduct = []
+        dataGetRecordStock.map((data, index) => {
+            selectedProduct.push(data.id)
+        })
+        console.log(selectedProduct)
+        this.setState({ selectedProduct, openModalProductList: true })
     }
     /** === OPEN MODAL SAVE STOCK */
     openModalSaveStock() {
         this.setState({ openModalSaveConfirmation: true })
         this.saveStockRecord()
+    }
+    /** GET RECORD LIST */
+    getRecordStock(keyword){
+        this.props.merchantGetStockRecordProcess({
+            search: keyword || ''
+        })
     }
     
     /** PARENT FUNCTION */
@@ -124,8 +153,12 @@ import {
         switch (data.type) {
             case 'search':
                 this.setState({ search: data.data })
+                this.getRecordStock(data.data)
+                break;
+            case 'delete':
                 console.log(data.data)
-                break;       
+                this.props.merchantDeleteStockRecordProcess(data.data)
+                break;    
             default:
                 break;
         }
@@ -136,7 +169,8 @@ import {
     }
     // RENDER CONTENT
     renderContent(){
-        return this.state.mockData ? (
+        return !this.props.merchant.loadingGetRecordStock 
+        || !this.props.merchant.loadingDeleteRecordStock  ? (
             this.renderData()
         ) : (
             <LoadingPage />
@@ -147,7 +181,11 @@ import {
     renderCardView(){
         return(
             <View>
-                <EditStockRecordListView />
+                <EditStockRecordListView 
+                    data={this.props.merchant.dataGetRecordStock}
+                    onRef={ref => (this.parentFunction = ref)}
+                    parentFunction={this.parentFunction.bind(this)}
+                />
             </View>
         )
     }
@@ -240,6 +278,7 @@ import {
       }
     // RENDER MODAL PRODUCT LIST
     renderModalProductList(){
+        console.log(this.state.selectedProduct)
         return this.state.openModalProductList ? (
             <ModalBottomProductList 
                 open={this.state.openModalProductList}
@@ -249,6 +288,7 @@ import {
                 }}
                 onRef={ref => (this.parentFunction = ref)}
                 parentFunction={this.parentFunction.bind(this)}
+                selectedProduct={this.state.selectedProduct}
             />
         ) : (
             <View />
