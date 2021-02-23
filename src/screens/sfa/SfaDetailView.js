@@ -27,50 +27,6 @@ import { useDispatch } from 'react-redux';
 
 function SfaDetailView(props) {
   const dispatch = useDispatch();
-  const [data, setData] = useState(
-    {
-      "data": {
-        "id": 1,
-        "orderCode": "S010004232321231231",
-        "orderRef": "A754123131",
-        "invoiceGroupName": "COMBINE",
-        "totalBilling": 670000,
-        "totalInstorePayment": 335000,
-        "totalCollection": 0,
-        "remainingBilling": 335000,
-        "collections": [
-            {
-                "name": "Tunai",
-                "value": 0
-            },
-            {
-                "name": "Cek",
-                "value": 0
-            },
-            {
-                "name": "Giro",
-                "value": 0
-            },
-            {
-                "name": "Transfer",
-                "value": 0
-            },
-            {
-                "name": "Promo",
-                "value": 0
-            },
-            {
-                "name": "Retur",
-                "value": 0
-            },
-            {
-                "name": "Materai",
-                "value": 0
-            }
-        ]
-      }
-    }
-  );
   /**
    * =======================
    * FUNCTIONAL
