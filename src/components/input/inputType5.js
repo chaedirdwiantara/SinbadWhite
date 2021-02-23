@@ -74,8 +74,8 @@ import {
                 styles.boxInput,
                 {
                   borderBottomColor: this.props.error
-                    ? Color.fontRed50
-                    : Color.fontBlack40
+                    ? Color.fontRed0
+                    : Color.fontBlack10
                 }
               ]}
             />
@@ -140,6 +140,7 @@ import {
       borderBottomWidth: 1,
       paddingHorizontal: 0,
       paddingVertical: 0,
+      paddingBottom: 16,
       borderBottomColor: Color.fontBlack40
     },
     boxError: {

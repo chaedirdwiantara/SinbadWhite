@@ -179,7 +179,7 @@ const SfaAddTagihanView = (props) => {
     return (
       <View style={{marginTop:16}}>
         <View>
-          <Text style={Fonts.type17}>Jumlah Penagihan</Text>
+          <Text style={Fonts.type10}>Jumlah Penagihan</Text>
         </View>
         <View style={[styles.boxInput, {flexDirection:"row", alignItems:"center"}]}>
           <TextInputMask
