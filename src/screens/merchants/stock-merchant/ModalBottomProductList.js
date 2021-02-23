@@ -122,7 +122,6 @@ class ModalBottomProductList extends Component {
                     selectedProduct.push(data.data.id)
                     dataForSaveProduct.push(dataObject)
                 }
-                console.log('selectedProduct ' + selectedProduct)
                 this.setState({ selectedProduct, dataForSaveProduct })
                 break;
             case 'search':
@@ -174,7 +173,6 @@ class ModalBottomProductList extends Component {
 
     /** ADD STOCK RECORD */
     addStockRecord(){
-        console.log(this.state.dataForSaveProduct)
         this.props.merchantAddStockRecordProcess({catalogues: this.state.dataForSaveProduct})
     }
     /**
@@ -256,7 +254,6 @@ class ModalBottomProductList extends Component {
 
     // RENDER TAG
     renderTags(){
-        console.log(this.state.tagsType)
         return (
             <TagListType3
                 selected={this.state.tagsType}

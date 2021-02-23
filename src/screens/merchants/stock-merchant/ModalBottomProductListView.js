@@ -89,7 +89,6 @@ class ModalBottomProductListView extends Component {
     }
 
     renderContent(){
-        console.log(this.props.pdp.dataGetMSSCatalogues)
         return (
             <View style={{ flex: 1 }}>
                 <View style={GlobalStyle.lines}/>

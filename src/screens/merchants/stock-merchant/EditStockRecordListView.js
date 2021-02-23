@@ -18,7 +18,8 @@ class EditStockRecordListView extends Component {
     constructor(props){
         super(props)
         this.state = {
-            data: this.props.data
+            data: this.props.data,
+            editData: []
         }
     }
     /** FUNCTION */
@@ -74,6 +75,13 @@ class EditStockRecordListView extends Component {
                                     keyboardType='numeric'
                                     returnKeyType='done'
                                     enablesReturnKeyAutomatically
+                                    onChangeText={qty => {
+                                        const shelfQty = qty.replace(/^0+(?!$)/g, '');
+                                        this.props.parentFunction({type: 'edit', data: {
+                                            stockId: item.id,
+                                            shelfQty
+                                        }})
+                                    }}
                                 />
                             </View>
                         </View>
@@ -93,6 +101,13 @@ class EditStockRecordListView extends Component {
                                     keyboardType='numeric'
                                     returnKeyType='done'
                                     enablesReturnKeyAutomatically
+                                    onChangeText={qty => {
+                                        const nonShelfQty = qty.replace(/^0+(?!$)/g, '');
+                                        this.props.parentFunction({ type: 'edit', data: {
+                                            stockId: item.id,
+                                            nonShelfQty
+                                        }})
+                                    }}
                                 />
                             </View>
                         </View>
@@ -115,7 +130,7 @@ class EditStockRecordListView extends Component {
         return (
             <FlatList 
                 contentContainerStyle={styles.flatListContainer}
-                data={this.state.data}
+                data={this.props.data}
                 renderItem={this.renderCardData.bind(this)}
                 keyExtractor={(item, index) => index.toString()}
             />
