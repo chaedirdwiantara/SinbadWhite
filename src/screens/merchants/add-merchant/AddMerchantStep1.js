@@ -77,11 +77,10 @@ class AddMerchantStep1 extends Component {
     ) {
       if (this.props.auth.errorCheckPhoneAvailble !== null) {
         this.setState({
-          errorPhoneNumber: true,
-          correctFormatPhoneNumber: true,
-          errorText: this.checkErrorMessage(
+          errorPhoneNumber: this.checkErrorMessage(
             this.props.auth.errorCheckPhoneAvailble
-          )
+          ),
+          correctFormatPhoneNumber: true
         });
       }
     }
@@ -92,7 +91,7 @@ class AddMerchantStep1 extends Component {
     if (error.code === 400) {
       return 'No. HP yang anda masukan sudah terdaftar';
     }
-    return 'Terjadi kesalahan server, silahkan coba lagi';
+    return 'Terjadi kesalahan pada server';
   }
   /** === PHONE NUMBER MODIFY === */
   checkPhone() {
