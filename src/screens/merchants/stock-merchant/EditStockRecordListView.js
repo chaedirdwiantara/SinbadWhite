@@ -17,60 +17,12 @@ import { Color } from '../../../config'
 class EditStockRecordListView extends Component {
     constructor(props){
         super(props)
-        this.state = {
-            mockData: [
-                {
-                    id: 1,
-                    catalogueCode: '1. SNB-CATALOGUE-22342',
-                    name: 'SGM EKSPLORE SOY 1-5TH MADU 400GR',
-                    showedStock: 400,
-                    nonShowedStock: 10,
-                    isExclusive: true
-                },
-                {
-                    id: 2,
-                    catalogueCode: '2. SNB-CATALOGUE-22321',
-                    name: 'SGM EKSPLORE SOY 1-5TH FNL 1000GR',
-                    showedStock: 10,
-                    nonShowedStock: 400,
-                    isExclusive: false
-                },
-                {
-                    id: 3,
-                    catalogueCode: '3. SNB-CATALOGUE-22342',
-                    name: 'SGM EKSPLORE SOY 1-5TH MADU 400GR',
-                    showedStock: 400,
-                    nonShowedStock: 10,
-                    isExclusive: true
-                },
-                {
-                    id: 4,
-                    catalogueCode: '4. SNB-CATALOGUE-22321',
-                    name: 'SGM EKSPLORE SOY 1-5TH FNL 1000GR',
-                    showedStock: 10,
-                    nonShowedStock: 400,
-                    isExclusive: false
-                },
-                {
-                    id: 5,
-                    catalogueCode: '5. SNB-CATALOGUE-22342',
-                    name: 'SGM EKSPLORE SOY 1-5TH MADU 400GR',
-                    showedStock: 400,
-                    nonShowedStock: 10,
-                    isExclusive: true
-                },
-                {
-                    id: 6,
-                    catalogueCode: '6. SNB-CATALOGUE-22321',
-                    name: 'SGM EKSPLORE SOY 1-5TH FNL 1000GR',
-                    showedStock: 10,
-                    nonShowedStock: 400,
-                    isExclusive: false
-                }
-            ]
-        }
+        this.state = {}
     }
     /** FUNCTION */
+    deleteStockRecord(id){
+        this.props.parentFunction({ type: 'delete', data: id})
+    }
     /** RENDER VIEW */
     /** RENDER MSS TYPE ICON */
     renderMSSType(){
@@ -145,7 +97,7 @@ class EditStockRecordListView extends Component {
                     </View>
                 </View>
                 <View style={{ position: 'absolute', marginTop: 16, right: 16}}>
-                    <TouchableOpacity onPress={() => console.log('Delete Catalogue')}>
+                    <TouchableOpacity onPress={() => this.deleteStockRecord(item.id)}>
                         <MaterialIcon 
                             name={'delete'}
                             size={24}
@@ -161,7 +113,7 @@ class EditStockRecordListView extends Component {
         return (
             <FlatList 
                 contentContainerStyle={styles.flatListContainer}
-                data={this.state.mockData}
+                data={this.props.data}
                 renderItem={this.renderCardData.bind(this)}
                 keyExtractor={(item, index) => index.toString()}
             />
