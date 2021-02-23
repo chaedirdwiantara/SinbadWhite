@@ -159,6 +159,22 @@ function updateSurvey({ params, surveyResponseId }) {
      method: 'GET'
    })
  }
+ /** DELETE RECORD STOCK */
+ function deleteRecordStock(id){
+   return ApiRest({
+     path: `stock-record/${id}`,
+     method: 'DELETE'
+   })
+ }
+
+ /** UPDATE RECORD STOCK */
+ function updateRecordStock(params){
+  return ApiRest({
+    path: 'update-stock-record',
+    method: 'POST',
+    params
+  })
+ }
 
 export const MerchantMethod = {
   getMerchant,
@@ -178,7 +194,9 @@ export const MerchantMethod = {
   submitSurvey,
   updateSurvey,
   addRecordStock,
-  getRecordStock
+  getRecordStock,
+  deleteRecordStock,
+  updateRecordStock
 };
 
 /**

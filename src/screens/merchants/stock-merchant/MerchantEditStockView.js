@@ -28,6 +28,7 @@ import {
   import GlobalFont from '../../../helpers/GlobalFont'
   import * as ActionCreators from '../../../state/actions'
   import EditStockRecordListView from './EditStockRecordListView'
+  import ModalBottomProductList from './ModalBottomProductList'
 
   class MerchantEditStockView extends Component {
       constructor(props){
@@ -37,7 +38,10 @@ import {
               openModalBackConfirmation: false,
               openModalSaveConfirmation: false,
               openModalProductList: false,
-              search: ''
+              selectedProduct: [],
+              dataForSaveProduct: [],
+              search: '',
+              data: this.props.merchant.dataGetRecordStock
           }
       }
           /** HEADER CONFIG */
@@ -75,6 +79,46 @@ import {
             )
         }
     }
+    /** FUNCTION */
+    componentDidMount(){
+        this.navigationFunction()
+        this.getRecordStock()
+    }
+    componentWillUnmount(){
+        BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackPress)
+    }
+    componentDidUpdate(prevProps){
+        // To Delete Catalogue
+        if(prevProps.merchant.dataDeleteRecordStock !== this.props.merchant.dataDeleteRecordStock){
+            if(this.props.merchant.dataDeleteRecordStock.success ){
+                this.props.merchantDeleteStockRecordReset()
+                this.getRecordStock(this.state.search)
+            }
+        }
+        // To get Catalouge after add new Catalogue
+        if(prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock){
+            if(this.props.merchant.dataAddRecordStock.success){
+                this.getRecordStock()
+                this.setState({ openModalProductList: false })
+            }
+        }
+
+        // To get catalogue after update
+        if(prevProps.merchant.dataUpdateRecordStock !== this.props.merchant.dataUpdateRecordStock){
+            if(this.props.merchant.dataUpdateRecordStock.success){
+                this.props.merchantUpdateStockRecordReset()
+                this.getRecordStock()
+                // this.getRecordStockActivity()
+                NavigationService.navigate('MerchantStockView')
+            }
+        }
+
+        if(prevProps.merchant.dataGetRecordStock !== this.props.merchant.dataGetRecordStock){
+            if(this.props.merchant.dataGetRecordStock.length < 0){
+                NavigationService.navigate('MerchantStockView')
+            }
+        }
+    }
     /**
      * =======================
      * NAVIGATION FUNCTION
@@ -91,13 +135,7 @@ import {
         );
     }
 
-    /** FUNCTION */
-    componentDidMount(){
-        this.navigationFunction()
-    }
-    componentWillUnmount(){
-        BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackPress)
-    }
+    
     /** === BACK BUTTON RN PRESS HANDLING === */
     handleBackPress = () => {
         this.setState({ openModalBackConfirmation: true });
@@ -109,13 +147,28 @@ import {
     };
     /** === OPEN MODAL PRODUCT LIST === */
     openModalProductList = () => {
-        console.log('Open Modal Product List')
         this.setState({ openModalProductList: true })
     }
     /** === OPEN MODAL SAVE STOCK */
     openModalSaveStock() {
         this.setState({ openModalSaveConfirmation: true })
-        this.saveStockRecord()
+    }
+    /** GET RECORD LIST */
+    getRecordStock(keyword){
+        this.props.merchantGetStockRecordProcess({
+            search: keyword || ''
+        })
+        setTimeout(() => {
+            this.setState({ data: this.props.merchant.dataGetRecordStock })
+        }, 100)
+    }
+    getRecordStockActivity(){
+        const journeyPlanSaleId = this.props.merchant.selectedMerchant.journeyPlanSaleId;
+    
+        this.props.merchantPostActivityProcess({
+            journeyPlanSaleId,
+            activity: 'record_stock'
+          })
     }
     
     /** PARENT FUNCTION */
@@ -123,19 +176,60 @@ import {
         switch (data.type) {
             case 'search':
                 this.setState({ search: data.data })
-                console.log(data.data)
-                break;       
+                this.getRecordStock(data.data)
+                break;
+            case 'delete':
+                this.props.merchantDeleteStockRecordProcess(data.data)
+                break;
+            case 'edit':
+                const catalogueIndex = this.state.data.findIndex(item => item.id === data.data.stockId)
+
+                const newCatalogueArray = [...this.state.data]
+
+                if(data.data.hasOwnProperty('shelfQty')){
+                    newCatalogueArray[catalogueIndex] = {
+                        ...newCatalogueArray[catalogueIndex],
+                        showedStock: data.data.shelfQty
+                    }
+                }
+                if(data.data.hasOwnProperty('nonShelfQty')){
+                    newCatalogueArray[catalogueIndex] = {
+                        ...newCatalogueArray[catalogueIndex],
+                        nonShowedStock: data.data.nonShelfQty
+                    }
+                }
+                const dataForSaveProduct = []
+        
+                newCatalogueArray.map((item, index) => {
+                    const object = {
+                        id: parseInt(item.id),
+                        showedStock: parseInt(item.showedStock),
+                        nonShowedStock: parseInt(item.nonShowedStock)
+                    }
+                    dataForSaveProduct.push(object)
+                })
+                this.setState({
+                    data: newCatalogueArray,
+                    dataForSaveProduct
+                })
+                break;  
             default:
                 break;
         }
     }
     // SAVE STOCK RECORD
     saveStockRecord(){
-        console.log('Save Stock Record')
+        if(this.state.dataForSaveProduct > 0){
+            this.props.merchantUpdateStockRecordProcess(this.state.dataForSaveProduct)
+        } else {
+            // this.getRecordStockActivity()
+            NavigationService.navigate('MerchantStockView')
+        }
     }
     // RENDER CONTENT
     renderContent(){
-        return this.state.mockData ? (
+        return this.props.merchant.loadingGetRecordStock === false
+            && this.props.merchant.dataGetRecordStock.length > 0 ? (
             this.renderData()
         ) : (
             <LoadingPage />
@@ -144,15 +238,28 @@ import {
     /** RENDER VIEW */
     // RENDER CARD View
     renderCardView(){
-        return(
+        return this.state.data.length > 0 ? (
             <View>
-                <EditStockRecordListView />
+                <EditStockRecordListView 
+                    data={this.state.data}
+                    onRef={ref => (this.parentFunction = ref)}
+                    parentFunction={this.parentFunction.bind(this)}
+                />
             </View>
+        ) : (
+            this.renderEmptyCatalogue()
+        )
+    }
+    renderEmptyCatalogue(){
+        return this.props.merchant.dataGetRecordStock.length < 0 ? (
+            NavigationService.navigate('MerchantStockView')
+        ) : (
+            <LoadingPage />
         )
     }
     // RENDER DATA
     renderData(){
-        return(
+        return (
             <View style={{backgroundColor: masterColor.backgroundWhite, flex: 1}}>
                 {this.renderSearch()}
                 {this.renderCardView()}
@@ -198,12 +305,11 @@ import {
                 content={'Anda belum menyimpan catatan stok saat ini konfirmasi penyimpanan catatan sebelum meninggalkan halaman ini'}
                 type={'okeNotRed'}
                 leftAction={() => {
-                    console.log('Keluar')
                     this.setState({ openModalBackConfirmation: false })
                     // Some function to go back
+                    NavigationService.navigate('MerchantStockView')
                 }}
                 rightAction={() => {
-                    console.log('Kembali')
                     this.setState({ openModalBackConfirmation: false })
                 }}
             />
@@ -223,12 +329,12 @@ import {
                 type={'okeNotRed'}
                 content={'Menyimpan perubahan record stock akan menghapus seluruh pengisian quesioner yang telah dilakukan \n \n Apakah anda ingin melanjutkan penyimpanan?'}
                 leftAction={() => {
-                    console.log('Hapus dan keluar')
+                    NavigationService.navigate('MerchantStockView')
                     this.setState({ openModalSaveConfirmation: false })
                     // Some function to save
                 }}
                 rightAction={() => {
-                    console.log('Ya, Simpan')
+                    this.saveStockRecord()
                     this.setState({ openModalSaveConfirmation: false })
                 }}
               />
@@ -236,6 +342,22 @@ import {
               <View />
           )
       }
+    // RENDER MODAL PRODUCT LIST
+    renderModalProductList(){
+        return this.state.openModalProductList ? (
+            <ModalBottomProductList 
+                open={this.state.openModalProductList}
+                close={() => {
+                    this.setState({ openModalProductList: false })
+                    this.props.getMSSCataloguesReset()
+                }}
+                onRef={ref => (this.parentFunction = ref)}
+                parentFunction={this.parentFunction.bind(this)}
+            />
+        ) : (
+            <View />
+        )
+    }
       /** MAIN RENDER */
       render(){
           return(
@@ -249,6 +371,7 @@ import {
                   {/* MODAL */}
                   {this.renderModalBackConfirmation()}
                   {this.renderModalSaveConfirmation()}
+                  {this.renderModalProductList()}
               </SafeAreaView>
           )
       }

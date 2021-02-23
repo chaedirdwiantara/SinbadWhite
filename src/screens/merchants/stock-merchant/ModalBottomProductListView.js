@@ -89,7 +89,6 @@ class ModalBottomProductListView extends Component {
     }
 
     renderContent(){
-        console.log(this.props.pdp.dataGetMSSCatalogues)
         return (
             <View style={{ flex: 1 }}>
                 <View style={GlobalStyle.lines}/>
@@ -129,7 +128,7 @@ class ModalBottomProductListView extends Component {
                 >
                     <View style={{ marginBottom: 8 }}>
                         <Text style={[Fonts.type37]}>
-                            {item.skuCode} {item.mss ? this.renderMSSType() : <View />}
+                            {item.skucode} {item.mss ? this.renderMSSType() : <View />}
                         </Text>
                     </View>
                     <View>
@@ -144,7 +143,7 @@ class ModalBottomProductListView extends Component {
                         size={24}
                         color={
                             this.props.selectedProduct.indexOf(item.id) > -1
-                            ? Color.fontGreen50
+                            ? Color.mainColor
                             : Color.fontBlack40
                         }
                     />

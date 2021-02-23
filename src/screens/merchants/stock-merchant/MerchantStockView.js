@@ -13,7 +13,8 @@ import {
     EmptyData,
     ButtonFloatType1,
     SearchBarType4,
-    ButtonSingle
+    ButtonSingle,
+    LoadingPage
 } from '../../../library/component'
 import {
     bindActionCreators,
@@ -131,11 +132,20 @@ class MerchantStockView extends Component {
         )
     }
     // RENDER CONTENT
-    renderContent(){
-        return this.props.merchant.dataGetRecordStock.length > 0 ? (
+    renderContentBody(){
+        return this.props.merchant.dataGetRecordStock.length > 0  ? (
             this.renderData()
         ) : (
             this.renderDataEmpty()
+        )
+    }
+
+    // RENDER
+    renderContent(){
+        return this.props.merchant.loadingGetRecordStock ? (
+            <LoadingPage />
+        ) : (
+            this.renderContentBody()
         )
     }
     // Render Button
@@ -174,10 +184,6 @@ class MerchantStockView extends Component {
     render(){
         return(
             <SafeAreaView style={styles.mainContainer}>
-                <BackHandlerBackSpecific 
-                    navigation={this.props.navigation}
-                    page={'MerchantStockView'}
-                />
                 <StatusBarWhite />
                 {this.renderContent()}
                 {/* Render Modal */}
@@ -190,7 +196,7 @@ class MerchantStockView extends Component {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: masterColor.mainColor
+        backgroundColor: masterColor.backgroundWhite
     },
     containerFloatButton: {
         width: '100%',

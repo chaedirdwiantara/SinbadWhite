@@ -26,7 +26,6 @@ import { Fonts } from '../../../helpers'
 import * as ActionCreators from '../../../state/actions'
 const { height } = Dimensions.get('window')
 import ModalBottomProductListView from './ModalBottomProductListView'
-import { TextInputMaskMethods } from 'react-native-masked-text'
 import NavigationService from '../../../navigation/NavigationService'
 
 class ModalBottomProductList extends Component {
@@ -109,7 +108,6 @@ class ModalBottomProductList extends Component {
     parentFunction(data){
         switch (data.type) {
             case 'stock':
-                console.log('Add SKU to Stock')
                 const selectedProduct = this.state.selectedProduct
                 const dataForSaveProduct = this.state.dataForSaveProduct
                 const indexSelectedProduct = selectedProduct.indexOf(data.data.id)
@@ -175,7 +173,6 @@ class ModalBottomProductList extends Component {
 
     /** ADD STOCK RECORD */
     addStockRecord(){
-        console.log(this.state.dataForSaveProduct)
         this.props.merchantAddStockRecordProcess({catalogues: this.state.dataForSaveProduct})
     }
     /**
@@ -257,7 +254,6 @@ class ModalBottomProductList extends Component {
 
     // RENDER TAG
     renderTags(){
-        console.log(this.state.tagsType)
         return (
             <TagListType3
                 selected={this.state.tagsType}
