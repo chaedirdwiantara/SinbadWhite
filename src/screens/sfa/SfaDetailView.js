@@ -217,16 +217,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ user, merchant, sfa }) => {
-  return { user, merchant, sfa };
-};
-
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
 export default connect(
-  mapStateToProps,
   mapDispatchToProps
 )(SfaDetailView);
 // export default DMSView;
