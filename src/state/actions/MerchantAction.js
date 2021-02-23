@@ -442,3 +442,26 @@ export function merchantDeleteStockRecordFailed(data){
 export function merchantDeleteStockRecordReset(){
   return { type: types.MERCHANT_DELETE_STOCK_RECORD_RESET}
 }
+/**
+ * =====================
+ * UPDATE STOCK RECORD
+ * =====================
+ */
+export function merchantUpdateStockRecordProcess(data){
+  return { type: types.MERCHANT_UPDATE_STOCK_RECORD_PROCESS, payload: data}
+}
+export function merchantUpdateStockRecordSuccess(data){
+  if (data.result === 'Ok'){
+    return {
+      type: types.MERCHANT_UPDATE_STOCK_RECORD_SUCCESS,
+      payload: data.data
+    }
+  }
+  return { type: types.MERCHANT_UPDATE_STOCK_RECORD_FAILED, payload: data}
+}
+export function merchantUpdateStockRecordFailed(data){
+  return { type: types.MERCHANT_UPDATE_STOCK_RECORD_FAILED, payload: data}
+}
+export function merchantUpdateStockRecordReset(){
+  return { type: types.MERCHANT_UPDATE_STOCK_RECORD_RESET}
+}

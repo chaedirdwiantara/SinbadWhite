@@ -101,3 +101,8 @@ export const MERCHANT_DELETE_STOCK_RECORD_PROCESS = 'MerchantDeleteStockRecordPr
 export const MERCHANT_DELETE_STOCK_RECORD_SUCCESS = 'MerchantDeleteStockRecordSuccess'
 export const MERCHANT_DELETE_STOCK_RECORD_FAILED = 'MerchantDeleteStockRecordFailed'
 export const MERCHANT_DELETE_STOCK_RECORD_RESET = 'MerchantDeleteStockRecordReset'
+/** MERCHANT UPDATE STOCK RECORD */
+export const MERCHANT_UPDATE_STOCK_RECORD_PROCESS = 'MerchantUpdateStockRecordProcess'
+export const MERCHANT_UPDATE_STOCK_RECORD_SUCCESS = 'MerhcantUpdateStockRecordSuccess'
+export const MERCHANT_UPDATE_STOCK_RECORD_FAILED = 'MerchantUpdateStockRecordFailed'
+export const MERCHANT_UPDATE_STOCK_RECORD_RESET = 'MerchantUpdateStockRecordReset'

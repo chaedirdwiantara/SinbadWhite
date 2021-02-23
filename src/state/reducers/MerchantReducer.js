@@ -1,3 +1,4 @@
+import styles from '../../helpers/GlobalFont';
 import * as types from '../types';
 import createReducer from './createReducer';
 
@@ -23,6 +24,7 @@ const INITIAL_STATE = {
   loadingAddRecordStock: false,
   loadingGetRecordStock: false,
   loadingDeleteRecordStock: false,
+  loadingUpdateRecordStock: false,
   /** data */
   dataPostActivity: null,
   dataGetLogAllActivity: null,
@@ -138,6 +140,7 @@ const INITIAL_STATE = {
   dataAddRecordStock: {},
   dataGetRecordStock: [],
   dataDeleteRecordStock: {},
+  dataUpdateRecordStock: {},
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
@@ -156,7 +159,8 @@ const INITIAL_STATE = {
   errorSubmitSurvey: null,
   errorAddRecordStock: null,
   errorGetRecordStock: null,
-  errorDeleteRecordStock: null
+  errorDeleteRecordStock: null,
+  errorUpdateRecordStock: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -884,6 +888,40 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       dataDeleteRecordStock: {}
+    }
+  },
+  /**
+   * ====================
+   * UPDATE RECORD STOCK
+   * ====================
+   */
+  [types.MERCHANT_UPDATE_STOCK_RECORD_PROCESS](state, action){
+    return {
+      ...state,
+      loadingUpdateRecordStock: true,
+      dataUpdateRecordStock: {},
+      errorDeleteRecordStock: null
+    }
+  },
+  [types.MERCHANT_UPDATE_STOCK_RECORD_SUCCESS](state, action){
+    return {
+      ...state,
+      loadingUpdateRecordStock: false,
+      dataUpdateRecordStock: action.payload,
+      errorUpdateRecordStock: null
+    }
+  },
+  [types.MERCHANT_UPDATE_STOCK_RECORD_FAILED](state, action){
+    return {
+      ...state,
+      loadingUpdateRecordStock: false,
+      errorUpdateRecordStock: action.payload
+    }
+  },
+  [types.MERCHANT_UPDATE_STOCK_RECORD_RESET](state, action){
+    return {
+      ...state,
+      dataUpdateRecordStock: {}
     }
   }
 });
