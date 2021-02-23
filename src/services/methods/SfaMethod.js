@@ -10,9 +10,9 @@ function getCollectionStatus(data) {
   }
 
 /** GET ORDER STATUS */
-function getSfaDetail(data) {
+function getSfaDetail(orderParcelId) {
   return ApiRest({
-    path: 'collection/v1/order-parcel/3832',
+    path: `collection/v1/order-parcel/${orderParcelId}`,
     method: 'GET'
   });
 }

@@ -13,7 +13,8 @@ import {
 } from '../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
-  ButtonSingle
+  ButtonSingle, 
+  LoadingPage
 } from '../../library/component';
 import {
   sfaGetDetailProcess,
@@ -222,9 +223,10 @@ function SfaDetailView(props) {
    * =======================
    */
   console.log("ordeParcelId:", props.navigation.state.params.orderParcelId);
+  console.log("ini data:", props);
   return (
     <>
-      {/* {props.merchant.dataGetMerchantDetail ? ( */}
+      {props.sfa.dataSfaGetDetail ? (
         <SafeAreaView style={styles.mainContainer}>
           <StatusBarWhite />
           <ScrollView style={{ flex: 1}}>
@@ -232,9 +234,9 @@ function SfaDetailView(props) {
           </ScrollView>
           {renderAddCollection()}
         </SafeAreaView>
-      {/* ) : (
+       ) : (
         <LoadingPage />
-      )} */}
+      )} 
     </>
   );
 }
@@ -256,8 +258,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ user, merchant }) => {
-  return { user, merchant };
+const mapStateToProps = ({ user, merchant, sfa }) => {
+  return { user, merchant, sfa };
 };
 
 const mapDispatchToProps = dispatch => {
