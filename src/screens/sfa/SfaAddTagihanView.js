@@ -31,7 +31,7 @@ const SfaAddTagihanView = (props) => {
   const [collectionMethod, setCollectionMethod] = useState(null)
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false)
   const [cash, setCash] = useState(0)
-  const [methodStatus, setMethodStatus] = useState('available')
+  const [methodStatus, setMethodStatus] = useState('unavailable')
   const [data, setData] = useState(
     {
       "data": {

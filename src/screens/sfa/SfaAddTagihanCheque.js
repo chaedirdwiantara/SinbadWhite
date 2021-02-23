@@ -10,7 +10,7 @@ import {
   TextInput
 } from '../../library/reactPackage';
 import { TextInputMask } from 'react-native-masked-text';
-import { MaterialIcon, moment } from '../../library/thirdPartyPackage';
+import { MaterialIcon, moment, MaterialCommunityIcons } from '../../library/thirdPartyPackage';
 import { InputType5 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
@@ -22,6 +22,7 @@ const SfaAddTagihanCheque = props => {
   const [invalidDate, setInvalidDate] = useState(new Date())
   const [balance, setBalance] = useState(0)
   const [collection, setCollection] = useState(0)
+  const [checkMaterai,setCheckMaterai] = useState(false)
   return (
     <>
       <View>
@@ -175,6 +176,56 @@ const SfaAddTagihanCheque = props => {
         </View>
         </View>
         <View  style={GlobalStyle.lines}/>
+        <View>
+        <Text style={[Fonts.type10, {paddingTop: 16}]}>
+            {status === 'available' ? null : 'Materai'}
+          </Text>
+          <View style={{flexDirection: 'row', alignItems:'center', paddingVertical: 16}}>
+          <TouchableOpacity
+                onPress={() =>
+                  setCheckMaterai(!checkMaterai)
+                }
+                style={{flex: 1}}
+              >
+                {checkMaterai ? (
+                  <MaterialCommunityIcons
+                    color={masterColor.mainColor}
+                    name="checkbox-marked"
+                    size={24}
+                  />
+                ) : (
+                  <MaterialCommunityIcons
+                    color={masterColor.fontBlack40}
+                    name="checkbox-blank-outline"
+                    size={24}
+                  />
+                )}
+              </TouchableOpacity>
+              <View style={{flex: 8}}>
+              <TouchableOpacity
+              onPress={() => console.log('open bank list')}
+              style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}
+            >
+              <Text
+                style={[
+                  Fonts.type17
+                ]}
+              >
+                {bankSource === '' ? 'Pilih Nilai Materai' : bankSource.name}
+              </Text>
+              <View>
+                <MaterialIcon
+                  name="chevron-right"
+                  color={masterColor.fontBlack40}
+                  size={24}
+                />
+              </View>
+            </TouchableOpacity>
+            <View style={[GlobalStyle.lines, {marginTop:8}]}/>
+              </View>
+          </View>
+          
+        </View>
       </View>
     </>
   );
