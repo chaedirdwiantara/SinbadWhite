@@ -24,12 +24,14 @@ import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch } from 'react-redux';
 import ModalCollectionMethod from'./ModalCollectionMethod'
+import SfaAddTagihanCheque from './SfaAddTagihanCheque';
 
-function SfaAddTagihanView(props) {
+const SfaAddTagihanView = (props) => {
   const dispatch = useDispatch();
   const [collectionMethod, setCollectionMethod] = useState(null)
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false)
   const [cash, setCash] = useState(0)
+  const [methodStatus, setMethodStatus] = useState('available')
   const [data, setData] = useState(
     {
       "data": {
@@ -51,6 +53,7 @@ function SfaAddTagihanView(props) {
    * =======================
    */
   const selectedCollectionMethod = (data) => {
+    console.log(data, 'data clicked');
     setCollectionMethod(data)
     setOpenCollectionMethod(false)
   }
@@ -59,6 +62,9 @@ function SfaAddTagihanView(props) {
     if (collectionMethod !== null) {
       if (collectionMethod.code === "cash") {
         return renderBillingCash()
+      }
+      if(collectionMethod.code === 'cheque'){
+        return renderBillingCheque()
       }
     }
   } 
@@ -139,7 +145,7 @@ function SfaAddTagihanView(props) {
             </View>
             <View style={[GlobalStyle.lines, { flex: 1, marginTop: 8, marginBottom: 16 }]} />
             <View>
-              <Text style={Fonts.type17}>Metode Penagihan</Text>
+              <Text style={Fonts.type10}>Metode Penagihan</Text>
             </View>
             <View>
               <TouchableOpacity
@@ -200,6 +206,10 @@ function SfaAddTagihanView(props) {
     )
   } 
 
+/** RENDER CHEQUE PAYMENT */
+const renderBillingCheque = () => {
+return <SfaAddTagihanCheque status={methodStatus}/>
+}
   /**
    * =======================
    * MODAL

@@ -22,6 +22,7 @@ import InputType1 from '../components/input/InputType1';
 import InputType2 from '../components/input/InputType2';
 import InputType3 from '../components/input/InputType3';
 import InputType4 from '../components/input/inputType4';
+import InputType5 from '../components/input/inputType5';
 /** INPUT MAPS (PIN POINT) */
 import InputMapsType1 from '../components/input/InputMapsType1';
 import InputMapsType2 from '../components/input/InputMapsType2';
@@ -134,6 +135,7 @@ export {
   InputType2,
   InputType3,
   InputType4,
+  InputType5,
   /** INPUT MAPS (PIN POINT) */
   InputMapsType1,
   InputMapsType2,
