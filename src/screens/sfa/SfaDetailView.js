@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -15,6 +15,9 @@ import {
   StatusBarWhite,
   ButtonSingle
 } from '../../library/component';
+import {
+  sfaGetDetailProcess,
+} from '../../state/actions';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
@@ -75,6 +78,11 @@ function SfaDetailView(props) {
   const addCollection = () => {
     NavigationService.navigate('SfaAddTagihanView')
   }
+
+  useEffect(() => {
+    const orderParcelId = parseInt(props.navigation.state.params.orderParcelId);
+    dispatch(sfaGetDetailProcess(orderParcelId));
+  }, [dispatch]);
 
   /**
    * *********************************
@@ -213,6 +221,7 @@ function SfaDetailView(props) {
    * MAIN
    * =======================
    */
+  console.log("ordeParcelId:", props.navigation.state.params.orderParcelId);
   return (
     <>
       {/* {props.merchant.dataGetMerchantDetail ? ( */}

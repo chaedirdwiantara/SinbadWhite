@@ -14,11 +14,24 @@ function* getSfaCollectionStatus(actions) {
       yield put(ActionCreators.sfaGetCollectionStatusFailed(error));
     }
   }
+
+/** GET SFA DETAIL */
+function* getSfaDetail(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getSfaDetail(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetDetailSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetDetailFailed(error));
+  }
+}
   function* SfaSaga() {
     yield takeEvery(
       types.SFA_GET_COLLECTION_STATUS_PROCESS,
       getSfaCollectionStatus
     )
+    yield takeEvery(types.SFA_GET_DETAIL_PROCESS, getSfaDetail);
 }
 
 export default SfaSaga;

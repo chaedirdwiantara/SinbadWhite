@@ -4,10 +4,13 @@ import createReducer from './createReducer';
 const INITIAL_STATE = {
 /** loading */
 loadingGetCollectionStatus: false,
+loadingSfaGetDetail: false,
 /** data */
 dataGetCollectionStatus: null,
+dataSfaGetDetail: null,
 /** error */
-errorGetCollectionStatus: null
+errorGetCollectionStatus: null,
+errorSfaGetDetail: null,
 }
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -36,6 +39,33 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetCollectionStatus: false,
       errorGetCollectionStatus: action.payload
+    };
+  },
+     /**
+   * ==========================
+   * GET SFA DETAIL
+   * ==========================
+   */
+  [types.SFA_GET_DETAIL_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetDetail: true,
+      dataSfaGetDetail: null,
+      errorSfaGetDetail: null
+    };
+  },
+  [types.SFA_GET_DETAIL_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetDetail: false,
+      dataSfaGetDetail: action.payload
+    };
+  },
+  [types.SFA_GET_DETAIL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaGetDetail: false,
+      errorSfaGetDetail: action.payload
     };
   },
 })

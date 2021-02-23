@@ -48,6 +48,7 @@ function SfaView(props) {
   const [data, setData] = useState({
     data: [
       {
+        id: 3832,
         invoice: 'COMBINE',
         orderCode: 'S0100042273101076686',
         orderRef: 'SNB1812/0002134',
@@ -58,6 +59,7 @@ function SfaView(props) {
         paymentStatus: 'waiting_for_payment'
       },
       {
+        id: 3832,
         invoice: 'TIGA RAKSA #2',
         orderCode: 'S0213042273101076686',
         orderRef: 'SNB1815/0002135',
@@ -68,6 +70,7 @@ function SfaView(props) {
         paymentStatus: 'overdue'
       },
       {
+        id: 3832,
         invoice: 'TIGA RAKSA #2',
         orderCode: 'S0213042273101076686',
         orderRef: 'SNB1815/0002135',
@@ -78,6 +81,7 @@ function SfaView(props) {
         paymentStatus: 'waiting_for_payment'
       },
       {
+        id: 3832,
         invoice: 'TIGA RAKSA #2',
         orderCode: 'S0213042273101076686',
         orderRef: 'SNB1815/0002135',
