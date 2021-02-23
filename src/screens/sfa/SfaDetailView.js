@@ -23,10 +23,11 @@ import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch , useSelector} from 'react-redux';
 
 function SfaDetailView(props) {
   const dispatch = useDispatch();
+  const { dataSfaGetDetail } = useSelector(state => state.sfa);
   /**
    * =======================
    * FUNCTIONAL
@@ -61,7 +62,7 @@ function SfaDetailView(props) {
   }
 
   const renderItemFakturInfo = () => {
-    const detailSfa = props.sfa.dataSfaGetDetail.data
+    const detailSfa = dataSfaGetDetail.data
     return (
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
@@ -101,7 +102,7 @@ function SfaDetailView(props) {
   }
 
   const renderItemCollectionInfo = () => {
-    const detailSfa = props.sfa.dataSfaGetDetail.data
+    const detailSfa = dataSfaGetDetail.data
     return (
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
@@ -121,7 +122,7 @@ function SfaDetailView(props) {
   }
 
   const renderCollectionDetail = () => {
-    return props.sfa.dataSfaGetDetail.data.collections.map((item, index) => {
+    return dataSfaGetDetail.data.collections.map((item, index) => {
       return (
         <View key={index} style={{marginLeft:8}}>
           <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
@@ -144,7 +145,7 @@ function SfaDetailView(props) {
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Outstanding</Text>
-          <Text style={Fonts.type22}>{MoneyFormat(props.sfa.dataSfaGetDetail.data.remainingBilling)}</Text>
+          <Text style={Fonts.type22}>{MoneyFormat(dataSfaGetDetail.data.remainingBilling)}</Text>
         </View>
       </View>
     )
@@ -184,7 +185,7 @@ function SfaDetailView(props) {
    */
   return (
     <>
-      {props.sfa.dataSfaGetDetail ? (
+      {dataSfaGetDetail ? (
         <SafeAreaView style={styles.mainContainer}>
           <StatusBarWhite />
           <ScrollView style={{ flex: 1}}>
