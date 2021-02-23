@@ -11,7 +11,11 @@ import {
 } from '../../library/reactPackage';
 import { TextInputMask } from 'react-native-masked-text';
 import { MaterialIcon, moment } from '../../library/thirdPartyPackage';
-import { InputType5 } from '../../library/component';
+import { 
+  InputType5, 
+  DatePickerSpinnerWithMinMaxDate, 
+  ModalBottomType4 
+} from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 const SfaAddTagihanCheque = props => {
@@ -22,6 +26,69 @@ const SfaAddTagihanCheque = props => {
   const [invalidDate, setInvalidDate] = useState(new Date())
   const [balance, setBalance] = useState(0)
   const [collection, setCollection] = useState(0)
+  const [openModalPublishDate, setOpenModalPublishDate] = useState(false)
+  const [openModalDueDate, setOpenModalDueDate] = useState(false)
+
+  /**
+   * =======================
+   * FUNCTIONAL
+   * =======================
+   */
+  const openPublishDate = () => {
+    setOpenModalPublishDate(true)
+  }
+
+  const openDueDate = () => {
+    setOpenModalDueDate(true)
+  }
+
+  /**
+   * *********************************
+   * RENDER VIEW
+   * *********************************
+   */
+  const renderPublishDate = () => {
+    return(
+      <ModalBottomType4
+        typeClose={'Tutup'}
+        open={openModalPublishDate}
+        title={"Tanggal Terbit"}
+        close={() => setOpenModalPublishDate(false)}
+        content={
+          <View>
+            <DatePickerSpinnerWithMinMaxDate
+             onSelect={(date)=> alert(date)}
+             close={() => setOpenModalPublishDate(false)}
+             minDate={new Date("2021-02-20")}
+            //  maxDate={new Date("2021-02-25")}
+            />
+          </View>
+        }
+      />
+    )
+  }
+
+  const renderDueDate = () => {
+    return(
+      <ModalBottomType4
+        typeClose={'Tutup'}
+        open={openModalDueDate}
+        title={"Tanggal Jatuh Tempo"}
+        close={() => setOpenModalDueDate(false)}
+        content={
+          <View>
+            <DatePickerSpinnerWithMinMaxDate
+             onSelect={(date)=> alert(date)}
+             close={() => setOpenModalDueDate(false)}
+            //  minDate={new Date("2021-02-20")}
+             maxDate={new Date("2021-02-25")}
+            />
+          </View>
+        }
+      />
+    )
+  }
+
   return (
     <>
       <View>
@@ -73,7 +140,7 @@ const SfaAddTagihanCheque = props => {
           </Text>
           <TouchableOpacity
               style={style.boxMenu}
-              onPress={() => console.log('open bank list')}
+              onPress={() => openPublishDate()}
             >
                  <View style={{flexDirection:'row', alignItems:'center'}}>
                 <MaterialIcon
@@ -102,7 +169,7 @@ const SfaAddTagihanCheque = props => {
           </Text>
           <TouchableOpacity
               style={style.boxMenu}
-              onPress={() => console.log('open bank list')}
+              onPress={() => openDueDate()}
             >
                  <View style={{flexDirection:'row', alignItems:'center'}}>
                 <MaterialIcon
@@ -176,6 +243,8 @@ const SfaAddTagihanCheque = props => {
         </View>
         <View  style={GlobalStyle.lines}/>
       </View>
+      {renderPublishDate()}
+      {renderDueDate()}
     </>
   );
 };

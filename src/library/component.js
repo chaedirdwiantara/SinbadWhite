@@ -96,6 +96,7 @@ import TagListType1 from '../components/tag/TagListType1';
 import TagListType2 from '../components/tag/TagListType2';
 /** DATE PICKER SPINNER */
 import DatePickerSpinner from '../components/DatePickerSpinner';
+import DatePickerSpinnerWithMinMaxDate from "../components/DatePickerSpinnerWithMinMaxDate";
 /** SELECTED MERCHANT */
 import SelectedMerchantName from '../components/SelectedMerchantName';
 /** ERROR BOUNDARY */
@@ -207,6 +208,7 @@ export {
   TagListType2,
   /** DATE PICKER SPINNER */
   DatePickerSpinner,
+  DatePickerSpinnerWithMinMaxDate,
   /** SELECTED MERCHANT NAME */
   SelectedMerchantName,
   /** Error Boundary */
