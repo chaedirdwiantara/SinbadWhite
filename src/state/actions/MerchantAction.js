@@ -419,3 +419,26 @@ export function merchantGetStockRecordSuccess(data){
 export function merchantGetStockRecordFailed(data){
   return { type: types.MERCHANT_GET_STOCK_RECORD_FAILED, payload: data}
 }
+/**
+ * =======================
+ * DELETE STOCK RECORD
+ * =======================
+ */
+export function merchantDeleteStockRecordProcess(data){
+  return { type: types.MERCHANT_DELETE_STOCK_RECORD_PROCESS, payload: data}
+}
+export function merchantDeleteStockRecordSuccess(data){
+  if (data.result === 'Ok'){
+    return {
+      type: types.MERCHANT_DELETE_STOCK_RECORD_SUCCESS,
+      payload: data.data
+    }
+  }
+  return { type: types.MERCHANT_DELETE_STOCK_RECORD_FAILED, payload: data}
+}
+export function merchantDeleteStockRecordFailed(data){
+  return { type: types.MERCHANT_DELETE_STOCK_RECORD_FAILED, payload: data}
+}
+export function merchantDeleteStockRecordReset(){
+  return { type: types.MERCHANT_DELETE_STOCK_RECORD_RESET}
+}

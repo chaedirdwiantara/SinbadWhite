@@ -200,6 +200,17 @@ function* getRecordStock(actions) {
     yield put(ActionCreators.merchantGetStockRecordFailed(error))
   }
 }
+/** DELETE RECORD STOCK */
+function* deleteRecordStock(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.deleteRecordStock(actions.payload)
+    })
+    yield put(ActionCreators.merchantDeleteStockRecordSuccess(response))
+  } catch (error) {
+    yield put(ActionCreators.merchantDeleteStockRecordFailed(error))
+  }
+}
 
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
@@ -227,6 +238,7 @@ function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_UPDATE_SURVEY_PROCESS, updateSurvey);
   yield takeEvery(types.MERCHANT_ADD_STOCK_RECORD_PROCESS, addRecordStock)
   yield takeEvery(types.MERCHANT_GET_STOCK_RECORD_PROCESS, getRecordStock)
+  yield takeEvery(types.MERCHANT_DELETE_STOCK_RECORD_PROCESS, deleteRecordStock)
 }
 
 export default MerchantSaga;

@@ -22,6 +22,7 @@ const INITIAL_STATE = {
   loadingSubmitSurvey: false,
   loadingAddRecordStock: false,
   loadingGetRecordStock: false,
+  loadingDeleteRecordStock: false,
   /** data */
   dataPostActivity: null,
   dataGetLogAllActivity: null,
@@ -135,7 +136,8 @@ const INITIAL_STATE = {
     photos: []
   },
   dataAddRecordStock: {},
-  dataGetRecordStock: [],
+  dataGetRecordStock: null,
+  dataDeleteRecordStock: null,
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
@@ -153,7 +155,8 @@ const INITIAL_STATE = {
   errorGetSurvey: null,
   errorSubmitSurvey: null,
   errorAddRecordStock: null,
-  errorGetRecordStock: null
+  errorGetRecordStock: null,
+  errorDeleteRecordStock: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -830,7 +833,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetRecordStock: true,
-      dataGetRecordStock: [],
+      dataGetRecordStock: null,
       errorGetRecordStock: null
     }
   },
@@ -847,6 +850,40 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetRecordStock: false,
       errorGetRecordStock: action.payload
+    }
+  },
+  /**
+   * =======================
+   * DELETE RECORD STOCK
+   * =======================
+   */
+  [types.MERCHANT_DELETE_STOCK_RECORD_PROCESS](state, action){
+    return {
+      ...state,
+      loadingDeleteRecordStock: true,
+      dataDeleteRecordStock: {},
+      errorDeleteRecordStock: null
+    }
+  },
+  [types.MERCHANT_DELETE_STOCK_RECORD_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingDeleteRecordStock: false,
+      dataDeleteRecordStock: action.payload,
+      errorDeleteRecordStock: null
+    }
+  },
+  [types.MERCHANT_DELETE_STOCK_RECORD_FAILED](state, action) {
+    return {
+      ...state,
+      loadingDeleteRecordStock: false,
+      errorDeleteRecordStock: action.payload
+    }
+  },
+  [types.MERCHANT_DELETE_STOCK_RECORD_RESET](state, action) {
+    return {
+      ...state,
+      dataDeleteRecordStock: null
     }
   }
 });
