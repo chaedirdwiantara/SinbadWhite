@@ -182,8 +182,6 @@ function SfaDetailView(props) {
    * MAIN
    * =======================
    */
-  console.log("ordeParcelId:", props.navigation.state.params.orderParcelId);
-  console.log("ini data:", props.sfa.dataSfaGetDetail);
   return (
     <>
       {props.sfa.dataSfaGetDetail ? (
