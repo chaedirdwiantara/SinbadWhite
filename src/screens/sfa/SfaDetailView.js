@@ -105,19 +105,22 @@ function SfaDetailView(props) {
   }
 
   const renderItemFakturInfo = () => {
+    const detailSfa = props.sfa.dataSfaGetDetail.data
     return (
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Nama Faktur</Text>
-          <Text style={Fonts.type17}>{data.data.invoiceGroupName}</Text>
+          <Text style={Fonts.type17}>{detailSfa.invoiceGroupName}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>No. Pesanan</Text>
-          <Text style={Fonts.type17}>{data.data.orderCode}</Text>
+          <Text style={Fonts.type17}>{detailSfa.orderCode}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>No. Referensi</Text>
-          <Text style={Fonts.type17}>{data.data.orderRef}</Text>
+          <Text style={Fonts.type17}>
+            {detailSfa.orderRef === null || detailSfa.orderRef === "" ? "-" : detailSfa.orderRef}
+          </Text>
         </View>
       </View>
     )
@@ -142,26 +145,27 @@ function SfaDetailView(props) {
   }
 
   const renderItemCollectionInfo = () => {
+    const detailSfa = props.sfa.dataSfaGetDetail.data
     return (
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Total Tagihan</Text>
-          <Text style={Fonts.type17}>{MoneyFormat(data.data.totalBilling)}</Text>
+          <Text style={Fonts.type17}>{MoneyFormat(detailSfa.totalBilling)}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Pembayaran Dari Toko</Text>
-          <Text style={Fonts.type17}>{MoneyFormat(data.data.totalInstorePayment)}</Text>
+          <Text style={Fonts.type17}>{MoneyFormat(detailSfa.totalInStorePayment)}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Total Penagihan</Text>
-          <Text style={Fonts.type17}>{MoneyFormat(data.data.totalCollection)}</Text>
+          <Text style={Fonts.type17}>{MoneyFormat(detailSfa.totalCollection)}</Text>
         </View>
       </View>
     )
   }
 
   const renderCollectionDetail = () => {
-    return data.data.collections.map((item, index) => {
+    return props.sfa.dataSfaGetDetail.data.collections.map((item, index) => {
       return (
         <View key={index} style={{marginLeft:8}}>
           <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
@@ -184,7 +188,7 @@ function SfaDetailView(props) {
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Outstanding</Text>
-          <Text style={Fonts.type22}>{MoneyFormat(data.data.remainingBilling)}</Text>
+          <Text style={Fonts.type22}>{MoneyFormat(props.sfa.dataSfaGetDetail.data.remainingBilling)}</Text>
         </View>
       </View>
     )
@@ -223,7 +227,7 @@ function SfaDetailView(props) {
    * =======================
    */
   console.log("ordeParcelId:", props.navigation.state.params.orderParcelId);
-  console.log("ini data:", props);
+  console.log("ini data:", props.sfa.dataSfaGetDetail);
   return (
     <>
       {props.sfa.dataSfaGetDetail ? (
