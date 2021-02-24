@@ -77,6 +77,17 @@ class MerchantStockView extends Component {
         
     }
 
+    buttonAddStock(){
+        const taskList = this.props.merchant.dataGetLogAllActivity
+        console.log(taskList.find( task => task.activity === 'check_out'))
+        if(
+            taskList.find( task => task.activity === 'check_out')){
+            return <View />
+        } else {
+            return this.renderButtonAddStock()
+        }
+    }
+
     /**
      * =============
      * RENDER VIEW
@@ -140,7 +151,7 @@ class MerchantStockView extends Component {
                         'Tambah produk untuk melakukan pencatatan stok'
                     }
                 />
-                {this.renderButtonAddStock()}
+                {this.buttonAddStock()}
             </View>
         )
     }
