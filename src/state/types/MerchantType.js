@@ -106,3 +106,8 @@ export const MERCHANT_UPDATE_STOCK_RECORD_PROCESS = 'MerchantUpdateStockRecordPr
 export const MERCHANT_UPDATE_STOCK_RECORD_SUCCESS = 'MerhcantUpdateStockRecordSuccess'
 export const MERCHANT_UPDATE_STOCK_RECORD_FAILED = 'MerchantUpdateStockRecordFailed'
 export const MERCHANT_UPDATE_STOCK_RECORD_RESET = 'MerchantUpdateStockRecordReset'
+/** MERCHANT BATCH DELETE STOCK RECORD */
+export const MERCHANT_BATCH_DELETE_STOCK_PROCESS = 'MerchantBatchDeleteStockProcess'
+export const MERCHANT_BATCH_DELETE_STOCK_SUCCESS = 'MerchantBatchDeleteStockSuccess'
+export const MERCHANT_BATCH_DELETE_STOCK_FAILED = 'MerchantBatchDeleteStockFailed'
+export const MERCHANT_BATCH_DELETE_STOCK_RESET = 'MerchantBatchDeleteStockReset'

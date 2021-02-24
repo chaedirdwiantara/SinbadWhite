@@ -175,6 +175,14 @@ function updateSurvey({ params, surveyResponseId }) {
     params
   })
  }
+ /** BATCH DELETE RECORD STOCK */
+ function batchDeleteRecordStock(params){
+   return ApiRest({
+     path: 'delete-stock-record',
+     method: 'POST',
+     params
+   })
+ }
 
 export const MerchantMethod = {
   getMerchant,
@@ -196,7 +204,8 @@ export const MerchantMethod = {
   addRecordStock,
   getRecordStock,
   deleteRecordStock,
-  updateRecordStock
+  updateRecordStock,
+  batchDeleteRecordStock
 };
 
 /**
