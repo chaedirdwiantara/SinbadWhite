@@ -32,7 +32,6 @@ function SfaCollectionListView(props) {
           data={props.dataList.data.orderParcels}
           renderItem={renderItem}
           //   numColumns={1}
-          //   extraData={this.state}
           keyExtractor={(item, index) => index.toString()}
           //   refreshing={this.props.history.refreshGetHistory}
           //   onRefresh={this.onHandleRefresh}
