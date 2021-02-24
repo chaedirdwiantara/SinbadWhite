@@ -14,7 +14,8 @@ import {
      SearchBarType4,
      ButtonSingle,
      LoadingPage,
-     ModalConfirmationType3
+     ModalConfirmationType3,
+     EmptyData
   } from '../../../library/component';
   import {
       AntDesignIcon,
@@ -41,7 +42,8 @@ import {
               selectedProduct: [],
               dataForSaveProduct: [],
               search: '',
-              data: this.props.merchant.dataGetRecordStock
+              data: this.props.merchant.dataGetRecordStock,
+              dataForDiscard: []
           }
       }
           /** HEADER CONFIG */
@@ -83,6 +85,7 @@ import {
     componentDidMount(){
         this.navigationFunction()
         this.getRecordStock()
+        this.discardDataSave()
     }
     componentWillUnmount(){
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackPress)
@@ -108,7 +111,7 @@ import {
             if(this.props.merchant.dataUpdateRecordStock.success){
                 this.props.merchantUpdateStockRecordReset()
                 this.getRecordStock()
-                // this.getRecordStockActivity()
+                this.getRecordStockActivity()
                 NavigationService.navigate('MerchantStockView')
             }
         }
@@ -170,6 +173,26 @@ import {
             activity: 'record_stock'
           })
     }
+    discardDataSave(){
+        const dataForDiscard = []
+        this.props.merchant.dataGetRecordStock.map((data, index) => {
+            const dataObject = {
+                id: parseInt(data.catalogueId),
+                isMustSale: data.isMustSale
+            }
+            dataForDiscard.push(dataObject)
+        })
+        console.log(dataForDiscard)
+        this.setState({ dataForDiscard })
+    }
+    discardData(){
+        this.props.merchantAddStockRecordProcess({
+            catalogues: this.state.dataForDiscard
+        })
+        this.setState({ openModalBackConfirmation: false })
+        // Some function to go back
+        NavigationService.navigate('MerchantStockView')
+    }
     
     /** PARENT FUNCTION */
     parentFunction(data){
@@ -222,14 +245,14 @@ import {
         if(this.state.dataForSaveProduct > 0){
             this.props.merchantUpdateStockRecordProcess(this.state.dataForSaveProduct)
         } else {
-            // this.getRecordStockActivity()
+            this.getRecordStockActivity()
+            console.log(this.state.deletedCatalogue)
             NavigationService.navigate('MerchantStockView')
         }
     }
     // RENDER CONTENT
     renderContent(){
-        return this.props.merchant.loadingGetRecordStock === false
-            && this.props.merchant.dataGetRecordStock.length > 0 ? (
+        return this.props.merchant.loadingGetRecordStock === false ? (
             this.renderData()
         ) : (
             <LoadingPage />
@@ -247,14 +270,26 @@ import {
                 />
             </View>
         ) : (
-            this.renderEmptyCatalogue()
+            <View style={styles.mainContainer}>
+                <EmptyData 
+                    title={'Tidak Ada Catatan Stok'}
+                    description={
+                        'Tambah produk untuk melakukan pencatatan stok'
+                    }
+                />
+            </View>
         )
     }
     renderEmptyCatalogue(){
-        return this.props.merchant.dataGetRecordStock.length < 0 ? (
-            NavigationService.navigate('MerchantStockView')
-        ) : (
+        return this.props.merchant.dataGetRecordStock.length < 1 ? (
             <LoadingPage />
+        ) : (
+            <EmptyData 
+                title={'Tidak Ada Catatan Stok'}
+                description={
+                    'Tambah produk untuk melakukan pencatatan stok'
+                }
+            />
         )
     }
     // RENDER DATA
@@ -304,11 +339,7 @@ import {
                 rightText={'Kembali'}
                 content={'Anda belum menyimpan catatan stok saat ini konfirmasi penyimpanan catatan sebelum meninggalkan halaman ini'}
                 type={'okeNotRed'}
-                leftAction={() => {
-                    this.setState({ openModalBackConfirmation: false })
-                    // Some function to go back
-                    NavigationService.navigate('MerchantStockView')
-                }}
+                leftAction={() => this.discardData()}
                 rightAction={() => {
                     this.setState({ openModalBackConfirmation: false })
                 }}
