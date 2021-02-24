@@ -25,6 +25,7 @@ const INITIAL_STATE = {
   loadingGetRecordStock: false,
   loadingDeleteRecordStock: false,
   loadingUpdateRecordStock: false,
+  loadingBatchDeleteRecord: false,
   /** data */
   dataPostActivity: null,
   dataGetLogAllActivity: null,
@@ -141,6 +142,8 @@ const INITIAL_STATE = {
   dataGetRecordStock: [],
   dataDeleteRecordStock: {},
   dataUpdateRecordStock: {},
+  dataBatchDeleteStock: {},
+  merchantStockRecordStatus: '',
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
@@ -160,7 +163,8 @@ const INITIAL_STATE = {
   errorAddRecordStock: null,
   errorGetRecordStock: null,
   errorDeleteRecordStock: null,
-  errorUpdateRecordStock: null
+  errorUpdateRecordStock: null,
+  errorBatchDeleteStock: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -828,6 +832,12 @@ export const merchant = createReducer(INITIAL_STATE, {
       errorAddMerchant: action.payload
     }
   },
+  [types.MERCHANT_ADD_STOCK_RECORD_RESET](state, action) {
+    return {
+      ...state,
+      dataAddRecordStock: {}
+    }
+  },
   /**
    * ========================
    * GET RECORD STOCK
@@ -923,7 +933,52 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       dataUpdateRecordStock: {}
     }
-  }
+  },
+  /**
+   * ======================
+   * BATCH DELETE STOCK
+   * ======================
+   */
+  [types.MERCHANT_BATCH_DELETE_STOCK_PROCESS](state, action){
+    return {
+      ...state,
+      loadingBatchDeleteRecord: true,
+      dataBatchDeleteStock: {},
+      errorBatchDeleteStock: null
+    }
+  },
+  [types.MERCHANT_BATCH_DELETE_STOCK_SUCCESS](state, action){
+    return {
+      ...state,
+      loadingBatchDeleteRecord: false,
+      dataBatchDeleteStock: action.payload,
+      errorBatchDeleteStock: null
+    }
+  },
+  [types.MERCHANT_BATCH_DELETE_STOCK_FAILED](state, action){
+    return {
+      ...state,
+      loadingBatchDeleteRecord: false,
+      errorBatchDeleteStock: action.payload
+    }
+  },
+  [types.MERCHANT_BATCH_DELETE_STOCK_RESET](state, action){
+    return {
+      ...state,
+      dataBatchDeleteStock: {}
+    }
+  },
+  /**
+   * ==============================
+   * MERCHANT STOCK RECORD FLAG
+   * ==============================
+   */
+   [types.MERCHANT_STOCK_RECORD_STATUS](state, action){
+     return {
+       ...state,
+       merchantStockRecordStatus: action.payload
+     }
+   }
 });
 /**
  * ===========================

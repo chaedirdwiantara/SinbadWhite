@@ -43,7 +43,8 @@ import {
               dataForSaveProduct: [],
               search: '',
               data: this.props.merchant.dataGetRecordStock,
-              dataForDiscard: []
+              dataForDiscard: [],
+              dataForBatchDelete: []
           }
       }
           /** HEADER CONFIG */
@@ -86,6 +87,7 @@ import {
         this.navigationFunction()
         this.getRecordStock()
         this.discardDataSave()
+        this.batchDeleteData()
     }
     componentWillUnmount(){
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackPress)
@@ -101,6 +103,7 @@ import {
         // To get Catalouge after add new Catalogue
         if(prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock){
             if(this.props.merchant.dataAddRecordStock.success){
+                this.props.merchantAddStockRecordReset()
                 this.getRecordStock()
                 this.setState({ openModalProductList: false })
             }
@@ -111,13 +114,25 @@ import {
             if(this.props.merchant.dataUpdateRecordStock.success){
                 this.props.merchantUpdateStockRecordReset()
                 this.getRecordStock()
-                this.getRecordStockActivity()
+                this.postRecordStockActivity()
                 NavigationService.navigate('MerchantStockView')
             }
         }
-
+        // To navigate when data are empty
         if(prevProps.merchant.dataGetRecordStock !== this.props.merchant.dataGetRecordStock){
+            if(this.props.merchant.merchantStockRecordStatus === 'NEW-STOCK'){
+                this.batchDeleteData()
+            }
             if(this.props.merchant.dataGetRecordStock.length < 0){
+                NavigationService.navigate('MerchantStockView')
+            }
+        }
+        // Navigate to MerchantStockView after batch delete
+        if(prevProps.merchant.dataBatchDeleteStock !== this.props.merchant.dataBatchDeleteStock
+            && this.props.merchant.dataBatchDeleteStock.hasOwnProperty('success')){
+            if (this.props.merchant.dataBatchDeleteStock.success){
+                this.props.merchantBatchDeleteStockReset()
+                this.getRecordStock()
                 NavigationService.navigate('MerchantStockView')
             }
         }
@@ -165,7 +180,8 @@ import {
             this.setState({ data: this.props.merchant.dataGetRecordStock })
         }, 100)
     }
-    getRecordStockActivity(){
+    // POST RECORD STOCK ACTIVITY
+    postRecordStockActivity(){
         const journeyPlanSaleId = this.props.merchant.selectedMerchant.journeyPlanSaleId;
     
         this.props.merchantPostActivityProcess({
@@ -173,6 +189,7 @@ import {
             activity: 'record_stock'
           })
     }
+    /** DISCARD DATA TO EARLIER BEFORE EDIT */
     discardDataSave(){
         const dataForDiscard = []
         this.props.merchant.dataGetRecordStock.map((data, index) => {
@@ -182,16 +199,37 @@ import {
             }
             dataForDiscard.push(dataObject)
         })
-        console.log(dataForDiscard)
         this.setState({ dataForDiscard })
     }
+    /** DISCARD DATA ACTION FROM BACK MODAL */
     discardData(){
-        this.props.merchantAddStockRecordProcess({
-            catalogues: this.state.dataForDiscard
+        if(this.props.merchant.merchantStockRecordStatus === 'NEW-STOCK'){
+            this.batchDeleteData()
+            this.batchDeleteAction()
+            this.props.merchantStockRecordStatus('')
+            this.setState({ openModalBackConfirmation: false })
+        } else {
+            this.props.merchantAddStockRecordProcess({
+                catalogues: this.state.dataForDiscard
+            })
+            this.setState({ openModalBackConfirmation: false })
+            NavigationService.navigate('MerchantStockView')
+
+        }
+    }
+    /** BATCH DELETE STOCK RECROD  DATA */
+    batchDeleteData(){
+        const dataForBatchDelete = []
+        this.props.merchant.dataGetRecordStock.map((data, index) => {
+            dataForBatchDelete.push(parseInt(data.id))
         })
-        this.setState({ openModalBackConfirmation: false })
-        // Some function to go back
-        NavigationService.navigate('MerchantStockView')
+        this.setState({ dataForBatchDelete })
+    }
+    /** BATCH DELETE ACTION */
+    batchDeleteAction(){
+        this.props.merchantBatchDeleteStockProcess({
+            id: this.state.dataForBatchDelete
+        })
     }
     
     /** PARENT FUNCTION */
@@ -245,8 +283,7 @@ import {
         if(this.state.dataForSaveProduct > 0){
             this.props.merchantUpdateStockRecordProcess(this.state.dataForSaveProduct)
         } else {
-            this.getRecordStockActivity()
-            console.log(this.state.deletedCatalogue)
+            this.postRecordStockActivity()
             NavigationService.navigate('MerchantStockView')
         }
     }
@@ -360,9 +397,9 @@ import {
                 type={'okeNotRed'}
                 content={'Menyimpan perubahan record stock akan menghapus seluruh pengisian quesioner yang telah dilakukan \n \n Apakah anda ingin melanjutkan penyimpanan?'}
                 leftAction={() => {
-                    NavigationService.navigate('MerchantStockView')
+                    // NavigationService.navigate('MerchantStockView')
+                    this.batchDeleteAction()
                     this.setState({ openModalSaveConfirmation: false })
-                    // Some function to save
                 }}
                 rightAction={() => {
                     this.saveStockRecord()

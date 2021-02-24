@@ -399,6 +399,10 @@ export function merchantAddStockRecordSuccess(data){
 export function merchantAddStockRecordFailed(data){
   return { type: types.MERCHANT_ADD_STOCK_RECORD_FAILED, payload: data}
 }
+
+export function merchantAddStockRecordReset(){
+  return { type: types.MERCHANT_ADD_STOCK_RECORD_RESET }
+}
 /**
  * ======================
  * GET STOCK RECORD
@@ -464,4 +468,35 @@ export function merchantUpdateStockRecordFailed(data){
 }
 export function merchantUpdateStockRecordReset(){
   return { type: types.MERCHANT_UPDATE_STOCK_RECORD_RESET}
+}
+/**
+ * ============================
+ * BATCH DELETE STOCK RECORD
+ * ============================
+ */
+export function merchantBatchDeleteStockProcess(data){
+  return { type: types.MERCHANT_BATCH_DELETE_STOCK_PROCESS, payload: data}
+}
+export function merchantBatchDeleteStockSuccess(data){
+  if (data.result === 'Ok'){
+    return {
+      type: types.MERCHANT_BATCH_DELETE_STOCK_SUCCESS,
+      payload: data.data
+    }
+  }
+  return { type: types.MERCHANT_BATCH_DELETE_STOCK_FAILED, payload: data }
+}
+export function merchantBatchDeleteStockFailed(data){
+  return { type: types.MERCHANT_BATCH_DELETE_STOCK_FAILED, payload: data }
+}
+export function merchantBatchDeleteStockReset(){
+  return { type: types.MERCHANT_BATCH_DELETE_STOCK_RESET }
+}
+/**
+ * ===============================
+ * MERCHANT STOCK RECORD STATUS
+ * ===============================
+ */
+export function merchantStockRecordStatus(status){
+  return { type: types.MERCHANT_STOCK_RECORD_STATUS, payload: status}
 }

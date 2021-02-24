@@ -45,6 +45,7 @@ class MerchantStockView extends Component {
      */
     componentDidMount(){
         this.getRecordStock()
+        this.props.merchantStockRecordStatus('')
     }
 
     getRecordStock(keyword){
@@ -67,7 +68,6 @@ class MerchantStockView extends Component {
 
     buttonEditStock(){
         const taskList = this.props.merchant.dataGetLogAllActivity
-        console.log(taskList.find( task => task.activity === 'check_out'))
         if(
             taskList.find( task => task.activity === 'check_out')){
             return <View />
@@ -79,7 +79,6 @@ class MerchantStockView extends Component {
 
     buttonAddStock(){
         const taskList = this.props.merchant.dataGetLogAllActivity
-        console.log(taskList.find( task => task.activity === 'check_out'))
         if(
             taskList.find( task => task.activity === 'check_out')){
             return <View />
@@ -99,7 +98,10 @@ class MerchantStockView extends Component {
             <View style={styles.containerFloatButton}>
                 <ButtonFloatType1 
                     title={'Tambah Produk'}
-                    push={() => this.setState({ openModalProductList: true })}
+                    push={() => {
+                        this.props.merchantStockRecordStatus('NEW-STOCK')
+                        this.setState({ openModalProductList: true })
+                    }}
                 />
             </View>
         )
@@ -110,8 +112,23 @@ class MerchantStockView extends Component {
             <View style={{backgroundColor: masterColor.fontBlack05, flex: 1}}>
                 {this.renderSearch()}
                 {this.renderCardView()}
-                {/* {this.renderButtonEditStock()} */}
                 {this.buttonEditStock()}
+                {/* {this.renderButtonEditStock()} */}
+            </View>
+        )
+    }
+    // RENDER EMPTY DATA
+    renderDataEmpty(){
+        return(
+            <View style={styles.mainContainer}>
+                <EmptyData 
+                    title={'Tidak Ada Catatan Stok'}
+                    description={
+                        'Tambah produk untuk melakukan pencatatan stok'
+                    }
+                />
+                {this.buttonAddStock()}
+                {/* {this.renderButtonAddStock()} */}
             </View>
         )
     }
@@ -141,20 +158,6 @@ class MerchantStockView extends Component {
             </View>
         )
     }
-    // RENDER EMPTY DATA
-    renderDataEmpty(){
-        return(
-            <View style={styles.mainContainer}>
-                <EmptyData 
-                    title={'Tidak Ada Catatan Stok'}
-                    description={
-                        'Tambah produk untuk melakukan pencatatan stok'
-                    }
-                />
-                {this.buttonAddStock()}
-            </View>
-        )
-    }
     // RENDER CONTENT
     renderContentBody(){
         return this.props.merchant.dataGetRecordStock.length > 0  ? (
@@ -179,7 +182,10 @@ class MerchantStockView extends Component {
                 <ButtonSingle
                     title={'Ubah Catatan Stock'}
                     borderRadius={8}
-                    onPress={() => NavigationService.navigate('MerchantEditStockView')}
+                    onPress={() => {
+                        this.props.merchantStockRecordStatus('EDIT-STOCK')  
+                        NavigationService.navigate('MerchantEditStockView')
+                    }}
                 />
             </View>
         )
