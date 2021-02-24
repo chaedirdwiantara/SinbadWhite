@@ -16,7 +16,7 @@ const INITIAL_STATE = {
   totalDataGetJourneyPlan: 0,
   totalDataGetJourneyPlanV2: 0,
   pageGetJourneyPlan: 0,
-  pageGetJourneyPlanV2: 0,
+  pageGetJourneyPlanV2: 1,
   dataSaveMerchantToJourneyPlan: null,
   dataSaveMerchantToJourneyPlanV2: null,
   /** error */
@@ -111,7 +111,7 @@ export const journey = createReducer(INITIAL_STATE, {
       loadingGetJourneyPlan: false,
       loadingLoadMoreGetJourneyPlan: false,
       refreshGetJourneyPlan: false,
-      totalDataGetJourneyPlanV2: action.payload.total,
+      totalDataGetJourneyPlanV2: action.payload.meta.total,
       dataGetJourneyPlanV2: [
         ...state.dataGetJourneyPlanV2,
         ...action.payload.data
@@ -130,7 +130,7 @@ export const journey = createReducer(INITIAL_STATE, {
   [types.JOURNEY_PLAN_GET_RESET_V2](state, action) {
     return {
       ...state,
-      pageGetJourneyPlanV2: 0,
+      pageGetJourneyPlanV2: 1,
       totalDataGetJourneyPlanV2: 0,
       dataGetJourneyPlanV2: []
     };
@@ -140,7 +140,7 @@ export const journey = createReducer(INITIAL_STATE, {
       ...state,
       refreshGetJourneyPlan: true,
       loadingGetJourneyPlan: true,
-      pageGetJourneyPlanV2: 0,
+      pageGetJourneyPlanV2: 1,
       totalDataGetJourneyPlanV2: 0,
       dataGetJourneyPlanV2: []
     };

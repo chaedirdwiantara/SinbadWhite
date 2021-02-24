@@ -1,4 +1,5 @@
 import ApiRest from '../apiRest';
+const salesManagementService = 'supplier/sales-management';
 /** GET JOURNEY PLAN LIST BY USER ID */
 function getJourneyPlan(data) {
   return ApiRest({
@@ -9,7 +10,9 @@ function getJourneyPlan(data) {
 /** GET JOURNEY PLAN LIST BY USER ID V2*/
 function getJourneyPlanV2(data) {
   return ApiRest({
-    path: `journey-list?$skip=${data.page}&$limit=10`,
+    path: `${salesManagementService}/v1/journey-book-stores/date?date=${
+      data.date
+    }&page=${data.page}&length=10`,
     method: 'GET'
   });
 }

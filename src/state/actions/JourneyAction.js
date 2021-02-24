@@ -92,7 +92,7 @@ export function saveMerchatToJourneyPlanFailed(data) {
  * ================================
  */
 /** === SAVE TO JOURNEY PLAN PROCESS === */
-export function saveMerchatToJourneyPlanProcessV2(data) {
+export function saveMerchantToJourneyPlanProcessV2(data) {
   return {
     type: types.SAVE_MERCHANT_TO_JOURNEY_PLAN_PROCESS_V2,
     payload: data
