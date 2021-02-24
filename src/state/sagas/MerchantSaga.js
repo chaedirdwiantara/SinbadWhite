@@ -60,9 +60,12 @@ function* getPortfolio(actions) {
 /** === PORTFOLIO BY USERID V2 === */
 function* getPortfolioV2(actions) {
   try {
-    const response = yield call(() => {
-      return MerchantMethod.getPortfolioByUserIdV2(actions.payload);
+    let response = yield call(() => {
+      return MerchantMethod.getPortfolioByUserIdV2();
     });
+    let newData = [];
+    newData.push(response.data.data.portfolio);
+    response.data.data = newData;
     yield put(ActionCreators.portfolioGetSuccessV2(response));
   } catch (error) {
     yield put(ActionCreators.portfolioGetSuccessV2(error));

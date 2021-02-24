@@ -46,17 +46,17 @@ class ModalBottomMerchantList extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.keyboardListener();
-    this.props.portfolioGetProcess(this.props.user.id);
+    this.props.portfolioGetProcessV2();
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
     if (
-      prevProps.merchant.dataGetPortfolio !==
-      this.props.merchant.dataGetPortfolio
+      prevProps.merchant.dataGetPortfolioV2 !==
+      this.props.merchant.dataGetPortfolioV2
     ) {
       if (
-        this.props.merchant.dataGetPortfolio !== null &&
-        this.props.merchant.dataGetPortfolio.length > 0
+        this.props.merchant.dataGetPortfolioV2 !== null &&
+        this.props.merchant.dataGetPortfolioV2.length > 0
       ) {
         this.getMerchant('direct', 0, '');
       }
@@ -102,7 +102,7 @@ class ModalBottomMerchantList extends Component {
       type,
       page: 0,
       loading: true,
-      portfolioId: this.props.merchant.dataGetPortfolio[portfolioIndex].id,
+      portfolioId: this.props.merchant.dataGetPortfolioV2[portfolioIndex].id,
       search
     });
   }
@@ -128,7 +128,7 @@ class ModalBottomMerchantList extends Component {
       const indexSelectedMerchant = selectedMerchant.indexOf(data.data);
       const dataObject = {
         portfolioId: parseInt(
-          this.props.merchant.dataGetPortfolio[this.state.portfolio].id,
+          this.props.merchant.dataGetPortfolioV2[this.state.portfolio].id,
           10
         ),
         storeId: parseInt(data.data, 10)
@@ -181,12 +181,12 @@ class ModalBottomMerchantList extends Component {
   }
   /** === TAGS SECTION === */
   renderTagsContent() {
-    return this.props.merchant.dataGetPortfolio.length > 0 ? (
+    return this.props.merchant.dataGetPortfolioV2.length > 0 ? (
       <TagListType1
         selected={this.state.portfolio}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
-        data={this.props.merchant.dataGetPortfolio}
+        data={this.props.merchant.dataGetPortfolioV2}
       />
     ) : (
       <View />
@@ -212,7 +212,7 @@ class ModalBottomMerchantList extends Component {
   /** === RENDER TAGS === */
   renderTags() {
     return !this.props.merchant.loadingGetPortfolio &&
-      this.props.merchant.dataGetPortfolio !== null
+      this.props.merchant.dataGetPortfolioV2 !== null
       ? this.renderTagsContent()
       : this.renderSkeletonTags();
   }
@@ -338,15 +338,17 @@ export default connect(
 )(ModalBottomMerchantList);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ * -> update the props of portfolio.
+ */

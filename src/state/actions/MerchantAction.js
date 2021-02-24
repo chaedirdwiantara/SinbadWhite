@@ -176,8 +176,8 @@ export function portfolioGetFailed(data) {
  * ====================================
  */
 /** PORTFOLIO GET PROCESS */
-export function portfolioGetProcessV2(userId) {
-  return { type: types.PORTFOLIO_GET_PROCESS_V2, payload: userId };
+export function portfolioGetProcessV2() {
+  return { type: types.PORTFOLIO_GET_PROCESS_V2 };
 }
 /** PORTFOLIO GET SUCCESS */
 export function portfolioGetSuccessV2(data) {
