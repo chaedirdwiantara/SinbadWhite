@@ -24,12 +24,12 @@ function saveMerchantToJourneyPlan(data) {
     params: data.body
   });
 }
-/** ADD MERCHANT TO JOURNEY PLAN */
+/** ADD MERCHANT TO JOURNEY PLAN V2 */
 function saveMerchantToJourneyPlanV2(data) {
   return ApiRest({
-    path: `journey-plan-list?storeType=${data.storeType}`,
+    path: `${salesManagementService}/v1/journey-book`,
     method: 'POST',
-    params: data.body
+    params: data
   });
 }
 /** GET JOUNEY PLAN REPORT VISIT AND TOTAL PRICE ORDER */
@@ -39,7 +39,7 @@ function getJourneyPlanReport(supplierIds) {
     method: 'GET'
   });
 }
-/** GET JOUNEY PLAN REPORT VISIT AND TOTAL PRICE ORDER V2 */
+/** GET JOURNEY PLAN REPORT VISIT AND TOTAL PRICE ORDER V2 */
 function getJourneyPlanReportV2(supplierIds) {
   return ApiRest({
     path: `journey-reports?supplierIds=${JSON.stringify(supplierIds)}`,
@@ -70,4 +70,8 @@ export const JourneyMethod = {
  * updatedDate: 18022021
  * updatedFunction:
  * -> Add new methods. (getJourneyPlanV2, saveMerchantToJourneyPlanV2, getJourneyPlanReportV2)
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ * -> Update the methods. (getJourneyPlanV2, saveMerchantToJourneyPlanV2)
  * */

@@ -82,10 +82,10 @@ class JourneyView extends Component {
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
     if (
-      prevProps.journey.dataSaveMerchantToJourneyPlan !==
-      this.props.journey.dataSaveMerchantToJourneyPlan
+      prevProps.journey.dataSaveMerchantToJourneyPlanV2 !==
+      this.props.journey.dataSaveMerchantToJourneyPlanV2
     ) {
-      if (this.props.journey.dataSaveMerchantToJourneyPlan !== null) {
+      if (this.props.journey.dataSaveMerchantToJourneyPlanV2 !== null) {
         this.props.journeyPlanGetResetV2();
         this.props.journeyPlanGetProcessV2({
           page: 1,
@@ -298,5 +298,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyView);
  * updatedDate: 24022021
  * updatedFunction:
  * -> Update the props of journey plan list.
+ * -> Update the props when saving merchant to journey plan.
  *
  */

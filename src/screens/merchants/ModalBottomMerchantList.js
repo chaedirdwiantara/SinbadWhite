@@ -12,6 +12,7 @@ import {
   bindActionCreators,
   connect,
   MaterialIcon,
+  moment,
   Modal
 } from '../../library/thirdPartyPackage'
 import {
@@ -26,6 +27,7 @@ import { Fonts } from '../../helpers'
 import ModalBottomMerchantListDataView from './ModalMerchantListDataView';
 import * as ActionCreators from '../../state/actions';
 const { height } = Dimensions.get('window');
+const today = moment().format('YYYY-MM-DD') + 'T00:00:00+00:00';
 
 class ModalBottomMerchantList extends Component {
   constructor(props) {
@@ -127,6 +129,7 @@ class ModalBottomMerchantList extends Component {
       const dataForAddJourney = this.state.dataForAddJourney;
       const indexSelectedMerchant = selectedMerchant.indexOf(data.data);
       const dataObject = {
+        typeOfStore: 'exist_store',
         portfolioId: parseInt(
           this.props.merchant.dataGetPortfolioV2[this.state.portfolio].id,
           10
@@ -149,9 +152,9 @@ class ModalBottomMerchantList extends Component {
   }
   /** === ADD JOURNEY PLAN === */
   addJourneyPlan() {
-    this.props.saveMerchatToJourneyPlanProcess({
-      storeType: 'exist_store',
-      body: this.state.dataForAddJourney
+    this.props.saveMerchantToJourneyPlanProcessV2({
+      date: today,
+      journeyBookStores: this.state.dataForAddJourney
     });
   }
   /**
@@ -351,4 +354,5 @@ export default connect(
  * updatedDate: 24022021
  * updatedFunction:
  * -> update the props of portfolio.
+ * -> Update function addJourneyPlan and the props when saving merchant to journey plan.
  */

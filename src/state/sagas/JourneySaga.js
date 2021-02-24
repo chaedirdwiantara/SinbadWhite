@@ -41,9 +41,9 @@ function* saveMerchantToJourneyPlanV2(actions) {
     const response = yield call(() => {
       return JourneyMethod.saveMerchantToJourneyPlanV2(actions.payload);
     });
-    yield put(ActionCreators.saveMerchatToJourneyPlanSuccessV2(response));
+    yield put(ActionCreators.saveMerchantToJourneyPlanSuccessV2(response));
   } catch (error) {
-    yield put(ActionCreators.saveMerchatToJourneyPlanFailedV2(error));
+    yield put(ActionCreators.saveMerchantToJourneyPlanFailedV2(error));
   }
 }
 /** GET JOUNEY PLAN REPORT VISIT AND TOTAL PRICE ORDER */
