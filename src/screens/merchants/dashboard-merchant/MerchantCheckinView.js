@@ -61,8 +61,8 @@ class MerchantCheckinView extends Component {
     ) {
       if (this.props.merchant.dataPostActivity !== null) {
         /** get log all activity */
-        this.props.merchantGetLogAllActivityProcess(
-          this.props.merchant.selectedMerchant.journeyPlanSaleId
+        this.props.merchantGetLogAllActivityProcessV2(
+          this.props.merchant.selectedMerchant.journeyBookStores.id
         );
         NavigationService.goBack(this.props.navigation.state.key);
       }
@@ -208,7 +208,8 @@ class MerchantCheckinView extends Component {
    * ====================
    */
   renderModalBottom() {
-    const journeyPlanSaleId = this.props.merchant.selectedMerchant.journeyPlanSaleId;
+    const journeyBookStoresId = this.props.merchant.selectedMerchant
+      .journeyBookStores.id;
     const store = this.props.merchant.selectedMerchant;
     return (
       <ModalBottomType2
@@ -236,7 +237,7 @@ class MerchantCheckinView extends Component {
                 borderRadius={4}
                 onPress={() =>
                   this.props.merchantPostActivityProcess({
-                    journeyPlanSaleId,
+                    journeyBookStoresId,
                     activity: 'check_in'
                   })
                 }
@@ -344,18 +345,21 @@ export default connect(
 )(MerchantCheckinView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Change Key
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Change Key
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ *  -> Update the props of log activity.
+ */

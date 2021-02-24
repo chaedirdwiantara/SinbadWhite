@@ -32,16 +32,17 @@ class ModalBottomMerchantCheckout extends Component {
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
     if (
-      prevProps.merchant.dataGetLogPerActivity !==
-      this.props.merchant.dataGetLogPerActivity
+      prevProps.merchant.dataGetLogPerActivityV2 !==
+      this.props.merchant.dataGetLogPerActivityV2
     ) {
-      if (this.props.merchant.dataGetLogPerActivity !== null) {
-        if (this.props.merchant.dataGetLogPerActivity.length > 0) {
+      if (this.props.merchant.dataGetLogPerActivityV2 !== null) {
+        if (this.props.merchant.dataGetLogPerActivityV2.length > 0) {
           if (
-            this.props.merchant.dataGetLogPerActivity[0].activity === 'check_in'
+            this.props.merchant.dataGetLogPerActivityV2[0].activity ===
+            'check_in'
           ) {
             this.setState({
-              checkInTime: this.props.merchant.dataGetLogPerActivity[0]
+              checkInTime: this.props.merchant.dataGetLogPerActivityV2[0]
                 .createdAt
             });
           }
@@ -54,7 +55,7 @@ class ModalBottomMerchantCheckout extends Component {
   checkCheckIn() {
     if (
       (!this.props.merchant.loadingGetLogPerActivity &&
-        this.props.merchant.dataGetLogPerActivity !== null) ||
+        this.props.merchant.dataGetLogPerActivityV2 !== null) ||
       this.state.checkInTime !== null
     ) {
       if (this.state.checkInTime !== null) {
@@ -68,9 +69,9 @@ class ModalBottomMerchantCheckout extends Component {
   checkDisableButton() {
     if (
       !this.props.merchant.loadingGetLogPerActivity &&
-      this.props.merchant.dataGetLogPerActivity !== null
+      this.props.merchant.dataGetLogPerActivityV2 !== null
     ) {
-      if (this.props.merchant.dataGetLogPerActivity.length > 0) {
+      if (this.props.merchant.dataGetLogPerActivityV2.length > 0) {
         return false;
       }
       return true;
@@ -253,17 +254,21 @@ export default connect(
 )(ModalBottomMerchantCheckout);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Change key
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Change key
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ * -> Update the props of log activity.
+ */

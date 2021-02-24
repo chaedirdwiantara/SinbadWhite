@@ -162,9 +162,14 @@ function* getLogPerActivity(actions) {
 /** === GET LOG PER ACTIVITY MERCHANT === */
 function* getLogPerActivityV2(actions) {
   try {
-    const response = yield call(() => {
+    let response = yield call(() => {
       return MerchantMethod.getLogPerActivityV2(actions.payload);
     });
+    let newData = [];
+    if (response.data.data) {
+      newData.push(response.data.data);
+    };
+    response.data.data = newData;
     yield put(ActionCreators.merchantGetLogPerActivitySuccessV2(response));
   } catch (error) {
     yield put(ActionCreators.merchantGetLogPerActivityFailedV2(error));

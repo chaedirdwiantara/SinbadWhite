@@ -79,6 +79,7 @@ class JourneyListDataView extends Component {
       }
     }
     /** GO TO SELECTED STORE */
+    data.name = data.storeName;
     this.props.merchantSelected(data);
     setTimeout(() => {
       NavigationService.navigate('MerchantHomeView', {
@@ -152,7 +153,7 @@ class JourneyListDataView extends Component {
           )}
         </View>
         <TouchableOpacity
-          onPress={() => this.goToMerchantDashboard(item.name, item)}
+          onPress={() => this.goToMerchantDashboard(item.storeName, item)}
           style={{
             paddingHorizontal: 10,
             paddingVertical: 13,
@@ -356,5 +357,6 @@ export default connect(
  * updatedDate: 24022021
  * updatedFunction:
  * -> Update the props of journey plan list.
+ * -> Update the props of log activity.
  *
  */

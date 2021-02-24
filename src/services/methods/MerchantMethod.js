@@ -95,9 +95,9 @@ function getLogAllActivity(journeyPlanSaleId) {
   });
 }
 /** === GET LOG ALL ACTIVITY  V2 === */
-function getLogAllActivityV2(journeyPlanSaleId) {
+function getLogAllActivityV2(journeyBookStoreId) {
   return ApiRest({
-    path: `agent-activities?journeyPlanSaleId=${journeyPlanSaleId}`,
+    path: `${salesManagementService}/v1/journey-book-store-logs/${journeyBookStoreId}/jbs`,
     method: 'GET'
   });
 }
@@ -113,9 +113,9 @@ function getLogPerActivity(data) {
 /** === GET LOG PER ACTIVITY V2 === */
 function getLogPerActivityV2(data) {
   return ApiRest({
-    path: `journey-plan-sale-logs?journeyPlanSaleId=${
-      data.journeyPlanSaleId
-    }&activity=${data.activity}&$limit=1&$skip=0&sort=asc&sortby=created_at`,
+    path: `${salesManagementService}/v1/journey-book-store-logs/${
+      data.journeyBookStoresId
+    }/activity?activity=${data.activity}`,
     method: 'GET'
   });
 }

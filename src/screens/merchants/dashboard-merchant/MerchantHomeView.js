@@ -121,15 +121,15 @@ class MerchantHomeView extends Component {
 
   /** FOR GET LOG ALL ACTIVITY */
   refreshMerchantGetLogAllActivityProcess() {
-    this.props.merchantGetLogAllActivityProcess(
-      this.props.merchant.selectedMerchant.journeyPlanSaleId
+    this.props.merchantGetLogAllActivityProcessV2(
+      this.props.merchant.selectedMerchant.journeyBookStores.id
     );
   }
 
   /** === DID MOUNT === */
   getSurvey = () => {
     const params = {
-      storeId: this.props.merchant.selectedMerchant.storeId,
+      storeId: this.props.merchant.selectedMerchant.journeyBookStores.storeId,
       page: 1,
       length: 10
     };
@@ -139,11 +139,11 @@ class MerchantHomeView extends Component {
   componentDidMount() {
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
-      this.props.merchant.selectedMerchant.storeId
+      this.props.merchant.selectedMerchant.journeyBookStores.storeId
     );
     /** FOR GET LOG ALL ACTIVITY */
-    this.props.merchantGetLogAllActivityProcess(
-      this.props.merchant.selectedMerchant.journeyPlanSaleId
+    this.props.merchantGetLogAllActivityProcessV2(
+      this.props.merchant.selectedMerchant.journeyBookStores.id
     );
     /** FOR GET SURVEY LIST */
     this.getSurvey();
@@ -229,10 +229,10 @@ class MerchantHomeView extends Component {
           item => item.responseStatus === 'completed'
         ).length
       ) {
-        if (this.props.merchant.dataGetLogAllActivity) {
+        if (this.props.merchant.dataGetLogAllActivityV2) {
           if (
-            !this.props.merchant.dataGetLogAllActivity.find(
-              item => item.activity === 'toko_survey'
+            !this.props.merchant.dataGetLogAllActivityV2.find(
+              item => item.activityName === 'toko_survey'
             )
           ) {
             this.setState({ successSurveyList: true }, () => this.SurveyDone());
@@ -268,8 +268,8 @@ class MerchantHomeView extends Component {
             this.setState({ showToast: false });
           }, 3000);
           /** FOR GET LOG ALL ACTIVITY */
-          this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.journeyPlanSaleId
+          this.props.merchantGetLogAllActivityProcessV2(
+            this.props.merchant.selectedMerchant.journeyBookStores.id
           );
         } else if (
           /** IF CHECK OUT SUCCESS */
@@ -284,20 +284,20 @@ class MerchantHomeView extends Component {
             this.setState({ showToast: false });
           }, 3000);
           /** FOR GET LOG ALL ACTIVITY */
-          this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.journeyPlanSaleId
+          this.props.merchantGetLogAllActivityProcessV2(
+            this.props.merchant.selectedMerchant.journeyBookStores.id
           );
         }
       }
     }
     if (
-      prevProps.merchant.dataGetLogPerActivity !==
-      this.props.merchant.dataGetLogPerActivity
+      prevProps.merchant.dataGetLogPerActivityV2 !==
+      this.props.merchant.dataGetLogPerActivityV2
     ) {
-      if (this.props.merchant.dataGetLogPerActivity !== null) {
-        if (this.props.merchant.dataGetLogPerActivity.length > 0) {
+      if (this.props.merchant.dataGetLogPerActivityV2 !== null) {
+        if (this.props.merchant.dataGetLogPerActivityV2.length > 0) {
           if (
-            this.props.merchant.dataGetLogPerActivity[0].activity === 'order'
+            this.props.merchant.dataGetLogPerActivityV2[0].activity === 'order'
           ) {
             this.checkoutProcess();
           }
@@ -324,19 +324,19 @@ class MerchantHomeView extends Component {
     }
     /** error get per activity */
     if (
-      prevProps.merchant.errorGetLogPerActivity !==
-      this.props.merchant.errorGetLogPerActivity
+      prevProps.merchant.errorGetLogPerActivityV2 !==
+      this.props.merchant.errorGetLogPerActivityV2
     ) {
-      if (this.props.merchant.errorGetLogPerActivity !== null) {
+      if (this.props.merchant.errorGetLogPerActivityV2 !== null) {
         this.doError();
       }
     }
-    /** error get per activity */
+    /** error get all activity */
     if (
-      prevProps.merchant.errorGetLogAllActivity !==
-      this.props.merchant.errorGetLogAllActivity
+      prevProps.merchant.errorGetLogAllActivityV2 !==
+      this.props.merchant.errorGetLogAllActivityV2
     ) {
-      if (this.props.merchant.errorGetLogAllActivity !== null) {
+      if (this.props.merchant.errorGetLogAllActivityV2 !== null) {
         this.doError();
       }
     }
@@ -356,7 +356,8 @@ class MerchantHomeView extends Component {
   /** CHECKOUT PROCESS */
   checkoutProcess() {
     this.props.merchantPostActivityProcess({
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
+      journeyBookStoresId: this.props.merchant.selectedMerchant
+        .journeyBookStores.id,
       activity: 'check_out'
     });
   }
@@ -366,13 +367,13 @@ class MerchantHomeView extends Component {
    */
   SurveyDone() {
     if (
-      !this.props.merchant.dataGetLogAllActivity.find(
+      !this.props.merchant.dataGetLogAllActivityV2.find(
         item => item.activity === 'toko_survey'
       )
     ) {
       this.props.merchantPostActivityProcess({
-        journeyPlanSaleId: this.props.merchant.selectedMerchant
-          .journeyPlanSaleId,
+        journeyBookStoresId: this.props.merchant.selectedMerchant
+          .journeyBookStores.id,
         activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
       });
     }
@@ -396,22 +397,23 @@ class MerchantHomeView extends Component {
         break;
       case 'history':
         NavigationService.navigate('HistoryView', {
-          storeId: this.props.merchant.selectedMerchant.storeId
+          storeId: this.props.merchant.selectedMerchant.journeyBookStores
+            .storeId
         });
         break;
       case 'checkIn':
         NavigationService.navigate('MerchantCheckinView');
         break;
       case 'checkOut':
-        this.props.merchantGetLogPerActivityProcess({
-          journeyPlanSaleId: this.props.merchant.selectedMerchant
-            .journeyPlanSaleId,
+        this.props.merchantGetLogPerActivityProcessV2({
+          journeyBookStoresId: this.props.merchant.selectedMerchant
+            .journeyBookStores.id,
           activity: 'check_in'
         });
         if (
           _.isEmpty(this.props.merchant.surveyList.payload.data) ||
-          this.props.merchant.dataGetLogAllActivity.find(
-            item => item.activity === 'toko_survey'
+          this.props.merchant.dataGetLogAllActivityV2.find(
+            item => item.activityName === 'toko_survey'
           )
         ) {
           this.setState({ openModalCheckout: true });
@@ -419,7 +421,7 @@ class MerchantHomeView extends Component {
         break;
       case 'survey':
         if (
-          this.props.merchant.dataGetLogAllActivity.find(
+          this.props.merchant.dataGetLogAllActivityV2.find(
             item => item.activity === 'check_in'
           )
         ) {
@@ -468,27 +470,27 @@ class MerchantHomeView extends Component {
 
   /** CHECK CHECK LIST TASK */
   checkCheckListTask(activity) {
-    if (this.props.merchant.dataGetLogAllActivity !== null) {
-      let checkActivity = this.props.merchant.dataGetLogAllActivity.filter(
+    if (this.props.merchant.dataGetLogAllActivityV2 !== null) {
+      let checkActivity = this.props.merchant.dataGetLogAllActivityV2.filter(
         function(rows) {
-          return rows.activity === activity;
+          return rows.activityName === activity;
         }
       );
       if (activity === ACTIVITY_JOURNEY_PLAN_ORDER) {
-        let getOrderStatus = this.props.merchant.dataGetLogAllActivity.filter(
+        let getOrderStatus = this.props.merchant.dataGetLogAllActivityV2.filter(
           function(rows) {
-            return rows.activity === ACTIVITY_JOURNEY_PLAN_ORDER;
+            return rows.activityName === ACTIVITY_JOURNEY_PLAN_ORDER;
           }
         );
         if (getOrderStatus.length < 1) {
-          let getNoOrder = this.props.merchant.dataGetLogAllActivity.filter(
+          let getNoOrder = this.props.merchant.dataGetLogAllActivityV2.filter(
             function(rows) {
-              return rows.activity === ACTIVITY_JOURNEY_PLAN_CHECK_OUT;
+              return rows.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_OUT;
             }
           );
           if (getNoOrder.length > 0) {
             let newOrderStatus = { ...getNoOrder[0] };
-            newOrderStatus.activity = ACTIVITY_JOURNEY_PLAN_ORDER;
+            newOrderStatus.activityName = ACTIVITY_JOURNEY_PLAN_ORDER;
             return newOrderStatus;
           } else {
             return false;
@@ -507,10 +509,10 @@ class MerchantHomeView extends Component {
   /** CHECK TOTAL COMPLETE TASK */
   checkTotalCompleteTask() {
     let total = 0;
-    if (this.props.merchant.dataGetLogAllActivity !== null) {
+    if (this.props.merchant.dataGetLogAllActivityV2 !== null) {
       this.state.task.map((item, index) => {
-        const checkActivity = this.props.merchant.dataGetLogAllActivity.findIndex(
-          itemAllActivity => itemAllActivity.activity === item.activity
+        const checkActivity = this.props.merchant.dataGetLogAllActivityV2.findIndex(
+          itemAllActivity => itemAllActivity.activityName === item.activity
         );
         if (checkActivity > -1) {
           total = total + 1;
@@ -727,7 +729,7 @@ class MerchantHomeView extends Component {
                 <View style={{ flexDirection: 'row', flex: 5 }}>
                   <View>
                     {taskList ? (
-                      taskList.activity === ACTIVITY_JOURNEY_PLAN_ORDER &&
+                      taskList.activityName === ACTIVITY_JOURNEY_PLAN_ORDER &&
                       taskList.noOrderNotes ? (
                         <MaterialIcon
                           // name="check-circle"
@@ -761,10 +763,10 @@ class MerchantHomeView extends Component {
                   }}
                 >
                   {taskList ? (
-                    taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN ||
-                    taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_OUT ? (
+                    taskList.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_IN ||
+                    taskList.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_OUT ? (
                       <Text style={Fonts.type107}>
-                        {taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                        {taskList.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_IN
                           ? `Check In ${moment(taskList.createdAt).format(
                               'HH:mm'
                             )}`
@@ -772,7 +774,7 @@ class MerchantHomeView extends Component {
                               'HH:mm'
                             )}`}
                       </Text>
-                    ) : taskList.activity === ACTIVITY_JOURNEY_PLAN_ORDER ? (
+                    ) : taskList.activityName === ACTIVITY_JOURNEY_PLAN_ORDER ? (
                       taskList.noOrderNotes ? (
                         <TouchableOpacity
                           onPress={() => {
@@ -820,7 +822,7 @@ class MerchantHomeView extends Component {
                           />
                         </TouchableOpacity>
                       )
-                    ) : taskList.activity ===
+                    ) : taskList.activityName ===
                       ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY ? (
                       <TouchableOpacity
                         onPress={() => {
@@ -913,7 +915,7 @@ class MerchantHomeView extends Component {
         <View>
           {item.menuName === 'Pesanan' &&
           this.props.permanent.newOrderSuccessPerMerchant.indexOf(
-            parseInt(this.props.merchant.selectedMerchant.storeId, 10)
+            parseInt(this.props.merchant.journeyBookStores.storeId, 10)
           ) > -1 ? (
             <View style={styles.boxNotification}>
               <View style={GlobalStyle.circleRedNotification16} />
@@ -1011,9 +1013,9 @@ class MerchantHomeView extends Component {
         onPress={
           () => {
             this.setState({ checkNoOrder: true });
-            this.props.merchantGetLogPerActivityProcess({
-              journeyPlanSaleId: this.props.merchant.selectedMerchant
-                .journeyPlanSaleId,
+            this.props.merchantGetLogPerActivityProcessV2({
+              journeyBookStoresId: this.props.merchant.selectedMerchant
+                .journeyBookStores.id,
               activity: 'order'
             });
           }
@@ -1092,7 +1094,7 @@ class MerchantHomeView extends Component {
         {!this.props.merchant.loadingGetMerchantLastOrder &&
         this.props.merchant.dataGetMerchantLastOrder !== null &&
         !this.props.merchant.loadingGetLogAllActivity &&
-        this.props.merchant.dataGetLogAllActivity !== null &&
+        this.props.merchant.dataGetLogAllActivityV2 !== null &&
         !this.state.loadingPostForCheckoutNoOrder ? (
           <View style={{ height: '100%' }}>
             {this.renderBackground()}
@@ -1305,4 +1307,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * updatedFunction:
  * -> Add validation for survey done.
  * -> Update the props of journey plan list.
+ * -> Update the props of log activity.
  */
