@@ -143,6 +143,7 @@ const INITIAL_STATE = {
   dataDeleteRecordStock: {},
   dataUpdateRecordStock: {},
   dataBatchDeleteStock: {},
+  merchantStockRecordStatus: '',
   /** error */
   errorGetMerchant: null,
   errorAddMerchant: null,
@@ -831,6 +832,12 @@ export const merchant = createReducer(INITIAL_STATE, {
       errorAddMerchant: action.payload
     }
   },
+  [types.MERCHANT_ADD_STOCK_RECORD_RESET](state, action) {
+    return {
+      ...state,
+      dataAddRecordStock: {}
+    }
+  },
   /**
    * ========================
    * GET RECORD STOCK
@@ -960,7 +967,18 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       dataBatchDeleteStock: {}
     }
-  }
+  },
+  /**
+   * ==============================
+   * MERCHANT STOCK RECORD FLAG
+   * ==============================
+   */
+   [types.MERCHANT_STOCK_RECORD_STATUS](state, action){
+     return {
+       ...state,
+       merchantStockRecordStatus: action.payload
+     }
+   }
 });
 /**
  * ===========================
