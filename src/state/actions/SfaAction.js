@@ -45,3 +45,27 @@ export function sfaGetDetailSuccess(data) {
 export function sfaGetDetailFailed(data) {
   return { type: types.SFA_GET_DETAIL_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * GET COLLECTION LIST
+ * ===========================
+ */
+/** === SFA GET COLLECTION LIST PROCESS === */
+export function sfaGetCollectionListProcess(data) {
+  return { type: types.SFA_GET_COLLECTION_PROCESS, payload: data };
+}
+/** === SFA GET COLLECTION LIST SUCCESS === */
+export function sfaGetCollectionListSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_COLLECTION_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_COLLECTION_FAILED, payload: data };
+}
+/** === SFA GET COLLECTION LIST FAILED === */
+export function sfaGetCollectionListFailed(data) {
+  return { type: types.SFA_GET_COLLECTION_FAILED, payload: data };
+}

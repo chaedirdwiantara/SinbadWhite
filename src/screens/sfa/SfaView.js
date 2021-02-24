@@ -29,12 +29,12 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { useDispatch, useSelector } from 'react-redux';
 import SfaCollectionListView from './SfaCollectionListView';
 import { ScrollView } from 'react-native-gesture-handler';
-import { sfaGetCollectionStatusProcess } from '../../state/actions/SfaAction';
+import { sfaGetCollectionListProcess, sfaGetCollectionStatusProcess } from '../../state/actions/SfaAction';
 
 function SfaView(props) {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('');
-  const { loadingGetCollectionStatus, dataGetCollectionStatus } = useSelector(state => state.sfa);
+  const { loadingGetCollectionStatus, dataGetCollectionStatus, loadingGetCollectionList, dataGetCollectionList } = useSelector(state => state.sfa);
   const [sfaTag, setSfaTag] = useState([
     { status: '', title: 'Semua', detail: '' },
     {
@@ -104,12 +104,24 @@ function SfaView(props) {
    */
   useEffect(() => {
     getCollectionStatus();
+    getCollectionList();
   }, []);
   
 
   const getCollectionStatus = () => {
     dispatch(sfaGetCollectionStatusProcess());
   };
+
+  const getCollectionList = () => {
+    const data = {
+      limit: 20,
+      storeId: 2,
+      supplierId: 2,
+      keyword: '',
+      statusPayment:''
+    }
+    dispatch(sfaGetCollectionListProcess(data))
+  }
   /**
    * *********************************
    * RENDER VIEW
@@ -151,6 +163,7 @@ function SfaView(props) {
   };
   /** === RENDER FOOTER === */
   const renderFooter = () => {
+    console.log(dataGetCollectionList);
     return (
       <>
         <View style={GlobalStyle.lines} />
@@ -276,16 +289,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, merchant }) => {
-  return { user, merchant };
-};
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(ActionCreators, dispatch);
-};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SfaView);
+export default SfaView
 // export default DMSView;
