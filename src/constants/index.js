@@ -16,7 +16,7 @@ export const TOTAL_PESANAN = 'total.pesanan';
  */
 export const ACTIVITY_JOURNEY_PLAN_CHECK_IN = 'check_in';
 export const ACTIVITY_JOURNEY_PLAN_ORDER = 'order';
-export const ACTIVITY_JOURNEY_PLAN_STOCK = 'stock';
+export const ACTIVITY_JOURNEY_PLAN_STOCK = 'record_stock';
 export const ACTIVITY_JOURNEY_PLAN_CHECK_OUT = 'check_out';
 
 /*
