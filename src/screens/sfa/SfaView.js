@@ -54,58 +54,7 @@ function SfaView(props) {
     { status: 'overdue', title: 'Overdue', detail: 'Pesanan Sudah Overdue' }
   ]);
   const [selectedTagStatus, setSelectedTagStatus] = useState('semua');
-  const [data, setData] = useState({
-    data: [
-      {
-        id: 3832,
-        invoice: 'COMBINE',
-        orderCode: 'S0100042273101076686',
-        orderRef: 'SNB1812/0002134',
-        total: 670000,
-        debtDate: '2020-09-03T08:32:10.932Z',
-        overdue: '2020-10-03T08:32:10.932Z',
-        paidAmount: 0,
-        paymentStatus: 'waiting_for_payment'
-      },
-      {
-        id: 3832,
-        invoice: 'TIGA RAKSA #2',
-        orderCode: 'S0213042273101076686',
-        orderRef: 'SNB1815/0002135',
-        total: 700000,
-        debtDate: '26-02-2021',
-        overdue: '28-02-2021',
-        paidAmount: 0,
-        paymentStatus: 'overdue'
-      },
-      {
-        id: 3832,
-        invoice: 'TIGA RAKSA #2',
-        orderCode: 'S0213042273101076686',
-        orderRef: 'SNB1815/0002135',
-        total: 700000,
-        debtDate: '26-02-2021',
-        overdue: '28-02-2021',
-        paidAmount: 0,
-        paymentStatus: 'waiting_for_payment'
-      },
-      {
-        id: 3832,
-        invoice: 'TIGA RAKSA #2',
-        orderCode: 'S0213042273101076686',
-        orderRef: 'SNB1815/0002135',
-        total: 700000,
-        debtDate: '26-02-2021',
-        overdue: '28-02-2021',
-        paidAmount: 0,
-        paymentStatus: 'overdue'
-      }
-    ],
-    totalInvoice: 3,
-    invoiceAmount: 1625000,
-    totalAmountPaid: 335000,
-    outstanding: 1675000
-  });
+  
   /**
    * =======================
    * FUNCTIONAL

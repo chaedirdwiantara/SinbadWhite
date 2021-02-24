@@ -102,7 +102,6 @@ function SfaCollectionListView(props) {
    * MAIN
    * =======================
    */
-  console.log(props.dataList, 'dataa');
   return (
     <>{renderData()}</>
     // renderSkeleton()

@@ -53,7 +53,6 @@ const SfaAddTagihanView = (props) => {
    * =======================
    */
   const selectedCollectionMethod = (data) => {
-    console.log(data, 'data clicked');
     setCollectionMethod(data)
     setOpenCollectionMethod(false)
   }
