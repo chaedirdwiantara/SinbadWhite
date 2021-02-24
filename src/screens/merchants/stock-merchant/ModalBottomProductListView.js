@@ -64,8 +64,8 @@ class ModalBottomProductListView extends Component {
         this.props.getMSSCataloguesProcess({
             page: 0,
             limit: 10,
-            mss: '',
-            keyword: ''
+            mss: this.props.mssType,
+            keyword: this.props.search
         })
     }
 
@@ -169,7 +169,7 @@ class ModalBottomProductListView extends Component {
     render(){
         return (
             <View style={styles.mainContainer}>
-                {this.state.dataLoading
+                {this.props.pdp.loadingGetMSSCatalogues
                 ? this.renderSkeleton()
                 : this.renderData()}
                 {/* For Loadmore */}

@@ -106,6 +106,14 @@ class ModalBottomProductList extends Component {
 
     // Parent Function to get Data from child
     parentFunction(data){
+        // if(data.type === 'sku-tag') {
+        //     this.props.getMSSCataloguesProcess({
+        //         page,
+        //         limit: this.state.pageLimit,
+        //         mss: mssType,
+        //         keyword: this.state.search
+        //     })
+        // }
         switch (data.type) {
             case 'stock':
                 const selectedProduct = this.state.selectedProduct
@@ -126,6 +134,8 @@ class ModalBottomProductList extends Component {
                 break;
             case 'search':
                 this.setState({ search: data.data })
+                console.log(data.data)
+                this.props.getMSSCataloguesReset()
                 this.props.getMSSCataloguesProcess({
                     page: 0,
                     limit: this.state.pageLimit,
@@ -134,10 +144,18 @@ class ModalBottomProductList extends Component {
                 })
                 break;
             case 'sku-tag':
+                console.log(data.data)
                 this.props.getMSSCataloguesReset()       
                 this.mssType(data.data)
                 break;        
             default:
+                this.props.getMSSCataloguesReset()
+                this.props.getMSSCataloguesProcess({
+                    page: 0,
+                    limit: this.state.pageLimit,
+                    keyword: this.state.search,
+                    mss: this.state.mssType
+                })
                 break;
         }
     }
@@ -163,6 +181,7 @@ class ModalBottomProductList extends Component {
     /** FETCH API FOR MSS CATALOGUES */
     getMssCatalogues(page, mssType){
         this.setState({ mssType })
+        this.props.getMSSCataloguesReset()
         this.props.getMSSCataloguesProcess({
             page,
             limit: this.state.pageLimit,

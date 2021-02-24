@@ -26,7 +26,7 @@ import {
       super(props);
       this.renderItem = this.renderItem.bind(this);
       this.state = {
-        activeTag: this.props.selected
+        activeTag: this.props.selected || 0
       };
     }
     /**
