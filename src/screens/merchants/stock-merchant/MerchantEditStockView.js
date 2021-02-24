@@ -199,14 +199,11 @@ import {
             }
             dataForDiscard.push(dataObject)
         })
-        console.log('Data for discard: ')
-        console.log(dataForDiscard)
         this.setState({ dataForDiscard })
     }
     /** DISCARD DATA ACTION FROM BACK MODAL */
     discardData(){
         if(this.props.merchant.merchantStockRecordStatus === 'NEW-STOCK'){
-            console.log('Batch delete new stock')
             this.batchDeleteData()
             this.batchDeleteAction()
             this.props.merchantStockRecordStatus('')
@@ -226,14 +223,10 @@ import {
         this.props.merchant.dataGetRecordStock.map((data, index) => {
             dataForBatchDelete.push(parseInt(data.id))
         })
-        console.log('Data for batch delete :')
-        console.log(dataForBatchDelete)
         this.setState({ dataForBatchDelete })
     }
     /** BATCH DELETE ACTION */
     batchDeleteAction(){
-        console.log('Batch Delete Action')
-        console.log(this.state.dataForBatchDelete)
         this.props.merchantBatchDeleteStockProcess({
             id: this.state.dataForBatchDelete
         })
@@ -291,7 +284,6 @@ import {
             this.props.merchantUpdateStockRecordProcess(this.state.dataForSaveProduct)
         } else {
             this.postRecordStockActivity()
-            console.log(this.state.deletedCatalogue)
             NavigationService.navigate('MerchantStockView')
         }
     }

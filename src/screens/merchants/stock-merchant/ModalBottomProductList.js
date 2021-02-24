@@ -135,7 +135,6 @@ class ModalBottomProductList extends Component {
                 break;
             case 'search':
                 this.setState({ search: data.data })
-                console.log(data.data)
                 this.props.getMSSCataloguesReset()
                 this.props.getMSSCataloguesProcess({
                     page: 0,
@@ -145,7 +144,6 @@ class ModalBottomProductList extends Component {
                 })
                 break;
             case 'sku-tag':
-                console.log(data.data)
                 this.props.getMSSCataloguesReset()       
                 this.mssType(data.data)
                 break;        
