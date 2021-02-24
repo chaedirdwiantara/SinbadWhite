@@ -29,7 +29,7 @@ function SfaCollectionListView(props) {
         <FlatList
           //   contentContainerStyle={styles.flatListContainer}
           //   ItemSeparatorComponent={this.renderSeparator}
-          data={props.data.data}
+          data={props.dataList.data.orderParcels}
           renderItem={renderItem}
           //   numColumns={1}
           //   extraData={this.state}
@@ -45,21 +45,21 @@ function SfaCollectionListView(props) {
   };
 
   const renderItem = ({ item, index }) => {
-    const delivery = moment(new Date(item.debtDate)).format('Do MMM YYYY');
-    const dueDate = moment(new Date(item.overdue)).format('Do MMM YYYY');
+    const delivery = moment(new Date(item.deliveredDate)).format('Do MMM YYYY');
+    const dueDate = moment(new Date(item.dueDate)).format('Do MMM YYYY');
     return (
       <View style={styles.listContainer}>
         <View style={styles.view1}>
           <View style={{ flex: 1 }}>
-            <Text style={Fonts.type48}>{item.invoice}</Text>
+            <Text style={Fonts.type48}>{item.invoiceGroupName}</Text>
           </View>
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
             <Text style={[Fonts.type22, { marginBottom: 8 }]}>
-              {item.paymentStatus}
+              {item.statusPayment}
             </Text>
             <View style={{ flexDirection: 'row' }}>
               <Text style={Fonts.type17}>Total: </Text>
-              <Text style={Fonts.type37}>{MoneyFormat(item.total)}</Text>
+              <Text style={Fonts.type37}>{MoneyFormat(item.invoiceAmount)}</Text>
             </View>
           </View>
         </View>
@@ -86,7 +86,7 @@ function SfaCollectionListView(props) {
             <Text style={[Fonts.type17, { marginBottom: 8 }]}>
               Sisa Tagihan
             </Text>
-            <Text style={Fonts.type109p}>{MoneyFormat(item.paidAmount)}</Text>
+            <Text style={Fonts.type109p}>{MoneyFormat(item.outstandingAmount)}</Text>
           </View>
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
             <TouchableOpacity style={styles.buttonDetail} onPress={() => NavigationService.navigate('SfaDetailView', {orderParcelId: item.id})}>
@@ -102,6 +102,7 @@ function SfaCollectionListView(props) {
    * MAIN
    * =======================
    */
+  console.log(props.dataList, 'dataa');
   return (
     <>{renderData()}</>
     // renderSkeleton()

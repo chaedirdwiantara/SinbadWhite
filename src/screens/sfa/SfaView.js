@@ -20,6 +20,7 @@ import {
   SearchBarType1,
   TagListType2,
   SkeletonType2,
+  SkeletonType24,
   SkeletonType25
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
@@ -136,8 +137,15 @@ function SfaView(props) {
    */
 
   const renderCollectionList = () => {
-    return <SfaCollectionListView data={data} />;
-  };
+    return (
+      <>
+      {!loadingGetCollectionList && dataGetCollectionList? 
+      <SfaCollectionListView dataList={dataGetCollectionList}/>:
+      renderSkeletonList()}
+        </>
+    )
+  
+    }
   /** === RENDER SKELETON TAGS === */
   const renderSkeletonTags = () => {
     return (
@@ -146,6 +154,9 @@ function SfaView(props) {
         <View style={GlobalStyle.lines} />
       </View>
     );
+  };
+  const renderSkeletonList = () => {
+    return <SkeletonType24 />;
   };
   /** === TAGS SECTION === */
   const renderTagsContent = () => {
