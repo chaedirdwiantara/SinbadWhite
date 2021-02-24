@@ -39,7 +39,7 @@ class ModalMerchantListDataView extends Component {
       type: this.props.portfolioIndex === 0 ? 'direct' : 'group',
       page: 0,
       loading: true,
-      portfolioId: this.props.merchant.dataGetPortfolio[
+      portfolioId: this.props.merchant.dataGetPortfolioV2[
         this.props.portfolioIndex
       ].id,
       search: this.props.search
@@ -58,7 +58,7 @@ class ModalMerchantListDataView extends Component {
           type: this.props.portfolioIndex === 0 ? 'direct' : 'group',
           page,
           loading: false,
-          portfolioId: this.props.merchant.dataGetPortfolio[
+          portfolioId: this.props.merchant.dataGetPortfolioV2[
             this.props.portfolioIndex
           ].id,
           search: this.props.search
@@ -240,14 +240,17 @@ export default connect(
 )(ModalMerchantListDataView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ * -> update the props of portfolio.
+ */

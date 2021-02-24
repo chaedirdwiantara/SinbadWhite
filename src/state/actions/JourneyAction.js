@@ -92,14 +92,14 @@ export function saveMerchatToJourneyPlanFailed(data) {
  * ================================
  */
 /** === SAVE TO JOURNEY PLAN PROCESS === */
-export function saveMerchatToJourneyPlanProcessV2(data) {
+export function saveMerchantToJourneyPlanProcessV2(data) {
   return {
     type: types.SAVE_MERCHANT_TO_JOURNEY_PLAN_PROCESS_V2,
     payload: data
   };
 }
 /** === SAVE TO JOURNEY PLAN SUCCESS === */
-export function saveMerchatToJourneyPlanSuccessV2(data) {
+export function saveMerchantToJourneyPlanSuccessV2(data) {
   if (data.result === 'Ok') {
     return {
       type: types.SAVE_MERCHANT_TO_JOURNEY_PLAN_SUCCESS_V2,
@@ -109,7 +109,7 @@ export function saveMerchatToJourneyPlanSuccessV2(data) {
   return { type: types.SAVE_MERCHANT_TO_JOURNEY_PLAN_FAILED_V2, payload: data };
 }
 /** === SAVE TO JOURNEY PLAN FAILED === */
-export function saveMerchatToJourneyPlanFailedV2(data) {
+export function saveMerchantToJourneyPlanFailedV2(data) {
   return { type: types.SAVE_MERCHANT_TO_JOURNEY_PLAN_FAILED_V2, payload: data };
 }
 /**

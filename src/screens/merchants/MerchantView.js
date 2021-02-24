@@ -78,17 +78,17 @@ class MerchantView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.navigationFunction();
-    this.props.portfolioGetProcess(this.props.user.id);
+    this.props.portfolioGetProcessV2();
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
     if (
-      prevProps.merchant.dataGetPortfolio !==
-      this.props.merchant.dataGetPortfolio
+      prevProps.merchant.dataGetPortfolioV2 !==
+      this.props.merchant.dataGetPortfolioV2
     ) {
       if (
-        this.props.merchant.dataGetPortfolio !== null &&
-        this.props.merchant.dataGetPortfolio.length > 0
+        this.props.merchant.dataGetPortfolioV2 !== null &&
+        this.props.merchant.dataGetPortfolioV2.length > 0
       ) {
         this.getMerchant('direct', 0, '');
       }
@@ -154,7 +154,7 @@ class MerchantView extends Component {
       type,
       page: 0,
       loading: true,
-      portfolioId: this.props.merchant.dataGetPortfolio[portfolioIndex].id,
+      portfolioId: this.props.merchant.dataGetPortfolioV2[portfolioIndex].id,
       search
     });
   }

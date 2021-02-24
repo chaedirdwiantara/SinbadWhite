@@ -249,7 +249,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetPortfolio: false,
       loadingGetMerchant: false,
-      dataGetPortfolioV2: action.payload
+      dataGetPortfolioV2: action.payload.data
     };
   },
   [types.PORTFOLIO_GET_FAILED_V2](state, action) {

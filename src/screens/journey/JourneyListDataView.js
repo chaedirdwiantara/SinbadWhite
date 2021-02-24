@@ -11,6 +11,7 @@ import {
   bindActionCreators,
   connect,
   MaterialIcon,
+  moment,
   OcticonsIcon
 } from '../../library/thirdPartyPackage'
 import {
@@ -24,6 +25,8 @@ import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 
+const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
+
 class JourneyListDataView extends Component {
   constructor(props) {
     super(props);
@@ -35,19 +38,27 @@ class JourneyListDataView extends Component {
    * =======================
    */
   onHandleRefresh = () => {
-    this.props.journeyPlanGetRefresh();
-    this.props.journeyPlanGetProcess({ page: 0, loading: true });
+    this.props.journeyPlanGetRefreshV2();
+    this.props.journeyPlanGetProcessV2({
+      page: 1,
+      date: today,
+      loading: true
+    });
   };
 
   onHandleLoadMore = () => {
-    if (this.props.journey.dataGetJourneyPlan) {
+    if (this.props.journey.dataGetJourneyPlanV2) {
       if (
-        this.props.journey.dataGetJourneyPlan.length <
-        this.props.journey.totalDataGetJourneyPlan
+        this.props.journey.dataGetJourneyPlanV2.length <
+        this.props.journey.totalDataGetJourneyPlanV2
       ) {
-        const page = this.props.journey.pageGetJourneyPlan + 10;
-        this.props.journeyPlanGetLoadMore(page);
-        this.props.journeyPlanGetProcess({ page, loading: false });
+        const page = this.props.journey.pageGetJourneyPlanV2 + 1;
+        this.props.journeyPlanGetLoadMoreV2(page);
+        this.props.journeyPlanGetProcessV2({
+          page,
+          data: today,
+          loading: true
+        });
       }
     }
   };
@@ -82,16 +93,13 @@ class JourneyListDataView extends Component {
   /** CHECK CHECK LIST ACTIVITY */
   checkCheckListActivity(logs) {
     let total = 0;
-    const checkActivityOrder = logs.findIndex(
-      itemAllActivity => itemAllActivity.activity === 'order'
-    );
-    if (checkActivityOrder > -1) {
+    if (logs.orderStatus) {
       total = total + 1;
     }
-    const checkActivityCheckOut = logs.findIndex(
-      itemAllActivity => itemAllActivity.activity === 'check_out'
-    );
-    if (checkActivityCheckOut > -1) {
+    if (!logs.orderStatus && logs.noOrderReasonId > 0) {
+      total = total + 1;
+    }
+    if ((logs.longitudeCheckOut && logs.latitudeCheckOut) !== 0) {
       total = total + 1;
     }
     return total;
@@ -124,11 +132,12 @@ class JourneyListDataView extends Component {
     return (
       <View key={index} style={styles.boxItem}>
         <View style={{ justifyContent: 'center' }}>
-          {item.journeyPlanSaleLogs.length !== 0 ? (
+          {(item.journeyBookStores.longitudeCheckIn &&
+            item.journeyBookStores.latitudeCheckIn) !== 0 ? (
             <MaterialIcon
               name="check-circle"
               color={
-                this.checkCheckListActivity(item.journeyPlanSaleLogs) > 1
+                this.checkCheckListActivity(item.journeyBookStores) > 1
                   ? masterColor.fontGreen50
                   : masterColor.fontYellow50
               }
@@ -154,27 +163,33 @@ class JourneyListDataView extends Component {
           <View>
             <Text
               style={
-                item.storeType === 'exist_store' ? Fonts.type16 : Fonts.type29
+                item.journeyBookStores.typeOfStore === 'exist_store'
+                  ? Fonts.type16
+                  : Fonts.type29
               }
             >
               {item.externalId ? item.externalId : '-'}
             </Text>
             <Text
               style={
-                item.storeType === 'exist_store' ? Fonts.type16 : Fonts.type29
+                item.journeyBookStores.typeOfStore === 'exist_store'
+                  ? Fonts.type16
+                  : Fonts.type29
               }
             >
-              {item.name}
+              {item.storeName}
             </Text>
           </View>
           <View>
             <Address
               substring
               font={
-                item.storeType === 'exist_store' ? Fonts.type17 : Fonts.type22
+                item.journeyBookStores.typeOfStore === 'exist_store'
+                  ? Fonts.type17
+                  : Fonts.type22
               }
               address={item.address}
-              urban={item.urban}
+              urban={item.urbans}
             />
           </View>
         </TouchableOpacity>
@@ -194,9 +209,8 @@ class JourneyListDataView extends Component {
             <MaterialIcon
               name="motorcycle"
               color={
-                item.journeyPlanSaleLogs.findIndex(
-                  jp => jp.activity === 'check_out'
-                ) > -1
+                (item.journeyBookStores.longitudeCheckOut &&
+                  item.journeyBookStores.latitudeCheckOut) !== 0
                   ? masterColor.fontGreen50
                   : masterColor.fontBlack40
               }
@@ -206,9 +220,7 @@ class JourneyListDataView extends Component {
             <OcticonsIcon
               name="package"
               color={
-                item.journeyPlanSaleLogs.findIndex(
-                  jp => jp.activity === 'order'
-                ) > -1
+                item.journeyBookStores.orderStatus
                   ? masterColor.fontGreen50
                   : masterColor.fontBlack40
               }
@@ -243,7 +255,7 @@ class JourneyListDataView extends Component {
   }
   /** === RENDER DATA === */
   renderData() {
-    return this.props.journey.dataGetJourneyPlan.length > 0
+    return this.props.journey.dataGetJourneyPlanV2.length > 0
       ? this.renderContent()
       : this.renderEmpty();
   }
@@ -253,7 +265,7 @@ class JourneyListDataView extends Component {
       <View style={{ flex: 1 }}>
         <FlatList
           contentContainerStyle={styles.flatListContainer}
-          data={this.props.journey.dataGetJourneyPlan}
+          data={this.props.journey.dataGetJourneyPlanV2}
           renderItem={this.renderItem.bind(this)}
           keyExtractor={(item, index) => index.toString()}
           refreshing={this.props.journey.refreshGetJourneyPlan}
@@ -340,9 +352,9 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: tatas
- * updatedDate: 06072020
+ * updatedBy: dyah
+ * updatedDate: 24022021
  * updatedFunction:
- * -> Change key
+ * -> Update the props of journey plan list.
  *
  */

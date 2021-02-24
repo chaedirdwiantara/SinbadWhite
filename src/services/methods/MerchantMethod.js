@@ -1,5 +1,6 @@
 import ApiRest from '../apiRest';
 import { GlobalMethod } from './GlobalMethod';
+const salesManagementService = 'supplier/sales-management';
 
 /** === MERCHANT LIST === */
 function getMerchant(data) {
@@ -41,9 +42,9 @@ function getPortfolioByUserId(userId) {
   });
 }
 /** === PORTFOLIO BY USERID V2 === */
-function getPortfolioByUserIdV2(userId) {
+function getPortfolioByUserIdV2() {
   return ApiRest({
-    path: `portfolios?userId=${userId}&type=group&paginate=false`,
+    path: `${salesManagementService}/v1/agent/portfolios`,
     method: 'GET'
   });
 }

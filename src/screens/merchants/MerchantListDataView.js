@@ -40,7 +40,7 @@ class MerchantListDataView extends Component {
       type: this.props.type,
       page: 0,
       loading: true,
-      portfolioId: this.props.merchant.dataGetPortfolio[
+      portfolioId: this.props.merchant.dataGetPortfolioV2[
         this.props.portfolioIndex
       ].id,
       search: this.props.search
@@ -59,7 +59,7 @@ class MerchantListDataView extends Component {
           page,
           loading: false,
           type: this.props.type,
-          portfolioId: this.props.merchant.dataGetPortfolio[
+          portfolioId: this.props.merchant.dataGetPortfolioV2[
             this.props.portfolioIndex
           ].id,
           search: this.props.search
@@ -239,14 +239,14 @@ export default connect(
 )(MerchantListDataView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ * -> update the props of portfolio.
+ *
+ */

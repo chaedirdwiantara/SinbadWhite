@@ -45,6 +45,7 @@ import {
 import _ from 'lodash';
 
 const { width, height } = Dimensions.get('window');
+const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
 
 class MerchantHomeView extends Component {
   constructor(props) {
@@ -342,8 +343,12 @@ class MerchantHomeView extends Component {
   }
 
   componentWillUnmount() {
-    this.props.journeyPlanGetReset();
-    this.props.journeyPlanGetProcess({ page: 0, loading: true });
+    this.props.journeyPlanGetResetV2();
+    this.props.journeyPlanGetProcessV2({
+      page: 1,
+      data: today,
+      loading: true
+    });
     this.props.getJourneyPlanReportProcess(
       this.props.user.userSuppliers.map(item => item.supplierId)
     );
@@ -360,10 +365,17 @@ class MerchantHomeView extends Component {
    * Set sales activity survey_toko done
    */
   SurveyDone() {
-    this.props.merchantPostActivityProcess({
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
-      activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-    });
+    if (
+      !this.props.merchant.dataGetLogAllActivity.find(
+        item => item.activity === 'toko_survey'
+      )
+    ) {
+      this.props.merchantPostActivityProcess({
+        journeyPlanSaleId: this.props.merchant.selectedMerchant
+          .journeyPlanSaleId,
+        activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+      });
+    }
   }
 
   /** FOR ERROR FUNCTION (FROM DID UPDATE) */
@@ -1288,4 +1300,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * updatedDate: 02122020
  * updatedFunction:
  * -> Add validation for checkout.
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ * -> Add validation for survey done.
+ * -> Update the props of journey plan list.
  */
