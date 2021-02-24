@@ -29,12 +29,20 @@ import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import SfaCollectionListView from './SfaCollectionListView';
 import { ScrollView } from 'react-native-gesture-handler';
-import { sfaGetCollectionListProcess, sfaGetCollectionStatusProcess } from '../../state/actions/SfaAction';
+import {
+  sfaGetCollectionListProcess,
+  sfaGetCollectionStatusProcess
+} from '../../state/actions/SfaAction';
 
 function SfaView(props) {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('');
-  const { loadingGetCollectionStatus, dataGetCollectionStatus, loadingGetCollectionList, dataGetCollectionList } = useSelector(state => state.sfa);
+  const {
+    loadingGetCollectionStatus,
+    dataGetCollectionStatus,
+    loadingGetCollectionList,
+    dataGetCollectionList
+  } = useSelector(state => state.sfa);
   const [sfaTag, setSfaTag] = useState([
     { status: '', title: 'Semua', detail: '' },
     {
@@ -106,7 +114,6 @@ function SfaView(props) {
     getCollectionStatus();
     getCollectionList();
   }, []);
-  
 
   const getCollectionStatus = () => {
     dispatch(sfaGetCollectionStatusProcess());
@@ -118,10 +125,10 @@ function SfaView(props) {
       storeId: 2,
       supplierId: 2,
       keyword: '',
-      statusPayment:''
-    }
-    dispatch(sfaGetCollectionListProcess(data))
-  }
+      statusPayment: ''
+    };
+    dispatch(sfaGetCollectionListProcess(data));
+  };
   /**
    * *********************************
    * RENDER VIEW
@@ -142,10 +149,10 @@ function SfaView(props) {
   };
   /** === TAGS SECTION === */
   const renderTagsContent = () => {
-    const status = dataGetCollectionStatus
+    const status = dataGetCollectionStatus;
     return (
       <>
-        {!loadingGetCollectionStatus && dataGetCollectionStatus? (
+        {!loadingGetCollectionStatus && dataGetCollectionStatus ? (
           <>
             <TagListType2
               selected={selectedTagStatus}
@@ -163,39 +170,43 @@ function SfaView(props) {
   };
   /** === RENDER FOOTER === */
   const renderFooter = () => {
-    console.log(dataGetCollectionList);
+    const data = dataGetCollectionList;
     return (
       <>
         <View style={GlobalStyle.lines} />
         <View style={styles.footer}>
-          {/* <SkeletonType25/> */}
-          <View style={{flexDirection:'row'}}>
-          <View style={styles.footer1}>
-            <View style={[styles.footerText, { marginBottom: 4 }]}>
-              <Text style={Fonts.type44}>Total Faktur: </Text>
-              <Text style={Fonts.type108p}>{data.totalInvoice}</Text>
+          {!loadingGetCollectionList && dataGetCollectionList ? (
+            <View style={{ flexDirection: 'row' }}>
+              <View style={styles.footer1}>
+                <View style={[styles.footerText, { marginBottom: 4 }]}>
+                  <Text style={Fonts.type44}>Total Faktur: </Text>
+                  <Text style={Fonts.type108p}>{data.data.totalInvoice}</Text>
+                </View>
+                <View style={styles.footerText}>
+                  <Text style={Fonts.type44}>Jumlah Faktur: </Text>
+                  <Text style={Fonts.type108p}>
+                    {MoneyFormat(data.data.totalInvoiceAmount)}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.footer1}>
+                <View style={[styles.footerText, { marginBottom: 4 }]}>
+                  <Text style={Fonts.type44}>Total Terbayar: </Text>
+                  <Text style={Fonts.type108p}>
+                    {MoneyFormat(data.data.totalAmountPaid)}
+                  </Text>
+                </View>
+                <View style={styles.footerText}>
+                  <Text style={Fonts.type44}>Sisa Tagihan: </Text>
+                  <Text style={Fonts.type108p}>
+                    {MoneyFormat(data.data.totalOutstandingAmount)}
+                  </Text>
+                </View>
+              </View>
             </View>
-            <View style={styles.footerText}>
-              <Text style={Fonts.type44}>Jumlah Faktur: </Text>
-              <Text style={Fonts.type108p}>
-                {MoneyFormat(data.invoiceAmount)}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.footer1}>
-            <View style={[styles.footerText, { marginBottom: 4 }]}>
-              <Text style={Fonts.type44}>Total Terbayar: </Text>
-              <Text style={Fonts.type108p}>
-                {MoneyFormat(data.totalAmountPaid)}
-              </Text>
-            </View>
-            <View style={styles.footerText}>
-              <Text style={Fonts.type44}>Sisa Tagihan: </Text>
-              <Text style={Fonts.type108p}>{MoneyFormat(data.outstanding)}</Text>
-            </View>
-          </View>
-          </View>
-         
+          ) : (
+            <SkeletonType25 />
+          )}
         </View>
       </>
     );
@@ -213,7 +224,6 @@ function SfaView(props) {
         <ScrollView>{renderCollectionList()}</ScrollView>
 
         {renderFooter()}
-        
       </View>
     );
   };
@@ -281,7 +291,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingHorizontal: 24,
-    paddingVertical: 16,
+    paddingVertical: 16
     // display: 'flex',
     // flexDirection: 'row'
   },
@@ -294,7 +304,5 @@ const styles = StyleSheet.create({
   }
 });
 
-
-
-export default SfaView
+export default SfaView;
 // export default DMSView;
