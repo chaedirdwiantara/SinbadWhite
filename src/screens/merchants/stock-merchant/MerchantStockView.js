@@ -65,6 +65,18 @@ class MerchantStockView extends Component {
         }
     }
 
+    buttonEditStock(){
+        const taskList = this.props.merchant.dataGetLogAllActivity
+        console.log(taskList.find( task => task.activity === 'check_out'))
+        if(
+            taskList.find( task => task.activity === 'check_out')){
+            return <View />
+        } else {
+            return this.renderButtonEditStock()
+        }
+        
+    }
+
     /**
      * =============
      * RENDER VIEW
@@ -87,7 +99,8 @@ class MerchantStockView extends Component {
             <View style={{backgroundColor: masterColor.fontBlack05, flex: 1}}>
                 {this.renderSearch()}
                 {this.renderCardView()}
-                {this.renderButtonEditStock()}
+                {/* {this.renderButtonEditStock()} */}
+                {this.buttonEditStock()}
             </View>
         )
     }
