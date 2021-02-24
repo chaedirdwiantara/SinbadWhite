@@ -110,8 +110,23 @@ class MerchantStockView extends Component {
             <View style={{backgroundColor: masterColor.fontBlack05, flex: 1}}>
                 {this.renderSearch()}
                 {this.renderCardView()}
-                {/* {this.renderButtonEditStock()} */}
-                {this.buttonEditStock()}
+                {/* {this.buttonEditStock()} */}
+                {this.renderButtonEditStock()}
+            </View>
+        )
+    }
+    // RENDER EMPTY DATA
+    renderDataEmpty(){
+        return(
+            <View style={styles.mainContainer}>
+                <EmptyData 
+                    title={'Tidak Ada Catatan Stok'}
+                    description={
+                        'Tambah produk untuk melakukan pencatatan stok'
+                    }
+                />
+                {/* {this.buttonAddStock()} */}
+                {this.renderButtonAddStock()}
             </View>
         )
     }
@@ -138,20 +153,6 @@ class MerchantStockView extends Component {
                 <StockRecordListView 
                     data={this.props.merchant.dataGetRecordStock}
                 />
-            </View>
-        )
-    }
-    // RENDER EMPTY DATA
-    renderDataEmpty(){
-        return(
-            <View style={styles.mainContainer}>
-                <EmptyData 
-                    title={'Tidak Ada Catatan Stok'}
-                    description={
-                        'Tambah produk untuk melakukan pencatatan stok'
-                    }
-                />
-                {this.buttonAddStock()}
             </View>
         )
     }
