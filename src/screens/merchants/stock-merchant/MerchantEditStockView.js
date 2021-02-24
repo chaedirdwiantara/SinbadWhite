@@ -103,6 +103,7 @@ import {
         // To get Catalouge after add new Catalogue
         if(prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock){
             if(this.props.merchant.dataAddRecordStock.success){
+                this.props.merchantAddStockRecordReset()
                 this.getRecordStock()
                 this.setState({ openModalProductList: false })
             }
@@ -119,6 +120,9 @@ import {
         }
         // To navigate when data are empty
         if(prevProps.merchant.dataGetRecordStock !== this.props.merchant.dataGetRecordStock){
+            if(this.props.merchant.merchantStockRecordStatus === 'NEW-STOCK'){
+                this.batchDeleteData()
+            }
             if(this.props.merchant.dataGetRecordStock.length < 0){
                 NavigationService.navigate('MerchantStockView')
             }
@@ -201,12 +205,20 @@ import {
     }
     /** DISCARD DATA ACTION FROM BACK MODAL */
     discardData(){
-        this.props.merchantAddStockRecordProcess({
-            catalogues: this.state.dataForDiscard
-        })
-        this.setState({ openModalBackConfirmation: false })
-        // Some function to go back
-        NavigationService.navigate('MerchantStockView')
+        if(this.props.merchant.merchantStockRecordStatus === 'NEW-STOCK'){
+            console.log('Batch delete new stock')
+            this.batchDeleteData()
+            this.batchDeleteAction()
+            this.props.merchantStockRecordStatus('')
+            this.setState({ openModalBackConfirmation: false })
+        } else {
+            this.props.merchantAddStockRecordProcess({
+                catalogues: this.state.dataForDiscard
+            })
+            this.setState({ openModalBackConfirmation: false })
+            NavigationService.navigate('MerchantStockView')
+
+        }
     }
     /** BATCH DELETE STOCK RECROD  DATA */
     batchDeleteData(){
@@ -221,6 +233,7 @@ import {
     /** BATCH DELETE ACTION */
     batchDeleteAction(){
         console.log('Batch Delete Action')
+        console.log(this.state.dataForBatchDelete)
         this.props.merchantBatchDeleteStockProcess({
             id: this.state.dataForBatchDelete
         })
