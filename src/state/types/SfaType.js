@@ -13,3 +13,8 @@ export const SFA_GET_COLLECTION_STATUS_FAILED =
 export const SFA_GET_DETAIL_PROCESS = 'SfaGetDetailProcess';
 export const SFA_GET_DETAIL_SUCCESS = 'SfaGetDetailSuccess';
 export const SFA_GET_DETAIL_FAILED = 'SfaGetDetailFailed';
+
+/** GET COLLECTION LIST */
+export const SFA_GET_COLLECTION_PROCESS = 'SfaGetCollectionProcess';
+export const SFA_GET_COLLECTION_SUCCESS = 'SfaGetCollectionSuccess';
+export const SFA_GET_COLLECTION_FAILED = 'SfaGetCollectionFailed';

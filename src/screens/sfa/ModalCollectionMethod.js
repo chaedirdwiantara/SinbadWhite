@@ -30,7 +30,7 @@ function ModalCollectionMethod(props) {
       {
         "id": 2,
         "name": "Cek",
-        "code": "check",
+        "code": "cheque",
         "balance": 1000000
       },
       {
@@ -59,6 +59,7 @@ function ModalCollectionMethod(props) {
       }
 	  ]
   })
+ 
 
   /**
    * =======================
