@@ -19,13 +19,13 @@ import {
   StatusBarWhite,
   SearchBarType1,
   TagListType2,
-  SkeletonType2
+  SkeletonType2,
+  SkeletonType25
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { useDispatch, useSelector } from 'react-redux';
 import SfaCollectionListView from './SfaCollectionListView';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -53,8 +53,8 @@ function SfaView(props) {
         orderCode: 'S0100042273101076686',
         orderRef: 'SNB1812/0002134',
         total: 670000,
-        debtDate: '25-02-2021',
-        overdue: '27-02-2021',
+        debtDate: '2020-09-03T08:32:10.932Z',
+        overdue: '2020-10-03T08:32:10.932Z',
         paidAmount: 0,
         paymentStatus: 'waiting_for_payment'
       },
@@ -168,6 +168,8 @@ function SfaView(props) {
       <>
         <View style={GlobalStyle.lines} />
         <View style={styles.footer}>
+          {/* <SkeletonType25/> */}
+          <View style={{flexDirection:'row'}}>
           <View style={styles.footer1}>
             <View style={[styles.footerText, { marginBottom: 4 }]}>
               <Text style={Fonts.type44}>Total Faktur: </Text>
@@ -192,6 +194,8 @@ function SfaView(props) {
               <Text style={Fonts.type108p}>{MoneyFormat(data.outstanding)}</Text>
             </View>
           </View>
+          </View>
+         
         </View>
       </>
     );
@@ -209,6 +213,7 @@ function SfaView(props) {
         <ScrollView>{renderCollectionList()}</ScrollView>
 
         {renderFooter()}
+        
       </View>
     );
   };
@@ -277,8 +282,8 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: 24,
     paddingVertical: 16,
-    display: 'flex',
-    flexDirection: 'row'
+    // display: 'flex',
+    // flexDirection: 'row'
   },
   footer1: {
     flex: 1
