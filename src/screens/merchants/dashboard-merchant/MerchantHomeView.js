@@ -427,8 +427,15 @@ class MerchantHomeView extends Component {
         }
         break;
       case 'stock':
-        console.log('Go To Stock Management')
-        NavigationService.navigate('MerchantStockView')
+        const taskList = this.props.merchant.dataGetLogAllActivity
+        
+        if (
+          taskList.find( 
+            task => task.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN
+            )
+        ) {
+          NavigationService.navigate('MerchantStockView')
+        }
         break;
       default:
         break;
@@ -528,6 +535,53 @@ class MerchantHomeView extends Component {
    * RENDER VIEW
    * =======================
    */
+  // RENDER BUTTON STOCK RECORD
+  buttonStock(item){
+    return item.activity ? (
+      <TouchableOpacity
+        onPress={() => {
+          this.goTo(item.goTo);
+        }}
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: -5
+        }}
+      >
+        <Text style={Fonts.type51}>Completed</Text>
+        <MaterialIcon
+          style={{
+            marginTop: 2,
+            padding: 0
+          }}
+          name="chevron-right"
+          color={Color.fontGreen50}
+          size={20}
+        />
+    </TouchableOpacity>
+    ) :(
+      <Button 
+        onPress={() => {
+          this.goTo(item.goTo)
+        }}
+        title={item.title}
+        titleStyle={[
+            Fonts.type16,
+            {
+              color: Color.fontWhite
+            }
+        ]}
+        buttonStyle={{
+            backgroundColor: Color.fontRed50,
+            borderRadius: 7,
+            paddingHorizontal: 20,
+            paddingVertical: 5,
+            width: '100%'
+        }}
+      />
+    )
+  }
 
   renderListProductImage(item) {
     return item.orderBrands.map((itemBrand, indexBrand) => {
@@ -824,6 +878,11 @@ class MerchantHomeView extends Component {
                           />
                         </TouchableOpacity>
                       )
+                    ) : taskList.activity === ACTIVITY_JOURNEY_PLAN_STOCK ? (
+                      this.buttonStock({
+                        goTo: item.goTo,
+                        activity: ACTIVITY_JOURNEY_PLAN_STOCK
+                      })
                     ) : taskList.activity ===
                       ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY ? (
                       <TouchableOpacity
