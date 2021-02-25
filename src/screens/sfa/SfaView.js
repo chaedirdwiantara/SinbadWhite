@@ -42,17 +42,12 @@ function SfaView(props) {
     loadingGetCollectionStatus,
     dataGetCollectionStatus,
     loadingGetCollectionList,
-    dataGetCollectionList
+    dataGetCollectionList,
+
   } = useSelector(state => state.sfa);
-  const [sfaTag, setSfaTag] = useState([
-    { status: '', title: 'Semua', detail: '' },
-    {
-      status: 'waiting_for_payment',
-      title: 'Menunggu Pembayaran',
-      detail: 'Sedang Menunggu Pembayaran'
-    },
-    { status: 'overdue', title: 'Overdue', detail: 'Pesanan Sudah Overdue' }
-  ]);
+  const {
+   selectedMerchant
+  } = useSelector(state => state.merchant);
   const [selectedTagStatus, setSelectedTagStatus] = useState('semua');
   
   /**
@@ -70,10 +65,13 @@ function SfaView(props) {
   };
 
   const getCollectionList = () => {
+   
+    const storeId = parseInt(selectedMerchant.storeId)
+    const supplierId = parseInt(selectedMerchant.supplierId)
     const data = {
       limit: 20,
-      storeId: 2,
-      supplierId: 2,
+      storeId: storeId,
+      supplierId: supplierId,
       keyword: '',
       statusPayment: ''
     };
