@@ -16,7 +16,6 @@ import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch } from 'react-redux';
-import { sfaGetReferenceListProcess } from '../../state/actions';
 
 function ModalCollectionMethod(props) {
   const dispatch = useDispatch();

@@ -13,6 +13,7 @@ import { moment } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import { SkeletonType24 } from '../../library/component';
 import NavigationService from '../../navigation/NavigationService';
+import SfaNoDataView from './SfaNoDataView';
 
 function SfaCollectionListView(props) {
   /**
@@ -25,7 +26,9 @@ function SfaCollectionListView(props) {
   };
   const renderData = () => {
     return (
+      <>
       <View style={styles.flatListContainer}>
+      { props.dataList.data.orderParcels !== null?  
         <FlatList
           //   contentContainerStyle={styles.flatListContainer}
           //   ItemSeparatorComponent={this.renderSeparator}
@@ -39,7 +42,13 @@ function SfaCollectionListView(props) {
           //   onEndReached={this.onHandleLoadMore}
           showsVerticalScrollIndicator
         />
-      </View>
+       : 
+       <View style={{marginTop: '20%'}}>
+<SfaNoDataView/>
+</View>
+       }
+     </View>
+      </>
     );
   };
 
