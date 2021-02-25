@@ -26,6 +26,7 @@ import { useDispatch } from 'react-redux';
 import ModalCollectionMethod from'./ModalCollectionMethod'
 import SfaAddTagihanCheque from './SfaAddTagihanCheque';
 import SfaAddTagihanTransfer from './SfaAddTagihanTransfer'
+import SfaAddTagihanPromo from './SfaAddTagihanPromo'
 
 const SfaAddTagihanView = (props) => {
   const dispatch = useDispatch();
@@ -56,6 +57,9 @@ const SfaAddTagihanView = (props) => {
       if (collectionMethod.code === "transfer") {
         return renderBillingTransfer()
       }
+      if (collectionMethod.code === "promo") {
+        return renderBillingPromo()
+      }
     }
   } 
   
@@ -72,7 +76,7 @@ const SfaAddTagihanView = (props) => {
   }
 
   const dataTrasfer = (data) => {
-    
+
   }
 
   useEffect(() => {
@@ -219,9 +223,14 @@ const SfaAddTagihanView = (props) => {
     return <SfaAddTagihanCheque status={methodStatus}/>
   }
 
-  /** RENDER CHEQUE PAYMENT */
+  /** RENDER TRANSFER PAYMENT */
   const renderBillingTransfer = () => {
     return <SfaAddTagihanTransfer collectionMethod={collectionMethod} data={dataTrasfer}/>
+  }
+
+  /** RENDER PROMO PAYMENT */
+  const renderBillingPromo = () => {
+    return <SfaAddTagihanPromo collectionMethod={collectionMethod}/>
   }
   /**
    * =======================
