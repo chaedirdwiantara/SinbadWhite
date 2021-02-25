@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -13,51 +13,43 @@ import {
   Modal,
 } from '../../library/thirdPartyPackage';
 import {
-    SearchBarType1
+    SearchBarType1,
+    LoadingPage
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { sfaGetReferenceListProcess } from '../../state/actions';
 
 function ModalReferenceList(props) {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('')
+  const {
+    dataGetReferenceList
+   } = useSelector(state => state.sfa);
 
-  /** FUNCTIONAL */
-
-  /** GET REFERENCES */
-  const getReference = () => {
-
-  }
-  const [data, setData] = useState({
-    "meta": {
-        "limit": 10,
-        "paymentCollectionId": 3,
-        "skip": 0,
-        "storeId": 101,
-        "supplierId": 2,
-        "total": 1
-    },
-    "data": [
-        {
-            "id": 4,
-            "referenceCode": "AABBCC",
-            "balance": 800000,
-            "issuedDate": "2021-02-23 08:43:45",
-            "invalidDate": "2021-03-01 08:43:45",
-            "bankSource": "Bank BCA"
-        }
-    ]
-  })
- 
 
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
-  
+  useEffect(() => {
+    getReference()
+  }, []);
+
+   /** GET REFERENCE LIST DATA */
+   const getReference = () => {
+    const data = {
+      supplierId : 2,
+      storeId: 101,
+      paymentCollectionTypeId: 3,
+      limit: 20
+    }
+    dispatch(sfaGetReferenceListProcess(data))
+  }
+
 
   /**
    * *********************************
@@ -69,7 +61,7 @@ function ModalReferenceList(props) {
       <View style={styles.headerContainer}>
         <View style={[styles.headerContent]}>
           <View style={[styles.headerBody]}>
-            <TouchableOpacity onPress={props.close}>
+            <TouchableOpacity onPress={props.close} style={{flex: 1}}>
               <View>
                 <MaterialIcon
                   name="arrow-back"
@@ -78,15 +70,14 @@ function ModalReferenceList(props) {
                   style={{
                     marginBottom: 8,
                     marginLeft: 8,
-                    alignContent: 'flex-start'
                   }}
                 />
               </View>
             </TouchableOpacity>
           </View>
-          <View style={{ alignItems: 'flex-start', flex: 1, alignSelf:"center" }}>
+          <View style={{width: '90%', marginLeft: -8}}>
           <SearchBarType1
-              placeholder={'Cari produk, nomor pesanan'}
+              placeholder={'Cari Cek Disini'}
               searchText={searchText}
               // onRef={ref => (this.parentFunction = ref)}
               // parentFunction={this.parentFunction.bind(this)}
@@ -99,6 +90,7 @@ function ModalReferenceList(props) {
   }
 
   const renderCollectionMethod = () => {
+    const data = dataGetReferenceList
     return data.data.map((item, index) => {
       return (
         <View key={index}>
@@ -125,10 +117,14 @@ function ModalReferenceList(props) {
    */
   const renderContent = () => {
     return (
-      <View style={styles.contentContainer}>
-        {/* {renderHeader()} */}
-        {renderCollectionMethod()}
+        <>
+        <View style={styles.contentContainer}>
+        {dataGetReferenceList?  
+         
+        renderCollectionMethod()
+     : <LoadingPage/>}
       </View>
+      </>
     );
   };
 
@@ -171,7 +167,8 @@ const styles = StyleSheet.create({
     },
     headerContent: {
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems:'center'
     },
     headerBody: {
         marginHorizontal: 8,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -16,6 +16,7 @@ import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch } from 'react-redux';
+import { sfaGetReferenceListProcess } from '../../state/actions';
 
 function ModalCollectionMethod(props) {
   const dispatch = useDispatch();
@@ -66,7 +67,6 @@ function ModalCollectionMethod(props) {
    * FUNCTIONAL
    * =======================
    */
-  
 
   /**
    * *********************************
