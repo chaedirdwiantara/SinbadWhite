@@ -32,20 +32,6 @@ const SfaAddTagihanView = (props) => {
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false)
   const [cash, setCash] = useState(0)
   const [methodStatus, setMethodStatus] = useState('unavailable')
-  const [data, setData] = useState(
-    {
-      "data": {
-        "id": 1,
-        "orderCode": "S010004232321231231",
-        "orderRef": "A754123131",
-        "invoiceGroupName": "COMBINE",
-        "totalBilling": 670000,
-        "totalInstorePayment": 335000,
-        "totalCollection": 0,
-        "remainingBilling": 335000,
-      }
-    }
-  );
 
   /**
    * =======================
@@ -69,8 +55,8 @@ const SfaAddTagihanView = (props) => {
   } 
   
   const textBillingCash = (text) => {
-    if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(data.data.remainingBilling)) {
-      setCash(parseInt(data.data.remainingBilling))
+    if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.navigation.state.params.data.remainingBilling)) {
+      setCash(parseInt(props.navigation.state.params.data.remainingBilling))
     } else {
       setCash(parseInt(text.replace(/[Rp.]+/g, '')))
     }
@@ -104,15 +90,17 @@ const SfaAddTagihanView = (props) => {
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Nama Faktur</Text>
-          <Text style={Fonts.type17}>{data.data.invoiceGroupName}</Text>
+          <Text style={Fonts.type17}>{props.navigation.state.params.data.invoiceGroupName}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>No. Pesanan</Text>
-          <Text style={Fonts.type17}>{data.data.orderCode}</Text>
+          <Text style={Fonts.type17}>{props.navigation.state.params.data.orderCode}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>No. Referensi</Text>
-          <Text style={Fonts.type17}>{data.data.orderRef}</Text>
+          <Text style={Fonts.type17}>
+            {props.navigation.state.params.data.orderRef === null ? "-" : props.navigation.state.params.data.orderRef}
+          </Text>
         </View>
       </View>
     )
@@ -128,7 +116,7 @@ const SfaAddTagihanView = (props) => {
             <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
             <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
               <Text style={Fonts.type17}>Sisa Tagihan</Text>
-              <Text style={Fonts.type22}>{MoneyFormat(data.data.remainingBilling)}</Text>
+              <Text style={Fonts.type22}>{MoneyFormat(props.navigation.state.params.data.remainingBilling)}</Text>
             </View>
           </View>
         </View>
@@ -262,6 +250,7 @@ return <SfaAddTagihanCheque status={methodStatus}/>
    * MAIN
    * =======================
    */
+  console.log("ini dataa:", props.navigation.state.params.data);
   return (
     <>
       {/* {props.merchant.dataGetMerchantDetail ? ( */}
