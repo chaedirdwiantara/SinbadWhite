@@ -89,7 +89,7 @@ class MerchantListView extends Component {
           <View>
             <View style={{ paddingHorizontal: 16, paddingVertical: 10 }}>
               <Text style={Fonts.type8}>
-                {this.props.merchant.totalDataGetMerchant} List Store
+                {this.props.merchant.totalDataGetMerchantV2} List Store
               </Text>
             </View>
             <View style={GlobalStyle.lines} />
@@ -169,4 +169,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantListView);
  * updatedDate: 24022021
  * updatedFunction:
  * -> update the props of portfolio.
+ * updatedBy: dyah
+ * updatedDate: 25022021
+ * updatedFunction:
+ * -> update the props of total merchant.
  */

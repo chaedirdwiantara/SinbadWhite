@@ -38,14 +38,15 @@ class MerchantSurveyView extends Component {
    */
   /** FOR GET LOG ALL ACTIVITY */
   refreshMerchantGetLogAllActivityProcess() {
-    this.props.merchantGetLogAllActivityProcess(
-      this.props.merchant.selectedMerchant.journeyPlanSaleId
+    this.props.merchantGetLogAllActivityProcessV2(
+      this.props.merchant.selectedMerchant.journeyBookStores.id
     );
   }
   /** FOR SET SALES ACTIVITY SURVEY_TOKO DONE */
   surveyDone() {
     this.props.merchantPostActivityProcess({
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
+      journeyBookStoresId: this.props.merchant.selectedMerchant
+        .journeyBookStores.id,
       activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
     });
     this.refreshMerchantGetLogAllActivityProcess();
@@ -89,10 +90,10 @@ class MerchantSurveyView extends Component {
           item => item.responseStatus === 'completed'
         ).length
       ) {
-        if (this.props.merchant.dataGetLogAllActivity) {
+        if (this.props.merchant.dataGetLogAllActivityV2) {
           if (
-            !this.props.merchant.dataGetLogAllActivity.find(
-              item => item.activity === 'toko_survey'
+            !this.props.merchant.dataGetLogAllActivityV2.find(
+              item => item.activityName === 'toko_survey'
             )
           ) {
             this.setState({ successSurveyList: true }, () => this.surveyDone());
@@ -302,4 +303,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyView);
  * updatedDate: 16122020
  * updatedFunction:
  * -> add surveySerialId to param navigation.
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ *  -> Update the props of log activity.
  */

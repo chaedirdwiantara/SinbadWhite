@@ -34,11 +34,10 @@ class ModalMerchantListDataView extends Component {
    * =======================
    */
   onHandleRefresh = () => {
-    this.props.merchantGetRefresh();
-    this.props.merchantGetProcess({
-      type: this.props.portfolioIndex === 0 ? 'direct' : 'group',
-      page: 0,
+    this.props.merchantGetRefreshV2();
+    this.props.merchantGetProcessV2({
       loading: true,
+      page: 1,
       portfolioId: this.props.merchant.dataGetPortfolioV2[
         this.props.portfolioIndex
       ].id,
@@ -47,20 +46,17 @@ class ModalMerchantListDataView extends Component {
   };
 
   onHandleLoadMore = () => {
-    if (this.props.merchant.dataGetMerchant) {
+    if (this.props.merchant.dataGetMerchantV2) {
       if (
-        this.props.merchant.dataGetMerchant.length <
-        this.props.merchant.totalDataGetMerchant
+        this.props.merchant.dataGetMerchantV2.length <
+        this.props.merchant.totalDataGetMerchantV2
       ) {
-        const page = this.props.merchant.pageGetMerchant + 10;
-        this.props.merchantGetLoadMore(page);
-        this.props.merchantGetProcess({
-          type: this.props.portfolioIndex === 0 ? 'direct' : 'group',
+        const page = this.props.merchant.pageGetMerchantV2 + 10;
+        this.props.merchantGetLoadMoreV2(page);
+        this.props.merchantGetProcessV2({
+          loading: true,
           page,
-          loading: false,
-          portfolioId: this.props.merchant.dataGetPortfolioV2[
-            this.props.portfolioIndex
-          ].id,
+          portfolioId: this.props.merchant.dataGetPortfolioV2[0].id,
           search: this.props.search
         });
       }
@@ -155,7 +151,7 @@ class ModalMerchantListDataView extends Component {
   }
   /** === RENDER DATA === */
   renderData() {
-    return this.props.merchant.dataGetMerchant.length > 0
+    return this.props.merchant.dataGetMerchantV2.length > 0
       ? this.renderContent()
       : this.renderEmpty();
   }
@@ -165,13 +161,13 @@ class ModalMerchantListDataView extends Component {
       <View style={{ flex: 1 }}>
         <View style={{ paddingHorizontal: 16, paddingVertical: 10 }}>
           <Text style={Fonts.type8}>
-            {this.props.merchant.totalDataGetMerchant} List Store
+            {this.props.merchant.totalDataGetMerchantV2} List Store
           </Text>
         </View>
         <View style={GlobalStyle.lines} />
         <FlatList
           contentContainerStyle={styles.flatListContainer}
-          data={this.props.merchant.dataGetMerchant}
+          data={this.props.merchant.dataGetMerchantV2}
           renderItem={this.renderItem.bind(this)}
           keyExtractor={(item, index) => index.toString()}
           refreshing={this.props.merchant.refreshGetMerchant}
@@ -253,4 +249,8 @@ export default connect(
  * updatedDate: 24022021
  * updatedFunction:
  * -> update the props of portfolio.
+ * updatedBy: dyah
+ * updatedDate: 25022021
+ * updatedFunction:
+ * -> update the props of merchant list.
  */

@@ -334,7 +334,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingGetMerchant: false,
       loadingLoadMoreGetMerchant: false,
       refreshGetMerchant: false,
-      totalDataGetMerchantV2: action.payload.total,
+      totalDataGetMerchantV2: action.payload.data.length,
       dataGetMerchantV2: [...state.dataGetMerchant, ...action.payload.data]
     };
   },
@@ -739,7 +739,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetLogAllActivity: false,
-      dataGetLogAllActivityV2: action.payload
+      dataGetLogAllActivityV2: action.payload.data
     };
   },
   [types.MERCHANT_GET_LOG_ALL_ACTIVITY_FAILED_V2](state, action) {

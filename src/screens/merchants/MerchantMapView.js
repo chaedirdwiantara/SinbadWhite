@@ -78,7 +78,7 @@ class MerchantMapView extends Component {
   renderBottomList() {
     return !this.props.merchant.loadingGetMerchant ? (
       <ModalBottomType2
-        title={`${this.props.merchant.totalDataGetMerchant} List Store`}
+        title={`${this.props.merchant.totalDataGetMerchantV2} List Store`}
         height={0.35 * height}
         body={
           <MerchantListDataView
@@ -213,9 +213,9 @@ class MerchantMapView extends Component {
         }}
         onLayout={() =>
           setTimeout(() => {
-            if (this.props.merchant.dataGetMerchant.length > 0) {
+            if (this.props.merchant.dataGetMerchantV2.length > 0) {
               this.mapRef.fitToCoordinates(
-                this.props.merchant.dataGetMerchant,
+                this.props.merchant.dataGetMerchantV2,
                 {
                   edgePadding: {
                     top: 16,
@@ -243,7 +243,7 @@ class MerchantMapView extends Component {
           <View />
         )}
 
-        {this.props.merchant.dataGetMerchant.map((marker, index) => (
+        {this.props.merchant.dataGetMerchantV2.map((marker, index) => (
           <Marker
             key={index}
             image={require('../../assets/icons/maps/drop_pin.png')}
@@ -346,4 +346,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantMapView);
  * updatedDate: 24022021
  * updatedFunction:
  * -> update the props of portfolio.
+ * updatedBy: dyah
+ * updatedDate: 25022021
+ * updatedFunction:
+ * -> update the props of merchant list.
  */

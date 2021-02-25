@@ -149,12 +149,11 @@ class MerchantView extends Component {
   }
   /** === CALL GET FUNCTION === */
   getMerchant(type, portfolioIndex, search) {
-    this.props.merchantGetReset();
-    this.props.merchantGetProcess({
-      type,
-      page: 0,
+    this.props.merchantGetResetV2();
+    this.props.merchantGetProcessV2({
       loading: true,
-      portfolioId: this.props.merchant.dataGetPortfolioV2[portfolioIndex].id,
+      page: 1,
+      portfolioId: this.props.merchant.dataGetPortfolioV2[0].id,
       search
     });
   }
@@ -253,15 +252,18 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(MerchantView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ * updatedBy: dyah
+ * updatedDate: 25022021
+ * updatedFunction:
+ * -> update the props of merchant list.
+ *
+ */
