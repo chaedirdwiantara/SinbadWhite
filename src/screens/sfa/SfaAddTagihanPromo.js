@@ -113,10 +113,10 @@ const SfaAddTagihanPromo = props => {
       return(
         <View style={{ marginHorizontal: -16, marginVertical: 16 }}>
             <InputType5
-                title={status === 'available' ? 'Nomor Cek' : '*Nomor Referensi'}
+                title={status === 'available' ? 'Nomor Referensi' : '*Nomor Referensi'}
                 value={noRef}
                 placeholder={
-                status === 'available' ? 'Nomor Cek' : '*Nomor Referensi'
+                status === 'available' ? 'Nomor Referensi' : '*Nomor Referensi'
                 }
                 keyboardType={'default'}
                 onChangeText={(text) => textReference(text)}
