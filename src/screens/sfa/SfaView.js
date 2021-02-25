@@ -19,22 +19,31 @@ import {
   StatusBarWhite,
   SearchBarType1,
   TagListType2,
-  SkeletonType2
+  SkeletonType2,
+  SkeletonType24,
+  SkeletonType25
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { useDispatch, useSelector } from 'react-redux';
 import SfaCollectionListView from './SfaCollectionListView';
 import { ScrollView } from 'react-native-gesture-handler';
-import { sfaGetCollectionStatusProcess } from '../../state/actions/SfaAction';
+import {
+  sfaGetCollectionListProcess,
+  sfaGetCollectionStatusProcess
+} from '../../state/actions/SfaAction';
 
 function SfaView(props) {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('');
-  const { loadingGetCollectionStatus, dataGetCollectionStatus } = useSelector(state => state.sfa);
+  const {
+    loadingGetCollectionStatus,
+    dataGetCollectionStatus,
+    loadingGetCollectionList,
+    dataGetCollectionList
+  } = useSelector(state => state.sfa);
   const [sfaTag, setSfaTag] = useState([
     { status: '', title: 'Semua', detail: '' },
     {
@@ -45,58 +54,7 @@ function SfaView(props) {
     { status: 'overdue', title: 'Overdue', detail: 'Pesanan Sudah Overdue' }
   ]);
   const [selectedTagStatus, setSelectedTagStatus] = useState('semua');
-  const [data, setData] = useState({
-    data: [
-      {
-        id: 3832,
-        invoice: 'COMBINE',
-        orderCode: 'S0100042273101076686',
-        orderRef: 'SNB1812/0002134',
-        total: 670000,
-        debtDate: '25-02-2021',
-        overdue: '27-02-2021',
-        paidAmount: 0,
-        paymentStatus: 'waiting_for_payment'
-      },
-      {
-        id: 3832,
-        invoice: 'TIGA RAKSA #2',
-        orderCode: 'S0213042273101076686',
-        orderRef: 'SNB1815/0002135',
-        total: 700000,
-        debtDate: '26-02-2021',
-        overdue: '28-02-2021',
-        paidAmount: 0,
-        paymentStatus: 'overdue'
-      },
-      {
-        id: 3832,
-        invoice: 'TIGA RAKSA #2',
-        orderCode: 'S0213042273101076686',
-        orderRef: 'SNB1815/0002135',
-        total: 700000,
-        debtDate: '26-02-2021',
-        overdue: '28-02-2021',
-        paidAmount: 0,
-        paymentStatus: 'waiting_for_payment'
-      },
-      {
-        id: 3832,
-        invoice: 'TIGA RAKSA #2',
-        orderCode: 'S0213042273101076686',
-        orderRef: 'SNB1815/0002135',
-        total: 700000,
-        debtDate: '26-02-2021',
-        overdue: '28-02-2021',
-        paidAmount: 0,
-        paymentStatus: 'overdue'
-      }
-    ],
-    totalInvoice: 3,
-    invoiceAmount: 1625000,
-    totalAmountPaid: 335000,
-    outstanding: 1675000
-  });
+  
   /**
    * =======================
    * FUNCTIONAL
@@ -104,11 +62,22 @@ function SfaView(props) {
    */
   useEffect(() => {
     getCollectionStatus();
+    getCollectionList();
   }, []);
-  
 
   const getCollectionStatus = () => {
     dispatch(sfaGetCollectionStatusProcess());
+  };
+
+  const getCollectionList = () => {
+    const data = {
+      limit: 20,
+      storeId: 2,
+      supplierId: 2,
+      keyword: '',
+      statusPayment: ''
+    };
+    dispatch(sfaGetCollectionListProcess(data));
   };
   /**
    * *********************************
@@ -117,8 +86,15 @@ function SfaView(props) {
    */
 
   const renderCollectionList = () => {
-    return <SfaCollectionListView data={data} />;
-  };
+    return (
+      <>
+      {!loadingGetCollectionList && dataGetCollectionList? 
+      <SfaCollectionListView dataList={dataGetCollectionList}/>:
+      renderSkeletonList()}
+        </>
+    )
+  
+    }
   /** === RENDER SKELETON TAGS === */
   const renderSkeletonTags = () => {
     return (
@@ -128,12 +104,15 @@ function SfaView(props) {
       </View>
     );
   };
+  const renderSkeletonList = () => {
+    return <SkeletonType24 />;
+  };
   /** === TAGS SECTION === */
   const renderTagsContent = () => {
-    const status = dataGetCollectionStatus
+    const status = dataGetCollectionStatus;
     return (
       <>
-        {!loadingGetCollectionStatus && dataGetCollectionStatus? (
+        {!loadingGetCollectionStatus && dataGetCollectionStatus ? (
           <>
             <TagListType2
               selected={selectedTagStatus}
@@ -151,34 +130,43 @@ function SfaView(props) {
   };
   /** === RENDER FOOTER === */
   const renderFooter = () => {
+    const data = dataGetCollectionList;
     return (
       <>
         <View style={GlobalStyle.lines} />
         <View style={styles.footer}>
-          <View style={styles.footer1}>
-            <View style={[styles.footerText, { marginBottom: 4 }]}>
-              <Text style={Fonts.type44}>Total Faktur: </Text>
-              <Text style={Fonts.type108p}>{data.totalInvoice}</Text>
+          {!loadingGetCollectionList && dataGetCollectionList ? (
+            <View style={{ flexDirection: 'row' }}>
+              <View style={styles.footer1}>
+                <View style={[styles.footerText, { marginBottom: 4 }]}>
+                  <Text style={Fonts.type44}>Total Faktur: </Text>
+                  <Text style={Fonts.type108p}>{data.data.totalInvoice}</Text>
+                </View>
+                <View style={styles.footerText}>
+                  <Text style={Fonts.type44}>Jumlah Faktur: </Text>
+                  <Text style={Fonts.type108p}>
+                    {MoneyFormat(data.data.totalInvoiceAmount)}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.footer1}>
+                <View style={[styles.footerText, { marginBottom: 4 }]}>
+                  <Text style={Fonts.type44}>Total Terbayar: </Text>
+                  <Text style={Fonts.type108p}>
+                    {MoneyFormat(data.data.totalAmountPaid)}
+                  </Text>
+                </View>
+                <View style={styles.footerText}>
+                  <Text style={Fonts.type44}>Sisa Tagihan: </Text>
+                  <Text style={Fonts.type108p}>
+                    {MoneyFormat(data.data.totalOutstandingAmount)}
+                  </Text>
+                </View>
+              </View>
             </View>
-            <View style={styles.footerText}>
-              <Text style={Fonts.type44}>Jumlah Faktur: </Text>
-              <Text style={Fonts.type108p}>
-                {MoneyFormat(data.invoiceAmount)}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.footer1}>
-            <View style={[styles.footerText, { marginBottom: 4 }]}>
-              <Text style={Fonts.type44}>Total Terbayar: </Text>
-              <Text style={Fonts.type108p}>
-                {MoneyFormat(data.totalAmountPaid)}
-              </Text>
-            </View>
-            <View style={styles.footerText}>
-              <Text style={Fonts.type44}>Sisa Tagihan: </Text>
-              <Text style={Fonts.type108p}>{MoneyFormat(data.outstanding)}</Text>
-            </View>
-          </View>
+          ) : (
+            <SkeletonType25 />
+          )}
         </View>
       </>
     );
@@ -263,9 +251,9 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingHorizontal: 24,
-    paddingVertical: 16,
-    display: 'flex',
-    flexDirection: 'row'
+    paddingVertical: 16
+    // display: 'flex',
+    // flexDirection: 'row'
   },
   footer1: {
     flex: 1
@@ -276,16 +264,5 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, merchant }) => {
-  return { user, merchant };
-};
-
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(ActionCreators, dispatch);
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SfaView);
+export default SfaView;
 // export default DMSView;
