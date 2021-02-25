@@ -4,12 +4,16 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
-  ScrollView
+  ScrollView,
+  TouchableOpacity,
+  LayoutAnimation,
+  TouchableWithoutFeedback
 } from '../../library/reactPackage';
 
 import {
   bindActionCreators,
-  connect
+  connect,
+  MaterialIcon
 } from '../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
@@ -28,19 +32,32 @@ import { useDispatch , useSelector} from 'react-redux';
 function SfaDetailView(props) {
   const dispatch = useDispatch();
   const { dataSfaGetDetail } = useSelector(state => state.sfa);
+  const [accordionOpen, setAccordionOpen] = useState(false)
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
   const addCollection = () => {
-    NavigationService.navigate('SfaAddTagihanView')
+    NavigationService.navigate('SfaAddTagihanView', {data: dataSfaGetDetail.data})
   }
 
   useEffect(() => {
     const orderParcelId = parseInt(props.navigation.state.params.orderParcelId);
     dispatch(sfaGetDetailProcess(orderParcelId));
   }, [dispatch]);
+
+  const openAccordion = (event) => {
+    LayoutAnimation.configureNext(
+      LayoutAnimation.create(
+        375,
+        LayoutAnimation.Types.easeIn,
+        LayoutAnimation.Properties.opacity
+      )
+    );
+
+    setAccordionOpen(event)
+  }
 
   /**
    * *********************************
@@ -104,11 +121,35 @@ function SfaDetailView(props) {
   const renderItemCollectionInfo = () => {
     const detailSfa = dataSfaGetDetail.data
     return (
-      <View>
-        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text style={Fonts.type17}>Total Tagihan</Text>
-          <Text style={Fonts.type17}>{MoneyFormat(detailSfa.totalBilling)}</Text>
-        </View>
+      <View key={1}>
+        <TouchableWithoutFeedback onPress={() => openAccordion(!accordionOpen)}>
+          <View style={{flexDirection:"row", marginBottom: 4, justifyContent:"space-between"}}>
+            <View style={{flexDirection:"row", justifyContent:"space-around"}}>
+              {
+                accordionOpen === true ? (
+                    <MaterialIcon
+                      name="keyboard-arrow-up"
+                      color={masterColor.fontBlack50}
+                      size={24}
+                      style={{marginTop:-4, marginLeft: -4, marginRight: 6}}
+                    />
+                  ) : (
+                    <MaterialIcon
+                      name="keyboard-arrow-down"
+                      color={masterColor.fontBlack50}
+                      size={24}
+                      style={{marginTop:-4, marginLeft: -4, marginRight: 6}}
+                    />
+                  )
+              }
+              <Text style={Fonts.type17}>Total Tagihan</Text>
+            </View>
+            <Text style={Fonts.type17}>{MoneyFormat(detailSfa.totalBilling)}</Text>
+          </View>
+        </TouchableWithoutFeedback>
+        {renderAccordion()}
+        <View style={[GlobalStyle.lines, { flex: 1, marginBottom: 8 }]} />
+
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Pembayaran Dari Toko</Text>
           <Text style={Fonts.type17}>{MoneyFormat(detailSfa.totalInStorePayment)}</Text>
@@ -154,12 +195,37 @@ function SfaDetailView(props) {
   const renderAddCollection= () => {
     return (
       <ButtonSingle
-        disabled={false}
+        disabled={dataSfaGetDetail.data.isPaid}
         title={'Tagih'}
         borderRadius={4}
         onPress={() => addCollection()}
       />
     );
+  }
+
+  const renderAccordion = () => {
+    if (accordionOpen === true) {
+      return(
+        <View>
+          <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+            <Text style={Fonts.type17}>{`Total Barang (${dataSfaGetDetail.data.parcelQty})`}</Text>
+            <Text style={Fonts.type17}>{MoneyFormat(dataSfaGetDetail.data.parcelGrossPrice)}</Text>
+          </View>
+          <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+            <Text style={Fonts.type51}>Potongan Harga</Text>
+            <Text style={Fonts.type17}>{MoneyFormat(dataSfaGetDetail.data.parcelPromo)}</Text>
+          </View>
+          <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+            <Text style={Fonts.type17}>Ongkos Kirim</Text>
+            <Text style={Fonts.type17}>{MoneyFormat(0)}</Text>
+          </View>
+          <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+            <Text style={Fonts.type17}>PPN 10%</Text>
+            <Text style={Fonts.type17}>{MoneyFormat(dataSfaGetDetail.data.parcelTaxes)}</Text>
+          </View>
+        </View>
+      )
+    }
   }
 
   /**
