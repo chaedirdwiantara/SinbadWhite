@@ -12,11 +12,9 @@ function getMerchant(data) {
   });
 }
 /** === MERCHANT LIST BY PORTFOLIO V2 === */
-function getMerchantV2(data) {
+function getMerchantV2() {
   return ApiRest({
-    path: `agent-stores?type=${data.type}&portfolioId=${
-      data.portfolioId
-    }&$skip=${data.page}&$limit=10&keyword=${data.search}`,
+    path: `${salesManagementService}/v1/agent/supplier-stores`,
     method: 'GET'
   });
 }

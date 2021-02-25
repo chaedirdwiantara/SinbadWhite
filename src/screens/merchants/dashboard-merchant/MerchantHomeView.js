@@ -129,7 +129,7 @@ class MerchantHomeView extends Component {
   /** === DID MOUNT === */
   getSurvey = () => {
     const params = {
-      storeId: this.props.merchant.selectedMerchant.journeyBookStores.storeId,
+      storeId: this.props.merchant.selectedMerchant.storeId,
       page: 1,
       length: 10
     };
@@ -139,14 +139,12 @@ class MerchantHomeView extends Component {
   componentDidMount() {
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
-      this.props.merchant.selectedMerchant.journeyBookStores.storeId
+      this.props.merchant.selectedMerchant.storeId
     );
     /** FOR GET LOG ALL ACTIVITY */
     this.props.merchantGetLogAllActivityProcessV2(
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
-    /** FOR GET SURVEY LIST */
-    this.getSurvey();
   }
 
   componentDidUpdate(prevProps) {
@@ -297,7 +295,8 @@ class MerchantHomeView extends Component {
       if (this.props.merchant.dataGetLogPerActivityV2 !== null) {
         if (this.props.merchant.dataGetLogPerActivityV2.length > 0) {
           if (
-            this.props.merchant.dataGetLogPerActivityV2[0].activity === 'order'
+            this.props.merchant.dataGetLogPerActivityV2[0].activityName ===
+            'order'
           ) {
             this.checkoutProcess();
           }
@@ -346,7 +345,7 @@ class MerchantHomeView extends Component {
     this.props.journeyPlanGetResetV2();
     this.props.journeyPlanGetProcessV2({
       page: 1,
-      data: today,
+      date: today,
       loading: true
     });
     this.props.getJourneyPlanReportProcess(
@@ -366,16 +365,18 @@ class MerchantHomeView extends Component {
    * Set sales activity survey_toko done
    */
   SurveyDone() {
-    if (
-      !this.props.merchant.dataGetLogAllActivityV2.find(
-        item => item.activity === 'toko_survey'
-      )
-    ) {
-      this.props.merchantPostActivityProcess({
-        journeyBookStoresId: this.props.merchant.selectedMerchant
-          .journeyBookStores.id,
-        activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-      });
+    if (this.props.dataGetLogAllActivityV2) {
+      if (
+        !this.props.merchant.dataGetLogAllActivityV2.find(
+          item => item.activityName === 'toko_survey'
+        )
+      ) {
+        this.props.merchantPostActivityProcess({
+          journeyBookStoresId: this.props.merchant.selectedMerchant
+            .journeyBookStores.id,
+          activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+        });
+      }
     }
   }
 
@@ -397,8 +398,7 @@ class MerchantHomeView extends Component {
         break;
       case 'history':
         NavigationService.navigate('HistoryView', {
-          storeId: this.props.merchant.selectedMerchant.journeyBookStores
-            .storeId
+          storeId: this.props.merchant.selectedMerchant.storeId
         });
         break;
       case 'checkIn':
@@ -410,22 +410,28 @@ class MerchantHomeView extends Component {
             .journeyBookStores.id,
           activity: 'check_in'
         });
-        if (
-          _.isEmpty(this.props.merchant.surveyList.payload.data) ||
-          this.props.merchant.dataGetLogAllActivityV2.find(
-            item => item.activityName === 'toko_survey'
-          )
-        ) {
-          this.setState({ openModalCheckout: true });
+        if (this.props.merchant.dataGetLogAllActivityV2) {
+          if (
+            _.isEmpty(this.props.merchant.surveyList.payload.data) ||
+            this.props.merchant.dataGetLogAllActivityV2.find(
+              item => item.activityName === 'toko_survey'
+            )
+          ) {
+            this.setState({ openModalCheckout: true });
+          }
         }
         break;
       case 'survey':
-        if (
-          this.props.merchant.dataGetLogAllActivityV2.find(
-            item => item.activity === 'check_in'
-          )
-        ) {
-          NavigationService.navigate('MerchantSurveyView', { readOnly: false });
+        if (this.props.merchant.dataGetLogAllActivityV2) {
+          if (
+            this.props.merchant.dataGetLogAllActivityV2.find(
+              item => item.activityName === 'check_in'
+            )
+          ) {
+            NavigationService.navigate('MerchantSurveyView', {
+              readOnly: false
+            });
+          }
         }
         break;
       default:
@@ -764,9 +770,11 @@ class MerchantHomeView extends Component {
                 >
                   {taskList ? (
                     taskList.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_IN ||
-                    taskList.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_OUT ? (
+                    taskList.activityName ===
+                      ACTIVITY_JOURNEY_PLAN_CHECK_OUT ? (
                       <Text style={Fonts.type107}>
-                        {taskList.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                        {taskList.activityName ===
+                        ACTIVITY_JOURNEY_PLAN_CHECK_IN
                           ? `Check In ${moment(taskList.createdAt).format(
                               'HH:mm'
                             )}`
@@ -774,7 +782,8 @@ class MerchantHomeView extends Component {
                               'HH:mm'
                             )}`}
                       </Text>
-                    ) : taskList.activityName === ACTIVITY_JOURNEY_PLAN_ORDER ? (
+                    ) : taskList.activityName ===
+                      ACTIVITY_JOURNEY_PLAN_ORDER ? (
                       taskList.noOrderNotes ? (
                         <TouchableOpacity
                           onPress={() => {
@@ -915,7 +924,7 @@ class MerchantHomeView extends Component {
         <View>
           {item.menuName === 'Pesanan' &&
           this.props.permanent.newOrderSuccessPerMerchant.indexOf(
-            parseInt(this.props.merchant.journeyBookStores.storeId, 10)
+            parseInt(this.props.selectedMerchant.storeId, 10)
           ) > -1 ? (
             <View style={styles.boxNotification}>
               <View style={GlobalStyle.circleRedNotification16} />
@@ -1308,4 +1317,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * -> Add validation for survey done.
  * -> Update the props of journey plan list.
  * -> Update the props of log activity.
+ * updatedBy: dyah
+ * updatedDate: 25022021
+ * updatedFunction:
+ * -> Add validation for log all activy done.
+ * -> Update the props of selected merchant.
  */

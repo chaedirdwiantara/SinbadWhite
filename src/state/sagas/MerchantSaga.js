@@ -64,7 +64,7 @@ function* getPortfolioV2(actions) {
       return MerchantMethod.getPortfolioByUserIdV2();
     });
     let newData = [];
-    newData.push(response.data.data.portfolio);
+    newData.push(response.data.data);
     response.data.data = newData;
     yield put(ActionCreators.portfolioGetSuccessV2(response));
   } catch (error) {
@@ -168,7 +168,7 @@ function* getLogPerActivityV2(actions) {
     let newData = [];
     if (response.data.data) {
       newData.push(response.data.data);
-    };
+    }
     response.data.data = newData;
     yield put(ActionCreators.merchantGetLogPerActivitySuccessV2(response));
   } catch (error) {

@@ -334,7 +334,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingGetMerchant: false,
       loadingLoadMoreGetMerchant: false,
       refreshGetMerchant: false,
-      totalDataGetMerchantV2: action.payload.total,
+      totalDataGetMerchantV2: action.payload.data.length,
       dataGetMerchantV2: [...state.dataGetMerchant, ...action.payload.data]
     };
   },
