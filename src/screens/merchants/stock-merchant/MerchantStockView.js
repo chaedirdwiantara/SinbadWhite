@@ -48,6 +48,12 @@ class MerchantStockView extends Component {
         this.props.merchantStockRecordStatus('')
     }
 
+    componentWillUnmount(){
+        this.props.merchantGetLogAllActivityProcess(
+            this.props.merchant.selectedMerchant.journeyPlanSaleId
+          );
+    }
+
     getRecordStock(keyword){
         this.props.merchantGetStockRecordProcess({
             search: keyword || ''
