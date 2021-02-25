@@ -23,6 +23,7 @@ const SfaAddTagihanPromo = props => {
   const status = props.status;
   const [noRef, setNoRef] = useState('');
   const [promoNumber, setPromoNumber] = useState('');
+  const [promoValue, setPromoValue] = useState(0)
   const [bankSource, setBankSource] = useState('');
   const [issuedDate, setIssuedDate] = useState(new Date())
   const [invalidDate, setInvalidDate] = useState(new Date())
@@ -38,9 +39,6 @@ const SfaAddTagihanPromo = props => {
    * FUNCTIONAL
    * =======================
    */
-  const openTransferDate = () => {
-    setOpenModalTransferDate(true)
-  }
 
   const clickCamera = () => {
     let options = {
@@ -82,9 +80,15 @@ const SfaAddTagihanPromo = props => {
   };
 
   const textReference = (text) => {
-    props.data(text)
     setNoRef(text)
-    
+  }
+
+  const textBillingPromo = (text) => {
+    if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)) {
+        setPromoValue(parseInt(props.remainingBilling))
+      } else {
+        setPromoValue(parseInt(text.replace(/[Rp.]+/g, '')))
+      }
   }
 
   /**
@@ -186,8 +190,8 @@ const SfaAddTagihanPromo = props => {
                     unit: 'Rp ',
                     suffixUnit: ''
                     }}
-                    value={collection}
-                    onChangeText={(text) => console.log(text)}
+                    value={promoValue}
+                    onChangeText={(text) => textBillingPromo(text)}
                     style={[
                     Fonts.type17,
                     {
@@ -290,7 +294,6 @@ const SfaAddTagihanPromo = props => {
    * MAIN
    * =======================
     */
-  console.log("collection:", dataImage);
   return (
     <>
       <View style={styles.mainContainer}>

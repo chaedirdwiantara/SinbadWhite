@@ -225,12 +225,12 @@ const SfaAddTagihanView = (props) => {
 
   /** RENDER TRANSFER PAYMENT */
   const renderBillingTransfer = () => {
-    return <SfaAddTagihanTransfer collectionMethod={collectionMethod} data={dataTrasfer}/>
+    return <SfaAddTagihanTransfer collectionMethod={collectionMethod} remainingBilling={props.navigation.state.params.data.remainingBilling} data={dataTrasfer}/>
   }
 
   /** RENDER PROMO PAYMENT */
   const renderBillingPromo = () => {
-    return <SfaAddTagihanPromo collectionMethod={collectionMethod}/>
+    return <SfaAddTagihanPromo collectionMethod={collectionMethod} remainingBilling={props.navigation.state.params.data.remainingBilling}/>
   }
   /**
    * =======================
@@ -285,7 +285,6 @@ const SfaAddTagihanView = (props) => {
    * MAIN
    * =======================
    */
-  console.log("ini dataa:", props.navigation.state.params.data);
   return (
     <>
       {/* {props.merchant.dataGetMerchantDetail ? ( */}

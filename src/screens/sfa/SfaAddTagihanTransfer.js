@@ -22,6 +22,7 @@ import ImagePicker from 'react-native-image-picker';
 const SfaAddTagihanTransfer = props => {
   const status = props.status;
   const [noRef, setNoRef] = useState('');
+  const [transferValue, setTransferValue] = useState(0);
   const [bankSource, setBankSource] = useState('');
   const [issuedDate, setIssuedDate] = useState(new Date())
   const [invalidDate, setInvalidDate] = useState(new Date())
@@ -84,6 +85,14 @@ const SfaAddTagihanTransfer = props => {
     props.data(text)
     setNoRef(text)
     
+  }
+
+  const textBillingTransfer = (text) => {
+    if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)) {
+        setTransferValue(parseInt(props.remainingBilling))
+      } else {
+        setTransferValue(parseInt(text.replace(/[Rp.]+/g, '')))
+      }
   }
 
   /**
@@ -261,8 +270,8 @@ const SfaAddTagihanTransfer = props => {
                     unit: 'Rp ',
                     suffixUnit: ''
                     }}
-                    value={collection}
-                    onChangeText={(text) => console.log(text)}
+                    value={transferValue}
+                    onChangeText={(text) => textBillingTransfer(text)}
                     style={[
                     Fonts.type17,
                     {
