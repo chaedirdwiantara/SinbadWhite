@@ -39,6 +39,19 @@ function* getCollectionList(actions) {
   }
 }
 
+/** GET REFERENCE LIST */
+function* getReferenceList(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getReferenceList(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetReferenceListSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetReferenceListFailed(error));
+  }
+}
+
+
   function* SfaSaga() {
     yield takeEvery(
       types.SFA_GET_COLLECTION_STATUS_PROCESS,
@@ -46,6 +59,7 @@ function* getCollectionList(actions) {
     )
     yield takeEvery(types.SFA_GET_DETAIL_PROCESS, getSfaDetail);
     yield takeEvery(types.SFA_GET_COLLECTION_PROCESS, getCollectionList)
+    yield takeEvery(types.SFA_GET_REFERENCE_PROCESS, getReferenceList)
 }
 
 export default SfaSaga;

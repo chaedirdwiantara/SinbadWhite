@@ -19,9 +19,16 @@ function getSfaDetail(orderParcelId) {
 
 /** GET COLLECTION LIST */
 function getCollectionList(data) {
-  console.log(data, 'data method');
   return ApiRest({
     path: `collection/v1/order-parcels?skip=0&limit=${data.limit}&storeId=${data.storeId}&supplierId=${data.supplierId}&keyword=${data.keyword}&statusPayment=${data.statusPayment}`,
+    method: `GET`
+  })
+}
+
+/** GET COLLECTION LIST */
+function getReferenceList(data) {
+  return ApiRest({
+    path: `collection/v1/payment-method?supplierId=${data.supplierId}&storeId=${data.storeId}&paymentCollectionTypeId=${data.paymentCollectionTypeId}&skip=0&limit=${data.limit}`,
     method: `GET`
   })
 }
@@ -29,5 +36,6 @@ function getCollectionList(data) {
   export const SfaMethod = {
     getCollectionStatus,
     getSfaDetail,
-    getCollectionList
+    getCollectionList,
+    getReferenceList
   };
