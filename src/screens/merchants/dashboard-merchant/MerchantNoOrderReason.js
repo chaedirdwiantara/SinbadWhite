@@ -56,8 +56,8 @@ class MerchantNoOrderReason extends Component {
         /** IF CHECK OUT SUCCESS */
         if (this.props.merchant.dataPostActivity.activity === 'check_out') {
           NavigationService.goBack(this.props.navigation.state.key);
-          this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.journeyPlanSaleId
+          this.props.merchantGetLogAllActivityProcessV2(
+            this.props.merchant.selectedMerchant.journeyBookStores.id
           );
           // eslint-disable-next-line react/no-did-update-set-state
           this.setState({
@@ -65,8 +65,8 @@ class MerchantNoOrderReason extends Component {
             notifToast: 'Keluar Toko Berhasil'
           });
           /** FOR GET LOG ALL ACTIVITY */
-          this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.journeyPlanSaleId
+          this.props.merchantGetLogAllActivityProcessV2(
+            this.props.merchant.selectedMerchant.journeyBookStores.id
           );
         }
       }
@@ -274,4 +274,8 @@ export default connect(
  * updatedDate: 07072020
  * updatedFunction:
  * -> Refactoring Module Import
+ * updatedBy: dyah
+ * updatedDate: 25022021
+ * updatedFunction:
+ * -> Update the props of log activity.
  */
