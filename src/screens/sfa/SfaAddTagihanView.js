@@ -25,13 +25,14 @@ import * as ActionCreators from '../../state/actions';
 import { useDispatch } from 'react-redux';
 import ModalCollectionMethod from'./ModalCollectionMethod'
 import SfaAddTagihanCheque from './SfaAddTagihanCheque';
+import SfaAddTagihanTransfer from './SfaAddTagihanTransfer'
 
 const SfaAddTagihanView = (props) => {
   const dispatch = useDispatch();
   const [collectionMethod, setCollectionMethod] = useState(null)
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false)
   const [cash, setCash] = useState(0)
-  const [methodStatus, setMethodStatus] = useState('unavailable')
+  const [methodStatus, setMethodStatus] = useState('available')
 
   /**
    * =======================
@@ -50,6 +51,9 @@ const SfaAddTagihanView = (props) => {
       }
       if(collectionMethod.code === 'cheque'){
         return renderBillingCheque()
+      }
+      if (collectionMethod.code === "transfer") {
+        return renderBillingTransfer()
       }
     }
   } 
@@ -193,10 +197,15 @@ const SfaAddTagihanView = (props) => {
     )
   } 
 
-/** RENDER CHEQUE PAYMENT */
-const renderBillingCheque = () => {
-return <SfaAddTagihanCheque status={methodStatus}/>
-}
+  /** RENDER CHEQUE PAYMENT */
+  const renderBillingCheque = () => {
+    return <SfaAddTagihanCheque status={methodStatus}/>
+  }
+
+  /** RENDER CHEQUE PAYMENT */
+  const renderBillingTransfer = () => {
+    return <SfaAddTagihanTransfer collectionMethod={collectionMethod}/>
+  }
   /**
    * =======================
    * MODAL
