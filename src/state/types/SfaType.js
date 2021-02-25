@@ -18,3 +18,8 @@ export const SFA_GET_DETAIL_FAILED = 'SfaGetDetailFailed';
 export const SFA_GET_COLLECTION_PROCESS = 'SfaGetCollectionProcess';
 export const SFA_GET_COLLECTION_SUCCESS = 'SfaGetCollectionSuccess';
 export const SFA_GET_COLLECTION_FAILED = 'SfaGetCollectionFailed';
+
+/** GET REFERENCE LIST */
+export const SFA_GET_REFERENCE_PROCESS = 'SfaGetReferenceProcess';
+export const SFA_GET_REFERENCE_SUCCESS = 'SfaGetReferenceSuccess';
+export const SFA_GET_REFERENCE_FAILED = 'SfaGetReferenceFailed';
