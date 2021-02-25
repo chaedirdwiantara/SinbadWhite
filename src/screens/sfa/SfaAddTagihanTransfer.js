@@ -374,7 +374,6 @@ const SfaAddTagihanTransfer = props => {
    * MAIN
    * =======================
     */
-  console.log("collection:", dataImage);
   return (
     <>
       <View style={styles.mainContainer}>
