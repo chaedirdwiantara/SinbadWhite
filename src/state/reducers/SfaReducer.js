@@ -6,14 +6,17 @@ const INITIAL_STATE = {
 loadingGetCollectionStatus: false,
 loadingSfaGetDetail: false,
 loadingGetCollectionList: false,
+loadingGetReferenceList : false,
 /** data */
 dataGetCollectionStatus: null,
 dataSfaGetDetail: null,
 dataGetCollectionList: null,
+dataGetReferenceList : null,
 /** error */
 errorGetCollectionStatus: null,
 errorSfaGetDetail: null,
 errorGetCollectionList: null,
+errorGetReferenceList: null
 }
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -96,6 +99,34 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetCollectionList: false,
       errorGetCollectionList: action.payload
+    };
+  },
+
+     /**
+   * ==========================
+   * GET REFERENCE LIST
+   * ==========================
+   */
+  [types.SFA_GET_REFERENCE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReferenceList: true,
+     dataGetReferenceList: null,
+      errorGetReferenceList: null
+    };
+  },
+  [types.SFA_GET_REFERENCE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReferenceList: false,
+      dataGetReferenceList: action.payload
+    };
+  },
+  [types.SFA_GET_REFERENCE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetReferenceList: false,
+      errorGetReferenceList: action.payload
     };
   },
 })

@@ -12,61 +12,44 @@ import {
   MaterialIcon,
   Modal,
 } from '../../library/thirdPartyPackage';
+import {
+    SearchBarType1,
+    LoadingPage
+} from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { sfaGetReferenceListProcess } from '../../state/actions';
 
-function ModalCollectionMethod(props) {
+function ModalReferenceList(props) {
   const dispatch = useDispatch();
-  const [data, setData] = useState({
-    "data": [
-      {
-        "id": 1,
-        "name": "Tunai",
-        "code": "cash",
-        "balance": 0
-      },
-      {
-        "id": 2,
-        "name": "Cek",
-        "code": "cheque",
-        "balance": 1000000
-      },
-      {
-        "id": 3,
-        "name": "Giro",
-        "code": "giro",
-        "balance": 0
-      },
-      {
-        "id": 4,
-        "name": "Transfer",
-        "code": "transfer",
-        "balance": 0
-      },
-      {
-        "id": 5,
-        "name": "Promo",
-        "code": "promo",
-        "balance": 0
-      },
-      {
-        "id": 6,
-        "name": "Retur",
-        "code": "sales_return",
-        "balance": 0
-      }
-	  ]
-  })
- 
+  const [searchText, setSearchText] = useState('')
+  const {
+    dataGetReferenceList
+   } = useSelector(state => state.sfa);
+
 
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
+  useEffect(() => {
+    getReference()
+  }, []);
+
+   /** GET REFERENCE LIST DATA */
+   const getReference = () => {
+    const data = {
+      supplierId : 2,
+      storeId: 101,
+      paymentCollectionTypeId: 3,
+      limit: 20
+    }
+    dispatch(sfaGetReferenceListProcess(data))
+  }
+
 
   /**
    * *********************************
@@ -78,7 +61,7 @@ function ModalCollectionMethod(props) {
       <View style={styles.headerContainer}>
         <View style={[styles.headerContent]}>
           <View style={[styles.headerBody]}>
-            <TouchableOpacity onPress={props.close}>
+            <TouchableOpacity onPress={props.close} style={{flex: 1}}>
               <View>
                 <MaterialIcon
                   name="arrow-back"
@@ -87,14 +70,18 @@ function ModalCollectionMethod(props) {
                   style={{
                     marginBottom: 8,
                     marginLeft: 8,
-                    alignContent: 'flex-start'
                   }}
                 />
               </View>
             </TouchableOpacity>
           </View>
-          <View style={{ alignItems: 'flex-start', flex: 1, alignSelf:"center" }}>
-            <Text style={[Fonts.type5, {marginLeft: 16}]}>Metode Penagihan</Text>
+          <View style={{width: '90%', marginLeft: -8}}>
+          <SearchBarType1
+              placeholder={'Cari Cek Disini'}
+              searchText={searchText}
+              // onRef={ref => (this.parentFunction = ref)}
+              // parentFunction={this.parentFunction.bind(this)}
+            />
           </View>
         </View>
         <View style={[GlobalStyle.lines, styles.shadowLine]} />
@@ -103,12 +90,13 @@ function ModalCollectionMethod(props) {
   }
 
   const renderCollectionMethod = () => {
+    const data = dataGetReferenceList
     return data.data.map((item, index) => {
       return (
         <View key={index}>
           <TouchableOpacity onPress={() => props.selectCollection(item)}>
             <View style={{margin: 16}}>
-              <Text style={Fonts.type24}>{item.name}</Text>
+              <Text style={Fonts.type24}>{item.referenceCode}</Text>
               {
                 item.balance > 0 
                 ? <Text style={[Fonts.type22, {marginTop: 5}]}>Saldo: {MoneyFormat(item.balance)}</Text>
@@ -129,10 +117,14 @@ function ModalCollectionMethod(props) {
    */
   const renderContent = () => {
     return (
-      <View style={styles.contentContainer}>
-        {/* {renderHeader()} */}
-        {renderCollectionMethod()}
+        <>
+        <View style={styles.contentContainer}>
+        {dataGetReferenceList?  
+         
+        renderCollectionMethod()
+     : <LoadingPage/>}
       </View>
+      </>
     );
   };
 
@@ -175,7 +167,8 @@ const styles = StyleSheet.create({
     },
     headerContent: {
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems:'center'
     },
     headerBody: {
         marginHorizontal: 8,
@@ -208,5 +201,5 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ModalCollectionMethod);
+)(ModalReferenceList);
 // export default DMSView;
