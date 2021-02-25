@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -33,6 +33,7 @@ const SfaAddTagihanView = (props) => {
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false)
   const [cash, setCash] = useState(0)
   const [methodStatus, setMethodStatus] = useState('available')
+  const [disabled, setDisabled] = useState(false)
 
   /**
    * =======================
@@ -69,6 +70,22 @@ const SfaAddTagihanView = (props) => {
   const saveCollection = () => {
     alert(cash)
   }
+
+  const dataTrasfer = (data) => {
+    
+  }
+
+  useEffect(() => {
+    if (collectionMethod !== null) {
+      if (collectionMethod.code === cash) {
+        if (cash === 0 || cash === '') {
+          setDisabled(true)
+        } else {
+          setDisabled(false)
+        }
+      }
+    }
+  }, [collectionMethod, cash]);
 
   /**
    * *********************************
@@ -204,7 +221,7 @@ const SfaAddTagihanView = (props) => {
 
   /** RENDER CHEQUE PAYMENT */
   const renderBillingTransfer = () => {
-    return <SfaAddTagihanTransfer collectionMethod={collectionMethod}/>
+    return <SfaAddTagihanTransfer collectionMethod={collectionMethod} data={dataTrasfer}/>
   }
   /**
    * =======================

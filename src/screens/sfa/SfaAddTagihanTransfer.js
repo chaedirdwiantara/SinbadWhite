@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,7 +6,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-  TextInput
+  TextInput,
+  Image
 } from '../../library/reactPackage';
 import { TextInputMask } from 'react-native-masked-text';
 import { MaterialIcon, moment, MaterialCommunityIcons } from '../../library/thirdPartyPackage';
@@ -17,6 +18,7 @@ import {
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
+import ImagePicker from 'react-native-image-picker';
 const SfaAddTagihanTransfer = props => {
   const status = props.status;
   const [noRef, setNoRef] = useState('');
@@ -27,6 +29,8 @@ const SfaAddTagihanTransfer = props => {
   const [collection, setCollection] = useState(0)
   const [checkMaterai,setCheckMaterai] = useState(false)
   const [openModalTransferDate, setOpenModalTransferDate] = useState(false)
+  const [dataImage, setDataImage] = useState(null)
+  const [errorInputImage, setErrorInputImage] = useState(false);
 
   /**
    * =======================
@@ -37,6 +41,50 @@ const SfaAddTagihanTransfer = props => {
     setOpenModalTransferDate(true)
   }
 
+  const clickCamera = () => {
+    let options = {
+      title: 'Select Image',
+      customButtons: [
+        { name: 'customOptionKey', title: 'Choose Photo from Custom Option' }
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      },
+      maxWidth: 800,
+      quality: 1
+      // maxHeight: 600
+    };
+
+    ImagePicker.showImagePicker(options, response => {
+      setErrorInputImage(false);
+
+      if (response.didCancel) {
+        null
+      } else if (response.error) {
+        null
+      } else if (response.customButton) {
+        null
+      } else if (response.fileSize > 2000000) {
+        setErrorInputImage(true);
+      } else {
+        // const source = { uri: response.uri };
+        setDataImage({
+          fileName: response.fileName,
+          fileData: response.data,
+          fileType: response.type,
+          fileUri: response.uri,
+          fileSize: response.fileSize
+        });
+      }
+    });
+  };
+
+  const textReference = (text) => {
+    props.data(text)
+    setNoRef(text)
+    
+  }
 
   /**
    * *********************************
@@ -68,7 +116,7 @@ const SfaAddTagihanTransfer = props => {
                 status === 'available' ? 'Nomor Cek' : '*Nomor Referensi'
                 }
                 keyboardType={'default'}
-                text={text => setNoRef(text)}
+                onChangeText={(text) => textReference(text)}
             />
         </View>
       )
@@ -235,6 +283,39 @@ const SfaAddTagihanTransfer = props => {
                 <Text style={[Fonts.type10, {paddingTop: 16}]}>
                     {status === 'available' ? 'Unggah Foto/Gambar' : '*Unggah Foto/Gambar'}
                 </Text>
+                {dataImage ? (
+                    <View style={{marginTop: 12}}>
+                        <View style={styles.smallContainerImage}>
+                          <Image
+                          source={{ uri: dataImage.fileUri }}
+                          style={styles.images}
+                          />
+                      </View>
+                    <View style={styles.smallContainerButtonImage}>
+                    <TouchableOpacity style={styles.buttonImage} onPress={()=> setDataImage()}>
+                        <Text style={Fonts.type36}>Hapus</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.buttonImage} onPress={() => clickCamera()}>
+                        <Text style={Fonts.type36}>Ulangi Foto</Text>
+                    </TouchableOpacity>
+                </View> 
+                </View>
+                ):( 
+                <View>
+                <TouchableOpacity onPress={() => clickCamera()} style={[GlobalStyle.shadowForBox,{flex: 1, width:90, marginTop: 12}]}>
+                    <View >
+                        <MaterialIcon
+                            name="camera-alt"
+                            color={masterColor.mainColor}
+                            size={50}
+                            style={{alignSelf:"center", marginTop:18}}
+                        />
+                    </View>
+                    <Text style={[Fonts.type38,{textAlign:"center", marginBottom: 8}]}>Unggah Foto</Text>
+                </TouchableOpacity>
+                </View>
+                )}
+                
             </View>
         )
     }
@@ -284,7 +365,7 @@ const SfaAddTagihanTransfer = props => {
    * MAIN
    * =======================
     */
-  console.log("collection:", props.collectionMethod);
+  console.log("collection:", dataImage);
   return (
     <>
       <View style={styles.mainContainer}>
@@ -306,5 +387,35 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center'
-    }
+    },
+    smallContainerImage: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+        alignItems: 'center'
+    },
+    smallContainerButtonImage: {
+        marginVertical: 16,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    buttonImage: {
+        width: 148,
+        height: 48,
+        borderRadius: 5,
+        borderColor: masterColor.mainColor,
+        borderWidth: 1,
+        justifyContent : 'center',
+        alignItems: 'center'
+    },
+    images: {
+        width: 328,
+        height: 328,
+        borderWidth: 1,
+        marginHorizontal: 3,
+        backgroundColor: 'white',
+        aspectRatio: 2 / 3
+      }
 });
