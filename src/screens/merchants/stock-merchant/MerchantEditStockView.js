@@ -395,7 +395,7 @@ import {
                 leftText={'Hapus dan keluar'}
                 rightText={'Ya, simpan'}
                 type={'okeNotRed'}
-                content={'Menyimpan perubahan record stock akan menghapus seluruh pengisian quesioner yang telah dilakukan \n \n Apakah anda ingin melanjutkan penyimpanan?'}
+                content={'Menyimpan perubahan record stock akan menghapus seluruh pengisian quesioner yang telah dilakukan \n \n Apakah anda ingin menyimpan Catatan Stok?'}
                 leftAction={() => {
                     // NavigationService.navigate('MerchantStockView')
                     this.batchDeleteAction()
