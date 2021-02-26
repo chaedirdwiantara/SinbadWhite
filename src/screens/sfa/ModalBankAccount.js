@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 function ModalBankAccount(props) {
   const dispatch = useDispatch();
-  const [data, setData] = useState({
+  const [dataBank, setDataBank] = useState({
     data: [
       {
         id: 1,
@@ -100,18 +100,14 @@ function ModalBankAccount(props) {
 
 
   const renderCollectionMethod = () => {
-    const data = data;
+    console.log(dataBank, 'data state');
+    const data = dataBank;
     return data.data.map((item, index) => {
       return (
         <View key={index}>
           <TouchableOpacity onPress={() => props.selectCollection(item)}>
             <View style={{ margin: 16 }}>
-              <Text style={Fonts.type24}>{item.referenceCode}</Text>
-              {item.balance > 0 ? (
-                <Text style={[Fonts.type22, { marginTop: 5 }]}>
-                  Saldo: {MoneyFormat(item.balance)}
-                </Text>
-              ) : null}
+              <Text style={Fonts.type24}>{item.displayName}</Text>
             </View>
             <View style={GlobalStyle.lines} />
           </TouchableOpacity>
@@ -129,7 +125,7 @@ function ModalBankAccount(props) {
     return (
       <>
         <View style={styles.contentContainer}>
-          {data ? renderCollectionMethod() : <LoadingPage />}
+          {dataBank ? renderCollectionMethod() : <LoadingPage />}
         </View>
       </>
     );
