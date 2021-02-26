@@ -107,7 +107,7 @@ class EditStockRecordListView extends Component {
                                     enablesReturnKeyAutomatically
                                     maxLength={4}
                                     onChangeText={qty => {
-                                        const nonShelfQty = qty.replace(/^0+(?!$)/g, '');
+                                        const nonShelfQty = qty.replace(/^0|\W|\\+(?!$)/g, '');
                                         this.props.parentFunction({ type: 'edit', data: {
                                             stockId: item.id,
                                             nonShelfQty

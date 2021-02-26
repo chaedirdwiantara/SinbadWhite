@@ -320,7 +320,7 @@ import {
         return this.props.merchant.dataGetRecordStock.length > 0 ? (
             <View>
                 <EditStockRecordListView 
-                    data={this.props.merchant.dataGetRecordStock}
+                    data={this.state.data}
                     onRef={ref => (this.parentFunction = ref)}
                     parentFunction={this.parentFunction.bind(this)}
                 />
