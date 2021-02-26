@@ -33,9 +33,18 @@ function getReferenceList(data) {
   })
 }
 
+/** GET COLLECTION LIST */
+function getPaymentMethod(data) {
+  return ApiRest({
+    path: `collection/v1/available-payment-methods?supplierId=${data.supplierId}&storeId=${data.storeId}`,
+    method: `GET`
+  })
+}
+
   export const SfaMethod = {
     getCollectionStatus,
     getSfaDetail,
     getCollectionList,
-    getReferenceList
+    getReferenceList,
+    getPaymentMethod
   };

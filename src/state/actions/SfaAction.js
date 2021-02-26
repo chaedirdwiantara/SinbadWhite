@@ -95,3 +95,28 @@ export function sfaGetReferenceListSuccess(data) {
 export function sfaGetReferenceListFailed(data) {
   return { type: types.SFA_GET_REFERENCE_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * GET PAYMENT METHOD
+ * ===========================
+ */
+/** === SFA GET PAYMENT METHOD PROCESS === */
+export function sfaGetPaymentMethodProcess(data) {
+  return { type: types.SFA_GET_PAYMENT_METHOD_PROCESS, payload: data };
+}
+
+/** === SFA GET PAYMENT METHOD SUCCESS === */
+export function sfaGetPaymentMethodSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_PAYMENT_METHOD_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_PAYMENT_METHOD_FAILED, payload: data };
+}
+/** === SFA GET PAYMENT METHOD FAILED === */
+export function sfaGetPaymentMethodFailed(data) {
+  return { type: types.SFA_GET_PAYMENT_METHOD_FAILED, payload: data };
+}

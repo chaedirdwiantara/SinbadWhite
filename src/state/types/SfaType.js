@@ -23,3 +23,8 @@ export const SFA_GET_COLLECTION_FAILED = 'SfaGetCollectionFailed';
 export const SFA_GET_REFERENCE_PROCESS = 'SfaGetReferenceProcess';
 export const SFA_GET_REFERENCE_SUCCESS = 'SfaGetReferenceSuccess';
 export const SFA_GET_REFERENCE_FAILED = 'SfaGetReferenceFailed';
+
+/** GET RPAYMENT METHOD */
+export const SFA_GET_PAYMENT_METHOD_PROCESS = 'SfaGetPaymentMethodProcess';
+export const SFA_GET_PAYMENT_METHOD_SUCCESS = 'SfaGetPaymentMethodSuccess';
+export const SFA_GET_PAYMENT_METHOD_FAILED = 'SfaGetPaymentMethodFailed';
