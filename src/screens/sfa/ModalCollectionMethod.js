@@ -26,36 +26,42 @@ function ModalCollectionMethod(props) {
         "id": 1,
         "name": "Tunai",
         "code": "cash",
+        "status": "active",
         "balance": 0
       },
       {
         "id": 2,
         "name": "Cek",
         "code": "cheque",
+        "status": "active",
         "balance": 1000000
       },
       {
         "id": 3,
         "name": "Giro",
         "code": "giro",
+        "status": "active",
         "balance": 0
       },
       {
         "id": 4,
         "name": "Transfer",
         "code": "transfer",
+        "status": "active",
         "balance": 0
       },
       {
         "id": 5,
         "name": "Promo",
         "code": "promo",
+        "status": "active",
         "balance": 0
       },
       {
         "id": 6,
         "name": "Retur",
         "code": "sales_return",
+        "status": "disabled",
         "balance": 0
       }
 	  ]
@@ -106,8 +112,12 @@ function ModalCollectionMethod(props) {
     return data.data.map((item, index) => {
       return (
         <View key={index}>
-          <TouchableOpacity onPress={() => props.selectCollection(item)}>
-            <View style={{margin: 16}}>
+          <TouchableOpacity 
+            disabled={item.status === "disabled" ? true : false} 
+            onPress={() => props.selectCollection(item)}
+            style={{backgroundColor: item.status === "disabled" ? masterColor.fontBlack10 : null}}
+          >
+            <View style={{margin: 16, opacity: item.status === "disabled" ? 0.5 : null}}>
               <Text style={Fonts.type24}>{item.name}</Text>
               {
                 item.balance > 0 
