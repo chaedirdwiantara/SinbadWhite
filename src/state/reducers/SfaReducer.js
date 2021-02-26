@@ -7,19 +7,19 @@ loadingGetCollectionStatus: false,
 loadingSfaGetDetail: false,
 loadingGetCollectionList: false,
 loadingGetReferenceList : false,
-loadingSfaGetPAymentMethod: false,
+loadingSfaGetPaymentMethod: false,
 /** data */
 dataGetCollectionStatus: null,
 dataSfaGetDetail: null,
 dataGetCollectionList: null,
 dataGetReferenceList : null,
-dataSfaGetPAymentMethod: null,
+dataSfaGetPaymentMethod: null,
 /** error */
 errorGetCollectionStatus: null,
 errorSfaGetDetail: null,
 errorGetCollectionList: null,
 errorGetReferenceList: null,
-errorSfaGetPAymentMethod: null,
+errorSfaGetPaymentMethod: null,
 }
 
 export const sfa = createReducer(INITIAL_STATE, {

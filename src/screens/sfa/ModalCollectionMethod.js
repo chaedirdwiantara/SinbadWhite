@@ -12,6 +12,9 @@ import {
   MaterialIcon,
   Modal,
 } from '../../library/thirdPartyPackage';
+import {
+  LoadingPage
+} from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
@@ -20,6 +23,7 @@ import { sfaGetPaymentMethodProcess } from '../../state/actions';
 
 function ModalCollectionMethod(props) {
   const dispatch = useDispatch();
+  const { dataSfaGetPaymentMethod} = useSelector(state => state.sfa);
   const [data, setData] = useState({
     "data": [
       {
@@ -161,6 +165,7 @@ function ModalCollectionMethod(props) {
    * MAIN
    * =======================
    */
+  console.log("disini:",dataSfaGetPaymentMethod);
   return (
     <View style={{flex:1}}>
         <Modal
@@ -173,13 +178,23 @@ function ModalCollectionMethod(props) {
           style={styles.mainContainer}
           onPress={props.close}
         >
+          <View style={styles.contentContainer}>
           {renderHeader()}
-          {renderContent()}
+            {
+              dataSfaGetPaymentMethod !== null
+              ? renderContent()
+              : <LoadingPage />
+            }
+          </View>
         </Modal>
       </View>
   );
 }
 const styles = StyleSheet.create({
+    contentContainer: {
+      flex: 1,
+      backgroundColor: masterColor.backgroundWhite,
+    },
     mainContainer: {
         marginBottom: 0,
         marginLeft: 0,
