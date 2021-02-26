@@ -1148,7 +1148,7 @@ class OmsCheckoutView extends Component {
           style={{ height: 20, width: 20, marginRight: 10 }}
         />
         <Text style={[Fonts.type8, { alignSelf: 'center' }]}>
-          {paymentMethod.paymentType.name} - {paymentMethod.PaymentChannel.name}{' '}
+          {paymentMethod.paymentType.name} - {paymentMethod.paymentChannel.name}{' '}
         </Text>
       </View>
     ) : (

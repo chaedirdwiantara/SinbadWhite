@@ -26,7 +26,7 @@ import ModalReferenceList from './ModalReferenceList';
 import ModalBankAccount from './ModalBankAccount';
 import ModalListMaterai from './ModalListMaterai';
 import {useSelector} from 'react-redux';
-const SfaAddTagihanCheque = props => {
+const SfaAddTagihanGiro = props => {
   const status = props.status;
   const [noRef, setNoRef] = useState('');
   const [bankSource, setBankSource] = useState('');
@@ -129,14 +129,11 @@ const renderContent = () => {
 <>
       <View>
         <View style={{ marginHorizontal: -16, marginVertical: 16 }}>
-          {/* <Text>
-            {status === 'available' ? 'Nomor Cek' : '*Nomor Referensi'}
-          </Text> */}
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View style={{ flex: 3 }}>
               <InputType5
                 title={
-                 isDisable !== false ? 'Nomor Cek' : '*Nomor Referensi'
+                 isDisable !== false ? 'Nomor Giro' : '*Nomor Referensi'
                 }
                 value={noRef}
                 placeholder={
@@ -287,7 +284,7 @@ const renderContent = () => {
         </View>
         <View style={{ paddingTop: 16 }}>
           <Text style={Fonts.type10}>
-            { isDisable !== false ? 'Nilai Cek' : '*Nilai Cek'}
+            { isDisable !== false ? 'Nilai Giro' : '*Nilai Giro'}
           </Text>
           <View
             style={[
@@ -515,7 +512,7 @@ const selectedStamp = (data) => {
   );
 };
 
-export default SfaAddTagihanCheque;
+export default SfaAddTagihanGiro;
 
 const style = StyleSheet.create({
   boxMenu: {

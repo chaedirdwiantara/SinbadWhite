@@ -21,6 +21,7 @@ import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { sfaGetReferenceListProcess } from '../../state/actions';
+import SfaNoDataView from './SfaNoDataView';
 
 function ModalReferenceList(props) {
   const dispatch = useDispatch();
@@ -41,10 +42,11 @@ function ModalReferenceList(props) {
 
    /** GET REFERENCE LIST DATA */
    const getReference = () => {
+     console.log(props, 'props');
     const data = {
-      supplierId : 2,
-      storeId: 101,
-      paymentCollectionTypeId: 3,
+      supplierId : props.supplierId,
+      storeId: props.storeId,
+      paymentCollectionTypeId: props.paymentCollectionTypeId,
       limit: 20
     }
     dispatch(sfaGetReferenceListProcess(data))
@@ -91,7 +93,8 @@ function ModalReferenceList(props) {
 
   const renderCollectionMethod = () => {
     const data = dataGetReferenceList
-    return data.data.map((item, index) => {
+    if( data.data)
+   { return data.data.map((item, index) => {
       return (
         <View key={index}>
           <TouchableOpacity onPress={() => props.selectCollection(item)}>
@@ -107,7 +110,10 @@ function ModalReferenceList(props) {
           </TouchableOpacity>
         </View>
       )
-    })
+    })}
+    else {
+      return <SfaNoDataView />
+    }
   }
 
   /**

@@ -35,7 +35,7 @@ import {
   sfaGetCollectionStatusProcess
 } from '../../state/actions/SfaAction';
 
-function SfaView(props) {
+const SfaView = (props) => {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('');
   const {
@@ -48,24 +48,28 @@ function SfaView(props) {
   const {
    selectedMerchant
   } = useSelector(state => state.merchant);
-  const [selectedTagStatus, setSelectedTagStatus] = useState('semua');
+  const [selectedTagStatus, setSelectedTagStatus] = useState(0);
+  const [paymentStatus, setPaymentStatus] = useState('')
   
+
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
   useEffect(() => {
-    getCollectionStatus();
     getCollectionList();
-  }, []);
+  }, [paymentStatus]);
+
+  useEffect(() => {
+    getCollectionStatus();
+  }, [])
 
   const getCollectionStatus = () => {
     dispatch(sfaGetCollectionStatusProcess());
   };
 
   const getCollectionList = () => {
-   
     const storeId = parseInt(selectedMerchant.storeId)
     const supplierId = parseInt(selectedMerchant.supplierId)
     const data = {
@@ -73,10 +77,19 @@ function SfaView(props) {
       storeId: storeId,
       supplierId: supplierId,
       keyword: '',
-      statusPayment: ''
+      statusPayment: paymentStatus
     };
     dispatch(sfaGetCollectionListProcess(data));
   };
+
+  /** PARENT FUNCTION */
+  const parentFunction = (data) => {
+    if(data.type === 'status') {
+      setPaymentStatus(dataGetCollectionStatus.data[data.data].status)
+      setSelectedTagStatus(data.data)
+    }
+  }
+
   /**
    * *********************************
    * RENDER VIEW
@@ -114,8 +127,8 @@ function SfaView(props) {
           <>
             <TagListType2
               selected={selectedTagStatus}
-              // onRef={ref => (this.parentFunction = ref)}
-              // parentFunction={this.parentFunction.bind(this)}
+              onRef={ref => (parentFunction = ref)}
+              parentFunction={parentFunction.bind(this)}
               data={status.data}
             />
             <View style={GlobalStyle.lines} />
@@ -179,7 +192,10 @@ function SfaView(props) {
       <View style={{ flex: 1 }}>
         {renderSearchAndFilter()}
         {renderTagsContent()}
-        <ScrollView>{renderCollectionList()}</ScrollView>
+        <ScrollView>
+          {renderCollectionList()}
+          
+          </ScrollView>
 
         {renderFooter()}
       </View>
