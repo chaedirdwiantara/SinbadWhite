@@ -84,7 +84,7 @@ class MerchantStockView extends Component {
                 this.setState({ openModalProductList: data.data })
                 setTimeout(() => {
                     NavigationService.navigate('MerchantEditStockView')
-                })
+                }, 500)
                 break; 
             default:
                 break;
@@ -93,8 +93,7 @@ class MerchantStockView extends Component {
 
     buttonEditStock(){
         const taskList = this.props.merchant.dataGetLogAllActivity
-        if(
-            taskList.find( task => task.activity === 'check_out')){
+        if(taskList.find( task => task.activity === 'check_out')){
             return <View />
         } else {
             return this.renderButtonEditStock()
@@ -104,8 +103,7 @@ class MerchantStockView extends Component {
 
     buttonAddStock(){
         const taskList = this.props.merchant.dataGetLogAllActivity
-        if(
-            taskList.find( task => task.activity === 'check_out')){
+        if(taskList.find( task => task.activity === 'check_out')){
             return <View />
         } else {
             return this.renderButtonAddStock()

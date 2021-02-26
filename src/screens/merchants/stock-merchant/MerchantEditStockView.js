@@ -109,7 +109,7 @@ import {
                 console.log('Get after Add')
                 this.props.merchantAddStockRecordReset()
                 this.getRecordStock(this.state.search)
-                this.setState({ openModalProductList: false })
+                this.batchDeleteData()
             }
         }
 
@@ -184,9 +184,7 @@ import {
         this.props.merchantGetStockRecordProcess({
             search: keyword || ''
         })
-        setTimeout(() => {
-            this.setState({ data: this.props.merchant.dataGetRecordStock })
-        }, 100)
+        this.setState({ data: this.props.merchant.dataGetRecordStock })
     }
     // POST RECORD STOCK ACTIVITY
     postRecordStockActivity(){
@@ -244,6 +242,11 @@ import {
     /** PARENT FUNCTION */
     parentFunction(data){
         switch (data.type) {
+            case 'productList':
+                setTimeout(() => {
+                    this.setState({ openModalProductList: data.data })
+                }, 500)
+                break; 
             case 'search':
                 this.setState({ search: data.data })
                 this.getRecordStock(data.data)
@@ -282,8 +285,10 @@ import {
                     data: newCatalogueArray,
                     dataForSaveProduct
                 })
-                break;  
+                break;
             default:
+                this.setState({ search: '' })
+                this.getRecordStock(this.state.search)
                 break;
         }
     }
@@ -300,10 +305,13 @@ import {
     }
     // RENDER CONTENT
     renderContent(){
-        return this.props.merchant.loadingGetRecordStock === false ? (
-            this.renderData()
-        ) : (
+        const merchant = this.props.merchant
+        return merchant.loadingGetRecordStock
+        || merchant.loadingDeleteRecordStock
+        || merchant.loadingAddRecordStock ? (
             <LoadingPage />
+            ) : (
+            this.renderData()
         )
     }
     /** RENDER VIEW */
@@ -312,12 +320,17 @@ import {
         return this.props.merchant.dataGetRecordStock.length > 0 ? (
             <View>
                 <EditStockRecordListView 
-                    data={this.state.data}
+                    data={this.props.merchant.dataGetRecordStock}
                     onRef={ref => (this.parentFunction = ref)}
                     parentFunction={this.parentFunction.bind(this)}
                 />
             </View>
         ) : (
+            this.props.merchant.loadingGetRecordStock 
+            || this.props.merchant.loadingAddRecordStock
+            || this.props.merchant.loadingDeleteRecordStock ? (
+                <LoadingPage />
+            ) : (
             <View style={styles.mainContainer}>
                 <EmptyData 
                     title={'Tidak Ada Catatan Stok'}
@@ -326,6 +339,7 @@ import {
                     }
                 />
             </View>
+            )
         )
     }
     renderEmptyCatalogue(){

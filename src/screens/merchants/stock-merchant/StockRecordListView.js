@@ -78,7 +78,7 @@ class StockRecordListView extends Component {
     renderContent(){
         return (
             <FlatList
-                contentContainerStyle={{ paddingBottom: 26 }}
+                contentContainerStyle={styles.flatListContainer}
                 data={this.props.data}
                 renderItem={this.renderCardData.bind(this)}
                 keyExtractor={(item, index) => index.toString()}
