@@ -685,7 +685,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingPostActivity: false,
-      dataPostActivityV2: action.payload
+      dataPostActivityV2: action.payload.data
     };
   },
   [types.MERCHANT_POST_ACTIVITY_FAILED_V2](state, action) {

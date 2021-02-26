@@ -38,7 +38,7 @@ class ModalBottomMerchantCheckout extends Component {
       if (this.props.merchant.dataGetLogPerActivityV2 !== null) {
         if (this.props.merchant.dataGetLogPerActivityV2.length > 0) {
           if (
-            this.props.merchant.dataGetLogPerActivityV2[0].activity ===
+            this.props.merchant.dataGetLogPerActivityV2[0].activityName ===
             'check_in'
           ) {
             this.setState({
@@ -268,7 +268,7 @@ export default connect(
  * updatedFunction:
  * -> Refactoring Module Import
  * updatedBy: dyah
- * updatedDate: 24022021
+ * updatedDate: 26022021
  * updatedFunction:
  * -> Update the props of log activity.
  */
