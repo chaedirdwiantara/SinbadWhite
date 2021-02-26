@@ -97,6 +97,7 @@ export const MERCHANT_ADD_STOCK_RECORD_RESET = 'MerchantAddStockRecordReset'
 export const MERCHANT_GET_STOCK_RECORD_PROCESS = 'MerchantGetStockRecordProcess'
 export const MERCHANT_GET_STOCK_RECORD_SUCCESS = 'MerchantGetStockRecordSuccess'
 export const MERCHANT_GET_STOCK_RECORD_FAILED = 'MerchantGetStockRecordFailed'
+export const MERCHANT_GET_STOCK_RECORD_REFRESH = 'MerchantGetStockRecordRefresh'
 /** MERCHANT DELETE STOCK RECORD */
 export const MERCHANT_DELETE_STOCK_RECORD_PROCESS = 'MerchantDeleteStockRecordProcess'
 export const MERCHANT_DELETE_STOCK_RECORD_SUCCESS = 'MerchantDeleteStockRecordSuccess'

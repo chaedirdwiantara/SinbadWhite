@@ -101,7 +101,9 @@ import {
             }
         }
         // To get Catalouge after add new Catalogue
-        if(prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock){
+        if(prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock
+            && this.props.merchant.dataAddRecordStock.hasOwnProperty('success')
+            ){
             if(this.props.merchant.dataAddRecordStock.success){
                 this.props.merchantAddStockRecordReset()
                 this.getRecordStock()
@@ -298,10 +300,10 @@ import {
     /** RENDER VIEW */
     // RENDER CARD View
     renderCardView(){
-        return this.state.data.length > 0 ? (
+        return this.props.merchant.dataGetRecordStock.length > 0 ? (
             <View>
                 <EditStockRecordListView 
-                    data={this.state.data}
+                    data={this.props.merchant.dataGetRecordStock}
                     onRef={ref => (this.parentFunction = ref)}
                     parentFunction={this.parentFunction.bind(this)}
                 />
@@ -318,7 +320,8 @@ import {
         )
     }
     renderEmptyCatalogue(){
-        return this.props.merchant.dataGetRecordStock.length < 1 ? (
+        return this.props.merchant.dataGetRecordStock.length < 1 
+        && !this.props.merchant.loadingGetRecordStock ? (
             <LoadingPage />
         ) : (
             <EmptyData 

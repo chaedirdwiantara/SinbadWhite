@@ -15,8 +15,6 @@ import {
 } from '../../../library/thirdPartyPackage'
 import {
     SkeletonType1,
-    LoadingLoadMore,
-    Address,
     EmptyData
 } from '../../../library/component'
 import { Color } from '../../../config'

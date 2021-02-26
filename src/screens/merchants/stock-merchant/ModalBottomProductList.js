@@ -56,6 +56,7 @@ class ModalBottomProductList extends Component {
                 }
             ],
             tagsType: 0,
+            loadingAddStock: false
         }
     }
 
@@ -67,8 +68,12 @@ class ModalBottomProductList extends Component {
         if (prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock 
             && this.props.merchant.dataAddRecordStock.success === true) {
                 this.props.merchantAddStockRecordReset()
-                this.props.parentFunction({ type: 'productList', data: false });
-                NavigationService.navigate('MerchantEditStockView')
+                this.props.merchantGetStockRecordProcess()
+                setTimeout(() => {
+                    this.props.parentFunction({ type: 'productList', data: false });
+                    this.setState({ loadingAddStock: false })
+                    NavigationService.navigate('MerchantEditStockView')
+                }, 500)
             }
     }
 
@@ -107,14 +112,6 @@ class ModalBottomProductList extends Component {
 
     // Parent Function to get Data from child
     parentFunction(data){
-        // if(data.type === 'sku-tag') {
-        //     this.props.getMSSCataloguesProcess({
-        //         page,
-        //         limit: this.state.pageLimit,
-        //         mss: mssType,
-        //         keyword: this.state.search
-        //     })
-        // }
         switch (data.type) {
             case 'stock':
                 const selectedProduct = this.state.selectedProduct
@@ -191,6 +188,7 @@ class ModalBottomProductList extends Component {
 
     /** ADD STOCK RECORD */
     addStockRecord(){
+        this.setState({ loadingAddStock: true })
         this.props.merchantAddStockRecordProcess({catalogues: this.state.dataForSaveProduct})
     }
     /**
@@ -311,6 +309,7 @@ class ModalBottomProductList extends Component {
                 title={'Tambah ke Catatan'}
                 borderRadius={4}
                 onPress={() => this.addStockRecord()}
+                loading={this.state.loadingAddStock}
             />
         )
     }

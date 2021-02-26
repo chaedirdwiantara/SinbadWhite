@@ -26,6 +26,7 @@ const INITIAL_STATE = {
   loadingDeleteRecordStock: false,
   loadingUpdateRecordStock: false,
   loadingBatchDeleteRecord: false,
+  loadingRefreshStock: false,
   /** data */
   dataPostActivity: null,
   dataGetLogAllActivity: null,
@@ -864,6 +865,14 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetRecordStock: false,
       errorGetRecordStock: action.payload
+    }
+  },
+  [types.MERCHANT_GET_STOCK_RECORD_REFRESH](state, action) {
+    return {
+      ...state,
+      loadingGetRecordStock: true,
+      loadingRefreshStock: true,
+      dataGetRecordStock: [],
     }
   },
   /**

@@ -9,7 +9,9 @@ import {
     TouchableOpacity
 } from '../../../library/reactPackage'
 import {
-    MaterialIcon
+    MaterialIcon,
+    bindActionCreators,
+    connect
 } from '../../../library/thirdPartyPackage'
 import { Fonts } from '../../../helpers'
 import { Color } from '../../../config'
