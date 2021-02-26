@@ -3,14 +3,17 @@ import {
   View,
   StyleSheet,
   Text,
-  SafeAreaView,
   TouchableOpacity,
-  ScrollView,
+  Image,
   TextInput,
-  Image
+  Dimensions
 } from '../../library/reactPackage';
 import { TextInputMask } from 'react-native-masked-text';
-import { MaterialIcon, moment, MaterialCommunityIcons } from '../../library/thirdPartyPackage';
+import { 
+  MaterialIcon, 
+  moment,
+  Tooltip, 
+} from '../../library/thirdPartyPackage';
 import { 
   InputType5, 
   DatePickerSpinnerWithMinMaxDate, 
@@ -19,20 +22,19 @@ import {
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import ImagePicker from 'react-native-image-picker';
+
+const { width, height } = Dimensions.get('window');
+
 const SfaAddTagihanPromo = props => {
   const status = props.status;
   const [noRef, setNoRef] = useState('');
   const [promoNumber, setPromoNumber] = useState('');
   const [promoValue, setPromoValue] = useState(0)
   const [bankSource, setBankSource] = useState('');
-  const [issuedDate, setIssuedDate] = useState(new Date())
-  const [invalidDate, setInvalidDate] = useState(new Date())
-  const [balance, setBalance] = useState(0)
-  const [collection, setCollection] = useState(0)
-  const [checkMaterai,setCheckMaterai] = useState(false)
   const [openModalTransferDate, setOpenModalTransferDate] = useState(false)
   const [dataImage, setDataImage] = useState(null)
   const [errorInputImage, setErrorInputImage] = useState(false);
+  const [openTooltip, setOpenTooltip] = useState(true)
 
   /**
    * =======================
@@ -111,30 +113,49 @@ const SfaAddTagihanPromo = props => {
 
   const renderFormReference = () => {
       return(
-        <View style={{ marginHorizontal: -16, marginVertical: 16 }}>
-            <InputType5
-                title={status === 'available' ? 'Nomor Referensi' : '*Nomor Referensi'}
-                value={noRef}
-                placeholder={
-                status === 'available' ? 'Nomor Referensi' : '*Nomor Referensi'
-                }
-                keyboardType={'default'}
-                onChangeText={(text) => textReference(text)}
-            />
+        <View style={{ marginVertical: 16 }}>
+          <View style={{flexDirection:"row"}}>
+            <View >
+              <Text style={Fonts.type10}>{status === 'available' ? 'Nomor Referensi' : '*Nomor Referensi'}</Text>
+            </View>
+            {renderTooltip("reference")}
+          </View>
+          <TextInput
+            style={
+              [Fonts.type17, styles.boxInput, 
+                {borderBottomColor: masterColor.fontBlack10, marginTop: 8}
+              ]
+            }
+            value={noRef}
+            placeholder={
+            status === 'available' ? 'Nomor Referensi' : '*Nomor Referensi'
+            }
+            keyboardType={'default'}
+            onChangeText={(text) => textReference(text)}
+          />
         </View>
       )
   }
 
   const renderFormPromoNumber = () => {
     return(
-      <View style={{ marginHorizontal: -16, marginBottom: 16 }}>
-          <InputType5
-              title={'Nomor Promo'}
-              value={promoNumber}
-              placeholder={'Nomor Promo'}
-              keyboardType={'default'}
-              onChangeText={(text) => setPromoNumber(text)}
-          />
+      <View style={{ marginBottom: 16 }}>
+        <View>
+          <View>
+            <Text style={Fonts.type10}>Nomor Promo</Text>
+          </View>
+        </View>
+        <TextInput
+          style={
+            [Fonts.type17, styles.boxInput, 
+              {borderBottomColor: masterColor.fontBlack10, marginTop: 8}
+            ]
+          }
+          value={promoNumber}
+          placeholder={'Nomor Promo'}
+          keyboardType={'default'}
+          onChangeText={(text) => setPromoNumber(text)}
+        />
       </View>
     )
     }
@@ -207,9 +228,12 @@ const SfaAddTagihanPromo = props => {
     const renderUploadImage = () => {
         return(
             <View>
-                <Text style={[Fonts.type10, {paddingTop: 16}]}>
-                    {status === 'available' ? 'Unggah Foto/Gambar' : '*Unggah Foto/Gambar'}
-                </Text>
+                <View style={{flexDirection:"row", paddingTop: 16}}>
+                  <Text style={[Fonts.type10]}>
+                      {status === 'available' ? 'Unggah Foto/Gambar' : '*Unggah Foto/Gambar'}
+                  </Text>
+                  {renderTooltip("image")}
+                </View>
                 {dataImage ? (
                     <View style={{marginTop: 12}}>
                         <View style={styles.smallContainerImage}>
@@ -272,6 +296,37 @@ const SfaAddTagihanPromo = props => {
         }
       />
     )
+  }
+
+  /** === RENDER TOOLTIP === */
+  const renderTooltip = (data)=> {
+    return (
+      <View>
+        <Tooltip
+          backgroundColor={masterColor.fontBlack50OP80}
+          height={55}
+          withOverlay={false}
+          withPointer={false}
+          onOpen={() => setOpenTooltip(false)}
+          onClose={() => setOpenTooltip(true)}
+          containerStyle={{
+            padding: 8,
+            width: 0.4 * width
+          }}
+          popover={
+            <Text style={Fonts.type87}>
+              Dapat berupa foto Bukti Transfer atau Kuitansi
+            </Text>
+          }
+        >
+          {openTooltip ? (
+            <MaterialIcon name="help" style={{marginLeft: 6}} size={17} color={masterColor.mainColor} />
+          ) : (
+            <View />
+          )}
+        </Tooltip>
+      </View>
+    );
   }
 
   /**
@@ -343,5 +398,12 @@ const styles = StyleSheet.create({
         marginHorizontal: 3,
         backgroundColor: 'white',
         aspectRatio: 2 / 3
-      }
+      },
+    boxInput: {
+      borderBottomWidth: 1,
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+      paddingBottom: 8,
+      borderBottomColor: masterColor.fontBlack40
+    },
 });
