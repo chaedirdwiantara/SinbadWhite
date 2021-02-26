@@ -44,6 +44,9 @@ class MerchantStockView extends Component {
      * ================
      */
     componentDidMount(){
+        this.props.merchantGetLogAllActivityProcess(
+            this.props.merchant.selectedMerchant.journeyPlanSaleId
+          );
         this.getRecordStock()
         this.props.merchantStockRecordStatus('')
     }
@@ -73,12 +76,15 @@ class MerchantStockView extends Component {
     parentFunction(data){
         switch (data.type) {
             case 'search':
+                this.props.merchantStockRecordStatus('SEARCH')
+                this.setState({ search: data.data })
                 this.getRecordStock(data.data)
                 break;
             case 'productList':
                 this.setState({ openModalProductList: data.data })
-
-                NavigationService.navigate('MerchantEditStockView')
+                setTimeout(() => {
+                    NavigationService.navigate('MerchantEditStockView')
+                })
                 break; 
             default:
                 break;
@@ -184,7 +190,8 @@ class MerchantStockView extends Component {
     }
     // RENDER CONTENT
     renderContentBody(){
-        return this.props.merchant.dataGetRecordStock.length > 0  ? (
+        return this.props.merchant.dataGetRecordStock.length > 0 
+        || this.props.merchant.merchantStockRecordStatus === 'SEARCH' ? (
             this.renderData()
         ) : (
             this.renderDataEmpty()
