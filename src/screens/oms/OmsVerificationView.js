@@ -136,7 +136,8 @@ class OmsVerificationView extends Component {
   getCheckoutItem() {
     this.props.omsGetCheckoutItemProcess({
       cartId: this.props.navigation.state.params.cartId,
-      catalogues: this.props.oms.dataCheckout
+      catalogues: this.props.oms.dataCheckout,
+      portfolioId: this.props.merchant.dataGetPortfolioV2[0].id
     });
   }
 
