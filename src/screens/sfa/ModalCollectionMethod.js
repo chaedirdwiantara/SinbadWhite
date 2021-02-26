@@ -24,53 +24,6 @@ import { sfaGetPaymentMethodProcess } from '../../state/actions';
 function ModalCollectionMethod(props) {
   const dispatch = useDispatch();
   const { dataSfaGetPaymentMethod} = useSelector(state => state.sfa);
-  const [data, setData] = useState({
-    "data": [
-      {
-        "id": 1,
-        "name": "Tunai",
-        "code": "cash",
-        "status": "active",
-        "balance": 0
-      },
-      {
-        "id": 2,
-        "name": "Cek",
-        "code": "cheque",
-        "status": "active",
-        "balance": 1000000
-      },
-      {
-        "id": 3,
-        "name": "Giro",
-        "code": "giro",
-        "status": "active",
-        "balance": 0
-      },
-      {
-        "id": 4,
-        "name": "Transfer",
-        "code": "transfer",
-        "status": "active",
-        "balance": 0
-      },
-      {
-        "id": 5,
-        "name": "Promo",
-        "code": "promo",
-        "status": "active",
-        "balance": 0
-      },
-      {
-        "id": 6,
-        "name": "Retur",
-        "code": "sales_return",
-        "status": "disabled",
-        "balance": 0
-      }
-	  ]
-  })
- 
 
   /**
    * =======================
@@ -121,7 +74,7 @@ function ModalCollectionMethod(props) {
   }
 
   const renderCollectionMethod = () => {
-    return data.data.map((item, index) => {
+    return dataSfaGetPaymentMethod.data.map((item, index) => {
       return (
         <View key={index}>
           <TouchableOpacity 
@@ -165,7 +118,6 @@ function ModalCollectionMethod(props) {
    * MAIN
    * =======================
    */
-  console.log("disini:",dataSfaGetPaymentMethod);
   return (
     <View style={{flex:1}}>
         <Modal
