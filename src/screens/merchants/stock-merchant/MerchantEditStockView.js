@@ -85,7 +85,7 @@ import {
     /** FUNCTION */
     componentDidMount(){
         this.navigationFunction()
-        this.getRecordStock()
+        // this.getRecordStock()
         this.discardDataSave()
         this.batchDeleteData()
     }
@@ -96,6 +96,7 @@ import {
         // To Delete Catalogue
         if(prevProps.merchant.dataDeleteRecordStock !== this.props.merchant.dataDeleteRecordStock){
             if(this.props.merchant.dataDeleteRecordStock.success ){
+                console.log('Get after delete')
                 this.props.merchantDeleteStockRecordReset()
                 this.getRecordStock(this.state.search)
             }
@@ -105,8 +106,9 @@ import {
             && this.props.merchant.dataAddRecordStock.hasOwnProperty('success')
             ){
             if(this.props.merchant.dataAddRecordStock.success){
+                console.log('Get after Add')
                 this.props.merchantAddStockRecordReset()
-                this.getRecordStock()
+                this.getRecordStock(this.state.search)
                 this.setState({ openModalProductList: false })
             }
         }
@@ -114,10 +116,13 @@ import {
         // To get catalogue after update
         if(prevProps.merchant.dataUpdateRecordStock !== this.props.merchant.dataUpdateRecordStock){
             if(this.props.merchant.dataUpdateRecordStock.success){
+                console.log('Get and Navigate after update')
                 this.props.merchantUpdateStockRecordReset()
-                this.getRecordStock()
+                this.getRecordStock(this.state.search)
                 this.postRecordStockActivity()
-                NavigationService.navigate('MerchantStockView')
+                setTimeout(() => {
+                    NavigationService.navigate('MerchantStockView')
+                })
             }
         }
         // To navigate when data are empty
@@ -134,7 +139,8 @@ import {
             && this.props.merchant.dataBatchDeleteStock.hasOwnProperty('success')){
             if (this.props.merchant.dataBatchDeleteStock.success){
                 this.props.merchantBatchDeleteStockReset()
-                this.getRecordStock()
+                this.props.merchantStockRecordStatus('')
+                this.getRecordStock(this.state.search)
                 NavigationService.navigate('MerchantStockView')
             }
         }
@@ -214,6 +220,7 @@ import {
             this.props.merchantAddStockRecordProcess({
                 catalogues: this.state.dataForDiscard
             })
+            this.props.merchantStockRecordStatus('')
             this.setState({ openModalBackConfirmation: false })
             NavigationService.navigate('MerchantStockView')
 
@@ -282,9 +289,11 @@ import {
     }
     // SAVE STOCK RECORD
     saveStockRecord(){
-        if(this.state.dataForSaveProduct > 0){
+        if(this.state.dataForSaveProduct.length > 0){
+            this.props.merchantStockRecordStatus('')
             this.props.merchantUpdateStockRecordProcess(this.state.dataForSaveProduct)
         } else {
+            this.props.merchantStockRecordStatus('')
             this.postRecordStockActivity()
             NavigationService.navigate('MerchantStockView')
         }
@@ -357,12 +366,18 @@ import {
     }
     // RENDER BUTTON SAVE STOCK
     renderButtonSaveStock() {
+        const merchant = this.props.merchant
        return (
            <View style={styles.containerEditButton}>
                <ButtonSingle
                    title={'Simpan Catatan Stock'}
                    borderRadius={8}
                    onPress={() => this.openModalSaveStock()}
+                   loading={
+                       merchant.loadingGetRecordStock 
+                       || merchant.loadingUpdateRecordStock
+                       || merchant.loadingPostActivity
+                    }
                />
            </View>
           )
@@ -405,8 +420,8 @@ import {
                     this.setState({ openModalSaveConfirmation: false })
                 }}
                 rightAction={() => {
-                    this.saveStockRecord()
                     this.setState({ openModalSaveConfirmation: false })
+                    this.saveStockRecord()
                 }}
               />
           ) : (

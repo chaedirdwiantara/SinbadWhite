@@ -54,6 +54,17 @@ class MerchantStockView extends Component {
           );
     }
 
+    componentDidUpdate(prevProps){
+        if(this.props.merchant.merchantStockRecordStatus === 'EDIT-STOCK'){
+            if(prevProps.merchant.dataGetRecordStock !== this.props.merchant.dataGetRecordStock){
+                if(this.props.merchant.dataGetRecordStock.length > 0){
+                    NavigationService.navigate('MerchantEditStockView')
+                }
+            }
+        }
+    }
+
+    /** GET STOCK RECORD */
     getRecordStock(keyword){
         this.props.merchantGetStockRecordProcess({
             search: keyword || ''
@@ -66,6 +77,8 @@ class MerchantStockView extends Component {
                 break;
             case 'productList':
                 this.setState({ openModalProductList: data.data })
+
+                NavigationService.navigate('MerchantEditStockView')
                 break; 
             default:
                 break;
@@ -91,6 +104,11 @@ class MerchantStockView extends Component {
         } else {
             return this.renderButtonAddStock()
         }
+    }
+
+    navigateToEditStock(){
+        this.props.merchantStockRecordStatus('EDIT-STOCK')
+        this.getRecordStock()
     }
 
     /**
@@ -188,10 +206,8 @@ class MerchantStockView extends Component {
                 <ButtonSingle
                     title={'Ubah Catatan Stock'}
                     borderRadius={8}
-                    onPress={() => {
-                        this.props.merchantStockRecordStatus('EDIT-STOCK')  
-                        NavigationService.navigate('MerchantEditStockView')
-                    }}
+                    onPress={() => this.navigateToEditStock()}
+                    loading={this.props.merchant.loadingGetRecordStock}
                 />
             </View>
         )
