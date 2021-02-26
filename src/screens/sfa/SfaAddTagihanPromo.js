@@ -129,11 +129,9 @@ const SfaAddTagihanPromo = props => {
     return(
       <View style={{ marginHorizontal: -16, marginBottom: 16 }}>
           <InputType5
-              title={status === 'available' ? 'Nomor Promo' : '*Nomor Promo'}
+              title={'Nomor Promo'}
               value={promoNumber}
-              placeholder={
-              status === 'available' ? 'Nomor Promo' : '*Nomor Promo'
-              }
+              placeholder={'Nomor Promo'}
               keyboardType={'default'}
               onChangeText={(text) => setPromoNumber(text)}
           />
