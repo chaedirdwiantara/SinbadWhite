@@ -56,10 +56,10 @@ class MerchantCheckinView extends Component {
   componentDidUpdate(prevProps) {
     /** IF CHECK IN SUCCESS */
     if (
-      prevProps.merchant.dataPostActivity !==
-      this.props.merchant.dataPostActivity
+      prevProps.merchant.dataPostActivityV2 !==
+      this.props.merchant.dataPostActivityV2
     ) {
-      if (this.props.merchant.dataPostActivity !== null) {
+      if (this.props.merchant.dataPostActivityV2 !== null) {
         /** get log all activity */
         this.props.merchantGetLogAllActivityProcessV2(
           this.props.merchant.selectedMerchant.journeyBookStores.id
@@ -236,9 +236,12 @@ class MerchantCheckinView extends Component {
                 loading={this.props.merchant.loadingPostActivity}
                 borderRadius={4}
                 onPress={() =>
-                  this.props.merchantPostActivityProcess({
-                    journeyBookStoresId,
-                    activity: 'check_in'
+                  this.props.merchantPostActivityProcessV2({
+                    journeyBookStoreId: this.props.merchant.selectedMerchant
+                      .journeyBookStores.id,
+                    activityName: 'check_in',
+                    longitude: this.state.longitude,
+                    latitude: this.state.latitude
                   })
                 }
               />
@@ -362,4 +365,8 @@ export default connect(
  * updatedDate: 24022021
  * updatedFunction:
  *  -> Update the props of log activity.
+ * updatedBy: dyah
+ * updatedDate: 26022021
+ * updatedFunction:
+ *  -> Update the props of post activity.
  */

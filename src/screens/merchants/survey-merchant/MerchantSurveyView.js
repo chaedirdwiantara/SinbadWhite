@@ -44,10 +44,10 @@ class MerchantSurveyView extends Component {
   }
   /** FOR SET SALES ACTIVITY SURVEY_TOKO DONE */
   surveyDone() {
-    this.props.merchantPostActivityProcess({
-      journeyBookStoresId: this.props.merchant.selectedMerchant
-        .journeyBookStores.id,
-      activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+    this.props.merchantPostActivityProcessV2({
+      journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores
+        .id,
+      activityName: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
     });
     this.refreshMerchantGetLogAllActivityProcess();
   }
@@ -63,7 +63,6 @@ class MerchantSurveyView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.refreshMerchantGetLogAllActivityProcess();
-    this.getSurveyList();
   }
   /** === DID UPDATE === */
   componentDidUpdate() {
@@ -307,4 +306,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyView);
  * updatedDate: 24022021
  * updatedFunction:
  *  -> Update the props of log activity.
+ * updatedBy: dyah
+ * updatedDate: 26022021
+ * updatedFunction:
+ * -> Update the props of post activity.
  */

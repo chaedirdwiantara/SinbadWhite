@@ -12,9 +12,11 @@ function getMerchant(data) {
   });
 }
 /** === MERCHANT LIST BY PORTFOLIO V2 === */
-function getMerchantV2() {
+function getMerchantV2(data) {
   return ApiRest({
-    path: `${salesManagementService}/v1/agent/supplier-stores`,
+    path: `${salesManagementService}/v1/agent/supplier-stores?search=${
+      data.search
+    }`,
     method: 'GET'
   });
 }
@@ -80,7 +82,7 @@ function postActivity(params) {
 /** === POST ACTIVITY V2 === */
 function postActivityV2(params) {
   return ApiRest({
-    path: 'journey-plan-sale-logs',
+    path: `${salesManagementService}/v1/journey-book-store-logs/activity`,
     method: 'POST',
     params
   });
@@ -120,7 +122,7 @@ function getLogPerActivityV2(data) {
 /** === GET NO ORDER REASON === */
 function getNoOrderReason() {
   return ApiRest({
-    path: 'no-order-reasons',
+    path: `${salesManagementService}/v1/no-order-reason`,
     method: 'GET'
   });
 }
@@ -228,4 +230,8 @@ export const MerchantMethod = {
  * updatedDate: 22022021
  * updatedFunction:
  * -> Add new methods. (postActivityV2, getLogAllActivityV2, getLogPerActivityV2)
+ * updatedBy: dyah
+ * updatedDate: 26022021
+ * updatedFunction:
+ * -> Update the methods. (getNoOrderReason, postActivityV2, getMerchantV2)
  */

@@ -110,6 +110,7 @@ function* postActivity(actions) {
     const response = yield call(() => {
       return MerchantMethod.postActivity(actions.payload);
     });
+    yield put(ActionCreators.merchantPostActivitySuccess());
     yield put(ActionCreators.merchantPostActivitySuccess(response));
   } catch (error) {
     yield put(ActionCreators.merchantPostActivityFailed(error));
@@ -118,9 +119,13 @@ function* postActivity(actions) {
 /** === POST ACTIVITY MERCHANT V2 === */
 function* postActivityV2(actions) {
   try {
-    const response = yield call(() => {
+    let response = yield call(() => {
       return MerchantMethod.postActivityV2(actions.payload);
     });
+    response.data.data = {
+      ...response.data.data,
+      activity: actions.payload.activityName
+    };
     yield put(ActionCreators.merchantPostActivitySuccessV2(response));
   } catch (error) {
     yield put(ActionCreators.merchantPostActivityFailedV2(error));

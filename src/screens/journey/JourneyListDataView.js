@@ -80,6 +80,7 @@ class JourneyListDataView extends Component {
     }
     /** GO TO SELECTED STORE */
     data.name = data.storeName;
+    data.storeId = data.storeId.toString();
     this.props.merchantSelected(data);
     setTimeout(() => {
       NavigationService.navigate('MerchantHomeView', {
@@ -133,8 +134,7 @@ class JourneyListDataView extends Component {
     return (
       <View key={index} style={styles.boxItem}>
         <View style={{ justifyContent: 'center' }}>
-          {(item.journeyBookStores.longitudeCheckIn &&
-            item.journeyBookStores.latitudeCheckIn) !== 0 ? (
+          {item.journeyBookStores.visitStatus ? (
             <MaterialIcon
               name="check-circle"
               color={
@@ -358,5 +358,10 @@ export default connect(
  * updatedFunction:
  * -> Update the props of journey plan list.
  * -> Update the props of log activity.
+ * updatedBy: dyah
+ * updatedDate: 26022021
+ * updatedFunction:
+ * -> Update the validation with visitStatus.
+ * -> Change storeId to string.
  *
  */
