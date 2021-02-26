@@ -76,8 +76,8 @@ const SfaView = (props) => {
       limit: 20,
       storeId: storeId,
       supplierId: supplierId,
-      keyword: paymentStatus,
-      statusPayment: ''
+      keyword: '',
+      statusPayment: paymentStatus
     };
     dispatch(sfaGetCollectionListProcess(data));
   };
