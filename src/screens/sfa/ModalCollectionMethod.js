@@ -15,8 +15,8 @@ import {
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
-import { useDispatch } from 'react-redux';
-import { sfaGetReferenceListProcess } from '../../state/actions';
+import { useDispatch , useSelector} from 'react-redux';
+import { sfaGetPaymentMethodProcess } from '../../state/actions';
 
 function ModalCollectionMethod(props) {
   const dispatch = useDispatch();
@@ -73,6 +73,14 @@ function ModalCollectionMethod(props) {
    * FUNCTIONAL
    * =======================
    */
+
+  useEffect(() => {
+    const data = {
+      supplierId : 2,
+      storeId: 101
+    }
+    dispatch(sfaGetPaymentMethodProcess(data))
+  }, []);
 
   /**
    * *********************************
@@ -207,16 +215,10 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = ({ user, merchant }) => {
-  return { user, merchant };
-};
-
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
 export default connect(
-  mapStateToProps,
   mapDispatchToProps
 )(ModalCollectionMethod);
-// export default DMSView;
