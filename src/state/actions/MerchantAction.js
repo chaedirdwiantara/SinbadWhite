@@ -423,6 +423,9 @@ export function merchantGetStockRecordSuccess(data){
 export function merchantGetStockRecordFailed(data){
   return { type: types.MERCHANT_GET_STOCK_RECORD_FAILED, payload: data}
 }
+export function merchantGetRecordRefresh(){
+  return { type: types.MERCHANT_GET_STOCK_RECORD_REFRESH }
+}
 /**
  * =======================
  * DELETE STOCK RECORD
