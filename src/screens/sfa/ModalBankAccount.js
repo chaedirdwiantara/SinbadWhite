@@ -90,7 +90,7 @@ function ModalBankAccount(props) {
             </TouchableOpacity>
           </View>
           <View style={{ alignItems: 'flex-start', flex: 1, alignSelf:"center" }}>
-            <Text style={[Fonts.type5, {marginLeft: 16}]}>Metode Penagihan</Text>
+            <Text style={[Fonts.type5, {marginLeft: 16}]}>Sumber Bank</Text>
           </View>
         </View>
         <View style={[GlobalStyle.lines, styles.shadowLine]} />
@@ -100,7 +100,7 @@ function ModalBankAccount(props) {
 
 
   const renderCollectionMethod = () => {
-    const data = dataGetReferenceList;
+    const data = data;
     return data.data.map((item, index) => {
       return (
         <View key={index}>
@@ -129,7 +129,7 @@ function ModalBankAccount(props) {
     return (
       <>
         <View style={styles.contentContainer}>
-          {dataGetReferenceList ? renderCollectionMethod() : <LoadingPage />}
+          {data ? renderCollectionMethod() : <LoadingPage />}
         </View>
       </>
     );

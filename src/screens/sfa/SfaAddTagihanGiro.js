@@ -23,8 +23,9 @@ import {
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import ModalReferenceList from './ModalReferenceList';
-import {useSelector} from 'react-redux';
-const SfaAddTagihanCheque = props => {
+import ModalBankAccount from './ModalBankAccount';
+import { useSelector } from 'react-redux'
+const SfaAddTagihanGiro = props => {
   const status = props.status;
   const [noRef, setNoRef] = useState('');
   const [bankSource, setBankSource] = useState('');
@@ -36,10 +37,14 @@ const SfaAddTagihanCheque = props => {
   const [openModalPublishDate, setOpenModalPublishDate] = useState(false);
   const [openModalDueDate, setOpenModalDueDate] = useState(false);
   const [openModalReference, setOpenModalReference] = useState(false);
-  const [dataReference, setDataReference] = useState()
+  const [openModalBank, setOpenModalBank] = useState(false);
+  const [dataReference, setDataReference] = useState();
+  const [dataBank, setDataBank] = useState();
   const {
     selectedMerchant
    } = useSelector(state => state.merchant);
+  
+
   /**
    * =======================
    * FUNCTIONAL
@@ -112,11 +117,11 @@ const renderContent = () => {
             <View style={{ flex: 3 }}>
               <InputType5
                 title={
-                  status === 'available' ? 'Nomor Cek' : '*Nomor Referensi'
+                  status === 'available' ? 'Nomor Giro' : '*Nomor Referensi'
                 }
                 value={noRef}
                 placeholder={
-                  status === 'available' ? 'Nomor Cek' : '*Nomor Referensi'
+                  status === 'available' ? 'Nomor Giro' : '*Nomor Referensi'
                 }
                 keyboardType={'default'}
                 text={text => setNoRef(text)}
@@ -147,7 +152,7 @@ const renderContent = () => {
           <View>
             <TouchableOpacity
               style={style.boxMenu}
-              onPress={() => console.log('open bank list')}
+              onPress={() => setOpenModalBank(true)}
             >
               <Text
                 style={[
@@ -366,13 +371,34 @@ const renderModalReference = () => {
     </View>
   );
 }
+/** MODAL REFERENCE */
+const renderModalBank = () => {
+    return (
+      <View>
+        {openModalBank ? (
+          <ModalBankAccount
+            open={openModalBank}
+            close={() => setOpenModalBank(false)}
+            onRef={ref => (selectCollection = ref)}
+            selectCollection={selectedBank.bind(this)}
+            supplierId = {selectedMerchant.supplierId}
+            storeId= {selectedMerchant.storeId}
+            paymentCollectionTypeId = {props.paymentCollectionTypeId}
+          />
+        ) : null}
+      </View>
+    );
+  }
 
 const selectedReference = (data) => {
-  console.log(data, 'data');
   setDataReference(data)
   setOpenModalReference(false)
-  console.log(dataReference, 'data reference');
 }
+
+const selectedBank = (data) => {
+    setDataBank(data)
+    setOpenModalBank(false)
+  }
 
   return (
     <>
@@ -380,11 +406,12 @@ const selectedReference = (data) => {
     {renderPublishDate()}
     {renderDueDate()}
     {renderModalReference()}
+    {renderModalBank()}
     </>
   );
 };
 
-export default SfaAddTagihanCheque;
+export default SfaAddTagihanGiro;
 
 const style = StyleSheet.create({
   boxMenu: {

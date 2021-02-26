@@ -23,10 +23,11 @@ import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch } from 'react-redux';
-import ModalCollectionMethod from'./ModalCollectionMethod'
+import ModalCollectionMethod from'./ModalCollectionMethod';
 import SfaAddTagihanCheque from './SfaAddTagihanCheque';
-import SfaAddTagihanTransfer from './SfaAddTagihanTransfer'
-import SfaAddTagihanPromo from './SfaAddTagihanPromo'
+import SfaAddTagihanTransfer from './SfaAddTagihanTransfer';
+import SfaAddTagihanPromo from './SfaAddTagihanPromo';
+import SfaAddTagihanGiro from './SfaAddTagihanGiro';
 
 const SfaAddTagihanView = (props) => {
   const dispatch = useDispatch();
@@ -52,13 +53,16 @@ const SfaAddTagihanView = (props) => {
         return renderBillingCash()
       }
       if(collectionMethod.code === 'cheque'){
-        return renderBillingCheque()
+        return renderBillingCheque(collectionMethod.id)
       }
       if (collectionMethod.code === "transfer") {
         return renderBillingTransfer()
       }
       if (collectionMethod.code === "promo") {
         return renderBillingPromo()
+      }
+      if (collectionMethod.code === 'giro'){
+        return renderBillingGiro(collectionMethod.id)
       }
     }
   } 
@@ -219,8 +223,8 @@ const SfaAddTagihanView = (props) => {
   } 
 
   /** RENDER CHEQUE PAYMENT */
-  const renderBillingCheque = () => {
-    return <SfaAddTagihanCheque status={methodStatus}/>
+  const renderBillingCheque = (id) => {
+    return <SfaAddTagihanCheque status={methodStatus} paymentCollectionTypeId = {id} />
   }
 
   /** RENDER TRANSFER PAYMENT */
@@ -231,6 +235,11 @@ const SfaAddTagihanView = (props) => {
   /** RENDER PROMO PAYMENT */
   const renderBillingPromo = () => {
     return <SfaAddTagihanPromo collectionMethod={collectionMethod} remainingBilling={props.navigation.state.params.data.remainingBilling}/>
+  }
+
+   /** RENDER GIRO PAYMENT */
+   const renderBillingGiro = (id) => {
+    return <SfaAddTagihanGiro status={methodStatus} paymentCollectionTypeId = {id} />
   }
   /**
    * =======================
