@@ -3,14 +3,11 @@ import {
   View,
   StyleSheet,
   Text,
-  SafeAreaView,
   TouchableOpacity,
-  ScrollView,
-  TextInput,
   Image
 } from '../../library/reactPackage';
 import { TextInputMask } from 'react-native-masked-text';
-import { MaterialIcon, moment, MaterialCommunityIcons } from '../../library/thirdPartyPackage';
+import { MaterialIcon, moment } from '../../library/thirdPartyPackage';
 import { 
   InputType5, 
   DatePickerSpinnerWithMinMaxDate, 
@@ -24,11 +21,8 @@ const SfaAddTagihanTransfer = props => {
   const [noRef, setNoRef] = useState('');
   const [transferValue, setTransferValue] = useState(0);
   const [bankSource, setBankSource] = useState('');
-  const [issuedDate, setIssuedDate] = useState(new Date())
   const [invalidDate, setInvalidDate] = useState(new Date())
   const [balance, setBalance] = useState(0)
-  const [collection, setCollection] = useState(0)
-  const [checkMaterai,setCheckMaterai] = useState(false)
   const [openModalTransferDate, setOpenModalTransferDate] = useState(false)
   const [dataImage, setDataImage] = useState(null)
   const [errorInputImage, setErrorInputImage] = useState(false);

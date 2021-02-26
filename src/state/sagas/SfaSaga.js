@@ -51,6 +51,17 @@ function* getReferenceList(actions) {
   }
 }
 
+/** GET PAYMENT METHOD */
+function* getPaymentMethod(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getPaymentMethod(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetPaymentMethodSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetPaymentMethodFailed(error));
+  }
+}
 
   function* SfaSaga() {
     yield takeEvery(
@@ -60,6 +71,7 @@ function* getReferenceList(actions) {
     yield takeEvery(types.SFA_GET_DETAIL_PROCESS, getSfaDetail);
     yield takeEvery(types.SFA_GET_COLLECTION_PROCESS, getCollectionList)
     yield takeEvery(types.SFA_GET_REFERENCE_PROCESS, getReferenceList)
+    yield takeEvery(types.SFA_GET_PAYMENT_METHOD_PROCESS, getPaymentMethod)
 }
 
 export default SfaSaga;

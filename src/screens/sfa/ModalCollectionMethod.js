@@ -12,61 +12,32 @@ import {
   MaterialIcon,
   Modal,
 } from '../../library/thirdPartyPackage';
+import {
+  LoadingPage
+} from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
-import { useDispatch } from 'react-redux';
-import { sfaGetReferenceListProcess } from '../../state/actions';
+import { useDispatch , useSelector} from 'react-redux';
+import { sfaGetPaymentMethodProcess } from '../../state/actions';
 
 function ModalCollectionMethod(props) {
   const dispatch = useDispatch();
-  const [data, setData] = useState({
-    "data": [
-      {
-        "id": 1,
-        "name": "Tunai",
-        "code": "cash",
-        "balance": 0
-      },
-      {
-        "id": 2,
-        "name": "Cek",
-        "code": "cheque",
-        "balance": 1000000
-      },
-      {
-        "id": 3,
-        "name": "Giro",
-        "code": "giro",
-        "balance": 0
-      },
-      {
-        "id": 4,
-        "name": "Transfer",
-        "code": "transfer",
-        "balance": 0
-      },
-      {
-        "id": 5,
-        "name": "Promo",
-        "code": "promo",
-        "balance": 0
-      },
-      {
-        "id": 6,
-        "name": "Retur",
-        "code": "sales_return",
-        "balance": 0
-      }
-	  ]
-  })
- 
+  const { dataSfaGetPaymentMethod} = useSelector(state => state.sfa);
 
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
+
+  useEffect(() => {
+    const data = {
+      supplierId : 2,
+      storeId: 101
+    }
+    dispatch(sfaGetPaymentMethodProcess(data))
+  }, []);
 
   /**
    * *********************************
@@ -103,11 +74,15 @@ function ModalCollectionMethod(props) {
   }
 
   const renderCollectionMethod = () => {
-    return data.data.map((item, index) => {
+    return dataSfaGetPaymentMethod.data.map((item, index) => {
       return (
         <View key={index}>
-          <TouchableOpacity onPress={() => props.selectCollection(item)}>
-            <View style={{margin: 16}}>
+          <TouchableOpacity 
+            disabled={item.status === "disabled" ? true : false} 
+            onPress={() => props.selectCollection(item)}
+            style={{backgroundColor: item.status === "disabled" ? masterColor.fontBlack10 : null}}
+          >
+            <View style={{margin: 16, opacity: item.status === "disabled" ? 0.5 : null}}>
               <Text style={Fonts.type24}>{item.name}</Text>
               {
                 item.balance > 0 
@@ -155,13 +130,23 @@ function ModalCollectionMethod(props) {
           style={styles.mainContainer}
           onPress={props.close}
         >
+          <View style={styles.contentContainer}>
           {renderHeader()}
-          {renderContent()}
+            {
+              dataSfaGetPaymentMethod !== null
+              ? renderContent()
+              : <LoadingPage />
+            }
+          </View>
         </Modal>
       </View>
   );
 }
 const styles = StyleSheet.create({
+    contentContainer: {
+      flex: 1,
+      backgroundColor: masterColor.backgroundWhite,
+    },
     mainContainer: {
         marginBottom: 0,
         marginLeft: 0,
@@ -197,16 +182,10 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = ({ user, merchant }) => {
-  return { user, merchant };
-};
-
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
 export default connect(
-  mapStateToProps,
   mapDispatchToProps
 )(ModalCollectionMethod);
-// export default DMSView;
