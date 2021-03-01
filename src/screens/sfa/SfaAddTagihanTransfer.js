@@ -20,6 +20,7 @@ import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import ImagePicker from 'react-native-image-picker';
 import ModalReferenceList from './ModalReferenceList';
+import ModalBankDestination from './ModalBankDestination'
 import {useSelector} from 'react-redux';
 
 const { width, height } = Dimensions.get('window');
@@ -33,10 +34,12 @@ const SfaAddTagihanTransfer = props => {
   const [isDisable, setIsDisable] = useState(false)
   const [openModalReference, setOpenModalReference] = useState(false);
   const [openModalBank, setOpenModalBank] = useState(false);
+  const [openModalBankDestination, setOpenModalBankDestination] = useState(false);
 
   //DATA INPUT
   const [noRef, setNoRef] = useState('');
   const [bankSource, setBankSource] = useState('');
+  const [bankDestination, setBankDestination] = useState(null);
   const [transferDate, setTransferDate] = useState(null)
   const [balance, setBalance] = useState(0)
   const [billingValue, setBillingValue] = useState(0);
@@ -137,6 +140,10 @@ const SfaAddTagihanTransfer = props => {
     setIsDisable(true)
   }
 
+  const selectedBankDestination = (data) => {
+    setBankDestination(data)
+  }
+
   /**
    * *********************************
    * RENDER VIEW
@@ -162,7 +169,7 @@ const SfaAddTagihanTransfer = props => {
         <View style={{ marginVertical: 16 }}>
           <View style={{flexDirection:"row"}}>
             <View >
-              <Text style={Fonts.type10}>{status === 'available' ? 'Nomor Referensi' : '*Nomor Referensi'}</Text>
+              <Text style={Fonts.type10}>{isDisable ? 'Nomor Referensi' : '*Nomor Referensi'}</Text>
             </View>
             {/* {renderTooltip()} */}
           </View>
@@ -175,7 +182,7 @@ const SfaAddTagihanTransfer = props => {
               }
               value={noRef}
               placeholder={
-              status === 'available' ? 'Nomor Referensi' : '*Nomor Referensi'
+                isDisable ? 'Nomor Referensi' : '*Nomor Referensi'
               }
               keyboardType={'default'}
               onChangeText={(text) => textReference(text)}
@@ -204,7 +211,7 @@ const SfaAddTagihanTransfer = props => {
       return(
         <View>
             <Text style={Fonts.type10}>
-                {status === 'available' ? 'Sumber Bank' : '*Sumber Bank'}
+                {isDisable ? 'Sumber Bank' : '*Sumber Bank'}
             </Text>
             <View>
                 <TouchableOpacity
@@ -237,20 +244,20 @@ const SfaAddTagihanTransfer = props => {
     return(
       <View>
           <Text style={Fonts.type10}>
-              {status === 'available' ? 'Tujuan Bank' : '*Tujuan Bank'}
+              {isDisable ? 'Tujuan Bank' : '*Tujuan Bank'}
           </Text>
           <View>
               <TouchableOpacity
               style={styles.boxMenu}
-              onPress={() => console.log('open bank list')}
+              onPress={() => setOpenModalBankDestination(true)}
               >
                   <Text
                       style={[
                       Fonts.type17,
-                      { opacity: bankSource === '' ? 0.5 : null }
+                      { opacity: bankDestination === null ? 0.5 : null }
                       ]}
                   >
-                      {bankSource === '' ? 'Pilih Tujuan Bank' : bankSource.name}
+                      {bankDestination === null ? 'Pilih Tujuan Bank' : "testtt"}
                   </Text>
                   <View style={{ position: 'absolute', right: 16 }}>
                       <MaterialIcon
@@ -270,7 +277,7 @@ const SfaAddTagihanTransfer = props => {
         return (
             <View style={{paddingVertical: 16}}>
                 <Text style={Fonts.type10}>
-                    {status === 'available' ? 'Tanggal Transfer' : '*Tanggal Transfer'}
+                    {isDisable ? 'Tanggal Transfer' : '*Tanggal Transfer'}
                 </Text>
                 <TouchableOpacity
                     style={styles.boxMenu}
@@ -296,7 +303,7 @@ const SfaAddTagihanTransfer = props => {
     const renderTransferValue = () => {
         return (
             <View style={{paddingTop: 16}}>
-                <Text style={Fonts.type10}>{status === 'available' ? 'Nilai Transfer' : '*Nilai Transfer'}</Text>
+                <Text style={Fonts.type10}>{isDisable ? 'Nilai Transfer' : '*Nilai Transfer'}</Text>
                 <View style={[GlobalStyle.boxInput, {flexDirection:"row", alignItems:"center"}]}>
                     <TextInputMask
                         type={'money'}
@@ -327,7 +334,7 @@ const SfaAddTagihanTransfer = props => {
         return(
             <View>
                 <Text style={[Fonts.type10, {paddingTop: 16}]}>
-                    {status === 'available' ? 'Jumlah Penagihan' : '*Jumlah Penagihan'}
+                    {isDisable ? 'Jumlah Penagihan' : '*Jumlah Penagihan'}
                 </Text>
                 <View style={[GlobalStyle.boxInput, {flexDirection:"row", alignItems:"center"}]}>
                 <TextInputMask
@@ -359,7 +366,7 @@ const SfaAddTagihanTransfer = props => {
         return(
             <View>
                 <Text style={[Fonts.type10, {paddingTop: 16}]}>
-                    {status === 'available' ? 'Unggah Foto/Gambar' : '*Unggah Foto/Gambar'}
+                    {isDisable? 'Unggah Foto/Gambar' : '*Unggah Foto/Gambar'}
                 </Text>
                 {dataImage ? (
                     <View style={{marginTop: 12}}>
@@ -476,6 +483,25 @@ const renderModalReference = () => {
   );
 }
 
+  /** MODAL BANK DESTINATION */
+  const renderModalBankDestination = () => {
+    return (
+      <View>
+        {openModalBankDestination ? (
+          <ModalBankDestination
+            open={openModalBankDestination}
+            close={() => setOpenModalBankDestination(false)}
+            onRef={ref => (selectBankDestination = ref)}
+            selectBankDestination={selectedBankDestination.bind(this)}
+            supplierId = {selectedMerchant.supplierId}
+            storeId= {selectedMerchant.storeId}
+            paymentCollectionTypeId = {props.collectionMethod.id}
+          />
+        ) : null}
+      </View>
+    );
+  }
+
   /**
    * ==================================
    * RENDER CONTENT DATA (MAIN VIEW)
@@ -501,6 +527,7 @@ const renderModalReference = () => {
       </View>
       {renderModalTransferDate()}
       {renderModalReference()}
+      {renderModalBankDestination()}
     </>
   );
 };

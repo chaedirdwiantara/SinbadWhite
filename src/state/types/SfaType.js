@@ -28,3 +28,8 @@ export const SFA_GET_REFERENCE_FAILED = 'SfaGetReferenceFailed';
 export const SFA_GET_PAYMENT_METHOD_PROCESS = 'SfaGetPaymentMethodProcess';
 export const SFA_GET_PAYMENT_METHOD_SUCCESS = 'SfaGetPaymentMethodSuccess';
 export const SFA_GET_PAYMENT_METHOD_FAILED = 'SfaGetPaymentMethodFailed';
+
+/** GET BANK DESTINATION */
+export const SFA_GET_BANK_ACCOUNT_PROCESS = 'SfaGetBankAccountProcess';
+export const SFA_GET_BANK_ACCOUNT_SUCCESS = 'SfaGetBankAccountSuccess';
+export const SFA_GET_BANK_ACCOUNT_FAILED = 'SfaGetBankAccountFailed';
