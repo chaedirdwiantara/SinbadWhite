@@ -85,7 +85,6 @@ import {
     /** FUNCTION */
     componentDidMount(){
         this.navigationFunction()
-        // this.getRecordStock()
         this.discardDataSave()
         this.batchDeleteData()
     }
@@ -93,7 +92,7 @@ import {
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackPress)
     }
     componentDidUpdate(prevProps){
-        // To Delete Catalogue
+        // To Delete Catalogue and get new stock record
         if(prevProps.merchant.dataDeleteRecordStock !== this.props.merchant.dataDeleteRecordStock){
             if(this.props.merchant.dataDeleteRecordStock.success ){
                 console.log('Get after delete')
@@ -103,7 +102,6 @@ import {
         }
         // To get Catalouge after add new Catalogue
         if(prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock
-            && this.props.merchant.dataAddRecordStock.hasOwnProperty('success')
             ){
             if(this.props.merchant.dataAddRecordStock.success){
                 console.log('Get after Add')
@@ -122,21 +120,24 @@ import {
                 this.postRecordStockActivity()
                 setTimeout(() => {
                     NavigationService.navigate('MerchantStockView')
-                })
+                }, 500)
             }
         }
         // To navigate when data are empty
         if(prevProps.merchant.dataGetRecordStock !== this.props.merchant.dataGetRecordStock){
+            console.log('Data change')
             if(this.props.merchant.merchantStockRecordStatus === 'NEW-STOCK'){
                 this.batchDeleteData()
             }
             if(this.props.merchant.dataGetRecordStock.length < 0){
                 NavigationService.navigate('MerchantStockView')
+            } else {
+                this.setState({ data: this.props.merchant.dataGetRecordStock })
             }
+            
         }
         // Navigate to MerchantStockView after batch delete
-        if(prevProps.merchant.dataBatchDeleteStock !== this.props.merchant.dataBatchDeleteStock
-            && this.props.merchant.dataBatchDeleteStock.hasOwnProperty('success')){
+        if(prevProps.merchant.dataBatchDeleteStock !== this.props.merchant.dataBatchDeleteStock){
             if (this.props.merchant.dataBatchDeleteStock.success){
                 this.props.merchantBatchDeleteStockReset()
                 this.props.merchantStockRecordStatus('')
@@ -306,14 +307,13 @@ import {
     // RENDER CONTENT
     renderContent(){
         const merchant = this.props.merchant
-        return merchant.loadingGetRecordStock
-        || merchant.loadingDeleteRecordStock
-        || merchant.loadingAddRecordStock ? (
+        return merchant.loadingGetRecordStock ? (
             <LoadingPage />
             ) : (
             this.renderData()
         )
     }
+
     /** RENDER VIEW */
     // RENDER CARD View
     renderCardView(){
@@ -326,11 +326,6 @@ import {
                 />
             </View>
         ) : (
-            this.props.merchant.loadingGetRecordStock 
-            || this.props.merchant.loadingAddRecordStock
-            || this.props.merchant.loadingDeleteRecordStock ? (
-                <LoadingPage />
-            ) : (
             <View style={styles.mainContainer}>
                 <EmptyData 
                     title={'Tidak Ada Catatan Stok'}
@@ -339,7 +334,6 @@ import {
                     }
                 />
             </View>
-            )
         )
     }
     renderEmptyCatalogue(){

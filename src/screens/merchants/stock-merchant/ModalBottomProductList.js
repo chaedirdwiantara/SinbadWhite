@@ -72,7 +72,8 @@ class ModalBottomProductList extends Component {
                 setTimeout(() => {
                     this.props.parentFunction({ type: 'productList', data: false });
                     this.setState({ loadingAddStock: false })
-                }, 500)
+                    NavigationService.navigate('MerchantEditStockView')
+                }, 1000)
             }
     }
 

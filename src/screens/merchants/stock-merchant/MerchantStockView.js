@@ -82,9 +82,6 @@ class MerchantStockView extends Component {
                 break;
             case 'productList':
                 this.setState({ openModalProductList: data.data })
-                setTimeout(() => {
-                    NavigationService.navigate('MerchantEditStockView')
-                }, 500)
                 break; 
             default:
                 break;
