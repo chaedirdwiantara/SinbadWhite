@@ -47,7 +47,10 @@ class OmsVerificationView extends Component {
    * FUNCTIONAL
    * =======================
    */
-
+  /** === DID MOUNT */
+  componentDidMount() {
+    this.props.portfolioGetProcessV2();
+  }
   /** === DID UPDATE */
   componentDidUpdate(prevProps) {
     /** === SUCCESS POST CHECKOUT ITEM ===
@@ -617,8 +620,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ oms, permanent }) => {
-  return { oms, permanent };
+const mapStateToProps = ({ oms, permanent, merchant }) => {
+  return { oms, permanent, merchant };
 };
 
 const mapDispatchToProps = dispatch => {
