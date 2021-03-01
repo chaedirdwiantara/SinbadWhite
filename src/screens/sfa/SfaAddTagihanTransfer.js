@@ -26,19 +26,25 @@ const { width, height } = Dimensions.get('window');
 
 const SfaAddTagihanTransfer = props => {
   const status = props.status;
-  const [noRef, setNoRef] = useState('');
-  const [billingValue, setBillingValue] = useState(0);
-  const [bankSource, setBankSource] = useState('');
-  const [transferDate, setTransferDate] = useState(new Date())
-  const [balance, setBalance] = useState(0)
+  
   const [openModalTransferDate, setOpenModalTransferDate] = useState(false)
-  const [dataImage, setDataImage] = useState(null)
   const [errorInputImage, setErrorInputImage] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(true)
   const [isDisable, setIsDisable] = useState(false)
   const [openModalReference, setOpenModalReference] = useState(false);
+  const [openModalBank, setOpenModalBank] = useState(false);
 
+  //DATA INPUT
+  const [noRef, setNoRef] = useState('');
+  const [bankSource, setBankSource] = useState('');
+  const [transferDate, setTransferDate] = useState(null)
+  const [balance, setBalance] = useState(0)
+  const [billingValue, setBillingValue] = useState(0);
+  const [dataImage, setDataImage] = useState(null)
+
+  //SELECTOR
   const {selectedMerchant} = useSelector(state => state.merchant);
+  
 
   /**
    * =======================
@@ -77,6 +83,7 @@ const SfaAddTagihanTransfer = props => {
         setErrorInputImage(true);
       } else {
         // const source = { uri: response.uri };
+        props.transferImage(response.data)
         setDataImage({
           fileName: response.fileName,
           fileData: response.data,
@@ -269,10 +276,10 @@ const SfaAddTagihanTransfer = props => {
                             <Text
                                 style={[
                                 Fonts.type17,
-                                { opacity: bankSource === '' ? 0.5 : null, marginLeft: 11 }
+                                { opacity: transferDate === null ? 0.5 : null, marginLeft: 11 }
                                 ]}
                             >
-                                {bankSource === '' ? moment(transferDate).format('DD/MM/YYYY') : bankSource.name}
+                                {transferDate !== null ? moment(transferDate).format('DD/MM/YYYY') : "Pilih Tanggal Transfer"}
                             </Text>
                         </View>
                 </TouchableOpacity>

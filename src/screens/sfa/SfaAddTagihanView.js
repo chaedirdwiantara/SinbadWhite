@@ -41,9 +41,12 @@ const SfaAddTagihanView = (props) => {
 
   //DATA PAYMENT TRANSFER
   const [referenceCode, setReferenceCode] = useState(null)
+  const [bankSource, setBankSource] = useState(null)
+  const [bankAccount, setBankAccount] = useState(null)
   const [transferDate, setTransferDate] = useState(null)
   const [transferValue, setTransferValue] = useState(0)
   const [billingValue, setBillingValue] = useState(0)
+  const [transferImage, setTransferImage] = useState(null)
 
   /**
    * =======================
@@ -88,12 +91,21 @@ const SfaAddTagihanView = (props) => {
       referenceCode: referenceCode,
       transferDate: transferDate,
       transferValue: transferValue,
-      billingValue: billingValue
+      billingValue: billingValue,
+      transferImage: transferImage
     })
   }
 
   const dataReferenceCode = (data) => {
     setReferenceCode(data)
+  }
+
+  const dataBankSource = (data) => {
+    setBankSource(data)
+  }
+
+  const dataBankAccount = (data) => {
+    setBankAccount(data)
   }
 
   const dataTransferDate = (data) => {
@@ -108,15 +120,20 @@ const SfaAddTagihanView = (props) => {
     setBillingValue(data)
   }
 
+  const dataTransferImage = (data) => {
+    setTransferImage(data)
+  }
+
   useEffect(() => {
     if (collectionMethod !== null) {
-      if (collectionMethod.code === cash) {
+      if (collectionMethod.code === "cash") {
         if (cash === 0 || cash === '') {
           setDisabled(true)
         } else {
           setDisabled(false)
         }
       }
+      if 
     }
   }, [collectionMethod, cash]);
 
@@ -259,9 +276,12 @@ const SfaAddTagihanView = (props) => {
         collectionMethod={collectionMethod} 
         remainingBilling={props.navigation.state.params.data.remainingBilling} 
         referenceCode={dataReferenceCode}
+        bankSource={dataBankSource}
+        bankAccount={dataBankAccount}
         transferDate={dataTransferDate}
         transferValue={dataTranserValue}
         billingValue={dataBillingValue}
+        transferImage={dataTransferImage}
       />
     )
   }
@@ -303,7 +323,7 @@ const SfaAddTagihanView = (props) => {
   const renderButtonSave= () => {
     return (
       <ButtonSingle
-        // disabled={cash === 0 || cash === '' ? true : false}
+        disabled={disabled}
         title={'Simpan'}
         borderRadius={4}
         onPress={() => saveCollection()}
