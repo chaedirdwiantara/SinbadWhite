@@ -12,14 +12,17 @@ import {
   MaterialIcon,
   Modal
 } from '../../library/thirdPartyPackage';
-import { SearchBarType1, LoadingPage } from '../../library/component';
+import { LoadingPage } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
-import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
+import { sfaGetAllBankProcess } from '../../state/actions';
 
 function ModalBankAccount(props) {
   const dispatch = useDispatch();
+  const {
+    dataGetAllBank
+   } = useSelector(state => state.sfa);
   const [dataBank, setDataBank] = useState({
     data: [
       {
@@ -54,16 +57,15 @@ function ModalBankAccount(props) {
    * FUNCTIONAL
    * =======================
    */
-  /* necessary lines for Integrate task later
-//   useEffect(() => {
-//     getBankAccount()
-//   }, []);
-/* necessary lines for Integrate task later
-   /** GET BANK ACCOUNT LIST DATA */
-  //    const getBankAccount = () => {
-  //     dispatch(sfaGetBankAccountProcess(data))
-  //   }
+ 
+   useEffect(() => {
+     getBankAccount()
+   }, []);
 
+   /** GET BANK ACCOUNT LIST DATA */
+      const getBankAccount = () => {
+     dispatch(sfaGetAllBankProcess())
+   }
   /**
    * *********************************
    * RENDER VIEW
@@ -100,8 +102,7 @@ function ModalBankAccount(props) {
 
 
   const renderCollectionMethod = () => {
-    console.log(dataBank, 'data state');
-    const data = dataBank;
+    const data = dataGetAllBank;
     return data.data.map((item, index) => {
       return (
         <View key={index}>

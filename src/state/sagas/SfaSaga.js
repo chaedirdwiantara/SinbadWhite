@@ -63,6 +63,18 @@ function* getPaymentMethod(actions) {
   }
 }
 
+/** GET ALL BANK */
+function* getAllBank(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getAllBank(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetAllBankSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetAllBankFailed(error));
+  }
+}
+
   function* SfaSaga() {
     yield takeEvery(
       types.SFA_GET_COLLECTION_STATUS_PROCESS,
@@ -72,6 +84,7 @@ function* getPaymentMethod(actions) {
     yield takeEvery(types.SFA_GET_COLLECTION_PROCESS, getCollectionList)
     yield takeEvery(types.SFA_GET_REFERENCE_PROCESS, getReferenceList)
     yield takeEvery(types.SFA_GET_PAYMENT_METHOD_PROCESS, getPaymentMethod)
+    yield takeEvery(types.SFA_GET_ALL_BANK_PROCESS,getAllBank )
 }
 
 export default SfaSaga;
