@@ -80,7 +80,7 @@ class EditStockRecordListView extends Component {
                                     enablesReturnKeyAutomatically
                                     maxLength={4}
                                     onChangeText={qty => {
-                                        const shelfQty = qty.replace(/^0+(?!$)/g, '');
+                                        const shelfQty = qty.replace(/\W|\\+(?!$)/g, '');
                                         this.props.parentFunction({type: 'edit', data: {
                                             stockId: item.id,
                                             shelfQty
@@ -107,7 +107,7 @@ class EditStockRecordListView extends Component {
                                     enablesReturnKeyAutomatically
                                     maxLength={4}
                                     onChangeText={qty => {
-                                        const nonShelfQty = qty.replace(/^0|\W|\\+(?!$)/g, '');
+                                        let nonShelfQty = qty.replace(/\W|\\+(?!$)/g, '');
                                         this.props.parentFunction({ type: 'edit', data: {
                                             stockId: item.id,
                                             nonShelfQty
