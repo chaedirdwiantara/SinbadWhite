@@ -154,8 +154,9 @@ function updateSurvey({ params, surveyResponseId }) {
  function getRecordStock(data){
   const storeId = GlobalMethod.merchantStoreId()
   const supplierId = GlobalMethod.userSupplierMapping()
+  const keywordSearch = data.search ? data.search : ''
    return ApiRest({
-     path: `stock-record?supplierId=${supplierId}&storeId=${storeId}&keyword=${data.search}`,
+     path: `stock-record?supplierId=${supplierId}&storeId=${storeId}&keyword=${keywordSearch}`,
      method: 'GET'
    })
  }

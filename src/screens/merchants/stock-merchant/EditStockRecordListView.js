@@ -15,6 +15,7 @@ import {
 } from '../../../library/thirdPartyPackage'
 import { Fonts } from '../../../helpers'
 import { Color } from '../../../config'
+import * as ActionCreators from '../../../state/actions'
 
 class EditStockRecordListView extends Component {
     constructor(props){
@@ -77,6 +78,7 @@ class EditStockRecordListView extends Component {
                                     keyboardType='numeric'
                                     returnKeyType='done'
                                     enablesReturnKeyAutomatically
+                                    maxLength={4}
                                     onChangeText={qty => {
                                         const shelfQty = qty.replace(/^0+(?!$)/g, '');
                                         this.props.parentFunction({type: 'edit', data: {
@@ -103,8 +105,9 @@ class EditStockRecordListView extends Component {
                                     keyboardType='numeric'
                                     returnKeyType='done'
                                     enablesReturnKeyAutomatically
+                                    maxLength={4}
                                     onChangeText={qty => {
-                                        const nonShelfQty = qty.replace(/^0+(?!$)/g, '');
+                                        const nonShelfQty = qty.replace(/^0|\W|\\+(?!$)/g, '');
                                         this.props.parentFunction({ type: 'edit', data: {
                                             stockId: item.id,
                                             nonShelfQty
@@ -204,5 +207,11 @@ const styles = StyleSheet.create({
         alignItems: 'center' 
     }
 })
+const mapStateToProps = ({ merchant }) => {
+    return { merchant }
+}
 
-export default EditStockRecordListView
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators(ActionCreators, dispatch)
+}
+export default connect(mapStateToProps, mapDispatchToProps)(EditStockRecordListView)

@@ -54,6 +54,17 @@ class MerchantStockView extends Component {
           );
     }
 
+    componentDidUpdate(prevProps){
+        if(this.props.merchant.merchantStockRecordStatus === 'EDIT-STOCK'){
+            if(prevProps.merchant.dataGetRecordStock !== this.props.merchant.dataGetRecordStock){
+                if(this.props.merchant.dataGetRecordStock.length > 0){
+                    NavigationService.navigate('MerchantEditStockView')
+                }
+            }
+        }
+    }
+
+    /** GET STOCK RECORD */
     getRecordStock(keyword){
         this.props.merchantGetStockRecordProcess({
             search: keyword || ''
@@ -62,6 +73,8 @@ class MerchantStockView extends Component {
     parentFunction(data){
         switch (data.type) {
             case 'search':
+                this.props.merchantStockRecordStatus('SEARCH')
+                this.setState({ search: data.data })
                 this.getRecordStock(data.data)
                 break;
             case 'productList':
@@ -74,8 +87,7 @@ class MerchantStockView extends Component {
 
     buttonEditStock(){
         const taskList = this.props.merchant.dataGetLogAllActivity
-        if(
-            taskList.find( task => task.activity === 'check_out')){
+        if(taskList && taskList.find( task => task.activity === 'check_out')){
             return <View />
         } else {
             return this.renderButtonEditStock()
@@ -85,12 +97,16 @@ class MerchantStockView extends Component {
 
     buttonAddStock(){
         const taskList = this.props.merchant.dataGetLogAllActivity
-        if(
-            taskList.find( task => task.activity === 'check_out')){
+        if(taskList && taskList.find( task => task.activity === 'check_out')){
             return <View />
         } else {
             return this.renderButtonAddStock()
         }
+    }
+
+    navigateToEditStock(){
+        this.props.merchantStockRecordStatus('EDIT-STOCK')
+        this.getRecordStock()
     }
 
     /**
@@ -166,7 +182,8 @@ class MerchantStockView extends Component {
     }
     // RENDER CONTENT
     renderContentBody(){
-        return this.props.merchant.dataGetRecordStock.length > 0  ? (
+        return this.props.merchant.dataGetRecordStock.length > 0 
+        || this.props.merchant.merchantStockRecordStatus === 'SEARCH' ? (
             this.renderData()
         ) : (
             this.renderDataEmpty()
@@ -188,10 +205,8 @@ class MerchantStockView extends Component {
                 <ButtonSingle
                     title={'Ubah Catatan Stock'}
                     borderRadius={8}
-                    onPress={() => {
-                        this.props.merchantStockRecordStatus('EDIT-STOCK')  
-                        NavigationService.navigate('MerchantEditStockView')
-                    }}
+                    onPress={() => this.navigateToEditStock()}
+                    loading={this.props.merchant.loadingGetRecordStock}
                 />
             </View>
         )

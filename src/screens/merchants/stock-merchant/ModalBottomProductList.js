@@ -68,12 +68,12 @@ class ModalBottomProductList extends Component {
         if (prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock 
             && this.props.merchant.dataAddRecordStock.success === true) {
                 this.props.merchantAddStockRecordReset()
-                this.props.merchantGetStockRecordProcess()
+                this.props.merchantGetStockRecordProcess({ search: '' })
                 setTimeout(() => {
                     this.props.parentFunction({ type: 'productList', data: false });
                     this.setState({ loadingAddStock: false })
                     NavigationService.navigate('MerchantEditStockView')
-                }, 500)
+                }, 1000)
             }
     }
 

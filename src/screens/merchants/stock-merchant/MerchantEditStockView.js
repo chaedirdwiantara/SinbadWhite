@@ -85,7 +85,6 @@ import {
     /** FUNCTION */
     componentDidMount(){
         this.navigationFunction()
-        this.getRecordStock()
         this.discardDataSave()
         this.batchDeleteData()
     }
@@ -93,48 +92,56 @@ import {
         BackHandler.removeEventListener('hardwareBackPress', this.handleHardwareBackPress)
     }
     componentDidUpdate(prevProps){
-        // To Delete Catalogue
+        // To Delete Catalogue and get new stock record
         if(prevProps.merchant.dataDeleteRecordStock !== this.props.merchant.dataDeleteRecordStock){
             if(this.props.merchant.dataDeleteRecordStock.success ){
+                console.log('Get after delete')
                 this.props.merchantDeleteStockRecordReset()
                 this.getRecordStock(this.state.search)
             }
         }
         // To get Catalouge after add new Catalogue
         if(prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock
-            && this.props.merchant.dataAddRecordStock.hasOwnProperty('success')
             ){
             if(this.props.merchant.dataAddRecordStock.success){
+                console.log('Get after Add')
                 this.props.merchantAddStockRecordReset()
-                this.getRecordStock()
-                this.setState({ openModalProductList: false })
+                this.getRecordStock(this.state.search)
+                this.batchDeleteData()
             }
         }
 
         // To get catalogue after update
         if(prevProps.merchant.dataUpdateRecordStock !== this.props.merchant.dataUpdateRecordStock){
             if(this.props.merchant.dataUpdateRecordStock.success){
+                console.log('Get and Navigate after update')
                 this.props.merchantUpdateStockRecordReset()
-                this.getRecordStock()
+                this.getRecordStock(this.state.search)
                 this.postRecordStockActivity()
-                NavigationService.navigate('MerchantStockView')
+                setTimeout(() => {
+                    NavigationService.navigate('MerchantStockView')
+                }, 500)
             }
         }
         // To navigate when data are empty
         if(prevProps.merchant.dataGetRecordStock !== this.props.merchant.dataGetRecordStock){
+            console.log('Data change')
             if(this.props.merchant.merchantStockRecordStatus === 'NEW-STOCK'){
                 this.batchDeleteData()
             }
             if(this.props.merchant.dataGetRecordStock.length < 0){
                 NavigationService.navigate('MerchantStockView')
+            } else {
+                this.setState({ data: this.props.merchant.dataGetRecordStock })
             }
+            
         }
         // Navigate to MerchantStockView after batch delete
-        if(prevProps.merchant.dataBatchDeleteStock !== this.props.merchant.dataBatchDeleteStock
-            && this.props.merchant.dataBatchDeleteStock.hasOwnProperty('success')){
+        if(prevProps.merchant.dataBatchDeleteStock !== this.props.merchant.dataBatchDeleteStock){
             if (this.props.merchant.dataBatchDeleteStock.success){
                 this.props.merchantBatchDeleteStockReset()
-                this.getRecordStock()
+                this.props.merchantStockRecordStatus('')
+                this.getRecordStock(this.state.search)
                 NavigationService.navigate('MerchantStockView')
             }
         }
@@ -178,9 +185,7 @@ import {
         this.props.merchantGetStockRecordProcess({
             search: keyword || ''
         })
-        setTimeout(() => {
-            this.setState({ data: this.props.merchant.dataGetRecordStock })
-        }, 100)
+        this.setState({ data: this.props.merchant.dataGetRecordStock })
     }
     // POST RECORD STOCK ACTIVITY
     postRecordStockActivity(){
@@ -214,6 +219,7 @@ import {
             this.props.merchantAddStockRecordProcess({
                 catalogues: this.state.dataForDiscard
             })
+            this.props.merchantStockRecordStatus('')
             this.setState({ openModalBackConfirmation: false })
             NavigationService.navigate('MerchantStockView')
 
@@ -237,6 +243,11 @@ import {
     /** PARENT FUNCTION */
     parentFunction(data){
         switch (data.type) {
+            case 'productList':
+                setTimeout(() => {
+                    this.setState({ openModalProductList: data.data })
+                }, 500)
+                break; 
             case 'search':
                 this.setState({ search: data.data })
                 this.getRecordStock(data.data)
@@ -275,28 +286,34 @@ import {
                     data: newCatalogueArray,
                     dataForSaveProduct
                 })
-                break;  
+                break;
             default:
+                this.setState({ search: '' })
+                this.getRecordStock(this.state.search)
                 break;
         }
     }
     // SAVE STOCK RECORD
     saveStockRecord(){
-        if(this.state.dataForSaveProduct > 0){
+        if(this.state.dataForSaveProduct.length > 0){
+            this.props.merchantStockRecordStatus('')
             this.props.merchantUpdateStockRecordProcess(this.state.dataForSaveProduct)
         } else {
+            this.props.merchantStockRecordStatus('')
             this.postRecordStockActivity()
             NavigationService.navigate('MerchantStockView')
         }
     }
     // RENDER CONTENT
     renderContent(){
-        return this.props.merchant.loadingGetRecordStock === false ? (
-            this.renderData()
-        ) : (
+        const merchant = this.props.merchant
+        return merchant.loadingGetRecordStock ? (
             <LoadingPage />
+            ) : (
+            this.renderData()
         )
     }
+
     /** RENDER VIEW */
     // RENDER CARD View
     renderCardView(){
@@ -357,12 +374,18 @@ import {
     }
     // RENDER BUTTON SAVE STOCK
     renderButtonSaveStock() {
+        const merchant = this.props.merchant
        return (
            <View style={styles.containerEditButton}>
                <ButtonSingle
                    title={'Simpan Catatan Stock'}
                    borderRadius={8}
                    onPress={() => this.openModalSaveStock()}
+                   loading={
+                       merchant.loadingGetRecordStock 
+                       || merchant.loadingUpdateRecordStock
+                       || merchant.loadingPostActivity
+                    }
                />
            </View>
           )
@@ -405,8 +428,8 @@ import {
                     this.setState({ openModalSaveConfirmation: false })
                 }}
                 rightAction={() => {
-                    this.saveStockRecord()
                     this.setState({ openModalSaveConfirmation: false })
+                    this.saveStockRecord()
                 }}
               />
           ) : (

@@ -866,7 +866,7 @@ class MerchantHomeView extends Component {
                             marginTop: -5
                           }}
                         >
-                          <Text style={Fonts.type51}>Completed</Text>
+                          <Text style={Fonts.type51}>Selesai</Text>
                           <MaterialIcon
                             style={{
                               marginTop: 2,
