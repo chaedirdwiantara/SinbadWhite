@@ -44,9 +44,6 @@ class MerchantStockView extends Component {
      * ================
      */
     componentDidMount(){
-        this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.journeyPlanSaleId
-          );
         this.getRecordStock()
         this.props.merchantStockRecordStatus('')
     }
@@ -90,7 +87,7 @@ class MerchantStockView extends Component {
 
     buttonEditStock(){
         const taskList = this.props.merchant.dataGetLogAllActivity
-        if(taskList.find( task => task.activity === 'check_out')){
+        if(taskList && taskList.find( task => task.activity === 'check_out')){
             return <View />
         } else {
             return this.renderButtonEditStock()
@@ -100,7 +97,7 @@ class MerchantStockView extends Component {
 
     buttonAddStock(){
         const taskList = this.props.merchant.dataGetLogAllActivity
-        if(taskList.find( task => task.activity === 'check_out')){
+        if(taskList && taskList.find( task => task.activity === 'check_out')){
             return <View />
         } else {
             return this.renderButtonAddStock()
