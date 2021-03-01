@@ -89,6 +89,7 @@ const SfaAddTagihanView = (props) => {
   const saveCollection = () => {
     console.log({
       referenceCode: referenceCode,
+      bankAccount: bankAccount,
       transferDate: transferDate,
       transferValue: transferValue,
       billingValue: billingValue,
@@ -134,7 +135,7 @@ const SfaAddTagihanView = (props) => {
         }
       }
       if (collectionMethod.code === "transfer") {
-        if (referenceCode === null || transferDate === null || transferValue === 0 || billingValue === 0 || transferImage ===null) {
+        if (referenceCode === null || bankAccount === null || transferDate === null || transferValue === 0 || billingValue === 0 || transferImage ===null) {
           setDisabled(true)
         } else {
           setDisabled(false)       
