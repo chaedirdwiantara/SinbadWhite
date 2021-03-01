@@ -28,7 +28,7 @@ function getCollectionList(data) {
 /** GET COLLECTION LIST */
 function getReferenceList(data) {
   return ApiRest({
-    path: `collection/v1/payment-method?supplierId=${data.supplierId}&storeId=${data.storeId}&paymentCollectionTypeId=${data.paymentCollectionTypeId}&skip=0&limit=${data.limit}`,
+    path: `collection/v1/payment-method?supplierId=${data.supplierId}&storeId=${data.storeId}&paymentCollectionTypeId=${data.paymentCollectionTypeId}&skip=0&limit=${data.limit}&keyword=${data.keyword}`,
     method: `GET`
   })
 }
