@@ -100,7 +100,6 @@ const SfaAddTagihanView = (props) => {
         balance: cash
       }
       dispatch(sfaPostPaymentMethodProcess(data));
-      console.log("ini cash:", data);
     }
     if (collectionMethod.code === "transfer") {
       console.log({
