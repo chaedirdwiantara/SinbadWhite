@@ -22,34 +22,6 @@ import { sfaGetBankAccountProcess } from '../../state/actions';
 function ModalBankDestination(props) {
   const dispatch = useDispatch();
   const { dataSfaGetBankAccount} = useSelector(state => state.sfa);
-  const [dataBank, setDataBank] = useState({
-    data: [
-      {
-        id: 1,
-        bankCode: 'BCA',
-        bankName: '014',
-        displayName: 'Bank BCA'
-      },
-      {
-        id: 2,
-        bankCode: 'BNI',
-        bankName: '009',
-        displayName: 'Bank BNI'
-      },
-      {
-        id: 3,
-        bankCode: 'Mandiri',
-        bankName: '008',
-        displayName: 'Bank Mandiri'
-      },
-      {
-        id: 4,
-        bankCode: 'BRI',
-        bankName: '002',
-        displayName: 'Bank BRI'
-      }
-    ]
-  });
 
   /**
    * =======================
@@ -96,9 +68,7 @@ function ModalBankDestination(props) {
   }
 
 
-  const renderCollectionMethod = () => {
-    console.log("iniii:", dataSfaGetBankAccount.data);
-    console.log(dataBank, 'data state');
+  const renderCollectionMethod = () => {\
     const data = dataSfaGetBankAccount;
     return data.data.map((item, index) => {
       return (
@@ -134,7 +104,6 @@ function ModalBankDestination(props) {
    * MAIN
    * =======================
    */
-//   console.log("iniii:", dataSfaGetBankAccount.data);
   return (
     <View style={{ flex: 1 }}>
       <Modal

@@ -141,7 +141,6 @@ const SfaAddTagihanTransfer = props => {
   }
 
   const selectedBankDestination = (data) => {
-    console.log("disini data:", data);
     props.bankAccount(data)
     setBankDestination(data)
     setOpenModalBankDestination(false)
