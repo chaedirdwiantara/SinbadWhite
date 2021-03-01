@@ -539,6 +539,13 @@ class MerchantHomeView extends Component {
     }
     return total;
   }
+  /** VALIDATE ORDER STATUS FOR TASK LIST */
+  validateOrderStatus = data => {
+    if (!data.orderStatus && data.noOrderReasonNote.length !== 0) {
+      return true;
+    }
+    return data.orderStatus;
+  };
   /**
    * ========================
    * RENDER VIEW
@@ -796,7 +803,7 @@ class MerchantHomeView extends Component {
                               'HH:mm'
                             )}`}
                       </Text>
-                    ) : !journeyBookStores.orderStatus ? (
+                    ) : this.validateOrderStatus(journeyBookStores) ? (
                       journeyBookStores.noOrderReasonNote.length !== 0 ? (
                         <TouchableOpacity
                           onPress={() => {
@@ -1342,4 +1349,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * updatedFunction:
  * -> Update the props of post activity.
  * -> Update function checkTotalCompleteTask.
+ * updatedBy: dyah
+ * updatedDate: 01032021
+ * updatedFunction:
+ * -> Update the tasklist when complete the order & not order .
  */
