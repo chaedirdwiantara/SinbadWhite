@@ -28,6 +28,9 @@ import SfaAddTagihanCheque from './SfaAddTagihanCheque';
 import SfaAddTagihanTransfer from './SfaAddTagihanTransfer';
 import SfaAddTagihanPromo from './SfaAddTagihanPromo';
 import SfaAddTagihanGiro from './SfaAddTagihanGiro';
+import {
+  sfaPostPaymentMethodProcess,
+} from '../../state/actions';
 
 const SfaAddTagihanView = (props) => {
   const dispatch = useDispatch();
@@ -96,6 +99,7 @@ const SfaAddTagihanView = (props) => {
         userId: parseInt(selectedMerchant.id), 
         balance: cash
       }
+      dispatch(sfaPostPaymentMethodProcess(data));
       console.log("ini cash:", data);
     }
     if (collectionMethod.code === "transfer") {

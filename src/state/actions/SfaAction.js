@@ -145,3 +145,28 @@ export function sfaGetBankAccountSuccess(data) {
 export function sfaGetBankAccountFailed(data) {
   return { type: types.SFA_GET_BANK_ACCOUNT_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * POST PAYMENT METHOD
+ * ===========================
+ */
+/** === SFA POST PAYMENT METHOD PROCESS === */
+export function sfaPostPaymentMethodProcess(data) {
+  return { type: types.SFA_POST_PAYMENT_METHOD_PROCESS, payload: data };
+}
+
+/** === SFA POST PAYMENT METHOD SUCCESS === */
+export function sfaPostPaymentMethodSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_POST_PAYMENT_METHOD_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_POST_PAYMENT_METHOD_FAILED, payload: data };
+}
+/** === SFA POST PAYMENT METHOD FAILED === */
+export function sfaPostPaymentMethodFailed(data) {
+  return { type: types.SFA_POST_PAYMENT_METHOD_FAILED, payload: data };
+}

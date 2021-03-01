@@ -49,11 +49,22 @@ function getBankAccount() {
   })
 }
 
+/** POST PAYMENT METHOD */
+function postPaymentMethod(data) {
+  console.log("data woi:", data);
+  return ApiRest({
+    path: 'collection/v1/payment-method',
+    method: 'POST',
+    params: data
+  });
+}
+
   export const SfaMethod = {
     getCollectionStatus,
     getSfaDetail,
     getCollectionList,
     getReferenceList,
     getPaymentMethod,
-    getBankAccount
+    getBankAccount,
+    postPaymentMethod
   };
