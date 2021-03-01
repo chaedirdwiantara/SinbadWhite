@@ -75,9 +75,7 @@ class JourneyView extends Component {
       date: today,
       loading: true
     });
-    this.props.getJourneyPlanReportProcess(
-      this.props.user.userSuppliers.map(item => item.supplierId)
-    );
+    this.props.getJourneyPlanReportProcessV2();
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
@@ -92,9 +90,7 @@ class JourneyView extends Component {
           date: today,
           loading: true
         });
-        this.props.getJourneyPlanReportProcess(
-          this.props.user.userSuppliers.map(item => item.supplierId)
-        );
+        this.props.getJourneyPlanReportProcessV2();
         this.setState({ openModalMerchantList: false });
       }
     }
@@ -150,19 +146,19 @@ class JourneyView extends Component {
   /** === RENDER HEADER === */
   renderHeader() {
     return !this.props.journey.loadingGetJourneyPlanReport &&
-      this.props.journey.dataGetJourneyPlanReport !== null ? (
+      this.props.journey.dataGetJourneyPlanReportV2 !== null ? (
       <View style={styles.headerContainer}>
         <View style={styles.boxHeader}>
           <Text style={[Fonts.type27, { marginBottom: 5 }]}>
-            {this.props.journey.dataGetJourneyPlanReport.total}/
-            {this.props.journey.dataGetJourneyPlanReport.target}
+            {this.props.journey.dataGetJourneyPlanReportV2.total}/
+            {this.props.journey.dataGetJourneyPlanReportV2.target}
           </Text>
           <Text style={Fonts.type26}>Toko Visit</Text>
         </View>
         <View style={styles.boxHeader}>
           <Text style={[Fonts.type27, { marginBottom: 5 }]}>
             {MoneyFormat(
-              this.props.journey.dataGetJourneyPlanReport.totalOrder
+              this.props.journey.dataGetJourneyPlanReportV2.totalOrder
             )}
           </Text>
           <Text style={Fonts.type26}>Toko Order</Text>
@@ -299,5 +295,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyView);
  * updatedFunction:
  * -> Update the props of journey plan list.
  * -> Update the props when saving merchant to journey plan.
- *
+ * updatedBy: dyah
+ * updatedDate: 01032021
+ * updatedFunction:
+ * -> Update the props of journey plan report.
  */

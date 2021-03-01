@@ -250,7 +250,7 @@ export const journey = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetJourneyPlanReport: false,
-      dataGetJourneyPlanReportV2: action.payload
+      dataGetJourneyPlanReportV2: action.payload.data
     };
   },
   [types.JOURNEY_PLAN_GET_REPORT_FAILED_V2](state, action) {
