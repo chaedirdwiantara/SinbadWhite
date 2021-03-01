@@ -22,20 +22,35 @@ import { TextInputMask } from 'react-native-masked-text';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ModalCollectionMethod from'./ModalCollectionMethod';
 import SfaAddTagihanCheque from './SfaAddTagihanCheque';
 import SfaAddTagihanTransfer from './SfaAddTagihanTransfer';
 import SfaAddTagihanPromo from './SfaAddTagihanPromo';
 import SfaAddTagihanGiro from './SfaAddTagihanGiro';
+import {
+  sfaPostPaymentMethodProcess,
+} from '../../state/actions';
 
 const SfaAddTagihanView = (props) => {
   const dispatch = useDispatch();
   const [collectionMethod, setCollectionMethod] = useState(null)
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false)
-  const [cash, setCash] = useState(0)
   const [methodStatus, setMethodStatus] = useState('available')
-  const [disabled, setDisabled] = useState(false)
+  const [disabled, setDisabled] = useState(true)
+
+  //DATA PAYMENT CASH
+  const [cash, setCash] = useState(0)
+
+  //DATA PAYMENT TRANSFER
+  const [referenceCode, setReferenceCode] = useState(null)
+  const [bankSource, setBankSource] = useState(null)
+  const [bankAccount, setBankAccount] = useState(null)
+  const [transferDate, setTransferDate] = useState(null)
+  const [transferValue, setTransferValue] = useState(0)
+  const [billingValue, setBillingValue] = useState(0)
+  const [transferImage, setTransferImage] = useState(null)
+  const {selectedMerchant} = useSelector(state => state.merchant);
 
   /**
    * =======================
@@ -76,24 +91,74 @@ const SfaAddTagihanView = (props) => {
   }
 
   const saveCollection = () => {
-    alert(cash)
+    if (collectionMethod.code === "cash") {
+      const data = {
+        paymentCollectionTypeId: parseInt(collectionMethod.id),
+        storeId: parseInt(selectedMerchant.storeId),
+        supplierId: parseInt(selectedMerchant.supplierId), 
+        userId: parseInt(selectedMerchant.id), 
+        balance: cash
+      }
+      dispatch(sfaPostPaymentMethodProcess(data));
+    }
+    if (collectionMethod.code === "transfer") {
+      console.log({
+        referenceCode: referenceCode,
+        bankAccount: bankAccount,
+        transferDate: transferDate,
+        transferValue: transferValue,
+        billingValue: billingValue,
+        transferImage: transferImage
+      })
+    }
   }
 
-  const dataTrasfer = (data) => {
+  const dataReferenceCode = (data) => {
+    setReferenceCode(data)
+  }
 
+  const dataBankSource = (data) => {
+    setBankSource(data)
+  }
+
+  const dataBankAccount = (data) => {
+    setBankAccount(data)
+  }
+
+  const dataTransferDate = (data) => {
+    setTransferDate(data)
+  }
+
+  const dataTranserValue = (data) => {
+    setTransferValue(data)
+  }
+
+  const dataBillingValue = (data) => {
+    setBillingValue(data)
+  }
+
+  const dataTransferImage = (data) => {
+    setTransferImage(data)
   }
 
   useEffect(() => {
     if (collectionMethod !== null) {
-      if (collectionMethod.code === cash) {
+      if (collectionMethod.code === "cash") {
         if (cash === 0 || cash === '') {
           setDisabled(true)
         } else {
           setDisabled(false)
         }
       }
+      if (collectionMethod.code === "transfer") {
+        if (referenceCode === null || bankAccount === null || transferDate === null || transferValue === 0 || billingValue === 0 || transferImage ===null) {
+          setDisabled(true)
+        } else {
+          setDisabled(false)       
+        }
+      }
     }
-  }, [collectionMethod, cash]);
+  }, [collectionMethod, cash, referenceCode, transferDate, transferValue, billingValue, transferImage]);
 
   /**
    * *********************************
@@ -229,12 +294,29 @@ const SfaAddTagihanView = (props) => {
 
   /** RENDER TRANSFER PAYMENT */
   const renderBillingTransfer = () => {
-    return <SfaAddTagihanTransfer collectionMethod={collectionMethod} remainingBilling={props.navigation.state.params.data.remainingBilling} data={dataTrasfer}/>
+    return (
+      <SfaAddTagihanTransfer 
+        collectionMethod={collectionMethod} 
+        remainingBilling={props.navigation.state.params.data.remainingBilling} 
+        referenceCode={dataReferenceCode}
+        bankSource={dataBankSource}
+        bankAccount={dataBankAccount}
+        transferDate={dataTransferDate}
+        transferValue={dataTranserValue}
+        billingValue={dataBillingValue}
+        transferImage={dataTransferImage}
+      />
+    )
   }
 
   /** RENDER PROMO PAYMENT */
   const renderBillingPromo = () => {
-    return <SfaAddTagihanPromo collectionMethod={collectionMethod} remainingBilling={props.navigation.state.params.data.remainingBilling}/>
+    return (
+      <SfaAddTagihanPromo 
+        collectionMethod={collectionMethod} 
+        remainingBilling={props.navigation.state.params.data.remainingBilling}
+      />
+    )
   }
 
    /** RENDER GIRO PAYMENT */
@@ -264,7 +346,7 @@ const SfaAddTagihanView = (props) => {
   const renderButtonSave= () => {
     return (
       <ButtonSingle
-        disabled={cash === 0 || cash === '' ? true : false}
+        disabled={disabled}
         title={'Simpan'}
         borderRadius={4}
         onPress={() => saveCollection()}
