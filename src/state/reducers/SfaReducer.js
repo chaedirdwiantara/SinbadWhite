@@ -8,18 +8,21 @@ loadingSfaGetDetail: false,
 loadingGetCollectionList: false,
 loadingGetReferenceList : false,
 loadingSfaGetPaymentMethod: false,
+loadingSfaGetBankAccount: false,
 /** data */
 dataGetCollectionStatus: null,
 dataSfaGetDetail: null,
 dataGetCollectionList: null,
 dataGetReferenceList : null,
 dataSfaGetPaymentMethod: null,
+dataSfaGetBankAccount: null,
 /** error */
 errorGetCollectionStatus: null,
 errorSfaGetDetail: null,
 errorGetCollectionList: null,
 errorGetReferenceList: null,
 errorSfaGetPaymentMethod: null,
+errorSfaGetBankAccount: null,
 }
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -158,6 +161,34 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       loadingSfaGetPaymentMethod: false,
       errorSfaGetPaymentMethod: action.payload
+    };
+  },
+
+  /**
+   * ==========================
+   * GET BANK ACCOUNT
+   * ==========================
+   */
+  [types.SFA_GET_BANK_ACCOUNT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetBankAccount: true,
+      dataSfaGetBankAccount: null,
+      errorSfaGetBankAccount: null
+    };
+  },
+  [types.SFA_GET_BANK_ACCOUNT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetBankAccount: false,
+      dataSfaGetBankAccount: action.payload
+    };
+  },
+  [types.SFA_GET_BANK_ACCOUNT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaGetBankAccount: false,
+      errorSfaGetBankAccount: action.payload
     };
   },
 })

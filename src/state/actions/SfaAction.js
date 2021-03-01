@@ -120,3 +120,28 @@ export function sfaGetPaymentMethodSuccess(data) {
 export function sfaGetPaymentMethodFailed(data) {
   return { type: types.SFA_GET_PAYMENT_METHOD_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * GET BANK ACCOUNT
+ * ===========================
+ */
+/** === SFA GET PAYMENT METHOD PROCESS === */
+export function sfaGetBankAccountProcess(data) {
+  return { type: types.SFA_GET_BANK_ACCOUNT_PROCESS, payload: data };
+}
+
+/** === SFA GET PAYMENT METHOD SUCCESS === */
+export function sfaGetBankAccountSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_BANK_ACCOUNT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_BANK_ACCOUNT_FAILED, payload: data };
+}
+/** === SFA GET PAYMENT METHOD FAILED === */
+export function sfaGetBankAccountFailed(data) {
+  return { type: types.SFA_GET_BANK_ACCOUNT_FAILED, payload: data };
+}

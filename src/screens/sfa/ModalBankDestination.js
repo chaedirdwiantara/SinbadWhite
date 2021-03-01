@@ -17,9 +17,11 @@ import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
+import { sfaGetBankAccountProcess } from '../../state/actions';
 
 function ModalBankDestination(props) {
   const dispatch = useDispatch();
+  const { dataSfaGetBankAccount} = useSelector(state => state.sfa);
   const [dataBank, setDataBank] = useState({
     data: [
       {
@@ -54,6 +56,10 @@ function ModalBankDestination(props) {
    * FUNCTIONAL
    * =======================
    */
+
+  useEffect(() => {
+    dispatch(sfaGetBankAccountProcess())
+  }, []);
 
 
   /**
@@ -91,14 +97,15 @@ function ModalBankDestination(props) {
 
 
   const renderCollectionMethod = () => {
+    console.log("iniii:", dataSfaGetBankAccount.data);
     console.log(dataBank, 'data state');
-    const data = dataBank;
+    const data = dataSfaGetBankAccount;
     return data.data.map((item, index) => {
       return (
         <View key={index}>
-          <TouchableOpacity onPress={() => props.selectCollection(item)}>
+          <TouchableOpacity onPress={() => props.selectBankDestination(item)}>
             <View style={{ margin: 16 }}>
-              <Text style={Fonts.type24}>{item.displayName}</Text>
+              <Text style={Fonts.type24}>{item.bank.displayName} - {item.ownerName}</Text>
             </View>
             <View style={GlobalStyle.lines} />
           </TouchableOpacity>
@@ -116,7 +123,7 @@ function ModalBankDestination(props) {
     return (
       <>
         <View style={styles.contentContainer}>
-          {dataBank ? renderCollectionMethod() : <LoadingPage />}
+          {dataSfaGetBankAccount ? renderCollectionMethod() : <LoadingPage />}
         </View>
       </>
     );
@@ -127,6 +134,7 @@ function ModalBankDestination(props) {
    * MAIN
    * =======================
    */
+//   console.log("iniii:", dataSfaGetBankAccount.data);
   return (
     <View style={{ flex: 1 }}>
       <Modal

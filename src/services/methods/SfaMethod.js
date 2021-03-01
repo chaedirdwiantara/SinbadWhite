@@ -41,10 +41,19 @@ function getPaymentMethod(data) {
   })
 }
 
+/** GET COLLECTION LIST */
+function getBankAccount() {
+  return ApiRest({
+    path: `collection/v1/bank-accounts`,
+    method: `GET`
+  })
+}
+
   export const SfaMethod = {
     getCollectionStatus,
     getSfaDetail,
     getCollectionList,
     getReferenceList,
-    getPaymentMethod
+    getPaymentMethod,
+    getBankAccount
   };
