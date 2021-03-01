@@ -22,7 +22,7 @@ import { TextInputMask } from 'react-native-masked-text';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ModalCollectionMethod from'./ModalCollectionMethod';
 import SfaAddTagihanCheque from './SfaAddTagihanCheque';
 import SfaAddTagihanTransfer from './SfaAddTagihanTransfer';
@@ -47,6 +47,7 @@ const SfaAddTagihanView = (props) => {
   const [transferValue, setTransferValue] = useState(0)
   const [billingValue, setBillingValue] = useState(0)
   const [transferImage, setTransferImage] = useState(null)
+  const {selectedMerchant} = useSelector(state => state.merchant);
 
   /**
    * =======================
@@ -87,14 +88,26 @@ const SfaAddTagihanView = (props) => {
   }
 
   const saveCollection = () => {
-    console.log({
-      referenceCode: referenceCode,
-      bankAccount: bankAccount,
-      transferDate: transferDate,
-      transferValue: transferValue,
-      billingValue: billingValue,
-      transferImage: transferImage
-    })
+    if (collectionMethod.code === "cash") {
+      const data = {
+        paymentCollectionTypeId: parseInt(collectionMethod.id),
+        storeId: parseInt(selectedMerchant.storeId),
+        supplierId: parseInt(selectedMerchant.supplierId), 
+        userId: parseInt(selectedMerchant.id), 
+        balance: cash
+      }
+      console.log("ini cash:", data);
+    }
+    if (collectionMethod.code === "transfer") {
+      console.log({
+        referenceCode: referenceCode,
+        bankAccount: bankAccount,
+        transferDate: transferDate,
+        transferValue: transferValue,
+        billingValue: billingValue,
+        transferImage: transferImage
+      })
+    }
   }
 
   const dataReferenceCode = (data) => {
