@@ -94,8 +94,7 @@ const SfaAddTagihanCheque = props => {
             <DatePickerSpinnerWithMinMaxDate
               onSelect={date => alert(date)}
               close={() => setOpenModalPublishDate(false)}
-              minDate={new Date()}
-              //  maxDate={new Date("2021-02-25")}
+              maxDate={new Date()}
             />
           </View>
         }
@@ -104,6 +103,10 @@ const SfaAddTagihanCheque = props => {
   };
 
   const renderDueDate = () => {
+    let tomorrow = new Date();
+    console.log(tomorrow.getDate() + 1);
+tomorrow = moment(tomorrow).add(1, 'day');
+console.log(tomorrow);
     return (
       <ModalBottomType4
         typeClose={'Tutup'}
@@ -115,8 +118,7 @@ const SfaAddTagihanCheque = props => {
             <DatePickerSpinnerWithMinMaxDate
               onSelect={date => alert(date)}
               close={() => setOpenModalDueDate(false)}
-              //  minDate={new Date("2021-02-20")}
-              maxDate={new Date('2021-02-25')}
+               minDate={moment(new Date()).add(1, 'day')}
             />
           </View>
         }

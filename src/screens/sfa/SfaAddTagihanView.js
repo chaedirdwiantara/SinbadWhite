@@ -76,7 +76,7 @@ const SfaAddTagihanView = (props) => {
   }
 
   const saveCollection = () => {
-    alert(cash)
+    console.log('ini di hit');
   }
 
   const dataTrasfer = (data) => {

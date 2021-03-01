@@ -21,37 +21,10 @@ import { sfaGetAllBankProcess } from '../../state/actions';
 function ModalBankAccount(props) {
   const dispatch = useDispatch();
   const {
-    dataGetAllBank
+    dataSfaGetAllBank,
+    loadingSfaGetAllBank
    } = useSelector(state => state.sfa);
-  const [dataBank, setDataBank] = useState({
-    data: [
-      {
-        id: 1,
-        bankCode: 'BCA',
-        bankName: '014',
-        displayName: 'Bank BCA'
-      },
-      {
-        id: 2,
-        bankCode: 'BNI',
-        bankName: '009',
-        displayName: 'Bank BNI'
-      },
-      {
-        id: 3,
-        bankCode: 'Mandiri',
-        bankName: '008',
-        displayName: 'Bank Mandiri'
-      },
-      {
-        id: 4,
-        bankCode: 'BRI',
-        bankName: '002',
-        displayName: 'Bank BRI'
-      }
-    ]
-  });
-
+  
   /**
    * =======================
    * FUNCTIONAL
@@ -102,8 +75,9 @@ function ModalBankAccount(props) {
 
 
   const renderCollectionMethod = () => {
-    const data = dataGetAllBank;
-    return data.data.map((item, index) => {
+    const data = dataSfaGetAllBank;
+    if (data)
+  {  return data.data.map((item, index) => {
       return (
         <View key={index}>
           <TouchableOpacity onPress={() => props.selectCollection(item)}>
@@ -114,7 +88,7 @@ function ModalBankAccount(props) {
           </TouchableOpacity>
         </View>
       );
-    });
+    })}
   };
 
   /**
@@ -126,7 +100,7 @@ function ModalBankAccount(props) {
     return (
       <>
         <View style={styles.contentContainer}>
-          {dataBank ? renderCollectionMethod() : <LoadingPage />}
+          {!loadingSfaGetAllBank && dataSfaGetAllBank? renderCollectionMethod() : <LoadingPage />}
         </View>
       </>
     );
