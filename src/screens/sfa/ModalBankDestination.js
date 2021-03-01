@@ -68,7 +68,7 @@ function ModalBankDestination(props) {
   }
 
 
-  const renderCollectionMethod = () => {\
+  const renderCollectionMethod = () => {
     const data = dataSfaGetBankAccount;
     return data.data.map((item, index) => {
       return (
