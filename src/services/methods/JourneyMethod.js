@@ -40,9 +40,9 @@ function getJourneyPlanReport(supplierIds) {
   });
 }
 /** GET JOURNEY PLAN REPORT VISIT AND TOTAL PRICE ORDER V2 */
-function getJourneyPlanReportV2(supplierIds) {
+function getJourneyPlanReportV2() {
   return ApiRest({
-    path: `journey-reports?supplierIds=${JSON.stringify(supplierIds)}`,
+    path: `${salesManagementService}/v1/agent/journey-book-reports`,
     method: 'GET'
   });
 }
@@ -74,4 +74,8 @@ export const JourneyMethod = {
  * updatedDate: 24022021
  * updatedFunction:
  * -> Update the methods. (getJourneyPlanV2, saveMerchantToJourneyPlanV2)
+ * updatedBy: dyah
+ * updatedDate: 01032021
+ * updatedFunction:
+ * -> Update the method. (getJourneyPlanReportV2)
  * */

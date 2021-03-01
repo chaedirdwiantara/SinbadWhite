@@ -61,7 +61,7 @@ function* getJourneyPlanReport(actions) {
 function* getJourneyPlanReportV2(actions) {
   try {
     const response = yield call(() => {
-      return JourneyMethod.getJourneyPlanReportV2(actions.payload);
+      return JourneyMethod.getJourneyPlanReportV2();
     });
     yield put(ActionCreators.getJourneyPlanReportSuccessV2(response));
   } catch (error) {
