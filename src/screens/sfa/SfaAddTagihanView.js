@@ -33,9 +33,17 @@ const SfaAddTagihanView = (props) => {
   const dispatch = useDispatch();
   const [collectionMethod, setCollectionMethod] = useState(null)
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false)
-  const [cash, setCash] = useState(0)
   const [methodStatus, setMethodStatus] = useState('available')
   const [disabled, setDisabled] = useState(false)
+
+  //DATA PAYMENT CASH
+  const [cash, setCash] = useState(0)
+
+  //DATA PAYMENT TRANSFER
+  const [referenceCode, setReferenceCode] = useState(null)
+  const [transferDate, setTransferDate] = useState(null)
+  const [transferValue, setTransferValue] = useState(0)
+  const [billingValue, setBillingValue] = useState(0)
 
   /**
    * =======================
@@ -76,11 +84,28 @@ const SfaAddTagihanView = (props) => {
   }
 
   const saveCollection = () => {
-    alert(cash)
+    console.log({
+      referenceCode: referenceCode,
+      transferDate: transferDate,
+      transferValue: transferValue,
+      billingValue: billingValue
+    })
   }
 
-  const dataTrasfer = (data) => {
+  const dataReferenceCode = (data) => {
+    setReferenceCode(data)
+  }
 
+  const dataTransferDate = (data) => {
+    setTransferDate(data)
+  }
+
+  const dataTranserValue = (data) => {
+    setTransferValue(data)
+  }
+
+  const dataBillingValue = (data) => {
+    setBillingValue(data)
   }
 
   useEffect(() => {
@@ -229,12 +254,26 @@ const SfaAddTagihanView = (props) => {
 
   /** RENDER TRANSFER PAYMENT */
   const renderBillingTransfer = () => {
-    return <SfaAddTagihanTransfer collectionMethod={collectionMethod} remainingBilling={props.navigation.state.params.data.remainingBilling} data={dataTrasfer}/>
+    return (
+      <SfaAddTagihanTransfer 
+        collectionMethod={collectionMethod} 
+        remainingBilling={props.navigation.state.params.data.remainingBilling} 
+        referenceCode={dataReferenceCode}
+        transferDate={dataTransferDate}
+        transferValue={dataTranserValue}
+        billingValue={dataBillingValue}
+      />
+    )
   }
 
   /** RENDER PROMO PAYMENT */
   const renderBillingPromo = () => {
-    return <SfaAddTagihanPromo collectionMethod={collectionMethod} remainingBilling={props.navigation.state.params.data.remainingBilling}/>
+    return (
+      <SfaAddTagihanPromo 
+        collectionMethod={collectionMethod} 
+        remainingBilling={props.navigation.state.params.data.remainingBilling}
+      />
+    )
   }
 
    /** RENDER GIRO PAYMENT */
@@ -264,7 +303,7 @@ const SfaAddTagihanView = (props) => {
   const renderButtonSave= () => {
     return (
       <ButtonSingle
-        disabled={cash === 0 || cash === '' ? true : false}
+        // disabled={cash === 0 || cash === '' ? true : false}
         title={'Simpan'}
         borderRadius={4}
         onPress={() => saveCollection()}
