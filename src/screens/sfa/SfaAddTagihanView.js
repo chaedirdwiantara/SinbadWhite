@@ -34,7 +34,7 @@ const SfaAddTagihanView = (props) => {
   const [collectionMethod, setCollectionMethod] = useState(null)
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false)
   const [methodStatus, setMethodStatus] = useState('available')
-  const [disabled, setDisabled] = useState(false)
+  const [disabled, setDisabled] = useState(true)
 
   //DATA PAYMENT CASH
   const [cash, setCash] = useState(0)
@@ -133,9 +133,15 @@ const SfaAddTagihanView = (props) => {
           setDisabled(false)
         }
       }
-      if 
+      if (collectionMethod.code === "transfer") {
+        if (referenceCode === null || transferDate === null || transferValue === 0 || billingValue === 0 || transferImage ===null) {
+          setDisabled(true)
+        } else {
+          setDisabled(false)       
+        }
+      }
     }
-  }, [collectionMethod, cash]);
+  }, [collectionMethod, cash, referenceCode, transferDate, transferValue, billingValue, transferImage]);
 
   /**
    * *********************************

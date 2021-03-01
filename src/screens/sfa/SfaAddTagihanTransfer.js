@@ -95,6 +95,11 @@ const SfaAddTagihanTransfer = props => {
     });
   };
 
+  const deleteImage = () => {
+    props.transferImage(null)
+    setDataImage(null)
+  }
+
   const textReference = (text) => {
     props.referenceCode(text)
     setNoRef(text)   
@@ -365,7 +370,7 @@ const SfaAddTagihanTransfer = props => {
                           />
                       </View>
                     <View style={styles.smallContainerButtonImage}>
-                    <TouchableOpacity style={styles.buttonImage} onPress={()=> setDataImage()}>
+                    <TouchableOpacity style={styles.buttonImage} onPress={()=> deleteImage()}>
                         <Text style={Fonts.type36}>Hapus</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.buttonImage} onPress={() => clickCamera()}>
