@@ -6,8 +6,8 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
-  ScrollView,
-  TextInput
+  Dimensions
+  
 } from '../../library/reactPackage';
 import { TextInputMask } from 'react-native-masked-text';
 import {
@@ -26,6 +26,8 @@ import ModalReferenceList from './ModalReferenceList';
 import ModalBankAccount from './ModalBankAccount';
 import ModalListMaterai from './ModalListMaterai';
 import {useSelector} from 'react-redux';
+const { width, height } = Dimensions.get('window');
+
 const SfaAddTagihanCheque = props => {
   const status = props.status;
   const [noRef, setNoRef] = useState('');
@@ -160,7 +162,7 @@ const renderContent = () => {
             <View style={{ flex: 3 }}>
               <InputType5
                 title={
-                 isDisable !== false ? 'Nomor Cek' : '*Nomor Referensi'
+                 isDisable !== false ? 'Nomor Cek' : `*Nomor Referensi` 
                 }
                 value={noRef}
                 placeholder={
@@ -168,6 +170,8 @@ const renderContent = () => {
                 }
                 keyboardType={'default'}
                 onChangeText={text => noReference(text)}
+                tooltip={isDisable ? false : true}
+                tooltipText={'Dapat berupa Nomor Cek, Giro, Transfer atau Kuitansi'}
               />
             </View>
             {isDisable? 
@@ -439,6 +443,7 @@ const renderContent = () => {
     </>
   )
 }
+
 
 /** MODAL REFERENCE */
 const renderModalReference = () => {
