@@ -457,8 +457,8 @@ const SfaAddTagihanTransfer = props => {
             <DatePickerSpinnerWithMinMaxDate
              onSelect={(date)=> textTransferDate(date)}
              close={() => setOpenModalTransferDate(false)}
-             minDate={new Date("2021-02-20")}
-            //  maxDate={new Date("2021-02-25")}
+            //  minDate={new Date("2021-02-20")}
+             maxDate={new Date()}
             />
           </View>
         }
@@ -468,6 +468,7 @@ const SfaAddTagihanTransfer = props => {
 
   /** MODAL REFERENCE */
 const renderModalReference = () => {
+  console.log("disini:", props.collectionMethod.id);
   return (
     <View>
       {openModalReference ? (

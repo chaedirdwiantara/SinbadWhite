@@ -59,7 +59,7 @@ const SfaView = (props) => {
    */
   useEffect(() => {
     getCollectionList();
-  }, [paymentStatus]);
+  }, [paymentStatus, searchText]);
 
   useEffect(() => {
     getCollectionStatus();
@@ -76,7 +76,7 @@ const SfaView = (props) => {
       limit: 20,
       storeId: storeId,
       supplierId: supplierId,
-      keyword: '',
+      keyword: searchText,
       statusPayment: paymentStatus
     };
     dispatch(sfaGetCollectionListProcess(data));
@@ -87,9 +87,11 @@ const SfaView = (props) => {
     if(data.type === 'status') {
       setPaymentStatus(dataGetCollectionStatus.data[data.data].status)
       setSelectedTagStatus(data.data)
-    }
+    }  else if (data.type === 'search') {
+      setSearchText(data.data)
   }
-
+  }
+console.log(searchText, 'cek');
   /**
    * *********************************
    * RENDER VIEW
@@ -100,7 +102,7 @@ const SfaView = (props) => {
     return (
       <>
       {!loadingGetCollectionList && dataGetCollectionList? 
-      <SfaCollectionListView dataList={dataGetCollectionList}/>:
+      <SfaCollectionListView dataList={dataGetCollectionList} status={dataGetCollectionStatus}/>:
       renderSkeletonList()}
         </>
     )
@@ -211,8 +213,8 @@ const SfaView = (props) => {
             <SearchBarType1
               placeholder={'Cari produk, nomor pesanan'}
               searchText={searchText}
-              // onRef={ref => (this.parentFunction = ref)}
-              // parentFunction={this.parentFunction.bind(this)}
+              onRef={ref => (parentFunction = ref)}
+              parentFunction={parentFunction.bind(this)}
             />
           </View>
           <TouchableOpacity

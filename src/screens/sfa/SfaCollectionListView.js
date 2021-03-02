@@ -11,19 +11,36 @@ import {
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import { moment } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
-import { SkeletonType24 } from '../../library/component';
 import NavigationService from '../../navigation/NavigationService';
 import SfaNoDataView from './SfaNoDataView';
 
 function SfaCollectionListView(props) {
+   /**
+   * =======================
+   * RENDER FUNCTION
+   * =======================
+   */
+const checkpayment =(item) => {
+  const data = props.status.data.find(
+    itemPayment => itemPayment.status === item
+  );
+  if (data) {
+    return data.title;
+  } else {
+    return '';
+  }
+}
+
+  const statusPayment = (item) => {
+    return props.status !== null
+      ? checkpayment(item)
+      : '';
+    }
   /**
    * =======================
    * RENDER VIEW
    * =======================
    */
-  const renderSkeleton = () => {
-    return <SkeletonType24 />;
-  };
   const renderData = () => {
     return (
       <>
@@ -63,7 +80,7 @@ function SfaCollectionListView(props) {
           </View>
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
             <Text style={[Fonts.type22, { marginBottom: 8 }]}>
-              {item.statusPayment}
+              {statusPayment(item.statusPayment)}
             </Text>
             <View style={{ flexDirection: 'row' }}>
               <Text style={Fonts.type17}>Total: </Text>

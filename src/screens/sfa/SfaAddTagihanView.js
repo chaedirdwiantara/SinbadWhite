@@ -67,7 +67,7 @@ const SfaAddTagihanView = (props) => {
       if (collectionMethod.code === "cash") {
         return renderBillingCash()
       }
-      if(collectionMethod.code === 'cheque'){
+      if(collectionMethod.code === 'check'){
         return renderBillingCheque(collectionMethod.id)
       }
       if (collectionMethod.code === "transfer") {

@@ -28,7 +28,7 @@ function getCollectionList(data) {
 /** GET COLLECTION LIST */
 function getReferenceList(data) {
   return ApiRest({
-    path: `collection/v1/payment-method?supplierId=${data.supplierId}&storeId=${data.storeId}&paymentCollectionTypeId=${data.paymentCollectionTypeId}&skip=0&limit=${data.limit}`,
+    path: `collection/v1/payment-method?supplierId=${data.supplierId}&storeId=${data.storeId}&paymentCollectionTypeId=${data.paymentCollectionTypeId}&skip=0&limit=${data.limit}&keyword=${data.keyword}`,
     method: `GET`
   })
 }
@@ -38,6 +38,14 @@ function getPaymentMethod(data) {
   return ApiRest({
     path: `collection/v1/available-payment-methods?supplierId=${data.supplierId}&storeId=${data.storeId}`,
     method: `GET`
+  })
+}
+
+/** GET ALL BANK ACCOUNT */
+function getAllBank(){
+  return ApiRest({
+    path: `collection/v1/banks`,
+    method: 'GET'
   })
 }
 
@@ -64,6 +72,7 @@ function postPaymentMethod(data) {
     getCollectionList,
     getReferenceList,
     getPaymentMethod,
+    getAllBank,
     getBankAccount,
     postPaymentMethod
   };

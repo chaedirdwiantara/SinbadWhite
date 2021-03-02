@@ -29,6 +29,10 @@ export const SFA_GET_PAYMENT_METHOD_PROCESS = 'SfaGetPaymentMethodProcess';
 export const SFA_GET_PAYMENT_METHOD_SUCCESS = 'SfaGetPaymentMethodSuccess';
 export const SFA_GET_PAYMENT_METHOD_FAILED = 'SfaGetPaymentMethodFailed';
 
+/** GET ALL BANK */
+export const SFA_GET_ALL_BANK_PROCESS = 'SfaGetAllBankProcess';
+export const SFA_GET_ALL_BANK_SUCCESS = 'SfaGetAllBankSuccess';
+export const SFA_GET_ALL_BANK_FAILED = 'SfaGetAllBankFailed';
 /** GET BANK DESTINATION */
 export const SFA_GET_BANK_ACCOUNT_PROCESS = 'SfaGetBankAccountProcess';
 export const SFA_GET_BANK_ACCOUNT_SUCCESS = 'SfaGetBankAccountSuccess';
