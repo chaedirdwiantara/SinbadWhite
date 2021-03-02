@@ -31,9 +31,8 @@ const SfaAddTagihanGiro = props => {
   const [noRef, setNoRef] = useState('');
   const [bankSource, setBankSource] = useState('');
   const [issuedDate, setIssuedDate] = useState(new Date());
-  const [invalidDate, setInvalidDate] = useState(new Date());
+  const [invalidDate, setInvalidDate] = useState(new Date(new Date(new Date()).setDate(new Date().getDate() + 1)));
   const [balance, setBalance] = useState(0);
-  const [collection, setCollection] = useState(0);
   const [checkMaterai, setCheckMaterai] = useState(false);
   const [openModalPublishDate, setOpenModalPublishDate] = useState(false);
   const [openModalDueDate, setOpenModalDueDate] = useState(false);
@@ -44,12 +43,8 @@ const SfaAddTagihanGiro = props => {
   const [dataReference, setDataReference] = useState()
   const [dataBank, setDataBank] = useState()
   const [dataStamp, setDataStamp] = useState()
-  const [dataSubmit, setDataSubmit] = useState({
-    balance: 0,
-    issuedDate: new Date(),
-    invalidDate: new Date() + 1,
-    bankAccount : ''
-  })
+  const [billingValue, setBillingValue] = useState(0)
+  const [balanceValue, setBalanceValue] = useState(0)
   const {
     selectedMerchant
    } = useSelector(state => state.merchant);
@@ -68,14 +63,43 @@ const SfaAddTagihanGiro = props => {
 
   const deleteDataReference = () => {
     setIsDisable(false)
-    setDataSubmit({
-      balance: 0,
-      issuedDate: new Date(),
-      invalidDate: new Date() + 1,
-      bankAccount : '',  
-    }
-    )
     setDataReference()
+    props.referenceCode(null)
+    props.issuedDate(null)
+    props.dueDate(null)
+    props.balance(0)
+    props.bankSource(null)
+  }
+
+  const noReference = (data) => {
+    setNoRef(data)
+    props.referenceCode(data)
+  }
+
+  const dataBillingValue = (text) => {
+    if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)) {
+        setBillingValue(parseInt(props.remainingBilling))
+        props.billingValue(parseInt(props.remainingBilling))
+      } else {
+        setBillingValue(parseInt(text.replace(/[Rp.]+/g, '')))
+        props.billingValue(parseInt(text.replace(/[Rp.]+/g, '')))
+      }
+  }
+
+  const dataBalance = (text) => {
+    const balanceInt = parseInt(text.replace(/[Rp.]+/g, ''))
+    setBalanceValue(balanceInt);
+    props.balance(balanceInt)
+  }
+
+  const dataIssuedDate = (date) => {
+    setIssuedDate(date)
+    props.issuedDate(date)
+  }
+
+  const dataDueDate = (date) => {
+    setInvalidDate(date)
+    props.dueDate(date)
   }
   /**
    * *********************************
@@ -92,10 +116,9 @@ const SfaAddTagihanGiro = props => {
         content={
           <View>
             <DatePickerSpinnerWithMinMaxDate
-              onSelect={date => alert(date)}
+              onSelect={date => dataIssuedDate(date)}
               close={() => setOpenModalPublishDate(false)}
-              minDate={new Date()}
-              //  maxDate={new Date("2021-02-25")}
+              maxDate={new Date()}
             />
           </View>
         }
@@ -104,6 +127,8 @@ const SfaAddTagihanGiro = props => {
   };
 
   const renderDueDate = () => {
+    const minDate = new Date(new Date(new Date()).setDate(new Date().getDate() + 1));
+    const today = new Date()
     return (
       <ModalBottomType4
         typeClose={'Tutup'}
@@ -113,10 +138,12 @@ const SfaAddTagihanGiro = props => {
         content={
           <View>
             <DatePickerSpinnerWithMinMaxDate
-              onSelect={date => alert(date)}
+              onSelect={date => dataDueDate(date)}
               close={() => setOpenModalDueDate(false)}
-              //  minDate={new Date("2021-02-20")}
-              maxDate={new Date('2021-02-25')}
+              minDate={minDate}
+              dateSelected={today.getDate() + 1}
+                monthSelected={today.getMonth() + 1}
+                yearSelected={today.getFullYear()}
             />
           </View>
         }
@@ -137,10 +164,12 @@ const renderContent = () => {
                 }
                 value={noRef}
                 placeholder={
-                  dataReference? dataSubmit.referenceCode : '*Nomor Referensi'
+                  dataReference? dataReference.referenceCode : '*Nomor Referensi'
                 }
                 keyboardType={'default'}
-                text={text => setNoRef(text)}
+                onChangeText={text => noReference(text)}
+                tooltip={isDisable ? false : true}
+                tooltipText={'Dapat berupa Nomor Cek, Giro, Transfer atau Kuitansi'}
               />
             </View>
             {isDisable? 
@@ -210,8 +239,7 @@ const renderContent = () => {
                   { opacity: isDisable? 0.5 : null }
                 ]}
               >
-                {dataReference? dataSubmit.bankAccount : dataBank? dataBank.displayName : 'Pilih Sumber Bank'}
-                {/* {dataBank? dataSubmit.displayName:   } */}
+                {dataReference? dataReference.bankSource : dataBank? dataBank.displayName : 'Pilih Sumber Bank'}
               </Text>
               <View style={{ position: 'absolute', right: 16 }}>
                 <MaterialIcon
@@ -247,7 +275,7 @@ const renderContent = () => {
                 ]}
               >
                 {dataReference
-                  ? moment(dataSubmit.issuedDate).format('DD/MM/YYYY')
+                  ? moment(dataReference.issuedDate).format('DD/MM/YYYY')
                   :  moment(issuedDate).format('DD/MM/YYYY')}
               </Text>
             </View>
@@ -275,7 +303,7 @@ const renderContent = () => {
                 ]}
               >
                 {dataReference
-                  ? moment(dataSubmit.invalidDate).format('DD/MM/YYYY')
+                  ? moment(dataReference.invalidDate).format('DD/MM/YYYY')
                   :  moment(invalidDate).format('DD/MM/YYYY')}
               </Text>
             </View>
@@ -302,8 +330,8 @@ const renderContent = () => {
               unit: 'Rp ',
               suffixUnit: ''
             }}
-            value={dataReference? dataSubmit.balance : 0}
-            onChangeText={text =>setDataSubmit({...dataSubmit, balance: text})}
+            value={dataReference? dataReference.balance : balanceValue}
+            onChangeText={text =>dataBalance(text)}
             style={
               [
               Fonts.type17,
@@ -339,8 +367,8 @@ const renderContent = () => {
                 unit: 'Rp ',
                 suffixUnit: ''
               }}
-              value={collection}
-              onChangeText={text => console.log(text)}
+              value={billingValue}
+              onChangeText={text => dataBillingValue(text)}
               style={[
                 Fonts.type17,
                 {
@@ -473,31 +501,35 @@ const renderModalListMaterai = () => {
 
 const functionMaterai = () => {
   setCheckMaterai (!checkMaterai)
+  props.isUsedStamp(!checkMaterai)
   if (checkMaterai === false) {
     setDataStamp()
+    props.stamp(null)
   }
 }
 
 const selectedReference = (data) => {
   setDataReference(data)
   setOpenModalReference(false)
-  setDataSubmit({...dataSubmit, 
-    referenceCode:data.referenceCode,
-    balance: data.balance,
-    bankAccount: data.bankSource,
-    invalidDate: data.invalidDate,
-    issuedDate: data.issuedDate})
   setIsDisable(true)
+  props.referenceCode(data.referenceCode)
+  props.bankSource(data.bankSource)
+  props.issuedDate(data.issuedDate)
+  props.dueDate(data.invalidDate)
+  props.balance(data.balance)
+
 }
 
 const selectedBank = (data) => {
   setDataBank(data)
   setOpenModalBank(false)
+  props.bankSource(data.id)
 }
 
 const selectedStamp = (data) => {
   setDataStamp(data)
   setOpenModalListMaterai(false)
+  props.stamp(data.id)
 }
 
   return (

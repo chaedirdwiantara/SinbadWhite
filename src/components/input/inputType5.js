@@ -5,15 +5,22 @@ import {
     Text,
     TextInput,
     StyleSheet,
-    TouchableOpacity
+    TouchableOpacity,
+    Dimensions
   } from '../../library/reactPackage';
+  import {
+    MaterialIcon,
+    Tooltip,
+  } from '../../library/thirdPartyPackage'
   import { Color } from '../../config';
   import { Fonts } from '../../helpers';
-  
+  const { width, height } = Dimensions.get('window');
   class InputType5 extends Component {
     constructor(props) {
       super(props);
-      this.state = {};
+      this.state = {
+        questionMarkShow: true,
+      };
     }
     /**
      * ======================
@@ -41,13 +48,14 @@ import {
     /** === RENDER TITLE === */
     renderTitle() {
       return (
-        <View style={styles.boxTitle}>
+        <View style={styles.boxTitle, {flexDirection:'row', alignItems:'center'}}>
           <Text>
             <Text style={Fonts.type10}>{this.props.title} </Text>
             <Text style={Fonts.type71}>
               {this.props.additionalTitle ? this.props.additionalTitle : ''}
             </Text>
           </Text>
+          {this.props.tooltip? this.renderTooltip() : null}
         </View>
       );
     }
@@ -116,6 +124,36 @@ import {
         </View>
       );
     }
+
+    /** === RENDER TOOLTIP === */
+  renderTooltip() {
+    return (
+      <Tooltip
+        backgroundColor={Color.fontBlack50OP80}
+        height={55}
+        withOverlay={false}
+        withPointer={false}
+        onOpen={() => this.setState({ questionMarkShow: false })}
+        onClose={() => this.setState({ questionMarkShow: true })}
+        containerStyle={{
+          padding: 8,
+          width: 0.4 * width
+        }}
+        popover={
+          <Text style={Fonts.type87}>
+            {this.props.tooltipText?this.props.tooltipText : '-' }
+          </Text>
+        }
+      >
+        {this.state.questionMarkShow ? (
+          <MaterialIcon name="help" size={13} color={Color.mainColor} />
+        ) : (
+          <View />
+        )}
+      </Tooltip>
+    );
+  }
+
     /** === MAIN VIEW === */
     render() {
       return <View style={styles.mainContainer}>{this.renderContent()}</View>;
