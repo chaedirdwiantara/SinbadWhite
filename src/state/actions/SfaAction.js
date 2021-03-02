@@ -194,3 +194,28 @@ export function sfaPostPaymentMethodSuccess(data) {
 export function sfaPostPaymentMethodFailed(data) {
   return { type: types.SFA_POST_PAYMENT_METHOD_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * GET STAMP LIST
+ * ===========================
+ */
+/** === SFA GET STAMP LIST PROCESS === */
+export function sfaGetStampListProcess(data) {
+  return { type: types.SFA_GET_STAMP_PROCESS, payload: data };
+}
+
+/** === SFA GET REFERENCE LIST SUCCESS === */
+export function sfaGetStampListSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_STAMP_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_STAMP_FAILED, payload: data };
+}
+/** === SFA GET REFERENCE LIST FAILED === */
+export function sfaGetStampListFailed(data) {
+  return { type: types.SFA_GET_STAMP_FAILED, payload: data };
+}

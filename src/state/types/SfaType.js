@@ -42,3 +42,8 @@ export const SFA_GET_BANK_ACCOUNT_FAILED = 'SfaGetBankAccountFailed';
 export const SFA_POST_PAYMENT_METHOD_PROCESS = 'SfaPostPaymentMethodProcess';
 export const SFA_POST_PAYMENT_METHOD_SUCCESS = 'SfaPostPaymentMethodSuccess';
 export const SFA_POST_PAYMENT_METHOD_FAILED = 'SfaPostPaymentMethodFailed';
+
+/** GET STAMP LIST */
+export const SFA_GET_STAMP_PROCESS = 'SfaGetStampProcess';
+export const SFA_GET_STAMP_SUCCESS = 'SfaGetStampSuccess';
+export const SFA_GET_STAMP_FAILED = 'SfaGetStampFailed';

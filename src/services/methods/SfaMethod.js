@@ -66,6 +66,15 @@ function postPaymentMethod(data) {
   });
 }
 
+/** GET STAMPS*/
+function getStamp(data) {
+  return ApiRest({
+    path: 'collection/v1/stamps',
+    method: 'GET',
+    params: data
+  });
+}
+
   export const SfaMethod = {
     getCollectionStatus,
     getSfaDetail,
@@ -74,5 +83,6 @@ function postPaymentMethod(data) {
     getPaymentMethod,
     getAllBank,
     getBankAccount,
-    postPaymentMethod
+    postPaymentMethod,
+    getStamp
   };

@@ -98,6 +98,18 @@ function* postPaymentMethod(actions) {
   }
 }
 
+/** GET STAMP LIST */
+function* getStampList(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getStamp(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetStampListSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetStampListFailed(error));
+  }
+}
+
   function* SfaSaga() {
     yield takeEvery(
       types.SFA_GET_COLLECTION_STATUS_PROCESS,
@@ -110,6 +122,7 @@ function* postPaymentMethod(actions) {
     yield takeEvery(types.SFA_GET_ALL_BANK_PROCESS,getAllBank )
     yield takeEvery(types.SFA_GET_BANK_ACCOUNT_PROCESS, getBankAccount)
     yield takeEvery(types.SFA_POST_PAYMENT_METHOD_PROCESS, postPaymentMethod)
+    yield takeEvery(types.SFA_GET_STAMP_PROCESS, getStampList)
 }
 
 export default SfaSaga;
