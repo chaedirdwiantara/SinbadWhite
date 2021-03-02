@@ -168,6 +168,8 @@ const renderContent = () => {
                 }
                 keyboardType={'default'}
                 onChangeText={text => noReference(text)}
+                tooltip={isDisable ? false : true}
+                tooltipText={'Dapat berupa Nomor Cek, Giro, Transfer atau Kuitansi'}
               />
             </View>
             {isDisable? 
