@@ -186,12 +186,75 @@ const SfaAddTagihanTransfer = props => {
 
   const renderFormReference = () => {
       return(
-        <View style={{ marginVertical: 16 }}>
-          <View style={{flexDirection:"row"}}>
+        <View style={{ marginHorizontal: -16, marginVertical: 16 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flex: 3 }}>
+              <InputType5
+                title={
+                 isDisable !== false ? 'Nomor Cek' : '*Nomor Referensi'
+                }
+                value={noRef}
+                placeholder={
+                  dataReference? dataSubmit.referenceCode : '*Nomor Referensi'
+                }
+                keyboardType={'default'}
+                text={text => setNoRef(text)}
+              />
+            </View>
+            {isDisable? 
+              <View style={{flexDirection:'row', marginRight: 16}}>
+                <TouchableOpacity
+                  onPress={() =>setOpenModalReference(true)}
+                  style={{
+                    backgroundColor: masterColor.mainColor,
+                    height: 36,
+                    width: 66,
+                    borderRadius: 8,
+                    justifyContent: 'center',
+                    alignItems: 'center', 
+                    marginRight: 8
+                  }}
+                >
+                  <Text style={Fonts.type94}> Ubah </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => deleteDataReference()}
+                  style={{
+                    backgroundColor: 'white',
+                    height: 36,
+                    width: 66,
+                    borderRadius: 8,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderColor: masterColor.mainColor,
+                    borderWidth: 1
+                  }}
+                >
+                  <Text style={Fonts.type100}> Hapus </Text>
+                </TouchableOpacity>
+              </View>
+            :
+              <View style={{ marginRight: 16}}>
+                <TouchableOpacity
+                  onPress={() =>setOpenModalReference(true)}
+                  style={{
+                    backgroundColor: 'red',
+                    height: 36,
+                    width: 66,
+                    borderRadius: 8,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Text style={Fonts.type94}> Cari</Text>
+                </TouchableOpacity>
+              </View> 
+            }
+          </View>
+          {/* <View style={{flexDirection:"row"}}>
             <View >
               <Text style={Fonts.type10}>{isDisable ? 'Nomor Referensi' : '*Nomor Referensi'}</Text>
             </View>
-            {/* {renderTooltip()} */}
           </View>
           <View style={{flexDirection:"row"}}>
             <TextInput
@@ -224,7 +287,7 @@ const SfaAddTagihanTransfer = props => {
                 <Text style={Fonts.type94}> Cari</Text>
               </TouchableOpacity>
             </View> 
-          </View>
+          </View> */}
         </View>
       )
   }
