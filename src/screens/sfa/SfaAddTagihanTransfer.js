@@ -439,9 +439,12 @@ const SfaAddTagihanTransfer = props => {
     const renderUploadImage = () => {
         return(
             <View>
-                <Text style={[Fonts.type10, {paddingTop: 16}]}>
-                    {isDisable? 'Unggah Foto/Gambar' : '*Unggah Foto/Gambar'}
-                </Text>
+                <View style={{flexDirection:"row"}}>
+                  <Text style={[Fonts.type10, {paddingTop: 16}]}>
+                      {isDisable? 'Unggah Foto/Gambar' : '*Unggah Foto/Gambar'}
+                  </Text>
+                {renderTooltip()}
+                </View>
                 {dataImage ? (
                   <View style={{marginTop: 12}}>
                     <View style={styles.smallContainerImage}>
@@ -492,7 +495,7 @@ const SfaAddTagihanTransfer = props => {
   /** === RENDER TOOLTIP === */
   const renderTooltip = ()=> {
     return (
-      <View>
+      <View style={{paddingTop: 18}}>
         <Tooltip
           backgroundColor={masterColor.fontBlack50OP80}
           height={55}
@@ -511,7 +514,7 @@ const SfaAddTagihanTransfer = props => {
           }
         >
           {openTooltip ? (
-            <MaterialIcon name="help" style={{marginLeft: 6}} size={17} color={masterColor.mainColor} />
+            <MaterialIcon name="help" style={{marginLeft: 4}} size={13} color={masterColor.mainColor} />
           ) : (
             <View />
           )}
