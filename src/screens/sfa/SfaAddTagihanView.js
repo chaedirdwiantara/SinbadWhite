@@ -12,6 +12,7 @@ import {
   bindActionCreators,
   connect,
   MaterialIcon,
+  moment
 } from '../../library/thirdPartyPackage';
 import {
   LoadingPage,
@@ -23,85 +24,91 @@ import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import ModalCollectionMethod from'./ModalCollectionMethod';
+import ModalCollectionMethod from './ModalCollectionMethod';
 import SfaAddTagihanCheque from './SfaAddTagihanCheque';
 import SfaAddTagihanTransfer from './SfaAddTagihanTransfer';
 import SfaAddTagihanPromo from './SfaAddTagihanPromo';
 import SfaAddTagihanGiro from './SfaAddTagihanGiro';
-import {
-  sfaPostPaymentMethodProcess,
-} from '../../state/actions';
+import { sfaPostPaymentMethodProcess } from '../../state/actions';
 
-const SfaAddTagihanView = (props) => {
+const SfaAddTagihanView = props => {
   const dispatch = useDispatch();
-  const [collectionMethod, setCollectionMethod] = useState(null)
-  const [openCollectionMethod, setOpenCollectionMethod] = useState(false)
-  const [methodStatus, setMethodStatus] = useState('available')
-  const [disabled, setDisabled] = useState(true)
+  const [collectionMethod, setCollectionMethod] = useState(null);
+  const [openCollectionMethod, setOpenCollectionMethod] = useState(false);
+  const [methodStatus, setMethodStatus] = useState('available');
+  const [disabled, setDisabled] = useState(true);
 
   //DATA PAYMENT CASH
-  const [cash, setCash] = useState(0)
+  const [cash, setCash] = useState(0);
 
   //DATA PAYMENT TRANSFER
-  const [referenceCode, setReferenceCode] = useState(null)
-  const [bankSource, setBankSource] = useState(null)
-  const [bankAccount, setBankAccount] = useState(null)
-  const [transferDate, setTransferDate] = useState(null)
-  const [transferValue, setTransferValue] = useState(0)
-  const [billingValue, setBillingValue] = useState(0)
-  const [transferImage, setTransferImage] = useState(null)
-  const {selectedMerchant} = useSelector(state => state.merchant);
+  const [referenceCode, setReferenceCode] = useState(null);
+  const [bankSource, setBankSource] = useState(null);
+  const [bankAccount, setBankAccount] = useState(null);
+  const [transferDate, setTransferDate] = useState(null);
+  const [transferValue, setTransferValue] = useState(0);
+  const [billingValue, setBillingValue] = useState(0);
+  const [transferImage, setTransferImage] = useState(null);
+  const [issuedDate, setIssuedDate] = useState(new Date());
+  const [dueDate, setDueDate] = useState(new Date(new Date(new Date()).setDate(new Date().getDate() + 1)));
+  const [balance, setBalance] = useState(null);
+  const [stamp, setStamp] = useState(null);
+  const { selectedMerchant } = useSelector(state => state.merchant);
+  const [isUsedStamp, setIsUsedStamp] = useState(false)
 
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
-  const selectedCollectionMethod = (data) => {
-    setCollectionMethod(data)
-    setOpenCollectionMethod(false)
-  }
+  const selectedCollectionMethod = data => {
+    setCollectionMethod(data);
+    setOpenCollectionMethod(false);
+  };
 
   const selectBilling = () => {
     if (collectionMethod !== null) {
-      if (collectionMethod.code === "cash") {
-        return renderBillingCash()
+      if (collectionMethod.code === 'cash') {
+        return renderBillingCash();
       }
-      if(collectionMethod.code === 'check'){
-        return renderBillingCheque(collectionMethod.id)
+      if (collectionMethod.code === 'check') {
+        return renderBillingCheque(collectionMethod.id);
       }
-      if (collectionMethod.code === "transfer") {
-        return renderBillingTransfer()
+      if (collectionMethod.code === 'transfer') {
+        return renderBillingTransfer();
       }
-      if (collectionMethod.code === "promo") {
-        return renderBillingPromo()
+      if (collectionMethod.code === 'promo') {
+        return renderBillingPromo();
       }
-      if (collectionMethod.code === 'giro'){
-        return renderBillingGiro(collectionMethod.id)
+      if (collectionMethod.code === 'giro') {
+        return renderBillingGiro(collectionMethod.id);
       }
     }
-  } 
-  
-  const textBillingCash = (text) => {
-    if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.navigation.state.params.data.remainingBilling)) {
-      setCash(parseInt(props.navigation.state.params.data.remainingBilling))
+  };
+
+  const textBillingCash = text => {
+    if (
+      parseInt(text.replace(/[Rp.]+/g, '')) >
+      parseInt(props.navigation.state.params.data.remainingBilling)
+    ) {
+      setCash(parseInt(props.navigation.state.params.data.remainingBilling));
     } else {
-      setCash(parseInt(text.replace(/[Rp.]+/g, '')))
+      setCash(parseInt(text.replace(/[Rp.]+/g, '')));
     }
-  }
+  };
 
   const saveCollection = () => {
-    if (collectionMethod.code === "cash") {
+    if (collectionMethod.code === 'cash') {
       const data = {
         paymentCollectionTypeId: parseInt(collectionMethod.id),
         storeId: parseInt(selectedMerchant.storeId),
-        supplierId: parseInt(selectedMerchant.supplierId), 
-        userId: parseInt(selectedMerchant.id), 
+        supplierId: parseInt(selectedMerchant.supplierId),
+        userId: parseInt(selectedMerchant.id),
         balance: cash
-      }
+      };
       dispatch(sfaPostPaymentMethodProcess(data));
     }
-    if (collectionMethod.code === "transfer") {
+    if (collectionMethod.code === 'transfer') {
       console.log({
         referenceCode: referenceCode,
         bankAccount: bankAccount,
@@ -109,56 +116,149 @@ const SfaAddTagihanView = (props) => {
         transferValue: transferValue,
         billingValue: billingValue,
         transferImage: transferImage
-      })
+      });
     }
-  }
+    if(collectionMethod.code === 'check' || collectionMethod.code === 'giro'){
+      const data ={
+        paymentCollectionTypeId: parseInt(collectionMethod.id),
+        storeId: parseInt(selectedMerchant.storeId),
+        supplierId: parseInt(selectedMerchant.supplierId),
+        userId: parseInt(selectedMerchant.id),
+        referenceCode : referenceCode,
+        bankId: bankSource,
+        issuedDate: moment.utc(issuedDate).format('YYYY-MM-DD HH:MM:SS'),
+        invalidDate: moment.utc(dueDate).format('YYYY-MM-DD HH:MM:SS'),
+        balance : balance,
+        isUsedStamp: isUsedStamp,
+        stampId: stamp
+      }
+      dispatch(sfaPostPaymentMethodProcess(data));
+    }
+  };
 
-  const dataReferenceCode = (data) => {
-    setReferenceCode(data)
-  }
+  const dataReferenceCode = data => {
+    setReferenceCode(data);
+  };
 
-  const dataBankSource = (data) => {
-    setBankSource(data)
-  }
+  const dataBankSource = data => {
+    setBankSource(data);
+  };
 
-  const dataBankAccount = (data) => {
-    setBankAccount(data)
-  }
+  const dataBankAccount = data => {
+    setBankAccount(data);
+  };
 
-  const dataTransferDate = (data) => {
-    setTransferDate(data)
-  }
+  const dataTransferDate = data => {
+    setTransferDate(data);
+  };
 
-  const dataTranserValue = (data) => {
-    setTransferValue(data)
-  }
+  const dataTranserValue = data => {
+    setTransferValue(data);
+  };
 
-  const dataBillingValue = (data) => {
-    setBillingValue(data)
-  }
+  const dataBillingValue = data => {
+    setBillingValue(data);
+  };
 
-  const dataTransferImage = (data) => {
-    setTransferImage(data)
+  const dataTransferImage = data => {
+    setTransferImage(data);
+  };
+
+  const dataIssuedDate = data => {
+    setIssuedDate(data);
+  };
+
+  const dataDueDate = data => {
+    setDueDate(data);
+  };
+
+  const dataBalance = data => {
+    setBalance(data);
+  };
+
+  const dataStamp = data => {
+    setStamp(data);
+  };
+  const statusStamp = data => {
+    setIsUsedStamp(data)
   }
 
   useEffect(() => {
     if (collectionMethod !== null) {
-      if (collectionMethod.code === "cash") {
+      if (collectionMethod.code === 'cash') {
         if (cash === 0 || cash === '') {
-          setDisabled(true)
+          setDisabled(true);
         } else {
-          setDisabled(false)
+          setDisabled(false);
         }
       }
-      if (collectionMethod.code === "transfer") {
-        if (referenceCode === null || bankAccount === null || transferDate === null || transferValue === 0 || billingValue === 0 || transferImage ===null) {
-          setDisabled(true)
+      if (collectionMethod.code === 'transfer') {
+        if (
+          referenceCode === null ||
+          bankAccount === null ||
+          transferDate === null ||
+          transferValue === 0 ||
+          billingValue === 0 ||
+          transferImage === null
+        ) {
+          setDisabled(true);
         } else {
-          setDisabled(false)       
+          setDisabled(false);
         }
+      }
+      if (collectionMethod.code === 'check' || collectionMethod.code === 'giro') {
+        if(isUsedStamp === true){
+          if(stamp !== null){
+            if (
+              referenceCode === null ||
+              bankSource === null ||
+              issuedDate === null ||
+              dueDate === null ||
+              balance === null ||
+              billingValue === 0 
+            ) {
+              setDisabled(true);
+            } else {
+              setDisabled(false);
+            }
+          }
+          else {
+            setDisabled(true);
+          }
+        } else if ( isUsedStamp === false){
+          if (
+            referenceCode === null ||
+            bankSource === null ||
+            issuedDate === null ||
+            dueDate === null ||
+            balance === null ||
+            billingValue === 0 
+          ) {
+            setDisabled(true);
+          } else {
+            setDisabled(false);
+          }
+        }
+
+
+       
       }
     }
-  }, [collectionMethod, cash, referenceCode, transferDate, transferValue, billingValue, transferImage]);
+  }, [
+    collectionMethod,
+    cash,
+    referenceCode,
+    transferDate,
+    transferValue,
+    billingValue,
+    transferImage,
+    bankSource,
+    issuedDate,
+    dueDate,
+    balance,
+    stamp,
+    isUsedStamp
+  ]);
 
   /**
    * *********************************
@@ -167,102 +267,147 @@ const SfaAddTagihanView = (props) => {
    */
   const renderFakturInfo = () => {
     return (
-        <View style={styles.container}>
-          <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
-            <View>
-              <Text style={Fonts.type48}>Informasi Faktur</Text>
-            </View>
-            <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
-            {renderItemFakturInfo()}
+      <View style={styles.container}>
+        <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
+          <View>
+            <Text style={Fonts.type48}>Informasi Faktur</Text>
           </View>
+          <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
+          {renderItemFakturInfo()}
         </View>
-    )
-  }
+      </View>
+    );
+  };
 
   const renderItemFakturInfo = () => {
     return (
       <View>
-        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginBottom: 8,
+            justifyContent: 'space-between'
+          }}
+        >
           <Text style={Fonts.type17}>Nama Faktur</Text>
-          <Text style={Fonts.type17}>{props.navigation.state.params.data.invoiceGroupName}</Text>
+          <Text style={Fonts.type17}>
+            {props.navigation.state.params.data.invoiceGroupName}
+          </Text>
         </View>
-        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginBottom: 8,
+            justifyContent: 'space-between'
+          }}
+        >
           <Text style={Fonts.type17}>No. Pesanan</Text>
-          <Text style={Fonts.type17}>{props.navigation.state.params.data.orderCode}</Text>
+          <Text style={Fonts.type17}>
+            {props.navigation.state.params.data.orderCode}
+          </Text>
         </View>
-        <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginBottom: 8,
+            justifyContent: 'space-between'
+          }}
+        >
           <Text style={Fonts.type17}>No. Referensi</Text>
           <Text style={Fonts.type17}>
-            {props.navigation.state.params.data.orderRef === null ? "-" : props.navigation.state.params.data.orderRef}
+            {props.navigation.state.params.data.orderRef === null
+              ? '-'
+              : props.navigation.state.params.data.orderRef}
           </Text>
         </View>
       </View>
-    )
-  }
+    );
+  };
 
   const renderCollectionInfo = () => {
     return (
-        <View style={styles.container}>
-          <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
-            <View>
-              <Text style={Fonts.type48}>Informasi Tagihan</Text>
-            </View>
-            <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
-            <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-              <Text style={Fonts.type17}>Sisa Tagihan</Text>
-              <Text style={Fonts.type22}>{MoneyFormat(props.navigation.state.params.data.remainingBilling)}</Text>
-            </View>
+      <View style={styles.container}>
+        <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
+          <View>
+            <Text style={Fonts.type48}>Informasi Tagihan</Text>
+          </View>
+          <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
+          <View
+            style={{
+              flexDirection: 'row',
+              marginBottom: 8,
+              justifyContent: 'space-between'
+            }}
+          >
+            <Text style={Fonts.type17}>Sisa Tagihan</Text>
+            <Text style={Fonts.type22}>
+              {MoneyFormat(props.navigation.state.params.data.remainingBilling)}
+            </Text>
           </View>
         </View>
-    )
-  }
+      </View>
+    );
+  };
 
   const renderCollectionDetail = () => {
     return (
-        <View style={[styles.container, {marginBottom:16}]}>
-          <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
-            <View>
-              <Text style={Fonts.type48}>Detail Penagihan</Text>
-            </View>
-            <View style={[GlobalStyle.lines, { flex: 1, marginTop: 8, marginBottom: 16 }]} />
-            <View>
-              <Text style={Fonts.type10}>Metode Penagihan</Text>
-            </View>
-            <View>
-              <TouchableOpacity
-                style={styles.boxMenu}
-                onPress={() => setOpenCollectionMethod(true)}
-              >
-                <Text style={[Fonts.type17, {opacity: collectionMethod === null ? 0.5 : null}]}>
-                  {
-                    collectionMethod === null 
-                    ? "Pilih Metode Penagihan"
-                    : collectionMethod.name
-                  }
-                </Text>
-                <View style={{ position: 'absolute', right: 16 }}>
-                  <MaterialIcon
-                    name="chevron-right"
-                    color={masterColor.fontBlack40}
-                    size={24}
-                  />
-                </View>
-              </TouchableOpacity>
-              <View style={[GlobalStyle.lines]} />
-            </View>
-            {selectBilling()}
+      <View style={[styles.container, { marginBottom: 16 }]}>
+        <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
+          <View>
+            <Text style={Fonts.type48}>Detail Penagihan</Text>
           </View>
+          <View
+            style={[
+              GlobalStyle.lines,
+              { flex: 1, marginTop: 8, marginBottom: 16 }
+            ]}
+          />
+          <View>
+            <Text style={Fonts.type10}>Metode Penagihan</Text>
+          </View>
+          <View>
+            <TouchableOpacity
+              style={styles.boxMenu}
+              onPress={() => setOpenCollectionMethod(true)}
+            >
+              <Text
+                style={[
+                  Fonts.type17,
+                  { opacity: collectionMethod === null ? 0.5 : null }
+                ]}
+              >
+                {collectionMethod === null
+                  ? 'Pilih Metode Penagihan'
+                  : collectionMethod.name}
+              </Text>
+              <View style={{ position: 'absolute', right: 16 }}>
+                <MaterialIcon
+                  name="chevron-right"
+                  color={masterColor.fontBlack40}
+                  size={24}
+                />
+              </View>
+            </TouchableOpacity>
+            <View style={[GlobalStyle.lines]} />
+          </View>
+          {selectBilling()}
         </View>
-    )
-  }
+      </View>
+    );
+  };
 
   const renderBillingCash = () => {
     return (
-      <View style={{marginTop:16}}>
+      <View style={{ marginTop: 16 }}>
         <View>
           <Text style={Fonts.type10}>Jumlah Penagihan</Text>
         </View>
-        <View style={[styles.boxInput, {flexDirection:"row", alignItems:"center"}]}>
+        <View
+          style={[
+            styles.boxInput,
+            { flexDirection: 'row', alignItems: 'center' }
+          ]}
+        >
           <TextInputMask
             type={'money'}
             options={{
@@ -273,31 +418,45 @@ const SfaAddTagihanView = (props) => {
               suffixUnit: ''
             }}
             value={cash}
-            onChangeText={(text) => textBillingCash(text)}
+            onChangeText={text => textBillingCash(text)}
             style={[
               Fonts.type17,
               {
-                width:"95%",
+                width: '95%',
                 borderBottomColor: masterColor.fontBlack10
               }
             ]}
           />
         </View>
       </View>
-    )
-  } 
+    );
+  };
 
   /** RENDER CHEQUE PAYMENT */
-  const renderBillingCheque = (id) => {
-    return <SfaAddTagihanCheque status={methodStatus} paymentCollectionTypeId = {id} />
-  }
+  const renderBillingCheque = id => {
+    return (
+      <SfaAddTagihanCheque
+        status={methodStatus}
+        paymentCollectionTypeId={id}
+        referenceCode={dataReferenceCode}
+        bankSource={dataBankSource}
+        issuedDate={dataIssuedDate}
+        dueDate={dataDueDate}
+        balance={dataBalance}
+        billingValue={dataBillingValue}
+        stamp={dataStamp}
+        remainingBilling={props.navigation.state.params.data.remainingBilling}
+        isUsedStamp={statusStamp}
+      />
+    );
+  };
 
   /** RENDER TRANSFER PAYMENT */
   const renderBillingTransfer = () => {
     return (
-      <SfaAddTagihanTransfer 
-        collectionMethod={collectionMethod} 
-        remainingBilling={props.navigation.state.params.data.remainingBilling} 
+      <SfaAddTagihanTransfer
+        collectionMethod={collectionMethod}
+        remainingBilling={props.navigation.state.params.data.remainingBilling}
         referenceCode={dataReferenceCode}
         bankSource={dataBankSource}
         bankAccount={dataBankAccount}
@@ -306,23 +465,36 @@ const SfaAddTagihanView = (props) => {
         billingValue={dataBillingValue}
         transferImage={dataTransferImage}
       />
-    )
-  }
+    );
+  };
 
   /** RENDER PROMO PAYMENT */
   const renderBillingPromo = () => {
     return (
-      <SfaAddTagihanPromo 
-        collectionMethod={collectionMethod} 
+      <SfaAddTagihanPromo
+        collectionMethod={collectionMethod}
         remainingBilling={props.navigation.state.params.data.remainingBilling}
       />
-    )
-  }
+    );
+  };
 
-   /** RENDER GIRO PAYMENT */
-   const renderBillingGiro = (id) => {
-    return <SfaAddTagihanGiro status={methodStatus} paymentCollectionTypeId = {id} />
-  }
+  /** RENDER GIRO PAYMENT */
+  const renderBillingGiro = id => {
+    return (
+      <SfaAddTagihanGiro  
+      status={methodStatus}
+      paymentCollectionTypeId={id}
+      referenceCode={dataReferenceCode}
+      bankSource={dataBankSource}
+      issuedDate={dataIssuedDate}
+      dueDate={dataDueDate}
+      balance={dataBalance}
+      billingValue={dataBillingValue}
+      stamp={dataStamp}
+      remainingBilling={props.navigation.state.params.data.remainingBilling}
+      isUsedStamp={statusStamp} />
+    );
+  };
   /**
    * =======================
    * MODAL
@@ -341,9 +513,9 @@ const SfaAddTagihanView = (props) => {
         ) : null}
       </View>
     );
-  }
+  };
 
-  const renderButtonSave= () => {
+  const renderButtonSave = () => {
     return (
       <ButtonSingle
         disabled={disabled}
@@ -352,7 +524,7 @@ const SfaAddTagihanView = (props) => {
         onPress={() => saveCollection()}
       />
     );
-  }
+  };
 
   /**
    * ==================================
@@ -369,8 +541,6 @@ const SfaAddTagihanView = (props) => {
     );
   };
 
-  
-
   /**
    * =======================
    * MAIN
@@ -379,20 +549,18 @@ const SfaAddTagihanView = (props) => {
   return (
     <>
       {/* {props.merchant.dataGetMerchantDetail ? ( */}
-        <SafeAreaView style={styles.mainContainer}>
-          <StatusBarWhite />
-          <ScrollView style={{ flex: 1}}>
-            {renderContent()}
-          </ScrollView>
-          {renderButtonSave()}
-          {renderModalCollectionMethod()}
-        </SafeAreaView>
+      <SafeAreaView style={styles.mainContainer}>
+        <StatusBarWhite />
+        <ScrollView style={{ flex: 1 }}>{renderContent()}</ScrollView>
+        {renderButtonSave()}
+        {renderModalCollectionMethod()}
+      </SafeAreaView>
       {/* ) : (
         <LoadingPage />
       )} */}
     </>
   );
-}
+};
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
@@ -420,7 +588,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     paddingVertical: 0,
     borderBottomColor: masterColor.fontBlack10
-  },
+  }
 });
 
 const mapStateToProps = ({ user, merchant }) => {
