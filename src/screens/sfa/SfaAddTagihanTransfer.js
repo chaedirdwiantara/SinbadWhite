@@ -5,12 +5,11 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Tooltip,
   Dimensions,
   TextInput
 } from '../../library/reactPackage';
 import { TextInputMask } from 'react-native-masked-text';
-import { MaterialIcon, moment } from '../../library/thirdPartyPackage';
+import { MaterialIcon, moment, Tooltip, } from '../../library/thirdPartyPackage';
 import { 
   InputType5, 
   DatePickerSpinnerWithMinMaxDate, 
@@ -39,8 +38,8 @@ const SfaAddTagihanTransfer = props => {
   const [dataReference, setDataReference] = useState(null)
 
   //DATA INPUT
-  const [noRef, setNoRef] = useState('');
-  const [bankSource, setBankSource] = useState('');
+  const [noRef, setNoRef] = useState(null);
+  const [bankSource, setBankSource] = useState(null);
   const [bankDestination, setBankDestination] = useState(null);
   const [transferDate, setTransferDate] = useState(null)
   const [balance, setBalance] = useState(0)
@@ -164,6 +163,23 @@ const SfaAddTagihanTransfer = props => {
     setIsDisable(true)
   }
 
+  const deleteDataReference = () => {
+    setIsDisable(false)
+    setDataReference()
+    setNoRef(null)   
+    props.referenceCode(null)
+    setBankSource(null)
+    props.bankSource(null)
+    setBankDestination(null)
+    props.bankAccount(null)
+    setTransferDate(null)
+    props.transferDate(null)
+    setBalance(0)
+    props.transferValue(0)
+    setDataImage(null);
+    props.transferImage(null)
+  }
+
   /**
    * *********************************
    * RENDER VIEW
@@ -191,14 +207,17 @@ const SfaAddTagihanTransfer = props => {
             <View style={{ flex: 3 }}>
               <InputType5
                 title={
-                 isDisable !== false ? 'Nomor Cek' : '*Nomor Referensi'
+                 isDisable !== false ? 'Nomor Referensi' : '*Nomor Referensi'
                 }
                 value={noRef}
                 placeholder={
-                  dataReference? dataSubmit.referenceCode : '*Nomor Referensi'
+                  isDisable ? 'Nomor Referensi' : '*Nomor Referensi'
                 }
                 keyboardType={'default'}
                 text={text => setNoRef(text)}
+                editable={!isDisable}
+                tooltip={true}
+                tooltipText={'Dapat berupa Nomor Cek, Giro, Transfer atau Kuitansi'}
               />
             </View>
             {isDisable? 
@@ -237,8 +256,9 @@ const SfaAddTagihanTransfer = props => {
               <View style={{ marginRight: 16}}>
                 <TouchableOpacity
                   onPress={() =>setOpenModalReference(true)}
+                  disabled={props.collectionMethod.balance <= 0 ? true : false}
                   style={{
-                    backgroundColor: 'red',
+                    backgroundColor: props.collectionMethod.balance <= 0 ? masterColor.fontRed10 : masterColor.mainColor,
                     height: 36,
                     width: 66,
                     borderRadius: 8,
@@ -251,43 +271,6 @@ const SfaAddTagihanTransfer = props => {
               </View> 
             }
           </View>
-          {/* <View style={{flexDirection:"row"}}>
-            <View >
-              <Text style={Fonts.type10}>{isDisable ? 'Nomor Referensi' : '*Nomor Referensi'}</Text>
-            </View>
-          </View>
-          <View style={{flexDirection:"row"}}>
-            <TextInput
-              style={
-                [Fonts.type17, styles.boxInput, 
-                  {borderBottomColor: masterColor.fontBlack10, marginTop: 8, width: "80%", opacity: isDisable ? 0.5 : null}
-                ]
-              }
-              value={noRef}
-              editable={!isDisable}
-              placeholder={
-                isDisable ? 'Nomor Referensi' : '*Nomor Referensi'
-              }
-              keyboardType={'default'}
-              onChangeText={(text) => textReference(text)}
-            />
-            <View style={{ marginRight: 16}}>
-              <TouchableOpacity
-                disabled={props.collectionMethod.balance <= 0 ? true : false}
-                onPress={() =>setOpenModalReference(true)}
-                style={{
-                  backgroundColor: props.collectionMethod.balance <= 0 ? masterColor.fontRed10 : masterColor.mainColor ,
-                  height: 36,
-                  width: 66,
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-              >
-                <Text style={Fonts.type94}> Cari</Text>
-              </TouchableOpacity>
-            </View> 
-          </View> */}
         </View>
       )
   }
@@ -308,10 +291,10 @@ const SfaAddTagihanTransfer = props => {
                     <Text
                         style={[
                         Fonts.type17,
-                        { opacity: bankSource === '' || isDisable === true ? 0.5 : null }
+                        { opacity: bankSource === null || isDisable === true ? 0.5 : null }
                         ]}
                     >
-                        {bankSource === '' ? 'Pilih Sumber Bank' : isDisable === true ? bankSource : bankSource.displayName}
+                        {bankSource === null ? 'Pilih Sumber Bank' : isDisable === true ? bankSource : bankSource.displayName}
                     </Text>
                     <View style={{ position: 'absolute', right: 16 }}>
                         <MaterialIcon
