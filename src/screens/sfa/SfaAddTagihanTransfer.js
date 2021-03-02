@@ -160,7 +160,6 @@ const SfaAddTagihanTransfer = props => {
     setDataImage({fileData: data.image});
     props.transferImage(data.image)
 
-
     setOpenModalReference(false)
     setIsDisable(true)
   }
@@ -211,9 +210,10 @@ const SfaAddTagihanTransfer = props => {
             />
             <View style={{ marginRight: 16}}>
               <TouchableOpacity
+                disabled={props.collectionMethod.balance <= 0 ? true : false}
                 onPress={() =>setOpenModalReference(true)}
                 style={{
-                  backgroundColor: 'red',
+                  backgroundColor: props.collectionMethod.balance <= 0 ? masterColor.fontRed10 : masterColor.mainColor ,
                   height: 36,
                   width: 66,
                   borderRadius: 8,
@@ -497,7 +497,7 @@ const SfaAddTagihanTransfer = props => {
 
   /** MODAL REFERENCE */
 const renderModalReference = () => {
-  console.log("disini:", props.collectionMethod.id);
+  console.log("disini:", props.collectionMethod.balance);
   return (
     <View>
       {openModalReference ? (
