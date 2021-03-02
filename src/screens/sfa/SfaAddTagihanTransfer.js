@@ -142,7 +142,6 @@ const SfaAddTagihanTransfer = props => {
   }
 
   const selectedReference = (data) => {
-    console.log("woiiii:", data);
     setDataReference(data)
 
     //DATA INPUT  
@@ -276,7 +275,6 @@ const SfaAddTagihanTransfer = props => {
   }
 
   const renderFormBankSource = () => {
-    console.log("ini bank:", bankSource);
       return(
         <View>
             <Text style={Fonts.type10}>
@@ -546,7 +544,6 @@ const SfaAddTagihanTransfer = props => {
 
   /** MODAL REFERENCE */
 const renderModalReference = () => {
-  console.log("disini:", props.collectionMethod.balance);
   return (
     <View>
       {openModalReference ? (
