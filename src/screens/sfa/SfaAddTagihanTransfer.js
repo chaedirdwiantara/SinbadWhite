@@ -212,6 +212,7 @@ const SfaAddTagihanTransfer = props => {
                 placeholder={
                   isDisable ? 'Nomor Referensi' : '*Nomor Referensi'
                 }
+                onChangeText={(text)=> textReference(text)}
                 keyboardType={'default'}
                 text={text => setNoRef(text)}
                 editable={!isDisable}
