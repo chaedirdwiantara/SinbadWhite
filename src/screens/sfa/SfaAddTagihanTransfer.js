@@ -35,6 +35,7 @@ const SfaAddTagihanTransfer = props => {
   const [openModalReference, setOpenModalReference] = useState(false);
   const [openModalBank, setOpenModalBank] = useState(false);
   const [openModalBankDestination, setOpenModalBankDestination] = useState(false);
+  const [dataReference, setDataReference] = useState(null)
 
   //DATA INPUT
   const [noRef, setNoRef] = useState('');
@@ -128,22 +129,31 @@ const SfaAddTagihanTransfer = props => {
       }
   }
 
-  const selectedReference = (data) => {
-    setDataReference(data)
-    setOpenModalReference(false)
-    setDataSubmit({...dataSubmit, 
-      referenceCode:data.referenceCode,
-      balance: data.balance,
-      bankAccount: data.bankSource,
-      invalidDate: data.invalidDate,
-      issuedDate: data.issuedDate})
-    setIsDisable(true)
-  }
-
   const selectedBankDestination = (data) => {
     props.bankAccount(data)
     setBankDestination(data)
     setOpenModalBankDestination(false)
+  }
+
+  const selectedReference = (data) => {
+    console.log("woiiii:", data);
+    setDataReference(data)
+
+    //DATA INPUT
+    props.referenceCode(data.referenceCode)
+    setNoRef(data.referenceCode)   
+    props.bankAccount(data.bankToAccount)
+    setBankDestination(data.bankToAccount)
+    setTransferDate(data.issuedDate)
+    props.transferDate(moment(data.issuedDate).format('YYYY-MM-DD'))
+    setBalance(parseInt(data.balance))
+    props.transferValue(parseInt(data.balance))
+    setDataImage({fileData: data.image});
+    props.transferImage(data.image)
+
+
+    setOpenModalReference(false)
+    setIsDisable(true)
   }
 
   /**
@@ -179,10 +189,11 @@ const SfaAddTagihanTransfer = props => {
             <TextInput
               style={
                 [Fonts.type17, styles.boxInput, 
-                  {borderBottomColor: masterColor.fontBlack10, marginTop: 8, width: "80%"}
+                  {borderBottomColor: masterColor.fontBlack10, marginTop: 8, width: "80%", opacity: isDisable ? 0.5 : null}
                 ]
               }
               value={noRef}
+              editable={!isDisable}
               placeholder={
                 isDisable ? 'Nomor Referensi' : '*Nomor Referensi'
               }
@@ -252,11 +263,12 @@ const SfaAddTagihanTransfer = props => {
               <TouchableOpacity
               style={styles.boxMenu}
               onPress={() => setOpenModalBankDestination(true)}
+              disabled={isDisable}
               >
                   <Text
                       style={[
                       Fonts.type17,
-                      { opacity: bankDestination === null ? 0.5 : null }
+                      { opacity: bankDestination  === null|| isDisable === true ? 0.5 : null }
                       ]}
                   >
                       {bankDestination === null ? 'Pilih Tujuan Bank' : bankDestination.bank.displayName}
@@ -284,13 +296,14 @@ const SfaAddTagihanTransfer = props => {
                 <TouchableOpacity
                     style={styles.boxMenu}
                     onPress={() => openTransferDate()}
+                    disabled={isDisable}
                 >
                         <View style={{flexDirection:'row', alignItems:'center'}}>
                         <MaterialIcon name="date-range" color={masterColor.mainColor} size={16} />
                             <Text
                                 style={[
                                 Fonts.type17,
-                                { opacity: transferDate === null ? 0.5 : null, marginLeft: 11 }
+                                { opacity: transferDate === null || isDisable === true ? 0.5 : null, marginLeft: 11 }
                                 ]}
                             >
                                 {transferDate !== null ? moment(transferDate).format('DD/MM/YYYY') : "Pilih Tanggal Transfer"}
@@ -308,6 +321,7 @@ const SfaAddTagihanTransfer = props => {
                 <Text style={Fonts.type10}>{isDisable ? 'Nilai Transfer' : '*Nilai Transfer'}</Text>
                 <View style={[GlobalStyle.boxInput, {flexDirection:"row", alignItems:"center"}]}>
                     <TextInputMask
+                        editable={!isDisable}
                         type={'money'}
                         options={{
                         precision: 0,
@@ -322,7 +336,8 @@ const SfaAddTagihanTransfer = props => {
                         Fonts.type17,
                         {
                             width:"95%",
-                            borderBottomColor: masterColor.fontBlack10
+                            borderBottomColor: masterColor.fontBlack10,
+                            opacity: isDisable === true ? 0.5 : null
                         }
                         ]}
                     />
@@ -371,21 +386,24 @@ const SfaAddTagihanTransfer = props => {
                     {isDisable? 'Unggah Foto/Gambar' : '*Unggah Foto/Gambar'}
                 </Text>
                 {dataImage ? (
-                    <View style={{marginTop: 12}}>
-                        <View style={styles.smallContainerImage}>
-                          <Image
-                          source={{ uri: dataImage.fileUri }}
-                          style={styles.images}
-                          />
-                      </View>
-                    <View style={styles.smallContainerButtonImage}>
-                    <TouchableOpacity style={styles.buttonImage} onPress={()=> deleteImage()}>
-                        <Text style={Fonts.type36}>Hapus</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonImage} onPress={() => clickCamera()}>
-                        <Text style={Fonts.type36}>Ulangi Foto</Text>
-                    </TouchableOpacity>
-                </View> 
+                  <View style={{marginTop: 12}}>
+                    <View style={styles.smallContainerImage}>
+                      <Image
+                      source={{ uri: `data:image/jpeg;base64, ${dataImage.fileData}` }}
+                      style={[styles.images, {opacity: isDisable===true ? 0.5 : null}]}
+                      />
+                    </View>
+                    { isDisable !== true ? (
+                      <View style={styles.smallContainerButtonImage}>
+                        <TouchableOpacity style={styles.buttonImage} onPress={()=> deleteImage()}>
+                            <Text style={Fonts.type36}>Hapus</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttonImage} onPress={() => clickCamera()}>
+                            <Text style={Fonts.type36}>Ulangi Foto</Text>
+                        </TouchableOpacity>
+                      </View> 
+                    ) : null
+                    }
                 </View>
                 ):( 
                 <View>
