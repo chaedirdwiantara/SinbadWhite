@@ -124,6 +124,12 @@ class MapsView extends Component {
       latitude: this.state.latitude
     });
   }
+  checkLongLat(longlat) {
+    if (longlat) {
+      return longlat;
+    }
+    return 0;
+  }
   /**
    * ========================
    * RENDER VIEW
@@ -169,8 +175,12 @@ class MapsView extends Component {
           draggable
           onDragEnd={event => {
             this.setState({
-              latitude: event.nativeEvent.coordinate.latitude,
-              longitude: event.nativeEvent.coordinate.longitude
+              latitude: this.checkLongLat(
+                event.nativeEvent.coordinate.latitude
+              ),
+              longitude: this.checkLongLat(
+                event.nativeEvent.coordinate.longitude
+              )
             });
           }}
           image={require('../../assets/icons/maps/drop_pin.png')}
