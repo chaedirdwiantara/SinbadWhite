@@ -211,10 +211,11 @@ function SfaDetailView(props) {
             <Text style={Fonts.type17}>{`Total Barang (${dataSfaGetDetail.data.parcelQty})`}</Text>
             <Text style={Fonts.type17}>{MoneyFormat(dataSfaGetDetail.data.parcelGrossPrice)}</Text>
           </View>
-          <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-            <Text style={Fonts.type51}>Potongan Harga</Text>
-            <Text style={Fonts.type17}>{MoneyFormat(dataSfaGetDetail.data.parcelPromo)}</Text>
-          </View>
+          {
+            dataSfaGetDetail.data.promoList !== null 
+            ? renderPromo()
+            : null
+          }
           <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
             <Text style={Fonts.type17}>Ongkos Kirim</Text>
             <Text style={Fonts.type17}>{MoneyFormat(0)}</Text>
@@ -226,6 +227,29 @@ function SfaDetailView(props) {
         </View>
       )
     }
+  }
+
+  const renderPromo = () => {
+    return dataSfaGetDetail.data.promoList.map((item, index) => {
+      return(
+        <View key={index} style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
+          <Text style={[Fonts.type51, {width:"80%"}]}>
+            {
+              item.promoValue !== null
+              ? item.promoName
+              : `${item.catalogueName} (${item.promoQty} Pcs)`
+            }
+          </Text>
+          <Text style={Fonts.type51}>
+            {
+              item.promoValue !== null
+              ? `- ${MoneyFormat(item.promoValue)}`
+              : 'FREE'
+            }
+          </Text>
+        </View>
+      )
+    })
   }
 
   /**

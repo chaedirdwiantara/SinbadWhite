@@ -111,6 +111,7 @@ const SfaAddTagihanView = props => {
     if (collectionMethod.code === 'transfer') {
       console.log({
         referenceCode: referenceCode,
+        bankSource: bankSource,
         bankAccount: bankAccount,
         transferDate: transferDate,
         transferValue: transferValue,
@@ -195,6 +196,7 @@ const SfaAddTagihanView = props => {
       if (collectionMethod.code === 'transfer') {
         if (
           referenceCode === null ||
+          bankSource === null ||
           bankAccount === null ||
           transferDate === null ||
           transferValue === 0 ||
@@ -247,7 +249,9 @@ const SfaAddTagihanView = props => {
   }, [
     collectionMethod,
     cash,
-    referenceCode,
+    referenceCode, 
+    bankSource, 
+    bankAccount,
     transferDate,
     transferValue,
     billingValue,
