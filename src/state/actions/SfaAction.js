@@ -145,3 +145,52 @@ export function sfaGetAllBankSuccess(data) {
 export function sfaGetAllBankFailed(data) {
   return { type: types.SFA_GET_ALL_BANK_FAILED, payload: data };
 }
+/**
+ * ===========================
+ * GET BANK ACCOUNT
+ * ===========================
+ */
+/** === SFA GET PAYMENT METHOD PROCESS === */
+export function sfaGetBankAccountProcess(data) {
+  return { type: types.SFA_GET_BANK_ACCOUNT_PROCESS, payload: data };
+}
+
+/** === SFA GET PAYMENT METHOD SUCCESS === */
+export function sfaGetBankAccountSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_BANK_ACCOUNT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_BANK_ACCOUNT_FAILED, payload: data };
+}
+/** === SFA GET PAYMENT METHOD FAILED === */
+export function sfaGetBankAccountFailed(data) {
+  return { type: types.SFA_GET_BANK_ACCOUNT_FAILED, payload: data };
+}
+
+/**
+ * ===========================
+ * POST PAYMENT METHOD
+ * ===========================
+ */
+/** === SFA POST PAYMENT METHOD PROCESS === */
+export function sfaPostPaymentMethodProcess(data) {
+  return { type: types.SFA_POST_PAYMENT_METHOD_PROCESS, payload: data };
+}
+
+/** === SFA POST PAYMENT METHOD SUCCESS === */
+export function sfaPostPaymentMethodSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_POST_PAYMENT_METHOD_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_POST_PAYMENT_METHOD_FAILED, payload: data };
+}
+/** === SFA POST PAYMENT METHOD FAILED === */
+export function sfaPostPaymentMethodFailed(data) {
+  return { type: types.SFA_POST_PAYMENT_METHOD_FAILED, payload: data };
+}

@@ -4,7 +4,10 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  Image
+  Image,
+  Tooltip,
+  Dimensions,
+  TextInput
 } from '../../library/reactPackage';
 import { TextInputMask } from 'react-native-masked-text';
 import { MaterialIcon, moment } from '../../library/thirdPartyPackage';
@@ -16,16 +19,35 @@ import {
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import ImagePicker from 'react-native-image-picker';
+import ModalReferenceList from './ModalReferenceList';
+import ModalBankDestination from './ModalBankDestination'
+import {useSelector} from 'react-redux';
+
+const { width, height } = Dimensions.get('window');
+
 const SfaAddTagihanTransfer = props => {
   const status = props.status;
-  const [noRef, setNoRef] = useState('');
-  const [transferValue, setTransferValue] = useState(0);
-  const [bankSource, setBankSource] = useState('');
-  const [invalidDate, setInvalidDate] = useState(new Date())
-  const [balance, setBalance] = useState(0)
+  
   const [openModalTransferDate, setOpenModalTransferDate] = useState(false)
-  const [dataImage, setDataImage] = useState(null)
   const [errorInputImage, setErrorInputImage] = useState(false);
+  const [openTooltip, setOpenTooltip] = useState(true)
+  const [isDisable, setIsDisable] = useState(false)
+  const [openModalReference, setOpenModalReference] = useState(false);
+  const [openModalBank, setOpenModalBank] = useState(false);
+  const [openModalBankDestination, setOpenModalBankDestination] = useState(false);
+
+  //DATA INPUT
+  const [noRef, setNoRef] = useState('');
+  const [bankSource, setBankSource] = useState('');
+  const [bankDestination, setBankDestination] = useState(null);
+  const [transferDate, setTransferDate] = useState(null)
+  const [balance, setBalance] = useState(0)
+  const [billingValue, setBillingValue] = useState(0);
+  const [dataImage, setDataImage] = useState(null)
+
+  //SELECTOR
+  const {selectedMerchant} = useSelector(state => state.merchant);
+  
 
   /**
    * =======================
@@ -64,6 +86,7 @@ const SfaAddTagihanTransfer = props => {
         setErrorInputImage(true);
       } else {
         // const source = { uri: response.uri };
+        props.transferImage(response.data)
         setDataImage({
           fileName: response.fileName,
           fileData: response.data,
@@ -75,18 +98,52 @@ const SfaAddTagihanTransfer = props => {
     });
   };
 
-  const textReference = (text) => {
-    props.data(text)
-    setNoRef(text)
-    
+  const deleteImage = () => {
+    props.transferImage(null)
+    setDataImage(null)
   }
 
-  const textBillingTransfer = (text) => {
+  const textReference = (text) => {
+    props.referenceCode(text)
+    setNoRef(text)   
+  }
+
+  const textTransferDate = (date) => {
+    setTransferDate(date)
+    props.transferDate(moment(date).format('YYYY-MM-DD'))
+}
+
+  const textTransferValue = (text) => {
+        setBalance(parseInt(text.replace(/[Rp.]+/g, '')))
+        props.transferValue(parseInt(text.replace(/[Rp.]+/g, '')))
+  }
+
+  const textBillingValue = (text) => {
     if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)) {
-        setTransferValue(parseInt(props.remainingBilling))
+        setBillingValue(parseInt(props.remainingBilling))
+        props.billingValue(parseInt(props.remainingBilling))
       } else {
-        setTransferValue(parseInt(text.replace(/[Rp.]+/g, '')))
+        setBillingValue(parseInt(text.replace(/[Rp.]+/g, '')))
+        props.billingValue(parseInt(text.replace(/[Rp.]+/g, '')))
       }
+  }
+
+  const selectedReference = (data) => {
+    setDataReference(data)
+    setOpenModalReference(false)
+    setDataSubmit({...dataSubmit, 
+      referenceCode:data.referenceCode,
+      balance: data.balance,
+      bankAccount: data.bankSource,
+      invalidDate: data.invalidDate,
+      issuedDate: data.issuedDate})
+    setIsDisable(true)
+  }
+
+  const selectedBankDestination = (data) => {
+    props.bankAccount(data)
+    setBankDestination(data)
+    setOpenModalBankDestination(false)
   }
 
   /**
@@ -111,16 +168,43 @@ const SfaAddTagihanTransfer = props => {
 
   const renderFormReference = () => {
       return(
-        <View style={{ marginHorizontal: -16, marginVertical: 16 }}>
-            <InputType5
-                title={status === 'available' ? 'Nomor Referensi' : '*Nomor Referensi'}
-                value={noRef}
-                placeholder={
-                status === 'available' ? 'Nomor Referensi' : '*Nomor Referensi'
-                }
-                keyboardType={'default'}
-                onChangeText={(text) => textReference(text)}
+        <View style={{ marginVertical: 16 }}>
+          <View style={{flexDirection:"row"}}>
+            <View >
+              <Text style={Fonts.type10}>{isDisable ? 'Nomor Referensi' : '*Nomor Referensi'}</Text>
+            </View>
+            {/* {renderTooltip()} */}
+          </View>
+          <View style={{flexDirection:"row"}}>
+            <TextInput
+              style={
+                [Fonts.type17, styles.boxInput, 
+                  {borderBottomColor: masterColor.fontBlack10, marginTop: 8, width: "80%"}
+                ]
+              }
+              value={noRef}
+              placeholder={
+                isDisable ? 'Nomor Referensi' : '*Nomor Referensi'
+              }
+              keyboardType={'default'}
+              onChangeText={(text) => textReference(text)}
             />
+            <View style={{ marginRight: 16}}>
+              <TouchableOpacity
+                onPress={() =>setOpenModalReference(true)}
+                style={{
+                  backgroundColor: 'red',
+                  height: 36,
+                  width: 66,
+                  borderRadius: 8,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <Text style={Fonts.type94}> Cari</Text>
+              </TouchableOpacity>
+            </View> 
+          </View>
         </View>
       )
   }
@@ -129,7 +213,7 @@ const SfaAddTagihanTransfer = props => {
       return(
         <View>
             <Text style={Fonts.type10}>
-                {status === 'available' ? 'Sumber Bank' : '*Sumber Bank'}
+                {isDisable ? 'Sumber Bank' : '*Sumber Bank'}
             </Text>
             <View>
                 <TouchableOpacity
@@ -162,20 +246,20 @@ const SfaAddTagihanTransfer = props => {
     return(
       <View>
           <Text style={Fonts.type10}>
-              {status === 'available' ? 'Tujuan Bank' : '*Tujuan Bank'}
+              {isDisable ? 'Tujuan Bank' : '*Tujuan Bank'}
           </Text>
           <View>
               <TouchableOpacity
               style={styles.boxMenu}
-              onPress={() => console.log('open bank list')}
+              onPress={() => setOpenModalBankDestination(true)}
               >
                   <Text
                       style={[
                       Fonts.type17,
-                      { opacity: bankSource === '' ? 0.5 : null }
+                      { opacity: bankDestination === null ? 0.5 : null }
                       ]}
                   >
-                      {bankSource === '' ? 'Pilih Tujuan Bank' : bankSource.name}
+                      {bankDestination === null ? 'Pilih Tujuan Bank' : bankDestination.bank.displayName}
                   </Text>
                   <View style={{ position: 'absolute', right: 16 }}>
                       <MaterialIcon
@@ -195,7 +279,7 @@ const SfaAddTagihanTransfer = props => {
         return (
             <View style={{paddingVertical: 16}}>
                 <Text style={Fonts.type10}>
-                    {status === 'available' ? 'Tanggal Transfer' : '*Tanggal Transfer'}
+                    {isDisable ? 'Tanggal Transfer' : '*Tanggal Transfer'}
                 </Text>
                 <TouchableOpacity
                     style={styles.boxMenu}
@@ -206,10 +290,10 @@ const SfaAddTagihanTransfer = props => {
                             <Text
                                 style={[
                                 Fonts.type17,
-                                { opacity: bankSource === '' ? 0.5 : null, marginLeft: 11 }
+                                { opacity: transferDate === null ? 0.5 : null, marginLeft: 11 }
                                 ]}
                             >
-                                {bankSource === '' ? moment(invalidDate).format('DD/MM/YYYY') : bankSource.name}
+                                {transferDate !== null ? moment(transferDate).format('DD/MM/YYYY') : "Pilih Tanggal Transfer"}
                             </Text>
                         </View>
                 </TouchableOpacity>
@@ -221,7 +305,7 @@ const SfaAddTagihanTransfer = props => {
     const renderTransferValue = () => {
         return (
             <View style={{paddingTop: 16}}>
-                <Text style={Fonts.type10}>{status === 'available' ? 'Nilai Transfer' : '*Nilai Transfer'}</Text>
+                <Text style={Fonts.type10}>{isDisable ? 'Nilai Transfer' : '*Nilai Transfer'}</Text>
                 <View style={[GlobalStyle.boxInput, {flexDirection:"row", alignItems:"center"}]}>
                     <TextInputMask
                         type={'money'}
@@ -233,7 +317,7 @@ const SfaAddTagihanTransfer = props => {
                         suffixUnit: ''
                         }}
                         value={balance}
-                        onChangeText={(text) => console.log(text)}
+                        onChangeText={(text) => textTransferValue(text)}
                         style={[
                         Fonts.type17,
                         {
@@ -252,7 +336,7 @@ const SfaAddTagihanTransfer = props => {
         return(
             <View>
                 <Text style={[Fonts.type10, {paddingTop: 16}]}>
-                    {status === 'available' ? 'Jumlah Penagihan' : '*Jumlah Penagihan'}
+                    {isDisable ? 'Jumlah Penagihan' : '*Jumlah Penagihan'}
                 </Text>
                 <View style={[GlobalStyle.boxInput, {flexDirection:"row", alignItems:"center"}]}>
                 <TextInputMask
@@ -264,8 +348,8 @@ const SfaAddTagihanTransfer = props => {
                     unit: 'Rp ',
                     suffixUnit: ''
                     }}
-                    value={transferValue}
-                    onChangeText={(text) => textBillingTransfer(text)}
+                    value={billingValue}
+                    onChangeText={(text) => textBillingValue(text)}
                     style={[
                     Fonts.type17,
                     {
@@ -284,7 +368,7 @@ const SfaAddTagihanTransfer = props => {
         return(
             <View>
                 <Text style={[Fonts.type10, {paddingTop: 16}]}>
-                    {status === 'available' ? 'Unggah Foto/Gambar' : '*Unggah Foto/Gambar'}
+                    {isDisable? 'Unggah Foto/Gambar' : '*Unggah Foto/Gambar'}
                 </Text>
                 {dataImage ? (
                     <View style={{marginTop: 12}}>
@@ -295,7 +379,7 @@ const SfaAddTagihanTransfer = props => {
                           />
                       </View>
                     <View style={styles.smallContainerButtonImage}>
-                    <TouchableOpacity style={styles.buttonImage} onPress={()=> setDataImage()}>
+                    <TouchableOpacity style={styles.buttonImage} onPress={()=> deleteImage()}>
                         <Text style={Fonts.type36}>Hapus</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.buttonImage} onPress={() => clickCamera()}>
@@ -329,6 +413,38 @@ const SfaAddTagihanTransfer = props => {
    * MODAL
    * ==================================
    */
+
+  /** === RENDER TOOLTIP === */
+  const renderTooltip = ()=> {
+    return (
+      <View>
+        <Tooltip
+          backgroundColor={masterColor.fontBlack50OP80}
+          height={55}
+          withOverlay={false}
+          withPointer={false}
+          onOpen={() => setOpenTooltip(false)}
+          onClose={() => setOpenTooltip(true)}
+          containerStyle={{
+            padding: 8,
+            width: 0.4 * width
+          }}
+          popover={
+            <Text style={Fonts.type87}>
+              Dapat berupa foto Bukti Transfer atau Kuitansi
+            </Text>
+          }
+        >
+          {openTooltip ? (
+            <MaterialIcon name="help" style={{marginLeft: 6}} size={17} color={masterColor.mainColor} />
+          ) : (
+            <View />
+          )}
+        </Tooltip>
+      </View>
+    );
+  }
+
   const renderModalTransferDate = () => {
     return(
       <ModalBottomType4
@@ -339,7 +455,7 @@ const SfaAddTagihanTransfer = props => {
         content={
           <View>
             <DatePickerSpinnerWithMinMaxDate
-             onSelect={(date)=> alert(date)}
+             onSelect={(date)=> textTransferDate(date)}
              close={() => setOpenModalTransferDate(false)}
              minDate={new Date("2021-02-20")}
             //  maxDate={new Date("2021-02-25")}
@@ -348,6 +464,44 @@ const SfaAddTagihanTransfer = props => {
         }
       />
     )
+  }
+
+  /** MODAL REFERENCE */
+const renderModalReference = () => {
+  return (
+    <View>
+      {openModalReference ? (
+        <ModalReferenceList
+          open={openModalReference}
+          close={() => setOpenModalReference(false)}
+          onRef={ref => (selectCollection = ref)}
+          selectCollection={selectedReference.bind(this)}
+          supplierId = {selectedMerchant.supplierId}
+          storeId= {selectedMerchant.storeId}
+          paymentCollectionTypeId = {props.collectionMethod.id}
+        />
+      ) : null}
+    </View>
+  );
+}
+
+  /** MODAL BANK DESTINATION */
+  const renderModalBankDestination = () => {
+    return (
+      <View>
+        {openModalBankDestination ? (
+          <ModalBankDestination
+            open={openModalBankDestination}
+            close={() => setOpenModalBankDestination(false)}
+            onRef={ref => (selectBankDestination = ref)}
+            selectBankDestination={selectedBankDestination.bind(this)}
+            supplierId = {selectedMerchant.supplierId}
+            storeId= {selectedMerchant.storeId}
+            paymentCollectionTypeId = {props.collectionMethod.id}
+          />
+        ) : null}
+      </View>
+    );
   }
 
   /**
@@ -374,6 +528,8 @@ const SfaAddTagihanTransfer = props => {
         {renderContent()}
       </View>
       {renderModalTransferDate()}
+      {renderModalReference()}
+      {renderModalBankDestination()}
     </>
   );
 };
@@ -419,5 +575,12 @@ const styles = StyleSheet.create({
         marginHorizontal: 3,
         backgroundColor: 'white',
         aspectRatio: 2 / 3
-      }
+      },
+    boxInput: {
+      borderBottomWidth: 1,
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+      paddingBottom: 8,
+      borderBottomColor: masterColor.fontBlack40
+    },
 });
