@@ -44,12 +44,9 @@ function ModalReferenceList(props) {
    /** GET REFERENCE LIST DATA */
    const getReference = () => {
     const data = {
-      // supplierId : props.supplierId,
-      supplierId: 2,
-      // storeId: props.storeId,
-      storeId:101,
-      // paymentCollectionTypeId: props.paymentCollectionTypeId,
-      paymentCollectionTypeId: 2,
+      supplierId : props.supplierId,
+      storeId: props.storeId,
+      paymentCollectionTypeId: props.paymentCollectionTypeId,
       limit: limit,
       keyword:searchText
     }
