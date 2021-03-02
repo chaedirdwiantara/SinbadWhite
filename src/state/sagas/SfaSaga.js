@@ -63,6 +63,17 @@ function* getPaymentMethod(actions) {
   }
 }
 
+/** GET ALL BANK */
+function* getAllBank(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getAllBank(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetAllBankSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetAllBankFailed(error));
+  }
+}
 /** GET PAYMENT METHOD */
 function* getBankAccount(actions) {
   try {
@@ -96,6 +107,7 @@ function* postPaymentMethod(actions) {
     yield takeEvery(types.SFA_GET_COLLECTION_PROCESS, getCollectionList)
     yield takeEvery(types.SFA_GET_REFERENCE_PROCESS, getReferenceList)
     yield takeEvery(types.SFA_GET_PAYMENT_METHOD_PROCESS, getPaymentMethod)
+    yield takeEvery(types.SFA_GET_ALL_BANK_PROCESS,getAllBank )
     yield takeEvery(types.SFA_GET_BANK_ACCOUNT_PROCESS, getBankAccount)
     yield takeEvery(types.SFA_POST_PAYMENT_METHOD_PROCESS, postPaymentMethod)
 }

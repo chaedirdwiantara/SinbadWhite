@@ -8,6 +8,7 @@ loadingSfaGetDetail: false,
 loadingGetCollectionList: false,
 loadingGetReferenceList : false,
 loadingSfaGetPaymentMethod: false,
+loadingSfaGetAllBank: false,
 loadingSfaGetBankAccount: false,
 loadingSfaPostPaymentMethod: false,
 /** data */
@@ -16,6 +17,7 @@ dataSfaGetDetail: null,
 dataGetCollectionList: null,
 dataGetReferenceList : null,
 dataSfaGetPaymentMethod: null,
+dataSfaGetAllBank: null,
 dataSfaGetBankAccount: null,
 dataSfaPostPaymentMethod: null,
 /** error */
@@ -24,6 +26,7 @@ errorSfaGetDetail: null,
 errorGetCollectionList: null,
 errorGetReferenceList: null,
 errorSfaGetPaymentMethod: null,
+errorSfaGetAllBank: null,
 errorSfaGetBankAccount: null,
 errorSfaPostPaymentMethod: null,
 }
@@ -165,6 +168,33 @@ export const sfa = createReducer(INITIAL_STATE, {
       loadingSfaGetPaymentMethod: false,
       errorSfaGetPaymentMethod: action.payload
     };
+  },
+   /**
+   * ==========================
+   * GET ALL BANK
+   * ==========================
+   */
+  [types.SFA_GET_ALL_BANK_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetAllBank: true,
+      dataSfaGetAllBank: null,
+      errorSfaGetAllBank: null
+    };
+  },
+  [types.SFA_GET_ALL_BANK_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetAllBank: false,
+      dataSfaGetAllBank: action.payload
+    };
+  },
+  [types.SFA_GET_ALL_BANK_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaGetAllBank: false,
+      errorSfaGetAllBank: action.payload
+    }
   },
 
   /**

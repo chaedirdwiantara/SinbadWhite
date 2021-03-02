@@ -26,6 +26,7 @@ import SfaNoDataView from './SfaNoDataView';
 function ModalReferenceList(props) {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('')
+  const [limit, setLimit] = useState(20)
   const {
     dataGetReferenceList
    } = useSelector(state => state.sfa);
@@ -38,21 +39,26 @@ function ModalReferenceList(props) {
    */
   useEffect(() => {
     getReference()
-  }, []);
+  }, [searchText]);
 
    /** GET REFERENCE LIST DATA */
    const getReference = () => {
-     console.log(props, 'props');
     const data = {
       supplierId : props.supplierId,
       storeId: props.storeId,
       paymentCollectionTypeId: props.paymentCollectionTypeId,
-      limit: 20
+      limit: limit,
+      keyword:searchText
     }
     dispatch(sfaGetReferenceListProcess(data))
   }
 
-
+/** PARENT FUNCTION */
+const parentFunction = (data) => {
+  if (data.type === 'search') {
+    setSearchText(data.data)
+}
+}
   /**
    * *********************************
    * RENDER VIEW
@@ -81,8 +87,8 @@ function ModalReferenceList(props) {
           <SearchBarType1
               placeholder={'Cari Cek Disini'}
               searchText={searchText}
-              // onRef={ref => (this.parentFunction = ref)}
-              // parentFunction={this.parentFunction.bind(this)}
+              onRef={ref => (parentFunction = ref)}
+              parentFunction={parentFunction.bind(this)}
             />
           </View>
         </View>
@@ -93,7 +99,7 @@ function ModalReferenceList(props) {
 
   const renderCollectionMethod = () => {
     const data = dataGetReferenceList
-    if( data.data)
+    if( data.data && data.data.length > 0)
    { return data.data.map((item, index) => {
       return (
         <View key={index}>
