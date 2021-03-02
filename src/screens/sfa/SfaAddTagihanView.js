@@ -104,6 +104,7 @@ const SfaAddTagihanView = (props) => {
     if (collectionMethod.code === "transfer") {
       console.log({
         referenceCode: referenceCode,
+        bankSource: bankSource,
         bankAccount: bankAccount,
         transferDate: transferDate,
         transferValue: transferValue,
@@ -151,14 +152,14 @@ const SfaAddTagihanView = (props) => {
         }
       }
       if (collectionMethod.code === "transfer") {
-        if (referenceCode === null || bankAccount === null || transferDate === null || transferValue === 0 || billingValue === 0 || transferImage ===null) {
+        if (referenceCode === null || bankSource === null || bankAccount === null || transferDate === null || transferValue === 0 || billingValue === 0 || transferImage ===null) {
           setDisabled(true)
         } else {
           setDisabled(false)       
         }
       }
     }
-  }, [collectionMethod, cash, referenceCode, transferDate, transferValue, billingValue, transferImage]);
+  }, [collectionMethod, cash, referenceCode, bankSource, bankAccount, transferDate, transferValue, billingValue, transferImage]);
 
   /**
    * *********************************

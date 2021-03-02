@@ -21,6 +21,7 @@ import masterColor from '../../config/masterColor.json';
 import ImagePicker from 'react-native-image-picker';
 import ModalReferenceList from './ModalReferenceList';
 import ModalBankDestination from './ModalBankDestination'
+import ModalBankAccount from './ModalBankAccount'
 import {useSelector} from 'react-redux';
 
 const { width, height } = Dimensions.get('window');
@@ -129,6 +130,12 @@ const SfaAddTagihanTransfer = props => {
       }
   }
 
+  const selectedBank = (data) => {
+    props.bankSource(data)
+    setBankSource(data)
+    setOpenModalBank(false)
+  }
+
   const selectedBankDestination = (data) => {
     props.bankAccount(data)
     setBankDestination(data)
@@ -139,11 +146,13 @@ const SfaAddTagihanTransfer = props => {
     console.log("woiiii:", data);
     setDataReference(data)
 
-    //DATA INPUT
-    props.referenceCode(data.referenceCode)
+    //DATA INPUT  
     setNoRef(data.referenceCode)   
-    props.bankAccount(data.bankToAccount)
+    props.referenceCode(data.referenceCode)
+    setBankSource(data.bankSource)
+    props.bankSource(data.bankSource)
     setBankDestination(data.bankToAccount)
+    props.bankAccount(data.bankToAccount)
     setTransferDate(data.issuedDate)
     props.transferDate(moment(data.issuedDate).format('YYYY-MM-DD'))
     setBalance(parseInt(data.balance))
@@ -221,6 +230,7 @@ const SfaAddTagihanTransfer = props => {
   }
 
   const renderFormBankSource = () => {
+    console.log("ini bank:", bankSource);
       return(
         <View>
             <Text style={Fonts.type10}>
@@ -229,15 +239,16 @@ const SfaAddTagihanTransfer = props => {
             <View>
                 <TouchableOpacity
                 style={styles.boxMenu}
-                onPress={() => console.log('open bank list')}
+                onPress={() => setOpenModalBank(true)}
+                disabled={isDisable}
                 >
                     <Text
                         style={[
                         Fonts.type17,
-                        { opacity: bankSource === '' ? 0.5 : null }
+                        { opacity: bankSource === '' || isDisable === true ? 0.5 : null }
                         ]}
                     >
-                        {bankSource === '' ? 'Pilih Sumber Bank' : bankSource.name}
+                        {bankSource === '' ? 'Pilih Sumber Bank' : isDisable === true ? bankSource : bankSource.displayName}
                     </Text>
                     <View style={{ position: 'absolute', right: 16 }}>
                         <MaterialIcon
@@ -504,6 +515,25 @@ const renderModalReference = () => {
   );
 }
 
+/** MODAL BANK ACCOUNT */
+const renderModalBank = () => {
+  return (
+    <View>
+      {openModalBank ? (
+        <ModalBankAccount
+          open={openModalBank}
+          close={() => setOpenModalBank(false)}
+          onRef={ref => (selectCollection = ref)}
+          selectCollection={selectedBank.bind(this)}
+          supplierId = {selectedMerchant.supplierId}
+          storeId= {selectedMerchant.storeId}
+          paymentCollectionTypeId = {props.paymentCollectionTypeId}
+        />
+      ) : null}
+    </View>
+  );
+}
+
   /** MODAL BANK DESTINATION */
   const renderModalBankDestination = () => {
     return (
@@ -549,6 +579,7 @@ const renderModalReference = () => {
       {renderModalTransferDate()}
       {renderModalReference()}
       {renderModalBankDestination()}
+      {renderModalBank()}
     </>
   );
 };

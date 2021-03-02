@@ -80,7 +80,12 @@ function ModalCollectionMethod(props) {
           <TouchableOpacity 
             disabled={item.status === "disabled" ? true : false} 
             onPress={() => props.selectCollection(item)}
-            style={{backgroundColor: item.status === "disabled" ? masterColor.fontBlack10 : null}}
+            style={
+              {
+                backgroundColor: item.status === "disabled" ? masterColor.fontBlack10 : null,
+                opacity: item.status === "disabled" ? 0.5 : null
+              }
+            }
           >
             <View style={{margin: 16, opacity: item.status === "disabled" ? 0.5 : null}}>
               <Text style={Fonts.type24}>{item.name}</Text>
