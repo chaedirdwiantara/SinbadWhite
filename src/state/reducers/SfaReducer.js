@@ -12,6 +12,8 @@ const INITIAL_STATE = {
   loadingSfaGetBankAccount: false,
   loadingSfaPostPaymentMethod: false,
   loadingSfaGetStampList: false,
+  loadingLoadMoreGetSfa: false,
+  refreshGetCollection: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -97,15 +99,16 @@ export const sfa = createReducer(INITIAL_STATE, {
   [types.SFA_GET_COLLECTION_PROCESS](state, action) {
     return {
       ...state,
-      loadingGetCollectionList: true,
-      dataGetCollectionList: null,
-      errorGetCollectionList: null
+      loadingGetCollectionList: action.payload.loading,
+      errorGetCollectionList: null,
     };
   },
   [types.SFA_GET_COLLECTION_SUCCESS](state, action) {
     return {
       ...state,
       loadingGetCollectionList: false,
+      loadingLoadMoreGetSfa: false,
+      refreshGetCollection: false,
       dataGetCollectionList: action.payload
     };
   },
@@ -113,6 +116,7 @@ export const sfa = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetCollectionList: false,
+      refreshGetCollection: false,
       errorGetCollectionList: action.payload
     };
   },
@@ -282,5 +286,22 @@ export const sfa = createReducer(INITIAL_STATE, {
       loadingSfaGetStampList: false,
       errorSfaGetStampList: action.payload
     };
-  }
+  },
+
+  [types.SFA_GET_LOADMORE](state, action) {
+    return {
+      ...state,
+      loadingLoadMoreGetSfa: true,
+      pageGetSfa: action.payload
+    };
+  },
+
+  [types.SFA_GET_REFRESH](state, action) {
+    return {
+      ...state,
+      refreshGetCollection: true,
+      loadingGetCollectionList: true,
+      dataGetCollectionList: []
+    };
+  },
 });

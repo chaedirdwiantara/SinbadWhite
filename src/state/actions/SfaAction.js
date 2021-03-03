@@ -219,3 +219,13 @@ export function sfaGetStampListSuccess(data) {
 export function sfaGetStampListFailed(data) {
   return { type: types.SFA_GET_STAMP_FAILED, payload: data };
 }
+
+/** === LOAD MORE GET COLLECTION === */
+export function SfaGetLoadMore(page) {
+  return { type: types.SFA_GET_LOADMORE, payload: page };
+}
+
+/** === REFRESH GET COLLECTION === */
+export function sfaGetRefresh() {
+  return { type: types.SFA_GET_REFRESH };
+}

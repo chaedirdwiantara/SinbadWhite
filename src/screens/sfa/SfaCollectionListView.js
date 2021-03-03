@@ -8,34 +8,35 @@ import {
   Image,
   FlatList
 } from '../../library/reactPackage';
+import { LoadingLoadMore } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import { moment } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import SfaNoDataView from './SfaNoDataView';
+import { useSelector } from 'react-redux';
 
 function SfaCollectionListView(props) {
-   /**
+  const { loadingLoadMoreGetSfa, refreshGetCollection } = useSelector(state => state.sfa);
+  /**
    * =======================
    * RENDER FUNCTION
    * =======================
    */
-const checkpayment =(item) => {
-  const data = props.status.data.find(
-    itemPayment => itemPayment.status === item
-  );
-  if (data) {
-    return data.title;
-  } else {
-    return '';
-  }
-}
-
-  const statusPayment = (item) => {
-    return props.status !== null
-      ? checkpayment(item)
-      : '';
+  const checkpayment = item => {
+    const data = props.status.data.find(
+      itemPayment => itemPayment.status === item
+    );
+    if (data) {
+      return data.title;
+    } else {
+      return '';
     }
+  };
+
+  const statusPayment = item => {
+    return props.status !== null ? checkpayment(item) : '';
+  };
 
   /**
    * =======================
@@ -43,28 +44,40 @@ const checkpayment =(item) => {
    * =======================
    */
   const renderData = () => {
-    return (
-      <>
-      <View style={styles.flatListContainer}>
-      { props.dataList.data.orderParcels !== null?  
-        <FlatList
-          data={props.dataList.data.orderParcels}
-          renderItem={renderItem}
-          //   numColumns={1}
-          keyExtractor={(item, index) => index.toString()}
-          //   refreshing={this.props.history.refreshGetHistory}
-          //   onRefresh={this.onHandleRefresh}
-          onEndReachedThreshold={0.2}
-          onEndReached={()=>props.loadmore()}
-          showsVerticalScrollIndicator
-        />
-       : 
-       <View style={{marginTop: '20%'}}>
-<SfaNoDataView/>
-</View>
-       }
-     </View>
-      </>
+    if (props.dataList) {
+      return (
+        <>
+          <View style={styles.flatListContainer}>
+            {props.dataList.data.orderParcels !== null ? (
+              <FlatList
+                data={props.dataList.data.orderParcels}
+                renderItem={renderItem}
+                //   numColumns={1}
+                keyExtractor={(item, index) => index.toString()}
+                  refreshing={refreshGetCollection}
+                  onRefresh={()=>props.refersh()}
+                onEndReachedThreshold={0.2}
+                onEndReached={() => props.loadmore()}
+                showsVerticalScrollIndicator
+              />
+            ) : (
+              <View style={{ marginTop: '20%' }}>
+                <SfaNoDataView />
+              </View>
+            )}
+          </View>
+        </>
+      );
+    }
+  };
+
+  const renderLoadMore = () => {
+    return loadingLoadMoreGetSfa ? (
+      <View style={{ marginTop: 8 }}>
+        <LoadingLoadMore />
+      </View>
+    ) : (
+      <View />
     );
   };
 
@@ -83,7 +96,9 @@ const checkpayment =(item) => {
             </Text>
             <View style={{ flexDirection: 'row' }}>
               <Text style={Fonts.type17}>Total: </Text>
-              <Text style={Fonts.type37}>{MoneyFormat(item.invoiceAmount)}</Text>
+              <Text style={Fonts.type37}>
+                {MoneyFormat(item.invoiceAmount)}
+              </Text>
             </View>
           </View>
         </View>
@@ -99,8 +114,8 @@ const checkpayment =(item) => {
             <Text style={[Fonts.type17, { marginBottom: 8 }]}>{delivery}</Text>
             {/* <Text style={Fonts.type17}>{item.orderRef}</Text> */}
             <View style={{ flexDirection: 'row' }}>
-              <Text style={Fonts.type22}>Jatuh Tempo: </Text>
-              <Text style={Fonts.type22}>{dueDate}</Text>
+              <Text style={item.statusPayment === 'overdue'? Fonts.type22 : Fonts.type17}>Jatuh Tempo: </Text>
+              <Text style={item.statusPayment === 'overdue'? Fonts.type22 : Fonts.type17}>{dueDate}</Text>
             </View>
           </View>
         </View>
@@ -110,10 +125,19 @@ const checkpayment =(item) => {
             <Text style={[Fonts.type17, { marginBottom: 8 }]}>
               Sisa Tagihan
             </Text>
-            <Text style={Fonts.type109p}>{MoneyFormat(item.outstandingAmount)}</Text>
+            <Text style={Fonts.type109p}>
+              {MoneyFormat(item.outstandingAmount)}
+            </Text>
           </View>
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
-            <TouchableOpacity style={styles.buttonDetail} onPress={() => NavigationService.navigate('SfaDetailView', {orderParcelId: item.id})}>
+            <TouchableOpacity
+              style={styles.buttonDetail}
+              onPress={() =>
+                NavigationService.navigate('SfaDetailView', {
+                  orderParcelId: item.id
+                })
+              }
+            >
               <Text style={Fonts.type94}>Detail</Text>
             </TouchableOpacity>
           </View>
@@ -127,7 +151,11 @@ const checkpayment =(item) => {
    * =======================
    */
   return (
-    <>{renderData()}</>
+    <>
+      {renderData()}
+
+      {renderLoadMore()}
+    </>
     // renderSkeleton()
   );
 }
