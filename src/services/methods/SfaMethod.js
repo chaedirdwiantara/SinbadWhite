@@ -66,6 +66,16 @@ function postPaymentMethod(data) {
   });
 }
 
+/** POST COLLECTION PAYMENT */
+function postCollectionPayment(data) {
+  console.log("param:", data);
+  return ApiRest({
+    path: 'collection/v1/payment',
+    method: 'POST',
+    params: data
+  });
+}
+
   export const SfaMethod = {
     getCollectionStatus,
     getSfaDetail,
@@ -74,5 +84,6 @@ function postPaymentMethod(data) {
     getPaymentMethod,
     getAllBank,
     getBankAccount,
-    postPaymentMethod
+    postPaymentMethod,
+    postCollectionPayment
   };

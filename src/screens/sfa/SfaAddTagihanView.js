@@ -29,7 +29,12 @@ import SfaAddTagihanCheque from './SfaAddTagihanCheque';
 import SfaAddTagihanTransfer from './SfaAddTagihanTransfer';
 import SfaAddTagihanPromo from './SfaAddTagihanPromo';
 import SfaAddTagihanGiro from './SfaAddTagihanGiro';
-import { sfaPostPaymentMethodProcess } from '../../state/actions';
+import { 
+  sfaPostPaymentMethodProcess, 
+  sfaPostCollectionPaymentProcess,
+  sfaGetDetailProcess,
+} from '../../state/actions';
+import NavigationService from '../../navigation/NavigationService';
 
 const SfaAddTagihanView = props => {
   const dispatch = useDispatch();
@@ -37,6 +42,7 @@ const SfaAddTagihanView = props => {
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false);
   const [methodStatus, setMethodStatus] = useState('available');
   const [disabled, setDisabled] = useState(true);
+  const { dataSfaPostPaymentMethod, errorSfaPostPaymentMethod,  loadingSfaPostPaymentMethod, loadingSfaPostCollectionPayment} = useSelector(state => state.sfa);
 
   //DATA PAYMENT CASH
   const [cash, setCash] = useState(0);
@@ -97,7 +103,7 @@ const SfaAddTagihanView = props => {
     }
   };
 
-  const saveCollection = () => {
+  const saveCollection = async () => {
     if (collectionMethod.code === 'cash') {
       const data = {
         paymentCollectionTypeId: parseInt(collectionMethod.id),
@@ -106,10 +112,28 @@ const SfaAddTagihanView = props => {
         userId: parseInt(selectedMerchant.id),
         balance: cash
       };
+      // console.log("disiniiii:", props.navigation.state.params.data.id);
       dispatch(sfaPostPaymentMethodProcess(data));
+      
+      // await dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
+      // if ( loadingSfaPostPaymentMethod === false) {
+      //   console.log("disini");
+      //   const dataPostPayment = {
+      //     supplierId: parseInt(selectedMerchant.supplierId),
+      //     userSellerId: parseInt(selectedMerchant.id),
+      //     orderParcelId: orderParcelId,
+      //     storeId: parseInt(selectedMerchant.storeId),
+      //     paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
+      //     amount: cash
+
+      //   }
+      //   dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
+      //   // dispatch(sfaGetDetailProcess(orderParcelId));
+      //   // NavigationService.navigate('SfaDetailView', {orderParcelId: orderParcelId})
+      // }
     }
     if (collectionMethod.code === 'transfer') {
-      console.log({
+      const data = {
         referenceCode: referenceCode,
         bankSource: bankSource,
         bankAccount: bankAccount,
@@ -117,7 +141,8 @@ const SfaAddTagihanView = props => {
         transferValue: transferValue,
         billingValue: billingValue,
         transferImage: transferImage
-      });
+      }
+      console.log("disni data:", data);
     }
     if(collectionMethod.code === 'check' || collectionMethod.code === 'giro'){
       const data ={
@@ -136,6 +161,29 @@ const SfaAddTagihanView = props => {
       dispatch(sfaPostPaymentMethodProcess(data));
     }
   };
+
+  useEffect(() => {
+    const orderParcelId = props.navigation.state.params.data.id
+    if (dataSfaPostPaymentMethod) {
+      const dataPostPayment = {
+        supplierId: parseInt(selectedMerchant.supplierId),
+        userSellerId: parseInt(selectedMerchant.id),
+        orderParcelId: orderParcelId,
+        storeId: parseInt(selectedMerchant.storeId),
+        paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
+        amount: cash
+      }
+      dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
+    }
+  }, [dataSfaPostPaymentMethod])
+
+  useEffect(() => {
+    if (loadingSfaPostCollectionPayment || loadingSfaPostPaymentMethod) {
+      setDisabled(true)
+    } else {
+      setDisabled(false)
+    }
+  }, [loadingSfaPostCollectionPayment, loadingSfaPostPaymentMethod])
 
   const dataReferenceCode = data => {
     setReferenceCode(data);
@@ -523,6 +571,7 @@ const SfaAddTagihanView = props => {
     return (
       <ButtonSingle
         disabled={disabled}
+        loading={loadingSfaPostCollectionPayment || loadingSfaPostPaymentMethod ? true : false}
         title={'Simpan'}
         borderRadius={4}
         onPress={() => saveCollection()}

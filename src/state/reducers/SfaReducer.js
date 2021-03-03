@@ -233,7 +233,7 @@ export const sfa = createReducer(INITIAL_STATE, {
   [types.SFA_POST_PAYMENT_METHOD_PROCESS](state, action) {
     return {
       ...state,
-      loadingSfaPostPAymentMethod: true,
+      loadingSfaPostPaymentMethod: true,
       dataSfaPostPaymentMethod: null,
       errorSfaPostPaymentMethod: null
     };
@@ -241,7 +241,7 @@ export const sfa = createReducer(INITIAL_STATE, {
   [types.SFA_POST_PAYMENT_METHOD_SUCCESS](state, action) {
     return {
       ...state,
-      loadingSfaPostPAymentMethod: false,
+      loadingSfaPostPaymentMethod: false,
       dataSfaPostPaymentMethod: action.payload
     };
   },
@@ -250,6 +250,34 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       loadingSfaPostPaymentMethod: false,
       errorSfaPostPaymentMethod: action.payload
+    };
+  },
+
+  /**
+   * ==========================
+   * POST COLLECTION PAYMENT
+   * ==========================
+   */
+  [types.SFA_POST_COLLECTION_PAYMENT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaPostCollectionPayment: true,
+      dataSfaPostCollectionPayment: null,
+      errorSfaPostCollectionPayment: null
+    };
+  },
+  [types.SFA_POST_COLLECTION_PAYMENT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaPostCollectionPayment: false,
+      dataSfaPostCollectionPayment: action.payload
+    };
+  },
+  [types.SFA_POST_COLLECTION_PAYMENT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaPostCollectionPayment: false,
+      errorSfaPostCollectionPayment: action
     };
   },
 })

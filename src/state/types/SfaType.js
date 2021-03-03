@@ -42,3 +42,8 @@ export const SFA_GET_BANK_ACCOUNT_FAILED = 'SfaGetBankAccountFailed';
 export const SFA_POST_PAYMENT_METHOD_PROCESS = 'SfaPostPaymentMethodProcess';
 export const SFA_POST_PAYMENT_METHOD_SUCCESS = 'SfaPostPaymentMethodSuccess';
 export const SFA_POST_PAYMENT_METHOD_FAILED = 'SfaPostPaymentMethodFailed';
+
+/** POST COLLECTION PAYMENT */
+export const SFA_POST_COLLECTION_PAYMENT_PROCESS = 'SfaPostCollectionPaymentProcess';
+export const SFA_POST_COLLECTION_PAYMENT_SUCCESS = 'SfaPostCollectionPaymentSuccess';
+export const SFA_POST_COLLECTION_PAYMENT_FAILED = 'SfaPostCollectionPaymentFailed';

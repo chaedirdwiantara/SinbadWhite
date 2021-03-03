@@ -194,3 +194,28 @@ export function sfaPostPaymentMethodSuccess(data) {
 export function sfaPostPaymentMethodFailed(data) {
   return { type: types.SFA_POST_PAYMENT_METHOD_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * POST COLLECTION PAYMENT
+ * ===========================
+ */
+/** === SFA POST COLLECTION PAYMENT PROCESS === */
+export function sfaPostCollectionPaymentProcess(data) {
+  return { type: types.SFA_POST_COLLECTION_PAYMENT_PROCESS, payload: data };
+}
+
+/** === SFA POST COLLECTION PAYMENT SUCCESS === */
+export function sfaPostCollectionPaymentSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_POST_COLLECTION_PAYMENT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_POST_COLLECTION_PAYMENT_FAILED, payload: data };
+}
+/** === SFA POST COLLECTION PAYMENT FAILED === */
+export function sfaPostCollectionPaymentFailed(data) {
+  return { type: types.SFA_POST_COLLECTION_PAYMENT_FAILED, payload: data };
+}
