@@ -158,6 +158,7 @@ const SfaAddTagihanTransfer = props => {
     setDataImage({fileData: data.image});
     props.transferImage(data.image)
 
+    props.useNoReference(true)
     setOpenModalReference(false)
     setIsDisable(true)
   }
@@ -177,6 +178,8 @@ const SfaAddTagihanTransfer = props => {
     props.transferValue(0)
     setDataImage(null);
     props.transferImage(null)
+
+    props.useNoReference(false)
   }
 
   /**

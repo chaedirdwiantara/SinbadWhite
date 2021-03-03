@@ -61,6 +61,7 @@ const SfaAddTagihanView = props => {
   const [stamp, setStamp] = useState(null);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [isUsedStamp, setIsUsedStamp] = useState(false)
+  const [isUseNoReference, setIsUseNoReference] = useState(false)
 
   /**
    * =======================
@@ -141,6 +142,16 @@ const SfaAddTagihanView = props => {
         transferValue: transferValue,
         billingValue: billingValue,
         transferImage: transferImage
+      }
+      if (isUseNoReference === true) {
+        const dataPostPayment = {
+          
+        }
+        console.log("pake reference");
+        dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
+      } else {
+        console.log("gak pake reference");
+        dispatch(sfaPostPaymentMethodProcess(data));
       }
       console.log("disni data:", data);
     }
@@ -230,6 +241,11 @@ const SfaAddTagihanView = props => {
   };
   const statusStamp = data => {
     setIsUsedStamp(data)
+  }
+
+  const useNoReference = data => {
+    console.log("use ref:", data);
+    setIsUseNoReference(data)
   }
 
   useEffect(() => {
@@ -516,6 +532,7 @@ const SfaAddTagihanView = props => {
         transferValue={dataTranserValue}
         billingValue={dataBillingValue}
         transferImage={dataTransferImage}
+        useNoReference={useNoReference}
       />
     );
   };
