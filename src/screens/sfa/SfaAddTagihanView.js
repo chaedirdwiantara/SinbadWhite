@@ -114,7 +114,6 @@ const SfaAddTagihanView = props => {
         userId: parseInt(selectedMerchant.id),
         balance: cash
       };
-      // console.log("disiniiii:", props.navigation.state.params.data.id);
       dispatch(sfaPostPaymentMethodProcess(data));
       
       // await dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
@@ -151,9 +150,9 @@ const SfaAddTagihanView = props => {
         // bankSource: bankSource,
         // bankAccount: bankAccount,
         // transferDate: transferDate,
-        // transferValue: transferValue,
-        
+        // transferValue: transferValue,     
         // transferImage: transferImage
+        // billingValue: billingValue
       }
       if (isUseNoReference === true) {
         const dataPostPayment = {
@@ -166,6 +165,7 @@ const SfaAddTagihanView = props => {
         }
         console.log("pake reference");
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
+        NavigationService.navigate('SfaDetailView', {orderParcelId: orderParcelId})
       } else {
         console.log("gak pake reference");
         dispatch(sfaPostPaymentMethodProcess(data));
@@ -201,7 +201,9 @@ const SfaAddTagihanView = props => {
         paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
         amount: cash
       }
-      dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
+      console.log("iniii data:", dataPostPayment);
+      // dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
+      // NavigationService.navigate('SfaDetailView', {orderParcelId: orderParcelId})
     }
   }, [dataSfaPostPaymentMethod])
 
@@ -483,7 +485,7 @@ const SfaAddTagihanView = props => {
     return (
       <View style={{ marginTop: 16 }}>
         <View>
-          <Text style={Fonts.type10}>Jumlah Penagihan</Text>
+          <Text style={Fonts.type10}>*Jumlah Penagihan</Text>
         </View>
         <View
           style={[
