@@ -105,6 +105,7 @@ const SfaAddTagihanView = props => {
   };
 
   const saveCollection = async () => {
+    const orderParcelId = props.navigation.state.params.data.id
     if (collectionMethod.code === 'cash') {
       const data = {
         paymentCollectionTypeId: parseInt(collectionMethod.id),
@@ -135,17 +136,33 @@ const SfaAddTagihanView = props => {
     }
     if (collectionMethod.code === 'transfer') {
       const data = {
+        paymentCollectionTypeId: parseInt(collectionMethod.id),
+        storeId: parseInt(selectedMerchant.storeId),
+        supplierId: parseInt(selectedMerchant.supplierId),
+        userId: parseInt(selectedMerchant.id),
         referenceCode: referenceCode,
-        bankSource: bankSource,
-        bankAccount: bankAccount,
-        transferDate: transferDate,
-        transferValue: transferValue,
-        billingValue: billingValue,
-        transferImage: transferImage
+        balance: transferValue,
+        issuedDate: moment(new Date(transferDate)).format('YYYY-MM-DD HH:mm:ss'),
+        bankId: bankSource.id,
+        bankToAccountId: bankAccount.id,
+        filename: transferImage.fileName,
+        type: transferImage.fileType,
+        image: transferImage.fileData,
+        // bankSource: bankSource,
+        // bankAccount: bankAccount,
+        // transferDate: transferDate,
+        // transferValue: transferValue,
+        
+        // transferImage: transferImage
       }
       if (isUseNoReference === true) {
         const dataPostPayment = {
-          
+          supplierId: parseInt(selectedMerchant.supplierId),
+          userSellerId: parseInt(selectedMerchant.id),
+          orderParcelId: orderParcelId,
+          storeId: parseInt(selectedMerchant.storeId),
+          paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
+          amount: billingValue
         }
         console.log("pake reference");
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
@@ -305,8 +322,6 @@ const SfaAddTagihanView = props => {
             setDisabled(false);
           }
         }
-
-
        
       }
     }

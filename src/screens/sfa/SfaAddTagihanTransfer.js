@@ -87,7 +87,13 @@ const SfaAddTagihanTransfer = props => {
         setErrorInputImage(true);
       } else {
         // const source = { uri: response.uri };
-        props.transferImage(response.data)
+        props.transferImage({
+          fileName: response.fileName,
+          fileData: response.data,
+          fileType: response.type,
+          fileUri: response.uri,
+          fileSize: response.fileSize
+        })
         setDataImage({
           fileName: response.fileName,
           fileData: response.data,
