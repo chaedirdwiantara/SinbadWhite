@@ -184,13 +184,13 @@ const SfaAddTagihanView = props => {
           paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
           amount: billingValue
         }
-        console.log("pake reference");
+        // console.log("pake reference");
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
       } else {
-        console.log("gak pake reference");
+        // console.log("gak pake reference");
         dispatch(sfaPostPaymentMethodProcess(data));
       }
-      console.log("disni data:", data);
+      // console.log("disni data:", data);
     }
     if(collectionMethod.code === 'check' || collectionMethod.code === 'giro'){
       const data ={
