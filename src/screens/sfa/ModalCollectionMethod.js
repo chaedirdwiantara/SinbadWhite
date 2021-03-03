@@ -24,6 +24,7 @@ import { sfaGetPaymentMethodProcess } from '../../state/actions';
 function ModalCollectionMethod(props) {
   const dispatch = useDispatch();
   const { dataSfaGetPaymentMethod} = useSelector(state => state.sfa);
+  const {selectedMerchant} = useSelector(state => state.merchant);
 
   /**
    * =======================
@@ -33,8 +34,8 @@ function ModalCollectionMethod(props) {
 
   useEffect(() => {
     const data = {
-      supplierId : 2,
-      storeId: 101
+      supplierId : selectedMerchant.supplierId,
+      storeId: selectedMerchant.storeId
     }
     dispatch(sfaGetPaymentMethodProcess(data))
   }, []);
