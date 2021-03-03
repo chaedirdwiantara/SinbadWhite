@@ -32,7 +32,9 @@ import SfaCollectionListView from './SfaCollectionListView';
 import { ScrollView } from 'react-native-gesture-handler';
 import {
   sfaGetCollectionListProcess,
-  sfaGetCollectionStatusProcess
+  sfaGetCollectionStatusProcess,
+  SfaGetLoadMore,
+  sfaGetRefresh
 } from '../../state/actions/SfaAction';
 
 const SfaView = props => {
@@ -42,12 +44,13 @@ const SfaView = props => {
     loadingGetCollectionStatus,
     dataGetCollectionStatus,
     loadingGetCollectionList,
-    dataGetCollectionList
+    dataGetCollectionList,
+    loadingLoadMoreGetSfa
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [selectedTagStatus, setSelectedTagStatus] = useState(0);
   const [paymentStatus, setPaymentStatus] = useState('');
-  const [limit, setLimit] = useState(20)
+  const [limit, setLimit] = useState(20);
 
   /**
    * =======================
@@ -55,8 +58,8 @@ const SfaView = props => {
    * =======================
    */
   useEffect(() => {
-    getCollectionList();
-  }, [paymentStatus, searchText, limit]);
+    getCollectionList(true, 20);
+  }, [paymentStatus, searchText]);
 
   useEffect(() => {
     getCollectionStatus();
@@ -66,15 +69,16 @@ const SfaView = props => {
     dispatch(sfaGetCollectionStatusProcess());
   };
 
-  const getCollectionList = () => {
+  const getCollectionList = (loading, page) => {
     const storeId = parseInt(selectedMerchant.storeId);
     const supplierId = parseInt(selectedMerchant.supplierId);
     const data = {
-      limit: limit,
+      limit: page,
       storeId: storeId,
       supplierId: supplierId,
       keyword: searchText,
-      statusPayment: paymentStatus
+      statusPayment: paymentStatus,
+      loading: loading
     };
     dispatch(sfaGetCollectionListProcess(data));
   };
@@ -96,9 +100,17 @@ const SfaView = props => {
         dataGetCollectionList.data.totalInvoice
       ) {
         const page = limit + 10;
-        setLimit(page)
+
+        setLimit(page);
+        dispatch(SfaGetLoadMore(page));
+        getCollectionList(false, page);
       }
     }
+  };
+
+  const onHandleRefresh = () => {
+    dispatch(sfaGetRefresh());
+    getCollectionList(true, 20);
   };
   /**
    * *********************************
@@ -109,14 +121,15 @@ const SfaView = props => {
   const renderCollectionList = () => {
     return (
       <>
-        {!loadingGetCollectionList && dataGetCollectionList ? (
+        {loadingGetCollectionList ? (
+          renderSkeletonList()
+        ) : (
           <SfaCollectionListView
             dataList={dataGetCollectionList}
             status={dataGetCollectionStatus}
             loadmore={onHandleLoadMore}
+            refersh={onHandleRefresh}
           />
-        ) : (
-          renderSkeletonList()
         )}
       </>
     );
@@ -163,31 +176,27 @@ const SfaView = props => {
         <View style={styles.footer}>
           {!loadingGetCollectionList && dataGetCollectionList ? (
             <View style={{ flexDirection: 'row' }}>
-              <View style={styles.footer1}>
-                <View style={[styles.footerText, { marginBottom: 4 }]}>
-                  <Text style={Fonts.type44}>Total Faktur: </Text>
-                  <Text style={Fonts.type108p}>{data.data.totalInvoice}</Text>
-                </View>
-                <View style={styles.footerText}>
-                  <Text style={Fonts.type44}>Jumlah Faktur: </Text>
-                  <Text style={Fonts.type108p}>
-                    {MoneyFormat(data.data.totalInvoiceAmount)}
-                  </Text>
-                </View>
+              <View style={{marginRight:4}}>
+                <Text style={[Fonts.type47, styles.textLeft]}>Total Faktur</Text>
+                <Text  style={[Fonts.type47, styles.textLeft]}>Total Tagihan</Text>
+                <Text  style={[Fonts.type47, styles.textLeft]}>Total Terbayar</Text>
+                <Text style={[Fonts.type47]}>Total Sisa Tagihan</Text>
               </View>
-              <View style={styles.footer1}>
-                <View style={[styles.footerText, { marginBottom: 4 }]}>
-                  <Text style={Fonts.type44}>Total Terbayar: </Text>
-                  <Text style={Fonts.type108p}>
-                    {MoneyFormat(data.data.totalAmountPaid)}
-                  </Text>
-                </View>
-                <View style={styles.footerText}>
-                  <Text style={Fonts.type44}>Sisa Tagihan: </Text>
-                  <Text style={Fonts.type108p}>
-                    {MoneyFormat(data.data.totalOutstandingAmount)}
-                  </Text>
-                </View>
+              <View>
+                <Text style={[Fonts.type28, styles.textRight]}>
+                  {dataGetCollectionList.data.totalInvoice}
+                </Text>
+                <Text style={[Fonts.type28, styles.textRight]}>
+                  {MoneyFormat(dataGetCollectionList.data.totalInvoiceAmount)}
+                </Text>
+                <Text style={[Fonts.type28, styles.textRight]}>
+                  {MoneyFormat(dataGetCollectionList.data.totalAmountPaid)}
+                </Text>
+                <Text style={[Fonts.type28, styles.textRight]}>
+                  {MoneyFormat(
+                    dataGetCollectionList.data.totalOutstandingAmount
+                  )}
+                </Text>
               </View>
             </View>
           ) : (
@@ -207,7 +216,11 @@ const SfaView = props => {
       <View style={{ flex: 1 }}>
         {renderSearchAndFilter()}
         {renderTagsContent()}
-        <View style={{ flex: 1 }}>{renderCollectionList()}</View>
+        <View style={{ flex: 1 }}>
+          {loadingGetCollectionList
+            ? renderSkeletonList()
+            : renderCollectionList()}
+        </View>
         <View>{renderFooter()}</View>
       </View>
     );
@@ -278,7 +291,9 @@ const styles = StyleSheet.create({
   footerText: {
     display: 'flex',
     flexDirection: 'row'
-  }
+  },
+  textLeft:{textAlign:'right', marginBottom:4},
+  textRight:{ marginBottom: 4}
 });
 
 export default SfaView;
