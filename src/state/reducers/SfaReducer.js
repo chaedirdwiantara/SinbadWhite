@@ -2,37 +2,42 @@ import * as types from '../types';
 import createReducer from './createReducer';
 
 const INITIAL_STATE = {
-/** loading */
-loadingGetCollectionStatus: false,
-loadingSfaGetDetail: false,
-loadingGetCollectionList: false,
-loadingGetReferenceList : false,
-loadingSfaGetPaymentMethod: false,
-loadingSfaGetAllBank: false,
-loadingSfaGetBankAccount: false,
-loadingSfaPostPaymentMethod: false,
-/** data */
-dataGetCollectionStatus: null,
-dataSfaGetDetail: null,
-dataGetCollectionList: null,
-dataGetReferenceList : null,
-dataSfaGetPaymentMethod: null,
-dataSfaGetAllBank: null,
-dataSfaGetBankAccount: null,
-dataSfaPostPaymentMethod: null,
-/** error */
-errorGetCollectionStatus: null,
-errorSfaGetDetail: null,
-errorGetCollectionList: null,
-errorGetReferenceList: null,
-errorSfaGetPaymentMethod: null,
-errorSfaGetAllBank: null,
-errorSfaGetBankAccount: null,
-errorSfaPostPaymentMethod: null,
-}
+  /** loading */
+  loadingGetCollectionStatus: false,
+  loadingSfaGetDetail: false,
+  loadingGetCollectionList: false,
+  loadingGetReferenceList: false,
+  loadingSfaGetPaymentMethod: false,
+  loadingSfaGetAllBank: false,
+  loadingSfaGetBankAccount: false,
+  loadingSfaPostPaymentMethod: false,
+  loadingSfaGetStampList: false,
+  loadingLoadMoreGetSfa: false,
+  refreshGetCollection: false,
+  /** data */
+  dataGetCollectionStatus: null,
+  dataSfaGetDetail: null,
+  dataGetCollectionList: null,
+  dataGetReferenceList: null,
+  dataSfaGetPaymentMethod: null,
+  dataSfaGetAllBank: null,
+  dataSfaGetBankAccount: null,
+  dataSfaPostPaymentMethod: null,
+  dataSfaGetStampList: null,
+  /** error */
+  errorGetCollectionStatus: null,
+  errorSfaGetDetail: null,
+  errorGetCollectionList: null,
+  errorGetReferenceList: null,
+  errorSfaGetPaymentMethod: null,
+  errorSfaGetAllBank: null,
+  errorSfaGetBankAccount: null,
+  errorSfaPostPaymentMethod: null,
+  errorSfaGetStampList: null
+};
 
 export const sfa = createReducer(INITIAL_STATE, {
-     /**
+  /**
    * ==========================
    * GET COLLECTION STATUS
    * ==========================
@@ -59,7 +64,7 @@ export const sfa = createReducer(INITIAL_STATE, {
       errorGetCollectionStatus: action.payload
     };
   },
-     /**
+  /**
    * ==========================
    * GET SFA DETAIL
    * ==========================
@@ -86,7 +91,7 @@ export const sfa = createReducer(INITIAL_STATE, {
       errorSfaGetDetail: action.payload
     };
   },
-     /**
+  /**
    * ==========================
    * GET COLLECTION LIST
    * ==========================
@@ -94,15 +99,16 @@ export const sfa = createReducer(INITIAL_STATE, {
   [types.SFA_GET_COLLECTION_PROCESS](state, action) {
     return {
       ...state,
-      loadingGetCollectionList: true,
-      dataGetCollectionList: null,
-      errorGetCollectionList: null
+      loadingGetCollectionList: action.payload.loading,
+      errorGetCollectionList: null,
     };
   },
   [types.SFA_GET_COLLECTION_SUCCESS](state, action) {
     return {
       ...state,
       loadingGetCollectionList: false,
+      loadingLoadMoreGetSfa: false,
+      refreshGetCollection: false,
       dataGetCollectionList: action.payload
     };
   },
@@ -110,11 +116,12 @@ export const sfa = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetCollectionList: false,
+      refreshGetCollection: false,
       errorGetCollectionList: action.payload
     };
   },
 
-     /**
+  /**
    * ==========================
    * GET REFERENCE LIST
    * ==========================
@@ -123,7 +130,7 @@ export const sfa = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetReferenceList: true,
-     dataGetReferenceList: null,
+      dataGetReferenceList: null,
       errorGetReferenceList: null
     };
   },
@@ -142,7 +149,7 @@ export const sfa = createReducer(INITIAL_STATE, {
     };
   },
 
-    /**
+  /**
    * ==========================
    * GET PAYMENT METHOD
    * ==========================
@@ -169,7 +176,7 @@ export const sfa = createReducer(INITIAL_STATE, {
       errorSfaGetPaymentMethod: action.payload
     };
   },
-   /**
+  /**
    * ==========================
    * GET ALL BANK
    * ==========================
@@ -194,7 +201,7 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       loadingSfaGetAllBank: false,
       errorSfaGetAllBank: action.payload
-    }
+    };
   },
 
   /**
@@ -225,7 +232,7 @@ export const sfa = createReducer(INITIAL_STATE, {
     };
   },
 
-   /**
+  /**
    * ==========================
    * POST PAYMENT METHOD
    * ==========================
@@ -252,4 +259,49 @@ export const sfa = createReducer(INITIAL_STATE, {
       errorSfaPostPaymentMethod: action.payload
     };
   },
-})
+
+  /**
+   * ==========================
+   * GET STAMP LIST
+   * ==========================
+   */
+  [types.SFA_GET_STAMP_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetStampList: true,
+      dataSfaGetStampList: null,
+      errorSfaGetStampList: null
+    };
+  },
+  [types.SFA_GET_STAMP_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetStampList: false,
+      dataSfaGetStampList: action.payload
+    };
+  },
+  [types.SFA_GET_STAMP_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaGetStampList: false,
+      errorSfaGetStampList: action.payload
+    };
+  },
+
+  [types.SFA_GET_LOADMORE](state, action) {
+    return {
+      ...state,
+      loadingLoadMoreGetSfa: true,
+      pageGetSfa: action.payload
+    };
+  },
+
+  [types.SFA_GET_REFRESH](state, action) {
+    return {
+      ...state,
+      refreshGetCollection: true,
+      loadingGetCollectionList: true,
+      dataGetCollectionList: []
+    };
+  },
+});

@@ -440,6 +440,7 @@ const SfaAddTagihanView = props => {
   const renderBillingCheque = id => {
     return (
       <SfaAddTagihanCheque
+        collectionMethod={collectionMethod}
         status={methodStatus}
         paymentCollectionTypeId={id}
         referenceCode={dataReferenceCode}
@@ -486,6 +487,7 @@ const SfaAddTagihanView = props => {
   const renderBillingGiro = id => {
     return (
       <SfaAddTagihanGiro  
+      collectionMethod={collectionMethod}
       status={methodStatus}
       paymentCollectionTypeId={id}
       referenceCode={dataReferenceCode}
