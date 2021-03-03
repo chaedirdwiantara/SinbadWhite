@@ -178,7 +178,8 @@ import {
       borderBottomWidth: 1,
       paddingHorizontal: 0,
       paddingVertical: 0,
-      paddingBottom: 16,
+      paddingBottom: 8,
+      paddingTop: 8,
       borderBottomColor: Color.fontBlack40
     },
     boxError: {

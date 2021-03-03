@@ -24,6 +24,7 @@ import { sfaGetPaymentMethodProcess } from '../../state/actions';
 function ModalCollectionMethod(props) {
   const dispatch = useDispatch();
   const { dataSfaGetPaymentMethod} = useSelector(state => state.sfa);
+  const {selectedMerchant} = useSelector(state => state.merchant);
 
   /**
    * =======================
@@ -33,8 +34,8 @@ function ModalCollectionMethod(props) {
 
   useEffect(() => {
     const data = {
-      supplierId : 2,
-      storeId: 101
+      supplierId : selectedMerchant.supplierId,
+      storeId: selectedMerchant.storeId
     }
     dispatch(sfaGetPaymentMethodProcess(data))
   }, []);
@@ -80,7 +81,12 @@ function ModalCollectionMethod(props) {
           <TouchableOpacity 
             disabled={item.status === "disabled" ? true : false} 
             onPress={() => props.selectCollection(item)}
-            style={{backgroundColor: item.status === "disabled" ? masterColor.fontBlack10 : null}}
+            style={
+              {
+                backgroundColor: item.status === "disabled" ? masterColor.fontBlack10 : null,
+                opacity: item.status === "disabled" ? 0.5 : null
+              }
+            }
           >
             <View style={{margin: 16, opacity: item.status === "disabled" ? 0.5 : null}}>
               <Text style={Fonts.type24}>{item.name}</Text>
