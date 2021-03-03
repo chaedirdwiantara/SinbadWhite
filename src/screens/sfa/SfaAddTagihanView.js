@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -42,7 +42,13 @@ const SfaAddTagihanView = props => {
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false);
   const [methodStatus, setMethodStatus] = useState('available');
   const [disabled, setDisabled] = useState(true);
-  const { dataSfaPostPaymentMethod, errorSfaPostPaymentMethod,  loadingSfaPostPaymentMethod, loadingSfaPostCollectionPayment} = useSelector(state => state.sfa);
+  const { 
+    dataSfaPostPaymentMethod, 
+    dataSfaPostCollectionPayment,
+    errorSfaPostPaymentMethod,  
+    loadingSfaPostPaymentMethod, 
+    loadingSfaPostCollectionPayment
+  } = useSelector(state => state.sfa);
 
   //DATA PAYMENT CASH
   const [cash, setCash] = useState(0);
@@ -63,11 +69,26 @@ const SfaAddTagihanView = props => {
   const [isUsedStamp, setIsUsedStamp] = useState(false)
   const [isUseNoReference, setIsUseNoReference] = useState(false)
 
+  //USEREF
+  const prevDataSfaPostPaymentMethodRef = useRef(dataSfaPostPaymentMethod)
+  const prevDataSfaPostCollectionPaymentRef = useRef(dataSfaPostCollectionPayment)
+
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
+
+  useEffect(() => {
+    prevDataSfaPostPaymentMethodRef.current = dataSfaPostPaymentMethod;
+  }, []);
+  const prevDataSfaPostPaymentMethod = prevDataSfaPostPaymentMethodRef.current
+
+  useEffect(() => {
+    prevDataSfaPostCollectionPaymentRef.current = dataSfaPostCollectionPayment;
+  }, []); 
+  const prevDataSfaPostCollectionPayment = prevDataSfaPostCollectionPaymentRef.current
+
   const selectedCollectionMethod = data => {
     setCollectionMethod(data);
     setOpenCollectionMethod(false);
@@ -165,7 +186,6 @@ const SfaAddTagihanView = props => {
         }
         console.log("pake reference");
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
-        NavigationService.navigate('SfaDetailView', {orderParcelId: orderParcelId})
       } else {
         console.log("gak pake reference");
         dispatch(sfaPostPaymentMethodProcess(data));
@@ -192,20 +212,30 @@ const SfaAddTagihanView = props => {
 
   useEffect(() => {
     const orderParcelId = props.navigation.state.params.data.id
-    if (dataSfaPostPaymentMethod) {
-      const dataPostPayment = {
-        supplierId: parseInt(selectedMerchant.supplierId),
-        userSellerId: parseInt(selectedMerchant.id),
-        orderParcelId: orderParcelId,
-        storeId: parseInt(selectedMerchant.storeId),
-        paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
-        amount: cash
+    if (prevDataSfaPostPaymentMethod !== dataSfaPostPaymentMethod) {
+      if (dataSfaPostPaymentMethod) {
+        const dataPostPayment = {
+          supplierId: parseInt(selectedMerchant.supplierId),
+          userSellerId: parseInt(selectedMerchant.id),
+          orderParcelId: orderParcelId,
+          storeId: parseInt(selectedMerchant.storeId),
+          paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
+          amount: cash
+        }
+        dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
       }
-      console.log("iniii data:", dataPostPayment);
-      // dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
-      // NavigationService.navigate('SfaDetailView', {orderParcelId: orderParcelId})
     }
   }, [dataSfaPostPaymentMethod])
+
+  useEffect(()=> {
+    const orderParcelId = props.navigation.state.params.data.id
+    if (prevDataSfaPostCollectionPayment !== dataSfaPostCollectionPayment){
+      if(dataSfaPostCollectionPayment) {
+        dispatch(sfaGetDetailProcess(orderParcelId))
+        NavigationService.navigate('SfaDetailView', {orderParcelId: orderParcelId})
+      }
+    }
+  }, [dataSfaPostCollectionPayment])
 
   useEffect(() => {
     if (loadingSfaPostCollectionPayment || loadingSfaPostPaymentMethod) {
