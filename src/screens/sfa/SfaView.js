@@ -35,22 +35,19 @@ import {
   sfaGetCollectionStatusProcess
 } from '../../state/actions/SfaAction';
 
-const SfaView = (props) => {
+const SfaView = props => {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('');
   const {
     loadingGetCollectionStatus,
     dataGetCollectionStatus,
     loadingGetCollectionList,
-    dataGetCollectionList,
-
+    dataGetCollectionList
   } = useSelector(state => state.sfa);
-  const {
-   selectedMerchant
-  } = useSelector(state => state.merchant);
+  const { selectedMerchant } = useSelector(state => state.merchant);
   const [selectedTagStatus, setSelectedTagStatus] = useState(0);
-  const [paymentStatus, setPaymentStatus] = useState('')
-  
+  const [paymentStatus, setPaymentStatus] = useState('');
+  const [limit, setLimit] = useState(20)
 
   /**
    * =======================
@@ -59,21 +56,21 @@ const SfaView = (props) => {
    */
   useEffect(() => {
     getCollectionList();
-  }, [paymentStatus, searchText]);
+  }, [paymentStatus, searchText, limit]);
 
   useEffect(() => {
     getCollectionStatus();
-  }, [])
+  }, []);
 
   const getCollectionStatus = () => {
     dispatch(sfaGetCollectionStatusProcess());
   };
 
   const getCollectionList = () => {
-    const storeId = parseInt(selectedMerchant.storeId)
-    const supplierId = parseInt(selectedMerchant.supplierId)
+    const storeId = parseInt(selectedMerchant.storeId);
+    const supplierId = parseInt(selectedMerchant.supplierId);
     const data = {
-      limit: 20,
+      limit: limit,
       storeId: storeId,
       supplierId: supplierId,
       keyword: searchText,
@@ -83,15 +80,26 @@ const SfaView = (props) => {
   };
 
   /** PARENT FUNCTION */
-  const parentFunction = (data) => {
-    if(data.type === 'status') {
-      setPaymentStatus(dataGetCollectionStatus.data[data.data].status)
-      setSelectedTagStatus(data.data)
-    }  else if (data.type === 'search') {
-      setSearchText(data.data)
-  }
-  }
-console.log(searchText, 'cek');
+  const parentFunction = data => {
+    if (data.type === 'status') {
+      setPaymentStatus(dataGetCollectionStatus.data[data.data].status);
+      setSelectedTagStatus(data.data);
+    } else if (data.type === 'search') {
+      setSearchText(data.data);
+    }
+  };
+
+  const onHandleLoadMore = () => {
+    if (dataGetCollectionList) {
+      if (
+        dataGetCollectionList.data.orderParcels.length <
+        dataGetCollectionList.data.totalInvoice
+      ) {
+        const page = limit + 10;
+        setLimit(page)
+      }
+    }
+  };
   /**
    * *********************************
    * RENDER VIEW
@@ -101,13 +109,18 @@ console.log(searchText, 'cek');
   const renderCollectionList = () => {
     return (
       <>
-      {!loadingGetCollectionList && dataGetCollectionList? 
-      <SfaCollectionListView dataList={dataGetCollectionList} status={dataGetCollectionStatus}/>:
-      renderSkeletonList()}
-        </>
-    )
-  
-    }
+        {!loadingGetCollectionList && dataGetCollectionList ? (
+          <SfaCollectionListView
+            dataList={dataGetCollectionList}
+            status={dataGetCollectionStatus}
+            loadmore={onHandleLoadMore}
+          />
+        ) : (
+          renderSkeletonList()
+        )}
+      </>
+    );
+  };
   /** === RENDER SKELETON TAGS === */
   const renderSkeletonTags = () => {
     return (
@@ -194,12 +207,8 @@ console.log(searchText, 'cek');
       <View style={{ flex: 1 }}>
         {renderSearchAndFilter()}
         {renderTagsContent()}
-        <ScrollView>
-          {renderCollectionList()}
-          
-          </ScrollView>
-
-        {renderFooter()}
+        <View style={{ flex: 1 }}>{renderCollectionList()}</View>
+        <View>{renderFooter()}</View>
       </View>
     );
   };
@@ -221,15 +230,6 @@ console.log(searchText, 'cek');
             style={{ paddingRight: 16, justifyContent: 'center' }}
             onPress={() => console.log('clicked')}
           >
-            {/* {this.state.portfolioId.length > 0 ||
-            this.state.dateFilter.dateGte !== '' ||
-            this.state.dateFilter.dateLte !== '' ? (
-              <View style={styles.circleFilter} />
-            ) : (
-              <View />
-            )
-             } */}
-
             <Image
               source={require('../../assets/icons/pdp/filter.png')}
               style={{ height: 24, width: 24 }}
@@ -259,7 +259,7 @@ console.log(searchText, 'cek');
       )} */}
     </>
   );
-}
+};
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
@@ -268,6 +268,7 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: 24,
     paddingVertical: 16
+    // position:'absolute'
     // display: 'flex',
     // flexDirection: 'row'
   },

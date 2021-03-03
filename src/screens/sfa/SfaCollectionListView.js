@@ -36,6 +36,7 @@ const checkpayment =(item) => {
       ? checkpayment(item)
       : '';
     }
+
   /**
    * =======================
    * RENDER VIEW
@@ -47,8 +48,6 @@ const checkpayment =(item) => {
       <View style={styles.flatListContainer}>
       { props.dataList.data.orderParcels !== null?  
         <FlatList
-          //   contentContainerStyle={styles.flatListContainer}
-          //   ItemSeparatorComponent={this.renderSeparator}
           data={props.dataList.data.orderParcels}
           renderItem={renderItem}
           //   numColumns={1}
@@ -56,7 +55,7 @@ const checkpayment =(item) => {
           //   refreshing={this.props.history.refreshGetHistory}
           //   onRefresh={this.onHandleRefresh}
           onEndReachedThreshold={0.2}
-          //   onEndReached={this.onHandleLoadMore}
+          onEndReached={()=>props.loadmore()}
           showsVerticalScrollIndicator
         />
        : 
