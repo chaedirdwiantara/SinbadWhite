@@ -206,7 +206,20 @@ const SfaAddTagihanView = props => {
         isUsedStamp: isUsedStamp,
         stampId: stamp
       }
-      dispatch(sfaPostPaymentMethodProcess(data));
+      if (isUseNoReference === true) {
+        const dataPostPayment = {
+          supplierId: parseInt(selectedMerchant.supplierId),
+          userSellerId: parseInt(selectedMerchant.id),
+          orderParcelId: orderParcelId,
+          storeId: parseInt(selectedMerchant.storeId),
+          paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
+          amount: billingValue
+        }
+      
+        // dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
+      } else {
+        dispatch(sfaPostPaymentMethodProcess(data));
+      }
     }
   };
 
@@ -272,7 +285,7 @@ const SfaAddTagihanView = props => {
   const dataTransferImage = data => {
     setTransferImage(data);
   };
-
+  
   const dataIssuedDate = data => {
     setIssuedDate(data);
   };
@@ -341,6 +354,8 @@ const SfaAddTagihanView = props => {
             setDisabled(true);
           }
         } else if ( isUsedStamp === false){
+          console.log('no stamp', referenceCode, bankSource, issuedDate, dueDate, balance, billingValue);
+
           if (
             referenceCode === null ||
             bankSource === null ||
@@ -562,6 +577,7 @@ const SfaAddTagihanView = props => {
         stamp={dataStamp}
         remainingBilling={props.navigation.state.params.data.remainingBilling}
         isUsedStamp={statusStamp}
+        useNoReference={useNoReference}
       />
     );
   };
