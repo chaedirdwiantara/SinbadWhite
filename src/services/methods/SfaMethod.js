@@ -68,7 +68,6 @@ function postPaymentMethod(data) {
 
 /** POST COLLECTION PAYMENT */
 function postCollectionPayment(data) {
-  console.log("param:", data);
   return ApiRest({
     path: 'collection/v1/payment',
     method: 'POST',
