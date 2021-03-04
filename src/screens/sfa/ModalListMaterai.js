@@ -17,53 +17,27 @@ import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
+import { sfaGetStampListProcess } from '../../state/actions';
 
 function ModalListMaterai(props) {
   const dispatch = useDispatch();
-  const [dataStamp, setDataStamp] = useState({
-        "data": [
-            {
-                "id": 1,
-                "name": "Rp3.000",
-                "nominal": 3000
-            },
-            {
-                "id": 2,
-                "name": "Rp6.000",
-                "nominal": 6000
-            },
-            {
-                "id": 3,
-                "name": "Rp9.000",
-                "nominal": 9000
-            },
-            {
-                "id": 4,
-                "name": "Rp10.000",
-                "nominal": 10000
-            },
-            {
-                "id": 5,
-                "name": "Rp12.000",
-                "nominal": 12000
-            }
-        ]
-    });
-
+  const {
+    dataSfaGetStampList
+   } = useSelector(state => state.sfa);
+  
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
-  /* necessary lines for Integrate task later
-//   useEffect(() => {
-//     getBankAccount()
-//   }, []);
-/* necessary lines for Integrate task later
-   /** GET BANK ACCOUNT LIST DATA */
-  //    const getBankAccount = () => {
-  //     dispatch(sfaGetBankAccountProcess(data))
-  //   }
+  useEffect(() => {
+    getStampList()
+  }, []);
+
+   /** GET STAMP LIST DATA */
+     const getStampList = () => {
+      dispatch(sfaGetStampListProcess())
+    }
 
   /**
    * *********************************
@@ -101,7 +75,7 @@ function ModalListMaterai(props) {
 
 
   const renderCollectionMethod = () => {
-    const data = dataStamp;
+    const data = dataSfaGetStampList;
     return data.data.map((item, index) => {
       return (
         <View key={index}>
@@ -125,7 +99,7 @@ function ModalListMaterai(props) {
     return (
       <>
         <View style={styles.contentContainer}>
-          {dataStamp ? renderCollectionMethod() : <LoadingPage />}
+          {dataSfaGetStampList? renderCollectionMethod() : <LoadingPage />}
         </View>
       </>
     );

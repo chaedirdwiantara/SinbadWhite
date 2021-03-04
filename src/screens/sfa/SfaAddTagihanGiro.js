@@ -208,8 +208,9 @@ const renderContent = () => {
             <View style={{ marginRight: 16}}>
               <TouchableOpacity
                 onPress={() =>setOpenModalReference(true)}
+                disabled={props.collectionMethod.balance <= 0 ? true : false}
                 style={{
-                  backgroundColor: 'red',
+                  backgroundColor: props.collectionMethod.balance <= 0 ? masterColor.fontRed10 : masterColor.mainColor,
                   height: 36,
                   width: 66,
                   borderRadius: 8,
