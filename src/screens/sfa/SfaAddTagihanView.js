@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -29,7 +29,12 @@ import SfaAddTagihanCheque from './SfaAddTagihanCheque';
 import SfaAddTagihanTransfer from './SfaAddTagihanTransfer';
 import SfaAddTagihanPromo from './SfaAddTagihanPromo';
 import SfaAddTagihanGiro from './SfaAddTagihanGiro';
-import { sfaPostPaymentMethodProcess } from '../../state/actions';
+import { 
+  sfaPostPaymentMethodProcess, 
+  sfaPostCollectionPaymentProcess,
+  sfaGetDetailProcess,
+} from '../../state/actions';
+import NavigationService from '../../navigation/NavigationService';
 
 const SfaAddTagihanView = props => {
   const dispatch = useDispatch();
@@ -37,6 +42,13 @@ const SfaAddTagihanView = props => {
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false);
   const [methodStatus, setMethodStatus] = useState('available');
   const [disabled, setDisabled] = useState(true);
+  const { 
+    dataSfaPostPaymentMethod, 
+    dataSfaPostCollectionPayment,
+    errorSfaPostPaymentMethod,  
+    loadingSfaPostPaymentMethod, 
+    loadingSfaPostCollectionPayment
+  } = useSelector(state => state.sfa);
 
   //DATA PAYMENT CASH
   const [cash, setCash] = useState(0);
@@ -55,12 +67,28 @@ const SfaAddTagihanView = props => {
   const [stamp, setStamp] = useState(null);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [isUsedStamp, setIsUsedStamp] = useState(false)
+  const [isUseNoReference, setIsUseNoReference] = useState(false)
+
+  //USEREF
+  const prevDataSfaPostPaymentMethodRef = useRef(dataSfaPostPaymentMethod)
+  const prevDataSfaPostCollectionPaymentRef = useRef(dataSfaPostCollectionPayment)
 
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
+
+  useEffect(() => {
+    prevDataSfaPostPaymentMethodRef.current = dataSfaPostPaymentMethod;
+  }, []);
+  const prevDataSfaPostPaymentMethod = prevDataSfaPostPaymentMethodRef.current
+
+  useEffect(() => {
+    prevDataSfaPostCollectionPaymentRef.current = dataSfaPostCollectionPayment;
+  }, []); 
+  const prevDataSfaPostCollectionPayment = prevDataSfaPostCollectionPaymentRef.current
+
   const selectedCollectionMethod = data => {
     setCollectionMethod(data);
     setOpenCollectionMethod(false);
@@ -97,7 +125,8 @@ const SfaAddTagihanView = props => {
     }
   };
 
-  const saveCollection = () => {
+  const saveCollection = async () => {
+    const orderParcelId = props.navigation.state.params.data.id
     if (collectionMethod.code === 'cash') {
       const data = {
         paymentCollectionTypeId: parseInt(collectionMethod.id),
@@ -109,15 +138,33 @@ const SfaAddTagihanView = props => {
       dispatch(sfaPostPaymentMethodProcess(data));
     }
     if (collectionMethod.code === 'transfer') {
-      console.log({
+      const data = {
+        paymentCollectionTypeId: parseInt(collectionMethod.id),
+        storeId: parseInt(selectedMerchant.storeId),
+        supplierId: parseInt(selectedMerchant.supplierId),
+        userId: parseInt(selectedMerchant.id),
         referenceCode: referenceCode,
-        bankSource: bankSource,
-        bankAccount: bankAccount,
-        transferDate: transferDate,
-        transferValue: transferValue,
-        billingValue: billingValue,
-        transferImage: transferImage
-      });
+        balance: transferValue,
+        issuedDate: moment(new Date(transferDate)).format('YYYY-MM-DD HH:mm:ss'),
+        bankId: bankSource.id,
+        bankToAccountId: bankAccount.id,
+        filename: transferImage.fileName,
+        type: transferImage.fileType,
+        image: transferImage.fileData,
+      }
+      if (isUseNoReference === true) {
+        const dataPostPayment = {
+          supplierId: parseInt(selectedMerchant.supplierId),
+          userSellerId: parseInt(selectedMerchant.id),
+          orderParcelId: orderParcelId,
+          storeId: parseInt(selectedMerchant.storeId),
+          paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
+          amount: billingValue
+        }
+        dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
+      } else {
+        dispatch(sfaPostPaymentMethodProcess(data));
+      }
     }
     if(collectionMethod.code === 'check' || collectionMethod.code === 'giro'){
       const data ={
@@ -136,6 +183,45 @@ const SfaAddTagihanView = props => {
       dispatch(sfaPostPaymentMethodProcess(data));
     }
   };
+
+  useEffect(() => {
+    const orderParcelId = props.navigation.state.params.data.id
+    if (prevDataSfaPostPaymentMethod !== dataSfaPostPaymentMethod) {
+      if (dataSfaPostPaymentMethod) {
+        const dataPostPayment = {
+          supplierId: parseInt(selectedMerchant.supplierId),
+          userSellerId: parseInt(selectedMerchant.id),
+          orderParcelId: orderParcelId,
+          storeId: parseInt(selectedMerchant.storeId),
+          paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
+          amount: collectionMethod.code === 'cash' 
+          ? cash 
+          : collectionMethod.code === 'transfer' 
+          ? billingValue
+          : cash
+        }
+        dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
+      }
+    }
+  }, [dataSfaPostPaymentMethod])
+
+  useEffect(()=> {
+    const orderParcelId = props.navigation.state.params.data.id
+    if (prevDataSfaPostCollectionPayment !== dataSfaPostCollectionPayment){
+      if(dataSfaPostCollectionPayment) {
+        dispatch(sfaGetDetailProcess(orderParcelId))
+        NavigationService.navigate('SfaDetailView', {orderParcelId: orderParcelId})
+      }
+    }
+  }, [dataSfaPostCollectionPayment])
+
+  useEffect(() => {
+    if (loadingSfaPostCollectionPayment || loadingSfaPostPaymentMethod) {
+      setDisabled(true)
+    } else {
+      setDisabled(false)
+    }
+  }, [loadingSfaPostCollectionPayment, loadingSfaPostPaymentMethod])
 
   const dataReferenceCode = data => {
     setReferenceCode(data);
@@ -182,6 +268,10 @@ const SfaAddTagihanView = props => {
   };
   const statusStamp = data => {
     setIsUsedStamp(data)
+  }
+
+  const useNoReference = data => {
+    setIsUseNoReference(data)
   }
 
   useEffect(() => {
@@ -241,8 +331,6 @@ const SfaAddTagihanView = props => {
             setDisabled(false);
           }
         }
-
-
        
       }
     }
@@ -404,7 +492,7 @@ const SfaAddTagihanView = props => {
     return (
       <View style={{ marginTop: 16 }}>
         <View>
-          <Text style={Fonts.type10}>Jumlah Penagihan</Text>
+          <Text style={Fonts.type10}>*Jumlah Penagihan</Text>
         </View>
         <View
           style={[
@@ -469,6 +557,7 @@ const SfaAddTagihanView = props => {
         transferValue={dataTranserValue}
         billingValue={dataBillingValue}
         transferImage={dataTransferImage}
+        useNoReference={useNoReference}
       />
     );
   };
@@ -525,6 +614,7 @@ const SfaAddTagihanView = props => {
     return (
       <ButtonSingle
         disabled={disabled}
+        loading={loadingSfaPostCollectionPayment || loadingSfaPostPaymentMethod ? true : false}
         title={'Simpan'}
         borderRadius={4}
         onPress={() => saveCollection()}

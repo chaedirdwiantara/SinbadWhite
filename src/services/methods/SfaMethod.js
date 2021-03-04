@@ -66,6 +66,15 @@ function postPaymentMethod(data) {
   });
 }
 
+/** POST COLLECTION PAYMENT */
+function postCollectionPayment(data) {
+  return ApiRest({
+    path: 'collection/v1/payment',
+    method: 'POST',
+    params: data
+  });
+}
+
 /** GET STAMPS*/
 function getStamp(data) {
   return ApiRest({
@@ -84,5 +93,6 @@ function getStamp(data) {
     getAllBank,
     getBankAccount,
     postPaymentMethod,
+    postCollectionPayment,    
     getStamp
   };

@@ -45,6 +45,11 @@ export const SFA_POST_PAYMENT_METHOD_PROCESS = 'SfaPostPaymentMethodProcess';
 export const SFA_POST_PAYMENT_METHOD_SUCCESS = 'SfaPostPaymentMethodSuccess';
 export const SFA_POST_PAYMENT_METHOD_FAILED = 'SfaPostPaymentMethodFailed';
 
+/** POST COLLECTION PAYMENT */
+export const SFA_POST_COLLECTION_PAYMENT_PROCESS = 'SfaPostCollectionPaymentProcess';
+export const SFA_POST_COLLECTION_PAYMENT_SUCCESS = 'SfaPostCollectionPaymentSuccess';
+export const SFA_POST_COLLECTION_PAYMENT_FAILED = 'SfaPostCollectionPaymentFailed';
+
 /** GET STAMP LIST */
 export const SFA_GET_STAMP_PROCESS = 'SfaGetStampProcess';
 export const SFA_GET_STAMP_SUCCESS = 'SfaGetStampSuccess';
