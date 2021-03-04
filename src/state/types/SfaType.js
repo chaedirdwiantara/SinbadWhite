@@ -18,6 +18,8 @@ export const SFA_GET_DETAIL_FAILED = 'SfaGetDetailFailed';
 export const SFA_GET_COLLECTION_PROCESS = 'SfaGetCollectionProcess';
 export const SFA_GET_COLLECTION_SUCCESS = 'SfaGetCollectionSuccess';
 export const SFA_GET_COLLECTION_FAILED = 'SfaGetCollectionFailed';
+export const SFA_GET_LOADMORE = 'SfaGetLoadMore';
+export const SFA_GET_REFRESH = 'SfayGetRefresh';
 
 /** GET REFERENCE LIST */
 export const SFA_GET_REFERENCE_PROCESS = 'SfaGetReferenceProcess';
@@ -47,3 +49,8 @@ export const SFA_POST_PAYMENT_METHOD_FAILED = 'SfaPostPaymentMethodFailed';
 export const SFA_POST_COLLECTION_PAYMENT_PROCESS = 'SfaPostCollectionPaymentProcess';
 export const SFA_POST_COLLECTION_PAYMENT_SUCCESS = 'SfaPostCollectionPaymentSuccess';
 export const SFA_POST_COLLECTION_PAYMENT_FAILED = 'SfaPostCollectionPaymentFailed';
+
+/** GET STAMP LIST */
+export const SFA_GET_STAMP_PROCESS = 'SfaGetStampProcess';
+export const SFA_GET_STAMP_SUCCESS = 'SfaGetStampSuccess';
+export const SFA_GET_STAMP_FAILED = 'SfaGetStampFailed';

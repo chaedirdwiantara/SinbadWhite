@@ -32,10 +32,12 @@ import SfaCollectionListView from './SfaCollectionListView';
 import { ScrollView } from 'react-native-gesture-handler';
 import {
   sfaGetCollectionListProcess,
-  sfaGetCollectionStatusProcess
+  sfaGetCollectionStatusProcess,
+  SfaGetLoadMore,
+  sfaGetRefresh
 } from '../../state/actions/SfaAction';
 
-const SfaView = (props) => {
+const SfaView = props => {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('');
   const {
@@ -43,14 +45,12 @@ const SfaView = (props) => {
     dataGetCollectionStatus,
     loadingGetCollectionList,
     dataGetCollectionList,
-
+    loadingLoadMoreGetSfa
   } = useSelector(state => state.sfa);
-  const {
-   selectedMerchant
-  } = useSelector(state => state.merchant);
+  const { selectedMerchant } = useSelector(state => state.merchant);
   const [selectedTagStatus, setSelectedTagStatus] = useState(0);
-  const [paymentStatus, setPaymentStatus] = useState('')
-  
+  const [paymentStatus, setPaymentStatus] = useState('');
+  const [limit, setLimit] = useState(20);
 
   /**
    * =======================
@@ -58,40 +58,60 @@ const SfaView = (props) => {
    * =======================
    */
   useEffect(() => {
-    getCollectionList();
+    getCollectionList(true, 20);
   }, [paymentStatus, searchText]);
 
   useEffect(() => {
     getCollectionStatus();
-  }, [])
+  }, []);
 
   const getCollectionStatus = () => {
     dispatch(sfaGetCollectionStatusProcess());
   };
 
-  const getCollectionList = () => {
-    const storeId = parseInt(selectedMerchant.storeId)
-    const supplierId = parseInt(selectedMerchant.supplierId)
+  const getCollectionList = (loading, page) => {
+    const storeId = parseInt(selectedMerchant.storeId);
+    const supplierId = parseInt(selectedMerchant.supplierId);
     const data = {
-      limit: 20,
+      limit: page,
       storeId: storeId,
       supplierId: supplierId,
       keyword: searchText,
-      statusPayment: paymentStatus
+      statusPayment: paymentStatus,
+      loading: loading
     };
     dispatch(sfaGetCollectionListProcess(data));
   };
 
   /** PARENT FUNCTION */
-  const parentFunction = (data) => {
-    if(data.type === 'status') {
-      setPaymentStatus(dataGetCollectionStatus.data[data.data].status)
-      setSelectedTagStatus(data.data)
-    }  else if (data.type === 'search') {
-      setSearchText(data.data)
-  }
-  }
-console.log(searchText, 'cek');
+  const parentFunction = data => {
+    if (data.type === 'status') {
+      setPaymentStatus(dataGetCollectionStatus.data[data.data].status);
+      setSelectedTagStatus(data.data);
+    } else if (data.type === 'search') {
+      setSearchText(data.data);
+    }
+  };
+
+  const onHandleLoadMore = () => {
+    if (dataGetCollectionList) {
+      if (
+        dataGetCollectionList.data.orderParcels.length <
+        dataGetCollectionList.data.totalInvoice
+      ) {
+        const page = limit + 10;
+
+        setLimit(page);
+        dispatch(SfaGetLoadMore(page));
+        getCollectionList(false, page);
+      }
+    }
+  };
+
+  const onHandleRefresh = () => {
+    dispatch(sfaGetRefresh());
+    getCollectionList(true, 20);
+  };
   /**
    * *********************************
    * RENDER VIEW
@@ -101,13 +121,19 @@ console.log(searchText, 'cek');
   const renderCollectionList = () => {
     return (
       <>
-      {!loadingGetCollectionList && dataGetCollectionList? 
-      <SfaCollectionListView dataList={dataGetCollectionList} status={dataGetCollectionStatus}/>:
-      renderSkeletonList()}
-        </>
-    )
-  
-    }
+        {loadingGetCollectionList ? (
+          renderSkeletonList()
+        ) : (
+          <SfaCollectionListView
+            dataList={dataGetCollectionList}
+            status={dataGetCollectionStatus}
+            loadmore={onHandleLoadMore}
+            refersh={onHandleRefresh}
+          />
+        )}
+      </>
+    );
+  };
   /** === RENDER SKELETON TAGS === */
   const renderSkeletonTags = () => {
     return (
@@ -150,31 +176,27 @@ console.log(searchText, 'cek');
         <View style={styles.footer}>
           {!loadingGetCollectionList && dataGetCollectionList ? (
             <View style={{ flexDirection: 'row' }}>
-              <View style={styles.footer1}>
-                <View style={[styles.footerText, { marginBottom: 4 }]}>
-                  <Text style={Fonts.type44}>Total Faktur: </Text>
-                  <Text style={Fonts.type108p}>{data.data.totalInvoice}</Text>
-                </View>
-                <View style={styles.footerText}>
-                  <Text style={Fonts.type44}>Jumlah Faktur: </Text>
-                  <Text style={Fonts.type108p}>
-                    {MoneyFormat(data.data.totalInvoiceAmount)}
-                  </Text>
-                </View>
+              <View style={{marginRight:4}}>
+                <Text style={[Fonts.type47, styles.textLeft]}>Total Faktur</Text>
+                <Text  style={[Fonts.type47, styles.textLeft]}>Total Tagihan</Text>
+                <Text  style={[Fonts.type47, styles.textLeft]}>Total Terbayar</Text>
+                <Text style={[Fonts.type47]}>Total Sisa Tagihan</Text>
               </View>
-              <View style={styles.footer1}>
-                <View style={[styles.footerText, { marginBottom: 4 }]}>
-                  <Text style={Fonts.type44}>Total Terbayar: </Text>
-                  <Text style={Fonts.type108p}>
-                    {MoneyFormat(data.data.totalAmountPaid)}
-                  </Text>
-                </View>
-                <View style={styles.footerText}>
-                  <Text style={Fonts.type44}>Sisa Tagihan: </Text>
-                  <Text style={Fonts.type108p}>
-                    {MoneyFormat(data.data.totalOutstandingAmount)}
-                  </Text>
-                </View>
+              <View>
+                <Text style={[Fonts.type28, styles.textRight]}>
+                  {dataGetCollectionList.data.totalInvoice}
+                </Text>
+                <Text style={[Fonts.type28, styles.textRight]}>
+                  {MoneyFormat(dataGetCollectionList.data.totalInvoiceAmount)}
+                </Text>
+                <Text style={[Fonts.type28, styles.textRight]}>
+                  {MoneyFormat(dataGetCollectionList.data.totalAmountPaid)}
+                </Text>
+                <Text style={[Fonts.type28, styles.textRight]}>
+                  {MoneyFormat(
+                    dataGetCollectionList.data.totalOutstandingAmount
+                  )}
+                </Text>
               </View>
             </View>
           ) : (
@@ -194,12 +216,12 @@ console.log(searchText, 'cek');
       <View style={{ flex: 1 }}>
         {renderSearchAndFilter()}
         {renderTagsContent()}
-        <ScrollView>
-          {renderCollectionList()}
-          
-          </ScrollView>
-
-        {renderFooter()}
+        <View style={{ flex: 1 }}>
+          {loadingGetCollectionList
+            ? renderSkeletonList()
+            : renderCollectionList()}
+        </View>
+        <View>{renderFooter()}</View>
       </View>
     );
   };
@@ -221,15 +243,6 @@ console.log(searchText, 'cek');
             style={{ paddingRight: 16, justifyContent: 'center' }}
             onPress={() => console.log('clicked')}
           >
-            {/* {this.state.portfolioId.length > 0 ||
-            this.state.dateFilter.dateGte !== '' ||
-            this.state.dateFilter.dateLte !== '' ? (
-              <View style={styles.circleFilter} />
-            ) : (
-              <View />
-            )
-             } */}
-
             <Image
               source={require('../../assets/icons/pdp/filter.png')}
               style={{ height: 24, width: 24 }}
@@ -259,7 +272,7 @@ console.log(searchText, 'cek');
       )} */}
     </>
   );
-}
+};
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
@@ -268,6 +281,7 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: 24,
     paddingVertical: 16
+    // position:'absolute'
     // display: 'flex',
     // flexDirection: 'row'
   },
@@ -277,7 +291,9 @@ const styles = StyleSheet.create({
   footerText: {
     display: 'flex',
     flexDirection: 'row'
-  }
+  },
+  textLeft:{textAlign:'right', marginBottom:4},
+  textRight:{ marginBottom: 4}
 });
 
 export default SfaView;

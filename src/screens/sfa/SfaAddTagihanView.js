@@ -136,23 +136,6 @@ const SfaAddTagihanView = props => {
         balance: cash
       };
       dispatch(sfaPostPaymentMethodProcess(data));
-      
-      // await dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
-      // if ( loadingSfaPostPaymentMethod === false) {
-      //   console.log("disini");
-      //   const dataPostPayment = {
-      //     supplierId: parseInt(selectedMerchant.supplierId),
-      //     userSellerId: parseInt(selectedMerchant.id),
-      //     orderParcelId: orderParcelId,
-      //     storeId: parseInt(selectedMerchant.storeId),
-      //     paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
-      //     amount: cash
-
-      //   }
-      //   dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
-      //   // dispatch(sfaGetDetailProcess(orderParcelId));
-      //   // NavigationService.navigate('SfaDetailView', {orderParcelId: orderParcelId})
-      // }
     }
     if (collectionMethod.code === 'transfer') {
       const data = {
@@ -168,12 +151,6 @@ const SfaAddTagihanView = props => {
         filename: transferImage.fileName,
         type: transferImage.fileType,
         image: transferImage.fileData,
-        // bankSource: bankSource,
-        // bankAccount: bankAccount,
-        // transferDate: transferDate,
-        // transferValue: transferValue,     
-        // transferImage: transferImage
-        // billingValue: billingValue
       }
       if (isUseNoReference === true) {
         const dataPostPayment = {
@@ -184,13 +161,10 @@ const SfaAddTagihanView = props => {
           paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
           amount: billingValue
         }
-        // console.log("pake reference");
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
       } else {
-        // console.log("gak pake reference");
         dispatch(sfaPostPaymentMethodProcess(data));
       }
-      // console.log("disni data:", data);
     }
     if(collectionMethod.code === 'check' || collectionMethod.code === 'giro'){
       const data ={
@@ -233,7 +207,11 @@ const SfaAddTagihanView = props => {
           orderParcelId: orderParcelId,
           storeId: parseInt(selectedMerchant.storeId),
           paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
-          amount: cash
+          amount: collectionMethod.code === 'cash' 
+          ? cash 
+          : collectionMethod.code === 'transfer' 
+          ? billingValue
+          : cash
         }
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
       }
@@ -306,7 +284,6 @@ const SfaAddTagihanView = props => {
   }
 
   const useNoReference = data => {
-    console.log("use ref:", data);
     setIsUseNoReference(data)
   }
 
@@ -566,6 +543,7 @@ const SfaAddTagihanView = props => {
   const renderBillingCheque = id => {
     return (
       <SfaAddTagihanCheque
+        collectionMethod={collectionMethod}
         status={methodStatus}
         paymentCollectionTypeId={id}
         referenceCode={dataReferenceCode}
@@ -614,6 +592,7 @@ const SfaAddTagihanView = props => {
   const renderBillingGiro = id => {
     return (
       <SfaAddTagihanGiro  
+      collectionMethod={collectionMethod}
       status={methodStatus}
       paymentCollectionTypeId={id}
       referenceCode={dataReferenceCode}

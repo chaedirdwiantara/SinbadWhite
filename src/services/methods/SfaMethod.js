@@ -68,10 +68,18 @@ function postPaymentMethod(data) {
 
 /** POST COLLECTION PAYMENT */
 function postCollectionPayment(data) {
-  console.log("param:", data);
   return ApiRest({
     path: 'collection/v1/payment',
     method: 'POST',
+    params: data
+  });
+}
+
+/** GET STAMPS*/
+function getStamp(data) {
+  return ApiRest({
+    path: 'collection/v1/stamps',
+    method: 'GET',
     params: data
   });
 }
@@ -85,5 +93,6 @@ function postCollectionPayment(data) {
     getAllBank,
     getBankAccount,
     postPaymentMethod,
-    postCollectionPayment
+    postCollectionPayment,    
+    getStamp
   };
