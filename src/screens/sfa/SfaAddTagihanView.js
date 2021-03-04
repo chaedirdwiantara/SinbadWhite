@@ -220,7 +220,11 @@ const SfaAddTagihanView = props => {
           orderParcelId: orderParcelId,
           storeId: parseInt(selectedMerchant.storeId),
           paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
-          amount: cash
+          amount: collectionMethod.code === 'cash' 
+          ? cash 
+          : collectionMethod.code === 'transfer' 
+          ? billingValue
+          : cash
         }
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
       }
