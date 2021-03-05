@@ -161,8 +161,6 @@ class MerchantHomeView extends Component {
     const { surveyList } = this.props.merchant;
     console.log('SURVEY LIST', surveyList, this.state.successSurveyList);
     const sfaStatus =  this.props.sfa.dataSfaGetStatusOrder
-    console.log("disini woi:", sfaStatus);
-    console.log("task:", this.state.task);
     /** IF NO SURVEY */
     if (
       _.isEmpty(surveyList.payload.data) &&
@@ -172,7 +170,7 @@ class MerchantHomeView extends Component {
     ) {
       this.setState({ successSurveyList: true }, () => this.SurveyDone());
       if (this.state.task.length === 3) {
-        if (sfaStatus.data.totalInvoice > 0 && sfaStatus.data.totalOverdueInvoice > 0) {
+        if (sfaStatus.data.totalInvoice > 0) {
           this.setState({
             task: [
               {
@@ -207,7 +205,7 @@ class MerchantHomeView extends Component {
     /** IF SURVEY LIST EXIST */
     if (!_.isEmpty(surveyList.payload.data) && surveyList.success && sfaStatus) {
       if (this.state.task.length === 3) {
-        if (sfaStatus.data.totalInvoice > 0 && sfaStatus.data.totalOverdueInvoice > 0) {
+        if (sfaStatus.data.totalInvoice > 0) {
           this.setState({
             task: [
               {
@@ -772,7 +770,6 @@ class MerchantHomeView extends Component {
           {this.state.task.map((item, index) => {
             const taskList = this.checkCheckListTask(item.activity);
             const sfaStatus = this.props.sfa.dataSfaGetStatusOrder.data
-            console.log("disini woiii:", sfaStatus);
             return (
               <View
                 key={index}
