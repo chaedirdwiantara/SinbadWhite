@@ -162,6 +162,7 @@ class MerchantHomeView extends Component {
     console.log('SURVEY LIST', surveyList, this.state.successSurveyList);
     const sfaStatus =  this.props.sfa.dataSfaGetStatusOrder
     console.log("disini woi:", sfaStatus);
+    console.log("task:", this.state.task);
     /** IF NO SURVEY */
     if (
       _.isEmpty(surveyList.payload.data) &&
@@ -170,31 +171,8 @@ class MerchantHomeView extends Component {
       sfaStatus
     ) {
       this.setState({ successSurveyList: true }, () => this.SurveyDone());
-      if (this.state.task.length === 4) {
-        if (sfaStatus.totalInvoice === 0 && totalInvoice.totalOverdueInvoice === 0) {
-          this.setState({
-            task: [
-              {
-                name: 'Check-in Toko',
-                title: 'Check-in',
-                goTo: 'checkIn',
-                activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-              },
-              {
-                name: 'Order',
-                title: 'Order',
-                goTo: 'pdp',
-                activity: ACTIVITY_JOURNEY_PLAN_ORDER
-              },
-              {
-                name: 'Check-out Toko',
-                title: 'Check-out',
-                goTo: 'checkOut',
-                activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-              }
-            ]
-          });
-        } else {
+      if (this.state.task.length === 3) {
+        if (sfaStatus.data.totalInvoice > 0 && sfaStatus.data.totalOverdueInvoice > 0) {
           this.setState({
             task: [
               {
@@ -223,13 +201,13 @@ class MerchantHomeView extends Component {
               }
             ]
           });
-        }
+        } 
       }
     }
     /** IF SURVEY LIST EXIST */
     if (!_.isEmpty(surveyList.payload.data) && surveyList.success && sfaStatus) {
-      if (this.state.task.length === 3 && sfaStatus.totalInvoice === 0 && totalInvoice.totalOverdueInvoice === 0) {
-        if (sfaStatus.totalInvoice === 0 && totalInvoice.totalOverdueInvoice === 0) {
+      if (this.state.task.length === 3) {
+        if (sfaStatus.data.totalInvoice > 0 && sfaStatus.data.totalOverdueInvoice > 0) {
           this.setState({
             task: [
               {
@@ -243,6 +221,12 @@ class MerchantHomeView extends Component {
                 title: 'Order',
                 goTo: 'pdp',
                 activity: ACTIVITY_JOURNEY_PLAN_ORDER
+              },
+              {
+                name: 'Penagihan',
+                title: 'Tagih',
+                goTo: 'collection',
+                activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
               },
               {
                 name: 'Toko Survey',
@@ -272,12 +256,6 @@ class MerchantHomeView extends Component {
                 title: 'Order',
                 goTo: 'pdp',
                 activity: ACTIVITY_JOURNEY_PLAN_ORDER
-              },
-              {
-                name: 'Penagihan',
-                title: 'Tagih',
-                goTo: 'collection',
-                activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
               },
               {
                 name: 'Toko Survey',
