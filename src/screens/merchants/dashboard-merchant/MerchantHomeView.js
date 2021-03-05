@@ -153,6 +153,8 @@ class MerchantHomeView extends Component {
     );
     /** FOR GET SURVEY LIST */
     this.getSurvey();
+    /** FOR GET SFA STATUS ORDER */
+    this.props.sfaGetStatusOrderProcess()
   }
 
   componentDidUpdate(prevProps) {
@@ -507,6 +509,13 @@ class MerchantHomeView extends Component {
           return getOrderStatus[0];
         }
       }
+
+      // if (activity === ACTIVITY_JOURNEY_PLAN_COLLECTION) {
+        
+      //       return true;
+          
+      // }
+
       if (checkActivity.length > 0) {
         return checkActivity[0];
       }
@@ -725,6 +734,8 @@ class MerchantHomeView extends Component {
           </View>
           {this.state.task.map((item, index) => {
             const taskList = this.checkCheckListTask(item.activity);
+            const sfaStatus = this.props.sfa.dataSfaGetStatusOrder.data
+            console.log("disini woiii:", sfaStatus);
             return (
               <View
                 key={index}
@@ -753,6 +764,39 @@ class MerchantHomeView extends Component {
                           size={24}
                         />
                       )
+                    ) : item.activity === ACTIVITY_JOURNEY_PLAN_COLLECTION ? (
+                      sfaStatus.totalInvoice === 0 && sfaStatus.totalOverdueInvoice === 0 ? (
+                        <MaterialIcon
+                          name="radio-button-unchecked"
+                          color={Color.fontBlack40}
+                          size={24}
+                        />
+                      ) : sfaStatus.totalInvoice > 0 && sfaStatus.totalOverdueInvoice > 1 ? (
+                        <MaterialIcon
+                          name="cancel"
+                          color={Color.fontRed50}
+                          size={24}
+                        />
+                      ) : sfaStatus.totalInvoice > 0 && sfaStatus.totalOverdueInvoice === 1 ? (
+                        <MaterialIcon
+                          name="timelapse"
+                          color={Color.fontYellow50}
+                          size={24}
+                        />
+                      ) : sfaStatus.totalInvoice > 0 && sfaStatus.totalOverdueInvoice === 0 ? (
+                        <MaterialIcon
+                          name="check-circle"
+                          color={Color.fontGreen50}
+                          size={24}
+                        />
+                      ) : (
+                        <MaterialIcon
+                          name="radio-button-unchecked"
+                          color={Color.fontBlack40}
+                          size={24}
+                        />
+                      )
+                      
                     ) : (
                       <MaterialIcon
                         name="radio-button-unchecked"
@@ -1103,7 +1147,9 @@ class MerchantHomeView extends Component {
         this.props.merchant.dataGetMerchantLastOrder !== null &&
         !this.props.merchant.loadingGetLogAllActivity &&
         this.props.merchant.dataGetLogAllActivity !== null &&
-        !this.state.loadingPostForCheckoutNoOrder ? (
+        !this.state.loadingPostForCheckoutNoOrder &&
+        this.props.sfa.dataSfaGetStatusOrder &&
+        !this.props.sfa.loadingSfaGetStatusOrder ? (
           <View style={{ height: '100%' }}>
             {this.renderBackground()}
             {this.renderContent()}
@@ -1278,8 +1324,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, merchant, user, permanent }) => {
-  return { auth, merchant, user, permanent };
+const mapStateToProps = ({ auth, merchant, user, permanent, sfa }) => {
+  return { auth, merchant, user, permanent, sfa };
 };
 
 const mapDispatchToProps = dispatch => {

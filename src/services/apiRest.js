@@ -60,7 +60,7 @@ export default async function endpoint({ path, method, params }) {
           });
           return {
             result: 'Error',
-            data: data.data,
+            data: response,
             code: response.status,
             message: data.message,
             errorCodeMessage: data.data ? data.data.errCode : null

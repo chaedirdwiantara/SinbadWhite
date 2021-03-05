@@ -54,3 +54,8 @@ export const SFA_POST_COLLECTION_PAYMENT_FAILED = 'SfaPostCollectionPaymentFaile
 export const SFA_GET_STAMP_PROCESS = 'SfaGetStampProcess';
 export const SFA_GET_STAMP_SUCCESS = 'SfaGetStampSuccess';
 export const SFA_GET_STAMP_FAILED = 'SfaGetStampFailed';
+
+/** GET STATUS ORDER */
+export const SFA_GET_STATUS_ORDER_PROCESS = 'SfaGetStatusOrderProcess';
+export const SFA_GET_STATUS_ORDER_SUCCESS = 'SfaGetStatusOrderSuccess';
+export const SFA_GET_STATUS_ORDER_FAILED = 'SfaGetStatusOrderFailed';
