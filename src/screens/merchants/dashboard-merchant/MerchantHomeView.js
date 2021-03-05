@@ -103,12 +103,12 @@ class MerchantHomeView extends Component {
           goTo: 'pdp',
           activity: ACTIVITY_JOURNEY_PLAN_ORDER
         },
-        {
-          name: 'Penagihan',
-          title: 'Tagih',
-          goTo: 'collection',
-          activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
-        },
+        // {
+        //   name: 'Penagihan',
+        //   title: 'Tagih',
+        //   goTo: 'collection',
+        //   activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
+        // },
         {
           name: 'Check-out Toko',
           title: 'Check-out',
@@ -160,81 +160,140 @@ class MerchantHomeView extends Component {
   componentDidUpdate(prevProps) {
     const { surveyList } = this.props.merchant;
     console.log('SURVEY LIST', surveyList, this.state.successSurveyList);
+    const sfaStatus =  this.props.sfa.dataSfaGetStatusOrder
+    console.log("disini woi:", sfaStatus);
     /** IF NO SURVEY */
     if (
       _.isEmpty(surveyList.payload.data) &&
       surveyList.success &&
-      !this.state.successSurveyList
+      !this.state.successSurveyList &&
+      sfaStatus
     ) {
       this.setState({ successSurveyList: true }, () => this.SurveyDone());
       if (this.state.task.length === 4) {
-        this.setState({
-          task: [
-            {
-              name: 'Check-in Toko',
-              title: 'Check-in',
-              goTo: 'checkIn',
-              activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-            },
-            {
-              name: 'Order',
-              title: 'Order',
-              goTo: 'pdp',
-              activity: ACTIVITY_JOURNEY_PLAN_ORDER
-            },
-            {
-              name: 'Penagihan',
-              title: 'Tagih',
-              goTo: 'collection',
-              activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
-            },
-            {
-              name: 'Check-out Toko',
-              title: 'Check-out',
-              goTo: 'checkOut',
-              activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-            }
-          ]
-        });
+        if (sfaStatus.totalInvoice === 0 && totalInvoice.totalOverdueInvoice === 0) {
+          this.setState({
+            task: [
+              {
+                name: 'Check-in Toko',
+                title: 'Check-in',
+                goTo: 'checkIn',
+                activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+              },
+              {
+                name: 'Order',
+                title: 'Order',
+                goTo: 'pdp',
+                activity: ACTIVITY_JOURNEY_PLAN_ORDER
+              },
+              {
+                name: 'Check-out Toko',
+                title: 'Check-out',
+                goTo: 'checkOut',
+                activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+              }
+            ]
+          });
+        } else {
+          this.setState({
+            task: [
+              {
+                name: 'Check-in Toko',
+                title: 'Check-in',
+                goTo: 'checkIn',
+                activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+              },
+              {
+                name: 'Order',
+                title: 'Order',
+                goTo: 'pdp',
+                activity: ACTIVITY_JOURNEY_PLAN_ORDER
+              },
+              {
+                name: 'Penagihan',
+                title: 'Tagih',
+                goTo: 'collection',
+                activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
+              },
+              {
+                name: 'Check-out Toko',
+                title: 'Check-out',
+                goTo: 'checkOut',
+                activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+              }
+            ]
+          });
+        }
       }
     }
     /** IF SURVEY LIST EXIST */
-    if (!_.isEmpty(surveyList.payload.data) && surveyList.success) {
-      if (this.state.task.length === 3) {
-        this.setState({
-          task: [
-            {
-              name: 'Check-in Toko',
-              title: 'Check-in',
-              goTo: 'checkIn',
-              activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-            },
-            {
-              name: 'Order',
-              title: 'Order',
-              goTo: 'pdp',
-              activity: ACTIVITY_JOURNEY_PLAN_ORDER
-            },
-            {
-              name: 'Penagihan',
-              title: 'Tagih',
-              goTo: 'collection',
-              activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
-            },
-            {
-              name: 'Toko Survey',
-              title: 'Isi',
-              goTo: 'survey',
-              activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-            },
-            {
-              name: 'Check-out Toko',
-              title: 'Check-out',
-              goTo: 'checkOut',
-              activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-            }
-          ]
-        });
+    if (!_.isEmpty(surveyList.payload.data) && surveyList.success && sfaStatus) {
+      if (this.state.task.length === 3 && sfaStatus.totalInvoice === 0 && totalInvoice.totalOverdueInvoice === 0) {
+        if (sfaStatus.totalInvoice === 0 && totalInvoice.totalOverdueInvoice === 0) {
+          this.setState({
+            task: [
+              {
+                name: 'Check-in Toko',
+                title: 'Check-in',
+                goTo: 'checkIn',
+                activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+              },
+              {
+                name: 'Order',
+                title: 'Order',
+                goTo: 'pdp',
+                activity: ACTIVITY_JOURNEY_PLAN_ORDER
+              },
+              {
+                name: 'Toko Survey',
+                title: 'Isi',
+                goTo: 'survey',
+                activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+              },
+              {
+                name: 'Check-out Toko',
+                title: 'Check-out',
+                goTo: 'checkOut',
+                activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+              }
+            ]
+          });
+        } else {
+          this.setState({
+            task: [
+              {
+                name: 'Check-in Toko',
+                title: 'Check-in',
+                goTo: 'checkIn',
+                activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+              },
+              {
+                name: 'Order',
+                title: 'Order',
+                goTo: 'pdp',
+                activity: ACTIVITY_JOURNEY_PLAN_ORDER
+              },
+              {
+                name: 'Penagihan',
+                title: 'Tagih',
+                goTo: 'collection',
+                activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
+              },
+              {
+                name: 'Toko Survey',
+                title: 'Isi',
+                goTo: 'survey',
+                activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+              },
+              {
+                name: 'Check-out Toko',
+                title: 'Check-out',
+                goTo: 'checkOut',
+                activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+              }
+            ]
+          });
+        }
       }
     }
     /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
@@ -765,28 +824,22 @@ class MerchantHomeView extends Component {
                         />
                       )
                     ) : item.activity === ACTIVITY_JOURNEY_PLAN_COLLECTION ? (
-                      sfaStatus.totalInvoice === 0 && sfaStatus.totalOverdueInvoice === 0 ? (
+                      sfaStatus.totalOverdueInvoice === 0 ? (
                         <MaterialIcon
-                          name="radio-button-unchecked"
-                          color={Color.fontBlack40}
+                          name="check-circle"
+                          color={Color.fontGreen50}
                           size={24}
                         />
-                      ) : sfaStatus.totalInvoice > 0 && sfaStatus.totalOverdueInvoice > 1 ? (
+                      ) : sfaStatus.totalOverdueInvoice > 1 ? (
                         <MaterialIcon
                           name="cancel"
                           color={Color.fontRed50}
                           size={24}
                         />
-                      ) : sfaStatus.totalInvoice > 0 && sfaStatus.totalOverdueInvoice === 1 ? (
+                      ) : sfaStatus.totalOverdueInvoice === 1 ? (
                         <MaterialIcon
                           name="timelapse"
                           color={Color.fontYellow50}
-                          size={24}
-                        />
-                      ) : sfaStatus.totalInvoice > 0 && sfaStatus.totalOverdueInvoice === 0 ? (
-                        <MaterialIcon
-                          name="check-circle"
-                          color={Color.fontGreen50}
                           size={24}
                         />
                       ) : (
