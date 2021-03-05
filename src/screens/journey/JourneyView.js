@@ -11,6 +11,7 @@ import {
   MaterialIcon,
   bindActionCreators,
   connect,
+  moment,
   SkeletonPlaceholder
 } from '../../library/thirdPartyPackage'
 import {
@@ -27,6 +28,8 @@ import masterColor from '../../config/masterColor';
 import ModalContentMenuAddMerchant from './ModalContentMenuAddMerchant';
 import ModalBottomMerchantList from '../merchants/ModalBottomMerchantList';
 import JourneyListDataView from './JourneyListDataView';
+
+const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
 
 class JourneyView extends Component {
   constructor(props) {
@@ -66,24 +69,28 @@ class JourneyView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    this.props.journeyPlanGetReset();
-    this.props.journeyPlanGetProcess({ page: 0, loading: true });
-    this.props.getJourneyPlanReportProcess(
-      this.props.user.userSuppliers.map(item => item.supplierId)
-    );
+    this.props.journeyPlanGetResetV2();
+    this.props.journeyPlanGetProcessV2({
+      page: 1,
+      date: today,
+      loading: true
+    });
+    this.props.getJourneyPlanReportProcessV2();
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
     if (
-      prevProps.journey.dataSaveMerchantToJourneyPlan !==
-      this.props.journey.dataSaveMerchantToJourneyPlan
+      prevProps.journey.dataSaveMerchantToJourneyPlanV2 !==
+      this.props.journey.dataSaveMerchantToJourneyPlanV2
     ) {
-      if (this.props.journey.dataSaveMerchantToJourneyPlan !== null) {
-        this.props.journeyPlanGetReset();
-        this.props.journeyPlanGetProcess({ page: 0, loading: true });
-        this.props.getJourneyPlanReportProcess(
-          this.props.user.userSuppliers.map(item => item.supplierId)
-        );
+      if (this.props.journey.dataSaveMerchantToJourneyPlanV2 !== null) {
+        this.props.journeyPlanGetResetV2();
+        this.props.journeyPlanGetProcessV2({
+          page: 1,
+          date: today,
+          loading: true
+        });
+        this.props.getJourneyPlanReportProcessV2();
         this.setState({ openModalMerchantList: false });
       }
     }
@@ -139,19 +146,19 @@ class JourneyView extends Component {
   /** === RENDER HEADER === */
   renderHeader() {
     return !this.props.journey.loadingGetJourneyPlanReport &&
-      this.props.journey.dataGetJourneyPlanReport !== null ? (
+      this.props.journey.dataGetJourneyPlanReportV2 !== null ? (
       <View style={styles.headerContainer}>
         <View style={styles.boxHeader}>
           <Text style={[Fonts.type27, { marginBottom: 5 }]}>
-            {this.props.journey.dataGetJourneyPlanReport.total}/
-            {this.props.journey.dataGetJourneyPlanReport.target}
+            {this.props.journey.dataGetJourneyPlanReportV2.total}/
+            {this.props.journey.dataGetJourneyPlanReportV2.target}
           </Text>
           <Text style={Fonts.type26}>Toko Visit</Text>
         </View>
         <View style={styles.boxHeader}>
           <Text style={[Fonts.type27, { marginBottom: 5 }]}>
             {MoneyFormat(
-              this.props.journey.dataGetJourneyPlanReport.totalOrder
+              this.props.journey.dataGetJourneyPlanReportV2.totalOrder
             )}
           </Text>
           <Text style={Fonts.type26}>Toko Order</Text>
@@ -278,14 +285,18 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(JourneyView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ * -> Update the props of journey plan list.
+ * -> Update the props when saving merchant to journey plan.
+ * updatedBy: dyah
+ * updatedDate: 01032021
+ * updatedFunction:
+ * -> Update the props of journey plan report.
+ */
