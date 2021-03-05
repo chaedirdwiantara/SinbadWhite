@@ -68,7 +68,7 @@ const SfaAddTagihanView = props => {
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [isUsedStamp, setIsUsedStamp] = useState(false)
   const [isUseNoReference, setIsUseNoReference] = useState(false)
-
+  const [paymentCollectionMethodId, setPaymentCollectionMethodId]= useState()
   //USEREF
   const prevDataSfaPostPaymentMethodRef = useRef(dataSfaPostPaymentMethod)
   const prevDataSfaPostCollectionPaymentRef = useRef(dataSfaPostCollectionPayment)
@@ -174,8 +174,8 @@ const SfaAddTagihanView = props => {
         userId: parseInt(selectedMerchant.id),
         referenceCode : referenceCode,
         bankId: bankSource,
-        issuedDate: moment.utc(issuedDate).format('YYYY-MM-DD HH:MM:SS'),
-        invalidDate: moment.utc(dueDate).format('YYYY-MM-DD HH:MM:SS'),
+        issuedDate: moment.utc(issuedDate).local().format('YYYY-MM-DD HH:MM:ss'),
+        invalidDate: moment.utc(dueDate).local().format('YYYY-MM-DD HH:MM:ss'),
         balance : balance,
         isUsedStamp: isUsedStamp,
         stampId: stamp
@@ -186,11 +186,10 @@ const SfaAddTagihanView = props => {
           userSellerId: parseInt(selectedMerchant.id),
           orderParcelId: orderParcelId,
           storeId: parseInt(selectedMerchant.storeId),
-          paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
+          paymentCollectionMethodId: parseInt(paymentCollectionMethodId),
           amount: billingValue
         }
-      
-        // dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
+        dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
       } else {
         dispatch(sfaPostPaymentMethodProcess(data));
       }
@@ -209,7 +208,7 @@ const SfaAddTagihanView = props => {
           paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
           amount: collectionMethod.code === 'cash' 
           ? cash 
-          : collectionMethod.code === 'transfer' 
+          : collectionMethod.code === 'transfer' || collectionMethod.code === 'check' || collectionMethod.code === 'giro'
           ? billingValue
           : cash
         }
@@ -287,6 +286,10 @@ const SfaAddTagihanView = props => {
     setIsUseNoReference(data)
   }
 
+  const noPaymentCollectionMethodId = data => {
+    setPaymentCollectionMethodId(data)
+  }
+
   useEffect(() => {
     if (collectionMethod !== null) {
       if (collectionMethod.code === 'cash') {
@@ -331,8 +334,6 @@ const SfaAddTagihanView = props => {
             setDisabled(true);
           }
         } else if ( isUsedStamp === false){
-          console.log('no stamp', referenceCode, bankSource, issuedDate, dueDate, balance, billingValue);
-
           if (
             referenceCode === null ||
             bankSource === null ||
@@ -556,6 +557,7 @@ const SfaAddTagihanView = props => {
         remainingBilling={props.navigation.state.params.data.remainingBilling}
         isUsedStamp={statusStamp}
         useNoReference={useNoReference}
+        paymentCollectionMethodId={noPaymentCollectionMethodId}
       />
     );
   };
