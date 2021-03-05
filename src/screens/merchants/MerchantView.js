@@ -78,17 +78,17 @@ class MerchantView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.navigationFunction();
-    this.props.portfolioGetProcess(this.props.user.id);
+    this.props.portfolioGetProcessV2();
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
     if (
-      prevProps.merchant.dataGetPortfolio !==
-      this.props.merchant.dataGetPortfolio
+      prevProps.merchant.dataGetPortfolioV2 !==
+      this.props.merchant.dataGetPortfolioV2
     ) {
       if (
-        this.props.merchant.dataGetPortfolio !== null &&
-        this.props.merchant.dataGetPortfolio.length > 0
+        this.props.merchant.dataGetPortfolioV2 !== null &&
+        this.props.merchant.dataGetPortfolioV2.length > 0
       ) {
         this.getMerchant('direct', 0, '');
       }
@@ -149,12 +149,11 @@ class MerchantView extends Component {
   }
   /** === CALL GET FUNCTION === */
   getMerchant(type, portfolioIndex, search) {
-    this.props.merchantGetReset();
-    this.props.merchantGetProcess({
-      type,
-      page: 0,
+    this.props.merchantGetResetV2();
+    this.props.merchantGetProcessV2({
       loading: true,
-      portfolioId: this.props.merchant.dataGetPortfolio[portfolioIndex].id,
+      page: 1,
+      portfolioId: this.props.merchant.dataGetPortfolioV2[0].id,
       search
     });
   }
@@ -253,15 +252,18 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(MerchantView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ * updatedBy: dyah
+ * updatedDate: 25022021
+ * updatedFunction:
+ * -> update the props of merchant list.
+ *
+ */
