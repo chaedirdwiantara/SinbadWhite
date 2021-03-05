@@ -8,7 +8,7 @@ import { Fonts} from '../../helpers';
 
 const SfaNoDataView = () => {
     return (
-      <View style={{ flex: 1, justifyContent: 'center' }}>
+      <View style={{  justifyContent: 'center' }}>
         <View style={{ alignSelf: 'center' }}>
           <View style={{ alignSelf: 'center' }}>
             <Image

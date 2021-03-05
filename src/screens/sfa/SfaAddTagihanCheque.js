@@ -523,6 +523,7 @@ const selectedReference = (data) => {
   props.dueDate(data.invalidDate)
   props.balance(data.balance)
   props.useNoReference(true)
+  props.paymentCollectionMethodId(data.id)
 }
 
 const selectedBank = (data) => {

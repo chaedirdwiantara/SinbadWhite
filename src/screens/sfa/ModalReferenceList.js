@@ -3,7 +3,8 @@ import {
   View,
   StyleSheet,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from '../../library/reactPackage';
 
 import {
@@ -97,6 +98,52 @@ const parentFunction = (data) => {
     )
   }
 
+  const renderItem = ({ item, index }) => {
+return (
+  <View key={index}>
+          <TouchableOpacity onPress={() => props.selectCollection(item)}>
+            <View style={{margin: 16}}>
+              <Text style={Fonts.type24}>{item.referenceCode}</Text>
+              {
+                item.balance > 0 
+                ? <Text style={[Fonts.type22, {marginTop: 5}]}>Saldo: {MoneyFormat(item.balance)}</Text>
+                : null
+              }
+            </View>
+            <View style={GlobalStyle.lines} />
+          </TouchableOpacity>
+        </View>
+)
+
+  }
+  const renderListCollectionMethod = () => {
+    return (
+      <>
+      {/* {data? ( */}
+        <View style={{flex: 1}}>
+        <FlatList
+        
+          data={dataGetReferenceList.data}
+          renderItem={renderItem}
+          //   numColumns={1}
+          keyExtractor={(item, index) => index.toString()}
+            // refreshing={refreshGetCollection}
+            // onRefresh={()=>props.refersh()}
+          onEndReachedThreshold={0.2}
+          // onEndReached={() => props.loadmore()}
+          showsVerticalScrollIndicator
+        />
+        </View>
+
+      {/* ) : (
+        <View style={{ marginTop: '20%' }}>
+          <SfaNoDataView />
+        </View>
+      )} */}
+      </>
+    )
+  }
+
   const renderCollectionMethod = () => {
     const data = dataGetReferenceList
     if( data.data && data.data.length > 0)
@@ -132,8 +179,8 @@ const parentFunction = (data) => {
         <>
         <View style={styles.contentContainer}>
         {dataGetReferenceList?  
-         
-        renderCollectionMethod()
+         renderListCollectionMethod()
+        // renderCollectionMethod()
      : <LoadingPage/>}
       </View>
       </>
