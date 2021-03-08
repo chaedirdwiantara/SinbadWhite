@@ -99,8 +99,10 @@ class ModalBottomMerchantList extends Component {
   }
   /** === CALL GET FUNCTION === */
   getMerchant(type, portfolioIndex, search) {
-    this.props.merchantGetResetV2();
-    this.props.merchantGetProcessV2({
+    const date = moment().format('YYYY-MM-DD');
+    this.props.merchantExistingGetReset();
+    this.props.merchantExistingGetProcess({
+      date,
       loading: true,
       page: 1,
       portfolioId: this.props.merchant.dataGetPortfolioV2[0].id,
@@ -355,7 +357,7 @@ export default connect(
  * -> update the props of portfolio.
  * -> Update function addJourneyPlan and the props when saving merchant to journey plan.
  * updatedBy: dyah
- * updatedDate: 25022021
+ * updatedDate: 08032021
  * updatedFunction:
  * -> update the props of merchant list.
  */

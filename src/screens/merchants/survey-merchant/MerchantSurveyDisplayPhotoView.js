@@ -335,6 +335,15 @@ class MerchantSurveyDisplayPhotoView extends Component {
     });
     this.setState({ photo: newPhoto });
   };
+  /** === GO TO MERCHANT VIEW === */
+  goToMerchantHomeView = () => {
+    this.setState({ modalCompleted: false });
+    this.props.merchantGetSurveyListReset();
+    this.props.merchantGetLogAllActivityProcessV2(
+      this.props.merchant.selectedMerchant.journeyBookStores.id
+    );
+    NavigationService.navigate('MerchantHomeView');
+  }
   /** ====== DID MOUNT FUNCTION ========== */
   /** NAVIGATION FUNCTION */
   navigationFunction() {
@@ -697,7 +706,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     return (
       <ModalBottomCompleted
         open={this.state.modalCompleted}
-        onReturnTaskList={() => NavigationService.navigate('MerchantHomeView')}
+        onReturnTaskList={() => this.goToMerchantHomeView()}
         onClose={() => this.setState({ modalCompleted: false })}
       />
     );
@@ -868,4 +877,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * updatedDate: 26022021
  * updatedFunction:
  * -> Update the props of post activity.
+ * updatedBy: dyah
+ * updatedDate: 08032021
+ * updatedFunction:
+ * -> Add funciton when return to tasklist.
  */

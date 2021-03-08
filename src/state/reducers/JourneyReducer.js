@@ -1,4 +1,5 @@
 import * as types from '../types';
+import _ from 'lodash';
 import createReducer from './createReducer';
 
 const INITIAL_STATE = {
@@ -112,10 +113,10 @@ export const journey = createReducer(INITIAL_STATE, {
       loadingLoadMoreGetJourneyPlan: false,
       refreshGetJourneyPlan: false,
       totalDataGetJourneyPlanV2: action.payload.meta.total,
-      dataGetJourneyPlanV2: [
-        ...state.dataGetJourneyPlanV2,
-        ...action.payload.data
-      ]
+      dataGetJourneyPlanV2: _.uniqBy(
+        [...state.dataGetJourneyPlanV2, ...action.payload.data],
+        'id'
+      )
     };
   },
   [types.JOURNEY_PLAN_GET_FAILED_V2](state, action) {
