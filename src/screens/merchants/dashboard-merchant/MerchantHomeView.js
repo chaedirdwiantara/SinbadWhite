@@ -161,6 +161,7 @@ class MerchantHomeView extends Component {
     const { surveyList } = this.props.merchant;
     console.log('SURVEY LIST', surveyList, this.state.successSurveyList);
     const sfaStatus =  this.props.sfa.dataSfaGetStatusOrder
+    console.log("woii:", this.props.merchant.dataGetLogAllActivity);
     /** IF NO SURVEY */
     if (
       _.isEmpty(surveyList.payload.data) &&
@@ -170,7 +171,7 @@ class MerchantHomeView extends Component {
     ) {
       this.setState({ successSurveyList: true }, () => this.SurveyDone());
       if (this.state.task.length === 3) {
-        if (sfaStatus.data.totalInvoice > 0) {
+        if (sfaStatus.data.totalInvoice > 0 ) {
           this.setState({
             task: [
               {
@@ -805,13 +806,13 @@ class MerchantHomeView extends Component {
                           color={Color.fontGreen50}
                           size={24}
                         />
-                      ) : sfaStatus.totalOverdueInvoice > 1 ? (
-                        <MaterialIcon
-                          name="cancel"
-                          color={Color.fontRed50}
-                          size={24}
-                        />
-                      ) : sfaStatus.totalOverdueInvoice === 1 ? (
+                      // ) : sfaStatus.totalOverdueInvoice > 1 ? (
+                      //   <MaterialIcon
+                      //     name="cancel"
+                      //     color={Color.fontRed50}
+                      //     size={24}
+                      //   />
+                      ) : sfaStatus.totalOverdueInvoice >= 1 ? (
                         <MaterialIcon
                           name="timelapse"
                           color={Color.fontYellow50}
