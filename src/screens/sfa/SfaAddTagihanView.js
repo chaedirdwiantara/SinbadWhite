@@ -193,6 +193,7 @@ const SfaAddTagihanView = props => {
     if(collectionMethod.code === 'check' || collectionMethod.code === 'giro'){
       const data ={
         paymentCollectionTypeId: parseInt(collectionMethod.id),
+        // paymentCollectionMethodId: 9,
         storeId: parseInt(selectedMerchant.storeId),
         supplierId: parseInt(selectedMerchant.supplierId),
         userId: parseInt(selectedMerchant.id),
@@ -256,11 +257,11 @@ const SfaAddTagihanView = props => {
     if (prevErrorSfaPostPaymentMethod !== errorSfaPostPaymentMethod) {
       if(errorSfaPostPaymentMethod) {
         setModalBottomError(true)
-        setMessageError(errorSfaPostPaymentMethod.payload.data.errorMessage)
+        setMessageError(errorSfaPostPaymentMethod.data.errorMessage)
       }
     }
   }, [errorSfaPostPaymentMethod])
-
+  
   //HANDLE ERROR POST COLLECTION
   useEffect(()=>{
     if (prevErrorSfaPostCollectionPayment !== errorSfaPostCollectionPayment) {
@@ -649,7 +650,11 @@ const SfaAddTagihanView = props => {
       billingValue={dataBillingValue}
       stamp={dataStamp}
       remainingBilling={props.navigation.state.params.data.remainingBilling}
-      isUsedStamp={statusStamp} />
+      isUsedStamp={statusStamp}
+      useNoReference={useNoReference}
+      paymentCollectionMethodId={noPaymentCollectionMethodId}
+       />
+      
     );
   };
   /**
