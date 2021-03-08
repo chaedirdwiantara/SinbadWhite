@@ -154,13 +154,14 @@ class MerchantHomeView extends Component {
     /** FOR GET SURVEY LIST */
     this.getSurvey();
     /** FOR GET SFA STATUS ORDER */
-    this.props.sfaGetStatusOrderProcess()
+    this.props.sfaGetStatusOrderProcess(this.props.merchant.selectedMerchant)
   }
 
   componentDidUpdate(prevProps) {
     const { surveyList } = this.props.merchant;
     console.log('SURVEY LIST', surveyList, this.state.successSurveyList);
     const sfaStatus =  this.props.sfa.dataSfaGetStatusOrder
+    console.log("woii:", this.props.merchant.selectedMerchant);
     /** IF NO SURVEY */
     if (
       _.isEmpty(surveyList.payload.data) &&
@@ -170,35 +171,61 @@ class MerchantHomeView extends Component {
     ) {
       this.setState({ successSurveyList: true }, () => this.SurveyDone());
       if (this.state.task.length === 3) {
-        if (sfaStatus.data.totalInvoice > 0 ) {
-          this.setState({
-            task: [
-              {
-                name: 'Check-in Toko',
-                title: 'Check-in',
-                goTo: 'checkIn',
-                activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-              },
-              {
-                name: 'Order',
-                title: 'Order',
-                goTo: 'pdp',
-                activity: ACTIVITY_JOURNEY_PLAN_ORDER
-              },
-              {
-                name: 'Penagihan',
-                title: 'Tagih',
-                goTo: 'collection',
-                activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
-              },
-              {
-                name: 'Check-out Toko',
-                title: 'Check-out',
-                goTo: 'checkOut',
-                activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-              }
-            ]
-          });
+        if (sfaStatus.data.totalInvoice > 0 && this.props.merchant.dataGetLogAllActivity === []) {
+          if (this.props.merchant.dataGetLogAllActivity === []) {
+            this.setState({
+              task: [
+                {
+                  name: 'Check-in Toko',
+                  title: 'Check-in',
+                  goTo: 'checkIn',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                },
+                {
+                  name: 'Order',
+                  title: 'Order',
+                  goTo: 'pdp',
+                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
+                },
+                {
+                  name: 'Check-out Toko',
+                  title: 'Check-out',
+                  goTo: 'checkOut',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+                }
+              ]
+            });
+          } else {
+            this.setState({
+              task: [
+                {
+                  name: 'Check-in Toko',
+                  title: 'Check-in',
+                  goTo: 'checkIn',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                },
+                {
+                  name: 'Order',
+                  title: 'Order',
+                  goTo: 'pdp',
+                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
+                },
+                {
+                  name: 'Penagihan',
+                  title: 'Tagih',
+                  goTo: 'collection',
+                  activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
+                },
+                {
+                  name: 'Check-out Toko',
+                  title: 'Check-out',
+                  goTo: 'checkOut',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+                }
+              ]
+            });
+          }
+          
         } 
       }
     }

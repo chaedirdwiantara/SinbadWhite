@@ -85,9 +85,10 @@ function getStamp(data) {
 }
 
 /** GET STATUS ORDER */
-function getStatusOrder(){
+function getStatusOrder(data){
+  console.log("datawoii:", data);
   return ApiRest({
-    path: `collection/v1/count-order-parcels?storeId=101&supplierId=2`,
+    path: `collection/v1/count-order-parcels?storeId=${parseInt(data.storeId)}&supplierId=${parseInt(data.supplierId)}`,
     method: 'GET'
   })
 }
