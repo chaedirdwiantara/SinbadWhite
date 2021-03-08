@@ -17,7 +17,7 @@ function getWarehouse(data){
 
 function getSalesSegementationTeam(data){
   return ApiRest({
-    path: `sales-segmentation/2`,
+    path: `sales-segmentation/${data}`,
     method: 'GET'
   })
 }

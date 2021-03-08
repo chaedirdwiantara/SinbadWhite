@@ -5,12 +5,19 @@ import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
-  Keyboard
+  Keyboard,
+  Text,
+  TouchableOpacity,
+  Image,
+  width,
+  TouchableWithoutFeedback,
+  ModalPopUp
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
   connect,
-  MaterialCommunityIcons
+  MaterialCommunityIcons,
+  MaterialIcon
 } from '../../../library/thirdPartyPackage';
 import {
   ButtonSingle,
@@ -22,6 +29,9 @@ import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
 import * as ActionCreators from '../../../state/actions';
 import { GlobalMethod } from '../../../services/methods';
+import { Fonts } from '../../../helpers';
+import masterColor from '../../../config/masterColor.json';
+import PhotoUploaded from '../reusable-view/PhotoUploaded';
 
 const idNumberGaps = [6,12]
 const taxNoGaps = [2,5,8,9,12,15]
@@ -49,7 +59,8 @@ class AddMerchantStep2 extends Component {
       taxNo: 
         this.props.merchant.dataMerchantVolatile.taxNo 
           ? GlobalMethod.addGaps(this.props.merchant.dataMerchantVolatile.taxNo, taxNoGaps, ".") 
-          : ''
+          : '',
+      previewImage: false
     };
   }
   /**
@@ -57,26 +68,62 @@ class AddMerchantStep2 extends Component {
    * FUNCTIONAL
    * =====================
    */
-  /** SEND DATA ADD MERCHANT */
-  nextStep() {
-    Keyboard.dismiss();
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    /** === IF SUCCESS UPLOAD === */
+    if (prevProps.global.dataUploadImage !== this.props.global.dataUploadImage) {
+      if (this.props.global.dataUploadImage !== null) {
+        this.props.saveImageBase64('');
+        this.props.saveVolatileDataMerchant({
+          idImageUrl: this.props.global.dataUploadImage.url
+        });
+        this.gotoNextScreen()
+      }
+    }
+    /** === IF FAILED UPLOAD === */
+    if (prevProps.global.errorUploadImage !== this.props.global.errorUploadImage) {
+      if (this.props.global.errorUploadImage !== null && this.state.thisPage) {
+        console.log("Error Uploading Image");
+      }
+    }
+  }
+  /** GO TO NEXT SCREEN */
+  gotoNextScreen(){
     this.props.saveVolatileDataMerchant({
       fullName: this.state.fullName,
       name: this.state.name,
       idNo: this.state.idNo.replace(/[^0-9]/g, ''),
-      taxNo: this.state.taxNo ? this.state.taxNo.replace(/[^0-9]/g, '') : ''
+      taxNo: this.state.taxNo.replace(/[^0-9]/g, '')
     });
     NavigationService.navigate('AddMerchantStep3')
   }
+   /** === UPLOAD PHOTO */
+  uploadPhoto() {
+    this.props.uploadImageProcess({
+      image: `data:image/jpg;base64,${this.props.global.imageBase64}`,
+      type: 'idCard',
+      oldLink: this.props.merchant.dataMerchantVolatile.idImageUrl
+    });
+  }
+  /** SEND DATA ADD MERCHANT */
+  handleNextButton() {
+    Keyboard.dismiss();
+    // if(this.props.global.imageBase64 !== ''){
+    //   this.uploadPhoto()
+    // } else {
+      this.gotoNextScreen()
+    // }
+  }
   /** disable button */
   buttonDisable() {
-    return (
-      this.state.fullName === '' ||
-      this.state.name === '' ||
-      this.state.idNo === '' ||
-      this.state.errorIdNumber ||
-      this.state.errorTaxNumber
-    );
+    if (
+      !this.state.fullName || !this.state.name ||
+      !this.state.idNo || !this.state.supplierName ||
+      this.state.errorIdNumber || this.state.errorTaxNumber
+    ){
+      return true
+    }
+    return false
   }
   /** === CHECK ID NUMBER FORMAT === */
   checkIdNoFormat(idNumber) {
@@ -101,6 +148,8 @@ class AddMerchantStep2 extends Component {
    * RENDER VIEW
    * ===================
    */
+
+  renderAsteriskRed = () => <Text style={{color: 'red'}}>*</Text>
   /** === RENDER STEP HEADER === */
   renderProgressHeader() {
     return (
@@ -114,11 +163,11 @@ class AddMerchantStep2 extends Component {
     );
   }
   /** === OWNER NAME === */
-  renderNameOwner() {
+  renderNameOwner(disabled) {
     return (
       <InputType4
-        editable={!this.props.merchant.dataMerchantDisabledField.fullName}
-        title={'* Nama Lengkap Pemilik'}
+        editable={!disabled}
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Nama Lengkap Pemilik</Text>}
         value={this.state.fullName}
         onChangeText={fullName => {
           const cleanNameFormat = fullName.replace(/[^\w\s]|[0-9]|[_]/g, '');
@@ -130,7 +179,7 @@ class AddMerchantStep2 extends Component {
         keyboardType={'default'}
         marginBottom={16}
         maxLength={40}
-        suffix={!this.props.merchant.dataMerchantDisabledField.fullName}
+        suffix={!disabled}
         suffixForPush
         suffixPush={() =>this.setState({fullName: ''})}
         suffixContent={
@@ -146,18 +195,18 @@ class AddMerchantStep2 extends Component {
     );
   }
   /** === MERCHANT NAME === */
-  renderNameMerchant() {
+  renderNameMerchant(disabled) {
     return (
       <InputType4
-        title={'* Nama Toko'}
-        editable={!this.props.merchant.dataMerchantDisabledField.storeName}
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Nama Toko</Text>}
+        editable={!disabled}
         value={this.state.name}
         onChangeText={name => this.setState({ name })}
         placeholder={'Masukan Nama Toko'}
         keyboardType={'default'}
         marginBottom={16}
         maxLength={40}
-        suffix={!this.props.merchant.dataMerchantDisabledField.storeName}
+        suffix={!disabled}
         suffixForPush
         suffixPush={() =>this.setState({name: ''})}
         suffixContent={
@@ -176,7 +225,7 @@ class AddMerchantStep2 extends Component {
   renderSupplier() {
     return (
       <InputType4
-        title={'* Supplier'}
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Supplier</Text>}
         editable={false}
         placeholder={this.state.supplierName}
         keyboardType={'default'}
@@ -185,11 +234,11 @@ class AddMerchantStep2 extends Component {
     );
   }
   /** === OWNER ID NO === */
-  renderIdNo() {
+  renderIdNo(disabled) {
     return (
       <InputType4
-        editable={!this.props.merchant.dataMerchantDisabledField.idNo}
-        title={'* Nomor Kartu Tanda Penduduk (KTP)'}
+        editable={!disabled}
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Nomor Kartu Tanda Penduduk (KTP)</Text>}
         value={this.state.idNo}
         onChangeText={idNo => {
           const cleanNumber = idNo.replace(/[^0-9]/g, '');
@@ -201,7 +250,7 @@ class AddMerchantStep2 extends Component {
         errorText={'Pastikan No.KTP maksimal 16 Digit'}
         maxLength={18}
         marginBottom={16}
-        suffix={!this.props.merchant.dataMerchantDisabledField.idNo}
+        suffix={!disabled}
         suffixForPush
         suffixPush={() =>this.setState({idNo: '', errorIdNumber: false})}
         suffixContent={
@@ -217,10 +266,10 @@ class AddMerchantStep2 extends Component {
     );
   }
   /** === OWNER TAX NO === */
-  renderTaxId() {
+  renderTaxId(disabled) {
     return (
       <InputType4
-        editable={!this.props.merchant.dataMerchantDisabledField.taxNo}
+        editable={!disabled}
         title={'Nomor Pokok Wajib Pajak (NPWP)'}
         value={this.state.taxNo}
         onChangeText={taxNo => {
@@ -233,7 +282,7 @@ class AddMerchantStep2 extends Component {
         errorText={'Pastikan No.NPWP maksimal 15 Digit'}
         maxLength={20}
         marginBottom={16}
-        suffix={!this.props.merchant.dataMerchantDisabledField.taxNo}
+        suffix={!disabled}
         suffixForPush
         suffixPush={() =>this.setState({taxNo: '', errorTaxNumber: false})}
         suffixContent={
@@ -248,15 +297,115 @@ class AddMerchantStep2 extends Component {
       />
     );
   }
+  /** RENDER IMAGE KTP */
+  renderImageIdNo(){
+    const showImage = this.props.global.imageBase64 !== ''
+    return (
+      <View style={{paddingHorizontal: 16}}>
+        <Text style={Fonts.type32}>{this.renderAsteriskRed()} Upload Foto KTP</Text>
+        {showImage ? this.renderThumbnail() : this.renderTakeIdNoPhotoButton()}
+      </View>
+    )
+  }
+  renderThumbnail(){
+    return(
+      <View style={{marginHorizontal: 16, flexDirection: 'row', alignItems: 'center'}}>
+        <TouchableWithoutFeedback onPress={() => this.setState({previewImage: true})}>
+          <Image 
+            source={{uri: `data:image/jpg;base64,${this.props.global.imageBase64}`}}
+            resizeMode="stretch"
+            borderRadius={8}
+            style={{
+              marginHorizontal: 16,
+              width: width * .3, height: width * .45, 
+              transform: [{rotate: '270deg'}]
+            }}
+          />
+        </TouchableWithoutFeedback>
+        <View style={{marginHorizontal: 32, alignItems: 'center'}}>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('TakeIdPicture')} 
+            style={{alignItems: 'center'}}>
+            <MaterialIcon
+              name="camera-alt"
+              color={Color.fontBlack50}
+              size={24}
+            />
+            <Text style={Fonts.type10}>Ulangi</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+  renderPreviewImage() {
+    return (
+      <ModalPopUp
+        animationType="slide"
+        transparent={true}
+        visible={this.state.previewImage}
+      >
+        <View
+          style={{
+            backgroundColor: masterColor.fontWhite,
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+          <TouchableOpacity 
+            onPress={() => this.setState({previewImage: false})}
+            style={{position: 'absolute', right: 16, top: 16}}>
+            <MaterialIcon
+              name="close"
+              color={Color.fontBlack50}
+              size={24}
+            />
+          </TouchableOpacity>
+          <Image 
+            source={{uri: `data:image/jpg;base64,${this.props.global.imageBase64}`}}
+            resizeMode="stretch"
+            style={{
+              width: width * .7, height: width, 
+              transform: [{rotate: '270deg'}]
+            }}
+          />
+        </View>
+      </ModalPopUp>
+    )
+  }
+  renderTakeIdNoPhotoButton(){
+    const storeIsExist = this.props.auth.dataCheckPhoneAvailble?.store !== null
+    const {idNo, errorIdNumber} = this.state
+    const disabled = idNo === "" || errorIdNumber || storeIsExist
+    return(
+      <View style={{flex:1, flexDirection: 'row', flexWrap: 'wrap', marginVertical: 16}}>
+        <TouchableOpacity 
+          disabled={disabled}
+          onPress={() => this.props.navigation.navigate('TakeIdPicture')}
+          style={{
+              borderWidth: 1, alignItems: 'center', padding: 8, 
+              borderRadius: 12, borderColor: masterColor.buttonGreyWhiteDisabled}}
+        >
+          <MaterialIcon
+            name="photo-camera"
+            color={ disabled ? masterColor.buttonGreyWhiteDisabled : masterColor.fontRed50}
+            size={40}
+          />
+          <Text style={Fonts.type71}>Upload Foto</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
   /** main content */
   renderContent() {
+    const storeIsExist = this.props.auth.dataCheckPhoneAvailble?.store !== null
     return (
       <View style={{ flex: 1, paddingTop: 20 }}>
-        {this.renderNameOwner()}
-        {this.renderNameMerchant()}
+        {this.renderNameOwner(storeIsExist)}
+        {this.renderNameMerchant(storeIsExist)}
         {this.renderSupplier()}
-        {this.renderIdNo()}
-        {this.renderTaxId()}
+        {this.renderIdNo(storeIsExist)}
+        {/* {this.renderImageIdNo()} */}
+        {this.renderTaxId(storeIsExist)}
         <View style={{ paddingBottom: 50 }} />
       </View>
     );
@@ -266,16 +415,14 @@ class AddMerchantStep2 extends Component {
     return (
       <ButtonSingle
         disabled={
-          this.buttonDisable() ||
-          this.props.merchant.loadingAddMerchant ||
-          this.state.addStoreProcess
+          this.buttonDisable() 
+          // this.props.merchant.loadingAddMerchant ||
+          // this.state.addStoreProcess
         }
         title={'Lanjutkan'}
-        loading={
-          this.props.merchant.loadingAddMerchant || this.state.addStoreProcess
-        }
+        loading={this.props.global.loadingUploadImage}
         borderRadius={4}
-        onPress={() => this.nextStep()}
+        onPress={() => this.handleNextButton()}
       />
     );
   }
@@ -289,6 +436,7 @@ class AddMerchantStep2 extends Component {
           {this.renderContent()}
         </ScrollView>
         {this.renderButton()}
+        {/* {this.renderPreviewImage()} */}
       </SafeAreaView>
     );
   }

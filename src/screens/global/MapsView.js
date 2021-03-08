@@ -41,7 +41,8 @@ class MapsView extends Component {
       openErrorGlobalLongLatToAddress: false,
       openModalNoGPS: false,
       openModalErrorGlobal: false,
-      defaultAddress: ''
+      defaultAddress: '',
+      loadingGetAddress: false
     };
   }
   /**
@@ -50,6 +51,7 @@ class MapsView extends Component {
    * ======================
    */
   componentDidMount() {
+    this.props.resetManualLocationInputData()
     this.getCurrentLocation();
   }
 
@@ -108,7 +110,12 @@ class MapsView extends Component {
   /** === CHECK DATA URBAN ID === */
   checkDataUrbanId() {
     if (this.props.global.dataGetUrbanId.length > 0) {
-      this.props.saveVolatileDataMerchant({address: this.state.defaultAddress})
+      const isValidAddress = this.state.defaultAddress !== 'Alamat tidak ditemukan' && this.props.global.dataLocationVolatile.zipCode === ''
+      if(isValidAddress){
+        this.props.saveVolatileDataMerchant({address: this.state.defaultAddress})
+      } else {
+        this.props.saveVolatileDataMerchant({address: null})
+      }
       NavigationService.goBack(this.props.navigation.state.key);
     } else {
       this.setState({ openErrorGlobalLongLatToAddress: true });
@@ -142,14 +149,21 @@ class MapsView extends Component {
     });
   }
   async getDefaultAddress(latlng) {
+    this.setState({loadingGetAddress: true})
     try {
       const {
         data: { results }
       } = await GlobalMethod.getAddressFromLongLat(latlng) || {};
-      if (results.length > 0) {
-        this.setState({defaultAddress: results[0]['formatted_address']});
+      if(results){
+        if (results.length > 0) {
+          this.setState({defaultAddress: results[0]['formatted_address']});
+        } else {
+          this.setState({defaultAddress: 'Alamat tidak ditemukan'});
+        }
+        this.setState({loadingGetAddress: false})
       }
     } catch (error) {
+      this.setState({loadingGetAddress: false})
       console.log(error);
     }
   }
@@ -268,7 +282,7 @@ class MapsView extends Component {
   }
 
   renderDefaultAddress() {
-    if (this.state.defaultAddress) {
+    if (this.state.defaultAddress && !this.state.loadingGetAddress) {
       const street = this.state.defaultAddress
         .split(',')
         .slice(0, 2)

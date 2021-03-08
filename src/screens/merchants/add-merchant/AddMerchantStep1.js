@@ -149,14 +149,17 @@ class AddMerchantStep1 extends Component {
   /** NEXT STEP TO ADD MERCHANT STEP 2 */
   nextStep(){
     const segmentationIsMatch = this.props.auth?.dataCheckPhoneAvailble?.segmentationDetail?.match
+    const portfolioExist = this.props.auth?.dataCheckPhoneAvailble?.segmentationDetail?.porfolioExist
     this.closeModalStoreInformation()
-    if(!segmentationIsMatch){
+    if (portfolioExist){
       this.setState({
-        errorTitle: 'Segmentasi toko tidak sesuai',
-        errorMessage: 'Maaf anda belum bisa menambahkan toko ini.',
+        errorTitle: 'Toko Sudah Ditangani',
+        errorMessage: 'Toko anda sudah ditangani oleh Sales Rep lain dengan Sales Team yang sama. Silahkan hubungi admin untuk proses lebih lanjut.',
         showModalError: true
       })
-    } else {
+      return
+    }
+    if(segmentationIsMatch){
       NavigationService.navigate('AddMerchantStep2');
       const segmentation = this.props.auth?.dataCheckPhoneAvailble?.segmentationDetail
       let dataWarehouses = segmentation?.warehouses
@@ -179,6 +182,12 @@ class AddMerchantStep1 extends Component {
         storeChannel: segmentation?.channel?.name || '',
         channelId: segmentation?.channel?.id,
       });
+    } else {
+      this.setState({
+        errorTitle: 'Segmentasi toko tidak sesuai',
+        errorMessage: 'Maaf anda belum bisa menambahkan toko ini. Silahkan hubungi admin untuk proses lebih lanjut.',
+        showModalError: true
+      })
     }
   }
   /**
@@ -369,7 +378,7 @@ class AddMerchantStep1 extends Component {
   /** RENDER MODAL ERROR CONTENT */
   modalErrorContent() {
     return (
-      <View style={{ alignItems: 'center' }}>
+      <View style={{ alignItems: 'center', paddingHorizontal: 24 }}>
         {this.props.white ? <StatusBarBlackOP40 /> : <StatusBarRedOP50 />}
         <Image
           source={require('../../../assets/images/sinbad_image/failed_error.png')}
@@ -378,13 +387,9 @@ class AddMerchantStep1 extends Component {
         <Text style={[Fonts.type7, { paddingVertical: 8 }]}>
           {this.state.errorTitle}
         </Text>
-        <Text style={Fonts.type17}>
+        <Text style={[Fonts.type17, {textAlign: 'center', lineHeight: 18}]}>
           {this.state.errorMessage}
         </Text>
-        <Text style={Fonts.type17}>
-          Silahkan hubungi admin untuk proses lebih lanjut.
-        </Text>
-
         <View style={{ width: '100%', paddingTop: 40 }}>
           <ButtonSingle
             borderRadius={4}

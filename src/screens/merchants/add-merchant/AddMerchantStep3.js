@@ -29,6 +29,7 @@ import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
 import * as ActionCreators from '../../../state/actions';
 import { Fonts } from '../../../helpers';
+import { GlobalMethod } from '../../../services/methods';
 
 const errorAreaMapping = "Alamat toko yang anda pilih diluar area mapping anda, silakan ubah alamat atau cek area mapping Anda."
 
@@ -46,8 +47,8 @@ class AddMerchantStep3 extends Component {
       /** for maps refresh */
       refreshLocation: false,
       /** field data */
-      address: this.props.merchant.dataMerchantVolatile.address,
-      noteAddress: this.props.merchant.dataMerchantVolatile.noteAddress,
+      address: this.props.merchant.dataMerchantVolatile.address || '',
+      noteAddress: this.props.merchant.dataMerchantVolatile.noteAddress || '',
     };
   }
   /**
@@ -111,12 +112,12 @@ class AddMerchantStep3 extends Component {
     Keyboard.dismiss();
     this.props.resetValidateAreaMapping()
     let urbanId = null
-    let supplierId = null
+    let supplierId = GlobalMethod.userSupplierMapping()
+    if(supplierId.length > 0){
+      supplierId = supplierId[0].toString()
+    }
     if (this.props.global.dataGetUrbanId !== null && this.props.global.dataGetUrbanId.length > 0) {
       urbanId = this.props.global.dataGetUrbanId[0].id
-    }
-    if (this.props.user.userSuppliers !== null && this.props.user.userSuppliers.length > 0) {
-      supplierId = this.props.user.userSuppliers[0].id
     }
     const params = {
       urbanId,
@@ -126,13 +127,16 @@ class AddMerchantStep3 extends Component {
   }
   /** disable button */
   buttonDisable() {
-    return (
-      this.state.address === null ||
-      this.props.global.longitude === '' ||
-      this.props.global.latitude === '' ||
-      this.props.global.dataGetUrbanId === null ||
+    if (
+      !this.state.address ||
+      !this.props.global.longitude ||
+      !this.props.global.latitude ||
+      !this.props.global.dataGetUrbanId ||
       this.props.merchant.loadingValidateAreaMapping
-    );
+    ){
+      return true
+    }
+    return false
   }
   /** GO TO MAPS */
   async goToMaps() {
@@ -157,6 +161,8 @@ class AddMerchantStep3 extends Component {
    * RENDER VIEW
    * ===================
    */
+
+  renderAsteriskRed = () => <Text style={{color: 'red'}}>*</Text>
   /** === RENDER STEP HEADER === */
   renderProgressHeader() {
     return (
@@ -174,7 +180,7 @@ class AddMerchantStep3 extends Component {
     return (
       <InputMapsType2
         change={!this.props.merchant.dataMerchantDisabledField.longLat}
-        title={'* Koordinat Lokasi'}
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Koordinat Lokasi</Text>}
         urbanId={this.props.global.dataGetUrbanId}
         selectedMapLong={this.props.global.longitude}
         selectedMapLat={this.props.global.latitude}
@@ -190,7 +196,7 @@ class AddMerchantStep3 extends Component {
       <InputType4
         multiline={true}
         editable={!this.props.merchant.dataMerchantDisabledField.address}
-        title={'* Detail Alamat'}
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Detail Alamat</Text>}
         value={this.state.address}
         placeholder={'Contoh : Jl. Kemang Raya No.58, RT.8/RW…'}
         keyboardType={'default'}

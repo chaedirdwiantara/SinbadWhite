@@ -16,6 +16,7 @@ import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import { Fonts, GlobalStyle } from '../../helpers';
 import NavigationService from '../../navigation/NavigationService';
+import { GlobalMethod } from '../../services/methods';
 
 
 class SegmentationList extends Component {
@@ -42,15 +43,15 @@ class SegmentationList extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const search = this.props.global.search.toLowerCase()
-    if (prevProps.global.search !== search) {
-      if(search){
+    if (prevProps.global.search !== this.props.global.search) {
+      const search = this.props.global.search.toLowerCase()
+      if(search !== ''){
         let searchData = this.props.merchant.dataSalesSegmentation
         if(searchData){
           searchData = searchData.filter(el => {
             return (
               el.name.toLowerCase().includes(search) || 
-              el.externalId.toLowerCase().includes(search)
+              el.externalId?.toLowerCase().includes(search)
             )
           })
         }
@@ -66,9 +67,9 @@ class SegmentationList extends Component {
 
     /** GET SALES SEGMENTATION DATA */
     const {params} = this.props.navigation.state
-    let supplierId = null
-    if (this.props.user.userSuppliers && this.props.user.userSuppliers.length > 0) {
-      supplierId = this.props.user.userSuppliers[0].id
+    let supplierId = GlobalMethod.userSupplierMapping()
+    if(supplierId.length > 0){
+      supplierId = supplierId[0].toString()
     }
     const body = {
       type: params?.type || 'Unknown Type',

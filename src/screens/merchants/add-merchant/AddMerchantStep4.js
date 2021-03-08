@@ -26,11 +26,21 @@ import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
 import * as ActionCreators from '../../../state/actions';
 import { Fonts } from '../../../helpers';
+import { GlobalMethod } from '../../../services/methods';
 
 class AddMerchantStep4 extends Component {
   constructor(props) {
     super(props);
+    const {
+      warehouse, storeGroup, storeType, 
+      storeChannel, storeCluster
+    } = props.merchant.dataMerchantVolatile
     this.state = {
+      disableWarehouse: warehouse !== '',
+      disableGroup: storeGroup !== '',
+      disableTipe: storeType !== '',
+      disableChannel: storeChannel !== '',
+      disableCluster: storeCluster !== '',
       showModalSuccess: false,
       showModalError: false,
     };
@@ -66,10 +76,9 @@ class AddMerchantStep4 extends Component {
       phone, clusterId, channelId, groupId, typeId,
       noteAddress
     } = this.props.merchant.dataMerchantVolatile
-    let supplierId = null
-    if (this.props.user.userSuppliers !== null && this.props.user.userSuppliers.length > 0) {
-      supplierId = this.props.user.userSuppliers[0].id
-      supplierId = Number(supplierId)
+    let supplierId = GlobalMethod.userSupplierMapping()
+    if(supplierId.length > 0){
+      supplierId = supplierId[0].toString()
     }
     clusterId = Number(clusterId)
     groupId = Number(groupId)
@@ -110,20 +119,21 @@ class AddMerchantStep4 extends Component {
       warehouseId, clusterId, channelId, 
       groupId, typeId
     } = this.props.merchant.dataMerchantVolatile
-    return(
-      this.props.merchant.loadingAddMerchant ||
-      warehouseId === null ||
-      clusterId === null ||
-      channelId === null ||
-      groupId === null ||
-      typeId === null
-    )
+
+    if ( 
+      !this.props.merchant.loadingAddMerchant &&
+      warehouseId && clusterId && channelId && groupId && typeId 
+    ) {
+      return false
+    }
+    return true
   }
   /**
    * ====================
    * RENDER VIEW
    * ===================
    */
+  renderAsteriskRed = () => <Text style={{color: 'red'}}>*</Text>
   /** === RENDER STEP HEADER === */
   renderProgressHeader() {
     return (
@@ -137,13 +147,13 @@ class AddMerchantStep4 extends Component {
     );
   }
   /** WAREHOUSE */
-  renderWarehouse(disabled){
+  renderWarehouse(){
     return (
       <DropdownType1 
-        title={'* Warehouse'}
-        placeholder={'Masukan tipe toko'}
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Warehouse</Text>}
+        placeholder={'Masukan warehouse'}
         selectedDropdownText={this.props.merchant.dataMerchantVolatile.warehouse || '-'}
-        disabled={disabled}
+        disabled={this.state.disableWarehouse}
         openDropdown={() => this.goToDropdown({
           type: 'warehouses',
           placeholder: 'Cari Warehouse'
@@ -152,13 +162,13 @@ class AddMerchantStep4 extends Component {
     )
   }
   /** STORE TYPE */
-  renderStoreType(disabled){
+  renderStoreType(){
     return (
       <DropdownType1 
-        title={'* Tipe Toko'}
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Tipe Toko</Text>}
         placeholder={'Masukan tipe toko'}
         selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeType || '-'}
-        disabled={disabled}
+        disabled={this.state.disableTipe}
         openDropdown={() => this.goToDropdown({
           type: 'types',
           placeholder: 'Cari Tipe Toko'
@@ -167,13 +177,13 @@ class AddMerchantStep4 extends Component {
     )
   }
   /** STORE GROUP */
-  renderStoreGroup(disabled){
+  renderStoreGroup(){
     return(
       <DropdownType1 
-        title={'* Group Toko'}
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Group Toko</Text>}
         placeholder={'Masukan group toko'}
         selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeGroup || '-'}
-        disabled={disabled}
+        disabled={this.state.disableGroup}
         openDropdown={() => this.goToDropdown({
           type: 'groups',
           placeholder: 'Cari Group Toko'
@@ -182,46 +192,45 @@ class AddMerchantStep4 extends Component {
     )
   }
   /** STORE CLUSTER */
-  renderStoreCluster(disabled){
+  renderStoreCluster(){
     return(
       <DropdownType1 
-      disabled={disabled}
-      title={'* Cluster Toko'}
-      placeholder={'Masukan cluster toko'}
-      selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeCluster || '-'}
-      openDropdown={() => this.goToDropdown({
-        type: 'clusters',
-        placeholder: 'Cari Cluster Toko'
-      })}
+        disabled={this.state.disableCluster}
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Cluster Toko</Text>}
+        placeholder={'Masukan cluster toko'}
+        selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeCluster || '-'}
+        openDropdown={() => this.goToDropdown({
+          type: 'clusters',
+          placeholder: 'Cari Cluster Toko'
+        })}
       />
       )
     }
     /** STORE CHANNEL */
-    renderStoreChannel(disabled){
+    renderStoreChannel(){
       return(
         <DropdownType1 
-        title={'* Channel Toko'}
-        placeholder={'Masukan channel toko'}
-        selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeChannel || '-'}
-        disabled={disabled}
-        openDropdown={() => this.goToDropdown({
-          type: 'channels',
-          placeholder: 'Cari Channel Toko'
-        })}
+          title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Channel Toko</Text>}
+          placeholder={'Masukan channel toko'}
+          selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeChannel || '-'}
+          disabled={this.state.disableChannel}
+          openDropdown={() => this.goToDropdown({
+            type: 'channels',
+            placeholder: 'Cari Channel Toko'
+          })}
         />
         )
       }
 
   /** main content */
   renderContent() {
-    const disabled = this.props.auth.dataCheckPhoneAvailble?.store !== null
     return (
       <View style={{ flex: 1, paddingTop: 20 }}>
-        {this.renderWarehouse(disabled)}
-        {this.renderStoreType(disabled)}
-        {this.renderStoreGroup(disabled)}
-        {this.renderStoreCluster(disabled)}
-        {this.renderStoreChannel(disabled)}
+        {this.renderWarehouse()}
+        {this.renderStoreType()}
+        {this.renderStoreGroup()}
+        {this.renderStoreCluster()}
+        {this.renderStoreChannel()}
       </View>
     );
   }

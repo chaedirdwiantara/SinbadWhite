@@ -5,7 +5,8 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
-  Text
+  Text,
+  Image
 } from '../../library/reactPackage'
 import {
   MaterialIcon,
@@ -19,7 +20,10 @@ import {
   StatusBarWhite,
   ToastType1,
   ModalBottomSwipeCloseNotScroll,
-  BackHandlerBackSpecific
+  BackHandlerBackSpecific,
+  ModalBottomType3,
+  StatusBarRedOP50,
+  ButtonSingle
 } from '../../library/component'
 import { MoneyFormat, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
@@ -38,7 +42,8 @@ class JourneyView extends Component {
       openModalAddMerchant: false,
       openModalMerchantList: false,
       showToast: false,
-      notifToast: ''
+      notifToast: '',
+      showModalError: false
     };
   }
   /**
@@ -76,6 +81,7 @@ class JourneyView extends Component {
       loading: true
     });
     this.props.getJourneyPlanReportProcessV2();
+    this.props.portfolioGetProcessV2();
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
@@ -125,10 +131,15 @@ class JourneyView extends Component {
         break;
       case 'new_merchant':
         this.setState({ openModalAddMerchant: false });
-        this.props.savePageAddMerchantFrom('JourneyView');
-        setTimeout(() => {
-          NavigationService.navigate('AddMerchantStep1');
-        }, 100);
+        const portfolio = this.props.merchant.dataGetPortfolioV2
+        if(portfolio !== null && portfolio.length > 0){
+          this.props.savePageAddMerchantFrom('JourneyView');
+          setTimeout(() => {
+            NavigationService.navigate('AddMerchantStep1');
+          }, 100);
+        } else {
+          this.setState({showModalError: true})
+        }
         break;
       default:
         break;
@@ -228,6 +239,46 @@ class JourneyView extends Component {
       <View />
     );
   }
+   /** RENDER MODAL ERROR */
+   renderModalError(){
+    return(
+      <ModalBottomType3
+        title={''}
+        open={this.state.showModalError}
+        close={() => this.setState({showModalError: false, errorTitle: '', errorMessage: ''})}
+        content={this.modalErrorContent()}
+        typeClose={'cancel'}
+      />
+    )
+  }
+
+  /** RENDER MODAL ERROR CONTENT */
+  modalErrorContent() {
+    return (
+      <View style={{ alignItems: 'center', paddingHorizontal: 24 }}>
+        <StatusBarRedOP50 />
+        <Image
+          source={require('../../assets/images/sinbad_image/failed_error.png')}
+          style={{ width: 208, height: 156 }}
+        />
+        <Text style={[Fonts.type7, { paddingVertical: 8, textAlign: 'center' }]}>
+          Maaf, Anda tidak memiliki akses untuk membuat toko
+        </Text>
+        <Text style={[Fonts.type17, {textAlign: 'center', lineHeight: 18}]}>
+          Hal ini bisa terjadi karena Anda tidak memiliki portfolio. Silakan hubungi admin untuk proses lebih lanjut.
+        </Text>
+        <View style={{ width: '100%', paddingTop: 40 }}>
+          <ButtonSingle
+            borderRadius={4}
+            title={'Oke, Saya Mengerti'}
+            onPress={() => {
+              this.setState({showModalError: false})
+            }}
+          />
+        </View>
+      </View>
+    );
+  }
   /** ===================== */
   /** === MAIN === */
   render() {
@@ -245,6 +296,7 @@ class JourneyView extends Component {
         {this.renderModalAddMerchant()}
         {this.renderModalMerchantList()}
         {this.renderToast()}
+        {this.state.showModalError && this.renderModalError()}
       </SafeAreaView>
     );
   }

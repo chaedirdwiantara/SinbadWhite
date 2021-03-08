@@ -101,6 +101,18 @@ function getListAndSearch(data) {
   });
 }
 /**
+ * ==========================
+ * UPLOAD PHOTO
+ * ==========================
+ */
+function uploadImage(data) {
+  return ApiRest({
+    path: 'upload-user-photo',
+    method: 'POST',
+    params: data
+  });
+}
+/**
  * ============================
  * GET ADDRESSS FROM LONG LAT
  * ============================
@@ -190,7 +202,8 @@ export const GlobalMethod = {
   merchantStoreId,
   userSupplierMapping,
   userStoreId,
-  addGaps
+  addGaps,
+  uploadImage
 };
 
 /**

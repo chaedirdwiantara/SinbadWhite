@@ -11,10 +11,15 @@ import { LoadingPage } from '../../library/component';
 import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions'
 import { Fonts } from '../../helpers';
+import { GlobalMethod } from '../../services/methods';
 
 class SegmentasiSalesTeamView extends Component {
   componentDidMount(){
-    this.props.getSalesSegmentationTeamProcess()
+    let supplierId = GlobalMethod.userSupplierMapping()
+    if(supplierId.length > 0){
+      supplierId = supplierId[0].toString()
+    }
+    this.props.getSalesSegmentationTeamProcess(supplierId)
   }
 
   setValue(params){
