@@ -478,6 +478,9 @@ class OmsCheckoutView extends Component {
   /** === MODIFY DATA FOR PAYLATER KUR === */
   selectedPaylaterType(item) {
     console.log('selected pay later type');
+    this.setState({
+      openModalKurAnnouncement: true
+    })
     // if (item.isRedirect === true) {
     //   this.setState({
     //     selectedPaylaterType: item,
@@ -904,7 +907,7 @@ class OmsCheckoutView extends Component {
             openModalKurAnnouncement: false
           })
         }
-        url={this.state.selectedPaylaterType.redirectUrl}
+        // url={this.state.selectedPaylaterType.redirectUrl}
         onRef={ref => (this.applicablePaylater = ref)}
         applicablePaylater={this.applicablePaylater.bind(this)}
       />
