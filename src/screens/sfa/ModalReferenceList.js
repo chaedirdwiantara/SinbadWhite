@@ -132,7 +132,7 @@ return (
   const renderListCollectionMethod = () => {
     return (
       <>
-      {/* {data? ( */}
+      {dataGetReferenceList.data.length > 0? (
         <View style={{flex: 1}}>
         <FlatList
         
@@ -148,11 +148,11 @@ return (
         />
         </View>
 
-      {/* ) : (
-        <View style={{ marginTop: '20%' }}>
+       ) : (
+        <View style={{ marginTop: '30%' }}>
           <SfaNoDataView />
         </View>
-      )} */}
+      )} 
       </>
     )
   }
