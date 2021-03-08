@@ -69,6 +69,7 @@ const SfaAddTagihanGiro = props => {
     props.dueDate(null)
     props.balance(0)
     props.bankSource(null)
+    props.useNoReference(false)
   }
 
   const noReference = (data) => {
@@ -519,6 +520,8 @@ const selectedReference = (data) => {
   props.issuedDate(data.issuedDate)
   props.dueDate(data.invalidDate)
   props.balance(data.balance)
+  props.useNoReference(true)
+  props.paymentCollectionMethodId(data.id)
 
 }
 
