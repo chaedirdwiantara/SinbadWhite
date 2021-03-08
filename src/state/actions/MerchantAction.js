@@ -73,6 +73,38 @@ export function merchantGetLoadMore(page) {
 }
 /**
  * ==============================
+ * GET MERCHANT LIST BY PORTFOLIO EXCLUDE STORE ON JOURNEY PLAN
+ * ==============================
+ */
+/** === MERCHANT GET PROCESS ==== */
+export function merchantExistingGetProcess(data) {
+  return { type: types.MERCHANT_EXISTING_GET_PROCESS, payload: data };
+}
+/** === MERCHANT GET SUCCESS === */
+export function merchantExistingGetSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.MERCHANT_EXISTING_GET_SUCCESS, payload: data.data };
+  }
+  return { type: types.MERCHANT_EXISTING_GET_FAILED, payload: data };
+}
+/** === MERCHANT GET FAILED === */
+export function merchantExistingGetFailed(data) {
+  return { type: types.MERCHANT_EXISTING_GET_FAILED, payload: data };
+}
+/** === REFRESH GET MERCHANT === */
+export function merchantExistingGetRefresh() {
+  return { type: types.MERCHANT_EXISTING_GET_REFRESH };
+}
+/** === RESET GET MERCHANT === */
+export function merchantExistingGetReset() {
+  return { type: types.MERCHANT_EXISTING_GET_RESET };
+}
+/** === LOAD MORE GET MERCHANT === */
+export function merchantExistingGetLoadMore(page) {
+  return { type: types.MERCHANT_EXISTING_GET_LOADMORE, payload: page };
+}
+/**
+ * ==============================
  * GET MERCHANT LIST BY PORTFOLIO V2
  * ==============================
  */
@@ -475,6 +507,9 @@ export function merchantGetSurveyListSuccess(data) {
 }
 export function merchantGetSurveyListFailed(data) {
   return { type: types.MERCHANT_GET_SURVEY_LIST_FAILED, payload: data };
+}
+export function merchantGetSurveyListReset(data) {
+  return { type: types.MERCHANT_GET_SURVEY_LIST_RESET, payload: data };
 }
 /**
  * ===========================================

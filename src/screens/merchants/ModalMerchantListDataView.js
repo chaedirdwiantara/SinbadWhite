@@ -11,6 +11,7 @@ import {
 import {
   bindActionCreators,
   MaterialIcon,
+  moment,
   connect
 } from '../../library/thirdPartyPackage'
 import {
@@ -22,6 +23,7 @@ import {
 import { Color } from '../../config'
 import { GlobalStyle, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
+const date = moment().format('YYYY-MM-DD');
 
 class ModalMerchantListDataView extends Component {
   constructor(props) {
@@ -34,8 +36,9 @@ class ModalMerchantListDataView extends Component {
    * =======================
    */
   onHandleRefresh = () => {
-    this.props.merchantGetRefreshV2();
-    this.props.merchantGetProcessV2({
+    this.props.merchantExistingGetReset();
+    this.props.merchantExistingGetProcess({
+      date,
       loading: true,
       page: 1,
       portfolioId: this.props.merchant.dataGetPortfolioV2[
@@ -52,8 +55,9 @@ class ModalMerchantListDataView extends Component {
         this.props.merchant.totalDataGetMerchantV2
       ) {
         const page = this.props.merchant.pageGetMerchantV2 + 10;
-        this.props.merchantGetLoadMoreV2(page);
-        this.props.merchantGetProcessV2({
+        this.props.merchantExistingGetLoadMore(page);
+        this.props.merchantExistingGetProcess({
+          date,
           loading: true,
           page,
           portfolioId: this.props.merchant.dataGetPortfolioV2[0].id,
@@ -250,7 +254,7 @@ export default connect(
  * updatedFunction:
  * -> update the props of portfolio.
  * updatedBy: dyah
- * updatedDate: 25022021
+ * updatedDate: 08032021
  * updatedFunction:
  * -> update the props of merchant list.
  */

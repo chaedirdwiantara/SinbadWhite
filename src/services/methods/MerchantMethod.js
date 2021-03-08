@@ -20,6 +20,15 @@ function getMerchantV2(data) {
     method: 'GET'
   });
 }
+/** === MERCHANT LIST BY PORTFOLIO EXCLUDE STORE ON JOURNEY PLAN === */
+function getMerchantExisting(data) {
+  return ApiRest({
+    path: `${salesManagementService}/v1/agent/journey-book/stores/existing?date=${
+      data.date
+    }&search=${data.search}`,
+    method: 'GET'
+  });
+}
 /** === MERCHANT DETAIL === */
 function getMerchantDetail(id) {
   return ApiRest({
@@ -182,6 +191,7 @@ function updateSurvey({ params, surveyResponseId }) {
 export const MerchantMethod = {
   getMerchant,
   getMerchantV2,
+  getMerchantExisting,
   getMerchantDetail,
   getMerchantDetailV2,
   getPortfolioByUserId,
@@ -234,4 +244,8 @@ export const MerchantMethod = {
  * updatedDate: 26022021
  * updatedFunction:
  * -> Update the methods. (getNoOrderReason, postActivityV2, getMerchantV2)
+ * updatedBy: dyah
+ * updatedDate: 08032021
+ * updatedFunction:
+ * -> Add new method. (getMerchantExisting)
  */
