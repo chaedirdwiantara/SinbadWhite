@@ -29,6 +29,8 @@ import SfaAddTagihanCheque from './SfaAddTagihanCheque';
 import SfaAddTagihanTransfer from './SfaAddTagihanTransfer';
 import SfaAddTagihanPromo from './SfaAddTagihanPromo';
 import SfaAddTagihanGiro from './SfaAddTagihanGiro';
+import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment'
+
 import { 
   sfaPostPaymentMethodProcess, 
   sfaPostCollectionPaymentProcess,
@@ -45,7 +47,8 @@ const SfaAddTagihanView = props => {
   const { 
     dataSfaPostPaymentMethod, 
     dataSfaPostCollectionPayment,
-    errorSfaPostPaymentMethod,  
+    errorSfaPostPaymentMethod, 
+    errorSfaPostCollectionPayment,
     loadingSfaPostPaymentMethod, 
     loadingSfaPostCollectionPayment
   } = useSelector(state => state.sfa);
@@ -73,12 +76,21 @@ const SfaAddTagihanView = props => {
   const prevDataSfaPostPaymentMethodRef = useRef(dataSfaPostPaymentMethod)
   const prevDataSfaPostCollectionPaymentRef = useRef(dataSfaPostCollectionPayment)
 
+  //USEREF ERROR
+  const prevErrorSfaPostPaymentMethodRef = useRef(errorSfaPostPaymentMethod)
+  const prevErrorSfaPostCollectionPaymentRef = useRef(errorSfaPostCollectionPayment)
+
+  //MODAL
+  const [modalBottomError , setModalBottomError] = useState(false)
+  const [messageError, setMessageError] = useState(null)
+
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
 
+   //USE EFFECT PREV DATA
   useEffect(() => {
     prevDataSfaPostPaymentMethodRef.current = dataSfaPostPaymentMethod;
   }, []);
@@ -88,6 +100,18 @@ const SfaAddTagihanView = props => {
     prevDataSfaPostCollectionPaymentRef.current = dataSfaPostCollectionPayment;
   }, []); 
   const prevDataSfaPostCollectionPayment = prevDataSfaPostCollectionPaymentRef.current
+
+  //USE EFFECT PREV DATA ERROR
+  useEffect(() => {
+    prevErrorSfaPostPaymentMethodRef.current = errorSfaPostPaymentMethod;
+  }, []);
+  const prevErrorSfaPostPaymentMethod = prevErrorSfaPostPaymentMethodRef.current
+
+  useEffect(() => {
+    prevErrorSfaPostCollectionPaymentRef.current = errorSfaPostCollectionPayment;
+  }, []); 
+  const prevErrorSfaPostCollectionPayment = prevErrorSfaPostCollectionPaymentRef.current
+
 
   const selectedCollectionMethod = data => {
     setCollectionMethod(data);
@@ -226,6 +250,26 @@ const SfaAddTagihanView = props => {
       }
     }
   }, [dataSfaPostCollectionPayment])
+
+  //HANDLE ERROR POST PAYMENT
+  useEffect(()=>{
+    if (prevErrorSfaPostPaymentMethod !== errorSfaPostPaymentMethod) {
+      if(errorSfaPostPaymentMethod) {
+        setModalBottomError(true)
+        setMessageError(errorSfaPostPaymentMethod.payload.data.errorMessage)
+      }
+    }
+  }, [errorSfaPostPaymentMethod])
+
+  //HANDLE ERROR POST COLLECTION
+  useEffect(()=>{
+    if (prevErrorSfaPostCollectionPayment !== errorSfaPostCollectionPayment) {
+      if(errorSfaPostCollectionPayment) {
+        setModalBottomError(true)
+        setMessageError(errorSfaPostCollectionPayment.payload.data.errorMessage)
+      }
+    }
+  }, [errorSfaPostCollectionPayment])
 
   useEffect(() => {
     if (loadingSfaPostCollectionPayment || loadingSfaPostPaymentMethod) {
@@ -640,6 +684,23 @@ const SfaAddTagihanView = props => {
     );
   };
 
+  /** RENDER MODAL ERROR */
+  const renderModalError = () => {
+    return (
+      <View>
+        {modalBottomError ? (
+          <ErrorBottomFailPayment
+            open={modalBottomError}
+            onPress={() => setModalBottomError(false)}
+            text={messageError}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  };
+
   /**
    * ==================================
    * RENDER CONTENT DATA (MAIN VIEW)
@@ -668,6 +729,7 @@ const SfaAddTagihanView = props => {
         <ScrollView style={{ flex: 1 }}>{renderContent()}</ScrollView>
         {renderButtonSave()}
         {renderModalCollectionMethod()}
+        {renderModalError()}
       </SafeAreaView>
       {/* ) : (
         <LoadingPage />

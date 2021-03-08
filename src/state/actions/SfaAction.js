@@ -254,3 +254,28 @@ export function SfaGetLoadMore(page) {
 export function sfaGetRefresh() {
   return { type: types.SFA_GET_REFRESH };
 }
+
+/**
+ * ===========================
+ * GET STATUS ORDER
+ * ===========================
+ */
+/** === SFA POST COLLECTION PAYMENT PROCESS === */
+export function sfaGetStatusOrderProcess(data) {
+  return { type: types.SFA_GET_STATUS_ORDER_PROCESS, payload: data };
+}
+
+/** === SFA POST COLLECTION PAYMENT SUCCESS === */
+export function sfaGetStatusOrderSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_STATUS_ORDER_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_STATUS_ORDER_FAILED, payload: data };
+}
+/** === SFA POST COLLECTION PAYMENT FAILED === */
+export function sfaGetStatusOrderFailed(data) {
+  return { type: types.SFA_GET_STATUS_ORDER_FAILED, payload: data };
+}
