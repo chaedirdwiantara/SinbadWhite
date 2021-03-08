@@ -49,7 +49,6 @@ const SfaAddTagihanTransfer = props => {
   //SELECTOR
   const {selectedMerchant} = useSelector(state => state.merchant);
   
-
   /**
    * =======================
    * FUNCTIONAL

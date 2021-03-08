@@ -233,7 +233,7 @@ const SfaView = props => {
         <View style={{ flexDirection: 'row' }}>
           <View style={{ flex: 1 }}>
             <SearchBarType1
-              placeholder={'Cari produk, nomor pesanan'}
+              placeholder={'Cari tagihan disini'}
               searchText={searchText}
               onRef={ref => (parentFunction = ref)}
               parentFunction={parentFunction.bind(this)}
@@ -262,14 +262,10 @@ const SfaView = props => {
    */
   return (
     <>
-      {/* {props.merchant.dataGetMerchantDetail ? ( */}
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarWhite />
         <View style={{ flex: 1 }}>{renderContent()}</View>
       </SafeAreaView>
-      {/* ) : (
-        <LoadingPage />
-      )} */}
     </>
   );
 };
