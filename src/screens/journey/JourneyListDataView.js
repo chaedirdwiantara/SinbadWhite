@@ -56,7 +56,7 @@ class JourneyListDataView extends Component {
         this.props.journeyPlanGetLoadMoreV2(page);
         this.props.journeyPlanGetProcessV2({
           page,
-          data: today,
+          date: today,
           loading: true
         });
       }
@@ -363,5 +363,8 @@ export default connect(
  * updatedFunction:
  * -> Update the validation with visitStatus.
  * -> Change storeId to string.
+ * updatedDate: 08032021
+ * updatedFunction:
+ * -> Update parameter when loadmore.
  *
  */
