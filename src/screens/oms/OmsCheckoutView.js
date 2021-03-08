@@ -40,6 +40,7 @@ import ModalBottomFailPayment from '../../components/error/ModalBottomFailPaymen
 import ModalBottomPayLaterType from './ModalBottomPayLaterType';
 import ModalConfirmKUR from '../../components/modal/ModalConfirmationType3';
 import ModalOmsKurWebView from './ModalOmsKurWebView';
+import ModalOmsKurAnnouncement from './ModalOmsKurAnnouncement';
 class OmsCheckoutView extends Component {
   constructor(props) {
     super(props);
@@ -100,7 +101,8 @@ class OmsCheckoutView extends Component {
       modalPayLaterType: false,
       modalConfirmKUR: false,
       openModalKurWebView: false,
-      openModalFailPaylater: false
+      openModalFailPaylater: false,
+      openModalKurAnnouncement: false
     };
   }
   /**
@@ -475,22 +477,23 @@ class OmsCheckoutView extends Component {
 
   /** === MODIFY DATA FOR PAYLATER KUR === */
   selectedPaylaterType(item) {
-    if (item.isRedirect === true) {
-      this.setState({
-        selectedPaylaterType: item,
-        modalConfirmKUR: true,
-        modalPaylaterType: true,
-        modalPaymentTypeMethod: false
-      });
-    } else {
-      this.setState({
-        selectedPaylaterType: item,
-        modalConfirmKUR: false,
-        modalPaylaterType: false,
-        modalPaymentTypeMethod: true
-      });
-      this.openPaymentMethod(this.state.selectedPaymentType);
-    }
+    console.log('selected pay later type');
+    // if (item.isRedirect === true) {
+    //   this.setState({
+    //     selectedPaylaterType: item,
+    //     modalConfirmKUR: true,
+    //     modalPaylaterType: true,
+    //     modalPaymentTypeMethod: false
+    //   });
+    // } else {
+    //   this.setState({
+    //     selectedPaylaterType: item,
+    //     modalConfirmKUR: false,
+    //     modalPaylaterType: false,
+    //     modalPaymentTypeMethod: true
+    //   });
+    //   this.openPaymentMethod(this.state.selectedPaymentType);
+    // }
   }
 
   /** === CHECK PAYMENT ALREADY SELECTED === */
@@ -880,6 +883,25 @@ class OmsCheckoutView extends Component {
         close={() =>
           this.setState({
             openModalKurWebView: false
+          })
+        }
+        url={this.state.selectedPaylaterType.redirectUrl}
+        onRef={ref => (this.applicablePaylater = ref)}
+        applicablePaylater={this.applicablePaylater.bind(this)}
+      />
+    ) : (
+      <View />
+    );
+  }
+
+   /** === RENDER MODAL KUR WEB VIEW === */
+   renderModalKurAnncouncement() {
+    return this.state.openModalKurAnnouncement ? (
+      <ModalOmsKurAnnouncement
+        open={this.state.openModalKurAnnouncement}
+        close={() =>
+          this.setState({
+            openModalKurAnnouncement: false
           })
         }
         url={this.state.selectedPaylaterType.redirectUrl}
@@ -1878,6 +1900,7 @@ class OmsCheckoutView extends Component {
         {this.renderModalConfirmKUR()}
         {this.renderModalKurWebview()}
         {this.renderModalFailPaylater()}
+        {this.renderModalKurAnncouncement()}
       </View>
     );
   }
