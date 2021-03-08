@@ -460,6 +460,7 @@ const renderModalReference = () => {
           supplierId = {selectedMerchant.supplierId}
           storeId= {selectedMerchant.storeId}
           paymentCollectionTypeId = {props.paymentCollectionTypeId}
+          type={'cek'}
         />
       ) : null}
     </View>

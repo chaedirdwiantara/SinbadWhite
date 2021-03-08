@@ -262,14 +262,10 @@ const SfaView = props => {
    */
   return (
     <>
-      {/* {props.merchant.dataGetMerchantDetail ? ( */}
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarWhite />
         <View style={{ flex: 1 }}>{renderContent()}</View>
       </SafeAreaView>
-      {/* ) : (
-        <LoadingPage />
-      )} */}
     </>
   );
 };

@@ -40,7 +40,7 @@ function ModalReferenceList(props) {
    */
   useEffect(() => {
     getReference()
-  }, [searchText]);
+  }, [searchText, limit]);
 
    /** GET REFERENCE LIST DATA */
    const getReference = () => {
@@ -60,6 +60,19 @@ const parentFunction = (data) => {
     setSearchText(data.data)
 }
 }
+
+const loadMore = () => {
+  if (dataGetReferenceList) {
+    if (
+      dataGetReferenceList.data.length <
+      dataGetReferenceList.meta.total
+    ) {
+      const page = limit + 10;
+      setLimit(page);
+    }
+  }
+}
+
   /**
    * *********************************
    * RENDER VIEW
@@ -86,7 +99,7 @@ const parentFunction = (data) => {
           </View>
           <View style={{width: '90%', marginLeft: -8}}>
           <SearchBarType1
-              placeholder={'Cari Cek Disini'}
+              placeholder={props.type === 'cek' ? 'Cari Cek Disini' : props.type === 'giro'? 'Cari Giro Disini' : 'Cari data disini'  }
               searchText={searchText}
               onRef={ref => (parentFunction = ref)}
               parentFunction={parentFunction.bind(this)}
@@ -130,7 +143,7 @@ return (
             // refreshing={refreshGetCollection}
             // onRefresh={()=>props.refersh()}
           onEndReachedThreshold={0.2}
-          // onEndReached={() => props.loadmore()}
+          onEndReached={()=>loadMore()}
           showsVerticalScrollIndicator
         />
         </View>
@@ -144,30 +157,7 @@ return (
     )
   }
 
-  const renderCollectionMethod = () => {
-    const data = dataGetReferenceList
-    if( data.data && data.data.length > 0)
-   { return data.data.map((item, index) => {
-      return (
-        <View key={index}>
-          <TouchableOpacity onPress={() => props.selectCollection(item)}>
-            <View style={{margin: 16}}>
-              <Text style={Fonts.type24}>{item.referenceCode}</Text>
-              {
-                item.balance > 0 
-                ? <Text style={[Fonts.type22, {marginTop: 5}]}>Saldo: {MoneyFormat(item.balance)}</Text>
-                : null
-              }
-            </View>
-            <View style={GlobalStyle.lines} />
-          </TouchableOpacity>
-        </View>
-      )
-    })}
-    else {
-      return <SfaNoDataView />
-    }
-  }
+  
 
   /**
    * ==================================
