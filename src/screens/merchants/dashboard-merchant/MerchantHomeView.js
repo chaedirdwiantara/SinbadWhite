@@ -161,7 +161,6 @@ class MerchantHomeView extends Component {
     const { surveyList } = this.props.merchant;
     console.log('SURVEY LIST', surveyList, this.state.successSurveyList);
     const sfaStatus =  this.props.sfa.dataSfaGetStatusOrder
-    console.log("woii:", this.props.merchant.dataGetLogAllActivity);
     /** IF NO SURVEY */
     if (
       _.isEmpty(surveyList.payload.data) &&
