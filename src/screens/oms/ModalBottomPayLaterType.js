@@ -60,7 +60,7 @@ class ModalBottomPaylaterType extends Component {
                 <View>
                   <Text style={Fonts.type8}>{item.description}</Text>
                 </View>
-                {item.message || item.message !== '' ? (
+                {(item.message || item.message !== '' ) && item.status !== 'enabled' ? (
                   <View style={{ marginTop: 8 }}>
                     <Text style={Fonts.type28}>{item.message}</Text>
                   </View>
@@ -119,7 +119,7 @@ class ModalBottomPaylaterType extends Component {
           open={this.props.open}
           onPress={this.props.close}
           close={this.props.close}
-          title={'Tipe Bayar Nanti'}
+          title={'Penyedia Layanan'}
           content={this.renderContent()}
         />
       </>
