@@ -96,7 +96,11 @@ class ModalMerchantListDataView extends Component {
         key={index}
         style={styles.boxItem}
         onPress={() =>
-          this.props.parentFunction({ type: 'merchant', data: item.storeId })
+          this.props.parentFunction({
+            type: 'merchant',
+            data: item.storeId,
+            item
+          })
         }
       >
         <View>
@@ -257,4 +261,8 @@ export default connect(
  * updatedDate: 08032021
  * updatedFunction:
  * -> update the props of merchant list.
+ * updatedBy: dyah
+ * updatedDate: 09032021
+ * updatedFunction:
+ * -> add new data when passing to parent function.
  */
