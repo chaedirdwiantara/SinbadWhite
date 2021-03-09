@@ -233,7 +233,7 @@ const SfaView = props => {
         <View style={{ flexDirection: 'row' }}>
           <View style={{ flex: 1 }}>
             <SearchBarType1
-              placeholder={'Cari tagihan disini'}
+              placeholder={'Cari nomor pesanan, nomor referensi'}
               searchText={searchText}
               onRef={ref => (parentFunction = ref)}
               parentFunction={parentFunction.bind(this)}
