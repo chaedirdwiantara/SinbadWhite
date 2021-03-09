@@ -77,7 +77,7 @@ class SegmentationList extends Component {
     }
     if(params?.type === 'warehouses'){
       if (this.props.global.dataGetUrbanId && this.props.global.dataGetUrbanId.length > 0) {
-        body.urbanId = '1' || this.props.global.dataGetUrbanId[0].id
+        body.urbanId = this.props.global.dataGetUrbanId[0].id
       }
     }
     this.props.getSalesSegmentationProcess(body)
