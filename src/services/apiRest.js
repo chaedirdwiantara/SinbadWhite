@@ -58,21 +58,13 @@ export default async function endpoint({ path, method, params }) {
             deviceData,
             time: new Date()
           });
-          if (response.code > 1000) {
-            return {
-              result: "Error",
-              data: response,
-              code: response.code
-             }
-            }else {
-              return {
-                result: 'Error',
-                data: data.data,
-                code: response.status,
-                message: data.message,
-                errorCodeMessage: data.data ? data.data.errCode : null
-              };
-            }
+          return {
+            result: 'Error',
+            data: data.data,
+            code: response.status,
+            message: data.message,
+            errorCodeMessage: data.data ? data.data.errCode : null
+          };
         });
       }
     })
