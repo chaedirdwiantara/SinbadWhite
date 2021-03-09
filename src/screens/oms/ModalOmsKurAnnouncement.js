@@ -140,8 +140,8 @@ class ModalOmsKurAnnouncement extends Component {
       <View >
         <ButtonSingle
           borderRadius={5}
-          title={'Proses Sekarang'}
-          onPress={() => alert("process ...")}
+          title={'Hubungi Customer Service'}
+          onPress={() =>  NavigationService.navigate('ProfileView')}
         />
       </View>
     );
