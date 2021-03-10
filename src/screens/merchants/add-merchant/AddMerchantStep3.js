@@ -5,11 +5,16 @@ import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
-  Keyboard
+  Keyboard,
+  Image,
+  Text,
+  PermissionsAndroid,
+  ToastAndroid
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
-  connect
+  connect,
+  Button
 } from '../../../library/thirdPartyPackage';
 import {
   ButtonSingle,
@@ -17,11 +22,16 @@ import {
   ProgressBarType1,
   InputType4,
   InputMapsType2,
-  DropdownType2
+  ModalBottomType3,
+  StatusBarRedOP50
 } from '../../../library/component';
 import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
 import * as ActionCreators from '../../../state/actions';
+import { Fonts } from '../../../helpers';
+import { GlobalMethod } from '../../../services/methods';
+
+const errorAreaMapping = "Alamat toko yang anda pilih diluar area mapping anda, silakan ubah alamat atau cek area mapping Anda."
 
 class AddMerchantStep3 extends Component {
   constructor(props) {
@@ -30,20 +40,15 @@ class AddMerchantStep3 extends Component {
       /** error */
       errorLocation: false,
       errorDetailLocation: false,
-      errorUrbanId: false,
-      errorWarehouse: false,
-      disabledDropdown: true,
       disabledAction: false,
       disableButton: true,
+      errorValidateAreaMapping: false,
+      errorMessage: '',
       /** for maps refresh */
       refreshLocation: false,
       /** field data */
-      address: this.props.merchant.dataMerchantVolatile.address,
-      noteAddress: this.props.merchant.dataMerchantVolatile.noteAddress,
-      /** for warehouse check */
-      warehouseFound: null,
-      warehouse: '',
-      warehouseTitle: 'Warehouse'
+      address: this.props.merchant.dataMerchantVolatile.address || '',
+      noteAddress: this.props.merchant.dataMerchantVolatile.noteAddress || '',
     };
   }
   /**
@@ -63,104 +68,101 @@ class AddMerchantStep3 extends Component {
         this.setState({ refreshLocation: false });
       }, 100);
     }
-
-    /** CHECK URBAN ID */
-    if (prevProps.global.dataGetUrbanId !== this.props.global.dataGetUrbanId) {
-      /** GET WAREHOUSE */
-
-      if (
-        this.props.global.dataGetUrbanId !== null &&
-        this.props.global.dataGetUrbanId.length !== 0
-      ) {
-        setTimeout(() => {
-          this.props.merchantGetWarehouseProcess(
-            this.props.global.dataGetUrbanId[0].id
-          );
-        }, 100);
+    /** VALIDATE AREA MAPPING IS SUCCESS */
+    if(prevProps.merchant.dataValidateAreaMapping !== this.props.merchant.dataValidateAreaMapping){
+      let dataValidateAreaMapping = this.props.merchant.dataValidateAreaMapping
+      if(dataValidateAreaMapping !== null){
+        if(dataValidateAreaMapping.length > 0){
+          let urbanId = null
+          if (this.props.global.dataGetUrbanId && this.props.global.dataGetUrbanId.length > 0) {
+            urbanId = this.props.global.dataGetUrbanId[0].id
+          }
+          this.props.saveVolatileDataMerchant({
+            longitude: this.props.global.longitude,
+            latitude: this.props.global.latitude,
+            address: this.state.address,
+            noteAddress: this.state.noteAddress,
+            urbanId
+          });
+          NavigationService.navigate('AddMerchantStep4')
+        } else {
+          this.setState({
+            errorValidateAreaMapping: true,
+            errorMessage: errorAreaMapping
+          })
+        }
       }
     }
-
-    /** CHECK WAREHOUSE */
-    if (
-      prevProps.merchant.dataGetWarehouse !==
-      this.props.merchant.dataGetWarehouse
-    ) {
-      if (this.props.merchant.dataGetWarehouse !== null) {
-        const warehouse = this.props.merchant.dataGetWarehouse;
-        if (warehouse.total === 0) {
-          this.props.saveVolatileDataMerchant({
-            warehouse: 'Lokasi toko tidak dalam area jangkauan warehouse tertentu.',
-            warehouseId: null
-          });
-          this.setState({
-            disabledAction: true,
-            warehouseFound: 0
-          });
-        } else if (warehouse.total === 1) {
-          this.props.saveVolatileDataMerchant({
-            warehouse: warehouse.data[0].name,
-            warehouseId: warehouse.data[0].id
-          });
-          this.setState({
-            disabledAction: true,
-            warehouseFound: 1
-          });
-        } else if (warehouse.total > 1) {
-          this.props.saveVolatileDataMerchant({
-            warehouse: null
-          });
-          this.setState({
-            disabledDropdown: false,
-            disabledAction: false,
-          });
+    if(prevProps.merchant.dataMerchantVolatile.address !== this.props.merchant.dataMerchantVolatile.address){
+      this.setState({address: this.props.merchant.dataMerchantVolatile.address})
+    }
+    /** VALIDATE AREA MAPPING IS ERROR */
+    if(prevProps.merchant.errorValidateAreaMapping !== this.props.merchant.errorValidateAreaMapping){
+      const error = this.props.merchant.errorValidateAreaMapping
+      if(error){
+        this.setState({errorValidateAreaMapping: true})
+        if(error?.code === 400){
+          this.setState({errorMessage: errorAreaMapping})
         }
       }
     }
   }
   /** SEND DATA ADD MERCHANT */
   nextStep() {
-    this.setState({ addStoreProcess: true });
     Keyboard.dismiss();
-    this.props.saveVolatileDataMerchant({
-      longitude: this.props.global.longitude,
-      latitude: this.props.global.latitude,
-      address: this.state.address,
-      noteAddress: this.state.noteAddress,
-      urbanId: this.props.global.dataGetUrbanId[0].id,
-      warehouse: this.props.merchant.dataMerchantVolatile.warehouse,
-      warehouseId: this.props.merchant.dataMerchantVolatile.warehouseId
-    });
-    setTimeout(() => {
-      this.setState({ addStoreProcess: false });
-      NavigationService.navigate('AddMerchantStep4');
-    }, 100);
-  }
-  /** GO TO DROPDOWN LIST */
-  goToDropdown(data) {
-    NavigationService.navigate('ListAndSearchType1', {
-      placeholder: data.placeholder,
-      type: data.type
-    });
+    this.props.resetValidateAreaMapping()
+    let urbanId = null
+    let supplierId = GlobalMethod.userSupplierMapping()
+    if(supplierId.length > 0){
+      supplierId = supplierId[0].toString()
+    }
+    if (this.props.global.dataGetUrbanId !== null && this.props.global.dataGetUrbanId.length > 0) {
+      urbanId = this.props.global.dataGetUrbanId[0].id
+    }
+    const params = {
+      urbanId,
+      supplierId
+    }
+    this.props.validateAreaMappingProcess(params)
   }
   /** disable button */
   buttonDisable() {
-    return (
-      this.state.address === null ||
-      this.props.global.longitude === '' ||
-      this.props.global.latitude === '' ||
-      this.props.global.dataGetUrbanId === null ||
-      this.props.merchant.dataMerchantVolatile.warehouse === null
-    );
+    if (
+      !this.state.address ||
+      !this.props.global.longitude ||
+      !this.props.global.latitude ||
+      !this.props.global.dataGetUrbanId ||
+      this.props.merchant.loadingValidateAreaMapping
+    ){
+      return true
+    }
+    return false
   }
   /** GO TO MAPS */
-  goToMaps() {
-    NavigationService.navigate('MapsView');
+  async goToMaps() {
+    try {
+      let granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+      if(!granted) {
+        let permissionResult = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+        if (permissionResult === PermissionsAndroid.RESULTS.GRANTED){
+          NavigationService.navigate('MapsView');
+        } else {
+          ToastAndroid.show('Anda harus mengizinkan aplikasi untuk mengakses lokasi', ToastAndroid.SHORT)
+        }
+      } else {
+        NavigationService.navigate('MapsView');
+      }
+    } catch (error) {
+      ToastAndroid.show(error?.message || '', ToastAndroid.SHORT)
+    }
   }
   /**
    * ====================
    * RENDER VIEW
    * ===================
    */
+
+  renderAsteriskRed = () => <Text style={{color: 'red'}}>*</Text>
   /** === RENDER STEP HEADER === */
   renderProgressHeader() {
     return (
@@ -178,7 +180,7 @@ class AddMerchantStep3 extends Component {
     return (
       <InputMapsType2
         change={!this.props.merchant.dataMerchantDisabledField.longLat}
-        title={'*Koordinat Lokasi'}
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Koordinat Lokasi</Text>}
         urbanId={this.props.global.dataGetUrbanId}
         selectedMapLong={this.props.global.longitude}
         selectedMapLat={this.props.global.latitude}
@@ -192,13 +194,14 @@ class AddMerchantStep3 extends Component {
   renderAddress() {
     return (
       <InputType4
+        multiline={true}
         editable={!this.props.merchant.dataMerchantDisabledField.address}
-        title={'*Detail Alamat'}
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Detail Alamat</Text>}
         value={this.state.address}
         placeholder={'Contoh : Jl. Kemang Raya No.58, RT.8/RW…'}
         keyboardType={'default'}
         onChangeText={address =>
-          this.setState({ address: address === '' ? null : address })
+          this.setState({ address})
         }
         error={false}
         errorText={''}
@@ -222,47 +225,12 @@ class AddMerchantStep3 extends Component {
       />
     );
   }
-  /** MERCHANT WAREHOUSE */
-  renderWarehouse() {
-    return (
-      <DropdownType2
-        title={
-          this.props.merchant.dataGetWarehouse.total !== 0
-            ? '*Warehouse'
-            : 'Warehouse'
-        }
-        placeholder={
-          this.props.merchant.dataGetWarehouse.total !== 0
-          ? 'Masukan Warehouse'
-          : 'Lokasi toko tidak dalam area jangkauan warehouse tertentu.'
-          }
-        selectedDropdownText={
-          this.props.merchant.dataMerchantVolatile.warehouse
-        }
-        disabledDropdown={this.state.disabledDropdown}
-        disabledAction={this.state.disabledAction}
-        openDropdown={() =>
-          this.goToDropdown({
-            type: 'warehouse',
-            placeholder: 'Pilih Warehouse'
-          })
-        }
-        errorText={
-          this.props.merchant.dataGetWarehouse.total === 1
-            ? 'Lokasi toko berada dalam area jangkauan warehouse tertentu dan tidak dapat diubah.'
-            : ''
-        }
-      />
-    );
-  }
-  /** main content */
   renderContent() {
     return (
       <View style={{ flex: 1, paddingTop: 20 }}>
         {this.renderMaps()}
         {this.renderAddress()}
         {this.renderNoteAddress()}
-        {this.renderWarehouse()}
         <View style={{ paddingBottom: 50 }} />
       </View>
     );
@@ -273,12 +241,61 @@ class AddMerchantStep3 extends Component {
       <ButtonSingle
         disabled={this.buttonDisable()}
         title={'Lanjutkan'}
-        loading={
-          this.props.merchant.loadingAddMerchant || this.state.addStoreProcess
-        }
+        loading={this.props.merchant.loadingValidateAreaMapping}
         borderRadius={4}
         onPress={() => this.nextStep()}
       />
+    );
+  }
+  /** RENDER MODAL ERROR */
+  renderModalError(){
+    return(
+      <ModalBottomType3
+        title={''}
+        open={this.state.errorValidateAreaMapping}
+        close={() => this.setState({errorValidateAreaMapping: false})}
+        content={this.modalErrorContent()}
+        onPress={this.props.onPress}
+        typeClose={'cancel'}
+      />
+    )
+  }
+
+  /** RENDER MODAL ERROR CONTENT */
+  modalErrorContent() {
+    return (
+      <View style={{ alignItems: 'center' }}>
+        <StatusBarRedOP50 />
+        <Image
+          source={require('../../../assets/images/sinbad_image/cry_sinbad.png')}
+          style={{ width: 208, height: 156 }}
+        />
+        <Text style={[Fonts.type7, { paddingVertical: 16 }]}>
+          Toko Gagal Terbuat
+        </Text>
+        <Text style={[Fonts.type24, {paddingHorizontal: 56, textAlign: 'center', marginBottom: 16}]}>
+          {this.state.errorMessage || "Terjadi kesalahan pada server"}
+        </Text>
+        <View style={{flexDirection: 'row', padding: 16}}>
+          <Button
+            type="outline"
+            onPress={() => {
+              this.setState({errorValidateAreaMapping: false, errorMessage: ''})
+              NavigationService.navigate('ProfileAreaMapping')
+            }}
+            titleStyle={Fonts.textButtonWhiteActive}
+            containerStyle={{flex: 1}}
+            buttonStyle={{borderColor: Color.buttonActiveColorRed, borderWidth: 1.5, paddingVertical: 11, borderRadius: 4}}
+            title="Cek Area Mapping" />
+          <View style={{marginHorizontal: 4}} />
+          <Button 
+            buttonStyle={{backgroundColor: Color.buttonActiveColorRed, paddingVertical: 12, borderRadius: 4}}
+            titleStyle={Fonts.textButtonRedActive}
+            containerStyle={{flex: 1}} 
+            onPress={() => this.setState({errorValidateAreaMapping: false, errorMessage: ''})}
+            title="Ubah Alamat" />
+        </View>
+      </View>
     );
   }
   /** === MAIN === */
@@ -291,6 +308,7 @@ class AddMerchantStep3 extends Component {
           {this.renderContent()}
         </ScrollView>
         {this.renderButton()}
+        {this.state.errorValidateAreaMapping && this.renderModalError()}
       </SafeAreaView>
     );
   }

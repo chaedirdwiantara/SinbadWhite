@@ -43,13 +43,13 @@ class MerchantListView extends Component {
    */
   /** === RENDER FOR SEARCH BAR === */
   renderSearchBar() {
-    return this.props.merchant.dataGetPortfolio !== null
+    return this.props.merchant.dataGetPortfolioV2 !== null
       ? this.renderCheckSearchBar()
       : this.renderSearchBarContent();
   }
   /** RENDER CHECK SEARCH BAR === */
   renderCheckSearchBar() {
-    return this.props.merchant.dataGetPortfolio.length > 0 ? (
+    return this.props.merchant.dataGetPortfolioV2.length > 0 ? (
       this.renderSearchBarContent()
     ) : (
       <View />
@@ -70,12 +70,12 @@ class MerchantListView extends Component {
   }
   /** === TAGS SECTION === */
   renderTagsContent() {
-    return this.props.merchant.dataGetPortfolio.length > 0 ? (
+    return this.props.merchant.dataGetPortfolioV2.length > 0 ? (
       <TagListType1
         selected={this.props.portfolio}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
-        data={this.props.merchant.dataGetPortfolio}
+        data={this.props.merchant.dataGetPortfolioV2}
       />
     ) : (
       <View />
@@ -89,7 +89,7 @@ class MerchantListView extends Component {
           <View>
             <View style={{ paddingHorizontal: 16, paddingVertical: 10 }}>
               <Text style={Fonts.type8}>
-                {this.props.merchant.totalDataGetMerchant} List Store
+                {this.props.merchant.totalDataGetMerchantV2} List Store
               </Text>
             </View>
             <View style={GlobalStyle.lines} />
@@ -113,7 +113,7 @@ class MerchantListView extends Component {
   /** === RENDER TAGS === */
   renderTags() {
     return !this.props.merchant.loadingGetPortfolio &&
-      this.props.merchant.dataGetPortfolio !== null
+      this.props.merchant.dataGetPortfolioV2 !== null
       ? this.renderTagsContent()
       : this.renderSkeletonTags();
   }
@@ -156,15 +156,21 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(MerchantListView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ * -> update the props of portfolio.
+ * updatedBy: dyah
+ * updatedDate: 25022021
+ * updatedFunction:
+ * -> update the props of total merchant.
+ */

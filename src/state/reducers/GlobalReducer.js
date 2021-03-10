@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   loadingGlobalLongLatToAddress: false,
   loadingGetVersion: false,
   loadingGetUrbanId: false,
+  loadingUploadImage: false,
   /** data */
   search: '',
   longitude: '',
@@ -31,11 +32,13 @@ const INITIAL_STATE = {
     zipCode: ''
   },
   dataGetUrbanId: null,
+  dataUploadImage: null,
   /** error */
   errorGetListAndSearch: null,
   errorGlobalLongLatToAddress: null,
   errorGetVersion: null,
-  errorGetUrbanId: null
+  errorGetUrbanId: null,
+  errorUploadImage: null
 };
 
 export const global = createReducer(INITIAL_STATE, {
@@ -158,6 +161,17 @@ export const global = createReducer(INITIAL_STATE, {
         urbanName: checkData('urbanName', dataUpdate, dataPrevious),
         zipCode: checkData('zipCode', dataUpdate, dataPrevious)
       }
+    };
+  },
+  /**
+   * ============================
+   * RESET MANUAL INPUT LOCATION
+   * =============================
+   */
+  [types.RESET_MANUAL_INPUT_LOCATION_DATA](state, action) {
+    return {
+      ...state,
+      dataLocationVolatile: INITIAL_STATE.dataLocationVolatile,
     };
   },
   /**
@@ -313,6 +327,33 @@ export const global = createReducer(INITIAL_STATE, {
       ...state,
       pageAreaMappingFrom: action.payload
     }
+  },
+  /**
+   * ===================================
+   * UPLOAD IMAGE
+   * ===================================
+   */
+  [types.UPLOAD_IMAGE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingUploadImage: true,
+      dataUploadImage: null,
+      errorUploadImage: null
+    };
+  },
+  [types.UPLOAD_IMAGE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingUploadImage: false,
+      dataUploadImage: action.payload
+    };
+  },
+  [types.UPLOAD_IMAGE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingUploadImage: false,
+      errorUploadImage: action.payload
+    };
   }
 });
 /**
