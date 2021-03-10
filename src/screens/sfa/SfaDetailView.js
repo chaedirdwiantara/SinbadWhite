@@ -195,7 +195,7 @@ function SfaDetailView(props) {
   const renderAddCollection= () => {
     return (
       <ButtonSingle
-        disabled={dataSfaGetDetail.data.isPaid}
+        disabled={dataSfaGetDetail.data.isPaid || dataSfaGetDetail.data.remainingBilling === 0}
         title={'Tagih'}
         borderRadius={4}
         onPress={() => addCollection()}
