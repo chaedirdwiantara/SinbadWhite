@@ -238,7 +238,7 @@ class AddMerchantStep4 extends Component {
   renderButton() {
     return (
       <ButtonSingle
-        title={'Lanjutkan'}
+        title={'Selesai'}
         loading={this.props.merchant.loadingAddMerchant}
         disabled={this.setDisable()}
         borderRadius={4}
