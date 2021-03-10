@@ -22,10 +22,14 @@ const INITIAL_STATE = {
   loadingSubmitSurvey: false,
   /** data */
   dataPostActivity: null,
+  dataPostActivityV2: null,
   dataGetLogAllActivity: null,
+  dataGetLogAllActivityV2: null,
   dataGetLogPerActivity: null,
+  dataGetLogPerActivityV2: null,
   selectedMerchant: null,
   dataGetMerchant: [],
+  dataGetMerchantV2: [],
   dataGetWarehouse: [],
   dataAddMerchant: null,
   dataEditMerchant: null,
@@ -45,13 +49,22 @@ const INITIAL_STATE = {
     customerHierarchiesName: ''
   },
   dataGetMerchantDetail: null,
+  dataGetMerchantDetailV2: null,
   dataGetMerchantLastOrder: null,
   totalDataGetMerchant: 0,
+  totalDataGetMerchantV2: 0,
   pageGetMerchant: 0,
+  pageGetMerchantV2: 0,
   dataGetPortfolio: null,
+  dataGetPortfolioV2: null,
   merchantChanged: false,
   dataGetNoOrderReason: null,
   dataMerchantRejected: {
+    name: null,
+    phoneNo: null,
+    imageUrl: null
+  },
+  dataMerchantRejectedV2: {
     name: null,
     phoneNo: null,
     imageUrl: null
@@ -114,7 +127,7 @@ const INITIAL_STATE = {
   },
   surveyList: {
     payload: {
-      data: []
+      data: null
     },
     success: null
   },
@@ -134,14 +147,20 @@ const INITIAL_STATE = {
   },
   /** error */
   errorGetMerchant: null,
+  errorGetMerchantV2: null,
   errorAddMerchant: null,
   errorEditMerchant: null,
   errorGetPortfolio: null,
+  errorGetPortfolioV2: null,
   errorGetMerchantDetail: null,
+  errorGetMerchantDetailV2: null,
   errorGetMerchantLastOrder: null,
   errorPostActivity: null,
+  errorPostActivityV2: null,
   errorGetLogAllActivity: null,
+  errorGetLogAllActivityV2: null,
   errorGetLogPerActivity: null,
+  errorGetLogPerActivityV2: null,
   errorGetNoOrderReason: null,
   errorGetStoreStatus: null,
   errorGetWarehouse: null,
@@ -212,6 +231,37 @@ export const merchant = createReducer(INITIAL_STATE, {
     };
   },
   /**
+   * ==========================
+   * PORTFOLIO BY USER ID V2
+   * ==========================
+   */
+  [types.PORTFOLIO_GET_PROCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingGetPortfolio: true,
+      loadingGetMerchant: true,
+      dataGetPortfolioV2: null,
+      errorGetPortfolioV2: null
+    };
+  },
+  [types.PORTFOLIO_GET_SUCCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingGetPortfolio: false,
+      loadingGetMerchant: false,
+      dataGetPortfolioV2: action.payload.data
+    };
+  },
+  [types.PORTFOLIO_GET_FAILED_V2](state, action) {
+    return {
+      ...state,
+      loadingGetPortfolio: false,
+      loadingGetMerchant: false,
+      dataGetPortfolioV2: [],
+      errorGetPortfolioV2: action.payload
+    };
+  },
+  /**
    * ===================
    * MERCHANT LIST
    * ===================
@@ -268,6 +318,62 @@ export const merchant = createReducer(INITIAL_STATE, {
     };
   },
   /**
+   * ===================
+   * MERCHANT LIST BY PORTFOLIO V2
+   * ===================
+   */
+  [types.MERCHANT_GET_PROCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingGetMerchant: action.payload.loading,
+      errorGetMerchantV2: null
+    };
+  },
+  [types.MERCHANT_GET_SUCCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingGetMerchant: false,
+      loadingLoadMoreGetMerchant: false,
+      refreshGetMerchant: false,
+      totalDataGetMerchantV2: action.payload.data.length,
+      dataGetMerchantV2: [...state.dataGetMerchant, ...action.payload.data]
+    };
+  },
+  [types.MERCHANT_GET_FAILED_V2](state, action) {
+    return {
+      ...state,
+      loadingGetMerchant: false,
+      loadingLoadMoreGetMerchant: false,
+      refreshGetMerchant: false,
+      errorGetMerchantV2: action.payload
+    };
+  },
+  [types.MERCHANT_GET_RESET_V2](state, action) {
+    return {
+      ...state,
+      pageGetMerchantV2: 0,
+      totalDataGetMerchantV2: 0,
+      dataGetMerchantV2: []
+    };
+  },
+  [types.MERCHANT_GET_REFRESH_V2](state, action) {
+    return {
+      ...state,
+      refreshGetMerchant: true,
+      loadingGetMerchant: true,
+      pageGetMerchantV2: 0,
+      totalDataGetMerchantV2: 0,
+      dataGetMerchantV2: []
+    };
+  },
+  [types.MERCHANT_GET_LOADMORE_V2](state, action) {
+    return {
+      ...state,
+      loadingLoadMoreGetMerchant: true,
+      pageGetMerchantV2: action.payload
+    };
+  },
+  /**
    * ==========================
    * MERCHANT DETAIL
    * ==========================
@@ -297,6 +403,94 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetMerchantDetail: false,
       errorGetMerchantDetail: action.payload
+    };
+  },
+  /**
+   * ===================
+   * MERCHANT LIST BY PORTFOLIO EXCLUDE STORE ON JOURNEY PLAN
+   * ===================
+   */
+  [types.MERCHANT_EXISTING_GET_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetMerchant: action.payload.loading,
+      errorGetMerchantV2: null
+    };
+  },
+  [types.MERCHANT_EXISTING_GET_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetMerchant: false,
+      loadingLoadMoreGetMerchant: false,
+      refreshGetMerchant: false,
+      totalDataGetMerchantV2: action.payload.data.length,
+      dataGetMerchantV2: [...state.dataGetMerchant, ...action.payload.data]
+    };
+  },
+  [types.MERCHANT_EXISTING_GET_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetMerchant: false,
+      loadingLoadMoreGetMerchant: false,
+      refreshGetMerchant: false,
+      errorGetMerchantV2: action.payload
+    };
+  },
+  [types.MERCHANT_EXISTING_GET_RESET](state, action) {
+    return {
+      ...state,
+      pageGetMerchantV2: 0,
+      totalDataGetMerchantV2: 0,
+      dataGetMerchantV2: []
+    };
+  },
+  [types.MERCHANT_EXISTING_GET_REFRESH](state, action) {
+    return {
+      ...state,
+      refreshGetMerchant: true,
+      loadingGetMerchant: true,
+      pageGetMerchantV2: 0,
+      totalDataGetMerchantV2: 0,
+      dataGetMerchantV2: []
+    };
+  },
+  [types.MERCHANT_EXISTING_GET_LOADMORE](state, action) {
+    return {
+      ...state,
+      loadingLoadMoreGetMerchant: true,
+      pageGetMerchantV2: action.payload
+    };
+  },
+  /**
+   * ==========================
+   * MERCHANT DETAIL V2
+   * ==========================
+   */
+  [types.MERCHANT_GET_DETAIL_PROCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingGetMerchantDetail: true,
+      dataGetMerchantDetailV2: null,
+      errorGetMerchantDetailV2: null
+    };
+  },
+  [types.MERCHANT_GET_DETAIL_SUCCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingGetMerchantDetail: false,
+      dataGetMerchantDetailV2: action.payload,
+      dataMerchantVolatile: saveDataMerchantVolatile(action.payload),
+      dataMerchantRejectedV2:
+        action.payload.rejectedFields !== null
+          ? action.payload.rejectedFields
+          : INITIAL_STATE.dataMerchantRejectedV2
+    };
+  },
+  [types.MERCHANT_GET_DETAIL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetMerchantDetail: false,
+      errorGetMerchantDetailV2: action.payload
     };
   },
   /**
@@ -533,6 +727,37 @@ export const merchant = createReducer(INITIAL_STATE, {
   },
   /**
    * =============================
+   * POST ACTIVITY V2
+   * =============================
+   */
+  [types.MERCHANT_POST_ACTIVITY_PROCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingPostActivity: true,
+      dataPostActivityV2: null,
+      errorPostActivityV2: null
+    };
+  },
+  [types.MERCHANT_POST_ACTIVITY_SUCCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingPostActivity: false,
+      selectedMerchant: {
+        ...state.selectedMerchant,
+        journeyBookStores: action.payload.data
+      },
+      dataPostActivityV2: action.payload.data
+    };
+  },
+  [types.MERCHANT_POST_ACTIVITY_FAILED_V2](state, action) {
+    return {
+      ...state,
+      loadingPostActivity: false,
+      errorPostActivityV2: action.payload
+    };
+  },
+  /**
+   * =============================
    * GET LOG ALL ACTIVITY MERCHANT
    * =============================
    */
@@ -556,6 +781,33 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetLogAllActivity: false,
       errorGetLogAllActivity: action.payload
+    };
+  },
+  /**
+   * =============================
+   * GET LOG ALL ACTIVITY MERCHANT V2
+   * =============================
+   */
+  [types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingGetLogAllActivity: true,
+      dataGetLogAllActivityV2: null,
+      errorGetLogAllActivityV2: null
+    };
+  },
+  [types.MERCHANT_GET_LOG_ALL_ACTIVITY_SUCCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingGetLogAllActivity: false,
+      dataGetLogAllActivityV2: action.payload.data
+    };
+  },
+  [types.MERCHANT_GET_LOG_ALL_ACTIVITY_FAILED_V2](state, action) {
+    return {
+      ...state,
+      loadingGetLogAllActivity: false,
+      errorGetLogAllActivityV2: action.payload
     };
   },
   /**
@@ -585,6 +837,34 @@ export const merchant = createReducer(INITIAL_STATE, {
       errorGetLogPerActivity: action.payload
     };
   },
+  /**
+   * =============================
+   * GET LOG PER ACTIVITY MERCHANT V2
+   * =============================
+   */
+  [types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingGetLogPerActivity: true,
+      dataGetLogPerActivityV2: null,
+      errorGetLogPerActivityV2: null
+    };
+  },
+  [types.MERCHANT_GET_LOG_PER_ACTIVITY_SUCCESS_V2](state, action) {
+    return {
+      ...state,
+      loadingGetLogPerActivity: false,
+      dataGetLogPerActivityV2: action.payload.data
+    };
+  },
+  [types.MERCHANT_GET_LOG_PER_ACTIVITY_FAILED_V2](state, action) {
+    return {
+      ...state,
+      loadingGetLogPerActivity: false,
+      errorGetLogPerActivityV2: action.payload
+    };
+  },
+  /**
   /**
    * =============================
    * GET LOG PER ACTIVITY MERCHANT
@@ -689,12 +969,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetSurveyList: true,
-      surveyList: {
-        payload: {
-          data: []
-        },
-        success: false
-      },
+      surveyList: INITIAL_STATE.surveyList,
       errorGetSurveyList: null
     };
   },
@@ -710,6 +985,12 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetSurveyList: false,
       errorGetSurveyList: action.payload
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_LIST_RESET](state, action) {
+    return {
+      ...state,
+      surveyList: INITIAL_STATE.surveyList
     };
   },
 
