@@ -303,7 +303,10 @@ class AddMerchantStep1 extends Component {
           <Text numberOfLines={2} style={[Fonts.type7, {marginVertical: 4}]}>
             {this.storeName(store?.owner?.fullName) || 'N/A'}
           </Text>
-          <Text style={[Fonts.type8, {marginVertical: 4}]}>
+          <Text style={[Fonts.type8]}>
+            {store?.owner?.phone || 'N/A'}
+          </Text>
+          <Text style={[Fonts.type9, {marginVertical: 4}]}>
             {store?.address || 'N/A'}
           </Text>
         </View>
@@ -421,11 +424,11 @@ class AddMerchantStep1 extends Component {
 
 class SegmentationCell extends PureComponent{
   render(){
-    const {label, value, showSeparator} = this.props || {}
+    const {label, value} = this.props || {}
     return(
       <View>
           <View style={{justifyContent: 'space-between', flexDirection: 'row', paddingVertical: 16}}>
-            <Text style={[Fonts.type8, {color: Color.fontBlack50OP50}]}>{label}</Text>
+            <Text style={[Fonts.type9]}>{label}</Text>
             <Text style={[Fonts.type7, {color: value ? Color.fontBlack50 : Color.fontBlack100OP40, fontSize: 12 }]}>{value || 'Belum Ditetapkan'}</Text>
           </View>
       </View>
