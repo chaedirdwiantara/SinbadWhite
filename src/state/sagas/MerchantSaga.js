@@ -224,6 +224,17 @@ function* getWarehouse(actions){
     yield put(ActionCreators.merchantGetWarehouseFailed(error))
   }
 }
+/** VALIDATE AREA MAPPING */
+function* validateAreaMapping(actions){
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.validateAreaMapping(actions.payload)
+    })
+    yield put(ActionCreators.validateAreaMappingSuccess(response))
+  } catch (error) {
+    yield put(ActionCreators.validateAreaMappingFailed(error))
+  }
+}
 /** GET SURVEY LIST */
 function* getSurveyList(actions) {
   try {
@@ -268,6 +279,17 @@ function* updateSurvey(actions) {
     yield put(ActionCreators.merchantSubmitSurveyFailed(error));
   }
 }
+/** GET SALES SEGMENTATION */
+function* getSalesSegmentation(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getSalesSegmentation(actions.payload);
+    });
+    yield put(ActionCreators.getSalesSegmentationSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.getSalesSegmentationFailed(error));
+  }
+}
 
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
@@ -302,10 +324,12 @@ function* MerchantSaga() {
   );
   yield takeEvery(types.MERCHANT_STORE_STATUS_PROCESS, getStoreStatus),
   yield takeEvery(types.MERCHANT_GET_WAREHOUSE_PROCESS, getWarehouse);
+  yield takeEvery(types.VALIDATE_AREA_MAPPING_PROCESS, validateAreaMapping);
   yield takeEvery(types.MERCHANT_GET_SURVEY_LIST_PROCESS, getSurveyList);
   yield takeEvery(types.MERCHANT_GET_SURVEY_PROCESS, getSurvey);
   yield takeEvery(types.MERCHANT_SUBMIT_SURVEY_PROCESS, submitSurvey);
   yield takeEvery(types.MERCHANT_UPDATE_SURVEY_PROCESS, updateSurvey);
+  yield takeEvery(types.GET_SALES_SEGMENTATION_PROCESS, getSalesSegmentation);
 }
 
 export default MerchantSaga;

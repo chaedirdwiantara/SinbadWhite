@@ -3,7 +3,8 @@ import {
   Component,
   View,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  Text
 } from '../../library/reactPackage';
 import {
   bindActionCreators,
@@ -22,10 +23,11 @@ import {
   ErrorPageNoGPS,
   ModalBottomErrorRespons
 } from '../../library/component';
-import { GlobalStyle } from '../../helpers';
+import { Fonts, GlobalStyle } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
+import { GlobalMethod } from '../../services/methods';
 
 class MapsView extends Component {
   constructor(props) {
@@ -38,7 +40,9 @@ class MapsView extends Component {
       reRender: false,
       openErrorGlobalLongLatToAddress: false,
       openModalNoGPS: false,
-      openModalErrorGlobal: false
+      openModalErrorGlobal: false,
+      defaultAddress: '',
+      loadingGetAddress: false
     };
   }
   /**
@@ -47,12 +51,22 @@ class MapsView extends Component {
    * ======================
    */
   componentDidMount() {
+    this.props.resetManualLocationInputData()
     this.getCurrentLocation();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps,prevState) {
     /** === IF SUCCESS === */
     /** => if success get location from google maps */
+    if (
+      prevState.longitude !== this.state.longitude ||
+      prevState.latitude !== this.state.latitude
+    ) {
+      this.getDefaultAddress({
+        longitude: this.state.longitude,
+        latitude: this.state.latitude
+      });
+    }
     if (
       prevProps.global.dataGlobalLongLatToAddress !==
       this.props.global.dataGlobalLongLatToAddress
@@ -96,6 +110,12 @@ class MapsView extends Component {
   /** === CHECK DATA URBAN ID === */
   checkDataUrbanId() {
     if (this.props.global.dataGetUrbanId.length > 0) {
+      const isValidAddress = this.state.defaultAddress !== 'Alamat tidak ditemukan' && this.props.global.dataLocationVolatile.zipCode === ''
+      if(isValidAddress){
+        this.props.saveVolatileDataMerchant({address: this.state.defaultAddress})
+      } else {
+        this.props.saveVolatileDataMerchant({address: null})
+      }
       NavigationService.goBack(this.props.navigation.state.key);
     } else {
       this.setState({ openErrorGlobalLongLatToAddress: true });
@@ -111,8 +131,12 @@ class MapsView extends Component {
       reRender: false
     });
   };
-  errorMaps = () => {
-    this.setState({ openModalNoGPS: true, reRender: false });
+  errorMaps = (error) => {
+    if(error?.code === 3){
+      this.getCurrentLocation()
+    } else {
+      this.setState({ openModalNoGPS: true, reRender: false });
+    }
   };
   getCurrentLocation() {
     this.setState({ reRender: true });
@@ -123,6 +147,25 @@ class MapsView extends Component {
       longitude: this.state.longitude,
       latitude: this.state.latitude
     });
+  }
+  async getDefaultAddress(latlng) {
+    this.setState({loadingGetAddress: true})
+    try {
+      const {
+        data: { results }
+      } = await GlobalMethod.getAddressFromLongLat(latlng) || {};
+      if(results){
+        if (results.length > 0) {
+          this.setState({defaultAddress: results[0]['formatted_address']});
+        } else {
+          this.setState({defaultAddress: 'Alamat tidak ditemukan'});
+        }
+        this.setState({loadingGetAddress: false})
+      }
+    } catch (error) {
+      this.setState({loadingGetAddress: false})
+      console.log(error);
+    }
   }
   checkLongLat(longlat) {
     if (longlat) {
@@ -237,9 +280,36 @@ class MapsView extends Component {
       ? this.renderLoading()
       : this.renderMapsContent();
   }
+
+  renderDefaultAddress() {
+    if (this.state.defaultAddress && !this.state.loadingGetAddress) {
+      const street = this.state.defaultAddress
+        .split(',')
+        .slice(0, 2)
+        .join(', ');
+      const urban = this.state.defaultAddress
+        .split(',')
+        .slice(2)
+        .join(', ')
+        .trim();
+      return (
+        <View style={{ margin: 16, marginBottom: 0 }}>
+          <Text style={{ fontFamily: Fonts.MontserratSemiBold, marginBottom: 8 }}>{street}</Text>
+          <Text style={{ fontFamily: Fonts.MontserratRegular }}>{urban}</Text>
+        </View>
+      );
+    }
+    return (
+      <Text style={{ margin: 16, textAlign: 'center' }}>
+        Mendapatkan lokasi. . .
+      </Text>
+    );
+  }
+
   renderButton() {
     return (
       <View style={styles.boxButtonBottom}>
+        {this.renderDefaultAddress()}
         <ButtonSingle
           disabled={
             this.state.reRender ||

@@ -4,7 +4,9 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView
+  SafeAreaView,
+  Image,
+  Text
 } from '../../library/reactPackage'
 import {
   MaterialIcon,
@@ -15,7 +17,10 @@ import {
 import {
   ToastType1,
   StatusBarWhite,
-  BackHandlerBackSpecific
+  BackHandlerBackSpecific,
+  StatusBarRedOP50,
+  ButtonSingle,
+  ModalBottomType3
 } from '../../library/component'
 import { Color } from '../../config'
 import * as ActionCreators from '../../state/actions';
@@ -23,6 +28,7 @@ import NavigationService from '../../navigation/NavigationService';
 import MerchantTabView from './MerchantTabView';
 import MerchantListView from './MerchantListView';
 import MerchantMapView from './MerchantMapView';
+import { Fonts } from '../../helpers';
 
 class MerchantView extends Component {
   constructor(props) {
@@ -33,7 +39,8 @@ class MerchantView extends Component {
       portfolio: 0,
       type: 'direct',
       showToast: false,
-      notifToast: ''
+      notifToast: '',
+      showModalError: false
     };
   }
   /**
@@ -118,8 +125,15 @@ class MerchantView extends Component {
   }
   /** HANDLE ADD BUTTON FROM HEADER */
   goToAdd = () => {
-    this.props.savePageAddMerchantFrom('MerchantView');
-    NavigationService.navigate('AddMerchantStep1');
+    const portfolio = this.props.merchant.dataGetPortfolioV2
+    if(portfolio !== null && portfolio.length > 0){
+      this.props.savePageAddMerchantFrom('MerchantView');
+      setTimeout(() => {
+        NavigationService.navigate('AddMerchantStep1');
+      }, 100);
+    } else {
+      this.setState({showModalError: true})
+    }
   };
   /** === FROM CHILD FUNCTION === */
   parentFunction(data) {
@@ -210,6 +224,46 @@ class MerchantView extends Component {
       <View />
     );
   }
+  /** RENDER MODAL ERROR */
+  renderModalError(){
+    return(
+      <ModalBottomType3
+        title={''}
+        open={this.state.showModalError}
+        close={() => this.setState({showModalError: false})}
+        content={this.modalErrorContent()}
+        typeClose={'cancel'}
+      />
+    )
+  }
+
+  /** RENDER MODAL ERROR CONTENT */
+  modalErrorContent() {
+    return (
+      <View style={{ alignItems: 'center', paddingHorizontal: 24 }}>
+        <StatusBarRedOP50 />
+        <Image
+          source={require('../../assets/images/sinbad_image/failed_error.png')}
+          style={{ width: 208, height: 156 }}
+        />
+        <Text style={[Fonts.type7, { paddingVertical: 8, textAlign: 'center' }]}>
+          Maaf, Anda tidak memiliki akses untuk membuat toko
+        </Text>
+        <Text style={[Fonts.type17, {textAlign: 'center', lineHeight: 18}]}>
+          Hal ini bisa terjadi karena Anda tidak memiliki portfolio. Silakan hubungi admin untuk proses lebih lanjut.
+        </Text>
+        <View style={{ width: '100%', paddingTop: 40 }}>
+          <ButtonSingle
+            borderRadius={4}
+            title={'Oke, Saya Mengerti'}
+            onPress={() => {
+              this.setState({showModalError: false})
+            }}
+          />
+        </View>
+      </View>
+    );
+  }
   /** === MAIN === */
   render() {
     return (
@@ -222,6 +276,7 @@ class MerchantView extends Component {
         {this.renderHeaderTabs()}
         {this.renderContent()}
         {this.renderToast()}
+        {this.state.showModalError && this.renderModalError()}
       </SafeAreaView>
     );
   }

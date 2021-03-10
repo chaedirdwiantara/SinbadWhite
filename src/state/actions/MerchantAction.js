@@ -425,6 +425,9 @@ export function merchantAddSuccess(data) {
 export function merchantAddFailed(data) {
   return { type: types.MERCHANT_ADD_FAILED, payload: data };
 }
+export function resetMerchantAdd() {
+  return { type: types.RESET_MERCHANT_ADD };
+}
 /**
  * ====================================
  * GET MERCHANT DETAIL
@@ -488,6 +491,7 @@ export function merchantGetWarehouseSuccess(data){
 export function merchantGetWarehouseFailed(data){
   return { type: types.MERCHANT_GET_WAREHOUSE_FAILED, payload: data}
 }
+
 /**
  * ===========================================
  * GET SURVEY LIST
@@ -558,4 +562,51 @@ export function merchantSubmitSurveyFailed(data) {
  */
 export function merchantUpdateSurveyProcess(data) {
   return { type: types.MERCHANT_UPDATE_SURVEY_PROCESS, payload: data };
+}
+
+/**
+ * ===========================================
+ * VALIDATE AREA MAPPING
+ * ===========================================
+ */
+export function validateAreaMappingProcess(data){
+  return { type: types.VALIDATE_AREA_MAPPING_PROCESS, payload: data}
+}
+export function validateAreaMappingSuccess(data){
+  if (data.result === 'Ok'){
+    return {
+      type: types.VALIDATE_AREA_MAPPING_SUCCESS,
+      payload: data
+    }
+  }
+  return { type: types.VALIDATE_AREA_MAPPING_FAILED, payload: data}
+}
+export function validateAreaMappingFailed(data){
+  return { type: types.VALIDATE_AREA_MAPPING_FAILED, payload: data}
+}
+export function resetValidateAreaMapping(){
+  return { type: types.RESET_VALIDATE_AREA_MAPPING }
+}
+/**
+ * ===========================================
+ * GET SALES SEGMENTATION
+ * ===========================================
+ */
+export function getSalesSegmentationProcess(data){
+  return { type: types.GET_SALES_SEGMENTATION_PROCESS, payload: data}
+}
+export function getSalesSegmentationSuccess(data){
+  if (data.result === 'Ok'){
+    return {
+      type: types.GET_SALES_SEGMENTATION_SUCCESS,
+      payload: data
+    }
+  }
+  return { type: types.GET_SALES_SEGMENTATION_FAILED, payload: data}
+}
+export function getSalesSegmentationFailed(data){
+  return { type: types.GET_SALES_SEGMENTATION_FAILED, payload: data}
+}
+export function resetGetSalesSegmentation(){
+  return { type: types.RESET_SALES_SEGMENTATION }
 }
