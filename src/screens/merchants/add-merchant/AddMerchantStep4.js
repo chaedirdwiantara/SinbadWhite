@@ -80,10 +80,6 @@ class AddMerchantStep4 extends Component {
     if(supplierId.length > 0){
       supplierId = supplierId[0].toString()
     }
-    clusterId = Number(clusterId)
-    groupId = Number(groupId)
-    typeId = Number(typeId)
-    channelId = Number(channelId)
     const payload = {
       supplierStoreId: null,
       storeId,
@@ -115,14 +111,10 @@ class AddMerchantStep4 extends Component {
     NavigationService.navigate('SegmentationList', params);
   }
   setDisable(){
-    const {
-      warehouseId, clusterId, channelId, 
-      groupId, typeId
-    } = this.props.merchant.dataMerchantVolatile
+    const {warehouseId} = this.props.merchant.dataMerchantVolatile
 
     if ( 
-      !this.props.merchant.loadingAddMerchant &&
-      warehouseId && clusterId && channelId && groupId && typeId 
+      !this.props.merchant.loadingAddMerchant && warehouseId
     ) {
       return false
     }
@@ -165,7 +157,7 @@ class AddMerchantStep4 extends Component {
   renderStoreType(){
     return (
       <DropdownType1 
-        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Tipe Toko</Text>}
+        title="Tipe Toko"
         placeholder={'Masukan tipe toko'}
         selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeType || '-'}
         disabled={this.state.disableTipe}
@@ -180,7 +172,7 @@ class AddMerchantStep4 extends Component {
   renderStoreGroup(){
     return(
       <DropdownType1 
-        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Group Toko</Text>}
+        title="Group Toko"
         placeholder={'Masukan group toko'}
         selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeGroup || '-'}
         disabled={this.state.disableGroup}
@@ -196,7 +188,7 @@ class AddMerchantStep4 extends Component {
     return(
       <DropdownType1 
         disabled={this.state.disableCluster}
-        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Cluster Toko</Text>}
+        title="Cluster Toko"
         placeholder={'Masukan cluster toko'}
         selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeCluster || '-'}
         openDropdown={() => this.goToDropdown({
@@ -210,7 +202,7 @@ class AddMerchantStep4 extends Component {
     renderStoreChannel(){
       return(
         <DropdownType1 
-          title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Channel Toko</Text>}
+          title="Channel Toko"
           placeholder={'Masukan channel toko'}
           selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeChannel || '-'}
           disabled={this.state.disableChannel}
