@@ -16,6 +16,7 @@ const INITIAL_STATE = {
   loadingLoadMoreGetSfa: false,
   refreshGetCollection: false,
   loadingSfaGetStatusOrder: false,
+  loadingSfaGetTransferImage: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -28,6 +29,7 @@ const INITIAL_STATE = {
   dataSfaPostCollectionPayment: null,
   dataSfaGetStampList: null,
   dataSfaGetStatusOrder: null,
+  dataSfaGetTransferImage: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -40,6 +42,7 @@ const INITIAL_STATE = {
   errorSfaPostCollectionPayment: null,
   errorSfaGetStampList: null,
   errorSfaGetStatusOrder: null,
+  errorSfaGetTransferImage: null
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -366,4 +369,32 @@ export const sfa = createReducer(INITIAL_STATE, {
       errorSfaGetStatusOrder: action.payload
     };
   },
+
+   /**
+   * ==========================
+   * GET TRANSFER IMAGE
+   * ==========================
+   */
+    [types.SFA_GET_TRANSFER_IMAGE_PROCESS](state, action) {
+      return {
+        ...state,
+        loadingSfaGetTransferImage: true,
+        dataSfaGetTransferImage: null,
+        errorSfaGetTransferImage: null
+      };
+    },
+    [types.SFA_GET_TRANSFER_IMAGE_SUCCESS](state, action) {
+      return {
+        ...state,
+        loadingSfaGetTransferImage: false,
+        dataSfaGetTransferImage: action.payload
+      };
+    },
+    [types.SFA_GET_TRANSFER_IMAGE_FAILED](state, action) {
+      return {
+        ...state,
+        loadingSfaGetTransferImage: false,
+        errorSfaGetTransferImage: action.payload
+      };
+    },
 });

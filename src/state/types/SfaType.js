@@ -59,3 +59,8 @@ export const SFA_GET_STAMP_FAILED = 'SfaGetStampFailed';
 export const SFA_GET_STATUS_ORDER_PROCESS = 'SfaGetStatusOrderProcess';
 export const SFA_GET_STATUS_ORDER_SUCCESS = 'SfaGetStatusOrderSuccess';
 export const SFA_GET_STATUS_ORDER_FAILED = 'SfaGetStatusOrderFailed';
+
+/** GET TRANSFER IMAGE */
+export const SFA_GET_TRANSFER_IMAGE_PROCESS = 'SfaGetTransferImageProcess';
+export const SFA_GET_TRANSFER_IMAGE_SUCCESS = 'SfaGetTransferImageSuccess';
+export const SFA_GET_TRANSFER_IMAGE_FAILED = 'SfaGetTransferImageFailed';

@@ -92,6 +92,14 @@ function getStatusOrder(data){
   })
 }
 
+/** GET TRANSFER IMAGE */
+function getTransferImage(id) {
+  return ApiRest({
+    path: `collection/v1/payment-method/images/${id}`,
+    method: 'GET'
+  });
+}
+
   export const SfaMethod = {
     getCollectionStatus,
     getSfaDetail,
@@ -103,5 +111,6 @@ function getStatusOrder(data){
     postPaymentMethod,
     postCollectionPayment,    
     getStamp,
-    getStatusOrder
+    getStatusOrder,
+    getTransferImage
   };
