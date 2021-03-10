@@ -169,6 +169,7 @@ const SfaAddTagihanTransfer = props => {
       dispatch(sfaGetTransferImageProcess(data.id));
     }
     setDataReference(data);
+    console.log("datareference:", data);
 
     //DATA INPUT
     setNoRef(data.referenceCode);
@@ -188,6 +189,7 @@ const SfaAddTagihanTransfer = props => {
     props.useNoReference(true);
     setOpenModalReference(false);
     setIsDisable(true);
+    props.paymentCollectionMethodId(data.id)
   };
 
   const deleteDataReference = () => {

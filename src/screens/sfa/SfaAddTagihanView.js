@@ -162,32 +162,32 @@ const SfaAddTagihanView = props => {
       dispatch(sfaPostPaymentMethodProcess(data));
     }
     if (collectionMethod.code === 'transfer') {
-      const data = {
-        paymentCollectionTypeId: parseInt(collectionMethod.id),
-        storeId: parseInt(selectedMerchant.storeId),
-        supplierId: parseInt(selectedMerchant.supplierId),
-        userId: parseInt(selectedMerchant.id),
-        referenceCode: referenceCode,
-        balance: transferValue,
-        issuedDate: moment(new Date(transferDate)).format('YYYY-MM-DD HH:mm:ss'),
-        bankId: bankSource.id,
-        bankToAccountId: bankAccount.id,
-        filename: transferImage.fileName,
-        type: transferImage.fileType,
-        image: transferImage.fileData,
-      }
       if (isUseNoReference === true) {
         const dataPostPayment = {
           supplierId: parseInt(selectedMerchant.supplierId),
           userSellerId: parseInt(selectedMerchant.id),
           orderParcelId: orderParcelId,
           storeId: parseInt(selectedMerchant.storeId),
-          paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
+          paymentCollectionMethodId: parseInt(paymentCollectionMethodId),
           amount: billingValue
         }
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
       } else {
-        dispatch(sfaPostPaymentMethodProcess(data));
+        const dataTransfer = {
+          paymentCollectionTypeId: parseInt(collectionMethod.id),
+          storeId: parseInt(selectedMerchant.storeId),
+          supplierId: parseInt(selectedMerchant.supplierId),
+          userId: parseInt(selectedMerchant.id),
+          referenceCode: referenceCode,
+          balance: transferValue,
+          issuedDate: moment(new Date(transferDate)).format('YYYY-MM-DD HH:mm:ss'),
+          bankId: bankSource.id,
+          bankToAccountId: bankAccount.id,
+          filename: transferImage.fileName,
+          type: transferImage.fileType,
+          image: transferImage.fileData,
+        }
+        dispatch(sfaPostPaymentMethodProcess(dataTransfer));
       }
     }
     if(collectionMethod.code === 'check' || collectionMethod.code === 'giro'){
@@ -621,6 +621,7 @@ const SfaAddTagihanView = props => {
         billingValue={dataBillingValue}
         transferImage={dataTransferImage}
         useNoReference={useNoReference}
+        paymentCollectionMethodId={noPaymentCollectionMethodId}
       />
     );
   };
