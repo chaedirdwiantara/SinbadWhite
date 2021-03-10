@@ -174,13 +174,13 @@ class AddMerchantStep1 extends Component {
         warehouse: warehouse?.name || null,
         warehouseId: warehouse?.id || null,
         storeType: segmentation?.type?.name || '',
-        typeId: segmentation?.type?.id,
+        typeId: segmentation?.type?.id || null,
         storeGroup: segmentation?.group?.name || '',
-        groupId: segmentation?.group?.id,
+        groupId: segmentation?.group?.id || null,
         storeCluster: segmentation?.cluster?.name || '',
-        clusterId: segmentation?.cluster?.id,
+        clusterId: segmentation?.cluster?.id || null,
         storeChannel: segmentation?.channel?.name || '',
-        channelId: segmentation?.channel?.id,
+        channelId: segmentation?.channel?.id || null,
       });
     } else {
       this.setState({
