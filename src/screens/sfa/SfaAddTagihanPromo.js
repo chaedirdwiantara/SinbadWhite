@@ -15,13 +15,12 @@ import {
   Tooltip, 
 } from '../../library/thirdPartyPackage';
 import { 
-  InputType5, 
-  DatePickerSpinnerWithMinMaxDate, 
-  ModalBottomType4 
+  InputType5
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import ImagePicker from 'react-native-image-picker';
+import ModalPrincipal from './ModalPrincipal';
 
 const { width, height } = Dimensions.get('window');
 
@@ -36,6 +35,8 @@ const SfaAddTagihanPromo = props => {
   const [errorInputImage, setErrorInputImage] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(true)
   const [isDisable, setIsDisable] = useState(false)
+
+  const [openModalPrincipal, setOpenModalPrincipal] = useState(false);
   
 
   /**
@@ -93,8 +94,10 @@ const SfaAddTagihanPromo = props => {
     props.promoNumber(text)
   }
 
-  const dataPrincipal = (data) => {
-
+  const selectedPrincipal = (data) => {
+    props.principal(data);
+    setPrincipal(data);
+    setOpenModalPrincipal(false);
   }
 
   const textPromoBalance = (text) => {
@@ -242,7 +245,7 @@ const SfaAddTagihanPromo = props => {
               <View>
                   <TouchableOpacity
                   style={styles.boxMenu}
-                  onPress={() => console.log('open bank list')}
+                  onPress={() => setOpenModalPrincipal(true)}
                   >
                       <Text
                           style={[
@@ -390,6 +393,25 @@ const SfaAddTagihanPromo = props => {
    * ==================================
    */
 
+  /** MODAL BANK DESTINATION */
+  const renderModalPrincipal = () => {
+    return (
+      <View>
+        {openModalPrincipal ? (
+          <ModalPrincipal
+            open={openModalPrincipal}
+            close={() => setOpenModalPrincipal(false)}
+            onRef={ref => (selectPrincipal = ref)}
+            selectPrincipal={selectedPrincipal.bind(this)}
+            // supplierId={selectedMerchant.supplierId}
+            // storeId={selectedMerchant.storeId}
+            // paymentCollectionTypeId={props.collectionMethod.id}
+          />
+        ) : null}
+      </View>
+    );
+  };
+
   /** === RENDER TOOLTIP === */
   const renderTooltip = (data)=> {
     return (
@@ -443,6 +465,7 @@ const SfaAddTagihanPromo = props => {
     <>
       <View style={styles.mainContainer}>
         {renderContent()}
+        {renderModalPrincipal()}
       </View>
     </>
   );

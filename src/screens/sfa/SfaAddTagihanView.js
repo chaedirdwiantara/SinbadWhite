@@ -213,7 +213,7 @@ const SfaAddTagihanView = props => {
 
           referenceCode: promoReferenceCode,
           promoNumber: promoNumber,
-          principal: "null",
+          principal: principal,
           promoValue: promoValue,
           balance: billingPromoValue,
           // filename: promoImage.fileName,
