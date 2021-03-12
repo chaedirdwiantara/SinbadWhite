@@ -188,6 +188,7 @@ const SfaAddTagihanTransfer = props => {
     props.useNoReference(true);
     setOpenModalReference(false);
     setIsDisable(true);
+    props.paymentCollectionMethodId(data.id)
   };
 
   const deleteDataReference = () => {
