@@ -36,10 +36,10 @@ class AddMerchantStep4 extends Component {
     } = props.auth.dataCheckPhoneAvailble?.segmentationDetail || {}
     this.state = {
       disableWarehouse: warehouses && warehouses.length > 0,
-      disableGroup: group !== null,
-      disableTipe: type !== null,
-      disableChannel: channel !== null,
-      disableCluster: cluster !== null,
+      disableGroup: group,
+      disableTipe: type,
+      disableChannel: channel,
+      disableCluster: cluster,
       showModalSuccess: false,
       showModalError: false,
     };
