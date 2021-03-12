@@ -216,9 +216,9 @@ const SfaAddTagihanView = props => {
           principal: "null",
           promoValue: promoValue,
           balance: billingPromoValue,
-          // filename: transferImage.fileName,
-          // type: transferImage.fileType,
-          // image: transferImage.fileData,
+          // filename: promoImage.fileName,
+          // type: promoImage.fileType,
+          // image: promoImage.fileData,
         }
         console.log("disini:", dataPromo);
         // dispatch(sfaPostPaymentMethodProcess(dataTransfer));

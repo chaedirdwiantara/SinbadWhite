@@ -32,10 +32,6 @@ const SfaAddTagihanPromo = props => {
   const [principal, setPrincipal] = useState(null)
   const [promoBalance, setPromoBalance] = useState(0)
   const [promoValue, setPromoValue] = useState(0)
-  
-
-  const [bankSource, setBankSource] = useState('');
-  const [openModalTransferDate, setOpenModalTransferDate] = useState(false)
   const [dataImage, setDataImage] = useState(null)
   const [errorInputImage, setErrorInputImage] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(true)
@@ -251,10 +247,10 @@ const SfaAddTagihanPromo = props => {
                       <Text
                           style={[
                           Fonts.type17,
-                          { opacity: bankSource === '' ? 0.5 : null }
+                          { opacity: principal === null ? 0.5 : null }
                           ]}
                       >
-                          {bankSource === '' ? 'Pilih Principal' : bankSource.name}
+                          {principal === null ? 'Pilih Principal' : principal.name}
                       </Text>
                       <View style={{ position: 'absolute', right: 16 }}>
                           <MaterialIcon
@@ -393,26 +389,6 @@ const SfaAddTagihanPromo = props => {
    * MODAL
    * ==================================
    */
-  const renderModalTransferDate = () => {
-    return(
-      <ModalBottomType4
-        typeClose={'Tutup'}
-        open={openModalTransferDate}
-        title={"Tanggal Transfer"}
-        close={() => setOpenModalTransferDate(false)}
-        content={
-          <View>
-            <DatePickerSpinnerWithMinMaxDate
-             onSelect={(date)=> alert(date)}
-             close={() => setOpenModalTransferDate(false)}
-             minDate={new Date("2021-02-20")}
-            //  maxDate={new Date("2021-02-25")}
-            />
-          </View>
-        }
-      />
-    )
-  }
 
   /** === RENDER TOOLTIP === */
   const renderTooltip = (data)=> {
@@ -468,7 +444,6 @@ const SfaAddTagihanPromo = props => {
       <View style={styles.mainContainer}>
         {renderContent()}
       </View>
-      {renderModalTransferDate()}
     </>
   );
 };
