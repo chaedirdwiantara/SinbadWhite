@@ -363,6 +363,7 @@ class MerchantHomeView extends Component {
     this.props.journeyPlanGetProcessV2({
       page: 1,
       date: today,
+      search: '',
       loading: true
     });
     this.props.getJourneyPlanReportProcessV2();
@@ -1370,4 +1371,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * -> Update the tasklist when complete the order & not order.
  * -> Update the validation when get survey list.
  * -> Update the validation when checkout.
+ * updatedBy: dyah
+ * updatedDate: 12032021
+ * updatedFunction:
+ * -> Add parameter search when get journey plan.
  */

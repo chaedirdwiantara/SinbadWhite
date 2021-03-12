@@ -35,6 +35,7 @@ class JourneyView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      search: '',
       openModalAddMerchant: false,
       openModalMerchantList: false,
       showToast: false,
@@ -73,6 +74,7 @@ class JourneyView extends Component {
     this.props.journeyPlanGetProcessV2({
       page: 1,
       date: today,
+      search: this.state.search,
       loading: true
     });
     this.props.getJourneyPlanReportProcessV2();
@@ -88,6 +90,7 @@ class JourneyView extends Component {
         this.props.journeyPlanGetProcessV2({
           page: 1,
           date: today,
+          search: this.state.search,
           loading: true
         });
         this.props.getJourneyPlanReportProcessV2();
@@ -299,4 +302,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyView);
  * updatedDate: 01032021
  * updatedFunction:
  * -> Update the props of journey plan report.
+ * updatedBy: dyah
+ * updatedDate: 12032021
+ * updatedFunction:
+ * -> Add parameter search when get journey plan.
  */
