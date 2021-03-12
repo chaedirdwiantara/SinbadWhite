@@ -32,10 +32,12 @@ class AddMerchantStep4 extends Component {
   constructor(props) {
     super(props);
     const {
-      warehouses, cluster, group, channel, type
+      cluster, group, channel, type
     } = props.auth.dataCheckPhoneAvailble?.segmentationDetail || {}
+    const singleWareHouse = props.merchant.dataValidateAreaMapping.length === 1
+    
     this.state = {
-      disableWarehouse: warehouses && warehouses.length > 0,
+      disableWarehouse: singleWareHouse,
       disableGroup: group,
       disableTipe: type,
       disableChannel: channel,
