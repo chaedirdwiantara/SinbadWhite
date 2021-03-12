@@ -72,6 +72,12 @@ const SfaAddTagihanView = props => {
   const [isUsedStamp, setIsUsedStamp] = useState(false)
   const [isUseNoReference, setIsUseNoReference] = useState(false)
   const [paymentCollectionMethodId, setPaymentCollectionMethodId]= useState()
+
+  //DATA PAYMENT PROMO
+  const [promoReferenceCode, setPromoReferenceCode] = useState(null);
+  const [promoNumber, setPromoNumber] = useState(null);
+  const [principal, setPrincipal] = useState(null);
+
   //USEREF
   const prevDataSfaPostPaymentMethodRef = useRef(dataSfaPostPaymentMethod)
   const prevDataSfaPostCollectionPaymentRef = useRef(dataSfaPostCollectionPayment)

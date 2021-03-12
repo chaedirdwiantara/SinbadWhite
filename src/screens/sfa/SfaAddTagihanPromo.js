@@ -35,6 +35,8 @@ const SfaAddTagihanPromo = props => {
   const [dataImage, setDataImage] = useState(null)
   const [errorInputImage, setErrorInputImage] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(true)
+  const [isDisable, setIsDisable] = useState(false)
+  const [promoBalance, setPromoBalance] = useState(0)
 
   /**
    * =======================
@@ -105,6 +107,7 @@ const SfaAddTagihanPromo = props => {
             {renderFormReference()}
             {renderFormPromoNumber()}
             {renderFormPrincipal()}
+            {renderPromoValue()}
             {renderBillingValue()}
             {renderUploadImage()}
         </View>
@@ -112,30 +115,83 @@ const SfaAddTagihanPromo = props => {
   }
 
   const renderFormReference = () => {
-      return(
-        <View style={{ marginVertical: 16 }}>
-          <View style={{flexDirection:"row"}}>
-            <View >
-              <Text style={Fonts.type10}>{status === 'available' ? 'Nomor Referensi' : '*Nomor Referensi'}</Text>
-            </View>
-            {renderTooltip("reference")}
+    return (
+      <View style={{ marginHorizontal: -16, marginVertical: 16 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flex: 3 }}>
+            <InputType5
+              title={
+                isDisable !== false ? 'Nomor Referensi' : '*Nomor Referensi'
+              }
+              value={noRef}
+              placeholder={isDisable ? 'Nomor Referensi' : '*Nomor Referensi'}
+              onChangeText={text => textReference(text)}
+              keyboardType={'default'}
+              text={text => setNoRef(text)}
+              editable={!isDisable}
+              tooltip={true}
+              tooltipText={
+                'Dapat berupa Nomor Cek, Giro, Transfer atau Kuitansi'
+              }
+            />
           </View>
-          <TextInput
-            style={
-              [Fonts.type17, styles.boxInput, 
-                {borderBottomColor: masterColor.fontBlack10, marginTop: 8}
-              ]
-            }
-            value={noRef}
-            placeholder={
-            status === 'available' ? 'Nomor Referensi' : '*Nomor Referensi'
-            }
-            keyboardType={'default'}
-            onChangeText={(text) => textReference(text)}
-          />
+          {isDisable ? (
+            <View style={{ flexDirection: 'row', marginRight: 16 }}>
+              <TouchableOpacity
+                onPress={() => setOpenModalReference(true)}
+                style={{
+                  backgroundColor: masterColor.mainColor,
+                  height: 36,
+                  width: 66,
+                  borderRadius: 8,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: 8
+                }}
+              >
+                <Text style={Fonts.type94}> Ubah </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => deleteDataReference()}
+                style={{
+                  backgroundColor: 'white',
+                  height: 36,
+                  width: 66,
+                  borderRadius: 8,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderColor: masterColor.mainColor,
+                  borderWidth: 1
+                }}
+              >
+                <Text style={Fonts.type100}> Hapus </Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={{ marginRight: 16 }}>
+              <TouchableOpacity
+                onPress={() => setOpenModalReference(true)}
+                disabled={props.collectionMethod.balance <= 0 ? true : false}
+                style={{
+                  backgroundColor:
+                    props.collectionMethod.balance <= 0
+                      ? masterColor.fontRed10
+                      : masterColor.mainColor,
+                  height: 36,
+                  width: 66,
+                  borderRadius: 8,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <Text style={Fonts.type94}> Cari</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
-      )
-  }
+      </View>
+    );
+  };
 
   const renderFormPromoNumber = () => {
     return(
@@ -192,6 +248,45 @@ const SfaAddTagihanPromo = props => {
           </View>
         )
     }
+
+    const renderPromoValue = () => {
+      return (
+        <View style={{ paddingTop: 16 }}>
+          <Text style={Fonts.type10}>
+            {isDisable ? 'Nilai Promo' : '*Nilai Promo'}
+          </Text>
+          <View
+            style={[
+              GlobalStyle.boxInput,
+              { flexDirection: 'row', alignItems: 'center' }
+            ]}
+          >
+            <TextInputMask
+              editable={!isDisable}
+              type={'money'}
+              options={{
+                precision: 0,
+                separator: ',',
+                delimiter: '.',
+                unit: 'Rp ',
+                suffixUnit: ''
+              }}
+              value={promoBalance}
+              onChangeText={text => textTransferValue(text)}
+              style={[
+                Fonts.type17,
+                {
+                  width: '95%',
+                  borderBottomColor: masterColor.fontBlack10,
+                  opacity: isDisable === true ? 0.5 : null
+                }
+              ]}
+            />
+          </View>
+          <View style={GlobalStyle.lines} />
+        </View>
+      );
+    };
 
     const renderBillingValue = () => {
         return(
