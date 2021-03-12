@@ -77,6 +77,9 @@ const SfaAddTagihanView = props => {
   const [promoReferenceCode, setPromoReferenceCode] = useState(null);
   const [promoNumber, setPromoNumber] = useState(null);
   const [principal, setPrincipal] = useState(null);
+  const [promoValue, setPromoValue] = useState(null);
+  const [billingPromoValue, setBillingPromoValue] = useState(null);
+  const [promoImage, setPromoImage] = useState(null);
 
   //USEREF
   const prevDataSfaPostPaymentMethodRef = useRef(dataSfaPostPaymentMethod)
@@ -194,6 +197,31 @@ const SfaAddTagihanView = props => {
           image: transferImage.fileData,
         }
         dispatch(sfaPostPaymentMethodProcess(dataTransfer));
+      }
+    }
+    console.log("apa:", collectionMethod.code);
+    if (collectionMethod.code === 'promo') {
+      if (isUseNoReference === true) {
+        alert("reference")
+      } else {
+        console.log("grgrg");
+        const dataPromo = {
+          paymentCollectionTypeId: parseInt(collectionMethod.id),
+          storeId: parseInt(selectedMerchant.storeId),
+          supplierId: parseInt(selectedMerchant.supplierId),
+          userId: parseInt(selectedMerchant.id),
+
+          referenceCode: promoReferenceCode,
+          promoNumber: promoNumber,
+          principal: "null",
+          promoValue: promoValue,
+          balance: billingPromoValue,
+          // filename: transferImage.fileName,
+          // type: transferImage.fileType,
+          // image: transferImage.fileData,
+        }
+        console.log("disini:", dataPromo);
+        // dispatch(sfaPostPaymentMethodProcess(dataTransfer));
       }
     }
     if(collectionMethod.code === 'check' || collectionMethod.code === 'giro'){
@@ -340,6 +368,26 @@ const SfaAddTagihanView = props => {
   const noPaymentCollectionMethodId = data => {
     setPaymentCollectionMethodId(data)
   }
+
+  //DATA PROMO
+  const dataPromoReferenceCode = data => {
+    setPromoReferenceCode(data);
+  };
+  const dataPromoNumber = data => {
+    setPromoNumber(data);
+  };
+  const dataPrincipal = data => {
+    setPrincipal(data);
+  };
+  const dataPromoValue = data => {
+    setPromoValue(data);
+  };
+  const dataBillingPromoValue = data => {
+    setBillingPromoValue(data);
+  };
+  const dataPromoImage = data => {
+    setPromoImage(data);
+  };
 
   useEffect(() => {
     if (collectionMethod !== null) {
@@ -638,6 +686,13 @@ const SfaAddTagihanView = props => {
       <SfaAddTagihanPromo
         collectionMethod={collectionMethod}
         remainingBilling={props.navigation.state.params.data.remainingBilling}
+        referenceCode={dataPromoReferenceCode}
+        promoNumber={dataPromoNumber}
+        principal={dataPrincipal}
+        promoValue={dataPromoValue}
+        billingPromoValue={dataBillingPromoValue}
+        promoImage={dataPromoImage}
+        useNoReference={useNoReference}
       />
     );
   };

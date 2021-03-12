@@ -29,14 +29,18 @@ const SfaAddTagihanPromo = props => {
   const status = props.status;
   const [noRef, setNoRef] = useState('');
   const [promoNumber, setPromoNumber] = useState('');
+  const [principal, setPrincipal] = useState(null)
+  const [promoBalance, setPromoBalance] = useState(0)
   const [promoValue, setPromoValue] = useState(0)
+  
+
   const [bankSource, setBankSource] = useState('');
   const [openModalTransferDate, setOpenModalTransferDate] = useState(false)
   const [dataImage, setDataImage] = useState(null)
   const [errorInputImage, setErrorInputImage] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(true)
   const [isDisable, setIsDisable] = useState(false)
-  const [promoBalance, setPromoBalance] = useState(0)
+  
 
   /**
    * =======================
@@ -85,13 +89,30 @@ const SfaAddTagihanPromo = props => {
 
   const textReference = (text) => {
     setNoRef(text)
+    props.referenceCode(text)
+  }
+
+  const textPromoNumber = (text) => {
+    setPromoNumber(text)
+    props.promoNumber(text)
+  }
+
+  const dataPrincipal = (data) => {
+
+  }
+
+  const textPromoBalance = (text) => {
+    setPromoBalance(parseInt(text.replace(/[Rp.]+/g, '')))
+    props.promoValue(parseInt(text.replace(/[Rp.]+/g, '')))
   }
 
   const textBillingPromo = (text) => {
     if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)) {
         setPromoValue(parseInt(props.remainingBilling))
+        props.billingPromoValue(parseInt(props.remainingBilling))
       } else {
         setPromoValue(parseInt(text.replace(/[Rp.]+/g, '')))
+        props.billingPromoValue(parseInt(text.replace(/[Rp.]+/g, '')))
       }
   }
 
@@ -210,7 +231,7 @@ const SfaAddTagihanPromo = props => {
           value={promoNumber}
           placeholder={'Nomor Promo'}
           keyboardType={'default'}
-          onChangeText={(text) => setPromoNumber(text)}
+          onChangeText={(text) => textPromoNumber(text)}
         />
       </View>
     )
@@ -272,7 +293,7 @@ const SfaAddTagihanPromo = props => {
                 suffixUnit: ''
               }}
               value={promoBalance}
-              onChangeText={text => textTransferValue(text)}
+              onChangeText={text => textPromoBalance(text)}
               style={[
                 Fonts.type17,
                 {
