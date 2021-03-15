@@ -162,6 +162,7 @@ class AddMerchantStep1 extends Component {
     if(segmentationIsMatch){
       NavigationService.navigate('AddMerchantStep2');
       const segmentation = this.props.auth?.dataCheckPhoneAvailble?.segmentationDetail
+      const store = this.props.auth?.dataCheckPhoneAvailble?.store
       let dataWarehouses = segmentation?.warehouses
       let warehouse = null
       if(dataWarehouses !== null){
