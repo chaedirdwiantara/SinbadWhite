@@ -976,6 +976,58 @@ class MerchantHomeView extends Component {
                         }}
                       />
                     )
+                  ) : item.activity === ACTIVITY_JOURNEY_PLAN_COLLECTION ? (
+                    sfaStatus.totalOverdueInvoice === 0 ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.goTo(item.goTo);
+                        }}
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <Text style={Fonts.type51}>{"Sudah Lunas >"}</Text>
+                      </TouchableOpacity>
+                    // ) : sfaStatus.totalOverdueInvoice > 1 ? (
+                    //   <MaterialIcon
+                    //     name="cancel"
+                    //     color={Color.fontRed50}
+                    //     size={24}
+                    //   />
+                    ) : sfaStatus.totalOverdueInvoice >= 1 ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.goTo(item.goTo);
+                        }}
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <Text style={Fonts.type69}>{"Berlangsung >"}</Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <Button
+                      onPress={() => {
+                        this.goTo(item.goTo);
+                      }}
+                      title={item.title}
+                      titleStyle={[
+                        Fonts.type16,
+                        {
+                          color: Color.fontWhite
+                        }
+                      ]}
+                      buttonStyle={{
+                        backgroundColor: Color.fontRed50,
+                        borderRadius: 7,
+                        paddingHorizontal: 20,
+                        paddingVertical: 5,
+                        width: '100%'
+                      }}
+                    />
+                    )
                   ) : (
                     <Button
                       onPress={() => {

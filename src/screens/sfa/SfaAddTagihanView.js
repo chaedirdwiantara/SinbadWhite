@@ -168,12 +168,12 @@ const SfaAddTagihanView = props => {
           userSellerId: parseInt(selectedMerchant.id),
           orderParcelId: orderParcelId,
           storeId: parseInt(selectedMerchant.storeId),
-          paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
+          paymentCollectionMethodId: parseInt(paymentCollectionMethodId),
           amount: billingValue
         }
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
       } else {
-        const data = {
+        const dataTransfer = {
           paymentCollectionTypeId: parseInt(collectionMethod.id),
           storeId: parseInt(selectedMerchant.storeId),
           supplierId: parseInt(selectedMerchant.supplierId),
@@ -187,7 +187,7 @@ const SfaAddTagihanView = props => {
           type: transferImage.fileType,
           image: transferImage.fileData,
         }
-        dispatch(sfaPostPaymentMethodProcess(data));
+        dispatch(sfaPostPaymentMethodProcess(dataTransfer));
       }
     }
     if(collectionMethod.code === 'check' || collectionMethod.code === 'giro'){
@@ -620,6 +620,7 @@ const SfaAddTagihanView = props => {
         billingValue={dataBillingValue}
         transferImage={dataTransferImage}
         useNoReference={useNoReference}
+        paymentCollectionMethodId={noPaymentCollectionMethodId}
       />
     );
   };
