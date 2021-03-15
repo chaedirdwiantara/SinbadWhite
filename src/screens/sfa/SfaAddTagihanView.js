@@ -148,7 +148,6 @@ const SfaAddTagihanView = props => {
       setCash(parseInt(text.replace(/[Rp.]+/g, '')));
     }
   };
-
   const saveCollection = async () => {
     const orderParcelId = props.navigation.state.params.data.id
     if (collectionMethod.code === 'cash') {
@@ -162,21 +161,8 @@ const SfaAddTagihanView = props => {
       dispatch(sfaPostPaymentMethodProcess(data));
     }
     if (collectionMethod.code === 'transfer') {
-      const data = {
-        paymentCollectionTypeId: parseInt(collectionMethod.id),
-        storeId: parseInt(selectedMerchant.storeId),
-        supplierId: parseInt(selectedMerchant.supplierId),
-        userId: parseInt(selectedMerchant.id),
-        referenceCode: referenceCode,
-        balance: transferValue,
-        issuedDate: moment(new Date(transferDate)).format('YYYY-MM-DD HH:mm:ss'),
-        bankId: bankSource.id,
-        bankToAccountId: bankAccount.id,
-        filename: transferImage.fileName,
-        type: transferImage.fileType,
-        image: transferImage.fileData,
-      }
       if (isUseNoReference === true) {
+        console.log(isUseNoReference, 'masuk reference');
         const dataPostPayment = {
           supplierId: parseInt(selectedMerchant.supplierId),
           userSellerId: parseInt(selectedMerchant.id),
@@ -187,13 +173,26 @@ const SfaAddTagihanView = props => {
         }
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
       } else {
+        const data = {
+          paymentCollectionTypeId: parseInt(collectionMethod.id),
+          storeId: parseInt(selectedMerchant.storeId),
+          supplierId: parseInt(selectedMerchant.supplierId),
+          userId: parseInt(selectedMerchant.id),
+          referenceCode: referenceCode,
+          balance: transferValue,
+          issuedDate: moment(new Date(transferDate)).format('YYYY-MM-DD HH:mm:ss'),
+          bankId: bankSource.id,
+          bankToAccountId: bankAccount.id,
+          filename: transferImage.fileName,
+          type: transferImage.fileType,
+          image: transferImage.fileData,
+        }
         dispatch(sfaPostPaymentMethodProcess(data));
       }
     }
     if(collectionMethod.code === 'check' || collectionMethod.code === 'giro'){
       const data ={
         paymentCollectionTypeId: parseInt(collectionMethod.id),
-        // paymentCollectionMethodId: 9,
         storeId: parseInt(selectedMerchant.storeId),
         supplierId: parseInt(selectedMerchant.supplierId),
         userId: parseInt(selectedMerchant.id),
