@@ -30,7 +30,9 @@ const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
 class JourneyListDataView extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      search: ''
+    };
   }
   /**
    * =======================
@@ -42,6 +44,7 @@ class JourneyListDataView extends Component {
     this.props.journeyPlanGetProcessV2({
       page: 1,
       date: today,
+      search: this.state.search,
       loading: true
     });
   };
@@ -57,6 +60,7 @@ class JourneyListDataView extends Component {
         this.props.journeyPlanGetProcessV2({
           page,
           date: today,
+          search: this.state.search,
           loading: true
         });
       }
@@ -366,5 +370,9 @@ export default connect(
  * updatedDate: 08032021
  * updatedFunction:
  * -> Update parameter when loadmore.
+ * updatedBy: dyah
+ * updatedDate: 12032021
+ * updatedFunction:
+ * -> Add parameter search when get journey plan.
  *
  */
