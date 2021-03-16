@@ -20,8 +20,8 @@ class ModalBottomSubmit extends Component {
       <View>
         <View style={styles.contentContainer}>
           <Text style={Fonts.type12}>
-            You can only submit it once. After this you can proceed to the next
-            step.
+            Mengirim foto hanya dapat dilakukan satu kali. Setelah mengirim
+            foto, dapat melanjutkan ke langkah selanjutnya.
           </Text>
         </View>
         <FlatList
@@ -41,7 +41,7 @@ class ModalBottomSubmit extends Component {
         <View style={styles.buttonContainer}>
           <View style={styles.button}>
             <ButtonSingleSmall
-              title="Cancel"
+              title="Batal"
               white
               borderRadius={4}
               onPress={this.props.onClose}
@@ -50,7 +50,7 @@ class ModalBottomSubmit extends Component {
           </View>
           <View style={styles.button}>
             <ButtonSingleSmall
-              title="Submit"
+              title="Kirim"
               loading={this.props.loading}
               disabled={this.props.loading}
               borderRadius={4}

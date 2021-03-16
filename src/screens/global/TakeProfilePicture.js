@@ -6,7 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   RNCamera,
   RNFS,
@@ -14,15 +14,13 @@ import {
   MaterialIcon,
   ImageEditor,
   connect
-} from '../../library/thirdPartyPackage'
-import {
-  StatusBarBlack
-} from '../../library/component'
+} from '../../library/thirdPartyPackage';
+import { StatusBarBlack } from '../../library/component';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 class TakeProfilePicture extends Component {
   constructor(props) {
@@ -47,27 +45,31 @@ class TakeProfilePicture extends Component {
   }
 
   takePicture = async () => {
-    this.setState({ loading: true });
-    const cropData = {
-      offset: { x: 200, y: 500 },
-      size: { width: 1700, height: 1700 }
-    };
-
-    if (this.camera) {
-      const options = {
-        quality: 0.2,
-        base64: true,
-        pauseAfterCapture: true,
-        fixOrientation: true,
-        orientation: 'portrait'
+    try {
+      this.setState({ loading: true });
+      let cropOptions = {
+        offset: { x: 0, y: 250 }
       };
-      const data = await this.camera.takePictureAsync(options);
-      ImageEditor.cropImage(data.uri, cropData).then(url => {
-        RNFS.readFile(url, 'base64').then(dataImage => {
-          this.props.saveImageBase64(dataImage);
-        });
-        RNFS.unlink(data.uri);
-      });
+
+      if (this.camera) {
+        const options = {
+          quality: 0.2,
+          base64: true,
+          pauseAfterCapture: true,
+          fixOrientation: true,
+          orientation: 'portrait'
+        };
+        let data = await this.camera.takePictureAsync(options);
+        let smallest = data.width < data.height ? data.width : data.height;
+        cropOptions.size = { width: smallest, height: smallest };
+        let cropedUri = await ImageEditor.cropImage(data.uri, cropOptions);
+        let dataImage = await RNFS.readFile(cropedUri, 'base64');
+        this.props.saveImageBase64(dataImage);
+        RNFS.unlink(cropedUri);
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-alert
+      alert(error.message);
     }
   };
 
@@ -79,7 +81,6 @@ class TakeProfilePicture extends Component {
           ref={ref => {
             this.camera = ref;
           }}
-          aspect={1}
           style={styles.preview}
           type={RNCamera.Constants.Type.front}
           captureAudio={false}
@@ -170,15 +171,14 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(TakeProfilePicture);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

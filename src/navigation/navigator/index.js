@@ -17,6 +17,9 @@ import GlobalNavigator from './GlobalNavigator';
 import PdpNavigator from './PdpNavigator';
 import OmsNavigator from './OmsNavigator';
 import HistoryNavigator from './HistoryNavigator';
+import {
+  nrInit,
+} from '../../../NewRelicRN.js';
 
 const MergeAllNavigator = {
   ...NotificationNavigator,
@@ -54,5 +57,7 @@ const SwitchNavigator = createSwitchNavigator(
     initialRouteName: 'Intro'
   }
 );
+
+nrInit('Intro');
 
 export default createAppContainer(SwitchNavigator);
