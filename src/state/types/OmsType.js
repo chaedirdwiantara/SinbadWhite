@@ -67,3 +67,8 @@ export const OMS_GET_PAY_LATER_TYPE_FAILED = 'OmsGetPayLaterTypeFailed';
 export const OMS_APPLICABLE_PAYLATER_PROCESS = 'OmsApplicablePaylaterProcess';
 export const OMS_APPLICABLE_PAYLATER_SUCCESS = 'OmsApplicablePaylaterSuccess';
 export const OMS_APPLICABLE_PAYLATER_FAILED = 'OmsApplicablePaylaterFailed';
+
+/** GET KUR OTP */
+export const OMS_GET_KUR_OTP_PROCESS = 'OmsGetKurOTPProcess';
+export const OMS_GET_KUR_OTP_SUCCESS = 'OmsGetKurOTPSuccess';
+export const OMS_GET_KUR_OTP_FAILED = 'OmsGetKurOTPFailed';

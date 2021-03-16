@@ -147,6 +147,14 @@ function getApplicablePaylater(data) {
   });
 }
 
+/** GET KUR OTP LATER */
+function getKurOtp(data) {
+  return ApiRest({
+    path: `payment/v1/klik-acc/otp?via=phone&storeCode=SNB-STORE-101`,
+    method: 'GET',
+  });
+}
+
 export const OmsMethod = {
   getCartItem,
   getCheckoutItem,
@@ -158,5 +166,6 @@ export const OmsMethod = {
   getLastPaymentChannel,
   checkPromo,
   getPayLaterType,
-  getApplicablePaylater
+  getApplicablePaylater,
+  getKurOtp
 };

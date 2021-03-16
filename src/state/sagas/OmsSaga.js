@@ -137,6 +137,18 @@ function* getApplicablePaylater(actions) {
   }
 }
 
+/** === GET KUR OTP === */
+function* getKurOtp(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.getKurOtp(actions.payload);
+    });
+    yield put(ActionCreators.OmsGetKurOtpSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.OmsGetKurOtpFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* OmsSaga() {
   yield takeEvery(types.OMS_GET_CART_ITEM_PROCESS, getCartItem);
@@ -157,6 +169,7 @@ function* OmsSaga() {
   yield takeEvery(types.OMS_CHECK_PROMO_PROCESS, checkPromo);
   yield takeEvery(types.OMS_GET_PAY_LATER_TYPE_PROCESS, getPayLaterType);
   yield takeEvery(types.OMS_APPLICABLE_PAYLATER_PROCESS, getApplicablePaylater);
+  yield takeEvery(types.OMS_GET_KUR_OTP_PROCESS, getKurOtp);
 }
 
 export default OmsSaga;
