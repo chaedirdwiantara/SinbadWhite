@@ -15,6 +15,8 @@ import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 import io.invertase.firebase.fabric.crashlytics.RNFirebaseCrashlyticsPackage;
 import com.microsoft.codepush.react.CodePush;
+import com.newrelic.agent.android.NewRelic;
+import com.rnnewrelic.NewRelicPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -41,6 +43,7 @@ public class MainApplication extends Application implements ReactApplication {
           packages.add(new RNFirebaseNotificationsPackage());
           packages.add(new RNFirebaseFirestorePackage());
           packages.add(new RNFirebaseCrashlyticsPackage());
+          packages.add(new NewRelicPackage());
           return packages;
         }
 
@@ -60,6 +63,9 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this); // Remove this line if you don't want Flipper enabled
+    if (!BuildConfig.NEWRELIC_KEY.isEmpty() && BuildConfig.NEWRELIC_KEY != null) {
+      NewRelic.withApplicationToken(BuildConfig.NEWRELIC_KEY).start(this);
+    }
   }
 
   /**
