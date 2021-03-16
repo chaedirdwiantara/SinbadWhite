@@ -418,7 +418,7 @@ status: "enabled"
     }));
     const isKUR = this.state.parcels.filter(data => data.paylaterType).some(data => data.paylaterType.id === 2)
     if (isKUR === true){
-      this.setState({ openModalOmsOtpKur : true})
+     NavigationService.navigate('OmsOtpKurView')
     }
     else {
   this.props.omsConfirmOrderProcess({
@@ -971,10 +971,8 @@ status: "enabled"
           openModalOmsOtpKur: false
         })
       }
-      openDifferentNumber={() => 
-      this.setState({
-        openModalUserDifferentNumber: true
-      })}
+     dataOtp = { this.props.dataOmsGetKurOtp}
+     errorOtp = {this.props.errorOmsGetKurOtp}
       
     />
   ) : (

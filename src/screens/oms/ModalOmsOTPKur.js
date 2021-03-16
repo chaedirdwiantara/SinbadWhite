@@ -23,7 +23,7 @@ import { Fonts, GlobalStyle} from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import ModalUserDifferentNumber from './ModalUserDifferentNumber';
-// import ModalBottomErrorOtpKur from './ModalBottomErrorOtpKur'
+import ModalOmsErrorOtpKur from './ModalOmsErrorOtpKur';
 
 const { width, height } = Dimensions.get('window');
 class ModalOmsOTPKur extends Component {
@@ -43,12 +43,36 @@ class ModalOmsOTPKur extends Component {
       maxOtp: false
     }
   }
+  /** DID UPDATE */
+  componentDidUpdate(){
+    if (this.props.dataOtp !== undefined){
+      if(prevProps.dataOtp !== this.props.dataOtp){
+        console.log('set time out');
+        this.resend()
+      }
+    }
+    if (this.props.errorOtp !== undefined){
+      if(prevProps.errorOtp !== this.props.errorOtp){
+        console.log('error otp');
+      }
+    }
+  }
+  /** DID MOUNT */
+  componentDidMount (){
+    this.getOtp()
+  }
 
   /**
    * ========================
    * FUNCTIONAL
    * ========================
    */
+
+  /** === GET OTP  */
+  getOtp(){
+    const storeCode = 'SNB-STORE-101'
+    this.props.OmsGetKurOtpProcess(storeCode)
+  }
   /** === SAVE OTP FROM OTP INPUT TO STATE */
   otpInput(data) {
     const otpInput = this.state.otpInput;
@@ -77,7 +101,7 @@ class ModalOmsOTPKur extends Component {
 
   //RESEND
   resend() {
-    this.setState({ resend: true, openModalErrorOtp: true });
+    this.setState({ resend: true });
     let countNumber = 90;
     const counter = setInterval(() => {
       countNumber--;
@@ -225,7 +249,7 @@ class ModalOmsOTPKur extends Component {
           this.state.resend === false ? (
             <View style={{flexDirection:"row", alignSelf:"center"}}>
               <Text style={[Fonts.type8, {textAlign:"center"}]}>Tidak menerima Kode ? </Text>
-              <TouchableOpacity onPress={() => this.resend()}>
+              <TouchableOpacity onPress={() => this.getOtp()}>
                 <Text style={Fonts.type108p}>Kirim Ulang</Text>
               </TouchableOpacity>
             </View>
@@ -301,10 +325,9 @@ renderModalUserDifferentNumber() {
     return(
     <View>
       {this.state.openModalErrorOtp ? (
-          <ModalBottomErrorOtpKur
+          <ModalOmsErrorOtpKur
           open={this.state.openModalErrorOtp}
           close={()=> this.setState({openModalErrorOtp: false})}
-          navigate={this.props.close}
         />)
         : null
         }
@@ -315,6 +338,8 @@ renderModalUserDifferentNumber() {
 
 /** === MAIN === */
   render() {  
+    console.log(this.props.dataOtp, 'props data');
+    console.log((this.props.errorOtp, 'error otp'));
     return(
       <View style={{flex:1}}>
         <StatusBarWhite />
@@ -333,7 +358,7 @@ renderModalUserDifferentNumber() {
           </ScrollView>
         </Modal>
         {this.renderModalUserDifferentNumber()}
-        {/* {this.renderModalBottomErrorOtpKur()} */}
+        {this.renderModalBottomErrorOtpKur()}
       </View>
     )
   }
