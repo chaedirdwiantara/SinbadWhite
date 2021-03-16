@@ -20,11 +20,11 @@ import {
   InputType5
 } from '../../library/component';
 import * as ActionCreators from '../../state/actions';
-import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
+import { Fonts, GlobalStyle } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import ImagePicker from 'react-native-image-picker';
 import ModalPrincipal from './ModalPrincipal';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const { width, height } = Dimensions.get('window');
 

@@ -22,6 +22,7 @@ import { sfaGetPrincipalProcess } from '../../state/actions';
 function ModalPrincipal(props) {
   const dispatch = useDispatch();
   const { dataSfaGetPrincipal} = useSelector(state => state.sfa);
+  const { selectedMerchant} = useSelector(state => state.merchant);
 
 const [dataPrincipal, setDataPrincipal] = useState([
     {id: 1, name: "Asahi"},
@@ -35,7 +36,7 @@ const [dataPrincipal, setDataPrincipal] = useState([
    */
 
   useEffect(() => {
-    dispatch(sfaGetPrincipalProcess())
+    dispatch(sfaGetPrincipalProcess(selectedMerchant.supplierId))
   }, []);
 
 

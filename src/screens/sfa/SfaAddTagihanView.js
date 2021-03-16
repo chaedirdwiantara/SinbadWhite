@@ -199,12 +199,9 @@ const SfaAddTagihanView = props => {
         dispatch(sfaPostPaymentMethodProcess(dataTransfer));
       }
     }
-    console.log("apa:", collectionMethod.code);
     if (collectionMethod.code === 'promo') {
       if (isUseNoReference === true) {
-        alert("reference")
       } else {
-        console.log("grgrg");
         const dataPromo = {
           paymentCollectionTypeId: parseInt(collectionMethod.id),
           storeId: parseInt(selectedMerchant.storeId),
@@ -220,7 +217,6 @@ const SfaAddTagihanView = props => {
           // type: promoImage.fileType,
           // image: promoImage.fileData,
         }
-        console.log("disini:", dataPromo);
         // dispatch(sfaPostPaymentMethodProcess(dataTransfer));
       }
     }
