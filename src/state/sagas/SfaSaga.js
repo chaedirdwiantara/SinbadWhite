@@ -146,6 +146,18 @@ function* getTransferImage(actions) {
   }
 }
 
+/** GET PRINCIPAL */
+function* getPrincipal(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getPrincipal(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetPrincipalSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetPrincipalFailed(error));
+  }
+}
+
   function* SfaSaga() {
     yield takeEvery(
       types.SFA_GET_COLLECTION_STATUS_PROCESS,
@@ -162,6 +174,7 @@ function* getTransferImage(actions) {
     yield takeEvery(types.SFA_GET_STAMP_PROCESS, getStampList)
     yield takeEvery(types.SFA_GET_STATUS_ORDER_PROCESS, getStatusOrder)
     yield takeEvery(types.SFA_GET_TRANSFER_IMAGE_PROCESS, getTransferImage)
+    yield takeEvery(types.SFA_GET_PRINCIPAL_PROCESS, getPrincipal)
 }
 
 export default SfaSaga;

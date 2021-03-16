@@ -987,7 +987,7 @@ class MerchantHomeView extends Component {
                           alignItems: 'center',
                         }}
                       >
-                        <Text style={Fonts.type51}>{"Sudah Lunas >"}</Text>
+                        <Text style={Fonts.type51}>{"Sudah Lunas"}</Text>
                       </TouchableOpacity>
                     // ) : sfaStatus.totalOverdueInvoice > 1 ? (
                     //   <MaterialIcon
@@ -1001,11 +1001,22 @@ class MerchantHomeView extends Component {
                           this.goTo(item.goTo);
                         }}
                         style={{
+                          flexDirection: 'row',
                           justifyContent: 'center',
                           alignItems: 'center',
+                          marginTop: -5
                         }}
                       >
-                        <Text style={Fonts.type69}>{"Berlangsung >"}</Text>
+                        <Text style={Fonts.type69}>Berlangsung</Text>
+                        <MaterialIcon
+                          style={{
+                            marginTop: 2,
+                            padding: 0
+                          }}
+                          name="chevron-right"
+                          color={Color.fontYellow50}
+                          size={20}
+                        />
                       </TouchableOpacity>
                     ) : (
                       <Button

@@ -17,11 +17,11 @@ import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import { sfaGetBankAccountProcess } from '../../state/actions';
+import { sfaGetPrincipalProcess } from '../../state/actions';
 
 function ModalPrincipal(props) {
   const dispatch = useDispatch();
-//   const { dataSfaGetBankAccount} = useSelector(state => state.sfa);
+  const { dataSfaGetPrincipal} = useSelector(state => state.sfa);
 
 const [dataPrincipal, setDataPrincipal] = useState([
     {id: 1, name: "Asahi"},
@@ -35,7 +35,7 @@ const [dataPrincipal, setDataPrincipal] = useState([
    */
 
   useEffect(() => {
-    dispatch(sfaGetBankAccountProcess())
+    dispatch(sfaGetPrincipalProcess())
   }, []);
 
 
@@ -75,7 +75,7 @@ const [dataPrincipal, setDataPrincipal] = useState([
 
   const renderPrincipal = () => {
     // const data = dataSfaGetBankAccount;
-    return dataPrincipal.map((item, index) => {
+    return dataSfaGetPrincipal.data.map((item, index) => {
       return (
         <View key={index}>
           <TouchableOpacity onPress={() => props.selectPrincipal(item)}>
@@ -98,8 +98,8 @@ const [dataPrincipal, setDataPrincipal] = useState([
     return (
       <>
         <View style={styles.contentContainer}>
-            {renderPrincipal()}
-          {/* {dataSfaGetBankAccount ? renderCollectionMethod() : <LoadingPage />} */}
+            {/* {renderPrincipal()} */}
+          {dataSfaGetPrincipal ? renderPrincipal() : <LoadingPage />}
         </View>
       </>
     );
