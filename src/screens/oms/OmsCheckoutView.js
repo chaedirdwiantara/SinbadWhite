@@ -41,6 +41,8 @@ import ModalBottomPayLaterType from './ModalBottomPayLaterType';
 import ModalConfirmKUR from '../../components/modal/ModalConfirmationType3';
 import ModalOmsKurWebView from './ModalOmsKurWebView';
 import ModalOmsKurAnnouncement from './ModalOmsKurAnnouncement';
+import ModalOmsOTPKur from './ModalOmsOTPKur';
+import ModalUserDifferentNumber from './ModalUserDifferentNumber';
 class OmsCheckoutView extends Component {
   constructor(props) {
     super(props);
@@ -102,7 +104,9 @@ class OmsCheckoutView extends Component {
       modalConfirmKUR: false,
       openModalKurWebView: false,
       openModalFailPaylater: false,
-      openModalKurAnnouncement: false
+      openModalKurAnnouncement: false,
+      openModalOmsOtpKur: false,
+      openModalUserDifferentNumber: false
     };
   }
   /**
@@ -282,8 +286,10 @@ class OmsCheckoutView extends Component {
             tAndR.data.paymentChannels == null &&
             tAndR.data.paymentTypes == null
           ) {
-            this.confirmOrder();
-            this.setState({ tAndRDetail: true });
+            const isKUR = this.state.parcels.filter(data => data.paylaterType).some(data => data.paylaterType.id === 2);
+            console.log(isKUR, 'iskur');
+            // this.confirmOrder();
+            // this.setState({ tAndRDetail: true });
           } else {
             this.setState({ modalTAndR: true });
           }
@@ -298,7 +304,25 @@ class OmsCheckoutView extends Component {
       ) {
         if (this.props.oms.dataOmsGetPayLaterType !== null) {
           this.setState({
-            payLaterType: this.props.oms.dataOmsGetPayLaterType.data
+            // payLaterType: this.props.oms.dataOmsGetPayLaterType.data
+            payLaterType: [{description: "Kredit Usaha Rakyat (KUR) merupakan sebuah layanan yang diberikan oleh pemerintah",
+            id: 2,
+            image: "",
+            isRedirect: false,
+            message: "",
+            name: "Supplier dengan KUR KlikACC",
+            redirectUrl: "",
+            status: "enabled"},
+          {
+            description: "Layanan Bayar Nanti yang disediakan langsung oleh Supplier",
+id: 1,
+image: "",
+isRedirect: false,
+message: "",
+name: "Supplier",
+redirectUrl: "",
+status: "enabled"
+          }]
           });
         }
       }
@@ -392,11 +416,18 @@ class OmsCheckoutView extends Component {
         ? this.state.selectedPaylaterType.id
         : null
     }));
-    this.props.omsConfirmOrderProcess({
+    const isKUR = this.state.parcels.filter(data => data.paylaterType).some(data => data.paylaterType.id === 2)
+    if (isKUR === true){
+      this.setState({ openModalOmsOtpKur : true})
+    }
+    else {
+  this.props.omsConfirmOrderProcess({
       orderId,
       storeId,
       parcels
     });
+    }
+  
     this.setState({ modalTAndR: false });
   }
   /** ======= DID UPDATE FUNCTION ==== */
@@ -474,6 +505,7 @@ class OmsCheckoutView extends Component {
 
   /** === MODIFY DATA FOR PAYLATER KUR === */
   selectedPaylaterType(item) {
+    console.log(item, 'item');
     if (item.id === 1) {
       //if paylaterType === supplier
       this.setState({
@@ -485,7 +517,7 @@ class OmsCheckoutView extends Component {
       this.openPaymentMethod(this.state.selectedPaymentType);
     } else if (item.id === 2) {
       //if paylaterType === KUR
-      if (item.message === null && item.message === '') {
+      if (item.message === null || item.message === '') {
         if (item.isRedirect === true) {
           this.setState({
             selectedPaylaterType: item,
@@ -928,6 +960,29 @@ class OmsCheckoutView extends Component {
       <View />
     );
   }
+
+ /** === RENDER MODAL OTP KUR === */
+ renderModalOtpKur() {
+  return this.state.openModalOmsOtpKur ? (
+    <ModalOmsOTPKur
+      open={this.state.openModalOmsOtpKur}
+      close={() =>
+        this.setState({
+          openModalOmsOtpKur: false
+        })
+      }
+      openDifferentNumber={() => 
+      this.setState({
+        openModalUserDifferentNumber: true
+      })}
+      
+    />
+  ) : (
+    <View />
+  );
+}
+
+
 
   /**
    * *********************************
@@ -1917,6 +1972,7 @@ class OmsCheckoutView extends Component {
         {this.renderModalKurWebview()}
         {this.renderModalFailPaylater()}
         {this.renderModalKurAnncouncement()}
+        {this.renderModalOtpKur()}
       </View>
     );
   }
