@@ -13,21 +13,25 @@ import {
   MaterialIcon, 
   moment,
   Tooltip, 
+  connect,
+  bindActionCreators
 } from '../../library/thirdPartyPackage';
 import { 
   InputType5
 } from '../../library/component';
+import * as ActionCreators from '../../state/actions';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import ImagePicker from 'react-native-image-picker';
 import ModalPrincipal from './ModalPrincipal';
+import { useDispatch, useSelector } from 'react-redux';
 
 const { width, height } = Dimensions.get('window');
 
 const SfaAddTagihanPromo = props => {
   const status = props.status;
   const [noRef, setNoRef] = useState('');
-  const [promoNumber, setPromoNumber] = useState('');
+  const [promoNumber, setPromoNumber] = useState(null);
   const [principal, setPrincipal] = useState(null)
   const [promoBalance, setPromoBalance] = useState(0)
   const [promoValue, setPromoValue] = useState(0)
@@ -37,6 +41,8 @@ const SfaAddTagihanPromo = props => {
   const [isDisable, setIsDisable] = useState(false)
 
   const [openModalPrincipal, setOpenModalPrincipal] = useState(false);
+
+  const { selectedMerchant} = useSelector(state => state.merchant);
   
 
   /**
@@ -44,6 +50,13 @@ const SfaAddTagihanPromo = props => {
    * FUNCTIONAL
    * =======================
    */
+   useEffect(() => {
+    const front = moment.utc(new Date()).local().format('YYYYMMDD')
+    const mid = selectedMerchant.externalId
+    const back = moment.utc(new Date()).local().format('HHmmss')
+    setPromoNumber(`${front}${mid}${back}`)
+    props.promoNumber(`${front}${mid}${back}`)
+  }, []);
 
   const clickCamera = () => {
     let options = {
@@ -224,13 +237,13 @@ const SfaAddTagihanPromo = props => {
         <TextInput
           style={
             [Fonts.type17, styles.boxInput, 
-              {borderBottomColor: masterColor.fontBlack10, marginTop: 8}
+              {opacity: 0.5}
             ]
           }
           value={promoNumber}
+          editable={false}
           placeholder={'Nomor Promo'}
           keyboardType={'default'}
-          onChangeText={(text) => textPromoNumber(text)}
         />
       </View>
     )
@@ -471,8 +484,6 @@ const SfaAddTagihanPromo = props => {
   );
 };
 
-export default SfaAddTagihanPromo;
-
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
@@ -521,3 +532,11 @@ const styles = StyleSheet.create({
       borderBottomColor: masterColor.fontBlack40
     },
 });
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
+
+export default connect(
+  mapDispatchToProps
+)(SfaAddTagihanPromo);
