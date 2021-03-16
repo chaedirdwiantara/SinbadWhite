@@ -24,11 +24,6 @@ function ModalPrincipal(props) {
   const { dataSfaGetPrincipal} = useSelector(state => state.sfa);
   const { selectedMerchant} = useSelector(state => state.merchant);
 
-const [dataPrincipal, setDataPrincipal] = useState([
-    {id: 1, name: "Asahi"},
-    {id: 2, name: "Frisian Flag"},
-])
-
   /**
    * =======================
    * FUNCTIONAL
