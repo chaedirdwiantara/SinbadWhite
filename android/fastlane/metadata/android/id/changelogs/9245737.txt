@@ -1,0 +1,4 @@
+What's new on Sinbad Agent, you can:
+* See store scheduled in Journey Plan
+* Improvement on New Store Registration
+* Improvement on Agent Profile

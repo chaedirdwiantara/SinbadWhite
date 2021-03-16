@@ -36,3 +36,20 @@ export function profileGetWarehouseSuccess(data){
 export function profileGetWarehouseFailed(data) {
   return { type: types.PROFILE_GET_WAREHOUSE_FAILED, payload: data}
 }
+/**
+ * =================================
+ * PROFILE GET SALES SEGMENTATION TEAM
+ * =================================
+ */
+export function getSalesSegmentationTeamProcess(data){
+  return { type: types.PROFILE_GET_SALES_SEGMENTATION_TEAM_PROCESS, payload: data }
+}
+export function getSalesSegmentationTeamSuccess(data){
+  if (data.result === 'Ok'){
+    return { type: types.PROFILE_GET_SALES_SEGMENTATION_TEAM_SUCCESS, payload: data.data}
+  }
+  return { type: types.PROFILE_GET_SALES_SEGMENTATION_TEAM_FAILED, payload: data}
+}
+export function getSalesSegmentationTeamFailed(data) {
+  return { type: types.PROFILE_GET_SALES_SEGMENTATION_TEAM_FAILED, payload: data}
+}

@@ -33,13 +33,15 @@ class ModalCarousel extends Component {
           itemWidth={1 * width}
           onSnapToItem={index => this.props.onSnapToItem(index)}
           renderItem={() => (
-            <Image
-              source={{
-                isStatic: true,
-                uri: this.props.data[this.props.activeIndex].fileUrl
-              }}
-              style={styles.image}
-            />
+            <View style={styles.imageContainer}>
+              <Image
+                source={{
+                  isStatic: true,
+                  uri: this.props.data[this.props.activeIndex].fileUrl
+                }}
+                style={styles.image}
+              />
+            </View>
           )}
           inactiveSlideOpacity={1}
           inactiveSlideScale={1}
@@ -123,9 +125,14 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     padding: 16
   },
-  image: {
+  imageContainer: {
     width,
     height: width
+  },
+  image: {
+    flex: 1,
+    height: '100%',
+    resizeMode: 'contain'
   },
   pagination: {
     flexDirection: 'row',
@@ -143,8 +150,8 @@ export default ModalCarousel;
  * ============================
  * createdBy: dyah
  * createdDate: 22112020
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 16022021
  * updatedFunction:
- * -> add modal for image carousel.
+ * -> update size of image carousel.
  */

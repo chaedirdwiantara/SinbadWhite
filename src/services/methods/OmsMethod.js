@@ -18,7 +18,8 @@ function getCheckoutItem(data) {
   let params = {
     storeId: GlobalMethod.merchantStoreId(),
     cartId: data.cartId,
-    catalogues: data.catalogues
+    catalogues: data.catalogues,
+    portfolioId: data.portfolioId
   };
   // promo
   params.promos = promoData();
