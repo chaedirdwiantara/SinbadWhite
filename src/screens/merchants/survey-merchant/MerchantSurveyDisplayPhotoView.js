@@ -161,15 +161,16 @@ class MerchantSurveyDisplayPhotoView extends Component {
   };
   /** === FOR GET LOG ALL ACTIVITY === */
   refreshMerchantGetLogAllActivityProcess() {
-    this.props.merchantGetLogAllActivityProcess(
-      this.props.merchant.selectedMerchant.journeyPlanSaleId
+    this.props.merchantGetLogAllActivityProcessV2(
+      this.props.merchant.selectedMerchant.journeyBookStores.id
     );
   }
   /** === FOR SET SALES ACTIVITY SURVEY_TOKO DONE === */
   surveyDone() {
-    this.props.merchantPostActivityProcess({
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
-      activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+    this.props.merchantPostActivityProcessV2({
+      journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores
+        .id,
+      activityName: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
     });
     this.refreshMerchantGetLogAllActivityProcess();
   }
@@ -251,7 +252,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       if (!item.uri) {
         if (check === 0) {
           check = check + 1;
-          return (item.uri = this.state.capturedPhoto.base64);
+          return (item.uri = this.state.capturedPhoto.uri);
         }
         return;
       }
@@ -334,6 +335,15 @@ class MerchantSurveyDisplayPhotoView extends Component {
     });
     this.setState({ photo: newPhoto });
   };
+  /** === GO TO MERCHANT VIEW === */
+  goToMerchantHomeView = () => {
+    this.setState({ modalCompleted: false });
+    this.props.merchantGetSurveyListReset();
+    this.props.merchantGetLogAllActivityProcessV2(
+      this.props.merchant.selectedMerchant.journeyBookStores.id
+    );
+    NavigationService.navigate('MerchantHomeView');
+  }
   /** ====== DID MOUNT FUNCTION ========== */
   /** NAVIGATION FUNCTION */
   navigationFunction() {
@@ -600,13 +610,19 @@ class MerchantSurveyDisplayPhotoView extends Component {
     return (
       <View style={styles.contentContainer}>
         <View style={[styles.cardContainer, styles.reviewContainer]}>
-          <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
+          <View
+            style={[
+              styles.insideCard,
+              GlobalStyle.shadowForBox5,
+              { height: '50%' }
+            ]}
+          >
             <Image
               source={{
                 isStatic: true,
                 uri: 'data:image/jpeg;base64,' + this.state.capturedPhoto.uri
               }}
-              style={{ height: 257 }}
+              style={styles.imageReviewImage}
             />
           </View>
           <View style={styles.reviewButtonContainer}>
@@ -690,7 +706,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     return (
       <ModalBottomCompleted
         open={this.state.modalCompleted}
-        onReturnTaskList={() => NavigationService.navigate('MerchantHomeView')}
+        onReturnTaskList={() => this.goToMerchantHomeView()}
         onClose={() => this.setState({ modalCompleted: false })}
       />
     );
@@ -771,6 +787,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: Color.backgroundWhite
   },
+  imageReviewImage: {
+    flex: 1,
+    height: '100%',
+    resizeMode: 'contain'
+  },
   imageDisplayPhoto: {
     borderRadius: 4,
     width: 51,
@@ -845,7 +866,19 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 16122020
+ * updatedDate: 16022021
  * updatedFunction:
- * -> additional params to submit survey response.
+ * -> update style for image at renderReviewImage.
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ *  -> Update the props of log activity.
+ * updatedBy: dyah
+ * updatedDate: 26022021
+ * updatedFunction:
+ * -> Update the props of post activity.
+ * updatedBy: dyah
+ * updatedDate: 08032021
+ * updatedFunction:
+ * -> Add funciton when return to tasklist.
  */
