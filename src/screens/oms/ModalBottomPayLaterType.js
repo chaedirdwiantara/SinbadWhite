@@ -99,7 +99,6 @@ class ModalBottomPaylaterType extends Component {
 
   /** RENDER CONTENT */
   renderContent() {
-    console.log(this.props.payLaterType, 'props');
     return (
       <>
         <View style={styles.mainContainer}>
