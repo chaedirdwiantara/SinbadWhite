@@ -56,13 +56,13 @@ class MerchantCheckinView extends Component {
   componentDidUpdate(prevProps) {
     /** IF CHECK IN SUCCESS */
     if (
-      prevProps.merchant.dataPostActivity !==
-      this.props.merchant.dataPostActivity
+      prevProps.merchant.dataPostActivityV2 !==
+      this.props.merchant.dataPostActivityV2
     ) {
-      if (this.props.merchant.dataPostActivity !== null) {
+      if (this.props.merchant.dataPostActivityV2 !== null) {
         /** get log all activity */
-        this.props.merchantGetLogAllActivityProcess(
-          this.props.merchant.selectedMerchant.journeyPlanSaleId
+        this.props.merchantGetLogAllActivityProcessV2(
+          this.props.merchant.selectedMerchant.journeyBookStores.id
         );
         NavigationService.goBack(this.props.navigation.state.key);
       }
@@ -208,7 +208,8 @@ class MerchantCheckinView extends Component {
    * ====================
    */
   renderModalBottom() {
-    const journeyPlanSaleId = this.props.merchant.selectedMerchant.journeyPlanSaleId;
+    const journeyBookStoresId = this.props.merchant.selectedMerchant
+      .journeyBookStores.id;
     const store = this.props.merchant.selectedMerchant;
     return (
       <ModalBottomType2
@@ -235,9 +236,12 @@ class MerchantCheckinView extends Component {
                 loading={this.props.merchant.loadingPostActivity}
                 borderRadius={4}
                 onPress={() =>
-                  this.props.merchantPostActivityProcess({
-                    journeyPlanSaleId,
-                    activity: 'check_in'
+                  this.props.merchantPostActivityProcessV2({
+                    journeyBookStoreId: this.props.merchant.selectedMerchant
+                      .journeyBookStores.id,
+                    activityName: 'check_in',
+                    longitude: this.state.longitude,
+                    latitude: this.state.latitude
                   })
                 }
               />
@@ -344,18 +348,25 @@ export default connect(
 )(MerchantCheckinView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Change Key
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Change Key
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ *  -> Update the props of log activity.
+ * updatedBy: dyah
+ * updatedDate: 26022021
+ * updatedFunction:
+ *  -> Update the props of post activity.
+ */
