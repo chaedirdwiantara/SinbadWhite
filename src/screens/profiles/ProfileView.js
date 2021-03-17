@@ -32,9 +32,13 @@ class ProfileView extends Component {
           goTo: 'data_diri'
         },
         {
-          name: 'Area Mapping',
-          goTo: 'area_mapping'
+          name: 'Segementasi Sales Team',
+          goTo: 'segmentasi_sales_team'
         },
+        // {
+        //   name: 'Area Mapping',
+        //   goTo: 'area_mapping'
+        // },
         {
           name: 'Hubungi Customer Services',
           goTo: 'call_cs'
@@ -73,9 +77,12 @@ class ProfileView extends Component {
       case 'call_cs':
         this.setState({ openModalCS: true });
         break;
-      case 'area_mapping':
-        this.props.savePageAddMerchantFrom('ProfileView')
-        NavigationService.navigate('ProfileAreaMapping')
+      // case 'area_mapping':
+      //   this.props.savePageAddMerchantFrom('ProfileView')
+      //   NavigationService.navigate('ProfileAreaMapping')
+      //   break;
+      case 'segmentasi_sales_team':
+        NavigationService.navigate('SegmentasiSalesTeamView')
         break;
       default:
         break;

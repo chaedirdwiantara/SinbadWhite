@@ -8,6 +8,7 @@ import TakeMerchantPicture from '../../screens/global/TakeMerchantPicture';
 import ListAndSearchType1 from '../../screens/global/ListAndSearchType1';
 import MapsView from '../../screens/global/MapsView';
 import InputManualLocation from '../../screens/global/InputManualLocation';
+import SegmentationList from '../../screens/global/SegmentationList';
 
 const GlobalNavigator = {
   /** === PAGE CAMERA FOR PROFILE PICTURE === */
@@ -45,6 +46,17 @@ const GlobalNavigator = {
   /** === PAGE FOR DROPDOWN LIST === */
   ListAndSearchType1: {
     screen: ListAndSearchType1,
+    navigationOptions: {
+      headerTintColor: Color.backButtonWhite,
+      headerStyle: {
+        backgroundColor: Color.mainColor
+      },
+      gesturesEnabled: false
+    }
+  },
+  /** === PAGE FOR DROPDOWN LIST === */
+  SegmentationList: {
+    screen: SegmentationList,
     navigationOptions: {
       headerTintColor: Color.backButtonWhite,
       headerStyle: {
