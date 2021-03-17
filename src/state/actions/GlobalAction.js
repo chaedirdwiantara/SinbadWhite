@@ -148,7 +148,10 @@ export function longlatToAddressGetSuccess(data) {
 export function longlatToAddressGetFailed(data) {
   return { type: types.GLOBAL_LONGLAT_TO_ADDRESS_FAILED, payload: data };
 }
-
+/** === RESET MANUAL LOCATION INPUT DATA === */
+export function resetManualLocationInputData() {
+  return { type: types.RESET_MANUAL_INPUT_LOCATION_DATA};
+}
 function modifyDataAddressFromGmaps(data) {
   const dataAddress = {
     province: '',
@@ -192,6 +195,27 @@ export function versionsGetSuccess(data) {
 /** === VERSION GET FAILED === */
 export function versionsGetFailed(data) {
   return { type: types.APP_VERSION_FAILED, payload: data };
+}
+
+/**
+ * =========================
+ * UPLOAD IMAGE
+ * =========================
+ */
+/** === UPLOAD IMAGE PROCESS === */
+export function uploadImageProcess(data) {
+  return { type: types.UPLOAD_IMAGE_PROCESS, payload: data };
+}
+/** === UPLOAD IMAGE SUCCESS === */
+export function uploadImageSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.UPLOAD_IMAGE_SUCCESS, payload: data.data };
+  }
+  return { type: types.UPLOAD_IMAGE_FAILED, payload: data };
+}
+/** === UPLOAD IMAGE FAILED === */
+export function uploadImageFailed(data) {
+  return { type: types.UPLOAD_IMAGE_FAILED, payload: data };
 }
 
 /**

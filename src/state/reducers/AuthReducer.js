@@ -69,7 +69,7 @@ export const auth = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingCheckPhoneAvailble: false,
-      dataCheckPhoneAvailble: action.payload.otp
+      dataCheckPhoneAvailble: action.payload
     };
   },
   [types.CHECK_PHONE_NUMBER_AVAILABLE_FAILED](state, action) {

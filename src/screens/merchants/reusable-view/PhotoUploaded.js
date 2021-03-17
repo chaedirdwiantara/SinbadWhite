@@ -31,7 +31,8 @@ class PhotoUploaded extends Component {
           style={[
             styles.image,
             {
-              marginTop: this.props.marginTop,
+              marginTop: this.props?.marginTop || 0,
+              aspectRatio: this.props?.aspectRatio || 1 / 1,
               transform: this.props.rotate
                 ? [{ rotate: '270deg' }]
                 : [{ rotate: '0deg' }]
@@ -49,7 +50,7 @@ class PhotoUploaded extends Component {
       <View
         style={{
           alignItems: 'center',
-          marginTop: this.props.marginTopRetakeText
+          marginTop: this.props?.marginTopRetakeText || 24
         }}
       >
         <TouchableOpacity onPress={this.props.reTake}>
