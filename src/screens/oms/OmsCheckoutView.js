@@ -287,9 +287,27 @@ class OmsCheckoutView extends Component {
             tAndR.data.paymentTypes == null
           ) {
             const isKUR = this.state.parcels.filter(data => data.paylaterType).some(data => data.paylaterType.id === 2);
-            console.log(isKUR, 'iskur');
-            // this.confirmOrder();
-            // this.setState({ tAndRDetail: true });
+           if(isKUR === true){
+            const storeId = parseInt(this.state.dataOmsGetCheckoutItem.storeId, 10);
+            const orderId = parseInt(this.props.oms.dataOmsGetCheckoutItem.id, 10);
+            const parcels = this.state.parcels.map((e, i) => ({
+              orderParcelId: e.orderParcelId,
+              paymentTypeSupplierMethodId: e.hasOwnProperty('paymentChannel')
+                ? e.paymentChannel.paymentTypeSupplierMethodId
+                : e.paymentTypeSupplierMethodId,
+              paymentTypeId: e.paymentTypeDetail.hasOwnProperty('paymentTypeId')
+                ? parseInt(e.paymentTypeDetail.paymentTypeId, 10)
+                : parseInt(e.paymentTypeDetail.id, 10),
+              paymentChannelId: e.paymentMethodDetail.id,
+              paylaterTypeId: this.state.selectedPaylaterType
+                ? this.state.selectedPaylaterType.id
+                : null
+            }));
+            NavigationService.navigate('OmsOtpKurView', {storeId, orderId, parcels})
+          }
+          else{
+            this.confirmOrder()
+          }
           } else {
             this.setState({ modalTAndR: true });
           }
@@ -417,8 +435,9 @@ status: "enabled"
         : null
     }));
     const isKUR = this.state.parcels.filter(data => data.paylaterType).some(data => data.paylaterType.id === 2)
+    console.log(this.state.parcels, 'parcels');
     if (isKUR === true){
-     NavigationService.navigate('OmsOtpKurView')
+     NavigationService.navigate('OmsOtpKurView', {storeId, orderId,parcels})
     }
     else {
   this.props.omsConfirmOrderProcess({
@@ -741,6 +760,9 @@ status: "enabled"
         this.errorPaymentNotAllowed();
       case 'ERR-STOCK':
         this.errorSKUNotAvailable();
+        break;
+      case 'ERR_APP_KUR_ACC_OTP_ERROR':
+        null
         break;
       default:
         // this.errorPaymentTryAgain()

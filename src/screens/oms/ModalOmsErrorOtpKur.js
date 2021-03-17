@@ -43,7 +43,7 @@ import {
             <ButtonSingle
               borderRadius={4}
               title={'Oke, Saya Mengerti'}
-              onPress={this.props.close
+              onPress={this.props.onPress
               }
             />
           </View>

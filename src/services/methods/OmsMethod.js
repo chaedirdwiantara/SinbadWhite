@@ -37,13 +37,15 @@ function getPayment(data) {
 }
 /** POST CONFIRM ORDER */
 function confirmOrder(data) {
+  console.log(data);
   return ApiRest({
     path: 'payment/v1/order/confirm',
     method: 'POST',
     params: {
       orderId: data.orderId,
       storeId: data.storeId,
-      parcels: data.parcels
+      parcels: data.parcels,
+      otp: data.otp
     }
   });
 }

@@ -1,25 +1,30 @@
 import {
-    React,
-    View,
-    Component,
-    TouchableOpacity,
-    Dimensions,
-    StyleSheet,
-    Text,
-    Image,
-    ScrollView,
-    Keyboard,
-    StatusBar
-  } from '../../library/reactPackage';
-  import {
-    MaterialIcon,
-    Modal,
-    bindActionCreators,
-    connect,
-  } from '../../library/thirdPartyPackage';
-  import { ButtonSingle, StatusBarWhite, OtpInput, StatusBarBlackOP40 } from '../../library/component';
+  React,
+  View,
+  Component,
+  TouchableOpacity,
+  Dimensions,
+  StyleSheet,
+  Text,
+  Image,
+  ScrollView,
+  Keyboard,
+  StatusBar
+} from '../../library/reactPackage';
+import {
+  MaterialIcon,
+  Modal,
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage';
+import {
+  ButtonSingle,
+  StatusBarWhite,
+  OtpInput,
+  StatusBarBlackOP40
+} from '../../library/component';
 import masterColor from '../../config/masterColor.json';
-import { Fonts, GlobalStyle} from '../../helpers';
+import { Fonts, GlobalStyle } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import ModalUserDifferentNumber from './ModalUserDifferentNumber';
@@ -42,29 +47,51 @@ class OmsOtpKurView extends Component {
       openModalUserDifferentNumber: false,
       openModalErrorOtp: false,
       maxOtp: false
-    }
+    };
   }
   /** DID UPDATE */
-  componentDidUpdate(){
-    if (this.props.oms.dataOmsGetKurOtp !== undefined){
-      if(prevProps.oms.dataOmsGetKurOtp !== this.props.oms.dataOmsGetKurOtp){
-          if (this.state.getOtp !== 0){
-        console.log('set time out');
-        // this.resend()}
+  componentDidUpdate(prevProps) {
+      console.log(this.props.oms.errorOmsConfirmOrder);
+    if (this.props.oms.dataOmsGetKurOtp !== undefined) {
+      if (prevProps.oms.dataOmsGetKurOtp !== this.props.oms.dataOmsGetKurOtp) {
+        if (this.state.getOtp === 0) {
+          this.setState({
+            getOtp: 1
+          });
+        } else {
+          this.resend();
+        }
       }
     }
-    if (this.props.oms.errorOmsGetKurOtp !== undefined){
-      if(prevProps.oms.errorOmsGetKurOtp !== this.props.oms.errorOmsGetKurOtp){
-        console.log('error otp');
+    if (this.props.oms.errorOmsGetKurOtp !== undefined) {
+      if (
+        prevProps.oms.errorOmsGetKurOtp !== this.props.oms.errorOmsGetKurOtp
+      ) {
+        if (
+          this.props.oms.errorOmsGetKurOtp &&
+          this.props.oms.errorOmsGetKurOtp.data.retry === false
+        )
+          this.setState({
+            openModalErrorOtp: true,
+            resend: false
+          });
       }
     }
+    if (
+        prevProps.oms.errorOmsConfirmOrder !== this.props.oms.errorOmsConfirmOrder
+      ) {
+        if (this.props.oms.errorOmsConfirmOrder !== null) {
+          if (
+            this.props.oms.errorOmsConfirmOrder.data
+          ) {
+            this.handleErrorConfirmOrder();
+          } 
+        }
+      }
   }
   /** DID MOUNT */
-  componentDidMount (){
-    this.getOtp()
-    this.setState({
-        getOtp: 1
-    })
+  componentDidMount() {
+    this.getOtp();
   }
 
   /**
@@ -74,9 +101,9 @@ class OmsOtpKurView extends Component {
    */
 
   /** === GET OTP  */
-  getOtp(){
-    const storeCode = 'SNB-STORE-101'
-    this.props.OmsGetKurOtpProcess(storeCode)
+  getOtp() {
+    const storeCode = 'SNB-STORE-101';
+    this.props.OmsGetKurOtpProcess(storeCode);
   }
   /** === SAVE OTP FROM OTP INPUT TO STATE */
   otpInput(data) {
@@ -93,17 +120,32 @@ class OmsOtpKurView extends Component {
     if ('11111' !== this.state.otpInput.join('')) {
       this.setState({
         errorOTP: true,
-        otpErrorText: 'Pastikan nomor atau kode verifikasi yang anda masukan benar'
+        otpErrorText:
+          'Pastikan nomor atau kode verifikasi yang anda masukan benar'
       });
     } else {
-      this.goTo();
+      this.confirmOrder();
     }
   }
   /** === GO TO === */
   goTo() {
-    alert("success")
+    alert('success');
   }
 
+  /** === CONFIRM ORDER === */
+  confirmOrder() {
+    const { params } = this.props.navigation.state;
+    const storeId = params.storeId;
+    const orderId = params.orderId;
+    const parcels = params.parcels;
+    const otp = this.state.otpInput.join('');
+    this.props.omsConfirmOrderProcess({
+      orderId,
+      storeId,
+      parcels,
+      otp
+    });
+  }
   //RESEND
   resend() {
     this.setState({ resend: true });
@@ -118,7 +160,21 @@ class OmsOtpKurView extends Component {
     }, 1000);
     this.setState({ counter });
   }
-
+  /** === HANDLE ERROR CONFIRM ORDER === */
+  handleErrorConfirmOrder() {
+    switch (this.props.oms.errorOmsConfirmOrder.data.errorCode) {
+      case 'ERR_APP_KUR_ACC_OTP_ERROR':
+        this.setState({
+          errorOTP: true,
+          otpErrorText:
+            'Pastikan nomor atau kode verifikasi yang anda masukan benar'
+        });
+        break;
+      default:
+          console.log('error');
+        break;
+    }
+  }
   /**
    * ==============================
    * RENDER VIEW
@@ -127,13 +183,13 @@ class OmsOtpKurView extends Component {
 
   renderContent() {
     return (
-      <View style={{flex: 1, backgroundColor: masterColor.backgroundWhite}}>
-        {this.renderTitle()} 
+      <View style={{ flex: 1, backgroundColor: masterColor.backgroundWhite }}>
+        {this.renderTitle()}
         {this.renderBoxOTP()}
         {this.renderButton()}
         {this.renderResend()}
       </View>
-    )
+    );
   }
 
   /** TITLE */
@@ -151,13 +207,18 @@ class OmsOtpKurView extends Component {
           <Text style={[Fonts.type8, { textAlign: 'center', marginTop: 10 }]}>
             Kode verifikasi telah dikirimkan melalui
           </Text>
-          <Text style={[Fonts.type8, { textAlign: 'center' }]}>
-            SMS ke{' '}
-            
-            xxx
-          </Text>
-          <TouchableOpacity onPress={() => this.setState({openModalUserDifferentNumber: true})}>
-            <Text style={[Fonts.type108p, {textAlign: "center", marginVertical: 8, marginBottom: 8}]}>
+          <Text style={[Fonts.type8, { textAlign: 'center' }]}>SMS ke xxx</Text>
+          <TouchableOpacity
+            onPress={() =>
+              this.setState({ openModalUserDifferentNumber: true })
+            }
+          >
+            <Text
+              style={[
+                Fonts.type108p,
+                { textAlign: 'center', marginVertical: 8, marginBottom: 8 }
+              ]}
+            >
               Bukan Nomor Anda?
             </Text>
           </TouchableOpacity>
@@ -170,13 +231,11 @@ class OmsOtpKurView extends Component {
   renderBoxOTP() {
     return (
       <View>
-      <View style={[styles.mainBoxOTP, GlobalStyle.shadowForBox]}>
-        {this.state.verifyPush ? this.renderIconNotification() : <View />}
-        {this.renderOtpInput()}
-      </View>
-      <View style={{flex: 1}}>
-        {this.renderErrorOTP()}
-      </View>
+        <View style={[styles.mainBoxOTP, GlobalStyle.shadowForBox]}>
+          {this.state.verifyPush ? this.renderIconNotification() : <View />}
+          {this.renderOtpInput()}
+        </View>
+        <View style={{ flex: 1 }}>{this.renderErrorOTP()}</View>
       </View>
     );
   }
@@ -190,11 +249,14 @@ class OmsOtpKurView extends Component {
       />
     );
   }
+
   /** ERROR OTP */
   renderErrorOTP() {
     return this.state.errorOTP ? (
       <View>
-        <Text style={[Fonts.type22, {marginHorizontal: 16}]}>{this.state.otpErrorText}</Text>
+        <Text style={[Fonts.type22, { marginHorizontal: 16 }]}>
+          {this.state.otpErrorText}
+        </Text>
       </View>
     ) : (
       <View />
@@ -212,7 +274,7 @@ class OmsOtpKurView extends Component {
         }
         title={'Verifikasi'}
         borderRadius={4}
-        onPress={() => this.checkOtp()}
+        onPress={() => this.confirmOrder()}
         // loading={this.props.auth.loadingSignInWithPhone || this.state.loading}
       />
     );
@@ -221,26 +283,32 @@ class OmsOtpKurView extends Component {
   //RENDER RESEND OTP
   renderResend() {
     return (
-      <View style={{marginHorizontal: 16}}>
-        {
-          this.state.resend === false ? (
-            <View style={{flexDirection:"row", alignSelf:"center"}}>
-              <Text style={[Fonts.type8, {textAlign:"center"}]}>Tidak menerima Kode ? </Text>
-              <TouchableOpacity onPress={() => this.getOtp()}>
-                <Text style={Fonts.type108p}>Kirim Ulang</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={{flexDirection:"row", alignSelf:"center"}}>
-              <Text style={[Fonts.type8, {textAlign:"center", marginHorizontal: 50}]}>
-                Mohon tunggu dalam <Text style={Fonts.type16}>{this.state.timer} detik</Text> untuk kirim ulang
-              </Text>
-            </View>
-          )
-        }
-        
+      <View style={{ marginHorizontal: 16 }}>
+        {this.state.resend === false ? (
+          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+            <Text style={[Fonts.type8, { textAlign: 'center' }]}>
+              Tidak menerima Kode ?{' '}
+            </Text>
+            <TouchableOpacity onPress={() => this.getOtp()}>
+              <Text style={Fonts.type108p}>Kirim Ulang</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+            <Text
+              style={[
+                Fonts.type8,
+                { textAlign: 'center', marginHorizontal: 50 }
+              ]}
+            >
+              Mohon tunggu dalam{' '}
+              <Text style={Fonts.type16}>{this.state.timer} detik</Text> untuk
+              kirim ulang
+            </Text>
+          </View>
+        )}
       </View>
-    )
+    );
   }
 
   /** RENDER ICON NOTIFICATION */
@@ -281,52 +349,57 @@ class OmsOtpKurView extends Component {
    */
 
   /** === RENDER MODAL USER DIFFERENT NUMBER === */
-renderModalUserDifferentNumber() {
-  return this.state.openModalUserDifferentNumber ? (
-    <ModalUserDifferentNumber
-      open={this.state.openModalUserDifferentNumber}
-      close={() =>
-        this.setState({
-          openModalUserDifferentNumber: false
-        })
-      }
-      
-    />
-  ) : (
-    <View />
-  );
-}
+  renderModalUserDifferentNumber() {
+    return this.state.openModalUserDifferentNumber ? (
+      <ModalUserDifferentNumber
+        open={this.state.openModalUserDifferentNumber}
+        close={() =>
+          this.setState({
+            openModalUserDifferentNumber: false
+          })
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
 
   //MODAL BOTTOM NOT MY NUMBER
   renderModalBottomErrorOtpKur() {
-    return(
-    <View>
-      {this.state.openModalErrorOtp ? (
+    return (
+      <View>
+        {this.state.openModalErrorOtp ? (
           <ModalOmsErrorOtpKur
-          open={this.state.openModalErrorOtp}
-          close={()=> this.setState({openModalErrorOtp: false})}
-        />)
-        : null
-        }
-    </View>
-    )
+            open={this.state.openModalErrorOtp}
+            close={() => this.setState({ openModalErrorOtp: false })}
+            onPress={
+              (() =>
+                this.setState({
+                  openModalErrorOtp: false
+                }),
+              NavigationService.goBack())
+            }
+          />
+        ) : null}
+      </View>
+    );
   }
 
-
-/** === MAIN === */
-  render() {  
-    return(
-      <View style={{flex:1}}>
+  /** === MAIN === */
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
         <StatusBarWhite />
-          <ScrollView style={{flex: 1, backgroundColor: masterColor.backgroundWhite}}>
-            {this.renderContent()}
-          </ScrollView>
+        <ScrollView
+          style={{ flex: 1, backgroundColor: masterColor.backgroundWhite }}
+        >
+          {this.renderContent()}
+        </ScrollView>
         {this.renderModalUserDifferentNumber()}
         {this.renderModalBottomErrorOtpKur()}
       </View>
-    )
+    );
   }
-
 }
 
 const styles = StyleSheet.create({
@@ -383,7 +456,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 15
-  },
+  }
 });
 
 const mapStateToProps = ({ oms, merchant, user, permanent }) => {
@@ -394,4 +467,7 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(OmsOtpKurView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OmsOtpKurView);
