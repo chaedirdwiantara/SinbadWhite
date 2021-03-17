@@ -13,34 +13,50 @@ import {
   MaterialIcon, 
   moment,
   Tooltip, 
+  connect,
+  bindActionCreators
 } from '../../library/thirdPartyPackage';
 import { 
-  InputType5, 
-  DatePickerSpinnerWithMinMaxDate, 
-  ModalBottomType4 
+  InputType5
 } from '../../library/component';
-import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
+import * as ActionCreators from '../../state/actions';
+import { Fonts, GlobalStyle } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import ImagePicker from 'react-native-image-picker';
+import ModalPrincipal from './ModalPrincipal';
+import { useSelector } from 'react-redux';
 
 const { width, height } = Dimensions.get('window');
 
 const SfaAddTagihanPromo = props => {
   const status = props.status;
   const [noRef, setNoRef] = useState('');
-  const [promoNumber, setPromoNumber] = useState('');
+  const [promoNumber, setPromoNumber] = useState(null);
+  const [principal, setPrincipal] = useState(null)
+  const [promoBalance, setPromoBalance] = useState(0)
   const [promoValue, setPromoValue] = useState(0)
-  const [bankSource, setBankSource] = useState('');
-  const [openModalTransferDate, setOpenModalTransferDate] = useState(false)
   const [dataImage, setDataImage] = useState(null)
   const [errorInputImage, setErrorInputImage] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(true)
+  const [isDisable, setIsDisable] = useState(false)
+
+  const [openModalPrincipal, setOpenModalPrincipal] = useState(false);
+
+  const { selectedMerchant} = useSelector(state => state.merchant);
+  
 
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
+   useEffect(() => {
+    const front = moment.utc(new Date()).local().format('YYYYMMDD')
+    const mid = selectedMerchant.externalId
+    const back = moment.utc(new Date()).local().format('HHmmss')
+    setPromoNumber(`${front}${mid}${back}`)
+    props.promoNumber(`${front}${mid}${back}`)
+  }, []);
 
   const clickCamera = () => {
     let options = {
@@ -83,13 +99,32 @@ const SfaAddTagihanPromo = props => {
 
   const textReference = (text) => {
     setNoRef(text)
+    props.referenceCode(text)
+  }
+
+  const textPromoNumber = (text) => {
+    setPromoNumber(text)
+    props.promoNumber(text)
+  }
+
+  const selectedPrincipal = (data) => {
+    props.principal(data);
+    setPrincipal(data);
+    setOpenModalPrincipal(false);
+  }
+
+  const textPromoBalance = (text) => {
+    setPromoBalance(parseInt(text.replace(/[Rp.]+/g, '')))
+    props.promoValue(parseInt(text.replace(/[Rp.]+/g, '')))
   }
 
   const textBillingPromo = (text) => {
     if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)) {
         setPromoValue(parseInt(props.remainingBilling))
+        props.billingPromoValue(parseInt(props.remainingBilling))
       } else {
         setPromoValue(parseInt(text.replace(/[Rp.]+/g, '')))
+        props.billingPromoValue(parseInt(text.replace(/[Rp.]+/g, '')))
       }
   }
 
@@ -105,6 +140,7 @@ const SfaAddTagihanPromo = props => {
             {renderFormReference()}
             {renderFormPromoNumber()}
             {renderFormPrincipal()}
+            {renderPromoValue()}
             {renderBillingValue()}
             {renderUploadImage()}
         </View>
@@ -112,30 +148,83 @@ const SfaAddTagihanPromo = props => {
   }
 
   const renderFormReference = () => {
-      return(
-        <View style={{ marginVertical: 16 }}>
-          <View style={{flexDirection:"row"}}>
-            <View >
-              <Text style={Fonts.type10}>{status === 'available' ? 'Nomor Referensi' : '*Nomor Referensi'}</Text>
-            </View>
-            {renderTooltip("reference")}
+    return (
+      <View style={{ marginHorizontal: -16, marginVertical: 16 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flex: 3 }}>
+            <InputType5
+              title={
+                isDisable !== false ? 'Nomor Referensi' : '*Nomor Referensi'
+              }
+              value={noRef}
+              placeholder={isDisable ? 'Nomor Referensi' : '*Nomor Referensi'}
+              onChangeText={text => textReference(text)}
+              keyboardType={'default'}
+              text={text => setNoRef(text)}
+              editable={!isDisable}
+              tooltip={true}
+              tooltipText={
+                'Dapat berupa Nomor Cek, Giro, Transfer atau Kuitansi'
+              }
+            />
           </View>
-          <TextInput
-            style={
-              [Fonts.type17, styles.boxInput, 
-                {borderBottomColor: masterColor.fontBlack10, marginTop: 8}
-              ]
-            }
-            value={noRef}
-            placeholder={
-            status === 'available' ? 'Nomor Referensi' : '*Nomor Referensi'
-            }
-            keyboardType={'default'}
-            onChangeText={(text) => textReference(text)}
-          />
+          {isDisable ? (
+            <View style={{ flexDirection: 'row', marginRight: 16 }}>
+              <TouchableOpacity
+                onPress={() => setOpenModalReference(true)}
+                style={{
+                  backgroundColor: masterColor.mainColor,
+                  height: 36,
+                  width: 66,
+                  borderRadius: 8,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: 8
+                }}
+              >
+                <Text style={Fonts.type94}> Ubah </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => deleteDataReference()}
+                style={{
+                  backgroundColor: 'white',
+                  height: 36,
+                  width: 66,
+                  borderRadius: 8,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderColor: masterColor.mainColor,
+                  borderWidth: 1
+                }}
+              >
+                <Text style={Fonts.type100}> Hapus </Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={{ marginRight: 16 }}>
+              <TouchableOpacity
+                onPress={() => setOpenModalReference(true)}
+                disabled={props.collectionMethod.balance <= 0 ? true : false}
+                style={{
+                  backgroundColor:
+                    props.collectionMethod.balance <= 0
+                      ? masterColor.fontRed10
+                      : masterColor.mainColor,
+                  height: 36,
+                  width: 66,
+                  borderRadius: 8,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <Text style={Fonts.type94}> Cari</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
-      )
-  }
+      </View>
+    );
+  };
 
   const renderFormPromoNumber = () => {
     return(
@@ -148,13 +237,13 @@ const SfaAddTagihanPromo = props => {
         <TextInput
           style={
             [Fonts.type17, styles.boxInput, 
-              {borderBottomColor: masterColor.fontBlack10, marginTop: 8}
+              {opacity: 0.5}
             ]
           }
           value={promoNumber}
+          editable={false}
           placeholder={'Nomor Promo'}
           keyboardType={'default'}
-          onChangeText={(text) => setPromoNumber(text)}
         />
       </View>
     )
@@ -169,15 +258,15 @@ const SfaAddTagihanPromo = props => {
               <View>
                   <TouchableOpacity
                   style={styles.boxMenu}
-                  onPress={() => console.log('open bank list')}
+                  onPress={() => setOpenModalPrincipal(true)}
                   >
                       <Text
                           style={[
                           Fonts.type17,
-                          { opacity: bankSource === '' ? 0.5 : null }
+                          { opacity: principal === null ? 0.5 : null }
                           ]}
                       >
-                          {bankSource === '' ? 'Pilih Principal' : bankSource.name}
+                          {principal === null ? 'Pilih Principal' : principal.name}
                       </Text>
                       <View style={{ position: 'absolute', right: 16 }}>
                           <MaterialIcon
@@ -192,6 +281,45 @@ const SfaAddTagihanPromo = props => {
           </View>
         )
     }
+
+    const renderPromoValue = () => {
+      return (
+        <View style={{ paddingTop: 16 }}>
+          <Text style={Fonts.type10}>
+            {isDisable ? 'Nilai Promo' : '*Nilai Promo'}
+          </Text>
+          <View
+            style={[
+              GlobalStyle.boxInput,
+              { flexDirection: 'row', alignItems: 'center' }
+            ]}
+          >
+            <TextInputMask
+              editable={!isDisable}
+              type={'money'}
+              options={{
+                precision: 0,
+                separator: ',',
+                delimiter: '.',
+                unit: 'Rp ',
+                suffixUnit: ''
+              }}
+              value={promoBalance}
+              onChangeText={text => textPromoBalance(text)}
+              style={[
+                Fonts.type17,
+                {
+                  width: '95%',
+                  borderBottomColor: masterColor.fontBlack10,
+                  opacity: isDisable === true ? 0.5 : null
+                }
+              ]}
+            />
+          </View>
+          <View style={GlobalStyle.lines} />
+        </View>
+      );
+    };
 
     const renderBillingValue = () => {
         return(
@@ -277,26 +405,25 @@ const SfaAddTagihanPromo = props => {
    * MODAL
    * ==================================
    */
-  const renderModalTransferDate = () => {
-    return(
-      <ModalBottomType4
-        typeClose={'Tutup'}
-        open={openModalTransferDate}
-        title={"Tanggal Transfer"}
-        close={() => setOpenModalTransferDate(false)}
-        content={
-          <View>
-            <DatePickerSpinnerWithMinMaxDate
-             onSelect={(date)=> alert(date)}
-             close={() => setOpenModalTransferDate(false)}
-             minDate={new Date("2021-02-20")}
-            //  maxDate={new Date("2021-02-25")}
-            />
-          </View>
-        }
-      />
-    )
-  }
+
+  /** MODAL BANK DESTINATION */
+  const renderModalPrincipal = () => {
+    return (
+      <View>
+        {openModalPrincipal ? (
+          <ModalPrincipal
+            open={openModalPrincipal}
+            close={() => setOpenModalPrincipal(false)}
+            onRef={ref => (selectPrincipal = ref)}
+            selectPrincipal={selectedPrincipal.bind(this)}
+            // supplierId={selectedMerchant.supplierId}
+            // storeId={selectedMerchant.storeId}
+            // paymentCollectionTypeId={props.collectionMethod.id}
+          />
+        ) : null}
+      </View>
+    );
+  };
 
   /** === RENDER TOOLTIP === */
   const renderTooltip = (data)=> {
@@ -351,13 +478,11 @@ const SfaAddTagihanPromo = props => {
     <>
       <View style={styles.mainContainer}>
         {renderContent()}
+        {renderModalPrincipal()}
       </View>
-      {renderModalTransferDate()}
     </>
   );
 };
-
-export default SfaAddTagihanPromo;
 
 const styles = StyleSheet.create({
     mainContainer: {
@@ -407,3 +532,11 @@ const styles = StyleSheet.create({
       borderBottomColor: masterColor.fontBlack40
     },
 });
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
+
+export default connect(
+  mapDispatchToProps
+)(SfaAddTagihanPromo);

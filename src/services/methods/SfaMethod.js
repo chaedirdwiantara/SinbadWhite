@@ -100,6 +100,14 @@ function getTransferImage(id) {
   });
 }
 
+/** GET PRINCIPAL */
+function getPrincipal(supplierId) {
+  return ApiRest({
+    path: `collection/v1/principals?supplierId=${supplierId}&skip=&limit=&keyword=`,
+    method: 'GET'
+  });
+}
+
   export const SfaMethod = {
     getCollectionStatus,
     getSfaDetail,
@@ -112,5 +120,6 @@ function getTransferImage(id) {
     postCollectionPayment,    
     getStamp,
     getStatusOrder,
-    getTransferImage
+    getTransferImage,
+    getPrincipal
   };
