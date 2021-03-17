@@ -57,6 +57,7 @@ export const oms = createReducer(INITIAL_STATE, {
       loadingOmsGetPaymentChannel: false,
       loadingOmsCheckPromo: false,
       loadingOmsGetPayLaterType: false,
+      loadingOmsGetKurOtp: false,
       /** data */
       dataOmsGetCartItem: null,
       dataOmsGetCartItemFromCheckout: null,
@@ -71,6 +72,7 @@ export const oms = createReducer(INITIAL_STATE, {
       dataOmsCheckPromo: null,
       dataOmsGetPayLaterType: null,
       dataOmsApplicablePaylater: null,
+      dataOmsGetKurOtp: null,
       /** error */
       errorOmsGetCartItem: null,
       errorOmsGetCheckoutItem: null,
@@ -81,6 +83,7 @@ export const oms = createReducer(INITIAL_STATE, {
       errorOmsGetPaymentChannel: null,
       errorOmsCheckPromo: null,
       errorOmsGetPayLaterType: null,
+      errorOmsGetKurOtp: null
     };
   },
   [types.OMS_RESET_DATA](state, action) {
@@ -491,4 +494,32 @@ export const oms = createReducer(INITIAL_STATE, {
       errorOmsApplicablePaylater: action.payload
     };
   },
+
+   /**
+   * ==================================
+   * GET KUR OTP
+   * =================================
+   */
+    [types.OMS_GET_KUR_OTP_PROCESS](state, action) {
+      return {
+        ...state,
+        loadingOmsGetKurOtp: true,
+        dataOmsGetKurOtp: null,
+        errorOmsGetKurOtp: null
+      };
+    },
+    [types.OMS_GET_KUR_OTP_SUCCESS](state, action) {
+      return {
+        ...state,
+        loadingOmsGetKurOtp: false,
+        dataOmsGetKurOtp: action.payload
+      };
+    },
+    [types.OMS_GET_KUR_OTP_FAILED](state, action) {
+      return {
+        ...state,
+        loadingOmsGetKurOtp: false,
+        errorOmsGetKurOtp: action.payload
+      };
+    },
 });

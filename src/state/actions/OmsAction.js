@@ -375,3 +375,29 @@ export function OmsApplicablePaylaterSuccess(data) {
 export function OmsApplicablePaylaterFailed(data) {
   return { type: types.OMS_APPLICABLE_PAYLATER_FAILED, payload: data };
 }
+
+/**
+ * ====================================
+ * GET OMS KUR OTP
+ * ====================================
+ */
+/** === GET OMS KUR OTP PROCESS === */
+export function OmsGetKurOtpProcess(data) {
+  return { type: types.OMS_GET_KUR_OTP_PROCESS, payload: data };
+}
+
+/** === GET OMS KUR OTP SUCCESS === */
+export function OmsGetKurOtpSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_GET_KUR_OTP_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_GET_KUR_OTP_FAILED, payload: data };
+}
+
+/** === GET OMS KUR OTP FAILED === */
+export function OmsGetKurOtpFailed(data) {
+  return { type: types.OMS_GET_KUR_OTP_FAILED, payload: data };
+}

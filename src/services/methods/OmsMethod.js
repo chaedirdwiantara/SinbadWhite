@@ -44,7 +44,8 @@ function confirmOrder(data) {
     params: {
       orderId: data.orderId,
       storeId: data.storeId,
-      parcels: data.parcels
+      parcels: data.parcels,
+      otp: data.otp
     }
   });
 }
@@ -148,6 +149,14 @@ function getApplicablePaylater(data) {
   });
 }
 
+/** GET KUR OTP LATER */
+function getKurOtp(data) {
+  return ApiRest({
+    path: `payment/v1/klik-acc/otp?via=phone&storeCode=${data}`,
+    method: 'GET',
+  });
+}
+
 export const OmsMethod = {
   getCartItem,
   getCheckoutItem,
@@ -159,5 +168,6 @@ export const OmsMethod = {
   getLastPaymentChannel,
   checkPromo,
   getPayLaterType,
-  getApplicablePaylater
+  getApplicablePaylater,
+  getKurOtp
 };

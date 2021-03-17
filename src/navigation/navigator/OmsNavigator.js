@@ -5,6 +5,8 @@ import GlobalFont from '../../helpers/GlobalFont';
 import OmsCartView from '../../screens/oms/OmsCartView';
 import OmsCheckoutView from '../../screens/oms/OmsCheckoutView';
 import OmsVerificationView from '../../screens/oms/OmsVerificationView';
+import OmsOtpKurView from '../../screens/oms/OMSOtpKurView';
+
 const OmsNavigator = {
   OmsCartView: {
     screen: OmsCartView,
@@ -58,6 +60,25 @@ const OmsNavigator = {
       headerTintColor: masterColor.backButtonWhite,
       headerStyle: {
         backgroundColor: masterColor.mainColor
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  OmsOtpKurView: {
+    screen: OmsOtpKurView,
+    navigationOptions: {
+      headerTitle: 'Verifikasi Kur Klik Acc',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.fontBlack50,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
       },
       headerRight: <View />,
       gesturesEnabled: false

@@ -84,7 +84,9 @@ class ModalBottomPaylaterType extends Component {
   /** RENDER CONTENT */
   renderModalContent() {
     return (
-      <View>{this.renderPaylaterType()}</View>
+      <View>
+        {this.renderPaylaterType()}
+        </View>
       //   </View>
       // </View>
     );
