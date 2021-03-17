@@ -38,7 +38,6 @@ function getPayment(data) {
 }
 /** POST CONFIRM ORDER */
 function confirmOrder(data) {
-  console.log(data);
   return ApiRest({
     path: 'payment/v1/order/confirm',
     method: 'POST',
@@ -153,7 +152,7 @@ function getApplicablePaylater(data) {
 /** GET KUR OTP LATER */
 function getKurOtp(data) {
   return ApiRest({
-    path: `payment/v1/klik-acc/otp?via=phone&storeCode=SNB-STORE-101`,
+    path: `payment/v1/klik-acc/otp?via=phone&storeCode=${data}`,
     method: 'GET',
   });
 }

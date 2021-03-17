@@ -48,20 +48,15 @@ class OmsOtpKurView extends Component {
       openModalUserDifferentNumber: false,
       openModalErrorOtp: false,
       openModalErrorGlobal: false,
-      maxOtp: false
+      maxOtp: false,
+      type: null
     };
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
     if (this.props.oms.dataOmsGetKurOtp) {
       if (prevProps.oms.dataOmsGetKurOtp !== this.props.oms.dataOmsGetKurOtp) {
-        if (this.state.getOtp === 0) {
-          this.setState({
-            getOtp: 1
-          });
-        } else {
-          this.resend();
-        }
+          this.resend()
       }
     }
     if (this.props.oms.errorOmsGetKurOtp !== undefined) {
@@ -76,7 +71,12 @@ class OmsOtpKurView extends Component {
             openModalErrorOtp: true,
             resend: false
           });}
-          if(this.props.oms.errorOmsGetKurOtp && this.props.oms.errorOmsGetKurOtp.data.delayInSec && this.state.getOtp !== 0){
+          if(this.props.oms.errorOmsGetKurOtp && this.props.oms.errorOmsGetKurOtp.data.delayInSec){
+            this.setState({
+              openModalErrorGlobal: true,
+              type:'delay',
+              timer: this.props.oms.errorOmsGetKurOtp.data.delayInSec
+            })
             this.resend()
           }
       }
@@ -92,6 +92,16 @@ class OmsOtpKurView extends Component {
           } 
         }
       }
+      if (
+        prevProps.oms.dataOmsConfirmOrder !== this.props.oms.dataOmsConfirmOrder
+      ) {
+        if (this.props.oms.dataOmsConfirmOrder !== null) {
+         this.setState({
+           verifyPush: true
+         })
+        }
+      }
+      
   }
   /** DID MOUNT */
   componentDidMount() {
@@ -106,7 +116,7 @@ class OmsOtpKurView extends Component {
 
   /** === GET OTP  */
   getOtp() {
-    const storeCode = 'SNB-STORE-101';
+    const storeCode = 'SNB-STORE-202';
     this.props.OmsGetKurOtpProcess(storeCode);
   }
   /** === SAVE OTP FROM OTP INPUT TO STATE */
@@ -114,26 +124,6 @@ class OmsOtpKurView extends Component {
     const otpInput = this.state.otpInput;
     otpInput[data.digit] = data.data;
     this.setState({ otpInput, errorOTP: false, verifyPush: false });
-  }
-
-  /** === CHECK OTP === */
-  checkOtp() {
-    this.setState({ loading: true });
-    Keyboard.dismiss();
-    this.setState({ errorOTP: false, verifyPush: true });
-    if ('11111' !== this.state.otpInput.join('')) {
-      this.setState({
-        errorOTP: true,
-        otpErrorText:
-          'Pastikan nomor atau kode verifikasi yang anda masukan benar'
-      });
-    } else {
-      this.confirmOrder();
-    }
-  }
-  /** === GO TO === */
-  goTo() {
-    alert('success');
   }
 
   /** === CONFIRM ORDER === */
@@ -152,8 +142,9 @@ class OmsOtpKurView extends Component {
   }
   //RESEND
   resend() {
-    this.setState({ resend: true });
-    let countNumber = 90;
+    this.setState({ resend: true, openModalErrorOtp: false });
+    const countdown = this.props.oms.errorOmsGetKurOtp
+    let countNumber = countdown ? countdown.data.delayInSec : this.state.timer;
     const counter = setInterval(() => {
       countNumber--;
       this.setState({ timer: countNumber.toString() });
@@ -171,15 +162,18 @@ class OmsOtpKurView extends Component {
         this.setState({
           errorOTP: true,
           otpErrorText:
-            'Pastikan nomor atau kode verifikasi yang anda masukan benar'
+            'Pastikan nomor atau kode verifikasi yang anda masukan benar',
+            verifyPush: true
         });
         break;
       case 'ERR_APP_KUR_ACC_OTP_EXPIRED':
         this.setState({
-          openModalErrorGlobal: true
+          openModalErrorGlobal: true,
         })
       default:
-          console.log('error');
+        this.setState({
+          openModalErrorGlobal: true,
+        })
         break;
     }
   }
@@ -215,7 +209,7 @@ class OmsOtpKurView extends Component {
           <Text style={[Fonts.type8, { textAlign: 'center', marginTop: 10 }]}>
             Kode verifikasi telah dikirimkan melalui
           </Text>
-          <Text style={[Fonts.type8, { textAlign: 'center' }]}>SMS ke xxx</Text>
+          <Text style={[Fonts.type8, { textAlign: 'center' }]}>SMS ke 0813-913-483xx</Text>
           <TouchableOpacity
             onPress={() =>
               this.setState({ openModalUserDifferentNumber: true })
@@ -348,6 +342,37 @@ class OmsOtpKurView extends Component {
     );
   }
 
+  /** RENDER ICON NOTIFICATION */
+  renderIconNotification() {
+    return (
+      <View style={{ position: 'absolute', top: -18 }}>
+        {this.state.errorOTP ? (
+          <MaterialIcon
+            name="cancel"
+            size={34}
+            color={masterColor.mainColor}
+            style={{
+              marginBottom: 8,
+              marginLeft: 8,
+              alignContent: 'flex-start'
+            }}
+          />
+        ) : (
+          <MaterialIcon
+            name="check-circle"
+            size={34}
+            color={masterColor.fontGreen50}
+            style={{
+              marginBottom: 8,
+              marginLeft: 8,
+              alignContent: 'flex-start'
+            }}
+          />
+        )}
+      </View>
+    );
+          }
+
   /**
    * ==============================
    * MODAL
@@ -398,13 +423,14 @@ class OmsOtpKurView extends Component {
         <ModalBottomFailPayment
           open={this.state.openModalErrorGlobal}
           onPress={() => this.setState({ openModalErrorGlobal: false })}
-          text={this.props.oms.errorOmsConfirmOrder.message}
+          text={this.state.type === 'delay'? this.props.oms.errorOmsGetKurOtp.data.message : this.props.oms.errorOmsConfirmOrder.message}
         />
       </View>
     ) : (
       <View />
     );
   }
+
 
   /** === MAIN === */
   render() {

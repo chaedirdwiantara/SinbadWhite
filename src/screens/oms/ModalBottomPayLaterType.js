@@ -33,8 +33,7 @@ class ModalBottomPaylaterType extends Component {
    */
   /** RENDER PAYMENT TYPE */
   renderPaylaterType() {
-    return this.props.payLaterType.map((item, index) => {
-    // return this.props.payLaterType.paylaterTypes.map((item, index) => {
+    return this.props.payLaterType.paylaterTypes.map((item, index) => {
       return (
         <View>
           <TouchableOpacity

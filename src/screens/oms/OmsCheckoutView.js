@@ -180,8 +180,14 @@ class OmsCheckoutView extends Component {
       prevProps.oms.dataOmsConfirmOrder !== this.props.oms.dataOmsConfirmOrder
     ) {
       if (this.props.oms.dataOmsConfirmOrder !== null) {
+        const isKUR = this.state.parcels.filter(data => data.paylaterType).some(data => data.paylaterType.id === 2);
+        if(isKUR){
+          setTimeout(() => {
+            this.backToMerchantHomeView(this.props.merchant.selectedMerchant.name);
+          }, 3000);
+        } else{
         this.backToMerchantHomeView(this.props.merchant.selectedMerchant.name);
-      }
+      }}
     }
     /**
      * === ERROR RESPONS ===
@@ -322,25 +328,8 @@ class OmsCheckoutView extends Component {
       ) {
         if (this.props.oms.dataOmsGetPayLaterType !== null) {
           this.setState({
-            // payLaterType: this.props.oms.dataOmsGetPayLaterType.data
-            payLaterType: [{description: "Kredit Usaha Rakyat (KUR) merupakan sebuah layanan yang diberikan oleh pemerintah",
-            id: 2,
-            image: "",
-            isRedirect: false,
-            message: "",
-            name: "Supplier dengan KUR KlikACC",
-            redirectUrl: "",
-            status: "enabled"},
-          {
-            description: "Layanan Bayar Nanti yang disediakan langsung oleh Supplier",
-id: 1,
-image: "",
-isRedirect: false,
-message: "",
-name: "Supplier",
-redirectUrl: "",
-status: "enabled"
-          }]
+            payLaterType: this.props.oms.dataOmsGetPayLaterType.data
+            
           });
         }
       }
