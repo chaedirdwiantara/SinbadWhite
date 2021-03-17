@@ -29,6 +29,7 @@ import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import ModalUserDifferentNumber from './ModalUserDifferentNumber';
 import ModalOmsErrorOtpKur from './ModalOmsErrorOtpKur';
+import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 
 const { width, height } = Dimensions.get('window');
 class OmsOtpKurView extends Component {
@@ -46,13 +47,13 @@ class OmsOtpKurView extends Component {
       counter: null,
       openModalUserDifferentNumber: false,
       openModalErrorOtp: false,
+      openModalErrorGlobal: false,
       maxOtp: false
     };
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
-      console.log(this.props.oms.errorOmsConfirmOrder);
-    if (this.props.oms.dataOmsGetKurOtp !== undefined) {
+    if (this.props.oms.dataOmsGetKurOtp) {
       if (prevProps.oms.dataOmsGetKurOtp !== this.props.oms.dataOmsGetKurOtp) {
         if (this.state.getOtp === 0) {
           this.setState({
@@ -70,11 +71,14 @@ class OmsOtpKurView extends Component {
         if (
           this.props.oms.errorOmsGetKurOtp &&
           this.props.oms.errorOmsGetKurOtp.data.retry === false
-        )
+        ){
           this.setState({
             openModalErrorOtp: true,
             resend: false
-          });
+          });}
+          if(this.props.oms.errorOmsGetKurOtp && this.props.oms.errorOmsGetKurOtp.data.delayInSec && this.state.getOtp !== 0){
+            this.resend()
+          }
       }
     }
     if (
@@ -82,7 +86,7 @@ class OmsOtpKurView extends Component {
       ) {
         if (this.props.oms.errorOmsConfirmOrder !== null) {
           if (
-            this.props.oms.errorOmsConfirmOrder.data
+            this.props.oms.errorOmsConfirmOrder.data &&  this.props.oms.errorOmsConfirmOrder.code === 400
           ) {
             this.handleErrorConfirmOrder();
           } 
@@ -170,6 +174,10 @@ class OmsOtpKurView extends Component {
             'Pastikan nomor atau kode verifikasi yang anda masukan benar'
         });
         break;
+      case 'ERR_APP_KUR_ACC_OTP_EXPIRED':
+        this.setState({
+          openModalErrorGlobal: true
+        })
       default:
           console.log('error');
         break;
@@ -269,13 +277,11 @@ class OmsOtpKurView extends Component {
       <ButtonSingle
         disabled={
           this.state.otpInput.filter(x => x !== '').length < 5 ||
-          // this.props.auth.loadingSignInWithPhone ||
           this.state.loading
         }
         title={'Verifikasi'}
         borderRadius={4}
         onPress={() => this.confirmOrder()}
-        // loading={this.props.auth.loadingSignInWithPhone || this.state.loading}
       />
     );
   }
@@ -377,11 +383,26 @@ class OmsOtpKurView extends Component {
                 this.setState({
                   openModalErrorOtp: false
                 }),
-              NavigationService.goBack())
+              NavigationService.goBack(this.props.navigation.state.key))
             }
           />
         ) : null}
       </View>
+    );
+  }
+
+   /** MODAL ERROR PAYMENT GLOBAL */
+   renderModalErrorGlobal() {
+    return this.state.openModalErrorGlobal ? (
+      <View>
+        <ModalBottomFailPayment
+          open={this.state.openModalErrorGlobal}
+          onPress={() => this.setState({ openModalErrorGlobal: false })}
+          text={this.props.oms.errorOmsConfirmOrder.message}
+        />
+      </View>
+    ) : (
+      <View />
     );
   }
 
@@ -397,6 +418,7 @@ class OmsOtpKurView extends Component {
         </ScrollView>
         {this.renderModalUserDifferentNumber()}
         {this.renderModalBottomErrorOtpKur()}
+        {this.renderModalErrorGlobal()}
       </View>
     );
   }
