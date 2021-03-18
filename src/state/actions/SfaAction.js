@@ -329,3 +329,28 @@ export function sfaGetPrincipalSuccess(data) {
 export function sfaGetPrincipalFailed(data) {
   return { type: types.SFA_GET_PRINCIPAL_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * LOADMORE PRINCIPAL
+ * ===========================
+ */
+/** === SFA LOADMORE PRINCIPAL PROCESS === */
+export function sfaPrincipalLoadmoreProcess(data) {
+  return { type: types.SFA_PRINCIPAL_LOADMORE_PROCESS, payload: data };
+}
+
+/** === SFA LOADMORE PRINCIPAL SUCCESS === */
+export function sfaPrincipalLoadmoreSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_PRINCIPAL_LOADMORE_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_PRINCIPAL_LOADMORE_FAILED, payload: data };
+}
+/** === SFA LOADMORE PRINCIPAL FAILED === */
+export function sfaPrincipalLoadmoreFailed(data) {
+  return { type: types.SFA_PRINCIPAL_LOADMORE_FAILED, payload: data };
+}

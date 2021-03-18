@@ -760,7 +760,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingPostActivity: false,
       selectedMerchant: {
         ...state.selectedMerchant,
-        journeyBookStores: action.payload.data
+        journeyBookStores: action.payload.data,
       },
       dataPostActivityV2: action.payload.data
     };

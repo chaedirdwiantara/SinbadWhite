@@ -101,9 +101,9 @@ function getTransferImage(id) {
 }
 
 /** GET PRINCIPAL */
-function getPrincipal(supplierId) {
+function getPrincipal(data) {
   return ApiRest({
-    path: `collection/v1/principals?supplierId=${supplierId}&skip=&limit=&keyword=`,
+    path: `collection/v1/principals?supplierId=${data.supplierId}&skip=${data.skip}&limit=${data.limit}&keyword=`,
     method: 'GET'
   });
 }
