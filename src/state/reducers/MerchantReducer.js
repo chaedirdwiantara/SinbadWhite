@@ -193,7 +193,7 @@ export const merchant = createReducer(INITIAL_STATE, {
   [types.MERCHANT_SELECTED](state, action) {
     return {
       ...state,
-      selectedMerchant: action.payload
+      selectedMerchant:{ ...action.payload, supplierId: 1}
     };
   },
   /**
