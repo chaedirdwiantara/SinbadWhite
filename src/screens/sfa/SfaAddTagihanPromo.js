@@ -317,13 +317,14 @@ const SfaAddTagihanPromo = props => {
               </Text>
               <View>
                   <TouchableOpacity
+                  disabled={isDisable}
                   style={styles.boxMenu}
                   onPress={() => setOpenModalPrincipal(true)}
                   >
                       <Text
                           style={[
                           Fonts.type17,
-                          { opacity: principal === null ? 0.5 : null }
+                          { opacity: principal === null || isDisable ? 0.5 : null }
                           ]}
                       >
                           {principal === null ? 'Pilih Principal' : principal.name}
