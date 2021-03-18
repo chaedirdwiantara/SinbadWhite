@@ -18,6 +18,7 @@ const INITIAL_STATE = {
   loadingSfaGetStatusOrder: false,
   loadingSfaGetTransferImage: false,
   loadingSfaGetPrincipal: false,
+  loadingLoadmorePrincipal: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -32,6 +33,7 @@ const INITIAL_STATE = {
   dataSfaGetStatusOrder: null,
   dataSfaGetTransferImage: null,
   dataSfaGetPrincipal: null,
+  dataLoadmorePrincipal: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -46,6 +48,7 @@ const INITIAL_STATE = {
   errorSfaGetStatusOrder: null,
   errorSfaGetTransferImage: null,
   errorSfaGetPrincipal: null,
+  errorLoadmorePrincipal: null,
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -427,4 +430,31 @@ export const sfa = createReducer(INITIAL_STATE, {
         errorSfaGetPrincipal: action.payload
       };
     },
+
+  /**
+   * =============================
+   * LOADMORE PRINCIPAL
+   * =============================
+   */
+   [types.SFA_PRINCIPAL_LOADMORE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingLoadmorePrincipal: true,
+      errorGetDebtSummaries: null
+    };
+  },
+  [types.SFA_PRINCIPAL_LOADMORE_SUCCESS](state, action) {
+    return {
+      ...state,
+      dataSfaGetPrincipal: action.payload,
+      loadingLoadmorePrincipal: false,
+    };
+  },
+  [types.SFA_PRINCIPAL_LOADMORE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingLoadmorePrincipal: false,
+      errorSfaGetPrincipal: action.payload
+    };
+  },
 });

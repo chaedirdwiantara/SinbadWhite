@@ -155,7 +155,10 @@ class MerchantHomeView extends Component {
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
     /** FOR GET SFA STATUS ORDER */
-    this.props.sfaGetStatusOrderProcess(this.props.merchant.selectedMerchant)
+    this.props.sfaGetStatusOrderProcess({
+      storeId: this.props.merchant.selectedMerchant.storeId,
+      supplierId: this.props.user.userSuppliers[0].supplier.id
+    })
   }
 
   componentDidUpdate(prevProps) {
