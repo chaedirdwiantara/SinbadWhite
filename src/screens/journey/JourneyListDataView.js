@@ -51,7 +51,7 @@ class JourneyListDataView extends Component {
 
   onHandleLoadMore = () => {
     if (
-      !this.props.journey.errorGetJourneyPlanReportV2 &&
+      !this.props.journey.errorGetJourneyPlan &&
       !this.props.journey.loadingLoadMoreGetJourneyPlan
     ) {
       if (this.props.journey.dataGetJourneyPlanV2) {
