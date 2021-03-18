@@ -224,12 +224,10 @@ const SfaAddTagihanView = props => {
           balance: promoValue,
           promoCode: promoNumber,
           principalId: principal.id,
-          // promoValue: billingPromoValue, //jumlah penagihan
           filename: promoImage.fileName,
           type: promoImage.fileType,
           image: promoImage.fileData,
         }
-        console.log("disini:", dataPromo);
         dispatch(sfaPostPaymentMethodProcess(dataPromo));
       }
     }
