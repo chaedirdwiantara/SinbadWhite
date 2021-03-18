@@ -20,8 +20,7 @@ function getSfaDetail(orderParcelId) {
 /** GET COLLECTION LIST */
 function getCollectionList(data) {
   return ApiRest({
-    // path: `collection/v1/order-parcels?skip=0&limit=${data.limit}&storeId=${data.storeId}&supplierId=${data.supplierId}&keyword=${data.keyword}&statusPayment=${data.statusPayment}`,
-    path: `collection/v1/order-parcels?skip=0&limit=${data.limit}&storeId=${data.storeId}&supplierId=${parseInt(1)}&keyword=${data.keyword}&statusPayment=${data.statusPayment}`,
+    path: `collection/v1/order-parcels?skip=0&limit=${data.limit}&storeId=${data.storeId}&supplierId=${data.supplierId}&keyword=${data.keyword}&statusPayment=${data.statusPayment}`,
     method: `GET`
   })
 }
@@ -29,8 +28,7 @@ function getCollectionList(data) {
 /** GET COLLECTION LIST */
 function getReferenceList(data) {
   return ApiRest({
-    // path: `collection/v1/payment-method?supplierId=${data.supplierId}&storeId=${data.storeId}&paymentCollectionTypeId=${data.paymentCollectionTypeId}&skip=0&limit=${data.limit}&keyword=${data.keyword}`,
-    path: `collection/v1/payment-method?supplierId=${parseInt(1)}&storeId=${data.storeId}&paymentCollectionTypeId=${data.paymentCollectionTypeId}&skip=0&limit=${data.limit}&keyword=${data.keyword}`,
+    path: `collection/v1/payment-method?supplierId=${data.supplierId}&storeId=${data.storeId}&paymentCollectionTypeId=${data.paymentCollectionTypeId}&skip=0&limit=${data.limit}&keyword=${data.keyword}`,
     method: `GET`
   })
 }
@@ -38,8 +36,7 @@ function getReferenceList(data) {
 /** GET COLLECTION LIST */
 function getPaymentMethod(data) {
   return ApiRest({
-    // path: `collection/v1/available-payment-methods?supplierId=${data.supplierId}&storeId=${data.storeId}`,
-    path: `collection/v1/available-payment-methods?supplierId=${parseInt(1)}&storeId=${data.storeId}`,
+    path: `collection/v1/available-payment-methods?supplierId=${data.supplierId}&storeId=${data.storeId}`,
     method: `GET`
   })
 }
@@ -90,8 +87,7 @@ function getStamp(data) {
 /** GET STATUS ORDER */
 function getStatusOrder(data){
   return ApiRest({
-    // path: `collection/v1/count-order-parcels?storeId=${parseInt(data.storeId)}&supplierId=${parseInt(data.supplierId)}`,
-    path: `collection/v1/count-order-parcels?storeId=${parseInt(data.storeId)}&supplierId=${parseInt(1)}`,
+    path: `collection/v1/count-order-parcels?storeId=${parseInt(data.storeId)}&supplierId=${parseInt(data.supplierId)}`,
     method: 'GET'
   })
 }
@@ -105,10 +101,9 @@ function getTransferImage(id) {
 }
 
 /** GET PRINCIPAL */
-function getPrincipal(supplierId) {
+function getPrincipal(data) {
   return ApiRest({
-    // path: `collection/v1/principals?supplierId=${supplierId}&skip=&limit=&keyword=`,
-    path: `collection/v1/principals?supplierId=${parseInt(1)}&skip=&limit=&keyword=`,
+    path: `collection/v1/principals?supplierId=${data.supplierId}&skip=${data.skip}&limit=${data.limit}&keyword=`,
     method: 'GET'
   });
 }

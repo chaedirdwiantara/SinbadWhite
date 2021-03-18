@@ -193,7 +193,9 @@ export const merchant = createReducer(INITIAL_STATE, {
   [types.MERCHANT_SELECTED](state, action) {
     return {
       ...state,
-      selectedMerchant: action.payload
+      // selectedMerchant: action.payload
+      //SEMENTARA UNTUK DEVELOP
+      selectedMerchant: {...action.payload, supplierId:1}
     };
   },
   /**
@@ -760,7 +762,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingPostActivity: false,
       selectedMerchant: {
         ...state.selectedMerchant,
-        journeyBookStores: action.payload.data
+        journeyBookStores: action.payload.data,
       },
       dataPostActivityV2: action.payload.data
     };

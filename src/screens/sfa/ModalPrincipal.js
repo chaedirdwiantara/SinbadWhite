@@ -3,7 +3,8 @@ import {
   View,
   StyleSheet,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from '../../library/reactPackage';
 
 import {
@@ -23,7 +24,7 @@ function ModalPrincipal(props) {
   const dispatch = useDispatch();
   const { dataSfaGetPrincipal} = useSelector(state => state.sfa);
   const { selectedMerchant} = useSelector(state => state.merchant);
-
+  const [limit, setLimit] = useState(20)
   /**
    * =======================
    * FUNCTIONAL
@@ -31,9 +32,27 @@ function ModalPrincipal(props) {
    */
 
   useEffect(() => {
-    dispatch(sfaGetPrincipalProcess(selectedMerchant.supplierId))
-  }, []);
+    dispatch(sfaGetPrincipalProcess(
+      {
+        // supplierId: selectedMerchant.supplierId, 
+        supplierId: 2, 
+        limit: limit, 
+        skip: 0
+      }
+    ))
+  }, [limit]);
 
+  const loadMore = () => {
+    if (dataSfaGetPrincipal) {
+      if (
+        dataSfaGetPrincipal.data.length <
+        dataSfaGetPrincipal.meta.total
+      ) {
+        const page = limit + 10;
+        setLimit(page);
+      }
+    }
+  }
 
   /**
    * *********************************
@@ -70,10 +89,36 @@ function ModalPrincipal(props) {
 
 
   const renderPrincipal = () => {
-    // const data = dataSfaGetBankAccount;
-    return dataSfaGetPrincipal.data.map((item, index) => {
-      return (
-        <View key={index}>
+    return(
+    <View style={{flex: 1}}>
+      <FlatList
+      
+        data={dataSfaGetPrincipal.data}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        onEndReachedThreshold={0.2}
+        onEndReached={()=>loadMore()}
+        showsVerticalScrollIndicator
+      />
+    </View>
+    )
+    // return dataSfaGetPrincipal.data.map((item, index) => {
+    //   return (
+    //     <View key={index}>
+    //       <TouchableOpacity onPress={() => props.selectPrincipal(item)}>
+    //         <View style={{ margin: 16 }}>
+    //           <Text style={Fonts.type24}>{item.name}</Text>
+    //         </View>
+    //         <View style={GlobalStyle.lines} />
+    //       </TouchableOpacity>
+    //     </View>
+    //   );
+    // });
+  };
+
+  const renderItem = ({ item, index }) => {
+    return (
+      <View key={index}>
           <TouchableOpacity onPress={() => props.selectPrincipal(item)}>
             <View style={{ margin: 16 }}>
               <Text style={Fonts.type24}>{item.name}</Text>
@@ -81,9 +126,8 @@ function ModalPrincipal(props) {
             <View style={GlobalStyle.lines} />
           </TouchableOpacity>
         </View>
-      );
-    });
-  };
+    )
+  }
 
   /**
    * ==================================
