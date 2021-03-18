@@ -131,7 +131,7 @@ class AddMerchantStep3 extends Component {
     this.props.validateAreaMappingProcess(params)
   }
   /** disable button */
-  buttonDisable() {
+  disableButton() {
     if (
       !this.state.address ||
       !this.state.vehicleAccessibilityName ||
@@ -291,7 +291,7 @@ class AddMerchantStep3 extends Component {
   renderButton() {
     return (
       <ButtonSingle
-        disabled={this.buttonDisable()}
+        disabled={this.disableButton()}
         title={'Lanjutkan'}
         loading={this.props.merchant.loadingValidateAreaMapping}
         borderRadius={4}
