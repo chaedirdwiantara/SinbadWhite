@@ -166,7 +166,7 @@ class AddMerchantStep1 extends Component {
       let dataWarehouses = segmentation?.warehouses
       let warehouse = null
       if(dataWarehouses !== null){
-        if(dataWarehouses.length > 0){
+        if(dataWarehouses.length === 1){
           warehouse = dataWarehouses[0]
         }
       }
@@ -175,7 +175,7 @@ class AddMerchantStep1 extends Component {
         imageUrl: store?.imageUrl || null,
         vehicleAccessibilityName: store?.vehicleAccessibility?.name || null,
         vehicleAccessibilityAmount: store?.vehicleAccessibilityAmount || null,
-        warehouse: warehouse?.name || null,
+        warehouse: warehouse?.name || "",
         warehouseId: warehouse?.id || null,
         storeType: segmentation?.type?.name || '',
         typeId: segmentation?.type?.id || null,

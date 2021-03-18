@@ -137,6 +137,8 @@ class MerchantHomeView extends Component {
   };
 
   componentDidMount() {
+    /** FOR GET MERCHANT LIST RESET */
+    this.props.merchantGetSurveyListReset();
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
       this.props.merchant.selectedMerchant.storeId
@@ -148,94 +150,108 @@ class MerchantHomeView extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { surveyList } = this.props.merchant;
+    const {
+      surveyList,
+      loadingGetSurveyList,
+      loadingGetLogAllActivity,
+      dataGetLogAllActivityV2
+    } = this.props.merchant;
     console.log('SURVEY LIST', surveyList, this.state.successSurveyList);
-    /** IF NO SURVEY */
-    if (
-      _.isEmpty(surveyList.payload.data) &&
-      surveyList.success &&
-      !this.state.successSurveyList
-    ) {
-      this.SurveyDone();
-      if (this.state.task.length === 4) {
-        this.setState({
-          task: [
-            {
-              name: 'Check-in Toko',
-              title: 'Check-in',
-              goTo: 'checkIn',
-              activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-            },
-            {
-              name: 'Order',
-              title: 'Order',
-              goTo: 'pdp',
-              activity: ACTIVITY_JOURNEY_PLAN_ORDER
-            },
-            {
-              name: 'Check-out Toko',
-              title: 'Check-out',
-              goTo: 'checkOut',
-              activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-            }
-          ]
-        });
-      }
-    }
-    /** IF SURVEY LIST EXIST */
-    if (!_.isEmpty(surveyList.payload.data) && surveyList.success) {
-      if (this.state.task.length === 3) {
-        this.setState({
-          task: [
-            {
-              name: 'Check-in Toko',
-              title: 'Check-in',
-              goTo: 'checkIn',
-              activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-            },
-            {
-              name: 'Order',
-              title: 'Order',
-              goTo: 'pdp',
-              activity: ACTIVITY_JOURNEY_PLAN_ORDER
-            },
-            {
-              name: 'Toko Survey',
-              title: 'Isi',
-              goTo: 'survey',
-              activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-            },
-            {
-              name: 'Check-out Toko',
-              title: 'Check-out',
-              goTo: 'checkOut',
-              activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-            }
-          ]
-        });
-      }
-    }
-    /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
-    if (
-      !_.isEmpty(surveyList.payload.data) &&
-      surveyList.success &&
-      !this.state.successSurveyList
-    ) {
-      if (
-        surveyList.payload.data.length ===
-        surveyList.payload.data.filter(
-          item => item.responseStatus === 'completed'
-        ).length
-      ) {
-        if (this.props.merchant.dataGetLogAllActivityV2) {
-          if (
-            !this.props.merchant.dataGetLogAllActivityV2.find(
-              item => item.activityName === 'toko_survey'
-            )
-          ) {
-            this.SurveyDone();
+
+    if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
+      if (surveyList.payload.data) {
+        /** IF NO SURVEY */
+        if (
+          _.isEmpty(surveyList.payload.data) &&
+          surveyList.success &&
+          !this.state.successSurveyList
+        ) {
+          this.SurveyDone();
+          if (this.state.task.length === 4) {
+            this.setState({
+              task: [
+                {
+                  name: 'Check-in Toko',
+                  title: 'Check-in',
+                  goTo: 'checkIn',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                },
+                {
+                  name: 'Order',
+                  title: 'Order',
+                  goTo: 'pdp',
+                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
+                },
+                {
+                  name: 'Check-out Toko',
+                  title: 'Check-out',
+                  goTo: 'checkOut',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+                }
+              ]
+            });
           }
         }
+        /** IF SURVEY LIST EXIST */
+        if (!_.isEmpty(surveyList.payload.data) && surveyList.success) {
+          if (this.state.task.length === 3) {
+            this.setState({
+              task: [
+                {
+                  name: 'Check-in Toko',
+                  title: 'Check-in',
+                  goTo: 'checkIn',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                },
+                {
+                  name: 'Order',
+                  title: 'Order',
+                  goTo: 'pdp',
+                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
+                },
+                {
+                  name: 'Toko Survey',
+                  title: 'Isi',
+                  goTo: 'survey',
+                  activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+                },
+                {
+                  name: 'Check-out Toko',
+                  title: 'Check-out',
+                  goTo: 'checkOut',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+                }
+              ]
+            });
+          }
+        }
+        /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
+        if (
+          !_.isEmpty(surveyList.payload.data) &&
+          surveyList.success &&
+          !this.state.successSurveyList
+        ) {
+          if (
+            surveyList.payload.data.length ===
+            surveyList.payload.data.filter(
+              item => item.responseStatus === 'completed'
+            ).length
+          ) {
+            if (this.props.merchant.dataGetLogAllActivityV2) {
+              if (
+                !this.props.merchant.dataGetLogAllActivityV2.find(
+                  item => item.activityName === 'toko_survey'
+                )
+              ) {
+                this.SurveyDone();
+              }
+            }
+          }
+        }
+      }
+      /** FOR GET SURVEY LIST */
+      if (!loadingGetSurveyList && !surveyList.payload.data) {
+        this.getSurvey();
       }
     }
     if (
@@ -342,10 +358,12 @@ class MerchantHomeView extends Component {
   }
 
   componentWillUnmount() {
+    this.props.merchantGetSurveyListReset();
     this.props.journeyPlanGetResetV2();
     this.props.journeyPlanGetProcessV2({
       page: 1,
       date: today,
+      search: '',
       loading: true
     });
     this.props.getJourneyPlanReportProcessV2();
@@ -539,13 +557,6 @@ class MerchantHomeView extends Component {
     }
     return total;
   }
-  /** VALIDATE ORDER STATUS FOR TASK LIST */
-  validateOrderStatus = data => {
-    if (!data.orderStatus && data.noOrderReasonNote.length !== 0) {
-      return true;
-    }
-    return data.orderStatus;
-  };
   /**
    * ========================
    * RENDER VIEW
@@ -803,7 +814,9 @@ class MerchantHomeView extends Component {
                               'HH:mm'
                             )}`}
                       </Text>
-                    ) : this.validateOrderStatus(journeyBookStores) ? (
+                    ) : taskList.activityName ===
+                      ACTIVITY_JOURNEY_PLAN_ORDER ? (
+                      !journeyBookStores.orderStatus &&
                       journeyBookStores.noOrderReasonNote.length !== 0 ? (
                         <TouchableOpacity
                           onPress={() => {
@@ -1120,7 +1133,6 @@ class MerchantHomeView extends Component {
   render() {
     return (
       <SafeAreaView>
-        <NavigationEvents onDidFocus={() => this.getSurvey()} />
         <StatusBarRed />
         {!this.props.merchant.loadingGetMerchantLastOrder &&
         this.props.merchant.dataGetMerchantLastOrder !== null &&
@@ -1353,4 +1365,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * updatedDate: 01032021
  * updatedFunction:
  * -> Update the tasklist when complete the order & not order .
+ * updatedBy: dyah
+ * updatedDate: 08032021
+ * updatedFunction:
+ * -> Update the tasklist when complete the order & not order.
+ * -> Update the validation when get survey list.
+ * -> Update the validation when checkout.
+ * updatedBy: dyah
+ * updatedDate: 12032021
+ * updatedFunction:
+ * -> Add parameter search when get journey plan.
  */
