@@ -113,7 +113,6 @@ function ModalPrincipal(props) {
   };
 
   const renderItem = ({ item, index }) => {
-    console.log("disini:", dataSfaGetPrincipal);
     return (
       <View key={index}>
           <TouchableOpacity onPress={() => props.selectPrincipal(item)}>

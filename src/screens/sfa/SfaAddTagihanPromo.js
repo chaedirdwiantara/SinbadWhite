@@ -24,12 +24,18 @@ import { Fonts, GlobalStyle } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import ImagePicker from 'react-native-image-picker';
 import ModalPrincipal from './ModalPrincipal';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import ModalReferenceList from './ModalReferenceList';
+import { sfaGetTransferImageProcess } from '../../state/actions';
 
 const { width, height } = Dimensions.get('window');
 
 const SfaAddTagihanPromo = props => {
   const status = props.status;
+
+  const [dataReference, setDataReference] = useState(null);
+
+  //DATA PROMO
   const [noRef, setNoRef] = useState('');
   const [promoNumber, setPromoNumber] = useState(null);
   const [principal, setPrincipal] = useState(null)
@@ -42,7 +48,10 @@ const SfaAddTagihanPromo = props => {
 
   const [openModalPrincipal, setOpenModalPrincipal] = useState(false);
 
-  const { selectedMerchant} = useSelector(state => state.merchant);
+  const { selectedMerchant } = useSelector(state => state.merchant);
+  const { dataSfaGetTransferImage} = useSelector(state => state.sfa);
+  const [openModalReference, setOpenModalReference] = useState(false);
+  const dispatch = useDispatch();
   
 
   /**
@@ -50,6 +59,22 @@ const SfaAddTagihanPromo = props => {
    * FUNCTIONAL
    * =======================
    */
+
+   useEffect(() => {
+    setExistingImage();
+  }, [dataSfaGetTransferImage]);
+
+  console.log("disniii:", dataSfaGetTransferImage);
+
+  const setExistingImage = () => {
+    if (dataSfaGetTransferImage && dataReference) {
+      setDataImage({ fileData: dataSfaGetTransferImage.data.image });
+      console.log("imagesssss:", dataSfaGetTransferImage);
+    }
+    console.log("image:", dataSfaGetTransferImage);
+    console.log("ref:", dataReference);
+  };
+
    useEffect(() => {
     const front = moment.utc(new Date()).local().format('YYYYMMDD')
     const mid = selectedMerchant.externalId
@@ -85,7 +110,13 @@ const SfaAddTagihanPromo = props => {
       } else if (response.fileSize > 2000000) {
         setErrorInputImage(true);
       } else {
-        // const source = { uri: response.uri };
+        props.promoImage({
+          fileName: response.fileName,
+          fileData: response.data,
+          fileType: response.type,
+          fileUri: response.uri,
+          fileSize: response.fileSize
+        });
         setDataImage({
           fileName: response.fileName,
           fileData: response.data,
@@ -127,6 +158,35 @@ const SfaAddTagihanPromo = props => {
         props.billingPromoValue(parseInt(text.replace(/[Rp.]+/g, '')))
       }
   }
+
+  const selectedReference = data => {
+    console.log("disni:", data);
+    console.log("grr:", props.collectionMethod.id);
+    if (props.collectionMethod.id === 5) {
+      dispatch(sfaGetTransferImageProcess(data.id));
+    }
+    setDataReference(data);
+
+    // //DATA INPUT
+    setNoRef(data.referenceCode);
+    props.referenceCode(data.referenceCode);
+    setPromoNumber(data.promoCode);
+    props.promoNumber(data.promoCode);
+    setPrincipal(data.principal);
+    props.principal(data.principal);
+    setPromoBalance(data.balance);
+    props.promoValue(data.balance);
+    // setBalance(parseInt(data.balance));
+    // props.transferValue(parseInt(data.balance));
+
+    setDataImage({ fileData: data.image });
+    props.promoImage(data.image);
+
+    props.useNoReference(true);
+    setOpenModalReference(false);
+    setIsDisable(true);
+    props.paymentCollectionMethodId(data.id)
+  };
 
   /**
    * *********************************
@@ -353,6 +413,7 @@ const SfaAddTagihanPromo = props => {
         )
     }
 
+    console.log("woi:", dataImage);
     const renderUploadImage = () => {
         return(
             <View>
@@ -362,7 +423,29 @@ const SfaAddTagihanPromo = props => {
                   </Text>
                   {renderTooltip("image")}
                 </View>
-                {dataImage ? (
+                {dataReference ? (
+                  dataImage.fileData ? (
+                    <View style={styles.smallContainerImage}>
+                    <Image
+                      source={{
+                        uri: `data:image/jpeg;base64, ${dataImage.fileData}`
+                      }}
+                      style={[
+                        styles.images,
+                        { opacity: isDisable === true ? 0.5 : null }
+                      ]}
+                    />
+                  </View>
+                  ) : (
+                    <View style={[styles.smallContainerImage, {height: 250}]}>
+                    <Image
+                source={require('../../assets/gif/loading/load_triagle.gif')}
+                style={{ height: 50, width: 50 }}
+              />
+                  </View>
+                   
+                  )
+                  ) : dataImage ? (
                     <View style={{marginTop: 12}}>
                         <View style={styles.smallContainerImage}>
                           <Image
@@ -416,9 +499,25 @@ const SfaAddTagihanPromo = props => {
             close={() => setOpenModalPrincipal(false)}
             onRef={ref => (selectPrincipal = ref)}
             selectPrincipal={selectedPrincipal.bind(this)}
-            // supplierId={selectedMerchant.supplierId}
-            // storeId={selectedMerchant.storeId}
-            // paymentCollectionTypeId={props.collectionMethod.id}
+          />
+        ) : null}
+      </View>
+    );
+  };
+
+  /** MODAL REFERENCE */
+  const renderModalReference = () => {
+    return (
+      <View>
+        {openModalReference ? (
+          <ModalReferenceList
+            open={openModalReference}
+            close={() => setOpenModalReference(false)}
+            onRef={ref => (selectCollection = ref)}
+            selectCollection={selectedReference.bind(this)}
+            supplierId={selectedMerchant.supplierId}
+            storeId={selectedMerchant.storeId}
+            paymentCollectionTypeId={props.collectionMethod.id}
           />
         ) : null}
       </View>
@@ -479,6 +578,7 @@ const SfaAddTagihanPromo = props => {
       <View style={styles.mainContainer}>
         {renderContent()}
         {renderModalPrincipal()}
+        {renderModalReference()}
       </View>
     </>
   );
@@ -495,11 +595,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     smallContainerImage: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'white',
-        alignItems: 'center'
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'white',
+      alignItems: 'center',
+      paddingTop: 8
     },
     smallContainerButtonImage: {
         marginVertical: 16,
