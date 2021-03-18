@@ -170,7 +170,7 @@ const renderContent = () => {
                   dataReference? dataReference.referenceCode : '*Nomor Referensi'
                 }
                 keyboardType={'default'}
-                onChangeText={text => noReference(text)}
+                onChangeText={text => noReference(text.trim())}
                 tooltip={isDisable ? false : true}
                 tooltipText={'Dapat berupa Nomor Cek, Giro, Transfer atau Kuitansi'}
               />
