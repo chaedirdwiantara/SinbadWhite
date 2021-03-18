@@ -13,16 +13,16 @@ import {
   MaterialIcon,
   Modal
 } from '../../library/thirdPartyPackage';
-import { SearchBarType1, LoadingPage } from '../../library/component';
+import { SearchBarType1, LoadingPage, LoadingLoadMore } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import { sfaGetPrincipalProcess } from '../../state/actions';
+import { sfaGetPrincipalProcess, sfaPrincipalLoadmoreProcess } from '../../state/actions';
 
 function ModalPrincipal(props) {
   const dispatch = useDispatch();
-  const { dataSfaGetPrincipal} = useSelector(state => state.sfa);
+  const { dataSfaGetPrincipal, loadingLoadmorePrincipal, loadingSfaGetPrincipal} = useSelector(state => state.sfa);
   const { selectedMerchant} = useSelector(state => state.merchant);
   const [limit, setLimit] = useState(20)
   /**
@@ -40,7 +40,7 @@ function ModalPrincipal(props) {
         skip: 0
       }
     ))
-  }, [limit]);
+  }, []);
 
   const loadMore = () => {
     if (dataSfaGetPrincipal) {
@@ -49,7 +49,12 @@ function ModalPrincipal(props) {
         dataSfaGetPrincipal.meta.total
       ) {
         const page = limit + 10;
-        setLimit(page);
+        setLimit(page)
+        dispatch(sfaPrincipalLoadmoreProcess({
+          supplierId: 2, 
+          limit: page, 
+          skip: 1
+        }))
       }
     }
   }
@@ -89,34 +94,26 @@ function ModalPrincipal(props) {
 
 
   const renderPrincipal = () => {
-    return(
-    <View style={{flex: 1}}>
-      <FlatList
-      
-        data={dataSfaGetPrincipal.data}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-        onEndReachedThreshold={0.2}
-        onEndReached={()=>loadMore()}
-        showsVerticalScrollIndicator
-      />
-    </View>
-    )
-    // return dataSfaGetPrincipal.data.map((item, index) => {
-    //   return (
-    //     <View key={index}>
-    //       <TouchableOpacity onPress={() => props.selectPrincipal(item)}>
-    //         <View style={{ margin: 16 }}>
-    //           <Text style={Fonts.type24}>{item.name}</Text>
-    //         </View>
-    //         <View style={GlobalStyle.lines} />
-    //       </TouchableOpacity>
-    //     </View>
-    //   );
-    // });
+    return dataSfaGetPrincipal && !loadingSfaGetPrincipal ? (
+      dataSfaGetPrincipal.data ? (
+        <View style={{flex: 1}}>
+          <FlatList
+            data={dataSfaGetPrincipal.data}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            numColumns={1}
+            onEndReachedThreshold={0.2}
+            onEndReached={()=>loadMore()}
+            showsVerticalScrollIndicator
+          />
+          {loadingLoadmorePrincipal ? <LoadingLoadMore /> : null}
+        </View>
+      ) : null
+    ) : <LoadingPage />
   };
 
   const renderItem = ({ item, index }) => {
+    console.log("disini:", dataSfaGetPrincipal);
     return (
       <View key={index}>
           <TouchableOpacity onPress={() => props.selectPrincipal(item)}>
@@ -138,8 +135,8 @@ function ModalPrincipal(props) {
     return (
       <>
         <View style={styles.contentContainer}>
-            {/* {renderPrincipal()} */}
-          {dataSfaGetPrincipal ? renderPrincipal() : <LoadingPage />}
+            {renderPrincipal()}
+          {/* {dataSfaGetPrincipal ? renderPrincipal() : <LoadingPage />} */}
         </View>
       </>
     );

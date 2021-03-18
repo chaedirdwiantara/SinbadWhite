@@ -69,3 +69,8 @@ export const SFA_GET_TRANSFER_IMAGE_FAILED = 'SfaGetTransferImageFailed';
 export const SFA_GET_PRINCIPAL_PROCESS = 'SfaGetPrincipalProcess';
 export const SFA_GET_PRINCIPAL_SUCCESS = 'SfaGetPrincipalSuccess';
 export const SFA_GET_PRINCIPAL_FAILED = 'SfaGetPrincipalFailed';
+
+/**LOAD MORE PRINCIPAL */
+export const SFA_PRINCIPAL_LOADMORE_PROCESS = 'SfaPrincipalLoadmoreProcess';
+export const SFA_PRINCIPAL_LOADMORE_SUCCESS = 'SfaPrincipalLoadmoreSuccess';
+export const SFA_PRINCIPAL_LOADMORE_FAILED = 'SfaPrincipalLoadmoreFailed';

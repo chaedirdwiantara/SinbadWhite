@@ -158,6 +158,18 @@ function* getPrincipal(actions) {
   }
 }
 
+/** GET PRINCIPAL */
+function* loadmorePrincipal(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getPrincipal(actions.payload);
+    });
+    yield put(ActionCreators.sfaPrincipalLoadmoreSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaPrincipalLoadmoreFailed(error));
+  }
+}
+
   function* SfaSaga() {
     yield takeEvery(
       types.SFA_GET_COLLECTION_STATUS_PROCESS,
@@ -174,7 +186,8 @@ function* getPrincipal(actions) {
     yield takeEvery(types.SFA_GET_STAMP_PROCESS, getStampList)
     yield takeEvery(types.SFA_GET_STATUS_ORDER_PROCESS, getStatusOrder)
     yield takeEvery(types.SFA_GET_TRANSFER_IMAGE_PROCESS, getTransferImage)
-    yield takeEvery(types.SFA_GET_PRINCIPAL_PROCESS, getPrincipal)
+    yield takeEvery(types.SFA_GET_PRINCIPAL_PROCESS, getPrincipal),
+    yield takeEvery(types.SFA_PRINCIPAL_LOADMORE_PROCESS, loadmorePrincipal)
 }
 
 export default SfaSaga;
