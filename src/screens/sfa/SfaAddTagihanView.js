@@ -121,8 +121,23 @@ const SfaAddTagihanView = props => {
   }, []); 
   const prevErrorSfaPostCollectionPayment = prevErrorSfaPostCollectionPaymentRef.current
 
+  const setIntialState = () => {
+    setReferenceCode(null);
+    setBankSource(null);
+   setBankAccount(null);
+    setTransferDate(null);
+   setTransferValue(0);
+    setBillingValue(0);
+    setTransferImage(null);
+    setBalance(null);
+    setStamp(null);
+    setIsUsedStamp(false)
+   setIsUseNoReference(false)
+  }
 
   const selectedCollectionMethod = data => {
+ 
+setIntialState()
     setCollectionMethod(data);
     setOpenCollectionMethod(false);
   };
@@ -311,6 +326,7 @@ const SfaAddTagihanView = props => {
   }, [loadingSfaPostCollectionPayment, loadingSfaPostPaymentMethod])
 
   const dataReferenceCode = data => {
+  const a = data.trim()
     setReferenceCode(data);
   };
 
