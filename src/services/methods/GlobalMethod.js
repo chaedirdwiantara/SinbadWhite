@@ -1,6 +1,7 @@
 import ApiRest from '../apiRest';
 import ApiRestMap from '../apiRestMap';
 import { Store } from '../../state/Store';
+import { DEFAULT_PRIVILEGE, HUNTER, TAKING_ORDER } from '../../helpers/RoleBaseAccessControl';
 
 function getListAndSearch(data) {
   
@@ -183,7 +184,7 @@ function userStoreId() {
   return stateData.user !== null ? stateData.user.userStores[0].storeId : '';
 }
 
-//** FORMATTER TEXTINPUT */
+/** FORMATTER TEXTINPUT */
 function addGaps(string = "", gaps, spacer){
   const offsets = [0].concat(gaps).concat([string.length]);
   return offsets.map((end, index) => {
@@ -192,6 +193,25 @@ function addGaps(string = "", gaps, spacer){
     return string.substr(start, end - start);
   }).filter(part => part !== "").join(spacer);
 };
+/** ROLE BASE ACCESS CONTROL */
+export function defineSalesRoles(privilege){
+  if(Array.isArray(privilege)){
+    privilege.forEach(el => {
+      DEFAULT_PRIVILEGE.forEach(item => {
+        if(el.privileges === item.name){
+          item.status = true
+        }
+      })
+    })
+  }
+  let roles = TAKING_ORDER
+  DEFAULT_PRIVILEGE.forEach(item => {
+    if(!item.status){
+      roles = HUNTER
+    }
+  })
+  return roles
+}
 
 export const GlobalMethod = {
   getListAndSearch,
@@ -203,7 +223,8 @@ export const GlobalMethod = {
   userSupplierMapping,
   userStoreId,
   addGaps,
-  uploadImage
+  uploadImage,
+  defineSalesRoles
 };
 
 /**

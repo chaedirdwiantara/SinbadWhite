@@ -22,8 +22,16 @@ function getSalesSegementationTeam(data){
   })
 }
 
+function getPrivileges(supplierId){
+  return ApiRest({
+    path: `privileges?type=agent-app&supplierId=${supplierId}`,
+    method: 'GET'
+  })
+}
+
 export const ProfileMethod = {
   editProfile,
   getWarehouse,
-  getSalesSegementationTeam
+  getSalesSegementationTeam,
+  getPrivileges
 };

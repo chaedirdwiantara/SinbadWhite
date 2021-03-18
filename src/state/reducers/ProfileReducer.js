@@ -6,14 +6,18 @@ const INITIAL_STATE = {
   loadingEditProfile: false,
   loadingGetWarehouse: false,
   loadingGetSalesSegmentationTeam: false,
+  loadingGetPrivilege: true,
   /** data */
   dataEditProfile: null,
   dataGetWarehouse: [],
   dataSalesSegmentationTeam: null,
+  dataPrivilege: null,
+  salesRole: null,
   /** error */
   errorAddProfile: null,
   errorGetWarehouse: null,
-  errorGetSalesSegmentationTeam: null
+  errorGetSalesSegmentationTeam: null,
+  errorGetPrivilege: null
 };
 
 export const profile = createReducer(INITIAL_STATE, {
@@ -94,6 +98,34 @@ export const profile = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetSalesSegmentationTeam: false,
       errorGetSalesSegmentationTeam: action.payload
+    }
+  },
+  [types.PROFILE_GET_PRIVILEGE_PROCESS](state, action){
+    return {
+      ...state,
+      loadingGetPrivilege: true,
+      dataPrivilege: null,
+      errorGetPrivilege: null
+    }
+  },
+  [types.PROFILE_GET_PRIVILEGE_SUCCESS](state, action){
+    return {
+      ...state,
+      loadingGetPrivilege: false,
+      dataPrivilege: action.payload
+    }
+  },
+  [types.PROFILE_GET_PRIVILEGE_FAILED](state, action){
+    return {
+      ...state,
+      loadingGetPrivilege: false,
+      errorGetPrivilege: action.payload
+    }
+  },
+  [types.PROFILE_SET_SALES_ROLE](state, action){
+    return {
+      ...state,
+      salesRole: action.payload
     }
   }
 });

@@ -43,6 +43,7 @@ import {
   ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
 } from '../../../constants';
 import _ from 'lodash';
+import { HUNTER } from '../../../helpers/RoleBaseAccessControl';
 
 const { width, height } = Dimensions.get('window');
 const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
@@ -110,7 +111,8 @@ class MerchantHomeView extends Component {
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
         }
       ],
-      successSurveyList: false
+      successSurveyList: false,
+      salesRole: this.props.profile.salesRole
     };
   }
   /**
@@ -147,6 +149,11 @@ class MerchantHomeView extends Component {
     this.props.merchantGetLogAllActivityProcessV2(
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
+    /** SHOW TASKLISK BASED ON ROLE BASE */
+    if(this.state.salesRole === HUNTER){
+      let updateTask = this.state.task.filter(el => el.name !== 'Order')
+      this.setState({task: updateTask})
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -194,7 +201,7 @@ class MerchantHomeView extends Component {
         }
         /** IF SURVEY LIST EXIST */
         if (!_.isEmpty(surveyList.payload.data) && surveyList.success) {
-          if (this.state.task.length === 3) {
+          if (this.state.task.length === 3 && this.state.salesRole !== HUNTER) {
             this.setState({
               task: [
                 {
@@ -1002,7 +1009,7 @@ class MerchantHomeView extends Component {
     return (
       <View>
         {/* {this.renderData()} */}
-        {this.renderLastOrder()}
+        {this.state.salesRole !== HUNTER && this.renderLastOrder()}
         {this.renderTastList()}
         {/* {this.renderMerchantMenu()} */}
       </View>
@@ -1056,12 +1063,15 @@ class MerchantHomeView extends Component {
         close={() => this.setState({ openModalCheckout: false })}
         onPress={
           () => {
-            this.setState({ checkNoOrder: true });
-            this.props.merchantGetLogPerActivityProcessV2({
-              journeyBookStoresId: this.props.merchant.selectedMerchant
-                .journeyBookStores.id,
-              activity: 'order'
-            });
+            if(this.state.salesRole === HUNTER){
+              this.checkoutProcess()
+            } else {
+              this.setState({ checkNoOrder: true });
+              this.props.merchantGetLogPerActivityProcessV2({
+                journeyBookStoresId: this.props.merchant.selectedMerchant.journeyBookStores.id,
+                activity: 'order'
+              });
+            }
           }
           // this.props.merchantPostActivityProcess({
           //   journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
@@ -1313,8 +1323,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, merchant, user, permanent }) => {
-  return { auth, merchant, user, permanent };
+const mapStateToProps = ({ auth, merchant, user, permanent, profile }) => {
+  return { auth, merchant, user, permanent, profile };
 };
 
 const mapDispatchToProps = dispatch => {
