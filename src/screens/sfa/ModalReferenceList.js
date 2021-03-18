@@ -32,6 +32,7 @@ function ModalReferenceList(props) {
     dataGetReferenceList
    } = useSelector(state => state.sfa);
 
+  const { userSuppliers } = useSelector(state => state.user);
 
   /**
    * =======================
@@ -45,7 +46,7 @@ function ModalReferenceList(props) {
    /** GET REFERENCE LIST DATA */
    const getReference = () => {
     const data = {
-      supplierId :  parseInt(props.supplierId),
+      supplierId : parseInt(userSuppliers[0].supplier.id),
       storeId: parseInt(props.storeId),
       paymentCollectionTypeId: parseInt(props.paymentCollectionTypeId),
       limit: limit,

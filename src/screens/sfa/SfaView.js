@@ -48,6 +48,7 @@ const SfaView = props => {
     loadingLoadMoreGetSfa
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
+  const { userSuppliers } = useSelector(state => state.user);
   const [selectedTagStatus, setSelectedTagStatus] = useState(0);
   const [paymentStatus, setPaymentStatus] = useState('');
   const [limit, setLimit] = useState(20);
@@ -71,11 +72,10 @@ const SfaView = props => {
 
   const getCollectionList = (loading, page) => {
     const storeId = parseInt(selectedMerchant.storeId);
-    const supplierId = parseInt(selectedMerchant.supplierId);
     const data = {
       limit: page,
       storeId: storeId,
-      supplierId: supplierId,
+      supplierId: parseInt(userSuppliers[0].supplier.id),
       keyword: searchText,
       statusPayment: paymentStatus,
       loading: loading
