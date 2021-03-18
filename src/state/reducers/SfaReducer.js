@@ -446,7 +446,7 @@ export const sfa = createReducer(INITIAL_STATE, {
   [types.SFA_PRINCIPAL_LOADMORE_SUCCESS](state, action) {
     return {
       ...state,
-      dataSfaGetPrincipal: action.payload.data,
+      dataSfaGetPrincipal: action.payload,
       loadingLoadmorePrincipal: false,
     };
   },
