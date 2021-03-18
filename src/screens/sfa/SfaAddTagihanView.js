@@ -29,12 +29,12 @@ import SfaAddTagihanCheque from './SfaAddTagihanCheque';
 import SfaAddTagihanTransfer from './SfaAddTagihanTransfer';
 import SfaAddTagihanPromo from './SfaAddTagihanPromo';
 import SfaAddTagihanGiro from './SfaAddTagihanGiro';
-import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment'
+import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 
-import { 
-  sfaPostPaymentMethodProcess, 
+import {
+  sfaPostPaymentMethodProcess,
   sfaPostCollectionPaymentProcess,
-  sfaGetDetailProcess,
+  sfaGetDetailProcess
 } from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 
@@ -44,12 +44,12 @@ const SfaAddTagihanView = props => {
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false);
   const [methodStatus, setMethodStatus] = useState('available');
   const [disabled, setDisabled] = useState(true);
-  const { 
-    dataSfaPostPaymentMethod, 
+  const {
+    dataSfaPostPaymentMethod,
     dataSfaPostCollectionPayment,
-    errorSfaPostPaymentMethod, 
+    errorSfaPostPaymentMethod,
     errorSfaPostCollectionPayment,
-    loadingSfaPostPaymentMethod, 
+    loadingSfaPostPaymentMethod,
     loadingSfaPostCollectionPayment
   } = useSelector(state => state.sfa);
 
@@ -65,13 +65,15 @@ const SfaAddTagihanView = props => {
   const [billingValue, setBillingValue] = useState(0);
   const [transferImage, setTransferImage] = useState(null);
   const [issuedDate, setIssuedDate] = useState(new Date());
-  const [dueDate, setDueDate] = useState(new Date(new Date(new Date()).setDate(new Date().getDate() + 1)));
+  const [dueDate, setDueDate] = useState(
+    new Date(new Date(new Date()).setDate(new Date().getDate() + 1))
+  );
   const [balance, setBalance] = useState(null);
   const [stamp, setStamp] = useState(null);
   const { selectedMerchant } = useSelector(state => state.merchant);
-  const [isUsedStamp, setIsUsedStamp] = useState(false)
-  const [isUseNoReference, setIsUseNoReference] = useState(false)
-  const [paymentCollectionMethodId, setPaymentCollectionMethodId]= useState()
+  const [isUsedStamp, setIsUsedStamp] = useState(false);
+  const [isUseNoReference, setIsUseNoReference] = useState(false);
+  const [paymentCollectionMethodId, setPaymentCollectionMethodId] = useState();
 
   //DATA PAYMENT PROMO
   const [promoReferenceCode, setPromoReferenceCode] = useState(null);
@@ -82,16 +84,20 @@ const SfaAddTagihanView = props => {
   const [promoImage, setPromoImage] = useState(null);
 
   //USEREF
-  const prevDataSfaPostPaymentMethodRef = useRef(dataSfaPostPaymentMethod)
-  const prevDataSfaPostCollectionPaymentRef = useRef(dataSfaPostCollectionPayment)
+  const prevDataSfaPostPaymentMethodRef = useRef(dataSfaPostPaymentMethod);
+  const prevDataSfaPostCollectionPaymentRef = useRef(
+    dataSfaPostCollectionPayment
+  );
 
   //USEREF ERROR
-  const prevErrorSfaPostPaymentMethodRef = useRef(errorSfaPostPaymentMethod)
-  const prevErrorSfaPostCollectionPaymentRef = useRef(errorSfaPostCollectionPayment)
+  const prevErrorSfaPostPaymentMethodRef = useRef(errorSfaPostPaymentMethod);
+  const prevErrorSfaPostCollectionPaymentRef = useRef(
+    errorSfaPostCollectionPayment
+  );
 
   //MODAL
-  const [modalBottomError , setModalBottomError] = useState(false)
-  const [messageError, setMessageError] = useState(null)
+  const [modalBottomError, setModalBottomError] = useState(false);
+  const [messageError, setMessageError] = useState(null);
 
   /**
    * =======================
@@ -99,45 +105,47 @@ const SfaAddTagihanView = props => {
    * =======================
    */
 
-   //USE EFFECT PREV DATA
+  //USE EFFECT PREV DATA
   useEffect(() => {
     prevDataSfaPostPaymentMethodRef.current = dataSfaPostPaymentMethod;
   }, []);
-  const prevDataSfaPostPaymentMethod = prevDataSfaPostPaymentMethodRef.current
+  const prevDataSfaPostPaymentMethod = prevDataSfaPostPaymentMethodRef.current;
 
   useEffect(() => {
     prevDataSfaPostCollectionPaymentRef.current = dataSfaPostCollectionPayment;
-  }, []); 
-  const prevDataSfaPostCollectionPayment = prevDataSfaPostCollectionPaymentRef.current
+  }, []);
+  const prevDataSfaPostCollectionPayment =
+    prevDataSfaPostCollectionPaymentRef.current;
 
   //USE EFFECT PREV DATA ERROR
   useEffect(() => {
     prevErrorSfaPostPaymentMethodRef.current = errorSfaPostPaymentMethod;
   }, []);
-  const prevErrorSfaPostPaymentMethod = prevErrorSfaPostPaymentMethodRef.current
+  const prevErrorSfaPostPaymentMethod =
+    prevErrorSfaPostPaymentMethodRef.current;
 
   useEffect(() => {
     prevErrorSfaPostCollectionPaymentRef.current = errorSfaPostCollectionPayment;
-  }, []); 
-  const prevErrorSfaPostCollectionPayment = prevErrorSfaPostCollectionPaymentRef.current
+  }, []);
+  const prevErrorSfaPostCollectionPayment =
+    prevErrorSfaPostCollectionPaymentRef.current;
 
   const setIntialState = () => {
     setReferenceCode(null);
     setBankSource(null);
-   setBankAccount(null);
+    setBankAccount(null);
     setTransferDate(null);
-   setTransferValue(0);
+    setTransferValue(0);
     setBillingValue(0);
     setTransferImage(null);
     setBalance(null);
     setStamp(null);
-    setIsUsedStamp(false)
-   setIsUseNoReference(false)
-  }
+    setIsUsedStamp(false);
+    setIsUseNoReference(false);
+  };
 
   const selectedCollectionMethod = data => {
- 
-setIntialState()
+    setIntialState();
     setCollectionMethod(data);
     setOpenCollectionMethod(false);
   };
@@ -174,7 +182,7 @@ setIntialState()
   };
 
   const saveCollection = async () => {
-    const orderParcelId = props.navigation.state.params.data.id
+    const orderParcelId = props.navigation.state.params.data.id;
     if (collectionMethod.code === 'cash') {
       const data = {
         paymentCollectionTypeId: parseInt(collectionMethod.id),
@@ -194,8 +202,8 @@ setIntialState()
           storeId: parseInt(selectedMerchant.storeId),
           paymentCollectionMethodId: parseInt(paymentCollectionMethodId),
           amount: billingValue
-        }
-        dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
+        };
+        dispatch(sfaPostCollectionPaymentProcess(dataPostPayment));
       } else {
         const dataTransfer = {
           paymentCollectionTypeId: parseInt(collectionMethod.id),
@@ -204,13 +212,15 @@ setIntialState()
           userId: parseInt(selectedMerchant.id),
           referenceCode: referenceCode,
           balance: transferValue,
-          issuedDate: moment(new Date(transferDate)).format('YYYY-MM-DD HH:mm:ss'),
+          issuedDate: moment(new Date(transferDate)).format(
+            'YYYY-MM-DD HH:mm:ss'
+          ),
           bankId: bankSource.id,
           bankToAccountId: bankAccount.id,
           filename: transferImage.fileName,
           type: transferImage.fileType,
-          image: transferImage.fileData,
-        }
+          image: transferImage.fileData
+        };
         dispatch(sfaPostPaymentMethodProcess(dataTransfer));
       }
     }
@@ -227,29 +237,35 @@ setIntialState()
           promoNumber: promoNumber,
           principal: principal,
           promoValue: promoValue,
-          balance: billingPromoValue,
+          balance: billingPromoValue
           // filename: promoImage.fileName,
           // type: promoImage.fileType,
           // image: promoImage.fileData,
-        }
+        };
         // dispatch(sfaPostPaymentMethodProcess(dataTransfer));
       }
     }
-    if(collectionMethod.code === 'check' || collectionMethod.code === 'giro'){
-      const data ={
+    if (collectionMethod.code === 'check' || collectionMethod.code === 'giro') {
+      const data = {
         paymentCollectionTypeId: parseInt(collectionMethod.id),
         // paymentCollectionMethodId: 9,
         storeId: parseInt(selectedMerchant.storeId),
         supplierId: parseInt(selectedMerchant.supplierId),
         userId: parseInt(selectedMerchant.id),
-        referenceCode : referenceCode,
+        referenceCode: referenceCode,
         bankId: bankSource,
-        issuedDate: moment.utc(issuedDate).local().format('YYYY-MM-DD HH:MM:ss'),
-        invalidDate: moment.utc(dueDate).local().format('YYYY-MM-DD HH:MM:ss'),
-        balance : balance,
+        issuedDate: moment
+          .utc(issuedDate)
+          .local()
+          .format('YYYY-MM-DD HH:MM:ss'),
+        invalidDate: moment
+          .utc(dueDate)
+          .local()
+          .format('YYYY-MM-DD HH:MM:ss'),
+        balance: balance,
         isUsedStamp: isUsedStamp,
         stampId: stamp
-      }
+      };
       if (isUseNoReference === true) {
         const dataPostPayment = {
           supplierId: parseInt(selectedMerchant.supplierId),
@@ -258,8 +274,8 @@ setIntialState()
           storeId: parseInt(selectedMerchant.storeId),
           paymentCollectionMethodId: parseInt(paymentCollectionMethodId),
           amount: billingValue
-        }
-        dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
+        };
+        dispatch(sfaPostCollectionPaymentProcess(dataPostPayment));
       } else {
         dispatch(sfaPostPaymentMethodProcess(data));
       }
@@ -267,7 +283,7 @@ setIntialState()
   };
 
   useEffect(() => {
-    const orderParcelId = props.navigation.state.params.data.id
+    const orderParcelId = props.navigation.state.params.data.id;
     if (prevDataSfaPostPaymentMethod !== dataSfaPostPaymentMethod) {
       if (dataSfaPostPaymentMethod) {
         const dataPostPayment = {
@@ -276,57 +292,64 @@ setIntialState()
           orderParcelId: orderParcelId,
           storeId: parseInt(selectedMerchant.storeId),
           paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
-          amount: collectionMethod.code === 'cash' 
-          ? cash 
-          : collectionMethod.code === 'transfer' || collectionMethod.code === 'check' || collectionMethod.code === 'giro'
-          ? billingValue
-          : cash
-        }
-        dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
+          amount:
+            collectionMethod.code === 'cash'
+              ? cash
+              : collectionMethod.code === 'transfer' ||
+                collectionMethod.code === 'check' ||
+                collectionMethod.code === 'giro'
+              ? billingValue
+              : cash
+        };
+        dispatch(sfaPostCollectionPaymentProcess(dataPostPayment));
       }
     }
-  }, [dataSfaPostPaymentMethod])
+  }, [dataSfaPostPaymentMethod]);
 
-  useEffect(()=> {
-    const orderParcelId = props.navigation.state.params.data.id
-    if (prevDataSfaPostCollectionPayment !== dataSfaPostCollectionPayment){
-      if(dataSfaPostCollectionPayment) {
-        dispatch(sfaGetDetailProcess(orderParcelId))
-        NavigationService.navigate('SfaDetailView', {orderParcelId: orderParcelId})
+  useEffect(() => {
+    const orderParcelId = props.navigation.state.params.data.id;
+    if (prevDataSfaPostCollectionPayment !== dataSfaPostCollectionPayment) {
+      if (dataSfaPostCollectionPayment) {
+        dispatch(sfaGetDetailProcess(orderParcelId));
+        NavigationService.navigate('SfaDetailView', {
+          orderParcelId: orderParcelId
+        });
       }
     }
-  }, [dataSfaPostCollectionPayment])
+  }, [dataSfaPostCollectionPayment]);
 
   //HANDLE ERROR POST PAYMENT
-  useEffect(()=>{
+  useEffect(() => {
     if (prevErrorSfaPostPaymentMethod !== errorSfaPostPaymentMethod) {
-      if(errorSfaPostPaymentMethod) {
-        setModalBottomError(true)
-        setMessageError(errorSfaPostPaymentMethod.data.errorMessage)
+      if (errorSfaPostPaymentMethod) {
+        setModalBottomError(true);
+        setMessageError(errorSfaPostPaymentMethod.data.errorMessage);
       }
     }
-  }, [errorSfaPostPaymentMethod])
-  
+  }, [errorSfaPostPaymentMethod]);
+
   //HANDLE ERROR POST COLLECTION
-  useEffect(()=>{
+  useEffect(() => {
     if (prevErrorSfaPostCollectionPayment !== errorSfaPostCollectionPayment) {
-      if(errorSfaPostCollectionPayment) {
-        setModalBottomError(true)
-        setMessageError(errorSfaPostCollectionPayment.payload.data.errorMessage)
+      if (errorSfaPostCollectionPayment) {
+        setModalBottomError(true);
+        setMessageError(
+          errorSfaPostCollectionPayment.payload.data.errorMessage
+        );
       }
     }
-  }, [errorSfaPostCollectionPayment])
+  }, [errorSfaPostCollectionPayment]);
 
   useEffect(() => {
     if (loadingSfaPostCollectionPayment || loadingSfaPostPaymentMethod) {
-      setDisabled(true)
+      setDisabled(true);
     } else {
-      setDisabled(false)
+      setDisabled(false);
     }
-  }, [loadingSfaPostCollectionPayment, loadingSfaPostPaymentMethod])
+  }, [loadingSfaPostCollectionPayment, loadingSfaPostPaymentMethod]);
 
   const dataReferenceCode = data => {
-  const a = data.trim()
+    const a = data.trim();
     setReferenceCode(data);
   };
 
@@ -353,7 +376,7 @@ setIntialState()
   const dataTransferImage = data => {
     setTransferImage(data);
   };
-  
+
   const dataIssuedDate = data => {
     setIssuedDate(data);
   };
@@ -370,16 +393,16 @@ setIntialState()
     setStamp(data);
   };
   const statusStamp = data => {
-    setIsUsedStamp(data)
-  }
+    setIsUsedStamp(data);
+  };
 
   const useNoReference = data => {
-    setIsUseNoReference(data)
-  }
+    setIsUseNoReference(data);
+  };
 
   const noPaymentCollectionMethodId = data => {
-    setPaymentCollectionMethodId(data)
-  }
+    setPaymentCollectionMethodId(data);
+  };
 
   //DATA PROMO
   const dataPromoReferenceCode = data => {
@@ -425,47 +448,48 @@ setIntialState()
           setDisabled(false);
         }
       }
-      if (collectionMethod.code === 'check' || collectionMethod.code === 'giro') {
-        if(isUsedStamp === true){
-          if(stamp !== null){
+      if (
+        collectionMethod.code === 'check' ||
+        collectionMethod.code === 'giro'
+      ) {
+        if (isUsedStamp === true) {
+          if (stamp !== null) {
             if (
               referenceCode === null ||
               bankSource === null ||
               issuedDate === null ||
               dueDate === null ||
               balance === null ||
-              billingValue === 0 
+              billingValue === 0
             ) {
               setDisabled(true);
             } else {
               setDisabled(false);
             }
-          }
-          else {
+          } else {
             setDisabled(true);
           }
-        } else if ( isUsedStamp === false){
+        } else if (isUsedStamp === false) {
           if (
             referenceCode === null ||
             bankSource === null ||
             issuedDate === null ||
             dueDate === null ||
             balance === null ||
-            billingValue === 0 
+            billingValue === 0
           ) {
             setDisabled(true);
           } else {
             setDisabled(false);
           }
         }
-       
       }
     }
   }, [
     collectionMethod,
     cash,
-    referenceCode, 
-    bankSource, 
+    referenceCode,
+    bankSource,
     bankAccount,
     transferDate,
     transferValue,
@@ -712,23 +736,22 @@ setIntialState()
   /** RENDER GIRO PAYMENT */
   const renderBillingGiro = id => {
     return (
-      <SfaAddTagihanGiro  
-      collectionMethod={collectionMethod}
-      status={methodStatus}
-      paymentCollectionTypeId={id}
-      referenceCode={dataReferenceCode}
-      bankSource={dataBankSource}
-      issuedDate={dataIssuedDate}
-      dueDate={dataDueDate}
-      balance={dataBalance}
-      billingValue={dataBillingValue}
-      stamp={dataStamp}
-      remainingBilling={props.navigation.state.params.data.remainingBilling}
-      isUsedStamp={statusStamp}
-      useNoReference={useNoReference}
-      paymentCollectionMethodId={noPaymentCollectionMethodId}
-       />
-      
+      <SfaAddTagihanGiro
+        collectionMethod={collectionMethod}
+        status={methodStatus}
+        paymentCollectionTypeId={id}
+        referenceCode={dataReferenceCode}
+        bankSource={dataBankSource}
+        issuedDate={dataIssuedDate}
+        dueDate={dataDueDate}
+        balance={dataBalance}
+        billingValue={dataBillingValue}
+        stamp={dataStamp}
+        remainingBilling={props.navigation.state.params.data.remainingBilling}
+        isUsedStamp={statusStamp}
+        useNoReference={useNoReference}
+        paymentCollectionMethodId={noPaymentCollectionMethodId}
+      />
     );
   };
   /**
@@ -755,7 +778,11 @@ setIntialState()
     return (
       <ButtonSingle
         disabled={disabled}
-        loading={loadingSfaPostCollectionPayment || loadingSfaPostPaymentMethod ? true : false}
+        loading={
+          loadingSfaPostCollectionPayment || loadingSfaPostPaymentMethod
+            ? true
+            : false
+        }
         title={'Simpan'}
         borderRadius={4}
         onPress={() => saveCollection()}
