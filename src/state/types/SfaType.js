@@ -64,3 +64,8 @@ export const SFA_GET_STATUS_ORDER_FAILED = 'SfaGetStatusOrderFailed';
 export const SFA_GET_TRANSFER_IMAGE_PROCESS = 'SfaGetTransferImageProcess';
 export const SFA_GET_TRANSFER_IMAGE_SUCCESS = 'SfaGetTransferImageSuccess';
 export const SFA_GET_TRANSFER_IMAGE_FAILED = 'SfaGetTransferImageFailed';
+
+/** GET PRINCIPAL */
+export const SFA_GET_PRINCIPAL_PROCESS = 'SfaGetPrincipalProcess';
+export const SFA_GET_PRINCIPAL_SUCCESS = 'SfaGetPrincipalSuccess';
+export const SFA_GET_PRINCIPAL_FAILED = 'SfaGetPrincipalFailed';

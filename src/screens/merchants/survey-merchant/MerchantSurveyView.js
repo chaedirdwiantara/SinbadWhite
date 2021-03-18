@@ -38,15 +38,16 @@ class MerchantSurveyView extends Component {
    */
   /** FOR GET LOG ALL ACTIVITY */
   refreshMerchantGetLogAllActivityProcess() {
-    this.props.merchantGetLogAllActivityProcess(
-      this.props.merchant.selectedMerchant.journeyPlanSaleId
+    this.props.merchantGetLogAllActivityProcessV2(
+      this.props.merchant.selectedMerchant.journeyBookStores.id
     );
   }
   /** FOR SET SALES ACTIVITY SURVEY_TOKO DONE */
   surveyDone() {
-    this.props.merchantPostActivityProcess({
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
-      activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+    this.props.merchantPostActivityProcessV2({
+      journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores
+        .id,
+      activityName: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
     });
     this.refreshMerchantGetLogAllActivityProcess();
   }
@@ -62,40 +63,52 @@ class MerchantSurveyView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.refreshMerchantGetLogAllActivityProcess();
-    this.getSurveyList();
   }
   /** === DID UPDATE === */
   componentDidUpdate() {
-    const { surveyList } = this.props.merchant;
-    /** IF NO SURVEY */
-    if (
-      _.isEmpty(surveyList.payload.data) &&
-      surveyList.success &&
-      !this.state.successSurveyList
-    ) {
-      this.setState({ successSurveyList: true }, () => this.surveyDone());
-      NavigationService.goBack(this.props.navigation.state.key);
-    }
+    const {
+      surveyList,
+      loadingGetLogAllActivity,
+      dataGetLogAllActivityV2
+    } = this.props.merchant;
 
-    /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
     if (
-      !_.isEmpty(surveyList.payload.data) &&
-      surveyList.success &&
-      !this.state.successSurveyList
+      surveyList.payload.data &&
+      !loadingGetLogAllActivity &&
+      dataGetLogAllActivityV2
     ) {
+      /** IF NO SURVEY */
       if (
-        surveyList.payload.data.length ===
-        surveyList.payload.data.filter(
-          item => item.responseStatus === 'completed'
-        ).length
+        _.isEmpty(surveyList.payload.data) &&
+        surveyList.success &&
+        !this.state.successSurveyList
       ) {
-        if (this.props.merchant.dataGetLogAllActivity) {
-          if (
-            !this.props.merchant.dataGetLogAllActivity.find(
-              item => item.activity === 'toko_survey'
-            )
-          ) {
-            this.setState({ successSurveyList: true }, () => this.surveyDone());
+        this.setState({ successSurveyList: true }, () => this.surveyDone());
+        NavigationService.goBack(this.props.navigation.state.key);
+      }
+
+      /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
+      if (
+        !_.isEmpty(surveyList.payload.data) &&
+        surveyList.success &&
+        !this.state.successSurveyList
+      ) {
+        if (
+          surveyList.payload.data.length ===
+          surveyList.payload.data.filter(
+            item => item.responseStatus === 'completed'
+          ).length
+        ) {
+          if (this.props.merchant.dataGetLogAllActivityV2) {
+            if (
+              !this.props.merchant.dataGetLogAllActivityV2.find(
+                item => item.activityName === 'toko_survey'
+              )
+            ) {
+              this.setState({ successSurveyList: true }, () =>
+                this.surveyDone()
+              );
+            }
           }
         }
       }
@@ -302,4 +315,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyView);
  * updatedDate: 16122020
  * updatedFunction:
  * -> add surveySerialId to param navigation.
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ *  -> Update the props of log activity.
+ * updatedBy: dyah
+ * updatedDate: 26022021
+ * updatedFunction:
+ * -> Update the props of post activity.
+ * updatedBy: dyah
+ * updatedDate: 08032021
+ * updatedFunction:
+ * -> Update validation for survey (componentDidUpdate).
  */

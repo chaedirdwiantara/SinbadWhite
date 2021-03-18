@@ -282,7 +282,7 @@ export function sfaGetStatusOrderFailed(data) {
 
 /**
  * ===========================
- * GET STATUS ORDER
+ * GET TRANSFER IMAGE
  * ===========================
  */
 /** === SFA GET TRANSFER IMAGE PROCESS === */
@@ -290,7 +290,7 @@ export function sfaGetTransferImageProcess(data) {
   return { type: types.SFA_GET_TRANSFER_IMAGE_PROCESS, payload: data };
 }
 
-/** === SFA POST COLLECTION PAYMENT SUCCESS === */
+/** === SFA GET TRANSFER IMAGE SUCCESS === */
 export function sfaGetTransferImageSuccess(data) {
   if (data.result === 'Ok') {
     return {
@@ -300,7 +300,32 @@ export function sfaGetTransferImageSuccess(data) {
   }
   return { type: types.SFA_GET_TRANSFER_IMAGE_FAILED, payload: data };
 }
-/** === SFA POST COLLECTION PAYMENT FAILED === */
+/** === SFA GET TRANSFER IMAGE FAILED === */
 export function sfaGetTransferImageFailed(data) {
   return { type: types.SFA_GET_TRANSFER_IMAGE_FAILED, payload: data };
+}
+
+/**
+ * ===========================
+ * GET PRINCIPAL
+ * ===========================
+ */
+/** === SFA GET PRINCIPAL PROCESS === */
+export function sfaGetPrincipalProcess(data) {
+  return { type: types.SFA_GET_PRINCIPAL_PROCESS, payload: data };
+}
+
+/** === SFA GET PRINCIPAL SUCCESS === */
+export function sfaGetPrincipalSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_PRINCIPAL_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_PRINCIPAL_FAILED, payload: data };
+}
+/** === SFA GET PRINCIPAL FAILED === */
+export function sfaGetPrincipalFailed(data) {
+  return { type: types.SFA_GET_PRINCIPAL_FAILED, payload: data };
 }

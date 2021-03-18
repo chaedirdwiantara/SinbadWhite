@@ -3,6 +3,7 @@ import CartGlobal from '../components/CartGlobal';
 import SearchBarType1 from '../components/search_bar/SearchBarType1';
 import SearchBarType2 from '../components/search_bar/SearchBarType2';
 import SearchBarType3 from '../components/search_bar/SearchBarType3';
+import SearchBarType4 from '../components/search_bar/SearchBarType4';
 /** BACK HANDLER */
 import BackHandlerCloseApp from '../components/BackHandlerCloseApp';
 import BackHandlerBackSpecific from '../components/BackHandlerBackSpecific';
@@ -119,6 +120,7 @@ export {
   SearchBarType1,
   SearchBarType2,
   SearchBarType3,
+  SearchBarType4,
   /** BACK HANDLER */
   BackHandlerCloseApp,
   BackHandlerBackSpecific,

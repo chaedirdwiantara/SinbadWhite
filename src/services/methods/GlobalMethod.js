@@ -101,6 +101,18 @@ function getListAndSearch(data) {
   });
 }
 /**
+ * ==========================
+ * UPLOAD PHOTO
+ * ==========================
+ */
+function uploadImage(data) {
+  return ApiRest({
+    path: 'upload-user-photo',
+    method: 'POST',
+    params: data
+  });
+}
+/**
  * ============================
  * GET ADDRESSS FROM LONG LAT
  * ============================
@@ -171,6 +183,16 @@ function userStoreId() {
   return stateData.user !== null ? stateData.user.userStores[0].storeId : '';
 }
 
+//** FORMATTER TEXTINPUT */
+function addGaps(string = "", gaps, spacer){
+  const offsets = [0].concat(gaps).concat([string.length]);
+  return offsets.map((end, index) => {
+    if (index === 0) return "";
+    const start = offsets[index - 1];
+    return string.substr(start, end - start);
+  }).filter(part => part !== "").join(spacer);
+};
+
 export const GlobalMethod = {
   getListAndSearch,
   getAddressFromLongLat,
@@ -179,7 +201,9 @@ export const GlobalMethod = {
   merchantStoreUrban,
   merchantStoreId,
   userSupplierMapping,
-  userStoreId
+  userStoreId,
+  addGaps,
+  uploadImage
 };
 
 /**

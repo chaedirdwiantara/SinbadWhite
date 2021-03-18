@@ -57,6 +57,7 @@ class InputType4 extends Component {
       <View style={styles.contentInput}>
         <View style={{ flex: 1 }}>
           <TextInput
+            multiline={this.props.multiline}
             editable={this.props.editable}
             maxLength={this.props.maxLength}
             secureTextEntry={this.props.secureTextEntry}
