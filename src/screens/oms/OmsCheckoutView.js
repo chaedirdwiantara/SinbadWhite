@@ -38,11 +38,12 @@ import ModalBottomStockConfirmationConfirmOrder from './ModalBottomStockConfirma
 import ModalBottomErrorMinimumOrder from './ModalBottomErrorMinimumOrder';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 import ModalBottomPayLaterType from './ModalBottomPayLaterType';
-import ModalConfirmKUR from '../../components/modal/ModalConfirmationType3';
+import ModalConfirmKUR from '../../components/modal_bottom/ModalBottomType4';
 import ModalOmsKurWebView from './ModalOmsKurWebView';
 import ModalOmsKurAnnouncement from './ModalOmsKurAnnouncement';
 import ModalOmsOTPKur from './ModalOmsOTPKur';
-import ModalUserDifferentNumber from './ModalUserDifferentNumber';
+import ModalBottomConfirmKur from './ModalBottomConfirmKur';
+
 class OmsCheckoutView extends Component {
   constructor(props) {
     super(props);
@@ -106,7 +107,6 @@ class OmsCheckoutView extends Component {
       openModalFailPaylater: false,
       openModalKurAnnouncement: false,
       openModalOmsOtpKur: false,
-      openModalUserDifferentNumber: false
     };
   }
   /**
@@ -553,7 +553,7 @@ class OmsCheckoutView extends Component {
           this.setState({
             selectedPaylaterType: item,
             modalConfirmKUR: true,
-            modalPaylaterType: true,
+            modalPaylaterType: false,
             modalPaymentTypeMethod: false
           });
         } else {
@@ -1938,27 +1938,46 @@ class OmsCheckoutView extends Component {
   }
 
   /** === RENDER MODAL CONFIRM PAYLATER KUR === */
+  // renderModalConfirmKUR() {
+  //   return (
+  //     <View>
+  //       {this.state.modalConfirmKUR ? (
+  //         <ModalConfirmKUR
+  //           open={this.state.modalConfirmKUR}
+  //           cancel={() => this.setState({ modalConfirmKUR: false })}
+  //           title="Konfirmasi"
+  //           cancelText="Batal"
+  //           confirmText="Lanjut"
+  //           // content="Untuk menggunakan Bayar Nanti dengan KUR KlikACC, Anda akan diarahkan ke halaman klikACC untuk melanjutkan proses."
+  //           customContent={
+  //             <Text style={[Fonts.type17, { textAlign: 'center' }]}>
+  //               Untuk menggunakan{' '}
+  //               <Text style={Fonts.type50}>Bayar Nanti dengan KUR KlikACC</Text>
+  //               , Anda akan diarahkan ke{' '}
+  //               <Text style={Fonts.type50}>halaman klikACC</Text> untuk
+  //               melanjutkan proses.
+  //             </Text>
+  //           }
+  //           ok={() => this.renderConfirmKUR()}
+  //         />
+  //       ) : (
+  //         <View />
+  //       )}
+  //     </View>
+  //   );
+  // }
+
+  /** MODAL BOTTOM CONFIRM KUR */
   renderModalConfirmKUR() {
     return (
       <View>
-        {this.state.modalConfirmKUR ? (
-          <ModalConfirmKUR
+        {this.state.modalConfirmKUR ?(
+          <ModalBottomConfirmKur
             open={this.state.modalConfirmKUR}
-            cancel={() => this.setState({ modalConfirmKUR: false })}
+            close={() => this.setState({ modalConfirmKUR: false,
+            modalPaylaterType: true })}
+            confirmKur={() => this.renderConfirmKUR()}
             title="Konfirmasi"
-            cancelText="Batal"
-            confirmText="Lanjut"
-            // content="Untuk menggunakan Bayar Nanti dengan KUR KlikACC, Anda akan diarahkan ke halaman klikACC untuk melanjutkan proses."
-            customContent={
-              <Text style={[Fonts.type17, { textAlign: 'center' }]}>
-                Untuk menggunakan{' '}
-                <Text style={Fonts.type50}>Bayar Nanti dengan KUR KlikACC</Text>
-                , Anda akan diarahkan ke{' '}
-                <Text style={Fonts.type50}>halaman klikACC</Text> untuk
-                melanjutkan proses.
-              </Text>
-            }
-            ok={() => this.renderConfirmKUR()}
           />
         ) : (
           <View />
@@ -1966,8 +1985,6 @@ class OmsCheckoutView extends Component {
       </View>
     );
   }
-
-  /** CONFIRM KUR */
 
   /**
    * =======================
