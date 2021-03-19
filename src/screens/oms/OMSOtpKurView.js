@@ -116,6 +116,7 @@ class OmsOtpKurView extends Component {
 
   /** === GET OTP  */
   getOtp() {
+    console.log(this.props.merchant.selectedMerchant.storeCode, 'store code');
     const storeCode = 'SNB-STORE-202';
     this.props.OmsGetKurOtpProcess(storeCode);
   }

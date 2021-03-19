@@ -328,8 +328,30 @@ class OmsCheckoutView extends Component {
       ) {
         if (this.props.oms.dataOmsGetPayLaterType !== null) {
           this.setState({
-            payLaterType: this.props.oms.dataOmsGetPayLaterType.data
-            
+            // payLaterType: this.props.oms.dataOmsGetPayLaterType.data
+            payLaterType: {"paymentTypeId": 2,
+            "orderParcelID": 4014,
+            "paylaterTypes": [
+                {
+                    "id": 2,
+                    "name": "Supplier dengan KUR KlikACC",
+                    "image": "",
+                    "status": "enabled",
+                    "description": "Kredit Usaha Rakyat (KUR) merupakan sebuah layanan yang diberikan oleh pemerintah",
+                    "isRedirect": false,
+                    "redirectUrl": "",
+                    "message": ""
+                },
+                {
+                    "id": 1,
+                    "name": "Supplier",
+                    "image": "",
+                    "status": "enabled",
+                    "description": "Layanan Bayar Nanti yang disediakan langsung oleh Supplier",
+                    "isRedirect": false,
+                    "redirectUrl": "",
+                    "message": ""
+                }]}
           });
         }
       }
