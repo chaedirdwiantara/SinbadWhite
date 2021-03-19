@@ -76,7 +76,7 @@ const SfaAddTagihanView = props => {
 
   //SELECTOR
   const { selectedMerchant } = useSelector(state => state.merchant);
-  const { userSuppliers } = useSelector(state => state.user);
+  const { userSuppliers, id } = useSelector(state => state.user);
 
   //DATA PAYMENT PROMO
   const [promoReferenceCode, setPromoReferenceCode] = useState(null);
@@ -183,15 +183,15 @@ const SfaAddTagihanView = props => {
       setCash(parseInt(text.replace(/[Rp.]+/g, '')));
     }
   };
-
   const saveCollection = async () => {
     const orderParcelId = props.navigation.state.params.data.id;
+    const userId = id
     if (collectionMethod.code === 'cash') {
       const data = {
         paymentCollectionTypeId: parseInt(collectionMethod.id),
         storeId: parseInt(selectedMerchant.storeId),
         supplierId: parseInt(userSuppliers[0].supplier.id),
-        userId: parseInt(selectedMerchant.id),
+        userId: parseInt(userId),
         balance: cash
       };
       dispatch(sfaPostPaymentMethodProcess(data));
@@ -200,7 +200,7 @@ const SfaAddTagihanView = props => {
       if (isUseNoReference === true) {
         const dataPostPayment = {
           supplierId: parseInt(userSuppliers[0].supplier.id),
-          userSellerId: parseInt(selectedMerchant.id),
+          userSellerId: parseInt(userId),
           orderParcelId: orderParcelId,
           storeId: parseInt(selectedMerchant.storeId),
           paymentCollectionMethodId: parseInt(paymentCollectionMethodId),
@@ -212,7 +212,7 @@ const SfaAddTagihanView = props => {
           paymentCollectionTypeId: parseInt(collectionMethod.id),
           storeId: parseInt(selectedMerchant.storeId),
           supplierId: parseInt(userSuppliers[0].supplier.id),
-          userId: parseInt(selectedMerchant.id),
+          userId: parseInt(userId),
           referenceCode: referenceCode,
           balance: transferValue,
           issuedDate: moment(new Date(transferDate)).format(
@@ -231,7 +231,7 @@ const SfaAddTagihanView = props => {
       if (isUseNoReference === true) {
         const dataPostPayment = {
           supplierId: parseInt(userSuppliers[0].supplier.id),
-          userSellerId: parseInt(selectedMerchant.id),
+          userSellerId: parseInt(userId),
           orderParcelId: orderParcelId,
           storeId: parseInt(selectedMerchant.storeId),
           paymentCollectionMethodId: parseInt(paymentCollectionMethodId),
@@ -243,7 +243,7 @@ const SfaAddTagihanView = props => {
           paymentCollectionTypeId: parseInt(collectionMethod.id),
           storeId: parseInt(selectedMerchant.storeId),
           supplierId: parseInt(userSuppliers[0].supplier.id),
-          userId: parseInt(selectedMerchant.id),
+          userId: parseInt(userId),
 
           referenceCode: promoReferenceCode,
           balance: promoValue,
@@ -259,10 +259,9 @@ const SfaAddTagihanView = props => {
     if (collectionMethod.code === 'check' || collectionMethod.code === 'giro') {
       const data = {
         paymentCollectionTypeId: parseInt(collectionMethod.id),
-        // paymentCollectionMethodId: 9,
         storeId: parseInt(selectedMerchant.storeId),
         supplierId: parseInt(userSuppliers[0].supplier.id),
-        userId: parseInt(selectedMerchant.id),
+        userId: parseInt(userId),
         referenceCode: referenceCode,
         bankId: bankSource,
         issuedDate: moment
@@ -280,7 +279,7 @@ const SfaAddTagihanView = props => {
       if (isUseNoReference === true) {
         const dataPostPayment = {
           supplierId: parseInt(userSuppliers[0].supplier.id),
-          userSellerId: parseInt(selectedMerchant.id),
+          userSellerId: parseInt(userId),
           orderParcelId: orderParcelId,
           storeId: parseInt(selectedMerchant.storeId),
           paymentCollectionMethodId: parseInt(paymentCollectionMethodId),
@@ -299,7 +298,7 @@ const SfaAddTagihanView = props => {
       if (dataSfaPostPaymentMethod) {
         const dataPostPayment = {
           supplierId: parseInt(userSuppliers[0].supplier.id),
-          userSellerId: parseInt(selectedMerchant.id),
+          userSellerId: parseInt(userId),
           orderParcelId: orderParcelId,
           storeId: parseInt(selectedMerchant.storeId),
           paymentCollectionMethodId: parseInt(dataSfaPostPaymentMethod.data.id),
