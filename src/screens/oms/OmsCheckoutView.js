@@ -338,7 +338,7 @@ class OmsCheckoutView extends Component {
                     "image": "",
                     "status": "enabled",
                     "description": "Kredit Usaha Rakyat (KUR) merupakan sebuah layanan yang diberikan oleh pemerintah",
-                    "isRedirect": false,
+                    "isRedirect": true,
                     "redirectUrl": "",
                     "message": ""
                 },
