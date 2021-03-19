@@ -37,7 +37,6 @@ import {
   sfaGetDetailProcess
 } from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
-import { stat } from 'react-native-fs';
 
 const SfaAddTagihanView = props => {
   const dispatch = useDispatch();
