@@ -72,3 +72,8 @@ export const OMS_APPLICABLE_PAYLATER_FAILED = 'OmsApplicablePaylaterFailed';
 export const OMS_GET_KUR_OTP_PROCESS = 'OmsGetKurOTPProcess';
 export const OMS_GET_KUR_OTP_SUCCESS = 'OmsGetKurOTPSuccess';
 export const OMS_GET_KUR_OTP_FAILED = 'OmsGetKurOTPFailed';
+
+/** POST KUR CONSENT */
+export const OMS_POST_KUR_CONSENT_PROCESS = 'OmsPostKurConsentProcess';
+export const OMS_POST_KUR_CONSENT_SUCCESS = 'OmsPostKurConsentSuccess';
+export const OMS_POST_KUR_CONSENT_FAILED = 'OmsPostKurConsentFailed';
