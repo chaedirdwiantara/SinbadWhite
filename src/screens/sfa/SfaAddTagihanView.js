@@ -294,6 +294,7 @@ const SfaAddTagihanView = props => {
 
   useEffect(() => {
     const orderParcelId = props.navigation.state.params.data.id;
+    const userId = id
     if (prevDataSfaPostPaymentMethod !== dataSfaPostPaymentMethod) {
       if (dataSfaPostPaymentMethod) {
         const dataPostPayment = {
