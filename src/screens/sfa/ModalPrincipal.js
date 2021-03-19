@@ -24,6 +24,7 @@ function ModalPrincipal(props) {
   const dispatch = useDispatch();
   const { dataSfaGetPrincipal, loadingLoadmorePrincipal, loadingSfaGetPrincipal} = useSelector(state => state.sfa);
   const { selectedMerchant} = useSelector(state => state.merchant);
+  const { userSuppliers } = useSelector(state => state.user);
   const [limit, setLimit] = useState(20)
   /**
    * =======================
@@ -34,8 +35,7 @@ function ModalPrincipal(props) {
   useEffect(() => {
     dispatch(sfaGetPrincipalProcess(
       {
-        // supplierId: selectedMerchant.supplierId, 
-        supplierId: 2, 
+        supplierId: parseInt(userSuppliers[0].supplier.id), 
         limit: limit, 
         skip: 0
       }
@@ -51,7 +51,7 @@ function ModalPrincipal(props) {
         const page = limit + 10;
         setLimit(page)
         dispatch(sfaPrincipalLoadmoreProcess({
-          supplierId: 2, 
+          supplierId: parseInt(userSuppliers[0].supplier.id), 
           limit: page, 
           skip: 1
         }))
@@ -113,7 +113,6 @@ function ModalPrincipal(props) {
   };
 
   const renderItem = ({ item, index }) => {
-    console.log("disini:", dataSfaGetPrincipal);
     return (
       <View key={index}>
           <TouchableOpacity onPress={() => props.selectPrincipal(item)}>
