@@ -52,7 +52,6 @@ const SfaAddTagihanView = props => {
     loadingSfaPostPaymentMethod,
     loadingSfaPostCollectionPayment
   } = useSelector(state => state.sfa);
-  const {id} = useSelector(state => state.user);
 
   //DATA PAYMENT CASH
   const [cash, setCash] = useState(0);
@@ -77,7 +76,7 @@ const SfaAddTagihanView = props => {
 
   //SELECTOR
   const { selectedMerchant } = useSelector(state => state.merchant);
-  const { userSuppliers } = useSelector(state => state.user);
+  const { userSuppliers, id } = useSelector(state => state.user);
 
   //DATA PAYMENT PROMO
   const [promoReferenceCode, setPromoReferenceCode] = useState(null);
