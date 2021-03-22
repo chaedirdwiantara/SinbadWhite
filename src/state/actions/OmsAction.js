@@ -407,12 +407,12 @@ export function OmsGetKurOtpFailed(data) {
  * POST OMS KUR CONSENT
  * ====================================
  */
-/** === GET OMS KUR OTP PROCESS === */
+/** === POST OMS KUR CONSENT PROCESS === */
 export function OmsPostKurConsentProcess(data) {
   return { type: types.OMS_POST_KUR_CONSENT_PROCESS, payload: data };
 }
 
-/** === GET OMS KUR OTP SUCCESS === */
+/** === POST OMS KUR CONSENT SUCCESS === */
 export function OmsPostKurConsentSuccess(data) {
   if (data.result === 'Ok') {
     return {
@@ -423,7 +423,7 @@ export function OmsPostKurConsentSuccess(data) {
   return { type: types.OMS_POST_KUR_CONSENT_FAILED, payload: data };
 }
 
-/** === GET OMS KUR OTP FAILED === */
+/** === POST OMS KUR CONSENT FAILED === */
 export function OmsPostKurConsentFailed(data) {
   return { type: types.OMS_POST_KUR_CONSENT_FAILED, payload: data };
 }

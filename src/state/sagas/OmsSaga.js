@@ -149,6 +149,18 @@ function* getKurOtp(actions) {
   }
 }
 
+/** POST OMS KUR CONSENT */
+function postKurConsent (actions){
+  try{
+    const response = yield call(()=> {
+      return OmsMethod.postKurConsent(actions.payload);
+    });
+    yield put(ActionCreators.OmsPostKurConsentSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.OmsPostKurConsentFailed(error));
+  }
+}
+
 
 
 /** === SAGA FUNCTION === */
@@ -172,6 +184,7 @@ function* OmsSaga() {
   yield takeEvery(types.OMS_GET_PAY_LATER_TYPE_PROCESS, getPayLaterType);
   yield takeEvery(types.OMS_APPLICABLE_PAYLATER_PROCESS, getApplicablePaylater);
   yield takeEvery(types.OMS_GET_KUR_OTP_PROCESS, getKurOtp);
+  yield takeEvery(types.OMS_POST_KUR_CONSENT_PROCESS, postKurConsent);
 }
 
 export default OmsSaga;
