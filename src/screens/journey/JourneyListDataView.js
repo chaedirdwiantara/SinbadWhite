@@ -50,19 +50,24 @@ class JourneyListDataView extends Component {
   };
 
   onHandleLoadMore = () => {
-    if (this.props.journey.dataGetJourneyPlanV2) {
-      if (
-        this.props.journey.dataGetJourneyPlanV2.length <
-        this.props.journey.totalDataGetJourneyPlanV2
-      ) {
-        const page = this.props.journey.pageGetJourneyPlanV2 + 1;
-        this.props.journeyPlanGetLoadMoreV2(page);
-        this.props.journeyPlanGetProcessV2({
-          page,
-          date: today,
-          search: this.state.search,
-          loading: true
-        });
+    if (
+      !this.props.journey.errorGetJourneyPlan &&
+      !this.props.journey.loadingLoadMoreGetJourneyPlan
+    ) {
+      if (this.props.journey.dataGetJourneyPlanV2) {
+        if (
+          this.props.journey.dataGetJourneyPlanV2.length <
+          this.props.journey.totalDataGetJourneyPlanV2
+        ) {
+          const page = this.props.journey.pageGetJourneyPlanV2 + 1;
+          this.props.journeyPlanGetLoadMoreV2(page);
+          this.props.journeyPlanGetProcessV2({
+            page,
+            date: today,
+            search: this.state.search,
+            loading: false
+          });
+        }
       }
     }
   };
@@ -374,5 +379,10 @@ export default connect(
  * updatedDate: 12032021
  * updatedFunction:
  * -> Add parameter search when get journey plan.
+ * updatedBy: dyah
+ * updatedDate: 18032021
+ * updatedFunction:
+ * -> Update props when loading more data.
+ * -> Update validation to handling load more.
  *
  */
