@@ -112,9 +112,6 @@ function ModalBankDestination(props) {
 
 
   const renderCollectionMethod = () => {
-    console.log("data:", dataSfaGetBankAccount);
-    console.log("loading:", loadingSfaGetBankAccount);
-    // const data = dataSfaGetBankAccount;
     return dataSfaGetBankAccount && !loadingSfaGetBankAccount ? (
       dataSfaGetBankAccount.data ? (
         <View style={{flex: 1}}>
