@@ -19,6 +19,7 @@ const INITIAL_STATE = {
   loadingSfaGetTransferImage: false,
   loadingSfaGetPrincipal: false,
   loadingLoadmorePrincipal: false,
+  loadingLoadmoreBankAccount: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -34,6 +35,7 @@ const INITIAL_STATE = {
   dataSfaGetTransferImage: null,
   dataSfaGetPrincipal: null,
   dataLoadmorePrincipal: null,
+  dataLoadmoreBankAccount: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -49,6 +51,7 @@ const INITIAL_STATE = {
   errorSfaGetTransferImage: null,
   errorSfaGetPrincipal: null,
   errorLoadmorePrincipal: null,
+  errorLoadmoreBankAccount: null,
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -455,6 +458,33 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       loadingLoadmorePrincipal: false,
       errorSfaGetPrincipal: action.payload
+    };
+  },
+
+  /**
+   * =============================
+   * LOADMORE BANK ACCOUNT
+   * =============================
+   */
+   [types.SFA_BANK_ACCOUNT_LOADMORE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingLoadmoreBankAccount: true,
+      errorSfaGetBankAccount: null
+    };
+  },
+  [types.SFA_BANK_ACCOUNT_LOADMORE_SUCCESS](state, action) {
+    return {
+      ...state,
+      dataSfaGetBankAccount: action.payload,
+      loadingLoadmoreBankAccount: false,
+    };
+  },
+  [types.SFA_BANK_ACCOUNT_LOADMORE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingLoadmoreBankAccount: false,
+      errorSfaGetBankAccount: action.payload
     };
   },
 });

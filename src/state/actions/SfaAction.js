@@ -354,3 +354,28 @@ export function sfaPrincipalLoadmoreSuccess(data) {
 export function sfaPrincipalLoadmoreFailed(data) {
   return { type: types.SFA_PRINCIPAL_LOADMORE_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * LOADMORE BANK DESTINATION
+ * ===========================
+ */
+/** === SFA LOADMORE BANK DESTINATION PROCESS === */
+export function sfaBankAccountLoadmoreProcess(data) {
+  return { type: types.SFA_BANK_ACCOUNT_LOADMORE_PROCESS, payload: data };
+}
+
+/** === SFA LOADMORE BANK DESTINATION SUCCESS === */
+export function sfaBankAccountLoadmoreSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_BANK_ACCOUNT_LOADMORE_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_BANK_ACCOUNT_LOADMORE_FAILED, payload: data };
+}
+/** === SFA LOADMORE BANK DESTINATION FAILED === */
+export function sfaBankAccountLoadmoreFailed(data) {
+  return { type: types.SFA_BANK_ACCOUNT_LOADMORE_FAILED, payload: data };
+}

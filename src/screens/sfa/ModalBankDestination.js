@@ -3,7 +3,8 @@ import {
   View,
   StyleSheet,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from '../../library/reactPackage';
 
 import {
@@ -12,8 +13,11 @@ import {
   MaterialIcon,
   Modal
 } from '../../library/thirdPartyPackage';
-import { SearchBarType1, LoadingPage } from '../../library/component';
-import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
+import { 
+  LoadingPage, 
+  LoadingLoadMore 
+} from '../../library/component';
+import { Fonts, GlobalStyle } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,7 +25,13 @@ import { sfaGetBankAccountProcess } from '../../state/actions';
 
 function ModalBankDestination(props) {
   const dispatch = useDispatch();
-  const { dataSfaGetBankAccount} = useSelector(state => state.sfa);
+  const { 
+    dataSfaGetBankAccount, 
+    dataSfaGetDetail, 
+    loadingSfaGetBankAccount, 
+    loadingLoadmoreBankAccount
+  } = useSelector(state => state.sfa);
+  const [limit, setLimit] = useState(20)
 
   /**
    * =======================
@@ -30,8 +40,30 @@ function ModalBankDestination(props) {
    */
 
   useEffect(() => {
-    dispatch(sfaGetBankAccountProcess())
+    const data = {
+      orderParcelId : parseInt(dataSfaGetDetail.data.id),
+      limit: limit,
+      skip: 0
+    }
+    dispatch(sfaGetBankAccountProcess(data))
   }, []);
+
+  const loadMore = () => {
+    if (dataSfaGetBankAccount) {
+      if (
+        dataSfaGetBankAccount.data.length <
+        dataSfaGetBankAccount.meta.total
+      ) {
+        const page = limit + 10;
+        setLimit(page)
+        dispatch(sfaGetBankAccountProcess({
+          orderParcelId : parseInt(dataSfaGetDetail.data.id),
+          limit: page,
+          skip: 1
+        }))
+      }
+    }
+  }
 
 
   /**
@@ -67,21 +99,38 @@ function ModalBankDestination(props) {
     )
   }
 
+  const renderItem = ({ item, index }) => {
+    return (
+      <View key={index}>
+        <TouchableOpacity onPress={() => props.selectBankDestination(item)}>
+          <View style={{ margin: 16 }}>
+            <Text style={Fonts.type24}>{item.bank.displayName} - {item.ownerName}</Text>
+          </View>
+          <View style={GlobalStyle.lines} />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
 
   const renderCollectionMethod = () => {
     const data = dataSfaGetBankAccount;
-    return data.data.map((item, index) => {
-      return (
-        <View key={index}>
-          <TouchableOpacity onPress={() => props.selectBankDestination(item)}>
-            <View style={{ margin: 16 }}>
-              <Text style={Fonts.type24}>{item.bank.displayName} - {item.ownerName}</Text>
-            </View>
-            <View style={GlobalStyle.lines} />
-          </TouchableOpacity>
+    return data && !loadingSfaGetBankAccount ? (
+      data.data ? (
+        <View style={{flex: 1}}>
+          <FlatList
+            data={data.data}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            numColumns={1}
+            onEndReachedThreshold={0.2}
+            onEndReached={()=>loadMore()}
+            showsVerticalScrollIndicator
+          />
+          {loadingLoadmoreBankAccount ? <LoadingLoadMore /> : null}
         </View>
-      );
-    });
+      ) : null
+    ) : <LoadingPage />
   };
 
   /**
@@ -93,7 +142,7 @@ function ModalBankDestination(props) {
     return (
       <>
         <View style={styles.contentContainer}>
-          {dataSfaGetBankAccount ? renderCollectionMethod() : <LoadingPage />}
+          {renderCollectionMethod()}
         </View>
       </>
     );

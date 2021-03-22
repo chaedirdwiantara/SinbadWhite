@@ -50,9 +50,9 @@ function getAllBank(){
 }
 
 /** GET COLLECTION LIST */
-function getBankAccount() {
+function getBankAccount(data) {
   return ApiRest({
-    path: `collection/v1/bank-accounts?orderParcelId=3437&skip=0&limit=1`,
+    path: `collection/v1/bank-accounts?orderParcelId=${data.orderParcelId}&skip=${data.skip}&limit=${data.limit}`,
     method: `GET`
   })
 }
