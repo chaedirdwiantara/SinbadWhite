@@ -64,15 +64,10 @@ const SfaAddTagihanPromo = props => {
     setExistingImage();
   }, [dataSfaGetTransferImage]);
 
-  console.log("disniii:", dataSfaGetTransferImage);
-
   const setExistingImage = () => {
     if (dataSfaGetTransferImage && dataReference) {
       setDataImage({ fileData: dataSfaGetTransferImage.data.image });
-      console.log("imagesssss:", dataSfaGetTransferImage);
     }
-    console.log("image:", dataSfaGetTransferImage);
-    console.log("ref:", dataReference);
   };
 
    useEffect(() => {
@@ -160,8 +155,6 @@ const SfaAddTagihanPromo = props => {
   }
 
   const selectedReference = data => {
-    console.log("disni:", data);
-    console.log("grr:", props.collectionMethod.id);
     if (props.collectionMethod.id === 5) {
       dispatch(sfaGetTransferImageProcess(data.id));
     }
@@ -414,7 +407,6 @@ const SfaAddTagihanPromo = props => {
         )
     }
 
-    console.log("woi:", dataImage);
     const renderUploadImage = () => {
         return(
             <View>
