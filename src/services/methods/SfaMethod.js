@@ -52,7 +52,7 @@ function getAllBank(){
 /** GET COLLECTION LIST */
 function getBankAccount() {
   return ApiRest({
-    path: `collection/v1/bank-accounts`,
+    path: `collection/v1/bank-accounts?orderParcelId=3437&skip=0&limit=1`,
     method: `GET`
   })
 }
