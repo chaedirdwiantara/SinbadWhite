@@ -43,7 +43,7 @@ import ModalOmsKurWebView from './ModalOmsKurWebView';
 import ModalOmsKurAnnouncement from './ModalOmsKurAnnouncement';
 import ModalOmsOTPKur from './ModalOmsOTPKur';
 import ModalBottomConfirmKur from './ModalBottomConfirmKur';
-
+import { toLocalTime, toUtcTime } from '../../helpers/TimeHelper';
 class OmsCheckoutView extends Component {
   constructor(props) {
     super(props);
@@ -106,7 +106,7 @@ class OmsCheckoutView extends Component {
       openModalKurWebView: false,
       openModalFailPaylater: false,
       openModalKurAnnouncement: false,
-      openModalOmsOtpKur: false,
+      openModalOmsOtpKur: false
     };
   }
   /**
@@ -180,14 +180,21 @@ class OmsCheckoutView extends Component {
       prevProps.oms.dataOmsConfirmOrder !== this.props.oms.dataOmsConfirmOrder
     ) {
       if (this.props.oms.dataOmsConfirmOrder !== null) {
-        const isKUR = this.state.parcels.filter(data => data.paylaterType).some(data => data.paylaterType.id === 2);
-        if(isKUR){
+        const isKUR = this.state.parcels
+          .filter(data => data.paylaterType)
+          .some(data => data.paylaterType.id === 2);
+        if (isKUR) {
           setTimeout(() => {
-            this.backToMerchantHomeView(this.props.merchant.selectedMerchant.name);
+            this.backToMerchantHomeView(
+              this.props.merchant.selectedMerchant.name
+            );
           }, 3000);
-        } else{
-        this.backToMerchantHomeView(this.props.merchant.selectedMerchant.name);
-      }}
+        } else {
+          this.backToMerchantHomeView(
+            this.props.merchant.selectedMerchant.name
+          );
+        }
+      }
     }
     /**
      * === ERROR RESPONS ===
@@ -292,28 +299,41 @@ class OmsCheckoutView extends Component {
             tAndR.data.paymentChannels == null &&
             tAndR.data.paymentTypes == null
           ) {
-            const isKUR = this.state.parcels.filter(data => data.paylaterType).some(data => data.paylaterType.id === 2);
-           if(isKUR === true){
-            const storeId = parseInt(this.state.dataOmsGetCheckoutItem.storeId, 10);
-            const orderId = parseInt(this.props.oms.dataOmsGetCheckoutItem.id, 10);
-            const parcels = this.state.parcels.map((e, i) => ({
-              orderParcelId: e.orderParcelId,
-              paymentTypeSupplierMethodId: e.hasOwnProperty('paymentChannel')
-                ? e.paymentChannel.paymentTypeSupplierMethodId
-                : e.paymentTypeSupplierMethodId,
-              paymentTypeId: e.paymentTypeDetail.hasOwnProperty('paymentTypeId')
-                ? parseInt(e.paymentTypeDetail.paymentTypeId, 10)
-                : parseInt(e.paymentTypeDetail.id, 10),
-              paymentChannelId: e.paymentMethodDetail.id,
-              paylaterTypeId: this.state.selectedPaylaterType
-                ? this.state.selectedPaylaterType.id
-                : null
-            }));
-            NavigationService.navigate('OmsOtpKurView', {storeId, orderId, parcels})
-          }
-          else{
-            this.confirmOrder()
-          }
+            const isKUR = this.state.parcels
+              .filter(data => data.paylaterType)
+              .some(data => data.paylaterType.id === 2);
+            if (isKUR === true) {
+              const storeId = parseInt(
+                this.state.dataOmsGetCheckoutItem.storeId,
+                10
+              );
+              const orderId = parseInt(
+                this.props.oms.dataOmsGetCheckoutItem.id,
+                10
+              );
+              const parcels = this.state.parcels.map((e, i) => ({
+                orderParcelId: e.orderParcelId,
+                paymentTypeSupplierMethodId: e.hasOwnProperty('paymentChannel')
+                  ? e.paymentChannel.paymentTypeSupplierMethodId
+                  : e.paymentTypeSupplierMethodId,
+                paymentTypeId: e.paymentTypeDetail.hasOwnProperty(
+                  'paymentTypeId'
+                )
+                  ? parseInt(e.paymentTypeDetail.paymentTypeId, 10)
+                  : parseInt(e.paymentTypeDetail.id, 10),
+                paymentChannelId: e.paymentMethodDetail.id,
+                paylaterTypeId: this.state.selectedPaylaterType
+                  ? this.state.selectedPaylaterType.id
+                  : null
+              }));
+              NavigationService.navigate('OmsOtpKurView', {
+                storeId,
+                orderId,
+                parcels
+              });
+            } else {
+              this.confirmOrder();
+            }
           } else {
             this.setState({ modalTAndR: true });
           }
@@ -328,32 +348,34 @@ class OmsCheckoutView extends Component {
       ) {
         if (this.props.oms.dataOmsGetPayLaterType !== null) {
           this.setState({
-            // payLaterType: this.props.oms.dataOmsGetPayLaterType.data
-            payLaterType: {"paymentTypeId": 2,
-            "orderParcelID": 4014,
-            "paylaterTypes": [
-                {
-                    "id": 2,
-                    "name": "Supplier dengan KUR KlikACC",
-                    "image": "",
-                    "status": "enabled",
-                    "description": "Kredit Usaha Rakyat (KUR) merupakan sebuah layanan yang diberikan oleh pemerintah",
-                    "isRedirect": true,
-                    "redirectUrl": "",
-                    "message": ""
-                },
-                {
-                    "id": 1,
-                    "name": "Supplier",
-                    "image": "",
-                    "status": "enabled",
-                    "description": "Layanan Bayar Nanti yang disediakan langsung oleh Supplier",
-                    "isRedirect": false,
-                    "redirectUrl": "",
-                    "message": ""
-                }]}
+            payLaterType: this.props.oms.dataOmsGetPayLaterType.data
           });
         }
+      }
+    }
+
+    //for otp kur consent
+    if (this.props.oms.dataOmsPostKurConsent !== undefined) {
+      if (
+        prevProps.oms.dataOmsPostKurConsent !==
+        this.props.oms.dataOmsPostKurConsent
+      ) {
+        if (this.props.oms.dataOmsPostKurConsent.code === 200) {
+          this.setState({
+            modalPaylaterType: true,
+            modalConfirmKUR: false,
+            openModalKurWebView: true
+          });
+        }
+      }
+    }
+
+    if (
+      prevProps.oms.errorOmsPostKurConsent !==
+      this.props.oms.errorOmsPostKurConsent
+    ) {
+      if (this.props.oms.errorOmsPostKurConsent !== null) {
+        this.setState({ modalErrorResponse: true, modalConfirmKUR: false });
       }
     }
   }
@@ -445,19 +467,24 @@ class OmsCheckoutView extends Component {
         ? this.state.selectedPaylaterType.id
         : null
     }));
-    const isKUR = this.state.parcels.filter(data => data.paylaterType).some(data => data.paylaterType.id === 2)
+    const isKUR = this.state.parcels
+      .filter(data => data.paylaterType)
+      .some(data => data.paylaterType.id === 2);
     console.log(this.state.parcels, 'parcels');
-    if (isKUR === true){
-     NavigationService.navigate('OmsOtpKurView', {storeId, orderId,parcels})
+    if (isKUR === true) {
+      NavigationService.navigate('OmsOtpKurView', {
+        storeId,
+        orderId,
+        parcels
+      });
+    } else {
+      this.props.omsConfirmOrderProcess({
+        orderId,
+        storeId,
+        parcels
+      });
     }
-    else {
-  this.props.omsConfirmOrderProcess({
-      orderId,
-      storeId,
-      parcels
-    });
-    }
-  
+
     this.setState({ modalTAndR: false });
   }
   /** ======= DID UPDATE FUNCTION ==== */
@@ -536,7 +563,6 @@ class OmsCheckoutView extends Component {
 
   /** === MODIFY DATA FOR PAYLATER KUR === */
   selectedPaylaterType(item) {
-    console.log(item, 'item');
     if (item.id === 1) {
       //if paylaterType === supplier
       this.setState({
@@ -774,10 +800,9 @@ class OmsCheckoutView extends Component {
         this.errorSKUNotAvailable();
         break;
       case 'ERR_APP_KUR_ACC_OTP_ERROR':
-        null
+        null;
         break;
       default:
-        // this.errorPaymentTryAgain()
         break;
     }
   }
@@ -950,11 +975,14 @@ class OmsCheckoutView extends Component {
 
   /** RENDER CONFIRM KUR */
   renderConfirmKUR() {
-    this.setState({
-      modalPaylaterType: true,
-      modalConfirmKUR: false,
-      openModalKurWebView: true
-    });
+    const date = new Date();
+    const utcTime = toUtcTime(date, 'YYYY-MM-DD hh:mm:ss');
+    const storeId = parseInt(this.state.dataOmsGetCheckoutItem.storeId, 10);
+    const data = {
+      storeId: storeId,
+      timestamp: utcTime
+    };
+    this.props.OmsPostKurConsentProcess(data);
   }
 
   /** === RENDER MODAL KUR WEB VIEW === */
@@ -995,26 +1023,23 @@ class OmsCheckoutView extends Component {
     );
   }
 
- /** === RENDER MODAL OTP KUR === */
- renderModalOtpKur() {
-  return this.state.openModalOmsOtpKur ? (
-    <ModalOmsOTPKur
-      open={this.state.openModalOmsOtpKur}
-      close={() =>
-        this.setState({
-          openModalOmsOtpKur: false
-        })
-      }
-     dataOtp = { this.props.dataOmsGetKurOtp}
-     errorOtp = {this.props.errorOmsGetKurOtp}
-      
-    />
-  ) : (
-    <View />
-  );
-}
-
-
+  /** === RENDER MODAL OTP KUR === */
+  renderModalOtpKur() {
+    return this.state.openModalOmsOtpKur ? (
+      <ModalOmsOTPKur
+        open={this.state.openModalOmsOtpKur}
+        close={() =>
+          this.setState({
+            openModalOmsOtpKur: false
+          })
+        }
+        dataOtp={this.props.dataOmsGetKurOtp}
+        errorOtp={this.props.errorOmsGetKurOtp}
+      />
+    ) : (
+      <View />
+    );
+  }
 
   /**
    * *********************************
@@ -1971,11 +1996,12 @@ class OmsCheckoutView extends Component {
   renderModalConfirmKUR() {
     return (
       <View>
-        {this.state.modalConfirmKUR ?(
+        {this.state.modalConfirmKUR ? (
           <ModalBottomConfirmKur
             open={this.state.modalConfirmKUR}
-            close={() => this.setState({ modalConfirmKUR: false,
-            modalPaylaterType: true })}
+            close={() =>
+              this.setState({ modalConfirmKUR: false, modalPaylaterType: true })
+            }
             confirmKur={() => this.renderConfirmKUR()}
             title="Konfirmasi"
           />

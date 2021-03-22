@@ -150,7 +150,7 @@ function* getKurOtp(actions) {
 }
 
 /** POST OMS KUR CONSENT */
-function postKurConsent (actions){
+function* postKurConsent (actions){
   try{
     const response = yield call(()=> {
       return OmsMethod.postKurConsent(actions.payload);
