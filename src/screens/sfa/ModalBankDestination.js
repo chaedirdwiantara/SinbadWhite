@@ -21,7 +21,7 @@ import { Fonts, GlobalStyle } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import { sfaGetBankAccountProcess } from '../../state/actions';
+import { sfaGetBankAccountProcess, sfaBankAccountLoadmoreProcess } from '../../state/actions';
 
 function ModalBankDestination(props) {
   const dispatch = useDispatch();
@@ -38,14 +38,12 @@ function ModalBankDestination(props) {
    * FUNCTIONAL
    * =======================
    */
-
   useEffect(() => {
-    const data = {
+    dispatch(sfaGetBankAccountProcess({
       orderParcelId : parseInt(dataSfaGetDetail.data.id),
       limit: limit,
       skip: 0
-    }
-    dispatch(sfaGetBankAccountProcess(data))
+    }))
   }, []);
 
   const loadMore = () => {
@@ -56,7 +54,7 @@ function ModalBankDestination(props) {
       ) {
         const page = limit + 10;
         setLimit(page)
-        dispatch(sfaGetBankAccountProcess({
+        dispatch(sfaBankAccountLoadmoreProcess({
           orderParcelId : parseInt(dataSfaGetDetail.data.id),
           limit: page,
           skip: 1
@@ -114,12 +112,14 @@ function ModalBankDestination(props) {
 
 
   const renderCollectionMethod = () => {
-    const data = dataSfaGetBankAccount;
-    return data && !loadingSfaGetBankAccount ? (
-      data.data ? (
+    console.log("data:", dataSfaGetBankAccount);
+    console.log("loading:", loadingSfaGetBankAccount);
+    // const data = dataSfaGetBankAccount;
+    return dataSfaGetBankAccount && !loadingSfaGetBankAccount ? (
+      dataSfaGetBankAccount.data ? (
         <View style={{flex: 1}}>
           <FlatList
-            data={data.data}
+            data={dataSfaGetBankAccount.data}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
             numColumns={1}
