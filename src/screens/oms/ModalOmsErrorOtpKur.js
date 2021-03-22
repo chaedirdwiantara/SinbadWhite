@@ -60,7 +60,7 @@ import {
           close={this.props.close}
           typeClose={'cancel'}
           content={this.renderModalContent()}
-          onPress={this.props.onPress}
+          onPress={()=>this.props.onPress}
         />
       );
     }

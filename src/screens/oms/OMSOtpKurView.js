@@ -178,6 +178,14 @@ class OmsOtpKurView extends Component {
         break;
     }
   }
+
+  /** ERROR OTP */
+  errorOTP () {
+    this.setState({
+      openModalErrorOtp: false
+    })
+    NavigationService.goBack(this.props.navigation.state.key)
+  }
   /**
    * ==============================
    * RENDER VIEW
@@ -405,11 +413,8 @@ class OmsOtpKurView extends Component {
             open={this.state.openModalErrorOtp}
             close={() => this.setState({ openModalErrorOtp: false })}
             onPress={
-              (() =>
-                this.setState({
-                  openModalErrorOtp: false
-                }),
-              NavigationService.goBack(this.props.navigation.state.key))
+              (() => this.errorOTP()
+              )
             }
           />
         ) : null}
