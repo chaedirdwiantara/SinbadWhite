@@ -411,7 +411,7 @@ class OmsOtpKurView extends Component {
         {this.state.openModalErrorOtp ? (
           <ModalOmsErrorOtpKur
             open={this.state.openModalErrorOtp}
-            close={() => this.setState({ openModalErrorOtp: false })}
+            close={() => this.errorOTP()}
             onPress={
               (() => this.errorOTP()
               )
