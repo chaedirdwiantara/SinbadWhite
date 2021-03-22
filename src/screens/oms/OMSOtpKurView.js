@@ -116,6 +116,7 @@ class OmsOtpKurView extends Component {
 
   /** === GET OTP  */
   getOtp() {
+    console.log(this.props.merchant.selectedMerchant.storeCode, 'store code');
     const storeCode = 'SNB-STORE-202';
     this.props.OmsGetKurOtpProcess(storeCode);
   }
@@ -176,6 +177,14 @@ class OmsOtpKurView extends Component {
         })
         break;
     }
+  }
+
+  /** ERROR OTP */
+  errorOTP () {
+    this.setState({
+      openModalErrorOtp: false
+    })
+    NavigationService.goBack(this.props.navigation.state.key)
   }
   /**
    * ==============================
@@ -402,13 +411,10 @@ class OmsOtpKurView extends Component {
         {this.state.openModalErrorOtp ? (
           <ModalOmsErrorOtpKur
             open={this.state.openModalErrorOtp}
-            close={() => this.setState({ openModalErrorOtp: false })}
+            close={() => this.errorOTP()}
             onPress={
-              (() =>
-                this.setState({
-                  openModalErrorOtp: false
-                }),
-              NavigationService.goBack(this.props.navigation.state.key))
+              (() => this.errorOTP()
+              )
             }
           />
         ) : null}

@@ -401,3 +401,29 @@ export function OmsGetKurOtpSuccess(data) {
 export function OmsGetKurOtpFailed(data) {
   return { type: types.OMS_GET_KUR_OTP_FAILED, payload: data };
 }
+
+/**
+ * ====================================
+ * POST OMS KUR CONSENT
+ * ====================================
+ */
+/** === POST OMS KUR CONSENT PROCESS === */
+export function OmsPostKurConsentProcess(data) {
+  return { type: types.OMS_POST_KUR_CONSENT_PROCESS, payload: data };
+}
+
+/** === POST OMS KUR CONSENT SUCCESS === */
+export function OmsPostKurConsentSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_POST_KUR_CONSENT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_POST_KUR_CONSENT_FAILED, payload: data };
+}
+
+/** === POST OMS KUR CONSENT FAILED === */
+export function OmsPostKurConsentFailed(data) {
+  return { type: types.OMS_POST_KUR_CONSENT_FAILED, payload: data };
+}

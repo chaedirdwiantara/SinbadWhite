@@ -13,6 +13,7 @@ const INITIAL_STATE = {
   loadingOmsCheckPromo: false,
   loadingOmsGetPayLaterType: false,
   loadingOmsApplicablePaylater: false,
+  loadingOmsPostKurConsent: false,
   /** data */
   dataOmsGetCartItem: null,
   dataOmsGetCartItemFromCheckout: null,
@@ -26,6 +27,7 @@ const INITIAL_STATE = {
   dataOmsGetPaymentChannel: null,
   dataOmsCheckPromo: null,
   dataOmsGetPayLaterType: null,
+  dataOmsPostKurConsent: null,
   /** error */
   errorOmsGetCartItem: null,
   errorOmsGetCheckoutItem: null,
@@ -36,7 +38,8 @@ const INITIAL_STATE = {
   errorOmsGetPaymentChannel: null,
   errorOmsCheckPromo: null,
   errorOmsGetPayLaterType: null,
-  errorOmsApplicablePaylater: null
+  errorOmsApplicablePaylater: null,
+  errorOmsPostKurConsent: null
 };
 
 export const oms = createReducer(INITIAL_STATE, {
@@ -520,6 +523,34 @@ export const oms = createReducer(INITIAL_STATE, {
         ...state,
         loadingOmsGetKurOtp: false,
         errorOmsGetKurOtp: action.payload
+      };
+    },
+
+    /**
+   * ==================================
+   * POST KUR CONSENT
+   * =================================
+   */
+     [types.OMS_POST_KUR_CONSENT_PROCESS](state, action) {
+      return {
+        ...state,
+        loadingOmsPostKurConsent: true,
+        dataOmsPostKurConsent: null,
+        errorOmsPostKurConsent: null
+      };
+    },
+    [types.OMS_POST_KUR_CONSENT_SUCCESS](state, action) {
+      return {
+        ...state,
+        loadingOmsPostKurConsent: false,
+        dataOmsPostKurConsent: action.payload
+      };
+    },
+    [types.OMS_POST_KUR_CONSENT_FAILED](state, action) {
+      return {
+        ...state,
+        loadingOmsPostKurConsent: false,
+        errorOmsPostKurConsent: action.payload
       };
     },
 });

@@ -149,11 +149,23 @@ function getApplicablePaylater(data) {
   });
 }
 
-/** GET KUR OTP LATER */
+/** GET KUR OTP */
 function getKurOtp(data) {
   return ApiRest({
     path: `payment/v1/klik-acc/otp?via=phone&storeCode=${data}`,
     method: 'GET',
+  });
+}
+
+/** POST KUR CONSENT */
+function postKurConsent(data) {
+  return ApiRest({
+    path: `payment/v1/consent`,
+    method: 'POST',
+    params: {
+      storeId: data.storeId,
+      timestamp: data.timestamp
+    }
   });
 }
 
@@ -169,5 +181,6 @@ export const OmsMethod = {
   checkPromo,
   getPayLaterType,
   getApplicablePaylater,
-  getKurOtp
+  getKurOtp,
+  postKurConsent
 };
