@@ -476,7 +476,7 @@ class OmsOtpKurView extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        {/* <StatusBarWhite /> */}
+        <StatusBarWhite />
         <ScrollView
           style={{ flex: 1, backgroundColor: masterColor.backgroundWhite }}
         >
