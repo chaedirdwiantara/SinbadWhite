@@ -234,6 +234,8 @@ class OmsOtpKurView extends Component {
   renderTitle() {
     const mobilePhoneNo = this.props.merchant.selectedMerchant
       .ownerMobilePhoneNo;
+    const phoneLength = mobilePhoneNo.length
+    const finalLength = phoneLength - 2
     return (
       <View style={{ alignItems: 'center', paddingVertical: 16 }}>
         <Image
@@ -248,8 +250,8 @@ class OmsOtpKurView extends Component {
             Kode verifikasi telah dikirimkan melalui
           </Text>
           <Text style={[Fonts.type8, { textAlign: 'center' }]}>
-            SMS ke {mobilePhoneNo.substring(0, 4)}-
-            {mobilePhoneNo.substring(4, 7)}-{mobilePhoneNo.substring(8, 10)}xx
+            {mobilePhoneNo? `SMS ke ${mobilePhoneNo.substring(0, 4)}-${mobilePhoneNo.substring(4, 7)}-${mobilePhoneNo.substring(7, finalLength)}xx` : ''}
+            
           </Text>
           <TouchableOpacity
             onPress={() =>
