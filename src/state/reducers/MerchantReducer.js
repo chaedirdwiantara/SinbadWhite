@@ -1123,7 +1123,7 @@ function saveDataMerchantVolatile(data) {
     taxNo: data.owner.taxNo,
     taxImageUrl: data.owner.taxImageUrl,
     idImageUrl: data.owner.idImageUrl,
-    selfieImageUrl: data.owner.idImageUrl,
+    selfieImageUrl: data.owner.selfieImageUrl,
     /** for merchant information */
     storeCode: data.storeCode,
     name: data.name,
