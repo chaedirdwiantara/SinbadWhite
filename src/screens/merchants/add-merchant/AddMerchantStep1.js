@@ -175,11 +175,7 @@ class AddMerchantStep1 extends Component {
         imageUrl: store?.imageUrl || null,
         vehicleAccessibilityName: store?.vehicleAccessibility?.name || null,
         vehicleAccessibilityAmount: store?.vehicleAccessibilityAmount || null,
-<<<<<<< HEAD
-        warehouse: warehouse?.name || null,
-=======
         warehouse: warehouse?.name || "",
->>>>>>> 0005368b71d52627850675076f274bc2f75051bf
         warehouseId: warehouse?.id || null,
         storeType: segmentation?.type?.name || '',
         typeId: segmentation?.type?.id || null,
