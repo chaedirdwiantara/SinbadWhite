@@ -24,6 +24,13 @@ export const MERCHANT_GET_FAILED_V2 = 'MerchantGetFailedV2';
 export const MERCHANT_GET_RESET_V2 = 'MerchantGetResetV2';
 export const MERCHANT_GET_REFRESH_V2 = 'MerchantGetRefreshV2';
 export const MERCHANT_GET_LOADMORE_V2 = 'MerchantGetLoadMoreV2';
+/** FOR GET MERCHANT LIST BY PORTFOLIO EXCLUDE STORE ON JOURNEY PLAN*/
+export const MERCHANT_EXISTING_GET_PROCESS = 'MerchantExistingGetProcess';
+export const MERCHANT_EXISTING_GET_SUCCESS = 'MerchantExistingGetSuccess';
+export const MERCHANT_EXISTING_GET_FAILED = 'MerchantExistingGetFailed';
+export const MERCHANT_EXISTING_GET_RESET = 'MerchantExistingGetReset';
+export const MERCHANT_EXISTING_GET_REFRESH = 'MerchantExistingGetRefresh';
+export const MERCHANT_EXISTING_GET_LOADMORE = 'MerchantExistingGetLoadMore';
 /** FOR GET MERCHANT DETAIL */
 export const MERCHANT_GET_DETAIL_PROCESS = 'MerchantGetDetailProcess';
 export const MERCHANT_GET_DETAIL_SUCCESS = 'MerchantGetDetailSuccess';
@@ -112,6 +119,7 @@ export const MERCHANT_GET_WAREHOUSE_FAILED = 'MerchantGetWarehouseFailed'
 export const MERCHANT_GET_SURVEY_LIST_PROCESS = 'MerchantGetSurveyListProcess';
 export const MERCHANT_GET_SURVEY_LIST_SUCCESS = 'MerchantGetSurveyListSuccess';
 export const MERCHANT_GET_SURVEY_LIST_FAILED = 'MerchantGetSurveyListFailed';
+export const MERCHANT_GET_SURVEY_LIST_RESET = 'MerchantGetSurveyListReset';
 /** MERCHANT GET SURVEY RESPONSE*/
 export const MERCHANT_GET_SURVEY_PROCESS = 'MerchantGetSurveyProcess';
 export const MERCHANT_GET_SURVEY_SUCCESS = 'MerchantGetSurveySuccess';

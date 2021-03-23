@@ -24,6 +24,17 @@ function* getMerchantV2(actions) {
     yield put(ActionCreators.merchantGetFailedV2(error));
   }
 }
+/** === MERCHANT LIST BY PORTFOLIO EXCLUDE STORE ON JOURNEY PLAN === */
+function* getMerchantExisting(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getMerchantExisting(actions.payload);
+    });
+    yield put(ActionCreators.merchantExistingGetSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantExistingGetFailed(error));
+  }
+}
 /** === MERCHANT DETAIL === */
 function* getMerchantDetail(actions) {
   try {
@@ -284,6 +295,7 @@ function* getSalesSegmentation(actions) {
 function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_GET_PROCESS, getMerchant);
   yield takeEvery(types.MERCHANT_GET_PROCESS_V2, getMerchantV2);
+  yield takeEvery(types.MERCHANT_EXISTING_GET_PROCESS, getMerchantExisting);
   yield takeEvery(types.MERCHANT_GET_DETAIL_PROCESS, getMerchantDetail);
   yield takeEvery(types.MERCHANT_GET_DETAIL_PROCESS_V2, getMerchantDetailV2);
   yield takeEvery(types.PORTFOLIO_GET_PROCESS, getPortfolio);

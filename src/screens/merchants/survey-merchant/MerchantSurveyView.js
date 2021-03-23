@@ -66,36 +66,49 @@ class MerchantSurveyView extends Component {
   }
   /** === DID UPDATE === */
   componentDidUpdate() {
-    const { surveyList } = this.props.merchant;
-    /** IF NO SURVEY */
-    if (
-      _.isEmpty(surveyList.payload.data) &&
-      surveyList.success &&
-      !this.state.successSurveyList
-    ) {
-      this.setState({ successSurveyList: true }, () => this.surveyDone());
-      NavigationService.goBack(this.props.navigation.state.key);
-    }
+    const {
+      surveyList,
+      loadingGetLogAllActivity,
+      dataGetLogAllActivityV2
+    } = this.props.merchant;
 
-    /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
     if (
-      !_.isEmpty(surveyList.payload.data) &&
-      surveyList.success &&
-      !this.state.successSurveyList
+      surveyList.payload.data &&
+      !loadingGetLogAllActivity &&
+      dataGetLogAllActivityV2
     ) {
+      /** IF NO SURVEY */
       if (
-        surveyList.payload.data.length ===
-        surveyList.payload.data.filter(
-          item => item.responseStatus === 'completed'
-        ).length
+        _.isEmpty(surveyList.payload.data) &&
+        surveyList.success &&
+        !this.state.successSurveyList
       ) {
-        if (this.props.merchant.dataGetLogAllActivityV2) {
-          if (
-            !this.props.merchant.dataGetLogAllActivityV2.find(
-              item => item.activityName === 'toko_survey'
-            )
-          ) {
-            this.setState({ successSurveyList: true }, () => this.surveyDone());
+        this.setState({ successSurveyList: true }, () => this.surveyDone());
+        NavigationService.goBack(this.props.navigation.state.key);
+      }
+
+      /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
+      if (
+        !_.isEmpty(surveyList.payload.data) &&
+        surveyList.success &&
+        !this.state.successSurveyList
+      ) {
+        if (
+          surveyList.payload.data.length ===
+          surveyList.payload.data.filter(
+            item => item.responseStatus === 'completed'
+          ).length
+        ) {
+          if (this.props.merchant.dataGetLogAllActivityV2) {
+            if (
+              !this.props.merchant.dataGetLogAllActivityV2.find(
+                item => item.activityName === 'toko_survey'
+              )
+            ) {
+              this.setState({ successSurveyList: true }, () =>
+                this.surveyDone()
+              );
+            }
           }
         }
       }
@@ -310,4 +323,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyView);
  * updatedDate: 26022021
  * updatedFunction:
  * -> Update the props of post activity.
+ * updatedBy: dyah
+ * updatedDate: 08032021
+ * updatedFunction:
+ * -> Update validation for survey (componentDidUpdate).
  */

@@ -1,4 +1,5 @@
 import * as types from '../types';
+import _ from 'lodash';
 import createReducer from './createReducer';
 
 const INITIAL_STATE = {

@@ -30,7 +30,9 @@ const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
 class JourneyListDataView extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      search: ''
+    };
   }
   /**
    * =======================
@@ -42,23 +44,30 @@ class JourneyListDataView extends Component {
     this.props.journeyPlanGetProcessV2({
       page: 1,
       date: today,
+      search: this.state.search,
       loading: true
     });
   };
 
   onHandleLoadMore = () => {
-    if (this.props.journey.dataGetJourneyPlanV2) {
-      if (
-        this.props.journey.dataGetJourneyPlanV2.length <
-        this.props.journey.totalDataGetJourneyPlanV2
-      ) {
-        const page = this.props.journey.pageGetJourneyPlanV2 + 1;
-        this.props.journeyPlanGetLoadMoreV2(page);
-        this.props.journeyPlanGetProcessV2({
-          page,
-          data: today,
-          loading: true
-        });
+    if (
+      !this.props.journey.errorGetJourneyPlan &&
+      !this.props.journey.loadingLoadMoreGetJourneyPlan
+    ) {
+      if (this.props.journey.dataGetJourneyPlanV2) {
+        if (
+          this.props.journey.dataGetJourneyPlanV2.length <
+          this.props.journey.totalDataGetJourneyPlanV2
+        ) {
+          const page = this.props.journey.pageGetJourneyPlanV2 + 1;
+          this.props.journeyPlanGetLoadMoreV2(page);
+          this.props.journeyPlanGetProcessV2({
+            page,
+            date: today,
+            search: this.state.search,
+            loading: false
+          });
+        }
       }
     }
   };
@@ -363,5 +372,17 @@ export default connect(
  * updatedFunction:
  * -> Update the validation with visitStatus.
  * -> Change storeId to string.
+ * updatedDate: 08032021
+ * updatedFunction:
+ * -> Update parameter when loadmore.
+ * updatedBy: dyah
+ * updatedDate: 12032021
+ * updatedFunction:
+ * -> Add parameter search when get journey plan.
+ * updatedBy: dyah
+ * updatedDate: 18032021
+ * updatedFunction:
+ * -> Update props when loading more data.
+ * -> Update validation to handling load more.
  *
  */

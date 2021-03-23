@@ -74,6 +74,13 @@ class AddMerchantStep3 extends Component {
       let dataValidateAreaMapping = this.props.merchant.dataValidateAreaMapping
       if(dataValidateAreaMapping !== null){
         if(dataValidateAreaMapping.length > 0){
+          if(dataValidateAreaMapping.length === 1){
+            const warehouse = dataValidateAreaMapping[0]
+            this.props.saveVolatileDataMerchant({
+              warehouse: warehouse?.name || "",
+              warehouseId: warehouse?.warehouseId || null,
+            });
+          }
           let urbanId = null
           if (this.props.global.dataGetUrbanId && this.props.global.dataGetUrbanId.length > 0) {
             urbanId = this.props.global.dataGetUrbanId[0].id
