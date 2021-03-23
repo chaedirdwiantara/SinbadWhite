@@ -85,14 +85,15 @@ class OmsOtpKurView extends Component {
           });
           this.resend();
         }
-        if(this.props.oms.errorOmsGetKurOtp &&
-          this.props.oms.errorOmsGetKurOtp.code === 500)
-        {
+        if (
+          this.props.oms.errorOmsGetKurOtp &&
+          this.props.oms.errorOmsGetKurOtp.code === 500
+        ) {
           this.setState({
             openModalErrorGlobal: true,
             messageError: null,
             type: 'backtocart'
-          })
+          });
         }
       }
     }
@@ -204,13 +205,12 @@ class OmsOtpKurView extends Component {
     NavigationService.goBack(this.props.navigation.state.key);
   }
 
-  errorGlobal(){
-    if(this.state.type === 'backtocart'){
-      this.setState({ openModalErrorGlobal: false })
-      NavigationService.goBack(this.props.navigation.state.key)
-    }
-    else {
-      this.setState({ openModalErrorGlobal: false })
+  errorGlobal() {
+    if (this.state.type === 'backtocart') {
+      this.setState({ openModalErrorGlobal: false });
+      NavigationService.goBack(this.props.navigation.state.key);
+    } else {
+      this.setState({ openModalErrorGlobal: false });
     }
   }
   /**
@@ -248,7 +248,8 @@ class OmsOtpKurView extends Component {
             Kode verifikasi telah dikirimkan melalui
           </Text>
           <Text style={[Fonts.type8, { textAlign: 'center' }]}>
-            SMS ke {mobilePhoneNo.substring(0,4)}-{mobilePhoneNo.substring(4,7)}-{mobilePhoneNo.substring(8,10)}xx
+            SMS ke {mobilePhoneNo.substring(0, 4)}-
+            {mobilePhoneNo.substring(4, 7)}-{mobilePhoneNo.substring(8, 10)}xx
           </Text>
           <TouchableOpacity
             onPress={() =>
@@ -461,9 +462,7 @@ class OmsOtpKurView extends Component {
         <ModalBottomFailPayment
           open={this.state.openModalErrorGlobal}
           onPress={() => this.errorGlobal()}
-          text={
-            this.state.messageError
-          }
+          text={this.state.messageError}
         />
       </View>
     ) : (
