@@ -49,14 +49,15 @@ class OmsOtpKurView extends Component {
       openModalErrorOtp: false,
       openModalErrorGlobal: false,
       maxOtp: false,
-      type: null
+      type: null,
+      messageError: null
     };
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
     if (this.props.oms.dataOmsGetKurOtp) {
       if (prevProps.oms.dataOmsGetKurOtp !== this.props.oms.dataOmsGetKurOtp) {
-          this.resend()
+        this.resend();
       }
     }
     if (this.props.oms.errorOmsGetKurOtp !== undefined) {
@@ -66,42 +67,56 @@ class OmsOtpKurView extends Component {
         if (
           this.props.oms.errorOmsGetKurOtp &&
           this.props.oms.errorOmsGetKurOtp.data.retry === false
-        ){
+        ) {
           this.setState({
             openModalErrorOtp: true,
             resend: false
-          });}
-          if(this.props.oms.errorOmsGetKurOtp && this.props.oms.errorOmsGetKurOtp.data.delayInSec){
-            this.setState({
-              openModalErrorGlobal: true,
-              type:'delay',
-              timer: this.props.oms.errorOmsGetKurOtp.data.delayInSec
-            })
-            this.resend()
-          }
+          });
+        }
+        if (
+          this.props.oms.errorOmsGetKurOtp &&
+          this.props.oms.errorOmsGetKurOtp.data.delayInSec
+        ) {
+          this.setState({
+            openModalErrorGlobal: true,
+            type: 'delay',
+            messageError: this.props.oms.errorOmsGetKurOtp.data.message,
+            timer: this.props.oms.errorOmsGetKurOtp.data.delayInSec
+          });
+          this.resend();
+        }
+        if(this.props.oms.errorOmsGetKurOtp &&
+          this.props.oms.errorOmsGetKurOtp.code === 500)
+        {
+          this.setState({
+            openModalErrorGlobal: true,
+            messageError: null,
+            type: 'backtocart'
+          })
+        }
       }
     }
     if (
-        prevProps.oms.errorOmsConfirmOrder !== this.props.oms.errorOmsConfirmOrder
-      ) {
-        if (this.props.oms.errorOmsConfirmOrder !== null) {
-          if (
-            this.props.oms.errorOmsConfirmOrder.data &&  this.props.oms.errorOmsConfirmOrder.code === 400
-          ) {
-            this.handleErrorConfirmOrder();
-          } 
+      prevProps.oms.errorOmsConfirmOrder !== this.props.oms.errorOmsConfirmOrder
+    ) {
+      if (this.props.oms.errorOmsConfirmOrder !== null) {
+        if (
+          this.props.oms.errorOmsConfirmOrder.data &&
+          this.props.oms.errorOmsConfirmOrder.code === 400
+        ) {
+          this.handleErrorConfirmOrder();
         }
       }
-      if (
-        prevProps.oms.dataOmsConfirmOrder !== this.props.oms.dataOmsConfirmOrder
-      ) {
-        if (this.props.oms.dataOmsConfirmOrder !== null) {
-         this.setState({
-           verifyPush: true
-         })
-        }
+    }
+    if (
+      prevProps.oms.dataOmsConfirmOrder !== this.props.oms.dataOmsConfirmOrder
+    ) {
+      if (this.props.oms.dataOmsConfirmOrder !== null) {
+        this.setState({
+          verifyPush: true
+        });
       }
-      
+    }
   }
   /** DID MOUNT */
   componentDidMount() {
@@ -116,8 +131,7 @@ class OmsOtpKurView extends Component {
 
   /** === GET OTP  */
   getOtp() {
-    console.log(this.props.merchant.selectedMerchant.storeCode, 'store code');
-    const storeCode = 'SNB-STORE-202';
+    const storeCode = this.props.merchant.selectedMerchant.storeCode;
     this.props.OmsGetKurOtpProcess(storeCode);
   }
   /** === SAVE OTP FROM OTP INPUT TO STATE */
@@ -144,7 +158,7 @@ class OmsOtpKurView extends Component {
   //RESEND
   resend() {
     this.setState({ resend: true, openModalErrorOtp: false });
-    const countdown = this.props.oms.errorOmsGetKurOtp
+    const countdown = this.props.oms.errorOmsGetKurOtp;
     let countNumber = countdown ? countdown.data.delayInSec : this.state.timer;
     const counter = setInterval(() => {
       countNumber--;
@@ -164,27 +178,40 @@ class OmsOtpKurView extends Component {
           errorOTP: true,
           otpErrorText:
             'Pastikan nomor atau kode verifikasi yang anda masukan benar',
-            verifyPush: true
+          verifyPush: true
         });
         break;
       case 'ERR_APP_KUR_ACC_OTP_EXPIRED':
         this.setState({
           openModalErrorGlobal: true,
-        })
+          messageError: this.props.oms.errorOmsConfirmOrder.message
+        });
+        break;
       default:
         this.setState({
           openModalErrorGlobal: true,
-        })
+          messageError: this.props.oms.errorOmsConfirmOrder.message
+        });
         break;
     }
   }
 
   /** ERROR OTP */
-  errorOTP () {
+  errorOTP() {
     this.setState({
       openModalErrorOtp: false
-    })
-    NavigationService.goBack(this.props.navigation.state.key)
+    });
+    NavigationService.goBack(this.props.navigation.state.key);
+  }
+
+  errorGlobal(){
+    if(this.state.type === 'backtocart'){
+      this.setState({ openModalErrorGlobal: false })
+      NavigationService.goBack(this.props.navigation.state.key)
+    }
+    else {
+      this.setState({ openModalErrorGlobal: false })
+    }
   }
   /**
    * ==============================
@@ -205,6 +232,8 @@ class OmsOtpKurView extends Component {
 
   /** TITLE */
   renderTitle() {
+    const mobilePhoneNo = this.props.merchant.selectedMerchant
+      .ownerMobilePhoneNo;
     return (
       <View style={{ alignItems: 'center', paddingVertical: 16 }}>
         <Image
@@ -218,7 +247,9 @@ class OmsOtpKurView extends Component {
           <Text style={[Fonts.type8, { textAlign: 'center', marginTop: 10 }]}>
             Kode verifikasi telah dikirimkan melalui
           </Text>
-          <Text style={[Fonts.type8, { textAlign: 'center' }]}>SMS ke 0813-913-483xx</Text>
+          <Text style={[Fonts.type8, { textAlign: 'center' }]}>
+            SMS ke {mobilePhoneNo.substring(0,4)}-{mobilePhoneNo.substring(4,7)}-{mobilePhoneNo.substring(8,10)}xx
+          </Text>
           <TouchableOpacity
             onPress={() =>
               this.setState({ openModalUserDifferentNumber: true })
@@ -380,7 +411,7 @@ class OmsOtpKurView extends Component {
         )}
       </View>
     );
-          }
+  }
 
   /**
    * ==============================
@@ -411,32 +442,34 @@ class OmsOtpKurView extends Component {
         {this.state.openModalErrorOtp ? (
           <ModalOmsErrorOtpKur
             open={this.state.openModalErrorOtp}
-            close={() => this.errorOTP()}
-            onPress={
-              (() => this.errorOTP()
-              )
+            close={() =>
+              this.setState({
+                openModalErrorOtp: false
+              })
             }
+            onPress={() => this.errorOTP()}
           />
         ) : null}
       </View>
     );
   }
 
-   /** MODAL ERROR PAYMENT GLOBAL */
-   renderModalErrorGlobal() {
+  /** MODAL ERROR PAYMENT GLOBAL */
+  renderModalErrorGlobal() {
     return this.state.openModalErrorGlobal ? (
       <View>
         <ModalBottomFailPayment
           open={this.state.openModalErrorGlobal}
-          onPress={() => this.setState({ openModalErrorGlobal: false })}
-          text={this.state.type === 'delay'? this.props.oms.errorOmsGetKurOtp.data.message : this.props.oms.errorOmsConfirmOrder.message}
+          onPress={() => this.errorGlobal()}
+          text={
+            this.state.messageError
+          }
         />
       </View>
     ) : (
       <View />
     );
   }
-
 
   /** === MAIN === */
   render() {
