@@ -508,6 +508,8 @@ const SfaAddTagihanView = props => {
           setDisabled(false);
         }
       }
+    } else {
+      setDisabled(true);
     }
   }, [
     collectionMethod,
