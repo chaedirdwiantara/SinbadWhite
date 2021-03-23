@@ -70,7 +70,7 @@ const OmsNavigator = {
     navigationOptions: {
       headerTitle: 'Verifikasi Kur Klik Acc',
       headerTitleStyle: [
-        GlobalFont.textHeaderPage,
+        GlobalFont.type5,
         {
           textAlign: 'center',
           flex: 1
@@ -78,10 +78,14 @@ const OmsNavigator = {
       ],
       headerTintColor: masterColor.fontBlack50,
       headerStyle: {
-        backgroundColor: masterColor.backgroundWhite
+        backgroundColor: masterColor.backgroundWhite,
+        shadowColor: 'transparent',
+        elevation: 0,
+        shadowOpacity: 0
       },
       headerRight: <View />,
-      gesturesEnabled: false
+      gesturesEnabled: false,
+      
     }
   }
 };

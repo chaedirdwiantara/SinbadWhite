@@ -191,7 +191,7 @@ class OmsOtpKurView extends Component {
       default:
         this.setState({
           openModalErrorGlobal: true,
-          messageError: this.props.oms.errorOmsConfirmOrder.message
+          messageError: null
         });
         break;
     }
@@ -476,7 +476,7 @@ class OmsOtpKurView extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <StatusBarWhite />
+        {/* <StatusBarWhite /> */}
         <ScrollView
           style={{ flex: 1, backgroundColor: masterColor.backgroundWhite }}
         >
