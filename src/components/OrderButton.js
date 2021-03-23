@@ -41,7 +41,6 @@ class OrderButton extends Component {
   /** === DID MOUNT */
   componentDidMount() {
     this.checkTotalClickPlusButton(this.state.qty)
-    console.log('Did Mount Order Button')
   }
   componentDidUpdate(prevProps) {
     /**
@@ -71,11 +70,9 @@ class OrderButton extends Component {
     let totalClickPlus = 0;
       /** === check if stock unlimited or not === */
       if (!this.state.unlimitedStock) {
-        console.log(this.props.isMaximum)
         if (this.state.isMax) {
           qtyMinusQtyOrder = this.state.maxQty - qty;
           totalClickPlus = Math.floor(qtyMinusQtyOrder / this.state.multipleQty);
-          console.log(totalClickPlus)
           this.setState({
             totalClickPlus: totalClickPlus >= 0 ? totalClickPlus : 0
           });

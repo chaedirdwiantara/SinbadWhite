@@ -138,19 +138,6 @@ class PdpOrderView extends Component {
     }
     return 0;
   }
-  /** === CHECK TERSISA TEXT === */
-  checkTersisa() {
-    if (
-      !this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock &&
-      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
-        this.props.pdp.dataDetailPdp.minQty
-    ) {
-      return `Tersisa ${NumberFormat(
-        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock
-      )} Pcs`;
-    }
-    return '';
-  }
   /** === CHECK INPUT QTY SECTION === */
   checkInputQtySection() {
     if (!this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock) {
@@ -214,8 +201,8 @@ class PdpOrderView extends Component {
   /** === RENDER BUTTON ORDER === */
   renderButtonOrder() {
     return (
-      <View style={styles.boxPesan}>
         <OrderButton
+          showKeyboard={this.state.showKeyboard}
           disabledAllButton={this.state.showKeyboard}
           item={this.props.pdp.dataDetailPdp}
           onRef={ref => (this.parentFunctionFromOrderButton = ref)}
@@ -225,7 +212,6 @@ class PdpOrderView extends Component {
           onFocus={() => this.setState({ buttonAddDisabled: true })}
           onBlur={() => this.setState({ buttonAddDisabled: false })}
         />
-      </View>
     );
   }
   /** === RENDER BUTTON === */
@@ -246,14 +232,6 @@ class PdpOrderView extends Component {
           })
         }
       />
-    );
-  }
-  /** === RENDER TERSISA TEXT === */
-  renderRemainingStock() {
-    return (
-      <View style={{ flex: 1 }}>
-        <Text style={Fonts.type22}>{this.checkTersisa()}</Text>
-      </View>
     );
   }
   /** === RENDER TOTAL BOTTOM === */
@@ -348,12 +326,11 @@ class PdpOrderView extends Component {
           </View>
         </View>
         {this.checkInputQtySection() ? (
-          <View style={styles.boxInputQty}>
+          <View style={{ flexDirection: 'row', flex: 1 }}>
             <View style={{ justifyContent: 'center' }}>
               <Text style={Fonts.type96}>Jumlah/pcs</Text>
             </View>
-            <View style={styles.boxRemainingStockOrderButton}>
-              {this.renderRemainingStock()}
+            <View style={{ flex: 1 }}>
               {this.renderButtonOrder()}
             </View>
           </View>
@@ -415,7 +392,8 @@ const styles = StyleSheet.create({
   boxRemainingStockOrderButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    flex: 1
   },
   boxInputQty: {
     flexDirection: 'row',
@@ -424,8 +402,7 @@ const styles = StyleSheet.create({
   },
   boxPesan: {
     marginLeft: 5,
-    flexDirection: 'row',
-    width: '55%'
+    flexDirection: 'row'
   }
 });
 
