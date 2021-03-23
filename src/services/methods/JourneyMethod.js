@@ -1,8 +1,18 @@
 import ApiRest from '../apiRest';
+const salesManagementService = 'supplier/sales-management';
 /** GET JOURNEY PLAN LIST BY USER ID */
 function getJourneyPlan(data) {
   return ApiRest({
     path: `journey-list?$skip=${data.page}&$limit=10`,
+    method: 'GET'
+  });
+}
+/** GET JOURNEY PLAN LIST BY USER ID V2*/
+function getJourneyPlanV2(data) {
+  return ApiRest({
+    path: `${salesManagementService}/v1/journey-book-stores/date?date=${
+      data.date
+    }&search=${data.search}&page=${data.page}&length=10`,
     method: 'GET'
   });
 }
@@ -14,6 +24,14 @@ function saveMerchantToJourneyPlan(data) {
     params: data.body
   });
 }
+/** ADD MERCHANT TO JOURNEY PLAN V2 */
+function saveMerchantToJourneyPlanV2(data) {
+  return ApiRest({
+    path: `${salesManagementService}/v1/journey-book`,
+    method: 'POST',
+    params: data
+  });
+}
 /** GET JOUNEY PLAN REPORT VISIT AND TOTAL PRICE ORDER */
 function getJourneyPlanReport(supplierIds) {
   return ApiRest({
@@ -21,22 +39,47 @@ function getJourneyPlanReport(supplierIds) {
     method: 'GET'
   });
 }
+/** GET JOURNEY PLAN REPORT VISIT AND TOTAL PRICE ORDER V2 */
+function getJourneyPlanReportV2() {
+  return ApiRest({
+    path: `${salesManagementService}/v1/agent/journey-book-reports`,
+    method: 'GET'
+  });
+}
 
 export const JourneyMethod = {
   getJourneyPlan,
+  getJourneyPlanV2,
   saveMerchantToJourneyPlan,
-  getJourneyPlanReport
+  saveMerchantToJourneyPlanV2,
+  getJourneyPlanReport,
+  getJourneyPlanReportV2
 };
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: tatas
-* updatedDate: 03072020
-* updatedFunction:
-* -> Change endpoint getJourneyPlan
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: tatas
+ * updatedDate: 03072020
+ * updatedFunction:
+ *  -> Change endpoint getJourneyPlan
+ * updatedBy: dyah
+ * updatedDate: 18022021
+ * updatedFunction:
+ * -> Add new methods. (getJourneyPlanV2, saveMerchantToJourneyPlanV2, getJourneyPlanReportV2)
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ * -> Update the methods. (getJourneyPlanV2, saveMerchantToJourneyPlanV2)
+ * updatedBy: dyah
+ * updatedDate: 01032021
+ * updatedFunction:
+ * -> Update the method. (getJourneyPlanReportV2)
+ * updatedBy: dyah
+ * updatedDate: 12032021
+ * updatedFunction:
+ * -> Add parameter search. (getJourneyPlanV2)
+ * */

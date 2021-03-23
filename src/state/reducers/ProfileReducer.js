@@ -5,12 +5,15 @@ const INITIAL_STATE = {
   /** loading */
   loadingEditProfile: false,
   loadingGetWarehouse: false,
+  loadingGetSalesSegmentationTeam: false,
   /** data */
   dataEditProfile: null,
   dataGetWarehouse: [],
+  dataSalesSegmentationTeam: null,
   /** error */
   errorAddProfile: null,
-  errorGetWarehouse: null
+  errorGetWarehouse: null,
+  errorGetSalesSegmentationTeam: null
 };
 
 export const profile = createReducer(INITIAL_STATE, {
@@ -69,6 +72,28 @@ export const profile = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetWarehouse: false,
       errorGetWarehouse: action.payload
+    }
+  },
+  [types.PROFILE_GET_SALES_SEGMENTATION_TEAM_PROCESS](state, action){
+    return {
+      ...state,
+      loadingGetSalesSegmentationTeam: true,
+      dataSalesSegmentationTeam: null,
+      errorGetSalesSegmentationTeam: null
+    }
+  },
+  [types.PROFILE_GET_SALES_SEGMENTATION_TEAM_SUCCESS](state, action){
+    return {
+      ...state,
+      loadingGetSalesSegmentationTeam: false,
+      dataSalesSegmentationTeam: action.payload
+    }
+  },
+  [types.PROFILE_GET_SALES_SEGMENTATION_TEAM_FAILED](state, action){
+    return {
+      ...state,
+      loadingGetSalesSegmentationTeam: false,
+      errorGetSalesSegmentationTeam: action.payload
     }
   }
 });
