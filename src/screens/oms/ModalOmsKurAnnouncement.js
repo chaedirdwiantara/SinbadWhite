@@ -55,7 +55,7 @@ class ModalOmsKurAnnouncement extends Component {
             </TouchableOpacity>
           </View>
           <View style={{ flex: 1, alignSelf: 'center', marginLeft: '25%' }}>
-            <Text style={Fonts.type35}>KUR KlikAcc</Text>
+            <Text style={Fonts.type35}>KUR KlikACC</Text>
           </View>
         </View>
       </View>

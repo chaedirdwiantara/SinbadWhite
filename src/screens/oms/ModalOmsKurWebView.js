@@ -65,7 +65,7 @@ renderHeader() {
           </TouchableOpacity>
         </View>
         <View style={{ alignItems: 'center', flex: 1, alignSelf:"center" }}>
-          <Text style={Fonts.type35}>S & K KUR KlikAcc</Text>
+          <Text style={Fonts.type35}>S & K KUR KlikACC</Text>
         </View>
       </View>
     </View>
