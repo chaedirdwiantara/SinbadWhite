@@ -23,7 +23,9 @@ import {
   InputType4,
   InputMapsType2,
   ModalBottomType3,
-  StatusBarRedOP50
+  StatusBarRedOP50,
+  DropdownType1,
+  InputType6
 } from '../../../library/component';
 import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
@@ -38,17 +40,16 @@ class AddMerchantStep3 extends Component {
     super(props);
     this.state = {
       /** error */
-      errorLocation: false,
-      errorDetailLocation: false,
-      disabledAction: false,
-      disableButton: true,
       errorValidateAreaMapping: false,
       errorMessage: '',
       /** for maps refresh */
       refreshLocation: false,
       /** field data */
-      address: this.props.merchant.dataMerchantVolatile.address || '',
-      noteAddress: this.props.merchant.dataMerchantVolatile.noteAddress || '',
+      existingStore: props.auth.dataCheckPhoneAvailble?.store,
+      address: props.merchant.dataMerchantVolatile.address || '',
+      noteAddress: props.merchant.dataMerchantVolatile.noteAddress || '',
+      vehicleAccessibilityName: props.merchant.dataMerchantVolatile.vehicleAccessibilityName || '',
+      vehicleAccessibilityAmount: props.merchant.dataMerchantVolatile.vehicleAccessibilityAmount || '',
     };
   }
   /**
@@ -89,6 +90,7 @@ class AddMerchantStep3 extends Component {
             latitude: this.props.global.latitude,
             address: this.state.address,
             noteAddress: this.state.noteAddress,
+            vehicleAccessibilityAmount: this.state.vehicleAccessibilityAmount,
             urbanId
           });
           NavigationService.navigate('AddMerchantStep4')
@@ -102,6 +104,9 @@ class AddMerchantStep3 extends Component {
     }
     if(prevProps.merchant.dataMerchantVolatile.address !== this.props.merchant.dataMerchantVolatile.address){
       this.setState({address: this.props.merchant.dataMerchantVolatile.address})
+    }
+    if(prevProps.merchant.dataMerchantVolatile.vehicleAccessibilityName !== this.props.merchant.dataMerchantVolatile.vehicleAccessibilityName){
+      this.setState({vehicleAccessibilityName: this.props.merchant.dataMerchantVolatile.vehicleAccessibilityName})
     }
     /** VALIDATE AREA MAPPING IS ERROR */
     if(prevProps.merchant.errorValidateAreaMapping !== this.props.merchant.errorValidateAreaMapping){
@@ -136,6 +141,8 @@ class AddMerchantStep3 extends Component {
   buttonDisable() {
     if (
       !this.state.address ||
+      !this.state.vehicleAccessibilityName ||
+      !this.state.vehicleAccessibilityAmount ||
       !this.props.global.longitude ||
       !this.props.global.latitude ||
       !this.props.global.dataGetUrbanId ||
@@ -163,12 +170,19 @@ class AddMerchantStep3 extends Component {
       ToastAndroid.show(error?.message || '', ToastAndroid.SHORT)
     }
   }
+  /** === GO TO DROPDOWN LIST ===  */
+  goToDropdown(data) {
+    NavigationService.navigate('ListAndSearchType1', {
+      placeholder: data.placeholder,
+      hide: data.hide ? data.hide : false,
+      type: data.type
+    });
+  }
   /**
    * ====================
    * RENDER VIEW
    * ===================
    */
-
   renderAsteriskRed = () => <Text style={{color: 'red'}}>*</Text>
   /** === RENDER STEP HEADER === */
   renderProgressHeader() {
@@ -202,7 +216,7 @@ class AddMerchantStep3 extends Component {
     return (
       <InputType4
         multiline={true}
-        editable={!this.props.merchant.dataMerchantDisabledField.address}
+        editable={this.state.existingStore?.address ? false : true}
         title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Detail Alamat</Text>}
         value={this.state.address}
         placeholder={'Contoh : Jl. Kemang Raya No.58, RT.8/RW…'}
@@ -220,7 +234,7 @@ class AddMerchantStep3 extends Component {
   renderNoteAddress() {
     return (
       <InputType4
-        editable={!this.props.merchant.dataMerchantDisabledField.noteAddress}
+        editable={this.state.existingStore?.noteAddress ? false : true}
         title={'Catatan Alamat'}
         value={this.state.noteAddress}
         placeholder={'Contoh : Masuk Gang arjuna depan toko cilok'}
@@ -232,12 +246,50 @@ class AddMerchantStep3 extends Component {
       />
     );
   }
+  /** === RENDER MERCHANT ROAD ACCESS === */
+  renderMerchantRoadAccess() {
+    return (
+      <DropdownType1
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Aksebilitas Kendaraan</Text>}
+        placeholder="Pilih aksesibilitas kendaraan"
+        disabled={this.state.existingStore?.vehicleAccessibility ? true : false}
+        selectedDropdownText={this.state.vehicleAccessibilityName}
+        openDropdown={() =>
+          this.goToDropdown({
+            type: 'vehicleMerchant',
+            placeholder: 'Cari Kendaraan'
+          })
+        }
+      />
+    );
+  }
+  /** === RENDER MERCHANT NUMBER OF ACCESS ROAD === */
+  renderMerchantNumberOfAccessRoad() {
+    return (
+      <InputType6
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Kapasitas Jalan</Text>}
+        value={this.state.vehicleAccessibilityAmount}
+        onChangeText={text => {
+          text = text.replace(/[^0-9]/g, '');
+          this.setState({ vehicleAccessibilityAmount: text });
+        }}
+        editable={!this.state.existingStore?.vehicleAccessibilityAmount ? true : false} 
+        info="Jumlah kendaraan yang bisa melewati jalan menuju Toko"
+        placeholder={'Masukan kapasitas jalan'}
+        keyboardType={'numeric'}
+        marginBottom={16}
+        maxLength={2}
+      />
+    );
+  }
   renderContent() {
     return (
       <View style={{ flex: 1, paddingTop: 20 }}>
         {this.renderMaps()}
         {this.renderAddress()}
         {this.renderNoteAddress()}
+        {this.renderMerchantRoadAccess()}
+        {this.renderMerchantNumberOfAccessRoad()}
         <View style={{ paddingBottom: 50 }} />
       </View>
     );
