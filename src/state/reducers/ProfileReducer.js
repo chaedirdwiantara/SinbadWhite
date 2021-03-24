@@ -13,7 +13,7 @@ const INITIAL_STATE = {
   /** error */
   errorAddProfile: null,
   errorGetWarehouse: null,
-  errorGetSalesSegmentationTeam: null,
+  errorGetSalesSegmentationTeam: null
 };
 
 export const profile = createReducer(INITIAL_STATE, {
