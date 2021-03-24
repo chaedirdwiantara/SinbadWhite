@@ -15,6 +15,7 @@ import {
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
+  Button,
   connect,
   MaterialCommunityIcons,
   MaterialIcon
@@ -73,7 +74,6 @@ class AddMerchantStep2 extends Component {
     /** === IF SUCCESS UPLOAD === */
     if (prevProps.global.dataUploadImage !== this.props.global.dataUploadImage) {
       if (this.props.global.dataUploadImage !== null) {
-        this.props.saveImageBase64('');
         this.props.saveVolatileDataMerchant({
           idImageUrl: this.props.global.dataUploadImage.url
         });
@@ -89,6 +89,7 @@ class AddMerchantStep2 extends Component {
   }
   /** GO TO NEXT SCREEN */
   gotoNextScreen(){
+    this.props.saveImageBase64('');
     this.props.saveVolatileDataMerchant({
       fullName: this.state.fullName,
       name: this.state.name,
@@ -108,18 +109,22 @@ class AddMerchantStep2 extends Component {
   /** SEND DATA ADD MERCHANT */
   handleNextButton() {
     Keyboard.dismiss();
-    // if(this.props.global.imageBase64 !== ''){
-    //   this.uploadPhoto()
-    // } else {
+    if(this.props.global.imageBase64 !== ''){
+      this.uploadPhoto()
+    } else {
       this.gotoNextScreen()
-    // }
+    }
   }
   /** disable button */
-  buttonDisable() {
+  disableButton() {
+    const storeIsExist = this.props.auth.dataCheckPhoneAvailble?.store !== null
+    if(storeIsExist) return false
+    
     if (
       !this.state.fullName || !this.state.name ||
       !this.state.idNo || !this.state.supplierName ||
-      this.state.errorIdNumber || this.state.errorTaxNumber
+      this.state.errorIdNumber || this.state.errorTaxNumber || 
+      this.props.global.loadingUploadImage || !this.props.global.imageBase64
     ){
       return true
     }
@@ -309,30 +314,33 @@ class AddMerchantStep2 extends Component {
   }
   renderThumbnail(){
     return(
-      <View style={{marginHorizontal: 16, flexDirection: 'row', alignItems: 'center'}}>
-        <TouchableWithoutFeedback onPress={() => this.setState({previewImage: true})}>
-          <Image 
-            source={{uri: `data:image/jpg;base64,${this.props.global.imageBase64}`}}
-            resizeMode="stretch"
-            borderRadius={8}
-            style={{
-              marginHorizontal: 16,
-              width: width * .3, height: width * .45, 
-              transform: [{rotate: '270deg'}]
-            }}
-          />
-        </TouchableWithoutFeedback>
-        <View style={{marginHorizontal: 32, alignItems: 'center'}}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('TakeIdPicture')} 
-            style={{alignItems: 'center'}}>
-            <MaterialIcon
-              name="camera-alt"
-              color={Color.fontBlack50}
-              size={24}
-            />
-            <Text style={Fonts.type10}>Ulangi</Text>
-          </TouchableOpacity>
+      <View style={{marginBottom: 24}}>
+        <Image 
+          source={{uri: `data:image/jpg;base64,${this.props.global.imageBase64}`}}
+          resizeMode="contain"
+          style={{
+            aspectRatio: 1/1,
+            marginVertical: -56,
+            zIndex: -9999,
+            width: '100%', 
+            transform: [{rotate: '270deg'}]
+          }}
+        />
+        <View style={{flexDirection: 'row'}}>
+          <Button
+            type="clear"
+            onPress={() => this.props.saveImageBase64('')}
+            titleStyle={Fonts.textButtonWhiteActive}
+            containerStyle={{flex: 1}}
+            title="Hapus" />
+          <View style={{marginHorizontal: 4}} />
+          <Button
+            type="outline"
+            onPress={() => this.props.navigation.navigate('TakeIdPicture')}
+            titleStyle={Fonts.textButtonWhiteActive}
+            containerStyle={{flex: 1}}
+            buttonStyle={{borderColor: Color.buttonActiveColorRed, borderWidth: 1.5, paddingVertical: 11, borderRadius: 4}}
+            title="Ulangi Foto" />
         </View>
       </View>
     )
@@ -404,7 +412,7 @@ class AddMerchantStep2 extends Component {
         {this.renderNameMerchant(storeIsExist)}
         {this.renderSupplier()}
         {this.renderIdNo(storeIsExist)}
-        {/* {this.renderImageIdNo()} */}
+        {this.renderImageIdNo()}
         {this.renderTaxId(storeIsExist)}
         <View style={{ paddingBottom: 50 }} />
       </View>
@@ -414,11 +422,7 @@ class AddMerchantStep2 extends Component {
   renderButton() {
     return (
       <ButtonSingle
-        disabled={
-          this.buttonDisable() 
-          // this.props.merchant.loadingAddMerchant ||
-          // this.state.addStoreProcess
-        }
+        disabled={this.disableButton() }
         title={'Lanjutkan'}
         loading={this.props.global.loadingUploadImage}
         borderRadius={4}
