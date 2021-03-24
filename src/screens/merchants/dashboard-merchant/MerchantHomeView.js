@@ -110,7 +110,7 @@ class MerchantHomeView extends Component {
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
         }
       ],
-      successSurveyList: false,
+      successSurveyList: false
     };
   }
   /**
@@ -1058,7 +1058,8 @@ class MerchantHomeView extends Component {
           () => {
               this.setState({ checkNoOrder: true });
               this.props.merchantGetLogPerActivityProcessV2({
-                journeyBookStoresId: this.props.merchant.selectedMerchant.journeyBookStores.id,
+                journeyBookStoresId: this.props.merchant.selectedMerchant
+                  .journeyBookStores.id,
                 activity: 'order'
               });
           }
