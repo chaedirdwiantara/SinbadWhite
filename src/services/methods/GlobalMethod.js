@@ -194,23 +194,17 @@ function addGaps(string = "", gaps, spacer){
   }).filter(part => part !== "").join(spacer);
 };
 /** ROLE BASE ACCESS CONTROL */
-export function defineSalesRoles(privilege){
+export function remappingPrivilege(privilege){
   if(Array.isArray(privilege)){
     privilege.forEach(el => {
-      DEFAULT_PRIVILEGE.forEach(item => {
-        if(el.privileges === item.name){
-          item.status = true
+      for (const key in DEFAULT_PRIVILEGE) {
+        if(DEFAULT_PRIVILEGE[key].name === el.privilege){
+          DEFAULT_PRIVILEGE[key].status = true
         }
-      })
+      }
     })
   }
-  let roles = TAKING_ORDER
-  DEFAULT_PRIVILEGE.forEach(item => {
-    if(!item.status){
-      roles = HUNTER
-    }
-  })
-  return roles
+  return DEFAULT_PRIVILEGE
 }
 
 export const GlobalMethod = {
@@ -224,7 +218,7 @@ export const GlobalMethod = {
   userStoreId,
   addGaps,
   uploadImage,
-  defineSalesRoles
+  remappingPrivilege
 };
 
 /**

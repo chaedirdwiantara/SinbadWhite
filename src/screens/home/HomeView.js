@@ -155,7 +155,7 @@ class HomeView extends Component {
       fullName: this.props.user.fullName,
       imageUrl: this.props.user.imageUrl
     });
-    if(this.props.profile.dataPrivilege === null){
+    if(this.props.privileges.dataPrivilege === null){
       this.getPrivileges()
     }
   }
@@ -197,11 +197,13 @@ class HomeView extends Component {
       }
     }
     /** DEFINE SALES ROLES WHEN SUCCESS GET PRIVILEGE */
-    const privilege = this.props.profile.dataPrivilege
-    if(prevProps.profile.dataPrivilege !== privilege){
+    const privilege = this.props.privileges.dataPrivilege
+    if(prevProps.privileges.dataPrivilege !== privilege){
       if(privilege !== null){
-        const role = GlobalMethod.defineSalesRoles(privilege)
-        this.props.setSalesRole(role)
+        // setTimeout(() => {
+        //   const role = GlobalMethod.defineSalesRoles(privilege?.data)
+        //   this.props.setSalesRole(role)
+        // }, 0)
       }
     }
   }
@@ -211,7 +213,8 @@ class HomeView extends Component {
     if(supplierId.length > 0){
       supplierId = supplierId[0].toString()
     }
-    this.props.getPrivilegeProcess(supplierId)
+    let userId = this.props.user?.id || ''
+    this.props.getPrivilegeProcess({supplierId, userId})
   }
   /** === PULL TO REFRESH === */
   _onRefresh() {
@@ -748,8 +751,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, merchant, global, salesmanKpi, profile }) => {
-  return { user, merchant, global, salesmanKpi, profile };
+const mapStateToProps = ({ user, merchant, global, salesmanKpi, privileges }) => {
+  return { user, merchant, global, salesmanKpi, privileges };
 };
 
 const mapDispatchToProps = dispatch => {

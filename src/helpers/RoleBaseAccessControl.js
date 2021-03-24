@@ -34,7 +34,7 @@ const retur = {
 }
 
 /** DEFAULT PRIVILEGE */
-export const DEFAULT_PRIVILEGE = [
+export const DEFAULT_PRIVILEGE = {
     createStore,
     checkIn,
     checkOut,
@@ -43,7 +43,7 @@ export const DEFAULT_PRIVILEGE = [
     survey,
     collection,
     retur
-]
+}
 
 
 /** SALES ROLES */

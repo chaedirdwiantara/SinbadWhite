@@ -22,9 +22,9 @@ function getSalesSegementationTeam(data){
   })
 }
 
-function getPrivileges(supplierId){
+function getPrivileges({supplierId, userId}){
   return ApiRest({
-    path: `privileges?type=agent-app&supplierId=${supplierId}`,
+    path: `privileges?type=agent-app&supplierId=${supplierId}&userId=${userId}`,
     method: 'GET'
   })
 }
