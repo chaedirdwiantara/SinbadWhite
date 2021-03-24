@@ -1,4 +1,3 @@
-import { GlobalMethod } from '../../services/methods';
 import * as types from '../types';
 /**
  * ==================================

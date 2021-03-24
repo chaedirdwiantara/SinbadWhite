@@ -6,18 +6,14 @@ const INITIAL_STATE = {
   loadingEditProfile: false,
   loadingGetWarehouse: false,
   loadingGetSalesSegmentationTeam: false,
-  loadingGetPrivilege: true,
   /** data */
   dataEditProfile: null,
   dataGetWarehouse: [],
   dataSalesSegmentationTeam: null,
-  dataPrivilege: null,
-  salesRole: null,
   /** error */
   errorAddProfile: null,
   errorGetWarehouse: null,
   errorGetSalesSegmentationTeam: null,
-  errorGetPrivilege: null
 };
 
 export const profile = createReducer(INITIAL_STATE, {
