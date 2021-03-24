@@ -141,7 +141,7 @@ class ModalOmsOTPKur extends Component {
             </TouchableOpacity>
           </View>
           <View style={{ alignItems: 'center', flex: 1, alignSelf:"center", marginLeft: -50 }}>
-            <Text style={Fonts.type55}>Verifikasi KUR KlikAcc</Text>
+            <Text style={Fonts.type55}>Verifikasi KUR KlikACC</Text>
           </View>
         </View>
       </View>

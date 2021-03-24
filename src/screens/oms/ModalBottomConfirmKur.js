@@ -122,7 +122,7 @@ class ModalBottomConfirmKur extends Component {
         onPress={this.props.close}
         close={this.props.close}
         typeClose={'close'}
-        title={'S & K KUR KlikAcc'}
+        title={'S & K KUR KlikACC'}
         content={this.renderContent()}
       />
     );
