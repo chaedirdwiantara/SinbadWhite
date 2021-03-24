@@ -327,7 +327,7 @@ class PdpOrderView extends Component {
         </View>
         {this.checkInputQtySection() ? (
           <View style={{ flexDirection: 'row', flex: 1 }}>
-            <View style={{ justifyContent: 'center' }}>
+            <View style={{ alignContent: 'flex-start' }}>
               <Text style={Fonts.type96}>Jumlah/pcs</Text>
             </View>
             <View style={{ flex: 1 }}>
