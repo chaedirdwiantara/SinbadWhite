@@ -51,7 +51,7 @@ function ModalPrincipal(props) {
         const page = limit + 10;
         setLimit(page)
         dispatch(sfaPrincipalLoadmoreProcess({
-          supplierId: 2, 
+          supplierId: parseInt(userSuppliers[0].supplier.id), 
           limit: page, 
           skip: 1
         }))

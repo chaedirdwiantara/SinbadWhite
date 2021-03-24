@@ -74,3 +74,8 @@ export const SFA_GET_PRINCIPAL_FAILED = 'SfaGetPrincipalFailed';
 export const SFA_PRINCIPAL_LOADMORE_PROCESS = 'SfaPrincipalLoadmoreProcess';
 export const SFA_PRINCIPAL_LOADMORE_SUCCESS = 'SfaPrincipalLoadmoreSuccess';
 export const SFA_PRINCIPAL_LOADMORE_FAILED = 'SfaPrincipalLoadmoreFailed';
+
+/** LOADMORE BANK DESTINATION */
+export const SFA_BANK_ACCOUNT_LOADMORE_PROCESS = 'SfaBankAccountLoadmoreProcess';
+export const SFA_BANK_ACCOUNT_LOADMORE_SUCCESS = 'SfaBankAccountLoadmoreSuccess';
+export const SFA_BANK_ACCOUNT_LOADMORE_FAILED = 'SfaBankAccountLoadmoreFailed';

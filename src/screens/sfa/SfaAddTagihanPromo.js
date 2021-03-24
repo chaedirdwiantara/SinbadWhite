@@ -64,15 +64,10 @@ const SfaAddTagihanPromo = props => {
     setExistingImage();
   }, [dataSfaGetTransferImage]);
 
-  console.log("disniii:", dataSfaGetTransferImage);
-
   const setExistingImage = () => {
     if (dataSfaGetTransferImage && dataReference) {
       setDataImage({ fileData: dataSfaGetTransferImage.data.image });
-      console.log("imagesssss:", dataSfaGetTransferImage);
     }
-    console.log("image:", dataSfaGetTransferImage);
-    console.log("ref:", dataReference);
   };
 
    useEffect(() => {
@@ -86,9 +81,6 @@ const SfaAddTagihanPromo = props => {
   const clickCamera = () => {
     let options = {
       title: 'Select Image',
-      customButtons: [
-        { name: 'customOptionKey', title: 'Choose Photo from Custom Option' }
-      ],
       storageOptions: {
         skipBackup: true,
         path: 'images'
@@ -160,8 +152,6 @@ const SfaAddTagihanPromo = props => {
   }
 
   const selectedReference = data => {
-    console.log("disni:", data);
-    console.log("grr:", props.collectionMethod.id);
     if (props.collectionMethod.id === 5) {
       dispatch(sfaGetTransferImageProcess(data.id));
     }
@@ -176,8 +166,6 @@ const SfaAddTagihanPromo = props => {
     props.principal(data.principal);
     setPromoBalance(data.balance);
     props.promoValue(data.balance);
-    // setBalance(parseInt(data.balance));
-    // props.transferValue(parseInt(data.balance));
 
     setDataImage({ fileData: data.image });
     props.promoImage(data.image);
@@ -186,6 +174,24 @@ const SfaAddTagihanPromo = props => {
     setOpenModalReference(false);
     setIsDisable(true);
     props.paymentCollectionMethodId(data.id)
+  };
+
+  const deleteDataReference = () => {
+    setIsDisable(false);
+    setDataReference();
+    setNoRef(null);
+    props.referenceCode(null);
+    setPromoNumber(null);
+    props.promoNumber(null);
+    setPrincipal(null);
+    props.principal(null);
+    setPromoBalance(null);
+    props.promoValue(null);
+
+    setDataImage(null);
+    props.promoImage(null);
+
+    props.useNoReference(false);
   };
 
   /**
@@ -414,7 +420,6 @@ const SfaAddTagihanPromo = props => {
         )
     }
 
-    console.log("woi:", dataImage);
     const renderUploadImage = () => {
         return(
             <View>

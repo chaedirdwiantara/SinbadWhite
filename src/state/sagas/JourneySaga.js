@@ -19,6 +19,11 @@ function* getJourneyPlanV2(actions) {
     const response = yield call(() => {
       return JourneyMethod.getJourneyPlanV2(actions.payload);
     });
+
+    if (response.data.data === null) {
+      response.data.data = [];
+    }
+
     yield put(ActionCreators.journeyPlanGetSuccessV2(response));
   } catch (error) {
     yield put(ActionCreators.journeyPlanGetFailedV2(error));
