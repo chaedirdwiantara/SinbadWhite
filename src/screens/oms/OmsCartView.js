@@ -789,25 +789,6 @@ class OmsCartView extends Component {
       );
     });
   }
-  /** ===> RENDER STOCK PER SKU === */
-  renderStock(item) {
-    let stock = '';
-    if (item.warehouseCatalogues.length > 0) {
-      if (
-        item.warehouseCatalogues[0].stock > 0 &&
-        !item.warehouseCatalogues[0].unlimitedStock
-      ) {
-        stock = `Tersisa ${NumberFormat(
-          item.warehouseCatalogues[0].stock
-        )} Pcs`;
-      }
-    }
-    return (
-      <View>
-        <Text style={[Fonts.type22, { textAlign: 'right' }]}>{stock}</Text>
-      </View>
-    );
-  }
   /**
    * ============================
    * RENDER SKU ERROR SECTION
