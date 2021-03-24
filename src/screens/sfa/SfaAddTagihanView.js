@@ -185,34 +185,38 @@ const SfaAddTagihanView = props => {
   };
   const saveCollection = async () => {
     const orderParcelId = props.navigation.state.params.data.id;
-    const userId = id
+    const userId = parseInt(id)
+    const supplierId = parseInt(userSuppliers[0].supplier.id)
+    const storeId = parseInt(selectedMerchant.storeId)
+    const paymentCollectionMethodId = parseInt(paymentCollectionMethodId)
     if (collectionMethod.code === 'cash') {
       const data = {
-        paymentCollectionTypeId: parseInt(collectionMethod.id),
-        storeId: parseInt(selectedMerchant.storeId),
-        supplierId: parseInt(userSuppliers[0].supplier.id),
-        userId: parseInt(userId),
-        balance: cash
-      };
-      dispatch(sfaPostPaymentMethodProcess(data));
+        supplierId: supplierId,
+        userSellerId: userId,
+        orderParcelId :orderParcelId,
+        storeId: storeId,
+        paymentCollectionMethodId: null,
+        amount : cash
+      }
+      dispatch(sfaPostCollectionPaymentProcess(data))
     }
     if (collectionMethod.code === 'transfer') {
       if (isUseNoReference === true) {
         const dataPostPayment = {
-          supplierId: parseInt(userSuppliers[0].supplier.id),
-          userSellerId: parseInt(userId),
+          supplierId: supplierId,
+          userSellerId: userId,
           orderParcelId: orderParcelId,
-          storeId: parseInt(selectedMerchant.storeId),
-          paymentCollectionMethodId: parseInt(paymentCollectionMethodId),
+          storeId: storeId,
+          paymentCollectionMethodId: paymentCollectionMethodId,
           amount: billingValue
         };
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment));
       } else {
         const dataTransfer = {
           paymentCollectionTypeId: parseInt(collectionMethod.id),
-          storeId: parseInt(selectedMerchant.storeId),
-          supplierId: parseInt(userSuppliers[0].supplier.id),
-          userId: parseInt(userId),
+          storeId: storeId,
+          supplierId: supplierId,
+          userId: userId,
           referenceCode: referenceCode,
           balance: transferValue,
           issuedDate: moment(new Date(transferDate)).format(
@@ -230,20 +234,20 @@ const SfaAddTagihanView = props => {
     if (collectionMethod.code === 'promo') {
       if (isUseNoReference === true) {
         const dataPostPayment = {
-          supplierId: parseInt(userSuppliers[0].supplier.id),
-          userSellerId: parseInt(userId),
+          supplierId: supplierId,
+          userSellerId: userId,
           orderParcelId: orderParcelId,
-          storeId: parseInt(selectedMerchant.storeId),
-          paymentCollectionMethodId: parseInt(paymentCollectionMethodId),
+          storeId: storeId,
+          paymentCollectionMethodId: paymentCollectionMethodId,
           amount: billingPromoValue
         }
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment))
       } else {
         const dataPromo = {
           paymentCollectionTypeId: parseInt(collectionMethod.id),
-          storeId: parseInt(selectedMerchant.storeId),
-          supplierId: parseInt(userSuppliers[0].supplier.id),
-          userId: parseInt(userId),
+          storeId: storeId,
+          supplierId: supplierId,
+          userId: userId,
 
           referenceCode: promoReferenceCode,
           balance: promoValue,
@@ -259,9 +263,9 @@ const SfaAddTagihanView = props => {
     if (collectionMethod.code === 'check' || collectionMethod.code === 'giro') {
       const data = {
         paymentCollectionTypeId: parseInt(collectionMethod.id),
-        storeId: parseInt(selectedMerchant.storeId),
-        supplierId: parseInt(userSuppliers[0].supplier.id),
-        userId: parseInt(userId),
+        storeId: storeId,
+        supplierId: supplierId,
+        userId: userId,
         referenceCode: referenceCode,
         bankId: bankSource,
         issuedDate: moment
@@ -278,11 +282,11 @@ const SfaAddTagihanView = props => {
       };
       if (isUseNoReference === true) {
         const dataPostPayment = {
-          supplierId: parseInt(userSuppliers[0].supplier.id),
-          userSellerId: parseInt(userId),
+          supplierId: supplierId,
+          userSellerId: userId,
           orderParcelId: orderParcelId,
-          storeId: parseInt(selectedMerchant.storeId),
-          paymentCollectionMethodId: parseInt(paymentCollectionMethodId),
+          storeId: storeId,
+          paymentCollectionMethodId: paymentCollectionMethodId,
           amount: billingValue
         };
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment));
@@ -508,6 +512,8 @@ const SfaAddTagihanView = props => {
           setDisabled(false);
         }
       }
+    } else {
+      setDisabled(true);
     }
   }, [
     collectionMethod,
