@@ -10,7 +10,7 @@ import * as rootReducers from '../state/reducers';
 const config = {
   key: 'root',
   storage,
-  whitelist: ['permanent', 'user', 'privilege'],
+  whitelist: ['permanent', 'user'],
   blacklist: ['auth', 'global', 'merchant', 'journey', 'pdp', 'oms', 'history'],
   debug: true
 };
