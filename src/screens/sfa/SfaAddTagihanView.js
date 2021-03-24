@@ -188,13 +188,14 @@ const SfaAddTagihanView = props => {
     const userId = id
     if (collectionMethod.code === 'cash') {
       const data = {
-        paymentCollectionTypeId: parseInt(collectionMethod.id),
-        storeId: parseInt(selectedMerchant.storeId),
         supplierId: parseInt(userSuppliers[0].supplier.id),
-        userId: parseInt(userId),
-        balance: cash
-      };
-      dispatch(sfaPostPaymentMethodProcess(data));
+        userSellerId: parseInt(userId),
+        orderParcelId :orderParcelId,
+        storeId: parseInt(selectedMerchant.storeId),
+        paymentCollectionMethodId: null,
+        amount : cash
+      }
+      dispatch(sfaPostCollectionPaymentProcess(data))
     }
     if (collectionMethod.code === 'transfer') {
       if (isUseNoReference === true) {
