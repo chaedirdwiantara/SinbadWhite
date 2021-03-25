@@ -290,6 +290,23 @@ function SfaDetailView(props) {
   );
 }
 
+export const HeaderRightOption = props => {
+
+  return (
+    <View style={styles.navOption}>
+      <>
+        <TouchableOpacity onPress={()=> NavigationService.navigate('SfaCollectionLog')}>
+          <MaterialIcon
+            name="restore"
+            size={28}
+            style={{ color: masterColor.fontBlack50 , marginRight: 10 }}
+          />
+        </TouchableOpacity>
+      </>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
@@ -305,6 +322,10 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: masterColor.backgroundWhite
   },
+  navOption: {
+    flex: 1,
+    paddingHorizontal: 10
+  }
 });
 
 const mapDispatchToProps = dispatch => {
