@@ -3,8 +3,9 @@ import {
   View,
   Text,
   TouchableOpacity,
+  FlatList,
+  StyleSheet
 } from '../../library/reactPackage';
-
 import {
   bindActionCreators,
   connect,
@@ -14,8 +15,10 @@ import {
 import {
     StatusBarWhite
 } from '../../library/component';
+import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
+import masterColor from '../../config/masterColor.json';
 
 function SfaCollectionLog(props) {
     const [collectionLog, setCollectionLog] = useState({
@@ -54,11 +57,33 @@ function SfaCollectionLog(props) {
 
     /** === RENDER COLLECTIONLIST === */
     const renderCollectionList = () => {
-        return(
-            <View>
-                <Text>{collectionLog.collectionDate}</Text>
-            </View>
-        )
+        return collectionLog.data.map((item, index) => {
+            return(
+                <View key={index}>
+                    <TouchableOpacity>
+                        <View style={{flexDirection: "row", justifyContent:"space-between", marginHorizontal:16, marginVertical: 16}}>
+                            <View>
+                                <Text>{item.salesmanName}</Text>
+                                <Text>{item.collectionDate} WIB</Text>
+                            </View>
+                            <View style={{flexDirection:"row"}}>
+                                <View style={{marginRight: 24}}>
+                                    <Text>{item.totalCollection}</Text>
+                                    <Text>{item.collectionMethod.code}</Text>
+                                </View>
+                                <MaterialIcon
+                                    name="chevron-right"
+                                    color={masterColor.fontBlack40}
+                                    size={24}
+                                    style={{alignSelf:"center"}}
+                                />
+                            </View>
+                        </View>
+                        <View style={{...GlobalStyle.lines, marginLeft: 16}} />
+                    </TouchableOpacity>
+                </View>
+            )
+        })
     }
     /** === RENDER CONTENT === */
     const renderContent = () =>{
@@ -76,13 +101,25 @@ function SfaCollectionLog(props) {
    * =======================
    */
   return (
-    <View>
+    <View style={styles.mainContainer}>
         <StatusBarWhite />
-        <View style={{ flex: 1 }}>{renderContent()}</View>
+        <View style={styles.container}>
+            {renderContent()}
+        </View>
     </View>
   );
 
 }
+
+const styles = StyleSheet.create({
+    mainContainer: {
+      flex: 1,
+      backgroundColor: masterColor.backgroundWhite
+    },
+    container: {
+        flex: 1,
+    }
+});
 
 const mapDispatchToProps = dispatch => {
     return bindActionCreators(ActionCreators, dispatch);
