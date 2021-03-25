@@ -32,7 +32,7 @@ class HistoryDetailPaymentInformation extends Component {
           <Text style={green ? Fonts.type51 : Fonts.type17}>{key}</Text>
         </View>
         <View style={{ flex: 1, alignItems: 'flex-end' }}>
-          <Text style={green ? Fonts.type51 : Fonts.type17}>{value}</Text>
+          <Text style={[green ? Fonts.type51 : Fonts.type17, {textAlign:"right"}]}>{value}</Text>
         </View>
       </View>
     );
@@ -56,7 +56,7 @@ class HistoryDetailPaymentInformation extends Component {
             )}
             {this.props.history.dataDetailHistory.paylaterType
               ? this.renderContentListGlobal(
-                  'Tipe Bayar Nanti',
+                  'Penyedia Layanan',
                   this.props.history.dataDetailHistory.paylaterType.name
                 )
               : null}
