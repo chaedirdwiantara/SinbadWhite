@@ -19,33 +19,11 @@ import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
+import SfaNoDataView from './SfaNoDataView';
 
 function SfaCollectionLog(props) {
     const [collectionLog, setCollectionLog] = useState({
-        data : [
-            {
-                storeId: 1,
-                orderParcelId: 1,
-                salesName: "Dian Mandala Putra",
-                updatedAt: "2021-03-25 06:49:18",
-                amount: 50000,
-                paymentMethod: {
-                    id: 19,
-                    type: "promo"
-                }
-            },
-            {
-                storeId: 1,
-                orderParcelId: 1,
-                salesName: "Dian Mandala Putra",
-                updatedAt: "2021-03-25 06:49:18",
-                amount: 50000,
-                paymentMethod: {
-                    id: 19,
-                    type: "promo"
-                }
-            },
-        ],
+        data : null
     })
     /**
    * =======================
@@ -63,11 +41,10 @@ function SfaCollectionLog(props) {
    * *********************************
    */
 
-    /** === RENDER COLLECTIONLIST === */
-    const renderCollectionList = () => {
-        return collectionLog.data.map((item, index) => {
-            return(
-                <View key={index}>
+    //**RENDER ITEM */
+    const renderItem = ({item, index}) => {
+        return(
+            <View key={index}>
                     <TouchableOpacity>
                         <View style={{flexDirection: "row", justifyContent:"space-between", marginHorizontal:16, marginVertical: 16}}>
                             <View>
@@ -90,8 +67,32 @@ function SfaCollectionLog(props) {
                         <View style={{...GlobalStyle.lines, marginLeft: 16}} />
                     </TouchableOpacity>
                 </View>
+        )
+    }
+
+    /** === RENDER COLLECTIONLIST === */
+    const renderCollectionList = () => {
+            return(
+                <View>
+                { collectionLog.data !== null ? (
+                    <FlatList
+                        data={collectionLog.data}
+                        renderItem={renderItem}
+                        numColumns={1}
+                        keyExtractor={(item, index) => index.toString()}
+                        // refreshing={refreshGetCollection}
+                        // onRefresh={()=>props.refersh()}
+                        // onEndReachedThreshold={0.2}
+                        // onEndReached={() => props.loadmore()}
+                        showsVerticalScrollIndicator
+                    />
+                  ) : (
+                    <View style={{ marginTop: '20%' }}>
+                      <SfaNoDataView/>
+                    </View>
+                  )}
+                  </View>
             )
-        })
     }
     /** === RENDER CONTENT === */
     const renderContent = () =>{
