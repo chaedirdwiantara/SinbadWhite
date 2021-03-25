@@ -10,10 +10,32 @@ import {
   connect,
   MaterialIcon
 } from '../../library/thirdPartyPackage';
+import {
+    StatusBarWhite
+} from '../../library/component';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
 
 function SfaCollectionLog(props) {
+    /**
+   * =======================
+   * FUNCTIONAL
+   * =======================
+   */
+
+    /**
+   * *********************************
+   * RENDER VIEW
+   * *********************************
+   */
+    const renderContent = () =>{
+        return(
+            <View>
+                {renderCollectionList()}
+            </View>
+        )
+    }
+
 
     /**
    * =======================
@@ -22,9 +44,8 @@ function SfaCollectionLog(props) {
    */
   return (
     <View>
-        <TouchableOpacity onPress={()=> alert("goTo added collection")}>
-            <Text>Go To Added collection</Text>
-        </TouchableOpacity>
+        <StatusBarWhite />
+        <View style={{ flex: 1 }}>{renderContent()}</View>
     </View>
   );
 
