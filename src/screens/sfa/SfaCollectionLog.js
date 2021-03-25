@@ -24,24 +24,28 @@ function SfaCollectionLog(props) {
     const [collectionLog, setCollectionLog] = useState({
         data : [
             {
-                salesmanName: "salesman Udin",
-                collectionDate: moment(new Date()).format("DD MMM YYYY HH:mm"),
-                totalCollection: 15000,
-                collectionMethod: {
-                    id: 1,
-                    code: "cash"
+                storeId: 1,
+                orderParcelId: 1,
+                salesName: "Dian Mandala Putra",
+                updatedAt: "2021-03-25 06:49:18",
+                amount: 50000,
+                paymentMethod: {
+                    id: 19,
+                    type: "promo"
                 }
             },
             {
-                salesmanName: "salesman Asep",
-                collectionDate: moment(new Date()).format("DD MMM YYYY HH:mm"),
-                totalCollection: 15000,
-                collectionMethod: {
-                    id: 1,
-                    code: "cash"
+                storeId: 1,
+                orderParcelId: 1,
+                salesName: "Dian Mandala Putra",
+                updatedAt: "2021-03-25 06:49:18",
+                amount: 50000,
+                paymentMethod: {
+                    id: 19,
+                    type: "promo"
                 }
             },
-        ]
+        ],
     })
     /**
    * =======================
@@ -67,13 +71,13 @@ function SfaCollectionLog(props) {
                     <TouchableOpacity>
                         <View style={{flexDirection: "row", justifyContent:"space-between", marginHorizontal:16, marginVertical: 16}}>
                             <View>
-                                <Text style={{...Fonts.type42, marginBottom: 8}}>{item.salesmanName}</Text>
-                                <Text style={Fonts.type17}>{item.collectionDate} WIB</Text>
+                                <Text style={{...Fonts.type42, marginBottom: 8}}>{item.salesName}</Text>
+                                <Text style={Fonts.type17}>{item.updatedAt} WIB</Text>
                             </View>
                             <View style={{flexDirection:"row"}}>
                                 <View style={{marginRight: 24}}>
-                                    <Text style={{...Fonts.type36, marginBottom: 8}}>{MoneyFormat(item.totalCollection)}</Text>
-                                    <Text style={Fonts.type17}>{capitalizeFirstLetter(item.collectionMethod.code)}</Text>
+                                    <Text style={{...Fonts.type36, marginBottom: 8}}>{MoneyFormat(item.amount)}</Text>
+                                    <Text style={Fonts.type17}>{capitalizeFirstLetter(item.paymentMethod.type)}</Text>
                                 </View>
                                 <MaterialIcon
                                     name="chevron-right"
