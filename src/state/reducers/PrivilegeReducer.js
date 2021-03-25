@@ -24,6 +24,12 @@ export const privileges = createReducer(INITIAL_STATE, {
       data: action.payload
     }
   },
+  [types.REMAPPING_PRIVILEGE](state, action){
+    return {
+      ...state,
+      data: action.payload
+    }
+  },
   [types.PRIVILEGE_GET_FAILED](state, action){
     return {
       ...state,
@@ -36,5 +42,8 @@ export const privileges = createReducer(INITIAL_STATE, {
       ...state,
       salesRole: action.payload
     }
+  },
+  [types.DELETE_ALL_DATA](state, action){
+    return INITIAL_STATE
   }
 });

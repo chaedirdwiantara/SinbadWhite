@@ -195,16 +195,20 @@ function addGaps(string = "", gaps, spacer){
 };
 /** ROLE BASE ACCESS CONTROL */
 export function remappingPrivilege(privilege){
+  const temp = {...DEFAULT_PRIVILEGE}
   if(Array.isArray(privilege)){
-    privilege.forEach(el => {
-      for (const key in DEFAULT_PRIVILEGE) {
-        if(DEFAULT_PRIVILEGE[key].name === el.privilege){
-          DEFAULT_PRIVILEGE[key].status = true
+    for (const key in temp) {
+      let flag = false
+      privilege.forEach(el => {
+        if(temp[key].name === el.privilege){
+          flag = true
+          return
         }
-      }
-    })
+      })
+      temp[key].status = flag
+    }
   }
-  return DEFAULT_PRIVILEGE
+  return temp
 }
 
 export const GlobalMethod = {

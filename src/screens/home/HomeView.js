@@ -45,6 +45,7 @@ import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import _ from 'lodash';
 import { GlobalMethod, SalesmanKpiMethod } from '../../services/methods';
+import { DEFAULT_PRIVILEGE } from '../../helpers/RoleBaseAccessControl';
 
 const { width } = Dimensions.get('window');
 const defaultImage = require('../../assets/images/sinbad_image/sinbadopacity.png');
@@ -155,7 +156,7 @@ class HomeView extends Component {
       fullName: this.props.user.fullName,
       imageUrl: this.props.user.imageUrl
     });
-    if(this.props.privileges.dataPrivilege === null){
+    if(this.props.privileges.data === null){
       this.getPrivileges()
     }
   }
@@ -197,8 +198,8 @@ class HomeView extends Component {
       }
     }
     /** DEFINE SALES ROLES WHEN SUCCESS GET PRIVILEGE */
-    const privilege = this.props.privileges.dataPrivilege
-    if(prevProps.privileges.dataPrivilege !== privilege){
+    const privilege = this.props.privileges.data
+    if(prevProps.privileges.data !== privilege){
       if(privilege !== null){
         // setTimeout(() => {
         //   const role = GlobalMethod.defineSalesRoles(privilege?.data)

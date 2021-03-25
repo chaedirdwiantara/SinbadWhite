@@ -136,10 +136,8 @@ class JourneyView extends Component {
       case 'new_merchant':
         this.setState({ openModalAddMerchant: false });
         const portfolio = this.props.merchant.dataGetPortfolioV2
-        const salesRole = this.props.profile.salesRole
-        const takingOrder = salesRole === TAKING_ORDER
-        const canAddStore = takingOrder && portfolio !== null
-        if(canAddStore){
+        const canCreateStore = this.props.privileges.data?.createStore?.status || false
+        if(portfolio !== null && canCreateStore){
           this.props.savePageAddMerchantFrom('JourneyView');
           setTimeout(() => {
             NavigationService.navigate('AddMerchantStep1');
@@ -262,19 +260,19 @@ class JourneyView extends Component {
   /** RENDER MODAL ERROR CONTENT */
   modalErrorContent() {
     return (
-      <View style={{ alignItems: 'center', paddingHorizontal: 24 }}>
+      <View style={{ alignItems: 'center', paddingHorizontal: 16 }}>
         <StatusBarRedOP50 />
         <Image
-          source={require('../../assets/images/sinbad_image/failed_error.png')}
+          source={require('../../assets/images/sinbad_image/sinbad_no_access.png')}
           style={{ width: 208, height: 156 }}
         />
-        <Text style={[Fonts.type7, { paddingVertical: 8, textAlign: 'center' }]}>
-          Maaf, Anda tidak memiliki akses untuk membuat toko
+        <Text style={[Fonts.type7, { padding: 16, textAlign: 'center' }]}>
+          Maaf, Anda tidak memiliki akses ke halaman ini
         </Text>
         <Text style={[Fonts.type17, {textAlign: 'center', lineHeight: 18}]}>
-          Hal ini bisa terjadi karena Anda tidak memiliki portfolio. Silakan hubungi admin untuk proses lebih lanjut.
+          Silakan hubungi admin untuk proses lebih lanjut
         </Text>
-        <View style={{ width: '100%', paddingTop: 40 }}>
+        <View style={{ width: '100%', paddingTop: 24 }}>
           <ButtonSingle
             borderRadius={4}
             title={'Oke, Saya Mengerti'}
@@ -332,8 +330,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ journey, user, merchant, profile }) => {
-  return { journey, user, merchant, profile };
+const mapStateToProps = ({ journey, user, merchant, privileges }) => {
+  return { journey, user, merchant, privileges };
 };
 
 const mapDispatchToProps = dispatch => {
