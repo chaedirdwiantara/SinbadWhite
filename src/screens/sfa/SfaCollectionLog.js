@@ -48,6 +48,10 @@ function SfaCollectionLog(props) {
    * FUNCTIONAL
    * =======================
    */
+    const capitalizeFirstLetter = (string) => {
+        return string[0].toUpperCase() + string.slice(1);
+    }
+    
 
     /**
    * *********************************
@@ -63,13 +67,13 @@ function SfaCollectionLog(props) {
                     <TouchableOpacity>
                         <View style={{flexDirection: "row", justifyContent:"space-between", marginHorizontal:16, marginVertical: 16}}>
                             <View>
-                                <Text>{item.salesmanName}</Text>
-                                <Text>{item.collectionDate} WIB</Text>
+                                <Text style={{...Fonts.type42, marginBottom: 8}}>{item.salesmanName}</Text>
+                                <Text style={Fonts.type17}>{item.collectionDate} WIB</Text>
                             </View>
                             <View style={{flexDirection:"row"}}>
                                 <View style={{marginRight: 24}}>
-                                    <Text>{item.totalCollection}</Text>
-                                    <Text>{item.collectionMethod.code}</Text>
+                                    <Text style={{...Fonts.type36, marginBottom: 8}}>{MoneyFormat(item.totalCollection)}</Text>
+                                    <Text style={Fonts.type17}>{capitalizeFirstLetter(item.collectionMethod.code)}</Text>
                                 </View>
                                 <MaterialIcon
                                     name="chevron-right"
