@@ -1,7 +1,7 @@
 import ApiRest from '../apiRest';
 import ApiRestMap from '../apiRestMap';
 import { Store } from '../../state/Store';
-import { DEFAULT_PRIVILEGE, HUNTER, TAKING_ORDER } from '../../helpers/RoleBaseAccessControl';
+import { DEFAULT_PRIVILEGE } from '../../helpers/RoleBaseAccessControl';
 
 function getListAndSearch(data) {
   

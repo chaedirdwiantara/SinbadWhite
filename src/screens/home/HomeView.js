@@ -197,16 +197,6 @@ class HomeView extends Component {
         }
       }
     }
-    /** DEFINE SALES ROLES WHEN SUCCESS GET PRIVILEGE */
-    const privilege = this.props.privileges.data
-    if(prevProps.privileges.data !== privilege){
-      if(privilege !== null){
-        // setTimeout(() => {
-        //   const role = GlobalMethod.defineSalesRoles(privilege?.data)
-        //   this.props.setSalesRole(role)
-        // }, 0)
-      }
-    }
   }
   /** GET SALES PRIVILEGE */
   getPrivileges(){

@@ -44,8 +44,3 @@ export const DEFAULT_PRIVILEGE = {
     collection,
     retur
 }
-
-
-/** SALES ROLES */
-export const HUNTER = "Hunter"
-export const TAKING_ORDER = "Taking Order"

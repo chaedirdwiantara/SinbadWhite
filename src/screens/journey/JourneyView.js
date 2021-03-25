@@ -32,7 +32,6 @@ import masterColor from '../../config/masterColor';
 import ModalContentMenuAddMerchant from './ModalContentMenuAddMerchant';
 import ModalBottomMerchantList from '../merchants/ModalBottomMerchantList';
 import JourneyListDataView from './JourneyListDataView';
-import { HUNTER, TAKING_ORDER } from '../../helpers/RoleBaseAccessControl';
 
 const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
 
