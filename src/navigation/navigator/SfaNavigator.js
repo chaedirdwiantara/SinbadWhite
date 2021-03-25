@@ -3,8 +3,9 @@ import { View } from 'react-native';
 import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 import SfaView from '../../screens/sfa/SfaView';
-import SfaDetailView from '../../screens/sfa/SfaDetailView';
+import SfaDetailView, { HeaderRightOption } from '../../screens/sfa/SfaDetailView';
 import SfaAddTagihanView from '../../screens/sfa/SfaAddTagihanView'
+import SfaCollectionLog from '../../screens/sfa/SfaCollectionLog'
 
 const SfaNavigator = {
   SfaView: {
@@ -33,7 +34,7 @@ const SfaNavigator = {
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
-      headerRight: <View />,
+      headerRight: <HeaderRightOption />,
       gesturesEnabled: false
     }
   },
@@ -41,6 +42,25 @@ const SfaNavigator = {
     screen: SfaAddTagihanView,
     navigationOptions: {
       headerTitle: 'Bayar Tagihan',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'left',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.fontBlack50,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  SfaCollectionLog: {
+    screen: SfaCollectionLog,
+    navigationOptions: {
+      headerTitle: 'Riwayat Transaksi',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
