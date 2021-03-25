@@ -44,7 +44,8 @@ import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import _ from 'lodash';
-import { SalesmanKpiMethod } from '../../services/methods';
+import { GlobalMethod, SalesmanKpiMethod } from '../../services/methods';
+import { DEFAULT_PRIVILEGE } from '../../helpers/RoleBaseAccessControl';
 
 const { width } = Dimensions.get('window');
 const defaultImage = require('../../assets/images/sinbad_image/sinbadopacity.png');
@@ -155,6 +156,9 @@ class HomeView extends Component {
       fullName: this.props.user.fullName,
       imageUrl: this.props.user.imageUrl
     });
+    if(this.props.privileges.data === null){
+      this.getPrivileges()
+    }
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
@@ -194,12 +198,22 @@ class HomeView extends Component {
       }
     }
   }
+  /** GET SALES PRIVILEGE */
+  getPrivileges(){
+    let supplierId = GlobalMethod.userSupplierMapping()
+    if(supplierId.length > 0){
+      supplierId = supplierId[0].toString()
+    }
+    let userId = this.props.user?.id || ''
+    this.props.getPrivilegeProcess({supplierId, userId})
+  }
   /** === PULL TO REFRESH === */
   _onRefresh() {
     this.setState({ refreshing: true }, () =>
       this.getKpiData(this.state.tabValue)
     );
   }
+  /** GET PRIVILIGES */
   /** === GET KPI DATA === */
   getKpiData(period) {
     if (_.isNil(this.props.user)) {
@@ -728,8 +742,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, merchant, global, salesmanKpi }) => {
-  return { user, merchant, global, salesmanKpi };
+const mapStateToProps = ({ user, merchant, global, salesmanKpi, privileges }) => {
+  return { user, merchant, global, salesmanKpi, privileges };
 };
 
 const mapDispatchToProps = dispatch => {
