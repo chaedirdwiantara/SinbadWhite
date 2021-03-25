@@ -8,7 +8,8 @@ import {
 import {
   bindActionCreators,
   connect,
-  MaterialIcon
+  MaterialIcon,
+  moment
 } from '../../library/thirdPartyPackage';
 import {
     StatusBarWhite
@@ -17,6 +18,28 @@ import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
 
 function SfaCollectionLog(props) {
+    const [collectionLog, setCollectionLog] = useState({
+        data : [
+            {
+                salesmanName: "salesman Udin",
+                collectionDate: moment(new Date()).format("DD MMM YYYY HH:mm"),
+                totalCollection: 15000,
+                collectionMethod: {
+                    id: 1,
+                    code: "cash"
+                }
+            },
+            {
+                salesmanName: "salesman Asep",
+                collectionDate: moment(new Date()).format("DD MMM YYYY HH:mm"),
+                totalCollection: 15000,
+                collectionMethod: {
+                    id: 1,
+                    code: "cash"
+                }
+            },
+        ]
+    })
     /**
    * =======================
    * FUNCTIONAL
@@ -28,6 +51,16 @@ function SfaCollectionLog(props) {
    * RENDER VIEW
    * *********************************
    */
+
+    /** === RENDER COLLECTIONLIST === */
+    const renderCollectionList = () => {
+        return(
+            <View>
+                <Text>{collectionLog.collectionDate}</Text>
+            </View>
+        )
+    }
+    /** === RENDER CONTENT === */
     const renderContent = () =>{
         return(
             <View>
