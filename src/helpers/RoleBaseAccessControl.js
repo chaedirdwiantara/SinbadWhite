@@ -1,36 +1,36 @@
 /** PRIVILEGE */
 const createStore = {
     name: "aa.create.store",
-    status: false
+    status: true
 }
 const checkIn = {
     name: "aa.checkin",
-    status: false
+    status: true
 }
 const checkOut = {
     name: "aa.checkout",
-    status: false
+    status: true
 }
 const checkStock = {
     name: "aa.record.stock",
-    status: false
+    status: true
 }
 const order = {
     name: "aa.order",
-    status: false
+    status: true
 }
 const survey = {
     name: "aa.survey",
-    status: false
+    status: true
 }
 const collection = {
     name: "aa.collection",
-    status: false
+    status: true
 }
 
 const retur = {
     name: "aa.retur",
-    status: false
+    status: true
 }
 
 /** DEFAULT PRIVILEGE */
