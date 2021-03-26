@@ -323,8 +323,8 @@ class OmsCheckoutView extends Component {
                   ? parseInt(e.paymentTypeDetail.paymentTypeId, 10)
                   : parseInt(e.paymentTypeDetail.id, 10),
                 paymentChannelId: e.paymentMethodDetail.id,
-                paylaterTypeId: this.state.selectedPaylaterType
-                  ? this.state.selectedPaylaterType.id
+                paylaterTypeId: e.paylaterType.id
+                  ? e.paylaterType.id
                   : null
               }));
               NavigationService.navigate('OmsOtpKurView', {
