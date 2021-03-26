@@ -41,7 +41,6 @@ function SfaCollectionLog(props) {
     }
 
     useEffect(() => {
-        // const orderParcelId = parseInt(props.navigation.state.params.orderParcelId);
         const data = {
             storeId: 1,
             orderParcelId: 1,
