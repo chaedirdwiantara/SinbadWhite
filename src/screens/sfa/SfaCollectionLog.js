@@ -13,18 +13,22 @@ import {
   moment
 } from '../../library/thirdPartyPackage';
 import {
-    StatusBarWhite
+    StatusBarWhite,
+    LoadingPage
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import SfaNoDataView from './SfaNoDataView';
+import { useDispatch , useSelector} from 'react-redux';
+import {
+    sfaGetCollectionLogProcess,
+} from '../../state/actions';
 
 function SfaCollectionLog(props) {
-    const [collectionLog, setCollectionLog] = useState({
-        data : null
-    })
+    const dispatch = useDispatch();
+    const { dataSfaGetCollectionLog } = useSelector(state => state.sfa);
     /**
    * =======================
    * FUNCTIONAL
@@ -33,6 +37,11 @@ function SfaCollectionLog(props) {
     const capitalizeFirstLetter = (string) => {
         return string[0].toUpperCase() + string.slice(1);
     }
+
+    useEffect(() => {
+        // const orderParcelId = parseInt(props.navigation.state.params.orderParcelId);
+        dispatch(sfaGetCollectionLogProcess());
+      }, [dispatch]);
     
 
     /**
@@ -74,27 +83,31 @@ function SfaCollectionLog(props) {
     const renderCollectionList = () => {
             return(
                 <View>
-                { collectionLog.data !== null ? (
-                    <FlatList
-                        data={collectionLog.data}
-                        renderItem={renderItem}
-                        numColumns={1}
-                        keyExtractor={(item, index) => index.toString()}
-                        // refreshing={refreshGetCollection}
-                        // onRefresh={()=>props.refersh()}
-                        // onEndReachedThreshold={0.2}
-                        // onEndReached={() => props.loadmore()}
-                        showsVerticalScrollIndicator
-                    />
-                  ) : (
-                    <View style={{ marginTop: '20%' }}>
-                      <SfaNoDataView
-                        topText={"Tidak Ada Transaksi"}
-                        midText={'Belum ada transaksi yang telah dilakukan'}
-                        bottomText={""}
-                      />
-                    </View>
-                  )}
+                { dataSfaGetCollectionLog ?
+                    dataSfaGetCollectionLog.data !== null ? (
+                        <FlatList
+                            data={dataSfaGetCollectionLog.data}
+                            renderItem={renderItem}
+                            numColumns={1}
+                            keyExtractor={(item, index) => index.toString()}
+                            // refreshing={refreshGetCollection}
+                            // onRefresh={()=>props.refersh()}
+                            // onEndReachedThreshold={0.2}
+                            // onEndReached={() => props.loadmore()}
+                            showsVerticalScrollIndicator
+                        />
+                    ) : (
+                        <View style={{ marginTop: '20%' }}>
+                        <SfaNoDataView
+                            topText={"Tidak Ada Transaksi"}
+                            midText={'Belum ada transaksi yang telah dilakukan'}
+                            bottomText={""}
+                        />
+                        </View>
+                    )
+                :
+                <LoadingPage />
+                }
                   </View>
             )
     }

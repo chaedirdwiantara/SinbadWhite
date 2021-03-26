@@ -79,3 +79,8 @@ export const SFA_PRINCIPAL_LOADMORE_FAILED = 'SfaPrincipalLoadmoreFailed';
 export const SFA_BANK_ACCOUNT_LOADMORE_PROCESS = 'SfaBankAccountLoadmoreProcess';
 export const SFA_BANK_ACCOUNT_LOADMORE_SUCCESS = 'SfaBankAccountLoadmoreSuccess';
 export const SFA_BANK_ACCOUNT_LOADMORE_FAILED = 'SfaBankAccountLoadmoreFailed';
+
+/** GET COLLECTION LOG */
+export const SFA_GET_COLLECTION_LOG_PROCESS = 'SfaGetCollectionLogProcess';
+export const SFA_GET_COLLECTION_LOG_SUCCESS = 'SfaGetCollectionLogSuccess';
+export const SFA_GET_COLLECTION_LOG_FAILED = 'SfaGetCollectionLogFailed';

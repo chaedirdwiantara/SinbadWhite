@@ -379,3 +379,28 @@ export function sfaBankAccountLoadmoreSuccess(data) {
 export function sfaBankAccountLoadmoreFailed(data) {
   return { type: types.SFA_BANK_ACCOUNT_LOADMORE_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * GET COLLECTION LOG
+ * ===========================
+ */
+/** === SFA GET COLLECTION LOG PROCESS === */
+export function sfaGetCollectionLogProcess(data) {
+  return { type: types.SFA_GET_COLLECTION_LOG_PROCESS, payload: data };
+}
+
+/** === SFA GET COLLECTION LOG SUCCESS === */
+export function sfaGetCollectionLogSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_COLLECTION_LOG_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_COLLECTION_LOG_FAILED, payload: data };
+}
+/** === SFA GET COLLECTION LOG FAILED === */
+export function sfaGetCollectionLogFailed(data) {
+  return { type: types.SFA_GET_COLLECTION_LOG_FAILED, payload: data };
+}
