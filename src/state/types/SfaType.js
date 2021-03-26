@@ -84,3 +84,8 @@ export const SFA_BANK_ACCOUNT_LOADMORE_FAILED = 'SfaBankAccountLoadmoreFailed';
 export const SFA_GET_COLLECTION_LOG_PROCESS = 'SfaGetCollectionLogProcess';
 export const SFA_GET_COLLECTION_LOG_SUCCESS = 'SfaGetCollectionLogSuccess';
 export const SFA_GET_COLLECTION_LOG_FAILED = 'SfaGetCollectionLogFailed';
+
+/** LOADMORE COLLECTION LOG */
+export const SFA_COLLECTION_LOG_LOADMORE_PROCESS = 'SfaCollectionLogLoadmoreProcess';
+export const SFA_COLLECTION_LOG_LOADMORE_SUCCESS = 'SfaCollectionLogLoadmoreSuccess';
+export const SFA_COLLECTION_LOG_LOADMORE_FAILED = 'SfaCollectionLogLoadmoreFailed';

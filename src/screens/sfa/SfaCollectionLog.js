@@ -14,7 +14,8 @@ import {
 } from '../../library/thirdPartyPackage';
 import {
     StatusBarWhite,
-    LoadingPage
+    LoadingPage,
+    LoadingLoadMore
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import NavigationService from '../../navigation/NavigationService';
@@ -24,11 +25,12 @@ import SfaNoDataView from './SfaNoDataView';
 import { useDispatch , useSelector} from 'react-redux';
 import {
     sfaGetCollectionLogProcess,
+    sfaCollectionLogLoadmoreProcess
 } from '../../state/actions';
 
 function SfaCollectionLog(props) {
     const dispatch = useDispatch();
-    const { dataSfaGetCollectionLog } = useSelector(state => state.sfa);
+    const { dataSfaGetCollectionLog, loadingLoadmoreCollectionLog } = useSelector(state => state.sfa);
     /**
    * =======================
    * FUNCTIONAL
@@ -40,8 +42,31 @@ function SfaCollectionLog(props) {
 
     useEffect(() => {
         // const orderParcelId = parseInt(props.navigation.state.params.orderParcelId);
-        dispatch(sfaGetCollectionLogProcess());
+        const data = {
+            storeId: 1,
+            orderParcelId: 1,
+            limit: 10,
+            skip: 0
+        }
+        dispatch(sfaGetCollectionLogProcess(data));
       }, [dispatch]);
+
+      const loadMore = () => {
+        if (dataSfaGetCollectionLog) {
+          if (
+            dataSfaGetCollectionLog.data.length <
+            dataSfaGetCollectionLog.meta.total
+          ) {
+            const page = 20;
+            dispatch(sfaCollectionLogLoadmoreProcess({
+                storeId: 1,
+                orderParcelId: 1,
+                limit: page,
+                skip: 1
+            }))
+          }
+        }
+      }
     
 
     /**
@@ -92,10 +117,8 @@ function SfaCollectionLog(props) {
                             renderItem={renderItem}
                             numColumns={1}
                             keyExtractor={(item, index) => index.toString()}
-                            // refreshing={refreshGetCollection}
-                            // onRefresh={()=>props.refersh()}
-                            // onEndReachedThreshold={0.2}
-                            // onEndReached={() => props.loadmore()}
+                            onEndReachedThreshold={0.2}
+                            onEndReached={() => loadMore()}
                             showsVerticalScrollIndicator
                         />
                     ) : (
@@ -108,9 +131,10 @@ function SfaCollectionLog(props) {
                         </View>
                     )
                 :
-                <LoadingPage />
+                    <LoadingPage />
                 }
-                  </View>
+                {loadingLoadmoreCollectionLog ? <LoadingLoadMore /> : null}
+                </View>
             )
     }
     /** === RENDER CONTENT === */

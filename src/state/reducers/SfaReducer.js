@@ -21,6 +21,7 @@ const INITIAL_STATE = {
   loadingLoadmorePrincipal: false,
   loadingLoadmoreBankAccount: false,
   loadingSfaGetCollectionLog: false,
+  loadingLoadmoreCollectionLog: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -38,6 +39,7 @@ const INITIAL_STATE = {
   dataLoadmorePrincipal: null,
   dataLoadmoreBankAccount: null,
   dataSfaGetCollectionLog: null,
+  dataLoadmoreCollectionLog: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -55,6 +57,7 @@ const INITIAL_STATE = {
   errorLoadmorePrincipal: null,
   errorLoadmoreBankAccount: null,
   errorSfaGetCollectionLog: null,
+  errorLoadmoreCollectionLog: null,
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -514,6 +517,32 @@ export const sfa = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingSfaGetCollectionLog: false,
+      errorSfaGetCollectionLog: action.payload
+    };
+  },
+  /**
+   * =============================
+   * LOADMORE COLLECTION LOG
+   * =============================
+   */
+   [types.SFA_COLLECTION_LOG_LOADMORE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingLoadmoreCollectionLog: true,
+      errorSfaGetCollectionLog: null
+    };
+  },
+  [types.SFA_COLLECTION_LOG_LOADMORE_SUCCESS](state, action) {
+    return {
+      ...state,
+      dataSfaGetCollectionLog: action.payload,
+      loadingLoadmoreCollectionLog: false,
+    };
+  },
+  [types.SFA_COLLECTION_LOG_LOADMORE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingLoadmoreCollectionLog: false,
       errorSfaGetCollectionLog: action.payload
     };
   },

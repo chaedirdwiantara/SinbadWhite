@@ -112,7 +112,7 @@ function getPrincipal(data) {
 /** GET COLLECTION LOG */
 function getCollectionLog(data) {
   return ApiRestMock({
-    path: `collection/v1/payment-billings?storeId=1&orderParcelId=1`,
+    path: `collection/v1/payment-billings?storeId=${data.storeId}&orderParcelId=${data.orderParcelId}&limit=${data.limit}&skip=${data.skip}&`,
     method: 'GET'
   });
 }

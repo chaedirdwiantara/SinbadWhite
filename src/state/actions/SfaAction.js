@@ -404,3 +404,28 @@ export function sfaGetCollectionLogSuccess(data) {
 export function sfaGetCollectionLogFailed(data) {
   return { type: types.SFA_GET_COLLECTION_LOG_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * LOADMORE COLLECTION LOG
+ * ===========================
+ */
+/** === SFA LOADMORE COLLECTION LOG PROCESS === */
+export function sfaCollectionLogLoadmoreProcess(data) {
+  return { type: types.SFA_COLLECTION_LOG_LOADMORE_PROCESS, payload: data };
+}
+
+/** === SFA LOADMORE COLLECTION LOG SUCCESS === */
+export function sfaCollectionLogLoadmoreSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_COLLECTION_LOG_LOADMORE_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_COLLECTION_LOG_LOADMORE_FAILED, payload: data };
+}
+/** === SFA LOADMORE COLLECTION LOG FAILED === */
+export function sfaCollectionLogLoadmoreFailed(data) {
+  return { type: types.SFA_COLLECTION_LOG_LOADMORE_FAILED, payload: data };
+}
