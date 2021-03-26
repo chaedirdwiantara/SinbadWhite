@@ -1,4 +1,5 @@
 import ApiRest from '../apiRest';
+import ApiRestMock from '../apiRestMock'
 import { GlobalMethod } from './GlobalMethod';
 
 /** GET ORDER STATUS */
