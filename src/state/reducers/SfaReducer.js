@@ -20,6 +20,8 @@ const INITIAL_STATE = {
   loadingSfaGetPrincipal: false,
   loadingLoadmorePrincipal: false,
   loadingLoadmoreBankAccount: false,
+  loadingSfaGetCollectionLog: false,
+  loadingLoadmoreCollectionLog: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -36,6 +38,8 @@ const INITIAL_STATE = {
   dataSfaGetPrincipal: null,
   dataLoadmorePrincipal: null,
   dataLoadmoreBankAccount: null,
+  dataSfaGetCollectionLog: null,
+  dataLoadmoreCollectionLog: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -52,6 +56,8 @@ const INITIAL_STATE = {
   errorSfaGetPrincipal: null,
   errorLoadmorePrincipal: null,
   errorLoadmoreBankAccount: null,
+  errorSfaGetCollectionLog: null,
+  errorLoadmoreCollectionLog: null,
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -485,6 +491,59 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       loadingLoadmoreBankAccount: false,
       errorSfaGetBankAccount: action.payload
+    };
+  },
+  /**
+   * ==========================
+   * GET COLLECTION LOG
+   * ==========================
+   */
+   [types.SFA_GET_COLLECTION_LOG_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetCollectionLog: true,
+      dataSfaGetCollectionLog: null,
+      errorSfaGetCollectionLog: null
+    };
+  },
+  [types.SFA_GET_COLLECTION_LOG_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetCollectionLog: false,
+      dataSfaGetCollectionLog: action.payload
+    };
+  },
+  [types.SFA_GET_COLLECTION_LOG_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaGetCollectionLog: false,
+      errorSfaGetCollectionLog: action.payload
+    };
+  },
+  /**
+   * =============================
+   * LOADMORE COLLECTION LOG
+   * =============================
+   */
+   [types.SFA_COLLECTION_LOG_LOADMORE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingLoadmoreCollectionLog: true,
+      errorSfaGetCollectionLog: null
+    };
+  },
+  [types.SFA_COLLECTION_LOG_LOADMORE_SUCCESS](state, action) {
+    return {
+      ...state,
+      dataSfaGetCollectionLog: action.payload,
+      loadingLoadmoreCollectionLog: false,
+    };
+  },
+  [types.SFA_COLLECTION_LOG_LOADMORE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingLoadmoreCollectionLog: false,
+      errorSfaGetCollectionLog: action.payload
     };
   },
 });

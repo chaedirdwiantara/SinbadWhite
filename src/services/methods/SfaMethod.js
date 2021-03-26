@@ -1,4 +1,5 @@
 import ApiRest from '../apiRest';
+import ApiRestMock from '../apiRestMock'
 import { GlobalMethod } from './GlobalMethod';
 
 /** GET ORDER STATUS */
@@ -108,6 +109,14 @@ function getPrincipal(data) {
   });
 }
 
+/** GET COLLECTION LOG */
+function getCollectionLog(data) {
+  return ApiRestMock({
+    path: `collection/v1/payment-billings?storeId=${data.storeId}&orderParcelId=${data.orderParcelId}&limit=${data.limit}&skip=${data.skip}&`,
+    method: 'GET'
+  });
+}
+
   export const SfaMethod = {
     getCollectionStatus,
     getSfaDetail,
@@ -121,5 +130,6 @@ function getPrincipal(data) {
     getStamp,
     getStatusOrder,
     getTransferImage,
-    getPrincipal
+    getPrincipal,
+    getCollectionLog
   };
