@@ -77,7 +77,7 @@ import {
               keyboardType={this.props.keyboardType}
               style={[
                 this.props.editable === false
-                  ? Fonts.textInputFieldDisabled
+                  ? Fonts.type31
                   : Fonts.type17,
                 styles.boxInput,
                 {
