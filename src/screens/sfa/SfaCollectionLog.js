@@ -88,7 +88,11 @@ function SfaCollectionLog(props) {
                     />
                   ) : (
                     <View style={{ marginTop: '20%' }}>
-                      <SfaNoDataView/>
+                      <SfaNoDataView
+                        topText={"Tidak Ada Transaksi"}
+                        midText={'Belum ada transaksi yang telah dilakukan'}
+                        bottomText={""}
+                      />
                     </View>
                   )}
                   </View>

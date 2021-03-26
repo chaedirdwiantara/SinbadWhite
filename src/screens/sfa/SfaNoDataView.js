@@ -6,7 +6,7 @@ import {
 } from '../../library/reactPackage';
 import { Fonts} from '../../helpers';
 
-const SfaNoDataView = () => {
+const SfaNoDataView = (props) => {
     return (
       <View style={{  justifyContent: 'center' }}>
         <View style={{ alignSelf: 'center' }}>
@@ -20,13 +20,25 @@ const SfaNoDataView = () => {
             <Text
               style={[Fonts.type7, { textAlign: 'center', marginBottom: 10 }]}
             >
-              Hasil Pencarian Tidak Ditemukan
+              {
+                props.topText === undefined || props.topText === null 
+                ? 'Hasil Pencarian Tidak Ditemukan' 
+                : props.topText
+              }
             </Text>
             <Text style={[Fonts.type17, { textAlign: 'center' }]}>
-              Hasil yang anda cari tidak ditemukan,
+              {
+                props.midText === undefined || props.midText === null 
+                ? 'Hasil yang anda cari tidak ditemukan,' 
+                : props.midText
+              }  
             </Text>
             <Text style={[Fonts.type17, { textAlign: 'center' }]}>
-              silahkan coba kembali
+              {
+                props.bottomText === undefined || props.bottomText === null 
+                ? 'silahkan coba kembali' 
+                : props.bottomText
+              }        
             </Text>
           </View>
         </View>
