@@ -56,21 +56,23 @@ function SfaCollectionLog(props) {
             <View key={index}>
                     <TouchableOpacity>
                         <View style={{flexDirection: "row", justifyContent:"space-between", marginHorizontal:16, marginVertical: 16}}>
-                            <View>
+                            <View style={{flex: 2}}>
                                 <Text style={{...Fonts.type42, marginBottom: 8}}>{item.salesName}</Text>
                                 <Text style={Fonts.type17}>{item.updatedAt} WIB</Text>
                             </View>
-                            <View style={{flexDirection:"row"}}>
-                                <View style={{marginRight: 24}}>
+                            <View style={{flex: 1, flexDirection:"row"}}>
+                                <View>
                                     <Text style={{...Fonts.type36, marginBottom: 8}}>{MoneyFormat(item.amount)}</Text>
-                                    <Text style={Fonts.type17}>{capitalizeFirstLetter(item.paymentMethod.type)}</Text>
+                                    <Text style={[Fonts.type17, {textAlign:"right"}]}>{capitalizeFirstLetter(item.paymentMethod.type)}</Text>
                                 </View>
+                                <View style={{flex: 1, alignSelf:"center"}}>
                                 <MaterialIcon
                                     name="chevron-right"
                                     color={masterColor.fontBlack40}
                                     size={24}
-                                    style={{alignSelf:"center"}}
+                                    style={{alignSelf:"flex-end" }}
                                 />
+                                </View>
                             </View>
                         </View>
                         <View style={{...GlobalStyle.lines, marginLeft: 16}} />
@@ -82,7 +84,7 @@ function SfaCollectionLog(props) {
     /** === RENDER COLLECTIONLIST === */
     const renderCollectionList = () => {
             return(
-                <View>
+                <View style={styles.container}>
                 { dataSfaGetCollectionLog ?
                     dataSfaGetCollectionLog.data !== null ? (
                         <FlatList
@@ -98,11 +100,11 @@ function SfaCollectionLog(props) {
                         />
                     ) : (
                         <View style={{ marginTop: '20%' }}>
-                        <SfaNoDataView
-                            topText={"Tidak Ada Transaksi"}
-                            midText={'Belum ada transaksi yang telah dilakukan'}
-                            bottomText={""}
-                        />
+                            <SfaNoDataView
+                                topText={"Tidak Ada Transaksi"}
+                                midText={'Belum ada transaksi yang telah dilakukan'}
+                                bottomText={""}
+                            />
                         </View>
                     )
                 :
@@ -114,7 +116,7 @@ function SfaCollectionLog(props) {
     /** === RENDER CONTENT === */
     const renderContent = () =>{
         return(
-            <View>
+            <View style={styles.container}>
                 {renderCollectionList()}
             </View>
         )
