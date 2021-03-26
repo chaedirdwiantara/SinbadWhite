@@ -20,12 +20,12 @@ import {
   ButtonSingle,
   InputType5
 } from '../../library/component';
-import { TextInputMask } from 'react-native-masked-text';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime} from '../../helpers/TimeHelper';
 import masterColor from '../../config/masterColor.json';
-import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
+
+import SfaCollectionDetailCheckandGiro from './SfaCollectionDetailCheckandGiro';
 
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
@@ -162,55 +162,7 @@ const SfaCollectionDetailView = props => {
           placeholder={data.collectionMethod}
           editable={false}
         />
-        <View style={styles.inputField}>
-          <InputType5
-            title={`Nomor Referensi`}
-            placeholder={data.referenceCode}
-            editable={false}
-          />
-        </View>
-        <View style={styles.inputField}>
-          <InputType5
-            title={`Sumber Bank`}
-            placeholder={data.bankSource}
-            editable={false}
-          />
-        </View>
-        <View style={styles.inputField}>
-          <InputType5
-            title={`Tanggal Terbit`}
-            placeholder={formatDate(data.issuedDate)}
-            editable={false}
-          />
-        </View>
-        <View style={styles.inputField}>
-          <InputType5
-            title={`Tanggal Jatuh Tempo`}
-            placeholder={formatDate(data.invalidDate)}
-            editable={false}
-          />
-        </View>
-        <View style={styles.inputField}>
-          <InputType5
-            title={`Nilai ${data.collectionMethod}`}
-            placeholder={MoneyFormatSpace(data.checkAmount)}
-            editable={false}
-          />
-        </View>
-        <View style={styles.inputField}>
-          <InputType5
-            title={`Jumlah Penagihan`}
-            placeholder={MoneyFormatSpace(data.billingAmount)}
-            editable={false}
-          />
-        </View>
-        <View style={styles.inputField}>
-          <InputType5
-            title={`Nilai Materai`}
-            placeholder={MoneyFormatSpace(data.stampAmount)}
-            editable={false}
-          />
-        </View>
+         <SfaCollectionDetailCheckandGiro data={data}/>
       </View>
     );
   };
