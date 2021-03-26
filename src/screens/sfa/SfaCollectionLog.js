@@ -36,9 +36,6 @@ function SfaCollectionLog(props) {
    * FUNCTIONAL
    * =======================
    */
-    const capitalizeFirstLetter = (string) => {
-        return string[0].toUpperCase() + string.slice(1);
-    }
 
     useEffect(() => {
         const data = {
@@ -82,12 +79,12 @@ function SfaCollectionLog(props) {
                         <View style={{flexDirection: "row", justifyContent:"space-between", marginHorizontal:16, marginVertical: 16}}>
                             <View style={{flex: 2}}>
                                 <Text style={{...Fonts.type42, marginBottom: 8}}>{item.salesName}</Text>
-                                <Text style={Fonts.type17}>{item.updatedAt} WIB</Text>
+                                <Text style={Fonts.type17}>{item.createdAt} WIB</Text>
                             </View>
                             <View style={{flex: 1, flexDirection:"row"}}>
                                 <View>
                                     <Text style={{...Fonts.type36, marginBottom: 8}}>{MoneyFormat(item.amount)}</Text>
-                                    <Text style={[Fonts.type17, {textAlign:"right"}]}>{capitalizeFirstLetter(item.paymentMethod.type)}</Text>
+                                    <Text style={[Fonts.type17, {textAlign:"right"}]}>{item.paymentCollectionMethodName}</Text>
                                 </View>
                                 <View style={{flex: 1, alignSelf:"center"}}>
                                 <MaterialIcon
