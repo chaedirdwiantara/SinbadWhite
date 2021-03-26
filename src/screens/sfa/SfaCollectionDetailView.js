@@ -26,12 +26,12 @@ import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
 
 import SfaCollectionDetailCheckandGiro from './SfaCollectionDetailCheckandGiro';
-
+import SfaCollectionDetailTransfer from './SfaCollectionDetailTransfer';
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
   const { dataSfaGetDetail } = useSelector(state => state.sfa);
   const data = {
-    collectionMethod: 'Cek',
+    collectionMethod: 'transfer',
     referenceCode: 'BA154123',
     bankSource: 'Bank BCA',
     issuedDate: '2021-03-26 00:00:00',
@@ -162,10 +162,25 @@ const SfaCollectionDetailView = props => {
           placeholder={data.collectionMethod}
           editable={false}
         />
-         <SfaCollectionDetailCheckandGiro data={data}/>
+        {renderCollectionDetailMethod()}
+         
       </View>
     );
   };
+
+  const renderCollectionDetailMethod = () => {
+   if(data.collectionMethod === 'check' || data.collectionMethod === 'giro'){
+    
+    return (
+<SfaCollectionDetailCheckandGiro data={data}/>
+     )
+   }
+   else if (data.collectionMethod === 'transfer'){
+     return(
+<SfaCollectionDetailTransfer data={data}/>
+)
+   }
+  }
 
   const renderContent = () => {
     return (
