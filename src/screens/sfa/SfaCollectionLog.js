@@ -22,7 +22,7 @@ function SfaCollectionLog(props) {
    */
   return (
     <View>
-        <TouchableOpacity onPress={()=> alert("goTo added collection")}>
+        <TouchableOpacity onPress={()=> NavigationService.navigate('SfaCollectionDetailView')}>
             <Text>Go To Added collection</Text>
         </TouchableOpacity>
     </View>

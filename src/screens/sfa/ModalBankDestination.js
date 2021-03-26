@@ -102,7 +102,7 @@ function ModalBankDestination(props) {
       <View key={index}>
         <TouchableOpacity onPress={() => props.selectBankDestination(item)}>
           <View style={{ margin: 16 }}>
-            <Text style={Fonts.type24}>{item.bank.displayName} - {item.ownerName}</Text>
+            <Text style={Fonts.type24}>{item.bank.displayName} {item.accountNo} {item.ownerName}</Text>
           </View>
           <View style={GlobalStyle.lines} />
         </TouchableOpacity>
