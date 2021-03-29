@@ -200,6 +200,7 @@ const SfaCollectionDetailView = props => {
           ]}
         >
           <TextInputMask
+            editable={false}
             type={'money'}
             options={{
               precision: 0,
@@ -210,7 +211,7 @@ const SfaCollectionDetailView = props => {
             }}
             value={data.billingAmount}
             style={[
-              Fonts.type17,
+              Fonts.type31,
               {
                 width: '100%',
                 borderBottomWidth: 1,

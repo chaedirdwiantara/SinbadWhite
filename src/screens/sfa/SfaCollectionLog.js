@@ -30,7 +30,12 @@ import {
 
 function SfaCollectionLog(props) {
     const dispatch = useDispatch();
-    const { dataSfaGetCollectionLog, loadingLoadmoreCollectionLog } = useSelector(state => state.sfa);
+    const { 
+        dataSfaGetCollectionLog, 
+        loadingLoadmoreCollectionLog,
+        dataSfaGetDetail
+    } = useSelector(state => state.sfa);
+    const { selectedMerchant } = useSelector(state => state.merchant);
     /**
    * =======================
    * FUNCTIONAL
@@ -39,8 +44,8 @@ function SfaCollectionLog(props) {
 
     useEffect(() => {
         const data = {
-            storeId: 1,
-            orderParcelId: 1,
+            storeId: parseInt(selectedMerchant.storeId),
+            orderParcelId: parseInt(dataSfaGetDetail.data.id),
             limit: 10,
             skip: 0
         }
