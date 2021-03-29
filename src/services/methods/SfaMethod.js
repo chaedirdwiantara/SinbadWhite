@@ -111,7 +111,7 @@ function getPrincipal(data) {
 
 /** GET COLLECTION LOG */
 function getCollectionLog(data) {
-  return ApiRestMock({
+  return ApiRest({
     path: `collection/v1/payment-billings?storeId=${data.storeId}&orderParcelId=${data.orderParcelId}&limit=${data.limit}&skip=${data.skip}&`,
     method: 'GET'
   });

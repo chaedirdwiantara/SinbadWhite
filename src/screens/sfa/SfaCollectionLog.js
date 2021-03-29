@@ -44,8 +44,8 @@ function SfaCollectionLog(props) {
 
     useEffect(() => {
         const data = {
-            storeId: 1,
-            orderParcelId: 1,
+            storeId: parseInt(selectedMerchant.storeId),
+            orderParcelId: dataSfaGetDetail.data.id,
             limit: 10,
             skip: 0
         }
