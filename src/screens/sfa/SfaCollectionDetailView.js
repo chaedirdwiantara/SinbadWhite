@@ -28,11 +28,12 @@ import { TextInputMask } from 'react-native-masked-text';
 
 import SfaCollectionDetailCheckandGiro from './SfaCollectionDetailCheckandGiro';
 import SfaCollectionDetailTransfer from './SfaCollectionDetailTransfer';
+import SfaCollectionDetailPromo from './SfaCollectionDetailPromo'
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
   const { dataSfaGetDetail } = useSelector(state => state.sfa);
   const data = {
-    collectionMethod: 'cash',
+    collectionMethod: 'promo',
     referenceCode: 'BA154123',
     bankSource: 'Bank BCA',
     issuedDate: '2021-03-26 00:00:00',
@@ -40,7 +41,9 @@ const SfaCollectionDetailView = props => {
     billingAmount: 234000,
     checkAmount: 1200000,
     stampAmount: 6000,
-    isEditable: true
+    isEditable: true,
+    promoNo: "test12443330shjjs",
+    principal: "TRS"
   };
 
   /**
@@ -184,6 +187,11 @@ const SfaCollectionDetailView = props => {
     return(
      renderCashDetail()
     )
+   }
+   else if (data.collectionMethod === "promo") {
+     return(
+      <SfaCollectionDetailPromo data={data}/>
+     )
    }
   }
 
