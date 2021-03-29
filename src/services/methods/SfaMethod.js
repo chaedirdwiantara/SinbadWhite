@@ -117,6 +117,14 @@ function getCollectionLog(data) {
   });
 }
 
+/** GET COLLECTION DETAIL */
+function getCollectionDetail(data) {
+  return ApiRestMock({
+    path: `collection/v1/payment-billings?storeId=${data.storeId}&paymentCollectionId=${data.paymentCollectionId}`,
+    method: 'GET'
+  });
+}
+
   export const SfaMethod = {
     getCollectionStatus,
     getSfaDetail,
@@ -131,5 +139,6 @@ function getCollectionLog(data) {
     getStatusOrder,
     getTransferImage,
     getPrincipal,
-    getCollectionLog
+    getCollectionLog,
+    getCollectionDetail
   };

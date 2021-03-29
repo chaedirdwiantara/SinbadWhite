@@ -22,6 +22,7 @@ const INITIAL_STATE = {
   loadingLoadmoreBankAccount: false,
   loadingSfaGetCollectionLog: false,
   loadingLoadmoreCollectionLog: false,
+  loadingSfaGetCollectionDetail: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -40,6 +41,7 @@ const INITIAL_STATE = {
   dataLoadmoreBankAccount: null,
   dataSfaGetCollectionLog: null,
   dataLoadmoreCollectionLog: null,
+  dataSfaGetCollectionDetail: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -58,6 +60,7 @@ const INITIAL_STATE = {
   errorLoadmoreBankAccount: null,
   errorSfaGetCollectionLog: null,
   errorLoadmoreCollectionLog: null,
+  errorSfaGetCollectionDetail: null,
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
