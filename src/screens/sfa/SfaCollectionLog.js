@@ -27,6 +27,7 @@ import {
     sfaGetCollectionLogProcess,
     sfaCollectionLogLoadmoreProcess
 } from '../../state/actions';
+const [limit, setLimit] = useState(20)
 
 function SfaCollectionLog(props) {
     const dispatch = useDispatch();
@@ -46,7 +47,7 @@ function SfaCollectionLog(props) {
         const data = {
             storeId: parseInt(selectedMerchant.storeId),
             orderParcelId: dataSfaGetDetail.data.id,
-            limit: 10,
+            limit: limit,
             skip: 0
         }
         dispatch(sfaGetCollectionLogProcess(data));
@@ -58,10 +59,11 @@ function SfaCollectionLog(props) {
             dataSfaGetCollectionLog.data.length <
             dataSfaGetCollectionLog.meta.total
           ) {
-            const page = 20;
+            const page = limit + 10;
+            setLimit(page)
             dispatch(sfaCollectionLogLoadmoreProcess({
-                storeId: 1,
-                orderParcelId: 1,
+                storeId: parseInt(selectedMerchant.storeId),
+                orderParcelId: dataSfaGetDetail.data.id,
                 limit: page,
                 skip: 1
             }))
