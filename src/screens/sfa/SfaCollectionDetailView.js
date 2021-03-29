@@ -24,6 +24,7 @@ import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime} from '../../helpers/TimeHelper';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
+import { TextInputMask } from 'react-native-masked-text';
 
 import SfaCollectionDetailCheckandGiro from './SfaCollectionDetailCheckandGiro';
 import SfaCollectionDetailTransfer from './SfaCollectionDetailTransfer';
@@ -31,7 +32,7 @@ const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
   const { dataSfaGetDetail } = useSelector(state => state.sfa);
   const data = {
-    collectionMethod: 'transfer',
+    collectionMethod: 'cash',
     referenceCode: 'BA154123',
     bankSource: 'Bank BCA',
     issuedDate: '2021-03-26 00:00:00',
@@ -169,18 +170,58 @@ const SfaCollectionDetailView = props => {
   };
 
   const renderCollectionDetailMethod = () => {
-   if(data.collectionMethod === 'check' || data.collectionMethod === 'giro'){
-    
+   if(data.collectionMethod === 'check' || data.collectionMethod === 'giro'){  
     return (
-<SfaCollectionDetailCheckandGiro data={data}/>
+      <SfaCollectionDetailCheckandGiro data={data}/>
      )
    }
    else if (data.collectionMethod === 'transfer'){
-     return(
-<SfaCollectionDetailTransfer data={data}/>
-)
+    return(
+      <SfaCollectionDetailTransfer data={data}/>
+    )
+   }
+   else if (data.collectionMethod === "cash") {
+    return(
+     renderCashDetail()
+    )
    }
   }
+
+  const renderCashDetail = () => {
+    return (
+      <View style={{ marginTop: 16, marginHorizontal: 16 }}>
+        <View>
+          <Text style={Fonts.type10}>Jumlah Penagihan</Text>
+        </View>
+        <View
+          style={[
+            styles.boxInput,
+            { flexDirection: 'row', alignItems: 'center' }
+          ]}
+        >
+          <TextInputMask
+            type={'money'}
+            options={{
+              precision: 0,
+              separator: ',',
+              delimiter: '.',
+              unit: 'Rp ',
+              suffixUnit: ''
+            }}
+            value={data.billingAmount}
+            style={[
+              Fonts.type17,
+              {
+                width: '100%',
+                borderBottomWidth: 1,
+                borderBottomColor: masterColor.fontBlack10,
+              }
+            ]}
+          />
+        </View>
+      </View>
+    );
+  };
 
   const renderContent = () => {
     return (
