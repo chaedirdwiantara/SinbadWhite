@@ -51,7 +51,7 @@ function SfaCollectionLog(props) {
             skip: 0
         }
         dispatch(sfaGetCollectionLogProcess(data));
-      }, [dispatch]);
+      }, []);
 
       const loadMore = () => {
         if (dataSfaGetCollectionLog) {
