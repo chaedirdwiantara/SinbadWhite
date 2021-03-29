@@ -27,7 +27,6 @@ import {
     sfaGetCollectionLogProcess,
     sfaCollectionLogLoadmoreProcess
 } from '../../state/actions';
-const [limit, setLimit] = useState(20)
 
 function SfaCollectionLog(props) {
     const dispatch = useDispatch();
@@ -37,6 +36,8 @@ function SfaCollectionLog(props) {
         dataSfaGetDetail
     } = useSelector(state => state.sfa);
     const { selectedMerchant } = useSelector(state => state.merchant);
+    const [limit, setLimit] = useState(20)
+    
     /**
    * =======================
    * FUNCTIONAL
@@ -88,18 +89,17 @@ function SfaCollectionLog(props) {
                                 <Text style={{...Fonts.type42, marginBottom: 8}}>{item.salesName}</Text>
                                 <Text style={Fonts.type17}>{item.createdAt} WIB</Text>
                             </View>
-                            <View style={{flex: 1, flexDirection:"row"}}>
-                                <View>
+                            <View style={{flex: 1, flexDirection:"row", justifyContent:"space-between"}}>
+                                <View style={{marginLeft: 16}}>
                                     <Text style={{...Fonts.type36, marginBottom: 8}}>{MoneyFormat(item.amount)}</Text>
                                     <Text style={[Fonts.type17, {textAlign:"right"}]}>{item.paymentCollectionMethodName}</Text>
                                 </View>
-                                <View style={{flex: 1, alignSelf:"center"}}>
-                                <MaterialIcon
-                                    name="chevron-right"
-                                    color={masterColor.fontBlack40}
-                                    size={24}
-                                    style={{alignSelf:"flex-end" }}
-                                />
+                                <View style={{alignSelf:"center"}}>
+                                    <MaterialIcon
+                                        name="chevron-right"
+                                        color={masterColor.fontBlack40}
+                                        size={24}
+                                    />
                                 </View>
                             </View>
                         </View>
