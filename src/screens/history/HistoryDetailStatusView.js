@@ -76,6 +76,7 @@ class HistoryDetailStatusView extends Component {
   }
   /** RENDER ORDER DETAIL */
   renderOrderDetail() {
+    const { dataDetailHistory } = this.props.history
     return (
       <View style={[GlobalStyle.shadowForBox, { marginBottom: 16 }]}>
         <View
@@ -96,6 +97,11 @@ class HistoryDetailStatusView extends Component {
             ).format('DD MMM YYYY HH:mm:ss')
           )}
           {this.renderContentListGlobal('Nomor Resi', '-')}
+          { dataDetailHistory.orderCancelReason !== null ? (
+            this.renderContentListGlobal('Alasan Pembatalan', dataDetailHistory.orderCancelReason.reason)
+          ) : (
+            <View />
+          ) }
         </View>
       </View>
     );
