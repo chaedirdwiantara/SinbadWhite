@@ -16,37 +16,41 @@ import {
 } from '../../library/thirdPartyPackage';
 import {
   LoadingPage,
-  StatusBarWhite,
-  ButtonSingle,
-  InputType5
+  InputType5,
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime} from '../../helpers/TimeHelper';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
+import { TextInputMask } from 'react-native-masked-text';
 
 import SfaCollectionDetailCheckandGiro from './SfaCollectionDetailCheckandGiro';
 import SfaCollectionDetailTransfer from './SfaCollectionDetailTransfer';
+import SfaCollectionDetailPromo from './SfaCollectionDetailPromo'
+import {
+  sfaGetCollectionDetailProcess
+} from '../../state/actions';
+
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
-  const { dataSfaGetDetail } = useSelector(state => state.sfa);
-  const data = {
-    collectionMethod: 'transfer',
-    referenceCode: 'BA154123',
-    bankSource: 'Bank BCA',
-    issuedDate: '2021-03-26 00:00:00',
-    invalidDate: '2021-03-29 00:00:00',
-    billingAmount: 234000,
-    checkAmount: 1200000,
-    stampAmount: 6000,
-    isEditable: true
-  };
+  const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
+  const { selectedMerchant } = useSelector(state => state.merchant);
 
   /**
    * *********************************
    * FUNCTION
    * *********************************
    */
+  useEffect(() =>{
+    const paymentCollectionId = props.navigation.state.params.paymentCollectionId
+    const data = {
+      paymentCollectionId: paymentCollectionId,
+      storeId: parseInt(selectedMerchant.storeId)
+    }
+    dispatch(sfaGetCollectionDetailProcess(data))
+  }, [])
+
+
   const formatDate = (date) => {
     const local = toLocalTime(date)
     return (
@@ -142,7 +146,7 @@ const SfaCollectionDetailView = props => {
 
   const renderCollectionDetail = () => {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, {marginBottom: 16}]}>
         <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
           <View>
             <Text style={Fonts.type48}>Detil Penagihan</Text>
@@ -159,7 +163,7 @@ const SfaCollectionDetailView = props => {
       <View style={{ marginHorizontal: -16 }}>
         <InputType5
           title={`Metode Penagihan`}
-          placeholder={data.collectionMethod}
+          placeholder={dataSfaGetCollectionDetail.collectionMethodType}
           editable={false}
         />
         {renderCollectionDetailMethod()}
@@ -169,35 +173,91 @@ const SfaCollectionDetailView = props => {
   };
 
   const renderCollectionDetailMethod = () => {
-   if(data.collectionMethod === 'check' || data.collectionMethod === 'giro'){
-    
+    const collectionMethodType = dataSfaGetCollectionDetail.collectionMethodType
+   if(collectionMethodType === 'check' || collectionMethodType === 'giro'){  
     return (
-<SfaCollectionDetailCheckandGiro data={data}/>
+      <SfaCollectionDetailCheckandGiro data={dataSfaGetCollectionDetail}/>
      )
    }
-   else if (data.collectionMethod === 'transfer'){
+   else if (collectionMethodType === 'transfer'){
+    return(
+      <SfaCollectionDetailTransfer data={dataSfaGetCollectionDetail}/>
+    )
+   }
+   else if (collectionMethodType === "cash") {
+    return(
+     renderCashDetail()
+    )
+   }
+   else if (collectionMethodType === "promo") {
      return(
-<SfaCollectionDetailTransfer data={data}/>
-)
+      <SfaCollectionDetailPromo data={dataSfaGetCollectionDetail}/>
+     )
    }
   }
 
-  const renderContent = () => {
+  const renderCashDetail = () => {
     return (
-      <View style={{ flex: 1, height: '100%', marginBottom: 16}}>
-        {renderFakturInfo()}
-        {renderCollectionInfo()}
-        {renderCollectionDetail()}
+      <View style={{ marginTop: 16, marginHorizontal: 16 }}>
+        <View>
+          <Text style={Fonts.type10}>Jumlah Penagihan</Text>
+        </View>
+        <View
+          style={[
+            styles.boxInput,
+            { flexDirection: 'row', alignItems: 'center' }
+          ]}
+        >
+          <TextInputMask
+            editable={false}
+            type={'money'}
+            options={{
+              precision: 0,
+              separator: ',',
+              delimiter: '.',
+              unit: 'Rp ',
+              suffixUnit: ''
+            }}
+            value={dataSfaGetCollectionDetail.paidAmount}
+            style={[
+              Fonts.type31,
+              {
+                width: '100%',
+                borderBottomWidth: 1,
+                borderBottomColor: masterColor.fontBlack10,
+              }
+            ]}
+          />
+        </View>
       </View>
     );
   };
+
+  const renderContent = () => {
+    return (
+      <View style={{flex: 1}}>
+        {dataSfaGetCollectionDetail ?
+          <ScrollView style={{ flex: 1, height: '100%'}}>       
+            {renderFakturInfo()}
+            {renderCollectionInfo()}
+            {renderCollectionDetail()}
+          </ScrollView>
+        :
+          <LoadingPage />
+        }
+      </View>     
+    );
+  };
+
+
   return <>
-  <ScrollView>
+  <View style={{flex:1}}>
 
   {renderContent()}
-  </ScrollView>
+  </View>
   </>;
 };
+
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,

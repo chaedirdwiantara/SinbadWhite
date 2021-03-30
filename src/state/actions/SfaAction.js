@@ -429,3 +429,28 @@ export function sfaCollectionLogLoadmoreSuccess(data) {
 export function sfaCollectionLogLoadmoreFailed(data) {
   return { type: types.SFA_COLLECTION_LOG_LOADMORE_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * GET COLLECTION DETAIL
+ * ===========================
+ */
+/** === SFA GET COLLECTION DETAIL PROCESS === */
+export function sfaGetCollectionDetailProcess(data) {
+  return { type: types.SFA_GET_COLLECTION_DETAIL_PROCESS, payload: data };
+}
+
+/** === SFA GET COLLECTION DETAIL SUCCESS === */
+export function sfaGetCollectionDetailSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_COLLECTION_DETAIL_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_COLLECTION_DETAIL_FAILED, payload: data };
+}
+/** === SFA GET COLLECTION DETAIL FAILED === */
+export function sfaGetCollectionDetailFailed(data) {
+  return { type: types.SFA_GET_COLLECTION_DETAIL_FAILED, payload: data };
+}

@@ -30,7 +30,14 @@ import {
 
 function SfaCollectionLog(props) {
     const dispatch = useDispatch();
-    const { dataSfaGetCollectionLog, loadingLoadmoreCollectionLog } = useSelector(state => state.sfa);
+    const { 
+        dataSfaGetCollectionLog, 
+        loadingLoadmoreCollectionLog,
+        dataSfaGetDetail
+    } = useSelector(state => state.sfa);
+    const { selectedMerchant } = useSelector(state => state.merchant);
+    const [limit, setLimit] = useState(20)
+    
     /**
    * =======================
    * FUNCTIONAL
@@ -39,13 +46,13 @@ function SfaCollectionLog(props) {
 
     useEffect(() => {
         const data = {
-            storeId: 1,
-            orderParcelId: 1,
-            limit: 10,
+            storeId: parseInt(selectedMerchant.storeId),
+            orderParcelId: dataSfaGetDetail.data.id,
+            limit: limit,
             skip: 0
         }
         dispatch(sfaGetCollectionLogProcess(data));
-      }, [dispatch]);
+      }, []);
 
       const loadMore = () => {
         if (dataSfaGetCollectionLog) {
@@ -53,10 +60,11 @@ function SfaCollectionLog(props) {
             dataSfaGetCollectionLog.data.length <
             dataSfaGetCollectionLog.meta.total
           ) {
-            const page = 20;
+            const page = limit + 10;
+            setLimit(page)
             dispatch(sfaCollectionLogLoadmoreProcess({
-                storeId: 1,
-                orderParcelId: 1,
+                storeId: parseInt(selectedMerchant.storeId),
+                orderParcelId: dataSfaGetDetail.data.id,
                 limit: page,
                 skip: 1
             }))
@@ -75,24 +83,23 @@ function SfaCollectionLog(props) {
     const renderItem = ({item, index}) => {
         return(
             <View key={index}>
-                    <TouchableOpacity onPress={()=> NavigationService.navigate('SfaCollectionDetailView')}>
+                    <TouchableOpacity onPress={()=> NavigationService.navigate('SfaCollectionDetailView', {paymentCollectionId: item.paymentCollectionId})}>
                         <View style={{flexDirection: "row", justifyContent:"space-between", marginHorizontal:16, marginVertical: 16}}>
                             <View style={{flex: 2}}>
                                 <Text style={{...Fonts.type42, marginBottom: 8}}>{item.salesName}</Text>
                                 <Text style={Fonts.type17}>{item.createdAt} WIB</Text>
                             </View>
-                            <View style={{flex: 1, flexDirection:"row"}}>
-                                <View>
+                            <View style={{flex: 1, flexDirection:"row", justifyContent:"space-between"}}>
+                                <View style={{marginLeft: 16}}>
                                     <Text style={{...Fonts.type36, marginBottom: 8}}>{MoneyFormat(item.amount)}</Text>
                                     <Text style={[Fonts.type17, {textAlign:"right"}]}>{item.paymentCollectionMethodName}</Text>
                                 </View>
-                                <View style={{flex: 1, alignSelf:"center"}}>
-                                <MaterialIcon
-                                    name="chevron-right"
-                                    color={masterColor.fontBlack40}
-                                    size={24}
-                                    style={{alignSelf:"flex-end" }}
-                                />
+                                <View style={{alignSelf:"center"}}>
+                                    <MaterialIcon
+                                        name="chevron-right"
+                                        color={masterColor.fontBlack40}
+                                        size={24}
+                                    />
                                 </View>
                             </View>
                         </View>

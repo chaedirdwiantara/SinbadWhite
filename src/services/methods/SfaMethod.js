@@ -111,8 +111,16 @@ function getPrincipal(data) {
 
 /** GET COLLECTION LOG */
 function getCollectionLog(data) {
+  return ApiRest({
+    path: `collection/v1/payment-billings?storeId=${data.storeId}&orderParcelId=${data.orderParcelId}&limit=${data.limit}&skip=${data.skip}`,
+    method: 'GET'
+  });
+}
+
+/** GET COLLECTION DETAIL */
+function getCollectionDetail(data) {
   return ApiRestMock({
-    path: `collection/v1/payment-billings?storeId=${data.storeId}&orderParcelId=${data.orderParcelId}&limit=${data.limit}&skip=${data.skip}&`,
+    path: `collection/v1/payment-billing?storeId=${data.storeId}&paymentCollectionId=${data.paymentCollectionMethodId}`,
     method: 'GET'
   });
 }
@@ -131,5 +139,6 @@ function getCollectionLog(data) {
     getStatusOrder,
     getTransferImage,
     getPrincipal,
-    getCollectionLog
+    getCollectionLog,
+    getCollectionDetail
   };

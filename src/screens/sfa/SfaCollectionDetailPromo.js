@@ -1,10 +1,10 @@
-import {React, View, StyleSheet} from '../../library/reactPackage';
+import {React, View, StyleSheet, Text, Image} from '../../library/reactPackage';
 import {moment} from '../../library/thirdPartyPackage';
 import {InputType5} from '../../library/component';
 import { toLocalTime} from '../../helpers/TimeHelper';
-import { MoneyFormatSpace } from '../../helpers';
+import { Fonts, MoneyFormatSpace } from '../../helpers';
 
-const SfaCollectionDetailCheckandGiro = (props) => {
+const SfaCollectionDetailPromo = (props) => {
     const data = props.data
 
      /**
@@ -20,7 +20,9 @@ const SfaCollectionDetailCheckandGiro = (props) => {
       )
     )
   }
+
     return (
+       
         <>
         <View style={styles.inputField}>
           <InputType5
@@ -31,28 +33,21 @@ const SfaCollectionDetailCheckandGiro = (props) => {
         </View>
         <View style={styles.inputField}>
           <InputType5
-            title={`Sumber Bank`}
-            placeholder={data.bankSource}
+            title={`Nomor Promo`}
+            placeholder={data.promoNumber}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
-            title={`Tanggal Terbit`}
-            placeholder={formatDate(data.collectionMethodDate)}
+            title={`Principal`}
+            placeholder={data.principalName}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
-            title={`Tanggal Jatuh Tempo`}
-            placeholder={formatDate(data.collectionMethodDueDate)}
-            editable={false}
-          />
-        </View>
-        <View style={styles.inputField}>
-          <InputType5
-            title={`Nilai ${data.collectionMethodType}`}
+            title={`Nilai Promo`}
             placeholder={MoneyFormatSpace(data.paymentCollectionMethodAmount)}
             editable={false}
           />
@@ -64,12 +59,9 @@ const SfaCollectionDetailCheckandGiro = (props) => {
             editable={false}
           />
         </View>
-        <View style={styles.inputField}>
-          <InputType5
-            title={`Nilai Materai`}
-            placeholder={MoneyFormatSpace(data.stampAmount)}
-            editable={false}
-          />
+        <View style={styles.imageContainer}>
+          <Text style={Fonts.type10}>Foto/Gambar</Text>
+         
         </View>
         </>
     )
@@ -78,6 +70,10 @@ const SfaCollectionDetailCheckandGiro = (props) => {
 const styles = StyleSheet.create({
     inputField: {
         marginTop: 16
-      }
+      },
+    imageContainer: {
+        padding: 16
+    }
+      
 })
-export default SfaCollectionDetailCheckandGiro
+export default SfaCollectionDetailPromo

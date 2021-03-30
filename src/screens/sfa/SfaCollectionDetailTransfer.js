@@ -41,28 +41,28 @@ const SfaCollectionDetailTransfer = (props) => {
         <View style={styles.inputField}>
           <InputType5
             title={`Tujuan Bank`}
-            placeholder={formatDate(data.issuedDate)}
+            placeholder={formatDate(data.collectionMethodDate)}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Tanggal Transfer`}
-            placeholder={formatDate(data.invalidDate)}
+            placeholder={formatDate(data.collectionMethodDueDate)}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Nilai Transfer`}
-            placeholder={MoneyFormatSpace(data.checkAmount)}
+            placeholder={MoneyFormatSpace(data.paymentCollectionMethodAmount)}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Jumlah Penagihan`}
-            placeholder={MoneyFormatSpace(data.billingAmount)}
+            placeholder={MoneyFormatSpace(data.paidAmount)}
             editable={false}
           />
         </View>
