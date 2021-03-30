@@ -146,7 +146,7 @@ const SfaCollectionDetailView = props => {
 
   const renderCollectionDetail = () => {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, {marginBottom: 16}]}>
         <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
           <View>
             <Text style={Fonts.type48}>Detil Penagihan</Text>
@@ -237,7 +237,7 @@ const SfaCollectionDetailView = props => {
     return (
       <View style={{flex: 1}}>
         {dataSfaGetCollectionDetail ?
-          <ScrollView style={{ flex: 1, height: '100%', marginBottom: 16}}>       
+          <ScrollView style={{ flex: 1, height: '100%'}}>       
             {renderFakturInfo()}
             {renderCollectionInfo()}
             {renderCollectionDetail()}
