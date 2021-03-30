@@ -1,0 +1,2 @@
+Updated Sinbad Agent:
+* Pada versi ini kami menambahkan upload foto KTP dan membuat Akses Kendaraan menjadi hal yang wajib diisi ketika membuat toko.
