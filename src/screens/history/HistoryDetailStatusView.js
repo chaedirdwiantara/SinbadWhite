@@ -69,7 +69,7 @@ class HistoryDetailStatusView extends Component {
           <Text style={Fonts.type17}>{key}</Text>
         </View>
         <View style={{ flex: 1, alignItems: 'flex-end' }}>
-          <Text style={Fonts.type17}>{value}</Text>
+          <Text style={[Fonts.type17, { textAlign: 'right' }]}>{value}</Text>
         </View>
       </View>
     );
