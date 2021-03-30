@@ -39,28 +39,28 @@ const SfaCollectionDetailCheckandGiro = (props) => {
         <View style={styles.inputField}>
           <InputType5
             title={`Tanggal Terbit`}
-            placeholder={formatDate(data.issuedDate)}
+            placeholder={formatDate(data.collectionMethodDate)}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Tanggal Jatuh Tempo`}
-            placeholder={formatDate(data.invalidDate)}
+            placeholder={formatDate(data.collectionMethodDueDate)}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
-            title={`Nilai ${data.collectionMethod}`}
-            placeholder={MoneyFormatSpace(data.checkAmount)}
+            title={`Nilai ${data.collectionMethodType}`}
+            placeholder={MoneyFormatSpace(data.paidAmount)}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Jumlah Penagihan`}
-            placeholder={MoneyFormatSpace(data.billingAmount)}
+            placeholder={MoneyFormatSpace(data.balance)}
             editable={false}
           />
         </View>

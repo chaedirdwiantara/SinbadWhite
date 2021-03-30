@@ -176,7 +176,7 @@ const SfaCollectionDetailView = props => {
       <View style={{ marginHorizontal: -16 }}>
         <InputType5
           title={`Metode Penagihan`}
-          placeholder={data.collectionMethod}
+          placeholder={dataSfaGetCollectionDetail.collectionMethodType}
           editable={false}
         />
         {renderCollectionDetailMethod()}
@@ -186,24 +186,25 @@ const SfaCollectionDetailView = props => {
   };
 
   const renderCollectionDetailMethod = () => {
-   if(data.collectionMethod === 'check' || data.collectionMethod === 'giro'){  
+    const collectionMethodType = dataSfaGetCollectionDetail.collectionMethodType
+   if(collectionMethodType === 'check' || collectionMethodType === 'giro'){  
     return (
-      <SfaCollectionDetailCheckandGiro data={data}/>
+      <SfaCollectionDetailCheckandGiro data={dataSfaGetCollectionDetail}/>
      )
    }
-   else if (data.collectionMethod === 'transfer'){
+   else if (collectionMethodType === 'transfer'){
     return(
-      <SfaCollectionDetailTransfer data={data}/>
+      <SfaCollectionDetailTransfer data={dataSfaGetCollectionDetail}/>
     )
    }
-   else if (data.collectionMethod === "cash") {
+   else if (collectionMethodType === "cash") {
     return(
      renderCashDetail()
     )
    }
-   else if (data.collectionMethod === "promo") {
+   else if (collectionMethodType === "promo") {
      return(
-      <SfaCollectionDetailPromo data={data}/>
+      <SfaCollectionDetailPromo data={dataSfaGetCollectionDetail}/>
      )
    }
   }
@@ -230,7 +231,7 @@ const SfaCollectionDetailView = props => {
               unit: 'Rp ',
               suffixUnit: ''
             }}
-            value={data.billingAmount}
+            value={dataSfaGetCollectionDetail.balance}
             style={[
               Fonts.type31,
               {
