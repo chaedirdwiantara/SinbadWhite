@@ -16,9 +16,7 @@ import {
 } from '../../library/thirdPartyPackage';
 import {
   LoadingPage,
-  StatusBarWhite,
-  ButtonSingle,
-  InputType5
+  InputType5,
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime} from '../../helpers/TimeHelper';
@@ -29,9 +27,14 @@ import { TextInputMask } from 'react-native-masked-text';
 import SfaCollectionDetailCheckandGiro from './SfaCollectionDetailCheckandGiro';
 import SfaCollectionDetailTransfer from './SfaCollectionDetailTransfer';
 import SfaCollectionDetailPromo from './SfaCollectionDetailPromo'
+import {
+  sfaGetCollectionDetailProcess
+} from '../../state/actions';
+
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
-  const { dataSfaGetDetail } = useSelector(state => state.sfa);
+  const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
+  const { selectedMerchant } = useSelector(state => state.merchant);
   const data = {
     collectionMethod: 'promo',
     referenceCode: 'BA154123',
@@ -51,6 +54,16 @@ const SfaCollectionDetailView = props => {
    * FUNCTION
    * *********************************
    */
+  useEffect(() =>{
+    const paymentCollectionId = props.navigation.state.params.paymentCollectionId
+    const data = {
+      paymentCollectionId: paymentCollectionId,
+      storeId: parseInt(selectedMerchant.storeId)
+    }
+    dispatch(sfaGetCollectionDetailProcess(data))
+  }, [])
+
+
   const formatDate = (date) => {
     const local = toLocalTime(date)
     return (
@@ -234,20 +247,29 @@ const SfaCollectionDetailView = props => {
 
   const renderContent = () => {
     return (
-      <View style={{ flex: 1, height: '100%', marginBottom: 16}}>
-        {renderFakturInfo()}
-        {renderCollectionInfo()}
-        {renderCollectionDetail()}
-      </View>
+      <View style={{flex: 1}}>
+        {dataSfaGetCollectionDetail ?
+          <ScrollView style={{ flex: 1, height: '100%', marginBottom: 16}}>       
+            {renderFakturInfo()}
+            {renderCollectionInfo()}
+            {renderCollectionDetail()}
+          </ScrollView>
+        :
+          <LoadingPage />
+        }
+      </View>     
     );
   };
+
+
   return <>
-  <ScrollView>
+  <View style={{flex:1}}>
 
   {renderContent()}
-  </ScrollView>
+  </View>
   </>;
 };
+
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
