@@ -81,7 +81,6 @@ function SfaCollectionLog(props) {
 
     //**RENDER ITEM */
     const renderItem = ({item, index}) => {
-        console.log("data:", item);
         return(
             <View key={index}>
                     <TouchableOpacity onPress={()=> NavigationService.navigate('SfaCollectionDetailView', {paymentCollectionId: item.paymentCollectionId})}>

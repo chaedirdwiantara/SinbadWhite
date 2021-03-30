@@ -35,19 +35,6 @@ const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
   const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
-  const data = {
-    collectionMethod: 'promo',
-    referenceCode: 'BA154123',
-    bankSource: 'Bank BCA',
-    issuedDate: '2021-03-26 00:00:00',
-    invalidDate: '2021-03-29 00:00:00',
-    billingAmount: 234000,
-    checkAmount: 1200000,
-    stampAmount: 6000,
-    isEditable: true,
-    promoNo: "test12443330shjjs",
-    principal: "TRS"
-  };
 
   /**
    * *********************************
@@ -231,7 +218,7 @@ const SfaCollectionDetailView = props => {
               unit: 'Rp ',
               suffixUnit: ''
             }}
-            value={dataSfaGetCollectionDetail.balance}
+            value={dataSfaGetCollectionDetail.paidAmount}
             style={[
               Fonts.type31,
               {

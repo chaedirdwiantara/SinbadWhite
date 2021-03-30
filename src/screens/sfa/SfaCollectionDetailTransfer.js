@@ -55,14 +55,14 @@ const SfaCollectionDetailTransfer = (props) => {
         <View style={styles.inputField}>
           <InputType5
             title={`Nilai Transfer`}
-            placeholder={MoneyFormatSpace(data.paidAmount)}
+            placeholder={MoneyFormatSpace(data.paymentCollectionMethodAmount)}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Jumlah Penagihan`}
-            placeholder={MoneyFormatSpace(data.balance)}
+            placeholder={MoneyFormatSpace(data.paidAmount)}
             editable={false}
           />
         </View>
