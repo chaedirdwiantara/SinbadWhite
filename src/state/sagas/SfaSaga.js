@@ -206,6 +206,18 @@ function* loadmoreCollectionLog(actions) {
   }
 }
 
+/** GET COLLECTION DETAIL */
+function* getCollectionDetail(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getCollectionDetail(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetCollectionDetailSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetCollectionDetailFailed(error));
+  }
+}
+
   function* SfaSaga() {
     yield takeEvery(
       types.SFA_GET_COLLECTION_STATUS_PROCESS,
@@ -226,7 +238,8 @@ function* loadmoreCollectionLog(actions) {
     yield takeEvery(types.SFA_PRINCIPAL_LOADMORE_PROCESS, loadmorePrincipal),
     yield takeEvery(types.SFA_BANK_ACCOUNT_LOADMORE_PROCESS, loadmoreBankAccount),
     yield takeEvery(types.SFA_GET_COLLECTION_LOG_PROCESS, getCollectionLog),
-    yield takeEvery(types.SFA_COLLECTION_LOG_LOADMORE_PROCESS, loadmoreCollectionLog)
+    yield takeEvery(types.SFA_COLLECTION_LOG_LOADMORE_PROCESS, loadmoreCollectionLog),
+    yield takeEvery(types.SFA_GET_COLLECTION_DETAIL_PROCESS, getCollectionDetail)
 }
 
 export default SfaSaga;
