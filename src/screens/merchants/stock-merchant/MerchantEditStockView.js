@@ -11,7 +11,7 @@ import {
  import { 
      BackHandlerBackSpecific,
      StatusBarWhite,
-     SearchBarType4,
+     SearchBarType5,
      ButtonSingle,
      LoadingPage,
      ModalConfirmationType3,
@@ -363,7 +363,7 @@ import {
     renderSearch(){
         return(
             <View style={{ paddingVertical: 8 }}>
-                    <SearchBarType4 
+                    <SearchBarType5
                         searchText={this.state.search}
                         placeholder={'Cari Produk disini'}
                         onRef={ref => (this.parentFunction = ref)}

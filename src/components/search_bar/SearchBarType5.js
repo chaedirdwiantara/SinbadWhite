@@ -22,7 +22,7 @@ import {
    * =====================
    */
   
-  class SearchBarType1 extends Component {
+  class SearchBarType5 extends Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -131,7 +131,7 @@ import {
   };
   
   // eslint-disable-next-line prettier/prettier
-  export default connect(mapStateToProps, {})(SearchBarType1);
+  export default connect(mapStateToProps, {})(SearchBarType5);
   
   /**
   * ============================

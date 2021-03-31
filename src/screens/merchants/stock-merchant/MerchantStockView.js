@@ -12,7 +12,7 @@ import {
     StatusBarWhite,
     EmptyData,
     ButtonFloatType1,
-    SearchBarType4,
+    SearchBarType5,
     ButtonSingle,
     LoadingPage
 } from '../../../library/component'
@@ -158,7 +158,7 @@ class MerchantStockView extends Component {
     renderSearch(){
         return(
             <View style={{ paddingVertical: 8, backgroundColor: masterColor.backgroundWhite }}>
-                    <SearchBarType4 
+                    <SearchBarType5 
                         searchText={this.state.search}
                         placeholder={'Cari Produk disini'}
                         onRef={ref => (this.parentFunction = ref)}
