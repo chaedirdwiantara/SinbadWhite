@@ -47,7 +47,10 @@ class OmsVerificationView extends Component {
    * FUNCTIONAL
    * =======================
    */
-
+  /** === DID MOUNT */
+  componentDidMount() {
+    this.props.portfolioGetProcessV2();
+  }
   /** === DID UPDATE */
   componentDidUpdate(prevProps) {
     /** === SUCCESS POST CHECKOUT ITEM ===
@@ -136,7 +139,8 @@ class OmsVerificationView extends Component {
   getCheckoutItem() {
     this.props.omsGetCheckoutItemProcess({
       cartId: this.props.navigation.state.params.cartId,
-      catalogues: this.props.oms.dataCheckout
+      catalogues: this.props.oms.dataCheckout,
+      portfolioId: this.props.merchant.dataGetPortfolioV2[0].id
     });
   }
 
@@ -616,8 +620,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ oms, permanent }) => {
-  return { oms, permanent };
+const mapStateToProps = ({ oms, permanent, merchant }) => {
+  return { oms, permanent, merchant };
 };
 
 const mapDispatchToProps = dispatch => {

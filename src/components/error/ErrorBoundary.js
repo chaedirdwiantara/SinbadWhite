@@ -5,6 +5,10 @@ import {
 } from '../../library/reactPackage'
 import errorLogs from '../../services/ErrorLogs'
 
+import {
+  nrLog,
+} from '../../../NewRelicRN.js';
+
 class ErrorBoundary extends Component {
   constructor(props){
     super(props)
@@ -19,6 +23,7 @@ class ErrorBoundary extends Component {
 
   componentDidCatch(error, errorInfo){
     errorLogs(error, errorInfo)
+    nrLog(error);
   }
   
   render(){

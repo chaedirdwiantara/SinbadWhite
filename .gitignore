@@ -38,6 +38,8 @@ build/
 local.properties
 *.iml
 /android/app/build/
+*.aab
+*.apk
 
 # node.js
 #
@@ -80,3 +82,4 @@ android/fastlane/config/sinbad.json
 google-services*
 
 contract/
+android/app/newrelic.properties

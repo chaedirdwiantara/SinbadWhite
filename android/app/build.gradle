@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "io.fabric"
+apply plugin: 'newrelic'
 
 import com.android.build.OutputFile
 
@@ -133,8 +134,8 @@ android {
         applicationId "com.sinbad.agentdevelopment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9245734
-        versionName "1.1.4"
+        versionCode 9245741
+        versionName "1.4.2"
         missingDimensionStrategy 'react-native-camera', 'general'
         multiDexEnabled true
     }
@@ -241,6 +242,9 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    implementation "com.newrelic.agent.android:android-agent:5.+"
+    implementation project(':react-native-config')
 }
 
 // Run this once to be able to run the application with BUCK
@@ -252,3 +256,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
 apply plugin: 'com.google.gms.google-services'
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"

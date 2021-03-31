@@ -49,15 +49,15 @@ class MerchantNoOrderReason extends Component {
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
     if (
-      prevProps.merchant.dataPostActivity !==
-      this.props.merchant.dataPostActivity
+      prevProps.merchant.dataPostActivityV2 !==
+      this.props.merchant.dataPostActivityV2
     ) {
-      if (this.props.merchant.dataPostActivity !== null) {
+      if (this.props.merchant.dataPostActivityV2 !== null) {
         /** IF CHECK OUT SUCCESS */
-        if (this.props.merchant.dataPostActivity.activity === 'check_out') {
+        if (this.props.merchant.dataPostActivityV2.activity === 'check_out') {
           NavigationService.goBack(this.props.navigation.state.key);
-          this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.journeyPlanSaleId
+          this.props.merchantGetLogAllActivityProcessV2(
+            this.props.merchant.selectedMerchant.journeyBookStores.id
           );
           // eslint-disable-next-line react/no-did-update-set-state
           this.setState({
@@ -65,8 +65,8 @@ class MerchantNoOrderReason extends Component {
             notifToast: 'Keluar Toko Berhasil'
           });
           /** FOR GET LOG ALL ACTIVITY */
-          this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.journeyPlanSaleId
+          this.props.merchantGetLogAllActivityProcessV2(
+            this.props.merchant.selectedMerchant.journeyBookStores.id
           );
         }
       }
@@ -81,7 +81,7 @@ class MerchantNoOrderReason extends Component {
         this.setState({
           viewOnly: true,
           selectedReason: payload.noOrderReasonId,
-          reason: payload.noOrderNotes
+          reason: payload.noOrderReasonNote
         });
       }
     } catch {
@@ -100,11 +100,16 @@ class MerchantNoOrderReason extends Component {
   /** CHECKOUT */
   checkOut() {
     Keyboard.dismiss();
-    this.props.merchantPostActivityProcess({
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
-      activity: 'check_out',
+    this.props.merchantPostActivityProcessV2({
+      journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores
+        .id,
+      activityName: 'check_out',
+      latitude: this.props.merchant.selectedMerchant.journeyBookStores
+        .latitudeCheckIn,
+      longitude: this.props.merchant.selectedMerchant.journeyBookStores
+        .longitudeCheckIn,
       noOrderReasonId: this.state.selectedReason,
-      noOrderNotes: this.state.reason
+      noOrderReasonNote: this.state.reason
     });
   }
   /**
@@ -274,4 +279,13 @@ export default connect(
  * updatedDate: 07072020
  * updatedFunction:
  * -> Refactoring Module Import
+ * updatedBy: dyah
+ * updatedDate: 25022021
+ * updatedFunction:
+ * -> Update the props of log activity.
+ * updatedBy: dyah
+ * updatedDate: 26022021
+ * updatedFunction:
+ * -> Update the props of post activity.
+ * -> Update payload noOrderReasonNote.
  */

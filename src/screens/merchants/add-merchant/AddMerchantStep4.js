@@ -5,7 +5,9 @@ import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
-  Keyboard
+  Keyboard,
+  Image,
+  Text
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
@@ -15,24 +17,33 @@ import {
   ButtonSingle,
   StatusBarWhite,
   ProgressBarType1,
-  DropdownType1
+  DropdownType1,
+  ModalBottomType3,
+  StatusBarBlackOP40,
+  ModalBottomType1
 } from '../../../library/component';
 import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
 import * as ActionCreators from '../../../state/actions';
-import ModalFailedCreateStore from '../../global/ModalFailedCreateStore'
+import { Fonts } from '../../../helpers';
+import { GlobalMethod } from '../../../services/methods';
 
 class AddMerchantStep4 extends Component {
   constructor(props) {
     super(props);
+    const {
+      cluster, group, channel, type
+    } = props.auth.dataCheckPhoneAvailble?.segmentationDetail || {}
+    const singleWareHouse = props.merchant.dataValidateAreaMapping.length === 1
+    
     this.state = {
-      /** error */
-      errorAddMerchant: false,
-      supplierId:
-        this.props.user.userSuppliers.length === 1
-          ? this.props.user.userSuppliers[0].supplier.id
-          : '',
-      modalFailedCreateStore: false
+      disableWarehouse: singleWareHouse,
+      disableGroup: group,
+      disableTipe: type,
+      disableChannel: channel,
+      disableCluster: cluster,
+      showModalSuccess: false,
+      showModalError: false,
     };
   }
   /**
@@ -43,124 +54,84 @@ class AddMerchantStep4 extends Component {
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
     /** IF ADD MERCHANT SUCCESS */
-    if (
-      prevProps.merchant.dataAddMerchant !== this.props.merchant.dataAddMerchant
-    ) {
-        if (this.props.merchant.dataAddMerchant !== null) {
-          switch (this.props.global.pageAddMerchantFrom) {
-            case 'MerchantView':
-              this.props.merchantGetReset();
-              this.props.merchantGetProcess({
-                type: 'direct',
-                page: 0,
-                loading: true,
-                portfolioId: '',
-                search: ''
-              });
-              break;
-            case 'JourneyView':
-              this.props.journeyPlanGetReset();
-              this.props.journeyPlanGetProcess({ page: 0, loading: true });
-              this.props.getJourneyPlanReportProcess(
-                this.props.user.userSuppliers.map(item => item.supplierId)
-              );
-              break;
-  
-            default:
-              break;
-          }
-          NavigationService.navigate(this.props.global.pageAddMerchantFrom);
-        }      
+    if (prevProps.merchant.dataAddMerchant !== this.props.merchant.dataAddMerchant) {
+      if(this.props.merchant.dataAddMerchant !== null){
+        this.setState({showModalSuccess: true})
+      }
     }
     /** IF ERROR ADD MERCHANT */
-    if (
-      prevProps.merchant.errorAddMerchant !==
-      this.props.merchant.errorAddMerchant
-    ) {
-      if (this.props.merchant.errorAddMerchant !== null) {
-        if(this.props.merchant.errorAddMerchant.data.errorCode === "ERR-AREA-MAPPING"){
-        this.props.volatileResetMerchant()
-          this.setState({
-            modalFailedCreateStore: true 
-          });
-        } else {
-            this.setState({ openErrorAddMerchant: true });         
-        }
-        
+    if (prevProps.merchant.errorAddMerchant !== this.props.merchant.errorAddMerchant) {
+      if(this.props.merchant.errorAddMerchant){
+        this.setState({showModalError: true})
       }
     }
   }
-  parentFunction(data){
-    switch (data.type) {
-      case 'goToAreaMapping':
-        this.setState({modalFailedCreateStore: false})
-        NavigationService.navigate('ProfileAreaMapping')
-        break;    
-      default:
-        break;
-    }
-  }
+  
   /** SEND DATA ADD MERCHANT */
   finalStep() {
-    this.setState({ addStoreProcess: true });
+    this.props.resetMerchantAdd()
     Keyboard.dismiss();
-    const warehouse = this.props.merchant.dataGetWarehouse
-    const data = this.props.merchant.dataMerchantVolatile
-    this.props.merchantAddProcess({
-      storeId: data.storeId,
-      externalId: data.externalId,
-      name: data.name,
-      address: data.address,
-      longitude: data.longitude,
-      latitude: data.latitude,
-      noteAddress: data.noteAddress,
-      urbanId: data.urbanId,
-      status: 'active',
-      warehouseId: warehouse.total === 0 || warehouse.total === 1 ? null : data.warehouseId,
-      user: {
-        fullName: data.fullName,
-        idNo: data.idNo,
-        taxNo: data.taxNo,
-        phone: data.phone,
-        status: 'active',
-        roles: [1]
-      },
-      supplier: {
-        supplierId: this.state.supplierId
-      },
-      type: {
-        typeId: data.typeId
-      },
-      group: {
-        groupId: data.groupId
-      },
-      cluster: {
-        clusterId: data.clusterId
-      },
-      channel: {
-        channelId: data.channelId
+    let {
+      storeId, name, address, longitude, latitude,
+      urbanId, warehouseId, fullName, idNo, taxNo,
+      phone, clusterId, channelId, groupId, typeId,
+      noteAddress, idImageUrl, vehicleAccessibilityId,
+      vehicleAccessibilityAmount
+    } = this.props.merchant.dataMerchantVolatile
+    let {supplierStoreId} = this.props.auth.dataCheckPhoneAvailble
+    let supplierId = GlobalMethod.userSupplierMapping()
+    if(supplierId.length > 0){
+      supplierId = supplierId[0].toString()
+    }
+    const payload = {
+      supplierStoreId: supplierStoreId || null,
+      storeId,
+      supplierId, 
+      registerData: {
+        user: {
+          fullName,
+          idNo,
+          taxNo,
+          phone,
+          idImageUrl
+        },
+        name, // nama toko
+        address,
+        noteAddress,
+        longitude,
+        latitude,
+        urbanId,
+        warehouseId,
+        vehicleAccessibilityId,
+        vehicleAccessibilityAmount,
+        clusterId,
+        groupId,
+        typeId,
+        channelId
       }
-    });
-    setTimeout(() => {
-      this.setState({ addStoreProcess: false });
-    }, 100);
+    }
+    this.props.merchantAddProcess(payload)
   }
   /** GO TO DROPDOWN LIST */
-  goToDropdown(data) {
-    NavigationService.navigate('ListAndSearchType1', {
-      placeholder: data.placeholder,
-      type: data.type
-    });
+  goToDropdown(params) {
+    NavigationService.navigate('SegmentationList', params);
   }
-  /** GO TO MAPS */
-  goToMaps() {
-    NavigationService.navigate('MapsView');
+  setDisable(){
+    const {warehouseId} = this.props.merchant.dataMerchantVolatile
+
+    if ( 
+      !this.props.merchant.loadingAddMerchant && warehouseId
+    ) {
+      return false
+    }
+    return true
   }
   /**
    * ====================
    * RENDER VIEW
    * ===================
    */
+  renderAsteriskRed = () => <Text style={{color: 'red'}}>*</Text>
   /** === RENDER STEP HEADER === */
   renderProgressHeader() {
     return (
@@ -173,16 +144,32 @@ class AddMerchantStep4 extends Component {
       </View>
     );
   }
+  /** WAREHOUSE */
+  renderWarehouse(){
+    return (
+      <DropdownType1 
+        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Warehouse</Text>}
+        placeholder={'Masukan warehouse'}
+        selectedDropdownText={this.props.merchant.dataMerchantVolatile.warehouse || '-'}
+        disabled={this.state.disableWarehouse}
+        openDropdown={() => this.goToDropdown({
+          type: 'warehouses',
+          placeholder: 'Cari Warehouse'
+        })}
+      />
+    )
+  }
   /** STORE TYPE */
   renderStoreType(){
     return (
       <DropdownType1 
-        title={'Tipe Toko'}
+        title="Tipe Toko"
         placeholder={'Masukan tipe toko'}
-        selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeType}
+        selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeType || '-'}
+        disabled={this.state.disableTipe}
         openDropdown={() => this.goToDropdown({
-          type: 'storeType',
-          placeholder: 'Masukan tipe toko'
+          type: 'types',
+          placeholder: 'Cari Tipe Toko'
         })}
       />
     )
@@ -191,12 +178,13 @@ class AddMerchantStep4 extends Component {
   renderStoreGroup(){
     return(
       <DropdownType1 
-        title={'Group Toko'}
+        title="Group Toko"
         placeholder={'Masukan group toko'}
-        selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeGroup}
+        selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeGroup || '-'}
+        disabled={this.state.disableGroup}
         openDropdown={() => this.goToDropdown({
-          type: 'storeGroup',
-          placeholder: 'Masukan group toko'
+          type: 'groups',
+          placeholder: 'Cari Group Toko'
         })}
       />
     )
@@ -205,53 +193,42 @@ class AddMerchantStep4 extends Component {
   renderStoreCluster(){
     return(
       <DropdownType1 
-        title={'Cluster Toko'}
+        disabled={this.state.disableCluster}
+        title="Cluster Toko"
         placeholder={'Masukan cluster toko'}
-        selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeCluster}
+        selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeCluster || '-'}
         openDropdown={() => this.goToDropdown({
-          type: 'storeCluster',
-          placeholder: 'Masukan cluster toko'
+          type: 'clusters',
+          placeholder: 'Cari Cluster Toko'
         })}
       />
-    )
-  }
-  /** STORE CHANNEL */
-  renderStoreChannel(){
-    return(
-      <DropdownType1 
-        title={'Channel Toko'}
-        placeholder={'Masukan channel toko'}
-        selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeChannel}
-        openDropdown={() => this.goToDropdown({
-          type: 'storeChannel',
-          placeholder: 'Masukan channel toko'
-        })}
-      />
-    )
-  }
-  /** RENDER MODAL FAILED CREATE STORE */
-  renderModalFailed(){
-    return(
-      <ModalFailedCreateStore
-        open={this.state.modalFailedCreateStore}
-        close={() => {
-          this.setState({modalFailedCreateStore: false})
-          NavigationService.navigate(this.props.global.pageAddMerchantFrom )
-          }}
-        onRef={ref => (this.parentFunction = ref)}
-        parentFunction={this.parentFunction.bind(this)}
-      />
-    )
-  }
+      )
+    }
+    /** STORE CHANNEL */
+    renderStoreChannel(){
+      return(
+        <DropdownType1 
+          title="Channel Toko"
+          placeholder={'Masukan channel toko'}
+          selectedDropdownText={this.props.merchant.dataMerchantVolatile.storeChannel || '-'}
+          disabled={this.state.disableChannel}
+          openDropdown={() => this.goToDropdown({
+            type: 'channels',
+            placeholder: 'Cari Channel Toko'
+          })}
+        />
+        )
+      }
+
   /** main content */
   renderContent() {
     return (
       <View style={{ flex: 1, paddingTop: 20 }}>
+        {this.renderWarehouse()}
         {this.renderStoreType()}
         {this.renderStoreGroup()}
         {this.renderStoreCluster()}
         {this.renderStoreChannel()}
-        <View style={{ paddingBottom: 50 }} />
       </View>
     );
   }
@@ -259,14 +236,101 @@ class AddMerchantStep4 extends Component {
   renderButton() {
     return (
       <ButtonSingle
-        title={'Lanjutkan'}
-        loading={
-          this.props.merchant.loadingAddMerchant || this.state.addStoreProcess
-        }
-        disabled={this.props.merchant.loadingAddMerchant || this.state.addStoreProcess}
+        title={'Selesai'}
+        loading={this.props.merchant.loadingAddMerchant}
+        disabled={this.setDisable()}
         borderRadius={4}
         onPress={() => this.finalStep()}
       />
+    );
+  }
+  /** RENDER MODAL SUCCESS */
+  renderModalSuccess(){
+    return(
+      <ModalBottomType1
+        title={''}
+        open={this.state.showModalSuccess}
+        content={this.modalSuccessContent()}
+      />
+    )
+  }
+  /** RENDER MODAL SUCCESS CONTENT */
+  modalSuccessContent() {
+    return (
+      <View style={{ alignItems: 'center' }}>
+        <StatusBarBlackOP40 />
+        <View style={{alignItems: 'center'}}>
+          <Image
+            source={require('../../../assets/images/sinbad_image/smile_sinbad.png')}
+            style={{ width: 240, height: 160 }}
+            resizeMode="contain"
+          />
+          <Text style={[Fonts.type7, { paddingVertical: 8 }]}>
+            Selamat, Toko Berhasil Didaftarkan
+          </Text>
+          <Text style={[Fonts.type8, {textAlign: 'center', marginHorizontal: 24, lineHeight: 24}]}>
+            Sekarang Anda dapat melihat toko yang didaftarkan di fitur Journey Plan atau List Toko
+          </Text>
+        </View>
+        <View style={{marginVertical: 16}} />
+        <View style={{ width: '100%'}}>
+          <ButtonSingle
+            borderRadius={4}
+            title="Kembali ke Beranda"
+            onPress={() => {
+              this.setState({showModalSuccess: false})
+              NavigationService.navigate("HomeView")
+            }}
+          />
+        </View>
+      </View>
+    );
+  }
+  /** RENDER MODAL ERROR */
+  renderModalError(){
+    return(
+      <ModalBottomType3
+        title={''}
+        open={this.state.showModalError}
+        close={() => this.setState({showModalError: false})}
+        content={this.modalErrorContent()}
+        typeClose={'cancel'}
+      />
+    )
+  }
+  /** RENDER MODAL ERROR CONTENT */
+  modalErrorContent() {
+    return (
+      <View style={{ alignItems: 'center' }}>
+        <StatusBarBlackOP40 />
+        <View style={{alignItems: 'center'}}>
+          <Image
+            source={require('../../../assets/images/sinbad_image/failed_error.png')}
+            style={{ width: 240, height: 160 }}
+            resizeMode="contain"
+          />
+          <View style={{marginVertical: 16}} />
+          <Text style={[Fonts.type7, { paddingVertical: 8 }]}>
+            Toko Gagal Dibuat
+          </Text>
+          <Text style={[Fonts.type8, {textAlign: 'center', marginHorizontal: 24, lineHeight: 24}]}>
+            Maaf anda belum bisa menambahkan toko ini
+          </Text>
+          <Text style={[Fonts.type8, {textAlign: 'center', marginHorizontal: 24, lineHeight: 24}]}>
+            Silahkan hubungi admin untuk proses lebih lanjut.
+          </Text>
+        </View>
+        <View style={{marginVertical: 16}} />
+        <View style={{ width: '100%'}}>
+          <ButtonSingle
+            borderRadius={4}
+            title={'Oke, Saya Mengerti'}
+            onPress={() => {
+              this.setState({showModalError: false})
+            }}
+          />
+        </View>
+      </View>
     );
   }
   /** === MAIN === */
@@ -279,7 +343,8 @@ class AddMerchantStep4 extends Component {
           {this.renderContent()}
         </ScrollView>
         {this.renderButton()}
-        {this.renderModalFailed()}
+        {this.state.showModalSuccess && this.renderModalSuccess()}
+        {this.state.showModalError && this.renderModalError()}
       </SafeAreaView>
     );
   }

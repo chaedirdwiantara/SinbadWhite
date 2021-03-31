@@ -31,7 +31,9 @@ export const GLOBAL_LONGLAT_TO_ADDRESS_FAILED = 'GlobalLonglatToAddressFailed';
 export const GLOBAL_MANUAL_INPUT_LOCATION = 'GlobalManualInputLocation';
 export const GLOBAL_MANUAL_INPUT_LOCATION_DATA_VOLATILE =
   'GlobalManualInputLocationDataVolatile';
-/** GE URBAN_ID FROM DB, BASED ON GOOGLE DATA */
+  export const RESET_MANUAL_INPUT_LOCATION_DATA =
+  'ResetManualInputLocationData';
+  /** GE URBAN_ID FROM DB, BASED ON GOOGLE DATA */
 export const GET_URBAN_ID_PROCESS = 'getUrbanIdProcess';
 export const GET_URBAN_ID_SUCCESS = 'getUrbanIdSuccess';
 export const GET_URBAN_ID_FAILED = 'getUrbanIdFailed';
@@ -39,3 +41,7 @@ export const GET_URBAN_ID_FAILED = 'getUrbanIdFailed';
 export const APP_VERSION_PROCESS = 'appVersionProcess';
 export const APP_VERSION_SUCCESS = 'appVersionSuccess';
 export const APP_VERSION_FAILED = 'appVersionFailed';
+/** UPLOAD IMAGE */
+export const UPLOAD_IMAGE_PROCESS = 'uploadImageProcess';
+export const UPLOAD_IMAGE_SUCCESS = 'uploadImageSuccess';
+export const UPLOAD_IMAGE_FAILED = 'uploadImageFailed';

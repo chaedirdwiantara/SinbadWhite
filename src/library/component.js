@@ -4,6 +4,7 @@ import SearchBarType1 from '../components/search_bar/SearchBarType1';
 import SearchBarType2 from '../components/search_bar/SearchBarType2';
 import SearchBarType3 from '../components/search_bar/SearchBarType3';
 import SearchBarType5 from '../components/search_bar/SearchBarType5';
+import SearchBarType4 from '../components/search_bar/SearchBarType4';
 /** BACK HANDLER */
 import BackHandlerCloseApp from '../components/BackHandlerCloseApp';
 import BackHandlerBackSpecific from '../components/BackHandlerBackSpecific';
@@ -23,6 +24,7 @@ import InputType1 from '../components/input/InputType1';
 import InputType2 from '../components/input/InputType2';
 import InputType3 from '../components/input/InputType3';
 import InputType4 from '../components/input/inputType4';
+import InputType6 from '../components/input/InputType6';
 /** INPUT MAPS (PIN POINT) */
 import InputMapsType1 from '../components/input/InputMapsType1';
 import InputMapsType2 from '../components/input/InputMapsType2';
@@ -118,6 +120,7 @@ export {
   SearchBarType1,
   SearchBarType2,
   SearchBarType3,
+  SearchBarType4,
   SearchBarType5,
   /** BACK HANDLER */
   BackHandlerCloseApp,
@@ -136,6 +139,7 @@ export {
   InputType2,
   InputType3,
   InputType4,
+  InputType6,
   /** INPUT MAPS (PIN POINT) */
   InputMapsType1,
   InputMapsType2,

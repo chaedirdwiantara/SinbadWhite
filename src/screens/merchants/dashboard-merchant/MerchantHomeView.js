@@ -17,6 +17,7 @@ import {
   moment,
   MaterialIcon,
   RFPercentage,
+  NavigationEvents,
   Button
 } from '../../../library/thirdPartyPackage';
 import {
@@ -45,6 +46,7 @@ import {
 import _ from 'lodash';
 
 const { width, height } = Dimensions.get('window');
+const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
 
 class MerchantHomeView extends Component {
   constructor(props) {
@@ -130,8 +132,8 @@ class MerchantHomeView extends Component {
 
   /** FOR GET LOG ALL ACTIVITY */
   refreshMerchantGetLogAllActivityProcess() {
-    this.props.merchantGetLogAllActivityProcess(
-      this.props.merchant.selectedMerchant.journeyPlanSaleId
+    this.props.merchantGetLogAllActivityProcessV2(
+      this.props.merchant.selectedMerchant.journeyBookStores.id
     );
   }
 
@@ -146,128 +148,140 @@ class MerchantHomeView extends Component {
   };
 
   componentDidMount() {
+    /** FOR GET MERCHANT LIST RESET */
+    this.props.merchantGetSurveyListReset();
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
       this.props.merchant.selectedMerchant.storeId
     );
     /** FOR GET LOG ALL ACTIVITY */
-    this.props.merchantGetLogAllActivityProcess(
-      this.props.merchant.selectedMerchant.journeyPlanSaleId
+    this.props.merchantGetLogAllActivityProcessV2(
+      this.props.merchant.selectedMerchant.journeyBookStores.id
     );
-    /** FOR GET SURVEY LIST */
-    this.getSurvey();
   }
 
   componentDidUpdate(prevProps) {
-    const { surveyList } = this.props.merchant;
+    const {
+      surveyList,
+      loadingGetSurveyList,
+      loadingGetLogAllActivity,
+      dataGetLogAllActivityV2
+    } = this.props.merchant;
     console.log('SURVEY LIST', surveyList, this.state.successSurveyList);
-    /** IF NO SURVEY */
-    if (
-      _.isEmpty(this.props.merchant.surveyList.payload.data) &&
-      this.props.merchant.surveyList.success &&
-      !this.state.successSurveyList
-    ) {
-      this.setState({ successSurveyList: true }, () => this.SurveyDone());
-      if (this.state.task.length === 4) {
-        this.setState({
-          task: [
-            {
-              name: 'Masuk Toko',
-              title: 'Masuk',
-              goTo: 'checkIn',
-              activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-            },
-            {
-              name: 'Order',
-              title: 'Order',
-              goTo: 'pdp',
-              activity: ACTIVITY_JOURNEY_PLAN_ORDER
-            },
-            {
-              name: 'Catatan Stok',
-              title: 'Isi',
-              goTo: 'stock',
-              activity: ACTIVITY_JOURNEY_PLAN_STOCK
-            },
-            {
-              name: 'Keluar Toko',
-              title: 'Keluar',
-              goTo: 'checkOut',
-              activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-            }
-          ]
-        });
-      }
-    }
-    /** IF SURVEY LIST EXIST */
-    if (!_.isEmpty(surveyList.payload.data) && surveyList.success) {
-      if (this.state.task.length === 4) {
-        this.setState({
-          task: [
-            {
-              name: 'Masuk Toko',
-              title: 'Masuk',
-              goTo: 'checkIn',
-              activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-            },
-            {
-              name: 'Order',
-              title: 'Order',
-              goTo: 'pdp',
-              activity: ACTIVITY_JOURNEY_PLAN_ORDER
-            },
-            {
-              name: 'Catatan Stok',
-              title: 'Isi',
-              goTo: 'stock',
-              activity: ACTIVITY_JOURNEY_PLAN_STOCK
-            },
-            {
-              name: 'Toko Survey',
-              title: 'Isi',
-              goTo: 'survey',
-              activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-            },
-            {
-              name: 'Keluar Toko',
-              title: 'Keluar',
-              goTo: 'checkOut',
-              activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-            }
-          ]
-        });
-      }
-    }
-    /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
-    if (
-      !_.isEmpty(surveyList.payload.data) &&
-      surveyList.success &&
-      !this.state.successSurveyList
-    ) {
-      if (
-        surveyList.payload.data.length ===
-        surveyList.payload.data.filter(
-          item => item.responseStatus === 'completed'
-        ).length
-      ) {
-        if (this.props.merchant.dataGetLogAllActivity) {
+
+    if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
+      if (surveyList.payload.data) {
+        /** IF NO SURVEY */
+        if (
+          _.isEmpty(surveyList.payload.data) &&
+          surveyList.success &&
+          !this.state.successSurveyList
+        ) {
+          this.SurveyDone();
+          if (this.state.task.length === 4) {
+            this.setState({
+              task: [
+                {
+                  name: 'Check-in Toko',
+                  title: 'Check-in',
+                  goTo: 'checkIn',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                },
+                {
+                  name: 'Order',
+                  title: 'Order',
+                  goTo: 'pdp',
+                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
+                },
+                {
+                  name: 'Check-out Toko',
+                  title: 'Check-out',
+                  goTo: 'checkOut',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+                }
+              ]
+            });
+          }
+        }
+        /** IF SURVEY LIST EXIST */
+        if (!_.isEmpty(surveyList.payload.data) && surveyList.success) {
+          if (this.state.task.length === 3) {
+            this.setState({
+              task: [
+                {
+                  name: 'Check-in Toko',
+                  title: 'Check-in',
+                  goTo: 'checkIn',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                },
+                {
+                  name: 'Order',
+                  title: 'Order',
+                  goTo: 'pdp',
+                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
+                },
+                {
+                  name: 'Toko Survey',
+                  title: 'Isi',
+                  goTo: 'survey',
+                  activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+                },
+                {
+                  name: 'Check-out Toko',
+                  title: 'Check-out',
+                  goTo: 'checkOut',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+                }
+              ]
+            });
+          }
+        }
+        /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
+        if (
+          !_.isEmpty(surveyList.payload.data) &&
+          surveyList.success &&
+          !this.state.successSurveyList
+        ) {
           if (
-            !this.props.merchant.dataGetLogAllActivity.find(
-              item => item.activity === 'toko_survey'
-            )
+            surveyList.payload.data.length ===
+            surveyList.payload.data.filter(
+              item => item.responseStatus === 'completed'
+            ).length
           ) {
-            this.setState({ successSurveyList: true }, () => this.SurveyDone());
+            if (this.props.merchant.dataGetLogAllActivityV2) {
+              if (
+                !this.props.merchant.dataGetLogAllActivityV2.find(
+                  item => item.activityName === 'toko_survey'
+                )
+              ) {
+                this.SurveyDone();
+              }
+            }
           }
         }
       }
+      /** FOR GET SURVEY LIST */
+      if (!loadingGetSurveyList && !surveyList.payload.data) {
+        this.getSurvey();
+      }
     }
     if (
-      prevProps.merchant.dataPostActivity !==
-      this.props.merchant.dataPostActivity
+      prevProps.merchant.dataPostActivityV2 !==
+      this.props.merchant.dataPostActivityV2
     ) {
-      if (this.props.merchant.dataPostActivity !== null) {
+      if (this.props.merchant.dataPostActivityV2 !== null) {
+        /** IF SURVEY DONE SUCCESS */
+        if (
+          this.props.merchant.dataPostActivityV2.activity ===
+          ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+        ) {
+          /** FOR GET LOG ALL ACTIVITY */
+          this.refreshMerchantGetLogAllActivityProcess();
+        }
+      }
+      if (this.props.merchant.dataPostActivityV2 !== null) {
         /** IF CHECK OUT SUCCESS */
-        if (this.props.merchant.dataPostActivity.activity === 'check_out') {
+        if (this.props.merchant.dataPostActivityV2.activity === 'check_out') {
           this.setState({
             openModalCheckout: false,
             loadingPostForCheckoutNoOrder: false,
@@ -279,12 +293,12 @@ class MerchantHomeView extends Component {
             this.setState({ showToast: false });
           }, 3000);
           /** FOR GET LOG ALL ACTIVITY */
-          this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.journeyPlanSaleId
+          this.props.merchantGetLogAllActivityProcessV2(
+            this.props.merchant.selectedMerchant.journeyBookStores.id
           );
         } else if (
           /** IF CHECK OUT SUCCESS */
-          this.props.merchant.dataPostActivity.activity === 'check_in'
+          this.props.merchant.dataPostActivityV2.activity === 'check_in'
         ) {
           this.setState({
             openModalCheckout: false,
@@ -295,20 +309,21 @@ class MerchantHomeView extends Component {
             this.setState({ showToast: false });
           }, 3000);
           /** FOR GET LOG ALL ACTIVITY */
-          this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.journeyPlanSaleId
+          this.props.merchantGetLogAllActivityProcessV2(
+            this.props.merchant.selectedMerchant.journeyBookStores.id
           );
         }
       }
     }
     if (
-      prevProps.merchant.dataGetLogPerActivity !==
-      this.props.merchant.dataGetLogPerActivity
+      prevProps.merchant.dataGetLogPerActivityV2 !==
+      this.props.merchant.dataGetLogPerActivityV2
     ) {
-      if (this.props.merchant.dataGetLogPerActivity !== null) {
-        if (this.props.merchant.dataGetLogPerActivity.length > 0) {
+      if (this.props.merchant.dataGetLogPerActivityV2 !== null) {
+        if (this.props.merchant.dataGetLogPerActivityV2.length > 0) {
           if (
-            this.props.merchant.dataGetLogPerActivity[0].activity === 'order'
+            this.props.merchant.dataGetLogPerActivityV2[0].activityName ===
+            'order'
           ) {
             this.checkoutProcess();
           }
@@ -326,45 +341,54 @@ class MerchantHomeView extends Component {
     /** FOR ERROR */
     /** error post */
     if (
-      prevProps.merchant.errorPostActivity !==
-      this.props.merchant.errorPostActivity
+      prevProps.merchant.errorPostActivityV2 !==
+      this.props.merchant.errorPostActivityV2
     ) {
-      if (this.props.merchant.errorPostActivity !== null) {
+      if (this.props.merchant.errorPostActivityV2 !== null) {
         this.doError();
       }
     }
     /** error get per activity */
     if (
-      prevProps.merchant.errorGetLogPerActivity !==
-      this.props.merchant.errorGetLogPerActivity
+      prevProps.merchant.errorGetLogPerActivityV2 !==
+      this.props.merchant.errorGetLogPerActivityV2
     ) {
-      if (this.props.merchant.errorGetLogPerActivity !== null) {
+      if (this.props.merchant.errorGetLogPerActivityV2 !== null) {
         this.doError();
       }
     }
-    /** error get per activity */
+    /** error get all activity */
     if (
-      prevProps.merchant.errorGetLogAllActivity !==
-      this.props.merchant.errorGetLogAllActivity
+      prevProps.merchant.errorGetLogAllActivityV2 !==
+      this.props.merchant.errorGetLogAllActivityV2
     ) {
-      if (this.props.merchant.errorGetLogAllActivity !== null) {
+      if (this.props.merchant.errorGetLogAllActivityV2 !== null) {
         this.doError();
       }
     }
   }
 
   componentWillUnmount() {
-    this.props.journeyPlanGetReset();
-    this.props.journeyPlanGetProcess({ page: 0, loading: true });
-    this.props.getJourneyPlanReportProcess(
-      this.props.user.userSuppliers.map(item => item.supplierId)
-    );
+    this.props.merchantGetSurveyListReset();
+    this.props.journeyPlanGetResetV2();
+    this.props.journeyPlanGetProcessV2({
+      page: 1,
+      date: today,
+      search: '',
+      loading: true
+    });
+    this.props.getJourneyPlanReportProcessV2();
   }
   /** CHECKOUT PROCESS */
   checkoutProcess() {
-    this.props.merchantPostActivityProcess({
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
-      activity: 'check_out'
+    this.props.merchantPostActivityProcessV2({
+      journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores
+        .id,
+      activityName: 'check_out',
+      latitude: this.props.merchant.selectedMerchant.journeyBookStores
+        .latitudeCheckIn,
+      longitude: this.props.merchant.selectedMerchant.journeyBookStores
+        .longitudeCheckIn
     });
   }
 
@@ -372,10 +396,21 @@ class MerchantHomeView extends Component {
    * Set sales activity survey_toko done
    */
   SurveyDone() {
-    this.props.merchantPostActivityProcess({
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
-      activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-    });
+    if (this.props.merchant.dataGetLogAllActivityV2) {
+      if (
+        !this.props.merchant.dataGetLogAllActivityV2.find(
+          item => item.activityName === 'toko_survey'
+        )
+      ) {
+        this.setState({ successSurveyList: true }, () =>
+          this.props.merchantPostActivityProcessV2({
+            journeyBookStoreId: this.props.merchant.selectedMerchant
+              .journeyBookStores.id,
+            activityName: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+          })
+        );
+      }
+    }
   }
 
   /** FOR ERROR FUNCTION (FROM DID UPDATE) */
@@ -403,27 +438,33 @@ class MerchantHomeView extends Component {
         NavigationService.navigate('MerchantCheckinView');
         break;
       case 'checkOut':
-        this.props.merchantGetLogPerActivityProcess({
-          journeyPlanSaleId: this.props.merchant.selectedMerchant
-            .journeyPlanSaleId,
+        this.props.merchantGetLogPerActivityProcessV2({
+          journeyBookStoresId: this.props.merchant.selectedMerchant
+            .journeyBookStores.id,
           activity: 'check_in'
         });
-        if (
-          _.isEmpty(this.props.merchant.surveyList.payload.data) ||
-          this.props.merchant.dataGetLogAllActivity.find(
-            item => item.activity === 'toko_survey'
-          )
-        ) {
-          this.setState({ openModalCheckout: true });
+        if (this.props.merchant.dataGetLogAllActivityV2) {
+          if (
+            _.isEmpty(this.props.merchant.surveyList.payload.data) ||
+            this.props.merchant.dataGetLogAllActivityV2.find(
+              item => item.activityName === 'toko_survey'
+            )
+          ) {
+            this.setState({ openModalCheckout: true });
+          }
         }
         break;
       case 'survey':
-        if (
-          this.props.merchant.dataGetLogAllActivity.find(
-            item => item.activity === 'check_in'
-          )
-        ) {
-          NavigationService.navigate('MerchantSurveyView', { readOnly: false });
+        if (this.props.merchant.dataGetLogAllActivityV2) {
+          if (
+            this.props.merchant.dataGetLogAllActivityV2.find(
+              item => item.activityName === 'check_in'
+            )
+          ) {
+            NavigationService.navigate('MerchantSurveyView', {
+              readOnly: false
+            });
+          }
         }
         break;
       case 'stock':
@@ -479,27 +520,27 @@ class MerchantHomeView extends Component {
 
   /** CHECK CHECK LIST TASK */
   checkCheckListTask(activity) {
-    if (this.props.merchant.dataGetLogAllActivity !== null) {
-      let checkActivity = this.props.merchant.dataGetLogAllActivity.filter(
+    if (this.props.merchant.dataGetLogAllActivityV2 !== null) {
+      let checkActivity = this.props.merchant.dataGetLogAllActivityV2.filter(
         function(rows) {
-          return rows.activity === activity;
+          return rows.activityName === activity;
         }
       );
       if (activity === ACTIVITY_JOURNEY_PLAN_ORDER) {
-        let getOrderStatus = this.props.merchant.dataGetLogAllActivity.filter(
+        let getOrderStatus = this.props.merchant.dataGetLogAllActivityV2.filter(
           function(rows) {
-            return rows.activity === ACTIVITY_JOURNEY_PLAN_ORDER;
+            return rows.activityName === ACTIVITY_JOURNEY_PLAN_ORDER;
           }
         );
         if (getOrderStatus.length < 1) {
-          let getNoOrder = this.props.merchant.dataGetLogAllActivity.filter(
+          let getNoOrder = this.props.merchant.dataGetLogAllActivityV2.filter(
             function(rows) {
-              return rows.activity === ACTIVITY_JOURNEY_PLAN_CHECK_OUT;
+              return rows.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_OUT;
             }
           );
           if (getNoOrder.length > 0) {
             let newOrderStatus = { ...getNoOrder[0] };
-            newOrderStatus.activity = ACTIVITY_JOURNEY_PLAN_ORDER;
+            newOrderStatus.activityName = ACTIVITY_JOURNEY_PLAN_ORDER;
             return newOrderStatus;
           } else {
             return false;
@@ -518,15 +559,23 @@ class MerchantHomeView extends Component {
   /** CHECK TOTAL COMPLETE TASK */
   checkTotalCompleteTask() {
     let total = 0;
-    if (this.props.merchant.dataGetLogAllActivity !== null) {
+    const journeyBookStores = this.props.merchant.selectedMerchant
+      .journeyBookStores;
+    if (this.props.merchant.dataGetLogAllActivityV2 !== null) {
       this.state.task.map((item, index) => {
-        const checkActivity = this.props.merchant.dataGetLogAllActivity.findIndex(
-          itemAllActivity => itemAllActivity.activity === item.activity
+        const checkActivity = this.props.merchant.dataGetLogAllActivityV2.findIndex(
+          itemAllActivity => itemAllActivity.activityName === item.activity
         );
         if (checkActivity > -1) {
           total = total + 1;
         }
       });
+    }
+    if (
+      !journeyBookStores.orderStatus &&
+      journeyBookStores.noOrderReasonId > 0
+    ) {
+      total = total + 1;
     }
     return total;
   }
@@ -773,6 +822,8 @@ class MerchantHomeView extends Component {
           </View>
           {this.state.task.map((item, index) => {
             const taskList = this.checkCheckListTask(item.activity);
+            const journeyBookStores = this.props.merchant.selectedMerchant
+              .journeyBookStores;
             return (
               <View
                 key={index}
@@ -785,8 +836,8 @@ class MerchantHomeView extends Component {
                 <View style={{ flexDirection: 'row', flex: 5 }}>
                   <View>
                     {taskList ? (
-                      taskList.activity === ACTIVITY_JOURNEY_PLAN_ORDER &&
-                      taskList.noOrderNotes ? (
+                      taskList.activityName === ACTIVITY_JOURNEY_PLAN_ORDER &&
+                      journeyBookStores.noOrderReasonNote.length !== 0 ? (
                         <MaterialIcon
                           // name="check-circle"
                           // name="timelapse"
@@ -819,10 +870,12 @@ class MerchantHomeView extends Component {
                   }}
                 >
                   {taskList ? (
-                    taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN ||
-                    taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_OUT ? (
+                    taskList.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_IN ||
+                    taskList.activityName ===
+                      ACTIVITY_JOURNEY_PLAN_CHECK_OUT ? (
                       <Text style={Fonts.type107}>
-                        {taskList.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                        {taskList.activityName ===
+                        ACTIVITY_JOURNEY_PLAN_CHECK_IN
                           ? `Check In ${moment(taskList.createdAt).format(
                               'HH:mm'
                             )}`
@@ -830,11 +883,15 @@ class MerchantHomeView extends Component {
                               'HH:mm'
                             )}`}
                       </Text>
-                    ) : taskList.activity === ACTIVITY_JOURNEY_PLAN_ORDER ? (
-                      taskList.noOrderNotes ? (
+                    ) : taskList.activityName ===
+                      ACTIVITY_JOURNEY_PLAN_ORDER ? (
+                      !journeyBookStores.orderStatus &&
+                      journeyBookStores.noOrderReasonNote.length !== 0 ? (
                         <TouchableOpacity
                           onPress={() => {
-                            this.navigateViewNoOrderReasonPage(taskList);
+                            this.navigateViewNoOrderReasonPage(
+                              journeyBookStores
+                            );
                           }}
                           style={{
                             flexDirection: 'row',
@@ -878,12 +935,12 @@ class MerchantHomeView extends Component {
                           />
                         </TouchableOpacity>
                       )
-                    ) : taskList.activity === ACTIVITY_JOURNEY_PLAN_STOCK ? (
+                    ) : taskList.activityName === ACTIVITY_JOURNEY_PLAN_STOCK ? (
                       this.buttonStock({
                         goTo: item.goTo,
                         activity: ACTIVITY_JOURNEY_PLAN_STOCK
                       })
-                    ) : taskList.activity ===
+                    ) : taskList.activityName ===
                       ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY ? (
                       <TouchableOpacity
                         onPress={() => {
@@ -976,7 +1033,7 @@ class MerchantHomeView extends Component {
         <View>
           {item.menuName === 'Pesanan' &&
           this.props.permanent.newOrderSuccessPerMerchant.indexOf(
-            parseInt(this.props.merchant.selectedMerchant.storeId, 10)
+            parseInt(this.props.selectedMerchant.storeId, 10)
           ) > -1 ? (
             <View style={styles.boxNotification}>
               <View style={GlobalStyle.circleRedNotification16} />
@@ -1074,9 +1131,9 @@ class MerchantHomeView extends Component {
         onPress={
           () => {
             this.setState({ checkNoOrder: true });
-            this.props.merchantGetLogPerActivityProcess({
-              journeyPlanSaleId: this.props.merchant.selectedMerchant
-                .journeyPlanSaleId,
+            this.props.merchantGetLogPerActivityProcessV2({
+              journeyBookStoresId: this.props.merchant.selectedMerchant
+                .journeyBookStores.id,
               activity: 'order'
             });
           }
@@ -1154,7 +1211,7 @@ class MerchantHomeView extends Component {
         {!this.props.merchant.loadingGetMerchantLastOrder &&
         this.props.merchant.dataGetMerchantLastOrder !== null &&
         !this.props.merchant.loadingGetLogAllActivity &&
-        this.props.merchant.dataGetLogAllActivity !== null &&
+        this.props.merchant.dataGetLogAllActivityV2 !== null &&
         !this.state.loadingPostForCheckoutNoOrder ? (
           <View style={{ height: '100%' }}>
             {this.renderBackground()}
@@ -1362,4 +1419,34 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * updatedDate: 02122020
  * updatedFunction:
  * -> Add validation for checkout.
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ * -> Add validation for survey done.
+ * -> Update the props of journey plan list.
+ * -> Update the props of log activity.
+ * updatedBy: dyah
+ * updatedDate: 25022021
+ * updatedFunction:
+ * -> Add validation for log all activy done.
+ * -> Update the props of selected merchant.
+ * updatedBy: dyah
+ * updatedDate: 26022021
+ * updatedFunction:
+ * -> Update the props of post activity.
+ * -> Update function checkTotalCompleteTask.
+ * updatedBy: dyah
+ * updatedDate: 01032021
+ * updatedFunction:
+ * -> Update the tasklist when complete the order & not order .
+ * updatedBy: dyah
+ * updatedDate: 08032021
+ * updatedFunction:
+ * -> Update the tasklist when complete the order & not order.
+ * -> Update the validation when get survey list.
+ * -> Update the validation when checkout.
+ * updatedBy: dyah
+ * updatedDate: 12032021
+ * updatedFunction:
+ * -> Add parameter search when get journey plan.
  */
