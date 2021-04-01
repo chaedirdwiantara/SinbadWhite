@@ -46,9 +46,21 @@ function* getUrbanId(actions) {
     yield put(ActionCreators.getUrbanIdFailed(error));
   }
 }
+/** === THIS FOR UPLOAD IMAGE === */
+function* uploadImage(actions) {
+  try {
+    const response = yield call(() => {
+      return GlobalMethod.uploadImage(actions.payload);
+    });
+    yield put(ActionCreators.uploadImageSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.uploadImageFailed(error));
+  }
+}
 /** === SAGA FUNCTION === */
 function* GlobalSaga() {
   yield takeEvery(types.LIST_AND_SEARCH_GET_PROCESS, getListAndSearch);
+  yield takeEvery(types.UPLOAD_IMAGE_PROCESS, uploadImage);
   yield takeEvery(types.GET_URBAN_ID_PROCESS, getUrbanId);
   yield takeEvery(types.APP_VERSION_PROCESS, getVersion);
   yield takeEvery(

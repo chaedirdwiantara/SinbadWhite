@@ -16,7 +16,7 @@ import {
 } from '../../../library/thirdPartyPackage'
 import {
     StatusBarBlackOP40,
-    SearchBarType4,
+    SearchBarType5,
     TagListType3,
     SkeletonType2,
     ButtonSingle
@@ -254,7 +254,7 @@ class ModalBottomProductList extends Component {
     renderContentSearchBar(){
         return (
             <View>
-                <SearchBarType4
+                <SearchBarType5
                     searchText={this.state.search}
                     placeholder={'Cari disini'}
                     onRef={ref => (this.parentFunction = ref)}

@@ -111,12 +111,18 @@ pipeline {
         }
         stage('Download ENV') {
             steps {
-                withAWS(credentials: "${AWS_CREDENTIAL}") {
-                    s3Download(file: 'index.js', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/index.js", force: true)
-                    s3Download(file: 'src/services/apiHost.js', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/apiHost.js", force: true)
-                    s3Download(file: 'android/app/google-services.json', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/google-services.json", force: true)
-                    s3Download(file: 'android/app/mykeystore.keystore', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/mykeystore.keystore", force: true)
-                    s3Download(file: 'android/app/src/main/res/values/strings.xml', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/strings.xml", force: true)
+                script {
+                    withAWS(credentials: "${AWS_CREDENTIAL}") {
+                        s3Download(file: 'index.js', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/index.js", force: true)
+                        s3Download(file: 'src/services/apiHost.js', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/apiHost.js", force: true)
+                        s3Download(file: 'android/app/google-services.json', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/google-services.json", force: true)
+                        s3Download(file: 'android/app/mykeystore.keystore', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/mykeystore.keystore", force: true)
+                        s3Download(file: 'android/app/src/main/res/values/strings.xml', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/strings.xml", force: true)
+                        if(SINBAD_ENV == 'production') {
+                            s3Download(file: '.env', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/.env", force: true)
+                            s3Download(file: 'android/app/newrelic.properties', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/newrelic.properties", force: true)
+                        }
+                    }
                 }
             }
         }
@@ -157,9 +163,11 @@ pipeline {
                 }
                 stage('Install Yarn & React') {
                     steps {
-                        sh "yarn global add react-native-cli create-react-native-app expo-cli"
-                        sh "npm ci"
-                        sh "npx jetify"
+                        sshagent(credentials : ['ssh-sinbad']) {
+                            sh "yarn global add react-native-cli create-react-native-app expo-cli"
+                            sh "npm ci"
+                            sh "npx jetify"
+                        }
                     }
                 }
                 stage('Change Environment') {
@@ -297,7 +305,7 @@ ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
                             }else if(SINBAD_ENV == 'production') {
                                 sh '''
                                     cd android && \
-                                    fastlane beta
+                                    fastlane production
                                 '''
                             }
                         }

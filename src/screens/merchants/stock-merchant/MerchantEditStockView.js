@@ -11,7 +11,7 @@ import {
  import { 
      BackHandlerBackSpecific,
      StatusBarWhite,
-     SearchBarType4,
+     SearchBarType5,
      ButtonSingle,
      LoadingPage,
      ModalConfirmationType3,
@@ -44,7 +44,9 @@ import {
               search: '',
               data: this.props.merchant.dataGetRecordStock,
               dataForDiscard: [],
-              dataForBatchDelete: []
+              dataForBatchDelete: [],
+              latitude: this.props.merchant.selectedMerchant.latitude,
+              longitude: this.props.merchant.selectedMerchant.longitude,
           }
       }
           /** HEADER CONFIG */
@@ -95,7 +97,6 @@ import {
         // To Delete Catalogue and get new stock record
         if(prevProps.merchant.dataDeleteRecordStock !== this.props.merchant.dataDeleteRecordStock){
             if(this.props.merchant.dataDeleteRecordStock.success ){
-                console.log('Get after delete')
                 this.props.merchantDeleteStockRecordReset()
                 this.getRecordStock(this.state.search)
             }
@@ -104,7 +105,6 @@ import {
         if(prevProps.merchant.dataAddRecordStock !== this.props.merchant.dataAddRecordStock
             ){
             if(this.props.merchant.dataAddRecordStock.success){
-                console.log('Get after Add')
                 this.props.merchantAddStockRecordReset()
                 this.getRecordStock(this.state.search)
                 this.batchDeleteData()
@@ -114,7 +114,6 @@ import {
         // To get catalogue after update
         if(prevProps.merchant.dataUpdateRecordStock !== this.props.merchant.dataUpdateRecordStock){
             if(this.props.merchant.dataUpdateRecordStock.success){
-                console.log('Get and Navigate after update')
                 this.props.merchantUpdateStockRecordReset()
                 this.getRecordStock(this.state.search)
                 this.postRecordStockActivity()
@@ -125,7 +124,6 @@ import {
         }
         // To navigate when data are empty
         if(prevProps.merchant.dataGetRecordStock !== this.props.merchant.dataGetRecordStock){
-            console.log('Data change')
             if(this.props.merchant.merchantStockRecordStatus === 'NEW-STOCK'){
                 this.batchDeleteData()
             }
@@ -189,11 +187,11 @@ import {
     }
     // POST RECORD STOCK ACTIVITY
     postRecordStockActivity(){
-        const journeyPlanSaleId = this.props.merchant.selectedMerchant.journeyPlanSaleId;
-    
-        this.props.merchantPostActivityProcess({
-            journeyPlanSaleId,
-            activity: 'record_stock'
+        this.props.merchantPostActivityProcessV2({
+            journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores.id,
+            activityName: 'record_stock',
+            longitude: this.state.longitude,
+            latitude: this.state.latitude
           })
     }
     /** DISCARD DATA TO EARLIER BEFORE EDIT */
@@ -363,7 +361,7 @@ import {
     renderSearch(){
         return(
             <View style={{ paddingVertical: 8 }}>
-                    <SearchBarType4 
+                    <SearchBarType5
                         searchText={this.state.search}
                         placeholder={'Cari Produk disini'}
                         onRef={ref => (this.parentFunction = ref)}

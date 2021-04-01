@@ -12,7 +12,7 @@ import {
     StatusBarWhite,
     EmptyData,
     ButtonFloatType1,
-    SearchBarType4,
+    SearchBarType5,
     ButtonSingle,
     LoadingPage
 } from '../../../library/component'
@@ -86,8 +86,8 @@ class MerchantStockView extends Component {
     }
 
     buttonEditStock(){
-        const taskList = this.props.merchant.dataGetLogAllActivity
-        if(taskList && taskList.find( task => task.activity === 'check_out')){
+        const taskList = this.props.merchant.dataGetLogAllActivityV2
+        if(taskList && taskList.find( task => task.activityName === 'check_out')){
             return <View />
         } else {
             return this.renderButtonEditStock()
@@ -96,8 +96,8 @@ class MerchantStockView extends Component {
     }
 
     buttonAddStock(){
-        const taskList = this.props.merchant.dataGetLogAllActivity
-        if(taskList && taskList.find( task => task.activity === 'check_out')){
+        const taskList = this.props.merchant.dataGetLogAllActivityV2
+        if(taskList && taskList.find( task => task.activityName === 'check_out')){
             return <View />
         } else {
             return this.renderButtonAddStock()
@@ -158,7 +158,7 @@ class MerchantStockView extends Component {
     renderSearch(){
         return(
             <View style={{ paddingVertical: 8, backgroundColor: masterColor.backgroundWhite }}>
-                    <SearchBarType4 
+                    <SearchBarType5 
                         searchText={this.state.search}
                         placeholder={'Cari Produk disini'}
                         onRef={ref => (this.parentFunction = ref)}
