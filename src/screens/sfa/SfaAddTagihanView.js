@@ -72,7 +72,7 @@ const SfaAddTagihanView = props => {
   const [stamp, setStamp] = useState(null);
   const [isUsedStamp, setIsUsedStamp] = useState(false)
   const [isUseNoReference, setIsUseNoReference] = useState(false)
-  const [paymentCollectionMethodId, setPaymentCollectionMethodId]= useState()
+  const [paymentCollectionId, setPaymentCollectionMethodId]= useState()
 
   //SELECTOR
   const { selectedMerchant } = useSelector(state => state.merchant);
@@ -183,12 +183,13 @@ const SfaAddTagihanView = props => {
       setCash(parseInt(text.replace(/[Rp.]+/g, '')));
     }
   };
+  console.log("log:", collectionMethod);
   const saveCollection = async () => {
     const orderParcelId = props.navigation.state.params.data.id;
     const userId = parseInt(id)
     const supplierId = parseInt(userSuppliers[0].supplier.id)
     const storeId = parseInt(selectedMerchant.storeId)
-    const paymentCollectionMethodId = parseInt(paymentCollectionMethodId)
+    const paymentCollectionMethodId = parseInt(paymentCollectionId)
     if (collectionMethod.code === 'cash') {
       const data = {
         supplierId: supplierId,
@@ -363,7 +364,6 @@ const SfaAddTagihanView = props => {
   }, [loadingSfaPostCollectionPayment, loadingSfaPostPaymentMethod]);
 
   const dataReferenceCode = data => {
-    const a = data.trim();
     setReferenceCode(data);
   };
 
@@ -412,9 +412,11 @@ const SfaAddTagihanView = props => {
 
   const useNoReference = data => {
     setIsUseNoReference(data);
+    console.log("disni:", data);
   };
 
   const noPaymentCollectionMethodId = data => {
+    console.log("dataaa2:", data);
     setPaymentCollectionMethodId(data);
   };
 
