@@ -163,7 +163,7 @@ const SfaCollectionDetailView = props => {
       <View style={{ marginHorizontal: -16 }}>
         <InputType5
           title={`Metode Penagihan`}
-          placeholder={dataSfaGetCollectionDetail.collectionMethodType}
+          placeholder={dataSfaGetCollectionDetail.paymentCollectionMethod.paymentCollectionTypeName}
           editable={false}
         />
         {renderCollectionDetailMethod()}
@@ -173,7 +173,7 @@ const SfaCollectionDetailView = props => {
   };
 
   const renderCollectionDetailMethod = () => {
-    const collectionMethodType = dataSfaGetCollectionDetail.collectionMethodType
+    const collectionMethodType = dataSfaGetCollectionDetail.paymentCollectionMethod.paymentCollectionTypeCode
    if(collectionMethodType === 'check' || collectionMethodType === 'giro'){  
     return (
       <SfaCollectionDetailCheckandGiro data={dataSfaGetCollectionDetail}/>
@@ -218,7 +218,7 @@ const SfaCollectionDetailView = props => {
               unit: 'Rp ',
               suffixUnit: ''
             }}
-            value={dataSfaGetCollectionDetail.paidAmount}
+            value={dataSfaGetCollectionDetail.paymentCollection.paidAmount}
             style={[
               Fonts.type31,
               {
