@@ -21,7 +21,6 @@ const SfaCollectionDetailPromo = (props) => {
     )
   }
 
-  console.log("dataa:", data);
     return (   
         <>
         <View style={styles.inputField}>
@@ -90,8 +89,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       backgroundColor: 'white',
       alignItems: 'center',
-      paddingTop: 8,
-      backgroundColor:"red"
+      paddingTop: 8
     },
     images: {
       width: 328,
