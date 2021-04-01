@@ -178,6 +178,39 @@ class MerchantHomeView extends Component {
           !this.state.successSurveyList
         ) {
           this.SurveyDone();
+          if (this.state.task.length === 5) {
+            this.setState({
+              task: [
+                {
+                  name: 'Check-in Toko',
+                  title: 'Check-in',
+                  goTo: 'checkIn',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                },
+                {
+                  name: 'Order',
+                  title: 'Order',
+                  goTo: 'pdp',
+                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
+                },
+                {
+                  name: 'Catatan Stok',
+                  title: 'Isi',
+                  goTo: 'stock',
+                  activity: ACTIVITY_JOURNEY_PLAN_STOCK
+                },
+                {
+                  name: 'Check-out Toko',
+                  title: 'Check-out',
+                  goTo: 'checkOut',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+                }
+              ]
+            });
+          }
+        }
+        /** IF SURVEY LIST EXIST */
+        if (!_.isEmpty(surveyList.payload.data) && surveyList.success) {
           if (this.state.task.length === 4) {
             this.setState({
               task: [
@@ -194,31 +227,10 @@ class MerchantHomeView extends Component {
                   activity: ACTIVITY_JOURNEY_PLAN_ORDER
                 },
                 {
-                  name: 'Check-out Toko',
-                  title: 'Check-out',
-                  goTo: 'checkOut',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                }
-              ]
-            });
-          }
-        }
-        /** IF SURVEY LIST EXIST */
-        if (!_.isEmpty(surveyList.payload.data) && surveyList.success) {
-          if (this.state.task.length === 3) {
-            this.setState({
-              task: [
-                {
-                  name: 'Check-in Toko',
-                  title: 'Check-in',
-                  goTo: 'checkIn',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                },
-                {
-                  name: 'Order',
-                  title: 'Order',
-                  goTo: 'pdp',
-                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
+                  name: 'Catatan Stok',
+                  title: 'Isi',
+                  goTo: 'stock',
+                  activity: ACTIVITY_JOURNEY_PLAN_STOCK
                 },
                 {
                   name: 'Toko Survey',
@@ -468,11 +480,11 @@ class MerchantHomeView extends Component {
         }
         break;
       case 'stock':
-        const taskList = this.props.merchant.dataGetLogAllActivity
+        const taskList = this.props.merchant.dataGetLogAllActivityV2
         
         if (
           taskList.find( 
-            task => task.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN
+            task => task.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_IN
             )
         ) {
           NavigationService.navigate('MerchantStockView')

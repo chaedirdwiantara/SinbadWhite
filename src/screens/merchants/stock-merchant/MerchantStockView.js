@@ -86,8 +86,8 @@ class MerchantStockView extends Component {
     }
 
     buttonEditStock(){
-        const taskList = this.props.merchant.dataGetLogAllActivity
-        if(taskList && taskList.find( task => task.activity === 'check_out')){
+        const taskList = this.props.merchant.dataGetLogAllActivityV2
+        if(taskList && taskList.find( task => task.activityName === 'check_out')){
             return <View />
         } else {
             return this.renderButtonEditStock()
@@ -96,8 +96,8 @@ class MerchantStockView extends Component {
     }
 
     buttonAddStock(){
-        const taskList = this.props.merchant.dataGetLogAllActivity
-        if(taskList && taskList.find( task => task.activity === 'check_out')){
+        const taskList = this.props.merchant.dataGetLogAllActivityV2
+        if(taskList && taskList.find( task => task.activityName === 'check_out')){
             return <View />
         } else {
             return this.renderButtonAddStock()
