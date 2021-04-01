@@ -219,9 +219,10 @@ const SfaAddTagihanView = props => {
           userId: userId,
           referenceCode: referenceCode,
           balance: transferValue,
-          issuedDate: moment(new Date(transferDate)).format(
-            'YYYY-MM-DD HH:mm:ss'
-          ),
+          issuedDate: moment
+          .utc(new Date(transferDate))
+          .local()
+          .format('YYYY-MM-DD HH:mm:ss'),
           bankId: bankSource.id,
           bankToAccountId: bankAccount.id,
           filename: transferImage.fileName,
@@ -271,11 +272,11 @@ const SfaAddTagihanView = props => {
         issuedDate: moment
           .utc(issuedDate)
           .local()
-          .format('YYYY-MM-DD HH:MM:ss'),
+          .format('YYYY-MM-DD HH:mm:ss'),
         invalidDate: moment
           .utc(dueDate)
           .local()
-          .format('YYYY-MM-DD HH:MM:ss'),
+          .format('YYYY-MM-DD HH:mm:ss'),
         balance: balance,
         isUsedStamp: isUsedStamp,
         stampId: stamp
