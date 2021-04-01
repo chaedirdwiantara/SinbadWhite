@@ -183,7 +183,6 @@ const SfaAddTagihanView = props => {
       setCash(parseInt(text.replace(/[Rp.]+/g, '')));
     }
   };
-  console.log("log:", collectionMethod);
   const saveCollection = async () => {
     const orderParcelId = props.navigation.state.params.data.id;
     const userId = parseInt(id)
@@ -412,11 +411,9 @@ const SfaAddTagihanView = props => {
 
   const useNoReference = data => {
     setIsUseNoReference(data);
-    console.log("disni:", data);
   };
 
   const noPaymentCollectionMethodId = data => {
-    console.log("dataaa2:", data);
     setPaymentCollectionMethodId(data);
   };
 
