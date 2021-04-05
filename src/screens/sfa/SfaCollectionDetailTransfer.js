@@ -70,7 +70,16 @@ const SfaCollectionDetailTransfer = (props) => {
         </View>
         <View style={styles.imageContainer}>
           <Text style={Fonts.type10}>Foto/Gambar</Text>
-         
+          <View style={styles.smallContainerImage}>
+            <Image
+              source={{
+                uri: `data:image/jpeg;base64, ${data.image}`
+              }}
+              style={[
+                styles.images
+              ]}
+            />
+          </View>
         </View>
         </>
     )
@@ -82,7 +91,23 @@ const styles = StyleSheet.create({
       },
     imageContainer: {
         padding: 16
-    }
+    },
+    smallContainerImage: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'white',
+      alignItems: 'center',
+      paddingTop: 8
+    },
+    images: {
+      width: 328,
+      height: 328,
+      borderWidth: 1,
+      marginHorizontal: 3,
+      backgroundColor: 'white',
+      aspectRatio: 2 / 3
+    },
       
 })
 export default SfaCollectionDetailTransfer
