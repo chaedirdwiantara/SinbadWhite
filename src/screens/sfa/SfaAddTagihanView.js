@@ -40,6 +40,7 @@ import NavigationService from '../../navigation/NavigationService';
 
 const SfaAddTagihanView = props => {
   const dispatch = useDispatch();
+  const date = new Date()
   const [collectionMethod, setCollectionMethod] = useState(null);
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false);
   const [methodStatus, setMethodStatus] = useState('available');
@@ -64,9 +65,9 @@ const SfaAddTagihanView = props => {
   const [transferValue, setTransferValue] = useState(0);
   const [billingValue, setBillingValue] = useState(0);
   const [transferImage, setTransferImage] = useState(null);
-  const [issuedDate, setIssuedDate] = useState(new Date());
+  const [issuedDate, setIssuedDate] = useState(date);
   const [dueDate, setDueDate] = useState(
-    new Date(new Date(new Date()).setDate(new Date().getDate() + 1))
+    date.setDate(date.getDate()+1)
   );
   const [balance, setBalance] = useState(null);
   const [stamp, setStamp] = useState(null);

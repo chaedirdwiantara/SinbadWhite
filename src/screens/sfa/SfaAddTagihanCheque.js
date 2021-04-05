@@ -30,10 +30,11 @@ const { width, height } = Dimensions.get('window');
 
 const SfaAddTagihanCheque = props => {
   const status = props.status;
+  const date = new Date();
   const [noRef, setNoRef] = useState('');
   const [bankSource, setBankSource] = useState('');
-  const [issuedDate, setIssuedDate] = useState(new Date());
-  const [invalidDate, setInvalidDate] = useState(new Date(new Date(new Date()).setDate(new Date().getDate() + 1)));
+  const [issuedDate, setIssuedDate] = useState(date);
+  const [invalidDate, setInvalidDate] = useState(date.setDate(date.getDate()+1));
   const [balance, setBalance] = useState(0);
   const [checkMaterai, setCheckMaterai] = useState(false);
   const [openModalPublishDate, setOpenModalPublishDate] = useState(false);
@@ -64,11 +65,12 @@ const SfaAddTagihanCheque = props => {
   };
 
   const deleteDataReference = () => {
+    const date = new Date()
     setIsDisable(false)
     setDataReference()
     props.referenceCode(null)
-    props.issuedDate(new Date())
-    props.dueDate(new Date(new Date(new Date()).setDate(new Date().getDate() + 1)))
+    props.issuedDate(date)
+    props.dueDate(date.setDate(date.getDate()+1))
     props.balance(0)
     props.bankSource(null)
     props.useNoReference(false)
@@ -130,7 +132,8 @@ const SfaAddTagihanCheque = props => {
   };
 
   const renderDueDate = () => {
-    const minDate = new Date(new Date(new Date()).setDate(new Date().getDate() + 1));
+    const date = new Date()
+    const minDate = date.setDate(date.getDate()+1);
     const today = new Date()
     return (
       <ModalBottomType4
