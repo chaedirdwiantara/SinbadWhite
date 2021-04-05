@@ -83,7 +83,7 @@ function SfaCollectionLog(props) {
     const renderItem = ({item, index}) => {
         return(
             <View key={index}>
-                    <TouchableOpacity onPress={()=> NavigationService.navigate('SfaCollectionDetailView', {paymentCollectionId: item.paymentCollectionId})}>
+                    <TouchableOpacity onPress={()=> NavigationService.navigate('SfaCollectionDetailView', {paymentCollectionId: item.id})}>
                         <View style={{flexDirection: "row", justifyContent:"space-between", marginHorizontal:16, marginVertical: 16}}>
                             <View style={{flex: 2}}>
                                 <Text style={{...Fonts.type42, marginBottom: 8}}>{item.salesName}</Text>

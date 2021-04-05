@@ -43,11 +43,7 @@ const SfaCollectionDetailView = props => {
    */
   useEffect(() =>{
     const paymentCollectionId = props.navigation.state.params.paymentCollectionId
-    const data = {
-      paymentCollectionId: paymentCollectionId,
-      storeId: parseInt(selectedMerchant.storeId)
-    }
-    dispatch(sfaGetCollectionDetailProcess(data))
+    dispatch(sfaGetCollectionDetailProcess(paymentCollectionId))
   }, [])
 
 
@@ -159,37 +155,37 @@ const SfaCollectionDetailView = props => {
   };
 
   const renderItemCollectionDetail = () => {
+    const collectionMethodType = dataSfaGetCollectionDetail.paymentCollection.paymentCollectionMethod.paymentCollectionType
     return (
       <View style={{ marginHorizontal: -16 }}>
         <InputType5
           title={`Metode Penagihan`}
-          placeholder={dataSfaGetCollectionDetail.collectionMethodType}
+          placeholder={collectionMethodType.name}
           editable={false}
         />
-        {renderCollectionDetailMethod()}
+        {renderCollectionDetailMethod(collectionMethodType)}
          
       </View>
     );
   };
 
-  const renderCollectionDetailMethod = () => {
-    const collectionMethodType = dataSfaGetCollectionDetail.collectionMethodType
-   if(collectionMethodType === 'check' || collectionMethodType === 'giro'){  
+  const renderCollectionDetailMethod = (collectionMethodType) => {
+   if(collectionMethodType.code === 'check' || collectionMethodType.code === 'giro'){  
     return (
       <SfaCollectionDetailCheckandGiro data={dataSfaGetCollectionDetail}/>
      )
    }
-   else if (collectionMethodType === 'transfer'){
+   else if (collectionMethodType.code === 'transfer'){
     return(
       <SfaCollectionDetailTransfer data={dataSfaGetCollectionDetail}/>
     )
    }
-   else if (collectionMethodType === "cash") {
+   else if (collectionMethodType.code === "cash") {
     return(
      renderCashDetail()
     )
    }
-   else if (collectionMethodType === "promo") {
+   else if (collectionMethodType.code === "promo") {
      return(
       <SfaCollectionDetailPromo data={dataSfaGetCollectionDetail}/>
      )
@@ -218,7 +214,7 @@ const SfaCollectionDetailView = props => {
               unit: 'Rp ',
               suffixUnit: ''
             }}
-            value={dataSfaGetCollectionDetail.paidAmount}
+            value={dataSfaGetCollectionDetail.paymentCollection.paidAmount}
             style={[
               Fonts.type31,
               {
@@ -280,8 +276,11 @@ const styles = StyleSheet.create({
 export default SfaCollectionDetailView;
 
 export const DetailHeaderOption = props => {
-
+  const { dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
   return (
+    <>
+    {dataSfaGetCollectionDetail?  
+    dataSfaGetCollectionDetail.isEditable?
     <View style={styles.navOption}>
       <>
         <TouchableOpacity onPress={()=> alert('Edit Page')}>
@@ -292,6 +291,8 @@ export const DetailHeaderOption = props => {
           />
         </TouchableOpacity>
       </>
-    </View>
+    </View>: null : null}
+   
+    </>
   );
 };

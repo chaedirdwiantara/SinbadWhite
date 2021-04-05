@@ -28,10 +28,10 @@ import ModalListMaterai from './ModalListMaterai';
 import {useSelector} from 'react-redux';
 const SfaAddTagihanGiro = props => {
   const status = props.status;
-  const [noRef, setNoRef] = useState('');
-  const [bankSource, setBankSource] = useState('');
+  const [noRef, setNoRef] = useState(null);
+  const [bankSource, setBankSource] = useState(null);
   const [issuedDate, setIssuedDate] = useState(new Date());
-  const [invalidDate, setInvalidDate] = useState(new Date(new Date(new Date()).setDate(new Date().getDate() + 1)));
+  const [invalidDate, setInvalidDate] = useState(new Date(new Date().setDate(new Date().getDate()+1)));
   const [balance, setBalance] = useState(0);
   const [checkMaterai, setCheckMaterai] = useState(false);
   const [openModalPublishDate, setOpenModalPublishDate] = useState(false);
@@ -65,8 +65,8 @@ const SfaAddTagihanGiro = props => {
     setIsDisable(false)
     setDataReference()
     props.referenceCode(null)
-    props.issuedDate(null)
-    props.dueDate(null)
+    props.issuedDate(new Date())
+    props.dueDate(new Date(new Date().setDate(new Date().getDate()+1)))
     props.balance(0)
     props.bankSource(null)
     props.useNoReference(false)
@@ -128,8 +128,8 @@ const SfaAddTagihanGiro = props => {
   };
 
   const renderDueDate = () => {
-    const minDate = new Date(new Date(new Date()).setDate(new Date().getDate() + 1));
     const today = new Date()
+    const minDate = new Date(today.setDate(today.getDate()+1));
     return (
       <ModalBottomType4
         typeClose={'Tutup'}

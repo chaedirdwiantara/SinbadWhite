@@ -33,7 +33,7 @@ const SfaAddTagihanCheque = props => {
   const [noRef, setNoRef] = useState('');
   const [bankSource, setBankSource] = useState('');
   const [issuedDate, setIssuedDate] = useState(new Date());
-  const [invalidDate, setInvalidDate] = useState(new Date(new Date(new Date()).setDate(new Date().getDate() + 1)));
+  const [invalidDate, setInvalidDate] = useState(new Date(new Date().setDate(new Date().getDate()+1)));
   const [balance, setBalance] = useState(0);
   const [checkMaterai, setCheckMaterai] = useState(false);
   const [openModalPublishDate, setOpenModalPublishDate] = useState(false);
@@ -67,8 +67,8 @@ const SfaAddTagihanCheque = props => {
     setIsDisable(false)
     setDataReference()
     props.referenceCode(null)
-    props.issuedDate(null)
-    props.dueDate(null)
+    props.issuedDate(new Date())
+    props.dueDate(new Date(new Date().setDate(new Date().getDate()+1)))
     props.balance(0)
     props.bankSource(null)
     props.useNoReference(false)
@@ -130,7 +130,7 @@ const SfaAddTagihanCheque = props => {
   };
 
   const renderDueDate = () => {
-    const minDate = new Date(new Date(new Date()).setDate(new Date().getDate() + 1));
+    const minDate = new Date(new Date().setDate(new Date().getDate()+1));
     const today = new Date()
     return (
       <ModalBottomType4
@@ -280,7 +280,7 @@ const renderContent = () => {
               >
                 {dataReference
                   ? moment(dataReference.issuedDate).format('DD/MM/YYYY')
-                  :  moment(issuedDate).format('DD/MM/YYYY')}
+                  :  moment(new Date()).format('DD/MM/YYYY')}
               </Text>
             </View>
           </TouchableOpacity>
