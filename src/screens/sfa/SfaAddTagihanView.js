@@ -65,7 +65,7 @@ const SfaAddTagihanView = props => {
   const [transferValue, setTransferValue] = useState(0);
   const [billingValue, setBillingValue] = useState(0);
   const [transferImage, setTransferImage] = useState(null);
-  const [issuedDate, setIssuedDate] = useState(date);
+  const [issuedDate, setIssuedDate] = useState(new Date());
   const [dueDate, setDueDate] = useState(
     new Date(date.setDate(date.getDate()+1))
   );

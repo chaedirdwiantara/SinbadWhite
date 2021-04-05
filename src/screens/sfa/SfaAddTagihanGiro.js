@@ -31,7 +31,7 @@ const SfaAddTagihanGiro = props => {
   const date = new Date()
   const [noRef, setNoRef] = useState(null);
   const [bankSource, setBankSource] = useState(null);
-  const [issuedDate, setIssuedDate] = useState(date);
+  const [issuedDate, setIssuedDate] = useState(new Date());
   const [invalidDate, setInvalidDate] = useState(new Date(date.setDate(date.getDate()+1)));
   const [balance, setBalance] = useState(0);
   const [checkMaterai, setCheckMaterai] = useState(false);
@@ -67,7 +67,7 @@ const SfaAddTagihanGiro = props => {
     setIsDisable(false)
     setDataReference()
     props.referenceCode(null)
-    props.issuedDate(date)
+    props.issuedDate(new Date())
     props.dueDate(new Date(date.setDate(date.getDate()+1)))
     props.balance(0)
     props.bankSource(null)

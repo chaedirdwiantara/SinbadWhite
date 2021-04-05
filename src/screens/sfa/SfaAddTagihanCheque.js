@@ -33,7 +33,7 @@ const SfaAddTagihanCheque = props => {
   const date = new Date();
   const [noRef, setNoRef] = useState('');
   const [bankSource, setBankSource] = useState('');
-  const [issuedDate, setIssuedDate] = useState(date);
+  const [issuedDate, setIssuedDate] = useState(new Date());
   const [invalidDate, setInvalidDate] = useState(new Date(date.setDate(date.getDate()+1)));
   const [balance, setBalance] = useState(0);
   const [checkMaterai, setCheckMaterai] = useState(false);
@@ -69,7 +69,7 @@ const SfaAddTagihanCheque = props => {
     setIsDisable(false)
     setDataReference()
     props.referenceCode(null)
-    props.issuedDate(date)
+    props.issuedDate(new Date())
     props.dueDate(date.setDate(date.getDate()+1))
     props.balance(0)
     props.bankSource(null)
@@ -283,7 +283,7 @@ const renderContent = () => {
               >
                 {dataReference
                   ? moment(dataReference.issuedDate).format('DD/MM/YYYY')
-                  :  moment(issuedDate).format('DD/MM/YYYY')}
+                  :  moment(new Date()).format('DD/MM/YYYY')}
               </Text>
             </View>
           </TouchableOpacity>
