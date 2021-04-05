@@ -173,6 +173,7 @@ const renderContent = () => {
                 onChangeText={text => noReference(text.trim())}
                 tooltip={isDisable ? false : true}
                 tooltipText={'Dapat berupa Nomor Cek, Giro, Transfer atau Kuitansi'}
+                editable={!isDisable}
               />
             </View>
             {isDisable? 
@@ -515,6 +516,7 @@ const functionMaterai = () => {
 }
 
 const selectedReference = (data) => {
+  console.log(data, 'data');
   setDataReference(data)
   setOpenModalReference(false)
   setIsDisable(true)

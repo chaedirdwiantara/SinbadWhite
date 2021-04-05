@@ -72,7 +72,7 @@ const SfaAddTagihanView = props => {
   const [stamp, setStamp] = useState(null);
   const [isUsedStamp, setIsUsedStamp] = useState(false)
   const [isUseNoReference, setIsUseNoReference] = useState(false)
-  const [paymentCollectionMethodId, setPaymentCollectionMethodId]= useState()
+  const [paymentCollectionMethodId1, setPaymentCollectionMethodId]= useState()
 
   //SELECTOR
   const { selectedMerchant } = useSelector(state => state.merchant);
@@ -183,14 +183,15 @@ const SfaAddTagihanView = props => {
       setCash(parseInt(text.replace(/[Rp.]+/g, '')));
     }
   };
+
   const saveCollection = async () => {
     const orderParcelId = props.navigation.state.params.data.id;
     const userId = parseInt(id)
     const supplierId = parseInt(userSuppliers[0].supplier.id)
     const storeId = parseInt(selectedMerchant.storeId)
-    const paymentCollectionMethodId = parseInt(paymentCollectionMethodId)
+    const paymentCollectionMethodId = parseInt(paymentCollectionMethodId1)
     if (collectionMethod.code === 'cash') {
-      const data = {
+      const dataCash = {
         supplierId: supplierId,
         userSellerId: userId,
         orderParcelId :orderParcelId,
@@ -198,7 +199,7 @@ const SfaAddTagihanView = props => {
         paymentCollectionMethodId: null,
         amount : cash
       }
-      dispatch(sfaPostCollectionPaymentProcess(data))
+      dispatch(sfaPostCollectionPaymentProcess(dataCash))
     }
     if (collectionMethod.code === 'transfer') {
       if (isUseNoReference === true) {
@@ -261,7 +262,7 @@ const SfaAddTagihanView = props => {
       }
     }
     if (collectionMethod.code === 'check' || collectionMethod.code === 'giro') {
-      const data = {
+      const dataCheckAndGiro = {
         paymentCollectionTypeId: parseInt(collectionMethod.id),
         storeId: storeId,
         supplierId: supplierId,
@@ -291,7 +292,7 @@ const SfaAddTagihanView = props => {
         };
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment));
       } else {
-        dispatch(sfaPostPaymentMethodProcess(data));
+        dispatch(sfaPostPaymentMethodProcess(dataCheckAndGiro));
       }
     }
   };
@@ -363,7 +364,6 @@ const SfaAddTagihanView = props => {
   }, [loadingSfaPostCollectionPayment, loadingSfaPostPaymentMethod]);
 
   const dataReferenceCode = data => {
-    const a = data.trim();
     setReferenceCode(data);
   };
 

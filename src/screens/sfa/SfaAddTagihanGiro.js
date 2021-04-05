@@ -171,6 +171,7 @@ const renderContent = () => {
                 onChangeText={text => noReference(text.trim())}
                 tooltip={isDisable ? false : true}
                 tooltipText={'Dapat berupa Nomor Cek, Giro, Transfer atau Kuitansi'}
+                editable={!isDisable}
               />
             </View>
             {isDisable? 
