@@ -6,8 +6,10 @@ import { MoneyFormatSpace } from '../../helpers';
 
 const SfaCollectionDetailCheckandGiro = (props) => {
     const data = props.data
+    const paymentCollection = data.paymentCollection
+    const paymentCollectionMethod = paymentCollection.paymentCollectionMethod
 
-     /**
+    /**
    * *********************************
    * FUNCTION
    * *********************************
@@ -25,49 +27,49 @@ const SfaCollectionDetailCheckandGiro = (props) => {
         <View style={styles.inputField}>
           <InputType5
             title={`Nomor Referensi`}
-            placeholder={data.referenceCode}
+            placeholder={paymentCollection.reference? paymentCollection.reference: ''}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Sumber Bank`}
-            placeholder={data.bankSource}
+            placeholder={paymentCollectionMethod.bankFrom.name?paymentCollectionMethod.bankFrom.name:''}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Tanggal Terbit`}
-            placeholder={formatDate(data.collectionMethodDate)}
+            placeholder={formatDate(paymentCollectionMethod.date? paymentCollectionMethod.date : '' )}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Tanggal Jatuh Tempo`}
-            placeholder={formatDate(data.collectionMethodDueDate)}
+            placeholder={formatDate(paymentCollectionMethod.dueDate? paymentCollectionMethod.dueDate: '' )}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
-            title={`Nilai ${data.collectionMethodType}`}
-            placeholder={MoneyFormatSpace(data.paymentCollectionMethodAmount)}
+            title={`Nilai ${paymentCollectionMethod.paymentCollectionType.name? paymentCollectionMethod.paymentCollectionType.name : ''}`}
+            placeholder={MoneyFormatSpace(paymentCollectionMethod.amount ? paymentCollectionMethod.amount : 0)}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Jumlah Penagihan`}
-            placeholder={MoneyFormatSpace(data.paidAmount)}
+            placeholder={MoneyFormatSpace(paymentCollection.paidAmount ? paymentCollection.paidAmount : 0)}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Nilai Materai`}
-            placeholder={MoneyFormatSpace(data.stampAmount)}
+            placeholder={MoneyFormatSpace(paymentCollectionMethod.stamp ? paymentCollectionMethod.stamp.nominal : 0)}
             editable={false}
           />
         </View>

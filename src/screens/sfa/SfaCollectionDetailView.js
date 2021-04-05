@@ -276,8 +276,11 @@ const styles = StyleSheet.create({
 export default SfaCollectionDetailView;
 
 export const DetailHeaderOption = props => {
-
+  const { dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
   return (
+    <>
+    {dataSfaGetCollectionDetail?  
+    dataSfaGetCollectionDetail.isEditable?
     <View style={styles.navOption}>
       <>
         <TouchableOpacity onPress={()=> alert('Edit Page')}>
@@ -288,6 +291,8 @@ export const DetailHeaderOption = props => {
           />
         </TouchableOpacity>
       </>
-    </View>
+    </View>: null : null}
+   
+    </>
   );
 };

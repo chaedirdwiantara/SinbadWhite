@@ -40,7 +40,6 @@ import NavigationService from '../../navigation/NavigationService';
 
 const SfaAddTagihanView = props => {
   const dispatch = useDispatch();
-  const date = new Date()
   const [collectionMethod, setCollectionMethod] = useState(null);
   const [openCollectionMethod, setOpenCollectionMethod] = useState(false);
   const [methodStatus, setMethodStatus] = useState('available');
@@ -65,16 +64,15 @@ const SfaAddTagihanView = props => {
   const [transferValue, setTransferValue] = useState(0);
   const [billingValue, setBillingValue] = useState(0);
   const [transferImage, setTransferImage] = useState(null);
-  const [issuedDate, setIssuedDate] = useState(date);
+  const [issuedDate, setIssuedDate] = useState(new Date());
   const [dueDate, setDueDate] = useState(
-    new Date(date.setDate(date.getDate()+1))
+    new Date(new Date().setDate(new Date().getDate()+1))
   );
   const [balance, setBalance] = useState(null);
   const [stamp, setStamp] = useState(null);
   const [isUsedStamp, setIsUsedStamp] = useState(false)
   const [isUseNoReference, setIsUseNoReference] = useState(false)
   const [paymentCollectionId, setPaymentCollectionMethodId]= useState()
-
   //SELECTOR
   const { selectedMerchant } = useSelector(state => state.merchant);
   const { userSuppliers, id } = useSelector(state => state.user);
@@ -98,7 +96,6 @@ const SfaAddTagihanView = props => {
   const prevErrorSfaPostCollectionPaymentRef = useRef(
     errorSfaPostCollectionPayment
   );
-
   //MODAL
   const [modalBottomError, setModalBottomError] = useState(false);
   const [messageError, setMessageError] = useState(null);
