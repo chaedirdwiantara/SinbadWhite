@@ -32,7 +32,7 @@ const SfaAddTagihanGiro = props => {
   const [noRef, setNoRef] = useState(null);
   const [bankSource, setBankSource] = useState(null);
   const [issuedDate, setIssuedDate] = useState(date);
-  const [invalidDate, setInvalidDate] = useState(date.setDate(date.getDate()+1));
+  const [invalidDate, setInvalidDate] = useState(new Date(date.setDate(date.getDate()+1)));
   const [balance, setBalance] = useState(0);
   const [checkMaterai, setCheckMaterai] = useState(false);
   const [openModalPublishDate, setOpenModalPublishDate] = useState(false);
@@ -68,7 +68,7 @@ const SfaAddTagihanGiro = props => {
     setDataReference()
     props.referenceCode(null)
     props.issuedDate(date)
-    props.dueDate(date.setDate(date.getDate()+1))
+    props.dueDate(new Date(date.setDate(date.getDate()+1)))
     props.balance(0)
     props.bankSource(null)
     props.useNoReference(false)
@@ -131,7 +131,7 @@ const SfaAddTagihanGiro = props => {
 
   const renderDueDate = () => {
     const today = new Date()
-    const minDate = today.setDate(today.getDate()+1);
+    const minDate = new Date(today.setDate(today.getDate()+1));
     return (
       <ModalBottomType4
         typeClose={'Tutup'}

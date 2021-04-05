@@ -34,7 +34,7 @@ const SfaAddTagihanCheque = props => {
   const [noRef, setNoRef] = useState('');
   const [bankSource, setBankSource] = useState('');
   const [issuedDate, setIssuedDate] = useState(date);
-  const [invalidDate, setInvalidDate] = useState(date.setDate(date.getDate()+1));
+  const [invalidDate, setInvalidDate] = useState(new Date(date.setDate(date.getDate()+1)));
   const [balance, setBalance] = useState(0);
   const [checkMaterai, setCheckMaterai] = useState(false);
   const [openModalPublishDate, setOpenModalPublishDate] = useState(false);
@@ -133,7 +133,7 @@ const SfaAddTagihanCheque = props => {
 
   const renderDueDate = () => {
     const date = new Date()
-    const minDate = date.setDate(date.getDate()+1);
+    const minDate = new Date(date.setDate(date.getDate()+1));
     const today = new Date()
     return (
       <ModalBottomType4

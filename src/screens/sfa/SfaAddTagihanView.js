@@ -67,7 +67,7 @@ const SfaAddTagihanView = props => {
   const [transferImage, setTransferImage] = useState(null);
   const [issuedDate, setIssuedDate] = useState(date);
   const [dueDate, setDueDate] = useState(
-    date.setDate(date.getDate()+1)
+    new Date(date.setDate(date.getDate()+1))
   );
   const [balance, setBalance] = useState(null);
   const [stamp, setStamp] = useState(null);
@@ -102,7 +102,6 @@ const SfaAddTagihanView = props => {
   //MODAL
   const [modalBottomError, setModalBottomError] = useState(false);
   const [messageError, setMessageError] = useState(null);
-
   /**
    * =======================
    * FUNCTIONAL
