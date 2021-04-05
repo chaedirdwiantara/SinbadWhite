@@ -26,28 +26,28 @@ const SfaCollectionDetailPromo = (props) => {
         <View style={styles.inputField}>
           <InputType5
             title={`Nomor Referensi`}
-            placeholder={data.paymentCollectionMethod.reference}
+            placeholder={data.paymentCollection.reference}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Nomor Promo`}
-            placeholder={data.paymentCollectionMethod.promoNo}
+            placeholder={data.paymentCollection.paymentCollectionMethod.promoNo}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Principal`}
-            placeholder={data.paymentCollectionMethod.principalName}
+            placeholder={data.paymentCollection.paymentCollectionMethod.principal.name}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Nilai Promo`}
-            placeholder={MoneyFormatSpace(data.paymentCollectionMethod.amount)}
+            placeholder={MoneyFormatSpace(data.paymentCollection.paymentCollectionMethod.amount)}
             editable={false}
           />
         </View>
