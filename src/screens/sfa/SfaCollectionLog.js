@@ -86,7 +86,7 @@ function SfaCollectionLog(props) {
                     <TouchableOpacity onPress={()=> NavigationService.navigate('SfaCollectionDetailView', {paymentCollectionId: item.id})}>
                         <View style={{flexDirection: "row", justifyContent:"space-between", marginHorizontal:16, marginVertical: 16}}>
                             <View >
-                                <Text style={{...Fonts.type42, marginBottom: 8}}>{item.salesName}</Text>
+                                <Text numberOfLines={1} style={{...Fonts.type42, marginBottom: 8, width:150}}>{item.salesName}</Text>
                                 <Text style={Fonts.type17}>{item.createdAt} WIB</Text>
                             </View>
                             <View style={{flex: 1, flexDirection:"row", justifyContent:"flex-end"}}>
