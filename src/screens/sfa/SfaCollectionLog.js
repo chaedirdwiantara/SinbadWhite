@@ -85,13 +85,13 @@ function SfaCollectionLog(props) {
             <View key={index}>
                     <TouchableOpacity onPress={()=> NavigationService.navigate('SfaCollectionDetailView', {paymentCollectionId: item.id})}>
                         <View style={{flexDirection: "row", justifyContent:"space-between", marginHorizontal:16, marginVertical: 16}}>
-                            <View style={{flex: 2}}>
+                            <View >
                                 <Text style={{...Fonts.type42, marginBottom: 8}}>{item.salesName}</Text>
                                 <Text style={Fonts.type17}>{item.createdAt} WIB</Text>
                             </View>
-                            <View style={{flex: 1, flexDirection:"row", justifyContent:"space-between"}}>
+                            <View style={{flex: 1, flexDirection:"row", justifyContent:"flex-end"}}>
                                 <View style={{marginLeft: 16}}>
-                                    <Text style={{...Fonts.type36, marginBottom: 8}}>{MoneyFormat(item.amount)}</Text>
+                                    <Text style={{...Fonts.type36, marginBottom: 8, textAlign:"right"}}>{MoneyFormat(item.amount)}</Text>
                                     <Text style={[Fonts.type17, {textAlign:"right"}]}>{item.paymentCollectionMethodName}</Text>
                                 </View>
                                 <View style={{alignSelf:"center"}}>
@@ -99,6 +99,7 @@ function SfaCollectionLog(props) {
                                         name="chevron-right"
                                         color={masterColor.fontBlack40}
                                         size={24}
+                                        style={{marginLeft: 8}}
                                     />
                                 </View>
                             </View>
