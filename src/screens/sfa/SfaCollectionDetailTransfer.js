@@ -6,6 +6,8 @@ import { Fonts, MoneyFormatSpace } from '../../helpers';
 
 const SfaCollectionDetailTransfer = (props) => {
     const data = props.data
+    const paymentCollection = data.paymentCollection
+    const paymentCollectionMethod = paymentCollection.paymentCollectionMethod
 
      /**
    * *********************************
@@ -27,42 +29,42 @@ const SfaCollectionDetailTransfer = (props) => {
         <View style={styles.inputField}>
           <InputType5
             title={`Nomor Referensi`}
-            placeholder={data.referenceCode}
+            placeholder={paymentCollection.reference? paymentCollection.reference: ''}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Sumber Bank`}
-            placeholder={data.bankSource}
+            placeholder={paymentCollectionMethod.bankFrom.name?paymentCollectionMethod.bankFrom.name:''}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Tujuan Bank`}
-            placeholder={formatDate(data.collectionMethodDate)}
+            placeholder={paymentCollectionMethod.bankToAccount.name?paymentCollectionMethod.bankToAccount.name:''}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Tanggal Transfer`}
-            placeholder={formatDate(data.collectionMethodDueDate)}
+            placeholder={formatDate(paymentCollectionMethod.date? paymentCollectionMethod.date : '')}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Nilai Transfer`}
-            placeholder={MoneyFormatSpace(data.paymentCollectionMethodAmount)}
+            placeholder={MoneyFormatSpace(paymentCollectionMethod.amount ? paymentCollectionMethod.amount : 0)}
             editable={false}
           />
         </View>
         <View style={styles.inputField}>
           <InputType5
             title={`Jumlah Penagihan`}
-            placeholder={MoneyFormatSpace(data.paidAmount)}
+            placeholder={MoneyFormatSpace(paymentCollection.paidAmount ? paymentCollection.paidAmount : 0)}
             editable={false}
           />
         </View>

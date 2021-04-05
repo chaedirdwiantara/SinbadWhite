@@ -28,11 +28,10 @@ import ModalListMaterai from './ModalListMaterai';
 import {useSelector} from 'react-redux';
 const SfaAddTagihanGiro = props => {
   const status = props.status;
-  const date = new Date()
   const [noRef, setNoRef] = useState(null);
   const [bankSource, setBankSource] = useState(null);
   const [issuedDate, setIssuedDate] = useState(new Date());
-  const [invalidDate, setInvalidDate] = useState(new Date(date.setDate(date.getDate()+1)));
+  const [invalidDate, setInvalidDate] = useState(new Date(new Date().setDate(new Date().getDate()+1)));
   const [balance, setBalance] = useState(0);
   const [checkMaterai, setCheckMaterai] = useState(false);
   const [openModalPublishDate, setOpenModalPublishDate] = useState(false);
@@ -63,12 +62,11 @@ const SfaAddTagihanGiro = props => {
   };
 
   const deleteDataReference = () => {
-    const date = new Date()
     setIsDisable(false)
     setDataReference()
     props.referenceCode(null)
     props.issuedDate(new Date())
-    props.dueDate(new Date(date.setDate(date.getDate()+1)))
+    props.dueDate(new Date(new Date().setDate(new Date().getDate()+1)))
     props.balance(0)
     props.bankSource(null)
     props.useNoReference(false)
