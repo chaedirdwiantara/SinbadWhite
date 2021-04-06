@@ -66,8 +66,7 @@ const SfaCollectionDetailPromo = (props) => {
                 uri: `data:image/jpeg;base64, ${data.image}`
               }}
               style={[
-                styles.images,
-                { opacity: 0.5 }
+                styles.images
               ]}
             />
           </View>
