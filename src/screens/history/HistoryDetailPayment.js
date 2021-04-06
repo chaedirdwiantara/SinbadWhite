@@ -93,7 +93,6 @@ class HistoryDetailPayment extends Component {
           this.incrementIdleTime();
           if (this.state.idleTime >= 600) {
             clearInterval(this.clockCall);
-            // NavigationService.navigate('Home');
             this.props.historyGetDetailProcess(this.props.data.id);
           }
         }, 1000);
@@ -274,7 +273,6 @@ class HistoryDetailPayment extends Component {
     const orderParcelId = this.props.history.dataDetailHistory.billing
       .orderParcelId;
     this.props.historyViewInvoiceProcess(orderParcelId);
-    // this.props.historyViewInvoiceProcess(1222);
   }
 
   /**RENDER SENDDATATOCLIPBOARD */
@@ -479,16 +477,7 @@ class HistoryDetailPayment extends Component {
       </View>
     );
   }
-  renderPanduanPembayaranRegular() {
-    return (
-      <View>
-        <HTMLView
-          value={this.props.data.paymentChannel.description[0].instruction}
-          stylesheet={GlobalStyleHtml}
-        />
-      </View>
-    );
-  }
+
   /** RENDER PANDUAN PEMBAYARAN VA*/
   renderPanduanPembayaranList() {
     const instruction = this.props.data.paymentChannel.description;
@@ -524,11 +513,7 @@ class HistoryDetailPayment extends Component {
                   paddingTop: 16
                 }}
               >
-                {paymentChannelId !== 2 ? (
-                  <View>{this.renderPanduanPembayaranRegular()}</View>
-                ) : (
-                  <View>{this.renderPanduanPembayaranList()}</View>
-                )}
+                <View>{this.renderPanduanPembayaranList()}</View>
               </View>
             </View>
             <View style={GlobalStyle.boxPadding} />
@@ -637,13 +622,11 @@ class HistoryDetailPayment extends Component {
               paymentChannelTypeId !== 1 &&
               expiredPaymentTime !== null)) &&
           billingStatus !== 'paid' &&
-          // this.props.history.dataDetailHistory.billing.billingStatus !== 'expired' &&
           (statusPayment === 'waiting_for_payment' ||
             statusPayment === 'overdue') &&
           billingStatus !== 'cancel' ? (
             this.renderVirtualAccountNumber()
-          ) : // a.paymentType.id === 2 &&
-          // accountVaNo === null &&
+          ) : 
           paymentChannelTypeId !== 1 &&
             expiredPaymentTime === null &&
             billingStatus !== 'paid' &&
@@ -723,7 +706,6 @@ class HistoryDetailPayment extends Component {
       <View style={{ flex: 1 }}>
         {this.state.section === 'payment' ? this.renderWaktuPembayaran() : null}
         {this.renderInvoice()}
-        {/* {this.renderPaymentInformationDetail()} */}
         {this.renderContentDetail()}
         {this.renderToast()}
       </View>

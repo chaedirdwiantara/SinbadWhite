@@ -37,16 +37,6 @@ function getPayment(data) {
   });
 }
 /** POST CONFIRM ORDER */
-// function confirmOrder(data) {
-//   return ApiRest({
-//     path: 'confirm-order',
-//     method: 'POST',
-//     params: {
-//       orderId: data.orderId,
-//       parcels: data.parcels
-//     }
-//   });
-// }
 function confirmOrder(data) {
   return ApiRest({
     path: 'payment/v1/order/confirm',
@@ -54,7 +44,8 @@ function confirmOrder(data) {
     params: {
       orderId: data.orderId,
       storeId: data.storeId,
-      parcels: data.parcels
+      parcels: data.parcels,
+      otp: data.otp
     }
   });
 }
@@ -113,7 +104,17 @@ function checkPromo(data) {
     params
   });
 }
-
+/** GET PAY LATER TYPE */
+function getPayLaterType(data) {
+  return ApiRest({
+    path: 'payment/v1/paylater-types',
+    method: 'POST',
+    params: {
+      paymentTypeId: data.paymentTypeId,
+      orderParcelId: data.orderParcelId
+    }
+  });
+}
 /**
  * =========================================
  * THIS CODE IS NOT FETCHING (ONLY FUNCTION)
@@ -137,6 +138,37 @@ function promoData() {
   return promos;
 }
 
+/** GET APPLICABLE PAY LATER */
+function getApplicablePaylater(data) {
+  return ApiRest({
+    path: 'payment/v1/loan-applicable',
+    method: 'POST',
+    params: {
+      storeCode: data
+    }
+  });
+}
+
+/** GET KUR OTP */
+function getKurOtp(data) {
+  return ApiRest({
+    path: `payment/v1/klik-acc/otp?via=phone&storeCode=${data}`,
+    method: 'GET',
+  });
+}
+
+/** POST KUR CONSENT */
+function postKurConsent(data) {
+  return ApiRest({
+    path: `payment/v1/consent`,
+    method: 'POST',
+    params: {
+      storeId: data.storeId,
+      timestamp: data.timestamp
+    }
+  });
+}
+
 export const OmsMethod = {
   getCartItem,
   getCheckoutItem,
@@ -146,5 +178,9 @@ export const OmsMethod = {
   getPaymentChannel,
   getTermsConditions,
   getLastPaymentChannel,
-  checkPromo
+  checkPromo,
+  getPayLaterType,
+  getApplicablePaylater,
+  getKurOtp,
+  postKurConsent
 };
