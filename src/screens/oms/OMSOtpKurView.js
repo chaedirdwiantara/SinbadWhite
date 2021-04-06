@@ -326,7 +326,7 @@ class OmsOtpKurView extends Component {
         title={'Verifikasi'}
         borderRadius={4}
         onPress={() => this.confirmOrder()}
-        loadingd={this.props.oms.loadingOmsConfirmOrder}
+        loading={this.props.oms.loadingOmsConfirmOrder}
       />
     );
   }
