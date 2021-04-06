@@ -179,6 +179,7 @@ const SfaAddTagihanView = props => {
       setCash(parseInt(text.replace(/[Rp.]+/g, '')));
     }
   };
+
   const saveCollection = async () => {
     const orderParcelId = props.navigation.state.params.data.id;
     const userId = parseInt(id)
@@ -186,7 +187,7 @@ const SfaAddTagihanView = props => {
     const storeId = parseInt(selectedMerchant.storeId)
     const paymentCollectionMethodId = parseInt(paymentCollectionId)
     if (collectionMethod.code === 'cash') {
-      const data = {
+      const dataCash = {
         supplierId: supplierId,
         userSellerId: userId,
         orderParcelId :orderParcelId,
@@ -194,7 +195,7 @@ const SfaAddTagihanView = props => {
         paymentCollectionMethodId: null,
         amount : cash
       }
-      dispatch(sfaPostCollectionPaymentProcess(data))
+      dispatch(sfaPostCollectionPaymentProcess(dataCash))
     }
     if (collectionMethod.code === 'transfer') {
       if (isUseNoReference === true) {
@@ -258,7 +259,7 @@ const SfaAddTagihanView = props => {
       }
     }
     if (collectionMethod.code === 'check' || collectionMethod.code === 'giro') {
-      const data = {
+      const dataCheckAndGiro = {
         paymentCollectionTypeId: parseInt(collectionMethod.id),
         storeId: storeId,
         supplierId: supplierId,
@@ -288,7 +289,7 @@ const SfaAddTagihanView = props => {
         };
         dispatch(sfaPostCollectionPaymentProcess(dataPostPayment));
       } else {
-        dispatch(sfaPostPaymentMethodProcess(data));
+        dispatch(sfaPostPaymentMethodProcess(dataCheckAndGiro));
       }
     }
   };

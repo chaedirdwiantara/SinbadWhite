@@ -67,8 +67,8 @@ const SfaAddTagihanGiro = props => {
     setInvalidDate(null)
     setIssuedDate(null)
     props.referenceCode(null)
-    props.issuedDate(new Date())
-    props.dueDate(new Date(new Date().setDate(new Date().getDate()+1)))
+    props.issuedDate(null)
+    props.dueDate(null)
     props.balance(0)
     props.bankSource(null)
     props.useNoReference(false)
@@ -173,6 +173,7 @@ const renderContent = () => {
                 onChangeText={text => noReference(text.trim())}
                 tooltip={isDisable ? false : true}
                 tooltipText={'Dapat berupa Nomor Cek, Giro, Transfer atau Kuitansi'}
+                editable={!isDisable}
               />
             </View>
             {isDisable? 

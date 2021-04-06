@@ -29,7 +29,7 @@ const SfaCollectionDetailTransfer = (props) => {
         <View style={styles.inputField}>
           <InputType5
             title={`Nomor Referensi`}
-            placeholder={paymentCollection.reference? paymentCollection.reference: ''}
+            placeholder={paymentCollectionMethod.reference? paymentCollectionMethod.reference: ''}
             editable={false}
           />
         </View>
@@ -43,7 +43,7 @@ const SfaCollectionDetailTransfer = (props) => {
         <View style={styles.inputField}>
           <InputType5
             title={`Tujuan Bank`}
-            placeholder={paymentCollectionMethod.bankToAccount.name?paymentCollectionMethod.bankToAccount.name:''}
+            placeholder={paymentCollectionMethod.bankToAccount.displayName?paymentCollectionMethod.bankToAccount.displayName:''}
             editable={false}
           />
         </View>

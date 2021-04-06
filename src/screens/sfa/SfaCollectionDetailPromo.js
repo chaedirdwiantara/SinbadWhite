@@ -26,7 +26,7 @@ const SfaCollectionDetailPromo = (props) => {
         <View style={styles.inputField}>
           <InputType5
             title={`Nomor Referensi`}
-            placeholder={data.paymentCollection.reference}
+            placeholder={data.paymentCollection.paymentCollectionMethod.reference}
             editable={false}
           />
         </View>
@@ -66,8 +66,7 @@ const SfaCollectionDetailPromo = (props) => {
                 uri: `data:image/jpeg;base64, ${data.image}`
               }}
               style={[
-                styles.images,
-                { opacity: 0.5 }
+                styles.images
               ]}
             />
           </View>

@@ -176,6 +176,7 @@ const SfaAddTagihanCheque = props => {
                   tooltipText={
                     'Dapat berupa Nomor Cek, Giro, Transfer atau Kuitansi'
                   }
+                  editable={!isDisable}
                 />
               </View>
               {isDisable ? (

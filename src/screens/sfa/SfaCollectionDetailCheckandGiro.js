@@ -27,7 +27,7 @@ const SfaCollectionDetailCheckandGiro = (props) => {
         <View style={styles.inputField}>
           <InputType5
             title={`Nomor Referensi`}
-            placeholder={paymentCollection.reference? paymentCollection.reference: ''}
+            placeholder={paymentCollectionMethod.reference? paymentCollectionMethod.reference: ''}
             editable={false}
           />
         </View>
