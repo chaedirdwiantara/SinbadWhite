@@ -50,7 +50,8 @@ class OmsOtpKurView extends Component {
       openModalErrorGlobal: false,
       maxOtp: false,
       type: null,
-      messageError: null
+      messageError: null,
+      disable: false
     };
   }
   /** DID UPDATE */
@@ -116,7 +117,13 @@ class OmsOtpKurView extends Component {
         this.setState({
           verifyPush: true
         });
+        if(this.props.oms.dataOmsConfirmOrder.code === 200){
+          this.setState({
+            disable: true
+          })
+        }
       }
+     
     }
   }
   /** DID MOUNT */
@@ -314,11 +321,12 @@ class OmsOtpKurView extends Component {
       <ButtonSingle
         disabled={
           this.state.otpInput.filter(x => x !== '').length < 5 ||
-          this.state.loading
+          this.state.loading || this.props.oms.loadingOmsConfirmOrder || this.state.disable
         }
         title={'Verifikasi'}
         borderRadius={4}
         onPress={() => this.confirmOrder()}
+        loading={this.props.oms.loadingOmsConfirmOrder}
       />
     );
   }
