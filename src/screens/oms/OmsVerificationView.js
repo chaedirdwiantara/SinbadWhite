@@ -28,6 +28,7 @@ import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
 import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
 import CallCS from '../../screens/global/CallCS';
 import ModalBottomErrorPromo from './ModalBottomErrorPromo';
+import ModalBottomErrorMaxOrderPromo from './ModalBottomErrorMaxOrderPromo';
 
 class OmsVerificationView extends Component {
   constructor(props) {
@@ -38,7 +39,8 @@ class OmsVerificationView extends Component {
       openModalErrorGlobal: false,
       openModalErrorNoUrban: false,
       openModalCS: false,
-      openModalErrorPromo: false
+      openModalErrorPromo: false,
+      openModalErrorMaxOrderPromo: false
     };
   }
 
@@ -112,6 +114,11 @@ class OmsVerificationView extends Component {
         this.setState({
           openModalErrorPromo: true,
           cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
+        });
+        break;
+      case 'ERR-BLOCK-PROMO':
+        this.setState({
+          openModalErrorMaxOrderPromo: true
         });
         break;
       default:
@@ -529,6 +536,20 @@ class OmsVerificationView extends Component {
       <View />
     );
   }
+  /** ===> RENDER MODAL MAX ORDER PROMO === */
+  renderModalErrorMaxOrderPromo() {
+    return this.state.openModalErrorMaxOrderPromo ? (
+      <View>
+        <ModalBottomErrorMaxOrderPromo
+          openModalBlockPromo={
+            this.props.oms.errorOmsGetCheckoutItem.data.blockPromo.length > 0
+          }
+        />
+      </View>
+    ) : (
+      <View />
+    );
+  }
 
   render() {
     return (
@@ -542,6 +563,7 @@ class OmsVerificationView extends Component {
         {this.renderModalErrorNoUrban()}
         {this.renderModalCallCS()}
         {this.renderModalErrorPromo()}
+        {this.renderModalErrorMaxOrderPromo()}
       </SafeAreaView>
     );
   }
