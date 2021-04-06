@@ -213,6 +213,8 @@ class OmsCartView extends Component {
           const productItem = itemBrand.cartBrandCatalogues[i];
           /** => makes all sku check (choose) */
           productItem.checkBox = true;
+          /** => Check if SKU has maxQty */
+          productItem.qty = productItem.isMaximum && productItem.qty > productItem.maxQty ? productItem.maxQty : productItem.qty
           /** => grouping all sku (available, out of stock, and unavailable) */
           if (productItem.catalogue.status === 'inactive') {
             productItem.statusInCart = 'unavailable';
@@ -702,6 +704,51 @@ class OmsCartView extends Component {
       );
     });
   }
+
+  /**
+   * ===> RENDER LIST CART ITEM ===
+   * - order button per item
+   * - price per item product (===> RENDER PRICE PER SKU)
+   * - item
+   */
+   renderButtonOrder(itemForOrderButton) {
+    return (
+      <OrderButton
+        showKeyboard={this.state.showKeyboard}
+        item={itemForOrderButton}
+        onRef={ref => (this.parentFunctionFromOrderButton = ref)}
+        parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
+          this
+        )}
+      />
+    );
+  }
+
+  renderListCartItemContent(item, itemForOrderButton) {
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={{ flexDirection: 'row' }}>
+          {this.renderImageGlobal(item)}
+          <View style={{ flex: 1 }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'space-between',
+                flexDirection: 'row'
+              }}
+            >
+              {this.renderNameGlobal(item)}
+              <View style={{ flex: 1 }}>{this.renderDeleteIcon(item)}</View>
+            </View>
+            <View style={{ flex: 1 }}>
+              {this.renderPriceProductGlobal(item)}
+              {this.renderButtonOrder(itemForOrderButton)}
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
   /**
    * ===> RENDER LIST CART ITEM ===
    * - price per item product (===> RENDER PRICE PER SKU)
@@ -737,61 +784,12 @@ class OmsCartView extends Component {
               />
             )}
           </TouchableOpacity>
-          <View style={{ flex: 1 }}>
-            <View style={{ flexDirection: 'row' }}>
-              {this.renderImageGlobal(item)}
-              <View style={{ flex: 1 }}>
-                {this.renderNameGlobal(item)}
-                {this.renderPriceProductGlobal(item)}
-                <View>
-                  <OrderButton
-                    item={itemForOrderButton}
-                    onRef={ref => (this.parentFunctionFromOrderButton = ref)}
-                    parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
-                      this
-                    )}
-                    onFocus={() => this.setState({ buttonAddDisabled: true })}
-                    onBlur={() => this.setState({ buttonAddDisabled: false })}
-                  />
-                </View>
-              </View>
-              <View
-                style={{
-                  justifyContent: 'space-between',
-                  width: '25%'
-                }}
-              >
-                {this.renderDeleteIcon(item)}
-                <View style={{ alignItems: 'flex-end' }}>
-                  {this.renderStock(item.catalogue)}
-                </View>
-              </View>
-            </View>
-          </View>
+          {this.renderListCartItemContent(item, itemForOrderButton)}
         </View>
       ) : (
         <View key={index} />
       );
     });
-  }
-  /** ===> RENDER STOCK PER SKU === */
-  renderStock(item) {
-    let stock = '';
-    if (item.warehouseCatalogues.length > 0) {
-      if (
-        item.warehouseCatalogues[0].stock > 0 &&
-        !item.warehouseCatalogues[0].unlimitedStock
-      ) {
-        stock = `Tersisa ${NumberFormat(
-          item.warehouseCatalogues[0].stock
-        )} Pcs`;
-      }
-    }
-    return (
-      <View>
-        <Text style={[Fonts.type22, { textAlign: 'right' }]}>{stock}</Text>
-      </View>
-    );
   }
   /**
    * ============================

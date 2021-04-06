@@ -7,7 +7,7 @@ import {
   TextInput,
   Text
 } from '../library/reactPackage'
-import { Fonts } from '../helpers'
+import { Fonts, NumberFormat } from '../helpers'
 import masterColor from '../config/masterColor.json';
 
 class OrderButton extends Component {
@@ -26,7 +26,11 @@ class OrderButton extends Component {
         ? this.props.item.qtyToCart
         : this.props.item.minQty,
       unlimitedStock: this.props.item.warehouseCatalogues[0].unlimitedStock,
-      plusButtonDisable: false
+      plusButtonDisable: false,
+      maxQty: this.props.item.maxQty,
+      isMax: this.props.item.isMaximum,
+      totalClickPlus: 0,
+      unit: this.props.item.minQtyType
     };
   }
   /**
@@ -34,7 +38,11 @@ class OrderButton extends Component {
    * FUNCTIONAL
    * =======================
    */
-  componentDidUpdate() {
+  /** === DID MOUNT */
+  componentDidMount() {
+    this.checkTotalClickPlusButton(this.state.qty)
+  }
+  componentDidUpdate(prevProps) {
     /**
      * this code for error status
      * update qty to qtySuges from BE
@@ -47,7 +55,46 @@ class OrderButton extends Component {
         });
       }
     }
+    /** => this for check keyboard */
+    if (prevProps.showKeyboard !== this.props.showKeyboard) {
+      if (!this.props.showKeyboard) {
+        /** => after keyboard close, call calculate function */
+        this.checkQtyAfterEnter();
+      }
+    }
   }
+
+  /** === CHECK HOW MANY BUTTON PLUS CAN PUSH === */
+    checkTotalClickPlusButton(qty) {
+    let qtyMinusQtyOrder = 0;
+    let totalClickPlus = 0;
+      /** === check if stock unlimited or not === */
+      if (!this.state.unlimitedStock) {
+        if (this.state.isMax) {
+          qtyMinusQtyOrder = this.state.maxQty - qty;
+          totalClickPlus = Math.floor(qtyMinusQtyOrder / this.state.multipleQty);
+          this.setState({
+            totalClickPlus: totalClickPlus >= 0 ? totalClickPlus : 0
+          });
+        } else {
+          qtyMinusQtyOrder = this.state.stock - qty;
+          totalClickPlus = Math.floor(qtyMinusQtyOrder / this.state.multipleQty);
+          this.setState({
+            totalClickPlus: totalClickPlus >= 0 ? totalClickPlus : 0
+          });
+        }
+      } else {
+        if (this.state.isMax) {
+          qtyMinusQtyOrder = this.state.maxQty - qty;
+          totalClickPlus = Math.floor(qtyMinusQtyOrder / this.state.multipleQty);
+          this.setState({
+            totalClickPlus: totalClickPlus >= 0 ? totalClickPlus : 0
+          });
+        } else {
+          this.setState({ totalClickPlus: 1000000000000 });
+        }
+      }
+    }
 
   /**
    * =======================
@@ -55,7 +102,11 @@ class OrderButton extends Component {
    * =======================
    */
   onPressPlus() {
+    /** === COUNTER PLUS BUTTON === */
+    let totalClickPlus = this.state.totalClickPlus
+    this.setState({ totalClickPlus: totalClickPlus - 1 })
     let qty = this.state.qty + this.state.multipleQty;
+    /** === SET QTY === */
     if (!this.state.unlimitedStock) {
       if (this.state.stock - qty < this.state.multipleQty) {
         this.sendValueToParent(qty);
@@ -78,14 +129,29 @@ class OrderButton extends Component {
    * =======================
    */
   onPressMinus() {
+    /** === COUNTER PLUS BUTTON === */
+    let totalClickPlus = this.state.totalClickPlus;
+    this.setState({ totalClickPlus: totalClickPlus + 1 });
     this.setState({ plusButtonDisable: false });
+    /** === SET QTY === */
     const qty = this.state.qty - this.state.multipleQty;
     if (qty < this.state.minQty) {
       this.sendValueToParent(this.state.minQty);
       this.setState({ qty: this.state.minQty });
     } else {
-      this.sendValueToParent(qty);
-      this.setState({ qty });
+      if (this.state.isMax) {
+        if (this.state.qty > this.state.maxQty) {
+          this.checkTotalClickPlusButton(this.state.minQty);
+          this.sendValueToParent(this.state.minQty);
+          this.setState({ qty: this.state.minQty });
+        } else {
+          this.sendValueToParent(qty);
+          this.setState({ qty });
+        }
+      } else {
+        this.sendValueToParent(qty);
+        this.setState({ qty });
+      }
     }
   }
   /**
@@ -105,6 +171,22 @@ class OrderButton extends Component {
 
   modifyQty() {
     const valueAfterMinimum = this.state.qty - this.state.minQty;
+    if (this.state.maxQty) {
+      if (valueAfterMinimum < this.state.maxQty) {
+        return (
+          Math.floor(valueAfterMinimum / this.state.multipleQty) *
+            this.state.multipleQty +
+          this.state.minQty
+        );
+      } else {
+        const maxQtyAfterMinimum = this.state.maxQty - this.state.minQty;
+        return (
+          Math.floor(maxQtyAfterMinimum / this.state.multipleQty) *
+            this.state.multipleQty +
+          this.state.minQty
+        );
+      }
+    }
     return (
       Math.floor(valueAfterMinimum / this.state.multipleQty) *
         this.state.multipleQty +
@@ -115,6 +197,22 @@ class OrderButton extends Component {
   modifyStockQty() {
     if (this.state.stock <= this.state.qty) {
       const valueAfterMinimum = this.state.stock - this.state.minQty;
+      if (this.state.maxQty) {
+        if (valueAfterMinimum < this.state.maxQty) {
+          return (
+            Math.floor(valueAfterMinimum / this.state.multipleQty) *
+              this.state.multipleQty +
+            this.state.minQty
+          );
+        } else {
+          const maxQtyAfterMinimum = this.state.maxQty - this.state.minQty;
+          return (
+            Math.floor(maxQtyAfterMinimum / this.state.multipleQty) *
+              this.state.multipleQty +
+            this.state.minQty
+          );
+        }
+      }
       return (
         Math.floor(valueAfterMinimum / this.state.multipleQty) *
           this.state.multipleQty +
@@ -124,6 +222,8 @@ class OrderButton extends Component {
   }
 
   checkQtyAfterEnter() {
+    this.checkTotalClickPlusButton(this.state.qty);
+    /** if value that entered below min qty, qty = min qty */
     if (this.state.qty === '' || this.state.qty < this.state.minQty) {
       this.sendValueToParent(this.state.minQty);
       this.setState({ qty: this.state.minQty });
@@ -150,78 +250,149 @@ class OrderButton extends Component {
 
   /** FOR DISABLE PLUS BUTTON */
   checkDisablePlusButton() {
-    if (!this.state.unlimitedStock) {
-      if (this.state.stock <= this.state.minQty) {
-        return true;
-      } else if (this.state.stock <= this.state.qty) {
-        return true;
-      }
+    // if (!this.state.unlimitedStock) {
+    //   if (this.state.stock <= this.state.minQty) {
+    //     return true;
+    //   } else if (this.state.stock <= this.state.qty) {
+    //     return true;
+    //   }
+    // }
+    if (this.state.totalClickPlus === 0) {
+      return true;
     }
+    return false;
+  }
+  /** === CHECK TERSISA TEXT === */
+  checkTersisa() {
+    if (!this.state.unlimitedStock && this.state.stock > this.state.minQty) {
+      return `Tersisa ${NumberFormat(this.state.stock)} ${this.state.unit}`;
+    }
+    return '';
+  }
+  /** === MAX QUANTITY ORDER === */
+  checkMaxQtyOrder() {
+    if (this.state.isMax) {
+      return `Maksimum pembelian ${this.state.maxQty} ${this.state.unit}`;
+    }
+    return '';
   }
 
   /**
    * this for calculator end
    */
+  /** === VIEW === */
+  /** => render max qty */
+  renderMaxQtyOrder() {
+    return (
+      <View style={{ paddingTop: 8 }}>
+        {this.state.totalClickPlus === 0 ? (
+          <Text style={Fonts.type67}>{this.checkMaxQtyOrder()}</Text>
+        ) : (
+          <Text style={Fonts.type67}>{''}</Text>
+        )}
+      </View>
+    );
+  }
+  /** => render minus button */
+  renderMinusButton() {
+    return this.state.qty <= this.state.minQty || this.props.showKeyboard ? (
+      <View style={styles.minusButtonDisabled}>
+        <Text style={styles.minusText}>-</Text>
+      </View>
+    ) : (
+      <TouchableOpacity
+        style={styles.minusButton}
+        onPress={() => this.onPressMinus()}
+      >
+        <Text style={styles.minusText}>-</Text>
+      </TouchableOpacity>
+    );
+  }
+  /** => render plus button */
+  renderPlusButton() {
+    return this.checkDisablePlusButton() || this.props.showKeyboard ? (
+      <View style={styles.plusButtonDisabled}>
+        <Text style={styles.plusText}>+</Text>
+      </View>
+    ) : (
+      <TouchableOpacity
+        style={styles.plusButton}
+        onPress={() => this.onPressPlus()}
+      >
+        <Text style={styles.plusText}>+</Text>
+      </TouchableOpacity>
+    );
+  }
+  /** => render input calculator */
+  renderInput() {
+    return (
+      <View style={styles.inputList}>
+        <TextInput
+          selectionColor={masterColor.mainColor}
+          returnKeyType="done"
+          value={this.state.qty.toString()}
+          keyboardType="numeric"
+          maxLength={6}
+          enablesReturnKeyAutomatically
+          onFocus={this.props.onFocus}
+          onBlur={this.props.onBlur}
+          onEndEditing={() => this.checkQtyAfterEnter()}
+          onChangeText={qty => {
+            const cleanNumber = qty.replace(/[^0-9]/g, '');
+            this.checkTotalClickPlusButton(cleanNumber);
+            this.setState({ qty: cleanNumber });
+          }}
+          style={[Fonts.type24, styles.input]}
+        />
+      </View>
+    );
+  }
+  /** => render calculator */
+  renderCalculator() {
+    return (
+      <View style={styles.containerInputQty}>
+        {this.renderMinusButton()}
+        {this.renderInput()}
+        {this.renderPlusButton()}
+      </View>
+    );
+  }
+  /** => render stock */
+  renderRemainingStock() {
+    return (
+      <View style={{ paddingRight: 8, justifyContent: 'center' }}>
+        <Text style={Fonts.type22}>{this.checkTersisa()}</Text>
+      </View>
+    );
+  }
 
   render() {
     return (
-      <View style={styles.containerInputQty}>
-        {this.state.qty <= this.state.minQty || this.props.disabledAllButton ? (
-          <View style={styles.minusButtonDisabled}>
-            <Text style={styles.minusText}>-</Text>
-          </View>
-        ) : (
-          <TouchableOpacity
-            style={styles.minusButton}
-            onPress={() => this.onPressMinus()}
-          >
-            <Text style={styles.minusText}>-</Text>
-          </TouchableOpacity>
-        )}
-        <View style={styles.inputList}>
-          <TextInput
-            selectionColor={masterColor.mainColor}
-            returnKeyType="done"
-            value={this.state.qty.toString()}
-            keyboardType="numeric"
-            maxLength={6}
-            enablesReturnKeyAutomatically
-            onFocus={this.props.onFocus}
-            onBlur={this.props.onBlur}
-            onEndEditing={() => this.checkQtyAfterEnter()}
-            onChangeText={qty => {
-              const cleanNumber = qty.replace(/[^0-9]/g, '');
-              this.setState({ qty: cleanNumber, plusButtonDisable: false });
-            }}
-            style={[Fonts.type24, styles.input]}
-          />
+      <View style={styles.mainContainer}>
+        <View style={styles.subMainContainer}>
+          {this.renderRemainingStock()}
+          {this.renderCalculator()}
         </View>
-        {this.state.plusButtonDisable ||
-        this.checkDisablePlusButton() ||
-        this.props.disabledAllButton ? (
-          <View style={styles.plusButtonDisabled}>
-            <Text style={styles.plusText}>+</Text>
-          </View>
-        ) : (
-          <TouchableOpacity
-            style={styles.plusButton}
-            onPress={() => this.onPressPlus()}
-          >
-            <Text style={styles.plusText}>+</Text>
-          </TouchableOpacity>
-        )}
+        {this.renderMaxQtyOrder()}
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  containerInputQty: {
+  mainContainer: {
+    alignItems: 'flex-end',
+    flex: 1
+  },
+  subMainContainer: {
     flex: 1,
+    flexDirection: 'row'
+  },
+  containerInputQty: {
     height: 27,
     width: 128,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center'
   },
   /** FOR MINUS BUTTON */
