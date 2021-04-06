@@ -1,0 +1,7 @@
+Thank you for using Sinbad!
+
+What's new in this version:
+- New Feature: Penyedia Layanan Bayar Nanti.
+	-- Supplier: pilihan ini untuk membuat pesanan Bayar Nanti seperti biasa.
+	-- Supplier dengan KUR KlikACC: pilihan ini untuk membuat pesanan melalui Kredit Usaha Rakyat (KUR), bekerja sama dengan KlikACC. Untuk menggunakan KUR, Toko perlu melengkapi No. KTP, Foto KTP, Selfie dengan KTP, Email, dan Nomor Telepon yang valid, verifikasi Video Call & Tanda Tangan Digital.
+- Fix bug & improvement
