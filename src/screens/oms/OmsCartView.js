@@ -213,6 +213,8 @@ class OmsCartView extends Component {
           const productItem = itemBrand.cartBrandCatalogues[i];
           /** => makes all sku check (choose) */
           productItem.checkBox = true;
+          /** => Check if SKU has maxQty */
+          productItem.qty = productItem.isMaximum && productItem.qty > productItem.maxQty ? productItem.maxQty : productItem.qty
           /** => grouping all sku (available, out of stock, and unavailable) */
           if (productItem.catalogue.status === 'inactive') {
             productItem.statusInCart = 'unavailable';
