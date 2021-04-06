@@ -28,10 +28,10 @@ import ModalListMaterai from './ModalListMaterai';
 import {useSelector} from 'react-redux';
 const SfaAddTagihanGiro = props => {
   const status = props.status;
-  const [noRef, setNoRef] = useState('');
-  const [bankSource, setBankSource] = useState('');
-  const [issuedDate, setIssuedDate] = useState(new Date());
-  const [invalidDate, setInvalidDate] = useState(new Date(new Date(new Date()).setDate(new Date().getDate() + 1)));
+  const [noRef, setNoRef] = useState(null);
+  const [bankSource, setBankSource] = useState(null);
+  const [issuedDate, setIssuedDate] = useState(null);
+  const [invalidDate, setInvalidDate] = useState(null);
   const [balance, setBalance] = useState(0);
   const [checkMaterai, setCheckMaterai] = useState(false);
   const [openModalPublishDate, setOpenModalPublishDate] = useState(false);
@@ -64,6 +64,8 @@ const SfaAddTagihanGiro = props => {
   const deleteDataReference = () => {
     setIsDisable(false)
     setDataReference()
+    setInvalidDate(null)
+    setIssuedDate(null)
     props.referenceCode(null)
     props.issuedDate(null)
     props.dueDate(null)
@@ -128,8 +130,8 @@ const SfaAddTagihanGiro = props => {
   };
 
   const renderDueDate = () => {
-    const minDate = new Date(new Date(new Date()).setDate(new Date().getDate() + 1));
     const today = new Date()
+    const minDate = new Date(today.setDate(today.getDate()+1));
     return (
       <ModalBottomType4
         typeClose={'Tutup'}
@@ -237,9 +239,12 @@ const renderContent = () => {
               disabled={isDisable}
             >
               <Text
-                style={[
+                 style={[
                   Fonts.type17,
-                  { opacity: isDisable? 0.5 : null }
+                  {
+                    opacity:
+                      bankSource === null || isDisable === true ? 0.5 : null
+                  }
                 ]}
               >
                 {dataReference? dataReference.bankSource : dataBank? dataBank.displayName : 'Pilih Sumber Bank'}
@@ -272,14 +277,14 @@ const renderContent = () => {
               />
 
               <Text
-                style={[
-                  Fonts.type17,
-                  { opacity: bankSource === '' ? 0.5 : null, marginLeft: 11 }
-                ]}
+               style={[
+                Fonts.type17,
+                { opacity: issuedDate === null || isDisable? 0.5 : null, marginLeft: 11 }
+              ]}
               >
                 {dataReference
                   ? moment(dataReference.issuedDate).format('DD/MM/YYYY')
-                  :  moment(issuedDate).format('DD/MM/YYYY')}
+                  : issuedDate? moment(issuedDate).format('DD/MM/YYYY') : 'Pilih Tanggal Terbit'}
               </Text>
             </View>
           </TouchableOpacity>
@@ -302,12 +307,12 @@ const renderContent = () => {
               <Text
                 style={[
                   Fonts.type17,
-                  { opacity: bankSource === '' ? 0.5 : null, marginLeft: 11 }
+                  { opacity: invalidDate === null || isDisable ? 0.5 : null, marginLeft: 11 }
                 ]}
               >
                 {dataReference
                   ? moment(dataReference.invalidDate).format('DD/MM/YYYY')
-                  :  moment(invalidDate).format('DD/MM/YYYY')}
+                  : invalidDate?  moment(invalidDate).format('DD/MM/YYYY') : 'Pilih Tanggal Jatuh Tempo'}
               </Text>
             </View>
           </TouchableOpacity>

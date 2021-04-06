@@ -64,16 +64,14 @@ const SfaAddTagihanView = props => {
   const [transferValue, setTransferValue] = useState(0);
   const [billingValue, setBillingValue] = useState(0);
   const [transferImage, setTransferImage] = useState(null);
-  const [issuedDate, setIssuedDate] = useState(new Date());
+  const [issuedDate, setIssuedDate] = useState(null);
   const [dueDate, setDueDate] = useState(
-    new Date(new Date(new Date()).setDate(new Date().getDate() + 1))
-  );
+   null)
   const [balance, setBalance] = useState(null);
   const [stamp, setStamp] = useState(null);
   const [isUsedStamp, setIsUsedStamp] = useState(false)
   const [isUseNoReference, setIsUseNoReference] = useState(false)
-  const [paymentCollectionMethodId1, setPaymentCollectionMethodId]= useState()
-
+  const [paymentCollectionId, setPaymentCollectionMethodId]= useState()
   //SELECTOR
   const { selectedMerchant } = useSelector(state => state.merchant);
   const { userSuppliers, id } = useSelector(state => state.user);
@@ -97,11 +95,9 @@ const SfaAddTagihanView = props => {
   const prevErrorSfaPostCollectionPaymentRef = useRef(
     errorSfaPostCollectionPayment
   );
-
   //MODAL
   const [modalBottomError, setModalBottomError] = useState(false);
   const [messageError, setMessageError] = useState(null);
-
   /**
    * =======================
    * FUNCTIONAL
@@ -189,7 +185,7 @@ const SfaAddTagihanView = props => {
     const userId = parseInt(id)
     const supplierId = parseInt(userSuppliers[0].supplier.id)
     const storeId = parseInt(selectedMerchant.storeId)
-    const paymentCollectionMethodId = parseInt(paymentCollectionMethodId1)
+    const paymentCollectionMethodId = parseInt(paymentCollectionId)
     if (collectionMethod.code === 'cash') {
       const dataCash = {
         supplierId: supplierId,
@@ -220,9 +216,10 @@ const SfaAddTagihanView = props => {
           userId: userId,
           referenceCode: referenceCode,
           balance: transferValue,
-          issuedDate: moment(new Date(transferDate)).format(
-            'YYYY-MM-DD HH:mm:ss'
-          ),
+          issuedDate: moment
+          .utc(new Date(transferDate))
+          .local()
+          .format('YYYY-MM-DD HH:mm:ss'),
           bankId: bankSource.id,
           bankToAccountId: bankAccount.id,
           filename: transferImage.fileName,
@@ -272,11 +269,11 @@ const SfaAddTagihanView = props => {
         issuedDate: moment
           .utc(issuedDate)
           .local()
-          .format('YYYY-MM-DD HH:MM:ss'),
+          .format('YYYY-MM-DD HH:mm:ss'),
         invalidDate: moment
           .utc(dueDate)
           .local()
-          .format('YYYY-MM-DD HH:MM:ss'),
+          .format('YYYY-MM-DD HH:mm:ss'),
         balance: balance,
         isUsedStamp: isUsedStamp,
         stampId: stamp

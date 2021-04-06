@@ -119,8 +119,8 @@ function getCollectionLog(data) {
 
 /** GET COLLECTION DETAIL */
 function getCollectionDetail(data) {
-  return ApiRestMock({
-    path: `collection/v1/payment-billing?storeId=${data.storeId}&paymentCollectionId=${data.paymentCollectionMethodId}`,
+  return ApiRest({
+    path: `collection/v1/payment-billing?paymentCollectionId=${data}`,
     method: 'GET'
   });
 }

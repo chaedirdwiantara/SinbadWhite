@@ -168,7 +168,6 @@ class MerchantHomeView extends Component {
       loadingGetLogAllActivity,
       dataGetLogAllActivityV2
     } = this.props.merchant;
-    console.log('SURVEY LIST', surveyList, this.state.successSurveyList);
     const sfaStatus =  this.props.sfa.dataSfaGetStatusOrder
     if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
       if (surveyList.payload.data) {
@@ -181,8 +180,36 @@ class MerchantHomeView extends Component {
       ) {
         this.SurveyDone();
         if (this.state.task.length === 3) {
-          if (sfaStatus.data.totalInvoice > 0 && this.props.merchant.dataGetLogAllActivity === []) {
-            if (this.props.merchant.dataGetLogAllActivity === []) {
+          if (sfaStatus.data.totalInvoice > 0 ) {
+            this.setState({
+              task: [
+                {
+                  name: 'Check-in Toko',
+                  title: 'Check-in',
+                  goTo: 'checkIn',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                },
+                {
+                  name: 'Order',
+                  title: 'Order',
+                  goTo: 'pdp',
+                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
+                },
+                {
+                  name: 'Penagihan',
+                  title: 'Tagih',
+                  goTo: 'collection',
+                  activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
+                },
+                {
+                  name: 'Check-out Toko',
+                  title: 'Check-out',
+                  goTo: 'checkOut',
+                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+                }
+              ]
+            });         
+          } else {
               this.setState({
                 task: [
                   {
@@ -205,43 +232,14 @@ class MerchantHomeView extends Component {
                   }
                 ]
               });
-            } else {
-              this.setState({
-                task: [
-                  {
-                    name: 'Check-in Toko',
-                    title: 'Check-in',
-                    goTo: 'checkIn',
-                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                  },
-                  {
-                    name: 'Order',
-                    title: 'Order',
-                    goTo: 'pdp',
-                    activity: ACTIVITY_JOURNEY_PLAN_ORDER
-                  },
-                  {
-                    name: 'Penagihan',
-                    title: 'Tagih',
-                    goTo: 'collection',
-                    activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
-                  },
-                  {
-                    name: 'Check-out Toko',
-                    title: 'Check-out',
-                    goTo: 'checkOut',
-                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                  }
-                ]
-              });
-            }
             
-          } 
+          }
         }
       }
       /** IF SURVEY LIST EXIST */
       if (!_.isEmpty(surveyList.payload.data) && surveyList.success && sfaStatus) {
         if (this.state.task.length === 3) {
+
           if (sfaStatus.data.totalInvoice > 0) {
             this.setState({
               task: [
@@ -291,6 +289,12 @@ class MerchantHomeView extends Component {
                   title: 'Order',
                   goTo: 'pdp',
                   activity: ACTIVITY_JOURNEY_PLAN_ORDER
+                },
+                {
+                  name: 'Penagihan',
+                  title: 'Tagih',
+                  goTo: 'collection',
+                  activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
                 },
                 {
                   name: 'Toko Survey',
