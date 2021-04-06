@@ -83,7 +83,7 @@ function SfaCollectionLog(props) {
     //**RENDER ITEM */
     const renderItem = ({item, index}) => {
         const local = toLocalTime(item.createdAt)
-        const date = moment(local).format('DD MMMM YYYY HH mm')
+        const date = moment(local).format('DD MMMM YYYY HH:mm')
         return(
             <View key={index}>
                     <TouchableOpacity onPress={()=> NavigationService.navigate('SfaCollectionDetailView', {paymentCollectionId: item.id})}>
