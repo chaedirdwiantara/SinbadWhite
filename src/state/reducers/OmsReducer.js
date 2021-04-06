@@ -11,6 +11,9 @@ const INITIAL_STATE = {
   loadingOmsGetCartItemFromCheckout: false,
   loadingOmsGetPaymentChannel: false,
   loadingOmsCheckPromo: false,
+  loadingOmsGetPayLaterType: false,
+  loadingOmsApplicablePaylater: false,
+  loadingOmsPostKurConsent: false,
   /** data */
   dataOmsGetCartItem: null,
   dataOmsGetCartItemFromCheckout: null,
@@ -23,6 +26,8 @@ const INITIAL_STATE = {
   dataCheckBoxlistCart: [],
   dataOmsGetPaymentChannel: null,
   dataOmsCheckPromo: null,
+  dataOmsGetPayLaterType: null,
+  dataOmsPostKurConsent: null,
   /** error */
   errorOmsGetCartItem: null,
   errorOmsGetCheckoutItem: null,
@@ -31,7 +36,10 @@ const INITIAL_STATE = {
   errorOmsDeleteCartItem: null,
   errorOmsGetCartItemFromCheckout: null,
   errorOmsGetPaymentChannel: null,
-  errorOmsCheckPromo: null
+  errorOmsCheckPromo: null,
+  errorOmsGetPayLaterType: null,
+  errorOmsApplicablePaylater: null,
+  errorOmsPostKurConsent: null
 };
 
 export const oms = createReducer(INITIAL_STATE, {
@@ -51,6 +59,8 @@ export const oms = createReducer(INITIAL_STATE, {
       loadingOmsGetCartItemFromCheckout: false,
       loadingOmsGetPaymentChannel: false,
       loadingOmsCheckPromo: false,
+      loadingOmsGetPayLaterType: false,
+      loadingOmsGetKurOtp: false,
       /** data */
       dataOmsGetCartItem: null,
       dataOmsGetCartItemFromCheckout: null,
@@ -63,6 +73,9 @@ export const oms = createReducer(INITIAL_STATE, {
       dataCheckBoxlistCart: [],
       dataOmsGetPaymentChannel: null,
       dataOmsCheckPromo: null,
+      dataOmsGetPayLaterType: null,
+      dataOmsApplicablePaylater: null,
+      dataOmsGetKurOtp: null,
       /** error */
       errorOmsGetCartItem: null,
       errorOmsGetCheckoutItem: null,
@@ -71,7 +84,9 @@ export const oms = createReducer(INITIAL_STATE, {
       errorOmsDeleteCartItem: null,
       errorOmsGetCartItemFromCheckout: null,
       errorOmsGetPaymentChannel: null,
-      errorOmsCheckPromo: null
+      errorOmsCheckPromo: null,
+      errorOmsGetPayLaterType: null,
+      errorOmsGetKurOtp: null
     };
   },
   [types.OMS_RESET_DATA](state, action) {
@@ -401,7 +416,7 @@ export const oms = createReducer(INITIAL_STATE, {
 
   /**
    * ==================================
-   * ACTIVATE VA
+   * CHECK PROMO
    * =================================
    */
   [types.OMS_CHECK_PROMO_PROCESS](state, action) {
@@ -425,5 +440,117 @@ export const oms = createReducer(INITIAL_STATE, {
       loadingOmsCheckPromo: false,
       errorOmsCheckPromo: action.payload
     };
-  }
+  },
+
+  /**
+   * ==================================
+   * GET PAY LATER TYPE
+   * =================================
+   */
+  [types.OMS_GET_PAY_LATER_TYPE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetPayLaterType: true,
+      dataOmsGetPayLaterType: null,
+      errorOmsGetPayLaterType: null
+    };
+  },
+  [types.OMS_GET_PAY_LATER_TYPE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetPayLaterType: false,
+      dataOmsGetPayLaterType: action.payload
+    };
+  },
+  [types.OMS_GET_PAY_LATER_TYPE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsGetPayLaterType: false,
+      errorOmsGetPayLaterType: action.payload
+    };
+  },
+
+  /**
+   * ==================================
+   * GET APPLICABLE PAYLATER
+   * =================================
+   */
+  [types.OMS_APPLICABLE_PAYLATER_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsApplicablePaylater: true,
+      dataOmsApplicablePaylater: null,
+      errorOmsApplicablePaylater: null
+    };
+  },
+  [types.OMS_APPLICABLE_PAYLATER_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsApplicablePaylater: false,
+      dataOmsApplicablePaylater: action.payload
+    };
+  },
+  [types.OMS_APPLICABLE_PAYLATER_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsApplicablePaylater: false,
+      errorOmsApplicablePaylater: action.payload
+    };
+  },
+
+   /**
+   * ==================================
+   * GET KUR OTP
+   * =================================
+   */
+    [types.OMS_GET_KUR_OTP_PROCESS](state, action) {
+      return {
+        ...state,
+        loadingOmsGetKurOtp: true,
+        dataOmsGetKurOtp: null,
+        errorOmsGetKurOtp: null
+      };
+    },
+    [types.OMS_GET_KUR_OTP_SUCCESS](state, action) {
+      return {
+        ...state,
+        loadingOmsGetKurOtp: false,
+        dataOmsGetKurOtp: action.payload
+      };
+    },
+    [types.OMS_GET_KUR_OTP_FAILED](state, action) {
+      return {
+        ...state,
+        loadingOmsGetKurOtp: false,
+        errorOmsGetKurOtp: action.payload
+      };
+    },
+
+    /**
+   * ==================================
+   * POST KUR CONSENT
+   * =================================
+   */
+     [types.OMS_POST_KUR_CONSENT_PROCESS](state, action) {
+      return {
+        ...state,
+        loadingOmsPostKurConsent: true,
+        dataOmsPostKurConsent: null,
+        errorOmsPostKurConsent: null
+      };
+    },
+    [types.OMS_POST_KUR_CONSENT_SUCCESS](state, action) {
+      return {
+        ...state,
+        loadingOmsPostKurConsent: false,
+        dataOmsPostKurConsent: action.payload
+      };
+    },
+    [types.OMS_POST_KUR_CONSENT_FAILED](state, action) {
+      return {
+        ...state,
+        loadingOmsPostKurConsent: false,
+        errorOmsPostKurConsent: action.payload
+      };
+    },
 });

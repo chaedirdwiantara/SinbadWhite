@@ -58,3 +58,22 @@ export const OMS_GET_LAST_PAYMENT_CHANNEL = 'omsGetLastPaymentChannel';
 export const OMS_CHECK_PROMO_PROCESS = 'OmsCheckPromoProcess';
 export const OMS_CHECK_PROMO_SUCCESS = 'OmsCheckPromoSuccess';
 export const OMS_CHECK_PROMO_FAILED = 'OmsCheckPromoFailed';
+/** GET PAY LATER TYPE */
+export const OMS_GET_PAY_LATER_TYPE_PROCESS = 'OmsGetPayLaterTypeProcess';
+export const OMS_GET_PAY_LATER_TYPE_SUCCESS = 'OmsGetPayLaterTypeSuccess';
+export const OMS_GET_PAY_LATER_TYPE_FAILED = 'OmsGetPayLaterTypeFailed';
+
+/** GET APPLICABLE PAYLATER */
+export const OMS_APPLICABLE_PAYLATER_PROCESS = 'OmsApplicablePaylaterProcess';
+export const OMS_APPLICABLE_PAYLATER_SUCCESS = 'OmsApplicablePaylaterSuccess';
+export const OMS_APPLICABLE_PAYLATER_FAILED = 'OmsApplicablePaylaterFailed';
+
+/** GET KUR OTP */
+export const OMS_GET_KUR_OTP_PROCESS = 'OmsGetKurOTPProcess';
+export const OMS_GET_KUR_OTP_SUCCESS = 'OmsGetKurOTPSuccess';
+export const OMS_GET_KUR_OTP_FAILED = 'OmsGetKurOTPFailed';
+
+/** POST KUR CONSENT */
+export const OMS_POST_KUR_CONSENT_PROCESS = 'OmsPostKurConsentProcess';
+export const OMS_POST_KUR_CONSENT_SUCCESS = 'OmsPostKurConsentSuccess';
+export const OMS_POST_KUR_CONSENT_FAILED = 'OmsPostKurConsentFailed';
