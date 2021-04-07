@@ -725,7 +725,6 @@ class OmsCartView extends Component {
   }
 
   renderListCartItemContent(item, itemForOrderButton) {
-    console.log(itemForOrderButton)
     return (
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row' }}>
