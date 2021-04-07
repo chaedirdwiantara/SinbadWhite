@@ -49,8 +49,8 @@ class MerchantStockView extends Component {
     }
 
     componentWillUnmount(){
-        this.props.merchantGetLogAllActivityProcess(
-            this.props.merchant.selectedMerchant.journeyPlanSaleId
+        this.props.merchantGetLogAllActivityProcessV2(
+            this.props.merchant.selectedMerchant.journeyBookStores.id
           );
     }
 
