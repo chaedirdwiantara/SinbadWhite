@@ -758,7 +758,9 @@ class OmsCartView extends Component {
     return this.state.productCartArray.map((item, index) => {
       const itemForOrderButton = item.catalogue;
       itemForOrderButton.addToCart = true;
-      itemForOrderButton.qtyToCart = item.qty;
+      itemForOrderButton.qtyToCart = item.isMaximum && item.qty > item.maxQty ? item.maxQty : item.qty;
+      itemForOrderButton.maxQty = item.maxQty
+      itemForOrderButton.isMaximum = item.isMaximum
       return item.brandId === productItem.brandId &&
         item.statusInCart === 'available' ? (
         <View style={styles.boxListItem} key={index}>
