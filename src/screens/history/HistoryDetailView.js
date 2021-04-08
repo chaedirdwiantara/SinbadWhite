@@ -107,7 +107,10 @@ class HistoryDetailView extends Component {
         this.props.history.errorHistoryDetail &&
         this.props.history.errorHistoryDetail.data !== null
       ) {
-        if (this.props.history.errorHistoryDetail.code >= 400 && this.props.history.errorHistoryDetail.code <500 ) {
+        if (
+          this.props.history.errorHistoryDetail.code >= 400 &&
+          this.props.history.errorHistoryDetail.code < 500
+        ) {
           this.manageError();
         } else {
           this.setState({ openModalError: true });
@@ -476,7 +479,7 @@ class HistoryDetailView extends Component {
       );
     }
   }
- 
+
   /** RENDER DETAIL PAYMENT */
   renderDetailPayment() {
     if (this.props.history.dataDetailHistory !== null) {
@@ -676,7 +679,7 @@ class HistoryDetailView extends Component {
 
   /** === RENDER BUTTON CHANGE PAYMENT === */
   renderSelectPaymentMethod() {
-    const statusPayment = this.props.history.dataDetailHistory.statusPayment
+    const statusPayment = this.props.history.dataDetailHistory.statusPayment;
     return (
       <View>
         {statusPayment === 'paid' || statusPayment === 'payment_failed' ? (
@@ -711,13 +714,19 @@ class HistoryDetailView extends Component {
 
   /** RENDER BOTTOM ACTION */
   renderBottomAction() {
+    const dataDetailHistory = this.props.history.dataDetailHistory;
     return (
       <View style={styles.boxBottomAction}>
         <TouchableOpacity onPress={() => this.setState({ openModalCS: true })}>
           <Text style={Fonts.type22}>Butuh Bantuan ?</Text>
         </TouchableOpacity>
         {this.state.section === 'order' &&
-        this.props.history.dataDetailHistory.status === 'confirm' ? (
+        ((dataDetailHistory.status === 'confirm' &&
+          dataDetailHistory.paymentType.id !== 1 &&
+          dataDetailHistory.statusPayment !== 'paid') ||
+          (dataDetailHistory.status === 'pending_payment' &&
+            dataDetailHistory.paymentType.id === 1 &&
+            dataDetailHistory.statusPayment === 'waiting_for_payment')) ? (
           this.renderCancelButton()
         ) : (
           <View />
@@ -782,7 +791,7 @@ class HistoryDetailView extends Component {
 
   /**RENDER MODAL PAYMENT METHOD */
   renderModalChangePaymentMethod() {
-     const paylaterType = this.props.history.dataDetailHistory.paylaterType
+    const paylaterType = this.props.history.dataDetailHistory.paylaterType;
     return this.state.openPaymentMethod ? (
       <ModalChangePaymentMethod
         open={this.state.openPaymentMethod}
@@ -797,7 +806,7 @@ class HistoryDetailView extends Component {
         total={this.props.history.dataDetailHistory.parcelFinalPrice}
         loading={this.props.oms.loadingOmsGetPaymentChannel}
         actionChange={this.renderWantToConfirm.bind(this)}
-        selectedPaylaterType = {paylaterType} // orderPrice={this.calTotalPrice()}
+        selectedPaylaterType={paylaterType} // orderPrice={this.calTotalPrice()}
         // onRef={ref => (this.selectPaymentMethod = ref)}
         // selectPaymentMethod={this.selectedPayment.bind(this)}
       />
@@ -903,7 +912,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(HistoryDetailView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HistoryDetailView);
 
 /**
  * ============================
