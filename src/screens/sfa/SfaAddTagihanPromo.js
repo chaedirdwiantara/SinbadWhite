@@ -45,7 +45,6 @@ const SfaAddTagihanPromo = props => {
   const [errorInputImage, setErrorInputImage] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(true)
   const [isDisable, setIsDisable] = useState(false)
-
   const [openModalPrincipal, setOpenModalPrincipal] = useState(false);
 
   const { selectedMerchant } = useSelector(state => state.merchant);
@@ -177,12 +176,16 @@ const SfaAddTagihanPromo = props => {
   };
 
   const deleteDataReference = () => {
+    const front = moment.utc(new Date()).local().format('YYYYMMDD')
+    const mid = selectedMerchant.externalId
+    const back = moment.utc(new Date()).local().format('HHmmss')
+
     setIsDisable(false);
     setDataReference();
     setNoRef(null);
     props.referenceCode(null);
-    setPromoNumber(null);
-    props.promoNumber(null);
+    setPromoNumber(`${front}${mid}${back}`);
+    props.promoNumber(`${front}${mid}${back}`);
     setPrincipal(null);
     props.principal(null);
     setPromoBalance(null);
