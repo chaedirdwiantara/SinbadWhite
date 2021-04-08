@@ -328,15 +328,17 @@ class HistoryDataListView extends Component {
   }
   /** === RENDER BUTTON FOR ORDER === */
   renderButtonForOrder(item) {
+    const payNow = 1
     switch (item.status){
       case 'confirm' :
-        if (item.paymentType.id === 1 && item.statusPayment === 'paid'){
+        if (item.paymentType.id === payNow && item.statusPayment === 'paid'){
           return <View/>
         } else {
+          if(item.statusPayment === 'waiting_for_payment')
           return this.renderButtonCancel(item)
         }
         case "pending_payment":
-          if (item.paymentType.id === 1 && item.statusPayment === "waiting_for_payment" ){
+          if (item.paymentType.id === payNow && item.statusPayment === "waiting_for_payment" ){
             return this.renderButtonCancel(item)
           }
       default :

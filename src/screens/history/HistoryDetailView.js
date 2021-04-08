@@ -720,15 +720,8 @@ class HistoryDetailView extends Component {
         <TouchableOpacity onPress={() => this.setState({ openModalCS: true })}>
           <Text style={Fonts.type22}>Butuh Bantuan ?</Text>
         </TouchableOpacity>
-        {this.state.section === 'order' &&
-        ((dataDetailHistory.status === 'confirm' &&
-          dataDetailHistory.paymentType.id !== 1 &&
-          dataDetailHistory.statusPayment !== 'paid') ||
-          (dataDetailHistory.status === 'pending_payment' &&
-            dataDetailHistory.paymentType.id === 1 &&
-            dataDetailHistory.statusPayment === 'waiting_for_payment')) ? (
-          this.renderCancelButton()
-        ) : (
+        {this.state.section === 'order'?
+        this.renderButtonForOrder() : (
           <View />
         )}
       </View>
@@ -814,6 +807,26 @@ class HistoryDetailView extends Component {
       <View />
     );
   }
+
+/** === RENDER BUTTON FOR ORDER === */
+renderButtonForOrder(item) {
+  const payNow = 1
+  switch (item.status){
+    case 'confirm' :
+      if (item.paymentType.id === payNow && item.statusPayment === 'paid'){
+        return <View/>
+      } else {
+        if(item.statusPayment === 'waiting_for_payment')
+        return this.renderCancelButton(item)
+      }
+      case "pending_payment":
+        if (item.paymentType.id === payNow && item.statusPayment === "waiting_for_payment" ){
+          return this.renderCancelButton(item)
+        }
+    default :
+    return <View/>
+  }
+}
 
   /**RENDER WANT TO CONFIRM*/
   renderWantToConfirm(item) {
