@@ -2,15 +2,6 @@ import ApiRest from '../apiRest';
 import { GlobalMethod } from './GlobalMethod';
 const salesManagementService = 'supplier/sales-management';
 
-/** === MERCHANT LIST === */
-function getMerchant(data) {
-  return ApiRest({
-    path: `agent-stores?type=${data.type}&portfolioId=${
-      data.portfolioId
-    }&$skip=${data.page}&$limit=10&keyword=${data.search}`,
-    method: 'GET'
-  });
-}
 /** === MERCHANT LIST BY PORTFOLIO V2 === */
 function getMerchantV2(data) {
   return ApiRest({
@@ -29,24 +20,10 @@ function getMerchantExisting(data) {
     method: 'GET'
   });
 }
-/** === MERCHANT DETAIL === */
-function getMerchantDetail(id) {
-  return ApiRest({
-    path: `supplier-store-profile/${id}`,
-    method: 'GET'
-  });
-}
 /** === MERCHANT DETAIL V2 === */
 function getMerchantDetailV2(id) {
   return ApiRest({
     path: `supplier-store-profile/${id}`,
-    method: 'GET'
-  });
-}
-/** === PORTFOLIO BY USERID === */
-function getPortfolioByUserId(userId) {
-  return ApiRest({
-    path: `portfolios?userId=${userId}&type=group&paginate=false`,
     method: 'GET'
   });
 }
@@ -80,14 +57,6 @@ function getMerchantLastOrder(storeId) {
     method: 'GET'
   });
 }
-/** === POST ACTIVITY === */
-function postActivity(params) {
-  return ApiRest({
-    path: 'journey-plan-sale-logs',
-    method: 'POST',
-    params
-  });
-}
 /** === POST ACTIVITY V2 === */
 function postActivityV2(params) {
   return ApiRest({
@@ -96,26 +65,10 @@ function postActivityV2(params) {
     params
   });
 }
-/** === GET LOG ALL ACTIVITY === */
-function getLogAllActivity(journeyPlanSaleId) {
-  return ApiRest({
-    path: `agent-activities?journeyPlanSaleId=${journeyPlanSaleId}`,
-    method: 'GET'
-  });
-}
 /** === GET LOG ALL ACTIVITY  V2 === */
 function getLogAllActivityV2(journeyBookStoreId) {
   return ApiRest({
     path: `${salesManagementService}/v1/journey-book-store-logs/${journeyBookStoreId}/jbs`,
-    method: 'GET'
-  });
-}
-/** === GET LOG PER ACTIVITY === */
-function getLogPerActivity(data) {
-  return ApiRest({
-    path: `journey-plan-sale-logs?journeyPlanSaleId=${
-      data.journeyPlanSaleId
-    }&activity=${data.activity}&$limit=1&$skip=0&sort=asc&sortby=created_at`,
     method: 'GET'
   });
 }
@@ -213,21 +166,15 @@ function getSalesSegmentation({type, supplierId, urbanId}){
 
 
 export const MerchantMethod = {
-  getMerchant,
   getMerchantV2,
   getMerchantExisting,
-  getMerchantDetail,
   getMerchantDetailV2,
-  getPortfolioByUserId,
   getPortfolioByUserIdV2,
   addMerchant,
   editMerchant,
   getMerchantLastOrder,
-  postActivity,
   postActivityV2,
-  getLogAllActivity,
   getLogAllActivityV2,
-  getLogPerActivity,
   getLogPerActivityV2,
   getNoOrderReason,
   getStoreStatus,
@@ -274,4 +221,8 @@ export const MerchantMethod = {
  * updatedDate: 08032021
  * updatedFunction:
  * -> Add new method. (getMerchantExisting)
+ * updatedBy: dyah
+ * updatedDate: 08042021
+ * updatedFunction:
+ * -> Clean method from old portfolio.
  */
