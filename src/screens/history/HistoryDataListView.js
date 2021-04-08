@@ -295,12 +295,12 @@ class HistoryDataListView extends Component {
             <Text style={{ ...textStyle, textAlign: 'right' }}>
               Tidak Dibayar
             </Text>
-          ) : ( 
+          ) : (
             <Text style={{ ...textStyle, textAlign: 'right', marginLeft: 15 }}>
               {this.statusPayment(item.statusPayment)}
             </Text>
           )}
-          {item.statusPayment === 'overdue'? (
+          {item.statusPayment === 'overdue' ? (
             <View style={{ marginLeft: 5 }}>
               <MaterialIcon name="error" size={15} color={'#f0444c'} />
             </View>
@@ -318,7 +318,7 @@ class HistoryDataListView extends Component {
             item.paymentChannel.paymentChannelTypeId !== 1
             ? moment.utc(new Date()).local() >
                 moment.utc(item.billing.expiredPaymentTime).local() &&
-              item.statusPayment === 'waiting_for_payment' 
+              item.statusPayment === 'waiting_for_payment'
               ? null
               : this.renderCountDown(item)
             : null
@@ -326,17 +326,47 @@ class HistoryDataListView extends Component {
       </View>
     );
   }
+  /** === RENDER BUTTON FOR ORDER === */
+  renderButtonForOrder(item) {
+    if (item.status === 'confirm') {
+      switch (item.statusPayment) {
+        case 'confirm':
+          if (item.paymentType.id === 1 && item.statusPayment === 'paid') {
+            return <View />;
+          } else {
+            return this.renderButtonCancel(item);
+          }
+        default:
+          return <View />;
+      }
+    } else if (item.status === 'pending_payment') {
+      switch (item.statusPayment) {
+        case 'waiting_for_payment':
+          if (item.paymentType.id === 1) {
+            return this.renderButtonCancel(item);
+          } else {
+            <View />;
+          }
+        default:
+          return <View />;
+      }
+    }
+  }
+
   /** === RENDER BUTTON FOR PAYMENT === */
   renderButtonForPayment(item) {
-    switch (item.statusPayment) {
-      case 'confirm':
-        return this.renderButtonCancel(item);
-      default:
-        return <View />;
+    if (item.status === 'confirm') {
+      switch (item.statusPayment) {
+        case 'confirm':
+          return this.renderButtonCancel(item);
+        default:
+          return <View />;
+      }
     }
   }
   /** ITEM */
   renderItem({ item, index }) {
+    const paymentType = item.paymentType.id;
     return (
       <View key={index}>
         <View style={GlobalStyle.shadowForBox}>
@@ -388,8 +418,8 @@ class HistoryDataListView extends Component {
                 {MoneyFormat(item.parcelFinalPrice)}
               </Text>
               <View style={{ flexDirection: 'row' }}>
-                {this.props.section === 'order' && item.status === 'confirm'
-                  ? this.renderButtonCancel(item)
+                {this.props.section === 'order'
+                  ? this.renderButtonForOrder(item)
                   : this.renderButtonForPayment(item)}
                 {this.renderButtonDetail(item)}
               </View>
