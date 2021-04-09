@@ -812,7 +812,6 @@ class HistoryDetailView extends Component {
 
 /** === RENDER BUTTON FOR ORDER === */
 renderButtonForOrder(item) {
-  const payNow = 1
   switch (item.status){
     case 'confirm' :
       if (item.paymentType.id !== PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT){
