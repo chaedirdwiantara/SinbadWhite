@@ -12,39 +12,16 @@ import { connect, bindActionCreators } from '../../library/thirdPartyPackage';
 import { ModalBottomType1, StatusBarRedOP50 } from '../../library/component';
 import { GlobalStyle, Fonts } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
-import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
 
-class ModalBottomErrorMaxOrderPromo extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      openModalBlockPromo: this.props.openModalBlockPromo
-    };
-  }
-
-  backToCartItemView() {
-    // navigate to cart item view
-    NavigationService.navigate('OmsCartView');
-    // re-fetch the cart
-    this.props.omsGetCartItemFromCheckoutProcess({
-      catalogues: this.props.oms.dataCart
-    });
-  }
-
-  /** === ON CLOSE MODAL BLOCK PROMO === */
-  onCloseModalBlockPromo() {
-    this.setState({ openModalBlockPromo: false });
-    this.backToCartItemView();
-  }
-
-  /** === RENDER ITEM === */
+class ModalBottomErrorMaxOrder extends Component {
+  /** === RENDER ITEMS === */
   renderItems() {
-    return this.props.oms.errorOmsGetCheckoutItem.data.blockPromo.map(
+    return this.props.oms.errorOmsGetCheckoutItem.data.catalogues.map(
       (item, index) => {
         const isLast =
           index ===
-          this.props.oms.errorOmsGetCheckoutItem.data.blockPromo.length - 1;
+          this.props.oms.errorOmsGetCheckoutItem.data.catalogues.length - 1;
         return (
           <View
             key={index}
@@ -56,23 +33,19 @@ class ModalBottomErrorMaxOrderPromo extends Component {
             <Image
               defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
               source={{
-                uri: item.catalogueImage
+                uri: item.catalogueImages.imageUrl
               }}
               style={GlobalStyle.image77Contain}
             />
             <View style={styles.itemDetailsContainer}>
-              <Text style={Fonts.type16}>{item.catalogueName}</Text>
+              <Text style={Fonts.type16}>{item.name}</Text>
               <View style={styles.itemChangesContainer}>
-                <Text style={Fonts.type29}>
-                  {item.orderQty || item.benefitQty} Pcs
-                </Text>
+                <Text style={Fonts.type29}>{item.currentQty} Pcs</Text>
                 <Image
                   source={require('../../assets/icons/global/arrow_right.png')}
                   style={styles.arrowIcon}
                 />
-                <Text style={Fonts.type29}>
-                  {item.catalogueMaxOrderQty} Pcs
-                </Text>
+                <Text style={Fonts.type29}>{item.maxQty} Pcs</Text>
               </View>
             </View>
           </View>
@@ -80,46 +53,41 @@ class ModalBottomErrorMaxOrderPromo extends Component {
       }
     );
   }
-  /** === RENDER BLOCK PROMO CONTENT === */
-  renderBlockPromoContent() {
-    return this.state.openModalBlockPromo ? (
+  /** === RENDER CONTENT === */
+  renderContent() {
+    return (
       <View style={styles.container}>
         <StatusBarRedOP50 />
         <View style={styles.modalDescriptionContainer}>
           <Text style={[Fonts.type59, styles.modalDescriptionText]}>
             Beberapa produk di bawah ini telah mengalami perubahan ketentuan
-            batas pembelian dan mempengaruhi pendapatan promo anda. Mohon tinjau
-            ulang keranjang dan coba lagi.
+            batas pembelian. Mohon tinjau ulang keranjang anda dan coba lagi.
           </Text>
         </View>
         <View style={styles.contentContainer}>
           <Text style={[Fonts.type48, { marginBottom: 8 }]}>
             Perubahan ketentuan batas pembelian
           </Text>
-          <ScrollView style={styles.scrollViewContiner}>
+          <ScrollView style={styles.scrollViewContainer}>
             {this.renderItems()}
           </ScrollView>
         </View>
       </View>
-    ) : (
-      <View />
-    );
-  }
-  /** === RENDER MODAL BLOCK PROMO === */
-  renderModalBlockPromo() {
-    return (
-      <ModalBottomType1
-        open={this.state.openModalBlockPromo}
-        onPress={() => this.onCloseModalBlockPromo()}
-        title={'Konfirmasi batas pembelian'}
-        buttonTitle={'Tinjau Keranjang'}
-        content={this.renderBlockPromoContent()}
-      />
     );
   }
   /** === MAIN === */
   render() {
-    return <>{this.renderModalBlockPromo()}</>;
+    return (
+      <>
+        <ModalBottomType1
+          open={this.props.open}
+          onPress={() => this.props.close()}
+          title={'Konfirmasi batas pembelian'}
+          buttonTitle={'Tinjau Keranjang'}
+          content={this.renderContent()}
+        />
+      </>
+    );
   }
 }
 
@@ -163,7 +131,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 16
   },
-  scrollViewContiner: {
+  scrollViewContainer: {
     maxHeight: height * 0.5
   }
 });
@@ -177,7 +145,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(ModalBottomErrorMaxOrderPromo);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalBottomErrorMaxOrder);
 
 /**
  * ============================

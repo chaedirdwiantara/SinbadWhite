@@ -28,7 +28,7 @@ import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
 import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
 import CallCS from '../../screens/global/CallCS';
 import ModalBottomErrorPromo from './ModalBottomErrorPromo';
-import ModalBottomErrorMaxOrderPromo from './ModalBottomErrorMaxOrderPromo';
+import ModalBottomErrorMaxOrder from './ModalBottomErrorMaxOrder';
 
 class OmsVerificationView extends Component {
   constructor(props) {
@@ -40,7 +40,7 @@ class OmsVerificationView extends Component {
       openModalErrorNoUrban: false,
       openModalCS: false,
       openModalErrorPromo: false,
-      openModalErrorMaxOrderPromo: false
+      openModalErrorMaxOrder: false
     };
   }
 
@@ -116,9 +116,9 @@ class OmsVerificationView extends Component {
           cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
         });
         break;
-      case 'ERR-BLOCK-PROMO':
+      case 'ERR-MAX-QTY':
         this.setState({
-          openModalErrorMaxOrderPromo: true
+          openModalErrorMaxOrder: true
         });
         break;
       default:
@@ -536,16 +536,19 @@ class OmsVerificationView extends Component {
       <View />
     );
   }
-  /** ===> RENDER MODAL MAX ORDER PROMO === */
-  renderModalErrorMaxOrderPromo() {
-    return this.state.openModalErrorMaxOrderPromo ? (
-      <View>
-        <ModalBottomErrorMaxOrderPromo
-          openModalBlockPromo={
-            this.props.oms.errorOmsGetCheckoutItem.data.blockPromo.length > 0
-          }
-        />
-      </View>
+  /** ===> RENDER MODAL ERROR MAX ORDER === */
+  renderModalErrorMaxOrder() {
+    return this.state.openModalErrorMaxOrder ? (
+      <ModalBottomErrorMaxOrder
+        open={this.state.openModalErrorMaxOrder}
+        close={() => {
+          this.setState({ openModalErrorMaxOrder: false });
+          NavigationService.navigate('OmsCartView');
+          this.props.omsGetCartItemFromCheckoutProcess({
+            catalogues: this.props.permanent.dataSkuCart
+          });
+        }}
+      />
     ) : (
       <View />
     );
@@ -563,7 +566,7 @@ class OmsVerificationView extends Component {
         {this.renderModalErrorNoUrban()}
         {this.renderModalCallCS()}
         {this.renderModalErrorPromo()}
-        {this.renderModalErrorMaxOrderPromo()}
+        {this.renderModalErrorMaxOrder()}
       </SafeAreaView>
     );
   }
