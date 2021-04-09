@@ -333,7 +333,7 @@ renderButtonForOrder(item) {
       if (item.paymentType.id !== PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT){
         return this.renderButtonCancel(item)
       }
-      case "pending_payment":
+      case 'pending_payment':
         if (item.paymentType.id === PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT ){
           return this.renderButtonCancel(item)
         }
