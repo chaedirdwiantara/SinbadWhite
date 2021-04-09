@@ -7,7 +7,7 @@
  */
 export const WAITING_FOR_PAYMENT = "waiting_for_payment"
 export const PAID = 'paid'
-export const FAILED = 'payment_failed'
+export const PAYMENT_FAILED = 'payment_failed'
 export const OVERDUE = 'overdue'
 
 /**
