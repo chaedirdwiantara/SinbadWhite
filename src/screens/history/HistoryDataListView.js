@@ -26,6 +26,7 @@ import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import CountDown from '../../components/CountDown';
 import { WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
+import {CONFIRM, PENDING_PAYMENT} from '../../constants/orderConstants';
 class HistoryDataListView extends Component {
   constructor(props) {
     super(props);
@@ -329,11 +330,11 @@ class HistoryDataListView extends Component {
   /** === RENDER BUTTON FOR ORDER === */
 renderButtonForOrder(item) {
   switch (item.status){
-    case 'confirm' :
+    case CONFIRM :
       if (item.paymentType.id !== PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT){
         return this.renderButtonCancel(item)
       }
-      case 'pending_payment':
+      case PENDING_PAYMENT:
         if (item.paymentType.id === PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT ){
           return this.renderButtonCancel(item)
         }
