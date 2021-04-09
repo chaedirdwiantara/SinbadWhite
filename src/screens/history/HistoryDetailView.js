@@ -36,6 +36,8 @@ import HistoryDetailPayment from './HistoryDetailPayment';
 import CallCS from '../../screens/global/CallCS';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 import ModalBottomErrorResponsWhite from '../../components/error/ModalBottomErrorResponsWhite';
+import { WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
+
 class HistoryDetailView extends Component {
   constructor(props) {
     super(props);
@@ -721,7 +723,7 @@ class HistoryDetailView extends Component {
           <Text style={Fonts.type22}>Butuh Bantuan ?</Text>
         </TouchableOpacity>
         {this.state.section === 'order'?
-        this.renderButtonForOrder() : (
+        this.renderButtonForOrder(dataDetailHistory) : (
           <View />
         )}
       </View>
@@ -813,14 +815,11 @@ renderButtonForOrder(item) {
   const payNow = 1
   switch (item.status){
     case 'confirm' :
-      if (item.paymentType.id === payNow && item.statusPayment === 'paid'){
-        return <View/>
-      } else {
-        if(item.statusPayment === 'waiting_for_payment')
+      if (item.paymentType.id !== PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT){
         return this.renderCancelButton(item)
       }
       case "pending_payment":
-        if (item.paymentType.id === payNow && item.statusPayment === "waiting_for_payment" ){
+        if (item.paymentType.id === PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT ){
           return this.renderCancelButton(item)
         }
     default :

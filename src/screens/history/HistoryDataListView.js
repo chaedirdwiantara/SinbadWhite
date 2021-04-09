@@ -25,7 +25,7 @@ import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import CountDown from '../../components/CountDown';
-
+import { WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
 class HistoryDataListView extends Component {
   constructor(props) {
     super(props);
@@ -327,36 +327,32 @@ class HistoryDataListView extends Component {
     );
   }
   /** === RENDER BUTTON FOR ORDER === */
-  renderButtonForOrder(item) {
-    const payNow = 1
-    switch (item.status){
-      case 'confirm' :
-        if (item.paymentType.id === payNow && item.statusPayment === 'paid'){
-          return <View/>
-        } else {
-          if(item.statusPayment === 'waiting_for_payment')
+renderButtonForOrder(item) {
+  switch (item.status){
+    case 'confirm' :
+      if (item.paymentType.id !== PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT){
+        return this.renderButtonCancel(item)
+      }
+      case "pending_payment":
+        if (item.paymentType.id === PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT ){
           return this.renderButtonCancel(item)
         }
-        case "pending_payment":
-          if (item.paymentType.id === payNow && item.statusPayment === "waiting_for_payment" ){
-            return this.renderButtonCancel(item)
-          }
-      default :
-      return <View/>
-    }
+    default :
+    return <View/>
   }
+}
 
-  /** === RENDER BUTTON FOR PAYMENT === */
-  renderButtonForPayment(item) {
-    if (item.status === 'confirm') {
-      switch (item.statusPayment) {
-        case 'confirm':
-          return this.renderButtonCancel(item);
-        default:
-          return <View />;
-      }
-    }
-  }
+  // /** === RENDER BUTTON FOR PAYMENT === */
+  // renderButtonForPayment(item) {
+  //   if (item.status === 'confirm') {
+  //     switch (item.statusPayment) {
+  //       case 'confirm':
+  //         return this.renderButtonCancel(item);
+  //       default:
+  //         return <View />;
+  //     }
+  //   }
+  // }
   /** ITEM */
   renderItem({ item, index }) {
     const paymentType = item.paymentType.id;
@@ -413,7 +409,7 @@ class HistoryDataListView extends Component {
               <View style={{ flexDirection: 'row' }}>
                 {this.props.section === 'order'
                   ? this.renderButtonForOrder(item)
-                  : this.renderButtonForPayment(item)}
+                  : null}
                 {this.renderButtonDetail(item)}
               </View>
             </View>
