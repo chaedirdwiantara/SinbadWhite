@@ -69,13 +69,14 @@ class HistoryDetailStatusView extends Component {
           <Text style={Fonts.type17}>{key}</Text>
         </View>
         <View style={{ flex: 1, alignItems: 'flex-end' }}>
-          <Text style={Fonts.type17}>{value}</Text>
+          <Text style={[Fonts.type17, { textAlign: 'right' }]}>{value}</Text>
         </View>
       </View>
     );
   }
   /** RENDER ORDER DETAIL */
   renderOrderDetail() {
+    const { dataDetailHistory } = this.props.history
     return (
       <View style={[GlobalStyle.shadowForBox, { marginBottom: 16 }]}>
         <View
@@ -96,6 +97,11 @@ class HistoryDetailStatusView extends Component {
             ).format('DD MMM YYYY HH:mm:ss')
           )}
           {this.renderContentListGlobal('Nomor Resi', '-')}
+          { dataDetailHistory.orderCancelReason !== null ? (
+            this.renderContentListGlobal('Alasan Pembatalan', dataDetailHistory.orderCancelReason.reason)
+          ) : (
+            <View />
+          ) }
         </View>
       </View>
     );
