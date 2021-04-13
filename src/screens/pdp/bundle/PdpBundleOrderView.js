@@ -152,20 +152,6 @@ class PdpBundleOrderView extends Component {
     }
     return 0;
   }
-  /** === CHECK TERSISA TEXT === */
-  checkTersisa() {
-    if (
-      !this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0]
-        .unlimitedStock &&
-      this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0].stock >
-        this.props.pdp.dataDetailBundlePdp.minQty
-    ) {
-      return `Tersisa ${NumberFormat(
-        this.props.pdp.dataDetailBundlePdp.warehouseCatalogues[0].stock
-      )} Pcs`;
-    }
-    return '';
-  }
   /** === CHECK INPUT QTY SECTION === */
   checkInputQtySection() {
     if (
@@ -231,7 +217,6 @@ class PdpBundleOrderView extends Component {
   /** === RENDER BUTTON ORDER === */
   renderButtonOrder() {
     return (
-      <View style={styles.boxPesan}>
         <OrderButton
           disabledAllButton={this.state.showKeyboard}
           item={this.props.pdp.dataDetailBundlePdp}
@@ -242,7 +227,6 @@ class PdpBundleOrderView extends Component {
           onFocus={() => this.setState({ buttonAddDisabled: true })}
           onBlur={() => this.setState({ buttonAddDisabled: false })}
         />
-      </View>
     );
   }
   /** === RENDER BUTTON === */
@@ -263,14 +247,6 @@ class PdpBundleOrderView extends Component {
           })
         }
       />
-    );
-  }
-  /** === RENDER TERSISA TEXT === */
-  renderRemainingStock() {
-    return (
-      <View style={{ flex: 1 }}>
-        <Text style={Fonts.type22}>{this.checkTersisa()}</Text>
-      </View>
     );
   }
   /** === RENDER TOTAL BOTTOM === */
@@ -367,11 +343,10 @@ class PdpBundleOrderView extends Component {
         </View>
         {this.checkInputQtySection() ? (
           <View style={styles.boxInputQty}>
-            <View style={{ justifyContent: 'center' }}>
+            <View style={{ justifyContent: 'flex-start' }}>
               <Text style={Fonts.type96}>Jumlah/pcs</Text>
             </View>
-            <View style={styles.boxRemainingStockOrderButton}>
-              {this.renderRemainingStock()}
+            <View style={{ flex: 1 }}>
               {this.renderButtonOrder()}
             </View>
           </View>
