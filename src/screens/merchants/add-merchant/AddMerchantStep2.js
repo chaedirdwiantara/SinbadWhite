@@ -13,9 +13,7 @@ import {
 import {
   bindActionCreators,
   Button,
-  ImageEditor,
   connect,
-  RNFS,
   MaterialCommunityIcons
 } from '../../../library/thirdPartyPackage';
 import {
@@ -32,7 +30,6 @@ import * as ActionCreators from '../../../state/actions';
 import { GlobalMethod } from '../../../services/methods';
 import { Fonts } from '../../../helpers';
 import masterColor from '../../../config/masterColor.json';
-// import {launchImageLibrary} from 'react-native-image-picker'
 import ImagePicker from 'react-native-image-crop-picker';
 
 const idNumberGaps = [6,12]
@@ -147,30 +144,17 @@ class AddMerchantStep2 extends Component {
   }
   /** === PICK IMAGE === */
   pickImage(){
-    const cropData = {
-      offset: { x: 600, y: 400 },
-      size: { width: 1850, height: 2900 }
-    };
-    const options = {
-      quality: 0.2,
-    };
     ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true
+      includeBase64: true,
+      width: 1920,
+      height: 1080,
+      cropping: true,
+      mediaType: 'photo'
     }).then(image => {
-      console.log(image);
+      this.setState({showModalTnC: false, checkTnC: false})
+      this.props.setPickedFromGalley(true)
+      this.props.saveImageBase64(image.data)
     });
-    // launchImageLibrary(options, result => {
-    //   this.setState({showModalTnC: false, checkTnC: false})
-    //   if(result?.uri){
-    //     ImageEditor.cropImage(result.uri, cropData).then(url => {
-    //       RNFS.readFile(url, 'base64').then(dataImage => {
-    //         this.props.saveImageBase64(dataImage);
-    //       });
-    //     });
-    //   }
-    // })
   }
   /**
    * ====================
@@ -307,6 +291,7 @@ class AddMerchantStep2 extends Component {
   }
   /** PREVIEW IMAGE */
   renderPreviewImage(){
+    const {isPickedFromGallery} = this.props.global
     return(
       <View style={{marginBottom: 24}}>
         <Image 
@@ -317,7 +302,7 @@ class AddMerchantStep2 extends Component {
             marginVertical: -56,
             zIndex: -9999,
             width: '100%', 
-            transform: [{rotate: '270deg'}]
+            transform: [{rotate: isPickedFromGallery ? '0deg' : '270deg'}]
           }}
         />
         <View style={{flexDirection: 'row'}}>

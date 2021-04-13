@@ -45,3 +45,5 @@ export const APP_VERSION_FAILED = 'appVersionFailed';
 export const UPLOAD_IMAGE_PROCESS = 'uploadImageProcess';
 export const UPLOAD_IMAGE_SUCCESS = 'uploadImageSuccess';
 export const UPLOAD_IMAGE_FAILED = 'uploadImageFailed';
+/** TO DEFINE IMAGE SOURCE, FROM GALLERY OR CAM */
+export const SET_PICKED_FROM_GALLERY = 'setPickedFromGallery'

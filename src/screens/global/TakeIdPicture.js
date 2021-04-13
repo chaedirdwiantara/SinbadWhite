@@ -35,6 +35,7 @@ class TakeIdPicture extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.global.imageBase64 !== this.props.global.imageBase64) {
       if (this.props.global.imageBase64 !== '') {
+        this.props.setPickedFromGalley(false)
         NavigationService.goBack(this.props.navigation.state.key);
       }
     }
