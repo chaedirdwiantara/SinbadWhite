@@ -17,6 +17,3 @@ export function getPrivilegeSuccess(data){
 export function getPrivilegeFailed(data) {
   return { type: types.PRIVILEGE_GET_FAILED, payload: data}
 }
-export function setSalesRole(data){
-  return {type: types.PRIVILEGE_SET_SALES_ROLE, payload: data}
-}
