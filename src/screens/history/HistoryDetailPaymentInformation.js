@@ -81,6 +81,10 @@ class HistoryDetailPaymentInformation extends Component {
               'PPN 10%',
               MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
             )}
+            {this.renderContentListGlobal(
+              'Biaya Layanan', 
+              MoneyFormat(this.props.history.dataDetailHistory.billing.totalFeeDeduct)
+            )}
             <View
               style={{
                 flexDirection: 'row',
