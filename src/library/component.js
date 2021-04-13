@@ -36,6 +36,7 @@ import ButtonFloatType1 from '../components/button/ButtonFloatType1';
 import ButtonSingle from '../components/button/ButtonSingle';
 import ButtonMenuType1 from '../components/button/ButtonMenuType1';
 import ButtonSingleSmall from '../components/button/ButtonSingleSmall';
+import IconButtonWithLabel from '../components/button/IconButtonWithLabel';
 /** MODAL */
 import ModalBottomWithClose from '../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalBottomSkuNotAvailable from '../components/error/ModalBottomSkuNotAvailable';
@@ -148,6 +149,7 @@ export {
   ButtonSingle,
   ButtonMenuType1,
   ButtonSingleSmall,
+  IconButtonWithLabel,
   /** MODAL */
   ModalBottomWithClose,
   ModalBottomSkuNotAvailable,
