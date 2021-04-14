@@ -141,8 +141,8 @@ class AddMerchantStep3 extends Component {
   disableButton() {
     const {address, vehicleAccessibilityAmount, vehicleAccessibilityName} = this.state
     const {longitude, latitude, dataGetUrbanId} = this.props.global
-    const latitudeIsNull = latitude === null || latitude === 0
-    const longitudeIsNull = longitude === null || longitude === 0
+    const latitudeIsNull = latitude === "" || latitude === 0
+    const longitudeIsNull = longitude === "" || longitude === 0
     if (
       !address ||!vehicleAccessibilityName ||!vehicleAccessibilityAmount ||
       !latitudeIsNull || !longitudeIsNull || !dataGetUrbanId ||
