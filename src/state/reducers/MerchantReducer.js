@@ -199,6 +199,8 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingGetPortfolio: true,
       loadingGetMerchant: true,
       dataGetPortfolioV2: null,
+      dataGetMerchantV2: [],
+      totalDataGetMerchantV2: 0,
       errorGetPortfolioV2: null
     };
   },
@@ -238,7 +240,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingLoadMoreGetMerchant: false,
       refreshGetMerchant: false,
       totalDataGetMerchantV2: action.payload.data.length,
-      dataGetMerchantV2: [...state.dataGetMerchant, ...action.payload.data]
+      dataGetMerchantV2: [...state.dataGetMerchantV2, ...action.payload.data]
     };
   },
   [types.MERCHANT_GET_FAILED_V2](state, action) {
@@ -294,7 +296,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingLoadMoreGetMerchant: false,
       refreshGetMerchant: false,
       totalDataGetMerchantV2: action.payload.data.length,
-      dataGetMerchantV2: [...state.dataGetMerchant, ...action.payload.data]
+      dataGetMerchantV2: [...state.dataGetMerchantV2, ...action.payload.data]
     };
   },
   [types.MERCHANT_EXISTING_GET_FAILED](state, action) {
