@@ -138,14 +138,14 @@ class AddMerchantStep3 extends Component {
     this.props.validateAreaMappingProcess(params)
   }
   /** disable button */
-  disableButton() {
-    const {address, vehicleAccessibilityAmount, vehicleAccessibilityName} = this.state
-    const {longitude, latitude, dataGetUrbanId} = this.props.global
-    const latitudeIsNull = latitude === "" || latitude === 0
-    const longitudeIsNull = longitude === "" || longitude === 0
+  buttonDisable() {
     if (
-      !address ||!vehicleAccessibilityName ||!vehicleAccessibilityAmount ||
-      !latitudeIsNull || !longitudeIsNull || !dataGetUrbanId ||
+      !this.state.address ||
+      !this.state.vehicleAccessibilityName ||
+      !this.state.vehicleAccessibilityAmount ||
+      !this.props.global.longitude ||
+      !this.props.global.latitude ||
+      !this.props.global.dataGetUrbanId ||
       this.props.merchant.loadingValidateAreaMapping
     ){
       return true
