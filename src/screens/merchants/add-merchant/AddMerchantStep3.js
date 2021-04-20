@@ -138,7 +138,7 @@ class AddMerchantStep3 extends Component {
     this.props.validateAreaMappingProcess(params)
   }
   /** disable button */
-  buttonDisable() {
+  disableButton() {
     if (
       !this.state.address ||
       !this.state.vehicleAccessibilityName ||

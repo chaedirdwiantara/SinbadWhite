@@ -298,11 +298,9 @@ class AddMerchantStep2 extends Component {
           source={{uri: `data:image/jpg;base64,${this.props.global.imageBase64}`}}
           resizeMode="contain"
           style={{
-            aspectRatio: 1/1,
-            marginVertical: -56,
-            zIndex: -9999,
-            width: '100%', 
-            transform: [{rotate: isPickedFromGallery ? '0deg' : '270deg'}]
+            aspectRatio: 16/9,
+            marginVertical: 12,
+            width: '100%',
           }}
         />
         <View style={{flexDirection: 'row'}}>
@@ -332,7 +330,7 @@ class AddMerchantStep2 extends Component {
     return(
       <View style={{flex:1, flexDirection: 'row', flexWrap: 'wrap', marginVertical: 16}}>
         <TouchableOpacity 
-          disabled={!disabled}
+          disabled={disabled}
           onPress={() => this.setState({showModalChoice: true})}
           style={{
               borderWidth: 1, alignItems: 'center', padding: 8, 
@@ -340,7 +338,7 @@ class AddMerchantStep2 extends Component {
         >
           <MaterialCommunityIcons
             name="image-plus"
-            color={!disabled ? masterColor.buttonGreyWhiteDisabled : masterColor.fontRed50}
+            color={disabled ? masterColor.buttonGreyWhiteDisabled : masterColor.fontRed50}
             size={40}
           />
           <Text style={Fonts.type71}>Upload Foto</Text>
@@ -378,7 +376,7 @@ class AddMerchantStep2 extends Component {
           label="Ambil Foto"
           onPress={() => {
             this.setState({showModalChoice: false})
-            navigate('TakeIdPicture')
+            navigate('TakeIdPicture', {typeCamera: 'id'})
           }}
         />
       </View>
