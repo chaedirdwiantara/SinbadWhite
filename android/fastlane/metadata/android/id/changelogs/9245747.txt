@@ -1,0 +1,2 @@
+Sinbad White versi 1.8.0
+Update aplikasi anda ke versi 1.8.0 untuk fitur - fitur baru persembahan dari Sinbad! Di versi ini, aplikasi Sinbad Agent akan dilengkapi dengan fitur terbaru untuk memastikan ketentuan pembelian produk telah dilengkapi dengan pengecekan ketentuan batas pembelian produk agar pemrosesan pesanan semakin akurat.
