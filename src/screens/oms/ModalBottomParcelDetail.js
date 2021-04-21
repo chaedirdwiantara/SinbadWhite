@@ -26,7 +26,8 @@ class ModalBottomParcelDetail extends Component {
 
     this.state = {
       data: this.props.data,
-      openTotal: false
+      openTotal: false,
+      dataPayment: this.props.dataPayment
     };
   }
 
@@ -173,6 +174,7 @@ class ModalBottomParcelDetail extends Component {
   }
 
   renderProduct() {
+    console.log("total:", this.state.dataPayment);
     return (
       <View>
         <View style={{ paddingHorizontal: 16 }}>
@@ -187,8 +189,6 @@ class ModalBottomParcelDetail extends Component {
             flexDirection: 'row',
             justifyContent: 'space-between',
             paddingHorizontal: 16,
-            marginTop: 10,
-            marginBottom: 20
           }}
         >
           <View>
@@ -197,6 +197,24 @@ class ModalBottomParcelDetail extends Component {
           <View>
             <Text style={Fonts.type75}>
               {MoneyFormat(this.state.data.parcelGrossPrice)}
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 16,
+            marginTop: 10,
+            marginBottom: 20
+          }}
+        >
+          <View>
+            <Text style={Fonts.type75}>Biaya Layanan</Text>
+          </View>
+          <View>
+            <Text style={Fonts.type75}>
+              {MoneyFormat(this.state.dataPayment.paymentMethodDetail.totalFee)}
             </Text>
           </View>
         </View>

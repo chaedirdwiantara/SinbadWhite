@@ -1,6 +1,7 @@
 import ApiRest from '../apiRest';
 import { GlobalMethod } from './GlobalMethod';
 import { Store } from '../../state/Store';
+import ApiRestMock from '../apiRestMock'
 /** GET CART ITEM */
 function getCartItem(data) {
   return ApiRest({
@@ -82,7 +83,7 @@ function getTermsConditions(data) {
 
 /** LAST PAYMENT CHANNEL */
 function getLastPaymentChannel({ invoiceGroupIds }) {
-  return ApiRest({
+  return ApiRestMock({
     path: 'payment/v1/channel/last',
     method: 'POST',
     params: {
