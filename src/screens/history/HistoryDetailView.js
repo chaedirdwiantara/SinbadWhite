@@ -36,6 +36,9 @@ import HistoryDetailPayment from './HistoryDetailPayment';
 import CallCS from '../../screens/global/CallCS';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 import ModalBottomErrorResponsWhite from '../../components/error/ModalBottomErrorResponsWhite';
+import { REFUNDED } from '../../constants/paymentConstants';
+import { CANCEL} from '../../constants/orderConstants';
+
 class HistoryDetailView extends Component {
   constructor(props) {
     super(props);
@@ -402,7 +405,7 @@ class HistoryDetailView extends Component {
                 : '-'
             )}
             {
-              this.props.history.dataDetailHistory.status === "cancel" ? 
+              this.props.history.dataDetailHistory.status === CANCEL && this.props.history.dataDetailHistory.statusPayment !== REFUNDED? 
                 this.renderContentListGlobal(
                   'Tanggal Pembatalan',
                   moment(
