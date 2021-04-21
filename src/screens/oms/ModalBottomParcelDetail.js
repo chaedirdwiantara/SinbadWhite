@@ -32,7 +32,6 @@ class ModalBottomParcelDetail extends Component {
   }
 
   renderOpenTotal() {
-    console.log("dataa:", this.state.dataPayment);
     return (
       <View style={styles.boxOpenTotal}>
         <View
@@ -83,25 +82,25 @@ class ModalBottomParcelDetail extends Component {
             </Text>
           </View>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between'
-          }}
-        >
-          <View>
-            <Text style={Fonts.type17}>Biaya Layanan</Text>
-          </View>
-          <View>
-            <Text style={Fonts.type17}>
-              {
-              this.state.dataPayment.paymentMethodDetail !== null 
-              ? MoneyFormat(this.state.dataPayment.paymentMethodDetail.totalFee)
-              : MoneyFormat(0)
-              }
-            </Text>
-          </View>
-        </View>
+        { 
+          this.state.dataPayment.paymentMethodDetail !== null ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between'
+              }}
+            >
+              <View>
+                <Text style={Fonts.type17}>Biaya Layanan</Text>
+              </View>
+              <View>
+                <Text style={Fonts.type17}>
+                  {MoneyFormat(this.state.dataPayment.paymentMethodDetail.totalFee)}
+                </Text>
+              </View>
+            </View>
+          ) : null
+        }
       </View>
     );
   }
@@ -195,7 +194,6 @@ class ModalBottomParcelDetail extends Component {
   }
 
   renderProduct() {
-    console.log("total:", this.state.data);
     return (
       <View>
         <View style={{ paddingHorizontal: 16 }}>

@@ -1165,7 +1165,6 @@ class OmsCheckoutView extends Component {
   }
   /** === RENDER SUB TOTAL DETAIL === */
   renderOpenSubTotal(item, index) {
-    console.log("disini:", this.state.parcels[index]);
     return this.state.openSubTotal === index ? (
       <View
         style={{
@@ -1215,7 +1214,7 @@ class OmsCheckoutView extends Component {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginBottom: 5
+            marginBottom: this.state.parcels[index].paymentMethodDetail !== null ? 5 : null
           }}
         >
           <View>
@@ -1225,25 +1224,26 @@ class OmsCheckoutView extends Component {
             <Text style={Fonts.type17}>{MoneyFormat(item.parcelTaxes)}</Text>
           </View>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between'
-          }}
-        >
-          <View>
-            <Text style={Fonts.type17}>Biaya Layanan</Text>
-          </View>
-          <View>
-            <Text style={Fonts.type17}>
-              {
-                this.state.parcels[index].paymentMethodDetail !== null 
-                ? MoneyFormat(this.state.parcels[index].paymentMethodDetail.totalFee) 
-                : MoneyFormat(0)
-              }
-            </Text>
-          </View>
-        </View>
+        {
+          this.state.parcels[index].paymentMethodDetail !== null ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between'
+              }}
+            >
+              <View>
+                <Text style={Fonts.type17}>Biaya Layanan</Text>
+              </View>
+              <View>
+                <Text style={Fonts.type17}>
+                  {MoneyFormat(this.state.parcels[index].paymentMethodDetail.totalFee)}
+                </Text>
+              </View>
+            </View>
+          ) : null
+        }
+        
       </View>
     ) : (
       <View />
