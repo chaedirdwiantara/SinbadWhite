@@ -1165,6 +1165,7 @@ class OmsCheckoutView extends Component {
   }
   /** === RENDER SUB TOTAL DETAIL === */
   renderOpenSubTotal(item, index) {
+    console.log("disini:", this.state.parcels[index]);
     return this.state.openSubTotal === index ? (
       <View
         style={{
@@ -1234,7 +1235,13 @@ class OmsCheckoutView extends Component {
             <Text style={Fonts.type17}>Biaya Layanan</Text>
           </View>
           <View>
-            <Text style={Fonts.type17}>{MoneyFormat(this.state.parcels[index].paymentMethodDetail.totalFee)}</Text>
+            <Text style={Fonts.type17}>
+              {
+                this.state.parcels[index].paymentMethodDetail !== null 
+                ? MoneyFormat(this.state.parcels[index].paymentMethodDetail.totalFee) 
+                : MoneyFormat(0)
+              }
+            </Text>
           </View>
         </View>
       </View>
