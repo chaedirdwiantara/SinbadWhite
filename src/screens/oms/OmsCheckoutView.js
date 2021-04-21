@@ -447,8 +447,7 @@ class OmsCheckoutView extends Component {
           })
         )
       };
-      // this.props.OmsGetTermsConditionsProcess(data);
-      console.log("disini:", data);
+      this.props.OmsGetTermsConditionsProcess(data);
     } else {
       this.setState({ modalWarningNotSelectPayment: true });
       setTimeout(() => {
@@ -890,7 +889,6 @@ class OmsCheckoutView extends Component {
   }
   /** === FOR SEE MORE PRODUCT LIST (OPEN MODAL PRODUCT LIST) === */
   openSeeMore(item, index) {
-    // console.log("parcelDetail:", index);
     this.setState({
       selectedParcelDetail: item,
       selectedParcelDetailPayment: this.state.parcels[index],
@@ -1167,7 +1165,6 @@ class OmsCheckoutView extends Component {
   }
   /** === RENDER SUB TOTAL DETAIL === */
   renderOpenSubTotal(item, index) {
-    console.log("disiniitem:", index);
     return this.state.openSubTotal === index ? (
       <View
         style={{
@@ -2029,7 +2026,6 @@ class OmsCheckoutView extends Component {
    * =======================
    */
   render() {
-    console.log("parcel:", this.state.parcels);
     return (
       <View style={styles.mainContainer}>
         {this.renderContent()}

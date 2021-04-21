@@ -174,7 +174,6 @@ class ModalBottomParcelDetail extends Component {
   }
 
   renderProduct() {
-    console.log("total:", this.state.dataPayment);
     return (
       <View>
         <View style={{ paddingHorizontal: 16 }}>

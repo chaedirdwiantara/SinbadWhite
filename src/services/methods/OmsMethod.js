@@ -83,7 +83,7 @@ function getTermsConditions(data) {
 
 /** LAST PAYMENT CHANNEL */
 function getLastPaymentChannel({ invoiceGroupIds }) {
-  return ApiRestMock({
+  return ApiRest({
     path: 'payment/v1/channel/last',
     method: 'POST',
     params: {
