@@ -282,6 +282,12 @@ class HistoryDataListView extends Component {
       case 'waiting_for_payment':
         textStyle = Fonts.type11;
         break;
+      case 'waiting_for_refund':
+        textStyle = Fonts.type11;
+        break;
+      case 'refunded':
+        textStyle = Fonts.type10;
+        break;
       default:
         break;
     }
