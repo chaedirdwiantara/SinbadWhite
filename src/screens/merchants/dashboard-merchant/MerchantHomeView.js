@@ -262,7 +262,8 @@ class MerchantHomeView extends Component {
         /** IF SURVEY DONE SUCCESS */
         if (
           this.props.merchant.dataPostActivityV2.activity ===
-          ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+            ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY &&
+          !_.isEmpty(surveyList.payload.data)
         ) {
           /** FOR GET LOG ALL ACTIVITY */
           this.refreshMerchantGetLogAllActivityProcess();
@@ -1375,4 +1376,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * updatedDate: 12032021
  * updatedFunction:
  * -> Add parameter search when get journey plan.
+ * updatedBy: dyah
+ * updatedDate: 21042021
+ * updatedFunction:
+ * -> Add validation when survey done.
  */

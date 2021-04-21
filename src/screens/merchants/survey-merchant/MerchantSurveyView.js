@@ -11,7 +11,6 @@ import {
 import {
   bindActionCreators,
   connect,
-  NavigationEvents,
   MaterialIcon,
   AntDesignIcon
 } from '../../../library/thirdPartyPackage';
@@ -21,7 +20,6 @@ import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
 import masterColor from '../../../config/masterColor.json';
-import { ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY } from '../../../constants';
 import _ from 'lodash';
 
 class MerchantSurveyView extends Component {
@@ -42,15 +40,6 @@ class MerchantSurveyView extends Component {
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
   }
-  /** FOR SET SALES ACTIVITY SURVEY_TOKO DONE */
-  surveyDone() {
-    this.props.merchantPostActivityProcessV2({
-      journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores
-        .id,
-      activityName: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-    });
-    this.refreshMerchantGetLogAllActivityProcess();
-  }
   /** FOR GET SURVEY LIST */
   getSurveyList() {
     const params = {
@@ -63,56 +52,6 @@ class MerchantSurveyView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.refreshMerchantGetLogAllActivityProcess();
-  }
-  /** === DID UPDATE === */
-  componentDidUpdate() {
-    const {
-      surveyList,
-      loadingGetLogAllActivity,
-      dataGetLogAllActivityV2
-    } = this.props.merchant;
-
-    if (
-      surveyList.payload.data &&
-      !loadingGetLogAllActivity &&
-      dataGetLogAllActivityV2
-    ) {
-      /** IF NO SURVEY */
-      if (
-        _.isEmpty(surveyList.payload.data) &&
-        surveyList.success &&
-        !this.state.successSurveyList
-      ) {
-        this.setState({ successSurveyList: true }, () => this.surveyDone());
-        NavigationService.goBack(this.props.navigation.state.key);
-      }
-
-      /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
-      if (
-        !_.isEmpty(surveyList.payload.data) &&
-        surveyList.success &&
-        !this.state.successSurveyList
-      ) {
-        if (
-          surveyList.payload.data.length ===
-          surveyList.payload.data.filter(
-            item => item.responseStatus === 'completed'
-          ).length
-        ) {
-          if (this.props.merchant.dataGetLogAllActivityV2) {
-            if (
-              !this.props.merchant.dataGetLogAllActivityV2.find(
-                item => item.activityName === 'toko_survey'
-              )
-            ) {
-              this.setState({ successSurveyList: true }, () =>
-                this.surveyDone()
-              );
-            }
-          }
-        }
-      }
-    }
   }
   /**
    * ========================
@@ -225,7 +164,6 @@ class MerchantSurveyView extends Component {
   render() {
     return (
       <SafeAreaView>
-        <NavigationEvents onDidFocus={() => this.getSurveyList()} />
         <StatusBarRed />
         {this.props.merchant.loadingGetSurveyList ? (
           <View style={{ height: '100%' }}>
@@ -327,4 +265,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyView);
  * updatedDate: 08032021
  * updatedFunction:
  * -> Update validation for survey (componentDidUpdate).
+ * updatedBy: dyah
+ * updatedDate: 21042021
+ * updatedFunction:
+ * -> Delete componentDidUpdate in the screenn & delete function surveyDone().
  */
