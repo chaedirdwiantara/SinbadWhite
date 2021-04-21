@@ -409,7 +409,17 @@ class HistoryDetailView extends Component {
                 this.renderContentListGlobal(
                   'Tanggal Pembatalan',
                   moment(
-                    new Date(this.props.history.dataDetailHistory.createdAt)
+                    new Date(this.props.history.dataDetailHistory.cancelDateTime)
+                  ).format('DD MMM YYYY HH:mm:ss')
+                )
+              : null
+            }
+            {
+              this.props.history.dataDetailHistory.statusPayment === REFUNDED? 
+                this.renderContentListGlobal(
+                  'Tanggal Pengembalian Dana',
+                  moment(
+                    new Date(this.props.history.dataDetailHistory.refundedDateTime)
                   ).format('DD MMM YYYY HH:mm:ss')
                 )
               : null
