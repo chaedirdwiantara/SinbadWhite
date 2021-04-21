@@ -401,6 +401,16 @@ class HistoryDetailView extends Component {
                   ).format('DD MMM YYYY HH:mm:ss')
                 : '-'
             )}
+            {
+              this.props.history.dataDetailHistory.status === "cancel" ? 
+                this.renderContentListGlobal(
+                  'Tanggal Pembatalan',
+                  moment(
+                    new Date(this.props.history.dataDetailHistory.createdAt)
+                  ).format('DD MMM YYYY HH:mm:ss')
+                )
+              : null
+            }
           </View>
         </View>
       </View>

@@ -1,5 +1,7 @@
 import ApiRest from '../apiRest';
 import { GlobalMethod } from './GlobalMethod';
+import ApiRestMock from '../apiRestMock'
+
 /** GET CART ITEM */
 function getHistory(data) {
   return ApiRest({
@@ -50,7 +52,7 @@ function editHistory(data) {
 }
 /** DETAIL HISTORY */
 function getDetailHistory(parcelId) {
-  return ApiRest({
+  return ApiRestMock({
     // path: `payment/v1/order/parcel/119`,
     path: `payment/v1/order/parcel/${parcelId}`,
     method: 'GET'
