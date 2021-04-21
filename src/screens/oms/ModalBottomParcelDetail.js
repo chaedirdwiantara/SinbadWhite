@@ -204,7 +204,7 @@ class ModalBottomParcelDetail extends Component {
             flexDirection: 'row',
             justifyContent: 'space-between',
             paddingHorizontal: 16,
-            marginTop: 10,
+            marginTop: 5,
             marginBottom: 20
           }}
         >
