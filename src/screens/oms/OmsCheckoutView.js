@@ -107,7 +107,8 @@ class OmsCheckoutView extends Component {
       openModalFailPaylater: false,
       openModalKurAnnouncement: false,
       openModalOmsOtpKur: false,
-      modalErrorConsent: false
+      modalErrorConsent: false,
+      selectedParcelDetailPayment: null
     };
   }
   /**
@@ -887,9 +888,10 @@ class OmsCheckoutView extends Component {
     });
   }
   /** === FOR SEE MORE PRODUCT LIST (OPEN MODAL PRODUCT LIST) === */
-  openSeeMore(item) {
+  openSeeMore(item, index) {
     this.setState({
       selectedParcelDetail: item,
+      selectedParcelDetailPayment: this.state.parcels[index],
       modalParcelDetail: true
     });
   }
@@ -1211,7 +1213,8 @@ class OmsCheckoutView extends Component {
         <View
           style={{
             flexDirection: 'row',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            marginBottom: this.state.parcels[index].paymentMethodDetail !== null ? 5 : null
           }}
         >
           <View>
@@ -1221,6 +1224,26 @@ class OmsCheckoutView extends Component {
             <Text style={Fonts.type17}>{MoneyFormat(item.parcelTaxes)}</Text>
           </View>
         </View>
+        {
+          this.state.parcels[index].paymentMethodDetail !== null ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between'
+              }}
+            >
+              <View>
+                <Text style={Fonts.type17}>Biaya Layanan</Text>
+              </View>
+              <View>
+                <Text style={Fonts.type17}>
+                  {MoneyFormat(this.state.parcels[index].paymentMethodDetail.totalFee)}
+                </Text>
+              </View>
+            </View>
+          ) : null
+        }
+        
       </View>
     ) : (
       <View />
@@ -1271,7 +1294,7 @@ class OmsCheckoutView extends Component {
                 <View>
                   <Text style={Fonts.type48}>{item.invoiceGroup.name}</Text>
                 </View>
-                <TouchableOpacity onPress={() => this.openSeeMore(item)}>
+                <TouchableOpacity onPress={() => this.openSeeMore(item, index)}>
                   <Text style={Fonts.type14}>Lihat lebih</Text>
                 </TouchableOpacity>
               </View>
@@ -1802,6 +1825,7 @@ class OmsCheckoutView extends Component {
           <ModalBottomParcelDetail
             open={this.state.modalParcelDetail}
             data={this.state.selectedParcelDetail}
+            dataPayment={this.state.selectedParcelDetailPayment}
             close={() => this.setState({ modalParcelDetail: false })}
           />
         ) : (
