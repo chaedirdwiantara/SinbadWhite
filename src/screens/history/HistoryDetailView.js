@@ -417,7 +417,7 @@ class HistoryDetailView extends Component {
                 this.renderContentListGlobal(
                   'Tanggal Pembatalan',
                   moment(
-                    new Date(this.props.history.dataDetailHistory.cancelDateTime)
+                    new Date(this.props.history.dataDetailHistory.cancelTime)
                   ).format('DD MMM YYYY HH:mm:ss')
                 )
               : null
@@ -427,7 +427,7 @@ class HistoryDetailView extends Component {
                 this.renderContentListGlobal(
                   'Tanggal Pengembalian Dana',
                   moment(
-                    new Date(this.props.history.dataDetailHistory.refundedDateTime)
+                    new Date(this.props.history.dataDetailHistory.refundedTime)
                   ).format('DD MMM YYYY HH:mm:ss')
                 )
               : null
