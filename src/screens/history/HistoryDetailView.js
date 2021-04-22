@@ -38,7 +38,6 @@ import ModalBottomFailPayment from '../../components/error/ModalBottomFailPaymen
 import ModalBottomErrorResponsWhite from '../../components/error/ModalBottomErrorResponsWhite';
 import { REFUNDED } from '../../constants/paymentConstants';
 import { CANCEL} from '../../constants/orderConstants';
-import { toLocalTime } from '../../helpers/TimeHelper';
 
 class HistoryDetailView extends Component {
   constructor(props) {
