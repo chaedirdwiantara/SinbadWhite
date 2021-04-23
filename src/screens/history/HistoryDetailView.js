@@ -375,7 +375,7 @@ class HistoryDetailView extends Component {
               ).format('DD MMM YYYY HH:mm:ss')
             )}
             {
-              this.props.history.dataDetailHistory.status !== CANCEL || this.props.history.dataDetailHistory.statusPayment !== REFUNDED ?
+              this.props.history.dataDetailHistory.status !== CANCEL && this.props.history.dataDetailHistory.statusPayment !== REFUNDED ?
                 this.renderContentListGlobal(
                   this.props.history.dataDetailHistory.deliveredDate !== null
                     ? 'Tanggal Pengiriman'
@@ -395,7 +395,7 @@ class HistoryDetailView extends Component {
               : null
             }
             {
-              this.props.history.dataDetailHistory.status !== CANCEL || this.props.history.dataDetailHistory.statusPayment !== REFUNDED ?
+              this.props.history.dataDetailHistory.status !== CANCEL && this.props.history.dataDetailHistory.statusPayment !== REFUNDED ?
                 this.renderContentListGlobal(
                   this.props.history.dataDetailHistory.dueDate !== null
                     ? 'Jatuh Tempo'
