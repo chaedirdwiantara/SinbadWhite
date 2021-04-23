@@ -25,6 +25,7 @@ import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import CountDown from '../../components/CountDown';
+import { REFUNDED, BILLING_PAID, PAY_NOW, PAID, WAITING_FOR_REFUND, WAITING_FOR_PAYMENT, PAYMENT_FAILED } from '../../constants/paymentConstants';
 
 class HistoryDataListView extends Component {
   constructor(props) {
@@ -314,17 +315,16 @@ class HistoryDataListView extends Component {
             <View />
           )}
         </View>
-        {item.statusPayment !== 'paid'
-          ? item.statusPayment !== 'payment_failed' &&
-            // item.billing.billingStatus !== 'expired' &&
+        {item.statusPayment !== PAID && item.statusPayment !== REFUNDED && item.statusPayment !== WAITING_FOR_REFUND
+          ? item.statusPayment !== PAYMENT_FAILED &&
             item.billing &&
-            item.billing.billingStatus !== 'paid' &&
+            item.billing.billingStatus !== BILLING_PAID &&
             item.billing.expiredPaymentTime &&
             item.paymentChannel &&
-            item.paymentChannel.paymentChannelTypeId !== 1
+            item.paymentChannel.paymentChannelTypeId !== PAY_NOW
             ? moment.utc(new Date()).local() >
                 moment.utc(item.billing.expiredPaymentTime).local() &&
-              item.statusPayment === 'waiting_for_payment' 
+              item.statusPayment === WAITING_FOR_PAYMENT
               ? null
               : this.renderCountDown(item)
             : null

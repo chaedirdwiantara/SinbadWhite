@@ -21,4 +21,11 @@
  export const PAY_NOW = 1
  export const PAY_LATER = 2
  export const PAY_ON_DELIVERY = 3
- 
+
+ /**
+  * BILLING STATUS : 
+  * 1. Paid
+  * 2. Refunded
+  */
+  export const BILLING_PAID = "paid"
+  export const BILLING_REFUNDED = "refunded"
