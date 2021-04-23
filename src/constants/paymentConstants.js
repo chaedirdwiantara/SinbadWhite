@@ -24,9 +24,8 @@
 
  /**
   * BILLING STATUS : 
-  * 1. Pay Now
-  * 2. Pay Later
-  * 3. Pay on Delivery
+  * 1. Paid
+  * 2. Refunded
   */
   export const BILLING_PAID = "paid"
   export const BILLING_REFUNDED = "refunded"
