@@ -1256,8 +1256,6 @@ class OmsCheckoutView extends Component {
    */
   /** === RENDER MAIN CONTENT === */
   renderSubTotal(item, index) {
-    console.log("fee:", this.state.parcels[index])
-    console.log("sub:", item);
     return (
       <TouchableOpacity
         style={styles.boxSubTotal}
