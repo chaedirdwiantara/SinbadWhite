@@ -82,7 +82,7 @@ class HistoryDetailPaymentInformation extends Component {
               MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
             )}
             {
-              this.props.history.dataDetailHistory.billing.totalFeeDeduct !== 0 ? 
+              this.props.history.dataDetailHistory.billing.totalFeeDeduct ? 
               this.renderContentListGlobal(
                 'Layanan Pembayaran', 
                 MoneyFormat(this.props.history.dataDetailHistory.billing.totalFeeDeduct)
