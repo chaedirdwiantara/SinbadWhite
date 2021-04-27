@@ -83,7 +83,7 @@ class ModalBottomParcelDetail extends Component {
           </View>
         </View>
         { 
-          this.state.dataPayment.paymentMethodDetail && this.state.dataPayment.paymentMethodDetail.totalFee !== 0 ? (
+          this.state.dataPayment.paymentMethodDetail && this.state.dataPayment.paymentMethodDetail.totalFee ? (
             <View
               style={{
                 flexDirection: 'row',

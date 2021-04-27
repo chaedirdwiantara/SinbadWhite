@@ -1225,7 +1225,7 @@ class OmsCheckoutView extends Component {
           </View>
         </View>
         {
-          this.state.parcels[index].paymentMethodDetail && this.state.parcels[index].paymentMethodDetail.totalFee !== 0 ? (
+          this.state.parcels[index].paymentMethodDetail && this.state.parcels[index].paymentMethodDetail.totalFee ? (
             <View
               style={{
                 flexDirection: 'row',
