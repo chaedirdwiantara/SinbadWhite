@@ -83,7 +83,7 @@ class ModalBottomParcelDetail extends Component {
           </View>
         </View>
         { 
-          this.state.dataPayment.paymentMethodDetail !== null ? (
+          this.state.dataPayment.paymentMethodDetail && this.state.dataPayment.paymentMethodDetail.totalFee ? (
             <View
               style={{
                 flexDirection: 'row',
@@ -91,7 +91,7 @@ class ModalBottomParcelDetail extends Component {
               }}
             >
               <View>
-                <Text style={Fonts.type17}>Biaya Layanan</Text>
+                <Text style={Fonts.type17}>Layanan Pembayaran</Text>
               </View>
               <View>
                 <Text style={Fonts.type17}>
@@ -122,7 +122,11 @@ class ModalBottomParcelDetail extends Component {
         </View>
         <View>
           <Text style={Fonts.type7}>
-            {MoneyFormat(this.state.data.parcelFinalPrice)}
+            {
+              this.state.dataPayment.paymentMethodDetail
+              ? MoneyFormat(this.state.data.parcelFinalPrice + this.state.dataPayment.paymentMethodDetail.totalFee)
+              : MoneyFormat(this.state.data.parcelFinalPrice)
+            }
           </Text>
         </View>
       </TouchableOpacity>

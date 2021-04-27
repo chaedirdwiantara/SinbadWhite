@@ -1225,7 +1225,7 @@ class OmsCheckoutView extends Component {
           </View>
         </View>
         {
-          this.state.parcels[index].paymentMethodDetail !== null ? (
+          this.state.parcels[index].paymentMethodDetail && this.state.parcels[index].paymentMethodDetail.totalFee ? (
             <View
               style={{
                 flexDirection: 'row',
@@ -1233,7 +1233,7 @@ class OmsCheckoutView extends Component {
               }}
             >
               <View>
-                <Text style={Fonts.type17}>Biaya Layanan</Text>
+                <Text style={Fonts.type17}>Layanan Pembayaran</Text>
               </View>
               <View>
                 <Text style={Fonts.type17}>
@@ -1271,7 +1271,13 @@ class OmsCheckoutView extends Component {
           <Text style={Fonts.type50}>Sub Total</Text>
         </View>
         <View>
-          <Text style={Fonts.type50}>{MoneyFormat(item.parcelFinalPrice)}</Text>
+          <Text style={Fonts.type50}>
+            {
+               this.state.parcels[index] && this.state.parcels[index].paymentMethodDetail
+                ? MoneyFormat(item.parcelFinalPrice + this.state.parcels[index].paymentMethodDetail.totalFee)
+                : MoneyFormat(item.parcelFinalPrice)
+            }
+          </Text>
         </View>
       </TouchableOpacity>
     );
