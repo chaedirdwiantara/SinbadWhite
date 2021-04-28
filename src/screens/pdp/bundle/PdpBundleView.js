@@ -144,32 +144,6 @@ class PdpBundleView extends Component {
     }
   }
 
-  /** === RENDER TERSISA TEXT === */
-  renderRemainingStock() {
-    return (
-      <View style={{ flex: 1 }}>
-        <Text style={Fonts.type22}>{this.checkTersisa()}</Text>
-      </View>
-    );
-  }
-
-  checkTersisa() {
-    if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length > 0) {
-      if (
-        !this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock &&
-        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock >
-          this.props.pdp.dataDetailPdp.minQty
-      ) {
-        return `Tersisa ${NumberFormat(
-          this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock
-        )} Pcs`;
-      }
-      return '';
-    } else {
-      return '';
-    }
-  }
-
   /** === PARENT FUNCTION FROM ORDER === */
   parentFunctionFromOrderButton(data) {
     /** NOTE 1 */
@@ -329,7 +303,6 @@ class PdpBundleView extends Component {
   /** === RENDER BUTTON ORDER === */
   renderButtonOrder() {
     return (
-      <View style={styles.boxPesan}>
         <OrderButton
           disabledAllButton={this.state.showKeyboard}
           item={this.props.pdp.dataDetailPdp}
@@ -340,7 +313,6 @@ class PdpBundleView extends Component {
           onFocus={() => this.setState({ buttonAddDisabled: true })}
           onBlur={() => this.setState({ buttonAddDisabled: false })}
         />
-      </View>
     );
   }
 
@@ -395,11 +367,10 @@ class PdpBundleView extends Component {
 
         {this.checkInputQtySection() ? (
           <View style={styles.boxInputQty}>
-            <View style={{ justifyContent: 'center' }}>
+            <View style={{ justifyContent: 'flex-start' }}>
               <Text style={Fonts.type96}>Jumlah/pcs</Text>
             </View>
-            <View style={styles.boxRemainingStockOrderButton}>
-              {this.renderRemainingStock()}
+            <View style={{ flex: 1 }}>
               {this.renderButtonOrder()}
             </View>
           </View>

@@ -1,5 +1,5 @@
 /**
- * STATUS PAYMENT : 
+ * STATUS PAYMENT :
  * 1. Waiting For Payment
  * 2. Payment Paid
  * 3. Payment Failed
@@ -11,9 +11,9 @@
  export const OVERDUE = 'overdue'
  export const WAITING_FOR_REFUND = 'waiting_for_refund'
  export const REFUNDED = 'refunded'
- 
+
   /**
-  * PAYMENT TYPE : 
+  * PAYMENT TYPE :
   * 1. Pay Now
   * 2. Pay Later
   * 3. Pay on Delivery
@@ -23,7 +23,7 @@
  export const PAY_ON_DELIVERY = 3
 
  /**
-  * BILLING STATUS : 
+  * BILLING STATUS :
   * 1. Paid
   * 2. Refunded
   */

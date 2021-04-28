@@ -1,5 +1,5 @@
 /**
- * ORDER STATUS : 
+ * ORDER STATUS :
  * 1. Confirm
  * 2. Shipping
  * 3. Done
