@@ -81,3 +81,6 @@ android/fastlane/config/sinbad.json
 
 google-services*
 android/app/newrelic.properties
+
+# jest
+coverage/
