@@ -277,10 +277,14 @@ class OmsCheckoutView extends Component {
                 lastPayment.paymentTypeSupplierMethodId,
               paylaterType: lastPayment.paylaterType
                 ? lastPayment.paylaterType
-                : null
+                : null,
+              totalFee: e.paymentMethodDetail
+                ? e.paymentMethodDetail.totalFee
+                : lastPayment.paymentChannel.totalFee
             }
           : { ...e };
       });
+      console.log("grr:", parcels);
       this.setState({
         disabled: false,
         usingDefault: true,
@@ -515,6 +519,13 @@ class OmsCheckoutView extends Component {
     );
     return mapParcel.reduce((a, b) => a + b, 0);
   }
+  /** === CALCULATE TOTAL SERVICE FEE === */
+  calTotalServiceFee() {
+    const mapParcel = this.state.parcels.map(
+      item => item.totalFee
+    );
+    return mapParcel.reduce((a, b) => a + b, 0);
+  }
   /** === OPEN COLAPSE SUB TOTAL === */
   openSubTotal(item, index) {
     if (this.state.openSubTotal === index) {
@@ -556,6 +567,7 @@ class OmsCheckoutView extends Component {
         ].paymentChannel = this.props.oms.dataOmsGetPaymentChannel.data;
         parcels[indexParcel].error = false;
         parcels[indexParcel].paylaterType = this.state.selectedPaylaterType;
+        parcels[indexParcel].totalFee = item.totalFee
       }
       this.setState({
         parcels,
@@ -662,6 +674,7 @@ class OmsCheckoutView extends Component {
       let paymentTypeDetail = null;
       let paylaterType = null;
       let error = false;
+      let totalFee = 0;
       if (this.state.parcels.length > 0) {
         const itemParcelFind = this.state.parcels.find(
           itemParcel => itemParcel.orderParcelId === parseInt(item.id, 10)
@@ -675,6 +688,7 @@ class OmsCheckoutView extends Component {
             ? itemParcelFind.paylaterType
             : null;
           error = itemParcelFind.error;
+          totalFee = itemParcelFind.paymentMethodDetail.totalFee
         }
       }
       const data = {
@@ -683,7 +697,8 @@ class OmsCheckoutView extends Component {
         paymentMethodDetail,
         paymentTypeDetail,
         paylaterType,
-        error
+        error,
+        totalFee
       };
       parcels.push(data);
       item.orderBrands.forEach(itemBrand => {
@@ -1136,7 +1151,7 @@ class OmsCheckoutView extends Component {
             <Text>
               <Text style={Fonts.type9}>Total: </Text>
               <Text style={Fonts.type53}>
-                {MoneyFormat(this.calTotalPrice())}
+                {MoneyFormat(this.calTotalPrice()+this.calTotalServiceFee())}
               </Text>
             </Text>
           </View>
