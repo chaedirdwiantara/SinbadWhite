@@ -284,7 +284,6 @@ class OmsCheckoutView extends Component {
             }
           : { ...e };
       });
-      console.log("grr:", parcels);
       this.setState({
         disabled: false,
         usingDefault: true,
