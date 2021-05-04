@@ -5,20 +5,13 @@ import TestRenderer from 'react-test-renderer';
 import { View, TouchableOpacity, Text, FlatList, SafeAreaView } from 'react-native';
 import HistoryDetailView from '../../../../src/screens/history/HistoryDetailView';
 import HistoryDetailPaymentInformation from '../../../../src/screens/history/HistoryDetailPaymentInformation'
+import MoneyFormat from '../../../../src/helpers/NumberFormater'
 jest.useFakeTimers();
 
 const middlewares = [];
 const mockStore = configureStore(middlewares);
 
 describe('HISTORY DETAIL', function() {
-    // const { navigation } = props;
-    // const name = this.props.navigation.getParam('name', 'Peter');
-
-    //   navigation.navigate("Modal", {
-    //       section: () => {
-    //           onIndexChange(0);
-    //       }
-    //   });
     const navigationMock = { state: { params: { section: "payment" } } };
 
     const mockSfaState = {
@@ -27,7 +20,9 @@ describe('HISTORY DETAIL', function() {
             dataGetPaymentStatus: null,
             dataDetailHistory: {
                 billing: {
-                    paymentChannelId : 2
+                    paymentChannelId : 2,
+                    totalFeeDeduct: 4500,
+                    totalPayment: 288868,
                 },
                 paymentType: {
                     name: "Bayar Sekarang"
@@ -53,10 +48,10 @@ describe('HISTORY DETAIL', function() {
                     orderVia: "sinbadApp"
                 },
                 voucherList: [
-                    {voucherValue: 10000}
+                    {voucherValue: '10000', voucherName: "testVoucher", voucherQty: 0, catalogueName: "testCatalogue"}
                 ],
                 promoList: [
-                    {promoValue: 10000}
+                    {promoValue: '10000', promoName: "testPromo", promoQty: 0, catalogueName: "testCatalogue"}
                 ],
                 order: {
                     store: {
@@ -64,6 +59,7 @@ describe('HISTORY DETAIL', function() {
                     }
                 },
                 parcelGrossPrice: 284368,
+                parcelTaxes: 28436,
             },
             errorHistoryDetail: null,
         },
@@ -84,13 +80,6 @@ describe('HISTORY DETAIL', function() {
       </Provider>
     );
     const result = component.root.findAllByType(HistoryDetailView);
-    // const flatlist = container.findAllByType(View)[0];
-    // const flatlistContainer = flatlist.findAllByType(View)[0];
-    // const result = flatlistContainer.findAllByType(View)[0]
-    // const result1 = result.findAllByType(View)[1]
-    // const result = container.findAllByType(Text)[1].props.children;
-    // const tree = container.props
-    // console.log("view0:", tree)
     expect(
       result
     ).toBeDefined();
@@ -101,12 +90,10 @@ describe('HISTORY DETAIL', function() {
     const store = factoryMockStore({});
     const component = TestRenderer.create(
       <Provider store={store}>
-        <HistoryDetailPaymentInformation data={[mockSfaState.history.dataDetailHistory]} />
+        <HistoryDetailPaymentInformation data={mockSfaState.history.dataDetailHistory} />
       </Provider>
     );
     const container = component.root.findAllByType(View)[0];
-    // const result = container.findAllByType(Text)[0];
-    console.log("log:", container);
     expect(
       result
     ).toBeDefined();
