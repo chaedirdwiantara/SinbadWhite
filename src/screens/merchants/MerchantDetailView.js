@@ -8,7 +8,9 @@ import {
   Dimensions,
   ScrollView,
   Image,
-  Text
+  Text,
+  PermissionsAndroid,
+  ToastAndroid
 } from '../../library/reactPackage';
 import {
   connect,
@@ -90,16 +92,30 @@ class MerchantDetailView extends Component {
     return hierarchy;
   }
 
-  toMapDetail() {
-    NavigationService.navigate('MerchantDetailMapView', {
-      latitude: this.props.merchant.dataGetMerchantDetail.latitude,
-      longitude: this.props.merchant.dataGetMerchantDetail.longitude,
-      name: this.props.merchant.dataGetMerchantDetail.name,
-      storeCode: this.props.merchant.dataGetMerchantDetail.storeCode,
-      externalId: this.props.merchant.dataGetMerchantDetail.externalId,
-      address: this.props.merchant.dataGetMerchantDetail.address,
-      urban: this.props.merchant.dataGetMerchantDetail.urban
-    });
+  async toMapDetail() {
+    const {
+      latitude, longitude, name,
+      storeCode, externalId, address, urban
+    } = this.props.merchant.dataGetMerchantDetail
+    const params = {
+      latitude, longitude, name,
+      storeCode,externalId,address,urban  
+    }
+    try {
+      let granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+      if(!granted) {
+        let permissionResult = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+        if (permissionResult === PermissionsAndroid.RESULTS.GRANTED){
+          NavigationService.navigate('MerchantDetailMapView', params);
+        } else {
+          ToastAndroid.show('Anda harus mengizinkan aplikasi untuk mengakses lokasi', ToastAndroid.SHORT)
+        }
+      } else {
+        NavigationService.navigate('MerchantDetailMapView', params);
+      }
+    } catch (error) {
+      ToastAndroid.show(error?.message || '', ToastAndroid.SHORT)
+    }
   }
   /** GO TO PAGE */
   goTo(page) {
@@ -196,6 +212,7 @@ class MerchantDetailView extends Component {
   }
   /** === HEADER MERCHANT === */
   renderHeaderMerchant() {
+    const {dataGetMerchantDetail} = this.props.merchant
     return (
       <View
         style={[
@@ -214,11 +231,9 @@ class MerchantDetailView extends Component {
               style={styles.mapImage}
             />
           </TouchableOpacity>
-          {this.props.merchant.dataGetMerchantDetail.imageUrl ? (
+          {dataGetMerchantDetail.imageUrl ? (
             <Image
-              source={{
-                uri: this.props.merchant.dataGetMerchantDetail.imageUrl
-              }}
+              source={{uri: dataGetMerchantDetail.imageUrl}}
               style={{ width: '100%', height: 169 }}
             />
           ) : (
@@ -247,21 +262,17 @@ class MerchantDetailView extends Component {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {this.renderVerifiedIcon()}
             <Text style={Fonts.type7}>
-              {this.props.merchant.dataGetMerchantDetail.externalId
-                ? this.props.merchant.dataGetMerchantDetail.externalId
-                : this.props.merchant.dataGetMerchantDetail.storeCode
-                ? this.props.merchant.dataGetMerchantDetail.storeCode
-                : '-'}
+              {dataGetMerchantDetail.externalId || dataGetMerchantDetail.storeCode || "-"}
             </Text>
           </View>
 
           <Text style={Fonts.type7}>
-            {this.props.merchant.dataGetMerchantDetail.name}
+            {dataGetMerchantDetail.name}
           </Text>
           <Text
             style={[Fonts.type8, { marginTop: 5, textTransform: 'capitalize' }]}
           >
-            {this.combineAddress(this.props.merchant.dataGetMerchantDetail)}
+            {this.combineAddress(dataGetMerchantDetail)}
           </Text>
           <TouchableOpacity
             style={{ marginTop: 8 }}
