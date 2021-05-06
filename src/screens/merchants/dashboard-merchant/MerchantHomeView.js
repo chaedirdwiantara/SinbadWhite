@@ -35,6 +35,7 @@ import NavigationService from '../../../navigation/NavigationService';
 import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
 import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
 import MerchantVerifyUser from './MerchantVerifyUser';
+import ModalBeforeCheckIn from './ModalBeforeCheckIn';
 import ModalBottomProgressChecking from '../../global/ModalBottomProgressChecking';
 import {
   ACTIVITY_JOURNEY_PLAN_CHECK_IN,
@@ -1143,6 +1144,10 @@ class MerchantHomeView extends Component {
       <View />
     );
   }
+  /** RENDER MODAL BEFORE CHECKIN */
+  renderModalBeforeCheckIn() {
+    return <ModalBeforeCheckIn open={false} ok={() => null} />;
+  }
   /** BACKGROUND */
   renderBackground() {
     return <View style={styles.backgroundRed} />;
@@ -1173,6 +1178,7 @@ class MerchantHomeView extends Component {
         {this.renderModalErrorRespons()}
         {this.renderModalVerifyUser()}
         {this.renderModalProgressChecking()}
+        {this.renderModalBeforeCheckIn()}
         <ModalBottomSuccessOrder />
       </SafeAreaView>
     );
@@ -1401,4 +1407,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * updatedDate: 05052021
  * updatedFunction:
  * -> Add validation for button when not check in yet.
+ * updatedBy: dyah
+ * updatedDate: 06052021
+ * updatedFunction:
+ * -> add modalBeforeCheckin
  */
