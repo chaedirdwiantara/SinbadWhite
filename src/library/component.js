@@ -42,6 +42,7 @@ import ModalBottomSkuNotAvailable from '../components/error/ModalBottomSkuNotAva
 import ModalWarning from '../components/modal/ModalWarning';
 import ModalConfirmation from '../components/modal/ModalConfirmation';
 import ModalConfirmationType2 from '../components/modal/ModalConfirmationType2';
+import ModalConfirmationType4 from '../components/modal/ModalConfirmationType4';
 import ModalBottomErrorPinMap from '../components/error/ModalBottomErrorPinMap';
 import ModalBottomSwipeCloseNotScroll from '../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalBottomType1 from '../components/modal_bottom/ModalBottomType1';
@@ -155,6 +156,7 @@ export {
   ModalWarning,
   ModalConfirmation,
   ModalConfirmationType2,
+  ModalConfirmationType4,
   ModalBottomErrorPinMap,
   ModalBottomSwipeCloseNotScroll,
   ModalBottomType1,
@@ -235,5 +237,9 @@ export {
  * updatedDate: 18122020
  * updatedFunction:
  * -> Add new component (customize modal bottom => modalBottomType5)
+ * updatedBy: dyah
+ * updatedDate: 06052021
+ * updatedFunction:
+ * -> Add new component (customize modal => ModalConfirmationType4)
  *
  */
