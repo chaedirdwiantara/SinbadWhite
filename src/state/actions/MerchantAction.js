@@ -259,6 +259,32 @@ export function merchantGetLogPerActivitySuccessV2(data) {
 export function merchantGetLogPerActivityFailedV2(data) {
   return { type: types.MERCHANT_GET_LOG_PER_ACTIVITY_FAILED_V2, payload: data };
 }
+/**
+ * ==================================
+ * GET LATEST CHECK IN AND CHECK OUT (LAST STORE)
+ * ==================================
+ */
+/** GET LATEST CHECK IN AND CHECK OUT PROCESS */
+export function merchantGetLatestCheckInOutProcess(data) {
+  return {
+    type: types.MERCHANT_GET_LATEST_CHECK_IN_OUT_PROCESS,
+    payload: data
+  };
+}
+/** GET LATEST CHECK IN AND CHECK OUT SUCCESS */
+export function merchantGetLatestCheckInOutSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_LATEST_CHECK_IN_OUT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_GET_LATEST_CHECK_IN_OUT_FAILED, payload: data };
+}
+/** GET LATEST CHECK IN AND CHECK OUT FAILED */
+export function merchantGetLatestCheckInOutFailed(data) {
+  return { type: types.MERCHANT_GET_LATEST_CHECK_IN_OUT_FAILED, payload: data };
+}
 
 /**
  * ==================================

@@ -68,6 +68,13 @@ export const MERCHANT_GET_LOG_PER_ACTIVITY_SUCCESS_V2 =
   'MerchantGetLogPerActivitySuccessV2';
 export const MERCHANT_GET_LOG_PER_ACTIVITY_FAILED_V2 =
   'MerchantGetLogPerActivityFailedV2';
+/** FOR GET LATEST CHECK IN AND CHECK OUT */
+export const MERCHANT_GET_LATEST_CHECK_IN_OUT_PROCESS = 
+  'MerchantGetLatestCheckInOutProcess';
+export const MERCHANT_GET_LATEST_CHECK_IN_OUT_SUCCESS =
+  'MerchantGetLatestCheckInOutSuccess';
+export const MERCHANT_GET_LATEST_CHECK_IN_OUT_FAILED =
+  'MerchantGetLatestCheckInOutFailed';
 /** SELECTED MERCHANT === */
 export const MERCHANT_SELECTED = 'MerchantSelected';
 /** MAPS MERCHANT */
