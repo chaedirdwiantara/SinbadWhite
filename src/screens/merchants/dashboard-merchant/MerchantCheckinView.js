@@ -90,16 +90,17 @@ class MerchantCheckinView extends Component {
   /** === CHECK IN/OUT STORE === */
   checkInOutStore() {
     if (this.state.checked) {
-      return this.postActivityCheckIn();
+      return this.postActivityCheckIn(true);
     }
     return this.setState({ modalOutStore: true });
   }
   /** === POST ACTIVITY CHECKIN === */
-  postActivityCheckIn() {
+  postActivityCheckIn(inStore) {
     this.props.merchantPostActivityProcessV2({
       journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores
         .id,
       activityName: 'check_in',
+      inStore,
       longitude: this.state.longitude,
       latitude: this.state.latitude
     });
@@ -312,7 +313,7 @@ class MerchantCheckinView extends Component {
         type={'okeNotRed'}
         okText={'Tidak di Toko'}
         cancelText={'Saya di Toko'}
-        ok={() => this.postActivityCheckIn()}
+        ok={() => this.postActivityCheckIn(false)}
         cancel={() => this.setState({ modalOutStore: false })}
       />
     );
@@ -439,4 +440,7 @@ export default connect(
  * updatedDate: 06052021
  * updatedFunction:
  *  -> Add new modal when checking in.
+ * updatedDate: 10052021
+ * updatedFunction:
+ *  -> Integrate in/out store when checking in.
  */

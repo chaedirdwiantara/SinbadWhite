@@ -57,6 +57,7 @@ class MerchantHomeView extends Component {
       openModalErrorGlobal: false,
       openModalCheckUser: false,
       openModalProgressChecking: false,
+      openModalBeforeCheckIn: false,
       checkNoOrder: false,
       showToast: false,
       loadingPostForCheckoutNoOrder: false,
@@ -138,6 +139,8 @@ class MerchantHomeView extends Component {
   };
 
   componentDidMount() {
+    /** FOR GET LATEST CHECK IN AND CHECK OUT */
+    this.props.merchantGetLatestCheckInOutProcess();
     /** FOR GET MERCHANT LIST RESET */
     this.props.merchantGetSurveyListReset();
     /** FOR GET LAST ORDER */
@@ -425,6 +428,9 @@ class MerchantHomeView extends Component {
         });
         break;
       case 'checkIn':
+        if (this.props.merchant.dataGetLatestCheckInOut) {
+          return this.setState({ openModalBeforeCheckIn: true })
+        }
         NavigationService.navigate('MerchantCheckinView');
         break;
       case 'checkOut':
@@ -1146,7 +1152,12 @@ class MerchantHomeView extends Component {
   }
   /** RENDER MODAL BEFORE CHECKIN */
   renderModalBeforeCheckIn() {
-    return <ModalBeforeCheckIn open={false} ok={() => null} />;
+    return (
+      <ModalBeforeCheckIn
+        open={this.state.openModalBeforeCheckIn}
+        ok={() => this.setState({ openModalBeforeCheckIn: false })}
+      />
+    );
   }
   /** BACKGROUND */
   renderBackground() {
@@ -1411,4 +1422,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * updatedDate: 06052021
  * updatedFunction:
  * -> add modalBeforeCheckin
+ * updatedBy: dyah
+ * updatedDate: 10052021
+ * updatedFunction:
+ * -> integration latest checkin&checkout.
  */

@@ -14,6 +14,7 @@ const INITIAL_STATE = {
   loadingPostActivity: false,
   loadingGetLogAllActivity: false,
   loadingGetLogPerActivity: false,
+  loadingGetLatestCheckInOut: false,
   loadingGetNoOrderReason: false,
   loadingGetStoreStatus: false,
   loadingGetWarehouse: false,
@@ -26,6 +27,7 @@ const INITIAL_STATE = {
   dataPostActivityV2: null,
   dataGetLogAllActivityV2: null,
   dataGetLogPerActivityV2: null,
+  dataGetLatestCheckInOut: null,
   selectedMerchant: null,
   dataGetMerchantV2: [],
   dataGetWarehouse: [],
@@ -147,6 +149,7 @@ const INITIAL_STATE = {
   errorPostActivityV2: null,
   errorGetLogAllActivityV2: null,
   errorGetLogPerActivityV2: null,
+  errorGetLatestCheckInOut: null,
   errorGetNoOrderReason: null,
   errorGetStoreStatus: null,
   errorGetWarehouse: null,
@@ -662,6 +665,33 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetLogPerActivity: false,
       errorGetLogPerActivityV2: action.payload
+    };
+  },
+  /**
+   * =============================
+   * GET LATEST CHECK IN AND CHECK OUT (LAST STORE)
+   * =============================
+   */
+  [types.MERCHANT_GET_LATEST_CHECK_IN_OUT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetLatestCheckInOut: true,
+      dataGetLatestCheckInOut: null,
+      errorGetLatestCheckInOut: null
+    };
+  },
+  [types.MERCHANT_GET_LATEST_CHECK_IN_OUT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetLatestCheckInOut: false,
+      dataGetLatestCheckInOut: action.payload.data
+    };
+  },
+  [types.MERCHANT_GET_LATEST_CHECK_IN_OUT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetLatestCheckInOut: false,
+      errorGetLatestCheckInOut: action.payload
     };
   },
   /**

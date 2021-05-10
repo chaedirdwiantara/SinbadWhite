@@ -124,6 +124,17 @@ function* getLogPerActivityV2(actions) {
     yield put(ActionCreators.merchantGetLogPerActivityFailedV2(error));
   }
 }
+/** === GET LATEST CHECK IN AND CHECK OUT (LAST STORE) === */
+function* getLatestCheckInOut(actions) {
+  try {
+    let response = yield call(() => {
+      return MerchantMethod.getLatestCheckInOut(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetLatestCheckInOutSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetLatestCheckInOutFailed(error));
+  }
+}
 /** === GET NO ORDER REASON === */
 function* getNoOrderReason(actions) {
   try {
@@ -242,6 +253,10 @@ function* MerchantSaga() {
   yield takeEvery(
     types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS_V2,
     getLogPerActivityV2
+  );
+  yield takeEvery(
+    types.MERCHANT_GET_LATEST_CHECK_IN_OUT_PROCESS,
+    getLatestCheckInOut
   );
   yield takeEvery(types.MERCHANT_STORE_STATUS_PROCESS, getStoreStatus),
   yield takeEvery(types.MERCHANT_GET_WAREHOUSE_PROCESS, getWarehouse);

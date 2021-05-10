@@ -81,6 +81,13 @@ function getLogPerActivityV2(data) {
     method: 'GET'
   });
 }
+/** === GET LATEST CHECK IN AND CHECK OUT === */
+function getLatestCheckInOut() {
+  return ApiRest({
+    path: `${salesManagementService}/v1/journey-book/lastcheckin`,
+    method: 'GET'
+  });
+}
 /** === GET NO ORDER REASON === */
 function getNoOrderReason() {
   return ApiRest({
@@ -176,6 +183,7 @@ export const MerchantMethod = {
   postActivityV2,
   getLogAllActivityV2,
   getLogPerActivityV2,
+  getLatestCheckInOut,
   getNoOrderReason,
   getStoreStatus,
   getWarehouse,
@@ -225,4 +233,8 @@ export const MerchantMethod = {
  * updatedDate: 08042021
  * updatedFunction:
  * -> Clean method from old portfolio.
+ * updatedBy: dyah
+ * updatedDate: 10052021
+ * updatedFunction:
+ * -> add method for latest checkin&checkout.
  */
