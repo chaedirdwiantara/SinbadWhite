@@ -114,6 +114,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     if (this.props.merchant.newSurveyResponse) {
       const surveyResponseId = this.props.merchant.dataSubmitSurvey.payload.id;
       this.props.merchantGetSurveyProcess(surveyResponseId);
+      this.getSurvey();
     }
     /**CHECK NAVIGATION FUNCTION */
     if (!this.props.navigation.state.params.goBackFunction) {
@@ -159,21 +160,15 @@ class MerchantSurveyDisplayPhotoView extends Component {
       }
     }
   };
-  /** === FOR GET LOG ALL ACTIVITY === */
-  refreshMerchantGetLogAllActivityProcess() {
-    this.props.merchantGetLogAllActivityProcessV2(
-      this.props.merchant.selectedMerchant.journeyBookStores.id
-    );
-  }
-  /** === FOR SET SALES ACTIVITY SURVEY_TOKO DONE === */
-  surveyDone() {
-    this.props.merchantPostActivityProcessV2({
-      journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores
-        .id,
-      activityName: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-    });
-    this.refreshMerchantGetLogAllActivityProcess();
-  }
+  /** === FOR GET SURVEY LIST === */
+  getSurvey = () => {
+    const params = {
+      storeId: this.props.merchant.selectedMerchant.storeId,
+      page: 1,
+      length: 10
+    };
+    this.props.merchantGetSurveyListProcess(params);
+  };
   /** === GO BACK FUNCTION === */
   goBack = () => {
     let totalPhoto = 0;
@@ -343,7 +338,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
     NavigationService.navigate('MerchantHomeView');
-  }
+  };
   /** ====== DID MOUNT FUNCTION ========== */
   /** NAVIGATION FUNCTION */
   navigationFunction() {
@@ -880,5 +875,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * updatedBy: dyah
  * updatedDate: 08032021
  * updatedFunction:
- * -> Add funciton when return to tasklist.
+ * -> Add function when return to tasklist.
+ * updatedBy: dyah
+ * updatedDate: 21042021
+ * updatedFunction:
+ * -> Add function to get survey list.
  */
