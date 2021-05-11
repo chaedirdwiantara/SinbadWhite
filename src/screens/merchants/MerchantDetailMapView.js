@@ -5,7 +5,9 @@ import {
   StyleSheet,
   Text,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Linking,
+  Platform
 } from '../../library/reactPackage'
 import {
   bindActionCreators,
@@ -14,7 +16,8 @@ import {
   MapView,
   Marker,
   Geolocation,
-  OpenAppSettings
+  OpenAppSettings,
+  Button
 } from '../../library/thirdPartyPackage'
 import {
   StatusBarWhite,
@@ -58,8 +61,12 @@ class MerchantDetailMapView extends Component {
       reRender: false
     });
   };
-  errorMaps = () => {
-    this.setState({ openModalNoGPS: true, reRender: false });
+  errorMaps = error => {
+    if(error?.code === 3){
+      this.getCurrentLocation()
+    } else {
+      this.setState({ openModalNoGPS: true, reRender: false });
+    }
   };
   getCurrentLocation() {
     this.setState({ reRender: true });
@@ -86,11 +93,7 @@ class MerchantDetailMapView extends Component {
     return {
       headerTitle: () => (
         <View style={{ width: '100%' }}>
-          <SearchBarType3
-            placeholder={
-              navigation.state.params ? navigation.state.params.placeholder : ''
-            }
-          />
+          <SearchBarType3 placeholder={navigation.state.params.placeholder || ''}/>
         </View>
       )
     };
@@ -191,23 +194,34 @@ class MerchantDetailMapView extends Component {
       : this.renderMapsContent();
   }
   renderButton() {
+    const {params} = this.props.navigation.state
     return (
       <View style={styles.boxButtonBottom}>
         <Text style={[Fonts.type7, { marginBottom: 5 }]}>
-          {this.props.navigation.state.params.externalId
-            ? this.props.navigation.state.params.externalId
-            : this.props.navigation.state.params.storeCode
-            ? this.props.navigation.state.params.storeCode
-            : '-'}
+          { params?.externalId || params?.storeCode || '-'}
         </Text>
         <Text style={[Fonts.type7, { marginBottom: 10 }]}>
-          {this.props.navigation.state.params.name}
+          {params?.name || "N/A"}
         </Text>
-        <Address
-          font={Fonts.type17}
-          address={this.props.navigation.state.params.address}
-          urban={this.props.navigation.state.params.urban}
-        />
+        <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 1}}>
+            <Address
+              font={Fonts.type17}
+              address={params?.address || 'N/A'}
+              urban={params?.urban || 'N/A'}
+            />
+          </View>
+          <View style={{marginHorizontal: 8}} />
+          <Button
+            onPress={() => {
+              const address = `${params?.latitude},${params?.longitude}`
+              const platform = Platform.OS === 'ios' ? 'apple' : 'google'
+              Linking.openURL(`http://maps.${platform}.com/maps?daddr=${address}`)
+            }}
+            titleStyle={[Fonts.textButtonRedActive, {fontSize: 10}]}
+            buttonStyle={{backgroundColor: Color.buttonActiveColorRed, borderRadius: 4}}
+            title="Lihat Rute" />
+        </View>
       </View>
     );
   }
@@ -320,4 +334,3 @@ export default connect(
 * -> Refactoring Module Import
 * 
 */
-
