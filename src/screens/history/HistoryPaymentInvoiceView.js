@@ -18,7 +18,7 @@ import { ModalBottomErrorRespons } from '../../library/component';
 import NavigationService from '../../navigation/NavigationService';
 import { Fonts } from '../../helpers';
 import { Color } from '../../config';
-import { file } from '@babel/types';
+// import { file } from '@babel/types';
 
 class HistoryPaymentInvoiceView extends Component {
   constructor(props) {

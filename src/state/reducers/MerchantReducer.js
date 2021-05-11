@@ -92,6 +92,9 @@ const INITIAL_STATE = {
     idImageUrl: null,
     taxImageUrl: null,
     selfieImageUrl: null,
+    isEmailVerified: false,
+    isMobilePhoneNoVerified: false,
+    email: null,
     /** merchant information */
     numberOfEmployee: null,
     largeArea: null,
@@ -522,6 +525,8 @@ export const merchant = createReducer(INITIAL_STATE, {
         idImageUrl: checkData('idImageUrl', dataUpdate, dataPrevious),
         taxImageUrl: checkData('taxImageUrl', dataUpdate, dataPrevious),
         selfieImageUrl: checkData('selfieImageUrl', dataUpdate, dataPrevious),
+        isEmailVerified: checkData('isEmailVerified', dataUpdate, dataPrevious),
+        isMobilePhoneNoVerified: checkData('isMobilePhoneNoVerified', dataUpdate, dataPrevious),
         /** merchant information */
         numberOfEmployee: checkData(
           'numberOfEmployee',
@@ -1181,6 +1186,9 @@ function saveDataMerchantVolatile(data) {
     taxImageUrl: data.owner.taxImageUrl,
     idImageUrl: data.owner.idImageUrl,
     selfieImageUrl: data.owner.selfieImageUrl,
+    isEmailVerified: data.owner.isEmailVerified,
+    isMobilePhoneNoVerified: data.owner.isMobilePhoneNoVerified,
+    bank: data.owner.bank,
     /** for merchant information */
     storeCode: data.storeCode,
     name: data.name,
