@@ -27,7 +27,7 @@ class MerchantDetailProfileView extends Component {
    */
   /** === CHECK REJECTION === */
   checkRejectionStatus(field) {
-    if (this.props.merchant.dataMerchantRejected[field]) {
+    if (this.props.merchant.dataMerchantRejectedV2[field]) {
       return true;
     }
     return false;
