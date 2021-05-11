@@ -24,7 +24,7 @@ class MerchantDetailClassificationView extends Component {
     super(props);
     this.state = {
       /** all data need */
-      id: this.props.merchant.dataGetMerchantDetail.id,
+      id: this.props.merchant.dataGetMerchantDetailV2.id,
       showToast: false,
       notifToast: ''
     };
