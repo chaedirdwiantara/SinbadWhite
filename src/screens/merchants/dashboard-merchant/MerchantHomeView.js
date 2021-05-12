@@ -157,6 +157,7 @@ class MerchantHomeView extends Component {
     const {
       surveyList,
       loadingGetSurveyList,
+      errorGetSurveyList,
       loadingGetLogAllActivity,
       dataGetLogAllActivityV2
     } = this.props.merchant;
@@ -253,7 +254,7 @@ class MerchantHomeView extends Component {
         }
       }
       /** FOR GET SURVEY LIST */
-      if (!loadingGetSurveyList && !surveyList.payload.data) {
+      if (!loadingGetSurveyList && !surveyList.payload.data && !errorGetSurveyList) {
         this.getSurvey();
       }
     }
