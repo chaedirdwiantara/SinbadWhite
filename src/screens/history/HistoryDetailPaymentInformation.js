@@ -48,6 +48,7 @@ class HistoryDetailPaymentInformation extends Component {
   }
   /** RENDER DETAIL INFORMASI PEMBAYARAN */
   renderPaymentInformationDetail() {
+    const paymentPromo = this.props.history.dataDetailHistory.paymentPromo
     return (
       <View>
         <View style={GlobalStyle.boxPadding} />
@@ -90,8 +91,8 @@ class HistoryDetailPaymentInformation extends Component {
               'PPN 10%',
               MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
             )}
-            {this.state.paymentPromo? this.renderContentListGlobal(
-              'Promo Pembayaran', MoneyFormat(this.state.paymentPromo),
+            {paymentPromo? this.renderContentListGlobal(
+              'Promo Pembayaran', MoneyFormat(paymentPromo),
               true,
               true
             ) : null}
