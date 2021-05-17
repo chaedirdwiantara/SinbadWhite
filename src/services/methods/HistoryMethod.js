@@ -1,5 +1,4 @@
 import ApiRest from '../apiRest';
-import ApiRestMock from '../apiRestMock';
 import { GlobalMethod } from './GlobalMethod';
 /** GET CART ITEM */
 function getHistory(data) {
@@ -51,8 +50,8 @@ function editHistory(data) {
 }
 /** DETAIL HISTORY */
 function getDetailHistory(parcelId) {
-  return ApiRestMock({
-    // path: `payment/v1/order/parcel/5129`,
+  return ApiRest({
+    testpath:`https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/payment/v1/order/parcel/${parcelId}`, // will be deleted once the real API ready from BE
     path: `payment/v1/order/parcel/${parcelId}`,
     method: 'GET'
   });
