@@ -15,11 +15,12 @@ class HistoryDetailPaymentInformation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: this.props.data
+      data: this.props.data,
+      paymentPromo: 20000
     };
   }
   /** RENDER CONTENT LIST GLOBAL */
-  renderContentListGlobal(key, value, green) {
+  renderContentListGlobal(key, value, green, minus) {
     return (
       <View
         style={{
@@ -32,7 +33,15 @@ class HistoryDetailPaymentInformation extends Component {
           <Text style={green ? Fonts.type51 : Fonts.type17}>{key}</Text>
         </View>
         <View style={{ flex: 1, alignItems: 'flex-end' }}>
-          <Text style={[green ? Fonts.type51 : Fonts.type17, {textAlign:"right"}]}>{value}</Text>
+          <Text
+            style={[
+              green ? Fonts.type51 : Fonts.type17,
+              { textAlign: 'right' }
+            ]}
+          >
+            {minus ? '-' : ''}
+            {value}
+          </Text>
         </View>
       </View>
     );
@@ -81,6 +90,11 @@ class HistoryDetailPaymentInformation extends Component {
               'PPN 10%',
               MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
             )}
+            {this.state.paymentPromo? this.renderContentListGlobal(
+              'Promo Pembayaran', MoneyFormat(this.state.paymentPromo),
+              true,
+              true
+            ) : null}
             <View
               style={{
                 flexDirection: 'row',
