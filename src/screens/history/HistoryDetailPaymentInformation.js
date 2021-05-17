@@ -19,7 +19,7 @@ class HistoryDetailPaymentInformation extends Component {
     };
   }
   /** RENDER CONTENT LIST GLOBAL */
-  renderContentListGlobal(key, value, green) {
+  renderContentListGlobal(key, value, green, minus) {
     return (
       <View
         style={{
@@ -32,13 +32,22 @@ class HistoryDetailPaymentInformation extends Component {
           <Text style={green ? Fonts.type51 : Fonts.type17}>{key}</Text>
         </View>
         <View style={{ flex: 1, alignItems: 'flex-end' }}>
-          <Text style={[green ? Fonts.type51 : Fonts.type17, {textAlign:"right"}]}>{value}</Text>
+          <Text
+            style={[
+              green ? Fonts.type51 : Fonts.type17,
+              { textAlign: 'right' }
+            ]}
+          >
+            {minus ? '-' : ''}
+            {value}
+          </Text>
         </View>
       </View>
     );
   }
   /** RENDER DETAIL INFORMASI PEMBAYARAN */
   renderPaymentInformationDetail() {
+    const paymentPromo = this.props.history.dataDetailHistory.paymentPromo
     return (
       <View>
         <View style={GlobalStyle.boxPadding} />
@@ -81,6 +90,11 @@ class HistoryDetailPaymentInformation extends Component {
               'PPN 10%',
               MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
             )}
+            {paymentPromo? this.renderContentListGlobal(
+              'Promo Pembayaran', MoneyFormat(paymentPromo),
+              true,
+              true
+            ) : null}
             <View
               style={{
                 flexDirection: 'row',

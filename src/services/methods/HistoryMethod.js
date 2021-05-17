@@ -51,7 +51,7 @@ function editHistory(data) {
 /** DETAIL HISTORY */
 function getDetailHistory(parcelId) {
   return ApiRest({
-    // path: `payment/v1/order/parcel/119`,
+    testpath:`https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/payment/v1/order/parcel/${parcelId}`, // will be deleted once the real API ready from BE
     path: `payment/v1/order/parcel/${parcelId}`,
     method: 'GET'
   });
