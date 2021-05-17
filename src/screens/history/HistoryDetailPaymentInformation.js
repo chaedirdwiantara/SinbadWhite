@@ -15,8 +15,7 @@ class HistoryDetailPaymentInformation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: this.props.data,
-      paymentPromo: 20000
+      data: this.props.data
     };
   }
   /** RENDER CONTENT LIST GLOBAL */
