@@ -36,8 +36,9 @@ import HistoryDetailPayment from './HistoryDetailPayment';
 import CallCS from '../../screens/global/CallCS';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 import ModalBottomErrorResponsWhite from '../../components/error/ModalBottomErrorResponsWhite';
-import { WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
-import { CONFIRM, PENDING_PAYMENT} from '../../constants/orderConstants';
+import { REFUNDED, WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
+import { CANCEL, CONFIRM, PENDING_PAYMENT } from '../../constants/orderConstants';
+
 class HistoryDetailView extends Component {
   constructor(props) {
     super(props);
@@ -376,36 +377,64 @@ class HistoryDetailView extends Component {
                 new Date(this.props.history.dataDetailHistory.createdAt)
               ).format('DD MMM YYYY HH:mm:ss')
             )}
-            {this.renderContentListGlobal(
-              this.props.history.dataDetailHistory.deliveredDate !== null
-                ? 'Tanggal Pengiriman'
-                : 'Estimasi Tanggal Pengiriman',
-              this.props.history.dataDetailHistory.deliveredDate !== null
-                ? moment(
-                    new Date(this.props.history.dataDetailHistory.deliveredDate)
+            {
+              this.props.history.dataDetailHistory.status !== CANCEL && this.props.history.dataDetailHistory.statusPayment !== REFUNDED ?
+                this.renderContentListGlobal(
+                  this.props.history.dataDetailHistory.deliveredDate !== null
+                    ? 'Tanggal Pengiriman'
+                    : 'Estimasi Tanggal Pengiriman',
+                  this.props.history.dataDetailHistory.deliveredDate !== null
+                    ? moment(
+                        new Date(this.props.history.dataDetailHistory.deliveredDate)
+                      ).format('DD MMM YYYY HH:mm:ss')
+                    : this.props.history.dataDetailHistory.estDeliveredDate !== null
+                    ? moment(
+                        new Date(
+                          this.props.history.dataDetailHistory.estDeliveredDate
+                        )
+                      ).format('DD MMM YYYY HH:mm:ss')
+                    : '-'
+                )
+              : null
+            }
+            {
+              this.props.history.dataDetailHistory.status !== CANCEL && this.props.history.dataDetailHistory.statusPayment !== REFUNDED ?
+                this.renderContentListGlobal(
+                  this.props.history.dataDetailHistory.dueDate !== null
+                    ? 'Jatuh Tempo'
+                    : 'Estimasi Jatuh Tempo',
+                  this.props.history.dataDetailHistory.dueDate !== null
+                    ? moment(
+                        new Date(this.props.history.dataDetailHistory.dueDate)
+                      ).format('DD MMM YYYY HH:mm:ss')
+                    : this.props.history.dataDetailHistory.estDueDate !== null
+                    ? moment(
+                        new Date(this.props.history.dataDetailHistory.estDueDate)
+                      ).format('DD MMM YYYY HH:mm:ss')
+                    : '-'
+                )
+              : null
+            }
+            {
+              this.props.history.dataDetailHistory.status === CANCEL && this.props.history.dataDetailHistory.statusPayment !== REFUNDED?
+                this.renderContentListGlobal(
+                  'Tanggal Pembatalan',
+                  moment(
+                    new Date(this.props.history.dataDetailHistory.cancelTime)
                   ).format('DD MMM YYYY HH:mm:ss')
-                : this.props.history.dataDetailHistory.estDeliveredDate !== null
-                ? moment(
-                    new Date(
-                      this.props.history.dataDetailHistory.estDeliveredDate
-                    )
+                )
+              : null
+            }
+            {
+              this.props.history.dataDetailHistory.statusPayment === REFUNDED?
+                this.renderContentListGlobal(
+                  'Tanggal Pengembalian Dana',
+                  moment(
+                    new Date(this.props.history.dataDetailHistory.refundedTime)
                   ).format('DD MMM YYYY HH:mm:ss')
-                : '-'
-            )}
-            {this.renderContentListGlobal(
-              this.props.history.dataDetailHistory.dueDate !== null
-                ? 'Jatuh Tempo'
-                : 'Estimasi Jatuh Tempo',
-              this.props.history.dataDetailHistory.dueDate !== null
-                ? moment(
-                    new Date(this.props.history.dataDetailHistory.dueDate)
-                  ).format('DD MMM YYYY HH:mm:ss')
-                : this.props.history.dataDetailHistory.estDueDate !== null
-                ? moment(
-                    new Date(this.props.history.dataDetailHistory.estDueDate)
-                  ).format('DD MMM YYYY HH:mm:ss')
-                : '-'
-            )}
+                )
+              : null
+            }
           </View>
         </View>
       </View>

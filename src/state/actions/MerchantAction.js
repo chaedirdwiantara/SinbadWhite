@@ -41,38 +41,6 @@ export function merchantChanged(data) {
 }
 /**
  * ==============================
- * GET MERCHANT BY PORTFOLIO
- * ==============================
- */
-/** === MERCHANT GET PROCESS ==== */
-export function merchantGetProcess(data) {
-  return { type: types.MERCHANT_GET_PROCESS, payload: data };
-}
-/** === MERCHANT GET SUCCESS === */
-export function merchantGetSuccess(data) {
-  if (data.result === 'Ok') {
-    return { type: types.MERCHANT_GET_SUCCESS, payload: data.data };
-  }
-  return { type: types.MERCHANT_GET_FAILED, payload: data };
-}
-/** === MERCHANT GET FAILED === */
-export function merchantGetFailed(data) {
-  return { type: types.MERCHANT_GET_FAILED, payload: data };
-}
-/** === REFRESH GET MERCHANT === */
-export function merchantGetRefresh() {
-  return { type: types.MERCHANT_GET_REFRESH };
-}
-/** === RESET GET MERCHANT === */
-export function merchantGetReset() {
-  return { type: types.MERCHANT_GET_RESET };
-}
-/** === LOAD MORE GET MERCHANT === */
-export function merchantGetLoadMore(page) {
-  return { type: types.MERCHANT_GET_LOADMORE, payload: page };
-}
-/**
- * ==============================
  * GET MERCHANT LIST BY PORTFOLIO EXCLUDE STORE ON JOURNEY PLAN
  * ==============================
  */
@@ -137,26 +105,6 @@ export function merchantGetLoadMoreV2(page) {
 }
 /**
  * ====================================
- * GET MERCHANT DETAIL
- * ====================================
- */
-/** === MERCHANT GET DETAIL PROCESS === */
-export function merchantGetDetailProcess(data) {
-  return { type: types.MERCHANT_GET_DETAIL_PROCESS, payload: data };
-}
-/** === MERCHANT GET DETAIL SUCCESS === */
-export function merchantGetDetailSuccess(data) {
-  if (data.result === 'Ok') {
-    return { type: types.MERCHANT_GET_DETAIL_SUCCESS, payload: data.data };
-  }
-  return { type: types.MERCHANT_GET_DETAIL_FAILED, payload: data };
-}
-/** === MERCHANT GET DETAIL FAILED === */
-export function merchantGetDetailFailed(data) {
-  return { type: types.MERCHANT_GET_DETAIL_FAILED, payload: data };
-}
-/**
- * ====================================
  * GET MERCHANT DETAIL V2
  * ====================================
  */
@@ -174,33 +122,6 @@ export function merchantGetDetailSuccessV2(data) {
 /** === MERCHANT GET DETAIL FAILED === */
 export function merchantGetDetailFailedV2(data) {
   return { type: types.MERCHANT_GET_DETAIL_FAILED_V2, payload: data };
-}
-/**
- * ====================================
- * GET PORTFOLIO BY USERID
- * ====================================
- */
-/** PORTFOLIO GET PROCESS */
-export function portfolioGetProcess(userId) {
-  return { type: types.PORTFOLIO_GET_PROCESS, payload: userId };
-}
-/** PORTFOLIO GET SUCCESS */
-export function portfolioGetSuccess(data) {
-  if (data.result === 'Ok') {
-    /** this for add default portfolio */
-    const dataResult = data.data;
-    const addingData = {
-      id: '',
-      name: 'Toko Baru'
-    };
-    dataResult.unshift(addingData);
-    return { type: types.PORTFOLIO_GET_SUCCESS, payload: dataResult };
-  }
-  return { type: types.PORTFOLIO_GET_FAILED, payload: data };
-}
-/** PORTFOLIO GET FAILED */
-export function portfolioGetFailed(data) {
-  return { type: types.PORTFOLIO_GET_FAILED, payload: data };
 }
 /**
  * ====================================
@@ -265,26 +186,6 @@ export function merchantGetLastOrderFailed(data) {
 }
 /**
  * ==================================
- * POST ACTIVITY
- * ==================================
- */
-/** POST ACTIVITY PROCESS */
-export function merchantPostActivityProcess(data) {
-  return { type: types.MERCHANT_POST_ACTIVITY_PROCESS, payload: data };
-}
-/** POST ACTIVITY SUCCESS */
-export function merchantPostActivitySuccess(data) {
-  if (data.result === 'Ok') {
-    return { type: types.MERCHANT_POST_ACTIVITY_SUCCESS, payload: data.data };
-  }
-  return { type: types.MERCHANT_POST_ACTIVITY_FAILED, payload: data };
-}
-/** POST ACTIVITY FAILED */
-export function merchantPostActivityFailed(data) {
-  return { type: types.MERCHANT_POST_ACTIVITY_FAILED, payload: data };
-}
-/**
- * ==================================
  * POST ACTIVITY V2
  * ==================================
  */
@@ -305,29 +206,6 @@ export function merchantPostActivitySuccessV2(data) {
 /** POST ACTIVITY FAILED */
 export function merchantPostActivityFailedV2(data) {
   return { type: types.MERCHANT_POST_ACTIVITY_FAILED_V2, payload: data };
-}
-/**
- * ==================================
- * GET LOG ALL ACTIVITY MERCHANT
- * ==================================
- */
-/** GET LOG ALL ACTIVITY MERCHANT PROCESS */
-export function merchantGetLogAllActivityProcess(data) {
-  return { type: types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS, payload: data };
-}
-/** GET LOG ALL ACTIVITY MERCHANT SUCCESS */
-export function merchantGetLogAllActivitySuccess(data) {
-  if (data.result === 'Ok') {
-    return {
-      type: types.MERCHANT_GET_LOG_ALL_ACTIVITY_SUCCESS,
-      payload: data.data
-    };
-  }
-  return { type: types.MERCHANT_GET_LOG_ALL_ACTIVITY_FAILED, payload: data };
-}
-/** GET LOG ALL ACTIVITY MERCHANT FAILED */
-export function merchantGetLogAllActivityFailed(data) {
-  return { type: types.MERCHANT_GET_LOG_ALL_ACTIVITY_FAILED, payload: data };
 }
 /**
  * ==================================
@@ -357,29 +235,6 @@ export function merchantGetLogAllActivityFailedV2(data) {
 }
 /**
  * ==================================
- * GET LOG PER ACTIVITY MERCHANT
- * ==================================
- */
-/** GET LOG PER ACTIVITY MERCHANT PROCESS */
-export function merchantGetLogPerActivityProcess(data) {
-  return { type: types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS, payload: data };
-}
-/** GET LOG PER ACTIVITY MERCHANT SUCCESS */
-export function merchantGetLogPerActivitySuccess(data) {
-  if (data.result === 'Ok') {
-    return {
-      type: types.MERCHANT_GET_LOG_PER_ACTIVITY_SUCCESS,
-      payload: data.data
-    };
-  }
-  return { type: types.MERCHANT_GET_LOG_PER_ACTIVITY_FAILED, payload: data };
-}
-/** GET LOG PER ACTIVITY MERCHANT FAILED */
-export function merchantGetLogPerActivityFailed(data) {
-  return { type: types.MERCHANT_GET_LOG_PER_ACTIVITY_FAILED, payload: data };
-}
-/**
- * ==================================
  * GET LOG PER ACTIVITY MERCHANT V2
  * ==================================
  */
@@ -403,6 +258,32 @@ export function merchantGetLogPerActivitySuccessV2(data) {
 /** GET LOG PER ACTIVITY MERCHANT FAILED */
 export function merchantGetLogPerActivityFailedV2(data) {
   return { type: types.MERCHANT_GET_LOG_PER_ACTIVITY_FAILED_V2, payload: data };
+}
+/**
+ * ==================================
+ * GET LATEST CHECK IN AND CHECK OUT (LAST STORE)
+ * ==================================
+ */
+/** GET LATEST CHECK IN AND CHECK OUT PROCESS */
+export function merchantGetLatestCheckInOutProcess(data) {
+  return {
+    type: types.MERCHANT_GET_LATEST_CHECK_IN_OUT_PROCESS,
+    payload: data
+  };
+}
+/** GET LATEST CHECK IN AND CHECK OUT SUCCESS */
+export function merchantGetLatestCheckInOutSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_LATEST_CHECK_IN_OUT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_GET_LATEST_CHECK_IN_OUT_FAILED, payload: data };
+}
+/** GET LATEST CHECK IN AND CHECK OUT FAILED */
+export function merchantGetLatestCheckInOutFailed(data) {
+  return { type: types.MERCHANT_GET_LATEST_CHECK_IN_OUT_FAILED, payload: data };
 }
 
 /**
