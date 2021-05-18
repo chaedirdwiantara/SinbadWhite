@@ -25,8 +25,9 @@ import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import CountDown from '../../components/CountDown';
-import { WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
+import { REFUNDED, BILLING_PAID, PAID, WAITING_FOR_REFUND, PAYMENT_FAILED, WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
 import {CONFIRM, PENDING_PAYMENT} from '../../constants/orderConstants';
+
 class HistoryDataListView extends Component {
   constructor(props) {
     super(props);
@@ -283,6 +284,12 @@ class HistoryDataListView extends Component {
       case 'waiting_for_payment':
         textStyle = Fonts.type11;
         break;
+      case 'waiting_for_refund':
+        textStyle = Fonts.type11;
+        break;
+      case 'refunded':
+        textStyle = Fonts.type10;
+        break;
       default:
         break;
     }
@@ -309,17 +316,16 @@ class HistoryDataListView extends Component {
             <View />
           )}
         </View>
-        {item.statusPayment !== 'paid'
-          ? item.statusPayment !== 'payment_failed' &&
-            // item.billing.billingStatus !== 'expired' &&
+        {item.statusPayment !== PAID && item.statusPayment !== REFUNDED && item.statusPayment !== WAITING_FOR_REFUND
+          ? item.statusPayment !== PAYMENT_FAILED &&
             item.billing &&
-            item.billing.billingStatus !== 'paid' &&
+            item.billing.billingStatus !== BILLING_PAID &&
             item.billing.expiredPaymentTime &&
             item.paymentChannel &&
-            item.paymentChannel.paymentChannelTypeId !== 1
+            item.paymentChannel.paymentChannelTypeId !== PAY_NOW
             ? moment.utc(new Date()).local() >
                 moment.utc(item.billing.expiredPaymentTime).local() &&
-              item.statusPayment === 'waiting_for_payment'
+              item.statusPayment === WAITING_FOR_PAYMENT
               ? null
               : this.renderCountDown(item)
             : null

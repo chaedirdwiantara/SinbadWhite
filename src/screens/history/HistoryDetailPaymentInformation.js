@@ -81,6 +81,14 @@ class HistoryDetailPaymentInformation extends Component {
               'PPN 10%',
               MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
             )}
+            {
+              this.props.history.dataDetailHistory.billing.totalFeeDeduct ? 
+              this.renderContentListGlobal(
+                'Layanan Pembayaran', 
+                MoneyFormat(this.props.history.dataDetailHistory.billing.totalFeeDeduct)
+              )
+              : null
+            }
             <View
               style={{
                 flexDirection: 'row',
@@ -94,7 +102,7 @@ class HistoryDetailPaymentInformation extends Component {
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
                 <Text style={Fonts.type21}>
                   {MoneyFormat(
-                    this.props.history.dataDetailHistory.parcelFinalPrice
+                    this.props.history.dataDetailHistory.billing.totalPayment
                   )}
                 </Text>
               </View>
