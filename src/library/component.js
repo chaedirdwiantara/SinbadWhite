@@ -23,11 +23,8 @@ import InputType1 from '../components/input/InputType1';
 import InputType2 from '../components/input/InputType2';
 import InputType3 from '../components/input/InputType3';
 import InputType4 from '../components/input/inputType4';
-<<<<<<< HEAD
 import InputType5 from '../components/input/inputType5';
-=======
 import InputType6 from '../components/input/InputType6';
->>>>>>> release
 /** INPUT MAPS (PIN POINT) */
 import InputMapsType1 from '../components/input/InputMapsType1';
 import InputMapsType2 from '../components/input/InputMapsType2';
@@ -94,10 +91,7 @@ import SkeletonType18 from '../components/skeleton/SkeletonType18';
 import SkeletonType21 from '../components/skeleton/SkeletonType21';
 import SkeletonType23 from '../components/skeleton/SkeletonType23';
 import SkeletonType24 from '../components/skeleton/SkeletonType24';
-<<<<<<< HEAD
 import SkeletonType25 from '../components/skeleton/SkeletonType25';
-=======
->>>>>>> release
 /** ADDRESS */
 import Address from '../components/Address';
 /** TAG */
@@ -146,11 +140,8 @@ export {
   InputType2,
   InputType3,
   InputType4,
-<<<<<<< HEAD
   InputType5,
-=======
   InputType6,
->>>>>>> release
   /** INPUT MAPS (PIN POINT) */
   InputMapsType1,
   InputMapsType2,
