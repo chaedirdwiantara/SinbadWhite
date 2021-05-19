@@ -45,4 +45,11 @@ function MoneyFormatShort(number) {
   return toCurrencyShort(number);
 }
 
-export { NumberFormat, MoneyFormat, MoneyFormatShort };
+function MoneyFormatSpace(money) {
+  return `Rp ${money
+    .toFixed(2)
+    .replace(/\d(?=(\d{3})+\.)/g, '$&.')
+    .slice(0, -3)}`;
+}
+
+export { NumberFormat, MoneyFormat, MoneyFormatShort, MoneyFormatSpace };

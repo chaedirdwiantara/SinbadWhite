@@ -1,7 +1,7 @@
 import Fonts from './GlobalFont';
 import GlobalStyle from './GlobalStyle';
 import GlobalStyleHtml from './GlobalStyleHtml';
-import { NumberFormat, MoneyFormat, MoneyFormatShort } from './NumberFormater';
+import { NumberFormat, MoneyFormat, MoneyFormatShort, MoneyFormatSpace } from './NumberFormater';
 import Scale from './Scale';
 import {
   getStartDateNow,
@@ -21,6 +21,7 @@ export {
   NumberFormat,
   MoneyFormat,
   MoneyFormatShort,
+  MoneyFormatSpace,
   Scale,
   getStartDateNow,
   getDateNow,

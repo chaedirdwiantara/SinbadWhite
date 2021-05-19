@@ -12,6 +12,7 @@ import {
   bindActionCreators,
   connect,
   MaterialIcon,
+  moment,
   Modal
 } from '../../library/thirdPartyPackage'
 import {
@@ -26,6 +27,7 @@ import { Fonts } from '../../helpers'
 import ModalBottomMerchantListDataView from './ModalMerchantListDataView';
 import * as ActionCreators from '../../state/actions';
 const { height } = Dimensions.get('window');
+const today = moment().format('YYYY-MM-DD') + 'T00:00:00+00:00';
 
 class ModalBottomMerchantList extends Component {
   constructor(props) {
@@ -46,17 +48,17 @@ class ModalBottomMerchantList extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.keyboardListener();
-    this.props.portfolioGetProcess(this.props.user.id);
+    this.props.portfolioGetProcessV2();
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
     if (
-      prevProps.merchant.dataGetPortfolio !==
-      this.props.merchant.dataGetPortfolio
+      prevProps.merchant.dataGetPortfolioV2 !==
+      this.props.merchant.dataGetPortfolioV2
     ) {
       if (
-        this.props.merchant.dataGetPortfolio !== null &&
-        this.props.merchant.dataGetPortfolio.length > 0
+        this.props.merchant.dataGetPortfolioV2 !== null &&
+        this.props.merchant.dataGetPortfolioV2.length > 0
       ) {
         this.getMerchant('direct', 0, '');
       }
@@ -97,12 +99,13 @@ class ModalBottomMerchantList extends Component {
   }
   /** === CALL GET FUNCTION === */
   getMerchant(type, portfolioIndex, search) {
-    this.props.merchantGetReset();
-    this.props.merchantGetProcess({
-      type,
-      page: 0,
+    const date = moment().format('YYYY-MM-DD');
+    this.props.merchantExistingGetReset();
+    this.props.merchantExistingGetProcess({
+      date,
       loading: true,
-      portfolioId: this.props.merchant.dataGetPortfolio[portfolioIndex].id,
+      page: 1,
+      portfolioId: this.props.merchant.dataGetPortfolioV2[0].id,
       search
     });
   }
@@ -127,11 +130,13 @@ class ModalBottomMerchantList extends Component {
       const dataForAddJourney = this.state.dataForAddJourney;
       const indexSelectedMerchant = selectedMerchant.indexOf(data.data);
       const dataObject = {
+        typeOfStore: 'exist_store',
         portfolioId: parseInt(
-          this.props.merchant.dataGetPortfolio[this.state.portfolio].id,
+          this.props.merchant.dataGetPortfolioV2[this.state.portfolio].id,
           10
         ),
-        storeId: parseInt(data.data, 10)
+        storeId: parseInt(data.data, 10),
+        storeName: data.item.name
         // journeyPlanId: parseInt(
         //   this.props.journey.dataGetJourneyPlan[0].journeyPlanId,
         //   10
@@ -149,9 +154,9 @@ class ModalBottomMerchantList extends Component {
   }
   /** === ADD JOURNEY PLAN === */
   addJourneyPlan() {
-    this.props.saveMerchatToJourneyPlanProcess({
-      storeType: 'exist_store',
-      body: this.state.dataForAddJourney
+    this.props.saveMerchantToJourneyPlanProcessV2({
+      date: today,
+      journeyBookStores: this.state.dataForAddJourney
     });
   }
   /**
@@ -181,12 +186,12 @@ class ModalBottomMerchantList extends Component {
   }
   /** === TAGS SECTION === */
   renderTagsContent() {
-    return this.props.merchant.dataGetPortfolio.length > 0 ? (
+    return this.props.merchant.dataGetPortfolioV2.length > 0 ? (
       <TagListType1
         selected={this.state.portfolio}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
-        data={this.props.merchant.dataGetPortfolio}
+        data={this.props.merchant.dataGetPortfolioV2}
       />
     ) : (
       <View />
@@ -212,7 +217,7 @@ class ModalBottomMerchantList extends Component {
   /** === RENDER TAGS === */
   renderTags() {
     return !this.props.merchant.loadingGetPortfolio &&
-      this.props.merchant.dataGetPortfolio !== null
+      this.props.merchant.dataGetPortfolioV2 !== null
       ? this.renderTagsContent()
       : this.renderSkeletonTags();
   }
@@ -338,15 +343,26 @@ export default connect(
 )(ModalBottomMerchantList);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ * updatedBy: dyah
+ * updatedDate: 24022021
+ * updatedFunction:
+ * -> update the props of portfolio.
+ * -> Update function addJourneyPlan and the props when saving merchant to journey plan.
+ * updatedBy: dyah
+ * updatedDate: 0803021
+ * updatedFunction:
+ * -> update the props of merchant list.
+ * updatedBy: dyah
+ * updatedDate: 0903021
+ * updatedFunction:
+ * -> add parameter storeName when save merchant to journey plan.
+ */

@@ -38,6 +38,8 @@ build/
 local.properties
 *.iml
 /android/app/build/
+*.aab
+*.apk
 
 # node.js
 #

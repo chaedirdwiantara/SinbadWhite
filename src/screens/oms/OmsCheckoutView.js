@@ -385,9 +385,10 @@ class OmsCheckoutView extends Component {
   /** ======= DID UPDATE FUNCTION ==== */
   backToMerchantHomeView(storeName) {
     /** UPDATE TASK ORDER */
-    this.props.merchantPostActivityProcess({
-      journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
-      activity: 'order'
+    this.props.merchantPostActivityProcessV2({
+      journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores
+        .id,
+      activityName: 'order'
     });
     NavigationService.navigate('MerchantHomeView', {
       storeName
@@ -1148,7 +1149,7 @@ class OmsCheckoutView extends Component {
           style={{ height: 20, width: 20, marginRight: 10 }}
         />
         <Text style={[Fonts.type8, { alignSelf: 'center' }]}>
-          {paymentMethod.paymentType.name} - {paymentMethod.PaymentChannel.name}{' '}
+          {paymentMethod.paymentType.name} - {paymentMethod.paymentChannel.name}{' '}
         </Text>
       </View>
     ) : (
@@ -1760,4 +1761,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(OmsCheckoutView);
  * updatedDate: 07072020
  * UpdatedFunction:
  * -> Refactoring Module Import
+ * updatedBy: dyah
+ * updatedDate: 26022021
+ * updatedFunction:
+ * -> Update the props of post activity.
  */

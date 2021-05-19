@@ -12,12 +12,16 @@ function getOTP(phoneNumber) {
 }
 
 function checkPhoneNumberAvailable(phoneNumber) {
+  let supplierId = GlobalMethod.userSupplierMapping()
+  if(supplierId.length > 0){
+    supplierId = supplierId[0]
+  }
   return ApiRest({
-    path: 'auth/check-phone-available',
+    path: 'auth/valid-phone', 
     method: 'POST',
     params: {
       mobilePhoneNo: phoneNumber,
-      supplierIds: GlobalMethod.userSupplierMapping()
+      supplierId
     }
   });
 }
