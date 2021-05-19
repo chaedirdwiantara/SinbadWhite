@@ -20,7 +20,7 @@ import {
   SearchBarType1,
   TagListType2,
   SkeletonType2,
-  SkeletonType24,
+  SkeletonType26,
   SkeletonType25
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
@@ -144,7 +144,7 @@ const SfaView = props => {
     );
   };
   const renderSkeletonList = () => {
-    return <SkeletonType24 />;
+    return <SkeletonType26 />;
   };
   /** === TAGS SECTION === */
   const renderTagsContent = () => {
