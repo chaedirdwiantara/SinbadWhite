@@ -87,7 +87,7 @@ function getLastPaymentChannel({ invoiceGroupIds }) {
     method: 'POST',
     params: {
       storeId: parseInt(GlobalMethod.merchantStoreId(), 10),
-      invoiceGroupIds
+      orderParcelIds: invoiceGroupIds
     }
   });
 }

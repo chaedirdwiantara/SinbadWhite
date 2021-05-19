@@ -149,6 +149,7 @@ class OmsCheckoutView extends Component {
         const invoiceGroupIds = this.props.oms.dataOmsGetCartItem.cartParcels.map(
           e => parseInt(e.invoiceGroupId, 10)
         );
+
         this.props.omsGetLastPaymentChannelProcess({ invoiceGroupIds });
         if (this.props.oms.loadingLastPaymentChannel) {
           this.setState({ disabled: true });
