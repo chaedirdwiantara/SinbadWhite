@@ -1,5 +1,6 @@
 import ApiRest from '../apiRest';
 import { GlobalMethod } from './GlobalMethod';
+
 /** GET CART ITEM */
 function getHistory(data) {
   return ApiRest({

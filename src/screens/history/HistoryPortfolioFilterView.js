@@ -33,7 +33,7 @@ class HistoryPortfolioFilterView extends Component {
    * =======================
    */
   componentDidMount() {
-    this.props.portfolioGetProcess(this.props.user.id);
+    this.props.portfolioGetProcessV2(this.props.user.id);
   }
 
   parentFunction() {
@@ -64,7 +64,7 @@ class HistoryPortfolioFilterView extends Component {
   }
   /** RENDER CONTENT PORTFOLIO */
   renderPortfolio() {
-    return this.props.merchant.dataGetPortfolio.map((item, index) => {
+    return this.props.merchant.dataGetPortfolioV2.map((item, index) => {
       return (
         <View key={index}>
           <TouchableOpacity onPress={() => this.addPortfolio(item)}>
@@ -112,7 +112,7 @@ class HistoryPortfolioFilterView extends Component {
           <Text style={Fonts.type61}>Portfolio</Text>
         </View>
         {!this.props.merchant.loadingGetPortfolio &&
-        this.props.merchant.dataGetPortfolio !== null
+        this.props.merchant.dataGetPortfolioV2 !== null
           ? this.renderPortfolio()
           : this.renderSkeleton()}
       </View>
@@ -167,15 +167,18 @@ export default connect(
 )(HistoryPortfolioFilterView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ * updatedBy: Dyah
+ * updatedDate: 08042021
+ * updatedFunction:
+ * -> Change dataGetPortfolio to dataGetPortfolioV2.
+ * -> Change portfolioGetProcess to portfolioGetProcessV2.
+ */

@@ -4,6 +4,7 @@ import {
   View,
   StyleSheet,
   Dimensions,
+  Text,
   TouchableOpacity
 } from '../../../library/reactPackage'
 import {
@@ -19,6 +20,7 @@ import {
   StatusBarWhite,
   SearchBarType3,
   ModalBottomType2,
+  ModalConfirmation,
   Address,
   ButtonSingle,
   LoadingPage,
@@ -35,6 +37,8 @@ class MerchantCheckinView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      checked: false,
+      modalOutStore: false,
       latitude: this.props.merchant.selectedMerchant.latitude,
       longitude: this.props.merchant.selectedMerchant.longitude,
       latitudeDelta: 0.02,
@@ -82,6 +86,25 @@ class MerchantCheckinView extends Component {
   getCurrentLocation() {
     this.setState({ reRender: true });
     Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
+  }
+  /** === CHECK IN/OUT STORE === */
+  checkInOutStore() {
+    if (this.state.checked) {
+      return this.postActivityCheckIn(true);
+    }
+    return this.setState({ modalOutStore: true });
+  }
+  /** === POST ACTIVITY CHECKIN === */
+  postActivityCheckIn(inStore) {
+    this.props.merchantPostActivityProcessV2({
+      journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores
+        .id,
+      activityName: 'check_in',
+      inStore,
+      longitude: this.state.longitude,
+      latitude: this.state.latitude
+    });
+    return this.setState({ modalOutStore: false });
   }
   /**
    * ========================
@@ -208,8 +231,6 @@ class MerchantCheckinView extends Component {
    * ====================
    */
   renderModalBottom() {
-    const journeyBookStoresId = this.props.merchant.selectedMerchant
-      .journeyBookStores.id;
     const store = this.props.merchant.selectedMerchant;
     return (
       <ModalBottomType2
@@ -229,21 +250,34 @@ class MerchantCheckinView extends Component {
                 urban={store.urban}
               />
             </View>
+            <View style={styles.spaceBeforeCheckBox} />
+            <View style={styles.checkInOutStore}>
+              <Text style={Fonts.type23}>Saya Berada di Toko</Text>
+              <TouchableOpacity
+                onPress={() => this.setState({ checked: !this.state.checked })}
+              >
+                {this.state.checked ? (
+                  <MaterialIcon
+                    name="check-circle"
+                    color={Color.mainColor}
+                    size={24}
+                  />
+                ) : (
+                  <MaterialIcon
+                    name="radio-button-unchecked"
+                    color={Color.fontBlack40}
+                    size={24}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
             <View>
               <ButtonSingle
                 disabled={this.props.merchant.loadingPostActivity}
                 title={'Masuk Toko'}
                 loading={this.props.merchant.loadingPostActivity}
                 borderRadius={4}
-                onPress={() =>
-                  this.props.merchantPostActivityProcessV2({
-                    journeyBookStoreId: this.props.merchant.selectedMerchant
-                      .journeyBookStores.id,
-                    activityName: 'check_in',
-                    longitude: this.state.longitude,
-                    latitude: this.state.latitude
-                  })
-                }
+                onPress={() => this.checkInOutStore()}
               />
             </View>
           </View>
@@ -268,6 +302,23 @@ class MerchantCheckinView extends Component {
     );
   }
 
+  /** CHECK OUT STORE */
+  renderModalOutStore() {
+    return (
+      <ModalConfirmation
+        statusBarWhite
+        title={'Anda sedang tidak berada di toko'}
+        open={this.state.modalOutStore}
+        content={'Apakah anda yakin saat ini sedang tidak berada di toko ?'}
+        type={'okeNotRed'}
+        okText={'Tidak di Toko'}
+        cancelText={'Saya di Toko'}
+        ok={() => this.postActivityCheckIn(false)}
+        cancel={() => this.setState({ modalOutStore: false })}
+      />
+    );
+  }
+
   /** RENDER CONTENT */
   renderContent() {
     return (
@@ -276,6 +327,7 @@ class MerchantCheckinView extends Component {
         {this.renderHeaderRight()}
         {this.renderMaps()}
         {this.renderModalBottom()}
+        {this.renderModalOutStore()}
       </View>
     );
   }
@@ -330,6 +382,21 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     bottom: 0
+  },
+  spaceBeforeCheckBox: {
+    borderTopColor: Color.fontBlack10,
+    borderTopWidth: 1,
+    marginLeft: 16
+  },
+  checkInOutStore: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomColor: Color.fontBlack10,
+    borderBottomWidth: 1
   }
 });
 
@@ -369,4 +436,11 @@ export default connect(
  * updatedDate: 26022021
  * updatedFunction:
  *  -> Update the props of post activity.
+ * updatedBy: dyah
+ * updatedDate: 06052021
+ * updatedFunction:
+ *  -> Add new modal when checking in.
+ * updatedDate: 10052021
+ * updatedFunction:
+ *  -> Integrate in/out store when checking in.
  */

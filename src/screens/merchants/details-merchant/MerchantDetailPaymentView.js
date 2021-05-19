@@ -53,7 +53,7 @@ class MerchantDetailProfileView extends Component {
   }
   /** === RENDER PAYMENT LIST === */
   renderPaymentList() {
-    return this.props.merchant.dataGetMerchantDetail.store.creditLimitStores.map(
+    return this.props.merchant.dataGetMerchantDetailV2.store.creditLimitStores.map(
       (item, index) => {
         return (
           <View
@@ -100,7 +100,7 @@ class MerchantDetailProfileView extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        {this.props.merchant.dataGetMerchantDetail.store.creditLimitStores
+        {this.props.merchant.dataGetMerchantDetailV2.store.creditLimitStores
           .length > 0
           ? this.renderContent()
           : this.renderEmpty()}
