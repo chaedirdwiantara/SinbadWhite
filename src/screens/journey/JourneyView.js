@@ -75,13 +75,7 @@ class JourneyView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    this.props.journeyPlanGetResetV2();
-    this.props.journeyPlanGetProcessV2({
-      page: 1,
-      date: today,
-      search: this.state.search,
-      loading: true
-    });
+    this.getJourneyPlan();
     this.props.getJourneyPlanReportProcessV2();
     this.props.portfolioGetProcessV2();
   }
@@ -92,13 +86,7 @@ class JourneyView extends Component {
       this.props.journey.dataSaveMerchantToJourneyPlanV2
     ) {
       if (this.props.journey.dataSaveMerchantToJourneyPlanV2 !== null) {
-        this.props.journeyPlanGetResetV2();
-        this.props.journeyPlanGetProcessV2({
-          page: 1,
-          date: today,
-          search: this.state.search,
-          loading: true
-        });
+        this.getJourneyPlan();
         this.props.getJourneyPlanReportProcessV2();
         this.setState({ openModalMerchantList: false });
       }
@@ -118,6 +106,22 @@ class JourneyView extends Component {
         }, 3000);
       }
     }
+  }
+  /** === FROM CHILD FUNCTION === */
+  parentFunction(data) {
+    if (data.type === 'search') {
+      this.setState({ search: data.data }, () => this.getJourneyPlan());
+    }
+  }
+  /** === GET JOURNEY PLAN === */
+  getJourneyPlan() {
+    this.props.journeyPlanGetResetV2();
+    this.props.journeyPlanGetProcessV2({
+      page: 1,
+      date: today,
+      search: this.state.search,
+      loading: true
+    });
   }
   /** === ADD MERCHANT TO JOURNEY === */
   addMerchant() {
@@ -155,7 +159,13 @@ class JourneyView extends Component {
    */
   /** === EMPTY JOURNEY === */
   renderJourneyListData() {
-    return <JourneyListDataView />;
+    return (
+      <JourneyListDataView
+        searchText={this.state.search}
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+      />
+    );
   }
   /** === RENDER HEADER === */
   renderHeader() {
@@ -358,4 +368,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyView);
  * updatedDate: 12032021
  * updatedFunction:
  * -> Add parameter search when get journey plan.
+ * updatedBy: dyah
+ * updatedDate: 04052021
+ * updatedFunction:
+ * -> Add search journey plan.
  */

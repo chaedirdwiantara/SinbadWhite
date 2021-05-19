@@ -160,7 +160,7 @@ const MerchantNavigator = {
   MerchantDetailProfileView: {
     screen: MerchantDetailProfileView,
     navigationOptions: {
-      headerTitle: 'Information Profil',
+      headerTitle: 'Informasi Profil',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
@@ -196,7 +196,7 @@ const MerchantNavigator = {
   MerchantDetailInformationView: {
     screen: MerchantDetailInformationView,
     navigationOptions: {
-      headerTitle: 'Information Toko',
+      headerTitle: 'Informasi Toko',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {

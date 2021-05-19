@@ -1,205 +1,137 @@
 import {
-  React,
-  Component,
-  View,
-  StyleSheet,
-  FlatList
-} from '../../library/reactPackage';
-import { SkeletonPlaceholder } from '../../library/thirdPartyPackage';
-import { Color } from '../../config';
-import { GlobalStyle } from '../../helpers';
-
-/**
- * =============================
- * NOTE
- * =============================
- * this skeleton for "History"
- */
-
-class SkeletonType24 extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [1, 2, 3, 4, 5, 6, 7]
-    };
-  }
-
-  renderSeparator() {
-    return <View style={GlobalStyle.boxPadding} />;
-  }
-  /** === RENDER ITEM SKELETON === */
-  renderItem({ item, index }) {
-    return (
-      <View key={index}>
-        <View style={styles.boxContent}>
-          <View>
+    React,
+    Component,
+    View,
+    StyleSheet,
+    FlatList,
+    Dimensions
+  } from '../../library/reactPackage'
+  import {
+    SkeletonPlaceholder
+  } from '../../library/thirdPartyPackage'
+  import { GlobalStyle } from '../../helpers'
+  import masterColor from '../../config/masterColor';
+  
+  const { height } = Dimensions.get('window');
+  
+  /**
+   * =============================
+   * NOTE
+   * =============================
+   * this skeleton for "JOURNEY PLAN"
+   */
+  
+  class SkeletonType24 extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        data: [1, 2]
+      };
+    }
+    /** === RENDER ITEM SKELETON === */
+    renderItem({ item, index }) {
+      return (
+        <View key={index} style={styles.boxItem}>
+          {/* <View style={styles.boxIcon}>
             <SkeletonPlaceholder>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between'
-                }}
-              >
+              <View style={styles.circle} />
+            </SkeletonPlaceholder>
+          </View> */}
+  
+          <View
+            style={{
+              paddingHorizontal: 10,
+              flex: 1
+            }}
+          >
+            <SkeletonPlaceholder>
+              <View style={{ flex: 1 }}>
                 <View
                   style={{
-                    height: 10,
-                    width: '30%',
-                    borderRadius: 10
-                  }}
-                />
-                <View
-                  style={{
-                    height: 10,
-                    width: '35%',
+                    width: '50%',
+                    height: 12,
                     borderRadius: 10
                   }}
                 />
               </View>
-              <View
-                style={{
-                  alignItems: 'flex-end',
-                  marginTop: 5
-                }}
-              >
+              <View style={{ flex: 1 }}>
                 <View
                   style={{
+                    width: '90%',
                     height: 10,
-                    width: '30%',
-                    borderRadius: 10
+                    borderRadius: 10,
+                    marginTop: 8
+                  }}
+                />
+                <View
+                  style={{
+                    width: '90%',
+                    height: 10,
+                    borderRadius: 10,
+                    marginTop: 8
                   }}
                 />
               </View>
             </SkeletonPlaceholder>
           </View>
-          <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
-          <SkeletonPlaceholder>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between'
-              }}
-            >
-              <View
-                style={{
-                  height: 10,
-                  width: '35%',
-                  borderRadius: 10
-                }}
-              />
-              <View
-                style={{
-                  height: 10,
-                  width: '25%',
-                  borderRadius: 10
-                }}
-              />
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginTop: 5
-              }}
-            >
-              <View
-                style={{
-                  height: 10,
-                  width: '30%',
-                  borderRadius: 10
-                }}
-              />
-              <View
-                style={{
-                  height: 10,
-                  width: '35%',
-                  borderRadius: 10
-                }}
-              />
-            </View>
-          </SkeletonPlaceholder>
-          <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
-          <SkeletonPlaceholder>
-            <View
-              style={{
-                flexDirection: 'row'
-              }}
-            >
-              <View
-                style={{
-                  flex: 1
-                }}
-              >
-                <View
-                  style={{
-                    height: 10,
-                    width: '30%',
-                    borderRadius: 10,
-                    marginBottom: 8
-                  }}
-                />
-                <View
-                  style={{
-                    height: 10,
-                    width: '30%',
-                    borderRadius: 10
-                  }}
-                />
-              </View>
-              <View style={{flex: 1, alignItems:'flex-end'}}>
-              <View
-                  style={{
-                    height: 36,
-                    width: '30%',
-                    borderRadius: 10
-                  }}
-                />
-              </View>
-            </View>
-          </SkeletonPlaceholder>
         </View>
-      </View>
-    );
-  }
-  /** === RENDER SKELETON === */
-  renderSkeleton() {
-    return (
-      <View>
-        <FlatList
-          contentContainerStyle={styles.flatListContainer}
-          data={this.state.data}
-          scrollEnabled={false}
-          renderItem={this.renderItem.bind(this)}
-          keyExtractor={(item, index) => index.toString()}
-          ItemSeparatorComponent={this.renderSeparator}
+      );
+    }
+    /** === RENDER SEPARATOR === */
+    renderSeparator() {
+      return (
+        <View
+          style={[GlobalStyle.lines, { marginLeft: 16, marginVertical: 10 }]}
         />
-      </View>
-    );
+      );
+    }
+    /** === RENDER SKELETON === */
+    renderSkeleton() {
+      return (
+        <View>
+          <FlatList
+            contentContainerStyle={styles.flatListContainer}
+            showsVerticalScrollIndicator={false}
+            data={this.state.data}
+            scrollEnabled={false}
+            renderItem={this.renderItem.bind(this)}
+            keyExtractor={(item, index) => index.toString()}
+            ItemSeparatorComponent={this.renderSeparator}
+          />
+        </View>
+      );
+    }
+    /** === MAIN === */
+    render() {
+      return <View style={styles.mainContainer}>{this.renderSkeleton()}</View>;
+    }
   }
-  /** === MAIN === */
-  render() {
-    return <View style={styles.mainContainer}>{this.renderSkeleton()}</View>;
-  }
-}
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    height: '100%',
-    backgroundColor: Color.backgroundWhite
-  },
-  flatListContainer: {
-    paddingBottom: 16
-  },
-  boxContent: {
-    flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    height: 190,
-    justifyContent:'center',
-    borderWidth: 1,
-    borderColor: Color.fontBlack10,
-    borderRadius: 8,
-    marginHorizontal: 16
-  }
-});
-
-export default SkeletonType24;
+  
+  const styles = StyleSheet.create({
+    mainContainer: {
+      height: '100%',
+      backgroundColor: masterColor.backgroundWhite
+    },
+    flatListContainer: {
+      paddingBottom: 16
+    },
+    boxItem: {
+      flexDirection: 'row',
+      paddingHorizontal: 16,
+      paddingVertical: 10
+    },
+    boxIcon: {
+      width: 24,
+      marginLeft: 5,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    circle: {
+      width: 24,
+      height: 24,
+      borderRadius: 24
+    }
+  });
+  
+  export default SkeletonType24;
+  

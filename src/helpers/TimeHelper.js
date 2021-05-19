@@ -15,6 +15,9 @@ export const localTimeNow = (units = '') => moment().format(units);
 export const timeDiff = (startTime, endTime, units = 'seconds') =>
   (startTime.getTime() - endTime.getTime()) / unitDivision(units);
 
+export const toUtcTime = (localTime, format = '') =>
+  moment.utc(localTime).format(format);
+
 const unitDivision = units => {
   switch (units) {
     case 'seconds':
@@ -43,7 +46,10 @@ export const getStartDateNow = () => changeStartDateFormat(moment());
 /*
  * TODO: DO NOT USE THIS FUNCTION
  */
-export const getStartDateMinHour = () => moment().startOf('day').format();
+export const getStartDateMinHour = () =>
+  moment()
+    .startOf('day')
+    .format();
 export const getDateNow = () => moment().format();
 export const getMonthNow = () => moment().month();
 export const getYearNow = () => moment().year();
@@ -62,5 +68,9 @@ export const getEndDateMonth = () =>
  * updatedDate: 18082020
  * updatedFunction:
  * -> update time helper for kpi dashboard (changeStartDateFormat & changeEndDateFormat).
+ * updatedBy: Ayu
+ * updatedDate: 22032021
+ * updatedFunction:
+ * -> update time helper add toUtcTime function
  *
  */

@@ -8,7 +8,9 @@ import {
   Dimensions,
   ScrollView,
   Image,
-  Text
+  Text,
+  PermissionsAndroid,
+  ToastAndroid
 } from '../../library/reactPackage';
 import {
   connect,
@@ -44,7 +46,7 @@ class MerchantDetailView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    this.props.merchantGetDetailProcess(this.props.navigation.state.params.id);
+    this.props.merchantGetDetailProcessV2(this.props.navigation.state.params.id);
   }
   /** === COMBINE ADDRESS === */
   combineAddress(item) {
@@ -90,16 +92,30 @@ class MerchantDetailView extends Component {
     return hierarchy;
   }
 
-  toMapDetail() {
-    NavigationService.navigate('MerchantDetailMapView', {
-      latitude: this.props.merchant.dataGetMerchantDetail.latitude,
-      longitude: this.props.merchant.dataGetMerchantDetail.longitude,
-      name: this.props.merchant.dataGetMerchantDetail.name,
-      storeCode: this.props.merchant.dataGetMerchantDetail.storeCode,
-      externalId: this.props.merchant.dataGetMerchantDetail.externalId,
-      address: this.props.merchant.dataGetMerchantDetail.address,
-      urban: this.props.merchant.dataGetMerchantDetail.urban
-    });
+  async toMapDetail() {
+    const {
+      latitude, longitude, name,
+      storeCode, externalId, address, urban
+    } = this.props.merchant.dataGetMerchantDetailV2
+    const params = {
+      latitude, longitude, name,
+      storeCode,externalId,address,urban  
+    }
+    try {
+      let granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+      if(!granted) {
+        let permissionResult = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+        if (permissionResult === PermissionsAndroid.RESULTS.GRANTED){
+          NavigationService.navigate('MerchantDetailMapView', params);
+        } else {
+          ToastAndroid.show('Anda harus mengizinkan aplikasi untuk mengakses lokasi', ToastAndroid.SHORT)
+        }
+      } else {
+        NavigationService.navigate('MerchantDetailMapView', params);
+      }
+    } catch (error) {
+      ToastAndroid.show(error?.message || '', ToastAndroid.SHORT)
+    }
   }
   /** GO TO PAGE */
   goTo(page) {
@@ -121,7 +137,7 @@ class MerchantDetailView extends Component {
         break;
       case 'merchantOrderHistory':
         NavigationService.navigate('HistoryView', {
-          storeId: this.props.merchant.dataGetMerchantDetail.storeId
+          storeId: this.props.merchant.dataGetMerchantDetailV2.storeId
         });
         break;
       default:
@@ -140,7 +156,7 @@ class MerchantDetailView extends Component {
   }
   /** === CHECK REJECTION === */
   checkRejection(field) {
-    const data = this.props.merchant.dataMerchantRejected;
+    const data = this.props.merchant.dataMerchantRejectedV2;
     switch (field) {
       case 'merchantInformation':
         return data.name || data.imageUrl || data.phoneNo;
@@ -155,12 +171,12 @@ class MerchantDetailView extends Component {
    */
   /** === RENDER VERIFIED ICON === */
   renderVerifiedIcon() {
-    return this.props.merchant.dataGetMerchantDetail.approvalStatus ===
+    return this.props.merchant.dataGetMerchantDetailV2.approvalStatus ===
       'rejected' ||
-      this.props.merchant.dataGetMerchantDetail.approvalStatus ===
+      this.props.merchant.dataGetMerchantDetailV2.approvalStatus ===
         'verified' ? (
       <View style={{ paddingRight: 8 }}>
-        {this.props.merchant.dataGetMerchantDetail.approvalStatus ===
+        {this.props.merchant.dataGetMerchantDetailV2.approvalStatus ===
         'rejected' ? (
           <MaterialIcon name="cancel" color={Color.mainColor} size={24} />
         ) : (
@@ -196,6 +212,7 @@ class MerchantDetailView extends Component {
   }
   /** === HEADER MERCHANT === */
   renderHeaderMerchant() {
+    const {dataGetMerchantDetailV2} = this.props.merchant
     return (
       <View
         style={[
@@ -214,11 +231,9 @@ class MerchantDetailView extends Component {
               style={styles.mapImage}
             />
           </TouchableOpacity>
-          {this.props.merchant.dataGetMerchantDetail.imageUrl ? (
+          {dataGetMerchantDetailV2.imageUrl ? (
             <Image
-              source={{
-                uri: this.props.merchant.dataGetMerchantDetail.imageUrl
-              }}
+              source={{uri: dataGetMerchantDetailV2.imageUrl}}
               style={{ width: '100%', height: 169 }}
             />
           ) : (
@@ -247,21 +262,17 @@ class MerchantDetailView extends Component {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {this.renderVerifiedIcon()}
             <Text style={Fonts.type7}>
-              {this.props.merchant.dataGetMerchantDetail.externalId
-                ? this.props.merchant.dataGetMerchantDetail.externalId
-                : this.props.merchant.dataGetMerchantDetail.storeCode
-                ? this.props.merchant.dataGetMerchantDetail.storeCode
-                : '-'}
+              {dataGetMerchantDetailV2.externalId || dataGetMerchantDetailV2.storeCode || "-"}
             </Text>
           </View>
 
           <Text style={Fonts.type7}>
-            {this.props.merchant.dataGetMerchantDetail.name}
+            {dataGetMerchantDetailV2.name}
           </Text>
           <Text
             style={[Fonts.type8, { marginTop: 5, textTransform: 'capitalize' }]}
           >
-            {this.combineAddress(this.props.merchant.dataGetMerchantDetail)}
+            {this.combineAddress(dataGetMerchantDetailV2)}
           </Text>
           <TouchableOpacity
             style={{ marginTop: 8 }}
@@ -293,8 +304,8 @@ class MerchantDetailView extends Component {
           <Text style={Fonts.type42}>Kelengkapan Profil</Text>
         </View>
         <ProgressBarType1
-          totalStep={this.props.merchant.dataGetMerchantDetail.progress.total}
-          currentStep={this.props.merchant.dataGetMerchantDetail.progress.done}
+          totalStep={this.props.merchant.dataGetMerchantDetailV2.progress.total}
+          currentStep={this.props.merchant.dataGetMerchantDetailV2.progress.done}
         />
       </View>
     );
@@ -316,8 +327,8 @@ class MerchantDetailView extends Component {
         <View style={styles.boxContentHeader}>
           <Text style={Fonts.type42}>Data Pemilik</Text>
           <Text style={Fonts.type59}>
-            {this.props.merchant.dataGetMerchantDetail.progress.ownerData.done}/
-            {this.props.merchant.dataGetMerchantDetail.progress.ownerData.total}{' '}
+            {this.props.merchant.dataGetMerchantDetailV2.progress.ownerData.done}/
+            {this.props.merchant.dataGetMerchantDetailV2.progress.ownerData.total}{' '}
             Selesai
           </Text>
         </View>
@@ -336,8 +347,8 @@ class MerchantDetailView extends Component {
         <View style={styles.boxContentHeader}>
           <Text style={Fonts.type42}>Data Toko</Text>
           <Text style={Fonts.type59}>
-            {this.props.merchant.dataGetMerchantDetail.progress.storeData.done}/
-            {this.props.merchant.dataGetMerchantDetail.progress.storeData.total}{' '}
+            {this.props.merchant.dataGetMerchantDetailV2.progress.storeData.done}/
+            {this.props.merchant.dataGetMerchantDetailV2.progress.storeData.total}{' '}
             Selesai
           </Text>
         </View>
@@ -409,7 +420,7 @@ class MerchantDetailView extends Component {
       <View>
         <CallMerchant
           phoneNumber={
-            this.props.merchant.dataGetMerchantDetail.owner.mobilePhoneNo
+            this.props.merchant.dataGetMerchantDetailV2.owner.mobilePhoneNo
           }
           open={this.state.openModalCallMerchant}
           close={() => this.setState({ openModalCallMerchant: false })}
@@ -427,7 +438,7 @@ class MerchantDetailView extends Component {
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarWhite />
         {!this.props.merchant.loadingGetMerchantDetail &&
-        this.props.merchant.dataGetMerchantDetail !== null ? (
+        this.props.merchant.dataGetMerchantDetailV2 !== null ? (
           this.renderData()
         ) : (
           <LoadingPage />

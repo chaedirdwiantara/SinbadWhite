@@ -2,21 +2,10 @@
  * MERCHANT
  * ========================
  */
-/** PORTFOLIO */
-export const PORTFOLIO_GET_PROCESS = 'PortfolioGetProcess';
-export const PORTFOLIO_GET_SUCCESS = 'PortfolioGetSuccess';
-export const PORTFOLIO_GET_FAILED = 'PortfolioGetFailed';
 /** PORTFOLIO BY USER ID V2*/
 export const PORTFOLIO_GET_PROCESS_V2 = 'PortfolioGetProcessV2';
 export const PORTFOLIO_GET_SUCCESS_V2 = 'PortfolioGetSuccessV2';
 export const PORTFOLIO_GET_FAILED_V2 = 'PortfolioGetFailedV2';
-/** FOR GET MERCHANT LIST */
-export const MERCHANT_GET_PROCESS = 'MerchantGetProcess';
-export const MERCHANT_GET_SUCCESS = 'MerchantGetSuccess';
-export const MERCHANT_GET_FAILED = 'MerchantGetFailed';
-export const MERCHANT_GET_RESET = 'MerchantGetReset';
-export const MERCHANT_GET_REFRESH = 'MerchantGetRefresh';
-export const MERCHANT_GET_LOADMORE = 'MerchantGetLoadMore';
 /** FOR GET MERCHANT LIST BY PORTFOLIO V2*/
 export const MERCHANT_GET_PROCESS_V2 = 'MerchantGetProcessV2';
 export const MERCHANT_GET_SUCCESS_V2 = 'MerchantGetSuccessV2';
@@ -31,10 +20,6 @@ export const MERCHANT_EXISTING_GET_FAILED = 'MerchantExistingGetFailed';
 export const MERCHANT_EXISTING_GET_RESET = 'MerchantExistingGetReset';
 export const MERCHANT_EXISTING_GET_REFRESH = 'MerchantExistingGetRefresh';
 export const MERCHANT_EXISTING_GET_LOADMORE = 'MerchantExistingGetLoadMore';
-/** FOR GET MERCHANT DETAIL */
-export const MERCHANT_GET_DETAIL_PROCESS = 'MerchantGetDetailProcess';
-export const MERCHANT_GET_DETAIL_SUCCESS = 'MerchantGetDetailSuccess';
-export const MERCHANT_GET_DETAIL_FAILED = 'MerchantGetDetailFailed';
 /** FOR GET MERCHANT DETAIL V2*/
 export const MERCHANT_GET_DETAIL_PROCESS_V2 = 'MerchantGetDetailProcessV2';
 export const MERCHANT_GET_DETAIL_SUCCESS_V2 = 'MerchantGetDetailSuccessV2';
@@ -65,21 +50,10 @@ export const MERCHANT_RESET_DATA_VOLATILE = 'MerchantResetDataVolatile'
 export const MERCHANT_GET_LAST_ORDER_PROCESS = 'MerchantGetLastOrderProcess';
 export const MERCHANT_GET_LAST_ORDER_SUCCESS = 'MerchantGetLastOrderSuccess';
 export const MERCHANT_GET_LAST_ORDER_FAILED = 'MerchantGetLastOrderFailed';
-/** FOR CHECKIN MERCHANT */
-export const MERCHANT_POST_ACTIVITY_PROCESS = 'MerchantPostActivityProcess';
-export const MERCHANT_POST_ACTIVITY_SUCCESS = 'MerchantPostActivitySuccess';
-export const MERCHANT_POST_ACTIVITY_FAILED = 'MerchantPostActivityFailed';
 /** FOR POST MERCHANT ACTIVITY V2 */
 export const MERCHANT_POST_ACTIVITY_PROCESS_V2 = 'MerchantPostActivityProcessV2';
 export const MERCHANT_POST_ACTIVITY_SUCCESS_V2 = 'MerchantPostActivitySuccessV2';
 export const MERCHANT_POST_ACTIVITY_FAILED_V2 = 'MerchantPostActivityFailedV2';
-/** FOR CHECKOUT MERCHANT */
-export const MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS =
-  'MerchantGetLogAllActivityProcess';
-export const MERCHANT_GET_LOG_ALL_ACTIVITY_SUCCESS =
-  'MerchantGetLogAllActivitySuccess';
-export const MERCHANT_GET_LOG_ALL_ACTIVITY_FAILED =
-  'MerchantGetLogAllActivityFailed';
 /** FOR GET LOG ALL ACTIVITY MERCHANT V2 */
 export const MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS_V2 =
   'MerchantGetLogAllActivityProcessV2';
@@ -87,13 +61,6 @@ export const MERCHANT_GET_LOG_ALL_ACTIVITY_SUCCESS_V2 =
   'MerchantGetLogAllActivitySuccessV2';
 export const MERCHANT_GET_LOG_ALL_ACTIVITY_FAILED_V2 =
   'MerchantGetLogAllActivityFailedV2';
-/** FOR GET LOG MERCHANT */
-export const MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS =
-  'MerchantGetLogPerActivityProcess';
-export const MERCHANT_GET_LOG_PER_ACTIVITY_SUCCESS =
-  'MerchantGetLogPerActivitySuccess';
-export const MERCHANT_GET_LOG_PER_ACTIVITY_FAILED =
-  'MerchantGetLogPerActivityFailed';
 /** FOR GET LOG PER ACTIVITY MERCHANT V2 */
 export const MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS_V2 =
   'MerchantGetLogPerActivityProcessV2';
@@ -101,6 +68,13 @@ export const MERCHANT_GET_LOG_PER_ACTIVITY_SUCCESS_V2 =
   'MerchantGetLogPerActivitySuccessV2';
 export const MERCHANT_GET_LOG_PER_ACTIVITY_FAILED_V2 =
   'MerchantGetLogPerActivityFailedV2';
+/** FOR GET LATEST CHECK IN AND CHECK OUT */
+export const MERCHANT_GET_LATEST_CHECK_IN_OUT_PROCESS = 
+  'MerchantGetLatestCheckInOutProcess';
+export const MERCHANT_GET_LATEST_CHECK_IN_OUT_SUCCESS =
+  'MerchantGetLatestCheckInOutSuccess';
+export const MERCHANT_GET_LATEST_CHECK_IN_OUT_FAILED =
+  'MerchantGetLatestCheckInOutFailed';
 /** SELECTED MERCHANT === */
 export const MERCHANT_SELECTED = 'MerchantSelected';
 /** MAPS MERCHANT */

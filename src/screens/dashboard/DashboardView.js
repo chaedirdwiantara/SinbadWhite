@@ -136,7 +136,7 @@ class DashboardView extends Component {
         {
           graphContentType: TOKO_DIKUNJUNGI,
           uri: '',
-          title: 'T. Dikunjingi'
+          title: 'T. Dikunjungi'
         },
         {
           graphContentType: TOKO_BARU,
@@ -804,5 +804,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(DashboardView);
  * updatedDate: 06072020
  * updatedFunction:
  * -> Refactoring Module Import
+ * updatedBy: Dyah
+ * updatedDate: 19042021
+ * updatedFunction:
+ * -> Fix dashboard title (T. Dikunjungi)
  *
  */

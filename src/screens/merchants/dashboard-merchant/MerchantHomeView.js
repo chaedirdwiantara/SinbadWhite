@@ -35,6 +35,7 @@ import NavigationService from '../../../navigation/NavigationService';
 import ModalBottomMerchantCheckout from './ModalBottomMerchantCheckout';
 import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
 import MerchantVerifyUser from './MerchantVerifyUser';
+import ModalBeforeCheckIn from './ModalBeforeCheckIn';
 import ModalBottomProgressChecking from '../../global/ModalBottomProgressChecking';
 import {
   ACTIVITY_JOURNEY_PLAN_CHECK_IN,
@@ -57,6 +58,7 @@ class MerchantHomeView extends Component {
       openModalErrorGlobal: false,
       openModalCheckUser: false,
       openModalProgressChecking: false,
+      openModalBeforeCheckIn: false,
       checkNoOrder: false,
       showToast: false,
       loadingPostForCheckoutNoOrder: false,
@@ -93,8 +95,8 @@ class MerchantHomeView extends Component {
        */
       task: [
         {
-          name: 'Check-in Toko',
-          title: 'Check-in',
+          name: 'Masuk Toko',
+          title: 'Masuk',
           goTo: 'checkIn',
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
         },
@@ -111,8 +113,8 @@ class MerchantHomeView extends Component {
         //   activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
         // },
         {
-          name: 'Check-out Toko',
-          title: 'Check-out',
+          name: 'Keluar Toko',
+          title: 'Keluar',
           goTo: 'checkOut',
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
         }
@@ -144,6 +146,8 @@ class MerchantHomeView extends Component {
   };
 
   componentDidMount() {
+    /** FOR GET LATEST CHECK IN AND CHECK OUT */
+    this.props.merchantGetLatestCheckInOutProcess();
     /** FOR GET MERCHANT LIST RESET */
     this.props.merchantGetSurveyListReset();
     /** FOR GET LAST ORDER */
@@ -165,6 +169,7 @@ class MerchantHomeView extends Component {
     const {
       surveyList,
       loadingGetSurveyList,
+      errorGetSurveyList,
       loadingGetLogAllActivity,
       dataGetLogAllActivityV2
     } = this.props.merchant;
@@ -184,8 +189,8 @@ class MerchantHomeView extends Component {
             this.setState({
               task: [
                 {
-                  name: 'Check-in Toko',
-                  title: 'Check-in',
+                  name: 'Masuk Toko',
+                  title: 'Masuk',
                   goTo: 'checkIn',
                   activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
                 },
@@ -202,8 +207,8 @@ class MerchantHomeView extends Component {
                   activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
                 },
                 {
-                  name: 'Check-out Toko',
-                  title: 'Check-out',
+                  name: 'Keluar Toko',
+                  title: 'Keluar',
                   goTo: 'checkOut',
                   activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
                 }
@@ -279,8 +284,8 @@ class MerchantHomeView extends Component {
             this.setState({
               task: [
                 {
-                  name: 'Check-in Toko',
-                  title: 'Check-in',
+                  name: 'Masuk Toko',
+                  title: 'Masuk',
                   goTo: 'checkIn',
                   activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
                 },
@@ -303,8 +308,8 @@ class MerchantHomeView extends Component {
                   activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
                 },
                 {
-                  name: 'Check-out Toko',
-                  title: 'Check-out',
+                  name: 'Keluar Toko',
+                  title: 'Keluar',
                   goTo: 'checkOut',
                   activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
                 }
@@ -351,7 +356,7 @@ class MerchantHomeView extends Component {
       }
     }
       /** FOR GET SURVEY LIST */
-      if (!loadingGetSurveyList && !surveyList.payload.data) {
+      if (!loadingGetSurveyList && !surveyList.payload.data && !errorGetSurveyList) {
         this.getSurvey();
       }
     }
@@ -363,7 +368,8 @@ class MerchantHomeView extends Component {
         /** IF SURVEY DONE SUCCESS */
         if (
           this.props.merchant.dataPostActivityV2.activity ===
-          ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+            ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY &&
+          !_.isEmpty(surveyList.payload.data)
         ) {
           /** FOR GET LOG ALL ACTIVITY */
           this.refreshMerchantGetLogAllActivityProcess();
@@ -525,6 +531,9 @@ class MerchantHomeView extends Component {
         });
         break;
       case 'checkIn':
+        if (this.props.merchant.dataGetLatestCheckInOut) {
+          return this.setState({ openModalBeforeCheckIn: true })
+        }
         NavigationService.navigate('MerchantCheckinView');
         break;
       case 'checkOut':
@@ -668,11 +677,59 @@ class MerchantHomeView extends Component {
     }
     return total;
   }
+  /** CHECK CHECK-IN */
+  checkCheckIn() {
+    const { journeyBookStores } = this.props.merchant.selectedMerchant;
+    if (
+      journeyBookStores.latitudeCheckIn === 0 &&
+      journeyBookStores.longitudeCheckIn === 0
+    ) {
+      return false;
+    }
+    return true;
+  }
   /**
    * ========================
    * RENDER VIEW
    * =======================
    */
+  /** === RENDER BUTTON BEFORE CHECK-IN === */
+  rendercheckCheckIn(item) {
+    if (this.checkCheckIn() || item.title === 'Masuk') {
+      return (
+        <Button
+          onPress={() => {
+            this.goTo(item.goTo);
+          }}
+          title={item.title}
+          titleStyle={[
+            Fonts.type16,
+            {
+              color: Color.fontWhite
+            }
+          ]}
+          buttonStyle={{
+            backgroundColor: Color.fontRed50,
+            borderRadius: 7,
+            paddingHorizontal: 20,
+            paddingVertical: 5,
+            width: '100%'
+          }}
+        />
+      );
+    }
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Text style={Fonts.type34}>Belum Masuk</Text>
+      </View>
+    );
+  }
 
   renderListProductImage(item) {
     return item.orderBrands.map((itemBrand, indexBrand) => {
@@ -727,7 +784,7 @@ class MerchantHomeView extends Component {
               paddingBottom: 8
             }}
           >
-            <Text style={Fonts.type42}>Last Order</Text>
+            <Text style={Fonts.type42}>Pesanan Terakhir</Text>
             <TouchableOpacity
               onPress={() => {
                 this.goTo('history');
@@ -739,7 +796,7 @@ class MerchantHomeView extends Component {
                 marginTop: -5
               }}
             >
-              <Text style={Fonts.type100}>See Order History</Text>
+              <Text style={Fonts.type100}>Lihat Riwayat</Text>
               <MaterialIcon
                 style={{
                   marginTop: 2,
@@ -943,16 +1000,24 @@ class MerchantHomeView extends Component {
                     taskList.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_IN ||
                     taskList.activityName ===
                       ACTIVITY_JOURNEY_PLAN_CHECK_OUT ? (
-                      <Text style={Fonts.type107}>
-                        {taskList.activityName ===
-                        ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                          ? `Check In ${moment(taskList.createdAt).format(
-                              'HH:mm'
-                            )}`
-                          : `Check Out ${moment(taskList.createdAt).format(
-                              'HH:mm'
-                            )}`}
-                      </Text>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <Text style={Fonts.type107}>
+                          {taskList.activityName ===
+                          ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                            ? `Masuk ${moment(taskList.createdAt).format(
+                                'HH:mm'
+                              )}`
+                            : `Keluar ${moment(taskList.createdAt).format(
+                                'HH:mm'
+                              )}`}
+                        </Text>
+                      </View>
                     ) : taskList.activityName ===
                       ACTIVITY_JOURNEY_PLAN_ORDER ? (
                       !journeyBookStores.orderStatus &&
@@ -1117,25 +1182,7 @@ class MerchantHomeView extends Component {
                     />
                     )
                   ) : (
-                    <Button
-                      onPress={() => {
-                        this.goTo(item.goTo);
-                      }}
-                      title={item.title}
-                      titleStyle={[
-                        Fonts.type16,
-                        {
-                          color: Color.fontWhite
-                        }
-                      ]}
-                      buttonStyle={{
-                        backgroundColor: Color.fontRed50,
-                        borderRadius: 7,
-                        paddingHorizontal: 20,
-                        paddingVertical: 5,
-                        width: '100%'
-                      }}
-                    />
+                    this.rendercheckCheckIn(item)
                   )}
                 </View>
               </View>
@@ -1327,6 +1374,15 @@ class MerchantHomeView extends Component {
       <View />
     );
   }
+  /** RENDER MODAL BEFORE CHECKIN */
+  renderModalBeforeCheckIn() {
+    return (
+      <ModalBeforeCheckIn
+        open={this.state.openModalBeforeCheckIn}
+        ok={() => this.setState({ openModalBeforeCheckIn: false })}
+      />
+    );
+  }
   /** BACKGROUND */
   renderBackground() {
     return <View style={styles.backgroundRed} />;
@@ -1359,6 +1415,7 @@ class MerchantHomeView extends Component {
         {this.renderModalErrorRespons()}
         {this.renderModalVerifyUser()}
         {this.renderModalProgressChecking()}
+        {this.renderModalBeforeCheckIn()}
         <ModalBottomSuccessOrder />
       </SafeAreaView>
     );
@@ -1579,4 +1636,20 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * updatedDate: 12032021
  * updatedFunction:
  * -> Add parameter search when get journey plan.
+ * updatedBy: dyah
+ * updatedDate: 21042021
+ * updatedFunction:
+ * -> Add validation when survey done.
+ * updatedBy: dyah
+ * updatedDate: 05052021
+ * updatedFunction:
+ * -> Add validation for button when not check in yet.
+ * updatedBy: dyah
+ * updatedDate: 06052021
+ * updatedFunction:
+ * -> add modalBeforeCheckin
+ * updatedBy: dyah
+ * updatedDate: 10052021
+ * updatedFunction:
+ * -> integration latest checkin&checkout.
  */

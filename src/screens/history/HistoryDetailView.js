@@ -36,6 +36,9 @@ import HistoryDetailPayment from './HistoryDetailPayment';
 import CallCS from '../../screens/global/CallCS';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 import ModalBottomErrorResponsWhite from '../../components/error/ModalBottomErrorResponsWhite';
+import { REFUNDED, WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
+import { CANCEL, CONFIRM, PENDING_PAYMENT } from '../../constants/orderConstants';
+
 class HistoryDetailView extends Component {
   constructor(props) {
     super(props);
@@ -99,13 +102,6 @@ class HistoryDetailView extends Component {
         this.getHistory();
       }
     }
-    // if(
-    //   prevProps.history.dataHistoryChangePaymentMethod !== this.props.history.dataHistoryChangePaymentMethody
-    // ){
-    //   console.log('ubah');
-
-    //   this.getHistory()
-    // }
     if (
       prevProps.history.errorHistoryDetail !==
       this.props.history.errorHistoryDetail
@@ -114,24 +110,15 @@ class HistoryDetailView extends Component {
         this.props.history.errorHistoryDetail &&
         this.props.history.errorHistoryDetail.data !== null
       ) {
-        if (this.props.history.errorHistoryDetail.code >= 400 && this.props.history.errorHistoryDetail.code <500 ) {
+        if (
+          this.props.history.errorHistoryDetail.code >= 400 &&
+          this.props.history.errorHistoryDetail.code < 500
+        ) {
           this.manageError();
         } else {
           this.setState({ openModalError: true });
         }
       }
-
-      // if (
-      //   prevProps.history.errorHistoryChangePaymentMethod !==
-      //   this.props.history.errorHistoryChangePaymentMethod
-      // ) {
-      //   if (this.props.history.errorHistoryChangePaymentMethod !== null) {
-      //     // this.setState({
-      //     //   openModalErrorGlobal : true
-      //     // });
-      //     this.manageError();
-      //   }
-      // }
     }
     if (
       prevProps.oms.dataOmsGetTermsConditions !==
@@ -390,41 +377,64 @@ class HistoryDetailView extends Component {
                 new Date(this.props.history.dataDetailHistory.createdAt)
               ).format('DD MMM YYYY HH:mm:ss')
             )}
-            {this.renderContentListGlobal(
-              this.props.history.dataDetailHistory.deliveredDate !== null
-                ? 'Tanggal Pengiriman'
-                : 'Estimasi Tanggal Pengiriman',
-              this.props.history.dataDetailHistory.deliveredDate !== null
-                ? moment(
-                    new Date(this.props.history.dataDetailHistory.deliveredDate)
+            {
+              this.props.history.dataDetailHistory.status !== CANCEL && this.props.history.dataDetailHistory.statusPayment !== REFUNDED ?
+                this.renderContentListGlobal(
+                  this.props.history.dataDetailHistory.deliveredDate !== null
+                    ? 'Tanggal Pengiriman'
+                    : 'Estimasi Tanggal Pengiriman',
+                  this.props.history.dataDetailHistory.deliveredDate !== null
+                    ? moment(
+                        new Date(this.props.history.dataDetailHistory.deliveredDate)
+                      ).format('DD MMM YYYY HH:mm:ss')
+                    : this.props.history.dataDetailHistory.estDeliveredDate !== null
+                    ? moment(
+                        new Date(
+                          this.props.history.dataDetailHistory.estDeliveredDate
+                        )
+                      ).format('DD MMM YYYY HH:mm:ss')
+                    : '-'
+                )
+              : null
+            }
+            {
+              this.props.history.dataDetailHistory.status !== CANCEL && this.props.history.dataDetailHistory.statusPayment !== REFUNDED ?
+                this.renderContentListGlobal(
+                  this.props.history.dataDetailHistory.dueDate !== null
+                    ? 'Jatuh Tempo'
+                    : 'Estimasi Jatuh Tempo',
+                  this.props.history.dataDetailHistory.dueDate !== null
+                    ? moment(
+                        new Date(this.props.history.dataDetailHistory.dueDate)
+                      ).format('DD MMM YYYY HH:mm:ss')
+                    : this.props.history.dataDetailHistory.estDueDate !== null
+                    ? moment(
+                        new Date(this.props.history.dataDetailHistory.estDueDate)
+                      ).format('DD MMM YYYY HH:mm:ss')
+                    : '-'
+                )
+              : null
+            }
+            {
+              this.props.history.dataDetailHistory.status === CANCEL && this.props.history.dataDetailHistory.statusPayment !== REFUNDED?
+                this.renderContentListGlobal(
+                  'Tanggal Pembatalan',
+                  moment(
+                    new Date(this.props.history.dataDetailHistory.cancelTime)
                   ).format('DD MMM YYYY HH:mm:ss')
-                : this.props.history.dataDetailHistory.estDeliveredDate !== null
-                ? moment(
-                    new Date(
-                      this.props.history.dataDetailHistory.estDeliveredDate
-                    )
+                )
+              : null
+            }
+            {
+              this.props.history.dataDetailHistory.statusPayment === REFUNDED?
+                this.renderContentListGlobal(
+                  'Tanggal Pengembalian Dana',
+                  moment(
+                    new Date(this.props.history.dataDetailHistory.refundedTime)
                   ).format('DD MMM YYYY HH:mm:ss')
-                : '-'
-              // moment(
-              //     new Date(
-              //       this.props.history.dataDetailHistory.estDeliveredDate
-              //     )
-              //   ).format('DD MMM YYYY HH:mm:ss')
-            )}
-            {this.renderContentListGlobal(
-              this.props.history.dataDetailHistory.dueDate !== null
-                ? 'Jatuh Tempo'
-                : 'Estimasi Jatuh Tempo',
-              this.props.history.dataDetailHistory.dueDate !== null
-                ? moment(
-                    new Date(this.props.history.dataDetailHistory.dueDate)
-                  ).format('DD MMM YYYY HH:mm:ss')
-                : this.props.history.dataDetailHistory.estDueDate !== null
-                ? moment(
-                    new Date(this.props.history.dataDetailHistory.estDueDate)
-                  ).format('DD MMM YYYY HH:mm:ss')
-                : '-'
-            )}
+                )
+              : null
+            }
           </View>
         </View>
       </View>
@@ -500,78 +510,7 @@ class HistoryDetailView extends Component {
       );
     }
   }
-  // return (
-  //   <View>
-  //     <View style={GlobalStyle.boxPadding} />
-  //     <View style={GlobalStyle.shadowForBox}>
-  //       <View
-  //         style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
-  //       >
-  //         <Text style={Fonts.type48}>Informasi Pembayaran</Text>
-  //       </View>
-  //       <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-  //       <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-  //         {this.renderContentListGlobal(
-  //           'Tipe Pembayaran',
-  //           this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
-  //             null
-  //             ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
-  //                 .paymentTypeSupplier.paymentType.name
-  //             : '-'
-  //         )}
-  //         {this.renderContentListGlobal(
-  //           'Metode Pembayaran',
-  //           this.props.history.dataDetailHistory.paymentTypeSupplierMethod !==
-  //             null
-  //             ? this.props.history.dataDetailHistory.paymentTypeSupplierMethod
-  //                 .paymentMethod.name
-  //             : '-'
-  //         )}
-  //         {this.renderContentListGlobal(
-  //           `Total Barang (${this.totalSKU()})`,
-  //           MoneyFormat(this.props.history.dataDetailHistory.parcelGrossPrice)
-  //         )}
-  //         {/* {this.renderContentListGlobal(
-  //           'Potongan Harga',
-  //           `- ${MoneyFormat(
-  //             this.props.history.dataDetailHistory.parcelPromo
-  //           )}`,
-  //           true
-  //         )} */}
-  //         {this.renderPromoList(
-  //           this.props.history.dataDetailHistory.promoList
-  //         )}
-  //         {this.renderVoucherList(
-  //           this.props.history.dataDetailHistory.voucherList
-  //         )}
-  //         {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
-  //         {this.renderContentListGlobal(
-  //           'PPN 10%',
-  //           MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
-  //         )}
-  //         <View
-  //           style={{
-  //             flexDirection: 'row',
-  //             justifyContent: 'space-between',
-  //             marginTop: 16
-  //           }}
-  //         >
-  //           <View style={{ flex: 1, alignItems: 'flex-start' }}>
-  //             <Text style={Fonts.type50}>Sub Total</Text>
-  //           </View>
-  //           <View style={{ flex: 1, alignItems: 'flex-end' }}>
-  //             <Text style={Fonts.type21}>
-  //               {MoneyFormat(
-  //                 this.props.history.dataDetailHistory.parcelFinalPrice
-  //               )}
-  //             </Text>
-  //           </View>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   </View>
-  // );
-  // }
+
   /** RENDER DETAIL PAYMENT */
   renderDetailPayment() {
     if (this.props.history.dataDetailHistory !== null) {
@@ -771,9 +710,10 @@ class HistoryDetailView extends Component {
 
   /** === RENDER BUTTON CHANGE PAYMENT === */
   renderSelectPaymentMethod() {
+    const statusPayment = this.props.history.dataDetailHistory.statusPayment;
     return (
       <View>
-        {this.props.history.dataDetailHistory.statusPayment === 'paid' ? (
+        {statusPayment === 'paid' || statusPayment === 'payment_failed' ? (
           <View />
         ) : (
           this.renderButtonChangePayment()
@@ -805,15 +745,14 @@ class HistoryDetailView extends Component {
 
   /** RENDER BOTTOM ACTION */
   renderBottomAction() {
+    const dataDetailHistory = this.props.history.dataDetailHistory;
     return (
       <View style={styles.boxBottomAction}>
         <TouchableOpacity onPress={() => this.setState({ openModalCS: true })}>
           <Text style={Fonts.type22}>Butuh Bantuan ?</Text>
         </TouchableOpacity>
-        {this.state.section === 'order' &&
-        this.props.history.dataDetailHistory.status === 'confirm' ? (
-          this.renderCancelButton()
-        ) : (
+        {this.state.section === 'order'?
+        this.renderButtonForOrder(dataDetailHistory) : (
           <View />
         )}
       </View>
@@ -876,6 +815,7 @@ class HistoryDetailView extends Component {
 
   /**RENDER MODAL PAYMENT METHOD */
   renderModalChangePaymentMethod() {
+    const paylaterType = this.props.history.dataDetailHistory.paylaterType;
     return this.state.openPaymentMethod ? (
       <ModalChangePaymentMethod
         open={this.state.openPaymentMethod}
@@ -889,7 +829,8 @@ class HistoryDetailView extends Component {
         billingID={this.props.history.dataDetailHistory.billing.id}
         total={this.props.history.dataDetailHistory.parcelFinalPrice}
         loading={this.props.oms.loadingOmsGetPaymentChannel}
-        actionChange={this.renderWantToConfirm.bind(this)} // orderPrice={this.calTotalPrice()}
+        actionChange={this.renderWantToConfirm.bind(this)}
+        selectedPaylaterType={paylaterType} // orderPrice={this.calTotalPrice()}
         // onRef={ref => (this.selectPaymentMethod = ref)}
         // selectPaymentMethod={this.selectedPayment.bind(this)}
       />
@@ -897,6 +838,22 @@ class HistoryDetailView extends Component {
       <View />
     );
   }
+
+/** === RENDER BUTTON FOR ORDER === */
+renderButtonForOrder(item) {
+  switch (item.status){
+    case CONFIRM :
+      if (item.paymentType.id !== PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT){
+        return this.renderCancelButton(item)
+      }
+      case PENDING_PAYMENT:
+        if (item.paymentType.id === PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT ){
+          return this.renderCancelButton(item)
+        }
+    default :
+    return <View/>
+  }
+}
 
   /**RENDER WANT TO CONFIRM*/
   renderWantToConfirm(item) {
@@ -995,7 +952,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(HistoryDetailView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HistoryDetailView);
 
 /**
  * ============================
