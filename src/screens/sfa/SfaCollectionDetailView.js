@@ -14,26 +14,25 @@ import {
   MaterialIcon,
   moment
 } from '../../library/thirdPartyPackage';
-import {
-  LoadingPage,
-  InputType5,
-} from '../../library/component';
+import { LoadingPage, InputType5 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
-import { toLocalTime} from '../../helpers/TimeHelper';
+import { toLocalTime } from '../../helpers/TimeHelper';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
 import { TextInputMask } from 'react-native-masked-text';
 
 import SfaCollectionDetailCheckandGiro from './SfaCollectionDetailCheckandGiro';
 import SfaCollectionDetailTransfer from './SfaCollectionDetailTransfer';
-import SfaCollectionDetailPromo from './SfaCollectionDetailPromo'
-import {
-  sfaGetCollectionDetailProcess
-} from '../../state/actions';
+import SfaCollectionDetailPromo from './SfaCollectionDetailPromo';
+import { sfaGetCollectionDetailProcess } from '../../state/actions';
+
+import NavigationService from '../../navigation/NavigationService';
 
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
-  const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
+  const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(
+    state => state.sfa
+  );
   const { selectedMerchant } = useSelector(state => state.merchant);
 
   /**
@@ -41,21 +40,20 @@ const SfaCollectionDetailView = props => {
    * FUNCTION
    * *********************************
    */
-  useEffect(() =>{
-    const paymentCollectionId = props.navigation.state.params.paymentCollectionId
-    dispatch(sfaGetCollectionDetailProcess(paymentCollectionId))
-  }, [])
+  useEffect(() => {
+    const paymentCollectionId =
+      props.navigation.state.params.paymentCollectionId;
+    dispatch(sfaGetCollectionDetailProcess(paymentCollectionId));
+  }, []);
 
+  const formatDate = date => {
+    const local = toLocalTime(date);
+    return moment(local).format('DD MMMM YYYY');
+  };
 
-  const formatDate = (date) => {
-    const local = toLocalTime(date)
-    return (
-    moment(local).format(
-        'DD MMMM YYYY'
-      )
-    )
-  }
-
+  const navigateToEdit = () => {
+    NavigationService.navigate('SfaEditCollectionView');
+  };
 
   /**
    * *********************************
@@ -142,7 +140,7 @@ const SfaCollectionDetailView = props => {
 
   const renderCollectionDetail = () => {
     return (
-      <View style={[styles.container, {marginBottom: 16}]}>
+      <View style={[styles.container, { marginBottom: 16 }]}>
         <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
           <View>
             <Text style={Fonts.type48}>Detil Penagihan</Text>
@@ -155,7 +153,9 @@ const SfaCollectionDetailView = props => {
   };
 
   const renderItemCollectionDetail = () => {
-    const collectionMethodType = dataSfaGetCollectionDetail.paymentCollection.paymentCollectionMethod.paymentCollectionType
+    const collectionMethodType =
+      dataSfaGetCollectionDetail.paymentCollection.paymentCollectionMethod
+        .paymentCollectionType;
     return (
       <View style={{ marginHorizontal: -16 }}>
         <InputType5
@@ -164,33 +164,26 @@ const SfaCollectionDetailView = props => {
           editable={false}
         />
         {renderCollectionDetailMethod(collectionMethodType)}
-         
       </View>
     );
   };
 
-  const renderCollectionDetailMethod = (collectionMethodType) => {
-   if(collectionMethodType.code === 'check' || collectionMethodType.code === 'giro'){  
-    return (
-      <SfaCollectionDetailCheckandGiro data={dataSfaGetCollectionDetail}/>
-     )
-   }
-   else if (collectionMethodType.code === 'transfer'){
-    return(
-      <SfaCollectionDetailTransfer data={dataSfaGetCollectionDetail}/>
-    )
-   }
-   else if (collectionMethodType.code === "cash") {
-    return(
-     renderCashDetail()
-    )
-   }
-   else if (collectionMethodType.code === "promo") {
-     return(
-      <SfaCollectionDetailPromo data={dataSfaGetCollectionDetail}/>
-     )
-   }
-  }
+  const renderCollectionDetailMethod = collectionMethodType => {
+    if (
+      collectionMethodType.code === 'check' ||
+      collectionMethodType.code === 'giro'
+    ) {
+      return (
+        <SfaCollectionDetailCheckandGiro data={dataSfaGetCollectionDetail} />
+      );
+    } else if (collectionMethodType.code === 'transfer') {
+      return <SfaCollectionDetailTransfer data={dataSfaGetCollectionDetail} />;
+    } else if (collectionMethodType.code === 'cash') {
+      return renderCashDetail();
+    } else if (collectionMethodType.code === 'promo') {
+      return <SfaCollectionDetailPromo data={dataSfaGetCollectionDetail} />;
+    }
+  };
 
   const renderCashDetail = () => {
     return (
@@ -220,7 +213,7 @@ const SfaCollectionDetailView = props => {
               {
                 width: '100%',
                 borderBottomWidth: 1,
-                borderBottomColor: masterColor.fontBlack10,
+                borderBottomColor: masterColor.fontBlack10
               }
             ]}
           />
@@ -231,27 +224,28 @@ const SfaCollectionDetailView = props => {
 
   const renderContent = () => {
     return (
-      <View style={{flex: 1}}>
-        {dataSfaGetCollectionDetail ?
-          <ScrollView style={{ flex: 1, height: '100%'}}>       
+      <View style={{ flex: 1 }}>
+        {dataSfaGetCollectionDetail ? (
+          <ScrollView style={{ flex: 1, height: '100%' }}>
+            <TouchableOpacity onPress={() => navigateToEdit()}>
+              <Text>Edit</Text>
+            </TouchableOpacity>
             {renderFakturInfo()}
             {renderCollectionInfo()}
             {renderCollectionDetail()}
           </ScrollView>
-        :
+        ) : (
           <LoadingPage />
-        }
-      </View>     
+        )}
+      </View>
     );
   };
 
-
-  return <>
-  <View style={{flex:1}}>
-
-  {renderContent()}
-  </View>
-  </>;
+  return (
+    <>
+      <View style={{ flex: 1 }}>{renderContent()}</View>
+    </>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -279,20 +273,21 @@ export const DetailHeaderOption = props => {
   const { dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
   return (
     <>
-    {dataSfaGetCollectionDetail?  
-    dataSfaGetCollectionDetail.isEditable?
-    <View style={styles.navOption}>
-      <>
-        <TouchableOpacity onPress={()=> alert('Edit Page')}>
-          <MaterialIcon
-            name="edit"
-            size={28}
-            style={{ color: masterColor.fontBlack50 , marginRight: 10 }}
-          />
-        </TouchableOpacity>
-      </>
-    </View>: null : null}
-   
+      {dataSfaGetCollectionDetail ? (
+        dataSfaGetCollectionDetail.isEditable ? (
+          <View style={styles.navOption}>
+            <>
+              <TouchableOpacity onPress={() => alert('Edit Page')}>
+                <MaterialIcon
+                  name="edit"
+                  size={28}
+                  style={{ color: masterColor.fontBlack50, marginRight: 10 }}
+                />
+              </TouchableOpacity>
+            </>
+          </View>
+        ) : null
+      ) : null}
     </>
   );
 };
