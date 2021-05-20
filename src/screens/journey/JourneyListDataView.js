@@ -146,7 +146,7 @@ class JourneyListDataView extends Component {
       <View style={styles.searchBar}>
         <SearchBarType1
           searchText={this.props.searchText}
-          placeholder={'Cari semua store'}
+          placeholder={'Cari nama / id toko disini'}
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
         />

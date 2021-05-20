@@ -662,7 +662,7 @@ class MerchantHomeView extends Component {
 
   renderLastOrder() {
     const order = this.props.merchant.dataGetMerchantLastOrder;
-    return order !== undefined ? (
+    return order !== undefined && order.orderParcels && !_.isEmpty(order.orderParcels) ? (
       <View style={styles.lastOrderContainer}>
         <View style={[styles.cardLastOrder, GlobalStyle.shadowForBox5]}>
           <View
