@@ -59,6 +59,14 @@ const SfaCollectionDetailView = props => {
     )
   }
 
+  const deleteTransaction = () => {
+    alert("delete")
+  }
+
+  const editTransaction = () => {
+    alert("edit")
+  }
+
   /* ========================
    * HEADER MODIFY
    * ========================
@@ -87,14 +95,14 @@ const SfaCollectionDetailView = props => {
             <Text style={Fonts.type5}>Detail Tarnsaksi</Text>
           </View>
           <View style={[styles.headerBody, {flexDirection:"row"}]}>
-            <TouchableOpacity onPress={()=> setIsEdit(true)}>
+            <TouchableOpacity onPress={()=> deleteTransaction()}>
               <MaterialIcon
                 name="delete"
                 size={28}
                 style={{ color: masterColor.fontBlack50 , marginRight: 10 }}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=> alert('Edit Transaksi')}>
+            <TouchableOpacity onPress={()=> editTransaction()}>
               <MaterialIcon
                 name="edit"
                 size={28}
@@ -103,13 +111,7 @@ const SfaCollectionDetailView = props => {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={[GlobalStyle.lines, {shadowColor: masterColor.shadow,shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 1,
-    shadowRadius: 3.84,
-    elevation: 1}]} />
+        <View style={[GlobalStyle.lines, styles.headerLine]} />
       </View>
     );
   };
@@ -347,37 +349,46 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     marginVertical: 16
   },
+  headerLine: {
+    shadowColor: masterColor.shadow,shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 1,
+    shadowRadius: 3.84,
+    elevation: 1
+  },
 });
 export default SfaCollectionDetailView;
 
-export const DetailHeaderOption = props => {
-  const { dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
-  const [isPrimer, setIsPrimer] = useState(false)
-  console.log("disini:", props);
-  return (
-    <>
-    {/* {dataSfaGetCollectionDetail?  
-    dataSfaGetCollectionDetail.isEditable? */}
-    <View style={styles.navOption}>
-      <View style={{flexDirection:"row"}}>
-        <TouchableOpacity onPress={()=> setIsEdit(true)}>
-          <MaterialIcon
-            name="delete"
-            size={28}
-            style={{ color: masterColor.fontBlack50 , marginRight: 10 }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={()=> alert('Edit Transaksi')}>
-          <MaterialIcon
-            name="edit"
-            size={28}
-            style={{ color: masterColor.fontBlack50 , marginRight: 10 }}
-          />
-        </TouchableOpacity>
-      </View>
-    </View>
-    {/* : null : null} */}
+// export const DetailHeaderOption = props => {
+//   const { dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
+//   const [isPrimer, setIsPrimer] = useState(false)
+//   console.log("disini:", props);
+//   return (
+//     <>
+//     {/* {dataSfaGetCollectionDetail?  
+//     dataSfaGetCollectionDetail.isEditable? */}
+//     <View style={styles.navOption}>
+//       <View style={{flexDirection:"row"}}>
+//         <TouchableOpacity onPress={()=> setIsEdit(true)}>
+//           <MaterialIcon
+//             name="delete"
+//             size={28}
+//             style={{ color: masterColor.fontBlack50 , marginRight: 10 }}
+//           />
+//         </TouchableOpacity>
+//         <TouchableOpacity onPress={()=> alert('Edit Transaksi')}>
+//           <MaterialIcon
+//             name="edit"
+//             size={28}
+//             style={{ color: masterColor.fontBlack50 , marginRight: 10 }}
+//           />
+//         </TouchableOpacity>
+//       </View>
+//     </View>
+//     {/* : null : null} */}
    
-    </>
-  );
-};
+//     </>
+//   );
+// };
