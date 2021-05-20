@@ -35,6 +35,7 @@ const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
   const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
+  const [isPrimer, setIsPrimer] = useState(false)
 
   /**
    * *********************************
@@ -279,19 +280,27 @@ export const DetailHeaderOption = props => {
   const { dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
   return (
     <>
-    {dataSfaGetCollectionDetail?  
-    dataSfaGetCollectionDetail.isEditable?
+    {/* {dataSfaGetCollectionDetail?  
+    dataSfaGetCollectionDetail.isEditable? */}
     <View style={styles.navOption}>
-      <>
-        <TouchableOpacity onPress={()=> alert('Edit Page')}>
+      <View style={{flexDirection:"row"}}>
+        <TouchableOpacity onPress={()=> alert('Delete Transaksi')}>
+          <MaterialIcon
+            name="delete"
+            size={28}
+            style={{ color: masterColor.fontBlack50 , marginRight: 10 }}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=> alert('Edit Transaksi')}>
           <MaterialIcon
             name="edit"
             size={28}
             style={{ color: masterColor.fontBlack50 , marginRight: 10 }}
           />
         </TouchableOpacity>
-      </>
-    </View>: null : null}
+      </View>
+    </View>
+    {/* : null : null} */}
    
     </>
   );

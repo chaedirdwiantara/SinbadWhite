@@ -79,7 +79,7 @@ const SfaNavigator = {
   SfaCollectionDetailView: {
     screen: SfaCollectionDetailView,
     navigationOptions: {
-      headerTitle: 'Detil Tagihan',
+      headerTitle: 'Detail Transaksi',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
