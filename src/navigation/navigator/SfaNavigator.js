@@ -79,21 +79,25 @@ const SfaNavigator = {
   SfaCollectionDetailView: {
     screen: SfaCollectionDetailView,
     navigationOptions: {
-      headerTitle: 'Detail Transaksi',
-      headerTitleStyle: [
-        GlobalFont.textHeaderPage,
-        {
-          textAlign: 'left',
-          flex: 1
-        }
-      ],
-      headerTintColor: masterColor.fontBlack50,
-      headerStyle: {
-        backgroundColor: masterColor.backgroundWhite
-      },
-      headerRight: <DetailHeaderOption />,
-      gesturesEnabled: false
-    }
+      header: null
+    },
+    // screen: SfaCollectionDetailView,
+    // navigationOptions: {
+    //   headerTitle: 'Detail Transaksi',
+    //   headerTitleStyle: [
+    //     GlobalFont.textHeaderPage,
+    //     {
+    //       textAlign: 'left',
+    //       flex: 1
+    //     }
+    //   ],
+    //   headerTintColor: masterColor.fontBlack50,
+    //   headerStyle: {
+    //     backgroundColor: masterColor.backgroundWhite
+    //   },
+    //   headerRight: <DetailHeaderOption />,
+    //   gesturesEnabled: false
+    // }
   },
   
 };

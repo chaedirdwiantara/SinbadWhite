@@ -30,12 +30,14 @@ import SfaCollectionDetailPromo from './SfaCollectionDetailPromo'
 import {
   sfaGetCollectionDetailProcess
 } from '../../state/actions';
+import NavigationService from '../../navigation/NavigationService';
 
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
   const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [isPrimer, setIsPrimer] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
 
   /**
    * *********************************
@@ -57,12 +59,69 @@ const SfaCollectionDetailView = props => {
     )
   }
 
+  /* ========================
+   * HEADER MODIFY
+   * ========================
+   */
+  const renderHeader = () => {
+    return (
+      <View style={styles.headerContainer}>
+        <View style={[styles.headerContent]}>
+          <View style={[styles.headerBody, { alignItems: 'flex-start' }]}>
+            <TouchableOpacity onPress={() => NavigationService.goBack()}>
+              <View>
+                <MaterialIcon
+                  name="arrow-back"
+                  size={24}
+                  color={masterColor.fontBlack50}
+                  style={{
+                    marginBottom: 8,
+                    marginLeft: 8,
+                    alignContent: 'flex-start'
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={{ alignSelf: 'center', flex: 1, marginLeft: 25 }}>
+            <Text style={Fonts.type5}>Detail Tarnsaksi</Text>
+          </View>
+          <View style={[styles.headerBody, {flexDirection:"row"}]}>
+            <TouchableOpacity onPress={()=> setIsEdit(true)}>
+              <MaterialIcon
+                name="delete"
+                size={28}
+                style={{ color: masterColor.fontBlack50 , marginRight: 10 }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=> alert('Edit Transaksi')}>
+              <MaterialIcon
+                name="edit"
+                size={28}
+                style={{ color: masterColor.fontBlack50 }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={[GlobalStyle.lines, {shadowColor: masterColor.shadow,shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 1,
+    shadowRadius: 3.84,
+    elevation: 1}]} />
+      </View>
+    );
+  };
+
 
   /**
    * *********************************
    * RENDER VIEW
    * *********************************
    */
+
+  
   const renderFakturInfo = () => {
     return (
       <View style={styles.container}>
@@ -230,6 +289,8 @@ const SfaCollectionDetailView = props => {
     );
   };
 
+  console.log("data:", isEdit);
+
   const renderContent = () => {
     return (
       <View style={{flex: 1}}>
@@ -249,7 +310,7 @@ const SfaCollectionDetailView = props => {
 
   return <>
   <View style={{flex:1}}>
-
+  {renderHeader()}
   {renderContent()}
   </View>
   </>;
@@ -272,19 +333,34 @@ const styles = StyleSheet.create({
   },
   inputField: {
     marginTop: 16
-  }
+  },
+  headerContainer: {
+    backgroundColor: masterColor.backgroundWhite,
+    height: 56,
+    justifyContent: 'center'
+  },
+  headerContent: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  headerBody: {
+    marginHorizontal: 8,
+    marginVertical: 16
+  },
 });
 export default SfaCollectionDetailView;
 
 export const DetailHeaderOption = props => {
   const { dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
+  const [isPrimer, setIsPrimer] = useState(false)
+  console.log("disini:", props);
   return (
     <>
     {/* {dataSfaGetCollectionDetail?  
     dataSfaGetCollectionDetail.isEditable? */}
     <View style={styles.navOption}>
       <View style={{flexDirection:"row"}}>
-        <TouchableOpacity onPress={()=> alert('Delete Transaksi')}>
+        <TouchableOpacity onPress={()=> setIsEdit(true)}>
           <MaterialIcon
             name="delete"
             size={28}
