@@ -7,6 +7,7 @@ import SfaDetailView, { HeaderRightOption } from '../../screens/sfa/SfaDetailVie
 import SfaAddTagihanView from '../../screens/sfa/SfaAddTagihanView';
 import SfaCollectionLog from '../../screens/sfa/SfaCollectionLog';
 import SfaCollectionDetailView, {DetailHeaderOption} from '../../screens/sfa/SfaCollectionDetailView';
+import SfaEditCollectionView from '../../screens/sfa/SfaEditCollectionView';
 const SfaNavigator = {
   SfaView: {
     screen: SfaView,
@@ -95,7 +96,25 @@ const SfaNavigator = {
       gesturesEnabled: false
     }
   },
-  
+  SfaEditCollectionView: {
+    screen: SfaEditCollectionView,
+    navigationOptions: {
+      headerTitle: 'Ubah Transaksi',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'left',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.fontBlack50,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
 };
 
 export default SfaNavigator;
