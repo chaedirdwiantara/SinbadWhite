@@ -81,13 +81,13 @@ function getTermsConditions(data) {
 }
 
 /** LAST PAYMENT CHANNEL */
-function getLastPaymentChannel({ invoiceGroupIds }) {
+function getLastPaymentChannel({ orderParcelIds }) {
   return ApiRest({
     path: 'payment/v1/channel/last',
     method: 'POST',
     params: {
       storeId: parseInt(GlobalMethod.merchantStoreId(), 10),
-      invoiceGroupIds
+      orderParcelIds: orderParcelIds
     }
   });
 }
