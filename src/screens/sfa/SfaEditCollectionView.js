@@ -12,16 +12,19 @@ import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import SfaEditCollectionCash from './SfaEditCollectionCash';
 import { useDispatch, useSelector } from 'react-redux';
-const SfaEditCollectionView = () => {
+import { TRANSFER, TUNAI } from '../../constants/collectionConstants';
+
+const SfaEditCollectionView = props => {
   const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(
     state => state.sfa
   );
-  const detailSfa = dataSfaGetDetail.data;
+  const detailSfa = props.navigation.state.params.dataDetail
   /**
    * *********************************
    * RENDER VIEW
    * *********************************
    */
+  console.log("dataa:", props.navigation.state.params.dataDetail);
   const renderFakturInfo = () => {
     return (
       <View style={styles.container}>
@@ -111,20 +114,28 @@ const SfaEditCollectionView = () => {
             <View>
               <Text style={Fonts.type48}>Detil Penagihan</Text>
             </View>
-            <View style={[{ flex: 1, marginVertical: 8 }]} />
-            <InputType5
-              title={`Metode Penagihan`}
-              placeholder={collectionMethodType.name}
-              editable={false}
-            />
-            <View style={{ marginLeft: 16 }}>{renderEditForm()}</View>
+            <View style={[GlobalStyle.lines, {marginVertical: 8, marginBottom: 16}]} />
+            <View style={{marginLeft: -16}}>
+              <InputType5
+                title={`Metode Penagihan`}
+                placeholder={collectionMethodType.name}
+                editable={false}
+              />
+              <View style={{marginLeft: 16}}>{renderEditForm()}</View>
+            </View>
           </View>
         </View>
       </View>
     );
   };
   const renderEditForm = () => {
-    return <SfaEditCollectionCash />;
+    const paymentCollectionType = detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType
+    return (
+      <View>
+        {/* {detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType} */}
+        <SfaEditCollectionCash />
+      </View>
+    );
   };
 
   const renderButtonSave = () => {

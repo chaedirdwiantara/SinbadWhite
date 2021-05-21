@@ -43,6 +43,7 @@ const SfaCollectionDetailView = props => {
    * FUNCTION
    * *********************************
    */
+  console.log("SFA COLLECTION DETAIL:", dataSfaGetCollectionDetail)
   useEffect(() => {
     const paymentCollectionId =
       props.navigation.state.params.paymentCollectionId;
@@ -59,7 +60,7 @@ const SfaCollectionDetailView = props => {
   }
 
   const editTransaction = () => {
-    NavigationService.navigate('SfaEditCollectionView');
+    NavigationService.navigate('SfaEditCollectionView', {dataDetail: dataSfaGetCollectionDetail});
   }
 
   /* ========================
