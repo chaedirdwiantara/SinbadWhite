@@ -14,7 +14,7 @@ import {
   MaterialIcon,
   moment
 } from '../../library/thirdPartyPackage';
-import { LoadingPage, InputType5 } from '../../library/component';
+import { LoadingPage, InputType5, ModalConfirmation } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
 import masterColor from '../../config/masterColor.json';
@@ -34,6 +34,9 @@ const SfaCollectionDetailView = props => {
     state => state.sfa
   );
   const { selectedMerchant } = useSelector(state => state.merchant);
+  const [isPrimer, setIsPrimer] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
+  const [isModalDeleteTransactionOpened, setIsModalDeleteTransactionOpened] = useState(false)
 
   /**
    * *********************************
@@ -51,15 +54,101 @@ const SfaCollectionDetailView = props => {
     return moment(local).format('DD MMMM YYYY');
   };
 
-  const navigateToEdit = () => {
-    NavigationService.navigate('SfaEditCollectionView');
+  const deleteTransaction = () => {
+    setIsModalDeleteTransactionOpened(true)
+  }
+
+  const editTransaction = () => {
+    NavigationService.navigate('SfaEditCollectionView', {dataDetail: dataSfaGetCollectionDetail});
+  }
+
+  /* ========================
+   * HEADER MODIFY
+   * ========================
+   */
+  const renderHeader = () => {
+    return (
+      <View style={styles.headerContainer}>
+        <View style={[styles.headerContent]}>
+          <View style={[styles.headerBody, { alignItems: 'flex-start' }]}>
+            <TouchableOpacity onPress={() => NavigationService.goBack()}>
+              <View>
+                <MaterialIcon
+                  name="arrow-back"
+                  size={24}
+                  color={masterColor.fontBlack50}
+                  style={{
+                    marginBottom: 8,
+                    marginLeft: 8,
+                    alignContent: 'flex-start'
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={{ alignSelf: 'center', flex: 1, marginLeft: 25 }}>
+            <Text style={Fonts.type5}>Detail Transaksi</Text>
+          </View>
+          <View style={[styles.headerBody, {flexDirection:"row"}]}>
+            <TouchableOpacity onPress={()=> deleteTransaction()}>
+              <MaterialIcon
+                name="delete"
+                size={28}
+                style={{ color: masterColor.fontBlack50 , marginRight: 10 }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=> editTransaction()}>
+              <MaterialIcon
+                name="edit"
+                size={28}
+                style={{ color: masterColor.fontBlack50 }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={[GlobalStyle.lines, styles.headerLine]} />
+      </View>
+    );
   };
+
+  /**
+   * ======================
+   * MODAL
+   * ======================
+   */
+   const renderModalDeleteTransaction = () => {
+    return (
+      <View>
+        {isModalDeleteTransactionOpened ? (
+          <ModalConfirmation
+            statusBarWhite
+            title={'Hapus Transaksi?'}
+            open={isModalDeleteTransactionOpened}
+            content={'Transaksi yang telah terhapus tidak dapat dikembalikan'}
+            type={'okeNotRed'}
+            okText={'Ya, Hapus'}
+            cancelText={'Tidak'}
+            ok={() => {
+              setIsModalDeleteTransactionOpened(false)
+            }}
+            cancel={() =>
+              setIsModalDeleteTransactionOpened(false)
+            }
+          />
+        ) : (
+          <View />
+        )} 
+      </View>
+    );
+  }
 
   /**
    * *********************************
    * RENDER VIEW
    * *********************************
    */
+
+  
   const renderFakturInfo = () => {
     return (
       <View style={styles.container}>
@@ -227,9 +316,6 @@ const SfaCollectionDetailView = props => {
       <View style={{ flex: 1 }}>
         {dataSfaGetCollectionDetail ? (
           <ScrollView style={{ flex: 1, height: '100%' }}>
-            <TouchableOpacity onPress={() => navigateToEdit()}>
-              <Text>Edit</Text>
-            </TouchableOpacity>
             {renderFakturInfo()}
             {renderCollectionInfo()}
             {renderCollectionDetail()}
@@ -241,11 +327,14 @@ const SfaCollectionDetailView = props => {
     );
   };
 
-  return (
-    <>
-      <View style={{ flex: 1 }}>{renderContent()}</View>
-    </>
-  );
+
+  return <>
+  <View style={{flex:1}}>
+  {renderHeader()}
+  {renderContent()}
+  {renderModalDeleteTransaction()}
+  </View>
+  </>;
 };
 
 const styles = StyleSheet.create({
@@ -265,29 +354,28 @@ const styles = StyleSheet.create({
   },
   inputField: {
     marginTop: 16
-  }
+  },
+  headerContainer: {
+    backgroundColor: masterColor.backgroundWhite,
+    height: 56,
+    justifyContent: 'center'
+  },
+  headerContent: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  headerBody: {
+    marginHorizontal: 8,
+    marginVertical: 16
+  },
+  headerLine: {
+    shadowColor: masterColor.shadow,shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 1,
+    shadowRadius: 3.84,
+    elevation: 1
+  },
 });
 export default SfaCollectionDetailView;
-
-export const DetailHeaderOption = props => {
-  const { dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
-  return (
-    <>
-      {dataSfaGetCollectionDetail ? (
-        dataSfaGetCollectionDetail.isEditable ? (
-          <View style={styles.navOption}>
-            <>
-              <TouchableOpacity onPress={() => alert('Edit Page')}>
-                <MaterialIcon
-                  name="edit"
-                  size={28}
-                  style={{ color: masterColor.fontBlack50, marginRight: 10 }}
-                />
-              </TouchableOpacity>
-            </>
-          </View>
-        ) : null
-      ) : null}
-    </>
-  );
-};

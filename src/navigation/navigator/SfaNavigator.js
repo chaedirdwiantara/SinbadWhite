@@ -80,21 +80,8 @@ const SfaNavigator = {
   SfaCollectionDetailView: {
     screen: SfaCollectionDetailView,
     navigationOptions: {
-      headerTitle: 'Detil Tagihan',
-      headerTitleStyle: [
-        GlobalFont.textHeaderPage,
-        {
-          textAlign: 'left',
-          flex: 1
-        }
-      ],
-      headerTintColor: masterColor.fontBlack50,
-      headerStyle: {
-        backgroundColor: masterColor.backgroundWhite
-      },
-      headerRight: <DetailHeaderOption />,
-      gesturesEnabled: false
-    }
+      header: null
+    },
   },
   SfaEditCollectionView: {
     screen: SfaEditCollectionView,
