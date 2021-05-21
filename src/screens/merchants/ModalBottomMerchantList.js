@@ -136,6 +136,7 @@ class ModalBottomMerchantList extends Component {
           10
         ),
         storeId: parseInt(data.data, 10),
+        externalStoreId: data.item.externalId,
         storeName: data.item.name
         // journeyPlanId: parseInt(
         //   this.props.journey.dataGetJourneyPlan[0].journeyPlanId,
@@ -365,4 +366,8 @@ export default connect(
  * updatedDate: 0903021
  * updatedFunction:
  * -> add parameter storeName when save merchant to journey plan.
+ * updatedBy: dyah
+ * updatedDate: 21052021
+ * updatedFunction:
+ * -> add store external id when adding store to journey plan. 
  */
