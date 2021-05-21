@@ -14,7 +14,7 @@ import {
   MaterialIcon,
   moment
 } from '../../library/thirdPartyPackage';
-import { LoadingPage, InputType5 } from '../../library/component';
+import { LoadingPage, InputType5, ModalConfirmation } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
 import masterColor from '../../config/masterColor.json';
@@ -36,6 +36,7 @@ const SfaCollectionDetailView = props => {
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [isPrimer, setIsPrimer] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
+  const [openModalDeleteTransaction, setOpenModalDeleteTransaction] = useState(false)
 
   /**
    * *********************************
@@ -54,7 +55,7 @@ const SfaCollectionDetailView = props => {
   };
 
   const deleteTransaction = () => {
-    alert("delete")
+    setOpenModalDeleteTransaction(true)
   }
 
   const editTransaction = () => {
@@ -110,6 +111,36 @@ const SfaCollectionDetailView = props => {
     );
   };
 
+  /**
+   * ======================
+   * MODAL
+   * ======================
+   */
+   const renderModalDeleteTransaction = () => {
+    return (
+      <View>
+        {openModalDeleteTransaction ? (
+          <ModalConfirmation
+            statusBarWhite
+            title={'Hapus Transaksi?'}
+            open={openModalDeleteTransaction}
+            content={'Transaksi yang telah terhapus tidak dapat dikembalikan'}
+            type={'okeNotRed'}
+            okText={'Ya, Hapus'}
+            cancelText={'Tidak'}
+            ok={() => {
+              setOpenModalDeleteTransaction(false)
+            }}
+            cancel={() =>
+              setOpenModalDeleteTransaction(false)
+            }
+          />
+        ) : (
+          <View />
+        )} 
+      </View>
+    );
+  }
 
   /**
    * *********************************
@@ -303,6 +334,7 @@ const SfaCollectionDetailView = props => {
   <View style={{flex:1}}>
   {renderHeader()}
   {renderContent()}
+  {renderModalDeleteTransaction()}
   </View>
   </>;
 };
