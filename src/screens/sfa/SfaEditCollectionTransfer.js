@@ -45,8 +45,8 @@ const SfaEditCollectionTransfer = props => {
   const [bankSource, setBankSource] = useState(props.data.paymentCollection.paymentCollectionMethod.bankFrom.name);
   const [bankDestination, setBankDestination] = useState(props.data.paymentCollection.paymentCollectionMethod.bankToAccount.displayName);
   const [transferDate, setTransferDate] = useState(props.data.paymentCollection.paymentCollectionMethod.date);
-  const [balance, setBalance] = useState(props.data.paymentCollection.paymentCollectionMethod.amount);
-  const [billingValue, setBillingValue] = useState(props.data.paymentCollection.paymentCollectionMethod.balance);
+  const [balance, setBalance] = useState(props.data.paymentCollection.paymentCollectionMethod.balance);
+  const [billingValue, setBillingValue] = useState(props.data.paymentCollection.paidAmount);
   const [dataImage, setDataImage] = useState(props.data.image);
 
   //SELECTOR
@@ -212,7 +212,6 @@ const SfaEditCollectionTransfer = props => {
    * RENDER VIEW
    * *********************************
    */
-  console.log("datazzz:", props.data);
   const renderForm = () => {
     return (
       <View>
@@ -308,7 +307,6 @@ const SfaEditCollectionTransfer = props => {
   };
 
   const renderFormBankSource = () => {
-      console.log("banksSource:", props.data.paymentCollection.paymentCollectionMethod.bankFrom.name);
     return (
       <View>
         <Text style={Fonts.type10}>

@@ -43,7 +43,6 @@ const SfaCollectionDetailView = props => {
    * FUNCTION
    * *********************************
    */
-  console.log("SFA COLLECTION DETAIL:", dataSfaGetCollectionDetail)
   useEffect(() => {
     const paymentCollectionId =
       props.navigation.state.params.paymentCollectionId;
@@ -312,8 +311,6 @@ const SfaCollectionDetailView = props => {
     );
   };
 
-  console.log("data:", isEdit);
-
   const renderContent = () => {
     return (
       <View style={{ flex: 1 }}>
@@ -382,35 +379,3 @@ const styles = StyleSheet.create({
   },
 });
 export default SfaCollectionDetailView;
-
-// export const DetailHeaderOption = props => {
-//   const { dataSfaGetCollectionDetail } = useSelector(state => state.sfa);
-//   const [isPrimer, setIsPrimer] = useState(false)
-//   console.log("disini:", props);
-//   return (
-//     <>
-//     {/* {dataSfaGetCollectionDetail?  
-//     dataSfaGetCollectionDetail.isEditable? */}
-//     <View style={styles.navOption}>
-//       <View style={{flexDirection:"row"}}>
-//         <TouchableOpacity onPress={()=> setIsEdit(true)}>
-//           <MaterialIcon
-//             name="delete"
-//             size={28}
-//             style={{ color: masterColor.fontBlack50 , marginRight: 10 }}
-//           />
-//         </TouchableOpacity>
-//         <TouchableOpacity onPress={()=> alert('Edit Transaksi')}>
-//           <MaterialIcon
-//             name="edit"
-//             size={28}
-//             style={{ color: masterColor.fontBlack50 , marginRight: 10 }}
-//           />
-//         </TouchableOpacity>
-//       </View>
-//     </View>
-//     {/* : null : null} */}
-   
-//     </>
-//   );
-// };

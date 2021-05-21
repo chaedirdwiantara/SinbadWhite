@@ -12,8 +12,9 @@ import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import SfaEditCollectionCash from './SfaEditCollectionCash';
 import { useDispatch, useSelector } from 'react-redux';
-import { TRANSFER, TUNAI } from '../../constants/collectionConstants';
+import { TRANSFER, TUNAI, PROMO } from '../../constants/collectionConstants';
 import SfaEditCollectionTransfer from './SfaEditCollectionTransfer';
+import SfaEditCollectionPromo from './SfaEditCollectionPromo';
 
 const SfaEditCollectionView = props => {
   const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(
@@ -25,7 +26,6 @@ const SfaEditCollectionView = props => {
    * RENDER VIEW
    * *********************************
    */
-  console.log("dataa:", props.navigation.state.params.dataDetail);
   const renderFakturInfo = () => {
     return (
       <View style={styles.container}>
@@ -135,8 +135,10 @@ const SfaEditCollectionView = props => {
       return <SfaEditCollectionCash />
     } else if (paymentCollectionType.name === TRANSFER) {
       return <SfaEditCollectionTransfer data={detailSfa} />
+    } else if (paymentCollectionType.name === PROMO){
+      return <SfaEditCollectionPromo data={detailSfa} />
     } else {
-      return <View />
+      return <View/>
     }
   };
 
