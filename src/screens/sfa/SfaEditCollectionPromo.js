@@ -42,8 +42,8 @@ const SfaEditCollectionPromo = props => {
   const [promoBalance, setPromoBalance] = useState(props.data.paymentCollection.paymentCollectionMethod.balance)
   const [promoValue, setPromoValue] = useState(props.data.paymentCollection.paidAmount)
   const [dataImage, setDataImage] = useState(props.data.paymentCollection.paymentCollectionMethod)
-  const [errorInputImage, setErrorInputImage] = useState(false);
-  const [openTooltip, setOpenTooltip] = useState(true)
+  const [isInputImageError, setIsInputImageError] = useState(false);
+  const [isTooltipOpened, setIsTooltipOpened] = useState(true)
   const [isDisable, setIsDisable] = useState(false)
   const [openModalPrincipal, setOpenModalPrincipal] = useState(false);
 
@@ -89,7 +89,7 @@ const SfaEditCollectionPromo = props => {
     };
 
     ImagePicker.showImagePicker(options, response => {
-      setErrorInputImage(false);
+        setIsInputImageError(false);
 
       if (response.didCancel) {
         null
@@ -98,7 +98,7 @@ const SfaEditCollectionPromo = props => {
       } else if (response.customButton) {
         null
       } else if (response.fileSize > 2000000) {
-        setErrorInputImage(true);
+        setIsInputImageError(true);
       } else {
         props.promoImage({
           fileName: response.fileName,
@@ -541,8 +541,8 @@ const SfaEditCollectionPromo = props => {
           height={55}
           withOverlay={false}
           withPointer={false}
-          onOpen={() => setOpenTooltip(false)}
-          onClose={() => setOpenTooltip(true)}
+          onOpen={() => setIsTooltipOpened(false)}
+          onClose={() => setIsTooltipOpened(true)}
           containerStyle={{
             padding: 8,
             width: 0.4 * width
@@ -553,7 +553,7 @@ const SfaEditCollectionPromo = props => {
             </Text>
           }
         >
-          {openTooltip ? (
+          {isTooltipOpened ? (
             <MaterialIcon name="help" style={{marginLeft: 6}} size={17} color={masterColor.mainColor} />
           ) : (
             <View />
