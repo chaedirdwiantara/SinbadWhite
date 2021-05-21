@@ -36,7 +36,7 @@ const SfaCollectionDetailView = props => {
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [isPrimer, setIsPrimer] = useState(false)
   const [isEdit, setIsEdit] = useState(false)
-  const [openModalDeleteTransaction, setOpenModalDeleteTransaction] = useState(false)
+  const [isModalDeleteTransactionOpened, setIsModalDeleteTransactionOpened] = useState(false)
 
   /**
    * *********************************
@@ -55,7 +55,7 @@ const SfaCollectionDetailView = props => {
   };
 
   const deleteTransaction = () => {
-    setOpenModalDeleteTransaction(true)
+    setIsModalDeleteTransactionOpened(true)
   }
 
   const editTransaction = () => {
@@ -87,7 +87,7 @@ const SfaCollectionDetailView = props => {
             </TouchableOpacity>
           </View>
           <View style={{ alignSelf: 'center', flex: 1, marginLeft: 25 }}>
-            <Text style={Fonts.type5}>Detail Tarnsaksi</Text>
+            <Text style={Fonts.type5}>Detail Transaksi</Text>
           </View>
           <View style={[styles.headerBody, {flexDirection:"row"}]}>
             <TouchableOpacity onPress={()=> deleteTransaction()}>
@@ -119,20 +119,20 @@ const SfaCollectionDetailView = props => {
    const renderModalDeleteTransaction = () => {
     return (
       <View>
-        {openModalDeleteTransaction ? (
+        {isModalDeleteTransactionOpened ? (
           <ModalConfirmation
             statusBarWhite
             title={'Hapus Transaksi?'}
-            open={openModalDeleteTransaction}
+            open={isModalDeleteTransactionOpened}
             content={'Transaksi yang telah terhapus tidak dapat dikembalikan'}
             type={'okeNotRed'}
             okText={'Ya, Hapus'}
             cancelText={'Tidak'}
             ok={() => {
-              setOpenModalDeleteTransaction(false)
+              setIsModalDeleteTransactionOpened(false)
             }}
             cancel={() =>
-              setOpenModalDeleteTransaction(false)
+              setIsModalDeleteTransactionOpened(false)
             }
           />
         ) : (
