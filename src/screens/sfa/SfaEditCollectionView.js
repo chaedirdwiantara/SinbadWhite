@@ -13,6 +13,7 @@ import masterColor from '../../config/masterColor.json';
 import SfaEditCollectionCash from './SfaEditCollectionCash';
 import { useDispatch, useSelector } from 'react-redux';
 import { TRANSFER, TUNAI } from '../../constants/collectionConstants';
+import SfaEditCollectionTransfer from './SfaEditCollectionTransfer';
 
 const SfaEditCollectionView = props => {
   const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(
@@ -130,12 +131,13 @@ const SfaEditCollectionView = props => {
   };
   const renderEditForm = () => {
     const paymentCollectionType = detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType
-    return (
-      <View>
-        {/* {detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType} */}
-        <SfaEditCollectionCash />
-      </View>
-    );
+    if (paymentCollectionType.name === TUNAI) {
+      return <SfaEditCollectionCash />
+    } else if (paymentCollectionType.name === TRANSFER) {
+      return <SfaEditCollectionTransfer data={detailSfa} />
+    } else {
+      return <View />
+    }
   };
 
   const renderButtonSave = () => {
@@ -153,11 +155,12 @@ const SfaEditCollectionView = props => {
   const renderContent = () => {
     return (
       <View style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }}>
         {renderFakturInfo()}
         {renderCollectionInfo()}
-        <ScrollView style={{ flex: 1 }}>{renderCollectionDetail()}</ScrollView>
-
+        {renderCollectionDetail()}
         {renderButtonSave()}
+        </ScrollView>
       </View>
     );
   };
