@@ -55,13 +55,6 @@ const SfaEditCollectionTransfer = props => {
     state => state.sfa
   );
 
-  //CHANGE DATA
-  const [isChanged, setIsChanged] = useState(false)
-  console.log("sini:", props.data);
-  // supplierId={selectedMerchant.supplierId}
-  // storeId={selectedMerchant.storeId}
-  // paymentCollectionTypeId={props.collectionMethod.id}
-
   /**
    * =======================
    * FUNCTIONAL
@@ -745,7 +738,7 @@ const SfaEditCollectionTransfer = props => {
             selectBankDestination={selectedBankDestination.bind(this)}
             supplierId={selectedMerchant.supplierId}
             storeId={selectedMerchant.storeId}
-            paymentCollectionTypeId={props.collectionMethod.id}
+            paymentCollectionTypeId={props.data.paymentCollection.paymentCollectionMethod.id}
           />
         ) : null}
       </View>
