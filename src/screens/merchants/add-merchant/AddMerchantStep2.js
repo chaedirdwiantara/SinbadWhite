@@ -364,7 +364,7 @@ class AddMerchantStep2 extends Component {
     return(
       <View style={{flex:1, flexDirection: 'row', justifyContent: 'space-evenly', marginVertical: 16}}>
         <IconButtonWithLabel 
-          icon="image-plus" 
+          name="image-multiple"
           label="Pilih Galeri"
           onPress={() => {
             this.setState({showModalChoice: false, showModalTnC: true})
