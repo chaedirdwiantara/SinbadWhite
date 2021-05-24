@@ -47,7 +47,7 @@ class HistoryDetailPaymentInformation extends Component {
   }
   /** RENDER DETAIL INFORMASI PEMBAYARAN */
   renderPaymentInformationDetail() {
-    const paymentPromo = this.props.history.dataDetailHistory.paymentPromo
+    const paymentPromo = this.props.history.dataDetailHistory.parcelPromoPaymentAmount
     return (
       <View>
         <View style={GlobalStyle.boxPadding} />
