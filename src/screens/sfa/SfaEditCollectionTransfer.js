@@ -42,10 +42,10 @@ const SfaEditCollectionTransfer = props => {
 
   //DATA INPUT
   const [noRef, setNoRef] = useState(props.data.paymentCollection.paymentCollectionMethod.reference);
-  const [bankSource, setBankSource] = useState(props.data.paymentCollection.paymentCollectionMethod.bankFrom.name);
-  const [bankDestination, setBankDestination] = useState(props.data.paymentCollection.paymentCollectionMethod.bankToAccount.displayName);
+  const [bankSource, setBankSource] = useState(props.data.paymentCollection.paymentCollectionMethod.bankFrom);
+  const [bankDestination, setBankDestination] = useState(props.data.paymentCollection.paymentCollectionMethod.bankToAccount);
   const [transferDate, setTransferDate] = useState(props.data.paymentCollection.paymentCollectionMethod.date);
-  const [balance, setBalance] = useState(props.data.paymentCollection.paymentCollectionMethod.balance);
+  const [balance, setBalance] = useState(props.data.paymentCollection.paymentCollectionMethod.amount);
   const [billingValue, setBillingValue] = useState(props.data.paymentCollection.paidAmount);
   const [dataImage, setDataImage] = useState(props.data.image);
 
@@ -54,6 +54,13 @@ const SfaEditCollectionTransfer = props => {
   const { dataSfaGetTransferImage, loadingSfaGetTransferImage } = useSelector(
     state => state.sfa
   );
+
+  //CHANGE DATA
+  const [isChanged, setIsChanged] = useState(false)
+  console.log("sini:", props.data);
+  // supplierId={selectedMerchant.supplierId}
+  // storeId={selectedMerchant.storeId}
+  // paymentCollectionTypeId={props.collectionMethod.id}
 
   /**
    * =======================
@@ -73,7 +80,25 @@ const SfaEditCollectionTransfer = props => {
         id : props.data.paymentCollection.id,
         paidAmount: billingValue,
         paymentCollectionMethod: {
-          
+          amount: balance,
+          balance: props.data.paymentCollection.paymentCollectionMethod.balance,
+          bankFrom: {
+            id: bankSource.id,
+            name: bankSource.name,
+          },
+          bankToAccount: {
+            accountNo: bankDestination.accountNo,
+            displayName: bankDestination.displayName,
+            id: bankDestination.id,
+          },
+          date: transferDate,
+          dueDate: props.data.paymentCollection.paymentCollectionMethod.dueDate,
+          id: props.data.paymentCollection.paymentCollectionMethod.id,
+          paymentCollectionType: props.data.paymentCollection.paymentCollectionMethod.paymentCollectionType,
+          principal: props.data.paymentCollection.paymentCollectionMethod.principal,
+          promoNo: props.data.paymentCollection.paymentCollectionMethod.promoNo,
+          reference: noRef,
+          stamp: props.data.paymentCollection.paymentCollectionMethod.stamp
         }
       }
     }
@@ -139,18 +164,19 @@ const SfaEditCollectionTransfer = props => {
   };
 
   const textReference = text => {
-    // props.referenceCode(text);
+    props.isChanged(true);
+    props.referenceCode(text);
     setNoRef(text);
   };
 
   const textTransferDate = date => {
     setTransferDate(date);
-    // props.transferDate(moment(date).format('YYYY-MM-DD'));
+    props.transferDate(moment(date).format('YYYY-MM-DD'));
   };
 
   const textTransferValue = text => {
     setBalance(parseInt(text.replace(/[Rp.]+/g, '')));
-    // props.transferValue(parseInt(text.replace(/[Rp.]+/g, '')));
+    props.transferValue(parseInt(text.replace(/[Rp.]+/g, '')));
   };
 
   const textBillingValue = text => {
@@ -158,21 +184,21 @@ const SfaEditCollectionTransfer = props => {
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)
     ) {
       setBillingValue(parseInt(props.remainingBilling));
-      // props.billingValue(parseInt(props.remainingBilling));
+      props.billingValue(parseInt(props.remainingBilling));
     } else {
       setBillingValue(parseInt(text.replace(/[Rp.]+/g, '')));
-      // props.billingValue(parseInt(text.replace(/[Rp.]+/g, '')));
+      props.billingValue(parseInt(text.replace(/[Rp.]+/g, '')));
     }
   };
 
   const selectedBank = data => {
-    // props.bankSource(data);
+    props.bankSource(data);
     setBankSource(data);
     setOpenModalBank(false);
   };
 
   const selectedBankDestination = data => {
-    // props.bankAccount(data);
+    props.bankAccount(data);
     setBankDestination(data);
     setOpenModalBankDestination(false);
   };
@@ -346,8 +372,8 @@ const SfaEditCollectionTransfer = props => {
               {bankSource === null
                 ? 'Pilih Sumber Bank'
                 : isDisable === true
-                ? bankSource
-                : bankSource}
+                ? bankSource.name
+                : bankSource.name}
             </Text>
             <View style={{ position: 'absolute', right: 16 }}>
               <MaterialIcon
@@ -386,7 +412,7 @@ const SfaEditCollectionTransfer = props => {
             >
               {bankDestination === null
                 ? 'Pilih Tujuan Bank'
-                : bankDestination}
+                : bankDestination.displayName}
             </Text>
             <View style={{ position: 'absolute', right: 16 }}>
               <MaterialIcon
@@ -681,7 +707,7 @@ const SfaEditCollectionTransfer = props => {
             selectCollection={selectedReference.bind(this)}
             supplierId={selectedMerchant.supplierId}
             storeId={selectedMerchant.storeId}
-            paymentCollectionTypeId={props.collectionMethod.id}
+            paymentCollectionTypeId={props.data.paymentCollection.paymentCollectionMethod.id}
           />
         ) : null}
       </View>

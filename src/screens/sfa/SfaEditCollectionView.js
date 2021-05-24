@@ -20,24 +20,74 @@ const SfaEditCollectionView = props => {
   const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(
     state => state.sfa
   );
-  const detailSfa = props.navigation.state.params.dataDetail
-  const [newDataDetailSfa, setNewDataDetailSfa] = useState (null)
+  const detailSfa = props.navigation.state.params.dataDetail;
+  const [newDataDetailSfa, setNewDataDetailSfa] = useState(null);
+  const [isChanged, setIsChanged] = useState(false);
+
+  //DATA PAYMENT TRANSFER
+  const [referenceCode, setReferenceCode] = useState(detailSfa.paymentCollection.paymentCollectionMethod.reference);
+  const [bankSource, setBankSource] = useState(detailSfa.paymentCollection.paymentCollectionMethod.bankFrom);
+  const [bankAccount, setBankAccount] = useState(detailSfa.paymentCollection.paymentCollectionMethod.bankToAccount);
+  const [transferDate, setTransferDate] = useState(detailSfa.paymentCollection.paymentCollectionMethod.date);
+  const [transferValue, setTransferValue] = useState(detailSfa.paymentCollection.paymentCollectionMethod.amount);
+  const [billingValue, setBillingValue] = useState(detailSfa.paymentCollection.paidAmount);
+  const [transferImage, setTransferImage] = useState(detailSfa.image);
+
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
   const saveEditCollection = () => {
-    console.log("detail:", detailSfa);
-    console.log("edit:")
-  }
+    const data = {
+      referenceCode : referenceCode,
+      bankSource : bankSource,
+      bankAccount : bankAccount,
+      transferDate : transferDate,
+      transferValue : transferValue,
+      billingValue : billingValue,
+      transferImage : transferImage
+    }
+    console.log("data:", data);
+  };
 
   const editCollectionNewData = data => {
-    setNewDataDetailSfa(data)
-  }
+    setNewDataDetailSfa(data);
+  };
 
-  console.log("newData:", newDataDetailSfa)
-  console.log("oldData:", detailSfa)
+  const isChangedData = data => {
+    setIsChanged(data);
+  };
+
+  console.log('change:', isChanged);
+
+  const dataReferenceCode = data => {
+    setReferenceCode(data);
+  };
+
+  const dataBankSource = data => {
+    setBankSource(data);
+  };
+
+  const dataBankAccount = data => {
+    setBankAccount(data);
+  };
+
+  const dataTransferDate = data => {
+    setTransferDate(data);
+  };
+
+  const dataTranserValue = data => {
+    setTransferValue(data);
+  };
+
+  const dataBillingValue = data => {
+    setBillingValue(data);
+  };
+
+  const dataTransferImage = data => {
+    setTransferImage(data);
+  };
   /**
    * *********************************
    * RENDER VIEW
@@ -132,14 +182,19 @@ const SfaEditCollectionView = props => {
             <View>
               <Text style={Fonts.type48}>Detil Penagihan</Text>
             </View>
-            <View style={[GlobalStyle.lines, {marginVertical: 8, marginBottom: 16}]} />
-            <View style={{marginLeft: -16}}>
+            <View
+              style={[
+                GlobalStyle.lines,
+                { marginVertical: 8, marginBottom: 16 }
+              ]}
+            />
+            <View style={{ marginLeft: -16 }}>
               <InputType5
                 title={`Metode Penagihan`}
                 placeholder={collectionMethodType.name}
                 editable={false}
               />
-              <View style={{marginLeft: 16}}>{renderEditForm()}</View>
+              <View style={{ marginLeft: 16 }}>{renderEditForm()}</View>
             </View>
           </View>
         </View>
@@ -147,15 +202,35 @@ const SfaEditCollectionView = props => {
     );
   };
   const renderEditForm = () => {
-    const paymentCollectionType = detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType
+    const paymentCollectionType =
+      detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType;
     if (paymentCollectionType.name === TUNAI) {
-      return <SfaEditCollectionCash />
+      return <SfaEditCollectionCash />;
     } else if (paymentCollectionType.name === TRANSFER) {
-      return <SfaEditCollectionTransfer data={detailSfa} newData={editCollectionNewData}/>
-    } else if (paymentCollectionType.name === PROMO){
-      return <SfaEditCollectionPromo data={detailSfa} newData={editCollectionNewData} />
+      return (
+        <SfaEditCollectionTransfer
+          data={detailSfa}
+          newData={editCollectionNewData}
+          isChanged={isChangedData}
+          referenceCode={dataReferenceCode}
+          bankSource={dataBankSource}
+          bankAccount={dataBankAccount}
+          transferDate={dataTransferDate}
+          transferValue={dataTranserValue}
+          billingValue={dataBillingValue}
+          transferImage={dataTransferImage}
+        />
+      );
+    } else if (paymentCollectionType.name === PROMO) {
+      return (
+        <SfaEditCollectionPromo
+          data={detailSfa}
+          newData={editCollectionNewData}
+          isChanged={isChangedData}
+        />
+      );
     } else {
-      return <View/>
+      return <View />;
     }
   };
 
@@ -175,10 +250,10 @@ const SfaEditCollectionView = props => {
     return (
       <View style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
-        {renderFakturInfo()}
-        {renderCollectionInfo()}
-        {renderCollectionDetail()}
-        {renderButtonSave()}
+          {renderFakturInfo()}
+          {renderCollectionInfo()}
+          {renderCollectionDetail()}
+          {renderButtonSave()}
         </ScrollView>
       </View>
     );
