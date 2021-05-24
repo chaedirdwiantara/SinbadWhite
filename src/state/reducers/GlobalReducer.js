@@ -17,7 +17,6 @@ const INITIAL_STATE = {
   pageAddMerchantFrom: '',
   pageAreaMappingFrom: '',
   imageBase64: '',
-  isPickedFromGallery: false,
   dataGetListAndSearch: [],
   totalDataGetListAndSearch: 0,
   pageGetListAndSearch: 0,
@@ -354,12 +353,6 @@ export const global = createReducer(INITIAL_STATE, {
       ...state,
       loadingUploadImage: false,
       errorUploadImage: action.payload
-    };
-  },
-  [types.SET_PICKED_FROM_GALLERY](state, action) {
-    return {
-      ...state,
-      isPickedFromGallery: action.payload
     };
   }
 });

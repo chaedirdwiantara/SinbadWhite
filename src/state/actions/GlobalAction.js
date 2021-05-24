@@ -217,10 +217,6 @@ export function uploadImageSuccess(data) {
 export function uploadImageFailed(data) {
   return { type: types.UPLOAD_IMAGE_FAILED, payload: data };
 }
-/** === SET PICKED FROM GALLEY === */
-export function setPickedFromGalley(data) {
-  return { type: types.SET_PICKED_FROM_GALLERY, payload: data };
-}
 
 /**
  * ========================

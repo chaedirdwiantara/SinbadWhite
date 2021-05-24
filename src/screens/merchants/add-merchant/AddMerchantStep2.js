@@ -144,6 +144,7 @@ class AddMerchantStep2 extends Component {
   }
   /** === PICK IMAGE === */
   pickImage(){
+    this.setState({showModalTnC: false, checkTnC: false})
     ImagePicker.openPicker({
       includeBase64: true,
       width: 1920,
@@ -151,8 +152,6 @@ class AddMerchantStep2 extends Component {
       cropping: true,
       mediaType: 'photo'
     }).then(image => {
-      this.setState({showModalTnC: false, checkTnC: false})
-      this.props.setPickedFromGalley(true)
       this.props.saveImageBase64(image.data)
     });
   }
@@ -291,19 +290,19 @@ class AddMerchantStep2 extends Component {
   }
   /** PREVIEW IMAGE */
   renderPreviewImage(){
-    const {isPickedFromGallery} = this.props.global
     return(
       <View style={{marginBottom: 24}}>
         <Image 
           source={{uri: `data:image/jpg;base64,${this.props.global.imageBase64}`}}
-          resizeMode="contain"
+          resizeMode="stretch"
+          borderRadius={12}
           style={{
-            aspectRatio: 16/9,
-            marginVertical: 12,
+            aspectRatio: 16/10,
+            marginVertical: 16,
             width: '100%',
           }}
         />
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Button
             type="clear"
             onPress={() => this.props.saveImageBase64('')}
@@ -316,7 +315,7 @@ class AddMerchantStep2 extends Component {
             onPress={() => this.setState({showModalChoice: true})}
             titleStyle={Fonts.textButtonWhiteActive}
             containerStyle={{flex: 1}}
-            buttonStyle={{borderColor: Color.buttonActiveColorRed, borderWidth: 1.5, paddingVertical: 11, borderRadius: 4}}
+            buttonStyle={{borderColor: Color.buttonActiveColorRed, borderWidth: 1.5, borderRadius: 4}}
             title="Ulangi Foto" />
         </View>
       </View>
@@ -376,7 +375,7 @@ class AddMerchantStep2 extends Component {
           label="Ambil Foto"
           onPress={() => {
             this.setState({showModalChoice: false})
-            navigate('TakeIdPicture', {typeCamera: 'id'})
+            navigate('TakeIdPicture', {typeCamera: 'id', uploadFromGallery: true})
           }}
         />
       </View>

@@ -12,12 +12,14 @@ import {
 import { 
   RNCamera,
   bindActionCreators,
-  MaterialIcon,
   connect,
   ImageEditor,
+  MaterialCommunityIcons,
   RNFS,
 } from '../../library/thirdPartyPackage'
 import { 
+  ButtonSingle,
+  ModalBottomType4,
   StatusBarBlack,
 } from '../../library/component'
 import * as ActionCreators from '../../state/actions';
@@ -25,19 +27,21 @@ import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor.json';
 import { ToastAndroid } from 'react-native';
 import { Fonts } from '../../helpers';
+import ImagePicker from 'react-native-image-crop-picker';
 
 class TakeIdPicture extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false
+      loading: false,
+      showModalTnC: false,
+      checkTnC: false
     };
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.global.imageBase64 !== this.props.global.imageBase64) {
       if (this.props.global.imageBase64 !== '') {
-        this.props.setPickedFromGalley(false)
         NavigationService.goBack(this.props.navigation.state.key);
       }
     }
@@ -45,10 +49,6 @@ class TakeIdPicture extends Component {
 
   takePicture = async () => {
     this.setState({ loading: true });
-    const cropData = {
-      offset: { x: 0, y: 0 },
-      size: { width: width, height: width }
-    }
 
     if (this.camera) {
       const options = {
@@ -72,8 +72,63 @@ class TakeIdPicture extends Component {
     }
   };
 
+  /** === PICK IMAGE === */
+  pickImage(){
+    this.setState({showModalTnC: false, checkTnC: false})
+    ImagePicker.openPicker({
+      includeBase64: true,
+      width: 1920,
+      height: 1080,
+      cropping: true,
+      mediaType: 'photo'
+    }).then(image => {
+      this.props.saveImageBase64(image.data)
+    });
+  }
+
+  /** RENDER MODAL TNC */
+  renderModalTnC(){
+    const {showModalTnC} = this.state
+    return(
+      <ModalBottomType4 
+        open={showModalTnC}
+        title="Ketentuan Pilih Galeri"
+        typeClose="cancel"
+        close={() => this.setState({showModalTnC: false, checkTnC: false})}
+        content={this.renderContentModalTnC()}
+      />
+    )
+  }
+  /** RENDER MODAL TNC CONTENT */
+  renderContentModalTnC(){
+    const {checkTnC} = this.state
+    return(
+      <View>
+        <View style={{paddingHorizontal: 16, flex: 1, paddingBottom: 16, flexDirection: 'row'}}>
+          <TouchableOpacity onPress={() => this.setState({ checkTnC: !checkTnC })}>
+            <MaterialCommunityIcons
+              color={checkTnC ? masterColor.mainColor : masterColor.fontBlack40}
+              name={checkTnC ? 'checkbox-marked' : 'checkbox-blank-outline'}
+              size={24}
+            />
+          </TouchableOpacity>
+          <Text style={[Fonts.type8, {marginLeft: 8, flex: 1}]}>
+            Saya bertanggung jawab atas foto KTP pemilik toko yang saya upload. Apabila terdapat penyalahgunaan terhadap foto KTP ini, maka saya bersedia mengikuti kebijakan yang berlaku di Sinbad
+          </Text>
+        </View>
+        <ButtonSingle
+          disabled={!checkTnC}
+          title={'Lanjutkan'}
+          borderRadius={4}
+          onPress={() => this.pickImage()}
+        />
+      </View>
+    )
+  }
+
   render() {
-    const {typeCamera} = this.props.navigation?.state?.params || {}
+    const {typeCamera, uploadFromGallery} = this.props.navigation?.state?.params || {}
+    const {showModalTnC} = this.state
     return (
       <View style={styles.mainContainer}>
         <StatusBarBlack />
@@ -92,10 +147,10 @@ class TakeIdPicture extends Component {
           <View style={styles.masking}>
             <View style={styles.partialMask}>
               <Text style={[Fonts.type7, {color: masterColor.fontWhite}]}>
-                Ambil Foto {typeCamera === 'id' ? 'E-KTP' : 'NPWP'}
+                Ambil Foto {typeCamera === 'id' ? 'KTP' : 'NPWP'}
               </Text>
               <Text style={[Fonts.type37, {color: masterColor.fontWhite, marginTop: 16}]}>
-                Posisikan {typeCamera === 'id' ? 'e-KTP' : 'NPWP'} Anda tepat berada di dalam bingkai
+                Posisikan {typeCamera === 'id' ? 'KTP' : 'NPWP'} Anda tepat berada di dalam bingkai
               </Text>
             </View>
             <View style={{height: .35 * height, backgroundColor: 'transparent', flexDirection: 'row'}}>
@@ -104,16 +159,35 @@ class TakeIdPicture extends Component {
               <View style={{flex: 1, backgroundColor: masterColor.fontBlack100OP60}} />
             </View>
             <View style={styles.partialMask}>
-              <TouchableOpacity
-                style={styles.boxCircleCamera}
-                onPress={this.takePicture.bind(this)}
-              >
-                <MaterialIcon
-                  name="photo-camera"
-                  color={masterColor.fontWhite}
-                  size={32}
-                />
-              </TouchableOpacity>
+              <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                <View style={{flex: 1}} />
+                <View style={{flex: 1}}>
+                  <TouchableOpacity
+                    style={{...styles.boxCircleCamera, alignSelf: 'center'}}
+                    onPress={this.takePicture.bind(this)}
+                  >
+                    <MaterialCommunityIcons
+                      name="camera"
+                      color={masterColor.fontWhite}
+                      size={32}
+                    />
+                  </TouchableOpacity>
+                </View>
+                {uploadFromGallery ? (
+                  <View style={{flex: 1}}>
+                    <TouchableOpacity
+                      style={{alignSelf: 'center'}}
+                      onPress={() => this.setState({showModalTnC: true})}
+                    >
+                      <MaterialCommunityIcons
+                        name="image-multiple"
+                        color={masterColor.fontWhite}
+                        size={24}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                ) : <View style={{flex: 1}} />}
+              </View>
             </View>
           </View>
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -127,6 +201,7 @@ class TakeIdPicture extends Component {
             </View>
           </View>
         </RNCamera>
+        {showModalTnC && this.renderModalTnC()}
       </View>
     );
   }
