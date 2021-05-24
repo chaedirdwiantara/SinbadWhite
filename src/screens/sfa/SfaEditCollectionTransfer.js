@@ -510,11 +510,11 @@ const SfaEditCollectionTransfer = props => {
           {renderTooltip()}
         </View>
         {dataReference ? (
-          dataImage.fileData ? (
+          dataImage ? (
             <View style={styles.smallContainerImage}>
             <Image
               source={{
-                uri: `data:image/jpeg;base64, ${dataImage.fileData}`
+                uri: `data:image/jpeg;base64, ${dataImage}`
               }}
               style={[
                 styles.images,
@@ -533,10 +533,11 @@ const SfaEditCollectionTransfer = props => {
           )
         ) : dataImage ? (
           <View style={{ marginTop: 12 }}>
+            <Text>disini</Text>
             <View style={styles.smallContainerImage}>
               <Image
                 source={{
-                  uri: `data:image/jpeg;base64, ${dataImage.fileData}`
+                  uri: `data:image/jpeg;base64, ${dataImage}`
                 }}
                 style={[
                   styles.images,
