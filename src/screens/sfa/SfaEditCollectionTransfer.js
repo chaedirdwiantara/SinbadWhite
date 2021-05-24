@@ -64,6 +64,22 @@ const SfaEditCollectionTransfer = props => {
     setExistingImage();
   }, [dataSfaGetTransferImage]);
 
+  useEffect(() => {
+    const data = {
+      image: dataImage,
+      isEditable: props.data.isEditable,
+      outstanding: props.data.outstanding,
+      paymentCollection: {
+        id : props.data.paymentCollection.id,
+        paidAmount: billingValue,
+        paymentCollectionMethod: {
+          
+        }
+      }
+    }
+    props.newData(data)
+  }, [noRef, bankSource, bankDestination, transferDate, balance, billingValue, dataImage]);
+
   const setExistingImage = () => {
     if (dataSfaGetTransferImage && dataReference) {
       setDataImage({ fileData: dataSfaGetTransferImage.data.image });
@@ -123,18 +139,18 @@ const SfaEditCollectionTransfer = props => {
   };
 
   const textReference = text => {
-    props.referenceCode(text);
+    // props.referenceCode(text);
     setNoRef(text);
   };
 
   const textTransferDate = date => {
     setTransferDate(date);
-    props.transferDate(moment(date).format('YYYY-MM-DD'));
+    // props.transferDate(moment(date).format('YYYY-MM-DD'));
   };
 
   const textTransferValue = text => {
     setBalance(parseInt(text.replace(/[Rp.]+/g, '')));
-    props.transferValue(parseInt(text.replace(/[Rp.]+/g, '')));
+    // props.transferValue(parseInt(text.replace(/[Rp.]+/g, '')));
   };
 
   const textBillingValue = text => {
@@ -142,21 +158,21 @@ const SfaEditCollectionTransfer = props => {
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)
     ) {
       setBillingValue(parseInt(props.remainingBilling));
-      props.billingValue(parseInt(props.remainingBilling));
+      // props.billingValue(parseInt(props.remainingBilling));
     } else {
       setBillingValue(parseInt(text.replace(/[Rp.]+/g, '')));
-      props.billingValue(parseInt(text.replace(/[Rp.]+/g, '')));
+      // props.billingValue(parseInt(text.replace(/[Rp.]+/g, '')));
     }
   };
 
   const selectedBank = data => {
-    props.bankSource(data);
+    // props.bankSource(data);
     setBankSource(data);
     setOpenModalBank(false);
   };
 
   const selectedBankDestination = data => {
-    props.bankAccount(data);
+    // props.bankAccount(data);
     setBankDestination(data);
     setOpenModalBankDestination(false);
   };

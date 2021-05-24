@@ -21,6 +21,23 @@ const SfaEditCollectionView = props => {
     state => state.sfa
   );
   const detailSfa = props.navigation.state.params.dataDetail
+  const [newDataDetailSfa, setNewDataDetailSfa] = useState (null)
+  /**
+   * =======================
+   * FUNCTIONAL
+   * =======================
+   */
+  const saveEditCollection = () => {
+    console.log("detail:", detailSfa);
+    console.log("edit:")
+  }
+
+  const editCollectionNewData = data => {
+    setNewDataDetailSfa(data)
+  }
+
+  console.log("newData:", newDataDetailSfa)
+  console.log("oldData:", detailSfa)
   /**
    * *********************************
    * RENDER VIEW
@@ -134,9 +151,9 @@ const SfaEditCollectionView = props => {
     if (paymentCollectionType.name === TUNAI) {
       return <SfaEditCollectionCash />
     } else if (paymentCollectionType.name === TRANSFER) {
-      return <SfaEditCollectionTransfer data={detailSfa} />
+      return <SfaEditCollectionTransfer data={detailSfa} newData={editCollectionNewData}/>
     } else if (paymentCollectionType.name === PROMO){
-      return <SfaEditCollectionPromo data={detailSfa} />
+      return <SfaEditCollectionPromo data={detailSfa} newData={editCollectionNewData} />
     } else {
       return <View/>
     }
@@ -149,7 +166,7 @@ const SfaEditCollectionView = props => {
         loading={false}
         title={'Simpan'}
         borderRadius={4}
-        onPress={() => console.log('simpan')}
+        onPress={() => saveEditCollection()}
       />
     );
   };
