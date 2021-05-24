@@ -9,22 +9,20 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  width,
-  TouchableWithoutFeedback,
-  ModalPopUp
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
   Button,
   connect,
-  MaterialCommunityIcons,
-  MaterialIcon
+  MaterialCommunityIcons
 } from '../../../library/thirdPartyPackage';
 import {
   ButtonSingle,
   StatusBarWhite,
   ProgressBarType1,
   InputType4,
+  ModalBottomType4,
+  IconButtonWithLabel,
 } from '../../../library/component';
 import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
@@ -32,7 +30,7 @@ import * as ActionCreators from '../../../state/actions';
 import { GlobalMethod } from '../../../services/methods';
 import { Fonts } from '../../../helpers';
 import masterColor from '../../../config/masterColor.json';
-import PhotoUploaded from '../reusable-view/PhotoUploaded';
+import ImagePicker from 'react-native-image-crop-picker';
 
 const idNumberGaps = [6,12]
 const taxNoGaps = [2,5,8,9,12,15]
@@ -40,28 +38,23 @@ const taxNoGaps = [2,5,8,9,12,15]
 class AddMerchantStep2 extends Component {
   constructor(props) {
     super(props);
+    const {user, merchant} = this.props
+    const {dataMerchantVolatile: {fullName, name, idNo, taxNo}} = merchant
     this.state = {
       /** error */
       errorIdNumber: false,
       errorTaxNumber: false,
-      addStoreProcess: false,
       /** supplier */
-      supplierName:
-        this.props.user?.userSuppliers.length === 1
-          ? this.props.user.userSuppliers[0].supplier.name
-          : '',
+      supplierName: user?.userSuppliers.length === 1 ? user.userSuppliers[0].supplier.name: '',
       /** field data */
-      fullName: this.props.merchant.dataMerchantVolatile.fullName || '',
-      name: this.props.merchant.dataMerchantVolatile.name || '',
-      idNo: 
-        this.props.merchant.dataMerchantVolatile.idNo 
-          ? GlobalMethod.addGaps(this.props.merchant.dataMerchantVolatile.idNo, idNumberGaps, " ") 
-          : '',
-      taxNo: 
-        this.props.merchant.dataMerchantVolatile.taxNo 
-          ? GlobalMethod.addGaps(this.props.merchant.dataMerchantVolatile.taxNo, taxNoGaps, ".") 
-          : '',
-      previewImage: false
+      fullName,
+      name,
+      idNo: idNo ? GlobalMethod.addGaps(idNo, idNumberGaps, " ") : null,
+      taxNo: taxNo ? GlobalMethod.addGaps(taxNo, taxNoGaps, ".") : null,
+      previewImage: false,
+      showModalChoice: false,
+      showModalTnC: false,
+      checkTnC: false
     };
   }
   /**
@@ -93,8 +86,8 @@ class AddMerchantStep2 extends Component {
     this.props.saveVolatileDataMerchant({
       fullName: this.state.fullName,
       name: this.state.name,
-      idNo: this.state.idNo.replace(/[^0-9]/g, ''),
-      taxNo: this.state.taxNo.replace(/[^0-9]/g, '')
+      idNo: this.state.idNo?.replace(/[^0-9]/g, ''),
+      taxNo: this.state.taxNo?.replace(/[^0-9]/g, '')
     });
     NavigationService.navigate('AddMerchantStep3')
   }
@@ -120,11 +113,12 @@ class AddMerchantStep2 extends Component {
     const storeIsExist = this.props.auth.dataCheckPhoneAvailble?.store !== null
     if(storeIsExist) return false
     
+    const {fullName, name, idNo, supplierName, errorIdNumber, errorTaxNumber} = this.state
+    const {loadingUploadImage, imageBase64} = this.props.global
+
     if (
-      !this.state.fullName || !this.state.name ||
-      !this.state.idNo || !this.state.supplierName ||
-      this.state.errorIdNumber || this.state.errorTaxNumber || 
-      this.props.global.loadingUploadImage || !this.props.global.imageBase64
+      !fullName || !name || !idNo || !supplierName || errorIdNumber ||
+      errorTaxNumber || loadingUploadImage || !imageBase64
     ){
       return true
     }
@@ -148,13 +142,27 @@ class AddMerchantStep2 extends Component {
       errorTaxNumber: !(formatted === '' || formatted.length >= 20) 
     });
   }
+  /** === PICK IMAGE === */
+  pickImage(){
+    this.setState({showModalTnC: false, checkTnC: false})
+    ImagePicker.openPicker({
+      includeBase64: true,
+      width: 1920,
+      height: 1080,
+      cropping: true,
+      mediaType: 'photo'
+    }).then(image => {
+      this.props.saveImageBase64(image.data)
+    });
+  }
   /**
    * ====================
    * RENDER VIEW
    * ===================
    */
 
-  renderAsteriskRed = () => <Text style={{color: 'red'}}>*</Text>
+  suffixIcon = () => <MaterialCommunityIcons color={Color.fontBlack60} name={'close-circle'} size={20} />
+  asteriskRed = () => <Text style={{color: 'red'}}>*</Text>
   /** === RENDER STEP HEADER === */
   renderProgressHeader() {
     return (
@@ -168,11 +176,11 @@ class AddMerchantStep2 extends Component {
     );
   }
   /** === OWNER NAME === */
-  renderNameOwner(disabled) {
+  renderNameOwner(editable) {
     return (
       <InputType4
-        editable={!disabled}
-        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Nama Lengkap Pemilik</Text>}
+        editable={!editable}
+        title={<Text style={{fontSize: 12}}>{this.asteriskRed()} Nama Lengkap Pemilik</Text>}
         value={this.state.fullName}
         onChangeText={fullName => {
           const cleanNameFormat = fullName.replace(/[^\w\s]|[0-9]|[_]/g, '');
@@ -184,45 +192,29 @@ class AddMerchantStep2 extends Component {
         keyboardType={'default'}
         marginBottom={16}
         maxLength={40}
-        suffix={!disabled}
+        suffix={!editable}
         suffixForPush
         suffixPush={() =>this.setState({fullName: ''})}
-        suffixContent={
-          this.state.fullName && (
-            <MaterialCommunityIcons
-              color={Color.fontBlack60}
-              name={'close-circle'}
-              size={20}
-            />
-          )
-        }
+        suffixContent={this.state.fullName && this.suffixIcon()}
       />
     );
   }
   /** === MERCHANT NAME === */
-  renderNameMerchant(disabled) {
+  renderNameMerchant(editable) {
     return (
       <InputType4
-        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Nama Toko</Text>}
-        editable={!disabled}
+        title={<Text style={{fontSize: 12}}>{this.asteriskRed()} Nama Toko</Text>}
+        editable={!editable}
         value={this.state.name}
         onChangeText={name => this.setState({ name })}
         placeholder={'Masukan Nama Toko'}
         keyboardType={'default'}
         marginBottom={16}
         maxLength={40}
-        suffix={!disabled}
+        suffix={!editable}
         suffixForPush
         suffixPush={() =>this.setState({name: ''})}
-        suffixContent={
-          this.state.name && (
-            <MaterialCommunityIcons
-              color={Color.fontBlack60}
-              name={'close-circle'}
-              size={20}
-            />
-          )
-        }
+        suffixContent={this.state.name && this.suffixIcon()}
       />
     );
   }
@@ -230,7 +222,7 @@ class AddMerchantStep2 extends Component {
   renderSupplier() {
     return (
       <InputType4
-        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Supplier</Text>}
+        title={<Text style={{fontSize: 12}}>{this.asteriskRed()} Supplier</Text>}
         editable={false}
         placeholder={this.state.supplierName}
         keyboardType={'default'}
@@ -239,11 +231,11 @@ class AddMerchantStep2 extends Component {
     );
   }
   /** === OWNER ID NO === */
-  renderIdNo(disabled) {
+  renderIdNo(editable) {
     return (
       <InputType4
-        editable={!disabled}
-        title={<Text style={{fontSize: 12}}>{this.renderAsteriskRed()} Nomor Kartu Tanda Penduduk (KTP)</Text>}
+        editable={!editable}
+        title={<Text style={{fontSize: 12}}>{this.asteriskRed()} Nomor Kartu Tanda Penduduk (KTP)</Text>}
         value={this.state.idNo}
         onChangeText={idNo => {
           const cleanNumber = idNo.replace(/[^0-9]/g, '');
@@ -255,26 +247,18 @@ class AddMerchantStep2 extends Component {
         errorText={'Pastikan No.KTP maksimal 16 Digit'}
         maxLength={18}
         marginBottom={16}
-        suffix={!disabled}
+        suffix={!editable}
         suffixForPush
         suffixPush={() =>this.setState({idNo: '', errorIdNumber: false})}
-        suffixContent={
-          this.state.idNo && (
-            <MaterialCommunityIcons
-              color={Color.fontBlack60}
-              name={'close-circle'}
-              size={20}
-            />
-          )
-        }
+        suffixContent={this.state.idNo && this.suffixIcon()}
       />
     );
   }
   /** === OWNER TAX NO === */
-  renderTaxId(disabled) {
+  renderTaxId(editable) {
     return (
       <InputType4
-        editable={!disabled}
+        editable={!editable}
         title={'Nomor Pokok Wajib Pajak (NPWP)'}
         value={this.state.taxNo}
         onChangeText={taxNo => {
@@ -287,18 +271,10 @@ class AddMerchantStep2 extends Component {
         errorText={'Pastikan No.NPWP maksimal 15 Digit'}
         maxLength={20}
         marginBottom={16}
-        suffix={!disabled}
+        suffix={!editable}
         suffixForPush
         suffixPush={() =>this.setState({taxNo: '', errorTaxNumber: false})}
-        suffixContent={
-          this.state.taxNo && (
-            <MaterialCommunityIcons
-              color={Color.fontBlack60}
-              name={'close-circle'}
-              size={20}
-            />
-          )
-        }
+        suffixContent={this.state.taxNo && this.suffixIcon()}
       />
     );
   }
@@ -307,26 +283,26 @@ class AddMerchantStep2 extends Component {
     const showImage = this.props.global.imageBase64 !== ''
     return (
       <View style={{paddingHorizontal: 16}}>
-        <Text style={Fonts.type32}>{this.renderAsteriskRed()} Upload Foto KTP</Text>
-        {showImage ? this.renderThumbnail() : this.renderTakeIdNoPhotoButton()}
+        <Text style={Fonts.type32}>{this.asteriskRed()} Upload Foto KTP</Text>
+        {showImage ? this.renderPreviewImage() : this.renderButtonUploadPhoto()}
       </View>
     )
   }
-  renderThumbnail(){
+  /** PREVIEW IMAGE */
+  renderPreviewImage(){
     return(
       <View style={{marginBottom: 24}}>
         <Image 
           source={{uri: `data:image/jpg;base64,${this.props.global.imageBase64}`}}
-          resizeMode="contain"
+          resizeMode="stretch"
+          borderRadius={12}
           style={{
-            aspectRatio: 1/1,
-            marginVertical: -56,
-            zIndex: -9999,
-            width: '100%', 
-            transform: [{rotate: '270deg'}]
+            aspectRatio: 16/10,
+            marginVertical: 16,
+            width: '100%',
           }}
         />
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Button
             type="clear"
             onPress={() => this.props.saveImageBase64('')}
@@ -336,70 +312,111 @@ class AddMerchantStep2 extends Component {
           <View style={{marginHorizontal: 4}} />
           <Button
             type="outline"
-            onPress={() => this.props.navigation.navigate('TakeIdPicture')}
+            onPress={() => this.setState({showModalChoice: true})}
             titleStyle={Fonts.textButtonWhiteActive}
             containerStyle={{flex: 1}}
-            buttonStyle={{borderColor: Color.buttonActiveColorRed, borderWidth: 1.5, paddingVertical: 11, borderRadius: 4}}
+            buttonStyle={{borderColor: Color.buttonActiveColorRed, borderWidth: 1.5, borderRadius: 4}}
             title="Ulangi Foto" />
         </View>
       </View>
     )
   }
-  renderPreviewImage() {
-    return (
-      <ModalPopUp
-        animationType="slide"
-        transparent={true}
-        visible={this.state.previewImage}
-      >
-        <View
-          style={{
-            backgroundColor: masterColor.fontWhite,
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}>
-          <TouchableOpacity 
-            onPress={() => this.setState({previewImage: false})}
-            style={{position: 'absolute', right: 16, top: 16}}>
-            <MaterialIcon
-              name="close"
-              color={Color.fontBlack50}
-              size={24}
-            />
-          </TouchableOpacity>
-          <Image 
-            source={{uri: `data:image/jpg;base64,${this.props.global.imageBase64}`}}
-            resizeMode="stretch"
-            style={{
-              width: width * .7, height: width, 
-              transform: [{rotate: '270deg'}]
-            }}
-          />
-        </View>
-      </ModalPopUp>
-    )
-  }
-  renderTakeIdNoPhotoButton(){
+  /** RENDER BUTTON UPLOAD PHOTO */
+  renderButtonUploadPhoto(){
     const storeIsExist = this.props.auth.dataCheckPhoneAvailble?.store !== null
     const {idNo, errorIdNumber} = this.state
-    const disabled = idNo === "" || errorIdNumber || storeIsExist
+    const disabled = idNo === null || errorIdNumber || storeIsExist
     return(
       <View style={{flex:1, flexDirection: 'row', flexWrap: 'wrap', marginVertical: 16}}>
         <TouchableOpacity 
           disabled={disabled}
-          onPress={() => this.props.navigation.navigate('TakeIdPicture')}
+          onPress={() => this.setState({showModalChoice: true})}
           style={{
               borderWidth: 1, alignItems: 'center', padding: 8, 
               borderRadius: 12, borderColor: masterColor.buttonGreyWhiteDisabled}}
         >
-          <MaterialIcon
-            name="photo-camera"
-            color={ disabled ? masterColor.buttonGreyWhiteDisabled : masterColor.fontRed50}
+          <MaterialCommunityIcons
+            name="image-plus"
+            color={disabled ? masterColor.buttonGreyWhiteDisabled : masterColor.fontRed50}
             size={40}
           />
           <Text style={Fonts.type71}>Upload Foto</Text>
         </TouchableOpacity>
+      </View>
+    )
+  }
+  /** RENDER MODAL CHOICE */
+  renderModalChoice(){
+    const {showModalChoice} = this.state
+    return(
+      <ModalBottomType4 
+        open={showModalChoice}
+        title="Upload Foto"
+        typeClose="cancel"
+        close={() => this.setState({showModalChoice: false})}
+        content={this.renderContentModalChoice()}
+      />
+    )
+  }
+  /** RENDER CONTENT MODAL CHOICE */
+  renderContentModalChoice(){
+    const {navigate} = this.props.navigation
+    return(
+      <View style={{flex:1, flexDirection: 'row', justifyContent: 'space-evenly', marginVertical: 16}}>
+        <IconButtonWithLabel 
+          icon="image-plus" 
+          label="Pilih Galeri"
+          onPress={() => {
+            this.setState({showModalChoice: false, showModalTnC: true})
+          }}
+        />
+        <IconButtonWithLabel 
+          icon="camera" 
+          label="Ambil Foto"
+          onPress={() => {
+            this.setState({showModalChoice: false})
+            navigate('TakeIdPicture', {typeCamera: 'id', uploadFromGallery: true})
+          }}
+        />
+      </View>
+    )
+  }
+  /** RENDER MODAL TNC */
+  renderModalTnC(){
+    const {showModalTnC} = this.state
+    return(
+      <ModalBottomType4 
+        open={showModalTnC}
+        title="Ketentuan Pilih Galeri"
+        typeClose="cancel"
+        close={() => this.setState({showModalTnC: false, checkTnC: false})}
+        content={this.renderContentModalTnC()}
+      />
+    )
+  }
+  /** RENDER MODAL TNC CONTENT */
+  renderContentModalTnC(){
+    const {checkTnC} = this.state
+    return(
+      <View>
+        <View style={{paddingHorizontal: 16, flex: 1, paddingBottom: 16, flexDirection: 'row'}}>
+          <TouchableOpacity onPress={() => this.setState({ checkTnC: !checkTnC })}>
+            <MaterialCommunityIcons
+              color={checkTnC ? masterColor.mainColor : masterColor.fontBlack40}
+              name={checkTnC ? 'checkbox-marked' : 'checkbox-blank-outline'}
+              size={24}
+            />
+          </TouchableOpacity>
+          <Text style={[Fonts.type8, {marginLeft: 8, flex: 1}]}>
+            Saya bertanggung jawab atas foto KTP pemilik toko yang saya upload. Apabila terdapat penyalahgunaan terhadap foto KTP ini, maka saya bersedia mengikuti kebijakan yang berlaku di Sinbad
+          </Text>
+        </View>
+        <ButtonSingle
+          disabled={!checkTnC}
+          title={'Lanjutkan'}
+          borderRadius={4}
+          onPress={() => this.pickImage()}
+        />
       </View>
     )
   }
@@ -411,7 +428,7 @@ class AddMerchantStep2 extends Component {
         {this.renderNameOwner(storeIsExist)}
         {this.renderNameMerchant(storeIsExist)}
         {this.renderSupplier()}
-        {this.renderIdNo(storeIsExist)}
+        {this.renderIdNo(storeIsExist)} 
         {this.renderImageIdNo()}
         {this.renderTaxId(storeIsExist)}
         <View style={{ paddingBottom: 50 }} />
@@ -432,6 +449,7 @@ class AddMerchantStep2 extends Component {
   }
   /** === MAIN === */
   render() {
+    const {showModalChoice, showModalTnC} = this.state
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarWhite />
@@ -440,7 +458,8 @@ class AddMerchantStep2 extends Component {
           {this.renderContent()}
         </ScrollView>
         {this.renderButton()}
-        {/* {this.renderPreviewImage()} */}
+        {showModalChoice && this.renderModalChoice()}
+        {showModalTnC && this.renderModalTnC()}
       </SafeAreaView>
     );
   }
