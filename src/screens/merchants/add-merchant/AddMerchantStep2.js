@@ -82,7 +82,6 @@ class AddMerchantStep2 extends Component {
   }
   /** GO TO NEXT SCREEN */
   gotoNextScreen(){
-    this.props.saveImageBase64('');
     this.props.saveVolatileDataMerchant({
       fullName: this.state.fullName,
       name: this.state.name,
@@ -297,7 +296,7 @@ class AddMerchantStep2 extends Component {
           resizeMode="stretch"
           borderRadius={12}
           style={{
-            aspectRatio: 16/10,
+            aspectRatio: 16/9,
             marginVertical: 16,
             width: '100%',
           }}
@@ -364,7 +363,7 @@ class AddMerchantStep2 extends Component {
     return(
       <View style={{flex:1, flexDirection: 'row', justifyContent: 'space-evenly', marginVertical: 16}}>
         <IconButtonWithLabel 
-          name="image-multiple"
+          icon="image-multiple"
           label="Pilih Galeri"
           onPress={() => {
             this.setState({showModalChoice: false, showModalTnC: true})
