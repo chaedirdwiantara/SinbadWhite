@@ -49,10 +49,6 @@ class OmsVerificationView extends Component {
    * FUNCTIONAL
    * =======================
    */
-  /** === DID MOUNT */
-  componentDidMount() {
-    this.props.portfolioGetProcessV2();
-  }
   /** === DID UPDATE */
   componentDidUpdate(prevProps) {
     /** === SUCCESS POST CHECKOUT ITEM ===
