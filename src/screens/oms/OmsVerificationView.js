@@ -49,10 +49,6 @@ class OmsVerificationView extends Component {
    * FUNCTIONAL
    * =======================
    */
-  /** === DID MOUNT */
-  componentDidMount() {
-    this.props.portfolioGetProcessV2();
-  }
   /** === DID UPDATE */
   componentDidUpdate(prevProps) {
     /** === SUCCESS POST CHECKOUT ITEM ===
@@ -144,11 +140,13 @@ class OmsVerificationView extends Component {
 
   /** ===  === */
   getCheckoutItem() {
-    this.props.omsGetCheckoutItemProcess({
-      cartId: this.props.navigation.state.params.cartId,
-      catalogues: this.props.oms.dataCheckout,
-      portfolioId: this.props.merchant.dataGetPortfolioV2[0].id
-    });
+    if(this.props.merchant.dataGetPortfolioV2){
+      this.props.omsGetCheckoutItemProcess({
+        cartId: this.props.navigation.state.params.cartId,
+        catalogues: this.props.oms.dataCheckout,
+        portfolioId: this.props.merchant.dataGetPortfolioV2[0].id
+      });
+    }
   }
 
   openBenefitDetail(index) {
