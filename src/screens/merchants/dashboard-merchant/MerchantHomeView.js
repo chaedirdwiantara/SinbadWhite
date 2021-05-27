@@ -151,6 +151,8 @@ class MerchantHomeView extends Component {
     this.props.merchantGetLogAllActivityProcessV2(
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
+    /** FOR GET PORTFOLIO (FOR PAYLOAD CHECKOUT ORDER) */
+    this.props.portfolioGetProcessV2();
   }
 
   componentDidUpdate(prevProps) {
