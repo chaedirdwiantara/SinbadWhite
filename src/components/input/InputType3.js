@@ -31,7 +31,7 @@ class InputType3 extends Component {
   /** === RENDER BAR === */
   inputText() {
     let backgroundColor =  Color.fontBlack05;
-    if (this.props.background) background = this.props.background;
+    if (this.props.backgroundColor) backgroundColor = this.props.backgroundColor;
 
     return (
       <View style={styles.boxInput}>
