@@ -4,7 +4,7 @@ import DeviceInfo from 'react-native-device-info';
 import apiHost from './apiHost';
 import { Store } from '../state/Store';
 
-export default async function endpoint({ path, method, params }) {
+export default async function endpoint({ path, method, params, testpath }) {
   const stateData = Store.getState();
   const headers = {};
 
@@ -25,7 +25,7 @@ export default async function endpoint({ path, method, params }) {
     reqBody.body = JSON.stringify(params);
   }
 
-  return fetch(apiHost.url + path, reqBody)
+  return fetch(testpath? testpath : apiHost.url + path, reqBody)
     .then(response => {
       if (response.status === 200 || response.status === 201) {
         return response.json().then(data => {
@@ -58,22 +58,13 @@ export default async function endpoint({ path, method, params }) {
             deviceData,
             time: new Date()
           });
-          if (data.code > 1000) {
-            return {
-              result: 'Error',
-              data: data,
-              code: response.status,
-              message: data.message,
-            };
-          }else {
-            return {
-              result: 'Error',
-              data: data.data,
-              code: response.status,
-              message: data.message,
-              errorCodeMessage: data.data ? data.data.errCode : null
-            };
-          }
+          return {
+            result: 'Error',
+            data: data.data,
+            code: response.status,
+            message: data.message,
+            errorCodeMessage: data.data ? data.data.errCode : null
+          };
         });
       }
     })
