@@ -411,7 +411,7 @@ renderButtonForOrder(item) {
             <View style={styles.boxItemContent}>
               <Text style={Fonts.type17}>
                 {item.parcelQty} Qty, Total:{' '}
-                {MoneyFormat(item.parcelFinalPrice)}
+                {MoneyFormat(item.billing.totalPayment)}
               </Text>
               <View style={{ flexDirection: 'row' }}>
                 {this.props.section === 'order'
