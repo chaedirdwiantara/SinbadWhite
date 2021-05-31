@@ -46,7 +46,7 @@ class MerchantDetailInformationView extends Component {
   }
   /** === CHECK REJECTION === */
   checkRejection(field) {
-    const data = this.props.merchant.dataMerchantRejected;
+    const data = this.props.merchant.dataMerchantRejectedV2;
     switch (field) {
       case 'detailMerchantAccount':
         return data.name || data.imageUrl || data.phoneNo;

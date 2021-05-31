@@ -1,12 +1,5 @@
 import ApiRest from '../apiRest';
 const salesManagementService = 'supplier/sales-management';
-/** GET JOURNEY PLAN LIST BY USER ID */
-function getJourneyPlan(data) {
-  return ApiRest({
-    path: `journey-list?$skip=${data.page}&$limit=10`,
-    method: 'GET'
-  });
-}
 /** GET JOURNEY PLAN LIST BY USER ID V2*/
 function getJourneyPlanV2(data) {
   return ApiRest({
@@ -16,27 +9,12 @@ function getJourneyPlanV2(data) {
     method: 'GET'
   });
 }
-/** ADD MERCHANT TO JOURNEY PLAN */
-function saveMerchantToJourneyPlan(data) {
-  return ApiRest({
-    path: `journey-plan-list?storeType=${data.storeType}`,
-    method: 'POST',
-    params: data.body
-  });
-}
 /** ADD MERCHANT TO JOURNEY PLAN V2 */
 function saveMerchantToJourneyPlanV2(data) {
   return ApiRest({
     path: `${salesManagementService}/v1/journey-book`,
     method: 'POST',
     params: data
-  });
-}
-/** GET JOUNEY PLAN REPORT VISIT AND TOTAL PRICE ORDER */
-function getJourneyPlanReport(supplierIds) {
-  return ApiRest({
-    path: `journey-reports?supplierIds=${JSON.stringify(supplierIds)}`,
-    method: 'GET'
   });
 }
 /** GET JOURNEY PLAN REPORT VISIT AND TOTAL PRICE ORDER V2 */
@@ -48,11 +26,8 @@ function getJourneyPlanReportV2() {
 }
 
 export const JourneyMethod = {
-  getJourneyPlan,
   getJourneyPlanV2,
-  saveMerchantToJourneyPlan,
   saveMerchantToJourneyPlanV2,
-  getJourneyPlanReport,
   getJourneyPlanReportV2
 };
 
@@ -82,4 +57,8 @@ export const JourneyMethod = {
  * updatedDate: 12032021
  * updatedFunction:
  * -> Add parameter search. (getJourneyPlanV2)
+ * updatedBy: dyah
+ * updatedDate: 08042021
+ * updatedFunction:
+ * -> Clean method from old journey plan.
  * */

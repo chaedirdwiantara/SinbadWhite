@@ -2,17 +2,6 @@ import { put, call, takeEvery } from 'redux-saga/effects';
 import { MerchantMethod } from '../../services/methods';
 import * as ActionCreators from '../actions';
 import * as types from '../types';
-/** === MERCHANT LIST === */
-function* getMerchant(actions) {
-  try {
-    const response = yield call(() => {
-      return MerchantMethod.getMerchant(actions.payload);
-    });
-    yield put(ActionCreators.merchantGetSuccess(response));
-  } catch (error) {
-    yield put(ActionCreators.merchantGetFailed(error));
-  }
-}
 /** === MERCHANT LIST BY PORTFOLIO V2 === */
 function* getMerchantV2(actions) {
   try {
@@ -35,18 +24,7 @@ function* getMerchantExisting(actions) {
     yield put(ActionCreators.merchantExistingGetFailed(error));
   }
 }
-/** === MERCHANT DETAIL === */
-function* getMerchantDetail(actions) {
-  try {
-    const response = yield call(() => {
-      return MerchantMethod.getMerchantDetail(actions.payload);
-    });
-    yield put(ActionCreators.merchantGetDetailSuccess(response));
-  } catch (error) {
-    yield put(ActionCreators.merchantGetDetailFailed(error));
-  }
-}
-/** === MERCHANT DETAIL === */
+/** === MERCHANT DETAIL V2 === */
 function* getMerchantDetailV2(actions) {
   try {
     const response = yield call(() => {
@@ -55,17 +33,6 @@ function* getMerchantDetailV2(actions) {
     yield put(ActionCreators.merchantGetDetailSuccessV2(response));
   } catch (error) {
     yield put(ActionCreators.merchantGetDetailFailedV2(error));
-  }
-}
-/** === PORTFOLIO BY USERID === */
-function* getPortfolio(actions) {
-  try {
-    const response = yield call(() => {
-      return MerchantMethod.getPortfolioByUserId(actions.payload);
-    });
-    yield put(ActionCreators.portfolioGetSuccess(response));
-  } catch (error) {
-    yield put(ActionCreators.portfolioGetSuccess(error));
   }
 }
 /** === PORTFOLIO BY USERID V2 === */
@@ -115,18 +82,6 @@ function* getMerchantLastOrder(actions) {
     yield put(ActionCreators.merchantGetLastOrderFailed(error));
   }
 }
-/** === CHECKIN MERCHANT === */
-function* postActivity(actions) {
-  try {
-    const response = yield call(() => {
-      return MerchantMethod.postActivity(actions.payload);
-    });
-    yield put(ActionCreators.merchantPostActivitySuccess());
-    yield put(ActionCreators.merchantPostActivitySuccess(response));
-  } catch (error) {
-    yield put(ActionCreators.merchantPostActivityFailed(error));
-  }
-}
 /** === POST ACTIVITY MERCHANT V2 === */
 function* postActivityV2(actions) {
   try {
@@ -142,17 +97,6 @@ function* postActivityV2(actions) {
     yield put(ActionCreators.merchantPostActivityFailedV2(error));
   }
 }
-/** === CHECKOUT MERCHANT === */
-function* getLogAllActivity(actions) {
-  try {
-    const response = yield call(() => {
-      return MerchantMethod.getLogAllActivity(actions.payload);
-    });
-    yield put(ActionCreators.merchantGetLogAllActivitySuccess(response));
-  } catch (error) {
-    yield put(ActionCreators.merchantGetLogAllActivityFailed(error));
-  }
-}
 /** === GET ALL LOG ACTIVITY MERCHANT V2 === */
 function* getLogAllActivityV2(actions) {
   try {
@@ -164,18 +108,7 @@ function* getLogAllActivityV2(actions) {
     yield put(ActionCreators.merchantGetLogAllActivityFailedV2(error));
   }
 }
-/** === GET LOG MERCHANT === */
-function* getLogPerActivity(actions) {
-  try {
-    const response = yield call(() => {
-      return MerchantMethod.getLogPerActivity(actions.payload);
-    });
-    yield put(ActionCreators.merchantGetLogPerActivitySuccess(response));
-  } catch (error) {
-    yield put(ActionCreators.merchantGetLogPerActivityFailed(error));
-  }
-}
-/** === GET LOG PER ACTIVITY MERCHANT === */
+/** === GET LOG PER ACTIVITY MERCHANT V2 === */
 function* getLogPerActivityV2(actions) {
   try {
     let response = yield call(() => {
@@ -189,6 +122,17 @@ function* getLogPerActivityV2(actions) {
     yield put(ActionCreators.merchantGetLogPerActivitySuccessV2(response));
   } catch (error) {
     yield put(ActionCreators.merchantGetLogPerActivityFailedV2(error));
+  }
+}
+/** === GET LATEST CHECK IN AND CHECK OUT (LAST STORE) === */
+function* getLatestCheckInOut(actions) {
+  try {
+    let response = yield call(() => {
+      return MerchantMethod.getLatestCheckInOut(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetLatestCheckInOutSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetLatestCheckInOutFailed(error));
   }
 }
 /** === GET NO ORDER REASON === */
@@ -293,34 +237,26 @@ function* getSalesSegmentation(actions) {
 
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
-  yield takeEvery(types.MERCHANT_GET_PROCESS, getMerchant);
   yield takeEvery(types.MERCHANT_GET_PROCESS_V2, getMerchantV2);
   yield takeEvery(types.MERCHANT_EXISTING_GET_PROCESS, getMerchantExisting);
-  yield takeEvery(types.MERCHANT_GET_DETAIL_PROCESS, getMerchantDetail);
   yield takeEvery(types.MERCHANT_GET_DETAIL_PROCESS_V2, getMerchantDetailV2);
-  yield takeEvery(types.PORTFOLIO_GET_PROCESS, getPortfolio);
   yield takeEvery(types.PORTFOLIO_GET_PROCESS_V2, getPortfolioV2);
   yield takeEvery(types.MERCHANT_ADD_PROCESS, addMerchant);
   yield takeEvery(types.MERCHANT_EDIT_PROCESS, editMerchant);
   yield takeEvery(types.MERCHANT_GET_LAST_ORDER_PROCESS, getMerchantLastOrder);
-  yield takeEvery(types.MERCHANT_POST_ACTIVITY_PROCESS, postActivity);
   yield takeEvery(types.MERCHANT_POST_ACTIVITY_PROCESS_V2, postActivityV2);
   yield takeEvery(types.MERCHANT_NO_ORDER_REASON_GET_PROCESS, getNoOrderReason);
-  yield takeEvery(
-    types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS,
-    getLogAllActivity
-  );
   yield takeEvery(
     types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS_V2,
     getLogAllActivityV2
   );
   yield takeEvery(
-    types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS,
-    getLogPerActivity
-  );
-  yield takeEvery(
     types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS_V2,
     getLogPerActivityV2
+  );
+  yield takeEvery(
+    types.MERCHANT_GET_LATEST_CHECK_IN_OUT_PROCESS,
+    getLatestCheckInOut
   );
   yield takeEvery(types.MERCHANT_STORE_STATUS_PROCESS, getStoreStatus),
   yield takeEvery(types.MERCHANT_GET_WAREHOUSE_PROCESS, getWarehouse);

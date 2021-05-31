@@ -58,7 +58,7 @@ class HistoryFilterView extends Component {
   modifyPorfolio() {
     let portfolio = '';
     this.state.portfolio.map((item, index) => {
-      const name = this.props.merchant.dataGetPortfolio.find(
+      const name = this.props.merchant.dataGetPortfolioV2.find(
         itemPortfolio => itemPortfolio.id === item
       ).name;
       portfolio =
@@ -219,14 +219,18 @@ const mapStateToProps = ({ merchant }) => {
 export default connect(mapStateToProps, {})(HistoryFilterView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ *  ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ * updatedBy: Dyah
+ * updatedDate: 08042021
+ * updatedFunction:
+ * -> Change dataGetPortfolio to dataGetPortfolioV2.
+ *
+ **/
