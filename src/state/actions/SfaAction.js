@@ -454,3 +454,28 @@ export function sfaGetCollectionDetailSuccess(data) {
 export function sfaGetCollectionDetailFailed(data) {
   return { type: types.SFA_GET_COLLECTION_DETAIL_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * EDIT COLLECTION
+ * ===========================
+ */
+/** === SFA EDIT COLLECTION PROCESS === */
+export function sfaEditCollectionProcess(data) {
+  return { type: types.SFA_EDIT_COLLECTION_PROCESS, payload: data };
+}
+
+/** === SFA EDIT COLLECTION SUCCESS === */
+export function sfaEditCollectionSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_EDIT_COLLECTION_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_EDIT_COLLECTION_FAILED, payload: data };
+}
+/** === SFA EDIT COLLECTION FAILED === */
+export function sfaEditCollectionFailed(data) {
+  return { type: types.SFA_EDIT_COLLECTION_FAILED, payload: data };
+}
