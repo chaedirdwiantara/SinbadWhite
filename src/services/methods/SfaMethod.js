@@ -126,6 +126,15 @@ function getCollectionDetail(data) {
   });
 }
 
+/** EDIT COLLECTION*/
+function editCollection(data) {
+  return ApiRest({
+    path: 'collection/v1/payment',
+    method: 'PATCH',
+    params: data
+  });
+}
+
   export const SfaMethod = {
     getCollectionStatus,
     getSfaDetail,
@@ -141,5 +150,6 @@ function getCollectionDetail(data) {
     getTransferImage,
     getPrincipal,
     getCollectionLog,
-    getCollectionDetail
+    getCollectionDetail,
+    editCollection
   };

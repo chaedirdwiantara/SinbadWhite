@@ -42,10 +42,10 @@ const SfaEditCollectionTransfer = props => {
 
   //DATA INPUT
   const [noRef, setNoRef] = useState(props.data.paymentCollection.paymentCollectionMethod.reference);
-  const [bankSource, setBankSource] = useState(props.data.paymentCollection.paymentCollectionMethod.bankFrom.name);
-  const [bankDestination, setBankDestination] = useState(props.data.paymentCollection.paymentCollectionMethod.bankToAccount.displayName);
+  const [bankSource, setBankSource] = useState(props.data.paymentCollection.paymentCollectionMethod.bankFrom);
+  const [bankDestination, setBankDestination] = useState(props.data.paymentCollection.paymentCollectionMethod.bankToAccount);
   const [transferDate, setTransferDate] = useState(props.data.paymentCollection.paymentCollectionMethod.date);
-  const [balance, setBalance] = useState(props.data.paymentCollection.paymentCollectionMethod.balance);
+  const [balance, setBalance] = useState(props.data.paymentCollection.paymentCollectionMethod.amount);
   const [billingValue, setBillingValue] = useState(props.data.paymentCollection.paidAmount);
   const [dataImage, setDataImage] = useState(props.data.image);
 
@@ -63,6 +63,40 @@ const SfaEditCollectionTransfer = props => {
   useEffect(() => {
     setExistingImage();
   }, [dataSfaGetTransferImage]);
+
+  useEffect(() => {
+    const data = {
+      image: dataImage,
+      isEditable: props.data.isEditable,
+      outstanding: props.data.outstanding,
+      paymentCollection: {
+        id : props.data.paymentCollection.id,
+        paidAmount: billingValue,
+        paymentCollectionMethod: {
+          amount: balance,
+          balance: props.data.paymentCollection.paymentCollectionMethod.balance,
+          bankFrom: {
+            id: bankSource.id,
+            name: bankSource.name,
+          },
+          bankToAccount: {
+            accountNo: bankDestination.accountNo,
+            displayName: bankDestination.displayName,
+            id: bankDestination.id,
+          },
+          date: transferDate,
+          dueDate: props.data.paymentCollection.paymentCollectionMethod.dueDate,
+          id: props.data.paymentCollection.paymentCollectionMethod.id,
+          paymentCollectionType: props.data.paymentCollection.paymentCollectionMethod.paymentCollectionType,
+          principal: props.data.paymentCollection.paymentCollectionMethod.principal,
+          promoNo: props.data.paymentCollection.paymentCollectionMethod.promoNo,
+          reference: noRef,
+          stamp: props.data.paymentCollection.paymentCollectionMethod.stamp
+        }
+      }
+    }
+    props.newData(data)
+  }, [noRef, bankSource, bankDestination, transferDate, balance, billingValue, dataImage]);
 
   const setExistingImage = () => {
     if (dataSfaGetTransferImage && dataReference) {
@@ -123,6 +157,7 @@ const SfaEditCollectionTransfer = props => {
   };
 
   const textReference = text => {
+    props.isChanged(true);
     props.referenceCode(text);
     setNoRef(text);
   };
@@ -330,8 +365,8 @@ const SfaEditCollectionTransfer = props => {
               {bankSource === null
                 ? 'Pilih Sumber Bank'
                 : isDisable === true
-                ? bankSource
-                : bankSource}
+                ? bankSource.name
+                : bankSource.name}
             </Text>
             <View style={{ position: 'absolute', right: 16 }}>
               <MaterialIcon
@@ -370,7 +405,7 @@ const SfaEditCollectionTransfer = props => {
             >
               {bankDestination === null
                 ? 'Pilih Tujuan Bank'
-                : bankDestination}
+                : bankDestination.displayName}
             </Text>
             <View style={{ position: 'absolute', right: 16 }}>
               <MaterialIcon
@@ -510,11 +545,11 @@ const SfaEditCollectionTransfer = props => {
           {renderTooltip()}
         </View>
         {dataReference ? (
-          dataImage.fileData ? (
+          dataImage ? (
             <View style={styles.smallContainerImage}>
             <Image
               source={{
-                uri: `data:image/jpeg;base64, ${dataImage.fileData}`
+                uri: `data:image/jpeg;base64, ${dataImage}`
               }}
               style={[
                 styles.images,
@@ -533,10 +568,11 @@ const SfaEditCollectionTransfer = props => {
           )
         ) : dataImage ? (
           <View style={{ marginTop: 12 }}>
+            <Text>disini</Text>
             <View style={styles.smallContainerImage}>
               <Image
                 source={{
-                  uri: `data:image/jpeg;base64, ${dataImage.fileData}`
+                  uri: `data:image/jpeg;base64, ${dataImage}`
                 }}
                 style={[
                   styles.images,
@@ -664,7 +700,7 @@ const SfaEditCollectionTransfer = props => {
             selectCollection={selectedReference.bind(this)}
             supplierId={selectedMerchant.supplierId}
             storeId={selectedMerchant.storeId}
-            paymentCollectionTypeId={props.collectionMethod.id}
+            paymentCollectionTypeId={props.data.paymentCollection.paymentCollectionMethod.id}
           />
         ) : null}
       </View>
@@ -702,7 +738,7 @@ const SfaEditCollectionTransfer = props => {
             selectBankDestination={selectedBankDestination.bind(this)}
             supplierId={selectedMerchant.supplierId}
             storeId={selectedMerchant.storeId}
-            paymentCollectionTypeId={props.collectionMethod.id}
+            paymentCollectionTypeId={props.data.paymentCollection.paymentCollectionMethod.id}
           />
         ) : null}
       </View>

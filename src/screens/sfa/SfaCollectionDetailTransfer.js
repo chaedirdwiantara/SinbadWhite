@@ -24,7 +24,6 @@ const SfaCollectionDetailTransfer = (props) => {
   }
 
     return (
-       
         <>
         <View style={styles.inputField}>
           <InputType5

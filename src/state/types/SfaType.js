@@ -94,3 +94,8 @@ export const SFA_COLLECTION_LOG_LOADMORE_FAILED = 'SfaCollectionLogLoadmoreFaile
 export const SFA_GET_COLLECTION_DETAIL_PROCESS = 'SfaGetCollectionDetailProcess';
 export const SFA_GET_COLLECTION_DETAIL_SUCCESS = 'SfaGetCollectionDetailSuccess';
 export const SFA_GET_COLLECTION_DETAIL_FAILED = 'SfaGetCollectionDetailFailed';
+
+/** GET EDIT COLLECTION */
+export const SFA_EDIT_COLLECTION_PROCESS = 'SfaEditCollectionProcess';
+export const SFA_EDIT_COLLECTION_SUCCESS = 'SfaEditCollectionSuccess';
+export const SFA_EDIT_COLLECTION_FAILED = 'SfaEditCollectionFailed';
