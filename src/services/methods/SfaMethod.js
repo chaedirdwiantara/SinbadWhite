@@ -112,7 +112,7 @@ function getPrincipal(data) {
 /** GET COLLECTION LOG */
 function getCollectionLog(data) {
   return ApiRest({
-    testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billings?storeId=${data.storeId}&orderParcelId=${data.orderParcelId}&limit=${data.limit}&skip=${data.skip}`,
+    // testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billings?storeId=${data.storeId}&orderParcelId=${data.orderParcelId}&limit=${data.limit}&skip=${data.skip}`,
     path: `collection/v1/payment-billings?storeId=${data.storeId}&orderParcelId=${data.orderParcelId}&limit=${data.limit}&skip=${data.skip}`,
     method: 'GET'
   });

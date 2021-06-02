@@ -16,7 +16,7 @@ import { useState } from 'react';
       moment
   } from '../../library/thirdPartyPackage';
   import { useSelector } from 'react-redux';
-const SfaEditCollectionCheckGiro = () => {
+const SfaEditCollectionCheckGiro = (props) => {
   //DATA PAYMENT CASH
   const [cash, setCash] = useState(0);
   const [balanceValue, setBalanceValue] = useState(0)
@@ -27,9 +27,11 @@ const SfaEditCollectionCheckGiro = () => {
   const [isDisable, setIsDisable] = useState(false);
   const [openModalBank, setOpenModalBank] = useState(false);
   const [dataBank, setDataBank] = useState({displayName: 'Bank BCA'});
+  const [dataStamp, setDataStamp] = useState();
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [checkMaterai, setCheckMaterai] = useState(false);
   const [openModalListMaterai, setOpenModalListMaterai] = useState(false);
+  const paymentCollectionTypeId = props.data.paymentCollection.paymentCollectionMethod.paymentCollectionType.id
   /**
    * =======================
    * FUNCTIONAL
@@ -84,6 +86,7 @@ const SfaEditCollectionCheckGiro = () => {
    * *********************************
    */
   /** MODAL STAMP */
+  console.log(props.data, 'detail sfa');
   const renderModalListMaterai = () => {
     return (
       <View>
@@ -95,7 +98,7 @@ const SfaEditCollectionCheckGiro = () => {
             selectStamp={selectedStamp.bind(this)}
             supplierId={selectedMerchant.supplierId}
             storeId={selectedMerchant.storeId}
-            paymentCollectionTypeId={props.paymentCollectionTypeId}
+            paymentCollectionTypeId={paymentCollectionTypeId}
           />
         ) : null}
       </View>
@@ -113,7 +116,7 @@ const SfaEditCollectionCheckGiro = () => {
             selectCollection={selectedBank.bind(this)}
             supplierId={selectedMerchant.supplierId}
             storeId={selectedMerchant.storeId}
-            paymentCollectionTypeId={props.paymentCollectionTypeId}
+            paymentCollectionTypeId={paymentCollectionTypeId}
           />
         ) : null}
       </View>

@@ -18,6 +18,7 @@ import SfaEditCollectionPromo from './SfaEditCollectionPromo';
 import SfaEditCollectionCheckGiro from './SfaEditCollectionGCheckGiro';
 
 const SfaEditCollectionView = props => {
+  const [isPrimary, setIsPrimary] = useState(true)
   const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(
     state => state.sfa
   );
@@ -139,7 +140,7 @@ const SfaEditCollectionView = props => {
     } else if (paymentCollectionType.name === PROMO){
       return <SfaEditCollectionPromo data={detailSfa} />
     } else if(paymentCollectionType.name === CEK || paymentCollectionType.name === GIRO){
-      return <SfaEditCollectionCheckGiro data={detailSfa} />
+      return <SfaEditCollectionCheckGiro data={detailSfa} isPrimary={isPrimary} />
     }
     else {
       return <View/>
