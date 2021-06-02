@@ -1,7 +1,7 @@
 import { React, View, Text, StyleSheet, TouchableOpacity } from '../../library/reactPackage';
 import { useState } from 'react';
   import { TextInputMask } from 'react-native-masked-text';
-  import { Fonts, GlobalStyle } from '../../helpers';
+  import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
   import {
     InputType5,
     DatePickerSpinnerWithMinMaxDate,
@@ -18,21 +18,24 @@ import { useState } from 'react';
   import { useSelector } from 'react-redux';
 const SfaEditCollectionCheckGiro = (props) => {
   //DATA PAYMENT CASH
-  const [cash, setCash] = useState(0);
-  const [balanceValue, setBalanceValue] = useState(0)
+  const paymentCollectionMethod = props.data.paymentCollection.paymentCollectionMethod
+  const paymentCollectionTypeId = paymentCollectionMethod.paymentCollectionType.id
+ 
+  const [paidAmount, setPaidAmount] = useState(props.data.paymentCollection.paidAmount);
+  const [reference, setReference] = useState(paymentCollectionMethod.reference)
+  const [balanceValue, setBalanceValue] = useState(paymentCollectionMethod.amount)
   const [openModalDueDate, setOpenModalDueDate] = useState(false);
   const [openModalPublishDate, setOpenModalPublishDate] = useState(false);
-  const [issuedDate, setIssuedDate] = useState(null);
-  const [invalidDate, setInvalidDate] = useState(null);
-  const [isDisable, setIsDisable] = useState(false);
+  const [issuedDate, setIssuedDate] = useState(paymentCollectionMethod.date);
+  const [invalidDate, setInvalidDate] = useState(paymentCollectionMethod.dueDate);
+  const [isDisable, setIsDisable] = useState(!props.isPrimary);
   const [openModalBank, setOpenModalBank] = useState(false);
   const [dataBank, setDataBank] = useState({displayName: 'Bank BCA'});
-  const [dataStamp, setDataStamp] = useState();
+  const [dataStamp, setDataStamp] = useState(paymentCollectionMethod.stamp);
   const { selectedMerchant } = useSelector(state => state.merchant);
-  const [checkMaterai, setCheckMaterai] = useState(false);
+  const [checkMaterai, setCheckMaterai] = useState(paymentCollectionMethod.stamp?true:false);
   const [openModalListMaterai, setOpenModalListMaterai] = useState(false);
-  const paymentCollectionTypeId = props.data.paymentCollection.paymentCollectionMethod.paymentCollectionType.id
-  /**
+   /**
    * =======================
    * FUNCTIONAL
    * =======================
@@ -40,11 +43,11 @@ const SfaEditCollectionCheckGiro = (props) => {
   const textBillingCash = text => {
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) >
-      parseInt(props.navigation.state.params.data.remainingBilling)
+      parseInt(props.data.outstanding)
     ) {
-      setCash(parseInt(props.navigation.state.params.data.remainingBilling));
+      setPaidAmount(parseInt(props.data.outstanding));
     } else {
-      setCash(parseInt(text.replace(/[Rp.]+/g, '')));
+      setPaidAmount(parseInt(text.replace(/[Rp.]+/g, '')));
     }
   };
   const dataBalance = text => {
@@ -80,6 +83,10 @@ const SfaEditCollectionCheckGiro = (props) => {
     setDataStamp(data);
     setOpenModalListMaterai(false);
   };
+
+  const dataReference = data => {
+    setReference(data)
+  }
   /**
    * *********************************
    * RENDER VIEW
@@ -171,6 +178,15 @@ const SfaEditCollectionCheckGiro = (props) => {
  const renderContent = () => {
      return (
         <>
+          <View style={{marginTop: 16, marginLeft:-16}}>
+          <InputType5
+            title={`*Nomor Referensi`}
+            placeholder={paymentCollectionMethod.reference}
+            value={reference}
+            editable={props.isPrimary}
+            onChangeText={text => dataReference(text)}
+          />
+        </View>
         <View style={{ paddingVertical: 16 }}>
             <Text style={Fonts.type10}>
               {'*Sumber Bank'}
@@ -223,7 +239,7 @@ const SfaEditCollectionCheckGiro = (props) => {
                   style={[
                     Fonts.type17,
                     {
-                      opacity: issuedDate === null ? 0.5 : null,
+                      opacity: props.isPrimary?null : 0.5,
                       marginLeft: 11
                     }
                   ]}
@@ -254,7 +270,7 @@ const SfaEditCollectionCheckGiro = (props) => {
                   style={[
                     Fonts.type17,
                     {
-                      opacity: invalidDate === null ? 0.5 : null,
+                      opacity: props.isPrimary?null : 0.5,
                       marginLeft: 11
                     }
                   ]}
@@ -289,9 +305,9 @@ const SfaEditCollectionCheckGiro = (props) => {
                     style={[
                       Fonts.type17,
                       {
+                        opacity: isDisable? 0.5: null,
                         width: '95%',
-                        borderBottomColor: masterColor.fontBlack50,
-                        opacity: null
+                        borderBottomColor: masterColor.fontBlack50
                       }
                     ]}
                     editable={!isDisable}
@@ -317,7 +333,7 @@ const SfaEditCollectionCheckGiro = (props) => {
                 unit: 'Rp ',
                 suffixUnit: ''
               }}
-              value={cash}
+              value={paidAmount}
               onChangeText={text => textBillingCash(text)}
               style={[
                 Fonts.type17,
@@ -330,7 +346,7 @@ const SfaEditCollectionCheckGiro = (props) => {
           </View>
           
         </View>
-        <View style={{ marginTop: 16 }}>
+        {paymentCollectionMethod.stamp?  <View style={{ marginTop: 16 }}>
               <Text style={[Fonts.type10]}>
                 {isDisable !== false ? null : 'Materai'}
               </Text>
@@ -370,7 +386,7 @@ const SfaEditCollectionCheckGiro = (props) => {
                     disabled={!checkMaterai}
                   >
                     <Text style={[Fonts.type17]}>
-                      {'Pilih Nilai Materai'}
+                      {dataStamp.name}
                     </Text>
                     <View>
                       <MaterialIcon
@@ -383,7 +399,8 @@ const SfaEditCollectionCheckGiro = (props) => {
                   <View style={[GlobalStyle.lines, { marginTop: 8 }]} />
                 </View>
               </View>
-            </View>
+            </View> : null}
+      
       
         </>
      )
