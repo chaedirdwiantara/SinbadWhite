@@ -10,11 +10,12 @@ import {
 import { InputType5, ButtonSingle } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
-import SfaEditCollectionCash from './SfaEditCollectionCash';
 import { useDispatch, useSelector } from 'react-redux';
-import { TRANSFER, TUNAI, PROMO } from '../../constants/collectionConstants';
+import { TRANSFER, TUNAI, PROMO, CEK, GIRO } from '../../constants/collectionConstants';
+import SfaEditCollectionCash from './SfaEditCollectionCash';
 import SfaEditCollectionTransfer from './SfaEditCollectionTransfer';
 import SfaEditCollectionPromo from './SfaEditCollectionPromo';
+import SfaEditCollectionCheckGiro from './SfaEditCollectionGCheckGiro';
 
 const SfaEditCollectionView = props => {
   const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(
@@ -229,8 +230,11 @@ const SfaEditCollectionView = props => {
           isChanged={isChangedData}
         />
       );
-    } else {
-      return <View />;
+    } else if(paymentCollectionType.name === CEK || paymentCollectionType.name === GIRO){
+      return <SfaEditCollectionCheckGiro data={detailSfa} />
+    }
+    else {
+      return <View/>
     }
   };
 

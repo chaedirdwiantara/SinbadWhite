@@ -233,22 +233,12 @@ const SfaView = props => {
         <View style={{ flexDirection: 'row' }}>
           <View style={{ flex: 1 }}>
             <SearchBarType1
-              placeholder={'Cari nomor pesanan, nomor referensi'}
+              placeholder={'Cari tagihan disini'}
               searchText={searchText}
               onRef={ref => (parentFunction = ref)}
               parentFunction={parentFunction.bind(this)}
             />
           </View>
-          <TouchableOpacity
-            style={{ paddingRight: 16, justifyContent: 'center' }}
-            onPress={() => console.log('clicked')}
-          >
-            <Image
-              source={require('../../assets/icons/pdp/filter.png')}
-              style={{ height: 24, width: 24 }}
-            />
-            <Text style={Fonts.type67}>Filter</Text>
-          </TouchableOpacity>
         </View>
         <View style={GlobalStyle.lines} />
       </View>
