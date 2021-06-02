@@ -16,12 +16,124 @@ import SfaEditCollectionCash from './SfaEditCollectionCash';
 import SfaEditCollectionTransfer from './SfaEditCollectionTransfer';
 import SfaEditCollectionPromo from './SfaEditCollectionPromo';
 import SfaEditCollectionCheckGiro from './SfaEditCollectionGCheckGiro';
+import { sfaEditCollectionProcess } from '../../state/actions';
 
 const SfaEditCollectionView = props => {
   const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(
     state => state.sfa
   );
-  const detailSfa = props.navigation.state.params.dataDetail
+  const { id } = useSelector(state => state.user);
+  const detailSfa = props.navigation.state.params.dataDetail;
+  const [newDataDetailSfa, setNewDataDetailSfa] = useState(null);
+  const [isChanged, setIsChanged] = useState(false);
+
+  //DATA PAYMENT TRANSFER & PROMO
+  const [referenceCode, setReferenceCode] = useState(detailSfa.paymentCollection.paymentCollectionMethod.reference);
+  const [bankSource, setBankSource] = useState(detailSfa.paymentCollection.paymentCollectionMethod.bankFrom);
+  const [bankAccount, setBankAccount] = useState(detailSfa.paymentCollection.paymentCollectionMethod.bankToAccount);
+  const [transferDate, setTransferDate] = useState(detailSfa.paymentCollection.paymentCollectionMethod.date);
+  const [transferValue, setTransferValue] = useState(detailSfa.paymentCollection.paymentCollectionMethod.amount);
+  const [billingValue, setBillingValue] = useState(detailSfa.paymentCollection.paidAmount);
+  const [transferImage, setTransferImage] = useState(detailSfa.image);
+  //DATA PAYMENT PROMO
+  const [principal, setPrincipal] = useState(detailSfa.paymentCollection.paymentCollectionMethod.principal)
+  const [promoValue, setPromoValue] = useState(detailSfa.paymentCollection.paymentCollectionMethod.amount)
+  const [promoImage, setPromoImage] = useState(detailSfa.image);
+
+  //USEDISPATCH
+  const dispatch = useDispatch();
+
+  /**
+   * =======================
+   * FUNCTIONAL
+   * =======================
+   */
+  const saveEditCollection = () => {
+    const paymentCollectionType =
+      detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType;
+    const userId =  parseInt(id)
+    const paymentCollectionId = detailSfa.paymentCollection.id
+    if (paymentCollectionType.name === TRANSFER) {
+      const data = {
+        userSellerId : userId,
+        paymentCollectionId : paymentCollectionId,
+        paymentCollectionTypeId : paymentCollectionType.id,
+        paymentAmount : billingValue, 
+        referenceCode : referenceCode,
+        bankId : bankSource.id,
+        bankToAccountId : bankAccount.id,
+        paymentDate:transferDate,
+        paymentCollectionMethodAmount : transferValue,
+        filename:"template-baru.jpeg",
+        type:"image/jpeg", 
+        image: transferImage
+      }
+      dispatch(sfaEditCollectionProcess(data));
+    } else if (paymentCollectionType.name === PROMO) {
+      const data = {
+        userSellerId : userId,
+        paymentCollectionId : paymentCollectionId,
+        paymentCollectionTypeId : paymentCollectionType.id,
+        paymentAmount : billingValue, 
+        referenceCode : referenceCode,
+        promoCode : detailSfa.paymentCollection.paymentCollectionMethod.promoNo,
+        principalId : principal.id,
+        paymentCollectionMethodAmount : promoValue,
+        filename: "template-baru.jpeg",
+        type: "image/jpeg", 
+        image: promoImage
+      }
+      dispatch(sfaEditCollectionProcess(data));
+    }
+  };
+
+  const editCollectionNewData = data => {
+    setNewDataDetailSfa(data);
+  };
+
+  const isChangedData = data => {
+    setIsChanged(data);
+  };
+
+  const dataReferenceCode = data => {
+    setReferenceCode(data);
+  };
+
+  const dataBankSource = data => {
+    setBankSource(data);
+  };
+
+  const dataBankAccount = data => {
+    setBankAccount(data);
+  };
+
+  const dataTransferDate = data => {
+    setTransferDate(data);
+  };
+
+  const dataTranserValue = data => {
+    setTransferValue(data);
+  };
+
+  const dataBillingValue = data => {
+    setBillingValue(data);
+  };
+
+  const dataTransferImage = data => {
+    setTransferImage(data);
+  };
+
+  const dataPrincipal = data => {
+    setPrincipal(data);
+  };
+
+  const dataPromoValue = data => {
+    setPromoValue(data);
+  };
+
+  const dataPromoImage = data => {
+    setPromoImage(data);
+  };
   /**
    * *********************************
    * RENDER VIEW
@@ -116,14 +228,19 @@ const SfaEditCollectionView = props => {
             <View>
               <Text style={Fonts.type48}>Detil Penagihan</Text>
             </View>
-            <View style={[GlobalStyle.lines, {marginVertical: 8, marginBottom: 16}]} />
-            <View style={{marginLeft: -16}}>
+            <View
+              style={[
+                GlobalStyle.lines,
+                { marginVertical: 8, marginBottom: 16 }
+              ]}
+            />
+            <View style={{ marginLeft: -16 }}>
               <InputType5
                 title={`Metode Penagihan`}
                 placeholder={collectionMethodType.name}
                 editable={false}
               />
-              <View style={{marginLeft: 16}}>{renderEditForm()}</View>
+              <View style={{ marginLeft: 16 }}>{renderEditForm()}</View>
             </View>
           </View>
         </View>
@@ -131,13 +248,38 @@ const SfaEditCollectionView = props => {
     );
   };
   const renderEditForm = () => {
-    const paymentCollectionType = detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType
+    const paymentCollectionType =
+      detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType;
     if (paymentCollectionType.name === TUNAI) {
-      return <SfaEditCollectionCash />
+      return <SfaEditCollectionCash />;
     } else if (paymentCollectionType.name === TRANSFER) {
-      return <SfaEditCollectionTransfer data={detailSfa} />
-    } else if (paymentCollectionType.name === PROMO){
-      return <SfaEditCollectionPromo data={detailSfa} />
+      return (
+        <SfaEditCollectionTransfer
+          data={detailSfa}
+          newData={editCollectionNewData}
+          isChanged={isChangedData}
+          referenceCode={dataReferenceCode}
+          bankSource={dataBankSource}
+          bankAccount={dataBankAccount}
+          transferDate={dataTransferDate}
+          transferValue={dataTranserValue}
+          billingValue={dataBillingValue}
+          transferImage={dataTransferImage}
+        />
+      );
+    } else if (paymentCollectionType.name === PROMO) {
+      return (
+        <SfaEditCollectionPromo
+          data={detailSfa}
+          newData={editCollectionNewData}
+          isChanged={isChangedData}
+          referenceCode={dataReferenceCode}
+          principal={dataPrincipal}
+          promoValue={dataPromoValue}
+          billingValue={dataBillingValue}
+          promoImage={dataPromoImage}
+        />
+      );
     } else if(paymentCollectionType.name === CEK || paymentCollectionType.name === GIRO){
       return <SfaEditCollectionCheckGiro data={detailSfa} />
     }
@@ -153,7 +295,7 @@ const SfaEditCollectionView = props => {
         loading={false}
         title={'Simpan'}
         borderRadius={4}
-        onPress={() => console.log('simpan')}
+        onPress={() => saveEditCollection()}
       />
     );
   };
@@ -162,10 +304,10 @@ const SfaEditCollectionView = props => {
     return (
       <View style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
-        {renderFakturInfo()}
-        {renderCollectionInfo()}
-        {renderCollectionDetail()}
-        {renderButtonSave()}
+          {renderFakturInfo()}
+          {renderCollectionInfo()}
+          {renderCollectionDetail()}
+          {renderButtonSave()}
         </ScrollView>
       </View>
     );
