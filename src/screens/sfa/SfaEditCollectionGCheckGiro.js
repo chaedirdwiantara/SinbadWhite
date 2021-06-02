@@ -46,19 +46,24 @@ const SfaEditCollectionCheckGiro = (props) => {
       parseInt(props.data.outstanding)
     ) {
       setPaidAmount(parseInt(props.data.outstanding));
+      props.onChangePaidAmount(parseInt(props.data.outstanding))
     } else {
       setPaidAmount(parseInt(text.replace(/[Rp.]+/g, '')));
+      props.onChangePaidAmount(parseInt(text.replace(/[Rp.]+/g, '')))
     }
   };
   const dataBalance = text => {
     const balanceInt = parseInt(text.replace(/[Rp.]+/g, ''));
     setBalanceValue(balanceInt);
+    props.onChangeBalanceValue(balanceInt)
   };
   const dataDueDate = date => {
     setInvalidDate(date);
+    props.onChangeDueDate(date)
   };
   const dataIssuedDate = date => {
     setIssuedDate(date);
+    props.onChangeIssuedDate(date)
   };
   const openDueDate = () => {
     setOpenModalDueDate(true);
@@ -70,6 +75,7 @@ const SfaEditCollectionCheckGiro = (props) => {
   const selectedBank = data => {
     setDataBank(data);
     setOpenModalBank(false);
+    props.onChangeDataBank(data)
   };
   
   const functionMaterai = () => {
@@ -81,11 +87,13 @@ const SfaEditCollectionCheckGiro = (props) => {
 
   const selectedStamp = data => {
     setDataStamp(data);
+    props.onChangeDataStamp(data)
     setOpenModalListMaterai(false);
   };
 
   const dataReference = data => {
     setReference(data)
+    props.onChangeReference(data)
   }
   /**
    * *********************************
@@ -93,7 +101,6 @@ const SfaEditCollectionCheckGiro = (props) => {
    * *********************************
    */
   /** MODAL STAMP */
-  console.log(props.data, 'detail sfa');
   const renderModalListMaterai = () => {
     return (
       <View>
