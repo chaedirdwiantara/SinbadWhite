@@ -494,7 +494,7 @@ class MerchantHomeView extends Component {
 
   /** CUSTOM NAVIGATE VIEW NO ORDER REASON PAGE */
   navigateViewNoOrderReasonPage = data => {
-    NavigationService.navigate('MerchantNoOrderReason', {
+    NavigationService.navigate('MerchantNoOrderReasonDetail', {
       noOrderReason: data
     });
   };
@@ -826,7 +826,7 @@ class MerchantHomeView extends Component {
                   <View>
                     {taskList ? (
                       taskList.activityName === ACTIVITY_JOURNEY_PLAN_ORDER &&
-                      journeyBookStores.noOrderReasonNote.length !== 0 ? (
+                      !journeyBookStores.orderStatus && journeyBookStores.noOrderReasonNote.length !== 0 ? (
                         <MaterialIcon
                           // name="check-circle"
                           // name="timelapse"
@@ -865,8 +865,7 @@ class MerchantHomeView extends Component {
                       <View
                         style={{
                           flexDirection: 'row',
-                          justifyContent: 'center',
-                          alignItems: 'center'
+                          justifyContent: 'flex-end',
                         }}
                       >
                         <Text style={Fonts.type107}>
@@ -892,12 +891,13 @@ class MerchantHomeView extends Component {
                           }}
                           style={{
                             flexDirection: 'row',
-                            justifyContent: 'center',
+                            justifyContent: 'flex-end',
                             alignItems: 'center',
+                            marginRight: -5,
                             marginTop: -5
                           }}
                         >
-                          <Text style={Fonts.type100}>See Reason</Text>
+                          <Text style={Fonts.type100}>Lihat Alasan</Text>
                           <MaterialIcon
                             style={{
                               marginTop: 2,
@@ -915,12 +915,13 @@ class MerchantHomeView extends Component {
                           }}
                           style={{
                             flexDirection: 'row',
-                            justifyContent: 'center',
+                            justifyContent: 'flex-end',
                             alignItems: 'center',
+                            marginRight: -5,
                             marginTop: -5
                           }}
                         >
-                          <Text style={Fonts.type51}>Completed</Text>
+                          <Text style={Fonts.type51}>Selesai</Text>
                           <MaterialIcon
                             style={{
                               marginTop: 2,
@@ -943,16 +944,17 @@ class MerchantHomeView extends Component {
                         }}
                         style={{
                           flexDirection: 'row',
-                          justifyContent: 'center',
+                          justifyContent: 'flex-end',
                           alignItems: 'center',
+                          marginRight: -5,
                           marginTop: -5
                         }}
                       >
-                        <Text style={Fonts.type51}>Completed</Text>
+                        <Text style={Fonts.type51}>Selesai</Text>
                         <MaterialIcon
                           style={{
                             marginTop: 2,
-                            padding: 0
+                            padding: 0,
                           }}
                           name="chevron-right"
                           color={Color.fontGreen50}
@@ -1429,4 +1431,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * updatedDate: 10052021
  * updatedFunction:
  * -> integration latest checkin&checkout.
+ * updatedBy: dyah
+ * updatedDate: 02062021
+ * updatedFunction:
+ * -> update task list to bahasa.
+ * -> update validation for order status.
+ * -> fix style task list.
  */
