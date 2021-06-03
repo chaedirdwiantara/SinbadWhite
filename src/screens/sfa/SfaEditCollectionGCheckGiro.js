@@ -393,7 +393,7 @@ const SfaEditCollectionCheckGiro = (props) => {
                     disabled={!checkMaterai}
                   >
                     <Text style={[Fonts.type17]}>
-                      {dataStamp.name}
+                      {!checkMaterai? 'Pilih Nilai Materai': dataStamp? dataStamp.name: 'Pilih Nilai Materai'}
                     </Text>
                     <View>
                       <MaterialIcon

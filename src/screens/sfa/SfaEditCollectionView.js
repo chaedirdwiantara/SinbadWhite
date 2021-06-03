@@ -108,7 +108,6 @@ const SfaEditCollectionView = props => {
   useEffect(() => {
     const paymentCollectionId = detailSfa.paymentCollection.id;
     if (prevDataSfaEditCollection !== dataSfaEditCollection) {
-      console.log(paymentCollectionId, 'id');
       if (dataSfaEditCollection) {
         dispatch(sfaGetCollectionDetailProcess(paymentCollectionId));
         NavigationService.navigate('SfaCollectionDetailView', {
@@ -165,7 +164,7 @@ const SfaEditCollectionView = props => {
         paymentCollectionTypeId: paymentCollectionType.id,
         paymentAmount: paidAmount,
         referenceCode: reference,
-        bankId: 1,
+        bankId: dataBank.id,
         issuedDate: issuedDate,
         invalidDate: invalidDate,
         paymentCollectionMethodAmount: balanceValue,
