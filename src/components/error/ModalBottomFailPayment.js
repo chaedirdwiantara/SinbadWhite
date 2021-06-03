@@ -37,7 +37,7 @@ import {
               <Text
                 style={[Fonts.type7, { textAlign: 'center', marginBottom: 10 }]}
               >
-                Terjadi Kesalahan
+               {this.props.errorTittle? this.props.errorTittle :'Terjadi Kesalahan'} 
               </Text>
               <Text style={[Fonts.type17, { textAlign: 'center', marginHorizontal: 20 }]}>
                 {this.props.text? this.props.text : 'Silahkan Mencoba Kembali'}
@@ -54,7 +54,7 @@ import {
           content={this.renderContent()}
           onPress={this.props.onPress}
           title={''}
-          buttonTitle={'Kembali'}
+          buttonTitle={this.props.buttonTitle? this.props.buttonTitle :'Kembali'}
         />
       );
     }

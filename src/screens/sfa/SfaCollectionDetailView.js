@@ -44,7 +44,8 @@ const SfaCollectionDetailView = props => {
     dataSfaGetCollectionDetail,
     dataSfaDeleteCollection,
     dataSfaGetCollectionLog,
-    loadingSfaDeleteCollection
+    loadingSfaDeleteCollection,
+    loadingSfaGetCollectionDetail
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [isPrimer, setIsPrimer] = useState(false);
@@ -428,7 +429,7 @@ const SfaCollectionDetailView = props => {
   const renderContent = () => {
     return (
       <View style={{ flex: 1 }}>
-        {dataSfaGetCollectionDetail && !loadingSfaDeleteCollection ? (
+        {dataSfaGetCollectionDetail && !loadingSfaGetCollectionDetail && !loadingSfaDeleteCollection ? (
           <ScrollView style={{ flex: 1, height: '100%' }}>
             {renderFakturInfo()}
             {renderCollectionInfo()}
