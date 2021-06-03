@@ -27,7 +27,7 @@ import {
   sfaGetCollectionDetailProcess
 } from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
-
+import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 const SfaEditCollectionView = props => {
   const [isPrimary, setIsPrimary] = useState(true);
   const {
@@ -436,6 +436,8 @@ const SfaEditCollectionView = props => {
 
   
   //RENDER MODAL
+
+    /** MODAL EDIT CONFIRMATION */
   const renderModalEditConfirmation = () => {
     return (
       <View>
@@ -461,6 +463,23 @@ const SfaEditCollectionView = props => {
     );
   };
 
+  /** MODAL ERROR EDIT COLLECTION */
+  const renderModalErrorEditCollection = () => {
+    return openModalErrorEditCollection ? (
+      <View>
+        <ModalBottomFailPayment
+          open={openModalErrorEditCollection}
+          onPress={() => setOpenModalErrorEditCollection(false)}
+          text= {'error'}
+          buttonTittle={'Ubah Transaksi'}
+          errorTittle={'Gagal Mengubah Transaksi'}
+        />
+      </View>
+    ) : (
+      <View />
+    );
+  }
+
   const renderContent = () => {
     return (
       <View style={{ flex: 1 }}>
@@ -470,6 +489,7 @@ const SfaEditCollectionView = props => {
           {renderCollectionDetail()}
           {renderButtonSave()}
           {renderModalEditConfirmation()}
+          {renderModalErrorEditCollection()}
         </ScrollView>
       </View>
     );
