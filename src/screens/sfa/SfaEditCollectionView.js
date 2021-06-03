@@ -34,7 +34,8 @@ const SfaEditCollectionView = props => {
     dataSfaGetDetail,
     dataSfaGetCollectionDetail,
     loadingSfaEditCollection,
-    loadingSfaGetCollectionDetail
+    loadingSfaGetCollectionDetail,
+    dataSfaEditCollection, errorSfaEditCollection
   } = useSelector(state => state.sfa);
   const { id } = useSelector(state => state.user);
   const detailSfa = props.navigation.state.params.dataDetail;
@@ -43,6 +44,7 @@ const SfaEditCollectionView = props => {
   const [openModalEditConfirmation, setOpenModalEditConfirmation] = useState(
     false
   );
+  const [openModalErrorEditCollection, setOpenModalErrorEditCollection] = useState(false)
   //DATA PAYMENT TRANSFER & PROMO
   const [referenceCode, setReferenceCode] = useState(
     detailSfa.paymentCollection.paymentCollectionMethod.reference
@@ -92,10 +94,9 @@ const SfaEditCollectionView = props => {
     detailSfa.paymentCollection.paymentCollectionMethod.amount
   );
 
-  //DATA SELECTOR
-  const { dataSfaEditCollection } = useSelector(state => state.sfa);
   //DATA USE REF
   const prevDataSfaEditCollectionRef = useRef(dataSfaEditCollection);
+  const prevErrorSfaEditCollectionRef = useRef(errorSfaEditCollection);
 
   //USEDISPATCH
   const dispatch = useDispatch();
@@ -104,6 +105,10 @@ const SfaEditCollectionView = props => {
     prevDataSfaEditCollectionRef.current = dataSfaEditCollection;
   }, []);
   const prevDataSfaEditCollection = prevDataSfaEditCollectionRef.current;
+  useEffect(() => {
+    prevErrorSfaEditCollectionRef.current = errorSfaEditCollection;
+  }, []);
+  const prevErrorSfaEditCollection = prevErrorSfaEditCollectionRef.current;
 
   useEffect(() => {
     const paymentCollectionId = detailSfa.paymentCollection.id;
@@ -116,6 +121,14 @@ const SfaEditCollectionView = props => {
       }
     }
   }, [dataSfaEditCollection]);
+
+  useEffect(() => {
+    if (prevErrorSfaEditCollection !== errorSfaEditCollection) {
+      if (errorSfaEditCollection) {
+      setOpenModalErrorEditCollection(true)
+      }
+    }
+  }, [errorSfaEditCollection]);
   /**
    * =======================
    * FUNCTIONAL
@@ -470,8 +483,8 @@ const SfaEditCollectionView = props => {
         <ModalBottomFailPayment
           open={openModalErrorEditCollection}
           onPress={() => setOpenModalErrorEditCollection(false)}
-          text= {'error'}
-          buttonTittle={'Ubah Transaksi'}
+          text= {errorSfaEditCollection.message}
+          buttonTitle={'Ubah Transaksi'}
           errorTittle={'Gagal Mengubah Transaksi'}
         />
       </View>
