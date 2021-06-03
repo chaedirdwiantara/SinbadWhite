@@ -13,3 +13,13 @@
  export const PROMO = 'Promo'
  export const TUNAI = 'Tunai'
  export const RETUR = 'Retur'
+
+ /**
+ * STATUS APPROVAL SFA :
+ * 1. approved
+ * 2. pending
+ * 3. reject
+ */
+  export const APPROVED = 'approved'
+  export const PENDING = 'pending'
+  export const REJECT = 'reject'

@@ -479,3 +479,29 @@ export function sfaEditCollectionSuccess(data) {
 export function sfaEditCollectionFailed(data) {
   return { type: types.SFA_EDIT_COLLECTION_FAILED, payload: data };
 }
+
+
+/**
+ * ===========================
+ * DELETE COLLECTION
+ * ===========================
+ */
+/** === SFA DELETE COLLECTION PROCESS === */
+export function sfaDeleteCollectionProcess(data) {
+  return { type: types.SFA_DELETE_COLLECTION_PROCESS, payload: data };
+}
+
+/** === SFA DELETE COLLECTION SUCCESS === */
+export function sfaDeleteCollectionSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_DELETE_COLLECTION_SUCCESS,
+      payload: data
+    };
+  }
+  return { type: types.SFA_DELETE_COLLECTION_FAILED, payload: data };
+}
+/** === SFA DELETE COLLECTION FAILED === */
+export function sfaDeleteCollectionFailed(data) {
+  return { type: types.SFA_DELETE_COLLECTION_FAILED, payload: data };
+}

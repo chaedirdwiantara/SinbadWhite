@@ -230,6 +230,18 @@ function* editCollection(actions) {
   }
 }
 
+/** DELETE COLLECTION */
+function* deleteCollection(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.deleteCollection(actions.payload);
+    });
+    yield put(ActionCreators.sfaDeleteCollectionSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaDeleteCollectionFailed(error));
+  }
+}
+
   function* SfaSaga() {
     yield takeEvery(
       types.SFA_GET_COLLECTION_STATUS_PROCESS,
@@ -252,7 +264,8 @@ function* editCollection(actions) {
     yield takeEvery(types.SFA_GET_COLLECTION_LOG_PROCESS, getCollectionLog),
     yield takeEvery(types.SFA_COLLECTION_LOG_LOADMORE_PROCESS, loadmoreCollectionLog),
     yield takeEvery(types.SFA_GET_COLLECTION_DETAIL_PROCESS, getCollectionDetail),
-    yield takeEvery(types.SFA_EDIT_COLLECTION_PROCESS, editCollection)
+    yield takeEvery(types.SFA_EDIT_COLLECTION_PROCESS, editCollection),
+    yield takeEvery(types.SFA_DELETE_COLLECTION_PROCESS, deleteCollection)
 }
 
 export default SfaSaga;

@@ -135,6 +135,14 @@ function editCollection(data) {
   });
 }
 
+/** DELETE COLLECTION */
+function deleteCollection(data) {
+  return ApiRest({
+    path: `collection/v1/payment/${data}`,
+    method: 'DELETE'
+  });
+}
+
   export const SfaMethod = {
     getCollectionStatus,
     getSfaDetail,
@@ -151,5 +159,6 @@ function editCollection(data) {
     getPrincipal,
     getCollectionLog,
     getCollectionDetail,
-    editCollection
+    editCollection,
+    deleteCollection
   };
