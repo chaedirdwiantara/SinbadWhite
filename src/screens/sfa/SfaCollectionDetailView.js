@@ -33,7 +33,7 @@ import {
   sfaDeleteCollectionProcess,
   sfaGetCollectionLogProcess
 } from '../../state/actions';
-import { APPROVED, REJECT, PENDING } from '../../constants/collectionConstants';
+import { APPROVED, REJECTED, PENDING } from '../../constants/collectionConstants';
 
 import NavigationService from '../../navigation/NavigationService';
 
@@ -331,7 +331,7 @@ const SfaCollectionDetailView = props => {
                   Menunggu
                 </Text>
               </View>
-            ) : paymentCollectionMethod.approvalStatus === REJECT ? (
+            ) : paymentCollectionMethod.approvalStatus === REJECTED ? (
               <View
                 style={{
                   backgroundColor: masterColor.fontRed10,
