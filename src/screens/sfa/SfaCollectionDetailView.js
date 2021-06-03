@@ -24,13 +24,13 @@ import { TextInputMask } from 'react-native-masked-text';
 import SfaCollectionDetailCheckandGiro from './SfaCollectionDetailCheckandGiro';
 import SfaCollectionDetailTransfer from './SfaCollectionDetailTransfer';
 import SfaCollectionDetailPromo from './SfaCollectionDetailPromo';
-import { sfaGetCollectionDetailProcess, sfaDeleteCollectionProcess } from '../../state/actions';
+import { sfaGetCollectionDetailProcess, sfaDeleteCollectionProcess, sfaGetCollectionLogProcess } from '../../state/actions';
 
 import NavigationService from '../../navigation/NavigationService';
 
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
-  const { dataSfaGetDetail, dataSfaGetCollectionDetail, dataSfaDeleteCollection } = useSelector(
+  const { dataSfaGetDetail, dataSfaGetCollectionDetail, dataSfaDeleteCollection, dataSfaGetCollectionLog, loadingSfaDeleteCollection } = useSelector(
     state => state.sfa
   );
   const { selectedMerchant } = useSelector(state => state.merchant);
@@ -38,11 +38,28 @@ const SfaCollectionDetailView = props => {
   const [isEdit, setIsEdit] = useState(false)
   const [isModalDeleteTransactionOpened, setIsModalDeleteTransactionOpened] = useState(false)
 
+  //USEREF
+  const prevDataSfaDeleteCollectionRef = useRef(dataSfaDeleteCollection);
+  const prevDataSfaGetCollectionLogRef = useRef(dataSfaGetCollectionLog);
+
   /**
    * *********************************
    * FUNCTION
    * *********************************
    */
+
+  //USE EFFECT PREV DATA DELETE
+  useEffect(() => {
+    prevDataSfaDeleteCollectionRef.current = dataSfaDeleteCollection;
+  }, []);
+  const prevDataSfaDeleteCollection = prevDataSfaDeleteCollectionRef.current;
+
+  //USE EFFECT PREV DATA LOG
+  useEffect(() => {
+    prevDataSfaGetCollectionLogRef.current = dataSfaGetCollectionLog;
+  }, []);
+  const prevDataSfaGetCollectionLog = prevDataSfaGetCollectionLogRef.current;
+
   useEffect(() => {
     const paymentCollectionId =
       props.navigation.state.params.paymentCollectionId;
@@ -67,36 +84,27 @@ const SfaCollectionDetailView = props => {
       props.navigation.state.params.paymentCollectionId;
     setIsModalDeleteTransactionOpened(false)
     dispatch(sfaDeleteCollectionProcess(paymentCollectionId));
-    alert('test')
   }
 
   useEffect(() => {
-    if (dataSfaDeleteCollection && dataSfaDeleteCollection.code === 200) {
-      const data = {
-        storeId: parseInt(selectedMerchant.storeId),
-        orderParcelId: dataSfaGetDetail.data.id,
-        limit: 20,
-        skip: 0
-      };
-      console.log('data:', data);
-      // dispatch(sfaGetCollectionLogProcess(data));
-      // NavigationService.navigate('SfaCollectionLog')
+    if (prevDataSfaDeleteCollection !== dataSfaDeleteCollection) {
+      if (dataSfaDeleteCollection) {
+        const data = {
+          storeId: parseInt(selectedMerchant.storeId),
+          orderParcelId: dataSfaGetDetail.data.id,
+          limit: 20,
+          skip: 0
+        };
+        dispatch(sfaGetCollectionLogProcess(data));
+      }
     }
   }, [dataSfaDeleteCollection])
 
   useEffect(() => {
-    if (dataSfaDeleteCollection && dataSfaDeleteCollection.code === 200) {
-      const data = {
-        storeId: parseInt(selectedMerchant.storeId),
-        orderParcelId: dataSfaGetDetail.data.id,
-        limit: 20,
-        skip: 0
-      };
-      console.log('data:', data);
-      // dispatch(sfaGetCollectionLogProcess(data));
+    if (prevDataSfaGetCollectionLog !== dataSfaGetCollectionLog) {
       NavigationService.navigate('SfaCollectionLog')
     }
-  }, [dataSfaDeleteCollection])
+  }, [dataSfaGetCollectionLog])
 
   /* ========================
    * HEADER MODIFY
@@ -350,7 +358,7 @@ const SfaCollectionDetailView = props => {
   const renderContent = () => {
     return (
       <View style={{ flex: 1 }}>
-        {dataSfaGetCollectionDetail ? (
+        {dataSfaGetCollectionDetail && !loadingSfaDeleteCollection ? (
           <ScrollView style={{ flex: 1, height: '100%' }}>
             {renderFakturInfo()}
             {renderCollectionInfo()}

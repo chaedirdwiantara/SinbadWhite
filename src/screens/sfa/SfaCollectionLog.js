@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -15,7 +15,8 @@ import {
 import {
   StatusBarWhite,
   LoadingPage,
-  LoadingLoadMore
+  LoadingLoadMore,
+  ToastType1
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import NavigationService from '../../navigation/NavigationService';
@@ -34,16 +35,47 @@ function SfaCollectionLog(props) {
   const {
     dataSfaGetCollectionLog,
     loadingLoadmoreCollectionLog,
-    dataSfaGetDetail
+    dataSfaGetDetail,
+    dataSfaDeleteCollection
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [limit, setLimit] = useState(20);
+  const [isShowToast, setIsShowToast] = useState(false)
+
+  //USEREF
+  const prevDataSfaDeleteCollectionRef = useRef(dataSfaDeleteCollection);
+  const prevDataSfaGetCollectionLogRef = useRef(dataSfaGetCollectionLog);
 
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
+
+   //USE EFFECT PREV DATA DELETE
+  useEffect(() => {
+    prevDataSfaDeleteCollectionRef.current = dataSfaDeleteCollection;
+  }, []);
+  const prevDataSfaDeleteCollection = prevDataSfaDeleteCollectionRef.current;
+
+    //USE EFFECT PREV DATA LOG
+    useEffect(() => {
+      prevDataSfaGetCollectionLogRef.current = dataSfaGetCollectionLog;
+    }, []);
+    const prevDataSfaGetCollectionLog = prevDataSfaGetCollectionLogRef.current;
+
+  useEffect(() => {
+    if (prevDataSfaDeleteCollection !== dataSfaDeleteCollection) {
+      if (prevDataSfaGetCollectionLog !== dataSfaGetCollectionLog) {
+        setIsShowToast(true)
+        setTimeout(() => {
+          setIsShowToast(false)
+        }, 3000);
+      }
+    }
+  }, [dataSfaDeleteCollection]);
+
+  
 
   useEffect(() => {
     const data = {
@@ -79,6 +111,14 @@ function SfaCollectionLog(props) {
    * RENDER VIEW
    * *********************************
    */
+
+   const renderToast = () => {
+    return isShowToast ? (
+      <ToastType1 margin={10} content={'Transaksi Berhasil Dihapus'} />
+    ) : (
+      <View />
+    );
+  }
 
   //**RENDER ITEM */
   const renderItem = ({ item, index }) => {
@@ -208,7 +248,12 @@ function SfaCollectionLog(props) {
   };
   /** === RENDER CONTENT === */
   const renderContent = () => {
-    return <View style={styles.container}>{renderCollectionList()}</View>;
+    return (
+      <View style={styles.container}>
+        {renderToast()}
+        {renderCollectionList()}
+      </View>
+      );
   };
 
   /**
