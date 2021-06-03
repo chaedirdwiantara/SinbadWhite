@@ -50,7 +50,7 @@ const SfaCollectionDetailView = props => {
     loadingSfaGetCollectionDetail
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
-  const [openEditSuccessToast, setOpenEditSuccessToast] = useState(false)
+  const [isShowEditSuccessToast, setIsShowEditSuccessToast] = useState(false)
   const [isPrimer, setIsPrimer] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [
@@ -138,9 +138,9 @@ const SfaCollectionDetailView = props => {
   useEffect(() => {
     if (prevDataSfaEditCollection !== dataSfaEditCollection) {
       if (dataSfaEditCollection) {
-        setOpenEditSuccessToast(true)
+        setIsShowEditSuccessToast(true)
         setTimeout(() => {
-          setOpenEditSuccessToast(false)
+          setIsShowEditSuccessToast(false)
         }, 3000);
       }
     }
@@ -447,7 +447,7 @@ const SfaCollectionDetailView = props => {
   };
 
   const renderToast = () => {
-    return openEditSuccessToast ? (
+    return isShowEditSuccessToast ? (
       <ToastType1 margin={70} content={'Transaksi Berhasil Diubah'} />
     ) : (
       <View />
