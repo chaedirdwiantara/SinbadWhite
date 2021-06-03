@@ -42,7 +42,11 @@ const SfaEditCollectionView = props => {
     dataSfaEditCollection,
     errorSfaEditCollection
   } = useSelector(state => state.sfa);
-  const [isPrimary, setIsPrimary] = useState(dataSfaGetCollectionDetail.paymentCollection.isPrimary);
+  const [isPrimary, setIsPrimary] = useState(
+    dataSfaGetCollectionDetail
+      ? dataSfaGetCollectionDetail.paymentCollection.isPrimary
+      : false
+  );
   const { id } = useSelector(state => state.user);
   const detailSfa = props.navigation.state.params.dataDetail;
   const [newDataDetailSfa, setNewDataDetailSfa] = useState(null);
@@ -89,7 +93,9 @@ const SfaEditCollectionView = props => {
   const [invalidDate, setInvalidDate] = useState(
     detailSfa.paymentCollection.paymentCollectionMethod.dueDate
   );
-  const [dataBank, setDataBank] = useState(detailSfa.paymentCollection.paymentCollectionMethod.bankFrom);
+  const [dataBank, setDataBank] = useState(
+    detailSfa.paymentCollection.paymentCollectionMethod.bankFrom
+  );
   const [dataStamp, setDataStamp] = useState(
     detailSfa.paymentCollection.paymentCollectionMethod.stamp
   );
@@ -146,7 +152,7 @@ const SfaEditCollectionView = props => {
   const saveEditCollection = () => {
     const paymentCollectionType =
       detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType;
-      console.log(paymentCollectionType, 'collection type');
+    console.log(paymentCollectionType, 'collection type');
     const userId = parseInt(id);
     const paymentCollectionId = detailSfa.paymentCollection.id;
     if (paymentCollectionType.name === TRANSFER) {
@@ -180,8 +186,7 @@ const SfaEditCollectionView = props => {
         image: promoImage
       };
       dispatch(sfaEditCollectionProcess(data));
-    } 
-    else if (paymentCollectionType.name === TUNAI) {
+    } else if (paymentCollectionType.name === TUNAI) {
       const data = {
         userSellerId: userId,
         paymentCollectionId: paymentCollectionId,
@@ -189,7 +194,7 @@ const SfaEditCollectionView = props => {
         paymentCollectionTypeId: paymentCollectionType.id
       };
       dispatch(sfaEditCollectionProcess(data));
-    }else if (paymentCollectionType.name === CEK || GIRO) {
+    } else if (paymentCollectionType.name === CEK || GIRO) {
       const data = {
         userSellerId: userId,
         paymentCollectionId: paymentCollectionId,
