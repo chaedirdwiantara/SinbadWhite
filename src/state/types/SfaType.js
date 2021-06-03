@@ -99,3 +99,8 @@ export const SFA_GET_COLLECTION_DETAIL_FAILED = 'SfaGetCollectionDetailFailed';
 export const SFA_EDIT_COLLECTION_PROCESS = 'SfaEditCollectionProcess';
 export const SFA_EDIT_COLLECTION_SUCCESS = 'SfaEditCollectionSuccess';
 export const SFA_EDIT_COLLECTION_FAILED = 'SfaEditCollectionFailed';
+
+/** DELETE COLLECTION */
+export const SFA_DELETE_COLLECTION_PROCESS = 'SfaDeleteCollectionProcess';
+export const SFA_DELETE_COLLECTION_SUCCESS = 'SfaDeleteCollectionSuccess';
+export const SFA_DELETE_COLLECTION_FAILED = 'SfaDeleteCollectionFailed';

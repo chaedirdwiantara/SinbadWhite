@@ -24,6 +24,7 @@ const INITIAL_STATE = {
   loadingLoadmoreCollectionLog: false,
   loadingSfaGetCollectionDetail: false,
   loadingSfaEditCollection: false,
+  loadingSfaDeleteCollection: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -44,6 +45,7 @@ const INITIAL_STATE = {
   dataLoadmoreCollectionLog: null,
   dataSfaGetCollectionDetail: null,
   dataSfaEditCollection: null,
+  dataSfaDeleteCollection: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -64,6 +66,7 @@ const INITIAL_STATE = {
   errorLoadmoreCollectionLog: null,
   errorSfaGetCollectionDetail: null,
   errorSfaEditCollection: null,
+  errorSfaDeleteCollection: null,
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -608,5 +611,33 @@ export const sfa = createReducer(INITIAL_STATE, {
         errorSfaEditCollection: action.payload
       };
     },
+
+     /**
+   * ==========================
+   * DELETE COLLECTION
+   * ==========================
+   */
+      [types.SFA_DELETE_COLLECTION_PROCESS](state, action) {
+        return {
+          ...state,
+          loadingSfaDeleteCollection: true,
+          dataSfaDeleteCollection: null,
+          errorSfaDeleteCollection: null
+        };
+      },
+      [types.SFA_DELETE_COLLECTION_SUCCESS](state, action) {
+        return {
+          ...state,
+          loadingSfaDeleteCollection: false,
+          dataSfaDeleteCollection: action.payload
+        };
+      },
+      [types.SFA_DELETE_COLLECTION_FAILED](state, action) {
+        return {
+          ...state,
+          loadingSfaDeleteCollection: false,
+          errorSfaDeleteCollection: action.payload
+        };
+      },
    
 });

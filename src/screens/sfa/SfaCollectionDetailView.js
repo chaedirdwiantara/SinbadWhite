@@ -24,13 +24,13 @@ import { TextInputMask } from 'react-native-masked-text';
 import SfaCollectionDetailCheckandGiro from './SfaCollectionDetailCheckandGiro';
 import SfaCollectionDetailTransfer from './SfaCollectionDetailTransfer';
 import SfaCollectionDetailPromo from './SfaCollectionDetailPromo';
-import { sfaGetCollectionDetailProcess } from '../../state/actions';
+import { sfaGetCollectionDetailProcess, sfaDeleteCollectionProcess } from '../../state/actions';
 
 import NavigationService from '../../navigation/NavigationService';
 
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
-  const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(
+  const { dataSfaGetDetail, dataSfaGetCollectionDetail, dataSfaDeleteCollection } = useSelector(
     state => state.sfa
   );
   const { selectedMerchant } = useSelector(state => state.merchant);
@@ -61,6 +61,42 @@ const SfaCollectionDetailView = props => {
   const editTransaction = () => {
     NavigationService.navigate('SfaEditCollectionView', {dataDetail: dataSfaGetCollectionDetail});
   }
+
+  const deleteCollection = () => {
+    const paymentCollectionId =
+      props.navigation.state.params.paymentCollectionId;
+    setIsModalDeleteTransactionOpened(false)
+    dispatch(sfaDeleteCollectionProcess(paymentCollectionId));
+    alert('test')
+  }
+
+  useEffect(() => {
+    if (dataSfaDeleteCollection && dataSfaDeleteCollection.code === 200) {
+      const data = {
+        storeId: parseInt(selectedMerchant.storeId),
+        orderParcelId: dataSfaGetDetail.data.id,
+        limit: 20,
+        skip: 0
+      };
+      console.log('data:', data);
+      // dispatch(sfaGetCollectionLogProcess(data));
+      // NavigationService.navigate('SfaCollectionLog')
+    }
+  }, [dataSfaDeleteCollection])
+
+  useEffect(() => {
+    if (dataSfaDeleteCollection && dataSfaDeleteCollection.code === 200) {
+      const data = {
+        storeId: parseInt(selectedMerchant.storeId),
+        orderParcelId: dataSfaGetDetail.data.id,
+        limit: 20,
+        skip: 0
+      };
+      console.log('data:', data);
+      // dispatch(sfaGetCollectionLogProcess(data));
+      NavigationService.navigate('SfaCollectionLog')
+    }
+  }, [dataSfaDeleteCollection])
 
   /* ========================
    * HEADER MODIFY
@@ -129,7 +165,7 @@ const SfaCollectionDetailView = props => {
             okText={'Ya, Hapus'}
             cancelText={'Tidak'}
             ok={() => {
-              setIsModalDeleteTransactionOpened(false)
+              deleteCollection()
             }}
             cancel={() =>
               setIsModalDeleteTransactionOpened(false)
