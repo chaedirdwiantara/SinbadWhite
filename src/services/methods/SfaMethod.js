@@ -138,7 +138,6 @@ function editCollection(data) {
 /** DELETE COLLECTION */
 function deleteCollection(data) {
   return ApiRest({
-    testpath:`https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment/30`,
     path: `collection/v1/payment/${data}`,
     method: 'DELETE'
   });
