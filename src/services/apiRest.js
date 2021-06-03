@@ -27,7 +27,6 @@ export default async function endpoint({ path, method, params, testpath }) {
 
   return fetch(testpath? testpath : apiHost.url + path, reqBody)
     .then(response => {
-      console.log('ini respon:', response);
       if (response.status === 200 || response.status === 201) {
         return response.json().then(data => {
           return {
@@ -37,7 +36,6 @@ export default async function endpoint({ path, method, params, testpath }) {
           };
         });
       } else {
-        console.log('ini respon:', response);
         return response.json().then(data => {
           let deviceData = {
             uniqueId: DeviceInfo.getUniqueId(),
