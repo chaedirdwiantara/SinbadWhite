@@ -14,7 +14,11 @@ import {
   MaterialIcon,
   moment
 } from '../../library/thirdPartyPackage';
-import { LoadingPage, InputType5, ModalConfirmation } from '../../library/component';
+import {
+  LoadingPage,
+  InputType5,
+  ModalConfirmation
+} from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
 import masterColor from '../../config/masterColor.json';
@@ -24,19 +28,31 @@ import { TextInputMask } from 'react-native-masked-text';
 import SfaCollectionDetailCheckandGiro from './SfaCollectionDetailCheckandGiro';
 import SfaCollectionDetailTransfer from './SfaCollectionDetailTransfer';
 import SfaCollectionDetailPromo from './SfaCollectionDetailPromo';
-import { sfaGetCollectionDetailProcess, sfaDeleteCollectionProcess, sfaGetCollectionLogProcess } from '../../state/actions';
+import {
+  sfaGetCollectionDetailProcess,
+  sfaDeleteCollectionProcess,
+  sfaGetCollectionLogProcess
+} from '../../state/actions';
+import { APPROVED, REJECT, PENDING } from '../../constants/collectionConstants';
 
 import NavigationService from '../../navigation/NavigationService';
 
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
-  const { dataSfaGetDetail, dataSfaGetCollectionDetail, dataSfaDeleteCollection, dataSfaGetCollectionLog, loadingSfaDeleteCollection } = useSelector(
-    state => state.sfa
-  );
+  const {
+    dataSfaGetDetail,
+    dataSfaGetCollectionDetail,
+    dataSfaDeleteCollection,
+    dataSfaGetCollectionLog,
+    loadingSfaDeleteCollection
+  } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
-  const [isPrimer, setIsPrimer] = useState(false)
-  const [isEdit, setIsEdit] = useState(false)
-  const [isModalDeleteTransactionOpened, setIsModalDeleteTransactionOpened] = useState(false)
+  const [isPrimer, setIsPrimer] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [
+    isModalDeleteTransactionOpened,
+    setIsModalDeleteTransactionOpened
+  ] = useState(false);
 
   //USEREF
   const prevDataSfaDeleteCollectionRef = useRef(dataSfaDeleteCollection);
@@ -72,19 +88,21 @@ const SfaCollectionDetailView = props => {
   };
 
   const deleteTransaction = () => {
-    setIsModalDeleteTransactionOpened(true)
-  }
+    setIsModalDeleteTransactionOpened(true);
+  };
 
   const editTransaction = () => {
-    NavigationService.navigate('SfaEditCollectionView', {dataDetail: dataSfaGetCollectionDetail});
-  }
+    NavigationService.navigate('SfaEditCollectionView', {
+      dataDetail: dataSfaGetCollectionDetail
+    });
+  };
 
   const deleteCollection = () => {
     const paymentCollectionId =
       props.navigation.state.params.paymentCollectionId;
-    setIsModalDeleteTransactionOpened(false)
+    setIsModalDeleteTransactionOpened(false);
     dispatch(sfaDeleteCollectionProcess(paymentCollectionId));
-  }
+  };
 
   useEffect(() => {
     if (prevDataSfaDeleteCollection !== dataSfaDeleteCollection) {
@@ -98,13 +116,13 @@ const SfaCollectionDetailView = props => {
         dispatch(sfaGetCollectionLogProcess(data));
       }
     }
-  }, [dataSfaDeleteCollection])
+  }, [dataSfaDeleteCollection]);
 
   useEffect(() => {
     if (prevDataSfaGetCollectionLog !== dataSfaGetCollectionLog) {
-      NavigationService.navigate('SfaCollectionLog')
+      NavigationService.navigate('SfaCollectionLog');
     }
-  }, [dataSfaGetCollectionLog])
+  }, [dataSfaGetCollectionLog]);
 
   /* ========================
    * HEADER MODIFY
@@ -133,15 +151,15 @@ const SfaCollectionDetailView = props => {
           <View style={{ alignSelf: 'center', flex: 1, marginLeft: 25 }}>
             <Text style={Fonts.type5}>Detail Transaksi</Text>
           </View>
-          <View style={[styles.headerBody, {flexDirection:"row"}]}>
-            <TouchableOpacity onPress={()=> deleteTransaction()}>
+          <View style={[styles.headerBody, { flexDirection: 'row' }]}>
+            <TouchableOpacity onPress={() => deleteTransaction()}>
               <MaterialIcon
                 name="delete"
                 size={28}
-                style={{ color: masterColor.fontBlack50 , marginRight: 10 }}
+                style={{ color: masterColor.fontBlack50, marginRight: 10 }}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=> editTransaction()}>
+            <TouchableOpacity onPress={() => editTransaction()}>
               <MaterialIcon
                 name="edit"
                 size={28}
@@ -160,7 +178,7 @@ const SfaCollectionDetailView = props => {
    * MODAL
    * ======================
    */
-   const renderModalDeleteTransaction = () => {
+  const renderModalDeleteTransaction = () => {
     return (
       <View>
         {isModalDeleteTransactionOpened ? (
@@ -173,18 +191,16 @@ const SfaCollectionDetailView = props => {
             okText={'Ya, Hapus'}
             cancelText={'Tidak'}
             ok={() => {
-              deleteCollection()
+              deleteCollection();
             }}
-            cancel={() =>
-              setIsModalDeleteTransactionOpened(false)
-            }
+            cancel={() => setIsModalDeleteTransactionOpened(false)}
           />
         ) : (
           <View />
-        )} 
+        )}
       </View>
     );
-  }
+  };
 
   /**
    * *********************************
@@ -192,7 +208,6 @@ const SfaCollectionDetailView = props => {
    * *********************************
    */
 
-  
   const renderFakturInfo = () => {
     return (
       <View style={styles.container}>
@@ -272,11 +287,66 @@ const SfaCollectionDetailView = props => {
   };
 
   const renderCollectionDetail = () => {
+    const paymentCollectionMethod =
+      dataSfaGetCollectionDetail.paymentCollection.paymentCollectionMethod;
     return (
       <View style={[styles.container, { marginBottom: 16 }]}>
         <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
-          <View>
-            <Text style={Fonts.type48}>Detil Penagihan</Text>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+          >
+            <View>
+              <Text style={Fonts.type48}>Detil Penagihan</Text>
+            </View>
+            {paymentCollectionMethod.approvalStatus === APPROVED ? (
+              <View
+                style={{
+                  backgroundColor: masterColor.fontGreen10,
+                  borderRadius: 30
+                }}
+              >
+                <Text
+                  style={[
+                    Fonts.type38,
+                    { margin: 8, color: masterColor.fontGreen50 }
+                  ]}
+                >
+                  Disetujui
+                </Text>
+              </View>
+            ) : paymentCollectionMethod.approvalStatus === PENDING ? (
+              <View
+                style={{
+                  backgroundColor: masterColor.fontYellow10,
+                  borderRadius: 30
+                }}
+              >
+                <Text
+                  style={[
+                    Fonts.type38,
+                    { margin: 8, color: masterColor.fontYellow50 }
+                  ]}
+                >
+                  Menunggu
+                </Text>
+              </View>
+            ) : paymentCollectionMethod.approvalStatus === REJECT ? (
+              <View
+                style={{
+                  backgroundColor: masterColor.fontRed10,
+                  borderRadius: 30
+                }}
+              >
+                <Text
+                  style={[
+                    Fonts.type38,
+                    { margin: 4, color: masterColor.fontRed50 }
+                  ]}
+                >
+                  Ditolak
+                </Text>
+              </View>
+            ) : null}
           </View>
           <View style={[{ flex: 1, marginVertical: 8 }]} />
           {renderItemCollectionDetail()}
@@ -371,14 +441,15 @@ const SfaCollectionDetailView = props => {
     );
   };
 
-
-  return <>
-  <View style={{flex:1}}>
-  {renderHeader()}
-  {renderContent()}
-  {renderModalDeleteTransaction()}
-  </View>
-  </>;
+  return (
+    <>
+      <View style={{ flex: 1 }}>
+        {renderHeader()}
+        {renderContent()}
+        {renderModalDeleteTransaction()}
+      </View>
+    </>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -413,13 +484,14 @@ const styles = StyleSheet.create({
     marginVertical: 16
   },
   headerLine: {
-    shadowColor: masterColor.shadow,shadowOffset: {
+    shadowColor: masterColor.shadow,
+    shadowOffset: {
       width: 0,
       height: 2
     },
     shadowOpacity: 1,
     shadowRadius: 3.84,
     elevation: 1
-  },
+  }
 });
 export default SfaCollectionDetailView;
