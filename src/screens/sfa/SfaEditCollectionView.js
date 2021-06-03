@@ -7,42 +7,137 @@ import {
   TouchableOpacity,
   ScrollView
 } from '../../library/reactPackage';
-import { InputType5, ButtonSingle } from '../../library/component';
+import {
+  InputType5,
+  ButtonSingle,
+  ModalConfirmation,
+  LoadingPage
+} from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
-import { TRANSFER, TUNAI, PROMO, CEK, GIRO } from '../../constants/collectionConstants';
+import {
+  TRANSFER,
+  TUNAI,
+  PROMO,
+  CEK,
+  GIRO
+} from '../../constants/collectionConstants';
 import SfaEditCollectionCash from './SfaEditCollectionCash';
 import SfaEditCollectionTransfer from './SfaEditCollectionTransfer';
 import SfaEditCollectionPromo from './SfaEditCollectionPromo';
 import SfaEditCollectionCheckGiro from './SfaEditCollectionGCheckGiro';
-import { sfaEditCollectionProcess } from '../../state/actions';
-
+import {
+  sfaEditCollectionProcess,
+  sfaGetCollectionDetailProcess
+} from '../../state/actions';
+import NavigationService from '../../navigation/NavigationService';
+import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 const SfaEditCollectionView = props => {
-  const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(
-    state => state.sfa
-  );
+  const {
+    dataSfaGetDetail,
+    dataSfaGetCollectionDetail,
+    loadingSfaEditCollection,
+    loadingSfaGetCollectionDetail,
+    dataSfaEditCollection,
+    errorSfaEditCollection
+  } = useSelector(state => state.sfa);
+  const [isPrimary, setIsPrimary] = useState(dataSfaGetCollectionDetail.paymentCollection.isPrimary);
   const { id } = useSelector(state => state.user);
   const detailSfa = props.navigation.state.params.dataDetail;
   const [newDataDetailSfa, setNewDataDetailSfa] = useState(null);
   const [isChanged, setIsChanged] = useState(false);
-
+  const [openModalEditConfirmation, setOpenModalEditConfirmation] = useState(
+    false
+  );
+  const [
+    openModalErrorEditCollection,
+    setOpenModalErrorEditCollection
+  ] = useState(false);
   //DATA PAYMENT TRANSFER & PROMO
-  const [referenceCode, setReferenceCode] = useState(detailSfa.paymentCollection.paymentCollectionMethod.reference);
-  const [bankSource, setBankSource] = useState(detailSfa.paymentCollection.paymentCollectionMethod.bankFrom);
-  const [bankAccount, setBankAccount] = useState(detailSfa.paymentCollection.paymentCollectionMethod.bankToAccount);
-  const [transferDate, setTransferDate] = useState(detailSfa.paymentCollection.paymentCollectionMethod.date);
-  const [transferValue, setTransferValue] = useState(detailSfa.paymentCollection.paymentCollectionMethod.amount);
-  const [billingValue, setBillingValue] = useState(detailSfa.paymentCollection.paidAmount);
+  const [referenceCode, setReferenceCode] = useState(
+    detailSfa.paymentCollection.paymentCollectionMethod.reference
+  );
+  const [bankSource, setBankSource] = useState(
+    detailSfa.paymentCollection.paymentCollectionMethod.bankFrom
+  );
+  const [bankAccount, setBankAccount] = useState(
+    detailSfa.paymentCollection.paymentCollectionMethod.bankToAccount
+  );
+  const [transferDate, setTransferDate] = useState(
+    detailSfa.paymentCollection.paymentCollectionMethod.date
+  );
+  const [transferValue, setTransferValue] = useState(
+    detailSfa.paymentCollection.paymentCollectionMethod.amount
+  );
+  const [billingValue, setBillingValue] = useState(
+    detailSfa.paymentCollection.paidAmount
+  );
   const [transferImage, setTransferImage] = useState(detailSfa.image);
   //DATA PAYMENT PROMO
-  const [principal, setPrincipal] = useState(detailSfa.paymentCollection.paymentCollectionMethod.principal)
-  const [promoValue, setPromoValue] = useState(detailSfa.paymentCollection.paymentCollectionMethod.amount)
+  const [principal, setPrincipal] = useState(
+    detailSfa.paymentCollection.paymentCollectionMethod.principal
+  );
+  const [promoValue, setPromoValue] = useState(
+    detailSfa.paymentCollection.paymentCollectionMethod.amount
+  );
   const [promoImage, setPromoImage] = useState(detailSfa.image);
+  //DATA CHECK AND GIRO
+  const [issuedDate, setIssuedDate] = useState(
+    detailSfa.paymentCollection.paymentCollectionMethod.date
+  );
+  const [invalidDate, setInvalidDate] = useState(
+    detailSfa.paymentCollection.paymentCollectionMethod.dueDate
+  );
+  const [dataBank, setDataBank] = useState(detailSfa.paymentCollection.paymentCollectionMethod.bankFrom);
+  const [dataStamp, setDataStamp] = useState(
+    detailSfa.paymentCollection.paymentCollectionMethod.stamp
+  );
+  const [paidAmount, setPaidAmount] = useState(
+    detailSfa.paymentCollection.paidAmount
+  );
+  const [reference, setReference] = useState(
+    detailSfa.paymentCollection.paymentCollectionMethod.reference
+  );
+  const [balanceValue, setBalanceValue] = useState(
+    detailSfa.paymentCollection.paymentCollectionMethod.amount
+  );
+
+  //DATA USE REF
+  const prevDataSfaEditCollectionRef = useRef(dataSfaEditCollection);
+  const prevErrorSfaEditCollectionRef = useRef(errorSfaEditCollection);
 
   //USEDISPATCH
   const dispatch = useDispatch();
+  //USE EFFECT PREV DATA
+  useEffect(() => {
+    prevDataSfaEditCollectionRef.current = dataSfaEditCollection;
+  }, []);
+  const prevDataSfaEditCollection = prevDataSfaEditCollectionRef.current;
+  useEffect(() => {
+    prevErrorSfaEditCollectionRef.current = errorSfaEditCollection;
+  }, []);
+  const prevErrorSfaEditCollection = prevErrorSfaEditCollectionRef.current;
 
+  useEffect(() => {
+    const paymentCollectionId = detailSfa.paymentCollection.id;
+    if (prevDataSfaEditCollection !== dataSfaEditCollection) {
+      if (dataSfaEditCollection) {
+        dispatch(sfaGetCollectionDetailProcess(paymentCollectionId));
+        NavigationService.navigate('SfaCollectionDetailView', {
+          paymentCollectionId: paymentCollectionId
+        });
+      }
+    }
+  }, [dataSfaEditCollection]);
+
+  useEffect(() => {
+    if (prevErrorSfaEditCollection !== errorSfaEditCollection) {
+      if (errorSfaEditCollection) {
+        setOpenModalErrorEditCollection(true);
+      }
+    }
+  }, [errorSfaEditCollection]);
   /**
    * =======================
    * FUNCTIONAL
@@ -51,38 +146,63 @@ const SfaEditCollectionView = props => {
   const saveEditCollection = () => {
     const paymentCollectionType =
       detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType;
-    const userId =  parseInt(id)
-    const paymentCollectionId = detailSfa.paymentCollection.id
+      console.log(paymentCollectionType, 'collection type');
+    const userId = parseInt(id);
+    const paymentCollectionId = detailSfa.paymentCollection.id;
     if (paymentCollectionType.name === TRANSFER) {
       const data = {
-        userSellerId : userId,
-        paymentCollectionId : paymentCollectionId,
-        paymentCollectionTypeId : paymentCollectionType.id,
-        paymentAmount : billingValue, 
-        referenceCode : referenceCode,
-        bankId : bankSource.id,
-        bankToAccountId : bankAccount.id,
-        paymentDate:transferDate,
-        paymentCollectionMethodAmount : transferValue,
-        filename:"template-baru.jpeg",
-        type:"image/jpeg", 
+        userSellerId: userId,
+        paymentCollectionId: paymentCollectionId,
+        paymentCollectionTypeId: paymentCollectionType.id,
+        paymentAmount: billingValue,
+        referenceCode: referenceCode,
+        bankId: bankSource.id,
+        bankToAccountId: bankAccount.id,
+        paymentDate: transferDate,
+        paymentCollectionMethodAmount: transferValue,
+        filename: 'template-baru.jpeg',
+        type: 'image/jpeg',
         image: transferImage
-      }
+      };
       dispatch(sfaEditCollectionProcess(data));
     } else if (paymentCollectionType.name === PROMO) {
       const data = {
-        userSellerId : userId,
-        paymentCollectionId : paymentCollectionId,
-        paymentCollectionTypeId : paymentCollectionType.id,
-        paymentAmount : billingValue, 
-        referenceCode : referenceCode,
-        promoCode : detailSfa.paymentCollection.paymentCollectionMethod.promoNo,
-        principalId : principal.id,
-        paymentCollectionMethodAmount : promoValue,
-        filename: "template-baru.jpeg",
-        type: "image/jpeg", 
+        userSellerId: userId,
+        paymentCollectionId: paymentCollectionId,
+        paymentCollectionTypeId: paymentCollectionType.id,
+        paymentAmount: billingValue,
+        referenceCode: referenceCode,
+        promoCode: detailSfa.paymentCollection.paymentCollectionMethod.promoNo,
+        principalId: principal.id,
+        paymentCollectionMethodAmount: promoValue,
+        filename: 'template-baru.jpeg',
+        type: 'image/jpeg',
         image: promoImage
-      }
+      };
+      dispatch(sfaEditCollectionProcess(data));
+    } 
+    else if (paymentCollectionType.name === TUNAI) {
+      const data = {
+        userSellerId: userId,
+        paymentCollectionId: paymentCollectionId,
+        paymentAmount: paidAmount,
+        paymentCollectionTypeId: paymentCollectionType.id
+      };
+      dispatch(sfaEditCollectionProcess(data));
+    }else if (paymentCollectionType.name === CEK || GIRO) {
+      const data = {
+        userSellerId: userId,
+        paymentCollectionId: paymentCollectionId,
+        paymentCollectionTypeId: paymentCollectionType.id,
+        paymentAmount: paidAmount,
+        referenceCode: reference,
+        bankId: dataBank.id,
+        issuedDate: issuedDate,
+        invalidDate: invalidDate,
+        paymentCollectionMethodAmount: balanceValue,
+        stampId: dataStamp ? dataStamp.id : null,
+        isUsedStamp: dataStamp ? true : false
+      };
       dispatch(sfaEditCollectionProcess(data));
     }
   };
@@ -133,6 +253,35 @@ const SfaEditCollectionView = props => {
 
   const dataPromoImage = data => {
     setPromoImage(data);
+  };
+
+  //FUNCTION FOR EDIT CHECK & GIRO
+  const onChangePaidAmount = data => {
+    setPaidAmount(data);
+  };
+
+  const onChangeReference = data => {
+    setReference(data);
+  };
+
+  const onChangeBalanceValue = data => {
+    setBalanceValue(data);
+  };
+
+  const onChangeIssuedDate = data => {
+    setIssuedDate(data);
+  };
+
+  const onChangeDueDate = data => {
+    setInvalidDate(data);
+  };
+
+  const onChangeDataBank = data => {
+    setDataBank(data);
+  };
+
+  const onChangeDataStamp = data => {
+    setDataStamp(data);
   };
   /**
    * *********************************
@@ -251,7 +400,13 @@ const SfaEditCollectionView = props => {
     const paymentCollectionType =
       detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType;
     if (paymentCollectionType.name === TUNAI) {
-      return <SfaEditCollectionCash />;
+      return (
+        <SfaEditCollectionCash
+          data={detailSfa}
+          onChangePaidAmount={onChangePaidAmount}
+          isChanged={isChangedData}
+        />
+      );
     } else if (paymentCollectionType.name === TRANSFER) {
       return (
         <SfaEditCollectionTransfer
@@ -280,23 +435,88 @@ const SfaEditCollectionView = props => {
           promoImage={dataPromoImage}
         />
       );
-    } else if(paymentCollectionType.name === CEK || paymentCollectionType.name === GIRO){
-      return <SfaEditCollectionCheckGiro data={detailSfa} />
-    }
-    else {
-      return <View/>
+    } else if (
+      paymentCollectionType.name === CEK ||
+      paymentCollectionType.name === GIRO
+    ) {
+      return (
+        <SfaEditCollectionCheckGiro
+          data={detailSfa}
+          isPrimary={isPrimary}
+          onChangePaidAmount={onChangePaidAmount}
+          onChangeReference={onChangeReference}
+          onChangeBalanceValue={onChangeBalanceValue}
+          onChangeIssuedDate={onChangeIssuedDate}
+          onChangeDueDate={onChangeDueDate}
+          onChangeDataBank={onChangeDataBank}
+          onChangeDataStamp={onChangeDataStamp}
+          isChanged={isChangedData}
+        />
+      );
+    } else {
+      return <View />;
     }
   };
 
+  const openModalConfirmation = () => {
+    setOpenModalEditConfirmation(true);
+  };
   const renderButtonSave = () => {
     return (
       <ButtonSingle
-        disabled={false}
-        loading={false}
+        disabled={loadingSfaEditCollection}
+        loading={loadingSfaEditCollection}
         title={'Simpan'}
         borderRadius={4}
-        onPress={() => saveEditCollection()}
+        onPress={() => openModalConfirmation()}
       />
+    );
+  };
+
+  //RENDER MODAL
+
+  /** MODAL EDIT CONFIRMATION */
+  const renderModalEditConfirmation = () => {
+    return (
+      <View>
+        {openModalEditConfirmation ? (
+          <ModalConfirmation
+            statusBarWhite
+            title={'Ubah Transaksi'}
+            open={openModalEditConfirmation}
+            content={
+              'Transaksi dengan nomor referensi yang sama juga akan terubah ?'
+            }
+            type={'okeNotRed'}
+            okText={'Ya, Ubah'}
+            cancelText={'Tidak'}
+            ok={() => {
+              setOpenModalEditConfirmation(false);
+              saveEditCollection();
+            }}
+            cancel={() => setOpenModalEditConfirmation(false)}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  };
+
+  /** MODAL ERROR EDIT COLLECTION */
+  const renderModalErrorEditCollection = () => {
+    return openModalErrorEditCollection ? (
+      <View>
+        <ModalBottomFailPayment
+          open={openModalErrorEditCollection}
+          onPress={() => setOpenModalErrorEditCollection(false)}
+          text={errorSfaEditCollection.message}
+          buttonTitle={'Ubah Transaksi'}
+          errorTittle={'Gagal Mengubah Transaksi'}
+        />
+      </View>
+    ) : (
+      <View />
     );
   };
 
@@ -308,11 +528,13 @@ const SfaEditCollectionView = props => {
           {renderCollectionInfo()}
           {renderCollectionDetail()}
           {renderButtonSave()}
+          {renderModalEditConfirmation()}
+          {renderModalErrorEditCollection()}
         </ScrollView>
       </View>
     );
   };
-  return <>{renderContent()}</>;
+  return <>{dataSfaGetCollectionDetail ? renderContent() : <LoadingPage />}</>;
 };
 const styles = StyleSheet.create({
   mainContainer: {
