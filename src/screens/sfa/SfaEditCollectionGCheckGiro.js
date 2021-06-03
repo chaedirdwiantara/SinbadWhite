@@ -30,7 +30,7 @@ const SfaEditCollectionCheckGiro = (props) => {
   const [invalidDate, setInvalidDate] = useState(paymentCollectionMethod.dueDate);
   const [isDisable, setIsDisable] = useState(!props.isPrimary);
   const [openModalBank, setOpenModalBank] = useState(false);
-  const [dataBank, setDataBank] = useState({displayName: 'Bank BCA'});
+  const [dataBank, setDataBank] = useState(paymentCollectionMethod.bankFrom);
   const [dataStamp, setDataStamp] = useState(paymentCollectionMethod.stamp);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [checkMaterai, setCheckMaterai] = useState(paymentCollectionMethod.stamp?true:false);
@@ -47,23 +47,28 @@ const SfaEditCollectionCheckGiro = (props) => {
     ) {
       setPaidAmount(parseInt(props.data.outstanding));
       props.onChangePaidAmount(parseInt(props.data.outstanding))
+      props.isChanged(true);
     } else {
       setPaidAmount(parseInt(text.replace(/[Rp.]+/g, '')));
       props.onChangePaidAmount(parseInt(text.replace(/[Rp.]+/g, '')))
+      props.isChanged(true);
     }
   };
   const dataBalance = text => {
     const balanceInt = parseInt(text.replace(/[Rp.]+/g, ''));
     setBalanceValue(balanceInt);
     props.onChangeBalanceValue(balanceInt)
+    props.isChanged(true);
   };
   const dataDueDate = date => {
     setInvalidDate(date);
     props.onChangeDueDate(date)
+    props.isChanged(true);
   };
   const dataIssuedDate = date => {
     setIssuedDate(date);
     props.onChangeIssuedDate(date)
+    props.isChanged(true);
   };
   const openDueDate = () => {
     setOpenModalDueDate(true);
@@ -76,6 +81,7 @@ const SfaEditCollectionCheckGiro = (props) => {
     setDataBank(data);
     setOpenModalBank(false);
     props.onChangeDataBank(data)
+    props.isChanged(true);
   };
   
   const functionMaterai = () => {
@@ -88,12 +94,14 @@ const SfaEditCollectionCheckGiro = (props) => {
   const selectedStamp = data => {
     setDataStamp(data);
     props.onChangeDataStamp(data)
+    props.isChanged(true);
     setOpenModalListMaterai(false);
   };
 
   const dataReference = data => {
     setReference(data)
     props.onChangeReference(data)
+    props.isChanged(true);
   }
   /**
    * *********************************
@@ -213,7 +221,7 @@ const SfaEditCollectionCheckGiro = (props) => {
                     }
                   ]}
                 >
-                  {dataBank.displayName}
+                  {dataBank.displayName? dataBank.displayName : dataBank.name}
                 </Text>
                 <View style={{ position: 'absolute', right: 16 }}>
                   <MaterialIcon
@@ -290,7 +298,7 @@ const SfaEditCollectionCheckGiro = (props) => {
           </View>
           <View style={{ paddingTop: 16 }}>
                 <Text style={Fonts.type10}>
-                  {'*Nilai Cek'}
+                  {`*Nilai ${paymentCollectionMethod.paymentCollectionType.name}`}
                 </Text>
                 <View
                   style={[

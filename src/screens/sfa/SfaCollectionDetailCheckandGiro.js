@@ -34,7 +34,7 @@ const SfaCollectionDetailCheckandGiro = (props) => {
         <View style={styles.inputField}>
           <InputType5
             title={`Sumber Bank`}
-            placeholder={paymentCollectionMethod.bankFrom.name?paymentCollectionMethod.bankFrom.name:''}
+            placeholder={paymentCollectionMethod.bankFrom?paymentCollectionMethod.bankFrom.name:''}
             editable={false}
           />
         </View>

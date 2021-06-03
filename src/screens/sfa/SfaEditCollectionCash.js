@@ -3,10 +3,9 @@ import { useState } from 'react';
   import { TextInputMask } from 'react-native-masked-text';
   import { Fonts } from '../../helpers';
   import masterColor from '../../config/masterColor.json';
-const SfaEditCollectionCash = () => {
+const SfaEditCollectionCash = (props) => {
   //DATA PAYMENT CASH
   const [cash, setCash] = useState(0);
-
   /**
    * =======================
    * FUNCTIONAL
@@ -15,11 +14,15 @@ const SfaEditCollectionCash = () => {
   const textBillingCash = text => {
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) >
-      parseInt(props.navigation.state.params.data.remainingBilling)
+      parseInt(props.data.outstanding)
     ) {
-      setCash(parseInt(props.navigation.state.params.data.remainingBilling));
+      setCash(parseInt(props.data.outstanding))
+      props.onChangePaidAmount(parseInt(props.data.outstanding))
+      props.isChanged(true);
     } else {
       setCash(parseInt(text.replace(/[Rp.]+/g, '')));
+      props.onChangePaidAmount(parseInt(text.replace(/[Rp.]+/g, '')))
+      props.isChanged(true);
     }
   };
 
