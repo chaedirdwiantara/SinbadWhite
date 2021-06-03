@@ -152,7 +152,6 @@ const SfaEditCollectionView = props => {
   const saveEditCollection = () => {
     const paymentCollectionType =
       detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType;
-    console.log(paymentCollectionType, 'collection type');
     const userId = parseInt(id);
     const paymentCollectionId = detailSfa.paymentCollection.id;
     if (paymentCollectionType.name === TRANSFER) {
