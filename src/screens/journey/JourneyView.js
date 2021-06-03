@@ -23,6 +23,7 @@ import {
   BackHandlerBackSpecific,
   ModalBottomType3,
   StatusBarRedOP50,
+  ModalBottomErrorRespons,
   ButtonSingle
 } from '../../library/component'
 import { MoneyFormat, Fonts } from '../../helpers'
@@ -42,6 +43,7 @@ class JourneyView extends Component {
       search: '',
       openModalAddMerchant: false,
       openModalMerchantList: false,
+      openModalErrorGlobal: false,
       showToast: false,
       notifToast: '',
       showModalError: false
@@ -106,12 +108,32 @@ class JourneyView extends Component {
         }, 3000);
       }
     }
+    /** error get journey plan reports */
+    if (
+      prevProps.journey.errorGetJourneyPlanReportV2 !==
+      this.props.journey.errorGetJourneyPlanReportV2
+    ) {
+      if (this.props.journey.errorGetJourneyPlanReportV2 !== null) {
+        this.doError();
+      }
+    }
   }
   /** === FROM CHILD FUNCTION === */
   parentFunction(data) {
     if (data.type === 'search') {
       this.setState({ search: data.data }, () => this.getJourneyPlan());
     }
+  }
+  /** FOR ERROR FUNCTION (FROM DID UPDATE) */
+  doError() {
+    /** Close all modal and open modal error respons */
+    this.setState({
+      openModalErrorGlobal: true,
+      openModalAddMerchant: false,
+      openModalMerchantList: false,
+      showToast: false,
+      showModalError: false,
+    });
   }
   /** === GET JOURNEY PLAN === */
   getJourneyPlan() {
@@ -292,6 +314,18 @@ class JourneyView extends Component {
       </View>
     );
   }
+  /** RENDER MODAL ERROR RESPONSE */
+  renderModalErrorResponse() {
+  return this.state.openModalErrorGlobal ? (
+    <ModalBottomErrorRespons
+      statusBarType={'transparent'}
+      open={this.state.openModalErrorGlobal}
+      onPress={() => this.setState({ openModalErrorGlobal: false })}
+    />
+    ) : (
+      <View />
+    );
+  }
   /** ===================== */
   /** === MAIN === */
   render() {
@@ -310,6 +344,7 @@ class JourneyView extends Component {
         {this.renderModalMerchantList()}
         {this.renderToast()}
         {this.state.showModalError && this.renderModalError()}
+        {this.renderModalErrorResponse()}
       </SafeAreaView>
     );
   }
@@ -372,4 +407,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyView);
  * updatedDate: 04052021
  * updatedFunction:
  * -> Add search journey plan.
+ * updatedBy: dyah
+ * updatedDate: 04052021
+ * updatedFunction:
+ * -> Add error modal when failed get journey plan reports.
  */
