@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ScrollView
 } from '../../library/reactPackage';
-import { InputType5, ButtonSingle } from '../../library/component';
+import { InputType5, ButtonSingle, ModalConfirmation } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,17 +28,21 @@ import {
 } from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 
-
 const SfaEditCollectionView = props => {
   const [isPrimary, setIsPrimary] = useState(true);
-  const { dataSfaGetDetail, dataSfaGetCollectionDetail,loadingSfaEditCollection } = useSelector(
-    state => state.sfa
-  );
+  const {
+    dataSfaGetDetail,
+    dataSfaGetCollectionDetail,
+    loadingSfaEditCollection,
+    loadingSfaGetCollectionDetail
+  } = useSelector(state => state.sfa);
   const { id } = useSelector(state => state.user);
   const detailSfa = props.navigation.state.params.dataDetail;
   const [newDataDetailSfa, setNewDataDetailSfa] = useState(null);
   const [isChanged, setIsChanged] = useState(false);
-
+  const [openModalEditConfirmation, setOpenModalEditConfirmation] = useState(
+    false
+  );
   //DATA PAYMENT TRANSFER & PROMO
   const [referenceCode, setReferenceCode] = useState(
     detailSfa.paymentCollection.paymentCollectionMethod.reference
@@ -165,7 +169,7 @@ const SfaEditCollectionView = props => {
         issuedDate: issuedDate,
         invalidDate: invalidDate,
         paymentCollectionMethodAmount: balanceValue,
-        stampId: dataStamp? dataStamp.id : null,
+        stampId: dataStamp ? dataStamp.id : null,
         isUsedStamp: dataStamp ? true : false
       };
       dispatch(sfaEditCollectionProcess(data));
@@ -416,15 +420,45 @@ const SfaEditCollectionView = props => {
     }
   };
 
+  const openModalConfirmation = () => {
+    setOpenModalEditConfirmation(true)
+  }
   const renderButtonSave = () => {
     return (
       <ButtonSingle
-        disabled={false}
+        disabled={loadingSfaEditCollection}
         loading={loadingSfaEditCollection}
         title={'Simpan'}
         borderRadius={4}
-        onPress={() => saveEditCollection()}
+        onPress={() => openModalConfirmation()}
       />
+    );
+  };
+
+  
+  //RENDER MODAL
+  const renderModalEditConfirmation = () => {
+    return (
+      <View>
+        {openModalEditConfirmation ? (
+          <ModalConfirmation
+            statusBarWhite
+            title={'Ubah Transaksi'}
+            open={openModalEditConfirmation}
+            content={'Transaksi dengan nomor referensi yang sama juga akan terubah ?'}
+            type={'okeNotRed'}
+            okText={'Ya, Ubah'}
+            cancelText={'Tidak'}
+            ok={() => {
+              setOpenModalEditConfirmation(false);
+              saveEditCollection()
+            }}
+            cancel={() => setOpenModalEditConfirmation(false)}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
     );
   };
 
@@ -436,17 +470,19 @@ const SfaEditCollectionView = props => {
           {renderCollectionInfo()}
           {renderCollectionDetail()}
           {renderButtonSave()}
+          {renderModalEditConfirmation()}
         </ScrollView>
       </View>
     );
   };
-  return <>
-  
-  {
-    dataSfaGetCollectionDetail?
-  renderContent(): null
-  }
-  </>;
+  return (
+    <>
+      {dataSfaGetCollectionDetail ? 
+        
+          renderContent()
+      : null }
+    </>
+  );
 };
 const styles = StyleSheet.create({
   mainContainer: {
