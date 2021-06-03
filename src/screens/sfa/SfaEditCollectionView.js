@@ -106,7 +106,7 @@ const SfaEditCollectionView = props => {
     if (prevDataSfaEditCollection !== dataSfaEditCollection) {
       console.log(paymentCollectionId, 'id');
       if (dataSfaEditCollection) {
-        
+        dispatch(sfaGetCollectionDetailProcess(paymentCollectionId));
         NavigationService.navigate('SfaCollectionDetailView', {
           paymentCollectionId: paymentCollectionId
         });
@@ -165,7 +165,7 @@ const SfaEditCollectionView = props => {
         issuedDate: issuedDate,
         invalidDate: invalidDate,
         paymentCollectionMethodAmount: balanceValue,
-        stampId: dataStamp.id,
+        stampId: dataStamp? dataStamp.id : null,
         isUsedStamp: dataStamp ? true : false
       };
       dispatch(sfaEditCollectionProcess(data));
@@ -440,7 +440,13 @@ const SfaEditCollectionView = props => {
       </View>
     );
   };
-  return <>{renderContent()}</>;
+  return <>
+  
+  {
+    dataSfaGetCollectionDetail?
+  renderContent(): null
+  }
+  </>;
 };
 const styles = StyleSheet.create({
   mainContainer: {

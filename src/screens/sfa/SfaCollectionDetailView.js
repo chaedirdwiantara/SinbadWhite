@@ -30,7 +30,7 @@ import NavigationService from '../../navigation/NavigationService';
 
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
-  const { dataSfaGetDetail, dataSfaGetCollectionDetail } = useSelector(
+  const { dataSfaGetDetail, dataSfaGetCollectionDetail, loadingSfaGetCollectionDetail } = useSelector(
     state => state.sfa
   );
   const { selectedMerchant } = useSelector(state => state.merchant);
@@ -314,7 +314,7 @@ const SfaCollectionDetailView = props => {
   const renderContent = () => {
     return (
       <View style={{ flex: 1 }}>
-        {dataSfaGetCollectionDetail ? (
+        {dataSfaGetCollectionDetail && !loadingSfaGetCollectionDetail ? (
           <ScrollView style={{ flex: 1, height: '100%' }}>
             {renderFakturInfo()}
             {renderCollectionInfo()}
