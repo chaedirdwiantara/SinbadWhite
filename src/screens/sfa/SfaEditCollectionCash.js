@@ -5,7 +5,7 @@ import { useState } from 'react';
   import masterColor from '../../config/masterColor.json';
 const SfaEditCollectionCash = (props) => {
   //DATA PAYMENT CASH
-  const [cash, setCash] = useState(0);
+  const [cash, setCash] = useState(props.data.paymentCollection.paidAmount);
   /**
    * =======================
    * FUNCTIONAL

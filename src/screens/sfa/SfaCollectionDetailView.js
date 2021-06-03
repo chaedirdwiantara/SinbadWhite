@@ -17,7 +17,8 @@ import {
 import {
   LoadingPage,
   InputType5,
-  ModalConfirmation
+  ModalConfirmation,
+  ToastType1
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
@@ -44,10 +45,12 @@ const SfaCollectionDetailView = props => {
     dataSfaGetCollectionDetail,
     dataSfaDeleteCollection,
     dataSfaGetCollectionLog,
+    dataSfaEditCollection,
     loadingSfaDeleteCollection,
     loadingSfaGetCollectionDetail
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
+  const [isShowEditSuccessToast, setIsShowEditSuccessToast] = useState(false)
   const [isPrimer, setIsPrimer] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [
@@ -58,13 +61,19 @@ const SfaCollectionDetailView = props => {
   //USEREF
   const prevDataSfaDeleteCollectionRef = useRef(dataSfaDeleteCollection);
   const prevDataSfaGetCollectionLogRef = useRef(dataSfaGetCollectionLog);
+  const prevDataSfaEditCollectionRef = useRef(dataSfaEditCollection);
 
   /**
    * *********************************
    * FUNCTION
    * *********************************
    */
-
+    //USE EFFECT PREV DATA EDIT
+  useEffect(() => {
+    prevDataSfaEditCollectionRef.current = dataSfaEditCollection;
+  }, []);
+  const prevDataSfaEditCollection = prevDataSfaEditCollectionRef.current;
+  
   //USE EFFECT PREV DATA DELETE
   useEffect(() => {
     prevDataSfaDeleteCollectionRef.current = dataSfaDeleteCollection;
@@ -125,6 +134,17 @@ const SfaCollectionDetailView = props => {
     }
   }, [dataSfaGetCollectionLog]);
 
+
+  useEffect(() => {
+    if (prevDataSfaEditCollection !== dataSfaEditCollection) {
+      if (dataSfaEditCollection) {
+        setIsShowEditSuccessToast(true)
+        setTimeout(() => {
+          setIsShowEditSuccessToast(false)
+        }, 3000);
+      }
+    }
+  }, [dataSfaEditCollection]);
   /* ========================
    * HEADER MODIFY
    * ========================
@@ -426,6 +446,14 @@ const SfaCollectionDetailView = props => {
     );
   };
 
+  const renderToast = () => {
+    return isShowEditSuccessToast ? (
+      <ToastType1 margin={70} content={'Transaksi Berhasil Diubah'} />
+    ) : (
+      <View />
+    );
+  }
+
   const renderContent = () => {
     return (
       <View style={{ flex: 1 }}>
@@ -448,6 +476,7 @@ const SfaCollectionDetailView = props => {
         {renderHeader()}
         {renderContent()}
         {renderModalDeleteTransaction()}
+        {renderToast()}
       </View>
     </>
   );
