@@ -10,7 +10,8 @@ import {
 import {
   InputType5,
   ButtonSingle,
-  ModalConfirmation
+  ModalConfirmation,
+  LoadingPage
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
@@ -533,7 +534,7 @@ const SfaEditCollectionView = props => {
       </View>
     );
   };
-  return <>{dataSfaGetCollectionDetail ? renderContent() : null}</>;
+  return <>{dataSfaGetCollectionDetail ? renderContent() : <LoadingPage />}</>;
 };
 const styles = StyleSheet.create({
   mainContainer: {
