@@ -151,6 +151,8 @@ class MerchantHomeView extends Component {
     this.props.merchantGetLogAllActivityProcessV2(
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
+    /** FOR GET PORTFOLIO (FOR PAYLOAD CHECKOUT ORDER) */
+    this.props.portfolioGetProcessV2();
   }
 
   componentDidUpdate(prevProps) {
@@ -723,7 +725,7 @@ class MerchantHomeView extends Component {
               )}
             </Text>
             <Text style={Fonts.type59}>
-              Total: {MoneyFormat(order.orderParcels[0].parcelFinalPrice)}
+              Total: {MoneyFormat(order.orderParcels[0].billings.totalPayment)}
             </Text>
           </View>
         </View>
