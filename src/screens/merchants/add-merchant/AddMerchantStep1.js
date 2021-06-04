@@ -63,10 +63,11 @@ class AddMerchantStep1 extends Component {
         if(store){
           this.setState({showStoreInformation: true})
         } else {
-          NavigationService.navigate('AddMerchantStep2');
+          this.props.saveImageBase64('');
           this.props.saveVolatileDataMerchant({
             phone: this.state.phoneNumber
           });
+          NavigationService.navigate('AddMerchantStep2');
         }
       } 
     }
