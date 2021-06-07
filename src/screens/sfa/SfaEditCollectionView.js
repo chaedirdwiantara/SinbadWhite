@@ -222,11 +222,9 @@ const SfaEditCollectionView = props => {
         paymentCollectionMethodAmount: transferValue,
         filename: transferImage ? transferImage.fileName ? transferImage.fileName : null : null,
         type: transferImage ? transferImage.fileType ? transferImage.fileType : null :null,
-        image: transferImage ? transferImage.fileData ? transferImage.fileData : transferImage : transferImage
+        image: transferImage ? transferImage.fileData ? transferImage.fileData : null : null
       };
-      console.log('datasss:', data);
-      console.log('data iamge:', transferImage);
-      // dispatch(sfaEditCollectionProcess(data));
+      dispatch(sfaEditCollectionProcess(data));
     } else if (paymentCollectionType.name === PROMO) {
       const data = {
         userSellerId: userId,
@@ -241,6 +239,7 @@ const SfaEditCollectionView = props => {
         type: 'image/jpeg',
         image: promoImage
       };
+      console.log('data promo:', data);
       dispatch(sfaEditCollectionProcess(data));
     } else if (paymentCollectionType.name === TUNAI) {
       const data = {
