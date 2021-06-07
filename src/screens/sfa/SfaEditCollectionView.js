@@ -165,11 +165,13 @@ const SfaEditCollectionView = props => {
         bankToAccountId: bankAccount.id,
         paymentDate: transferDate,
         paymentCollectionMethodAmount: transferValue,
-        filename: 'template-baru.jpeg',
-        type: 'image/jpeg',
-        image: transferImage
+        filename: transferImage ? transferImage.fileName ? transferImage.fileName : null : null,
+        type: transferImage ? transferImage.fileType ? transferImage.fileType : null :null,
+        image: transferImage ? transferImage.fileData ? transferImage.fileData : transferImage : transferImage
       };
-      dispatch(sfaEditCollectionProcess(data));
+      console.log('datasss:', data);
+      console.log('data iamge:', transferImage);
+      // dispatch(sfaEditCollectionProcess(data));
     } else if (paymentCollectionType.name === PROMO) {
       const data = {
         userSellerId: userId,
