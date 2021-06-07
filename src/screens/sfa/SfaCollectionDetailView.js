@@ -150,7 +150,6 @@ const SfaCollectionDetailView = props => {
    * ========================
    */
   const renderHeader = () => {
-    console.log('data:', dataSfaGetCollectionDetail);
     return (
       <View style={styles.headerContainer}>
         <View style={[styles.headerContent]}>

@@ -376,8 +376,8 @@ const SfaEditCollectionTransfer = props => {
               {bankSource === null
                 ? 'Pilih Sumber Bank'
                 : isDisable === true
-                ? bankSource.name
-                : bankSource.name}
+                ? bankSource.displayName
+                : bankSource.displayName}
             </Text>
             <View style={{ position: 'absolute', right: 16 }}>
               <MaterialIcon
@@ -394,6 +394,7 @@ const SfaEditCollectionTransfer = props => {
   };
 
   const renderFormBankAccount = () => {
+    console.log('bankSource:', bankDestination);
     return (
       <View>
         <Text style={Fonts.type10}>
@@ -416,7 +417,7 @@ const SfaEditCollectionTransfer = props => {
             >
               {bankDestination === null
                 ? 'Pilih Tujuan Bank'
-                : bankDestination.displayName}
+                : bankDestination.bank ? bankDestination.bank.displayName : bankDestination.displayName}
             </Text>
             <View style={{ position: 'absolute', right: 16 }}>
               <MaterialIcon
