@@ -22,6 +22,7 @@ import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { sfaGetBankAccountProcess, sfaBankAccountLoadmoreProcess } from '../../state/actions';
+import SfaNoDataView from './SfaNoDataView';
 
 function ModalBankDestination(props) {
   const dispatch = useDispatch();
@@ -126,7 +127,11 @@ function ModalBankDestination(props) {
           />
           {loadingLoadmoreBankAccount ? <LoadingLoadMore /> : null}
         </View>
-      ) : null
+      ) : (
+        <View style={{ marginTop: '30%' }}>
+          <SfaNoDataView />
+        </View>
+      )
     ) : <LoadingPage />
   };
 
