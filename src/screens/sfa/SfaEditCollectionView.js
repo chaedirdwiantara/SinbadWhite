@@ -491,7 +491,7 @@ const SfaEditCollectionView = props => {
           referenceCode={dataReferenceCode}
           principal={dataPrincipal}
           promoValue={dataPromoValue}
-          billingValue={dataBillingValue}
+          billingPromoValue={dataBillingValue}
           promoImage={dataPromoImage}
         />
       );

@@ -21,6 +21,8 @@ const SfaCollectionDetailPromo = (props) => {
     )
   }
 
+
+  console.log('data:', data);
     return (   
         <>
         <View style={styles.inputField}>
@@ -63,7 +65,7 @@ const SfaCollectionDetailPromo = (props) => {
           <View style={styles.smallContainerImage}>
             <Image
               source={{
-                uri: `data:image/jpeg;base64, ${data.image}`
+                uri: `data:image/jpeg;base64, ${data.paymentCollection.paymentCollectionMethod.image}`
               }}
               style={[
                 styles.images
@@ -97,6 +99,7 @@ const styles = StyleSheet.create({
       marginHorizontal: 3,
       backgroundColor: 'white',
       aspectRatio: 2 / 3,
+      opacity: 0.5
     },
       
 })
