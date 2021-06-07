@@ -21,8 +21,6 @@ const SfaCollectionDetailPromo = (props) => {
     )
   }
 
-
-  console.log('data:', data);
     return (   
         <>
         <View style={styles.inputField}>

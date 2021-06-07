@@ -201,7 +201,6 @@ const SfaEditCollectionPromo = props => {
    * RENDER VIEW
    * *********************************
    */
-  console.log('promooo:', props.data);
 
   const renderForm = () => {
       return(

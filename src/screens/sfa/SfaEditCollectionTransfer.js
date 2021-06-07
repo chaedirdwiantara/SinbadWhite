@@ -269,7 +269,6 @@ const SfaEditCollectionTransfer = props => {
     );
   };
 
-  console.log('edit:', props.data);
   const renderFormReference = () => {
     const collectionDetail = props.data.paymentCollection
     return (
@@ -394,7 +393,6 @@ const SfaEditCollectionTransfer = props => {
   };
 
   const renderFormBankAccount = () => {
-    console.log('bankSource:', bankDestination);
     return (
       <View>
         <Text style={Fonts.type10}>
@@ -547,7 +545,6 @@ const SfaEditCollectionTransfer = props => {
     );
   };
 
-  console.log('iamge:', dataImage);
   const renderUploadImage = () => {
     return (
       <View>

@@ -196,7 +196,6 @@ const SfaEditCollectionView = props => {
   }
 
   const handleBackHeader = () => {
-    console.log('back:', isChanged);
     if (isChanged === true) {
       setOpenModalBackEdit(true)
     } else {
