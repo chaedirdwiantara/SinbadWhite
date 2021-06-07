@@ -235,11 +235,10 @@ const SfaEditCollectionView = props => {
         promoCode: detailSfa.paymentCollection.paymentCollectionMethod.promoNo,
         principalId: principal.id,
         paymentCollectionMethodAmount: promoValue,
-        filename: 'template-baru.jpeg',
-        type: 'image/jpeg',
-        image: promoImage
+        filename: promoImage ? promoImage.fileName ? promoImage.fileName : null : null,
+        type: promoImage ? promoImage.fileType ? promoImage.fileType : null :null,
+        image: promoImage ? promoImage.fileData ? promoImage.fileData : null : null
       };
-      console.log('data promo:', data);
       dispatch(sfaEditCollectionProcess(data));
     } else if (paymentCollectionType.name === TUNAI) {
       const data = {
