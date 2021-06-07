@@ -51,8 +51,6 @@ const SfaCollectionDetailView = props => {
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [isShowEditSuccessToast, setIsShowEditSuccessToast] = useState(false)
-  const [isPrimer, setIsPrimer] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
   const [
     isModalDeleteTransactionOpened,
     setIsModalDeleteTransactionOpened
