@@ -3,7 +3,7 @@ import firebase from 'react-native-firebase';
 import DeviceInfo from 'react-native-device-info';
 import apiHost from './apiHost';
 import { Store } from '../state/Store';
-export default async function endpoint({ path, method, params }) {
+export default async function endpoint({ path, method, params, testpath }) {
   const stateData = Store.getState();
   const headers = {};
   set(headers, 'Accept', 'application/json');
@@ -16,7 +16,7 @@ export default async function endpoint({ path, method, params }) {
   if (!isEmpty(params)) {
     reqBody.body = JSON.stringify(params);
   }
-  return fetch(apiHost.url + path, reqBody)
+  return fetch(testpath? testpath : apiHost.url + path, reqBody)
     .then(response => {
       if (response.status === 200 || response.status === 201) {
         return response.json().then(data => {
