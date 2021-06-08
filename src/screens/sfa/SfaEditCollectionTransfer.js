@@ -65,6 +65,14 @@ const SfaEditCollectionTransfer = props => {
   }, [dataSfaGetTransferImage]);
 
   useEffect(() => {
+    if (noRef && balance && billingValue && dataImage) {
+      props.buttonDisabled(false)
+    } else {
+      props.buttonDisabled(true)
+    }
+  }, [noRef, balance, billingValue, dataImage])
+
+  useEffect(() => {
     const data = {
       image: dataImage,
       isEditable: props.data.isEditable,
@@ -76,8 +84,8 @@ const SfaEditCollectionTransfer = props => {
           amount: balance,
           balance: props.data.paymentCollection.paymentCollectionMethod.balance,
           bankFrom: {
-            id: bankSource.id,
-            name: bankSource.name,
+            id: bankSource ? bankSource.id : null,
+            name: bankSource ? bankSource.name : null,
           },
           bankToAccount: {
             accountNo: bankDestination.accountNo,
@@ -177,15 +185,57 @@ const SfaEditCollectionTransfer = props => {
   const textBillingValue = text => {
     props.isChanged(true);
     if (
-      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)
+      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.data.outstanding)
     ) {
-      setBillingValue(parseInt(props.remainingBilling));
-      props.billingValue(parseInt(props.remainingBilling));
+      if (props.data.outstanding < balance){
+        setBillingValue(parseInt(props.data.outstanding));
+        props.billingValue(parseInt(props.data.outstanding));
+      } else {
+        setBillingValue(parseInt(balance));
+        props.billingValue(parseInt(balance));
+      }
+    } else if (
+      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(balance)
+    ) {
+      if (props.data.outstanding < balance){
+        setBillingValue(parseInt(props.data.outstanding));
+        props.billingValue(parseInt(props.data.outstanding));
+      } else {
+        setBillingValue(parseInt(balance));
+        props.billingValue(parseInt(balance));
+      }
     } else {
       setBillingValue(parseInt(text.replace(/[Rp.]+/g, '')));
       props.billingValue(parseInt(text.replace(/[Rp.]+/g, '')));
     }
   };
+
+  useEffect(()=> {
+    if (
+      parseInt(billingValue) > parseInt(props.data.outstanding)
+    ) {
+      if (props.data.outstanding < balance){
+        setBillingValue(parseInt(props.data.outstanding));
+        props.billingValue(parseInt(props.data.outstanding));
+      } else {
+        setBillingValue(parseInt(balance));
+        props.billingValue(parseInt(balance));
+      }
+    } else if (
+      parseInt(billingValue) > parseInt(balance)
+    ) {
+      if (props.data.outstanding < balance){
+        setBillingValue(parseInt(props.data.outstanding));
+        props.billingValue(parseInt(props.data.outstanding));
+      } else {
+        setBillingValue(parseInt(balance));
+        props.billingValue(parseInt(balance));
+      }
+    } else {
+      setBillingValue(parseInt(billingValue));
+      props.billingValue(parseInt(billingValue));
+    }
+  }, [billingValue, balance]) 
 
   const selectedBank = data => {
     props.isChanged(true);
@@ -230,26 +280,6 @@ const SfaEditCollectionTransfer = props => {
     props.paymentCollectionMethodId(data.id)
   };
 
-  const deleteDataReference = () => {
-    props.isChanged(true);
-    setIsDisable(false);
-    setDataReference();
-    setNoRef(null);
-    props.referenceCode(null);
-    setBankSource(null);
-    props.bankSource(null);
-    setBankDestination(null);
-    props.bankAccount(null);
-    setTransferDate(null);
-    props.transferDate(null);
-    setBalance(0);
-    props.transferValue(0);
-    setDataImage(null);
-    props.transferImage(null);
-
-    props.useNoReference(false);
-  };
-
   /**
    * *********************************
    * RENDER VIEW
@@ -291,61 +321,6 @@ const SfaEditCollectionTransfer = props => {
               }
             />
           </View>
-          {!isDisable ? (
-            <View style={{ flexDirection: 'row', marginRight: 16 }}>
-              <TouchableOpacity
-                onPress={() => setOpenModalReference(true)}
-                style={{
-                  backgroundColor: masterColor.mainColor,
-                  height: 36,
-                  width: 66,
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginRight: 8
-                }}
-              >
-                <Text style={Fonts.type94}> Ubah </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => deleteDataReference()}
-                style={{
-                  backgroundColor: 'white',
-                  height: 36,
-                  width: 66,
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderColor: masterColor.mainColor,
-                  borderWidth: 1
-                }}
-              >
-                <Text style={Fonts.type100}> Hapus </Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={{ marginRight: 16 }}>
-              <TouchableOpacity
-                onPress={() => setOpenModalReference(true)}
-                disabled={
-                  collectionDetail.paymentCollectionMethod.balance <= 0 || isDisable ? true : false
-                }
-                style={{
-                  backgroundColor:
-                  collectionDetail.paymentCollectionMethod.balance <= 0 || isDisable
-                      ? masterColor.fontRed10
-                      : masterColor.mainColor,
-                  height: 36,
-                  width: 66,
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-              >
-                <Text style={Fonts.type94}> Cari</Text>
-              </TouchableOpacity>
-            </View>
-          )}
         </View>
       </View>
     );

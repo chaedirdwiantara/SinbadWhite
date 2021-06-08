@@ -62,19 +62,19 @@ const SfaEditCollectionPromo = props => {
     setExistingImage();
   }, [dataSfaGetTransferImage]);
 
+  useEffect(() => {
+    if (noRef && promoBalance && promoValue && dataImage) {
+      props.buttonDisabled(false)
+    } else {
+      props.buttonDisabled(true)
+    }
+  }, [noRef, promoBalance, promoValue, dataImage])
+
   const setExistingImage = () => {
     if (dataSfaGetTransferImage && dataReference) {
       setDataImage({ fileData: dataSfaGetTransferImage.data.image });
     }
   };
-
-//    useEffect(() => {
-//     const front = moment.utc(new Date()).local().format('YYYYMMDD')
-//     const mid = selectedMerchant.externalId
-//     const back = moment.utc(new Date()).local().format('HHmmss')
-//     setPromoNumber(`${front}${mid}${back}`)
-//     props.promoNumber(`${front}${mid}${back}`)
-//   }, []);
 
   const clickCamera = () => {
     let options = {
@@ -140,14 +140,58 @@ const SfaEditCollectionPromo = props => {
   }
 
   const textBillingPromo = (text) => {
-    if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)) {
-        setPromoValue(parseInt(props.remainingBilling))
-        props.billingPromoValue(parseInt(props.remainingBilling))
+    if (
+      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.data.outstanding)
+    ) {
+      if (props.data.outstanding < promoBalance){
+        setPromoValue(parseInt(props.data.outstanding));
+        props.billingPromoValue(parseInt(props.data.outstanding));
       } else {
-        setPromoValue(parseInt(text.replace(/[Rp.]+/g, '')))
-        props.billingPromoValue(parseInt(text.replace(/[Rp.]+/g, '')))
+        setPromoValue(parseInt(promoBalance));
+        props.billingPromoValue(parseInt(promoBalance));
       }
+    } else if (
+      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(promoBalance)
+    ) {
+      if (props.data.outstanding < promoBalance){
+        setPromoValue(parseInt(props.data.outstanding));
+        props.billingPromoValue(parseInt(props.data.outstanding));
+      } else {
+        setPromoValue(parseInt(promoBalance));
+        props.billingPromoValue(parseInt(promoBalance));
+      }
+    } else {
+      setPromoValue(parseInt(text.replace(/[Rp.]+/g, '')));
+      props.billingPromoValue(parseInt(text.replace(/[Rp.]+/g, '')));
+    }
   }
+
+  useEffect(()=> {
+    if (
+      parseInt(promoValue) > parseInt(props.data.outstanding)
+    ) {
+      if (props.data.outstanding < promoBalance){
+        setPromoValue(parseInt(props.data.outstanding));
+        props.billingPromoValue(parseInt(props.data.outstanding));
+      } else {
+        setPromoValue(parseInt(promoBalance));
+        props.billingPromoValue(parseInt(promoBalance));
+      }
+    } else if (
+      parseInt(promoValue) > parseInt(promoBalance)
+    ) {
+      if (props.data.outstanding < promoBalance){
+        setPromoValue(parseInt(props.data.outstanding));
+        props.billingPromoValue(parseInt(props.data.outstanding));
+      } else {
+        setPromoValue(parseInt(promoBalance));
+        props.billingPromoValue(parseInt(promoBalance));
+      }
+    } else {
+      setPromoValue(parseInt(promoValue));
+      props.billingPromoValue(parseInt(promoValue));
+    }
+  }, [promoValue, promoBalance]) 
 
   const selectedReference = data => {
     if (props.collectionMethod.id === 5) {
@@ -172,28 +216,6 @@ const SfaEditCollectionPromo = props => {
     setOpenModalReference(false);
     setIsDisable(true);
     props.paymentCollectionMethodId(data.id)
-  };
-
-  const deleteDataReference = () => {
-    const front = moment.utc(new Date()).local().format('YYYYMMDD')
-    const mid = selectedMerchant.externalId
-    const back = moment.utc(new Date()).local().format('HHmmss')
-
-    setIsDisable(false);
-    setDataReference();
-    setNoRef(null);
-    props.referenceCode(null);
-    setPromoNumber(`${front}${mid}${back}`);
-    props.promoNumber(`${front}${mid}${back}`);
-    setPrincipal(null);
-    props.principal(null);
-    setPromoBalance(null);
-    props.promoValue(null);
-
-    setDataImage(null);
-    props.promoImage(null);
-
-    props.useNoReference(false);
   };
 
   /**
@@ -236,59 +258,6 @@ const SfaEditCollectionPromo = props => {
               }
             />
           </View>
-          {isDisable ? (
-            <View style={{ flexDirection: 'row', marginRight: 16 }}>
-              <TouchableOpacity
-                onPress={() => setOpenModalReference(true)}
-                style={{
-                  backgroundColor: masterColor.mainColor,
-                  height: 36,
-                  width: 66,
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginRight: 8
-                }}
-              >
-                <Text style={Fonts.type94}> Ubah </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => deleteDataReference()}
-                style={{
-                  backgroundColor: 'white',
-                  height: 36,
-                  width: 66,
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderColor: masterColor.mainColor,
-                  borderWidth: 1
-                }}
-              >
-                <Text style={Fonts.type100}> Hapus </Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={{ marginRight: 16 }}>
-              <TouchableOpacity
-                onPress={() => setOpenModalReference(true)}
-                disabled={props.data.paymentCollection.paymentCollectionMethod.balance <= 0 ? true : false}
-                style={{
-                  backgroundColor:
-                  props.data.paymentCollection.paymentCollectionMethod.balance <= 0
-                      ? masterColor.fontRed10
-                      : masterColor.mainColor,
-                  height: 36,
-                  width: 66,
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-              >
-                <Text style={Fonts.type94}> Cari</Text>
-              </TouchableOpacity>
-            </View>
-          )}
         </View>
       </View>
     );

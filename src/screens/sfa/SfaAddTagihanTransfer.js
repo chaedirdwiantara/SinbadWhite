@@ -141,13 +141,55 @@ const SfaAddTagihanTransfer = props => {
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)
     ) {
-      setBillingValue(parseInt(props.remainingBilling));
-      props.billingValue(parseInt(props.remainingBilling));
+      if (props.remainingBilling < balance){
+        setBillingValue(parseInt(props.remainingBilling));
+        props.billingValue(parseInt(props.remainingBilling));
+      } else {
+        setBillingValue(parseInt(balance));
+        props.billingValue(parseInt(balance));
+      }
+    } else if (
+      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(balance)
+    ) {
+      if (props.remainingBilling < balance){
+        setBillingValue(parseInt(props.remainingBilling));
+        props.billingValue(parseInt(props.remainingBilling));
+      } else {
+        setBillingValue(parseInt(balance));
+        props.billingValue(parseInt(balance));
+      }
     } else {
       setBillingValue(parseInt(text.replace(/[Rp.]+/g, '')));
       props.billingValue(parseInt(text.replace(/[Rp.]+/g, '')));
     }
-  };
+  }
+
+  useEffect(()=> {
+    if (
+      parseInt(billingValue) > parseInt(props.remainingBilling)
+    ) {
+      if (props.remainingBilling < balance){
+        setBillingValue(parseInt(props.remainingBilling));
+        props.billingValue(parseInt(props.remainingBilling));
+      } else {
+        setBillingValue(parseInt(balance));
+        props.billingValue(parseInt(balance));
+      }
+    } else if (
+      parseInt(billingValue) > parseInt(balance)
+    ) {
+      if (props.remainingBilling < balance){
+        setBillingValue(parseInt(props.remainingBilling));
+        props.billingValue(parseInt(props.remainingBilling));
+      } else {
+        setBillingValue(parseInt(balance));
+        props.billingValue(parseInt(balance));
+      }
+    } else {
+      setBillingValue(parseInt(billingValue));
+      props.billingValue(parseInt(billingValue));
+    }
+  }, [billingValue, balance]) 
 
   const selectedBank = data => {
     props.bankSource(data);
