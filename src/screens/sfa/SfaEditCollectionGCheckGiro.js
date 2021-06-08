@@ -1,73 +1,88 @@
-import { React, View, Text, StyleSheet, TouchableOpacity } from '../../library/reactPackage';
+import {
+  React,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity
+} from '../../library/reactPackage';
 import { useState } from 'react';
-  import { TextInputMask } from 'react-native-masked-text';
-  import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
-  import {
-    InputType5,
-    DatePickerSpinnerWithMinMaxDate,
-    ModalBottomType4
-  } from '../../library/component';
-  import masterColor from '../../config/masterColor.json';
-  import ModalBankAccount from './ModalBankAccount';
-  import ModalListMaterai from './ModalListMaterai';
-  import {
-      MaterialIcon,
-      MaterialCommunityIcons,
-      moment
-  } from '../../library/thirdPartyPackage';
-  import { useSelector } from 'react-redux';
-const SfaEditCollectionCheckGiro = (props) => {
+import { TextInputMask } from 'react-native-masked-text';
+import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
+import {
+  InputType5,
+  DatePickerSpinnerWithMinMaxDate,
+  ModalBottomType4
+} from '../../library/component';
+import masterColor from '../../config/masterColor.json';
+import ModalBankAccount from './ModalBankAccount';
+import ModalListMaterai from './ModalListMaterai';
+import {
+  MaterialIcon,
+  MaterialCommunityIcons,
+  moment
+} from '../../library/thirdPartyPackage';
+import { useSelector } from 'react-redux';
+const SfaEditCollectionCheckGiro = props => {
   //DATA PAYMENT CASH
-  const paymentCollectionMethod = props.data.paymentCollection.paymentCollectionMethod
-  const paymentCollectionTypeId = paymentCollectionMethod.paymentCollectionType.id
- 
-  const [paidAmount, setPaidAmount] = useState(props.data.paymentCollection.paidAmount);
-  const [reference, setReference] = useState(paymentCollectionMethod.reference)
-  const [balanceValue, setBalanceValue] = useState(paymentCollectionMethod.amount)
+  const paymentCollectionMethod =
+    props.data.paymentCollection.paymentCollectionMethod;
+  const paymentCollectionTypeId =
+    paymentCollectionMethod.paymentCollectionType.id;
+
+  const [paidAmount, setPaidAmount] = useState(
+    props.data.paymentCollection.paidAmount
+  );
+  const [reference, setReference] = useState(paymentCollectionMethod.reference);
+  const [balanceValue, setBalanceValue] = useState(
+    paymentCollectionMethod.amount
+  );
   const [openModalDueDate, setOpenModalDueDate] = useState(false);
   const [openModalPublishDate, setOpenModalPublishDate] = useState(false);
   const [issuedDate, setIssuedDate] = useState(paymentCollectionMethod.date);
-  const [invalidDate, setInvalidDate] = useState(paymentCollectionMethod.dueDate);
+  const [invalidDate, setInvalidDate] = useState(
+    paymentCollectionMethod.dueDate
+  );
   const [isDisable, setIsDisable] = useState(!props.isPrimary);
   const [openModalBank, setOpenModalBank] = useState(false);
   const [dataBank, setDataBank] = useState(paymentCollectionMethod.bankFrom);
   const [dataStamp, setDataStamp] = useState(paymentCollectionMethod.stamp);
   const { selectedMerchant } = useSelector(state => state.merchant);
-  const [checkMaterai, setCheckMaterai] = useState(paymentCollectionMethod.stamp?true:false);
+  const [checkMaterai, setCheckMaterai] = useState(
+    paymentCollectionMethod.stamp ? true : false
+  );
   const [openModalListMaterai, setOpenModalListMaterai] = useState(false);
-   /**
+  /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
   const textBillingCash = text => {
     if (
-      parseInt(text.replace(/[Rp.]+/g, '')) >
-      parseInt(props.data.outstanding)
+      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.data.outstanding)
     ) {
       setPaidAmount(parseInt(props.data.outstanding));
-      props.onChangePaidAmount(parseInt(props.data.outstanding))
+      props.onChangePaidAmount(parseInt(props.data.outstanding));
       props.isChanged(true);
     } else {
       setPaidAmount(parseInt(text.replace(/[Rp.]+/g, '')));
-      props.onChangePaidAmount(parseInt(text.replace(/[Rp.]+/g, '')))
+      props.onChangePaidAmount(parseInt(text.replace(/[Rp.]+/g, '')));
       props.isChanged(true);
     }
   };
   const dataBalance = text => {
     const balanceInt = parseInt(text.replace(/[Rp.]+/g, ''));
     setBalanceValue(balanceInt);
-    props.onChangeBalanceValue(balanceInt)
+    props.onChangeBalanceValue(balanceInt);
     props.isChanged(true);
   };
   const dataDueDate = date => {
     setInvalidDate(date);
-    props.onChangeDueDate(date)
+    props.onChangeDueDate(date);
     props.isChanged(true);
   };
   const dataIssuedDate = date => {
     setIssuedDate(date);
-    props.onChangeIssuedDate(date)
+    props.onChangeIssuedDate(date);
     props.isChanged(true);
   };
   const openDueDate = () => {
@@ -80,10 +95,10 @@ const SfaEditCollectionCheckGiro = (props) => {
   const selectedBank = data => {
     setDataBank(data);
     setOpenModalBank(false);
-    props.onChangeDataBank(data)
+    props.onChangeDataBank(data);
     props.isChanged(true);
   };
-  
+
   const functionMaterai = () => {
     setCheckMaterai(!checkMaterai);
     if (checkMaterai === false) {
@@ -93,16 +108,16 @@ const SfaEditCollectionCheckGiro = (props) => {
 
   const selectedStamp = data => {
     setDataStamp(data);
-    props.onChangeDataStamp(data)
+    props.onChangeDataStamp(data);
     props.isChanged(true);
     setOpenModalListMaterai(false);
   };
 
   const dataReference = data => {
-    setReference(data)
-    props.onChangeReference(data)
+    setReference(data);
+    props.onChangeReference(data);
     props.isChanged(true);
-  }
+  };
   /**
    * *********************************
    * RENDER VIEW
@@ -126,8 +141,8 @@ const SfaEditCollectionCheckGiro = (props) => {
       </View>
     );
   };
-   /** MODAL BANK ACCOUNT */
-   const renderModalBank = () => {
+  /** MODAL BANK ACCOUNT */
+  const renderModalBank = () => {
     return (
       <View>
         {openModalBank ? (
@@ -145,8 +160,7 @@ const SfaEditCollectionCheckGiro = (props) => {
     );
   };
 
-
-   const renderDueDate = () => {
+  const renderDueDate = () => {
     const minDate = new Date(new Date().setDate(new Date().getDate() + 1));
     const today = new Date();
     return (
@@ -190,145 +204,142 @@ const SfaEditCollectionCheckGiro = (props) => {
     );
   };
 
- const renderContent = () => {
-     return (
-        <>
-          <View style={{marginTop: 16, marginLeft:-16}}>
+  const renderContent = () => {
+    return (
+      <>
+        <View style={styles.inputBox}>
           <InputType5
             title={`*Nomor Referensi`}
             placeholder={paymentCollectionMethod.reference}
             value={reference}
             editable={props.isPrimary}
             onChangeText={text => dataReference(text)}
+            tooltip={true}
+            tooltipText={
+              'Dapat berupa Nomor Cek, Giro, Transfer atau Kuitansi'
+            }
           />
         </View>
         <View style={{ paddingVertical: 16 }}>
-            <Text style={Fonts.type10}>
-              {'*Sumber Bank'}
-            </Text>
-            <View>
-              <TouchableOpacity
-                style={styles.boxMenu}
-                onPress={() => setOpenModalBank(true)}
-                disabled={isDisable}
+          <Text style={Fonts.type10}>{'*Sumber Bank'}</Text>
+          <View>
+            <TouchableOpacity
+              style={styles.boxMenu}
+              onPress={() => setOpenModalBank(true)}
+              disabled={!props.isPrimary}
+            >
+              <Text
+                style={[
+                  Fonts.type17,
+                  {
+                    opacity: props.isPrimary ? null : 0.5
+                  }
+                ]}
               >
-                <Text
-                  style={[
-                    Fonts.type17,
-                    {
-                      opacity:
-                        null
-                    }
-                  ]}
-                >
-                  {dataBank.displayName? dataBank.displayName : dataBank.name}
-                </Text>
-                <View style={{ position: 'absolute', right: 16 }}>
-                  <MaterialIcon
-                    name="chevron-right"
-                    color={masterColor.fontBlack40}
-                    size={24}
-                  />
-                </View>
-              </TouchableOpacity>
-              <View style={[GlobalStyle.lines]} />
-            </View>
+                {dataBank.displayName ? dataBank.displayName : dataBank.name}
+              </Text>
+              <View style={{ position: 'absolute', right: 16 }}>
+                <MaterialIcon
+                  name="chevron-right"
+                  color={masterColor.fontBlack40}
+                  size={24}
+                />
+              </View>
+            </TouchableOpacity>
+            <View style={[GlobalStyle.lines]} />
           </View>
+        </View>
         <View style={{ paddingVertical: 16 }}>
-            <Text style={Fonts.type10}>
-              {'*Tanggal Terbit'}
-            </Text>
-            <TouchableOpacity
-              style={styles.boxMenu}
-              onPress={() => openPublishDate()}
-              disabled={isDisable}
-            >
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <MaterialIcon
-                  name="date-range"
-                  color={masterColor.mainColor}
-                  size={16}
-                />
+          <Text style={Fonts.type10}>{'*Tanggal Terbit'}</Text>
+          <TouchableOpacity
+            style={styles.boxMenu}
+            onPress={() => openPublishDate()}
+            disabled={isDisable}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialIcon
+                name="date-range"
+                color={masterColor.mainColor}
+                size={16}
+              />
 
-                <Text
-                  style={[
-                    Fonts.type17,
-                    {
-                      opacity: props.isPrimary?null : 0.5,
-                      marginLeft: 11
-                    }
-                  ]}
-                >
-                  { moment(issuedDate).format('DD/MM/YYYY')}
-                </Text>
-              </View>
-            </TouchableOpacity>
-            <View style={[GlobalStyle.lines]} />
-          </View>
-        <View style={{paddingTop: 16}}>
-            <Text style={Fonts.type10}>
-              {'*Tanggal Jatuh Tempo'}
-            </Text>
-            <TouchableOpacity
-              style={styles.boxMenu}
-              onPress={() => openDueDate()}
-              disabled={isDisable}
-            >
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <MaterialIcon
-                  name="date-range"
-                  color={masterColor.mainColor}
-                  size={16}
-                />
+              <Text
+                style={[
+                  Fonts.type17,
+                  {
+                    opacity: props.isPrimary ? null : 0.5,
+                    marginLeft: 11
+                  }
+                ]}
+              >
+                {moment(issuedDate).format('DD/MM/YYYY')}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <View style={[GlobalStyle.lines]} />
+        </View>
+        <View style={{ paddingTop: 16 }}>
+          <Text style={Fonts.type10}>{'*Tanggal Jatuh Tempo'}</Text>
+          <TouchableOpacity
+            style={styles.boxMenu}
+            onPress={() => openDueDate()}
+            disabled={isDisable}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialIcon
+                name="date-range"
+                color={masterColor.mainColor}
+                size={16}
+              />
 
-                <Text
-                  style={[
-                    Fonts.type17,
-                    {
-                      opacity: props.isPrimary?null : 0.5,
-                      marginLeft: 11
-                    }
-                  ]}
-                >
-                  {moment(invalidDate).format('DD/MM/YYYY')}
-                </Text>
-              </View>
-            </TouchableOpacity>
-            <View style={[GlobalStyle.lines]} />
+              <Text
+                style={[
+                  Fonts.type17,
+                  {
+                    opacity: props.isPrimary ? null : 0.5,
+                    marginLeft: 11
+                  }
+                ]}
+              >
+                {moment(invalidDate).format('DD/MM/YYYY')}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <View style={[GlobalStyle.lines]} />
+        </View>
+        <View style={{ paddingTop: 16 }}>
+          <Text style={Fonts.type10}>
+            {`*Nilai ${paymentCollectionMethod.paymentCollectionType.name}`}
+          </Text>
+          <View
+            style={[
+              styles.boxInput,
+              { flexDirection: 'row', alignItems: 'center' }
+            ]}
+          >
+            <TextInputMask
+              type={'money'}
+              options={{
+                precision: 0,
+                separator: ',',
+                delimiter: '.',
+                unit: 'Rp ',
+                suffixUnit: ''
+              }}
+              value={balanceValue}
+              onChangeText={text => dataBalance(text)}
+              style={[
+                Fonts.type17,
+                {
+                  opacity: isDisable ? 0.5 : null,
+                  width: '95%',
+                  borderBottomColor: masterColor.fontBlack50
+                }
+              ]}
+              editable={!isDisable}
+            />
           </View>
-          <View style={{ paddingTop: 16 }}>
-                <Text style={Fonts.type10}>
-                  {`*Nilai ${paymentCollectionMethod.paymentCollectionType.name}`}
-                </Text>
-                <View
-                  style={[
-                    styles.boxInput,
-                    { flexDirection: 'row', alignItems: 'center' }
-                  ]}
-                >
-                  <TextInputMask
-                    type={'money'}
-                    options={{
-                      precision: 0,
-                      separator: ',',
-                      delimiter: '.',
-                      unit: 'Rp ',
-                      suffixUnit: ''
-                    }}
-                    value={balanceValue}
-                    onChangeText={text => dataBalance(text)}
-                    style={[
-                      Fonts.type17,
-                      {
-                        opacity: isDisable? 0.5: null,
-                        width: '95%',
-                        borderBottomColor: masterColor.fontBlack50
-                      }
-                    ]}
-                    editable={!isDisable}
-                  />
-                </View>
-              </View>
+        </View>
         <View style={{ marginTop: 16 }}>
           <View>
             <Text style={Fonts.type10}>*Jumlah Penagihan</Text>
@@ -359,12 +370,11 @@ const SfaEditCollectionCheckGiro = (props) => {
               ]}
             />
           </View>
-          
         </View>
-        {paymentCollectionMethod.stamp?  <View style={{ marginTop: 16 }}>
-              <Text style={[Fonts.type10]}>
-                {isDisable !== false ? null : 'Materai'}
-              </Text>
+        {paymentCollectionMethod.stamp ? (
+          props.isPrimary ? (
+            <View style={{ marginTop: 16 }}>
+              <Text style={[Fonts.type10]}>'Nilai Materai'</Text>
               <View
                 style={{
                   flexDirection: 'row',
@@ -401,7 +411,11 @@ const SfaEditCollectionCheckGiro = (props) => {
                     disabled={!checkMaterai}
                   >
                     <Text style={[Fonts.type17]}>
-                      {!checkMaterai? 'Pilih Nilai Materai': dataStamp? dataStamp.name: 'Pilih Nilai Materai'}
+                      {!checkMaterai
+                        ? 'Pilih Nilai Materai'
+                        : dataStamp
+                        ? dataStamp.name
+                        : 'Pilih Nilai Materai'}
                     </Text>
                     <View>
                       <MaterialIcon
@@ -414,36 +428,45 @@ const SfaEditCollectionCheckGiro = (props) => {
                   <View style={[GlobalStyle.lines, { marginTop: 8 }]} />
                 </View>
               </View>
-            </View> : null}
-      
-      
-        </>
-     )
- }
+            </View>
+          ) : (
+            <View style={styles.inputBox}>
+              <InputType5
+                title={`Nilai Materai`}
+                placeholder={dataStamp.name}
+                editable={false}
+              />
+            </View>
+          )
+        ) : null}
+      </>
+    );
+  };
   return (
-     <>
-     {renderContent()}
-     {renderDueDate()}
-     {renderPublishDate()}
-     {renderModalBank()}
-     {renderModalListMaterai()}
-     </>
+    <>
+      {renderContent()}
+      {renderDueDate()}
+      {renderPublishDate()}
+      {renderModalBank()}
+      {renderModalListMaterai()}
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-    boxInput: {
-      borderBottomWidth: 1,
-      paddingHorizontal: 0,
-      paddingVertical: 0,
-      borderBottomColor: masterColor.fontBlack10
-    },
-    boxMenu: {
-        // paddingHorizontal: 16,
-        paddingVertical: 17,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }
-  });
+  boxInput: {
+    borderBottomWidth: 1,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    borderBottomColor: masterColor.fontBlack10
+  },
+  boxMenu: {
+    // paddingHorizontal: 16,
+    paddingVertical: 17,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  inputBox: { marginTop: 16, marginLeft: -16 }
+});
 export default SfaEditCollectionCheckGiro;
