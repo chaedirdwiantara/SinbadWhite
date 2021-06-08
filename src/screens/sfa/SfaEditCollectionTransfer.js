@@ -76,8 +76,8 @@ const SfaEditCollectionTransfer = props => {
           amount: balance,
           balance: props.data.paymentCollection.paymentCollectionMethod.balance,
           bankFrom: {
-            id: bankSource.id,
-            name: bankSource.name,
+            id: bankSource ? bankSource.id : null,
+            name: bankSource ? bankSource.name : null,
           },
           bankToAccount: {
             accountNo: bankDestination.accountNo,
@@ -246,8 +246,6 @@ const SfaEditCollectionTransfer = props => {
     props.transferValue(0);
     setDataImage(null);
     props.transferImage(null);
-
-    props.useNoReference(false);
   };
 
   /**
@@ -291,61 +289,6 @@ const SfaEditCollectionTransfer = props => {
               }
             />
           </View>
-          {!isDisable ? (
-            <View style={{ flexDirection: 'row', marginRight: 16 }}>
-              <TouchableOpacity
-                onPress={() => setOpenModalReference(true)}
-                style={{
-                  backgroundColor: masterColor.mainColor,
-                  height: 36,
-                  width: 66,
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginRight: 8
-                }}
-              >
-                <Text style={Fonts.type94}> Ubah </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => deleteDataReference()}
-                style={{
-                  backgroundColor: 'white',
-                  height: 36,
-                  width: 66,
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderColor: masterColor.mainColor,
-                  borderWidth: 1
-                }}
-              >
-                <Text style={Fonts.type100}> Hapus </Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={{ marginRight: 16 }}>
-              <TouchableOpacity
-                onPress={() => setOpenModalReference(true)}
-                disabled={
-                  collectionDetail.paymentCollectionMethod.balance <= 0 || isDisable ? true : false
-                }
-                style={{
-                  backgroundColor:
-                  collectionDetail.paymentCollectionMethod.balance <= 0 || isDisable
-                      ? masterColor.fontRed10
-                      : masterColor.mainColor,
-                  height: 36,
-                  width: 66,
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-              >
-                <Text style={Fonts.type94}> Cari</Text>
-              </TouchableOpacity>
-            </View>
-          )}
         </View>
       </View>
     );
