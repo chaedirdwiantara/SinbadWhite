@@ -76,14 +76,6 @@ const SfaEditCollectionPromo = props => {
     }
   };
 
-//    useEffect(() => {
-//     const front = moment.utc(new Date()).local().format('YYYYMMDD')
-//     const mid = selectedMerchant.externalId
-//     const back = moment.utc(new Date()).local().format('HHmmss')
-//     setPromoNumber(`${front}${mid}${back}`)
-//     props.promoNumber(`${front}${mid}${back}`)
-//   }, []);
-
   const clickCamera = () => {
     let options = {
       title: 'Select Image',
@@ -180,28 +172,6 @@ const SfaEditCollectionPromo = props => {
     setOpenModalReference(false);
     setIsDisable(true);
     props.paymentCollectionMethodId(data.id)
-  };
-
-  const deleteDataReference = () => {
-    const front = moment.utc(new Date()).local().format('YYYYMMDD')
-    const mid = selectedMerchant.externalId
-    const back = moment.utc(new Date()).local().format('HHmmss')
-
-    setIsDisable(false);
-    setDataReference();
-    setNoRef(null);
-    props.referenceCode(null);
-    setPromoNumber(`${front}${mid}${back}`);
-    props.promoNumber(`${front}${mid}${back}`);
-    setPrincipal(null);
-    props.principal(null);
-    setPromoBalance(null);
-    props.promoValue(null);
-
-    setDataImage(null);
-    props.promoImage(null);
-
-    props.useNoReference(false);
   };
 
   /**

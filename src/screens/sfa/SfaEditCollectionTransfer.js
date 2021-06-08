@@ -238,24 +238,6 @@ const SfaEditCollectionTransfer = props => {
     props.paymentCollectionMethodId(data.id)
   };
 
-  const deleteDataReference = () => {
-    props.isChanged(true);
-    setIsDisable(false);
-    setDataReference();
-    setNoRef(null);
-    props.referenceCode(null);
-    setBankSource(null);
-    props.bankSource(null);
-    setBankDestination(null);
-    props.bankAccount(null);
-    setTransferDate(null);
-    props.transferDate(null);
-    setBalance(0);
-    props.transferValue(0);
-    setDataImage(null);
-    props.transferImage(null);
-  };
-
   /**
    * *********************************
    * RENDER VIEW
