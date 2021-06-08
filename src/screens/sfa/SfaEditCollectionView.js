@@ -416,7 +416,7 @@ const SfaEditCollectionView = props => {
           >
             <Text style={Fonts.type17}>Sisa Tagihan</Text>
             <Text style={Fonts.type100}>
-              {MoneyFormatSpace(detailSfa.remainingBilling)}
+              {MoneyFormatSpace( dataSfaGetCollectionDetail.outstanding)}
             </Text>
           </View>
         </View>
