@@ -140,14 +140,58 @@ const SfaEditCollectionPromo = props => {
   }
 
   const textBillingPromo = (text) => {
-    if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)) {
-        setPromoValue(parseInt(props.remainingBilling))
-        props.billingPromoValue(parseInt(props.remainingBilling))
+    if (
+      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.data.outstanding)
+    ) {
+      if (props.data.outstanding < promoBalance){
+        setPromoValue(parseInt(props.data.outstanding));
+        props.billingPromoValue(parseInt(props.data.outstanding));
       } else {
-        setPromoValue(parseInt(text.replace(/[Rp.]+/g, '')))
-        props.billingPromoValue(parseInt(text.replace(/[Rp.]+/g, '')))
+        setPromoValue(parseInt(promoBalance));
+        props.billingPromoValue(parseInt(promoBalance));
       }
+    } else if (
+      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(promoBalance)
+    ) {
+      if (props.data.outstanding < promoBalance){
+        setPromoValue(parseInt(props.data.outstanding));
+        props.billingPromoValue(parseInt(props.data.outstanding));
+      } else {
+        setPromoValue(parseInt(promoBalance));
+        props.billingPromoValue(parseInt(promoBalance));
+      }
+    } else {
+      setPromoValue(parseInt(text.replace(/[Rp.]+/g, '')));
+      props.billingPromoValue(parseInt(text.replace(/[Rp.]+/g, '')));
+    }
   }
+
+  useEffect(()=> {
+    if (
+      parseInt(promoValue) > parseInt(props.data.outstanding)
+    ) {
+      if (props.data.outstanding < promoBalance){
+        setPromoValue(parseInt(props.data.outstanding));
+        props.billingPromoValue(parseInt(props.data.outstanding));
+      } else {
+        setPromoValue(parseInt(promoBalance));
+        props.billingPromoValue(parseInt(promoBalance));
+      }
+    } else if (
+      parseInt(promoValue) > parseInt(promoBalance)
+    ) {
+      if (props.data.outstanding < promoBalance){
+        setPromoValue(parseInt(props.data.outstanding));
+        props.billingPromoValue(parseInt(props.data.outstanding));
+      } else {
+        setPromoValue(parseInt(promoBalance));
+        props.billingPromoValue(parseInt(promoBalance));
+      }
+    } else {
+      setPromoValue(parseInt(promoValue));
+      props.billingPromoValue(parseInt(promoValue));
+    }
+  }, [promoValue, promoBalance]) 
 
   const selectedReference = data => {
     if (props.collectionMethod.id === 5) {

@@ -182,18 +182,61 @@ const SfaEditCollectionTransfer = props => {
     props.transferValue(parseInt(text.replace(/[Rp.]+/g, '')));
   };
 
+  console.log('dataaa:', props.data.outstanding);
   const textBillingValue = text => {
     props.isChanged(true);
     if (
-      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)
+      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.data.outstanding)
     ) {
-      setBillingValue(parseInt(props.remainingBilling));
-      props.billingValue(parseInt(props.remainingBilling));
+      if (props.data.outstanding < balance){
+        setBillingValue(parseInt(props.data.outstanding));
+        props.billingValue(parseInt(props.data.outstanding));
+      } else {
+        setBillingValue(parseInt(balance));
+        props.billingValue(parseInt(balance));
+      }
+    } else if (
+      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(balance)
+    ) {
+      if (props.data.outstanding < balance){
+        setBillingValue(parseInt(props.data.outstanding));
+        props.billingValue(parseInt(props.data.outstanding));
+      } else {
+        setBillingValue(parseInt(balance));
+        props.billingValue(parseInt(balance));
+      }
     } else {
       setBillingValue(parseInt(text.replace(/[Rp.]+/g, '')));
       props.billingValue(parseInt(text.replace(/[Rp.]+/g, '')));
     }
   };
+
+  useEffect(()=> {
+    if (
+      parseInt(billingValue) > parseInt(props.data.outstanding)
+    ) {
+      if (props.data.outstanding < balance){
+        setBillingValue(parseInt(props.data.outstanding));
+        props.billingValue(parseInt(props.data.outstanding));
+      } else {
+        setBillingValue(parseInt(balance));
+        props.billingValue(parseInt(balance));
+      }
+    } else if (
+      parseInt(billingValue) > parseInt(balance)
+    ) {
+      if (props.data.outstanding < balance){
+        setBillingValue(parseInt(props.data.outstanding));
+        props.billingValue(parseInt(props.data.outstanding));
+      } else {
+        setBillingValue(parseInt(balance));
+        props.billingValue(parseInt(balance));
+      }
+    } else {
+      setBillingValue(parseInt(billingValue));
+      props.billingValue(parseInt(billingValue));
+    }
+  }, [billingValue, balance]) 
 
   const selectedBank = data => {
     props.isChanged(true);
