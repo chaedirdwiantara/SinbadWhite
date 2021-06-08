@@ -143,8 +143,8 @@ class MerchantCheckinView extends Component {
           latitudeDelta: this.state.latitudeDelta,
           longitudeDelta: this.state.longitudeDelta
         }}
-        onLayout={() =>
-          setTimeout(() => {
+        onLayout={() => {
+          if (this.mapRef) {
             this.mapRef.fitToCoordinates(
               [
                 {
@@ -165,9 +165,9 @@ class MerchantCheckinView extends Component {
                 },
                 animated: true
               }
-            );
-          }, 500)
-        }
+            )
+          }}
+      }
       >
         <Marker
           image={require('../../../assets/icons/maps/drop_pin.png')}
