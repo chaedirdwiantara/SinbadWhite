@@ -252,17 +252,6 @@ pipeline {
                 sh "echo PATH=$PATH:${ANDROID_HOME}/platform-tools>>/home/ubuntu/bash.bashrc"
             }
         }
-        stage('SonarQube Analysis') {
-            when { expression { SINBAD_ENV != "production" || SINBAD_ENV != "demo" } }
-            steps{
-                script{
-                    def scannerHome = tool 'SonarQubeScanner';
-                    withSonarQubeEnv('sonarqube-sinbad') {
-                        sh "${scannerHome}/bin/sonar-scanner"
-                    }
-                }
-            }
-        }
         stage('Deployment') {
             parallel {
                 stage("Upload to S3") {
@@ -345,6 +334,17 @@ ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
                                 }
                             }
                         }
+                    }
+                }
+            }
+        }
+        stage('SonarQube Analysis') {
+            when { expression { SINBAD_ENV != "production" || SINBAD_ENV != "demo" } }
+            steps{
+                script{
+                    def scannerHome = tool 'SonarQubeScanner';
+                    withSonarQubeEnv('sonarqube-sinbad') {
+                        sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
             }
