@@ -190,8 +190,6 @@ const SfaEditCollectionView = props => {
    * FUNCTIONAL
    * =======================
    */
-
-  console.log('button:', isButtonDisabled);
   //handleBack
   const handleBackEdit = () => {
     NavigationService.goBack()
