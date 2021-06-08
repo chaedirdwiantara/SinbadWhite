@@ -182,7 +182,6 @@ const SfaEditCollectionTransfer = props => {
     props.transferValue(parseInt(text.replace(/[Rp.]+/g, '')));
   };
 
-  console.log('dataaa:', props.data.outstanding);
   const textBillingValue = text => {
     props.isChanged(true);
     if (
