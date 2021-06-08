@@ -29,6 +29,7 @@ import {
   sfaCollectionLogLoadmoreProcess
 } from '../../state/actions';
 import { toLocalTime } from '../../helpers/TimeHelper';
+import { APPROVED, REJECTED, PENDING } from '../../constants/collectionConstants';
 
 function SfaCollectionLog(props) {
   const dispatch = useDispatch();
@@ -137,21 +138,23 @@ function SfaCollectionLog(props) {
             })
           }
         >
+          
           <View
             style={styles.statusContainer}
           >
+            {item.status? 
             <View>
               <Text
                 style={{
-                  ...(item.collectionStatusName === 'Disetujui'
+                  ...(item.status === APPROVED
                     ? Fonts.type92
-                    : item.collectionStatusName === 'Menunggu'
+                    : item.status === PENDING
                     ? Fonts.type110p
                     : Fonts.type111p),
                   backgroundColor:
-                    item.collectionStatusName === 'Disetujui'
+                    item.status === APPROVED
                       ? '#E1F7E8'
-                      : item.collectionStatusName === 'Menunggu'
+                      : item.status === PENDING
                       ? '#FFF0D1'
                       : '#FAC0C3',
                   paddingHorizontal: 10,
@@ -159,9 +162,11 @@ function SfaCollectionLog(props) {
                   borderRadius: 100
                 }}
               >
-                {item.collectionStatusName}
+                {item.status === APPROVED? 'Disetujui': item.status === PENDING? 'Menunggu' : 'Ditolak' }
               </Text>
             </View>
+            
+        :  null}
             <View>
               <View style={{ alignSelf: 'center' }}>
                 <MaterialIcon
