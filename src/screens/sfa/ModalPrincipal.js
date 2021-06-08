@@ -19,6 +19,7 @@ import masterColor from '../../config/masterColor.json';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { sfaGetPrincipalProcess, sfaPrincipalLoadmoreProcess } from '../../state/actions';
+import SfaNoDataView from './SfaNoDataView';
 
 function ModalPrincipal(props) {
   const dispatch = useDispatch();
@@ -95,7 +96,7 @@ function ModalPrincipal(props) {
 
   const renderPrincipal = () => {
     return dataSfaGetPrincipal && !loadingSfaGetPrincipal ? (
-      dataSfaGetPrincipal.data ? (
+      dataSfaGetPrincipal.data.length > 0 ? (
         <View style={{flex: 1}}>
           <FlatList
             data={dataSfaGetPrincipal.data}
@@ -108,7 +109,11 @@ function ModalPrincipal(props) {
           />
           {loadingLoadmorePrincipal ? <LoadingLoadMore /> : null}
         </View>
-      ) : null
+      ) : (
+        <View style={{ marginTop: '30%' }}>
+          <SfaNoDataView />
+        </View>
+      )
     ) : <LoadingPage />
   };
 

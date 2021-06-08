@@ -41,7 +41,7 @@ const SfaEditCollectionPromo = props => {
   const [principal, setPrincipal] = useState(props.data.paymentCollection.paymentCollectionMethod.principal)
   const [promoBalance, setPromoBalance] = useState(props.data.paymentCollection.paymentCollectionMethod.amount)
   const [promoValue, setPromoValue] = useState(props.data.paymentCollection.paidAmount)
-  const [dataImage, setDataImage] = useState(props.data.image)
+  const [dataImage, setDataImage] = useState(props.data.paymentCollection.paymentCollectionMethod.image)
   const [isInputImageError, setIsInputImageError] = useState(false);
   const [isTooltipOpened, setIsTooltipOpened] = useState(true)
   const [isDisable, setIsDisable] = useState(false)

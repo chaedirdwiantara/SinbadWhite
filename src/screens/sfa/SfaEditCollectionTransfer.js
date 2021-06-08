@@ -32,7 +32,7 @@ const SfaEditCollectionTransfer = props => {
   const [openModalTransferDate, setOpenModalTransferDate] = useState(false);
   const [errorInputImage, setErrorInputImage] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(true);
-  const [isDisable, setIsDisable] = useState(false);
+  const [isDisable, setIsDisable] = useState(!props.data.paymentCollection.isPrimary);
   const [openModalReference, setOpenModalReference] = useState(false);
   const [openModalBank, setOpenModalBank] = useState(false);
   const [openModalBankDestination, setOpenModalBankDestination] = useState(
@@ -47,7 +47,7 @@ const SfaEditCollectionTransfer = props => {
   const [transferDate, setTransferDate] = useState(props.data.paymentCollection.paymentCollectionMethod.date);
   const [balance, setBalance] = useState(props.data.paymentCollection.paymentCollectionMethod.amount);
   const [billingValue, setBillingValue] = useState(props.data.paymentCollection.paidAmount);
-  const [dataImage, setDataImage] = useState(props.data.image);
+  const [dataImage, setDataImage] = useState(props.data.paymentCollection.paymentCollectionMethod.image);
 
   //SELECTOR
   const { selectedMerchant } = useSelector(state => state.merchant);
@@ -163,16 +163,19 @@ const SfaEditCollectionTransfer = props => {
   };
 
   const textTransferDate = date => {
+    props.isChanged(true);
     setTransferDate(date);
     props.transferDate(moment(date).format('YYYY-MM-DD'));
   };
 
   const textTransferValue = text => {
+    props.isChanged(true);
     setBalance(parseInt(text.replace(/[Rp.]+/g, '')));
     props.transferValue(parseInt(text.replace(/[Rp.]+/g, '')));
   };
 
   const textBillingValue = text => {
+    props.isChanged(true);
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)
     ) {
@@ -185,18 +188,21 @@ const SfaEditCollectionTransfer = props => {
   };
 
   const selectedBank = data => {
+    props.isChanged(true);
     props.bankSource(data);
     setBankSource(data);
     setOpenModalBank(false);
   };
 
   const selectedBankDestination = data => {
+    props.isChanged(true);
     props.bankAccount(data);
     setBankDestination(data);
     setOpenModalBankDestination(false);
   };
 
   const selectedReference = data => {
+    props.isChanged(true);
     if (props.collectionMethod.id === 4) {
       dispatch(sfaGetTransferImageProcess(data.id));
     }
@@ -204,6 +210,7 @@ const SfaEditCollectionTransfer = props => {
 
     //DATA INPUT
     setNoRef(data.referenceCode);
+    props.isChanged(true);
     props.referenceCode(data.referenceCode);
     setBankSource(data.bankSource);
     props.bankSource(data.bankSource);
@@ -224,6 +231,7 @@ const SfaEditCollectionTransfer = props => {
   };
 
   const deleteDataReference = () => {
+    props.isChanged(true);
     setIsDisable(false);
     setDataReference();
     setNoRef(null);
@@ -283,7 +291,7 @@ const SfaEditCollectionTransfer = props => {
               }
             />
           </View>
-          {isDisable ? (
+          {!isDisable ? (
             <View style={{ flexDirection: 'row', marginRight: 16 }}>
               <TouchableOpacity
                 onPress={() => setOpenModalReference(true)}
@@ -319,10 +327,12 @@ const SfaEditCollectionTransfer = props => {
             <View style={{ marginRight: 16 }}>
               <TouchableOpacity
                 onPress={() => setOpenModalReference(true)}
-                disabled={collectionDetail.paymentCollectionMethod.balance <= 0 ? true : false}
+                disabled={
+                  collectionDetail.paymentCollectionMethod.balance <= 0 || isDisable ? true : false
+                }
                 style={{
                   backgroundColor:
-                  collectionDetail.paymentCollectionMethod.balance <= 0
+                  collectionDetail.paymentCollectionMethod.balance <= 0 || isDisable
                       ? masterColor.fontRed10
                       : masterColor.mainColor,
                   height: 36,
@@ -365,8 +375,8 @@ const SfaEditCollectionTransfer = props => {
               {bankSource === null
                 ? 'Pilih Sumber Bank'
                 : isDisable === true
-                ? bankSource.name
-                : bankSource.name}
+                ? bankSource.displayName
+                : bankSource.displayName}
             </Text>
             <View style={{ position: 'absolute', right: 16 }}>
               <MaterialIcon
@@ -405,7 +415,7 @@ const SfaEditCollectionTransfer = props => {
             >
               {bankDestination === null
                 ? 'Pilih Tujuan Bank'
-                : bankDestination.displayName}
+                : bankDestination.bank ? bankDestination.bank.displayName : bankDestination.displayName}
             </Text>
             <View style={{ position: 'absolute', right: 16 }}>
               <MaterialIcon
@@ -546,40 +556,67 @@ const SfaEditCollectionTransfer = props => {
         </View>
         {dataReference ? (
           dataImage ? (
-            <View style={styles.smallContainerImage}>
-            <Image
-              source={{
-                uri: `data:image/jpeg;base64, ${dataImage}`
-              }}
-              style={[
-                styles.images,
-                { opacity: isDisable === true ? 0.5 : null }
-              ]}
-            />
-          </View>
+            dataImage.fileData ? (
+              <View style={styles.smallContainerImage}>
+                <Image
+                  source={{
+                    uri: `data:image/jpeg;base64, ${dataImage.fileData}`
+                  }}
+                  style={[
+                    styles.images,
+                    { opacity: isDisable === true ? 0.5 : null }
+                  ]}
+                />
+              </View>
+            ) : (
+              <View style={styles.smallContainerImage}>
+                <Image
+                  source={{
+                    uri: `data:image/jpeg;base64, ${dataImage}`
+                  }}
+                  style={[
+                    styles.images,
+                    { opacity: isDisable === true ? 0.5 : null }
+                  ]}
+                />
+              </View>
+            )
           ) : (
             <View style={[styles.smallContainerImage, {height: 250}]}>
-            <Image
-        source={require('../../assets/gif/loading/load_triagle.gif')}
-        style={{ height: 50, width: 50 }}
-      />
-          </View>
+              <Image
+                source={require('../../assets/gif/loading/load_triagle.gif')}
+                style={{ height: 50, width: 50 }}
+              />
+            </View>
            
           )
         ) : dataImage ? (
           <View style={{ marginTop: 12 }}>
-            <Text>disini</Text>
-            <View style={styles.smallContainerImage}>
-              <Image
-                source={{
-                  uri: `data:image/jpeg;base64, ${dataImage}`
-                }}
-                style={[
-                  styles.images,
-                  { opacity: isDisable === true ? 0.5 : null }
-                ]}
-              />
-            </View>
+            {dataImage.fileData ? (
+              <View style={styles.smallContainerImage}>
+                <Image
+                  source={{
+                    uri: `data:image/jpeg;base64, ${dataImage.fileData}`
+                  }}
+                  style={[
+                    styles.images,
+                    { opacity: isDisable === true ? 0.5 : null }
+                  ]}
+                />
+              </View>
+            ) : (
+              <View style={styles.smallContainerImage}>
+                <Image
+                  source={{
+                    uri: `data:image/jpeg;base64, ${dataImage}`
+                  }}
+                  style={[
+                    styles.images,
+                    { opacity: isDisable === true ? 0.5 : null }
+                  ]}
+                />
+              </View>
+            )}
             {isDisable !== true ? (
               <View style={styles.smallContainerButtonImage}>
                 <TouchableOpacity

@@ -33,6 +33,9 @@ import {
 } from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
+import {
+  MaterialIcon
+} from '../../library/thirdPartyPackage';
 const SfaEditCollectionView = props => {
   const {
     dataSfaGetDetail,
@@ -58,6 +61,8 @@ const SfaEditCollectionView = props => {
     openModalErrorEditCollection,
     setOpenModalErrorEditCollection
   ] = useState(false);
+  const [openModalBackEdit, setOpenModalBackEdit] = useState(false)
+
   //DATA PAYMENT TRANSFER & PROMO
   const [referenceCode, setReferenceCode] = useState(
     detailSfa.paymentCollection.paymentCollectionMethod.reference
@@ -144,11 +149,60 @@ const SfaEditCollectionView = props => {
       }
     }
   }, [errorSfaEditCollection]);
+
+  /* ========================
+   * HEADER MODIFY
+   * ========================
+   */
+  const renderHeader = () => {
+    return (
+      <View style={styles.headerContainer}>
+        <View style={[styles.headerContent]}>
+          <View style={[styles.headerBody, { alignItems: 'flex-start' }]}>
+            <TouchableOpacity onPress={() => handleBackHeader()}>
+              <View>
+                <MaterialIcon
+                  name="arrow-back"
+                  size={24}
+                  color={masterColor.fontBlack50}
+                  style={{
+                    marginBottom: 8,
+                    marginLeft: 8,
+                    alignContent: 'flex-start'
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={{ alignSelf: 'center', flex: 1, marginLeft: 25 }}>
+            <Text style={Fonts.type5}>Ubah Transaksi</Text>
+          </View>
+
+        </View>
+        <View style={[GlobalStyle.lines, styles.headerLine]} />
+      </View>
+    );
+  };
+
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
+
+  //handleBack
+  const handleBackEdit = () => {
+    NavigationService.goBack()
+  }
+
+  const handleBackHeader = () => {
+    if (isChanged === true) {
+      setOpenModalBackEdit(true)
+    } else {
+      handleBackEdit()
+    }
+  }
+
   const saveEditCollection = () => {
     const paymentCollectionType =
       detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType;
@@ -165,9 +219,9 @@ const SfaEditCollectionView = props => {
         bankToAccountId: bankAccount.id,
         paymentDate: transferDate,
         paymentCollectionMethodAmount: transferValue,
-        filename: 'template-baru.jpeg',
-        type: 'image/jpeg',
-        image: transferImage
+        filename: transferImage ? transferImage.fileName ? transferImage.fileName : null : null,
+        type: transferImage ? transferImage.fileType ? transferImage.fileType : null :null,
+        image: transferImage ? transferImage.fileData ? transferImage.fileData : null : null
       };
       dispatch(sfaEditCollectionProcess(data));
     } else if (paymentCollectionType.name === PROMO) {
@@ -180,9 +234,9 @@ const SfaEditCollectionView = props => {
         promoCode: detailSfa.paymentCollection.paymentCollectionMethod.promoNo,
         principalId: principal.id,
         paymentCollectionMethodAmount: promoValue,
-        filename: 'template-baru.jpeg',
-        type: 'image/jpeg',
-        image: promoImage
+        filename: promoImage ? promoImage.fileName ? promoImage.fileName : null : null,
+        type: promoImage ? promoImage.fileType ? promoImage.fileType : null :null,
+        image: promoImage ? promoImage.fileData ? promoImage.fileData : null : null
       };
       dispatch(sfaEditCollectionProcess(data));
     } else if (paymentCollectionType.name === TUNAI) {
@@ -435,7 +489,7 @@ const SfaEditCollectionView = props => {
           referenceCode={dataReferenceCode}
           principal={dataPrincipal}
           promoValue={dataPromoValue}
-          billingValue={dataBillingValue}
+          billingPromoValue={dataBillingValue}
           promoImage={dataPromoImage}
         />
       );
@@ -507,6 +561,34 @@ const SfaEditCollectionView = props => {
     );
   };
 
+  /** MODAL BACK EDIT COLLECTION */
+  const renderModalBackEdit = () => {
+    return (
+      <View>
+        {openModalBackEdit ? (
+          <ModalConfirmation
+            statusBarWhite
+            title={'Keluar Halaman?'}
+            open={openModalBackEdit}
+            content={
+              'Perubahan yang telah Anda lakukan tidak akan tersimpan'
+            }
+            type={'okeNotRed'}
+            okText={'Ya, Keluar'}
+            cancelText={'Tidak'}
+            ok={() => {
+              setOpenModalBackEdit(false);
+              handleBackEdit();
+            }}
+            cancel={() => setOpenModalBackEdit(false)}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  };
+
   /** MODAL ERROR EDIT COLLECTION */
   const renderModalErrorEditCollection = () => {
     return openModalErrorEditCollection ? (
@@ -528,12 +610,14 @@ const SfaEditCollectionView = props => {
     return (
       <View style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
+          {renderHeader()}
           {renderFakturInfo()}
           {renderCollectionInfo()}
           {renderCollectionDetail()}
           {renderButtonSave()}
           {renderModalEditConfirmation()}
           {renderModalErrorEditCollection()}
+          {renderModalBackEdit()}
         </ScrollView>
       </View>
     );
@@ -557,6 +641,29 @@ const styles = StyleSheet.create({
   },
   inputField: {
     marginTop: 16
+  },
+  headerContainer: {
+    backgroundColor: masterColor.backgroundWhite,
+    height: 56,
+    justifyContent: 'center'
+  },
+  headerContent: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  headerBody: {
+    marginHorizontal: 8,
+    marginVertical: 16
+  },
+  headerLine: {
+    shadowColor: masterColor.shadow,
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 1,
+    shadowRadius: 3.84,
+    elevation: 1
   }
 });
 export default SfaEditCollectionView;

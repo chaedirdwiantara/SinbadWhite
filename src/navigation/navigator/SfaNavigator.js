@@ -86,20 +86,7 @@ const SfaNavigator = {
   SfaEditCollectionView: {
     screen: SfaEditCollectionView,
     navigationOptions: {
-      headerTitle: 'Ubah Transaksi',
-      headerTitleStyle: [
-        GlobalFont.textHeaderPage,
-        {
-          textAlign: 'left',
-          flex: 1
-        }
-      ],
-      headerTintColor: masterColor.fontBlack50,
-      headerStyle: {
-        backgroundColor: masterColor.backgroundWhite
-      },
-      headerRight: <View />,
-      gesturesEnabled: false
+      header: null
     }
   },
 };

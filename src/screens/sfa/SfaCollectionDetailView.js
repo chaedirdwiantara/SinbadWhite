@@ -51,8 +51,6 @@ const SfaCollectionDetailView = props => {
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [isShowEditSuccessToast, setIsShowEditSuccessToast] = useState(false)
-  const [isPrimer, setIsPrimer] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
   const [
     isModalDeleteTransactionOpened,
     setIsModalDeleteTransactionOpened
@@ -172,22 +170,27 @@ const SfaCollectionDetailView = props => {
           <View style={{ alignSelf: 'center', flex: 1, marginLeft: 25 }}>
             <Text style={Fonts.type5}>Detail Transaksi</Text>
           </View>
-          <View style={[styles.headerBody, { flexDirection: 'row' }]}>
-            <TouchableOpacity onPress={() => deleteTransaction()}>
-              <MaterialIcon
-                name="delete"
-                size={28}
-                style={{ color: masterColor.fontBlack50, marginRight: 10 }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => editTransaction()}>
-              <MaterialIcon
-                name="edit"
-                size={28}
-                style={{ color: masterColor.fontBlack50 }}
-              />
-            </TouchableOpacity>
-          </View>
+          { dataSfaGetCollectionDetail && dataSfaGetCollectionDetail.isEditable ?
+            (
+              <View style={[styles.headerBody, { flexDirection: 'row' }]}>
+                <TouchableOpacity onPress={() => deleteTransaction()}>
+                  <MaterialIcon
+                    name="delete"
+                    size={28}
+                    style={{ color: masterColor.fontBlack50, marginRight: 10 }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => editTransaction()}>
+                  <MaterialIcon
+                    name="edit"
+                    size={28}
+                    style={{ color: masterColor.fontBlack50 }}
+                  />
+                </TouchableOpacity>
+              </View>
+            ) : null
+          }
+
         </View>
         <View style={[GlobalStyle.lines, styles.headerLine]} />
       </View>
@@ -207,7 +210,11 @@ const SfaCollectionDetailView = props => {
             statusBarWhite
             title={'Hapus Transaksi?'}
             open={isModalDeleteTransactionOpened}
-            content={'Transaksi yang telah terhapus tidak dapat dikembalikan'}
+            content={
+              dataSfaGetCollectionDetail.paymentCollection.isPrimary 
+              ? 'Transaksi dengan nomor referensi yang sama juga akan terhapus'
+              : 'Transaksi yang telah terhapus tidak dapat dikembalikan'
+            }
             type={'okeNotRed'}
             okText={'Ya, Hapus'}
             cancelText={'Tidak'}
