@@ -158,6 +158,8 @@ class MerchantHomeView extends Component {
     this.props.merchantGetLogAllActivityProcessV2(
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
+    /** FOR GET PORTFOLIO (FOR PAYLOAD CHECKOUT ORDER) */
+    this.props.portfolioGetProcessV2();
     /** FOR GET SFA STATUS ORDER */
     this.props.sfaGetStatusOrderProcess({
       storeId: this.props.merchant.selectedMerchant.storeId,
@@ -213,7 +215,7 @@ class MerchantHomeView extends Component {
                   activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
                 }
               ]
-            });         
+            });
           } else {
               this.setState({
                 task: [
@@ -237,7 +239,7 @@ class MerchantHomeView extends Component {
                   }
                 ]
               });
-            
+
           }
         }
       }
@@ -642,9 +644,9 @@ class MerchantHomeView extends Component {
       }
 
       // if (activity === ACTIVITY_JOURNEY_PLAN_COLLECTION) {
-        
+
       //       return true;
-          
+
       // }
 
       if (checkActivity.length > 0) {
@@ -835,7 +837,7 @@ class MerchantHomeView extends Component {
               )}
             </Text>
             <Text style={Fonts.type59}>
-              Total: {MoneyFormat(order.orderParcels[0].parcelFinalPrice)}
+              Total: {MoneyFormat(order.orderParcels[0].billings.totalPayment)}
             </Text>
           </View>
         </View>
@@ -978,7 +980,7 @@ class MerchantHomeView extends Component {
                           size={24}
                         />
                       )
-                      
+
                     ) : (
                       <MaterialIcon
                         name="radio-button-unchecked"
