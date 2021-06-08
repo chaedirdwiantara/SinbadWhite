@@ -1,7 +1,6 @@
 import ApiRest from '../apiRest';
 import { GlobalMethod } from './GlobalMethod';
 import { Store } from '../../state/Store';
-import ApiRestMock from '../apiRestMock'
 /** GET CART ITEM */
 function getCartItem(data) {
   return ApiRest({
