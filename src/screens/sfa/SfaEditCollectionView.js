@@ -57,6 +57,7 @@ const SfaEditCollectionView = props => {
   const [openModalEditConfirmation, setOpenModalEditConfirmation] = useState(
     false
   );
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false)
   const [
     openModalErrorEditCollection,
     setOpenModalErrorEditCollection
@@ -190,6 +191,7 @@ const SfaEditCollectionView = props => {
    * =======================
    */
 
+  console.log('button:', isButtonDisabled);
   //handleBack
   const handleBackEdit = () => {
     NavigationService.goBack()
@@ -341,6 +343,10 @@ const SfaEditCollectionView = props => {
   const onChangeDataStamp = data => {
     setDataStamp(data);
   };
+
+  const buttonDisabled = data => {
+    setIsButtonDisabled(data);
+  };
   /**
    * *********************************
    * RENDER VIEW
@@ -478,6 +484,7 @@ const SfaEditCollectionView = props => {
           transferValue={dataTranserValue}
           billingValue={dataBillingValue}
           transferImage={dataTransferImage}
+          buttonDisabled={buttonDisabled}
         />
       );
     } else if (paymentCollectionType.name === PROMO) {
@@ -491,6 +498,7 @@ const SfaEditCollectionView = props => {
           promoValue={dataPromoValue}
           billingPromoValue={dataBillingValue}
           promoImage={dataPromoImage}
+          buttonDisabled={buttonDisabled}
         />
       );
     } else if (
@@ -522,7 +530,7 @@ const SfaEditCollectionView = props => {
   const renderButtonSave = () => {
     return (
       <ButtonSingle
-        disabled={loadingSfaEditCollection}
+        disabled={loadingSfaEditCollection || isButtonDisabled}
         loading={loadingSfaEditCollection}
         title={'Simpan'}
         borderRadius={4}

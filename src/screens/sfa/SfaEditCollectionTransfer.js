@@ -65,6 +65,14 @@ const SfaEditCollectionTransfer = props => {
   }, [dataSfaGetTransferImage]);
 
   useEffect(() => {
+    if (noRef && balance && billingValue && dataImage) {
+      props.buttonDisabled(false)
+    } else {
+      props.buttonDisabled(true)
+    }
+  }, [noRef, balance, billingValue, dataImage])
+
+  useEffect(() => {
     const data = {
       image: dataImage,
       isEditable: props.data.isEditable,

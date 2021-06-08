@@ -62,6 +62,14 @@ const SfaEditCollectionPromo = props => {
     setExistingImage();
   }, [dataSfaGetTransferImage]);
 
+  useEffect(() => {
+    if (noRef && promoBalance && promoValue && dataImage) {
+      props.buttonDisabled(false)
+    } else {
+      props.buttonDisabled(true)
+    }
+  }, [noRef, promoBalance, promoValue, dataImage])
+
   const setExistingImage = () => {
     if (dataSfaGetTransferImage && dataReference) {
       setDataImage({ fileData: dataSfaGetTransferImage.data.image });
@@ -236,59 +244,6 @@ const SfaEditCollectionPromo = props => {
               }
             />
           </View>
-          {isDisable ? (
-            <View style={{ flexDirection: 'row', marginRight: 16 }}>
-              <TouchableOpacity
-                onPress={() => setOpenModalReference(true)}
-                style={{
-                  backgroundColor: masterColor.mainColor,
-                  height: 36,
-                  width: 66,
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginRight: 8
-                }}
-              >
-                <Text style={Fonts.type94}> Ubah </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => deleteDataReference()}
-                style={{
-                  backgroundColor: 'white',
-                  height: 36,
-                  width: 66,
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderColor: masterColor.mainColor,
-                  borderWidth: 1
-                }}
-              >
-                <Text style={Fonts.type100}> Hapus </Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={{ marginRight: 16 }}>
-              <TouchableOpacity
-                onPress={() => setOpenModalReference(true)}
-                disabled={props.data.paymentCollection.paymentCollectionMethod.balance <= 0 ? true : false}
-                style={{
-                  backgroundColor:
-                  props.data.paymentCollection.paymentCollectionMethod.balance <= 0
-                      ? masterColor.fontRed10
-                      : masterColor.mainColor,
-                  height: 36,
-                  width: 66,
-                  borderRadius: 8,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-              >
-                <Text style={Fonts.type94}> Cari</Text>
-              </TouchableOpacity>
-            </View>
-          )}
         </View>
       </View>
     );
