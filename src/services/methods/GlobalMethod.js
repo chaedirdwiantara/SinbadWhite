@@ -195,6 +195,9 @@ function addGaps(string = "", gaps, spacer){
 };
 /** ROLE BASE ACCESS CONTROL */
 export function remappingPrivilege(privilege){
+  if(!privilege || privilege.length === 0){
+    return DEFAULT_PRIVILEGE
+  }
   const temp = {...DEFAULT_PRIVILEGE}
   if(Array.isArray(privilege)){
     for (const key in temp) {

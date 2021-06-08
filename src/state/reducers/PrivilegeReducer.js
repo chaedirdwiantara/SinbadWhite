@@ -1,3 +1,4 @@
+import { GlobalMethod } from '../../services/methods';
 import * as types from '../types';
 import createReducer from './createReducer';
 
@@ -5,7 +6,6 @@ const INITIAL_STATE = {
   loading: false,
   data: null,
   error: null,
-  salesRole: null
 };
 
 export const privileges = createReducer(INITIAL_STATE, {
@@ -21,26 +21,15 @@ export const privileges = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loading: false,
-      data: action.payload
-    }
-  },
-  [types.REMAPPING_PRIVILEGE](state, action){
-    return {
-      ...state,
-      data: action.payload
+      data: GlobalMethod.remappingPrivilege(action.payload)
     }
   },
   [types.PRIVILEGE_GET_FAILED](state, action){
     return {
       ...state,
       loading: false,
+      data: GlobalMethod.remappingPrivilege(null),
       error: action.payload
-    }
-  },
-  [types.PRIVILEGE_SET_SALES_ROLE](state, action){
-    return {
-      ...state,
-      salesRole: action.payload
     }
   },
   [types.DELETE_ALL_DATA](state, action){
