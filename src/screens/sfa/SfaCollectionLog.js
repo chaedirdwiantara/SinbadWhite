@@ -166,7 +166,7 @@ function SfaCollectionLog(props) {
               </Text>
             </View>
             
-        :  null}
+        : <View style={{width: 16}} />}
             <View>
               <View style={{ alignSelf: 'center' }}>
                 <MaterialIcon
