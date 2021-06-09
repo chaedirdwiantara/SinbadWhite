@@ -125,6 +125,7 @@ class MerchantView extends Component {
   }
   /** HANDLE ADD BUTTON FROM HEADER */
   goToAdd = () => {
+    // ADD STORE VALIDATION
     const portfolio = this.props.merchant.dataGetPortfolioV2
     const canCreateStore = this.props.privileges.data?.createStore?.status || false
     if(portfolio !== null && canCreateStore){
