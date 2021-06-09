@@ -133,6 +133,7 @@ class JourneyView extends Component {
         });
         break;
       case 'new_merchant':
+        // VALIDATE SALES REP CAN ADD STORE OR NOT
         this.setState({ openModalAddMerchant: false });
         const portfolio = this.props.merchant.dataGetPortfolioV2
         const canCreateStore = this.props.privileges.data?.createStore?.status || false
