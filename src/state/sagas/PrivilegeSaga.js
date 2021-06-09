@@ -2,7 +2,7 @@ import { put, call, takeEvery, delay } from 'redux-saga/effects';
 import { PrivilegeMethod } from '../../services/methods/PrivilegeMethod';
 import * as ActionCreators from '../actions';
 import * as types from '../types';
-/** === GET SALES PRIVILEGES === */
+// GET SALES PRIVILEGES
 function* getPrivileges(actions){
   try {
     const response = yield call(() => {
@@ -13,7 +13,7 @@ function* getPrivileges(actions){
     yield put(ActionCreators.getPrivilegeFailed(error))
   }
 }
-/** === SAGA FUNCTION === */
+// SAGA FUNCTION
 function* PrivilegeSaga() {
   yield takeEvery(types.PRIVILEGE_GET_PROCESS, getPrivileges)
 }
