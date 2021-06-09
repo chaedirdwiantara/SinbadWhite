@@ -181,6 +181,16 @@ pipeline {
                                         sed -i 's/agentdevelopment/agent/g' $file
                                     done
                                 '''
+                                if(SINBAD_ENV == 'production') {
+                                    sh '''
+                                        find android/ -type f |
+                                        while read file
+                                        do
+                                            sed -i 's/ic_launcher_dev/ic_launcher/g' $file
+                                            sed -i 's/ic_launcher_round_dev/ic_launcher_round/g' $file
+                                        done
+                                    '''
+                                }
                             }else{
                                 if(SINBAD_ENV != 'development') {
                                     if(SINBAD_ENV == 'staging') {
@@ -324,6 +334,17 @@ ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
                                 }
                             }
                         }
+                    }
+                }
+            }
+        }
+        stage('SonarQube Analysis') {
+            when { expression { SINBAD_ENV != "production" || SINBAD_ENV != "demo" } }
+            steps{
+                script{
+                    def scannerHome = tool 'SonarQubeScanner';
+                    withSonarQubeEnv('sonarqube-sinbad') {
+                        sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
             }

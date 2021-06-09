@@ -1,0 +1,7 @@
+What's new in this version:
+
+- New Feature: Penyedia Layanan Bayar Nanti. Sekarang, Anda bisa memilih Penyedia Layanan Bayar Nanti!
+- Bayar Nanti Supplier: Toko dapat memilih pilihan ini untuk membuat pesanan Bayar Nanti seperti biasa.
+- Bayar Nanti Supplier dengan KUR KlikACC: Toko dapat memilih pilihan ini untuk membuat pesanan kredit melalui program Kredit Usaha Rakyat (KUR), bekerja sama dengan KlikACC. Untuk dapat menggunakan fasilitas kredit KUR, Toko diharapkan untuk melengkapi data-data, yakni No. KTP, Foto KTP, Selfie dengan KTP, Email, dan Nomor Telepon yang valid dan melakukan verifikasi melalui Video Call & Tanda Tangan Digital.
+- New Feature: Buat Pesanan dengan fasilitas Bayar Nanti melalui Supplier dengan KUR KlikACC: diperlukan verifikasi OTP.
+- Fix bug & improvement

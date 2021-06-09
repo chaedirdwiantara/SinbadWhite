@@ -1,5 +1,6 @@
 import ApiRest from '../apiRest';
 import { GlobalMethod } from './GlobalMethod';
+
 /** GET CART ITEM */
 function getHistory(data) {
   return ApiRest({
@@ -51,7 +52,6 @@ function editHistory(data) {
 /** DETAIL HISTORY */
 function getDetailHistory(parcelId) {
   return ApiRest({
-    // path: `payment/v1/order/parcel/119`,
     path: `payment/v1/order/parcel/${parcelId}`,
     method: 'GET'
   });

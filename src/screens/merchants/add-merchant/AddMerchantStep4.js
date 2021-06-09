@@ -56,6 +56,7 @@ class AddMerchantStep4 extends Component {
     /** IF ADD MERCHANT SUCCESS */
     if (prevProps.merchant.dataAddMerchant !== this.props.merchant.dataAddMerchant) {
       if(this.props.merchant.dataAddMerchant !== null){
+        this.props.saveImageBase64('');
         this.setState({showModalSuccess: true})
       }
     }
@@ -75,30 +76,35 @@ class AddMerchantStep4 extends Component {
       storeId, name, address, longitude, latitude,
       urbanId, warehouseId, fullName, idNo, taxNo,
       phone, clusterId, channelId, groupId, typeId,
-      noteAddress
+      noteAddress, idImageUrl, vehicleAccessibilityId,
+      vehicleAccessibilityAmount
     } = this.props.merchant.dataMerchantVolatile
+    let {supplierStoreId} = this.props.auth.dataCheckPhoneAvailble
     let supplierId = GlobalMethod.userSupplierMapping()
     if(supplierId.length > 0){
       supplierId = supplierId[0].toString()
     }
     const payload = {
-      supplierStoreId: null,
+      supplierStoreId: supplierStoreId || null,
       storeId,
-      supplierId,
+      supplierId, 
       registerData: {
-        name,
+        user: {
+          fullName,
+          idNo,
+          taxNo,
+          phone,
+          idImageUrl
+        },
+        name, // nama toko
         address,
         noteAddress,
         longitude,
         latitude,
         urbanId,
         warehouseId,
-        user: {
-          fullName,
-          idNo,
-          taxNo,
-          phone
-        },
+        vehicleAccessibilityId,
+        vehicleAccessibilityAmount,
         clusterId,
         groupId,
         typeId,

@@ -44,8 +44,7 @@ import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import _ from 'lodash';
-import { GlobalMethod, SalesmanKpiMethod } from '../../services/methods';
-import { DEFAULT_PRIVILEGE } from '../../helpers/RoleBaseAccessControl';
+import { SalesmanKpiMethod } from '../../services/methods';
 
 const { width } = Dimensions.get('window');
 const defaultImage = require('../../assets/images/sinbad_image/sinbadopacity.png');
@@ -215,7 +214,6 @@ class HomeView extends Component {
       this.getKpiData(this.state.tabValue)
     );
   }
-  /** GET PRIVILIGES */
   /** === GET KPI DATA === */
   getKpiData(period) {
     if (_.isNil(this.props.user)) {
@@ -744,8 +742,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, merchant, global, salesmanKpi, privileges }) => {
-  return { user, merchant, global, salesmanKpi, privileges };
+const mapStateToProps = ({ user, merchant, global, salesmanKpi }) => {
+  return { user, merchant, global, salesmanKpi };
 };
 
 const mapDispatchToProps = dispatch => {

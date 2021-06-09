@@ -18,6 +18,7 @@ import {
   SkeletonType3,
   LoadingLoadMore,
   Address,
+  SearchBarType1,
   EmptyData
 } from '../../library/component'
 import { GlobalStyle, Fonts } from '../../helpers'
@@ -34,6 +35,11 @@ class JourneyListDataView extends Component {
       search: ''
     };
   }
+  parentFunction(data) {
+    if (data.type === 'search') {
+      this.props.parentFunction(data);
+    }
+  }
   /**
    * =======================
    * FUNCTIONAL
@@ -44,25 +50,30 @@ class JourneyListDataView extends Component {
     this.props.journeyPlanGetProcessV2({
       page: 1,
       date: today,
-      search: this.state.search,
+      search: this.props.searchText,
       loading: true
     });
   };
 
   onHandleLoadMore = () => {
-    if (this.props.journey.dataGetJourneyPlanV2) {
-      if (
-        this.props.journey.dataGetJourneyPlanV2.length <
-        this.props.journey.totalDataGetJourneyPlanV2
-      ) {
-        const page = this.props.journey.pageGetJourneyPlanV2 + 1;
-        this.props.journeyPlanGetLoadMoreV2(page);
-        this.props.journeyPlanGetProcessV2({
-          page,
-          date: today,
-          search: this.state.search,
-          loading: true
-        });
+    if (
+      !this.props.journey.errorGetJourneyPlan &&
+      !this.props.journey.loadingLoadMoreGetJourneyPlan
+    ) {
+      if (this.props.journey.dataGetJourneyPlanV2) {
+        if (
+          this.props.journey.dataGetJourneyPlanV2.length <
+          this.props.journey.totalDataGetJourneyPlanV2
+        ) {
+          const page = this.props.journey.pageGetJourneyPlanV2 + 1;
+          this.props.journeyPlanGetLoadMoreV2(page);
+          this.props.journeyPlanGetProcessV2({
+            page,
+            date: today,
+            search: this.props.searchText,
+            loading: false
+          });
+        }
       }
     }
   };
@@ -115,6 +126,34 @@ class JourneyListDataView extends Component {
    * RENDER VIEW
    * ======================
    */
+  /** === RENDER FOR SEARCH BAR === */
+  renderSearchBar() {
+    return this.props.journey.dataGetJourneyPlanReportV2 !== null
+      ? this.renderCheckSearchBar()
+      : this.renderSearchBarContent();
+  }
+  /** RENDER CHECK SEARCH BAR === */
+  renderCheckSearchBar() {
+    return this.props.journey.dataGetJourneyPlanReportV2.target > 0 ? (
+      this.renderSearchBarContent()
+    ) : (
+      <View />
+    );
+  }
+  /** === RENDER SEARCH BAR === */
+  renderSearchBarContent() {
+    return (
+      <View style={styles.searchBar}>
+        <SearchBarType1
+          searchText={this.props.searchText}
+          placeholder={'Cari semua store'}
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
+        />
+      </View>
+    );
+  }
+
   /**
    * =====================
    * LOADING
@@ -297,6 +336,7 @@ class JourneyListDataView extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
+        {this.renderSearchBar()}
         {this.props.journey.loadingGetJourneyPlan
           ? this.renderSkeleton()
           : this.renderData()}
@@ -335,6 +375,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 4,
     backgroundColor: masterColor.backgroundWhite
+  },
+  searchBar: {
+    paddingTop: 4
   }
 });
 
@@ -374,5 +417,14 @@ export default connect(
  * updatedDate: 12032021
  * updatedFunction:
  * -> Add parameter search when get journey plan.
+ * updatedBy: dyah
+ * updatedDate: 18032021
+ * updatedFunction:
+ * -> Update props when loading more data.
+ * -> Update validation to handling load more.
+ * updatedBy: dyah
+ * updatedDate: 04052021
+ * updatedFunction:
+ * -> Add search journey plan.
  *
  */

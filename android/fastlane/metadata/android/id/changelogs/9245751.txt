@@ -1,0 +1,8 @@
+Terima kasih telah menggunakan Sinbad! Apa yang baru di versi ini:
+- Status Pembayaran Baru
+  -- Menunggu Pengembalian: Salesman dapat mengetahui Order Bayar Sekarang yang sudah dibayar, tetapi di Batalkan dan diubah menjadi Menunggu Pengembalian
+  -- Dikembalikan: Salesman dapat mengetahui Order mana yang pembayarannya sudah dikembalikan
+- Lihat rute menuju toko & meningkatkan tampilan pada profil
+- Add search store feature in Journey Plan
+- Improve experience in visiting each store
+- Fix bug

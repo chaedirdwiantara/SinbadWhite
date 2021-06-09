@@ -324,3 +324,106 @@ export function omsCheckPromoSuccess(data) {
 export function omsCheckPromoFailed(data) {
   return { type: types.OMS_CHECK_PROMO_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * GET PAY LATER TYPE
+ * ===========================
+ */
+/** === GET PAY LATER TYPE PROCESS === */
+export function omsGetPayLaterTypeProcess(data) {
+  return { type: types.OMS_GET_PAY_LATER_TYPE_PROCESS, payload: data };
+}
+
+/** === GET PAY LATER TYPE SUCCESS === */
+export function omsGetPayLaterTypeSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_GET_PAY_LATER_TYPE_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_GET_PAY_LATER_TYPE_FAILED, payload: data };
+}
+/** === GET PAY LATER TYPE FAILED === */
+export function omsGetPayLaterTypeFailed(data) {
+  return { type: types.OMS_GET_PAY_LATER_TYPE_FAILED, payload: data };
+}
+
+/**
+ * ====================================
+ * GET APPLICABLE PAYLATER
+ * ====================================
+ */
+/** === GET APPLICABLE PAYLATER PROCESS === */
+export function OmsApplicablePaylaterProcess(data) {
+  return { type: types.OMS_APPLICABLE_PAYLATER_PROCESS, payload: data };
+}
+
+/** === GET APPLICABLE PAYLATER SUCCESS === */
+export function OmsApplicablePaylaterSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_APPLICABLE_PAYLATER_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_APPLICABLE_PAYLATER_FAILED, payload: data };
+}
+
+/** === GET APPLICABLE PAYLATER FAILED === */
+export function OmsApplicablePaylaterFailed(data) {
+  return { type: types.OMS_APPLICABLE_PAYLATER_FAILED, payload: data };
+}
+
+/**
+ * ====================================
+ * GET OMS KUR OTP
+ * ====================================
+ */
+/** === GET OMS KUR OTP PROCESS === */
+export function OmsGetKurOtpProcess(data) {
+  return { type: types.OMS_GET_KUR_OTP_PROCESS, payload: data };
+}
+
+/** === GET OMS KUR OTP SUCCESS === */
+export function OmsGetKurOtpSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_GET_KUR_OTP_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_GET_KUR_OTP_FAILED, payload: data };
+}
+
+/** === GET OMS KUR OTP FAILED === */
+export function OmsGetKurOtpFailed(data) {
+  return { type: types.OMS_GET_KUR_OTP_FAILED, payload: data };
+}
+
+/**
+ * ====================================
+ * POST OMS KUR CONSENT
+ * ====================================
+ */
+/** === POST OMS KUR CONSENT PROCESS === */
+export function OmsPostKurConsentProcess(data) {
+  return { type: types.OMS_POST_KUR_CONSENT_PROCESS, payload: data };
+}
+
+/** === POST OMS KUR CONSENT SUCCESS === */
+export function OmsPostKurConsentSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_POST_KUR_CONSENT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_POST_KUR_CONSENT_FAILED, payload: data };
+}
+
+/** === POST OMS KUR CONSENT FAILED === */
+export function OmsPostKurConsentFailed(data) {
+  return { type: types.OMS_POST_KUR_CONSENT_FAILED, payload: data };
+}

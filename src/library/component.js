@@ -23,6 +23,7 @@ import InputType1 from '../components/input/InputType1';
 import InputType2 from '../components/input/InputType2';
 import InputType3 from '../components/input/InputType3';
 import InputType4 from '../components/input/inputType4';
+import InputType6 from '../components/input/InputType6';
 /** INPUT MAPS (PIN POINT) */
 import InputMapsType1 from '../components/input/InputMapsType1';
 import InputMapsType2 from '../components/input/InputMapsType2';
@@ -35,12 +36,14 @@ import ButtonFloatType1 from '../components/button/ButtonFloatType1';
 import ButtonSingle from '../components/button/ButtonSingle';
 import ButtonMenuType1 from '../components/button/ButtonMenuType1';
 import ButtonSingleSmall from '../components/button/ButtonSingleSmall';
+import IconButtonWithLabel from '../components/button/IconButtonWithLabel';
 /** MODAL */
 import ModalBottomWithClose from '../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalBottomSkuNotAvailable from '../components/error/ModalBottomSkuNotAvailable';
 import ModalWarning from '../components/modal/ModalWarning';
 import ModalConfirmation from '../components/modal/ModalConfirmation';
 import ModalConfirmationType2 from '../components/modal/ModalConfirmationType2';
+import ModalConfirmationType4 from '../components/modal/ModalConfirmationType4';
 import ModalBottomErrorPinMap from '../components/error/ModalBottomErrorPinMap';
 import ModalBottomSwipeCloseNotScroll from '../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalBottomType1 from '../components/modal_bottom/ModalBottomType1';
@@ -86,7 +89,8 @@ import SkeletonType8 from '../components/skeleton/SkeletonType8';
 import SkeletonType11 from '../components/skeleton/SkeletonType11';
 import SkeletonType18 from '../components/skeleton/SkeletonType18';
 import SkeletonType21 from '../components/skeleton/SkeletonType21';
-import SkeletonType23 from '../components/skeleton/SkeletonType23'
+import SkeletonType23 from '../components/skeleton/SkeletonType23';
+import SkeletonType24 from '../components/skeleton/SkeletonType24';
 /** ADDRESS */
 import Address from '../components/Address';
 /** TAG */
@@ -134,6 +138,7 @@ export {
   InputType2,
   InputType3,
   InputType4,
+  InputType6,
   /** INPUT MAPS (PIN POINT) */
   InputMapsType1,
   InputMapsType2,
@@ -146,12 +151,14 @@ export {
   ButtonSingle,
   ButtonMenuType1,
   ButtonSingleSmall,
+  IconButtonWithLabel,
   /** MODAL */
   ModalBottomWithClose,
   ModalBottomSkuNotAvailable,
   ModalWarning,
   ModalConfirmation,
   ModalConfirmationType2,
+  ModalConfirmationType4,
   ModalBottomErrorPinMap,
   ModalBottomSwipeCloseNotScroll,
   ModalBottomType1,
@@ -196,6 +203,7 @@ export {
   SkeletonType18,
   SkeletonType21,
   SkeletonType23,
+  SkeletonType24,
   /** ADDRESS */
   Address,
   /** TAG */
@@ -231,5 +239,9 @@ export {
  * updatedDate: 18122020
  * updatedFunction:
  * -> Add new component (customize modal bottom => modalBottomType5)
+ * updatedBy: dyah
+ * updatedDate: 06052021
+ * updatedFunction:
+ * -> Add new component (customize modal => ModalConfirmationType4)
  *
  */

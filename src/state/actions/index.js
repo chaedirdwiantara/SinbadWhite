@@ -12,4 +12,3 @@ export * from './OmsAction';
 export * from './HistoryAction';
 export * from './ProfileAction';
 export * from './SalesmanKpiAction';
-export * from './PrivilegeAction';

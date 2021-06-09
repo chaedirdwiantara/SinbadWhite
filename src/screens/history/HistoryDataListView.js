@@ -25,6 +25,8 @@ import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import CountDown from '../../components/CountDown';
+import { REFUNDED, BILLING_PAID, PAID, WAITING_FOR_REFUND, PAYMENT_FAILED, WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
+import {CONFIRM, PENDING_PAYMENT} from '../../constants/orderConstants';
 
 class HistoryDataListView extends Component {
   constructor(props) {
@@ -282,6 +284,12 @@ class HistoryDataListView extends Component {
       case 'waiting_for_payment':
         textStyle = Fonts.type11;
         break;
+      case 'waiting_for_refund':
+        textStyle = Fonts.type11;
+        break;
+      case 'refunded':
+        textStyle = Fonts.type10;
+        break;
       default:
         break;
     }
@@ -295,12 +303,12 @@ class HistoryDataListView extends Component {
             <Text style={{ ...textStyle, textAlign: 'right' }}>
               Tidak Dibayar
             </Text>
-          ) : ( 
+          ) : (
             <Text style={{ ...textStyle, textAlign: 'right', marginLeft: 15 }}>
               {this.statusPayment(item.statusPayment)}
             </Text>
           )}
-          {item.statusPayment === 'overdue'? (
+          {item.statusPayment === 'overdue' ? (
             <View style={{ marginLeft: 5 }}>
               <MaterialIcon name="error" size={15} color={'#f0444c'} />
             </View>
@@ -308,17 +316,16 @@ class HistoryDataListView extends Component {
             <View />
           )}
         </View>
-        {item.statusPayment !== 'paid'
-          ? item.statusPayment !== 'payment_failed' &&
-            // item.billing.billingStatus !== 'expired' &&
+        {item.statusPayment !== PAID && item.statusPayment !== REFUNDED && item.statusPayment !== WAITING_FOR_REFUND
+          ? item.statusPayment !== PAYMENT_FAILED &&
             item.billing &&
-            item.billing.billingStatus !== 'paid' &&
+            item.billing.billingStatus !== BILLING_PAID &&
             item.billing.expiredPaymentTime &&
             item.paymentChannel &&
-            item.paymentChannel.paymentChannelTypeId !== 1
+            item.paymentChannel.paymentChannelTypeId !== PAY_NOW
             ? moment.utc(new Date()).local() >
                 moment.utc(item.billing.expiredPaymentTime).local() &&
-              item.statusPayment === 'waiting_for_payment' 
+              item.statusPayment === WAITING_FOR_PAYMENT
               ? null
               : this.renderCountDown(item)
             : null
@@ -326,17 +333,36 @@ class HistoryDataListView extends Component {
       </View>
     );
   }
-  /** === RENDER BUTTON FOR PAYMENT === */
-  renderButtonForPayment(item) {
-    switch (item.statusPayment) {
-      case 'confirm':
-        return this.renderButtonCancel(item);
-      default:
-        return <View />;
-    }
+  /** === RENDER BUTTON FOR ORDER === */
+renderButtonForOrder(item) {
+  switch (item.status){
+    case CONFIRM :
+      if (item.paymentType.id !== PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT){
+        return this.renderButtonCancel(item)
+      }
+      case PENDING_PAYMENT:
+        if (item.paymentType.id === PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT ){
+          return this.renderButtonCancel(item)
+        }
+    default :
+    return <View/>
   }
+}
+
+  // /** === RENDER BUTTON FOR PAYMENT === */
+  // renderButtonForPayment(item) {
+  //   if (item.status === 'confirm') {
+  //     switch (item.statusPayment) {
+  //       case 'confirm':
+  //         return this.renderButtonCancel(item);
+  //       default:
+  //         return <View />;
+  //     }
+  //   }
+  // }
   /** ITEM */
   renderItem({ item, index }) {
+    const paymentType = item.paymentType.id;
     return (
       <View key={index}>
         <View style={GlobalStyle.shadowForBox}>
@@ -385,12 +411,12 @@ class HistoryDataListView extends Component {
             <View style={styles.boxItemContent}>
               <Text style={Fonts.type17}>
                 {item.parcelQty} Qty, Total:{' '}
-                {MoneyFormat(item.parcelFinalPrice)}
+                {MoneyFormat(item.billing.totalPayment)}
               </Text>
               <View style={{ flexDirection: 'row' }}>
-                {this.props.section === 'order' && item.status === 'confirm'
-                  ? this.renderButtonCancel(item)
-                  : this.renderButtonForPayment(item)}
+                {this.props.section === 'order'
+                  ? this.renderButtonForOrder(item)
+                  : null}
                 {this.renderButtonDetail(item)}
               </View>
             </View>

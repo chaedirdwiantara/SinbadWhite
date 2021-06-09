@@ -75,13 +75,7 @@ class JourneyView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    this.props.journeyPlanGetResetV2();
-    this.props.journeyPlanGetProcessV2({
-      page: 1,
-      date: today,
-      search: this.state.search,
-      loading: true
-    });
+    this.getJourneyPlan();
     this.props.getJourneyPlanReportProcessV2();
     this.props.portfolioGetProcessV2();
   }
@@ -92,13 +86,7 @@ class JourneyView extends Component {
       this.props.journey.dataSaveMerchantToJourneyPlanV2
     ) {
       if (this.props.journey.dataSaveMerchantToJourneyPlanV2 !== null) {
-        this.props.journeyPlanGetResetV2();
-        this.props.journeyPlanGetProcessV2({
-          page: 1,
-          date: today,
-          search: this.state.search,
-          loading: true
-        });
+        this.getJourneyPlan();
         this.props.getJourneyPlanReportProcessV2();
         this.setState({ openModalMerchantList: false });
       }
@@ -119,6 +107,22 @@ class JourneyView extends Component {
       }
     }
   }
+  /** === FROM CHILD FUNCTION === */
+  parentFunction(data) {
+    if (data.type === 'search') {
+      this.setState({ search: data.data }, () => this.getJourneyPlan());
+    }
+  }
+  /** === GET JOURNEY PLAN === */
+  getJourneyPlan() {
+    this.props.journeyPlanGetResetV2();
+    this.props.journeyPlanGetProcessV2({
+      page: 1,
+      date: today,
+      search: this.state.search,
+      loading: true
+    });
+  }
   /** === ADD MERCHANT TO JOURNEY === */
   addMerchant() {
     this.setState({ openModalAddMerchant: true });
@@ -136,8 +140,7 @@ class JourneyView extends Component {
         // VALIDATE SALES REP CAN ADD STORE OR NOT
         this.setState({ openModalAddMerchant: false });
         const portfolio = this.props.merchant.dataGetPortfolioV2
-        const canCreateStore = this.props.privileges.data?.createStore?.status || false
-        if(portfolio !== null && canCreateStore){
+        if(portfolio !== null && portfolio.length > 0){
           this.props.savePageAddMerchantFrom('JourneyView');
           setTimeout(() => {
             NavigationService.navigate('AddMerchantStep1');
@@ -157,7 +160,13 @@ class JourneyView extends Component {
    */
   /** === EMPTY JOURNEY === */
   renderJourneyListData() {
-    return <JourneyListDataView />;
+    return (
+      <JourneyListDataView
+        searchText={this.state.search}
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+      />
+    );
   }
   /** === RENDER HEADER === */
   renderHeader() {
@@ -260,19 +269,19 @@ class JourneyView extends Component {
   /** RENDER MODAL ERROR CONTENT */
   modalErrorContent() {
     return (
-      <View style={{ alignItems: 'center', paddingHorizontal: 16 }}>
+      <View style={{ alignItems: 'center', paddingHorizontal: 24 }}>
         <StatusBarRedOP50 />
         <Image
-          source={require('../../assets/images/sinbad_image/sinbad_no_access.png')}
+          source={require('../../assets/images/sinbad_image/failed_error.png')}
           style={{ width: 208, height: 156 }}
         />
-        <Text style={[Fonts.type7, { padding: 16, textAlign: 'center' }]}>
-          Maaf, Anda tidak memiliki akses ke halaman ini
+        <Text style={[Fonts.type7, { paddingVertical: 8, textAlign: 'center' }]}>
+          Maaf, Anda tidak memiliki akses untuk membuat toko
         </Text>
         <Text style={[Fonts.type17, {textAlign: 'center', lineHeight: 18}]}>
-          Silakan hubungi admin untuk proses lebih lanjut
+          Hal ini bisa terjadi karena Anda tidak memiliki portfolio. Silakan hubungi admin untuk proses lebih lanjut.
         </Text>
-        <View style={{ width: '100%', paddingTop: 24 }}>
+        <View style={{ width: '100%', paddingTop: 40 }}>
           <ButtonSingle
             borderRadius={4}
             title={'Oke, Saya Mengerti'}
@@ -330,8 +339,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ journey, user, merchant, privileges }) => {
-  return { journey, user, merchant, privileges };
+const mapStateToProps = ({ journey, user, merchant }) => {
+  return { journey, user, merchant };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -360,4 +369,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyView);
  * updatedDate: 12032021
  * updatedFunction:
  * -> Add parameter search when get journey plan.
+ * updatedBy: dyah
+ * updatedDate: 04052021
+ * updatedFunction:
+ * -> Add search journey plan.
  */

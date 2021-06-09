@@ -1,7 +1,6 @@
 import ApiRest from '../apiRest';
 import ApiRestMap from '../apiRestMap';
 import { Store } from '../../state/Store';
-import { DEFAULT_PRIVILEGE } from '../../helpers/RoleBaseAccessControl';
 
 function getListAndSearch(data) {
   
@@ -184,7 +183,7 @@ function userStoreId() {
   return stateData.user !== null ? stateData.user.userStores[0].storeId : '';
 }
 
-/** FORMATTER TEXTINPUT */
+//** FORMATTER TEXTINPUT */
 function addGaps(string = "", gaps, spacer){
   const offsets = [0].concat(gaps).concat([string.length]);
   return offsets.map((end, index) => {
@@ -224,8 +223,7 @@ export const GlobalMethod = {
   userSupplierMapping,
   userStoreId,
   addGaps,
-  uploadImage,
-  remappingPrivilege
+  uploadImage
 };
 
 /**

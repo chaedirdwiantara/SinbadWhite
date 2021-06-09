@@ -138,7 +138,13 @@ class ModalBottomPaymentMethod extends Component {
             <Text
               style={(Fonts.type8, { marginLeft: 10, alignSelf: 'center' })}
             >
-              {this.props.paymentType.paymentType.name}
+                {this.props.paymentType.paymentType.name} 
+              {
+                this.props.selectedPaylaterType === null 
+                ? null
+                : ` - ${this.props.selectedPaylaterType.name}`
+              }
+             
             </Text>
           </View>
         </View>

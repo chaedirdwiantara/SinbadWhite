@@ -37,7 +37,7 @@ class MerchantEditPartialView extends Component {
       disabledDropdown: true,
       disabledAction: false,
       /** all data need */
-      id: this.props.merchant.dataGetMerchantDetail.id,
+      id: this.props.merchant.dataGetMerchantDetailV2.id,
       /** for merchant information */
       name: this.props.merchant.dataMerchantVolatile.name,
       phoneNo: this.props.merchant.dataMerchantVolatile.phoneNo,
@@ -205,14 +205,14 @@ class MerchantEditPartialView extends Component {
     if (this.props.merchant.dataGetWarehouse.total === 0) {
       return (
         this.props.global.longitude ===
-          this.props.merchant.dataGetMerchantDetail.longitude &&
+          this.props.merchant.dataGetMerchantDetailV2.longitude &&
         this.props.global.latitude ===
-          this.props.merchant.dataGetMerchantDetail.latitude
+          this.props.merchant.dataGetMerchantDetailV2.latitude
       );
     } else {
-      if (this.props.merchant.dataGetMerchantDetail.warehouse) {
+      if (this.props.merchant.dataGetMerchantDetailV2.warehouse) {
         return (
-          this.props.merchant.dataGetMerchantDetail.warehouse.name ===
+          this.props.merchant.dataGetMerchantDetailV2.warehouse.name ===
           this.props.merchant.dataMerchantVolatile.warehouse
         );
       } else {
@@ -238,9 +238,9 @@ class MerchantEditPartialView extends Component {
           this.state.vehicleAccessibilityAmount ===
             data.vehicleAccessibilityAmount &&
           this.props.merchant.dataMerchantVolatile.vehicleAccessibilityId ===
-            this.props.merchant.dataGetMerchantDetail.vehicleAccessibilityId &&
+            this.props.merchant.dataGetMerchantDetailV2.vehicleAccessibilityId &&
           this.props.merchant.dataMerchantVolatile.numberOfEmployee ===
-            this.props.merchant.dataGetMerchantDetail.numberOfEmployee
+            this.props.merchant.dataGetMerchantDetailV2.numberOfEmployee
         );
       case 'merchantAddress':
         return (

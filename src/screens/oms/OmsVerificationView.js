@@ -28,6 +28,8 @@ import ModalBottomStockConfirmation from './ModalBottomStockConfirmation';
 import ModalBottomErrorNoUrban from './ModalBottomErrorNoUrban';
 import CallCS from '../../screens/global/CallCS';
 import ModalBottomErrorPromo from './ModalBottomErrorPromo';
+import ModalBottomErrorMaxOrder from './ModalBottomErrorMaxOrder';
+import _ from 'lodash';
 
 class OmsVerificationView extends Component {
   constructor(props) {
@@ -38,7 +40,8 @@ class OmsVerificationView extends Component {
       openModalErrorGlobal: false,
       openModalErrorNoUrban: false,
       openModalCS: false,
-      openModalErrorPromo: false
+      openModalErrorPromo: false,
+      openModalErrorMaxOrder: false
     };
   }
 
@@ -47,10 +50,6 @@ class OmsVerificationView extends Component {
    * FUNCTIONAL
    * =======================
    */
-  /** === DID MOUNT */
-  componentDidMount() {
-    this.props.portfolioGetProcessV2();
-  }
   /** === DID UPDATE */
   componentDidUpdate(prevProps) {
     /** === SUCCESS POST CHECKOUT ITEM ===
@@ -114,6 +113,11 @@ class OmsVerificationView extends Component {
           cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
         });
         break;
+      case 'ERR-MAX-QTY':
+        this.setState({
+          openModalErrorMaxOrder: true
+        });
+        break;
       default:
         break;
     }
@@ -137,10 +141,15 @@ class OmsVerificationView extends Component {
 
   /** ===  === */
   getCheckoutItem() {
+    let portfolioId;
+    if(this.props.merchant.dataGetPortfolioV2 && !_.isEmpty(this.props.merchant.dataGetPortfolioV2)){
+      portfolioId = this.props.merchant.dataGetPortfolioV2[0].id
+    }
+
     this.props.omsGetCheckoutItemProcess({
       cartId: this.props.navigation.state.params.cartId,
       catalogues: this.props.oms.dataCheckout,
-      portfolioId: this.props.merchant.dataGetPortfolioV2[0].id
+      portfolioId,
     });
   }
 
@@ -529,6 +538,23 @@ class OmsVerificationView extends Component {
       <View />
     );
   }
+  /** ===> RENDER MODAL ERROR MAX ORDER === */
+  renderModalErrorMaxOrder() {
+    return this.state.openModalErrorMaxOrder ? (
+      <ModalBottomErrorMaxOrder
+        open={this.state.openModalErrorMaxOrder}
+        close={() => {
+          this.setState({ openModalErrorMaxOrder: false });
+          NavigationService.navigate('OmsCartView');
+          this.props.omsGetCartItemFromCheckoutProcess({
+            catalogues: this.props.permanent.dataSkuCart
+          });
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
 
   render() {
     return (
@@ -542,6 +568,7 @@ class OmsVerificationView extends Component {
         {this.renderModalErrorNoUrban()}
         {this.renderModalCallCS()}
         {this.renderModalErrorPromo()}
+        {this.renderModalErrorMaxOrder()}
       </SafeAreaView>
     );
   }
