@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity
 } from '../../library/reactPackage';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextInputMask } from 'react-native-masked-text';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import {
@@ -51,24 +51,69 @@ const SfaEditCollectionCheckGiro = props => {
     paymentCollectionMethod.stamp ? true : false
   );
   const [openModalListMaterai, setOpenModalListMaterai] = useState(false);
+  const [outstanding, setOutstanding] = useState(props.data.outstanding + props.data.paymentCollection.paidAmount)
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
+//function to make sure collection !> balance || colection !>outstanding
+useEffect(() => {
+  if (parseInt(paidAmount) > parseInt(outstanding)) {
+    if (outstanding< balanceValue) {
+      setPaidAmount(parseInt(outstanding));
+      props.onChangePaidAmount(parseInt(outstanding));
+    } else {
+      setPaidAmount(parseInt(balanceValue));
+      props.onChangePaidAmount(parseInt(balanceValue));
+    }
+  } else if (parseInt(paidAmount) > parseInt(balanceValue)) {
+    if (outstanding< balanceValue) {
+      setPaidAmount(parseInt(outstanding))
+      props.onChangePaidAmount(parseInt(outstanding));
+    } else {
+      setPaidAmount(parseInt(balanceValue));
+      props.onChangePaidAmount(parseInt(balanceValue));
+    }
+  } else {
+    setPaidAmount(parseInt(paidAmount));
+    props.onChangePaidAmount(parseInt(paidAmount));
+  }
+}, [paidAmount, balanceValue]);
+
+useEffect(()=> {
+if (checkMaterai === false){
+  setDataStamp()
+  props.onChangeDataStamp()
+}
+}, [checkMaterai])
+
   const textBillingCash = text => {
     if (
-      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.data.outstanding)
+      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(outstanding)
     ) {
-      setPaidAmount(parseInt(props.data.outstanding));
-      props.onChangePaidAmount(parseInt(props.data.outstanding));
-      props.isChanged(true);
-    } else {
+      if (props.data.outstanding + paidAmount < balanceValue) {
+        setPaidAmount(parseInt(outstanding ));
+        props.onChangePaidAmount(parseInt(outstanding));
+      } else {
+        setPaidAmount(parseInt(balanceValue));
+        props.onChangePaidAmount(parseInt(balanceValue));
+      }
+    } else if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(balanceValue)) {
+      if (props.remainingBilling < balanceValue) {
+        setPaidAmount(parseInt(outstanding));
+        props.onChangePaidAmount(parseInt(outstanding));
+      } else {
+        setPaidAmount(parseInt(balanceValue));
+        props.onChangePaidAmount(parseInt(balanceValue));
+      }
+    }
+    else {
       setPaidAmount(parseInt(text.replace(/[Rp.]+/g, '')));
       props.onChangePaidAmount(parseInt(text.replace(/[Rp.]+/g, '')));
-      props.isChanged(true);
     }
   };
+
   const dataBalance = text => {
     const balanceInt = parseInt(text.replace(/[Rp.]+/g, ''));
     setBalanceValue(balanceInt);
@@ -103,6 +148,8 @@ const SfaEditCollectionCheckGiro = props => {
     setCheckMaterai(!checkMaterai);
     if (checkMaterai === false) {
       setDataStamp();
+      props.onChangeDataStamp();
+      props.isChanged(true);
     }
   };
 
@@ -374,7 +421,7 @@ const SfaEditCollectionCheckGiro = props => {
         {paymentCollectionMethod.stamp ? (
           props.isPrimary ? (
             <View style={{ marginTop: 16 }}>
-              <Text style={[Fonts.type10]}>'Nilai Materai'</Text>
+              <Text style={[Fonts.type10]}>Nilai Materai</Text>
               <View
                 style={{
                   flexDirection: 'row',

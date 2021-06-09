@@ -42,6 +42,7 @@ function SfaCollectionLog(props) {
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [limit, setLimit] = useState(20);
   const [isShowToast, setIsShowToast] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
 
   //USEREF
   const prevDataSfaDeleteCollectionRef = useRef(dataSfaDeleteCollection);
@@ -79,13 +80,7 @@ function SfaCollectionLog(props) {
   
 
   useEffect(() => {
-    const data = {
-      storeId: parseInt(selectedMerchant.storeId),
-      orderParcelId: dataSfaGetDetail.data.id,
-      limit: limit,
-      skip: 0
-    };
-    dispatch(sfaGetCollectionLogProcess(data));
+  getCollectionLog()
   }, []);
 
   const loadMore = () => {
@@ -106,7 +101,19 @@ function SfaCollectionLog(props) {
       }
     }
   };
-
+ /** REFRESH LIST VIEW */
+ const onHandleRefresh = () => {
+  getCollectionLog()
+};
+const getCollectionLog = () => {
+  const data = {
+    storeId: parseInt(selectedMerchant.storeId),
+    orderParcelId: dataSfaGetDetail.data.id,
+    limit: limit,
+    skip: 0
+  };
+  dispatch(sfaGetCollectionLogProcess(data));
+}
   /**
    * *********************************
    * RENDER VIEW
@@ -234,6 +241,8 @@ function SfaCollectionLog(props) {
               onEndReachedThreshold={0.2}
               onEndReached={() => loadMore()}
               showsVerticalScrollIndicator
+              refreshing={refreshing}
+              onRefresh={()=>onHandleRefresh()}
             />
           ) : (
             <View style={{ marginTop: '20%' }}>
