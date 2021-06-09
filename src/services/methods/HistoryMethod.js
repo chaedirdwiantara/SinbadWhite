@@ -52,7 +52,6 @@ function editHistory(data) {
 /** DETAIL HISTORY */
 function getDetailHistory(parcelId) {
   return ApiRest({
-    // path: `payment/v1/order/parcel/119`,
     path: `payment/v1/order/parcel/${parcelId}`,
     method: 'GET'
   });
