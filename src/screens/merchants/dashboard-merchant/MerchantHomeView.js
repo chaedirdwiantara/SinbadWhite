@@ -725,7 +725,7 @@ class MerchantHomeView extends Component {
               )}
             </Text>
             <Text style={Fonts.type59}>
-              Total: {MoneyFormat(order.orderParcels[0].parcelFinalPrice)}
+              Total: {MoneyFormat(order.orderParcels[0].billings.totalPayment)}
             </Text>
           </View>
         </View>

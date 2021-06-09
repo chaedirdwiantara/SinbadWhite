@@ -56,6 +56,7 @@ class AddMerchantStep4 extends Component {
     /** IF ADD MERCHANT SUCCESS */
     if (prevProps.merchant.dataAddMerchant !== this.props.merchant.dataAddMerchant) {
       if(this.props.merchant.dataAddMerchant !== null){
+        this.props.saveImageBase64('');
         this.setState({showModalSuccess: true})
       }
     }
