@@ -420,7 +420,7 @@ const SfaEditCollectionView = props => {
           >
             <Text style={Fonts.type17}>Sisa Tagihan</Text>
             <Text style={Fonts.type100}>
-              {MoneyFormatSpace( dataSfaGetCollectionDetail.outstanding)}
+              {MoneyFormatSpace( dataSfaGetCollectionDetail.outstanding +  dataSfaGetCollectionDetail.paymentCollection.paidAmount)}
             </Text>
           </View>
         </View>
