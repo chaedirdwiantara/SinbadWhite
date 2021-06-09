@@ -156,6 +156,7 @@ class HomeView extends Component {
       fullName: this.props.user.fullName,
       imageUrl: this.props.user.imageUrl
     });
+    // CHECK SALES PRIVILEGE
     if(this.props.privileges.data === null){
       this.getPrivileges()
     }
@@ -198,7 +199,7 @@ class HomeView extends Component {
       }
     }
   }
-  /** GET SALES PRIVILEGE */
+  // GET SALES PRIVILEGE 
   getPrivileges(){
     let supplierId = GlobalMethod.userSupplierMapping()
     if(supplierId.length > 0){
@@ -207,6 +208,7 @@ class HomeView extends Component {
     let userId = this.props.user?.id || ''
     this.props.getPrivilegeProcess({supplierId, userId})
   }
+  
   /** === PULL TO REFRESH === */
   _onRefresh() {
     this.setState({ refreshing: true }, () =>
