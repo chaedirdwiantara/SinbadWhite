@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity
 } from '../../library/reactPackage';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextInputMask } from 'react-native-masked-text';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import {
@@ -56,19 +56,56 @@ const SfaEditCollectionCheckGiro = props => {
    * FUNCTIONAL
    * =======================
    */
+//function to make sure collection !> balance || colection !>outstanding
+useEffect(() => {
+  if (parseInt(paidAmount) > parseInt(props.data.outstanding)) {
+    if (props.data.outstanding < balanceValue) {
+      setPaidAmount(parseInt(props.data.outstanding));
+      props.onChangePaidAmount(parseInt(props.data.outstanding));
+    } else {
+      setPaidAmount(parseInt(balanceValue));
+      props.onChangePaidAmount(parseInt(balanceValue));
+    }
+  } else if (parseInt(paidAmount) > parseInt(balanceValue)) {
+    if (props.data.outstanding < balanceValue) {
+      setPaidAmount(parseInt(props.data.outstanding));
+      props.onChangePaidAmount(parseInt(props.data.outstanding));
+    } else {
+      setPaidAmount(parseInt(balanceValue));
+      props.onChangePaidAmount(parseInt(balanceValue));
+    }
+  } else {
+    setPaidAmount(parseInt(paidAmount));
+    props.onChangePaidAmount(parseInt(paidAmount));
+  }
+}, [paidAmount, balanceValue]);
+
   const textBillingCash = text => {
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.data.outstanding)
     ) {
-      setPaidAmount(parseInt(props.data.outstanding));
-      props.onChangePaidAmount(parseInt(props.data.outstanding));
-      props.isChanged(true);
-    } else {
+      if (props.data.outstanding < balanceValue) {
+        setPaidAmount(parseInt(props.data.outstanding));
+        props.onChangePaidAmount(parseInt(props.data.outstanding));
+      } else {
+        setPaidAmount(parseInt(balanceValue));
+        props.onChangePaidAmount(parseInt(balanceValue));
+      }
+    } else if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(balanceValue)) {
+      if (props.remainingBilling < balanceValue) {
+        setPaidAmount(parseInt(props.data.outstanding));
+        props.onChangePaidAmount(parseInt(props.data.outstanding));
+      } else {
+        setPaidAmount(parseInt(balanceValue));
+        props.onChangePaidAmount(parseInt(balanceValue));
+      }
+    }
+    else {
       setPaidAmount(parseInt(text.replace(/[Rp.]+/g, '')));
       props.onChangePaidAmount(parseInt(text.replace(/[Rp.]+/g, '')));
-      props.isChanged(true);
     }
   };
+
   const dataBalance = text => {
     const balanceInt = parseInt(text.replace(/[Rp.]+/g, ''));
     setBalanceValue(balanceInt);
@@ -103,6 +140,8 @@ const SfaEditCollectionCheckGiro = props => {
     setCheckMaterai(!checkMaterai);
     if (checkMaterai === false) {
       setDataStamp();
+      props.onChangeDataStamp();
+      props.isChanged(true);
     }
   };
 
