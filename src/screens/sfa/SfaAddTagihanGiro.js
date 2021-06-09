@@ -105,7 +105,6 @@ const SfaAddTagihanGiro = props => {
   }
 
   const dataBillingValue = text => {
-    console.log(balanceValue, 'balance');
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)
     ) {
