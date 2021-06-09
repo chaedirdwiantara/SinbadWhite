@@ -51,6 +51,7 @@ const SfaEditCollectionCheckGiro = props => {
     paymentCollectionMethod.stamp ? true : false
   );
   const [openModalListMaterai, setOpenModalListMaterai] = useState(false);
+  const [outstanding, setOutstanding] = useState(props.data.outstanding + props.data.paymentCollection.paidAmount)
   /**
    * =======================
    * FUNCTIONAL
@@ -58,18 +59,18 @@ const SfaEditCollectionCheckGiro = props => {
    */
 //function to make sure collection !> balance || colection !>outstanding
 useEffect(() => {
-  if (parseInt(paidAmount) > parseInt(props.data.outstanding)) {
-    if (props.data.outstanding < balanceValue) {
-      setPaidAmount(parseInt(props.data.outstanding));
-      props.onChangePaidAmount(parseInt(props.data.outstanding));
+  if (parseInt(paidAmount) > parseInt(props.data.outstanding + paidAmount)) {
+    if (outstanding< balanceValue) {
+      setPaidAmount(parseInt(outstanding));
+      props.onChangePaidAmount(parseInt(outstanding));
     } else {
       setPaidAmount(parseInt(balanceValue));
       props.onChangePaidAmount(parseInt(balanceValue));
     }
   } else if (parseInt(paidAmount) > parseInt(balanceValue)) {
-    if (props.data.outstanding < balanceValue) {
-      setPaidAmount(parseInt(props.data.outstanding));
-      props.onChangePaidAmount(parseInt(props.data.outstanding));
+    if (outstanding< balanceValue) {
+      setPaidAmount(parseInt(outstanding))
+      props.onChangePaidAmount(parseInt(outstanding));
     } else {
       setPaidAmount(parseInt(balanceValue));
       props.onChangePaidAmount(parseInt(balanceValue));
@@ -89,19 +90,19 @@ if (checkMaterai === false){
 
   const textBillingCash = text => {
     if (
-      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.data.outstanding)
+      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(outstanding)
     ) {
-      if (props.data.outstanding < balanceValue) {
-        setPaidAmount(parseInt(props.data.outstanding));
-        props.onChangePaidAmount(parseInt(props.data.outstanding));
+      if (props.data.outstanding + paidAmount < balanceValue) {
+        setPaidAmount(parseInt(outstanding ));
+        props.onChangePaidAmount(parseInt(outstanding));
       } else {
         setPaidAmount(parseInt(balanceValue));
         props.onChangePaidAmount(parseInt(balanceValue));
       }
     } else if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(balanceValue)) {
       if (props.remainingBilling < balanceValue) {
-        setPaidAmount(parseInt(props.data.outstanding));
-        props.onChangePaidAmount(parseInt(props.data.outstanding));
+        setPaidAmount(parseInt(outstanding));
+        props.onChangePaidAmount(parseInt(outstanding));
       } else {
         setPaidAmount(parseInt(balanceValue));
         props.onChangePaidAmount(parseInt(balanceValue));
