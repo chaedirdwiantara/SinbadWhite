@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../../helpers/GlobalFont';
 import {
   View,
@@ -52,6 +52,31 @@ const SfaAddTagihanCheque = props => {
    * FUNCTIONAL
    * =======================
    */
+
+  //function to make sure collection !> balance || colection !>outstanding
+  useEffect(() => {
+    if (parseInt(billingValue) > parseInt(props.remainingBilling)) {
+      if (props.remainingBilling < balanceValue) {
+        setBillingValue(parseInt(props.remainingBilling));
+        props.billingValue(parseInt(props.remainingBilling));
+      } else {
+        setBillingValue(parseInt(balanceValue));
+        props.billingValue(parseInt(balanceValue));
+      }
+    } else if (parseInt(billingValue) > parseInt(balanceValue)) {
+      if (props.remainingBilling < balanceValue) {
+        setBillingValue(parseInt(props.remainingBilling));
+        props.billingValue(parseInt(props.remainingBilling));
+      } else {
+        setBillingValue(parseInt(balanceValue));
+        props.billingValue(parseInt(balanceValue));
+      }
+    } else {
+      setBillingValue(parseInt(billingValue));
+      props.billingValue(parseInt(billingValue));
+    }
+  }, [billingValue, balanceValue]);
+
   const openPublishDate = () => {
     setOpenModalPublishDate(true);
   };
@@ -63,8 +88,8 @@ const SfaAddTagihanCheque = props => {
   const deleteDataReference = () => {
     setIsDisable(false);
     setDataReference();
-    setIssuedDate(null)
-    setInvalidDate(null)
+    setIssuedDate(null);
+    setInvalidDate(null);
     props.referenceCode(null);
     props.issuedDate(null);
     props.dueDate(null);
@@ -79,12 +104,27 @@ const SfaAddTagihanCheque = props => {
   };
 
   const dataBillingValue = text => {
+    console.log(balanceValue, 'balance');
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)
     ) {
-      setBillingValue(parseInt(props.remainingBilling));
-      props.billingValue(parseInt(props.remainingBilling));
-    } else {
+      if (props.remainingBilling < balanceValue) {
+        setBillingValue(parseInt(props.remainingBilling));
+        props.billingValue(parseInt(props.remainingBilling));
+      } else {
+        setBillingValue(parseInt(balanceValue));
+        props.billingValue(parseInt(balanceValue));
+      }
+    } else if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(balanceValue)) {
+      if (props.remainingBilling < balanceValue) {
+        setBillingValue(parseInt(props.remainingBilling));
+        props.billingValue(parseInt(props.remainingBilling));
+      } else {
+        setBillingValue(parseInt(balanceValue));
+        props.billingValue(parseInt(balanceValue));
+      }
+    }
+    else {
       setBillingValue(parseInt(text.replace(/[Rp.]+/g, '')));
       props.billingValue(parseInt(text.replace(/[Rp.]+/g, '')));
     }
