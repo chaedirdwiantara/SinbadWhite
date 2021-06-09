@@ -26,7 +26,7 @@ import {
 import SfaEditCollectionCash from './SfaEditCollectionCash';
 import SfaEditCollectionTransfer from './SfaEditCollectionTransfer';
 import SfaEditCollectionPromo from './SfaEditCollectionPromo';
-import SfaEditCollectionCheckGiro from './SfaEditCollectionGCheckGiro';
+import SfaEditCollectionCheckGiro from './SfaEditCollectionCheckGiro';
 import {
   sfaEditCollectionProcess,
   sfaGetCollectionDetailProcess
