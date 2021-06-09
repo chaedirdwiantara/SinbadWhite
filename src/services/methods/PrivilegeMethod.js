@@ -1,5 +1,5 @@
 import ApiRest from '../apiRest';
-/** === GET PRIVILEGE === */
+// GET PRIVILEGE
 
 function getPrivileges({supplierId, userId}){
   return ApiRest({
