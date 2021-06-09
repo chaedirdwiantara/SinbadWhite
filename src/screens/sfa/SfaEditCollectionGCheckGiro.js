@@ -80,6 +80,13 @@ useEffect(() => {
   }
 }, [paidAmount, balanceValue]);
 
+useEffect(()=> {
+if (checkMaterai === false){
+  setDataStamp()
+  props.onChangeDataStamp()
+}
+}, [checkMaterai])
+
   const textBillingCash = text => {
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.data.outstanding)
@@ -413,7 +420,7 @@ useEffect(() => {
         {paymentCollectionMethod.stamp ? (
           props.isPrimary ? (
             <View style={{ marginTop: 16 }}>
-              <Text style={[Fonts.type10]}>'Nilai Materai'</Text>
+              <Text style={[Fonts.type10]}>Nilai Materai</Text>
               <View
                 style={{
                   flexDirection: 'row',
