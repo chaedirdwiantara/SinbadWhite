@@ -602,7 +602,7 @@ const SfaEditCollectionView = props => {
         <ModalBottomFailPayment
           open={openModalErrorEditCollection}
           onPress={() => setOpenModalErrorEditCollection(false)}
-          text={errorSfaEditCollection.message}
+          text={errorSfaEditCollection.data.errorMessage}
           buttonTitle={'Ubah Transaksi'}
           errorTittle={'Gagal Mengubah Transaksi'}
         />
