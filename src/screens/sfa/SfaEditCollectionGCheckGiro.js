@@ -59,7 +59,7 @@ const SfaEditCollectionCheckGiro = props => {
    */
 //function to make sure collection !> balance || colection !>outstanding
 useEffect(() => {
-  if (parseInt(paidAmount) > parseInt(props.data.outstanding + paidAmount)) {
+  if (parseInt(paidAmount) > parseInt(outstanding)) {
     if (outstanding< balanceValue) {
       setPaidAmount(parseInt(outstanding));
       props.onChangePaidAmount(parseInt(outstanding));
