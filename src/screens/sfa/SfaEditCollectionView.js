@@ -420,7 +420,7 @@ const SfaEditCollectionView = props => {
           >
             <Text style={Fonts.type17}>Sisa Tagihan</Text>
             <Text style={Fonts.type100}>
-              {MoneyFormatSpace( dataSfaGetCollectionDetail.outstanding)}
+              {MoneyFormatSpace( dataSfaGetCollectionDetail.outstanding +  dataSfaGetCollectionDetail.paymentCollection.paidAmount)}
             </Text>
           </View>
         </View>
@@ -602,7 +602,7 @@ const SfaEditCollectionView = props => {
         <ModalBottomFailPayment
           open={openModalErrorEditCollection}
           onPress={() => setOpenModalErrorEditCollection(false)}
-          text={errorSfaEditCollection.message}
+          text={errorSfaEditCollection.data.errorMessage}
           buttonTitle={'Ubah Transaksi'}
           errorTittle={'Gagal Mengubah Transaksi'}
         />
