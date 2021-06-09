@@ -1,6 +1,7 @@
 import ApiRest from '../apiRest';
 import ApiRestMap from '../apiRestMap';
 import { Store } from '../../state/Store';
+import { DEFAULT_PRIVILEGE } from '../../helpers/RoleBaseAccessControl';
 
 function getListAndSearch(data) {
   
@@ -223,7 +224,8 @@ export const GlobalMethod = {
   userSupplierMapping,
   userStoreId,
   addGaps,
-  uploadImage
+  uploadImage,
+  remappingPrivilege
 };
 
 /**

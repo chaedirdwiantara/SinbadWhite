@@ -66,7 +66,7 @@ class MerchantView extends Component {
       headerRight: () => (
         <TouchableOpacity
           style={{ marginRight: 16 }}
-          onPress={() => state.params.goToAddFunction()}
+          onPress={() => state.params?.goToAddFunction()}
         >
           <AntDesignIcon
             color={Color.mainColor}
