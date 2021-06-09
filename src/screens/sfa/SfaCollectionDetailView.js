@@ -5,7 +5,8 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  RefreshControl
 } from '../../library/reactPackage';
 
 import {
@@ -35,11 +36,11 @@ import {
   sfaGetCollectionLogProcess
 } from '../../state/actions';
 import { APPROVED, REJECTED, PENDING } from '../../constants/collectionConstants';
-
 import NavigationService from '../../navigation/NavigationService';
 
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
+  const [refreshing, setRefreshing] = useState(false)
   const {
     dataSfaGetDetail,
     dataSfaGetCollectionDetail,
@@ -60,6 +61,16 @@ const SfaCollectionDetailView = props => {
   const prevDataSfaDeleteCollectionRef = useRef(dataSfaDeleteCollection);
   const prevDataSfaGetCollectionLogRef = useRef(dataSfaGetCollectionLog);
   const prevDataSfaEditCollectionRef = useRef(dataSfaEditCollection);
+
+   /** === ON REFRESH === */
+   const onRefresh = () => {
+    getCollectionDetail()
+    /** SET PAGE REFRESH */
+    setRefreshing(true)
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 10);
+  };
 
   /**
    * *********************************
@@ -85,10 +96,14 @@ const SfaCollectionDetailView = props => {
   const prevDataSfaGetCollectionLog = prevDataSfaGetCollectionLogRef.current;
 
   useEffect(() => {
-    const paymentCollectionId =
-      props.navigation.state.params.paymentCollectionId;
-    dispatch(sfaGetCollectionDetailProcess(paymentCollectionId));
+ getCollectionDetail()
   }, []);
+
+  const getCollectionDetail = () => {
+    const paymentCollectionId =
+    props.navigation.state.params.paymentCollectionId;
+    dispatch(sfaGetCollectionDetailProcess(paymentCollectionId));
+  }
 
   const formatDate = date => {
     const local = toLocalTime(date);
@@ -465,7 +480,12 @@ const SfaCollectionDetailView = props => {
     return (
       <View style={{ flex: 1 }}>
         {dataSfaGetCollectionDetail && !loadingSfaGetCollectionDetail && !loadingSfaDeleteCollection ? (
-          <ScrollView style={{ flex: 1, height: '100%' }}>
+          <ScrollView  refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={()=>onRefresh()}
+            />
+          } style={{ flex: 1, height: '100%' }}>
             {renderFakturInfo()}
             {renderCollectionInfo()}
             {renderCollectionDetail()}
