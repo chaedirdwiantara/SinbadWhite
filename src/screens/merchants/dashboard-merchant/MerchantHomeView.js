@@ -148,7 +148,7 @@ class MerchantHomeView extends Component {
     this.props.merchantGetLogAllActivityProcessV2(
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
-    /** HIDE TASK BASE ON PRIVILEGE */
+    // HIDE TASK BASE ON PRIVILEGE
     const {checkIn, checkOut, order} = this.state.privileges || {}
     let newTask = this.state.task
     if(!checkIn?.status){ // same as (checkIn && !checkIn.status)
