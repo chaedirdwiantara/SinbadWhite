@@ -583,6 +583,7 @@ const SfaAddTagihanCheque = props => {
 
   const selectedReference = data => {
     setDataReference(data);
+    setBalanceValue(data.balance)
     setOpenModalReference(false);
     setIsDisable(true);
     props.referenceCode(data.referenceCode);
