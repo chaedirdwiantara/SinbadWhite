@@ -137,9 +137,11 @@ class JourneyView extends Component {
         });
         break;
       case 'new_merchant':
+        // VALIDATE SALES REP CAN ADD STORE OR NOT
         this.setState({ openModalAddMerchant: false });
         const portfolio = this.props.merchant.dataGetPortfolioV2
-        if(portfolio !== null && portfolio.length > 0){
+        const canCreateStore = this.props.privileges.data?.createStore?.status || false
+        if(portfolio !== null && canCreateStore){
           this.props.savePageAddMerchantFrom('JourneyView');
           setTimeout(() => {
             NavigationService.navigate('AddMerchantStep1');
@@ -338,8 +340,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ journey, user, merchant }) => {
-  return { journey, user, merchant };
+const mapStateToProps = ({ journey, user, merchant, privileges }) => {
+  return { journey, user, merchant, privileges };
 };
 
 const mapDispatchToProps = dispatch => {

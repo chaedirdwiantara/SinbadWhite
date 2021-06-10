@@ -66,7 +66,7 @@ class MerchantView extends Component {
       headerRight: () => (
         <TouchableOpacity
           style={{ marginRight: 16 }}
-          onPress={() => state.params.goToAddFunction()}
+          onPress={() => state.params?.goToAddFunction()}
         >
           <AntDesignIcon
             color={Color.mainColor}
@@ -125,8 +125,10 @@ class MerchantView extends Component {
   }
   /** HANDLE ADD BUTTON FROM HEADER */
   goToAdd = () => {
+    // ADD STORE VALIDATION
     const portfolio = this.props.merchant.dataGetPortfolioV2
-    if(portfolio !== null && portfolio.length > 0){
+    const canCreateStore = this.props.privileges.data?.createStore?.status || false
+    if(portfolio !== null && canCreateStore){
       this.props.savePageAddMerchantFrom('MerchantView');
       setTimeout(() => {
         NavigationService.navigate('AddMerchantStep1');
@@ -295,8 +297,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, merchant }) => {
-  return { user, merchant };
+const mapStateToProps = ({ user, merchant, privileges }) => {
+  return { user, merchant, privileges };
 };
 
 const mapDispatchToProps = dispatch => {

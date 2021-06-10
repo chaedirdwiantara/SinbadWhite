@@ -112,7 +112,8 @@ class MerchantHomeView extends Component {
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
         }
       ],
-      successSurveyList: false
+      successSurveyList: false,
+      privileges: this.props.privileges.data
     };
   }
   /**
@@ -151,6 +152,19 @@ class MerchantHomeView extends Component {
     this.props.merchantGetLogAllActivityProcessV2(
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
+    // HIDE TASK BASE ON PRIVILEGE
+    const {checkIn, checkOut, order} = this.state.privileges || {}
+    let newTask = this.state.task
+    if(!checkIn?.status){ // same as (checkIn && !checkIn.status)
+      newTask = newTask.filter(el => el.title !== 'Masuk')
+    }
+    if(!checkOut?.status){
+      newTask = newTask.filter(el => el.title !== 'Keluar')
+    }
+    if(!order?.status){
+      newTask = newTask.filter(el => el.title !== 'Order')
+    }
+    this.setState({task: newTask})
     /** FOR GET PORTFOLIO (FOR PAYLOAD CHECKOUT ORDER) */
     this.props.portfolioGetProcessV2();
   }
@@ -443,12 +457,12 @@ class MerchantHomeView extends Component {
           activity: 'check_in'
         });
         if (this.props.merchant.dataGetLogAllActivityV2) {
-          if (
-            _.isEmpty(this.props.merchant.surveyList.payload.data) ||
-            this.props.merchant.dataGetLogAllActivityV2.find(
-              item => item.activityName === 'toko_survey'
-            )
-          ) {
+          const haveSurvey = _.isEmpty(this.props.merchant.surveyList.payload.data)
+          const surveyHasDone = this.props.merchant.dataGetLogAllActivityV2.find(
+            item => item.activityName === 'toko_survey'
+          )
+          const {checkOut} = this.state.privileges
+          if (haveSurvey || surveyHasDone || checkOut?.status) {
             this.setState({ openModalCheckout: true });
           }
         }
@@ -1027,10 +1041,11 @@ class MerchantHomeView extends Component {
   }
   /** === RENDER CONTENT ITEM === */
   renderContentItem() {
+    const {order} = this.state.privileges
     return (
       <View>
         {/* {this.renderData()} */}
-        {this.renderLastOrder()}
+        {order?.status && this.renderLastOrder()}
         {this.renderTastList()}
         {/* {this.renderMerchantMenu()} */}
       </View>
@@ -1078,18 +1093,24 @@ class MerchantHomeView extends Component {
    * =====================
    */
   renderModalCheckout() {
+    const {order} = this.state.privileges
+    
     return this.state.openModalCheckout ? (
       <ModalBottomMerchantCheckout
         open={this.state.openModalCheckout}
         close={() => this.setState({ openModalCheckout: false })}
         onPress={
           () => {
-            this.setState({ checkNoOrder: true });
-            this.props.merchantGetLogPerActivityProcessV2({
-              journeyBookStoresId: this.props.merchant.selectedMerchant
-                .journeyBookStores.id,
-              activity: 'order'
-            });
+            if(order?.status){
+              this.setState({ checkNoOrder: true });
+              this.props.merchantGetLogPerActivityProcessV2({
+                journeyBookStoresId: this.props.merchant.selectedMerchant
+                  .journeyBookStores.id,
+                activity: 'order'
+              });
+            } else {
+              this.checkoutProcess()
+            }
           }
           // this.props.merchantPostActivityProcess({
           //   journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
@@ -1351,8 +1372,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, merchant, user, permanent }) => {
-  return { auth, merchant, user, permanent };
+const mapStateToProps = ({ auth, merchant, user, permanent, privileges }) => {
+  return { auth, merchant, user, permanent, privileges };
 };
 
 const mapDispatchToProps = dispatch => {
