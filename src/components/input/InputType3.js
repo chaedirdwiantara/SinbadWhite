@@ -30,6 +30,9 @@ class InputType3 extends Component {
   }
   /** === RENDER BAR === */
   inputText() {
+    let backgroundColor =  Color.fontBlack05;
+    if (this.props.backgroundColor) backgroundColor = this.props.backgroundColor;
+
     return (
       <View style={styles.boxInput}>
         <TextInput
@@ -41,11 +44,13 @@ class InputType3 extends Component {
           onChangeText={this.props.text}
           keyboardType={this.props.keyboardType}
           multiline={true}
+          maxLength={this.props.maxLength}
           numberOfLines={4}
           style={[
             Fonts.type24,
             styles.input,
             {
+              backgroundColor,
               textAlignVertical: 'top'
             }
           ]}
@@ -97,7 +102,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     paddingHorizontal: 8,
-    backgroundColor: Color.fontBlack05,
     paddingBottom: 8,
     borderColor: Color.fontBlack10
   },

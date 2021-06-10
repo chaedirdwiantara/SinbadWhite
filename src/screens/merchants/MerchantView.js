@@ -20,6 +20,7 @@ import {
   BackHandlerBackSpecific,
   StatusBarRedOP50,
   ButtonSingle,
+  ModalBottomErrorRespons,
   ModalBottomType3
 } from '../../library/component'
 import { Color } from '../../config'
@@ -40,6 +41,7 @@ class MerchantView extends Component {
       type: 'direct',
       showToast: false,
       notifToast: '',
+      openModalErrorGlobal: false,
       showModalError: false
     };
   }
@@ -115,6 +117,15 @@ class MerchantView extends Component {
         }, 3000);
       }
     }
+    /** ERROR GET LIST OF MERCHANT */
+    if (
+      prevProps.merchant.errorGetMerchantV2 !==
+      this.props.merchant.errorGetMerchantV2
+    ) {
+      if (this.props.merchant.errorGetMerchantV2 !== null) {
+        this.setState({ openModalErrorGlobal: true, });
+      }
+    }
   }
   /** ====== DID MOUNT FUNCTION ========== */
   /** NAVIGATION FUNCTION */
@@ -160,6 +171,15 @@ class MerchantView extends Component {
         type: data.data === 0 ? 'direct' : 'group'
       });
     }
+  }
+  /** FOR ERROR FUNCTION (FROM DID UPDATE) */
+  doError() {
+    /** Close all modal and open modal error respons */
+    this.setState({
+      openModalErrorGlobal: true,
+      showToast: false,
+      showModalError: false,
+    });
   }
   /** === CALL GET FUNCTION === */
   getMerchant(type, portfolioIndex, search) {
@@ -264,6 +284,18 @@ class MerchantView extends Component {
       </View>
     );
   }
+  /** RENDER MODAL ERROR RESPONSE */
+  renderModalErrorResponse() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={() => this.setState({ openModalErrorGlobal: false })}
+      />
+      ) : (
+        <View />
+      );
+    }
   /** === MAIN === */
   render() {
     return (
@@ -277,6 +309,7 @@ class MerchantView extends Component {
         {this.renderContent()}
         {this.renderToast()}
         {this.state.showModalError && this.renderModalError()}
+        {this.renderModalErrorResponse()}
       </SafeAreaView>
     );
   }
@@ -317,8 +350,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantView);
  * updatedFunction:
  * -> Refactoring Module Import
  * updatedBy: dyah
- * updatedDate: 25022021
+ * updatedDate: 09062021
  * updatedFunction:
- * -> update the props of merchant list.
+ * -> add modal error when failed get list of merchant.
  *
  */

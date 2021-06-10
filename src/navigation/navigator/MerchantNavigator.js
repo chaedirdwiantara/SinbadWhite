@@ -14,6 +14,7 @@ import AddMerchantStep4 from '../../screens/merchants/add-merchant/AddMerchantSt
 import MerchantHomeView from '../../screens/merchants/dashboard-merchant/MerchantHomeView';
 import MerchantCheckinView from '../../screens/merchants/dashboard-merchant/MerchantCheckinView';
 import MerchantNoOrderReason from '../../screens/merchants/dashboard-merchant/MerchantNoOrderReason';
+import MerchantNoOrderReasonDetail from '../../screens/merchants/dashboard-merchant/MerchantNoOrderReasonDetail';
 /** merchant detail */
 import MerchantDetailProfileView from '../../screens/merchants/details-merchant/MerchantDetailProfileView';
 import MerchantDetailAccountView from '../../screens/merchants/details-merchant/MerchantDetailAccountView';
@@ -254,18 +255,25 @@ const MerchantNavigator = {
   MerchantNoOrderReason: {
     screen: MerchantNoOrderReason,
     navigationOptions: {
-      headerTitle: 'Alasan Tidak ada Order',
+      headerTitle: 'Alasan Tidak Ada Order',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
-        {
-          textAlign: 'center',
-          flex: 1
-        }
       ],
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
       headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  MerchantNoOrderReasonDetail: {
+    screen: MerchantNoOrderReasonDetail,
+    navigationOptions: {
+      headerTitle: 'Detail Alasan',
+      headerTitleStyle: GlobalFont.textHeaderPage,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
       gesturesEnabled: false
     }
   },
