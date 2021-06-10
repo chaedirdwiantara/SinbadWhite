@@ -211,9 +211,7 @@ class HomeView extends Component {
   /** === PULL TO REFRESH === */
   _onRefresh() {
     this.setState({ refreshing: true }, () => {
-      if(this.props.privileges.data === null){
-        this.getPrivileges()
-      }
+      this.getPrivileges()
       this.getKpiData(this.state.tabValue)
     });
   }
