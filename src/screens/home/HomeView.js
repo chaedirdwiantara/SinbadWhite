@@ -155,6 +155,7 @@ class HomeView extends Component {
       fullName: this.props.user.fullName,
       imageUrl: this.props.user.imageUrl
     });
+    this.props.getSalesTeamProcess();
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
