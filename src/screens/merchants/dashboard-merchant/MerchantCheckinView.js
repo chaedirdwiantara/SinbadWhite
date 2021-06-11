@@ -64,11 +64,13 @@ class MerchantCheckinView extends Component {
       this.props.merchant.dataPostActivityV2
     ) {
       if (this.props.merchant.dataPostActivityV2 !== null) {
-        /** get log all activity */
-        this.props.merchantGetLogAllActivityProcessV2(
-          this.props.merchant.selectedMerchant.journeyBookStores.id
-        );
-        NavigationService.goBack(this.props.navigation.state.key);
+        if (this.props.merchant.dataPostActivityV2.activity === 'check_in'){
+          /** get log all activity */
+          this.props.merchantGetLogAllActivityProcessV2(
+            this.props.merchant.selectedMerchant.journeyBookStores.id
+          );
+          NavigationService.goBack(this.props.navigation.state.key);
+        }
       }
     }
   }
