@@ -2,7 +2,6 @@ import ApiRest from '../apiRest';
 import { GlobalMethod } from '../methods/GlobalMethod';
 
 function getPdp(data) {
-  console.log(data)
   return ApiRest({
     path: `catalogues?$skip=${data.page}&$limit=10&supplierIds=${JSON.stringify(
       GlobalMethod.userSupplierMapping()

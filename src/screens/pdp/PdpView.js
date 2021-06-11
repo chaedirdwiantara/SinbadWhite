@@ -19,6 +19,7 @@ import {
   ToastType1,
   SelectedMerchantName,
   ModalConfirmation,
+  ModalBottomErrorRespons,
   ModalBottomSkuNotAvailable
 } from '../../library/component';
 import { Fonts } from '../../helpers';
@@ -41,6 +42,7 @@ class PdpView extends Component {
       openModalSkuNotAvailable: false,
       openModalSort: false,
       openModalConfirmRemoveCart: false,
+      openModalErrorGlobal: false,
       /** data */
       layout: 'grid',
       addProductNotif: false,
@@ -88,6 +90,9 @@ class PdpView extends Component {
   componentDidMount() {
     this.props.pdpGetReset();
     this.getPdp({ page: 0, loading: true });
+    if (this.props.profile.errorGetSalesTeam !== null) {
+      this.doError();
+    }
   }
   /** === DID UPDATE */
   componentDidUpdate(prevState) {
@@ -196,6 +201,19 @@ class PdpView extends Component {
         break;
       default:
         break;
+    }
+  }
+  /** FOR ERROR FUNCTION (FROM DID UPDATE) */
+  doError() {
+    /** Close all modal and open modal error respons */
+    if (!this.state.openModalErrorGlobal){
+      this.setState({
+        openModalErrorGlobal: true,
+        openModalOrder: false,
+        openModalSkuNotAvailable: false,
+        openModalSort: false,
+        openModalConfirmRemoveCart: false,
+      });
     }
   }
   /** === FETCH DATA (THIS FOR ALL FITLER) === */
@@ -359,6 +377,21 @@ class PdpView extends Component {
       <View />
     );
   }
+  /** MODAL ERROR RESPONS */
+  renderModalErrorRespons() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        open={this.state.openModalErrorGlobal}
+        onPress={() => {
+          this.setState({ openModalErrorGlobal: false });
+          this.props.getSalesTeamProcess();
+          NavigationService.navigate('MerchantHomeView');
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === MAIN === */
   render() {
     return (
@@ -375,6 +408,7 @@ class PdpView extends Component {
         {this.renderModalSort()}
         {/* modal */}
         {this.renderModalSkuNotAvailable()}
+        {this.renderModalErrorRespons()}
       </SafeAreaView>
     );
   }
@@ -414,5 +448,6 @@ export default connect(
  * updatedDate: 11062021
  * updatedFunction:
  * -> add parameter invoiceGroupIds (pdpGetProcess)
+ * -> add handle error when failed get sales team.
  *
  */

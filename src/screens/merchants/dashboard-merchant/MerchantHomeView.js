@@ -153,6 +153,9 @@ class MerchantHomeView extends Component {
     );
     /** FOR GET PORTFOLIO (FOR PAYLOAD CHECKOUT ORDER) */
     this.props.portfolioGetProcessV2();
+    if (this.props.profile.errorGetSalesTeam) {
+      this.props.getSalesTeamProcess();
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -1366,8 +1369,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, merchant, user, permanent }) => {
-  return { auth, merchant, user, permanent };
+const mapStateToProps = ({ auth, merchant, user, permanent, profile }) => {
+  return { auth, merchant, user, permanent, profile };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -1384,7 +1387,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 09062021
+ * updatedDate: 11062021
  * updatedFunction:
- * -> add modal error when failed get last order & log all activity.
+ * -> add action get sales team to get catalogues.
  */
