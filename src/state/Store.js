@@ -20,9 +20,9 @@ const sagaMiddleware = createSagaMiddleware();
 
 middleware.push(sagaMiddleware);
 
-if (__DEV__) {
-  middleware.push(createLogger());
-}
+// if (__DEV__) {
+//   middleware.push(createLogger());
+// }
 
 const reducers = persistCombineReducers(config, rootReducers);
 const enhancers = [applyMiddleware(...middleware)];

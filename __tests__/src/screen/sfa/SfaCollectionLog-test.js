@@ -14,54 +14,88 @@ describe('SFA COLLECTION', function() {
     const navigationMock = { state: { params: { section: "payment" } } };
 
     const mockSfaState = {
-        history: {
-            loadingDetailHistory: false,
-            dataGetPaymentStatus: null,
-            dataDetailHistory: {
-                billing: {
-                    paymentChannelId : 2,
-                    totalFeeDeduct: 4500,
-                    totalPayment: 288868,
-                },
-                paymentType: {
-                    name: "Bayar Sekarang"
-                },
-                paymentChannel: {
-                    name: "Bca Virtual Account",
-                    description: [
-                        {
-                            name: "ATM BCA",
-                            instruction: "<ol><li>Masukkan Kartu ATM BCA &amp; Pin Anda</li><li>Pilih menu Transaksi Lainnya - Transfer - Rekening BCA Virtual Account</li><li>Masukkan No. Virtual Account&nbsp;</span><span style=font-size:10pt;font-family:Arial;font-style:normal;color:#ff0000;>[<span style=color: rgb(255, 0, 0); font-family: Arial; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;>07773183060</span>]</span><span style=font-size:10pt;font-family:Arial;font-style:normal;></li><li>Pastikan detil pembayaran Anda sudah sesuai</li><li>Masukkan jumlah Transfer sesuai dengan Jumlah yang harus dibayar</li><li>Ikuti instruksi untuk menyelesaikan transaksi</li><li>Simpan struk transaksi sebagai bukti pembayaran Anda</li></ol>"
-                        },
-                        {
-                            name: "m-BCA (BCA Mobile)",
-                            instruction: "<ol><li>Log in pada aplikasi BCA Mobile</li><li>Pilih menu m-BCA dan masukkan kode akses Anda</li><li>Pilih m-Transfer - BCA Virtual Account</li><li>Masukkan No. Virtual Account&nbsp;</span><span style=font-size:10pt;font-family:Arial;font-style:normal;color:#ff0000;>[07773183060]</span><span style=font-size:10pt;font-family:Arial;font-style:normal;></li><li>Masukkan pin m-BCA Anda</li><li>Simpan bukti pembayaran Anda</li></ol>"
-                        },
-                        {
-                            name: "Internet Banking BCA",
-                            instruction: "<ol><li>Login di halaman Internet Banking BCA (</span><a href=https://klikbca.com/><span style=font-size:10pt;font-family:Arial;font-style:normal;color:#4285f4;>https://klikbca.com/</span></a><span style=font-size:10pt;font-family:Arial;font-style:normal;>)</li><li>Pilih Transfer Dana</li><li>Masukkan No. Virtual Account&nbsp;</span><span style=font-size:10pt;font-family:Arial;font-style:normal;color:#ff0000;>[<span style=color: rgb(255, 0, 0); font-family: Arial; font-size: 13.3333px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;>07773183060</span>]</span><span style=font-size:10pt;font-family:Arial;font-style:normal;></li><li>Pastikan detil pembayaran Anda sudah sesuai</li><li>masukkan mToken</li><li>Simpan bukti pembayaran Anda</li></ol>"
-                        }
-                    ],
-                },
-                order: {
-                    orderVia: "sinbadApp"
-                },
-                voucherList: [
-                    {voucherValue: '10000', voucherName: "testVoucher", voucherQty: 0, catalogueName: "testCatalogue"}
-                ],
-                promoList: [
-                    {promoValue: '10000', promoName: "testPromo", promoQty: 0, catalogueName: "testCatalogue"}
-                ],
-                order: {
-                    store: {
-                        "address": "Jalan Trogong",
-                    }
-                },
-                parcelGrossPrice: 284368,
-                parcelTaxes: 28436,
-            },
-            errorHistoryDetail: null,
+        sfa: {
+          loadingSfaGetCollectionLog: false,
+          dataSfaGetCollectionLog: {
+            data : [
+              {
+                amount: 1000,
+                createdAt: "2021-06-10 05:59:57",
+                id: 155,
+                paymentCollectionMethodId: 119,
+                paymentCollectionMethodName: "Cek",
+                salesName: "FAKE Febrianka",
+                status: "pending"
+              },
+              {
+
+              }
+            ],
+            meta : {
+              "limit": 20,
+              "orderParcelId": 1079858,
+              "skip": 0,
+              "storeId": 224590,
+              "total": 19
+            }
+          },
+          errorSfaGetCollectionLog: null
         },
+        merchant: {
+          address: "jalan bendungan hilir IX",
+          externalId: "LIN001",
+          id: 159228,
+          journeyBookStores: {
+            createdAt: "2021-06-11T08:54:47.351331+07:00",
+            deletedAt: null,
+            externalStoreId: "LIN001",
+            id: 351,
+            inStore: false,
+            journeyBookId: 126,
+            latitudeCheckIn: 0,
+            latitudeCheckOut: 0,
+            longitudeCheckIn: 0,
+            longitudeCheckOut: 0,
+            noOrderReason: "",
+            noOrderReasonId: 0,
+            noOrderReasonNote: "",
+            orderStatus: false,
+            permanentJourneyPlanId: 0,
+            portfolioId: 22,
+            route: 0,
+            storeId: 224590,
+            storeName: "TOKOKU",
+            typeOfStore: "exist_store",
+            updatedAt: "2021-06-11T10:00:12.864236+07:00",
+            visitStatus: false
+          },
+          latitude: -6.255109786987305,
+          longitude: 106.80799865722656,
+          name: "TOKOKU",
+          ownerMobilePhoneNo: "081718843601",
+          storeCode: "SNB-STORE-224590-R1",
+          storeId: "224590",
+          storeName: "TOKOKU",
+          supplierId: 1,
+          urbans: {
+            city: "JAKARTA PUSAT",
+            createdAt: "2019-12-10T13:41:13.417445+07:00",
+            deletedAt: null,
+            district: "TANAH ABANG",
+            id: 25656,
+            province: {
+              id: 31, 
+              createdAt: "2019-12-10T13:40:28.651924+07:00", 
+              updatedAt: "2019-12-10T13:40:28.651924+07:00", 
+              deletedAt: null, 
+              name: "DAERAH KHUSUS IBUKOTA JAKARTA"
+            },
+            provinceId: 31,
+            updatedAt: "2019-12-10T13:41:13.417445+07:00",
+            urban: "BENDUNGAN HILIR",
+            zipCode: "10210"
+          }
+        }
     };
 
     const factoryMockStore = attr =>
@@ -70,12 +104,12 @@ describe('SFA COLLECTION', function() {
             ...attr
     });
 
-  // If click history list navigate to history detail view
-  it('SHOW HISTORY DETAIL VIEW', () => {
+  // show approval status in collection log
+  it('SHOW APPROVAL STATUS', () => {
     const store = factoryMockStore({});
     const component = TestRenderer.create(
       <Provider store={store}>
-        <HistoryDetailView navigation={navigationMock} />
+        <SfaCollectionLog />
       </Provider>
     );
     const result = component.root.findAllByType(HistoryDetailView);
@@ -85,16 +119,16 @@ describe('SFA COLLECTION', function() {
   });
 
   // cek layanan pembayaran if using Bca Virtual Account
-  it('Cek layanan pembayaran', () => {
-    const store = factoryMockStore({});
-    const component = TestRenderer.create(
-      <Provider store={store}>
-        <HistoryDetailPaymentInformation data={mockSfaState.history.dataDetailHistory} />
-      </Provider>
-    );
-    const container = component.root.findAllByType(View)[0];
-    expect(
-      result
-    ).toBeDefined();
-  });  
+  // it('Cek layanan pembayaran', () => {
+  //   const store = factoryMockStore({});
+  //   const component = TestRenderer.create(
+  //     <Provider store={store}>
+  //       <HistoryDetailPaymentInformation data={mockSfaState.history.dataDetailHistory} />
+  //     </Provider>
+  //   );
+  //   const container = component.root.findAllByType(View)[0];
+  //   expect(
+  //     result
+  //   ).toBeDefined();
+  // });  
 });
