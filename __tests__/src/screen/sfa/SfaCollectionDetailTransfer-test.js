@@ -3,8 +3,7 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import TestRenderer from 'react-test-renderer';
 import { View, TouchableOpacity, Text, FlatList, SafeAreaView } from 'react-native';
-import SfaCollectionDetailView from '../../../../src/screens/sfa/SfaCollectionDetailView';
-import MoneyFormat from '../../../../src/helpers/NumberFormater'
+import SfaCollectionDetailTransfer from '../../../../src/screens/sfa/SfaCollectionDetailTransfer';
 jest.useFakeTimers();
 
 const middlewares = [];
@@ -112,7 +111,7 @@ describe('SFA COLLECTION', function() {
                     dueDate: "2021-06-22 00:00:00",
                     id: 125,
                     image: null,
-                    paymentCollectionType: {id: 2, name: "Cek", code: "check"},
+                    paymentCollectionType: {id: 2, name: "Transfer", code: "transfer"},
                     principal: null,
                     promoNo: null,
                     reference: "testjumat",
@@ -186,14 +185,14 @@ describe('SFA COLLECTION', function() {
     });
 
   // show data detail collection
-  it('SHOW COLLECTION DETAIL DATA', () => {
+  it('SHOW DATA DETAIL TO DETAIL TRANSFER', () => {
     const store = factoryMockStore({});
     const component = TestRenderer.create(
       <Provider store={store}>
-        <SfaCollectionDetailView />
+        <SfaCollectionDetailTransfer data={mockSfaState.sfa.dataSfaGetCollectionDetail}/>
       </Provider>
     );
-    const result = component.root.findAllByType(SfaCollectionDetailView);
+    const result = component.root.findAllByType(SfaCollectionDetailTransfer);
 
     expect(
       result
