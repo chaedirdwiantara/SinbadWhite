@@ -200,11 +200,13 @@ class PdpView extends Component {
   }
   /** === FETCH DATA (THIS FOR ALL FITLER) === */
   getPdp(data) {
+    const { dataSalesTeam } = this.props.profile
     this.props.pdpGetProcess({
       page: data.page,
       loading: data.loading,
       sort: data.sort !== undefined ? data.sort : this.state.sort,
       sortBy: data.sortBy !== undefined ? data.sortBy : this.state.sortBy,
+      invoiceGroupIds: dataSalesTeam ? dataSalesTeam[0].salesTeamInvoice.map(item => item.invoiceId) : [],
       search: this.props.global.search
     });
   }
@@ -388,8 +390,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ pdp, user, global, merchant, oms }) => {
-  return { pdp, user, global, merchant, oms };
+const mapStateToProps = ({ pdp, user, global, merchant, oms, profile }) => {
+  return { pdp, user, global, merchant, oms, profile };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -408,9 +410,9 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
+ * updatedBy: dyah
+ * updatedDate: 11062021
  * updatedFunction:
- * -> Refactoring Module Import
+ * -> add parameter invoiceGroupIds (pdpGetProcess)
  *
  */

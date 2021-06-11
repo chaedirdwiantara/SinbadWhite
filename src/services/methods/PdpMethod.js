@@ -2,12 +2,13 @@ import ApiRest from '../apiRest';
 import { GlobalMethod } from '../methods/GlobalMethod';
 
 function getPdp(data) {
+  console.log(data)
   return ApiRest({
     path: `catalogues?$skip=${data.page}&$limit=10&supplierIds=${JSON.stringify(
       GlobalMethod.userSupplierMapping()
     )}&searchName=${data.search}&status=active&sort=${data.sort}&sortby=${
       data.sortBy
-    }&storeId=${GlobalMethod.merchantStoreId()}`,
+    }&storeId=${GlobalMethod.merchantStoreId()}&invoiceGroupIds=${JSON.stringify(data.invoiceGroupIds)}`,
     method: 'GET'
   });
 }
@@ -18,7 +19,7 @@ function getSearchPdp(data) {
       GlobalMethod.userSupplierMapping()
     )}&searchName=${data.search}&status=active&sort=${data.sort}&sortby=${
       data.sortBy
-    }&storeId=${GlobalMethod.merchantStoreId()}`,
+    }&storeId=${GlobalMethod.merchantStoreId()}&invoiceGroupIds=${JSON.stringify(data.invoiceGroupIds)}`,
     method: 'GET'
   });
 }
@@ -42,8 +43,8 @@ export const PdpMethod = {
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: tatas
- * updatedDate: 06072020
+ * updatedBy: dyah
+ * updatedDate: 11062021
  * updatedFunction:
- * -> Change global method
+ * -> add parameter invoiceGroupIds (pdpGetProcess)
  */
