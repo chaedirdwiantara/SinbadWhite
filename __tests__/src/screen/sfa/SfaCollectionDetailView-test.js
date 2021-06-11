@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import TestRenderer from 'react-test-renderer';
 import { View, TouchableOpacity, Text, FlatList, SafeAreaView } from 'react-native';
-import SfaCollectionLog from '../../../../src/screens/sfa/SfaCollectionLog';
+import SfaCollectionDetailView from '../../../../src/screens/sfa/SfaCollectionDetailView';
 import MoneyFormat from '../../../../src/helpers/NumberFormater'
 jest.useFakeTimers();
 
@@ -45,7 +45,82 @@ describe('SFA COLLECTION', function() {
               "total": 19
             }
           },
-          errorSfaGetCollectionLog: null
+          errorSfaGetCollectionLog: null,
+          dataSfaGetDetail : {
+              data: {
+                collections: [
+                    {
+                        name: "Tunai",
+                        value: 5000
+                    },
+                    {
+                        name: "Cek",
+                        value: 612000
+                    },
+                    {
+                        name: "Giro",
+                        value: 55000
+                    },
+                    {
+                        name: "Transfer",
+                        value: 65000
+                    },
+                    {
+                        name: "Promo",
+                        value: 53000
+                    }
+                ],
+                id: 1079858,
+                invoiceGroupName: "COMBINE",
+                isPaid: false,
+                orderCode: "S0100042235001077030",
+                orderRef: null,
+                parcelGrossPrice: 3083200,
+                parcelPromo: 1000,
+                parcelQty: 200,
+                parcelTaxes: 308220,
+                promoList: [
+                    {
+                        catalogueName: null,
+                        catalogueimagesurl: null,
+                        promoId: "600",
+                        promoName: "teestflexi11",
+                        promoQty: null,
+                        promoValue: 1000
+                    },
+                ],
+                remainingBilling: 2578420,
+                totalBilling: 3390420,
+                totalCollection: 823000,
+                totalInStorePayment: 0
+              }
+          },
+          dataSfaGetCollectionDetail : {
+            isEditable: true,
+            outstanding: 2578420,
+            paymentCollection: {
+                id: 175,
+                isPrimary: true,
+                paidAmount: 40000,
+                paymentCollectionMethod: {
+                    amount: 300000,
+                    approvalStatus: "pending",
+                    balance: 260000,
+                    bankFrom: {id: 1, name: "BCA", displayName: "Bank BCA"},
+                    bankToAccount: null,
+                    date: "2021-06-11 00:00:00",
+                    dueDate: "2021-06-22 00:00:00",
+                    id: 125,
+                    image: null,
+                    paymentCollectionType: {id: 2, name: "Cek", code: "check"},
+                    principal: null,
+                    promoNo: null,
+                    reference: "testjumat",
+                    stamp: null
+                }
+
+            }
+          },
         },
         merchant: {
           address: "jalan bendungan hilir IX",
@@ -110,30 +185,17 @@ describe('SFA COLLECTION', function() {
             ...attr
     });
 
-  // show approval status in collection log
+  // show data detail collection
   it('SHOW COLLECTION LOG', () => {
     const store = factoryMockStore({});
     const component = TestRenderer.create(
       <Provider store={store}>
-        <SfaCollectionLog MoneyFormat />
+        <SfaCollectionDetailView />
       </Provider>
     );
-    const result = component.root.findAllByType(SfaCollectionLog);
+    const result = component.root.findAllByType(Text)[1].props.children;
+    console.log('res:', result);
 
-    expect(
-      result
-    ).toBeDefined();
-  });
-
-  // show approval status in collection log
-  it('SHOW APPROVAL STATUS IN COLLECTION LOG', () => {
-    const store = factoryMockStore({});
-    const component = TestRenderer.create(
-      <Provider store={store}>
-        <SfaCollectionLog MoneyFormat />
-      </Provider>
-    );
-    const result = component.root.findAllByType(FlatList);
     expect(
       result
     ).toBeDefined();
