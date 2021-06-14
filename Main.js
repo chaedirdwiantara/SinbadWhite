@@ -2,18 +2,18 @@ import { React, Component } from './src/library/reactPackage';
 import { Provider, PersistGate } from './src/library/thirdPartyPackage';
 import Navigator from './src/navigation';
 import { Store, Persistor } from './src/state/Store';
-import { ErrorBoundary } from './src/library/component';
+import SentryCore from './src/screens/global/SentryCore';
 
 class Main extends Component {
   render() {
     return (
-      <Provider store={Store}>
-        <PersistGate persistor={Persistor} loading={null}>
-          <ErrorBoundary>
+      <SentryCore>
+        <Provider store={Store}>
+          <PersistGate persistor={Persistor} loading={null}>
             <Navigator />
-          </ErrorBoundary>
-        </PersistGate>
-      </Provider>
+          </PersistGate>
+        </Provider>
+      </SentryCore>
     );
   }
 }
