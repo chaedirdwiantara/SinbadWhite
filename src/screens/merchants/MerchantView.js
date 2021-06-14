@@ -128,7 +128,7 @@ class MerchantView extends Component {
     // ADD STORE VALIDATION
     const portfolio = this.props.merchant.dataGetPortfolioV2
     const canCreateStore = this.props.privileges.data?.createStore?.status || false
-    if(portfolio !== null && canCreateStore){
+    if(portfolio !== null && portfolio.length > 0 && canCreateStore){
       this.props.savePageAddMerchantFrom('MerchantView');
       setTimeout(() => {
         NavigationService.navigate('AddMerchantStep1');
