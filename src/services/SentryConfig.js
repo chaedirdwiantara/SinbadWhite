@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react-native';
-import SENTRY_DSN from '@env';
+import { SENTRY_DSN } from '@env';
 
 const SentryConfig = () => {
   return Sentry.init({
