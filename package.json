@@ -17,7 +17,7 @@
     "@react-native-community/image-editor": "git@github.com:Sinbad-B2B-Platform/react-native-image-editor.git#2.3.1",
     "@react-native-community/progress-bar-android": "1.0.3",
     "@react-native-community/progress-view": "1.2.2",
-    "@sentry/react-native": "2.4.3",
+    "@sentry/react-native": "2.5.0",
     "lodash": "4.17.20",
     "moment": "2.27.0",
     "numeral": "2.0.6",
