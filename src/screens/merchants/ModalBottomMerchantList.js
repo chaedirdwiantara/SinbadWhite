@@ -20,6 +20,7 @@ import {
   SearchBarType1,
   TagListType1,
   SkeletonType2,
+  ModalBottomErrorRespons,
   ButtonSingle
 } from '../../library/component'
 import { Color } from '../../config'
@@ -33,6 +34,7 @@ class ModalBottomMerchantList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      openModalErrorGlobal: false,
       search: '',
       portfolio: 0,
       heightList: 0.93 * height,
@@ -61,6 +63,15 @@ class ModalBottomMerchantList extends Component {
         this.props.merchant.dataGetPortfolioV2.length > 0
       ) {
         this.getMerchant('direct', 0, '');
+      }
+    }
+    /** ERROR GET LIST OF MERCHANT */
+     if (
+      prevProps.merchant.errorGetMerchantV2 !==
+      this.props.merchant.errorGetMerchantV2
+    ) {
+      if (this.props.merchant.errorGetMerchantV2 !== null) {
+        this.setState({ openModalErrorGlobal: true, });
       }
     }
   }
@@ -136,6 +147,7 @@ class ModalBottomMerchantList extends Component {
           10
         ),
         storeId: parseInt(data.data, 10),
+        externalStoreId: data.item.externalId,
         storeName: data.item.name
         // journeyPlanId: parseInt(
         //   this.props.journey.dataGetJourneyPlan[0].journeyPlanId,
@@ -285,12 +297,25 @@ class ModalBottomMerchantList extends Component {
       </Modal>
     );
   }
+  /** RENDER MODAL ERROR RESPONSE */
+  renderModalErrorResponse() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={() => this.setState({ openModalErrorGlobal: false })}
+      />
+      ) : (
+        <View />
+      );
+    }
   /** === MAIN === */
   render() {
     return (
       <View>
         <StatusBarBlackOP40 />
         {this.renderContent()}
+        {this.renderModalErrorResponse()}
       </View>
     );
   }
@@ -348,21 +373,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
- * updatedFunction:
- * -> Refactoring Module Import
  * updatedBy: dyah
- * updatedDate: 24022021
+ * updatedDate: 09062021
  * updatedFunction:
- * -> update the props of portfolio.
- * -> Update function addJourneyPlan and the props when saving merchant to journey plan.
- * updatedBy: dyah
- * updatedDate: 0803021
- * updatedFunction:
- * -> update the props of merchant list.
- * updatedBy: dyah
- * updatedDate: 0903021
- * updatedFunction:
- * -> add parameter storeName when save merchant to journey plan.
+ * -> add modal error when failed get list of merchant.
  */
