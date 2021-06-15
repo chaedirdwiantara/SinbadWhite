@@ -119,6 +119,9 @@ class MerchantNoOrderReason extends Component {
    */
   /** RENDER CONTENT ITEM */
   renderContentItem(item, index) {
+    let checked = false;
+    if (this.state.selectedReason === item.id) checked = true;
+
     return (
       <TouchableOpacity
         key={index}
@@ -127,46 +130,52 @@ class MerchantNoOrderReason extends Component {
           this.selectReason(item.id);
         }}
       >
-        <View style={styles.boxContentItem}>
+        <View style={[
+            styles.boxContentItem, 
+            { borderColor: checked ? Color.fontRed10 : Color.fontWhite }
+          ]}>
           <View style={{ flex: 1 }}>
-            <Text style={Fonts.type8}>{item.reason}</Text>
+            <Text style={checked ? Fonts.type8 : Fonts.type9}>{item.reason}</Text>
           </View>
           <View style={styles.boxIconRight}>
-            {this.state.selectedReason === item.id ? (
-              <MaterialIcon
-                name="check-circle"
-                color={Color.mainColor}
-                size={24}
-              />
-            ) : (
-              <View style={styles.circleEmptyCheck} />
-            )}
+            <View style={[styles.circleEmptyCheck, { borderColor: checked ? Color.mainColor : Color.fontBlack40 }]}>
+              {checked ? (<View style={styles.circleChecked}/>) : null}
+            </View>
           </View>
         </View>
-        <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
       </TouchableOpacity>
     );
   }
   /** RENDER CONTENT */
   renderContent() {
-    return this.props.merchant.dataGetNoOrderReason.map((item, index) => {
-      return this.renderContentItem(item, index);
-    });
+    return (
+      <View style={styles.contentContainer}> 
+        {this.props.merchant.dataGetNoOrderReason.map((item, index) => {
+            return this.renderContentItem(item, index);
+          })
+        }
+      </View>
+    )
   }
   /** RENDER CONTENT REASON */
   renderContentReason() {
     return (
-      <View style={{ marginTop: 20 }}>
+      <View style={styles.contentReasonContainer}>
         <InputType3
-          title={'*Alasan'}
+          title={'Catatan'}
           editable={!this.state.viewOnly}
           value={this.state.reason}
-          placeholder={'Masukan alasan Anda'}
+          placeholder={'Silahkan isi catatan untuk alasan yang dipilih'}
           keyboardType={'default'}
           text={text => this.setState({ reason: text })}
           error={false}
           errorText={''}
+          maxLength={140}
+          backgroundColor={Color.backgroundWhite}
         />
+        <View style={styles.maxCharacters}>
+          <Text style={Fonts.type12}>{`${this.state.reason.length}/140 karakter`}</Text>
+        </View>
       </View>
     );
   }
@@ -191,7 +200,7 @@ class MerchantNoOrderReason extends Component {
           this.state.reason === '' ||
           this.props.merchant.loadingPostActivity
         }
-        title={'Keluar Toko'}
+        title={'Simpan Alasan'}
         loading={this.props.merchant.loadingPostActivity}
         borderRadius={4}
         onPress={() => this.checkOut()}
@@ -233,23 +242,48 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Color.backgroundWhite
   },
+  contentContainer: {
+    backgroundColor: Color.fontBlack05, 
+    paddingVertical: 16,
+  },
   boxContentItem: {
+    marginHorizontal: 16,
+    marginBottom: 8,
+    borderRadius: 8,
+    borderWidth: 1,
     paddingHorizontal: 20,
     paddingVertical: 16,
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: Color.backgroundWhite,
     justifyContent: 'space-between'
   },
   boxIconRight: {
     position: 'absolute',
     right: 20
   },
+  circleChecked: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: Color.mainColor,
+  },
   circleEmptyCheck: {
     width: 22,
     height: 22,
     borderRadius: 22,
-    backgroundColor: Color.fontBlack40
-  }
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  contentReasonContainer: {
+    marginTop: 20,
+  },
+  maxCharacters: {
+    paddingHorizontal: 16, 
+    flexDirection: 'row', 
+    justifyContent: 'flex-end',
+  },
 });
 
 const mapStateToProps = ({ merchant }) => {
@@ -288,4 +322,8 @@ export default connect(
  * updatedFunction:
  * -> Update the props of post activity.
  * -> Update payload noOrderReasonNote.
+ * updatedBy: dyah
+ * updatedDate: 31052021
+ * updatedFunction:
+ * -> New UI for no order reason screen.
  */

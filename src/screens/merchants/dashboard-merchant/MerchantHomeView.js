@@ -112,7 +112,8 @@ class MerchantHomeView extends Component {
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
         }
       ],
-      successSurveyList: false
+      successSurveyList: false,
+      privileges: this.props.privileges.data
     };
   }
   /**
@@ -151,6 +152,19 @@ class MerchantHomeView extends Component {
     this.props.merchantGetLogAllActivityProcessV2(
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
+    // HIDE TASK BASE ON PRIVILEGE
+    const {checkIn, checkOut, order} = this.state.privileges || {}
+    let newTask = this.state.task
+    if(!checkIn?.status){ // same as (checkIn && !checkIn.status)
+      newTask = newTask.filter(el => el.title !== 'Masuk')
+    }
+    if(!checkOut?.status){
+      newTask = newTask.filter(el => el.title !== 'Keluar')
+    }
+    if(!order?.status){
+      newTask = newTask.filter(el => el.title !== 'Order')
+    }
+    this.setState({task: newTask})
     /** FOR GET PORTFOLIO (FOR PAYLOAD CHECKOUT ORDER) */
     this.props.portfolioGetProcessV2();
   }
@@ -362,6 +376,15 @@ class MerchantHomeView extends Component {
         this.doError();
       }
     }
+    /** error get last order */
+    if (
+      prevProps.merchant.errorGetMerchantLastOrder !==
+      this.props.merchant.errorGetMerchantLastOrder
+    ) {
+      if (this.props.merchant.errorGetMerchantLastOrder !== null) {
+        this.doError();
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -412,12 +435,14 @@ class MerchantHomeView extends Component {
   /** FOR ERROR FUNCTION (FROM DID UPDATE) */
   doError() {
     /** Close all modal and open modal error respons */
-    this.setState({
-      openModalErrorGlobal: true,
-      openModalCheckout: false,
-      openModalConfirmNoOrder: false,
-      loadingPostForCheckoutNoOrder: false
-    });
+    if (!this.state.openModalErrorGlobal){
+      this.setState({
+        openModalErrorGlobal: true,
+        openModalCheckout: false,
+        openModalConfirmNoOrder: false,
+        loadingPostForCheckoutNoOrder: false
+      });
+    }
   }
   /** === GO TO (MENU PRESS) */
   goTo(page) {
@@ -443,12 +468,12 @@ class MerchantHomeView extends Component {
           activity: 'check_in'
         });
         if (this.props.merchant.dataGetLogAllActivityV2) {
-          if (
-            _.isEmpty(this.props.merchant.surveyList.payload.data) ||
-            this.props.merchant.dataGetLogAllActivityV2.find(
-              item => item.activityName === 'toko_survey'
-            )
-          ) {
+          const haveSurvey = _.isEmpty(this.props.merchant.surveyList.payload.data)
+          const surveyHasDone = this.props.merchant.dataGetLogAllActivityV2.find(
+            item => item.activityName === 'toko_survey'
+          )
+          const {checkOut} = this.state.privileges
+          if (haveSurvey || surveyHasDone || checkOut?.status) {
             this.setState({ openModalCheckout: true });
           }
         }
@@ -494,7 +519,7 @@ class MerchantHomeView extends Component {
 
   /** CUSTOM NAVIGATE VIEW NO ORDER REASON PAGE */
   navigateViewNoOrderReasonPage = data => {
-    NavigationService.navigate('MerchantNoOrderReason', {
+    NavigationService.navigate('MerchantNoOrderReasonDetail', {
       noOrderReason: data
     });
   };
@@ -664,7 +689,7 @@ class MerchantHomeView extends Component {
 
   renderLastOrder() {
     const order = this.props.merchant.dataGetMerchantLastOrder;
-    return order !== undefined ? (
+    return order && order.orderParcels && !_.isEmpty(order.orderParcels) ? (
       <View style={styles.lastOrderContainer}>
         <View style={[styles.cardLastOrder, GlobalStyle.shadowForBox5]}>
           <View
@@ -826,7 +851,7 @@ class MerchantHomeView extends Component {
                   <View>
                     {taskList ? (
                       taskList.activityName === ACTIVITY_JOURNEY_PLAN_ORDER &&
-                      journeyBookStores.noOrderReasonNote.length !== 0 ? (
+                      !journeyBookStores.orderStatus && journeyBookStores.noOrderReasonNote.length !== 0 ? (
                         <MaterialIcon
                           // name="check-circle"
                           // name="timelapse"
@@ -865,8 +890,7 @@ class MerchantHomeView extends Component {
                       <View
                         style={{
                           flexDirection: 'row',
-                          justifyContent: 'center',
-                          alignItems: 'center'
+                          justifyContent: 'flex-end',
                         }}
                       >
                         <Text style={Fonts.type107}>
@@ -892,12 +916,13 @@ class MerchantHomeView extends Component {
                           }}
                           style={{
                             flexDirection: 'row',
-                            justifyContent: 'center',
+                            justifyContent: 'flex-end',
                             alignItems: 'center',
+                            marginRight: -5,
                             marginTop: -5
                           }}
                         >
-                          <Text style={Fonts.type100}>See Reason</Text>
+                          <Text style={Fonts.type100}>Lihat Alasan</Text>
                           <MaterialIcon
                             style={{
                               marginTop: 2,
@@ -915,12 +940,13 @@ class MerchantHomeView extends Component {
                           }}
                           style={{
                             flexDirection: 'row',
-                            justifyContent: 'center',
+                            justifyContent: 'flex-end',
                             alignItems: 'center',
+                            marginRight: -5,
                             marginTop: -5
                           }}
                         >
-                          <Text style={Fonts.type51}>Completed</Text>
+                          <Text style={Fonts.type51}>Selesai</Text>
                           <MaterialIcon
                             style={{
                               marginTop: 2,
@@ -943,16 +969,17 @@ class MerchantHomeView extends Component {
                         }}
                         style={{
                           flexDirection: 'row',
-                          justifyContent: 'center',
+                          justifyContent: 'flex-end',
                           alignItems: 'center',
+                          marginRight: -5,
                           marginTop: -5
                         }}
                       >
-                        <Text style={Fonts.type51}>Completed</Text>
+                        <Text style={Fonts.type51}>Selesai</Text>
                         <MaterialIcon
                           style={{
                             marginTop: 2,
-                            padding: 0
+                            padding: 0,
                           }}
                           name="chevron-right"
                           color={Color.fontGreen50}
@@ -1027,10 +1054,11 @@ class MerchantHomeView extends Component {
   }
   /** === RENDER CONTENT ITEM === */
   renderContentItem() {
+    const {order} = this.state.privileges
     return (
       <View>
         {/* {this.renderData()} */}
-        {this.renderLastOrder()}
+        {order?.status && this.renderLastOrder()}
         {this.renderTastList()}
         {/* {this.renderMerchantMenu()} */}
       </View>
@@ -1078,18 +1106,24 @@ class MerchantHomeView extends Component {
    * =====================
    */
   renderModalCheckout() {
+    const {order} = this.state.privileges
+    
     return this.state.openModalCheckout ? (
       <ModalBottomMerchantCheckout
         open={this.state.openModalCheckout}
         close={() => this.setState({ openModalCheckout: false })}
         onPress={
           () => {
-            this.setState({ checkNoOrder: true });
-            this.props.merchantGetLogPerActivityProcessV2({
-              journeyBookStoresId: this.props.merchant.selectedMerchant
-                .journeyBookStores.id,
-              activity: 'order'
-            });
+            if(order?.status){
+              this.setState({ checkNoOrder: true });
+              this.props.merchantGetLogPerActivityProcessV2({
+                journeyBookStoresId: this.props.merchant.selectedMerchant
+                  .journeyBookStores.id,
+                activity: 'order'
+              });
+            } else {
+              this.checkoutProcess()
+            }
           }
           // this.props.merchantPostActivityProcess({
           //   journeyPlanSaleId: this.props.merchant.selectedMerchant.journeyPlanSaleId,
@@ -1135,6 +1169,9 @@ class MerchantHomeView extends Component {
         open={this.state.openModalErrorGlobal}
         onPress={() => {
           this.setState({ openModalErrorGlobal: false });
+          if (this.props.merchant.errorGetLogAllActivityV2){
+            return NavigationService.navigate('JourneyView');
+          }
         }}
       />
     ) : (
@@ -1172,7 +1209,6 @@ class MerchantHomeView extends Component {
       <SafeAreaView>
         <StatusBarRed />
         {!this.props.merchant.loadingGetMerchantLastOrder &&
-        this.props.merchant.dataGetMerchantLastOrder !== null &&
         !this.props.merchant.loadingGetLogAllActivity &&
         this.props.merchant.dataGetLogAllActivityV2 !== null &&
         !this.state.loadingPostForCheckoutNoOrder ? (
@@ -1351,8 +1387,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, merchant, user, permanent }) => {
-  return { auth, merchant, user, permanent };
+const mapStateToProps = ({ auth, merchant, user, permanent, privileges }) => {
+  return { auth, merchant, user, permanent, privileges };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -1368,65 +1404,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: tatas
- * updatedDate: 01072020
- * updatedFunction:
- * -> Add checking user status
- * updatedDate: 02072020
- * updatedFunction:
- * -> Remove unused state
- * -> Add function to change modal check status False after navigate
- * updatedDate: 03072020
- * updatedFunction:
- * -> Change key
  * updatedBy: dyah
- * updatedDate: 02122020
+ * updatedDate: 09062021
  * updatedFunction:
- * -> Add validation for checkout.
- * updatedBy: dyah
- * updatedDate: 24022021
- * updatedFunction:
- * -> Add validation for survey done.
- * -> Update the props of journey plan list.
- * -> Update the props of log activity.
- * updatedBy: dyah
- * updatedDate: 25022021
- * updatedFunction:
- * -> Add validation for log all activy done.
- * -> Update the props of selected merchant.
- * updatedBy: dyah
- * updatedDate: 26022021
- * updatedFunction:
- * -> Update the props of post activity.
- * -> Update function checkTotalCompleteTask.
- * updatedBy: dyah
- * updatedDate: 01032021
- * updatedFunction:
- * -> Update the tasklist when complete the order & not order .
- * updatedBy: dyah
- * updatedDate: 08032021
- * updatedFunction:
- * -> Update the tasklist when complete the order & not order.
- * -> Update the validation when get survey list.
- * -> Update the validation when checkout.
- * updatedBy: dyah
- * updatedDate: 12032021
- * updatedFunction:
- * -> Add parameter search when get journey plan.
- * updatedBy: dyah
- * updatedDate: 21042021
- * updatedFunction:
- * -> Add validation when survey done.
- * updatedBy: dyah
- * updatedDate: 05052021
- * updatedFunction:
- * -> Add validation for button when not check in yet.
- * updatedBy: dyah
- * updatedDate: 06052021
- * updatedFunction:
- * -> add modalBeforeCheckin
- * updatedBy: dyah
- * updatedDate: 10052021
- * updatedFunction:
- * -> integration latest checkin&checkout.
+ * -> add modal error when failed get last order & log all activity.
  */
