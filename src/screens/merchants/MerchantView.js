@@ -68,7 +68,7 @@ class MerchantView extends Component {
       headerRight: () => (
         <TouchableOpacity
           style={{ marginRight: 16 }}
-          onPress={() => state.params.goToAddFunction()}
+          onPress={() => state.params?.goToAddFunction()}
         >
           <AntDesignIcon
             color={Color.mainColor}
@@ -136,8 +136,10 @@ class MerchantView extends Component {
   }
   /** HANDLE ADD BUTTON FROM HEADER */
   goToAdd = () => {
+    // ADD STORE VALIDATION
     const portfolio = this.props.merchant.dataGetPortfolioV2
-    if(portfolio !== null && portfolio.length > 0){
+    const canCreateStore = this.props.privileges.data?.createStore?.status || false
+    if(portfolio !== null && portfolio.length > 0 && canCreateStore){
       this.props.savePageAddMerchantFrom('MerchantView');
       setTimeout(() => {
         NavigationService.navigate('AddMerchantStep1');
@@ -260,19 +262,21 @@ class MerchantView extends Component {
   /** RENDER MODAL ERROR CONTENT */
   modalErrorContent() {
     return (
-      <View style={{ alignItems: 'center', paddingHorizontal: 24 }}>
+      <View style={{ alignItems: 'center' }}>
         <StatusBarRedOP50 />
         <Image
-          source={require('../../assets/images/sinbad_image/failed_error.png')}
+          source={require('../../assets/images/sinbad_image/sinbad_no_access.png')}
           style={{ width: 208, height: 156 }}
         />
-        <Text style={[Fonts.type7, { paddingVertical: 8, textAlign: 'center' }]}>
-          Maaf, Anda tidak memiliki akses untuk membuat toko
-        </Text>
-        <Text style={[Fonts.type17, {textAlign: 'center', lineHeight: 18}]}>
-          Hal ini bisa terjadi karena Anda tidak memiliki portfolio. Silakan hubungi admin untuk proses lebih lanjut.
-        </Text>
-        <View style={{ width: '100%', paddingTop: 40 }}>
+        <View style={{padding: 24}}>
+          <Text style={[Fonts.type7, { padding: 8, textAlign: 'center' }]}>
+            Maaf, Anda tidak memiliki akses ke halaman ini
+          </Text>
+          <Text style={[Fonts.type17, {textAlign: 'center', lineHeight: 18}]}>
+            Silakan hubungi admin untuk proses lebih lanjut
+          </Text>
+        </View>
+        <View style={{ width: '100%' }}>
           <ButtonSingle
             borderRadius={4}
             title={'Oke, Saya Mengerti'}
@@ -328,8 +332,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, merchant }) => {
-  return { user, merchant };
+const mapStateToProps = ({ user, merchant, privileges }) => {
+  return { user, merchant, privileges };
 };
 
 const mapDispatchToProps = dispatch => {

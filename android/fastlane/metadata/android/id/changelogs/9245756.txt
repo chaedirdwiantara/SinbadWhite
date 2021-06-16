@@ -1,6 +1,6 @@
-Terima kasih telah menggunakan Sinbad! Apa yang baru di versi ini:
-- Promo baru yang memungkinkan anda mendapatkan potongan harga ketika memilih metode pembayaran tertentu
-- Upload KTP melalui gallery
+Hi, Sales Representative.
 
-Pastikan aplikasi anda up-to-date agar tidak pernah ketinggalan penawaran - penawaran terbaik dari Sinbad.
-Semakin banyak belanja, semakin untung! Cuma ada di Sinbad!
+Pada versi ini, kami merilis fitur Roles Based Access Control (RBAC). Apa itu? RBAC adalah fitur yang mengatur aktivitas apa saja yang boleh Anda lakukan berdasarkan roles yang Anda miliki. Hal ini tentu diaplikasikan untuk mendukung pekerjaan Anda sehingga dapat dilakukan lebih cepat. Segera download aplikasinya dan lihat perbedaannya.
+
+Salam hangat,
+Tim Sinbad
