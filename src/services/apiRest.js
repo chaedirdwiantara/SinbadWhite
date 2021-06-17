@@ -65,6 +65,11 @@ export default async function endpoint({ path, method, params, testpath }) {
       }
     })
     .catch(err => {
+      Sentry.configureScope(function(scope) {
+        scope.setTag('Bug Type', 'Server Down');
+        scope.setLevel(Sentry.Severity.Fatal);
+        Sentry.captureMessage('Server Down');
+      });
       return {
         result: 'Error',
         code: 503,
