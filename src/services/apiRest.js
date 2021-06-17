@@ -39,7 +39,7 @@ export default async function endpoint({ path, method, params, testpath }) {
       } else {
         return response.json().then(data => {
           Sentry.configureScope(function(scope) {
-            scope.setTag('Bug Type', 'Api Error');
+            scope.setTag('Bug Type', 'API Error');
             scope.setLevel(Sentry.Severity.Error);
             scope.setExtras({
               endpoint: apiHost.url + path,
@@ -52,11 +52,7 @@ export default async function endpoint({ path, method, params, testpath }) {
                   : 'not login',
               error: data
             });
-            Sentry.captureMessage(
-              `Api Error ${
-                stateData.user !== null ? stateData.user.id : 'not login'
-              }`
-            );
+            Sentry.captureMessage(`Api Error ${path}`);
           });
           return {
             result: 'Error',
