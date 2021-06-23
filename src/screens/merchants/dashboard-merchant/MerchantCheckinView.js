@@ -108,6 +108,16 @@ class MerchantCheckinView extends Component {
     });
     return this.setState({ modalOutStore: false });
   }
+  /** === DISABLE BUTTON MASUK TOKO === */
+  disableButton() {
+    if (this.props.merchant.loadingPostActivity) {
+      return true;
+    }
+    if (this.state.latitude === 0 && this.state.longitude === 0) {
+      return true;
+    }
+    return false;
+  }
   /**
    * ========================
    * RENDER VIEW
@@ -275,7 +285,7 @@ class MerchantCheckinView extends Component {
             </View>
             <View>
               <ButtonSingle
-                disabled={this.props.merchant.loadingPostActivity}
+                disabled={this.disableButton()}
                 title={'Masuk Toko'}
                 loading={this.props.merchant.loadingPostActivity}
                 borderRadius={4}
