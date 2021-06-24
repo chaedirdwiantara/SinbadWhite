@@ -92,7 +92,7 @@ class HomeView extends Component {
       ],
       kpiDashboard: [
         {
-          title: 'T. Order',
+          title: 'Toko Order',
           id: 'orderedStores',
           image: require('../../assets/images/menu_dashboard/order.png'),
           data: {
@@ -101,7 +101,7 @@ class HomeView extends Component {
           }
         },
         {
-          title: 'T. Baru',
+          title: 'Toko Baru',
           id: 'newStores',
           image: require('../../assets/images/menu_dashboard/new.png'),
           data: {
@@ -128,7 +128,7 @@ class HomeView extends Component {
           }
         },
         {
-          title: 'T. Dikunjungi',
+          title: 'Toko Dikunjungi',
           id: 'visitedStores',
           image: require('../../assets/images/menu_dashboard/visit.png'),
           data: {
@@ -762,8 +762,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 26112020
+ * updatedDate: 24062021
  * updatedFunction:
- * -> update kpi dashboard (bug fix & array validation)
+ * -> update kpi dashboard title (T. = Toko)
  *
  */
