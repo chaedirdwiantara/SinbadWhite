@@ -15,7 +15,7 @@ export const sendDataApiError = data => {
       params: data.params,
       error: data.error
     });
-    Sentry.captureMessage(`Api Error ${data.path}`);
+    Sentry.captureMessage(`API Error ${data.path}`);
   });
 };
 /** SERVER DOWN */
