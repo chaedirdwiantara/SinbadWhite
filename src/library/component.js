@@ -73,7 +73,7 @@ import ToastType1 from '../components/toast/ToastType1';
 /** LIST */
 import ProductListType1 from '../components/list/ProductListType1';
 import ProductListType2 from '../components/list/ProductListType2';
-import ProductListType3 from '../components/list/ProductListType3'
+import ProductListType3 from '../components/list/ProductListType3';
 /** EMPTY DATA */
 import ComingSoon from '../components/empty_state/ComingSoon';
 import EmptyData from '../components/empty_state/EmptyData';
@@ -100,8 +100,6 @@ import TagListType2 from '../components/tag/TagListType2';
 import DatePickerSpinner from '../components/DatePickerSpinner';
 /** SELECTED MERCHANT */
 import SelectedMerchantName from '../components/SelectedMerchantName';
-/** ERROR BOUNDARY */
-import ErrorBoundary from '../components/error/ErrorBoundary';
 /** CARD */
 import Shadow from '../components/card/shadow';
 /** TABS */
@@ -110,9 +108,9 @@ import SalesmanChart from '../components/SalesmanChart';
 import SlideIndicator from '../components/slide_indicator';
 import CardType1 from '../components/card/CardType1';
 /** TEMPLATE */
-import PdpGrid from '../components/template/PdpGrid'
+import PdpGrid from '../components/template/PdpGrid';
 /** ACCORDION */
-import Accordion from '../components/accordion/Accordion'
+import Accordion from '../components/accordion/Accordion';
 
 export {
   CartGlobal,
@@ -213,8 +211,6 @@ export {
   DatePickerSpinner,
   /** SELECTED MERCHANT NAME */
   SelectedMerchantName,
-  /** Error Boundary */
-  ErrorBoundary,
   /** CARD */
   Shadow,
   /** TABS */

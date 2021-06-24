@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
   Text,
   Image
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   MaterialIcon,
   bindActionCreators,
   connect,
   moment,
   SkeletonPlaceholder
-} from '../../library/thirdPartyPackage'
+} from '../../library/thirdPartyPackage';
 import {
   ButtonFloatType1,
   StatusBarWhite,
@@ -24,8 +24,8 @@ import {
   ModalBottomType3,
   StatusBarRedOP50,
   ButtonSingle
-} from '../../library/component'
-import { MoneyFormat, Fonts } from '../../helpers'
+} from '../../library/component';
+import { MoneyFormat, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
@@ -138,14 +138,14 @@ class JourneyView extends Component {
         break;
       case 'new_merchant':
         this.setState({ openModalAddMerchant: false });
-        const portfolio = this.props.merchant.dataGetPortfolioV2
-        if(portfolio !== null && portfolio.length > 0){
+        const portfolio = this.props.merchant.dataGetPortfolioV2;
+        if (portfolio !== null && portfolio.length > 0) {
           this.props.savePageAddMerchantFrom('JourneyView');
           setTimeout(() => {
             NavigationService.navigate('AddMerchantStep1');
           }, 100);
         } else {
-          this.setState({showModalError: true})
+          this.setState({ showModalError: true });
         }
         break;
       default:
@@ -252,17 +252,23 @@ class JourneyView extends Component {
       <View />
     );
   }
-   /** RENDER MODAL ERROR */
-   renderModalError(){
-    return(
+  /** RENDER MODAL ERROR */
+  renderModalError() {
+    return (
       <ModalBottomType3
         title={''}
         open={this.state.showModalError}
-        close={() => this.setState({showModalError: false, errorTitle: '', errorMessage: ''})}
+        close={() =>
+          this.setState({
+            showModalError: false,
+            errorTitle: '',
+            errorMessage: ''
+          })
+        }
         content={this.modalErrorContent()}
         typeClose={'cancel'}
       />
-    )
+    );
   }
 
   /** RENDER MODAL ERROR CONTENT */
@@ -274,18 +280,21 @@ class JourneyView extends Component {
           source={require('../../assets/images/sinbad_image/failed_error.png')}
           style={{ width: 208, height: 156 }}
         />
-        <Text style={[Fonts.type7, { paddingVertical: 8, textAlign: 'center' }]}>
+        <Text
+          style={[Fonts.type7, { paddingVertical: 8, textAlign: 'center' }]}
+        >
           Maaf, Anda tidak memiliki akses untuk membuat toko
         </Text>
-        <Text style={[Fonts.type17, {textAlign: 'center', lineHeight: 18}]}>
-          Hal ini bisa terjadi karena Anda tidak memiliki portfolio. Silakan hubungi admin untuk proses lebih lanjut.
+        <Text style={[Fonts.type17, { textAlign: 'center', lineHeight: 18 }]}>
+          Hal ini bisa terjadi karena Anda tidak memiliki portfolio. Silakan
+          hubungi admin untuk proses lebih lanjut.
         </Text>
         <View style={{ width: '100%', paddingTop: 40 }}>
           <ButtonSingle
             borderRadius={4}
             title={'Oke, Saya Mengerti'}
             onPress={() => {
-              this.setState({showModalError: false})
+              this.setState({ showModalError: false });
             }}
           />
         </View>
@@ -347,7 +356,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(JourneyView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(JourneyView);
 
 /**
  * ============================

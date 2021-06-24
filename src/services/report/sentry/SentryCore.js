@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, BackHandler } from 'react-native';
 import { setJSExceptionHandler } from 'react-native-exception-handler';
-import { Sentry, SentryConfig } from '../../services/SentryConfig';
+import { Sentry, SentryConfig } from './SentryConfig';
 
 SentryConfig();
 
@@ -23,7 +23,7 @@ setJSExceptionHandler((error, isFatal) => {
     Sentry.configureScope(function(scope) {
       scope.setTag('Bug Type', 'Crash');
       scope.setLevel(Sentry.Severity.Critical);
-      Sentry.captureException(error);
+      Sentry.captureException(new Error(error), scope);
     });
     handleError(error);
   }

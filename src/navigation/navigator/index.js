@@ -17,9 +17,7 @@ import GlobalNavigator from './GlobalNavigator';
 import PdpNavigator from './PdpNavigator';
 import OmsNavigator from './OmsNavigator';
 import HistoryNavigator from './HistoryNavigator';
-import {
-  nrInit,
-} from '../../../NewRelicRN.js';
+import { nrInit } from '../../services/report/newRelic/NewRelicRN.js';
 
 const MergeAllNavigator = {
   ...NotificationNavigator,

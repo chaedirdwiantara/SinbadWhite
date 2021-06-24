@@ -1,9 +1,10 @@
 import { set, isEmpty } from 'lodash';
 import apiHost from './apiHost';
 import { Store } from '../state/Store';
-import { Sentry, SentryConfig } from '../services/SentryConfig';
-
-SentryConfig();
+import {
+  sendDataApiError,
+  sendDataServerDown
+} from './report/sentry/sendDataToSentry';
 
 export default async function endpoint({ path, method, params, testpath }) {
   const stateData = Store.getState();
@@ -38,21 +39,11 @@ export default async function endpoint({ path, method, params, testpath }) {
         });
       } else {
         return response.json().then(data => {
-          Sentry.configureScope(function(scope) {
-            scope.setTag('Bug Type', 'API Error');
-            scope.setLevel(Sentry.Severity.Error);
-            scope.setExtras({
-              endpoint: apiHost.url + path,
-              userId: stateData.user !== null ? stateData.user.id : 'not login',
-              method,
-              params,
-              token:
-                stateData.permanent.token !== null
-                  ? stateData.permanent.token
-                  : 'not login',
-              error: data
-            });
-            Sentry.captureMessage(`Api Error ${path}`);
+          sendDataApiError({
+            path,
+            method,
+            params,
+            error: data
           });
           return {
             result: 'Error',
@@ -65,11 +56,7 @@ export default async function endpoint({ path, method, params, testpath }) {
       }
     })
     .catch(err => {
-      Sentry.configureScope(function(scope) {
-        scope.setTag('Bug Type', 'Server Down');
-        scope.setLevel(Sentry.Severity.Fatal);
-        Sentry.captureMessage('Server Down');
-      });
+      sendDataServerDown();
       return {
         result: 'Error',
         code: 503,
