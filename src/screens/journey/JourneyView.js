@@ -209,7 +209,7 @@ class JourneyView extends Component {
               this.props.journey.dataGetJourneyPlanReportV2.totalOrder
             )}
           </Text>
-          <Text style={Fonts.type26}>Toko Order</Text>
+          <Text style={Fonts.type26}>Total Order</Text>
         </View>
       </View>
     ) : (
