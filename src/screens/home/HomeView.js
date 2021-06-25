@@ -212,8 +212,14 @@ class HomeView extends Component {
   /** === PULL TO REFRESH === */
   _onRefresh() {
     this.setState({ refreshing: true }, () => {
-      this.getPrivileges()
-      this.getKpiData(this.state.tabValue)
+      this.getPrivileges();
+      this.getKpiData(this.state.tabValue);
+      this.props.versionsGetProcess();
+      this.props.navigation.setParams({
+        fullName: this.props.user.fullName,
+        imageUrl: this.props.user.imageUrl
+      });
+      this.props.getSalesTeamProcess();
     });
   }
   /** === GET KPI DATA === */
@@ -762,8 +768,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 24062021
+ * updatedDate: 25062021
  * updatedFunction:
  * -> update kpi dashboard title (T. = Toko)
+ * -> add function to _onRefresh function.
  *
  */
