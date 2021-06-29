@@ -195,17 +195,6 @@ class HistoryDataListView extends Component {
    * RENDER VIEW
    * =======================
    */
-  /** ITEM BUTTON DETAIL*/
-  renderButtonDetail(item) {
-    return (
-      <TouchableOpacity
-        style={styles.buttonDetail}
-        onPress={() => this.goToDetail(item)}
-      >
-        <Text style={Fonts.type39}>Detail</Text>
-      </TouchableOpacity>
-    );
-  }
   /** ITEM BUTTON CANCEL */
   renderButtonCancel(item) {
     return (
@@ -228,7 +217,7 @@ class HistoryDataListView extends Component {
   }
   /** RENDER SEPARATOR */
   renderSeparator() {
-    return <View style={GlobalStyle.boxPadding} />;
+    return <View style={{marginBottom: 16}} />;
   }
 
   /** RENDER COUNTDOWN */
@@ -277,18 +266,32 @@ class HistoryDataListView extends Component {
 
   /** === RENDER ITEM (STATUS PAYMENT) === */
   renderItemStatusPayment(item) {
-    let textStyle = Fonts.type10;
+    let textStyle = Fonts.type67;
+    let colorStyle = masterColor.fontBlack05
     switch (item.statusPayment) {
       case 'payment_failed':
+        textStyle = Fonts.type67
+        colorStyle = masterColor.fontBlack05
+        break;
       case 'overdue':
+        textStyle = Fonts.type14;
+        colorStyle = masterColor.fontRed10
+        break;
       case 'waiting_for_payment':
-        textStyle = Fonts.type11;
+        textStyle = Fonts.type109p;
+        colorStyle = masterColor.fontYellow10
         break;
       case 'waiting_for_refund':
-        textStyle = Fonts.type11;
+        textStyle = Fonts.type109p;
+        colorStyle = masterColor.fontYellow10
         break;
       case 'refunded':
-        textStyle = Fonts.type10;
+        textStyle = Fonts.type110p;
+        colorStyle = masterColor.fontGreen10
+        break;
+      case 'paid':
+        textStyle = Fonts.type110p;
+        colorStyle = masterColor.fontGreen10
         break;
       default:
         break;
@@ -300,21 +303,39 @@ class HistoryDataListView extends Component {
           moment.utc(new Date()).local() >
             moment.utc(item.billing.expiredPaymentTime).local() &&
           item.statusPayment === 'waiting_for_payment' ? (
-            <Text style={{ ...textStyle, textAlign: 'right' }}>
+            <Text 
+              style={[Fonts.type67, 
+                { 
+                  textAlign: 'right', 
+                  backgroundColor: masterColor.fontBlack05 
+                }]}
+            >
               Tidak Dibayar
             </Text>
           ) : (
-            <Text style={{ ...textStyle, textAlign: 'right', marginLeft: 15 }}>
-              {this.statusPayment(item.statusPayment)}
-            </Text>
-          )}
-          {item.statusPayment === 'overdue' ? (
-            <View style={{ marginLeft: 5 }}>
-              <MaterialIcon name="error" size={15} color={'#f0444c'} />
+            <View 
+              style={{
+                backgroundColor: colorStyle, 
+                marginLeft: 15, 
+                paddingHorizontal: 8, 
+                paddingVertical: 4, 
+                borderRadius: 4, 
+                flexDirection: 'row' 
+              }}
+            >
+              <Text style={{ ...textStyle, textAlign: 'right' }}>
+                {this.statusPayment(item.statusPayment)}
+              </Text>
+              {item.statusPayment === 'overdue' ? (
+                <View style={{ marginLeft: 5 }}>
+                  <MaterialIcon name="error" size={15} color={'#f0444c'} />
+                </View>
+              ) : (
+                <View />
+              )}
             </View>
-          ) : (
-            <View />
           )}
+          
         </View>
         {item.statusPayment !== PAID && item.statusPayment !== REFUNDED && item.statusPayment !== WAITING_FOR_REFUND
           ? item.statusPayment !== PAYMENT_FAILED &&
@@ -365,7 +386,7 @@ renderButtonForOrder(item) {
     const paymentType = item.paymentType.id;
     return (
       <View key={index}>
-        <View style={GlobalStyle.shadowForBox}>
+        <TouchableOpacity style={[styles.cardContainer, GlobalStyle.shadowForBox5]} onPress={() => this.goToDetail(item)}>
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
               <Text style={Fonts.type10}>{item.orderCode}</Text>
@@ -408,20 +429,54 @@ renderButtonForOrder(item) {
               <View />
             )}
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
-            <View style={styles.boxItemContent}>
-              <Text style={Fonts.type17}>
-                {item.parcelQty} Qty, Total:{' '}
-                {MoneyFormat(item.billing.totalPayment)}
-              </Text>
-              <View style={{ flexDirection: 'row' }}>
-                {this.props.section === 'order'
-                  ? this.renderButtonForOrder(item)
-                  : null}
-                {this.renderButtonDetail(item)}
+            {this.props.section === 'order' ? (
+              <View style={styles.boxItemContent}>
+                <Text style={Fonts.type17}>
+                  {item.parcelQty} Qty, Total:{' '}
+                  {MoneyFormat(item.billing.totalPayment)}
+                </Text>
+                <View style={{ flexDirection: 'row' }}>
+                  {this.props.section === 'order'
+                    ? this.renderButtonForOrder(item)
+                    : null}
+                </View>
               </View>
-            </View>
+            ) : 
+              <View>
+                <View>
+                  <View style={[styles.boxItemContent, {marginBottom: 4}]}>
+                    <View style={{flex: 1, flexDirection: 'row', alignSelf: 'space-between'}}>
+                      <Text 
+                        style={[item.billing.isPartialInfoShow ? Fonts.type112p : Fonts.type111p, {flex: 1, textDecorationLine: item.billing.isPartialInfoShow ? 'line-through' : 'none'}]}>
+                        {MoneyFormat(item.billing.totalPayment)}
+                      </Text>
+                      <Text style={[item.billing.isPartialInfoShow ? Fonts.type112p : Fonts.type111p, {textDecorationLine: item.billing.isPartialInfoShow ? 'line-through' : 'none'}]}>QTY: {item.parcelQty}</Text>
+                    </View>
+                  </View>
+                  { item.billing.isPartialInfoShow ?
+                    <View style={styles.boxItemContent}>
+                      <View style={{flex: 1, flexDirection: 'row', alignSelf: 'space-between'}}>
+                        <Text style={[Fonts.type111p, {flex: 1}]}>
+                          {MoneyFormat(item.billing.deliveredTotalPayment)}
+                        </Text>
+                        <Text style={Fonts.type111p}>QTY: {item.deliveredParcelQty}</Text>
+                      </View>
+                    </View>
+                    : null
+                  }
+                </View>  
+              </View>
+            }
+
           </View>
-        </View>
+          { item.billing.isPartialInfoShow ?
+            <View style={styles.sticky}>
+              <MaterialIcon name="error" size={15} color={masterColor.fontYellow50} />
+              <Text style={[Fonts.type109p, {marginLeft: 6}]}>Terjadi Pengiriman Sebagian</Text>
+            </View>
+            : null
+          }
+        </TouchableOpacity>
       </View>
     );
   }
@@ -515,20 +570,28 @@ renderButtonForOrder(item) {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1
+    flex: 1,
   },
   flatListContainer: {
-    paddingBottom: 50
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    
+    backgroundColor: masterColor.backgroundWhite
+  },
+  cardContainer: {
+    backgroundColor:masterColor.backgroundWhite, 
+    borderRadius: 8
   },
   boxContent: {
     flex: 1,
     paddingVertical: 10,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
+    borderRadius: 16
   },
   boxItemContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   buttonDetail: {
     backgroundColor: masterColor.mainColor,
@@ -558,6 +621,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     alignContent: 'center',
     justifyContent: 'center'
+  },
+  sticky: {
+    flexDirection: 'row', 
+    justifyContent:'center',
+    backgroundColor: masterColor.fontYellow10, 
+    borderBottomLeftRadius: 8, 
+    borderBottomRightRadius: 8, 
+    paddingVertical: 8
   }
 });
 
