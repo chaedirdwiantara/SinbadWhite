@@ -195,17 +195,6 @@ class HistoryDataListView extends Component {
    * RENDER VIEW
    * =======================
    */
-  /** ITEM BUTTON DETAIL*/
-  renderButtonDetail(item) {
-    return (
-      <TouchableOpacity
-        style={styles.buttonDetail}
-        onPress={() => this.goToDetail(item)}
-      >
-        <Text style={Fonts.type39}>Detail</Text>
-      </TouchableOpacity>
-    );
-  }
   /** ITEM BUTTON CANCEL */
   renderButtonCancel(item) {
     return (
@@ -382,7 +371,7 @@ renderButtonForOrder(item) {
     const paymentType = item.paymentType.id;
     return (
       <View key={index}>
-        <View style={[styles.cardContainer, GlobalStyle.shadowForBox5]}>
+        <TouchableOpacity style={[styles.cardContainer, GlobalStyle.shadowForBox5]} onPress={() => this.goToDetail(item)}>
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
               <Text style={Fonts.type10}>{item.orderCode}</Text>
@@ -434,7 +423,6 @@ renderButtonForOrder(item) {
                 {this.props.section === 'order'
                   ? this.renderButtonForOrder(item)
                   : null}
-                {this.renderButtonDetail(item)}
               </View>
             </View>
           </View>
@@ -445,7 +433,7 @@ renderButtonForOrder(item) {
             </View>
             : null
           }
-        </View>
+        </TouchableOpacity>
       </View>
     );
   }
