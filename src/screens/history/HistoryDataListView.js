@@ -277,18 +277,32 @@ class HistoryDataListView extends Component {
 
   /** === RENDER ITEM (STATUS PAYMENT) === */
   renderItemStatusPayment(item) {
-    let textStyle = Fonts.type10;
+    let textStyle = Fonts.type67;
+    let colorStyle = masterColor.fontBlack05
     switch (item.statusPayment) {
       case 'payment_failed':
+        textStyle = Fonts.type67
+        colorStyle = masterColor.fontBlack05
+        break;
       case 'overdue':
+        textStyle = Fonts.type14;
+        colorStyle = masterColor.fontRed10
+        break;
       case 'waiting_for_payment':
-        textStyle = Fonts.type11;
+        textStyle = Fonts.type109p;
+        colorStyle = masterColor.fontYellow10
         break;
       case 'waiting_for_refund':
-        textStyle = Fonts.type11;
+        textStyle = Fonts.type109p;
+        colorStyle = masterColor.fontYellow10
         break;
       case 'refunded':
-        textStyle = Fonts.type10;
+        textStyle = Fonts.type110p;
+        colorStyle = masterColor.fontGreen10
+        break;
+      case 'paid':
+        textStyle = Fonts.type110p;
+        colorStyle = masterColor.fontGreen10
         break;
       default:
         break;
@@ -300,21 +314,24 @@ class HistoryDataListView extends Component {
           moment.utc(new Date()).local() >
             moment.utc(item.billing.expiredPaymentTime).local() &&
           item.statusPayment === 'waiting_for_payment' ? (
-            <Text style={{ ...textStyle, textAlign: 'right' }}>
+            <Text style={[Fonts.type67, { textAlign: 'right', backgroundColor: masterColor.fontBlack05 }]}>
               Tidak Dibayar
             </Text>
           ) : (
-            <Text style={{ ...textStyle, textAlign: 'right', marginLeft: 15 }}>
-              {this.statusPayment(item.statusPayment)}
-            </Text>
-          )}
-          {item.statusPayment === 'overdue' ? (
-            <View style={{ marginLeft: 5 }}>
-              <MaterialIcon name="error" size={15} color={'#f0444c'} />
+            <View style={{backgroundColor: colorStyle, marginLeft: 15, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4, flexDirection: 'row' }}>
+              <Text style={{ ...textStyle, textAlign: 'right' }}>
+                {this.statusPayment(item.statusPayment)}
+              </Text>
+              {item.statusPayment === 'overdue' ? (
+                <View style={{ marginLeft: 5 }}>
+                  <MaterialIcon name="error" size={15} color={'#f0444c'} />
+                </View>
+              ) : (
+                <View />
+              )}
             </View>
-          ) : (
-            <View />
           )}
+          
         </View>
         {item.statusPayment !== PAID && item.statusPayment !== REFUNDED && item.statusPayment !== WAITING_FOR_REFUND
           ? item.statusPayment !== PAYMENT_FAILED &&

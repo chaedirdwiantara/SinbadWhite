@@ -4,7 +4,7 @@ import { GlobalMethod } from './GlobalMethod';
 /** GET CART ITEM */
 function getHistory(data) {
   return ApiRest({
-    testpath: 'https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/payment/v1/order/get-parcels?userId=1&storeId=1&searchKey=&status=confirm&statusPayment=&orderGte=2019-01-01&orderLte=2021-12-12&$limit=10&$skip=0',
+    testpath: 'https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/payment/v1/order/get-parcels?userId=123&storeId=1&searchKey=&status=confirm&statusPayment=&orderGte=2019-01-01&orderLte=2021-12-12&$limit=10&$skip=0',
     path: `payment/v1/order/get-parcels?userId=${
       data.userId}&storeId=${data.storeId}&$limit=10&$skip=${
       data.page
