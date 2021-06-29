@@ -438,6 +438,13 @@ renderButtonForOrder(item) {
               </View>
             </View>
           </View>
+          { item.billing.isPartialInfoShow ?
+            <View style={styles.sticky}>
+              <MaterialIcon name="error" size={15} color={masterColor.fontYellow50} />
+              <Text style={[Fonts.type109p, {marginLeft: 6}]}>Terjadi Pengiriman Sebagian</Text>
+            </View>
+            : null
+          }
         </View>
       </View>
     );
@@ -583,6 +590,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     alignContent: 'center',
     justifyContent: 'center'
+  },
+  sticky: {
+    flexDirection: 'row', 
+    justifyContent:'center',
+    backgroundColor: masterColor.fontYellow10, 
+    borderBottomLeftRadius: 8, 
+    borderBottomRightRadius: 8, 
+    paddingVertical: 8
   }
 });
 
