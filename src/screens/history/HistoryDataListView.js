@@ -228,7 +228,7 @@ class HistoryDataListView extends Component {
   }
   /** RENDER SEPARATOR */
   renderSeparator() {
-    return <View style={GlobalStyle.boxPadding} />;
+    return <View style={{marginBottom: 16}} />;
   }
 
   /** RENDER COUNTDOWN */
@@ -365,7 +365,7 @@ renderButtonForOrder(item) {
     const paymentType = item.paymentType.id;
     return (
       <View key={index}>
-        <View style={GlobalStyle.shadowForBox}>
+        <View style={[styles.cardContainer, GlobalStyle.shadowForBox5]}>
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
               <Text style={Fonts.type10}>{item.orderCode}</Text>
@@ -515,20 +515,28 @@ renderButtonForOrder(item) {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1
+    flex: 1,
   },
   flatListContainer: {
-    paddingBottom: 50
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    
+    backgroundColor: masterColor.backgroundWhite
+  },
+  cardContainer: {
+    backgroundColor:masterColor.backgroundWhite, 
+    borderRadius: 8
   },
   boxContent: {
     flex: 1,
     paddingVertical: 10,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
+    borderRadius: 16
   },
   boxItemContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   buttonDetail: {
     backgroundColor: masterColor.mainColor,
