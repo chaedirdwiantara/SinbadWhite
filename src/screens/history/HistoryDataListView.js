@@ -414,17 +414,46 @@ renderButtonForOrder(item) {
               <View />
             )}
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
-            <View style={styles.boxItemContent}>
-              <Text style={Fonts.type17}>
-                {item.parcelQty} Qty, Total:{' '}
-                {MoneyFormat(item.billing.totalPayment)}
-              </Text>
-              <View style={{ flexDirection: 'row' }}>
-                {this.props.section === 'order'
-                  ? this.renderButtonForOrder(item)
-                  : null}
+            {this.props.section === 'order' ? (
+              <View style={styles.boxItemContent}>
+                <Text style={Fonts.type17}>
+                  {item.parcelQty} Qty, Total:{' '}
+                  {MoneyFormat(item.billing.totalPayment)}
+                </Text>
+                <View style={{ flexDirection: 'row' }}>
+                  {this.props.section === 'order'
+                    ? this.renderButtonForOrder(item)
+                    : null}
+                </View>
               </View>
-            </View>
+            ) : 
+              <View>
+                {item.billing.isPartialInfoShow ?
+                  <View style={[styles.boxItemContent, {marginBottom: 4}]}>
+                    <View style={{flex: 1, flexDirection: 'row', alignSelf: 'space-between'}}>
+                      <Text style={[Fonts.type112p, {flex: 1, textDecorationLine: 'line-through'}]}>
+                        {MoneyFormat(item.billing.totalPayment)}
+                      </Text>
+                      <Text style={[Fonts.type112p, {textDecorationLine: 'line-through'}]}>QTY: {item.parcelQty}</Text>
+                    </View>
+                  </View>
+                : null}
+                <View style={styles.boxItemContent}>
+                  <View style={{flex: 1, flexDirection: 'row', alignSelf: 'space-between'}}>
+                    <Text style={[Fonts.type111p, {flex: 1}]}>
+                      {MoneyFormat(item.billing.totalPayment)}
+                    </Text>
+                    <Text style={Fonts.type111p}>QTY: {item.parcelQty}</Text>
+                  </View>
+                  <View style={{ flexDirection: 'row' }}>
+                    {this.props.section === 'order'
+                      ? this.renderButtonForOrder(item)
+                      : null}
+                  </View>
+                </View>
+              </View>
+            }
+
           </View>
           { item.billing.isPartialInfoShow ?
             <View style={styles.sticky}>
