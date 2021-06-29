@@ -303,11 +303,26 @@ class HistoryDataListView extends Component {
           moment.utc(new Date()).local() >
             moment.utc(item.billing.expiredPaymentTime).local() &&
           item.statusPayment === 'waiting_for_payment' ? (
-            <Text style={[Fonts.type67, { textAlign: 'right', backgroundColor: masterColor.fontBlack05 }]}>
+            <Text 
+              style={[Fonts.type67, 
+                { 
+                  textAlign: 'right', 
+                  backgroundColor: masterColor.fontBlack05 
+                }]}
+            >
               Tidak Dibayar
             </Text>
           ) : (
-            <View style={{backgroundColor: colorStyle, marginLeft: 15, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4, flexDirection: 'row' }}>
+            <View 
+              style={{
+                backgroundColor: colorStyle, 
+                marginLeft: 15, 
+                paddingHorizontal: 8, 
+                paddingVertical: 4, 
+                borderRadius: 4, 
+                flexDirection: 'row' 
+              }}
+            >
               <Text style={{ ...textStyle, textAlign: 'right' }}>
                 {this.statusPayment(item.statusPayment)}
               </Text>
