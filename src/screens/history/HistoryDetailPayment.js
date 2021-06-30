@@ -235,10 +235,10 @@ class HistoryDetailPayment extends Component {
             }}
           >
             <View style={{ flex: 1, alignItems: 'flex-start' }}>
-              <Text style={Fonts.type17}>Nomor Pesanan</Text>
+              <Text style={Fonts.type9}>Nomor Pesanan</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <Text style={Fonts.type17}>
+              <Text style={Fonts.type9}>
                 {this.props.history.dataDetailHistory.orderCode
                   ? this.props.history.dataDetailHistory.orderCode
                   : '-'}
@@ -254,10 +254,10 @@ class HistoryDetailPayment extends Component {
             }}
           >
             <View style={{ flex: 1, alignItems: 'flex-start' }}>
-              <Text style={Fonts.type17}>Nomor Referensi</Text>
+              <Text style={Fonts.type9}>Nomor Referensi</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <Text style={Fonts.type17}>
+              <Text style={Fonts.type9}>
                 {this.props.history.dataDetailHistory.orderRef
                   ? this.props.history.dataDetailHistory.orderRef
                   : '-'}
