@@ -7,7 +7,11 @@ import {
   TouchableOpacity,
   Text
 } from '../../library/reactPackage';
-import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon
+} from '../../library/thirdPartyPackage';
 import {
   SkeletonType7,
   LoadingLoadMore,
@@ -17,6 +21,7 @@ import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
 import Price from '../../functions/Price';
+import masterColor from '../../config/masterColor.json';
 
 class PdpLineDataView extends Component {
   constructor(props) {
@@ -67,6 +72,32 @@ class PdpLineDataView extends Component {
       </TouchableOpacity>
     );
   }
+  /** === RENDER MSS TAG === */
+  renderMSS(item) {
+    return item.isMss ? (
+      <View
+        style={{
+          paddingTop: 8,
+          paddingBottom: 8
+        }}
+      >
+        <View
+          style={{
+            alignSelf: 'flex-start',
+            backgroundColor: masterColor.fontBlue10,
+            padding: 4,
+            borderRadius: 50,
+            flexDirection: 'row',
+            alignItems: 'center'
+          }}
+        >
+          <MaterialIcon name="stars" color={masterColor.fontBlue50} size={18} />
+        </View>
+      </View>
+    ) : (
+      <View />
+    );
+  }
   /** === RENDER ITEM === */
   renderItem({ item, index }) {
     return (
@@ -75,11 +106,15 @@ class PdpLineDataView extends Component {
           <View
             style={{
               flex: 1,
-              justifyContent: 'center',
-              alignItems: 'flex-start'
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              flexDirection: 'row'
             }}
           >
-            <Text style={Fonts.type16}>SKU : {item.externalId}</Text>
+            <View style={{ width: '60%' }}>
+              <Text style={Fonts.type16}>SKU : {item.externalId}</Text>
+            </View>
+            {this.renderMSS(item)}
           </View>
           <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 10 }}>
             <Text style={Fonts.type24}>{this.checkPrice(item)}</Text>
