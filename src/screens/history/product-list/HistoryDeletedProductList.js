@@ -25,7 +25,6 @@ import {
     }
   
     renderContent() {
-        console.log('data:', this.props.data);
       return (
         <View>
           <View style={GlobalStyle.boxPadding} />
