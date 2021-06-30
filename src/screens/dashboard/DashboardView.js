@@ -61,7 +61,7 @@ const listMenu = [
 
 const listMenuWhite = [
   {
-    title: 'Toko Order',
+    title: 'Toko Memesan',
     value: 'orderedStores'
   },
   {
@@ -126,7 +126,7 @@ class DashboardView extends Component {
         {
           graphContentType: TOKO_ORDER,
           uri: '',
-          title: 'Toko Order'
+          title: 'Toko Memesan'
         },
         {
           graphContentType: TOTAL_PENJUALAN,
@@ -801,8 +801,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(DashboardView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 24062021
+ * updatedDate: 30062021
  * updatedFunction:
- * -> update dashboard title (T. = Toko)
+ * -> update dashboard title (Toko Order => Toko Memesan)
  *
  */
