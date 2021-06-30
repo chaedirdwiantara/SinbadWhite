@@ -74,8 +74,8 @@
             <View
               style={{ justifyContent: 'space-between', flex: 1, paddingLeft: 8 }}
             >
-              <Text style={Fonts.type10}>{item.catalogueName}</Text>
-              <Text style={Fonts.type10}>
+              <Text style={[Fonts.type10, { textTransform: 'capitalize' }]}>{item.catalogueName}</Text>
+              <Text style={Fonts.type111p}>
                 {this.props.type === 'Bonus'
                   ? 0
                   : MoneyFormat(item.cataloguePrice)}
@@ -88,13 +88,13 @@
                 alignItems: 'flex-end'
               }}
             >
-              <Text style={Fonts.type10}>{item.catalogueQty} Pcs</Text>
+              <Text style={Fonts.type47}>{item.catalogueQty} Pcs</Text>
             </View>
           </View>
           <View style={GlobalStyle.lines} />
           <View style={styles.boxButtonAndPriceTotal}>
-            <Text style={Fonts.type10}>
-              Total Harga:{' '}
+            <Text style={Fonts.type47}>Total Harga:{' '}</Text>
+            <Text style={Fonts.type111p}>
               {this.props.type === 'Bonus'
                 ? 0
                 : MoneyFormat(item.catalogueTotalPrice)}
@@ -206,13 +206,13 @@
         >
           {this.state.showMore ? (
             <View style={styles.boxSeeMore}>
-              <MaterialIcon name="keyboard-arrow-up" size={24} />
-              <Text style={Fonts.type10}>Lihat Ringkas</Text>
+              <MaterialIcon name="keyboard-arrow-up" size={24} color={masterColor.fontRed50}/>
+              <Text style={Fonts.type11}>Lihat Ringkas</Text>
             </View>
           ) : (
             <View style={styles.boxSeeMore}>
-              <MaterialIcon name="keyboard-arrow-down" size={24} />
-              <Text style={Fonts.type10}>Lihat Lebih</Text>
+              <MaterialIcon name="keyboard-arrow-down" size={24} color={masterColor.fontRed50}/>
+              <Text style={Fonts.type11}>Lihat Lebih</Text>
             </View>
           )}
         </TouchableOpacity>
