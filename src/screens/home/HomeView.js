@@ -92,7 +92,7 @@ class HomeView extends Component {
       ],
       kpiDashboard: [
         {
-          title: 'Toko Order',
+          title: 'Toko Memesan',
           id: 'orderedStores',
           image: require('../../assets/images/menu_dashboard/order.png'),
           data: {
@@ -768,9 +768,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 25062021
+ * updatedDate: 30062021
  * updatedFunction:
- * -> update kpi dashboard title (T. = Toko)
- * -> add function to _onRefresh function.
+ * -> update kpi dashboard title (Toko Order = Toko Memesan)
  *
  */
