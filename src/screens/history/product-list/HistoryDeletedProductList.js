@@ -9,7 +9,7 @@ import {
     connect,
     bindActionCreators
   } from '../../../library/thirdPartyPackage';
-  import { ProductListType7 } from '../../../library/component';
+  import { ProductListType4 } from '../../../library/component';
   import * as ActionCreators from '../../../state/actions';
   import { GlobalStyle, Fonts } from '../../../helpers';
   import masterColor from '../../../config/masterColor.json';
@@ -25,6 +25,7 @@ import {
     }
   
     renderContent() {
+        console.log('data:', this.props.data);
       return (
         <View>
           <View style={GlobalStyle.boxPadding} />
@@ -40,7 +41,7 @@ import {
                 { marginHorizontal: 16, marginBottom: 8 }
               ]}
             />
-            <ProductListType7 clickable={false} data={this.props.data} />
+            <ProductListType4 clickable={false} data={this.props.data} />
           </View>
         </View>
       );
