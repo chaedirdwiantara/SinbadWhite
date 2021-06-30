@@ -314,10 +314,10 @@ class HistoryDetailView extends Component {
         }}
       >
         <View style={{ flex: 1, alignItems: 'flex-start' }}>
-          <Text style={green ? Fonts.type51 : Fonts.type17}>{key}</Text>
+          <Text style={green ? Fonts.type107 : Fonts.type9}>{key}</Text>
         </View>
         <View style={{ flex: 1, alignItems: 'flex-end' }}>
-          <Text style={green ? Fonts.type51 : Fonts.type17}>{value}</Text>
+          <Text style={green ? Fonts.type107 : Fonts.type9}>{value}</Text>
         </View>
       </View>
     );
@@ -357,6 +357,52 @@ class HistoryDetailView extends Component {
         </TouchableWithoutFeedback>
       </View>
     );
+  }
+  /** RENDER INFORMASI PENGEMBALIAN */
+  renderInformasiPengembalian() {
+    return (
+      <View>
+        <View style={GlobalStyle.boxPadding} />
+        <View style={GlobalStyle.shadowForBox}>
+          <View
+            style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
+          >
+            <Text style={Fonts.type48}>Informasi Pengembalian</Text>
+          </View>
+          <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
+
+          <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+            {this.renderContentListGlobal(
+              this.props.history.dataDetailHistory.status === CANCEL ? 'Total Pembayaran' : 'Total Pembayaran Pesanan' , 
+              MoneyFormat(this.props.history.dataDetailHistory.billing.totalPayment)
+            )}
+            {this.renderContentListGlobal(
+              'Total Pembayaran Pengiriman', 
+              MoneyFormat(this.props.history.dataDetailHistory.billing.deliveredTotalPayment)
+            )}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 16
+              }}
+            >
+              <View style={{ flex: 1, alignItems: 'flex-start' }}>
+                <Text style={Fonts.type48}>Total Pengembalian</Text>
+              </View>
+              <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                <Text style={Fonts.type48}>
+                  {MoneyFormat(
+                    this.props.history.dataDetailHistory.billing.refundTotal
+                  )}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+        </View>
+      </View>
+    )
   }
   /** RENDER RINGKASAN PESANAN */
   renderRingkasanPesanan() {
@@ -495,12 +541,12 @@ class HistoryDetailView extends Component {
               }}
             >
               <View style={{ flex: 1 }}>
-                <Text style={Fonts.type17}>Alamat Pengiriman</Text>
+                <Text style={Fonts.type9}>Alamat Pengiriman</Text>
               </View>
               <View style={{ flex: 1 }}>
                 <Address
                   position={'right'}
-                  font={Fonts.type17}
+                  font={Fonts.type9}
                   address={
                     this.props.history.dataDetailHistory.order.store.address
                   }
@@ -551,6 +597,7 @@ class HistoryDetailView extends Component {
         >
           {this.renderHeaderStatus()}
           {this.renderDetailPayment()}
+          {this.renderInformasiPengembalian()}
           {this.renderRingkasanPesanan()}
           {this.renderProductList()}
           {this.renderDeletedProductList()}
