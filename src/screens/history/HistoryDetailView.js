@@ -38,6 +38,7 @@ import ModalBottomFailPayment from '../../components/error/ModalBottomFailPaymen
 import ModalBottomErrorResponsWhite from '../../components/error/ModalBottomErrorResponsWhite';
 import { REFUNDED, WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
 import { CANCEL, CONFIRM, PENDING_PAYMENT } from '../../constants/orderConstants';
+import HistoryDeletedProductList from './product-list/HistoryDeletedProductList';
 
 class HistoryDetailView extends Component {
   constructor(props) {
@@ -459,6 +460,19 @@ class HistoryDetailView extends Component {
       </>
     );
   }
+  /** RENDER DELETED PRODUCT LIST */
+  renderDeletedProductList() {
+    const detailHistory = this.props.history.dataDetailHistory;
+    return (detailHistory.removedList.length !== 0 &&
+      detailHistory.deliveredParcelModified) ||
+      (detailHistory.invoicedParcelModified &&
+        detailHistory.status === 'delivered') ||
+      detailHistory.status === 'done' ? (
+      <HistoryDeletedProductList data={detailHistory.removedList} />
+    ) : (
+      <View />
+    );
+  }
   /** RENDER DELIVERY DETAIL */
   renderDeliveryDetail() {
     return (
@@ -539,6 +553,7 @@ class HistoryDetailView extends Component {
           {this.renderDetailPayment()}
           {this.renderRingkasanPesanan()}
           {this.renderProductList()}
+          {this.renderDeletedProductList()}
           {this.renderDeliveryDetail()}
           {this.state.section === 'order' ? (
             this.renderPaymentInformation()
