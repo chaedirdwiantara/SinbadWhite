@@ -64,11 +64,13 @@ class MerchantCheckinView extends Component {
       this.props.merchant.dataPostActivityV2
     ) {
       if (this.props.merchant.dataPostActivityV2 !== null) {
-        /** get log all activity */
-        this.props.merchantGetLogAllActivityProcessV2(
-          this.props.merchant.selectedMerchant.journeyBookStores.id
-        );
-        NavigationService.goBack(this.props.navigation.state.key);
+        if (this.props.merchant.dataPostActivityV2.activity === 'check_in'){
+          /** get log all activity */
+          this.props.merchantGetLogAllActivityProcessV2(
+            this.props.merchant.selectedMerchant.journeyBookStores.id
+          );
+          NavigationService.goBack(this.props.navigation.state.key);
+        }
       }
     }
   }
@@ -143,8 +145,8 @@ class MerchantCheckinView extends Component {
           latitudeDelta: this.state.latitudeDelta,
           longitudeDelta: this.state.longitudeDelta
         }}
-        onLayout={() =>
-          setTimeout(() => {
+        onLayout={() => {
+          if (this.mapRef) {
             this.mapRef.fitToCoordinates(
               [
                 {
@@ -165,9 +167,9 @@ class MerchantCheckinView extends Component {
                 },
                 animated: true
               }
-            );
-          }, 500)
-        }
+            )
+          }}
+      }
       >
         <Marker
           image={require('../../../assets/icons/maps/drop_pin.png')}

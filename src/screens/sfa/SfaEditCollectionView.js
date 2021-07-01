@@ -26,7 +26,7 @@ import {
 import SfaEditCollectionCash from './SfaEditCollectionCash';
 import SfaEditCollectionTransfer from './SfaEditCollectionTransfer';
 import SfaEditCollectionPromo from './SfaEditCollectionPromo';
-import SfaEditCollectionCheckGiro from './SfaEditCollectionGCheckGiro';
+import SfaEditCollectionCheckGiro from './SfaEditCollectionCheckGiro';
 import {
   sfaEditCollectionProcess,
   sfaGetCollectionDetailProcess
@@ -81,7 +81,7 @@ const SfaEditCollectionView = props => {
     detailSfa.paymentCollection.paymentCollectionMethod.amount
   );
   const [billingValue, setBillingValue] = useState(
-    detailSfa.paymentCollection.paidAmount
+    detailSfa.paymentCollection.paidByCollectionMethod
   );
   const [transferImage, setTransferImage] = useState(detailSfa.image);
   //DATA PAYMENT PROMO
@@ -106,7 +106,7 @@ const SfaEditCollectionView = props => {
     detailSfa.paymentCollection.paymentCollectionMethod.stamp
   );
   const [paidAmount, setPaidAmount] = useState(
-    detailSfa.paymentCollection.paidAmount
+    detailSfa.paymentCollection.paidByCollectionMethod
   );
   const [reference, setReference] = useState(
     detailSfa.paymentCollection.paymentCollectionMethod.reference
@@ -114,6 +114,9 @@ const SfaEditCollectionView = props => {
   const [balanceValue, setBalanceValue] = useState(
     detailSfa.paymentCollection.paymentCollectionMethod.amount
   );
+
+  //Update Data Total Penagihan
+  const [totalBilling, setTotalBilling] = useState((dataStamp ? dataStamp.nominal : 0) + paidAmount)
 
   //DATA USE REF
   const prevDataSfaEditCollectionRef = useRef(dataSfaEditCollection);
@@ -291,10 +294,12 @@ const SfaEditCollectionView = props => {
 
   const dataTranserValue = data => {
     setTransferValue(data);
+    setTotalBilling((dataStamp ? dataStamp.nominal : 0) + data)
   };
 
   const dataBillingValue = data => {
     setBillingValue(data);
+    setTotalBilling((dataStamp ? dataStamp.nominal : 0) + data)
   };
 
   const dataTransferImage = data => {
@@ -316,6 +321,7 @@ const SfaEditCollectionView = props => {
   //FUNCTION FOR EDIT CHECK & GIRO
   const onChangePaidAmount = data => {
     setPaidAmount(data);
+    setTotalBilling((dataStamp ? dataStamp.nominal : 0) + data)
   };
 
   const onChangeReference = data => {
@@ -340,6 +346,7 @@ const SfaEditCollectionView = props => {
 
   const onChangeDataStamp = data => {
     setDataStamp(data);
+    setTotalBilling((data ? data.nominal : 0) + paidAmount)
   };
 
   const buttonDisabled = data => {
@@ -420,7 +427,7 @@ const SfaEditCollectionView = props => {
           >
             <Text style={Fonts.type17}>Sisa Tagihan</Text>
             <Text style={Fonts.type100}>
-              {MoneyFormatSpace( dataSfaGetCollectionDetail.outstanding)}
+              {MoneyFormatSpace( dataSfaGetCollectionDetail.outstanding + dataSfaGetCollectionDetail.paymentCollection.paidAmount)}
             </Text>
           </View>
         </View>
@@ -527,13 +534,19 @@ const SfaEditCollectionView = props => {
   };
   const renderButtonSave = () => {
     return (
-      <ButtonSingle
-        disabled={loadingSfaEditCollection || isButtonDisabled}
-        loading={loadingSfaEditCollection}
-        title={'Simpan'}
-        borderRadius={4}
-        onPress={() => openModalConfirmation()}
-      />
+      <View>
+        <View style={{marginTop: 17, marginHorizontal: 16, flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Text style={Fonts.type88}>Total Penagihan</Text>
+          <Text style={Fonts.type112p}>{MoneyFormatSpace(totalBilling)}</Text>
+        </View>
+        <ButtonSingle
+          disabled={loadingSfaEditCollection || isButtonDisabled}
+          loading={loadingSfaEditCollection}
+          title={'Simpan'}
+          borderRadius={4}
+          onPress={() => openModalConfirmation()}
+        />
+      </View>
     );
   };
 
@@ -602,7 +615,7 @@ const SfaEditCollectionView = props => {
         <ModalBottomFailPayment
           open={openModalErrorEditCollection}
           onPress={() => setOpenModalErrorEditCollection(false)}
-          text={errorSfaEditCollection.message}
+          text={errorSfaEditCollection.data.errorMessage}
           buttonTitle={'Ubah Transaksi'}
           errorTittle={'Gagal Mengubah Transaksi'}
         />
@@ -620,11 +633,11 @@ const SfaEditCollectionView = props => {
           {renderFakturInfo()}
           {renderCollectionInfo()}
           {renderCollectionDetail()}
-          {renderButtonSave()}
           {renderModalEditConfirmation()}
           {renderModalErrorEditCollection()}
           {renderModalBackEdit()}
         </ScrollView>
+        {renderButtonSave()}
       </View>
     );
   };

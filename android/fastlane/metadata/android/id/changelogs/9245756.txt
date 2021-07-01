@@ -1,0 +1,6 @@
+Hi, Sales Representative.
+
+Pada versi ini, kami merilis fitur Roles Based Access Control (RBAC). Apa itu? RBAC adalah fitur yang mengatur aktivitas apa saja yang boleh Anda lakukan berdasarkan roles yang Anda miliki. Hal ini tentu diaplikasikan untuk mendukung pekerjaan Anda sehingga dapat dilakukan lebih cepat. Segera download aplikasinya dan lihat perbedaannya.
+
+Salam hangat,
+Tim Sinbad

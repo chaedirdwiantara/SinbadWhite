@@ -61,6 +61,29 @@ const SfaAddTagihanCheque = props => {
       props.stamp(null);
     }
   }, [checkMaterai]);
+  //function to make sure collection !> balance || colection !>outstanding
+  useEffect(() => {
+    if (parseInt(billingValue) > parseInt(props.remainingBilling)) {
+      if (props.remainingBilling < balanceValue) {
+        setBillingValue(parseInt(props.remainingBilling));
+        props.billingValue(parseInt(props.remainingBilling));
+      } else {
+        setBillingValue(parseInt(balanceValue));
+        props.billingValue(parseInt(balanceValue));
+      }
+    } else if (parseInt(billingValue) > parseInt(balanceValue)) {
+      if (props.remainingBilling < balanceValue) {
+        setBillingValue(parseInt(props.remainingBilling));
+        props.billingValue(parseInt(props.remainingBilling));
+      } else {
+        setBillingValue(parseInt(balanceValue));
+        props.billingValue(parseInt(balanceValue));
+      }
+    } else {
+      setBillingValue(parseInt(billingValue));
+      props.billingValue(parseInt(billingValue));
+    }
+  }, [billingValue, balanceValue]);
 
   const openPublishDate = () => {
     setOpenModalPublishDate(true);
@@ -579,6 +602,7 @@ const SfaAddTagihanCheque = props => {
 
   const selectedReference = data => {
     setDataReference(data);
+    setBalanceValue(data.balance)
     setOpenModalReference(false);
     setIsDisable(true);
     props.referenceCode(data.referenceCode);

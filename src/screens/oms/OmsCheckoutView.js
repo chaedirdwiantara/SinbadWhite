@@ -147,10 +147,11 @@ class OmsCheckoutView extends Component {
         this.props.oms.dataOmsGetCartItem &&
         !this.state.alreadyFetchLastPayment
       ) {
-        const invoiceGroupIds = this.props.oms.dataOmsGetCartItem.cartParcels.map(
-          e => parseInt(e.invoiceGroupId, 10)
+        const orderParcelIds = this.props.oms.dataOmsGetCheckoutItem.orderParcels.map(
+          e => parseInt(e.id, 10)
         );
-        this.props.omsGetLastPaymentChannelProcess({ invoiceGroupIds });
+
+        this.props.omsGetLastPaymentChannelProcess({ orderParcelIds });
         if (this.props.oms.loadingLastPaymentChannel) {
           this.setState({ disabled: true });
         }
@@ -240,7 +241,6 @@ class OmsCheckoutView extends Component {
       this.props.oms.dataLastPaymentChannel.data &&
       this.props.oms.dataLastPaymentChannel.data.paymentTypeChannels
     ) {
-     
       const paymentMethodSelected = this.props.oms.dataLastPaymentChannel.data.paymentTypeChannels.map(
         e => e.paymentType.id
       );
@@ -327,9 +327,7 @@ class OmsCheckoutView extends Component {
                   ? parseInt(e.paymentTypeDetail.paymentTypeId, 10)
                   : parseInt(e.paymentTypeDetail.id, 10),
                 paymentChannelId: e.paymentMethodDetail.id,
-                paylaterTypeId: e.paylaterType.id
-                  ? e.paylaterType.id
-                  : null
+                paylaterTypeId: e.paylaterType.id ? e.paylaterType.id : null
               }));
               NavigationService.navigate('OmsOtpKurView', {
                 storeId,
@@ -354,8 +352,6 @@ class OmsCheckoutView extends Component {
         if (this.props.oms.dataOmsGetPayLaterType !== null) {
           this.setState({
             payLaterType: this.props.oms.dataOmsGetPayLaterType.data
-
-            
           });
         }
       }
@@ -872,8 +868,12 @@ class OmsCheckoutView extends Component {
     this.setState({ modalErrorResponse: false });
     NavigationService.navigate('Home');
   }
-  errorOtpConsent(){
-    this.setState({ modalErrorConsent: false, modalConfirmKUR: false, modalPaylaterType: true });
+  errorOtpConsent() {
+    this.setState({
+      modalErrorConsent: false,
+      modalConfirmKUR: false,
+      modalPaylaterType: true
+    });
   }
 
   /** === FOR OPEN MODAL TERM AND REFRENCE ===  */
@@ -2026,7 +2026,6 @@ class OmsCheckoutView extends Component {
     );
   }
 
-  
   /** MODAL BOTTOM CONFIRM KUR */
   renderModalConfirmKUR() {
     return (

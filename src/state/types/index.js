@@ -14,3 +14,4 @@ export * from './SearchType';
 export * from './JourneyType';
 export * from './SalesmanKpi';
 export * from './SfaType';
+export * from './PrivilegeType';

@@ -10,6 +10,7 @@ import HistorySaga from './HistorySaga';
 import ProfileSaga from './ProfileSaga';
 import SalesmanKpiSaga from './SalesmanKpiSaga';
 import SfaSaga from './SfaSaga';
+import PrivilegeSaga from './PrivilegeSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -23,5 +24,6 @@ export default function* rootSaga() {
     fork(ProfileSaga),
     fork(SalesmanKpiSaga),
     fork(SfaSaga),
+    fork(PrivilegeSaga)
   ]);
 }

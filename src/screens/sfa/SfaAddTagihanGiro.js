@@ -56,6 +56,30 @@ const SfaAddTagihanGiro = props => {
     }
   }, [checkMaterai]);
 
+  //function to make sure collection !> balance || colection !>outstanding
+  useEffect(() => {
+    if (parseInt(billingValue) > parseInt(props.remainingBilling)) {
+      if (props.remainingBilling < balanceValue) {
+        setBillingValue(parseInt(props.remainingBilling));
+        props.billingValue(parseInt(props.remainingBilling));
+      } else {
+        setBillingValue(parseInt(balanceValue));
+        props.billingValue(parseInt(balanceValue));
+      }
+    } else if (parseInt(billingValue) > parseInt(balanceValue)) {
+      if (props.remainingBilling < balanceValue) {
+        setBillingValue(parseInt(props.remainingBilling));
+        props.billingValue(parseInt(props.remainingBilling));
+      } else {
+        setBillingValue(parseInt(balanceValue));
+        props.billingValue(parseInt(balanceValue));
+      }
+    } else {
+      setBillingValue(parseInt(billingValue));
+      props.billingValue(parseInt(billingValue));
+    }
+  }, [billingValue, balanceValue]);
+
   const openPublishDate = () => {
     setOpenModalPublishDate(true);
   };
@@ -96,8 +120,6 @@ const SfaAddTagihanGiro = props => {
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)
     ) {
-      setBillingValue(parseInt(props.remainingBilling));
-      props.billingValue(parseInt(props.remainingBilling));
       if (props.remainingBilling < balanceValue) {
         setBillingValue(parseInt(props.remainingBilling));
         props.billingValue(parseInt(props.remainingBilling));
