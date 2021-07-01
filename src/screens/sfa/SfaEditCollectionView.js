@@ -533,7 +533,6 @@ const SfaEditCollectionView = props => {
     setOpenModalEditConfirmation(true);
   };
   const renderButtonSave = () => {
-    console.log('stamp:', dataSfaEditCollection);
     return (
       <View>
         <View style={{marginTop: 17, marginHorizontal: 16, flexDirection: 'row', justifyContent: 'space-between'}}>
