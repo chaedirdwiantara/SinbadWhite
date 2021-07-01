@@ -28,9 +28,10 @@ const SfaEditCollectionCheckGiro = props => {
     props.data.paymentCollection.paymentCollectionMethod;
   const paymentCollectionTypeId =
     paymentCollectionMethod.paymentCollectionType.id;
+  const paymentCollection = props.data.paymentCollection
 
   const [paidAmount, setPaidAmount] = useState(
-    props.data.paymentCollection.paidAmount
+    props.data.paymentCollection.paidByCollectionMethod
   );
   const [reference, setReference] = useState(paymentCollectionMethod.reference);
   const [balanceValue, setBalanceValue] = useState(
@@ -51,7 +52,7 @@ const SfaEditCollectionCheckGiro = props => {
     paymentCollectionMethod.stamp ? true : false
   );
   const [openModalListMaterai, setOpenModalListMaterai] = useState(false);
-  const [outstanding, setOutstanding] = useState(props.data.outstanding + props.data.paymentCollection.paidAmount)
+  const [outstanding, setOutstanding] = useState(props.data.outstanding + props.data.paymentCollection.paidByCollectionMethod)
   /**
    * =======================
    * FUNCTIONAL
