@@ -177,7 +177,9 @@ class ModalBottomMerchantList extends Component {
   addJourneyPlan() {
     this.props.saveMerchantToJourneyPlanProcessV2({
       date: today,
-      externalSalesId: this.props.user.userCode ? this.props.user.userCode : '',
+      externalSalesRepId: this.props.user.userCode
+        ? this.props.user.userCode
+        : '',
       journeyBookStores: this.state.dataForAddJourney
     });
   }
