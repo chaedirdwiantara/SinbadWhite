@@ -8,3 +8,4 @@ export * from '../methods/HistoryMethod';
 export * from '../methods/ProfileMethod';
 export * from '../methods/SalesmanKpiMethod';
 export * from '../methods/SfaMethod';
+export * from '../methods/PrivilegeMethod';

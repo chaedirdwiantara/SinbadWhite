@@ -9,7 +9,11 @@ import {
   TouchableOpacity,
   Text
 } from '../../library/reactPackage';
-import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon
+} from '../../library/thirdPartyPackage';
 import {
   SkeletonType4,
   LoadingLoadMore,
@@ -19,6 +23,7 @@ import { Color } from '../../config';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import Price from '../../functions/Price';
+import masterColor from '../../config/masterColor.json';
 
 class PdpGridDataView extends Component {
   constructor(props) {
@@ -80,6 +85,35 @@ class PdpGridDataView extends Component {
       </TouchableOpacity>
     );
   }
+  /** === RENDER MSS TAG === */
+  renderMSS(item) {
+    return item.isMss ? (
+      <View
+        style={{
+          paddingHorizontal: 11,
+          paddingTop: 8
+        }}
+      >
+        <View
+          style={{
+            alignSelf: 'flex-start',
+            backgroundColor: masterColor.fontBlue10,
+            padding: 4,
+            borderRadius: 50,
+            flexDirection: 'row',
+            alignItems: 'center'
+          }}
+        >
+          <MaterialIcon name="stars" color={masterColor.fontBlue50} size={18} />
+          <Text style={[Fonts.type108, { paddingHorizontal: 4 }]}>
+            Must-Selling
+          </Text>
+        </View>
+      </View>
+    ) : (
+      <View />
+    );
+  }
   /** === RENDER ITEM === */
   renderItem(item, index) {
     const productImage = (
@@ -96,6 +130,7 @@ class PdpGridDataView extends Component {
         <View style={styles.boxMainContent}>
           <View style={[GlobalStyle.shadow5, styles.cardMainContent]}>
             <View>{productImage}</View>
+            {this.renderMSS(item)}
             <View style={{ paddingHorizontal: 11, paddingVertical: 10 }}>
               <View>
                 <Text style={[Fonts.type37, { textTransform: 'capitalize' }]}>

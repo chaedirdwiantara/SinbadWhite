@@ -23,6 +23,7 @@ import {
   BackHandlerBackSpecific,
   ModalBottomType3,
   StatusBarRedOP50,
+  ModalBottomErrorRespons,
   ButtonSingle
 } from '../../library/component'
 import { MoneyFormat, Fonts } from '../../helpers'
@@ -42,6 +43,7 @@ class JourneyView extends Component {
       search: '',
       openModalAddMerchant: false,
       openModalMerchantList: false,
+      openModalErrorGlobal: false,
       showToast: false,
       notifToast: '',
       showModalError: false
@@ -106,12 +108,32 @@ class JourneyView extends Component {
         }, 3000);
       }
     }
+    /** error get journey plan reports */
+    if (
+      prevProps.journey.errorGetJourneyPlanReportV2 !==
+      this.props.journey.errorGetJourneyPlanReportV2
+    ) {
+      if (this.props.journey.errorGetJourneyPlanReportV2 !== null) {
+        this.doError();
+      }
+    }
   }
   /** === FROM CHILD FUNCTION === */
   parentFunction(data) {
     if (data.type === 'search') {
       this.setState({ search: data.data }, () => this.getJourneyPlan());
     }
+  }
+  /** FOR ERROR FUNCTION (FROM DID UPDATE) */
+  doError() {
+    /** Close all modal and open modal error respons */
+    this.setState({
+      openModalErrorGlobal: true,
+      openModalAddMerchant: false,
+      openModalMerchantList: false,
+      showToast: false,
+      showModalError: false,
+    });
   }
   /** === GET JOURNEY PLAN === */
   getJourneyPlan() {
@@ -137,9 +159,11 @@ class JourneyView extends Component {
         });
         break;
       case 'new_merchant':
+        // VALIDATE SALES REP CAN ADD STORE OR NOT
         this.setState({ openModalAddMerchant: false });
         const portfolio = this.props.merchant.dataGetPortfolioV2
-        if(portfolio !== null && portfolio.length > 0){
+        const canCreateStore = this.props.privileges.data?.createStore?.status || false
+        if(portfolio !== null && portfolio.length > 0 && canCreateStore){
           this.props.savePageAddMerchantFrom('JourneyView');
           setTimeout(() => {
             NavigationService.navigate('AddMerchantStep1');
@@ -268,19 +292,21 @@ class JourneyView extends Component {
   /** RENDER MODAL ERROR CONTENT */
   modalErrorContent() {
     return (
-      <View style={{ alignItems: 'center', paddingHorizontal: 24 }}>
+      <View style={{ alignItems: 'center' }}>
         <StatusBarRedOP50 />
         <Image
-          source={require('../../assets/images/sinbad_image/failed_error.png')}
+          source={require('../../assets/images/sinbad_image/sinbad_no_access.png')}
           style={{ width: 208, height: 156 }}
         />
-        <Text style={[Fonts.type7, { paddingVertical: 8, textAlign: 'center' }]}>
-          Maaf, Anda tidak memiliki akses untuk membuat toko
-        </Text>
-        <Text style={[Fonts.type17, {textAlign: 'center', lineHeight: 18}]}>
-          Hal ini bisa terjadi karena Anda tidak memiliki portfolio. Silakan hubungi admin untuk proses lebih lanjut.
-        </Text>
-        <View style={{ width: '100%', paddingTop: 40 }}>
+        <View style={{padding: 24}}>
+          <Text style={[Fonts.type7, { padding: 8, textAlign: 'center' }]}>
+            Maaf, Anda tidak memiliki akses ke halaman ini
+          </Text>
+          <Text style={[Fonts.type17, {textAlign: 'center', lineHeight: 18}]}>
+            Silakan hubungi admin untuk proses lebih lanjut
+          </Text>
+        </View>
+        <View style={{ width: '100%' }}>
           <ButtonSingle
             borderRadius={4}
             title={'Oke, Saya Mengerti'}
@@ -290,6 +316,18 @@ class JourneyView extends Component {
           />
         </View>
       </View>
+    );
+  }
+  /** RENDER MODAL ERROR RESPONSE */
+  renderModalErrorResponse() {
+  return this.state.openModalErrorGlobal ? (
+    <ModalBottomErrorRespons
+      statusBarType={'transparent'}
+      open={this.state.openModalErrorGlobal}
+      onPress={() => this.setState({ openModalErrorGlobal: false })}
+    />
+    ) : (
+      <View />
     );
   }
   /** ===================== */
@@ -310,6 +348,7 @@ class JourneyView extends Component {
         {this.renderModalMerchantList()}
         {this.renderToast()}
         {this.state.showModalError && this.renderModalError()}
+        {this.renderModalErrorResponse()}
       </SafeAreaView>
     );
   }
@@ -338,8 +377,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ journey, user, merchant }) => {
-  return { journey, user, merchant };
+const mapStateToProps = ({ journey, user, merchant, privileges }) => {
+  return { journey, user, merchant, privileges };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -372,4 +411,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyView);
  * updatedDate: 04052021
  * updatedFunction:
  * -> Add search journey plan.
+ * updatedBy: dyah
+ * updatedDate: 04052021
+ * updatedFunction:
+ * -> Add error modal when failed get journey plan reports.
  */
