@@ -294,10 +294,12 @@ const SfaEditCollectionView = props => {
 
   const dataTranserValue = data => {
     setTransferValue(data);
+    setTotalBilling((dataStamp ? dataStamp.nominal : 0) + data)
   };
 
   const dataBillingValue = data => {
     setBillingValue(data);
+    setTotalBilling((dataStamp ? dataStamp.nominal : 0) + data)
   };
 
   const dataTransferImage = data => {
@@ -531,7 +533,7 @@ const SfaEditCollectionView = props => {
     setOpenModalEditConfirmation(true);
   };
   const renderButtonSave = () => {
-    console.log('stamp:', paidAmount);
+    console.log('stamp:', dataSfaEditCollection);
     return (
       <View>
         <View style={{marginTop: 17, marginHorizontal: 16, flexDirection: 'row', justifyContent: 'space-between'}}>
