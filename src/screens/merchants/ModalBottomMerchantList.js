@@ -65,8 +65,17 @@ class ModalBottomMerchantList extends Component {
         this.getMerchant('direct', 0, '');
       }
     }
+    /** ERROR GET PORTFOLIO */
+    if (
+      prevProps.merchant.errorGetPortfolioV2 !==
+      this.props.merchant.errorGetPortfolioV2
+    ) {
+      if (this.props.merchant.errorGetPortfolioV2 !== null) {
+        this.setState({ openModalErrorGlobal: true });
+      }
+    }
     /** ERROR GET LIST OF MERCHANT */
-     if (
+    if (
       prevProps.merchant.errorGetMerchantV2 !==
       this.props.merchant.errorGetMerchantV2
     ) {
@@ -168,6 +177,7 @@ class ModalBottomMerchantList extends Component {
   addJourneyPlan() {
     this.props.saveMerchantToJourneyPlanProcessV2({
       date: today,
+      externalSalesId: this.props.user.userCode ? this.props.user.userCode : '',
       journeyBookStores: this.state.dataForAddJourney
     });
   }
@@ -374,7 +384,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 09062021
+ * updatedDate: 01072021
  * updatedFunction:
- * -> add modal error when failed get list of merchant.
+ * -> add modal error when failed get portfolio.
+ * -> add new parameter externalSalesId when adding store(s) to journey plan.
  */
