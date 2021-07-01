@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../../helpers/GlobalFont';
 import {
   View,
@@ -46,12 +46,22 @@ const SfaAddTagihanCheque = props => {
   const [dataStamp, setDataStamp] = useState();
   const [billingValue, setBillingValue] = useState(0);
   const [balanceValue, setBalanceValue] = useState(0);
+  const [stampAmount, setStampAmount] = useState(0)
   const { selectedMerchant } = useSelector(state => state.merchant);
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
+
+  useEffect(() => {
+    if (checkMaterai === false) {
+      setDataStamp();
+      setStampAmount(0)
+      props.stamp(null);
+    }
+  }, [checkMaterai]);
+
   const openPublishDate = () => {
     setOpenModalPublishDate(true);
   };
@@ -76,6 +86,18 @@ const SfaAddTagihanCheque = props => {
   const noReference = data => {
     setNoRef(data);
     props.referenceCode(data);
+  };
+
+  useEffect(() => {
+    collectionValidation()
+  }, [billingValue, stampAmount])
+  const collectionValidation = () => {
+    const total = billingValue + stampAmount;
+    const substraction = total - props.remainingBilling;
+    if (parseInt(total) > parseInt(props.remainingBilling)) {
+      setBillingValue(billingValue - substraction);
+      props.billingValue(parseInt(billingValue - substraction));
+    }
   };
 
   const dataBillingValue = text => {
@@ -564,7 +586,8 @@ const SfaAddTagihanCheque = props => {
   const selectedStamp = data => {
     setDataStamp(data);
     setOpenModalListMaterai(false);
-    props.stamp(data.id);
+    setStampAmount(data.nominal)
+    props.stamp(data);
   };
 
   return (
