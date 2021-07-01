@@ -557,7 +557,7 @@ const SfaAddTagihanCheque = props => {
           <ModalListMaterai
             open={openModalListMaterai}
             close={() => setOpenModalListMaterai(false)}
-            onRef={ref => (selectCollection = ref)}
+            onRef={ref => (selectedStamp = ref)}
             selectStamp={selectedStamp.bind(this)}
             supplierId={selectedMerchant.supplierId}
             storeId={selectedMerchant.storeId}
