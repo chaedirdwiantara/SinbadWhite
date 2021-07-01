@@ -39,6 +39,7 @@ const SfaEditCollectionTransfer = props => {
     false
   );
   const [dataReference, setDataReference] = useState(null);
+  const [outstanding, setOutstanding] = useState(props.data.paymentCollection.paidAmount + props.data.outstanding)
 
   //DATA INPUT
   const [noRef, setNoRef] = useState(props.data.paymentCollection.paymentCollectionMethod.reference);
@@ -185,11 +186,11 @@ const SfaEditCollectionTransfer = props => {
   const textBillingValue = text => {
     props.isChanged(true);
     if (
-      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.data.outstanding)
+      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(outstanding)
     ) {
-      if (props.data.outstanding < balance){
-        setBillingValue(parseInt(props.data.outstanding));
-        props.billingValue(parseInt(props.data.outstanding));
+      if (outstanding < balance){
+        setBillingValue(parseInt(outstanding));
+        props.billingValue(parseInt(outstanding));
       } else {
         setBillingValue(parseInt(balance));
         props.billingValue(parseInt(balance));
@@ -197,9 +198,9 @@ const SfaEditCollectionTransfer = props => {
     } else if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(balance)
     ) {
-      if (props.data.outstanding < balance){
-        setBillingValue(parseInt(props.data.outstanding));
-        props.billingValue(parseInt(props.data.outstanding));
+      if (outstanding < balance){
+        setBillingValue(parseInt(outstanding));
+        props.billingValue(parseInt(outstanding));
       } else {
         setBillingValue(parseInt(balance));
         props.billingValue(parseInt(balance));
@@ -212,11 +213,11 @@ const SfaEditCollectionTransfer = props => {
 
   useEffect(()=> {
     if (
-      parseInt(billingValue) > parseInt(props.data.outstanding)
+      parseInt(billingValue) > parseInt(outstanding)
     ) {
-      if (props.data.outstanding < balance){
-        setBillingValue(parseInt(props.data.outstanding));
-        props.billingValue(parseInt(props.data.outstanding));
+      if (outstanding < balance){
+        setBillingValue(parseInt(outstanding));
+        props.billingValue(parseInt(outstanding));
       } else {
         setBillingValue(parseInt(balance));
         props.billingValue(parseInt(balance));
@@ -224,9 +225,9 @@ const SfaEditCollectionTransfer = props => {
     } else if (
       parseInt(billingValue) > parseInt(balance)
     ) {
-      if (props.data.outstanding < balance){
-        setBillingValue(parseInt(props.data.outstanding));
-        props.billingValue(parseInt(props.data.outstanding));
+      if (outstanding < balance){
+        setBillingValue(parseInt(outstanding));
+        props.billingValue(parseInt(outstanding));
       } else {
         setBillingValue(parseInt(balance));
         props.billingValue(parseInt(balance));

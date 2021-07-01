@@ -34,6 +34,7 @@ const SfaEditCollectionPromo = props => {
   const status = props.status;
 
   const [dataReference, setDataReference] = useState(null);
+  const [outstanding, setOutstanding] = useState(props.data.paymentCollection.paidAmount + props.data.outstanding)
 
   //DATA PROMO
   const [noRef, setNoRef] = useState(props.data.paymentCollection.paymentCollectionMethod.reference);
@@ -141,11 +142,11 @@ const SfaEditCollectionPromo = props => {
 
   const textBillingPromo = (text) => {
     if (
-      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.data.outstanding)
+      parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(outstanding)
     ) {
-      if (props.data.outstanding < promoBalance){
-        setPromoValue(parseInt(props.data.outstanding));
-        props.billingPromoValue(parseInt(props.data.outstanding));
+      if (outstanding < promoBalance){
+        setPromoValue(parseInt(outstanding));
+        props.billingPromoValue(parseInt(outstanding));
       } else {
         setPromoValue(parseInt(promoBalance));
         props.billingPromoValue(parseInt(promoBalance));
@@ -153,9 +154,9 @@ const SfaEditCollectionPromo = props => {
     } else if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(promoBalance)
     ) {
-      if (props.data.outstanding < promoBalance){
-        setPromoValue(parseInt(props.data.outstanding));
-        props.billingPromoValue(parseInt(props.data.outstanding));
+      if (outstanding < promoBalance){
+        setPromoValue(parseInt(outstanding));
+        props.billingPromoValue(parseInt(outstanding));
       } else {
         setPromoValue(parseInt(promoBalance));
         props.billingPromoValue(parseInt(promoBalance));
@@ -168,11 +169,11 @@ const SfaEditCollectionPromo = props => {
 
   useEffect(()=> {
     if (
-      parseInt(promoValue) > parseInt(props.data.outstanding)
+      parseInt(promoValue) > parseInt(outstanding)
     ) {
-      if (props.data.outstanding < promoBalance){
-        setPromoValue(parseInt(props.data.outstanding));
-        props.billingPromoValue(parseInt(props.data.outstanding));
+      if (outstanding < promoBalance){
+        setPromoValue(parseInt(outstanding));
+        props.billingPromoValue(parseInt(outstanding));
       } else {
         setPromoValue(parseInt(promoBalance));
         props.billingPromoValue(parseInt(promoBalance));
@@ -180,9 +181,9 @@ const SfaEditCollectionPromo = props => {
     } else if (
       parseInt(promoValue) > parseInt(promoBalance)
     ) {
-      if (props.data.outstanding < promoBalance){
-        setPromoValue(parseInt(props.data.outstanding));
-        props.billingPromoValue(parseInt(props.data.outstanding));
+      if (outstanding < promoBalance){
+        setPromoValue(parseInt(outstanding));
+        props.billingPromoValue(parseInt(outstanding));
       } else {
         setPromoValue(parseInt(promoBalance));
         props.billingPromoValue(parseInt(promoBalance));
