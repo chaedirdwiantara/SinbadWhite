@@ -527,13 +527,19 @@ const SfaEditCollectionView = props => {
   };
   const renderButtonSave = () => {
     return (
-      <ButtonSingle
-        disabled={loadingSfaEditCollection || isButtonDisabled}
-        loading={loadingSfaEditCollection}
-        title={'Simpan'}
-        borderRadius={4}
-        onPress={() => openModalConfirmation()}
-      />
+      <View>
+        <View style={{marginTop: 17, marginHorizontal: 16, flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Text style={Fonts.type88}>Total Penagihan</Text>
+          <Text style={Fonts.type112p}>Rp. 25000</Text>
+        </View>
+        <ButtonSingle
+          disabled={loadingSfaEditCollection || isButtonDisabled}
+          loading={loadingSfaEditCollection}
+          title={'Simpan'}
+          borderRadius={4}
+          onPress={() => openModalConfirmation()}
+        />
+      </View>
     );
   };
 
@@ -620,11 +626,11 @@ const SfaEditCollectionView = props => {
           {renderFakturInfo()}
           {renderCollectionInfo()}
           {renderCollectionDetail()}
-          {renderButtonSave()}
           {renderModalEditConfirmation()}
           {renderModalErrorEditCollection()}
           {renderModalBackEdit()}
         </ScrollView>
+        {renderButtonSave()}
       </View>
     );
   };

@@ -418,7 +418,7 @@ if (checkMaterai === false){
             />
           </View>
         </View>
-        {paymentCollectionMethod.stamp ? (
+        {
           props.isPrimary ? (
             <View style={{ marginTop: 16 }}>
               <Text style={[Fonts.type10]}>Nilai Materai</Text>
@@ -484,8 +484,7 @@ if (checkMaterai === false){
                 editable={false}
               />
             </View>
-          )
-        ) : null}
+          )}
       </>
     );
   };
