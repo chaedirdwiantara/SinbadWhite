@@ -46,6 +46,7 @@ const SfaAddTagihanCheque = props => {
   const [dataStamp, setDataStamp] = useState();
   const [billingValue, setBillingValue] = useState(0);
   const [balanceValue, setBalanceValue] = useState(0);
+  const [stampAmount, setStampAmount] = useState(0);
   const { selectedMerchant } = useSelector(state => state.merchant);
   /**
    * =======================
@@ -53,6 +54,13 @@ const SfaAddTagihanCheque = props => {
    * =======================
    */
 
+  useEffect(() => {
+    if (checkMaterai === false) {
+      setDataStamp();
+      setStampAmount(0);
+      props.stamp(null);
+    }
+  }, [checkMaterai]);
   //function to make sure collection !> balance || colection !>outstanding
   useEffect(() => {
     if (parseInt(billingValue) > parseInt(props.remainingBilling)) {
@@ -103,6 +111,18 @@ const SfaAddTagihanCheque = props => {
     props.referenceCode(data);
   };
 
+  useEffect(() => {
+    collectionValidation();
+  }, [billingValue, stampAmount]);
+  const collectionValidation = () => {
+    const total = billingValue + stampAmount;
+    const substraction = total - props.remainingBilling;
+    if (parseInt(total) > parseInt(props.remainingBilling)) {
+      setBillingValue(billingValue - substraction);
+      props.billingValue(parseInt(billingValue - substraction));
+    }
+  };
+
   const dataBillingValue = text => {
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)
@@ -122,8 +142,7 @@ const SfaAddTagihanCheque = props => {
         setBillingValue(parseInt(balanceValue));
         props.billingValue(parseInt(balanceValue));
       }
-    }
-    else {
+    } else {
       setBillingValue(parseInt(text.replace(/[Rp.]+/g, '')));
       props.billingValue(parseInt(text.replace(/[Rp.]+/g, '')));
     }
@@ -561,7 +580,7 @@ const SfaAddTagihanCheque = props => {
           <ModalListMaterai
             open={openModalListMaterai}
             close={() => setOpenModalListMaterai(false)}
-            onRef={ref => (selectCollection = ref)}
+            onRef={ref => (selectedStamp = ref)}
             selectStamp={selectedStamp.bind(this)}
             supplierId={selectedMerchant.supplierId}
             storeId={selectedMerchant.storeId}
@@ -604,7 +623,8 @@ const SfaAddTagihanCheque = props => {
   const selectedStamp = data => {
     setDataStamp(data);
     setOpenModalListMaterai(false);
-    props.stamp(data.id);
+    setStampAmount(data.nominal);
+    props.stamp(data);
   };
 
   return (
