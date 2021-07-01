@@ -422,7 +422,6 @@ const SfaAddTagihanView = props => {
   };
 
   const dataStamp = data => {
-    console.log(data, 'data');
     if (data){
       setStamp(data.id);
       setStampAmount(data.nominal)
@@ -815,6 +814,7 @@ const SfaAddTagihanView = props => {
         isUsedStamp={statusStamp}
         useNoReference={useNoReference}
         paymentCollectionMethodId={noPaymentCollectionMethodId}
+        stampAmount={stampAmount}
       />
     );
   };
