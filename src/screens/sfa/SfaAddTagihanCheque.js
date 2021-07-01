@@ -46,7 +46,7 @@ const SfaAddTagihanCheque = props => {
   const [dataStamp, setDataStamp] = useState();
   const [billingValue, setBillingValue] = useState(0);
   const [balanceValue, setBalanceValue] = useState(0);
-  const [stampAmount, setStampAmount] = useState(0)
+  const [stampAmount, setStampAmount] = useState(0);
   const { selectedMerchant } = useSelector(state => state.merchant);
   /**
    * =======================
@@ -57,7 +57,7 @@ const SfaAddTagihanCheque = props => {
   useEffect(() => {
     if (checkMaterai === false) {
       setDataStamp();
-      setStampAmount(0)
+      setStampAmount(0);
       props.stamp(null);
     }
   }, [checkMaterai]);
@@ -73,8 +73,8 @@ const SfaAddTagihanCheque = props => {
   const deleteDataReference = () => {
     setIsDisable(false);
     setDataReference();
-    setIssuedDate(null)
-    setInvalidDate(null)
+    setIssuedDate(null);
+    setInvalidDate(null);
     props.referenceCode(null);
     props.issuedDate(null);
     props.dueDate(null);
@@ -89,8 +89,8 @@ const SfaAddTagihanCheque = props => {
   };
 
   useEffect(() => {
-    collectionValidation()
-  }, [billingValue, stampAmount])
+    collectionValidation();
+  }, [billingValue, stampAmount]);
   const collectionValidation = () => {
     const total = billingValue + stampAmount;
     const substraction = total - props.remainingBilling;
@@ -104,8 +104,21 @@ const SfaAddTagihanCheque = props => {
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)
     ) {
-      setBillingValue(parseInt(props.remainingBilling));
-      props.billingValue(parseInt(props.remainingBilling));
+      if (props.remainingBilling < balanceValue) {
+        setBillingValue(parseInt(props.remainingBilling));
+        props.billingValue(parseInt(props.remainingBilling));
+      } else {
+        setBillingValue(parseInt(balanceValue));
+        props.billingValue(parseInt(balanceValue));
+      }
+    } else if (parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(balanceValue)) {
+      if (props.remainingBilling < balanceValue) {
+        setBillingValue(parseInt(props.remainingBilling));
+        props.billingValue(parseInt(props.remainingBilling));
+      } else {
+        setBillingValue(parseInt(balanceValue));
+        props.billingValue(parseInt(balanceValue));
+      }
     } else {
       setBillingValue(parseInt(text.replace(/[Rp.]+/g, '')));
       props.billingValue(parseInt(text.replace(/[Rp.]+/g, '')));
@@ -586,7 +599,7 @@ const SfaAddTagihanCheque = props => {
   const selectedStamp = data => {
     setDataStamp(data);
     setOpenModalListMaterai(false);
-    setStampAmount(data.nominal)
+    setStampAmount(data.nominal);
     props.stamp(data);
   };
 
