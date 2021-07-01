@@ -89,6 +89,16 @@ if (checkMaterai === false){
 }
 }, [checkMaterai])
 
+//VALIDASI TOTAL PENAGIHAN
+useEffect(() => {
+  const totalBilling = (dataStamp ? dataStamp.nominal : 0) + paidAmount
+  if (dataStamp) {
+    if (totalBilling > outstanding) {
+      setPaidAmount(paidAmount - dataStamp.nominal)
+    }
+  }
+}, [paidAmount, dataStamp])
+
   const textBillingCash = text => {
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(outstanding)
