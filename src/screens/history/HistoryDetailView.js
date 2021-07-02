@@ -597,7 +597,7 @@ class HistoryDetailView extends Component {
         >
           {this.renderHeaderStatus()}
           {this.renderDetailPayment()}
-          {this.renderInformasiPengembalian()}
+          {/* {this.renderInformasiPengembalian()} */}
           {this.renderRingkasanPesanan()}
           {this.renderProductList()}
           {this.renderDeletedProductList()}

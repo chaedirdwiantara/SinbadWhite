@@ -450,13 +450,13 @@ renderButtonForOrder(item) {
                   <View style={[styles.boxItemContent, {marginBottom: 4}]}>
                     <View style={{flex: 1, flexDirection: 'row', alignSelf: 'space-between'}}>
                       <Text 
-                        style={[item.billing.isPartialInfoShow ? Fonts.type112p : Fonts.type111p, {flex: 1, textDecorationLine: item.billing.isPartialInfoShow ? 'line-through' : 'none'}]}>
+                        style={[item.deliveredParcelModified ? Fonts.type112p : Fonts.type111p, {flex: 1, textDecorationLine: item.deliveredParcelModified ? 'line-through' : 'none'}]}>
                         {MoneyFormat(item.billing.totalPayment)}
                       </Text>
-                      <Text style={[item.billing.isPartialInfoShow ? Fonts.type112p : Fonts.type111p, {textDecorationLine: item.billing.isPartialInfoShow ? 'line-through' : 'none'}]}>QTY: {item.parcelQty}</Text>
+                      <Text style={[item.deliveredParcelModified ? Fonts.type112p : Fonts.type111p, {textDecorationLine: item.deliveredParcelModified ? 'line-through' : 'none'}]}>QTY: {item.parcelQty}</Text>
                     </View>
                   </View>
-                  { item.billing.isPartialInfoShow ?
+                  { item.deliveredParcelModified ?
                     <View style={styles.boxItemContent}>
                       <View style={{flex: 1, flexDirection: 'row', alignSelf: 'space-between'}}>
                         <Text style={[Fonts.type111p, {flex: 1}]}>
@@ -472,7 +472,7 @@ renderButtonForOrder(item) {
             }
 
           </View>
-          { item.billing.isPartialInfoShow ?
+          { item.deliveredParcelModified && item.statusPayment !== REFUNDED ?
             <View style={styles.sticky}>
               <MaterialIcon name="error" size={15} color={masterColor.fontYellow50} />
               <Text style={[Fonts.type109p, {marginLeft: 6}]}>Terjadi Pengiriman Sebagian</Text>
