@@ -11,7 +11,8 @@ import { Fonts, GlobalStyle } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import * as ActionCreators from '../../state/actions';
-import { CANCEL } from '../../constants/orderConstants';
+import { CANCEL, DELIVERED, DONE } from '../../constants/orderConstants';
+import { OVERDUE, PAID, PAY_LATER, PAY_NOW, PAY_ON_DELIVERY, WAITING_FOR_PAYMENT } from '../../constants/paymentConstants';
 class HistoryDetailPaymentInformation extends Component {
   constructor(props) {
     super(props);
@@ -19,6 +20,31 @@ class HistoryDetailPaymentInformation extends Component {
       data: this.props.data
     };
   }
+  /**
+   * =======================
+   * FUNCTIONAL
+   * =======================
+   */
+
+  totalPembayaranPesanan(data) {
+    let total = 0;
+    if (data.paymentType.id === PAY_NOW) {
+      total = data.billing.totalPayment
+    } else {
+      if (data.status === DELIVERED || data.status === DONE) {
+        total = data.billing.deliveredTotalPayment
+      } else {
+        total = data.billing.totalPayment
+      }
+    }
+    return total;
+  }
+
+  /**
+   * =======================
+   * VIEW
+   * =======================
+   */
   /** RENDER CONTENT LIST GLOBAL */
   renderContentListGlobal(key, value, green, minus) {
     return (
@@ -49,6 +75,7 @@ class HistoryDetailPaymentInformation extends Component {
   /** RENDER DETAIL INFORMASI PEMBAYARAN */
   renderPaymentInformationDetail() {
     const paymentPromo = this.props.history.dataDetailHistory.parcelPromoPaymentAmount
+    const detailHistory = this.props.history.dataDetailHistory
     return (
       <View>
         <View style={GlobalStyle.boxPadding} />
@@ -62,36 +89,36 @@ class HistoryDetailPaymentInformation extends Component {
           <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
             {this.renderContentListGlobal(
               'Tipe Pembayaran',
-              this.props.history.dataDetailHistory.paymentType.name
+              detailHistory.paymentType.name
             )}
-            {this.props.history.dataDetailHistory.paylaterType
+            {detailHistory.paylaterType
               ? this.renderContentListGlobal(
                   'Penyedia Layanan',
-                  this.props.history.dataDetailHistory.paylaterType.name
+                  detailHistory.paylaterType.name
                 )
               : null}
             {this.renderContentListGlobal(
               'Metode Pembayaran',
-              this.props.history.dataDetailHistory.paymentChannel.name
+              detailHistory.paymentChannel.name
             )}
             <View style={[GlobalStyle.lines, { marginTop: 8 }]} />
 
             {this.renderContentListGlobal(
               `Sub-total pesanan (${
-                this.props.history.dataDetailHistory.parcelQty
+                detailHistory.parcelQty
               })`,
               MoneyFormat(this.props.data.parcelGrossPrice)
             )}
             {this.renderPromoList(
-              this.props.history.dataDetailHistory.promoList
+              detailHistory.promoList
             )}
             {this.renderVoucherList(
-              this.props.history.dataDetailHistory.voucherList
+              detailHistory.voucherList
             )}
             {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
             {this.renderContentListGlobal(
               'PPN 10%',
-              MoneyFormat(this.props.history.dataDetailHistory.parcelTaxes)
+              MoneyFormat(detailHistory.parcelTaxes)
             )}
             <View
               style={{
@@ -106,7 +133,7 @@ class HistoryDetailPaymentInformation extends Component {
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
                 <Text style={Fonts.type48}>
                   {MoneyFormat(
-                    this.props.history.dataDetailHistory.parcelFinalPrice
+                    detailHistory.parcelFinalPrice
                   )}
                 </Text>
               </View>
@@ -117,10 +144,10 @@ class HistoryDetailPaymentInformation extends Component {
               'Promo Pembayaran', MoneyFormat(paymentPromo), false, true
             ) : null}
             {
-              this.props.history.dataDetailHistory.billing.totalFeeDeduct ? 
+              detailHistory.billing.totalFeeDeduct ? 
               this.renderContentListGlobal(
                 'Layanan Pembayaran', 
-                MoneyFormat(this.props.history.dataDetailHistory.billing.totalFeeDeduct)
+                MoneyFormat(detailHistory.billing.totalFeeDeduct)
               )
               : null
             }
@@ -134,7 +161,7 @@ class HistoryDetailPaymentInformation extends Component {
               <View style={{ flex: 1, alignItems: 'flex-start' }}>
                 <Text style={Fonts.type48}>
                   {
-                    this.props.history.dataDetailHistory.status === CANCEL ?
+                    detailHistory.status === CANCEL ?
                     'Total Pembayaran'
                     :
                     'Total Pembayaran Pesanan'
@@ -144,7 +171,7 @@ class HistoryDetailPaymentInformation extends Component {
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
                 <Text style={Fonts.type48}>
                   {MoneyFormat(
-                    this.props.history.dataDetailHistory.billing.totalPayment
+                    this.totalPembayaranPesanan(detailHistory)
                   )}
                 </Text>
               </View>

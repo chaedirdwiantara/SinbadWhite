@@ -360,6 +360,7 @@ class HistoryDetailView extends Component {
   }
   /** RENDER INFORMASI PENGEMBALIAN */
   renderInformasiPengembalian() {
+    const detailHistory = this.props.history.dataDetailHistory
     return (
       <View>
         <View style={GlobalStyle.boxPadding} />
@@ -373,12 +374,18 @@ class HistoryDetailView extends Component {
 
           <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
             {this.renderContentListGlobal(
-              this.props.history.dataDetailHistory.status === CANCEL ? 'Total Pembayaran' : 'Total Pembayaran Pesanan' , 
-              MoneyFormat(this.props.history.dataDetailHistory.billing.totalPayment)
+              detailHistory.status === CANCEL ? 'Total Pembayaran' : 'Total Pembayaran Pesanan' , 
+              MoneyFormat(
+                detailHistory.billing.totalPayment
+              )
             )}
             {this.renderContentListGlobal(
               'Total Pembayaran Pengiriman', 
-              MoneyFormat(this.props.history.dataDetailHistory.billing.deliveredTotalPayment)
+              MoneyFormat(
+                detailHistory.status === CANCEL
+                ? 0
+                : detailHistory.billing.deliveredTotalPayment
+              )
             )}
             <View
               style={{
@@ -599,7 +606,7 @@ class HistoryDetailView extends Component {
           {this.renderHeaderStatus()}
           {this.renderDetailPayment()}
           { 
-            detailHistory.deliveredParcelModified && this.state.section === 'payment'
+            (detailHistory.deliveredParcelModified || detailHistory.status === CANCEL) && this.state.section === 'payment'
             ? this.renderInformasiPengembalian()
             : null
           }
