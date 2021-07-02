@@ -606,7 +606,9 @@ class HistoryDetailView extends Component {
           {this.renderHeaderStatus()}
           {this.renderDetailPayment()}
           { 
-            (detailHistory.deliveredParcelModified || detailHistory.status === CANCEL) && this.state.section === 'payment'
+            (detailHistory.deliveredParcelModified || detailHistory.status === CANCEL) && 
+            detailHistory.paymentType.id === PAY_NOW && 
+            this.state.section === 'payment'
             ? this.renderInformasiPengembalian()
             : null
           }
