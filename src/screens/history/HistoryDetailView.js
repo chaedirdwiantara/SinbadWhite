@@ -585,6 +585,7 @@ class HistoryDetailView extends Component {
 
   /** RENDER CONTENT */
   renderContent() {
+    const detailHistory = this.props.history.dataDetailHistory;
     return (
       <View style={{ flex: 1 }}>
         <ScrollView
@@ -597,7 +598,11 @@ class HistoryDetailView extends Component {
         >
           {this.renderHeaderStatus()}
           {this.renderDetailPayment()}
-          {/* {this.renderInformasiPengembalian()} */}
+          { 
+            detailHistory.deliveredParcelModified 
+            ? this.renderInformasiPengembalian()
+            : null
+          }
           {this.renderRingkasanPesanan()}
           {this.renderProductList()}
           {this.renderDeletedProductList()}
