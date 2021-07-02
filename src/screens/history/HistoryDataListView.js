@@ -226,8 +226,8 @@ class HistoryDataListView extends Component {
     const expiredTime = new Date(item.billing.expiredPaymentTime);
     const timeDiffInSecond = (timeNow.getTime() - expiredTime.getTime()) / 1000;
     return (
-      <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-        <Text style={Fonts.type10}>Waktu Bayar: </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'flex-end', marginTop: 11 }}>
+        <Text style={Fonts.type57}>Waktu Bayar: </Text>
         <CountDown
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
@@ -337,20 +337,7 @@ class HistoryDataListView extends Component {
           )}
           
         </View>
-        {item.statusPayment !== PAID && item.statusPayment !== REFUNDED && item.statusPayment !== WAITING_FOR_REFUND
-          ? item.statusPayment !== PAYMENT_FAILED &&
-            item.billing &&
-            item.billing.billingStatus !== BILLING_PAID &&
-            item.billing.expiredPaymentTime &&
-            item.paymentChannel &&
-            item.paymentChannel.paymentChannelTypeId !== PAY_NOW
-            ? moment.utc(new Date()).local() >
-                moment.utc(item.billing.expiredPaymentTime).local() &&
-              item.statusPayment === WAITING_FOR_PAYMENT
-              ? null
-              : this.renderCountDown(item)
-            : null
-          : null}
+        
       </View>
     );
   }
@@ -396,11 +383,27 @@ renderButtonForOrder(item) {
             </View>
             <View style={styles.boxItemContent}>
               {this.props.section === 'payment' ? (
-                <Text style={Fonts.type57}>
-                  {moment(new Date(item.createdAt)).format(
-                    'DD MMM YYYY HH:mm:ss'
-                  )}
-                </Text>
+                <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-between'}}>
+                  <Text style={[Fonts.type57, {marginTop: 11}]}>
+                    {moment(new Date(item.createdAt)).format(
+                      'DD MMM YYYY HH:mm:ss'
+                    )}
+                  </Text>
+                  {item.statusPayment !== PAID && item.statusPayment !== REFUNDED && item.statusPayment !== WAITING_FOR_REFUND
+                    ? item.statusPayment !== PAYMENT_FAILED &&
+                      item.billing &&
+                      item.billing.billingStatus !== BILLING_PAID &&
+                      item.billing.expiredPaymentTime &&
+                      item.paymentChannel &&
+                      item.paymentChannel.paymentChannelTypeId !== PAY_NOW
+                      ? moment.utc(new Date()).local() >
+                          moment.utc(item.billing.expiredPaymentTime).local() &&
+                        item.statusPayment === WAITING_FOR_PAYMENT
+                        ? null
+                        : this.renderCountDown(item)
+                      : null
+                    : null}
+                </View>
               ) : (
                 <View />
               )}
