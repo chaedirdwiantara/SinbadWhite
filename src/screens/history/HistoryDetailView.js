@@ -599,7 +599,7 @@ class HistoryDetailView extends Component {
           {this.renderHeaderStatus()}
           {this.renderDetailPayment()}
           { 
-            detailHistory.deliveredParcelModified 
+            detailHistory.deliveredParcelModified && this.state.section === 'payment'
             ? this.renderInformasiPengembalian()
             : null
           }
