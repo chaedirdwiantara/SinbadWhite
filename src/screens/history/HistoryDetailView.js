@@ -36,7 +36,7 @@ import HistoryDetailPayment from './HistoryDetailPayment';
 import CallCS from '../../screens/global/CallCS';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 import ModalBottomErrorResponsWhite from '../../components/error/ModalBottomErrorResponsWhite';
-import { REFUNDED, WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
+import { REFUNDED, WAITING_FOR_PAYMENT, PAY_NOW, PAID, WAITING_FOR_REFUND } from '../../constants/paymentConstants';
 import { CANCEL, CONFIRM, PENDING_PAYMENT } from '../../constants/orderConstants';
 import HistoryDeletedProductList from './product-list/HistoryDeletedProductList';
 
@@ -360,6 +360,7 @@ class HistoryDetailView extends Component {
   }
   /** RENDER INFORMASI PENGEMBALIAN */
   renderInformasiPengembalian() {
+    const detailHistory = this.props.history.dataDetailHistory
     return (
       <View>
         <View style={GlobalStyle.boxPadding} />
@@ -373,12 +374,18 @@ class HistoryDetailView extends Component {
 
           <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
             {this.renderContentListGlobal(
-              this.props.history.dataDetailHistory.status === CANCEL ? 'Total Pembayaran' : 'Total Pembayaran Pesanan' , 
-              MoneyFormat(this.props.history.dataDetailHistory.billing.totalPayment)
+              detailHistory.status === CANCEL ? 'Total Pembayaran' : 'Total Pembayaran Pesanan' , 
+              MoneyFormat(
+                detailHistory.billing.totalPayment
+              )
             )}
             {this.renderContentListGlobal(
               'Total Pembayaran Pengiriman', 
-              MoneyFormat(this.props.history.dataDetailHistory.billing.deliveredTotalPayment)
+              MoneyFormat(
+                detailHistory.status === CANCEL
+                ? 0
+                : detailHistory.billing.deliveredTotalPayment
+              )
             )}
             <View
               style={{
@@ -585,6 +592,7 @@ class HistoryDetailView extends Component {
 
   /** RENDER CONTENT */
   renderContent() {
+    const detailHistory = this.props.history.dataDetailHistory;
     return (
       <View style={{ flex: 1 }}>
         <ScrollView
@@ -597,7 +605,17 @@ class HistoryDetailView extends Component {
         >
           {this.renderHeaderStatus()}
           {this.renderDetailPayment()}
-          {this.renderInformasiPengembalian()}
+          {
+            detailHistory.paymentType.id === PAY_NOW && 
+            (
+              (detailHistory.status === CANCEL && 
+                (detailHistory.statusPayment === PAID || detailHistory.statusPayment === REFUNDED || detailHistory.statusPayment === WAITING_FOR_REFUND)) || 
+              detailHistory.deliveredParcelModified
+            ) ?   
+                this.renderInformasiPengembalian()
+            :
+             null
+          }
           {this.renderRingkasanPesanan()}
           {this.renderProductList()}
           {this.renderDeletedProductList()}

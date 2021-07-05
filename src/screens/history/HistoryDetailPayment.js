@@ -36,6 +36,7 @@ import CountDown from '../../components/CountDown';
 import { timeDiff, toLocalTime } from '../../helpers/TimeHelper';
 import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation';
 import { Color } from '../../config';
+import { BILLING_REFUNDED, BILLING_REFUND_REQUESTED, BILLING_EXPIRED, BILLING_CANCEL, BILLING_PAID} from '../../constants/paymentConstants';
 
 const { width, height } = Dimensions.get('window');
 class HistoryDetailPayment extends Component {
@@ -490,9 +491,11 @@ class HistoryDetailPayment extends Component {
     const paymentChannelId = this.props.data.paymentChannel.paymentChannelTypeId;
     return (
       <View>
-        {billingStatus !== 'paid' &&
-        billingStatus !== 'expired' &&
-        billingStatus !== 'cancel' ? (
+        {billingStatus !== BILLING_PAID &&
+        billingStatus !== BILLING_EXPIRED &&
+        billingStatus !== BILLING_CANCEL &&
+        billingStatus !== BILLING_REFUND_REQUESTED &&
+        billingStatus !== BILLING_REFUNDED ? (
           <View>
             <View style={GlobalStyle.boxPadding} />
             <View style={GlobalStyle.shadowForBox}>
