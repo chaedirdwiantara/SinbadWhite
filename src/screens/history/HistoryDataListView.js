@@ -26,7 +26,7 @@ import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import CountDown from '../../components/CountDown';
 import { REFUNDED, BILLING_PAID, PAID, WAITING_FOR_REFUND, PAYMENT_FAILED, WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
-import {CONFIRM, PENDING_PAYMENT} from '../../constants/orderConstants';
+import {CONFIRM, DELIVERED, PENDING_PAYMENT, DONE} from '../../constants/orderConstants';
 
 class HistoryDataListView extends Component {
   constructor(props) {
@@ -447,6 +447,17 @@ renderButtonForOrder(item) {
             ) : 
               <View>
                 <View>
+                { !item.deliveredParcelModified && (item.status === DELIVERED || item.status === DONE) ?
+                  <View style={[styles.boxItemContent, {marginBottom: 4}]}>
+                    <View style={{flex: 1, flexDirection: 'row', alignSelf: 'space-between'}}>
+                      <Text 
+                        style={[item.deliveredParcelModified ? Fonts.type112p : Fonts.type111p, {flex: 1, textDecorationLine: item.deliveredParcelModified ? 'line-through' : 'none'}]}>
+                        {MoneyFormat(item.billing.deliveredTotalPayment)}
+                      </Text>
+                      <Text style={[item.deliveredParcelModified ? Fonts.type112p : Fonts.type111p, {textDecorationLine: item.deliveredParcelModified ? 'line-through' : 'none'}]}>QTY: {item.deliveredParcelQty}</Text>
+                    </View>
+                  </View>
+                  : 
                   <View style={[styles.boxItemContent, {marginBottom: 4}]}>
                     <View style={{flex: 1, flexDirection: 'row', alignSelf: 'space-between'}}>
                       <Text 
@@ -456,6 +467,7 @@ renderButtonForOrder(item) {
                       <Text style={[item.deliveredParcelModified ? Fonts.type112p : Fonts.type111p, {textDecorationLine: item.deliveredParcelModified ? 'line-through' : 'none'}]}>QTY: {item.parcelQty}</Text>
                     </View>
                   </View>
+                }
                   { item.deliveredParcelModified ?
                     <View style={styles.boxItemContent}>
                       <View style={{flex: 1, flexDirection: 'row', alignSelf: 'space-between'}}>
