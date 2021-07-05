@@ -36,7 +36,7 @@ import HistoryDetailPayment from './HistoryDetailPayment';
 import CallCS from '../../screens/global/CallCS';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 import ModalBottomErrorResponsWhite from '../../components/error/ModalBottomErrorResponsWhite';
-import { REFUNDED, WAITING_FOR_PAYMENT, PAY_NOW, PAID } from '../../constants/paymentConstants';
+import { REFUNDED, WAITING_FOR_PAYMENT, PAY_NOW, PAID, WAITING_FOR_REFUND } from '../../constants/paymentConstants';
 import { CANCEL, CONFIRM, PENDING_PAYMENT } from '../../constants/orderConstants';
 import HistoryDeletedProductList from './product-list/HistoryDeletedProductList';
 
@@ -608,7 +608,8 @@ class HistoryDetailView extends Component {
           {
             detailHistory.paymentType.id === PAY_NOW && 
             (
-              (detailHistory.statusPayment === PAID && detailHistory.status === CANCEL) || 
+              (detailHistory.status === CANCEL && 
+                (detailHistory.statusPayment === PAID || detailHistory.statusPayment === REFUNDED || detailHistory.statusPayment === WAITING_FOR_REFUND)) || 
               detailHistory.deliveredParcelModified
             ) ?   
                 this.renderInformasiPengembalian()
