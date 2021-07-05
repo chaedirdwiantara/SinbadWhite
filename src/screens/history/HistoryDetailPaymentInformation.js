@@ -40,6 +40,62 @@ class HistoryDetailPaymentInformation extends Component {
     return total;
   }
 
+  totalPesanan(data) {
+    let total = 0;
+    if (data.paymentType.id === PAY_NOW) {
+      total = data.parcelFinalPrice
+    } else {
+      if (data.status === DELIVERED || data.status === DONE) {
+        total = data.deliveredParcelFinalPrice
+      } else {
+        total = data.parcelFinalPrice
+      }
+    }
+    return total;
+  }
+
+  totalPPN(data) {
+    let total = 0;
+    if (data.paymentType.id === PAY_NOW) {
+      total = data.parcelTaxes
+    } else {
+      if (data.status === DELIVERED || data.status === DONE) {
+        total = data.deliveredParcelTaxes
+      } else {
+        total = data.parcelTaxes
+      }
+    }
+    return total;
+  }
+
+  totalParcelQty(data) {
+    let total = 0;
+    if (data.paymentType.id === PAY_NOW) {
+      total = data.parcelQty
+    } else {
+      if (data.status === DELIVERED || data.status === DONE) {
+        total = data.deliveredParcelQty
+      } else {
+        total = data.parcelQty
+      }
+    }
+    return total;
+  }
+
+  subTotalPesanan(data) {
+    let total = 0;
+    if (data.paymentType.id === PAY_NOW) {
+      total = data.parcelGrossPrice
+    } else {
+      if (data.status === DELIVERED || data.status === DONE) {
+        total = data.deliveredParcelGrossPrice
+      } else {
+        total = data.parcelGrossPrice
+      }
+    }
+    return total;
+  }
+
   /**
    * =======================
    * VIEW
@@ -105,9 +161,9 @@ class HistoryDetailPaymentInformation extends Component {
 
             {this.renderContentListGlobal(
               `Sub-total pesanan (${
-                detailHistory.parcelQty
+                this.totalParcelQty(detailHistory)
               })`,
-              MoneyFormat(this.props.data.parcelGrossPrice)
+              MoneyFormat(this.subTotalPesanan(detailHistory))
             )}
             {this.renderPromoList(
               detailHistory.promoList
@@ -118,7 +174,7 @@ class HistoryDetailPaymentInformation extends Component {
             {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
             {this.renderContentListGlobal(
               'PPN 10%',
-              MoneyFormat(detailHistory.parcelTaxes)
+              MoneyFormat(this.totalPPN(detailHistory))
             )}
             <View
               style={{
@@ -133,7 +189,7 @@ class HistoryDetailPaymentInformation extends Component {
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
                 <Text style={Fonts.type48}>
                   {MoneyFormat(
-                    detailHistory.parcelFinalPrice
+                    this.totalPesanan(detailHistory)
                   )}
                 </Text>
               </View>
