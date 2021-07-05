@@ -414,7 +414,7 @@ const styles = StyleSheet.create({
   },
   boxButtonDetail: {
     marginLeft: 8,
-    paddingVertical: 8,
+    paddingVertical: 6,
     paddingHorizontal: 16,
     borderRadius: 5,
     borderColor: masterColor.fontBlack10,
