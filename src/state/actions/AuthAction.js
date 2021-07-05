@@ -5,8 +5,8 @@ import * as types from '../types';
  * ==============================
  */
 /** === DELETE ALL DATA ==== */
-export function deleteAllData() {
-  return { type: types.DELETE_ALL_DATA };
+export function signOut() {
+  return { type: types.DELETE_USER_DATA };
 }
 /**
  * ==============================

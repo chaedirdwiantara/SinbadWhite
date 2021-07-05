@@ -4,6 +4,7 @@
  */
 /** FOR SIGNOUT */
 export const DELETE_ALL_DATA = 'DeleteAllData';
+export const DELETE_USER_DATA = 'DeleteUserData';
 /** FOR SAVE SEARCH GLOBAL */
 export const SEARCH_TEXT = 'SearchText';
 /** FOR SAVE LOCATION VOLATILE DATA */
