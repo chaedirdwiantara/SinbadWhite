@@ -62,6 +62,9 @@ const SfaEditCollectionView = props => {
     openModalErrorEditCollection,
     setOpenModalErrorEditCollection
   ] = useState(false);
+  const [messageError, setMessageError] = useState(null);
+  const [titleError, setTitleError] = useState(null);
+  const [buttonTitle, setButtonTitle] = useState(null);
   const [openModalBackEdit, setOpenModalBackEdit] = useState(false)
 
   //DATA PAYMENT TRANSFER & PROMO
@@ -149,11 +152,48 @@ const SfaEditCollectionView = props => {
   useEffect(() => {
     if (prevErrorSfaEditCollection !== errorSfaEditCollection) {
       if (errorSfaEditCollection) {
-        setOpenModalErrorEditCollection(true);
+        handleError(errorSfaEditCollection);
       }
     }
   }, [errorSfaEditCollection]);
 
+  const handleError = error => {
+    if (error) {
+      switch (error.data.code) {
+        case 40002:
+          handleErrorSpecific(
+            error,
+            'Gagal Mengubah Transaksi',
+            'Ubah Transaksi'
+          );
+          break;
+        case 40005:
+          handleErrorSpecific(
+            error,
+            'Nomor Referensi Duplikat',
+            'Oke, Mengerti'
+          );
+          break;
+        default:
+          handleErrorGlobal();
+          break;
+      }
+    }
+  };
+
+  const handleErrorSpecific = (error, title, buttonText) => {
+    setMessageError(error.data.errorMessage);
+    setTitleError(title);
+    setButtonTitle(buttonText);
+    setOpenModalErrorEditCollection(true);
+  };
+
+  const handleErrorGlobal = () => {
+    setMessageError(null);
+    setTitleError(null);
+    setButtonTitle(null);
+    setOpenModalErrorEditCollection(true);
+  };
   /* ========================
    * HEADER MODIFY
    * ========================
@@ -615,9 +655,9 @@ const SfaEditCollectionView = props => {
         <ModalBottomFailPayment
           open={openModalErrorEditCollection}
           onPress={() => setOpenModalErrorEditCollection(false)}
-          text={errorSfaEditCollection.data.errorMessage}
-          buttonTitle={'Ubah Transaksi'}
-          errorTittle={'Gagal Mengubah Transaksi'}
+          text={messageError}
+          buttonTitle={buttonTitle}
+          errorTitle={titleError}
         />
       </View>
     ) : (
