@@ -362,7 +362,6 @@ renderButtonForOrder(item) {
   // }
   /** ITEM */
   renderItem({ item, index }) {
-    const paymentType = item.paymentType.id;
     return (
       <View key={index}>
         <View style={GlobalStyle.shadowForBox}>

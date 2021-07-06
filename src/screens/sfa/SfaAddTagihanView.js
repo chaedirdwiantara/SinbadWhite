@@ -99,6 +99,8 @@ const SfaAddTagihanView = props => {
   //MODAL
   const [modalBottomError, setModalBottomError] = useState(false);
   const [messageError, setMessageError] = useState(null);
+  const [titleError, setTitleError] = useState(null);
+  const [buttonTitle, setButtonTitle] = useState(null);
   /**
    * =======================
    * FUNCTIONAL
@@ -355,8 +357,7 @@ const SfaAddTagihanView = props => {
   useEffect(() => {
     if (prevErrorSfaPostPaymentMethod !== errorSfaPostPaymentMethod) {
       if (errorSfaPostPaymentMethod) {
-        setModalBottomError(true);
-        setMessageError(errorSfaPostPaymentMethod.data.errorMessage);
+        handleError(errorSfaPostPaymentMethod)
       }
     }
   }, [errorSfaPostPaymentMethod]);
@@ -365,10 +366,7 @@ const SfaAddTagihanView = props => {
   useEffect(() => {
     if (prevErrorSfaPostCollectionPayment !== errorSfaPostCollectionPayment) {
       if (errorSfaPostCollectionPayment) {
-        setModalBottomError(true);
-        setMessageError(
-          errorSfaPostCollectionPayment.payload.data.errorMessage
-        );
+       handleError(errorSfaPostCollectionPayment)
       }
     }
   }, [errorSfaPostCollectionPayment]);
@@ -563,6 +561,34 @@ const SfaAddTagihanView = props => {
     promoImage,
     billingPromoValue
   ]);
+
+
+  const handleError = (error) => {
+    if(error) {
+      switch (error.data.code) {
+        case 40005:
+          handleErrorSpecific(error, 'Nomor Referensi Duplikat', 'Oke, Mengerti')
+          break;
+        default:
+          handleErrorGlobal();
+          break;
+      }
+    }
+  };
+
+  const handleErrorSpecific = (error, title, buttonText) => {
+    setMessageError(error.data.errorMessage);
+    setTitleError(title);
+    setButtonTitle(buttonText)
+    setModalBottomError(true);
+  };
+
+  const handleErrorGlobal = () => {
+    setMessageError(null);
+    setTitleError(null);
+    setButtonTitle(null);
+    setModalBottomError(true);
+  };
 
   /**
    * *********************************
@@ -863,6 +889,8 @@ const SfaAddTagihanView = props => {
             open={modalBottomError}
             onPress={() => setModalBottomError(false)}
             text={messageError}
+            errorTitle={titleError}
+            buttonTitle={buttonTitle}
           />
         ) : (
           <View />

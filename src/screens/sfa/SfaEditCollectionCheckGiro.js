@@ -29,7 +29,6 @@ const SfaEditCollectionCheckGiro = props => {
   const paymentCollectionTypeId =
     paymentCollectionMethod.paymentCollectionType.id;
   const paymentCollection = props.data.paymentCollection
-
   const [paidAmount, setPaidAmount] = useState(
     props.data.paymentCollection.paidByCollectionMethod
   );
