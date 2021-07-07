@@ -408,7 +408,13 @@ class HistoryDataListView extends Component {
         >
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
-              <Text style={Fonts.type10}>{item.orderCode}</Text>
+              <Text
+                accessible={true}
+                accessibilityLabel={'txtTagihanOrderCOde'}
+                style={Fonts.type10}
+              >
+                {item.orderCode}
+              </Text>
               {this.props.section === 'payment'
                 ? this.renderItemStatusPayment(item)
                 : this.renderItemStatusOrder(item)}
@@ -422,7 +428,11 @@ class HistoryDataListView extends Component {
                     justifyContent: 'space-between'
                   }}
                 >
-                  <Text style={[Fonts.type57, { marginTop: 11 }]}>
+                  <Text
+                    accessible={true}
+                    accessibilityLabel={'txtTagihanTanggalTransaksi'}
+                    style={[Fonts.type57, { marginTop: 11 }]}
+                  >
                     {moment(new Date(item.createdAt)).format(
                       'DD MMM YYYY HH:mm:ss'
                     )}
@@ -474,7 +484,9 @@ class HistoryDataListView extends Component {
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             {this.props.section === 'order' ? (
               <View style={styles.boxItemContent}>
-                <Text style={Fonts.type17}>
+                <Text 
+                  accessible={true}
+                  accessibilityLabel={'txtTagihanQtyandTotal'} style={Fonts.type17}>
                   {item.parcelQty} Qty, Total:{' '}
                   {MoneyFormat(item.billing.totalPayment)}
                 </Text>
