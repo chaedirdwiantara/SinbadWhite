@@ -49,6 +49,10 @@ class ProductListType2 extends Component {
     return (
       <View style={[GlobalStyle.shadowForBox5, styles.boxListProductItem]}>
         <View
+          accessible={true}
+          accessibilityLabel={
+            this.props.accessibilityLabel ? this.props.accessibilityLabel : null
+          }
           style={{
             paddingHorizontal: 16,
             paddingBottom: 16,
