@@ -556,8 +556,10 @@ const SfaEditCollectionView = props => {
             loadingSfaEditCollection || isButtonDisabled ||
             (
               paymentCollectionType.name === CEK || paymentCollectionType.name === GIRO ?
-                isMateraiCheck && dataStamp?
-                false : true
+                isMateraiCheck ?
+                  dataStamp ?
+                    false : true 
+                : false
               : false
             )
           }
