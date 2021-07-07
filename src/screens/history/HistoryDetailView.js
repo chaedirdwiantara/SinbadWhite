@@ -36,8 +36,17 @@ import HistoryDetailPayment from './HistoryDetailPayment';
 import CallCS from '../../screens/global/CallCS';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 import ModalBottomErrorResponsWhite from '../../components/error/ModalBottomErrorResponsWhite';
-import { REFUNDED, WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
-import { CANCEL, CONFIRM, PENDING_PAYMENT } from '../../constants/orderConstants';
+import {
+  REFUNDED,
+  WAITING_FOR_PAYMENT,
+  PAY_NOW
+} from '../../constants/paymentConstants';
+import {
+  CANCEL,
+  CONFIRM,
+  PENDING_PAYMENT
+} from '../../constants/orderConstants';
+import HistoryBonusProductList from './product-list/HistoryBonusProductList';
 
 class HistoryDetailView extends Component {
   constructor(props) {
@@ -377,17 +386,20 @@ class HistoryDetailView extends Component {
                 new Date(this.props.history.dataDetailHistory.createdAt)
               ).format('DD MMM YYYY HH:mm:ss')
             )}
-            {
-              this.props.history.dataDetailHistory.status !== CANCEL && this.props.history.dataDetailHistory.statusPayment !== REFUNDED ?
-                this.renderContentListGlobal(
+            {this.props.history.dataDetailHistory.status !== CANCEL &&
+            this.props.history.dataDetailHistory.statusPayment !== REFUNDED
+              ? this.renderContentListGlobal(
                   this.props.history.dataDetailHistory.deliveredDate !== null
                     ? 'Tanggal Pengiriman'
                     : 'Estimasi Tanggal Pengiriman',
                   this.props.history.dataDetailHistory.deliveredDate !== null
                     ? moment(
-                        new Date(this.props.history.dataDetailHistory.deliveredDate)
+                        new Date(
+                          this.props.history.dataDetailHistory.deliveredDate
+                        )
                       ).format('DD MMM YYYY HH:mm:ss')
-                    : this.props.history.dataDetailHistory.estDeliveredDate !== null
+                    : this.props.history.dataDetailHistory.estDeliveredDate !==
+                      null
                     ? moment(
                         new Date(
                           this.props.history.dataDetailHistory.estDeliveredDate
@@ -395,11 +407,10 @@ class HistoryDetailView extends Component {
                       ).format('DD MMM YYYY HH:mm:ss')
                     : '-'
                 )
-              : null
-            }
-            {
-              this.props.history.dataDetailHistory.status !== CANCEL && this.props.history.dataDetailHistory.statusPayment !== REFUNDED ?
-                this.renderContentListGlobal(
+              : null}
+            {this.props.history.dataDetailHistory.status !== CANCEL &&
+            this.props.history.dataDetailHistory.statusPayment !== REFUNDED
+              ? this.renderContentListGlobal(
                   this.props.history.dataDetailHistory.dueDate !== null
                     ? 'Jatuh Tempo'
                     : 'Estimasi Jatuh Tempo',
@@ -409,32 +420,30 @@ class HistoryDetailView extends Component {
                       ).format('DD MMM YYYY HH:mm:ss')
                     : this.props.history.dataDetailHistory.estDueDate !== null
                     ? moment(
-                        new Date(this.props.history.dataDetailHistory.estDueDate)
+                        new Date(
+                          this.props.history.dataDetailHistory.estDueDate
+                        )
                       ).format('DD MMM YYYY HH:mm:ss')
                     : '-'
                 )
-              : null
-            }
-            {
-              this.props.history.dataDetailHistory.status === CANCEL && this.props.history.dataDetailHistory.statusPayment !== REFUNDED?
-                this.renderContentListGlobal(
+              : null}
+            {this.props.history.dataDetailHistory.status === CANCEL &&
+            this.props.history.dataDetailHistory.statusPayment !== REFUNDED
+              ? this.renderContentListGlobal(
                   'Tanggal Pembatalan',
                   moment(
                     new Date(this.props.history.dataDetailHistory.cancelTime)
                   ).format('DD MMM YYYY HH:mm:ss')
                 )
-              : null
-            }
-            {
-              this.props.history.dataDetailHistory.statusPayment === REFUNDED?
-                this.renderContentListGlobal(
+              : null}
+            {this.props.history.dataDetailHistory.statusPayment === REFUNDED
+              ? this.renderContentListGlobal(
                   'Tanggal Pengembalian Dana',
                   moment(
                     new Date(this.props.history.dataDetailHistory.refundedTime)
                   ).format('DD MMM YYYY HH:mm:ss')
                 )
-              : null
-            }
+              : null}
           </View>
         </View>
       </View>
@@ -539,6 +548,7 @@ class HistoryDetailView extends Component {
           {this.renderDetailPayment()}
           {this.renderRingkasanPesanan()}
           {this.renderProductList()}
+          {this.renderBonusProductList()}
           {this.renderDeliveryDetail()}
           {this.state.section === 'order' ? (
             this.renderPaymentInformation()
@@ -570,8 +580,10 @@ class HistoryDetailView extends Component {
         break;
       case 'ERR_APP_INVOICE_NOT_FOUND':
         this.errorInvoicENotFound();
+        break;
       case 'ERR_APP_INVOICE_ON_PROGRESS':
         this.errorInvoiceOnProgress();
+        break;
       default:
         this.setState({
           openModalErrorGlobal: true
@@ -751,8 +763,9 @@ class HistoryDetailView extends Component {
         <TouchableOpacity onPress={() => this.setState({ openModalCS: true })}>
           <Text style={Fonts.type22}>Butuh Bantuan ?</Text>
         </TouchableOpacity>
-        {this.state.section === 'order'?
-        this.renderButtonForOrder(dataDetailHistory) : (
+        {this.state.section === 'order' ? (
+          this.renderButtonForOrder(dataDetailHistory)
+        ) : (
           <View />
         )}
       </View>
@@ -761,6 +774,16 @@ class HistoryDetailView extends Component {
   /** BACKGROUND */
   renderBackground() {
     return <View style={styles.backgroundRed} />;
+  }
+  /** RENDER BONUS PRODUCT LIST */
+  renderBonusProductList() {
+    return this.props.history.dataDetailHistory.bonusCatalogues.length !== 0 ? (
+      <HistoryBonusProductList
+        data={this.props.history.dataDetailHistory.bonusCatalogues}
+      />
+    ) : (
+      <View />
+    );
   }
   /**
    * ======================
@@ -839,21 +862,29 @@ class HistoryDetailView extends Component {
     );
   }
 
-/** === RENDER BUTTON FOR ORDER === */
-renderButtonForOrder(item) {
-  switch (item.status){
-    case CONFIRM :
-      if (item.paymentType.id !== PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT){
-        return this.renderCancelButton(item)
-      }
-      case PENDING_PAYMENT:
-        if (item.paymentType.id === PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT ){
-          return this.renderCancelButton(item)
+  /** === RENDER BUTTON FOR ORDER === */
+  renderButtonForOrder(item) {
+    switch (item.status) {
+      case CONFIRM:
+        if (
+          item.paymentType.id !== PAY_NOW &&
+          item.statusPayment === WAITING_FOR_PAYMENT
+        ) {
+          return this.renderCancelButton(item);
         }
-    default :
-    return <View/>
+        break;
+      case PENDING_PAYMENT:
+        if (
+          item.paymentType.id === PAY_NOW &&
+          item.statusPayment === WAITING_FOR_PAYMENT
+        ) {
+          return this.renderCancelButton(item);
+        }
+        break;
+      default:
+        return <View />;
+    }
   }
-}
 
   /**RENDER WANT TO CONFIRM*/
   renderWantToConfirm(item) {

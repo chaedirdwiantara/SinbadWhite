@@ -73,7 +73,8 @@ import ToastType1 from '../components/toast/ToastType1';
 /** LIST */
 import ProductListType1 from '../components/list/ProductListType1';
 import ProductListType2 from '../components/list/ProductListType2';
-import ProductListType3 from '../components/list/ProductListType3'
+import ProductListType3 from '../components/list/ProductListType3';
+import ProductListType7 from '../components/list/ProductListType7';
 /** EMPTY DATA */
 import ComingSoon from '../components/empty_state/ComingSoon';
 import EmptyData from '../components/empty_state/EmptyData';
@@ -110,9 +111,9 @@ import SalesmanChart from '../components/SalesmanChart';
 import SlideIndicator from '../components/slide_indicator';
 import CardType1 from '../components/card/CardType1';
 /** TEMPLATE */
-import PdpGrid from '../components/template/PdpGrid'
+import PdpGrid from '../components/template/PdpGrid';
 /** ACCORDION */
-import Accordion from '../components/accordion/Accordion'
+import Accordion from '../components/accordion/Accordion';
 
 export {
   CartGlobal,
@@ -187,6 +188,7 @@ export {
   ProductListType1,
   ProductListType2,
   ProductListType3,
+  ProductListType7,
   /** EMPTY DATA */
   ComingSoon,
   EmptyData,
