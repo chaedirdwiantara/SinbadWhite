@@ -4,7 +4,9 @@ import {
   View,
   StyleSheet,
   Text,
-  TouchableOpacity
+  SafeAreaView,
+  TouchableOpacity,
+  Dimensions
 } from '../../library/reactPackage';
 import { TextInputMask } from 'react-native-masked-text';
 import {
@@ -23,12 +25,15 @@ import ModalReferenceList from './ModalReferenceList';
 import ModalBankAccount from './ModalBankAccount';
 import ModalListMaterai from './ModalListMaterai';
 import { useSelector } from 'react-redux';
+const { width, height } = Dimensions.get('window');
+
 const SfaAddTagihanGiro = props => {
   const status = props.status;
-  const [noRef, setNoRef] = useState(null);
+  const [noRef, setNoRef] = useState('');
   const [bankSource, setBankSource] = useState(null);
   const [issuedDate, setIssuedDate] = useState(null);
   const [invalidDate, setInvalidDate] = useState(null);
+  const [balance, setBalance] = useState(0);
   const [checkMaterai, setCheckMaterai] = useState(false);
   const [openModalPublishDate, setOpenModalPublishDate] = useState(false);
   const [openModalDueDate, setOpenModalDueDate] = useState(false);
@@ -48,6 +53,7 @@ const SfaAddTagihanGiro = props => {
    * FUNCTIONAL
    * =======================
    */
+
   useEffect(() => {
     if (checkMaterai === false) {
       setDataStamp();
@@ -55,7 +61,6 @@ const SfaAddTagihanGiro = props => {
       props.stamp(null);
     }
   }, [checkMaterai]);
-
   //function to make sure collection !> balance || colection !>outstanding
   useEffect(() => {
     if (parseInt(billingValue) > parseInt(props.remainingBilling)) {
@@ -91,8 +96,8 @@ const SfaAddTagihanGiro = props => {
   const deleteDataReference = () => {
     setIsDisable(false);
     setDataReference();
-    setInvalidDate(null);
     setIssuedDate(null);
+    setInvalidDate(null);
     props.referenceCode(null);
     props.issuedDate(null);
     props.dueDate(null);
@@ -105,6 +110,7 @@ const SfaAddTagihanGiro = props => {
     setNoRef(data);
     props.referenceCode(data);
   };
+
   useEffect(() => {
     collectionValidation();
   }, [billingValue, stampAmount]);
@@ -116,6 +122,7 @@ const SfaAddTagihanGiro = props => {
       props.billingValue(parseInt(billingValue - substraction));
     }
   };
+
   const dataBillingValue = text => {
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)
@@ -182,8 +189,8 @@ const SfaAddTagihanGiro = props => {
   };
 
   const renderDueDate = () => {
+    const minDate = new Date(new Date().setDate(new Date().getDate() + 1));
     const today = new Date();
-    const minDate = new Date(today.setDate(today.getDate() + 1));
     return (
       <ModalBottomType4
         typeClose={'Tutup'}
@@ -214,9 +221,7 @@ const SfaAddTagihanGiro = props => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View style={{ flex: 3 }}>
                 <InputType5
-                  title={
-                    isDisable !== false ? 'Nomor Giro' : '*Nomor Referensi'
-                  }
+                  title={isDisable !== false ? 'Nomor Giro' : `*Nomor Referensi`}
                   value={noRef}
                   placeholder={
                     dataReference
@@ -345,7 +350,7 @@ const SfaAddTagihanGiro = props => {
                   style={[
                     Fonts.type17,
                     {
-                      opacity: issuedDate === null || isDisable ? 0.5 : null,
+                      opacity: issuedDate === null ? 0.5 : null,
                       marginLeft: 11
                     }
                   ]}
@@ -382,7 +387,7 @@ const SfaAddTagihanGiro = props => {
                   style={[
                     Fonts.type17,
                     {
-                      opacity: invalidDate === null || isDisable ? 0.5 : null,
+                      opacity: invalidDate === null ? 0.5 : null,
                       marginLeft: 11
                     }
                   ]}
@@ -597,6 +602,7 @@ const SfaAddTagihanGiro = props => {
 
   const selectedReference = data => {
     setDataReference(data);
+    setBalanceValue(data.balance)
     setOpenModalReference(false);
     setIsDisable(true);
     props.referenceCode(data.referenceCode);
