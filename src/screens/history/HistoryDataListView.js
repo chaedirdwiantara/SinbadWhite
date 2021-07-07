@@ -242,7 +242,13 @@ class HistoryDataListView extends Component {
       <View
         style={{ flexDirection: 'row', alignItems: 'flex-end', marginTop: 11 }}
       >
-        <Text style={Fonts.type57}>Waktu Bayar: </Text>
+        <Text
+          accessible={true}
+          accessibilityLabel={'txtTagihanWaktuBayar'}
+          style={Fonts.type57}
+        >
+          Waktu Bayar:
+        </Text>
         <CountDown
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
@@ -395,6 +401,8 @@ class HistoryDataListView extends Component {
     return (
       <View key={index}>
         <TouchableOpacity
+          accessible={true}
+          accessibilityLabel={'btnTagihanDetail'}
           style={[styles.cardContainer, GlobalStyle.shadowForBox5]}
           onPress={() => this.goToDetail(item)}
         >

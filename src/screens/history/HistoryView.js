@@ -188,6 +188,8 @@ class HistoryView extends Component {
             />
           </View>
           <TouchableOpacity
+            accessible={true}
+            accessibilityLabel={'btnTagihanFilter'}
             style={{ paddingRight: 16, justifyContent: 'center' }}
             onPress={() => this.setState({ openMainFilter: true })}
           >
