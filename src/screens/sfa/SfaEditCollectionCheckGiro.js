@@ -53,6 +53,8 @@ const SfaEditCollectionCheckGiro = props => {
   );
   const [openModalListMaterai, setOpenModalListMaterai] = useState(false);
   const [outstanding, setOutstanding] = useState(props.data.outstanding + props.data.paymentCollection.paidByCollectionMethod)
+
+  const [isChangeBillingValue, setIsChangeBillingValue] = useState(false)
   /**
    * =======================
    * FUNCTIONAL
@@ -92,14 +94,17 @@ if (checkMaterai === false){
 //VALIDASI TOTAL PENAGIHAN
 useEffect(() => {
   const totalBilling = (dataStamp ? dataStamp.nominal : 0) + paidAmount
+  if (isChangeBillingValue) {
   if (dataStamp) {
     if (totalBilling > outstanding) {
       setPaidAmount(paidAmount - dataStamp.nominal)
     }
   }
-}, [paidAmount, dataStamp])
+}
+}, [paidAmount, dataStamp, isChangeBillingValue])
 
   const textBillingCash = text => {
+    // setIsChangeBillingValue(true)
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(outstanding)
     ) {
@@ -157,6 +162,7 @@ useEffect(() => {
 
   const functionMaterai = () => {
     setCheckMaterai(!checkMaterai);
+    props.checkMaterai(!checkMaterai)
     if (checkMaterai === false) {
       setDataStamp();
       props.onChangeDataStamp();
