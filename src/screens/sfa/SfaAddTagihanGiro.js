@@ -12,7 +12,8 @@ import { TextInputMask } from 'react-native-masked-text';
 import {
   MaterialIcon,
   moment,
-  MaterialCommunityIcons
+  MaterialCommunityIcons,
+  Tooltip
 } from '../../library/thirdPartyPackage';
 import {
   InputType5,
@@ -47,6 +48,7 @@ const SfaAddTagihanGiro = props => {
   const [billingValue, setBillingValue] = useState(0);
   const [balanceValue, setBalanceValue] = useState(0);
   const [stampAmount, setStampAmount] = useState(0);
+  const [questionMarkShow, setQuestionMarkShow] = useState(true);
   const { selectedMerchant } = useSelector(state => state.merchant);
   /**
    * =======================
@@ -185,6 +187,36 @@ const SfaAddTagihanGiro = props => {
           </View>
         }
       />
+    );
+  };
+  /** === RENDER TOOLTIP === */
+  const renderTooltip = () => {
+    return (
+      <Tooltip
+        backgroundColor={masterColor.fontBlack50OP80}
+        height={75}
+        withOverlay={false}
+        withPointer={false}
+        onOpen={() => setQuestionMarkShow(false) }
+        onClose={() => setQuestionMarkShow(true) }
+        containerStyle={{
+          padding: 8,
+          width: 0.6 * width
+        }}
+        popover={
+          
+          <Text style={Fonts.type87}>
+            {`\u25CF`} Masukan nilai materai apabila disediakan oleh Toko {'\n'}{'\n'}
+            {`\u25CF`} Nilai Materai yang dipilih akan menambah nilai penagihan
+          </Text>
+        }
+      >
+        {questionMarkShow ? (
+          <MaterialIcon name="help" size={13} color={masterColor.mainColor} />
+        ) : (
+          <View />
+        )}
+      </Tooltip>
     );
   };
 
@@ -470,9 +502,13 @@ const SfaAddTagihanGiro = props => {
           <View style={GlobalStyle.lines} />
           {isDisable ? null : (
             <View style={{ marginTop: 16 }}>
+              <View style={{display:'flex', flexDirection:'row'}}>
               <Text style={[Fonts.type10]}>
                 {isDisable !== false ? null : 'Materai'}
               </Text>
+              {renderTooltip()}
+              </View>
+              
               <View
                 style={{
                   flexDirection: 'row',
