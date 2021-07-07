@@ -4,13 +4,16 @@ import {
   View,
   StyleSheet,
   Text,
-  TouchableOpacity
+  SafeAreaView,
+  TouchableOpacity,
+  Dimensions
 } from '../../library/reactPackage';
 import { TextInputMask } from 'react-native-masked-text';
 import {
   MaterialIcon,
   moment,
-  MaterialCommunityIcons
+  MaterialCommunityIcons,
+  Tooltip
 } from '../../library/thirdPartyPackage';
 import {
   InputType5,
@@ -23,12 +26,15 @@ import ModalReferenceList from './ModalReferenceList';
 import ModalBankAccount from './ModalBankAccount';
 import ModalListMaterai from './ModalListMaterai';
 import { useSelector } from 'react-redux';
+const { width, height } = Dimensions.get('window');
+
 const SfaAddTagihanGiro = props => {
   const status = props.status;
-  const [noRef, setNoRef] = useState(null);
+  const [noRef, setNoRef] = useState('');
   const [bankSource, setBankSource] = useState(null);
   const [issuedDate, setIssuedDate] = useState(null);
   const [invalidDate, setInvalidDate] = useState(null);
+  const [balance, setBalance] = useState(0);
   const [checkMaterai, setCheckMaterai] = useState(false);
   const [openModalPublishDate, setOpenModalPublishDate] = useState(false);
   const [openModalDueDate, setOpenModalDueDate] = useState(false);
@@ -42,12 +48,14 @@ const SfaAddTagihanGiro = props => {
   const [billingValue, setBillingValue] = useState(0);
   const [balanceValue, setBalanceValue] = useState(0);
   const [stampAmount, setStampAmount] = useState(0);
+  const [questionMarkShow, setQuestionMarkShow] = useState(true);
   const { selectedMerchant } = useSelector(state => state.merchant);
   /**
    * =======================
    * FUNCTIONAL
    * =======================
    */
+
   useEffect(() => {
     if (checkMaterai === false) {
       setDataStamp();
@@ -55,7 +63,6 @@ const SfaAddTagihanGiro = props => {
       props.stamp(null);
     }
   }, [checkMaterai]);
-
   //function to make sure collection !> balance || colection !>outstanding
   useEffect(() => {
     if (parseInt(billingValue) > parseInt(props.remainingBilling)) {
@@ -91,8 +98,8 @@ const SfaAddTagihanGiro = props => {
   const deleteDataReference = () => {
     setIsDisable(false);
     setDataReference();
-    setInvalidDate(null);
     setIssuedDate(null);
+    setInvalidDate(null);
     props.referenceCode(null);
     props.issuedDate(null);
     props.dueDate(null);
@@ -105,6 +112,7 @@ const SfaAddTagihanGiro = props => {
     setNoRef(data);
     props.referenceCode(data);
   };
+
   useEffect(() => {
     collectionValidation();
   }, [billingValue, stampAmount]);
@@ -116,6 +124,7 @@ const SfaAddTagihanGiro = props => {
       props.billingValue(parseInt(billingValue - substraction));
     }
   };
+
   const dataBillingValue = text => {
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(props.remainingBilling)
@@ -180,10 +189,40 @@ const SfaAddTagihanGiro = props => {
       />
     );
   };
+  /** === RENDER TOOLTIP === */
+  const renderTooltip = () => {
+    return (
+      <Tooltip
+        backgroundColor={masterColor.fontBlack50OP80}
+        height={75}
+        withOverlay={false}
+        withPointer={false}
+        onOpen={() => setQuestionMarkShow(false) }
+        onClose={() => setQuestionMarkShow(true) }
+        containerStyle={{
+          padding: 8,
+          width: 0.6 * width
+        }}
+        popover={
+          
+          <Text style={Fonts.type87}>
+            {`\u25CF`} Masukan nilai materai apabila disediakan oleh Toko {'\n'}{'\n'}
+            {`\u25CF`} Nilai Materai yang dipilih akan menambah nilai penagihan
+          </Text>
+        }
+      >
+        {questionMarkShow ? (
+          <MaterialIcon name="help" size={13} color={masterColor.mainColor} />
+        ) : (
+          <View />
+        )}
+      </Tooltip>
+    );
+  };
 
   const renderDueDate = () => {
+    const minDate = new Date(new Date().setDate(new Date().getDate() + 1));
     const today = new Date();
-    const minDate = new Date(today.setDate(today.getDate() + 1));
     return (
       <ModalBottomType4
         typeClose={'Tutup'}
@@ -214,9 +253,7 @@ const SfaAddTagihanGiro = props => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View style={{ flex: 3 }}>
                 <InputType5
-                  title={
-                    isDisable !== false ? 'Nomor Giro' : '*Nomor Referensi'
-                  }
+                  title={isDisable !== false ? 'Nomor Giro' : `*Nomor Referensi`}
                   value={noRef}
                   placeholder={
                     dataReference
@@ -345,7 +382,7 @@ const SfaAddTagihanGiro = props => {
                   style={[
                     Fonts.type17,
                     {
-                      opacity: issuedDate === null || isDisable ? 0.5 : null,
+                      opacity: issuedDate === null ? 0.5 : null,
                       marginLeft: 11
                     }
                   ]}
@@ -382,7 +419,7 @@ const SfaAddTagihanGiro = props => {
                   style={[
                     Fonts.type17,
                     {
-                      opacity: invalidDate === null || isDisable ? 0.5 : null,
+                      opacity: invalidDate === null ? 0.5 : null,
                       marginLeft: 11
                     }
                   ]}
@@ -465,9 +502,13 @@ const SfaAddTagihanGiro = props => {
           <View style={GlobalStyle.lines} />
           {isDisable ? null : (
             <View style={{ marginTop: 16 }}>
+              <View style={{display:'flex', flexDirection:'row'}}>
               <Text style={[Fonts.type10]}>
                 {isDisable !== false ? null : 'Materai'}
               </Text>
+              {renderTooltip()}
+              </View>
+              
               <View
                 style={{
                   flexDirection: 'row',
@@ -597,6 +638,7 @@ const SfaAddTagihanGiro = props => {
 
   const selectedReference = data => {
     setDataReference(data);
+    setBalanceValue(data.balance)
     setOpenModalReference(false);
     setIsDisable(true);
     props.referenceCode(data.referenceCode);
