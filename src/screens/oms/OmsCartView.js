@@ -961,6 +961,8 @@ class OmsCartView extends Component {
   renderCheckoutButton() {
     return (
       <ButtonSingleSmall
+        accessible={true}
+        accessibilityLabel={'btnKeranjangCheckout'}
         disabled={
           this.props.oms.loadingOmsCheckPromo ||
           this.props.oms.loadingOmsGetCheckoutItem ||

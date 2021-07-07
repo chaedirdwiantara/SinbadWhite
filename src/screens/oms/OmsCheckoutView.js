@@ -1149,8 +1149,12 @@ class OmsCheckoutView extends Component {
           <View>
             <Text>
               <Text style={Fonts.type9}>Total: </Text>
-              <Text style={Fonts.type53}>
-                {MoneyFormat(this.calTotalPrice()+this.calTotalServiceFee())}
+              <Text
+                accessible={true}
+                accessibilityLabel={'txtCheckoutTotal'}
+                style={Fonts.type53}
+              >
+                {MoneyFormat(this.calTotalPrice() + this.calTotalServiceFee())}
               </Text>
             </Text>
           </View>
@@ -1162,6 +1166,8 @@ class OmsCheckoutView extends Component {
   renderConfirmButton() {
     return (
       <ButtonSingleSmall
+        accessible={true}
+        accessibilityLabel={'btnCheckoutBuatPesanan'}
         disabled={
           this.props.oms.loadingOmsConfirmOrder ||
           this.props.oms.loadingOmsGetTermsConditions
@@ -1537,6 +1543,8 @@ class OmsCheckoutView extends Component {
         </View>
         <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
         <TouchableOpacity
+          accessible={true}
+          accessibilityLabel={'btnCheckoutTipePembayaran'}
           disabled={this.state.disabled}
           style={[
             styles.boxPayment,
