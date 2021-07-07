@@ -709,6 +709,8 @@ class MerchantHomeView extends Component {
           >
             <Text style={Fonts.type42}>Pesanan Terakhir</Text>
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel={'btnMerchantHomeRiwayat'}
               onPress={() => {
                 this.goTo('history');
               }}
