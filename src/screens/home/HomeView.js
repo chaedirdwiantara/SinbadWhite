@@ -358,7 +358,7 @@ class HomeView extends Component {
           )}
 
           <View style={{ marginLeft: 12 }}>
-            <Text style={Fonts.type5}>
+            <Text accessible={true} accessibilityLabel={'txtHomeScreen'} style={Fonts.type5}>
               Hello{' '}
               {navigation.state.params
                 ? navigation.state.params.fullName.length >= 20
@@ -559,6 +559,8 @@ class HomeView extends Component {
   renderMenuItem = ({ item, index }) => {
     return (
       <TouchableOpacity
+        accessible={true}
+        accessibilityLabel={'btnHomeMenu'}
         style={styles.menuBoxPerItem}
         key={index}
         onPress={() => this.goToPage(item)}
