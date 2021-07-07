@@ -779,7 +779,7 @@ class HistoryDetailView extends Component {
   renderBonusProductList() {
     return this.props.history.dataDetailHistory.bonusCatalogues.length !== 0 ? (
       <HistoryBonusProductList
-        data={this.props.history.dataDetailHistory.promoList}
+        data={this.props.history.dataDetailHistory.bonusCatalogues}
       />
     ) : (
       <View />
