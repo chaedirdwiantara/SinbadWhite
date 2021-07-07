@@ -1170,8 +1170,11 @@ class MerchantHomeView extends Component {
                             this.goTo(item.goTo);
                           }}
                           style={{
-                            justifyContent: 'center',
-                            alignItems: 'center'
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                            marginRight: -5,
+                            marginTop: -5
                           }}
                         >
                           <Text style={Fonts.type51}>{'Sudah Lunas'}</Text>
