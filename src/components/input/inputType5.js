@@ -130,14 +130,14 @@ import {
     return (
       <Tooltip
         backgroundColor={Color.fontBlack50OP80}
-        height={55}
+        height={this.props.type === 'stamp' ? 75 : 55}
         withOverlay={false}
         withPointer={false}
         onOpen={() => this.setState({ questionMarkShow: false })}
         onClose={() => this.setState({ questionMarkShow: true })}
         containerStyle={{
           padding: 8,
-          width: 0.4 * width
+          width: this.props.type === 'stamp' ? 0.6 * width : 0.4 * width
         }}
         popover={
           <Text style={Fonts.type87}>

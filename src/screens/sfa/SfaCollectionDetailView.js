@@ -453,7 +453,10 @@ const SfaCollectionDetailView = props => {
               unit: 'Rp ',
               suffixUnit: ''
             }}
-            value={dataSfaGetCollectionDetail.paymentCollection.paidAmount}
+            value={
+              dataSfaGetCollectionDetail.paymentCollection
+                .paidByCollectionMethod
+            }
             style={[
               Fonts.type31,
               {

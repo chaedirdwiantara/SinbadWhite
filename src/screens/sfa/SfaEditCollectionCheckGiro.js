@@ -3,11 +3,13 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from '../../library/reactPackage';
 import { useState, useEffect } from 'react';
 import { TextInputMask } from 'react-native-masked-text';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
+const { width, height } = Dimensions.get('window');
 import {
   InputType5,
   DatePickerSpinnerWithMinMaxDate,
@@ -19,7 +21,8 @@ import ModalListMaterai from './ModalListMaterai';
 import {
   MaterialIcon,
   MaterialCommunityIcons,
-  moment
+  moment,
+  Tooltip
 } from '../../library/thirdPartyPackage';
 import { useSelector } from 'react-redux';
 const SfaEditCollectionCheckGiro = props => {
@@ -29,7 +32,6 @@ const SfaEditCollectionCheckGiro = props => {
   const paymentCollectionTypeId =
     paymentCollectionMethod.paymentCollectionType.id;
   const paymentCollection = props.data.paymentCollection
-
   const [paidAmount, setPaidAmount] = useState(
     props.data.paymentCollection.paidByCollectionMethod
   );
@@ -53,8 +55,8 @@ const SfaEditCollectionCheckGiro = props => {
   );
   const [openModalListMaterai, setOpenModalListMaterai] = useState(false);
   const [outstanding, setOutstanding] = useState(props.data.outstanding + props.data.paymentCollection.paidAmount)
-
   const [isChangeBillingValue, setIsChangeBillingValue] = useState(false)
+  const [questionMarkShow, setQuestionMarkShow] = useState(true);
   /**
    * =======================
    * FUNCTIONAL
@@ -182,6 +184,37 @@ useEffect(() => {
     props.onChangeReference(data);
     props.isChanged(true);
   };
+
+  /** === RENDER TOOLTIP === */
+const renderTooltip = () => {
+  return (
+    <Tooltip
+      backgroundColor={masterColor.fontBlack50OP80}
+      height={75}
+      withOverlay={false}
+      withPointer={false}
+      onOpen={() => setQuestionMarkShow(false) }
+      onClose={() => setQuestionMarkShow(true) }
+      containerStyle={{
+        padding: 8,
+        width: 0.6 * width
+      }}
+      popover={
+        
+        <Text style={Fonts.type87}>
+          {`\u25CF`} Masukan nilai materai apabila disediakan oleh Toko {'\n'}{'\n'}
+          {`\u25CF`} Nilai Materai yang dipilih akan menambah nilai penagihan
+        </Text>
+      }
+    >
+      {questionMarkShow ? (
+        <MaterialIcon name="help" size={13} color={masterColor.mainColor} />
+      ) : (
+        <View />
+      )}
+    </Tooltip>
+  );
+};
   /**
    * *********************************
    * RENDER VIEW
@@ -439,6 +472,7 @@ useEffect(() => {
           props.isPrimary ? (
             <View style={{ marginTop: 16 }}>
               <Text style={[Fonts.type10]}>Nilai Materai</Text>
+              {renderTooltip()}
               <View
                 style={{
                   flexDirection: 'row',
@@ -499,6 +533,11 @@ useEffect(() => {
                 title={`Nilai Materai`}
                 placeholder={dataStamp.name}
                 editable={false}
+                tooltip={true}
+                tooltipText={
+                '\u25CF Masukan nilai materai apabila disediakan oleh Toko \n \n \u25CF Nilai Materai yang dipilih akan menambah nilai penagihan'
+              }
+                  type={'stamp'}
               />
             </View>
           )}
