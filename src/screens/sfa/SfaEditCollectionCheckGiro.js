@@ -52,7 +52,7 @@ const SfaEditCollectionCheckGiro = props => {
     paymentCollectionMethod.stamp ? true : false
   );
   const [openModalListMaterai, setOpenModalListMaterai] = useState(false);
-  const [outstanding, setOutstanding] = useState(props.data.outstanding + props.data.paymentCollection.paidByCollectionMethod)
+  const [outstanding, setOutstanding] = useState(props.data.outstanding + props.data.paymentCollection.paidAmount)
 
   const [isChangeBillingValue, setIsChangeBillingValue] = useState(false)
   /**
@@ -104,10 +104,10 @@ useEffect(() => {
 }, [paidAmount, dataStamp, isChangeBillingValue])
 
   const textBillingCash = text => {
-    // setIsChangeBillingValue(true)
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(outstanding)
     ) {
+      setIsChangeBillingValue(true)
       if (props.data.outstanding + paidAmount < balanceValue) {
         setPaidAmount(parseInt(outstanding ));
         props.onChangePaidAmount(parseInt(outstanding));
