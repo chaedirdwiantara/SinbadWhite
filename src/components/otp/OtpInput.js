@@ -41,6 +41,8 @@ class OtpInput extends Component {
       <View style={styles.boxInputPartial}>
         <View style={styles.boxInput}>
           <TextInput
+            accessible={true}
+            accessibilityLabel={'txtOtpInput1'}
             selectionColor={Color.mainColor}
             autoFocus={this.state.input1 === ''}
             ref={ref => {
@@ -70,6 +72,8 @@ class OtpInput extends Component {
       <View style={styles.boxInputPartial}>
         <View style={styles.boxInput}>
           <TextInput
+            accessible={true}
+            accessibilityLabel={'txtOtpInput2'}
             selectionColor={Color.mainColor}
             ref={ref => {
               this.input2 = ref;
@@ -104,6 +108,8 @@ class OtpInput extends Component {
       <View style={styles.boxInputPartial}>
         <View style={styles.boxInput}>
           <TextInput
+            accessible={true}
+            accessibilityLabel={'txtOtpInput3'}
             selectionColor={Color.mainColor}
             ref={ref => {
               this.input3 = ref;
@@ -138,6 +144,8 @@ class OtpInput extends Component {
       <View style={styles.boxInputPartial}>
         <View style={styles.boxInput}>
           <TextInput
+            accessible={true}
+            accessibilityLabel={'txtOtpInput4'}
             selectionColor={Color.mainColor}
             ref={ref => {
               this.input4 = ref;
@@ -172,6 +180,8 @@ class OtpInput extends Component {
       <View style={styles.boxInputPartial}>
         <View style={styles.boxInput}>
           <TextInput
+            accessible={true}
+            accessibilityLabel={'txtOtpInput5'}
             selectionColor={Color.mainColor}
             ref={ref => {
               this.input5 = ref;

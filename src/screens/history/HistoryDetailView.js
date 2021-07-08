@@ -507,6 +507,8 @@ class HistoryDetailView extends Component {
           </View>
           <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
           <ProductListType2
+            accessible={true}
+            accessibilityLabel={'cardDetailProduk'}
             data={this.props.history.dataDetailHistory.orderBrands}
           />
         </View>
@@ -828,11 +830,15 @@ class HistoryDetailView extends Component {
     const dataDetailHistory = this.props.history.dataDetailHistory;
     return (
       <View style={styles.boxBottomAction}>
-        <TouchableOpacity onPress={() => this.setState({ openModalCS: true })}>
+        <TouchableOpacity
+          accessible={true}
+          accessibilityLabel={'btnDetailButuhBantuan'}
+          onPress={() => this.setState({ openModalCS: true })}
+        >
           <Text style={Fonts.type22}>Butuh Bantuan ?</Text>
         </TouchableOpacity>
         {this.state.section === 'order'?
-        this.renderButtonForOrder(dataDetailHistory) : (
+          this.renderButtonForOrder(dataDetailHistory) : (
           <View />
         )}
       </View>

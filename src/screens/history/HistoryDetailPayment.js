@@ -219,7 +219,11 @@ class HistoryDetailPayment extends Component {
                   />
                 </View>
               ) : (
-                <TouchableOpacity onPress={() => this.goToInvoice()}>
+                <TouchableOpacity
+                  accessible={true}
+                  accessibilityLabel={'btnDetailLihatFaktur'}
+                  onPress={() => this.goToInvoice()}
+                >
                   <Text style={Fonts.type107}>Lihat Faktur</Text>
                 </TouchableOpacity>
               )}
@@ -239,7 +243,11 @@ class HistoryDetailPayment extends Component {
               <Text style={Fonts.type9}>Nomor Pesanan</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <Text style={Fonts.type9}>
+              <Text
+                accessible={true}
+                accessibilityLabel={'txtDetailNomorPesanan'}
+                style={Fonts.type9}
+              >
                 {this.props.history.dataDetailHistory.orderCode
                   ? this.props.history.dataDetailHistory.orderCode
                   : '-'}
@@ -258,7 +266,11 @@ class HistoryDetailPayment extends Component {
               <Text style={Fonts.type9}>Nomor Referensi</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <Text style={Fonts.type9}>
+              <Text
+                accessible={true}
+                accessibilityLabel={'txtDetailNomorReferensi'}
+                style={Fonts.type9}
+              >
                 {this.props.history.dataDetailHistory.orderRef
                   ? this.props.history.dataDetailHistory.orderRef
                   : '-'}
@@ -331,6 +343,8 @@ class HistoryDetailPayment extends Component {
               </View>
             </View>
             <View
+              accessible={true}
+              accessibilityLabel={'cardDetailVA'}
               style={{
                 paddingHorizontal: 16,
                 paddingBottom: 8,
@@ -652,6 +666,8 @@ class HistoryDetailPayment extends Component {
     // const paymentChannelId = 3;
     return (
       <Tooltip
+        accessible={true}
+        accessibilityLabel={'btnDetailTooltipVa'}
         backgroundColor={Color.fontBlack50OP80}
         height={55}
         withOverlay={false}
