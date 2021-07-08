@@ -26,8 +26,6 @@ import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 
-const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
-
 class JourneyListDataView extends Component {
   constructor(props) {
     super(props);
@@ -46,6 +44,7 @@ class JourneyListDataView extends Component {
    * =======================
    */
   onHandleRefresh = () => {
+    const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
     this.props.journeyPlanGetRefreshV2();
     this.props.journeyPlanGetProcessV2({
       page: 1,
@@ -56,6 +55,7 @@ class JourneyListDataView extends Component {
   };
 
   onHandleLoadMore = () => {
+    const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
     if (
       !this.props.journey.errorGetJourneyPlan &&
       !this.props.journey.loadingLoadMoreGetJourneyPlan
@@ -454,11 +454,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 02072021
+ * updatedDate: 08072021
  * updatedFunction:
- * -> Delete oldest notes.
- * -> Change order icon, checkout icon, and fonts.
- * -> Add PJP and NONPJP label.
- * -> Add icon for chat.
+ * -> move variable 'today' to inside class component (related function).
  *
  */

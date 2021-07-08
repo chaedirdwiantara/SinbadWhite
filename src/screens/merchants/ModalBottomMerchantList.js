@@ -28,7 +28,6 @@ import { Fonts } from '../../helpers'
 import ModalBottomMerchantListDataView from './ModalMerchantListDataView';
 import * as ActionCreators from '../../state/actions';
 const { height } = Dimensions.get('window');
-const today = moment().format('YYYY-MM-DD') + 'T00:00:00+00:00';
 
 class ModalBottomMerchantList extends Component {
   constructor(props) {
@@ -175,6 +174,7 @@ class ModalBottomMerchantList extends Component {
   }
   /** === ADD JOURNEY PLAN === */
   addJourneyPlan() {
+    const today = moment().format('YYYY-MM-DD') + 'T00:00:00+00:00';
     this.props.saveMerchantToJourneyPlanProcessV2({
       date: today,
       externalSalesRepId: this.props.user.userCode
@@ -386,8 +386,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 01072021
+ * updatedDate: 08072021
  * updatedFunction:
- * -> add modal error when failed get portfolio.
- * -> add new parameter externalSalesId when adding store(s) to journey plan.
+ * -> move variable 'today' to inside class component (related function)
  */
