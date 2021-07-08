@@ -613,6 +613,8 @@ class MerchantHomeView extends Component {
     if (this.checkCheckIn() || item.title === 'Masuk') {
       return (
         <Button
+          accessible={true}
+          accessibilityLabel={'btnMerchantHomeMenu'}
           onPress={() => {
             this.goTo(item.goTo);
           }}
@@ -641,7 +643,13 @@ class MerchantHomeView extends Component {
           alignItems: 'center'
         }}
       >
-        <Text style={Fonts.type34}>Belum Masuk</Text>
+        <Text
+          accessible={true}
+          accessibilityLabel={'txtMerchantHomeBelumMasuk'}
+          style={Fonts.type34}
+        >
+          Belum Masuk
+        </Text>
       </View>
     );
   }
@@ -701,6 +709,8 @@ class MerchantHomeView extends Component {
           >
             <Text style={Fonts.type42}>Pesanan Terakhir</Text>
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel={'btnMerchantHomeRiwayat'}
               onPress={() => {
                 this.goTo('history');
               }}
@@ -946,7 +956,13 @@ class MerchantHomeView extends Component {
                             marginTop: -5
                           }}
                         >
-                          <Text style={Fonts.type51}>Selesai</Text>
+                          <Text
+                            accessible={true}
+                            accessibilityLabel={'txtMerchantHomeSelesaiOrder'}
+                            style={Fonts.type51}
+                          >
+                            Selesai
+                          </Text>
                           <MaterialIcon
                             style={{
                               marginTop: 2,

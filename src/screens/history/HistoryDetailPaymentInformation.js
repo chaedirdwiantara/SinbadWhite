@@ -116,6 +116,8 @@ class HistoryDetailPaymentInformation extends Component {
         </View>
         <View style={{ flex: 1, alignItems: 'flex-end' }}>
           <Text
+            accessible={true}
+            accessibilityLabel={'txtDetailValueGlobal'}
             style={[
               green ? Fonts.type107 : Fonts.type9,
               { textAlign: 'right' }
@@ -220,10 +222,12 @@ class HistoryDetailPaymentInformation extends Component {
                 </Text>
               </View>
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                <Text style={Fonts.type48}>
-                  {MoneyFormat(
-                    this.totalPembayaranPesanan(detailHistory)
-                  )}
+                <Text
+                  accessible={true}
+                  accessibilityLabel={'txtDetailTotalPembayaranPesanan'}
+                  style={Fonts.type48}
+                >
+                  {MoneyFormat(this.totalPembayaranPesanan(detailHistory))}
                 </Text>
               </View>
             </View>

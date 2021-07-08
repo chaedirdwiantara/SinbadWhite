@@ -73,7 +73,10 @@ class PdpView extends Component {
             <MaterialIcon color={Color.fontWhite} name={'search'} size={24} />
           </TouchableOpacity>
           <View style={{ marginRight: 16, marginLeft: 12 }}>
-            <CartGlobal />
+            <CartGlobal
+              accessible={true}
+              accessibilityLabel={'btnProdukCart'}
+            />
           </View>
         </View>
       )

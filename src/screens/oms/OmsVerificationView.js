@@ -393,13 +393,25 @@ class OmsVerificationView extends Component {
           <View
             style={[styles.bottomInformationTextContainer, { marginBottom: 8 }]}
           >
-            <Text style={Fonts.type8}>Total Transaksi</Text>
+            <Text
+              accessible={true}
+              accessibilityLabel={'txtVerifikasiTotalTransaksi'}
+              style={Fonts.type8}
+            >
+              Total Transaksi
+            </Text>
             <Text style={Fonts.type8}>
               {MoneyFormat(parseInt(dataOmsCheckPromo.grandTotalTransaction))}
             </Text>
           </View>
           <View style={styles.bottomInformationTextContainer}>
-            <Text style={Fonts.type8}>Total Potongan</Text>
+            <Text
+              accessible={true}
+              accessibilityLabel={'txtVerifikasiTotalPotongan'}
+              style={Fonts.type8}
+            >
+              Total Potongan
+            </Text>
             <Text style={Fonts.type107}>
               {MoneyFormat(parseInt(dataOmsCheckPromo.grandTotalRebate))}
             </Text>
@@ -407,6 +419,8 @@ class OmsVerificationView extends Component {
         </View>
         <View>
           <ButtonSingle
+            accessible={true}
+            accessibilityLabel={'btnVeriifkasiLanjutPembayaran'}
             disabled={this.props.oms.loadingOmsGetCheckoutItem}
             loading={this.props.oms.loadingOmsGetCheckoutItem}
             title={'Lanjut Ke Pembayaran'}

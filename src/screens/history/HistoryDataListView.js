@@ -25,8 +25,21 @@ import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import CountDown from '../../components/CountDown';
-import { REFUNDED, BILLING_PAID, PAID, WAITING_FOR_REFUND, PAYMENT_FAILED, WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
-import {CONFIRM, DELIVERED, PENDING_PAYMENT, DONE} from '../../constants/orderConstants';
+import {
+  REFUNDED,
+  BILLING_PAID,
+  PAID,
+  WAITING_FOR_REFUND,
+  PAYMENT_FAILED,
+  WAITING_FOR_PAYMENT,
+  PAY_NOW
+} from '../../constants/paymentConstants';
+import {
+  CONFIRM,
+  DELIVERED,
+  PENDING_PAYMENT,
+  DONE
+} from '../../constants/orderConstants';
 
 class HistoryDataListView extends Component {
   constructor(props) {
@@ -217,7 +230,7 @@ class HistoryDataListView extends Component {
   }
   /** RENDER SEPARATOR */
   renderSeparator() {
-    return <View style={{marginBottom: 16}} />;
+    return <View style={{ marginBottom: 16 }} />;
   }
 
   /** RENDER COUNTDOWN */
@@ -226,8 +239,16 @@ class HistoryDataListView extends Component {
     const expiredTime = new Date(item.billing.expiredPaymentTime);
     const timeDiffInSecond = (timeNow.getTime() - expiredTime.getTime()) / 1000;
     return (
-      <View style={{ flexDirection: 'row', alignItems: 'flex-end', marginTop: 11 }}>
-        <Text style={Fonts.type57}>Waktu Bayar: </Text>
+      <View
+        style={{ flexDirection: 'row', alignItems: 'flex-end', marginTop: 11 }}
+      >
+        <Text
+          accessible={true}
+          accessibilityLabel={'txtTagihanWaktuBayar'}
+          style={Fonts.type57}
+        >
+          Waktu Bayar:
+        </Text>
         <CountDown
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
@@ -267,31 +288,31 @@ class HistoryDataListView extends Component {
   /** === RENDER ITEM (STATUS PAYMENT) === */
   renderItemStatusPayment(item) {
     let textStyle = Fonts.type67;
-    let colorStyle = masterColor.fontBlack05
+    let colorStyle = masterColor.fontBlack05;
     switch (item.statusPayment) {
       case 'payment_failed':
-        textStyle = Fonts.type67
-        colorStyle = masterColor.fontBlack05
+        textStyle = Fonts.type67;
+        colorStyle = masterColor.fontBlack05;
         break;
       case 'overdue':
         textStyle = Fonts.type14;
-        colorStyle = masterColor.fontRed10
+        colorStyle = masterColor.fontRed10;
         break;
       case 'waiting_for_payment':
         textStyle = Fonts.type109p;
-        colorStyle = masterColor.fontYellow10
+        colorStyle = masterColor.fontYellow10;
         break;
       case 'waiting_for_refund':
         textStyle = Fonts.type109p;
-        colorStyle = masterColor.fontYellow10
+        colorStyle = masterColor.fontYellow10;
         break;
       case 'refunded':
         textStyle = Fonts.type110p;
-        colorStyle = masterColor.fontGreen10
+        colorStyle = masterColor.fontGreen10;
         break;
       case 'paid':
         textStyle = Fonts.type110p;
-        colorStyle = masterColor.fontGreen10
+        colorStyle = masterColor.fontGreen10;
         break;
       default:
         break;
@@ -303,24 +324,26 @@ class HistoryDataListView extends Component {
           moment.utc(new Date()).local() >
             moment.utc(item.billing.expiredPaymentTime).local() &&
           item.statusPayment === 'waiting_for_payment' ? (
-            <Text 
-              style={[Fonts.type67, 
-                { 
-                  textAlign: 'right', 
-                  backgroundColor: masterColor.fontBlack05 
-                }]}
+            <Text
+              style={[
+                Fonts.type67,
+                {
+                  textAlign: 'right',
+                  backgroundColor: masterColor.fontBlack05
+                }
+              ]}
             >
               Tidak Dibayar
             </Text>
           ) : (
-            <View 
+            <View
               style={{
-                backgroundColor: colorStyle, 
-                marginLeft: 15, 
-                paddingHorizontal: 8, 
-                paddingVertical: 4, 
-                borderRadius: 4, 
-                flexDirection: 'row' 
+                backgroundColor: colorStyle,
+                marginLeft: 15,
+                paddingHorizontal: 8,
+                paddingVertical: 4,
+                borderRadius: 4,
+                flexDirection: 'row'
               }}
             >
               <Text style={{ ...textStyle, textAlign: 'right' }}>
@@ -335,27 +358,31 @@ class HistoryDataListView extends Component {
               )}
             </View>
           )}
-          
         </View>
-        
       </View>
     );
   }
   /** === RENDER BUTTON FOR ORDER === */
-renderButtonForOrder(item) {
-  switch (item.status){
-    case CONFIRM :
-      if (item.paymentType.id !== PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT){
-        return this.renderButtonCancel(item)
-      }
-      case PENDING_PAYMENT:
-        if (item.paymentType.id === PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT ){
-          return this.renderButtonCancel(item)
+  renderButtonForOrder(item) {
+    switch (item.status) {
+      case CONFIRM:
+        if (
+          item.paymentType.id !== PAY_NOW &&
+          item.statusPayment === WAITING_FOR_PAYMENT
+        ) {
+          return this.renderButtonCancel(item);
         }
-    default :
-    return <View/>
+      case PENDING_PAYMENT:
+        if (
+          item.paymentType.id === PAY_NOW &&
+          item.statusPayment === WAITING_FOR_PAYMENT
+        ) {
+          return this.renderButtonCancel(item);
+        }
+      default:
+        return <View />;
+    }
   }
-}
 
   // /** === RENDER BUTTON FOR PAYMENT === */
   // renderButtonForPayment(item) {
@@ -373,23 +400,46 @@ renderButtonForOrder(item) {
     const paymentType = item.paymentType.id;
     return (
       <View key={index}>
-        <TouchableOpacity style={[styles.cardContainer, GlobalStyle.shadowForBox5]} onPress={() => this.goToDetail(item)}>
+        <TouchableOpacity
+          accessible={true}
+          accessibilityLabel={'btnTagihanDetail'}
+          style={[styles.cardContainer, GlobalStyle.shadowForBox5]}
+          onPress={() => this.goToDetail(item)}
+        >
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
-              <Text style={Fonts.type10}>{item.orderCode}</Text>
+              <Text
+                accessible={true}
+                accessibilityLabel={'txtTagihanOrderCOde'}
+                style={Fonts.type10}
+              >
+                {item.orderCode}
+              </Text>
               {this.props.section === 'payment'
                 ? this.renderItemStatusPayment(item)
                 : this.renderItemStatusOrder(item)}
             </View>
             <View style={styles.boxItemContent}>
               {this.props.section === 'payment' ? (
-                <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-between'}}>
-                  <Text style={[Fonts.type57, {marginTop: 11}]}>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <Text
+                    accessible={true}
+                    accessibilityLabel={'txtTagihanTanggalTransaksi'}
+                    style={[Fonts.type57, { marginTop: 11 }]}
+                  >
                     {moment(new Date(item.createdAt)).format(
                       'DD MMM YYYY HH:mm:ss'
                     )}
                   </Text>
-                  {item.statusPayment !== PAID && item.statusPayment !== REFUNDED && item.statusPayment !== WAITING_FOR_REFUND
+                  {item.statusPayment !== PAID &&
+                  item.statusPayment !== REFUNDED &&
+                  item.statusPayment !== WAITING_FOR_REFUND
                     ? item.statusPayment !== PAYMENT_FAILED &&
                       item.billing &&
                       item.billing.billingStatus !== BILLING_PAID &&
@@ -434,7 +484,9 @@ renderButtonForOrder(item) {
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             {this.props.section === 'order' ? (
               <View style={styles.boxItemContent}>
-                <Text style={Fonts.type17}>
+                <Text 
+                  accessible={true}
+                  accessibilityLabel={'txtTagihanQtyandTotal'} style={Fonts.type17}>
                   {item.parcelQty} Qty, Total:{' '}
                   {MoneyFormat(item.billing.totalPayment)}
                 </Text>
@@ -444,55 +496,127 @@ renderButtonForOrder(item) {
                     : null}
                 </View>
               </View>
-            ) : 
+            ) : (
               <View>
                 <View>
-                { !item.deliveredParcelModified && (item.status === DELIVERED || item.status === DONE) ?
-                  <View style={[styles.boxItemContent, {marginBottom: 4}]}>
-                    <View style={{flex: 1, flexDirection: 'row', alignSelf: 'space-between'}}>
-                      <Text 
-                        style={[item.deliveredParcelModified ? Fonts.type112p : Fonts.type111p, {flex: 1, textDecorationLine: item.deliveredParcelModified ? 'line-through' : 'none'}]}>
-                        {MoneyFormat(item.billing.deliveredTotalPayment)}
-                      </Text>
-                      <Text style={[item.deliveredParcelModified ? Fonts.type112p : Fonts.type111p, {textDecorationLine: item.deliveredParcelModified ? 'line-through' : 'none'}]}>QTY: {item.deliveredParcelQty}</Text>
-                    </View>
-                  </View>
-                  : 
-                  <View style={[styles.boxItemContent, {marginBottom: 4}]}>
-                    <View style={{flex: 1, flexDirection: 'row', alignSelf: 'space-between'}}>
-                      <Text 
-                        style={[item.deliveredParcelModified ? Fonts.type112p : Fonts.type111p, {flex: 1, textDecorationLine: item.deliveredParcelModified ? 'line-through' : 'none'}]}>
-                        {MoneyFormat(item.billing.totalPayment)}
-                      </Text>
-                      <Text style={[item.deliveredParcelModified ? Fonts.type112p : Fonts.type111p, {textDecorationLine: item.deliveredParcelModified ? 'line-through' : 'none'}]}>QTY: {item.parcelQty}</Text>
-                    </View>
-                  </View>
-                }
-                  { item.deliveredParcelModified ?
-                    <View style={styles.boxItemContent}>
-                      <View style={{flex: 1, flexDirection: 'row', alignSelf: 'space-between'}}>
-                        <Text style={[Fonts.type111p, {flex: 1}]}>
+                  {!item.deliveredParcelModified &&
+                  (item.status === DELIVERED || item.status === DONE) ? (
+                    <View style={[styles.boxItemContent, { marginBottom: 4 }]}>
+                      <View
+                        style={{
+                          flex: 1,
+                          flexDirection: 'row',
+                          alignSelf: 'space-between'
+                        }}
+                      >
+                        <Text
+                          style={[
+                            item.deliveredParcelModified
+                              ? Fonts.type112p
+                              : Fonts.type111p,
+                            {
+                              flex: 1,
+                              textDecorationLine: item.deliveredParcelModified
+                                ? 'line-through'
+                                : 'none'
+                            }
+                          ]}
+                        >
                           {MoneyFormat(item.billing.deliveredTotalPayment)}
                         </Text>
-                        <Text style={Fonts.type111p}>QTY: {item.deliveredParcelQty}</Text>
+                        <Text
+                          style={[
+                            item.deliveredParcelModified
+                              ? Fonts.type112p
+                              : Fonts.type111p,
+                            {
+                              textDecorationLine: item.deliveredParcelModified
+                                ? 'line-through'
+                                : 'none'
+                            }
+                          ]}
+                        >
+                          QTY: {item.deliveredParcelQty}
+                        </Text>
                       </View>
                     </View>
-                    : null
-                  }
-                </View>  
+                  ) : (
+                    <View style={[styles.boxItemContent, { marginBottom: 4 }]}>
+                      <View
+                        style={{
+                          flex: 1,
+                          flexDirection: 'row',
+                          alignSelf: 'space-between'
+                        }}
+                      >
+                        <Text
+                          style={[
+                            item.deliveredParcelModified
+                              ? Fonts.type112p
+                              : Fonts.type111p,
+                            {
+                              flex: 1,
+                              textDecorationLine: item.deliveredParcelModified
+                                ? 'line-through'
+                                : 'none'
+                            }
+                          ]}
+                        >
+                          {MoneyFormat(item.billing.totalPayment)}
+                        </Text>
+                        <Text
+                          style={[
+                            item.deliveredParcelModified
+                              ? Fonts.type112p
+                              : Fonts.type111p,
+                            {
+                              textDecorationLine: item.deliveredParcelModified
+                                ? 'line-through'
+                                : 'none'
+                            }
+                          ]}
+                        >
+                          QTY: {item.parcelQty}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+                  {item.deliveredParcelModified ? (
+                    <View style={styles.boxItemContent}>
+                      <View
+                        style={{
+                          flex: 1,
+                          flexDirection: 'row',
+                          alignSelf: 'space-between'
+                        }}
+                      >
+                        <Text style={[Fonts.type111p, { flex: 1 }]}>
+                          {MoneyFormat(item.billing.deliveredTotalPayment)}
+                        </Text>
+                        <Text style={Fonts.type111p}>
+                          QTY: {item.deliveredParcelQty}
+                        </Text>
+                      </View>
+                    </View>
+                  ) : null}
+                </View>
               </View>
-            }
-
+            )}
           </View>
           { item.deliveredParcelModified && 
           item.statusPayment !== REFUNDED && 
-          this.props.section === 'payment'?
+          this.props.section === 'payment'? (
             <View style={styles.sticky}>
-              <MaterialIcon name="error" size={15} color={masterColor.fontYellow50} />
-              <Text style={[Fonts.type109p, {marginLeft: 6}]}>Terjadi Pengiriman Sebagian</Text>
+              <MaterialIcon
+                name="error"
+                size={15}
+                color={masterColor.fontYellow50}
+              />
+              <Text style={[Fonts.type109p, { marginLeft: 6 }]}>
+                Terjadi Pengiriman Sebagian
+              </Text>
             </View>
-            : null
-          }
+          ) : null}
         </TouchableOpacity>
       </View>
     );
@@ -587,16 +711,16 @@ renderButtonForOrder(item) {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
+    flex: 1
   },
   flatListContainer: {
     paddingVertical: 16,
     paddingHorizontal: 16,
-    
+
     backgroundColor: masterColor.backgroundWhite
   },
   cardContainer: {
-    backgroundColor:masterColor.backgroundWhite, 
+    backgroundColor: masterColor.backgroundWhite,
     borderRadius: 8
   },
   boxContent: {
@@ -608,7 +732,7 @@ const styles = StyleSheet.create({
   boxItemContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   buttonDetail: {
     backgroundColor: masterColor.mainColor,
@@ -640,11 +764,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   sticky: {
-    flexDirection: 'row', 
-    justifyContent:'center',
-    backgroundColor: masterColor.fontYellow10, 
-    borderBottomLeftRadius: 8, 
-    borderBottomRightRadius: 8, 
+    flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: masterColor.fontYellow10,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
     paddingVertical: 8
   }
 });
