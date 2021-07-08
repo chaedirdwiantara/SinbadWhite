@@ -54,7 +54,8 @@ const SfaEditCollectionCheckGiro = props => {
     paymentCollectionMethod.stamp ? true : false
   );
   const [openModalListMaterai, setOpenModalListMaterai] = useState(false);
-  const [outstanding, setOutstanding] = useState(props.data.outstanding + props.data.paymentCollection.paidByCollectionMethod)
+  const [outstanding, setOutstanding] = useState(props.data.outstanding + props.data.paymentCollection.paidAmount)
+  const [isChangeBillingValue, setIsChangeBillingValue] = useState(false)
   const [questionMarkShow, setQuestionMarkShow] = useState(true);
   /**
    * =======================
@@ -95,17 +96,20 @@ if (checkMaterai === false){
 //VALIDASI TOTAL PENAGIHAN
 useEffect(() => {
   const totalBilling = (dataStamp ? dataStamp.nominal : 0) + paidAmount
+  if (isChangeBillingValue) {
   if (dataStamp) {
     if (totalBilling > outstanding) {
       setPaidAmount(paidAmount - dataStamp.nominal)
     }
   }
-}, [paidAmount, dataStamp])
+}
+}, [paidAmount, dataStamp, isChangeBillingValue])
 
   const textBillingCash = text => {
     if (
       parseInt(text.replace(/[Rp.]+/g, '')) > parseInt(outstanding)
     ) {
+      setIsChangeBillingValue(true)
       if (props.data.outstanding + paidAmount < balanceValue) {
         setPaidAmount(parseInt(outstanding ));
         props.onChangePaidAmount(parseInt(outstanding));
@@ -160,6 +164,7 @@ useEffect(() => {
 
   const functionMaterai = () => {
     setCheckMaterai(!checkMaterai);
+    props.checkMaterai(!checkMaterai)
     if (checkMaterai === false) {
       setDataStamp();
       props.onChangeDataStamp();

@@ -106,12 +106,6 @@ class MerchantHomeView extends Component {
           goTo: 'pdp',
           activity: ACTIVITY_JOURNEY_PLAN_ORDER
         },
-        // {
-        //   name: 'Penagihan',
-        //   title: 'Tagih',
-        //   goTo: 'collection',
-        //   activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
-        // },
         {
           name: 'Keluar Toko',
           title: 'Keluar',
@@ -160,25 +154,26 @@ class MerchantHomeView extends Component {
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
     // HIDE TASK BASE ON PRIVILEGE
-    const {checkIn, checkOut, order} = this.state.privileges || {}
-    let newTask = this.state.task
-    if(!checkIn?.status){ // same as (checkIn && !checkIn.status)
-      newTask = newTask.filter(el => el.title !== 'Masuk')
+    const { checkIn, checkOut, order } = this.state.privileges || {};
+    let newTask = this.state.task;
+    if (!checkIn?.status) {
+      // same as (checkIn && !checkIn.status)
+      newTask = newTask.filter(el => el.title !== 'Masuk');
     }
-    if(!checkOut?.status){
-      newTask = newTask.filter(el => el.title !== 'Keluar')
+    if (!checkOut?.status) {
+      newTask = newTask.filter(el => el.title !== 'Keluar');
     }
-    if(!order?.status){
-      newTask = newTask.filter(el => el.title !== 'Order')
+    if (!order?.status) {
+      newTask = newTask.filter(el => el.title !== 'Order');
     }
-    this.setState({task: newTask})
+    this.setState({ task: newTask });
     /** FOR GET PORTFOLIO (FOR PAYLOAD CHECKOUT ORDER) */
     this.props.portfolioGetProcessV2();
     /** FOR GET SFA STATUS ORDER */
     this.props.sfaGetStatusOrderProcess({
       storeId: this.props.merchant.selectedMerchant.storeId,
       supplierId: this.props.user.userSuppliers[0].supplier.id
-    })
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -189,53 +184,32 @@ class MerchantHomeView extends Component {
       loadingGetLogAllActivity,
       dataGetLogAllActivityV2
     } = this.props.merchant;
-    const sfaStatus =  this.props.sfa.dataSfaGetStatusOrder
+    const sfaStatus = this.props.sfa.dataSfaGetStatusOrder;
     if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
       if (surveyList.payload.data) {
-      /** IF NO SURVEY */
-      if (
-        _.isEmpty(surveyList.payload.data) &&
-        surveyList.success &&
-        !this.state.successSurveyList &&
-        sfaStatus
-      ) {
-        this.SurveyDone();
-        if (this.state.task.length === 3) {
-          if (sfaStatus.data.totalInvoice > 0 ) {
-            this.setState({
-              task: [
-                {
-                  name: 'Masuk Toko',
-                  title: 'Masuk',
-                  goTo: 'checkIn',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                },
-                {
-                  name: 'Order',
-                  title: 'Order',
-                  goTo: 'pdp',
-                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
-                },
-                {
-                  name: 'Penagihan',
-                  title: 'Tagih',
-                  goTo: 'collection',
-                  activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
-                },
-                {
-                  name: 'Keluar Toko',
-                  title: 'Keluar',
-                  goTo: 'checkOut',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                }
-              ]
-            });
+        /** IF NO SURVEY */
+        if (
+          _.isEmpty(surveyList.payload.data) &&
+          surveyList.success &&
+          !this.state.successSurveyList &&
+          sfaStatus
+        ) {
+          if (
+            !this.props.merchant.dataGetLogAllActivityV2.find(
+              item => item.activityName === 'toko_survey'
+            )
+          ) {
+            this.SurveyDone();
           } else {
+            this.setState({successSurveyList: true})
+          }
+          if (this.state.task.length === 3) {
+            if (sfaStatus.data.totalInvoice > 0) {
               this.setState({
                 task: [
                   {
-                    name: 'Check-in Toko',
-                    title: 'Check-in',
+                    name: 'Masuk Toko',
+                    title: 'Masuk',
                     goTo: 'checkIn',
                     activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
                   },
@@ -246,133 +220,162 @@ class MerchantHomeView extends Component {
                     activity: ACTIVITY_JOURNEY_PLAN_ORDER
                   },
                   {
-                    name: 'Check-out Toko',
-                    title: 'Check-out',
+                    name: 'Penagihan',
+                    title: 'Tagih',
+                    goTo: 'collection',
+                    activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
+                  },
+                  {
+                    name: 'Keluar Toko',
+                    title: 'Keluar',
                     goTo: 'checkOut',
                     activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
                   }
                 ]
               });
-
+            } else {
+              this.setState({
+                task: [
+                  {
+                    name: 'Masuk Toko',
+                    title: 'Masuk',
+                    goTo: 'checkIn',
+                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                  },
+                  {
+                    name: 'Order',
+                    title: 'Order',
+                    goTo: 'pdp',
+                    activity: ACTIVITY_JOURNEY_PLAN_ORDER
+                  },
+                  {
+                    name: 'Keluar Toko',
+                    title: 'Keluar',
+                    goTo: 'checkOut',
+                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+                  }
+                ]
+              });
+            }
           }
         }
-      }
-      /** IF SURVEY LIST EXIST */
-      if (!_.isEmpty(surveyList.payload.data) && surveyList.success && sfaStatus) {
-        if (this.state.task.length === 3) {
-
-          if (sfaStatus.data.totalInvoice > 0) {
-            this.setState({
-              task: [
-                {
-                  name: 'Check-in Toko',
-                  title: 'Check-in',
-                  goTo: 'checkIn',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                },
-                {
-                  name: 'Order',
-                  title: 'Order',
-                  goTo: 'pdp',
-                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
-                },
-                {
-                  name: 'Penagihan',
-                  title: 'Tagih',
-                  goTo: 'collection',
-                  activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
-                },
-                {
-                  name: 'Toko Survey',
-                  title: 'Isi',
-                  goTo: 'survey',
-                  activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-                },
-                {
-                  name: 'Check-out Toko',
-                  title: 'Check-out',
-                  goTo: 'checkOut',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                }
-              ]
-            });
-          } else {
-            this.setState({
-              task: [
-                {
-                  name: 'Masuk Toko',
-                  title: 'Masuk',
-                  goTo: 'checkIn',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                },
-                {
-                  name: 'Order',
-                  title: 'Order',
-                  goTo: 'pdp',
-                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
-                },
-                {
-                  name: 'Penagihan',
-                  title: 'Tagih',
-                  goTo: 'collection',
-                  activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
-                },
-                {
-                  name: 'Toko Survey',
-                  title: 'Isi',
-                  goTo: 'survey',
-                  activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-                },
-                {
-                  name: 'Keluar Toko',
-                  title: 'Keluar',
-                  goTo: 'checkOut',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                }
-              ]
-            });
-          }
-        }
-      }
-      /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
-      if (
-        !_.isEmpty(surveyList.payload.data) &&
-        surveyList.success &&
-        !this.state.successSurveyList
-      ) {
+        /** IF SURVEY LIST EXIST */
         if (
-          surveyList.payload.data.length ===
-          surveyList.payload.data.filter(
-            item => item.responseStatus === 'completed'
-          ).length
+          !_.isEmpty(surveyList.payload.data) &&
+          surveyList.success &&
+          sfaStatus
         ) {
-          if (this.props.merchant.dataGetLogAllActivity) {
-            if (
-              surveyList.payload.data.length ===
-              surveyList.payload.data.filter(
-                item => item.responseStatus === 'completed'
-              ).length
-            ) {
-              if (this.props.merchant.dataGetLogAllActivityV2) {
-                if (
-                  !this.props.merchant.dataGetLogAllActivityV2.find(
-                    item => item.activityName === 'toko_survey'
-                  )
-                ) {
-                  this.SurveyDone();
+          if (this.state.task.length === 3) {
+            if (sfaStatus.data.totalInvoice > 0) {
+              this.setState({
+                task: [
+                  {
+                    name: 'Masuk Toko',
+                    title: 'Masuk',
+                    goTo: 'checkIn',
+                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                  },
+                  {
+                    name: 'Order',
+                    title: 'Order',
+                    goTo: 'pdp',
+                    activity: ACTIVITY_JOURNEY_PLAN_ORDER
+                  },
+                  {
+                    name: 'Penagihan',
+                    title: 'Tagih',
+                    goTo: 'collection',
+                    activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
+                  },
+                  {
+                    name: 'Toko Survey',
+                    title: 'Isi',
+                    goTo: 'survey',
+                    activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+                  },
+                  {
+                    name: 'Keluar Toko',
+                    title: 'Keluar',
+                    goTo: 'checkOut',
+                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+                  }
+                ]
+              });
+            } else {
+              this.setState({
+                task: [
+                  {
+                    name: 'Masuk Toko',
+                    title: 'Masuk',
+                    goTo: 'checkIn',
+                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+                  },
+                  {
+                    name: 'Order',
+                    title: 'Order',
+                    goTo: 'pdp',
+                    activity: ACTIVITY_JOURNEY_PLAN_ORDER
+                  },
+                  {
+                    name: 'Toko Survey',
+                    title: 'Isi',
+                    goTo: 'survey',
+                    activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+                  },
+                  {
+                    name: 'Keluar Toko',
+                    title: 'Keluar',
+                    goTo: 'checkOut',
+                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+                  }
+                ]
+              });
+            }
+          }
+        }
+        /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
+        if (
+          !_.isEmpty(surveyList.payload.data) &&
+          surveyList.success &&
+          !this.state.successSurveyList
+        ) {
+          if (
+            surveyList.payload.data.length ===
+            surveyList.payload.data.filter(
+              item => item.responseStatus === 'completed'
+            ).length
+          ) {
+            if (this.props.merchant.dataGetLogAllActivity) {
+              if (
+                surveyList.payload.data.length ===
+                surveyList.payload.data.filter(
+                  item => item.responseStatus === 'completed'
+                ).length
+              ) {
+                if (this.props.merchant.dataGetLogAllActivityV2) {
+                  if (
+                    !this.props.merchant.dataGetLogAllActivityV2.find(
+                      item => item.activityName === 'toko_survey'
+                    )
+                  ) {
+                    this.SurveyDone();
+                  }
                 }
               }
             }
           }
-        }
-        /** FOR GET SURVEY LIST */
-        if (!loadingGetSurveyList && !surveyList.payload.data) {
-          this.getSurvey();
+          /** FOR GET SURVEY LIST */
+          if (!loadingGetSurveyList && !surveyList.payload.data) {
+            this.getSurvey();
+          }
         }
       }
-    }
       /** FOR GET SURVEY LIST */
-      if (!loadingGetSurveyList && !surveyList.payload.data && !errorGetSurveyList) {
+      if (
+        !loadingGetSurveyList &&
+        !surveyList.payload.data &&
+        !errorGetSurveyList
+      ) {
         this.getSurvey();
       }
     }
@@ -537,7 +540,7 @@ class MerchantHomeView extends Component {
   /** FOR ERROR FUNCTION (FROM DID UPDATE) */
   doError() {
     /** Close all modal and open modal error respons */
-    if (!this.state.openModalErrorGlobal){
+    if (!this.state.openModalErrorGlobal) {
       this.setState({
         openModalErrorGlobal: true,
         openModalCheckout: false,
@@ -559,7 +562,7 @@ class MerchantHomeView extends Component {
         break;
       case 'checkIn':
         if (this.props.merchant.dataGetLatestCheckInOut) {
-          return this.setState({ openModalBeforeCheckIn: true })
+          return this.setState({ openModalBeforeCheckIn: true });
         }
         NavigationService.navigate('MerchantCheckinView');
         break;
@@ -570,11 +573,13 @@ class MerchantHomeView extends Component {
           activity: 'check_in'
         });
         if (this.props.merchant.dataGetLogAllActivityV2) {
-          const haveSurvey = _.isEmpty(this.props.merchant.surveyList.payload.data)
+          const haveSurvey = _.isEmpty(
+            this.props.merchant.surveyList.payload.data
+          );
           const surveyHasDone = this.props.merchant.dataGetLogAllActivityV2.find(
             item => item.activityName === 'toko_survey'
-          )
-          const {checkOut} = this.state.privileges
+          );
+          const { checkOut } = this.state.privileges;
           if (haveSurvey || surveyHasDone || checkOut?.status) {
             this.setState({ openModalCheckout: true });
           }
@@ -595,7 +600,7 @@ class MerchantHomeView extends Component {
         break;
       case 'collection':
         NavigationService.navigate('SfaView');
-      break;
+        break;
       default:
         break;
     }
@@ -948,7 +953,7 @@ class MerchantHomeView extends Component {
           </View>
           {this.state.task.map((item, index) => {
             const taskList = this.checkCheckListTask(item.activity);
-            const sfaStatus = this.props.sfa.dataSfaGetStatusOrder.data
+            const sfaStatus = this.props.sfa.dataSfaGetStatusOrder.data;
             const journeyBookStores = this.props.merchant.selectedMerchant
               .journeyBookStores;
             return (
@@ -964,7 +969,8 @@ class MerchantHomeView extends Component {
                   <View>
                     {taskList ? (
                       taskList.activityName === ACTIVITY_JOURNEY_PLAN_ORDER &&
-                      !journeyBookStores.orderStatus && journeyBookStores.noOrderReasonNote.length !== 0 ? (
+                      !journeyBookStores.orderStatus &&
+                      journeyBookStores.noOrderReasonNote.length !== 0 ? (
                         <MaterialIcon
                           // name="check-circle"
                           // name="timelapse"
@@ -981,23 +987,33 @@ class MerchantHomeView extends Component {
                       )
                     ) : item.activity === ACTIVITY_JOURNEY_PLAN_COLLECTION ? (
                       sfaStatus.totalOverdueInvoice === 0 ? (
-                        <MaterialIcon
-                          name="check-circle"
-                          color={Color.fontGreen50}
-                          size={24}
-                        />
-                      // ) : sfaStatus.totalOverdueInvoice > 1 ? (
-                      //   <MaterialIcon
-                      //     name="cancel"
-                      //     color={Color.fontRed50}
-                      //     size={24}
-                      //   />
-                      ) : sfaStatus.totalOverdueInvoice >= 1 ? (
-                        <MaterialIcon
-                          name="timelapse"
-                          color={Color.fontYellow50}
-                          size={24}
-                        />
+                        this.checkCheckIn() ? (
+                          <MaterialIcon
+                            name="check-circle"
+                            color={Color.fontGreen50}
+                            size={24}
+                          />
+                        ) : (
+                          <MaterialIcon
+                            name="radio-button-unchecked"
+                            color={Color.fontBlack40}
+                            size={24}
+                          />
+                        )
+                      ) : this.checkCheckIn() ? (
+                        sfaStatus.totalOverdueInvoice >= 1 ? (
+                          <MaterialIcon
+                            name="timelapse"
+                            color={Color.fontYellow50}
+                            size={24}
+                          />
+                        ) : (
+                          <MaterialIcon
+                            name="radio-button-unchecked"
+                            color={Color.fontBlack40}
+                            size={24}
+                          />
+                        )
                       ) : (
                         <MaterialIcon
                           name="radio-button-unchecked"
@@ -1005,7 +1021,6 @@ class MerchantHomeView extends Component {
                           size={24}
                         />
                       )
-
                     ) : (
                       <MaterialIcon
                         name="radio-button-unchecked"
@@ -1030,7 +1045,7 @@ class MerchantHomeView extends Component {
                       <View
                         style={{
                           flexDirection: 'row',
-                          justifyContent: 'flex-end',
+                          justifyContent: 'flex-end'
                         }}
                       >
                         <Text style={Fonts.type107}>
@@ -1119,7 +1134,7 @@ class MerchantHomeView extends Component {
                         <MaterialIcon
                           style={{
                             marginTop: 2,
-                            padding: 0,
+                            padding: 0
                           }}
                           name="chevron-right"
                           color={Color.fontGreen50}
@@ -1149,66 +1164,94 @@ class MerchantHomeView extends Component {
                     )
                   ) : item.activity === ACTIVITY_JOURNEY_PLAN_COLLECTION ? (
                     sfaStatus.totalOverdueInvoice === 0 ? (
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.goTo(item.goTo);
-                        }}
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <Text style={Fonts.type51}>{"Sudah Lunas"}</Text>
-                      </TouchableOpacity>
-                    // ) : sfaStatus.totalOverdueInvoice > 1 ? (
+                      this.checkCheckIn() ? (
+                        <TouchableOpacity
+                          onPress={() => {
+                            this.goTo(item.goTo);
+                          }}
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                            marginRight: -5,
+                            marginTop: -5
+                          }}
+                        >
+                          <Text style={Fonts.type51}>{'Sudah Lunas'}</Text>
+                        </TouchableOpacity>
+                      ) : (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <Text style={Fonts.type34}>Belum Masuk</Text>
+                        </View>
+                      )
+                    ) : // ) : sfaStatus.totalOverdueInvoice > 1 ? (
                     //   <MaterialIcon
                     //     name="cancel"
                     //     color={Color.fontRed50}
                     //     size={24}
                     //   />
-                    ) : sfaStatus.totalOverdueInvoice >= 1 ? (
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.goTo(item.goTo);
-                        }}
+                    this.checkCheckIn() ? (
+                      sfaStatus.totalOverdueInvoice >= 1 ? (
+                        <TouchableOpacity
+                          onPress={() => {
+                            this.goTo(item.goTo);
+                          }}
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                            marginRight: -5,
+                            marginTop: -5
+                          }}
+                        >
+                          <Text style={Fonts.type69}>Berlangsung</Text>
+                          <MaterialIcon
+                            style={{
+                              marginTop: 2,
+                              padding: 0
+                            }}
+                            name="chevron-right"
+                            color={Color.fontYellow50}
+                            size={20}
+                          />
+                        </TouchableOpacity>
+                      ) : (
+                        <Button
+                          onPress={() => {
+                            this.goTo(item.goTo);
+                          }}
+                          title={item.title}
+                          titleStyle={[
+                            Fonts.type16,
+                            {
+                              color: Color.fontWhite
+                            }
+                          ]}
+                          buttonStyle={{
+                            backgroundColor: Color.fontRed50,
+                            borderRadius: 7,
+                            paddingHorizontal: 20,
+                            paddingVertical: 5,
+                            width: '100%'
+                          }}
+                        />
+                      )
+                    ) : (
+                      <View
                         style={{
                           flexDirection: 'row',
                           justifyContent: 'center',
-                          alignItems: 'center',
-                          marginTop: -5
+                          alignItems: 'center'
                         }}
                       >
-                        <Text style={Fonts.type69}>Berlangsung</Text>
-                        <MaterialIcon
-                          style={{
-                            marginTop: 2,
-                            padding: 0
-                          }}
-                          name="chevron-right"
-                          color={Color.fontYellow50}
-                          size={20}
-                        />
-                      </TouchableOpacity>
-                    ) : (
-                      <Button
-                      onPress={() => {
-                        this.goTo(item.goTo);
-                      }}
-                      title={item.title}
-                      titleStyle={[
-                        Fonts.type16,
-                        {
-                          color: Color.fontWhite
-                        }
-                      ]}
-                      buttonStyle={{
-                        backgroundColor: Color.fontRed50,
-                        borderRadius: 7,
-                        paddingHorizontal: 20,
-                        paddingVertical: 5,
-                        width: '100%'
-                      }}
-                    />
+                        <Text style={Fonts.type34}>Belum Masuk</Text>
+                      </View>
                     )
                   ) : (
                     this.rendercheckCheckIn(item)
@@ -1277,7 +1320,7 @@ class MerchantHomeView extends Component {
   }
   /** === RENDER CONTENT ITEM === */
   renderContentItem() {
-    const {order} = this.state.privileges
+    const { order } = this.state.privileges;
     return (
       <View>
         {/* {this.renderData()} */}
@@ -1329,15 +1372,15 @@ class MerchantHomeView extends Component {
    * =====================
    */
   renderModalCheckout() {
-    const {order} = this.state.privileges
-    
+    const { order } = this.state.privileges;
+
     return this.state.openModalCheckout ? (
       <ModalBottomMerchantCheckout
         open={this.state.openModalCheckout}
         close={() => this.setState({ openModalCheckout: false })}
         onPress={
           () => {
-            if(order?.status){
+            if (order?.status) {
               this.setState({ checkNoOrder: true });
               this.props.merchantGetLogPerActivityProcessV2({
                 journeyBookStoresId: this.props.merchant.selectedMerchant
@@ -1345,7 +1388,7 @@ class MerchantHomeView extends Component {
                 activity: 'order'
               });
             } else {
-              this.checkoutProcess()
+              this.checkoutProcess();
             }
           }
           // this.props.merchantPostActivityProcess({
@@ -1392,7 +1435,7 @@ class MerchantHomeView extends Component {
         open={this.state.openModalErrorGlobal}
         onPress={() => {
           this.setState({ openModalErrorGlobal: false });
-          if (this.props.merchant.errorGetLogAllActivityV2){
+          if (this.props.merchant.errorGetLogAllActivityV2) {
             return NavigationService.navigate('JourneyView');
           }
         }}
@@ -1612,7 +1655,14 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, merchant, user, permanent, privileges, sfa }) => {
+const mapStateToProps = ({
+  auth,
+  merchant,
+  user,
+  permanent,
+  privileges,
+  sfa
+}) => {
   return { auth, merchant, user, permanent, privileges, sfa };
 };
 
@@ -1621,7 +1671,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MerchantHomeView);
 
 /**
  * ============================

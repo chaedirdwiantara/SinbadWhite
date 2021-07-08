@@ -95,6 +95,7 @@ const SfaEditCollectionView = props => {
     detailSfa.paymentCollection.paymentCollectionMethod.amount
   );
   const [promoImage, setPromoImage] = useState(detailSfa.image);
+
   //DATA CHECK AND GIRO
   const [issuedDate, setIssuedDate] = useState(
     detailSfa.paymentCollection.paymentCollectionMethod.date
@@ -117,9 +118,12 @@ const SfaEditCollectionView = props => {
   const [balanceValue, setBalanceValue] = useState(
     detailSfa.paymentCollection.paymentCollectionMethod.amount
   );
+  const [isMateraiCheck, setIsMateraiCheck] = useState(detailSfa.paymentCollection.paymentCollectionMethod.stamp ? true : false);
 
   //Update Data Total Penagihan
-  const [totalBilling, setTotalBilling] = useState((dataStamp ? dataStamp.nominal : 0) + paidAmount)
+  const [totalBilling, setTotalBilling] = useState(
+    (detailSfa.paymentCollection.paymentCollectionMethod.stamp ? detailSfa.paymentCollection.paymentCollectionMethod.stamp.nominal : 0) + detailSfa.paymentCollection.paidByCollectionMethod
+  )
 
   //DATA USE REF
   const prevDataSfaEditCollectionRef = useRef(dataSfaEditCollection);
@@ -316,6 +320,10 @@ const SfaEditCollectionView = props => {
     setIsChanged(data);
   };
 
+  const isMateraiCheckData = data => {
+    setIsMateraiCheck(data);
+  };
+
   const dataReferenceCode = data => {
     setReferenceCode(data);
   };
@@ -455,6 +463,7 @@ const SfaEditCollectionView = props => {
 
   const renderCollectionInfo = () => {
     const detailSfa = dataSfaGetDetail.data;
+    const stamp = dataSfaGetCollectionDetail.paymentCollection.paymentCollectionMethod.stamp
     return (
       <View style={styles.container}>
         <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
@@ -467,7 +476,7 @@ const SfaEditCollectionView = props => {
           >
             <Text style={Fonts.type17}>Sisa Tagihan</Text>
             <Text style={Fonts.type100}>
-              {MoneyFormatSpace( dataSfaGetCollectionDetail.outstanding + dataSfaGetCollectionDetail.paymentCollection.paidByCollectionMethod)}
+              {MoneyFormatSpace( dataSfaGetCollectionDetail.outstanding + dataSfaGetCollectionDetail.paymentCollection.paidByCollectionMethod + (stamp? stamp.nominal : 0))}
             </Text>
           </View>
         </View>
@@ -562,6 +571,7 @@ const SfaEditCollectionView = props => {
           onChangeDataBank={onChangeDataBank}
           onChangeDataStamp={onChangeDataStamp}
           isChanged={isChangedData}
+          checkMaterai={isMateraiCheckData}
         />
       );
     } else {
@@ -572,7 +582,9 @@ const SfaEditCollectionView = props => {
   const openModalConfirmation = () => {
     setOpenModalEditConfirmation(true);
   };
+
   const renderButtonSave = () => {
+    const paymentCollectionType = detailSfa.paymentCollection.paymentCollectionMethod.paymentCollectionType;
     return (
       <View>
         <View style={{marginTop: 17, marginHorizontal: 16, flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -580,7 +592,17 @@ const SfaEditCollectionView = props => {
           <Text style={Fonts.type112p}>{MoneyFormatSpace(totalBilling)}</Text>
         </View>
         <ButtonSingle
-          disabled={loadingSfaEditCollection || isButtonDisabled}
+          disabled={
+            loadingSfaEditCollection || isButtonDisabled ||
+            (
+              paymentCollectionType.name === CEK || paymentCollectionType.name === GIRO ?
+                isMateraiCheck ?
+                  dataStamp ?
+                    false : true 
+                : false
+              : false
+            )
+          }
           loading={loadingSfaEditCollection}
           title={'Simpan'}
           borderRadius={4}

@@ -62,7 +62,7 @@ const SfaCollectionDetailCheckandGiro = (props) => {
         <View style={styles.inputField}>
           <InputType5
             title={`Jumlah Penagihan`}
-            placeholder={MoneyFormatSpace(paymentCollection.paidAmount ? paymentCollection.paidAmount : 0)}
+            placeholder={MoneyFormatSpace(paymentCollection.paidByCollectionMethod ? paymentCollection.paidByCollectionMethod : 0)}
             editable={false}
           />
         </View>
