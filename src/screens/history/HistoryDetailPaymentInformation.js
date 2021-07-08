@@ -216,12 +216,7 @@ class HistoryDetailPaymentInformation extends Component {
             >
               <View style={{ flex: 1, alignItems: 'flex-start' }}>
                 <Text style={Fonts.type48}>
-                  {
-                    detailHistory.status === CANCEL ?
-                    'Total Pembayaran'
-                    :
-                    'Total Pembayaran Pesanan'
-                  }
+                    Total Pembayaran Pesanan
                 </Text>
               </View>
               <View style={{ flex: 1, alignItems: 'flex-end' }}>

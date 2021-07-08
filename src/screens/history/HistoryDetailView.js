@@ -374,7 +374,7 @@ class HistoryDetailView extends Component {
 
           <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
             {this.renderContentListGlobal(
-              detailHistory.status === CANCEL ? 'Total Pembayaran' : 'Total Pembayaran Pesanan' , 
+              'Total Pembayaran Pesanan', 
               MoneyFormat(
                 detailHistory.billing.totalPayment
               )
@@ -607,9 +607,15 @@ class HistoryDetailView extends Component {
           {this.renderDetailPayment()}
           {
             detailHistory.paymentType.id === PAY_NOW && 
+            this.state.section === 'payment' &&
             (
               (detailHistory.status === CANCEL && 
-                (detailHistory.statusPayment === PAID || detailHistory.statusPayment === REFUNDED || detailHistory.statusPayment === WAITING_FOR_REFUND)) || 
+                (
+                  detailHistory.statusPayment === PAID || 
+                  detailHistory.statusPayment === REFUNDED || 
+                  detailHistory.statusPayment === WAITING_FOR_REFUND
+                )
+              ) || 
               detailHistory.deliveredParcelModified
             ) ?   
                 this.renderInformasiPengembalian()
@@ -625,6 +631,23 @@ class HistoryDetailView extends Component {
           ) : (
             <View />
           )}
+          {
+            detailHistory.paymentType.id === PAY_NOW && 
+            this.state.section === 'order' &&
+            (
+              (detailHistory.status === CANCEL && 
+                (
+                  detailHistory.statusPayment === PAID || 
+                  detailHistory.statusPayment === REFUNDED || 
+                  detailHistory.statusPayment === WAITING_FOR_REFUND
+                )
+              ) || 
+              detailHistory.deliveredParcelModified
+            ) ?   
+                this.renderInformasiPengembalian()
+            :
+             null
+          }
           {this.state.section === 'payment' ? (
             this.renderSelectPaymentMethod()
           ) : (

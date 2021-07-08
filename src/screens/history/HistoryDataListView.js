@@ -484,7 +484,9 @@ renderButtonForOrder(item) {
             }
 
           </View>
-          { item.deliveredParcelModified && item.statusPayment !== REFUNDED ?
+          { item.deliveredParcelModified && 
+          item.statusPayment !== REFUNDED && 
+          this.props.section === 'payment'?
             <View style={styles.sticky}>
               <MaterialIcon name="error" size={15} color={masterColor.fontYellow50} />
               <Text style={[Fonts.type109p, {marginLeft: 6}]}>Terjadi Pengiriman Sebagian</Text>
