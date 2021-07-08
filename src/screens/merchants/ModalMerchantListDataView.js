@@ -23,7 +23,6 @@ import {
 import { Color } from '../../config'
 import { GlobalStyle, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
-const date = moment().format('YYYY-MM-DD');
 
 class ModalMerchantListDataView extends Component {
   constructor(props) {
@@ -36,6 +35,7 @@ class ModalMerchantListDataView extends Component {
    * =======================
    */
   onHandleRefresh = () => {
+    const date = moment().format('YYYY-MM-DD');
     this.props.merchantExistingGetReset();
     this.props.merchantExistingGetProcess({
       date,
@@ -49,6 +49,7 @@ class ModalMerchantListDataView extends Component {
   };
 
   onHandleLoadMore = () => {
+    const date = moment().format('YYYY-MM-DD');
     if (this.props.merchant.dataGetMerchantV2) {
       if (
         this.props.merchant.dataGetMerchantV2.length <
@@ -249,20 +250,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
- * updatedFunction:
- * -> Refactoring Module Import
  * updatedBy: dyah
- * updatedDate: 24022021
+ * updatedDate: 08072021
  * updatedFunction:
- * -> update the props of portfolio.
- * updatedBy: dyah
- * updatedDate: 08032021
- * updatedFunction:
- * -> update the props of merchant list.
- * updatedBy: dyah
- * updatedDate: 09032021
- * updatedFunction:
- * -> add new data when passing to parent function.
+ * -> move variable 'date' to inside class component (related function)
  */

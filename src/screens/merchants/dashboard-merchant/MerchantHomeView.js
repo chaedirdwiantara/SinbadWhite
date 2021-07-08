@@ -46,7 +46,6 @@ import {
 import _ from 'lodash';
 
 const { width, height } = Dimensions.get('window');
-const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
 
 class MerchantHomeView extends Component {
   constructor(props) {
@@ -391,6 +390,7 @@ class MerchantHomeView extends Component {
   }
 
   componentWillUnmount() {
+    const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
     this.props.merchantGetSurveyListReset();
     this.props.journeyPlanGetResetV2();
     this.props.journeyPlanGetProcessV2({
@@ -1408,7 +1408,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 11062021
+ * updatedDate: 08072021
  * updatedFunction:
- * -> add action get sales team to get catalogues.
+ * -> move variable 'today' to inside class component (related function)
  */
