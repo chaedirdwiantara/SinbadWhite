@@ -13,6 +13,7 @@ export const sendDataApiError = data => {
       endpoint: apiHost.url + data.path,
       method: data.method,
       params: data.params,
+      payloadString: JSON.stringify(data.params),
       error: data.error
     });
     Sentry.captureMessage(`API Error ${data.path}`);
@@ -21,9 +22,9 @@ export const sendDataApiError = data => {
 /** SERVER DOWN */
 export const sendDataServerDown = () => {
   Sentry.configureScope(function(scope) {
-    scope.setTag('Bug Type', 'Server Down');
+    scope.setTag('Bug Type', 'Service Error');
     scope.setLevel(Sentry.Severity.Fatal);
-    Sentry.captureMessage('Server Down');
+    Sentry.captureMessage('Service Error');
   });
 };
 /** local function */
