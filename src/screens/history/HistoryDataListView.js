@@ -163,9 +163,124 @@ class HistoryDataListView extends Component {
 
   /** === RENDER ITEM (STATUS PAYMENT) === */
   renderItemStatusOrder(item) {
+    let textStyle = Fonts.type67;
+    let colorStyle = masterColor.fontBlack05;
+    console.log("ini item:", item);
+    'cancel',
+    'confirm',
+    'shipping',
+    'packing',
+    'delivered',
+    'checkout',
+    'pending',
+    'pending_payment',
+    'pending_supplier',
+    'pending_partial',
+    'done'
+    switch (item.status) {
+      case 'cancel':
+        textStyle = Fonts.type14; //sudah
+        colorStyle = masterColor.fontRed10;
+      break;
+      case 'confirm':
+        textStyle = Fonts.type67;
+        colorStyle = masterColor.fontBlack05;
+      break;
+      case 'shipping':
+        textStyle = Fonts.type67;
+        colorStyle = masterColor.fontBlack05;
+      break;
+      case 'packing':
+        textStyle = Fonts.type67;
+        colorStyle = masterColor.fontBlack05;
+      break;
+      case 'delivered':
+        textStyle = Fonts.type67;
+        colorStyle = masterColor.fontBlack05;
+      break;
+      case 'checkout':
+        textStyle = Fonts.type67;
+        colorStyle = masterColor.fontBlack05;
+      break;
+      case 'pending':
+        textStyle = Fonts.type109p; //sudah
+        colorStyle = masterColor.fontYellow10;
+      break;
+      case 'pending_payment':
+        textStyle = Fonts.type109p; //sudah
+        colorStyle = masterColor.fontYellow10;
+      break;
+      case 'pending_supplier':
+        textStyle = Fonts.type67;
+        colorStyle = masterColor.fontBlack05;
+      break;
+      case 'pending_partial':
+        textStyle = Fonts.type67;
+        colorStyle = masterColor.fontBlack05;
+      break;
+      case 'done':
+        textStyle = Fonts.type67;
+        colorStyle = masterColor.fontBlack05;
+      break;
+      default:
+        break;
+    }
+    // return (
+    //   <View>
+    //     <View style={{ flexDirection: 'row' }}>
+    //       {item.paymentChannel.id === 2 &&
+    //       moment.utc(new Date()).local() >
+    //         moment.utc(item.billing.expiredPaymentTime).local() &&
+    //       item.statusPayment === 'waiting_for_payment' ? (
+    //         <Text
+    //           style={[
+    //             Fonts.type67,
+    //             {
+    //               textAlign: 'right',
+    //               backgroundColor: masterColor.fontBlack05
+    //             }
+    //           ]}
+    //         >
+    //           Tidak Dibayar
+    //         </Text>
+    //       ) : (
+    //         <View
+    //           style={{
+    //             backgroundColor: colorStyle,
+    //             marginLeft: 15,
+    //             paddingHorizontal: 8,
+    //             paddingVertical: 4,
+    //             borderRadius: 4,
+    //             flexDirection: 'row'
+    //           }}
+    //         >
+    //           <Text style={{ ...textStyle, textAlign: 'right' }}>
+    //             {this.statusPayment(item.statusPayment)}
+    //           </Text>
+    //           {item.statusPayment === 'overdue' ? (
+    //             <View style={{ marginLeft: 5 }}>
+    //               <MaterialIcon name="error" size={15} color={'#f0444c'} />
+    //             </View>
+    //           ) : (
+    //             <View />
+    //           )}
+    //         </View>
+    //       )}
+    //     </View>
+    //   </View>
+    // );
     return (
-      <View>
-        <Text style={Fonts.type10}>{this.statusOrder(item.status)}</Text>
+      <View 
+        style={{
+          backgroundColor: colorStyle,
+          marginLeft: 15,
+          paddingHorizontal: 8,
+          paddingVertical: 4,
+          borderRadius: 4,
+          flexDirection: 'row'
+        }}
+      >
+        <Text style={{ ...textStyle, textAlign: 'right' }}>{this.statusOrder(item.status)}</Text>
       </View>
     );
   }
