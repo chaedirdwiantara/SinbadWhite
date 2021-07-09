@@ -5,15 +5,15 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Image,
   Text
 } from '../../library/reactPackage'
 import {
   bindActionCreators,
   connect,
   MaterialIcon,
-  moment,
-  OcticonsIcon
-} from '../../library/thirdPartyPackage'
+  moment
+} from '../../library/thirdPartyPackage';
 import {
   SkeletonType3,
   LoadingLoadMore,
@@ -25,8 +25,6 @@ import { GlobalStyle, Fonts } from '../../helpers'
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
-
-const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
 
 class JourneyListDataView extends Component {
   constructor(props) {
@@ -46,6 +44,7 @@ class JourneyListDataView extends Component {
    * =======================
    */
   onHandleRefresh = () => {
+    const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
     this.props.journeyPlanGetRefreshV2();
     this.props.journeyPlanGetProcessV2({
       page: 1,
@@ -56,6 +55,7 @@ class JourneyListDataView extends Component {
   };
 
   onHandleLoadMore = () => {
+    const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
     if (
       !this.props.journey.errorGetJourneyPlan &&
       !this.props.journey.loadingLoadMoreGetJourneyPlan
@@ -174,6 +174,14 @@ class JourneyListDataView extends Component {
 
   /** === RENDER ITEM === */
   renderItem({ item, index }) {
+    let pjp = true;
+    if (
+      item.journeyBookStores.route === null ||
+      item.journeyBookStores.route === 0
+    ) {
+      pjp = false;
+    }
+
     return (
       <View key={index} style={styles.boxItem}>
         <View style={{ justifyContent: 'center' }}>
@@ -204,20 +212,45 @@ class JourneyListDataView extends Component {
             flex: 1
           }}
         >
-          <View>
+          <View style={{ marginBottom: 4 }}>
+            <View style={styles.containerExternalStoreId}>
+              <Text
+                style={
+                  item.journeyBookStores.typeOfStore === 'exist_store'
+                    ? Fonts.type67
+                    : Fonts.type29
+                }
+              >
+                {item.externalId ? item.externalId : '-'}
+              </Text>
+              <View
+                style={[
+                  styles.labelPJP,
+                  {
+                    backgroundColor: pjp
+                      ? masterColor.fontBlue10
+                      : masterColor.fontBlack10
+                  }
+                ]}
+              >
+                <Text
+                  style={[
+                    Fonts.type67,
+                    {
+                      color: pjp
+                        ? masterColor.fontBlue60
+                        : masterColor.fontBlack60
+                    }
+                  ]}
+                >
+                  {pjp ? 'PJP' : 'NON PJP'}
+                </Text>
+              </View>
+            </View>
             <Text
               style={
                 item.journeyBookStores.typeOfStore === 'exist_store'
-                  ? Fonts.type16
-                  : Fonts.type29
-              }
-            >
-              {item.externalId ? item.externalId : '-'}
-            </Text>
-            <Text
-              style={
-                item.journeyBookStores.typeOfStore === 'exist_store'
-                  ? Fonts.type16
+                  ? Fonts.type8
                   : Fonts.type29
               }
             >
@@ -226,10 +259,11 @@ class JourneyListDataView extends Component {
           </View>
           <View>
             <Address
+              maxLength={30}
               substring
               font={
                 item.journeyBookStores.typeOfStore === 'exist_store'
-                  ? Fonts.type17
+                  ? Fonts.type67
                   : Fonts.type22
               }
               address={item.address}
@@ -250,25 +284,23 @@ class JourneyListDataView extends Component {
               marginBottom: 17
             }}
           >
-            <MaterialIcon
-              name="motorcycle"
-              color={
+            <Image
+              source={
                 (item.journeyBookStores.longitudeCheckOut &&
                   item.journeyBookStores.latitudeCheckOut) !== 0
-                  ? masterColor.fontGreen50
-                  : masterColor.fontBlack40
+                  ? require('../../assets/icons/journey/visit_green.png')
+                  : require('../../assets/icons/journey/visit_gray.png')
               }
-              size={24}
+              style={styles.iconVisitOrder}
             />
             <View style={{ marginLeft: 10 }} />
-            <OcticonsIcon
-              name="package"
-              color={
+            <Image
+              source={
                 item.journeyBookStores.orderStatus
-                  ? masterColor.fontGreen50
-                  : masterColor.fontBlack40
+                  ? require('../../assets/icons/journey/order_green.png')
+                  : require('../../assets/icons/journey/order_gray.png')
               }
-              size={24}
+              style={styles.iconVisitOrder}
             />
           </View>
           <View
@@ -280,13 +312,17 @@ class JourneyListDataView extends Component {
               style={styles.boxButtonChat}
               onPress={() => this.goToChat()}
             >
-              <Text style={Fonts.type28}>Chat</Text>
+              <MaterialIcon
+                color={masterColor.fontBlack100}
+                name={'chat'}
+                size={15}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.boxButtonDetail}
               onPress={() => this.goToDetailMerchant(item.id)}
             >
-              <Text style={Fonts.type18}>Detail</Text>
+              <Text style={Fonts.type49}>Detail</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -358,23 +394,40 @@ const styles = StyleSheet.create({
   },
   boxItem: {
     flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 16
+  },
+  containerExternalStoreId: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6
+  },
+  labelPJP: {
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    marginLeft: 8,
+    borderRadius: 4
+  },
+  iconVisitOrder: {
+    width: 15,
+    height: 15
   },
   boxButtonDetail: {
     marginLeft: 8,
-    paddingVertical: 8,
+    paddingVertical: 6,
     paddingHorizontal: 16,
-    borderRadius: 4,
-    backgroundColor: masterColor.mainColor
+    borderRadius: 5,
+    borderColor: masterColor.fontBlack10,
+    borderWidth: 1,
+    backgroundColor: masterColor.fontBlack05
   },
   boxButtonChat: {
-    marginLeft: 8,
-    borderWidth: 1.5,
-    borderColor: masterColor.mainColor,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 4,
-    backgroundColor: masterColor.backgroundWhite
+    justifyContent: 'center',
+    paddingHorizontal: 6,
+    borderRadius: 20,
+    borderColor: masterColor.fontBlack10,
+    borderWidth: 1,
+    backgroundColor: masterColor.fontBlack05
   },
   searchBar: {
     paddingTop: 4
@@ -401,30 +454,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 24022021
+ * updatedDate: 08072021
  * updatedFunction:
- * -> Update the props of journey plan list.
- * -> Update the props of log activity.
- * updatedBy: dyah
- * updatedDate: 26022021
- * updatedFunction:
- * -> Update the validation with visitStatus.
- * -> Change storeId to string.
- * updatedDate: 08032021
- * updatedFunction:
- * -> Update parameter when loadmore.
- * updatedBy: dyah
- * updatedDate: 12032021
- * updatedFunction:
- * -> Add parameter search when get journey plan.
- * updatedBy: dyah
- * updatedDate: 18032021
- * updatedFunction:
- * -> Update props when loading more data.
- * -> Update validation to handling load more.
- * updatedBy: dyah
- * updatedDate: 04052021
- * updatedFunction:
- * -> Add search journey plan.
+ * -> move variable 'today' to inside class component (related function).
  *
  */

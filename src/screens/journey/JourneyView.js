@@ -34,8 +34,6 @@ import ModalContentMenuAddMerchant from './ModalContentMenuAddMerchant';
 import ModalBottomMerchantList from '../merchants/ModalBottomMerchantList';
 import JourneyListDataView from './JourneyListDataView';
 
-const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
-
 class JourneyView extends Component {
   constructor(props) {
     super(props);
@@ -137,6 +135,7 @@ class JourneyView extends Component {
   }
   /** === GET JOURNEY PLAN === */
   getJourneyPlan() {
+    const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
     this.props.journeyPlanGetResetV2();
     this.props.journeyPlanGetProcessV2({
       page: 1,
@@ -209,7 +208,7 @@ class JourneyView extends Component {
               this.props.journey.dataGetJourneyPlanReportV2.totalOrder
             )}
           </Text>
-          <Text style={Fonts.type26}>Toko Order</Text>
+          <Text style={Fonts.type26}>Total Order</Text>
         </View>
       </View>
     ) : (
@@ -395,24 +394,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 24022021
+ * updatedDate: 08072021
  * updatedFunction:
- * -> Update the props of journey plan list.
- * -> Update the props when saving merchant to journey plan.
- * updatedBy: dyah
- * updatedDate: 01032021
- * updatedFunction:
- * -> Update the props of journey plan report.
- * updatedBy: dyah
- * updatedDate: 12032021
- * updatedFunction:
- * -> Add parameter search when get journey plan.
- * updatedBy: dyah
- * updatedDate: 04052021
- * updatedFunction:
- * -> Add search journey plan.
- * updatedBy: dyah
- * updatedDate: 04052021
- * updatedFunction:
- * -> Add error modal when failed get journey plan reports.
+ * -> move variable 'today' to inside class component (related function)
  */

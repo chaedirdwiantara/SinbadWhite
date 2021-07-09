@@ -53,3 +53,20 @@ export function getSalesSegmentationTeamSuccess(data){
 export function getSalesSegmentationTeamFailed(data) {
   return { type: types.PROFILE_GET_SALES_SEGMENTATION_TEAM_FAILED, payload: data}
 }
+/**
+ * =================================
+ * PROFILE GET SALES TEAM
+ * =================================
+ */
+ export function getSalesTeamProcess(data){
+  return { type: types.PROFILE_GET_SALES_TEAM_PROCESS, payload: data }
+}
+export function getSalesTeamSuccess(data){
+  if (data.result === 'Ok'){
+    return { type: types.PROFILE_GET_SALES_TEAM_SUCCESS, payload: data.data}
+  }
+  return { type: types.PROFILE_GET_SALES_TEAM_FAILED, payload: data}
+}
+export function getSalesTeamFailed(data) {
+  return { type: types.PROFILE_GET_SALES_TEAM_FAILED, payload: data}
+}

@@ -14,18 +14,20 @@ import {
   MaterialIcon,
   DeviceInfo
 } from '../../library/thirdPartyPackage';
-import { StatusBarWhite } from '../../library/component';
+import { StatusBarWhite, ToastType1 } from '../../library/component';
 import { Color } from '../../config';
 import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import CallCS from '../../screens/global/CallCS';
+import { GlobalMethod } from '../../services/methods';
 
 class ProfileView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       openModalCS: false,
+      showToast: false,
       menu: [
         {
           name: 'Data Diri',
@@ -42,7 +44,11 @@ class ProfileView extends Component {
         {
           name: 'Hubungi Customer Services',
           goTo: 'call_cs'
-        }        
+        },
+        {
+          name: 'Clear Cache',
+          goTo: 'clear_cache'
+        }
       ]
     };
   }
@@ -65,6 +71,7 @@ class ProfileView extends Component {
   signOut() {
     this.props.navigation.navigate('Auth');
     setTimeout(() => {
+      this.props.signOut();
       this.props.deleteAllData();
     }, 50);
   }
@@ -84,9 +91,32 @@ class ProfileView extends Component {
       case 'segmentasi_sales_team':
         NavigationService.navigate('SegmentasiSalesTeamView')
         break;
+      case 'clear_cache':
+        this.clearCache();
+        break;
       default:
         break;
     }
+  }
+  /** === CLEAR CACHE === */
+  clearCache() {
+    this.setState({ showToast: true });
+    this.props.deleteAllData();
+    this.getPrivileges();
+    this.props.versionsGetProcess();
+    this.props.getSalesTeamProcess();
+    setTimeout(() => {
+      this.setState({ showToast: false });
+    }, 1000);
+  }
+  /** === GET SALES PRIVILEGE === */
+  getPrivileges() {
+    let supplierId = GlobalMethod.userSupplierMapping();
+    if (supplierId.length > 0) {
+      supplierId = supplierId[0].toString();
+    }
+    let userId = this.props.user?.id || '';
+    this.props.getPrivilegeProcess({ supplierId, userId });
   }
   /**
    * ================
@@ -187,6 +217,17 @@ class ProfileView extends Component {
       <View />
     );
   }
+  /** TOAST */
+  renderToast() {
+    return this.state.showToast ? (
+      <ToastType1
+        margin={30}
+        content={'Data kamu sudah berhasil dibersihkan'}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === MAIN === */
   render() {
     return (
@@ -197,6 +238,7 @@ class ProfileView extends Component {
         {this.renderVersion()}
         {this.renderSignOut()}
         {this.renderModalCallCS()}
+        {this.renderToast()}
       </SafeAreaView>
     );
   }
