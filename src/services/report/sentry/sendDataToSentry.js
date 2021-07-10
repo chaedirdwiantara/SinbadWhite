@@ -20,10 +20,18 @@ export const sendDataApiError = data => {
   });
 };
 /** SERVER DOWN */
-export const sendDataServerDown = () => {
+export const sendDataServiceError = data => {
   Sentry.configureScope(function(scope) {
     scope.setTag('Bug Type', 'Service Error');
+    scope.setTag('Team', getTeam(data.path));
     scope.setLevel(Sentry.Severity.Fatal);
+    scope.setExtras({
+      ...getUserIdAndStoreId(),
+      endpoint: apiHost.url + data.path,
+      method: data.method,
+      params: data.params,
+      payloadString: JSON.stringify(data.params)
+    });
     Sentry.captureMessage('Service Error');
   });
 };

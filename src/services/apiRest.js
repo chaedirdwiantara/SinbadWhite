@@ -3,7 +3,7 @@ import apiHost from './apiHost';
 import { Store } from '../state/Store';
 import {
   sendDataApiError,
-  sendDataServerDown
+  sendDataServiceError
 } from './report/sentry/sendDataToSentry';
 
 export default async function endpoint({ path, method, params, testpath }) {
@@ -56,7 +56,11 @@ export default async function endpoint({ path, method, params, testpath }) {
       }
     })
     .catch(err => {
-      sendDataServerDown();
+      sendDataServiceError({
+        path,
+        method,
+        params
+      });
       return {
         result: 'Error',
         code: 503,
