@@ -22,8 +22,9 @@ setJSExceptionHandler((error, isFatal) => {
   if (isFatal) {
     Sentry.configureScope(function(scope) {
       scope.setTag('Bug Type', 'Crash');
+      scope.setTag('Team', 'mobile');
       scope.setLevel(Sentry.Severity.Critical);
-      Sentry.captureException(new Error(error), scope);
+      Sentry.captureException(error, scope);
     });
     handleError(error);
   }
