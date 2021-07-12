@@ -96,14 +96,12 @@ class MerchantCheckinView extends Component {
         this.setState({
           interval: setInterval(() => {
             this.getCurrentLocation();
-            console.log('test interval');
           }, 5000)
         });
       }
     }
   };
   internalClearInterval = () => {
-    console.log('clear')
     if (this.state.interval) {
       clearInterval(this.state.interval);
       this.setState({
