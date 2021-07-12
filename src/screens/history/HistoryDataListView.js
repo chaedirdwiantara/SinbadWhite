@@ -167,43 +167,43 @@ class HistoryDataListView extends Component {
     let colorStyle = masterColor.fontBlack05;
     switch (item.status) {
       case 'cancel':
-        textStyle = Fonts.type14; //sudah
+        textStyle = Fonts.type14; 
         colorStyle = masterColor.fontRed10;
       break;
       case 'confirm':
-        textStyle = Fonts.type67;  //sudah
+        textStyle = Fonts.type67;  
         colorStyle = masterColor.fontBlack05;
       break;
       case 'shipping':
-        textStyle = Fonts.type67; //sudah
+        textStyle = Fonts.type67; 
         colorStyle = masterColor.fontBlack05;
       break;
       case 'packing':
-        textStyle = Fonts.type67; //sudah
+        textStyle = Fonts.type67; 
         colorStyle = masterColor.fontBlack05;
       break;
       case 'delivered':
-        textStyle = Fonts.type110p; //sudah
+        textStyle = Fonts.type110p; 
         colorStyle = masterColor.fontGreen10;
       break;
       case 'pending':
-        textStyle = Fonts.type109p; //sudah
+        textStyle = Fonts.type109p; 
         colorStyle = masterColor.fontYellow10;
       break;
       case 'pending_payment':
-        textStyle = Fonts.type109p; //sudah
+        textStyle = Fonts.type109p; 
         colorStyle = masterColor.fontYellow10;
       break;
       case 'pending_supplier':
-        textStyle = Fonts.type109p; //sudah
+        textStyle = Fonts.type109p; 
         colorStyle = masterColor.fontYellow10;
       break;
       case 'pending_partial':
-        textStyle = Fonts.type109p; //sudah
+        textStyle = Fonts.type109p; 
         colorStyle = masterColor.fontYellow10;
       break;
       case 'done':
-        textStyle = Fonts.type110p; //sudah
+        textStyle = Fonts.type110p; 
         colorStyle = masterColor.fontGreen10;
       break;
       default:
