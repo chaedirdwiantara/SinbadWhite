@@ -45,6 +45,7 @@ class MerchantCheckinView extends Component {
       latitudeDelta: 0.02,
       longitudeDelta: 0.02,
       reRender: false,
+      interval: false,
       openModalNoGPS: false
     };
   }
@@ -82,15 +83,22 @@ class MerchantCheckinView extends Component {
   successMaps = success => {
     const longitude = success.coords.longitude;
     const latitude = success.coords.latitude;
-    const timer = setInterval(() => this.getCurrentLocation(), 5000);
     if (longitude !== 0 && latitude !== 0) {
-      clearInterval(timer);
+      clearInterval();
       this.setState({
         longitude,
         latitude,
         openModalNoGPS: false,
         reRender: false
       });
+    } else {
+      if (!this.state.interval) {
+        this.setState({ interval: true }, () =>
+          setInterval(() => {
+            this.getCurrentLocation();
+          }, 5000)
+        );
+      }
     }
   };
 
