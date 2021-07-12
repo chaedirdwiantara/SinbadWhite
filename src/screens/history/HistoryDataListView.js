@@ -163,9 +163,64 @@ class HistoryDataListView extends Component {
 
   /** === RENDER ITEM (STATUS PAYMENT) === */
   renderItemStatusOrder(item) {
+    let textStyle = Fonts.type67;
+    let colorStyle = masterColor.fontBlack05;
+    switch (item.status) {
+      case 'cancel':
+        textStyle = Fonts.type14; 
+        colorStyle = masterColor.fontRed10;
+      break;
+      case 'confirm':
+        textStyle = Fonts.type67;  
+        colorStyle = masterColor.fontBlack05;
+      break;
+      case 'shipping':
+        textStyle = Fonts.type67; 
+        colorStyle = masterColor.fontBlack05;
+      break;
+      case 'packing':
+        textStyle = Fonts.type67; 
+        colorStyle = masterColor.fontBlack05;
+      break;
+      case 'delivered':
+        textStyle = Fonts.type110p; 
+        colorStyle = masterColor.fontGreen10;
+      break;
+      case 'pending':
+        textStyle = Fonts.type109p; 
+        colorStyle = masterColor.fontYellow10;
+      break;
+      case 'pending_payment':
+        textStyle = Fonts.type109p; 
+        colorStyle = masterColor.fontYellow10;
+      break;
+      case 'pending_supplier':
+        textStyle = Fonts.type109p; 
+        colorStyle = masterColor.fontYellow10;
+      break;
+      case 'pending_partial':
+        textStyle = Fonts.type109p; 
+        colorStyle = masterColor.fontYellow10;
+      break;
+      case 'done':
+        textStyle = Fonts.type110p; 
+        colorStyle = masterColor.fontGreen10;
+      break;
+      default:
+        break;
+    }
     return (
-      <View>
-        <Text style={Fonts.type10}>{this.statusOrder(item.status)}</Text>
+      <View 
+        style={{
+          backgroundColor: colorStyle,
+          marginLeft: 15,
+          paddingHorizontal: 8,
+          paddingVertical: 4,
+          borderRadius: 4,
+          flexDirection: 'row'
+        }}
+      >
+        <Text style={{ ...textStyle, textAlign: 'right' }}>{this.statusOrder(item.status)}</Text>
       </View>
     );
   }
@@ -483,14 +538,108 @@ class HistoryDataListView extends Component {
             )}
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             {this.props.section === 'order' ? (
-              <View style={styles.boxItemContent}>
-                <Text 
-                  accessible={true}
-                  accessibilityLabel={'txtTagihanQtyandTotal'} style={Fonts.type17}>
-                  {item.parcelQty} Qty, Total:{' '}
-                  {MoneyFormat(item.billing.totalPayment)}
-                </Text>
-                <View style={{ flexDirection: 'row' }}>
+              <View >
+                {!item.deliveredParcelModified &&
+                  (item.status === DELIVERED || item.status === DONE) ? (
+                    <View style={[styles.boxItemContent, { marginBottom: 4 }]}>
+                      <View
+                        style={{
+                          flex: 1,
+                          flexDirection: 'row',
+                          alignSelf: 'space-between'
+                        }}
+                      >
+                        <Text
+                          style={[
+                            item.deliveredParcelModified
+                              ? Fonts.type112p
+                              : Fonts.type111p,
+                            {
+                              flex: 1,
+                              textDecorationLine: item.deliveredParcelModified
+                                ? 'line-through'
+                                : 'none'
+                            }
+                          ]}
+                        >
+                          {MoneyFormat(item.billing.deliveredTotalPayment)}
+                        </Text>
+                        <Text
+                          style={[
+                            item.deliveredParcelModified
+                              ? Fonts.type112p
+                              : Fonts.type111p,
+                            {
+                              textDecorationLine: item.deliveredParcelModified
+                                ? 'line-through'
+                                : 'none'
+                            }
+                          ]}
+                        >
+                          QTY: {item.deliveredParcelQty}
+                        </Text>
+                      </View>
+                    </View>
+                  ) : (
+                    <View style={[styles.boxItemContent, { marginBottom: 4 }]}>
+                      <View
+                        style={{
+                          flex: 1,
+                          flexDirection: 'row',
+                          alignSelf: 'space-between'
+                        }}
+                      >
+                        <Text
+                          style={[
+                            item.deliveredParcelModified
+                              ? Fonts.type112p
+                              : Fonts.type111p,
+                            {
+                              flex: 1,
+                              textDecorationLine: item.deliveredParcelModified
+                                ? 'line-through'
+                                : 'none'
+                            }
+                          ]}
+                        >
+                          {MoneyFormat(item.billing.totalPayment)}
+                        </Text>
+                        <Text
+                          style={[
+                            item.deliveredParcelModified
+                              ? Fonts.type112p
+                              : Fonts.type111p,
+                            {
+                              textDecorationLine: item.deliveredParcelModified
+                                ? 'line-through'
+                                : 'none'
+                            }
+                          ]}
+                        >
+                          QTY: {item.parcelQty}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+                  {item.deliveredParcelModified ? (
+                    <View style={styles.boxItemContent}>
+                      <View
+                        style={{
+                          flex: 1,
+                          flexDirection: 'row',
+                          alignSelf: 'space-between'
+                        }}
+                      >
+                        <Text style={[Fonts.type111p, { flex: 1 }]}>
+                          {MoneyFormat(item.billing.deliveredTotalPayment)}
+                        </Text>
+                        <Text style={Fonts.type111p}>
+                          QTY: {item.deliveredParcelQty}
+                        </Text>
+                      </View>
+                    </View>
+                  ) : null}
+                <View style={{ flexDirection: 'row', alignSelf: 'flex-end', marginTop: 10 }}>
                   {this.props.section === 'order'
                     ? this.renderButtonForOrder(item)
                     : null}
