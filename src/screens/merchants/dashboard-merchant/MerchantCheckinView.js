@@ -75,21 +75,33 @@ class MerchantCheckinView extends Component {
       }
     }
   }
+  componentWillUnmount() {
+    clearInterval();
+  }
   /** === GET CURRENT LOCATION === */
   successMaps = success => {
-    this.setState({
-      longitude: success.coords.longitude,
-      latitude: success.coords.latitude,
-      openModalNoGPS: false,
-      reRender: false
-    });
+    const longitude = success.coords.longitude;
+    const latitude = success.coords.latitude;
+    const timer = setInterval(() => this.getCurrentLocation(), 5000);
+    if (longitude !== 0 && latitude !== 0) {
+      clearInterval(timer);
+      this.setState({
+        longitude,
+        latitude,
+        openModalNoGPS: false,
+        reRender: false
+      });
+    }
   };
+
   errorMaps = async () => {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
       );
-      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        this.getCurrentLocation();
+      } else {
         setTimeout(() => this.getCurrentLocation(), 5000);
       }
       this.setState({ reRender: false });
@@ -445,7 +457,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 05072021
+ * updatedDate: 12072021
  * updatedFunction:
- * -> change behaviour when getting current location (use permission android)
+ * -> change behaviour when getting current location (use interval & auto refresh when failed getting location (latlong 0))
  */
