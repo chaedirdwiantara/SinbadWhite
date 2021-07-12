@@ -52,6 +52,7 @@ class JourneyListDataView extends Component {
       search: this.props.searchText,
       loading: true
     });
+    this.props.getJourneyPlanReportProcessV2();
   };
 
   onHandleLoadMore = () => {
@@ -389,7 +390,6 @@ const styles = StyleSheet.create({
     backgroundColor: masterColor.backgroundWhite
   },
   flatListContainer: {
-    paddingTop: 10,
     paddingBottom: 60
   },
   boxItem: {
@@ -454,8 +454,9 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 08072021
+ * updatedDate: 12072021
  * updatedFunction:
- * -> move variable 'today' to inside class component (related function).
+ * -> add get journey report when refresh journey plan.
+ * -> fix styling for list of journey plan.
  *
  */
