@@ -32,7 +32,7 @@ export const sendDataServiceError = data => {
       params: data.params,
       payloadString: JSON.stringify(data.params)
     });
-    Sentry.captureMessage('Service Error');
+    Sentry.captureMessage(`Service Error ${data.path}`);
   });
 };
 /** local function */
