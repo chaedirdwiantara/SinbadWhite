@@ -77,14 +77,14 @@ class MerchantCheckinView extends Component {
     }
   }
   componentWillUnmount() {
-    clearInterval();
+    this.internalClearInterval();
   }
   /** === GET CURRENT LOCATION === */
   successMaps = success => {
     const longitude = success.coords.longitude;
     const latitude = success.coords.latitude;
     if (longitude !== 0 && latitude !== 0) {
-      clearInterval();
+      this.internalClearInterval();
       this.setState({
         longitude,
         latitude,
@@ -93,15 +93,24 @@ class MerchantCheckinView extends Component {
       });
     } else {
       if (!this.state.interval) {
-        this.setState({ interval: true }, () =>
-          setInterval(() => {
+        this.setState({
+          interval: setInterval(() => {
             this.getCurrentLocation();
+            console.log('test interval');
           }, 5000)
-        );
+        });
       }
     }
   };
-
+  internalClearInterval = () => {
+    console.log('clear')
+    if (this.state.interval) {
+      clearInterval(this.state.interval);
+      this.setState({
+        interval: null
+      });
+    }
+  };
   errorMaps = async () => {
     try {
       const granted = await PermissionsAndroid.request(
