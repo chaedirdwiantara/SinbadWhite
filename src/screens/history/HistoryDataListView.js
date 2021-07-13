@@ -512,6 +512,19 @@ class HistoryDataListView extends Component {
               ) : (
                 <View />
               )}
+              {this.props.section === 'order' ? (
+              <View style={[styles.boxItemContent,{flex: 1}]}>
+                <Text
+                    style={[Fonts.type57]}
+                  >
+                    {moment(new Date(item.createdAt)).format(
+                      'DD MMM YYYY HH:mm:ss'
+                    )}
+                </Text>
+              </View>
+            ) : (
+              <View />
+            )}
               {this.props.section === 'payment' &&
               item.statusPayment !== 'payment_failed' &&
               item.statusPayment !== 'paid' ? (
@@ -524,18 +537,6 @@ class HistoryDataListView extends Component {
             </View>
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             {this.renderProductSection(item.orderBrands)}
-            {this.props.section === 'order' ? (
-              <View style={{ marginTop: 8, alignItems: 'flex-end' }}>
-                <Text style={Fonts.type17}>
-                  Dipesan pada{' '}
-                  {moment(new Date(item.createdAt)).format(
-                    'DD MMM YYYY HH:mm:ss'
-                  )}
-                </Text>
-              </View>
-            ) : (
-              <View />
-            )}
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             {this.props.section === 'order' ? (
               <View >
