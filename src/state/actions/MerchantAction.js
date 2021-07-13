@@ -28,8 +28,8 @@ export function saveVolatileDataEditMerchant(data) {
  * SAVE VOLATILE DATA TO RESET MERCHANT
  * ====================================
  */
-export function volatileResetMerchant(){
-  return { type: types.MERCHANT_RESET_DATA_VOLATILE }
+export function volatileResetMerchant() {
+  return { type: types.MERCHANT_RESET_DATA_VOLATILE };
 }
 /**
  * ====================================
@@ -337,40 +337,40 @@ export function merchantGetNoOrderReasonFailed(data) {
  * GET STORE STATUS
  * =====================================
  */
-export function merchantGetStoreStatusProcess(data){
-  return { type: types.MERCHANT_STORE_STATUS_PROCESS, payload: data}
+export function merchantGetStoreStatusProcess(data) {
+  return { type: types.MERCHANT_STORE_STATUS_PROCESS, payload: data };
 }
-export function merchantGetStoreStatusSuccess(data){
-  if (data.result === 'Ok'){
+export function merchantGetStoreStatusSuccess(data) {
+  if (data.result === 'Ok') {
     return {
       type: types.MERCHANT_STORE_STATUS_SUCCESS,
       payload: data
-    }
+    };
   }
-  return { type: types.MERCHANT_STORE_STATUS_FAILED, payload: data }
+  return { type: types.MERCHANT_STORE_STATUS_FAILED, payload: data };
 }
-export function merchantGetStoreStatusFailed(data){
-  return { type: types.MERCHANT_STORE_STATUS_FAILED, payload: data }
+export function merchantGetStoreStatusFailed(data) {
+  return { type: types.MERCHANT_STORE_STATUS_FAILED, payload: data };
 }
 /**
  * ===========================================
  * GET WAREHOSUE
  * ===========================================
  */
-export function merchantGetWarehouseProcess(data){
-  return { type: types.MERCHANT_GET_WAREHOUSE_PROCESS, payload: data}
+export function merchantGetWarehouseProcess(data) {
+  return { type: types.MERCHANT_GET_WAREHOUSE_PROCESS, payload: data };
 }
-export function merchantGetWarehouseSuccess(data){
-  if (data.result === 'Ok'){
+export function merchantGetWarehouseSuccess(data) {
+  if (data.result === 'Ok') {
     return {
       type: types.MERCHANT_GET_WAREHOUSE_SUCCESS,
       payload: data
-    }
+    };
   }
-  return { type: types.MERCHANT_GET_WAREHOUSE_FAILED, payload: data}
+  return { type: types.MERCHANT_GET_WAREHOUSE_FAILED, payload: data };
 }
-export function merchantGetWarehouseFailed(data){
-  return { type: types.MERCHANT_GET_WAREHOUSE_FAILED, payload: data}
+export function merchantGetWarehouseFailed(data) {
+  return { type: types.MERCHANT_GET_WAREHOUSE_FAILED, payload: data };
 }
 
 /**
@@ -450,44 +450,61 @@ export function merchantUpdateSurveyProcess(data) {
  * VALIDATE AREA MAPPING
  * ===========================================
  */
-export function validateAreaMappingProcess(data){
-  return { type: types.VALIDATE_AREA_MAPPING_PROCESS, payload: data}
+export function validateAreaMappingProcess(data) {
+  return { type: types.VALIDATE_AREA_MAPPING_PROCESS, payload: data };
 }
-export function validateAreaMappingSuccess(data){
-  if (data.result === 'Ok'){
+export function validateAreaMappingSuccess(data) {
+  if (data.result === 'Ok') {
     return {
       type: types.VALIDATE_AREA_MAPPING_SUCCESS,
       payload: data
-    }
+    };
   }
-  return { type: types.VALIDATE_AREA_MAPPING_FAILED, payload: data}
+  return { type: types.VALIDATE_AREA_MAPPING_FAILED, payload: data };
 }
-export function validateAreaMappingFailed(data){
-  return { type: types.VALIDATE_AREA_MAPPING_FAILED, payload: data}
+export function validateAreaMappingFailed(data) {
+  return { type: types.VALIDATE_AREA_MAPPING_FAILED, payload: data };
 }
-export function resetValidateAreaMapping(){
-  return { type: types.RESET_VALIDATE_AREA_MAPPING }
+export function resetValidateAreaMapping() {
+  return { type: types.RESET_VALIDATE_AREA_MAPPING };
 }
 /**
  * ===========================================
  * GET SALES SEGMENTATION
  * ===========================================
  */
-export function getSalesSegmentationProcess(data){
-  return { type: types.GET_SALES_SEGMENTATION_PROCESS, payload: data}
+export function getSalesSegmentationProcess(data) {
+  return { type: types.GET_SALES_SEGMENTATION_PROCESS, payload: data };
 }
-export function getSalesSegmentationSuccess(data){
-  if (data.result === 'Ok'){
+export function getSalesSegmentationSuccess(data) {
+  if (data.result === 'Ok') {
     return {
       type: types.GET_SALES_SEGMENTATION_SUCCESS,
       payload: data
-    }
+    };
   }
-  return { type: types.GET_SALES_SEGMENTATION_FAILED, payload: data}
+  return { type: types.GET_SALES_SEGMENTATION_FAILED, payload: data };
 }
-export function getSalesSegmentationFailed(data){
-  return { type: types.GET_SALES_SEGMENTATION_FAILED, payload: data}
+export function getSalesSegmentationFailed(data) {
+  return { type: types.GET_SALES_SEGMENTATION_FAILED, payload: data };
 }
-export function resetGetSalesSegmentation(){
-  return { type: types.RESET_SALES_SEGMENTATION }
+export function resetGetSalesSegmentation() {
+  return { type: types.RESET_SALES_SEGMENTATION };
+}
+/**
+ * ==============================
+ * GET RETURN ACTIVE INFO
+ * ==============================
+ */
+export function getReturnActiveInfoProcess(data) {
+  return { type: types.GET_RETURN_ACTIVE_INFO_PROCESS, payload: data };
+}
+export function getReturnActiveInfoSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.GET_RETURN_ACTIVE_INFO_SUCCESS, payload: data.data };
+  }
+  return { type: types.GET_RETURN_ACTIVE_INFO_FAILED, payload: data };
+}
+export function getReturnActiveInfoFailed(data) {
+  return { type: types.GET_RETURN_ACTIVE_INFO_FAILED, payload: data };
 }

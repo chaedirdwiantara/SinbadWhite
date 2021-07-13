@@ -107,12 +107,6 @@ class MerchantHomeView extends Component {
           activity: ACTIVITY_JOURNEY_PLAN_ORDER
         },
         {
-          name: 'Retur Barang',
-          title: 'Retur',
-          goTo: 'retur',
-          activity: ACTIVITY_JOURNEY_PLAN_RETUR
-        },
-        {
           name: 'Keluar Toko',
           title: 'Keluar',
           goTo: 'checkOut',
@@ -159,8 +153,9 @@ class MerchantHomeView extends Component {
     this.props.merchantGetLogAllActivityProcessV2(
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
+    this.props.getReturnActiveInfoProcess();
     // HIDE TASK BASE ON PRIVILEGE
-    const { checkIn, checkOut, order } = this.state.privileges || {};
+    const { checkIn, checkOut, order, retur } = this.state.privileges || {};
     let newTask = this.state.task;
     if (!checkIn?.status) {
       // same as (checkIn && !checkIn.status)
@@ -172,6 +167,9 @@ class MerchantHomeView extends Component {
     if (!order?.status) {
       newTask = newTask.filter(el => el.title !== 'Order');
     }
+    // if (!retur?.status) {
+    //   newTask = newTask.filter(el => el.title !== 'Retur');
+    // }
     this.setState({ task: newTask });
     /** FOR GET PORTFOLIO (FOR PAYLOAD CHECKOUT ORDER) */
     this.props.portfolioGetProcessV2();
@@ -183,10 +181,30 @@ class MerchantHomeView extends Component {
       loadingGetSurveyList,
       errorGetSurveyList,
       loadingGetLogAllActivity,
-      dataGetLogAllActivityV2
+      dataGetLogAllActivityV2,
+      dataReturnActiveInfo
     } = this.props.merchant;
 
-    if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
+    // Check is retur active
+    if (prevProps.merchant.dataReturnActiveInfo !== dataReturnActiveInfo) {
+      if (dataReturnActiveInfo !== null && dataReturnActiveInfo.isActive) {
+        const retur = {
+          name: 'Retur Barang',
+          title: 'Retur',
+          goTo: 'retur',
+          activity: ACTIVITY_JOURNEY_PLAN_RETUR
+        };
+        let newTask = this.state.task;
+        newTask.splice(2, 0, retur);
+        this.setState({ task: newTask });
+      }
+    }
+
+    if (
+      !loadingGetLogAllActivity &&
+      dataGetLogAllActivityV2 &&
+      dataReturnActiveInfo
+    ) {
       if (surveyList.payload.data) {
         /** IF NO SURVEY */
         if (
@@ -196,73 +214,13 @@ class MerchantHomeView extends Component {
         ) {
           this.SurveyDone();
           if (this.state.task.length === 5) {
-            this.setState({
-              task: [
-                {
-                  name: 'Masuk Toko',
-                  title: 'Masuk',
-                  goTo: 'checkIn',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                },
-                {
-                  name: 'Order',
-                  title: 'Order',
-                  goTo: 'pdp',
-                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
-                },
-                {
-                  name: 'Retur Barang',
-                  title: 'Retur',
-                  goTo: 'retur',
-                  activity: ACTIVITY_JOURNEY_PLAN_RETUR
-                },
-                {
-                  name: 'Keluar Toko',
-                  title: 'Keluar',
-                  goTo: 'checkOut',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                }
-              ]
-            });
+            this.taskListFilter('noSurvey');
           }
         }
         /** IF SURVEY LIST EXIST */
         if (!_.isEmpty(surveyList.payload.data) && surveyList.success) {
           if (this.state.task.length === 5) {
-            this.setState({
-              task: [
-                {
-                  name: 'Masuk Toko',
-                  title: 'Masuk',
-                  goTo: 'checkIn',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                },
-                {
-                  name: 'Order',
-                  title: 'Order',
-                  goTo: 'pdp',
-                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
-                },
-                {
-                  name: 'Retur Barang',
-                  title: 'Retur',
-                  goTo: 'retur',
-                  activity: ACTIVITY_JOURNEY_PLAN_RETUR
-                },
-                {
-                  name: 'Toko Survey',
-                  title: 'Isi',
-                  goTo: 'survey',
-                  activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-                },
-                {
-                  name: 'Keluar Toko',
-                  title: 'Keluar',
-                  goTo: 'checkOut',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                }
-              ]
-            });
+            this.taskListFilter('surveyExist');
           }
         }
         /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
@@ -518,7 +476,6 @@ class MerchantHomeView extends Component {
         }
         break;
       case 'retur':
-        console.log('Go To Retur Page');
         break;
       default:
         break;
@@ -544,6 +501,76 @@ class MerchantHomeView extends Component {
       default:
         break;
     }
+  }
+
+  taskListFilter(filter) {
+    const { dataReturnActiveInfo } = this.props.merchant;
+    const retur = {
+      name: 'Retur Barang',
+      title: 'Retur',
+      goTo: 'retur',
+      activity: ACTIVITY_JOURNEY_PLAN_RETUR
+    };
+    const data = {};
+    switch (filter) {
+      case 'noSurvey':
+        data.task = [
+          {
+            name: 'Masuk Toko',
+            title: 'Masuk',
+            goTo: 'checkIn',
+            activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+          },
+          {
+            name: 'Order',
+            title: 'Order',
+            goTo: 'pdp',
+            activity: ACTIVITY_JOURNEY_PLAN_ORDER
+          },
+          {
+            name: 'Keluar Toko',
+            title: 'Keluar',
+            goTo: 'checkOut',
+            activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+          }
+        ];
+        break;
+      case 'surveyExist':
+        data.task = [
+          {
+            name: 'Masuk Toko',
+            title: 'Masuk',
+            goTo: 'checkIn',
+            activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+          },
+          {
+            name: 'Order',
+            title: 'Order',
+            goTo: 'pdp',
+            activity: ACTIVITY_JOURNEY_PLAN_ORDER
+          },
+          {
+            name: 'Toko Survey',
+            title: 'Isi',
+            goTo: 'survey',
+            activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+          },
+          {
+            name: 'Keluar Toko',
+            title: 'Keluar',
+            goTo: 'checkOut',
+            activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+          }
+        ];
+        break;
+
+      default:
+        break;
+    }
+    if (dataReturnActiveInfo.isActive) {
+      data.task.splice(2, 0, retur);
+    }
+    this.setState({ task: data.task });
   }
 
   /** CUSTOM NAVIGATE VIEW NO ORDER REASON PAGE */
