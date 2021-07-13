@@ -5,9 +5,9 @@ function getPdp(data) {
   return ApiRest({
     path: `catalogues?$skip=${data.page}&$limit=10&supplierIds=${JSON.stringify(
       GlobalMethod.userSupplierMapping()
-    )}&searchName=${data.search}&status=active&sort=${data.sort}&sortby=${
-      data.sortBy
-    }&storeId=${GlobalMethod.merchantStoreId()}`,
+    )}&searchName=${encodeURIComponent(data.search)}&status=active&sort=${
+      data.sort
+    }&sortby=${data.sortBy}&storeId=${GlobalMethod.merchantStoreId()}`,
     method: 'GET'
   });
 }
@@ -16,9 +16,9 @@ function getSearchPdp(data) {
   return ApiRest({
     path: `catalogues?$skip=${data.page}&$limit=10&supplierIds=${JSON.stringify(
       GlobalMethod.userSupplierMapping()
-    )}&searchName=${data.search}&status=active&sort=${data.sort}&sortby=${
-      data.sortBy
-    }&storeId=${GlobalMethod.merchantStoreId()}`,
+    )}&searchName=${encodeURIComponent(data.search)}&status=active&sort=${
+      data.sort
+    }&sortby=${data.sortBy}&storeId=${GlobalMethod.merchantStoreId()}`,
     method: 'GET'
   });
 }
