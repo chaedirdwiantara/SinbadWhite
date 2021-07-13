@@ -13,9 +13,6 @@ buildscript {
         androidMapsUtilsVersion = "0.5+"
     }
     repositories {
-        maven {
-            url 'https://maven.fabric.io/public'
-        }
         google()
         jcenter()
         mavenCentral()
@@ -23,7 +20,6 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle:3.5.4")
         classpath 'com.google.gms:google-services:4.3.3'
-        classpath 'io.fabric.tools:gradle:1.25.4'
         classpath "com.newrelic.agent.android:agent-gradle-plugin:5.+"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

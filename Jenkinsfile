@@ -374,13 +374,20 @@ ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
                 }
             }
         }
-        stage('SonarQube Analysis') {
-            when { expression { SINBAD_ENV != "production" || SINBAD_ENV != "demo" } }
+        stage('Code Analysis') {
+            when { expression { SINBAD_ENV != "production" && SINBAD_ENV != "demo" } }
             steps{
                 script{
-                    def scannerHome = tool 'SonarQubeScanner';
-                    withSonarQubeEnv('sonarqube-sinbad') {
-                        sh "${scannerHome}/bin/sonar-scanner"
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+                        try{
+                            def scannerHome = tool 'SonarQubeScanner';
+                            withSonarQubeEnv('sonarqube-sinbad') {
+                                sh "${scannerHome}/bin/sonar-scanner"
+                            }
+                        }catch (Exception e) {
+                            echo 'Exception occurred: ' + e.toString()
+                            sh "exit 1"
+                        }
                     }
                 }
             }

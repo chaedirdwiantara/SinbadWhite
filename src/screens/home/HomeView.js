@@ -44,7 +44,7 @@ import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import _ from 'lodash';
-import { SalesmanKpiMethod } from '../../services/methods';
+import { GlobalMethod, SalesmanKpiMethod } from '../../services/methods';
 
 const { width } = Dimensions.get('window');
 const defaultImage = require('../../assets/images/sinbad_image/sinbadopacity.png');
@@ -92,7 +92,7 @@ class HomeView extends Component {
       ],
       kpiDashboard: [
         {
-          title: 'T. Order',
+          title: 'Toko Memesan',
           id: 'orderedStores',
           image: require('../../assets/images/menu_dashboard/order.png'),
           data: {
@@ -101,7 +101,7 @@ class HomeView extends Component {
           }
         },
         {
-          title: 'T. Baru',
+          title: 'Toko Baru',
           id: 'newStores',
           image: require('../../assets/images/menu_dashboard/new.png'),
           data: {
@@ -128,7 +128,7 @@ class HomeView extends Component {
           }
         },
         {
-          title: 'T. Dikunjungi',
+          title: 'Toko Dikunjungi',
           id: 'visitedStores',
           image: require('../../assets/images/menu_dashboard/visit.png'),
           data: {
@@ -155,6 +155,11 @@ class HomeView extends Component {
       fullName: this.props.user.fullName,
       imageUrl: this.props.user.imageUrl
     });
+    this.props.getSalesTeamProcess();
+    // CHECK SALES PRIVILEGE
+    if(this.props.privileges.data === null){
+      this.getPrivileges()
+    }
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
@@ -194,11 +199,28 @@ class HomeView extends Component {
       }
     }
   }
+  // GET SALES PRIVILEGE 
+  getPrivileges(){
+    let supplierId = GlobalMethod.userSupplierMapping()
+    if(supplierId.length > 0){
+      supplierId = supplierId[0].toString()
+    }
+    let userId = this.props.user?.id || ''
+    this.props.getPrivilegeProcess({supplierId, userId})
+  }
+  
   /** === PULL TO REFRESH === */
   _onRefresh() {
-    this.setState({ refreshing: true }, () =>
-      this.getKpiData(this.state.tabValue)
-    );
+    this.setState({ refreshing: true }, () => {
+      this.getPrivileges();
+      this.getKpiData(this.state.tabValue);
+      this.props.versionsGetProcess();
+      this.props.navigation.setParams({
+        fullName: this.props.user.fullName,
+        imageUrl: this.props.user.imageUrl
+      });
+      this.props.getSalesTeamProcess();
+    });
   }
   /** === GET KPI DATA === */
   getKpiData(period) {
@@ -728,8 +750,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, merchant, global, salesmanKpi }) => {
-  return { user, merchant, global, salesmanKpi };
+const mapStateToProps = ({ user, merchant, global, salesmanKpi, privileges }) => {
+  return { user, merchant, global, salesmanKpi, privileges };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -746,8 +768,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 26112020
+ * updatedDate: 30062021
  * updatedFunction:
- * -> update kpi dashboard (bug fix & array validation)
+ * -> update kpi dashboard title (Toko Order = Toko Memesan)
  *
  */

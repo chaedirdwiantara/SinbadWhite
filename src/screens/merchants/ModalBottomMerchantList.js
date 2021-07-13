@@ -20,6 +20,7 @@ import {
   SearchBarType1,
   TagListType1,
   SkeletonType2,
+  ModalBottomErrorRespons,
   ButtonSingle
 } from '../../library/component'
 import { Color } from '../../config'
@@ -27,12 +28,12 @@ import { Fonts } from '../../helpers'
 import ModalBottomMerchantListDataView from './ModalMerchantListDataView';
 import * as ActionCreators from '../../state/actions';
 const { height } = Dimensions.get('window');
-const today = moment().format('YYYY-MM-DD') + 'T00:00:00+00:00';
 
 class ModalBottomMerchantList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      openModalErrorGlobal: false,
       search: '',
       portfolio: 0,
       heightList: 0.93 * height,
@@ -61,6 +62,24 @@ class ModalBottomMerchantList extends Component {
         this.props.merchant.dataGetPortfolioV2.length > 0
       ) {
         this.getMerchant('direct', 0, '');
+      }
+    }
+    /** ERROR GET PORTFOLIO */
+    if (
+      prevProps.merchant.errorGetPortfolioV2 !==
+      this.props.merchant.errorGetPortfolioV2
+    ) {
+      if (this.props.merchant.errorGetPortfolioV2 !== null) {
+        this.setState({ openModalErrorGlobal: true });
+      }
+    }
+    /** ERROR GET LIST OF MERCHANT */
+    if (
+      prevProps.merchant.errorGetMerchantV2 !==
+      this.props.merchant.errorGetMerchantV2
+    ) {
+      if (this.props.merchant.errorGetMerchantV2 !== null) {
+        this.setState({ openModalErrorGlobal: true, });
       }
     }
   }
@@ -136,6 +155,7 @@ class ModalBottomMerchantList extends Component {
           10
         ),
         storeId: parseInt(data.data, 10),
+        externalStoreId: data.item.externalId,
         storeName: data.item.name
         // journeyPlanId: parseInt(
         //   this.props.journey.dataGetJourneyPlan[0].journeyPlanId,
@@ -154,8 +174,12 @@ class ModalBottomMerchantList extends Component {
   }
   /** === ADD JOURNEY PLAN === */
   addJourneyPlan() {
+    const today = moment().format('YYYY-MM-DD') + 'T00:00:00+00:00';
     this.props.saveMerchantToJourneyPlanProcessV2({
       date: today,
+      externalSalesRepId: this.props.user.userCode
+        ? this.props.user.userCode
+        : '',
       journeyBookStores: this.state.dataForAddJourney
     });
   }
@@ -285,12 +309,25 @@ class ModalBottomMerchantList extends Component {
       </Modal>
     );
   }
+  /** RENDER MODAL ERROR RESPONSE */
+  renderModalErrorResponse() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={() => this.setState({ openModalErrorGlobal: false })}
+      />
+      ) : (
+        <View />
+      );
+    }
   /** === MAIN === */
   render() {
     return (
       <View>
         <StatusBarBlackOP40 />
         {this.renderContent()}
+        {this.renderModalErrorResponse()}
       </View>
     );
   }
@@ -348,21 +385,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
- * updatedFunction:
- * -> Refactoring Module Import
  * updatedBy: dyah
- * updatedDate: 24022021
+ * updatedDate: 08072021
  * updatedFunction:
- * -> update the props of portfolio.
- * -> Update function addJourneyPlan and the props when saving merchant to journey plan.
- * updatedBy: dyah
- * updatedDate: 0803021
- * updatedFunction:
- * -> update the props of merchant list.
- * updatedBy: dyah
- * updatedDate: 0903021
- * updatedFunction:
- * -> add parameter storeName when save merchant to journey plan.
+ * -> move variable 'today' to inside class component (related function)
  */
