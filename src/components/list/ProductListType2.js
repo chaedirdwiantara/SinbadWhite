@@ -83,14 +83,14 @@ class ProductListType2 extends Component {
               alignItems: 'flex-end'
             }}
           >
-            <Text style={Fonts.type47}>{item.qty} Pcs</Text>
+            <Text style={Fonts.type47}>{item.deliveredQty ? item.deliveredQty : item.qty} Pcs</Text>
           </View>
         </View>
         <View style={GlobalStyle.lines} />
         <View style={styles.boxButtonAndPriceTotal}>
           <Text style={Fonts.type47}>Total Harga: </Text>
           <Text style={Fonts.type111p}>
-            {MoneyFormat(item.catalogueGrossPrice)}
+            {MoneyFormat(item.deliveredCatalogueGrossPrice ? item.deliveredCatalogueGrossPrice : item.catalogueGrossPrice)}
           </Text>
         </View>
       </View>

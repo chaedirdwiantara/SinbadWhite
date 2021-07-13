@@ -37,7 +37,7 @@ import CallCS from '../../screens/global/CallCS';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 import ModalBottomErrorResponsWhite from '../../components/error/ModalBottomErrorResponsWhite';
 import { REFUNDED, WAITING_FOR_PAYMENT, PAY_NOW, PAID, WAITING_FOR_REFUND } from '../../constants/paymentConstants';
-import { CANCEL, CONFIRM, PENDING_PAYMENT } from '../../constants/orderConstants';
+import { CANCEL, CONFIRM, DELIVERED, DONE, PENDING_PAYMENT } from '../../constants/orderConstants';
 import HistoryDeletedProductList from './product-list/HistoryDeletedProductList';
 
 class HistoryDetailView extends Component {
@@ -452,7 +452,10 @@ class HistoryDetailView extends Component {
               : null
             }
             {
-              this.props.history.dataDetailHistory.status !== CANCEL && this.props.history.dataDetailHistory.statusPayment !== REFUNDED ?
+              this.props.history.dataDetailHistory.status !== CANCEL && 
+              this.props.history.dataDetailHistory.statusPayment !== REFUNDED &&
+              this.props.history.dataDetailHistory.status !== DELIVERED &&
+              this.props.history.dataDetailHistory.status !== DONE ?
                 this.renderContentListGlobal(
                   this.props.history.dataDetailHistory.dueDate !== null
                     ? 'Jatuh Tempo'
@@ -486,6 +489,16 @@ class HistoryDetailView extends Component {
                   moment(
                     new Date(this.props.history.dataDetailHistory.refundedTime)
                   ).format('DD MMM YYYY HH:mm:ss')
+                )
+              : null
+            }
+            {
+              this.props.history.dataDetailHistory.deliveredParcelModified && 
+              (this.props.history.dataDetailHistory.status === DELIVERED ||
+              this.props.history.dataDetailHistory.status === DONE) ?
+                this.renderContentListGlobal(
+                  'Tanggal Pengembalian',
+                  '-'
                 )
               : null
             }
