@@ -363,7 +363,7 @@ export const merchant = createReducer(INITIAL_STATE, {
           : INITIAL_STATE.dataMerchantRejectedV2
     };
   },
-  [types.MERCHANT_GET_DETAIL_FAILED](state, action) {
+  [types.MERCHANT_GET_DETAIL_FAILED_V2](state, action) {
     return {
       ...state,
       loadingGetMerchantDetail: false,
