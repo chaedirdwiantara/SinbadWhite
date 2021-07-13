@@ -101,8 +101,6 @@ import TagListType2 from '../components/tag/TagListType2';
 import DatePickerSpinner from '../components/DatePickerSpinner';
 /** SELECTED MERCHANT */
 import SelectedMerchantName from '../components/SelectedMerchantName';
-/** ERROR BOUNDARY */
-import ErrorBoundary from '../components/error/ErrorBoundary';
 /** CARD */
 import Shadow from '../components/card/shadow';
 /** TABS */
@@ -215,8 +213,6 @@ export {
   DatePickerSpinner,
   /** SELECTED MERCHANT NAME */
   SelectedMerchantName,
-  /** Error Boundary */
-  ErrorBoundary,
   /** CARD */
   Shadow,
   /** TABS */

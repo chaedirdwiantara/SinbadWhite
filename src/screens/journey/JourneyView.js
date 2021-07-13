@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
   Text,
   Image
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   MaterialIcon,
   bindActionCreators,
   connect,
   moment,
   SkeletonPlaceholder
-} from '../../library/thirdPartyPackage'
+} from '../../library/thirdPartyPackage';
 import {
   ButtonFloatType1,
   StatusBarWhite,
@@ -25,8 +25,8 @@ import {
   StatusBarRedOP50,
   ModalBottomErrorRespons,
   ButtonSingle
-} from '../../library/component'
-import { MoneyFormat, Fonts } from '../../helpers'
+} from '../../library/component';
+import { MoneyFormat, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
@@ -168,7 +168,7 @@ class JourneyView extends Component {
             NavigationService.navigate('AddMerchantStep1');
           }, 100);
         } else {
-          this.setState({showModalError: true})
+          this.setState({ showModalError: true });
         }
         break;
       default:
@@ -275,17 +275,23 @@ class JourneyView extends Component {
       <View />
     );
   }
-   /** RENDER MODAL ERROR */
-   renderModalError(){
-    return(
+  /** RENDER MODAL ERROR */
+  renderModalError() {
+    return (
       <ModalBottomType3
         title={''}
         open={this.state.showModalError}
-        close={() => this.setState({showModalError: false, errorTitle: '', errorMessage: ''})}
+        close={() =>
+          this.setState({
+            showModalError: false,
+            errorTitle: '',
+            errorMessage: ''
+          })
+        }
         content={this.modalErrorContent()}
         typeClose={'cancel'}
       />
-    )
+    );
   }
 
   /** RENDER MODAL ERROR CONTENT */
@@ -310,7 +316,7 @@ class JourneyView extends Component {
             borderRadius={4}
             title={'Oke, Saya Mengerti'}
             onPress={() => {
-              this.setState({showModalError: false})
+              this.setState({ showModalError: false });
             }}
           />
         </View>
@@ -385,7 +391,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(JourneyView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(JourneyView);
 
 /**
  * ============================

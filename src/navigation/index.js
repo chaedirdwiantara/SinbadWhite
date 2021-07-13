@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import NavigationStack from './navigator';
 import NavigationService from './NavigationService';
-import { nrInteraction, nrRecordMetric } from '../../NewRelicRN.js';
+import {
+  nrInteraction,
+  nrRecordMetric
+} from '../services/report/newRelic/NewRelicRN.js';
 
 class Navigations extends Component {
   render() {
