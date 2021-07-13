@@ -9,7 +9,7 @@ export const user = createReducer(INITIAL_STATE, {
    * DELETE ALL DATA
    * ==================================
    */
-  [types.DELETE_ALL_DATA](state, action) {
+  [types.DELETE_USER_DATA](state, action) {
     return INITIAL_STATE;
   },
   /**
