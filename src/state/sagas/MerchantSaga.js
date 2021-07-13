@@ -147,36 +147,36 @@ function* getNoOrderReason(actions) {
   }
 }
 /** === GET STORE STATUS === */
-function* getStoreStatus(actions){
+function* getStoreStatus(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.getStoreStatus(actions.payload)
-    })
-    yield put(ActionCreators.merchantGetStoreStatusSuccess(response))
+      return MerchantMethod.getStoreStatus(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetStoreStatusSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.merchantGetStoreStatusFailed(error))
+    yield put(ActionCreators.merchantGetStoreStatusFailed(error));
   }
 }
 /** GET WAREHOUSE */
-function* getWarehouse(actions){
+function* getWarehouse(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.getWarehouse(actions.payload)
-    })
-    yield put(ActionCreators.merchantGetWarehouseSuccess(response))
+      return MerchantMethod.getWarehouse(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetWarehouseSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.merchantGetWarehouseFailed(error))
+    yield put(ActionCreators.merchantGetWarehouseFailed(error));
   }
 }
 /** VALIDATE AREA MAPPING */
-function* validateAreaMapping(actions){
+function* validateAreaMapping(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.validateAreaMapping(actions.payload)
-    })
-    yield put(ActionCreators.validateAreaMappingSuccess(response))
+      return MerchantMethod.validateAreaMapping(actions.payload);
+    });
+    yield put(ActionCreators.validateAreaMappingSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.validateAreaMappingFailed(error))
+    yield put(ActionCreators.validateAreaMappingFailed(error));
   }
 }
 /** GET SURVEY LIST */
@@ -234,6 +234,17 @@ function* getSalesSegmentation(actions) {
     yield put(ActionCreators.getSalesSegmentationFailed(error));
   }
 }
+/** GET RETURN ACTIVE INFO */
+function* getReturnActiveInfo(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getReturnActiveInfo(actions.payload);
+    });
+    yield put(ActionCreators.getReturnActiveInfoSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.getReturnActiveInfoFailed(error));
+  }
+}
 
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
@@ -258,7 +269,7 @@ function* MerchantSaga() {
     types.MERCHANT_GET_LATEST_CHECK_IN_OUT_PROCESS,
     getLatestCheckInOut
   );
-  yield takeEvery(types.MERCHANT_STORE_STATUS_PROCESS, getStoreStatus),
+  yield takeEvery(types.MERCHANT_STORE_STATUS_PROCESS, getStoreStatus);
   yield takeEvery(types.MERCHANT_GET_WAREHOUSE_PROCESS, getWarehouse);
   yield takeEvery(types.VALIDATE_AREA_MAPPING_PROCESS, validateAreaMapping);
   yield takeEvery(types.MERCHANT_GET_SURVEY_LIST_PROCESS, getSurveyList);
@@ -266,6 +277,7 @@ function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_SUBMIT_SURVEY_PROCESS, submitSurvey);
   yield takeEvery(types.MERCHANT_UPDATE_SURVEY_PROCESS, updateSurvey);
   yield takeEvery(types.GET_SALES_SEGMENTATION_PROCESS, getSalesSegmentation);
+  yield takeEvery(types.GET_RETURN_ACTIVE_INFO_PROCESS, getReturnActiveInfo);
 }
 
 export default MerchantSaga;

@@ -23,6 +23,7 @@ const INITIAL_STATE = {
   loadingSubmitSurvey: false,
   loadingValidateAreaMapping: false,
   loadingGetSalesSegmentation: false,
+  loadingReturnActiveInfo: false,
   /** data */
   dataPostActivityV2: null,
   dataGetLogAllActivityV2: null,
@@ -142,6 +143,7 @@ const INITIAL_STATE = {
   },
   dataValidateAreaMapping: null,
   dataSalesSegmentation: null,
+  dataReturnActiveInfo: null,
   /** error */
   errorGetMerchantV2: null,
   errorAddMerchant: null,
@@ -160,7 +162,8 @@ const INITIAL_STATE = {
   errorGetSurvey: null,
   errorSubmitSurvey: null,
   errorValidateAreaMapping: null,
-  errorGetSalesSegmentation: null
+  errorGetSalesSegmentation: null,
+  errorReturnActiveInfo: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -364,7 +367,7 @@ export const merchant = createReducer(INITIAL_STATE, {
           : INITIAL_STATE.dataMerchantRejectedV2
     };
   },
-  [types.MERCHANT_GET_DETAIL_FAILED](state, action) {
+  [types.MERCHANT_GET_DETAIL_FAILED_V2](state, action) {
     return {
       ...state,
       loadingGetMerchantDetail: false,
@@ -394,7 +397,11 @@ export const merchant = createReducer(INITIAL_STATE, {
         taxImageUrl: checkData('taxImageUrl', dataUpdate, dataPrevious),
         selfieImageUrl: checkData('selfieImageUrl', dataUpdate, dataPrevious),
         isEmailVerified: checkData('isEmailVerified', dataUpdate, dataPrevious),
-        isMobilePhoneNoVerified: checkData('isMobilePhoneNoVerified', dataUpdate, dataPrevious),
+        isMobilePhoneNoVerified: checkData(
+          'isMobilePhoneNoVerified',
+          dataUpdate,
+          dataPrevious
+        ),
         /** merchant information */
         numberOfEmployee: checkData(
           'numberOfEmployee',
@@ -891,7 +898,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     };
   },
 
-/**
+  /**
    * ============================
    * VALIDATE AREA MAPPING
    * ============================
@@ -926,7 +933,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       errorValidateAreaMapping: null
     };
   },
-/**
+  /**
    * ============================
    * GET SALES SEGMENTATION
    * ============================
@@ -973,6 +980,34 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingSubmitSurvey: true,
       dataSubmitSurvey: {},
       errorSubmitSurvey: null
+    };
+  },
+  /**
+   * ========================
+   * RETURN ACTIVE INFO
+   * ========================
+   */
+  [types.GET_RETURN_ACTIVE_INFO_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingReturnActiveInfo: true,
+      dataReturnActiveInfo: null,
+      errorReturnActiveInfo: null
+    };
+  },
+  [types.GET_RETURN_ACTIVE_INFO_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingReturnActiveInfo: false,
+      dataReturnActiveInfo: action.payload,
+      errorReturnActiveInfo: null
+    };
+  },
+  [types.GET_RETURN_ACTIVE_INFO_FAILED](state, action) {
+    return {
+      ...state,
+      loadingReturnActiveInfo: false,
+      errorReturnActiveInfo: action.payload
     };
   }
 });

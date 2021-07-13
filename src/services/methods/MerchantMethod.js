@@ -156,9 +156,9 @@ function validateAreaMapping(params) {
   });
 }
 /** GET SEGMENTATION LSIT */
-function getSalesSegmentation({type, supplierId, urbanId}){
-  if(urbanId){
-    const params = {urbanId, supplierId}
+function getSalesSegmentation({ type, supplierId, urbanId }) {
+  if (urbanId) {
+    const params = { urbanId, supplierId };
     return ApiRest({
       path: 'validate-urban-segmentation',
       method: 'POST',
@@ -168,9 +168,16 @@ function getSalesSegmentation({type, supplierId, urbanId}){
   return ApiRest({
     path: `sales-segmentation?type=${type}&supplierId=${supplierId}`,
     method: 'GET'
-  })
+  });
 }
-
+/** GET RETURN ACTIVE INFO */
+function getReturnActiveInfo(data) {
+  return ApiRest({
+    testpath:
+      'https://55e1a5fa-31c2-4825-99f7-a7127ceb6395.mock.pstmn.io/check-return-is-active',
+    method: 'GET'
+  });
+}
 
 export const MerchantMethod = {
   getMerchantV2,
@@ -192,7 +199,8 @@ export const MerchantMethod = {
   submitSurvey,
   updateSurvey,
   validateAreaMapping,
-  getSalesSegmentation
+  getSalesSegmentation,
+  getReturnActiveInfo
 };
 
 /**
