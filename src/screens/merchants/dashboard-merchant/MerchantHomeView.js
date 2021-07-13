@@ -196,8 +196,7 @@ class MerchantHomeView extends Component {
         };
         let newTask = this.state.task;
         newTask.splice(2, 0, retur);
-        console.log(newTask);
-        // this.setState({ task: newTask });
+        this.setState({ task: newTask });
       }
     }
 
@@ -477,7 +476,6 @@ class MerchantHomeView extends Component {
         }
         break;
       case 'retur':
-        console.log('Go To Retur Page');
         break;
       default:
         break;
@@ -572,7 +570,6 @@ class MerchantHomeView extends Component {
     if (dataReturnActiveInfo.isActive) {
       data.task.splice(2, 0, retur);
     }
-    console.log(data.task);
     this.setState({ task: data.task });
   }
 
