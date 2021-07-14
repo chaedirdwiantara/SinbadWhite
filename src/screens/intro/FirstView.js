@@ -6,12 +6,9 @@ import {
   StyleSheet,
   Image,
   Text
-} from '../../library/reactPackage'
-import {
-  connect,
-  firebase
-} from '../../library/thirdPartyPackage'
-import { Fonts } from '../../helpers'
+} from '../../library/reactPackage';
+import { connect } from '../../library/thirdPartyPackage';
+import { Fonts } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 
 class FirstView extends Component {
@@ -25,7 +22,6 @@ class FirstView extends Component {
    * ==============================
    */
   componentDidMount() {
-    firebase.crashlytics().enableCrashlyticsCollection();
     setTimeout(() => {
       this.props.navigation.navigate(
         this.props.permanent.token !== null ? 'App' : this.checkIFOTPexist()
@@ -105,14 +101,14 @@ const mapStateToProps = ({ permanent }) => {
 export default connect(mapStateToProps)(FirstView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

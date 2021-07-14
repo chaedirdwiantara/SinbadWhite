@@ -22,8 +22,29 @@ function getSalesSegementationTeam(data){
   })
 }
 
+function getSalesTeam(data){
+  return ApiRest({
+    path: `supplier/sales-management/v1/sales-teams/sales`,
+    method: 'GET'
+  });
+}
+
 export const ProfileMethod = {
   editProfile,
   getWarehouse,
-  getSalesSegementationTeam
+  getSalesSegementationTeam,
+  getSalesTeam,
 };
+
+
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: dyah
+ * updatedDate: 11062021
+ * updatedFunction:
+ * -> add function to get sales team
+ */

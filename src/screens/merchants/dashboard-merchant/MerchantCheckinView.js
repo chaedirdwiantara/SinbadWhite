@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   Text,
+  PermissionsAndroid,
   TouchableOpacity
 } from '../../../library/reactPackage'
 import {
@@ -44,6 +45,7 @@ class MerchantCheckinView extends Component {
       latitudeDelta: 0.02,
       longitudeDelta: 0.02,
       reRender: false,
+      interval: false,
       openModalNoGPS: false
     };
   }
@@ -74,16 +76,53 @@ class MerchantCheckinView extends Component {
       }
     }
   }
+  componentWillUnmount() {
+    this.internalClearInterval();
+  }
   /** === GET CURRENT LOCATION === */
   successMaps = success => {
-    this.setState({
-      longitude: success.coords.longitude,
-      latitude: success.coords.latitude,
-      reRender: false
-    });
+    const longitude = success.coords.longitude;
+    const latitude = success.coords.latitude;
+    if (longitude !== 0 && latitude !== 0) {
+      this.internalClearInterval();
+      this.setState({
+        longitude,
+        latitude,
+        openModalNoGPS: false,
+        reRender: false
+      });
+    } else {
+      if (!this.state.interval) {
+        this.setState({
+          interval: setInterval(() => {
+            this.getCurrentLocation();
+          }, 5000)
+        });
+      }
+    }
   };
-  errorMaps = () => {
-    this.setState({ openModalNoGPS: true, reRender: false });
+  internalClearInterval = () => {
+    if (this.state.interval) {
+      clearInterval(this.state.interval);
+      this.setState({
+        interval: null
+      });
+    }
+  };
+  errorMaps = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        this.getCurrentLocation();
+      } else {
+        setTimeout(() => this.getCurrentLocation(), 5000);
+      }
+      this.setState({ reRender: false });
+    } catch (err) {
+      console.warn(err);
+    }
   };
   getCurrentLocation() {
     this.setState({ reRender: true });
@@ -107,6 +146,16 @@ class MerchantCheckinView extends Component {
       latitude: this.state.latitude
     });
     return this.setState({ modalOutStore: false });
+  }
+  /** === DISABLE BUTTON MASUK TOKO === */
+  disableButton() {
+    if (this.props.merchant.loadingPostActivity) {
+      return true;
+    }
+    if (this.state.latitude === 0 && this.state.longitude === 0) {
+      return true;
+    }
+    return false;
   }
   /**
    * ========================
@@ -275,7 +324,7 @@ class MerchantCheckinView extends Component {
             </View>
             <View>
               <ButtonSingle
-                disabled={this.props.merchant.loadingPostActivity}
+                disabled={this.disableButton()}
                 title={'Masuk Toko'}
                 loading={this.props.merchant.loadingPostActivity}
                 borderRadius={4}
@@ -422,27 +471,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 06072020
- * updatedFunction:
- * -> Change Key
- * updatedBy: Tatas
- * updatedDate: 07072020
- * updatedFunction:
- * -> Refactoring Module Import
  * updatedBy: dyah
- * updatedDate: 24022021
+ * updatedDate: 12072021
  * updatedFunction:
- *  -> Update the props of log activity.
- * updatedBy: dyah
- * updatedDate: 26022021
- * updatedFunction:
- *  -> Update the props of post activity.
- * updatedBy: dyah
- * updatedDate: 06052021
- * updatedFunction:
- *  -> Add new modal when checking in.
- * updatedDate: 10052021
- * updatedFunction:
- *  -> Integrate in/out store when checking in.
+ * -> change behaviour when getting current location (use interval & auto refresh when failed getting location (latlong 0))
  */

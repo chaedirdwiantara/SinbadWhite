@@ -118,8 +118,8 @@ pipeline {
                         s3Download(file: 'android/app/google-services.json', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/google-services.json", force: true)
                         s3Download(file: 'android/app/mykeystore.keystore', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/mykeystore.keystore", force: true)
                         s3Download(file: 'android/app/src/main/res/values/strings.xml', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/strings.xml", force: true)
+                        s3Download(file: '.env', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/.env", force: true)
                         if(SINBAD_ENV == 'production') {
-                            s3Download(file: '.env', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/.env", force: true)
                             s3Download(file: 'android/app/newrelic.properties', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/newrelic.properties", force: true)
                         }
                     }
@@ -250,6 +250,42 @@ pipeline {
                 sh "export PATH=$PATH:${GRADLE_HOME}/gradle-${GRADLE_VERSION}/bin"
                 sh "export PATH=$PATH:${MAVEN_HOME}/apache-maven-${MAVEN_VERSION}/bin"
                 sh "echo PATH=$PATH:${ANDROID_HOME}/platform-tools>>/home/ubuntu/bash.bashrc"
+            }
+        }
+        stage('Source Map') {
+            when { expression { SINBAD_ENV != 'development' || SINBAD_ENV != 'staging' } }
+            steps {
+                script{
+                    // Get Version Name
+                    dir("android") {
+                        sh "rm -f -- gradleInfo.txt"
+                        sh "./gradlew -q printVersionName > gradleInfo.txt"
+                        env.APP_VERSION_NAME = sh(returnStdout: true, script: 'tail -n 1 gradleInfo.txt').trim()
+                    }
+
+                    // Get Version Code
+                    dir("android") {
+                        sh "rm -f -- gradleInfo.txt"
+                        sh "./gradlew -q printVersionCode > gradleInfo.txt"
+                        env.APP_VERSION_CODE = sh(returnStdout: true, script: 'tail -n 1 gradleInfo.txt').trim()
+                    }
+
+                    // Get APPLICATION
+                    dir("android") {
+                        sh "rm -f -- gradleInfo.txt"
+                        sh "./gradlew -q printApplicationId > gradleInfo.txt"
+                        env.APP_ID = sh(returnStdout: true, script: 'tail -n 1 gradleInfo.txt').trim()
+                    }
+
+                    sh "if [ -d ${WORKSPACE}/source_maps ]; then rm -Rf ${WORKSPACE}/source_maps; fi"
+                    sh "mkdir ${WORKSPACE}/source_maps"
+                    sh "react-native bundle --dev false --platform android --entry-file index.js --bundle-output source_maps/index.android.bundle  --sourcemap-output source_maps/index.android.bundle.packager.map"
+                    sh "node_modules/hermes-engine/linux64-bin/hermesc -emit-binary -out source_maps/index.android.bundle.compiler.hbc source_maps/index.android.bundle -output-source-map"
+                    sh "node_modules/react-native/scripts/compose-source-maps.js source_maps/index.android.bundle.packager.map source_maps/index.android.bundle.compiler.hbc.map -o source_maps/index.android.bundle.map"
+                    withCredentials([string(credentialsId: 'sentry-sinbad', variable: 'SENTRYTOKEN')]) {
+                        sh "node_modules/@sentry/cli/sentry-cli --auth-token ${SENTRYTOKEN} releases --org sinbad-id --project sinbad-white-${SINBAD_ENV} files ${env.APP_ID}@${env.APP_VERSION_NAME}+${env.APP_VERSION_CODE} upload-sourcemaps --dist ${env.APP_VERSION_CODE} --strip-prefix . --rewrite source_maps/index.android.bundle source_maps/index.android.bundle.map"
+                    }
+                }
             }
         }
         stage('Deployment') {

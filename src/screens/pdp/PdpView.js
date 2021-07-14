@@ -19,6 +19,7 @@ import {
   ToastType1,
   SelectedMerchantName,
   ModalConfirmation,
+  ModalBottomErrorRespons,
   ModalBottomSkuNotAvailable
 } from '../../library/component';
 import { Fonts } from '../../helpers';
@@ -41,6 +42,7 @@ class PdpView extends Component {
       openModalSkuNotAvailable: false,
       openModalSort: false,
       openModalConfirmRemoveCart: false,
+      openModalErrorGlobal: false,
       /** data */
       layout: 'grid',
       addProductNotif: false,
@@ -91,6 +93,9 @@ class PdpView extends Component {
   componentDidMount() {
     this.props.pdpGetReset();
     this.getPdp({ page: 0, loading: true });
+    if (this.props.profile.errorGetSalesTeam !== null) {
+      this.doError();
+    }
   }
   /** === DID UPDATE */
   componentDidUpdate(prevState) {
@@ -201,13 +206,28 @@ class PdpView extends Component {
         break;
     }
   }
+  /** FOR ERROR FUNCTION (FROM DID UPDATE) */
+  doError() {
+    /** Close all modal and open modal error respons */
+    if (!this.state.openModalErrorGlobal){
+      this.setState({
+        openModalErrorGlobal: true,
+        openModalOrder: false,
+        openModalSkuNotAvailable: false,
+        openModalSort: false,
+        openModalConfirmRemoveCart: false,
+      });
+    }
+  }
   /** === FETCH DATA (THIS FOR ALL FITLER) === */
   getPdp(data) {
+    const { dataSalesTeam } = this.props.profile
     this.props.pdpGetProcess({
       page: data.page,
       loading: data.loading,
       sort: data.sort !== undefined ? data.sort : this.state.sort,
       sortBy: data.sortBy !== undefined ? data.sortBy : this.state.sortBy,
+      invoiceGroupIds: dataSalesTeam ? dataSalesTeam[0].salesTeamInvoice.map(item => item.invoiceId) : [],
       search: this.props.global.search
     });
   }
@@ -360,6 +380,21 @@ class PdpView extends Component {
       <View />
     );
   }
+  /** MODAL ERROR RESPONS */
+  renderModalErrorRespons() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        open={this.state.openModalErrorGlobal}
+        onPress={() => {
+          this.setState({ openModalErrorGlobal: false });
+          this.props.getSalesTeamProcess();
+          NavigationService.navigate('MerchantHomeView');
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === MAIN === */
   render() {
     return (
@@ -376,6 +411,7 @@ class PdpView extends Component {
         {this.renderModalSort()}
         {/* modal */}
         {this.renderModalSkuNotAvailable()}
+        {this.renderModalErrorRespons()}
       </SafeAreaView>
     );
   }
@@ -391,8 +427,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ pdp, user, global, merchant, oms }) => {
-  return { pdp, user, global, merchant, oms };
+const mapStateToProps = ({ pdp, user, global, merchant, oms, profile }) => {
+  return { pdp, user, global, merchant, oms, profile };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -411,9 +447,10 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
+ * updatedBy: dyah
+ * updatedDate: 11062021
  * updatedFunction:
- * -> Refactoring Module Import
+ * -> add parameter invoiceGroupIds (pdpGetProcess)
+ * -> add handle error when failed get sales team.
  *
  */
