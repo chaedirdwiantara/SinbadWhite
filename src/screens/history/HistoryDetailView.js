@@ -40,18 +40,18 @@ import {
   REFUNDED,
   WAITING_FOR_PAYMENT,
   PAY_NOW,
-  PAID, 
+  PAID,
   WAITING_FOR_REFUND
 } from '../../constants/paymentConstants';
 import {
   CANCEL,
   CONFIRM,
-  DELIVERED, 
-  DONE, 
+  DELIVERED,
+  DONE,
   PENDING_PAYMENT
 } from '../../constants/orderConstants';
 import HistoryBonusProductList from './product-list/HistoryBonusProductList';
-
+import HistoryDeletedProductList from './product-list/HistoryDeletedProductList';
 class HistoryDetailView extends Component {
   constructor(props) {
     super(props);
@@ -372,7 +372,7 @@ class HistoryDetailView extends Component {
   }
   /** RENDER INFORMASI PENGEMBALIAN */
   renderInformasiPengembalian() {
-    const detailHistory = this.props.history.dataDetailHistory
+    const detailHistory = this.props.history.dataDetailHistory;
     return (
       <View>
         <View style={GlobalStyle.boxPadding} />
@@ -386,17 +386,15 @@ class HistoryDetailView extends Component {
 
           <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
             {this.renderContentListGlobal(
-              'Total Pembayaran Pesanan', 
-              MoneyFormat(
-                detailHistory.billing.totalPayment
-              )
+              'Total Pembayaran Pesanan',
+              MoneyFormat(detailHistory.billing.totalPayment)
             )}
             {this.renderContentListGlobal(
-              'Total Pembayaran Pengiriman', 
+              'Total Pembayaran Pengiriman',
               MoneyFormat(
                 detailHistory.status === CANCEL
-                ? 0
-                : detailHistory.billing.deliveredTotalPayment
+                  ? 0
+                  : detailHistory.billing.deliveredTotalPayment
               )
             )}
             <View
@@ -418,13 +416,13 @@ class HistoryDetailView extends Component {
               </View>
             </View>
           </View>
-
         </View>
       </View>
-    )
+    );
   }
   /** RENDER RINGKASAN PESANAN */
   renderRingkasanPesanan() {
+    const statusPayment = this.props.history.dataDetailHistory.statusPayment;
     return (
       <View>
         <View style={GlobalStyle.boxPadding} />
@@ -444,7 +442,7 @@ class HistoryDetailView extends Component {
               ).format('DD MMM YYYY HH:mm:ss')
             )}
             {this.props.history.dataDetailHistory.status !== CANCEL &&
-            this.props.history.dataDetailHistory.statusPayment !== REFUNDED
+            statusPayment !== REFUNDED
               ? this.renderContentListGlobal(
                   this.props.history.dataDetailHistory.deliveredDate !== null
                     ? 'Tanggal Pengiriman'
@@ -464,14 +462,12 @@ class HistoryDetailView extends Component {
                       ).format('DD MMM YYYY HH:mm:ss')
                     : '-'
                 )
-              : null
-            }
-            {
-              this.props.history.dataDetailHistory.status !== CANCEL && 
-              this.props.history.dataDetailHistory.statusPayment !== REFUNDED &&
-              this.props.history.dataDetailHistory.status !== DELIVERED &&
-              this.props.history.dataDetailHistory.status !== DONE ?
-                this.renderContentListGlobal(
+              : null}
+            {this.props.history.dataDetailHistory.status !== CANCEL &&
+            statusPayment !== REFUNDED &&
+            this.props.history.dataDetailHistory.status !== DELIVERED &&
+            this.props.history.dataDetailHistory.status !== DONE
+              ? this.renderContentListGlobal(
                   this.props.history.dataDetailHistory.dueDate !== null
                     ? 'Jatuh Tempo'
                     : 'Estimasi Jatuh Tempo',
@@ -489,7 +485,7 @@ class HistoryDetailView extends Component {
                 )
               : null}
             {this.props.history.dataDetailHistory.status === CANCEL &&
-            this.props.history.dataDetailHistory.statusPayment !== REFUNDED
+            statusPayment !== REFUNDED
               ? this.renderContentListGlobal(
                   'Tanggal Pembatalan',
                   moment(
@@ -497,25 +493,18 @@ class HistoryDetailView extends Component {
                   ).format('DD MMM YYYY HH:mm:ss')
                 )
               : null}
-            {this.props.history.dataDetailHistory.statusPayment === REFUNDED
+            {statusPayment === REFUNDED || statusPayment === WAITING_FOR_REFUND
               ? this.renderContentListGlobal(
-                  'Tanggal Pengembalian Dana',
-                  moment(
-                    new Date(this.props.history.dataDetailHistory.refundedTime)
-                  ).format('DD MMM YYYY HH:mm:ss')
-                )
-              : null
-            }
-            {
-              this.props.history.dataDetailHistory.deliveredParcelModified && 
-              (this.props.history.dataDetailHistory.status === DELIVERED ||
-              this.props.history.dataDetailHistory.status === DONE) ?
-                this.renderContentListGlobal(
                   'Tanggal Pengembalian',
-                  '-'
+                  statusPayment === REFUNDED
+                    ? moment(
+                        new Date(
+                          this.props.history.dataDetailHistory.refundedTime
+                        )
+                      ).format('DD MMM YYYY HH:mm:ss')
+                    : '-'
                 )
-              : null
-            }
+              : null}
           </View>
         </View>
       </View>
@@ -634,23 +623,15 @@ class HistoryDetailView extends Component {
         >
           {this.renderHeaderStatus()}
           {this.renderDetailPayment()}
-          {
-            detailHistory.paymentType.id === PAY_NOW && 
-            this.state.section === 'payment' &&
-            (
-              (detailHistory.status === CANCEL && 
-                (
-                  detailHistory.statusPayment === PAID || 
-                  detailHistory.statusPayment === REFUNDED || 
-                  detailHistory.statusPayment === WAITING_FOR_REFUND
-                )
-              ) || 
-              detailHistory.deliveredParcelModified
-            ) ?   
-                this.renderInformasiPengembalian()
-            :
-             null
-          }
+          {detailHistory.paymentType.id === PAY_NOW &&
+          this.state.section === 'payment' &&
+          ((detailHistory.status === CANCEL &&
+            (detailHistory.statusPayment === PAID ||
+              detailHistory.statusPayment === REFUNDED ||
+              detailHistory.statusPayment === WAITING_FOR_REFUND)) ||
+            detailHistory.deliveredParcelModified)
+            ? this.renderInformasiPengembalian()
+            : null}
           {this.renderRingkasanPesanan()}
           {this.renderProductList()}
           {this.renderDeletedProductList()}
@@ -661,23 +642,15 @@ class HistoryDetailView extends Component {
           ) : (
             <View />
           )}
-          {
-            detailHistory.paymentType.id === PAY_NOW && 
-            this.state.section === 'order' &&
-            (
-              (detailHistory.status === CANCEL && 
-                (
-                  detailHistory.statusPayment === PAID || 
-                  detailHistory.statusPayment === REFUNDED || 
-                  detailHistory.statusPayment === WAITING_FOR_REFUND
-                )
-              ) || 
-              detailHistory.deliveredParcelModified
-            ) ?   
-                this.renderInformasiPengembalian()
-            :
-             null
-          }
+          {detailHistory.paymentType.id === PAY_NOW &&
+          this.state.section === 'order' &&
+          ((detailHistory.status === CANCEL &&
+            (detailHistory.statusPayment === PAID ||
+              detailHistory.statusPayment === REFUNDED ||
+              detailHistory.statusPayment === WAITING_FOR_REFUND)) ||
+            detailHistory.deliveredParcelModified)
+            ? this.renderInformasiPengembalian()
+            : null}
           {this.state.section === 'payment' ? (
             this.renderSelectPaymentMethod()
           ) : (
