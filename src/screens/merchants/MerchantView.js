@@ -126,6 +126,15 @@ class MerchantView extends Component {
         this.setState({ openModalErrorGlobal: true, });
       }
     }
+    /** ERROR GET PORTFOLIO*/
+    if (
+      prevProps.merchant.errorGetPortfolioV2 !==
+      this.props.merchant.errorGetPortfolioV2
+    ) {
+      if (this.props.merchant.errorGetPortfolioV2 !== null) {
+        this.setState({ openModalErrorGlobal: true, });
+      }
+    }
   }
   /** ====== DID MOUNT FUNCTION ========== */
   /** NAVIGATION FUNCTION */
@@ -349,13 +358,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantView);
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
- * updatedFunction:
- * -> Refactoring Module Import
  * updatedBy: dyah
- * updatedDate: 09062021
+ * updatedDate: 01072021
  * updatedFunction:
- * -> add modal error when failed get list of merchant.
+ * -> add modal error when failed get portfolio.
  *
  */

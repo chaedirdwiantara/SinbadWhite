@@ -217,6 +217,15 @@ export function uploadImageSuccess(data) {
 export function uploadImageFailed(data) {
   return { type: types.UPLOAD_IMAGE_FAILED, payload: data };
 }
+/**
+ * ===========================
+ * CLEAR CACHE
+ * ==========================
+ */
+/** === REMOVE ALL DATA === */
+export function deleteAllData() {
+  return { type: types.DELETE_ALL_DATA };
+}
 
 /**
  * ========================

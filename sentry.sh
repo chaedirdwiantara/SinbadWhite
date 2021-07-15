@@ -1,0 +1,5 @@
+#!/bin/bash
+react-native bundle --dev false --platform android --entry-file index.js --bundle-output source_maps/index.android.bundle  --sourcemap-output source_maps/index.android.bundle.packager.map
+node_modules/hermes-engine/osx-bin/hermesc -emit-binary -out source_maps/index.android.bundle.compiler.hbc source_maps/index.android.bundle -output-source-map
+node_modules/react-native/scripts/compose-source-maps.js source_maps/index.android.bundle.packager.map source_maps/index.android.bundle.compiler.hbc.map -o source_maps/index.android.bundle.map
+node_modules/@sentry/cli/sentry-cli --auth-token {AUTH_TOKEN} releases --org {ORG} --project {PROJECT} files {applicationId}@{versionName}+{versionCode} upload-sourcemaps --dist {versionCode} --strip-prefix . --rewrite source_maps/index.android.bundle source_maps/index.android.bundle.map

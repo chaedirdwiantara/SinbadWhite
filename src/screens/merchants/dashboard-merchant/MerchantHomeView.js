@@ -46,7 +46,6 @@ import {
 import _ from 'lodash';
 
 const { width, height } = Dimensions.get('window');
-const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
 
 class MerchantHomeView extends Component {
   constructor(props) {
@@ -167,6 +166,9 @@ class MerchantHomeView extends Component {
     this.setState({task: newTask})
     /** FOR GET PORTFOLIO (FOR PAYLOAD CHECKOUT ORDER) */
     this.props.portfolioGetProcessV2();
+    if (this.props.profile.errorGetSalesTeam) {
+      this.props.getSalesTeamProcess();
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -388,6 +390,7 @@ class MerchantHomeView extends Component {
   }
 
   componentWillUnmount() {
+    const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
     this.props.merchantGetSurveyListReset();
     this.props.journeyPlanGetResetV2();
     this.props.journeyPlanGetProcessV2({
@@ -1387,8 +1390,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, merchant, user, permanent, privileges }) => {
-  return { auth, merchant, user, permanent, privileges };
+const mapStateToProps = ({ auth, merchant, user, permanent, profile, privileges }) => {
+  return { auth, merchant, user, permanent, profile, privileges };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -1405,7 +1408,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 09062021
+ * updatedDate: 08072021
  * updatedFunction:
- * -> add modal error when failed get last order & log all activity.
+ * -> move variable 'today' to inside class component (related function)
  */
