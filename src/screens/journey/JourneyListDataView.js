@@ -177,8 +177,8 @@ class JourneyListDataView extends Component {
   renderItem({ item, index }) {
     let pjp = true;
     if (
-      item.journeyBookStores.route === null ||
-      item.journeyBookStores.route === 0
+      item.journeyBookStores.permanentJourneyPlanId === null ||
+      item.journeyBookStores.permanentJourneyPlanId === 0
     ) {
       pjp = false;
     }
