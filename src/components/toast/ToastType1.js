@@ -18,11 +18,13 @@ class ToastType1 extends Component {
   renderNotification() {
     return (
       <View style={styles.contentRow}>
-        <View style={styles.circleNotif}>
-          <TouchableOpacity>
-            <OcticonsIcon name="check" size={12} color={Color.fontWhite} />
-          </TouchableOpacity>
-        </View>
+        {this.props.basic ? null : (
+          <View style={styles.circleNotif}>
+            <TouchableOpacity>
+              <OcticonsIcon name="check" size={12} color={Color.fontWhite} />
+            </TouchableOpacity>
+          </View>
+        )}
         <Text style={Fonts.type25}>{this.props.content}</Text>
       </View>
     );
