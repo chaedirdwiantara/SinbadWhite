@@ -82,6 +82,9 @@ class SearchBarType1 extends Component {
     return (
       <View style={{ flex: 1 }}>
         <TextInput
+          editable={
+            this.props.editable !== undefined ? this.props.editable : true
+          }
           selectionColor={Color.mainColor}
           onEndEditing={() => this.searchText()}
           value={this.state.search}
@@ -134,15 +137,14 @@ const mapStateToProps = ({}) => {
 export default connect(mapStateToProps, {})(SearchBarType1);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 08072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: dyah
+ * updatedDate: 16072021
+ * updatedFunction:
+ * -> adding new props 'editable' to disable/enable search bar.
+ *
+ */
