@@ -133,7 +133,10 @@ class ModalBottomMerchantList extends Component {
   /** === CALL GET FUNCTION === */
   getMerchant(type, portfolioIndex, search) {
     const date = moment().format('YYYY-MM-DD');
-    if (this.props.merchant.dataGetPortfolioV2) {
+    if (
+      this.props.merchant.dataGetPortfolioV2 &&
+      this.props.merchant.dataGetPortfolioV2 > 0
+    ) {
       this.props.merchantExistingGetReset();
       this.props.merchantExistingGetProcess({
         date,
