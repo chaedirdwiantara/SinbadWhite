@@ -54,7 +54,7 @@ import {
           content={this.renderContent()}
           onPress={this.props.onPress}
           title={''}
-          buttonTitle={'Kembali'}
+          buttonTitle={this.props.buttonTitle? this.props.buttonTitle : 'Kembali'}
         />
       );
     }
