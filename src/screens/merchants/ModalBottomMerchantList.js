@@ -135,7 +135,7 @@ class ModalBottomMerchantList extends Component {
     const date = moment().format('YYYY-MM-DD');
     if (
       this.props.merchant.dataGetPortfolioV2 &&
-      this.props.merchant.dataGetPortfolioV2 > 0
+      this.props.merchant.dataGetPortfolioV2.length > 0
     ) {
       this.props.merchantExistingGetReset();
       this.props.merchantExistingGetProcess({
@@ -423,7 +423,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 16072021
+ * updatedDate: 19072021
  * updatedFunction:
  * -> fix bug sales (who didn't have portfolio) trying to search merchant.
  * -> add toast when sales didn't have portfolio.
