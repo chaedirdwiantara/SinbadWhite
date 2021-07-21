@@ -60,6 +60,7 @@ class MerchantListView extends Component {
     return (
       <View>
         <SearchBarType1
+          editable={this.props.merchant.dataGetPortfolioV2 ? true : false}
           searchText={this.props.searchText}
           placeholder={'Cari nama / id toko disini'}
           onRef={ref => (this.parentFunction = ref)}
@@ -161,16 +162,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantListView);
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
- * updatedFunction:
- * -> Refactoring Module Import
  * updatedBy: dyah
- * updatedDate: 24022021
+ * updatedDate: 16072021
  * updatedFunction:
- * -> update the props of portfolio.
- * updatedBy: dyah
- * updatedDate: 25022021
- * updatedFunction:
- * -> update the props of total merchant.
+ * -> disable search when portfolio null.
  */
