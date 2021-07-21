@@ -74,22 +74,22 @@ function getListAndSearch(data) {
     case 'storeType':
       listAndSearchApi = `types?supplierIds=${JSON.stringify(
         userSupplierMapping()
-      )}&`;
+      )}&status=active&`;
       break;
     case 'storeGroup':
       listAndSearchApi = `groups?supplierIds=${JSON.stringify(
         userSupplierMapping()
-      )}&`;
+      )}&status=active&`;
       break;
     case 'storeCluster':
       listAndSearchApi = `clusters?supplierIds=${JSON.stringify(
         userSupplierMapping()
-      )}&`;
+      )}&status=active&`;
       break;
     case 'storeChannel':
       listAndSearchApi = `channels?supplierIds=${JSON.stringify(
         userSupplierMapping()
-      )}&`;
+      )}&status=active&`;
       break;
     default:
       break;

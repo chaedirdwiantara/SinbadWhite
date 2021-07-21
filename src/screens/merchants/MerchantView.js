@@ -101,6 +101,19 @@ class MerchantView extends Component {
       ) {
         this.getMerchant('direct', 0, '');
       }
+      if (
+        this.props.merchant.dataGetPortfolioV2 !== null &&
+        this.props.merchant.dataGetPortfolioV2.length === 0
+      ) {
+        this.setState({
+          openModalCheckout: false,
+          showToast: true,
+          notifToast: 'Anda belum memiliki portfolio'
+        });
+        setTimeout(() => {
+          this.setState({ showToast: false });
+        }, 3000);
+      }
     }
     /** IF ADD MERCHANT SUCCESS */
     if (
@@ -250,7 +263,11 @@ class MerchantView extends Component {
   /** TOAST */
   renderToast() {
     return this.state.showToast ? (
-      <ToastType1 margin={30} content={this.state.notifToast} />
+      <ToastType1
+        basic={this.state.notifToast === 'Anda belum memiliki portfolio'}
+        margin={30}
+        content={this.state.notifToast}
+      />
     ) : (
       <View />
     );
@@ -359,8 +376,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 01072021
+ * updatedDate: 16072021
  * updatedFunction:
- * -> add modal error when failed get portfolio.
+ * -> add toast when sales didn't have portfolio.
  *
  */
