@@ -45,10 +45,10 @@ class MerchantNoVisitReasonView extends Component {
   componentDidUpdate(prevProps) {
     /** error get list of reason not visit */
     if (
-      prevProps.journey.errorGetNoVisitReason !==
-      this.props.journey.errorGetNoVisitReason
+      prevProps.merchant.errorGetNoVisitReason !==
+      this.props.merchant.errorGetNoVisitReason
     ) {
-      if (this.props.journey.errorGetNoVisitReason !== null) {
+      if (this.props.merchant.errorGetNoVisitReason !== null) {
         this.setState({ openModalError: true });
       }
     }
