@@ -81,7 +81,7 @@ class ProductListType7 extends Component {
    * RENDER VIEW
    * =======================
    */
-  /** Render Qty */
+  /** RENDER SINGLE QTY */
   renderQty(qty) {
     return (
       <View
@@ -194,7 +194,9 @@ class ProductListType7 extends Component {
                 : MoneyFormat(item.cataloguePrice)}
             </Text>
           </View>
-          {this.checkQty(item)}
+          {this.props.type === 'Bonus'
+            ? this.checkQty(item)
+            : this.renderQty(item.catalogueQty)}
         </View>
         <View style={GlobalStyle.lines} />
         <View style={styles.boxButtonAndPriceTotal}>
@@ -250,15 +252,9 @@ class ProductListType7 extends Component {
                   )}
             </Text>
           </View>
-          <View
-            style={{
-              justifyContent: 'flex-end',
-              width: '20%',
-              alignItems: 'flex-end'
-            }}
-          >
-            <Text style={Fonts.type47}>{item.catalogueQty} Pcs</Text>
-          </View>
+          {this.props.type === 'Bonus'
+            ? this.checkQty(item)
+            : this.renderQty(item.catalogueQty)}
         </View>
         <View style={GlobalStyle.lines} />
         <View style={styles.boxButtonAndPriceTotal}>
