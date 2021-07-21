@@ -21,6 +21,7 @@ import {
   TagListType1,
   SkeletonType2,
   ModalBottomErrorRespons,
+  ToastType1,
   ButtonSingle
 } from '../../library/component'
 import { Color } from '../../config'
@@ -34,6 +35,7 @@ class ModalBottomMerchantList extends Component {
     super(props);
     this.state = {
       openModalErrorGlobal: false,
+      showToast: false,
       search: '',
       portfolio: 0,
       heightList: 0.93 * height,
@@ -62,6 +64,18 @@ class ModalBottomMerchantList extends Component {
         this.props.merchant.dataGetPortfolioV2.length > 0
       ) {
         this.getMerchant('direct', 0, '');
+      }
+      if (
+        this.props.merchant.dataGetPortfolioV2 !== null &&
+        this.props.merchant.dataGetPortfolioV2.length === 0
+      ) {
+        this.setState({
+          openModalErrorGlobal: false,
+          showToast: true
+        });
+        setTimeout(() => {
+          this.setState({ showToast: false });
+        }, 3000);
       }
     }
     /** ERROR GET PORTFOLIO */
@@ -119,14 +133,19 @@ class ModalBottomMerchantList extends Component {
   /** === CALL GET FUNCTION === */
   getMerchant(type, portfolioIndex, search) {
     const date = moment().format('YYYY-MM-DD');
-    this.props.merchantExistingGetReset();
-    this.props.merchantExistingGetProcess({
-      date,
-      loading: true,
-      page: 1,
-      portfolioId: this.props.merchant.dataGetPortfolioV2[0].id,
-      search
-    });
+    if (
+      this.props.merchant.dataGetPortfolioV2 &&
+      this.props.merchant.dataGetPortfolioV2.length > 0
+    ) {
+      this.props.merchantExistingGetReset();
+      this.props.merchantExistingGetProcess({
+        date,
+        loading: true,
+        page: 1,
+        portfolioId: this.props.merchant.dataGetPortfolioV2[0].id,
+        search
+      });
+    }
   }
   /** === PARENT FUNCTION FROM CHILD === */
   parentFunction(data) {
@@ -227,6 +246,7 @@ class ModalBottomMerchantList extends Component {
       <View>
         <SearchBarType1
           searchText={this.state.search}
+          editable={this.props.merchant.dataGetPortfolioV2 ? true : false}
           placeholder={'Cari nama / id toko disini'}
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
@@ -284,6 +304,7 @@ class ModalBottomMerchantList extends Component {
         {this.renderTags()}
         {this.renderContentList()}
         {this.renderButton()}
+        {this.renderToast()}
       </View>
     );
   }
@@ -321,6 +342,22 @@ class ModalBottomMerchantList extends Component {
         <View />
       );
     }
+  /**
+   * ===================
+   * TOAST
+   * ====================
+   */
+  renderToast() {
+    return this.state.showToast ? (
+      <ToastType1
+        basic={true}
+        margin={30}
+        content={'Anda belum memiliki portfolio'}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === MAIN === */
   render() {
     return (
@@ -386,7 +423,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 08072021
+ * updatedDate: 19072021
  * updatedFunction:
- * -> move variable 'today' to inside class component (related function)
+ * -> fix bug sales (who didn't have portfolio) trying to search merchant.
+ * -> add toast when sales didn't have portfolio.
  */
