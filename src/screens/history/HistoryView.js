@@ -6,11 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text
-} from '../../library/reactPackage'
-import {
-  bindActionCreators,
-  connect
-} from '../../library/thirdPartyPackage'
+} from '../../library/reactPackage';
+import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
   StatusBarBlackOP40,
@@ -18,8 +15,8 @@ import {
   ModalBottomType3,
   ModalBottomType4,
   DatePickerSpinner
-} from '../../library/component'
-import { GlobalStyle, Fonts } from '../../helpers'
+} from '../../library/component';
+import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import HistoryTabView from './HistoryTabView';
@@ -28,6 +25,7 @@ import HistoryPaymentView from './HistoryPaymentView';
 import HistoryFilterView from './HistoryFilterView';
 import HistoryPortfolioFilterView from './HistoryPortfolioFilterView';
 import HistoryDateFilterView from './HistoryDateFilterView';
+import HistoryOrderFilterView from './order-filter/HistoryOrderFilterView';
 
 class HistoryView extends Component {
   constructor(props) {
@@ -47,7 +45,8 @@ class HistoryView extends Component {
       openMainFilter: false,
       openPortfolioFilter: false,
       openDateFilter: false,
-      openDateSelect: false
+      openDateSelect: false,
+      openOrderFilter: false
     };
   }
   /**
@@ -78,50 +77,110 @@ class HistoryView extends Component {
   }
   /** === FROM CHILD FUNCTION === */
   parentFunction(data) {
-    if (data.type === 'section') {
-      this.setState({ activeTab: data.data });
-    } else if (data.type === 'search') {
-      this.setState({ searchText: data.data });
-    } else if (data.type === 'portfolio') {
-      this.setState({ openMainFilter: false, openPortfolioFilter: true });
-    } else if (data.type === 'date') {
-      this.setState({ openMainFilter: false, openDateFilter: true });
-    } else if (data.type === 'addPortfolio') {
-      this.setState({
-        openMainFilter: true,
-        openPortfolioFilter: false,
-        portfolio: data.data
-      });
-    } else if (data.type === 'doFilter') {
-      this.setState({
-        openMainFilter: false,
-        startDate: data.data.startDate,
-        endDate: data.data.endDate,
-        portfolioId: data.data.portfolio,
-        dateFilter: data.data.dateFilter
-      });
-    } else if (data.type === 'dateType') {
-      this.setState({
-        typeDate: data.data,
-        openDateSelect: true,
-        openDateFilter: false
-      });
-    } else if (data.type === 'datePicker') {
-      this.setState({ openDateSelect: false, openDateFilter: true });
-      if (this.state.typeDate === 'startDate') {
-        this.setState({ startDate: data.data, endDate: '' });
-      } else {
-        this.setState({ endDate: data.data });
-      }
-    } else if (data.type === 'selectDate') {
-      if (data.data.type === 'selectedDate') {
-        this.setState({ openDateFilter: false, openMainFilter: true });
-      }
-      this.setState({
-        startDate: data.data.startDate,
-        endDate: data.data.endDate
-      });
+    switch (data.type) {
+      case 'section':
+        this.setState({ activeTab: data.data });
+        break;
+      case 'search':
+        this.setState({ searchText: data.data });
+        break;
+      case 'portfolio':
+        this.setState({ openMainFilter: false, openPortfolioFilter: true });
+        break;
+      case 'order':
+        console.log(data.data);
+        this.setState({ openMainFilter: false, openOrderFilter: true });
+        break;
+      case 'date':
+        this.setState({ openMainFilter: false, openDateFilter: true });
+        break;
+      case 'addPortfolio':
+        this.setState({
+          openMainFilter: true,
+          openPortfolioFilter: false,
+          portfolio: data.data
+        });
+        break;
+      case 'doFilter':
+        this.setState({
+          openMainFilter: false,
+          startDate: data.data.startDate,
+          endDate: data.data.endDate,
+          portfolioId: data.data.portfolio,
+          dateFilter: data.data.dateFilter
+        });
+        break;
+      case 'dateType':
+        this.setState({
+          typeDate: data.data,
+          openDateSelect: true,
+          openDateFilter: false
+        });
+        break;
+      case 'datePicker':
+        this.setState({ openDateSelect: false, openDateFilter: true });
+        if (this.state.typeDate === 'startDate') {
+          this.setState({ startDate: data.data, endDate: '' });
+        } else {
+          this.setState({ endDate: data.data });
+        }
+        break;
+      case 'selectDate':
+        if (data.data.type === 'selectedDate') {
+          this.setState({ openDateFilter: false, openMainFilter: true });
+        }
+        this.setState({
+          startDate: data.data.startDate,
+          endDate: data.data.endDate
+        });
+        break;
+      default:
+        break;
     }
+    // if (data.type === 'section') {
+    //   this.setState({ activeTab: data.data });
+    // } else if (data.type === 'search') {
+    //   this.setState({ searchText: data.data });
+    // } else if (data.type === 'portfolio') {
+    //   this.setState({ openMainFilter: false, openPortfolioFilter: true });
+    // } else if (data.type === 'date') {
+    //   this.setState({ openMainFilter: false, openDateFilter: true });
+    // } else if (data.type === 'addPortfolio') {
+    //   this.setState({
+    //     openMainFilter: true,
+    //     openPortfolioFilter: false,
+    //     portfolio: data.data
+    //   });
+    // } else if (data.type === 'doFilter') {
+    //   this.setState({
+    //     openMainFilter: false,
+    //     startDate: data.data.startDate,
+    //     endDate: data.data.endDate,
+    //     portfolioId: data.data.portfolio,
+    //     dateFilter: data.data.dateFilter
+    //   });
+    // } else if (data.type === 'dateType') {
+    //   this.setState({
+    //     typeDate: data.data,
+    //     openDateSelect: true,
+    //     openDateFilter: false
+    //   });
+    // } else if (data.type === 'datePicker') {
+    //   this.setState({ openDateSelect: false, openDateFilter: true });
+    //   if (this.state.typeDate === 'startDate') {
+    //     this.setState({ startDate: data.data, endDate: '' });
+    //   } else {
+    //     this.setState({ endDate: data.data });
+    //   }
+    // } else if (data.type === 'selectDate') {
+    //   if (data.data.type === 'selectedDate') {
+    //     this.setState({ openDateFilter: false, openMainFilter: true });
+    //   }
+    //   this.setState({
+    //     startDate: data.data.startDate,
+    //     endDate: data.data.endDate
+    //   });
+    // }
   }
   /** SAVE DATE FILTER */
   saveDatePicker(date) {
@@ -237,6 +296,27 @@ class HistoryView extends Component {
     );
   }
 
+  renderModalFilterOrder() {
+    return this.state.openOrderFilter ? (
+      <ModalBottomType4
+        open={this.state.openOrderFilter}
+        title={'Filter'}
+        close={() =>
+          this.setState({ openMainFilter: true, openOrderFilter: false })
+        }
+        content={
+          <HistoryOrderFilterView
+            portfolio={this.state.portfolio}
+            onRef={ref => (this.parentFunction = ref)}
+            parentFunction={this.parentFunction.bind(this)}
+          />
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
+
   renderModalFitlerPortfolio() {
     return this.state.openPortfolioFilter ? (
       <ModalBottomType4
@@ -318,6 +398,7 @@ class HistoryView extends Component {
         {this.renderModalFitlerPortfolio()}
         {this.renderModalFitlerDate()}
         {this.renderModalSelectDate()}
+        {this.renderModalFilterOrder()}
       </View>
     );
   }
@@ -355,14 +436,14 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(HistoryView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
