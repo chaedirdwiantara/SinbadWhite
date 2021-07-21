@@ -5,16 +5,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text
-} from '../../library/reactPackage'
-import {
-  MaterialIcon,
-  connect
-} from '../../library/thirdPartyPackage'
-import {
-  StatusBarBlackOP40,
-  ButtonSingle
-} from '../../library/component'
-import { GlobalStyle, Fonts } from '../../helpers'
+} from '../../library/reactPackage';
+import { MaterialIcon, connect } from '../../library/thirdPartyPackage';
+import { StatusBarBlackOP40, ButtonSingle } from '../../library/component';
+import { GlobalStyle, Fonts } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 
 class HistoryFilterView extends Component {
@@ -73,6 +67,42 @@ class HistoryFilterView extends Component {
    * RENDER VIEW
    * =======================
    */
+  /** RENDER ORDER FILTER */
+  renderOrder() {
+    return (
+      <TouchableOpacity onPress={() => this.parentFunction({ type: 'order' })}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 16,
+            paddingVertical: 8
+          }}
+        >
+          <View>
+            <Text style={[Fonts.type42, { marginBottom: 5 }]}>Dibuat Oleh</Text>
+            {this.state.portfolio.length > 0 ? (
+              <Text style={Fonts.type23}>
+                {this.modifyPorfolio().length >= 55
+                  ? this.modifyPorfolio().substring(0, 55) + '...'
+                  : this.modifyPorfolio()}
+              </Text>
+            ) : (
+              <Text style={Fonts.type23}>Semua</Text>
+            )}
+          </View>
+          <View style={{ justifyContent: 'center' }}>
+            <MaterialIcon
+              name="chevron-right"
+              color={masterColor.fontBlack40}
+              size={24}
+            />
+          </View>
+        </View>
+        <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
+      </TouchableOpacity>
+    );
+  }
   /** RENDER CONTENT PORTFOLIO */
   renderPortfolio() {
     return (
@@ -156,6 +186,7 @@ class HistoryFilterView extends Component {
           </TouchableOpacity>
         </View>
         {this.renderPortfolio()}
+        {this.renderOrder()}
         {this.renderDate()}
       </View>
     );
