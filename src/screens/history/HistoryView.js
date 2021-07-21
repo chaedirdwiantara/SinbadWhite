@@ -63,6 +63,7 @@ class HistoryView extends Component {
     this.checkNewOrderNotif();
     this.props.historyGetOrderStatusProcess();
     this.props.historyGetPaymentStatusProcess();
+    this.getSalesName();
   }
 
   /** CHECK NEW ORDER NOTIF */
@@ -78,6 +79,13 @@ class HistoryView extends Component {
         this.props.historyDeleteNewOrderNotifPerMerchant(data);
       }
     }
+  }
+  getSalesName() {
+    const order = {
+      userId: this.props.user.id,
+      name: this.props.user.fullName
+    };
+    this.setState({ order });
   }
   /** === FROM CHILD FUNCTION === */
   parentFunction(data) {
@@ -394,8 +402,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ merchant, permanent }) => {
-  return { merchant, permanent };
+const mapStateToProps = ({ merchant, permanent, user }) => {
+  return { merchant, permanent, user };
 };
 
 const mapDispatchToProps = dispatch => {
