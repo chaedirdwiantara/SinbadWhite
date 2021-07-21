@@ -17,7 +17,8 @@ import {
   StatusBarWhite,
   ButtonSingle,
   LoadingPage,
-  InputType3
+  InputType3,
+  ModalBottomErrorRespons
 } from '../../../library/component';
 import { Fonts } from '../../../helpers';
 import { Color } from '../../../config';
@@ -28,6 +29,7 @@ class MerchantNoVisitReasonView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      openModalError: false,
       selectedReason: '',
       reason: ''
     };
@@ -39,6 +41,17 @@ class MerchantNoVisitReasonView extends Component {
    */
   componentDidMount() {
     this.props.merchantGetNoVisitReasonProcess();
+  }
+  componentDidUpdate(prevProps) {
+    /** error get list of reason not visit */
+    if (
+      prevProps.journey.errorGetNoVisitReason !==
+      this.props.journey.errorGetNoVisitReason
+    ) {
+      if (this.props.journey.errorGetNoVisitReason !== null) {
+        this.setState({ openModalError: true });
+      }
+    }
   }
   /** REASON SELECT */
   selectReason(id) {
@@ -164,6 +177,18 @@ class MerchantNoVisitReasonView extends Component {
       />
     );
   }
+  /** RENDER MODAL ERROR RESPONSE */
+  renderModalErrorResponse() {
+    return this.state.openModalError ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalError}
+        onPress={() => this.setState({ openModalError: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** MAIN */
   render() {
     return (
@@ -175,6 +200,8 @@ class MerchantNoVisitReasonView extends Component {
         ) : (
           <LoadingPage />
         )}
+        {/* modal */}
+        {this.renderModalErrorResponse()}
       </SafeAreaView>
     );
   }
@@ -252,4 +279,5 @@ export default connect(
  * updatedDate:
  * updatedFunction:
  * -> create new screen no visit reason.
+ * -> add modal error when failed get list of reason not visit.
  */
