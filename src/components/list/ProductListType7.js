@@ -51,6 +51,83 @@ class ProductListType7 extends Component {
    * RENDER VIEW
    * =======================
    */
+  /** Render Qty */
+  renderQty(qty, invoicedCatalogueQty) {
+    return typeof invoicedCatalogueQty !== 'undefined' &&
+      invoicedCatalogueQty !== null ? (
+      qty !== invoicedCatalogueQty ? (
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row'
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+              alignItems: 'flex-end'
+            }}
+          >
+            <Text
+              style={[
+                Fonts.type10Red,
+                {
+                  textDecorationLine: 'line-through',
+                  textDecorationStyle: 'solid'
+                }
+              ]}
+            >
+              {qty} Pcs
+            </Text>
+          </View>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+              alignItems: 'flex-end'
+            }}
+          >
+            <Text style={Fonts.type47}>{invoicedCatalogueQty} Pcs</Text>
+          </View>
+        </View>
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row'
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+              alignItems: 'flex-end'
+            }}
+          >
+            <Text style={Fonts.type47}>{invoicedCatalogueQty} Pcs</Text>
+          </View>
+        </View>
+      )
+    ) : (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row'
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end'
+          }}
+        >
+          <Text style={Fonts.type47}>{qty} Pcs</Text>
+        </View>
+      </View>
+    );
+  }
   /** ITEM LIST PRODUCT */
   renderListProductItem(item) {
     return (
@@ -72,32 +149,31 @@ class ProductListType7 extends Component {
             />
           </View>
           <View
-            style={{ justifyContent: 'space-between', flex: 1, paddingLeft: 8 }}
+            style={{ justifyContent: 'space-between', flex: 2, paddingLeft: 8 }}
           >
-            <Text style={Fonts.type10}>{item.catalogueName}</Text>
-            <Text style={Fonts.type10}>
+            <Text style={Fonts.type17}>{item.catalogueName}</Text>
+            <Text style={Fonts.type117p}>
               {this.props.type === 'Bonus'
                 ? MoneyFormat(0)
                 : MoneyFormat(item.cataloguePrice)}
             </Text>
           </View>
-          <View
-            style={{
-              justifyContent: 'flex-end',
-              width: '20%',
-              alignItems: 'flex-end'
-            }}
-          >
-            <Text style={Fonts.type10}>{item.catalogueQty} Pcs</Text>
-          </View>
+          {/* eslint-disable-next-line no-prototype-builtins */}
+          {item.hasOwnProperty('invoicedCatalogueQty')
+            ? this.renderQty(item.catalogueQty, item.invoicedCatalogueQty)
+            : this.renderQty(item.catalogueQty)}
         </View>
         <View style={GlobalStyle.lines} />
         <View style={styles.boxButtonAndPriceTotal}>
-          <Text style={Fonts.type10}>
-            Total Harga:{' '}
+          <Text style={[Fonts.type38, { flex: 1 }]}>Total Harga:</Text>
+          <Text style={[Fonts.type117p, { flex: 1, textAlign: 'right' }]}>
             {this.props.type === 'Bonus'
               ? MoneyFormat(0)
-              : MoneyFormat(item.catalogueTotalPrice)}
+              : this.props.type === 'Payment'
+              ? MoneyFormat(item.cataloguePrice ? item.cataloguePrice : 0)
+              : MoneyFormat(
+                  item.catalogueTotalPrice ? item.catalogueTotalPrice : 0
+                )}
           </Text>
         </View>
       </View>
@@ -129,12 +205,16 @@ class ProductListType7 extends Component {
             style={{ justifyContent: 'space-between', flex: 1, paddingLeft: 8 }}
           >
             <TouchableOpacity onPress={() => this.goToDetail(item.id)}>
-              <Text style={Fonts.type10}>{item.catalogueName}</Text>
+              <Text style={Fonts.type17}>{item.catalogueName}</Text>
             </TouchableOpacity>
             <Text style={Fonts.type10}>
               {this.props.type === 'Bonus'
                 ? MoneyFormat(0)
-                : MoneyFormat(item.cataloguePrice)}
+                : this.props.type === 'Payment'
+                ? MoneyFormat(item.cataloguePrice ? item.cataloguePrice : 0)
+                : MoneyFormat(
+                    item.catalogueTotalPrice ? item.catalogueTotalPrice : 0
+                  )}
             </Text>
           </View>
           <View
@@ -144,16 +224,16 @@ class ProductListType7 extends Component {
               alignItems: 'flex-end'
             }}
           >
-            <Text style={Fonts.type10}>{item.catalogueQty} Pcs</Text>
+            <Text style={Fonts.type47}>{item.catalogueQty} Pcs</Text>
           </View>
         </View>
         <View style={GlobalStyle.lines} />
         <View style={styles.boxButtonAndPriceTotal}>
-          <Text style={Fonts.type10}>
-            Total Harga:{' '}
+          <Text style={[Fonts.type38, { flex: 1 }]}>Total Harga:</Text>
+          <Text style={[Fonts.type117p, { flex: 1 }]}>
             {this.props.type === 'Bonus'
               ? MoneyFormat(0)
-              : MoneyFormat(item.catalogueTotalPrice)}
+              : MoneyFormat(item.catalogueTotalPrice ? item.cataloguePrice : 0)}
           </Text>
         </View>
       </View>
