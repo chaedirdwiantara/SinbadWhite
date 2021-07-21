@@ -42,6 +42,10 @@ class HistoryView extends Component {
       },
       portfolio: [],
       portfolioId: [],
+      order: {
+        userId: '',
+        name: ''
+      },
       openMainFilter: false,
       openPortfolioFilter: false,
       openDateFilter: false,
@@ -88,7 +92,6 @@ class HistoryView extends Component {
         this.setState({ openMainFilter: false, openPortfolioFilter: true });
         break;
       case 'order':
-        console.log(data.data);
         this.setState({ openMainFilter: false, openOrderFilter: true });
         break;
       case 'date':
@@ -107,7 +110,8 @@ class HistoryView extends Component {
           startDate: data.data.startDate,
           endDate: data.data.endDate,
           portfolioId: data.data.portfolio,
-          dateFilter: data.data.dateFilter
+          dateFilter: data.data.dateFilter,
+          order: data.data.order
         });
         break;
       case 'dateType':
@@ -134,53 +138,16 @@ class HistoryView extends Component {
           endDate: data.data.endDate
         });
         break;
+      case 'orderFilter':
+        this.setState({
+          openMainFilter: true,
+          openOrderFilter: false,
+          order: data.data
+        });
+        break;
       default:
         break;
     }
-    // if (data.type === 'section') {
-    //   this.setState({ activeTab: data.data });
-    // } else if (data.type === 'search') {
-    //   this.setState({ searchText: data.data });
-    // } else if (data.type === 'portfolio') {
-    //   this.setState({ openMainFilter: false, openPortfolioFilter: true });
-    // } else if (data.type === 'date') {
-    //   this.setState({ openMainFilter: false, openDateFilter: true });
-    // } else if (data.type === 'addPortfolio') {
-    //   this.setState({
-    //     openMainFilter: true,
-    //     openPortfolioFilter: false,
-    //     portfolio: data.data
-    //   });
-    // } else if (data.type === 'doFilter') {
-    //   this.setState({
-    //     openMainFilter: false,
-    //     startDate: data.data.startDate,
-    //     endDate: data.data.endDate,
-    //     portfolioId: data.data.portfolio,
-    //     dateFilter: data.data.dateFilter
-    //   });
-    // } else if (data.type === 'dateType') {
-    //   this.setState({
-    //     typeDate: data.data,
-    //     openDateSelect: true,
-    //     openDateFilter: false
-    //   });
-    // } else if (data.type === 'datePicker') {
-    //   this.setState({ openDateSelect: false, openDateFilter: true });
-    //   if (this.state.typeDate === 'startDate') {
-    //     this.setState({ startDate: data.data, endDate: '' });
-    //   } else {
-    //     this.setState({ endDate: data.data });
-    //   }
-    // } else if (data.type === 'selectDate') {
-    //   if (data.data.type === 'selectedDate') {
-    //     this.setState({ openDateFilter: false, openMainFilter: true });
-    //   }
-    //   this.setState({
-    //     startDate: data.data.startDate,
-    //     endDate: data.data.endDate
-    //   });
-    // }
   }
   /** SAVE DATE FILTER */
   saveDatePicker(date) {
@@ -209,6 +176,7 @@ class HistoryView extends Component {
             search={this.state.searchText}
             dateFilter={this.state.dateFilter}
             portfolio={this.state.portfolioId}
+            order={this.state.order}
           />
         ) : (
           <HistoryOrderView
@@ -217,6 +185,7 @@ class HistoryView extends Component {
             search={this.state.searchText}
             dateFilter={this.state.dateFilter}
             portfolio={this.state.portfolioId}
+            order={this.state.order}
           />
         )}
       </View>
@@ -286,6 +255,7 @@ class HistoryView extends Component {
             portfolio={this.state.portfolio}
             dateGte={this.state.startDate}
             dateLte={this.state.endDate}
+            order={this.state.order}
             onRef={ref => (this.parentFunction = ref)}
             parentFunction={this.parentFunction.bind(this)}
           />
@@ -306,7 +276,7 @@ class HistoryView extends Component {
         }
         content={
           <HistoryOrderFilterView
-            portfolio={this.state.portfolio}
+            order={this.state.order.userId}
             onRef={ref => (this.parentFunction = ref)}
             parentFunction={this.parentFunction.bind(this)}
           />

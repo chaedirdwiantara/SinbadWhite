@@ -17,7 +17,8 @@ class HistoryFilterView extends Component {
     this.state = {
       portfolio: this.props.portfolio,
       dateGte: this.props.dateGte,
-      dateLte: this.props.dateLte
+      dateLte: this.props.dateLte,
+      order: this.props.order
     };
   }
   /**
@@ -44,6 +45,10 @@ class HistoryFilterView extends Component {
         dateFilter: {
           dateGte: '',
           dateLte: ''
+        },
+        order: {
+          userId: '',
+          name: ''
         }
       }
     });
@@ -81,15 +86,9 @@ class HistoryFilterView extends Component {
         >
           <View>
             <Text style={[Fonts.type42, { marginBottom: 5 }]}>Dibuat Oleh</Text>
-            {this.state.portfolio.length > 0 ? (
-              <Text style={Fonts.type23}>
-                {this.modifyPorfolio().length >= 55
-                  ? this.modifyPorfolio().substring(0, 55) + '...'
-                  : this.modifyPorfolio()}
-              </Text>
-            ) : (
-              <Text style={Fonts.type23}>Semua</Text>
-            )}
+            <Text style={Fonts.type23}>
+              {this.state.order.name !== '' ? this.state.order.name : 'Semua'}
+            </Text>
           </View>
           <View style={{ justifyContent: 'center' }}>
             <MaterialIcon
@@ -185,7 +184,7 @@ class HistoryFilterView extends Component {
             <Text style={Fonts.type62}>Hapus</Text>
           </TouchableOpacity>
         </View>
-        {this.renderPortfolio()}
+        {/* {this.renderPortfolio()} */}
         {this.renderOrder()}
         {this.renderDate()}
       </View>
@@ -196,7 +195,8 @@ class HistoryFilterView extends Component {
     return (
       <ButtonSingle
         disabled={
-          this.state.portfolio.length === 0 &&
+          // this.state.portfolio.length === 0 &&
+          this.state.order.name === '' &&
           (this.state.dateGte === '' || this.state.dateLte === '')
         }
         title={'Terapkan'}
@@ -211,7 +211,8 @@ class HistoryFilterView extends Component {
               dateFilter: {
                 dateGte: this.state.dateGte,
                 dateLte: this.state.dateLte
-              }
+              },
+              order: this.state.order
             }
           })
         }
