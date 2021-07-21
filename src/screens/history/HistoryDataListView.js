@@ -25,8 +25,16 @@ import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import CountDown from '../../components/CountDown';
-import { REFUNDED, BILLING_PAID, PAID, WAITING_FOR_REFUND, PAYMENT_FAILED, WAITING_FOR_PAYMENT, PAY_NOW } from '../../constants/paymentConstants';
-import {CONFIRM, PENDING_PAYMENT} from '../../constants/orderConstants';
+import {
+  REFUNDED,
+  BILLING_PAID,
+  PAID,
+  WAITING_FOR_REFUND,
+  PAYMENT_FAILED,
+  WAITING_FOR_PAYMENT,
+  PAY_NOW
+} from '../../constants/paymentConstants';
+import { CONFIRM, PENDING_PAYMENT } from '../../constants/orderConstants';
 
 class HistoryDataListView extends Component {
   constructor(props) {
@@ -61,6 +69,10 @@ class HistoryDataListView extends Component {
       this.getHistory(true, 0);
     }
     if (prevProps.dateFilter !== this.props.dateFilter) {
+      this.props.historyGetReset();
+      this.getHistory(true, 0);
+    }
+    if (prevProps.order !== this.props.order) {
       this.props.historyGetReset();
       this.getHistory(true, 0);
     }
@@ -102,7 +114,7 @@ class HistoryDataListView extends Component {
   getHistory(loading, page) {
     this.props.historyGetProcess({
       loading,
-      userId: this.props.user.id,
+      userId: this.props.order?.userId || '',
       storeId: this.props.storeId,
       page,
       statusOrder: this.props.section === 'order' ? this.props.status : '',
@@ -316,7 +328,9 @@ class HistoryDataListView extends Component {
             <View />
           )}
         </View>
-        {item.statusPayment !== PAID && item.statusPayment !== REFUNDED && item.statusPayment !== WAITING_FOR_REFUND
+        {item.statusPayment !== PAID &&
+        item.statusPayment !== REFUNDED &&
+        item.statusPayment !== WAITING_FOR_REFUND
           ? item.statusPayment !== PAYMENT_FAILED &&
             item.billing &&
             item.billing.billingStatus !== BILLING_PAID &&
@@ -334,20 +348,26 @@ class HistoryDataListView extends Component {
     );
   }
   /** === RENDER BUTTON FOR ORDER === */
-renderButtonForOrder(item) {
-  switch (item.status){
-    case CONFIRM :
-      if (item.paymentType.id !== PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT){
-        return this.renderButtonCancel(item)
-      }
-      case PENDING_PAYMENT:
-        if (item.paymentType.id === PAY_NOW && item.statusPayment === WAITING_FOR_PAYMENT ){
-          return this.renderButtonCancel(item)
+  renderButtonForOrder(item) {
+    switch (item.status) {
+      case CONFIRM:
+        if (
+          item.paymentType.id !== PAY_NOW &&
+          item.statusPayment === WAITING_FOR_PAYMENT
+        ) {
+          return this.renderButtonCancel(item);
         }
-    default :
-    return <View/>
+      case PENDING_PAYMENT:
+        if (
+          item.paymentType.id === PAY_NOW &&
+          item.statusPayment === WAITING_FOR_PAYMENT
+        ) {
+          return this.renderButtonCancel(item);
+        }
+      default:
+        return <View />;
+    }
   }
-}
 
   // /** === RENDER BUTTON FOR PAYMENT === */
   // renderButtonForPayment(item) {

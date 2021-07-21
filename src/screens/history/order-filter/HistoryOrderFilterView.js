@@ -19,13 +19,21 @@ import {
 import { GlobalStyle, Fonts } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import masterColor from '../../../config/masterColor.json';
+import { GlobalMethod } from '../../../services/methods';
 
 class HistoryOrderFilterView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      orderFilter: ['Semua'],
-      portfolio: this.props.portfolio
+      orderFilter: [
+        {
+          userId: '',
+          name: 'Semua'
+        }
+      ],
+      portfolio: this.props.portfolio,
+      orderBySelected: null,
+      selectedUserId: this.props.order
     };
   }
   /**
@@ -35,31 +43,27 @@ class HistoryOrderFilterView extends Component {
    */
   componentDidMount() {
     this.getSalesName();
-    console.log(this.state.orderFilter);
   }
 
   getSalesName() {
     let orderFilter = this.state.orderFilter;
-    const salesName = this.props.user.fullName;
+    const salesName = {
+      userId: this.props.user.id,
+      name: this.props.user.fullName
+    };
     orderFilter.push(salesName);
+    this.setState({ orderFilter, order: orderFilter });
   }
 
   parentFunction() {
     this.props.parentFunction({
       type: 'orderFilter',
-      data: this.state.orderFilter
+      data: this.state.orderBySelected
     });
   }
 
-  addPortfolio(item) {
-    const portfolio = this.state.portfolio;
-    const index = this.state.portfolio.indexOf(item.id);
-    if (index > -1) {
-      portfolio.splice(index, 1);
-    } else {
-      portfolio.push(item.id);
-    }
-    this.setState({ portfolio });
+  addOrderFilter(item) {
+    this.setState({ selectedUserId: item.userId, orderBySelected: item });
   }
   /**
    * ========================
@@ -71,11 +75,11 @@ class HistoryOrderFilterView extends Component {
     return <SkeletonType6 />;
   }
   /** RENDER CONTENT PORTFOLIO */
-  renderPortfolio() {
-    return this.props.merchant.dataGetPortfolioV2.map((item, index) => {
+  renderOrder() {
+    return this.state.orderFilter.map((item, index) => {
       return (
         <View key={index}>
-          <TouchableOpacity onPress={() => this.addPortfolio(item)}>
+          <TouchableOpacity onPress={() => this.addOrderFilter(item)}>
             <View
               style={{
                 flexDirection: 'row',
@@ -98,7 +102,7 @@ class HistoryOrderFilterView extends Component {
                 <MaterialIcon
                   name="check-circle"
                   color={
-                    this.state.portfolio.indexOf(item.id) > -1
+                    this.state.selectedUserId === item.userId
                       ? masterColor.mainColor
                       : masterColor.fontBlack40
                   }
@@ -121,7 +125,7 @@ class HistoryOrderFilterView extends Component {
         </View>
         {!this.props.merchant.loadingGetPortfolio &&
         this.props.merchant.dataGetPortfolioV2 !== null
-          ? this.renderPortfolio()
+          ? this.renderOrder()
           : this.renderSkeleton()}
       </View>
     );
