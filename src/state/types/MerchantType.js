@@ -40,6 +40,13 @@ export const MERCHANT_NO_ORDER_REASON_GET_SUCCESS =
   'MerchantNoOrderReasonGetSuccess';
 export const MERCHANT_NO_ORDER_REASON_GET_FAILED =
   'MerchantNoOrderReasonGetFailed';
+/** FOR REASON NO ORDER */
+export const MERCHANT_NO_VISIT_REASON_GET_PROCESS =
+  'MerchantNoVisitReasonGetProcess';
+export const MERCHANT_NO_VISIT_REASON_GET_SUCCESS =
+  'MerchantNoVisitReasonGetSuccess';
+export const MERCHANT_NO_VISIT_REASON_GET_FAILED =
+  'MerchantNoVisitReasonGetFailed';
 /** FOR ADD MERCHANT */
 export const MERCHANT_SAVE_DATA_VOLATILE = 'MerchantAddDataVolatile';
 /** FOR EDIT MERCHANT */
