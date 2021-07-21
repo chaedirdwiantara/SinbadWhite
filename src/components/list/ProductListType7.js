@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /**
  * this product list for history order
  */
@@ -46,70 +47,43 @@ class ProductListType7 extends Component {
     this.props.pdpGetDetailProcess(pdpId);
     NavigationService.navigate('PdpDetailView');
   }
+  /** CHECK QTY */
+  checkQty(item) {
+    const {
+      invoicedParcelModified,
+      deliveredParcelModified,
+      status
+    } = this.props.detailHistory;
+
+    if (status !== 'pending_partial') {
+      let qty;
+      if (invoicedParcelModified && !deliveredParcelModified) {
+        item.hasOwnProperty('invoicedCatalogueQty')
+          ? (qty = item.invoicedCatalogueQty)
+          : (qty = item.catalogueQty);
+      } else if (deliveredParcelModified) {
+        item.hasOwnProperty('deliveredCatalogueQty')
+          ? (qty = item.deliveredCatalogueQty)
+          : (qty = item.catalogueQty);
+      } else {
+        qty = item.catalogueQty;
+      }
+      return this.renderQty(qty);
+    } else {
+      return this.renderDifferenceQty(
+        item.catalogueQty,
+        item.invoicedCatalogueQty
+      );
+    }
+  }
   /**
    * ========================
    * RENDER VIEW
    * =======================
    */
   /** Render Qty */
-  renderQty(qty, invoicedCatalogueQty) {
-    return typeof invoicedCatalogueQty !== 'undefined' &&
-      invoicedCatalogueQty !== null ? (
-      qty !== invoicedCatalogueQty ? (
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row'
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'flex-end',
-              alignItems: 'flex-end'
-            }}
-          >
-            <Text
-              style={[
-                Fonts.type10Red,
-                {
-                  textDecorationLine: 'line-through',
-                  textDecorationStyle: 'solid'
-                }
-              ]}
-            >
-              {qty} Pcs
-            </Text>
-          </View>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'flex-end',
-              alignItems: 'flex-end'
-            }}
-          >
-            <Text style={Fonts.type47}>{invoicedCatalogueQty} Pcs</Text>
-          </View>
-        </View>
-      ) : (
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row'
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'flex-end',
-              alignItems: 'flex-end'
-            }}
-          >
-            <Text style={Fonts.type47}>{invoicedCatalogueQty} Pcs</Text>
-          </View>
-        </View>
-      )
-    ) : (
+  renderQty(qty) {
+    return (
       <View
         style={{
           flex: 1,
@@ -124,6 +98,64 @@ class ProductListType7 extends Component {
           }}
         >
           <Text style={Fonts.type47}>{qty} Pcs</Text>
+        </View>
+      </View>
+    );
+  }
+
+  /** RENDER DIFFERENCE QTY */
+  renderDifferenceQty(qtyBefore, qtyAfter) {
+    return qtyBefore !== qtyAfter ? (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row'
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end'
+          }}
+        >
+          <Text
+            style={[
+              Fonts.type10Red,
+              {
+                textDecorationLine: 'line-through',
+                textDecorationStyle: 'solid'
+              }
+            ]}
+          >
+            {qtyBefore} Pcs
+          </Text>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end'
+          }}
+        >
+          <Text style={Fonts.type47}>{qtyAfter} Pcs</Text>
+        </View>
+      </View>
+    ) : (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row'
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end'
+          }}
+        >
+          <Text style={Fonts.type47}>{qtyAfter} Pcs</Text>
         </View>
       </View>
     );
@@ -149,7 +181,11 @@ class ProductListType7 extends Component {
             />
           </View>
           <View
-            style={{ justifyContent: 'space-between', flex: 2, paddingLeft: 8 }}
+            style={{
+              justifyContent: 'space-between',
+              flex: 5,
+              paddingLeft: 8
+            }}
           >
             <Text style={Fonts.type17}>{item.catalogueName}</Text>
             <Text style={Fonts.type117p}>
@@ -158,10 +194,7 @@ class ProductListType7 extends Component {
                 : MoneyFormat(item.cataloguePrice)}
             </Text>
           </View>
-          {/* eslint-disable-next-line no-prototype-builtins */}
-          {item.hasOwnProperty('invoicedCatalogueQty')
-            ? this.renderQty(item.catalogueQty, item.invoicedCatalogueQty)
-            : this.renderQty(item.catalogueQty)}
+          {this.checkQty(item)}
         </View>
         <View style={GlobalStyle.lines} />
         <View style={styles.boxButtonAndPriceTotal}>
