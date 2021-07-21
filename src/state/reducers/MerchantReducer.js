@@ -16,6 +16,7 @@ const INITIAL_STATE = {
   loadingGetLogPerActivity: false,
   loadingGetLatestCheckInOut: false,
   loadingGetNoOrderReason: false,
+  loadingGetNoVisitReason: false,
   loadingGetStoreStatus: false,
   loadingGetWarehouse: false,
   loadingGetListSurvey: false,
@@ -55,6 +56,7 @@ const INITIAL_STATE = {
   dataGetPortfolioV2: null,
   merchantChanged: false,
   dataGetNoOrderReason: null,
+  dataGetNoVisitReason: null,
   dataMerchantRejectedV2: {
     name: null,
     phoneNo: null,
@@ -154,6 +156,7 @@ const INITIAL_STATE = {
   errorGetLogPerActivityV2: null,
   errorGetLatestCheckInOut: null,
   errorGetNoOrderReason: null,
+  errorGetNoVisitReason: null,
   errorGetStoreStatus: null,
   errorGetWarehouse: null,
   errorGetSurveyList: null,
@@ -701,7 +704,7 @@ export const merchant = createReducer(INITIAL_STATE, {
   /**
   /**
    * =============================
-   * GET LOG PER ACTIVITY MERCHANT
+   * GET NO ORDER REASON
    * =============================
    */
   [types.MERCHANT_NO_ORDER_REASON_GET_PROCESS](state, action) {
@@ -724,6 +727,33 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetNoOrderReason: false,
       errorGetNoOrderReason: action.payload
+    };
+  },
+  /**
+   * =============================
+   * GET NO VISIT REASON
+   * =============================
+   */
+  [types.MERCHANT_NO_VISIT_REASON_GET_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetNoVisitReason: true,
+      dataGetNoVisitReason: null,
+      errorGetNoVisitReason: null
+    };
+  },
+  [types.MERCHANT_NO_VISIT_REASON_GET_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetNoVisitReason: false,
+      dataGetNoVisitReason: action.payload.data
+    };
+  },
+  [types.MERCHANT_NO_VISIT_REASON_GET_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetNoVisitReason: false,
+      errorGetNoVisitReason: action.payload
     };
   },
   /**

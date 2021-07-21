@@ -95,6 +95,13 @@ function getNoOrderReason() {
     method: 'GET'
   });
 }
+/** === GET NO VISIT REASON === */
+function getNoVisitReason() {
+  return ApiRest({
+    path: `${salesManagementService}/v1/no-order-reason`,
+    method: 'GET'
+  });
+}
 /** === GET STORE STATUS === */
 function getStoreStatus() {
   return ApiRest({
@@ -185,6 +192,7 @@ export const MerchantMethod = {
   getLogPerActivityV2,
   getLatestCheckInOut,
   getNoOrderReason,
+  getNoVisitReason,
   getStoreStatus,
   getWarehouse,
   getSurveyList,
@@ -201,40 +209,8 @@ export const MerchantMethod = {
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: tatas
- * updatedDate: 01072020
- * updatedFunction:
- * -> add fucntion to get store status
- * updatedBy: tatas
- * updatedDate: 06072020
- * updatedFunction:
- * -> Change global method to get userId and supplierId\
  * updatedBy: dyah
- * updatedDate: 27112020
+ * updatedDate: 21072021
  * updatedFunction:
- * -> Add methods. (get survey list, get survey response, submit survey)
- * updatedBy: dyah
- * updatedDate: 18022021
- * updatedFunction:
- * -> Add new methods. (getMerchantV2, getMerchantDetailV2, getPortfolioByUserIdV2)
- * updatedBy: dyah
- * updatedDate: 22022021
- * updatedFunction:
- * -> Add new methods. (postActivityV2, getLogAllActivityV2, getLogPerActivityV2)
- * updatedBy: dyah
- * updatedDate: 26022021
- * updatedFunction:
- * -> Update the methods. (getNoOrderReason, postActivityV2, getMerchantV2)
- * updatedBy: dyah
- * updatedDate: 08032021
- * updatedFunction:
- * -> Add new method. (getMerchantExisting)
- * updatedBy: dyah
- * updatedDate: 08042021
- * updatedFunction:
- * -> Clean method from old portfolio.
- * updatedBy: dyah
- * updatedDate: 10052021
- * updatedFunction:
- * -> add method for latest checkin&checkout.
+ * ->  add new method. (getNoVisitReason)
  */
