@@ -19,7 +19,6 @@ import {
 import { GlobalStyle, Fonts } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import masterColor from '../../../config/masterColor.json';
-import { GlobalMethod } from '../../../services/methods';
 
 class HistoryOrderFilterView extends Component {
   constructor(props) {
