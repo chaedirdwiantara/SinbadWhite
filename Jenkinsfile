@@ -156,7 +156,7 @@ pipeline {
                         sh "if [ -d ${MAVEN_HOME} ]; then rm -rf ${MAVEN_HOME}; fi && mkdir ${MAVEN_HOME}"
                         sh '''
                             cd $MAVEN_HOME && \
-                            curl -sL -o maven.zip https://www-us.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.zip && \
+                            curl -sL -o maven.zip https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.zip && \
                             unzip -d $MAVEN_HOME maven.zip && rm maven.zip
                         '''
                     }
@@ -253,7 +253,7 @@ pipeline {
             }
         }
         stage('Source Map') {
-            when { expression { SINBAD_ENV != 'development' || SINBAD_ENV != 'staging' } }
+            when { expression { SINBAD_ENV != 'development' && SINBAD_ENV != 'staging' } }
             steps {
                 script{
                     // Get Version Name
