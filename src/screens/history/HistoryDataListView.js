@@ -753,9 +753,8 @@ class HistoryDataListView extends Component {
               </View>
             )}
           </View>
-          { item.deliveredParcelModified && 
-          item.statusPayment !== REFUNDED && 
-          this.props.section === 'payment'? (
+          {item.deliveredParcelModified &&
+          item.statusPayment !== REFUNDED && item.status !== DONE ? (
             <View style={styles.sticky}>
               <MaterialIcon
                 name="error"
