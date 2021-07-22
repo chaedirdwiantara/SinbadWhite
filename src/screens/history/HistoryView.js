@@ -148,7 +148,7 @@ class HistoryView extends Component {
         break;
       case 'orderFilter':
         this.setState({
-          openMainFilter: true,
+          openMainFilter: false,
           openOrderFilter: false,
           order: data.data
         });
