@@ -166,6 +166,14 @@ class MerchantCheckinView extends Component {
     if (this.state.latitude === 0 && this.state.longitude === 0) {
       return true;
     }
+    if (this.state.inStore === null) {
+      return true;
+    }
+    if (this.state.inStore) {
+      if (this.state.visitStore === null) {
+        return true;
+      }
+    }
     return false;
   }
   /**
@@ -597,4 +605,5 @@ export default connect(
  * updatedDate: 23072021
  * updatedFunction:
  * -> update ui & add buttons (in store & visit store).
+ * -> add validation for confirm button.
  */
