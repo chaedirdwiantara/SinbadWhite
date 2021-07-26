@@ -49,6 +49,19 @@ class MerchantNoVisitPicture extends Component {
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
     // check post no visit success, and goback to detail/task list.
+    if (this.props.merchant.dataPostNoVisitReason) {
+      if (
+        prevProps.merchant.dataPostNoVisitReason !==
+        this.props.merchant.dataPostNoVisitReason
+      ) {
+        // navigate to task list (MerchantHomeView)
+        NavigationService.customizeReset(
+          1,
+          ['JourneyView', 'MerchantHomeView'],
+          { storeName: this.props.merchant.selectedMerchant.storeName }
+        );
+      }
+    }
   }
   /** Will Unmount */
   componentWillUnmount() {
@@ -86,7 +99,18 @@ class MerchantNoVisitPicture extends Component {
     }
   };
   postNoVisitReason = () => {
+    const { status, notes } = this.props.navigation.state.params;
+    const { journeyBookStores } = this.props.merchant.selectedMerchant;
     // post noVisitReasonId, noVisitReasonNote, and picture
+    const data = {
+      inStore: status.inStore,
+      canSalesVisitStore: false,
+      noVisitReasonId: notes.noVisitReasonId,
+      noVisitReasonNote: notes.noVisitReasonNote,
+      photo: this.state.capturedPhoto
+    };
+    const payload = { data, journeyBookStoreId: journeyBookStores.id };
+    this.props.merchantPostNoVisitReasonProcess(payload);
   };
   /**
    * ========================
@@ -234,6 +258,7 @@ class MerchantNoVisitPicture extends Component {
             title={'Ambil Ulang'}
             white
             borderRadius={4}
+            disabled={this.props.merchant.loadingPostNoVisitReason}
             onPress={() =>
               this.setState(
                 {
@@ -249,6 +274,7 @@ class MerchantNoVisitPicture extends Component {
             flex
             title={'Simpan'}
             borderRadius={4}
+            disabled={this.props.merchant.loadingPostNoVisitReason}
             onPress={() => this.postNoVisitReason()}
           />
         </View>
@@ -340,8 +366,8 @@ export default connect(
  * ============================
  * createdBy: dyah
  * createdDate: 21072021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 26072021
  * updatedFunction:
- * -> create new screen for taking a picture no visit reason.
+ * -> integrate post reason not visit.
  */

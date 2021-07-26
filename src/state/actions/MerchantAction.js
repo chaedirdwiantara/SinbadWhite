@@ -356,6 +356,29 @@ export function merchantGetNoVisitReasonFailed(data) {
   return { type: types.MERCHANT_NO_VISIT_REASON_GET_FAILED, payload: data };
 }
 /**
+ * ====================================
+ * POST NO VISIT REASON
+ * ====================================
+ */
+/** === MERCHANT POST NO VISIT REASON PROCESS === */
+export function merchantPostNoVisitReasonProcess(data) {
+  return { type: types.MERCHANT_POST_NO_VISIT_REASON_PROCESS, payload: data };
+}
+/** === MERCHANT POST NO VISIT REASON SUCCESS === */
+export function merchantPostNoVisitReasonSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_POST_NO_VISIT_REASON_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_POST_NO_VISIT_REASON_FAILED, payload: data };
+}
+/** === MERCHANT POST NO VISIT REASON FAILED === */
+export function merchantPostNoVisitReasonFailed(data) {
+  return { type: types.MERCHANT_POST_NO_VISIT_REASON_FAILED, payload: data };
+}
+/**
  * =====================================
  * GET STORE STATUS
  * =====================================

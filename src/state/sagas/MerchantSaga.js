@@ -159,6 +159,17 @@ function* getNoVisitReason(actions) {
     yield put(ActionCreators.merchantGetNoVisitReasonFailed(error));
   }
 }
+/** === POST NO VISIT REASON === */
+function* postNoVisitReason(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.postNoVisitReason(actions.payload);
+    });
+    yield put(ActionCreators.merchantPostNoVisitReasonSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantPostNoVisitReasonFailed(error));
+  }
+}
 /** === GET STORE STATUS === */
 function* getStoreStatus(actions){
   try {
@@ -260,6 +271,10 @@ function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_POST_ACTIVITY_PROCESS_V2, postActivityV2);
   yield takeEvery(types.MERCHANT_NO_ORDER_REASON_GET_PROCESS, getNoOrderReason);
   yield takeEvery(types.MERCHANT_NO_VISIT_REASON_GET_PROCESS, getNoVisitReason);
+  yield takeEvery(
+    types.MERCHANT_POST_NO_VISIT_REASON_PROCESS,
+    postNoVisitReason
+  );
   yield takeEvery(
     types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS_V2,
     getLogAllActivityV2
