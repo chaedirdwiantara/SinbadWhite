@@ -98,8 +98,18 @@ function getNoOrderReason() {
 /** === GET NO VISIT REASON === */
 function getNoVisitReason() {
   return ApiRest({
-    path: `${salesManagementService}/v1/no-order-reason`,
+    path: `${salesManagementService}/v1/no-visit-reason`,
     method: 'GET'
+  });
+}
+/** === POST NO VISIT REASON === */
+function postNoVisitReason(data) {
+  return ApiRest({
+    path: `${salesManagementService}/v1/journey-book-stores/${
+      data.journeyBookStoreId
+    }/notvisitstore`,
+    method: 'POST',
+    params: data.data
   });
 }
 /** === GET STORE STATUS === */
@@ -193,6 +203,7 @@ export const MerchantMethod = {
   getLatestCheckInOut,
   getNoOrderReason,
   getNoVisitReason,
+  postNoVisitReason,
   getStoreStatus,
   getWarehouse,
   getSurveyList,
@@ -210,7 +221,8 @@ export const MerchantMethod = {
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 21072021
+ * updatedDate: 26072021
  * updatedFunction:
- * ->  add new method. (getNoVisitReason)
+ * -> add new method. (postNoVisitReason)
+ * -> update endpoint. (getNoVisitReason)
  */

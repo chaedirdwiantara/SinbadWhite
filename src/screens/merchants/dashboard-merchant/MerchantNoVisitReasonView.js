@@ -66,6 +66,7 @@ class MerchantNoVisitReasonView extends Component {
     Keyboard.dismiss();
     NavigationService.navigate('MerchantNoVisitPicture', {
       storeName: this.props.merchant.selectedMerchant.name,
+      status: this.props.navigation.state.params.status,
       notes: {
         noVisitReasonId: this.state.selectedReason,
         noVisitReasonNote: this.state.reason
@@ -275,9 +276,8 @@ export default connect(
  * ============================
  * createdBy: dyah
  * createdDate: 21072021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 26072021
  * updatedFunction:
- * -> create new screen no visit reason.
- * -> add modal error when failed get list of reason not visit.
+ * -> add params to navigate to MerchantNoVisitPicture screen.
  */

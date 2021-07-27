@@ -17,6 +17,7 @@ const INITIAL_STATE = {
   loadingGetLatestCheckInOut: false,
   loadingGetNoOrderReason: false,
   loadingGetNoVisitReason: false,
+  loadingPostNoVisitReason: false,
   loadingGetStoreStatus: false,
   loadingGetWarehouse: false,
   loadingGetListSurvey: false,
@@ -57,6 +58,7 @@ const INITIAL_STATE = {
   merchantChanged: false,
   dataGetNoOrderReason: null,
   dataGetNoVisitReason: null,
+  dataPostNoVisitReason: null,
   dataMerchantRejectedV2: {
     name: null,
     phoneNo: null,
@@ -157,6 +159,7 @@ const INITIAL_STATE = {
   errorGetLatestCheckInOut: null,
   errorGetNoOrderReason: null,
   errorGetNoVisitReason: null,
+  errorPostNoVisitReason: null,
   errorGetStoreStatus: null,
   errorGetWarehouse: null,
   errorGetSurveyList: null,
@@ -754,6 +757,37 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetNoVisitReason: false,
       errorGetNoVisitReason: action.payload
+    };
+  },
+  /**
+   * =============================
+   * POST NO VISIT REASON
+   * =============================
+   */
+  [types.MERCHANT_POST_NO_VISIT_REASON_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingPostNoVisitReason: true,
+      dataPostNoVisitReason: null,
+      errorPostNoVisitReason: null
+    };
+  },
+  [types.MERCHANT_POST_NO_VISIT_REASON_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingPostNoVisitReason: false,
+      selectedMerchant: {
+        ...state.selectedMerchant,
+        journeyBookStores: action.payload.data
+      },
+      dataPostNoVisitReason: action.payload.data
+    };
+  },
+  [types.MERCHANT_POST_NO_VISIT_REASON_FAILED](state, action) {
+    return {
+      ...state,
+      loadingPostNoVisitReason: false,
+      errorPostNoVisitReason: action.payload
     };
   },
   /**
