@@ -170,6 +170,17 @@ function* postNoVisitReason(actions) {
     yield put(ActionCreators.merchantPostNoVisitReasonFailed(error));
   }
 }
+/** === GET JOURNEY BOOK DETAIL === */
+function* getJourneyBookDetail(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getJourneyBookDetail(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetDetailJourneyBookSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetDetailJourneyBookFailed(error));
+  }
+}
 /** === GET STORE STATUS === */
 function* getStoreStatus(actions){
   try {
@@ -274,6 +285,10 @@ function* MerchantSaga() {
   yield takeEvery(
     types.MERCHANT_POST_NO_VISIT_REASON_PROCESS,
     postNoVisitReason
+  );
+  yield takeEvery(
+    types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_PROCESS,
+    getJourneyBookDetail
   );
   yield takeEvery(
     types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS_V2,

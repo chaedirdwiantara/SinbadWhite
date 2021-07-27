@@ -18,6 +18,7 @@ const INITIAL_STATE = {
   loadingGetNoOrderReason: false,
   loadingGetNoVisitReason: false,
   loadingPostNoVisitReason: false,
+  loadingGetJourneyBookDetail: false,
   loadingGetStoreStatus: false,
   loadingGetWarehouse: false,
   loadingGetListSurvey: false,
@@ -59,6 +60,7 @@ const INITIAL_STATE = {
   dataGetNoOrderReason: null,
   dataGetNoVisitReason: null,
   dataPostNoVisitReason: null,
+  dataGetJourneyBookDetail: null,
   dataMerchantRejectedV2: {
     name: null,
     phoneNo: null,
@@ -159,6 +161,7 @@ const INITIAL_STATE = {
   errorGetLatestCheckInOut: null,
   errorGetNoOrderReason: null,
   errorGetNoVisitReason: null,
+  errorGetJourneyBookDetail: null,
   errorPostNoVisitReason: null,
   errorGetStoreStatus: null,
   errorGetWarehouse: null,
@@ -788,6 +791,37 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingPostNoVisitReason: false,
       errorPostNoVisitReason: action.payload
+    };
+  },
+  /**
+   * =============================
+   * GET JOURNEY BOOK DETAIL
+   * =============================
+   */
+  [types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyBookDetail: true,
+      dataGetJourneyBookDetail: null,
+      errorGetJourneyBookDetail: null
+    };
+  },
+  [types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyBookDetail: false,
+      selectedMerchant: {
+        ...state.selectedMerchant,
+        journeyBookStores: action.payload.data
+      },
+      dataGetJourneyBookDetail: action.payload.data
+    };
+  },
+  [types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyBookDetail: false,
+      errorGetJourneyBookDetail: action.payload
     };
   },
   /**
