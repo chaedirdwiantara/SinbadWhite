@@ -112,6 +112,13 @@ function postNoVisitReason(data) {
     params: data.data
   });
 }
+/** === GET DETAIL JOURNEY BOOK  === */
+function getJourneyBookDetail(journeyBookStoreId) {
+  return ApiRest({
+    path: `${salesManagementService}/v1/journey-book-stores/${journeyBookStoreId}`,
+    method: 'GET'
+  });
+}
 /** === GET STORE STATUS === */
 function getStoreStatus() {
   return ApiRest({
@@ -204,6 +211,7 @@ export const MerchantMethod = {
   getNoOrderReason,
   getNoVisitReason,
   postNoVisitReason,
+  getJourneyBookDetail,
   getStoreStatus,
   getWarehouse,
   getSurveyList,
@@ -221,8 +229,7 @@ export const MerchantMethod = {
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 26072021
+ * updatedDate: 27072021
  * updatedFunction:
- * -> add new method. (postNoVisitReason)
- * -> update endpoint. (getNoVisitReason)
+ * -> add new method. (getDetailJourneyBook)
  */

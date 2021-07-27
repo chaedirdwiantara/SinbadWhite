@@ -54,6 +54,13 @@ export const MERCHANT_POST_NO_VISIT_REASON_SUCCESS =
 'MerchantPostNoVisitReasonSuccess';
 export const MERCHANT_POST_NO_VISIT_REASON_FAILED =
 'MerchantPostNoVisitReasonFailed';
+/* FOR GET JOURNEY BOOK DETAIL */
+export const MERCHANT_GET_JOURNEY_BOOK_DETAIL_PROCESS =
+  'MerchantGetJourneyBookDetailProcess';
+export const MERCHANT_GET_JOURNEY_BOOK_DETAIL_SUCCESS =
+  'MerchantGetJourneyBookDetailSuccess';
+export const MERCHANT_GET_JOURNEY_BOOK_DETAIL_FAILED =
+  'MerchantGetJourneyBookDetailFailed';
 /** FOR ADD MERCHANT */
 export const MERCHANT_SAVE_DATA_VOLATILE = 'MerchantAddDataVolatile';
 /** FOR EDIT MERCHANT */

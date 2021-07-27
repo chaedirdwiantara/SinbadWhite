@@ -38,7 +38,11 @@ class MerchantNoVisitReasonDetailView extends Component {
    * =======================
    */
   componentDidMount() {
+    const { journeyBookStores } = this.props.merchant.selectedMerchant;
     this.props.merchantGetNoVisitReasonProcess();
+    if (!journeyBookStores.visitStorePhotos) {
+      this.props.merchantGetDetailJourneyBookProcess(journeyBookStores.id);
+    }
   }
   componentDidUpdate(prevProps) {
     /** error get list of reason not visit */
@@ -47,6 +51,15 @@ class MerchantNoVisitReasonDetailView extends Component {
       this.props.merchant.errorGetNoVisitReason
     ) {
       if (this.props.merchant.errorGetNoVisitReason !== null) {
+        this.setState({ openModalError: true });
+      }
+    }
+    /** error get journey book detail */
+    if (
+      prevProps.merchant.errorGetJourneyBookDetail !==
+      this.props.merchant.errorGetJourneyBookDetail
+    ) {
+      if (this.props.merchant.errorGetJourneyBookDetail !== null) {
         this.setState({ openModalError: true });
       }
     }
@@ -100,7 +113,7 @@ class MerchantNoVisitReasonDetailView extends Component {
   renderReason() {
     const { journeyBookStores } = this.props.merchant.selectedMerchant;
     const index = this.props.merchant.dataGetNoVisitReason.findIndex(
-      item => item.id === journeyBookStores.NoVisitReasonId
+      item => item.id === journeyBookStores.noVisitReasonId
     );
     return (
       <View style={styles.reasonContainer}>
@@ -111,16 +124,18 @@ class MerchantNoVisitReasonDetailView extends Component {
           </Text>
           <View style={{ height: 4 }} />
           <Text style={Fonts.type60}>
-            {journeyBookStores.NoVisitReasonNote}
+            {journeyBookStores.noVisitReasonNote}
           </Text>
         </View>
         <View style={{ height: 200, borderRadius: 8, paddingVertical: 16 }}>
-          <Image
-            style={{ height: '100%', borderRadius: 8 }}
-            source={{
-              uri: journeyBookStores.visitStorePhotos
-            }}
-          />
+          {journeyBookStores.visitStorePhotos ? (
+            <Image
+              style={{ height: '100%', borderRadius: 8 }}
+              source={{
+                uri: journeyBookStores.visitStorePhotos[0].photoStoreUrl
+              }}
+            />
+          ) : null}
         </View>
       </View>
     );
@@ -203,7 +218,8 @@ class MerchantNoVisitReasonDetailView extends Component {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarWhite />
-        {this.props.merchant.dataGetNoVisitReason ? (
+        {this.props.merchant.dataGetNoVisitReason ||
+        !this.props.merchant.loadingGetJourneyBookDetail ? (
           this.renderContent()
         ) : (
           <LoadingPage />

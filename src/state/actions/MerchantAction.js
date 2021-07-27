@@ -379,6 +379,32 @@ export function merchantPostNoVisitReasonFailed(data) {
   return { type: types.MERCHANT_POST_NO_VISIT_REASON_FAILED, payload: data };
 }
 /**
+ * ====================================
+ * GET JOURNEY BOOK DETAIL
+ * ====================================
+ */
+/** === MERCHANT GET JOURNEY BOOK DETAIL PROCESS === */
+export function merchantGetDetailJourneyBookProcess(data) {
+  return {
+    type: types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_PROCESS,
+    payload: data
+  };
+}
+/** === MERCHANT GET JOURNEY BOOK DETAIL SUCCESS === */
+export function merchantGetDetailJourneyBookSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_FAILED, payload: data };
+}
+/** === MERCHANT GET JOURNEY BOOK DETAIL FAILED === */
+export function merchantGetDetailJourneyBookFailed(data) {
+  return { type: types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_FAILED, payload: data };
+}
+/**
  * =====================================
  * GET STORE STATUS
  * =====================================
