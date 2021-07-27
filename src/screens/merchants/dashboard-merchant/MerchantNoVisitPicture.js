@@ -86,8 +86,7 @@ class MerchantNoVisitPicture extends Component {
     try {
       this.setState({ loading: true });
       let cropOptions = {
-        offset: { x: 0, y: 250 },
-        size: { width: 1850, height: 2900 }
+        offset: { x: 0, y: 250 }
       };
 
       if (this.camera) {
@@ -99,6 +98,7 @@ class MerchantNoVisitPicture extends Component {
         };
 
         let data = await this.camera.takePictureAsync(options);
+        cropOptions.size = { width: data.width, height: data.height };
         let cropedUri = await ImageEditor.cropImage(data.uri, cropOptions);
         let dataImage = await RNFS.readFile(cropedUri, 'base64');
         this.props.saveImageBase64(dataImage);
@@ -395,7 +395,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 21072021
  * updatedBy: dyah
- * updatedDate: 26072021
+ * updatedDate: 27072021
  * updatedFunction:
- * -> integrate post reason not visit.
+ * -> update the size of the photo.
  */
