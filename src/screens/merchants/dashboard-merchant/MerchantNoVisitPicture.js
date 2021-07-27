@@ -17,7 +17,11 @@ import {
   ImageEditor,
   connect
 } from '../../../library/thirdPartyPackage';
-import { StatusBarWhite, ButtonSingleSmall } from '../../../library/component';
+import {
+  StatusBarWhite,
+  ButtonSingleSmall,
+  ModalBottomErrorRespons
+} from '../../../library/component';
 import { Fonts } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
@@ -29,6 +33,7 @@ class MerchantNoVisitPicture extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      openModalError: false,
       headerShown: false,
       notes: null,
       backCamera: true,
@@ -60,6 +65,15 @@ class MerchantNoVisitPicture extends Component {
           ['JourneyView', 'MerchantHomeView'],
           { storeName: this.props.merchant.selectedMerchant.storeName }
         );
+      }
+    }
+    /** error post reason not visit */
+    if (
+      prevProps.merchant.errorPostNoVisitReason !==
+      this.props.merchant.errorPostNoVisitReason
+    ) {
+      if (this.props.merchant.errorPostNoVisitReason !== null) {
+        this.setState({ openModalError: true });
       }
     }
   }
@@ -290,6 +304,18 @@ class MerchantNoVisitPicture extends Component {
       </View>
     );
   }
+  /** RENDER MODAL ERROR RESPONSE */
+  renderModalErrorResponse() {
+    return this.state.openModalError ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalError}
+        onPress={() => this.setState({ openModalError: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** MAIN */
   render() {
     return (
@@ -298,6 +324,8 @@ class MerchantNoVisitPicture extends Component {
         {this.state.capturedPhoto
           ? this.renderDisplayPhotoContainer()
           : this.renderCamera()}
+        {/* Modal */}
+        {this.renderModalErrorResponse()}
       </SafeAreaView>
     );
   }
