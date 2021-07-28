@@ -203,10 +203,10 @@ class JourneyView extends Component {
     const longitude = success.coords.longitude;
     const latitude = success.coords.latitude;
     // navigate to journey map
-    // NavigationService.navigate('', {
-    //   longitude,
-    //   latitude
-    // });
+    NavigationService.navigate('JourneyMapView', {
+      longitude,
+      latitude
+    });
   };
   /** === ERROR GET CURRENT LOCATION === */
   errorMaps = async () => {
@@ -470,7 +470,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 22072021
+ * updatedDate: 28072021
  * updatedFunction:
- * -> add map button function for showing gps permission and then navigate to journey map view.
+ * -> add navigates to journey map view.
  */
