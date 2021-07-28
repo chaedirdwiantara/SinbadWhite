@@ -127,7 +127,7 @@ class MerchantNoVisitReasonDetailView extends Component {
             {journeyBookStores.noVisitReasonNote}
           </Text>
         </View>
-        <View style={{ height: 200, borderRadius: 8, paddingVertical: 16 }}>
+        <View style={{ height: 300, borderRadius: 8, paddingVertical: 16 }}>
           {journeyBookStores.visitStorePhotos ? (
             <Image
               style={{ height: '100%', borderRadius: 8 }}
@@ -218,7 +218,7 @@ class MerchantNoVisitReasonDetailView extends Component {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarWhite />
-        {this.props.merchant.dataGetNoVisitReason ||
+        {this.props.merchant.dataGetNoVisitReason &&
         !this.props.merchant.loadingGetJourneyBookDetail ? (
           this.renderContent()
         ) : (
@@ -289,8 +289,9 @@ export default connect(
  * ============================
  * createdBy: dyah
  * createdDate: 26072021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 27072021
  * updatedFunction:
- * ->  create new screen for detail reason (no visit).
+ * -> update size of photo.
+ * -> add validation when showing the detail.
  */
