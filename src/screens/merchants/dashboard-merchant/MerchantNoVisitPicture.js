@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  ImageBackground,
   Text
 } from '../../../library/reactPackage';
 import {
@@ -252,13 +253,22 @@ class MerchantNoVisitPicture extends Component {
   renderDisplayPhoto() {
     return (
       <View style={{ height: 0.7 * height }}>
-        <Image
+        <ImageBackground
           style={styles.displayPhoto}
           source={{
             isStatic: true,
             uri: 'data:image/jpeg;base64,' + this.state.capturedPhoto
           }}
-        />
+        >
+          <View style={{ alignItems: 'center' }}>
+            {this.props.merchant.loadingPostNoVisitReason && (
+              <Image
+                source={require('../../../assets/gif/loading/load_triagle.gif')}
+                style={{ height: 80, width: 80 }}
+              />
+            )}
+          </View>
+        </ImageBackground>
       </View>
     );
   }
@@ -342,6 +352,7 @@ const styles = StyleSheet.create({
   displayPhoto: {
     flex: 1,
     height: '100%',
+    justifyContent: 'center',
     resizeMode: 'cover'
   },
   cameraButtonContainer: {
@@ -395,7 +406,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 21072021
  * updatedBy: dyah
- * updatedDate: 27072021
+ * updatedDate: 28072021
  * updatedFunction:
- * -> update the size of the photo.
+ * -> add loading when submit reason not visit.
  */

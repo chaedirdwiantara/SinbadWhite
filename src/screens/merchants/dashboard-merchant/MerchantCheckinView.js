@@ -74,7 +74,7 @@ class MerchantCheckinView extends Component {
           this.props.merchantGetLogAllActivityProcessV2(
             this.props.merchant.selectedMerchant.journeyBookStores.id
           );
-          NavigationService.goBack(this.props.navigation.state.key);
+          NavigationService.navigate('MerchantHomeView');
         }
       }
     }
@@ -602,8 +602,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 23072021
+ * updatedDate: 28072021
  * updatedFunction:
- * -> update ui & add buttons (in store & visit store).
- * -> add validation for confirm button.
+ * -> update navigates after post activity 'check_in'. (handle revisit flow)
  */

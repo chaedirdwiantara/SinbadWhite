@@ -7,6 +7,7 @@ const INITIAL_STATE = {
   loadingGetJourneyPlan: false,
   refreshGetJourneyPlan: false,
   loadingLoadMoreGetJourneyPlan: false,
+  loadingGetJourneyPlanMapData: false,
   loadingSaveMerchantToJourneyPlan: false,
   loadingGetJourneyPlanReport: false,
   /** data */
@@ -14,9 +15,11 @@ const INITIAL_STATE = {
   dataGetJourneyPlanReportV2: null,
   totalDataGetJourneyPlanV2: 0,
   pageGetJourneyPlanV2: 1,
+  dataGetJourneyPlanMapData: null,
   dataSaveMerchantToJourneyPlanV2: null,
   /** error */
   errorGetJourneyPlanV2: null,
+  errorGetJourneyPlanMapData: null,
   errorGetJourneyPlanReportV2: null,
   errorSaveMerchantToJourneyPlanV2: null
 };
@@ -87,6 +90,41 @@ export const journey = createReducer(INITIAL_STATE, {
       ...state,
       loadingLoadMoreGetJourneyPlan: true,
       pageGetJourneyPlanV2: action.payload
+    };
+  },
+  /**
+   * ===================
+   * JOURNEY PLAN MAP DATA
+   * ===================
+   */
+  [types.JOURNEY_PLAN_GET_MAP_DATA_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyPlanMapData: true,
+      dataGetJourneyPlanMapData: null,
+      errorGetJourneyPlanMapData: null
+    };
+  },
+  [types.JOURNEY_PLAN_GET_MAP_DATA_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyPlanMapData: false,
+      dataGetJourneyPlanMapData: action.payload.data
+    };
+  },
+  [types.JOURNEY_PLAN_GET_MAP_DATA_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyPlanMapData: false,
+      errorGetJourneyPlanMapData: action.payload
+    };
+  },
+  [types.JOURNEY_PLAN_GET_MAP_DATA_RESET](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyPlanMapData: false,
+      dataGetJourneyPlanMapData: null,
+      errorGetJourneyPlanMapData: null
     };
   },
   /**
