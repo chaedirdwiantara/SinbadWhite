@@ -18,6 +18,22 @@ function* getJourneyPlanV2(actions) {
     yield put(ActionCreators.journeyPlanGetFailedV2(error));
   }
 }
+/** GET JOURNEY PLAN MAP DATA */
+function* getJourneyPlanMapData(actions) {
+  try {
+    const response = yield call(() => {
+      return JourneyMethod.getJourneyPlanV2(actions.payload);
+    });
+
+    if (response.data.data === null) {
+      response.data.data = [];
+    }
+
+    yield put(ActionCreators.journeyPlanGetMapDataSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.journeyPlanGetMapDataFailed(error));
+  }
+}
 /** ADD MERCHANT TO JOURNEY PLAN V2*/
 function* saveMerchantToJourneyPlanV2(actions) {
   try {
@@ -42,6 +58,10 @@ function* getJourneyPlanReportV2(actions) {
 }
 function* JourneySaga() {
   yield takeEvery(types.JOURNEY_PLAN_GET_PROCESS_V2, getJourneyPlanV2);
+  yield takeEvery(
+    types.JOURNEY_PLAN_GET_MAP_DATA_PROCESS,
+    getJourneyPlanMapData
+  );
   yield takeEvery(
     types.SAVE_MERCHANT_TO_JOURNEY_PLAN_PROCESS_V2,
     saveMerchantToJourneyPlanV2
