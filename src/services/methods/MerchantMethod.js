@@ -173,8 +173,7 @@ function getSalesSegmentation({ type, supplierId, urbanId }) {
 /** GET RETURN ACTIVE INFO */
 function getReturnActiveInfo(data) {
   return ApiRest({
-    testpath:
-      'https://55e1a5fa-31c2-4825-99f7-a7127ceb6395.mock.pstmn.io/check-return-is-active',
+    path: 'check-return-is-active',
     method: 'GET'
   });
 }
