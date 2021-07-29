@@ -61,7 +61,7 @@ const listMenu = [
 
 const listMenuWhite = [
   {
-    title: 'T. Order',
+    title: 'Toko Memesan',
     value: 'orderedStores'
   },
   {
@@ -69,11 +69,11 @@ const listMenuWhite = [
     value: 'totalSales'
   },
   {
-    title: 'T. Dikunjungi',
+    title: 'Toko Dikunjungi',
     value: 'visitedStores'
   },
   {
-    title: 'T. Baru',
+    title: 'Toko Baru',
     value: 'newStores'
   },
   {
@@ -126,7 +126,7 @@ class DashboardView extends Component {
         {
           graphContentType: TOKO_ORDER,
           uri: '',
-          title: 'T. Order'
+          title: 'Toko Memesan'
         },
         {
           graphContentType: TOTAL_PENJUALAN,
@@ -136,12 +136,12 @@ class DashboardView extends Component {
         {
           graphContentType: TOKO_DIKUNJUNGI,
           uri: '',
-          title: 'T. Dikunjungi'
+          title: 'Toko Dikunjungi'
         },
         {
           graphContentType: TOKO_BARU,
           uri: '',
-          title: 'T. Baru'
+          title: 'Toko Baru'
         },
         {
           graphContentType: TOTAL_PESANAN,
@@ -800,13 +800,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(DashboardView);
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 06072020
- * updatedFunction:
- * -> Refactoring Module Import
  * updatedBy: Dyah
- * updatedDate: 19042021
+ * updatedDate: 30062021
  * updatedFunction:
- * -> Fix dashboard title (T. Dikunjungi)
+ * -> update dashboard title (Toko Order => Toko Memesan)
  *
  */
