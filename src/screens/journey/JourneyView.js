@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
   Text,
   Image
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   MaterialIcon,
   bindActionCreators,
   connect,
   moment,
   SkeletonPlaceholder
-} from '../../library/thirdPartyPackage'
+} from '../../library/thirdPartyPackage';
 import {
   ButtonFloatType1,
   StatusBarWhite,
@@ -25,16 +25,14 @@ import {
   StatusBarRedOP50,
   ModalBottomErrorRespons,
   ButtonSingle
-} from '../../library/component'
-import { MoneyFormat, Fonts } from '../../helpers'
+} from '../../library/component';
+import { MoneyFormat, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import ModalContentMenuAddMerchant from './ModalContentMenuAddMerchant';
 import ModalBottomMerchantList from '../merchants/ModalBottomMerchantList';
 import JourneyListDataView from './JourneyListDataView';
-
-const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
 
 class JourneyView extends Component {
   constructor(props) {
@@ -137,6 +135,7 @@ class JourneyView extends Component {
   }
   /** === GET JOURNEY PLAN === */
   getJourneyPlan() {
+    const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
     this.props.journeyPlanGetResetV2();
     this.props.journeyPlanGetProcessV2({
       page: 1,
@@ -169,7 +168,7 @@ class JourneyView extends Component {
             NavigationService.navigate('AddMerchantStep1');
           }, 100);
         } else {
-          this.setState({showModalError: true})
+          this.setState({ showModalError: true });
         }
         break;
       default:
@@ -209,7 +208,7 @@ class JourneyView extends Component {
               this.props.journey.dataGetJourneyPlanReportV2.totalOrder
             )}
           </Text>
-          <Text style={Fonts.type26}>Toko Order</Text>
+          <Text style={Fonts.type26}>Total Order</Text>
         </View>
       </View>
     ) : (
@@ -276,17 +275,23 @@ class JourneyView extends Component {
       <View />
     );
   }
-   /** RENDER MODAL ERROR */
-   renderModalError(){
-    return(
+  /** RENDER MODAL ERROR */
+  renderModalError() {
+    return (
       <ModalBottomType3
         title={''}
         open={this.state.showModalError}
-        close={() => this.setState({showModalError: false, errorTitle: '', errorMessage: ''})}
+        close={() =>
+          this.setState({
+            showModalError: false,
+            errorTitle: '',
+            errorMessage: ''
+          })
+        }
         content={this.modalErrorContent()}
         typeClose={'cancel'}
       />
-    )
+    );
   }
 
   /** RENDER MODAL ERROR CONTENT */
@@ -311,7 +316,7 @@ class JourneyView extends Component {
             borderRadius={4}
             title={'Oke, Saya Mengerti'}
             onPress={() => {
-              this.setState({showModalError: false})
+              this.setState({ showModalError: false });
             }}
           />
         </View>
@@ -386,7 +391,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(JourneyView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(JourneyView);
 
 /**
  * ============================
@@ -395,24 +403,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 24022021
+ * updatedDate: 08072021
  * updatedFunction:
- * -> Update the props of journey plan list.
- * -> Update the props when saving merchant to journey plan.
- * updatedBy: dyah
- * updatedDate: 01032021
- * updatedFunction:
- * -> Update the props of journey plan report.
- * updatedBy: dyah
- * updatedDate: 12032021
- * updatedFunction:
- * -> Add parameter search when get journey plan.
- * updatedBy: dyah
- * updatedDate: 04052021
- * updatedFunction:
- * -> Add search journey plan.
- * updatedBy: dyah
- * updatedDate: 04052021
- * updatedFunction:
- * -> Add error modal when failed get journey plan reports.
+ * -> move variable 'today' to inside class component (related function)
  */

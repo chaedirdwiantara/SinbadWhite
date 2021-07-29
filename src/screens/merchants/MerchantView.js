@@ -101,6 +101,19 @@ class MerchantView extends Component {
       ) {
         this.getMerchant('direct', 0, '');
       }
+      if (
+        this.props.merchant.dataGetPortfolioV2 !== null &&
+        this.props.merchant.dataGetPortfolioV2.length === 0
+      ) {
+        this.setState({
+          openModalCheckout: false,
+          showToast: true,
+          notifToast: 'Anda belum memiliki portfolio'
+        });
+        setTimeout(() => {
+          this.setState({ showToast: false });
+        }, 3000);
+      }
     }
     /** IF ADD MERCHANT SUCCESS */
     if (
@@ -123,6 +136,15 @@ class MerchantView extends Component {
       this.props.merchant.errorGetMerchantV2
     ) {
       if (this.props.merchant.errorGetMerchantV2 !== null) {
+        this.setState({ openModalErrorGlobal: true, });
+      }
+    }
+    /** ERROR GET PORTFOLIO*/
+    if (
+      prevProps.merchant.errorGetPortfolioV2 !==
+      this.props.merchant.errorGetPortfolioV2
+    ) {
+      if (this.props.merchant.errorGetPortfolioV2 !== null) {
         this.setState({ openModalErrorGlobal: true, });
       }
     }
@@ -241,7 +263,11 @@ class MerchantView extends Component {
   /** TOAST */
   renderToast() {
     return this.state.showToast ? (
-      <ToastType1 margin={30} content={this.state.notifToast} />
+      <ToastType1
+        basic={this.state.notifToast === 'Anda belum memiliki portfolio'}
+        margin={30}
+        content={this.state.notifToast}
+      />
     ) : (
       <View />
     );
@@ -349,13 +375,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantView);
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
- * updatedFunction:
- * -> Refactoring Module Import
  * updatedBy: dyah
- * updatedDate: 09062021
+ * updatedDate: 16072021
  * updatedFunction:
- * -> add modal error when failed get list of merchant.
+ * -> add toast when sales didn't have portfolio.
  *
  */

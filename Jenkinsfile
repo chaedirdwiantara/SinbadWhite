@@ -118,8 +118,8 @@ pipeline {
                         s3Download(file: 'android/app/google-services.json', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/google-services.json", force: true)
                         s3Download(file: 'android/app/mykeystore.keystore', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/mykeystore.keystore", force: true)
                         s3Download(file: 'android/app/src/main/res/values/strings.xml', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/strings.xml", force: true)
+                        s3Download(file: '.env', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/.env", force: true)
                         if(SINBAD_ENV == 'production') {
-                            s3Download(file: '.env', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/.env", force: true)
                             s3Download(file: 'android/app/newrelic.properties', bucket: 'sinbad-env', path: "${SINBAD_ENV}/${SINBAD_REPO}/newrelic.properties", force: true)
                         }
                     }
@@ -156,7 +156,7 @@ pipeline {
                         sh "if [ -d ${MAVEN_HOME} ]; then rm -rf ${MAVEN_HOME}; fi && mkdir ${MAVEN_HOME}"
                         sh '''
                             cd $MAVEN_HOME && \
-                            curl -sL -o maven.zip https://www-us.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.zip && \
+                            curl -sL -o maven.zip https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.zip && \
                             unzip -d $MAVEN_HOME maven.zip && rm maven.zip
                         '''
                     }
@@ -252,6 +252,42 @@ pipeline {
                 sh "echo PATH=$PATH:${ANDROID_HOME}/platform-tools>>/home/ubuntu/bash.bashrc"
             }
         }
+        stage('Source Map') {
+            when { expression { SINBAD_ENV != 'development' && SINBAD_ENV != 'staging' } }
+            steps {
+                script{
+                    // Get Version Name
+                    dir("android") {
+                        sh "rm -f -- gradleInfo.txt"
+                        sh "./gradlew -q printVersionName > gradleInfo.txt"
+                        env.APP_VERSION_NAME = sh(returnStdout: true, script: 'tail -n 1 gradleInfo.txt').trim()
+                    }
+
+                    // Get Version Code
+                    dir("android") {
+                        sh "rm -f -- gradleInfo.txt"
+                        sh "./gradlew -q printVersionCode > gradleInfo.txt"
+                        env.APP_VERSION_CODE = sh(returnStdout: true, script: 'tail -n 1 gradleInfo.txt').trim()
+                    }
+
+                    // Get APPLICATION
+                    dir("android") {
+                        sh "rm -f -- gradleInfo.txt"
+                        sh "./gradlew -q printApplicationId > gradleInfo.txt"
+                        env.APP_ID = sh(returnStdout: true, script: 'tail -n 1 gradleInfo.txt').trim()
+                    }
+
+                    sh "if [ -d ${WORKSPACE}/source_maps ]; then rm -Rf ${WORKSPACE}/source_maps; fi"
+                    sh "mkdir ${WORKSPACE}/source_maps"
+                    sh "react-native bundle --dev false --platform android --entry-file index.js --bundle-output source_maps/index.android.bundle  --sourcemap-output source_maps/index.android.bundle.packager.map"
+                    sh "node_modules/hermes-engine/linux64-bin/hermesc -emit-binary -out source_maps/index.android.bundle.compiler.hbc source_maps/index.android.bundle -output-source-map"
+                    sh "node_modules/react-native/scripts/compose-source-maps.js source_maps/index.android.bundle.packager.map source_maps/index.android.bundle.compiler.hbc.map -o source_maps/index.android.bundle.map"
+                    withCredentials([string(credentialsId: 'sentry-sinbad', variable: 'SENTRYTOKEN')]) {
+                        sh "node_modules/@sentry/cli/sentry-cli --auth-token ${SENTRYTOKEN} releases --org sinbad-id --project sinbad-white-${SINBAD_ENV} files ${env.APP_ID}@${env.APP_VERSION_NAME}+${env.APP_VERSION_CODE} upload-sourcemaps --dist ${env.APP_VERSION_CODE} --strip-prefix . --rewrite source_maps/index.android.bundle source_maps/index.android.bundle.map"
+                    }
+                }
+            }
+        }
         stage('Deployment') {
             parallel {
                 stage("Upload to S3") {
@@ -263,7 +299,7 @@ pipeline {
                         '''
                         sh "tar czf ${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz -C ${WORKSPACE}/android/app/build/outputs/apk/release/ ."
                         withAWS(credentials: "${AWS_CREDENTIAL}") {
-                            s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz")
+                            s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}-${currentBuild.number}.tar.gz")
                             s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz")
                         }
                         slackSend color: '#FFFFFF', channel: "${SLACK_CHANNEL}", message: """
@@ -274,7 +310,7 @@ Environment: ${SINBAD_ENV}
 Commit ID: ${env.GIT_COMMIT}
 Changes Message: ${env.GIT_MESSAGE}
 You can download this application in here
-${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz
+${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}-${currentBuild.number}.tar.gz
 Or latest application for environment ${SINBAD_ENV} in here
 ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
             """

@@ -11,6 +11,14 @@ const INITIAL_STATE = {
 };
 
 export const salesmanKpi = createReducer(INITIAL_STATE, {
+  /**
+   * ==================================
+   * DELETE ALL DATA
+   * ==================================
+   */
+  [types.DELETE_ALL_DATA](state, action) {
+    return INITIAL_STATE;
+  },
   [types.KPI_DASHBOARD_GET_PROCESS](state, action) {
     return {
       ...state,
