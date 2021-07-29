@@ -139,7 +139,7 @@ class MerchantCheckinView extends Component {
         status: { inStore }
       });
     } else if (this.state.inStore && this.state.visitStore) {
-      this.postActivityCheckIn();
+      this.postActivityCheckIn(this.state.inStore);
     } else if (this.state.inStore && !this.state.visitStore) {
       NavigationService.navigate('MerchantNoVisitReasonView', {
         status: { inStore, visitStore }

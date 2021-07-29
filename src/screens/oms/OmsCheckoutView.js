@@ -189,12 +189,14 @@ class OmsCheckoutView extends Component {
         if (isKUR) {
           setTimeout(() => {
             this.backToMerchantHomeView(
-              this.props.merchant.selectedMerchant.name
+              this.props.merchant.selectedMerchant.name,
+              this.props.oms.dataOmsConfirmOrder.data.orderParcels[0].orderId
             );
           }, 3000);
         } else {
           this.backToMerchantHomeView(
-            this.props.merchant.selectedMerchant.name
+            this.props.merchant.selectedMerchant.name,
+            this.props.oms.dataOmsConfirmOrder.data.orderParcels[0].orderId
           );
         }
       }
@@ -491,12 +493,13 @@ class OmsCheckoutView extends Component {
     this.setState({ modalTAndR: false });
   }
   /** ======= DID UPDATE FUNCTION ==== */
-  backToMerchantHomeView(storeName) {
+  backToMerchantHomeView(storeName, orderId) {
     /** UPDATE TASK ORDER */
     this.props.merchantPostActivityProcessV2({
       journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores
         .id,
-      activityName: 'order'
+      activityName: 'order',
+      orderId
     });
     NavigationService.navigate('MerchantHomeView', {
       storeName
@@ -2173,15 +2176,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: tatas
- * updatedDate: 06072020
- * updatedFunction:
- * -> Change key
- * updatedDate: 07072020
- * UpdatedFunction:
- * -> Refactoring Module Import
  * updatedBy: dyah
- * updatedDate: 26022021
+ * updatedDate: 29072021
  * updatedFunction:
- * -> Update the props of post activity.
+ * -> post order activity with order id after creates order.
  */
