@@ -47,6 +47,7 @@ import {
   PENDING_PAYMENT
 } from '../../constants/orderConstants';
 import HistoryBonusProductList from './product-list/HistoryBonusProductList';
+import HistoryDeletedProductList from './product-list/HistoryDeletedProductList';
 
 class HistoryDetailView extends Component {
   constructor(props) {
@@ -531,6 +532,19 @@ class HistoryDetailView extends Component {
       );
     }
   }
+  /** RENDER DELETED PRODUCT LIST */
+  renderDeletedProductList() {
+    const detailHistory = this.props.history.dataDetailHistory;
+    return (detailHistory.removedList.length !== 0 &&
+      detailHistory.deliveredParcelModified) ||
+      (detailHistory.invoicedParcelModified &&
+        detailHistory.status === 'delivered') ||
+      detailHistory.status === 'done' ? (
+      <HistoryDeletedProductList data={detailHistory.removedList} />
+    ) : (
+      <View />
+    );
+  }
 
   /** RENDER CONTENT */
   renderContent() {
@@ -549,6 +563,7 @@ class HistoryDetailView extends Component {
           {this.renderRingkasanPesanan()}
           {this.renderProductList()}
           {this.renderBonusProductList()}
+          {this.renderDeletedProductList()}
           {this.renderDeliveryDetail()}
           {this.state.section === 'order' ? (
             this.renderPaymentInformation()
