@@ -1,4 +1,4 @@
-import { put, call, takeEvery } from 'redux-saga/effects';
+import { put, call, takeEvery, takeLatest } from 'redux-saga/effects';
 import { MerchantMethod } from '../../services/methods';
 import * as ActionCreators from '../actions';
 import * as types from '../types';
@@ -279,26 +279,32 @@ function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_ADD_PROCESS, addMerchant);
   yield takeEvery(types.MERCHANT_EDIT_PROCESS, editMerchant);
   yield takeEvery(types.MERCHANT_GET_LAST_ORDER_PROCESS, getMerchantLastOrder);
-  yield takeEvery(types.MERCHANT_POST_ACTIVITY_PROCESS_V2, postActivityV2);
-  yield takeEvery(types.MERCHANT_NO_ORDER_REASON_GET_PROCESS, getNoOrderReason);
-  yield takeEvery(types.MERCHANT_NO_VISIT_REASON_GET_PROCESS, getNoVisitReason);
-  yield takeEvery(
+  yield takeLatest(types.MERCHANT_POST_ACTIVITY_PROCESS_V2, postActivityV2);
+  yield takeLatest(
+    types.MERCHANT_NO_ORDER_REASON_GET_PROCESS,
+    getNoOrderReason
+  );
+  yield takeLatest(
+    types.MERCHANT_NO_VISIT_REASON_GET_PROCESS,
+    getNoVisitReason
+  );
+  yield takeLatest(
     types.MERCHANT_POST_NO_VISIT_REASON_PROCESS,
     postNoVisitReason
   );
-  yield takeEvery(
+  yield takeLatest(
     types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_PROCESS,
     getJourneyBookDetail
   );
-  yield takeEvery(
+  yield takeLatest(
     types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS_V2,
     getLogAllActivityV2
   );
-  yield takeEvery(
+  yield takeLatest(
     types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS_V2,
     getLogPerActivityV2
   );
-  yield takeEvery(
+  yield takeLatest(
     types.MERCHANT_GET_LATEST_CHECK_IN_OUT_PROCESS,
     getLatestCheckInOut
   );

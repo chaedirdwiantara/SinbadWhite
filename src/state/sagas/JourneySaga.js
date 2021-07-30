@@ -1,4 +1,4 @@
-import { put, call, takeEvery } from 'redux-saga/effects';
+import { put, call, takeLatest } from 'redux-saga/effects';
 import { JourneyMethod } from '../../services/methods';
 import * as ActionCreators from '../actions';
 import * as types from '../types';
@@ -57,16 +57,16 @@ function* getJourneyPlanReportV2(actions) {
   }
 }
 function* JourneySaga() {
-  yield takeEvery(types.JOURNEY_PLAN_GET_PROCESS_V2, getJourneyPlanV2);
-  yield takeEvery(
+  yield takeLatest(types.JOURNEY_PLAN_GET_PROCESS_V2, getJourneyPlanV2);
+  yield takeLatest(
     types.JOURNEY_PLAN_GET_MAP_DATA_PROCESS,
     getJourneyPlanMapData
   );
-  yield takeEvery(
+  yield takeLatest(
     types.SAVE_MERCHANT_TO_JOURNEY_PLAN_PROCESS_V2,
     saveMerchantToJourneyPlanV2
   );
-  yield takeEvery(
+  yield takeLatest(
     types.JOURNEY_PLAN_GET_REPORT_PROCESS_V2,
     getJourneyPlanReportV2
   );
