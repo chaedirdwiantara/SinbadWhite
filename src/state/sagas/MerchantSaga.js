@@ -272,10 +272,10 @@ function* getSalesSegmentation(actions) {
 
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
-  yield takeEvery(types.MERCHANT_GET_PROCESS_V2, getMerchantV2);
-  yield takeEvery(types.MERCHANT_EXISTING_GET_PROCESS, getMerchantExisting);
-  yield takeEvery(types.MERCHANT_GET_DETAIL_PROCESS_V2, getMerchantDetailV2);
-  yield takeEvery(types.PORTFOLIO_GET_PROCESS_V2, getPortfolioV2);
+  yield takeLatest(types.MERCHANT_GET_PROCESS_V2, getMerchantV2);
+  yield takeLatest(types.MERCHANT_EXISTING_GET_PROCESS, getMerchantExisting);
+  yield takeLatest(types.MERCHANT_GET_DETAIL_PROCESS_V2, getMerchantDetailV2);
+  yield takeLatest(types.PORTFOLIO_GET_PROCESS_V2, getPortfolioV2);
   yield takeEvery(types.MERCHANT_ADD_PROCESS, addMerchant);
   yield takeEvery(types.MERCHANT_EDIT_PROCESS, editMerchant);
   yield takeEvery(types.MERCHANT_GET_LAST_ORDER_PROCESS, getMerchantLastOrder);
@@ -308,13 +308,13 @@ function* MerchantSaga() {
     types.MERCHANT_GET_LATEST_CHECK_IN_OUT_PROCESS,
     getLatestCheckInOut
   );
-  yield takeEvery(types.MERCHANT_STORE_STATUS_PROCESS, getStoreStatus),
+  yield takeEvery(types.MERCHANT_STORE_STATUS_PROCESS, getStoreStatus);
   yield takeEvery(types.MERCHANT_GET_WAREHOUSE_PROCESS, getWarehouse);
   yield takeEvery(types.VALIDATE_AREA_MAPPING_PROCESS, validateAreaMapping);
-  yield takeEvery(types.MERCHANT_GET_SURVEY_LIST_PROCESS, getSurveyList);
-  yield takeEvery(types.MERCHANT_GET_SURVEY_PROCESS, getSurvey);
-  yield takeEvery(types.MERCHANT_SUBMIT_SURVEY_PROCESS, submitSurvey);
-  yield takeEvery(types.MERCHANT_UPDATE_SURVEY_PROCESS, updateSurvey);
+  yield takeLatest(types.MERCHANT_GET_SURVEY_LIST_PROCESS, getSurveyList);
+  yield takeLatest(types.MERCHANT_GET_SURVEY_PROCESS, getSurvey);
+  yield takeLatest(types.MERCHANT_SUBMIT_SURVEY_PROCESS, submitSurvey);
+  yield takeLatest(types.MERCHANT_UPDATE_SURVEY_PROCESS, updateSurvey);
   yield takeEvery(types.GET_SALES_SEGMENTATION_PROCESS, getSalesSegmentation);
 }
 
