@@ -382,6 +382,38 @@ class OmsCheckoutView extends Component {
         // this.errorOtpConsent()
       }
     }
+
+    //HANDLE ERROR ORDER PARCEL EXPIRED
+    if (
+      prevProps.oms.errorOmsGetPayment !== this.props.oms.errorOmsGetPayment
+    ) {
+      if (
+        this.props.oms.errorOmsGetPayment &&
+        this.props.oms.errorOmsGetPayment.code === 404
+      ) {
+        this.handleErrorOrderParcelExpired();
+      }
+    }
+    if (
+      prevProps.oms.errorOmsGetPaymentChannel !== this.props.oms.errorOmsGetPaymentChannel
+    ) {
+      if (
+        this.props.oms.errorOmsGetPaymentChannel &&
+        this.props.oms.errorOmsGetPaymentChannel.code === 404
+      ) {
+        this.handleErrorOrderParcelExpired();
+      }
+    }
+    if (
+      prevProps.oms.errorOmsGetPaylater !== this.props.oms.errorOmsGetPaylater
+    ) {
+      if (
+        this.props.oms.errorOmsGetPaylater &&
+        this.props.oms.errorOmsGetPaylater.code === 404
+      ) {
+        this.handleErrorOrderParcelExpired();
+      }
+    }
   }
   /** === WILL UNMOUNT === */
   componentWillUnmount() {
@@ -875,7 +907,27 @@ class OmsCheckoutView extends Component {
       modalPaylaterType: true
     });
   }
+// === ERROR PAYMENT ORDER PARCEL EXPIRED ===
+handleErrorOrderParcelExpired() {
+  this.setState({
+    modalWarningCheckoutIsExpired: true,
+    modalPaymentTypeList: false,
+    modalPaymentTypeMethod: false,
+    modalPaymentMethodDetail: false,
+    modalPaylaterType: false
+  });
+}
 
+closeErrorOrderParcelExpired() {
+  this.setState({
+      modalWarningCheckoutIsExpired: false,
+      modalPaymentTypeList: false,
+      modalPaymentTypeMethod: false,
+      modalPaymentMethodDetail: false,
+      modalPaylaterType: false
+  });
+  this.backToCartItemView();
+}
   /** === FOR OPEN MODAL TERM AND REFRENCE ===  */
   checkTerm(selectedPaymentType) {
     this.setState({ modalPaymentTypeList: false, selectedPaymentType });
@@ -1685,12 +1737,14 @@ class OmsCheckoutView extends Component {
     return (
       <View>
         {this.state.modalWarningCheckoutIsExpired ? (
-          <ModalWarning
-            open={this.state.modalWarningCheckoutIsExpired}
-            content={
-              'Anda berada terlalu lama di halaman checkout silakan melakukan checkout ulang'
+          <ModalBottomFailPayment
+          open={this.state.modalWarningCheckoutIsExpired}
+          text={
+              'Sesi checkout Anda sudah habis. Silakan ulangi proses checkout Anda.'
             }
-          />
+          buttonTitle={'Ok'}
+          onPress={() => this.closeErrorOrderParcelExpired()}
+        />
         ) : (
           <View />
         )}
