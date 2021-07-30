@@ -116,6 +116,8 @@ class SignInWithPhoneView extends Component {
   renderContentPhoneNumberInput() {
     return (
       <InputType4
+        accessible={true}
+        accessibilityLabel={'txtInputNomorHp'}
         title={'Nomor Handphone'}
         error={this.state.errorPhoneNumber}
         errorText={'No. HP yang anda masukan salah'}
@@ -155,6 +157,8 @@ class SignInWithPhoneView extends Component {
   renderButton() {
     return (
       <ButtonSingle
+        accessible={true}
+        accessibilityLabel={'btnLoginLanjutkan'}
         disabled={
           !this.state.correctFormatPhoneNumber || this.props.auth.loadingGetOTP
         }
