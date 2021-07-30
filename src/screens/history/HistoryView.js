@@ -217,6 +217,8 @@ class HistoryView extends Component {
         <View style={{ flexDirection: 'row' }}>
           <View style={{ flex: 1 }}>
             <SearchBarType1
+              accessible={true}
+              accessibilityLabel={'txtFieldTagihanCariProduk'}
               placeholder={'Cari produk, nomor pesanan'}
               searchText={this.state.searchText}
               onRef={ref => (this.parentFunction = ref)}
@@ -224,6 +226,8 @@ class HistoryView extends Component {
             />
           </View>
           <TouchableOpacity
+            accessible={true}
+            accessibilityLabel={'btnTagihanFilter'}
             style={{ paddingRight: 16, justifyContent: 'center' }}
             onPress={() => this.setState({ openMainFilter: true })}
           >

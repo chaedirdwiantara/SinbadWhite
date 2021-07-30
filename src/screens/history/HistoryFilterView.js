@@ -106,6 +106,8 @@ class HistoryFilterView extends Component {
   renderPortfolio() {
     return (
       <TouchableOpacity
+        accessible={true}
+        accessibilityLabel={'btnFilterPortfolio'}
         onPress={() => this.parentFunction({ type: 'portfolio' })}
       >
         <View
@@ -194,6 +196,8 @@ class HistoryFilterView extends Component {
   renderButton() {
     return (
       <ButtonSingle
+        accessible={true}
+        accessibilityLabel={'btnFilterTerapkan'}
         disabled={
           // this.state.portfolio.length === 0 &&
           this.state.order.name === '' &&
