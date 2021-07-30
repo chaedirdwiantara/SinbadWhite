@@ -1,17 +1,6 @@
-import {
-  React,
-  Component,
-  View,
-  StyleSheet
-} from '../../library/reactPackage'
-import {
-  bindActionCreators,
-  connect
-} from '../../library/thirdPartyPackage'
-import {
-  TagListType2,
-  SkeletonType2
-} from '../../library/component'
+import { React, Component, View, StyleSheet } from '../../library/reactPackage';
+import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
+import { TagListType2, SkeletonType2 } from '../../library/component';
 import * as ActionCreators from '../../state/actions';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
@@ -55,6 +44,7 @@ class HistoryPaymentView extends Component {
               ].status
             : ''
         }
+        order={this.props.order}
       />
     );
   }
@@ -118,14 +108,14 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(HistoryPaymentView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

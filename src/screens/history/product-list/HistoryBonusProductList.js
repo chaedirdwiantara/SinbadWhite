@@ -42,8 +42,9 @@ class HistoryBonusProductList extends Component {
           />
           <ProductListType7
             clickable={false}
-            data={this.props.data}
+            data={this.props.data.bonusCatalogues}
             type="Bonus"
+            detailHistory={this.props.data}
           />
         </View>
       </View>
