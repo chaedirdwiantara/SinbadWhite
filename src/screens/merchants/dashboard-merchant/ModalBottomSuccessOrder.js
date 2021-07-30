@@ -42,6 +42,8 @@ class ModalBottomSuccessOrder extends Component {
   render() {
     return (
       <ModalBottomType1
+        accessible={true}
+        accessibilityLabel={'btnModalTerimakasih'}
         open={this.props.oms.dataOmsConfirmOrder !== null}
         title={''}
         buttonTitle={'Selesai'}
