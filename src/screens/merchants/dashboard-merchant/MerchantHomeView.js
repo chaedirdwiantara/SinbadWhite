@@ -203,7 +203,7 @@ class MerchantHomeView extends Component {
           ) {
             this.SurveyDone();
           } else {
-            this.setState({ successSurveyList: true });
+            this.setState({successSurveyList: true})
           }
           if (this.state.task.length === 3) {
             if (sfaStatus.data.totalInvoice > 0) {
@@ -1658,8 +1658,16 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, merchant, user, permanent, profile, privileges }) => {
-  return { auth, merchant, user, permanent, profile, privileges };
+const mapStateToProps = ({
+  auth,
+  merchant,
+  user,
+  permanent,
+  privileges,
+  profile,
+  sfa
+}) => {
+  return { auth, merchant, user, permanent, privileges,profile, sfa };
 };
 
 const mapDispatchToProps = dispatch => {
