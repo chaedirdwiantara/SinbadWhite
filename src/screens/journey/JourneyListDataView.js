@@ -122,6 +122,21 @@ class JourneyListDataView extends Component {
     }
     return total;
   }
+  /** CHECK VISIT ACTIVITY */
+  checkVisitActivity(logs) {
+    // check already check out or not
+    if ((logs.longitudeCheckOut && logs.latitudeCheckOut) !== 0) {
+      return require('../../assets/icons/journey/visit_green.png');
+    }
+    // not checkin yet.
+    if ((logs.longitudeCheckOut && logs.latitudeCheckOut) === 0) {
+      // not visit
+      if (!logs.visitStatus && logs.noVisitReasonId) {
+        return require('../../assets/icons/journey/no_visit_black.png');
+      }
+      return require('../../assets/icons/journey/visit_gray.png');
+    }
+  }
   /**
    * ======================
    * RENDER VIEW
@@ -286,12 +301,7 @@ class JourneyListDataView extends Component {
             }}
           >
             <Image
-              source={
-                (item.journeyBookStores.longitudeCheckOut &&
-                  item.journeyBookStores.latitudeCheckOut) !== 0
-                  ? require('../../assets/icons/journey/visit_green.png')
-                  : require('../../assets/icons/journey/visit_gray.png')
-              }
+              source={this.checkVisitActivity(item.journeyBookStores)}
               style={styles.iconVisitOrder}
             />
             <View style={{ marginLeft: 10 }} />
@@ -454,9 +464,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 12072021
+ * updatedDate: 02082021
  * updatedFunction:
- * -> add get journey report when refresh journey plan.
- * -> fix styling for list of journey plan.
+ * -> update icon when not visit the store.
  *
  */

@@ -400,6 +400,14 @@ class MerchantHomeView extends Component {
       loading: true
     });
     this.props.getJourneyPlanReportProcessV2();
+    this.props.journeyPlanGetMapDataReset();
+    this.props.journeyPlanGetMapDataProcess({
+      page: 1,
+      length: 1000,
+      date: today,
+      search: '',
+      loading: true
+    });
   }
   /** CHECKOUT PROCESS */
   checkoutProcess() {
@@ -1468,7 +1476,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 26072021
+ * updatedDate: 02082021
  * updatedFunction:
- * -> add validation for task list (especially check-in cause reason not visit)
+ * -> add get journey map data when back to back journey plan's map.
  */
