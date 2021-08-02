@@ -1,8 +1,11 @@
 import { set, isEmpty } from 'lodash';
-import firebase from 'react-native-firebase';
-import DeviceInfo from 'react-native-device-info';
 import apiHost from './apiHost';
 import { Store } from '../state/Store';
+import {
+  sendDataApiError,
+  sendDataServiceError
+} from './report/sentry/sendDataToSentry';
+
 export default async function endpoint({ path, method, params, testpath }) {
   const stateData = Store.getState();
   const headers = {};
@@ -16,7 +19,7 @@ export default async function endpoint({ path, method, params, testpath }) {
   if (!isEmpty(params)) {
     reqBody.body = JSON.stringify(params);
   }
-  return fetch(testpath? testpath : apiHost.url + path, reqBody)
+  return fetch(testpath ? testpath : apiHost.url + path, reqBody)
     .then(response => {
       if (response.status === 200 || response.status === 201) {
         return response.json().then(data => {
@@ -24,26 +27,11 @@ export default async function endpoint({ path, method, params, testpath }) {
         });
       } else {
         return response.json().then(data => {
-          let deviceData = {
-            uniqueId: DeviceInfo.getUniqueId(),
-            systemVersion: DeviceInfo.getSystemVersion(),
-            appVersion: DeviceInfo.getVersion(),
-            brand: DeviceInfo.getBrand(),
-            deviceId: DeviceInfo.getDeviceId()
-          };
-          const ref = firebase.firestore().collection('error-reports');
-          ref.add({
-            endpoint: path,
-            userId: stateData.user !== null ? stateData.user.id : 'not login',
+          sendDataApiError({
+            path,
             method,
-            payload: params,
-            token:
-              stateData.permanent.token !== null
-                ? stateData.permanent.token
-                : 'not login',
-            error: data,
-            deviceData,
-            time: new Date()
+            params,
+            error: data
           });
           if (data.code > 1000) {
             return {
@@ -66,6 +54,11 @@ export default async function endpoint({ path, method, params, testpath }) {
       }
     })
     .catch(err => {
+      sendDataServiceError({
+        path,
+        method,
+        params
+      });
       return {
         result: 'Error',
         code: 503,
