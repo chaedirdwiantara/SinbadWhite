@@ -70,6 +70,18 @@ class JourneyMapView extends Component {
         if (this.props.journey.dataGetJourneyPlanMapData.length === 0) {
           this.setState({ modalEmpty: true });
         }
+        // check the current condition of store (visit/not)
+        let updatedMerchant;
+        // check selected merchant
+        if (this.state.merchant) {
+          updatedMerchant = this.props.journey.dataGetJourneyPlanMapData.find(
+            item => item.externalId === this.state.merchant.externalId
+          );
+        }
+        // if there's changes, update selected merchant
+        if (updatedMerchant && updatedMerchant !== this.state.merchant) {
+          this.setState({ merchant: updatedMerchant });
+        }
       }
     }
   }
@@ -605,8 +617,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyMapView);
  * ============================
  * createdBy: dyah
  * createdDate: 28072021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 02082021
  * updatedFunction:
- * -> create new screen 'JourneyMapView'.
+ * -> refresh selected merchant after visit store.
  */
