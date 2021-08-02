@@ -200,7 +200,7 @@ class JourneyMapView extends Component {
       <MapView
         ref={ref => (this.mapRef = ref)}
         style={{ flex: 1, width: '100%' }}
-        initialRegion={{
+        region={{
           latitude: this.state.latitude,
           longitude: this.state.longitude,
           latitudeDelta: this.state.latitudeDelta,
@@ -253,7 +253,7 @@ class JourneyMapView extends Component {
       <MapView
         ref={ref => (this.mapRef = ref)}
         style={{ flex: 1, width: '100%' }}
-        initialRegion={{
+        region={{
           latitude: this.state.latitude,
           longitude: this.state.longitude,
           latitudeDelta: this.state.latitudeDelta,
@@ -621,4 +621,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyMapView);
  * updatedDate: 02082021
  * updatedFunction:
  * -> refresh selected merchant after visit store.
+ * -> change initial region to region. (control current location & zoom)
  */
