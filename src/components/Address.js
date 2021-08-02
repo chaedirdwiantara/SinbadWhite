@@ -55,16 +55,20 @@ class Address extends Component {
    */
   /** === IF TEXT SUBSTRING === */
   renderSubstring() {
+    let maxLength = 55;
+    if (this.props.maxLength) {
+      maxLength = this.props.maxLength;
+    }
     return (
       <View>
-        {this.combineAddress().length >= 55 ? (
+        {this.combineAddress().length >= maxLength ? (
           <Text
             style={[
               this.props.font,
               { textTransform: 'capitalize', textAlign: this.props.position }
             ]}
           >
-            {this.combineAddress().substring(0, 55)}...
+            {this.combineAddress().substring(0, maxLength)}...
           </Text>
         ) : (
           <Text
@@ -109,15 +113,14 @@ class Address extends Component {
 export default Address;
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 08072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: dyah
+ * updatedDate: 02072021
+ * updatedFunction:
+ * -> add maximal character for address.
+ *
+ */

@@ -15,11 +15,16 @@ export const permanent = createReducer(INITIAL_STATE, {
    * DELETE ALL DATA
    * ==================================
    * - token
+   * - otpAgentSignIn
+   * - phoneNumberAgentSignIn
+   * - newOrderSuccessPerMerchant
    */
-  [types.DELETE_ALL_DATA](state, action) {
+  [types.DELETE_USER_DATA](state, action) {
     return {
       ...state,
       token: null,
+      otpAgentSignIn: null,
+      phoneNumberAgentSignIn: null,
       newOrderSuccessPerMerchant: []
     };
   },

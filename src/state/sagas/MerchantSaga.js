@@ -42,7 +42,9 @@ function* getPortfolioV2(actions) {
       return MerchantMethod.getPortfolioByUserIdV2();
     });
     let newData = [];
-    newData.push(response.data.data);
+    if (response.data.data) {
+      newData.push(response.data.data);
+    }
     response.data.data = newData;
     yield put(ActionCreators.portfolioGetSuccessV2(response));
   } catch (error) {

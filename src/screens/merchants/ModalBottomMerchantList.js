@@ -21,6 +21,7 @@ import {
   TagListType1,
   SkeletonType2,
   ModalBottomErrorRespons,
+  ToastType1,
   ButtonSingle
 } from '../../library/component'
 import { Color } from '../../config'
@@ -28,13 +29,13 @@ import { Fonts } from '../../helpers'
 import ModalBottomMerchantListDataView from './ModalMerchantListDataView';
 import * as ActionCreators from '../../state/actions';
 const { height } = Dimensions.get('window');
-const today = moment().format('YYYY-MM-DD') + 'T00:00:00+00:00';
 
 class ModalBottomMerchantList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       openModalErrorGlobal: false,
+      showToast: false,
       search: '',
       portfolio: 0,
       heightList: 0.93 * height,
@@ -64,9 +65,30 @@ class ModalBottomMerchantList extends Component {
       ) {
         this.getMerchant('direct', 0, '');
       }
+      if (
+        this.props.merchant.dataGetPortfolioV2 !== null &&
+        this.props.merchant.dataGetPortfolioV2.length === 0
+      ) {
+        this.setState({
+          openModalErrorGlobal: false,
+          showToast: true
+        });
+        setTimeout(() => {
+          this.setState({ showToast: false });
+        }, 3000);
+      }
+    }
+    /** ERROR GET PORTFOLIO */
+    if (
+      prevProps.merchant.errorGetPortfolioV2 !==
+      this.props.merchant.errorGetPortfolioV2
+    ) {
+      if (this.props.merchant.errorGetPortfolioV2 !== null) {
+        this.setState({ openModalErrorGlobal: true });
+      }
     }
     /** ERROR GET LIST OF MERCHANT */
-     if (
+    if (
       prevProps.merchant.errorGetMerchantV2 !==
       this.props.merchant.errorGetMerchantV2
     ) {
@@ -111,14 +133,19 @@ class ModalBottomMerchantList extends Component {
   /** === CALL GET FUNCTION === */
   getMerchant(type, portfolioIndex, search) {
     const date = moment().format('YYYY-MM-DD');
-    this.props.merchantExistingGetReset();
-    this.props.merchantExistingGetProcess({
-      date,
-      loading: true,
-      page: 1,
-      portfolioId: this.props.merchant.dataGetPortfolioV2[0].id,
-      search
-    });
+    if (
+      this.props.merchant.dataGetPortfolioV2 &&
+      this.props.merchant.dataGetPortfolioV2.length > 0
+    ) {
+      this.props.merchantExistingGetReset();
+      this.props.merchantExistingGetProcess({
+        date,
+        loading: true,
+        page: 1,
+        portfolioId: this.props.merchant.dataGetPortfolioV2[0].id,
+        search
+      });
+    }
   }
   /** === PARENT FUNCTION FROM CHILD === */
   parentFunction(data) {
@@ -166,8 +193,12 @@ class ModalBottomMerchantList extends Component {
   }
   /** === ADD JOURNEY PLAN === */
   addJourneyPlan() {
+    const today = moment().format('YYYY-MM-DD') + 'T00:00:00+00:00';
     this.props.saveMerchantToJourneyPlanProcessV2({
       date: today,
+      externalSalesRepId: this.props.user.userCode
+        ? this.props.user.userCode
+        : '',
       journeyBookStores: this.state.dataForAddJourney
     });
   }
@@ -215,6 +246,7 @@ class ModalBottomMerchantList extends Component {
       <View>
         <SearchBarType1
           searchText={this.state.search}
+          editable={this.props.merchant.dataGetPortfolioV2 ? true : false}
           placeholder={'Cari nama / id toko disini'}
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
@@ -272,6 +304,7 @@ class ModalBottomMerchantList extends Component {
         {this.renderTags()}
         {this.renderContentList()}
         {this.renderButton()}
+        {this.renderToast()}
       </View>
     );
   }
@@ -309,6 +342,22 @@ class ModalBottomMerchantList extends Component {
         <View />
       );
     }
+  /**
+   * ===================
+   * TOAST
+   * ====================
+   */
+  renderToast() {
+    return this.state.showToast ? (
+      <ToastType1
+        basic={true}
+        margin={30}
+        content={'Anda belum memiliki portfolio'}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === MAIN === */
   render() {
     return (
@@ -374,7 +423,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 09062021
+ * updatedDate: 19072021
  * updatedFunction:
- * -> add modal error when failed get list of merchant.
+ * -> fix bug sales (who didn't have portfolio) trying to search merchant.
+ * -> add toast when sales didn't have portfolio.
  */

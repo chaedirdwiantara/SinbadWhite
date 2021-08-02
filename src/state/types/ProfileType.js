@@ -15,3 +15,7 @@ export const PROFILE_GET_WAREHOUSE_FAILED = 'ProfileGetWarehouseFailed'
 export const PROFILE_GET_SALES_SEGMENTATION_TEAM_PROCESS = 'ProfileGetSalesSegementationTeamProcess'
 export const PROFILE_GET_SALES_SEGMENTATION_TEAM_SUCCESS = 'ProfileGetSalesSegementationTeamSuccess'
 export const PROFILE_GET_SALES_SEGMENTATION_TEAM_FAILED = 'ProfileGetSalesSegementationTeamFailed'
+/** FOR GET SALES TEAM */
+export const PROFILE_GET_SALES_TEAM_PROCESS = 'ProfileGetSalesTeamProcess'
+export const PROFILE_GET_SALES_TEAM_SUCCESS = 'ProfileGetSalesTeamSuccess'
+export const PROFILE_GET_SALES_TEAM_FAILED = 'ProfileGetSalesTeamFailed'

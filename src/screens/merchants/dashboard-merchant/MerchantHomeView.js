@@ -47,7 +47,6 @@ import {
 import _ from 'lodash';
 
 const { width, height } = Dimensions.get('window');
-const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
 
 class MerchantHomeView extends Component {
   constructor(props) {
@@ -174,6 +173,9 @@ class MerchantHomeView extends Component {
       storeId: this.props.merchant.selectedMerchant.storeId,
       supplierId: this.props.user.userSuppliers[0].supplier.id
     });
+    if (this.props.profile.errorGetSalesTeam) {
+      this.props.getSalesTeamProcess();
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -201,7 +203,7 @@ class MerchantHomeView extends Component {
           ) {
             this.SurveyDone();
           } else {
-            this.setState({successSurveyList: true})
+            this.setState({ successSurveyList: true });
           }
           if (this.state.task.length === 3) {
             if (sfaStatus.data.totalInvoice > 0) {
@@ -493,6 +495,7 @@ class MerchantHomeView extends Component {
   }
 
   componentWillUnmount() {
+    const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
     this.props.merchantGetSurveyListReset();
     this.props.journeyPlanGetResetV2();
     this.props.journeyPlanGetProcessV2({
@@ -1655,15 +1658,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({
-  auth,
-  merchant,
-  user,
-  permanent,
-  privileges,
-  sfa
-}) => {
-  return { auth, merchant, user, permanent, privileges, sfa };
+const mapStateToProps = ({ auth, merchant, user, permanent, profile, privileges }) => {
+  return { auth, merchant, user, permanent, profile, privileges };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -1683,7 +1679,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 09062021
+ * updatedDate: 08072021
  * updatedFunction:
- * -> add modal error when failed get last order & log all activity.
+ * -> move variable 'today' to inside class component (related function)
  */
