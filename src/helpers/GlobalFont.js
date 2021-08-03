@@ -787,6 +787,12 @@ const styles = StyleSheet.create({
     lineHeight: 15,
     textAlign: 'center',
     color: Color.buttonRedDisableColor
+  },
+  type10Red: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 11,
+    lineHeight: 14,
+    color: Color.fontRed40
   }
 });
 

@@ -183,7 +183,7 @@ class ProductListType7 extends Component {
           <View
             style={{
               justifyContent: 'space-between',
-              flex: 5,
+              flex: 2,
               paddingLeft: 8
             }}
           >
