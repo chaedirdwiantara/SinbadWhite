@@ -12,7 +12,14 @@ import masterColor from '../../config/masterColor.json';
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import * as ActionCreators from '../../state/actions';
 import { CANCEL, DELIVERED, DONE } from '../../constants/orderConstants';
-import { OVERDUE, PAID, PAY_LATER, PAY_NOW, PAY_ON_DELIVERY, WAITING_FOR_PAYMENT } from '../../constants/paymentConstants';
+import {
+  OVERDUE,
+  PAID,
+  PAY_LATER,
+  PAY_NOW,
+  PAY_ON_DELIVERY,
+  WAITING_FOR_PAYMENT
+} from '../../constants/paymentConstants';
 class HistoryDetailPaymentInformation extends Component {
   constructor(props) {
     super(props);
@@ -29,12 +36,12 @@ class HistoryDetailPaymentInformation extends Component {
   totalPembayaranPesanan(data) {
     let total = 0;
     if (data.paymentType.id === PAY_NOW) {
-      total = data.billing.totalPayment
+      total = data.billing.totalPayment;
     } else {
       if (data.status === DELIVERED || data.status === DONE) {
-        total = data.billing.deliveredTotalPayment
+        total = data.billing.deliveredTotalPayment;
       } else {
-        total = data.billing.totalPayment
+        total = data.billing.totalPayment;
       }
     }
     return total;
@@ -43,12 +50,12 @@ class HistoryDetailPaymentInformation extends Component {
   totalPesanan(data) {
     let total = 0;
     if (data.paymentType.id === PAY_NOW) {
-      total = data.parcelFinalPrice
+      total = data.parcelFinalPrice;
     } else {
       if (data.status === DELIVERED || data.status === DONE) {
-        total = data.deliveredParcelFinalPrice
+        total = data.deliveredParcelFinalPrice;
       } else {
-        total = data.parcelFinalPrice
+        total = data.parcelFinalPrice;
       }
     }
     return total;
@@ -57,12 +64,12 @@ class HistoryDetailPaymentInformation extends Component {
   totalPPN(data) {
     let total = 0;
     if (data.paymentType.id === PAY_NOW) {
-      total = data.parcelTaxes
+      total = data.parcelTaxes;
     } else {
       if (data.status === DELIVERED || data.status === DONE) {
-        total = data.deliveredParcelTaxes
+        total = data.deliveredParcelTaxes;
       } else {
-        total = data.parcelTaxes
+        total = data.parcelTaxes;
       }
     }
     return total;
@@ -71,12 +78,12 @@ class HistoryDetailPaymentInformation extends Component {
   totalParcelQty(data) {
     let total = 0;
     if (data.paymentType.id === PAY_NOW) {
-      total = data.parcelQty
+      total = data.parcelQty;
     } else {
       if (data.status === DELIVERED || data.status === DONE) {
-        total = data.deliveredParcelQty
+        total = data.deliveredParcelQty;
       } else {
-        total = data.parcelQty
+        total = data.parcelQty;
       }
     }
     return total;
@@ -85,15 +92,43 @@ class HistoryDetailPaymentInformation extends Component {
   subTotalPesanan(data) {
     let total = 0;
     if (data.paymentType.id === PAY_NOW) {
-      total = data.parcelGrossPrice
+      total = data.parcelGrossPrice;
     } else {
       if (data.status === DELIVERED || data.status === DONE) {
-        total = data.deliveredParcelGrossPrice
+        total = data.deliveredParcelGrossPrice;
       } else {
-        total = data.parcelGrossPrice
+        total = data.parcelGrossPrice;
       }
     }
     return total;
+  }
+
+  /** Promo & Voucher Information */
+  promoVoucherInformation(type, data) {
+    const detailHistory = this.props.history.dataDetailHistory;
+    switch (type) {
+      case 'voucher':
+        break;
+      case 'promo':
+        if (
+          detailHistory.status === DONE ||
+          detailHistory.status === DELIVERED
+        ) {
+          return {
+            qty: data.deliveredPromoQty
+          };
+        } else if (detailHistory.invoicedParcelModified) {
+          return {
+            qty: data.invoicedPromoQty
+          };
+        } else {
+          return {
+            qty: data.promoQty
+          };
+        }
+      default:
+        break;
+    }
   }
 
   /**
@@ -132,8 +167,9 @@ class HistoryDetailPaymentInformation extends Component {
   }
   /** RENDER DETAIL INFORMASI PEMBAYARAN */
   renderPaymentInformationDetail() {
-    const paymentPromo = this.props.history.dataDetailHistory.parcelPromoPaymentAmount
-    const detailHistory = this.props.history.dataDetailHistory
+    const paymentPromo = this.props.history.dataDetailHistory
+      .parcelPromoPaymentAmount;
+    const detailHistory = this.props.history.dataDetailHistory;
     return (
       <View>
         <View style={GlobalStyle.boxPadding} />
@@ -162,17 +198,11 @@ class HistoryDetailPaymentInformation extends Component {
             <View style={[GlobalStyle.lines, { marginTop: 8 }]} />
 
             {this.renderContentListGlobal(
-              `Sub-total pesanan (${
-                this.totalParcelQty(detailHistory)
-              })`,
+              `Sub-total pesanan (${this.totalParcelQty(detailHistory)})`,
               MoneyFormat(this.subTotalPesanan(detailHistory))
             )}
-            {this.renderPromoList(
-              detailHistory.promoList
-            )}
-            {this.renderVoucherList(
-              detailHistory.voucherList
-            )}
+            {this.renderPromoList(detailHistory.promoList)}
+            {this.renderVoucherList(detailHistory.voucherList)}
             {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
             {this.renderContentListGlobal(
               'PPN 10%',
@@ -190,25 +220,26 @@ class HistoryDetailPaymentInformation extends Component {
               </View>
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
                 <Text style={Fonts.type48}>
-                  {MoneyFormat(
-                    this.totalPesanan(detailHistory)
-                  )}
+                  {MoneyFormat(this.totalPesanan(detailHistory))}
                 </Text>
               </View>
             </View>
             <View style={[GlobalStyle.lines, { marginTop: 8 }]} />
 
-            {paymentPromo? this.renderContentListGlobal(
-              'Promo Pembayaran', MoneyFormat(paymentPromo), false, true
-            ) : null}
-            {
-              detailHistory.billing.totalFeeDeduct ? 
-              this.renderContentListGlobal(
-                'Layanan Pembayaran', 
-                MoneyFormat(detailHistory.billing.totalFeeDeduct)
-              )
-              : null
-            }
+            {paymentPromo
+              ? this.renderContentListGlobal(
+                  'Promo Pembayaran',
+                  MoneyFormat(paymentPromo),
+                  false,
+                  true
+                )
+              : null}
+            {detailHistory.billing.totalFeeDeduct
+              ? this.renderContentListGlobal(
+                  'Layanan Pembayaran',
+                  MoneyFormat(detailHistory.billing.totalFeeDeduct)
+                )
+              : null}
             <View
               style={{
                 flexDirection: 'row',
@@ -217,9 +248,7 @@ class HistoryDetailPaymentInformation extends Component {
               }}
             >
               <View style={{ flex: 1, alignItems: 'flex-start' }}>
-                <Text style={Fonts.type48}>
-                    Total Pembayaran Pesanan
-                </Text>
+                <Text style={Fonts.type48}>Total Pembayaran Pesanan</Text>
               </View>
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
                 <Text
@@ -263,7 +292,9 @@ class HistoryDetailPaymentInformation extends Component {
           {this.renderContentListGlobal(
             item.promoValue !== null
               ? item.promoName
-              : `${item.catalogueName} (${item.promoQty} Pcs)`,
+              : `${item.catalogueName} (${
+                  this.promoVoucherInformation('promo', item).qty
+                } Pcs)`,
             item.promoValue !== null
               ? `- ${MoneyFormat(item.promoValue)}`
               : 'FREE',

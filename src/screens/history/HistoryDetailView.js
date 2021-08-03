@@ -634,7 +634,6 @@ class HistoryDetailView extends Component {
             : null}
           {this.renderRingkasanPesanan()}
           {this.renderProductList()}
-          {this.renderDeletedProductList()}
           {this.renderBonusProductList()}
           {this.renderDeletedProductList()}
           {this.renderDeliveryDetail()}
