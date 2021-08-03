@@ -44,6 +44,7 @@ class JourneyMapView extends Component {
       filter: 'Semua Toko',
       noGPS: false
     };
+    this.mapMerchantRef = React.createRef(null);
   }
   /**
    * =====================
@@ -53,7 +54,7 @@ class JourneyMapView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.getJourneyPlan();
-    if (this.props.navigation.state.params.latitude) {
+    if (this.props.navigation.state.params?.latitude) {
       const { latitude, longitude } = this.props.navigation.state.params;
       this.setState({ latitude, longitude });
     } else {
@@ -99,10 +100,26 @@ class JourneyMapView extends Component {
   }
   /** === SUCCESS GET CURRENT LOCATION === */
   successMaps = success => {
-    this.setState({
-      longitude: success.coords.longitude,
-      latitude: success.coords.latitude
-    });
+    this.setState(
+      {
+        longitude: success.coords.longitude,
+        latitude: success.coords.latitude
+      },
+      () => {
+        if (
+          this.props.journey.dataGetJourneyPlanMapData?.length > 0 &&
+          this.mapMerchantRef
+        ) {
+          // set current location & zoom radius 1km
+          this.mapMerchantRef.current.animateToRegion({
+            latitude: this.state.latitude,
+            longitude: this.state.longitude,
+            latitudeDelta: this.state.latitudeDelta,
+            longitudeDelta: this.state.longitudeDelta
+          });
+        }
+      }
+    );
   };
   /** === ERROR GET CURRENT LOCATION === */
   errorMaps = () => {
@@ -251,9 +268,9 @@ class JourneyMapView extends Component {
   renderMapsContent() {
     return (
       <MapView
-        ref={ref => (this.mapRef = ref)}
+        ref={this.mapMerchantRef}
         style={{ flex: 1, width: '100%' }}
-        region={{
+        initialRegion={{
           latitude: this.state.latitude,
           longitude: this.state.longitude,
           latitudeDelta: this.state.latitudeDelta,
@@ -618,8 +635,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyMapView);
  * createdBy: dyah
  * createdDate: 28072021
  * updatedBy: dyah
- * updatedDate: 02082021
+ * updatedDate: 03082021
  * updatedFunction:
- * -> refresh selected merchant after visit store.
- * -> change initial region to region. (control current location & zoom)
+ * -> change region to initial region on renderMapsContent.
+ * -> set ref to mapView on renderMapsContent. (control current location & zoom)
  */
