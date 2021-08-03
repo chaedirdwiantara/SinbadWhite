@@ -420,22 +420,6 @@ class HistoryDataListView extends Component {
             </View>
           )}
         </View>
-        {item.statusPayment !== PAID &&
-        item.statusPayment !== REFUNDED &&
-        item.statusPayment !== WAITING_FOR_REFUND
-          ? item.statusPayment !== PAYMENT_FAILED &&
-            item.billing &&
-            item.billing.billingStatus !== BILLING_PAID &&
-            item.billing.expiredPaymentTime &&
-            item.paymentChannel &&
-            item.paymentChannel.paymentChannelTypeId !== PAY_NOW
-            ? moment.utc(new Date()).local() >
-                moment.utc(item.billing.expiredPaymentTime).local() &&
-              item.statusPayment === WAITING_FOR_PAYMENT
-              ? null
-              : this.renderCountDown(item)
-            : null
-          : null}
       </View>
     );
   }
