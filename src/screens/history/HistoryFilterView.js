@@ -5,16 +5,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text
-} from '../../library/reactPackage'
-import {
-  MaterialIcon,
-  connect
-} from '../../library/thirdPartyPackage'
-import {
-  StatusBarBlackOP40,
-  ButtonSingle
-} from '../../library/component'
-import { GlobalStyle, Fonts } from '../../helpers'
+} from '../../library/reactPackage';
+import { MaterialIcon, connect } from '../../library/thirdPartyPackage';
+import { StatusBarBlackOP40, ButtonSingle } from '../../library/component';
+import { GlobalStyle, Fonts } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 
 class HistoryFilterView extends Component {
@@ -23,7 +17,8 @@ class HistoryFilterView extends Component {
     this.state = {
       portfolio: this.props.portfolio,
       dateGte: this.props.dateGte,
-      dateLte: this.props.dateLte
+      dateLte: this.props.dateLte,
+      order: this.props.order
     };
   }
   /**
@@ -50,6 +45,10 @@ class HistoryFilterView extends Component {
         dateFilter: {
           dateGte: '',
           dateLte: ''
+        },
+        order: {
+          userId: '',
+          name: ''
         }
       }
     });
@@ -73,10 +72,42 @@ class HistoryFilterView extends Component {
    * RENDER VIEW
    * =======================
    */
+  /** RENDER ORDER FILTER */
+  renderOrder() {
+    return (
+      <TouchableOpacity onPress={() => this.parentFunction({ type: 'order' })}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: 16,
+            paddingVertical: 8
+          }}
+        >
+          <View>
+            <Text style={[Fonts.type42, { marginBottom: 5 }]}>Dibuat Oleh</Text>
+            <Text style={Fonts.type23}>
+              {this.state.order.name !== '' ? this.state.order.name : 'Semua'}
+            </Text>
+          </View>
+          <View style={{ justifyContent: 'center' }}>
+            <MaterialIcon
+              name="chevron-right"
+              color={masterColor.fontBlack40}
+              size={24}
+            />
+          </View>
+        </View>
+        <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
+      </TouchableOpacity>
+    );
+  }
   /** RENDER CONTENT PORTFOLIO */
   renderPortfolio() {
     return (
       <TouchableOpacity
+        accessible={true}
+        accessibilityLabel={'btnFilterPortfolio'}
         onPress={() => this.parentFunction({ type: 'portfolio' })}
       >
         <View
@@ -155,7 +186,8 @@ class HistoryFilterView extends Component {
             <Text style={Fonts.type62}>Hapus</Text>
           </TouchableOpacity>
         </View>
-        {this.renderPortfolio()}
+        {/* {this.renderPortfolio()} */}
+        {this.renderOrder()}
         {this.renderDate()}
       </View>
     );
@@ -164,8 +196,11 @@ class HistoryFilterView extends Component {
   renderButton() {
     return (
       <ButtonSingle
+        accessible={true}
+        accessibilityLabel={'btnFilterTerapkan'}
         disabled={
-          this.state.portfolio.length === 0 &&
+          // this.state.portfolio.length === 0 &&
+          this.state.order.name === '' &&
           (this.state.dateGte === '' || this.state.dateLte === '')
         }
         title={'Terapkan'}
@@ -180,7 +215,8 @@ class HistoryFilterView extends Component {
               dateFilter: {
                 dateGte: this.state.dateGte,
                 dateLte: this.state.dateLte
-              }
+              },
+              order: this.state.order
             }
           })
         }

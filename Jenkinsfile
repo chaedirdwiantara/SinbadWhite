@@ -253,7 +253,7 @@ pipeline {
             }
         }
         stage('Source Map') {
-            when { expression { SINBAD_ENV != 'development' || SINBAD_ENV != 'staging' } }
+            when { expression { SINBAD_ENV != 'development' && SINBAD_ENV != 'staging' } }
             steps {
                 script{
                     // Get Version Name
@@ -299,7 +299,7 @@ pipeline {
                         '''
                         sh "tar czf ${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz -C ${WORKSPACE}/android/app/build/outputs/apk/release/ ."
                         withAWS(credentials: "${AWS_CREDENTIAL}") {
-                            s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz")
+                            s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}-${currentBuild.number}.tar.gz")
                             s3Upload(file: "${WORKSPACE}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz", bucket: 'app-download.sinbad.web.id', path: "${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz")
                         }
                         slackSend color: '#FFFFFF', channel: "${SLACK_CHANNEL}", message: """
@@ -310,7 +310,7 @@ Environment: ${SINBAD_ENV}
 Commit ID: ${env.GIT_COMMIT}
 Changes Message: ${env.GIT_MESSAGE}
 You can download this application in here
-${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}.tar.gz
+${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-${env.GIT_TAG}-${env.GIT_COMMIT_SHORT}-${currentBuild.number}.tar.gz
 Or latest application for environment ${SINBAD_ENV} in here
 ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
             """

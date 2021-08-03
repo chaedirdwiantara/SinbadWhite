@@ -14,6 +14,7 @@ import {
   MaterialIcon
 } from '../../library/thirdPartyPackage'
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
+import masterColor from '../../config/masterColor.json';
 
 class ProductListType2 extends Component {
   constructor(props) {
@@ -48,6 +49,10 @@ class ProductListType2 extends Component {
     return (
       <View style={[GlobalStyle.shadowForBox5, styles.boxListProductItem]}>
         <View
+          accessible={true}
+          accessibilityLabel={
+            this.props.accessibilityLabel ? this.props.accessibilityLabel : null
+          }
           style={{
             paddingHorizontal: 16,
             paddingBottom: 16,
@@ -69,7 +74,7 @@ class ProductListType2 extends Component {
             <Text style={[Fonts.type10, { textTransform: 'capitalize' }]}>
               {item.catalogue.name}
             </Text>
-            <Text style={Fonts.type10}>{MoneyFormat(item.grossPrice)}</Text>
+            <Text style={Fonts.type47}>{MoneyFormat(item.grossPrice)}</Text>
           </View>
           <View
             style={{
@@ -78,13 +83,14 @@ class ProductListType2 extends Component {
               alignItems: 'flex-end'
             }}
           >
-            <Text style={Fonts.type10}>{item.qty} Pcs</Text>
+            <Text style={Fonts.type47}>{item.deliveredQty ? item.deliveredQty : item.qty} Pcs</Text>
           </View>
         </View>
         <View style={GlobalStyle.lines} />
         <View style={styles.boxButtonAndPriceTotal}>
-          <Text style={Fonts.type10}>
-            Total Harga: {MoneyFormat(item.catalogueGrossPrice)}
+          <Text style={Fonts.type47}>Total Harga: </Text>
+          <Text style={Fonts.type111p}>
+            {MoneyFormat(item.deliveredCatalogueGrossPrice ? item.deliveredCatalogueGrossPrice : item.catalogueGrossPrice)}
           </Text>
         </View>
       </View>
@@ -132,13 +138,13 @@ class ProductListType2 extends Component {
       >
         {this.state.showMore ? (
           <View style={styles.boxSeeMore}>
-            <MaterialIcon name="keyboard-arrow-up" size={24} />
-            <Text style={Fonts.type10}>Lihat Ringkas</Text>
+            <MaterialIcon name="keyboard-arrow-up" size={24} color={masterColor.fontRed50}/>
+            <Text style={Fonts.type11}>Lihat Ringkas</Text>
           </View>
         ) : (
           <View style={styles.boxSeeMore}>
-            <MaterialIcon name="keyboard-arrow-down" size={24} />
-            <Text style={Fonts.type10}>Lihat Lebih</Text>
+            <MaterialIcon name="keyboard-arrow-down" size={24} color={masterColor.fontRed50}/>
+            <Text style={Fonts.type11}>Lihat Lebih</Text>
           </View>
         )}
       </TouchableOpacity>
@@ -194,4 +200,16 @@ export default ProductListType2;
 * -> Refactoring Module Import
 * 
 */
+/**
+* createdBy: 
+* createdDate: 
+* updatedBy: Tyo
+* updatedDate: 30062021
+* updatedFunction:
+* -> change font type10 to type 11 in wording lihat lebih & lihat ringkas
+* -> change color black to red in icon arrow up & arrow down
+* -> modify text Total Harga using flexDirection = row and change font
+* 
+*/
+
 

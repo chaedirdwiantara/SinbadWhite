@@ -9,12 +9,12 @@ import {
   connect,
   bindActionCreators
 } from '../../../library/thirdPartyPackage';
-import { ProductListType7 } from '../../../library/component';
+import { ProductListType4 } from '../../../library/component';
 import * as ActionCreators from '../../../state/actions';
 import { GlobalStyle, Fonts } from '../../../helpers';
 import masterColor from '../../../config/masterColor.json';
 
-class HistoryBonusProductList extends Component {
+class HistoryDeletedProductList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,7 +32,7 @@ class HistoryBonusProductList extends Component {
           <View
             style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
           >
-            <Text style={Fonts.type48}>Bonus</Text>
+            <Text style={Fonts.type48}>Produk Dibatalkan</Text>
           </View>
           <View
             style={[
@@ -40,12 +40,7 @@ class HistoryBonusProductList extends Component {
               { marginHorizontal: 16, marginBottom: 8 }
             ]}
           />
-          <ProductListType7
-            clickable={false}
-            data={this.props.data.bonusCatalogues}
-            type="Bonus"
-            detailHistory={this.props.data}
-          />
+          <ProductListType4 clickable={false} data={this.props.data} />
         </View>
       </View>
     );
@@ -133,17 +128,4 @@ const mapStateToProps = ({ oms, history, user, merchant }) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(HistoryBonusProductList);
-
-/**
- * ============================
- * NOTES
- * ============================
- * createdBy:
- * createdDate:
- * updatedBy: tatas
- * updatedDate: 24062020
- * updatedFunction:
- * -> Refactoring Module Import
- *
- */
+)(HistoryDeletedProductList);
