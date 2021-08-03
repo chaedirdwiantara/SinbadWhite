@@ -85,6 +85,10 @@ class ButtonSingleSmall extends Component {
     return (
       <View>
         <Button
+          accessible={true}
+          accessibilityLabel={
+            this.props.accessibilityLabel ? this.props.accessibilityLabel : null
+          }
           disabled={this.props.disabled ? this.props.disabled : false}
           onPress={this.props.onPress}
           title={this.props.title}

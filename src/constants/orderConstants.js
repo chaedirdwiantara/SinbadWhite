@@ -10,3 +10,4 @@
  export const DONE = 'done'
  export const PENDING_PAYMENT = 'pending_payment'
  export const CANCEL = 'cancel'
+ export const DELIVERED = 'delivered'

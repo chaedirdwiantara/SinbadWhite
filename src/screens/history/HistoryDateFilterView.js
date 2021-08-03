@@ -148,6 +148,8 @@ class HistoryDateFilterView extends Component {
   renderButton() {
     return (
       <ButtonSingle
+        accessible={true}
+        accessibilityLabel={'btnDateFilterTerapkan'}
         disabled={this.state.startDate === '' || this.state.endDate === ''}
         title={'Terapkan'}
         borderRadius={4}
