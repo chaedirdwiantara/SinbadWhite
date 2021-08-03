@@ -77,6 +77,10 @@ class HistoryDataListView extends Component {
       this.props.historyGetReset();
       this.getHistory(true, 0);
     }
+    if (prevProps.order !== this.props.order) {
+      this.props.historyGetReset();
+      this.getHistory(true, 0);
+    }
     if (
       prevProps.history.dataEditHistory !== this.props.history.dataEditHistory
     ) {
@@ -115,7 +119,7 @@ class HistoryDataListView extends Component {
   getHistory(loading, page) {
     this.props.historyGetProcess({
       loading,
-      userId: this.props.user.id,
+      userId: this.props.order?.userId || '',
       storeId: this.props.storeId,
       page,
       statusOrder: this.props.section === 'order' ? this.props.status : '',
@@ -167,50 +171,50 @@ class HistoryDataListView extends Component {
     let colorStyle = masterColor.fontBlack05;
     switch (item.status) {
       case 'cancel':
-        textStyle = Fonts.type14; 
+        textStyle = Fonts.type14;
         colorStyle = masterColor.fontRed10;
-      break;
+        break;
       case 'confirm':
-        textStyle = Fonts.type67;  
+        textStyle = Fonts.type67;
         colorStyle = masterColor.fontBlack05;
-      break;
+        break;
       case 'shipping':
-        textStyle = Fonts.type67; 
+        textStyle = Fonts.type67;
         colorStyle = masterColor.fontBlack05;
-      break;
+        break;
       case 'packing':
-        textStyle = Fonts.type67; 
+        textStyle = Fonts.type67;
         colorStyle = masterColor.fontBlack05;
-      break;
+        break;
       case 'delivered':
-        textStyle = Fonts.type110p; 
+        textStyle = Fonts.type110p;
         colorStyle = masterColor.fontGreen10;
-      break;
+        break;
       case 'pending':
-        textStyle = Fonts.type109p; 
+        textStyle = Fonts.type109p;
         colorStyle = masterColor.fontYellow10;
-      break;
+        break;
       case 'pending_payment':
-        textStyle = Fonts.type109p; 
+        textStyle = Fonts.type109p;
         colorStyle = masterColor.fontYellow10;
-      break;
+        break;
       case 'pending_supplier':
-        textStyle = Fonts.type109p; 
+        textStyle = Fonts.type109p;
         colorStyle = masterColor.fontYellow10;
-      break;
+        break;
       case 'pending_partial':
-        textStyle = Fonts.type109p; 
+        textStyle = Fonts.type109p;
         colorStyle = masterColor.fontYellow10;
-      break;
+        break;
       case 'done':
-        textStyle = Fonts.type110p; 
+        textStyle = Fonts.type110p;
         colorStyle = masterColor.fontGreen10;
-      break;
+        break;
       default:
         break;
     }
     return (
-      <View 
+      <View
         style={{
           backgroundColor: colorStyle,
           marginLeft: 15,
@@ -220,7 +224,9 @@ class HistoryDataListView extends Component {
           flexDirection: 'row'
         }}
       >
-        <Text style={{ ...textStyle, textAlign: 'right' }}>{this.statusOrder(item.status)}</Text>
+        <Text style={{ ...textStyle, textAlign: 'right' }}>
+          {this.statusOrder(item.status)}
+        </Text>
       </View>
     );
   }
@@ -414,6 +420,22 @@ class HistoryDataListView extends Component {
             </View>
           )}
         </View>
+        {item.statusPayment !== PAID &&
+        item.statusPayment !== REFUNDED &&
+        item.statusPayment !== WAITING_FOR_REFUND
+          ? item.statusPayment !== PAYMENT_FAILED &&
+            item.billing &&
+            item.billing.billingStatus !== BILLING_PAID &&
+            item.billing.expiredPaymentTime &&
+            item.paymentChannel &&
+            item.paymentChannel.paymentChannelTypeId !== PAY_NOW
+            ? moment.utc(new Date()).local() >
+                moment.utc(item.billing.expiredPaymentTime).local() &&
+              item.statusPayment === WAITING_FOR_PAYMENT
+              ? null
+              : this.renderCountDown(item)
+            : null
+          : null}
       </View>
     );
   }
@@ -427,6 +449,7 @@ class HistoryDataListView extends Component {
         ) {
           return this.renderButtonCancel(item);
         }
+        break;
       case PENDING_PAYMENT:
         if (
           item.paymentType.id === PAY_NOW &&
@@ -434,6 +457,7 @@ class HistoryDataListView extends Component {
         ) {
           return this.renderButtonCancel(item);
         }
+        break;
       default:
         return <View />;
     }
@@ -513,18 +537,16 @@ class HistoryDataListView extends Component {
                 <View />
               )}
               {this.props.section === 'order' ? (
-              <View style={[styles.boxItemContent,{flex: 1}]}>
-                <Text
-                    style={[Fonts.type57]}
-                  >
+                <View style={[styles.boxItemContent, { flex: 1 }]}>
+                  <Text style={[Fonts.type57]}>
                     {moment(new Date(item.createdAt)).format(
                       'DD MMM YYYY HH:mm:ss'
                     )}
-                </Text>
-              </View>
-            ) : (
-              <View />
-            )}
+                  </Text>
+                </View>
+              ) : (
+                <View />
+              )}
               {this.props.section === 'payment' &&
               item.statusPayment !== 'payment_failed' &&
               item.statusPayment !== 'paid' ? (
@@ -539,108 +561,114 @@ class HistoryDataListView extends Component {
             {this.renderProductSection(item.orderBrands)}
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             {this.props.section === 'order' ? (
-              <View >
+              <View>
                 {!item.deliveredParcelModified &&
-                  (item.status === DELIVERED || item.status === DONE) ? (
-                    <View style={[styles.boxItemContent, { marginBottom: 4 }]}>
-                      <View
-                        style={{
-                          flex: 1,
-                          flexDirection: 'row',
-                          alignSelf: 'space-between'
-                        }}
+                (item.status === DELIVERED || item.status === DONE) ? (
+                  <View style={[styles.boxItemContent, { marginBottom: 4 }]}>
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        alignSelf: 'space-between'
+                      }}
+                    >
+                      <Text
+                        style={[
+                          item.deliveredParcelModified
+                            ? Fonts.type112p
+                            : Fonts.type111p,
+                          {
+                            flex: 1,
+                            textDecorationLine: item.deliveredParcelModified
+                              ? 'line-through'
+                              : 'none'
+                          }
+                        ]}
                       >
-                        <Text
-                          style={[
-                            item.deliveredParcelModified
-                              ? Fonts.type112p
-                              : Fonts.type111p,
-                            {
-                              flex: 1,
-                              textDecorationLine: item.deliveredParcelModified
-                                ? 'line-through'
-                                : 'none'
-                            }
-                          ]}
-                        >
-                          {MoneyFormat(item.billing.deliveredTotalPayment)}
-                        </Text>
-                        <Text
-                          style={[
-                            item.deliveredParcelModified
-                              ? Fonts.type112p
-                              : Fonts.type111p,
-                            {
-                              textDecorationLine: item.deliveredParcelModified
-                                ? 'line-through'
-                                : 'none'
-                            }
-                          ]}
-                        >
-                          QTY: {item.deliveredParcelQty}
-                        </Text>
-                      </View>
-                    </View>
-                  ) : (
-                    <View style={[styles.boxItemContent, { marginBottom: 4 }]}>
-                      <View
-                        style={{
-                          flex: 1,
-                          flexDirection: 'row',
-                          alignSelf: 'space-between'
-                        }}
+                        {MoneyFormat(item.billing.deliveredTotalPayment)}
+                      </Text>
+                      <Text
+                        style={[
+                          item.deliveredParcelModified
+                            ? Fonts.type112p
+                            : Fonts.type111p,
+                          {
+                            textDecorationLine: item.deliveredParcelModified
+                              ? 'line-through'
+                              : 'none'
+                          }
+                        ]}
                       >
-                        <Text
-                          style={[
-                            item.deliveredParcelModified
-                              ? Fonts.type112p
-                              : Fonts.type111p,
-                            {
-                              flex: 1,
-                              textDecorationLine: item.deliveredParcelModified
-                                ? 'line-through'
-                                : 'none'
-                            }
-                          ]}
-                        >
-                          {MoneyFormat(item.billing.totalPayment)}
-                        </Text>
-                        <Text
-                          style={[
-                            item.deliveredParcelModified
-                              ? Fonts.type112p
-                              : Fonts.type111p,
-                            {
-                              textDecorationLine: item.deliveredParcelModified
-                                ? 'line-through'
-                                : 'none'
-                            }
-                          ]}
-                        >
-                          QTY: {item.parcelQty}
-                        </Text>
-                      </View>
+                        QTY: {item.deliveredParcelQty}
+                      </Text>
                     </View>
-                  )}
-                  {item.deliveredParcelModified ? (
-                    <View style={styles.boxItemContent}>
-                      <View
-                        style={{
-                          flex: 1,
-                          flexDirection: 'row',
-                          alignSelf: 'space-between'
-                        }}
+                  </View>
+                ) : (
+                  <View style={[styles.boxItemContent, { marginBottom: 4 }]}>
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        alignSelf: 'space-between'
+                      }}
+                    >
+                      <Text
+                        style={[
+                          item.deliveredParcelModified
+                            ? Fonts.type112p
+                            : Fonts.type111p,
+                          {
+                            flex: 1,
+                            textDecorationLine: item.deliveredParcelModified
+                              ? 'line-through'
+                              : 'none'
+                          }
+                        ]}
                       >
-                        <Text style={[Fonts.type111p, { flex: 1 }]}>
-                          {MoneyFormat(item.billing.deliveredTotalPayment)}
-                        </Text>
-                        <Text style={Fonts.type111p}>
-                          QTY: {item.deliveredParcelQty}
-                        </Text>
-                      </View>
+                        {MoneyFormat(item.billing.totalPayment)}
+                      </Text>
+                      <Text
+                        style={[
+                          item.deliveredParcelModified
+                            ? Fonts.type112p
+                            : Fonts.type111p,
+                          {
+                            textDecorationLine: item.deliveredParcelModified
+                              ? 'line-through'
+                              : 'none'
+                          }
+                        ]}
+                      >
+                        QTY: {item.parcelQty}
+                      </Text>
                     </View>
-                  ) : null}
-                <View style={{ flexDirection: 'row', alignSelf: 'flex-end', marginTop: 10 }}>
+                  </View>
+                )}
+                {item.deliveredParcelModified ? (
+                  <View style={styles.boxItemContent}>
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        alignSelf: 'space-between'
+                      }}
+                    >
+                      <Text style={[Fonts.type111p, { flex: 1 }]}>
+                        {MoneyFormat(item.billing.deliveredTotalPayment)}
+                      </Text>
+                      <Text style={Fonts.type111p}>
+                        QTY: {item.deliveredParcelQty}
+                      </Text>
+                    </View>
+                  </View>
+                ) : null}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignSelf: 'flex-end',
+                    marginTop: 10
+                  }}
+                >
                   {this.props.section === 'order'
                     ? this.renderButtonForOrder(item)
                     : null}
@@ -754,7 +782,8 @@ class HistoryDataListView extends Component {
             )}
           </View>
           {item.deliveredParcelModified &&
-          item.statusPayment !== REFUNDED && item.status !== DONE ? (
+          item.statusPayment !== REFUNDED &&
+          item.status !== DONE ? (
             <View style={styles.sticky}>
               <MaterialIcon
                 name="error"

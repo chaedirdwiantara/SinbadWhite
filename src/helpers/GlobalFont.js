@@ -663,6 +663,12 @@ const styles = StyleSheet.create({
     lineHeight: 13,
     color: Color.fontRed50
   },
+  type117p: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 10,
+    lineHeight: 13,
+    color: Color.fontBlack50
+  },
   type109p: {
     fontFamily: Fonts.MontserratMedium,
     fontSize: 10,

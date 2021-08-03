@@ -6,11 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text
-} from '../../library/reactPackage'
-import {
-  bindActionCreators,
-  connect
-} from '../../library/thirdPartyPackage'
+} from '../../library/reactPackage';
+import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
   StatusBarBlackOP40,
@@ -18,8 +15,8 @@ import {
   ModalBottomType3,
   ModalBottomType4,
   DatePickerSpinner
-} from '../../library/component'
-import { GlobalStyle, Fonts } from '../../helpers'
+} from '../../library/component';
+import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import HistoryTabView from './HistoryTabView';
@@ -28,6 +25,7 @@ import HistoryPaymentView from './HistoryPaymentView';
 import HistoryFilterView from './HistoryFilterView';
 import HistoryPortfolioFilterView from './HistoryPortfolioFilterView';
 import HistoryDateFilterView from './HistoryDateFilterView';
+import HistoryOrderFilterView from './order-filter/HistoryOrderFilterView';
 
 class HistoryView extends Component {
   constructor(props) {
@@ -44,10 +42,15 @@ class HistoryView extends Component {
       },
       portfolio: [],
       portfolioId: [],
+      order: {
+        userId: '',
+        name: ''
+      },
       openMainFilter: false,
       openPortfolioFilter: false,
       openDateFilter: false,
-      openDateSelect: false
+      openDateSelect: false,
+      openOrderFilter: false
     };
   }
   /**
@@ -60,6 +63,7 @@ class HistoryView extends Component {
     this.checkNewOrderNotif();
     this.props.historyGetOrderStatusProcess();
     this.props.historyGetPaymentStatusProcess();
+    this.getSalesName();
   }
 
   /** CHECK NEW ORDER NOTIF */
@@ -76,51 +80,81 @@ class HistoryView extends Component {
       }
     }
   }
+  getSalesName() {
+    const order = {
+      userId: this.props.user.id,
+      name: this.props.user.fullName
+    };
+    this.setState({ order });
+  }
   /** === FROM CHILD FUNCTION === */
   parentFunction(data) {
-    if (data.type === 'section') {
-      this.setState({ activeTab: data.data });
-    } else if (data.type === 'search') {
-      this.setState({ searchText: data.data });
-    } else if (data.type === 'portfolio') {
-      this.setState({ openMainFilter: false, openPortfolioFilter: true });
-    } else if (data.type === 'date') {
-      this.setState({ openMainFilter: false, openDateFilter: true });
-    } else if (data.type === 'addPortfolio') {
-      this.setState({
-        openMainFilter: true,
-        openPortfolioFilter: false,
-        portfolio: data.data
-      });
-    } else if (data.type === 'doFilter') {
-      this.setState({
-        openMainFilter: false,
-        startDate: data.data.startDate,
-        endDate: data.data.endDate,
-        portfolioId: data.data.portfolio,
-        dateFilter: data.data.dateFilter
-      });
-    } else if (data.type === 'dateType') {
-      this.setState({
-        typeDate: data.data,
-        openDateSelect: true,
-        openDateFilter: false
-      });
-    } else if (data.type === 'datePicker') {
-      this.setState({ openDateSelect: false, openDateFilter: true });
-      if (this.state.typeDate === 'startDate') {
-        this.setState({ startDate: data.data, endDate: '' });
-      } else {
-        this.setState({ endDate: data.data });
-      }
-    } else if (data.type === 'selectDate') {
-      if (data.data.type === 'selectedDate') {
-        this.setState({ openDateFilter: false, openMainFilter: true });
-      }
-      this.setState({
-        startDate: data.data.startDate,
-        endDate: data.data.endDate
-      });
+    switch (data.type) {
+      case 'section':
+        this.setState({ activeTab: data.data });
+        break;
+      case 'search':
+        this.setState({ searchText: data.data });
+        break;
+      case 'portfolio':
+        this.setState({ openMainFilter: false, openPortfolioFilter: true });
+        break;
+      case 'order':
+        this.setState({ openMainFilter: false, openOrderFilter: true });
+        break;
+      case 'date':
+        this.setState({ openMainFilter: false, openDateFilter: true });
+        break;
+      case 'addPortfolio':
+        this.setState({
+          openMainFilter: true,
+          openPortfolioFilter: false,
+          portfolio: data.data
+        });
+        break;
+      case 'doFilter':
+        this.setState({
+          openMainFilter: false,
+          startDate: data.data.startDate,
+          endDate: data.data.endDate,
+          portfolioId: data.data.portfolio,
+          dateFilter: data.data.dateFilter,
+          order: data.data.order
+        });
+        break;
+      case 'dateType':
+        this.setState({
+          typeDate: data.data,
+          openDateSelect: true,
+          openDateFilter: false
+        });
+        break;
+      case 'datePicker':
+        this.setState({ openDateSelect: false, openDateFilter: true });
+        if (this.state.typeDate === 'startDate') {
+          this.setState({ startDate: data.data, endDate: '' });
+        } else {
+          this.setState({ endDate: data.data });
+        }
+        break;
+      case 'selectDate':
+        if (data.data.type === 'selectedDate') {
+          this.setState({ openDateFilter: false, openMainFilter: true });
+        }
+        this.setState({
+          startDate: data.data.startDate,
+          endDate: data.data.endDate
+        });
+        break;
+      case 'orderFilter':
+        this.setState({
+          openMainFilter: false,
+          openOrderFilter: false,
+          order: data.data
+        });
+        break;
+      default:
+        break;
     }
   }
   /** SAVE DATE FILTER */
@@ -150,6 +184,7 @@ class HistoryView extends Component {
             search={this.state.searchText}
             dateFilter={this.state.dateFilter}
             portfolio={this.state.portfolioId}
+            order={this.state.order}
           />
         ) : (
           <HistoryOrderView
@@ -158,6 +193,7 @@ class HistoryView extends Component {
             search={this.state.searchText}
             dateFilter={this.state.dateFilter}
             portfolio={this.state.portfolioId}
+            order={this.state.order}
           />
         )}
       </View>
@@ -231,6 +267,28 @@ class HistoryView extends Component {
             portfolio={this.state.portfolio}
             dateGte={this.state.startDate}
             dateLte={this.state.endDate}
+            order={this.state.order}
+            onRef={ref => (this.parentFunction = ref)}
+            parentFunction={this.parentFunction.bind(this)}
+          />
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
+
+  renderModalFilterOrder() {
+    return this.state.openOrderFilter ? (
+      <ModalBottomType4
+        open={this.state.openOrderFilter}
+        title={'Filter'}
+        close={() =>
+          this.setState({ openMainFilter: true, openOrderFilter: false })
+        }
+        content={
+          <HistoryOrderFilterView
+            order={this.state.order.userId}
             onRef={ref => (this.parentFunction = ref)}
             parentFunction={this.parentFunction.bind(this)}
           />
@@ -322,6 +380,7 @@ class HistoryView extends Component {
         {this.renderModalFitlerPortfolio()}
         {this.renderModalFitlerDate()}
         {this.renderModalSelectDate()}
+        {this.renderModalFilterOrder()}
       </View>
     );
   }
@@ -347,8 +406,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ merchant, permanent }) => {
-  return { merchant, permanent };
+const mapStateToProps = ({ merchant, permanent, user }) => {
+  return { merchant, permanent, user };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -359,14 +418,14 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(HistoryView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

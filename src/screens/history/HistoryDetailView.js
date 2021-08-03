@@ -636,6 +636,7 @@ class HistoryDetailView extends Component {
           {this.renderProductList()}
           {this.renderDeletedProductList()}
           {this.renderBonusProductList()}
+          {this.renderDeletedProductList()}
           {this.renderDeliveryDetail()}
           {this.state.section === 'order' ? (
             this.renderPaymentInformation()
@@ -878,9 +879,7 @@ class HistoryDetailView extends Component {
   /** RENDER BONUS PRODUCT LIST */
   renderBonusProductList() {
     return this.props.history.dataDetailHistory.bonusCatalogues.length !== 0 ? (
-      <HistoryBonusProductList
-        data={this.props.history.dataDetailHistory.bonusCatalogues}
-      />
+      <HistoryBonusProductList data={this.props.history.dataDetailHistory} />
     ) : (
       <View />
     );
