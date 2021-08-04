@@ -5,26 +5,34 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text
-} from '../../library/reactPackage'
+} from '../../../library/reactPackage';
 import {
   bindActionCreators,
   MaterialIcon,
   connect
-} from '../../library/thirdPartyPackage'
+} from '../../../library/thirdPartyPackage';
 import {
   StatusBarBlackOP40,
   ButtonSingle,
   SkeletonType6
-} from '../../library/component'
-import { GlobalStyle, Fonts } from '../../helpers'
-import * as ActionCreators from '../../state/actions';
-import masterColor from '../../config/masterColor.json';
+} from '../../../library/component';
+import { GlobalStyle, Fonts } from '../../../helpers';
+import * as ActionCreators from '../../../state/actions';
+import masterColor from '../../../config/masterColor.json';
 
-class HistoryPortfolioFilterView extends Component {
+class HistoryOrderFilterView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      portfolio: this.props.portfolio
+      orderFilter: [
+        {
+          userId: '',
+          name: 'Semua'
+        }
+      ],
+      portfolio: this.props.portfolio,
+      orderBySelected: null,
+      selectedUserId: this.props.order
     };
   }
   /**
@@ -33,25 +41,28 @@ class HistoryPortfolioFilterView extends Component {
    * =======================
    */
   componentDidMount() {
-    this.props.portfolioGetProcessV2(this.props.user.id);
+    this.getSalesName();
+  }
+
+  getSalesName() {
+    let orderFilter = this.state.orderFilter;
+    const salesName = {
+      userId: this.props.user.id,
+      name: this.props.user.fullName
+    };
+    orderFilter.push(salesName);
+    this.setState({ orderFilter, order: orderFilter });
   }
 
   parentFunction() {
     this.props.parentFunction({
-      type: 'addPortfolio',
-      data: this.state.portfolio
+      type: 'orderFilter',
+      data: this.state.orderBySelected
     });
   }
 
-  addPortfolio(item) {
-    const portfolio = this.state.portfolio;
-    const index = this.state.portfolio.indexOf(item.id);
-    if (index > -1) {
-      portfolio.splice(index, 1);
-    } else {
-      portfolio.push(item.id);
-    }
-    this.setState({ portfolio });
+  addOrderFilter(item) {
+    this.setState({ selectedUserId: item.userId, orderBySelected: item });
   }
   /**
    * ========================
@@ -63,11 +74,11 @@ class HistoryPortfolioFilterView extends Component {
     return <SkeletonType6 />;
   }
   /** RENDER CONTENT PORTFOLIO */
-  renderPortfolio() {
-    return this.props.merchant.dataGetPortfolioV2.map((item, index) => {
+  renderOrder() {
+    return this.state.orderFilter.map((item, index) => {
       return (
         <View key={index}>
-          <TouchableOpacity onPress={() => this.addPortfolio(item)}>
+          <TouchableOpacity onPress={() => this.addOrderFilter(item)}>
             <View
               style={{
                 flexDirection: 'row',
@@ -90,7 +101,7 @@ class HistoryPortfolioFilterView extends Component {
                 <MaterialIcon
                   name="check-circle"
                   color={
-                    this.state.portfolio.indexOf(item.id) > -1
+                    this.state.selectedUserId === item.userId
                       ? masterColor.mainColor
                       : masterColor.fontBlack40
                   }
@@ -109,11 +120,11 @@ class HistoryPortfolioFilterView extends Component {
     return (
       <View>
         <View style={styles.boxSubTitle}>
-          <Text style={Fonts.type61}>Portfolio</Text>
+          <Text style={Fonts.type61}>Dibuat Oleh</Text>
         </View>
         {!this.props.merchant.loadingGetPortfolio &&
         this.props.merchant.dataGetPortfolioV2 !== null
-          ? this.renderPortfolio()
+          ? this.renderOrder()
           : this.renderSkeleton()}
       </View>
     );
@@ -122,8 +133,6 @@ class HistoryPortfolioFilterView extends Component {
   renderButton() {
     return (
       <ButtonSingle
-        accessible={true}
-        accessibilityLabel={'btnFilterPortfolioTerapkan'}
         disabled={false}
         title={'Terapkan'}
         borderRadius={4}
@@ -166,7 +175,7 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(HistoryPortfolioFilterView);
+)(HistoryOrderFilterView);
 
 /**
  * ============================

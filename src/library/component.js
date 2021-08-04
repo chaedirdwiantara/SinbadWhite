@@ -75,6 +75,7 @@ import ToastType1 from '../components/toast/ToastType1';
 import ProductListType1 from '../components/list/ProductListType1';
 import ProductListType2 from '../components/list/ProductListType2';
 import ProductListType3 from '../components/list/ProductListType3';
+import ProductListType4 from '../components/list/ProductListType4';
 import ProductListType7 from '../components/list/ProductListType7';
 /** EMPTY DATA */
 import ComingSoon from '../components/empty_state/ComingSoon';
@@ -191,6 +192,7 @@ export {
   ProductListType1,
   ProductListType2,
   ProductListType3,
+  ProductListType4,
   ProductListType7,
   /** EMPTY DATA */
   ComingSoon,
