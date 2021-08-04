@@ -279,7 +279,7 @@ class JourneyMapView extends Component {
         onLayout={() =>
           setTimeout(() => {
             if (this.props.journey.dataGetJourneyPlanMapData?.length > 0) {
-              this.mapRef.fitToCoordinates(
+              this.mapMerchantRef.current.fitToCoordinates(
                 [
                   {
                     latitude: this.state.latitude,
