@@ -1,18 +1,7 @@
-import {
-  React,
-  Component,
-  View,
-  StyleSheet
-} from '../../library/reactPackage'
-import {
-  bindActionCreators,
-  connect
-} from '../../library/thirdPartyPackage'
-import {
-  TagListType2,
-  SkeletonType2
-} from '../../library/component'
-import { GlobalStyle } from '../../helpers'
+import { React, Component, View, StyleSheet } from '../../library/reactPackage';
+import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
+import { TagListType2, SkeletonType2 } from '../../library/component';
+import { GlobalStyle } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import HistoryDataListView from './HistoryDataListView';
@@ -55,6 +44,7 @@ class HistoryOrderView extends Component {
               ].status
             : ''
         }
+        order={this.props.order}
       />
     );
   }
@@ -118,14 +108,14 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(HistoryOrderView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

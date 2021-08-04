@@ -40,6 +40,8 @@ class ModalTAndR extends Component {
   renderButton() {
     return (
       <Button
+        accessible={true}
+        accessibilityLabel={'btnCheckoutLanjutkanTandC'}
         disabled={!this.state.tAndRCheck}
         onPress={() => this.props.agreeTAndR(this.props.data)}
         title="Lanjutkan"

@@ -36,6 +36,7 @@ import CountDown from '../../components/CountDown';
 import { timeDiff, toLocalTime } from '../../helpers/TimeHelper';
 import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation';
 import { Color } from '../../config';
+import { BILLING_REFUNDED, BILLING_REFUND_REQUESTED, BILLING_EXPIRED, BILLING_CANCEL, BILLING_PAID} from '../../constants/paymentConstants';
 
 const { width, height } = Dimensions.get('window');
 class HistoryDetailPayment extends Component {
@@ -218,7 +219,11 @@ class HistoryDetailPayment extends Component {
                   />
                 </View>
               ) : (
-                <TouchableOpacity onPress={() => this.goToInvoice()}>
+                <TouchableOpacity
+                  accessible={true}
+                  accessibilityLabel={'btnDetailLihatFaktur'}
+                  onPress={() => this.goToInvoice()}
+                >
                   <Text style={Fonts.type107}>Lihat Faktur</Text>
                 </TouchableOpacity>
               )}
@@ -235,10 +240,14 @@ class HistoryDetailPayment extends Component {
             }}
           >
             <View style={{ flex: 1, alignItems: 'flex-start' }}>
-              <Text style={Fonts.type17}>Nomor Pesanan</Text>
+              <Text style={Fonts.type9}>Nomor Pesanan</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <Text style={Fonts.type17}>
+              <Text
+                accessible={true}
+                accessibilityLabel={'txtDetailNomorPesanan'}
+                style={Fonts.type9}
+              >
                 {this.props.history.dataDetailHistory.orderCode
                   ? this.props.history.dataDetailHistory.orderCode
                   : '-'}
@@ -254,10 +263,14 @@ class HistoryDetailPayment extends Component {
             }}
           >
             <View style={{ flex: 1, alignItems: 'flex-start' }}>
-              <Text style={Fonts.type17}>Nomor Referensi</Text>
+              <Text style={Fonts.type9}>Nomor Referensi</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <Text style={Fonts.type17}>
+              <Text
+                accessible={true}
+                accessibilityLabel={'txtDetailNomorReferensi'}
+                style={Fonts.type9}
+              >
                 {this.props.history.dataDetailHistory.orderRef
                   ? this.props.history.dataDetailHistory.orderRef
                   : '-'}
@@ -330,6 +343,8 @@ class HistoryDetailPayment extends Component {
               </View>
             </View>
             <View
+              accessible={true}
+              accessibilityLabel={'cardDetailVA'}
               style={{
                 paddingHorizontal: 16,
                 paddingBottom: 8,
@@ -490,9 +505,11 @@ class HistoryDetailPayment extends Component {
     const paymentChannelId = this.props.data.paymentChannel.paymentChannelTypeId;
     return (
       <View>
-        {billingStatus !== 'paid' &&
-        billingStatus !== 'expired' &&
-        billingStatus !== 'cancel' ? (
+        {billingStatus !== BILLING_PAID &&
+        billingStatus !== BILLING_EXPIRED &&
+        billingStatus !== BILLING_CANCEL &&
+        billingStatus !== BILLING_REFUND_REQUESTED &&
+        billingStatus !== BILLING_REFUNDED ? (
           <View>
             <View style={GlobalStyle.boxPadding} />
             <View style={GlobalStyle.shadowForBox}>
@@ -649,6 +666,8 @@ class HistoryDetailPayment extends Component {
     // const paymentChannelId = 3;
     return (
       <Tooltip
+        accessible={true}
+        accessibilityLabel={'btnDetailTooltipVa'}
         backgroundColor={Color.fontBlack50OP80}
         height={55}
         withOverlay={false}

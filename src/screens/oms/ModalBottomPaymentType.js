@@ -103,6 +103,8 @@ class ModalBottomPaymentType extends Component {
             <View>{this.renderListPaymentTypeContent(item)}</View>
           ) : (
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel={'btnCheckoutPilihTipePembayaran'}
               onPress={() => this.props.selectPaymentType(item)}
             >
               {this.renderListPaymentTypeContent(item)}

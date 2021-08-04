@@ -32,7 +32,13 @@ class CartGlobal extends Component {
   /** === IF THERE IS DATA IN CART === */
   renderCartNotEmpty() {
     return (
-      <TouchableOpacity onPress={() => this.goToOmsCartView()}>
+      <TouchableOpacity
+        accessible={true}
+        accessibilityLabel={
+          this.props.accessibilityLabel ? this.props.accessibilityLabel : null
+        }
+        onPress={() => this.goToOmsCartView()}
+      >
         <Badge
           value={this.props.oms.dataCart.length}
           containerStyle={styles.badgeContainer}

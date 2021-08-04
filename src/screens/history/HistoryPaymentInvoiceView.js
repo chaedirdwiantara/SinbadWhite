@@ -165,6 +165,8 @@ class HistoryPaymentInvoiceView extends Component {
         <View style={{ flex: 1, alignItems: 'flex-end', marginRight: 16 }}>
           {this.state.loadingDownload === false ? (
             <MaterialIcon
+              accessible={true}
+              accessibilityLabel={'btnDetailDownloadFaktur'}
               onPress={() => this.progressDownload()}
               name="get-app"
               size={24}
