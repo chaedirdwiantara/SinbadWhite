@@ -37,6 +37,8 @@ class ModalBottomPaymentMethod extends Component {
       return itemPaymnetMethod.status !== 'disabled' ? (
         <View key={index}>
           <TouchableOpacity
+            accessible={true}
+            accessibilityLabel={'btnCheckoutMetodePembayaran'}
             style={{
               flexDirection: 'row',
               paddingHorizontal: 20,

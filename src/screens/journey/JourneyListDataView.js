@@ -220,6 +220,8 @@ class JourneyListDataView extends Component {
           )}
         </View>
         <TouchableOpacity
+          accessible={true}
+          accessibilityLabel={'btnJourneyStore'}
           onPress={() => this.goToMerchantDashboard(item.storeName, item)}
           style={{
             paddingHorizontal: 10,

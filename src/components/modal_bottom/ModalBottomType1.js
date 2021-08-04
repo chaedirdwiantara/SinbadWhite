@@ -45,6 +45,10 @@ class ModalBottomType1 extends Component {
   renderButton() {
     return this.props.buttonTitle ? (
       <ButtonSingle
+        accessible={true}
+        accessibilityLabel={
+          this.props.accessibilityLabel ? this.props.accessibilityLabel : null
+        }
         disabled={false}
         title={this.props.buttonTitle}
         borderRadius={4}
