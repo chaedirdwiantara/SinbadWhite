@@ -35,7 +35,12 @@ class ModalBottomWithClose extends Component {
           <View style={GlobalStyle.linesSwipeModal} />
         </View>
         <View style={styles.boxContentTitle}>
-          <TouchableOpacity style={styles.boxClose} onPress={this.props.close}>
+          <TouchableOpacity
+            accessible={true}
+            accessibilityLabel={'btnCloseModalCS'}
+            style={styles.boxClose}
+            onPress={this.props.close}
+          >
             <MaterialIcon
               name="close"
               color={Color.fontBlack50}
