@@ -579,7 +579,13 @@ class OmsCartView extends Component {
     return (
       <View style={[styles.boxAddress, GlobalStyle.shadowBottom]}>
         <View style={styles.boxTitle}>
-          <Text style={Fonts.type48}>Alamat Pengiriman</Text>
+          <Text
+            style={Fonts.type48}
+            accessible={true}
+            accessibilityLabel={'txtCartAlamat'}
+          >
+            Alamat Pengiriman
+          </Text>
         </View>
         <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
         <View style={{ paddingVertical: 10, paddingHorizontal: 16 }}>

@@ -82,6 +82,10 @@ class SearchBarType1 extends Component {
     return (
       <View style={{ flex: 1 }}>
         <TextInput
+          accessible={true}
+          accessibilityLabel={
+            this.props.accessibilityLabel ? this.props.accessibilityLabel : null
+          }
           editable={
             this.props.editable !== undefined ? this.props.editable : true
           }

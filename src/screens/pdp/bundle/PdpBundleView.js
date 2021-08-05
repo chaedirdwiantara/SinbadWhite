@@ -243,6 +243,7 @@ class PdpBundleView extends Component {
     return (
       <ButtonSingle
         title={this.buttonTitle()}
+        accessibilityLabel={'btnPdpAddtoCart'}
         borderRadius={4}
         disabled={this.buttonDisabled()}
         disabledGrey

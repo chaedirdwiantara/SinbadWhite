@@ -126,7 +126,11 @@ class HistoryFilterView extends Component {
           }}
         >
           <View>
-            <Text style={[Fonts.type42, { marginBottom: 5 }]}>
+            <Text
+              accessible={true}
+              accessibilityLabel={'txtModalFilter'}
+              style={[Fonts.type42, { marginBottom: 5 }]}
+            >
               Tanggal Order{' '}
             </Text>
             <Text style={Fonts.type23}>

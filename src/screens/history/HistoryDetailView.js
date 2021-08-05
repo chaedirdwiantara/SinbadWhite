@@ -338,7 +338,11 @@ class HistoryDetailView extends Component {
   renderHeaderStatus() {
     return (
       <View style={{ margin: 16 }}>
-        <TouchableWithoutFeedback onPress={() => this.goToDetailStatus()}>
+        <TouchableWithoutFeedback 
+          accessible={true}
+          accessibilityLabel={'btnHistoryDetailTabStatus'}
+          onPress={() => this.goToDetailStatus()}
+        >
           <View
             style={[
               GlobalStyle.shadowForBox,
