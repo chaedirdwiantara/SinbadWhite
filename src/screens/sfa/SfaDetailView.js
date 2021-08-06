@@ -39,7 +39,7 @@ function SfaDetailView(props) {
    * =======================
    */
   const addCollection = () => {
-    NavigationService.navigate('SfaAddTagihanView', {data: dataSfaGetDetail.data})
+    NavigationService.navigate('SfaCollectionMethodListView');
   }
 
   useEffect(() => {

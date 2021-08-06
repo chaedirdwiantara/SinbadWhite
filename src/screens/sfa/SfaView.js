@@ -28,7 +28,7 @@ import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
-import SfaCollectionListView from './SfaCollectionListView';
+import SfaInvoiceListView from './SfaInvoiceListView';
 import { ScrollView } from 'react-native-gesture-handler';
 import {
   sfaGetCollectionListProcess,
@@ -124,7 +124,7 @@ const SfaView = props => {
         {loadingGetCollectionList ? (
           renderSkeletonList()
         ) : (
-          <SfaCollectionListView
+          <SfaInvoiceListView
             dataList={dataGetCollectionList}
             status={dataGetCollectionStatus}
             loadmore={onHandleLoadMore}

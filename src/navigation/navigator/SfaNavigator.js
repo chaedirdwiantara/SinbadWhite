@@ -8,6 +8,8 @@ import SfaAddTagihanView from '../../screens/sfa/SfaAddTagihanView';
 import SfaCollectionLog from '../../screens/sfa/SfaCollectionLog';
 import SfaCollectionDetailView, {DetailHeaderOption} from '../../screens/sfa/SfaCollectionDetailView';
 import SfaEditCollectionView from '../../screens/sfa/SfaEditCollectionView';
+import SfaCollectionMethodListView from '../../screens/sfa/SfaCollectionMethodListView';
+import SfaCollectionListView from '../../screens/sfa/SfaCollectionListView';
 const SfaNavigator = {
   SfaView: {
     screen: SfaView,
@@ -87,6 +89,44 @@ const SfaNavigator = {
     screen: SfaEditCollectionView,
     navigationOptions: {
       header: null
+    }
+  },
+  SfaCollectionMethodListView: {
+    screen: SfaCollectionMethodListView,
+    navigationOptions: {
+      headerTitle: 'Metode Penagihan',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'left',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.fontBlack50,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  SfaCollectionListView: {
+    screen: SfaCollectionListView,
+    navigationOptions: {
+      headerTitle: 'Daftar Penagihan',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'left',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.fontBlack50,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
     }
   },
 };
