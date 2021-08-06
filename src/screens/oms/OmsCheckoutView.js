@@ -536,9 +536,13 @@ class OmsCheckoutView extends Component {
       activityName: 'order',
       orderId
     });
-    NavigationService.navigate('MerchantHomeView', {
-      storeName
-    });
+
+    // delay 500ms make sure order activity send before change screen
+    setTimeout(() => {
+      NavigationService.navigate('MerchantHomeView', {
+        storeName
+      });
+    }, 500);
   }
   /**
    * ======================
