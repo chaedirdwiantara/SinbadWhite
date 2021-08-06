@@ -176,11 +176,11 @@ const SfaView = props => {
         <View style={styles.footer}>
           {!loadingGetCollectionList && dataGetCollectionList ? (
             <View style={{ flexDirection: 'row' }}>
-              <View style={{marginRight:4}}>
-                <Text style={[Fonts.type47, styles.textLeft]}>Total Faktur</Text>
-                <Text  style={[Fonts.type47, styles.textLeft]}>Total Tagihan</Text>
-                <Text  style={[Fonts.type47, styles.textLeft]}>Total Terbayar</Text>
-                <Text style={[Fonts.type47]}>Total Sisa Tagihan</Text>
+              <View style={{marginRight:24}}>
+                <Text style={[Fonts.type47, styles.textRight]}>Total Faktur</Text>
+                <Text style={[Fonts.type47, styles.textRight]}>Total Sisa Tagihan</Text>
+                {/* <Text style={[Fonts.type47, styles.textRight]}>Total Terbayar</Text> */}
+                <Text style={[Fonts.type47, styles.textRight]}>Total Sisa Tagihan Overdue</Text>
               </View>
               <View>
                 <Text style={[Fonts.type28, styles.textRight]}>
@@ -189,9 +189,9 @@ const SfaView = props => {
                 <Text style={[Fonts.type28, styles.textRight]}>
                   {MoneyFormat(dataGetCollectionList.data.totalInvoiceAmount)}
                 </Text>
-                <Text style={[Fonts.type28, styles.textRight]}>
+                {/* <Text style={[Fonts.type28, styles.textRight]}>
                   {MoneyFormat(dataGetCollectionList.data.totalAmountPaid)}
-                </Text>
+                </Text> */}
                 <Text style={[Fonts.type28, styles.textRight]}>
                   {MoneyFormat(
                     dataGetCollectionList.data.totalOutstandingAmount

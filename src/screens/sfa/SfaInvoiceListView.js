@@ -9,7 +9,7 @@ import {
   FlatList
 } from '../../library/reactPackage';
 import { LoadingLoadMore } from '../../library/component';
-import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
+import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { moment } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
@@ -81,70 +81,105 @@ function SfaInvoiceListView(props) {
     );
   };
 
+  /** === RENDER ITEM (STATUS PAYMENT) === */
+  const renderItemStatusPayment = (status_payment) => {
+    let textStyle = Fonts.type67;
+    let colorStyle = masterColor.fontBlack05;
+    switch (status_payment) {
+      case 'overdue':
+        textStyle = Fonts.type14;
+        colorStyle = masterColor.fontRed10;
+        break;
+      case 'waiting_for_payment':
+        textStyle = Fonts.type109p;
+        colorStyle = masterColor.fontYellow10;
+        break;
+      default:
+        break;
+    }
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        <View
+          style={{
+            backgroundColor: colorStyle,
+            marginLeft: 15,
+            paddingHorizontal: 8,
+            paddingVertical: 4,
+            borderRadius: 4,
+            flexDirection: 'row'
+          }}
+        >
+          <Text style={{ ...textStyle, textAlign: 'right' }}>
+            {statusPayment(status_payment)}
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
   const renderItem = ({ item, index }) => {
-    const delivery = moment(new Date(item.deliveredDate)).format('Do MMM YYYY');
+    // const delivery = moment(new Date(item.deliveredDate)).format('Do MMM YYYY');
     const dueDate = moment(new Date(item.dueDate)).format('Do MMM YYYY');
     return (
       <View style={styles.listContainer}>
-        <View style={styles.view1}>
+        <TouchableOpacity
+          onPress={() =>
+            NavigationService.navigate('SfaDetailView', {
+              orderParcelId: item.id
+            })
+          }
+        >
+          <View style={styles.view1}>
           <View style={{ flex: 1 }}>
             <Text style={Fonts.type48}>{item.invoiceGroupName}</Text>
           </View>
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
-            <Text style={[Fonts.type22, { marginBottom: 8 }]}>
-              {statusPayment(item.statusPayment)}
-            </Text>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={Fonts.type17}>Total: </Text>
-              <Text style={Fonts.type37}>
-                {MoneyFormat(item.invoiceAmount)}
-              </Text>
-            </View>
+            { renderItemStatusPayment(item.statusPayment) }
           </View>
         </View>
+        </TouchableOpacity>
         <View style={GlobalStyle.lines} />
         <View style={styles.view2}>
           <View style={{ flex: 1 }}>
             <Text style={[Fonts.type17, { marginBottom: 8 }]}>
-              {item.orderCode}
+              Nomor Pesanan
             </Text>
-            <Text style={Fonts.type17}>{item.orderRef}</Text>
+            <Text style={Fonts.type17}>
+              Jatuh Tempo
+            </Text>
           </View>
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
-            <Text style={[Fonts.type17, { marginBottom: 8 }]}>{delivery}</Text>
-            {/* <Text style={Fonts.type17}>{item.orderRef}</Text> */}
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={item.statusPayment === 'overdue'? Fonts.type22 : Fonts.type17}>Jatuh Tempo: </Text>
-              <Text style={item.statusPayment === 'overdue'? Fonts.type22 : Fonts.type17}>{dueDate}</Text>
-            </View>
+            <Text style={[Fonts.type17, { marginBottom: 8 }]}>
+              {item.orderCode}
+            </Text>
+            <Text style={Fonts.type17}>
+              {dueDate}
+            </Text>
           </View>
         </View>
         <View style={GlobalStyle.lines} />
         <View style={styles.view3}>
           <View style={{ flex: 1 }}>
             <Text style={[Fonts.type17, { marginBottom: 8 }]}>
-              Sisa Tagihan
+              Total Tagihan
             </Text>
-            <Text style={Fonts.type109p}>
-              {MoneyFormat(item.outstandingAmount)}
+            <Text style={Fonts.type50}>
+              {MoneyFormatSpace(item.invoiceAmount)}
             </Text>
           </View>
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
-            <TouchableOpacity
-              style={styles.buttonDetail}
-              onPress={() =>
-                NavigationService.navigate('SfaDetailView', {
-                  orderParcelId: item.id
-                })
-              }
-            >
-              <Text style={Fonts.type94}>Detail</Text>
-            </TouchableOpacity>
+            <Text style={[Fonts.type17, { marginBottom: 8 }]}>
+              Sisa Tagihan
+            </Text>
+            <Text style={Fonts.type112py}>
+              {MoneyFormatSpace(item.outstandingAmount)}
+            </Text>
           </View>
         </View>
       </View>
     );
   };
+
   /**
    * =======================
    * MAIN
