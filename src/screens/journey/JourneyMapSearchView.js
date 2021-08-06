@@ -4,15 +4,20 @@ import {
   connect,
   moment
 } from '../../library/thirdPartyPackage';
-import { SearchBarType2 } from '../../library/component';
+import {
+  SearchBarType2,
+  ModalBottomErrorRespons
+} from '../../library/component';
 import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
 import JourneyListSearchView from './JourneyListSearchView';
+import NavigationService from '../../navigation/NavigationService';
 
 class JourneyMapSearchView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      openModalErrorGlobal: false,
       merchant: null,
       search: ''
     };
@@ -69,6 +74,20 @@ class JourneyMapSearchView extends Component {
       journeyPlanGetMapSearchProcess: this.props.journeyPlanGetMapSearchProcess
     });
   }
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    /** error get journey plan map search */
+    if (
+      prevProps.journey.errorGetJourneyPlanMapSearch !==
+      this.props.journey.errorGetJourneyPlanMapSearch
+    ) {
+      if (this.props.journey.errorGetJourneyPlanMapSearch !== null) {
+        this.setState({
+          openModalErrorGlobal: true
+        });
+      }
+    }
+  }
   /** === GET JOURNEY PLAN === */
   getJourneyPlan(search, navigation) {
     const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
@@ -102,10 +121,30 @@ class JourneyMapSearchView extends Component {
   renderJourneyListSearch() {
     return <JourneyListSearchView searchText={this.state.search} />;
   }
+  /** === RENDER MODAL ERROR RESPONSE === */
+  renderModalErrorResponse() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={() =>
+          this.setState({ openModalErrorGlobal: false }, () =>
+            NavigationService.goBack()
+          )
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === MAIN === */
   render() {
     return (
-      <View style={styles.mainContainer}>{this.renderJourneyListSearch()}</View>
+      <View style={styles.mainContainer}>
+        {this.renderJourneyListSearch()}
+        {/* Modal */}
+        {this.renderModalErrorResponse()}
+      </View>
     );
   }
 }

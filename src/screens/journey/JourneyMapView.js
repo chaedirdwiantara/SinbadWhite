@@ -19,6 +19,7 @@ import {
 import {
   ButtonSingleSmall,
   LoadingPage,
+  ModalBottomErrorRespons,
   Address
 } from '../../library/component';
 import { Color } from '../../config';
@@ -41,6 +42,7 @@ class JourneyMapView extends Component {
       merchant: null,
       modalEmpty: false,
       modalFilter: false,
+      openModalErrorGlobal: false,
       filter: 'Semua Toko',
       noGPS: false
     };
@@ -126,11 +128,28 @@ class JourneyMapView extends Component {
           );
       }
     }
+    /** error get journey plan map data */
+    if (
+      prevProps.journey.errorGetJourneyPlanMapData !==
+      this.props.journey.errorGetJourneyPlanMapData
+    ) {
+      if (this.props.journey.errorGetJourneyPlanMapData !== null) {
+        this.doError();
+      }
+    }
   }
   /** === WILL UNMOUNT === */
   componentWillUnmount() {
     this.props.navigation.setParams({
       merchant: null
+    });
+  }
+  /** FOR ERROR FUNCTION (FROM DID UPDATE) */
+  doError() {
+    this.setState({
+      openModalErrorGlobal: true,
+      modalEmpty: false,
+      modalFilter: false
     });
   }
   /** === GET JOURNEY PLAN === */
@@ -591,6 +610,22 @@ class JourneyMapView extends Component {
   //     />
   //   );
   // }
+  /** === RENDER MODAL ERROR RESPONSE === */
+  renderModalErrorResponse() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={() =>
+          this.setState({ openModalErrorGlobal: false }, () =>
+            NavigationService.goBack()
+          )
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === MAIN === */
   render() {
     return (
@@ -606,6 +641,7 @@ class JourneyMapView extends Component {
         {this.renderBottom()}
         {this.renderModalJourneyPlanEmpty()}
         {/* {this.renderModalFilter()} */}
+        {this.renderModalErrorResponse()}
       </View>
     );
   }
@@ -726,4 +762,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyMapView);
  * updatedDate: 06082021
  * updatedFunction:
  * -> add search bar on journey map view.
+ * -> add handle error response.
  */
