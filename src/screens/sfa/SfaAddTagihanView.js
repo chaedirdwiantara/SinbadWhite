@@ -896,7 +896,7 @@ const SfaAddTagihanView = props => {
           }}
         >
           <Text style={[Fonts.type23, { flex: 1 }]}>Total Penagihan</Text>
-          <Text style={[Fonts.type112p, { flex: 1, textAlign: 'right' }]}>
+          <Text style={[Fonts.type116p, { flex: 1, textAlign: 'right' }]}>
             {MoneyFormat(totalCollection)}
           </Text>
         </View>
