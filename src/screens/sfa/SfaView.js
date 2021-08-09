@@ -23,7 +23,7 @@ import {
   SkeletonType26,
   SkeletonType25
 } from '../../library/component';
-import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
+import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
@@ -187,13 +187,13 @@ const SfaView = props => {
                   {dataGetCollectionList.data.totalInvoice}
                 </Text>
                 <Text style={[Fonts.type28, styles.textRight]}>
-                  {MoneyFormat(dataGetCollectionList.data.totalInvoiceAmount)}
+                  {MoneyFormatSpace(dataGetCollectionList.data.totalInvoiceAmount)}
                 </Text>
                 {/* <Text style={[Fonts.type28, styles.textRight]}>
-                  {MoneyFormat(dataGetCollectionList.data.totalAmountPaid)}
+                  {MoneyFormatSpace(dataGetCollectionList.data.totalAmountPaid)}
                 </Text> */}
                 <Text style={[Fonts.type28, styles.textRight]}>
-                  {MoneyFormat(
+                  {MoneyFormatSpace(
                     dataGetCollectionList.data.totalOutstandingAmount
                   )}
                 </Text>
