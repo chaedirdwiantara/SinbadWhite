@@ -19,6 +19,7 @@ import {
 import {
   ButtonSingleSmall,
   LoadingPage,
+  ModalBottomErrorRespons,
   Address
 } from '../../library/component';
 import { Color } from '../../config';
@@ -41,6 +42,7 @@ class JourneyMapView extends Component {
       merchant: null,
       modalEmpty: false,
       modalFilter: false,
+      openModalErrorGlobal: false,
       filter: 'Semua Toko',
       noGPS: false
     };
@@ -85,6 +87,70 @@ class JourneyMapView extends Component {
         }
       }
     }
+    // check params & update the merchant's state
+    if (this.props.navigation.state.params?.merchant) {
+      console.log(this.props);
+      // check oldest params
+      if (!prevProps.navigation.state.params) {
+        this.setState(
+          {
+            merchant: this.props.navigation.state.params.merchant
+          },
+          // set the layout of the map
+          () => {
+            this.mapMerchantRef.current.animateToRegion({
+              latitude: this.state.merchant.latitude,
+              longitude: this.state.merchant.longitude,
+              latitudeDelta: this.state.latitudeDelta,
+              longitudeDelta: this.state.longitudeDelta
+            });
+          }
+        );
+      } else {
+        // check differences between oldest & newest params
+        if (
+          prevProps.navigation.state.params.merchant !==
+          this.props.navigation.state.params.merchant
+        )
+          this.setState(
+            {
+              merchant: this.props.navigation.state.params.merchant
+            },
+            // set the layout of the map
+            () => {
+              this.mapMerchantRef.current.animateToRegion({
+                latitude: this.state.merchant.latitude,
+                longitude: this.state.merchant.longitude,
+                latitudeDelta: this.state.latitudeDelta,
+                longitudeDelta: this.state.longitudeDelta
+              });
+            }
+          );
+      }
+    }
+    /** error get journey plan map data */
+    if (
+      prevProps.journey.errorGetJourneyPlanMapData !==
+      this.props.journey.errorGetJourneyPlanMapData
+    ) {
+      if (this.props.journey.errorGetJourneyPlanMapData !== null) {
+        this.doError();
+      }
+    }
+  }
+  /** === WILL UNMOUNT === */
+  componentWillUnmount() {
+    this.props.navigation.setParams({
+      merchant: null
+    });
+  }
+  /** FOR ERROR FUNCTION (FROM DID UPDATE) */
+  doError() {
+    this.setState({
+      openModalErrorGlobal: true,
+      modalEmpty: false,
+      modalFilter: false
+    });
   }
   /** === GET JOURNEY PLAN === */
   getJourneyPlan() {
@@ -168,6 +234,30 @@ class JourneyMapView extends Component {
    * RENDER VIEW
    * ======================
    */
+  /** === RENDER SEARCH BAR === */
+  renderSearchBar() {
+    return (
+      <View style={styles.searchBarContainer}>
+        <TouchableOpacity
+          onPress={() => NavigationService.navigate('JourneyMapSearchView')}
+          style={[styles.boxSearchBar, GlobalStyle.shadow]}
+        >
+          <View style={{ paddingHorizontal: 11 }}>
+            <MaterialIcon
+              color={Color.fontBlack100}
+              name={'search'}
+              size={24}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <View style={[styles.inputBox]}>
+              <Text style={Fonts.type85}>Cari Nama / ID Toko disini</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  }
   /** === RENDER CURRENT LOCATION === */
   renderCurrentLocation() {
     return (
@@ -520,10 +610,29 @@ class JourneyMapView extends Component {
   //     />
   //   );
   // }
+  /** === RENDER MODAL ERROR RESPONSE === */
+  renderModalErrorResponse() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={() =>
+          this.setState({ openModalErrorGlobal: false }, () =>
+            NavigationService.goBack()
+          )
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === MAIN === */
   render() {
     return (
       <View style={styles.mainContainer}>
+        <View style={{ position: 'absolute', zIndex: 1000, width: '100%' }}>
+          {this.renderSearchBar()}
+        </View>
         {this.props.journey.loadingGetJourneyPlanMapData ||
         this.props.journey.loadingGetJourneyPlan
           ? this.renderLoading()
@@ -532,6 +641,7 @@ class JourneyMapView extends Component {
         {this.renderBottom()}
         {this.renderModalJourneyPlanEmpty()}
         {/* {this.renderModalFilter()} */}
+        {this.renderModalErrorResponse()}
       </View>
     );
   }
@@ -541,6 +651,20 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: Color.backgroundWhite
+  },
+  searchBarContainer: {
+    paddingTop: 16,
+    paddingHorizontal: 16
+  },
+  boxSearchBar: {
+    height: 41,
+    borderRadius: 4,
+    alignItems: 'center',
+    backgroundColor: Color.backgroundWhite,
+    flexDirection: 'row'
+  },
+  inputBox: {
+    paddingVertical: 0
   },
   containerBackButton: {
     justifyContent: 'center',
@@ -635,8 +759,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyMapView);
  * createdBy: dyah
  * createdDate: 28072021
  * updatedBy: dyah
- * updatedDate: 03082021
+ * updatedDate: 06082021
  * updatedFunction:
- * -> change region to initial region on renderMapsContent.
- * -> set ref to mapView on renderMapsContent. (control current location & zoom)
+ * -> add search bar on journey map view.
+ * -> add handle error response.
  */
