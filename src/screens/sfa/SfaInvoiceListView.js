@@ -162,7 +162,7 @@ function SfaInvoiceListView(props) {
             <Text style={[Fonts.type17, { marginBottom: 8 }]}>
               Sisa Tagihan
             </Text>
-            <Text style={Fonts.type112py}>
+            <Text style={Fonts.type113p}>
               {MoneyFormatSpace(item.outstandingAmount)}
             </Text>
           </View>
