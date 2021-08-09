@@ -26,7 +26,7 @@ import { Color } from '../../config';
 import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
-// import ModalBottomFilterList from './ModalBottomFilterList';
+import ModalBottomFilterList from './ModalBottomFilterList';
 import ModalJourneyPlanEmpty from './ModalJourneyPlanEmpty';
 
 const { width, height } = Dimensions.get('window');
@@ -88,8 +88,10 @@ class JourneyMapView extends Component {
       }
     }
     // check params & update the merchant's state
-    if (this.props.navigation.state.params?.merchant) {
-      console.log(this.props);
+    if (
+      this.props.navigation.state.params?.merchant &&
+      !this.props.journey.loadingGetJourneyPlanMapData
+    ) {
       // check oldest params
       if (!prevProps.navigation.state.params) {
         this.setState(
@@ -98,12 +100,10 @@ class JourneyMapView extends Component {
           },
           // set the layout of the map
           () => {
-            this.mapMerchantRef.current.animateToRegion({
-              latitude: this.state.merchant.latitude,
-              longitude: this.state.merchant.longitude,
-              latitudeDelta: this.state.latitudeDelta,
-              longitudeDelta: this.state.longitudeDelta
-            });
+            this.setZoomMap(
+              this.state.merchant.latitude,
+              this.state.merchant.longitude
+            );
           }
         );
       } else {
@@ -118,14 +118,22 @@ class JourneyMapView extends Component {
             },
             // set the layout of the map
             () => {
-              this.mapMerchantRef.current.animateToRegion({
-                latitude: this.state.merchant.latitude,
-                longitude: this.state.merchant.longitude,
-                latitudeDelta: this.state.latitudeDelta,
-                longitudeDelta: this.state.longitudeDelta
-              });
+              this.setZoomMap(
+                this.state.merchant.latitude,
+                this.state.merchant.longitude
+              );
             }
           );
+      }
+    }
+    // check params filter & update the filter's state
+    if (this.props.navigation.state.params?.filter) {
+      // check oldest params
+      if (prevProps.navigation.state.params?.filter) {
+        // check differences between oldest state & params
+        if (this.state.filter !== this.props.navigation.state.params.filter) {
+          this.setState({ filter: 'Semua Toko' });
+        }
       }
     }
     /** error get journey plan map data */
@@ -164,6 +172,22 @@ class JourneyMapView extends Component {
       loading: true
     });
   }
+  /** === GO TO JOURNEY MAP SEARCH VIEW === */
+  goToMapSearch() {
+    this.getJourneyPlan();
+    NavigationService.navigate('JourneyMapSearchView', {
+      mapMerchantRef: this.mapMerchantRef
+    });
+  }
+  /** === CONTROL ZOOM & RADIUS 1KM === */
+  setZoomMap(latitude, longitude) {
+    this.mapMerchantRef.current.animateToRegion({
+      latitude,
+      longitude,
+      latitudeDelta: this.state.latitudeDelta,
+      longitudeDelta: this.state.longitudeDelta
+    });
+  }
   /** === SUCCESS GET CURRENT LOCATION === */
   successMaps = success => {
     this.setState(
@@ -177,12 +201,7 @@ class JourneyMapView extends Component {
           this.mapMerchantRef
         ) {
           // set current location & zoom radius 1km
-          this.mapMerchantRef.current.animateToRegion({
-            latitude: this.state.latitude,
-            longitude: this.state.longitude,
-            latitudeDelta: this.state.latitudeDelta,
-            longitudeDelta: this.state.longitudeDelta
-          });
+          this.setZoomMap(this.state.latitude, this.state.latitude);
         }
       }
     );
@@ -239,7 +258,7 @@ class JourneyMapView extends Component {
     return (
       <View style={styles.searchBarContainer}>
         <TouchableOpacity
-          onPress={() => NavigationService.navigate('JourneyMapSearchView')}
+          onPress={() => this.goToMapSearch()}
           style={[styles.boxSearchBar, GlobalStyle.shadow]}
         >
           <View style={{ paddingHorizontal: 11 }}>
@@ -514,7 +533,7 @@ class JourneyMapView extends Component {
         {this.renderButtonBackAndLocation()}
         <View style={styles.modalBottom}>
           <View style={styles.topModalBottom}>
-            {/* {this.renderFilter()} */}
+            {this.renderFilter()}
             <View />
             <Text style={Fonts.type8}>
               Terdapat {this.props.journey.dataGetJourneyPlanMapData?.length}{' '}
@@ -600,16 +619,16 @@ class JourneyMapView extends Component {
     );
   }
   /** === RENDER MODAL FILTER JOURNEY PLAN === */
-  // renderModalFilter() {
-  //   return (
-  //     <ModalBottomFilterList
-  //       open={this.state.modalFilter}
-  //       filter={this.state.filter}
-  //       close={() => this.setState({ modalFilter: false })}
-  //       save={filter => this.setState({ modalFilter: false, filter })}
-  //     />
-  //   );
-  // }
+  renderModalFilter() {
+    return (
+      <ModalBottomFilterList
+        open={this.state.modalFilter}
+        filter={this.state.filter}
+        close={() => this.setState({ modalFilter: false })}
+        save={filter => this.setState({ modalFilter: false, filter })}
+      />
+    );
+  }
   /** === RENDER MODAL ERROR RESPONSE === */
   renderModalErrorResponse() {
     return this.state.openModalErrorGlobal ? (
@@ -640,7 +659,7 @@ class JourneyMapView extends Component {
         {/* MODAL */}
         {this.renderBottom()}
         {this.renderModalJourneyPlanEmpty()}
-        {/* {this.renderModalFilter()} */}
+        {this.renderModalFilter()}
         {this.renderModalErrorResponse()}
       </View>
     );
@@ -759,8 +778,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyMapView);
  * createdBy: dyah
  * createdDate: 28072021
  * updatedBy: dyah
- * updatedDate: 06082021
+ * updatedDate: 09082021
  * updatedFunction:
- * -> add search bar on journey map view.
- * -> add handle error response.
+ * -> add modal filter on journey map view.
+ * -> add function to control zoom & radius 1km.
  */

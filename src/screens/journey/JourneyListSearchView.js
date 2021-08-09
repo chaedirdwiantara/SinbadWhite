@@ -70,7 +70,10 @@ class JourneyListSearchView extends Component {
   /** back to map */
   backToMap(data) {
     // back to map with params
-    NavigationService.navigate('JourneyMapView', { merchant: data });
+    NavigationService.navigate('JourneyMapView', {
+      merchant: data,
+      filter: 'Semua Toko'
+    });
   }
   /**
    * =====================
@@ -282,9 +285,8 @@ export default connect(
  * ============================
  * createdBy: dyah
  * createdDate: 06082021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 09082021
  * updatedFunction:
- * -> create list for search journey plan on map.
- *
+ * -> sent params filter to journey map view.
  */
