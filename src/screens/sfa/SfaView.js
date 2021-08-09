@@ -127,6 +127,7 @@ const SfaView = props => {
           <SfaInvoiceListView
             dataList={dataGetCollectionList}
             status={dataGetCollectionStatus}
+            searchText={searchText}
             loadmore={onHandleLoadMore}
             refersh={onHandleRefresh}
           />
@@ -266,7 +267,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingHorizontal: 24,
-    paddingVertical: 16
+    paddingVertical: 16,
+    backgroundColor: masterColor.backgroundWhite
     // position:'absolute'
     // display: 'flex',
     // flexDirection: 'row'

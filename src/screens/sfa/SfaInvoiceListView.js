@@ -62,7 +62,17 @@ function SfaInvoiceListView(props) {
               />
             ) : (
               <View style={{ marginTop: '20%' }}>
-                <SfaNoDataView />
+                {
+                  props.searchText !== '' ? (
+                    <SfaNoDataView/>
+                  ) : (
+                    <SfaNoDataView 
+                      topText='Belum ada tagihan'
+                      midText='Yuk belanja kebutuhanmu sekarang di Sinbad'
+                      bottomText=''
+                    />
+                  ) 
+                }
               </View>
             )}
           </View>
@@ -112,61 +122,61 @@ function SfaInvoiceListView(props) {
     // const delivery = moment(new Date(item.deliveredDate)).format('Do MMM YYYY');
     const dueDate = moment(new Date(item.dueDate)).format('Do MMM YYYY');
     return (
-      <View style={styles.listContainer}>
-        <TouchableOpacity
-          onPress={() =>
-            NavigationService.navigate('SfaDetailView', {
-              orderParcelId: item.id
-            })
-          }
-        >
-          <View style={styles.view1}>
-          <View style={{ flex: 1 }}>
-            <Text style={Fonts.type48}>{item.invoiceGroupName}</Text>
+        <View style={styles.listContainer}>
+          <TouchableOpacity
+            onPress={() =>
+              NavigationService.navigate('SfaDetailView', {
+                orderParcelId: item.id
+              })
+            }
+          >
+            <View style={styles.view1}>
+            <View style={{ flex: 1 }}>
+              <Text style={Fonts.type48}>{item.invoiceGroupName}</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              { renderItemStatusPayment(item.statusPayment) }
+            </View>
           </View>
-          <View style={{ flex: 1, alignItems: 'flex-end' }}>
-            { renderItemStatusPayment(item.statusPayment) }
+          <View style={GlobalStyle.lines} />
+          <View style={styles.view2}>
+            <View style={{ flex: 1 }}>
+              <Text style={[Fonts.type17, { marginBottom: 8 }]}>
+                Nomor Pesanan
+              </Text>
+              <Text style={Fonts.type17}>
+                Jatuh Tempo
+              </Text>
+            </View>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              <Text style={[Fonts.type17, { marginBottom: 8 }]}>
+                {item.orderCode}
+              </Text>
+              <Text style={Fonts.type17}>
+                {dueDate}
+              </Text>
+            </View>
           </View>
-        </View>
+          <View style={GlobalStyle.lines} />
+          <View style={styles.view3}>
+            <View style={{ flex: 1 }}>
+              <Text style={[Fonts.type17, { marginBottom: 8 }]}>
+                Total Tagihan
+              </Text>
+              <Text style={Fonts.type50}>
+                {MoneyFormatSpace(item.invoiceAmount)}
+              </Text>
+            </View>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              <Text style={[Fonts.type17, { marginBottom: 8 }]}>
+                Sisa Tagihan
+              </Text>
+              <Text style={Fonts.type113p}>
+                {MoneyFormatSpace(item.outstandingAmount)}
+              </Text>
+            </View>
+          </View>
         </TouchableOpacity>
-        <View style={GlobalStyle.lines} />
-        <View style={styles.view2}>
-          <View style={{ flex: 1 }}>
-            <Text style={[Fonts.type17, { marginBottom: 8 }]}>
-              Nomor Pesanan
-            </Text>
-            <Text style={Fonts.type17}>
-              Jatuh Tempo
-            </Text>
-          </View>
-          <View style={{ flex: 1, alignItems: 'flex-end' }}>
-            <Text style={[Fonts.type17, { marginBottom: 8 }]}>
-              {item.orderCode}
-            </Text>
-            <Text style={Fonts.type17}>
-              {dueDate}
-            </Text>
-          </View>
-        </View>
-        <View style={GlobalStyle.lines} />
-        <View style={styles.view3}>
-          <View style={{ flex: 1 }}>
-            <Text style={[Fonts.type17, { marginBottom: 8 }]}>
-              Total Tagihan
-            </Text>
-            <Text style={Fonts.type50}>
-              {MoneyFormatSpace(item.invoiceAmount)}
-            </Text>
-          </View>
-          <View style={{ flex: 1, alignItems: 'flex-end' }}>
-            <Text style={[Fonts.type17, { marginBottom: 8 }]}>
-              Sisa Tagihan
-            </Text>
-            <Text style={Fonts.type113p}>
-              {MoneyFormatSpace(item.outstandingAmount)}
-            </Text>
-          </View>
-        </View>
       </View>
     );
   };
