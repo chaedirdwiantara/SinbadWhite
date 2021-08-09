@@ -19,6 +19,7 @@ import {
   LoadingLoadMore,
   Address,
   SearchBarType1,
+  EmptyDataType2,
   EmptyData
 } from '../../library/component'
 import { GlobalStyle, Fonts } from '../../helpers'
@@ -372,7 +373,13 @@ class JourneyListDataView extends Component {
   }
   /** === RENDER EMPTY === */
   renderEmpty() {
-    return (
+    return this.props.searchText.length > 0 ? (
+      <EmptyDataType2
+        top
+        title={'Pencarian Tidak Ditemukan'}
+        description={'Cek kembali nama toko atau ID toko yang kamu masukkan'}
+      />
+    ) : (
       <EmptyData
         title={'Journey Plan Kosong'}
         description={
@@ -466,8 +473,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 02082021
+ * updatedDate: 09082021
  * updatedFunction:
- * -> update icon when not visit the store.
+ * -> update image when didn't find the store when searching.
  *
  */
