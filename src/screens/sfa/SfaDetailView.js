@@ -151,7 +151,7 @@ function SfaDetailView(props) {
         <View style={[GlobalStyle.lines, { flex: 1, marginBottom: 8 }]} />
 
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text style={Fonts.type17}>Pembayaran Dari Toko</Text>
+          <Text style={Fonts.type17}>Pembayaran dari Toko</Text>
           <Text style={Fonts.type17}>{MoneyFormat(detailSfa.totalInStorePayment)}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
@@ -185,7 +185,7 @@ function SfaDetailView(props) {
     return(
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text style={Fonts.type17}>Outstanding</Text>
+          <Text style={Fonts.type17}>Sisa Tagihan</Text>
           <Text style={Fonts.type22}>{MoneyFormat(dataSfaGetDetail.data.remainingBilling)}</Text>
         </View>
       </View>
@@ -208,7 +208,7 @@ function SfaDetailView(props) {
       return(
         <View>
           <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-            <Text style={Fonts.type17}>{`Total Barang (${dataSfaGetDetail.data.parcelQty})`}</Text>
+            <Text style={Fonts.type17}>{`Sub-Total (${dataSfaGetDetail.data.parcelQty})`}</Text>
             <Text style={Fonts.type17}>{MoneyFormat(dataSfaGetDetail.data.parcelGrossPrice)}</Text>
           </View>
           {
