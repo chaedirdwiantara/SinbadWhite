@@ -662,38 +662,7 @@ const styles = StyleSheet.create({
     fontSize: 9,
     lineHeight: 14,
     color: Color.mainColor
-  },
-  type109p: {
-    fontFamily: Fonts.MontserratBold,
-    fontSize: 11,
-    lineHeight: 13,
-    color: Color.mainColor
-  },
-  type110p: {
-    fontFamily: Fonts.MontserratSemiBold,
-    fontSize: 10,
-    lineHeight: 14,
-    color: Color.fontYellow50
-  },
-  type111p: {
-    fontFamily: Fonts.MontserratSemiBold,
-    fontSize: 10,
-    lineHeight: 14,
-    color: Color.fontRed50
-  },
-  type112p: {
-    fontFamily: Fonts.MontserratBold,
-    fontSize: 14,
-    lineHeight: 17,
-    color: Color.fontRed50
-  },
-  type117p: {
-    fontFamily: Fonts.MontserratBold,
-    fontSize: 10,
-    lineHeight: 13,
-    color: Color.fontBlack50
-  },
-  type109p: {
+  },type109p: {
     fontFamily: Fonts.MontserratMedium,
     fontSize: 10,
     lineHeight: 13,
@@ -716,6 +685,36 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 13,
     color: Color.fontBlack40
+  },
+  type113p: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 11,
+    lineHeight: 13,
+    color: Color.mainColor
+  },
+  type114p: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 10,
+    lineHeight: 14,
+    color: Color.fontYellow50
+  },
+  type115p: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 10,
+    lineHeight: 14,
+    color: Color.fontRed50
+  },
+  type116p: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 14,
+    lineHeight: 17,
+    color: Color.fontRed50
+  },
+  type117p: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 10,
+    lineHeight: 13,
+    color: Color.fontBlack50
   },
   forCompare: {
     fontFamily: Fonts.MontserratBold,
