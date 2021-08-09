@@ -99,16 +99,7 @@ function SfaInvoiceListView(props) {
     }
     return (
       <View style={{ flexDirection: 'row' }}>
-        <View
-          style={{
-            backgroundColor: colorStyle,
-            marginLeft: 15,
-            paddingHorizontal: 8,
-            paddingVertical: 4,
-            borderRadius: 4,
-            flexDirection: 'row'
-          }}
-        >
+        <View style={{ ...styles.view1Status, backgroundColor: colorStyle }} >
           <Text style={{ ...textStyle, textAlign: 'right' }}>
             {statusPayment(status_payment)}
           </Text>
@@ -214,6 +205,13 @@ const styles = StyleSheet.create({
   view1: {
     paddingBottom: 8,
     display: 'flex',
+    flexDirection: 'row'
+  },
+  view1Status: {
+    marginLeft: 15,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
     flexDirection: 'row'
   },
   view2: {

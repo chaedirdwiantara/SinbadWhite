@@ -34,119 +34,32 @@ import {
           <View style={styles.boxContent}>
             <View>
               <SkeletonPlaceholder>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <View
-                    style={{
-                      height: 10,
-                      width: '30%',
-                      borderRadius: 10
-                    }}
-                  />
-                  <View
-                    style={{
-                      height: 10,
-                      width: '35%',
-                      borderRadius: 10
-                    }}
-                  />
+                <View style={{ ...boxSkeleton }} >
+                  <View style={{ ...boxSkeletonDetail, width: '30%', }} />
+                  <View style={{ ...boxSkeletonDetail, width: '35%' }} />
                 </View>
               </SkeletonPlaceholder>
             </View>
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             <SkeletonPlaceholder>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <View
-                  style={{
-                    height: 10,
-                    width: '35%',
-                    borderRadius: 10
-                  }}
-                />
-                <View
-                  style={{
-                    height: 10,
-                    width: '25%',
-                    borderRadius: 10
-                  }}
-                />
+              <View style={{ ...boxSkeleton }} >
+                <View style={{ ...boxSkeletonDetail, width: '35%', }} />
+                <View style={{ ...boxSkeletonDetail, width: '25%', }} />
               </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 5
-                }}
-              >
-                <View
-                  style={{
-                    height: 10,
-                    width: '30%',
-                    borderRadius: 10
-                  }}
-                />
-                <View
-                  style={{
-                    height: 10,
-                    width: '35%',
-                    borderRadius: 10
-                  }}
-                />
+              <View style={{ ...boxSkeleton, marginTop: 5 }} >
+                <View style={{ ...boxSkeletonDetail, width: '30%', }} />
+                <View style={{ ...boxSkeletonDetail, width: '35%', }} />
               </View>
             </SkeletonPlaceholder>
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             <SkeletonPlaceholder>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <View
-                  style={{
-                    height: 10,
-                    width: '30%',
-                    borderRadius: 10
-                  }}
-                />
-                <View
-                  style={{
-                    height: 10,
-                    width: '30%',
-                    borderRadius: 10
-                  }}
-                />
+              <View style={{ ...boxSkeleton }} >
+                <View style={{ ...boxSkeletonDetail, width: '30%', }} />
+                <View style={{ ...boxSkeletonDetail, width: '30%', }} />
               </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 5
-                }}
-              >
-                <View
-                  style={{
-                    height: 10,
-                    width: '25%',
-                    borderRadius: 10
-                  }}
-                />
-                <View
-                  style={{
-                    height: 10,
-                    width: '25%',
-                    borderRadius: 10
-                  }}
-                />
+              <View style={{ ...boxSkeleton, marginTop: 5 }} >
+                <View style={{ ...boxSkeletonDetail, width: '25%', }} />
+                <View style={{ ...boxSkeletonDetail, width: '25%', }} />
               </View>
             </SkeletonPlaceholder>
           </View>
@@ -181,6 +94,14 @@ import {
     },
     flatListContainer: {
       paddingBottom: 16
+    },
+    boxSkeleton: {
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
+    boxSkeletonDetail: {
+      height: 10,
+      borderRadius: 10
     },
     boxContent: {
       flex: 1,
