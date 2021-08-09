@@ -23,7 +23,7 @@ import {
   SkeletonType26,
   SkeletonType25
 } from '../../library/component';
-import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
+import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
@@ -127,6 +127,7 @@ const SfaView = props => {
           <SfaInvoiceListView
             dataList={dataGetCollectionList}
             status={dataGetCollectionStatus}
+            searchText={searchText}
             loadmore={onHandleLoadMore}
             refersh={onHandleRefresh}
           />
@@ -176,24 +177,24 @@ const SfaView = props => {
         <View style={styles.footer}>
           {!loadingGetCollectionList && dataGetCollectionList ? (
             <View style={{ flexDirection: 'row' }}>
-              <View style={{marginRight:4}}>
-                <Text style={[Fonts.type47, styles.textLeft]}>Total Faktur</Text>
-                <Text  style={[Fonts.type47, styles.textLeft]}>Total Tagihan</Text>
-                <Text  style={[Fonts.type47, styles.textLeft]}>Total Terbayar</Text>
-                <Text style={[Fonts.type47]}>Total Sisa Tagihan</Text>
+              <View style={{marginRight:24}}>
+                <Text style={[Fonts.type47, styles.textRight]}>Total Faktur</Text>
+                <Text style={[Fonts.type47, styles.textRight]}>Total Sisa Tagihan</Text>
+                {/* <Text style={[Fonts.type47, styles.textRight]}>Total Terbayar</Text> */}
+                <Text style={[Fonts.type47, styles.textRight]}>Total Sisa Tagihan Overdue</Text>
               </View>
               <View>
                 <Text style={[Fonts.type28, styles.textRight]}>
                   {dataGetCollectionList.data.totalInvoice}
                 </Text>
                 <Text style={[Fonts.type28, styles.textRight]}>
-                  {MoneyFormat(dataGetCollectionList.data.totalInvoiceAmount)}
+                  {MoneyFormatSpace(dataGetCollectionList.data.totalInvoiceAmount)}
                 </Text>
+                {/* <Text style={[Fonts.type28, styles.textRight]}>
+                  {MoneyFormatSpace(dataGetCollectionList.data.totalAmountPaid)}
+                </Text> */}
                 <Text style={[Fonts.type28, styles.textRight]}>
-                  {MoneyFormat(dataGetCollectionList.data.totalAmountPaid)}
-                </Text>
-                <Text style={[Fonts.type28, styles.textRight]}>
-                  {MoneyFormat(
+                  {MoneyFormatSpace(
                     dataGetCollectionList.data.totalOutstandingAmount
                   )}
                 </Text>
@@ -266,7 +267,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingHorizontal: 24,
-    paddingVertical: 16
+    paddingVertical: 16,
+    backgroundColor: masterColor.backgroundWhite
     // position:'absolute'
     // display: 'flex',
     // flexDirection: 'row'
