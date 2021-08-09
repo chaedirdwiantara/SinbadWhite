@@ -662,6 +662,29 @@ const styles = StyleSheet.create({
     fontSize: 9,
     lineHeight: 14,
     color: Color.mainColor
+  },type109p: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10,
+    lineHeight: 13,
+    color: Color.fontYellow50
+  },
+  type110p: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10,
+    lineHeight: 13,
+    color: Color.fontGreen50
+  },
+  type111p: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 10,
+    lineHeight: 13,
+    color: Color.shadow
+  },
+  type112p: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 10,
+    lineHeight: 13,
+    color: Color.fontBlack40
   },
   type113p: {
     fontFamily: Fonts.MontserratBold,
@@ -692,30 +715,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 13,
     color: Color.fontBlack50
-  },
-  type109p: {
-    fontFamily: Fonts.MontserratMedium,
-    fontSize: 10,
-    lineHeight: 13,
-    color: Color.fontYellow50
-  },
-  type110p: {
-    fontFamily: Fonts.MontserratMedium,
-    fontSize: 10,
-    lineHeight: 13,
-    color: Color.fontGreen50
-  },
-  type111p: {
-    fontFamily: Fonts.MontserratBold,
-    fontSize: 10,
-    lineHeight: 13,
-    color: Color.shadow
-  },
-  type112p: {
-    fontFamily: Fonts.MontserratBold,
-    fontSize: 10,
-    lineHeight: 13,
-    color: Color.fontBlack40
   },
   forCompare: {
     fontFamily: Fonts.MontserratBold,
