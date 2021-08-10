@@ -393,6 +393,26 @@ class MerchantHomeView extends Component {
         this.doError();
       }
     }
+
+    /**
+     * CHECK OVERDUE ORDER STATUS
+     */
+    // IF SUCCESS
+    if (
+      prevProps.oms.dataOMSCheckOverdue !== this.props.oms.dataOMSCheckOverdue
+    ) {
+      if (this.props.oms.dataOMSCheckOverdue !== null) {
+        this.verifyUser();
+      }
+    }
+    // IF FAILED
+    if (
+      prevProps.oms.errorOMSCheckOverdue !== this.props.oms.errorOMSCheckOverdue
+    ) {
+      if (this.props.oms.errorOMSCheckOverdue !== null) {
+        this.doError();
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -453,15 +473,27 @@ class MerchantHomeView extends Component {
       });
     }
   }
+
+  /** FOR VERIFY USER STATUS AND ORDER OVERDUE */
   verifyUser() {
-    // this.setState({ openModalCheckUser: true });
-    this.setState({ openModalOverdue: true });
+    if (
+      this.props.oms.dataOMSCheckOverdue.overdue &&
+      this.props.oms.dataOMSCheckOverdue !== null
+    ) {
+      this.setState({
+        openModalOverdue: true,
+        openModalProgressChecking: false
+      });
+    } else {
+      this.setState({ openModalCheckUser: true });
+    }
   }
   /** === GO TO (MENU PRESS) */
   goTo(page) {
     switch (page) {
       case 'pdp':
-        this.verifyUser();
+        this.setState({ openModalProgressChecking: true });
+        this.props.OMSCheckOverdueProcess();
         break;
       case 'history':
         NavigationService.navigate('HistoryView', {
@@ -1098,7 +1130,8 @@ class MerchantHomeView extends Component {
   }
   /** RENDER MODAL PROGRESS CHECKING */
   renderModalProgressChecking() {
-    return this.state.openModalProgressChecking ? (
+    return this.state.openModalProgressChecking ||
+      this.props.oms.loadingOMSCheckOverdue ? (
       <ModalBottomProgressChecking
         open={this.state.openModalProgressChecking}
         progress={'Mohon tunggu'}
@@ -1443,9 +1476,10 @@ const mapStateToProps = ({
   user,
   permanent,
   profile,
-  privileges
+  privileges,
+  oms
 }) => {
-  return { auth, merchant, user, permanent, profile, privileges };
+  return { auth, merchant, user, permanent, profile, privileges, oms };
 };
 
 const mapDispatchToProps = dispatch => {

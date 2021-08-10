@@ -14,6 +14,7 @@ const INITIAL_STATE = {
   loadingOmsGetPayLaterType: false,
   loadingOmsApplicablePaylater: false,
   loadingOmsPostKurConsent: false,
+  loadingOMSCheckOverdue: false,
   /** data */
   dataOmsGetCartItem: null,
   dataOmsGetCartItemFromCheckout: null,
@@ -28,6 +29,7 @@ const INITIAL_STATE = {
   dataOmsCheckPromo: null,
   dataOmsGetPayLaterType: null,
   dataOmsPostKurConsent: null,
+  dataOMSCheckOverdue: null,
   /** error */
   errorOmsGetCartItem: null,
   errorOmsGetCheckoutItem: null,
@@ -39,7 +41,8 @@ const INITIAL_STATE = {
   errorOmsCheckPromo: null,
   errorOmsGetPayLaterType: null,
   errorOmsApplicablePaylater: null,
-  errorOmsPostKurConsent: null
+  errorOmsPostKurConsent: null,
+  errorOMSCheckOverdue: null
 };
 
 export const oms = createReducer(INITIAL_STATE, {
@@ -498,59 +501,86 @@ export const oms = createReducer(INITIAL_STATE, {
     };
   },
 
-   /**
+  /**
    * ==================================
    * GET KUR OTP
    * =================================
    */
-    [types.OMS_GET_KUR_OTP_PROCESS](state, action) {
-      return {
-        ...state,
-        loadingOmsGetKurOtp: true,
-        dataOmsGetKurOtp: null,
-        errorOmsGetKurOtp: null
-      };
-    },
-    [types.OMS_GET_KUR_OTP_SUCCESS](state, action) {
-      return {
-        ...state,
-        loadingOmsGetKurOtp: false,
-        dataOmsGetKurOtp: action.payload
-      };
-    },
-    [types.OMS_GET_KUR_OTP_FAILED](state, action) {
-      return {
-        ...state,
-        loadingOmsGetKurOtp: false,
-        errorOmsGetKurOtp: action.payload
-      };
-    },
+  [types.OMS_GET_KUR_OTP_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetKurOtp: true,
+      dataOmsGetKurOtp: null,
+      errorOmsGetKurOtp: null
+    };
+  },
+  [types.OMS_GET_KUR_OTP_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetKurOtp: false,
+      dataOmsGetKurOtp: action.payload
+    };
+  },
+  [types.OMS_GET_KUR_OTP_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsGetKurOtp: false,
+      errorOmsGetKurOtp: action.payload
+    };
+  },
 
-    /**
+  /**
    * ==================================
    * POST KUR CONSENT
    * =================================
    */
-     [types.OMS_POST_KUR_CONSENT_PROCESS](state, action) {
-      return {
-        ...state,
-        loadingOmsPostKurConsent: true,
-        dataOmsPostKurConsent: null,
-        errorOmsPostKurConsent: null
-      };
-    },
-    [types.OMS_POST_KUR_CONSENT_SUCCESS](state, action) {
-      return {
-        ...state,
-        loadingOmsPostKurConsent: false,
-        dataOmsPostKurConsent: action.payload
-      };
-    },
-    [types.OMS_POST_KUR_CONSENT_FAILED](state, action) {
-      return {
-        ...state,
-        loadingOmsPostKurConsent: false,
-        errorOmsPostKurConsent: action.payload
-      };
-    },
+  [types.OMS_POST_KUR_CONSENT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsPostKurConsent: true,
+      dataOmsPostKurConsent: null,
+      errorOmsPostKurConsent: null
+    };
+  },
+  [types.OMS_POST_KUR_CONSENT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsPostKurConsent: false,
+      dataOmsPostKurConsent: action.payload
+    };
+  },
+  [types.OMS_POST_KUR_CONSENT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsPostKurConsent: false,
+      errorOmsPostKurConsent: action.payload
+    };
+  },
+  /**
+   * ========================
+   * GET CHECK OVERDUE
+   * ========================
+   */
+  [types.OMS_CHECK_OVERDUE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOMSCheckOverdue: true,
+      dataOMSCheckOverdue: null,
+      errorOMSCheckOverdue: null
+    };
+  },
+  [types.OMS_CHECK_OVERDUE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOMSCheckOverdue: false,
+      dataOMSCheckOverdue: action.payload
+    };
+  },
+  [types.OMS_CHECK_OVERDUE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOMSCheckOverdue: false,
+      errorOMSCheckOverdue: action.data
+    };
+  }
 });

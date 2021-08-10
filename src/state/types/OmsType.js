@@ -77,3 +77,8 @@ export const OMS_GET_KUR_OTP_FAILED = 'OmsGetKurOTPFailed';
 export const OMS_POST_KUR_CONSENT_PROCESS = 'OmsPostKurConsentProcess';
 export const OMS_POST_KUR_CONSENT_SUCCESS = 'OmsPostKurConsentSuccess';
 export const OMS_POST_KUR_CONSENT_FAILED = 'OmsPostKurConsentFailed';
+
+/** CHECK ORDER OVERDUE */
+export const OMS_CHECK_OVERDUE_PROCESS = 'OMSCheckOverdueProcess';
+export const OMS_CHECK_OVERDUE_SUCCESS = 'OMSCheckOverdueSuccess';
+export const OMS_CHECK_OVERDUE_FAILED = 'OMSCheckOverdueFailed';
