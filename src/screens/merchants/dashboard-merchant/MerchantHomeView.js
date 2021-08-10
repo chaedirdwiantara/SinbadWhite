@@ -17,7 +17,6 @@ import {
   moment,
   MaterialIcon,
   RFPercentage,
-  NavigationEvents,
   Button
 } from '../../../library/thirdPartyPackage';
 import {
@@ -26,7 +25,8 @@ import {
   LoadingPage,
   ToastType1,
   ModalConfirmation,
-  ModalBottomErrorRespons
+  ModalBottomErrorRespons,
+  ModalConfirmationType5
 } from '../../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers';
 import { Color } from '../../../config';
@@ -57,6 +57,7 @@ class MerchantHomeView extends Component {
       openModalCheckUser: false,
       openModalProgressChecking: false,
       openModalBeforeCheckIn: false,
+      openModalOverdue: false,
       checkNoOrder: false,
       showToast: false,
       loadingPostForCheckoutNoOrder: false,
@@ -152,18 +153,19 @@ class MerchantHomeView extends Component {
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
     // HIDE TASK BASE ON PRIVILEGE
-    const {checkIn, checkOut, order} = this.state.privileges || {}
-    let newTask = this.state.task
-    if(!checkIn?.status){ // same as (checkIn && !checkIn.status)
-      newTask = newTask.filter(el => el.title !== 'Masuk')
+    const { checkIn, checkOut, order } = this.state.privileges || {};
+    let newTask = this.state.task;
+    if (!checkIn?.status) {
+      // same as (checkIn && !checkIn.status)
+      newTask = newTask.filter(el => el.title !== 'Masuk');
     }
-    if(!checkOut?.status){
-      newTask = newTask.filter(el => el.title !== 'Keluar')
+    if (!checkOut?.status) {
+      newTask = newTask.filter(el => el.title !== 'Keluar');
     }
-    if(!order?.status){
-      newTask = newTask.filter(el => el.title !== 'Order')
+    if (!order?.status) {
+      newTask = newTask.filter(el => el.title !== 'Order');
     }
-    this.setState({task: newTask})
+    this.setState({ task: newTask });
     /** FOR GET PORTFOLIO (FOR PAYLOAD CHECKOUT ORDER) */
     this.props.portfolioGetProcessV2();
     if (this.props.profile.errorGetSalesTeam) {
@@ -272,7 +274,11 @@ class MerchantHomeView extends Component {
         }
       }
       /** FOR GET SURVEY LIST */
-      if (!loadingGetSurveyList && !surveyList.payload.data && !errorGetSurveyList) {
+      if (
+        !loadingGetSurveyList &&
+        !surveyList.payload.data &&
+        !errorGetSurveyList
+      ) {
         this.getSurvey();
       }
     }
@@ -387,6 +393,26 @@ class MerchantHomeView extends Component {
         this.doError();
       }
     }
+
+    /**
+     * CHECK OVERDUE ORDER STATUS
+     */
+    // IF SUCCESS
+    if (
+      prevProps.oms.dataOMSCheckOverdue !== this.props.oms.dataOMSCheckOverdue
+    ) {
+      if (this.props.oms.dataOMSCheckOverdue !== null) {
+        this.verifyUser();
+      }
+    }
+    // IF FAILED
+    if (
+      prevProps.oms.errorOMSCheckOverdue !== this.props.oms.errorOMSCheckOverdue
+    ) {
+      if (this.props.oms.errorOMSCheckOverdue !== null) {
+        this.doError();
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -438,7 +464,7 @@ class MerchantHomeView extends Component {
   /** FOR ERROR FUNCTION (FROM DID UPDATE) */
   doError() {
     /** Close all modal and open modal error respons */
-    if (!this.state.openModalErrorGlobal){
+    if (!this.state.openModalErrorGlobal) {
       this.setState({
         openModalErrorGlobal: true,
         openModalCheckout: false,
@@ -447,11 +473,27 @@ class MerchantHomeView extends Component {
       });
     }
   }
+
+  /** FOR VERIFY USER STATUS AND ORDER OVERDUE */
+  verifyUser() {
+    if (
+      this.props.oms.dataOMSCheckOverdue.overdue &&
+      this.props.oms.dataOMSCheckOverdue !== null
+    ) {
+      this.setState({
+        openModalOverdue: true,
+        openModalProgressChecking: false
+      });
+    } else {
+      this.setState({ openModalCheckUser: true });
+    }
+  }
   /** === GO TO (MENU PRESS) */
   goTo(page) {
     switch (page) {
       case 'pdp':
-        this.setState({ openModalCheckUser: true });
+        this.setState({ openModalProgressChecking: true });
+        this.props.OMSCheckOverdueProcess();
         break;
       case 'history':
         NavigationService.navigate('HistoryView', {
@@ -460,7 +502,7 @@ class MerchantHomeView extends Component {
         break;
       case 'checkIn':
         if (this.props.merchant.dataGetLatestCheckInOut) {
-          return this.setState({ openModalBeforeCheckIn: true })
+          return this.setState({ openModalBeforeCheckIn: true });
         }
         NavigationService.navigate('MerchantCheckinView');
         break;
@@ -471,11 +513,13 @@ class MerchantHomeView extends Component {
           activity: 'check_in'
         });
         if (this.props.merchant.dataGetLogAllActivityV2) {
-          const haveSurvey = _.isEmpty(this.props.merchant.surveyList.payload.data)
+          const haveSurvey = _.isEmpty(
+            this.props.merchant.surveyList.payload.data
+          );
           const surveyHasDone = this.props.merchant.dataGetLogAllActivityV2.find(
             item => item.activityName === 'toko_survey'
-          )
-          const {checkOut} = this.state.privileges
+          );
+          const { checkOut } = this.state.privileges;
           if (haveSurvey || surveyHasDone || checkOut?.status) {
             this.setState({ openModalCheckout: true });
           }
@@ -864,7 +908,8 @@ class MerchantHomeView extends Component {
                   <View>
                     {taskList ? (
                       taskList.activityName === ACTIVITY_JOURNEY_PLAN_ORDER &&
-                      !journeyBookStores.orderStatus && journeyBookStores.noOrderReasonNote.length !== 0 ? (
+                      !journeyBookStores.orderStatus &&
+                      journeyBookStores.noOrderReasonNote.length !== 0 ? (
                         <MaterialIcon
                           // name="check-circle"
                           // name="timelapse"
@@ -903,7 +948,7 @@ class MerchantHomeView extends Component {
                       <View
                         style={{
                           flexDirection: 'row',
-                          justifyContent: 'flex-end',
+                          justifyContent: 'flex-end'
                         }}
                       >
                         <Text style={Fonts.type107}>
@@ -998,7 +1043,7 @@ class MerchantHomeView extends Component {
                         <MaterialIcon
                           style={{
                             marginTop: 2,
-                            padding: 0,
+                            padding: 0
                           }}
                           name="chevron-right"
                           color={Color.fontGreen50}
@@ -1073,7 +1118,7 @@ class MerchantHomeView extends Component {
   }
   /** === RENDER CONTENT ITEM === */
   renderContentItem() {
-    const {order} = this.state.privileges
+    const { order } = this.state.privileges;
     return (
       <View>
         {/* {this.renderData()} */}
@@ -1085,7 +1130,8 @@ class MerchantHomeView extends Component {
   }
   /** RENDER MODAL PROGRESS CHECKING */
   renderModalProgressChecking() {
-    return this.state.openModalProgressChecking ? (
+    return this.state.openModalProgressChecking ||
+      this.props.oms.loadingOMSCheckOverdue ? (
       <ModalBottomProgressChecking
         open={this.state.openModalProgressChecking}
         progress={'Mohon tunggu'}
@@ -1125,15 +1171,15 @@ class MerchantHomeView extends Component {
    * =====================
    */
   renderModalCheckout() {
-    const {order} = this.state.privileges
-    
+    const { order } = this.state.privileges;
+
     return this.state.openModalCheckout ? (
       <ModalBottomMerchantCheckout
         open={this.state.openModalCheckout}
         close={() => this.setState({ openModalCheckout: false })}
         onPress={
           () => {
-            if(order?.status){
+            if (order?.status) {
               this.setState({ checkNoOrder: true });
               this.props.merchantGetLogPerActivityProcessV2({
                 journeyBookStoresId: this.props.merchant.selectedMerchant
@@ -1141,7 +1187,7 @@ class MerchantHomeView extends Component {
                 activity: 'order'
               });
             } else {
-              this.checkoutProcess()
+              this.checkoutProcess();
             }
           }
           // this.props.merchantPostActivityProcess({
@@ -1188,7 +1234,7 @@ class MerchantHomeView extends Component {
         open={this.state.openModalErrorGlobal}
         onPress={() => {
           this.setState({ openModalErrorGlobal: false });
-          if (this.props.merchant.errorGetLogAllActivityV2){
+          if (this.props.merchant.errorGetLogAllActivityV2) {
             return NavigationService.navigate('JourneyView');
           }
         }}
@@ -1216,6 +1262,23 @@ class MerchantHomeView extends Component {
         open={this.state.openModalBeforeCheckIn}
         ok={() => this.setState({ openModalBeforeCheckIn: false })}
       />
+    );
+  }
+  /** RENDER MODAL OVERDUE */
+  renderModalOverdue() {
+    return this.state.openModalOverdue ? (
+      <ModalConfirmationType5
+        title={'Toko Ini Memiliki Transaksi Overdue'}
+        content={
+          'Silahkan konfirmasi kepada toko terkait transaksi tersebut. Anda juga dapat melakukan penagihan.'
+        }
+        okText={'Baik, Mengerti'}
+        ok={() =>
+          this.setState({ openModalOverdue: false, openModalCheckUser: true })
+        }
+      />
+    ) : (
+      <View />
     );
   }
   /** BACKGROUND */
@@ -1248,6 +1311,7 @@ class MerchantHomeView extends Component {
         {this.renderModalVerifyUser()}
         {this.renderModalProgressChecking()}
         {this.renderModalBeforeCheckIn()}
+        {this.renderModalOverdue()}
         <ModalBottomSuccessOrder />
       </SafeAreaView>
     );
@@ -1406,8 +1470,16 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, merchant, user, permanent, profile, privileges }) => {
-  return { auth, merchant, user, permanent, profile, privileges };
+const mapStateToProps = ({
+  auth,
+  merchant,
+  user,
+  permanent,
+  profile,
+  privileges,
+  oms
+}) => {
+  return { auth, merchant, user, permanent, profile, privileges, oms };
 };
 
 const mapDispatchToProps = dispatch => {

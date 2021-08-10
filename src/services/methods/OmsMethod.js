@@ -153,19 +153,27 @@ function getApplicablePaylater(data) {
 function getKurOtp(data) {
   return ApiRest({
     path: `payment/v1/klik-acc/otp?via=phone&storeCode=${data}`,
-    method: 'GET',
+    method: 'GET'
   });
 }
 
 /** POST KUR CONSENT */
 function postKurConsent(data) {
   return ApiRest({
-    path: `payment/v1/consent`,
+    path: 'payment/v1/consent',
     method: 'POST',
     params: {
       storeId: data.storeId,
       timestamp: data.timestamp
     }
+  });
+}
+
+/** GET CHECK OVEDUE */
+function checkOverdue() {
+  return ApiRest({
+    testpath: `https://55e1a5fa-31c2-4825-99f7-a7127ceb6395.mock.pstmn.io/check-overdue?storeId=${GlobalMethod.merchantStoreId()}&supplierId=${GlobalMethod.userSupplierMapping()}`,
+    method: 'GET'
   });
 }
 
@@ -182,5 +190,6 @@ export const OmsMethod = {
   getPayLaterType,
   getApplicablePaylater,
   getKurOtp,
-  postKurConsent
+  postKurConsent,
+  checkOverdue
 };
