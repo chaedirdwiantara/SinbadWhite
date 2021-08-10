@@ -16,7 +16,7 @@ import {
   PENDING
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
-import { ButtonSingle, } from '../../library/component';
+import { ButtonSingle } from '../../library/component';
 const SfaCollectionListView = props => {
   const [refreshing, setRefreshing] = useState(false);
   const data = {
@@ -42,13 +42,16 @@ const SfaCollectionListView = props => {
         invalidDate: '2021-03-01 08:43:45',
         bankSource: 'Bank BCA',
         isEditable: false,
-        isUsable: false,
+        isUsable: true,
         approvalStatus: 'pending',
         collectionMethodId: 2
       }
     ]
   };
-
+  /** FUNCTION NAVIGATE TO ADD COLLECTION */
+  const navigatetoAddCollection = () => {
+    NavigationService.navigate('SfaCollectionAddView');
+  };
   /** FUNCTION COLLECTION METHOD */
   const collectionMethod = id => {
     let collection = '';
@@ -110,6 +113,7 @@ const SfaCollectionListView = props => {
   const renderButton = (title, type, disable) => {
     return (
       <TouchableOpacity
+        disabled={disable}
         style={{
           ...styles.buttonSmall,
           backgroundColor:
@@ -276,7 +280,11 @@ const SfaCollectionListView = props => {
   const renderBottomButton = () => {
     return (
       <>
-        <ButtonSingle title={'Tambah Penagihan'} borderRadius={4} />
+        <ButtonSingle
+          onPress={navigatetoAddCollection()}
+          title={'Tambah Penagihan'}
+          borderRadius={4}
+        />
       </>
     );
   };
