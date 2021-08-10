@@ -15,6 +15,20 @@
  export const RETUR = 'Retur'
 
  /**
+ * COLLECTION TYPE CODE:
+ * 1. giro
+ * 2. cek
+ * 3. transfer
+ * 4. promo
+ * 5. tunai
+ */
+ export const GIRO_CODE = 'giro'
+ export const CEK_CODE = 'cek'
+ export const TRANSFER_CODE = 'transfer'
+ export const PROMO_CODE = 'promo'
+ export const TUNAI_CODE = 'tunai'
+
+ /**
  * STATUS APPROVAL SFA :
  * 1. approved
  * 2. pending
