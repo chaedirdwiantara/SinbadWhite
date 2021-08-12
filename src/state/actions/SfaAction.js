@@ -514,7 +514,7 @@ export function sfaDeleteCollectionFailed(data) {
 
 /** === SFA GET BILLING DETAIL PROCESS === */
 export function sfaGetBillingDetailProcess(data) {
-  return { type: types.SFA_GET_COLLECTION_DETAIL_PROCESS, payload: data };
+  return { type: types.SFA_GET_BILLING_DETAIL_PROCESS, payload: data };
 }
 
 /** === SFA GET BILLING DETAIL SUCCESS === */

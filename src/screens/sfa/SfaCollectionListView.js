@@ -146,13 +146,8 @@ const SfaCollectionListView = props => {
         <TouchableOpacity
           style={[styles.listContainer, GlobalStyle.shadowForBox]}
           onPress={() =>
-            // NavigationService.navigate('SfaCollectionDetailView', {
-            //   paymentCollectionId: item.id
-            // })
-
-            // TODO: remove below code and use navigate to SfaCollectionDetailView
-            NavigationService.navigate('SfaBillingDetailView', {
-              paymentBillingId: item.id
+            NavigationService.navigate('SfaCollectionDetailView', {
+              paymentCollectionId: item.id
             })
           }
         >

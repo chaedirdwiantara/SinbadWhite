@@ -2,13 +2,10 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   SafeAreaView,
-  TouchableOpacity,
   ScrollView,
   RefreshControl
 } from '../../library/reactPackage';
-import { MaterialIcon } from '../../library/thirdPartyPackage';
 import { LoadingPage } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
@@ -20,7 +17,7 @@ import {
   REJECTED,
   PENDING
 } from '../../constants/collectionConstants';
-import NavigationService from '../../navigation/NavigationService';
+import { CardHeaderBadge, CardBody, CardHeader } from './components/DetailView';
 
 const SfaBillingDetailView = props => {
   const dispatch = useDispatch();
@@ -51,45 +48,12 @@ const SfaBillingDetailView = props => {
   }, []);
 
   const getBillingDetail = () => {
-    const paymentBillingId = props.navigation.state.params.paymentCollectionId;
+    const paymentBillingId = props.navigation.state.params.paymentBillingId;
     dispatch(sfaGetBillingDetailProcess(paymentBillingId));
   };
 
   const formatDate = date => {
     return date ? toLocalTime(date, 'DD MMMM YYYY') : '';
-  };
-
-  /* ========================
-   * HEADER MODIFY
-   * ========================
-   */
-  const renderHeader = () => {
-    return (
-      <View style={styles.headerContainer}>
-        <View style={[styles.headerContent]}>
-          <View style={[styles.headerBody, { alignItems: 'flex-start' }]}>
-            <TouchableOpacity onPress={() => NavigationService.goBack()}>
-              <View>
-                <MaterialIcon
-                  name="arrow-back"
-                  size={24}
-                  color={masterColor.fontBlack50}
-                  style={{
-                    marginBottom: 8,
-                    marginLeft: 8,
-                    alignContent: 'flex-start'
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View style={{ alignSelf: 'center', flex: 1, marginLeft: 25 }}>
-            <Text style={Fonts.type5}>Detail Pembayaran</Text>
-          </View>
-        </View>
-        <View style={[GlobalStyle.lines, styles.headerLine]} />
-      </View>
-    );
   };
 
   /**
@@ -99,90 +63,6 @@ const SfaBillingDetailView = props => {
    */
 
   /**
-   * RENDER BADGE
-   * @param {string} title
-   * @param {any} backgroundColor
-   * @param {any} textColor
-   * @returns
-   */
-  const renderBadge = items => {
-    return (
-      <View
-        style={{ borderRadius: 30, backgroundColor: items.backgroundColor }}
-      >
-        <Text style={[Fonts.type38, { padding: 8, color: items.textColor }]}>
-          {items.title}
-        </Text>
-      </View>
-    );
-  };
-
-  /**
-   * RENDER CARD HEADER
-   * @param {string} title
-   * @param {any} boxStyle
-   * @param {any} renderCardHeaderBadge
-   * @param {any} renderCardBody
-   * @returns
-   */
-  const renderCardHeader = items => {
-    return (
-      <View style={styles.container}>
-        <View
-          style={[
-            styles.cardTaskList,
-            GlobalStyle.shadowForBox5,
-            { ...items.boxStyle }
-          ]}
-        >
-          <View style={{ ...styles.items }}>
-            <Text style={Fonts.type48}>{items.title}</Text>
-            {items.renderCardHeaderBadge ? items.renderCardHeaderBadge() : null}
-          </View>
-          <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
-          {items.renderCardBody ? items.renderCardBody() : null}
-        </View>
-      </View>
-    );
-  };
-
-  /**
-   * RENDER CARD BODY
-   * @param {*} title
-   * @param {*} value
-   * @param {*} imageSource
-   * @returns
-   */
-  const renderCardBody = items => {
-    return (
-      <>
-        <View style={{ ...styles.items, marginBottom: 8 }}>
-          {items?.tooltip ? (
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={Fonts.type17}>{items.title}</Text>
-            </View>
-          ) : (
-            <Text style={Fonts.type17}>{items.title}</Text>
-          )}
-          <Text style={Fonts.type17}>{items.value}</Text>
-        </View>
-        {/* {items.imageSource ? (
-          <View style={{ flexDirection: 'row' }}>
-            <View style={styles.smallContainerImage}>
-              <Image
-                source={{
-                  uri: `data:image/jpeg;base64, ${items.imageSource}`
-                }}
-                style={styles.images}
-              />
-            </View>
-          </View>
-        ) : null} */}
-      </>
-    );
-  };
-
-  /**
    * ======================================
    * RENDER INVOICE INFORMATION CARD HEADER
    * ======================================
@@ -190,8 +70,14 @@ const SfaBillingDetailView = props => {
   const renderInvoiceInfoHeader = () => {
     return (
       <>
-        {renderCardHeader({
+        {CardHeader({
           title: 'Informasi Faktur',
+          styleContainer: styles.container,
+          styleCard: {
+            ...styles.cardTaskList,
+            ...GlobalStyle.shadowForBox5
+          },
+          styleCardView: styles.styleCardView,
           renderCardBody: renderInvoiceInfoBody
         })}
       </>
@@ -212,17 +98,20 @@ const SfaBillingDetailView = props => {
 
     return (
       <>
-        {renderCardBody({
+        {CardBody({
           title: 'Nomor Faktur',
-          value: invoiceGroupName
+          value: invoiceGroupName,
+          styleCardView: styles.styleCardView
         })}
-        {renderCardBody({
+        {CardBody({
           title: 'Nomor Pesanan',
-          value: orderCode
+          value: orderCode,
+          styleCardView: styles.styleCardView
         })}
-        {renderCardBody({
+        {CardBody({
           title: 'Nomor Referensi',
-          value: orderRef
+          value: orderRef,
+          styleCardView: styles.styleCardView
         })}
       </>
     );
@@ -236,10 +125,15 @@ const SfaBillingDetailView = props => {
   const renderCodeInfoHeader = () => {
     return (
       <>
-        {renderCardHeader({
+        {CardHeader({
           title: 'Informasi Kode',
-          renderCardBody: renderCodeInfoBody,
-          boxStyle: { marginBottom: 16 }
+          styleContainer: styles.container,
+          styleCard: {
+            ...styles.cardTaskList,
+            ...GlobalStyle.shadowForBox5
+          },
+          styleCardView: styles.styleCardView,
+          renderCardBody: renderCodeInfoBody
         })}
       </>
     );
@@ -258,13 +152,15 @@ const SfaBillingDetailView = props => {
 
     return (
       <>
-        {renderCardBody({
+        {CardBody({
           title: 'Kode Pembayaran',
-          value: billingPaymentCode
+          value: billingPaymentCode,
+          styleCardView: styles.styleCardView
         })}
-        {renderCardBody({
+        {CardBody({
           title: 'Kode Pembayaran Ref',
-          value: billingPaymentRef
+          value: billingPaymentRef,
+          styleCardView: styles.styleCardView
         })}
       </>
     );
@@ -279,19 +175,19 @@ const SfaBillingDetailView = props => {
     const { approvalStatus } = dataSfaGetBillingDetail.data;
 
     return approvalStatus === APPROVED
-      ? renderBadge({
+      ? CardHeaderBadge({
           title: 'Disetujui',
           backgroundColor: masterColor.fontGreen10,
           textColor: masterColor.fontGreen50
         })
       : approvalStatus === PENDING
-      ? renderBadge({
+      ? CardHeaderBadge({
           title: 'Menunggu',
           backgroundColor: masterColor.fontYellow10,
           textColor: masterColor.fontYellow50
         })
       : approvalStatus === REJECTED
-      ? renderBadge({
+      ? CardHeaderBadge({
           title: 'Ditolak',
           backgroundColor: masterColor.fontRed10,
           textColor: masterColor.fontRed50
@@ -307,8 +203,15 @@ const SfaBillingDetailView = props => {
   const renderBillingInfoCardHeader = () => {
     return (
       <>
-        {renderCardHeader({
+        {CardHeader({
           title: 'Informasi Pembayaran',
+          styleContainer: styles.container,
+          styleCard: {
+            ...styles.cardTaskList,
+            ...GlobalStyle.shadowForBox5,
+            marginBottom: 16
+          },
+          styleCardView: styles.styleCardView,
           renderCardHeaderBadge: renderBillingInfoHeaderBadge,
           renderCardBody: renderBillingInfoBody
         })}
@@ -326,17 +229,30 @@ const SfaBillingDetailView = props => {
 
     return (
       <>
-        {renderCardBody({
+        {CardBody({
           title: 'Tanggal Pembayaran',
-          value: formatDate(createdAt)
+          value: formatDate(createdAt),
+          valuePosition: 'bottom',
+          titleStyle: { ...Fonts.type50 },
+          valueStyle: { marginBottom: 16 },
+          viewType: 'date',
+          styleCardView: styles.styleCardView
         })}
-        {renderCardBody({
+        {CardBody({
           title: 'Jumlah Pembayaran',
-          value: MoneyFormatSpace(amount)
+          value: MoneyFormatSpace(amount),
+          valuePosition: 'bottom',
+          titleStyle: { ...Fonts.type50 },
+          valueStyle: { marginBottom: 16 },
+          styleCardView: styles.styleCardView
         })}
-        {renderCardBody({
+        {CardBody({
           title: 'Total Pembayaran',
-          value: MoneyFormatSpace(totalAmount)
+          value: MoneyFormatSpace(totalAmount),
+          valuePosition: 'bottom',
+          titleStyle: { ...Fonts.type50 },
+          valueStyle: { marginBottom: 16 },
+          styleCardView: styles.styleCardView
         })}
       </>
     );
@@ -352,8 +268,8 @@ const SfaBillingDetailView = props => {
     return (
       <View style={{ flex: 1 }}>
         {renderInvoiceInfoHeader()}
-        {renderBillingInfoCardHeader()}
         {renderCodeInfoHeader()}
+        {renderBillingInfoCardHeader()}
       </View>
     );
   };
@@ -363,17 +279,6 @@ const SfaBillingDetailView = props => {
    * MAIN
    * =======================
    */
-  // return (
-  //   <View style={{ flex: 1 }}>
-  //     <StatusBarWhite />
-  //     <ScrollView
-  //       style={{ flex: 1, backgroundColor: masterColor.backgroundWhite }}
-  //     >
-  //       {renderContent()}
-  //     </ScrollView>
-  //   </View>
-  // );
-
   return (
     <View style={{ flex: 1 }}>
       {dataSfaGetBillingDetail && !loadingSfaGetBillingDetail ? (
@@ -412,35 +317,10 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: masterColor.backgroundWhite
   },
-  inputField: {
-    marginTop: 16
-  },
-  headerContainer: {
-    backgroundColor: masterColor.backgroundWhite,
-    height: 56,
-    justifyContent: 'center'
-  },
-  headerContent: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  headerBody: {
-    marginHorizontal: 8,
-    marginVertical: 16
-  },
-  headerLine: {
-    shadowColor: masterColor.shadow,
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 1,
-    shadowRadius: 3.84,
-    elevation: 1
-  },
-  items: {
+  styleCardView: {
     flexDirection: 'row',
     justifyContent: 'space-between'
   }
 });
+
 export default SfaBillingDetailView;
