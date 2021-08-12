@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -10,16 +10,13 @@ import {
   Dimensions,
   Image
 } from '../../library/reactPackage';
-import { MaterialIcon, moment, Tooltip } from '../../library/thirdPartyPackage';
+import { MaterialIcon, Tooltip } from '../../library/thirdPartyPackage';
 import { LoadingPage, ButtonSingle } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  sfaGetCollectionDetailProcess,
-  sfaGetCollectionLogProcess
-} from '../../state/actions';
+import { sfaGetCollectionDetailProcess } from '../../state/actions';
 import {
   APPROVED,
   REJECTED,
@@ -31,66 +28,17 @@ import {
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(null);
 
-  // TODO: if integration API done, remove it.
-  const dataDummy = {
-    data: {
-      id: 63,
-      paymentCollectionType: {
-        id: 4,
-        name: 'Cek',
-        code: 'cek'
-      },
-      bankFrom: {
-        id: 2,
-        name: 'BNI',
-        displayName: 'Bank BNI'
-      },
-      bankToAccount: {
-        id: 1,
-        accountNo: '',
-        displayName: 'BNI  '
-      },
-      createdDate: '2021-02-23 00:00:00',
-      dueDate: '2021-02-23 00:00:00',
-      transferDate: '2021-02-23 00:00:00',
-      amount: 790000,
-      totalAmount: 800000,
-      balance: 790000,
-      totalBalance: 800000,
-      promoNo: null,
-      principal: null,
-      stamp: null,
-      reference: 'TRBBBCCCS63',
-      collectionCode: 'C1234',
-      approvalStatus: 'approved',
-      salesmanCode: 'ID1234',
-      salesmanName: 'Entong',
-      image: 'base64(image_binary)'
-    }
-  };
-
   const {
-    dataSfaGetDetail,
     dataSfaGetCollectionDetail,
-    dataSfaDeleteCollection,
-    dataSfaGetCollectionLog,
-    dataSfaEditCollection,
-    loadingSfaDeleteCollection,
     loadingSfaGetCollectionDetail
   } = useSelector(state => state.sfa);
-  const { selectedMerchant } = useSelector(state => state.merchant);
-
-  //USEREF
-  const prevDataSfaDeleteCollectionRef = useRef(dataSfaDeleteCollection);
-  const prevDataSfaGetCollectionLogRef = useRef(dataSfaGetCollectionLog);
-  const prevDataSfaEditCollectionRef = useRef(dataSfaEditCollection);
 
   /** === ON REFRESH === */
   const onRefresh = () => {
@@ -107,69 +55,19 @@ const SfaCollectionDetailView = props => {
    * FUNCTION
    * *********************************
    */
-  //USE EFFECT PREV DATA EDIT
-  useEffect(() => {
-    prevDataSfaEditCollectionRef.current = dataSfaEditCollection;
-  }, []);
-  const prevDataSfaEditCollection = prevDataSfaEditCollectionRef.current;
-
-  //USE EFFECT PREV DATA DELETE
-  useEffect(() => {
-    prevDataSfaDeleteCollectionRef.current = dataSfaDeleteCollection;
-  }, []);
-  const prevDataSfaDeleteCollection = prevDataSfaDeleteCollectionRef.current;
-
-  //USE EFFECT PREV DATA LOG
-  useEffect(() => {
-    prevDataSfaGetCollectionLogRef.current = dataSfaGetCollectionLog;
-  }, []);
-  const prevDataSfaGetCollectionLog = prevDataSfaGetCollectionLogRef.current;
 
   useEffect(() => {
     getCollectionDetail();
   }, []);
 
   const getCollectionDetail = () => {
-    const paymentCollectionId =
-      props.navigation.state.params.paymentCollectionId;
+    const paymentCollectionId = props.navigation.state.params.paymentCollectionId;
     dispatch(sfaGetCollectionDetailProcess(paymentCollectionId));
   };
 
   const formatDate = date => {
-    const local = toLocalTime(date);
-    return moment(local).format('DD MMMM YYYY');
+    return date ? toLocalTime(date, 'DD MMMM YYYY') : '';
   };
-
-  useEffect(() => {
-    if (prevDataSfaDeleteCollection !== dataSfaDeleteCollection) {
-      if (dataSfaDeleteCollection) {
-        const data = {
-          storeId: parseInt(selectedMerchant.storeId),
-          orderParcelId: dataSfaGetDetail.data.id,
-          limit: 20,
-          skip: 0
-        };
-        dispatch(sfaGetCollectionLogProcess(data));
-      }
-    }
-  }, [dataSfaDeleteCollection]);
-
-  useEffect(() => {
-    if (prevDataSfaGetCollectionLog !== dataSfaGetCollectionLog) {
-      NavigationService.navigate('SfaCollectionLog');
-    }
-  }, [dataSfaGetCollectionLog]);
-
-  useEffect(() => {
-    if (prevDataSfaEditCollection !== dataSfaEditCollection) {
-      if (dataSfaEditCollection) {
-        setIsShowEditSuccessToast(true);
-        setTimeout(() => {
-          setIsShowEditSuccessToast(false);
-        }, 3000);
-      }
-    }
-  }, [dataSfaEditCollection]);
 
   /* ========================
    * HEADER MODIFY
@@ -198,25 +96,6 @@ const SfaCollectionDetailView = props => {
           <View style={{ alignSelf: 'center', flex: 1, marginLeft: 25 }}>
             <Text style={Fonts.type5}>Detail Penagihan</Text>
           </View>
-          {dataSfaGetCollectionDetail &&
-          dataSfaGetCollectionDetail.isEditable ? (
-            <View style={[styles.headerBody, { flexDirection: 'row' }]}>
-              <TouchableOpacity onPress={() => deleteTransaction()}>
-                <MaterialIcon
-                  name="delete"
-                  size={28}
-                  style={{ color: masterColor.fontBlack50, marginRight: 10 }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => editTransaction()}>
-                <MaterialIcon
-                  name="edit"
-                  size={28}
-                  style={{ color: masterColor.fontBlack50 }}
-                />
-              </TouchableOpacity>
-            </View>
-          ) : null}
         </View>
         <View style={[GlobalStyle.lines, styles.headerLine]} />
       </View>
@@ -288,45 +167,37 @@ const SfaCollectionDetailView = props => {
     return (
       <>
         <View style={{ ...styles.items, marginBottom: 8 }}>
-          {
-            items?.tooltip 
-              ? ( 
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={Fonts.type17}>{items.title}</Text>
-                  {renderTooltip(items)}
-                </View>
-              ) : (
-                <Text style={Fonts.type17}>{items.title}</Text>  
-              )
-          }
-          <Text style={Fonts.type17}>{items.value}</Text>
-        </View>
-        {
-          items.imageSource ? (
+          {items?.tooltip ? (
             <View style={{ flexDirection: 'row' }}>
-              <View style={styles.smallContainerImage}>
-                <Image
-                  source={{
-                    // uri: `data:image/jpeg;base64, ${items.imageSource}`
-                    uri: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOGQ7y3EVG8p5JTNea9KqLBhzJa0qRI7R58Q&usqp=CAU`
-                  }}
-                  style={styles.images}
-                />
-              </View>
+              <Text style={Fonts.type17}>{items.title}</Text>
+              {renderTooltip(items)}
             </View>
           ) : (
-            null
-          )
-        }
+            <Text style={Fonts.type17}>{items.title}</Text>
+          )}
+          <Text style={Fonts.type17}>{items.value}</Text>
+        </View>
+        {items.imageSource ? (
+          <View style={{ flexDirection: 'row' }}>
+            <View style={styles.smallContainerImage}>
+              <Image
+                source={{
+                  uri: `data:image/jpeg;base64, ${items.imageSource}`
+                }}
+                style={styles.images}
+              />
+            </View>
+          </View>
+        ) : null}
       </>
     );
   };
 
   /**
    * RENDER TOOLTIP
-   * @returns 
+   * @returns
    */
-  const renderTooltip = (items) => {
+  const renderTooltip = items => {
     return (
       <>
         <Tooltip
@@ -383,17 +254,17 @@ const SfaCollectionDetailView = props => {
    * @returns
    */
   const renderInfoCodeBody = () => {
-    // const detailSfa = dataSfaGetDetail.data;
-    const detailSfa = dataDummy.data;
+    const collectionDetail = dataSfaGetCollectionDetail.data;
+    console.log(collectionDetail);
     return (
       <>
         {renderCardBody({
           title: 'Kode Penagihan',
-          value: detailSfa.collectionCode
+          value: collectionDetail.collectionCode
         })}
         {renderCardBody({
           title: 'Kode Penagihan Ref',
-          value: dataSfaGetDetail.collectionRef
+          value: collectionDetail.collectionRef
         })}
       </>
     );
@@ -405,23 +276,21 @@ const SfaCollectionDetailView = props => {
    * ==========================================
    */
   const renderCollectionDetailHeaderBadge = () => {
-    // const paymentCollectionMethod =
-    //   dataSfaGetCollectionDetail.paymentCollection.paymentCollectionMethod;
-    const paymentCollectionMethod = dataDummy.data;
+    const collectionDetail = dataSfaGetCollectionDetail.data;
 
-    return paymentCollectionMethod.approvalStatus === APPROVED
+    return collectionDetail.approvalStatus === APPROVED
       ? renderBadge({
           title: 'Disetujui',
           backgroundColor: masterColor.fontGreen10,
           textColor: masterColor.fontGreen50
         })
-      : paymentCollectionMethod.approvalStatus === PENDING
+      : collectionDetail.approvalStatus === PENDING
       ? renderBadge({
           title: 'Menunggu',
           backgroundColor: masterColor.fontYellow10,
           textColor: masterColor.fontYellow50
         })
-      : paymentCollectionMethod.approvalStatus === REJECTED
+      : collectionDetail.approvalStatus === REJECTED
       ? renderBadge({
           title: 'Ditolak',
           backgroundColor: masterColor.fontRed10,
@@ -453,11 +322,11 @@ const SfaCollectionDetailView = props => {
    * ====================================
    */
   const renderCollectionDetailBody = () => {
-    // const collectionMethodType =
-    //   dataSfaGetCollectionDetail.paymentCollection.paymentCollectionMethod
-    //     .paymentCollectionType;
-    const collectionDetail = dataDummy.data;
-    const tooltipData = collectionDetail.paymentCollectionType.code === CEK_CODE ? { tooltipText: 'Foto Penagihan' } : null
+    const collectionDetail = dataSfaGetCollectionDetail.data;
+    const tooltipData =
+      collectionDetail.paymentCollectionType.code === CEK_CODE
+        ? { tooltipText: 'Foto Penagihan' }
+        : null;
 
     return (
       <>
@@ -469,69 +338,55 @@ const SfaCollectionDetailView = props => {
           title: 'Metode Penagihan',
           value: collectionDetail.paymentCollectionType.name
         })}
-        {
-          collectionDetail.paymentCollectionType.code !== TUNAI_CODE ?
-            renderCardBody({
+        {collectionDetail.paymentCollectionType.code !== TUNAI_CODE
+          ? renderCardBody({
               title: 'Nomor Referensi',
               value: collectionDetail.reference
-            }) 
-          : null
-        }
-        {
-          collectionDetail.paymentCollectionType.code !== TUNAI_CODE ?
-            renderCardBody({
+            })
+          : null}
+        {collectionDetail.paymentCollectionType.code !== TUNAI_CODE
+          ? renderCardBody({
               title: 'Sumber Bank',
-              value: collectionDetail.bankFrom.name
-            }) 
-          : null
-        }
-        {
-          collectionDetail.paymentCollectionType.code === TRANSFER_CODE ?
-            renderCardBody({
+              value: collectionDetail.bankFrom.displayName
+            })
+          : null}
+        {collectionDetail.paymentCollectionType.code === TRANSFER_CODE
+          ? renderCardBody({
               title: 'Bank Tujuan',
               value: collectionDetail.bankToAccount.displayName
-            }) 
-          : null
-        }
-        {
-          collectionDetail.paymentCollectionType.code === TRANSFER_CODE ?
-            renderCardBody({
+            })
+          : null}
+        {collectionDetail.paymentCollectionType.code === TRANSFER_CODE
+          ? renderCardBody({
               title: 'Tanggal Transfer',
               value: collectionDetail.transferDate
-            }) 
-          : null
-        }
-        {
-          collectionDetail.paymentCollectionType.code === CEK_CODE ||
-          collectionDetail.paymentCollectionType.code === GIRO_CODE ?
-            renderCardBody({
+            })
+          : null}
+        {collectionDetail.paymentCollectionType.code === CEK_CODE ||
+        collectionDetail.paymentCollectionType.code === GIRO_CODE
+          ? renderCardBody({
               title: 'Tanggal Terbit',
-              value: collectionDetail.issuedDate
-            }) 
-          : null
-        }
-        {
-          collectionDetail.paymentCollectionType.code === CEK_CODE ||
-          collectionDetail.paymentCollectionType.code === GIRO_CODE ?
-            renderCardBody({
+              value: formatDate(collectionDetail.issuedDate)
+            })
+          : null}
+        {collectionDetail.paymentCollectionType.code === CEK_CODE ||
+        collectionDetail.paymentCollectionType.code === GIRO_CODE
+          ? renderCardBody({
               title: 'Tanggal Jatuh Tempo',
-              value: collectionDetail.dueDate
-            }) 
-          : null
-        }
+              value: formatDate(collectionDetail.dueDate)
+            })
+          : null}
         {renderCardBody({
           title: 'Jumlah Penagihan',
           value: MoneyFormatSpace(collectionDetail.amount)
         })}
-        {
-          collectionDetail.paymentCollectionType.code === CEK_CODE ||
-          collectionDetail.paymentCollectionType.code === GIRO_CODE ?
-            renderCardBody({
+        {collectionDetail.paymentCollectionType.code === CEK_CODE ||
+        collectionDetail.paymentCollectionType.code === GIRO_CODE
+          ? renderCardBody({
               title: 'Materai',
-              value: collectionDetail.stamp
-            }) 
-          : null
-        }
+              value: MoneyFormatSpace(collectionDetail.stamp.nominal)
+            })
+          : null}
         {renderCardBody({
           title: 'Foto Penagihan',
           value: '',
@@ -547,7 +402,7 @@ const SfaCollectionDetailView = props => {
           value: MoneyFormatSpace(collectionDetail.balance)
         })}
       </>
-    )
+    );
   };
 
   /**
@@ -575,17 +430,17 @@ const SfaCollectionDetailView = props => {
    * @returns
    */
   const renderInfoSalesmanBody = () => {
-    // const detailSfa = dataSfaGetDetail.data;
-    const detailSfa = dataDummy.data;
+    const collectionDetail = dataSfaGetCollectionDetail.data;
+
     return (
       <>
         {renderCardBody({
           title: 'Kode Salesman',
-          value: detailSfa.salesmanCode
+          value: collectionDetail.salesmanCode
         })}
         {renderCardBody({
           title: 'Name Salesman',
-          value: detailSfa.salesmanName
+          value: collectionDetail.salesmanName
         })}
       </>
     );
@@ -598,10 +453,10 @@ const SfaCollectionDetailView = props => {
   const renderBillingHistoryButton = () => {
     return (
       <ButtonSingle
-        disabled={
-          dataSfaGetDetail.data.isPaid ||
-          dataSfaGetDetail.data.remainingBilling === 0
-        }
+        // disabled={
+        //   dataSfaGetDetail.data.isPaid ||
+        //   dataSfaGetDetail.data.remainingBilling === 0
+        // }
         title={'Lihat Daftar Pembayaran'}
         borderRadius={4}
         // onPress={() => addCollection()}
@@ -632,9 +487,7 @@ const SfaCollectionDetailView = props => {
    */
   return (
     <View style={{ flex: 1 }}>
-      {dataSfaGetCollectionDetail &&
-      !loadingSfaGetCollectionDetail &&
-      !loadingSfaDeleteCollection ? (
+      {dataSfaGetCollectionDetail && !loadingSfaGetCollectionDetail ? (
         <SafeAreaView style={styles.mainContainer}>
           {renderHeader()}
           <ScrollView
@@ -706,14 +559,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
-    alignItems: 'center',
     marginBottom: 16
   },
   images: {
     width: width - 65,
     height: 138,
     borderWidth: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   }
 });
 export default SfaCollectionDetailView;
