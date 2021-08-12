@@ -6,6 +6,7 @@ import {
   Dimensions,
   Text,
   PermissionsAndroid,
+  Image,
   TouchableOpacity
 } from '../../../library/reactPackage'
 import {
@@ -46,6 +47,8 @@ class MerchantCheckinView extends Component {
       longitudeDelta: 0.02,
       reRender: false,
       interval: false,
+      inStore: null,
+      visitStore: null,
       openModalNoGPS: false
     };
   }
@@ -71,7 +74,7 @@ class MerchantCheckinView extends Component {
           this.props.merchantGetLogAllActivityProcessV2(
             this.props.merchant.selectedMerchant.journeyBookStores.id
           );
-          NavigationService.goBack(this.props.navigation.state.key);
+          NavigationService.navigate('MerchantHomeView');
         }
       }
     }
@@ -129,11 +132,19 @@ class MerchantCheckinView extends Component {
     Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
   }
   /** === CHECK IN/OUT STORE === */
-  checkInOutStore() {
-    if (this.state.checked) {
-      return this.postActivityCheckIn(true);
+  confirm() {
+    const { inStore, visitStore } = this.state;
+    if (!this.state.inStore) {
+      NavigationService.navigate('MerchantNoVisitReasonView', {
+        status: { inStore }
+      });
+    } else if (this.state.inStore && this.state.visitStore) {
+      this.postActivityCheckIn(this.state.inStore);
+    } else if (this.state.inStore && !this.state.visitStore) {
+      NavigationService.navigate('MerchantNoVisitReasonView', {
+        status: { inStore, visitStore }
+      });
     }
-    return this.setState({ modalOutStore: true });
   }
   /** === POST ACTIVITY CHECKIN === */
   postActivityCheckIn(inStore) {
@@ -154,6 +165,14 @@ class MerchantCheckinView extends Component {
     }
     if (this.state.latitude === 0 && this.state.longitude === 0) {
       return true;
+    }
+    if (this.state.inStore === null) {
+      return true;
+    }
+    if (this.state.inStore) {
+      if (this.state.visitStore === null) {
+        return true;
+      }
     }
     return false;
   }
@@ -276,61 +295,162 @@ class MerchantCheckinView extends Component {
       ? this.renderLoading()
       : this.renderMapsContent();
   }
+  /** === RENDER MERCHANT === */
+  renderMerchant() {
+    const merchant = this.props.merchant.selectedMerchant;
+    return (
+      <View style={styles.merchantContainer}>
+        <View style={styles.merchantView}>
+          <View>
+            <Image
+              source={require('../../../assets/images/menu/list_toko.png')}
+              style={styles.imageCircle}
+            />
+          </View>
+          <View style={{ paddingHorizontal: 12 }}>
+            <Text style={Fonts.type12}>{merchant.externalId}</Text>
+            <View style={{ height: 4 }} />
+            <Text style={Fonts.type23}>{merchant.name}</Text>
+          </View>
+        </View>
+        <View style={{ flexDirection: 'row', paddingRight: 12 }}>
+          <View style={{ width: 40 }} />
+          <View style={{ paddingLeft: 12, paddingRight: 16 }}>
+            <Address
+              substring
+              maxLength={50}
+              font={Fonts.type56}
+              address={merchant.address}
+              urban={merchant.urbans}
+            />
+          </View>
+        </View>
+      </View>
+    );
+  }
+  /** === RENDER IN STORE === */
+  renderInStore() {
+    return (
+      <View>
+        <View style={styles.confirmInStoreContainer}>
+          <Text style={Fonts.type23}>Anda Sedang di Toko Saat ini?</Text>
+          <View style={styles.confirmButtonContainer}>
+            <TouchableOpacity
+              style={[
+                styles.confirmButton,
+                {
+                  borderColor:
+                    this.state.inStore === null || this.state.inStore
+                      ? Color.fontBlack10
+                      : Color.mainColor
+                }
+              ]}
+              disabled={this.props.merchant.loadingPostActivity}
+              onPress={() => this.setState({ inStore: false })}
+            >
+              <Text
+                style={
+                  this.state.inStore === null || this.state.inStore
+                    ? Fonts.type23
+                    : Fonts.type62
+                }
+              >
+                Tidak
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.confirmButton,
+                {
+                  borderColor: this.state.inStore
+                    ? Color.mainColor
+                    : Color.fontBlack10
+                }
+              ]}
+              disabled={this.props.merchant.loadingPostActivity}
+              onPress={() => this.setState({ inStore: true })}
+            >
+              <Text style={this.state.inStore ? Fonts.type62 : Fonts.type23}>
+                Ya
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  }
+  /** === RENDER VISIT STORE === */
+  renderVisitStore() {
+    return (
+      <View>
+        <View style={styles.confirmVisitStoreContainer}>
+          <Text style={Fonts.type23}>Toko dapat di Kunjungi?</Text>
+          <View style={styles.confirmButtonContainer}>
+            <TouchableOpacity
+              style={[
+                styles.confirmButton,
+                {
+                  borderColor:
+                    this.state.visitStore === null || this.state.visitStore
+                      ? Color.fontBlack10
+                      : Color.mainColor
+                }
+              ]}
+              disabled={this.props.merchant.loadingPostActivity}
+              onPress={() => this.setState({ visitStore: false })}
+            >
+              <Text
+                style={
+                  this.state.visitStore === null || this.state.visitStore
+                    ? Fonts.type23
+                    : Fonts.type62
+                }
+              >
+                Tidak
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.confirmButton,
+                {
+                  borderColor: this.state.visitStore
+                    ? Color.mainColor
+                    : Color.fontBlack10
+                }
+              ]}
+              disabled={this.props.merchant.loadingPostActivity}
+              onPress={() => this.setState({ visitStore: true })}
+            >
+              <Text style={this.state.visitStore ? Fonts.type62 : Fonts.type23}>
+                Ya
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  }
   /**
    * ====================
    * MODAL
    * ====================
    */
   renderModalBottom() {
-    const store = this.props.merchant.selectedMerchant;
     return (
       <ModalBottomType2
-        title={`${
-          store.externalId
-            ? store.externalId
-            : '-'
-        } - ${store.name}`}
+        noTitle={this.renderMerchant()}
+        maxHeight={height}
         body={
           <View style={{ flex: 1 }}>
-            <View
-              style={{ paddingHorizontal: 16, paddingVertical: 16, flex: 1 }}
-            >
-              <Address
-                font={Fonts.type17}
-                address={store.address}
-                urban={store.urban}
-              />
-            </View>
-            <View style={styles.spaceBeforeCheckBox} />
-            <View style={styles.checkInOutStore}>
-              <Text style={Fonts.type23}>Saya Berada di Toko</Text>
-              <TouchableOpacity
-                onPress={() => this.setState({ checked: !this.state.checked })}
-              >
-                {this.state.checked ? (
-                  <MaterialIcon
-                    name="check-circle"
-                    color={Color.mainColor}
-                    size={24}
-                  />
-                ) : (
-                  <MaterialIcon
-                    name="radio-button-unchecked"
-                    color={Color.fontBlack40}
-                    size={24}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-            <View>
-              <ButtonSingle
-                disabled={this.disableButton()}
-                title={'Masuk Toko'}
-                loading={this.props.merchant.loadingPostActivity}
-                borderRadius={4}
-                onPress={() => this.checkInOutStore()}
-              />
-            </View>
+            {this.renderInStore()}
+            {this.state.inStore && this.renderVisitStore()}
+            <ButtonSingle
+              disabled={this.disableButton()}
+              title={'Konfirmasi'}
+              loading={this.props.merchant.loadingPostActivity}
+              borderRadius={4}
+              onPress={() => this.confirm()}
+            />
           </View>
         }
       />
@@ -418,6 +538,39 @@ const styles = StyleSheet.create({
     height: 55,
     zIndex: 1000
   },
+  merchantView: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  imageCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 40
+  },
+  confirmInStoreContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 8,
+    flex: 1
+  },
+  confirmVisitStoreContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    flex: 1
+  },
+  confirmButtonContainer: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingTop: 16
+  },
+  confirmButton: {
+    borderWidth: 1,
+    borderRadius: 24,
+    padding: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '48%'
+  },
   boxButton: {
     backgroundColor: Color.backgroundWhite,
     justifyContent: 'center',
@@ -425,29 +578,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     height: 40,
     width: '100%'
-  },
-  boxButtonBottom: {
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    backgroundColor: Color.backgroundWhite,
-    position: 'absolute',
-    width: '100%',
-    bottom: 0
-  },
-  spaceBeforeCheckBox: {
-    borderTopColor: Color.fontBlack10,
-    borderTopWidth: 1,
-    marginLeft: 16
-  },
-  checkInOutStore: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomColor: Color.fontBlack10,
-    borderBottomWidth: 1
   }
 });
 
@@ -472,7 +602,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 12072021
+ * updatedDate: 28072021
  * updatedFunction:
- * -> change behaviour when getting current location (use interval & auto refresh when failed getting location (latlong 0))
+ * -> update navigates after post activity 'check_in'. (handle revisit flow)
  */
