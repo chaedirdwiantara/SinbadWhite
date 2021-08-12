@@ -3,7 +3,9 @@ import {
   View,
   Text,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  Image,
+  StyleSheet
 } from '../../../library/reactPackage';
 import { useState } from 'react';
 import ImagePicker from 'react-native-image-picker';
@@ -12,14 +14,20 @@ import { MaterialIcon, Tooltip } from '../../../library/thirdPartyPackage';
 import { Fonts, GlobalStyle } from '../../../helpers';
 const { width } = Dimensions.get('window');
 const SfaImageInput = props => {
-  const [isQuestionMarkShow, setQuestionMarkShow] = useState(false);
+  const [isQuestionMarkShow, setQuestionMarkShow] = useState(true);
   const [errorInputImage, setErrorInputImage] = useState(false);
   const [imageName, setImageName] = useState();
   const [imageType, setImageType] = useState();
   const [imageData, setImageData] = useState();
+  /** FUNCTION DELETE IMAGE */
+  const onDeleteImage = () => {
+    props.delete();
+    setImageData();
+    setImageName();
+    setImageType();
+  };
   /** FUNCTION CLICK CAMERA */
   const clickCamera = () => {
-    console.log('iamge picker');
     let options = {
       title: 'Select Image',
       storageOptions: {
@@ -28,11 +36,9 @@ const SfaImageInput = props => {
       },
       maxWidth: 800,
       quality: 1
-      // maxHeight: 600
     };
 
     ImagePicker.showImagePicker(options, response => {
-      console.log('image picker', response);
       setErrorInputImage(false);
 
       if (response.didCancel) {
@@ -44,8 +50,7 @@ const SfaImageInput = props => {
       } else if (response.fileSize > 2000000) {
         setErrorInputImage(true);
       } else {
-        console.log('disiniii');
-        console.log(response, 'response');
+        props.action(response);
         setImageData(response.data);
         setImageName(response.fileName);
         setImageType(response.type);
@@ -111,19 +116,89 @@ const SfaImageInput = props => {
   const renderTitle = () => {
     return (
       <View style={{ flexDirection: 'row' }}>
-        <Text style={[Fonts.type10]}>
+        <Text style={[Fonts.type10, {marginRight: 6}]}>
           {props.title ? props.title : '*Foto Penagihan'}
         </Text>
         {renderTooltip()}
       </View>
     );
   };
+
+  /** RENDER IMAGE */
+  const renderImage = () => {
+    return (
+      <View>
+        <View style={styles.smallContainerImage}>
+          <Image
+            source={{
+              uri: `data:image/jpeg;base64, ${imageData}`
+            }}
+            style={[styles.images]}
+          />
+        </View>
+        {renderButton()}
+      </View>
+    );
+  };
+
+  /** RENDER BUTTON */
+
+  const renderButton = () => {
+    return (
+      <View style={styles.smallContainerButtonImage}>
+        <TouchableOpacity
+          style={styles.buttonImage}
+          onPress={() => onDeleteImage()}
+        >
+          <Text style={Fonts.type36}>Hapus</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonImage}
+          onPress={() => clickCamera()}
+        >
+          <Text style={Fonts.type36}>Ulangi Foto</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   return (
     <View>
       {renderTitle()}
-      {renderCamera()}
+      {imageData ? renderImage() : renderCamera()}
     </View>
   );
 };
 
 export default SfaImageInput;
+const styles = StyleSheet.create({
+  images: {
+    width: 328,
+    height: 328,
+    borderWidth: 1,
+    marginHorizontal: 3,
+    backgroundColor: 'white',
+    aspectRatio: 2 / 3
+  },
+  smallContainerButtonImage: {
+    marginVertical: 16,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  buttonImage: {
+    width: 148,
+    height: 48,
+    borderRadius: 5,
+    borderColor: masterColor.mainColor,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  smallContainerImage: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    paddingTop: 8
+  }
+});

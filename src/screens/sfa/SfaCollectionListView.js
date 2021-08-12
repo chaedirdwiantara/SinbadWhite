@@ -281,7 +281,7 @@ const SfaCollectionListView = props => {
     return (
       <>
         <ButtonSingle
-          onPress={navigatetoAddCollection()}
+          onPress={() => navigatetoAddCollection()}
           title={'Tambah Penagihan'}
           borderRadius={4}
         />
@@ -308,11 +308,8 @@ const SfaCollectionListView = props => {
    */
   return (
     <>
-      <>
-        <ScrollView>{renderContent()}</ScrollView>
-
-        {renderBottomButton()}
-      </>
+      <ScrollView>{renderContent()}</ScrollView>
+      {renderBottomButton()}
     </>
   );
 };
