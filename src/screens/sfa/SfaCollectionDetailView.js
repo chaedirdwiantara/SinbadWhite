@@ -255,7 +255,7 @@ const SfaCollectionDetailView = props => {
    */
   const renderInfoCodeBody = () => {
     const collectionDetail = dataSfaGetCollectionDetail.data;
-    console.log(collectionDetail);
+
     return (
       <>
         {renderCardBody({
