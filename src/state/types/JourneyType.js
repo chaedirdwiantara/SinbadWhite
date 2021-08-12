@@ -9,6 +9,11 @@ export const JOURNEY_PLAN_GET_FAILED_V2 = 'JourneyPlanGetFailedV2';
 export const JOURNEY_PLAN_GET_RESET_V2 = 'JourneyPlanGetResetV2';
 export const JOURNEY_PLAN_GET_REFRESH_V2 = 'JourneyPlanGetRefreshV2';
 export const JOURNEY_PLAN_GET_LOADMORE_V2 = 'JourneyPlanGetLoadMoreV2';
+/** FOR GET JOURNEY PLAN MAP DATA*/
+export const JOURNEY_PLAN_GET_MAP_DATA_PROCESS = 'JourneyPlanGetMapDataProcess';
+export const JOURNEY_PLAN_GET_MAP_DATA_SUCCESS = 'JourneyPlanGetMapDataSuccess';
+export const JOURNEY_PLAN_GET_MAP_DATA_FAILED = 'JourneyPlanGetMapDataFailed';
+export const JOURNEY_PLAN_GET_MAP_DATA_RESET = 'JourneyPlanGetMapDataReset';
 /** FOR POST MERCHANT TO JOURNEY PLAN V2 */
 export const SAVE_MERCHANT_TO_JOURNEY_PLAN_PROCESS_V2 =
   'saveMerchantToJourneyPlanProcessV2';
