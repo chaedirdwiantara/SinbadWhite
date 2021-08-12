@@ -51,6 +51,7 @@ class JourneyListDataView extends Component {
       page: 1,
       date: today,
       search: this.props.searchText,
+      storetype: 'all',
       loading: true
     });
     this.props.getJourneyPlanReportProcessV2();
@@ -73,6 +74,7 @@ class JourneyListDataView extends Component {
             page,
             date: today,
             search: this.props.searchText,
+            storetype: 'all',
             loading: false
           });
         }
@@ -475,6 +477,6 @@ export default connect(
  * updatedBy: dyah
  * updatedDate: 09082021
  * updatedFunction:
- * -> update image when didn't find the store when searching.
+ * -> update parameter storetype.
  *
  */
