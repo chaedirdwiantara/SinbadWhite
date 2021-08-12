@@ -105,6 +105,7 @@ class JourneyMapSearchView extends Component {
       page: 1,
       date: today,
       search,
+      storetype: 'all',
       loading: true
     });
   }
@@ -176,8 +177,8 @@ export default connect(
  * ============================
  * createdBy: dyah
  * createdDate: 06082021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 12082021
  * updatedFunction:
- * -> create new screen for search journey plan on map.
+ * -> update parameter storetype.
  */

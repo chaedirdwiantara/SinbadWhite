@@ -71,7 +71,9 @@ class JourneyMapView extends Component {
         this.props.journey.dataGetJourneyPlanMapData
       ) {
         if (this.props.journey.dataGetJourneyPlanMapData.length === 0) {
-          this.setState({ modalEmpty: true });
+          if (this.state.filter === 'Semua Toko') {
+            this.setState({ modalEmpty: true });
+          }
         }
         // check the current condition of store (visit/not)
         let updatedMerchant;
@@ -83,7 +85,7 @@ class JourneyMapView extends Component {
         }
         // if there's changes, update selected merchant
         if (updatedMerchant && updatedMerchant !== this.state.merchant) {
-          this.setState({ merchant: updatedMerchant });
+          this.setState({ merchant: updatedMerchant, filter: 'Semua Toko' });
         }
       }
     }
@@ -160,15 +162,34 @@ class JourneyMapView extends Component {
       modalFilter: false
     });
   }
+  /** FOR FILTER VALUE */
+  returnFilter() {
+    switch (this.state.filter) {
+      case 'Semua Toko':
+        return 'all';
+      case 'Toko PJP':
+        return 'pjp';
+      case 'Toko Non-PJP':
+        return 'nonpjp';
+      case 'Sudah Dikunjungi':
+        return 'visited';
+      case 'Belum Dikunjungi':
+        return 'notvisited';
+      default:
+        return 'all';
+    }
+  }
   /** === GET JOURNEY PLAN === */
   getJourneyPlan() {
     const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
+    const storetype = this.returnFilter();
     this.props.journeyPlanGetMapDataReset();
     this.props.journeyPlanGetMapDataProcess({
       page: 1,
       length: 1000,
       date: today,
       search: '',
+      storetype,
       loading: true
     });
   }
@@ -625,7 +646,11 @@ class JourneyMapView extends Component {
         open={this.state.modalFilter}
         filter={this.state.filter}
         close={() => this.setState({ modalFilter: false })}
-        save={filter => this.setState({ modalFilter: false, filter })}
+        save={filter =>
+          this.setState({ modalFilter: false, merchant: null, filter }, () =>
+            this.getJourneyPlan()
+          )
+        }
       />
     );
   }
@@ -778,8 +803,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(JourneyMapView);
  * createdBy: dyah
  * createdDate: 28072021
  * updatedBy: dyah
- * updatedDate: 09082021
+ * updatedDate: 12082021
  * updatedFunction:
- * -> add modal filter on journey map view.
- * -> add function to control zoom & radius 1km.
+ * -> integrate parameter filter (storetype) journey plan.
  */
