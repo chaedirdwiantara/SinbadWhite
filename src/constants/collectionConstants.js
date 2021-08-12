@@ -23,7 +23,7 @@
  * 5. tunai
  */
  export const GIRO_CODE = 'giro'
- export const CEK_CODE = 'cek'
+ export const CEK_CODE = 'check'
  export const TRANSFER_CODE = 'transfer'
  export const PROMO_CODE = 'promo'
  export const TUNAI_CODE = 'tunai'

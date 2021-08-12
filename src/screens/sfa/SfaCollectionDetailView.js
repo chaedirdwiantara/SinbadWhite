@@ -99,7 +99,7 @@ const SfaCollectionDetailView = props => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-    }, 3);
+    }, 10);
   };
 
   /**
