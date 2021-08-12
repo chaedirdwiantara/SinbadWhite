@@ -332,7 +332,7 @@ const SfaCollectionDetailView = props => {
       <>
         {renderCardBody({
           title: 'Tanggal Penagihan',
-          value: formatDate('2020-08-20')
+          value: formatDate(collectionDetail.createdDate)
         })}
         {renderCardBody({
           title: 'Metode Penagihan',
