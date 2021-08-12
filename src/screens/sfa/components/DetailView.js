@@ -69,6 +69,7 @@ const cardBodyValue = props => (
  * @param {string} title string
  * @param {*} value string | number
  * @param {string} imageSource string
+ * @param {StyleSheet} imageSourceStyle StyleSheet
  * @param {StyleSheet} titleStyle StyleSheet - for title
  * @param {StyleSheet} valueStyle StyleSheet - for value
  * @param {*} valuePosition right | bottom; default: right
@@ -96,7 +97,7 @@ const CardBody = props => {
 
       {props.imageSource ? (
         <View style={{ flexDirection: 'row' }}>
-          <View style={{ ...props.smallContainerImage }}>
+          <View style={{ ...props.imageSourceStyle }}>
             <Text style={Fonts.type17}>{props.value}</Text>
           </View>
         </View>

@@ -19,6 +19,13 @@ import {
 } from '../../constants/collectionConstants';
 import { CardHeaderBadge, CardBody, CardHeader } from './components/DetailView';
 
+// Sementara, nanti ambil dari collectionConstants;
+const CASH = 1;
+const CHEQUE = 2; // cek
+const GIRO = 3;
+const TRANSFER = 4;
+const PROMO = 5;
+
 const SfaBillingDetailView = props => {
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
@@ -225,7 +232,12 @@ const SfaBillingDetailView = props => {
    * ========================
    */
   const renderBillingInfoBody = () => {
-    const { createdAt, amount, totalAmount } = dataSfaGetBillingDetail.data;
+    const {
+      createdAt,
+      amount,
+      stampAmount,
+      totalAmount
+    } = dataSfaGetBillingDetail.data;
 
     return (
       <>
@@ -241,6 +253,18 @@ const SfaBillingDetailView = props => {
         {CardBody({
           title: 'Jumlah Pembayaran',
           value: MoneyFormatSpace(amount),
+          valuePosition: 'bottom',
+          titleStyle: { ...Fonts.type50 },
+          valueStyle: { marginBottom: 16 },
+          styleCardView: styles.styleCardView
+        })}
+        {/* TODO: Show if paymentMethodType.id == CHEQUE || GIRO */}
+        {CardBody({
+          title: 'Materai',
+          value:
+            stampAmount !== undefined && stampAmount !== null
+              ? MoneyFormatSpace(stampAmount)
+              : '-',
           valuePosition: 'bottom',
           titleStyle: { ...Fonts.type50 },
           valueStyle: { marginBottom: 16 },
