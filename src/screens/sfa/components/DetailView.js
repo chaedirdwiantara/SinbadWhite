@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text } from '../../../library/reactPackage';
 import { Fonts, GlobalStyle } from '../../../helpers';
+import masterColor from '../../../config/masterColor.json';
+import { MaterialIcon } from '../../../library/thirdPartyPackage';
 
 /**
  * Card Header Badge
@@ -60,9 +62,24 @@ const cardBodyTitle = props => (
  * @param {StyleSheet} valueStyle StyleSheet
  * @returns
  */
-const cardBodyValue = props => (
-  <Text style={[Fonts.type17, { ...props.valueStyle }]}>{props.value}</Text>
-);
+const cardBodyValue = props => {
+  const prefixIcon = props.prefixIcon || null;
+
+  return (
+    <>
+      {prefixIcon && prefixIcon.icon ? (
+        <MaterialIcon
+          name={prefixIcon.icon}
+          color={masterColor.mainColor}
+          size={16}
+          style={{ ...prefixIcon.style }}
+        />
+      ) : null}
+
+      <Text style={[Fonts.type17, { ...props.valueStyle }]}>{props.value}</Text>
+    </>
+  );
+};
 
 /**
  * CARD BODY
