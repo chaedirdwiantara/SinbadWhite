@@ -17,6 +17,7 @@ import {
   LoadingPage,
   ModalConfirmation,
   ModalBottomErrorRespons,
+  SkeletonType25,
   Address
 } from '../../../library/component';
 import { Fonts } from '../../../helpers';
@@ -157,7 +158,9 @@ class MerchantNoVisitReasonDetailView extends Component {
                 uri: journeyBookStores.visitStorePhotos[0].photoStoreUrl
               }}
             />
-          ) : null}
+          ) : (
+            <SkeletonType25 />
+          )}
         </View>
       </View>
     );
@@ -318,7 +321,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 26072021
  * updatedBy: dyah
- * updatedDate: 12082021
+ * updatedDate: 13082021
  * updatedFunction:
- * -> update condition when revisiting store (check latest checkin/out).
+ * -> add skeleton for photo reason not visit.
  */
