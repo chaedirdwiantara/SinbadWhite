@@ -16,7 +16,12 @@ import { GlobalStyle, Fonts, MoneyFormatSpace } from '../../helpers';
 import {
   APPROVED,
   REJECTED,
-  PENDING
+  PENDING,
+  CASH,
+  CHECK,
+  GIRO,
+  TRANSFER,
+  PROMO
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 import {
@@ -28,6 +33,7 @@ import {
 import { TextInputMask } from 'react-native-masked-text';
 import SfaImageInput from './sfaComponents/SfaImageInput';
 const SfaCollectionAddView = props => {
+  const paymentCollectionMethodId = 4;
   const [amount, setAmount] = useState(0);
   const [noReference, setNoReference] = useState('');
   const [issuedDate, setIssuedDate] = useState(null);
@@ -149,7 +155,9 @@ const SfaCollectionAddView = props => {
 
   /** RENDER REFERENCE */
   const renderReference = () => {
-    return (
+    return paymentCollectionMethodId === CHECK ||
+      paymentCollectionMethodId === GIRO ||
+      paymentCollectionMethodId === TRANSFER ? (
       <View style={{ marginHorizontal: -16, marginBottom: 16 }}>
         <InputType5
           title={'*Nomor Referensi'}
@@ -162,12 +170,14 @@ const SfaCollectionAddView = props => {
           editable={true}
         />
       </View>
-    );
+    ) : null;
   };
 
   /** RENDER BANK SOURCE */
   const renderBankSource = () => {
-    return (
+    return paymentCollectionMethodId === CHECK ||
+      paymentCollectionMethodId === GIRO ||
+      paymentCollectionMethodId === TRANSFER ? (
       <View style={{ marginBottom: 16 }}>
         <Text style={Fonts.type10}>*Sumber Bank</Text>
         <TouchableOpacity
@@ -186,7 +196,7 @@ const SfaCollectionAddView = props => {
         </TouchableOpacity>
         <View style={[GlobalStyle.lines]} />
       </View>
-    );
+    ) : null;
   };
 
   /** RENDER CONTENT */
@@ -229,7 +239,8 @@ const SfaCollectionAddView = props => {
 
   /** RENDER INVALID DATE */
   const renderInvalidDate = () => {
-    return (
+    return paymentCollectionMethodId === CHECK ||
+      paymentCollectionMethodId === GIRO ? (
       <View style={{ marginBottom: 8 }}>
         <Text style={Fonts.type10}>*Tanggal Jatuh Tempo</Text>
         <TouchableOpacity
@@ -257,14 +268,14 @@ const SfaCollectionAddView = props => {
         </TouchableOpacity>
         <View style={[GlobalStyle.lines]} />
       </View>
-    );
+    ) : null;
   };
 
   /** RENDER ISSUED DATE */
   const renderIssuedDate = () => {
     return (
       <View style={{ marginBottom: 8 }}>
-        <Text style={Fonts.type10}>Tanggal Terbit</Text>
+        <Text style={Fonts.type10}>*Tanggal Terbit</Text>
         <TouchableOpacity
           style={styles.boxMenu}
           onPress={() => openIssuedDate()}
@@ -295,7 +306,8 @@ const SfaCollectionAddView = props => {
 
   /** RENDER MATERAI */
   const renderMaterai = () => {
-    return (
+    return paymentCollectionMethodId === CHECK ||
+      paymentCollectionMethodId === GIRO ? (
       <View style={{ marginTop: 16 }}>
         <View style={{ display: 'flex', flexDirection: 'row' }}>
           <Text style={[Fonts.type10]}>Materai</Text>
@@ -346,7 +358,7 @@ const SfaCollectionAddView = props => {
           </View>
         </View>
       </View>
-    );
+    ) : null;
   };
 
   /** RENDER IMAGE */
