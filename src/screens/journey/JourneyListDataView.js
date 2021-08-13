@@ -19,6 +19,7 @@ import {
   LoadingLoadMore,
   Address,
   SearchBarType1,
+  EmptyDataType2,
   EmptyData
 } from '../../library/component'
 import { GlobalStyle, Fonts } from '../../helpers'
@@ -50,6 +51,7 @@ class JourneyListDataView extends Component {
       page: 1,
       date: today,
       search: this.props.searchText,
+      storetype: 'all',
       loading: true
     });
     this.props.getJourneyPlanReportProcessV2();
@@ -72,6 +74,7 @@ class JourneyListDataView extends Component {
             page,
             date: today,
             search: this.props.searchText,
+            storetype: 'all',
             loading: false
           });
         }
@@ -372,7 +375,13 @@ class JourneyListDataView extends Component {
   }
   /** === RENDER EMPTY === */
   renderEmpty() {
-    return (
+    return this.props.searchText.length > 0 ? (
+      <EmptyDataType2
+        top
+        title={'Pencarian Tidak Ditemukan'}
+        description={'Cek kembali nama toko atau ID toko yang kamu masukkan'}
+      />
+    ) : (
       <EmptyData
         title={'Journey Plan Kosong'}
         description={
@@ -466,8 +475,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 02082021
+ * updatedDate: 09082021
  * updatedFunction:
- * -> update icon when not visit the store.
+ * -> update parameter storetype.
  *
  */

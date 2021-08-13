@@ -164,6 +164,7 @@ class JourneyView extends Component {
       page: 1,
       date: today,
       search: this.state.search,
+      storetype: 'all',
       loading: true
     });
   }
@@ -470,7 +471,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 28072021
+ * updatedDate: 12082021
  * updatedFunction:
- * -> add navigates to journey map view.
+ * -> update parameter storetype.
  */
