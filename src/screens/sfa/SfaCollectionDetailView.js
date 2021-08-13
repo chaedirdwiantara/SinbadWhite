@@ -7,10 +7,9 @@ import {
   TouchableOpacity,
   ScrollView,
   RefreshControl,
-  Dimensions,
-  Image
+  Dimensions
 } from '../../library/reactPackage';
-import { MaterialIcon, Tooltip } from '../../library/thirdPartyPackage';
+import { MaterialIcon } from '../../library/thirdPartyPackage';
 import { LoadingPage, ButtonSingle } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
@@ -21,19 +20,20 @@ import {
   APPROVED,
   REJECTED,
   PENDING,
-  TRANSFER_CODE,
-  TUNAI_CODE,
-  CEK_CODE,
-  GIRO_CODE
+  TRANSFER,
+  CASH,
+  CHECK,
+  GIRO
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
+import { CardBody, CardHeader, CardHeaderBadge } from './components/DetailView';
 
 const { width } = Dimensions.get('window');
+const isNumber = n => (n !== null && n !== undefined ? true : false);
 
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
-  const [openTooltip, setOpenTooltip] = useState(null);
 
   const {
     dataSfaGetCollectionDetail,
@@ -61,7 +61,8 @@ const SfaCollectionDetailView = props => {
   }, []);
 
   const getCollectionDetail = () => {
-    const paymentCollectionId = props.navigation.state.params.paymentCollectionId;
+    const paymentCollectionId =
+      props.navigation.state.params.paymentCollectionId;
     dispatch(sfaGetCollectionDetailProcess(paymentCollectionId));
   };
 
@@ -109,189 +110,73 @@ const SfaCollectionDetailView = props => {
    */
 
   /**
-   * RENDER BADGE
-   * @param {string} title
-   * @param {any} backgroundColor
-   * @param {any} textColor
-   * @returns
+   * ==============================
+   * RENDER CODE INFORMATION HEADER
+   * ==============================
    */
-  const renderBadge = items => {
-    return (
-      <View
-        style={{ borderRadius: 30, backgroundColor: items.backgroundColor }}
-      >
-        <Text style={[Fonts.type38, { padding: 8, color: items.textColor }]}>
-          {items.title}
-        </Text>
-      </View>
-    );
-  };
-
-  /**
-   * RENDER CARD HEADER
-   * @param {string} title
-   * @param {any} boxStyle
-   * @param {any} renderCardHeaderBadge
-   * @param {any} renderCardBody
-   * @returns
-   */
-  const renderCardHeader = items => {
-    return (
-      <View style={styles.container}>
-        <View
-          style={[
-            styles.cardTaskList,
-            GlobalStyle.shadowForBox5,
-            { ...items.boxStyle }
-          ]}
-        >
-          <View style={{ ...styles.items }}>
-            <Text style={Fonts.type48}>{items.title}</Text>
-            {items.renderCardHeaderBadge ? items.renderCardHeaderBadge() : null}
-          </View>
-          <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
-          {items.renderCardBody ? items.renderCardBody() : null}
-        </View>
-      </View>
-    );
-  };
-
-  /**
-   * RENDER CARD BODY
-   * @param {*} title
-   * @param {*} value
-   * @param {*} imageSource
-   * @returns
-   */
-  const renderCardBody = items => {
+  const renderCodeInfoHeader = () => {
     return (
       <>
-        <View style={{ ...styles.items, marginBottom: 8 }}>
-          {items?.tooltip ? (
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={Fonts.type17}>{items.title}</Text>
-              {renderTooltip(items)}
-            </View>
-          ) : (
-            <Text style={Fonts.type17}>{items.title}</Text>
-          )}
-          <Text style={Fonts.type17}>{items.value}</Text>
-        </View>
-        {items.imageSource ? (
-          <View style={{ flexDirection: 'row' }}>
-            <View style={styles.smallContainerImage}>
-              <Image
-                source={{
-                  uri: `data:image/jpeg;base64, ${items.imageSource}`
-                }}
-                style={styles.images}
-              />
-            </View>
-          </View>
-        ) : null}
-      </>
-    );
-  };
-
-  /**
-   * RENDER TOOLTIP
-   * @returns
-   */
-  const renderTooltip = items => {
-    return (
-      <>
-        <Tooltip
-          backgroundColor={masterColor.fontBlack50OP80}
-          height={55}
-          withOverlay={false}
-          withPointer={false}
-          onOpen={() => setOpenTooltip({ [items.title]: false })}
-          onClose={() => setOpenTooltip({ [items.title]: true })}
-          containerStyle={{
-            padding: 8,
-            width: 0.4 * width
-          }}
-          popover={
-            <Text style={Fonts.type87}> {items.tooltip?.tooltipText} </Text>
-          }
-        >
-          {openTooltip ? (
-            <MaterialIcon
-              name="help"
-              style={{ marginLeft: 6 }}
-              size={13}
-              color={masterColor.mainColor}
-            />
-          ) : (
-            <View />
-          )}
-        </Tooltip>
-      </>
-    );
-  };
-
-  /**
-   * ==================================-
-   * RENDER INFORMATION INFO CARD HEADER
-   * ===================================
-   * @returns
-   */
-  const renderInfoCodeHeader = () => {
-    return (
-      <>
-        {renderCardHeader({
+        {CardHeader({
           title: 'Informasi Kode',
-          renderCardBody: renderInfoCodeBody
+          styleContainer: styles.container,
+          styleCard: {
+            ...styles.cardTaskList,
+            ...GlobalStyle.shadowForBox5
+          },
+          styleCardView: styles.styleCardView,
+          renderCardBody: renderCodeInfoBody
         })}
       </>
     );
   };
 
   /**
-   * =================================
-   * RENDER INFORMATION INFO CARD BODY
-   * =================================
-   * @returns
+   * ============================
+   * RENDER CODE INFORMATION BODY
+   * ============================
    */
-  const renderInfoCodeBody = () => {
+  const renderCodeInfoBody = () => {
     const collectionDetail = dataSfaGetCollectionDetail.data;
 
     return (
       <>
-        {renderCardBody({
+        {CardBody({
           title: 'Kode Penagihan',
-          value: collectionDetail.collectionCode
+          value: collectionDetail.collectionCode,
+          styleCardView: styles.styleCardView
         })}
-        {renderCardBody({
+        {CardBody({
           title: 'Kode Penagihan Ref',
-          value: collectionDetail.collectionRef
+          value: collectionDetail.collectionRef,
+          styleCardView: styles.styleCardView
         })}
       </>
     );
   };
 
   /**
-   * ==========================================
-   * RENDER COLLECTION DETAIL CARD HEADER BADGE
-   * ==========================================
+   * ========================================
+   * RENDER COLLECTION INFO CARD HEADER BADGE
+   * ========================================
    */
-  const renderCollectionDetailHeaderBadge = () => {
-    const collectionDetail = dataSfaGetCollectionDetail.data;
+  const renderCollectionInfoHeaderBadge = () => {
+    const { approvalStatus } = dataSfaGetCollectionDetail.data;
 
-    return collectionDetail.approvalStatus === APPROVED
-      ? renderBadge({
+    return approvalStatus === APPROVED
+      ? CardHeaderBadge({
           title: 'Disetujui',
           backgroundColor: masterColor.fontGreen10,
           textColor: masterColor.fontGreen50
         })
-      : collectionDetail.approvalStatus === PENDING
-      ? renderBadge({
+      : approvalStatus === PENDING
+      ? CardHeaderBadge({
           title: 'Menunggu',
           backgroundColor: masterColor.fontYellow10,
           textColor: masterColor.fontYellow50
         })
-      : collectionDetail.approvalStatus === REJECTED
-      ? renderBadge({
+      : approvalStatus === REJECTED
+      ? CardHeaderBadge({
           title: 'Ditolak',
           backgroundColor: masterColor.fontRed10,
           textColor: masterColor.fontRed50
@@ -300,106 +185,138 @@ const SfaCollectionDetailView = props => {
   };
 
   /**
-   * ====================================
-   * RENDER COLLECTION DETAIL CARD HEADER
-   * ====================================
+   * =============================
+   * RENDER COLLECTION INFO HEADER
+   * =============================
    */
-  const renderCollectionDetailCardHeader = () => {
+  const renderCollectionInfoHeader = () => {
     return (
       <>
-        {renderCardHeader({
+        {CardHeader({
           title: 'Informasi Penagihan',
-          renderCardHeaderBadge: renderCollectionDetailHeaderBadge,
-          renderCardBody: renderCollectionDetailBody
+          styleContainer: styles.container,
+          styleCard: {
+            ...styles.cardTaskList,
+            ...GlobalStyle.shadowForBox5
+          },
+          styleCardView: styles.styleCardView,
+          renderCardHeaderBadge: renderCollectionInfoHeaderBadge,
+          renderCardBody: renderCollectionInfoBody
         })}
       </>
     );
   };
 
   /**
-   * ====================================
-   * RENDER COLLECTION DETAIL BODY
-   * ====================================
+   * ===========================
+   * RENDER COLLECTION INFO BODY
+   * ===========================
    */
-  const renderCollectionDetailBody = () => {
-    const collectionDetail = dataSfaGetCollectionDetail.data;
-    const tooltipData =
-      collectionDetail.paymentCollectionType.code === CEK_CODE
-        ? { tooltipText: 'Foto Penagihan' }
-        : null;
+  const renderCollectionInfoBody = () => {
+    const {
+      createdDate,
+      paymentCollectionType,
+      reference,
+      bankFrom,
+      bankToAccount,
+      transferDate,
+      issuedDate,
+      dueDate,
+      amount,
+      stamp,
+      totalAmount,
+      balance,
+      image
+    } = dataSfaGetCollectionDetail.data;
 
     return (
       <>
-        {renderCardBody({
+        {CardBody({
           title: 'Tanggal Penagihan',
-          value: formatDate(collectionDetail.createdDate)
+          value: formatDate(createdDate),
+          styleCardView: styles.styleCardView
         })}
-        {renderCardBody({
+        {CardBody({
           title: 'Metode Penagihan',
-          value: collectionDetail.paymentCollectionType.name
+          value: paymentCollectionType?.name,
+          styleCardView: styles.styleCardView
         })}
-        {collectionDetail.paymentCollectionType.code !== TUNAI_CODE
-          ? renderCardBody({
+        {paymentCollectionType.id !== CASH
+          ? CardBody({
               title: 'Nomor Referensi',
-              value: collectionDetail.reference
+              value: reference,
+              styleCardView: styles.styleCardView
             })
           : null}
-        {collectionDetail.paymentCollectionType.code !== TUNAI_CODE
-          ? renderCardBody({
+        {paymentCollectionType.id !== CASH
+          ? CardBody({
               title: 'Sumber Bank',
-              value: collectionDetail.bankFrom.displayName
+              value: bankFrom.displayName,
+              styleCardView: styles.styleCardView
             })
           : null}
-        {collectionDetail.paymentCollectionType.code === TRANSFER_CODE
-          ? renderCardBody({
+        {paymentCollectionType.id === TRANSFER
+          ? CardBody({
               title: 'Bank Tujuan',
-              value: collectionDetail.bankToAccount.displayName
+              value: bankToAccount.displayName,
+              styleCardView: styles.styleCardView
             })
           : null}
-        {collectionDetail.paymentCollectionType.code === TRANSFER_CODE
-          ? renderCardBody({
+        {paymentCollectionType.id === TRANSFER
+          ? CardBody({
               title: 'Tanggal Transfer',
-              value: collectionDetail.transferDate
+              value: formatDate(transferDate),
+              styleCardView: styles.styleCardView
             })
           : null}
-        {collectionDetail.paymentCollectionType.code === CEK_CODE ||
-        collectionDetail.paymentCollectionType.code === GIRO_CODE
-          ? renderCardBody({
+        {paymentCollectionType.id === CHECK || paymentCollectionType.id === GIRO
+          ? CardBody({
               title: 'Tanggal Terbit',
-              value: formatDate(collectionDetail.issuedDate)
+              value: formatDate(issuedDate),
+              styleCardView: styles.styleCardView
             })
           : null}
-        {collectionDetail.paymentCollectionType.code === CEK_CODE ||
-        collectionDetail.paymentCollectionType.code === GIRO_CODE
-          ? renderCardBody({
+        {paymentCollectionType.id === CHECK || paymentCollectionType.id === GIRO
+          ? CardBody({
               title: 'Tanggal Jatuh Tempo',
-              value: formatDate(collectionDetail.dueDate)
+              value: formatDate(dueDate),
+              styleCardView: styles.styleCardView
             })
           : null}
-        {renderCardBody({
+        {CardBody({
           title: 'Jumlah Penagihan',
-          value: MoneyFormatSpace(collectionDetail.amount)
+          value: isNumber(amount) ? MoneyFormatSpace(amount) : '',
+          styleCardView: styles.styleCardView
         })}
-        {collectionDetail.paymentCollectionType.code === CEK_CODE ||
-        collectionDetail.paymentCollectionType.code === GIRO_CODE
-          ? renderCardBody({
+        {paymentCollectionType.id === CHECK || paymentCollectionType.id === GIRO
+          ? CardBody({
               title: 'Materai',
-              value: MoneyFormatSpace(collectionDetail.stamp.nominal)
+              value: isNumber(stamp?.nominal)
+                ? MoneyFormatSpace(stamp.nominal)
+                : '-',
+              styleCardView: styles.styleCardView
             })
           : null}
-        {renderCardBody({
+        {CardBody({
           title: 'Foto Penagihan',
-          value: '',
-          tooltip: tooltipData,
-          imageSource: collectionDetail.image
+          imageSource: { uri: `data:image/jpeg;base64, ${image}` },
+          imageSourceStyle: styles.images,
+          imageContainerStyle: styles.smallContainerImage,
+          styleCardView: styles.styleCardView,
+          titleIcon: {
+            suffixIcon: 'help',
+            suffixStyle: { marginLeft: 6 }
+          }
         })}
-        {renderCardBody({
+        {CardBody({
           title: 'Total Penagihan',
-          value: MoneyFormatSpace(collectionDetail.totalAmount)
+          value: isNumber(totalAmount) ? MoneyFormatSpace(totalAmount) : '',
+          styleCardView: styles.styleCardView
         })}
-        {renderCardBody({
+        {CardBody({
           title: 'Sisa Penagihan',
-          value: MoneyFormatSpace(collectionDetail.balance)
+          value: isNumber(balance) ? MoneyFormatSpace(balance) : '',
+          styleCardView: styles.styleCardView
         })}
       </>
     );
@@ -409,15 +326,20 @@ const SfaCollectionDetailView = props => {
    * ==================================
    * RENDER INFORMATION SALESMAN HEADER
    * ==================================
-   * @returns
    */
-  const renderInfoSalesmanHeader = () => {
+  const renderSalesmanInfoHeader = () => {
     return (
       <>
-        {renderCardHeader({
+        {CardHeader({
           title: 'Informasi Salesman',
-          renderCardBody: renderInfoSalesmanBody,
-          boxStyle: { marginBottom: 16 }
+          styleContainer: styles.container,
+          styleCard: {
+            ...styles.cardTaskList,
+            ...GlobalStyle.shadowForBox5,
+            marginBottom: 16
+          },
+          styleCardView: styles.styleCardView,
+          renderCardBody: renderSalesmanInfoBody
         })}
       </>
     );
@@ -427,20 +349,21 @@ const SfaCollectionDetailView = props => {
    * ================================
    * RENDER INFORMATION SALESMAN BODY
    * ================================
-   * @returns
    */
-  const renderInfoSalesmanBody = () => {
+  const renderSalesmanInfoBody = () => {
     const collectionDetail = dataSfaGetCollectionDetail.data;
 
     return (
       <>
-        {renderCardBody({
+        {CardBody({
           title: 'Kode Salesman',
-          value: collectionDetail.salesmanCode
+          value: collectionDetail.salesmanCode,
+          styleCardView: styles.styleCardView
         })}
-        {renderCardBody({
+        {CardBody({
           title: 'Name Salesman',
-          value: collectionDetail.salesmanName
+          value: collectionDetail.salesmanName,
+          styleCardView: styles.styleCardView
         })}
       </>
     );
@@ -452,15 +375,19 @@ const SfaCollectionDetailView = props => {
    */
   const renderBillingHistoryButton = () => {
     return (
-      <ButtonSingle
-        // disabled={
-        //   dataSfaGetDetail.data.isPaid ||
-        //   dataSfaGetDetail.data.remainingBilling === 0
-        // }
-        title={'Lihat Daftar Pembayaran'}
-        borderRadius={4}
-        // onPress={() => addCollection()}
-      />
+      <>
+        <View style={[GlobalStyle.lines, styles.footerLine]} />
+        <ButtonSingle
+          title={'Lihat Riwayat Pembayaran'}
+          borderRadius={4}
+          onPress={() =>
+            // TODO: Change navigation to SfaBillingListView
+            NavigationService.navigate('SfaBillingDetailView', {
+              paymentBillingId: dataSfaGetCollectionDetail.data.id
+            })
+          }
+        />
+      </>
     );
   };
 
@@ -473,9 +400,9 @@ const SfaCollectionDetailView = props => {
   const renderContent = () => {
     return (
       <View style={{ flex: 1 }}>
-        {renderInfoCodeHeader()}
-        {renderCollectionDetailCardHeader()}
-        {renderInfoSalesmanHeader()}
+        {renderCodeInfoHeader()}
+        {renderCollectionInfoHeader()}
+        {renderSalesmanInfoHeader()}
       </View>
     );
   };
@@ -551,9 +478,15 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 1
   },
-  items: {
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+  footerLine: {
+    shadowColor: masterColor.shadow,
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.84,
+    elevation: 1
   },
   smallContainerImage: {
     alignItems: 'center',
@@ -566,6 +499,10 @@ const styles = StyleSheet.create({
     height: 138,
     borderWidth: 1,
     backgroundColor: 'white'
+  },
+  styleCardView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 });
 export default SfaCollectionDetailView;

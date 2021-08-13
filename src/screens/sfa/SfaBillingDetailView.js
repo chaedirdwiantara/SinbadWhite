@@ -243,15 +243,14 @@ const SfaBillingDetailView = props => {
             paymentCollectionType.id === TRANSFER
               ? '*Tanggal Pembayaran'
               : 'Tanggal Pembayaran',
-          prefixIcon: {
-            icon: 'date-range',
-            style: { marginRight: 11 }
+          valueIcon: {
+            prefixIcon: 'date-range',
+            prefixStyle: { marginRight: 11 }
           },
           value: formatDate(createdAt),
           valuePosition: 'bottom',
           titleStyle: { ...Fonts.type37 },
           valueStyle: { marginBottom: 16 },
-          viewType: 'date',
           styleCardView: styles.styleCardView
         })}
         {CardBody({
