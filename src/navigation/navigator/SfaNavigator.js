@@ -3,14 +3,19 @@ import { View } from 'react-native';
 import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 import SfaView from '../../screens/sfa/SfaView';
-import SfaDetailView, { HeaderRightOption } from '../../screens/sfa/SfaDetailView';
+import SfaDetailView, {
+  HeaderRightOption
+} from '../../screens/sfa/SfaDetailView';
 import SfaAddTagihanView from '../../screens/sfa/SfaAddTagihanView';
 import SfaCollectionLog from '../../screens/sfa/SfaCollectionLog';
-import SfaCollectionDetailView, {DetailHeaderOption} from '../../screens/sfa/SfaCollectionDetailView';
+import SfaCollectionDetailView, {
+  DetailHeaderOption
+} from '../../screens/sfa/SfaCollectionDetailView';
 import SfaEditCollectionView from '../../screens/sfa/SfaEditCollectionView';
 import SfaCollectionMethodListView from '../../screens/sfa/SfaCollectionMethodListView';
 import SfaCollectionListView from '../../screens/sfa/SfaCollectionListView';
 import SfaCollectionAddView from '../../screens/sfa/SfaCollectionAddView';
+import SfaBillingDetailView from '../../screens/sfa/SfaBillingDetailView';
 
 const SfaNavigator = {
   SfaView: {
@@ -85,7 +90,7 @@ const SfaNavigator = {
     screen: SfaCollectionDetailView,
     navigationOptions: {
       header: null
-    },
+    }
   },
   SfaEditCollectionView: {
     screen: SfaEditCollectionView,
@@ -116,6 +121,25 @@ const SfaNavigator = {
     screen: SfaCollectionListView,
     navigationOptions: {
       headerTitle: 'Daftar Penagihan',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'left',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.fontBlack50,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  SfaBillingDetailView: {
+    screen: SfaBillingDetailView,
+    navigationOptions: {
+      headerTitle: 'Detail Pembayaran',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {

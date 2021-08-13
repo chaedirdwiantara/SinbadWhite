@@ -142,6 +142,15 @@ function deleteCollection(data) {
   });
 }
 
+/** GET BILLING DETAIL */
+function getBillingDetail(data) {
+  return ApiRest({
+    path: `collection/v1/payment-billing/${data}`,
+    testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billing/${data}`,
+    method: 'GET'
+  });
+}
+
   export const SfaMethod = {
     getCollectionStatus,
     getSfaDetail,
@@ -159,5 +168,6 @@ function deleteCollection(data) {
     getCollectionLog,
     getCollectionDetail,
     editCollection,
-    deleteCollection
+    deleteCollection,
+    getBillingDetail
   };
