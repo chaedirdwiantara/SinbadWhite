@@ -26,11 +26,12 @@ const INITIAL_STATE = {
   loadingSfaEditCollection: false,
   loadingSfaDeleteCollection: false,
   loadingSfaGetBillingDetail: false,
+  loadingLoadMoreGetReferenceList: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
   dataGetCollectionList: null,
-  dataGetReferenceList: null,
+  dataGetReferenceList: [],
   dataSfaGetPaymentMethod: null,
   dataSfaGetAllBank: null,
   dataSfaGetBankAccount: null,
@@ -163,10 +164,10 @@ export const sfa = createReducer(INITIAL_STATE, {
    * ==========================
    */
   [types.SFA_GET_REFERENCE_PROCESS](state, action) {
+    console.log(action.payload.loading, 'TEST LOADING');
     return {
       ...state,
-      loadingGetReferenceList: true,
-      dataGetReferenceList: null,
+      loadingGetReferenceList: action.payload.loading,
       errorGetReferenceList: null
     };
   },
@@ -174,7 +175,8 @@ export const sfa = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetReferenceList: false,
-      dataGetReferenceList: action.payload
+      dataGetReferenceList: action.payload,
+      loadingLoadMoreGetReferenceList: false
     };
   },
   [types.SFA_GET_REFERENCE_FAILED](state, action) {
@@ -184,7 +186,14 @@ export const sfa = createReducer(INITIAL_STATE, {
       errorGetReferenceList: action.payload
     };
   },
-
+  [types.SFA_COLLECTION_LIST_LOADMORE_PROCESS](state, action) {
+    console.log('MASUK SINI');
+    return {
+      ...state,
+      loadingLoadMoreGetReferenceList: true,
+      pageGetSfaReferenceList: action.payload
+    };
+  },
   /**
    * ==========================
    * GET PAYMENT METHOD

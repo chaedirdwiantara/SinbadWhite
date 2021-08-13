@@ -17,59 +17,62 @@ import {
   PENDING
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
-import { ButtonSingle, LoadingPage } from '../../library/component';
-import { sfaGetReferenceListProcess } from '../../state/actions';
+import {
+  ButtonSingle,
+  LoadingPage,
+  LoadingLoadMore
+} from '../../library/component';
+import {
+  sfaGetReferenceListProcess,
+  sfaCollectionListLoadmoreProcess
+} from '../../state/actions';
 const SfaCollectionListView = props => {
   const dispatch = useDispatch();
   const collectionMethodId = props.navigation.state.params.collectionMethodId;
   const [refreshing, setRefreshing] = useState(false);
   const [limit, setLimit] = useState(4);
-  const { dataGetReferenceList } = useSelector(state => state.sfa);
+  const {
+    dataGetReferenceList,
+    loadingLoadMoreGetReferenceList,
+    loadingGetReferenceList
+  } = useSelector(state => state.sfa);
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
 
   /** FUNCTION GET COLLECTION LIST */
-  const getCollectionList = () => {
+  const getCollectionList = (loading, page) => {
     const data = {
       supplierId: parseInt(1, 10),
       storeId: parseInt(3, 10),
       paymentCollectionTypeId: parseInt(1, 10),
       userId: 231322,
-      limit: limit
+      limit: page,
+      loading: loading
     };
     dispatch(sfaGetReferenceListProcess(data));
   };
   useEffect(() => {
-    getCollectionList();
+    getCollectionList(true, 3);
   }, []);
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigatetoAddCollection = () => {
     NavigationService.navigate('SfaCollectionAddView');
   };
-  /** FUNCTION COLLECTION METHOD */
-  const collectionMethod = id => {
-    let collection = '';
-    switch (id) {
-      case 1:
-        collection = 'Tunai';
-        break;
-      case 2:
-        collection = 'Cek';
-        break;
-      case 3:
-        collection = 'Giro';
-        break;
-      case 4:
-        collection = 'Transfer';
-        break;
-      case 5:
-        collection = 'Promo';
-        break;
-      default:
-        collection = '';
-        break;
+
+  /** FUNCTION REFRESH COLLECTION LIST */
+  const onHandleRefresh = () => {
+    getCollectionList(true, 10);
+  };
+
+  const onLoadMore = () => {
+    if (dataGetReferenceList) {
+      if (dataGetReferenceList.data.length < dataGetReferenceList.meta.total) {
+        const page = limit + 10;
+        setLimit(page);
+        dispatch(sfaCollectionListLoadmoreProcess(page));
+        getCollectionList(false, page);
+      }
     }
-    return collection;
   };
   /** RENDER CONTENT LIST GLOBAL */
   const renderContentListGlobal = (key, value, black, bold, red) => {
@@ -138,9 +141,8 @@ const SfaCollectionListView = props => {
    * =======================
    */
   const renderItem = ({ item, index }) => {
-    console.log(item.isEditable, item.isUsable);
     return (
-      <View key={index} style={{ marginVertical: 31, marginHorizontal: 16 }}>
+      <View key={index} style={{ marginVertical: 8, marginHorizontal: 16 }}>
         <TouchableOpacity
           style={[styles.listContainer, GlobalStyle.shadowForBox]}
           onPress={() =>
@@ -206,7 +208,7 @@ const SfaCollectionListView = props => {
               )}
               {renderContentListGlobal(
                 'Metode Penagihan',
-                collectionMethod(item.collectionMethodId)
+                item.collectionMethodName
               )}
               {renderContentListGlobal('Salesman', item.salesman)}
             </View>
@@ -243,6 +245,10 @@ const SfaCollectionListView = props => {
       </View>
     );
   };
+  const renderLoadmore = () => {
+    console.log('LALALA');
+  };
+  console.log(loadingLoadMoreGetReferenceList, 'reference list load more');
   /**
    * =======================
    * RENDER COLLECTION LIST
@@ -250,18 +256,19 @@ const SfaCollectionListView = props => {
    */
   const renderCollectionList = () => {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <FlatList
           data={dataGetReferenceList.data}
           renderItem={renderItem}
           numColumns={1}
           keyExtractor={(item, index) => index.toString()}
           onEndReachedThreshold={0.2}
-          // onEndReached={() => loadMore()}
+          onEndReached={() => onLoadMore()}
           showsVerticalScrollIndicator
           refreshing={refreshing}
-          // onRefresh={()=>onHandleRefresh()}
+          onRefresh={() => onHandleRefresh()}
         />
+        {loadingLoadMoreGetReferenceList ? <LoadingLoadMore /> : null}
       </View>
     );
   };
@@ -289,10 +296,12 @@ const SfaCollectionListView = props => {
    */
 
   const renderContent = () => {
-    return (
+    return !loadingGetReferenceList ? (
       <>
-        <View>{renderCollectionList()}</View>
+        <View style={{ flex: 1 }}>{renderCollectionList()}</View>
       </>
+    ) : (
+      <LoadingPage />
     );
   };
   /**
@@ -300,13 +309,11 @@ const SfaCollectionListView = props => {
    * MAIN
    * =======================
    */
-  return dataGetReferenceList ? (
+  return (
     <>
-      <ScrollView>{renderContent()}</ScrollView>
+      {renderContent()}
       {renderBottomButton()}
     </>
-  ) : (
-    <LoadingPage />
   );
 };
 
