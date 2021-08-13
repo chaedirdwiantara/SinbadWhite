@@ -164,7 +164,6 @@ export const sfa = createReducer(INITIAL_STATE, {
    * ==========================
    */
   [types.SFA_GET_REFERENCE_PROCESS](state, action) {
-    console.log(action.payload.loading, 'TEST LOADING');
     return {
       ...state,
       loadingGetReferenceList: action.payload.loading,
@@ -187,7 +186,6 @@ export const sfa = createReducer(INITIAL_STATE, {
     };
   },
   [types.SFA_COLLECTION_LIST_LOADMORE_PROCESS](state, action) {
-    console.log('MASUK SINI');
     return {
       ...state,
       loadingLoadMoreGetReferenceList: true,

@@ -42,17 +42,17 @@ const SfaCollectionListView = props => {
   /** FUNCTION GET COLLECTION LIST */
   const getCollectionList = (loading, page) => {
     const data = {
-      supplierId: parseInt(1, 10),
-      storeId: parseInt(3, 10),
-      paymentCollectionTypeId: parseInt(1, 10),
-      userId: 231322,
+      supplierId: parseInt(userSuppliers[0].supplierId, 10),
+      storeId: parseInt(selectedMerchant.storeId, 10),
+      paymentCollectionTypeId: parseInt(collectionMethodId, 10),
+      userId: parseInt(userSuppliers[0].userId, 10),
       limit: page,
       loading: loading
     };
     dispatch(sfaGetReferenceListProcess(data));
   };
   useEffect(() => {
-    getCollectionList(true, 3);
+    getCollectionList(true, 10);
   }, []);
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigatetoAddCollection = () => {
@@ -245,10 +245,7 @@ const SfaCollectionListView = props => {
       </View>
     );
   };
-  const renderLoadmore = () => {
-    console.log('LALALA');
-  };
-  console.log(loadingLoadMoreGetReferenceList, 'reference list load more');
+
   /**
    * =======================
    * RENDER COLLECTION LIST
