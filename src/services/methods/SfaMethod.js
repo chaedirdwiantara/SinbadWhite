@@ -120,7 +120,9 @@ function getCollectionLog(data) {
 /** GET COLLECTION DETAIL */
 function getCollectionDetail(data) {
   return ApiRest({
-    path: `collection/v1/payment-billing?paymentCollectionId=${data}`,
+    // path: `collection/v1/payment-billing?paymentCollectionId=${data}`,
+    path: `collection/v1/payment-method/${data}`,
+    testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-method/${data}`,
     method: 'GET'
   });
 }

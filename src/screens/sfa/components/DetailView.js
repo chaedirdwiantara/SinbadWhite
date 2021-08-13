@@ -1,8 +1,51 @@
 import React from 'react';
-import { View, Text } from '../../../library/reactPackage';
+import { View, Text, Dimensions, Image } from '../../../library/reactPackage';
+import { MaterialIcon, Tooltip } from '../../../library/thirdPartyPackage';
 import { Fonts, GlobalStyle } from '../../../helpers';
 import masterColor from '../../../config/masterColor.json';
-import { MaterialIcon } from '../../../library/thirdPartyPackage';
+
+const { width } = Dimensions.get('window');
+
+/**
+ * Tooltip Component
+ *
+ * @param {*} props
+ * @param {number} width number
+ * @param {function} setOpenTooltip function useState
+ * @param {boolean} openTooltip boolean - value of setOpenTooltip state
+ * @returns
+ */
+const tooltipComponent = props => {
+  const w = props.width ? props.width : 0.4 * width;
+  return (
+    <>
+      <Tooltip
+        backgroundColor={masterColor.fontBlack50OP80}
+        height={55}
+        withOverlay={false}
+        withPointer={false}
+        onOpen={() => props.setOpenTooltip}
+        onClose={() => props.setOpenTooltip}
+        containerStyle={{
+          padding: 8,
+          width: w
+        }}
+        popover={<Text style={Fonts.type87}> {props?.tooltipText} </Text>}
+      >
+        {props.openTooltip ? (
+          <MaterialIcon
+            name="help"
+            style={{ marginLeft: 6 }}
+            size={13}
+            color={masterColor.mainColor}
+          />
+        ) : (
+          <View />
+        )}
+      </Tooltip>
+    </>
+  );
+};
 
 /**
  * Card Header Badge
@@ -46,15 +89,47 @@ const CardHeader = props => {
   );
 };
 
+const icon = props => {
+  const size = props?.size ? props.size : 16;
+  return (
+    <MaterialIcon
+      name={props.name}
+      color={masterColor.mainColor}
+      size={size}
+      style={props?.style}
+    />
+  );
+};
+
 /**
  * CARD BODY TITLE
  * @param {string} value string
  * @param {StyleSheet} titleStyle StyleSheet
  * @returns
  */
-const cardBodyTitle = props => (
-  <Text style={[Fonts.type17, { ...props.titleStyle }]}>{props.title}</Text>
-);
+const cardBodyTitle = props => {
+  const { titleIcon } = props;
+
+  return (
+    <View style={{ flexDirection: 'row' }}>
+      {titleIcon?.prefixIcon
+        ? icon({
+            name: titleIcon.prefixIcon,
+            size: titleIcon?.prefixSize,
+            style: titleIcon?.prefixStyle
+          })
+        : null}
+      <Text style={[Fonts.type17, { ...props.titleStyle }]}>{props.title}</Text>
+      {titleIcon?.suffixIcon
+        ? icon({
+            name: titleIcon.suffixIcon,
+            size: titleIcon?.suffixSize,
+            style: titleIcon?.suffixStyle
+          })
+        : null}
+    </View>
+  );
+};
 
 /**
  * CARD BODY VALUE
@@ -63,21 +138,47 @@ const cardBodyTitle = props => (
  * @returns
  */
 const cardBodyValue = props => {
-  const prefixIcon = props.prefixIcon || null;
+  const { valueIcon } = props;
 
   return (
-    <>
-      {prefixIcon && prefixIcon.icon ? (
-        <MaterialIcon
-          name={prefixIcon.icon}
-          color={masterColor.mainColor}
-          size={16}
-          style={{ ...prefixIcon.style }}
-        />
-      ) : null}
-
+    <View style={{ flexDirection: 'row' }}>
+      {valueIcon?.prefixIcon
+        ? icon({
+            name: valueIcon.prefixIcon,
+            size: valueIcon?.prefixSize,
+            style: valueIcon?.prefixStyle
+          })
+        : null}
       <Text style={[Fonts.type17, { ...props.valueStyle }]}>{props.value}</Text>
-    </>
+      {valueIcon?.suffixIcon
+        ? icon({
+            name: valueIcon.suffixIcon,
+            size: valueIcon?.suffixSize,
+            style: valueIcon?.suffixStyle
+          })
+        : null}
+    </View>
+  );
+};
+
+/**
+ * RENDER IMAGE
+ *
+ * Example use image payload: {uri: `data:image/jpeg;base64, ${items.imageSource}`}
+ *
+ * @param {*} props
+ * @returns
+ */
+const renderImage = props => {
+  return (
+    <View style={{ flexDirection: 'row' }}>
+      <View style={{ ...props?.imageContainerStyle }}>
+        <Image
+          source={{ ...props?.imageSource }}
+          style={{ ...props?.imageSourceStyle }}
+        />
+      </View>
+    </View>
   );
 };
 
@@ -86,12 +187,28 @@ const cardBodyValue = props => {
  * @param {string} title string
  * @param {*} value string | number
  * @param {string} imageSource string
+ * @param {StyleSheet} imageContainerStyle StyleSheet
  * @param {StyleSheet} imageSourceStyle StyleSheet
  * @param {StyleSheet} titleStyle StyleSheet - for title
  * @param {StyleSheet} valueStyle StyleSheet - for value
- * @param {*} valuePosition right | bottom; default: right
- * @param {*} viewType date | string; default: string
+ * @param {string} valuePosition right | bottom; default: right
  * @param {StyleSheet} styleCardView StyleSheet - for card view
+ * @param {*} titleIcon Object - {
+            prefixIcon: 'date-range',
+            prefixStyle: {} // StyleSheet,
+            prefixSize: 16,
+            suffixIcon: 'help',
+            suffixStyle: {}, // StyleSheet
+            suffixSize: 16,
+          }
+ * @param {*} valueIcon Object - {
+            prefixIcon: 'date-range',
+            prefixStyle: {} // StyleSheet,
+            prefixSize: 16,
+            suffixIcon: 'help',
+            suffixStyle: {}, // StyleSheet
+            suffixSize: 16
+          }
  * @returns
  */
 const CardBody = props => {
@@ -99,26 +216,27 @@ const CardBody = props => {
 
   return (
     <>
-      <View style={{ marginBottom: 8, ...props.styleCardView }}>
+      <View style={{ marginBottom: 8, ...props?.styleCardView }}>
         {props?.tooltip ? (
-          <View style={{ flexDirection: 'row' }}>{cardBodyTitle(props)}</View>
+          <View style={{ flexDirection: 'row' }}>
+            {cardBodyTitle(props)}
+            {props?.tooltip ? tooltipComponent(props.tooltip) : null}
+          </View>
         ) : (
           cardBodyTitle(props)
         )}
-        {valuePosition === 'right' ? cardBodyValue(props) : null}
+        {valuePosition === 'right' ? (
+          <View style={{ flexDirection: 'column' }}>
+            {cardBodyValue(props)}
+          </View>
+        ) : null}
       </View>
 
       {valuePosition === 'bottom' ? (
         <View style={{ flexDirection: 'row' }}>{cardBodyValue(props)}</View>
       ) : null}
 
-      {props.imageSource ? (
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ ...props.imageSourceStyle }}>
-            <Text style={Fonts.type17}>{props.value}</Text>
-          </View>
-        </View>
-      ) : null}
+      {props.imageSource ? renderImage(props) : null}
     </>
   );
 };

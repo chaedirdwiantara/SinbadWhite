@@ -27,7 +27,7 @@ const SfaNavigator = {
   SfaDetailView: {
     screen: SfaDetailView,
     navigationOptions: {
-      headerTitle: 'Detil Tagihan',
+      headerTitle: 'Detail Tagihan',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
