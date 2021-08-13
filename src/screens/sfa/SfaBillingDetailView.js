@@ -15,16 +15,12 @@ import { sfaGetBillingDetailProcess } from '../../state/actions';
 import {
   APPROVED,
   REJECTED,
-  PENDING
+  PENDING,
+  CHECK,
+  GIRO,
+  TRANSFER
 } from '../../constants/collectionConstants';
 import { CardHeaderBadge, CardBody, CardHeader } from './components/DetailView';
-
-// Sementara, nanti ambil dari collectionConstants;
-const CASH = 1;
-const CHEQUE = 2; // cek
-const GIRO = 3;
-const TRANSFER = 4;
-const PROMO = 5;
 
 const SfaBillingDetailView = props => {
   const dispatch = useDispatch();
@@ -236,48 +232,58 @@ const SfaBillingDetailView = props => {
       createdAt,
       amount,
       stampAmount,
-      totalAmount
+      totalAmount,
+      paymentCollectionType
     } = dataSfaGetBillingDetail.data;
 
     return (
       <>
         {CardBody({
-          title: 'Tanggal Pembayaran',
+          title:
+            paymentCollectionType.id === TRANSFER
+              ? '*Tanggal Pembayaran'
+              : 'Tanggal Pembayaran',
           value: formatDate(createdAt),
           valuePosition: 'bottom',
-          titleStyle: { ...Fonts.type50 },
+          titleStyle: { ...Fonts.type37 },
           valueStyle: { marginBottom: 16 },
           viewType: 'date',
           styleCardView: styles.styleCardView
         })}
         {CardBody({
-          title: 'Jumlah Pembayaran',
+          title:
+            paymentCollectionType.id === TRANSFER
+              ? '*Jumlah Pembayaran'
+              : 'Jumlah Pembayaran',
           value: MoneyFormatSpace(amount),
           valuePosition: 'bottom',
-          titleStyle: { ...Fonts.type50 },
+          titleStyle: { ...Fonts.type37 },
           valueStyle: { marginBottom: 16 },
           styleCardView: styles.styleCardView
         })}
-        {/* TODO: Show if paymentMethodType.id == CHEQUE || GIRO */}
-        {CardBody({
-          title: 'Materai',
-          value:
-            stampAmount !== undefined && stampAmount !== null
-              ? MoneyFormatSpace(stampAmount)
-              : '-',
-          valuePosition: 'bottom',
-          titleStyle: { ...Fonts.type50 },
-          valueStyle: { marginBottom: 16 },
-          styleCardView: styles.styleCardView
-        })}
-        {CardBody({
-          title: 'Total Pembayaran',
-          value: MoneyFormatSpace(totalAmount),
-          valuePosition: 'bottom',
-          titleStyle: { ...Fonts.type50 },
-          valueStyle: { marginBottom: 16 },
-          styleCardView: styles.styleCardView
-        })}
+        {paymentCollectionType.id === CHECK || paymentCollectionType.id === GIRO
+          ? CardBody({
+              title: 'Materai',
+              value:
+                stampAmount !== undefined && stampAmount !== null
+                  ? MoneyFormatSpace(stampAmount)
+                  : '-',
+              valuePosition: 'bottom',
+              titleStyle: { ...Fonts.type37 },
+              valueStyle: { marginBottom: 16 },
+              styleCardView: styles.styleCardView
+            })
+          : null}
+        {paymentCollectionType.id !== TRANSFER
+          ? CardBody({
+              title: 'Total Pembayaran',
+              value: MoneyFormatSpace(totalAmount),
+              valuePosition: 'bottom',
+              titleStyle: { ...Fonts.type37 },
+              valueStyle: { marginBottom: 16 },
+              styleCardView: styles.styleCardView
+            })
+          : null}
       </>
     );
   };
