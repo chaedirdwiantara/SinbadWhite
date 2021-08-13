@@ -29,7 +29,7 @@ const SfaCollectionAddView = props => {
   const [noReference, setNoReference] = useState('');
   const [issuedDate, setIssuedDate] = useState(null);
   const [isModalBankOpen, setIsModalBankOpen] = useState(false);
-  const [isModalIssuedDateOpen, setIsmodalIssuedDateOpen] = useState(false);
+  const [isModalIssuedDateOpen, setIsModalIssuedDateOpen] = useState(false);
 
   const [imageName, setImageName] = useState();
   const [imageType, setImageType] = useState();
@@ -57,6 +57,10 @@ const SfaCollectionAddView = props => {
 
   const onSelectIssuedDate = date => {
     setIssuedDate(date);
+  };
+
+  const openIssuedDate = () => {
+    setIsModalIssuedDateOpen(true);
   };
   /**
    * *********************************
@@ -166,7 +170,8 @@ const SfaCollectionAddView = props => {
       </>
     );
   };
-  /** RENDER BOTTOM */
+
+  /** RENDER BOTTOM TAB */
   const renderBottomTab = () => {
     return (
       <View>
@@ -184,16 +189,48 @@ const SfaCollectionAddView = props => {
   /** RENDER ISSUED DATE */
   const renderIssuedDate = () => {
     return (
+      <View style={{ marginBottom: 8 }}>
+        <Text style={Fonts.type10}>Tanggal Terbit</Text>
+        <TouchableOpacity
+          style={styles.boxMenu}
+          onPress={() => openIssuedDate()}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <MaterialIcon
+              name="date-range"
+              color={masterColor.mainColor}
+              size={16}
+            />
+
+            <Text
+              style={[
+                Fonts.type17,
+                {
+                  marginLeft: 11
+                }
+              ]}
+            >
+              Pilih Tanggal Terbit
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <View style={[GlobalStyle.lines]} />
+      </View>
+    );
+  };
+  /** RENDER MODAL ISSUED DATE */
+  const renderModalIssuedDate = () => {
+    return (
       <ModalBottomType4
         typeClose={'Tutup'}
         open={isModalIssuedDateOpen}
         title={'Tanggal Terbit'}
-        close={() => setIsmodalIssuedDateOpen(false)}
+        close={() => setIsModalIssuedDateOpen(false)}
         content={
           <View>
             <DatePickerSpinnerWithMinMaxDate
               onSelect={date => onSelectIssuedDate(date)}
-              close={() => setIsmodalIssuedDateOpen(false)}
+              close={() => setIsModalIssuedDateOpen(false)}
               maxDate={new Date()}
             />
           </View>
@@ -210,6 +247,7 @@ const SfaCollectionAddView = props => {
     <>
       <ScrollView>{renderContent()}</ScrollView>
       {renderBottomTab()}
+      {renderModalIssuedDate()}
     </>
   );
 };
