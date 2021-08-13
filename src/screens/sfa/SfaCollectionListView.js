@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   View,
   Text,
@@ -16,38 +17,31 @@ import {
   PENDING
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
-import { ButtonSingle } from '../../library/component';
+import { ButtonSingle, LoadingPage } from '../../library/component';
+import { sfaGetReferenceListProcess } from '../../state/actions';
 const SfaCollectionListView = props => {
+  const dispatch = useDispatch();
+  const collectionMethodId = props.navigation.state.params.collectionMethodId;
   const [refreshing, setRefreshing] = useState(false);
-  const data = {
-    meta: {
-      limit: 1,
-      paymentCollectionTypeId: 2,
-      skip: 0,
-      storeId: 101,
-      supplierId: 2,
-      userId: 123,
-      total: 14
-    },
-    data: [
-      {
-        id: 2,
-        collectionCode: 'C00101202106000001',
-        collectionRef: 'AABBCC2',
-        salesman: 'Budiman Keren',
-        totalAmount: 600000,
-        balance: 500000,
-        createdAt: '2021-02-23 08:43:45',
-        issuedDate: '2021-02-23 08:43:45',
-        invalidDate: '2021-03-01 08:43:45',
-        bankSource: 'Bank BCA',
-        isEditable: false,
-        isUsable: true,
-        approvalStatus: 'pending',
-        collectionMethodId: 2
-      }
-    ]
+  const [limit, setLimit] = useState(4);
+  const { dataGetReferenceList } = useSelector(state => state.sfa);
+  const { userSuppliers } = useSelector(state => state.user);
+  const { selectedMerchant } = useSelector(state => state.merchant);
+
+  /** FUNCTION GET COLLECTION LIST */
+  const getCollectionList = () => {
+    const data = {
+      supplierId: parseInt(1, 10),
+      storeId: parseInt(3, 10),
+      paymentCollectionTypeId: parseInt(1, 10),
+      userId: 231322,
+      limit: limit
+    };
+    dispatch(sfaGetReferenceListProcess(data));
   };
+  useEffect(() => {
+    getCollectionList();
+  }, []);
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigatetoAddCollection = () => {
     NavigationService.navigate('SfaCollectionAddView');
@@ -258,7 +252,7 @@ const SfaCollectionListView = props => {
     return (
       <View>
         <FlatList
-          data={data.data}
+          data={dataGetReferenceList.data}
           renderItem={renderItem}
           numColumns={1}
           keyExtractor={(item, index) => index.toString()}
@@ -306,11 +300,13 @@ const SfaCollectionListView = props => {
    * MAIN
    * =======================
    */
-  return (
+  return dataGetReferenceList ? (
     <>
       <ScrollView>{renderContent()}</ScrollView>
       {renderBottomButton()}
     </>
+  ) : (
+    <LoadingPage />
   );
 };
 

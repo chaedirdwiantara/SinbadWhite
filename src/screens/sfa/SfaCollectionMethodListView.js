@@ -33,9 +33,11 @@ const SfaCollectionMethodListView = props => {
     dispatch(sfaGetPaymentMethodProcess(data));
   }, []);
 
-  const onSelectCollectionMethod = () => {
-    NavigationService.navigate('SfaCollectionListView');
-  }
+  const onSelectCollectionMethod = item => {
+    NavigationService.navigate('SfaCollectionListView', {
+      collectionMethodId: item.id
+    });
+  };
 
   /**
    * *********************************
@@ -101,7 +103,7 @@ const SfaCollectionMethodListView = props => {
       </View>
     </View>
   );
-}
+};
 export default SfaCollectionMethodListView;
 const styles = StyleSheet.create({
   contentContainer: {
