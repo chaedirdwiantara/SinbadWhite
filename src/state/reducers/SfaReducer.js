@@ -25,7 +25,6 @@ const INITIAL_STATE = {
   loadingSfaGetCollectionDetail: false,
   loadingSfaEditCollection: false,
   loadingSfaDeleteCollection: false,
-  loadingSfaGetBillingDetail: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -47,7 +46,6 @@ const INITIAL_STATE = {
   dataSfaGetCollectionDetail: null,
   dataSfaEditCollection: null,
   dataSfaDeleteCollection: null,
-  dataSfaGetBillingDetail: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -69,7 +67,6 @@ const INITIAL_STATE = {
   errorSfaGetCollectionDetail: null,
   errorSfaEditCollection: null,
   errorSfaDeleteCollection: null,
-  errorSfaGetBillingDetail: null
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -643,31 +640,4 @@ export const sfa = createReducer(INITIAL_STATE, {
         };
       },
    
-  /**
-   * ==========================
-   * GET BILLING DETAIL
-   * ==========================
-   */
-   [types.SFA_GET_BILLING_DETAIL_PROCESS](state, action) {
-    return {
-      ...state,
-      loadingSfaGetBillingDetail: true,
-      dataSfaGetBillingDetail: null,
-      errorSfaGetBillingDetail: null
-    };
-  },
-  [types.SFA_GET_BILLING_DETAIL_SUCCESS](state, action) {
-    return {
-      ...state,
-      loadingSfaGetBillingDetail: false,
-      dataSfaGetBillingDetail: action.payload
-    };
-  },
-  [types.SFA_GET_BILLING_DETAIL_FAILED](state, action) {
-    return {
-      ...state,
-      loadingSfaGetBillingDetail: false,
-      errorSfaGetBillingDetail: action.payload
-    };
-  }
 });

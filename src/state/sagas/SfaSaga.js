@@ -242,20 +242,7 @@ function* deleteCollection(actions) {
   }
 }
 
-/** GET BILLING DETAIL */
-function* getBillingDetail(actions) {
-  try {
-    const response = yield call(() => {
-      return SfaMethod.getBillingDetail(actions.payload);
-    });
-    yield put(ActionCreators.sfaGetBillingDetailSuccess(response));
-  } catch (error) {
-    yield put(ActionCreators.sfaGetBillingDetailFailed(error));
-  }
-}
-
-/** === SAGA FUNCTION === */
-function* SfaSaga() {
+  function* SfaSaga() {
     yield takeEvery(
       types.SFA_GET_COLLECTION_STATUS_PROCESS,
       getSfaCollectionStatus
@@ -278,8 +265,7 @@ function* SfaSaga() {
     yield takeEvery(types.SFA_COLLECTION_LOG_LOADMORE_PROCESS, loadmoreCollectionLog),
     yield takeEvery(types.SFA_GET_COLLECTION_DETAIL_PROCESS, getCollectionDetail),
     yield takeEvery(types.SFA_EDIT_COLLECTION_PROCESS, editCollection),
-    yield takeEvery(types.SFA_DELETE_COLLECTION_PROCESS, deleteCollection),
-    yield takeEvery(types.SFA_GET_BILLING_DETAIL_PROCESS, getBillingDetail);
+    yield takeEvery(types.SFA_DELETE_COLLECTION_PROCESS, deleteCollection)
 }
 
 export default SfaSaga;
