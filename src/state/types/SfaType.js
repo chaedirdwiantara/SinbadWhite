@@ -104,8 +104,3 @@ export const SFA_EDIT_COLLECTION_FAILED = 'SfaEditCollectionFailed';
 export const SFA_DELETE_COLLECTION_PROCESS = 'SfaDeleteCollectionProcess';
 export const SFA_DELETE_COLLECTION_SUCCESS = 'SfaDeleteCollectionSuccess';
 export const SFA_DELETE_COLLECTION_FAILED = 'SfaDeleteCollectionFailed';
-
-/** GET BILLING DETAIL */
-export const SFA_GET_BILLING_DETAIL_PROCESS = 'SfaGetBillingDetailProcess';
-export const SFA_GET_BILLING_DETAIL_SUCCESS = 'SfaGetBillingDetailSuccess';
-export const SFA_GET_BILLING_DETAIL_FAILED = 'SfaGetBillingDetailFailed';
