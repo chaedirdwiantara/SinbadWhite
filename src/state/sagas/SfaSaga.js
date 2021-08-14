@@ -254,6 +254,18 @@ function* getBillingDetail(actions) {
   }
 }
 
+/** GET BILLING ADD */
+function* getBillingAdd(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getBillingAdd(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetBillingAddSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetBillingAddFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* SfaSaga() {
     yield takeEvery(
@@ -280,6 +292,7 @@ function* SfaSaga() {
     yield takeEvery(types.SFA_EDIT_COLLECTION_PROCESS, editCollection),
     yield takeEvery(types.SFA_DELETE_COLLECTION_PROCESS, deleteCollection),
     yield takeEvery(types.SFA_GET_BILLING_DETAIL_PROCESS, getBillingDetail);
+    yield takeEvery(types.SFA_GET_BILLING_ADD_PROCESS, getBillingAdd);
 }
 
 export default SfaSaga;

@@ -532,3 +532,30 @@ export function sfaGetBillingDetailSuccess(data) {
 export function sfaGetBillingDetailFailed(data) {
   return { type: types.SFA_GET_BILLING_DETAIL_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * GET BILLING ADD
+ * ===========================
+ */
+
+/** === SFA GET BILLING ADD PROCESS === */
+export function sfaGetBillingAddProcess(data) {
+  return { type: types.SFA_GET_BILLING_ADD_PROCESS, payload: data };
+}
+
+/** === SFA GET BILLING ADD SUCCESS === */
+export function sfaGetBillingAddSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_BILLING_ADD_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_BILLING_ADD_FAILED, payload: data };
+}
+
+/** === SFA GET BILLING ADD FAILED === */
+export function sfaGetBillingAddFailed(data) {
+  return { type: types.SFA_GET_BILLING_ADD_FAILED, payload: data };
+}
