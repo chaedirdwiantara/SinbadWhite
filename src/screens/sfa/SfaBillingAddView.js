@@ -12,7 +12,7 @@ import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
 import { sfaGetBillingAddProcess } from '../../state/actions';
-import { CardBody, CardHeader } from './components/DetailView';
+import { CardBody, CardHeader } from './components/CardView';
 import NavigationService from '../../navigation/NavigationService';
 
 const SfaBillingAddView = props => {

@@ -26,7 +26,7 @@ import {
   GIRO
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
-import { CardBody, CardHeader, CardHeaderBadge } from './components/DetailView';
+import { CardBody, CardHeader, CardHeaderBadge } from './components/CardView';
 
 const { width } = Dimensions.get('window');
 const isNumber = n => (n !== null && n !== undefined ? true : false);
@@ -382,7 +382,7 @@ const SfaCollectionDetailView = props => {
           borderRadius={4}
           onPress={() =>
             // TODO: Change navigation to SfaBillingListView
-            NavigationService.navigate('SfaBillingDetailView', {
+            NavigationService.navigate('SfaBillingAddView', {
               paymentBillingId: dataSfaGetCollectionDetail.data.id
             })
           }
