@@ -38,6 +38,12 @@ class SignInWithPhoneView extends Component {
    * FUNCTIONAL
    * ========================
    */
+  componentDidMount() {
+    /** THIS FOR MAINTENANCE PAGE */
+    if (this.props.permanent.appMaintenance) {
+      NavigationService.navigate('MaintenanceView');
+    }
+  }
   /** COMPONENT DID UPDATE */
   componentDidUpdate(prevProps) {
     /** CHECK IF SUCCESS */
@@ -222,8 +228,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ auth, permanent }) => {
+  return { auth, permanent };
 };
 
 const mapDispatchToProps = dispatch => {
