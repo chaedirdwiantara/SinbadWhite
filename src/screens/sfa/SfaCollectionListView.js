@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   View,
   Text,
@@ -16,63 +17,62 @@ import {
   PENDING
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
-import { ButtonSingle, } from '../../library/component';
+import {
+  ButtonSingle,
+  LoadingPage,
+  LoadingLoadMore
+} from '../../library/component';
+import {
+  sfaGetReferenceListProcess,
+  sfaCollectionListLoadmoreProcess
+} from '../../state/actions';
 const SfaCollectionListView = props => {
+  const dispatch = useDispatch();
+  const collectionMethodId = props.navigation.state.params.collectionMethodId;
   const [refreshing, setRefreshing] = useState(false);
-  const data = {
-    meta: {
-      limit: 1,
-      paymentCollectionTypeId: 2,
-      skip: 0,
-      storeId: 101,
-      supplierId: 2,
-      userId: 123,
-      total: 14
-    },
-    data: [
-      {
-        id: 2,
-        collectionCode: 'C00101202106000001',
-        collectionRef: 'AABBCC2',
-        salesman: 'Budiman Keren',
-        totalAmount: 600000,
-        balance: 500000,
-        createdAt: '2021-02-23 08:43:45',
-        issuedDate: '2021-02-23 08:43:45',
-        invalidDate: '2021-03-01 08:43:45',
-        bankSource: 'Bank BCA',
-        isEditable: false,
-        isUsable: false,
-        approvalStatus: 'pending',
-        collectionMethodId: 2
-      }
-    ]
+  const [limit, setLimit] = useState(4);
+  const {
+    dataGetReferenceList,
+    loadingLoadMoreGetReferenceList,
+    loadingGetReferenceList
+  } = useSelector(state => state.sfa);
+  const { userSuppliers } = useSelector(state => state.user);
+  const { selectedMerchant } = useSelector(state => state.merchant);
+
+  /** FUNCTION GET COLLECTION LIST */
+  const getCollectionList = (loading, page) => {
+    const data = {
+      supplierId: parseInt(userSuppliers[0].supplierId, 10),
+      storeId: parseInt(selectedMerchant.storeId, 10),
+      paymentCollectionTypeId: parseInt(collectionMethodId, 10),
+      userId: parseInt(userSuppliers[0].userId, 10),
+      limit: page,
+      loading: loading
+    };
+    dispatch(sfaGetReferenceListProcess(data));
+  };
+  useEffect(() => {
+    getCollectionList(true, 10);
+  }, []);
+  /** FUNCTION NAVIGATE TO ADD COLLECTION */
+  const navigatetoAddCollection = () => {
+    NavigationService.navigate('SfaCollectionAddView');
   };
 
-  /** FUNCTION COLLECTION METHOD */
-  const collectionMethod = id => {
-    let collection = '';
-    switch (id) {
-      case 1:
-        collection = 'Tunai';
-        break;
-      case 2:
-        collection = 'Cek';
-        break;
-      case 3:
-        collection = 'Giro';
-        break;
-      case 4:
-        collection = 'Transfer';
-        break;
-      case 5:
-        collection = 'Promo';
-        break;
-      default:
-        collection = '';
-        break;
+  /** FUNCTION REFRESH COLLECTION LIST */
+  const onHandleRefresh = () => {
+    getCollectionList(true, 10);
+  };
+
+  const onLoadMore = () => {
+    if (dataGetReferenceList) {
+      if (dataGetReferenceList.data.length < dataGetReferenceList.meta.total) {
+        const page = limit + 10;
+        setLimit(page);
+        dispatch(sfaCollectionListLoadmoreProcess(page));
+        getCollectionList(false, page);
+      }
     }
-    return collection;
   };
   /** RENDER CONTENT LIST GLOBAL */
   const renderContentListGlobal = (key, value, black, bold, red) => {
@@ -110,6 +110,7 @@ const SfaCollectionListView = props => {
   const renderButton = (title, type, disable) => {
     return (
       <TouchableOpacity
+        disabled={disable}
         style={{
           ...styles.buttonSmall,
           backgroundColor:
@@ -140,9 +141,8 @@ const SfaCollectionListView = props => {
    * =======================
    */
   const renderItem = ({ item, index }) => {
-    console.log(item.isEditable, item.isUsable);
     return (
-      <View key={index} style={{ marginVertical: 31, marginHorizontal: 16 }}>
+      <View key={index} style={{ marginVertical: 8, marginHorizontal: 16 }}>
         <TouchableOpacity
           style={[styles.listContainer, GlobalStyle.shadowForBox]}
           onPress={() =>
@@ -208,7 +208,7 @@ const SfaCollectionListView = props => {
               )}
               {renderContentListGlobal(
                 'Metode Penagihan',
-                collectionMethod(item.collectionMethodId)
+                item.collectionMethodName
               )}
               {renderContentListGlobal('Salesman', item.salesman)}
             </View>
@@ -245,6 +245,7 @@ const SfaCollectionListView = props => {
       </View>
     );
   };
+
   /**
    * =======================
    * RENDER COLLECTION LIST
@@ -252,18 +253,19 @@ const SfaCollectionListView = props => {
    */
   const renderCollectionList = () => {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <FlatList
-          data={data.data}
+          data={dataGetReferenceList.data}
           renderItem={renderItem}
           numColumns={1}
           keyExtractor={(item, index) => index.toString()}
           onEndReachedThreshold={0.2}
-          // onEndReached={() => loadMore()}
+          onEndReached={() => onLoadMore()}
           showsVerticalScrollIndicator
           refreshing={refreshing}
-          // onRefresh={()=>onHandleRefresh()}
+          onRefresh={() => onHandleRefresh()}
         />
+        {loadingLoadMoreGetReferenceList ? <LoadingLoadMore /> : null}
       </View>
     );
   };
@@ -276,7 +278,11 @@ const SfaCollectionListView = props => {
   const renderBottomButton = () => {
     return (
       <>
-        <ButtonSingle title={'Tambah Penagihan'} borderRadius={4} />
+        <ButtonSingle
+          onPress={() => navigatetoAddCollection()}
+          title={'Tambah Penagihan'}
+          borderRadius={4}
+        />
       </>
     );
   };
@@ -287,10 +293,12 @@ const SfaCollectionListView = props => {
    */
 
   const renderContent = () => {
-    return (
+    return !loadingGetReferenceList ? (
       <>
-        <View>{renderCollectionList()}</View>
+        <View style={{ flex: 1 }}>{renderCollectionList()}</View>
       </>
+    ) : (
+      <LoadingPage />
     );
   };
   /**
@@ -300,11 +308,8 @@ const SfaCollectionListView = props => {
    */
   return (
     <>
-      <>
-        <ScrollView>{renderContent()}</ScrollView>
-
-        {renderBottomButton()}
-      </>
+      {renderContent()}
+      {renderBottomButton()}
     </>
   );
 };

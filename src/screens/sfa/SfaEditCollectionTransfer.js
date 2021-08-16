@@ -800,7 +800,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
-    alignItems: 'center',
     paddingTop: 8
   },
   smallContainerButtonImage: {

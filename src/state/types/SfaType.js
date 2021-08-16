@@ -1,5 +1,5 @@
 /** =======================
- * SFA 
+ * SFA
  * ========================
  */
 /** GET COLLECTION STATUS */
@@ -7,8 +7,7 @@ export const SFA_GET_COLLECTION_STATUS_PROCESS =
   'SfaGetCollectionStatusProcess';
 export const SFA_GET_COLLECTION_STATUS_SUCCESS =
   'SfaGetCollectionStatusSuccess';
-export const SFA_GET_COLLECTION_STATUS_FAILED =
-  'SfaGetCollectionStatusFailed';
+export const SFA_GET_COLLECTION_STATUS_FAILED = 'SfaGetCollectionStatusFailed';
 /** GET DETAIL SFA */
 export const SFA_GET_DETAIL_PROCESS = 'SfaGetDetailProcess';
 export const SFA_GET_DETAIL_SUCCESS = 'SfaGetDetailSuccess';
@@ -25,6 +24,8 @@ export const SFA_GET_REFRESH = 'SfayGetRefresh';
 export const SFA_GET_REFERENCE_PROCESS = 'SfaGetReferenceProcess';
 export const SFA_GET_REFERENCE_SUCCESS = 'SfaGetReferenceSuccess';
 export const SFA_GET_REFERENCE_FAILED = 'SfaGetReferenceFailed';
+export const SFA_COLLECTION_LIST_LOADMORE_PROCESS =
+  'SfaCollectionListLoadMoreProcess';
 
 /** GET PAYMENT METHOD */
 export const SFA_GET_PAYMENT_METHOD_PROCESS = 'SfaGetPaymentMethodProcess';
@@ -46,9 +47,12 @@ export const SFA_POST_PAYMENT_METHOD_SUCCESS = 'SfaPostPaymentMethodSuccess';
 export const SFA_POST_PAYMENT_METHOD_FAILED = 'SfaPostPaymentMethodFailed';
 
 /** POST COLLECTION PAYMENT */
-export const SFA_POST_COLLECTION_PAYMENT_PROCESS = 'SfaPostCollectionPaymentProcess';
-export const SFA_POST_COLLECTION_PAYMENT_SUCCESS = 'SfaPostCollectionPaymentSuccess';
-export const SFA_POST_COLLECTION_PAYMENT_FAILED = 'SfaPostCollectionPaymentFailed';
+export const SFA_POST_COLLECTION_PAYMENT_PROCESS =
+  'SfaPostCollectionPaymentProcess';
+export const SFA_POST_COLLECTION_PAYMENT_SUCCESS =
+  'SfaPostCollectionPaymentSuccess';
+export const SFA_POST_COLLECTION_PAYMENT_FAILED =
+  'SfaPostCollectionPaymentFailed';
 
 /** GET STAMP LIST */
 export const SFA_GET_STAMP_PROCESS = 'SfaGetStampProcess';
@@ -76,8 +80,10 @@ export const SFA_PRINCIPAL_LOADMORE_SUCCESS = 'SfaPrincipalLoadmoreSuccess';
 export const SFA_PRINCIPAL_LOADMORE_FAILED = 'SfaPrincipalLoadmoreFailed';
 
 /** LOADMORE BANK DESTINATION */
-export const SFA_BANK_ACCOUNT_LOADMORE_PROCESS = 'SfaBankAccountLoadmoreProcess';
-export const SFA_BANK_ACCOUNT_LOADMORE_SUCCESS = 'SfaBankAccountLoadmoreSuccess';
+export const SFA_BANK_ACCOUNT_LOADMORE_PROCESS =
+  'SfaBankAccountLoadmoreProcess';
+export const SFA_BANK_ACCOUNT_LOADMORE_SUCCESS =
+  'SfaBankAccountLoadmoreSuccess';
 export const SFA_BANK_ACCOUNT_LOADMORE_FAILED = 'SfaBankAccountLoadmoreFailed';
 
 /** GET COLLECTION LOG */
@@ -86,13 +92,18 @@ export const SFA_GET_COLLECTION_LOG_SUCCESS = 'SfaGetCollectionLogSuccess';
 export const SFA_GET_COLLECTION_LOG_FAILED = 'SfaGetCollectionLogFailed';
 
 /** LOADMORE COLLECTION LOG */
-export const SFA_COLLECTION_LOG_LOADMORE_PROCESS = 'SfaCollectionLogLoadmoreProcess';
-export const SFA_COLLECTION_LOG_LOADMORE_SUCCESS = 'SfaCollectionLogLoadmoreSuccess';
-export const SFA_COLLECTION_LOG_LOADMORE_FAILED = 'SfaCollectionLogLoadmoreFailed';
+export const SFA_COLLECTION_LOG_LOADMORE_PROCESS =
+  'SfaCollectionLogLoadmoreProcess';
+export const SFA_COLLECTION_LOG_LOADMORE_SUCCESS =
+  'SfaCollectionLogLoadmoreSuccess';
+export const SFA_COLLECTION_LOG_LOADMORE_FAILED =
+  'SfaCollectionLogLoadmoreFailed';
 
 /** GET COLLECTION DETAIL */
-export const SFA_GET_COLLECTION_DETAIL_PROCESS = 'SfaGetCollectionDetailProcess';
-export const SFA_GET_COLLECTION_DETAIL_SUCCESS = 'SfaGetCollectionDetailSuccess';
+export const SFA_GET_COLLECTION_DETAIL_PROCESS =
+  'SfaGetCollectionDetailProcess';
+export const SFA_GET_COLLECTION_DETAIL_SUCCESS =
+  'SfaGetCollectionDetailSuccess';
 export const SFA_GET_COLLECTION_DETAIL_FAILED = 'SfaGetCollectionDetailFailed';
 
 /** GET EDIT COLLECTION */

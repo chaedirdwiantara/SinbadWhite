@@ -76,6 +76,11 @@ export function sfaGetCollectionListFailed(data) {
  * GET REFERENCE LIST
  * ===========================
  */
+/** === SFA LOADMORE REFERENCE LIST PROCESS === */
+export function sfaCollectionListLoadmoreProcess(data) {
+  return { type: types.SFA_COLLECTION_LIST_LOADMORE_PROCESS, payload: data };
+}
+
 /** === SFA GET REFERENCE LIST PROCESS === */
 export function sfaGetReferenceListProcess(data) {
   return { type: types.SFA_GET_REFERENCE_PROCESS, payload: data };
