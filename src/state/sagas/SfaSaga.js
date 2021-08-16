@@ -254,15 +254,15 @@ function* getBillingDetail(actions) {
   }
 }
 
-/** GET BILLING ADD */
-function* getBillingAdd(actions) {
+/** POST BILLING ADD */
+function* postBillingAdd(actions) {
   try {
     const response = yield call(() => {
-      return SfaMethod.getBillingAdd(actions.payload);
+      return SfaMethod.postBillingAdd(actions.payload);
     });
-    yield put(ActionCreators.sfaGetBillingAddSuccess(response));
+    yield put(ActionCreators.sfaPostBillingAddSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.sfaGetBillingAddFailed(error));
+    yield put(ActionCreators.sfaPostBillingAddFailed(error));
   }
 }
 
@@ -292,7 +292,7 @@ function* SfaSaga() {
     yield takeEvery(types.SFA_EDIT_COLLECTION_PROCESS, editCollection),
     yield takeEvery(types.SFA_DELETE_COLLECTION_PROCESS, deleteCollection),
     yield takeEvery(types.SFA_GET_BILLING_DETAIL_PROCESS, getBillingDetail);
-    yield takeEvery(types.SFA_GET_BILLING_ADD_PROCESS, getBillingAdd);
+    yield takeEvery(types.SFA_POST_BILLING_ADD_PROCESS, postBillingAdd);
 }
 
 export default SfaSaga;

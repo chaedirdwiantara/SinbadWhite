@@ -1,51 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
   SafeAreaView,
   ScrollView,
-  RefreshControl,
-  Text
+  // RefreshControl,
+  Text,
+  TouchableOpacity
 } from '../../library/reactPackage';
-import { LoadingPage, ButtonSingle } from '../../library/component';
+import {
+  MaterialIcon,
+  MaterialCommunityIcons
+} from '../../library/thirdPartyPackage';
+import { TextInputMask } from 'react-native-masked-text';
+import { ButtonSingle } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
-import { sfaGetBillingAddProcess } from '../../state/actions';
 import { CardBody, CardHeader } from './components/CardView';
 import NavigationService from '../../navigation/NavigationService';
+import { CASH, CHECK, GIRO } from '../../constants/collectionConstants';
+import { sfaPostBillingAddProcess } from '../../state/actions';
 
 const SfaBillingAddView = props => {
   const dispatch = useDispatch();
-  const [refreshing, setRefreshing] = useState(false);
 
-  const dataSfaGetBillingAdd = {
-    data: {
-      fakturName: 'COMBINE',
-      orderCode: 'S001001788812',
-      orderRef: 'A754',
-      totalInvoiceAmmount: 1100000,
-      totalInvoiceOutstandingAmmount: 1100000,
-      paymentCollectionTypeId: 1,
-      collectionRef: 'C001',
-      collectionAmount: 1100000,
-      stampAmount: 10000,
-      totalCollectionAmount: 1100000,
-      totalCollectionRemainingAmount: 120000
-    }
-  };
+  const collectionInfo = props.navigation.state.params;
+  // const [refreshing, setRefreshing] = useState(false);
+  const [paymentAmount, setPaymentAmount] = useState(0);
+  const [isStampChecked, setIsStampChecked] = useState(null);
+  const [stampAmount, setStampAmount] = useState(0);
 
-  const { loadingSfaGetBillingAdd } = useSelector(state => state.sfa);
+  console.log('collectionInfo:', collectionInfo);
+
+  const {
+    loadingSfaPostBillingAdd,
+    dataSfaGetDetail,
+    dataSfaPostBillingAdd
+  } = useSelector(state => state.sfa);
+  const { userSuppliers } = useSelector(state => state.user);
+  const { selectedMerchant } = useSelector(state => state.merchant);
 
   /** === ON REFRESH === */
-  const onRefresh = () => {
-    getBillingAdd();
-    /** SET PAGE REFRESH */
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 10);
-  };
+  // const onRefresh = () => {
+  //   /** SET PAGE REFRESH */
+  //   setRefreshing(true);
+  //   setTimeout(() => {
+  //     setRefreshing(false);
+  //   }, 10);
+  // };
 
   /**
    * *********************************
@@ -53,16 +56,48 @@ const SfaBillingAddView = props => {
    * *********************************
    */
 
-  useEffect(() => {
-    getBillingAdd();
-  }, []);
+  const isNumber = n => (n !== null && n !== undefined ? true : false);
 
-  const getBillingAdd = () => {
-    const paymentBillingId = props.navigation.state.params.paymentBillingId;
-    dispatch(sfaGetBillingAddProcess(paymentBillingId));
+  const dataPaymentAmount = text => {
+    let paymentAmountInt = parseInt(text.replace(/[Rp.]+/g, ''), 10);
+
+    if (
+      collectionInfo.paymentCollectionTypeId === GIRO ||
+      collectionInfo.paymentCollectionTypeId === CHECK
+    ) {
+      if (collectionInfo.isStampUsed === true) {
+        paymentAmountInt += stampAmount;
+      }
+    }
+
+    setPaymentAmount(paymentAmountInt);
   };
 
-  const isNumber = n => (n !== null && n !== undefined ? true : false);
+  const onCheckStamp = () => {
+    setIsStampChecked(!isStampChecked);
+    if (isStampChecked === false) {
+      console.log('lalla');
+    }
+  };
+
+  const submit = () => {
+    const data = {
+      supplierId: parseInt(userSuppliers[0].supplierId, 10),
+      userId: parseInt(userSuppliers[0].userId, 10),
+      orderParcelId: dataSfaGetDetail.data.id,
+      storeId: parseInt(selectedMerchant.storeId, 10),
+      paymentCollectionMethodId: collectionInfo.paymentCollectionTypeId,
+      amount: paymentAmount,
+      isUsedStamp: collectionInfo.isStampUsed
+    };
+    dispatch(sfaPostBillingAddProcess(data));
+
+    if (!loadingSfaPostBillingAdd && dataSfaPostBillingAdd?.id) {
+      NavigationService.navigate('SfaDetailView', {
+        orderParcelId: dataSfaGetDetail.data.id
+      });
+    }
+  };
 
   /**
    * *********************************
@@ -99,18 +134,18 @@ const SfaBillingAddView = props => {
    */
   const renderInvoiceInfoBody = () => {
     const {
-      fakturName,
+      invoiceGroupName,
       orderCode,
       orderRef,
-      totalInvoiceAmmount,
-      totalInvoiceOutstandingAmmount
-    } = dataSfaGetBillingAdd?.data;
+      totalBilling,
+      remainingBilling
+    } = dataSfaGetDetail?.data;
 
     return (
       <>
         {CardBody({
           title: 'Nama Faktur',
-          value: fakturName,
+          value: invoiceGroupName,
           styleCardView: styles.styleCardView
         })}
         {CardBody({
@@ -120,24 +155,21 @@ const SfaBillingAddView = props => {
         })}
         {CardBody({
           title: 'Nomor Referensi',
-          value: orderRef,
+          value: orderRef ? orderRef : '-',
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Total Tagihan',
-          value:
-            totalInvoiceAmmount !== undefined && totalInvoiceAmmount !== null
-              ? MoneyFormatSpace(totalInvoiceAmmount)
-              : '-',
+          value: isNumber(totalBilling)
+            ? MoneyFormatSpace(totalBilling)
+            : MoneyFormatSpace(0),
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Sisa Tagihan',
-          value:
-            totalInvoiceOutstandingAmmount !== undefined &&
-            totalInvoiceOutstandingAmmount !== null
-              ? MoneyFormatSpace(totalInvoiceOutstandingAmmount)
-              : '-',
+          value: isNumber(remainingBilling)
+            ? MoneyFormatSpace(remainingBilling)
+            : MoneyFormatSpace(0),
           styleCardView: styles.styleCardView
         })}
       </>
@@ -172,45 +204,46 @@ const SfaBillingAddView = props => {
    * ==================================
    */
   const renderCollectionInfoBody = () => {
-    const {
-      paymentCollectionTypeId,
-      collectionRef,
-      collectionAmount,
-      stampAmount,
-      totalCollectionAmount,
-      totalCollectionRemainingAmount
-    } = dataSfaGetBillingAdd.data;
-
     return (
       <>
         {CardBody({
           title: 'Metode Penagihan',
-          value: paymentCollectionTypeId,
+          value: collectionInfo?.collectionMethodName,
           styleCardView: styles.styleCardView
         })}
-        {CardBody({
-          title: 'Nomor Penagihan',
-          value: collectionRef,
-          styleCardView: styles.styleCardView
-        })}
-        {CardBody({
-          title: 'Nilai Penagihan',
-          value: MoneyFormatSpace(collectionAmount),
-          styleCardView: styles.styleCardView
-        })}
-        {CardBody({
-          title: 'Materai',
-          value: isNumber(stampAmount) ? stampAmount : '-',
-          styleCardView: styles.styleCardView
-        })}
+        {collectionInfo.paymentCollectionTypeId !== CASH
+          ? CardBody({
+              title: 'Nomor Referensi',
+              value: collectionInfo?.collectionCode,
+              styleCardView: styles.styleCardView
+            })
+          : null}
+        {collectionInfo.paymentCollectionTypeId === CHECK ||
+        collectionInfo.paymentCollectionTypeId === GIRO
+          ? CardBody({
+              title: 'Nilai Penagihan',
+              value: MoneyFormatSpace(collectionInfo.amount),
+              styleCardView: styles.styleCardView
+            })
+          : null}
+        {collectionInfo.paymentCollectionTypeId === CHECK ||
+        collectionInfo.paymentCollectionTypeId === GIRO
+          ? CardBody({
+              title: 'Materai',
+              value: isNumber(collectionInfo?.stampAmount)
+                ? MoneyFormatSpace(collectionInfo.stampAmount)
+                : '-',
+              styleCardView: styles.styleCardView
+            })
+          : null}
         {CardBody({
           title: 'Total Penagihan',
-          value: MoneyFormatSpace(totalCollectionAmount),
+          value: MoneyFormatSpace(collectionInfo?.totalAmount),
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Sisa Penagihan',
-          value: MoneyFormatSpace(totalCollectionRemainingAmount),
+          value: MoneyFormatSpace(collectionInfo?.totalBalance),
           styleCardView: styles.styleCardView
         })}
       </>
@@ -233,9 +266,122 @@ const SfaBillingAddView = props => {
             ...GlobalStyle.shadowForBox5,
             marginBottom: 16
           },
-          styleCardView: styles.styleCardView
-          // renderCardBody: renderBillingInfoBody
+          styleCardView: styles.styleCardView,
+          renderCardBody: renderBillingInfoBody
         })}
+      </>
+    );
+  };
+
+  /** RENDER MATERAI */
+  const renderMaterai = () => {
+    const renderItem = () => {
+      return (
+        <>
+          <TouchableOpacity onPress={() => onCheckStamp()} style={{ flex: 1 }}>
+            {isStampChecked ? (
+              <MaterialCommunityIcons
+                color={masterColor.mainColor}
+                name="checkbox-marked"
+                size={24}
+              />
+            ) : (
+              <MaterialCommunityIcons
+                color={masterColor.fontBlack40}
+                name="checkbox-blank-outline"
+                size={24}
+              />
+            )}
+          </TouchableOpacity>
+          <View style={{ flex: 8 }}>
+            <TouchableOpacity
+              onPress={() => console.log('true')}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}
+              disabled={!isStampChecked}
+            >
+              <Text style={[Fonts.type17]}>Materai</Text>
+              <View>
+                <MaterialIcon
+                  name="chevron-right"
+                  color={masterColor.fontBlack40}
+                  size={24}
+                />
+              </View>
+            </TouchableOpacity>
+            <View style={[GlobalStyle.lines, { marginTop: 8 }]} />
+          </View>
+        </>
+      );
+    };
+
+    return collectionInfo.paymentCollectionTypeId === CHECK ||
+      collectionInfo.paymentCollectionTypeId === GIRO ? (
+      <View style={{ marginTop: 16 }}>
+        <View style={{ display: 'flex', flexDirection: 'row' }}>
+          <Text style={[Fonts.type10]}>Materai</Text>
+          {/* {renderTooltip()} */}
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingVertical: 16
+          }}
+        >
+          {collectionInfo.isStampUsed === null ? (
+            <Text style={[Fonts.type17]}>
+              Penagihan tidak menggunakan materai
+            </Text>
+          ) : collectionInfo.isStampUsed === true ? (
+            renderItem()
+          ) : (
+            <Text style={[Fonts.type17]}>
+              Materai telah digunakan di pembayaran lainnya
+            </Text>
+          )}
+        </View>
+      </View>
+    ) : null;
+  };
+
+  /**
+   * ========================
+   * RENDER BILLING INFO BODY
+   * ========================
+   */
+  const renderBillingInfoBody = () => {
+    return (
+      <>
+        <View style={{ paddingTop: 16 }}>
+          <Text style={Fonts.type10}>*Jumlah Pembayaran</Text>
+          <View>
+            <TextInputMask
+              type={'money'}
+              options={{
+                precision: 0,
+                separator: ',',
+                delimiter: '.',
+                unit: 'Rp ',
+                suffixUnit: ''
+              }}
+              value={paymentAmount}
+              onChangeText={text => dataPaymentAmount(text)}
+              style={[
+                Fonts.type17,
+                {
+                  width: '95%',
+                  borderBottomColor: masterColor.fontBlack50
+                }
+              ]}
+            />
+          </View>
+        </View>
+        <View style={GlobalStyle.lines} />
+        {renderMaterai()}
       </>
     );
   };
@@ -246,15 +392,12 @@ const SfaBillingAddView = props => {
         <View style={[GlobalStyle.lines, styles.footerLine]} />
         <View style={styles.footer}>
           <View style={{ flexDirection: 'row' }}>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={[Fonts.type23, styles.textLeft]}>
-                Total Pembayaran
-              </Text>
+            <View style={{ flex: 1 }}>
+              <Text style={Fonts.type23}>Total Pembayaran</Text>
             </View>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={[Fonts.type116p, styles.textRight]}>
-                {/* TODO: */}
-                {MoneyFormatSpace(1000000)}
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              <Text style={Fonts.type116p}>
+                {MoneyFormatSpace(paymentAmount)}
               </Text>
             </View>
           </View>
@@ -271,14 +414,11 @@ const SfaBillingAddView = props => {
     return (
       <>
         <ButtonSingle
+          loading={loadingSfaPostBillingAdd}
+          disabled={loadingSfaPostBillingAdd}
           title={'Simpan'}
           borderRadius={4}
-          // onPress={() =>
-          //   // TODO: Change navigation to SfaBillingListView
-          //   NavigationService.navigate('SfaBillingDetailView', {
-          //     paymentBillingId: dataSfaGetCollectionDetail.data.id
-          //   })
-          // }
+          onPress={() => submit()}
         />
       </>
     );
@@ -295,7 +435,6 @@ const SfaBillingAddView = props => {
       <View style={{ flex: 1 }}>
         {renderInvoiceInfoHeader()}
         {renderCollectionInfoHeader()}
-        {renderCollectionInfoHeader()}
         {renderBillingInfoCardHeader()}
       </View>
     );
@@ -308,25 +447,25 @@ const SfaBillingAddView = props => {
    */
   return (
     <View style={{ flex: 1 }}>
-      {dataSfaGetBillingAdd && !loadingSfaGetBillingAdd ? (
-        <SafeAreaView style={styles.mainContainer}>
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={() => onRefresh()}
-              />
-            }
-            style={{ flex: 1, height: '100%' }}
-          >
-            {renderContent()}
-          </ScrollView>
-          {renderFooter()}
-          {renderSaveButton()}
-        </SafeAreaView>
-      ) : (
+      {/* {dataSfaGetBillingAdd && !loadingSfaGetBillingAdd ? ( */}
+      <SafeAreaView style={styles.mainContainer}>
+        <ScrollView
+          // refreshControl={
+          //   <RefreshControl
+          //     refreshing={refreshing}
+          //     onRefresh={() => onRefresh()}
+          //   />
+          // }
+          style={{ flex: 1, height: '100%' }}
+        >
+          {renderContent()}
+        </ScrollView>
+        {renderFooter()}
+        {renderSaveButton()}
+      </SafeAreaView>
+      {/* ) : (
         <LoadingPage />
-      )}
+      )} */}
     </View>
   );
 };

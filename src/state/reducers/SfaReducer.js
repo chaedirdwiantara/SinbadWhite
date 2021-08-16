@@ -27,7 +27,7 @@ const INITIAL_STATE = {
   loadingSfaDeleteCollection: false,
   loadingLoadMoreGetReferenceList: false,
   loadingSfaGetBillingDetail: false,
-  loadingSfaGetBillingAdd: false,
+  loadingSfaPostBillingAdd: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -50,6 +50,7 @@ const INITIAL_STATE = {
   dataSfaEditCollection: null,
   dataSfaDeleteCollection: null,
   dataSfaGetBillingDetail: null,
+  dataSfaPostBillingDetail: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -71,7 +72,8 @@ const INITIAL_STATE = {
   errorSfaGetCollectionDetail: null,
   errorSfaEditCollection: null,
   errorSfaDeleteCollection: null,
-  errorSfaGetBillingDetail: null
+  errorSfaGetBillingDetail: null,
+  errorSfaPostBillingDetail: null
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -681,29 +683,29 @@ export const sfa = createReducer(INITIAL_STATE, {
 
   /**
    * ==========================
-   * GET BILLING ADD
+   * POST BILLING ADD
    * ==========================
    */
-  [types.SFA_GET_BILLING_ADD_PROCESS](state, action) {
+  [types.SFA_POST_BILLING_ADD_PROCESS](state, action) {
     return {
       ...state,
-      loadingSfaGetBillingAdd: true,
-      dataSfaGetBillingAdd: null,
-      errorSfaGetBillingAdd: null
+      loadingSfaPostBillingAdd: true,
+      dataSfaPostBillingAdd: null,
+      errorSfaPostBillingAdd: null
     };
   },
-  [types.SFA_GET_BILLING_ADD_SUCCESS](state, action) {
+  [types.SFA_POST_BILLING_ADD_SUCCESS](state, action) {
     return {
       ...state,
-      loadingSfaGetBillingAdd: false,
-      dataSfaGetBillingAdd: action.payload
+      loadingSfaPostBillingAdd: false,
+      dataSfaPostBillingAdd: action.payload
     };
   },
-  [types.SFA_GET_BILLING_ADD_FAILED](state, action) {
+  [types.SFA_POST_BILLING_ADD_FAILED](state, action) {
     return {
       ...state,
-      loadingSfaGetBillingAdd: false,
-      errorSfaGetBillingAdd: action.payload
+      loadingSfaPostBillingAdd: false,
+      errorSfaPostBillingAdd: action.payload
     };
   }
 });

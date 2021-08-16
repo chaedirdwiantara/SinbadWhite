@@ -381,8 +381,7 @@ const SfaCollectionDetailView = props => {
           title={'Lihat Riwayat Pembayaran'}
           borderRadius={4}
           onPress={() =>
-            // TODO: Change navigation to SfaBillingListView
-            NavigationService.navigate('SfaBillingAddView', {
+            NavigationService.navigate('SfaBillingLogView', {
               paymentBillingId: dataSfaGetCollectionDetail.data.id
             })
           }
