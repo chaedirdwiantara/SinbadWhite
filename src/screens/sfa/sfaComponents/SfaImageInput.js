@@ -12,6 +12,7 @@ import ImagePicker from 'react-native-image-picker';
 import masterColor from '../../../config/masterColor.json';
 import { MaterialIcon, Tooltip } from '../../../library/thirdPartyPackage';
 import { Fonts, GlobalStyle } from '../../../helpers';
+import { II_MB } from '../../../constants/paymentConstants';
 const { width } = Dimensions.get('window');
 const SfaImageInput = props => {
   const [isQuestionMarkShow, setQuestionMarkShow] = useState(true);
@@ -47,7 +48,7 @@ const SfaImageInput = props => {
         setErrorInputImage(true);
       } else if (response.customButton) {
         null;
-      } else if (response.fileSize > 2000000) {
+      } else if (response.fileSize > II_MB) {
         setErrorInputImage(true);
       } else {
         props.action(response);
