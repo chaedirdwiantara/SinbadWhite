@@ -4,7 +4,6 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
-  // RefreshControl,
   Text,
   TouchableOpacity
 } from '../../library/reactPackage';
@@ -24,14 +23,11 @@ import { sfaPostBillingAddProcess } from '../../state/actions';
 
 const SfaBillingAddView = props => {
   const dispatch = useDispatch();
-
   const collectionInfo = props.navigation.state.params;
-  // const [refreshing, setRefreshing] = useState(false);
   const [paymentAmount, setPaymentAmount] = useState(0);
-  const [isStampChecked, setIsStampChecked] = useState(null);
-  const [stampAmount, setStampAmount] = useState(0);
-
-  console.log('collectionInfo:', collectionInfo);
+  const [isStampChecked, setIsStampChecked] = useState(false);
+  const [totalPaymentAmount, setTotalPaymentAmount] = useState(0);
+  const stampAmount = 10000;
 
   const {
     loadingSfaPostBillingAdd,
@@ -41,33 +37,25 @@ const SfaBillingAddView = props => {
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
 
-  /** === ON REFRESH === */
-  // const onRefresh = () => {
-  //   /** SET PAGE REFRESH */
-  //   setRefreshing(true);
-  //   setTimeout(() => {
-  //     setRefreshing(false);
-  //   }, 10);
-  // };
-
   /**
    * *********************************
    * FUNCTION
    * *********************************
    */
-
   const isNumber = n => (n !== null && n !== undefined ? true : false);
 
-  const dataPaymentAmount = text => {
+  const onChangePaymentAmount = text => {
     let paymentAmountInt = parseInt(text.replace(/[Rp.]+/g, ''), 10);
 
     if (
-      collectionInfo.paymentCollectionTypeId === GIRO ||
-      collectionInfo.paymentCollectionTypeId === CHECK
+      (collectionInfo.paymentCollectionTypeId === GIRO ||
+        collectionInfo.paymentCollectionTypeId === CHECK) &&
+      collectionInfo.isStampUsed === true &&
+      isStampChecked === true
     ) {
-      if (collectionInfo.isStampUsed === true) {
-        paymentAmountInt += stampAmount;
-      }
+      setTotalPaymentAmount(paymentAmountInt + stampAmount);
+    } else {
+      setTotalPaymentAmount(paymentAmountInt);
     }
 
     setPaymentAmount(paymentAmountInt);
@@ -76,7 +64,9 @@ const SfaBillingAddView = props => {
   const onCheckStamp = () => {
     setIsStampChecked(!isStampChecked);
     if (isStampChecked === false) {
-      console.log('lalla');
+      setTotalPaymentAmount(totalPaymentAmount + stampAmount);
+    } else if (isStampChecked === true) {
+      setTotalPaymentAmount(totalPaymentAmount - stampAmount);
     }
   };
 
@@ -87,7 +77,7 @@ const SfaBillingAddView = props => {
       orderParcelId: dataSfaGetDetail.data.id,
       storeId: parseInt(selectedMerchant.storeId, 10),
       paymentCollectionMethodId: collectionInfo.paymentCollectionTypeId,
-      amount: paymentAmount,
+      amount: totalPaymentAmount,
       isUsedStamp: collectionInfo.isStampUsed
     };
     dispatch(sfaPostBillingAddProcess(data));
@@ -273,7 +263,11 @@ const SfaBillingAddView = props => {
     );
   };
 
-  /** RENDER MATERAI */
+  /**
+   * ========================
+   * RENDER
+   * ========================
+   */
   const renderMaterai = () => {
     const renderItem = () => {
       return (
@@ -295,7 +289,7 @@ const SfaBillingAddView = props => {
           </TouchableOpacity>
           <View style={{ flex: 8 }}>
             <TouchableOpacity
-              onPress={() => console.log('true')}
+              // onPress={() => console.log('true')}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -303,7 +297,7 @@ const SfaBillingAddView = props => {
               }}
               disabled={!isStampChecked}
             >
-              <Text style={[Fonts.type17]}>Materai</Text>
+              <Text style={[Fonts.type17]}>Rp 10.000</Text>
               <View>
                 <MaterialIcon
                   name="chevron-right"
@@ -369,7 +363,7 @@ const SfaBillingAddView = props => {
                 suffixUnit: ''
               }}
               value={paymentAmount}
-              onChangeText={text => dataPaymentAmount(text)}
+              onChangeText={text => onChangePaymentAmount(text)}
               style={[
                 Fonts.type17,
                 {
@@ -397,7 +391,7 @@ const SfaBillingAddView = props => {
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
               <Text style={Fonts.type116p}>
-                {MoneyFormatSpace(paymentAmount)}
+                {MoneyFormatSpace(totalPaymentAmount)}
               </Text>
             </View>
           </View>
@@ -447,25 +441,13 @@ const SfaBillingAddView = props => {
    */
   return (
     <View style={{ flex: 1 }}>
-      {/* {dataSfaGetBillingAdd && !loadingSfaGetBillingAdd ? ( */}
       <SafeAreaView style={styles.mainContainer}>
-        <ScrollView
-          // refreshControl={
-          //   <RefreshControl
-          //     refreshing={refreshing}
-          //     onRefresh={() => onRefresh()}
-          //   />
-          // }
-          style={{ flex: 1, height: '100%' }}
-        >
+        <ScrollView style={{ flex: 1, height: '100%' }}>
           {renderContent()}
         </ScrollView>
         {renderFooter()}
         {renderSaveButton()}
       </SafeAreaView>
-      {/* ) : (
-        <LoadingPage />
-      )} */}
     </View>
   );
 };
