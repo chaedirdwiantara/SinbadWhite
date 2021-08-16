@@ -327,7 +327,7 @@ const renderTooltip = () => {
             </View>
           </View>
           <View>
-            <Text style={Fonts.type10}>
+            <Text style={Fonts.type17}>
               {isDisable !== false ? 'Sumber Bank' : '*Sumber Bank'}
             </Text>
             <View>

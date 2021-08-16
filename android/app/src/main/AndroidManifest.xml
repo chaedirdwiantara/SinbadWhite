@@ -24,7 +24,8 @@
       android:allowBackup="false"
       android:hardwareAccelerated="true"
       android:largeHeap="true"
-      android:theme="@style/AppTheme">
+      android:theme="@style/AppTheme"
+      android:requestLegacyExternalStorage="true">
 
       <meta-data
         android:name="com.google.android.geo.API_KEY"
