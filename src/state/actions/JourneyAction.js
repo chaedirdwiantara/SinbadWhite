@@ -33,6 +33,33 @@ export function journeyPlanGetLoadMoreV2(page) {
   return { type: types.JOURNEY_PLAN_GET_LOADMORE_V2, payload: page };
 }
 /**
+ * ==============================
+ * GET JOURNEY PLAN MAP DATA
+ * ==============================
+ */
+/** === JOURNEY PLAN GET MAP DATA PROCESS ==== */
+export function journeyPlanGetMapDataProcess(data) {
+  return { type: types.JOURNEY_PLAN_GET_MAP_DATA_PROCESS, payload: data };
+}
+/** === JOURNEY PLAN GET MAP DATA SUCCESS === */
+export function journeyPlanGetMapDataSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.JOURNEY_PLAN_GET_MAP_DATA_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.JOURNEY_PLAN_GET_MAP_DATA_FAILED, payload: data };
+}
+/** === JOURNEY PLAN GET MAP DATA FAILED === */
+export function journeyPlanGetMapDataFailed(data) {
+  return { type: types.JOURNEY_PLAN_GET_MAP_DATA_FAILED, payload: data };
+}
+/** === JOURNEY PLAN GET MAP DATA RESET === */
+export function journeyPlanGetMapDataReset() {
+  return { type: types.JOURNEY_PLAN_GET_MAP_DATA_RESET };
+}
+/**
  * ================================
  * SAVE MERCHANT TO JOURNEY PLAN V2
  * ================================

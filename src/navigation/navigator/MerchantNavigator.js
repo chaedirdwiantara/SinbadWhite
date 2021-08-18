@@ -15,6 +15,9 @@ import MerchantHomeView from '../../screens/merchants/dashboard-merchant/Merchan
 import MerchantCheckinView from '../../screens/merchants/dashboard-merchant/MerchantCheckinView';
 import MerchantNoOrderReason from '../../screens/merchants/dashboard-merchant/MerchantNoOrderReason';
 import MerchantNoOrderReasonDetail from '../../screens/merchants/dashboard-merchant/MerchantNoOrderReasonDetail';
+import MerchantNoVisitReasonView from '../../screens/merchants/dashboard-merchant/MerchantNoVisitReasonView';
+import MerchantNoVisitPicture from '../../screens/merchants/dashboard-merchant/MerchantNoVisitPicture';
+import MerchantNoVisitReasonDetailView from '../../screens/merchants/dashboard-merchant/MerchantNoVisitReasonDetailView';
 /** merchant detail */
 import MerchantDetailProfileView from '../../screens/merchants/details-merchant/MerchantDetailProfileView';
 import MerchantDetailAccountView from '../../screens/merchants/details-merchant/MerchantDetailAccountView';
@@ -268,6 +271,39 @@ const MerchantNavigator = {
   },
   MerchantNoOrderReasonDetail: {
     screen: MerchantNoOrderReasonDetail,
+    navigationOptions: {
+      headerTitle: 'Detail Alasan',
+      headerTitleStyle: GlobalFont.textHeaderPage,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      gesturesEnabled: false
+    }
+  },
+  MerchantNoVisitReasonView: {
+    screen: MerchantNoVisitReasonView,
+    navigationOptions: {
+      headerTitle: 'Alasan Tidak Ada Kunjungan',
+      headerTitleStyle: [GlobalFont.textHeaderPage],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      gesturesEnabled: false
+    }
+  },
+  MerchantNoVisitPicture: {
+    screen: MerchantNoVisitPicture,
+    navigationOptions: {
+      headerTintColor: masterColor.backButtonWhite,
+      headerStyle: {
+        elevation: 0,
+        backgroundColor: masterColor.mainColor
+      },
+      gesturesEnabled: false
+    }
+  },
+  MerchantNoVisitReasonDetailView: {
+    screen: MerchantNoVisitReasonDetailView,
     navigationOptions: {
       headerTitle: 'Detail Alasan',
       headerTitleStyle: GlobalFont.textHeaderPage,

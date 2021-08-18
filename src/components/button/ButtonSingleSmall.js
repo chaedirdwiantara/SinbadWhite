@@ -99,6 +99,7 @@ class ButtonSingleSmall extends Component {
           type={'solid'}
           loading={this.props.loading}
           loadingStyle={{ paddingHorizontal: this.props.loadingPadding }}
+          icon={this.props.icon}
         />
       </View>
     );
@@ -140,14 +141,14 @@ const styles = StyleSheet.create({
 export default ButtonSingleSmall;
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: dyah
+ * updatedDate: 28072020
+ * updatedFunction:
+ * -> add icon props for adding an icon.
+ *
+ */

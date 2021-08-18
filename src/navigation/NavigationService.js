@@ -3,7 +3,7 @@
  * NAVIGATION SERVICE
  * =================================
  */
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 let navigator;
 
@@ -40,10 +40,29 @@ function goBack(key) {
     })
   );
 }
+/** === CUSTOMIZE RESET PAGE === */
+function customizeReset(index, routeNames, params) {
+  let actions = [];
+  routeNames.map(item =>
+    actions.push(
+      NavigationActions.navigate({
+        routeName: item,
+        params: params ? params : {}
+      })
+    )
+  );
+  navigator.dispatch(
+    StackActions.reset({
+      index,
+      actions
+    })
+  );
+}
 
 export default {
   navigate,
   goBack,
   setTopLevelNavigator,
-  getActiveRouteName
+  getActiveRouteName,
+  customizeReset
 };
