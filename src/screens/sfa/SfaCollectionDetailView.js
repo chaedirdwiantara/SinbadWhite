@@ -379,7 +379,7 @@ const SfaCollectionDetailView = props => {
    */
   return (
     <>
-      {!loadingSfaGetCollectionDetail ? (
+      {!loadingSfaGetCollectionDetail && dataSfaGetCollectionDetail ? (
         <>
           <ScrollView
             refreshControl={

@@ -171,6 +171,15 @@ function getBillingDetail(data) {
   });
 }
 
+/** GET PAYMENT COLLECTION LOG */
+function getPaymentCollectionLog(data) {
+  return ApiRest({
+    path: `collection/v1/payment-billing-collections?paymentCollectionMethodId=${data.paymentCollectionMethodId}&limit=${data.limit}&skip=${data.skip}`,
+    testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billing-collections?paymentCollectionMethodId=${data.paymentCollectionMethodId}&limit=${data.limit}&skip=${data.skip}`,
+    method: 'GET'
+  });
+}
+
 export const SfaMethod = {
   getCollectionStatus,
   getSfaDetail,
@@ -189,5 +198,6 @@ export const SfaMethod = {
   getCollectionDetail,
   editCollection,
   deleteCollection,
-  getBillingDetail
+  getBillingDetail,
+  getPaymentCollectionLog
 };
