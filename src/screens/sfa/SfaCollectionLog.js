@@ -156,8 +156,8 @@ const getCollectionLog = () => {
                   ...(item.status === APPROVED
                     ? Fonts.type92
                     : item.status === PENDING
-                    ? Fonts.type110p
-                    : Fonts.type111p),
+                    ? Fonts.type114p
+                    : Fonts.type115p),
                   backgroundColor:
                     item.status === APPROVED
                       ? '#E1F7E8'

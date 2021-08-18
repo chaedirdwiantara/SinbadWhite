@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,69 +6,47 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-  RefreshControl
+  RefreshControl,
+  Dimensions
 } from '../../library/reactPackage';
-
-import {
-  bindActionCreators,
-  connect,
-  MaterialIcon,
-  moment
-} from '../../library/thirdPartyPackage';
-import {
-  LoadingPage,
-  InputType5,
-  ModalConfirmation,
-  ToastType1
-} from '../../library/component';
+import { MaterialIcon } from '../../library/thirdPartyPackage';
+import { LoadingPage, ButtonSingle } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
-import { TextInputMask } from 'react-native-masked-text';
-
-import SfaCollectionDetailCheckandGiro from './SfaCollectionDetailCheckandGiro';
-import SfaCollectionDetailTransfer from './SfaCollectionDetailTransfer';
-import SfaCollectionDetailPromo from './SfaCollectionDetailPromo';
+import { sfaGetCollectionDetailProcess } from '../../state/actions';
 import {
-  sfaGetCollectionDetailProcess,
-  sfaDeleteCollectionProcess,
-  sfaGetCollectionLogProcess
-} from '../../state/actions';
-import { APPROVED, REJECTED, PENDING } from '../../constants/collectionConstants';
+  APPROVED,
+  REJECTED,
+  PENDING,
+  TRANSFER,
+  CASH,
+  CHECK,
+  GIRO
+} from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
+import { CardBody, CardHeader, CardHeaderBadge } from './components/CardView';
+
+const { width } = Dimensions.get('window');
+const isNumber = n => (n !== null && n !== undefined ? true : false);
 
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
-  const [refreshing, setRefreshing] = useState(false)
+  const [refreshing, setRefreshing] = useState(false);
+
   const {
-    dataSfaGetDetail,
     dataSfaGetCollectionDetail,
-    dataSfaDeleteCollection,
-    dataSfaGetCollectionLog,
-    dataSfaEditCollection,
-    loadingSfaDeleteCollection,
     loadingSfaGetCollectionDetail
   } = useSelector(state => state.sfa);
-  const { selectedMerchant } = useSelector(state => state.merchant);
-  const [isShowEditSuccessToast, setIsShowEditSuccessToast] = useState(false)
-  const [
-    isModalDeleteTransactionOpened,
-    setIsModalDeleteTransactionOpened
-  ] = useState(false);
 
-  //USEREF
-  const prevDataSfaDeleteCollectionRef = useRef(dataSfaDeleteCollection);
-  const prevDataSfaGetCollectionLogRef = useRef(dataSfaGetCollectionLog);
-  const prevDataSfaEditCollectionRef = useRef(dataSfaEditCollection);
-
-   /** === ON REFRESH === */
-   const onRefresh = () => {
-    getCollectionDetail()
+  /** === ON REFRESH === */
+  const onRefresh = () => {
+    getCollectionDetail();
     /** SET PAGE REFRESH */
-    setRefreshing(true)
+    setRefreshing(true);
     setTimeout(() => {
-      setRefreshing(false)
+      setRefreshing(false);
     }, 10);
   };
 
@@ -77,87 +55,21 @@ const SfaCollectionDetailView = props => {
    * FUNCTION
    * *********************************
    */
-    //USE EFFECT PREV DATA EDIT
-  useEffect(() => {
-    prevDataSfaEditCollectionRef.current = dataSfaEditCollection;
-  }, []);
-  const prevDataSfaEditCollection = prevDataSfaEditCollectionRef.current;
-  
-  //USE EFFECT PREV DATA DELETE
-  useEffect(() => {
-    prevDataSfaDeleteCollectionRef.current = dataSfaDeleteCollection;
-  }, []);
-  const prevDataSfaDeleteCollection = prevDataSfaDeleteCollectionRef.current;
-
-  //USE EFFECT PREV DATA LOG
-  useEffect(() => {
-    prevDataSfaGetCollectionLogRef.current = dataSfaGetCollectionLog;
-  }, []);
-  const prevDataSfaGetCollectionLog = prevDataSfaGetCollectionLogRef.current;
 
   useEffect(() => {
- getCollectionDetail()
+    getCollectionDetail();
   }, []);
 
   const getCollectionDetail = () => {
     const paymentCollectionId =
-    props.navigation.state.params.paymentCollectionId;
+      props.navigation.state.params.paymentCollectionId;
     dispatch(sfaGetCollectionDetailProcess(paymentCollectionId));
-  }
+  };
 
   const formatDate = date => {
-    const local = toLocalTime(date);
-    return moment(local).format('DD MMMM YYYY');
+    return date ? toLocalTime(date, 'DD MMMM YYYY') : '';
   };
 
-  const deleteTransaction = () => {
-    setIsModalDeleteTransactionOpened(true);
-  };
-
-  const editTransaction = () => {
-    NavigationService.navigate('SfaEditCollectionView', {
-      dataDetail: dataSfaGetCollectionDetail
-    });
-  };
-
-  const deleteCollection = () => {
-    const paymentCollectionId =
-      props.navigation.state.params.paymentCollectionId;
-    setIsModalDeleteTransactionOpened(false);
-    dispatch(sfaDeleteCollectionProcess(paymentCollectionId));
-  };
-
-  useEffect(() => {
-    if (prevDataSfaDeleteCollection !== dataSfaDeleteCollection) {
-      if (dataSfaDeleteCollection) {
-        const data = {
-          storeId: parseInt(selectedMerchant.storeId),
-          orderParcelId: dataSfaGetDetail.data.id,
-          limit: 20,
-          skip: 0
-        };
-        dispatch(sfaGetCollectionLogProcess(data));
-      }
-    }
-  }, [dataSfaDeleteCollection]);
-
-  useEffect(() => {
-    if (prevDataSfaGetCollectionLog !== dataSfaGetCollectionLog) {
-      NavigationService.navigate('SfaCollectionLog');
-    }
-  }, [dataSfaGetCollectionLog]);
-
-
-  useEffect(() => {
-    if (prevDataSfaEditCollection !== dataSfaEditCollection) {
-      if (dataSfaEditCollection) {
-        setIsShowEditSuccessToast(true)
-        setTimeout(() => {
-          setIsShowEditSuccessToast(false)
-        }, 3000);
-      }
-    }
-  }, [dataSfaEditCollection]);
   /* ========================
    * HEADER MODIFY
    * ========================
@@ -183,64 +95,10 @@ const SfaCollectionDetailView = props => {
             </TouchableOpacity>
           </View>
           <View style={{ alignSelf: 'center', flex: 1, marginLeft: 25 }}>
-            <Text style={Fonts.type5}>Detail Transaksi</Text>
+            <Text style={Fonts.type5}>Detail Penagihan</Text>
           </View>
-          { dataSfaGetCollectionDetail && dataSfaGetCollectionDetail.isEditable ?
-            (
-              <View style={[styles.headerBody, { flexDirection: 'row' }]}>
-                <TouchableOpacity onPress={() => deleteTransaction()}>
-                  <MaterialIcon
-                    name="delete"
-                    size={28}
-                    style={{ color: masterColor.fontBlack50, marginRight: 10 }}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => editTransaction()}>
-                  <MaterialIcon
-                    name="edit"
-                    size={28}
-                    style={{ color: masterColor.fontBlack50 }}
-                  />
-                </TouchableOpacity>
-              </View>
-            ) : null
-          }
-
         </View>
         <View style={[GlobalStyle.lines, styles.headerLine]} />
-      </View>
-    );
-  };
-
-  /**
-   * ======================
-   * MODAL
-   * ======================
-   */
-  const renderModalDeleteTransaction = () => {
-    return (
-      <View>
-        {isModalDeleteTransactionOpened ? (
-          <ModalConfirmation
-            statusBarWhite
-            title={'Hapus Transaksi?'}
-            open={isModalDeleteTransactionOpened}
-            content={
-              dataSfaGetCollectionDetail.paymentCollection.isPrimary 
-              ? 'Transaksi dengan nomor referensi yang sama juga akan terhapus'
-              : 'Transaksi yang telah terhapus tidak dapat dikembalikan'
-            }
-            type={'okeNotRed'}
-            okText={'Ya, Hapus'}
-            cancelText={'Tidak'}
-            ok={() => {
-              deleteCollection();
-            }}
-            cancel={() => setIsModalDeleteTransactionOpened(false)}
-          />
-        ) : (
-          <View />
-        )}
       </View>
     );
   };
@@ -251,264 +109,330 @@ const SfaCollectionDetailView = props => {
    * *********************************
    */
 
-  const renderFakturInfo = () => {
+  /**
+   * ==============================
+   * RENDER CODE INFORMATION HEADER
+   * ==============================
+   */
+  const renderCodeInfoHeader = () => {
     return (
-      <View style={styles.container}>
-        <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
-          <View>
-            <Text style={Fonts.type48}>Informasi Faktur</Text>
-          </View>
-          <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
-          {renderItemFakturInfo()}
-        </View>
-      </View>
+      <>
+        {CardHeader({
+          title: 'Informasi Kode',
+          styleContainer: styles.container,
+          styleCard: {
+            ...styles.cardTaskList,
+            ...GlobalStyle.shadowForBox5
+          },
+          styleCardView: styles.styleCardView,
+          renderCardBody: renderCodeInfoBody
+        })}
+      </>
     );
   };
 
-  const renderItemFakturInfo = () => {
-    const detailSfa = dataSfaGetDetail.data;
+  /**
+   * ============================
+   * RENDER CODE INFORMATION BODY
+   * ============================
+   */
+  const renderCodeInfoBody = () => {
+    const collectionDetail = dataSfaGetCollectionDetail.data;
+
     return (
-      <View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginBottom: 8,
-            justifyContent: 'space-between'
-          }}
-        >
-          <Text style={Fonts.type17}>Nama Faktur</Text>
-          <Text style={Fonts.type17}>{detailSfa.invoiceGroupName}</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginBottom: 8,
-            justifyContent: 'space-between'
-          }}
-        >
-          <Text style={Fonts.type17}>No. Pesanan</Text>
-          <Text style={Fonts.type17}>{detailSfa.orderCode}</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginBottom: 8,
-            justifyContent: 'space-between'
-          }}
-        >
-          <Text style={Fonts.type17}>No. Referensi</Text>
-          <Text style={Fonts.type17}>
-            {detailSfa.orderRef === null || detailSfa.orderRef === ''
-              ? '-'
-              : detailSfa.orderRef}
-          </Text>
-        </View>
-      </View>
+      <>
+        {CardBody({
+          title: 'Kode Penagihan',
+          value: collectionDetail.collectionCode,
+          styleCardView: styles.styleCardView
+        })}
+        {CardBody({
+          title: 'Kode Penagihan Ref',
+          value: collectionDetail.collectionRef,
+          styleCardView: styles.styleCardView
+        })}
+      </>
     );
   };
 
-  const renderCollectionInfo = () => {
-    const detailSfa = dataSfaGetDetail.data;
+  /**
+   * ========================================
+   * RENDER COLLECTION INFO CARD HEADER BADGE
+   * ========================================
+   */
+  const renderCollectionInfoHeaderBadge = () => {
+    const { approvalStatus } = dataSfaGetCollectionDetail.data;
+
+    return approvalStatus === APPROVED
+      ? CardHeaderBadge({
+          title: 'Disetujui',
+          backgroundColor: masterColor.fontGreen10,
+          textColor: masterColor.fontGreen50
+        })
+      : approvalStatus === PENDING
+      ? CardHeaderBadge({
+          title: 'Menunggu',
+          backgroundColor: masterColor.fontYellow10,
+          textColor: masterColor.fontYellow50
+        })
+      : approvalStatus === REJECTED
+      ? CardHeaderBadge({
+          title: 'Ditolak',
+          backgroundColor: masterColor.fontRed10,
+          textColor: masterColor.fontRed50
+        })
+      : null;
+  };
+
+  /**
+   * =============================
+   * RENDER COLLECTION INFO HEADER
+   * =============================
+   */
+  const renderCollectionInfoHeader = () => {
     return (
-      <View style={styles.container}>
-        <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
-          <View>
-            <Text style={Fonts.type48}>Informasi Tagihan</Text>
-          </View>
-          <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-          >
-            <Text style={Fonts.type17}>Sisa Tagihan</Text>
-            <Text style={Fonts.type100}>
-              {MoneyFormatSpace(dataSfaGetCollectionDetail.outstanding)}
-            </Text>
-          </View>
-        </View>
-      </View>
+      <>
+        {CardHeader({
+          title: 'Informasi Penagihan',
+          styleContainer: styles.container,
+          styleCard: {
+            ...styles.cardTaskList,
+            ...GlobalStyle.shadowForBox5
+          },
+          styleCardView: styles.styleCardView,
+          renderCardHeaderBadge: renderCollectionInfoHeaderBadge,
+          renderCardBody: renderCollectionInfoBody
+        })}
+      </>
     );
   };
 
-  const renderCollectionDetail = () => {
-    const paymentCollectionMethod =
-      dataSfaGetCollectionDetail.paymentCollection.paymentCollectionMethod;
+  /**
+   * ===========================
+   * RENDER COLLECTION INFO BODY
+   * ===========================
+   */
+  const renderCollectionInfoBody = () => {
+    const {
+      createdDate,
+      paymentCollectionType,
+      reference,
+      bankFrom,
+      bankToAccount,
+      transferDate,
+      issuedDate,
+      dueDate,
+      amount,
+      stamp,
+      totalAmount,
+      balance,
+      image
+    } = dataSfaGetCollectionDetail.data;
+
     return (
-      <View style={[styles.container, { marginBottom: 16 }]}>
-        <View style={[styles.cardTaskList, GlobalStyle.shadowForBox5]}>
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-          >
-            <View>
-              <Text style={Fonts.type48}>Detil Penagihan</Text>
-            </View>
-            {paymentCollectionMethod.approvalStatus === APPROVED ? (
-              <View
-                style={{
-                  backgroundColor: masterColor.fontGreen10,
-                  borderRadius: 30
-                }}
-              >
-                <Text
-                  style={[
-                    Fonts.type38,
-                    { margin: 8, color: masterColor.fontGreen50 }
-                  ]}
-                >
-                  Disetujui
-                </Text>
-              </View>
-            ) : paymentCollectionMethod.approvalStatus === PENDING ? (
-              <View
-                style={{
-                  backgroundColor: masterColor.fontYellow10,
-                  borderRadius: 30
-                }}
-              >
-                <Text
-                  style={[
-                    Fonts.type38,
-                    { margin: 8, color: masterColor.fontYellow50 }
-                  ]}
-                >
-                  Menunggu
-                </Text>
-              </View>
-            ) : paymentCollectionMethod.approvalStatus === REJECTED ? (
-              <View
-                style={{
-                  backgroundColor: masterColor.fontRed10,
-                  borderRadius: 30
-                }}
-              >
-                <Text
-                  style={[
-                    Fonts.type38,
-                    { margin: 4, color: masterColor.fontRed50 }
-                  ]}
-                >
-                  Ditolak
-                </Text>
-              </View>
-            ) : null}
-          </View>
-          <View style={[{ flex: 1, marginVertical: 8 }]} />
-          {renderItemCollectionDetail()}
-        </View>
-      </View>
+      <>
+        {CardBody({
+          title: 'Tanggal Penagihan',
+          value: formatDate(createdDate),
+          styleCardView: styles.styleCardView
+        })}
+        {CardBody({
+          title: 'Metode Penagihan',
+          value: paymentCollectionType?.name,
+          styleCardView: styles.styleCardView
+        })}
+        {paymentCollectionType.id !== CASH
+          ? CardBody({
+              title: 'Nomor Referensi',
+              value: reference,
+              styleCardView: styles.styleCardView
+            })
+          : null}
+        {paymentCollectionType.id !== CASH
+          ? CardBody({
+              title: 'Sumber Bank',
+              value: bankFrom.displayName,
+              styleCardView: styles.styleCardView
+            })
+          : null}
+        {paymentCollectionType.id === TRANSFER
+          ? CardBody({
+              title: 'Bank Tujuan',
+              value: bankToAccount.displayName,
+              styleCardView: styles.styleCardView
+            })
+          : null}
+        {paymentCollectionType.id === TRANSFER
+          ? CardBody({
+              title: 'Tanggal Transfer',
+              value: formatDate(transferDate),
+              styleCardView: styles.styleCardView
+            })
+          : null}
+        {paymentCollectionType.id === CHECK || paymentCollectionType.id === GIRO
+          ? CardBody({
+              title: 'Tanggal Terbit',
+              value: formatDate(issuedDate),
+              styleCardView: styles.styleCardView
+            })
+          : null}
+        {paymentCollectionType.id === CHECK || paymentCollectionType.id === GIRO
+          ? CardBody({
+              title: 'Tanggal Jatuh Tempo',
+              value: formatDate(dueDate),
+              styleCardView: styles.styleCardView
+            })
+          : null}
+        {CardBody({
+          title: 'Jumlah Penagihan',
+          value: isNumber(amount) ? MoneyFormatSpace(amount) : '',
+          styleCardView: styles.styleCardView
+        })}
+        {paymentCollectionType.id === CHECK || paymentCollectionType.id === GIRO
+          ? CardBody({
+              title: 'Materai',
+              value: isNumber(stamp?.nominal)
+                ? MoneyFormatSpace(stamp.nominal)
+                : '-',
+              styleCardView: styles.styleCardView
+            })
+          : null}
+        {CardBody({
+          title: 'Foto Penagihan',
+          imageSource: { uri: `data:image/jpeg;base64, ${image}` },
+          imageSourceStyle: styles.images,
+          imageContainerStyle: styles.smallContainerImage,
+          styleCardView: styles.styleCardView,
+          titleIcon: {
+            suffixIcon: 'help',
+            suffixStyle: { marginLeft: 6 }
+          }
+        })}
+        {CardBody({
+          title: 'Total Penagihan',
+          value: isNumber(totalAmount) ? MoneyFormatSpace(totalAmount) : '',
+          styleCardView: styles.styleCardView
+        })}
+        {CardBody({
+          title: 'Sisa Penagihan',
+          value: isNumber(balance) ? MoneyFormatSpace(balance) : '',
+          styleCardView: styles.styleCardView
+        })}
+      </>
     );
   };
 
-  const renderItemCollectionDetail = () => {
-    const collectionMethodType =
-      dataSfaGetCollectionDetail.paymentCollection.paymentCollectionMethod
-        .paymentCollectionType;
+  /**
+   * ==================================
+   * RENDER INFORMATION SALESMAN HEADER
+   * ==================================
+   */
+  const renderSalesmanInfoHeader = () => {
     return (
-      <View style={{ marginHorizontal: -16 }}>
-        <InputType5
-          title={`Metode Penagihan`}
-          placeholder={collectionMethodType.name}
-          editable={false}
+      <>
+        {CardHeader({
+          title: 'Informasi Salesman',
+          styleContainer: styles.container,
+          styleCard: {
+            ...styles.cardTaskList,
+            ...GlobalStyle.shadowForBox5,
+            marginBottom: 16
+          },
+          styleCardView: styles.styleCardView,
+          renderCardBody: renderSalesmanInfoBody
+        })}
+      </>
+    );
+  };
+
+  /**
+   * ================================
+   * RENDER INFORMATION SALESMAN BODY
+   * ================================
+   */
+  const renderSalesmanInfoBody = () => {
+    const collectionDetail = dataSfaGetCollectionDetail.data;
+
+    return (
+      <>
+        {CardBody({
+          title: 'Kode Salesman',
+          value: collectionDetail.salesmanCode,
+          styleCardView: styles.styleCardView
+        })}
+        {CardBody({
+          title: 'Name Salesman',
+          value: collectionDetail.salesmanName,
+          styleCardView: styles.styleCardView
+        })}
+      </>
+    );
+  };
+
+  /**
+   * RENDER BILLING HISTORY BUTTON
+   * @returns
+   */
+  const renderBillingHistoryButton = () => {
+    return (
+      <>
+        <View style={[GlobalStyle.lines, styles.footerLine]} />
+        <ButtonSingle
+          title={'Lihat Riwayat Pembayaran'}
+          borderRadius={4}
+          onPress={() =>
+            NavigationService.navigate('SfaBillingLogView', {
+              paymentBillingId: dataSfaGetCollectionDetail.data.id
+            })
+          }
         />
-        {renderCollectionDetailMethod(collectionMethodType)}
-      </View>
+      </>
     );
   };
 
-  const renderCollectionDetailMethod = collectionMethodType => {
-    if (
-      collectionMethodType.code === 'check' ||
-      collectionMethodType.code === 'giro'
-    ) {
-      return (
-        <SfaCollectionDetailCheckandGiro data={dataSfaGetCollectionDetail} />
-      );
-    } else if (collectionMethodType.code === 'transfer') {
-      return <SfaCollectionDetailTransfer data={dataSfaGetCollectionDetail} />;
-    } else if (collectionMethodType.code === 'cash') {
-      return renderCashDetail();
-    } else if (collectionMethodType.code === 'promo') {
-      return <SfaCollectionDetailPromo data={dataSfaGetCollectionDetail} />;
-    }
-  };
-
-  const renderCashDetail = () => {
-    return (
-      <View style={{ marginTop: 16, marginHorizontal: 16 }}>
-        <View>
-          <Text style={Fonts.type10}>Jumlah Penagihan</Text>
-        </View>
-        <View
-          style={[
-            styles.boxInput,
-            { flexDirection: 'row', alignItems: 'center' }
-          ]}
-        >
-          <TextInputMask
-            editable={false}
-            type={'money'}
-            options={{
-              precision: 0,
-              separator: ',',
-              delimiter: '.',
-              unit: 'Rp ',
-              suffixUnit: ''
-            }}
-            value={
-              dataSfaGetCollectionDetail.paymentCollection
-                .paidByCollectionMethod
-            }
-            style={[
-              Fonts.type31,
-              {
-                width: '100%',
-                borderBottomWidth: 1,
-                borderBottomColor: masterColor.fontBlack10
-              }
-            ]}
-          />
-        </View>
-      </View>
-    );
-  };
-
-  const renderToast = () => {
-    return isShowEditSuccessToast ? (
-      <ToastType1 margin={70} content={'Transaksi Berhasil Diubah'} />
-    ) : (
-      <View />
-    );
-  }
-
+  /**
+   * =======================
+   * RENDER CONTENT
+   * =======================
+   * @returns
+   */
   const renderContent = () => {
     return (
       <View style={{ flex: 1 }}>
-        {dataSfaGetCollectionDetail && !loadingSfaGetCollectionDetail && !loadingSfaDeleteCollection ? (
-          <ScrollView  refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={()=>onRefresh()}
-            />
-          } style={{ flex: 1, height: '100%' }}>
-            {renderFakturInfo()}
-            {renderCollectionInfo()}
-            {renderCollectionDetail()}
-          </ScrollView>
-        ) : (
-          <LoadingPage />
-        )}
+        {renderCodeInfoHeader()}
+        {renderCollectionInfoHeader()}
+        {renderSalesmanInfoHeader()}
       </View>
     );
   };
 
+  /**
+   * =======================
+   * MAIN
+   * =======================
+   */
   return (
-    <>
-      <View style={{ flex: 1 }}>
-        {renderHeader()}
-        {renderContent()}
-        {renderModalDeleteTransaction()}
-        {renderToast()}
-      </View>
-    </>
+    <View style={{ flex: 1 }}>
+      {dataSfaGetCollectionDetail && !loadingSfaGetCollectionDetail ? (
+        <SafeAreaView style={styles.mainContainer}>
+          {renderHeader()}
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => onRefresh()}
+              />
+            }
+            style={{ flex: 1, height: '100%' }}
+          >
+            {renderContent()}
+          </ScrollView>
+          {renderBillingHistoryButton()}
+        </SafeAreaView>
+      ) : (
+        <LoadingPage />
+      )}
+    </View>
   );
 };
 
@@ -552,6 +476,32 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 3.84,
     elevation: 1
+  },
+  footerLine: {
+    shadowColor: masterColor.shadow,
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.84,
+    elevation: 1
+  },
+  smallContainerImage: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    marginBottom: 16
+  },
+  images: {
+    width: width - 65,
+    height: 138,
+    borderWidth: 1,
+    backgroundColor: 'white'
+  },
+  styleCardView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 });
 export default SfaCollectionDetailView;

@@ -1160,7 +1160,13 @@ closeErrorOrderParcelExpired() {
     return (
       <View style={[styles.boxAddress, GlobalStyle.shadowBottom]}>
         <View style={styles.boxTitle}>
-          <Text style={Fonts.type48}>Alamat Pengiriman</Text>
+          <Text
+            style={Fonts.type48}
+            accessible={true}
+            accessibilityLabel={'txtCheckoutAlamat'}
+          >
+            Alamat Pengiriman
+          </Text>
         </View>
         <View style={[GlobalStyle.lines, { marginLeft: 16 }]} />
         <View style={{ paddingVertical: 10, paddingHorizontal: 16 }}>
@@ -1210,12 +1216,14 @@ closeErrorOrderParcelExpired() {
         <View style={styles.boxBottomValue}>
           <View>
             <Text>
-              <Text style={Fonts.type9}>Total: </Text>
               <Text
                 accessible={true}
                 accessibilityLabel={'txtCheckoutTotal'}
-                style={Fonts.type53}
+                style={Fonts.type9}
               >
+                Total:{' '}
+              </Text>
+              <Text style={Fonts.type53}>
                 {MoneyFormat(this.calTotalPrice() + this.calTotalServiceFee())}
               </Text>
             </Text>

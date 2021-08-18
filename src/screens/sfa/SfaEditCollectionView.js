@@ -589,7 +589,7 @@ const SfaEditCollectionView = props => {
       <View>
         <View style={{marginTop: 17, marginHorizontal: 16, flexDirection: 'row', justifyContent: 'space-between'}}>
           <Text style={Fonts.type88}>Total Penagihan</Text>
-          <Text style={Fonts.type112p}>{MoneyFormatSpace(totalBilling)}</Text>
+          <Text style={Fonts.type116p}>{MoneyFormatSpace(totalBilling)}</Text>
         </View>
         <ButtonSingle
           disabled={

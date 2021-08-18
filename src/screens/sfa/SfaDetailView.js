@@ -23,7 +23,7 @@ import {
 import {
   sfaGetDetailProcess,
 } from '../../state/actions';
-import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
+import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
@@ -39,7 +39,7 @@ function SfaDetailView(props) {
    * =======================
    */
   const addCollection = () => {
-    NavigationService.navigate('SfaAddTagihanView', {data: dataSfaGetDetail.data})
+    NavigationService.navigate('SfaCollectionMethodListView');
   }
 
   useEffect(() => {
@@ -144,19 +144,19 @@ function SfaDetailView(props) {
               }
               <Text style={Fonts.type17}>Total Tagihan</Text>
             </View>
-            <Text style={Fonts.type17}>{MoneyFormat(detailSfa.totalBilling)}</Text>
+            <Text style={Fonts.type17}>{MoneyFormatSpace(detailSfa.totalBilling)}</Text>
           </View>
         </TouchableWithoutFeedback>
         {renderAccordion()}
         <View style={[GlobalStyle.lines, { flex: 1, marginBottom: 8 }]} />
 
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text style={Fonts.type17}>Pembayaran Dari Toko</Text>
-          <Text style={Fonts.type17}>{MoneyFormat(detailSfa.totalInStorePayment)}</Text>
+          <Text style={Fonts.type17}>Pembayaran dari Toko</Text>
+          <Text style={Fonts.type17}>{MoneyFormatSpace(detailSfa.totalInStorePayment)}</Text>
         </View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
           <Text style={Fonts.type17}>Total Penagihan</Text>
-          <Text style={Fonts.type17}>{MoneyFormat(detailSfa.totalCollection)}</Text>
+          <Text style={Fonts.type17}>{MoneyFormatSpace(detailSfa.totalCollection)}</Text>
         </View>
       </View>
     )
@@ -172,7 +172,7 @@ function SfaDetailView(props) {
               {
                 item.value === 0 
                 ? "-"
-                : MoneyFormat(item.value)
+                : MoneyFormatSpace(item.value)
               }
             </Text>
           </View>
@@ -185,8 +185,8 @@ function SfaDetailView(props) {
     return(
       <View>
         <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-          <Text style={Fonts.type17}>Outstanding</Text>
-          <Text style={Fonts.type22}>{MoneyFormat(dataSfaGetDetail.data.remainingBilling)}</Text>
+          <Text style={Fonts.type17}>Sisa Tagihan</Text>
+          <Text style={Fonts.type22}>{MoneyFormatSpace(dataSfaGetDetail.data.remainingBilling)}</Text>
         </View>
       </View>
     )
@@ -208,8 +208,8 @@ function SfaDetailView(props) {
       return(
         <View>
           <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
-            <Text style={Fonts.type17}>{`Total Barang (${dataSfaGetDetail.data.parcelQty})`}</Text>
-            <Text style={Fonts.type17}>{MoneyFormat(dataSfaGetDetail.data.parcelGrossPrice)}</Text>
+            <Text style={Fonts.type17}>{`Sub-Total (${dataSfaGetDetail.data.parcelQty})`}</Text>
+            <Text style={Fonts.type17}>{MoneyFormatSpace(dataSfaGetDetail.data.parcelGrossPrice)}</Text>
           </View>
           {
             dataSfaGetDetail.data.promoList !== null 
@@ -218,11 +218,11 @@ function SfaDetailView(props) {
           }
           <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
             <Text style={Fonts.type17}>Ongkos Kirim</Text>
-            <Text style={Fonts.type17}>{MoneyFormat(0)}</Text>
+            <Text style={Fonts.type17}>{MoneyFormatSpace(0)}</Text>
           </View>
           <View style={{flexDirection:"row", marginBottom: 8, justifyContent: "space-between"}}>
             <Text style={Fonts.type17}>PPN 10%</Text>
-            <Text style={Fonts.type17}>{MoneyFormat(dataSfaGetDetail.data.parcelTaxes)}</Text>
+            <Text style={Fonts.type17}>{MoneyFormatSpace(dataSfaGetDetail.data.parcelTaxes)}</Text>
           </View>
         </View>
       )
@@ -243,7 +243,7 @@ function SfaDetailView(props) {
           <Text style={Fonts.type51}>
             {
               item.promoValue !== null
-              ? `- ${MoneyFormat(item.promoValue)}`
+              ? `- ${MoneyFormatSpace(item.promoValue)}`
               : 'FREE'
             }
           </Text>

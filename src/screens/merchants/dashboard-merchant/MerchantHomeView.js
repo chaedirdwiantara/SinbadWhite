@@ -1044,7 +1044,6 @@ class MerchantHomeView extends Component {
                           size={24}
                         />
                       )
-<<<<<<< HEAD
                     ) : item.activity === ACTIVITY_JOURNEY_PLAN_COLLECTION ? (
                       sfaStatus.totalOverdueInvoice === 0 ? (
                         this.checkCheckIn() ? (
@@ -1081,7 +1080,6 @@ class MerchantHomeView extends Component {
                           size={24}
                         />
                       )
-=======
                     ) : !this.checkCheckIn() && // check task list checkIn, reason not visit
                       journeyBookStores.noVisitReasonId &&
                       item.title === 'Masuk' ? (
@@ -1090,7 +1088,6 @@ class MerchantHomeView extends Component {
                         color={Color.fontRed50}
                         size={24}
                       />
->>>>>>> a12d576b2766737fbacdabdaf7b7bec8a5a21255
                     ) : (
                       <MaterialIcon
                         name="radio-button-unchecked"
@@ -1754,7 +1751,7 @@ const mapStateToProps = ({
   profile,
   sfa
 }) => {
-  return { auth, merchant, user, permanent, privileges,profile, sfa };
+  return { auth, merchant, user, permanent, privileges, profile, sfa };
 };
 
 const mapDispatchToProps = dispatch => {

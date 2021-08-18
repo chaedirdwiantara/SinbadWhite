@@ -76,6 +76,11 @@ export function sfaGetCollectionListFailed(data) {
  * GET REFERENCE LIST
  * ===========================
  */
+/** === SFA LOADMORE REFERENCE LIST PROCESS === */
+export function sfaCollectionListLoadmoreProcess(data) {
+  return { type: types.SFA_COLLECTION_LIST_LOADMORE_PROCESS, payload: data };
+}
+
 /** === SFA GET REFERENCE LIST PROCESS === */
 export function sfaGetReferenceListProcess(data) {
   return { type: types.SFA_GET_REFERENCE_PROCESS, payload: data };
@@ -504,4 +509,31 @@ export function sfaDeleteCollectionSuccess(data) {
 /** === SFA DELETE COLLECTION FAILED === */
 export function sfaDeleteCollectionFailed(data) {
   return { type: types.SFA_DELETE_COLLECTION_FAILED, payload: data };
+}
+
+/**
+ * ===========================
+ * GET BILLING DETAIL
+ * ===========================
+ */
+
+/** === SFA GET BILLING DETAIL PROCESS === */
+export function sfaGetBillingDetailProcess(data) {
+  return { type: types.SFA_GET_BILLING_DETAIL_PROCESS, payload: data };
+}
+
+/** === SFA GET BILLING DETAIL SUCCESS === */
+export function sfaGetBillingDetailSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_BILLING_DETAIL_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_BILLING_DETAIL_FAILED, payload: data };
+}
+
+/** === SFA GET BILLING DETAIL FAILED === */
+export function sfaGetBillingDetailFailed(data) {
+  return { type: types.SFA_GET_BILLING_DETAIL_FAILED, payload: data };
 }
