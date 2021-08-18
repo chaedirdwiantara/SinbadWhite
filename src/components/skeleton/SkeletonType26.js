@@ -1,120 +1,93 @@
 import {
-    React,
-    Component,
-    View,
-    StyleSheet,
-    FlatList
-  } from '../../library/reactPackage';
-  import { SkeletonPlaceholder } from '../../library/thirdPartyPackage';
-  import { Color } from '../../config';
-  import { GlobalStyle } from '../../helpers';
-  
-  /**
-   * =============================
-   * NOTE
-   * =============================
-   * this skeleton for "History"
-   */
-  
-  class SkeletonType26 extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        data: [1, 2, 3, 4, 5, 6, 7]
-      };
-    }
-  
-    renderSeparator() {
-      return <View style={GlobalStyle.boxPadding} />;
-    }
-    /** === RENDER ITEM SKELETON === */
-    renderItem({ item, index }) {
-      return (
-        <View key={index}>
-          <View style={styles.boxContent}>
-            <View>
-              <SkeletonPlaceholder>
-                <View style={{ ...styles.boxSkeleton }} >
-                  <View style={{ ...styles.boxSkeletonDetail, width: '30%', }} />
-                  <View style={{ ...styles.boxSkeletonDetail, width: '35%' }} />
-                </View>
-              </SkeletonPlaceholder>
-            </View>
-            <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
-            <SkeletonPlaceholder>
-              <View style={{ ...styles.boxSkeleton }} >
-                <View style={{ ...styles.boxSkeletonDetail, width: '35%', }} />
-                <View style={{ ...styles.boxSkeletonDetail, width: '25%', }} />
-              </View>
-              <View style={{ ...styles.boxSkeleton, marginTop: 5 }} >
-                <View style={{ ...styles.boxSkeletonDetail, width: '30%', }} />
-                <View style={{ ...styles.boxSkeletonDetail, width: '35%', }} />
-              </View>
-            </SkeletonPlaceholder>
-            <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
-            <SkeletonPlaceholder>
-              <View style={{ ...styles.boxSkeleton }} >
-                <View style={{ ...styles.boxSkeletonDetail, width: '30%', }} />
-                <View style={{ ...styles.boxSkeletonDetail, width: '30%', }} />
-              </View>
-              <View style={{ ...styles.boxSkeleton, marginTop: 5 }} >
-                <View style={{ ...styles.boxSkeletonDetail, width: '25%', }} />
-                <View style={{ ...styles.boxSkeletonDetail, width: '25%', }} />
-              </View>
-            </SkeletonPlaceholder>
-          </View>
-        </View>
-      );
-    }
-    /** === RENDER SKELETON === */
-    renderSkeleton() {
-      return (
-        <View>
-          <FlatList
-            contentContainerStyle={styles.flatListContainer}
-            data={this.state.data}
-            scrollEnabled={false}
-            renderItem={this.renderItem.bind(this)}
-            keyExtractor={(item, index) => index.toString()}
-            ItemSeparatorComponent={this.renderSeparator}
-          />
-        </View>
-      );
-    }
-    /** === MAIN === */
-    render() {
-      return <View style={styles.mainContainer}>{this.renderSkeleton()}</View>;
-    }
+  React,
+  Component,
+  View,
+  StyleSheet,
+  FlatList
+} from '../../library/reactPackage';
+import { SkeletonPlaceholder } from '../../library/thirdPartyPackage';
+import masterColor from '../../config/masterColor';
+import { GlobalStyle } from '../../helpers';
+
+/**
+ * =============================
+ * NOTE
+ * =============================
+ * this skeleton for "MerchantSurveyDisplayPhotoView" (display photo survey)
+ */
+
+class SkeletonType26 extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [1, 2, 3, 4, 5]
+    };
   }
-  
-  const styles = StyleSheet.create({
-    mainContainer: {
-      height: '100%',
-      backgroundColor: Color.backgroundWhite
-    },
-    flatListContainer: {
-      paddingBottom: 16
-    },
-    boxSkeleton: {
-      flexDirection: 'row',
-      justifyContent: 'space-between'
-    },
-    boxSkeletonDetail: {
-      height: 10,
-      borderRadius: 10
-    },
-    boxContent: {
-      flex: 1,
-      paddingVertical: 10,
-      paddingHorizontal: 16,
-      height: 190,
-      justifyContent:'center',
-      borderWidth: 1,
-      borderColor: Color.fontBlack10,
-      borderRadius: 8,
-      marginHorizontal: 16
-    }
-  });
-  
-  export default SkeletonType26;
-  
+  /** === RENDER ITEM SKELETON === */
+  renderItem({ item, index }) {
+    return (
+      <View key={index} style={styles.boxContainer}>
+        <SkeletonPlaceholder>
+          <View style={{ flex: 1 }}>
+            <View style={styles.box} />
+          </View>
+        </SkeletonPlaceholder>
+      </View>
+    );
+  }
+  /** === RENDER SKELETON === */
+  renderSkeleton() {
+    return (
+      <View style={[styles.flatlistContainer, GlobalStyle.shadowForBox5]}>
+        <SkeletonPlaceholder>
+          <View style={{ flex: 1 }}>
+            <View style={styles.textSkeleton} />
+          </View>
+        </SkeletonPlaceholder>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          data={this.state.data}
+          scrollEnabled={false}
+          horizontal={true}
+          renderItem={this.renderItem.bind(this)}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </View>
+    );
+  }
+  /** === MAIN === */
+  render() {
+    return <View style={styles.mainContainer}>{this.renderSkeleton()}</View>;
+  }
+}
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    backgroundColor: masterColor.backgroundWhite
+  },
+  flatlistContainer: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    backgroundColor: masterColor.backgroundWhite
+  },
+  boxContainer: {
+    flexDirection: 'row',
+    flex: 1
+  },
+  box: {
+    borderRadius: 4,
+    width: 51,
+    height: 51,
+    marginRight: 10,
+    marginTop: 12
+  },
+  textSkeleton: {
+    width: '50%',
+    height: 12,
+    borderRadius: 10
+  }
+});
+
+export default SkeletonType26;

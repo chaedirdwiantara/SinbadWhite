@@ -20,8 +20,8 @@ import {
   SearchBarType1,
   TagListType2,
   SkeletonType2,
-  SkeletonType26,
-  SkeletonType25
+  SkeletonType28,
+  SkeletonType27
 } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
@@ -145,7 +145,7 @@ const SfaView = props => {
     );
   };
   const renderSkeletonList = () => {
-    return <SkeletonType26 />;
+    return <SkeletonType28 />;
   };
   /** === TAGS SECTION === */
   const renderTagsContent = () => {
@@ -201,7 +201,7 @@ const SfaView = props => {
               </View>
             </View>
           ) : (
-            <SkeletonType25 />
+            <SkeletonType27 />
           )}
         </View>
       </>

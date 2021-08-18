@@ -1751,7 +1751,7 @@ const mapStateToProps = ({
   profile,
   sfa
 }) => {
-  return { auth, merchant, user, permanent, privileges,profile, sfa };
+  return { auth, merchant, user, permanent, privileges, profile, sfa };
 };
 
 const mapDispatchToProps = dispatch => {
