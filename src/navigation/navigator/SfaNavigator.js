@@ -16,6 +16,7 @@ import SfaCollectionMethodListView from '../../screens/sfa/SfaCollectionMethodLi
 import SfaCollectionListView from '../../screens/sfa/SfaCollectionListView';
 import SfaCollectionAddView from '../../screens/sfa/SfaCollectionAddView';
 import SfaBillingDetailView from '../../screens/sfa/SfaBillingDetailView';
+import SfaBillingAddView from '../../screens/sfa/SfaBillingAddView';
 
 const SfaNavigator = {
   SfaView: {
@@ -140,6 +141,25 @@ const SfaNavigator = {
     screen: SfaBillingDetailView,
     navigationOptions: {
       headerTitle: 'Detail Pembayaran',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'left',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.fontBlack50,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  SfaBillingAddView: {
+    screen: SfaBillingAddView,
+    navigationOptions: {
+      headerTitle: 'Tambah Pembayaran',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {

@@ -20,7 +20,7 @@ import {
   GIRO,
   TRANSFER
 } from '../../constants/collectionConstants';
-import { CardHeaderBadge, CardBody, CardHeader } from './components/DetailView';
+import { CardHeaderBadge, CardBody, CardHeader } from './components/CardView';
 
 const SfaBillingDetailView = props => {
   const dispatch = useDispatch();

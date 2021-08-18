@@ -26,6 +26,7 @@ import {
   sfaGetReferenceListProcess,
   sfaCollectionListLoadmoreProcess
 } from '../../state/actions';
+
 const SfaCollectionListView = props => {
   const dispatch = useDispatch();
   const collectionMethodId = props.navigation.state.params.collectionMethodId;
@@ -74,6 +75,11 @@ const SfaCollectionListView = props => {
       }
     }
   };
+
+  const navigationRenderButton = (page, items) => {
+    NavigationService.navigate(page, items);
+  };
+
   /** RENDER CONTENT LIST GLOBAL */
   const renderContentListGlobal = (key, value, black, bold, red) => {
     return (
@@ -107,7 +113,7 @@ const SfaCollectionListView = props => {
     );
   };
   /** RENDER BUTTON */
-  const renderButton = (title, type, disable) => {
+  const renderButton = (title, type, disable, page, items) => {
     return (
       <TouchableOpacity
         disabled={disable}
@@ -123,6 +129,7 @@ const SfaCollectionListView = props => {
             ? masterColor.buttonRedDisableColor
             : masterColor.mainColor
         }}
+        onPress={() => navigationRenderButton(page, items)}
       >
         <Text
           style={[
@@ -230,7 +237,16 @@ const SfaCollectionListView = props => {
             <View style={styles.buttonContainer}>
               {renderButton('Ubah', 'white', !item.isEditable)}
               {renderButton('Hapus', 'white', !item.isEditable)}
-              {renderButton('Gunakan', 'red', !item.isUsable)}
+              {renderButton(
+                'Gunakan',
+                'red',
+                !item.isUsable,
+                'SfaBillingAddView',
+                {
+                  ...item,
+                  paymentCollectionTypeId: parseInt(collectionMethodId, 10)
+                }
+              )}
             </View>
             <View
               style={{
