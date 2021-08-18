@@ -70,39 +70,6 @@ const SfaCollectionDetailView = props => {
     return date ? toLocalTime(date, 'DD MMMM YYYY') : '';
   };
 
-  /* ========================
-   * HEADER MODIFY
-   * ========================
-   */
-  const renderHeader = () => {
-    return (
-      <View style={styles.headerContainer}>
-        <View style={[styles.headerContent]}>
-          <View style={[styles.headerBody, { alignItems: 'flex-start' }]}>
-            <TouchableOpacity onPress={() => NavigationService.goBack()}>
-              <View>
-                <MaterialIcon
-                  name="arrow-back"
-                  size={24}
-                  color={masterColor.fontBlack50}
-                  style={{
-                    marginBottom: 8,
-                    marginLeft: 8,
-                    alignContent: 'flex-start'
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View style={{ alignSelf: 'center', flex: 1, marginLeft: 25 }}>
-            <Text style={Fonts.type5}>Detail Penagihan</Text>
-          </View>
-        </View>
-        <View style={[GlobalStyle.lines, styles.headerLine]} />
-      </View>
-    );
-  };
-
   /**
    * *********************************
    * RENDER VIEW
@@ -219,7 +186,6 @@ const SfaCollectionDetailView = props => {
       reference,
       bankFrom,
       bankToAccount,
-      transferDate,
       issuedDate,
       dueDate,
       amount,
@@ -265,7 +231,7 @@ const SfaCollectionDetailView = props => {
         {paymentCollectionType.id === TRANSFER
           ? CardBody({
               title: 'Tanggal Transfer',
-              value: formatDate(transferDate),
+              value: formatDate(issuedDate),
               styleCardView: styles.styleCardView
             })
           : null}
@@ -412,10 +378,9 @@ const SfaCollectionDetailView = props => {
    * =======================
    */
   return (
-    <View style={{ flex: 1 }}>
-      {dataSfaGetCollectionDetail && !loadingSfaGetCollectionDetail ? (
-        <SafeAreaView style={styles.mainContainer}>
-          {renderHeader()}
+    <>
+      {!loadingSfaGetCollectionDetail ? (
+        <>
           <ScrollView
             refreshControl={
               <RefreshControl
@@ -428,11 +393,11 @@ const SfaCollectionDetailView = props => {
             {renderContent()}
           </ScrollView>
           {renderBillingHistoryButton()}
-        </SafeAreaView>
+        </>
       ) : (
         <LoadingPage />
       )}
-    </View>
+    </>
   );
 };
 

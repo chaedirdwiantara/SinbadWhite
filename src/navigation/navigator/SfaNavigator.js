@@ -90,7 +90,20 @@ const SfaNavigator = {
   SfaCollectionDetailView: {
     screen: SfaCollectionDetailView,
     navigationOptions: {
-      header: null
+      headerTitle: 'Detail Penagihan',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'left',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.fontBlack50,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
     }
   },
   SfaEditCollectionView: {
