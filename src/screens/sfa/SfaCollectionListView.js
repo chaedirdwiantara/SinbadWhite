@@ -287,7 +287,7 @@ const SfaCollectionListView = props => {
    */
   const renderCollectionList = () => {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, marginTop: 10 }}>
         <FlatList
           data={dataGetReferenceList.data}
           renderItem={renderItem}
@@ -329,7 +329,7 @@ const SfaCollectionListView = props => {
   const renderContent = () => {
     return !loadingGetReferenceList ? (
       <View style={{ flex: 1 }}>
-        {dataGetReferenceList.meta.total > 0
+        {dataGetReferenceList?.data?.length > 0
           ? renderCollectionList()
           : renderNoData()}
       </View>
