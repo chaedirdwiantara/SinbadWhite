@@ -186,7 +186,6 @@ const SfaCollectionDetailView = props => {
       reference,
       bankFrom,
       bankToAccount,
-      transferDate,
       issuedDate,
       dueDate,
       amount,
@@ -232,7 +231,7 @@ const SfaCollectionDetailView = props => {
         {paymentCollectionType.id === TRANSFER
           ? CardBody({
               title: 'Tanggal Transfer',
-              value: formatDate(transferDate),
+              value: formatDate(issuedDate),
               styleCardView: styles.styleCardView
             })
           : null}
