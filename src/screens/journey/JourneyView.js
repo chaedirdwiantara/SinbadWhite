@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Text,
+  PermissionsAndroid,
   Image
 } from '../../library/reactPackage';
 import {
@@ -13,6 +14,7 @@ import {
   bindActionCreators,
   connect,
   moment,
+  Geolocation,
   SkeletonPlaceholder
 } from '../../library/thirdPartyPackage';
 import {
@@ -53,6 +55,7 @@ class JourneyView extends Component {
    * ========================
    */
   static navigationOptions = ({ navigation }) => {
+    const getCurrentLocation = navigation.getParam('getCurrentLocation');
     return {
       headerLeft: () => (
         <TouchableOpacity
@@ -64,6 +67,20 @@ class JourneyView extends Component {
             name={'arrow-back'}
             size={24}
           />
+        </TouchableOpacity>
+      ),
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.headerMapButton}
+          onPress={() =>
+            getCurrentLocation ? getCurrentLocation(navigation) : null
+          }
+        >
+          <Image
+            style={{ marginRight: 8, width: 14 }}
+            source={require('../../assets/icons/maps/map_journey.png')}
+          />
+          <Text style={Fonts.type16}>Peta</Text>
         </TouchableOpacity>
       )
     };
@@ -78,6 +95,12 @@ class JourneyView extends Component {
     this.getJourneyPlan();
     this.props.getJourneyPlanReportProcessV2();
     this.props.portfolioGetProcessV2();
+    /**SET NAVIGATION FUNCTION */
+    this.props.navigation.setParams({
+      getCurrentLocation: this.getCurrentLocation,
+      successMaps: this.successMaps,
+      errorMaps: this.errorMaps
+    });
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
@@ -174,6 +197,39 @@ class JourneyView extends Component {
       default:
         break;
     }
+  }
+  /** === SUCCESS GET CURRENT LOCATION === */
+  successMaps = success => {
+    const longitude = success.coords.longitude;
+    const latitude = success.coords.latitude;
+    // navigate to journey map
+    NavigationService.navigate('JourneyMapView', {
+      longitude,
+      latitude
+    });
+  };
+  /** === ERROR GET CURRENT LOCATION === */
+  errorMaps = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        this.getCurrentLocation();
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+  /** === GET CURRENT LOCATION === */
+  getCurrentLocation(navigation) {
+    if (navigation) {
+      return Geolocation.getCurrentPosition(
+        navigation.getParam('successMaps'),
+        navigation.getParam('errorMaps')
+      );
+    }
+    return Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
   }
   /**
    * =================
@@ -369,6 +425,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 13
   },
+  headerMapButton: {
+    backgroundColor: masterColor.fontBlack05,
+    marginRight: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: masterColor.fontBlack10,
+    borderWidth: 1,
+    borderRadius: 24,
+    padding: 8,
+    paddingHorizontal: 12
+  },
   containerFloatButton: {
     width: '100%',
     position: 'absolute',
@@ -403,7 +470,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 08072021
+ * updatedDate: 28072021
  * updatedFunction:
- * -> move variable 'today' to inside class component (related function)
+ * -> add navigates to journey map view.
  */

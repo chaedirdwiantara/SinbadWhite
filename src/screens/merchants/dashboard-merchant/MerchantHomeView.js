@@ -505,6 +505,14 @@ class MerchantHomeView extends Component {
       loading: true
     });
     this.props.getJourneyPlanReportProcessV2();
+    this.props.journeyPlanGetMapDataReset();
+    this.props.journeyPlanGetMapDataProcess({
+      page: 1,
+      length: 1000,
+      date: today,
+      search: '',
+      loading: true
+    });
   }
   /** CHECKOUT PROCESS */
   checkoutProcess() {
@@ -730,6 +738,52 @@ class MerchantHomeView extends Component {
    */
   /** === RENDER BUTTON BEFORE CHECK-IN === */
   rendercheckCheckIn(item) {
+    const { journeyBookStores } = this.props.merchant.selectedMerchant;
+    // checkIn false, have reason not visit
+    if (!this.checkCheckIn()) {
+      if (journeyBookStores.noVisitReasonId) {
+        // tasklist checkIn
+        if (item.title === 'Masuk') {
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                NavigationService.navigate('MerchantNoVisitReasonDetailView')
+              }
+              style={styles.buttonDetailNoVisitReason}
+            >
+              <Text style={Fonts.type100}>Lihat Alasan</Text>
+              <MaterialIcon
+                style={{
+                  marginTop: 2,
+                  padding: 0
+                }}
+                name="chevron-right"
+                color={Color.fontRed50}
+                size={20}
+              />
+            </TouchableOpacity>
+          );
+        }
+        if (item.title === 'Keluar' || item.title === 'Isi') {
+          return null;
+        }
+        return (
+          <Button
+            onPress={() => {
+              this.goTo(item.goTo);
+            }}
+            title={item.title}
+            titleStyle={[
+              Fonts.type16,
+              {
+                color: Color.fontWhite
+              }
+            ]}
+            buttonStyle={styles.buttonGoTo}
+          />
+        );
+      }
+    }
     if (this.checkCheckIn() || item.title === 'Masuk') {
       return (
         <Button
@@ -745,13 +799,7 @@ class MerchantHomeView extends Component {
               color: Color.fontWhite
             }
           ]}
-          buttonStyle={{
-            backgroundColor: Color.fontRed50,
-            borderRadius: 7,
-            paddingHorizontal: 20,
-            paddingVertical: 5,
-            width: '100%'
-          }}
+          buttonStyle={styles.buttonGoTo}
         />
       );
     }
@@ -985,8 +1033,6 @@ class MerchantHomeView extends Component {
                       !journeyBookStores.orderStatus &&
                       journeyBookStores.noOrderReasonNote.length !== 0 ? (
                         <MaterialIcon
-                          // name="check-circle"
-                          // name="timelapse"
                           name="cancel"
                           color={Color.fontRed50}
                           size={24}
@@ -998,6 +1044,7 @@ class MerchantHomeView extends Component {
                           size={24}
                         />
                       )
+<<<<<<< HEAD
                     ) : item.activity === ACTIVITY_JOURNEY_PLAN_COLLECTION ? (
                       sfaStatus.totalOverdueInvoice === 0 ? (
                         this.checkCheckIn() ? (
@@ -1034,6 +1081,16 @@ class MerchantHomeView extends Component {
                           size={24}
                         />
                       )
+=======
+                    ) : !this.checkCheckIn() && // check task list checkIn, reason not visit
+                      journeyBookStores.noVisitReasonId &&
+                      item.title === 'Masuk' ? (
+                      <MaterialIcon
+                        name="cancel"
+                        color={Color.fontRed50}
+                        size={24}
+                      />
+>>>>>>> a12d576b2766737fbacdabdaf7b7bec8a5a21255
                     ) : (
                       <MaterialIcon
                         name="radio-button-unchecked"
@@ -1671,6 +1728,20 @@ const styles = StyleSheet.create({
     top: -5,
     right: -5,
     zIndex: 1000
+  },
+  buttonGoTo: {
+    backgroundColor: Color.fontRed50,
+    borderRadius: 7,
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    width: '100%'
+  },
+  buttonDetailNoVisitReason: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginRight: -5,
+    marginTop: -5
   }
 });
 
@@ -1703,7 +1774,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 08072021
+ * updatedDate: 02082021
  * updatedFunction:
- * -> move variable 'today' to inside class component (related function)
+ * -> add get journey map data when back to back journey plan's map.
  */
