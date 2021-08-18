@@ -120,8 +120,3 @@ export const SFA_DELETE_COLLECTION_FAILED = 'SfaDeleteCollectionFailed';
 export const SFA_GET_BILLING_DETAIL_PROCESS = 'SfaGetBillingDetailProcess';
 export const SFA_GET_BILLING_DETAIL_SUCCESS = 'SfaGetBillingDetailSuccess';
 export const SFA_GET_BILLING_DETAIL_FAILED = 'SfaGetBillingDetailFailed';
-
-/** POST BILLING ADD */
-export const SFA_POST_BILLING_ADD_PROCESS = 'SfaPostBillingAddProcess';
-export const SFA_POST_BILLING_ADD_SUCCESS = 'SfaPostBillingAddSuccess';
-export const SFA_POST_BILLING_ADD_FAILED = 'SfaPostBillingAddFailed';

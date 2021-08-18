@@ -173,15 +173,6 @@ function getBillingDetail(data) {
   });
 }
 
-/** POST BILLING ADD */
-function postBillingAdd(data) {
-  return ApiRest({
-    path: 'collection/v1/payment',
-    method: 'POST',
-    params: data
-  });
-}
-
 export const SfaMethod = {
   getCollectionStatus,
   getSfaDetail,
@@ -200,6 +191,5 @@ export const SfaMethod = {
   getCollectionDetail,
   editCollection,
   deleteCollection,
-  getBillingDetail,
-  postBillingAdd
+  getBillingDetail
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -19,7 +19,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CardBody, CardHeader } from './components/CardView';
 import NavigationService from '../../navigation/NavigationService';
 import { CASH, CHECK, GIRO } from '../../constants/collectionConstants';
-import { sfaPostBillingAddProcess } from '../../state/actions';
+import { sfaPostCollectionPaymentProcess } from '../../state/actions';
+import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 
 const SfaBillingAddView = props => {
   const dispatch = useDispatch();
@@ -29,13 +30,26 @@ const SfaBillingAddView = props => {
   const [totalPaymentAmount, setTotalPaymentAmount] = useState(0);
   const stampAmount = 10000;
 
+  // SELECTOR
   const {
-    loadingSfaPostBillingAdd,
-    dataSfaGetDetail,
-    dataSfaPostBillingAdd
+    loadingSfaPostCollectionPayment,
+    dataSfaPostCollectionPayment,
+    errorSfaPostCollectionPayment,
+    dataSfaGetDetail
   } = useSelector(state => state.sfa);
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
+
+  //USEREF ERROR
+  const prevErrorSfaPostCollectionPaymentRef = useRef(
+    errorSfaPostCollectionPayment
+  );
+
+  //MODAL
+  const [modalBottomError, setModalBottomError] = useState(false);
+  const [messageError, setMessageError] = useState(null);
+  const [titleError, setTitleError] = useState(null);
+  const [buttonTitle, setButtonTitle] = useState(null);
 
   /**
    * *********************************
@@ -80,13 +94,60 @@ const SfaBillingAddView = props => {
       amount: totalPaymentAmount,
       isUsedStamp: collectionInfo.isStampUsed
     };
-    dispatch(sfaPostBillingAddProcess(data));
+    dispatch(sfaPostCollectionPaymentProcess(data));
 
-    if (!loadingSfaPostBillingAdd && dataSfaPostBillingAdd?.id) {
+    if (!loadingSfaPostCollectionPayment && dataSfaPostCollectionPayment?.id) {
       NavigationService.navigate('SfaDetailView', {
         orderParcelId: dataSfaGetDetail.data.id
       });
     }
+  };
+
+  //USE EFFECT PREV DATA ERROR
+  useEffect(() => {
+    prevErrorSfaPostCollectionPaymentRef.current = errorSfaPostCollectionPayment;
+  }, []);
+  const prevErrorSfaPostCollectionPayment =
+    prevErrorSfaPostCollectionPaymentRef.current;
+
+  //HANDLE ERROR POST COLLECTION
+  useEffect(() => {
+    if (prevErrorSfaPostCollectionPayment !== errorSfaPostCollectionPayment) {
+      if (errorSfaPostCollectionPayment) {
+        handleError(errorSfaPostCollectionPayment);
+      }
+    }
+  }, [errorSfaPostCollectionPayment]);
+
+  const handleError = error => {
+    if (error) {
+      switch (error?.data?.code) {
+        case 40005:
+          handleErrorSpecific(
+            error,
+            'Nomor Referensi Duplikat',
+            'Oke, Mengerti'
+          );
+          break;
+        default:
+          handleErrorGlobal();
+          break;
+      }
+    }
+  };
+
+  const handleErrorSpecific = (error, title, buttonText) => {
+    setMessageError(error.data.errorMessage);
+    setTitleError(title);
+    setButtonTitle(buttonText);
+    setModalBottomError(true);
+  };
+
+  const handleErrorGlobal = () => {
+    setMessageError(null);
+    setTitleError(null);
+    setButtonTitle(null);
+    setModalBottomError(true);
   };
 
   /**
@@ -94,6 +155,25 @@ const SfaBillingAddView = props => {
    * RENDER VIEW
    * *********************************
    */
+
+  /** RENDER MODAL ERROR */
+  const renderModalError = () => {
+    return (
+      <View>
+        {modalBottomError ? (
+          <ErrorBottomFailPayment
+            open={modalBottomError}
+            onPress={() => setModalBottomError(false)}
+            text={messageError}
+            errorTitle={titleError}
+            buttonTitle={buttonTitle}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  };
 
   /**
    * ======================================
@@ -408,8 +488,8 @@ const SfaBillingAddView = props => {
     return (
       <>
         <ButtonSingle
-          loading={loadingSfaPostBillingAdd}
-          disabled={loadingSfaPostBillingAdd}
+          loading={loadingSfaPostCollectionPayment}
+          disabled={loadingSfaPostCollectionPayment}
           title={'Simpan'}
           borderRadius={4}
           onPress={() => submit()}
@@ -447,6 +527,7 @@ const SfaBillingAddView = props => {
         </ScrollView>
         {renderFooter()}
         {renderSaveButton()}
+        {renderModalError()}
       </SafeAreaView>
     </View>
   );

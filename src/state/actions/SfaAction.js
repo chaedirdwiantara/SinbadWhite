@@ -537,28 +537,3 @@ export function sfaGetBillingDetailSuccess(data) {
 export function sfaGetBillingDetailFailed(data) {
   return { type: types.SFA_GET_BILLING_DETAIL_FAILED, payload: data };
 }
-
-/**
- * ===========================
- * POST BILLING ADD
- * ===========================
- */
-/** === SFA POST BILLING ADD PROCESS === */
-export function sfaPostBillingAddProcess(data) {
-  return { type: types.SFA_POST_BILLING_ADD_PROCESS, payload: data };
-}
-
-/** === SFA POST BILLING ADD SUCCESS === */
-export function sfaPostBillingAddSuccess(data) {
-  if (data.result === 'Ok') {
-    return {
-      type: types.SFA_POST_BILLING_ADD_SUCCESS,
-      payload: data.data
-    };
-  }
-  return { type: types.SFA_POST_BILLING_ADD_FAILED, payload: data };
-}
-/** === SFA POST BILLING ADD FAILED === */
-export function sfaPostBillingAddFailed(data) {
-  return { type: types.SFA_POST_BILLING_ADD_FAILED, payload: data };
-}

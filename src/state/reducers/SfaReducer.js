@@ -27,7 +27,6 @@ const INITIAL_STATE = {
   loadingSfaDeleteCollection: false,
   loadingLoadMoreGetReferenceList: false,
   loadingSfaGetBillingDetail: false,
-  loadingSfaPostBillingAdd: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -678,34 +677,6 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       loadingSfaGetBillingDetail: false,
       errorSfaGetBillingDetail: action.payload
-    };
-  },
-
-  /**
-   * ==========================
-   * POST BILLING ADD
-   * ==========================
-   */
-  [types.SFA_POST_BILLING_ADD_PROCESS](state, action) {
-    return {
-      ...state,
-      loadingSfaPostBillingAdd: true,
-      dataSfaPostBillingAdd: null,
-      errorSfaPostBillingAdd: null
-    };
-  },
-  [types.SFA_POST_BILLING_ADD_SUCCESS](state, action) {
-    return {
-      ...state,
-      loadingSfaPostBillingAdd: false,
-      dataSfaPostBillingAdd: action.payload
-    };
-  },
-  [types.SFA_POST_BILLING_ADD_FAILED](state, action) {
-    return {
-      ...state,
-      loadingSfaPostBillingAdd: false,
-      errorSfaPostBillingAdd: action.payload
     };
   }
 });
