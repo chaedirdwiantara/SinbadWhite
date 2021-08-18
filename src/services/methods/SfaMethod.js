@@ -20,7 +20,7 @@ function getSfaDetail(orderParcelId) {
 /** GET COLLECTION LIST */
 function getCollectionList(data) {
   return ApiRest({
-    path: `collection/v1/order-parcels?skip=0&limit=${data.limit}&storeId=${
+    path: `collection/v1/order-parcels?skip=${data.skip}&limit=${data.limit}&storeId=${
       data.storeId
     }&supplierId=${data.supplierId}&keyword=${data.keyword}&statusPayment=${
       data.statusPayment
