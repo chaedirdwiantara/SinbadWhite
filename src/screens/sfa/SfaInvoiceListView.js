@@ -52,10 +52,10 @@ function SfaInvoiceListView(props) {
               <FlatList
                 data={props.dataList.data.orderParcels}
                 renderItem={renderItem}
-                //   numColumns={1}
+                numColumns={1}
                 keyExtractor={(item, index) => index.toString()}
-                  refreshing={refreshGetCollection}
-                  onRefresh={()=>props.refersh()}
+                refreshing={refreshGetCollection}
+                onRefresh={() => props.refersh()}
                 onEndReachedThreshold={0.2}
                 onEndReached={() => props.loadmore()}
                 showsVerticalScrollIndicator

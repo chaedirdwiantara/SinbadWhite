@@ -78,7 +78,8 @@ const SfaView = props => {
       supplierId: parseInt(userSuppliers[0].supplier.id),
       keyword: searchText,
       statusPayment: paymentStatus,
-      loading: loading
+      loading: loading,
+      skip: 0
     };
     dispatch(sfaGetCollectionListProcess(data));
   };
