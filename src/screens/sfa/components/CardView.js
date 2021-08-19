@@ -76,14 +76,14 @@ const CardHeaderBadge = props => {
  */
 const CardHeader = props => {
   return (
-    <View style={{ ...props.styleContainer }}>
-      <View style={{ ...props.styleCard }}>
-        <View style={{ ...props.styleCardView }}>
+    <View style={{ ...props?.styleContainer }}>
+      <View style={{ ...props?.styleCard }}>
+        <View style={{ ...props?.styleCardView }}>
           <Text style={Fonts.type48}>{props.title}</Text>
-          {props.renderCardHeaderBadge ? props.renderCardHeaderBadge() : null}
+          {props?.renderCardHeaderBadge ? props.renderCardHeaderBadge() : null}
         </View>
         <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
-        {props.renderCardBody ? props.renderCardBody() : null}
+        {props?.renderCardBody ? props.renderCardBody() : null}
       </View>
     </View>
   );
@@ -93,7 +93,7 @@ const icon = props => {
   const size = props?.size ? props.size : 16;
   return (
     <MaterialIcon
-      name={props.name}
+      name={props?.name}
       color={masterColor.mainColor}
       size={size}
       style={props?.style}
@@ -108,23 +108,23 @@ const icon = props => {
  * @returns
  */
 const cardBodyTitle = props => {
-  const { titleIcon } = props;
-
   return (
     <View style={{ flexDirection: 'row' }}>
-      {titleIcon?.prefixIcon
+      {props?.titleIcon?.prefixIcon
         ? icon({
-            name: titleIcon.prefixIcon,
-            size: titleIcon?.prefixSize,
-            style: titleIcon?.prefixStyle
+            name: props?.titleIcon.prefixIcon,
+            size: props?.titleIcon?.prefixSize,
+            style: props?.titleIcon?.prefixStyle
           })
         : null}
-      <Text style={[Fonts.type17, { ...props.titleStyle }]}>{props.title}</Text>
-      {titleIcon?.suffixIcon
+      <Text style={[Fonts.type17, { ...props?.titleStyle }]}>
+        {props?.title}
+      </Text>
+      {props?.titleIcon?.suffixIcon
         ? icon({
-            name: titleIcon.suffixIcon,
-            size: titleIcon?.suffixSize,
-            style: titleIcon?.suffixStyle
+            name: props?.titleIcon.suffixIcon,
+            size: props?.titleIcon?.suffixSize,
+            style: props?.titleIcon?.suffixStyle
           })
         : null}
     </View>
@@ -138,23 +138,23 @@ const cardBodyTitle = props => {
  * @returns
  */
 const cardBodyValue = props => {
-  const { valueIcon } = props;
-
   return (
     <View style={{ flexDirection: 'row' }}>
-      {valueIcon?.prefixIcon
+      {props?.valueIcon?.prefixIcon
         ? icon({
-            name: valueIcon.prefixIcon,
-            size: valueIcon?.prefixSize,
-            style: valueIcon?.prefixStyle
+            name: props?.valueIcon.prefixIcon,
+            size: props?.valueIcon?.prefixSize,
+            style: props?.valueIcon?.prefixStyle
           })
         : null}
-      <Text style={[Fonts.type17, { ...props.valueStyle }]}>{props.value}</Text>
-      {valueIcon?.suffixIcon
+      <Text style={{ ...Fonts.type17, ...props?.valueStyle }}>
+        {props?.value}
+      </Text>
+      {props?.valueIcon?.suffixIcon
         ? icon({
-            name: valueIcon.suffixIcon,
-            size: valueIcon?.suffixSize,
-            style: valueIcon?.suffixStyle
+            name: props?.valueIcon.suffixIcon,
+            size: props?.valueIcon?.suffixSize,
+            style: props?.valueIcon?.suffixStyle
           })
         : null}
     </View>
@@ -236,7 +236,7 @@ const CardBody = props => {
         <View style={{ flexDirection: 'row' }}>{cardBodyValue(props)}</View>
       ) : null}
 
-      {props.imageSource ? renderImage(props) : null}
+      {props?.imageSource ? renderImage(props) : null}
     </>
   );
 };

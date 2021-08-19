@@ -116,16 +116,16 @@ function SfaDetailView(props) {
     setModalBottomError(true);
   };
 
+  const onClickModalError = () => {
+    setModalBottomError(false);
+    NavigationService.navigate('SfaView');
+  };
+
   /**
    * *********************************
    * RENDER VIEW
    * *********************************
    */
-
-  const onClickModalError = () => {
-    setModalBottomError(false);
-    NavigationService.navigate('SfaView');
-  };
 
   /** RENDER MODAL ERROR */
   const renderModalError = () => {

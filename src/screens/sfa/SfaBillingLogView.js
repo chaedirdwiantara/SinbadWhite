@@ -5,7 +5,7 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  TouchableOpacity,
+  TouchableOpacity
 } from '../../library/reactPackage';
 import { MaterialIcon, moment } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
@@ -43,9 +43,9 @@ const SfaBillingLogView = props => {
   //** FUNCTION GET PAYMENT LOG */
   const getPaymentCollectionLog = (loading, page) => {
     const data = {
-      paymentCollectionMethodId : 494,
+      paymentCollectionMethodId: 494,
       limit: 10
-    }
+    };
     dispatch(sfaGetPaymentCollectionLogProcess(data));
   };
   /** FUNCTION GET COLLECTION LIST */
@@ -64,6 +64,7 @@ const SfaBillingLogView = props => {
     getCollectionList(true, 10);
     getPaymentCollectionLog(true, 10);
   }, []);
+
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigatetoAddCollection = () => {
     NavigationService.navigate('SfaCollectionAddView');
@@ -156,8 +157,8 @@ const SfaBillingLogView = props => {
         <TouchableOpacity
           style={[styles.listContainer, GlobalStyle.shadowForBox]}
           onPress={() =>
-            NavigationService.navigate('SfaCollectionDetailView', {
-              paymentCollectionId: item.id
+            NavigationService.navigate('SfaBillingDetailView', {
+              paymentBillingId: item.id
             })
           }
         >
@@ -207,15 +208,12 @@ const SfaBillingLogView = props => {
 
           <View style={styles.salesContainer}>
             <View>
-              {renderContentListGlobal(
-                'Nomor Pesanan',
-                item.orderCode
-              )}
+              {renderContentListGlobal('Nomor Pesanan', item.orderCode)}
               {renderContentListGlobal(
                 'Tanggal Pembayaran',
                 moment(new Date(item.createdAt)).format('DD MMM YYYY')
               )}
-                {renderContentListGlobal(
+              {renderContentListGlobal(
                 'Metode Penagihan',
                 item.paymentCollectionMethodName
               )}
@@ -246,8 +244,8 @@ const SfaBillingLogView = props => {
    * =======================
    */
   const renderCollectionList = () => {
-    return dataSfaGetPaymentCollectionLog?(
-      <View style={{ flex: 1 }}>
+    return dataSfaGetPaymentCollectionLog ? (
+      <View style={{ flex: 1, marginTop: 10 }}>
         <FlatList
           data={dataSfaGetPaymentCollectionLog.data}
           renderItem={renderItem}
@@ -261,7 +259,9 @@ const SfaBillingLogView = props => {
         />
         {loadingLoadMoreGetReferenceList ? <LoadingLoadMore /> : null}
       </View>
-    ) : <View/>;
+    ) : (
+      <View />
+    );
   };
   /**
    * =======================
