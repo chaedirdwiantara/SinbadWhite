@@ -120,3 +120,8 @@ export const SFA_DELETE_COLLECTION_FAILED = 'SfaDeleteCollectionFailed';
 export const SFA_GET_BILLING_DETAIL_PROCESS = 'SfaGetBillingDetailProcess';
 export const SFA_GET_BILLING_DETAIL_SUCCESS = 'SfaGetBillingDetailSuccess';
 export const SFA_GET_BILLING_DETAIL_FAILED = 'SfaGetBillingDetailFailed';
+
+/** GET COLLECTION PAYMENT LOG */
+export const SFA_GET_PAYMENT_COLLECTION_LOG_PROCESS = 'SfaGetPaymentCollectionLogProcess';
+export const SFA_GET_PAYMENT_COLLECTION_LOG_SUCCESS = 'SfaGetPaymentCollectionLogSuccess';
+export const SFA_GET_PAYMENT_COLLECTION_LOG_FAILED = 'SfaGetPaymentCollectionLogFailed';
