@@ -1,26 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from '../../library/reactPackage';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   MaterialIcon,
-  MaterialCommunityIcons
+  MaterialCommunityIcons,
+  moment,
+  Tooltip
 } from '../../library/thirdPartyPackage';
+import ModalBankAccount from './ModalBankAccount';
+import ModalListMaterai from './ModalListMaterai';
 import masterColor from '../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormatSpace } from '../../helpers';
 import {
-  APPROVED,
-  REJECTED,
-  PENDING,
   CASH,
   CHECK,
   GIRO,
-  TRANSFER,
-  PROMO
+  TRANSFER
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 import {
@@ -31,28 +33,132 @@ import {
 } from '../../library/component';
 import { TextInputMask } from 'react-native-masked-text';
 import SfaImageInput from './sfaComponents/SfaImageInput';
+import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
+import {
+  sfaPostPaymentMethodProcess,
+  sfaGetReferenceListProcess
+} from '../../state/actions';
+const { width, height } = Dimensions.get('window');
+
 const SfaCollectionAddView = props => {
-  const paymentCollectionMethodId = 4;
+  const dispatch = useDispatch();
+  const paymentCollectionMethodId = props.navigation.state.params.id;
   const [amount, setAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [noReference, setNoReference] = useState('');
   const [transferDate, setTransferDate] = useState(null);
   const [issuedDate, setIssuedDate] = useState(null);
   const [invalidDate, setInvalidDate] = useState(null);
+  const [dataBank, setDataBank] = useState(null);
+  const [dataStamp, setDataStamp] = useState(null);
+  const [isModalStampOpen, setIsModalStampOpen] = useState(false);
   const [isModalBankOpen, setIsModalBankOpen] = useState(false);
   const [isModalTransferDateOpen, setIsModalTransferDateOpen] = useState(false);
   const [isModalIssuedDateOpen, setIsModalIssuedDateOpen] = useState(false);
   const [isModalInvalidDateOpen, setIsModalInvalidDateOpen] = useState(false);
   const [isStampChecked, setIsStampChecked] = useState(false);
+  const [isSaveDisabled, setIsSaveDisabled] = useState(true);
+  const [questionMarkShow, setQuestionMarkShow] = useState(true);
   const [imageName, setImageName] = useState();
   const [imageType, setImageType] = useState();
   const [imageData, setImageData] = useState();
+  const [isModalBottomErrorOpen, setIsModalBottomErrorOpen] = useState(false);
+  const [messageError, setMessageError] = useState(null);
+  const [titleError, setTitleError] = useState(null);
+  const [buttonTitle, setButtonTitle] = useState(null);
+  /**
+   * *********************************
+   * RENDER USESELECTOR
+   * *********************************
+   */
+  const { userSuppliers } = useSelector(state => state.user);
+  const { selectedMerchant } = useSelector(state => state.merchant);
+  const {
+    loadingSfaPostPaymentMethod,
+    dataSfaPostPaymentMethod,
+    errorSfaPostPaymentMethod
+  } = useSelector(state => state.sfa);
+
+  /**
+   * *********************************
+   * RENDER USEREF
+   * *********************************
+   */
+  const prevDataSfaPostPaymentMethodRef = useRef(dataSfaPostPaymentMethod);
+  const prevErrorSfaPostPaymentMethodRef = useRef(errorSfaPostPaymentMethod);
+
+  /**
+   * *********************************
+   * RENDER USE EFFECT
+   * *********************************
+   */
+  useEffect(() => {
+    prevDataSfaPostPaymentMethodRef.current = dataSfaPostPaymentMethod;
+  }, []);
+  const prevDataSfaPostPaymentMethod = prevDataSfaPostPaymentMethodRef.current;
+
+  useEffect(() => {
+    prevErrorSfaPostPaymentMethodRef.current = errorSfaPostPaymentMethod;
+  }, []);
+  const prevErrorSfaPostPaymentMethod =
+    prevErrorSfaPostPaymentMethodRef.current;
+
+  useEffect(() => {
+    if (prevDataSfaPostPaymentMethod !== dataSfaPostPaymentMethod) {
+      if (dataSfaPostPaymentMethod) {
+        navigateOnSucces();
+      }
+    }
+  }, [dataSfaPostPaymentMethod]);
+
+  useEffect(() => {
+    totalAmountCal(amount);
+  }, [amount, dataStamp]);
+
+  useEffect(() => {
+    checkInput();
+  });
+
+  useEffect(() => {
+    if (isStampChecked === false) {
+      setDataStamp(null);
+    }
+  }, [isStampChecked]);
+
+  /** HANDLE ERROR POST COLLECTION */
+  useEffect(() => {
+    if (prevErrorSfaPostPaymentMethod !== errorSfaPostPaymentMethod) {
+      if (errorSfaPostPaymentMethod) {
+        handleError(errorSfaPostPaymentMethod);
+      }
+    }
+  }, [errorSfaPostPaymentMethod]);
+  /**
+   * *********************************
+   * RENDER FUNCTION
+   * *********************************
+   */
+  const navigateOnSucces = () => {
+    const data = {
+      supplierId: parseInt(userSuppliers[0].supplierId, 10),
+      storeId: parseInt(selectedMerchant.storeId, 10),
+      paymentCollectionTypeId: parseInt(paymentCollectionMethodId, 10),
+      userId: parseInt(userSuppliers[0].userId, 10),
+      limit: 20,
+      loading: true
+    };
+    dispatch(sfaGetReferenceListProcess(data));
+    NavigationService.navigate('SfaCollectionListView', {
+      collectionMethodId: paymentCollectionMethodId
+    });
+  };
 
   const onChangeReference = value => {
     setNoReference(value);
   };
 
   const onChangeAmount = value => {
-    setAmount(value);
+    setAmount(parseInt(value.replace(/[Rp.]+/g, ''), 10));
   };
 
   const onChooseImage = response => {
@@ -74,16 +180,8 @@ const SfaCollectionAddView = props => {
   const onSelectIssuedDate = date => {
     setIssuedDate(date);
   };
-
   const onSelectInvalidDate = date => {
     setInvalidDate(date);
-  };
-
-  const onCheckStamp = () => {
-    setIsStampChecked(!isStampChecked);
-    if (isStampChecked === false) {
-      console.log('lalla');
-    }
   };
 
   const openTransferDate = () => {
@@ -96,6 +194,131 @@ const SfaCollectionAddView = props => {
 
   const openInvalidDate = () => {
     setIsModalInvalidDateOpen(true);
+  };
+
+  const onSelectBank = data => {
+    setDataBank(data);
+    setIsModalBankOpen(false);
+  };
+
+  const onSelectStamp = data => {
+    setDataStamp(data);
+    setIsModalStampOpen(false);
+  };
+
+  const totalAmountCal = value => {
+    if (paymentCollectionMethodId === CASH) {
+      setTotalAmount(amount);
+    }
+    if (
+      paymentCollectionMethodId === CHECK ||
+      paymentCollectionMethodId === GIRO
+    ) {
+      const stamp = dataStamp ? dataStamp.nominal : 0;
+      const total = amount + stamp;
+      setTotalAmount(parseInt(total, 10));
+    }
+  };
+
+  const checkInput = () => {
+    if (paymentCollectionMethodId === CASH) {
+      if (!amount || !imageData) {
+        setIsSaveDisabled(true);
+      } else {
+        setIsSaveDisabled(false);
+      }
+    }
+    if (
+      paymentCollectionMethodId === CHECK ||
+      paymentCollectionMethodId === GIRO
+    ) {
+      if (
+        !amount ||
+        !imageData ||
+        !issuedDate ||
+        !noReference ||
+        !invalidDate ||
+        !dataBank
+      ) {
+        setIsSaveDisabled(true);
+      } else {
+        setIsSaveDisabled(false);
+      }
+    }
+  };
+
+  const createCollection = () => {
+    const data = {
+      paymentCollectionTypeId: paymentCollectionMethodId,
+      supplierId: parseInt(userSuppliers[0].supplierId, 10),
+      storeId: parseInt(selectedMerchant.storeId, 10),
+      userId: parseInt(userSuppliers[0].userId, 10),
+      amount: parseInt(amount, 10),
+      filename: imageName,
+      type: imageType,
+      image: imageData
+    };
+    if (paymentCollectionMethodId === CASH) {
+      dispatch(sfaPostPaymentMethodProcess(data));
+    }
+    if (
+      paymentCollectionMethodId === CHECK ||
+      paymentCollectionMethodId === GIRO
+    ) {
+      const stampId = dataStamp ? dataStamp.id : null;
+      const isUsedStamp = dataStamp ? true : false;
+      const bankId = dataBank.id;
+      const dateIssued = moment
+        .utc(issuedDate)
+        .local()
+        .format('YYYY-MM-DD HH:mm:ss');
+      const dateInvalid = moment
+        .utc(invalidDate)
+        .local()
+        .format('YYYY-MM-DD HH:mm:ss');
+      const dataCheckGiro = {
+        ...data,
+        stampId: stampId,
+        isUsedStamp: isUsedStamp,
+        bankId: bankId,
+        issuedDate: dateIssued,
+        invalidDate: dateInvalid,
+        referenceCode: noReference
+      };
+      dispatch(sfaPostPaymentMethodProcess(dataCheckGiro));
+    }
+  };
+
+  /** FUNCTION HANDLE ERROR POST COLLECTION */
+  const handleError = error => {
+    if (error) {
+      switch (error.data.code) {
+        case 40005:
+          handleErrorSpecific(
+            error,
+            'Nomor Referensi Duplikat',
+            'Oke, Mengerti'
+          );
+          break;
+        default:
+          handleErrorGlobal();
+          break;
+      }
+    }
+  };
+  /** HANDLE ERROR SPECIFIC */
+  const handleErrorSpecific = (error, title, buttonText) => {
+    setMessageError(error.data.errorMessage);
+    setTitleError(title);
+    setButtonTitle(buttonText);
+    setIsModalBottomErrorOpen(true);
+  };
+  /** HANDLE ERROR GLOBAL */
+  const handleErrorGlobal = () => {
+    setMessageError(null);
+    setTitleError(null);
+    setButtonTitle(null);
+    setIsModalBottomErrorOpen(true);
   };
   /**
    * *********************************
@@ -120,10 +343,19 @@ const SfaCollectionAddView = props => {
 
   /** RENDER COLLECTION METHOD */
   const renderCollectionMethod = () => {
+    const id = paymentCollectionMethodId;
     return (
       <View>
         <Text style={[Fonts.type10, styles.titleInput]}>Metode Penagihan</Text>
-        <Text style={[Fonts.type17, { marginBottom: 16 }]}>Tunai</Text>
+        <Text style={[Fonts.type17, { marginBottom: 16 }]}>
+          {id === CASH
+            ? 'Tunai'
+            : id === CHECK
+            ? 'Cek'
+            : id === GIRO
+            ? 'Giro'
+            : 'Transfer'}
+        </Text>
       </View>
     );
   };
@@ -196,7 +428,12 @@ const SfaCollectionAddView = props => {
           onPress={() => setIsModalBankOpen(true)}
           disabled={false}
         >
-          <Text style={[Fonts.type31]}>Pilih Sumber Bank</Text>
+          {dataBank ? (
+            <Text style={[Fonts.type17]}>{dataBank.displayName}</Text>
+          ) : (
+            <Text style={[Fonts.type31]}>Pilih Sumber Bank</Text>
+          )}
+
           <View style={{ position: 'absolute', right: 16 }}>
             <MaterialIcon
               name="chevron-right"
@@ -249,9 +486,11 @@ const SfaCollectionAddView = props => {
     return (
       <>
         <ButtonSingle
-          onPress={() => console.log('clicked')}
-          title={'Tambah Penagihan'}
+          onPress={() => createCollection()}
+          title={'Simpan'}
           borderRadius={4}
+          disabled={isSaveDisabled}
+          loading={loadingSfaPostPaymentMethod}
         />
       </>
     );
@@ -260,11 +499,11 @@ const SfaCollectionAddView = props => {
   /** RENDER BOTTOM TAB */
   const renderBottomTab = () => {
     return (
-      <View>
-        <View style={styles.totalCollection}>
+      <View style={[GlobalStyle.shadowForBox, { borderWidth: 0.2 }]}>
+        <View style={[styles.totalCollection]}>
           <Text style={[Fonts.type23, { flex: 1 }]}>Total Penagihan</Text>
           <Text style={[Fonts.type116p, { flex: 1, textAlign: 'right' }]}>
-            {MoneyFormatSpace(10000)}
+            {MoneyFormatSpace(totalAmount)}
           </Text>
         </View>
         {renderButton()}
@@ -330,7 +569,9 @@ const SfaCollectionAddView = props => {
                 }
               ]}
             >
-              Pilih Tanggal Jatuh Tempo
+              {invalidDate
+                ? moment(invalidDate).format('DD/MM/YYYY')
+                : 'Pilih Tanggal Jatuh Tempo'}
             </Text>
           </View>
         </TouchableOpacity>
@@ -364,13 +605,17 @@ const SfaCollectionAddView = props => {
                 }
               ]}
             >
-              Pilih Tanggal Terbit
+              {issuedDate
+                ? moment(issuedDate).format('DD/MM/YYYY')
+                : 'Pilih Tanggal Terbit'}
             </Text>
           </View>
         </TouchableOpacity>
         <View style={[GlobalStyle.lines]} />
       </View>
-    ) : null;
+    ) : (
+      <View />
+    );
   };
 
   /** RENDER MATERAI */
@@ -380,7 +625,7 @@ const SfaCollectionAddView = props => {
       <View style={{ marginTop: 16 }}>
         <View style={{ display: 'flex', flexDirection: 'row' }}>
           <Text style={[Fonts.type10]}>Materai</Text>
-          {/* {renderTooltip()} */}
+          {renderStampTooltip()}
         </View>
         <View
           style={{
@@ -389,7 +634,10 @@ const SfaCollectionAddView = props => {
             paddingVertical: 16
           }}
         >
-          <TouchableOpacity onPress={() => onCheckStamp()} style={{ flex: 1 }}>
+          <TouchableOpacity
+            onPress={() => setIsStampChecked(!isStampChecked)}
+            style={{ flex: 1 }}
+          >
             {isStampChecked ? (
               <MaterialCommunityIcons
                 color={masterColor.mainColor}
@@ -406,7 +654,7 @@ const SfaCollectionAddView = props => {
           </TouchableOpacity>
           <View style={{ flex: 8 }}>
             <TouchableOpacity
-              onPress={() => console.log('true')}
+              onPress={() => setIsModalStampOpen(true)}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -414,7 +662,12 @@ const SfaCollectionAddView = props => {
               }}
               disabled={!isStampChecked}
             >
-              <Text style={[Fonts.type17]}>Materai</Text>
+              {dataStamp ? (
+                <Text style={[Fonts.type17]}>{dataStamp.name}</Text>
+              ) : (
+                <Text style={[Fonts.type31]}>Pilih Nilai Materai</Text>
+              )}
+
               <View>
                 <MaterialIcon
                   name="chevron-right"
@@ -441,6 +694,42 @@ const SfaCollectionAddView = props => {
     );
   };
 
+  /** === RENDER TOOLTIP === */
+  const renderStampTooltip = () => {
+    return (
+      <Tooltip
+        backgroundColor={masterColor.fontBlack50OP80}
+        height={75}
+        withOverlay={false}
+        withPointer={false}
+        onOpen={() => setQuestionMarkShow(false)}
+        onClose={() => setQuestionMarkShow(true)}
+        containerStyle={{
+          padding: 8,
+          width: 0.6 * width
+        }}
+        popover={
+          <Text style={Fonts.type87}>
+            {`\u25CF`} Masukan nilai materai apabila disediakan oleh Toko {'\n'}
+            {'\n'}
+            {`\u25CF`} Nilai Materai yang dipilih akan menambah nilai penagihan
+          </Text>
+        }
+      >
+        {questionMarkShow ? (
+          <MaterialIcon name="help" size={13} color={masterColor.mainColor} />
+        ) : (
+          <View />
+        )}
+      </Tooltip>
+    );
+  };
+
+  /**
+   * *********************************
+   * RENDER MODAL
+   * *********************************
+   */
   /** RENDER MODAL TRANSFER DATE */
   const renderModalTransferDate = () => {
     return (
@@ -468,7 +757,7 @@ const SfaCollectionAddView = props => {
       <ModalBottomType4
         typeClose={'cancel'}
         open={isModalIssuedDateOpen}
-        title={'Tanggal Terbit'}
+        title={'Tanggal Jatuh Tempo'}
         close={() => setIsModalIssuedDateOpen(false)}
         content={
           <View>
@@ -508,7 +797,62 @@ const SfaCollectionAddView = props => {
       />
     );
   };
+  /** MODAL BANK ACCOUNT */
+  const renderModalBank = () => {
+    return (
+      <View>
+        {isModalBankOpen ? (
+          <ModalBankAccount
+            open={isModalBankOpen}
+            close={() => setIsModalBankOpen(false)}
+            onRef={ref => (selectCollection = ref)}
+            selectCollection={onSelectBank.bind(this)}
+            supplierId={parseInt(userSuppliers[0].supplierId, 10)}
+            storeId={parseInt(selectedMerchant.storeId, 10)}
+            paymentCollectionTypeId={paymentCollectionMethodId}
+          />
+        ) : null}
+      </View>
+    );
+  };
 
+  /** MODAL STAMP */
+  const renderModalListMaterai = () => {
+    return (
+      <View>
+        {isModalStampOpen ? (
+          <ModalListMaterai
+            open={isModalStampOpen}
+            close={() => setIsModalStampOpen(false)}
+            onRef={ref => (selectedStamp = ref)}
+            selectStamp={onSelectStamp.bind(this)}
+            supplierId={parseInt(userSuppliers[0].supplierId, 10)}
+            storeId={parseInt(selectedMerchant.storeId, 10)}
+            paymentCollectionTypeId={paymentCollectionMethodId}
+          />
+        ) : null}
+      </View>
+    );
+  };
+
+  /** RENDER MODAL ERROR */
+  const renderModalError = () => {
+    return (
+      <View>
+        {isModalBottomErrorOpen ? (
+          <ErrorBottomFailPayment
+            open={isModalBottomErrorOpen}
+            onPress={() => setIsModalBottomErrorOpen(false)}
+            text={messageError}
+            errorTitle={titleError}
+            buttonTitle={buttonTitle}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  };
   /**
    * *********************************
    * RENDER MAIN
@@ -521,6 +865,9 @@ const SfaCollectionAddView = props => {
       {renderModalTransferDate()}
       {renderModalIssuedDate()}
       {renderModalInvalidDate()}
+      {renderModalBank()}
+      {renderModalListMaterai()}
+      {renderModalError()}
     </>
   );
 };

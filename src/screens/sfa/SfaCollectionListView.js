@@ -58,7 +58,9 @@ const SfaCollectionListView = props => {
   }, []);
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigatetoAddCollection = () => {
-    NavigationService.navigate('SfaCollectionAddView');
+    NavigationService.navigate('SfaCollectionAddView', {
+      id: collectionMethodId
+    });
   };
 
   /** FUNCTION REFRESH COLLECTION LIST */
@@ -270,7 +272,7 @@ const SfaCollectionListView = props => {
    */
   const renderNoData = () => {
     return (
-      <View style={{ marginTop: 16 }}>
+      <View style={{ flex: 1, justifyContent: 'center' }}>
         <SfaNoDataView
           topText="Belum ada penagihan"
           midText="Yuk lakukan penambahan penagihanmu."
