@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView
 } from '../../library/reactPackage';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   MaterialIcon,
   MaterialCommunityIcons
@@ -14,9 +15,6 @@ import {
 import masterColor from '../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormatSpace } from '../../helpers';
 import {
-  APPROVED,
-  REJECTED,
-  PENDING,
   CASH,
   CHECK,
   GIRO,
@@ -32,9 +30,16 @@ import {
 } from '../../library/component';
 import { TextInputMask } from 'react-native-masked-text';
 import SfaImageInput from './sfaComponents/SfaImageInput';
+import {
+  sfaPostPaymentMethodProcess,
+  sfaGetDetailProcess
+} from '../../state/actions';
+
 const SfaCollectionAddView = props => {
-  const paymentCollectionMethodId = 4;
+  const dispatch = useDispatch();
+  const paymentCollectionMethodId = props.navigation.state.params.id;
   const [amount, setAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [noReference, setNoReference] = useState('');
   const [issuedDate, setIssuedDate] = useState(null);
   const [invalidDate, setInvalidDate] = useState(null);
@@ -42,16 +47,35 @@ const SfaCollectionAddView = props => {
   const [isModalIssuedDateOpen, setIsModalIssuedDateOpen] = useState(false);
   const [isModalInvalidDateOpen, setIsModalInvalidDateOpen] = useState(false);
   const [isStampChecked, setIsStampChecked] = useState(false);
+  const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [imageName, setImageName] = useState();
   const [imageType, setImageType] = useState();
   const [imageData, setImageData] = useState();
+  const { userSuppliers } = useSelector(state => state.user);
+  const { selectedMerchant } = useSelector(state => state.merchant);
+  const {
+    dataSfaPostPaymentMethod,
+    dataSfaPostCollectionPayment,
+    errorSfaPostPaymentMethod,
+    errorSfaPostCollectionPayment,
+    loadingSfaPostPaymentMethod,
+    loadingSfaPostCollectionPayment
+  } = useSelector(state => state.sfa);
+
+  useEffect(() => {
+    totalAmountCal(amount);
+  }, [amount]);
+
+  useEffect(() => {
+    checkInput();
+  });
 
   const onChangeReference = value => {
     setNoReference(value);
   };
 
   const onChangeAmount = value => {
-    setAmount(value);
+    setAmount(parseInt(value.replace(/[Rp.]+/g, '')));
   };
 
   const onChooseImage = response => {
@@ -88,6 +112,39 @@ const SfaCollectionAddView = props => {
   const openInvalidDate = () => {
     setIsModalInvalidDateOpen(true);
   };
+
+  const totalAmountCal = value => {
+    if (paymentCollectionMethodId === CASH) {
+      setTotalAmount(amount);
+    }
+  };
+
+  const checkInput = () => {
+    if (paymentCollectionMethodId === CASH) {
+      if (!amount || !imageData) {
+        setIsSaveDisabled(true);
+      } else {
+        setIsSaveDisabled(false);
+      }
+    }
+  };
+
+  const createCollection = () => {
+    const data = {
+      paymentCollectionTypeId: paymentCollectionMethodId,
+      supplierId: parseInt(userSuppliers[0].supplierId, 10),
+      storeId: parseInt(selectedMerchant.storeId, 10),
+      userId: parseInt(userSuppliers[0].userId, 10),
+      amount: parseInt(amount, 10),
+      filename: imageName,
+      type: imageType,
+      image: imageData
+    };
+    if (paymentCollectionMethodId === CASH) {
+      dispatch(sfaPostPaymentMethodProcess(data));
+    }
+  };
+
   /**
    * *********************************
    * RENDER VIEW
@@ -109,10 +166,19 @@ const SfaCollectionAddView = props => {
 
   /** RENDER COLLECTION METHOD */
   const renderCollectionMethod = () => {
+    const id = paymentCollectionMethodId;
     return (
       <View>
         <Text style={[Fonts.type10, styles.titleInput]}>Metode Penagihan</Text>
-        <Text style={[Fonts.type17, { marginBottom: 16 }]}>Tunai</Text>
+        <Text style={[Fonts.type17, { marginBottom: 16 }]}>
+          {id === CASH
+            ? 'Tunai'
+            : id === CHECK
+            ? 'Cek'
+            : id === GIRO
+            ? 'Giro'
+            : 'Transfer'}
+        </Text>
       </View>
     );
   };
@@ -214,9 +280,11 @@ const SfaCollectionAddView = props => {
     return (
       <>
         <ButtonSingle
-          onPress={() => console.log('clicked')}
-          title={'Tambah Penagihan'}
+          onPress={() => createCollection()}
+          title={'Simpan'}
           borderRadius={4}
+          disabled={isSaveDisabled}
+          loading={loadingSfaPostCollectionPayment}
         />
       </>
     );
@@ -225,11 +293,11 @@ const SfaCollectionAddView = props => {
   /** RENDER BOTTOM TAB */
   const renderBottomTab = () => {
     return (
-      <View>
-        <View style={styles.totalCollection}>
+      <View style={[GlobalStyle.shadowForBox, { borderWidth: 0.2 }]}>
+        <View style={[styles.totalCollection]}>
           <Text style={[Fonts.type23, { flex: 1 }]}>Total Penagihan</Text>
           <Text style={[Fonts.type116p, { flex: 1, textAlign: 'right' }]}>
-            {MoneyFormatSpace(10000)}
+            {MoneyFormatSpace(totalAmount)}
           </Text>
         </View>
         {renderButton()}
@@ -273,7 +341,7 @@ const SfaCollectionAddView = props => {
 
   /** RENDER ISSUED DATE */
   const renderIssuedDate = () => {
-    return (
+    return paymentCollectionMethodId !== CASH ? (
       <View style={{ marginBottom: 8 }}>
         <Text style={Fonts.type10}>*Tanggal Terbit</Text>
         <TouchableOpacity
@@ -301,6 +369,8 @@ const SfaCollectionAddView = props => {
         </TouchableOpacity>
         <View style={[GlobalStyle.lines]} />
       </View>
+    ) : (
+      <View />
     );
   };
 

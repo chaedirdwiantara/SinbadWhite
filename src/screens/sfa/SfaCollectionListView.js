@@ -57,7 +57,9 @@ const SfaCollectionListView = props => {
   }, []);
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigatetoAddCollection = () => {
-    NavigationService.navigate('SfaCollectionAddView');
+    NavigationService.navigate('SfaCollectionAddView', {
+      id: collectionMethodId
+    });
   };
 
   /** FUNCTION REFRESH COLLECTION LIST */
@@ -123,8 +125,8 @@ const SfaCollectionListView = props => {
             type === 'red' && disable
               ? masterColor.buttonRedDisableColor
               : type === 'red'
-              ? masterColor.mainColor
-              : masterColor.fontWhite,
+                ? masterColor.mainColor
+                : masterColor.fontWhite,
           borderColor: disable
             ? masterColor.buttonRedDisableColor
             : masterColor.mainColor
@@ -166,14 +168,14 @@ const SfaCollectionListView = props => {
                     ...(item.approvalStatus === APPROVED
                       ? Fonts.type92
                       : item.approvalStatus === PENDING
-                      ? Fonts.type114p
-                      : Fonts.type115p),
+                        ? Fonts.type114p
+                        : Fonts.type115p),
                     backgroundColor:
                       item.approvalStatus === APPROVED
                         ? '#E1F7E8'
                         : item.approvalStatus === PENDING
-                        ? '#FFF0D1'
-                        : '#FAC0C3',
+                          ? '#FFF0D1'
+                          : '#FAC0C3',
                     paddingHorizontal: 10,
                     paddingVertical: 6,
                     borderRadius: 100
@@ -182,8 +184,8 @@ const SfaCollectionListView = props => {
                   {item.approvalStatus === APPROVED
                     ? 'Disetujui'
                     : item.approvalStatus === PENDING
-                    ? 'Menunggu'
-                    : 'Ditolak'}
+                      ? 'Menunggu'
+                      : 'Ditolak'}
                 </Text>
               </View>
             ) : (
