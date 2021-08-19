@@ -22,8 +22,7 @@ import {
   CASH,
   CHECK,
   GIRO,
-  TRANSFER,
-  PROMO
+  TRANSFER
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 import {
@@ -47,12 +46,14 @@ const SfaCollectionAddView = props => {
   const [amount, setAmount] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const [noReference, setNoReference] = useState('');
+  const [transferDate, setTransferDate] = useState(null);
   const [issuedDate, setIssuedDate] = useState(null);
   const [invalidDate, setInvalidDate] = useState(null);
   const [dataBank, setDataBank] = useState(null);
   const [dataStamp, setDataStamp] = useState(null);
   const [isModalStampOpen, setIsModalStampOpen] = useState(false);
   const [isModalBankOpen, setIsModalBankOpen] = useState(false);
+  const [isModalTransferDateOpen, setIsModalTransferDateOpen] = useState(false);
   const [isModalIssuedDateOpen, setIsModalIssuedDateOpen] = useState(false);
   const [isModalInvalidDateOpen, setIsModalInvalidDateOpen] = useState(false);
   const [isStampChecked, setIsStampChecked] = useState(false);
@@ -172,12 +173,21 @@ const SfaCollectionAddView = props => {
     setImageType();
   };
 
+  const onSelectTransferDate = date => {
+    setTransferDate(date);
+  };
+
   const onSelectIssuedDate = date => {
     setIssuedDate(date);
   };
   const onSelectInvalidDate = date => {
     setInvalidDate(date);
   };
+
+  const openTransferDate = () => {
+    setIsModalTransferDateOpen(true);
+  };
+
   const openIssuedDate = () => {
     setIsModalIssuedDateOpen(true);
   };
@@ -320,10 +330,12 @@ const SfaCollectionAddView = props => {
       <View>
         {renderReference()}
         {renderBankSource()}
+        {renderBankTo()}
+        {renderTransferDate()}
         {renderIssuedDate()}
         {renderInvalidDate()}
-        {renderMaterai()}
         {renderAmount()}
+        {renderMaterai()}
         {renderImage()}
       </View>
     );
@@ -435,6 +447,30 @@ const SfaCollectionAddView = props => {
     ) : null;
   };
 
+  /** RENDER BANK TO */
+  const renderBankTo = () => {
+    return paymentCollectionMethodId === TRANSFER ? (
+      <View style={{ marginBottom: 16 }}>
+        <Text style={Fonts.type10}>*Tujuan Bank</Text>
+        <TouchableOpacity
+          style={styles.boxMenu}
+          onPress={() => setIsModalBankOpen(true)}
+          disabled={false}
+        >
+          <Text style={[Fonts.type31]}>Pilih Tujuan Bank</Text>
+          <View style={{ position: 'absolute', right: 16 }}>
+            <MaterialIcon
+              name="chevron-right"
+              color={masterColor.fontBlack40}
+              size={24}
+            />
+          </View>
+        </TouchableOpacity>
+        <View style={[GlobalStyle.lines]} />
+      </View>
+    ) : null;
+  };
+
   /** RENDER CONTENT */
   const renderContent = () => {
     return (
@@ -475,6 +511,39 @@ const SfaCollectionAddView = props => {
     );
   };
 
+  /** RENDER TRANSFER DATE */
+  const renderTransferDate = () => {
+    return paymentCollectionMethodId === TRANSFER ? (
+      <View style={{ marginBottom: 8 }}>
+        <Text style={Fonts.type10}>*Tanggal Transfer</Text>
+        <TouchableOpacity
+          style={styles.boxMenu}
+          onPress={() => openTransferDate()}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <MaterialIcon
+              name="date-range"
+              color={masterColor.mainColor}
+              size={16}
+            />
+
+            <Text
+              style={[
+                Fonts.type17,
+                {
+                  marginLeft: 11
+                }
+              ]}
+            >
+              Pilih Tanggal Transfer
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <View style={[GlobalStyle.lines]} />
+      </View>
+    ) : null;
+  };
+
   /** RENDER INVALID DATE */
   const renderInvalidDate = () => {
     return paymentCollectionMethodId === CHECK ||
@@ -513,7 +582,8 @@ const SfaCollectionAddView = props => {
 
   /** RENDER ISSUED DATE */
   const renderIssuedDate = () => {
-    return paymentCollectionMethodId !== CASH ? (
+    return paymentCollectionMethodId === CHECK ||
+      paymentCollectionMethodId === GIRO ? (
       <View style={{ marginBottom: 8 }}>
         <Text style={Fonts.type10}>*Tanggal Terbit</Text>
         <TouchableOpacity
@@ -660,6 +730,27 @@ const SfaCollectionAddView = props => {
    * RENDER MODAL
    * *********************************
    */
+  /** RENDER MODAL TRANSFER DATE */
+  const renderModalTransferDate = () => {
+    return (
+      <ModalBottomType4
+        typeClose={'cancel'}
+        open={isModalTransferDateOpen}
+        title={'Tanggal Transfer'}
+        close={() => setIsModalTransferDateOpen(false)}
+        content={
+          <View>
+            <DatePickerSpinnerWithMinMaxDate
+              onSelect={date => onSelectTransferDate(date)}
+              close={() => setIsModalTransferDateOpen(false)}
+              maxDate={new Date()}
+            />
+          </View>
+        }
+      />
+    );
+  };
+
   /** RENDER MODAL ISSUED DATE */
   const renderModalIssuedDate = () => {
     return (
@@ -771,6 +862,7 @@ const SfaCollectionAddView = props => {
     <>
       <ScrollView>{renderContent()}</ScrollView>
       {renderBottomTab()}
+      {renderModalTransferDate()}
       {renderModalIssuedDate()}
       {renderModalInvalidDate()}
       {renderModalBank()}
@@ -779,6 +871,7 @@ const SfaCollectionAddView = props => {
     </>
   );
 };
+
 const styles = StyleSheet.create({
   contentContainer: {
     marginHorizontal: 16,
@@ -804,4 +897,5 @@ const styles = StyleSheet.create({
     alignContent: 'space-between'
   }
 });
+
 export default SfaCollectionAddView;

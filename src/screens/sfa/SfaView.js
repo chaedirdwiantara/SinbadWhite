@@ -146,7 +146,11 @@ const SfaView = props => {
     );
   };
   const renderSkeletonList = () => {
-    return <SkeletonType28 />;
+    return (
+      <View style={{ marginTop: 16 }}>
+        <SkeletonType28 />
+      </View>
+    );
   };
   /** === TAGS SECTION === */
   const renderTagsContent = () => {

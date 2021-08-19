@@ -26,6 +26,7 @@ import {
   sfaGetReferenceListProcess,
   sfaCollectionListLoadmoreProcess
 } from '../../state/actions';
+import SfaNoDataView from './SfaNoDataView';
 
 const SfaCollectionListView = props => {
   const dispatch = useDispatch();
@@ -125,8 +126,8 @@ const SfaCollectionListView = props => {
             type === 'red' && disable
               ? masterColor.buttonRedDisableColor
               : type === 'red'
-                ? masterColor.mainColor
-                : masterColor.fontWhite,
+              ? masterColor.mainColor
+              : masterColor.fontWhite,
           borderColor: disable
             ? masterColor.buttonRedDisableColor
             : masterColor.mainColor
@@ -168,14 +169,14 @@ const SfaCollectionListView = props => {
                     ...(item.approvalStatus === APPROVED
                       ? Fonts.type92
                       : item.approvalStatus === PENDING
-                        ? Fonts.type114p
-                        : Fonts.type115p),
+                      ? Fonts.type114p
+                      : Fonts.type115p),
                     backgroundColor:
                       item.approvalStatus === APPROVED
                         ? '#E1F7E8'
                         : item.approvalStatus === PENDING
-                          ? '#FFF0D1'
-                          : '#FAC0C3',
+                        ? '#FFF0D1'
+                        : '#FAC0C3',
                     paddingHorizontal: 10,
                     paddingVertical: 6,
                     borderRadius: 100
@@ -184,8 +185,8 @@ const SfaCollectionListView = props => {
                   {item.approvalStatus === APPROVED
                     ? 'Disetujui'
                     : item.approvalStatus === PENDING
-                      ? 'Menunggu'
-                      : 'Ditolak'}
+                    ? 'Menunggu'
+                    : 'Ditolak'}
                 </Text>
               </View>
             ) : (
@@ -266,12 +267,29 @@ const SfaCollectionListView = props => {
 
   /**
    * =======================
+   * RENDER NO DATA
+   * =======================
+   */
+  const renderNoData = () => {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        <SfaNoDataView
+          topText="Belum ada penagihan"
+          midText="Yuk lakukan penambahan penagihanmu."
+          bottomText=""
+        />
+      </View>
+    );
+  };
+
+  /**
+   * =======================
    * RENDER COLLECTION LIST
    * =======================
    */
   const renderCollectionList = () => {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, marginTop: 10 }}>
         <FlatList
           data={dataGetReferenceList.data}
           renderItem={renderItem}
@@ -312,9 +330,11 @@ const SfaCollectionListView = props => {
 
   const renderContent = () => {
     return !loadingGetReferenceList ? (
-      <>
-        <View style={{ flex: 1 }}>{renderCollectionList()}</View>
-      </>
+      <View style={{ flex: 1 }}>
+        {dataGetReferenceList?.data?.length > 0
+          ? renderCollectionList()
+          : renderNoData()}
+      </View>
     ) : (
       <LoadingPage />
     );
