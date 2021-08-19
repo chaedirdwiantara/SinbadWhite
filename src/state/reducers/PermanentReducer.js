@@ -6,7 +6,9 @@ const INITIAL_STATE = {
   token: null,
   otpAgentSignIn: null,
   phoneNumberAgentSignIn: null,
-  newOrderSuccessPerMerchant: []
+  newOrderSuccessPerMerchant: [],
+  /** this for maintenance app */
+  appMaintenance: false
 };
 
 export const permanent = createReducer(INITIAL_STATE, {
@@ -26,6 +28,17 @@ export const permanent = createReducer(INITIAL_STATE, {
       otpAgentSignIn: null,
       phoneNumberAgentSignIn: null,
       newOrderSuccessPerMerchant: []
+    };
+  },
+  /**
+   * =============================
+   * MAINTENANCE APP
+   * =============================
+   */
+  [types.APP_MAINTENANCE](state, action) {
+    return {
+      ...state,
+      appMaintenance: action.payload
     };
   },
   /**

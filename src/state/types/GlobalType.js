@@ -12,7 +12,7 @@ export const LOCATION_SAVE_DATA_VOLATILE = 'LocationSaveDataVolatile';
 /** FOR FLAG MERCHANT ADD PUSHED */
 export const SAVE_PAGE_ADD_MERCHANT_FROM = 'SavePageAddMerchantFrom';
 /** FOR FLAG AREA MAPPING */
-export const SAVE_PAGE_AREA_MAPPING_FROM = 'SavePageAreaMappingFrom'
+export const SAVE_PAGE_AREA_MAPPING_FROM = 'SavePageAreaMappingFrom';
 /** FOR SAVE IMAGE BASE 64 */
 export const SAVE_IMAGE_BASE64 = 'saveImageBase64';
 /** FOR GET LIST AND SEARCH */
@@ -32,9 +32,8 @@ export const GLOBAL_LONGLAT_TO_ADDRESS_FAILED = 'GlobalLonglatToAddressFailed';
 export const GLOBAL_MANUAL_INPUT_LOCATION = 'GlobalManualInputLocation';
 export const GLOBAL_MANUAL_INPUT_LOCATION_DATA_VOLATILE =
   'GlobalManualInputLocationDataVolatile';
-  export const RESET_MANUAL_INPUT_LOCATION_DATA =
-  'ResetManualInputLocationData';
-  /** GE URBAN_ID FROM DB, BASED ON GOOGLE DATA */
+export const RESET_MANUAL_INPUT_LOCATION_DATA = 'ResetManualInputLocationData';
+/** GE URBAN_ID FROM DB, BASED ON GOOGLE DATA */
 export const GET_URBAN_ID_PROCESS = 'getUrbanIdProcess';
 export const GET_URBAN_ID_SUCCESS = 'getUrbanIdSuccess';
 export const GET_URBAN_ID_FAILED = 'getUrbanIdFailed';
@@ -46,3 +45,5 @@ export const APP_VERSION_FAILED = 'appVersionFailed';
 export const UPLOAD_IMAGE_PROCESS = 'uploadImageProcess';
 export const UPLOAD_IMAGE_SUCCESS = 'uploadImageSuccess';
 export const UPLOAD_IMAGE_FAILED = 'uploadImageFailed';
+/** THIS FOR MAINTENANCE APP */
+export const APP_MAINTENANCE = 'appCurrentMaintenance';
