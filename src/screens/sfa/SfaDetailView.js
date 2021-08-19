@@ -93,7 +93,7 @@ function SfaDetailView(props) {
     if (error) {
       switch (error?.data?.code) {
         case 40003:
-          handleErrorSpecific(error, 'Data Tidak Ditemukan', 'Kembali');
+          handleErrorSpecific(error, 'Maaf, data tidak ditemukan', 'Kembali');
           break;
         default:
           handleErrorGlobal();
@@ -135,7 +135,7 @@ function SfaDetailView(props) {
           <ErrorBottomFailPayment
             open={modalBottomError}
             onPress={() => onClickModalError()}
-            text={messageError}
+            // text={messageError}
             errorTitle={titleError}
             buttonTitle={buttonTitle}
           />

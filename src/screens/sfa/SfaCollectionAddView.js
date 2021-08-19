@@ -38,7 +38,10 @@ import {
   sfaPostPaymentMethodProcess,
   sfaGetReferenceListProcess
 } from '../../state/actions';
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
+
+const MODAL_TYPE_SOURCE = 1;
+const MODAL_TYPE_TO = 2;
 
 const SfaCollectionAddView = props => {
   const dispatch = useDispatch();
@@ -50,7 +53,9 @@ const SfaCollectionAddView = props => {
   const [issuedDate, setIssuedDate] = useState(null);
   const [invalidDate, setInvalidDate] = useState(null);
   const [dataBank, setDataBank] = useState(null);
+  const [dataBankTo, setDataBankTo] = useState(null);
   const [dataStamp, setDataStamp] = useState(null);
+  const [modalBankOpenType, setModalBankOpenType] = useState(null);
   const [isModalStampOpen, setIsModalStampOpen] = useState(false);
   const [isModalBankOpen, setIsModalBankOpen] = useState(false);
   const [isModalTransferDateOpen, setIsModalTransferDateOpen] = useState(false);
@@ -201,13 +206,21 @@ const SfaCollectionAddView = props => {
     setIsModalBankOpen(false);
   };
 
+  const onSelectBankTo = data => {
+    setDataBankTo(data);
+    setIsModalBankOpen(false);
+  };
+
   const onSelectStamp = data => {
     setDataStamp(data);
     setIsModalStampOpen(false);
   };
 
   const totalAmountCal = value => {
-    if (paymentCollectionMethodId === CASH) {
+    if (
+      paymentCollectionMethodId === CASH ||
+      paymentCollectionMethodId === TRANSFER
+    ) {
       setTotalAmount(amount);
     }
     if (
@@ -239,6 +252,20 @@ const SfaCollectionAddView = props => {
         !noReference ||
         !invalidDate ||
         !dataBank
+      ) {
+        setIsSaveDisabled(true);
+      } else {
+        setIsSaveDisabled(false);
+      }
+    }
+    if (paymentCollectionMethodId === TRANSFER) {
+      if (
+        !noReference ||
+        !dataBank ||
+        !dataBankTo ||
+        !transferDate ||
+        !amount ||
+        !imageData
       ) {
         setIsSaveDisabled(true);
       } else {
@@ -286,6 +313,23 @@ const SfaCollectionAddView = props => {
         referenceCode: noReference
       };
       dispatch(sfaPostPaymentMethodProcess(dataCheckGiro));
+    }
+    if (paymentCollectionMethodId === TRANSFER) {
+      const bankId = dataBank.id;
+      const bankToId = dataBankTo.id;
+      const trfDate = moment
+        .utc(transferDate)
+        .local()
+        .format('YYYY-MM-DD HH:mm:ss');
+
+      const dataTransfer = {
+        ...data,
+        referenceCode: noReference,
+        issuedDate: trfDate,
+        bankId,
+        bankToAccountId: bankToId
+      };
+      dispatch(sfaPostPaymentMethodProcess(dataTransfer));
     }
   };
 
@@ -418,6 +462,11 @@ const SfaCollectionAddView = props => {
 
   /** RENDER BANK SOURCE */
   const renderBankSource = () => {
+    const onPress = () => {
+      setIsModalBankOpen(true);
+      setModalBankOpenType(MODAL_TYPE_SOURCE);
+    };
+
     return paymentCollectionMethodId === CHECK ||
       paymentCollectionMethodId === GIRO ||
       paymentCollectionMethodId === TRANSFER ? (
@@ -425,7 +474,7 @@ const SfaCollectionAddView = props => {
         <Text style={Fonts.type10}>*Sumber Bank</Text>
         <TouchableOpacity
           style={styles.boxMenu}
-          onPress={() => setIsModalBankOpen(true)}
+          onPress={() => onPress()}
           disabled={false}
         >
           {dataBank ? (
@@ -449,15 +498,25 @@ const SfaCollectionAddView = props => {
 
   /** RENDER BANK TO */
   const renderBankTo = () => {
+    const onPress = () => {
+      setIsModalBankOpen(true);
+      setModalBankOpenType(MODAL_TYPE_TO);
+    };
+
     return paymentCollectionMethodId === TRANSFER ? (
       <View style={{ marginBottom: 16 }}>
         <Text style={Fonts.type10}>*Tujuan Bank</Text>
         <TouchableOpacity
           style={styles.boxMenu}
-          onPress={() => setIsModalBankOpen(true)}
+          onPress={() => onPress()}
           disabled={false}
         >
-          <Text style={[Fonts.type31]}>Pilih Tujuan Bank</Text>
+          {dataBankTo ? (
+            <Text style={[Fonts.type17]}>{dataBankTo.displayName}</Text>
+          ) : (
+            <Text style={[Fonts.type31]}>Pilih Tujuan Bank</Text>
+          )}
+
           <View style={{ position: 'absolute', right: 16 }}>
             <MaterialIcon
               name="chevron-right"
@@ -489,7 +548,7 @@ const SfaCollectionAddView = props => {
           onPress={() => createCollection()}
           title={'Simpan'}
           borderRadius={4}
-          disabled={isSaveDisabled}
+          disabled={isSaveDisabled || loadingSfaPostPaymentMethod}
           loading={loadingSfaPostPaymentMethod}
         />
       </>
@@ -527,15 +586,10 @@ const SfaCollectionAddView = props => {
               size={16}
             />
 
-            <Text
-              style={[
-                Fonts.type17,
-                {
-                  marginLeft: 11
-                }
-              ]}
-            >
-              Pilih Tanggal Transfer
+            <Text style={[Fonts.type17, { marginLeft: 11 }]}>
+              {transferDate
+                ? moment(transferDate).format('DD/MM/YYYY')
+                : 'Pilih Tanggal Transfer'}
             </Text>
           </View>
         </TouchableOpacity>
@@ -730,6 +784,7 @@ const SfaCollectionAddView = props => {
    * RENDER MODAL
    * *********************************
    */
+
   /** RENDER MODAL TRANSFER DATE */
   const renderModalTransferDate = () => {
     return (
@@ -797,16 +852,25 @@ const SfaCollectionAddView = props => {
       />
     );
   };
+
   /** MODAL BANK ACCOUNT */
   const renderModalBank = () => {
+    let fnSelectCollection = onSelectBank.bind(this);
+    let title = 'Sumber Bank';
+    if (modalBankOpenType === MODAL_TYPE_TO) {
+      fnSelectCollection = onSelectBankTo.bind(this);
+      title = 'Tujuan Bank';
+    }
+
     return (
       <View>
         {isModalBankOpen ? (
           <ModalBankAccount
+            title={title}
             open={isModalBankOpen}
             close={() => setIsModalBankOpen(false)}
             onRef={ref => (selectCollection = ref)}
-            selectCollection={onSelectBank.bind(this)}
+            selectCollection={fnSelectCollection}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
             storeId={parseInt(selectedMerchant.storeId, 10)}
             paymentCollectionTypeId={paymentCollectionMethodId}

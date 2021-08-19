@@ -65,7 +65,9 @@ function ModalBankAccount(props) {
             </TouchableOpacity>
           </View>
           <View style={{ alignItems: 'flex-start', flex: 1, alignSelf:"center" }}>
-            <Text style={[Fonts.type5, {marginLeft: 16}]}>Sumber Bank</Text>
+            <Text style={[Fonts.type5, {marginLeft: 16}]}>
+              { props?.title ? props?.title : 'Sumber Bank' }
+            </Text>
           </View>
         </View>
         <View style={[GlobalStyle.lines, styles.shadowLine]} />
