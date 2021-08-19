@@ -532,7 +532,7 @@ describe('action', () => {
             const result = SfaAction.sfaGetTransferImageSuccess(data.data);
             // assert           
                 expect(result.payload).toStrictEqual(
-                    factory(SfaType.SFA_GET_TRANSFER_IMAGE_SUCCESS).payload.data.data
+                    factory(SfaType.SFA_GET_COLLECTION_IMAGE_SUCCESS).payload.data.data
                 );
         });
         it('should create action to trigger failed', function() {

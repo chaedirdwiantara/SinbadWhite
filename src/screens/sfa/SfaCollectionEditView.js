@@ -36,37 +36,45 @@ import SfaImageInput from './components/SfaImageInput';
 import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 import {
   sfaPostPaymentMethodProcess,
-  sfaGetReferenceListProcess
+  sfaGetReferenceListProcess,
+  sfaGetCollectionImageProcess
 } from '../../state/actions';
 const { width } = Dimensions.get('window');
 
 const MODAL_TYPE_SOURCE = 1;
 const MODAL_TYPE_TO = 2;
 
-const SfaCollectionAddView = props => {
+const SfaCollectionEditView = props => {
   const dispatch = useDispatch();
   const paymentCollectionMethodId = props.navigation.state.params.id;
-  const [amount, setAmount] = useState(0);
+  const initialData = props.navigation.state.params.data;
+  const [amount, setAmount] = useState(initialData.amount);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [noReference, setNoReference] = useState('');
+  const [noReference, setNoReference] = useState(initialData.referenceCode);
   const [transferDate, setTransferDate] = useState(null);
-  const [issuedDate, setIssuedDate] = useState(null);
-  const [invalidDate, setInvalidDate] = useState(null);
-  const [dataBank, setDataBank] = useState(null);
+  const [issuedDate, setIssuedDate] = useState(initialData.issuedDate);
+  const [invalidDate, setInvalidDate] = useState(initialData.invalidDate);
+  const [dataBank, setDataBank] = useState({
+    displayName: initialData.bankSource
+  });
   const [dataBankTo, setDataBankTo] = useState(null);
-  const [dataStamp, setDataStamp] = useState(null);
+  const [dataStamp, setDataStamp] = useState({
+    nominal: initialData.stampAmount
+  });
   const [modalBankOpenType, setModalBankOpenType] = useState(null);
   const [isModalStampOpen, setIsModalStampOpen] = useState(false);
   const [isModalBankOpen, setIsModalBankOpen] = useState(false);
   const [isModalTransferDateOpen, setIsModalTransferDateOpen] = useState(false);
   const [isModalIssuedDateOpen, setIsModalIssuedDateOpen] = useState(false);
   const [isModalInvalidDateOpen, setIsModalInvalidDateOpen] = useState(false);
-  const [isStampChecked, setIsStampChecked] = useState(false);
+  const [isStampChecked, setIsStampChecked] = useState(
+    initialData.stampAmount ? true : false
+  );
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [questionMarkShow, setQuestionMarkShow] = useState(true);
-  const [imageName, setImageName] = useState();
-  const [imageType, setImageType] = useState();
-  const [imageData, setImageData] = useState();
+  const [imageName, setImageName] = useState(null);
+  const [imageType, setImageType] = useState(null);
+  const [imageData, setImageData] = useState(null);
   const [isModalBottomErrorOpen, setIsModalBottomErrorOpen] = useState(false);
   const [messageError, setMessageError] = useState(null);
   const [titleError, setTitleError] = useState(null);
@@ -81,7 +89,9 @@ const SfaCollectionAddView = props => {
   const {
     loadingSfaPostPaymentMethod,
     dataSfaPostPaymentMethod,
-    errorSfaPostPaymentMethod
+    errorSfaPostPaymentMethod,
+    loadingSfaGetCollectionImage,
+    dataSfaGetCollectionImage
   } = useSelector(state => state.sfa);
 
   /**
@@ -91,7 +101,7 @@ const SfaCollectionAddView = props => {
    */
   const prevDataSfaPostPaymentMethodRef = useRef(dataSfaPostPaymentMethod);
   const prevErrorSfaPostPaymentMethodRef = useRef(errorSfaPostPaymentMethod);
-
+  const prevDataSfaGetCollectionImageRef = useRef(dataSfaGetCollectionImage);
   /**
    * *********************************
    * RENDER USE EFFECT
@@ -101,6 +111,11 @@ const SfaCollectionAddView = props => {
     prevDataSfaPostPaymentMethodRef.current = dataSfaPostPaymentMethod;
   }, []);
   const prevDataSfaPostPaymentMethod = prevDataSfaPostPaymentMethodRef.current;
+
+  useEffect(() => {
+    prevDataSfaGetCollectionImageRef.current = dataSfaGetCollectionImage;
+  }, []);
+  const prevDataSfaGetCollectionImage = prevDataSfaGetCollectionImageRef.current;
 
   useEffect(() => {
     prevErrorSfaPostPaymentMethodRef.current = errorSfaPostPaymentMethod;
@@ -117,6 +132,14 @@ const SfaCollectionAddView = props => {
   }, [dataSfaPostPaymentMethod]);
 
   useEffect(() => {
+    if (prevDataSfaGetCollectionImage !== dataSfaGetCollectionImage) {
+      if (dataSfaGetCollectionImage) {
+        setImageData(dataSfaGetCollectionImage.data.image);
+      }
+    }
+  }, [dataSfaGetCollectionImage]);
+
+  useEffect(() => {
     totalAmountCal(amount);
   }, [amount, dataStamp]);
 
@@ -130,6 +153,10 @@ const SfaCollectionAddView = props => {
     }
   }, [isStampChecked]);
 
+  useEffect(() => {
+    dispatch(sfaGetCollectionImageProcess(initialData.id));
+  }, []);
+
   /** HANDLE ERROR POST COLLECTION */
   useEffect(() => {
     if (prevErrorSfaPostPaymentMethod !== errorSfaPostPaymentMethod) {
@@ -138,6 +165,7 @@ const SfaCollectionAddView = props => {
       }
     }
   }, [errorSfaPostPaymentMethod]);
+
   /**
    * *********************************
    * RENDER FUNCTION
@@ -717,7 +745,9 @@ const SfaCollectionAddView = props => {
               disabled={!isStampChecked}
             >
               {dataStamp ? (
-                <Text style={[Fonts.type17]}>{dataStamp.name}</Text>
+                <Text style={[Fonts.type17]}>
+                  {MoneyFormatSpace(dataStamp.nominal)}
+                </Text>
               ) : (
                 <Text style={[Fonts.type31]}>Pilih Nilai Materai</Text>
               )}
@@ -744,6 +774,8 @@ const SfaCollectionAddView = props => {
         title={'*Foto Penagihan'}
         action={onChooseImage}
         delete={onDeleteImage}
+        loading={loadingSfaGetCollectionImage}
+        imageData={imageData}
       />
     );
   };
@@ -962,4 +994,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SfaCollectionAddView;
+export default SfaCollectionEditView;

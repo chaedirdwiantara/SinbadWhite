@@ -64,10 +64,10 @@ export const SFA_GET_STATUS_ORDER_PROCESS = 'SfaGetStatusOrderProcess';
 export const SFA_GET_STATUS_ORDER_SUCCESS = 'SfaGetStatusOrderSuccess';
 export const SFA_GET_STATUS_ORDER_FAILED = 'SfaGetStatusOrderFailed';
 
-/** GET TRANSFER IMAGE */
-export const SFA_GET_TRANSFER_IMAGE_PROCESS = 'SfaGetTransferImageProcess';
-export const SFA_GET_TRANSFER_IMAGE_SUCCESS = 'SfaGetTransferImageSuccess';
-export const SFA_GET_TRANSFER_IMAGE_FAILED = 'SfaGetTransferImageFailed';
+/** GET COLLECTION IMAGE */
+export const SFA_GET_COLLECTION_IMAGE_PROCESS = 'SfaGetCollectionImageProcess';
+export const SFA_GET_COLLECTION_IMAGE_SUCCESS = 'SfaGetCollectionImageSuccess';
+export const SFA_GET_COLLECTION_IMAGE_FAILED = 'SfaGetCollectionImageFailed';
 
 /** GET PRINCIPAL */
 export const SFA_GET_PRINCIPAL_PROCESS = 'SfaGetPrincipalProcess';

@@ -16,7 +16,7 @@ const INITIAL_STATE = {
   loadingLoadMoreGetSfa: false,
   refreshGetCollection: false,
   loadingSfaGetStatusOrder: false,
-  loadingSfaGetTransferImage: false,
+  loadingSfaGetCollectionImage: false,
   loadingSfaGetPrincipal: false,
   loadingLoadmorePrincipal: false,
   loadingLoadmoreBankAccount: false,
@@ -40,7 +40,7 @@ const INITIAL_STATE = {
   dataSfaPostCollectionPayment: null,
   dataSfaGetStampList: null,
   dataSfaGetStatusOrder: null,
-  dataSfaGetTransferImage: null,
+  dataSfaGetCollectionImage: null,
   dataSfaGetPrincipal: null,
   dataLoadmorePrincipal: null,
   dataLoadmoreBankAccount: null,
@@ -64,7 +64,7 @@ const INITIAL_STATE = {
   errorSfaPostCollectionPayment: null,
   errorSfaGetStampList: null,
   errorSfaGetStatusOrder: null,
-  errorSfaGetTransferImage: null,
+  errorSfaGetCollectionImage: null,
   errorSfaGetPrincipal: null,
   errorLoadmorePrincipal: null,
   errorLoadmoreBankAccount: null,
@@ -414,26 +414,26 @@ export const sfa = createReducer(INITIAL_STATE, {
    * GET TRANSFER IMAGE
    * ==========================
    */
-    [types.SFA_GET_TRANSFER_IMAGE_PROCESS](state, action) {
+    [types.SFA_GET_COLLECTION_IMAGE_PROCESS](state, action) {
       return {
         ...state,
-        loadingSfaGetTransferImage: true,
-        dataSfaGetTransferImage: null,
-        errorSfaGetTransferImage: null
+        loadingSfaGetCollectionImage: true,
+        dataSfaGetCollectionImage: null,
+        errorSfaGetCollectionImage: null
       };
     },
-    [types.SFA_GET_TRANSFER_IMAGE_SUCCESS](state, action) {
+    [types.SFA_GET_COLLECTION_IMAGE_SUCCESS](state, action) {
       return {
         ...state,
-        loadingSfaGetTransferImage: false,
-        dataSfaGetTransferImage: action.payload
+        loadingSfaGetCollectionImage: false,
+        dataSfaGetCollectionImage: action.payload
       };
     },
-    [types.SFA_GET_TRANSFER_IMAGE_FAILED](state, action) {
+    [types.SFA_GET_COLLECTION_IMAGE_FAILED](state, action) {
       return {
         ...state,
-        loadingSfaGetTransferImage: false,
-        errorSfaGetTransferImage: action.payload
+        loadingSfaGetCollectionImage: false,
+        errorSfaGetCollectionImage: action.payload
       };
     },
     /**

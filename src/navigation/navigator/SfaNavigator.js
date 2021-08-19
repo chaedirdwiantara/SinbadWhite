@@ -6,7 +6,6 @@ import SfaView from '../../screens/sfa/SfaView';
 import SfaDetailView, {
   HeaderRightOption
 } from '../../screens/sfa/SfaDetailView';
-import SfaAddTagihanView from '../../screens/sfa/SfaAddTagihanView';
 import SfaCollectionLog from '../../screens/sfa/SfaCollectionLog';
 import SfaCollectionDetailView, {
   DetailHeaderOption
@@ -18,6 +17,7 @@ import SfaCollectionAddView from '../../screens/sfa/SfaCollectionAddView';
 import SfaBillingDetailView from '../../screens/sfa/SfaBillingDetailView';
 import SfaBillingAddView from '../../screens/sfa/SfaBillingAddView';
 import SfaBillingLogView from '../../screens/sfa/SfaBillingLogView';
+import SfaCollectionEditView from '../../screens/sfa/SfaCollectionEditView';
 
 const SfaNavigator = {
   SfaView: {
@@ -47,25 +47,6 @@ const SfaNavigator = {
         backgroundColor: masterColor.backgroundWhite
       },
       headerRight: <HeaderRightOption />,
-      gesturesEnabled: false
-    }
-  },
-  SfaAddTagihanView: {
-    screen: SfaAddTagihanView,
-    navigationOptions: {
-      headerTitle: 'Bayar Tagihan',
-      headerTitleStyle: [
-        GlobalFont.textHeaderPage,
-        {
-          textAlign: 'left',
-          flex: 1
-        }
-      ],
-      headerTintColor: masterColor.fontBlack50,
-      headerStyle: {
-        backgroundColor: masterColor.backgroundWhite
-      },
-      headerRight: <View />,
       gesturesEnabled: false
     }
   },
@@ -212,6 +193,25 @@ const SfaNavigator = {
     screen: SfaBillingLogView,
     navigationOptions: {
       headerTitle: 'Riwayat Pembayaran',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'left',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.fontBlack50,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  SfaCollectionEditView: {
+    screen: SfaCollectionEditView,
+    navigationOptions: {
+      headerTitle: 'Ubah Penagihan',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
