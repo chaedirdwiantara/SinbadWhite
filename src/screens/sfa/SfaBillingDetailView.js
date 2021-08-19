@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -21,14 +21,27 @@ import {
   TRANSFER
 } from '../../constants/collectionConstants';
 import { CardHeaderBadge, CardBody, CardHeader } from './components/CardView';
+import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
+import NavigationService from '../../navigation/NavigationService';
 
 const SfaBillingDetailView = props => {
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
 
-  const { dataSfaGetBillingDetail, loadingSfaGetBillingDetail } = useSelector(
-    state => state.sfa
-  );
+  const {
+    dataSfaGetBillingDetail,
+    loadingSfaGetBillingDetail,
+    errorSfaGetBillingDetail
+  } = useSelector(state => state.sfa);
+
+  //USEREF ERROR
+  const prevErrorSfaGetBillingDetailRef = useRef(errorSfaGetBillingDetail);
+
+  //MODAL
+  const [modalBottomError, setModalBottomError] = useState(false);
+  const [messageError, setMessageError] = useState(null);
+  const [titleError, setTitleError] = useState(null);
+  const [buttonTitle, setButtonTitle] = useState(null);
 
   /** === ON REFRESH === */
   const onRefresh = () => {
@@ -59,11 +72,77 @@ const SfaBillingDetailView = props => {
     return date ? toLocalTime(date, 'DD MMMM YYYY') : '';
   };
 
+  //USE EFFECT PREV DATA ERROR
+  useEffect(() => {
+    prevErrorSfaGetBillingDetailRef.current = errorSfaGetBillingDetail;
+  }, []);
+  const prevErrorSfaGetBillingDetail = prevErrorSfaGetBillingDetailRef.current;
+
+  //HANDLE ERROR POST COLLECTION
+  useEffect(() => {
+    if (prevErrorSfaGetBillingDetail !== errorSfaGetBillingDetail) {
+      if (errorSfaGetBillingDetail) {
+        handleError(errorSfaGetBillingDetail);
+      }
+    }
+  }, [errorSfaGetBillingDetail]);
+
+  const handleError = error => {
+    if (error) {
+      switch (error?.data?.code) {
+        case 40003:
+          handleErrorSpecific(error, 'Data Tidak Ditemukan', 'Kembali');
+          break;
+        default:
+          handleErrorGlobal();
+          break;
+      }
+    }
+  };
+
+  const handleErrorSpecific = (error, title, buttonText) => {
+    setMessageError(error.data.errorMessage);
+    setTitleError(title);
+    setButtonTitle(buttonText);
+    setModalBottomError(true);
+  };
+
+  const handleErrorGlobal = () => {
+    setMessageError(null);
+    setTitleError(null);
+    setButtonTitle(null);
+    setModalBottomError(true);
+  };
+
+  const onClickModalError = () => {
+    setModalBottomError(false);
+    NavigationService.navigate('SfaBillingLogView');
+  };
+
   /**
    * *********************************
    * RENDER VIEW
    * *********************************
    */
+
+  /** RENDER MODAL ERROR */
+  const renderModalError = () => {
+    return (
+      <View>
+        {modalBottomError ? (
+          <ErrorBottomFailPayment
+            open={modalBottomError}
+            onPress={() => onClickModalError()}
+            text={messageError}
+            errorTitle={titleError}
+            buttonTitle={buttonTitle}
+          />
+        ) : (
+          <View />
+        )}
+      </View>
+    );
+  };
 
   /**
    * ======================================
@@ -314,7 +393,7 @@ const SfaBillingDetailView = props => {
    */
   return (
     <View style={{ flex: 1 }}>
-      {dataSfaGetBillingDetail && !loadingSfaGetBillingDetail ? (
+      {!loadingSfaGetBillingDetail ? (
         <SafeAreaView style={styles.mainContainer}>
           <ScrollView
             refreshControl={
@@ -325,7 +404,7 @@ const SfaBillingDetailView = props => {
             }
             style={{ flex: 1, height: '100%' }}
           >
-            {renderContent()}
+            {dataSfaGetBillingDetail ? renderContent() : renderModalError()}
           </ScrollView>
         </SafeAreaView>
       ) : (
