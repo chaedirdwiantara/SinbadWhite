@@ -26,6 +26,7 @@ import {
   sfaGetReferenceListProcess,
   sfaCollectionListLoadmoreProcess
 } from '../../state/actions';
+import SfaNoDataView from './SfaNoDataView';
 
 const SfaCollectionListView = props => {
   const dispatch = useDispatch();
@@ -264,12 +265,29 @@ const SfaCollectionListView = props => {
 
   /**
    * =======================
+   * RENDER NO DATA
+   * =======================
+   */
+  const renderNoData = () => {
+    return (
+      <View style={{ marginTop: 16 }}>
+        <SfaNoDataView
+          topText="Belum ada penagihan"
+          midText="Yuk lakukan penambahan penagihanmu."
+          bottomText=""
+        />
+      </View>
+    );
+  };
+
+  /**
+   * =======================
    * RENDER COLLECTION LIST
    * =======================
    */
   const renderCollectionList = () => {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, marginTop: 10 }}>
         <FlatList
           data={dataGetReferenceList.data}
           renderItem={renderItem}
@@ -310,9 +328,11 @@ const SfaCollectionListView = props => {
 
   const renderContent = () => {
     return !loadingGetReferenceList ? (
-      <>
-        <View style={{ flex: 1 }}>{renderCollectionList()}</View>
-      </>
+      <View style={{ flex: 1 }}>
+        {dataGetReferenceList?.data?.length > 0
+          ? renderCollectionList()
+          : renderNoData()}
+      </View>
     ) : (
       <LoadingPage />
     );
