@@ -200,7 +200,7 @@ export default SfaInvoiceListView;
 
 const styles = StyleSheet.create({
   listContainer: {
-    marginBottom: 9,
+    marginBottom: 16,
     paddingTop: 20,
     paddingBottom: 16,
     paddingRight: 16,
