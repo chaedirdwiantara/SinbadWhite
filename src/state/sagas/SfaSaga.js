@@ -5,15 +5,15 @@ import * as types from '../types';
 
 /** GET COLLECTION STATUS */
 function* getSfaCollectionStatus(actions) {
-    try {
-      const response = yield call(() => {
-        return SfaMethod.getCollectionStatus(actions.payload);
-      });
-      yield put(ActionCreators.sfaGetCollectionStatusSuccess(response));
-    } catch (error) {
-      yield put(ActionCreators.sfaGetCollectionStatusFailed(error));
-    }
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getCollectionStatus(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetCollectionStatusSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetCollectionStatusFailed(error));
   }
+}
 
 /** GET SFA DETAIL */
 function* getSfaDetail(actions) {
@@ -254,32 +254,60 @@ function* getBillingDetail(actions) {
   }
 }
 
+/** GET PAYMENT COLLECTION LOG */
+function* getPaymentCollectionLog(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getPaymentCollectionLog(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetPaymentCollectionLogSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetPaymentCollectionLogFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* SfaSaga() {
-    yield takeEvery(
-      types.SFA_GET_COLLECTION_STATUS_PROCESS,
-      getSfaCollectionStatus
-    )
-    yield takeEvery(types.SFA_GET_DETAIL_PROCESS, getSfaDetail);
-    yield takeEvery(types.SFA_GET_COLLECTION_PROCESS, getCollectionList)
-    yield takeEvery(types.SFA_GET_REFERENCE_PROCESS, getReferenceList)
-    yield takeEvery(types.SFA_GET_PAYMENT_METHOD_PROCESS, getPaymentMethod)
-    yield takeEvery(types.SFA_GET_ALL_BANK_PROCESS,getAllBank )
-    yield takeEvery(types.SFA_GET_BANK_ACCOUNT_PROCESS, getBankAccount)
-    yield takeEvery(types.SFA_POST_PAYMENT_METHOD_PROCESS, postPaymentMethod)
-    yield takeEvery(types.SFA_POST_COLLECTION_PAYMENT_PROCESS, postCollectionPayment)
-    yield takeEvery(types.SFA_GET_STAMP_PROCESS, getStampList)
-    yield takeEvery(types.SFA_GET_STATUS_ORDER_PROCESS, getStatusOrder)
-    yield takeEvery(types.SFA_GET_TRANSFER_IMAGE_PROCESS, getTransferImage)
-    yield takeEvery(types.SFA_GET_PRINCIPAL_PROCESS, getPrincipal),
+  yield takeEvery(
+    types.SFA_GET_COLLECTION_STATUS_PROCESS,
+    getSfaCollectionStatus
+  );
+  yield takeEvery(types.SFA_GET_DETAIL_PROCESS, getSfaDetail);
+  yield takeEvery(types.SFA_GET_COLLECTION_PROCESS, getCollectionList);
+  yield takeEvery(types.SFA_GET_REFERENCE_PROCESS, getReferenceList);
+  yield takeEvery(types.SFA_GET_PAYMENT_METHOD_PROCESS, getPaymentMethod);
+  yield takeEvery(types.SFA_GET_ALL_BANK_PROCESS, getAllBank);
+  yield takeEvery(types.SFA_GET_BANK_ACCOUNT_PROCESS, getBankAccount);
+  yield takeEvery(types.SFA_POST_PAYMENT_METHOD_PROCESS, postPaymentMethod);
+  yield takeEvery(
+    types.SFA_POST_COLLECTION_PAYMENT_PROCESS,
+    postCollectionPayment
+  );
+  yield takeEvery(types.SFA_GET_STAMP_PROCESS, getStampList);
+  yield takeEvery(types.SFA_GET_STATUS_ORDER_PROCESS, getStatusOrder);
+  yield takeEvery(types.SFA_GET_TRANSFER_IMAGE_PROCESS, getTransferImage);
+  yield takeEvery(types.SFA_GET_PRINCIPAL_PROCESS, getPrincipal),
     yield takeEvery(types.SFA_PRINCIPAL_LOADMORE_PROCESS, loadmorePrincipal),
-    yield takeEvery(types.SFA_BANK_ACCOUNT_LOADMORE_PROCESS, loadmoreBankAccount),
+    yield takeEvery(
+      types.SFA_BANK_ACCOUNT_LOADMORE_PROCESS,
+      loadmoreBankAccount
+    ),
     yield takeEvery(types.SFA_GET_COLLECTION_LOG_PROCESS, getCollectionLog),
-    yield takeEvery(types.SFA_COLLECTION_LOG_LOADMORE_PROCESS, loadmoreCollectionLog),
-    yield takeEvery(types.SFA_GET_COLLECTION_DETAIL_PROCESS, getCollectionDetail),
+    yield takeEvery(
+      types.SFA_COLLECTION_LOG_LOADMORE_PROCESS,
+      loadmoreCollectionLog
+    ),
+    yield takeEvery(
+      types.SFA_GET_COLLECTION_DETAIL_PROCESS,
+      getCollectionDetail
+    ),
     yield takeEvery(types.SFA_EDIT_COLLECTION_PROCESS, editCollection),
     yield takeEvery(types.SFA_DELETE_COLLECTION_PROCESS, deleteCollection),
-    yield takeEvery(types.SFA_GET_BILLING_DETAIL_PROCESS, getBillingDetail);
+    yield takeEvery(types.SFA_GET_BILLING_DETAIL_PROCESS, getBillingDetail),
+    yield takeEvery(
+      types.SFA_GET_PAYMENT_COLLECTION_LOG_PROCESS,
+      getPaymentCollectionLog
+    );
 }
 
 export default SfaSaga;

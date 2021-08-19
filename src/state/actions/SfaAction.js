@@ -537,3 +537,32 @@ export function sfaGetBillingDetailSuccess(data) {
 export function sfaGetBillingDetailFailed(data) {
   return { type: types.SFA_GET_BILLING_DETAIL_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * GET COLLECTION PAYMENT LOG
+ * ===========================
+ */
+
+/** === SFA GET BILLING DETAIL PROCESS === */
+export function sfaGetPaymentCollectionLogProcess(data) {
+  return { type: types.SFA_GET_PAYMENT_COLLECTION_LOG_PROCESS, payload: data };
+}
+
+/** === SFA GET BILLING DETAIL SUCCESS === */
+export function sfaGetPaymentCollectionLogSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_PAYMENT_COLLECTION_LOG_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_PAYMENT_COLLECTION_LOG_FAILED, payload: data };
+}
+
+/** === SFA GET BILLING DETAIL FAILED === */
+export function sfaGetPaymentCollectionLogFailed(data) {
+  return { type: types.SFA_GET_PAYMENT_COLLECTION_LOG_FAILED, payload: data };
+}
+
+

@@ -34,14 +34,19 @@ const SfaBillingLogView = props => {
   const {
     dataGetReferenceList,
     loadingLoadMoreGetReferenceList,
-    loadingGetReferenceList
+    loadingSfaGetPaymentCollectionLog,
+    dataSfaGetPaymentCollectionLog
   } = useSelector(state => state.sfa);
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
 
   //** FUNCTION GET PAYMENT LOG */
   const getPaymentCollectionLog = (loading, page) => {
-    dispatch(sfaGetPaymentCollectionLogProcess());
+    const data = {
+      paymentCollectionMethodId : 494,
+      limit: 10
+    }
+    dispatch(sfaGetPaymentCollectionLogProcess(data));
   };
   /** FUNCTION GET COLLECTION LIST */
   const getCollectionList = (loading, page) => {
@@ -202,40 +207,24 @@ const SfaBillingLogView = props => {
 
           <View style={styles.salesContainer}>
             <View>
-              <Text style={[Fonts.type42, { marginTop: 8 }]}>
-                {item.collectionCode}
-              </Text>
-            </View>
-            <View>
               {renderContentListGlobal(
-                'Tanggal Penagihan',
-                moment(new Date(item.issuedDate)).format('DD MMM YYYY')
+                'Nomor Pesanan',
+                item.orderCode
               )}
               {renderContentListGlobal(
+                'Tanggal Pembayaran',
+                moment(new Date(item.createdAt)).format('DD MMM YYYY')
+              )}
+                {renderContentListGlobal(
                 'Metode Penagihan',
-                item.collectionMethodName
+                item.paymentCollectionMethodName
               )}
-              {renderContentListGlobal('Salesman', item.salesman)}
-            </View>
-            <View style={[GlobalStyle.lines, { marginTop: 8 }]} />
-            <View>
-              {renderContentListGlobal(
-                'Total Penagihan:',
-                'Sisa Penagihan:',
-                true
-              )}
-              {renderContentListGlobal(
-                MoneyFormatSpace(item.totalAmount),
-                MoneyFormatSpace(item.balance),
-                false,
-                true,
-                true
-              )}
+              {renderContentListGlobal('Salesman', item.salesName)}
+              {renderContentListGlobal('Total Pembayaran', item.amount, true)}
             </View>
             <View style={styles.buttonContainer}>
               {renderButton('Ubah', 'white', !item.isEditable)}
               {renderButton('Hapus', 'white', !item.isEditable)}
-              {renderButton('Gunakan', 'red', !item.isUsable)}
             </View>
             <View
               style={{
@@ -257,10 +246,10 @@ const SfaBillingLogView = props => {
    * =======================
    */
   const renderCollectionList = () => {
-    return (
+    return dataSfaGetPaymentCollectionLog?(
       <View style={{ flex: 1 }}>
         <FlatList
-          data={dataGetReferenceList.data}
+          data={dataSfaGetPaymentCollectionLog.data}
           renderItem={renderItem}
           numColumns={1}
           keyExtractor={(item, index) => index.toString()}
@@ -272,7 +261,7 @@ const SfaBillingLogView = props => {
         />
         {loadingLoadMoreGetReferenceList ? <LoadingLoadMore /> : null}
       </View>
-    );
+    ) : <View/>;
   };
   /**
    * =======================
@@ -298,7 +287,7 @@ const SfaBillingLogView = props => {
    */
 
   const renderContent = () => {
-    return !loadingGetReferenceList ? (
+    return !loadingSfaGetPaymentCollectionLog ? (
       <>
         <View style={{ flex: 1 }}>{renderCollectionList()}</View>
       </>
@@ -347,11 +336,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 14,
     width: '30%',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginLeft: 20
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     marginVertical: 16
   }
 });
