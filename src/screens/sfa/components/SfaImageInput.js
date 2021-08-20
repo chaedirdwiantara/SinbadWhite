@@ -7,7 +7,7 @@ import {
   Image,
   StyleSheet
 } from '../../../library/reactPackage';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ImagePicker from 'react-native-image-picker';
 import masterColor from '../../../config/masterColor.json';
 import { MaterialIcon, Tooltip } from '../../../library/thirdPartyPackage';
@@ -17,9 +17,14 @@ const { width } = Dimensions.get('window');
 const SfaImageInput = props => {
   const [isQuestionMarkShow, setQuestionMarkShow] = useState(true);
   const [errorInputImage, setErrorInputImage] = useState(false);
-  const [imageName, setImageName] = useState();
-  const [imageType, setImageType] = useState();
-  const [imageData, setImageData] = useState();
+  const [imageName, setImageName] = useState(null);
+  const [imageType, setImageType] = useState(null);
+  const [imageData, setImageData] = useState(null);
+
+  /** USE EFFECT  */
+  useEffect(() => {
+    setImageData(props.imageData);
+  }, [props.imageData]);
   /** FUNCTION DELETE IMAGE */
   const onDeleteImage = () => {
     props.delete();
@@ -117,7 +122,7 @@ const SfaImageInput = props => {
   const renderTitle = () => {
     return (
       <View style={{ flexDirection: 'row' }}>
-        <Text style={[Fonts.type10, {marginRight: 6}]}>
+        <Text style={[Fonts.type10, { marginRight: 6 }]}>
           {props.title ? props.title : '*Foto Penagihan'}
         </Text>
         {renderTooltip()}
@@ -166,7 +171,20 @@ const SfaImageInput = props => {
   return (
     <View>
       {renderTitle()}
-      {imageData ? renderImage() : renderCamera()}
+      {!props.loading && props.imageData ? (
+        props.imageData ? (
+          renderImage()
+        ) : (
+          renderCamera()
+        )
+      ) : (
+        <View style={[styles.smallContainerImage, { flex: 1, height: 328 }]}>
+          <Image
+            source={require('../../../assets/gif/loading/load_triagle.gif')}
+            style={{ height: 50, width: 50 }}
+          />
+        </View>
+      )}
     </View>
   );
 };

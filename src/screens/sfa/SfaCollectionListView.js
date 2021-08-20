@@ -56,10 +56,18 @@ const SfaCollectionListView = props => {
   useEffect(() => {
     getCollectionList(true, 10);
   }, []);
+
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigatetoAddCollection = () => {
     NavigationService.navigate('SfaCollectionAddView', {
       id: collectionMethodId
+    });
+  };
+
+  const navigatetoEditCollection = item => {
+    NavigationService.navigate('SfaCollectionEditView', {
+      id: collectionMethodId,
+      data: item
     });
   };
 
@@ -79,8 +87,11 @@ const SfaCollectionListView = props => {
     }
   };
 
-  const navigationRenderButton = (page, items) => {
-    NavigationService.navigate(page, items);
+  const navigatetoAddBilling = item => {
+    NavigationService.navigate('SfaBillingAddView', {
+      ...item,
+      paymentCollectionTypeId: parseInt(collectionMethodId, 10)
+    });
   };
 
   /** RENDER CONTENT LIST GLOBAL */
@@ -116,7 +127,7 @@ const SfaCollectionListView = props => {
     );
   };
   /** RENDER BUTTON */
-  const renderButton = (title, type, disable, page, items) => {
+  const renderButton = (title, type, disable, action, item) => {
     return (
       <TouchableOpacity
         disabled={disable}
@@ -132,7 +143,7 @@ const SfaCollectionListView = props => {
             ? masterColor.buttonRedDisableColor
             : masterColor.mainColor
         }}
-        onPress={() => navigationRenderButton(page, items)}
+        onPress={() => action(item)}
       >
         <Text
           style={[
@@ -238,17 +249,20 @@ const SfaCollectionListView = props => {
               )}
             </View>
             <View style={styles.buttonContainer}>
-              {renderButton('Ubah', 'white', !item.isEditable)}
+              {renderButton(
+                'Ubah',
+                'white',
+                !item.isEditable,
+                navigatetoEditCollection.bind(item),
+                item
+              )}
               {renderButton('Hapus', 'white', !item.isEditable)}
               {renderButton(
                 'Gunakan',
                 'red',
                 !item.isUsable,
-                'SfaBillingAddView',
-                {
-                  ...item,
-                  paymentCollectionTypeId: parseInt(collectionMethodId, 10)
-                }
+                navigatetoAddBilling.bind(item),
+                item
               )}
             </View>
             <View

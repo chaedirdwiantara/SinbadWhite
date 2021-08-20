@@ -135,14 +135,14 @@ function* getStatusOrder(actions) {
 }
 
 /** GET TRANSFER IMAGE */
-function* getTransferImage(actions) {
+function* getCollectionImage(actions) {
   try {
     const response = yield call(() => {
-      return SfaMethod.getTransferImage(actions.payload);
+      return SfaMethod.getCollectionImage(actions.payload);
     });
-    yield put(ActionCreators.sfaGetTransferImageSuccess(response));
+    yield put(ActionCreators.sfaGetCollectionImageSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.sfaGetTransferImageFailed(error));
+    yield put(ActionCreators.sfaGetCollectionImageFailed(error));
   }
 }
 
@@ -285,7 +285,7 @@ function* SfaSaga() {
   );
   yield takeEvery(types.SFA_GET_STAMP_PROCESS, getStampList);
   yield takeEvery(types.SFA_GET_STATUS_ORDER_PROCESS, getStatusOrder);
-  yield takeEvery(types.SFA_GET_TRANSFER_IMAGE_PROCESS, getTransferImage);
+  yield takeEvery(types.SFA_GET_COLLECTION_IMAGE_PROCESS, getCollectionImage);
   yield takeEvery(types.SFA_GET_PRINCIPAL_PROCESS, getPrincipal),
     yield takeEvery(types.SFA_PRINCIPAL_LOADMORE_PROCESS, loadmorePrincipal),
     yield takeEvery(

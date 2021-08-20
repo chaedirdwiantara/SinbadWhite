@@ -291,23 +291,23 @@ export function sfaGetStatusOrderFailed(data) {
  * ===========================
  */
 /** === SFA GET TRANSFER IMAGE PROCESS === */
-export function sfaGetTransferImageProcess(data) {
-  return { type: types.SFA_GET_TRANSFER_IMAGE_PROCESS, payload: data };
+export function sfaGetCollectionImageProcess(data) {
+  return { type: types.SFA_GET_COLLECTION_IMAGE_PROCESS, payload: data };
 }
 
 /** === SFA GET TRANSFER IMAGE SUCCESS === */
-export function sfaGetTransferImageSuccess(data) {
+export function sfaGetCollectionImageSuccess(data) {
   if (data.result === 'Ok') {
     return {
-      type: types.SFA_GET_TRANSFER_IMAGE_SUCCESS,
+      type: types.SFA_GET_COLLECTION_IMAGE_SUCCESS,
       payload: data.data
     };
   }
-  return { type: types.SFA_GET_TRANSFER_IMAGE_FAILED, payload: data };
+  return { type: types.SFA_GET_COLLECTION_IMAGE_FAILED, payload: data };
 }
 /** === SFA GET TRANSFER IMAGE FAILED === */
-export function sfaGetTransferImageFailed(data) {
-  return { type: types.SFA_GET_TRANSFER_IMAGE_FAILED, payload: data };
+export function sfaGetCollectionImageFailed(data) {
+  return { type: types.SFA_GET_COLLECTION_IMAGE_FAILED, payload: data };
 }
 
 /**
