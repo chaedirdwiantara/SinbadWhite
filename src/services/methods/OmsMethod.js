@@ -172,7 +172,7 @@ function postKurConsent(data) {
 /** GET CHECK OVEDUE */
 function checkOverdue() {
   return ApiRest({
-    testpath: `https://55e1a5fa-31c2-4825-99f7-a7127ceb6395.mock.pstmn.io/check-overdue?storeId=${GlobalMethod.merchantStoreId()}&supplierId=${GlobalMethod.userSupplierMapping()}`,
+    path: `check-overdue?storeId=${GlobalMethod.merchantStoreId()}&supplierId=${GlobalMethod.userSupplierMapping()}`,
     method: 'GET'
   });
 }
