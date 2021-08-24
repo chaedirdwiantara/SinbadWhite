@@ -28,6 +28,7 @@ const INITIAL_STATE = {
   loadingLoadMoreGetReferenceList: false,
   loadingSfaGetBillingDetail: false,
   loadingSfaGetPaymentCollectionLog : false,
+  loadingSfaPatchCollectionMethod : false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -52,6 +53,7 @@ const INITIAL_STATE = {
   dataSfaGetBillingDetail: null,
   dataSfaPostBillingDetail: null,
   dataSfaGetPaymentCollectionLog: null,
+  dataSfaPatchCollectionMethod: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -75,7 +77,8 @@ const INITIAL_STATE = {
   errorSfaDeleteCollection: null,
   errorSfaGetBillingDetail: null,
   errorSfaPostBillingDetail: null,
-  errorSfaGetPaymentCollectionLog: null
+  errorSfaGetPaymentCollectionLog: null,
+  errorSfaPatchCollectionMethod: null
 };
 
 export const sfa = createReducer(INITIAL_STATE, {

@@ -565,4 +565,29 @@ export function sfaGetPaymentCollectionLogFailed(data) {
   return { type: types.SFA_GET_PAYMENT_COLLECTION_LOG_FAILED, payload: data };
 }
 
+/**
+ * ===========================
+ * PATCH EDIT COLLECTION METHOD
+ * ===========================
+ */
 
+/** === SFA PATCH EDIT COLLECTION METHOD PROCESS === */
+export function sfaEditCollectionMethodProcess(data) {
+  return { type: types.SFA_EDIT_COLLECTION_METHOD_PROCESS, payload: data };
+}
+
+/** === SFA PATCH EDIT COLLECTION METHOD SUCCESS === */
+export function sfaEditCollectionMethodSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_EDIT_COLLECTION_METHOD_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_EDIT_COLLECTION_METHOD_FAILED, payload: data };
+}
+
+/** === SFA PATCH EDIT COLLECTION METHOD FAILED === */
+export function sfaEditCollectionMethodFailed(data) {
+  return { type: types.SFA_EDIT_COLLECTION_METHOD_FAILED, payload: data };
+}

@@ -145,7 +145,7 @@ function getCollectionDetail(data) {
   });
 }
 
-/** EDIT COLLECTION*/
+/** EDIT BILLING PAYMENT */
 function editCollection(data) {
   return ApiRest({
     path: 'collection/v1/payment',
@@ -181,6 +181,15 @@ function getPaymentCollectionLog(data) {
   });
 }
 
+/** EDIT COLLECTION METHOD */
+function editCollectionMethod(data) {
+  return ApiRest({
+    path: 'collection/v1/payment-method',
+    method: 'PATCH',
+    params: data
+  });
+}
+
 export const SfaMethod = {
   getCollectionStatus,
   getSfaDetail,
@@ -200,5 +209,6 @@ export const SfaMethod = {
   editCollection,
   deleteCollection,
   getBillingDetail,
-  getPaymentCollectionLog
+  getPaymentCollectionLog,
+  editCollectionMethod
 };

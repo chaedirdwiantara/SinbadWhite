@@ -45,6 +45,11 @@ const SfaBillingAddView = props => {
     errorSfaPostCollectionPayment
   );
 
+  //USEREF POST BILLING
+  const prevdataSfaPostCollectionPaymentRef = useRef(
+    dataSfaPostCollectionPayment
+  );
+
   //MODAL
   const [modalBottomError, setModalBottomError] = useState(false);
   const [messageError, setMessageError] = useState(null);
@@ -94,12 +99,6 @@ const SfaBillingAddView = props => {
       isUsedStamp: collectionInfo.isStampUsed
     };
     dispatch(sfaPostCollectionPaymentProcess(data));
-
-    if (!loadingSfaPostCollectionPayment && dataSfaPostCollectionPayment?.id) {
-      NavigationService.navigate('SfaDetailView', {
-        orderParcelId: dataSfaGetDetail.data.id
-      });
-    }
   };
 
   //USE EFFECT PREV DATA ERROR
@@ -108,6 +107,11 @@ const SfaBillingAddView = props => {
   }, []);
   const prevErrorSfaPostCollectionPayment =
     prevErrorSfaPostCollectionPaymentRef.current;
+  useEffect(() => {
+    prevdataSfaPostCollectionPaymentRef.current = dataSfaPostCollectionPayment;
+  }, []);
+  const prevdataSfaPostCollectionPayment =
+    prevdataSfaPostCollectionPaymentRef.current;
 
   //HANDLE ERROR POST COLLECTION
   useEffect(() => {
@@ -117,6 +121,16 @@ const SfaBillingAddView = props => {
       }
     }
   }, [errorSfaPostCollectionPayment]);
+
+  useEffect(() => {
+    if (prevdataSfaPostCollectionPayment !== dataSfaPostCollectionPayment) {
+      if (dataSfaPostCollectionPayment) {
+        NavigationService.navigate('SfaDetailView', {
+          orderParcelId: dataSfaGetDetail.data.id
+        });
+      }
+    }
+  }, [dataSfaPostCollectionPayment]);
 
   const handleError = error => {
     if (error) {
