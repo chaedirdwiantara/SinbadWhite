@@ -48,6 +48,7 @@ class JourneyMapSearchView extends Component {
         <View style={{ width: '100%', marginTop: -16, marginLeft: -16 }}>
           <SearchBarType2
             blackSearchIcon
+            maxLength={30}
             searchText={search}
             onRef={ref => (this.parentFunction = ref)}
             parentFunction={
@@ -178,7 +179,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 06082021
  * updatedBy: dyah
- * updatedDate: 12082021
+ * updatedDate: 24082021
  * updatedFunction:
- * -> update parameter storetype.
+ * -> maximise the character of search (30 characters)
  */

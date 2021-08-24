@@ -164,6 +164,7 @@ class JourneyListDataView extends Component {
     return (
       <View style={styles.searchBar}>
         <SearchBarType1
+          maxLength={30}
           searchText={this.props.searchText}
           placeholder={'Cari nama / id toko disini'}
           onRef={ref => (this.parentFunction = ref)}
@@ -475,8 +476,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 09082021
+ * updatedDate: 24082021
  * updatedFunction:
- * -> update parameter storetype.
+ * -> maximise the character of search (30 characters).
  *
  */
