@@ -243,7 +243,7 @@ const SfaCollectionListView = props => {
               )}
               {renderContentListGlobal(
                 MoneyFormatSpace(item.totalAmount),
-                MoneyFormatSpace(item.balance),
+                MoneyFormatSpace(item.totalBalance),
                 false,
                 true,
                 true

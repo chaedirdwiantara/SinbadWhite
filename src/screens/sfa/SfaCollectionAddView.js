@@ -16,6 +16,7 @@ import {
 } from '../../library/thirdPartyPackage';
 import ModalBankAccount from './ModalBankAccount';
 import ModalListMaterai from './ModalListMaterai';
+import ModalBankDestination from './ModalBankDestination';
 import masterColor from '../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormatSpace } from '../../helpers';
 import {
@@ -61,6 +62,7 @@ const SfaCollectionAddView = props => {
   const [isModalTransferDateOpen, setIsModalTransferDateOpen] = useState(false);
   const [isModalIssuedDateOpen, setIsModalIssuedDateOpen] = useState(false);
   const [isModalInvalidDateOpen, setIsModalInvalidDateOpen] = useState(false);
+  const [isModalBankDestinationOpen, setIsModalBankDestinationOpen] = useState(false);
   const [isStampChecked, setIsStampChecked] = useState(false);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [questionMarkShow, setQuestionMarkShow] = useState(true);
@@ -208,8 +210,12 @@ const SfaCollectionAddView = props => {
 
   const onSelectBankTo = data => {
     setDataBankTo(data);
-    setIsModalBankOpen(false);
+    setIsModalBankDestinationOpen(false);
   };
+
+  const onOpenBankTo = () => {
+    setIsModalBankDestinationOpen(true)
+   };
 
   const onSelectStamp = data => {
     setDataStamp(data);
@@ -364,6 +370,7 @@ const SfaCollectionAddView = props => {
     setButtonTitle(null);
     setIsModalBottomErrorOpen(true);
   };
+
   /**
    * *********************************
    * RENDER VIEW
@@ -498,21 +505,16 @@ const SfaCollectionAddView = props => {
 
   /** RENDER BANK TO */
   const renderBankTo = () => {
-    const onPress = () => {
-      setIsModalBankOpen(true);
-      setModalBankOpenType(MODAL_TYPE_TO);
-    };
-
     return paymentCollectionMethodId === TRANSFER ? (
       <View style={{ marginBottom: 16 }}>
         <Text style={Fonts.type10}>*Tujuan Bank</Text>
         <TouchableOpacity
           style={styles.boxMenu}
-          onPress={() => onPress()}
+          onPress={() => onOpenBankTo()}
           disabled={false}
         >
           {dataBankTo ? (
-            <Text style={[Fonts.type17]}>{dataBankTo.displayName}</Text>
+            <Text style={[Fonts.type17]}>{dataBankTo.bank.displayName}</Text>
           ) : (
             <Text style={[Fonts.type31]}>Pilih Tujuan Bank</Text>
           )}
@@ -862,7 +864,6 @@ const SfaCollectionAddView = props => {
       fnSelectCollection = onSelectBankTo.bind(this);
       title = 'Tujuan Bank';
     }
-
     return (
       <View>
         {isModalBankOpen ? (
@@ -891,6 +892,24 @@ const SfaCollectionAddView = props => {
             close={() => setIsModalStampOpen(false)}
             onRef={ref => (selectedStamp = ref)}
             selectStamp={onSelectStamp.bind(this)}
+            supplierId={parseInt(userSuppliers[0].supplierId, 10)}
+            storeId={parseInt(selectedMerchant.storeId, 10)}
+            paymentCollectionTypeId={paymentCollectionMethodId}
+          />
+        ) : null}
+      </View>
+    );
+  };
+   /** MODAL BANK DESTINATION */
+   const renderModalBankDestination = () => {
+    return (
+      <View>
+        {isModalBankDestinationOpen ? (
+          <ModalBankDestination
+            open={isModalBankDestinationOpen}
+            close={() => setIsModalBankDestinationOpen(false)}
+            onRef={ref => (selectBankDestination = ref)}
+            selectBankDestination={onSelectBankTo.bind(this)}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
             storeId={parseInt(selectedMerchant.storeId, 10)}
             paymentCollectionTypeId={paymentCollectionMethodId}
@@ -933,6 +952,7 @@ const SfaCollectionAddView = props => {
       {renderModalBank()}
       {renderModalListMaterai()}
       {renderModalError()}
+      {renderModalBankDestination()}
     </>
   );
 };

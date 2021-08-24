@@ -16,6 +16,7 @@ import {
 } from '../../library/thirdPartyPackage';
 import ModalBankAccount from './ModalBankAccount';
 import ModalListMaterai from './ModalListMaterai';
+import ModalBankDestination from './ModalBankDestination';
 import masterColor from '../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormatSpace } from '../../helpers';
 import {
@@ -53,13 +54,15 @@ const SfaCollectionEditView = props => {
   const [amount, setAmount] = useState(initialData.amount);
   const [totalAmount, setTotalAmount] = useState(0);
   const [noReference, setNoReference] = useState(initialData.referenceCode);
-  const [transferDate, setTransferDate] = useState(null);
+  const [transferDate, setTransferDate] = useState(initialData.issuedDate);
   const [issuedDate, setIssuedDate] = useState(initialData.issuedDate);
   const [invalidDate, setInvalidDate] = useState(initialData.invalidDate);
   const [dataBank, setDataBank] = useState({
     displayName: initialData.bankSource
   });
-  const [dataBankTo, setDataBankTo] = useState(null);
+  const [dataBankTo, setDataBankTo] = useState({
+    bank: { displayName: initialData.bankSource }
+  });
   const [dataStamp, setDataStamp] = useState({
     nominal: initialData.stampAmount
   });
@@ -68,6 +71,9 @@ const SfaCollectionEditView = props => {
   const [isModalBankOpen, setIsModalBankOpen] = useState(false);
   const [isModalTransferDateOpen, setIsModalTransferDateOpen] = useState(false);
   const [isModalIssuedDateOpen, setIsModalIssuedDateOpen] = useState(false);
+  const [isModalBankDestinationOpen, setIsModalBankDestinationOpen] = useState(
+    false
+  );
   const [isModalInvalidDateOpen, setIsModalInvalidDateOpen] = useState(false);
   const [isStampChecked, setIsStampChecked] = useState(
     initialData.stampAmount ? true : false
@@ -116,7 +122,8 @@ const SfaCollectionEditView = props => {
   useEffect(() => {
     prevDataSfaPatchCollectionMethodRef.current = dataSfaPatchCollectionMethod;
   }, []);
-  const prevDataSfaPatchCollectionMethod = prevDataSfaPatchCollectionMethodRef.current;
+  const prevDataSfaPatchCollectionMethod =
+    prevDataSfaPatchCollectionMethodRef.current;
 
   useEffect(() => {
     prevDataSfaGetCollectionImageRef.current = dataSfaGetCollectionImage;
@@ -243,7 +250,11 @@ const SfaCollectionEditView = props => {
 
   const onSelectBankTo = data => {
     setDataBankTo(data);
-    setIsModalBankOpen(false);
+    setIsModalBankDestinationOpen(false);
+  };
+
+  const onOpenBankTo = () => {
+    setIsModalBankDestinationOpen(true);
   };
 
   const onSelectStamp = data => {
@@ -333,13 +344,13 @@ const SfaCollectionEditView = props => {
       const dataCheckGiro = {
         ...data,
         stampId: stampId,
-        isUsedStamp: isUsedStamp,
+        isUsedStamp: stampId ? isUsedStamp : false,
         bankId: bankId,
         issuedDate: dateIssued,
         invalidDate: dateInvalid,
         referenceCode: noReference
       };
-      dispatch(sfaPostPaymentMethodProcess(dataCheckGiro));
+      dispatch(sfaEditCollectionMethodProcess(dataCheckGiro));
     }
     if (paymentCollectionTypeId === TRANSFER) {
       const bankId = dataBank.id;
@@ -356,7 +367,7 @@ const SfaCollectionEditView = props => {
         bankId,
         bankToAccountId: bankToId
       };
-      dispatch(sfaPostPaymentMethodProcess(dataTransfer));
+      dispatch(sfaEditCollectionMethodProcess(dataTransfer));
     }
   };
 
@@ -525,21 +536,16 @@ const SfaCollectionEditView = props => {
 
   /** RENDER BANK TO */
   const renderBankTo = () => {
-    const onPress = () => {
-      setIsModalBankOpen(true);
-      setModalBankOpenType(MODAL_TYPE_TO);
-    };
-
     return paymentCollectionTypeId === TRANSFER ? (
       <View style={{ marginBottom: 16 }}>
         <Text style={Fonts.type10}>*Tujuan Bank</Text>
         <TouchableOpacity
           style={styles.boxMenu}
-          onPress={() => onPress()}
+          onPress={() => onOpenBankTo()}
           disabled={false}
         >
           {dataBankTo ? (
-            <Text style={[Fonts.type17]}>{dataBankTo.displayName}</Text>
+            <Text style={[Fonts.type17]}>{dataBankTo.bank.displayName}</Text>
           ) : (
             <Text style={[Fonts.type31]}>Pilih Tujuan Bank</Text>
           )}
@@ -911,6 +917,25 @@ const SfaCollectionEditView = props => {
     );
   };
 
+  /** MODAL BANK DESTINATION */
+  const renderModalBankDestination = () => {
+    return (
+      <View>
+        {isModalBankDestinationOpen ? (
+          <ModalBankDestination
+            open={isModalBankDestinationOpen}
+            close={() => setIsModalBankDestinationOpen(false)}
+            onRef={ref => (selectBankDestination = ref)}
+            selectBankDestination={onSelectBankTo.bind(this)}
+            supplierId={parseInt(userSuppliers[0].supplierId, 10)}
+            storeId={parseInt(selectedMerchant.storeId, 10)}
+            paymentCollectionTypeId={paymentCollectionTypeId}
+          />
+        ) : null}
+      </View>
+    );
+  };
+
   /** MODAL STAMP */
   const renderModalListMaterai = () => {
     return (
@@ -963,6 +988,7 @@ const SfaCollectionEditView = props => {
       {renderModalBank()}
       {renderModalListMaterai()}
       {renderModalError()}
+      {renderModalBankDestination()}
     </>
   );
 };
