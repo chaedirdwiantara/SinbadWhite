@@ -84,6 +84,7 @@ class SearchBarType2 extends Component {
     return (
       <View style={{ flex: 1 }}>
         <TextInput
+          maxLength={this.props.maxLength}
           selectionColor={Color.mainColor}
           onEndEditing={() => this.searchText()}
           value={this.state.search}
@@ -142,8 +143,8 @@ export default connect(mapStateToProps, {})(SearchBarType2);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 06082021
+ * updatedDate: 24082021
  * updatedFunction:
- * -> custom color of search icon.
+ * -> adding new props 'maxlength' to maximize the character.
  *
  */
