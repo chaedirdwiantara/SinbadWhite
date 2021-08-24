@@ -192,7 +192,7 @@ const SfaBillingDetailView = props => {
         })}
         {CardBody({
           title: 'Nomor Referensi',
-          value: orderRef,
+          value: orderRef || '-',
           styleCardView: styles.styleCardView
         })}
       </>
@@ -236,12 +236,12 @@ const SfaBillingDetailView = props => {
       <>
         {CardBody({
           title: 'Kode Pembayaran',
-          value: billingPaymentCode,
+          value: billingPaymentCode || '-',
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Kode Pembayaran Ref',
-          value: billingPaymentRef,
+          value: billingPaymentRef || '-',
           styleCardView: styles.styleCardView
         })}
       </>
