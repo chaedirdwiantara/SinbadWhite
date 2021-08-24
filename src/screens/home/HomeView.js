@@ -157,8 +157,12 @@ class HomeView extends Component {
     });
     this.props.getSalesTeamProcess();
     // CHECK SALES PRIVILEGE
-    if(this.props.privileges.data === null){
-      this.getPrivileges()
+    if (this.props.privileges.data === null) {
+      this.getPrivileges();
+    }
+    /** THIS FOR MAINTENANCE PAGE */
+    if (this.props.permanent.appMaintenance) {
+      NavigationService.navigate('MaintenanceView');
     }
   }
   /** DID UPDATE */
@@ -199,16 +203,16 @@ class HomeView extends Component {
       }
     }
   }
-  // GET SALES PRIVILEGE 
-  getPrivileges(){
-    let supplierId = GlobalMethod.userSupplierMapping()
-    if(supplierId.length > 0){
-      supplierId = supplierId[0].toString()
+  // GET SALES PRIVILEGE
+  getPrivileges() {
+    let supplierId = GlobalMethod.userSupplierMapping();
+    if (supplierId.length > 0) {
+      supplierId = supplierId[0].toString();
     }
-    let userId = this.props.user?.id || ''
-    this.props.getPrivilegeProcess({supplierId, userId})
+    let userId = this.props.user?.id || '';
+    this.props.getPrivilegeProcess({ supplierId, userId });
   }
-  
+
   /** === PULL TO REFRESH === */
   _onRefresh() {
     this.setState({ refreshing: true }, () => {
@@ -365,7 +369,11 @@ class HomeView extends Component {
           )}
 
           <View style={{ marginLeft: 12 }}>
-            <Text accessible={true} accessibilityLabel={'txtHomeScreen'} style={Fonts.type5}>
+            <Text
+              accessible={true}
+              accessibilityLabel={'txtHomeScreen'}
+              style={Fonts.type5}
+            >
               Hello{' '}
               {navigation.state.params
                 ? navigation.state.params.fullName.length >= 20
@@ -752,8 +760,15 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, merchant, global, salesmanKpi, privileges }) => {
-  return { user, merchant, global, salesmanKpi, privileges };
+const mapStateToProps = ({
+  user,
+  merchant,
+  global,
+  salesmanKpi,
+  privileges,
+  permanent
+}) => {
+  return { user, merchant, global, salesmanKpi, privileges, permanent };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -761,7 +776,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomeView);
 
 /**
  * ============================

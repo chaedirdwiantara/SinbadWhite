@@ -13,6 +13,7 @@ import java.util.List;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
+import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import com.microsoft.codepush.react.CodePush;
 import com.newrelic.agent.android.NewRelic;
 import com.rnnewrelic.NewRelicPackage;
@@ -41,6 +42,7 @@ public class MainApplication extends Application implements ReactApplication {
           packages.add(new RNFirebaseMessagingPackage());
           packages.add(new RNFirebaseNotificationsPackage());
           packages.add(new RNFirebaseFirestorePackage());
+          packages.add(new RNFirebaseDatabasePackage());
           packages.add(new NewRelicPackage());
           return packages;
         }
