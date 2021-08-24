@@ -266,6 +266,18 @@ function* getPaymentCollectionLog(actions) {
   }
 }
 
+/** GET PAYMENT COLLECTION LOG */
+function* editCollectionMethod(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.editCollectionMethod(actions.payload);
+    });
+    yield put(ActionCreators.sfaEditCollectionMethodSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaEditCollectionMethodFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* SfaSaga() {
   yield takeEvery(
@@ -307,6 +319,10 @@ function* SfaSaga() {
     yield takeEvery(
       types.SFA_GET_PAYMENT_COLLECTION_LOG_PROCESS,
       getPaymentCollectionLog
+    ),
+    yield takeEvery(
+      types.SFA_EDIT_COLLECTION_METHOD_PROCESS,
+      editCollectionMethod
     );
 }
 

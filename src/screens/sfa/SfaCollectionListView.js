@@ -31,7 +31,7 @@ import SfaNoDataView from './SfaNoDataView';
 
 const SfaCollectionListView = props => {
   const dispatch = useDispatch();
-  const collectionMethodId = props.navigation.state.params.collectionMethodId;
+  const collectionTypeId = props.navigation.state.params.collectionMethodId;
   const [refreshing, setRefreshing] = useState(false);
   const [limit, setLimit] = useState(4);
   const {
@@ -47,7 +47,7 @@ const SfaCollectionListView = props => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
       storeId: parseInt(selectedMerchant.storeId, 10),
-      paymentCollectionTypeId: parseInt(collectionMethodId, 10),
+      paymentCollectionTypeId: parseInt(collectionTypeId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
       limit: page,
       loading: loading
@@ -61,13 +61,13 @@ const SfaCollectionListView = props => {
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigatetoAddCollection = () => {
     NavigationService.navigate('SfaCollectionAddView', {
-      id: collectionMethodId
+      id: collectionTypeId
     });
   };
 
   const navigatetoEditCollection = item => {
     NavigationService.navigate('SfaCollectionEditView', {
-      id: collectionMethodId,
+      collectionTypeId: collectionTypeId,
       data: item
     });
   };
@@ -91,7 +91,7 @@ const SfaCollectionListView = props => {
   const navigatetoAddBilling = item => {
     NavigationService.navigate('SfaBillingAddView', {
       ...item,
-      paymentCollectionTypeId: parseInt(collectionMethodId, 10)
+      paymentCollectionTypeId: parseInt(collectionTypeId, 10)
     });
   };
 

@@ -37,7 +37,8 @@ import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPaymen
 import {
   sfaPostPaymentMethodProcess,
   sfaGetReferenceListProcess,
-  sfaGetCollectionImageProcess
+  sfaGetCollectionImageProcess,
+  sfaEditCollectionMethodProcess
 } from '../../state/actions';
 const { width } = Dimensions.get('window');
 
@@ -46,7 +47,8 @@ const MODAL_TYPE_TO = 2;
 
 const SfaCollectionEditView = props => {
   const dispatch = useDispatch();
-  const paymentCollectionMethodId = props.navigation.state.params.id;
+  const paymentCollectionTypeId =
+    props.navigation.state.params.collectionTypeId;
   const initialData = props.navigation.state.params.data;
   const [amount, setAmount] = useState(initialData.amount);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -87,9 +89,9 @@ const SfaCollectionEditView = props => {
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const {
-    loadingSfaPostPaymentMethod,
-    dataSfaPostPaymentMethod,
-    errorSfaPostPaymentMethod,
+    loadingSfaPatchCollectionMethod,
+    dataSfaPatchCollectionMethod,
+    errorSfaPatchCollectionMethod,
     loadingSfaGetCollectionImage,
     dataSfaGetCollectionImage
   } = useSelector(state => state.sfa);
@@ -99,8 +101,12 @@ const SfaCollectionEditView = props => {
    * RENDER USEREF
    * *********************************
    */
-  const prevDataSfaPostPaymentMethodRef = useRef(dataSfaPostPaymentMethod);
-  const prevErrorSfaPostPaymentMethodRef = useRef(errorSfaPostPaymentMethod);
+  const prevDataSfaPatchCollectionMethodRef = useRef(
+    dataSfaPatchCollectionMethod
+  );
+  const prevErrorSfaPatchCollectionMethodRef = useRef(
+    errorSfaPatchCollectionMethod
+  );
   const prevDataSfaGetCollectionImageRef = useRef(dataSfaGetCollectionImage);
   /**
    * *********************************
@@ -108,28 +114,28 @@ const SfaCollectionEditView = props => {
    * *********************************
    */
   useEffect(() => {
-    prevDataSfaPostPaymentMethodRef.current = dataSfaPostPaymentMethod;
+    prevDataSfaPatchCollectionMethodRef.current = dataSfaPatchCollectionMethod;
   }, []);
-  const prevDataSfaPostPaymentMethod = prevDataSfaPostPaymentMethodRef.current;
+  const prevDataSfaPatchCollectionMethod = prevDataSfaPatchCollectionMethodRef.current;
 
   useEffect(() => {
     prevDataSfaGetCollectionImageRef.current = dataSfaGetCollectionImage;
   }, []);
-  const prevDataSfaGetCollectionImage = prevDataSfaGetCollectionImageRef.current;
+  const prevDataSfaGetCollectionImage =
+    prevDataSfaGetCollectionImageRef.current;
 
   useEffect(() => {
-    prevErrorSfaPostPaymentMethodRef.current = errorSfaPostPaymentMethod;
+    prevErrorSfaPatchCollectionMethodRef.current = errorSfaPatchCollectionMethod;
   }, []);
-  const prevErrorSfaPostPaymentMethod =
-    prevErrorSfaPostPaymentMethodRef.current;
-
+  const prevErrorSfaPatchCollectionMethod =
+    prevErrorSfaPatchCollectionMethodRef.current;
   useEffect(() => {
-    if (prevDataSfaPostPaymentMethod !== dataSfaPostPaymentMethod) {
-      if (dataSfaPostPaymentMethod) {
+    if (prevDataSfaPatchCollectionMethod !== dataSfaPatchCollectionMethod) {
+      if (dataSfaPatchCollectionMethod) {
         navigateOnSucces();
       }
     }
-  }, [dataSfaPostPaymentMethod]);
+  }, [dataSfaPatchCollectionMethod]);
 
   useEffect(() => {
     if (prevDataSfaGetCollectionImage !== dataSfaGetCollectionImage) {
@@ -159,12 +165,12 @@ const SfaCollectionEditView = props => {
 
   /** HANDLE ERROR POST COLLECTION */
   useEffect(() => {
-    if (prevErrorSfaPostPaymentMethod !== errorSfaPostPaymentMethod) {
-      if (errorSfaPostPaymentMethod) {
-        handleError(errorSfaPostPaymentMethod);
+    if (prevErrorSfaPatchCollectionMethod !== errorSfaPatchCollectionMethod) {
+      if (errorSfaPatchCollectionMethod) {
+        handleError(errorSfaPatchCollectionMethod);
       }
     }
-  }, [errorSfaPostPaymentMethod]);
+  }, [errorSfaPatchCollectionMethod]);
 
   /**
    * *********************************
@@ -172,17 +178,18 @@ const SfaCollectionEditView = props => {
    * *********************************
    */
   const navigateOnSucces = () => {
+    console.log('DISINI');
     const data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
       storeId: parseInt(selectedMerchant.storeId, 10),
-      paymentCollectionTypeId: parseInt(paymentCollectionMethodId, 10),
+      paymentCollectionTypeId: parseInt(paymentCollectionTypeId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
       limit: 20,
       loading: true
     };
     dispatch(sfaGetReferenceListProcess(data));
     NavigationService.navigate('SfaCollectionListView', {
-      collectionMethodId: paymentCollectionMethodId
+      collectionMethodId: paymentCollectionTypeId
     });
   };
 
@@ -246,15 +253,12 @@ const SfaCollectionEditView = props => {
 
   const totalAmountCal = value => {
     if (
-      paymentCollectionMethodId === CASH ||
-      paymentCollectionMethodId === TRANSFER
+      paymentCollectionTypeId === CASH ||
+      paymentCollectionTypeId === TRANSFER
     ) {
       setTotalAmount(amount);
     }
-    if (
-      paymentCollectionMethodId === CHECK ||
-      paymentCollectionMethodId === GIRO
-    ) {
+    if (paymentCollectionTypeId === CHECK || paymentCollectionTypeId === GIRO) {
       const stamp = dataStamp ? dataStamp.nominal : 0;
       const total = amount + stamp;
       setTotalAmount(parseInt(total, 10));
@@ -262,17 +266,14 @@ const SfaCollectionEditView = props => {
   };
 
   const checkInput = () => {
-    if (paymentCollectionMethodId === CASH) {
+    if (paymentCollectionTypeId === CASH) {
       if (!amount || !imageData) {
         setIsSaveDisabled(true);
       } else {
         setIsSaveDisabled(false);
       }
     }
-    if (
-      paymentCollectionMethodId === CHECK ||
-      paymentCollectionMethodId === GIRO
-    ) {
+    if (paymentCollectionTypeId === CHECK || paymentCollectionTypeId === GIRO) {
       if (
         !amount ||
         !imageData ||
@@ -286,7 +287,7 @@ const SfaCollectionEditView = props => {
         setIsSaveDisabled(false);
       }
     }
-    if (paymentCollectionMethodId === TRANSFER) {
+    if (paymentCollectionTypeId === TRANSFER) {
       if (
         !noReference ||
         !dataBank ||
@@ -302,24 +303,22 @@ const SfaCollectionEditView = props => {
     }
   };
 
-  const createCollection = () => {
+  const editCollection = () => {
     const data = {
-      paymentCollectionTypeId: paymentCollectionMethodId,
+      paymentCollectionId: initialData.id,
+      paymentCollectionTypeId: paymentCollectionTypeId,
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
       storeId: parseInt(selectedMerchant.storeId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
-      amount: parseInt(amount, 10),
+      balance: parseInt(amount, 10),
       filename: imageName,
       type: imageType,
       image: imageData
     };
-    if (paymentCollectionMethodId === CASH) {
-      dispatch(sfaPostPaymentMethodProcess(data));
+    if (paymentCollectionTypeId === CASH) {
+      dispatch(sfaEditCollectionMethodProcess(data));
     }
-    if (
-      paymentCollectionMethodId === CHECK ||
-      paymentCollectionMethodId === GIRO
-    ) {
+    if (paymentCollectionTypeId === CHECK || paymentCollectionTypeId === GIRO) {
       const stampId = dataStamp ? dataStamp.id : null;
       const isUsedStamp = dataStamp ? true : false;
       const bankId = dataBank.id;
@@ -342,7 +341,7 @@ const SfaCollectionEditView = props => {
       };
       dispatch(sfaPostPaymentMethodProcess(dataCheckGiro));
     }
-    if (paymentCollectionMethodId === TRANSFER) {
+    if (paymentCollectionTypeId === TRANSFER) {
       const bankId = dataBank.id;
       const bankToId = dataBankTo.id;
       const trfDate = moment
@@ -415,7 +414,7 @@ const SfaCollectionEditView = props => {
 
   /** RENDER COLLECTION METHOD */
   const renderCollectionMethod = () => {
-    const id = paymentCollectionMethodId;
+    const id = paymentCollectionTypeId;
     return (
       <View>
         <Text style={[Fonts.type10, styles.titleInput]}>Metode Penagihan</Text>
@@ -470,9 +469,9 @@ const SfaCollectionEditView = props => {
 
   /** RENDER REFERENCE */
   const renderReference = () => {
-    return paymentCollectionMethodId === CHECK ||
-      paymentCollectionMethodId === GIRO ||
-      paymentCollectionMethodId === TRANSFER ? (
+    return paymentCollectionTypeId === CHECK ||
+      paymentCollectionTypeId === GIRO ||
+      paymentCollectionTypeId === TRANSFER ? (
       <View style={{ marginHorizontal: -16, marginBottom: 16 }}>
         <InputType5
           title={'*Nomor Referensi'}
@@ -495,9 +494,9 @@ const SfaCollectionEditView = props => {
       setModalBankOpenType(MODAL_TYPE_SOURCE);
     };
 
-    return paymentCollectionMethodId === CHECK ||
-      paymentCollectionMethodId === GIRO ||
-      paymentCollectionMethodId === TRANSFER ? (
+    return paymentCollectionTypeId === CHECK ||
+      paymentCollectionTypeId === GIRO ||
+      paymentCollectionTypeId === TRANSFER ? (
       <View style={{ marginBottom: 16 }}>
         <Text style={Fonts.type10}>*Sumber Bank</Text>
         <TouchableOpacity
@@ -531,7 +530,7 @@ const SfaCollectionEditView = props => {
       setModalBankOpenType(MODAL_TYPE_TO);
     };
 
-    return paymentCollectionMethodId === TRANSFER ? (
+    return paymentCollectionTypeId === TRANSFER ? (
       <View style={{ marginBottom: 16 }}>
         <Text style={Fonts.type10}>*Tujuan Bank</Text>
         <TouchableOpacity
@@ -573,11 +572,11 @@ const SfaCollectionEditView = props => {
     return (
       <>
         <ButtonSingle
-          onPress={() => createCollection()}
+          onPress={() => editCollection()}
           title={'Simpan'}
           borderRadius={4}
-          disabled={isSaveDisabled || loadingSfaPostPaymentMethod}
-          loading={loadingSfaPostPaymentMethod}
+          disabled={isSaveDisabled || loadingSfaPatchCollectionMethod}
+          loading={loadingSfaPatchCollectionMethod}
         />
       </>
     );
@@ -600,7 +599,7 @@ const SfaCollectionEditView = props => {
 
   /** RENDER TRANSFER DATE */
   const renderTransferDate = () => {
-    return paymentCollectionMethodId === TRANSFER ? (
+    return paymentCollectionTypeId === TRANSFER ? (
       <View style={{ marginBottom: 8 }}>
         <Text style={Fonts.type10}>*Tanggal Transfer</Text>
         <TouchableOpacity
@@ -628,8 +627,8 @@ const SfaCollectionEditView = props => {
 
   /** RENDER INVALID DATE */
   const renderInvalidDate = () => {
-    return paymentCollectionMethodId === CHECK ||
-      paymentCollectionMethodId === GIRO ? (
+    return paymentCollectionTypeId === CHECK ||
+      paymentCollectionTypeId === GIRO ? (
       <View style={{ marginBottom: 8 }}>
         <Text style={Fonts.type10}>*Tanggal Jatuh Tempo</Text>
         <TouchableOpacity
@@ -664,8 +663,8 @@ const SfaCollectionEditView = props => {
 
   /** RENDER ISSUED DATE */
   const renderIssuedDate = () => {
-    return paymentCollectionMethodId === CHECK ||
-      paymentCollectionMethodId === GIRO ? (
+    return paymentCollectionTypeId === CHECK ||
+      paymentCollectionTypeId === GIRO ? (
       <View style={{ marginBottom: 8 }}>
         <Text style={Fonts.type10}>*Tanggal Terbit</Text>
         <TouchableOpacity
@@ -702,8 +701,8 @@ const SfaCollectionEditView = props => {
 
   /** RENDER MATERAI */
   const renderMaterai = () => {
-    return paymentCollectionMethodId === CHECK ||
-      paymentCollectionMethodId === GIRO ? (
+    return paymentCollectionTypeId === CHECK ||
+      paymentCollectionTypeId === GIRO ? (
       <View style={{ marginTop: 16 }}>
         <View style={{ display: 'flex', flexDirection: 'row' }}>
           <Text style={[Fonts.type10]}>Materai</Text>
@@ -905,7 +904,7 @@ const SfaCollectionEditView = props => {
             selectCollection={fnSelectCollection}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
             storeId={parseInt(selectedMerchant.storeId, 10)}
-            paymentCollectionTypeId={paymentCollectionMethodId}
+            paymentCollectionTypeId={paymentCollectionTypeId}
           />
         ) : null}
       </View>
@@ -924,7 +923,7 @@ const SfaCollectionEditView = props => {
             selectStamp={onSelectStamp.bind(this)}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
             storeId={parseInt(selectedMerchant.storeId, 10)}
-            paymentCollectionTypeId={paymentCollectionMethodId}
+            paymentCollectionTypeId={paymentCollectionTypeId}
           />
         ) : null}
       </View>

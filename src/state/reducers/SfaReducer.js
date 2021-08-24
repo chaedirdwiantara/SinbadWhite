@@ -27,8 +27,8 @@ const INITIAL_STATE = {
   loadingSfaDeleteCollection: false,
   loadingLoadMoreGetReferenceList: false,
   loadingSfaGetBillingDetail: false,
-  loadingSfaGetPaymentCollectionLog : false,
-  loadingSfaPatchCollectionMethod : false,
+  loadingSfaGetPaymentCollectionLog: false,
+  loadingSfaPatchCollectionMethod: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -145,7 +145,7 @@ export const sfa = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetCollectionList: action.payload.loading,
-      errorGetCollectionList: null,
+      errorGetCollectionList: null
     };
   },
   [types.SFA_GET_COLLECTION_SUCCESS](state, action) {
@@ -412,67 +412,67 @@ export const sfa = createReducer(INITIAL_STATE, {
     };
   },
 
-   /**
+  /**
    * ==========================
    * GET TRANSFER IMAGE
    * ==========================
    */
-    [types.SFA_GET_COLLECTION_IMAGE_PROCESS](state, action) {
-      return {
-        ...state,
-        loadingSfaGetCollectionImage: true,
-        dataSfaGetCollectionImage: null,
-        errorSfaGetCollectionImage: null
-      };
-    },
-    [types.SFA_GET_COLLECTION_IMAGE_SUCCESS](state, action) {
-      return {
-        ...state,
-        loadingSfaGetCollectionImage: false,
-        dataSfaGetCollectionImage: action.payload
-      };
-    },
-    [types.SFA_GET_COLLECTION_IMAGE_FAILED](state, action) {
-      return {
-        ...state,
-        loadingSfaGetCollectionImage: false,
-        errorSfaGetCollectionImage: action.payload
-      };
-    },
-    /**
+  [types.SFA_GET_COLLECTION_IMAGE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetCollectionImage: true,
+      dataSfaGetCollectionImage: null,
+      errorSfaGetCollectionImage: null
+    };
+  },
+  [types.SFA_GET_COLLECTION_IMAGE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetCollectionImage: false,
+      dataSfaGetCollectionImage: action.payload
+    };
+  },
+  [types.SFA_GET_COLLECTION_IMAGE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaGetCollectionImage: false,
+      errorSfaGetCollectionImage: action.payload
+    };
+  },
+  /**
    * ==========================
    * GET PRINCIPAL
    * ==========================
    */
-     [types.SFA_GET_PRINCIPAL_PROCESS](state, action) {
-      return {
-        ...state,
-        loadingSfaGetPrincipal: true,
-        dataSfaGetPrincipal: null,
-        errorSfaGetPrincipal: null
-      };
-    },
-    [types.SFA_GET_PRINCIPAL_SUCCESS](state, action) {
-      return {
-        ...state,
-        loadingSfaGetPrincipal: false,
-        dataSfaGetPrincipal: action.payload
-      };
-    },
-    [types.SFA_GET_PRINCIPAL_FAILED](state, action) {
-      return {
-        ...state,
-        loadingSfaGetPrincipal: false,
-        errorSfaGetPrincipal: action.payload
-      };
-    },
+  [types.SFA_GET_PRINCIPAL_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetPrincipal: true,
+      dataSfaGetPrincipal: null,
+      errorSfaGetPrincipal: null
+    };
+  },
+  [types.SFA_GET_PRINCIPAL_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetPrincipal: false,
+      dataSfaGetPrincipal: action.payload
+    };
+  },
+  [types.SFA_GET_PRINCIPAL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaGetPrincipal: false,
+      errorSfaGetPrincipal: action.payload
+    };
+  },
 
   /**
    * =============================
    * LOADMORE PRINCIPAL
    * =============================
    */
-   [types.SFA_PRINCIPAL_LOADMORE_PROCESS](state, action) {
+  [types.SFA_PRINCIPAL_LOADMORE_PROCESS](state, action) {
     return {
       ...state,
       loadingLoadmorePrincipal: true,
@@ -483,7 +483,7 @@ export const sfa = createReducer(INITIAL_STATE, {
     return {
       ...state,
       dataSfaGetPrincipal: action.payload,
-      loadingLoadmorePrincipal: false,
+      loadingLoadmorePrincipal: false
     };
   },
   [types.SFA_PRINCIPAL_LOADMORE_FAILED](state, action) {
@@ -499,7 +499,7 @@ export const sfa = createReducer(INITIAL_STATE, {
    * LOADMORE BANK ACCOUNT
    * =============================
    */
-   [types.SFA_BANK_ACCOUNT_LOADMORE_PROCESS](state, action) {
+  [types.SFA_BANK_ACCOUNT_LOADMORE_PROCESS](state, action) {
     return {
       ...state,
       loadingLoadmoreBankAccount: true,
@@ -510,7 +510,7 @@ export const sfa = createReducer(INITIAL_STATE, {
     return {
       ...state,
       dataSfaGetBankAccount: action.payload,
-      loadingLoadmoreBankAccount: false,
+      loadingLoadmoreBankAccount: false
     };
   },
   [types.SFA_BANK_ACCOUNT_LOADMORE_FAILED](state, action) {
@@ -525,7 +525,7 @@ export const sfa = createReducer(INITIAL_STATE, {
    * GET COLLECTION LOG
    * ==========================
    */
-   [types.SFA_GET_COLLECTION_LOG_PROCESS](state, action) {
+  [types.SFA_GET_COLLECTION_LOG_PROCESS](state, action) {
     return {
       ...state,
       loadingSfaGetCollectionLog: true,
@@ -552,7 +552,7 @@ export const sfa = createReducer(INITIAL_STATE, {
    * LOADMORE COLLECTION LOG
    * =============================
    */
-   [types.SFA_COLLECTION_LOG_LOADMORE_PROCESS](state, action) {
+  [types.SFA_COLLECTION_LOG_LOADMORE_PROCESS](state, action) {
     return {
       ...state,
       loadingLoadmoreCollectionLog: true,
@@ -563,7 +563,7 @@ export const sfa = createReducer(INITIAL_STATE, {
     return {
       ...state,
       dataSfaGetCollectionLog: action.payload,
-      loadingLoadmoreCollectionLog: false,
+      loadingLoadmoreCollectionLog: false
     };
   },
   [types.SFA_COLLECTION_LOG_LOADMORE_FAILED](state, action) {
@@ -574,96 +574,96 @@ export const sfa = createReducer(INITIAL_STATE, {
     };
   },
 
-   /**
+  /**
    * ==========================
    * GET COLLECTION LOG
    * ==========================
    */
-    [types.SFA_GET_COLLECTION_DETAIL_PROCESS](state, action) {
-      return {
-        ...state,
-        loadingSfaGetCollectionDetail: true,
-        dataSfaGetCollectionDetail: null,
-        errorSfaGetCollectionDetail: null
-      };
-    },
-    [types.SFA_GET_COLLECTION_DETAIL_SUCCESS](state, action) {
-      return {
-        ...state,
-        loadingSfaGetCollectionDetail: false,
-        dataSfaGetCollectionDetail: action.payload
-      };
-    },
-    [types.SFA_GET_COLLECTION_DETAIL_FAILED](state, action) {
-      return {
-        ...state,
-        loadingSfaGetCollectionDetail: false,
-        errorSfaGetCollectionDetail: action.payload
-      };
-    },
+  [types.SFA_GET_COLLECTION_DETAIL_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetCollectionDetail: true,
+      dataSfaGetCollectionDetail: null,
+      errorSfaGetCollectionDetail: null
+    };
+  },
+  [types.SFA_GET_COLLECTION_DETAIL_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetCollectionDetail: false,
+      dataSfaGetCollectionDetail: action.payload
+    };
+  },
+  [types.SFA_GET_COLLECTION_DETAIL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaGetCollectionDetail: false,
+      errorSfaGetCollectionDetail: action.payload
+    };
+  },
 
-    /**
+  /**
    * ==========================
    * EDIT COLLECTION
    * ==========================
    */
-     [types.SFA_EDIT_COLLECTION_PROCESS](state, action) {
-      return {
-        ...state,
-        loadingSfaEditCollection: true,
-        dataSfaEditCollection: null,
-        errorSfaEditCollection: null
-      };
-    },
-    [types.SFA_EDIT_COLLECTION_SUCCESS](state, action) {
-      return {
-        ...state,
-        loadingSfaEditCollection: false,
-        dataSfaEditCollection: action.payload
-      };
-    },
-    [types.SFA_EDIT_COLLECTION_FAILED](state, action) {
-      return {
-        ...state,
-        loadingSfaEditCollection: false,
-        errorSfaEditCollection: action.payload
-      };
-    },
+  [types.SFA_EDIT_COLLECTION_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaEditCollection: true,
+      dataSfaEditCollection: null,
+      errorSfaEditCollection: null
+    };
+  },
+  [types.SFA_EDIT_COLLECTION_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaEditCollection: false,
+      dataSfaEditCollection: action.payload
+    };
+  },
+  [types.SFA_EDIT_COLLECTION_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaEditCollection: false,
+      errorSfaEditCollection: action.payload
+    };
+  },
 
-     /**
+  /**
    * ==========================
    * DELETE COLLECTION
    * ==========================
    */
-      [types.SFA_DELETE_COLLECTION_PROCESS](state, action) {
-        return {
-          ...state,
-          loadingSfaDeleteCollection: true,
-          dataSfaDeleteCollection: null,
-          errorSfaDeleteCollection: null
-        };
-      },
-      [types.SFA_DELETE_COLLECTION_SUCCESS](state, action) {
-        return {
-          ...state,
-          loadingSfaDeleteCollection: false,
-          dataSfaDeleteCollection: action.payload
-        };
-      },
-      [types.SFA_DELETE_COLLECTION_FAILED](state, action) {
-        return {
-          ...state,
-          loadingSfaDeleteCollection: false,
-          errorSfaDeleteCollection: action.payload
-        };
-      },
-   
+  [types.SFA_DELETE_COLLECTION_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaDeleteCollection: true,
+      dataSfaDeleteCollection: null,
+      errorSfaDeleteCollection: null
+    };
+  },
+  [types.SFA_DELETE_COLLECTION_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaDeleteCollection: false,
+      dataSfaDeleteCollection: action.payload
+    };
+  },
+  [types.SFA_DELETE_COLLECTION_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaDeleteCollection: false,
+      errorSfaDeleteCollection: action.payload
+    };
+  },
+
   /**
    * ==========================
    * GET BILLING DETAIL
    * ==========================
    */
-   [types.SFA_GET_BILLING_DETAIL_PROCESS](state, action) {
+  [types.SFA_GET_BILLING_DETAIL_PROCESS](state, action) {
     return {
       ...state,
       loadingSfaGetBillingDetail: true,
@@ -691,7 +691,7 @@ export const sfa = createReducer(INITIAL_STATE, {
    * GET COLLECTION PAYMENT LOG
    * ==========================
    */
-   [types.SFA_GET_PAYMENT_COLLECTION_LOG_PROCESS](state, action) {
+  [types.SFA_GET_PAYMENT_COLLECTION_LOG_PROCESS](state, action) {
     return {
       ...state,
       loadingSfaGetPaymentCollectionLog: true,
@@ -711,6 +711,33 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       loadingSfaGetPaymentCollectionLog: false,
       errorSfaGetPaymentCollectionLog: action.payload
+    };
+  },
+  /**
+   * ==========================
+   * PATCH COLLECTION METHOD
+   * ==========================
+   */
+  [types.SFA_EDIT_COLLECTION_METHOD_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaPatchCollectionMethod: true,
+      dataSfaSfaPatchCollectionMethod: null,
+      errorSfaSfaPatchCollectionMethod: null
+    };
+  },
+  [types.SFA_EDIT_COLLECTION_METHOD_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaPatchCollectionMethod: false,
+      dataSfaPatchCollectionMethod: action.payload
+    };
+  },
+  [types.SFA_EDIT_COLLECTION_METHOD_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaPatchCollectionMethod: false,
+      errorSfaSfaPatchCollectionMethod: action.payload
     };
   }
 });
