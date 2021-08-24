@@ -11,6 +11,7 @@ import {
 import { MaterialIcon, moment } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormatSpace } from '../../helpers';
+import { toLocalTime } from '../../helpers/TimeHelper';
 import {
   APPROVED,
   REJECTED,
@@ -225,7 +226,7 @@ const SfaCollectionListView = props => {
             <View>
               {renderContentListGlobal(
                 'Tanggal Penagihan',
-                moment(new Date(item.issuedDate)).format('DD MMM YYYY')
+                toLocalTime(item.createdAt, 'DD MMM YYYY')
               )}
               {renderContentListGlobal(
                 'Metode Penagihan',

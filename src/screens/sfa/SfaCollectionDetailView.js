@@ -348,7 +348,9 @@ const SfaCollectionDetailView = props => {
           borderRadius={4}
           onPress={() =>
             NavigationService.navigate('SfaBillingLogView', {
-              paymentBillingId: dataSfaGetCollectionDetail.data.id
+              collectionId: dataSfaGetCollectionDetail.data.id,
+              paymentCollectionTypeId:
+                dataSfaGetCollectionDetail.data.paymentCollectionType.id
             })
           }
         />

@@ -18,6 +18,7 @@ import SfaBillingDetailView from '../../screens/sfa/SfaBillingDetailView';
 import SfaBillingAddView from '../../screens/sfa/SfaBillingAddView';
 import SfaBillingLogView from '../../screens/sfa/SfaBillingLogView';
 import SfaCollectionEditView from '../../screens/sfa/SfaCollectionEditView';
+import SfaBillingEditView from '../../screens/sfa/SfaBillingEditView';
 
 const SfaNavigator = {
   SfaView: {
@@ -212,6 +213,25 @@ const SfaNavigator = {
     screen: SfaCollectionEditView,
     navigationOptions: {
       headerTitle: 'Ubah Penagihan',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'left',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.fontBlack50,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  }, 
+  SfaBillingEditView: {
+    screen: SfaBillingEditView,
+    navigationOptions: {
+      headerTitle: 'Ubah Pembayaran',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {

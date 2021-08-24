@@ -12,30 +12,40 @@ import {
   MaterialCommunityIcons
 } from '../../library/thirdPartyPackage';
 import { TextInputMask } from 'react-native-masked-text';
-import { ButtonSingle } from '../../library/component';
+import { ButtonSingle, LoadingPage } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardBody, CardHeader } from './components/CardView';
 import NavigationService from '../../navigation/NavigationService';
 import { CASH, CHECK, GIRO } from '../../constants/collectionConstants';
-import { sfaPostCollectionPaymentProcess } from '../../state/actions';
+import {
+  sfaPostCollectionPaymentProcess,
+  sfaGetBillingDetailProcess,
+  sfaGetDetailProcess
+} from '../../state/actions';
 import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 
-const SfaBillingAddView = props => {
+const SfaBillingEditView = props => {
   const dispatch = useDispatch();
   const collectionInfo = props.navigation.state.params;
-  const [paymentAmount, setPaymentAmount] = useState(0);
+  const [paymentAmount, setPaymentAmount] = useState(
+    dataSfaGetBillingDetail?.data.amount
+  );
   const [isStampChecked, setIsStampChecked] = useState(false);
   const [totalPaymentAmount, setTotalPaymentAmount] = useState(0);
   const stampAmount = 10000;
 
+
   // SELECTOR
   const {
     loadingSfaPostCollectionPayment,
+    loadingSfaGetBillingDetail,
+    loadingSfaGetDetail,
     dataSfaPostCollectionPayment,
     errorSfaPostCollectionPayment,
-    dataSfaGetDetail
+    dataSfaGetDetail,
+    dataSfaGetBillingDetail
   } = useSelector(state => state.sfa);
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
@@ -44,11 +54,12 @@ const SfaBillingAddView = props => {
   const prevErrorSfaPostCollectionPaymentRef = useRef(
     errorSfaPostCollectionPayment
   );
+  const prevDataSfaGetBillingDetailRef = useRef(dataSfaGetBillingDetail);
 
-  //USEREF POST BILLING
-  const prevdataSfaPostCollectionPaymentRef = useRef(
-    dataSfaPostCollectionPayment
-  );
+  useEffect(() => {
+    getBillingDetail();
+    getInvoiceDetail();
+  }, []);
 
   //MODAL
   const [modalBottomError, setModalBottomError] = useState(false);
@@ -61,16 +72,26 @@ const SfaBillingAddView = props => {
    * FUNCTION
    * *********************************
    */
-  const isNumber = n => (n !== null && n !== undefined ? true : false);
 
+  const getBillingDetail = () => {
+    dispatch(sfaGetBillingDetailProcess(210));
+  };
+
+  const getInvoiceDetail = () => {
+    const orderParcelId = dataSfaGetDetail.data.id;
+    dispatch(sfaGetDetailProcess(orderParcelId));
+  };
+
+  const isNumber = n => (n !== null && n !== undefined ? true : false);
   const onChangePaymentAmount = text => {
     let paymentAmountInt = parseInt(text.replace(/[Rp.]+/g, ''), 10);
 
     if (
-      (collectionInfo.paymentCollectionTypeId === GIRO ||
-        collectionInfo.paymentCollectionTypeId === CHECK) &&
-      collectionInfo.isStampUsed === true &&
-      isStampChecked === true
+      dataSfaGetBillingDetail.data.paymentCollectionType.id === GIRO ||
+      dataSfaGetBillingDetail.data.paymentCollectionType.id === CHECK
+      //   &&
+      // collectionInfo.isStampUsed === true &&
+      // isStampChecked === true
     ) {
       setTotalPaymentAmount(paymentAmountInt + stampAmount);
     } else {
@@ -88,30 +109,45 @@ const SfaBillingAddView = props => {
       setTotalPaymentAmount(totalPaymentAmount - stampAmount);
     }
   };
+
   const submit = () => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
       orderParcelId: dataSfaGetDetail.data.id,
       storeId: parseInt(selectedMerchant.storeId, 10),
-      paymentCollectionMethodId: collectionInfo.id,
+      paymentCollectionMethodId: collectionInfo.paymentCollectionMethodId,
       amount: totalPaymentAmount,
-      isUsedStamp: collectionInfo.isStampUsed
+      isUsedStamp: true
     };
     dispatch(sfaPostCollectionPaymentProcess(data));
+
+    if (!loadingSfaPostCollectionPayment && dataSfaPostCollectionPayment?.id) {
+      NavigationService.navigate('SfaDetailView', {
+        orderParcelId: dataSfaGetDetail.data.id
+      });
+    }
   };
 
+  useEffect(()=> {
+    prevDataSfaGetBillingDetailRef.current = dataSfaGetBillingDetail;
+  }, [])
+  const prevDataSfaGetBillingDetail =
+  prevDataSfaGetBillingDetailRef.current;
+
+  useEffect(() => {
+    if (prevDataSfaGetBillingDetail !== dataSfaGetBillingDetail) {
+      if (dataSfaGetBillingDetail) {
+        setPaymentAmount(dataSfaGetBillingDetail.data.amount);
+      }
+    }
+  }, [dataSfaGetBillingDetail]);
   //USE EFFECT PREV DATA ERROR
   useEffect(() => {
     prevErrorSfaPostCollectionPaymentRef.current = errorSfaPostCollectionPayment;
   }, []);
   const prevErrorSfaPostCollectionPayment =
     prevErrorSfaPostCollectionPaymentRef.current;
-  useEffect(() => {
-    prevdataSfaPostCollectionPaymentRef.current = dataSfaPostCollectionPayment;
-  }, []);
-  const prevdataSfaPostCollectionPayment =
-    prevdataSfaPostCollectionPaymentRef.current;
 
   //HANDLE ERROR POST COLLECTION
   useEffect(() => {
@@ -121,16 +157,6 @@ const SfaBillingAddView = props => {
       }
     }
   }, [errorSfaPostCollectionPayment]);
-
-  useEffect(() => {
-    if (prevdataSfaPostCollectionPayment !== dataSfaPostCollectionPayment) {
-      if (dataSfaPostCollectionPayment) {
-        NavigationService.navigate('SfaDetailView', {
-          orderParcelId: dataSfaGetDetail.data.id
-        });
-      }
-    }
-  }, [dataSfaPostCollectionPayment]);
 
   const handleError = error => {
     if (error) {
@@ -280,7 +306,6 @@ const SfaBillingAddView = props => {
       </>
     );
   };
-
   /**
    * ==================================
    * RENDER COLLECTION INFORMATION BODY
@@ -291,42 +316,42 @@ const SfaBillingAddView = props => {
       <>
         {CardBody({
           title: 'Metode Penagihan',
-          value: collectionInfo?.collectionMethodName,
+          value: collectionInfo?.paymentCollectionMethodName,
           styleCardView: styles.styleCardView
         })}
-        {collectionInfo.paymentCollectionTypeId !== CASH
+        {dataSfaGetBillingDetail.data.paymentCollectionType.id !== CASH
           ? CardBody({
               title: 'Nomor Referensi',
               value: collectionInfo?.collectionCode,
               styleCardView: styles.styleCardView
             })
           : null}
-        {collectionInfo.paymentCollectionTypeId === CHECK ||
-        collectionInfo.paymentCollectionTypeId === GIRO
+        {dataSfaGetBillingDetail.data.paymentCollectionType.id === CHECK ||
+        dataSfaGetBillingDetail.data.paymentCollectionType.id === GIRO
           ? CardBody({
               title: 'Nilai Penagihan',
               value: MoneyFormatSpace(collectionInfo.amount),
               styleCardView: styles.styleCardView
             })
           : null}
-        {collectionInfo.paymentCollectionTypeId === CHECK ||
-        collectionInfo.paymentCollectionTypeId === GIRO
+        {dataSfaGetBillingDetail.data.paymentCollectionType.id === CHECK ||
+        dataSfaGetBillingDetail.data.paymentCollectionType.id === GIRO
           ? CardBody({
               title: 'Materai',
-              value: isNumber(collectionInfo?.stampAmount)
-                ? MoneyFormatSpace(collectionInfo.stampAmount)
+              value: isNumber(dataSfaGetBillingDetail.data.stampAmount)
+                ? MoneyFormatSpace(dataSfaGetBillingDetail.data.stampAmount)
                 : '-',
               styleCardView: styles.styleCardView
             })
           : null}
         {CardBody({
           title: 'Total Penagihan',
-          value: MoneyFormatSpace(collectionInfo?.totalAmount),
+          value: MoneyFormatSpace(collectionInfo?.amount),
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Sisa Penagihan',
-          value: MoneyFormatSpace(collectionInfo?.totalBalance),
+          value: MoneyFormatSpace(collectionInfo?.amount),
           styleCardView: styles.styleCardView
         })}
       </>
@@ -405,8 +430,8 @@ const SfaBillingAddView = props => {
       );
     };
 
-    return collectionInfo.paymentCollectionTypeId === CHECK ||
-      collectionInfo.paymentCollectionTypeId === GIRO ? (
+    return dataSfaGetBillingDetail.data.paymentCollectionType.id === CHECK ||
+      dataSfaGetBillingDetail.data.paymentCollectionType.id === GIRO ? (
       <View style={{ marginTop: 16 }}>
         <View style={{ display: 'flex', flexDirection: 'row' }}>
           <Text style={[Fonts.type10]}>Materai</Text>
@@ -518,12 +543,14 @@ const SfaBillingAddView = props => {
    * @returns
    */
   const renderContent = () => {
-    return (
+    return dataSfaGetBillingDetail && dataSfaGetDetail ? (
       <View style={{ flex: 1 }}>
         {renderInvoiceInfoHeader()}
         {renderCollectionInfoHeader()}
         {renderBillingInfoCardHeader()}
       </View>
+    ) : (
+      <View />
     );
   };
 
@@ -532,7 +559,7 @@ const SfaBillingAddView = props => {
    * MAIN
    * =======================
    */
-  return (
+  return !loadingSfaGetBillingDetail && !loadingSfaGetDetail ? (
     <View style={{ flex: 1 }}>
       <SafeAreaView style={styles.mainContainer}>
         <ScrollView style={{ flex: 1, height: '100%' }}>
@@ -543,6 +570,8 @@ const SfaBillingAddView = props => {
         {renderModalError()}
       </SafeAreaView>
     </View>
+  ) : (
+    <LoadingPage />
   );
 };
 
@@ -572,4 +601,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SfaBillingAddView;
+export default SfaBillingEditView;
