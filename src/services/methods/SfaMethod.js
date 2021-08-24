@@ -20,11 +20,11 @@ function getSfaDetail(orderParcelId) {
 /** GET COLLECTION LIST */
 function getCollectionList(data) {
   return ApiRest({
-    path: `collection/v1/order-parcels?skip=${data.skip}&limit=${data.limit}&storeId=${
-      data.storeId
-    }&supplierId=${data.supplierId}&keyword=${data.keyword}&statusPayment=${
-      data.statusPayment
-    }`,
+    path: `collection/v1/order-parcels?skip=${data.skip}&limit=${
+      data.limit
+    }&storeId=${data.storeId}&supplierId=${data.supplierId}&keyword=${
+      data.keyword
+    }&statusPayment=${data.statusPayment}`,
     method: `GET`
   });
 }
@@ -173,8 +173,10 @@ function getBillingDetail(data) {
 /** GET PAYMENT COLLECTION LOG */
 function getPaymentCollectionLog(data) {
   return ApiRest({
-    path: `collection/v1/payment-billing-collections?paymentCollectionMethodId=${data.paymentCollectionMethodId}&limit=${data.limit}&skip=${data.skip}`,
-    testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billing-collections?paymentCollectionMethodId=${data.paymentCollectionMethodId}&limit=${data.limit}&skip=${data.skip}`,
+    path: `collection/v1/payment-billing-collections?paymentCollectionMethodId=${
+      data.paymentCollectionMethodId
+    }&storeId=${data.storeId}&limit=${data.limit}&skip=${data.skip}`,
+    // testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billing-collections?paymentCollectionMethodId=${data.paymentCollectionMethodId}&limit=${data.limit}&skip=${data.skip}`,
     method: 'GET'
   });
 }

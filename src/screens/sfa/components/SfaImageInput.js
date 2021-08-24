@@ -171,8 +171,8 @@ const SfaImageInput = props => {
   return (
     <View>
       {renderTitle()}
-      {!props.loading && props.imageData ? (
-        props.imageData ? (
+      {!props.loading ? (
+        props.imageData || imageData ? (
           renderImage()
         ) : (
           renderCamera()

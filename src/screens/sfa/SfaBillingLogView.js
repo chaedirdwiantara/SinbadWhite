@@ -28,7 +28,9 @@ import {
 } from '../../state/actions';
 const SfaBillingLogView = props => {
   const dispatch = useDispatch();
-  const collectionMethodId = 1;
+  const collectionMethodId =
+    props.navigation.state.params.paymentCollectionTypeId;
+  const paymentCollectionMethodId = props.navigation.state.params.collectionId;
   const [refreshing, setRefreshing] = useState(false);
   const [limit, setLimit] = useState(4);
   const {
@@ -43,8 +45,10 @@ const SfaBillingLogView = props => {
   //** FUNCTION GET PAYMENT LOG */
   const getPaymentCollectionLog = (loading, page) => {
     const data = {
-      paymentCollectionMethodId: 494,
-      limit: 10
+      paymentCollectionMethodId: paymentCollectionMethodId,
+      limit: 10,
+      storeId: parseInt(selectedMerchant.storeId, 10),
+      skip: 0
     };
     dispatch(sfaGetPaymentCollectionLogProcess(data));
   };
@@ -65,11 +69,13 @@ const SfaBillingLogView = props => {
     getPaymentCollectionLog(true, 10);
   }, []);
 
-  /** FUNCTION NAVIGATE TO ADD COLLECTION */
-  const navigatetoAddCollection = () => {
-    NavigationService.navigate('SfaCollectionAddView');
+  /** FUNCTION NAVIGATE TO EDIT BILLING */
+  const navigatetoEditBilling = item => {
+    NavigationService.navigate('SfaBillingEditView', {
+      ...item,
+      paymentCollectionTypeId: parseInt(collectionMethodId, 10)
+    });
   };
-
   /** FUNCTION REFRESH COLLECTION LIST */
   const onHandleRefresh = () => {
     getCollectionList(true, 10);
@@ -118,7 +124,7 @@ const SfaBillingLogView = props => {
     );
   };
   /** RENDER BUTTON */
-  const renderButton = (title, type, disable) => {
+  const renderButton = (title, type, disable, action, item) => {
     return (
       <TouchableOpacity
         disabled={disable}
@@ -134,6 +140,7 @@ const SfaBillingLogView = props => {
             ? masterColor.buttonRedDisableColor
             : masterColor.mainColor
         }}
+        onPress={() => action(item)}
       >
         <Text
           style={[
@@ -218,11 +225,27 @@ const SfaBillingLogView = props => {
                 item.paymentCollectionMethodName
               )}
               {renderContentListGlobal('Salesman', item.salesName)}
-              {renderContentListGlobal('Total Pembayaran', item.amount, true)}
+              {renderContentListGlobal(
+                'Total Pembayaran',
+                MoneyFormatSpace(item.amount),
+                true
+              )}
             </View>
             <View style={styles.buttonContainer}>
-              {renderButton('Ubah', 'white', !item.isEditable)}
-              {renderButton('Hapus', 'white', !item.isEditable)}
+              {renderButton(
+                'Ubah',
+                'white',
+                !item.isEditable,
+                navigatetoEditBilling.bind(item),
+                item
+              )}
+              {renderButton(
+                'Hapus',
+                'white',
+                !item.isEditable,
+                navigatetoEditBilling.bind(item),
+                item
+              )}
             </View>
             <View
               style={{
@@ -269,17 +292,6 @@ const SfaBillingLogView = props => {
    * =======================
    */
 
-  const renderBottomButton = () => {
-    return (
-      <>
-        <ButtonSingle
-          onPress={() => navigatetoAddCollection()}
-          title={'Tambah Penagihan'}
-          borderRadius={4}
-        />
-      </>
-    );
-  };
   /**
    * =======================
    * RENDER CONTENT
@@ -300,12 +312,7 @@ const SfaBillingLogView = props => {
    * MAIN
    * =======================
    */
-  return (
-    <>
-      {renderContent()}
-      {renderBottomButton()}
-    </>
-  );
+  return <>{renderContent()}</>;
 };
 
 const styles = StyleSheet.create({

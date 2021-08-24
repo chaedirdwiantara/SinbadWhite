@@ -744,6 +744,7 @@ const SfaCollectionAddView = props => {
         title={'*Foto Penagihan'}
         action={onChooseImage}
         delete={onDeleteImage}
+        loading={false}
       />
     );
   };
