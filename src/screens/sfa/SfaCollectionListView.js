@@ -21,7 +21,8 @@ import NavigationService from '../../navigation/NavigationService';
 import {
   ButtonSingle,
   LoadingPage,
-  LoadingLoadMore
+  LoadingLoadMore,
+  ModalConfirmation
 } from '../../library/component';
 import {
   sfaGetReferenceListProcess,
@@ -31,8 +32,12 @@ import SfaNoDataView from './SfaNoDataView';
 
 const SfaCollectionListView = props => {
   const dispatch = useDispatch();
-  const collectionMethodId = props.navigation.state.params.collectionMethodId;
+  const collectionTypeId = props.navigation.state.params.collectionMethodId;
   const [refreshing, setRefreshing] = useState(false);
+  const [
+    isModalDeleteConfirmationOpen,
+    setIsModalDeleteConfirmationOpen
+  ] = useState(false);
   const [limit, setLimit] = useState(4);
   const {
     dataGetReferenceList,
@@ -47,7 +52,7 @@ const SfaCollectionListView = props => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
       storeId: parseInt(selectedMerchant.storeId, 10),
-      paymentCollectionTypeId: parseInt(collectionMethodId, 10),
+      paymentCollectionTypeId: parseInt(collectionTypeId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
       limit: page,
       loading: loading
@@ -61,13 +66,13 @@ const SfaCollectionListView = props => {
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigatetoAddCollection = () => {
     NavigationService.navigate('SfaCollectionAddView', {
-      id: collectionMethodId
+      id: collectionTypeId
     });
   };
 
   const navigatetoEditCollection = item => {
     NavigationService.navigate('SfaCollectionEditView', {
-      id: collectionMethodId,
+      collectionTypeId: collectionTypeId,
       data: item
     });
   };
@@ -91,8 +96,12 @@ const SfaCollectionListView = props => {
   const navigatetoAddBilling = item => {
     NavigationService.navigate('SfaBillingAddView', {
       ...item,
-      paymentCollectionTypeId: parseInt(collectionMethodId, 10)
+      paymentCollectionTypeId: parseInt(collectionTypeId, 10)
     });
+  };
+
+  const onDeleteCollection = item => {
+    setIsModalDeleteConfirmationOpen(true);
   };
 
   /** RENDER CONTENT LIST GLOBAL */
@@ -243,7 +252,7 @@ const SfaCollectionListView = props => {
               )}
               {renderContentListGlobal(
                 MoneyFormatSpace(item.totalAmount),
-                MoneyFormatSpace(item.balance),
+                MoneyFormatSpace(item.totalBalance),
                 false,
                 true,
                 true
@@ -257,7 +266,13 @@ const SfaCollectionListView = props => {
                 navigatetoEditCollection.bind(item),
                 item
               )}
-              {renderButton('Hapus', 'white', !item.isEditable)}
+              {renderButton(
+                'Hapus',
+                'white',
+                !item.isEditable,
+                onDeleteCollection.bind(item),
+                item
+              )}
               {renderButton(
                 'Gunakan',
                 'red',
@@ -296,7 +311,25 @@ const SfaCollectionListView = props => {
       </View>
     );
   };
-
+  /** ===> RENDER MODAL DELETE CONFIRMATION === */
+  const renderModalConfirmationDelete = () => {
+    return isModalDeleteConfirmationOpen ? (
+      <ModalConfirmation
+        title={'Hapus Penagihan?'}
+        open={isModalDeleteConfirmationOpen}
+        okText={'Kembali'}
+        cancelText={'Hapus'}
+        content={'Penagihan yang telah terhapus tidak dapat dikembalikan'}
+        type={'okeNotRed'}
+        ok={() => {
+          setIsModalDeleteConfirmationOpen(false);
+        }}
+        cancel={() => setIsModalDeleteConfirmationOpen(false)}
+      />
+    ) : (
+      <View />
+    );
+  };
   /**
    * =======================
    * RENDER COLLECTION LIST
@@ -363,6 +396,7 @@ const SfaCollectionListView = props => {
     <>
       {renderContent()}
       {renderBottomButton()}
+      {renderModalConfirmationDelete()}
     </>
   );
 };
