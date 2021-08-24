@@ -21,7 +21,8 @@ import NavigationService from '../../navigation/NavigationService';
 import {
   ButtonSingle,
   LoadingPage,
-  LoadingLoadMore
+  LoadingLoadMore,
+  ModalConfirmation
 } from '../../library/component';
 import {
   sfaGetReferenceListProcess,
@@ -33,6 +34,10 @@ const SfaCollectionListView = props => {
   const dispatch = useDispatch();
   const collectionTypeId = props.navigation.state.params.collectionMethodId;
   const [refreshing, setRefreshing] = useState(false);
+  const [
+    isModalDeleteConfirmationOpen,
+    setIsModalDeleteConfirmationOpen
+  ] = useState(false);
   const [limit, setLimit] = useState(4);
   const {
     dataGetReferenceList,
@@ -93,6 +98,10 @@ const SfaCollectionListView = props => {
       ...item,
       paymentCollectionTypeId: parseInt(collectionTypeId, 10)
     });
+  };
+
+  const onDeleteCollection = item => {
+    setIsModalDeleteConfirmationOpen(true);
   };
 
   /** RENDER CONTENT LIST GLOBAL */
@@ -257,7 +266,13 @@ const SfaCollectionListView = props => {
                 navigatetoEditCollection.bind(item),
                 item
               )}
-              {renderButton('Hapus', 'white', !item.isEditable)}
+              {renderButton(
+                'Hapus',
+                'white',
+                !item.isEditable,
+                onDeleteCollection.bind(item),
+                item
+              )}
               {renderButton(
                 'Gunakan',
                 'red',
@@ -296,7 +311,25 @@ const SfaCollectionListView = props => {
       </View>
     );
   };
-
+  /** ===> RENDER MODAL DELETE CONFIRMATION === */
+  const renderModalConfirmationDelete = () => {
+    return isModalDeleteConfirmationOpen ? (
+      <ModalConfirmation
+        title={'Hapus Penagihan?'}
+        open={isModalDeleteConfirmationOpen}
+        okText={'Kembali'}
+        cancelText={'Hapus'}
+        content={'Penagihan yang telah terhapus tidak dapat dikembalikan'}
+        type={'okeNotRed'}
+        ok={() => {
+          setIsModalDeleteConfirmationOpen(false);
+        }}
+        cancel={() => setIsModalDeleteConfirmationOpen(false)}
+      />
+    ) : (
+      <View />
+    );
+  };
   /**
    * =======================
    * RENDER COLLECTION LIST
@@ -363,6 +396,7 @@ const SfaCollectionListView = props => {
     <>
       {renderContent()}
       {renderBottomButton()}
+      {renderModalConfirmationDelete()}
     </>
   );
 };
