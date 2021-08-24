@@ -9,8 +9,7 @@ import {
 import {
   bindActionCreators,
   connect,
-  MaterialIcon,
-  moment
+  MaterialIcon
 } from '../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
@@ -29,7 +28,11 @@ import {
   sfaCollectionLogLoadmoreProcess
 } from '../../state/actions';
 import { toLocalTime } from '../../helpers/TimeHelper';
-import { APPROVED, REJECTED, PENDING } from '../../constants/collectionConstants';
+import {
+  APPROVED,
+  REJECTED,
+  PENDING
+} from '../../constants/collectionConstants';
 
 function SfaCollectionLog(props) {
   const dispatch = useDispatch();
@@ -41,8 +44,8 @@ function SfaCollectionLog(props) {
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [limit, setLimit] = useState(20);
-  const [isShowToast, setIsShowToast] = useState(false)
-  const [refreshing, setRefreshing] = useState(false)
+  const [isShowToast, setIsShowToast] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   //USEREF
   const prevDataSfaDeleteCollectionRef = useRef(dataSfaDeleteCollection);
@@ -54,33 +57,31 @@ function SfaCollectionLog(props) {
    * =======================
    */
 
-   //USE EFFECT PREV DATA DELETE
+  //USE EFFECT PREV DATA DELETE
   useEffect(() => {
     prevDataSfaDeleteCollectionRef.current = dataSfaDeleteCollection;
   }, []);
   const prevDataSfaDeleteCollection = prevDataSfaDeleteCollectionRef.current;
 
-    //USE EFFECT PREV DATA LOG
-    useEffect(() => {
-      prevDataSfaGetCollectionLogRef.current = dataSfaGetCollectionLog;
-    }, []);
-    const prevDataSfaGetCollectionLog = prevDataSfaGetCollectionLogRef.current;
+  //USE EFFECT PREV DATA LOG
+  useEffect(() => {
+    prevDataSfaGetCollectionLogRef.current = dataSfaGetCollectionLog;
+  }, []);
+  const prevDataSfaGetCollectionLog = prevDataSfaGetCollectionLogRef.current;
 
   useEffect(() => {
     if (prevDataSfaDeleteCollection !== dataSfaDeleteCollection) {
       if (prevDataSfaGetCollectionLog !== dataSfaGetCollectionLog) {
-        setIsShowToast(true)
+        setIsShowToast(true);
         setTimeout(() => {
-          setIsShowToast(false)
+          setIsShowToast(false);
         }, 3000);
       }
     }
   }, [dataSfaDeleteCollection]);
 
-  
-
   useEffect(() => {
-  getCollectionLog()
+    getCollectionLog();
   }, []);
 
   const loadMore = () => {
@@ -101,79 +102,78 @@ function SfaCollectionLog(props) {
       }
     }
   };
- /** REFRESH LIST VIEW */
- const onHandleRefresh = () => {
-  getCollectionLog()
-};
-const getCollectionLog = () => {
-  const data = {
-    storeId: parseInt(selectedMerchant.storeId),
-    orderParcelId: dataSfaGetDetail.data.id,
-    limit: limit,
-    skip: 0
+  /** REFRESH LIST VIEW */
+  const onHandleRefresh = () => {
+    getCollectionLog();
   };
-  dispatch(sfaGetCollectionLogProcess(data));
-}
+  const getCollectionLog = () => {
+    const data = {
+      storeId: parseInt(selectedMerchant.storeId),
+      orderParcelId: dataSfaGetDetail.data.id,
+      limit: limit,
+      skip: 0
+    };
+    dispatch(sfaGetCollectionLogProcess(data));
+  };
   /**
    * *********************************
    * RENDER VIEW
    * *********************************
    */
 
-   const renderToast = () => {
+  const renderToast = () => {
     return isShowToast ? (
       <ToastType1 margin={10} content={'Transaksi Berhasil Dihapus'} />
     ) : (
       <View />
     );
-  }
+  };
 
   //**RENDER ITEM */
   const renderItem = ({ item, index }) => {
-    const local = toLocalTime(item.createdAt);
-    const date = moment(local).format('DD MMMM YYYY HH:mm');
+    const date = toLocalTime(item.createdAt, 'DD MMMM YYYY HH:mm');
+
     return (
       <View key={index} style={{ marginHorizontal: 16, marginVertical: 8 }}>
         <TouchableOpacity
-          style={[
-           styles.listContainer,
-            GlobalStyle.shadowForBox
-          ]}
+          style={[styles.listContainer, GlobalStyle.shadowForBox]}
           onPress={() =>
             NavigationService.navigate('SfaCollectionDetailView', {
               paymentCollectionId: item.id
             })
           }
         >
-          
-          <View
-            style={styles.statusContainer}
-          >
-            {item.status? 
-            <View>
-              <Text
-                style={{
-                  ...(item.status === APPROVED
-                    ? Fonts.type92
-                    : item.status === PENDING
-                    ? Fonts.type114p
-                    : Fonts.type115p),
-                  backgroundColor:
-                    item.status === APPROVED
-                      ? '#E1F7E8'
+          <View style={styles.statusContainer}>
+            {item.status ? (
+              <View>
+                <Text
+                  style={{
+                    ...(item.status === APPROVED
+                      ? Fonts.type92
                       : item.status === PENDING
-                      ? '#FFF0D1'
-                      : '#FAC0C3',
-                  paddingHorizontal: 10,
-                  paddingVertical: 6,
-                  borderRadius: 100
-                }}
-              >
-                {item.status === APPROVED? 'Disetujui': item.status === PENDING? 'Menunggu' : 'Ditolak' }
-              </Text>
-            </View>
-            
-        : <View style={{width: 16}} />}
+                      ? Fonts.type114p
+                      : Fonts.type115p),
+                    backgroundColor:
+                      item.status === APPROVED
+                        ? '#E1F7E8'
+                        : item.status === PENDING
+                        ? '#FFF0D1'
+                        : '#FAC0C3',
+                    paddingHorizontal: 10,
+                    paddingVertical: 6,
+                    borderRadius: 100
+                  }}
+                >
+                  {item.status === APPROVED
+                    ? 'Disetujui'
+                    : item.status === PENDING
+                    ? 'Menunggu'
+                    : 'Ditolak'}
+                </Text>
+              </View>
+            ) : (
+              <View style={{ width: 16 }} />
+            )}
             <View>
               <View style={{ alignSelf: 'center' }}>
                 <MaterialIcon
@@ -186,9 +186,7 @@ const getCollectionLog = () => {
             </View>
           </View>
           <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-          <View
-            style={styles.salesContainer}
-          >
+          <View style={styles.salesContainer}>
             <View>
               <Text
                 numberOfLines={1}
@@ -242,7 +240,7 @@ const getCollectionLog = () => {
               onEndReached={() => loadMore()}
               showsVerticalScrollIndicator
               refreshing={refreshing}
-              onRefresh={()=>onHandleRefresh()}
+              onRefresh={() => onHandleRefresh()}
             />
           ) : (
             <View style={{ marginTop: '20%' }}>
@@ -267,7 +265,7 @@ const getCollectionLog = () => {
         {renderToast()}
         {renderCollectionList()}
       </View>
-      );
+    );
   };
 
   /**
@@ -297,13 +295,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8
   },
-  statusContainer:{
+  statusContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 16,
     marginVertical: 16
   },
-  salesContainer:{
+  salesContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 16,

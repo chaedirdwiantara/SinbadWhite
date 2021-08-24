@@ -1,23 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
   Text,
-  SafeAreaView,
   TouchableOpacity,
-  Image,
   FlatList
 } from '../../library/reactPackage';
 import { LoadingLoadMore } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
-import { moment } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
 import SfaNoDataView from './SfaNoDataView';
 import { useSelector } from 'react-redux';
+import { toLocalTime } from '../../helpers/TimeHelper';
 
 function SfaInvoiceListView(props) {
-  const { loadingLoadMoreGetSfa, refreshGetCollection } = useSelector(state => state.sfa);
+  const { loadingLoadMoreGetSfa, refreshGetCollection } = useSelector(
+    state => state.sfa
+  );
   /**
    * =======================
    * RENDER FUNCTION
@@ -62,17 +62,15 @@ function SfaInvoiceListView(props) {
               />
             ) : (
               <View style={{ marginTop: '20%' }}>
-                {
-                  props.searchText !== '' ? (
-                    <SfaNoDataView/>
-                  ) : (
-                    <SfaNoDataView 
-                      topText='Belum ada tagihan'
-                      midText='Yuk belanja kebutuhanmu sekarang di Sinbad'
-                      bottomText=''
-                    />
-                  ) 
-                }
+                {props.searchText !== '' ? (
+                  <SfaNoDataView />
+                ) : (
+                  <SfaNoDataView
+                    topText="Belum ada tagihan"
+                    midText="Yuk belanja kebutuhanmu sekarang di Sinbad"
+                    bottomText=""
+                  />
+                )}
               </View>
             )}
           </View>
@@ -92,7 +90,7 @@ function SfaInvoiceListView(props) {
   };
 
   /** === RENDER ITEM (STATUS PAYMENT) === */
-  const renderItemStatusPayment = (status_payment) => {
+  const renderItemStatusPayment = status_payment => {
     let textStyle = Fonts.type67;
     let colorStyle = masterColor.fontBlack05;
     switch (status_payment) {
@@ -109,33 +107,33 @@ function SfaInvoiceListView(props) {
     }
     return (
       <View style={{ flexDirection: 'row' }}>
-        <View style={{ ...styles.view1Status, backgroundColor: colorStyle }} >
+        <View style={{ ...styles.view1Status, backgroundColor: colorStyle }}>
           <Text style={{ ...textStyle, textAlign: 'right' }}>
             {statusPayment(status_payment)}
           </Text>
         </View>
       </View>
     );
-  }
+  };
 
   const renderItem = ({ item, index }) => {
-    // const delivery = moment(new Date(item.deliveredDate)).format('Do MMM YYYY');
-    const dueDate = moment(new Date(item.dueDate)).format('Do MMM YYYY');
+    const dueDate = toLocalTime(item.dueDate, 'DD MMM YYYY');
+
     return (
-        <View style={styles.listContainer}>
-          <TouchableOpacity
-            onPress={() =>
-              NavigationService.navigate('SfaDetailView', {
-                orderParcelId: item.id
-              })
-            }
-          >
-            <View style={styles.view1}>
+      <View style={styles.listContainer}>
+        <TouchableOpacity
+          onPress={() =>
+            NavigationService.navigate('SfaDetailView', {
+              orderParcelId: item.id
+            })
+          }
+        >
+          <View style={styles.view1}>
             <View style={{ flex: 1 }}>
               <Text style={Fonts.type48}>{item.invoiceGroupName}</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              { renderItemStatusPayment(item.statusPayment) }
+              {renderItemStatusPayment(item.statusPayment)}
             </View>
           </View>
           <View style={GlobalStyle.lines} />
@@ -144,17 +142,13 @@ function SfaInvoiceListView(props) {
               <Text style={[Fonts.type17, { marginBottom: 8 }]}>
                 Nomor Pesanan
               </Text>
-              <Text style={Fonts.type17}>
-                Jatuh Tempo
-              </Text>
+              <Text style={Fonts.type17}>Jatuh Tempo</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
               <Text style={[Fonts.type17, { marginBottom: 8 }]}>
                 {item.orderCode}
               </Text>
-              <Text style={Fonts.type17}>
-                {dueDate}
-              </Text>
+              <Text style={Fonts.type17}>{dueDate}</Text>
             </View>
           </View>
           <View style={GlobalStyle.lines} />

@@ -67,7 +67,7 @@ const SfaCollectionDetailView = props => {
   };
 
   const formatDate = date => {
-    return date ? toLocalTime(date, 'DD MMMM YYYY') : '';
+    return date ? toLocalTime(date, 'DD MMM YYYY') : '-';
   };
 
   /**
