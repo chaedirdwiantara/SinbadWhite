@@ -199,7 +199,7 @@ const SfaBillingEditView = props => {
   }, [paymentAmount]);
 
   useEffect(() => {
-    if (!loadingSfaPostCollectionPayment) {
+    if (!loadingSfaPostCollectionPayment && paymentAmount !== 0) {
       setIsButtonDisabled(false);
     }
   }, [loadingSfaPostCollectionPayment]);
