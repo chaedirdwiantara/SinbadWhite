@@ -69,7 +69,7 @@ const SfaBillingDetailView = props => {
   };
 
   const formatDate = date => {
-    return date ? toLocalTime(date, 'DD MMMM YYYY') : '';
+    return date ? toLocalTime(date, 'DD/MM/YYYY') : '-';
   };
 
   //USE EFFECT PREV DATA ERROR
@@ -192,7 +192,7 @@ const SfaBillingDetailView = props => {
         })}
         {CardBody({
           title: 'Nomor Referensi',
-          value: orderRef,
+          value: orderRef || '-',
           styleCardView: styles.styleCardView
         })}
       </>
@@ -236,12 +236,12 @@ const SfaBillingDetailView = props => {
       <>
         {CardBody({
           title: 'Kode Pembayaran',
-          value: billingPaymentCode,
+          value: billingPaymentCode || '-',
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Kode Pembayaran Ref',
-          value: billingPaymentRef,
+          value: billingPaymentRef || '-',
           styleCardView: styles.styleCardView
         })}
       </>
@@ -329,7 +329,7 @@ const SfaBillingDetailView = props => {
           value: formatDate(createdAt),
           valuePosition: 'bottom',
           titleStyle: { ...Fonts.type37 },
-          valueStyle: { marginBottom: 16 },
+          valueStyle: { marginBottom: 16, marginTop: 2 },
           styleCardView: styles.styleCardView
         })}
         {CardBody({

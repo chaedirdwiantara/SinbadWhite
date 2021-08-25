@@ -67,7 +67,7 @@ const SfaCollectionDetailView = props => {
   };
 
   const formatDate = date => {
-    return date ? toLocalTime(date, 'DD MMMM YYYY') : '';
+    return date ? toLocalTime(date, 'DD MMM YYYY') : '-';
   };
 
   /**
@@ -110,12 +110,12 @@ const SfaCollectionDetailView = props => {
       <>
         {CardBody({
           title: 'Kode Penagihan',
-          value: collectionDetail.collectionCode,
+          value: collectionDetail?.collectionCode || '-',
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Kode Penagihan Ref',
-          value: collectionDetail.collectionRef,
+          value: collectionDetail?.collectionRef || '-',
           styleCardView: styles.styleCardView
         })}
       </>

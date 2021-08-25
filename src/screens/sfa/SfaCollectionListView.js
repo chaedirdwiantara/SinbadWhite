@@ -5,10 +5,9 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  TouchableOpacity,
-  ScrollView
+  TouchableOpacity
 } from '../../library/reactPackage';
-import { MaterialIcon, moment } from '../../library/thirdPartyPackage';
+import { MaterialIcon } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';

@@ -7,7 +7,7 @@ import {
   FlatList,
   TouchableOpacity
 } from '../../library/reactPackage';
-import { MaterialIcon, moment } from '../../library/thirdPartyPackage';
+import { MaterialIcon } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormatSpace } from '../../helpers';
 import {
@@ -26,6 +26,8 @@ import {
   sfaCollectionListLoadmoreProcess,
   sfaGetPaymentCollectionLogProcess
 } from '../../state/actions';
+import { toLocalTime } from '../../helpers/TimeHelper';
+
 const SfaBillingLogView = props => {
   const dispatch = useDispatch();
   const collectionMethodId =
@@ -218,7 +220,7 @@ const SfaBillingLogView = props => {
               {renderContentListGlobal('Nomor Pesanan', item.orderCode)}
               {renderContentListGlobal(
                 'Tanggal Pembayaran',
-                moment(new Date(item.createdAt)).format('DD MMM YYYY')
+                toLocalTime(item.createdAt, 'DD MMM YYYY')
               )}
               {renderContentListGlobal(
                 'Metode Penagihan',
