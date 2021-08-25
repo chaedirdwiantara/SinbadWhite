@@ -273,8 +273,8 @@ class DashboardView extends Component {
   getNowDetailKpi = () => {
     this.getKpiData({
       period: 'nowDaily',
-      startDate: getStartDateMinHour(),
-      endDate: moment().format()
+      startDate: moment().format('YYYY-MM-DD'),
+      endDate: moment().format('YYYY-MM-DD')
     });
   };
 
@@ -285,8 +285,8 @@ class DashboardView extends Component {
       period: 'nowMonthly',
       startDate: moment(
         new Date(date.getFullYear(), date.getMonth(), 1)
-      ).format(),
-      endDate: moment().format()
+      ).format('YYYY-MM-DD'),
+      endDate: moment().format('YYYY-MM-DD')
     });
   };
 
@@ -296,10 +296,10 @@ class DashboardView extends Component {
       period: 'daily',
       startDate: moment(getStartDateNow())
         .subtract(3, 'day')
-        .format(),
+        .format('YYYY-MM-DD'),
       endDate: moment()
         .add(3, 'day')
-        .format()
+        .format('YYYY-MM-DD')
     });
   };
 
@@ -310,10 +310,10 @@ class DashboardView extends Component {
       period: 'monthly',
       startDate: moment(new Date(date.getFullYear(), date.getMonth(), 1))
         .subtract(3, 'month')
-        .format(),
+        .format('YYYY-MM-DD'),
       endDate: moment()
         .add(3, 'month')
-        .format()
+        .format('YYYY-MM-DD')
     });
   };
 
@@ -801,8 +801,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(DashboardView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 30062021
+ * updatedDate: 25082021
  * updatedFunction:
- * -> update dashboard title (Toko Order => Toko Memesan)
+ * -> update date format.
  *
  */
