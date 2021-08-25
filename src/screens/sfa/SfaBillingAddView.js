@@ -28,6 +28,7 @@ const SfaBillingAddView = props => {
   const [paymentAmount, setPaymentAmount] = useState(0);
   const [isStampChecked, setIsStampChecked] = useState(false);
   const [totalPaymentAmount, setTotalPaymentAmount] = useState(0);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const stampAmount = 10000;
 
   // SELECTOR
@@ -88,7 +89,9 @@ const SfaBillingAddView = props => {
       setTotalPaymentAmount(totalPaymentAmount - stampAmount);
     }
   };
+
   const submit = () => {
+    setIsButtonDisabled(true);
     const data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
@@ -162,6 +165,20 @@ const SfaBillingAddView = props => {
     setButtonTitle(null);
     setModalBottomError(true);
   };
+
+  useEffect(() => {
+    if (paymentAmount !== 0) {
+      setIsButtonDisabled(false);
+    } else {
+      setIsButtonDisabled(true);
+    }
+  }, [paymentAmount]);
+
+  useEffect(() => {
+    if (!loadingSfaPostCollectionPayment) {
+      setIsButtonDisabled(false);
+    }
+  }, [loadingSfaPostCollectionPayment]);
 
   /**
    * *********************************
@@ -502,7 +519,7 @@ const SfaBillingAddView = props => {
       <>
         <ButtonSingle
           loading={loadingSfaPostCollectionPayment}
-          disabled={loadingSfaPostCollectionPayment}
+          disabled={isButtonDisabled}
           title={'Simpan'}
           borderRadius={4}
           onPress={() => submit()}
