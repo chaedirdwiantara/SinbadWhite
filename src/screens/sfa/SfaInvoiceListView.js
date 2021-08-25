@@ -106,13 +106,11 @@ function SfaInvoiceListView(props) {
         break;
     }
     return (
-      <View style={{ flexDirection: 'row' }}>
         <View style={{ ...styles.view1Status, backgroundColor: colorStyle }}>
           <Text style={{ ...textStyle, textAlign: 'right' }}>
             {statusPayment(status_payment)}
           </Text>
         </View>
-      </View>
     );
   };
 
@@ -132,7 +130,7 @@ function SfaInvoiceListView(props) {
             <View style={{ flex: 1 }}>
               <Text style={Fonts.type48}>{item.invoiceGroupName}</Text>
             </View>
-            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+            <View style={{ alignItems: 'flex-end' }}>
               {renderItemStatusPayment(item.statusPayment)}
             </View>
           </View>
@@ -215,8 +213,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 4,
-    flexDirection: 'row'
+    borderRadius: 4
   },
   view2: {
     paddingVertical: 12,
