@@ -7,10 +7,7 @@ import {
   Text,
   TouchableOpacity
 } from '../../library/reactPackage';
-import {
-  MaterialIcon,
-  MaterialCommunityIcons
-} from '../../library/thirdPartyPackage';
+import { MaterialCommunityIcons } from '../../library/thirdPartyPackage';
 import { TextInputMask } from 'react-native-masked-text';
 import { ButtonSingle } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
@@ -25,11 +22,10 @@ import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPaymen
 const SfaBillingAddView = props => {
   const dispatch = useDispatch();
   const collectionInfo = props.navigation.state.params;
-  const [paymentAmount, setPaymentAmount] = useState(0);
+  const [billingAmount, setBillingAmount] = useState(0);
   const [isStampChecked, setIsStampChecked] = useState(false);
-  const [totalPaymentAmount, setTotalPaymentAmount] = useState(0);
+  const [totalBillingAmount, setTotalBillingAmount] = useState(0);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const stampAmount = 10000;
 
   // SELECTOR
   const {
@@ -65,29 +61,83 @@ const SfaBillingAddView = props => {
   const isNumber = n => (n !== null && n !== undefined ? true : false);
 
   const onChangePaymentAmount = text => {
-    let paymentAmountInt = parseInt(text.replace(/[Rp.]+/g, ''), 10);
+    const { totalBalance, stampAmount } = collectionInfo;
+    const { remainingBilling } = dataSfaGetDetail?.data;
 
+    let billAmount = parseInt(text.replace(/[Rp.]+/g, ''), 10);
+    let totalBillAmount = 0;
+
+    if (billAmount > remainingBilling) {
+      if (remainingBilling < totalBalance) {
+        billAmount = remainingBilling;
+      } else {
+        billAmount = totalBalance;
+      }
+    } else if (billAmount > totalBalance) {
+      if (remainingBilling < totalBalance) {
+        billAmount = remainingBilling;
+      } else {
+        billAmount = totalBalance;
+      }
+    }
+
+    // validation paymentCollectionTypeId GIRO or CHECK
     if (
       (collectionInfo.paymentCollectionTypeId === GIRO ||
         collectionInfo.paymentCollectionTypeId === CHECK) &&
       collectionInfo.isStampUsed === true &&
       isStampChecked === true
     ) {
-      setTotalPaymentAmount(paymentAmountInt + stampAmount);
+      // validation use stamp or not
+      if (isStampChecked) {
+        const totalBillAmountWithStamp = billAmount + stampAmount;
+
+        // validation billAmount > Remaining Billing, validation billAmount > Total Balance
+        if (totalBillAmountWithStamp > remainingBilling) {
+          billAmount = remainingBilling - stampAmount;
+          totalBillAmount = remainingBilling;
+        } else if (totalBillAmountWithStamp > totalBalance) {
+          billAmount = totalBalance - stampAmount;
+          totalBillAmount = totalBalance;
+        } else {
+          totalBillAmount = totalBillAmountWithStamp;
+        }
+      } else {
+        totalBillAmount = billAmount + collectionInfo.stampAmount;
+      }
     } else {
-      setTotalPaymentAmount(paymentAmountInt);
+      totalBillAmount = billAmount;
     }
 
-    setPaymentAmount(paymentAmountInt);
+    setBillingAmount(billAmount);
+    setTotalBillingAmount(totalBillAmount);
   };
 
   const onCheckStamp = () => {
     setIsStampChecked(!isStampChecked);
+
+    const { remainingBilling } = dataSfaGetDetail?.data;
+    const { stampAmount, totalBalance } = collectionInfo;
+    const totalBillAmountWithStamp = billingAmount + stampAmount;
+    const substraction = totalBillAmountWithStamp - remainingBilling;
+
+    let totalBillAmount = 0;
+
     if (isStampChecked === false) {
-      setTotalPaymentAmount(totalPaymentAmount + stampAmount);
+      if (totalBillAmountWithStamp > remainingBilling) {
+        totalBillAmount = billingAmount;
+        setBillingAmount(billingAmount - substraction);
+      } else if (totalBillAmountWithStamp > totalBalance) {
+        totalBillAmount = billingAmount;
+        setBillingAmount(billingAmount - substraction);
+      } else {
+        totalBillAmount = totalBillAmountWithStamp;
+      }
     } else if (isStampChecked === true) {
-      setTotalPaymentAmount(totalPaymentAmount - stampAmount);
+      totalBillAmount = billingAmount;
     }
+
+    setTotalBillingAmount(totalBillAmount);
   };
 
   const submit = () => {
@@ -98,7 +148,7 @@ const SfaBillingAddView = props => {
       orderParcelId: dataSfaGetDetail.data.id,
       storeId: parseInt(selectedMerchant.storeId, 10),
       paymentCollectionMethodId: collectionInfo.id,
-      amount: totalPaymentAmount,
+      amount: totalBillingAmount,
       isUsedStamp: collectionInfo.isStampUsed
     };
     dispatch(sfaPostCollectionPaymentProcess(data));
@@ -167,15 +217,15 @@ const SfaBillingAddView = props => {
   };
 
   useEffect(() => {
-    if (paymentAmount !== 0) {
+    if (billingAmount) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);
     }
-  }, [paymentAmount]);
+  }, [billingAmount]);
 
   useEffect(() => {
-    if (!loadingSfaPostCollectionPayment && paymentAmount !== 0) {
+    if (!loadingSfaPostCollectionPayment && !billingAmount) {
       setIsButtonDisabled(false);
     }
   }, [loadingSfaPostCollectionPayment]);
@@ -314,7 +364,7 @@ const SfaBillingAddView = props => {
         {collectionInfo.paymentCollectionTypeId !== CASH
           ? CardBody({
               title: 'Nomor Referensi',
-              value: collectionInfo?.collectionCode,
+              value: collectionInfo?.collectionCode || '-',
               styleCardView: styles.styleCardView
             })
           : null}
@@ -407,14 +457,9 @@ const SfaBillingAddView = props => {
               }}
               disabled={!isStampChecked}
             >
-              <Text style={[Fonts.type17]}>Rp 10.000</Text>
-              <View>
-                <MaterialIcon
-                  name="chevron-right"
-                  color={masterColor.fontBlack40}
-                  size={24}
-                />
-              </View>
+              <Text style={[Fonts.type17]}>
+                {MoneyFormatSpace(collectionInfo.stampAmount)}
+              </Text>
             </TouchableOpacity>
             <View style={[GlobalStyle.lines, { marginTop: 8 }]} />
           </View>
@@ -472,7 +517,7 @@ const SfaBillingAddView = props => {
                 unit: 'Rp ',
                 suffixUnit: ''
               }}
-              value={paymentAmount}
+              value={billingAmount}
               onChangeText={text => onChangePaymentAmount(text)}
               style={[
                 Fonts.type17,
@@ -501,7 +546,7 @@ const SfaBillingAddView = props => {
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
               <Text style={Fonts.type116p}>
-                {MoneyFormatSpace(totalPaymentAmount)}
+                {MoneyFormatSpace(totalBillingAmount)}
               </Text>
             </View>
           </View>
