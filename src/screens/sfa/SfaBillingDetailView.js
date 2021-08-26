@@ -18,7 +18,11 @@ import {
   PENDING,
   CHECK,
   GIRO,
-  TRANSFER
+  TRANSFER,
+  USED,
+  USED_BY_OTHERS,
+  NOT_AVAILABLE,
+  NOT_USED
 } from '../../constants/collectionConstants';
 import { CardHeaderBadge, CardBody, CardHeader } from './components/CardView';
 import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
@@ -119,6 +123,21 @@ const SfaBillingDetailView = props => {
     NavigationService.navigate('SfaBillingLogView');
   };
 
+  /** FUNCTION CHECK MATERAI STATUS */
+  const checkMateraiStatus = (status, amount) => {
+    switch (status) {
+      case NOT_USED:
+        return 'Pembayaran tidak menggunakan materai';
+      case USED:
+        return MoneyFormatSpace(amount);
+      case NOT_AVAILABLE:
+        return 'Penagihan tidak menggunakan materai';
+      case USED_BY_OTHERS:
+        return 'Materai sudah digunakan di pembayaran lainnya';
+      default:
+        break;
+    }
+  };
   /**
    * *********************************
    * RENDER VIEW
@@ -254,7 +273,9 @@ const SfaBillingDetailView = props => {
    * =====================================
    */
   const renderBillingInfoHeaderBadge = () => {
-    const { approvalStatus } = dataSfaGetBillingDetail.data;
+    const {
+      approvalStatus
+    } = dataSfaGetBillingDetail.data.paymentCollectionMethod;
 
     return approvalStatus === APPROVED
       ? CardHeaderBadge({
@@ -307,13 +328,10 @@ const SfaBillingDetailView = props => {
    * ========================
    */
   const renderBillingInfoBody = () => {
-    const {
-      createdAt,
-      amount,
-      stampAmount,
-      totalAmount,
-      paymentCollectionType
-    } = dataSfaGetBillingDetail.data;
+    const { createdAt } = dataSfaGetBillingDetail.data;
+    const { paidAmount, paidByCollectionMethod } = dataSfaGetBillingDetail.data;
+    const { stampAmount, stampStatus } = dataSfaGetBillingDetail.data;
+    const { paymentCollectionType } = dataSfaGetBillingDetail.data;
 
     return (
       <>
@@ -337,7 +355,7 @@ const SfaBillingDetailView = props => {
             paymentCollectionType.id === TRANSFER
               ? '*Jumlah Pembayaran'
               : 'Jumlah Pembayaran',
-          value: MoneyFormatSpace(amount),
+          value: MoneyFormatSpace(paidByCollectionMethod),
           valuePosition: 'bottom',
           titleStyle: { ...Fonts.type37 },
           valueStyle: { marginBottom: 16 },
@@ -346,10 +364,9 @@ const SfaBillingDetailView = props => {
         {paymentCollectionType.id === CHECK || paymentCollectionType.id === GIRO
           ? CardBody({
               title: 'Materai',
-              value:
-                stampAmount !== undefined && stampAmount !== null
-                  ? MoneyFormatSpace(stampAmount)
-                  : '-',
+              value: stampStatus
+                ? checkMateraiStatus(stampStatus, stampAmount)
+                : '-',
               valuePosition: 'bottom',
               titleStyle: { ...Fonts.type37 },
               valueStyle: { marginBottom: 16 },
@@ -359,7 +376,7 @@ const SfaBillingDetailView = props => {
         {paymentCollectionType.id !== TRANSFER
           ? CardBody({
               title: 'Total Pembayaran',
-              value: MoneyFormatSpace(totalAmount),
+              value: MoneyFormatSpace(paidAmount),
               valuePosition: 'bottom',
               titleStyle: { ...Fonts.type37 },
               valueStyle: { marginBottom: 16 },

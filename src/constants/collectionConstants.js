@@ -23,3 +23,16 @@ export const RETUR = 6;
 export const APPROVED = 'approved';
 export const PENDING = 'pending';
 export const REJECTED = 'rejected';
+
+/**
+ * STATUS STAMP SFA
+ * 1. NOT_USED
+ * 2. USED
+ * 3. USED_BY_OTHERS
+ * 4. NOT_AVAILABLE
+ */
+
+export const NOT_USED = 'NOT_USED';
+export const USED = 'USED';
+export const USED_BY_OTHERS = 'USED_BY_OTHERS';
+export const NOT_AVAILABLE = 'NOT_AVAILABLE';
