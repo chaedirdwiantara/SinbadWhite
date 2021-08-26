@@ -10,7 +10,12 @@ import {
 import { MaterialCommunityIcons } from '../../library/thirdPartyPackage';
 import { TextInputMask } from 'react-native-masked-text';
 import { ButtonSingle } from '../../library/component';
-import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
+import {
+  Fonts,
+  GlobalStyle,
+  MoneyFormatSpace,
+  StringToNumber
+} from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardBody, CardHeader } from './components/CardView';
@@ -64,7 +69,7 @@ const SfaBillingAddView = props => {
     const { totalBalance, stampAmount } = collectionInfo;
     const { remainingBilling } = dataSfaGetDetail?.data;
 
-    let billAmount = parseInt(text.replace(/[Rp.]+/g, ''), 10);
+    let billAmount = StringToNumber(text);
     let totalBillAmount = 0;
 
     if (billAmount > remainingBilling) {
@@ -217,18 +222,12 @@ const SfaBillingAddView = props => {
   };
 
   useEffect(() => {
-    if (billingAmount) {
+    if (!isNaN(billingAmount) && billingAmount > 0) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);
     }
   }, [billingAmount]);
-
-  useEffect(() => {
-    if (!loadingSfaPostCollectionPayment && !billingAmount) {
-      setIsButtonDisabled(false);
-    }
-  }, [loadingSfaPostCollectionPayment]);
 
   /**
    * *********************************
