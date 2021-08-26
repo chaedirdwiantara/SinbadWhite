@@ -98,7 +98,7 @@ const SfaBillingLogView = props => {
     });
     dispatch(sfaGetCollectionDetailProcess(paymentCollectionMethodId));
   };
-  console.log(isModalDeleteConfirmationOpen);
+  
   //** FUNCTION GET PAYMENT LOG */
   const getPaymentCollectionLog = (loading, page) => {
     const data = {
