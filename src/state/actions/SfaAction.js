@@ -492,23 +492,24 @@ export function sfaEditCollectionFailed(data) {
  * ===========================
  */
 /** === SFA DELETE COLLECTION PROCESS === */
-export function sfaDeleteCollectionProcess(data) {
-  return { type: types.SFA_DELETE_COLLECTION_PROCESS, payload: data };
+export function sfaDeletePaymentBillingProcess(data) {
+  console.log(data, 'data');
+  return { type: types.SFA_DELETE_PAYMENT_BILLING_PROCESS, payload: data };
 }
 
 /** === SFA DELETE COLLECTION SUCCESS === */
-export function sfaDeleteCollectionSuccess(data) {
+export function sfaDeletePaymentBillingSuccess(data) {
   if (data.result === 'Ok') {
     return {
-      type: types.SFA_DELETE_COLLECTION_SUCCESS,
+      type: types.SFA_DELETE_PAYMENT_BILLING_SUCCESS,
       payload: data
     };
   }
-  return { type: types.SFA_DELETE_COLLECTION_FAILED, payload: data };
+  return { type: types.SFA_DELETE_PAYMENT_BILLING_FAILED, payload: data };
 }
 /** === SFA DELETE COLLECTION FAILED === */
-export function sfaDeleteCollectionFailed(data) {
-  return { type: types.SFA_DELETE_COLLECTION_FAILED, payload: data };
+export function sfaDeletePaymentBillingFailed(data) {
+  return { type: types.SFA_DELETE_PAYMENT_BILLING_FAILED, payload: data };
 }
 
 /**

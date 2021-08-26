@@ -155,10 +155,11 @@ function editCollection(data) {
 }
 
 /** DELETE COLLECTION */
-function deleteCollection(data) {
+function deletePaymentBilling(data) {
   return ApiRest({
-    path: `collection/v1/payment/${data}`,
-    method: 'DELETE'
+    path: `collection/v1/payment/${data.billingId}`,
+    method: 'DELETE',
+    params: { userId: data.userId }
   });
 }
 
@@ -207,7 +208,7 @@ export const SfaMethod = {
   getCollectionLog,
   getCollectionDetail,
   editCollection,
-  deleteCollection,
+  deletePaymentBilling,
   getBillingDetail,
   getPaymentCollectionLog,
   editCollectionMethod

@@ -191,7 +191,7 @@ const SfaCollectionDetailView = props => {
       amount,
       stamp,
       totalAmount,
-      balance,
+      totalBalance,
       image
     } = dataSfaGetCollectionDetail.data;
 
@@ -281,7 +281,7 @@ const SfaCollectionDetailView = props => {
         })}
         {CardBody({
           title: 'Sisa Penagihan',
-          value: isNumber(balance) ? MoneyFormatSpace(balance) : '',
+          value: isNumber(totalBalance) ? MoneyFormatSpace(totalBalance) : '',
           styleCardView: styles.styleCardView
         })}
       </>
