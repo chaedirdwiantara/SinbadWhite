@@ -1,5 +1,4 @@
 import ApiRest from '../apiRest';
-import { GlobalMethod } from './GlobalMethod';
 
 /** GET ORDER STATUS */
 function getCollectionStatus(data) {
@@ -25,7 +24,7 @@ function getCollectionList(data) {
     }&storeId=${data.storeId}&supplierId=${data.supplierId}&keyword=${
       data.keyword
     }&statusPayment=${data.statusPayment}`,
-    method: `GET`
+    method: 'GET'
   });
 }
 
@@ -37,7 +36,7 @@ function getReferenceList(data) {
     }&userId=${data.userId}&paymentCollectionTypeId=${
       data.paymentCollectionTypeId
     }&skip=0&limit=${data.limit}`,
-    method: `GET`
+    method: 'GET'
   });
 }
 
@@ -47,14 +46,14 @@ function getPaymentMethod(data) {
     path: `collection/v1/available-payment-methods?supplierId=${
       data.supplierId
     }&storeId=${data.storeId}`,
-    method: `GET`
+    method: 'GET'
   });
 }
 
 /** GET ALL BANK ACCOUNT */
 function getAllBank() {
   return ApiRest({
-    path: `collection/v1/banks`,
+    path: 'collection/v1/banks',
     method: 'GET'
   });
 }
@@ -65,7 +64,7 @@ function getBankAccount(data) {
     path: `collection/v1/bank-accounts?orderParcelId=${
       data.orderParcelId
     }&skip=${data.skip}&limit=${data.limit}`,
-    method: `GET`
+    method: 'GET'
   });
 }
 
@@ -100,8 +99,9 @@ function getStamp(data) {
 function getStatusOrder(data) {
   return ApiRest({
     path: `collection/v1/count-order-parcels?storeId=${parseInt(
-      data.storeId
-    )}&supplierId=${parseInt(data.supplierId)}`,
+      data.storeId,
+      10
+    )}&supplierId=${parseInt(data.supplierId, 10)}`,
     method: 'GET'
   });
 }
@@ -191,6 +191,15 @@ function editCollectionMethod(data) {
   });
 }
 
+/** DELETE COLLECTION METHOD */
+function deleteCollectionMethod(data) {
+  return ApiRest({
+    path: `collection/v1/payment-method/${data.collectionId}`,
+    method: 'DELETE',
+    params: { userId: data.userId }
+  });
+}
+
 export const SfaMethod = {
   getCollectionStatus,
   getSfaDetail,
@@ -211,5 +220,6 @@ export const SfaMethod = {
   deletePaymentBilling,
   getBillingDetail,
   getPaymentCollectionLog,
-  editCollectionMethod
+  editCollectionMethod,
+  deleteCollectionMethod
 };
