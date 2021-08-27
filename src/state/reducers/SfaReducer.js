@@ -29,6 +29,7 @@ const INITIAL_STATE = {
   loadingSfaGetBillingDetail: false,
   loadingSfaGetPaymentCollectionLog: false,
   loadingSfaPatchCollectionMethod: false,
+  loadingSfaDeleteCollectionMethod: true,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -54,6 +55,7 @@ const INITIAL_STATE = {
   dataSfaPostBillingDetail: null,
   dataSfaGetPaymentCollectionLog: null,
   dataSfaPatchCollectionMethod: null,
+  dataSfaDeleteCollectionMethod: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -78,7 +80,8 @@ const INITIAL_STATE = {
   errorSfaGetBillingDetail: null,
   errorSfaPostBillingDetail: null,
   errorSfaGetPaymentCollectionLog: null,
-  errorSfaPatchCollectionMethod: null
+  errorSfaPatchCollectionMethod: null,
+  errorSfaDeleteCollectionMethod: null
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -738,6 +741,34 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       loadingSfaPatchCollectionMethod: false,
       errorSfaSfaPatchCollectionMethod: action.payload
+    };
+  },
+
+  /**
+   * ==========================
+   * DELETE COLLECTION METHOD
+   * ==========================
+   */
+  [types.SFA_DELETE_COLLECTION_METHOD_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaDeleteCollectionMethod: true,
+      dataSfaDeleteCollectionMethod: null,
+      errorSfaDeleteCollectionMethod: null
+    };
+  },
+  [types.SFA_DELETE_COLLECTION_METHOD_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaDeleteCollectionMethod: false,
+      dataSfaDeleteCollectionMethod: action.payload
+    };
+  },
+  [types.SFA_DELETE_COLLECTION_METHOD_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaDeleteCollectionMethod: false,
+      errorSfaDeleteCollectionMethod: action.payload
     };
   }
 });

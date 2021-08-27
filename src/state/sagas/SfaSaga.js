@@ -1,4 +1,4 @@
-import { put, call, takeEvery, take } from 'redux-saga/effects';
+import { put, call, takeEvery } from 'redux-saga/effects';
 import { SfaMethod } from '../../services/methods';
 import * as ActionCreators from '../actions';
 import * as types from '../types';
@@ -278,6 +278,18 @@ function* editCollectionMethod(actions) {
   }
 }
 
+/** EDIT COLLECTION METHOD */
+function* deleteCollectionMethod(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.deleteCollectionMethod(actions.payload);
+    });
+    yield put(ActionCreators.sfaDeleteCollectionMethodSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaDeleteCollectionMethodFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* SfaSaga() {
   yield takeEvery(
@@ -298,32 +310,33 @@ function* SfaSaga() {
   yield takeEvery(types.SFA_GET_STAMP_PROCESS, getStampList);
   yield takeEvery(types.SFA_GET_STATUS_ORDER_PROCESS, getStatusOrder);
   yield takeEvery(types.SFA_GET_COLLECTION_IMAGE_PROCESS, getCollectionImage);
-  yield takeEvery(types.SFA_GET_PRINCIPAL_PROCESS, getPrincipal),
-    yield takeEvery(types.SFA_PRINCIPAL_LOADMORE_PROCESS, loadmorePrincipal),
-    yield takeEvery(
-      types.SFA_BANK_ACCOUNT_LOADMORE_PROCESS,
-      loadmoreBankAccount
-    ),
-    yield takeEvery(types.SFA_GET_COLLECTION_LOG_PROCESS, getCollectionLog),
-    yield takeEvery(
-      types.SFA_COLLECTION_LOG_LOADMORE_PROCESS,
-      loadmoreCollectionLog
-    ),
-    yield takeEvery(
-      types.SFA_GET_COLLECTION_DETAIL_PROCESS,
-      getCollectionDetail
-    ),
-    yield takeEvery(types.SFA_EDIT_COLLECTION_PROCESS, editCollection),
-    yield takeEvery(types.SFA_DELETE_PAYMENT_BILLING_PROCESS, deletePaymentBilling),
-    yield takeEvery(types.SFA_GET_BILLING_DETAIL_PROCESS, getBillingDetail),
-    yield takeEvery(
-      types.SFA_GET_PAYMENT_COLLECTION_LOG_PROCESS,
-      getPaymentCollectionLog
-    ),
-    yield takeEvery(
-      types.SFA_EDIT_COLLECTION_METHOD_PROCESS,
-      editCollectionMethod
-    );
+  yield takeEvery(types.SFA_GET_PRINCIPAL_PROCESS, getPrincipal);
+  yield takeEvery(types.SFA_PRINCIPAL_LOADMORE_PROCESS, loadmorePrincipal);
+  yield takeEvery(types.SFA_BANK_ACCOUNT_LOADMORE_PROCESS, loadmoreBankAccount);
+  yield takeEvery(types.SFA_GET_COLLECTION_LOG_PROCESS, getCollectionLog);
+  yield takeEvery(
+    types.SFA_COLLECTION_LOG_LOADMORE_PROCESS,
+    loadmoreCollectionLog
+  );
+  yield takeEvery(types.SFA_GET_COLLECTION_DETAIL_PROCESS, getCollectionDetail);
+  yield takeEvery(types.SFA_EDIT_COLLECTION_PROCESS, editCollection);
+  yield takeEvery(
+    types.SFA_DELETE_PAYMENT_BILLING_PROCESS,
+    deletePaymentBilling
+  );
+  yield takeEvery(types.SFA_GET_BILLING_DETAIL_PROCESS, getBillingDetail);
+  yield takeEvery(
+    types.SFA_GET_PAYMENT_COLLECTION_LOG_PROCESS,
+    getPaymentCollectionLog
+  );
+  yield takeEvery(
+    types.SFA_EDIT_COLLECTION_METHOD_PROCESS,
+    editCollectionMethod
+  );
+  yield takeEvery(
+    types.SFA_DELETE_COLLECTION_METHOD_PROCESS,
+    deleteCollectionMethod
+  );
 }
 
 export default SfaSaga;
