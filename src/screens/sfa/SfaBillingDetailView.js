@@ -326,10 +326,14 @@ const SfaBillingDetailView = props => {
    * ========================
    */
   const renderBillingInfoBody = () => {
-    const { createdAt } = dataSfaGetBillingDetail.data;
-    const { paidAmount, paidByCollectionMethod } = dataSfaGetBillingDetail.data;
-    const { stampAmount, stampStatus } = dataSfaGetBillingDetail.data;
-    const { paymentCollectionType } = dataSfaGetBillingDetail.data;
+    const {
+      createdAt,
+      paidAmount,
+      paidByCollectionMethod,
+      stampAmount,
+      stampStatus,
+      paymentCollectionType
+    } = dataSfaGetBillingDetail?.data;
 
     return (
       <>
