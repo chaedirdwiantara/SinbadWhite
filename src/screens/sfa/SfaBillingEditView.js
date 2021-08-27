@@ -30,7 +30,8 @@ import {
 import {
   sfaPostCollectionPaymentProcess,
   sfaGetBillingDetailProcess,
-  sfaGetDetailProcess
+  sfaGetDetailProcess,
+  sfaEditBillingProcess
 } from '../../state/actions';
 import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 
@@ -48,18 +49,27 @@ const SfaBillingEditView = props => {
   } = useSelector(state => state.sfa);
   const collectionInfo = props.navigation.state.params;
   const stampNominal = dataSfaGetBillingDetail?.data.stampAmount;
-  const [paymentAmount, setPaymentAmount] = useState(collectionInfo.amount);
-  const [isStampChecked, setIsStampChecked] = useState(false);
+  const amount = collectionInfo.amount;
+  const totalAmount = stampNominal + amount;
+  const [paymentAmount, setPaymentAmount] = useState(
+    dataSfaGetBillingDetail?.data.paidByCollectionMethod
+  );
+  const [isStampChecked, setIsStampChecked] = useState(
+    dataSfaGetBillingDetail?.data.stampStatus === USED ? true : false
+  );
   const [totalPaymentAmount, setTotalPaymentAmount] = useState(
-    stampNominal || paymentAmount ? stampNominal + paymentAmount : 5
+    totalAmount ? totalAmount : 0
   );
   const [stampAmount, setStampAmount] = useState(
     stampNominal ? stampNominal : 0
   );
+  const [collectionBalance, setCollectionBalance] = useState(
+    dataSfaGetBillingDetail?.data.paymentCollectionMethod.totalBalance +
+      dataSfaGetBillingDetail?.data.paidAmount
+  );
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
-
   //USEREF ERROR
   const prevErrorSfaPostCollectionPaymentRef = useRef(
     errorSfaPostCollectionPayment
@@ -78,27 +88,56 @@ const SfaBillingEditView = props => {
    * FUNCTION
    * *********************************
    */
-
   const getBillingDetail = () => {
     dispatch(sfaGetBillingDetailProcess(collectionInfo.id));
   };
+  // function to make sure collection !> balance || colection !>outstanding
+  useEffect(() => {
+    const outstanding = dataSfaGetBillingDetail?.data.outstandingAmount;
+    if (parseInt(paymentAmount, 10) > parseInt(outstanding, 10)) {
+      if (outstanding < collectionBalance) {
+        setPaymentAmount(parseInt(outstanding, 10));
+        setTotalPaymentAmount(parseInt(outstanding, 10) + stampAmount);
+      } else {
+        setPaymentAmount(parseInt(collectionBalance, 10));
+        setTotalPaymentAmount(parseInt(collectionBalance, 10) + stampAmount);
+      }
+    } else if (parseInt(paymentAmount, 10) > parseInt(collectionBalance, 10)) {
+      if (outstanding < collectionBalance) {
+        setPaymentAmount(parseInt(outstanding, 10));
+        setTotalPaymentAmount(parseInt(outstanding, 10) + stampAmount);
+      } else {
+        setPaymentAmount(parseInt(collectionBalance, 10));
+        setTotalPaymentAmount(parseInt(collectionBalance, 10) + stampAmount);
+      }
+    } else {
+      setPaymentAmount(parseInt(paymentAmount, 10));
+      setTotalPaymentAmount(parseInt(paymentAmount, 10) + stampAmount);
+    }
+  }, [paymentAmount, collectionBalance]);
 
   const isNumber = n => (n !== null && n !== undefined ? true : false);
   const onChangePaymentAmount = text => {
-    let paymentAmountInt = parseInt(text.replace(/[Rp.]+/g, ''), 10);
-
-    if (
-      dataSfaGetBillingDetail.data.paymentCollectionType.id === GIRO ||
-      dataSfaGetBillingDetail.data.paymentCollectionType.id === CHECK
-      //   &&
-      // collectionInfo.isStampUsed === true &&
-      // isStampChecked === true
+    const outstanding = dataSfaGetBillingDetail?.data.outstandingAmount;
+    if (parseInt(text.replace(/[Rp.]+/g, ''), 10) > parseInt(outstanding, 10)) {
+      // setIsChangeBillingValue(true);
+      if (outstanding + paymentAmount < collectionBalance) {
+        setPaymentAmount(parseInt(outstanding, 10));
+      } else {
+        setPaymentAmount(parseInt(collectionBalance, 10));
+      }
+    } else if (
+      parseInt(text.replace(/[Rp.]+/g, ''), 10) >
+      parseInt(collectionBalance, 10)
     ) {
-      setTotalPaymentAmount(paymentAmountInt + stampAmount);
+      if (outstanding < collectionBalance) {
+        setPaymentAmount(parseInt(outstanding, 10));
+      } else {
+        setPaymentAmount(parseInt(collectionBalance, 10));
+      }
     } else {
-      setTotalPaymentAmount(paymentAmountInt);
+      setPaymentAmount(parseInt(text.replace(/[Rp.]+/g, ''), 10));
     }
-    setPaymentAmount(paymentAmountInt);
   };
 
   const onCheckStamp = () => {
@@ -113,21 +152,16 @@ const SfaBillingEditView = props => {
   const submit = () => {
     setIsButtonDisabled(true);
     const data = {
-      supplierId: parseInt(userSuppliers[0].supplierId, 10),
+      paymentCollectionId: parseInt(collectionInfo.id, 10),
+      paymentCollectionTypeId: parseInt(
+        dataSfaGetBillingDetail.data.paymentCollectionType.id,
+        10
+      ),
       userId: parseInt(userSuppliers[0].userId, 10),
-      orderParcelId: dataSfaGetDetail.data.id,
-      storeId: parseInt(selectedMerchant.storeId, 10),
-      paymentCollectionMethodId: collectionInfo.paymentCollectionMethodId,
-      amount: totalPaymentAmount,
-      isUsedStamp: true
+      paymentAmount: parseInt(paymentAmount, 10),
+      isUsedStamp: isStampChecked
     };
-    dispatch(sfaPostCollectionPaymentProcess(data));
-
-    if (!loadingSfaPostCollectionPayment && dataSfaPostCollectionPayment?.id) {
-      NavigationService.navigate('SfaDetailView', {
-        orderParcelId: dataSfaGetDetail.data.id
-      });
-    }
+    dispatch(sfaEditBillingProcess(data));
   };
 
   //USE EFFECT PREV DATA ERROR
@@ -195,9 +229,9 @@ const SfaBillingEditView = props => {
   const checkMateraiStatus = status => {
     let text;
     switch (status) {
-      case NOT_USED:
-        text = 'Pembayaran tidak menggunakan materai';
-        break;
+      // case NOT_USED:
+      //   text = 'Pembayaran tidak menggunakan materai';
+      //   break;
       case NOT_AVAILABLE:
         text = 'Penagihan tidak menggunakan materai';
         break;
@@ -376,7 +410,7 @@ const SfaBillingEditView = props => {
         })}
         {CardBody({
           title: 'Sisa Penagihan',
-          value: MoneyFormatSpace(paymentCollectionMethod.totalBalance),
+          value: MoneyFormatSpace(collectionBalance),
           styleCardView: styles.styleCardView
         })}
       </>
@@ -427,8 +461,8 @@ const SfaBillingEditView = props => {
             paddingVertical: 16
           }}
         >
-          {stampStatus === USED
-            ? renderMateraiAvailable()
+          {stampStatus === USED || stampStatus === NOT_USED
+            ? renderMateraiAvailable(stampAmount)
             : checkMateraiStatus(stampStatus)}
         </View>
       </View>
@@ -436,6 +470,8 @@ const SfaBillingEditView = props => {
   };
 
   const renderMateraiAvailable = () => {
+    const stampNominal =
+      dataSfaGetBillingDetail?.data.paymentCollectionMethod.stamp.nominal;
     return (
       <>
         <TouchableOpacity onPress={() => onCheckStamp()} style={{ flex: 1 }}>
@@ -464,7 +500,7 @@ const SfaBillingEditView = props => {
             disabled={!isStampChecked}
           >
             <Text style={[isStampChecked ? Fonts.type17 : Fonts.type31]}>
-              Rp 10.000
+              {MoneyFormatSpace(stampNominal)}
             </Text>
           </TouchableOpacity>
           <View style={[GlobalStyle.lines, { marginTop: 8 }]} />

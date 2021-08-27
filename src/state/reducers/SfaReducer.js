@@ -23,7 +23,7 @@ const INITIAL_STATE = {
   loadingSfaGetCollectionLog: false,
   loadingLoadmoreCollectionLog: false,
   loadingSfaGetCollectionDetail: false,
-  loadingSfaEditCollection: false,
+  loadingSfaEditBilling: false,
   loadingSfaDeletePaymentBilling: false,
   loadingLoadMoreGetReferenceList: false,
   loadingSfaGetBillingDetail: false,
@@ -48,7 +48,7 @@ const INITIAL_STATE = {
   dataSfaGetCollectionLog: null,
   dataLoadmoreCollectionLog: null,
   dataSfaGetCollectionDetail: null,
-  dataSfaEditCollection: null,
+  dataSfaEditBilling: null,
   dataSfaDeletePaymentBilling: null,
   dataSfaGetBillingDetail: null,
   dataSfaPostBillingDetail: null,
@@ -73,7 +73,7 @@ const INITIAL_STATE = {
   errorSfaGetCollectionLog: null,
   errorLoadmoreCollectionLog: null,
   errorSfaGetCollectionDetail: null,
-  errorSfaEditCollection: null,
+  errorSfaEditBilling: null,
   errorSfaDeletePaymentBilling: null,
   errorSfaGetBillingDetail: null,
   errorSfaPostBillingDetail: null,
@@ -607,26 +607,26 @@ export const sfa = createReducer(INITIAL_STATE, {
    * EDIT COLLECTION
    * ==========================
    */
-  [types.SFA_EDIT_COLLECTION_PROCESS](state, action) {
+  [types.SFA_EDIT_BILLING_PROCESS](state, action) {
     return {
       ...state,
-      loadingSfaEditCollection: true,
-      dataSfaEditCollection: null,
-      errorSfaEditCollection: null
+      loadingSfaEditBilling: true,
+      dataSfaEditBilling: null,
+      errorSfaEditBilling: null
     };
   },
-  [types.SFA_EDIT_COLLECTION_SUCCESS](state, action) {
+  [types.SFA_EDIT_BILLING_SUCCESS](state, action) {
     return {
       ...state,
-      loadingSfaEditCollection: false,
-      dataSfaEditCollection: action.payload
+      loadingSfaEditBilling: false,
+      dataSfaEditBilling: action.payload
     };
   },
-  [types.SFA_EDIT_COLLECTION_FAILED](state, action) {
+  [types.SFA_EDIT_BILLING_FAILED](state, action) {
     return {
       ...state,
-      loadingSfaEditCollection: false,
-      errorSfaEditCollection: action.payload
+      loadingSfaEditBilling: false,
+      errorSfaEditBilling: action.payload
     };
   },
 

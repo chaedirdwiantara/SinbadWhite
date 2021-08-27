@@ -820,7 +820,7 @@ describe('action', () => {
             it('should create action to trigger process', function(){
                 const result = SfaAction.sfaEditCollectionProcess(data);
                 expect(result).toStrictEqual(
-                    factory(SfaType.SFA_EDIT_COLLECTION_PROCESS)
+                    factory(SfaType.SFA_EDIT_BILLING_PROCESS)
                 )
             });
             it('should create action to trigger success', function() {
@@ -829,7 +829,7 @@ describe('action', () => {
 
                 // assert           
                     expect(result.payload).toStrictEqual(
-                        factory(SfaType.SFA_EDIT_COLLECTION_SUCCESS).payload.data.data
+                        factory(SfaType.SFA_EDIT_BILLING_SUCCESS).payload.data.data
                     );
             });
             it('should create action to trigger failed', function() {
@@ -837,7 +837,7 @@ describe('action', () => {
                 const result = SfaAction.sfaEditCollectionFailed(data);
                 // assert
                 expect(result).toStrictEqual(
-                    factory(SfaType.SFA_EDIT_COLLECTION_FAILED)
+                    factory(SfaType.SFA_EDIT_BILLING_FAILED)
                 );
             });
         })
