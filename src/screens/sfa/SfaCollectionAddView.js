@@ -62,7 +62,9 @@ const SfaCollectionAddView = props => {
   const [isModalTransferDateOpen, setIsModalTransferDateOpen] = useState(false);
   const [isModalIssuedDateOpen, setIsModalIssuedDateOpen] = useState(false);
   const [isModalInvalidDateOpen, setIsModalInvalidDateOpen] = useState(false);
-  const [isModalBankDestinationOpen, setIsModalBankDestinationOpen] = useState(false);
+  const [isModalBankDestinationOpen, setIsModalBankDestinationOpen] = useState(
+    false
+  );
   const [isStampChecked, setIsStampChecked] = useState(false);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [questionMarkShow, setQuestionMarkShow] = useState(true);
@@ -214,8 +216,8 @@ const SfaCollectionAddView = props => {
   };
 
   const onOpenBankTo = () => {
-    setIsModalBankDestinationOpen(true)
-   };
+    setIsModalBankDestinationOpen(true);
+  };
 
   const onSelectStamp = data => {
     setDataStamp(data);
@@ -505,6 +507,7 @@ const SfaCollectionAddView = props => {
 
   /** RENDER BANK TO */
   const renderBankTo = () => {
+    console.log(dataBankTo);
     return paymentCollectionMethodId === TRANSFER ? (
       <View style={{ marginBottom: 16 }}>
         <Text style={Fonts.type10}>*Tujuan Bank</Text>
@@ -514,7 +517,15 @@ const SfaCollectionAddView = props => {
           disabled={false}
         >
           {dataBankTo ? (
-            <Text style={[Fonts.type17]}>{dataBankTo.bank.displayName}</Text>
+            <View>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[Fonts.type10]}>
+                  {dataBankTo.bank.displayName}
+                </Text>
+                <Text style={[Fonts.type17]}> - {dataBankTo.accountNo}</Text>
+              </View>
+              <Text style={[Fonts.type17]}>{dataBankTo.ownerName}</Text>
+            </View>
           ) : (
             <Text style={[Fonts.type31]}>Pilih Tujuan Bank</Text>
           )}
@@ -900,8 +911,8 @@ const SfaCollectionAddView = props => {
       </View>
     );
   };
-   /** MODAL BANK DESTINATION */
-   const renderModalBankDestination = () => {
+  /** MODAL BANK DESTINATION */
+  const renderModalBankDestination = () => {
     return (
       <View>
         {isModalBankDestinationOpen ? (
