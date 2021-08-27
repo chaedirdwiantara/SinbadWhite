@@ -112,9 +112,9 @@ export const SFA_EDIT_COLLECTION_SUCCESS = 'SfaEditCollectionSuccess';
 export const SFA_EDIT_COLLECTION_FAILED = 'SfaEditCollectionFailed';
 
 /** DELETE COLLECTION */
-export const SFA_DELETE_COLLECTION_PROCESS = 'SfaDeleteCollectionProcess';
-export const SFA_DELETE_COLLECTION_SUCCESS = 'SfaDeleteCollectionSuccess';
-export const SFA_DELETE_COLLECTION_FAILED = 'SfaDeleteCollectionFailed';
+export const SFA_DELETE_PAYMENT_BILLING_PROCESS = 'SfaDeletePaymentBillingProcess';
+export const SFA_DELETE_PAYMENT_BILLING_SUCCESS = 'SfaDeletePaymentBillingSuccess';
+export const SFA_DELETE_PAYMENT_BILLING_FAILED = 'SfaDeletePaymentBillingFailed';
 
 /** GET BILLING DETAIL */
 export const SFA_GET_BILLING_DETAIL_PROCESS = 'SfaGetBillingDetailProcess';

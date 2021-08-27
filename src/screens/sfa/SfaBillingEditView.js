@@ -18,7 +18,15 @@ import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardBody, CardHeader } from './components/CardView';
 import NavigationService from '../../navigation/NavigationService';
-import { CASH, CHECK, GIRO } from '../../constants/collectionConstants';
+import {
+  CASH,
+  CHECK,
+  GIRO,
+  USED,
+  USED_BY_OTHERS,
+  NOT_AVAILABLE,
+  NOT_USED
+} from '../../constants/collectionConstants';
 import {
   sfaPostCollectionPaymentProcess,
   sfaGetBillingDetailProcess,
@@ -28,15 +36,6 @@ import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPaymen
 
 const SfaBillingEditView = props => {
   const dispatch = useDispatch();
-  const collectionInfo = props.navigation.state.params;
-  const [paymentAmount, setPaymentAmount] = useState(
-    dataSfaGetBillingDetail?.data.amount
-  );
-  const [isStampChecked, setIsStampChecked] = useState(false);
-  const [totalPaymentAmount, setTotalPaymentAmount] = useState(0);
-  const stampAmount = 10000;
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-
   // SELECTOR
   const {
     loadingSfaPostCollectionPayment,
@@ -47,6 +46,17 @@ const SfaBillingEditView = props => {
     dataSfaGetDetail,
     dataSfaGetBillingDetail
   } = useSelector(state => state.sfa);
+  const collectionInfo = props.navigation.state.params;
+  const stampNominal = dataSfaGetBillingDetail?.data.stampAmount;
+  const [paymentAmount, setPaymentAmount] = useState(collectionInfo.amount);
+  const [isStampChecked, setIsStampChecked] = useState(false);
+  const [totalPaymentAmount, setTotalPaymentAmount] = useState(
+    stampNominal || paymentAmount ? stampNominal + paymentAmount : 5
+  );
+  const [stampAmount, setStampAmount] = useState(
+    stampNominal ? stampNominal : 0
+  );
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
 
@@ -54,13 +64,9 @@ const SfaBillingEditView = props => {
   const prevErrorSfaPostCollectionPaymentRef = useRef(
     errorSfaPostCollectionPayment
   );
-  const prevDataSfaGetBillingDetailRef = useRef(dataSfaGetBillingDetail);
-
   useEffect(() => {
     getBillingDetail();
-    getInvoiceDetail();
   }, []);
-
   //MODAL
   const [modalBottomError, setModalBottomError] = useState(false);
   const [messageError, setMessageError] = useState(null);
@@ -74,12 +80,7 @@ const SfaBillingEditView = props => {
    */
 
   const getBillingDetail = () => {
-    dispatch(sfaGetBillingDetailProcess(210));
-  };
-
-  const getInvoiceDetail = () => {
-    const orderParcelId = dataSfaGetDetail.data.id;
-    dispatch(sfaGetDetailProcess(orderParcelId));
+    dispatch(sfaGetBillingDetailProcess(collectionInfo.id));
   };
 
   const isNumber = n => (n !== null && n !== undefined ? true : false);
@@ -97,7 +98,6 @@ const SfaBillingEditView = props => {
     } else {
       setTotalPaymentAmount(paymentAmountInt);
     }
-
     setPaymentAmount(paymentAmountInt);
   };
 
@@ -130,19 +130,6 @@ const SfaBillingEditView = props => {
     }
   };
 
-  useEffect(()=> {
-    prevDataSfaGetBillingDetailRef.current = dataSfaGetBillingDetail;
-  }, [])
-  const prevDataSfaGetBillingDetail =
-  prevDataSfaGetBillingDetailRef.current;
-
-  useEffect(() => {
-    if (prevDataSfaGetBillingDetail !== dataSfaGetBillingDetail) {
-      if (dataSfaGetBillingDetail) {
-        setPaymentAmount(dataSfaGetBillingDetail.data.amount);
-      }
-    }
-  }, [dataSfaGetBillingDetail]);
   //USE EFFECT PREV DATA ERROR
   useEffect(() => {
     prevErrorSfaPostCollectionPaymentRef.current = errorSfaPostCollectionPayment;
@@ -204,6 +191,25 @@ const SfaBillingEditView = props => {
     }
   }, [loadingSfaPostCollectionPayment]);
 
+  /** FUNCTION CHECK MATERAI STATUS */
+  const checkMateraiStatus = status => {
+    let text;
+    switch (status) {
+      case NOT_USED:
+        text = 'Pembayaran tidak menggunakan materai';
+        break;
+      case NOT_AVAILABLE:
+        text = 'Penagihan tidak menggunakan materai';
+        break;
+      case USED_BY_OTHERS:
+        text = 'Materai sudah digunakan di pembayaran lainnya';
+        break;
+      default:
+        break;
+    }
+
+    return <Text style={[Fonts.type17]}>{text}</Text>;
+  };
   /**
    * *********************************
    * RENDER VIEW
@@ -261,9 +267,9 @@ const SfaBillingEditView = props => {
       invoiceGroupName,
       orderCode,
       orderRef,
-      totalBilling,
-      remainingBilling
-    } = dataSfaGetDetail?.data;
+      deliveredAmount,
+      outstandingAmount
+    } = dataSfaGetBillingDetail?.data;
 
     return (
       <>
@@ -284,15 +290,15 @@ const SfaBillingEditView = props => {
         })}
         {CardBody({
           title: 'Total Tagihan',
-          value: isNumber(totalBilling)
-            ? MoneyFormatSpace(totalBilling)
+          value: isNumber(deliveredAmount)
+            ? MoneyFormatSpace(deliveredAmount)
             : MoneyFormatSpace(0),
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Sisa Tagihan',
-          value: isNumber(remainingBilling)
-            ? MoneyFormatSpace(remainingBilling)
+          value: isNumber(outstandingAmount)
+            ? MoneyFormatSpace(outstandingAmount)
             : MoneyFormatSpace(0),
           styleCardView: styles.styleCardView
         })}
@@ -327,46 +333,50 @@ const SfaBillingEditView = props => {
    * ==================================
    */
   const renderCollectionInfoBody = () => {
+    const {
+      paymentCollectionMethod,
+      paymentCollectionType
+    } = dataSfaGetBillingDetail.data;
     return (
       <>
         {CardBody({
           title: 'Metode Penagihan',
-          value: collectionInfo?.paymentCollectionMethodName,
+          value: paymentCollectionType?.name,
           styleCardView: styles.styleCardView
         })}
-        {dataSfaGetBillingDetail.data.paymentCollectionType.id !== CASH
+        {paymentCollectionType.id !== CASH
           ? CardBody({
               title: 'Nomor Referensi',
-              value: collectionInfo?.collectionCode,
+              value: paymentCollectionMethod.collectionRef
+                ? paymentCollectionMethod.collectionRef
+                : '-',
               styleCardView: styles.styleCardView
             })
           : null}
-        {dataSfaGetBillingDetail.data.paymentCollectionType.id === CHECK ||
-        dataSfaGetBillingDetail.data.paymentCollectionType.id === GIRO
+        {paymentCollectionType.id === CHECK || paymentCollectionType.id === GIRO
           ? CardBody({
               title: 'Nilai Penagihan',
-              value: MoneyFormatSpace(collectionInfo.amount),
+              value: MoneyFormatSpace(paymentCollectionMethod.amount),
               styleCardView: styles.styleCardView
             })
           : null}
-        {dataSfaGetBillingDetail.data.paymentCollectionType.id === CHECK ||
-        dataSfaGetBillingDetail.data.paymentCollectionType.id === GIRO
+        {paymentCollectionType.id === CHECK || paymentCollectionType.id === GIRO
           ? CardBody({
               title: 'Materai',
-              value: isNumber(dataSfaGetBillingDetail.data.stampAmount)
-                ? MoneyFormatSpace(dataSfaGetBillingDetail.data.stampAmount)
+              value: paymentCollectionMethod.stamp
+                ? MoneyFormatSpace(paymentCollectionMethod.stamp.nominal)
                 : '-',
               styleCardView: styles.styleCardView
             })
           : null}
         {CardBody({
           title: 'Total Penagihan',
-          value: MoneyFormatSpace(collectionInfo?.amount),
+          value: MoneyFormatSpace(paymentCollectionMethod.totalAmount),
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Sisa Penagihan',
-          value: MoneyFormatSpace(collectionInfo?.amount),
+          value: MoneyFormatSpace(paymentCollectionMethod.totalBalance),
           styleCardView: styles.styleCardView
         })}
       </>
@@ -398,53 +408,11 @@ const SfaBillingEditView = props => {
 
   /**
    * ========================
-   * RENDER
+   * RENDER MATERAI
    * ========================
    */
   const renderMaterai = () => {
-    const renderItem = () => {
-      return (
-        <>
-          <TouchableOpacity onPress={() => onCheckStamp()} style={{ flex: 1 }}>
-            {isStampChecked ? (
-              <MaterialCommunityIcons
-                color={masterColor.mainColor}
-                name="checkbox-marked"
-                size={24}
-              />
-            ) : (
-              <MaterialCommunityIcons
-                color={masterColor.fontBlack40}
-                name="checkbox-blank-outline"
-                size={24}
-              />
-            )}
-          </TouchableOpacity>
-          <View style={{ flex: 8 }}>
-            <TouchableOpacity
-              // onPress={() => console.log('true')}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-              disabled={!isStampChecked}
-            >
-              <Text style={[Fonts.type17]}>Rp 10.000</Text>
-              <View>
-                <MaterialIcon
-                  name="chevron-right"
-                  color={masterColor.fontBlack40}
-                  size={24}
-                />
-              </View>
-            </TouchableOpacity>
-            <View style={[GlobalStyle.lines, { marginTop: 8 }]} />
-          </View>
-        </>
-      );
-    };
-
+    const { stampStatus, stampAmount } = dataSfaGetBillingDetail?.data;
     return dataSfaGetBillingDetail.data.paymentCollectionType.id === CHECK ||
       dataSfaGetBillingDetail.data.paymentCollectionType.id === GIRO ? (
       <View style={{ marginTop: 16 }}>
@@ -459,20 +427,50 @@ const SfaBillingEditView = props => {
             paddingVertical: 16
           }}
         >
-          {collectionInfo.isStampUsed === null ? (
-            <Text style={[Fonts.type17]}>
-              Penagihan tidak menggunakan materai
-            </Text>
-          ) : collectionInfo.isStampUsed === true ? (
-            renderItem()
-          ) : (
-            <Text style={[Fonts.type17]}>
-              Materai telah digunakan di pembayaran lainnya
-            </Text>
-          )}
+          {stampStatus === USED
+            ? renderMateraiAvailable()
+            : checkMateraiStatus(stampStatus)}
         </View>
       </View>
     ) : null;
+  };
+
+  const renderMateraiAvailable = () => {
+    return (
+      <>
+        <TouchableOpacity onPress={() => onCheckStamp()} style={{ flex: 1 }}>
+          {isStampChecked ? (
+            <MaterialCommunityIcons
+              color={masterColor.mainColor}
+              name="checkbox-marked"
+              size={24}
+            />
+          ) : (
+            <MaterialCommunityIcons
+              color={masterColor.fontBlack40}
+              name="checkbox-blank-outline"
+              size={24}
+            />
+          )}
+        </TouchableOpacity>
+        <View style={{ flex: 8 }}>
+          <TouchableOpacity
+            // onPress={() => console.log('true')}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}
+            disabled={!isStampChecked}
+          >
+            <Text style={[isStampChecked ? Fonts.type17 : Fonts.type31]}>
+              Rp 10.000
+            </Text>
+          </TouchableOpacity>
+          <View style={[GlobalStyle.lines, { marginTop: 8 }]} />
+        </View>
+      </>
+    );
   };
 
   /**

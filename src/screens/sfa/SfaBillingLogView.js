@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   View,
@@ -17,14 +17,16 @@ import {
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 import {
-  ButtonSingle,
   LoadingPage,
-  LoadingLoadMore
+  LoadingLoadMore,
+  ModalConfirmation
 } from '../../library/component';
 import {
   sfaGetReferenceListProcess,
   sfaCollectionListLoadmoreProcess,
-  sfaGetPaymentCollectionLogProcess
+  sfaGetPaymentCollectionLogProcess,
+  sfaDeletePaymentBillingProcess,
+  sfaGetCollectionDetailProcess
 } from '../../state/actions';
 import { toLocalTime } from '../../helpers/TimeHelper';
 
@@ -34,16 +36,69 @@ const SfaBillingLogView = props => {
     props.navigation.state.params.paymentCollectionTypeId;
   const paymentCollectionMethodId = props.navigation.state.params.collectionId;
   const [refreshing, setRefreshing] = useState(false);
+  const [billingId, setBillingId] = useState(null);
+  const [
+    isModalDeleteConfirmationOpen,
+    setIsModalDeleteConfirmationOpen
+  ] = useState(false);
   const [limit, setLimit] = useState(4);
   const {
     dataGetReferenceList,
     loadingLoadMoreGetReferenceList,
     loadingSfaGetPaymentCollectionLog,
-    dataSfaGetPaymentCollectionLog
+    dataSfaGetPaymentCollectionLog,
+    dataSfaDeletePaymentBilling,
+    errorSfaDeletePaymentBilling
   } = useSelector(state => state.sfa);
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
+  /**
+   * *********************************
+   * RENDER USEREF
+   * *********************************
+   */
+  const prevDataSfaDeletePaymentBillingRef = useRef(
+    dataSfaDeletePaymentBilling
+  );
+  const prevErrorSfaDeletePaymentBillingRef = useRef(
+    errorSfaDeletePaymentBilling
+  );
 
+  /**
+   * *********************************
+   * RENDER USE EFFECT
+   * *********************************
+   */
+  useEffect(() => {
+    prevDataSfaDeletePaymentBillingRef.current = dataSfaDeletePaymentBilling;
+  }, []);
+  const prevDataSfaDeletePaymentBilling =
+    prevDataSfaDeletePaymentBillingRef.current;
+
+  useEffect(() => {
+    prevErrorSfaDeletePaymentBillingRef.current = errorSfaDeletePaymentBilling;
+  }, []);
+  const prevErrorSfaDeletePaymentBilling =
+    prevErrorSfaDeletePaymentBillingRef.current;
+
+  useEffect(() => {
+    if (prevDataSfaDeletePaymentBilling !== dataSfaDeletePaymentBilling) {
+      if (dataSfaDeletePaymentBilling) {
+        navigateOnSuccesDelete();
+      }
+    }
+  }, [dataSfaDeletePaymentBilling]);
+
+  /** FUNCTION NAVIGATE ON SUCCES DELETE BILLING */
+  const navigateOnSuccesDelete = () => {
+    
+    setIsModalDeleteConfirmationOpen(false);
+    NavigationService.navigate('SfaCollectionDetailView', {
+      paymentCollectionId: paymentCollectionMethodId
+    });
+    dispatch(sfaGetCollectionDetailProcess(paymentCollectionMethodId));
+  };
+  
   //** FUNCTION GET PAYMENT LOG */
   const getPaymentCollectionLog = (loading, page) => {
     const data = {
@@ -67,7 +122,6 @@ const SfaBillingLogView = props => {
     dispatch(sfaGetReferenceListProcess(data));
   };
   useEffect(() => {
-    getCollectionList(true, 10);
     getPaymentCollectionLog(true, 10);
   }, []);
 
@@ -80,7 +134,7 @@ const SfaBillingLogView = props => {
   };
   /** FUNCTION REFRESH COLLECTION LIST */
   const onHandleRefresh = () => {
-    getCollectionList(true, 10);
+    getPaymentCollectionLog(true, 10);
   };
 
   const onLoadMore = () => {
@@ -93,6 +147,22 @@ const SfaBillingLogView = props => {
       }
     }
   };
+
+  /** FUNCTION OPEN MODAL DELETE BILLING */
+  const onDeleteCollection = item => {
+    setBillingId(item.id);
+    setIsModalDeleteConfirmationOpen(true);
+  };
+
+  /** FUNCTION DELETE BILLING */
+  const deleteBilling = () => {
+    const data = {
+      billingId,
+      userId: parseInt(userSuppliers[0].userId, 10)
+    };
+    dispatch(sfaDeletePaymentBillingProcess(data));
+  };
+
   /** RENDER CONTENT LIST GLOBAL */
   const renderContentListGlobal = (key, value, black, bold, red) => {
     return (
@@ -245,7 +315,7 @@ const SfaBillingLogView = props => {
                 'Hapus',
                 'white',
                 !item.isEditable,
-                navigatetoEditBilling.bind(item),
+                onDeleteCollection.bind(item),
                 item
               )}
             </View>
@@ -290,10 +360,29 @@ const SfaBillingLogView = props => {
   };
   /**
    * =======================
-   * RENDER BOTTOM BUTTON
+   * RENDER MODAL
    * =======================
    */
 
+  /** ===> RENDER MODAL DELETE CONFIRMATION === */
+  const renderModalConfirmationDelete = () => {
+    return isModalDeleteConfirmationOpen ? (
+      <ModalConfirmation
+        title={'Hapus Penagihan?'}
+        open={isModalDeleteConfirmationOpen}
+        okText={'Kembali'}
+        cancelText={'Hapus'}
+        content={'Penagihan yang telah terhapus tidak dapat dikembalikan'}
+        type={'okeNotRed'}
+        ok={() => {
+          setIsModalDeleteConfirmationOpen(false);
+        }}
+        cancel={() => deleteBilling()}
+      />
+    ) : (
+      <View />
+    );
+  };
   /**
    * =======================
    * RENDER CONTENT
@@ -314,7 +403,12 @@ const SfaBillingLogView = props => {
    * MAIN
    * =======================
    */
-  return <>{renderContent()}</>;
+  return (
+    <>
+      {renderContent()}
+      {renderModalConfirmationDelete()}
+    </>
+  );
 };
 
 const styles = StyleSheet.create({

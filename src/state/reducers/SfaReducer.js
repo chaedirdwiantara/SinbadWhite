@@ -24,7 +24,7 @@ const INITIAL_STATE = {
   loadingLoadmoreCollectionLog: false,
   loadingSfaGetCollectionDetail: false,
   loadingSfaEditCollection: false,
-  loadingSfaDeleteCollection: false,
+  loadingSfaDeletePaymentBilling: false,
   loadingLoadMoreGetReferenceList: false,
   loadingSfaGetBillingDetail: false,
   loadingSfaGetPaymentCollectionLog: false,
@@ -49,7 +49,7 @@ const INITIAL_STATE = {
   dataLoadmoreCollectionLog: null,
   dataSfaGetCollectionDetail: null,
   dataSfaEditCollection: null,
-  dataSfaDeleteCollection: null,
+  dataSfaDeletePaymentBilling: null,
   dataSfaGetBillingDetail: null,
   dataSfaPostBillingDetail: null,
   dataSfaGetPaymentCollectionLog: null,
@@ -74,7 +74,7 @@ const INITIAL_STATE = {
   errorLoadmoreCollectionLog: null,
   errorSfaGetCollectionDetail: null,
   errorSfaEditCollection: null,
-  errorSfaDeleteCollection: null,
+  errorSfaDeletePaymentBilling: null,
   errorSfaGetBillingDetail: null,
   errorSfaPostBillingDetail: null,
   errorSfaGetPaymentCollectionLog: null,
@@ -635,26 +635,26 @@ export const sfa = createReducer(INITIAL_STATE, {
    * DELETE COLLECTION
    * ==========================
    */
-  [types.SFA_DELETE_COLLECTION_PROCESS](state, action) {
+  [types.SFA_DELETE_PAYMENT_BILLING_PROCESS](state, action) {
     return {
       ...state,
-      loadingSfaDeleteCollection: true,
-      dataSfaDeleteCollection: null,
-      errorSfaDeleteCollection: null
+      loadingSfaDeletePaymentBilling: true,
+      dataSfaDeletePaymentBilling: null,
+      errorSfaDeletePaymentBilling: null
     };
   },
-  [types.SFA_DELETE_COLLECTION_SUCCESS](state, action) {
+  [types.SFA_DELETE_PAYMENT_BILLING_SUCCESS](state, action) {
     return {
       ...state,
-      loadingSfaDeleteCollection: false,
-      dataSfaDeleteCollection: action.payload
+      loadingSfaDeletePaymentBilling: false,
+      dataSfaDeletePaymentBilling: action.payload
     };
   },
-  [types.SFA_DELETE_COLLECTION_FAILED](state, action) {
+  [types.SFA_DELETE_PAYMENT_BILLING_FAILED](state, action) {
     return {
       ...state,
-      loadingSfaDeleteCollection: false,
-      errorSfaDeleteCollection: action.payload
+      loadingSfaDeletePaymentBilling: false,
+      errorSfaDeletePaymentBilling: action.payload
     };
   },
 

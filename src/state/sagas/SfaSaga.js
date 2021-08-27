@@ -231,14 +231,14 @@ function* editCollection(actions) {
 }
 
 /** DELETE COLLECTION */
-function* deleteCollection(actions) {
+function* deletePaymentBilling(actions) {
   try {
     const response = yield call(() => {
-      return SfaMethod.deleteCollection(actions.payload);
+      return SfaMethod.deletePaymentBilling(actions.payload);
     });
-    yield put(ActionCreators.sfaDeleteCollectionSuccess(response));
+    yield put(ActionCreators.sfaDeletePaymentBillingSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.sfaDeleteCollectionFailed(error));
+    yield put(ActionCreators.sfaDeletePaymentBillingFailed(error));
   }
 }
 
@@ -314,7 +314,7 @@ function* SfaSaga() {
       getCollectionDetail
     ),
     yield takeEvery(types.SFA_EDIT_COLLECTION_PROCESS, editCollection),
-    yield takeEvery(types.SFA_DELETE_COLLECTION_PROCESS, deleteCollection),
+    yield takeEvery(types.SFA_DELETE_PAYMENT_BILLING_PROCESS, deletePaymentBilling),
     yield takeEvery(types.SFA_GET_BILLING_DETAIL_PROCESS, getBillingDetail),
     yield takeEvery(
       types.SFA_GET_PAYMENT_COLLECTION_LOG_PROCESS,
