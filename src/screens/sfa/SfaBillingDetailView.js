@@ -135,7 +135,7 @@ const SfaBillingDetailView = props => {
       case USED_BY_OTHERS:
         return 'Materai sudah digunakan di pembayaran lainnya';
       default:
-        break;
+        return '-';
     }
   };
   /**
@@ -273,9 +273,7 @@ const SfaBillingDetailView = props => {
    * =====================================
    */
   const renderBillingInfoHeaderBadge = () => {
-    const {
-      approvalStatus
-    } = dataSfaGetBillingDetail.data.paymentCollectionMethod;
+    const { approvalStatus } = dataSfaGetBillingDetail.data;
 
     return approvalStatus === APPROVED
       ? CardHeaderBadge({
