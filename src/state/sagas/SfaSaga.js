@@ -219,14 +219,14 @@ function* getCollectionDetail(actions) {
 }
 
 /** EDIT COLLECTION */
-function* editCollection(actions) {
+function* editCollectionBilling(actions) {
   try {
     const response = yield call(() => {
-      return SfaMethod.editCollection(actions.payload);
+      return SfaMethod.editCollectionBilling(actions.payload);
     });
-    yield put(ActionCreators.sfaEditCollectionSuccess(response));
+    yield put(ActionCreators.sfaEditBillingSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.sfaEditCollectionFailed(error));
+    yield put(ActionCreators.sfaEditBillingFailed(error));
   }
 }
 

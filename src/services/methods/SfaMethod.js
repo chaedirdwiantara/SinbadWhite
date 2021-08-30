@@ -146,7 +146,7 @@ function getCollectionDetail(data) {
 }
 
 /** EDIT BILLING PAYMENT */
-function editCollection(data) {
+function editCollectionBilling(data) {
   return ApiRest({
     path: 'collection/v1/payment',
     method: 'PATCH',
@@ -216,7 +216,7 @@ export const SfaMethod = {
   getPrincipal,
   getCollectionLog,
   getCollectionDetail,
-  editCollection,
+  editCollectionBilling,
   deletePaymentBilling,
   getBillingDetail,
   getPaymentCollectionLog,

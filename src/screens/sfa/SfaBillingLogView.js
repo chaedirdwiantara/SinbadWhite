@@ -29,7 +29,7 @@ import {
   sfaGetCollectionDetailProcess
 } from '../../state/actions';
 import { toLocalTime } from '../../helpers/TimeHelper';
-
+import SfaNoDataView from './SfaNoDataView';
 const SfaBillingLogView = props => {
   const dispatch = useDispatch();
   const collectionMethodId =
@@ -91,14 +91,13 @@ const SfaBillingLogView = props => {
 
   /** FUNCTION NAVIGATE ON SUCCES DELETE BILLING */
   const navigateOnSuccesDelete = () => {
-    
     setIsModalDeleteConfirmationOpen(false);
     NavigationService.navigate('SfaCollectionDetailView', {
       paymentCollectionId: paymentCollectionMethodId
     });
     dispatch(sfaGetCollectionDetailProcess(paymentCollectionMethodId));
   };
-  
+
   //** FUNCTION GET PAYMENT LOG */
   const getPaymentCollectionLog = (loading, page) => {
     const data = {
@@ -339,23 +338,31 @@ const SfaBillingLogView = props => {
    * =======================
    */
   const renderCollectionList = () => {
-    return dataSfaGetPaymentCollectionLog ? (
-      <View style={{ flex: 1, marginTop: 10 }}>
-        <FlatList
-          data={dataSfaGetPaymentCollectionLog.data}
-          renderItem={renderItem}
-          numColumns={1}
-          keyExtractor={(item, index) => index.toString()}
-          onEndReachedThreshold={0.2}
-          onEndReached={() => onLoadMore()}
-          showsVerticalScrollIndicator
-          refreshing={refreshing}
-          onRefresh={() => onHandleRefresh()}
-        />
-        {loadingLoadMoreGetReferenceList ? <LoadingLoadMore /> : null}
-      </View>
+    return dataSfaGetPaymentCollectionLog?.data ? (
+      <>
+        <View style={{ flex: 1, marginTop: 10 }}>
+          <FlatList
+            data={dataSfaGetPaymentCollectionLog.data}
+            renderItem={renderItem}
+            numColumns={1}
+            keyExtractor={(item, index) => index.toString()}
+            onEndReachedThreshold={0.2}
+            onEndReached={() => onLoadMore()}
+            showsVerticalScrollIndicator
+            refreshing={refreshing}
+            onRefresh={() => onHandleRefresh()}
+          />
+          {loadingLoadMoreGetReferenceList ? <LoadingLoadMore /> : null}
+        </View>
+      </>
     ) : (
-      <View />
+      <View style={{ marginTop: 16 }}>
+        <SfaNoDataView
+          topText={'Belum Ada Pembayaran'}
+          midText={'Yuk lakukan pembayaran.'}
+          bottomText={''}
+        />
+      </View>
     );
   };
   /**
