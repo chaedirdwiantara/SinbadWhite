@@ -7,7 +7,8 @@ import {
   Image,
   Text
 } from '../../library/reactPackage';
-import { connect } from '../../library/thirdPartyPackage';
+import { connect, bindActionCreators } from '../../library/thirdPartyPackage';
+import * as ActionCreators from '../../state/actions';
 import { Fonts } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 
@@ -22,6 +23,7 @@ class FirstView extends Component {
    * ==============================
    */
   componentDidMount() {
+    this.props.appVersion(0);
     setTimeout(() => {
       this.props.navigation.navigate(
         this.props.permanent.token !== null ? 'App' : this.checkIFOTPexist()
@@ -97,8 +99,14 @@ const styles = StyleSheet.create({
 const mapStateToProps = ({ permanent }) => {
   return { permanent };
 };
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
 
-export default connect(mapStateToProps)(FirstView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FirstView);
 
 /**
  * ============================
