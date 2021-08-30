@@ -112,9 +112,12 @@ export const SFA_EDIT_BILLING_SUCCESS = 'SfaEditBillingSuccess';
 export const SFA_EDIT_BILLING_FAILED = 'SfaEditBillingFailed';
 
 /** DELETE COLLECTION */
-export const SFA_DELETE_PAYMENT_BILLING_PROCESS = 'SfaDeletePaymentBillingProcess';
-export const SFA_DELETE_PAYMENT_BILLING_SUCCESS = 'SfaDeletePaymentBillingSuccess';
-export const SFA_DELETE_PAYMENT_BILLING_FAILED = 'SfaDeletePaymentBillingFailed';
+export const SFA_DELETE_PAYMENT_BILLING_PROCESS =
+  'SfaDeletePaymentBillingProcess';
+export const SFA_DELETE_PAYMENT_BILLING_SUCCESS =
+  'SfaDeletePaymentBillingSuccess';
+export const SFA_DELETE_PAYMENT_BILLING_FAILED =
+  'SfaDeletePaymentBillingFailed';
 
 /** GET BILLING DETAIL */
 export const SFA_GET_BILLING_DETAIL_PROCESS = 'SfaGetBillingDetailProcess';
@@ -122,11 +125,25 @@ export const SFA_GET_BILLING_DETAIL_SUCCESS = 'SfaGetBillingDetailSuccess';
 export const SFA_GET_BILLING_DETAIL_FAILED = 'SfaGetBillingDetailFailed';
 
 /** GET COLLECTION PAYMENT LOG */
-export const SFA_GET_PAYMENT_COLLECTION_LOG_PROCESS = 'SfaGetPaymentCollectionLogProcess';
-export const SFA_GET_PAYMENT_COLLECTION_LOG_SUCCESS = 'SfaGetPaymentCollectionLogSuccess';
-export const SFA_GET_PAYMENT_COLLECTION_LOG_FAILED = 'SfaGetPaymentCollectionLogFailed';
+export const SFA_GET_PAYMENT_COLLECTION_LOG_PROCESS =
+  'SfaGetPaymentCollectionLogProcess';
+export const SFA_GET_PAYMENT_COLLECTION_LOG_SUCCESS =
+  'SfaGetPaymentCollectionLogSuccess';
+export const SFA_GET_PAYMENT_COLLECTION_LOG_FAILED =
+  'SfaGetPaymentCollectionLogFailed';
 
 /** EDIT COLLECTION METHOD */
-export const SFA_EDIT_COLLECTION_METHOD_PROCESS = 'SfaEditCollectionMethodProcess';
-export const SFA_EDIT_COLLECTION_METHOD_SUCCESS = 'SfaEditCollectionMethodSuccess';
-export const SFA_EDIT_COLLECTION_METHOD_FAILED = 'SfaEditCollectionMethodFailed';
+export const SFA_EDIT_COLLECTION_METHOD_PROCESS =
+  'SfaEditCollectionMethodProcess';
+export const SFA_EDIT_COLLECTION_METHOD_SUCCESS =
+  'SfaEditCollectionMethodSuccess';
+export const SFA_EDIT_COLLECTION_METHOD_FAILED =
+  'SfaEditCollectionMethodFailed';
+
+/** DELETE COLLECTION METHOD */
+export const SFA_DELETE_COLLECTION_METHOD_PROCESS =
+  'SfaDeleteCollectionMethodProcess';
+export const SFA_DELETE_COLLECTION_METHOD_SUCCESS =
+  'SfaDeleteCollectionMethodSuccess';
+export const SFA_DELETE_COLLECTION_METHOD_FAILED =
+  'SfaDeleteCollectionMethodFailed';

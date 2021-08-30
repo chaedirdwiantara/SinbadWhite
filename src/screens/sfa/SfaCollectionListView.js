@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   View,
@@ -11,11 +11,7 @@ import { MaterialIcon } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
-import {
-  APPROVED,
-  REJECTED,
-  PENDING
-} from '../../constants/collectionConstants';
+import { APPROVED, PENDING } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 import {
   ButtonSingle,
@@ -24,8 +20,10 @@ import {
   ModalConfirmation
 } from '../../library/component';
 import {
+  sfaGetPaymentMethodProcess,
   sfaGetReferenceListProcess,
-  sfaCollectionListLoadmoreProcess
+  sfaCollectionListLoadmoreProcess,
+  sfaDeleteCollectionMethodProcess
 } from '../../state/actions';
 import SfaNoDataView from './SfaNoDataView';
 
@@ -33,6 +31,7 @@ const SfaCollectionListView = props => {
   const dispatch = useDispatch();
   const collectionTypeId = props.navigation.state.params.collectionMethodId;
   const [refreshing, setRefreshing] = useState(false);
+  const [collectionId, setCollectionId] = useState(null);
   const [
     isModalDeleteConfirmationOpen,
     setIsModalDeleteConfirmationOpen
@@ -41,10 +40,60 @@ const SfaCollectionListView = props => {
   const {
     dataGetReferenceList,
     loadingLoadMoreGetReferenceList,
-    loadingGetReferenceList
+    loadingGetReferenceList,
+    dataSfaDeleteCollectionMethod,
+    errorSfaDeleteCollectionMethod
   } = useSelector(state => state.sfa);
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
+
+  /**
+   * *********************************
+   * RENDER USEREF
+   * *********************************
+   */
+  const prevDataSfaDeleteCollectionMethodRef = useRef(
+    dataSfaDeleteCollectionMethod
+  );
+  const prevErrorSfaDeleteCollectionMethodRef = useRef(
+    errorSfaDeleteCollectionMethod
+  );
+
+  /**
+   * *********************************
+   * RENDER USE EFFECT
+   * *********************************
+   */
+  useEffect(() => {
+    prevDataSfaDeleteCollectionMethodRef.current = dataSfaDeleteCollectionMethod;
+  }, []);
+  const prevDataSfaDeleteCollectionMethod =
+    prevDataSfaDeleteCollectionMethodRef.current;
+
+  useEffect(() => {
+    prevErrorSfaDeleteCollectionMethodRef.current = errorSfaDeleteCollectionMethod;
+  }, []);
+  const prevErrorSfaDeleteCollectionMethod =
+    prevErrorSfaDeleteCollectionMethodRef.current;
+
+  useEffect(() => {
+    if (prevDataSfaDeleteCollectionMethod !== dataSfaDeleteCollectionMethod) {
+      if (dataSfaDeleteCollectionMethod) {
+        navigateOnSuccesDelete();
+      }
+    }
+  }, [dataSfaDeleteCollectionMethod]);
+
+  /** FUNCTION NAVIGATE ON SUCCES DELETE COLLECTION */
+  const navigateOnSuccesDelete = () => {
+    setIsModalDeleteConfirmationOpen(false);
+    const data = {
+      supplierId: parseInt(userSuppliers[0].supplier.id, 10),
+      storeId: selectedMerchant.storeId
+    };
+    getCollectionList(true, 10);
+    dispatch(sfaGetPaymentMethodProcess(data));
+  };
 
   /** FUNCTION GET COLLECTION LIST */
   const getCollectionList = (loading, page) => {
@@ -58,6 +107,7 @@ const SfaCollectionListView = props => {
     };
     dispatch(sfaGetReferenceListProcess(data));
   };
+
   useEffect(() => {
     getCollectionList(true, 10);
   }, []);
@@ -99,8 +149,19 @@ const SfaCollectionListView = props => {
     });
   };
 
+  /** FUNCTION OPEN MODAL DELETE COLLECTION METHOD */
   const onDeleteCollection = item => {
+    setCollectionId(item.id);
     setIsModalDeleteConfirmationOpen(true);
+  };
+
+  /** FUNCTION DELETE COLLECTION METHOD */
+  const deleteCollection = () => {
+    const data = {
+      collectionId,
+      userId: parseInt(userSuppliers[0].userId, 10)
+    };
+    dispatch(sfaDeleteCollectionMethodProcess(data));
   };
 
   /** RENDER CONTENT LIST GLOBAL */
@@ -310,6 +371,7 @@ const SfaCollectionListView = props => {
       </View>
     );
   };
+
   /** ===> RENDER MODAL DELETE CONFIRMATION === */
   const renderModalConfirmationDelete = () => {
     return isModalDeleteConfirmationOpen ? (
@@ -323,7 +385,7 @@ const SfaCollectionListView = props => {
         ok={() => {
           setIsModalDeleteConfirmationOpen(false);
         }}
-        cancel={() => setIsModalDeleteConfirmationOpen(false)}
+        cancel={() => deleteCollection()}
       />
     ) : (
       <View />

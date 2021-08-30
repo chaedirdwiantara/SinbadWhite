@@ -1,4 +1,5 @@
 import * as types from '../types';
+
 /**
  * ===========================
  * GET COLLECTION STATUS
@@ -6,22 +7,22 @@ import * as types from '../types';
  */
 /** === SFA GET COLLECTION STATUS PROCESS === */
 export function sfaGetCollectionStatusProcess(data) {
-    return { type: types.SFA_GET_COLLECTION_STATUS_PROCESS, payload: data };
+  return { type: types.SFA_GET_COLLECTION_STATUS_PROCESS, payload: data };
+}
+/** === SFA GET COLLECTION STATUS SUCCESS === */
+export function sfaGetCollectionStatusSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_COLLECTION_STATUS_SUCCESS,
+      payload: data.data
+    };
   }
-  /** === SFA GET COLLECTION STATUS SUCCESS === */
-  export function sfaGetCollectionStatusSuccess(data) {
-    if (data.result === 'Ok') {
-      return {
-        type: types.SFA_GET_COLLECTION_STATUS_SUCCESS,
-        payload: data.data
-      };
-    }
-    return { type: types.SFA_GET_COLLECTION_STATUS_FAILED, payload: data };
-  }
-  /** === SFA GET COLLECTION STATUS FAILED === */
-  export function sfaGetCollectionStatusFailed(data) {
-    return { type: types.SFA_GET_COLLECTION_STATUS_FAILED, payload: data };
-  }
+  return { type: types.SFA_GET_COLLECTION_STATUS_FAILED, payload: data };
+}
+/** === SFA GET COLLECTION STATUS FAILED === */
+export function sfaGetCollectionStatusFailed(data) {
+  return { type: types.SFA_GET_COLLECTION_STATUS_FAILED, payload: data };
+}
 /**
  * ===========================
  * GET SFA DETAIL
@@ -485,7 +486,6 @@ export function sfaEditBillingFailed(data) {
   return { type: types.SFA_EDIT_BILLING_FAILED, payload: data };
 }
 
-
 /**
  * ===========================
  * DELETE COLLECTION
@@ -493,7 +493,6 @@ export function sfaEditBillingFailed(data) {
  */
 /** === SFA DELETE COLLECTION PROCESS === */
 export function sfaDeletePaymentBillingProcess(data) {
-  console.log(data, 'data');
   return { type: types.SFA_DELETE_PAYMENT_BILLING_PROCESS, payload: data };
 }
 
@@ -591,4 +590,29 @@ export function sfaEditCollectionMethodSuccess(data) {
 /** === SFA PATCH EDIT COLLECTION METHOD FAILED === */
 export function sfaEditCollectionMethodFailed(data) {
   return { type: types.SFA_EDIT_COLLECTION_METHOD_FAILED, payload: data };
+}
+
+/**
+ * ===========================
+ * DELETE COLLECTION METHOD
+ * ===========================
+ */
+/** === SFA DELETE COLLECTION METHOD PROCESS === */
+export function sfaDeleteCollectionMethodProcess(data) {
+  return { type: types.SFA_DELETE_COLLECTION_METHOD_PROCESS, payload: data };
+}
+
+/** === SFA DELETE COLLECTION METHOD SUCCESS === */
+export function sfaDeleteCollectionMethodSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_DELETE_COLLECTION_METHOD_SUCCESS,
+      payload: data
+    };
+  }
+  return { type: types.SFA_DELETE_COLLECTION_METHOD_FAILED, payload: data };
+}
+/** === SFA DELETE COLLECTION METHOD FAILED === */
+export function sfaDeleteCollectionMethodFailed(data) {
+  return { type: types.SFA_DELETE_COLLECTION_METHOD_FAILED, payload: data };
 }
