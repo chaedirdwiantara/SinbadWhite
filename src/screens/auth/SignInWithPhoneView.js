@@ -44,6 +44,7 @@ class SignInWithPhoneView extends Component {
    * ========================
    */
   componentDidMount() {
+    this.props.appVersion(0);
     /** THIS FOR MAINTENANCE PAGE */
     if (this.props.permanent.appMaintenance) {
       NavigationService.navigate('MaintenanceView');

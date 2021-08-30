@@ -149,6 +149,7 @@ class HomeView extends Component {
    * =======================
    */
   componentDidMount() {
+    this.props.appVersion(0);
     // this.props.versionsGetProcess();
     this.getKpiData(this.state.tabValue);
     this.props.navigation.setParams({

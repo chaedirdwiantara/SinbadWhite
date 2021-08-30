@@ -23,7 +23,6 @@ class FirstView extends Component {
    * ==============================
    */
   componentDidMount() {
-    this.props.appVersion(0);
     setTimeout(() => {
       this.props.navigation.navigate(
         this.props.permanent.token !== null ? 'App' : this.checkIFOTPexist()
