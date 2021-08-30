@@ -338,7 +338,7 @@ const SfaBillingLogView = props => {
    * =======================
    */
   const renderCollectionList = () => {
-    return dataSfaGetPaymentCollectionLog.data ? (
+    return dataSfaGetPaymentCollectionLog?.data ? (
       <>
         <View style={{ flex: 1, marginTop: 10 }}>
           <FlatList

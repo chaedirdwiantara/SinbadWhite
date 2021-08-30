@@ -507,7 +507,6 @@ const SfaCollectionAddView = props => {
 
   /** RENDER BANK TO */
   const renderBankTo = () => {
-    console.log(dataBankTo);
     return paymentCollectionMethodId === TRANSFER ? (
       <View style={{ marginBottom: 16 }}>
         <Text style={Fonts.type10}>*Tujuan Bank</Text>

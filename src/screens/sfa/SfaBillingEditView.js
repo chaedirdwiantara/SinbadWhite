@@ -42,20 +42,22 @@ const SfaBillingEditView = props => {
     loadingSfaPostCollectionPayment,
     loadingSfaGetBillingDetail,
     loadingSfaGetDetail,
-    dataSfaPostCollectionPayment,
-    errorSfaPostCollectionPayment,
+    errorSfaEditBilling,
+    dataSfaEditBilling,
     dataSfaGetDetail,
     dataSfaGetBillingDetail
   } = useSelector(state => state.sfa);
   const collectionInfo = props.navigation.state.params;
-  const stampNominal = dataSfaGetBillingDetail?.data.stampAmount;
-  const amount = collectionInfo.amount;
+  const stampStatus = dataSfaGetBillingDetail?.data.stampStatus;
+  const stampNominal =
+    stampStatus === USED || stampStatus === NOT_USED
+      ? dataSfaGetBillingDetail?.data.paymentCollectionMethod.stamp.nominal
+      : 0;
+  const amount = dataSfaGetBillingDetail?.data.paidByCollectionMethod;
   const totalAmount = stampNominal + amount;
-  const [paymentAmount, setPaymentAmount] = useState(
-    dataSfaGetBillingDetail?.data.paidByCollectionMethod
-  );
+  const [paymentAmount, setPaymentAmount] = useState(amount);
   const [isStampChecked, setIsStampChecked] = useState(
-    dataSfaGetBillingDetail?.data.stampStatus === USED ? true : false
+    stampStatus === USED ? true : false
   );
   const [totalPaymentAmount, setTotalPaymentAmount] = useState(
     totalAmount ? totalAmount : 0
@@ -69,14 +71,6 @@ const SfaBillingEditView = props => {
   );
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const { userSuppliers } = useSelector(state => state.user);
-  const { selectedMerchant } = useSelector(state => state.merchant);
-  //USEREF ERROR
-  const prevErrorSfaPostCollectionPaymentRef = useRef(
-    errorSfaPostCollectionPayment
-  );
-  useEffect(() => {
-    getBillingDetail();
-  }, []);
   //MODAL
   const [modalBottomError, setModalBottomError] = useState(false);
   const [messageError, setMessageError] = useState(null);
@@ -88,6 +82,10 @@ const SfaBillingEditView = props => {
    * FUNCTION
    * *********************************
    */
+
+  useEffect(() => {
+    getBillingDetail();
+  }, []);
   const getBillingDetail = () => {
     dispatch(sfaGetBillingDetailProcess(collectionInfo.id));
   };
@@ -163,23 +161,43 @@ const SfaBillingEditView = props => {
     };
     dispatch(sfaEditBillingProcess(data));
   };
+  /** USEREF SUCCESS */
+  const prevDataSfaEditBillingRef = useRef(dataSfaEditBilling);
+  /** USEREF ERROR */
+  const prevErrorSfaEditBillingRef = useRef(errorSfaEditBilling);
+
+  /** USE EFFECT SUCCESS EDIT BILLING */
+  useEffect(() => {
+    prevDataSfaEditBillingRef.current = dataSfaEditBilling;
+  }, []);
+  const prevDataSfaEditBilling = prevDataSfaEditBillingRef.current;
 
   //USE EFFECT PREV DATA ERROR
   useEffect(() => {
-    prevErrorSfaPostCollectionPaymentRef.current = errorSfaPostCollectionPayment;
+    prevErrorSfaEditBillingRef.current = errorSfaEditBilling;
   }, []);
-  const prevErrorSfaPostCollectionPayment =
-    prevErrorSfaPostCollectionPaymentRef.current;
+  const prevErrorSfaEditBilling = prevErrorSfaEditBillingRef.current;
 
   //HANDLE ERROR POST COLLECTION
   useEffect(() => {
-    if (prevErrorSfaPostCollectionPayment !== errorSfaPostCollectionPayment) {
-      if (errorSfaPostCollectionPayment) {
-        handleError(errorSfaPostCollectionPayment);
+    if (prevErrorSfaEditBilling !== errorSfaEditBilling) {
+      if (errorSfaEditBilling) {
+        handleError(errorSfaEditBilling);
       }
     }
-  }, [errorSfaPostCollectionPayment]);
+  }, [errorSfaEditBilling]);
 
+  /** HANDLE ON SUCCESS */
+  //HANDLE ERROR POST COLLECTION
+  useEffect(() => {
+    if (prevDataSfaEditBilling !== dataSfaEditBilling) {
+      if (dataSfaEditBilling) {
+        navigateOnSuccessEdit();
+      }
+    }
+  }, [dataSfaEditBilling]);
+
+  /** HANDLE ERROR EDIT BILLING */
   const handleError = error => {
     if (error) {
       switch (error?.data?.code) {
@@ -211,6 +229,17 @@ const SfaBillingEditView = props => {
     setModalBottomError(true);
   };
 
+  /** HANDLE SUCCESS EDIT BILLING */
+  const navigateOnSuccessEdit = () => {
+    const {
+      paymentCollectionType,
+      paymentCollectionMethod
+    } = dataSfaGetBillingDetail?.data;
+    NavigationService.navigate('SfaBillingLogView', {
+      collectionId: paymentCollectionMethod.paymentCollectionMethodId,
+      paymentCollectionTypeId: paymentCollectionType.id
+    });
+  };
   useEffect(() => {
     if (paymentAmount !== 0) {
       setIsButtonDisabled(false);
@@ -446,7 +475,7 @@ const SfaBillingEditView = props => {
    * ========================
    */
   const renderMaterai = () => {
-    const { stampStatus, stampAmount } = dataSfaGetBillingDetail?.data;
+    const { stampStatus } = dataSfaGetBillingDetail?.data;
     return dataSfaGetBillingDetail.data.paymentCollectionType.id === CHECK ||
       dataSfaGetBillingDetail.data.paymentCollectionType.id === GIRO ? (
       <View style={{ marginTop: 16 }}>
@@ -491,7 +520,6 @@ const SfaBillingEditView = props => {
         </TouchableOpacity>
         <View style={{ flex: 8 }}>
           <TouchableOpacity
-            // onPress={() => console.log('true')}
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -608,7 +636,7 @@ const SfaBillingEditView = props => {
    * MAIN
    * =======================
    */
-  return !loadingSfaGetBillingDetail && !loadingSfaGetDetail ? (
+  return !loadingSfaGetBillingDetail && dataSfaGetBillingDetail ? (
     <View style={{ flex: 1 }}>
       <SafeAreaView style={styles.mainContainer}>
         <ScrollView style={{ flex: 1, height: '100%' }}>

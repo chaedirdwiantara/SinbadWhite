@@ -448,7 +448,6 @@ const SfaBillingAddView = props => {
           </TouchableOpacity>
           <View style={{ flex: 8 }}>
             <TouchableOpacity
-              // onPress={() => console.log('true')}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
