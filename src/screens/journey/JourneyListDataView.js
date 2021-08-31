@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Text
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   bindActionCreators,
   connect,
@@ -20,8 +20,8 @@ import {
   Address,
   SearchBarType1,
   EmptyData
-} from '../../library/component'
-import { GlobalStyle, Fonts } from '../../helpers'
+} from '../../library/component';
+import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
@@ -90,7 +90,10 @@ class JourneyListDataView extends Component {
      * if agent change store
      */
     if (this.props.merchant.selectedMerchant !== null) {
-      if (this.props.merchant.selectedMerchant.storeId !== data.storeId) {
+      if (
+        parseInt(this.props.merchant.selectedMerchant.storeId, 10) !==
+        data.storeId
+      ) {
         this.props.merchantChanged(true);
       }
     }
