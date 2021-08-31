@@ -28,10 +28,9 @@ import {
   NOT_USED
 } from '../../constants/collectionConstants';
 import {
-  sfaPostCollectionPaymentProcess,
   sfaGetBillingDetailProcess,
-  sfaGetDetailProcess,
-  sfaEditBillingProcess
+  sfaEditBillingProcess,
+  sfaGetPaymentCollectionLogProcess
 } from '../../state/actions';
 import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 
@@ -41,21 +40,26 @@ const SfaBillingEditView = props => {
   const {
     loadingSfaPostCollectionPayment,
     loadingSfaGetBillingDetail,
-    loadingSfaGetDetail,
     errorSfaEditBilling,
     dataSfaEditBilling,
     dataSfaGetDetail,
     dataSfaGetBillingDetail
   } = useSelector(state => state.sfa);
+  const { selectedMerchant } = useSelector(state => state.merchant);
   const collectionInfo = props.navigation.state.params;
-  const stampStatus = dataSfaGetBillingDetail?.data.stampStatus;
-  const stampNominal =
+  const [stampStatus, setStampStatus] = useState(
+    dataSfaGetBillingDetail?.data.stampStatus
+  );
+  const [stampNominal, setStampNominal] = useState(
     stampStatus === USED || stampStatus === NOT_USED
       ? dataSfaGetBillingDetail?.data.paymentCollectionMethod.stamp.nominal
-      : 0;
-  const amount = dataSfaGetBillingDetail?.data.paidByCollectionMethod;
+      : 0
+  );
+  const [amount, setAmount] = useState(
+    dataSfaGetBillingDetail?.data.paidByCollectionMethod
+  );
   const totalAmount = stampNominal + amount;
-  const [paymentAmount, setPaymentAmount] = useState(amount);
+  const [paymentAmount, setPaymentAmount] = useState(amount ? amount : 0);
   const [isStampChecked, setIsStampChecked] = useState(
     stampStatus === USED ? true : false
   );
@@ -235,11 +239,21 @@ const SfaBillingEditView = props => {
       paymentCollectionType,
       paymentCollectionMethod
     } = dataSfaGetBillingDetail?.data;
+    const data = {
+      paymentCollectionMethodId:
+        paymentCollectionMethod.paymentCollectionMethodId,
+      limit: 20,
+      storeId: parseInt(selectedMerchant.storeId, 10),
+      skip: 0,
+      loading: true
+    };
+    dispatch(sfaGetPaymentCollectionLogProcess(data));
     NavigationService.navigate('SfaBillingLogView', {
       collectionId: paymentCollectionMethod.paymentCollectionMethodId,
       paymentCollectionTypeId: paymentCollectionType.id
     });
   };
+
   useEffect(() => {
     if (paymentAmount !== 0) {
       setIsButtonDisabled(false);

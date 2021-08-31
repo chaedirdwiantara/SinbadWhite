@@ -131,7 +131,8 @@ export const SFA_GET_PAYMENT_COLLECTION_LOG_SUCCESS =
   'SfaGetPaymentCollectionLogSuccess';
 export const SFA_GET_PAYMENT_COLLECTION_LOG_FAILED =
   'SfaGetPaymentCollectionLogFailed';
-
+export const SFA_PAYMENT_COLLECTION_LOG_LOADMORE_PROCESS =
+  'SfaGetPaymentCollectionLogLoadmoreProcess';
 /** EDIT COLLECTION METHOD */
 export const SFA_EDIT_COLLECTION_METHOD_PROCESS =
   'SfaEditCollectionMethodProcess';

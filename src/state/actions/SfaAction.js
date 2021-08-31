@@ -543,7 +543,13 @@ export function sfaGetBillingDetailFailed(data) {
  * GET COLLECTION PAYMENT LOG
  * ===========================
  */
-
+/** === SFA LOADMORE BILLING DETAIL PROCESS === */
+export function sfaGetPaymentCollectionLogLoadmoreProcess(data) {
+  return {
+    type: types.SFA_PAYMENT_COLLECTION_LOG_LOADMORE_PROCESS,
+    payload: data
+  };
+}
 /** === SFA GET BILLING DETAIL PROCESS === */
 export function sfaGetPaymentCollectionLogProcess(data) {
   return { type: types.SFA_GET_PAYMENT_COLLECTION_LOG_PROCESS, payload: data };

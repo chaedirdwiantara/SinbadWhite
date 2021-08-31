@@ -26,7 +26,8 @@ import {
   sfaCollectionListLoadmoreProcess,
   sfaGetPaymentCollectionLogProcess,
   sfaDeletePaymentBillingProcess,
-  sfaGetCollectionDetailProcess
+  sfaGetCollectionDetailProcess,
+  sfaGetPaymentCollectionLogLoadmoreProcess
 } from '../../state/actions';
 import { toLocalTime } from '../../helpers/TimeHelper';
 import SfaNoDataView from './SfaNoDataView';
@@ -43,8 +44,7 @@ const SfaBillingLogView = props => {
   ] = useState(false);
   const [limit, setLimit] = useState(4);
   const {
-    dataGetReferenceList,
-    loadingLoadMoreGetReferenceList,
+    loadingLoadMoreGetPaymentCollectionLog,
     loadingSfaGetPaymentCollectionLog,
     dataSfaGetPaymentCollectionLog,
     dataSfaDeletePaymentBilling,
@@ -102,9 +102,10 @@ const SfaBillingLogView = props => {
   const getPaymentCollectionLog = (loading, page) => {
     const data = {
       paymentCollectionMethodId: paymentCollectionMethodId,
-      limit: 10,
+      limit: page,
       storeId: parseInt(selectedMerchant.storeId, 10),
-      skip: 0
+      skip: 0,
+      loading
     };
     dispatch(sfaGetPaymentCollectionLogProcess(data));
   };
@@ -137,12 +138,15 @@ const SfaBillingLogView = props => {
   };
 
   const onLoadMore = () => {
-    if (dataGetReferenceList) {
-      if (dataGetReferenceList.data.length < dataGetReferenceList.meta.total) {
+    if (dataSfaGetPaymentCollectionLog) {
+      if (
+        dataSfaGetPaymentCollectionLog?.data.length <
+        dataSfaGetPaymentCollectionLog?.meta.total
+      ) {
         const page = limit + 10;
         setLimit(page);
-        dispatch(sfaCollectionListLoadmoreProcess(page));
-        getCollectionList(false, page);
+        dispatch(sfaGetPaymentCollectionLogLoadmoreProcess(page));
+        getPaymentCollectionLog(false, page);
       }
     }
   };
@@ -340,7 +344,7 @@ const SfaBillingLogView = props => {
   const renderCollectionList = () => {
     return dataSfaGetPaymentCollectionLog?.data ? (
       <>
-        <View style={{ flex: 1, marginTop: 10 }}>
+        <View style={{ flex: 1, marginVertical: 10 }}>
           <FlatList
             data={dataSfaGetPaymentCollectionLog.data}
             renderItem={renderItem}
@@ -352,7 +356,7 @@ const SfaBillingLogView = props => {
             refreshing={refreshing}
             onRefresh={() => onHandleRefresh()}
           />
-          {loadingLoadMoreGetReferenceList ? <LoadingLoadMore /> : null}
+          { loadingLoadMoreGetPaymentCollectionLog ? <LoadingLoadMore /> : null}
         </View>
       </>
     ) : (
