@@ -150,7 +150,8 @@ class HomeView extends Component {
    * =======================
    */
   componentDidMount() {
-    this.props.versionsGetProcess();
+    this.props.appVersion(0);
+    // this.props.versionsGetProcess();
     this.getKpiData(this.state.tabValue);
     this.props.navigation.setParams({
       fullName: this.props.user.fullName,
@@ -190,17 +191,28 @@ class HomeView extends Component {
         }
       }
     }
-    if (prevProps.global.dataGetVersion !== this.props.global.dataGetVersion) {
-      if (this.props.global.dataGetVersion !== null) {
-        if (
-          this.props.global.dataGetVersion.version !== DeviceInfo.getVersion()
-        ) {
-          if (this.props.global.dataGetVersion.isForce) {
-            this.setState({ openModalForceUpdateApp: true });
-          } else {
-            this.setState({ openModalUpdateApp: true });
-          }
-        }
+    // if (prevProps.global.dataGetVersion !== this.props.global.dataGetVersion) {
+    //   if (this.props.global.dataGetVersion !== null) {
+    //     if (
+    //       this.props.global.dataGetVersion.version !== DeviceInfo.getVersion()
+    //     ) {
+    //       if (this.props.global.dataGetVersion.isForce) {
+    //         this.setState({ openModalForceUpdateApp: true });
+    //       } else {
+    //         this.setState({ openModalUpdateApp: true });
+    //       }
+    //     }
+    //   }
+    // }
+    if (
+      prevProps.permanent.appVersionCode !== this.props.permanent.appVersionCode
+    ) {
+      if (this.props.permanent.appVersionCode > DeviceInfo.getBuildNumber()) {
+        this.setState({ openModalForceUpdateApp: true });
+      } else if (
+        this.props.permanent.appVersionCode <= DeviceInfo.getBuildNumber()
+      ) {
+        this.setState({ openModalForceUpdateApp: false });
       }
     }
   }
