@@ -23,6 +23,7 @@ import {
   ModalConfirmation,
   ButtonSingle,
   LoadingPage,
+  SkeletonType26,
   BackHandlerBackSpecific
 } from '../../../library/component';
 import { GlobalStyle, Fonts } from '../../../helpers';
@@ -35,7 +36,6 @@ import ModalBottomCompleted from './ModalBottomCompleted';
 import ModalBottomSubmit from './ModalBottomSubmit';
 import MerchantPhotoList from './MerchantPhotoList';
 import MerchantSurveySteps from './MerchantSurveySteps';
-import { ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY } from '../../../constants';
 const { width } = Dimensions.get('window');
 
 class MerchantSurveyDisplayPhotoView extends Component {
@@ -396,6 +396,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     const { surveySteps } = this.props.navigation.state.params;
     return (
       <View style={[styles.cardContainer]}>
+        {this.props.merchant.loadingGetSurvey && <SkeletonType26 />}
         {this.state.photosDisplayBefore.length !== 0 ? (
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
             <Text>{`Foto ${
@@ -432,6 +433,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
           </View>
         ) : null}
         <View style={{ height: 16 }} />
+        {this.props.merchant.loadingGetSurvey && <SkeletonType26 />}
         {this.state.photosDisplayAfter.length !== 0 ? (
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
             <Text>{`Foto ${
@@ -861,23 +863,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 16022021
+ * updatedDate: 13082021
  * updatedFunction:
- * -> update style for image at renderReviewImage.
- * updatedBy: dyah
- * updatedDate: 24022021
- * updatedFunction:
- *  -> Update the props of log activity.
- * updatedBy: dyah
- * updatedDate: 26022021
- * updatedFunction:
- * -> Update the props of post activity.
- * updatedBy: dyah
- * updatedDate: 08032021
- * updatedFunction:
- * -> Add function when return to tasklist.
- * updatedBy: dyah
- * updatedDate: 21042021
- * updatedFunction:
- * -> Add function to get survey list.
+ * -> add skeleton for photo survey.
  */
