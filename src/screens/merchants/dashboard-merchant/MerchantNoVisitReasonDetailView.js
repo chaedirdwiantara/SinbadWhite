@@ -17,18 +17,21 @@ import {
   LoadingPage,
   ModalConfirmation,
   ModalBottomErrorRespons,
+  SkeletonType25,
   Address
 } from '../../../library/component';
 import { Fonts } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
+import ModalBeforeCheckIn from './ModalBeforeCheckIn';
 
 class MerchantNoVisitReasonDetailView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       openModalError: false,
+      openModalBeforeCheckIn: false,
       modalConfirmation: false
     };
   }
@@ -51,7 +54,7 @@ class MerchantNoVisitReasonDetailView extends Component {
       this.props.merchant.errorGetNoVisitReason
     ) {
       if (this.props.merchant.errorGetNoVisitReason !== null) {
-        this.setState({ openModalError: true });
+        this.doError();
       }
     }
     /** error get journey book detail */
@@ -60,9 +63,29 @@ class MerchantNoVisitReasonDetailView extends Component {
       this.props.merchant.errorGetJourneyBookDetail
     ) {
       if (this.props.merchant.errorGetJourneyBookDetail !== null) {
-        this.setState({ openModalError: true });
+        this.doError();
       }
     }
+  }
+  /** For Error Response */
+  doError() {
+    this.setState({
+      openModalError: true,
+      openModalBeforeCheckIn: false,
+      modalConfirmation: false
+    });
+  }
+  /** For Check latest Checkin/out when Revisit Store */
+  revisitStore() {
+    if (this.props.merchant.dataGetLatestCheckInOut) {
+      return this.setState({
+        modalConfirmation: false,
+        openModalBeforeCheckIn: true
+      });
+    }
+    return this.setState({ modalConfirmation: false }, () =>
+      NavigationService.navigate('MerchantCheckinView')
+    );
   }
   /**
    * ========================
@@ -135,7 +158,9 @@ class MerchantNoVisitReasonDetailView extends Component {
                 uri: journeyBookStores.visitStorePhotos[0].photoStoreUrl
               }}
             />
-          ) : null}
+          ) : (
+            <SkeletonType25 />
+          )}
         </View>
       </View>
     );
@@ -179,6 +204,15 @@ class MerchantNoVisitReasonDetailView extends Component {
    * RENDER MODAL
    * ====================
    */
+  /** RENDER MODAL BEFORE CHECKIN */
+  renderModalBeforeCheckIn() {
+    return (
+      <ModalBeforeCheckIn
+        open={this.state.openModalBeforeCheckIn}
+        ok={() => this.setState({ openModalBeforeCheckIn: false })}
+      />
+    );
+  }
   /** Render Modal Confirmation */
   renderModalConfirmation() {
     return (
@@ -193,11 +227,7 @@ class MerchantNoVisitReasonDetailView extends Component {
         okText={'Tidak'}
         cancelText={'Kunjungi'}
         ok={() => this.setState({ modalConfirmation: false })}
-        cancel={() =>
-          this.setState({ modalConfirmation: false }, () =>
-            NavigationService.navigate('MerchantCheckinView')
-          )
-        }
+        cancel={() => this.revisitStore()}
       />
     );
   }
@@ -225,6 +255,7 @@ class MerchantNoVisitReasonDetailView extends Component {
           <LoadingPage />
         )}
         {/* MODAL */}
+        {this.renderModalBeforeCheckIn()}
         {this.renderModalConfirmation()}
         {this.renderModalErrorResponse()}
       </SafeAreaView>
@@ -290,8 +321,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 26072021
  * updatedBy: dyah
- * updatedDate: 27072021
+ * updatedDate: 13082021
  * updatedFunction:
- * -> update size of photo.
- * -> add validation when showing the detail.
+ * -> add skeleton for photo reason not visit.
  */

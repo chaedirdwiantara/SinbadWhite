@@ -18,6 +18,7 @@ import {
   SkeletonType1,
   LoadingLoadMore,
   Address,
+  EmptyDataType2,
   EmptyData
 } from '../../library/component'
 import { Color } from '../../config'
@@ -190,7 +191,14 @@ class ModalMerchantListDataView extends Component {
   }
   /** === RENDER EMPTY === */
   renderEmpty() {
-    return (
+    return this.props.search.length > 0 &&
+      this.props.merchant.dataGetPortfolioV2.length > 0 ? (
+      <EmptyDataType2
+        top
+        title={'Pencarian Tidak Ditemukan'}
+        description={'Cek kembali nama toko atau ID toko yang kamu masukkan'}
+      />
+    ) : (
       <EmptyData
         title={'List Toko Kosong'}
         description={'Maaf , Anda tidak mempunyai list toko'}
@@ -251,7 +259,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 08072021
+ * updatedDate: 09082021
  * updatedFunction:
- * -> move variable 'date' to inside class component (related function)
+ * -> update image when didn't find the store when searching.
  */

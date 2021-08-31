@@ -85,6 +85,7 @@ class SearchBarType1 extends Component {
           editable={
             this.props.editable !== undefined ? this.props.editable : true
           }
+          maxLength={this.props.maxLength}
           selectionColor={Color.mainColor}
           onEndEditing={() => this.searchText()}
           value={this.state.search}
@@ -143,8 +144,8 @@ export default connect(mapStateToProps, {})(SearchBarType1);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 16072021
+ * updatedDate: 24082021
  * updatedFunction:
- * -> adding new props 'editable' to disable/enable search bar.
+ * -> adding new props 'maxlength' to maximize the character.
  *
  */

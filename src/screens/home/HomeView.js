@@ -18,6 +18,7 @@ import {
   MaterialIcon,
   DeviceInfo,
   bindActionCreators,
+  moment,
   connect
 } from '../../library/thirdPartyPackage';
 import {
@@ -248,18 +249,22 @@ class HomeView extends Component {
 
     switch (period) {
       case 'daily':
-        params.startDate = getStartDateMinHour();
-        params.endDate = getDateNow();
+        params.startDate = moment().format('YYYY-MM-DD');
+        params.endDate = moment().format('YYYY-MM-DD');
         break;
 
       case 'weekly':
-        params.startDate = getStartDateNow();
-        params.endDate = getDateNow();
+        params.startDate = moment().format('YYYY-MM-DD');
+        params.endDate = moment().format('YYYY-MM-DD');
         break;
 
       case 'monthly':
-        params.startDate = getStartDateMonth();
-        params.endDate = getEndDateMonth();
+        params.startDate = moment()
+          .startOf('month')
+          .format('YYYY-MM-DD');
+        params.endDate = moment()
+          .endOf('month')
+          .format('YYYY-MM-DD');
         break;
 
       default:
@@ -788,8 +793,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 30062021
+ * updatedDate: 25082021
  * updatedFunction:
- * -> update kpi dashboard title (Toko Order = Toko Memesan)
+ * -> update date format.
  *
  */
