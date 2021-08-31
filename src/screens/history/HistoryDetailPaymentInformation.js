@@ -4,7 +4,8 @@ import {
   View,
   Text,
   SafeAreaView,
-  StyleSheet
+  StyleSheet,
+  TouchableOpacity
 } from '../../library/reactPackage';
 import { MoneyFormat } from '../../helpers/NumberFormater';
 import { Fonts, GlobalStyle } from '../../helpers';
@@ -20,6 +21,7 @@ import {
   PAY_ON_DELIVERY,
   WAITING_FOR_PAYMENT
 } from '../../constants/paymentConstants';
+
 class HistoryDetailPaymentInformation extends Component {
   constructor(props) {
     super(props);
@@ -175,9 +177,21 @@ class HistoryDetailPaymentInformation extends Component {
         <View style={GlobalStyle.boxPadding} />
         <View style={GlobalStyle.shadowForBox}>
           <View
-            style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
+            style={{
+              paddingHorizontal: 16,
+              paddingTop: 16,
+              paddingBottom: 8,
+              flexDirection: 'row'
+            }}
           >
-            <Text style={Fonts.type48}>Informasi Pembayaran</Text>
+            <View style={{ flex: 1, alignItems: 'flex-start' }}>
+              <Text style={Fonts.type48}>Informasi Pembayaran</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              <TouchableOpacity onPress={() => console.log('pressed')}>
+                <Text style={Fonts.type29}>Riwayat Penagihan</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
           <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
