@@ -139,7 +139,10 @@ class JourneyMapView extends Component {
      * if agent change store
      */
     if (this.props.merchant.selectedMerchant !== null) {
-      if (this.props.merchant.selectedMerchant.storeId !== data.storeId) {
+      if (
+        parseInt(this.props.merchant.selectedMerchant.storeId, 10) !==
+        data.storeId
+      ) {
         this.props.merchantChanged(true);
       }
     }
@@ -626,7 +629,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(JourneyMapView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(JourneyMapView);
 
 /**
  * ============================
