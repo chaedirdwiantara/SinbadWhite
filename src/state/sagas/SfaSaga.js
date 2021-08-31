@@ -319,7 +319,7 @@ function* SfaSaga() {
     loadmoreCollectionLog
   );
   yield takeEvery(types.SFA_GET_COLLECTION_DETAIL_PROCESS, getCollectionDetail);
-  yield takeEvery(types.SFA_EDIT_COLLECTION_PROCESS, editCollection);
+  yield takeEvery(types.SFA_EDIT_BILLING_PROCESS, editCollectionBilling);
   yield takeEvery(
     types.SFA_DELETE_PAYMENT_BILLING_PROCESS,
     deletePaymentBilling
