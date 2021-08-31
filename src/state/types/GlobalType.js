@@ -47,3 +47,4 @@ export const UPLOAD_IMAGE_SUCCESS = 'uploadImageSuccess';
 export const UPLOAD_IMAGE_FAILED = 'uploadImageFailed';
 /** THIS FOR MAINTENANCE APP */
 export const APP_MAINTENANCE = 'appCurrentMaintenance';
+export const APP_VERSION = 'appVersion';
