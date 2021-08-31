@@ -11,9 +11,11 @@ class RealTimeActionFirebase extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      maintenance: false
+      maintenance: false,
+      versionCode: 0
     };
     this.maintenanceRef = firebase.database().ref('maintenance/sinbadWhite');
+    this.checkVersion = firebase.database().ref('mobileVersion/sinbadWhite');
   }
 
   /**
@@ -24,6 +26,7 @@ class RealTimeActionFirebase extends Component {
   /** => DID MOUNT == */
   componentDidMount() {
     this.fetchDataForMaintenance();
+    this.fetchDataForVersion();
   }
   /** => DID UPDATE === */
   componentDidUpdate(prevState) {
@@ -35,10 +38,20 @@ class RealTimeActionFirebase extends Component {
         this.saveDataMaintenance(this.state.maintenance);
       }
     }
+    /** FOR VERSION */
+    if (prevState.versionCode !== this.state.versionCode) {
+      if (this.props.permanent.appVersionCode !== this.state.versionCode) {
+        this.saveDataVersionCode(this.state.versionCode);
+      }
+    }
   }
   // /** === save data */
   saveDataMaintenance(data) {
     this.props.appMaintenance(data);
+  }
+  /** => save data version code */
+  saveDataVersionCode(data) {
+    this.props.appVersion(data);
   }
   /** => FETCH DATA */
   fetchDataForMaintenance() {
@@ -46,7 +59,12 @@ class RealTimeActionFirebase extends Component {
       this.setState({ maintenance: data.val() });
     });
   }
-
+  /** => FETCH DATA FOR VERSION */
+  fetchDataForVersion() {
+    this.checkVersion.on('value', data => {
+      this.setState({ versionCode: data.val().versionCode });
+    });
+  }
   /**
    * ========================
    * RENDER VIEW

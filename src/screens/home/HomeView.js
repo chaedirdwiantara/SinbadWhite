@@ -18,6 +18,7 @@ import {
   MaterialIcon,
   DeviceInfo,
   bindActionCreators,
+  moment,
   connect
 } from '../../library/thirdPartyPackage';
 import {
@@ -149,7 +150,8 @@ class HomeView extends Component {
    * =======================
    */
   componentDidMount() {
-    this.props.versionsGetProcess();
+    this.props.appVersion(0);
+    // this.props.versionsGetProcess();
     this.getKpiData(this.state.tabValue);
     this.props.navigation.setParams({
       fullName: this.props.user.fullName,
@@ -189,17 +191,28 @@ class HomeView extends Component {
         }
       }
     }
-    if (prevProps.global.dataGetVersion !== this.props.global.dataGetVersion) {
-      if (this.props.global.dataGetVersion !== null) {
-        if (
-          this.props.global.dataGetVersion.version !== DeviceInfo.getVersion()
-        ) {
-          if (this.props.global.dataGetVersion.isForce) {
-            this.setState({ openModalForceUpdateApp: true });
-          } else {
-            this.setState({ openModalUpdateApp: true });
-          }
-        }
+    // if (prevProps.global.dataGetVersion !== this.props.global.dataGetVersion) {
+    //   if (this.props.global.dataGetVersion !== null) {
+    //     if (
+    //       this.props.global.dataGetVersion.version !== DeviceInfo.getVersion()
+    //     ) {
+    //       if (this.props.global.dataGetVersion.isForce) {
+    //         this.setState({ openModalForceUpdateApp: true });
+    //       } else {
+    //         this.setState({ openModalUpdateApp: true });
+    //       }
+    //     }
+    //   }
+    // }
+    if (
+      prevProps.permanent.appVersionCode !== this.props.permanent.appVersionCode
+    ) {
+      if (this.props.permanent.appVersionCode > DeviceInfo.getBuildNumber()) {
+        this.setState({ openModalForceUpdateApp: true });
+      } else if (
+        this.props.permanent.appVersionCode <= DeviceInfo.getBuildNumber()
+      ) {
+        this.setState({ openModalForceUpdateApp: false });
       }
     }
   }
@@ -248,18 +261,22 @@ class HomeView extends Component {
 
     switch (period) {
       case 'daily':
-        params.startDate = getStartDateMinHour();
-        params.endDate = getDateNow();
+        params.startDate = moment().format('YYYY-MM-DD');
+        params.endDate = moment().format('YYYY-MM-DD');
         break;
 
       case 'weekly':
-        params.startDate = getStartDateNow();
-        params.endDate = getDateNow();
+        params.startDate = moment().format('YYYY-MM-DD');
+        params.endDate = moment().format('YYYY-MM-DD');
         break;
 
       case 'monthly':
-        params.startDate = getStartDateMonth();
-        params.endDate = getEndDateMonth();
+        params.startDate = moment()
+          .startOf('month')
+          .format('YYYY-MM-DD');
+        params.endDate = moment()
+          .endOf('month')
+          .format('YYYY-MM-DD');
         break;
 
       default:
@@ -788,8 +805,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 30062021
+ * updatedDate: 25082021
  * updatedFunction:
- * -> update kpi dashboard title (Toko Order = Toko Memesan)
+ * -> update date format.
  *
  */

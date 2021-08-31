@@ -245,6 +245,7 @@ class ModalBottomMerchantList extends Component {
     return (
       <View>
         <SearchBarType1
+          maxLength={30}
           searchText={this.state.search}
           editable={this.props.merchant.dataGetPortfolioV2 ? true : false}
           placeholder={'Cari nama / id toko disini'}
@@ -423,8 +424,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 19072021
+ * updatedDate: 24082021
  * updatedFunction:
- * -> fix bug sales (who didn't have portfolio) trying to search merchant.
- * -> add toast when sales didn't have portfolio.
+ * -> maximise the character of search (30 characters)
  */
