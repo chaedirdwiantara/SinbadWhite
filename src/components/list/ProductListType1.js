@@ -10,9 +10,9 @@ import {
   Image,
   StyleSheet,
   Text
-} from '../../library/reactPackage'
-import { GlobalStyle, Fonts } from '../../helpers'
-import { Color } from '../../config'
+} from '../../library/reactPackage';
+import { GlobalStyle, Fonts } from '../../helpers';
+import { Color } from '../../config';
 
 class ProductListType1 extends Component {
   constructor(props) {
@@ -44,7 +44,7 @@ class ProductListType1 extends Component {
   /** ITEM LIST PRODUCT */
   renderListProductImageContent(itemProduct, indexCounter) {
     return itemProduct.map((item, index) => {
-      return indexCounter++ < 4 ? (
+      return indexCounter++ < 3 ? (
         <View key={index} style={{ paddingHorizontal: 5 }}>
           <Image
             defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
@@ -61,17 +61,14 @@ class ProductListType1 extends Component {
   }
   /** LIST ALL PRODUCT */
   renderListProductImage(itemBrand, indexCounter) {
-    return itemBrand.map((item, index) => {
-      indexCounter++;
-      return (
-        <View key={index} style={{ flexDirection: 'row' }}>
-          {this.renderListProductImageContent(
-            item.orderBrandCatalogues,
-            indexCounter
-          )}
-        </View>
-      );
-    });
+    return (
+      <View key={indexCounter} style={{ flexDirection: 'row' }}>
+        {this.renderListProductImageContent(
+          itemBrand[indexCounter].orderBrandCatalogues,
+          indexCounter
+        )}
+      </View>
+    );
   }
 
   render() {
@@ -101,15 +98,14 @@ const styles = StyleSheet.create({
 export default ProductListType1;
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
