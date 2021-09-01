@@ -1,3 +1,5 @@
+/* eslint-disable no-case-declarations */
+/* eslint-disable no-prototype-builtins */
 import {
   React,
   Component,
@@ -214,7 +216,7 @@ class MerchantEditStockView extends Component {
     const dataForDiscard = [];
     this.props.merchant.dataGetRecordStock.map((data, index) => {
       const dataObject = {
-        id: parseInt(data.catalogueId),
+        id: parseInt(data.catalogueId, 10),
         isMustSale: data.isMustSale
       };
       dataForDiscard.push(dataObject);
@@ -241,7 +243,7 @@ class MerchantEditStockView extends Component {
   batchDeleteData() {
     const dataForBatchDelete = [];
     this.props.merchant.dataGetRecordStock.map((data, index) => {
-      dataForBatchDelete.push(parseInt(data.id));
+      dataForBatchDelete.push(parseInt(data.id, 10));
     });
     this.setState({ dataForBatchDelete });
   }
@@ -290,9 +292,9 @@ class MerchantEditStockView extends Component {
 
         newCatalogueArray.map((item, index) => {
           const object = {
-            id: parseInt(item.id),
-            showedStock: parseInt(item.showedStock),
-            nonShowedStock: parseInt(item.nonShowedStock)
+            id: parseInt(item.id, 10),
+            showedStock: parseInt(item.showedStock, 10),
+            nonShowedStock: parseInt(item.nonShowedStock, 10)
           };
           dataForSaveProduct.push(object);
         });
