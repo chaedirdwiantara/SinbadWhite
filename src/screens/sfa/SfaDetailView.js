@@ -396,7 +396,7 @@ function SfaDetailView(props) {
     }
   };
   /** === RENDER VOUCHER LIST ==== */
-  const renderVoucherList = (data) => {
+  const renderVoucherList = data => {
     return data.map((item, index) => {
       return (
         <View key={index}>
@@ -412,7 +412,7 @@ function SfaDetailView(props) {
         </View>
       );
     });
-  }
+  };
   /** RENDER PROMO */
   const renderPromo = () => {
     return dataSfaGetDetail.data.promoList.map((item, index) => {
@@ -484,7 +484,11 @@ export const HeaderRightOption = props => {
     <View style={styles.navOption}>
       <>
         <TouchableOpacity
-          onPress={() => NavigationService.navigate('SfaCollectionLog')}
+          onPress={() =>
+            NavigationService.navigate('SfaCollectionLog', {
+              type: 'collection'
+            })
+          }
         >
           <MaterialIcon
             name="restore"
