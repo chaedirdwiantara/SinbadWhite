@@ -4,7 +4,6 @@ import {
   View,
   StyleSheet,
   FlatList,
-  Image,
   TouchableOpacity,
   Text
 } from '../../../library/reactPackage';

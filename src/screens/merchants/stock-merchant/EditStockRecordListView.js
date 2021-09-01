@@ -101,6 +101,15 @@ class EditStockRecordListView extends Component {
                   flexDirection: 'row',
                   justifyContent: 'flex-end'
                 }}
+                onPress={() => {
+                  this.props.parentFunction({
+                    type: 'ShelfStock',
+                    data: {
+                      packagedQty: item.packagedQty,
+                      name: 'Shelf Produk'
+                    }
+                  });
+                }}
               >
                 <View style={[styles.inputBox, { marginRight: 8 }]}>
                   <Text style={[Fonts.type24, styles.textInput]}>
@@ -125,6 +134,15 @@ class EditStockRecordListView extends Component {
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'flex-end'
+                }}
+                onPress={() => {
+                  this.props.parentFunction({
+                    type: 'NonShelfStock',
+                    data: {
+                      packagedQty: item.packagedQty,
+                      name: 'Non Shelf Produk'
+                    }
+                  });
                 }}
               >
                 <View style={[styles.inputBox, { marginRight: 8 }]}>

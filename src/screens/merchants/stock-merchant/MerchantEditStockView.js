@@ -32,6 +32,7 @@ import GlobalFont from '../../../helpers/GlobalFont';
 import * as ActionCreators from '../../../state/actions';
 import EditStockRecordListView from './EditStockRecordListView';
 import ModalBottomProductList from './ModalBottomProductList';
+import ModalUpdateStock from './ModalUpdateStock';
 
 class MerchantEditStockView extends Component {
   constructor(props) {
@@ -41,6 +42,8 @@ class MerchantEditStockView extends Component {
       openModalBackConfirmation: false,
       openModalSaveConfirmation: false,
       openModalProductList: false,
+      openModalUpdateStock: false,
+      modalTitleUpdate: '',
       selectedProduct: [],
       dataForSaveProduct: [],
       search: '',
@@ -303,6 +306,18 @@ class MerchantEditStockView extends Component {
           dataForSaveProduct
         });
         break;
+      case 'ShelfStock':
+        this.setState({
+          openModalUpdateStock: true,
+          modalTitleUpdate: data.data.name
+        });
+        break;
+      case 'NonShelfStock':
+        this.setState({
+          openModalUpdateStock: true,
+          modalTitleUpdate: data.data.name
+        });
+        break;
       default:
         this.setState({ search: '' });
         this.getRecordStock(this.state.search);
@@ -464,6 +479,22 @@ class MerchantEditStockView extends Component {
       <View />
     );
   }
+  // RENDER MODAL UPDATE STOCK
+  renderModalUpdateStock() {
+    return this.state.openModalUpdateStock ? (
+      <ModalUpdateStock
+        open={this.state.openModalUpdateStock}
+        close={() => {
+          this.setState({ openModalUpdateStock: false });
+        }}
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+        title={this.state.modalTitleUpdate}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** MAIN RENDER */
   render() {
     return (
@@ -478,6 +509,7 @@ class MerchantEditStockView extends Component {
         {this.renderModalBackConfirmation()}
         {this.renderModalSaveConfirmation()}
         {this.renderModalProductList()}
+        {this.renderModalUpdateStock()}
       </SafeAreaView>
     );
   }
