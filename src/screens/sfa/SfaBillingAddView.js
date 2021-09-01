@@ -245,9 +245,6 @@ const SfaBillingAddView = props => {
   const checkMateraiStatus = status => {
     let text;
     switch (status) {
-      // case NOT_USED:
-      //   text = 'Pembayaran tidak menggunakan materai';
-      //   break;
       case NOT_AVAILABLE:
         text = 'Penagihan tidak menggunakan materai';
         break;
