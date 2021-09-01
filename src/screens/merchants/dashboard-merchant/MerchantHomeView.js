@@ -109,6 +109,12 @@ class MerchantHomeView extends Component {
           activity: ACTIVITY_JOURNEY_PLAN_ORDER
         },
         {
+          name: 'Catatan Stok',
+          title: 'Isi',
+          goTo: 'stock',
+          activity: ACTIVITY_JOURNEY_PLAN_STOCK
+        },
+        {
           name: 'Keluar Toko',
           title: 'Keluar',
           goTo: 'checkOut',
