@@ -150,7 +150,7 @@ const SfaBillingEditView = props => {
       setTotalPaymentAmount(totalPaymentAmount - stampAmount);
     }
   };
-
+/** ON SUBMIT EDIT */
   const submit = () => {
     setIsButtonDisabled(true);
     const data = {
@@ -218,7 +218,7 @@ const SfaBillingEditView = props => {
       }
     }
   };
-
+/** HANDLE ERROR SPECIFIC */
   const handleErrorSpecific = (error, title, buttonText) => {
     setMessageError(error.data.errorMessage);
     setTitleError(title);
@@ -226,6 +226,7 @@ const SfaBillingEditView = props => {
     setModalBottomError(true);
   };
 
+  /** HANDLE ERROR GLOBAL */
   const handleErrorGlobal = () => {
     setMessageError(null);
     setTitleError(null);

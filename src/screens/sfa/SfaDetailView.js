@@ -395,7 +395,24 @@ function SfaDetailView(props) {
       );
     }
   };
-
+  /** === RENDER VOUCHER LIST ==== */
+  const renderVoucherList = (data) => {
+    return data.map((item, index) => {
+      return (
+        <View key={index}>
+          {this.renderContentListGlobal(
+            item.voucherValue !== null
+              ? item.voucherName
+              : `${item.catalogueName} (${item.voucherQty} Pcs)`,
+            item.voucherValue !== null
+              ? `- ${MoneyFormatSpace(item.voucherValue)}`
+              : 'FREE',
+            true
+          )}
+        </View>
+      );
+    });
+  }
   /** RENDER PROMO */
   const renderPromo = () => {
     return dataSfaGetDetail.data.promoList.map((item, index) => {
