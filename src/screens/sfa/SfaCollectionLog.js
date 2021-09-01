@@ -17,7 +17,12 @@ import {
   LoadingLoadMore,
   ToastType1
 } from '../../library/component';
-import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
+import {
+  Fonts,
+  GlobalStyle,
+  MoneyFormat,
+  MoneyFormatSpace
+} from '../../helpers';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
@@ -35,6 +40,7 @@ import {
 } from '../../constants/collectionConstants';
 
 function SfaCollectionLog(props) {
+  const type = props.navigation.state.params.type;
   const dispatch = useDispatch();
   const {
     dataSfaGetCollectionLog,
@@ -42,6 +48,7 @@ function SfaCollectionLog(props) {
     dataSfaGetDetail,
     dataSfaDeleteCollection
   } = useSelector(state => state.sfa);
+  const { dataDetailHistory } = useSelector(state => state.history);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [limit, setLimit] = useState(20);
   const [isShowToast, setIsShowToast] = useState(false);
@@ -84,6 +91,12 @@ function SfaCollectionLog(props) {
     getCollectionLog();
   }, []);
 
+  const navigateToDetail = item => {
+    const screenName = type ? 'HistoryCollectionDetail' : 'SfaBillingDetail';
+    NavigationService.navigate(screenName, {
+      paymentBillingId: item.id
+    });
+  };
   const loadMore = () => {
     if (dataSfaGetCollectionLog) {
       if (
@@ -107,14 +120,53 @@ function SfaCollectionLog(props) {
     getCollectionLog();
   };
   const getCollectionLog = () => {
+    const orderParcelId =
+      type === 'history'
+        ? dataDetailHistory.billing.orderParcelId
+        : dataSfaGetDetail.data.id;
     const data = {
-      storeId: parseInt(selectedMerchant.storeId),
-      orderParcelId: dataSfaGetDetail.data.id,
+      storeId: parseInt(selectedMerchant.storeId, 10),
+      orderParcelId,
       limit: limit,
       skip: 0
     };
     dispatch(sfaGetCollectionLogProcess(data));
   };
+
+  /** RENDER CONTENT LIST GLOBAL */
+  const renderContentListGlobal = (key, value, black, bold, red) => {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginTop: 8
+        }}
+      >
+        <View style={{ flex: 1, alignItems: 'flex-start' }}>
+          <Text
+            numberOfLines={1}
+            style={black ? Fonts.type17 : bold ? Fonts.type50 : Fonts.type96}
+          >
+            {key}
+          </Text>
+        </View>
+        <View style={{ flex: 1, alignItems: 'flex-end' }}>
+          <Text
+            accessible={true}
+            accessibilityLabel={'txtDetailValueGlobal'}
+            style={[
+              red ? Fonts.type113p : Fonts.type17,
+              { textAlign: 'right' }
+            ]}
+          >
+            {value}
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
   /**
    * *********************************
    * RENDER VIEW
@@ -137,11 +189,7 @@ function SfaCollectionLog(props) {
       <View key={index} style={{ marginHorizontal: 16, marginVertical: 8 }}>
         <TouchableOpacity
           style={[styles.listContainer, GlobalStyle.shadowForBox]}
-          onPress={() =>
-            NavigationService.navigate('SfaCollectionDetailView', {
-              paymentCollectionId: item.id
-            })
-          }
+          onPress={() => navigateToDetail(item)}
         >
           <View style={styles.statusContainer}>
             {item.status ? (
@@ -186,37 +234,23 @@ function SfaCollectionLog(props) {
             </View>
           </View>
           <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
-          <View style={styles.salesContainer}>
-            <View>
-              <Text
-                numberOfLines={1}
-                style={{ ...Fonts.type42, marginBottom: 8, width: 150 }}
-              >
-                {item.salesName}
-              </Text>
-              <Text style={Fonts.type96}>{date} WIB</Text>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'flex-end'
-              }}
-            >
-              <View style={{ marginLeft: 16 }}>
-                <Text
-                  style={{
-                    ...Fonts.type30,
-                    marginBottom: 8,
-                    textAlign: 'right'
-                  }}
-                >
-                  {MoneyFormat(item.amount)}
-                </Text>
-                <Text style={[Fonts.type96, { textAlign: 'right' }]}>
-                  {item.paymentCollectionMethodName}
-                </Text>
-              </View>
+          <View>
+            <View style={styles.salesContainer}>
+              {renderContentListGlobal('Nomor Pesanan', item.orderCode)}
+              {renderContentListGlobal(
+                'Tanggal Pembayaran',
+                toLocalTime(item.createdAt, 'DD MMM YYYY')
+              )}
+              {renderContentListGlobal(
+                'Metode Penagihan',
+                item.paymentCollectionMethodName
+              )}
+              {renderContentListGlobal('Salesman', item.salesName)}
+              {renderContentListGlobal(
+                'Total Pembayaran',
+                MoneyFormatSpace(item.amount),
+                true
+              )}
             </View>
           </View>
           <View style={{ ...GlobalStyle.lines, marginLeft: 16 }} />
@@ -302,10 +336,9 @@ const styles = StyleSheet.create({
     marginVertical: 16
   },
   salesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     marginHorizontal: 16,
-    marginVertical: 16
+    marginTop: 8,
+    marginBottom: 16
   }
 });
 

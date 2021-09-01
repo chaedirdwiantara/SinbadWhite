@@ -21,6 +21,7 @@ import {
   PAY_ON_DELIVERY,
   WAITING_FOR_PAYMENT
 } from '../../constants/paymentConstants';
+import NavigationService from '../../navigation/NavigationService';
 
 class HistoryDetailPaymentInformation extends Component {
   constructor(props) {
@@ -188,7 +189,13 @@ class HistoryDetailPaymentInformation extends Component {
               <Text style={Fonts.type48}>Informasi Pembayaran</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <TouchableOpacity onPress={() => console.log('pressed')}>
+              <TouchableOpacity
+                onPress={() =>
+                  NavigationService.navigate('HistoryCollectionLog', {
+                    type: 'history'
+                  })
+                }
+              >
                 <Text style={Fonts.type29}>Riwayat Penagihan</Text>
               </TouchableOpacity>
             </View>
