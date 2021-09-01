@@ -83,7 +83,7 @@ const CardHeader = props => {
           {props?.renderCardHeaderBadge ? props.renderCardHeaderBadge() : null}
         </View>
         <View style={[GlobalStyle.lines, { flex: 1, marginVertical: 8 }]} />
-        {props?.renderCardBody ? props.renderCardBody() : null}
+        {props.renderCardBody ? props.renderCardBody() : null}
       </View>
     </View>
   );
