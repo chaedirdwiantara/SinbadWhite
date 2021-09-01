@@ -47,6 +47,23 @@ class EditStockRecordListView extends Component {
   }
   /** RENDER CARD DATA */
   renderCardData({ item, index }) {
+    let shelfQty = {};
+    let nonShelfQty = {};
+
+    if (item.showedStock < item.packagedQty) {
+      (shelfQty.pcs = item.showedStock), (shelfQty.box = 0);
+    } else {
+      (shelfQty.pcs = item.showedStock % item.packagedQty),
+        (shelfQty.box = Math.floor(item.showedStock / item.packagedQty));
+    }
+
+    if (item.nonShowedStock < item.packagedQty) {
+      (nonShelfQty.pcs = item.nonShowedStock), (nonShelfQty.box = 0);
+    } else {
+      (nonShelfQty.pcs = item.nonShowedStock % item.packagedQty),
+        (nonShelfQty.box = Math.floor(item.nonShowedStock / item.packagedQty));
+    }
+
     return (
       <View style={styles.cardContent} key={index}>
         <View
@@ -79,26 +96,23 @@ class EditStockRecordListView extends Component {
               <Text style={[Fonts.type96]}>Shelf Produk</Text>
             </View>
             <View style={{ flex: 1 }}>
-              <View style={styles.inputBox}>
-                <TextInput
-                  style={[Fonts.type24, styles.textInput]}
-                  value={item.showedStock.toString()}
-                  keyboardType="numeric"
-                  returnKeyType="done"
-                  enablesReturnKeyAutomatically
-                  maxLength={4}
-                  onChangeText={qty => {
-                    const shelfQty = qty.replace(/\W|\\+(?!$)/g, '');
-                    this.props.parentFunction({
-                      type: 'edit',
-                      data: {
-                        stockId: item.id,
-                        shelfQty
-                      }
-                    });
-                  }}
-                />
-              </View>
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end'
+                }}
+              >
+                <View style={[styles.inputBox, { marginRight: 8 }]}>
+                  <Text style={[Fonts.type24, styles.textInput]}>
+                    {shelfQty.box}box
+                  </Text>
+                </View>
+                <View style={styles.inputBox}>
+                  <Text style={[Fonts.type24, styles.textInput]}>
+                    {shelfQty.pcs}pcs
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.shelfSection}>{this.renderSeparator()}</View>
@@ -107,26 +121,23 @@ class EditStockRecordListView extends Component {
               <Text style={[Fonts.type96]}>Non-Shelf Produk</Text>
             </View>
             <View style={{ flex: 1 }}>
-              <View style={styles.inputBox}>
-                <TextInput
-                  style={[Fonts.type24, styles.textInput]}
-                  value={item.nonShowedStock.toString()}
-                  keyboardType="numeric"
-                  returnKeyType="done"
-                  enablesReturnKeyAutomatically
-                  maxLength={4}
-                  onChangeText={qty => {
-                    let nonShelfQty = qty.replace(/\W|\\+(?!$)/g, '');
-                    this.props.parentFunction({
-                      type: 'edit',
-                      data: {
-                        stockId: item.id,
-                        nonShelfQty
-                      }
-                    });
-                  }}
-                />
-              </View>
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end'
+                }}
+              >
+                <View style={[styles.inputBox, { marginRight: 8 }]}>
+                  <Text style={[Fonts.type24, styles.textInput]}>
+                    {nonShelfQty.box}box
+                  </Text>
+                </View>
+                <View style={styles.inputBox}>
+                  <Text style={[Fonts.type24, styles.textInput]}>
+                    {nonShelfQty.pcs}pcs
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -191,9 +202,9 @@ const styles = StyleSheet.create({
     width: 50,
     height: 30,
     borderWidth: 1,
-    alignSelf: 'flex-end',
     borderColor: Color.fontBlack10,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   shelfSection: {
     alignItems: 'center',
@@ -208,11 +219,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16
   },
   textInput: {
-    textAlign: 'center',
-    padding: 0,
-    height: '100%',
-    width: '100%',
-    alignItems: 'center'
+    color: Color.fontBlack60
   }
 });
 const mapStateToProps = ({ merchant }) => {
