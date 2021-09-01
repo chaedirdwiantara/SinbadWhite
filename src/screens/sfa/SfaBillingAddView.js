@@ -21,7 +21,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CardBody, CardHeader } from './components/CardView';
 import NavigationService from '../../navigation/NavigationService';
 import { CASH, CHECK, GIRO } from '../../constants/collectionConstants';
-import { sfaPostCollectionPaymentProcess } from '../../state/actions';
+import {
+  sfaGetDetailProcess,
+  sfaPostCollectionPaymentProcess
+} from '../../state/actions';
 import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 
 const SfaBillingAddView = props => {
@@ -183,6 +186,7 @@ const SfaBillingAddView = props => {
   useEffect(() => {
     if (prevdataSfaPostCollectionPayment !== dataSfaPostCollectionPayment) {
       if (dataSfaPostCollectionPayment) {
+        dispatch(sfaGetDetailProcess(dataSfaGetDetail.data.id));
         NavigationService.navigate('SfaDetailView', {
           orderParcelId: dataSfaGetDetail.data.id
         });
@@ -282,42 +286,34 @@ const SfaBillingAddView = props => {
    * ====================================
    */
   const renderInvoiceInfoBody = () => {
-    const {
-      invoiceGroupName,
-      orderCode,
-      orderRef,
-      totalBilling,
-      remainingBilling
-    } = dataSfaGetDetail?.data;
-
     return (
       <>
         {CardBody({
           title: 'Nama Faktur',
-          value: invoiceGroupName,
+          value: dataSfaGetDetail?.data?.invoiceGroupName,
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Nomor Pesanan',
-          value: orderCode,
+          value: dataSfaGetDetail?.data?.orderCode,
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Nomor Referensi',
-          value: orderRef ? orderRef : '-',
+          value: dataSfaGetDetail?.data?.orderRef || '-',
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Total Tagihan',
-          value: isNumber(totalBilling)
-            ? MoneyFormatSpace(totalBilling)
+          value: isNumber(dataSfaGetDetail?.data?.totalBilling)
+            ? MoneyFormatSpace(dataSfaGetDetail.data.totalBilling)
             : MoneyFormatSpace(0),
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Sisa Tagihan',
-          value: isNumber(remainingBilling)
-            ? MoneyFormatSpace(remainingBilling)
+          value: isNumber(dataSfaGetDetail?.data?.remainingBilling)
+            ? MoneyFormatSpace(dataSfaGetDetail.data.remainingBilling)
             : MoneyFormatSpace(0),
           styleCardView: styles.styleCardView
         })}
