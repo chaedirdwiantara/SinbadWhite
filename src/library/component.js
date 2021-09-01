@@ -3,6 +3,7 @@ import CartGlobal from '../components/CartGlobal';
 import SearchBarType1 from '../components/search_bar/SearchBarType1';
 import SearchBarType2 from '../components/search_bar/SearchBarType2';
 import SearchBarType3 from '../components/search_bar/SearchBarType3';
+import SearchBarType5 from '../components/search_bar/SearchBarType5';
 import SearchBarType4 from '../components/search_bar/SearchBarType4';
 /** BACK HANDLER */
 import BackHandlerCloseApp from '../components/BackHandlerCloseApp';
@@ -44,6 +45,7 @@ import ModalWarning from '../components/modal/ModalWarning';
 import ModalConfirmation from '../components/modal/ModalConfirmation';
 import ModalConfirmationType2 from '../components/modal/ModalConfirmationType2';
 import ModalConfirmationType4 from '../components/modal/ModalConfirmationType4';
+import ModalConfirmationType3 from '../components/modal/ModalConfirmationType3';
 import ModalBottomErrorPinMap from '../components/error/ModalBottomErrorPinMap';
 import ModalBottomSwipeCloseNotScroll from '../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalBottomType1 from '../components/modal_bottom/ModalBottomType1';
@@ -101,6 +103,7 @@ import Address from '../components/Address';
 /** TAG */
 import TagListType1 from '../components/tag/TagListType1';
 import TagListType2 from '../components/tag/TagListType2';
+import TagListType3 from '../components/tag/TagListType3';
 /** DATE PICKER SPINNER */
 import DatePickerSpinner from '../components/DatePickerSpinner';
 /** SELECTED MERCHANT */
@@ -124,6 +127,7 @@ export {
   SearchBarType2,
   SearchBarType3,
   SearchBarType4,
+  SearchBarType5,
   /** BACK HANDLER */
   BackHandlerCloseApp,
   BackHandlerBackSpecific,
@@ -162,6 +166,7 @@ export {
   ModalConfirmation,
   ModalConfirmationType2,
   ModalConfirmationType4,
+  ModalConfirmationType3,
   ModalBottomErrorPinMap,
   ModalBottomSwipeCloseNotScroll,
   ModalBottomType1,
@@ -217,6 +222,7 @@ export {
   /** TAG */
   TagListType1,
   TagListType2,
+  TagListType3,
   /** DATE PICKER SPINNER */
   DatePickerSpinner,
   /** SELECTED MERCHANT NAME */

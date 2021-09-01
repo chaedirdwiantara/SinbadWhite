@@ -182,36 +182,36 @@ function* getJourneyBookDetail(actions) {
   }
 }
 /** === GET STORE STATUS === */
-function* getStoreStatus(actions){
+function* getStoreStatus(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.getStoreStatus(actions.payload)
-    })
-    yield put(ActionCreators.merchantGetStoreStatusSuccess(response))
+      return MerchantMethod.getStoreStatus(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetStoreStatusSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.merchantGetStoreStatusFailed(error))
+    yield put(ActionCreators.merchantGetStoreStatusFailed(error));
   }
 }
 /** GET WAREHOUSE */
-function* getWarehouse(actions){
+function* getWarehouse(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.getWarehouse(actions.payload)
-    })
-    yield put(ActionCreators.merchantGetWarehouseSuccess(response))
+      return MerchantMethod.getWarehouse(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetWarehouseSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.merchantGetWarehouseFailed(error))
+    yield put(ActionCreators.merchantGetWarehouseFailed(error));
   }
 }
 /** VALIDATE AREA MAPPING */
-function* validateAreaMapping(actions){
+function* validateAreaMapping(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.validateAreaMapping(actions.payload)
-    })
-    yield put(ActionCreators.validateAreaMappingSuccess(response))
+      return MerchantMethod.validateAreaMapping(actions.payload);
+    });
+    yield put(ActionCreators.validateAreaMappingSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.validateAreaMappingFailed(error))
+    yield put(ActionCreators.validateAreaMappingFailed(error));
   }
 }
 /** GET SURVEY LIST */
@@ -256,6 +256,61 @@ function* updateSurvey(actions) {
     yield put(ActionCreators.merchantSubmitSurveySuccess(response));
   } catch (error) {
     yield put(ActionCreators.merchantSubmitSurveyFailed(error));
+  }
+}
+/** ADD RECORD STOCK */
+function* addRecordStock(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.addRecordStock(actions.payload);
+    });
+    yield put(ActionCreators.merchantAddStockRecordSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantAddStockRecordFailed(error));
+  }
+}
+/** GET RECORD STOCK */
+function* getRecordStock(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getRecordStock(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetStockRecordSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetStockRecordFailed(error));
+  }
+}
+/** DELETE RECORD STOCK */
+function* deleteRecordStock(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.deleteRecordStock(actions.payload);
+    });
+    yield put(ActionCreators.merchantDeleteStockRecordSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantDeleteStockRecordFailed(error));
+  }
+}
+/** UPDATE RECORD STOCK */
+function* updateRecordStock(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.updateRecordStock(actions.payload);
+    });
+    yield put(ActionCreators.merchantUpdateStockRecordSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantUpdateStockRecordFailed(error));
+  }
+}
+/** BATCH DELETE RECORD STOCK */
+function* batchDeleteRecordStock(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.batchDeleteRecordStock(actions.payload);
+    });
+    yield put(ActionCreators.merchantBatchDeleteStockSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantBatchDeleteStockFailed(error));
   }
 }
 /** GET SALES SEGMENTATION */
@@ -311,10 +366,24 @@ function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_STORE_STATUS_PROCESS, getStoreStatus);
   yield takeEvery(types.MERCHANT_GET_WAREHOUSE_PROCESS, getWarehouse);
   yield takeEvery(types.VALIDATE_AREA_MAPPING_PROCESS, validateAreaMapping);
-  yield takeLatest(types.MERCHANT_GET_SURVEY_LIST_PROCESS, getSurveyList);
-  yield takeLatest(types.MERCHANT_GET_SURVEY_PROCESS, getSurvey);
-  yield takeLatest(types.MERCHANT_SUBMIT_SURVEY_PROCESS, submitSurvey);
-  yield takeLatest(types.MERCHANT_UPDATE_SURVEY_PROCESS, updateSurvey);
+  yield takeEvery(types.MERCHANT_GET_SURVEY_LIST_PROCESS, getSurveyList);
+  yield takeEvery(types.MERCHANT_GET_SURVEY_PROCESS, getSurvey);
+  yield takeEvery(types.MERCHANT_SUBMIT_SURVEY_PROCESS, submitSurvey);
+  yield takeEvery(types.MERCHANT_UPDATE_SURVEY_PROCESS, updateSurvey);
+  yield takeEvery(types.MERCHANT_ADD_STOCK_RECORD_PROCESS, addRecordStock);
+  yield takeEvery(types.MERCHANT_GET_STOCK_RECORD_PROCESS, getRecordStock);
+  yield takeEvery(
+    types.MERCHANT_DELETE_STOCK_RECORD_PROCESS,
+    deleteRecordStock
+  );
+  yield takeEvery(
+    types.MERCHANT_UPDATE_STOCK_RECORD_PROCESS,
+    updateRecordStock
+  );
+  yield takeEvery(
+    types.MERCHANT_BATCH_DELETE_STOCK_PROCESS,
+    batchDeleteRecordStock
+  );
   yield takeEvery(types.GET_SALES_SEGMENTATION_PROCESS, getSalesSegmentation);
 }
 

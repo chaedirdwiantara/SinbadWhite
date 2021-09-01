@@ -196,6 +196,60 @@ function getSalesSegmentation({type, supplierId, urbanId}){
 }
 
 
+/**
+ * ==================
+ * STOCK MANAGEMENT
+ * ==================
+ */
+/** ADD RECORD STOCK */
+ function addRecordStock(data){
+   const storeId = GlobalMethod.merchantStoreId()
+   const supplierId = GlobalMethod.userSupplierMapping()
+   return ApiRest({
+     path: `stock-record`,
+     method: 'POST',
+     params: {
+      storeId: parseInt(storeId),
+      supplierId: parseInt(supplierId[0]),
+      catalogues: data.catalogues
+    }
+   })
+ }
+ /** GET RECORD STOCK */
+ function getRecordStock(data){
+  const storeId = GlobalMethod.merchantStoreId()
+  const supplierId = GlobalMethod.userSupplierMapping()
+  const keywordSearch = data.search ? data.search : ''
+   return ApiRest({
+     path: `stock-record?supplierId=${supplierId}&storeId=${storeId}&keyword=${keywordSearch}`,
+     method: 'GET'
+   })
+ }
+ /** DELETE RECORD STOCK */
+ function deleteRecordStock(id){
+   return ApiRest({
+     path: `stock-record/${id}`,
+     method: 'DELETE'
+   })
+ }
+
+ /** UPDATE RECORD STOCK */
+ function updateRecordStock(params){
+  return ApiRest({
+    path: 'update-stock-record',
+    method: 'POST',
+    params
+  })
+ }
+ /** BATCH DELETE RECORD STOCK */
+ function batchDeleteRecordStock(params){
+   return ApiRest({
+     path: 'delete-stock-record',
+     method: 'POST',
+     params
+   })
+ }
+
 export const MerchantMethod = {
   getMerchantV2,
   getMerchantExisting,
@@ -218,6 +272,11 @@ export const MerchantMethod = {
   getSurveyResponse,
   submitSurvey,
   updateSurvey,
+  addRecordStock,
+  getRecordStock,
+  deleteRecordStock,
+  updateRecordStock,
+  batchDeleteRecordStock,
   validateAreaMapping,
   getSalesSegmentation
 };

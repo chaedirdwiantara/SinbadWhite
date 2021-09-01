@@ -40,7 +40,8 @@ import {
   ACTIVITY_JOURNEY_PLAN_CHECK_IN,
   ACTIVITY_JOURNEY_PLAN_CHECK_OUT,
   ACTIVITY_JOURNEY_PLAN_ORDER,
-  ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+  ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY,
+  ACTIVITY_JOURNEY_PLAN_STOCK
 } from '../../../constants';
 import _ from 'lodash';
 
@@ -80,6 +81,10 @@ class MerchantHomeView extends Component {
           menuName: 'Toko Survey',
           icon: require('../../../assets/icons/merchant/pesanan.png'),
           goTo: 'survey'
+        },
+        {
+          menuName: 'Catatan Stok',
+          goTo: 'stock'
         },
         {
           menuName: 'Keluar Toko',
@@ -151,18 +156,19 @@ class MerchantHomeView extends Component {
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
     // HIDE TASK BASE ON PRIVILEGE
-    const {checkIn, checkOut, order} = this.state.privileges || {}
-    let newTask = this.state.task
-    if(!checkIn?.status){ // same as (checkIn && !checkIn.status)
-      newTask = newTask.filter(el => el.title !== 'Masuk')
+    const { checkIn, checkOut, order } = this.state.privileges || {};
+    let newTask = this.state.task;
+    if (!checkIn?.status) {
+      // same as (checkIn && !checkIn.status)
+      newTask = newTask.filter(el => el.title !== 'Masuk');
     }
-    if(!checkOut?.status){
-      newTask = newTask.filter(el => el.title !== 'Keluar')
+    if (!checkOut?.status) {
+      newTask = newTask.filter(el => el.title !== 'Keluar');
     }
-    if(!order?.status){
-      newTask = newTask.filter(el => el.title !== 'Order')
+    if (!order?.status) {
+      newTask = newTask.filter(el => el.title !== 'Order');
     }
-    this.setState({task: newTask})
+    this.setState({ task: newTask });
     /** FOR GET PORTFOLIO (FOR PAYLOAD CHECKOUT ORDER) */
     this.props.portfolioGetProcessV2();
     if (this.props.profile.errorGetSalesTeam) {
@@ -188,7 +194,7 @@ class MerchantHomeView extends Component {
           !this.state.successSurveyList
         ) {
           this.SurveyDone();
-          if (this.state.task.length === 4) {
+          if (this.state.task.length === 5) {
             this.setState({
               task: [
                 {
@@ -215,7 +221,7 @@ class MerchantHomeView extends Component {
         }
         /** IF SURVEY LIST EXIST */
         if (!_.isEmpty(surveyList.payload.data) && surveyList.success) {
-          if (this.state.task.length === 3) {
+          if (this.state.task.length === 4) {
             this.setState({
               task: [
                 {
@@ -229,6 +235,12 @@ class MerchantHomeView extends Component {
                   title: 'Order',
                   goTo: 'pdp',
                   activity: ACTIVITY_JOURNEY_PLAN_ORDER
+                },
+                {
+                  name: 'Catatan Stok',
+                  title: 'Isi',
+                  goTo: 'stock',
+                  activity: ACTIVITY_JOURNEY_PLAN_STOCK
                 },
                 {
                   name: 'Toko Survey',
@@ -271,7 +283,11 @@ class MerchantHomeView extends Component {
         }
       }
       /** FOR GET SURVEY LIST */
-      if (!loadingGetSurveyList && !surveyList.payload.data && !errorGetSurveyList) {
+      if (
+        !loadingGetSurveyList &&
+        !surveyList.payload.data &&
+        !errorGetSurveyList
+      ) {
         this.getSurvey();
       }
     }
@@ -447,7 +463,7 @@ class MerchantHomeView extends Component {
   /** FOR ERROR FUNCTION (FROM DID UPDATE) */
   doError() {
     /** Close all modal and open modal error respons */
-    if (!this.state.openModalErrorGlobal){
+    if (!this.state.openModalErrorGlobal) {
       this.setState({
         openModalErrorGlobal: true,
         openModalCheckout: false,
@@ -469,7 +485,7 @@ class MerchantHomeView extends Component {
         break;
       case 'checkIn':
         if (this.props.merchant.dataGetLatestCheckInOut) {
-          return this.setState({ openModalBeforeCheckIn: true })
+          return this.setState({ openModalBeforeCheckIn: true });
         }
         NavigationService.navigate('MerchantCheckinView');
         break;
@@ -480,11 +496,13 @@ class MerchantHomeView extends Component {
           activity: 'check_in'
         });
         if (this.props.merchant.dataGetLogAllActivityV2) {
-          const haveSurvey = _.isEmpty(this.props.merchant.surveyList.payload.data)
+          const haveSurvey = _.isEmpty(
+            this.props.merchant.surveyList.payload.data
+          );
           const surveyHasDone = this.props.merchant.dataGetLogAllActivityV2.find(
             item => item.activityName === 'toko_survey'
-          )
-          const {checkOut} = this.state.privileges
+          );
+          const { checkOut } = this.state.privileges;
           if (haveSurvey || surveyHasDone || checkOut?.status) {
             this.setState({ openModalCheckout: true });
           }
@@ -501,6 +519,17 @@ class MerchantHomeView extends Component {
               readOnly: false
             });
           }
+        }
+        break;
+      case 'stock':
+        const taskList = this.props.merchant.dataGetLogAllActivityV2;
+
+        if (
+          taskList.find(
+            task => task.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_IN
+          )
+        ) {
+          NavigationService.navigate('MerchantStockView');
         }
         break;
       default:
@@ -913,7 +942,8 @@ class MerchantHomeView extends Component {
                   <View>
                     {taskList ? (
                       taskList.activityName === ACTIVITY_JOURNEY_PLAN_ORDER &&
-                      !journeyBookStores.orderStatus && journeyBookStores.noOrderReasonNote.length !== 0 ? (
+                      !journeyBookStores.orderStatus &&
+                      journeyBookStores.noOrderReasonNote.length !== 0 ? (
                         <MaterialIcon
                           name="cancel"
                           color={Color.fontRed50}
@@ -958,7 +988,7 @@ class MerchantHomeView extends Component {
                       <View
                         style={{
                           flexDirection: 'row',
-                          justifyContent: 'flex-end',
+                          justifyContent: 'flex-end'
                         }}
                       >
                         <Text style={Fonts.type107}>
@@ -1033,6 +1063,12 @@ class MerchantHomeView extends Component {
                         </TouchableOpacity>
                       )
                     ) : taskList.activityName ===
+                      ACTIVITY_JOURNEY_PLAN_STOCK ? (
+                      this.buttonStock({
+                        goTo: item.goTo,
+                        activity: ACTIVITY_JOURNEY_PLAN_STOCK
+                      })
+                    ) : taskList.activityName ===
                       ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY ? (
                       <TouchableOpacity
                         onPress={() => {
@@ -1053,7 +1089,7 @@ class MerchantHomeView extends Component {
                         <MaterialIcon
                           style={{
                             marginTop: 2,
-                            padding: 0,
+                            padding: 0
                           }}
                           name="chevron-right"
                           color={Color.fontGreen50}
@@ -1128,7 +1164,7 @@ class MerchantHomeView extends Component {
   }
   /** === RENDER CONTENT ITEM === */
   renderContentItem() {
-    const {order} = this.state.privileges
+    const { order } = this.state.privileges;
     return (
       <View>
         {/* {this.renderData()} */}
@@ -1180,15 +1216,15 @@ class MerchantHomeView extends Component {
    * =====================
    */
   renderModalCheckout() {
-    const {order} = this.state.privileges
-    
+    const { order } = this.state.privileges;
+
     return this.state.openModalCheckout ? (
       <ModalBottomMerchantCheckout
         open={this.state.openModalCheckout}
         close={() => this.setState({ openModalCheckout: false })}
         onPress={
           () => {
-            if(order?.status){
+            if (order?.status) {
               this.setState({ checkNoOrder: true });
               this.props.merchantGetLogPerActivityProcessV2({
                 journeyBookStoresId: this.props.merchant.selectedMerchant
@@ -1196,7 +1232,7 @@ class MerchantHomeView extends Component {
                 activity: 'order'
               });
             } else {
-              this.checkoutProcess()
+              this.checkoutProcess();
             }
           }
           // this.props.merchantPostActivityProcess({
@@ -1243,7 +1279,7 @@ class MerchantHomeView extends Component {
         open={this.state.openModalErrorGlobal}
         onPress={() => {
           this.setState({ openModalErrorGlobal: false });
-          if (this.props.merchant.errorGetLogAllActivityV2){
+          if (this.props.merchant.errorGetLogAllActivityV2) {
             return NavigationService.navigate('JourneyView');
           }
         }}
@@ -1475,7 +1511,14 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, merchant, user, permanent, profile, privileges }) => {
+const mapStateToProps = ({
+  auth,
+  merchant,
+  user,
+  permanent,
+  profile,
+  privileges
+}) => {
   return { auth, merchant, user, permanent, profile, privileges };
 };
 

@@ -125,6 +125,33 @@ export const MERCHANT_SUBMIT_SURVEY_SUCCESS = 'MerchantSubmitSurveySuccess';
 export const MERCHANT_SUBMIT_SURVEY_FAILED = 'MerchantSubmitSurveyFailed';
 /** MERCHANT UPDATE SURVEY RESPONSE */
 export const MERCHANT_UPDATE_SURVEY_PROCESS = 'MerchantUpdateSurveyProcess';
+/** MERCHANT ADD STOCK RECORD */
+export const MERCHANT_ADD_STOCK_RECORD_PROCESS = 'MerchantAddStockRecordProcess'
+export const MERCHANT_ADD_STOCK_RECORD_SUCCESS = 'MerchantAddStockRecordSuccess'
+export const MERCHANT_ADD_STOCK_RECORD_FAILED = 'MerchantAddStockRecordFailed'
+export const MERCHANT_ADD_STOCK_RECORD_RESET = 'MerchantAddStockRecordReset'
+/** MERCHANT GET STOCK RECORD */
+export const MERCHANT_GET_STOCK_RECORD_PROCESS = 'MerchantGetStockRecordProcess'
+export const MERCHANT_GET_STOCK_RECORD_SUCCESS = 'MerchantGetStockRecordSuccess'
+export const MERCHANT_GET_STOCK_RECORD_FAILED = 'MerchantGetStockRecordFailed'
+export const MERCHANT_GET_STOCK_RECORD_REFRESH = 'MerchantGetStockRecordRefresh'
+/** MERCHANT DELETE STOCK RECORD */
+export const MERCHANT_DELETE_STOCK_RECORD_PROCESS = 'MerchantDeleteStockRecordProcess'
+export const MERCHANT_DELETE_STOCK_RECORD_SUCCESS = 'MerchantDeleteStockRecordSuccess'
+export const MERCHANT_DELETE_STOCK_RECORD_FAILED = 'MerchantDeleteStockRecordFailed'
+export const MERCHANT_DELETE_STOCK_RECORD_RESET = 'MerchantDeleteStockRecordReset'
+/** MERCHANT UPDATE STOCK RECORD */
+export const MERCHANT_UPDATE_STOCK_RECORD_PROCESS = 'MerchantUpdateStockRecordProcess'
+export const MERCHANT_UPDATE_STOCK_RECORD_SUCCESS = 'MerhcantUpdateStockRecordSuccess'
+export const MERCHANT_UPDATE_STOCK_RECORD_FAILED = 'MerchantUpdateStockRecordFailed'
+export const MERCHANT_UPDATE_STOCK_RECORD_RESET = 'MerchantUpdateStockRecordReset'
+/** MERCHANT BATCH DELETE STOCK RECORD */
+export const MERCHANT_BATCH_DELETE_STOCK_PROCESS = 'MerchantBatchDeleteStockProcess'
+export const MERCHANT_BATCH_DELETE_STOCK_SUCCESS = 'MerchantBatchDeleteStockSuccess'
+export const MERCHANT_BATCH_DELETE_STOCK_FAILED = 'MerchantBatchDeleteStockFailed'
+export const MERCHANT_BATCH_DELETE_STOCK_RESET = 'MerchantBatchDeleteStockReset'
+/** MERCHANT STATUS STOCK RECORD */
+export const MERCHANT_STOCK_RECORD_STATUS = 'MerchantStockRecordStatus'
 /** MERCHANT VALIDATE AREA MAPPING */
 export const VALIDATE_AREA_MAPPING_PROCESS = 'ValidateAreaMappingProcess'
 export const VALIDATE_AREA_MAPPING_SUCCESS = 'ValidateAreaMappingSuccess'
