@@ -20,7 +20,15 @@ import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardBody, CardHeader } from './components/CardView';
 import NavigationService from '../../navigation/NavigationService';
-import { CASH, CHECK, GIRO } from '../../constants/collectionConstants';
+import {
+  CASH,
+  CHECK,
+  GIRO,
+  USED,
+  USED_BY_OTHERS,
+  NOT_AVAILABLE,
+  NOT_USED
+} from '../../constants/collectionConstants';
 import {
   sfaGetDetailProcess,
   sfaPostCollectionPaymentProcess
@@ -233,6 +241,25 @@ const SfaBillingAddView = props => {
     }
   }, [billingAmount]);
 
+  /** FUNCTION CHECK MATERAI STATUS */
+  const checkMateraiStatus = status => {
+    let text;
+    switch (status) {
+      // case NOT_USED:
+      //   text = 'Pembayaran tidak menggunakan materai';
+      //   break;
+      case NOT_AVAILABLE:
+        text = 'Penagihan tidak menggunakan materai';
+        break;
+      case USED_BY_OTHERS:
+        text = 'Materai sudah digunakan di pembayaran lainnya';
+        break;
+      default:
+        break;
+    }
+
+    return <Text style={[Fonts.type17]}>{text}</Text>;
+  };
   /**
    * *********************************
    * RENDER VIEW
@@ -475,17 +502,9 @@ const SfaBillingAddView = props => {
             paddingVertical: 16
           }}
         >
-          {collectionInfo.isStampUsed === null ? (
-            <Text style={[Fonts.type17]}>
-              Penagihan tidak menggunakan materai
-            </Text>
-          ) : collectionInfo.isStampUsed === true ? (
-            renderItem()
-          ) : (
-            <Text style={[Fonts.type17]}>
-              Materai telah digunakan di pembayaran lainnya
-            </Text>
-          )}
+          {collectionInfo.stampStatus === USED || collectionInfo.stampStatus === NOT_USED
+            ? renderItem()
+            : checkMateraiStatus(collectionInfo.stampStatus)}
         </View>
       </View>
     ) : null;

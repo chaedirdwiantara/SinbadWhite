@@ -54,7 +54,7 @@ const SfaNavigator = {
   SfaCollectionLog: {
     screen: SfaCollectionLog,
     navigationOptions: {
-      headerTitle: 'Riwayat Transaksi',
+      headerTitle: 'Riwayat Pembayaran',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
