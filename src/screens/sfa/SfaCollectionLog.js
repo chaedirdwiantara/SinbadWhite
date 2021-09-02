@@ -92,7 +92,8 @@ function SfaCollectionLog(props) {
   }, []);
 
   const navigateToDetail = item => {
-    const screenName = type ? 'HistoryCollectionDetail' : 'SfaBillingDetail';
+    const screenName =
+      type === 'history' ? 'HistoryCollectionDetail' : 'SfaBillingDetailView';
     NavigationService.navigate(screenName, {
       paymentBillingId: item.id
     });
