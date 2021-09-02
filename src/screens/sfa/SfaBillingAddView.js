@@ -164,7 +164,7 @@ const SfaBillingAddView = props => {
       orderParcelId: dataSfaGetDetail.data.id,
       storeId: parseInt(selectedMerchant.storeId, 10),
       paymentCollectionMethodId: collectionInfo.id,
-      amount: totalBillingAmount,
+      amount: billingAmount,
       isUsedStamp: isStampChecked
     };
     dispatch(sfaPostCollectionPaymentProcess(data));
