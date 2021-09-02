@@ -38,7 +38,9 @@ import {
   REJECTED,
   PENDING
 } from '../../constants/collectionConstants';
-
+import {
+  HISTORY
+} from '../../constants/paymentConstants';
 function SfaCollectionLog(props) {
   const type = props.navigation.state.params.type;
   const dispatch = useDispatch();
@@ -93,7 +95,7 @@ function SfaCollectionLog(props) {
 
   const navigateToDetail = item => {
     const screenName =
-      type === 'history' ? 'HistoryCollectionDetail' : 'SfaBillingDetailView';
+      type === HISTORY ? 'HistoryCollectionDetail' : 'SfaBillingDetailView';
     NavigationService.navigate(screenName, {
       paymentBillingId: item.id
     });
@@ -122,7 +124,7 @@ function SfaCollectionLog(props) {
   };
   const getCollectionLog = () => {
     const orderParcelId =
-      type === 'history'
+      type === HISTORY
         ? dataDetailHistory.billing.orderParcelId
         : dataSfaGetDetail.data.id;
     const data = {
