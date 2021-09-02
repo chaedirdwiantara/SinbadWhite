@@ -64,7 +64,7 @@ const SfaCollectionEditView = props => {
     bank: { displayName: initialData.bankSource }
   });
   const [dataStamp, setDataStamp] = useState({
-    nominal: initialData.stampAmount
+    nominal: initialData?.stampAmount
   });
   const [modalBankOpenType, setModalBankOpenType] = useState(null);
   const [isModalStampOpen, setIsModalStampOpen] = useState(false);
@@ -270,7 +270,7 @@ const SfaCollectionEditView = props => {
       setTotalAmount(amount);
     }
     if (paymentCollectionTypeId === CHECK || paymentCollectionTypeId === GIRO) {
-      const stamp = dataStamp ? dataStamp.nominal : 0;
+      const stamp = dataStamp?.nominal ? dataStamp.nominal : 0;
       const total = amount + stamp;
       setTotalAmount(parseInt(total, 10));
     }
@@ -749,9 +749,9 @@ const SfaCollectionEditView = props => {
               }}
               disabled={!isStampChecked}
             >
-              {dataStamp ? (
+              {dataStamp?.nominal ? (
                 <Text style={[Fonts.type17]}>
-                  {MoneyFormatSpace(dataStamp.nominal)}
+                  {MoneyFormatSpace(dataStamp?.nominal)}
                 </Text>
               ) : (
                 <Text style={[Fonts.type31]}>Pilih Nilai Materai</Text>
