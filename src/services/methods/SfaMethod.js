@@ -30,12 +30,22 @@ function getCollectionList(data) {
 
 /** GET COLLECTION LIST */
 function getReferenceList(data) {
+  const keyword = data.keyword ? `&keyword=${data.keyword}` : '';
+  const paymentCollectionTypeId = data.paymentCollectionTypeId
+    ? `&paymentCollectionTypeId=${data.paymentCollectionTypeId}`
+    : '';
+  const approvalStatus = data.approvalStatus
+    ? `&approvalStatus=${data.approvalStatus}`
+    : '';
+
   return ApiRest({
     path: `collection/v1/payment-methods?supplierId=${
       data.supplierId
-    }&storeId=${data.storeId}&userId=${data.userId}&paymentCollectionTypeId=${
-      data.paymentCollectionTypeId
-    }&skip=0&limit=${data.limit}`,
+    }&storeId=${data.storeId}&userId=${
+      data.userId
+    }${paymentCollectionTypeId}${keyword}${approvalStatus}&skip=0&limit=${
+      data.limit
+    }`,
     method: 'GET'
   });
 }
@@ -200,6 +210,14 @@ function deleteCollectionMethod(data) {
   });
 }
 
+/** GET BILLING STATUS */
+function getBillingStatus() {
+  return ApiRest({
+    path: 'collection/v1/available-collection-status',
+    method: 'GET'
+  });
+}
+
 export const SfaMethod = {
   getCollectionStatus,
   getSfaDetail,
@@ -221,5 +239,6 @@ export const SfaMethod = {
   getBillingDetail,
   getPaymentCollectionLog,
   editCollectionMethod,
-  deleteCollectionMethod
+  deleteCollectionMethod,
+  getBillingStatus
 };

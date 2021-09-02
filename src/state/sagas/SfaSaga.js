@@ -290,6 +290,18 @@ function* deleteCollectionMethod(actions) {
   }
 }
 
+/** GET BILLING STATUS */
+function* getSfaBillingStatus(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getBillingStatus(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetBillingStatusSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetBillingStatusFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* SfaSaga() {
   yield takeEvery(
@@ -337,6 +349,7 @@ function* SfaSaga() {
     types.SFA_DELETE_COLLECTION_METHOD_PROCESS,
     deleteCollectionMethod
   );
+  yield takeEvery(types.SFA_GET_BILLING_STATUS_PROCESS, getSfaBillingStatus);
 }
 
 export default SfaSaga;

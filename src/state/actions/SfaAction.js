@@ -622,3 +622,27 @@ export function sfaDeleteCollectionMethodSuccess(data) {
 export function sfaDeleteCollectionMethodFailed(data) {
   return { type: types.SFA_DELETE_COLLECTION_METHOD_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * GET BILLING STATUS
+ * ===========================
+ */
+/** === SFA GET BILLING STATUS PROCESS === */
+export function sfaGetBillingStatusProcess(data) {
+  return { type: types.SFA_GET_BILLING_STATUS_PROCESS, payload: data };
+}
+/** === SFA GET BILLING STATUS SUCCESS === */
+export function sfaGetBillingStatusSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_BILLING_STATUS_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_BILLING_STATUS_FAILED, payload: data };
+}
+/** === SFA GET BILLING STATUS FAILED === */
+export function sfaGetBillingStatusFailed(data) {
+  return { type: types.SFA_GET_BILLING_STATUS_FAILED, payload: data };
+}

@@ -148,3 +148,8 @@ export const SFA_DELETE_COLLECTION_METHOD_SUCCESS =
   'SfaDeleteCollectionMethodSuccess';
 export const SFA_DELETE_COLLECTION_METHOD_FAILED =
   'SfaDeleteCollectionMethodFailed';
+
+/** GET BILLING STATUS */
+export const SFA_GET_BILLING_STATUS_PROCESS = 'SfaGetBillingStatusProcess';
+export const SFA_GET_BILLING_STATUS_SUCCESS = 'SfaGetBillingStatusSuccess';
+export const SFA_GET_BILLING_STATUS_FAILED = 'SfaGetBillingStatusFailed';
