@@ -8,7 +8,7 @@ import {
   height,
   TextInput
 } from '../../../library/reactPackage';
-import { StatusBarBlackOP40 } from '../../../library/component';
+import { StatusBarBlackOP40, ButtonSingle } from '../../../library/component';
 import { Modal, MaterialIcon } from '../../../library/thirdPartyPackage';
 import { Color } from '../../../config';
 import { GlobalStyle, Fonts } from '../../../helpers';
@@ -16,7 +16,10 @@ import { GlobalStyle, Fonts } from '../../../helpers';
 class ModalUpdateStock extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      pcs: 0,
+      box: 0
+    };
   }
 
   /**
@@ -42,6 +45,7 @@ class ModalUpdateStock extends Component {
         >
           {this.renderContentTitle()}
           {this.renderContentBody()}
+          {this.renderButton()}
         </View>
       </Modal>
     );
@@ -72,7 +76,9 @@ class ModalUpdateStock extends Component {
     return (
       <View style={{ padding: 16 }}>
         <View style={{ marginBottom: 8 }}>
-          <Text>Jumlah per pcs</Text>
+          <Text style={[Fonts.H12Medium, { color: Color.fontBlack80 }]}>
+            Jumlah per pcs
+          </Text>
         </View>
         <View
           style={{
@@ -83,8 +89,74 @@ class ModalUpdateStock extends Component {
             marginBottom: 16
           }}
         >
-          <TextInput placeholder={'pcs'} />
+          <TextInput
+            style={Fonts.H12Medium}
+            placeholder={'pcs'}
+            keyboardType="numeric"
+            returnKeyType="done"
+            enablesReturnKeyAutomatically
+            maxLength={4}
+            onChange={qty => {
+              let pcs = qty.replace(/\W|\\+(?!$)/g, '');
+              this.setState({ pcs });
+            }}
+          />
         </View>
+        <View style={{ marginBottom: 8 }}>
+          <Text style={[Fonts.H12Medium, { color: Color.fontBlack80 }]}>
+            Jumlah per box
+          </Text>
+        </View>
+        <View
+          style={{
+            borderColor: Color.fontBlack60,
+            borderWidth: 1,
+            borderRadius: 4,
+            height: 40,
+            marginBottom: 10
+          }}
+        >
+          <TextInput
+            style={Fonts.H12Medium}
+            placeholder={'box'}
+            keyboardType="numeric"
+            returnKeyType="done"
+            enablesReturnKeyAutomatically
+            maxLength={4}
+            onChange={qty => {
+              let box = qty.replace(/\W|\\+(?!$)/g, '');
+              this.setState({ box });
+            }}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 16
+          }}
+        >
+          <MaterialIcon
+            name={'info-outline'}
+            size={18}
+            color={Color.fontBlack70}
+          />
+          <Text style={Fonts.H11Normal}> 1 box terdiri dari 24pcs</Text>
+        </View>
+      </View>
+    );
+  }
+
+  // Render Button
+  renderButton() {
+    return (
+      <View style={{ borderTopWidth: 1, borderColor: Color.fontBlack10 }}>
+        <ButtonSingle
+          title={'Konfirmasi'}
+          borderRadius={4}
+          onPress={() => console.log('Konfirmasi Update Stock')}
+          loading={this.state.loadingAddStock}
+        />
       </View>
     );
   }
