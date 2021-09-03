@@ -109,11 +109,6 @@ const SfaView = props => {
 
   /** PARENT FUNCTION */
   let parentFunction = data => {
-    console.log(
-      '====dataGetCollectionListStatus:',
-      dataGetCollectionListStatus.data[data.data].status
-    );
-
     switch (data.type) {
       case 'status':
         setSelectedTagStatus(data.data);
