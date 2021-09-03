@@ -622,3 +622,27 @@ export function sfaDeleteCollectionMethodSuccess(data) {
 export function sfaDeleteCollectionMethodFailed(data) {
   return { type: types.SFA_DELETE_COLLECTION_METHOD_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * GET COLLECTION LIST STATUS
+ * ===========================
+ */
+/** === SFA GET COLLECTION LIST STATUS PROCESS === */
+export function sfaGetCollectionListStatusProcess(data) {
+  return { type: types.SFA_GET_COLLECTION_LIST_STATUS_PROCESS, payload: data };
+}
+/** === SFA GET COLLECTION LIST STATUS SUCCESS === */
+export function sfaGetCollectionListStatusSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_COLLECTION_LIST_STATUS_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_COLLECTION_LIST_STATUS_FAILED, payload: data };
+}
+/** === SFA GET COLLECTION LIST STATUS FAILED === */
+export function sfaGetCollectionListStatusFailed(data) {
+  return { type: types.SFA_GET_COLLECTION_LIST_STATUS_FAILED, payload: data };
+}

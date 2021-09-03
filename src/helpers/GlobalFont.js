@@ -662,7 +662,8 @@ const styles = StyleSheet.create({
     fontSize: 9,
     lineHeight: 14,
     color: Color.mainColor
-  },type109p: {
+  },
+  type109p: {
     fontFamily: Fonts.MontserratMedium,
     fontSize: 10,
     lineHeight: 13,
@@ -715,6 +716,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 13,
     color: Color.fontBlack50
+  },
+  type118p: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 11,
+    lineHeight: 14,
+    color: Color.fontBlack60
   },
   forCompare: {
     fontFamily: Fonts.MontserratBold,

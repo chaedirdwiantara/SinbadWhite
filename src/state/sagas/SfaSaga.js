@@ -290,6 +290,18 @@ function* deleteCollectionMethod(actions) {
   }
 }
 
+/** GET COLLECTION LIST STATUS */
+function* getSfaCollectionListStatus(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getCollectionListStatus(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetCollectionListStatusSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetCollectionListStatusFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* SfaSaga() {
   yield takeEvery(
@@ -336,6 +348,10 @@ function* SfaSaga() {
   yield takeEvery(
     types.SFA_DELETE_COLLECTION_METHOD_PROCESS,
     deleteCollectionMethod
+  );
+  yield takeEvery(
+    types.SFA_GET_COLLECTION_LIST_STATUS_PROCESS,
+    getSfaCollectionListStatus
   );
 }
 
