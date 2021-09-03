@@ -148,3 +148,11 @@ export const SFA_DELETE_COLLECTION_METHOD_SUCCESS =
   'SfaDeleteCollectionMethodSuccess';
 export const SFA_DELETE_COLLECTION_METHOD_FAILED =
   'SfaDeleteCollectionMethodFailed';
+
+/** GET COLLECTION LIST STATUS */
+export const SFA_GET_COLLECTION_LIST_STATUS_PROCESS =
+  'SfaGetCollectionListStatusProcess';
+export const SFA_GET_COLLECTION_LIST_STATUS_SUCCESS =
+  'SfaGetCollectionListStatusSuccess';
+export const SFA_GET_COLLECTION_LIST_STATUS_FAILED =
+  'SfaGetCollectionListStatusFailed';

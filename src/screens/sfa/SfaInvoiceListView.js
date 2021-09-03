@@ -106,11 +106,11 @@ function SfaInvoiceListView(props) {
         break;
     }
     return (
-        <View style={{ ...styles.view1Status, backgroundColor: colorStyle }}>
-          <Text style={{ ...textStyle, textAlign: 'right' }}>
-            {statusPayment(status_payment)}
-          </Text>
-        </View>
+      <View style={{ ...styles.view1Status, backgroundColor: colorStyle }}>
+        <Text style={{ ...textStyle, textAlign: 'right' }}>
+          {statusPayment(status_payment)}
+        </Text>
+      </View>
     );
   };
 
@@ -181,7 +181,6 @@ function SfaInvoiceListView(props) {
   return (
     <>
       {renderData()}
-
       {renderLoadMore()}
     </>
     // renderSkeleton()
