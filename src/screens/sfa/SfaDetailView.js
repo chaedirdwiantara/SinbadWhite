@@ -368,7 +368,10 @@ function SfaDetailView(props) {
               {MoneyFormatSpace(dataSfaGetDetail.data.parcelGrossPrice)}
             </Text>
           </View>
-          {dataSfaGetDetail.data.promoList !== null ? renderPromo() : null}
+          {dataSfaGetDetail?.data.promoList !== null ? renderPromo() : null}
+          {dataSfaGetDetail?.data.voucherList !== null
+            ? renderVoucherList()
+            : null}
           <View
             style={{
               flexDirection: 'row',
@@ -396,19 +399,27 @@ function SfaDetailView(props) {
     }
   };
   /** === RENDER VOUCHER LIST ==== */
-  const renderVoucherList = data => {
-    return data.map((item, index) => {
+  const renderVoucherList = () => {
+    return dataSfaGetDetail.data.voucherList.map((item, index) => {
       return (
-        <View key={index}>
-          {this.renderContentListGlobal(
-            item.voucherValue !== null
+        <View
+          key={index}
+          style={{
+            flexDirection: 'row',
+            marginBottom: 8,
+            justifyContent: 'space-between'
+          }}
+        >
+          <Text style={[Fonts.type51, { width: '80%' }]}>
+            {item.voucherValue !== null
               ? item.voucherName
-              : `${item.catalogueName} (${item.voucherQty} Pcs)`,
-            item.voucherValue !== null
+              : `${item.catalogueName} (${item.voucherQty} Pcs)`}
+          </Text>
+          <Text style={Fonts.type51}>
+            {item.voucherValue !== null
               ? `- ${MoneyFormatSpace(item.voucherValue)}`
-              : 'FREE',
-            true
-          )}
+              : 'FREE'}
+          </Text>
         </View>
       );
     });
