@@ -131,18 +131,18 @@ const SfaView = props => {
         }
         break;
       case 'section':
-        setSearchText('');
-        setPaymentStatus('');
-        setSearchTextCollection('');
-        setApprovalStatusCollection('');
         setSelectedTagStatus(0);
         setActiveTab(data.data);
 
         if (data.data === TAB_COLLECTION) {
+          setSearchTextCollection('');
+          setApprovalStatusCollection('');
           getCollectionListStatus();
         } else {
+          setSearchText('');
+          setPaymentStatus('');
           getInvoiceStatus();
-          getInvoiceList(true, 20);
+          // getInvoiceList(true, 20);
         }
         break;
     }
