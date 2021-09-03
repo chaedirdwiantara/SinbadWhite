@@ -38,9 +38,7 @@ import {
   REJECTED,
   PENDING
 } from '../../constants/collectionConstants';
-import {
-  HISTORY
-} from '../../constants/paymentConstants';
+import { HISTORY } from '../../constants/paymentConstants';
 function SfaCollectionLog(props) {
   const type = props.navigation.state.params.type;
   const dispatch = useDispatch();
