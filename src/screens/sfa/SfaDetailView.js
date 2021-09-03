@@ -27,7 +27,7 @@ import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
-
+import { COLLECTION } from '../../constants/paymentConstants';
 function SfaDetailView(props) {
   const dispatch = useDispatch();
 
@@ -486,7 +486,7 @@ export const HeaderRightOption = props => {
         <TouchableOpacity
           onPress={() =>
             NavigationService.navigate('SfaCollectionLog', {
-              type: 'collection'
+              type: COLLECTION
             })
           }
         >

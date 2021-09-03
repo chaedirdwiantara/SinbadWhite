@@ -38,3 +38,12 @@ export const BILLING_CANCEL = 'cancel';
  */
 
 export const II_MB = 1024 * 1024 * 2;
+
+/**
+ * PAYMENT PAGES:
+ * 1. HISTORY
+ * 2. COLLECTION
+ */
+
+export const HISTORY = 'history';
+export const COLLECTION = 'collection';
