@@ -270,7 +270,7 @@ const SfaCollectionEditView = props => {
       setTotalAmount(amount);
     }
     if (paymentCollectionTypeId === CHECK || paymentCollectionTypeId === GIRO) {
-      const stamp = dataStamp?.nominal ? dataStamp.nominal : 0;
+      const stamp = dataStamp?.nominal || 0;
       const total = amount + stamp;
       setTotalAmount(parseInt(total, 10));
     }

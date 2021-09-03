@@ -19,7 +19,8 @@ import {
   PAY_LATER,
   PAY_NOW,
   PAY_ON_DELIVERY,
-  WAITING_FOR_PAYMENT
+  WAITING_FOR_PAYMENT,
+  HISTORY
 } from '../../constants/paymentConstants';
 import NavigationService from '../../navigation/NavigationService';
 
@@ -192,7 +193,7 @@ class HistoryDetailPaymentInformation extends Component {
               <TouchableOpacity
                 onPress={() =>
                   NavigationService.navigate('HistoryCollectionLog', {
-                    type: 'history'
+                    type: HISTORY
                   })
                 }
               >
