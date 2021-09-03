@@ -16,7 +16,7 @@ function getSfaDetail(orderParcelId) {
   });
 }
 
-/** GET COLLECTION LIST */
+/** GET INVOICE LIST */
 function getCollectionList(data) {
   return ApiRest({
     path: `collection/v1/order-parcels?skip=${data.skip}&limit=${
@@ -210,8 +210,8 @@ function deleteCollectionMethod(data) {
   });
 }
 
-/** GET BILLING STATUS */
-function getBillingStatus() {
+/** GET COLLECTION LIST STATUS */
+function getCollectionListStatus() {
   return ApiRest({
     path: 'collection/v1/available-collection-status',
     method: 'GET'
@@ -240,5 +240,5 @@ export const SfaMethod = {
   getPaymentCollectionLog,
   editCollectionMethod,
   deleteCollectionMethod,
-  getBillingStatus
+  getCollectionListStatus
 };

@@ -31,7 +31,7 @@ const INITIAL_STATE = {
   loadingSfaPatchCollectionMethod: false,
   loadingSfaDeleteCollectionMethod: true,
   loadingLoadMoreGetPaymentCollectionLog: false,
-  loadingGetBillingStatus: false,
+  loadingGetCollectionListStatus: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -58,7 +58,7 @@ const INITIAL_STATE = {
   dataSfaGetPaymentCollectionLog: null,
   dataSfaPatchCollectionMethod: null,
   dataSfaDeleteCollectionMethod: null,
-  dataGetBillingStatus: null,
+  dataGetCollectionListStatus: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -85,7 +85,7 @@ const INITIAL_STATE = {
   errorSfaGetPaymentCollectionLog: null,
   errorSfaPatchCollectionMethod: null,
   errorSfaDeleteCollectionMethod: null,
-  errorGetBillingStatus: null
+  errorGetCollectionListStatus: null
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -786,29 +786,29 @@ export const sfa = createReducer(INITIAL_STATE, {
 
   /**
    * ==========================
-   * GET BILLING STATUS
+   * GET COLLECTION LIST STATUS
    * ==========================
    */
-  [types.SFA_GET_BILLING_STATUS_PROCESS](state, action) {
+  [types.SFA_GET_COLLECTION_LIST_STATUS_PROCESS](state, action) {
     return {
       ...state,
-      loadingGetBillingStatus: true,
-      dataGetBillingStatus: null,
-      errorGetBillingStatus: null
+      loadingGetCollectionListStatus: true,
+      dataGetCollectionListStatus: null,
+      errorGetCollectionListStatus: null
     };
   },
-  [types.SFA_GET_BILLING_STATUS_SUCCESS](state, action) {
+  [types.SFA_GET_COLLECTION_LIST_STATUS_SUCCESS](state, action) {
     return {
       ...state,
-      loadingGetBillingStatus: false,
-      dataGetBillingStatus: action.payload
+      loadingGetCollectionListStatus: false,
+      dataGetCollectionListStatus: action.payload
     };
   },
-  [types.SFA_GET_BILLING_STATUS_FAILED](state, action) {
+  [types.SFA_GET_COLLECTION_LIST_STATUS_FAILED](state, action) {
     return {
       ...state,
-      loadingGetBillingStatus: false,
-      errorGetBillingStatus: action.payload
+      loadingGetCollectionListStatus: false,
+      errorGetCollectionListStatus: action.payload
     };
   }
 });

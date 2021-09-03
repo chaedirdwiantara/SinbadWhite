@@ -8,8 +8,8 @@ import {
 import { Fonts } from '../../helpers';
 import { Color } from '../../config';
 
+export const TAB_INVOICE = 'invoice';
 export const TAB_COLLECTION = 'collection';
-export const TAB_BILLING = 'billing';
 
 function SfaTabView(props) {
   const activeTab = props.activeTab;
@@ -51,8 +51,41 @@ function SfaTabView(props) {
           }
         ];
   };
+
+  /** === TAB INVOICE === */
+  const renderSectionInvoice = () => {
+    return activeTab === TAB_INVOICE ? (
+      <View style={styleTabs(TAB_INVOICE)}>
+        <Text
+          style={
+            activeTab === TAB_INVOICE
+              ? [Fonts.type11, { marginBottom: -1 }]
+              : Fonts.type10
+          }
+        >
+          Tagihan
+        </Text>
+      </View>
+    ) : (
+      <TouchableOpacity
+        style={styleTabs(TAB_INVOICE)}
+        onPress={() => onChangeTabs(TAB_INVOICE)}
+      >
+        <Text
+          style={
+            activeTab === TAB_INVOICE
+              ? [Fonts.type11, { marginBottom: -1 }]
+              : Fonts.type118p
+          }
+        >
+          Tagihan
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
   /** === TAB COLLECTION === */
-  const renderTabCollection = () => {
+  const renderSectionCollection = () => {
     return activeTab === TAB_COLLECTION ? (
       <View style={styleTabs(TAB_COLLECTION)}>
         <Text
@@ -62,7 +95,7 @@ function SfaTabView(props) {
               : Fonts.type10
           }
         >
-          Tagihan
+          Penagihan
         </Text>
       </View>
     ) : (
@@ -73,37 +106,6 @@ function SfaTabView(props) {
         <Text
           style={
             activeTab === TAB_COLLECTION
-              ? [Fonts.type11, { marginBottom: -1 }]
-              : Fonts.type118p
-          }
-        >
-          Tagihan
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-  /** === TAB BILLING === */
-  const renderSectionBilling = () => {
-    return activeTab === TAB_BILLING ? (
-      <View style={styleTabs(TAB_BILLING)}>
-        <Text
-          style={
-            activeTab === TAB_BILLING
-              ? [Fonts.type11, { marginBottom: -1 }]
-              : Fonts.type10
-          }
-        >
-          Penagihan
-        </Text>
-      </View>
-    ) : (
-      <TouchableOpacity
-        style={styleTabs(TAB_BILLING)}
-        onPress={() => onChangeTabs(TAB_BILLING)}
-      >
-        <Text
-          style={
-            activeTab === TAB_BILLING
               ? [Fonts.type11, { marginBottom: -1 }]
               : Fonts.type118p
           }
@@ -122,8 +124,8 @@ function SfaTabView(props) {
   return (
     <>
       <View style={styles.boxTabs}>
-        {renderTabCollection()}
-        {renderSectionBilling()}
+        {renderSectionInvoice()}
+        {renderSectionCollection()}
       </View>
     </>
   );

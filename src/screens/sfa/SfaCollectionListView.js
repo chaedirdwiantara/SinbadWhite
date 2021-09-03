@@ -29,7 +29,9 @@ import SfaNoDataView from './SfaNoDataView';
 
 const SfaCollectionListView = props => {
   const dispatch = useDispatch();
-  const collectionTypeId = props.navigation.state.params.collectionMethodId;
+  const collectionTypeId = props?.isNavigateFromTab
+    ? null
+    : props.navigation.state.params.collectionMethodId;
   const [refreshing, setRefreshing] = useState(false);
   const [collectionId, setCollectionId] = useState(null);
   const [
@@ -97,14 +99,28 @@ const SfaCollectionListView = props => {
 
   /** FUNCTION GET COLLECTION LIST */
   const getCollectionList = (loading, page) => {
-    const data = {
+    let data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
       storeId: parseInt(selectedMerchant.storeId, 10),
-      paymentCollectionTypeId: parseInt(collectionTypeId, 10),
+      // paymentCollectionTypeId: parseInt(collectionTypeId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
       limit: page,
       loading: loading
     };
+
+    if (props.isNavigateFromTab) {
+      data = {
+        ...data,
+        approvalStatus: props.approvalStatus,
+        keyword: props.keyword
+      };
+    } else {
+      data = {
+        ...data,
+        paymentCollectionTypeId: parseInt(collectionTypeId, 10)
+      };
+    }
+
     dispatch(sfaGetReferenceListProcess(data));
   };
 
@@ -211,7 +227,8 @@ const SfaCollectionListView = props => {
               : masterColor.fontWhite,
           borderColor: disable
             ? masterColor.buttonRedDisableColor
-            : masterColor.mainColor
+            : masterColor.mainColor,
+          marginLeft: props.isNavigateFromTab ? 21 : null
         }}
         onPress={() => action(item)}
       >
@@ -318,7 +335,13 @@ const SfaCollectionListView = props => {
                 true
               )}
             </View>
-            <View style={styles.buttonContainer}>
+            <View
+              style={
+                props.isNavigateFromTab
+                  ? styles.buttonContainer2
+                  : styles.buttonContainer
+              }
+            >
               {renderButton(
                 'Ubah',
                 'white',
@@ -333,13 +356,15 @@ const SfaCollectionListView = props => {
                 onDeleteCollection.bind(item),
                 item
               )}
-              {renderButton(
-                'Gunakan',
-                'red',
-                !item.isUsable,
-                navigatetoAddBilling.bind(item),
-                item
-              )}
+              {props.isNavigateFromTab
+                ? null
+                : renderButton(
+                    'Gunakan',
+                    'red',
+                    !item.isUsable,
+                    navigatetoAddBilling.bind(item),
+                    item
+                  )}
             </View>
             <View
               style={{
@@ -431,6 +456,7 @@ const SfaCollectionListView = props => {
       </>
     );
   };
+
   /**
    * =======================
    * RENDER CONTENT
@@ -448,6 +474,7 @@ const SfaCollectionListView = props => {
       <LoadingPage />
     );
   };
+
   /**
    * =======================
    * MAIN
@@ -456,7 +483,7 @@ const SfaCollectionListView = props => {
   return (
     <>
       {renderContent()}
-      {renderBottomButton()}
+      {props.isNavigateFromTab ? null : renderBottomButton()}
       {renderModalConfirmationDelete()}
     </>
   );
@@ -495,6 +522,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginVertical: 16
+  },
+  buttonContainer2: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     marginVertical: 16
   }
 });

@@ -625,24 +625,24 @@ export function sfaDeleteCollectionMethodFailed(data) {
 
 /**
  * ===========================
- * GET BILLING STATUS
+ * GET COLLECTION LIST STATUS
  * ===========================
  */
-/** === SFA GET BILLING STATUS PROCESS === */
-export function sfaGetBillingStatusProcess(data) {
-  return { type: types.SFA_GET_BILLING_STATUS_PROCESS, payload: data };
+/** === SFA GET COLLECTION LIST STATUS PROCESS === */
+export function sfaGetCollectionListStatusProcess(data) {
+  return { type: types.SFA_GET_COLLECTION_LIST_STATUS_PROCESS, payload: data };
 }
-/** === SFA GET BILLING STATUS SUCCESS === */
-export function sfaGetBillingStatusSuccess(data) {
+/** === SFA GET COLLECTION LIST STATUS SUCCESS === */
+export function sfaGetCollectionListStatusSuccess(data) {
   if (data.result === 'Ok') {
     return {
-      type: types.SFA_GET_BILLING_STATUS_SUCCESS,
+      type: types.SFA_GET_COLLECTION_LIST_STATUS_SUCCESS,
       payload: data.data
     };
   }
-  return { type: types.SFA_GET_BILLING_STATUS_FAILED, payload: data };
+  return { type: types.SFA_GET_COLLECTION_LIST_STATUS_FAILED, payload: data };
 }
-/** === SFA GET BILLING STATUS FAILED === */
-export function sfaGetBillingStatusFailed(data) {
-  return { type: types.SFA_GET_BILLING_STATUS_FAILED, payload: data };
+/** === SFA GET COLLECTION LIST STATUS FAILED === */
+export function sfaGetCollectionListStatusFailed(data) {
+  return { type: types.SFA_GET_COLLECTION_LIST_STATUS_FAILED, payload: data };
 }
