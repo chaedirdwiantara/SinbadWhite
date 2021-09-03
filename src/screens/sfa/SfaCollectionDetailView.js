@@ -2,16 +2,12 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
   ScrollView,
   RefreshControl,
   Dimensions
 } from '../../library/reactPackage';
-import { MaterialIcon } from '../../library/thirdPartyPackage';
 import { LoadingPage, ButtonSingle } from '../../library/component';
-import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
+import { GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
@@ -224,7 +220,19 @@ const SfaCollectionDetailView = props => {
         {paymentCollectionType.id === TRANSFER
           ? CardBody({
               title: 'Bank Tujuan',
-              value: bankToAccount.displayName,
+              value: `${bankToAccount?.bank?.name} - ${
+                bankToAccount?.accountNo
+              }`,
+              styleCardView: {
+                ...styles.styleCardView,
+                marginBottom: 0
+              }
+            })
+          : null}
+        {paymentCollectionType.id === TRANSFER
+          ? CardBody({
+              title: '',
+              value: bankToAccount?.description,
               styleCardView: styles.styleCardView
             })
           : null}
