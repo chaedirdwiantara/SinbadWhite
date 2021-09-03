@@ -94,8 +94,8 @@ const SfaView = props => {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
       storeId: parseInt(selectedMerchant.storeId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
-      approvalStatus: props.approvalStatus,
-      keyword: props.keyword,
+      approvalStatus: approvalStatusCollection,
+      keyword: searchTextCollection,
       limit: page,
       loading: loading
     };
@@ -113,7 +113,7 @@ const SfaView = props => {
       case 'status':
         setSelectedTagStatus(data.data);
 
-        if (data.data === TAB_COLLECTION) {
+        if (activeTab === TAB_COLLECTION) {
           setApprovalStatusCollection(
             dataGetCollectionListStatus.data[data.data].status
           );
@@ -124,7 +124,7 @@ const SfaView = props => {
 
         break;
       case 'search':
-        if (data.data === TAB_COLLECTION) {
+        if (activeTab === TAB_COLLECTION) {
           setSearchTextCollection(data.data);
         } else {
           setSearchText(data.data);

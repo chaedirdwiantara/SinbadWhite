@@ -185,7 +185,6 @@ const SfaCollectionEditView = props => {
    * *********************************
    */
   const navigateOnSucces = () => {
-    console.log('DISINI');
     const data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
       storeId: parseInt(selectedMerchant.storeId, 10),
