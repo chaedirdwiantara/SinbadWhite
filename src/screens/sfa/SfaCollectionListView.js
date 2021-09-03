@@ -102,7 +102,6 @@ const SfaCollectionListView = props => {
     let data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
       storeId: parseInt(selectedMerchant.storeId, 10),
-      // paymentCollectionTypeId: parseInt(collectionTypeId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
       limit: page,
       loading: loading
