@@ -109,21 +109,6 @@ const SfaBillingLogView = props => {
     };
     dispatch(sfaGetPaymentCollectionLogProcess(data));
   };
-  /** FUNCTION GET COLLECTION LIST */
-  const getCollectionList = (loading, page) => {
-    const data = {
-      supplierId: parseInt(userSuppliers[0].supplierId, 10),
-      storeId: parseInt(selectedMerchant.storeId, 10),
-      paymentCollectionTypeId: parseInt(collectionMethodId, 10),
-      userId: parseInt(userSuppliers[0].userId, 10),
-      limit: page,
-      loading: loading
-    };
-    dispatch(sfaGetReferenceListProcess(data));
-  };
-  useEffect(() => {
-    getPaymentCollectionLog(true, 10);
-  }, []);
 
   /** FUNCTION NAVIGATE TO EDIT BILLING */
   const navigatetoEditBilling = item => {
@@ -356,7 +341,7 @@ const SfaBillingLogView = props => {
             refreshing={refreshing}
             onRefresh={() => onHandleRefresh()}
           />
-          { loadingLoadMoreGetPaymentCollectionLog ? <LoadingLoadMore /> : null}
+          {loadingLoadMoreGetPaymentCollectionLog ? <LoadingLoadMore /> : null}
         </View>
       </>
     ) : (
