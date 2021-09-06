@@ -24,6 +24,7 @@ const INITIAL_STATE = {
   loadingGetListSurvey: false,
   loadingGetSurvey: false,
   loadingSubmitSurvey: false,
+  loadingGetQuestionnaire: false,
   loadingValidateAreaMapping: false,
   loadingGetSalesSegmentation: false,
   /** data */
@@ -146,6 +147,7 @@ const INITIAL_STATE = {
     status: '',
     photos: []
   },
+  dateGetQuestionnaire: [],
   dataValidateAreaMapping: null,
   dataSalesSegmentation: null,
   /** error */
@@ -168,6 +170,7 @@ const INITIAL_STATE = {
   errorGetSurveyList: null,
   errorGetSurvey: null,
   errorSubmitSurvey: null,
+  errorGetQuestionnaire: null,
   errorValidateAreaMapping: null,
   errorGetSalesSegmentation: null
 };
@@ -985,6 +988,34 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingSubmitSurvey: false,
       errorSubmitSurvey: action.payload
+    };
+  },
+
+  /**
+   * ============================
+   * GET QUESTIONNAIRE (QUESTION)
+   * ============================
+   */
+  [types.MERCHANT_GET_QUESTIONNAIRE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetQuestionnaire: true,
+      dateGetQuestionnaire: [],
+      errorGetQuestionnaire: null
+    };
+  },
+  [types.MERCHANT_GET_QUESTIONNAIRE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetQuestionnaire: false,
+      dateGetQuestionnaire: action.payload
+    };
+  },
+  [types.MERCHANT_GET_QUESTIONNAIRE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetQuestionnaire: false,
+      errorGetQuestionnaire: action.payload
     };
   },
 

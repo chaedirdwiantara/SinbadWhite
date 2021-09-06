@@ -30,6 +30,7 @@ import MerchantEditView from '../../screens/merchants/edit-merchant/MerchantEdit
 /** merchant survey */
 import MerchantSurveyView from '../../screens/merchants/survey-merchant/MerchantSurveyView';
 import MerchantSurveyDisplayPhotoView from '../../screens/merchants/survey-merchant/MerchantSurveyDisplayPhotoView';
+import MerchantQuestionnaireView from '../../screens/merchants/survey-merchant/MerchantQuestionnaireView';
 
 const MerchantNavigator = {
   MerchantView: {
@@ -332,6 +333,17 @@ const MerchantNavigator = {
       headerStyle: {
         elevation: 0,
         backgroundColor: masterColor.mainColor
+      },
+      gesturesEnabled: false
+    }
+  },
+  MerchantQuestionnaireView: {
+    screen: MerchantQuestionnaireView,
+    navigationOptions: {
+      headerTitle: 'Input Survey',
+      headerTitleStyle: GlobalFont.textHeaderPage,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
       },
       gesturesEnabled: false
     }

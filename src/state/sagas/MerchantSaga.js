@@ -258,6 +258,17 @@ function* updateSurvey(actions) {
     yield put(ActionCreators.merchantSubmitSurveyFailed(error));
   }
 }
+/** GET QUESTIONNAIRE */
+function* getQuestionnaire(actions) {
+  try {
+    const response = yield call(() => {
+      // return MerchantMethod.updateSurvey(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetQuestionnaireSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetQuestionnaireFailed(error));
+  }
+}
 /** GET SALES SEGMENTATION */
 function* getSalesSegmentation(actions) {
   try {
@@ -315,6 +326,7 @@ function* MerchantSaga() {
   yield takeLatest(types.MERCHANT_GET_SURVEY_PROCESS, getSurvey);
   yield takeLatest(types.MERCHANT_SUBMIT_SURVEY_PROCESS, submitSurvey);
   yield takeLatest(types.MERCHANT_UPDATE_SURVEY_PROCESS, updateSurvey);
+  yield takeLatest(types.MERCHANT_GET_QUESTIONNAIRE_PROCESS, getQuestionnaire);
   yield takeEvery(types.GET_SALES_SEGMENTATION_PROCESS, getSalesSegmentation);
 }
 
