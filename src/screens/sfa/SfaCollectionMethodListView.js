@@ -10,7 +10,7 @@ import { LoadingPage } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
-import { sfaGetPaymentMethodProcess } from '../../state/actions';
+import { sfaGetReferenceListProcess } from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 
 const SfaCollectionMethodListView = props => {
@@ -24,16 +24,17 @@ const SfaCollectionMethodListView = props => {
    * FUNCTIONAL
    * =======================
    */
-
-  useEffect(() => {
-    const data = {
-      supplierId: parseInt(userSuppliers[0].supplier.id),
-      storeId: selectedMerchant.storeId
-    };
-    dispatch(sfaGetPaymentMethodProcess(data));
-  }, []);
-
+  
   const onSelectCollectionMethod = item => {
+    let data = {
+      supplierId: parseInt(userSuppliers[0].supplierId, 10),
+      storeId: parseInt(selectedMerchant.storeId, 10),
+      userId: parseInt(userSuppliers[0].userId, 10),
+      limit: 20,
+      loading: true,
+      paymentCollectionTypeId: parseInt(item.id, 10)
+    };
+    dispatch(sfaGetReferenceListProcess(data))
     NavigationService.navigate('SfaCollectionListView', {
       collectionMethodId: item.id
     });

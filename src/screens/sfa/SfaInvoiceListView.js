@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList
 } from '../../library/reactPackage';
+import { useDispatch } from 'react-redux';
 import { LoadingLoadMore } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
@@ -13,8 +14,10 @@ import NavigationService from '../../navigation/NavigationService';
 import SfaNoDataView from './SfaNoDataView';
 import { useSelector } from 'react-redux';
 import { toLocalTime } from '../../helpers/TimeHelper';
+import { sfaGetDetailProcess } from '../../state/actions';
 
 function SfaInvoiceListView(props) {
+  const dispatch = useDispatch();
   const { loadingLoadMoreGetSfa, refreshGetCollection } = useSelector(
     state => state.sfa
   );
@@ -89,6 +92,12 @@ function SfaInvoiceListView(props) {
     );
   };
 
+  const navigateToDetail = item => {
+    dispatch(sfaGetDetailProcess(item.id));
+    NavigationService.navigate('SfaDetailView', {
+      orderParcelId: item.id
+    });
+  };
   /** === RENDER ITEM (STATUS PAYMENT) === */
   const renderItemStatusPayment = status_payment => {
     let textStyle = Fonts.type67;
@@ -119,13 +128,7 @@ function SfaInvoiceListView(props) {
 
     return (
       <View style={styles.listContainer}>
-        <TouchableOpacity
-          onPress={() =>
-            NavigationService.navigate('SfaDetailView', {
-              orderParcelId: item.id
-            })
-          }
-        >
+        <TouchableOpacity onPress={() => navigateToDetail(item)}>
           <View style={styles.view1}>
             <View style={{ flex: 1 }}>
               <Text style={Fonts.type48}>{item.invoiceGroupName}</Text>

@@ -23,7 +23,8 @@ import {
   sfaGetPaymentMethodProcess,
   sfaGetReferenceListProcess,
   sfaCollectionListLoadmoreProcess,
-  sfaDeleteCollectionMethodProcess
+  sfaDeleteCollectionMethodProcess,
+  sfaGetCollectionDetailProcess
 } from '../../state/actions';
 import SfaNoDataView from './SfaNoDataView';
 
@@ -113,18 +114,12 @@ const SfaCollectionListView = props => {
         approvalStatus: props.approvalStatus,
         keyword: props.keyword
       };
-    } else {
-      data = {
-        ...data,
-        paymentCollectionTypeId: parseInt(collectionTypeId, 10)
-      };
+      dispatch(sfaGetReferenceListProcess(data));
     }
-
-    dispatch(sfaGetReferenceListProcess(data));
   };
 
   useEffect(() => {
-    getCollectionList(true, 10);
+    getCollectionList(true, 20);
   }, []);
 
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
@@ -179,6 +174,13 @@ const SfaCollectionListView = props => {
     dispatch(sfaDeleteCollectionMethodProcess(data));
   };
 
+  /** FUNCTION NAVIGATE TO COLLECTION DETAIL */
+  const navigateToCollectionDetail = item => {
+    dispatch(sfaGetCollectionDetailProcess(item.id));
+    NavigationService.navigate('SfaCollectionDetailView', {
+      paymentCollectionId: item.id
+    });
+  };
   /** RENDER CONTENT LIST GLOBAL */
   const renderContentListGlobal = (key, value, black, bold, red) => {
     return (
@@ -252,11 +254,7 @@ const SfaCollectionListView = props => {
       <View key={index} style={{ marginVertical: 8, marginHorizontal: 16 }}>
         <TouchableOpacity
           style={[styles.listContainer, GlobalStyle.shadowForBox]}
-          onPress={() =>
-            NavigationService.navigate('SfaCollectionDetailView', {
-              paymentCollectionId: item.id
-            })
-          }
+          onPress={() => navigateToCollectionDetail(item)}
         >
           <View style={styles.statusContainer}>
             {item.approvalStatus ? (
