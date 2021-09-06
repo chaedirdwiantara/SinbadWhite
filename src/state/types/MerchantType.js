@@ -123,6 +123,13 @@ export const MERCHANT_GET_SURVEY_FAILED = 'MerchantGetSurveyFailed';
 export const MERCHANT_SUBMIT_SURVEY_PROCESS = 'MerchantSubmitSurveyProcess';
 export const MERCHANT_SUBMIT_SURVEY_SUCCESS = 'MerchantSubmitSurveySuccess';
 export const MERCHANT_SUBMIT_SURVEY_FAILED = 'MerchantSubmitSurveyFailed';
+/** MERCHANT GET QUESTIONNAIRE */
+export const MERCHANT_GET_QUESTIONNAIRE_PROCESS =
+  'MerchantGetQuestionnaireProcess';
+export const MERCHANT_GET_QUESTIONNAIRE_SUCCESS =
+  'MerchantGetQuestionnaireSuccess';
+export const MERCHANT_GET_QUESTIONNAIRE_FAILED =
+  'MerchantGetQuestionnaireFailed';
 /** MERCHANT UPDATE SURVEY RESPONSE */
 export const MERCHANT_UPDATE_SURVEY_PROCESS = 'MerchantUpdateSurveyProcess';
 /** MERCHANT VALIDATE AREA MAPPING */
