@@ -17,8 +17,8 @@ class ModalUpdateStock extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pcs: 0,
-      box: 0
+      pcs: this.props.data.data.qty.pcs,
+      box: this.props.data.data.qty.box
     };
   }
 
@@ -91,13 +91,14 @@ class ModalUpdateStock extends Component {
         >
           <TextInput
             style={Fonts.H12Medium}
+            value={this.state.pcs.toString()}
             placeholder={'pcs'}
             keyboardType="numeric"
             returnKeyType="done"
             enablesReturnKeyAutomatically
             maxLength={4}
-            onChange={qty => {
-              let pcs = qty.replace(/\W|\\+(?!$)/g, '');
+            onChangeText={qty => {
+              const pcs = qty.replace(/\W|^0+|\\+(?!$)/g, '');
               this.setState({ pcs });
             }}
           />
@@ -118,13 +119,14 @@ class ModalUpdateStock extends Component {
         >
           <TextInput
             style={Fonts.H12Medium}
+            value={this.state.box.toString()}
             placeholder={'box'}
             keyboardType="numeric"
             returnKeyType="done"
             enablesReturnKeyAutomatically
             maxLength={4}
-            onChange={qty => {
-              let box = qty.replace(/\W|\\+(?!$)/g, '');
+            onChangeText={qty => {
+              const box = qty.replace(/\W|^0+|\\+(?!$)/g, '');
               this.setState({ box });
             }}
           />
@@ -154,7 +156,17 @@ class ModalUpdateStock extends Component {
         <ButtonSingle
           title={'Konfirmasi'}
           borderRadius={4}
-          onPress={() => console.log('Konfirmasi Update Stock')}
+          onPress={() =>
+            this.props.parentFunction({
+              type: 'edit',
+              data: this.props.data,
+              updatedQty: {
+                pcs: this.state.pcs,
+                box: this.state.box
+              },
+              stockId: this.props.data.data.stockId
+            })
+          }
           loading={this.state.loadingAddStock}
         />
       </View>

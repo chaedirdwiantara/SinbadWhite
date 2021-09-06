@@ -47,23 +47,6 @@ class EditStockRecordListView extends Component {
   }
   /** RENDER CARD DATA */
   renderCardData({ item, index }) {
-    let shelfQty = {};
-    let nonShelfQty = {};
-
-    if (item.showedStock < item.packagedQty) {
-      (shelfQty.pcs = item.showedStock), (shelfQty.box = 0);
-    } else {
-      (shelfQty.pcs = item.showedStock % item.packagedQty),
-        (shelfQty.box = Math.floor(item.showedStock / item.packagedQty));
-    }
-
-    if (item.nonShowedStock < item.packagedQty) {
-      (nonShelfQty.pcs = item.nonShowedStock), (nonShelfQty.box = 0);
-    } else {
-      (nonShelfQty.pcs = item.nonShowedStock % item.packagedQty),
-        (nonShelfQty.box = Math.floor(item.nonShowedStock / item.packagedQty));
-    }
-
     return (
       <View style={styles.cardContent} key={index}>
         <View
@@ -106,19 +89,24 @@ class EditStockRecordListView extends Component {
                     type: 'ShelfStock',
                     data: {
                       packagedQty: item.packagedQty,
-                      name: 'Shelf Produk'
+                      name: 'Shelf Produk',
+                      stockId: item.id,
+                      qty: {
+                        pcs: item.shelfQty.pcs,
+                        box: item.shelfQty.box
+                      }
                     }
                   });
                 }}
               >
                 <View style={[styles.inputBox, { marginRight: 8 }]}>
                   <Text style={[Fonts.type24, styles.textInput]}>
-                    {shelfQty.box}box
+                    {item.shelfQty.box}box
                   </Text>
                 </View>
                 <View style={styles.inputBox}>
                   <Text style={[Fonts.type24, styles.textInput]}>
-                    {shelfQty.pcs}pcs
+                    {item.shelfQty.pcs}pcs
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -140,19 +128,24 @@ class EditStockRecordListView extends Component {
                     type: 'NonShelfStock',
                     data: {
                       packagedQty: item.packagedQty,
-                      name: 'Non Shelf Produk'
+                      name: 'Non Shelf Produk',
+                      stockId: item.id,
+                      qty: {
+                        pcs: item.nonShelfQty.pcs,
+                        box: item.nonShelfQty.box
+                      }
                     }
                   });
                 }}
               >
                 <View style={[styles.inputBox, { marginRight: 8 }]}>
                   <Text style={[Fonts.type24, styles.textInput]}>
-                    {nonShelfQty.box}box
+                    {item.nonShelfQty.box}box
                   </Text>
                 </View>
                 <View style={styles.inputBox}>
                   <Text style={[Fonts.type24, styles.textInput]}>
-                    {nonShelfQty.pcs}pcs
+                    {item.nonShelfQty.pcs}pcs
                   </Text>
                 </View>
               </TouchableOpacity>
