@@ -11,7 +11,10 @@ import { GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
-import { sfaGetCollectionDetailProcess } from '../../state/actions';
+import {
+  sfaGetCollectionDetailProcess,
+  sfaGetPaymentCollectionLogProcess
+} from '../../state/actions';
 import {
   APPROVED,
   REJECTED,
@@ -35,7 +38,7 @@ const SfaCollectionDetailView = props => {
     dataSfaGetCollectionDetail,
     loadingSfaGetCollectionDetail
   } = useSelector(state => state.sfa);
-
+  const { selectedMerchant } = useSelector(state => state.merchant);
   /** === ON REFRESH === */
   const onRefresh = () => {
     getCollectionDetail();
@@ -46,15 +49,27 @@ const SfaCollectionDetailView = props => {
     }, 10);
   };
 
+  /** NAVIGATE TO BILLING LOG */
+  const navigateToBillingLog = () => {
+    NavigationService.navigate('SfaBillingLogView', {
+      collectionId: dataSfaGetCollectionDetail.data.id,
+      paymentCollectionTypeId:
+        dataSfaGetCollectionDetail.data.paymentCollectionType.id
+    });
+    const data = {
+      paymentCollectionMethodId: dataSfaGetCollectionDetail.data.id,
+      limit: 20,
+      storeId: parseInt(selectedMerchant.storeId, 10),
+      skip: 0,
+      loading: true
+    };
+    dispatch(sfaGetPaymentCollectionLogProcess(data));
+  };
   /**
    * *********************************
    * FUNCTION
    * *********************************
    */
-
-  useEffect(() => {
-    getCollectionDetail();
-  }, []);
 
   const getCollectionDetail = () => {
     const paymentCollectionId =
@@ -354,13 +369,7 @@ const SfaCollectionDetailView = props => {
         <ButtonSingle
           title={'Lihat Riwayat Pembayaran'}
           borderRadius={4}
-          onPress={() =>
-            NavigationService.navigate('SfaBillingLogView', {
-              collectionId: dataSfaGetCollectionDetail.data.id,
-              paymentCollectionTypeId:
-                dataSfaGetCollectionDetail.data.paymentCollectionType.id
-            })
-          }
+          onPress={() => navigateToBillingLog()}
         />
       </>
     );
