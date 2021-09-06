@@ -47,7 +47,7 @@ class MerchantEditStockView extends Component {
       selectedProduct: [],
       dataForSaveProduct: [],
       search: '',
-      data: this.props.merchant.dataGetRecordStock,
+      data: [],
       dataForDiscard: [],
       dataForBatchDelete: [],
       latitude: this.props.merchant.selectedMerchant.latitude,
@@ -93,6 +93,7 @@ class MerchantEditStockView extends Component {
     this.navigationFunction();
     this.discardDataSave();
     this.batchDeleteData();
+    this.saveToLocal();
   }
   componentWillUnmount() {
     BackHandler.removeEventListener(
@@ -148,7 +149,8 @@ class MerchantEditStockView extends Component {
       if (this.props.merchant.dataGetRecordStock.length < 0) {
         NavigationService.navigate('MerchantStockView');
       } else {
-        this.setState({ data: this.props.merchant.dataGetRecordStock });
+        // this.setState({ data: this.props.merchant.dataGetRecordStock });
+        this.saveToLocal();
       }
     }
     // Navigate to MerchantStockView after batch delete
@@ -203,6 +205,40 @@ class MerchantEditStockView extends Component {
       search: keyword || ''
     });
     this.setState({ data: this.props.merchant.dataGetRecordStock });
+  }
+  // SAVE DATA TO LOCAL STATE
+  saveToLocal() {
+    const stockRecord = [];
+    this.props.merchant.dataGetRecordStock.map(item => {
+      const stockItem = item;
+      let shelfQty = {};
+      let nonShelfQty = {};
+
+      if (item.showedStock < item.packagedQty) {
+        (shelfQty.pcs = item.showedStock), (shelfQty.box = 0);
+      } else {
+        (shelfQty.pcs = item.showedStock % item.packagedQty),
+          (shelfQty.box = Math.floor(item.showedStock / item.packagedQty));
+      }
+
+      if (item.nonShowedStock < item.packagedQty) {
+        (nonShelfQty.pcs = item.nonShowedStock), (nonShelfQty.box = 0);
+      } else {
+        (nonShelfQty.pcs = item.nonShowedStock % item.packagedQty),
+          (nonShelfQty.box = Math.floor(
+            item.nonShowedStock / item.packagedQty
+          ));
+      }
+
+      stockItem.shelfQty = shelfQty;
+      stockItem.nonShelfQty = nonShelfQty;
+
+      stockRecord.push(stockItem);
+    });
+
+    console.log('Convert To Local State', stockRecord);
+
+    this.setState({ data: stockRecord });
   }
   // POST RECORD STOCK ACTIVITY
   postRecordStockActivity() {
@@ -273,22 +309,34 @@ class MerchantEditStockView extends Component {
         this.props.merchantDeleteStockRecordProcess(data.data);
         break;
       case 'edit':
+        console.log('Data from Child', data);
+
+        // Find index for updated stock id
         const catalogueIndex = this.state.data.findIndex(
-          item => item.id === data.data.stockId
+          item => item.id === data.stockId
         );
 
         const newCatalogueArray = [...this.state.data];
 
-        if (data.data.hasOwnProperty('shelfQty')) {
+        // Check if there are updated qty on shelf stock
+        if (data.data.type === 'ShelfStock') {
           newCatalogueArray[catalogueIndex] = {
             ...newCatalogueArray[catalogueIndex],
-            showedStock: data.data.shelfQty
+            shelfQty: {
+              pcs: data.updatedQty.pcs,
+              box: data.updatedQty.box
+            }
           };
         }
-        if (data.data.hasOwnProperty('nonShelfQty')) {
+
+        // Check if there are updated qty on non shelf stock
+        if (data.data.type === 'NonShelfStock') {
           newCatalogueArray[catalogueIndex] = {
             ...newCatalogueArray[catalogueIndex],
-            nonShowedStock: data.data.nonShelfQty
+            nonShelfQty: {
+              pcs: data.updatedQty.pcs,
+              box: data.updatedQty.box
+            }
           };
         }
         const dataForSaveProduct = [];
@@ -296,26 +344,38 @@ class MerchantEditStockView extends Component {
         newCatalogueArray.map((item, index) => {
           const object = {
             id: parseInt(item.id, 10),
-            showedStock: parseInt(item.showedStock, 10),
-            nonShowedStock: parseInt(item.nonShowedStock, 10)
+            showedStock: {
+              pcs: parseInt(item.shelfQty.pcs, 10),
+              box: parseInt(item.shelfQty.box, 10)
+            },
+            nonShowedStock: {
+              pcs: parseInt(item.nonShelfQty.pcs, 10),
+              box: parseInt(item.nonShelfQty.box, 10)
+            }
           };
           dataForSaveProduct.push(object);
         });
+
         this.setState({
           data: newCatalogueArray,
-          dataForSaveProduct
+          dataForSaveProduct,
+          openModalUpdateStock: false
         });
         break;
       case 'ShelfStock':
+        console.log('Modal Shelf Stock', data.data);
         this.setState({
           openModalUpdateStock: true,
-          modalTitleUpdate: data.data.name
+          modalTitleUpdate: data.data.name,
+          stockData: data
         });
         break;
       case 'NonShelfStock':
+        console.log('Modal Non Shelf Stock', data.data);
         this.setState({
           openModalUpdateStock: true,
-          modalTitleUpdate: data.data.name
+          modalTitleUpdate: data.data.name,
+          stockData: data
         });
         break;
       default:
@@ -343,7 +403,11 @@ class MerchantEditStockView extends Component {
     return merchant.loadingGetRecordStock ? <LoadingPage /> : this.renderData();
   }
 
-  /** RENDER VIEW */
+  /**
+   * ===============
+   * RENDER VIEW
+   * ===============
+   * */
   // RENDER CARD View
   renderCardView() {
     return this.props.merchant.dataGetRecordStock.length > 0 ? (
@@ -490,6 +554,7 @@ class MerchantEditStockView extends Component {
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
         title={this.state.modalTitleUpdate}
+        data={this.state.stockData}
       />
     ) : (
       <View />
