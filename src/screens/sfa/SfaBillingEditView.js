@@ -69,12 +69,6 @@ const SfaBillingEditView = props => {
    * *********************************
    */
 
-  useEffect(() => {
-    getBillingDetail();
-  }, []);
-  const getBillingDetail = () => {
-    dispatch(sfaGetBillingDetailProcess(collectionInfo.id));
-  };
   // function to make sure collection !> balance || colection !>outstanding
   useEffect(() => {
     const outstanding = dataSfaGetBillingDetail?.data.outstandingAmount;

@@ -22,12 +22,11 @@ import {
   ModalConfirmation
 } from '../../library/component';
 import {
-  sfaGetReferenceListProcess,
-  sfaCollectionListLoadmoreProcess,
   sfaGetPaymentCollectionLogProcess,
   sfaDeletePaymentBillingProcess,
   sfaGetCollectionDetailProcess,
-  sfaGetPaymentCollectionLogLoadmoreProcess
+  sfaGetPaymentCollectionLogLoadmoreProcess,
+  sfaGetBillingDetailProcess
 } from '../../state/actions';
 import { toLocalTime } from '../../helpers/TimeHelper';
 import SfaNoDataView from './SfaNoDataView';
@@ -112,6 +111,7 @@ const SfaBillingLogView = props => {
 
   /** FUNCTION NAVIGATE TO EDIT BILLING */
   const navigatetoEditBilling = item => {
+    dispatch(sfaGetBillingDetailProcess(item.id))
     NavigationService.navigate('SfaBillingEditView', {
       ...item,
       paymentCollectionTypeId: parseInt(collectionMethodId, 10)
