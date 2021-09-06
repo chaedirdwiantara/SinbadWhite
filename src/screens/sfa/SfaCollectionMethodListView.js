@@ -24,15 +24,7 @@ const SfaCollectionMethodListView = props => {
    * FUNCTIONAL
    * =======================
    */
-
-  useEffect(() => {
-    const data = {
-      supplierId: parseInt(userSuppliers[0].supplier.id),
-      storeId: selectedMerchant.storeId
-    };
-    dispatch(sfaGetPaymentMethodProcess(data));
-  }, []);
-
+  
   const onSelectCollectionMethod = item => {
     NavigationService.navigate('SfaCollectionListView', {
       collectionMethodId: item.id

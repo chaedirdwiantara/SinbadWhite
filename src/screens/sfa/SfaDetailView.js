@@ -20,7 +20,10 @@ import {
   ButtonSingle,
   LoadingPage
 } from '../../library/component';
-import { sfaGetDetailProcess } from '../../state/actions';
+import {
+  sfaGetDetailProcess,
+  sfaGetPaymentMethodProcess
+} from '../../state/actions';
 import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import NavigationService from '../../navigation/NavigationService';
@@ -37,6 +40,9 @@ function SfaDetailView(props) {
     dataSfaGetDetail,
     errorSfaGetDetail
   } = useSelector(state => state.sfa);
+
+  const { selectedMerchant } = useSelector(state => state.merchant);
+  const { userSuppliers } = useSelector(state => state.user);
   const [accordionOpen, setAccordionOpen] = useState(false);
 
   //USEREF ERROR
@@ -54,13 +60,13 @@ function SfaDetailView(props) {
    * =======================
    */
   const addCollection = () => {
+    const data = {
+      supplierId: parseInt(userSuppliers[0].supplier.id, 10),
+      storeId: selectedMerchant.storeId
+    };
+    dispatch(sfaGetPaymentMethodProcess(data));
     NavigationService.navigate('SfaCollectionMethodListView');
   };
-
-  useEffect(() => {
-    const orderParcelId = parseInt(props.navigation.state.params.orderParcelId);
-    dispatch(sfaGetDetailProcess(orderParcelId));
-  }, [dispatch]);
 
   const openAccordion = event => {
     LayoutAnimation.configureNext(
