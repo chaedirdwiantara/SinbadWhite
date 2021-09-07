@@ -7,7 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
   LayoutAnimation,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  RefreshControl
 } from '../../library/reactPackage';
 
 import {
@@ -33,7 +34,8 @@ import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPaymen
 import { COLLECTION } from '../../constants/paymentConstants';
 function SfaDetailView(props) {
   const dispatch = useDispatch();
-
+  const orderParcelId = props.navigation.state.params.orderParcelId;
+  const [refreshing, setRefreshing] = useState(false);
   // SELECTOR
   const {
     loadingSfaGetDetail,
@@ -126,7 +128,19 @@ function SfaDetailView(props) {
     setModalBottomError(false);
     NavigationService.navigate('SfaView');
   };
-
+  /** GET DETAIL ORDER PARCEL */
+  const getDetailOrder = () => {
+    dispatch(sfaGetDetailProcess(orderParcelId));
+  };
+  /** === ON REFRESH === */
+  const onRefresh = () => {
+    getDetailOrder();
+    /** SET PAGE REFRESH */
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 10);
+  };
   /**
    * *********************************
    * RENDER VIEW
@@ -465,7 +479,15 @@ function SfaDetailView(props) {
   const renderContent = () => {
     return (
       <>
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => onRefresh()}
+            />
+          }
+          style={{ flex: 1 }}
+        >
           <View style={{ flex: 1 }}>
             {renderFakturInfo()}
             {renderCollectionInfo()}
