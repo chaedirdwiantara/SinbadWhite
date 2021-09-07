@@ -9,7 +9,9 @@ function getJourneyPlanV2(data) {
   return ApiRest({
     path: `${salesManagementService}/v1/journey-book-stores/date?date=${
       data.date
-    }&search=${data.search}&page=${data.page}&length=${length}`,
+    }&search=${data.search}&page=${data.page}&length=${length}&storetype=${
+      data.storetype
+    }`,
     method: 'GET'
   });
 }
@@ -42,7 +44,7 @@ export const JourneyMethod = {
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 28072021
+ * updatedDate: 12082021
  * updatedFunction:
- *  -> add parameter get journey plan.
+ *  -> add parameter get journey plan (storetype).
  * */

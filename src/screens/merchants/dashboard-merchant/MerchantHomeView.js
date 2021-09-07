@@ -17,7 +17,6 @@ import {
   moment,
   MaterialIcon,
   RFPercentage,
-  NavigationEvents,
   Button
 } from '../../../library/thirdPartyPackage';
 import {
@@ -502,6 +501,7 @@ class MerchantHomeView extends Component {
       page: 1,
       date: today,
       search: '',
+      storetype: 'all',
       loading: true
     });
     this.props.getJourneyPlanReportProcessV2();
@@ -511,6 +511,7 @@ class MerchantHomeView extends Component {
       length: 1000,
       date: today,
       search: '',
+      storetype: 'all',
       loading: true
     });
   }
@@ -1771,7 +1772,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 02082021
+ * updatedDate: 12082021
  * updatedFunction:
- * -> add get journey map data when back to back journey plan's map.
+ * -> update parameter storetype and delete NavigationEvents.
  */

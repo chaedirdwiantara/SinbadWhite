@@ -121,6 +121,7 @@ class MerchantMapView extends Component {
     return (
       <View>
         <SearchBarType2
+          maxLength={30}
           searchText={this.props.searchText}
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
@@ -338,16 +339,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantMapView);
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
- * updatedFunction:
- * -> Refactoring Module Import
  * updatedBy: dyah
- * updatedDate: 24022021
+ * updatedDate: 24082021
  * updatedFunction:
- * -> update the props of portfolio.
- * updatedBy: dyah
- * updatedDate: 25022021
- * updatedFunction:
- * -> update the props of merchant list.
+ * -> maximise the character of search (30 characters)
  */

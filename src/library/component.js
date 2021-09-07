@@ -80,6 +80,7 @@ import ProductListType7 from '../components/list/ProductListType7';
 /** EMPTY DATA */
 import ComingSoon from '../components/empty_state/ComingSoon';
 import EmptyData from '../components/empty_state/EmptyData';
+import EmptyDataType2 from '../components/empty_state/EmptyDataType2';
 /** SKELETON */
 import SkeletonType1 from '../components/skeleton/SkeletonType1';
 import SkeletonType2 from '../components/skeleton/SkeletonType2';
@@ -105,7 +106,7 @@ import TagListType1 from '../components/tag/TagListType1';
 import TagListType2 from '../components/tag/TagListType2';
 /** DATE PICKER SPINNER */
 import DatePickerSpinner from '../components/DatePickerSpinner';
-import DatePickerSpinnerWithMinMaxDate from "../components/DatePickerSpinnerWithMinMaxDate";
+import DatePickerSpinnerWithMinMaxDate from '../components/DatePickerSpinnerWithMinMaxDate';
 /** SELECTED MERCHANT */
 import SelectedMerchantName from '../components/SelectedMerchantName';
 /** CARD */
@@ -199,6 +200,7 @@ export {
   /** EMPTY DATA */
   ComingSoon,
   EmptyData,
+  EmptyDataType2,
   /** SKELETON */
   SkeletonType1,
   SkeletonType2,
@@ -247,13 +249,9 @@ export {
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Dyah
- * updatedDate: 18122020
- * updatedFunction:
- * -> Add new component (customize modal bottom => modalBottomType5)
  * updatedBy: dyah
- * updatedDate: 06052021
+ * updatedDate: 06082021
  * updatedFunction:
- * -> Add new component (customize modal => ModalConfirmationType4)
+ * -> add new component (empty state => emptyDataType2)
  *
  */
