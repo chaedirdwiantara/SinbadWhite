@@ -291,11 +291,7 @@ const SfaCollectionDetailView = props => {
           imageSource: { uri: `data:image/jpeg;base64, ${image}` },
           imageSourceStyle: styles.images,
           imageContainerStyle: styles.smallContainerImage,
-          styleCardView: styles.styleCardView,
-          titleIcon: {
-            suffixIcon: 'help',
-            suffixStyle: { marginLeft: 6 }
-          }
+          styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Total Penagihan',
