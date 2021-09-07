@@ -34,6 +34,22 @@ function* getJourneyPlanMapData(actions) {
     yield put(ActionCreators.journeyPlanGetMapDataFailed(error));
   }
 }
+/** GET JOURNEY PLAN MAP SEARCH LIST */
+function* getJourneyPlanMapSearch(actions) {
+  try {
+    const response = yield call(() => {
+      return JourneyMethod.getJourneyPlanV2(actions.payload);
+    });
+
+    if (response.data.data === null) {
+      response.data.data = [];
+    }
+
+    yield put(ActionCreators.journeyPlanGetMapSearchSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.journeyPlanGetMapSearchFailed(error));
+  }
+}
 /** ADD MERCHANT TO JOURNEY PLAN V2*/
 function* saveMerchantToJourneyPlanV2(actions) {
   try {
@@ -61,6 +77,10 @@ function* JourneySaga() {
   yield takeLatest(
     types.JOURNEY_PLAN_GET_MAP_DATA_PROCESS,
     getJourneyPlanMapData
+  );
+  yield takeLatest(
+    types.JOURNEY_PLAN_GET_MAP_SEARCH_PROCESS,
+    getJourneyPlanMapSearch
   );
   yield takeLatest(
     types.SAVE_MERCHANT_TO_JOURNEY_PLAN_PROCESS_V2,

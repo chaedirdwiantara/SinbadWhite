@@ -8,6 +8,9 @@ const INITIAL_STATE = {
   refreshGetJourneyPlan: false,
   loadingLoadMoreGetJourneyPlan: false,
   loadingGetJourneyPlanMapData: false,
+  loadingGetJourneyPlanMapSearch: false,
+  refreshGetJourneyPlanMapSearch: false,
+  loadingLoadMoreGetJourneyPlanMapSearch: false,
   loadingSaveMerchantToJourneyPlan: false,
   loadingGetJourneyPlanReport: false,
   /** data */
@@ -16,10 +19,15 @@ const INITIAL_STATE = {
   totalDataGetJourneyPlanV2: 0,
   pageGetJourneyPlanV2: 1,
   dataGetJourneyPlanMapData: null,
+  dataGetJourneyPlanMapSearch: [],
+  totalDataGetJourneyPlanMapSearch: 0,
+  dataGetJourneyPlanMapSearchType: 'reset',
+  pageGetJourneyPlanMapSearch: 1,
   dataSaveMerchantToJourneyPlanV2: null,
   /** error */
   errorGetJourneyPlanV2: null,
   errorGetJourneyPlanMapData: null,
+  errorGetJourneyPlanMapSearch: null,
   errorGetJourneyPlanReportV2: null,
   errorSaveMerchantToJourneyPlanV2: null
 };
@@ -125,6 +133,67 @@ export const journey = createReducer(INITIAL_STATE, {
       loadingGetJourneyPlanMapData: false,
       dataGetJourneyPlanMapData: null,
       errorGetJourneyPlanMapData: null
+    };
+  },
+  /**
+   * ===================
+   * JOURNEY PLAN MAP SEARCH LIST
+   * ===================
+   */
+  [types.JOURNEY_PLAN_GET_MAP_SEARCH_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyPlanMapSearch: action.payload.loading,
+      errorGetJourneyPlanMapSearch: null
+    };
+  },
+  [types.JOURNEY_PLAN_GET_MAP_SEARCH_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyPlanMapSearch: false,
+      loadingLoadMoreGetJourneyPlanMapSearch: false,
+      refreshGetJourneyPlanMapSearch: false,
+      totalDataGetJourneyPlanMapSearch: action.payload.meta.total,
+      dataGetJourneyPlanMapSearchType: 'success',
+      dataGetJourneyPlanMapSearch: [
+        ...state.dataGetJourneyPlanMapSearch,
+        ...action.payload.data
+      ]
+    };
+  },
+  [types.JOURNEY_PLAN_GET_MAP_SEARCH_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyPlanMapSearch: false,
+      loadingLoadMoreGetJourneyPlanMapSearch: false,
+      refreshGetJourneyPlanMapSearch: false,
+      errorGetJourneyPlanMapSearch: action.payload
+    };
+  },
+  [types.JOURNEY_PLAN_GET_MAP_SEARCH_RESET](state, action) {
+    return {
+      ...state,
+      pageGetJourneyPlanMapSearch: 1,
+      totalDataGetJourneyPlanMapSearch: 0,
+      dataGetJourneyPlanMapSearch: [],
+      dataGetJourneyPlanMapSearchType: 'reset'
+    };
+  },
+  [types.JOURNEY_PLAN_GET_MAP_SEARCH_REFRESH](state, action) {
+    return {
+      ...state,
+      refreshGetJourneyPlanMapSearch: true,
+      loadingGetJourneyPlanMapSearch: true,
+      pageGetJourneyPlanMapSearch: 1,
+      totalDataGetJourneyPlanMapSearch: 0,
+      dataGetJourneyPlanMapSearch: []
+    };
+  },
+  [types.JOURNEY_PLAN_GET_MAP_SEARCH_LOADMORE](state, action) {
+    return {
+      ...state,
+      loadingLoadMoreGetJourneyPlanMapSearch: true,
+      pageGetJourneyPlanMapSearch: action.payload
     };
   },
   /**

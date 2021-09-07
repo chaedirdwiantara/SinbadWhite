@@ -53,7 +53,9 @@ class SearchBarType2 extends Component {
     return (
       <View style={{ paddingHorizontal: 11 }}>
         <MaterialIcon
-          color={Color.fontBlack60}
+          color={
+            this.props.blackSearchIcon ? Color.fontBlack100 : Color.fontBlack60
+          }
           name={'search'}
           size={24}
         />
@@ -82,6 +84,7 @@ class SearchBarType2 extends Component {
     return (
       <View style={{ flex: 1 }}>
         <TextInput
+          maxLength={this.props.maxLength}
           selectionColor={Color.mainColor}
           onEndEditing={() => this.searchText()}
           value={this.state.search}
@@ -134,15 +137,14 @@ const mapStateToProps = ({}) => {
 export default connect(mapStateToProps, {})(SearchBarType2);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 08072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: dyah
+ * updatedDate: 24082021
+ * updatedFunction:
+ * -> adding new props 'maxlength' to maximize the character.
+ *
+ */

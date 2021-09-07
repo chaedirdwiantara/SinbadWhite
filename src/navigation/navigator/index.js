@@ -4,6 +4,8 @@ import { fromRight } from 'react-navigation-transitions';
 /** === PAGE === */
 /** for first screen */
 import IntroNavigator from './IntroNavigator';
+/** for extra screen */
+import ExtraNavigator from './ExtraNavigator';
 /** ================= */
 import BottomNavigator from './BottomNavigator';
 import AuthNavigator from './AuthNavigator';
@@ -43,6 +45,8 @@ const config = {
 
 const IntroAppNavigator = createStackNavigator(IntroNavigator);
 
+const ExtraAppNavigator = createStackNavigator(ExtraNavigator);
+
 const StackAppNavigator = createStackNavigator(MergeAllNavigator, {
   ...config,
   initialRouteName: 'BottomNavigator'
@@ -52,6 +56,7 @@ const StackAuthNavigator = createStackNavigator(AuthNavigator, config);
 const SwitchNavigator = createSwitchNavigator(
   {
     Intro: IntroAppNavigator,
+    Extra: ExtraAppNavigator,
     App: StackAppNavigator,
     Auth: StackAuthNavigator
   },

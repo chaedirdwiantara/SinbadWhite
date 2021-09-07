@@ -14,6 +14,18 @@ export const JOURNEY_PLAN_GET_MAP_DATA_PROCESS = 'JourneyPlanGetMapDataProcess';
 export const JOURNEY_PLAN_GET_MAP_DATA_SUCCESS = 'JourneyPlanGetMapDataSuccess';
 export const JOURNEY_PLAN_GET_MAP_DATA_FAILED = 'JourneyPlanGetMapDataFailed';
 export const JOURNEY_PLAN_GET_MAP_DATA_RESET = 'JourneyPlanGetMapDataReset';
+/** FOR GET JOURNEY PLAN MAP SEARCH LIST*/
+export const JOURNEY_PLAN_GET_MAP_SEARCH_PROCESS =
+  'JourneyPlanGetMapSearchProcess';
+export const JOURNEY_PLAN_GET_MAP_SEARCH_SUCCESS =
+  'JourneyPlanGetMapSearchSuccess';
+export const JOURNEY_PLAN_GET_MAP_SEARCH_FAILED =
+  'JourneyPlanGetMapSearchFailed';
+export const JOURNEY_PLAN_GET_MAP_SEARCH_RESET = 'JourneyPlanGetMapSearchReset';
+export const JOURNEY_PLAN_GET_MAP_SEARCH_REFRESH =
+  'JourneyPlanGetMapSearchRefresh';
+export const JOURNEY_PLAN_GET_MAP_SEARCH_LOADMORE =
+  'JourneyPlanGetMapSearchLoadMore';
 /** FOR POST MERCHANT TO JOURNEY PLAN V2 */
 export const SAVE_MERCHANT_TO_JOURNEY_PLAN_PROCESS_V2 =
   'saveMerchantToJourneyPlanProcessV2';
