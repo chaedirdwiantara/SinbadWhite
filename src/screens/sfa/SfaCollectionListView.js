@@ -114,8 +114,13 @@ const SfaCollectionListView = props => {
         approvalStatus: props.approvalStatus,
         keyword: props.keyword
       };
-      dispatch(sfaGetReferenceListProcess(data));
+    } else {
+      data = {
+        ...data,
+        paymentCollectionTypeId: parseInt(collectionTypeId, 10)
+      };
     }
+    dispatch(sfaGetReferenceListProcess(data));
   };
 
   useEffect(() => {
@@ -139,6 +144,10 @@ const SfaCollectionListView = props => {
   /** FUNCTION REFRESH COLLECTION LIST */
   const onHandleRefresh = () => {
     getCollectionList(true, 10);
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 10);
   };
 
   const onLoadMore = () => {

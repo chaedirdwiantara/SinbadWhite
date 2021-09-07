@@ -277,7 +277,7 @@ const SfaCollectionEditView = props => {
 
   const checkInput = () => {
     if (paymentCollectionTypeId === CASH) {
-      if (!amount || !imageData) {
+      if (!amount || !imageData || initialData.amount === amount) {
         setIsSaveDisabled(true);
       } else {
         setIsSaveDisabled(false);
@@ -290,7 +290,13 @@ const SfaCollectionEditView = props => {
         !issuedDate ||
         !noReference ||
         !invalidDate ||
-        !dataBank
+        !dataBank ||
+        (initialData.amount === amount &&
+          initialData.issuedDate === issuedDate &&
+          initialData.invalidDate === invalidDate &&
+          initialData.referenceCode === noReference &&
+          initialData.bankSource === dataBank.displayName &&
+          initialData.stampAmount === dataStamp.nominal)
       ) {
         setIsSaveDisabled(true);
       } else {
@@ -298,13 +304,18 @@ const SfaCollectionEditView = props => {
       }
     }
     if (paymentCollectionTypeId === TRANSFER) {
+      console.log(initialData, dataBankTo, 'initial');
       if (
         !noReference ||
         !dataBank ||
         !dataBankTo ||
         !transferDate ||
         !amount ||
-        !imageData
+        !imageData ||
+        (initialData.amount === amount &&
+          initialData.createdAt === transferDate &&
+          initialData.referenceCode === noReference &&
+          initialData.bankSource === dataBank.displayName)
       ) {
         setIsSaveDisabled(true);
       } else {
