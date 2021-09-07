@@ -3,18 +3,24 @@ import {
   View,
   StyleSheet,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView,
+  RefreshControl
 } from '../../library/reactPackage';
 
 import { LoadingPage } from '../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
-import { sfaGetReferenceListProcess } from '../../state/actions';
+import {
+  sfaGetReferenceListProcess,
+  sfaGetPaymentMethodProcess
+} from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 
 const SfaCollectionMethodListView = props => {
   const dispatch = useDispatch();
+  const [refreshing, setRefreshing] = useState(false);
   const { dataSfaGetPaymentMethod } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const { userSuppliers } = useSelector(state => state.user);
@@ -24,7 +30,7 @@ const SfaCollectionMethodListView = props => {
    * FUNCTIONAL
    * =======================
    */
-  
+
   const onSelectCollectionMethod = item => {
     let data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
@@ -34,12 +40,28 @@ const SfaCollectionMethodListView = props => {
       loading: true,
       paymentCollectionTypeId: parseInt(item.id, 10)
     };
-    dispatch(sfaGetReferenceListProcess(data))
+    dispatch(sfaGetReferenceListProcess(data));
     NavigationService.navigate('SfaCollectionListView', {
       collectionMethodId: item.id
     });
   };
-
+  /** GET REFERENCE */
+  const getReference = () => {
+    const data = {
+      supplierId: parseInt(userSuppliers[0].supplier.id, 10),
+      storeId: selectedMerchant.storeId
+    };
+    dispatch(sfaGetPaymentMethodProcess(data));
+  };
+  /** === ON REFRESH === */
+  const onRefresh = () => {
+    getReference();
+    /** SET PAGE REFRESH */
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 10);
+  };
   /**
    * *********************************
    * RENDER VIEW
@@ -85,10 +107,19 @@ const SfaCollectionMethodListView = props => {
    */
   const renderContent = () => {
     return (
-      <View style={styles.contentContainer}>
-        {/* {renderHeader()} */}
-        {renderCollectionMethod()}
-      </View>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => onRefresh()}
+          />
+        }
+      >
+        <View style={styles.contentContainer}>
+          {/* {renderHeader()} */}
+          {renderCollectionMethod()}
+        </View>
+      </ScrollView>
     );
   };
 
