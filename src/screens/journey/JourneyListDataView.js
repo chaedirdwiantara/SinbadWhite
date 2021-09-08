@@ -241,6 +241,9 @@ class JourneyListDataView extends Component {
             <View style={styles.containerExternalStoreId}>
               <Text
                 style={
+                  /*
+                  exist_store ditambahkan dari toko existing, selain itu adalah toko baru
+                 */
                   item.journeyBookStores.typeOfStore === 'exist_store'
                     ? Fonts.type67
                     : Fonts.type29
@@ -274,6 +277,9 @@ class JourneyListDataView extends Component {
             </View>
             <Text
               style={
+                /*
+                  exist_store ditambahkan dari toko existing, selain itu adalah toko baru
+                */
                 item.journeyBookStores.typeOfStore === 'exist_store'
                   ? Fonts.type8
                   : Fonts.type29
@@ -287,6 +293,9 @@ class JourneyListDataView extends Component {
               maxLength={30}
               substring
               font={
+                /*
+                  exist_store ditambahkan dari toko existing, selain itu adalah toko baru
+                 */
                 item.journeyBookStores.typeOfStore === 'exist_store'
                   ? Fonts.type67
                   : Fonts.type22
