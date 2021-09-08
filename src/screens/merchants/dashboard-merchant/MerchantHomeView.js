@@ -9,7 +9,8 @@ import {
   SafeAreaView,
   Dimensions,
   Image,
-  Text
+  Text,
+  BackHandler
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
@@ -1272,6 +1273,9 @@ class MerchantHomeView extends Component {
         content={
           'Silahkan konfirmasi kepada toko terkait transaksi tersebut. Anda juga dapat melakukan penagihan.'
         }
+        open={this.state.openModalOverdue}
+        onBackButtonPress={() => this.setState({ openModalOverdue: false })}
+        onBackdropPress={() => this.setState({ openModalOverdue: false })}
         okText={'Baik, Mengerti'}
         ok={() =>
           this.setState({ openModalOverdue: false, openModalCheckUser: true })

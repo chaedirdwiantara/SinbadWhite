@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Text
 } from '../../library/reactPackage';
-import { connect } from '../../library/thirdPartyPackage';
+import { connect, Modal } from '../../library/thirdPartyPackage';
 import { StatusBarRedOP50, StatusBarBlackOP40 } from '../../library/component';
 import { Fonts } from '../../helpers';
 import { Color } from '../../config';
@@ -19,11 +19,17 @@ class ModalConfirmationType5 extends Component {
   /** MAIN RENDER */
   render() {
     return (
-      <ModalPopUp
-        visible={this.props.open}
-        transparent
-        animationType="fade"
-        onRequestClose={() => {}}
+      <Modal
+        isVisible={this.props.open}
+        onBackButtonPress={this.props.onBackButtonPress}
+        onBackdropPress={this.props.onBackdropPress}
+        useNativeDriver={true}
+        hasBackdrop={true}
+        coverScreen={true}
+        swipeDirection={['up']}
+        backdropColor={Color.fontBlack100}
+        backdropOpacity={0.4}
+        style={styles.mainContainer}
       >
         {this.props.statusBarWhite ? (
           <StatusBarBlackOP40 />
@@ -58,14 +64,13 @@ class ModalConfirmationType5 extends Component {
             </View>
           </View>
         </View>
-      </ModalPopUp>
+      </Modal>
     );
   }
 }
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: Color.fontBlack100OP40,
     position: 'relative',
     justifyContent: 'center',
     flex: 1
@@ -112,6 +117,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 12,
     backgroundColor: Color.fontBlack40
+  },
+  modalContainer: {
+    marginBottom: 0,
+    marginLeft: 0,
+    marginRight: 0
   }
 });
 
