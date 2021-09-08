@@ -141,7 +141,7 @@ const INITIAL_STATE = {
   },
   dataSubmitSurvey: {
     surveyId: null,
-    surveyStepId: null,
+    surveyQuestionId: null,
     storeId: null,
     storeName: '',
     status: '',
