@@ -90,8 +90,8 @@ class ModalUpdateStock extends Component {
           }}
         >
           <TextInput
-            style={Fonts.H12Medium}
-            value={this.state.pcs.toString()}
+            style={[Fonts.H12Medium, { color: Color.fontBlack100 }]}
+            value={this.state.pcs === 0 ? null : this.state.pcs.toString()}
             placeholder={'pcs'}
             keyboardType="numeric"
             returnKeyType="done"
@@ -118,8 +118,8 @@ class ModalUpdateStock extends Component {
           }}
         >
           <TextInput
-            style={Fonts.H12Medium}
-            value={this.state.box.toString()}
+            style={[Fonts.H12Medium, { color: Color.fontBlack100 }]}
+            value={this.state.box === 0 ? null : this.state.box.toString()}
             placeholder={'box'}
             keyboardType="numeric"
             returnKeyType="done"
@@ -143,7 +143,10 @@ class ModalUpdateStock extends Component {
             size={18}
             color={Color.fontBlack70}
           />
-          <Text style={Fonts.H11Normal}> 1 box terdiri dari 24pcs</Text>
+          <Text style={Fonts.H11Normal}>
+            {' '}
+            1 box terdiri dari {this.props.data.data.packagedQty}pcs
+          </Text>
         </View>
       </View>
     );

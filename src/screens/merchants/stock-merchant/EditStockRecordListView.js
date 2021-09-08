@@ -6,7 +6,8 @@ import {
   Text,
   FlatList,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  width
 } from '../../../library/reactPackage';
 import {
   MaterialIcon,
@@ -210,12 +211,13 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     borderRadius: 4,
-    width: 50,
+    width: 60,
     height: 30,
     borderWidth: 1,
     borderColor: Color.fontBlack10,
     justifyContent: 'center',
     alignItems: 'center'
+    // paddingHorizontal: 8
   },
   shelfSection: {
     alignItems: 'center',
