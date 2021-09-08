@@ -10,7 +10,6 @@ import SfaCollectionLog from '../../screens/sfa/SfaCollectionLog';
 import SfaCollectionDetailView, {
   DetailHeaderOption
 } from '../../screens/sfa/SfaCollectionDetailView';
-import SfaEditCollectionView from '../../screens/sfa/SfaEditCollectionView';
 import SfaCollectionMethodListView from '../../screens/sfa/SfaCollectionMethodListView';
 import SfaCollectionListView from '../../screens/sfa/SfaCollectionListView';
 import SfaCollectionAddView from '../../screens/sfa/SfaCollectionAddView';
@@ -87,12 +86,6 @@ const SfaNavigator = {
       },
       headerRight: <View />,
       gesturesEnabled: false
-    }
-  },
-  SfaEditCollectionView: {
-    screen: SfaEditCollectionView,
-    navigationOptions: {
-      header: null
     }
   },
   SfaCollectionMethodListView: {

@@ -94,7 +94,7 @@ const SfaCollectionListView = props => {
       supplierId: parseInt(userSuppliers[0].supplier.id, 10),
       storeId: selectedMerchant.storeId
     };
-    getCollectionList(true, 10);
+    getCollectionList(true, 20);
     dispatch(sfaGetPaymentMethodProcess(data));
   };
 
@@ -114,8 +114,13 @@ const SfaCollectionListView = props => {
         approvalStatus: props.approvalStatus,
         keyword: props.keyword
       };
-      dispatch(sfaGetReferenceListProcess(data));
+    } else {
+      data = {
+        ...data,
+        paymentCollectionTypeId: parseInt(collectionTypeId, 10)
+      };
     }
+    dispatch(sfaGetReferenceListProcess(data));
   };
 
   useEffect(() => {
@@ -138,7 +143,11 @@ const SfaCollectionListView = props => {
 
   /** FUNCTION REFRESH COLLECTION LIST */
   const onHandleRefresh = () => {
-    getCollectionList(true, 10);
+    getCollectionList(true, 20);
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 10);
   };
 
   const onLoadMore = () => {
