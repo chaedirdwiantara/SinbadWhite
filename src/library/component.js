@@ -24,6 +24,7 @@ import InputType2 from '../components/input/InputType2';
 import InputType3 from '../components/input/InputType3';
 import InputType4 from '../components/input/inputType4';
 import InputType6 from '../components/input/InputType6';
+import InputType7 from '../components/input/InputType7';
 /** INPUT MAPS (PIN POINT) */
 import InputMapsType1 from '../components/input/InputMapsType1';
 import InputMapsType2 from '../components/input/InputMapsType2';
@@ -116,6 +117,10 @@ import CardType1 from '../components/card/CardType1';
 import PdpGrid from '../components/template/PdpGrid';
 /** ACCORDION */
 import Accordion from '../components/accordion/Accordion';
+/** RADIO BUTTON */
+import RadioButton from '../components/radioButton/radioButton';
+/** CHECK BOX */
+import CheckBox from '../components/checkBox/checkBox';
 
 export {
   CartGlobal,
@@ -142,6 +147,7 @@ export {
   InputType3,
   InputType4,
   InputType6,
+  InputType7,
   /** INPUT MAPS (PIN POINT) */
   InputMapsType1,
   InputMapsType2,
@@ -232,7 +238,11 @@ export {
   /** TEMPLATE */
   PdpGrid,
   /** Accordion */
-  Accordion
+  Accordion,
+  /** RADIO BUTTON */
+  RadioButton,
+  /** CHECK BOX */
+  CheckBox
 };
 
 /**
@@ -242,8 +252,8 @@ export {
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 06082021
+ * updatedDate: 06092021
  * updatedFunction:
- * -> add new component (empty state => emptyDataType2)
+ * -> add new component (radioButton, checkBox, and inputType7)
  *
  */
