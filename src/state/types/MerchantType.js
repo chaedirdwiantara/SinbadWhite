@@ -130,6 +130,13 @@ export const MERCHANT_GET_QUESTIONNAIRE_SUCCESS =
   'MerchantGetQuestionnaireSuccess';
 export const MERCHANT_GET_QUESTIONNAIRE_FAILED =
   'MerchantGetQuestionnaireFailed';
+/** MERCHANT SUBMIT QUESTIONNAIRE */
+export const MERCHANT_SUBMIT_QUESTIONNAIRE_PROCESS =
+  'MerchantSubmitQuestionnaireProcess';
+export const MERCHANT_SUBMIT_QUESTIONNAIRE_SUCCESS =
+  'MerchantSubmitQuestionnaireSuccess';
+export const MERCHANT_SUBMIT_QUESTIONNAIRE_FAILED =
+  'MerchantSubmitQuestionnaireFailed';
 /** MERCHANT UPDATE SURVEY RESPONSE */
 export const MERCHANT_UPDATE_SURVEY_PROCESS = 'MerchantUpdateSurveyProcess';
 /** MERCHANT VALIDATE AREA MAPPING */
