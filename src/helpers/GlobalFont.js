@@ -812,6 +812,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 24,
     color: Color.fontWhite
+  },
+  //hasil survey
+  textSurveyResult: {
+    fontFamily: Fonts.MontserratMedium,
+    fontWeight: 'bold',
+    fontSize: 13,
+    lineHeight: 16,
+    color: Color.fontBlack50
   }
 });
 

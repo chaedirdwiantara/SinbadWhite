@@ -51,7 +51,7 @@ class SuccessSubmitView extends Component {
         disabled={false}
         title={'Lihat Hasil Survey'}
         borderRadius={4}
-        onPress={NavigationService.navigate('MerchantHomeView', {
+        onPress={NavigationService.navigate('MerchantSurveyResultView', {
           readOnly: false
         })}
       />

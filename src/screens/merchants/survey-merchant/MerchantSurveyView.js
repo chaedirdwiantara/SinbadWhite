@@ -130,7 +130,7 @@ class MerchantSurveyView extends Component {
           <TouchableOpacity
             style={styles.cardInside}
             onPress={() =>
-              NavigationService.navigate('MerchantSurveyDisplayPhotoView', {
+              NavigationService.navigate('MerchantQuestionnaireView', {
                 readOnly,
                 surveyId: item.id,
                 surveyName: item.surveyName,
@@ -246,7 +246,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MerchantSurveyView);
 
 /**
  * ============================

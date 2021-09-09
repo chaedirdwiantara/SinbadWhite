@@ -24,13 +24,14 @@ import MerchantDetailAccountView from '../../screens/merchants/details-merchant/
 import MerchantDetailInformationView from '../../screens/merchants/details-merchant/MerchantDetailInformationView';
 import MerchantDetailPaymentView from '../../screens/merchants/details-merchant/MerchantDetailPaymentView';
 import MerchantDetailAddressView from '../../screens/merchants/details-merchant/MerchantDetailAddressView';
-import MerchantDetailClassificationView from '../../screens/merchants/details-merchant/MerchantDetailClassificationView'
+import MerchantDetailClassificationView from '../../screens/merchants/details-merchant/MerchantDetailClassificationView';
 /** merchant edit */
 import MerchantEditView from '../../screens/merchants/edit-merchant/MerchantEditView';
 /** merchant survey */
 import MerchantSurveyView from '../../screens/merchants/survey-merchant/MerchantSurveyView';
 import MerchantSurveyDisplayPhotoView from '../../screens/merchants/survey-merchant/MerchantSurveyDisplayPhotoView';
 import MerchantQuestionnaireView from '../../screens/merchants/survey-merchant/MerchantQuestionnaireView';
+import MerchantSurveyResultView from '../../screens/merchants/survey-merchant/MerchantSurveyResultView';
 
 const MerchantNavigator = {
   MerchantView: {
@@ -260,9 +261,7 @@ const MerchantNavigator = {
     screen: MerchantNoOrderReason,
     navigationOptions: {
       headerTitle: 'Alasan Tidak Ada Order',
-      headerTitleStyle: [
-        GlobalFont.textHeaderPage,
-      ],
+      headerTitleStyle: [GlobalFont.textHeaderPage],
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
@@ -339,6 +338,17 @@ const MerchantNavigator = {
     screen: MerchantQuestionnaireView,
     navigationOptions: {
       headerTitle: 'Input Survey',
+      headerTitleStyle: GlobalFont.textHeaderPage,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      gesturesEnabled: false
+    }
+  },
+  MerchantSurveyResultView: {
+    screen: MerchantSurveyResultView,
+    navigationOptions: {
+      headerTitle: 'Hasil Survey',
       headerTitleStyle: GlobalFont.textHeaderPage,
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
