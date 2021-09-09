@@ -24,7 +24,8 @@ import {
   sfaGetReferenceListProcess,
   sfaCollectionListLoadmoreProcess,
   sfaDeleteCollectionMethodProcess,
-  sfaGetCollectionDetailProcess
+  sfaGetCollectionDetailProcess,
+  sfaGetCollectionImageProcess
 } from '../../state/actions';
 import SfaNoDataView from './SfaNoDataView';
 
@@ -186,6 +187,7 @@ const SfaCollectionListView = props => {
   /** FUNCTION NAVIGATE TO COLLECTION DETAIL */
   const navigateToCollectionDetail = item => {
     dispatch(sfaGetCollectionDetailProcess(item.id));
+    dispatch(sfaGetCollectionImageProcess(item.id));
     NavigationService.navigate('SfaCollectionDetailView', {
       paymentCollectionId: item.id
     });

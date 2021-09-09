@@ -36,9 +36,12 @@ const SfaCollectionDetailView = props => {
 
   const {
     dataSfaGetCollectionDetail,
-    loadingSfaGetCollectionDetail
+    loadingSfaGetCollectionDetail,
+    dataSfaGetCollectionImage,
+    loadingSfaGetCollectionImage
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
+
   /** === ON REFRESH === */
   const onRefresh = () => {
     getCollectionDetail();
@@ -202,10 +205,9 @@ const SfaCollectionDetailView = props => {
       amount,
       stamp,
       totalAmount,
-      totalBalance,
-      image
+      totalBalance
     } = dataSfaGetCollectionDetail.data;
-
+    const image = dataSfaGetCollectionImage?.data.image;
     return (
       <>
         {CardBody({
@@ -288,6 +290,7 @@ const SfaCollectionDetailView = props => {
           : null}
         {CardBody({
           title: 'Foto Penagihan',
+          loadingImage: loadingSfaGetCollectionImage,
           imageSource: { uri: `data:image/jpeg;base64, ${image}` },
           imageSourceStyle: styles.images,
           imageContainerStyle: styles.smallContainerImage,
