@@ -753,6 +753,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: Color.mainColor
   },
+  textButtonWhite: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: RFPercentage(2.1), //13,
+    textAlign: 'center',
+    color: Color.backgroundWhite
+  },
   textButtonWhiteDisabled: {
     fontFamily: Fonts.MontserratSemiBold,
     fontSize: RFPercentage(2.1), //13,
@@ -799,6 +805,13 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 14,
     color: Color.fontRed40
+  },
+  //success submit
+  textWhiteTitle: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 20,
+    lineHeight: 24,
+    color: Color.fontWhite
   }
 });
 
