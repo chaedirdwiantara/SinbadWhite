@@ -26,6 +26,7 @@ class RadioButton extends Component {
       <TouchableOpacity
         key={item.id.toString()}
         onPress={() => this.props.onSelect(item)}
+        disabled={this.props.disabled}
       >
         <View style={styles.radioButtonContainer}>
           <MaterialIcon
@@ -81,8 +82,8 @@ export default RadioButton;
  * ============================
  * createdBy: dyah
  * createdDate: 06092021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 09092021
  * updatedFunction:
- * -> create radio button component.
+ * -> add props disable radio button component.
  */

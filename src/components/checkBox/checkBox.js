@@ -23,7 +23,10 @@ class CheckBox extends Component {
   /** === RENDER CHECK BOX === */
   renderCheckBox = () => {
     return (
-      <TouchableOpacity onPress={this.props.onSelect}>
+      <TouchableOpacity
+        onPress={this.props.onSelect}
+        disabled={this.props.disabled}
+      >
         <View style={styles.checkBoxContainer}>
           <MaterialIcon
             name={this.props.selected ? 'check-box' : 'check-box-outline-blank'}
@@ -64,8 +67,8 @@ export default CheckBox;
  * ============================
  * createdBy: dyah
  * createdDate: 06092021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 09092021
  * updatedFunction:
- * -> create checkbox component.
+ * -> add props disable checkbox component.
  */
