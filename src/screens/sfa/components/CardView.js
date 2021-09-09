@@ -213,7 +213,6 @@ const renderImage = props => {
  */
 const CardBody = props => {
   const valuePosition = props.valuePosition ? props.valuePosition : 'right';
-
   return (
     <>
       <View style={{ marginBottom: 8, ...props?.styleCardView }}>
@@ -236,7 +235,23 @@ const CardBody = props => {
         <View style={{ flexDirection: 'row' }}>{cardBodyValue(props)}</View>
       ) : null}
 
-      {props?.imageSource ? renderImage(props) : null}
+      {props?.loadingImage ? (
+        <View
+          style={{
+            ...props?.imageSourceStyle,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderColor: '#ffffff'
+          }}
+        >
+          <Image
+            source={require('../../../assets/gif/loading/load_triagle.gif')}
+            style={{ height: 50, width: 50 }}
+          />
+        </View>
+      ) : (
+        renderImage(props)
+      )}
     </>
   );
 };
