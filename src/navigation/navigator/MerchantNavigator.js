@@ -318,10 +318,8 @@ const MerchantNavigator = {
   MerchantSurveyView: {
     screen: MerchantSurveyView,
     navigationOptions: {
-      headerTintColor: masterColor.backButtonWhite,
       headerStyle: {
-        elevation: 0,
-        backgroundColor: masterColor.mainColor
+        backgroundColor: masterColor.backgroundWhite
       },
       gesturesEnabled: false
     }

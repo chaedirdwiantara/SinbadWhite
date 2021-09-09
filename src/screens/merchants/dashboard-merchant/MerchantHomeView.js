@@ -77,7 +77,7 @@ class MerchantHomeView extends Component {
           goTo: 'checkIn'
         },
         {
-          menuName: 'Toko Survey',
+          menuName: 'Survei',
           icon: require('../../../assets/icons/merchant/pesanan.png'),
           goTo: 'survey'
         },
@@ -231,7 +231,7 @@ class MerchantHomeView extends Component {
                   activity: ACTIVITY_JOURNEY_PLAN_ORDER
                 },
                 {
-                  name: 'Toko Survey',
+                  name: 'Survei',
                   title: 'Isi',
                   goTo: 'survey',
                   activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
@@ -616,6 +616,46 @@ class MerchantHomeView extends Component {
     return true;
   }
   /**
+   * CHECK THE CONDITION WHEN
+   * - HAVING REASON NOT VISIT
+   * - STATUS SURVEY IN PROGRESS
+   */
+  checkNoVisitReasonAndSurveyStatus(journeyBookStores, item) {
+    if (
+      !this.checkCheckIn() &&
+      journeyBookStores.noVisitReasonId &&
+      item.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN
+    ) {
+      return <MaterialIcon name="cancel" color={Color.fontRed50} size={24} />;
+    }
+    if (item.activity === ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY) {
+      if (
+        this.props.merchant.surveyList.payload.data?.find(
+          value => value.responseStatus === 'inProgress'
+        )
+      ) {
+        return (
+          <View
+            style={{
+              backgroundColor: Color.fontYellow50,
+              borderRadius: 100,
+              padding: 2
+            }}
+          >
+            <MaterialIcon name="timelapse" color={Color.fontWhite} size={20} />
+          </View>
+        );
+      }
+    }
+    return (
+      <MaterialIcon
+        name="radio-button-unchecked"
+        color={Color.fontBlack40}
+        size={24}
+      />
+    );
+  }
+  /**
    * ========================
    * RENDER VIEW
    * =======================
@@ -637,10 +677,7 @@ class MerchantHomeView extends Component {
             >
               <Text style={Fonts.type100}>Lihat Alasan</Text>
               <MaterialIcon
-                style={{
-                  marginTop: 2,
-                  padding: 0
-                }}
+                style={styles.containerChevronRight}
                 name="chevron-right"
                 color={Color.fontRed50}
                 size={20}
@@ -668,7 +705,38 @@ class MerchantHomeView extends Component {
         );
       }
     }
-    if (this.checkCheckIn() || item.title === 'Masuk') {
+    // checkIn true or activity check_in => show button
+    if (
+      this.checkCheckIn() ||
+      item.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN
+    ) {
+      // checkIn true & surveyList inProgress customize button
+      if (item.activity === ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY) {
+        if (
+          this.props.merchant.surveyList.payload.data?.find(
+            value => value.responseStatus === 'inProgress'
+          )
+        ) {
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                NavigationService.navigate('MerchantSurveyView', {
+                  readOnly: false
+                })
+              }
+              style={styles.containerSurveyInProgress}
+            >
+              <Text style={Fonts.type69}>Berlangsung</Text>
+              <MaterialIcon
+                style={styles.containerChevronRight}
+                name="chevron-right"
+                color={Color.fontYellow50}
+                size={20}
+              />
+            </TouchableOpacity>
+          );
+        }
+      }
       return (
         <Button
           accessible={true}
@@ -775,10 +843,7 @@ class MerchantHomeView extends Component {
             >
               <Text style={Fonts.type100}>Lihat Riwayat</Text>
               <MaterialIcon
-                style={{
-                  marginTop: 2,
-                  padding: 0
-                }}
+                style={styles.containerChevronRight}
                 name="chevron-right"
                 color={Color.fontRed50}
                 size={20}
@@ -926,20 +991,11 @@ class MerchantHomeView extends Component {
                           size={24}
                         />
                       )
-                    ) : !this.checkCheckIn() && // check task list checkIn, reason not visit
-                      journeyBookStores.noVisitReasonId &&
-                      item.title === 'Masuk' ? (
-                      <MaterialIcon
-                        name="cancel"
-                        color={Color.fontRed50}
-                        size={24}
-                      />
                     ) : (
-                      <MaterialIcon
-                        name="radio-button-unchecked"
-                        color={Color.fontBlack40}
-                        size={24}
-                      />
+                      this.checkNoVisitReasonAndSurveyStatus(
+                        journeyBookStores,
+                        item
+                      )
                     )}
                   </View>
                   <View style={{ justifyContent: 'center', paddingLeft: 8 }}>
@@ -1472,6 +1528,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: -5,
     marginTop: -5
+  },
+  containerSurveyInProgress: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginRight: -5,
+    marginTop: -5
+  },
+  containerChevronRight: {
+    marginTop: 2,
+    padding: 0
   }
 });
 
@@ -1493,7 +1560,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 12082021
+ * updatedDate: 08092021
  * updatedFunction:
- * -> update parameter storetype and delete NavigationEvents.
+ * -> customize survei tasklist.
  */

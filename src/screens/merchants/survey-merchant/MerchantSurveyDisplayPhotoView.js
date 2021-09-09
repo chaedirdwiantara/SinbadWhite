@@ -77,7 +77,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     const {
       readOnly,
       surveyResponseId,
-      surveySteps
+      surveyQuestions
     } = this.props.navigation.state.params;
     let newPhoto = [];
     if (readOnly && !surveyResponseId) {
@@ -89,7 +89,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     } else {
       let array = _.range(
         0,
-        surveySteps.find(item => item.order === 1).maxPhotos
+        surveyQuestions.find(item => item.order === 1).maxPhotos
       );
       _.each(array, () =>
         newPhoto.push({
@@ -126,21 +126,21 @@ class MerchantSurveyDisplayPhotoView extends Component {
     if (!_.isEmpty(this.props.merchant.dataSurvey.payload.responsePhoto)) {
       const newSurveyResponse = _.orderBy(
         this.props.merchant.dataSurvey.payload.responsePhoto,
-        ['surveyStepId'],
+        ['surveyQuestionId'],
         ['asc']
       );
-      const arraySurveyStepId = [
-        ...new Set(newSurveyResponse.map(item => item.surveyStepId))
+      const arraySurveyQuestionId = [
+        ...new Set(newSurveyResponse.map(item => item.surveyQuestionId))
       ];
-      if (arraySurveyStepId.length === 2) {
+      if (arraySurveyQuestionId.length === 2) {
         this.setState(
           {
             modalSubmit: false,
             photosDisplayBefore: newSurveyResponse.filter(
-              item => item.surveyStepId === arraySurveyStepId[0]
+              item => item.surveyQuestionId === arraySurveyQuestionId[0]
             ),
             photosDisplayAfter: newSurveyResponse.filter(
-              item => item.surveyStepId === arraySurveyStepId[1]
+              item => item.surveyQuestionId === arraySurveyQuestionId[1]
             ),
             displayPhoto: true,
             modalCompleted: this.state.activeStep === 0 ? false : true,
@@ -153,7 +153,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
           modalSubmit: false,
           activeStep: 0,
           photosDisplayBefore: newSurveyResponse.filter(
-            item => item.surveyStepId === arraySurveyStepId[0]
+            item => item.surveyQuestionId === arraySurveyQuestionId[0]
           ),
           displayPhoto: true
         });
@@ -257,7 +257,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === SUBMIT PHOTO === */
   submitPhoto = () => {
     const newPhoto = [];
-    const { surveySteps } = this.props.navigation.state.params;
+    const { surveyQuestions } = this.props.navigation.state.params;
     let params = {
       surveyId: this.props.navigation.state.params.surveyId,
       storeId: this.props.merchant.selectedMerchant.storeId,
@@ -278,14 +278,14 @@ class MerchantSurveyDisplayPhotoView extends Component {
         ...params,
         photos: newPhoto,
         status: '',
-        surveyStepId: surveySteps.find(item => item.order === 1).surveyStepId
+        surveyQuestionId: surveyQuestions.find(item => item.order === 1).surveyQuestionId
       };
       this.props.merchantSubmitSurveyProcess(params);
     } else {
       params = {
         photos: newPhoto,
         status: 'completed',
-        surveyStepId: surveySteps.find(item => item.order === 2).surveyStepId
+        surveyQuestionId: surveyQuestions.find(item => item.order === 2).surveyQuestionId
       };
       let surveyResponseId = null;
       if (this.props.merchant.dataSubmitSurvey.payload) {
@@ -298,11 +298,11 @@ class MerchantSurveyDisplayPhotoView extends Component {
   };
   /** === CONTINUE STEP === */
   continueStep = () => {
-    const { surveySteps } = this.props.navigation.state.params;
+    const { surveyQuestions } = this.props.navigation.state.params;
     let newPhoto = [];
     let array = _.range(
       0,
-      surveySteps.find(item => item.order === 2).maxPhotos
+      surveyQuestions.find(item => item.order === 2).maxPhotos
     );
     _.each(array, () =>
       newPhoto.push({
@@ -385,7 +385,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
         <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
           <MerchantSurveySteps
             active={this.state.activeStep}
-            surveySteps={this.props.navigation.state.params.surveySteps}
+            surveyQuestions={this.props.navigation.state.params.surveyQuestions}
           />
         </View>
       </View>
@@ -393,14 +393,14 @@ class MerchantSurveyDisplayPhotoView extends Component {
   }
   /** === RENDER DISPLAY PHOTO === */
   renderDisplayPhoto() {
-    const { surveySteps } = this.props.navigation.state.params;
+    const { surveyQuestions } = this.props.navigation.state.params;
     return (
       <View style={[styles.cardContainer]}>
         {this.props.merchant.loadingGetSurvey && <SkeletonType26 />}
         {this.state.photosDisplayBefore.length !== 0 ? (
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
             <Text>{`Foto ${
-              surveySteps.find(item => item.order === 1).title
+              surveyQuestions.find(item => item.order === 1).title
             }`}</Text>
             <FlatList
               data={this.state.photosDisplayBefore}
@@ -437,7 +437,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
         {this.state.photosDisplayAfter.length !== 0 ? (
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
             <Text>{`Foto ${
-              surveySteps.find(item => item.order === 2).title
+              surveyQuestions.find(item => item.order === 2).title
             }`}</Text>
             <FlatList
               data={this.state.photosDisplayAfter}
@@ -680,12 +680,12 @@ class MerchantSurveyDisplayPhotoView extends Component {
   }
   /** === RENDER MODAL NEXT PROCESS (MODAL SUBMIT)=== */
   renderModalSubmit() {
-    const { surveySteps } = this.props.navigation.state.params;
+    const { surveyQuestions } = this.props.navigation.state.params;
     let sectionName = '';
     if (this.state.activeStep === 0) {
-      sectionName = surveySteps.find(item => item.order === 1).title;
+      sectionName = surveyQuestions.find(item => item.order === 1).title;
     } else {
-      sectionName = surveySteps.find(item => item.order === 2).title;
+      sectionName = surveyQuestions.find(item => item.order === 2).title;
     }
     return (
       <ModalBottomSubmit
@@ -863,7 +863,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 13082021
+ * updatedDate: 08092021
  * updatedFunction:
- * -> add skeleton for photo survey.
+ * -> update property surveyStep to surveyQuestion.
  */

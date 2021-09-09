@@ -11,16 +11,14 @@ import {
 import {
   bindActionCreators,
   connect,
-  MaterialIcon,
-  AntDesignIcon
+  MaterialIcon
 } from '../../../library/thirdPartyPackage';
-import { LoadingPage, StatusBarRed } from '../../../library/component';
+import { LoadingPage, StatusBarWhite } from '../../../library/component';
 import { GlobalStyle, Fonts } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
 import masterColor from '../../../config/masterColor.json';
-import _ from 'lodash';
 
 class MerchantSurveyView extends Component {
   constructor(props) {
@@ -52,29 +50,83 @@ class MerchantSurveyView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.refreshMerchantGetLogAllActivityProcess();
+    const totalSurvey = this.props.merchant.surveyList.payload.data.length;
+    const totalCompletedSurvey = this.props.merchant.surveyList.payload.data.filter(
+      item => item.responseStatus === 'completed'
+    ).length;
+    const { readOnly } = this.props.navigation.state.params;
+    this.props.navigation.setParams({
+      totalSurvey,
+      totalCompletedSurvey,
+      readOnly
+    });
   }
   /**
    * ========================
    * HEADER MODIFY
    * ========================
    */
-  static navigationOptions = () => {
-    let storeName = 'Toko Survey';
+  static navigationOptions = ({ navigation }) => {
+    const { totalSurvey, totalCompletedSurvey } = navigation.state.params;
 
     return {
       headerTitle: () => (
         <View>
-          <Text style={Fonts.type35}>{storeName}</Text>
+          <Text style={Fonts.textHeaderPage}>
+            Survei ({totalCompletedSurvey}/{totalSurvey})
+          </Text>
         </View>
       )
     };
   };
-  /** === RENDER DISPLAY PHOTO MENU === */
-  renderDisplayPhotoMenu(item) {
+  /**
+   * ========================
+   * RENDER
+   * ========================
+   */
+  /** === RENDER STATUS SURVEY === */
+  renderStatusSurvey = status => {
+    let icon, iconColor, color, font, text;
+    if (status) {
+      if (status === 'inProgress') {
+        icon = 'watch-later';
+        iconColor = Color.fontYellow50;
+        color = Color.fontYellow10;
+        font = Fonts.type109p;
+        text = 'Diisi Sebagian';
+      } else {
+        icon = 'check';
+        iconColor = Color.fontGreen50;
+        color = Color.fontGreen50OP10;
+        font = Fonts.type110p;
+        text = 'Selesai';
+      }
+    } else {
+      color = Color.fontBlack05;
+      font = Fonts.type60;
+      text = 'Belum diisi';
+    }
+
+    return (
+      <View style={[styles.statusSurveyContainer, { backgroundColor: color }]}>
+        {icon && (
+          <MaterialIcon
+            name={icon}
+            color={iconColor}
+            size={13}
+            style={{ marginRight: 5 }}
+          />
+        )}
+        <Text style={font}>{text}</Text>
+      </View>
+    );
+  };
+  /** === RENDER SURVEY === */
+  renderSurvey(item) {
     const { readOnly } = this.props.navigation.state.params;
     return (
       <View style={[styles.menuContainer]}>
-        <View style={[styles.card, GlobalStyle.shadowForBox5]}>
+        <View style={[styles.card, GlobalStyle.shadowForBox]}>
           <TouchableOpacity
             style={styles.cardInside}
             onPress={() =>
@@ -84,48 +136,28 @@ class MerchantSurveyView extends Component {
                 surveyName: item.surveyName,
                 surveyResponseId: item.surveyResponseId,
                 surveySerialId: item.surveySerialId,
-                surveySteps: item.surveySteps
+                surveyQuestions: item.surveyQuestions
               })
             }
           >
-            <View style={styles.cameraBackground}>
-              <AntDesignIcon
-                name="camerao"
-                color={masterColor.fontWhite}
-                size={20}
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialIcon
+                name={item.type === 'photo' ? 'photo-camera' : 'assignment'}
+                color={masterColor.fontBlack40}
+                size={25}
+                style={{ marginRight: 19 }}
               />
-              {item.responseStatus ? (
-                <View
-                  style={[
-                    styles.iconContainer,
-                    {
-                      backgroundColor:
-                        item.responseStatus === 'inProgress'
-                          ? masterColor.fontYellow50
-                          : masterColor.fontGreen50
-                    }
-                  ]}
-                >
-                  <MaterialIcon
-                    name={
-                      item.responseStatus === 'inProgress'
-                        ? 'timelapse'
-                        : 'check'
-                    }
-                    color={masterColor.fontWhite}
-                    size={11}
-                  />
-                </View>
-              ) : null}
+              <View>
+                <Text style={[Fonts.type16]}>{item.surveyName}</Text>
+                <View style={{ height: 12 }} />
+                {this.renderStatusSurvey(item.responseStatus)}
+              </View>
             </View>
-            <View>
-              <Text style={[Fonts.type12, { color: masterColor.fontBlack100 }]}>
-                {item.surveyName}
-              </Text>
-              <Text style={[Fonts.type12, { color: masterColor.fontBlack80 }]}>
-                {item.SurveyDesc ? item.SurveyDesc : ''}
-              </Text>
-            </View>
+            <MaterialIcon
+              name="chevron-right"
+              color={masterColor.fontBlack40}
+              size={25}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -138,7 +170,7 @@ class MerchantSurveyView extends Component {
         <FlatList
           data={this.props.merchant.surveyList.payload.data}
           keyExtractor={(data, index) => index.toString()}
-          renderItem={({ item }) => this.renderDisplayPhotoMenu(item)}
+          renderItem={({ item }) => this.renderSurvey(item)}
         />
       </View>
     );
@@ -146,7 +178,7 @@ class MerchantSurveyView extends Component {
   /** === RENDER CONTENT === */
   renderContent() {
     return (
-      <View style={styles.contentContainer}>
+      <View>
         <FlatList
           showsVerticalScrollIndicator
           data={[1]}
@@ -156,24 +188,17 @@ class MerchantSurveyView extends Component {
       </View>
     );
   }
-  /** BACKGROUND */
-  renderBackground() {
-    return <View style={styles.backgroundRed} />;
-  }
   /** === RENDER MAIN === */
   render() {
     return (
       <SafeAreaView>
-        <StatusBarRed />
+        <StatusBarWhite />
         {this.props.merchant.loadingGetSurveyList ? (
           <View style={{ height: '100%' }}>
             <LoadingPage />
           </View>
         ) : (
-          <View style={{ height: '100%' }}>
-            {this.renderBackground()}
-            {this.renderContent()}
-          </View>
+          <View style={styles.container}>{this.renderContent()}</View>
         )}
       </SafeAreaView>
     );
@@ -181,17 +206,10 @@ class MerchantSurveyView extends Component {
 }
 
 const styles = StyleSheet.create({
-  contentContainer: {
-    width: '100%',
+  container: {
     height: '100%',
-    position: 'absolute',
-    zIndex: 1000
+    backgroundColor: Color.fontBlack05
   },
-  backgroundRed: {
-    backgroundColor: Color.mainColor,
-    height: 85
-  },
-  /** for content */
   menuContainer: {
     paddingHorizontal: 16,
     paddingTop: 11,
@@ -200,34 +218,21 @@ const styles = StyleSheet.create({
   card: {
     paddingVertical: 16,
     paddingHorizontal: 16,
-    borderRadius: 10,
+    borderRadius: 4,
     backgroundColor: Color.backgroundWhite
   },
   cardInside: {
-    borderWidth: 1,
-    borderColor: masterColor.fontBlack10,
-    borderRadius: 5,
-    padding: 8,
     flexDirection: 'row',
-    alignItems: 'center'
-  },
-  cameraBackground: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: masterColor.mainColor,
-    justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 6
+    justifyContent: 'space-between'
   },
-  iconContainer: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    justifyContent: 'center',
+  statusSurveyContainer: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: Color.fontBlack10,
+    flexDirection: 'row',
     alignItems: 'center'
   }
 });
@@ -250,23 +255,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyView);
  * createdBy: dyah
  * createdDate: 19112020
  * updatedBy: dyah
- * updatedDate: 16122020
+ * updatedDate: 08092021
  * updatedFunction:
- * -> add surveySerialId to param navigation.
- * updatedBy: dyah
- * updatedDate: 24022021
- * updatedFunction:
- *  -> Update the props of log activity.
- * updatedBy: dyah
- * updatedDate: 26022021
- * updatedFunction:
- * -> Update the props of post activity.
- * updatedBy: dyah
- * updatedDate: 08032021
- * updatedFunction:
- * -> Update validation for survey (componentDidUpdate).
- * updatedBy: dyah
- * updatedDate: 21042021
- * updatedFunction:
- * -> Delete componentDidUpdate in the screenn & delete function surveyDone().
+ * -> change the ui of survey list.
  */
