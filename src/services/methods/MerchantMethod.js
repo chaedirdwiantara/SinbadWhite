@@ -171,6 +171,14 @@ function updateSurvey({ params, surveyResponseId }) {
     params
   });
 }
+/** SUBMIT QUESTIONNAIRE */
+function submitQuestionnaire(params) {
+  return ApiRest({
+    path: 'supplier/service-survey/v1/survey/questionnaire_response',
+    method: 'POST',
+    params
+  });
+}
 /** VALIDATE MAPPING */
 function validateAreaMapping(params) {
   return ApiRest({
@@ -218,6 +226,7 @@ export const MerchantMethod = {
   getSurveyResponse,
   submitSurvey,
   updateSurvey,
+  submitQuestionnaire,
   validateAreaMapping,
   getSalesSegmentation
 };
@@ -229,7 +238,7 @@ export const MerchantMethod = {
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 27072021
+ * updatedDate: 09092021
  * updatedFunction:
- * -> add new method. (getDetailJourneyBook)
+ * -> add new method. (submitQuestionnaire)
  */

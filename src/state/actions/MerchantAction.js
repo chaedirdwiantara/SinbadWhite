@@ -539,6 +539,26 @@ export function merchantGetQuestionnaireFailed(data) {
 }
 /**
  * ===========================================
+ * SUBMIT QUESTIONNAIRE RESPONSE
+ * ===========================================
+ */
+export function merchantSubmitQuestionnaireProcess(data) {
+  return { type: types.MERCHANT_SUBMIT_QUESTIONNAIRE_PROCESS, payload: data };
+}
+export function merchantSubmitQuestionnaireSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_SUBMIT_QUESTIONNAIRE_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_SUBMIT_QUESTIONNAIRE_FAILED, payload: data };
+}
+export function merchantSubmitQuestionnaireFailed(data) {
+  return { type: types.MERCHANT_SUBMIT_QUESTIONNAIRE_FAILED, payload: data };
+}
+/**
+ * ===========================================
  * VALIDATE AREA MAPPING
  * ===========================================
  */

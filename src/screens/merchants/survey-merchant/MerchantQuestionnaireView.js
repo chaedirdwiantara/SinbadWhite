@@ -18,6 +18,7 @@ import {
   StatusBarWhite,
   InputType7,
   RadioButton,
+  ModalConfirmation,
   CheckBox
 } from '../../../library/component';
 import { Fonts } from '../../../helpers';
@@ -31,6 +32,8 @@ class MerchantQuestionnaireView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      modalConfirmation: false,
+      review: false,
       questions: [],
       unAnswered: []
     };
@@ -65,10 +68,17 @@ class MerchantQuestionnaireView extends Component {
     this.setState({ questions: newQuestions });
 
     /**SET NAVIGATION FUNCTION */
-    this.props.navigation.setParams({
-      submitQuestionnaire: this.submitQuestionnaire
-    });
+    this.setNavigationParams();
   }
+
+  /**SET NAVIGATION PARAMS */
+  setNavigationParams = () => {
+    this.props.navigation.setParams({
+      checkRequiredAnswers: this.checkRequiredAnswers,
+      submitQuestionnaire: this.submitQuestionnaire,
+      review: this.state.review
+    });
+  };
 
   /** === UPDATE/SELECT ANSWER === */
   selectAnswer = (candidateAnswerId, survey) => {
@@ -146,8 +156,8 @@ class MerchantQuestionnaireView extends Component {
     return this.state.unAnswered.find(item => item.surveyId === id);
   };
 
-  /** === SUBMIT QUESTIONNAIRE === */
-  submitQuestionnaire = () => {
+  /** === CHECK REQUIRED ANSWER === */
+  checkRequiredAnswers = () => {
     // filter the required answer
     const requiredAnswer = this.state.questions.filter(item => item.required);
     let unAnswered = [];
@@ -176,6 +186,11 @@ class MerchantQuestionnaireView extends Component {
     if (unAnswered.length > 0) {
       return this.setState({ unAnswered });
     }
+    this.setState({ modalConfirmation: true, unAnswered: [] });
+  };
+
+  /** === SUBMIT QUESTIONNAIRE === */
+  submitQuestionnaire = status => {
     // CHECK UNREQUIRED QUESTION
     // value === total candidate answers
     // inputValue !== 0
@@ -203,7 +218,14 @@ class MerchantQuestionnaireView extends Component {
       }
     });
     // send request
-    console.log('answers', answers);
+    const payload = {
+      surveyId: this.props.navigation.state.params.surveyId,
+      surveyStepId: 1,
+      storeId: this.props.merchant.selectedMerchant.storeId,
+      status,
+      answers
+    };
+    console.log('payload', payload);
   };
   /** === CHECK RENDER PER CATEGORY & TYPE === */
   renderPerCategoryAndType = item => {
@@ -258,22 +280,51 @@ class MerchantQuestionnaireView extends Component {
    * ========================
    */
   static navigationOptions = ({ navigation }) => {
+    const checkRequiredAnswers = navigation.getParam('checkRequiredAnswers');
     const submitQuestionnaire = navigation.getParam('submitQuestionnaire');
+    let review;
+    if (navigation.state.params) {
+      review = navigation.state.params.review;
+    }
 
-    return {
-      headerRight: () => (
+    const finishButton = () => {
+      return (
         <TouchableOpacity
           style={styles.finishButton}
+          onPress={() => (checkRequiredAnswers ? checkRequiredAnswers() : null)}
+        >
+          <Text style={Fonts.type21}>Selesai</Text>
+        </TouchableOpacity>
+      );
+    };
+
+    const sendButton = () => {
+      return (
+        <TouchableOpacity
+          style={[
+            styles.finishButton,
+            { backgroundColor: Color.fontGreen50, borderWidth: 0 }
+          ]}
           onPress={() => {
-            submitQuestionnaire ? submitQuestionnaire(navigation) : null;
+            submitQuestionnaire ? submitQuestionnaire('completed') : null;
             NavigationService.navigate('SuccessSubmit', {
               surveyName: 'Coba Survey'
             });
           }}
         >
-          <Text style={Fonts.type21}>Selesai</Text>
+          <MaterialIcon
+            name="check-circle"
+            color={Color.fontWhite}
+            size={14}
+            style={{ marginRight: 6 }}
+          />
+          <Text style={Fonts.type25}>Kirim</Text>
         </TouchableOpacity>
-      )
+      );
+    };
+
+    return {
+      headerRight: () => (review ? sendButton() : finishButton())
     };
   };
 
@@ -287,6 +338,7 @@ class MerchantQuestionnaireView extends Component {
     return (
       <RadioButton
         data={candidateAnswer}
+        disabled={this.state.review}
         onSelect={item =>
           this.selectAnswer(item.id, { surveyId, category: 'single_answer' })
         }
@@ -303,6 +355,7 @@ class MerchantQuestionnaireView extends Component {
     return (
       <CheckBox
         key={'multi-single-ans-' + item.id}
+        disabled={this.state.review}
         onSelect={() =>
           this.selectAnswer(item.id, {
             surveyId,
@@ -326,6 +379,7 @@ class MerchantQuestionnaireView extends Component {
     return (
       <CheckBox
         key={'multi-cum-ans-' + item.id}
+        disabled={this.state.review}
         onSelect={() =>
           this.selectAnswer(item.id, {
             surveyId,
@@ -352,6 +406,7 @@ class MerchantQuestionnaireView extends Component {
           <Text style={Fonts.type23}>{item.title}</Text>
           <View style={{ width: '40%' }}>
             <InputType7
+              editable={!this.state.review}
               placeholder="Input disini"
               max={100}
               min={1}
@@ -381,6 +436,7 @@ class MerchantQuestionnaireView extends Component {
               <Text style={Fonts.type23}>{candidate.title}</Text>
               <View style={{ width: '40%' }}>
                 <InputType7
+                  editable={!this.state.review}
                   placeholder="Input disini"
                   keyboardType="numeric"
                   max={100}
@@ -408,6 +464,7 @@ class MerchantQuestionnaireView extends Component {
                 <Text style={Fonts.type23}>{candidate.title}</Text>
                 <View style={{ width: '40%' }}>
                   <InputType7
+                    editable={!this.state.review}
                     placeholder="Input disini"
                     keyboardType="numeric"
                     text={inputValue =>
@@ -455,12 +512,27 @@ class MerchantQuestionnaireView extends Component {
             }
           ]}
         >
-          <Text style={Fonts.type117p}>
-            Pertanyaan {index + 1}
-            {item.required && (
-              <Text style={{ color: Color.mainColor }}>{' *'}</Text>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+          >
+            <Text style={Fonts.type117p}>
+              Pertanyaan {index + 1}
+              {item.required && (
+                <Text style={{ color: Color.mainColor }}>{' *'}</Text>
+              )}
+            </Text>
+            {this.state.review && (
+              <TouchableOpacity
+                onPress={() =>
+                  this.setState({ review: false }, () =>
+                    this.setNavigationParams()
+                  )
+                }
+              >
+                <MaterialIcon name="edit" color={Color.fontBlack60} size={14} />
+              </TouchableOpacity>
             )}
-          </Text>
+          </View>
           <View style={{ height: 16 }} />
           <Text style={Fonts.type8}>{item.title}</Text>
           {item.surveyQuestionCategory.code === 'multiple_answer' && (
@@ -548,6 +620,25 @@ class MerchantQuestionnaireView extends Component {
       </View>
     );
   }
+  /** === RENDER MODAL FINISH QUESTIONNAIRE === */
+  renderModalFinish() {
+    return (
+      <ModalConfirmation
+        statusBarWhite
+        title={'Selesai mengisi survei?'}
+        open={this.state.modalConfirmation}
+        content={'Pastikan jawaban yang Anda pilih sudah sesuai.'}
+        okText={'Selesai'}
+        cancelText={'Kembali'}
+        ok={() => {
+          this.setState({ modalConfirmation: false, review: true }, () =>
+            this.setNavigationParams()
+          );
+        }}
+        cancel={() => this.setState({ modalConfirmation: false })}
+      />
+    );
+  }
   /** === RENDER MAIN === */
   render() {
     return (
@@ -560,6 +651,8 @@ class MerchantQuestionnaireView extends Component {
         ) : (
           <View style={{ height: '100%' }}>{this.renderContent()}</View>
         )}
+        {/* MODAL */}
+        {this.renderModalFinish()}
       </SafeAreaView>
     );
   }
@@ -642,8 +735,8 @@ export default connect(
  * ============================
  * createdBy: dyah
  * createdDate: 06092021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 09092021
  * updatedFunction:
- * -> add merchant questionnaire view.
+ * -> update ui take survey (questionnaire).
  */
