@@ -30,7 +30,8 @@ import {
   ButtonSingle,
   InputType5,
   DatePickerSpinnerWithMinMaxDate,
-  ModalBottomType4
+  ModalBottomType4,
+  LoadingPage
 } from '../../library/component';
 import { TextInputMask } from 'react-native-masked-text';
 import SfaImageInput from './components/SfaImageInput';
@@ -50,22 +51,17 @@ const SfaCollectionEditView = props => {
   const dispatch = useDispatch();
   const paymentCollectionTypeId =
     props.navigation.state.params.collectionTypeId;
-  const initialData = props.navigation.state.params.data;
-  const [amount, setAmount] = useState(initialData.amount);
+  const pcmId = props.navigation.state.params.pcmId;
+  const [initialData, setInitialData] = useState(null);
+  const [amount, setAmount] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [noReference, setNoReference] = useState(initialData.referenceCode);
-  const [transferDate, setTransferDate] = useState(initialData.issuedDate);
-  const [issuedDate, setIssuedDate] = useState(initialData.issuedDate);
-  const [invalidDate, setInvalidDate] = useState(initialData.invalidDate);
-  const [dataBank, setDataBank] = useState({
-    displayName: initialData.bankSource
-  });
-  const [dataBankTo, setDataBankTo] = useState({
-    bank: { displayName: initialData.bankSource }
-  });
-  const [dataStamp, setDataStamp] = useState({
-    nominal: initialData?.stampAmount
-  });
+  const [noReference, setNoReference] = useState(null);
+  const [transferDate, setTransferDate] = useState(null);
+  const [issuedDate, setIssuedDate] = useState(null);
+  const [invalidDate, setInvalidDate] = useState(null);
+  const [dataBank, setDataBank] = useState(null);
+  const [dataBankTo, setDataBankTo] = useState(null);
+  const [dataStamp, setDataStamp] = useState(null);
   const [modalBankOpenType, setModalBankOpenType] = useState(null);
   const [isModalStampOpen, setIsModalStampOpen] = useState(false);
   const [isModalBankOpen, setIsModalBankOpen] = useState(false);
@@ -75,9 +71,7 @@ const SfaCollectionEditView = props => {
     false
   );
   const [isModalInvalidDateOpen, setIsModalInvalidDateOpen] = useState(false);
-  const [isStampChecked, setIsStampChecked] = useState(
-    initialData.stampAmount ? true : false
-  );
+  const [isStampChecked, setIsStampChecked] = useState(false);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [questionMarkShow, setQuestionMarkShow] = useState(true);
   const [imageName, setImageName] = useState(null);
@@ -99,7 +93,9 @@ const SfaCollectionEditView = props => {
     dataSfaPatchCollectionMethod,
     errorSfaPatchCollectionMethod,
     loadingSfaGetCollectionImage,
-    dataSfaGetCollectionImage
+    dataSfaGetCollectionImage,
+    dataSfaGetCollectionDetail,
+    loadingSfaGetCollectionDetail
   } = useSelector(state => state.sfa);
 
   /**
@@ -114,6 +110,7 @@ const SfaCollectionEditView = props => {
     errorSfaPatchCollectionMethod
   );
   const prevDataSfaGetCollectionImageRef = useRef(dataSfaGetCollectionImage);
+  const prevDataSfaGetCollectionDetailRef = useRef(dataSfaGetCollectionDetail);
   /**
    * *********************************
    * RENDER USE EFFECT
@@ -136,6 +133,21 @@ const SfaCollectionEditView = props => {
   }, []);
   const prevErrorSfaPatchCollectionMethod =
     prevErrorSfaPatchCollectionMethodRef.current;
+
+  useEffect(() => {
+    prevDataSfaGetCollectionDetailRef.current = dataSfaGetCollectionDetail;
+  }, []);
+  const prevDataSfaGetCollectionDetail =
+    prevDataSfaGetCollectionDetailRef.current;
+
+  useEffect(() => {
+    if (prevDataSfaGetCollectionDetail !== dataSfaGetCollectionDetail) {
+      if (dataSfaGetCollectionDetail) {
+        getInitialData();
+      }
+    }
+  }, [dataSfaGetCollectionDetail]);
+
   useEffect(() => {
     if (prevDataSfaPatchCollectionMethod !== dataSfaPatchCollectionMethod) {
       if (dataSfaPatchCollectionMethod) {
@@ -167,7 +179,7 @@ const SfaCollectionEditView = props => {
   }, [isStampChecked]);
 
   useEffect(() => {
-    dispatch(sfaGetCollectionImageProcess(initialData.id));
+    dispatch(sfaGetCollectionImageProcess(pcmId));
   }, []);
 
   /** HANDLE ERROR POST COLLECTION */
@@ -184,6 +196,26 @@ const SfaCollectionEditView = props => {
    * RENDER FUNCTION
    * *********************************
    */
+  /** FUNCTION SET INITIAL DATA */
+  const getInitialData = () => {
+    const detailCollection = dataSfaGetCollectionDetail?.data;
+    setInitialData(detailCollection);
+    setAmount(detailCollection.amount);
+    setTotalAmount(detailCollection.totalAmount);
+    setNoReference(detailCollection.reference);
+    setTransferDate(detailCollection.issuedDate);
+    setIssuedDate(detailCollection.issuedDate);
+    setInvalidDate(detailCollection.dueDate);
+    setDataBank({
+      displayName: detailCollection?.bankFrom.displayName || ''
+    });
+    setDataBankTo(detailCollection.bankToAccount);
+    setDataStamp({
+      nominal: detailCollection.stamp?.nominal || 0
+    });
+    setIsStampChecked(detailCollection.stamp ? true : false);
+  };
+  /** FUNCTION ON SUCCESS EDIT COLLECTION */
   const navigateOnSucces = () => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
@@ -304,7 +336,6 @@ const SfaCollectionEditView = props => {
       }
     }
     if (paymentCollectionTypeId === TRANSFER) {
-      console.log(initialData, dataBankTo, 'initial');
       if (
         !noReference ||
         !dataBank ||
@@ -555,7 +586,15 @@ const SfaCollectionEditView = props => {
           disabled={false}
         >
           {dataBankTo ? (
-            <Text style={[Fonts.type17]}>{dataBankTo.bank.displayName}</Text>
+            <View>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[Fonts.type10]}>
+                  {dataBankTo.bank.displayName}
+                </Text>
+                <Text style={[Fonts.type17]}> - {dataBankTo.accountNo}</Text>
+              </View>
+              <Text style={[Fonts.type17]}>{dataBankTo.description}</Text>
+            </View>
           ) : (
             <Text style={[Fonts.type31]}>Pilih Tujuan Bank</Text>
           )}
@@ -990,15 +1029,24 @@ const SfaCollectionEditView = props => {
    */
   return (
     <>
-      <ScrollView>{renderContent()}</ScrollView>
-      {renderBottomTab()}
-      {renderModalTransferDate()}
-      {renderModalIssuedDate()}
-      {renderModalInvalidDate()}
-      {renderModalBank()}
-      {renderModalListMaterai()}
-      {renderModalError()}
-      {renderModalBankDestination()}
+      {!loadingSfaGetCollectionDetail && dataSfaGetCollectionDetail ? (
+        <>
+          <ScrollView>{renderContent()}</ScrollView>
+
+          {renderBottomTab()}
+          {renderModalTransferDate()}
+          {renderModalIssuedDate()}
+          {renderModalInvalidDate()}
+          {renderModalBank()}
+          {renderModalListMaterai()}
+          {renderModalError()}
+          {renderModalBankDestination()}
+        </>
+      ) : (
+        <View style={{ flex: 1 }}>
+          <LoadingPage />
+        </View>
+      )}
     </>
   );
 };
