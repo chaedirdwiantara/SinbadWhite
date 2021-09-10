@@ -49,7 +49,9 @@ function SfaCollectionLog(props) {
     dataSfaDeleteCollection
   } = useSelector(state => state.sfa);
   const { dataDetailHistory } = useSelector(state => state.history);
-  const { selectedMerchant } = useSelector(state => state.merchant);
+  const { selectedMerchant, dataGetMerchantDetailV2 } = useSelector(
+    state => state.merchant
+  );
   const [limit, setLimit] = useState(20);
   const [isShowToast, setIsShowToast] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -125,9 +127,13 @@ function SfaCollectionLog(props) {
       type === HISTORY
         ? dataDetailHistory.billing.orderParcelId
         : dataSfaGetDetail.data.id;
+    const storeId =
+      type === HISTORY
+        ? dataGetMerchantDetailV2.store.id
+        : selectedMerchant?.storeId;
     const data = {
-      storeId: parseInt(selectedMerchant.storeId, 10),
-      orderParcelId,
+      storeId: parseInt(storeId, 10),
+      orderParcelId: parseInt(orderParcelId, 10),
       limit: limit,
       skip: 0
     };
