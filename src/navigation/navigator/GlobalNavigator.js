@@ -9,6 +9,7 @@ import ListAndSearchType1 from '../../screens/global/ListAndSearchType1';
 import MapsView from '../../screens/global/MapsView';
 import InputManualLocation from '../../screens/global/InputManualLocation';
 import SegmentationList from '../../screens/global/SegmentationList';
+import SuccessSubmitView from '../../screens/global/SuccessSubmitView';
 
 const GlobalNavigator = {
   /** === PAGE CAMERA FOR PROFILE PICTURE === */
@@ -90,6 +91,14 @@ const GlobalNavigator = {
         backgroundColor: Color.mainColor
       },
       headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  /** SUCCESS SUBMIT FORM VIEW=== */
+  SuccessSubmit: {
+    screen: SuccessSubmitView,
+    navigationOptions: {
+      headerShown: false,
       gesturesEnabled: false
     }
   }

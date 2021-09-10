@@ -26,6 +26,7 @@ import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
 import _ from 'lodash';
 import { questions } from './mockData';
+import NavigationService from '../../../navigation/NavigationService';
 
 class MerchantQuestionnaireView extends Component {
   constructor(props) {
@@ -304,9 +305,12 @@ class MerchantQuestionnaireView extends Component {
             styles.finishButton,
             { backgroundColor: Color.fontGreen50, borderWidth: 0 }
           ]}
-          onPress={() =>
-            submitQuestionnaire ? submitQuestionnaire('completed') : null
-          }
+          onPress={() => {
+            submitQuestionnaire ? submitQuestionnaire('completed') : null;
+            NavigationService.navigate('SuccessSubmit', {
+              surveyName: 'Coba Survey'
+            });
+          }}
         >
           <MaterialIcon
             name="check-circle"
