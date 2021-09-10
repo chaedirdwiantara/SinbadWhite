@@ -278,7 +278,7 @@ const SfaBillingEditView = props => {
     const initialTotalPaymentAmount =
       dataSfaGetBillingDetail?.data.paidByCollectionMethod + stampNominal;
     const isDataIdentic = totalPaymentAmount === initialTotalPaymentAmount;
-
+ 
     if (noPaymentAmount || isDataIdentic) {
       setIsButtonDisabled(true);
     } else {
