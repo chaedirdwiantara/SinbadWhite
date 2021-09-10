@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   FlatList,
   SafeAreaView,
-  Text
+  Text,
+  Dimensions
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
@@ -16,9 +17,6 @@ import {
 import {
   LoadingPage,
   StatusBarWhite,
-  InputType7,
-  RadioButton,
-  CheckBox,
   ButtonSingle
 } from '../../../library/component';
 import { Fonts } from '../../../helpers';
@@ -28,6 +26,7 @@ import _ from 'lodash';
 import { questions } from './mockData';
 import NavigationService from '../../../navigation/NavigationService';
 
+const { height, width } = Dimensions.get('window');
 class MerchantSurveyResultView extends Component {
   constructor(props) {
     super(props);
@@ -173,12 +172,14 @@ class MerchantSurveyResultView extends Component {
                 <Text style={[Fonts.type8, { marginBottom: 4.5 }]}>
                   Pertanyaan {index + 1}
                 </Text>
-                {this.state.openCollapse &&
-                  this.state.activeIndexCollapse === index && (
-                    <Text style={[Fonts.type8, { color: '#A0A4A8' }]}>
-                      {item.title}
-                    </Text>
-                  )}
+                <View style={{ width: '90%' }}>
+                  {this.state.openCollapse &&
+                    this.state.activeIndexCollapse === index && (
+                      <Text style={[Fonts.type8, { color: '#A0A4A8' }]}>
+                        {item?.title ?? '-'}
+                      </Text>
+                    )}
+                </View>
               </View>
             </TouchableOpacity>
           </View>
@@ -192,7 +193,7 @@ class MerchantSurveyResultView extends Component {
         style={{ width: '20%' }}
         data={questions}
         keyExtractor={(data, index) => index.toString()}
-        renderItem={() => (
+        renderItem={({ item, index }) => (
           <View
             style={{
               backgroundColor: '#FAFAFA',
@@ -206,7 +207,7 @@ class MerchantSurveyResultView extends Component {
               marginBottom: '25%'
             }}
           >
-            <Text>8</Text>
+            <Text>{item?.totalScore ?? '-'}</Text>
           </View>
         )}
       />
@@ -214,16 +215,27 @@ class MerchantSurveyResultView extends Component {
   }
   renderButton() {
     return (
-      <ButtonSingle
-        disabled={false}
-        title={'Kembali ke Daftar Tugas'}
-        borderRadius={4}
-        onPress={() =>
-          NavigationService.navigate('MerchantHomeView', {
-            readOnly: false
-          })
-        }
-      />
+      <View
+        style={[
+          styles.bottomButtonContainer,
+          styles.headerContainer,
+          {
+            borderTopColor: 'none',
+            marginTop: 16
+          }
+        ]}
+      >
+        <ButtonSingle
+          disabled={false}
+          title={'Kembali ke Daftar Tugas'}
+          borderRadius={4}
+          onPress={() =>
+            NavigationService.navigate('MerchantHomeView', {
+              readOnly: false
+            })
+          }
+        />
+      </View>
     );
   }
   renderSurveyResponses() {
@@ -317,7 +329,7 @@ class MerchantSurveyResultView extends Component {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    paddingBottom: 16,
+    // paddingBottom: 16,
     paddingTop: 12,
     borderWidth: 1,
     borderTopWidth: 4,

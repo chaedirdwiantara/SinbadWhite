@@ -23,11 +23,6 @@ class SuccessSubmitView extends Component {
       caption: this.props.navigation.state
     };
   }
-  /**
-   * =======================
-   * FUNCTIONAL
-   * =======================
-   */
 
   /**
    * ==============================
@@ -51,9 +46,11 @@ class SuccessSubmitView extends Component {
         disabled={false}
         title={'Lihat Hasil Survey'}
         borderRadius={4}
-        onPress={NavigationService.navigate('MerchantSurveyResultView', {
-          readOnly: false
-        })}
+        onPress={() =>
+          NavigationService.navigate('MerchantSurveyResultView', {
+            readOnly: false
+          })
+        }
       />
     );
   }
