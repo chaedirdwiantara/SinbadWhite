@@ -25,6 +25,7 @@ import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
 import _ from 'lodash';
 import { questions } from './mockData';
+import NavigationService from '../../../navigation/NavigationService';
 
 class MerchantQuestionnaireView extends Component {
   constructor(props) {
@@ -258,13 +259,17 @@ class MerchantQuestionnaireView extends Component {
    */
   static navigationOptions = ({ navigation }) => {
     const submitQuestionnaire = navigation.getParam('submitQuestionnaire');
+
     return {
       headerRight: () => (
         <TouchableOpacity
           style={styles.finishButton}
-          onPress={() =>
-            submitQuestionnaire ? submitQuestionnaire(navigation) : null
-          }
+          onPress={() => {
+            submitQuestionnaire ? submitQuestionnaire(navigation) : null;
+            NavigationService.navigate('SuccessSubmit', {
+              surveyName: 'Coba Survey'
+            });
+          }}
         >
           <Text style={Fonts.type21}>Selesai</Text>
         </TouchableOpacity>
