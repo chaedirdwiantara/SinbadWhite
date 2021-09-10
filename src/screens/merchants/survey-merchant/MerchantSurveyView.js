@@ -129,16 +129,25 @@ class MerchantSurveyView extends Component {
         <View style={[styles.card, GlobalStyle.shadowForBox]}>
           <TouchableOpacity
             style={styles.cardInside}
-            onPress={() =>
-              NavigationService.navigate('MerchantSurveyDisplayPhotoView', {
-                readOnly,
+            onPress={() => {
+              if (item.template?.code === 'photo') {
+                return NavigationService.navigate(
+                  'MerchantSurveyDisplayPhotoView',
+                  {
+                    readOnly,
+                    surveyId: item.id,
+                    surveyName: item.surveyName,
+                    surveyResponseId: item.surveyResponseId,
+                    surveySerialId: item.surveySerialId,
+                    surveyQuestions: item.surveyQuestions
+                  }
+                );
+              }
+              NavigationService.navigate('MerchantQuestionnaireView', {
                 surveyId: item.id,
-                surveyName: item.surveyName,
-                surveyResponseId: item.surveyResponseId,
-                surveySerialId: item.surveySerialId,
-                surveyQuestions: item.surveyQuestions
-              })
-            }
+                surveyName: item.surveyName
+              });
+            }}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <MaterialIcon
@@ -255,7 +264,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyView);
  * createdBy: dyah
  * createdDate: 19112020
  * updatedBy: dyah
- * updatedDate: 08092021
+ * updatedDate: 09092021
  * updatedFunction:
- * -> change the ui of survey list.
+ * -> update the navigation.
  */
