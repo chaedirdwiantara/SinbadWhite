@@ -127,7 +127,7 @@ const SfaCollectionListView = props => {
   useEffect(() => {
     getCollectionList(true, 20);
   }, []);
-
+ 
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigatetoAddCollection = () => {
     NavigationService.navigate('SfaCollectionAddView', {
