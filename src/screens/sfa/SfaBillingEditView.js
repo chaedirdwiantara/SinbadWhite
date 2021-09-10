@@ -264,16 +264,17 @@ const SfaBillingEditView = props => {
   };
 
   useEffect(() => {
-    if (
-      paymentAmount === 0 ||
-      totalPaymentAmount ===
-        dataSfaGetBillingDetail?.data.paidByCollectionMethod + stampNominal
-    ) {
+    const noPaymentAmount = paymentAmount === 0;
+    const initialTotalPaymentAmount =
+      dataSfaGetBillingDetail?.data.paidByCollectionMethod + stampNominal;
+    const isDataChange = totalPaymentAmount !== initialTotalPaymentAmount;
+
+    if (noPaymentAmount || !isDataChange) {
       setIsButtonDisabled(true);
     } else {
       setIsButtonDisabled(false);
     }
-  }, [paymentAmount, isStampChecked]);
+  }, [totalPaymentAmount, isStampChecked]);
 
   useEffect(() => {
     if (!loadingSfaEditBilling && paymentAmount !== 0) {
