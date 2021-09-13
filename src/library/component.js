@@ -45,6 +45,7 @@ import ModalWarning from '../components/modal/ModalWarning';
 import ModalConfirmation from '../components/modal/ModalConfirmation';
 import ModalConfirmationType2 from '../components/modal/ModalConfirmationType2';
 import ModalConfirmationType4 from '../components/modal/ModalConfirmationType4';
+import ModalConfirmationType5 from '../components/modal/ModalConfirmationType5';
 import ModalBottomErrorPinMap from '../components/error/ModalBottomErrorPinMap';
 import ModalBottomSwipeCloseNotScroll from '../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalBottomType1 from '../components/modal_bottom/ModalBottomType1';
@@ -121,6 +122,11 @@ import Accordion from '../components/accordion/Accordion';
 import RadioButton from '../components/radioButton/radioButton';
 /** CHECK BOX */
 import CheckBox from '../components/checkBox/checkBox';
+/** QUESTIONNAIRE */
+import SingleAnswerComponent from '../components/questionnaire/SingleAnswerComponent';
+import MultipleAnswerComponent from '../components/questionnaire/MultipleAnswerComponent';
+import BasicRangeAnswerComponent from '../components/questionnaire/BasicRangeAnswerComponent';
+import CompareGroupRangeAnswerComponent from '../components/questionnaire/CompareGroupRangeAnswerComponent';
 
 export {
   CartGlobal,
@@ -168,6 +174,7 @@ export {
   ModalConfirmation,
   ModalConfirmationType2,
   ModalConfirmationType4,
+  ModalConfirmationType5,
   ModalBottomErrorPinMap,
   ModalBottomSwipeCloseNotScroll,
   ModalBottomType1,
@@ -242,7 +249,12 @@ export {
   /** RADIO BUTTON */
   RadioButton,
   /** CHECK BOX */
-  CheckBox
+  CheckBox,
+  /** QUESTIONNAIRE */
+  SingleAnswerComponent,
+  MultipleAnswerComponent,
+  BasicRangeAnswerComponent,
+  CompareGroupRangeAnswerComponent
 };
 
 /**
@@ -252,8 +264,9 @@ export {
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 06092021
+ * updatedDate: 13092021
  * updatedFunction:
- * -> add new component (radioButton, checkBox, and inputType7)
+ * -> add new modal component (modalConfirmationType5)
+ * -> add new questionnaire components (4).
  *
  */
