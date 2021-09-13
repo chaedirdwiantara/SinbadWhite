@@ -136,6 +136,7 @@ const SfaCollectionListView = props => {
   };
 
   const navigatetoEditCollection = item => {
+    dispatch(sfaGetCollectionDetailProcess(item.id));
     NavigationService.navigate('SfaCollectionEditView', {
       collectionTypeId: collectionTypeId,
       data: item
