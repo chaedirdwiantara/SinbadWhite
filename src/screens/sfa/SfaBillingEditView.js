@@ -69,32 +69,41 @@ const SfaBillingEditView = props => {
    * *********************************
    */
 
-  // function to make sure collection !> balance || colection !>outstanding
+  /** FUNCTION TO CHECK IF PAYMENT BILLING !> BALANCE || PAYMENT BILLING !> OUTSTANDING */
   useEffect(() => {
     const outstanding = dataSfaGetBillingDetail?.data.outstandingAmount;
-    if (parseInt(paymentAmount, 10) > parseInt(outstanding, 10)) {
-      if (outstanding < collectionBalance) {
+    const totalPayment = parseInt(outstanding, 10) + stampNominal;
+    const paymentGreaterThanOutstanding =
+      parseInt(paymentAmount, 10) > parseInt(outstanding, 10);
+    const collectionBalanceGreaterThanOutstanding =
+      collectionBalance > outstanding;
+    const paymentGreaterThanCollectionBalance =
+      parseInt(paymentAmount, 10) > parseInt(collectionBalance, 10);
+    if (paymentGreaterThanOutstanding) {
+      if (collectionBalanceGreaterThanOutstanding) {
         setPaymentAmount(parseInt(outstanding, 10));
-        setTotalPaymentAmount(parseInt(outstanding, 10) + stampNominal);
+        setTotalPaymentAmount(totalPayment);
       } else {
         setPaymentAmount(parseInt(collectionBalance, 10));
-        setTotalPaymentAmount(parseInt(collectionBalance, 10) + stampNominal);
+        setTotalPaymentAmount(totalPayment);
       }
-    } else if (parseInt(paymentAmount, 10) > parseInt(collectionBalance, 10)) {
-      if (outstanding < collectionBalance) {
+    } else if (paymentGreaterThanCollectionBalance) {
+      if (collectionBalanceGreaterThanOutstanding) {
         setPaymentAmount(parseInt(outstanding, 10));
-        setTotalPaymentAmount(parseInt(outstanding, 10) + stampNominal);
+        setTotalPaymentAmount(totalPayment);
       } else {
         setPaymentAmount(parseInt(collectionBalance, 10));
-        setTotalPaymentAmount(parseInt(collectionBalance, 10) + stampNominal);
+        setTotalPaymentAmount(totalPayment);
       }
     } else {
       setPaymentAmount(parseInt(paymentAmount, 10));
-      setTotalPaymentAmount(parseInt(paymentAmount, 10) + stampNominal);
+      setTotalPaymentAmount(totalPayment);
     }
   }, [paymentAmount, collectionBalance]);
 
   const isNumber = n => (n !== null && n !== undefined ? true : false);
+
+  /** FUNCTION ON CHANGE PAYMENT AMOUNT */
   const onChangePaymentAmount = text => {
     const outstanding = dataSfaGetBillingDetail?.data.outstandingAmount;
     if (parseInt(text.replace(/[Rp.]+/g, ''), 10) > parseInt(outstanding, 10)) {
@@ -263,17 +272,19 @@ const SfaBillingEditView = props => {
     });
   };
 
+  /** FOR DISABLE BUTTON SAVE WHEN DATA STILL THE SAME */
   useEffect(() => {
-    if (
-      paymentAmount === 0 ||
-      totalPaymentAmount ===
-        dataSfaGetBillingDetail?.data.paidByCollectionMethod + stampNominal
-    ) {
+    const noPaymentAmount = paymentAmount === 0;
+    const initialTotalPaymentAmount =
+      dataSfaGetBillingDetail?.data.paidByCollectionMethod + stampNominal;
+    const isDataIdentic = totalPaymentAmount === initialTotalPaymentAmount;
+ 
+    if (noPaymentAmount || isDataIdentic) {
       setIsButtonDisabled(true);
     } else {
       setIsButtonDisabled(false);
     }
-  }, [paymentAmount, isStampChecked]);
+  }, [totalPaymentAmount, isStampChecked]);
 
   useEffect(() => {
     if (!loadingSfaEditBilling && paymentAmount !== 0) {
