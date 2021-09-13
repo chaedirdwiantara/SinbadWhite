@@ -60,6 +60,7 @@ class MerchantListView extends Component {
     return (
       <View>
         <SearchBarType1
+          maxLength={30}
           editable={this.props.merchant.dataGetPortfolioV2 ? true : false}
           searchText={this.props.searchText}
           placeholder={'Cari nama / id toko disini'}
@@ -163,7 +164,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantListView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 16072021
+ * updatedDate: 24082021
  * updatedFunction:
- * -> disable search when portfolio null.
+ * -> maximise the character of search (30 characters)
  */
