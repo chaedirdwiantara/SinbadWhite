@@ -30,7 +30,8 @@ import {
   ButtonSingle,
   InputType5,
   DatePickerSpinnerWithMinMaxDate,
-  ModalBottomType4
+  ModalBottomType4,
+  LoadingPage
 } from '../../library/component';
 import { TextInputMask } from 'react-native-masked-text';
 import SfaImageInput from './components/SfaImageInput';
@@ -50,22 +51,17 @@ const SfaCollectionEditView = props => {
   const dispatch = useDispatch();
   const paymentCollectionTypeId =
     props.navigation.state.params.collectionTypeId;
-  const initialData = props.navigation.state.params.data;
-  const [amount, setAmount] = useState(initialData.amount);
+  const pcmId = props.navigation.state.params.data.id;
+  const [initialData, setInitialData] = useState(null);
+  const [amount, setAmount] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [noReference, setNoReference] = useState(initialData.referenceCode);
-  const [transferDate, setTransferDate] = useState(initialData.issuedDate);
-  const [issuedDate, setIssuedDate] = useState(initialData.issuedDate);
-  const [invalidDate, setInvalidDate] = useState(initialData.invalidDate);
-  const [dataBank, setDataBank] = useState({
-    displayName: initialData.bankSource
-  });
-  const [dataBankTo, setDataBankTo] = useState({
-    bank: { displayName: initialData.bankSource }
-  });
-  const [dataStamp, setDataStamp] = useState({
-    nominal: initialData?.stampAmount
-  });
+  const [noReference, setNoReference] = useState(null);
+  const [transferDate, setTransferDate] = useState(null);
+  const [issuedDate, setIssuedDate] = useState(null);
+  const [invalidDate, setInvalidDate] = useState(null);
+  const [dataBank, setDataBank] = useState(null);
+  const [dataBankTo, setDataBankTo] = useState(null);
+  const [dataStamp, setDataStamp] = useState(null);
   const [modalBankOpenType, setModalBankOpenType] = useState(null);
   const [isModalStampOpen, setIsModalStampOpen] = useState(false);
   const [isModalBankOpen, setIsModalBankOpen] = useState(false);
@@ -75,9 +71,7 @@ const SfaCollectionEditView = props => {
     false
   );
   const [isModalInvalidDateOpen, setIsModalInvalidDateOpen] = useState(false);
-  const [isStampChecked, setIsStampChecked] = useState(
-    initialData.stampAmount ? true : false
-  );
+  const [isStampChecked, setIsStampChecked] = useState(false);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [questionMarkShow, setQuestionMarkShow] = useState(true);
   const [imageName, setImageName] = useState(null);
@@ -99,7 +93,9 @@ const SfaCollectionEditView = props => {
     dataSfaPatchCollectionMethod,
     errorSfaPatchCollectionMethod,
     loadingSfaGetCollectionImage,
-    dataSfaGetCollectionImage
+    dataSfaGetCollectionImage,
+    dataSfaGetCollectionDetail,
+    loadingSfaGetCollectionDetail
   } = useSelector(state => state.sfa);
 
   /**
@@ -114,6 +110,7 @@ const SfaCollectionEditView = props => {
     errorSfaPatchCollectionMethod
   );
   const prevDataSfaGetCollectionImageRef = useRef(dataSfaGetCollectionImage);
+  const prevDataSfaGetCollectionDetailRef = useRef(dataSfaGetCollectionDetail);
   /**
    * *********************************
    * RENDER USE EFFECT
@@ -136,6 +133,21 @@ const SfaCollectionEditView = props => {
   }, []);
   const prevErrorSfaPatchCollectionMethod =
     prevErrorSfaPatchCollectionMethodRef.current;
+
+  useEffect(() => {
+    prevDataSfaGetCollectionDetailRef.current = dataSfaGetCollectionDetail;
+  }, []);
+  const prevDataSfaGetCollectionDetail =
+    prevDataSfaGetCollectionDetailRef.current;
+
+  useEffect(() => {
+    if (prevDataSfaGetCollectionDetail !== dataSfaGetCollectionDetail) {
+      if (dataSfaGetCollectionDetail) {
+        getInitialData();
+      }
+    }
+  }, [dataSfaGetCollectionDetail]);
+
   useEffect(() => {
     if (prevDataSfaPatchCollectionMethod !== dataSfaPatchCollectionMethod) {
       if (dataSfaPatchCollectionMethod) {
@@ -148,17 +160,25 @@ const SfaCollectionEditView = props => {
     if (prevDataSfaGetCollectionImage !== dataSfaGetCollectionImage) {
       if (dataSfaGetCollectionImage) {
         setImageData(dataSfaGetCollectionImage.data.image);
+        checkInput();
       }
     }
   }, [dataSfaGetCollectionImage]);
-
+  useEffect(() => {
+    checkInput();
+  }, [
+    amount,
+    imageData,
+    noReference,
+    dataBankTo,
+    dataBank,
+    issuedDate,
+    invalidDate,
+    dataStamp
+  ]);
   useEffect(() => {
     totalAmountCal(amount);
   }, [amount, dataStamp]);
-
-  useEffect(() => {
-    checkInput();
-  });
 
   useEffect(() => {
     if (isStampChecked === false) {
@@ -167,7 +187,8 @@ const SfaCollectionEditView = props => {
   }, [isStampChecked]);
 
   useEffect(() => {
-    dispatch(sfaGetCollectionImageProcess(initialData.id));
+    console.log('edit ');
+    dispatch(sfaGetCollectionImageProcess(pcmId));
   }, []);
 
   /** HANDLE ERROR POST COLLECTION */
@@ -184,6 +205,24 @@ const SfaCollectionEditView = props => {
    * RENDER FUNCTION
    * *********************************
    */
+  /** FUNCTION SET INITIAL DATA */
+  const getInitialData = () => {
+    const detailCollection = dataSfaGetCollectionDetail?.data;
+    setInitialData(detailCollection);
+    setAmount(detailCollection.amount);
+    setTotalAmount(detailCollection.totalAmount);
+    setNoReference(detailCollection.reference);
+    setTransferDate(detailCollection.issuedDate);
+    setIssuedDate(detailCollection.issuedDate);
+    setInvalidDate(detailCollection.dueDate);
+    setDataBank(detailCollection?.bankFrom || null);
+    setDataBankTo(detailCollection.bankToAccount);
+    setDataStamp(detailCollection.stamp || 0);
+    setIsStampChecked(detailCollection.stamp ? true : false);
+    checkInput();
+  };
+
+  /** FUNCTION ON SUCCESS EDIT COLLECTION */
   const navigateOnSucces = () => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
@@ -276,50 +315,72 @@ const SfaCollectionEditView = props => {
   };
 
   const checkInput = () => {
+    const isAmountChange = initialData?.amount !== amount;
+    const isReferenceChange = initialData?.reference !== noReference;
+    const isIssuedDateChange = initialData?.issuedDate !== issuedDate;
+    const isDueDateChange = initialData?.dueDate !== invalidDate;
+    const isBankFromChange =
+      initialData?.bankFrom?.displayName !== dataBank?.displayName;
+    const isBankToChange =
+      initialData?.bankToAccount?.displayName !== dataBankTo?.displayName;
+    const isImageChange = dataSfaGetCollectionImage?.data.image !== imageData;
+    const isStampNominalChange =
+      dataSfaGetCollectionDetail?.data.stamp?.nominal !== dataStamp?.nominal;
+
     if (paymentCollectionTypeId === CASH) {
-      if (!amount || !imageData || initialData.amount === amount) {
-        setIsSaveDisabled(true);
-      } else {
+      const isDataCashChange = isAmountChange || isImageChange;
+      const isDataCashComplete = amount && imageData;
+      if (isDataCashComplete && isDataCashChange) {
         setIsSaveDisabled(false);
+      } else {
+        setIsSaveDisabled(true);
       }
     }
     if (paymentCollectionTypeId === CHECK || paymentCollectionTypeId === GIRO) {
-      if (
-        !amount ||
-        !imageData ||
-        !issuedDate ||
-        !noReference ||
-        !invalidDate ||
-        !dataBank ||
-        (initialData.amount === amount &&
-          initialData.issuedDate === issuedDate &&
-          initialData.invalidDate === invalidDate &&
-          initialData.referenceCode === noReference &&
-          initialData.bankSource === dataBank.displayName &&
-          initialData.stampAmount === dataStamp.nominal)
-      ) {
-        setIsSaveDisabled(true);
-      } else {
+      const isDataCheckGiroChange =
+        isAmountChange ||
+        isReferenceChange ||
+        isIssuedDateChange ||
+        isDueDateChange ||
+        isBankFromChange ||
+        isStampNominalChange ||
+        isImageChange;
+
+      const isDataCheckGiroComplete =
+        amount &&
+        imageData &&
+        issuedDate &&
+        noReference &&
+        invalidDate &&
+        dataBank;
+      if (isDataCheckGiroComplete && isDataCheckGiroChange) {
         setIsSaveDisabled(false);
+      } else {
+        setIsSaveDisabled(true);
       }
     }
     if (paymentCollectionTypeId === TRANSFER) {
-      console.log(initialData, dataBankTo, 'initial');
-      if (
-        !noReference ||
-        !dataBank ||
-        !dataBankTo ||
-        !transferDate ||
-        !amount ||
-        !imageData ||
-        (initialData.amount === amount &&
-          initialData.createdAt === transferDate &&
-          initialData.referenceCode === noReference &&
-          initialData.bankSource === dataBank.displayName)
-      ) {
-        setIsSaveDisabled(true);
-      } else {
+      const isDataTransferChange =
+        isAmountChange ||
+        isReferenceChange ||
+        isIssuedDateChange ||
+        isBankFromChange ||
+        isBankFromChange ||
+        isStampNominalChange ||
+        isImageChange;
+
+      const isDataTransferComplete =
+        amount &&
+        noReference &&
+        dataBank &&
+        dataBankTo &&
+        transferDate &&
+        amount &&
+        imageData;
+      if (isDataTransferComplete && isDataTransferChange) {
         setIsSaveDisabled(false);
+      } else {
+        setIsSaveDisabled(true);
       }
     }
   };
@@ -487,7 +548,7 @@ const SfaCollectionEditView = props => {
       </>
     );
   };
-
+  console.log(noReference, 'REFENSI');
   /** RENDER REFERENCE */
   const renderReference = () => {
     return paymentCollectionTypeId === CHECK ||
@@ -555,7 +616,15 @@ const SfaCollectionEditView = props => {
           disabled={false}
         >
           {dataBankTo ? (
-            <Text style={[Fonts.type17]}>{dataBankTo.bank.displayName}</Text>
+            <View>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={[Fonts.type10]}>
+                  {dataBankTo.bank.displayName}
+                </Text>
+                <Text style={[Fonts.type17]}> - {dataBankTo.accountNo}</Text>
+              </View>
+              <Text style={[Fonts.type17]}>{dataBankTo.description}</Text>
+            </View>
           ) : (
             <Text style={[Fonts.type31]}>Pilih Tujuan Bank</Text>
           )}
@@ -990,15 +1059,24 @@ const SfaCollectionEditView = props => {
    */
   return (
     <>
-      <ScrollView>{renderContent()}</ScrollView>
-      {renderBottomTab()}
-      {renderModalTransferDate()}
-      {renderModalIssuedDate()}
-      {renderModalInvalidDate()}
-      {renderModalBank()}
-      {renderModalListMaterai()}
-      {renderModalError()}
-      {renderModalBankDestination()}
+      {!loadingSfaGetCollectionDetail && dataSfaGetCollectionDetail ? (
+        <>
+          <ScrollView>{renderContent()}</ScrollView>
+
+          {renderBottomTab()}
+          {renderModalTransferDate()}
+          {renderModalIssuedDate()}
+          {renderModalInvalidDate()}
+          {renderModalBank()}
+          {renderModalListMaterai()}
+          {renderModalError()}
+          {renderModalBankDestination()}
+        </>
+      ) : (
+        <View style={{ flex: 1 }}>
+          <LoadingPage />
+        </View>
+      )}
     </>
   );
 };
