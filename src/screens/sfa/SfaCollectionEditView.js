@@ -326,40 +326,10 @@ const SfaCollectionEditView = props => {
     const isImageChange = dataSfaGetCollectionImage?.data.image !== imageData;
     const isStampNominalChange =
       dataSfaGetCollectionDetail?.data.stamp?.nominal !== dataStamp?.nominal;
-    const isDataCashChange = isAmountChange || isImageChange;
-    const isDataCheckGiroChange =
-      isAmountChange ||
-      isReferenceChange ||
-      isIssuedDateChange ||
-      isDueDateChange ||
-      isBankFromChange ||
-      isStampNominalChange ||
-      isImageChange;
-    const isDataTransferChange =
-      isAmountChange ||
-      isReferenceChange ||
-      isIssuedDateChange ||
-      isBankFromChange ||
-      isBankFromChange ||
-      isStampNominalChange ||
-      isImageChange;
-    const isDataCashComplete = amount && imageData;
-    const isDataCheckGiroComplete =
-      amount &&
-      imageData &&
-      issuedDate &&
-      noReference &&
-      invalidDate &&
-      dataBank;
-    const isDataTransferComplete =
-      amount &&
-      noReference &&
-      dataBank &&
-      dataBankTo &&
-      transferDate &&
-      amount &&
-      imageData;
+
     if (paymentCollectionTypeId === CASH) {
+      const isDataCashChange = isAmountChange || isImageChange;
+      const isDataCashComplete = amount && imageData;
       if (isDataCashComplete && isDataCashChange) {
         setIsSaveDisabled(false);
       } else {
@@ -367,6 +337,22 @@ const SfaCollectionEditView = props => {
       }
     }
     if (paymentCollectionTypeId === CHECK || paymentCollectionTypeId === GIRO) {
+      const isDataCheckGiroChange =
+        isAmountChange ||
+        isReferenceChange ||
+        isIssuedDateChange ||
+        isDueDateChange ||
+        isBankFromChange ||
+        isStampNominalChange ||
+        isImageChange;
+
+      const isDataCheckGiroComplete =
+        amount &&
+        imageData &&
+        issuedDate &&
+        noReference &&
+        invalidDate &&
+        dataBank;
       if (isDataCheckGiroComplete && isDataCheckGiroChange) {
         setIsSaveDisabled(false);
       } else {
@@ -374,6 +360,23 @@ const SfaCollectionEditView = props => {
       }
     }
     if (paymentCollectionTypeId === TRANSFER) {
+      const isDataTransferChange =
+        isAmountChange ||
+        isReferenceChange ||
+        isIssuedDateChange ||
+        isBankFromChange ||
+        isBankFromChange ||
+        isStampNominalChange ||
+        isImageChange;
+
+      const isDataTransferComplete =
+        amount &&
+        noReference &&
+        dataBank &&
+        dataBankTo &&
+        transferDate &&
+        amount &&
+        imageData;
       if (isDataTransferComplete && isDataTransferChange) {
         setIsSaveDisabled(false);
       } else {
