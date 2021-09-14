@@ -444,7 +444,6 @@ export function merchantGetWarehouseSuccess(data){
 export function merchantGetWarehouseFailed(data){
   return { type: types.MERCHANT_GET_WAREHOUSE_FAILED, payload: data}
 }
-
 /**
  * ===========================================
  * GET SURVEY LIST
@@ -508,11 +507,12 @@ export function merchantGetSurveyFailed(data) {
 export function merchantGetSurveyResponseProcess(data) {
   return { type: types.MERCHANT_GET_SURVEY_RESPONSE_PROCESS, payload: data };
 }
-export function merchantGetSurveyResponseSuccess(data) {
+export function merchantGetSurveyResponseSuccess(data, totalScore) {
   if (data.result === 'Ok') {
     return {
       type: types.MERCHANT_GET_SURVEY_RESPONSE_SUCCESS,
-      payload: data.data
+      payload: data.data,
+      totalScore: totalScore
     };
   }
   return { type: types.MERCHANT_GET_SURVEY_RESPONSE_FAILED, payload: data };
@@ -548,6 +548,15 @@ export function merchantSubmitSurveyResponseFailed(data) {
 export function merchantUpdateSurveyResponseProcess(data) {
   return { type: types.MERCHANT_UPDATE_SURVEY_RESPONSE_PROCESS, payload: data };
 }
+/**
+ * ===========================================
+ * SURVEY RESULT
+ * ===========================================
+ */
+ export function getSurveyResult(data){
+  return { type: types.MERCHANT_SURVEY_RESULT, payload: data}
+}
+
 /**
  * ===========================================
  * VALIDATE AREA MAPPING

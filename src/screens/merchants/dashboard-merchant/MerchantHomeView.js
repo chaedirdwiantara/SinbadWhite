@@ -499,6 +499,7 @@ class MerchantHomeView extends Component {
           ) {
             NavigationService.navigate('MerchantSurveyView', {
               readOnly: false
+
             });
           }
         }
@@ -931,7 +932,6 @@ class MerchantHomeView extends Component {
         storeName = navigation.state.params.storeName;
       }
     }
-
     return {
       headerTitle: () => (
         <View>

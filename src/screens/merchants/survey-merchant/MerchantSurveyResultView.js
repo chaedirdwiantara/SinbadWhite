@@ -31,10 +31,10 @@ class MerchantSurveyResultView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      questions: [],
-      unAnswered: [],
       openCollapse: false,
-      activeIndexCollapse: 0
+      activeIndexCollapse: 0,
+      surveyResponse: {},
+      surveyTotalScore: 0
     };
   }
   /**
@@ -44,39 +44,26 @@ class MerchantSurveyResultView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    let newQuestions = [];
-    questions.map(item => {
-      // calculate the total of candidate answer
-      let totalCandidateAnswerMax;
-      if (
-        item.surveyScoreType.code === 'single_score' ||
-        item.surveyScoreType.code === 'cumulative_score'
-      ) {
-        totalCandidateAnswerMax = 1;
-      } else {
-        totalCandidateAnswerMax = item.surveyCandidateAnswer.length;
-      }
-      // add questions to local state
-      newQuestions.push({
-        surveyId: item.surveyId,
-        required: item.required,
-        totalCandidateAnswerMax,
-        value: []
-      });
-    });
-    this.setState({ questions: newQuestions });
-
-    /**SET NAVIGATION FUNCTION */
-    this.props.navigation.setParams({
-      submitQuestionnaire: this.submitQuestionnaire
-    });
+    let surveyResponseId = 109;
+    this.props.merchantGetSurveyResponseProcess(surveyResponseId);
   }
-
-  /**
-   * ========================
-   * HEADER MODIFY
-   * ========================
-   */
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    /**CHECK SURVEY RESPONSE */
+    if (
+      prevProps.merchant.dataSurveyResponse !==
+        this.props.merchant.dataSurveyResponse &&
+      this.props.merchant.dataSurveyResponse.success
+    ) {
+      this.setState({
+        surveyResponse:
+          this?.props?.merchant?.dataSurveyResponse?.payload ?? null
+      });
+      this.setState({
+        surveyTotalScore: this?.props?.merchant?.dataTotalScoreSurvey ?? null
+      });
+    }
+  }
 
   /**
    * =======================
@@ -97,9 +84,12 @@ class MerchantSurveyResultView extends Component {
           }
         ]}
       >
-        <Text style={Fonts.type4}>Survey Exclusive Danone September</Text>
+        <Text style={Fonts.type4}>
+          {' '}
+          {this.state.surveyResponse?.survey?.name ?? '-'}
+        </Text>
         <Text style={[Fonts.type23, { paddingTop: 4 }]}>
-          Cek Store Performance
+          {this.state.surveyResponse?.survey?.description ?? '-'}
         </Text>
         <View style={{ flexDirection: 'row', paddingVertical: 12 }}>
           <View
@@ -115,7 +105,11 @@ class MerchantSurveyResultView extends Component {
               size={14}
               style={{ marginRight: 6 }}
             />
-            <Text style={Fonts.type23}>Exclusive Danone</Text>
+            <Text style={Fonts.type23}>
+              {this.state.surveyResponse?.survey?.invoiceGroups.length > 0
+                ? this.state.surveyResponse?.survey?.invoiceGroups.join(',')
+                : ' - tidak ada invoice'}
+            </Text>
           </View>
           <View
             style={{
@@ -129,7 +123,13 @@ class MerchantSurveyResultView extends Component {
               size={14}
               style={{ marginRight: 6 }}
             />
-            <Text style={Fonts.type23}>SGM (+1 Other)</Text>
+            <Text style={Fonts.type23}>
+              {this.state.surveyResponse?.survey?.brands.length > 0
+                ? `${this.state.surveyResponse?.survey?.brands[0] ??
+                    '-'}(+${this.state.surveyResponse?.survey?.brands.length -
+                    1})`
+                : '- tidak ada brand'}
+            </Text>
           </View>
         </View>
       </View>
@@ -139,7 +139,7 @@ class MerchantSurveyResultView extends Component {
   renderCollapse() {
     return (
       <FlatList
-        data={questions}
+        data={this.state.surveyResponse?.survey?.questions ?? []}
         keyExtractor={(data, index) => index.toString()}
         renderItem={({ item, index }) => (
           <View style={{ width: '80%' }}>
@@ -191,7 +191,7 @@ class MerchantSurveyResultView extends Component {
     return (
       <FlatList
         style={{ width: '20%' }}
-        data={questions}
+        data={this.state.surveyResponse?.survey?.questions ?? []}
         keyExtractor={(data, index) => index.toString()}
         renderItem={({ item, index }) => (
           <View
@@ -207,7 +207,7 @@ class MerchantSurveyResultView extends Component {
               marginBottom: '25%'
             }}
           >
-            <Text>{item?.totalScore ?? '-'}</Text>
+            <Text>{item?.questionResponseScore?.result ?? '-'}</Text>
           </View>
         )}
       />
@@ -251,11 +251,15 @@ class MerchantSurveyResultView extends Component {
         >
           <View style={{ alignItems: 'center' }}>
             <Text style={Fonts.type23}>Responden</Text>
-            <Text style={[Fonts.type4, { paddingTop: 4 }]}>Laris Manis</Text>
+            <Text style={[Fonts.type4, { paddingTop: 4 }]}>
+              {this.props.merchant.dataSurveyResult.storeName ?? '-'}
+            </Text>
           </View>
           <View style={{ alignItems: 'center' }}>
             <Text style={Fonts.type23}>Total Skor</Text>
-            <Text style={[Fonts.type4, { paddingTop: 4 }]}>80</Text>
+            <Text style={[Fonts.type4, { paddingTop: 4 }]}>
+              {this.state.surveyTotalScore ?? '0'}
+            </Text>
           </View>
         </View>
         <View

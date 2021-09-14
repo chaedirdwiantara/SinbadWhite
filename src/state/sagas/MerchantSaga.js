@@ -239,10 +239,15 @@ function* getSurvey(actions) {
 /** GET SURVEY RESPONSE */
 function* getSurveyResponse(actions) {
   try {
-    const response = yield call(() => {
-      return MerchantMethod.getSurveyResponse(actions.payload);
+    const response = yield call( () => {
+      // return MerchantMethod.getSurveyResponse(actions.payload);
+      //test
+      return MerchantMethod.getSurveyResponseTest(actions.payload);
     });
-    yield put(ActionCreators.merchantGetSurveyResponseSuccess(response));
+    let arrResult = response.data.payload.survey.questions.map(data => parseFloat(data.questionResponseScore.result))
+    let totalScore = arrResult.reduce((a, b) => a + b, 0)
+    
+    yield put(ActionCreators.merchantGetSurveyResponseSuccess(response, totalScore));
   } catch (error) {
     yield put(ActionCreators.merchantGetSurveyResponseFailed(error));
   }
@@ -263,6 +268,18 @@ function* updateSurveyResponse(actions) {
   try {
     const response = yield call(() => {
       return MerchantMethod.updateSurveyResponse(actions.payload);
+    });
+    yield put(ActionCreators.merchantSubmitSurveyResponseSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantSubmitSurveyResponseFailed(error));
+  }
+}
+
+/** SURVEY  RESULT TEST */
+function* getSurveyResultResponse(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.submitSurveyResponse(actions.payload);
     });
     yield put(ActionCreators.merchantSubmitSurveyResponseSuccess(response));
   } catch (error) {
