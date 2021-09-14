@@ -234,24 +234,25 @@ const CardBody = props => {
       {valuePosition === 'bottom' ? (
         <View style={{ flexDirection: 'row' }}>{cardBodyValue(props)}</View>
       ) : null}
-
-      {props?.loadingImage ? (
-        <View
-          style={{
-            ...props?.imageSourceStyle,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderColor: '#ffffff'
-          }}
-        >
+      <View
+        style={{
+          ...props?.imageSourceStyle,
+          alignItems: 'center',
+          justifyContent: 'center',
+          alignContent:'center',
+          alignSelf:'center',
+          borderColor: '#ffffff'
+        }}
+      >
+        {props?.loadingImage ? (
           <Image
             source={require('../../../assets/gif/loading/load_triagle.gif')}
             style={{ height: 50, width: 50 }}
           />
-        </View>
-      ) : (
-        renderImage(props)
-      )}
+        ) : (
+          renderImage(props)
+        )}
+      </View>
     </>
   );
 };

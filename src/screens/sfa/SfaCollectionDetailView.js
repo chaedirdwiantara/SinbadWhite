@@ -477,10 +477,12 @@ const styles = StyleSheet.create({
     marginBottom: 16
   },
   images: {
-    width: width - 65,
-    height: 138,
+    width: 328,
+    height: 328,
     borderWidth: 1,
-    backgroundColor: 'white'
+    marginHorizontal: 3,
+    backgroundColor: 'white',
+    aspectRatio: 2 / 3
   },
   styleCardView: {
     flexDirection: 'row',
