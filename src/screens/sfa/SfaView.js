@@ -325,7 +325,7 @@ const SfaView = props => {
                   Total Penagihan
                 </Text>
                 <Text style={[Fonts.type47, styles.textRight]}>
-                  Total Sisa Tagihan
+                  Total Sisa Penagihan
                 </Text>
               </View>
               <View>
