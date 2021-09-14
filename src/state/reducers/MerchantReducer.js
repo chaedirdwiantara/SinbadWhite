@@ -22,6 +22,8 @@ const INITIAL_STATE = {
   loadingGetStoreStatus: false,
   loadingGetWarehouse: false,
   loadingGetListSurvey: false,
+  refreshGetSurveyList: false,
+  loadingLoadMoreSurveyList: false,
   loadingGetSurvey: false,
   loadingSubmitSurvey: false,
   loadingSubmitQuestionnaire: false,
@@ -134,6 +136,8 @@ const INITIAL_STATE = {
     },
     success: null
   },
+  totalDataGetSurveyList: 0,
+  pageGetSurveyList: 0,
   newSurveyResponse: false,
   dataSurvey: {
     id: null,
@@ -922,6 +926,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetSurveyList: false,
+      refreshGetSurveyList: false,
       surveyList: action.payload
     };
   },
@@ -938,7 +943,23 @@ export const merchant = createReducer(INITIAL_STATE, {
       surveyList: INITIAL_STATE.surveyList
     };
   },
-
+  [types.MERCHANT_GET_SURVEY_LIST_REFRESH](state, action) {
+    return {
+      ...state,
+      refreshGetSurveyList: true,
+      loadingGetSurveyList: true,
+      pageGetSurveyList: 0,
+      totalDataGetSurveyList: 0,
+      surveyList: INITIAL_STATE.surveyList
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_LIST_LOADMORE](state, action) {
+    return {
+      ...state,
+      loadingLoadMoreSurveyList: true,
+      pageGetSurveyList: action.payload
+    };
+  },
   /**
    * ============================
    * GET SURVEY

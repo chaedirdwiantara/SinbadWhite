@@ -6,36 +6,38 @@ import {
   TouchableOpacity,
   FlatList,
   SafeAreaView,
+  Image,
   Text
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
   connect,
+  Modal,
   MaterialIcon
 } from '../../../library/thirdPartyPackage';
 import {
   LoadingPage,
   StatusBarWhite,
-  InputType7,
-  RadioButton,
-  ModalConfirmation,
-  CheckBox
+  ModalConfirmationType5,
+  ModalBottomErrorRespons
 } from '../../../library/component';
 import { Fonts } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
-import _ from 'lodash';
 import { questions } from './mockData';
 import NavigationService from '../../../navigation/NavigationService';
+import QuestionListDataView from './QuestionListDataView';
 
 class MerchantQuestionnaireView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalConfirmation: false,
+      modalConfirmationFinish: false,
+      modalConfirmationSave: false,
       review: false,
       questions: [],
-      unAnswered: []
+      unAnswered: [],
+      openModalErrorGlobal: false
     };
   }
   /**
@@ -71,92 +73,46 @@ class MerchantQuestionnaireView extends Component {
     this.setNavigationParams();
   }
 
-  /**SET NAVIGATION PARAMS */
+  componentDidUpdate(prevProps) {
+    // if success with status 'completed' navigate to success screen
+    // if success with status 'inProgress' back to survey list
+    // if failed show toast
+    if (this.props.merchant.errorSubmitSurvey) {
+      if (
+        prevProps.merchant.errorSubmitSurvey !==
+        this.props.merchant.errorSubmitSurvey
+      ) {
+        this.setState({ openModalErrorGlobal: true });
+      }
+    }
+  }
+
+  /**
+   *  === SET NAVIGATION PARAMS ===
+   * @returns {callback} set param (function & state) to navigation.
+   */
   setNavigationParams = () => {
     this.props.navigation.setParams({
       checkRequiredAnswers: this.checkRequiredAnswers,
       submitQuestionnaire: this.submitQuestionnaire,
+      setModalConfirmationSave: this.setModalConfirmationSave,
       review: this.state.review
     });
   };
 
-  /** === UPDATE/SELECT ANSWER === */
-  selectAnswer = (candidateAnswerId, survey) => {
-    let newQuestions = this.state.questions;
-    // find the index of question
-    const index = newQuestions.findIndex(
-      item => item.surveyId === survey.surveyId
-    );
-    if (survey.category === 'single_answer') {
-      newQuestions[index].value = [
-        { candidateAnswerId, inputValue: 'checked' }
-      ];
-    } else if (survey.category === 'multiple_answer') {
-      // check the answer already selected or not (checkbox)
-      const alreadySelected = newQuestions[index].value.find(
-        item => item.candidateAnswerId === candidateAnswerId
-      );
-      // if alreadySelected, delete the value from the answer
-      if (alreadySelected) {
-        newQuestions[index].value = newQuestions[index].value.filter(
-          answer => answer.candidateAnswerId !== candidateAnswerId
-        );
-      } else {
-        // if not, add the value to the answer
-        newQuestions[index].value.push({
-          candidateAnswerId,
-          inputValue: 'checked'
-        });
-      }
-    } else if (survey.category === 'vc_basic') {
-      // check the answer already inputed or not (input)
-      const alreadyInputed = newQuestions[index].value.findIndex(
-        item => item.candidateAnswerId === candidateAnswerId
-      );
-      // if alreadyInputed, change the value of the answer
-      if (alreadyInputed > -1) {
-        newQuestions[index].value[alreadyInputed] = {
-          candidateAnswerId,
-          inputValue: survey.inputValue
-        };
-      } else {
-        // if not, add the value to the answer
-        newQuestions[index].value.push({
-          candidateAnswerId,
-          inputValue: survey.inputValue
-        });
-      }
-    }
-    // update the answer of the question
-    this.setState({ questions: newQuestions });
-  };
-
-  /** === CHECK SELECTED ANSWER (for radio button & check box) === */
-  checkSelectedAnswers = (survey, candidateAnswerId) => {
-    if (this.state.questions.length > 0) {
-      // find the question
-      const value = this.state.questions.find(
-        item => item.surveyId === survey.surveyId
-      ).value;
-      // check the category & the value
-      if (survey.category === 'single_answer') {
-        if (value[0]) return value[0].candidateAnswerId;
-      } else if (survey.category === 'multiple_answer') {
-        if (value.length > 0) {
-          return value.find(
-            item => item.candidateAnswerId === candidateAnswerId
-          );
-        }
-      }
-    }
-  };
-
-  /** === CHECK UNANSWERED QUESTION (after click selesai) === */
-  checkUnAnsweredQuestion = id => {
+  /**
+   *  === CHECK UNANSWERED QUESTION  ===
+   * @param {number} id survey id
+   * @returns {callback} object/undefined unanswered "required" question.
+   */
+  checkUnAnsweredRequiredQuestion = id => {
     return this.state.unAnswered.find(item => item.surveyId === id);
   };
 
-  /** === CHECK REQUIRED ANSWER === */
+  /**
+   *  === CHECK REQUIRED ANSWER  ===
+   * @returns {callback} array of unanswered "required" question or show modal confirmation finish taking survey.
+   */
   checkRequiredAnswers = () => {
     // filter the required answer
     const requiredAnswer = this.state.questions.filter(item => item.required);
@@ -186,14 +142,16 @@ class MerchantQuestionnaireView extends Component {
     if (unAnswered.length > 0) {
       return this.setState({ unAnswered });
     }
-    this.setState({ modalConfirmation: true, unAnswered: [] });
+    return this.setState({ modalConfirmationFinish: true, unAnswered: [] });
   };
 
-  /** === SUBMIT QUESTIONNAIRE === */
+  /**
+   *  === SUBMIT QUESTIONNAIRE  ===
+   * @param {string} status status of response ("completed" or "inProgress")
+   * @returns {callback} array of unanswered "required" question or show modal confirmation finish taking survey.
+   */
   submitQuestionnaire = status => {
     // CHECK UNREQUIRED QUESTION
-    // value === total candidate answers
-    // inputValue !== 0
     // if all required question already inputed (collect the answer)
     let answers = [];
     this.state.questions.map(item => {
@@ -220,68 +178,42 @@ class MerchantQuestionnaireView extends Component {
     // send request
     const payload = {
       surveyId: this.props.navigation.state.params.surveyId,
-      surveyStepId: 1,
       storeId: this.props.merchant.selectedMerchant.storeId,
       status,
-      answers
+      photos: [],
+      questions: [
+        {
+          id: 1,
+          scoreType: 1,
+          response: answers
+        }
+      ]
     };
     console.log('payload', payload);
   };
-  /** === CHECK RENDER PER CATEGORY & TYPE === */
-  renderPerCategoryAndType = item => {
-    const {
-      surveyQuestionCategory,
-      surveyScoreType,
-      surveyCandidateAnswer,
-      surveyId
-    } = item;
-    switch (surveyQuestionCategory.code) {
-      case 'single_answer':
-        if (surveyScoreType.code === 'single_score') {
-          return this.renderSingleAnswer(
-            _.orderBy(surveyCandidateAnswer, ['order']),
-            surveyId
-          );
-        }
-        break;
-      case 'multiple_answer':
-        if (surveyScoreType.code === 'single_score') {
-          return surveyCandidateAnswer.map(candidate =>
-            this.renderMultiSingleAnswer(candidate, surveyId)
-          );
-        } else if (surveyScoreType.code === 'cumulative_score') {
-          return surveyCandidateAnswer.map(candidate =>
-            this.renderMultiCumulativeAnswer(candidate, surveyId)
-          );
-        }
-        break;
-      case 'vc_basic':
-        if (surveyScoreType.code === 'range_score') {
-          return surveyCandidateAnswer.map(candidate =>
-            this.renderBasicRangeAnswer(candidate, surveyId)
-          );
-        }
-        break;
-      case 'vc_compare_group':
-        if (surveyScoreType.code === 'range_score') {
-          return this.renderCompareGroupRangeAnswer(
-            surveyCandidateAnswer,
-            surveyId
-          );
-        }
-        break;
-      default:
-        break;
-    }
+  /**
+   *  === SET MODAL CONFIRMATION SAVE  ===
+   * @param {boolean} value state of the modal confirmation save.
+   * @returns {callback} show or hide the modal confirmation save. (when click goBack)
+   */
+  setModalConfirmationSave = value => {
+    this.setState({ modalConfirmationSave: value });
   };
   /**
-   * ========================
-   * HEADER MODIFY
-   * ========================
+   * =======================
+   * RENDER
+   * =======================
+   */
+  /**
+   * === HEADER MODIFY  ===
+   * @returns {ReactElement} render finish button, goBack, and send button.
    */
   static navigationOptions = ({ navigation }) => {
     const checkRequiredAnswers = navigation.getParam('checkRequiredAnswers');
     const submitQuestionnaire = navigation.getParam('submitQuestionnaire');
+    const setModalConfirmationSave = navigation.getParam(
+      'setModalConfirmationSave'
+    );
     let review;
     if (navigation.state.params) {
       review = navigation.state.params.review;
@@ -324,232 +256,29 @@ class MerchantQuestionnaireView extends Component {
     };
 
     return {
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() =>
+            setModalConfirmationSave ? setModalConfirmationSave(true) : null
+          }
+        >
+          <MaterialIcon
+            name="arrow-back"
+            color={Color.fontBlack80}
+            size={24}
+            style={{ marginLeft: 16 }}
+          />
+        </TouchableOpacity>
+      ),
       headerRight: () => (review ? sendButton() : finishButton())
     };
   };
 
   /**
-   * =======================
-   * RENDER
-   * =======================
+   * === RENDER HEADER QUESTIONNAIRE  ===
+   * @returns {ReactElement} render header questionnaire (title, desc, etc).
    */
-  /** === RENDER FOR SINGLE ANSWER x SINGLE SCORE === */
-  renderSingleAnswer = (candidateAnswer, surveyId) => {
-    return (
-      <RadioButton
-        data={candidateAnswer}
-        disabled={this.state.review}
-        onSelect={item =>
-          this.selectAnswer(item.id, { surveyId, category: 'single_answer' })
-        }
-        selected={this.checkSelectedAnswers({
-          surveyId,
-          category: 'single_answer'
-        })}
-      />
-    );
-  };
-
-  /** === RENDER FOR MULTIPLE ANSWER x SINGLE SCORE === */
-  renderMultiSingleAnswer = (item, surveyId) => {
-    return (
-      <CheckBox
-        key={'multi-single-ans-' + item.id}
-        disabled={this.state.review}
-        onSelect={() =>
-          this.selectAnswer(item.id, {
-            surveyId,
-            category: 'multiple_answer'
-          })
-        }
-        selected={this.checkSelectedAnswers(
-          {
-            surveyId,
-            category: 'multiple_answer'
-          },
-          item.id
-        )}
-        label={item.title}
-      />
-    );
-  };
-
-  /** === RENDER FOR MULTIPLE ANSWER x CUMULATIVE SCORE === */
-  renderMultiCumulativeAnswer = (item, surveyId) => {
-    return (
-      <CheckBox
-        key={'multi-cum-ans-' + item.id}
-        disabled={this.state.review}
-        onSelect={() =>
-          this.selectAnswer(item.id, {
-            surveyId,
-            category: 'multiple_answer'
-          })
-        }
-        selected={this.checkSelectedAnswers(
-          {
-            surveyId,
-            category: 'multiple_answer'
-          },
-          item.id
-        )}
-        label={item.title}
-      />
-    );
-  };
-
-  /** === RENDER FOR VC BASIC x RANGE SCORE === */
-  renderBasicRangeAnswer = (item, surveyId) => {
-    return (
-      <View key={'basic-range-ans-' + item.id}>
-        <View style={styles.boxContentItem}>
-          <Text style={Fonts.type23}>{item.title}</Text>
-          <View style={{ width: '40%' }}>
-            <InputType7
-              editable={!this.state.review}
-              placeholder="Input disini"
-              max={100}
-              min={1}
-              keyboardType="numeric"
-              text={inputValue =>
-                this.selectAnswer(item.id, {
-                  surveyId,
-                  category: 'vc_basic',
-                  inputValue
-                })
-              }
-            />
-          </View>
-        </View>
-      </View>
-    );
-  };
-
-  /** === RENDER FOR VC GROUP x RANGE SCORE === */
-  renderCompareGroupRangeAnswer = (item, surveyId) => {
-    return (
-      <View>
-        {_.orderBy(item, ['order'])
-          .filter(candidate => candidate.isBaseValue)
-          .map(candidate => (
-            <View key={'base-' + candidate.id} style={styles.boxContentItem}>
-              <Text style={Fonts.type23}>{candidate.title}</Text>
-              <View style={{ width: '40%' }}>
-                <InputType7
-                  editable={!this.state.review}
-                  placeholder="Input disini"
-                  keyboardType="numeric"
-                  max={100}
-                  min={1}
-                  text={inputValue =>
-                    this.selectAnswer(item.id, {
-                      surveyId,
-                      category: 'vc_basic',
-                      inputValue
-                    })
-                  }
-                />
-              </View>
-            </View>
-          ))}
-        <View style={styles.notBaseContainer}>
-          <Text style={Fonts.type83}>Bandingkan dengan:</Text>
-          {_.orderBy(item, ['order'])
-            .filter(candidate => !candidate.isBaseValue)
-            .map(candidate => (
-              <View
-                key={'not-base-' + candidate.id}
-                style={styles.boxContentItem}
-              >
-                <Text style={Fonts.type23}>{candidate.title}</Text>
-                <View style={{ width: '40%' }}>
-                  <InputType7
-                    editable={!this.state.review}
-                    placeholder="Input disini"
-                    keyboardType="numeric"
-                    text={inputValue =>
-                      this.selectAnswer(candidate.id, {
-                        surveyId,
-                        category: 'vc_basic',
-                        inputValue
-                      })
-                    }
-                  />
-                </View>
-              </View>
-            ))}
-        </View>
-      </View>
-    );
-  };
-
-  /** === RENDER QUESTION === */
-  renderUnAnsweredQuestion = () => {
-    return (
-      <View style={styles.unAnsweredQuestionContainer}>
-        <MaterialIcon
-          name="info"
-          color={Color.fontYellow50}
-          size={16}
-          style={{ marginRight: 6 }}
-        />
-        <Text style={Fonts.type109p}>Pertanyaan ini belum dilengkapi</Text>
-      </View>
-    );
-  };
-
-  /** === RENDER QUESTION === */
-  renderQuestion(item, index) {
-    return (
-      <View style={[styles.menuContainer]}>
-        <View
-          style={[
-            styles.card,
-            {
-              borderColor: this.checkUnAnsweredQuestion(item.surveyId)
-                ? Color.fontBlack50
-                : Color.fontBlack10
-            }
-          ]}
-        >
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-          >
-            <Text style={Fonts.type117p}>
-              Pertanyaan {index + 1}
-              {item.required && (
-                <Text style={{ color: Color.mainColor }}>{' *'}</Text>
-              )}
-            </Text>
-            {this.state.review && (
-              <TouchableOpacity
-                onPress={() =>
-                  this.setState({ review: false }, () =>
-                    this.setNavigationParams()
-                  )
-                }
-              >
-                <MaterialIcon name="edit" color={Color.fontBlack60} size={14} />
-              </TouchableOpacity>
-            )}
-          </View>
-          <View style={{ height: 16 }} />
-          <Text style={Fonts.type8}>{item.title}</Text>
-          {item.surveyQuestionCategory.code === 'multiple_answer' && (
-            <Text style={Fonts.type67}>
-              (Dapat pilih lebih dari satu jawaban)
-            </Text>
-          )}
-          {this.renderPerCategoryAndType(item)}
-          {this.checkUnAnsweredQuestion(item.surveyId) &&
-            this.renderUnAnsweredQuestion()}
-        </View>
-      </View>
-    );
-  }
-
-  /** === RENDER HEADER === */
-  renderHeader() {
+  renderHeaderQuestionnaire() {
     return (
       <View style={styles.headerContainer}>
         <Text style={Fonts.type4}>Survey Exclusive Danone September</Text>
@@ -594,20 +323,43 @@ class MerchantQuestionnaireView extends Component {
       </View>
     );
   }
-  /** === RENDER CONTENT ITEM === */
+  /**
+   * === RENDER QUESTION LIST  ===
+   * @returns {ReactElement} render list of question.
+   */
+  renderQuestionList() {
+    return (
+      <QuestionListDataView
+        questions={this.state.questions}
+        review={this.state.review}
+        updateQuestion={newQuestions =>
+          this.setState({ questions: newQuestions })
+        }
+        onEdit={() =>
+          this.setState({ review: false }, () => this.setNavigationParams())
+        }
+        checkUnAnsweredRequiredQuestion={value =>
+          this.checkUnAnsweredRequiredQuestion(value)
+        }
+      />
+    );
+  }
+  /**
+   * === RENDER CONTENT ITEM ===
+   * @returns {ReactElement} render item of content (header & list of question).
+   */
   renderContentItem() {
     return (
       <View style={{ padding: 16 }}>
-        {this.renderHeader()}
-        <FlatList
-          data={questions}
-          keyExtractor={(data, index) => index.toString()}
-          renderItem={({ item, index }) => this.renderQuestion(item, index)}
-        />
+        {this.renderHeaderQuestionnaire()}
+        {this.renderQuestionList()}
       </View>
     );
   }
-  /** === RENDER CONTENT === */
+  /**
+   * === RENDER CONTENT ===
+   * @returns {ReactElement} render content.
+   */
   renderContent() {
     return (
       <View>
@@ -620,26 +372,85 @@ class MerchantQuestionnaireView extends Component {
       </View>
     );
   }
-  /** === RENDER MODAL FINISH QUESTIONNAIRE === */
+  /**
+   * === RENDER MODAL FINISH QUESTIONNAIRE ===
+   * @returns {ReactElement} modal after click finish button.
+   */
   renderModalFinish() {
     return (
-      <ModalConfirmation
+      <ModalConfirmationType5
         statusBarWhite
         title={'Selesai mengisi survei?'}
-        open={this.state.modalConfirmation}
+        open={this.state.modalConfirmationFinish}
         content={'Pastikan jawaban yang Anda pilih sudah sesuai.'}
         okText={'Selesai'}
         cancelText={'Kembali'}
         ok={() => {
-          this.setState({ modalConfirmation: false, review: true }, () =>
+          this.setState({ modalConfirmationFinish: false, review: true }, () =>
             this.setNavigationParams()
           );
         }}
-        cancel={() => this.setState({ modalConfirmation: false })}
+        cancel={() => this.setState({ modalConfirmationFinish: false })}
       />
     );
   }
-  /** === RENDER MAIN === */
+  /**
+   * === RENDER MODAL SAVE ANSWER QUESTIONNAIRE ===
+   * @returns {ReactElement} modal after click goback.
+   */
+  renderModalSaveAnswer() {
+    return (
+      <ModalConfirmationType5
+        statusBarWhite
+        title={'Keluar dari survei?'}
+        open={this.state.modalConfirmationSave}
+        type={'okeNotRed'}
+        content={'Jawaban yang sudah dimasukkan akan tetap tersimpan.'}
+        okText={'Keluar'}
+        cancelText={'Lanjutkan'}
+        ok={() => this.submitQuestionnaire('inProgress')}
+        cancel={() => this.setState({ modalConfirmationSave: false })}
+      />
+    );
+  }
+  /**
+   * === RENDER MODAL LOADING ===
+   * @returns {ReactElement} modal after submit button (send request).
+   */
+  renderModalLoading() {
+    return (
+      <Modal isVisible={this.props.merchant.loadingSubmitSurvey}>
+        <View style={{ alignItems: 'center' }}>
+          <Image
+            source={require('../../../assets/gif/loading/load_triagle.gif')}
+            style={{ height: 80, width: 80 }}
+          />
+        </View>
+      </Modal>
+    );
+  }
+  /**
+   *  === RENDER MODAL ERROR RESPONSE  ===
+   * @returns {ReactElement} render modal if error from be
+   * @memberof renderModalError
+   */
+  renderModalErrorResponse() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={() =>
+          this.setState({ openModalErrorGlobal: false }, () =>
+            this.submitQuestionnaire()
+          )
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** ===================== */
+  /** === MAIN === */
   render() {
     return (
       <SafeAreaView>
@@ -653,6 +464,9 @@ class MerchantQuestionnaireView extends Component {
         )}
         {/* MODAL */}
         {this.renderModalFinish()}
+        {this.renderModalSaveAnswer()}
+        {this.renderModalLoading()}
+        {this.renderModalErrorResponse()}
       </SafeAreaView>
     );
   }
@@ -677,32 +491,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20
-  },
-  /** for content */
-  menuContainer: {
-    paddingTop: 11,
-    paddingBottom: 5
-  },
-  card: {
-    borderWidth: 1,
-    borderRadius: 4,
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    backgroundColor: Color.backgroundWhite
-  },
-  boxContentItem: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Color.backgroundWhite,
-    paddingTop: 12
-  },
-  notBaseContainer: {
-    marginTop: 12,
-    borderWidth: 1,
-    borderColor: Color.fontBlack10,
-    borderRadius: 4,
-    padding: 12
   },
   finishButton: {
     marginRight: 16,
@@ -736,7 +524,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 06092021
  * updatedBy: dyah
- * updatedDate: 09092021
+ * updatedDate: 13092021
  * updatedFunction:
- * -> update ui take survey (questionnaire).
+ * -> update take survey code (separate the question list)
  */
