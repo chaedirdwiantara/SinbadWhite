@@ -485,7 +485,7 @@ class MerchantHomeView extends Component {
             item => item.activityName === 'toko_survey'
           )
           const {checkOut} = this.state.privileges
-          if (haveSurvey || surveyHasDone || checkOut?.status) {
+          if ((haveSurvey || surveyHasDone) && checkOut?.status) {
             this.setState({ openModalCheckout: true });
           }
         }
@@ -1560,7 +1560,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 08092021
+ * updatedDate: 13092021
  * updatedFunction:
- * -> customize survei tasklist.
+ * -> fix the validation when checking out. (must completed the survey)
  */

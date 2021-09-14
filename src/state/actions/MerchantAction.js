@@ -450,9 +450,11 @@ export function merchantGetWarehouseFailed(data){
  * GET SURVEY LIST
  * ===========================================
  */
+/** === SURVEY LIST GET PROCESS ==== */
 export function merchantGetSurveyListProcess(data) {
   return { type: types.MERCHANT_GET_SURVEY_LIST_PROCESS, payload: data };
 }
+/** === SURVEY LIST GET SUCCESS ==== */
 export function merchantGetSurveyListSuccess(data) {
   if (data.result === 'Ok') {
     return {
@@ -462,11 +464,21 @@ export function merchantGetSurveyListSuccess(data) {
   }
   return { type: types.MERCHANT_GET_SURVEY_LIST_FAILED, payload: data };
 }
+/** === SURVEY LIST GET FAILED ==== */
 export function merchantGetSurveyListFailed(data) {
   return { type: types.MERCHANT_GET_SURVEY_LIST_FAILED, payload: data };
 }
+/** === RESET SURVEY LIST ==== */
 export function merchantGetSurveyListReset(data) {
   return { type: types.MERCHANT_GET_SURVEY_LIST_RESET, payload: data };
+}
+/** === REFRESH SURVEY LIST ==== */
+export function merchantGetSurveyListRefresh(data) {
+  return { type: types.MERCHANT_GET_SURVEY_LIST_REFRESH, payload: data };
+}
+/** === LOAD MORE SURVEY LIST ==== */
+export function MerchantGetSurveyListLoadMore(data) {
+  return { type: types.MERCHANT_GET_SURVEY_LIST_LOADMORE, payload: data };
 }
 /**
  * ===========================================

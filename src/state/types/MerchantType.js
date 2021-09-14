@@ -115,6 +115,8 @@ export const MERCHANT_GET_SURVEY_LIST_PROCESS = 'MerchantGetSurveyListProcess';
 export const MERCHANT_GET_SURVEY_LIST_SUCCESS = 'MerchantGetSurveyListSuccess';
 export const MERCHANT_GET_SURVEY_LIST_FAILED = 'MerchantGetSurveyListFailed';
 export const MERCHANT_GET_SURVEY_LIST_RESET = 'MerchantGetSurveyListReset';
+export const MERCHANT_GET_SURVEY_LIST_REFRESH = 'MerchantGetSurveyListRefresh';
+export const MERCHANT_GET_SURVEY_LIST_LOADMORE = 'MerchantGetSurveyListLoadMore';
 /** MERCHANT GET SURVEY RESPONSE*/
 export const MERCHANT_GET_SURVEY_PROCESS = 'MerchantGetSurveyProcess';
 export const MERCHANT_GET_SURVEY_SUCCESS = 'MerchantGetSurveySuccess';
