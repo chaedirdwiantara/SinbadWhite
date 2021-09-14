@@ -148,15 +148,22 @@ function getSurveyList(params) {
     method: 'GET'
   });
 }
-/** GET SURVEY RESPONSE */
-function getSurveyResponse(id) {
+/** GET SURVEY BY ID */
+function getSurvey(id) {
   return ApiRest({
-    path: `supplier/service-survey/v1/survey/response?id=${id}`,
+    path: `supplier/service-survey/v2/surveys/${id}`,
     method: 'GET'
   });
 }
-/** SUBMIT SURVEY */
-function submitSurvey(params) {
+/** GET SURVEY RESPONSE */
+function getSurveyResponse(id) {
+  return ApiRest({
+    path: `supplier/service-survey/v1/survey/response/${id}`,
+    method: 'GET'
+  });
+}
+/** SUBMIT SURVEY RESPONSE */
+function submitSurveyResponse(params) {
   return ApiRest({
     path: 'supplier/service-survey/v1/survey/response',
     method: 'POST',
@@ -164,18 +171,10 @@ function submitSurvey(params) {
   });
 }
 /** UPDATE SURVEY RESPONSE */
-function updateSurvey({ params, surveyResponseId }) {
+function updateSurveyResponse({ params, surveyResponseId }) {
   return ApiRest({
     path: `supplier/service-survey/v1/survey/response/${surveyResponseId}`,
     method: 'PATCH',
-    params
-  });
-}
-/** SUBMIT QUESTIONNAIRE */
-function submitQuestionnaire(params) {
-  return ApiRest({
-    path: 'supplier/service-survey/v1/survey/questionnaire_response',
-    method: 'POST',
     params
   });
 }
@@ -223,10 +222,10 @@ export const MerchantMethod = {
   getStoreStatus,
   getWarehouse,
   getSurveyList,
+  getSurvey,
   getSurveyResponse,
-  submitSurvey,
-  updateSurvey,
-  submitQuestionnaire,
+  submitSurveyResponse,
+  updateSurveyResponse,
   validateAreaMapping,
   getSalesSegmentation
 };
@@ -238,7 +237,8 @@ export const MerchantMethod = {
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 09092021
+ * updatedDate: 14092021
  * updatedFunction:
- * -> add new method. (submitQuestionnaire)
+ * -> add new method, get survey by id. (getSurvey)
+ * -> change method name (submitSurveyResponse, updateSurveyResponse)
  */

@@ -25,9 +25,8 @@ const INITIAL_STATE = {
   refreshGetSurveyList: false,
   loadingLoadMoreSurveyList: false,
   loadingGetSurvey: false,
-  loadingSubmitSurvey: false,
-  loadingSubmitQuestionnaire: false,
-  loadingGetQuestionnaire: false,
+  loadingGetSurveyResponse: false,
+  loadingSubmitSurveyResponse: false,
   loadingValidateAreaMapping: false,
   loadingGetSalesSegmentation: false,
   /** data */
@@ -138,13 +137,14 @@ const INITIAL_STATE = {
   },
   totalDataGetSurveyList: 0,
   pageGetSurveyList: 0,
+  dataGetSurvey: null,
   newSurveyResponse: false,
-  dataSurvey: {
+  dataSurveyResponse: {
     id: null,
     status: '',
     responsePhoto: []
   },
-  dataSubmitSurvey: {
+  dataSubmitSurveyResponse: {
     surveyId: null,
     surveyQuestionId: null,
     storeId: null,
@@ -152,15 +152,7 @@ const INITIAL_STATE = {
     status: '',
     photos: []
   },
-  dataSubmitQuestionnaire: {
-    surveyId: null,
-    surveyQuestionId: null,
-    storeId: null,
-    storeName: '',
-    status: '',
-    photos: []
-  },
-  dateGetQuestionnaire: [],
+
   dataValidateAreaMapping: null,
   dataSalesSegmentation: null,
   /** error */
@@ -182,9 +174,8 @@ const INITIAL_STATE = {
   errorGetWarehouse: null,
   errorGetSurveyList: null,
   errorGetSurvey: null,
-  errorSubmitSurvey: null,
-  errorSubmitQuestionnaire: null,
-  errorGetQuestionnaire: null,
+  errorGetSurveyResponse: null,
+  errorSubmitSurveyResponse: null,
   errorValidateAreaMapping: null,
   errorGetSalesSegmentation: null
 };
@@ -962,19 +953,14 @@ export const merchant = createReducer(INITIAL_STATE, {
   },
   /**
    * ============================
-   * GET SURVEY
+   * GET SURVEY BY ID
    * ============================
    */
   [types.MERCHANT_GET_SURVEY_PROCESS](state, action) {
     return {
       ...state,
       loadingGetSurvey: true,
-      dataSurvey: {
-        id: null,
-        status: '',
-        responsePhoto: []
-      },
-      newSurveyResponse: false,
+      dataGetSurvey: null,
       errorGetSurvey: null
     };
   },
@@ -982,7 +968,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetSurvey: false,
-      dataSurvey: action.payload
+      dataGetSurvey: action.payload
     };
   },
   [types.MERCHANT_GET_SURVEY_FAILED](state, action) {
@@ -995,89 +981,65 @@ export const merchant = createReducer(INITIAL_STATE, {
 
   /**
    * ============================
+   * GET SURVEY RESPONSE
+   * ============================
+   */
+  [types.MERCHANT_GET_SURVEY_RESPONSE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyResponse: true,
+      dataSurveyResponse: {
+        id: null,
+        status: '',
+        responsePhoto: []
+      },
+      newSurveyResponse: false,
+      errorGetSurveyResponse: null
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_RESPONSE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyResponse: false,
+      dataSurveyResponse: action.payload
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_RESPONSE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyResponse: false,
+      errorGetSurveyResponse: action.payload
+    };
+  },
+
+  /**
+   * ============================
    * SUBMIT SURVEY
    * ============================
    */
-  [types.MERCHANT_SUBMIT_SURVEY_PROCESS](state, action) {
+  [types.MERCHANT_SUBMIT_SURVEY_RESPONSE_PROCESS](state, action) {
     return {
       ...state,
-      loadingSubmitSurvey: true,
-      dataSubmitSurvey: {},
-      errorSubmitSurvey: null
+      loadingSubmitSurveyResponse: true,
+      dataSubmitSurveyResponse: {},
+      errorSubmitSurveyResponse: null
     };
   },
-  [types.MERCHANT_SUBMIT_SURVEY_SUCCESS](state, action) {
+  [types.MERCHANT_SUBMIT_SURVEY_RESPONSE_SUCCESS](state, action) {
     return {
       ...state,
-      loadingSubmitSurvey: false,
-      dataSubmitSurvey: action.payload,
+      loadingSubmitSurveyResponse: false,
+      dataSubmitSurveyResponse: action.payload,
       newSurveyResponse: true
     };
   },
-  [types.MERCHANT_SUBMIT_SURVEY_FAILED](state, action) {
+  [types.MERCHANT_SUBMIT_SURVEY_RESPONSE_FAILED](state, action) {
     return {
       ...state,
-      loadingSubmitSurvey: false,
-      errorSubmitSurvey: action.payload
+      loadingSubmitSurveyResponse: false,
+      errorSubmitSurveyResponse: action.payload
     };
   },
-
-  /**
-   * ============================
-   * GET QUESTIONNAIRE (QUESTION)
-   * ============================
-   */
-  [types.MERCHANT_GET_QUESTIONNAIRE_PROCESS](state, action) {
-    return {
-      ...state,
-      loadingGetQuestionnaire: true,
-      dateGetQuestionnaire: [],
-      errorGetQuestionnaire: null
-    };
-  },
-  [types.MERCHANT_GET_QUESTIONNAIRE_SUCCESS](state, action) {
-    return {
-      ...state,
-      loadingGetQuestionnaire: false,
-      dateGetQuestionnaire: action.payload
-    };
-  },
-  [types.MERCHANT_GET_QUESTIONNAIRE_FAILED](state, action) {
-    return {
-      ...state,
-      loadingGetQuestionnaire: false,
-      errorGetQuestionnaire: action.payload
-    };
-  },
-
-  /**
-   * ============================
-   * SUBMIT QUESTIONNAIRE
-   * ============================
-   */
-  [types.MERCHANT_SUBMIT_QUESTIONNAIRE_PROCESS](state, action) {
-    return {
-      ...state,
-      loadingSubmitQuestionnaire: true,
-      dataSubmitQuestionnaire: {},
-      errorSubmitQuestionnaire: null
-    };
-  },
-  [types.MERCHANT_SUBMIT_QUESTIONNAIRE_SUCCESS](state, action) {
-    return {
-      ...state,
-      loadingSubmitQuestionnaire: false,
-      dataSubmitQuestionnaire: action.payload
-    };
-  },
-  [types.MERCHANT_SUBMIT_QUESTIONNAIRE_FAILED](state, action) {
-    return {
-      ...state,
-      loadingSubmitQuestionnaire: false,
-      errorSubmitQuestionnaire: action.payload
-    };
-  },
-
 /**
    * ============================
    * VALIDATE AREA MAPPING
@@ -1154,12 +1116,12 @@ export const merchant = createReducer(INITIAL_STATE, {
    * UPDATE SURVEY
    * ============================
    */
-  [types.MERCHANT_UPDATE_SURVEY_PROCESS](state, action) {
+  [types.MERCHANT_UPDATE_SURVEY_RESPONSE_PROCESS](state, action) {
     return {
       ...state,
-      loadingSubmitSurvey: true,
-      dataSubmitSurvey: {},
-      errorSubmitSurvey: null
+      loadingSubmitSurveyResponse: true,
+      dataSubmitSurveyResponse: {},
+      errorSubmitSurveyResponse: null
     };
   }
 });

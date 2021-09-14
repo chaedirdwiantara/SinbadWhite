@@ -77,10 +77,10 @@ class MerchantQuestionnaireView extends Component {
     // if success with status 'completed' navigate to success screen
     // if success with status 'inProgress' back to survey list
     // if failed show toast
-    if (this.props.merchant.errorSubmitSurvey) {
+    if (this.props.merchant.errorSubmitSurveyResponse) {
       if (
-        prevProps.merchant.errorSubmitSurvey !==
-        this.props.merchant.errorSubmitSurvey
+        prevProps.merchant.errorSubmitSurveyResponse !==
+        this.props.merchant.errorSubmitSurveyResponse
       ) {
         this.setState({ openModalErrorGlobal: true });
       }
@@ -419,7 +419,7 @@ class MerchantQuestionnaireView extends Component {
    */
   renderModalLoading() {
     return (
-      <Modal isVisible={this.props.merchant.loadingSubmitSurvey}>
+      <Modal isVisible={this.props.merchant.loadingSubmitSurveyResponse}>
         <View style={{ alignItems: 'center' }}>
           <Image
             source={require('../../../assets/gif/loading/load_triagle.gif')}

@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Text,
   PermissionsAndroid,
-  Image
+  Image,
+  ImageBackground
 } from '../../library/reactPackage';
 import {
   MaterialIcon,
@@ -286,22 +287,29 @@ class JourneyView extends Component {
   renderHeader() {
     return !this.props.journey.loadingGetJourneyPlanReport &&
       this.props.journey.dataGetJourneyPlanReportV2 !== null ? (
-      <View style={styles.headerContainer}>
-        <View style={styles.boxHeader}>
-          <Text style={[Fonts.type27, { marginBottom: 5 }]}>
-            {this.props.journey.dataGetJourneyPlanReportV2.total}/
-            {this.props.journey.dataGetJourneyPlanReportV2.target}
-          </Text>
-          <Text style={Fonts.type26}>Toko Visit</Text>
-        </View>
-        <View style={styles.boxHeader}>
-          <Text style={[Fonts.type27, { marginBottom: 5 }]}>
-            {MoneyFormat(
-              this.props.journey.dataGetJourneyPlanReportV2.totalOrder
-            )}
-          </Text>
-          <Text style={Fonts.type26}>Total Order</Text>
-        </View>
+      <View>
+        {/* <View style={styles.mainContainer}> */}
+        <ImageBackground
+          source={require('../../assets/images/background/bg_jp_white.png')}
+          style={[styles.headerContainer, { zIndex: 0 }]}
+        >
+          <View style={[styles.boxHeader, { zIndex: 1 }]}>
+            <Text style={[styles.headerTextTitle, { marginBottom: 5 }]}>
+              {this.props.journey.dataGetJourneyPlanReportV2.total}/
+              {this.props.journey.dataGetJourneyPlanReportV2.target}
+            </Text>
+            <Text style={styles.headerTextSubTitle}>Kunjungan Toko</Text>
+          </View>
+          <View style={styles.boxHeader}>
+            <Text style={[styles.headerTextTitle, { marginBottom: 5 }]}>
+              {MoneyFormat(
+                this.props.journey.dataGetJourneyPlanReportV2.totalOrder
+              )}
+            </Text>
+            <Text style={styles.headerTextSubTitle}>Total Order Toko</Text>
+          </View>
+        </ImageBackground>
+        {/* </View> */}
       </View>
     ) : (
       <SkeletonPlaceholder>
@@ -485,7 +493,7 @@ const styles = StyleSheet.create({
     backgroundColor: masterColor.backgroundWhite
   },
   headerContainer: {
-    backgroundColor: masterColor.mainColor,
+    backgroundColor: masterColor.backgroundWhite,
     flexDirection: 'row',
     paddingVertical: 13
   },
@@ -510,6 +518,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  //extra font
+  headerTextSubTitle: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10,
+    lineHeight: 12,
+    color: masterColor.fontBlack80
+  },
+  headerTextTitle: {
+    fontFamily: Fonts.MontserratExtraBold,
+    fontSize: 18,
+    lineHeight: 17,
+    color: masterColor.fontBlack50
   }
 });
 

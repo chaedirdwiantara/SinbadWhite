@@ -117,30 +117,27 @@ export const MERCHANT_GET_SURVEY_LIST_FAILED = 'MerchantGetSurveyListFailed';
 export const MERCHANT_GET_SURVEY_LIST_RESET = 'MerchantGetSurveyListReset';
 export const MERCHANT_GET_SURVEY_LIST_REFRESH = 'MerchantGetSurveyListRefresh';
 export const MERCHANT_GET_SURVEY_LIST_LOADMORE = 'MerchantGetSurveyListLoadMore';
-/** MERCHANT GET SURVEY RESPONSE*/
+/** MERCHANT GET SURVEY BY ID*/
 export const MERCHANT_GET_SURVEY_PROCESS = 'MerchantGetSurveyProcess';
 export const MERCHANT_GET_SURVEY_SUCCESS = 'MerchantGetSurveySuccess';
 export const MERCHANT_GET_SURVEY_FAILED = 'MerchantGetSurveyFailed';
+/** MERCHANT GET SURVEY RESPONSE*/
+export const MERCHANT_GET_SURVEY_RESPONSE_PROCESS =
+  'MerchantGetSurveyResponseProcess';
+export const MERCHANT_GET_SURVEY_RESPONSE_SUCCESS =
+  'MerchantGetSurveyResponseSuccess';
+export const MERCHANT_GET_SURVEY_RESPONSE_FAILED =
+  'MerchantGetSurveyResponseFailed';
 /** MERCHANT SUBMIT SURVEY */
-export const MERCHANT_SUBMIT_SURVEY_PROCESS = 'MerchantSubmitSurveyProcess';
-export const MERCHANT_SUBMIT_SURVEY_SUCCESS = 'MerchantSubmitSurveySuccess';
-export const MERCHANT_SUBMIT_SURVEY_FAILED = 'MerchantSubmitSurveyFailed';
-/** MERCHANT GET QUESTIONNAIRE */
-export const MERCHANT_GET_QUESTIONNAIRE_PROCESS =
-  'MerchantGetQuestionnaireProcess';
-export const MERCHANT_GET_QUESTIONNAIRE_SUCCESS =
-  'MerchantGetQuestionnaireSuccess';
-export const MERCHANT_GET_QUESTIONNAIRE_FAILED =
-  'MerchantGetQuestionnaireFailed';
-/** MERCHANT SUBMIT QUESTIONNAIRE */
-export const MERCHANT_SUBMIT_QUESTIONNAIRE_PROCESS =
-  'MerchantSubmitQuestionnaireProcess';
-export const MERCHANT_SUBMIT_QUESTIONNAIRE_SUCCESS =
-  'MerchantSubmitQuestionnaireSuccess';
-export const MERCHANT_SUBMIT_QUESTIONNAIRE_FAILED =
-  'MerchantSubmitQuestionnaireFailed';
+export const MERCHANT_SUBMIT_SURVEY_RESPONSE_PROCESS =
+  'MerchantSubmitSurveyResponseProcess';
+export const MERCHANT_SUBMIT_SURVEY_RESPONSE_SUCCESS =
+  'MerchantSubmitSurveyResponseSuccess';
+export const MERCHANT_SUBMIT_SURVEY_RESPONSE_FAILED =
+  'MerchantSubmitSurveyResponseFailed';
 /** MERCHANT UPDATE SURVEY RESPONSE */
-export const MERCHANT_UPDATE_SURVEY_PROCESS = 'MerchantUpdateSurveyProcess';
+export const MERCHANT_UPDATE_SURVEY_RESPONSE_PROCESS =
+  'MerchantUpdateSurveyResponseProcess';
 /** MERCHANT VALIDATE AREA MAPPING */
 export const VALIDATE_AREA_MAPPING_PROCESS = 'ValidateAreaMappingProcess'
 export const VALIDATE_AREA_MAPPING_SUCCESS = 'ValidateAreaMappingSuccess'

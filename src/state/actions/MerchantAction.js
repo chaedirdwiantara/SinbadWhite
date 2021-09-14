@@ -482,7 +482,7 @@ export function MerchantGetSurveyListLoadMore(data) {
 }
 /**
  * ===========================================
- * GET SURVEY RESPONSE
+ * GET SURVEY BY ID
  * ===========================================
  */
 export function merchantGetSurveyProcess(data) {
@@ -502,72 +502,51 @@ export function merchantGetSurveyFailed(data) {
 }
 /**
  * ===========================================
- * SUBMIT SURVEY
+ * GET SURVEY RESPONSE
  * ===========================================
  */
-export function merchantSubmitSurveyProcess(data) {
-  return { type: types.MERCHANT_SUBMIT_SURVEY_PROCESS, payload: data };
+export function merchantGetSurveyResponseProcess(data) {
+  return { type: types.MERCHANT_GET_SURVEY_RESPONSE_PROCESS, payload: data };
 }
-export function merchantSubmitSurveySuccess(data) {
+export function merchantGetSurveyResponseSuccess(data) {
   if (data.result === 'Ok') {
     return {
-      type: types.MERCHANT_SUBMIT_SURVEY_SUCCESS,
+      type: types.MERCHANT_GET_SURVEY_RESPONSE_SUCCESS,
       payload: data.data
     };
   }
-  return { type: types.MERCHANT_SUBMIT_SURVEY_FAILED, payload: data };
+  return { type: types.MERCHANT_GET_SURVEY_RESPONSE_FAILED, payload: data };
 }
-export function merchantSubmitSurveyFailed(data) {
-  return { type: types.MERCHANT_SUBMIT_SURVEY_FAILED, payload: data };
+export function merchantGetSurveyResponseFailed(data) {
+  return { type: types.MERCHANT_GET_SURVEY_RESPONSE_FAILED, payload: data };
+}
+/**
+ * ===========================================
+ * SUBMIT SURVEY
+ * ===========================================
+ */
+export function merchantSubmitSurveyResponseProcess(data) {
+  return { type: types.MERCHANT_SUBMIT_SURVEY_RESPONSE_PROCESS, payload: data };
+}
+export function merchantSubmitSurveyResponseSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_SUBMIT_SURVEY_RESPONSE_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_SUBMIT_SURVEY_RESPONSE_FAILED, payload: data };
+}
+export function merchantSubmitSurveyResponseFailed(data) {
+  return { type: types.MERCHANT_SUBMIT_SURVEY_RESPONSE_FAILED, payload: data };
 }
 /**
  * ===========================================
  * UPDATE SURVEY RESPONSE
  * ===========================================
  */
-export function merchantUpdateSurveyProcess(data) {
-  return { type: types.MERCHANT_UPDATE_SURVEY_PROCESS, payload: data };
-}
-
-/**
- * ===========================================
- * GET QUESTIONNAIRE RESPONSE
- * ===========================================
- */
-export function merchantGetQuestionnaireProcess(data) {
-  return { type: types.MERCHANT_GET_QUESTIONNAIRE_PROCESS, payload: data };
-}
-export function merchantGetQuestionnaireSuccess(data) {
-  if (data.result === 'Ok') {
-    return {
-      type: types.MERCHANT_GET_QUESTIONNAIRE_SUCCESS,
-      payload: data.data
-    };
-  }
-  return { type: types.MERCHANT_GET_QUESTIONNAIRE_FAILED, payload: data };
-}
-export function merchantGetQuestionnaireFailed(data) {
-  return { type: types.MERCHANT_GET_QUESTIONNAIRE_FAILED, payload: data };
-}
-/**
- * ===========================================
- * SUBMIT QUESTIONNAIRE RESPONSE
- * ===========================================
- */
-export function merchantSubmitQuestionnaireProcess(data) {
-  return { type: types.MERCHANT_SUBMIT_QUESTIONNAIRE_PROCESS, payload: data };
-}
-export function merchantSubmitQuestionnaireSuccess(data) {
-  if (data.result === 'Ok') {
-    return {
-      type: types.MERCHANT_SUBMIT_QUESTIONNAIRE_SUCCESS,
-      payload: data.data
-    };
-  }
-  return { type: types.MERCHANT_SUBMIT_QUESTIONNAIRE_FAILED, payload: data };
-}
-export function merchantSubmitQuestionnaireFailed(data) {
-  return { type: types.MERCHANT_SUBMIT_QUESTIONNAIRE_FAILED, payload: data };
+export function merchantUpdateSurveyResponseProcess(data) {
+  return { type: types.MERCHANT_UPDATE_SURVEY_RESPONSE_PROCESS, payload: data };
 }
 /**
  * ===========================================

@@ -35,7 +35,7 @@ class SurveyListDataView extends Component {
 
   onHandleLoadMore = () => {
     if (
-      !this.props.merchant.errorGetSurvey &&
+      !this.props.merchant.errorGetSurveyList &&
       !this.props.merchant.loadingLoadMoreSurveyList
     ) {
       if (this.props.merchant.surveyList.payload.data) {
@@ -110,7 +110,7 @@ class SurveyListDataView extends Component {
           <TouchableOpacity
             style={styles.cardInside}
             onPress={() => {
-              if (item.template?.code === 'photo') {
+              if (item.surveyType === 'photo') {
                 return NavigationService.navigate(
                   'MerchantSurveyDisplayPhotoView',
                   {
@@ -131,7 +131,9 @@ class SurveyListDataView extends Component {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <MaterialIcon
-                name={item.type === 'photo' ? 'photo-camera' : 'assignment'}
+                name={
+                  item.surveyType === 'photo' ? 'photo-camera' : 'assignment'
+                }
                 color={masterColor.fontBlack40}
                 size={25}
                 style={{ marginRight: 19 }}
