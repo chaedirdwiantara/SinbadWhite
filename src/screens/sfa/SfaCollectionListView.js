@@ -17,7 +17,8 @@ import {
   ButtonSingle,
   LoadingPage,
   LoadingLoadMore,
-  ModalConfirmation
+  ModalConfirmation,
+  SkeletonType28
 } from '../../library/component';
 import {
   sfaGetPaymentMethodProcess,
@@ -480,7 +481,7 @@ const SfaCollectionListView = props => {
           : renderNoData()}
       </View>
     ) : (
-      <LoadingPage />
+      <SkeletonType28 />
     );
   };
 
