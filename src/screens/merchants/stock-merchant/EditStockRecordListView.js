@@ -93,8 +93,8 @@ class EditStockRecordListView extends Component {
                       name: 'Shelf Produk',
                       stockId: item.id,
                       qty: {
-                        pcs: item.shelfQty.pcs,
-                        box: item.shelfQty.box
+                        pcs: item.showedStock.pcs,
+                        box: item.showedStock.box
                       }
                     }
                   });
@@ -102,12 +102,12 @@ class EditStockRecordListView extends Component {
               >
                 <View style={[styles.inputBox, { marginRight: 8 }]}>
                   <Text style={[Fonts.type24, styles.textInput]}>
-                    {item.shelfQty.box}box
+                    {item.showedStock.box}box
                   </Text>
                 </View>
                 <View style={styles.inputBox}>
                   <Text style={[Fonts.type24, styles.textInput]}>
-                    {item.shelfQty.pcs}pcs
+                    {item.showedStock.pcs}pcs
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -132,8 +132,8 @@ class EditStockRecordListView extends Component {
                       name: 'Non Shelf Produk',
                       stockId: item.id,
                       qty: {
-                        pcs: item.nonShelfQty.pcs,
-                        box: item.nonShelfQty.box
+                        pcs: item.nonShowedStock.pcs,
+                        box: item.nonShowedStock.box
                       }
                     }
                   });
@@ -141,12 +141,12 @@ class EditStockRecordListView extends Component {
               >
                 <View style={[styles.inputBox, { marginRight: 8 }]}>
                   <Text style={[Fonts.type24, styles.textInput]}>
-                    {item.nonShelfQty.box}box
+                    {item.nonShowedStock.box}box
                   </Text>
                 </View>
                 <View style={styles.inputBox}>
                   <Text style={[Fonts.type24, styles.textInput]}>
-                    {item.nonShelfQty.pcs}pcs
+                    {item.nonShowedStock.pcs}pcs
                   </Text>
                 </View>
               </TouchableOpacity>

@@ -30,6 +30,11 @@ class StockRecordListView extends Component {
     );
   }
 
+  calculateStock(qty, packageQty) {
+    const total = packageQty * qty.box + qty.pcs;
+    return total;
+  }
+
   // RENDER CARD DATA
   renderCardData({ item, index }) {
     return (
@@ -55,13 +60,13 @@ class StockRecordListView extends Component {
           <View style={{ flex: 1, alignItems: 'center', marginVertical: 8 }}>
             <Text style={[Fonts.type96]}>Shelf Produk</Text>
             <Text style={[Fonts.type10, { marginTop: 8 }]}>
-              {item.showedStock}
+              {this.calculateStock(item.showedStock, item.packagedQty)}
             </Text>
           </View>
           <View style={{ flex: 1, alignItems: 'center', marginVertical: 8 }}>
             <Text style={[Fonts.type96]}>Non-Shelf Produk</Text>
             <Text style={[Fonts.type10, { marginTop: 8 }]}>
-              {item.nonShowedStock}
+              {this.calculateStock(item.nonShowedStock, item.packagedQty)}
             </Text>
           </View>
         </View>

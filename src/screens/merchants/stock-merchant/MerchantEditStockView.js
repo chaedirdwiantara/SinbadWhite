@@ -208,37 +208,7 @@ class MerchantEditStockView extends Component {
   }
   // SAVE DATA TO LOCAL STATE
   saveToLocal() {
-    const stockRecord = [];
-    this.props.merchant.dataGetRecordStock.map(item => {
-      const stockItem = item;
-      let shelfQty = {};
-      let nonShelfQty = {};
-
-      if (item.showedStock < item.packagedQty) {
-        (shelfQty.pcs = item.showedStock), (shelfQty.box = 0);
-      } else {
-        (shelfQty.pcs = item.showedStock % item.packagedQty),
-          (shelfQty.box = Math.floor(item.showedStock / item.packagedQty));
-      }
-
-      if (item.nonShowedStock < item.packagedQty) {
-        (nonShelfQty.pcs = item.nonShowedStock), (nonShelfQty.box = 0);
-      } else {
-        (nonShelfQty.pcs = item.nonShowedStock % item.packagedQty),
-          (nonShelfQty.box = Math.floor(
-            item.nonShowedStock / item.packagedQty
-          ));
-      }
-
-      stockItem.shelfQty = shelfQty;
-      stockItem.nonShelfQty = nonShelfQty;
-
-      stockRecord.push(stockItem);
-    });
-
-    console.log('Convert To Local State', stockRecord);
-
-    this.setState({ data: stockRecord });
+    this.setState({ data: this.props.merchant.dataGetRecordStock });
   }
   // POST RECORD STOCK ACTIVITY
   postRecordStockActivity() {
@@ -322,7 +292,7 @@ class MerchantEditStockView extends Component {
         if (data.data.type === 'ShelfStock') {
           newCatalogueArray[catalogueIndex] = {
             ...newCatalogueArray[catalogueIndex],
-            shelfQty: {
+            showedStock: {
               pcs: data.updatedQty.pcs,
               box: data.updatedQty.box
             }
@@ -333,7 +303,7 @@ class MerchantEditStockView extends Component {
         if (data.data.type === 'NonShelfStock') {
           newCatalogueArray[catalogueIndex] = {
             ...newCatalogueArray[catalogueIndex],
-            nonShelfQty: {
+            nonShowedStock: {
               pcs: data.updatedQty.pcs,
               box: data.updatedQty.box
             }
@@ -345,12 +315,12 @@ class MerchantEditStockView extends Component {
           const object = {
             id: parseInt(item.id, 10),
             showedStock: {
-              pcs: parseInt(item.shelfQty.pcs, 10),
-              box: parseInt(item.shelfQty.box, 10)
+              pcs: parseInt(item.showedStock.pcs, 10),
+              box: parseInt(item.showedStock.box, 10)
             },
             nonShowedStock: {
-              pcs: parseInt(item.nonShelfQty.pcs, 10),
-              box: parseInt(item.nonShelfQty.box, 10)
+              pcs: parseInt(item.nonShowedStock.pcs, 10),
+              box: parseInt(item.nonShowedStock.box, 10)
             }
           };
           dataForSaveProduct.push(object);
