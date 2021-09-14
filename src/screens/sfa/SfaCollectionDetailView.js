@@ -27,7 +27,7 @@ import {
 import NavigationService from '../../navigation/NavigationService';
 import { CardBody, CardHeader, CardHeaderBadge } from './components/CardView';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 const isNumber = n => (n !== null && n !== undefined ? true : false);
 
 const SfaCollectionDetailView = props => {
@@ -294,7 +294,7 @@ const SfaCollectionDetailView = props => {
           imageSource: { uri: `data:image/jpeg;base64, ${image}` },
           imageSourceStyle: styles.images,
           imageContainerStyle: styles.smallContainerImage,
-          styleCardView: styles.styleCardView
+          styleCardView: styles.styleCardViewImage
         })}
         {CardBody({
           title: 'Total Penagihan',
@@ -474,19 +474,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
-    marginBottom: 16
+    marginBottom: 16,
+    height: (50 / 100) * height,
+    width: '100%'
   },
   images: {
-    width: 328,
-    height: 328,
+    resizeMode: 'contain',
+    height: '100%',
+    width: '100%',
     borderWidth: 1,
-    marginHorizontal: 3,
     backgroundColor: 'white',
-    aspectRatio: 2 / 3
+    flex: 1
   },
   styleCardView: {
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  styleCardViewImage: {
+    flex: 1
   }
 });
 export default SfaCollectionDetailView;
