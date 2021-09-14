@@ -72,7 +72,6 @@ const SfaBillingEditView = props => {
   /** FUNCTION TO CHECK IF PAYMENT BILLING !> BALANCE || PAYMENT BILLING !> OUTSTANDING */
   useEffect(() => {
     const outstanding = dataSfaGetBillingDetail?.data.outstandingAmount;
-    const totalPayment = parseInt(outstanding, 10) + stampNominal;
     const paymentGreaterThanOutstanding =
       parseInt(paymentAmount, 10) > parseInt(outstanding, 10);
     const collectionBalanceGreaterThanOutstanding =
@@ -82,22 +81,22 @@ const SfaBillingEditView = props => {
     if (paymentGreaterThanOutstanding) {
       if (collectionBalanceGreaterThanOutstanding) {
         setPaymentAmount(parseInt(outstanding, 10));
-        setTotalPaymentAmount(totalPayment);
+        setTotalPaymentAmount( parseInt(outstanding, 10) + stampNominal);
       } else {
         setPaymentAmount(parseInt(collectionBalance, 10));
-        setTotalPaymentAmount(totalPayment);
+        setTotalPaymentAmount(parseInt(collectionBalance, 10) + stampNominal);
       }
     } else if (paymentGreaterThanCollectionBalance) {
       if (collectionBalanceGreaterThanOutstanding) {
         setPaymentAmount(parseInt(outstanding, 10));
-        setTotalPaymentAmount(totalPayment);
+        setTotalPaymentAmount(parseInt(outstanding, 10) + stampNominal);
       } else {
         setPaymentAmount(parseInt(collectionBalance, 10));
-        setTotalPaymentAmount(totalPayment);
+        setTotalPaymentAmount(parseInt(collectionBalance, 10) + stampNominal);
       }
     } else {
       setPaymentAmount(parseInt(paymentAmount, 10));
-      setTotalPaymentAmount(totalPayment);
+      setTotalPaymentAmount(parseInt(paymentAmount, 10) + stampNominal);
     }
   }, [paymentAmount, collectionBalance]);
 
