@@ -7,7 +7,7 @@ import {
   FlatList,
   SafeAreaView,
   Text,
-  Dimensions
+  ScrollView
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
@@ -23,10 +23,8 @@ import { Fonts } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
 import _ from 'lodash';
-import { questions } from './mockData';
 import NavigationService from '../../../navigation/NavigationService';
 
-const { height, width } = Dimensions.get('window');
 class MerchantSurveyResultView extends Component {
   constructor(props) {
     super(props);
@@ -49,7 +47,6 @@ class MerchantSurveyResultView extends Component {
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
-    /**CHECK SURVEY RESPONSE */
     if (
       prevProps.merchant.dataSurveyResponse !==
         this.props.merchant.dataSurveyResponse &&
@@ -71,7 +68,149 @@ class MerchantSurveyResultView extends Component {
    * =======================
    */
 
-  /** === RENDER HEADER === */
+  /**
+   * === RENDER HEADER OF DETAIL SCORE ===
+   * @returns {ReactElement} render header of DETAIL SCORE.
+   */
+  renderDetailScoreHeader() {
+    return (
+      <View
+        style={{
+          flex: 0.5,
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          alignContent: 'center',
+          paddingVertical: 20
+        }}
+      >
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={Fonts.type23}>Responden</Text>
+          <Text style={[Fonts.type4, { paddingTop: 4 }]}>
+            {this.props.merchant.dataSurveyResult.storeName ?? '-'}
+          </Text>
+        </View>
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={Fonts.type23}>Total Skor</Text>
+          <Text style={[Fonts.type4, { paddingTop: 4 }]}>
+            {this.state.surveyTotalScore ?? '0'}
+          </Text>
+        </View>
+      </View>
+    );
+  }
+  /**
+   * === RENDER DIVIDER ===
+   * @returns {ReactElement} render line as divider.
+   */
+  renderDivider() {
+    return (
+      <View
+        style={{
+          borderBottomColor: Color.fontBlack10,
+          borderBottomWidth: 1
+        }}
+      />
+    );
+  }
+  /**
+   * === RENDER  OF DETAIL SCORE CONTENT===
+   * @returns {ReactElement} render header of detail score content.
+   */
+  renderDetailScoreContent() {
+    return (
+      <React.Fragment>
+        <View
+          style={{
+            lineHeight: 16,
+            paddingVertical: 16,
+            paddingHorizontal: 16
+          }}
+        >
+          <Text style={Fonts.textSurveyResult}>Detail Skor</Text>
+        </View>
+        <ScrollView>
+          <View
+            style={{
+              paddingHorizontal: 16,
+              flex: 2,
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}
+          >
+            {this.renderCollapse()}
+          </View>
+        </ScrollView>
+      </React.Fragment>
+    );
+  }
+  /**
+   * === RENDER COLLAPSE OF DETAIL SCORE ===
+   * @returns {ReactElement} render collapse of detail score.
+   * @memberof renderDetailScoreContent
+   */
+  renderCollapse() {
+    return (
+      <FlatList
+        data={this.state.surveyResponse?.survey?.questions ?? []}
+        keyExtractor={(data, index) => index.toString()}
+        renderItem={({ item, index }) => (
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <View style={{ flex: 2 }}>
+              <TouchableOpacity
+                style={styles.boxCollapse}
+                onPress={() =>
+                  this.setState({
+                    openCollapse: !this.state.openCollapse,
+                    activeIndexCollapse: index
+                  })
+                }
+              >
+                <View>
+                  {this.state.openCollapse &&
+                  this.state.activeIndexCollapse === index ? (
+                    <MaterialIcon
+                      name="keyboard-arrow-up"
+                      color={'#CACCCF'}
+                      size={30}
+                    />
+                  ) : (
+                    <MaterialIcon
+                      name="keyboard-arrow-down"
+                      color={'#CACCCF'}
+                      size={30}
+                    />
+                  )}
+                </View>
+                <View style={{ justifyContent: 'center' }}>
+                  <Text style={[Fonts.type8, { marginBottom: 4.5 }]}>
+                    Pertanyaan {index + 1}
+                  </Text>
+                  <View style={{ width: '80%' }}>
+                    {this.state.openCollapse &&
+                      this.state.activeIndexCollapse === index && (
+                        <Text style={[Fonts.type8, { color: '#A0A4A8' }]}>
+                          {item?.title ?? '-'}
+                        </Text>
+                      )}
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={{ flex: 1 }}>
+              <View style={styles.boxScore}>
+                <Text>{item?.questionResponseScore?.result ?? '-'}</Text>
+              </View>
+            </View>
+          </View>
+        )}
+      />
+    );
+  }
+
+  /**
+   * === RENDER HEADER ===
+   * @returns {ReactElement} render header.
+   */
   renderHeader() {
     return (
       <View
@@ -80,12 +219,12 @@ class MerchantSurveyResultView extends Component {
           {
             paddingHorizontal: 16,
             borderTopColor: Color.fontGreen50,
-            marginBottom: 16
+            marginBottom: 16,
+            flex: 0.5
           }
         ]}
       >
-        <Text style={Fonts.type4}>
-          {' '}
+        <Text style={[Fonts.type4, { paddingLeft: 0 }]}>
           {this.state.surveyResponse?.survey?.name ?? '-'}
         </Text>
         <Text style={[Fonts.type23, { paddingTop: 4 }]}>
@@ -108,7 +247,7 @@ class MerchantSurveyResultView extends Component {
             <Text style={Fonts.type23}>
               {this.state.surveyResponse?.survey?.invoiceGroups.length > 0
                 ? this.state.surveyResponse?.survey?.invoiceGroups.join(',')
-                : ' - tidak ada invoice'}
+                : ' - Tidak ada Invoice'}
             </Text>
           </View>
           <View
@@ -128,91 +267,32 @@ class MerchantSurveyResultView extends Component {
                 ? `${this.state.surveyResponse?.survey?.brands[0] ??
                     '-'}(+${this.state.surveyResponse?.survey?.brands.length -
                     1})`
-                : '- tidak ada brand'}
+                : '- Tidak ada Brand'}
             </Text>
           </View>
         </View>
       </View>
     );
   }
-
-  renderCollapse() {
+  /**
+   * === RENDER SECTION DETAIL SCORE ===
+   * @returns {ReactElement} render section detail score.
+   */
+  renderDetailScore() {
     return (
-      <FlatList
-        data={this.state.surveyResponse?.survey?.questions ?? []}
-        keyExtractor={(data, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={{ width: '80%' }}>
-            <TouchableOpacity
-              style={styles.boxCollapse}
-              onPress={() =>
-                this.setState({
-                  openCollapse: !this.state.openCollapse,
-                  activeIndexCollapse: index
-                })
-              }
-            >
-              <View>
-                {this.state.openCollapse &&
-                this.state.activeIndexCollapse === index ? (
-                  <MaterialIcon
-                    name="keyboard-arrow-up"
-                    color={'#CACCCF'}
-                    size={30}
-                  />
-                ) : (
-                  <MaterialIcon
-                    name="keyboard-arrow-down"
-                    color={'#CACCCF'}
-                    size={30}
-                  />
-                )}
-              </View>
-              <View style={{ justifyContent: 'center' }}>
-                <Text style={[Fonts.type8, { marginBottom: 4.5 }]}>
-                  Pertanyaan {index + 1}
-                </Text>
-                <View style={{ width: '90%' }}>
-                  {this.state.openCollapse &&
-                    this.state.activeIndexCollapse === index && (
-                      <Text style={[Fonts.type8, { color: '#A0A4A8' }]}>
-                        {item?.title ?? '-'}
-                      </Text>
-                    )}
-                </View>
-              </View>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+      <View
+        style={[styles.headerContainer, { flex: 2, flexDirection: 'column' }]}
+      >
+        {this.renderDetailScoreHeader()}
+        {this.renderDivider()}
+        {this.renderDetailScoreContent()}
+      </View>
     );
   }
-  renderBoxScore() {
-    return (
-      <FlatList
-        style={{ width: '20%' }}
-        data={this.state.surveyResponse?.survey?.questions ?? []}
-        keyExtractor={(data, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View
-            style={{
-              backgroundColor: '#FAFAFA',
-              borderWidth: 1,
-              borderColor: '#CACCCF',
-              boxSizing: 'border-box',
-              borderRadius: 4,
-              alignItems: 'center',
-              paddingVertical: 8,
-              paddingHorizontal: 16,
-              marginBottom: '25%'
-            }}
-          >
-            <Text>{item?.questionResponseScore?.result ?? '-'}</Text>
-          </View>
-        )}
-      />
-    );
-  }
+  /**
+   * === RENDER BOTTOM BUTTON ===
+   * @returns {ReactElement} render bottom button.
+   */
   renderButton() {
     return (
       <View
@@ -221,7 +301,8 @@ class MerchantSurveyResultView extends Component {
           styles.headerContainer,
           {
             borderTopColor: 'none',
-            marginTop: 16
+            marginTop: 16,
+            flex: 0.5
           }
         ]}
       >
@@ -238,79 +319,17 @@ class MerchantSurveyResultView extends Component {
       </View>
     );
   }
-  renderSurveyResponses() {
-    return (
-      <View style={styles.headerContainer}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            paddingVertical: 20
-          }}
-        >
-          <View style={{ alignItems: 'center' }}>
-            <Text style={Fonts.type23}>Responden</Text>
-            <Text style={[Fonts.type4, { paddingTop: 4 }]}>
-              {this.props.merchant.dataSurveyResult.storeName ?? '-'}
-            </Text>
-          </View>
-          <View style={{ alignItems: 'center' }}>
-            <Text style={Fonts.type23}>Total Skor</Text>
-            <Text style={[Fonts.type4, { paddingTop: 4 }]}>
-              {this.state.surveyTotalScore ?? '0'}
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            borderBottomColor: Color.fontBlack10,
-            borderBottomWidth: 1
-          }}
-        />
-        <View
-          style={{
-            lineHeight: 16,
-            paddingVertical: 16,
-            paddingHorizontal: 16
-          }}
-        >
-          <Text style={Fonts.textSurveyResult}>Detail Skor</Text>
-        </View>
-        <View
-          style={{
-            paddingHorizontal: 16,
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between'
-          }}
-        >
-          {this.renderCollapse()}
-          {this.renderBoxScore()}
-        </View>
-      </View>
-    );
-  }
-  /** === RENDER CONTENT ITEM === */
-  renderContentItem() {
-    return (
-      <View style={{ padding: 16 }}>
-        {this.renderHeader()}
-        {this.renderSurveyResponses()}
-        {this.renderButton()}
-      </View>
-    );
-  }
-  /** === RENDER CONTENT === */
+
+  /**
+   * === RENDER CONTENT ===
+   * @returns {ReactElement} render content.
+   */
   renderContent() {
     return (
-      <View>
-        <FlatList
-          showsVerticalScrollIndicator
-          data={[1]}
-          renderItem={this.renderContentItem.bind(this)}
-          keyExtractor={(data, index) => index.toString()}
-        />
+      <View style={{ height: '100%', flexDirection: 'column', padding: 16 }}>
+        {this.renderHeader()}
+        {this.renderDetailScore()}
+        {this.renderButton()}
       </View>
     );
   }
@@ -319,12 +338,12 @@ class MerchantSurveyResultView extends Component {
     return (
       <SafeAreaView>
         <StatusBarWhite />
-        {this.props.merchant.loadingGetSurveyList ? (
+        {Object.keys(this.state.surveyResponse).length === 0 ? (
           <View style={{ height: '100%' }}>
             <LoadingPage />
           </View>
         ) : (
-          <View style={{ height: '100%' }}>{this.renderContent()}</View>
+          <View>{this.renderContent()}</View>
         )}
       </SafeAreaView>
     );
@@ -333,7 +352,6 @@ class MerchantSurveyResultView extends Component {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    // paddingBottom: 16,
     paddingTop: 12,
     borderWidth: 1,
     borderTopWidth: 4,
@@ -391,8 +409,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   boxScore: {
-    flexBasis: '80%',
-    flexGrow: 1
+    backgroundColor: '#FAFAFA',
+    borderWidth: 1,
+    borderColor: '#CACCCF',
+    borderRadius: 4,
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    marginBottom: '15%'
   }
 });
 
