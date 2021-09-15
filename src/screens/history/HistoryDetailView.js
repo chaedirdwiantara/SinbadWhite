@@ -651,11 +651,12 @@ class HistoryDetailView extends Component {
             detailHistory.deliveredParcelModified)
             ? this.renderInformasiPengembalian()
             : null}
-          {this.state.section === 'payment' ? (
-            this.renderSelectPaymentMethod()
-          ) : (
-            <View />
-          )}
+          {/* Quick solution promo payment pay later bondhan/08 september 2021}
+          {/*{this.state.section === 'payment' ? (*/}
+          {/*  this.renderSelectPaymentMethod()*/}
+          {/*) : (*/}
+          {/*  <View />*/}
+          {/*)}*/}
           <View style={{ paddingBottom: 50 }} />
         </ScrollView>
       </View>
