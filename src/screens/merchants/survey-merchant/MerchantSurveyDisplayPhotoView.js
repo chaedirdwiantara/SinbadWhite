@@ -130,7 +130,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     ) {
       const newSurveyResponse = _.orderBy(
         this.props.merchant.dataSurveyResponse.payload.responsePhoto,
-        ['surveyQuestionId'],
+        ['order'],
         ['asc']
       );
       const arraySurveyQuestionId = [
@@ -261,9 +261,10 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === SUBMIT PHOTO === */
   submitPhoto = () => {
     const newPhoto = [];
-    const { surveyQuestions } = this.props.navigation.state.params;
+    const { surveyQuestions, typeId } = this.props.navigation.state.params;
     let params = {
       surveyId: this.props.navigation.state.params.surveyId,
+      typeId,
       storeId: this.props.merchant.selectedMerchant.storeId,
       storeName: this.props.merchant.selectedMerchant.name,
       surveySerialId: this.props.navigation.state.params.surveySerialId
@@ -289,6 +290,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     } else {
       params = {
         photos: newPhoto,
+        typeId,
         status: 'completed',
         surveyQuestionId: surveyQuestions.find(item => item.order === 2)
           .surveyQuestionId
@@ -873,7 +875,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 08092021
+ * updatedDate: 16092021
  * updatedFunction:
- * -> update property surveyStep to surveyQuestion.
+ * -> add typeId.
+ * -> change order by "surveyQuestionId" to "order".
  */
