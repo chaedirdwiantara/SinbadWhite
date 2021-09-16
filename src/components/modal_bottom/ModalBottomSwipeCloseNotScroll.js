@@ -67,6 +67,7 @@ class ModalBottomWithClose extends Component {
         onSwipeMove={this.props.close}
         deviceHeight={height}
         style={styles.mainContainer}
+        onRequestClose={this.props.onRequestClose ? this.props.onRequestClose : this.props.close}
       >
         <View style={styles.contentContainer}>
           {this.renderContentTitle()}
@@ -127,9 +128,9 @@ export default connect(mapStateToProps)(ModalBottomWithClose);
 * ============================
 * createdBy: 
 * createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
+* updatedBy: Raka
+* updatedDate: 14092021
 * updatedFunction:
-* -> Refactoring Module Import
+* -> set default function to close modal when click back button android
 * 
 */
