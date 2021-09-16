@@ -29,11 +29,13 @@ class CompareGroupRangeAnswerComponent extends Component {
                   editable={!this.props.disabled}
                   placeholder="Input disini"
                   keyboardType="numeric"
-                  max={100}
-                  min={1}
+                  defaultValue={answer.answersResponse?.inputValue}
+                  max={1000000}
+                  min={0}
                   text={inputValue =>
                     this.props.onChange({
                       id: answer.id,
+                      isBaseValue: true,
                       inputValue
                     })
                   }
@@ -53,9 +55,13 @@ class CompareGroupRangeAnswerComponent extends Component {
                     editable={!this.props.disabled}
                     placeholder="Input disini"
                     keyboardType="numeric"
+                    defaultValue={answer.answersResponse?.inputValue}
+                    max={1000000}
+                    min={0}
                     text={inputValue =>
                       this.props.onChange({
                         id: answer.id,
+                        isBaseValue: false,
                         inputValue
                       })
                     }
@@ -87,8 +93,10 @@ export default CompareGroupRangeAnswerComponent;
  * ============================
  * createdBy: dyah
  * createdDate: 13092021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 16092021
  * updatedFunction:
- * -> add questionnaire component (compare group range answer)
+ * -> add props defaultValue.
+ * -> update min & max.
+ * -> add baseValue when updating text.
  */
