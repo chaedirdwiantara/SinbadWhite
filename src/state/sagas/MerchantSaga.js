@@ -299,17 +299,6 @@ function* updateSurveyResponse(actions) {
   }
 }
 
-/** SURVEY  RESULT TEST */
-function* getSurveyResultResponse(actions) {
-  try {
-    const response = yield call(() => {
-      return MerchantMethod.submitSurveyResponse(actions.payload);
-    });
-    yield put(ActionCreators.merchantSubmitSurveyResponseSuccess(response));
-  } catch (error) {
-    yield put(ActionCreators.merchantSubmitSurveyResponseFailed(error));
-  }
-}
 /** GET SALES SEGMENTATION */
 function* getSalesSegmentation(actions) {
   try {
