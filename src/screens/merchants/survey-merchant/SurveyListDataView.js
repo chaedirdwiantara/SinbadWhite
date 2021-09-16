@@ -217,8 +217,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Color.fontBlack10,
     flexDirection: 'row',
-    alignSelf: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    alignSelf: 'flex-start'
   }
 });
 
