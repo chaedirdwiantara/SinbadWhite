@@ -18,45 +18,37 @@ class QuestionAnswersListView extends Component {
    */
   /** === CHECK RENDER PER CATEGORY & TYPE === */
   renderContent = item => {
-    const {
-      surveyQuestionCategory,
-      surveyScoreType,
-      surveyCandidateAnswer,
-      surveyId
-    } = item;
-    switch (surveyQuestionCategory.code) {
+    const { category, scoreType, candidateAnswer, id } = item;
+    switch (category.code) {
       case 'single_answer':
-        if (surveyScoreType.code === 'single_score') {
+        if (scoreType.code === 'single_score') {
           return this.renderSingleAnswer(
-            _.orderBy(surveyCandidateAnswer, ['order']),
-            surveyId
+            _.orderBy(candidateAnswer, ['order']),
+            id
           );
         }
         break;
       case 'multiple_answer':
-        if (surveyScoreType.code === 'single_score') {
-          return surveyCandidateAnswer.map(candidate =>
-            this.renderMultiSingleAnswer(candidate, surveyId)
+        if (scoreType.code === 'single_score') {
+          return candidateAnswer.map(candidate =>
+            this.renderMultiSingleAnswer(candidate, id)
           );
-        } else if (surveyScoreType.code === 'cumulative_score') {
-          return surveyCandidateAnswer.map(candidate =>
-            this.renderMultiCumulativeAnswer(candidate, surveyId)
+        } else if (scoreType.code === 'cumulative_score') {
+          return candidateAnswer.map(candidate =>
+            this.renderMultiCumulativeAnswer(candidate, id)
           );
         }
         break;
       case 'vc_basic':
-        if (surveyScoreType.code === 'range_score') {
-          return surveyCandidateAnswer.map(candidate =>
-            this.renderBasicRangeAnswer(candidate, surveyId)
+        if (scoreType.code === 'percentage_range_score') {
+          return candidateAnswer.map(candidate =>
+            this.renderBasicRangeAnswer(candidate, id)
           );
         }
         break;
       case 'vc_compare_group':
-        if (surveyScoreType.code === 'range_score') {
-          return this.renderCompareGroupRangeAnswer(
-            surveyCandidateAnswer,
-            surveyId
-          );
+        if (scoreType.code === 'percentage_range_score') {
+          return this.renderCompareGroupRangeAnswer(candidateAnswer, id);
         }
         break;
       default:
@@ -70,26 +62,28 @@ class QuestionAnswersListView extends Component {
    * =======================
    */
   /** === RENDER FOR SINGLE ANSWER x SINGLE SCORE === */
-  renderSingleAnswer = (candidateAnswer, surveyId) => {
+  renderSingleAnswer = (candidateAnswer, questionId) => {
     return (
       <SingleAnswerComponent
         data={candidateAnswer}
         disabled={this.props.disabled}
         onChange={item =>
           this.props.onChange({
-            questionId: this.props.questionId,
             id: item.id,
-            surveyId,
+            questionId,
             category: 'single_answer'
           })
         }
-        selected={this.props.selected({ surveyId, category: 'single_answer' })}
+        selected={this.props.selected({
+          questionId,
+          category: 'single_answer'
+        })}
       />
     );
   };
 
   /** === RENDER FOR MULTIPLE ANSWER x SINGLE SCORE === */
-  renderMultiSingleAnswer = (candidateAnswer, surveyId) => {
+  renderMultiSingleAnswer = (candidateAnswer, questionId) => {
     return (
       <MultipleAnswerComponent
         key={'multi-single-ans-' + candidateAnswer.id}
@@ -98,12 +92,12 @@ class QuestionAnswersListView extends Component {
         onChange={() =>
           this.props.onChange({
             id: candidateAnswer.id,
-            surveyId,
+            questionId,
             category: 'multiple_answer'
           })
         }
         selected={this.props.selected({
-          surveyId,
+          questionId,
           id: candidateAnswer.id,
           category: 'multiple_answer'
         })}
@@ -112,7 +106,7 @@ class QuestionAnswersListView extends Component {
   };
 
   /** === RENDER FOR MULTIPLE ANSWER x CUMULATIVE SCORE === */
-  renderMultiCumulativeAnswer = (candidateAnswer, surveyId) => {
+  renderMultiCumulativeAnswer = (candidateAnswer, questionId) => {
     return (
       <MultipleAnswerComponent
         key={'multi-cum-ans-' + candidateAnswer.id}
@@ -121,12 +115,12 @@ class QuestionAnswersListView extends Component {
         onChange={() =>
           this.props.onChange({
             id: candidateAnswer.id,
-            surveyId,
+            questionId,
             category: 'multiple_answer'
           })
         }
         selected={this.props.selected({
-          surveyId,
+          questionId,
           id: candidateAnswer.id,
           category: 'multiple_answer'
         })}
@@ -135,17 +129,19 @@ class QuestionAnswersListView extends Component {
   };
 
   /** === RENDER FOR VC BASIC x RANGE SCORE === */
-  renderBasicRangeAnswer = (candidateAnswer, surveyId) => {
+  renderBasicRangeAnswer = (candidateAnswer, questionId) => {
     return (
       <BasicRangeAnswerComponent
         key={'basic-range-ans-' + candidateAnswer.id}
         item={candidateAnswer}
+        defaultValue={candidateAnswer.answersResponse?.inputValue}
         disabled={this.props.disabled}
         onChange={inputValue =>
           this.props.onChange({
             id: candidateAnswer.id,
             inputValue,
-            surveyId,
+            questionId,
+            isBaseValue: false,
             category: 'vc_basic'
           })
         }
@@ -154,7 +150,7 @@ class QuestionAnswersListView extends Component {
   };
 
   /** === RENDER FOR VC GROUP x RANGE SCORE === */
-  renderCompareGroupRangeAnswer = (candidateAnswer, surveyId) => {
+  renderCompareGroupRangeAnswer = (candidateAnswer, questionId) => {
     return (
       <CompareGroupRangeAnswerComponent
         item={candidateAnswer}
@@ -162,7 +158,7 @@ class QuestionAnswersListView extends Component {
         onChange={value =>
           this.props.onChange({
             ...value,
-            surveyId,
+            questionId,
             category: 'vc_compare_group'
           })
         }
@@ -184,8 +180,10 @@ export default QuestionAnswersListView;
  * ============================
  * createdBy: dyah
  * createdDate: 13092021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 16092021
  * updatedFunction:
- * -> update take survey code (separate the render per category/type)
+ * -> integration for ui take survey.
+ * -> add isBaseValue & defaultValue.
+ * -> change surveyId to questionId.
  */

@@ -24,7 +24,6 @@ import {
 import { Fonts } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
-import { questions } from './mockData';
 import NavigationService from '../../../navigation/NavigationService';
 import QuestionListDataView from './QuestionListDataView';
 
@@ -47,36 +46,89 @@ class MerchantQuestionnaireView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    let newQuestions = [];
-    questions.map(item => {
-      // calculate the total of candidate answer
-      let totalCandidateAnswerMax;
-      if (
-        item.surveyScoreType.code === 'single_score' ||
-        item.surveyScoreType.code === 'cumulative_score'
-      ) {
-        totalCandidateAnswerMax = 1;
-      } else {
-        totalCandidateAnswerMax = item.surveyCandidateAnswer.length;
-      }
-      // add questions to local state
-      newQuestions.push({
-        surveyId: item.surveyId,
-        required: item.required,
-        totalCandidateAnswerMax,
-        value: []
-      });
+    const { surveyId, surveyResponseId } = this.props.navigation.state.params;
+    let responseId = '';
+    if (surveyResponseId) responseId = `?responseId=${surveyResponseId}`;
+    this.props.merchantGetSurveyProcess({
+      id: surveyId,
+      responseId
     });
-    this.setState({ questions: newQuestions });
+    this.props.merchantGetSurveyBrandProcess(surveyId);
 
     /**SET NAVIGATION FUNCTION */
     this.setNavigationParams();
   }
-
+  /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
-    // if success with status 'completed' navigate to success screen
-    // if success with status 'inProgress' back to survey list
-    // if failed show toast
+    // check success or not (get survey)
+    if (this.props.merchant.dataGetSurvey) {
+      if (
+        prevProps.merchant.dataGetSurvey !== this.props.merchant.dataGetSurvey
+      ) {
+        let newQuestions = [];
+        this.props.merchant.dataGetSurvey.questions.map(item => {
+          // calculate the total of candidate answer
+          let totalCandidateAnswerMax;
+          let value = [];
+          if (
+            item.scoreType.code === 'single_score' ||
+            item.scoreType.code === 'cumulative_score'
+          ) {
+            totalCandidateAnswerMax = 1;
+          } else {
+            totalCandidateAnswerMax = item.candidateAnswer.length;
+          }
+          item.candidateAnswer.map(candidate => {
+            // check if answersResponse already inputed
+            if (candidate.answersResponse) {
+              const isBaseValue = candidate.isBaseValue ? true : false;
+              value.push({
+                candidateAnswerId: candidate.id,
+                inputValue: candidate.answersResponse.inputValue,
+                isBaseValue
+              });
+            }
+          });
+          // add questions to local state
+          newQuestions.push({
+            questionId: item.id,
+            scoreTypeId: item.scoreType.id,
+            required: item.required,
+            totalCandidateAnswerMax,
+            value
+          });
+        });
+        this.setState({ questions: newQuestions });
+      }
+    }
+    const dataSubmitSurveyResponse = this.props.merchant
+      .dataSubmitSurveyResponse.payload;
+    const { surveyResponseId } = this.props.navigation.state.params;
+    // check the data submit (if success)
+    if (dataSubmitSurveyResponse) {
+      if (
+        prevProps.merchant.dataSubmitSurveyResponse.payload !==
+        dataSubmitSurveyResponse
+      ) {
+        this.props.merchantGetSurveyListProcess({
+          storeId: this.props.merchant.selectedMerchant.storeId,
+          page: 1,
+          length: 10
+        });
+        if (dataSubmitSurveyResponse.status === 'completed') {
+          // if success with status 'completed' navigate to success screen
+          return NavigationService.navigate('SuccessSubmit', {
+            surveyResponseId,
+            surveyId: dataSubmitSurveyResponse.survey?.id,
+            surveyName: dataSubmitSurveyResponse.survey?.name
+          });
+        } else {
+          // if success with status 'inProgress' back to survey list
+          return NavigationService.goBack();
+        }
+      }
+    }
+    // if failed show modal error
     if (this.props.merchant.errorSubmitSurveyResponse) {
       if (
         prevProps.merchant.errorSubmitSurveyResponse !==
@@ -106,7 +158,7 @@ class MerchantQuestionnaireView extends Component {
    * @returns {callback} object/undefined unanswered "required" question.
    */
   checkUnAnsweredRequiredQuestion = id => {
-    return this.state.unAnswered.find(item => item.surveyId === id);
+    return this.state.unAnswered.find(item => item.questionId === id);
   };
 
   /**
@@ -151,12 +203,25 @@ class MerchantQuestionnaireView extends Component {
    * @returns {callback} array of unanswered "required" question or show modal confirmation finish taking survey.
    */
   submitQuestionnaire = status => {
+    // check if user didn't fill the survey yet
+    if (
+      status === 'inProgress' &&
+      !this.state.questions.find(item => item.value.length > 0)
+    ) {
+      return NavigationService.goBack();
+    }
     // CHECK UNREQUIRED QUESTION
     // if all required question already inputed (collect the answer)
     let answers = [];
     this.state.questions.map(item => {
       if (item.required) {
-        item.value.map(input => answers.push(input)); //  data for request
+        if (item.value.length > 0) {
+          answers.push({
+            scoreTypeId: item.scoreTypeId,
+            id: item.questionId,
+            response: item.value
+          });
+        }
       } else {
         // check the not required question
         let totalValue = 0;
@@ -169,27 +234,50 @@ class MerchantQuestionnaireView extends Component {
             }
           });
           // if totalValue same with totalCandidateAnswerMax assign to answer
-          if (totalValue === item.totalCandidateAnswerMax) {
-            item.value.map(input => answers.push(input)); //  data for request
+          if (
+            totalValue === item.totalCandidateAnswerMax ||
+            (totalValue < item.totalCandidateAnswerMax &&
+              status === 'inProgress')
+          ) {
+            answers.push({
+              scoreTypeId: item.scoreTypeId,
+              id: item.questionId,
+              response: item.value
+            });
+          }
+        } else {
+          if (status === 'inProgress') {
+            item.value.map(input => {
+              if (input.inputValue.length > 0) {
+                answers.push({
+                  scoreTypeId: item.scoreTypeId,
+                  id: item.questionId,
+                  response: item.value
+                });
+              }
+            });
           }
         }
       }
     });
+    const { surveyResponseId, typeId } = this.props.navigation.state.params;
     // send request
-    const payload = {
-      surveyId: this.props.navigation.state.params.surveyId,
+    const params = {
+      surveyId: this.props.merchant.dataGetSurvey?.id,
       storeId: this.props.merchant.selectedMerchant.storeId,
+      surveyQuestionId: 1,
       status,
+      typeId,
       photos: [],
-      questions: [
-        {
-          id: 1,
-          scoreType: 1,
-          response: answers
-        }
-      ]
+      questions: answers
     };
-    console.log('payload', payload);
+    if (surveyResponseId) {
+      return this.props.merchantUpdateSurveyResponseProcess({
+        params,
+        surveyResponseId
+      });
+    }
+    return this.props.merchantSubmitSurveyResponseProcess(params);
   };
   /**
    *  === SET MODAL CONFIRMATION SAVE  ===
@@ -198,6 +286,28 @@ class MerchantQuestionnaireView extends Component {
    */
   setModalConfirmationSave = value => {
     this.setState({ modalConfirmationSave: value });
+  };
+  /**
+   *  === CONVERT BRAND AND INVOICE  ===
+   * @param {array} value data of brand/invoice
+   * @param {string} type type "brand" or "invoce" to specify the attribute.
+   * @returns {callback} return string to show brand or invoice.
+   */
+  convertBrandAndInvoice = (value, type) => {
+    if (value?.length >= 1) {
+      if (value.length === 1) {
+        if (type === 'invoice') {
+          return `${value[0].invoiceGroupName}`;
+        }
+        return `${value[0].brandName}`;
+      } else {
+        if (type === 'invoice') {
+          return `${value[0].invoiceGroupName} (+${value.length - 1} Other)`;
+        }
+        return `${value[0].brandName} (+${value.length - 1} Other)`;
+      }
+    }
+    return '-';
   };
   /**
    * =======================
@@ -239,9 +349,6 @@ class MerchantQuestionnaireView extends Component {
           ]}
           onPress={() => {
             submitQuestionnaire ? submitQuestionnaire('completed') : null;
-            NavigationService.navigate('SuccessSubmit', {
-              surveyName: 'Coba Survey'
-            });
           }}
         >
           <MaterialIcon
@@ -279,11 +386,12 @@ class MerchantQuestionnaireView extends Component {
    * @returns {ReactElement} render header questionnaire (title, desc, etc).
    */
   renderHeaderQuestionnaire() {
+    const { dataGetSurvey, dataGetSurveyBrand } = this.props.merchant;
     return (
       <View style={styles.headerContainer}>
-        <Text style={Fonts.type4}>Survey Exclusive Danone September</Text>
+        <Text style={Fonts.type4}>{dataGetSurvey?.name || '-'}</Text>
         <Text style={[Fonts.type23, { paddingTop: 4 }]}>
-          Cek Store Performance
+          {dataGetSurvey?.description || '-'}
         </Text>
         <View style={{ flexDirection: 'row', paddingVertical: 12 }}>
           <View
@@ -299,7 +407,12 @@ class MerchantQuestionnaireView extends Component {
               size={14}
               style={{ marginRight: 6 }}
             />
-            <Text style={Fonts.type23}>Exclusive Danone</Text>
+            <Text style={Fonts.type23}>
+              {this.convertBrandAndInvoice(
+                dataGetSurvey?.invoiceGroups,
+                'invoice'
+              )}
+            </Text>
           </View>
           <View
             style={{
@@ -313,7 +426,9 @@ class MerchantQuestionnaireView extends Component {
               size={14}
               style={{ marginRight: 6 }}
             />
-            <Text style={Fonts.type23}>SGM (+1 Other)</Text>
+            <Text style={Fonts.type23}>
+              {this.convertBrandAndInvoice(dataGetSurveyBrand, 'brand')}
+            </Text>
           </View>
         </View>
         <Text style={Fonts.type9}>
@@ -408,7 +523,11 @@ class MerchantQuestionnaireView extends Component {
         content={'Jawaban yang sudah dimasukkan akan tetap tersimpan.'}
         okText={'Keluar'}
         cancelText={'Lanjutkan'}
-        ok={() => this.submitQuestionnaire('inProgress')}
+        ok={() =>
+          this.setState({ modalConfirmationSave: false }, () =>
+            this.submitQuestionnaire('inProgress')
+          )
+        }
         cancel={() => this.setState({ modalConfirmationSave: false })}
       />
     );
@@ -455,7 +574,8 @@ class MerchantQuestionnaireView extends Component {
     return (
       <SafeAreaView>
         <StatusBarWhite />
-        {this.props.merchant.loadingGetSurveyList ? (
+        {this.props.merchant.loadingGetSurvey ||
+        this.props.merchant.loadingGetSurveyBrand ? (
           <View style={{ height: '100%' }}>
             <LoadingPage />
           </View>
@@ -524,7 +644,8 @@ export default connect(
  * createdBy: dyah
  * createdDate: 06092021
  * updatedBy: dyah
- * updatedDate: 13092021
+ * updatedDate: 16092021
  * updatedFunction:
- * -> update take survey code (separate the question list)
+ * -> add get survey brand.
+ * -> add componentDidUpdate when success submit survey.
  */
