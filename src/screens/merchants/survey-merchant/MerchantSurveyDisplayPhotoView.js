@@ -85,7 +85,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       return this.setState({ displayPhoto: true });
     }
     if (surveyResponseId) {
-      this.props.merchantGetSurveyProcess(surveyResponseId);
+      this.props.merchantGetSurveyResponseProcess(surveyResponseId);
     } else {
       let array = _.range(
         0,
@@ -105,15 +105,17 @@ class MerchantSurveyDisplayPhotoView extends Component {
   componentDidUpdate(prevProps) {
     /**CHECK SURVEY RESPONSE */
     if (
-      prevProps.merchant.dataSurvey !== this.props.merchant.dataSurvey &&
-      this.props.merchant.dataSurvey.success
+      prevProps.merchant.dataSurveyResponse !==
+        this.props.merchant.dataSurveyResponse &&
+      this.props.merchant.dataSurveyResponse.success
     ) {
       this.checkResponsePhoto();
     }
     /**CHECK AFTER SUBMIT */
     if (this.props.merchant.newSurveyResponse) {
-      const surveyResponseId = this.props.merchant.dataSubmitSurvey.payload.id;
-      this.props.merchantGetSurveyProcess(surveyResponseId);
+      const surveyResponseId = this.props.merchant.dataSubmitSurveyResponse
+        .payload.id;
+      this.props.merchantGetSurveyResponseProcess(surveyResponseId);
       this.getSurvey();
     }
     /**CHECK NAVIGATION FUNCTION */
@@ -123,10 +125,12 @@ class MerchantSurveyDisplayPhotoView extends Component {
   }
   /** === CHECK RESPONSE PHOTO === */
   checkResponsePhoto = () => {
-    if (!_.isEmpty(this.props.merchant.dataSurvey.payload.responsePhoto)) {
+    if (
+      !_.isEmpty(this.props.merchant.dataSurveyResponse.payload.responsePhoto)
+    ) {
       const newSurveyResponse = _.orderBy(
-        this.props.merchant.dataSurvey.payload.responsePhoto,
-        ['surveyQuestionId'],
+        this.props.merchant.dataSurveyResponse.payload.responsePhoto,
+        ['order'],
         ['asc']
       );
       const arraySurveyQuestionId = [
@@ -257,9 +261,10 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === SUBMIT PHOTO === */
   submitPhoto = () => {
     const newPhoto = [];
-    const { surveyQuestions } = this.props.navigation.state.params;
+    const { surveyQuestions, typeId } = this.props.navigation.state.params;
     let params = {
       surveyId: this.props.navigation.state.params.surveyId,
+      typeId,
       storeId: this.props.merchant.selectedMerchant.storeId,
       storeName: this.props.merchant.selectedMerchant.name,
       surveySerialId: this.props.navigation.state.params.surveySerialId
@@ -278,22 +283,29 @@ class MerchantSurveyDisplayPhotoView extends Component {
         ...params,
         photos: newPhoto,
         status: '',
-        surveyQuestionId: surveyQuestions.find(item => item.order === 1).surveyQuestionId
+        surveyQuestionId: surveyQuestions.find(item => item.order === 1)
+          .surveyQuestionId
       };
-      this.props.merchantSubmitSurveyProcess(params);
+      this.props.merchantSubmitSurveyResponseProcess(params);
     } else {
       params = {
         photos: newPhoto,
+        typeId,
         status: 'completed',
-        surveyQuestionId: surveyQuestions.find(item => item.order === 2).surveyQuestionId
+        surveyQuestionId: surveyQuestions.find(item => item.order === 2)
+          .surveyQuestionId
       };
       let surveyResponseId = null;
-      if (this.props.merchant.dataSubmitSurvey.payload) {
-        surveyResponseId = this.props.merchant.dataSubmitSurvey.payload.id;
+      if (this.props.merchant.dataSubmitSurveyResponse.payload) {
+        surveyResponseId = this.props.merchant.dataSubmitSurveyResponse.payload
+          .id;
       } else {
         surveyResponseId = this.props.navigation.state.params.surveyResponseId;
       }
-      this.props.merchantUpdateSurveyProcess({ params, surveyResponseId });
+      this.props.merchantUpdateSurveyResponseProcess({
+        params,
+        surveyResponseId
+      });
     }
   };
   /** === CONTINUE STEP === */
@@ -396,7 +408,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     const { surveyQuestions } = this.props.navigation.state.params;
     return (
       <View style={[styles.cardContainer]}>
-        {this.props.merchant.loadingGetSurvey && <SkeletonType26 />}
+        {this.props.merchant.loadingGetSurveyResponse && <SkeletonType26 />}
         {this.state.photosDisplayBefore.length !== 0 ? (
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
             <Text>{`Foto ${
@@ -433,7 +445,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
           </View>
         ) : null}
         <View style={{ height: 16 }} />
-        {this.props.merchant.loadingGetSurvey && <SkeletonType26 />}
+        {this.props.merchant.loadingGetSurveyResponse && <SkeletonType26 />}
         {this.state.photosDisplayAfter.length !== 0 ? (
           <View style={[styles.insideCard, GlobalStyle.shadowForBox5]}>
             <Text>{`Foto ${
@@ -690,7 +702,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
     return (
       <ModalBottomSubmit
         open={this.state.modalSubmit}
-        loading={this.props.merchant.loadingSubmitSurvey}
+        loading={this.props.merchant.loadingSubmitSurveyResponse}
         title={`Kirim foto "${sectionName}"`}
         data={this.state.photo}
         onClose={() => this.setState({ modalSubmit: false })}
@@ -736,7 +748,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       <SafeAreaView>
         <BackHandlerBackSpecific navigation={this.props.navigation} />
         <StatusBarRed />
-        {this.props.merchant.loadingGetSurvey ? (
+        {this.props.merchant.loadingGetSurveyResponse ? (
           <View style={{ height: '100%' }}>
             <LoadingPage />
           </View>
@@ -863,7 +875,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 08092021
+ * updatedDate: 16092021
  * updatedFunction:
- * -> update property surveyStep to surveyQuestion.
+ * -> add typeId.
+ * -> change order by "surveyQuestionId" to "order".
  */

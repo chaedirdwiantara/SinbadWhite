@@ -18,7 +18,7 @@ class InputType7 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: '',
+      text: this.props.defaultValue || '',
       typing: false,
       typingTimeout: 0,
       isFocused: false
@@ -131,8 +131,8 @@ export default InputType7;
  * ============================
  * createdBy: dyah
  * createdDate: 06092021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 16092021
  * updatedFunction:
- * -> create inputType7 component.
+ * -> add prop defaultValue.
  */

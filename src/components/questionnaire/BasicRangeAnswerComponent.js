@@ -22,10 +22,11 @@ class BasicRangeAnswerComponent extends Component {
           <Text style={Fonts.type23}>{this.props.item.title}</Text>
           <View style={{ width: '40%' }}>
             <InputType7
+              defaultValue={this.props.defaultValue}
               editable={!this.props.disabled}
               placeholder="Input disini"
-              max={100}
-              min={1}
+              max={1000000}
+              min={0}
               keyboardType="numeric"
               text={inputValue => this.props.onChange(inputValue)}
             />
@@ -54,8 +55,9 @@ export default BasicRangeAnswerComponent;
  * ============================
  * createdBy: dyah
  * createdDate: 13092021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 16092021
  * updatedFunction:
- * -> add questionnaire component (basic range answer)
+ * -> add props default value.
+ * -> update min & max.
  */
