@@ -153,7 +153,7 @@ const SfaImageInput = props => {
     return (
       <View style={styles.smallContainerButtonImage}>
         <TouchableOpacity
-          style={styles.buttonImage}
+          style={styles.buttonImageDelete}
           onPress={() => onDeleteImage()}
         >
           <Text style={Fonts.type36}>Hapus</Text>
@@ -162,7 +162,7 @@ const SfaImageInput = props => {
           style={styles.buttonImage}
           onPress={() => clickCamera()}
         >
-          <Text style={Fonts.type36}>Ulangi Foto</Text>
+          <Text style={Fonts.type19}>Ulangi Foto</Text>
         </TouchableOpacity>
       </View>
     );
@@ -206,7 +206,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   buttonImage: {
-    width: 148,
+    width: (35 / 100) * width,
+    height: 48,
+    borderRadius: 5,
+    borderColor: masterColor.mainColor,
+    backgroundColor: masterColor.mainColor,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonImageDelete: {
+    width: (35 / 100) * width,
     height: 48,
     borderRadius: 5,
     borderColor: masterColor.mainColor,

@@ -175,6 +175,8 @@ class HistoryDetailPaymentInformation extends Component {
       .parcelPromoPaymentAmount;
     const detailHistory = this.props.history.dataDetailHistory;
     const isPayLater = detailHistory.billing.paymentTypeId === PAY_LATER;
+    const isDeliveredOrDone =
+      detailHistory.status === DONE || detailHistory.status === DELIVERED;
     return (
       <View>
         <View style={GlobalStyle.boxPadding} />
@@ -191,7 +193,7 @@ class HistoryDetailPaymentInformation extends Component {
               <Text style={Fonts.type48}>Informasi Pembayaran</Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              {isPayLater ? (
+              {isPayLater && isDeliveredOrDone ? (
                 <TouchableOpacity
                   onPress={() =>
                     NavigationService.navigate('HistoryCollectionLog', {
