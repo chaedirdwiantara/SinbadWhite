@@ -482,6 +482,26 @@ export function MerchantGetSurveyListLoadMore(data) {
 }
 /**
  * ===========================================
+ * GET TOTAL SURVEY
+ * ===========================================
+ */
+export function merchantGetTotalSurveyProcess(data) {
+  return { type: types.MERCHANT_GET_TOTAL_SURVEY_PROCESS, payload: data };
+}
+export function merchantGetTotalSurveySuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_TOTAL_SURVEY_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_GET_TOTAL_SURVEY_FAILED, payload: data };
+}
+export function merchantGetTotalSurveyFailed(data) {
+  return { type: types.MERCHANT_GET_TOTAL_SURVEY_FAILED, payload: data };
+}
+/**
+ * ===========================================
  * GET SURVEY BY ID
  * ===========================================
  */
@@ -499,6 +519,26 @@ export function merchantGetSurveySuccess(data) {
 }
 export function merchantGetSurveyFailed(data) {
   return { type: types.MERCHANT_GET_SURVEY_FAILED, payload: data };
+}
+/**
+ * ===========================================
+ * GET SURVEY BRAND BY SURVEY ID
+ * ===========================================
+ */
+export function merchantGetSurveyBrandProcess(data) {
+  return { type: types.MERCHANT_GET_SURVEY_BRAND_PROCESS, payload: data };
+}
+export function merchantGetSurveyBrandSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_SURVEY_BRAND_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_GET_SURVEY_BRAND_FAILED, payload: data };
+}
+export function merchantGetSurveyBrandFailed(data) {
+  return { type: types.MERCHANT_GET_SURVEY_BRAND_FAILED, payload: data };
 }
 /**
  * ===========================================

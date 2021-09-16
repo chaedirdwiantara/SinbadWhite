@@ -225,6 +225,17 @@ function* getSurveyList(actions) {
     yield put(ActionCreators.merchantGetSurveyListFailed(error));
   }
 }
+/** GET TOTAL SURVEY */
+function* getTotalSurvey(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getTotalSurvey(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetTotalSurveySuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetTotalSurveyFailed(error));
+  }
+}
 /** GET SURVEY BY ID */
 function* getSurvey(actions) {
   try {
@@ -234,6 +245,17 @@ function* getSurvey(actions) {
     yield put(ActionCreators.merchantGetSurveySuccess(response));
   } catch (error) {
     yield put(ActionCreators.merchantGetSurveyFailed(error));
+  }
+}
+/** GET SURVEY BRAND BY SURVEY ID */
+function* getSurveyBrand(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getSurveyBrand(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetSurveyBrandSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetSurveyBrandFailed(error));
   }
 }
 /** GET SURVEY RESPONSE */
@@ -323,7 +345,9 @@ function* MerchantSaga() {
   yield takeEvery(types.MERCHANT_GET_WAREHOUSE_PROCESS, getWarehouse);
   yield takeEvery(types.VALIDATE_AREA_MAPPING_PROCESS, validateAreaMapping);
   yield takeLatest(types.MERCHANT_GET_SURVEY_LIST_PROCESS, getSurveyList);
+  yield takeLatest(types.MERCHANT_GET_TOTAL_SURVEY_PROCESS, getTotalSurvey);
   yield takeLatest(types.MERCHANT_GET_SURVEY_PROCESS, getSurvey);
+  yield takeLatest(types.MERCHANT_GET_SURVEY_BRAND_PROCESS, getSurveyBrand);
   yield takeLatest(
     types.MERCHANT_GET_SURVEY_RESPONSE_PROCESS,
     getSurveyResponse

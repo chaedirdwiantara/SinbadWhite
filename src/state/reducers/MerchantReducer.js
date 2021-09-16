@@ -24,7 +24,9 @@ const INITIAL_STATE = {
   loadingGetListSurvey: false,
   refreshGetSurveyList: false,
   loadingLoadMoreSurveyList: false,
+  loadingGetTotalSurvey: false,
   loadingGetSurvey: false,
+  loadingGetSurveyBrand: false,
   loadingGetSurveyResponse: false,
   loadingSubmitSurveyResponse: false,
   loadingValidateAreaMapping: false,
@@ -137,7 +139,9 @@ const INITIAL_STATE = {
   },
   totalDataGetSurveyList: 0,
   pageGetSurveyList: 0,
+  dataGetTotalSurvey: null,
   dataGetSurvey: null,
+  dataGetSurveyBrand: null,
   newSurveyResponse: false,
   dataSurveyResponse: {
     id: null,
@@ -173,7 +177,9 @@ const INITIAL_STATE = {
   errorGetStoreStatus: null,
   errorGetWarehouse: null,
   errorGetSurveyList: null,
+  errorGetTotalSurvey: null,
   errorGetSurvey: null,
+  errorGetSurveyBrand: null,
   errorGetSurveyResponse: null,
   errorSubmitSurveyResponse: null,
   errorValidateAreaMapping: null,
@@ -953,6 +959,33 @@ export const merchant = createReducer(INITIAL_STATE, {
   },
   /**
    * ============================
+   * GET TOTAL SURVEY
+   * ============================
+   */
+  [types.MERCHANT_GET_TOTAL_SURVEY_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetTotalSurvey: true,
+      dataGetTotalSurvey: null,
+      errorGetTotalSurvey: null
+    };
+  },
+  [types.MERCHANT_GET_TOTAL_SURVEY_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetTotalSurvey: false,
+      dataGetTotalSurvey: action.payload.payload
+    };
+  },
+  [types.MERCHANT_GET_TOTAL_SURVEY_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetTotalSurvey: false,
+      errorGetTotalSurvey: action.payload
+    };
+  },
+  /**
+   * ============================
    * GET SURVEY BY ID
    * ============================
    */
@@ -968,7 +1001,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetSurvey: false,
-      dataGetSurvey: action.payload
+      dataGetSurvey: action.payload.payload
     };
   },
   [types.MERCHANT_GET_SURVEY_FAILED](state, action) {
@@ -976,6 +1009,33 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetSurvey: false,
       errorGetSurvey: action.payload
+    };
+  },
+  /**
+   * ============================
+   * GET SURVEY BRAND BY SURVEY ID
+   * ============================
+   */
+  [types.MERCHANT_GET_SURVEY_BRAND_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyBrand: true,
+      dataGetSurveyBrand: null,
+      errorGetSurveyBrand: null
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_BRAND_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyBrand: false,
+      dataGetSurveyBrand: action.payload.payload.data
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_BRAND_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyBrand: false,
+      errorGetSurveyBrand: action.payload
     };
   },
 
