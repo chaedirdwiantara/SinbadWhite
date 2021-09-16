@@ -80,7 +80,11 @@ class SurveyListDataView extends Component {
     // surveyType questionnaire
     if (item.responseStatus === 'completed') {
       // navigate to result
-      return console.log('navigate to result');
+      return NavigationService.navigate('MerchantSurveyResultView', {
+        surveyResponseId: item.surveyResponseId,
+        surveyId: item.id,
+        surveyName: item.surveyName,
+      });
     } else {
       return NavigationService.navigate('MerchantQuestionnaireView', {
         surveyId: item.id,

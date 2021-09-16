@@ -178,6 +178,13 @@ function getSurveyResponse(id) {
     method: 'GET'
   });
 }
+/** GET SURVEY RESPONSE TEST*/
+function getSurveyResponseTest(id) {
+  return ApiRest({
+    method: 'GET',
+    testpath: `https://0944a58f-17fd-46cb-a43e-e1c2282cf435.mock.pstmn.io/supplier/service-survey/v1/survey/response/${id}`
+  });
+}
 /** SUBMIT SURVEY RESPONSE */
 function submitSurveyResponse(params) {
   return ApiRest({
@@ -244,6 +251,7 @@ export const MerchantMethod = {
   getSurveyResponse,
   submitSurveyResponse,
   updateSurveyResponse,
+  getSurveyResponseTest,
   validateAreaMapping,
   getSalesSegmentation
 };

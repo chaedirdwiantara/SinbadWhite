@@ -105,9 +105,8 @@ class JourneyListDataView extends Component {
     data.storeId = data.storeId.toString();
     this.props.merchantSelected(data);
     setTimeout(() => {
-      NavigationService.navigate('MerchantHomeView', {
-        storeName
-      });
+      this.props.getSurveyResult(data.storeName)
+      NavigationService.navigate('MerchantHomeView');
     }, 100);
   }
   /** go to chat */
@@ -370,6 +369,7 @@ class JourneyListDataView extends Component {
   }
   /** === RENDER DATA CONTENT === */
   renderContent() {
+    console.log("this.props.journey.dataGetJourneyPlanV2", this.props.journey.dataGetJourneyPlanV2)
     return (
       <View style={{ flex: 1 }}>
         <FlatList

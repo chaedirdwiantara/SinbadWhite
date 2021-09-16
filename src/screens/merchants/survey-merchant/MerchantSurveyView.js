@@ -128,7 +128,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MerchantSurveyView);
 
 /**
  * ============================

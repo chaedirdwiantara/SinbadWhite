@@ -137,6 +137,9 @@ const INITIAL_STATE = {
     },
     success: null
   },
+  dataSurveyResult: {
+    storeName: ''
+  },
   totalDataGetSurveyList: 0,
   pageGetSurveyList: 0,
   dataGetTotalSurvey: null,
@@ -156,7 +159,7 @@ const INITIAL_STATE = {
     status: '',
     photos: []
   },
-
+  dataTotalScoreSurvey: "0",
   dataValidateAreaMapping: null,
   dataSalesSegmentation: null,
   /** error */
@@ -905,7 +908,17 @@ export const merchant = createReducer(INITIAL_STATE, {
       dataMerchantDisabledField: INITIAL_STATE.dataMerchantDisabledField
     };
   },
-
+  /**
+   * ============================
+   * SURVEY RESULT
+   * ============================
+   */
+   [types.MERCHANT_SURVEY_RESULT](state, action) {
+    return {
+      ...state,
+      dataSurveyResult: {storeName : action.payload}
+    };
+  }, 
   /**
    * ============================
    * GET SURVEY LIST
@@ -1061,7 +1074,8 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetSurveyResponse: false,
-      dataSurveyResponse: action.payload
+      dataSurveyResponse: action.payload,
+      dataTotalScoreSurvey: action.totalScore
     };
   },
   [types.MERCHANT_GET_SURVEY_RESPONSE_FAILED](state, action) {

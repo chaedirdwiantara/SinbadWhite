@@ -182,36 +182,36 @@ function* getJourneyBookDetail(actions) {
   }
 }
 /** === GET STORE STATUS === */
-function* getStoreStatus(actions){
+function* getStoreStatus(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.getStoreStatus(actions.payload)
-    })
-    yield put(ActionCreators.merchantGetStoreStatusSuccess(response))
+      return MerchantMethod.getStoreStatus(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetStoreStatusSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.merchantGetStoreStatusFailed(error))
+    yield put(ActionCreators.merchantGetStoreStatusFailed(error));
   }
 }
 /** GET WAREHOUSE */
-function* getWarehouse(actions){
+function* getWarehouse(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.getWarehouse(actions.payload)
-    })
-    yield put(ActionCreators.merchantGetWarehouseSuccess(response))
+      return MerchantMethod.getWarehouse(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetWarehouseSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.merchantGetWarehouseFailed(error))
+    yield put(ActionCreators.merchantGetWarehouseFailed(error));
   }
 }
 /** VALIDATE AREA MAPPING */
-function* validateAreaMapping(actions){
+function* validateAreaMapping(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.validateAreaMapping(actions.payload)
-    })
-    yield put(ActionCreators.validateAreaMappingSuccess(response))
+      return MerchantMethod.validateAreaMapping(actions.payload);
+    });
+    yield put(ActionCreators.validateAreaMappingSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.validateAreaMappingFailed(error))
+    yield put(ActionCreators.validateAreaMappingFailed(error));
   }
 }
 /** GET SURVEY LIST */
@@ -264,7 +264,14 @@ function* getSurveyResponse(actions) {
     const response = yield call(() => {
       return MerchantMethod.getSurveyResponse(actions.payload);
     });
-    yield put(ActionCreators.merchantGetSurveyResponseSuccess(response));
+    let arrResult = response.data.payload.survey.questions.map(data =>
+      parseFloat(data.questionResponseScore.result)
+    );
+    let totalScore = arrResult.reduce((a, b) => a + b, 0);
+
+    yield put(
+      ActionCreators.merchantGetSurveyResponseSuccess(response, totalScore)
+    );
   } catch (error) {
     yield put(ActionCreators.merchantGetSurveyResponseFailed(error));
   }
@@ -285,6 +292,18 @@ function* updateSurveyResponse(actions) {
   try {
     const response = yield call(() => {
       return MerchantMethod.updateSurveyResponse(actions.payload);
+    });
+    yield put(ActionCreators.merchantSubmitSurveyResponseSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantSubmitSurveyResponseFailed(error));
+  }
+}
+
+/** SURVEY  RESULT TEST */
+function* getSurveyResultResponse(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.submitSurveyResponse(actions.payload);
     });
     yield put(ActionCreators.merchantSubmitSurveyResponseSuccess(response));
   } catch (error) {

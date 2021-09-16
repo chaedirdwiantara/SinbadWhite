@@ -146,6 +146,9 @@ export const MERCHANT_SUBMIT_SURVEY_RESPONSE_FAILED =
 /** MERCHANT UPDATE SURVEY RESPONSE */
 export const MERCHANT_UPDATE_SURVEY_RESPONSE_PROCESS =
   'MerchantUpdateSurveyResponseProcess';
+export const MERCHANT_UPDATE_SURVEY_PROCESS = 'MerchantUpdateSurveyProcess';
+/** MERCHANT SURVEY RESULT*/
+export const MERCHANT_SURVEY_RESULT = 'MerchantGetSurveyResult';
 /** MERCHANT VALIDATE AREA MAPPING */
 export const VALIDATE_AREA_MAPPING_PROCESS = 'ValidateAreaMappingProcess'
 export const VALIDATE_AREA_MAPPING_SUCCESS = 'ValidateAreaMappingSuccess'
