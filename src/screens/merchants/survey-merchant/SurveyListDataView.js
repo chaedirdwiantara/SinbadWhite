@@ -28,11 +28,15 @@ class SurveyListDataView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  /** FOR REFRESH */
   onHandleRefresh = () => {
     this.props.merchantGetSurveyListRefresh();
     this.getSurveyList(1);
+    this.props.merchantGetTotalSurveyProcess(
+      this.props.merchant.selectedMerchant?.storeId
+    );
   };
-
+  /** FOR LOAD MORE */
   onHandleLoadMore = () => {
     if (
       !this.props.merchant.errorGetSurveyList &&
@@ -59,6 +63,33 @@ class SurveyListDataView extends Component {
     };
     this.props.merchantGetSurveyListProcess(params);
   }
+  /** FOR WHEN CLICKING THE SURVEY */
+  goToSurvey = item => {
+    const { readOnly } = this.props.navigation.state.params;
+    if (item.surveyType === 'photo') {
+      return NavigationService.navigate('MerchantSurveyDisplayPhotoView', {
+        readOnly,
+        surveyId: item.id,
+        surveyName: item.surveyName,
+        typeId: item.typeId,
+        surveyResponseId: item.surveyResponseId,
+        surveySerialId: item.surveySerialId,
+        surveyQuestions: item.surveyQuestions
+      });
+    }
+    // surveyType questionnaire
+    if (item.responseStatus === 'completed') {
+      // navigate to result
+      return console.log('navigate to result');
+    } else {
+      return NavigationService.navigate('MerchantQuestionnaireView', {
+        surveyId: item.id,
+        surveyName: item.surveyName,
+        typeId: item.typeId,
+        surveyResponseId: item.surveyResponseId
+      });
+    }
+  };
   /**
    * ========================
    * RENDER
@@ -103,31 +134,12 @@ class SurveyListDataView extends Component {
   };
   /** === RENDER SURVEY === */
   renderItem({ item }) {
-    const { readOnly } = this.props.navigation.state.params;
     return (
       <View style={[styles.menuContainer]}>
         <View style={[styles.card, GlobalStyle.shadowForBox]}>
           <TouchableOpacity
             style={styles.cardInside}
-            onPress={() => {
-              if (item.surveyType === 'photo') {
-                return NavigationService.navigate(
-                  'MerchantSurveyDisplayPhotoView',
-                  {
-                    readOnly,
-                    surveyId: item.id,
-                    surveyName: item.surveyName,
-                    surveyResponseId: item.surveyResponseId,
-                    surveySerialId: item.surveySerialId,
-                    surveyQuestions: item.surveyQuestions
-                  }
-                );
-              }
-              NavigationService.navigate('MerchantQuestionnaireView', {
-                surveyId: item.id,
-                surveyName: item.surveyName
-              });
-            }}
+            onPress={() => this.goToSurvey(item)}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <MaterialIcon
@@ -205,6 +217,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Color.fontBlack10,
     flexDirection: 'row',
+    alignSelf: 'flex-start',
     alignItems: 'center'
   }
 });
@@ -226,8 +239,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(SurveyListDataView);
  * ============================
  * createdBy: dyah
  * createdDate: 13092021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 16092021
  * updatedFunction:
- * -> add survey list data.
+ * -> create new function when going to survey.
+ * -> update stylesheet for survey response status.
+ * -> add new props when refresh (getTotalSurvey).
  */
