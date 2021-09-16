@@ -196,7 +196,6 @@ class JourneyView extends Component {
     switch (type) {
       case 'existing_merchant':
         this.setState({
-          openModalAddMerchant: false,
           openModalMerchantList: true
         });
         break;
@@ -554,8 +553,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
- * updatedDate: 12082021
+ * updatedBy: Raka
+ * updatedDate: 14092021
  * updatedFunction:
- * -> update parameter storetype.
+ * -> make dialog multiple when open toko existing dialog.
  */
