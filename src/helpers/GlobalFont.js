@@ -820,6 +820,12 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 16,
     color: Color.fontBlack50
+  },
+  textDetailScoreHeader: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 16,
+    lineHeight: 16,
+    color: Color.fontBlack50
   }
 });
 

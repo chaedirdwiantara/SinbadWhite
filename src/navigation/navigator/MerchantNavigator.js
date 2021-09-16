@@ -349,11 +349,11 @@ const MerchantNavigator = {
     screen: MerchantSurveyResultView,
     navigationOptions: {
       headerTitle: 'Hasil Survey',
-      headerTitleStyle: GlobalFont.textHeaderPage,
+      title: 'Hasil Survey',
+      headerTitleStyle: [GlobalFont.textHeaderPage, { marginLeft: 0 }],
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
-      },
-      gesturesEnabled: false
+      }
     }
   }
 };

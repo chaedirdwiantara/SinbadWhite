@@ -19,9 +19,6 @@ let ScreenHeight = Dimensions.get('window').height;
 class SuccessSubmitView extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      caption: this.props.navigation.state
-    };
   }
 
   /**
@@ -29,7 +26,10 @@ class SuccessSubmitView extends Component {
    * RENDER VIEW
    * ==============================
    */
-  /** === STATUS BAR === */
+  /**
+   * === RENDER STATUS BAR ===
+   * @returns {ReactElement} render status bar.
+   */
   renderStatusBar() {
     return (
       <StatusBar
@@ -38,8 +38,16 @@ class SuccessSubmitView extends Component {
       />
     );
   }
-  /** === RENDER BUTTON === */
+  /**
+   * === RENDER BUTTON ===
+   * @returns {ReactElement} render button.
+   */
   renderButton() {
+    const {
+      surveyResponseId,
+      surveyId,
+      surveyName
+    } = this.props.navigation.state.params;
     return (
       <ButtonSingle
         whiteTransparent
@@ -48,13 +56,18 @@ class SuccessSubmitView extends Component {
         borderRadius={4}
         onPress={() =>
           NavigationService.navigate('MerchantSurveyResultView', {
-            readOnly: false
+            surveyResponseId,
+            surveyId,
+            surveyName
           })
         }
       />
     );
   }
-  /** === RENDER TITLE CAPTION === */
+  /**
+   * === RENDER TITLE CAPTION ===
+   * @returns {ReactElement} render title caption.
+   */
   renderTitleCaption() {
     return (
       <Text style={[Fonts.type6, { marginTop: '10%', alignContent: 'center' }]}>
@@ -62,9 +75,13 @@ class SuccessSubmitView extends Component {
       </Text>
     );
   }
-  /** === RENDER CAPTION === */
+  /**
+   * === RENDER CAPTION ===
+   * @returns {ReactElement} render caption.
+   */
 
   renderCaption() {
+    const { surveyName } = this.props.navigation.state.params;
     return (
       <Text
         style={[
@@ -72,12 +89,14 @@ class SuccessSubmitView extends Component {
           { marginTop: '3%', marginBottom: '5%', textAlign: 'center' }
         ]}
       >
-        {`Terima kasih sudah menyelesaikan "${this?.props?.navigation?.state
-          ?.params?.surveyName ?? '-'}" `}
+        {`Terima kasih sudah menyelesaikan "${surveyName ?? '-'}". `}
       </Text>
     );
   }
-  /** === RENDER CONTENT === */
+  /**
+   * === RENDER CONTENT ===
+   * @returns {ReactElement} render content.
+   */
   renderContent() {
     return (
       <View style={styles.centeredCaption}>
@@ -91,7 +110,10 @@ class SuccessSubmitView extends Component {
       </View>
     );
   }
-  /** === RENDER BACKGROUND === */
+  /**
+   * === RENDER BACKGROUND ===
+   * @returns {ReactElement} render background.
+   */
   renderBackground() {
     return (
       <ImageBackground

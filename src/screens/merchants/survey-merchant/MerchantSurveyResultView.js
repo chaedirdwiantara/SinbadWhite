@@ -30,11 +30,10 @@ class MerchantSurveyResultView extends Component {
     super(props);
     this.state = {
       openCollapse: false,
-      activeIndexCollapse: 0,
-      surveyResponse: {},
-      surveyTotalScore: 0
+      activeIndexCollapse: 0
     };
   }
+
   /**
    * =======================
    * FUNCTIONAL
@@ -42,25 +41,33 @@ class MerchantSurveyResultView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    let surveyResponseId = 109;
+    const { surveyResponseId, surveyId } = this.props.navigation.state.params;
+
+    this.props.merchantGetSurveyBrandProcess(surveyId);
     this.props.merchantGetSurveyResponseProcess(surveyResponseId);
   }
-  /** === DID UPDATE === */
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.merchant.dataSurveyResponse !==
-        this.props.merchant.dataSurveyResponse &&
-      this.props.merchant.dataSurveyResponse.success
-    ) {
-      this.setState({
-        surveyResponse:
-          this?.props?.merchant?.dataSurveyResponse?.payload ?? null
-      });
-      this.setState({
-        surveyTotalScore: this?.props?.merchant?.dataTotalScoreSurvey ?? null
-      });
+  /**
+   *  === CONVERT BRAND AND INVOICE  ===
+   * @param {array} value data of brand/invoice
+   * @param {string} type type "brand" or "invoce" to specify the attribute.
+   * @returns {callback} return string to show brand or invoice.
+   */
+  convertBrandAndInvoice = (value, type) => {
+    if (value?.length >= 1) {
+      if (value.length === 1) {
+        if (type === 'invoice') {
+          return `${value[0].invoiceGroupName}`;
+        }
+        return `${value[0].brandName}`;
+      } else {
+        if (type === 'invoice') {
+          return `${value[0].invoiceGroupName} (+${value.length - 1} Other)`;
+        }
+        return `${value[0].brandName} (+${value.length - 1} Other)`;
+      }
     }
-  }
+    return '-';
+  };
 
   /**
    * =======================
@@ -73,26 +80,26 @@ class MerchantSurveyResultView extends Component {
    * @returns {ReactElement} render header of DETAIL SCORE.
    */
   renderDetailScoreHeader() {
+    const { dataSurveyResult, dataTotalScoreSurvey } = this.props.merchant;
     return (
       <View
         style={{
           flex: 0.5,
           flexDirection: 'row',
           justifyContent: 'space-around',
-          alignContent: 'center',
-          paddingVertical: 20
+          alignContent: 'center'
         }}
       >
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Text style={Fonts.type23}>Responden</Text>
-          <Text style={[Fonts.type4, { paddingTop: 4 }]}>
-            {this.props.merchant.dataSurveyResult.storeName ?? '-'}
+          <Text style={[Fonts.textDetailScoreHeader, { paddingTop: 4 }]}>
+            {dataSurveyResult.storeName ?? '-'}
           </Text>
         </View>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Text style={Fonts.type23}>Total Skor</Text>
-          <Text style={[Fonts.type4, { paddingTop: 4 }]}>
-            {this.state.surveyTotalScore ?? '0'}
+          <Text style={[Fonts.textDetailScoreHeader, { paddingTop: 4 }]}>
+            {dataTotalScoreSurvey ?? '0'}
           </Text>
         </View>
       </View>
@@ -149,9 +156,11 @@ class MerchantSurveyResultView extends Component {
    * @memberof renderDetailScoreContent
    */
   renderCollapse() {
+    const dataSurveyResponse = this.props.merchant.dataSurveyResponse.payload;
+
     return (
       <FlatList
-        data={this.state.surveyResponse?.survey?.questions ?? []}
+        data={dataSurveyResponse?.survey?.questions ?? []}
         keyExtractor={(data, index) => index.toString()}
         renderItem={({ item, index }) => (
           <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -198,7 +207,7 @@ class MerchantSurveyResultView extends Component {
             </View>
             <View style={{ flex: 1 }}>
               <View style={styles.boxScore}>
-                <Text>{item?.questionResponseScore?.result ?? '-'}</Text>
+                <Text>{item.questionResponseScore.result ?? '-'}</Text>
               </View>
             </View>
           </View>
@@ -212,6 +221,9 @@ class MerchantSurveyResultView extends Component {
    * @returns {ReactElement} render header.
    */
   renderHeader() {
+    const dataSurveyResponse = this.props.merchant.dataSurveyResponse.payload;
+    const dataGetSurveyBrand = this.props.merchant.dataGetSurveyBrand;
+
     return (
       <View
         style={[
@@ -225,12 +237,19 @@ class MerchantSurveyResultView extends Component {
         ]}
       >
         <Text style={[Fonts.type4, { paddingLeft: 0 }]}>
-          {this.state.surveyResponse?.survey?.name ?? '-'}
+          {dataSurveyResponse?.survey?.name || '-'}
         </Text>
         <Text style={[Fonts.type23, { paddingTop: 4 }]}>
-          {this.state.surveyResponse?.survey?.description ?? '-'}
+          {dataSurveyResponse?.survey?.description || '-'}
         </Text>
-        <View style={{ flexDirection: 'row', paddingVertical: 12 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            flex: 1,
+            flexWrap: 'wrap',
+            paddingVertical: 12
+          }}
+        >
           <View
             style={{
               flexDirection: 'row',
@@ -245,9 +264,10 @@ class MerchantSurveyResultView extends Component {
               style={{ marginRight: 6 }}
             />
             <Text style={Fonts.type23}>
-              {this.state.surveyResponse?.survey?.invoiceGroups.length > 0
-                ? this.state.surveyResponse?.survey?.invoiceGroups.join(',')
-                : ' - Tidak ada Invoice'}
+              {this.convertBrandAndInvoice(
+                dataSurveyResponse?.survey?.invoiceGroups,
+                'invoice'
+              )}
             </Text>
           </View>
           <View
@@ -263,11 +283,7 @@ class MerchantSurveyResultView extends Component {
               style={{ marginRight: 6 }}
             />
             <Text style={Fonts.type23}>
-              {this.state.surveyResponse?.survey?.brands.length > 0
-                ? `${this.state.surveyResponse?.survey?.brands[0] ??
-                    '-'}(+${this.state.surveyResponse?.survey?.brands.length -
-                    1})`
-                : '- Tidak ada Brand'}
+              {this.convertBrandAndInvoice(dataGetSurveyBrand, 'brand')}
             </Text>
           </View>
         </View>
@@ -294,6 +310,7 @@ class MerchantSurveyResultView extends Component {
    * @returns {ReactElement} render bottom button.
    */
   renderButton() {
+    const { dataSurveyResult } = this.props.merchant;
     return (
       <View
         style={[
@@ -312,7 +329,7 @@ class MerchantSurveyResultView extends Component {
           borderRadius={4}
           onPress={() =>
             NavigationService.navigate('MerchantHomeView', {
-              readOnly: false
+              storeName: dataSurveyResult.storeName ?? '-'
             })
           }
         />
@@ -338,7 +355,8 @@ class MerchantSurveyResultView extends Component {
     return (
       <SafeAreaView>
         <StatusBarWhite />
-        {Object.keys(this.state.surveyResponse).length === 0 ? (
+        {this.props.merchant.loadingGetSurveyResponse ||
+        this.props.merchant.loadingGetSurveyBrand ? (
           <View style={{ height: '100%' }}>
             <LoadingPage />
           </View>
