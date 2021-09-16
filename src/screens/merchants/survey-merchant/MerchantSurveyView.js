@@ -46,16 +46,26 @@ class MerchantSurveyView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     this.refreshMerchantGetLogAllActivityProcess();
-    const totalSurvey = this.props.merchant.surveyList.payload.data.length;
-    const totalCompletedSurvey = this.props.merchant.surveyList.payload.data.filter(
-      item => item.responseStatus === 'completed'
-    ).length;
-    const { readOnly } = this.props.navigation.state.params;
-    this.props.navigation.setParams({
-      totalSurvey,
-      totalCompletedSurvey,
-      readOnly
-    });
+    this.props.merchantGetTotalSurveyProcess(
+      this.props.merchant.selectedMerchant?.storeId
+    );
+  }
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    if (this.props.merchant.dataGetTotalSurvey) {
+      if (
+        prevProps.merchant.dataGetTotalSurvey !==
+        this.props.merchant.dataGetTotalSurvey
+      ) {
+        const { readOnly } = this.props.navigation.state.params;
+        this.props.navigation.setParams({
+          totalSurvey: this.props.merchant.dataGetTotalSurvey.total,
+          totalCompletedSurvey: this.props.merchant.dataGetTotalSurvey
+            .completed,
+          readOnly
+        });
+      }
+    }
   }
   /**
    * ========================
@@ -89,7 +99,8 @@ class MerchantSurveyView extends Component {
     return (
       <SafeAreaView>
         <StatusBarWhite />
-        {this.props.merchant.loadingGetSurveyList ? (
+        {this.props.merchant.loadingGetSurveyList ||
+        this.props.merchant.loadingGetTotalSurvey ? (
           <View style={{ height: '100%' }}>
             <LoadingPage />
           </View>
@@ -129,7 +140,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 19112020
  * updatedBy: dyah
- * updatedDate: 13092021
+ * updatedDate: 16092021
  * updatedFunction:
- * -> update code in merchant survey view (separate the survey list view).
+ * -> add function to get total survey.
  */

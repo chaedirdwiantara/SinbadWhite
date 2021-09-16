@@ -148,10 +148,26 @@ function getSurveyList(params) {
     method: 'GET'
   });
 }
-/** GET SURVEY BY ID */
-function getSurvey(id) {
+/** GET TOTAL SURVEY */
+function getTotalSurvey(storeId) {
   return ApiRest({
-    path: `supplier/service-survey/v2/surveys/${id}`,
+    path: `supplier/service-survey/v1/surveys/totaltoday/mobile?storeId=${storeId}`,
+    method: 'GET'
+  });
+}
+/** GET SURVEY BY ID */
+function getSurvey(params) {
+  return ApiRest({
+    path: `supplier/service-survey/v1/surveys/withresponse/${params.id}${
+      params.responseId
+    }`,
+    method: 'GET'
+  });
+}
+/** GET SURVEY BRAND BY SURVEY ID */
+function getSurveyBrand(id) {
+  return ApiRest({
+    path: `supplier/service-survey/v1/brands/survey/${id}`,
     method: 'GET'
   });
 }
@@ -229,7 +245,9 @@ export const MerchantMethod = {
   getStoreStatus,
   getWarehouse,
   getSurveyList,
+  getTotalSurvey,
   getSurvey,
+  getSurveyBrand,
   getSurveyResponse,
   submitSurveyResponse,
   updateSurveyResponse,
@@ -245,8 +263,8 @@ export const MerchantMethod = {
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 14092021
+ * updatedDate: 16092021
  * updatedFunction:
- * -> add new method, get survey by id. (getSurvey)
- * -> change method name (submitSurveyResponse, updateSurveyResponse)
+ * -> add new method, get survey brand by survey id. (getSurveyBrand)
+ * -> add new method, get total survey (today). (getTotalSurvey)
  */

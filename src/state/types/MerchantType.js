@@ -117,10 +117,18 @@ export const MERCHANT_GET_SURVEY_LIST_FAILED = 'MerchantGetSurveyListFailed';
 export const MERCHANT_GET_SURVEY_LIST_RESET = 'MerchantGetSurveyListReset';
 export const MERCHANT_GET_SURVEY_LIST_REFRESH = 'MerchantGetSurveyListRefresh';
 export const MERCHANT_GET_SURVEY_LIST_LOADMORE = 'MerchantGetSurveyListLoadMore';
+/** MERCHANT GET TOTAL SURVEY*/
+export const MERCHANT_GET_TOTAL_SURVEY_PROCESS = 'MerchantGetTotalSurveyProcess';
+export const MERCHANT_GET_TOTAL_SURVEY_SUCCESS = 'MerchantGetTotalSurveySuccess';
+export const MERCHANT_GET_TOTAL_SURVEY_FAILED = 'MerchantGetTotalSurveyFailed';
 /** MERCHANT GET SURVEY BY ID*/
 export const MERCHANT_GET_SURVEY_PROCESS = 'MerchantGetSurveyProcess';
 export const MERCHANT_GET_SURVEY_SUCCESS = 'MerchantGetSurveySuccess';
 export const MERCHANT_GET_SURVEY_FAILED = 'MerchantGetSurveyFailed';
+/** MERCHANT GET SURVEY BRAND BY SURVEY ID*/
+export const MERCHANT_GET_SURVEY_BRAND_PROCESS = 'MerchantGetSurveyBrandProcess';
+export const MERCHANT_GET_SURVEY_BRAND_SUCCESS = 'MerchantGetSurveyBrandSuccess';
+export const MERCHANT_GET_SURVEY_BRAND_FAILED = 'MerchantGetSurveyBrandFailed';
 /** MERCHANT GET SURVEY RESPONSE*/
 export const MERCHANT_GET_SURVEY_RESPONSE_PROCESS =
   'MerchantGetSurveyResponseProcess';

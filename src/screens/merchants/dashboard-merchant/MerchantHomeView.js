@@ -956,9 +956,9 @@ class MerchantHomeView extends Component {
               paddingBottom: 10
             }}
           >
-            <Text style={Fonts.type64}>Task List</Text>
+            <Text style={Fonts.type64}>Daftar Tugas</Text>
             <Text style={Fonts.type31}>
-              {this.checkTotalCompleteTask()}/{this.state.task.length} Complete
+              {this.checkTotalCompleteTask()}/{this.state.task.length} Selesai
             </Text>
           </View>
           {this.state.task.map((item, index) => {
@@ -1560,7 +1560,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 13092021
+ * updatedDate: 16092021
  * updatedFunction:
- * -> fix the validation when checking out. (must completed the survey)
+ * -> change writing (task list -> daftar tugas).
+ * -> change writing (completed -> selesai).
  */

@@ -15,7 +15,6 @@ import {
 import { Fonts } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
-import { questions } from './mockData';
 import QuestionAnswersListView from './QuestionAnswersListView';
 
 class QuestionListDataView extends Component {
@@ -32,11 +31,11 @@ class QuestionListDataView extends Component {
     let newQuestions = this.props.questions;
     // find the index of question
     const index = newQuestions.findIndex(
-      item => item.surveyId === survey.surveyId
+      item => item.questionId === survey.questionId
     );
     if (survey.category === 'single_answer') {
       newQuestions[index].value = [
-        { candidateAnswerId, inputValue: 'checked' }
+        { isBaseValue: false, candidateAnswerId, inputValue: 'checked' }
       ];
     } else if (survey.category === 'multiple_answer') {
       // check the answer already selected or not (checkbox)
@@ -51,6 +50,7 @@ class QuestionListDataView extends Component {
       } else {
         // if not, add the value to the answer
         newQuestions[index].value.push({
+          isBaseValue: false,
           candidateAnswerId,
           inputValue: 'checked'
         });
@@ -67,12 +67,14 @@ class QuestionListDataView extends Component {
       if (alreadyInputed > -1) {
         newQuestions[index].value[alreadyInputed] = {
           candidateAnswerId,
+          isBaseValue: survey.isBaseValue,
           inputValue: survey.inputValue
         };
       } else {
         // if not, add the value to the answer
         newQuestions[index].value.push({
           candidateAnswerId,
+          isBaseValue: survey.isBaseValue,
           inputValue: survey.inputValue
         });
       }
@@ -86,15 +88,15 @@ class QuestionListDataView extends Component {
     if (this.props.questions.length > 0) {
       // find the question
       const value = this.props.questions.find(
-        item => item.surveyId === survey.surveyId
-      ).value;
+        item => item.questionId === survey.questionId
+      )?.value;
       // check the category & the value
       if (survey.category === 'single_answer') {
-        if (value[0]) {
+        if (value && value[0]) {
           return value[0].candidateAnswerId;
         }
       } else if (survey.category === 'multiple_answer') {
-        if (value.length > 0) {
+        if (value?.length > 0) {
           return value.find(
             item => item.candidateAnswerId === candidateAnswerId
           );
@@ -132,9 +134,7 @@ class QuestionListDataView extends Component {
           style={[
             styles.card,
             {
-              borderColor: this.props.checkUnAnsweredRequiredQuestion(
-                item.surveyId
-              )
+              borderColor: this.props.checkUnAnsweredRequiredQuestion(item.id)
                 ? Color.fontBlack50
                 : Color.fontBlack10
             }
@@ -157,7 +157,7 @@ class QuestionListDataView extends Component {
           </View>
           <View style={{ height: 16 }} />
           <Text style={Fonts.type8}>{item.title}</Text>
-          {item.surveyQuestionCategory.code === 'multiple_answer' && (
+          {item.category.code === 'multiple_answer' && (
             <Text style={Fonts.type67}>
               (Dapat pilih lebih dari satu jawaban)
             </Text>
@@ -172,7 +172,7 @@ class QuestionListDataView extends Component {
               this.checkSelectedAnswers({ ...value }, value.id)
             }
           />
-          {this.props.checkUnAnsweredRequiredQuestion(item.surveyId) &&
+          {this.props.checkUnAnsweredRequiredQuestion(item.id) &&
             this.renderUnAnsweredQuestion()}
         </View>
       </View>
@@ -229,7 +229,7 @@ class QuestionListDataView extends Component {
   render() {
     return (
       <FlatList
-        data={questions} // this.props.question
+        data={this.props.merchant.dataGetSurvey?.questions}
         keyExtractor={(data, index) => index.toString()}
         renderItem={({ item, index }) => this.renderQuestion(item, index)}
       />
@@ -290,8 +290,8 @@ export default connect(
  * ============================
  * createdBy: dyah
  * createdDate: 13092021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 160092021
  * updatedFunction:
- * -> update take survey code (separate the question list)
+ * -> add isBaseValue and change surveyId to questionId.
  */
