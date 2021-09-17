@@ -157,7 +157,6 @@ class MerchantSurveyResultView extends Component {
    */
   renderCollapse() {
     const dataSurveyResponse = this.props.merchant.dataSurveyResponse.payload;
-
     return (
       <FlatList
         data={dataSurveyResponse?.survey?.questions ?? []}
@@ -207,7 +206,7 @@ class MerchantSurveyResultView extends Component {
             </View>
             <View style={{ flex: 1 }}>
               <View style={styles.boxScore}>
-                <Text>{item.questionResponseScore.result ?? '-'}</Text>
+                <Text>{item.questionResponseScore?.result ?? '0'}</Text>
               </View>
             </View>
           </View>
