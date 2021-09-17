@@ -134,17 +134,17 @@ class MerchantSurveyDisplayPhotoView extends Component {
         ['asc']
       );
       const arraySurveyQuestionId = [
-        ...new Set(newSurveyResponse.map(item => item.surveyQuestionId))
+        ...new Set(newSurveyResponse.map(item => item.questionId))
       ];
       if (arraySurveyQuestionId.length === 2) {
         this.setState(
           {
             modalSubmit: false,
             photosDisplayBefore: newSurveyResponse.filter(
-              item => item.surveyQuestionId === arraySurveyQuestionId[0]
+              item => item.questionId === arraySurveyQuestionId[0]
             ),
             photosDisplayAfter: newSurveyResponse.filter(
-              item => item.surveyQuestionId === arraySurveyQuestionId[1]
+              item => item.questionId === arraySurveyQuestionId[1]
             ),
             displayPhoto: true,
             modalCompleted: this.state.activeStep === 0 ? false : true,
@@ -157,7 +157,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
           modalSubmit: false,
           activeStep: 0,
           photosDisplayBefore: newSurveyResponse.filter(
-            item => item.surveyQuestionId === arraySurveyQuestionId[0]
+            item => item.questionId === arraySurveyQuestionId[0]
           ),
           displayPhoto: true
         });
@@ -875,8 +875,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 16092021
+ * updatedDate: 17092021
  * updatedFunction:
- * -> add typeId.
- * -> change order by "surveyQuestionId" to "order".
+ * -> add change surveyQuestionId to questionId when getting survey response & displaying the photo.
  */
