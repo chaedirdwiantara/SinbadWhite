@@ -264,11 +264,13 @@ function* getSurveyResponse(actions) {
     const response = yield call(() => {
       return MerchantMethod.getSurveyResponse(actions.payload);
     });
-    let arrResult = response.data.payload.survey.questions.map(data =>
-      parseFloat(data.questionResponseScore.result)
-    );
-    let totalScore = arrResult.reduce((a, b) => a + b, 0);
-
+    let totalScore = 0;
+    if (!response.data.payload.responsePhoto) {
+      let arrResult = response.data.payload.survey.questions.map(data =>
+        parseFloat(data.questionResponseScore.result)
+      );
+      totalScore = arrResult.reduce((a, b) => a + b, 0);
+    }
     yield put(
       ActionCreators.merchantGetSurveyResponseSuccess(response, totalScore)
     );
