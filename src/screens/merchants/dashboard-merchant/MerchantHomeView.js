@@ -1503,7 +1503,7 @@ class MerchantHomeView extends Component {
       <View />
     );
   }
-  /** RENDER MODAL CONFIRM DELETE CART */
+  /** RENDER MODAL CONFIRM NO COLLECTION */
   renderModalNoCollectionConfirmation() {
     return this.state.openModalConfirmNoCollection ? (
       <ModalConfirmation
