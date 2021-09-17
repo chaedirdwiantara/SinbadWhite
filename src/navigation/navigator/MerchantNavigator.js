@@ -347,13 +347,15 @@ const MerchantNavigator = {
   },
   MerchantSurveyResultView: {
     screen: MerchantSurveyResultView,
+
     navigationOptions: {
-      headerTitle: 'Hasil Survey',
       title: 'Hasil Survey',
-      headerTitleStyle: [GlobalFont.textHeaderPage, { marginLeft: 0 }],
+      headerTitleStyle: [GlobalFont.textHeaderPage, { marginLeft: '5%' }],
       headerStyle: {
-        backgroundColor: masterColor.backgroundWhite
-      }
+        backgroundColor: masterColor.backgroundWhite,
+        paddingLeft: 20
+      },
+      headerLeft: null
     }
   }
 };
