@@ -106,7 +106,9 @@ class JourneyListDataView extends Component {
     this.props.merchantSelected(data);
     setTimeout(() => {
       this.props.getSurveyResult(data.storeName)
-      NavigationService.navigate('MerchantHomeView');
+      NavigationService.navigate('MerchantHomeView', {
+        storeName: data.storeName
+      });
     }, 100);
   }
   /** go to chat */
