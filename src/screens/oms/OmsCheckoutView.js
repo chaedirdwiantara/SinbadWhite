@@ -852,6 +852,7 @@ class OmsCheckoutView extends Component {
         break;
       case 'ERR-APP-NOT-ALLOW':
         this.errorPaymentNotAllowed();
+        break;
       case 'ERR-STOCK':
         this.errorSKUNotAvailable();
         break;
@@ -859,6 +860,7 @@ class OmsCheckoutView extends Component {
         null;
         break;
       default:
+        this.renderModalWarningAllCondition();
         break;
     }
   }

@@ -57,6 +57,7 @@ class MerchantHomeView extends Component {
       openModalCheckUser: false,
       openModalProgressChecking: false,
       openModalBeforeCheckIn: false,
+      openModalConfirmNoCollection: false,
       checkNoOrder: false,
       showToast: false,
       loadingPostForCheckoutNoOrder: false,
@@ -202,7 +203,7 @@ class MerchantHomeView extends Component {
           ) {
             this.SurveyDone();
           } else {
-            this.setState({successSurveyList: true})
+            this.setState({ successSurveyList: true });
           }
           if (this.state.task.length === 3) {
             if (sfaStatus.data.totalInvoice > 0) {
@@ -1502,6 +1503,34 @@ class MerchantHomeView extends Component {
       <View />
     );
   }
+  /** RENDER MODAL CONFIRM NO COLLECTION */
+  renderModalNoCollectionConfirmation() {
+    return this.state.openModalConfirmNoCollection ? (
+      <ModalConfirmation
+        title={'Konfirmasi'}
+        open={this.state.openModalConfirmNoCollection}
+        content={
+          'Masih ada Tagihan yang belum terbayar penuh. Tetap ingin keluar?'
+        }
+        type={'okeRed'}
+        okText={'Ya'}
+        cancelText={'Tidak'}
+        ok={() => {
+          this.setState({ openModalConfirmNoCollection: false });
+        }}
+        cancel={() => {
+          this.setState({
+            openModalConfirmNoCollection: false
+          });
+          setTimeout(() => {
+            NavigationService.navigate('SfaView');
+          }, 10);
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** MODAL ERROR RESPONS */
   renderModalErrorRespons() {
     return this.state.openModalErrorGlobal ? (
@@ -1571,6 +1600,7 @@ class MerchantHomeView extends Component {
         {this.renderModalVerifyUser()}
         {this.renderModalProgressChecking()}
         {this.renderModalBeforeCheckIn()}
+        {this.renderModalNoCollectionConfirmation()}
         <ModalBottomSuccessOrder />
       </SafeAreaView>
     );
