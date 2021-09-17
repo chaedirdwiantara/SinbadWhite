@@ -178,13 +178,6 @@ function getSurveyResponse(id) {
     method: 'GET'
   });
 }
-/** GET SURVEY RESPONSE TEST*/
-function getSurveyResponseTest(id) {
-  return ApiRest({
-    method: 'GET',
-    testpath: `https://0944a58f-17fd-46cb-a43e-e1c2282cf435.mock.pstmn.io/supplier/service-survey/v1/survey/response/${id}`
-  });
-}
 /** SUBMIT SURVEY RESPONSE */
 function submitSurveyResponse(params) {
   return ApiRest({
@@ -210,9 +203,9 @@ function validateAreaMapping(params) {
   });
 }
 /** GET SEGMENTATION LSIT */
-function getSalesSegmentation({type, supplierId, urbanId}){
-  if(urbanId){
-    const params = {urbanId, supplierId}
+function getSalesSegmentation({ type, supplierId, urbanId }) {
+  if (urbanId) {
+    const params = { urbanId, supplierId };
     return ApiRest({
       path: 'validate-urban-segmentation',
       method: 'POST',
@@ -222,9 +215,8 @@ function getSalesSegmentation({type, supplierId, urbanId}){
   return ApiRest({
     path: `sales-segmentation?type=${type}&supplierId=${supplierId}`,
     method: 'GET'
-  })
+  });
 }
-
 
 export const MerchantMethod = {
   getMerchantV2,
@@ -251,7 +243,6 @@ export const MerchantMethod = {
   getSurveyResponse,
   submitSurveyResponse,
   updateSurveyResponse,
-  getSurveyResponseTest,
   validateAreaMapping,
   getSalesSegmentation
 };

@@ -264,11 +264,13 @@ function* getSurveyResponse(actions) {
     const response = yield call(() => {
       return MerchantMethod.getSurveyResponse(actions.payload);
     });
-    let arrResult = response.data.payload.survey.questions.map(data =>
-      parseFloat(data.questionResponseScore.result)
-    );
-    let totalScore = arrResult.reduce((a, b) => a + b, 0);
-
+    let totalScore = 0;
+    if (!response.data.payload.responsePhoto) {
+      let arrResult = response.data.payload.survey.questions.map(data =>
+        parseFloat(data.questionResponseScore.result)
+      );
+      totalScore = arrResult.reduce((a, b) => a + b, 0);
+    }
     yield put(
       ActionCreators.merchantGetSurveyResponseSuccess(response, totalScore)
     );
@@ -299,17 +301,6 @@ function* updateSurveyResponse(actions) {
   }
 }
 
-/** SURVEY  RESULT TEST */
-function* getSurveyResultResponse(actions) {
-  try {
-    const response = yield call(() => {
-      return MerchantMethod.submitSurveyResponse(actions.payload);
-    });
-    yield put(ActionCreators.merchantSubmitSurveyResponseSuccess(response));
-  } catch (error) {
-    yield put(ActionCreators.merchantSubmitSurveyResponseFailed(error));
-  }
-}
 /** GET SALES SEGMENTATION */
 function* getSalesSegmentation(actions) {
   try {
