@@ -102,6 +102,7 @@ export const oms = createReducer(INITIAL_STATE, {
       loadingOmsDeleteCartItem: false,
       loadingOmsGetCartItemFromCheckout: false,
       loadingOmsCheckPromo: false,
+      loadingOMSCheckOverdue: false,
       /** data */
       dataOmsGetCartItem: null,
       dataOmsGetCartItemFromCheckout: null,
@@ -113,6 +114,7 @@ export const oms = createReducer(INITIAL_STATE, {
       dataCheckout: [],
       dataCheckBoxlistCart: [],
       dataOmsCheckPromo: null,
+      dataOMSCheckOverdue: null,
       /** error */
       errorOmsGetCartItem: null,
       errorOmsGetCheckoutItem: null,
@@ -120,7 +122,8 @@ export const oms = createReducer(INITIAL_STATE, {
       errorOmsGetPayment: null,
       errorOmsDeleteCartItem: null,
       errorOmsGetCartItemFromCheckout: null,
-      errorOmsCheckPromo: null
+      errorOmsCheckPromo: null,
+      errorOMSCheckOverdue: null
     };
   },
   /**
