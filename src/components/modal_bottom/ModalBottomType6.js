@@ -28,6 +28,7 @@ class ModalBottomType6 extends Component {
    * FUNCTIONAL
    * ======================
    */
+  /** CHECK COUNTER AND REFRESH */
   checkCounterAndRefresh() {
     this.props.onRefresh(this.checkStatusAndCount().condition);
   }

@@ -508,7 +508,7 @@ class MerchantCheckinView extends Component {
         noTitle={this.renderMerchant()}
         onRefresh={condition => {
           //start check count attemp if invalid(not in radius)
-          if (condition === 'invalid') {
+          if (condition === 'invalid' && this.state.count <= 3) {
             this.setState({ count: this.state.count + 1 });
           }
           //get current location
