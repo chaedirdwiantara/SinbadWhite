@@ -18,6 +18,7 @@ import MerchantNoOrderReasonDetail from '../../screens/merchants/dashboard-merch
 import MerchantNoVisitReasonView from '../../screens/merchants/dashboard-merchant/MerchantNoVisitReasonView';
 import MerchantNoVisitPicture from '../../screens/merchants/dashboard-merchant/MerchantNoVisitPicture';
 import MerchantNoVisitReasonDetailView from '../../screens/merchants/dashboard-merchant/MerchantNoVisitReasonDetailView';
+import MerchantNoCollectionReason from '../../screens/merchants/dashboard-merchant/MerchantNoCollectionReason';
 /** merchant detail */
 import MerchantDetailProfileView from '../../screens/merchants/details-merchant/MerchantDetailProfileView';
 import MerchantDetailAccountView from '../../screens/merchants/details-merchant/MerchantDetailAccountView';
@@ -259,9 +260,7 @@ const MerchantNavigator = {
     screen: MerchantNoOrderReason,
     navigationOptions: {
       headerTitle: 'Alasan Tidak Ada Order',
-      headerTitleStyle: [
-        GlobalFont.textHeaderPage,
-      ],
+      headerTitleStyle: [GlobalFont.textHeaderPage],
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
@@ -333,6 +332,18 @@ const MerchantNavigator = {
         elevation: 0,
         backgroundColor: masterColor.mainColor
       },
+      gesturesEnabled: false
+    }
+  },
+  MerchantNoCollectionReason: {
+    screen: MerchantNoCollectionReason,
+    navigationOptions: {
+      headerTitle: 'Alasan Tidak Ada Penagihan',
+      headerTitleStyle: [GlobalFont.textHeaderPage],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
       gesturesEnabled: false
     }
   }
