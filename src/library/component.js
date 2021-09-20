@@ -53,6 +53,7 @@ import ModalBottomType2 from '../components/modal_bottom/ModalBottomType2';
 import ModalBottomType3 from '../components/modal_bottom/ModalBottomType3';
 import ModalBottomType4 from '../components/modal_bottom/ModalBottomType4';
 import ModalBottomType5 from '../components/modal_bottom/ModalBottomType5';
+import ModalBottomType6 from '../components/modal_bottom/ModalBottomType6';
 /** ERROR MODAL */
 import ModalBottomErrorRespons from '../components/error/ModalBottomErrorRespons';
 /** OTP */
@@ -182,6 +183,7 @@ export {
   ModalBottomType3,
   ModalBottomType4,
   ModalBottomType5,
+  ModalBottomType6,
   /** ERROR MODAL */
   ModalBottomErrorRespons,
   /** OTP */
@@ -264,9 +266,8 @@ export {
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 13092021
+ * updatedDate: 20092021
  * updatedFunction:
- * -> add new modal component (modalConfirmationType5)
- * -> add new questionnaire components (4).
+ * -> add new modal bottom component (ModalBottomType6)
  *
  */

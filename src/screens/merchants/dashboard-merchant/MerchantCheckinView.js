@@ -21,7 +21,7 @@ import {
 import {
   StatusBarWhite,
   SearchBarType3,
-  ModalBottomType2,
+  ModalBottomType6,
   ModalConfirmation,
   Address,
   ButtonSingle,
@@ -49,7 +49,10 @@ class MerchantCheckinView extends Component {
       interval: false,
       inStore: null,
       visitStore: null,
-      openModalNoGPS: false
+      openModalNoGPS: false,
+      count: 0,
+      refresh: true,
+      success: false
     };
   }
   /**
@@ -78,6 +81,8 @@ class MerchantCheckinView extends Component {
         }
       }
     }
+    /** IF USER LOCATION NOT IN THE RADIUS setState success: false, count: +1 */
+    /** IF USER LOCATION IN THE RADIUS setState success: true, count: +1 */
   }
   componentWillUnmount() {
     this.internalClearInterval();
@@ -127,8 +132,13 @@ class MerchantCheckinView extends Component {
       console.warn(err);
     }
   };
-  getCurrentLocation() {
-    this.setState({ reRender: true });
+  getCurrentLocation(value) {
+    let refresh = false;
+    if (value) refresh = value;
+    this.setState({
+      refresh,
+      reRender: true
+    });
     Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
   }
   /** === CHECK IN/OUT STORE === */
@@ -205,7 +215,6 @@ class MerchantCheckinView extends Component {
       <MapView
         ref={ref => (this.mapRef = ref)}
         style={{ flex: 1, width: '100%' }}
-        showsUserLocation={true}
         maxZoomLevel={16}
         initialRegion={{
           latitude: this.state.latitude,
@@ -240,13 +249,26 @@ class MerchantCheckinView extends Component {
       }
       >
         <Marker
-          image={require('../../../assets/icons/maps/drop_pin.png')}
+          coordinate={{
+            latitude: this.state.latitude,
+            longitude: this.state.longitude
+          }}
+          title={'Anda'}
+        >
+          <Image
+            style={{ width: 30, height: 30 }}
+            source={require('../../../assets/icons/maps/pin_my_location_2.png')}
+          />
+        </Marker>
+        <Marker
           coordinate={{
             latitude: this.props.merchant.selectedMerchant.latitude,
             longitude: this.props.merchant.selectedMerchant.longitude
           }}
           title={this.props.merchant.selectedMerchant.name}
-        />
+        >
+          <Image source={require('../../../assets/icons/maps/store_red.png')} />
+        </Marker>
       </MapView>
     );
   }
@@ -368,7 +390,10 @@ class MerchantCheckinView extends Component {
                 }
               ]}
               disabled={this.props.merchant.loadingPostActivity}
-              onPress={() => this.setState({ inStore: true })}
+              onPress={() => {
+                // check api (user location in radius/not)
+                this.setState({ inStore: true });
+              }}
             >
               <Text style={this.state.inStore ? Fonts.type62 : Fonts.type23}>
                 Ya
@@ -437,11 +462,14 @@ class MerchantCheckinView extends Component {
    */
   renderModalBottom() {
     return (
-      <ModalBottomType2
+      <ModalBottomType6
         noTitle={this.renderMerchant()}
+        onRefresh={() => this.getCurrentLocation(true)}
+        count={this.state.count}
+        success={this.state.success}
         maxHeight={height}
         body={
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, backgroundColor: Color.backgroundWhite }}>
             {this.renderInStore()}
             {this.state.inStore && this.renderVisitStore()}
             <ButtonSingle
