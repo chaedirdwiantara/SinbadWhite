@@ -368,10 +368,7 @@ class MerchantCheckinView extends Component {
                 }
               ]}
               disabled={this.props.merchant.loadingPostActivity}
-              onPress={() => {
-                // check api (user location in radius/not)
-                this.setState({ inStore: false });
-              }}
+              onPress={() => this.setState({ inStore: false })}
             >
               <Text
                 style={
@@ -393,7 +390,10 @@ class MerchantCheckinView extends Component {
                 }
               ]}
               disabled={this.props.merchant.loadingPostActivity}
-              onPress={() => this.setState({ inStore: true })}
+              onPress={() => {
+                // check api (user location in radius/not)
+                this.setState({ inStore: true });
+              }}
             >
               <Text style={this.state.inStore ? Fonts.type62 : Fonts.type23}>
                 Ya
