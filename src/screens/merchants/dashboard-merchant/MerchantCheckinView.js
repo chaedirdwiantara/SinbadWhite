@@ -7,8 +7,9 @@ import {
   Text,
   PermissionsAndroid,
   Image,
-  TouchableOpacity
-} from '../../../library/reactPackage'
+  TouchableOpacity,
+  BackHandler
+} from '../../../library/reactPackage';
 import {
   bindActionCreators,
   connect,
@@ -17,19 +18,20 @@ import {
   Marker,
   Geolocation,
   OpenAppSettings
-} from '../../../library/thirdPartyPackage'
+} from '../../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
   SearchBarType3,
   ModalBottomType6,
   ModalConfirmation,
+  ModalConfirmationType5,
   Address,
   ButtonSingle,
   LoadingPage,
   ErrorPageNoGPS
-} from '../../../library/component'
-import { GlobalStyle, Fonts } from '../../../helpers'
-import { Color } from '../../../config'
+} from '../../../library/component';
+import { GlobalStyle, Fonts } from '../../../helpers';
+import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
 
@@ -52,8 +54,11 @@ class MerchantCheckinView extends Component {
       openModalNoGPS: false,
       count: 0,
       refresh: true,
-      success: false
+      success: false,
+      openModalNotInRadius: false,
+      radius: 6
     };
+    this.initialState = { ...this.state };
   }
   /**
    * =====================
@@ -72,7 +77,7 @@ class MerchantCheckinView extends Component {
       this.props.merchant.dataPostActivityV2
     ) {
       if (this.props.merchant.dataPostActivityV2 !== null) {
-        if (this.props.merchant.dataPostActivityV2.activity === 'check_in'){
+        if (this.props.merchant.dataPostActivityV2.activity === 'check_in') {
           /** get log all activity */
           this.props.merchantGetLogAllActivityProcessV2(
             this.props.merchant.selectedMerchant.journeyBookStores.id
@@ -184,7 +189,17 @@ class MerchantCheckinView extends Component {
         return true;
       }
     }
+    //if success false
+    if (!this.state.success) {
+      return true;
+    }
     return false;
+  }
+  /**
+   * Reset to initial state
+   */
+  onHandleReset() {
+    this.setState(this.initialState);
   }
   /**
    * ========================
@@ -244,9 +259,9 @@ class MerchantCheckinView extends Component {
                 },
                 animated: true
               }
-            )
-          }}
-      }
+            );
+          }
+        }}
       >
         <Marker
           coordinate={{
@@ -282,11 +297,7 @@ class MerchantCheckinView extends Component {
             NavigationService.goBack(this.props.navigation.state.key)
           }
         >
-          <MaterialIcon
-            name="arrow-back"
-            color={Color.fontBlack80}
-            size={24}
-          />
+          <MaterialIcon name="arrow-back" color={Color.fontBlack80} size={24} />
         </TouchableOpacity>
       </View>
     );
@@ -298,11 +309,7 @@ class MerchantCheckinView extends Component {
           style={[styles.boxButton, GlobalStyle.shadow]}
           onPress={() => this.getCurrentLocation()}
         >
-          <MaterialIcon
-            name="near-me"
-            color={Color.fontBlue50}
-            size={24}
-          />
+          <MaterialIcon name="near-me" color={Color.fontBlue50} size={24} />
         </TouchableOpacity>
       </View>
     );
@@ -350,6 +357,15 @@ class MerchantCheckinView extends Component {
       </View>
     );
   }
+  checkIfInRadius() {
+    if (this.state.radius <= 5) {
+      //modal valid
+      this.setState({ success: true, count: 0 });
+    } else {
+      //modal invalid
+      this.setState({ success: false, count: this.state.count + 1 });
+    }
+  }
   /** === RENDER IN STORE === */
   renderInStore() {
     return (
@@ -393,6 +409,7 @@ class MerchantCheckinView extends Component {
               onPress={() => {
                 // check api (user location in radius/not)
                 this.setState({ inStore: true });
+                this.checkIfInRadius();
               }}
             >
               <Text style={this.state.inStore ? Fonts.type62 : Fonts.type23}>
@@ -460,11 +477,47 @@ class MerchantCheckinView extends Component {
    * MODAL
    * ====================
    */
+  /**
+   * === RENDER DIALOG NOT IN RADIUS ===
+   * @returns {ReactElement}
+   */
+  renderDialogPositionNotInRadius() {
+    return (
+      <ModalConfirmationType5
+        title={'Posisi Anda Belum Sesuai'}
+        okText={'Coba Lagi'}
+        cancelText={'Keluar'}
+        open={this.state.openModalNotInRadius}
+        content={
+          'Silakan tutup dan buka kembali (force close) aplikasi dan ulangi proses masuk ke toko.'
+        }
+        type={'okeNotRed'}
+        ok={() => {
+          this.onHandleReset();
+        }}
+        cancel={() => {
+          BackHandler.exitApp();
+        }}
+      />
+    );
+  }
+
   renderModalBottom() {
     return (
       <ModalBottomType6
         noTitle={this.renderMerchant()}
-        onRefresh={() => this.getCurrentLocation(true)}
+        onRefresh={condition => {
+          //start check count attemp if invalid(not in radius)
+          if (condition === 'invalid') {
+            this.setState({ count: this.state.count + 1 });
+          }
+          //get current location
+          this.getCurrentLocation(true);
+          //check count attemp
+          if (this.state.count === 3) {
+            this.setState({ openModalNotInRadius: true });
+          }
+        }}
         count={this.state.count}
         success={this.state.success}
         maxHeight={height}
@@ -536,6 +589,7 @@ class MerchantCheckinView extends Component {
       <View style={styles.mainContainer}>
         <StatusBarWhite />
         {this.state.openModalNoGPS ? this.renderNoGps() : this.renderContent()}
+        {this.renderDialogPositionNotInRadius()}
       </View>
     );
   }
