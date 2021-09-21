@@ -359,11 +359,13 @@ class MerchantCheckinView extends Component {
   }
   checkIfInRadius() {
     if (this.state.radius <= 5) {
-      //modal valid
+      //test modal valid => erase later
       this.setState({ success: true, count: 0 });
     } else {
-      //modal invalid
-      this.setState({ success: false, count: this.state.count + 1 });
+      //test modal invalid => erase later
+      if (this.state.count <= 3) {
+        this.setState({ success: false, count: this.state.count + 1 });
+      }
     }
   }
   /** === RENDER IN STORE === */
