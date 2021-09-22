@@ -26,32 +26,25 @@ class ModalBottomType6 extends Component {
    * FUNCTIONAL
    * ======================
    */
-  /** CHECK COUNTER AND REFRESH */
-  checkCounterAndRefresh() {
-    this.props.onRefresh(this.checkStatusAndCount().condition);
-  }
   /** CHECK STATUS AND COUNT */
   checkStatusAndCount() {
     let title = 'Perhatikan Posisi Anda dengan Toko';
     let desc = 'Perbarui lokasi anda jika belum sesuai dengan titik toko ';
     let backgroundColor = Color.fontBlue50;
     let icon = 'refresh';
-    let condition = 'valid';
     // SUCCESS (in radius)
     if (this.props.success) {
       title = 'Posisi Telah Sesuai';
       desc = 'Anda bisa lanjut mengunjungi toko';
       icon = 'beenhere';
-      condition = 'valid';
     }
     // FAILED (not in radius)
     if (!this.props.success && this.props.count !== 0) {
       title = 'Posisi Anda Belum Sesuai dengan Toko';
       desc = 'Gunakan tombol refresh untuk memperbarui lokasi';
       backgroundColor = Color.fontYellow50;
-      condition = 'invalid';
     }
-    return { title, desc, backgroundColor, icon, condition };
+    return { title, desc, backgroundColor, icon };
   }
   /**
    * ==================
@@ -128,7 +121,7 @@ class ModalBottomType6 extends Component {
             <Text style={Fonts.type26}>{this.checkStatusAndCount().desc}</Text>
           </View>
           <TouchableOpacity
-            onPress={() => this.checkCounterAndRefresh()}
+            onPress={this.props.onRefresh}
             disabled={this.props.success}
           >
             <MaterialIcon
@@ -187,9 +180,9 @@ export default ModalBottomType6;
  * ============================
  * createdBy: dyah
  * createdDate: 20092021
- * updatedBy:
- * updatedDate:
+ * updatedBy: dyah
+ * updatedDate: 22092021
  * updatedFunction:
- * -> add modal bottom type 6 (for checkin)
+ * -> update prop onRefresh & delete condition.
  *
  */

@@ -86,8 +86,39 @@ class MerchantCheckinView extends Component {
         }
       }
     }
-    /** IF USER LOCATION NOT IN THE RADIUS setState success: false, count: +1 */
-    /** IF USER LOCATION IN THE RADIUS setState success: true, count: +1 */
+    const {
+      dataGetRadiusLockGeotag,
+      errorGetRadiusLockGeotag
+    } = this.props.merchant;
+    /** CHECK RADIUS LOCK GEOTAG (SUCCESS) */
+    if (dataGetRadiusLockGeotag) {
+      if (
+        prevProps.merchant.dataGetRadiusLockGeotag !== dataGetRadiusLockGeotag
+      ) {
+        /** IF USER LOCATION IN THE RADIUS */
+        if (
+          dataGetRadiusLockGeotag.active &&
+          dataGetRadiusLockGeotag.accepted
+        ) {
+          this.setState({ succes: true, count: this.state.count + 1 });
+        }
+        /** IF USER LOCATION NOT IN THE RADIUS */
+        if (
+          dataGetRadiusLockGeotag.active &&
+          !dataGetRadiusLockGeotag.accepted
+        ) {
+          this.setState({ succes: false, count: this.state.count + 1 });
+        }
+      }
+    }
+    /** CHECK RADIUS LOCK GEOTAG (FAILED) */
+    if (errorGetRadiusLockGeotag) {
+      if (
+        prevProps.merchant.errorGetRadiusLockGeotag !== errorGetRadiusLockGeotag
+      ) {
+        // show modal error
+      }
+    }
   }
   componentWillUnmount() {
     this.internalClearInterval();
@@ -98,12 +129,24 @@ class MerchantCheckinView extends Component {
     const latitude = success.coords.latitude;
     if (longitude !== 0 && latitude !== 0) {
       this.internalClearInterval();
-      this.setState({
-        longitude,
-        latitude,
-        openModalNoGPS: false,
-        reRender: false
-      });
+      this.setState(
+        {
+          longitude,
+          latitude,
+          openModalNoGPS: false,
+          reRender: false
+        },
+        () => {
+          if (this.state.refresh) {
+            this.props.getRadiusLockGeotagProcess({
+              storeLong: this.props.merchant.selectedMerchant.longitude,
+              storeLat: this.props.merchant.selectedMerchant.latitude,
+              salesLong: this.state.longitude,
+              salesLat: this.state.latitude
+            });
+          }
+        }
+      );
     } else {
       if (!this.state.interval) {
         this.setState({
@@ -140,11 +183,13 @@ class MerchantCheckinView extends Component {
   getCurrentLocation(value) {
     let refresh = false;
     if (value) refresh = value;
-    this.setState({
-      refresh,
-      reRender: true
-    });
-    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
+    this.setState(
+      {
+        refresh,
+        reRender: true
+      },
+      () => Geolocation.getCurrentPosition(this.successMaps, this.errorMaps)
+    );
   }
   /** === CHECK IN/OUT STORE === */
   confirm() {
@@ -409,9 +454,13 @@ class MerchantCheckinView extends Component {
               ]}
               disabled={this.props.merchant.loadingPostActivity}
               onPress={() => {
-                // check api (user location in radius/not)
+                this.props.getRadiusLockGeotagProcess({
+                  storeLong: this.props.merchant.selectedMerchant.longitude,
+                  storeLat: this.props.merchant.selectedMerchant.latitude,
+                  salesLong: this.state.longitude,
+                  salesLat: this.state.latitude
+                });
                 this.setState({ inStore: true });
-                this.checkIfInRadius();
               }}
             >
               <Text style={this.state.inStore ? Fonts.type62 : Fonts.type23}>
@@ -508,18 +557,7 @@ class MerchantCheckinView extends Component {
     return (
       <ModalBottomType6
         noTitle={this.renderMerchant()}
-        onRefresh={condition => {
-          //start check count attemp if invalid(not in radius)
-          if (condition === 'invalid' && this.state.count <= 3) {
-            this.setState({ count: this.state.count + 1 });
-          }
-          //get current location
-          this.getCurrentLocation(true);
-          //check count attemp
-          if (this.state.count === 3) {
-            this.setState({ openModalNotInRadius: true });
-          }
-        }}
+        onRefresh={() => this.getCurrentLocation(true)}
         count={this.state.count}
         success={this.state.success}
         maxHeight={height}
@@ -686,7 +724,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 28072021
+ * updatedDate: 22092021
  * updatedFunction:
- * -> update navigates after post activity 'check_in'. (handle revisit flow)
+ * -> preparing data for integration (lock geotag).
  */
