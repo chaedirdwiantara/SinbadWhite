@@ -655,8 +655,8 @@ export function getRadiusLockGeotagSuccess(data) {
   if (data.result === 'Ok') {
     return {
       type: types.GET_RADIUS_LOCK_GEOTAG_SUCCESS,
-      payload: data
-    }
+      payload: data.data
+    };
   }
   return { type: types.GET_RADIUS_LOCK_GEOTAG_FAILED, payload: data };
 }
