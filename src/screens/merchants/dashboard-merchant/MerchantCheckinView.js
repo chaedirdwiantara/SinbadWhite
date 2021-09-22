@@ -106,17 +106,13 @@ class MerchantCheckinView extends Component {
           dataGetRadiusLockGeotag.active &&
           !dataGetRadiusLockGeotag.accepted
         ) {
-          this.setState(
-            {
-              succes: false,
-              count: this.state.count + 1
-            },
-            () => {
-              if (this.state.count === 4) {
-                this.setState({ openModalNotInRadius: true });
-              }
-            }
-          );
+          this.setState({
+            succes: false,
+            count: this.state.count + 1
+          });
+          if (this.state.count === 4) {
+            this.setState({ openModalNotInRadius: true });
+          }
         }
       }
     }
@@ -558,6 +554,7 @@ class MerchantCheckinView extends Component {
   }
 
   renderModalBottom() {
+    const { loadingGetRadiusLockGeotag } = this.props.merchant;
     return (
       <ModalBottomType6
         noTitle={this.renderMerchant()}
@@ -565,6 +562,7 @@ class MerchantCheckinView extends Component {
         count={this.state.count}
         success={this.state.success}
         maxHeight={height}
+        loadGeoTag={loadingGetRadiusLockGeotag}
         body={
           <View style={{ flex: 1, backgroundColor: Color.backgroundWhite }}>
             {this.renderInStore()}

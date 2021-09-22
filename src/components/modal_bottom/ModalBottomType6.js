@@ -122,7 +122,7 @@ class ModalBottomType6 extends Component {
           </View>
           <TouchableOpacity
             onPress={this.props.onRefresh}
-            disabled={this.props.success}
+            disabled={this.props.success || this.props.loadGeoTag}
           >
             <MaterialIcon
               name={this.checkStatusAndCount().icon}
