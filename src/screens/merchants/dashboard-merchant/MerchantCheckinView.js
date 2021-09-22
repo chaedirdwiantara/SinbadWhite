@@ -118,10 +118,6 @@ class MerchantCheckinView extends Component {
             }
           );
         }
-        /** IF USER LOCKGEOTAG NOT ACTIVE */
-        if (!dataGetRadiusLockGeotag.active) {
-          this.setState({ succes: false });
-        }
       }
     }
     /** CHECK RADIUS LOCK GEOTAG (FAILED) */
