@@ -567,7 +567,7 @@ class MerchantCheckinView extends Component {
         noTitle={this.renderMerchant()}
         onRefresh={() => this.getCurrentLocation(true)}
         count={this.state.count}
-        success={this?.state?.success}
+        success={this.state.success}
         maxHeight={height}
         body={
           <View style={{ flex: 1, backgroundColor: Color.backgroundWhite }}>
