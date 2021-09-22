@@ -217,6 +217,17 @@ function getSalesSegmentation({ type, supplierId, urbanId }) {
     method: 'GET'
   });
 }
+/** GET RADIUS LOCK GEOTAG */
+function getRadiusLockGeotag(params) {
+  return ApiRest({
+    path: `${salesManagementService}/v1/lockgeotag/validate?storeLong=${
+      params.storeLong
+    }&storeLat=${params.storeLat}&salesLong=${params.salesLong}&salesLat=${
+      params.salesLat
+    }`,
+    method: 'GET'
+  });
+}
 
 export const MerchantMethod = {
   getMerchantV2,
@@ -244,7 +255,8 @@ export const MerchantMethod = {
   submitSurveyResponse,
   updateSurveyResponse,
   validateAreaMapping,
-  getSalesSegmentation
+  getSalesSegmentation,
+  getRadiusLockGeotag
 };
 
 /**
@@ -254,8 +266,7 @@ export const MerchantMethod = {
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 16092021
+ * updatedDate: 22092021
  * updatedFunction:
- * -> add new method, get survey brand by survey id. (getSurveyBrand)
- * -> add new method, get total survey (today). (getTotalSurvey)
+ * -> add new method, get radius lock geotag. (getRadiusLockGeotag)
  */

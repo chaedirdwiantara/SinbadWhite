@@ -159,3 +159,7 @@ export const GET_SALES_SEGMENTATION_PROCESS = 'GetSalesSegmentationProcess'
 export const GET_SALES_SEGMENTATION_SUCCESS = 'GetSalesSegmentationSuccess'
 export const GET_SALES_SEGMENTATION_FAILED = 'GetSalesSegmentationFailed'
 export const RESET_SALES_SEGMENTATION = 'ResetSalesSegmentation'
+/** MERCHANT GET RADIUS LOCK GEOTAG */
+export const GET_RADIUS_LOCK_GEOTAG_PROCESS = 'GetRadiusLockGeotagProcess';
+export const GET_RADIUS_LOCK_GEOTAG_SUCCESS = 'GetRadiusLockGeotagSuccess';
+export const GET_RADIUS_LOCK_GEOTAG_FAILED = 'GetRadiusLockGeotagFailed';
