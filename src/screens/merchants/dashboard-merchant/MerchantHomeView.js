@@ -110,7 +110,6 @@ class MerchantHomeView extends Component {
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
         }
       ],
-      successSurveyList: false,
       privileges: this.props.privileges.data
     };
   }
@@ -140,8 +139,8 @@ class MerchantHomeView extends Component {
   componentDidMount() {
     /** FOR GET LATEST CHECK IN AND CHECK OUT */
     this.props.merchantGetLatestCheckInOutProcess();
-    /** FOR GET MERCHANT LIST RESET */
-    this.props.merchantGetSurveyListReset();
+    /** FOR GET MERCHANT LIST */
+    this.getSurvey();
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
       this.props.merchant.selectedMerchant.storeId
@@ -168,25 +167,23 @@ class MerchantHomeView extends Component {
     if (this.props.profile.errorGetSalesTeam) {
       this.props.getSalesTeamProcess();
     }
+    /** FOR GET TOTAL SURVEY */
+    this.props.merchantGetTotalSurveyProcess(
+      this.props.merchant.selectedMerchant?.storeId
+    );
   }
 
   componentDidUpdate(prevProps) {
     const {
-      surveyList,
-      loadingGetSurveyList,
-      errorGetSurveyList,
       loadingGetLogAllActivity,
+      dataGetTotalSurvey,
       dataGetLogAllActivityV2
     } = this.props.merchant;
 
     if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
-      if (surveyList.payload.data) {
+      if (dataGetTotalSurvey) {
         /** IF NO SURVEY */
-        if (
-          _.isEmpty(surveyList.payload.data) &&
-          surveyList.success &&
-          !this.state.successSurveyList
-        ) {
+        if (dataGetTotalSurvey.total === 0) {
           this.SurveyDone();
           if (this.state.task.length === 4) {
             this.setState({
@@ -214,7 +211,7 @@ class MerchantHomeView extends Component {
           }
         }
         /** IF SURVEY LIST EXIST */
-        if (!_.isEmpty(surveyList.payload.data) && surveyList.success) {
+        if (dataGetTotalSurvey.total !== 0) {
           if (this.state.task.length === 3) {
             this.setState({
               task: [
@@ -247,32 +244,14 @@ class MerchantHomeView extends Component {
           }
         }
         /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
-        if (
-          !_.isEmpty(surveyList.payload.data) &&
-          surveyList.success &&
-          !this.state.successSurveyList
-        ) {
+        if (dataGetTotalSurvey.total !== 0) {
           if (
-            surveyList.payload.data.length ===
-            surveyList.payload.data.filter(
-              item => item.responseStatus === 'completed'
-            ).length
+            this.props.merchant.dataGetTotalSurvey.total ===
+            this.props.merchant.dataGetTotalSurvey.completed
           ) {
-            if (this.props.merchant.dataGetLogAllActivityV2) {
-              if (
-                !this.props.merchant.dataGetLogAllActivityV2.find(
-                  item => item.activityName === 'toko_survey'
-                )
-              ) {
-                this.SurveyDone();
-              }
-            }
+            this.SurveyDone();
           }
         }
-      }
-      /** FOR GET SURVEY LIST */
-      if (!loadingGetSurveyList && !surveyList.payload.data && !errorGetSurveyList) {
-        this.getSurvey();
       }
     }
     if (
@@ -284,7 +263,7 @@ class MerchantHomeView extends Component {
         if (
           this.props.merchant.dataPostActivityV2.activity ===
             ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY &&
-          !_.isEmpty(surveyList.payload.data)
+          dataGetTotalSurvey.total !== 0
         ) {
           /** FOR GET LOG ALL ACTIVITY */
           this.refreshMerchantGetLogAllActivityProcess();
@@ -386,11 +365,19 @@ class MerchantHomeView extends Component {
         this.doError();
       }
     }
+    /** error get total survey */
+    if (this.props.merchant.errorGetTotalSurvey) {
+      if (
+        prevProps.merchant.errorGetTotalSurvey !==
+        this.props.merchant.errorGetTotalSurvey
+      ) {
+        this.doError();
+      }
+    }
   }
 
   componentWillUnmount() {
     const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
-    this.props.merchantGetSurveyListReset();
     this.props.journeyPlanGetResetV2();
     this.props.journeyPlanGetProcessV2({
       page: 1,
@@ -427,19 +414,27 @@ class MerchantHomeView extends Component {
    * Set sales activity survey_toko done
    */
   SurveyDone() {
-    if (this.props.merchant.dataGetLogAllActivityV2) {
+    const {
+      loadingPostActivity,
+      dataGetLogAllActivityV2,
+      dataPostActivityV2
+    } = this.props.merchant;
+    if (!loadingPostActivity) {
       if (
-        !this.props.merchant.dataGetLogAllActivityV2.find(
-          item => item.activityName === 'toko_survey'
-        )
+        !dataPostActivityV2 ||
+        dataPostActivityV2?.activity !== ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
       ) {
-        this.setState({ successSurveyList: true }, () =>
+        if (
+          !dataGetLogAllActivityV2.find(
+            item => item.activityName === 'toko_survey'
+          )
+        ) {
           this.props.merchantPostActivityProcessV2({
             journeyBookStoreId: this.props.merchant.selectedMerchant
               .journeyBookStores.id,
             activityName: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-          })
-        );
+          });
+        }
       }
     }
   }
@@ -480,7 +475,7 @@ class MerchantHomeView extends Component {
           activity: 'check_in'
         });
         if (this.props.merchant.dataGetLogAllActivityV2) {
-          const haveSurvey = _.isEmpty(this.props.merchant.surveyList.payload.data)
+          const haveSurvey = this.props.merchant.dataGetTotalSurvey.total === 0;
           const surveyHasDone = this.props.merchant.dataGetLogAllActivityV2.find(
             item => item.activityName === 'toko_survey'
           )
@@ -498,8 +493,10 @@ class MerchantHomeView extends Component {
             )
           ) {
             NavigationService.navigate('MerchantSurveyView', {
-              readOnly: false
-
+              readOnly: false,
+              totalSurvey: this.props.merchant.dataGetTotalSurvey.total,
+              totalCompletedSurvey: this.props.merchant.dataGetTotalSurvey
+                .completed
             });
           }
         }
@@ -539,6 +536,8 @@ class MerchantHomeView extends Component {
 
   navigateSurveyReadOnly = data => {
     NavigationService.navigate('MerchantSurveyView', {
+      totalSurvey: this.props.merchant.dataGetTotalSurvey.total,
+      totalCompletedSurvey: this.props.merchant.dataGetTotalSurvey.completed,
       readOnly: true,
       data
     });
@@ -722,7 +721,10 @@ class MerchantHomeView extends Component {
             <TouchableOpacity
               onPress={() =>
                 NavigationService.navigate('MerchantSurveyView', {
-                  readOnly: false
+                  readOnly: false,
+                  totalSurvey: this.props.merchant.dataGetTotalSurvey.total,
+                  totalCompletedSurvey: this.props.merchant.dataGetTotalSurvey
+                    .completed
                 })
               }
               style={styles.containerSurveyInProgress}
@@ -818,7 +820,7 @@ class MerchantHomeView extends Component {
 
   renderLastOrder() {
     const order = this.props.merchant.dataGetMerchantLastOrder;
-    return order && order.orderParcels && !_.isEmpty(order.orderParcels) ? (
+    return order?.orderParcels && !_.isEmpty(order.orderParcels) ? (
       <View style={styles.lastOrderContainer}>
         <View style={[styles.cardLastOrder, GlobalStyle.shadowForBox5]}>
           <View
@@ -1560,8 +1562,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 16092021
+ * updatedDate: 23092021
  * updatedFunction:
- * -> change writing (task list -> daftar tugas).
- * -> change writing (completed -> selesai).
+ * -> update survey list condition to total survey (componentDidUpdate)
+ * -> update SurveyDone function.
  */

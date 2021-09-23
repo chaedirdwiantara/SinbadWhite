@@ -116,7 +116,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       const surveyResponseId = this.props.merchant.dataSubmitSurveyResponse
         .payload.id;
       this.props.merchantGetSurveyResponseProcess(surveyResponseId);
-      this.getSurvey();
+      this.getSurvey(true);
     }
     /**CHECK NAVIGATION FUNCTION */
     if (!this.props.navigation.state.params.goBackFunction) {
@@ -165,12 +165,18 @@ class MerchantSurveyDisplayPhotoView extends Component {
     }
   };
   /** === FOR GET SURVEY LIST === */
-  getSurvey = () => {
+  getSurvey = loading => {
+    this.props.merchantGetSurveyListReset();
     const params = {
       storeId: this.props.merchant.selectedMerchant.storeId,
       page: 1,
-      length: 10
+      length: 10,
+      loading
     };
+    /** FOR GET TOTAL SURVEY */
+    this.props.merchantGetTotalSurveyProcess(
+      this.props.merchant.selectedMerchant?.storeId
+    );
     this.props.merchantGetSurveyListProcess(params);
   };
   /** === GO BACK FUNCTION === */
@@ -345,7 +351,9 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === GO TO MERCHANT VIEW === */
   goToMerchantHomeView = () => {
     this.setState({ modalCompleted: false });
-    this.props.merchantGetSurveyListReset();
+    this.props.merchantGetTotalSurveyProcess(
+      this.props.merchant.selectedMerchant?.storeId
+    );
     this.props.merchantGetLogAllActivityProcessV2(
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
@@ -875,7 +883,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 17092021
+ * updatedDate: 23092021
  * updatedFunction:
- * -> add change surveyQuestionId to questionId when getting survey response & displaying the photo.
+ * -> add loading when get survey list.
+ * -> add get total survey.
  */

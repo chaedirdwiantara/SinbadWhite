@@ -110,12 +110,18 @@ class MerchantQuestionnaireView extends Component {
         prevProps.merchant.dataSubmitSurveyResponse.payload !==
         dataSubmitSurveyResponse
       ) {
+        this.props.merchantGetSurveyListReset();
         this.props.merchantGetSurveyListProcess({
           storeId: this.props.merchant.selectedMerchant.storeId,
+          loading: true,
           page: 1,
           length: 10
         });
         if (dataSubmitSurveyResponse.status === 'completed') {
+          /** FOR GET TOTAL SURVEY */
+          this.props.merchantGetTotalSurveyProcess(
+            this.props.merchant.selectedMerchant?.storeId
+          );
           // if success with status 'completed' navigate to success screen
           return NavigationService.navigate('SuccessSubmit', {
             surveyResponseId,
@@ -644,8 +650,8 @@ export default connect(
  * createdBy: dyah
  * createdDate: 06092021
  * updatedBy: dyah
- * updatedDate: 16092021
+ * updatedDate: 23092021
  * updatedFunction:
- * -> add get survey brand.
- * -> add componentDidUpdate when success submit survey.
+ * -> reset survey list when success submit survey.
+ * -> add get total survey when success submit survey.
  */
