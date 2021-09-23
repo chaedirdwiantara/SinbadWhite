@@ -28,6 +28,7 @@ import {
   Address,
   ButtonSingle,
   LoadingPage,
+  ModalBottomErrorRespons,
   ErrorPageNoGPS
 } from '../../../library/component';
 import { GlobalStyle, Fonts } from '../../../helpers';
@@ -55,7 +56,8 @@ class MerchantCheckinView extends Component {
       count: 0,
       refresh: true,
       success: false,
-      openModalNotInRadius: false
+      openModalNotInRadius: false,
+      openModalErrorGlobal: false
     };
     this.initialState = { ...this.state };
   }
@@ -87,7 +89,8 @@ class MerchantCheckinView extends Component {
     }
     const {
       dataGetRadiusLockGeotag,
-      errorGetRadiusLockGeotag
+      errorGetRadiusLockGeotag,
+      errorPostActivityV2
     } = this.props.merchant;
     /** CHECK RADIUS LOCK GEOTAG (SUCCESS) */
     if (dataGetRadiusLockGeotag) {
@@ -121,12 +124,28 @@ class MerchantCheckinView extends Component {
       if (
         prevProps.merchant.errorGetRadiusLockGeotag !== errorGetRadiusLockGeotag
       ) {
-        // show modal error
+        this.doError();
+      }
+    }
+    /** FAILED ERROR POST CHECK IN ACTIVITY */
+    if (errorPostActivityV2) {
+      if (prevProps.merchant.errorPostActivityV2 !== errorPostActivityV2) {
+        this.doError();
       }
     }
   }
   componentWillUnmount() {
     this.internalClearInterval();
+  }
+  /** FOR ERROR FUNCTION (FROM DID UPDATE) */
+  doError() {
+    /** Close all modal and open modal error respons */
+    this.setState({
+      openModalErrorGlobal: true,
+      openModalNoGPS: false,
+      modalOutStore: false,
+      openModalNotInRadius: false
+    });
   }
   /** === GET CURRENT LOCATION === */
   successMaps = success => {
@@ -613,6 +632,19 @@ class MerchantCheckinView extends Component {
     );
   }
 
+  /** RENDER MODAL ERROR RESPONSE */
+  renderModalErrorResponse() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={() => this.setState({ openModalErrorGlobal: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
+
   /** RENDER CONTENT */
   renderContent() {
     return (
@@ -622,6 +654,7 @@ class MerchantCheckinView extends Component {
         {this.renderMaps()}
         {this.renderModalBottom()}
         {this.renderModalOutStore()}
+        {this.renderModalErrorResponse()}
       </View>
     );
   }
@@ -726,7 +759,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 22092021
+ * updatedDate: 23092021
  * updatedFunction:
- * -> preparing data for integration (lock geotag).
+ * -> add modal error response (when failed get radius lock geotag & failed post activity)
  */
