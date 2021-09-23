@@ -33,7 +33,7 @@ class ModalBottomType6 extends Component {
     let backgroundColor = Color.fontBlue50;
     let icon = 'refresh';
     // SUCCESS (in radius)
-    if (this.props.success) {
+    if (this.props.success && this.props.count === 0) {
       title = 'Posisi Telah Sesuai';
       desc = 'Anda bisa lanjut mengunjungi toko';
       icon = 'beenhere';
@@ -122,7 +122,7 @@ class ModalBottomType6 extends Component {
           </View>
           <TouchableOpacity
             onPress={this.props.onRefresh}
-            disabled={this.props.success}
+            disabled={this.props.success || this.props.loadGeoTag}
           >
             <MaterialIcon
               name={this.checkStatusAndCount().icon}

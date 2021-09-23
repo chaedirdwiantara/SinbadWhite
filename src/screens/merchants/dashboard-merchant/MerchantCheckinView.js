@@ -55,8 +55,7 @@ class MerchantCheckinView extends Component {
       count: 0,
       refresh: true,
       success: false,
-      openModalNotInRadius: false,
-      radius: 6
+      openModalNotInRadius: false
     };
     this.initialState = { ...this.state };
   }
@@ -100,14 +99,20 @@ class MerchantCheckinView extends Component {
           dataGetRadiusLockGeotag.active &&
           dataGetRadiusLockGeotag.accepted
         ) {
-          this.setState({ succes: true, count: this.state.count + 1 });
+          this.setState({ success: true, count: 0 });
         }
         /** IF USER LOCATION NOT IN THE RADIUS */
         if (
           dataGetRadiusLockGeotag.active &&
           !dataGetRadiusLockGeotag.accepted
         ) {
-          this.setState({ succes: false, count: this.state.count + 1 });
+          this.setState({
+            succes: false,
+            count: this.state.count + 1
+          });
+          if (this.state.count === 4) {
+            this.setState({ openModalNotInRadius: true });
+          }
         }
       }
     }
@@ -188,7 +193,11 @@ class MerchantCheckinView extends Component {
         refresh,
         reRender: true
       },
-      () => Geolocation.getCurrentPosition(this.successMaps, this.errorMaps)
+      () =>
+        Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
+          timeout: 30000,
+          enableHighAccuracy: true
+        })
     );
   }
   /** === CHECK IN/OUT STORE === */
@@ -220,6 +229,7 @@ class MerchantCheckinView extends Component {
   }
   /** === DISABLE BUTTON MASUK TOKO === */
   disableButton() {
+    const { dataGetRadiusLockGeotag } = this.props.merchant;
     if (this.props.merchant.loadingPostActivity) {
       return true;
     }
@@ -234,8 +244,8 @@ class MerchantCheckinView extends Component {
         return true;
       }
     }
-    //if success false
-    if (!this.state.success) {
+    //if success false && lock geo tag active
+    if (!this.state.success && dataGetRadiusLockGeotag?.active) {
       return true;
     }
     return false;
@@ -245,6 +255,7 @@ class MerchantCheckinView extends Component {
    */
   onHandleReset() {
     this.setState(this.initialState);
+    this.getCurrentLocation();
   }
   /**
    * ========================
@@ -402,17 +413,6 @@ class MerchantCheckinView extends Component {
       </View>
     );
   }
-  checkIfInRadius() {
-    if (this.state.radius <= 5) {
-      //test modal valid => erase later
-      this.setState({ success: true, count: 0 });
-    } else {
-      //test modal invalid => erase later
-      if (this.state.count <= 3) {
-        this.setState({ success: false, count: this.state.count + 1 });
-      }
-    }
-  }
   /** === RENDER IN STORE === */
   renderInStore() {
     return (
@@ -454,13 +454,13 @@ class MerchantCheckinView extends Component {
               ]}
               disabled={this.props.merchant.loadingPostActivity}
               onPress={() => {
+                this.setState({ inStore: true });
                 this.props.getRadiusLockGeotagProcess({
                   storeLong: this.props.merchant.selectedMerchant.longitude,
                   storeLat: this.props.merchant.selectedMerchant.latitude,
                   salesLong: this.state.longitude,
                   salesLat: this.state.latitude
                 });
-                this.setState({ inStore: true });
               }}
             >
               <Text style={this.state.inStore ? Fonts.type62 : Fonts.type23}>
@@ -554,6 +554,7 @@ class MerchantCheckinView extends Component {
   }
 
   renderModalBottom() {
+    const { loadingGetRadiusLockGeotag } = this.props.merchant;
     return (
       <ModalBottomType6
         noTitle={this.renderMerchant()}
@@ -561,6 +562,7 @@ class MerchantCheckinView extends Component {
         count={this.state.count}
         success={this.state.success}
         maxHeight={height}
+        loadGeoTag={loadingGetRadiusLockGeotag}
         body={
           <View style={{ flex: 1, backgroundColor: Color.backgroundWhite }}>
             {this.renderInStore()}
