@@ -87,18 +87,23 @@ class MerchantSurveyResultView extends Component {
           flex: 0.5,
           flexDirection: 'row',
           justifyContent: 'space-around',
-          alignContent: 'center'
+          alignContent: 'center',
+          paddingVertical: '9%'
         }}
       >
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={Fonts.type23}>Responden</Text>
-          <Text style={[Fonts.textDetailScoreHeader, { paddingTop: 4 }]}>
+          <Text style={Fonts.textHeaderPageSurveyResult}>Responden</Text>
+          <Text
+            style={[Fonts.textSubHeaderPageSurveyResult, { paddingTop: 4 }]}
+          >
             {dataSurveyResult.storeName ?? '-'}
           </Text>
         </View>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={Fonts.type23}>Total Skor</Text>
-          <Text style={[Fonts.textDetailScoreHeader, { paddingTop: 4 }]}>
+          <Text style={Fonts.textHeaderPageSurveyResult}>Total Skor</Text>
+          <Text
+            style={[Fonts.textSubHeaderPageSurveyResult, { paddingTop: 4 }]}
+          >
             {dataTotalScoreSurvey ?? '0'}
           </Text>
         </View>
@@ -158,60 +163,62 @@ class MerchantSurveyResultView extends Component {
   renderCollapse() {
     const dataSurveyResponse = this.props.merchant.dataSurveyResponse.payload;
     return (
-      <FlatList
-        data={dataSurveyResponse?.survey?.questions ?? []}
-        keyExtractor={(data, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View style={{ flex: 1, flexDirection: 'row' }}>
-            <View style={{ flex: 2 }}>
-              <TouchableOpacity
-                style={styles.boxCollapse}
-                onPress={() =>
-                  this.setState({
-                    openCollapse: !this.state.openCollapse,
-                    activeIndexCollapse: index
-                  })
-                }
-              >
-                <View>
-                  {this.state.openCollapse &&
-                  this.state.activeIndexCollapse === index ? (
-                    <MaterialIcon
-                      name="keyboard-arrow-up"
-                      color={'#CACCCF'}
-                      size={30}
-                    />
-                  ) : (
-                    <MaterialIcon
-                      name="keyboard-arrow-down"
-                      color={'#CACCCF'}
-                      size={30}
-                    />
-                  )}
-                </View>
-                <View style={{ justifyContent: 'center' }}>
-                  <Text style={[Fonts.type8, { marginBottom: 4.5 }]}>
-                    Pertanyaan {index + 1}
-                  </Text>
-                  <View style={{ width: '80%' }}>
+      <View style={{ paddingBottom: 5, flex: 1 }}>
+        <FlatList
+          data={dataSurveyResponse?.survey?.questions ?? []}
+          keyExtractor={(data, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+              <View style={{ flex: 2 }}>
+                <TouchableOpacity
+                  style={styles.boxCollapse}
+                  onPress={() =>
+                    this.setState({
+                      openCollapse: !this.state.openCollapse,
+                      activeIndexCollapse: index
+                    })
+                  }
+                >
+                  <View>
                     {this.state.openCollapse &&
-                      this.state.activeIndexCollapse === index && (
-                        <Text style={[Fonts.type8, { color: '#A0A4A8' }]}>
-                          {item?.title ?? '-'}
-                        </Text>
-                      )}
+                    this.state.activeIndexCollapse === index ? (
+                      <MaterialIcon
+                        name="keyboard-arrow-up"
+                        color={'#CACCCF'}
+                        size={30}
+                      />
+                    ) : (
+                      <MaterialIcon
+                        name="keyboard-arrow-down"
+                        color={'#CACCCF'}
+                        size={30}
+                      />
+                    )}
                   </View>
+                  <View style={{ justifyContent: 'center' }}>
+                    <Text style={[Fonts.type8, { marginBottom: 4.5 }]}>
+                      Pertanyaan {index + 1}
+                    </Text>
+                    <View style={{ width: '80%' }}>
+                      {this.state.openCollapse &&
+                        this.state.activeIndexCollapse === index && (
+                          <Text style={[Fonts.type8, { color: '#A0A4A8' }]}>
+                            {item?.title ?? '-'}
+                          </Text>
+                        )}
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View style={{ flex: 1 }}>
+                <View style={styles.boxScore}>
+                  <Text>{item.questionResponseScore?.result ?? '0'}</Text>
                 </View>
-              </TouchableOpacity>
-            </View>
-            <View style={{ flex: 1 }}>
-              <View style={styles.boxScore}>
-                <Text>{item.questionResponseScore?.result ?? '0'}</Text>
               </View>
             </View>
-          </View>
-        )}
-      />
+          )}
+        />
+      </View>
     );
   }
 

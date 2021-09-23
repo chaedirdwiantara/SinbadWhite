@@ -705,6 +705,16 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: Color.fontGreen50
   },
+  /** === text for haader detail hasil survey === */
+  textHeaderPageSurveyResult: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: RFPercentage(2)
+  },
+  /** === text for sub haader detail hasil survey === */
+  textSubHeaderPageSurveyResult: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: RFPercentage(2.4)
+  },
   /** === text for haader page === */
   textHeaderPage: {
     fontFamily: Fonts.MontserratBold,
@@ -818,12 +828,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.MontserratMedium,
     fontWeight: 'bold',
     fontSize: 13,
-    lineHeight: 16,
-    color: Color.fontBlack50
-  },
-  textDetailScoreHeader: {
-    fontFamily: Fonts.MontserratSemiBold,
-    fontSize: 16,
     lineHeight: 16,
     color: Color.fontBlack50
   }
