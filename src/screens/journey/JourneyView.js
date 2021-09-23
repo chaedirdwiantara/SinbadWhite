@@ -293,14 +293,14 @@ class JourneyView extends Component {
           style={[styles.headerContainer, { zIndex: 0 }]}
         >
           <View style={[styles.boxHeader, { zIndex: 1 }]}>
-            <Text style={[styles.headerTextTitle, { marginBottom: 5 }]}>
+            <Text style={[Fonts.textHeaderPageJourney, { marginBottom: 5 }]}>
               {this.props.journey.dataGetJourneyPlanReportV2.total}/
               {this.props.journey.dataGetJourneyPlanReportV2.target}
             </Text>
             <Text style={styles.headerTextSubTitle}>Kunjungan Toko</Text>
           </View>
           <View style={styles.boxHeader}>
-            <Text style={[styles.headerTextTitle, { marginBottom: 5 }]}>
+            <Text style={[Fonts.textHeaderPageJourney, { marginBottom: 5 }]}>
               {MoneyFormat(
                 this.props.journey.dataGetJourneyPlanReportV2.totalOrder
               )}
@@ -524,12 +524,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 12,
     color: masterColor.fontBlack80
-  },
-  headerTextTitle: {
-    fontFamily: Fonts.MontserratExtraBold,
-    fontSize: 18,
-    lineHeight: 17,
-    color: masterColor.fontBlack50
   }
 });
 
