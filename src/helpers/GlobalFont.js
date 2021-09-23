@@ -715,6 +715,11 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.MontserratBold,
     fontSize: RFPercentage(2.4)
   },
+  /** === text for haader page journey list === */
+  textHeaderPageJourney: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: RFPercentage(2.4)
+  },
   /** === text for haader page === */
   textHeaderPage: {
     fontFamily: Fonts.MontserratBold,
