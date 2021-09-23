@@ -6,6 +6,7 @@ import {
 } from '../../../library/reactPackage';
 import { useState } from 'react';
 import ModalBottomMerchantNoCollectionReason from './ModalBottomMerchantNoCollectionReason';
+import MerchantCollectionReasonList from './MerchantCollectionReasonList';
 const MerchantNoCollectionReason = () => {
   const [isModalReasonOpen, setIsModalReasonOpen] = useState(false);
   const reasonNotCollect = [
@@ -16,6 +17,34 @@ const MerchantNoCollectionReason = () => {
     { id: 5, reason: 'Toko Pindah' },
     { id: 6, reason: 'Ganti Bisnis' }
   ];
+  const collectionUnpaid = {
+    data: {
+      orderParcels: [
+        {
+          deliveredDate: '2021-09-03 09:09:46',
+          dueDate: '2021-09-05 09:09:46',
+          id: 1081735,
+          invoiceAmount: 139740,
+          invoiceGroupName: 'Exclusive Danone',
+          orderCode: 'S0100032305811078558',
+          orderRef: null,
+          outstandingAmount: 0,
+          paidAmount: 139740
+        },
+        {
+          deliveredDate: '2021-09-03 09:09:46',
+          dueDate: '2021-09-05 09:09:46',
+          id: 1081735,
+          invoiceAmount: 139740,
+          invoiceGroupName: 'Exclusive Danone',
+          orderCode: 'S0100032305811078558',
+          orderRef: null,
+          outstandingAmount: 0,
+          paidAmount: 139740
+        }
+      ]
+    }
+  };
   const onPressReason = () => {
     setIsModalReasonOpen(true);
     console.log('modal open');
@@ -33,9 +62,7 @@ const MerchantNoCollectionReason = () => {
   return (
     <>
       <View>
-        <TouchableOpacity onPress={() => onPressReason()}>
-          <Text>No Collection</Text>
-        </TouchableOpacity>
+        <MerchantCollectionReasonList dataList={collectionUnpaid} />
       </View>
       {renderModalBottomNotCollectReason()}
     </>
