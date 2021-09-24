@@ -7,6 +7,7 @@ import OmsCheckoutView from '../../screens/oms/OmsCheckoutView';
 import OmsVerificationView from '../../screens/oms/OmsVerificationView';
 import OmsOtpKurView from '../../screens/oms/OMSOtpKurView';
 import ReturnOrderView from '../../screens/merchants/return-order/ReturnOrderView';
+import { GlobalStyle } from '../../helpers';
 
 const OmsNavigator = {
   OmsCartView: {
@@ -93,11 +94,7 @@ const OmsNavigator = {
     navigationOptions: {
       headerTitle: 'Daftar Pesanan',
       headerTitleStyle: GlobalFont.textHeaderPage,
-      headerStyle: {
-        backgroundColor: masterColor.backgroundWhite,
-        elevation: 2,
-        shadowOpacity: 1
-      },
+      headerStyle: GlobalStyle.shadowForBox10,
       gesturesEnabled: false
     }
   }

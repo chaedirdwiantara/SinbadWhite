@@ -12,12 +12,18 @@ import {
 import { StatusBarWhite, SearchBarType5 } from '../../../library/component';
 import masterColor from '../../../config/masterColor.json';
 import * as ActionCreators from '../../../state/actions';
+import ReturnOrderListView from './ReturnOrderListView';
+import { GlobalMethod } from '../../../services/methods';
 
 class ReturnOrderView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchText: ''
+      searchText: '',
+      dateFilter: {
+        dateGte: '',
+        dateLte: ''
+      }
     };
   }
 
@@ -31,7 +37,7 @@ class ReturnOrderView extends Component {
 
   renderSearchBar() {
     return (
-      <View>
+      <View style={{ marginVertical: 8 }}>
         <SearchBarType5
           placeholder={'Nama produk / ID faktur'}
           searchText={this.state.searchText}
@@ -42,8 +48,25 @@ class ReturnOrderView extends Component {
     );
   }
 
+  renderData() {
+    return (
+      <View style={styles.mainContainer}>
+        <ReturnOrderListView
+          storeId={GlobalMethod.merchantStoreId()}
+          search={this.state.searchText}
+          dateFilter={this.state.dateFilter}
+        />
+      </View>
+    );
+  }
+
   renderContent() {
-    return <View>{this.renderSearchBar()}</View>;
+    return (
+      <View style={styles.mainContainer}>
+        {this.renderSearchBar()}
+        {this.renderData()}
+      </View>
+    );
   }
 
   render() {
