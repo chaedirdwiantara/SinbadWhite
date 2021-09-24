@@ -6,18 +6,22 @@ import {
   Image,
   SafeAreaView,
   Keyboard,
-  Text
+  Text,
+  Linking,
+  BackHandler
 } from '../../library/reactPackage';
 import {
   bindActionCreators,
   connect,
-  MaterialCommunityIcons
+  MaterialCommunityIcons,
+  DeviceInfo
 } from '../../library/thirdPartyPackage';
 import {
   ButtonSingle,
   StatusBarRed,
   BackHandlerCloseApp,
-  InputType4
+  InputType4,
+  ModalConfirmationType2
 } from '../../library/component';
 import { Fonts, GlobalStyle } from '../../helpers';
 import { Color } from '../../config';
@@ -30,7 +34,8 @@ class SignInWithPhoneView extends Component {
     this.state = {
       phoneNumber: '',
       errorPhoneNumber: false,
-      correctFormatPhoneNumber: false
+      correctFormatPhoneNumber: false,
+      openModalForceUpdateApp: false
     };
   }
   /**
@@ -38,6 +43,13 @@ class SignInWithPhoneView extends Component {
    * FUNCTIONAL
    * ========================
    */
+  componentDidMount() {
+    this.props.appVersion(0);
+    /** THIS FOR MAINTENANCE PAGE */
+    if (this.props.permanent.appMaintenance) {
+      NavigationService.navigate('MaintenanceView');
+    }
+  }
   /** COMPONENT DID UPDATE */
   componentDidUpdate(prevProps) {
     /** CHECK IF SUCCESS */
@@ -58,6 +70,17 @@ class SignInWithPhoneView extends Component {
           errorPhoneNumber: true,
           correctFormatPhoneNumber: false
         });
+      }
+    }
+    if (
+      prevProps.permanent.appVersionCode !== this.props.permanent.appVersionCode
+    ) {
+      if (this.props.permanent.appVersionCode > DeviceInfo.getBuildNumber()) {
+        this.setState({ openModalForceUpdateApp: true });
+      } else if (
+        this.props.permanent.appVersionCode <= DeviceInfo.getBuildNumber()
+      ) {
+        this.setState({ openModalForceUpdateApp: false });
       }
     }
   }
@@ -116,6 +139,8 @@ class SignInWithPhoneView extends Component {
   renderContentPhoneNumberInput() {
     return (
       <InputType4
+        accessible={true}
+        accessibilityLabel={'txtInputNomorHp'}
         title={'Nomor Handphone'}
         error={this.state.errorPhoneNumber}
         errorText={'No. HP yang anda masukan salah'}
@@ -155,6 +180,8 @@ class SignInWithPhoneView extends Component {
   renderButton() {
     return (
       <ButtonSingle
+        accessible={true}
+        accessibilityLabel={'btnLoginLanjutkan'}
         disabled={
           !this.state.correctFormatPhoneNumber || this.props.auth.loadingGetOTP
         }
@@ -176,6 +203,31 @@ class SignInWithPhoneView extends Component {
       </View>
     );
   }
+  /**
+   * =====================
+   * MODAL
+   * =====================
+   */
+  /** RENDER MODAL FORCE UPDATE */
+  renderModalForceUpdate() {
+    return this.state.openModalForceUpdateApp ? (
+      <ModalConfirmationType2
+        title={'Update Aplikasi'}
+        okText={'Update'}
+        open={this.state.openModalForceUpdateApp}
+        content={
+          'Update aplikasi sekarang dan nikmati performa yang lebih stabil.'
+        }
+        type={'okeRed'}
+        ok={() => {
+          BackHandler.exitApp();
+          Linking.openURL('market://details?id=com.sinbad.agent');
+        }}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === MAIN === */
   render() {
     return (
@@ -189,6 +241,8 @@ class SignInWithPhoneView extends Component {
             {this.renderContent()}
           </View>
         </View>
+        {/* modal */}
+        {this.renderModalForceUpdate()}
       </SafeAreaView>
     );
   }
@@ -218,8 +272,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth }) => {
-  return { auth };
+const mapStateToProps = ({ auth, permanent }) => {
+  return { auth, permanent };
 };
 
 const mapDispatchToProps = dispatch => {

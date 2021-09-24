@@ -33,6 +33,68 @@ export function journeyPlanGetLoadMoreV2(page) {
   return { type: types.JOURNEY_PLAN_GET_LOADMORE_V2, payload: page };
 }
 /**
+ * ==============================
+ * GET JOURNEY PLAN MAP DATA
+ * ==============================
+ */
+/** === JOURNEY PLAN GET MAP DATA PROCESS ==== */
+export function journeyPlanGetMapDataProcess(data) {
+  return { type: types.JOURNEY_PLAN_GET_MAP_DATA_PROCESS, payload: data };
+}
+/** === JOURNEY PLAN GET MAP DATA SUCCESS === */
+export function journeyPlanGetMapDataSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.JOURNEY_PLAN_GET_MAP_DATA_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.JOURNEY_PLAN_GET_MAP_DATA_FAILED, payload: data };
+}
+/** === JOURNEY PLAN GET MAP DATA FAILED === */
+export function journeyPlanGetMapDataFailed(data) {
+  return { type: types.JOURNEY_PLAN_GET_MAP_DATA_FAILED, payload: data };
+}
+/** === JOURNEY PLAN GET MAP DATA RESET === */
+export function journeyPlanGetMapDataReset() {
+  return { type: types.JOURNEY_PLAN_GET_MAP_DATA_RESET };
+}
+/**
+ * ==============================
+ * GET JOURNEY PLAN MAP SEARCH
+ * ==============================
+ */
+/** === JOURNEY PLAN GET PROCESS ==== */
+export function journeyPlanGetMapSearchProcess(data) {
+  return { type: types.JOURNEY_PLAN_GET_MAP_SEARCH_PROCESS, payload: data };
+}
+/** === JOURNEY PLAN GET SUCCESS === */
+export function journeyPlanGetMapSearchSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.JOURNEY_PLAN_GET_MAP_SEARCH_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.JOURNEY_PLAN_GET_MAP_SEARCH_FAILED, payload: data };
+}
+/** === JOURNEY PLAN GET FAILED === */
+export function journeyPlanGetMapSearchFailed(data) {
+  return { type: types.JOURNEY_PLAN_GET_MAP_SEARCH_FAILED, payload: data };
+}
+/** === REFRESH GET MERCHANT === */
+export function journeyPlanGetMapSearchRefresh() {
+  return { type: types.JOURNEY_PLAN_GET_MAP_SEARCH_REFRESH };
+}
+/** === RESET GET MERCHANT === */
+export function journeyPlanGetMapSearchReset() {
+  return { type: types.JOURNEY_PLAN_GET_MAP_SEARCH_RESET };
+}
+/** === LOAD MORE GET MERCHANT === */
+export function journeyPlanGetMapSearchLoadMore(page) {
+  return { type: types.JOURNEY_PLAN_GET_MAP_SEARCH_LOADMORE, payload: page };
+}
+/**
  * ================================
  * SAVE MERCHANT TO JOURNEY PLAN V2
  * ================================

@@ -53,7 +53,7 @@ export function savePageAddMerchantFrom(data) {
  * ===============================
  */
 export function savePageAreaMappingFrom(data) {
-  return { type: types.SAVE_PAGE_AREA_MAPPING_FROM, payload: data}
+  return { type: types.SAVE_PAGE_AREA_MAPPING_FROM, payload: data };
 }
 /**
  * ==============================
@@ -150,7 +150,7 @@ export function longlatToAddressGetFailed(data) {
 }
 /** === RESET MANUAL LOCATION INPUT DATA === */
 export function resetManualLocationInputData() {
-  return { type: types.RESET_MANUAL_INPUT_LOCATION_DATA};
+  return { type: types.RESET_MANUAL_INPUT_LOCATION_DATA };
 }
 function modifyDataAddressFromGmaps(data) {
   const dataAddress = {
@@ -226,7 +226,22 @@ export function uploadImageFailed(data) {
 export function deleteAllData() {
   return { type: types.DELETE_ALL_DATA };
 }
-
+/**
+ * ======================
+ * MAINTENANCE APP
+ * ======================
+ */
+export function appMaintenance(data) {
+  return { type: types.APP_MAINTENANCE, payload: data };
+}
+/**
+ * ======================
+ * VERSION APP
+ * ======================
+ */
+export function appVersion(data) {
+  return { type: types.APP_VERSION, payload: data };
+}
 /**
  * ========================
  * NOTE

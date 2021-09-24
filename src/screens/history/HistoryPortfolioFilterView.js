@@ -122,6 +122,8 @@ class HistoryPortfolioFilterView extends Component {
   renderButton() {
     return (
       <ButtonSingle
+        accessible={true}
+        accessibilityLabel={'btnFilterPortfolioTerapkan'}
         disabled={false}
         title={'Terapkan'}
         borderRadius={4}

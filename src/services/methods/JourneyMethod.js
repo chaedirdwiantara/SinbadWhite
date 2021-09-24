@@ -2,10 +2,16 @@ import ApiRest from '../apiRest';
 const salesManagementService = 'supplier/sales-management';
 /** GET JOURNEY PLAN LIST BY USER ID V2*/
 function getJourneyPlanV2(data) {
+  let length = 10;
+  if (data.length) {
+    length = data.length;
+  }
   return ApiRest({
     path: `${salesManagementService}/v1/journey-book-stores/date?date=${
       data.date
-    }&search=${data.search}&page=${data.page}&length=10`,
+    }&search=${data.search}&page=${data.page}&length=${length}&storetype=${
+      data.storetype
+    }`,
     method: 'GET'
   });
 }
@@ -37,28 +43,8 @@ export const JourneyMethod = {
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: tatas
- * updatedDate: 03072020
- * updatedFunction:
- *  -> Change endpoint getJourneyPlan
  * updatedBy: dyah
- * updatedDate: 18022021
+ * updatedDate: 12082021
  * updatedFunction:
- * -> Add new methods. (getJourneyPlanV2, saveMerchantToJourneyPlanV2, getJourneyPlanReportV2)
- * updatedBy: dyah
- * updatedDate: 24022021
- * updatedFunction:
- * -> Update the methods. (getJourneyPlanV2, saveMerchantToJourneyPlanV2)
- * updatedBy: dyah
- * updatedDate: 01032021
- * updatedFunction:
- * -> Update the method. (getJourneyPlanReportV2)
- * updatedBy: dyah
- * updatedDate: 12032021
- * updatedFunction:
- * -> Add parameter search. (getJourneyPlanV2)
- * updatedBy: dyah
- * updatedDate: 08042021
- * updatedFunction:
- * -> Clean method from old journey plan.
+ *  -> add parameter get journey plan (storetype).
  * */

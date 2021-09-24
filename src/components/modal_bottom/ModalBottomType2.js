@@ -89,7 +89,11 @@ class ModalBottomType2 extends Component {
               paddingVertical: 10
             }}
           >
-            <Text style={Fonts.type8}>{this.props.title}</Text>
+            {this.props.noTitle ? (
+              this.props.noTitle
+            ) : (
+              <Text style={Fonts.type8}>{this.props.title}</Text>
+            )}
           </View>
           <View style={GlobalStyle.lines} />
         </View>
@@ -120,7 +124,17 @@ class ModalBottomType2 extends Component {
   /** === RENDER STATUS BAR === */
   renderContent() {
     return (
-      <View style={[styles.contentContainer, GlobalStyle.shadow]}>
+      <View
+        style={[
+          styles.contentContainer,
+          GlobalStyle.shadow,
+          {
+            maxHeight: this.props.maxHeight
+              ? this.props.maxHeight
+              : 0.45 * height
+          }
+        ]}
+      >
         {this.renderContentTitle()}
         {this.renderContentBody()}
       </View>
@@ -142,7 +156,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     borderBottomWidth: 0,
-    maxHeight: 0.45 * height,
     backgroundColor: Color.backgroundWhite,
     flexDirection: 'column',
     position: 'absolute',
@@ -169,15 +182,14 @@ const styles = StyleSheet.create({
 export default ModalBottomType2;
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 08072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: dyah
+ * updatedDate: 22072021
+ * updatedFunction:
+ * -> update modal bottom & add props (noTitle & maxHeight).
+ *
+ */

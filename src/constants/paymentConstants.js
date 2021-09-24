@@ -29,3 +29,7 @@
   */
   export const BILLING_PAID = "paid"
   export const BILLING_REFUNDED = "refunded"
+  export const BILLING_REFUND_REQUESTED = "refund_requested"
+  export const BILLING_EXPIRED = "expired"
+  export const BILLING_CANCEL = "cancel"
+

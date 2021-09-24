@@ -657,11 +657,47 @@ const styles = StyleSheet.create({
     lineHeight: 13,
     color: Color.fontBlue50
   },
+  type109: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 12,
+    lineHeight: 15,
+    color: Color.fontBlack50
+  },
   type108p: {
     fontFamily: Fonts.MontserratBold,
     fontSize: 11,
     lineHeight: 13,
     color: Color.fontRed50
+  },
+  type117p: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 10,
+    lineHeight: 13,
+    color: Color.fontBlack50
+  },
+  type109p: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10,
+    lineHeight: 13,
+    color: Color.fontYellow50
+  },
+  type110p: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10,
+    lineHeight: 13,
+    color: Color.fontGreen50
+  },
+  type111p: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 10,
+    lineHeight: 13,
+    color: Color.shadow
+  },
+  type112p: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 10,
+    lineHeight: 13,
+    color: Color.fontBlack40
   },
   forCompare: {
     fontFamily: Fonts.MontserratBold,
@@ -757,6 +793,12 @@ const styles = StyleSheet.create({
     lineHeight: 15,
     textAlign: 'center',
     color: Color.buttonRedDisableColor
+  },
+  type10Red: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 11,
+    lineHeight: 14,
+    color: Color.fontRed40
   }
 });
 

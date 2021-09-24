@@ -83,6 +83,8 @@ class OtpView extends Component {
   renderButton() {
     return (
       <ButtonSingle
+        accessible={true}
+        accessibilityLabel={'btnOtpVerifikasi'}
         disabled={
           this.state.otpInput.filter(x => x !== '').length < 5 ||
           this.props.auth.loadingSignIn
@@ -118,6 +120,8 @@ class OtpView extends Component {
     return (
       <View style={styles.boxOtp}>
         <OtpInput
+          accessible={true}
+          accessibilityLabel={'txtOtpInputOtp'}
           onRef={ref => (this.fromOTPInput = ref)}
           fromOTPInput={this.otpInput.bind(this)}
         />

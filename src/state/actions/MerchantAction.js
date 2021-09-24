@@ -311,14 +311,14 @@ export function resetMerchantAdd() {
 }
 /**
  * ====================================
- * GET MERCHANT DETAIL
+ * GET NO ORDER REASON
  * ====================================
  */
-/** === MERCHANT GET DETAIL PROCESS === */
+/** === MERCHANT GET NO ORDER REASON PROCESS === */
 export function merchantGetNoOrderReasonProcess(data) {
   return { type: types.MERCHANT_NO_ORDER_REASON_GET_PROCESS, payload: data };
 }
-/** === MERCHANT GET DETAIL SUCCESS === */
+/** === MERCHANT GET NO ORDER REASON SUCCESS === */
 export function merchantGetNoOrderReasonSuccess(data) {
   if (data.result === 'Ok') {
     return {
@@ -328,9 +328,81 @@ export function merchantGetNoOrderReasonSuccess(data) {
   }
   return { type: types.MERCHANT_NO_ORDER_REASON_GET_FAILED, payload: data };
 }
-/** === MERCHANT GET DETAIL FAILED === */
+/** === MERCHANT GET NO ORDER REASON FAILED === */
 export function merchantGetNoOrderReasonFailed(data) {
   return { type: types.MERCHANT_NO_ORDER_REASON_GET_FAILED, payload: data };
+}
+/**
+ * ====================================
+ * GET NO VISIT REASON
+ * ====================================
+ */
+/** === MERCHANT GET NO VISIT REASON PROCESS === */
+export function merchantGetNoVisitReasonProcess(data) {
+  return { type: types.MERCHANT_NO_VISIT_REASON_GET_PROCESS, payload: data };
+}
+/** === MERCHANT GET NO VISIT REASON SUCCESS === */
+export function merchantGetNoVisitReasonSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_NO_VISIT_REASON_GET_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_NO_VISIT_REASON_GET_FAILED, payload: data };
+}
+/** === MERCHANT GET NO VISIT REASON FAILED === */
+export function merchantGetNoVisitReasonFailed(data) {
+  return { type: types.MERCHANT_NO_VISIT_REASON_GET_FAILED, payload: data };
+}
+/**
+ * ====================================
+ * POST NO VISIT REASON
+ * ====================================
+ */
+/** === MERCHANT POST NO VISIT REASON PROCESS === */
+export function merchantPostNoVisitReasonProcess(data) {
+  return { type: types.MERCHANT_POST_NO_VISIT_REASON_PROCESS, payload: data };
+}
+/** === MERCHANT POST NO VISIT REASON SUCCESS === */
+export function merchantPostNoVisitReasonSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_POST_NO_VISIT_REASON_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_POST_NO_VISIT_REASON_FAILED, payload: data };
+}
+/** === MERCHANT POST NO VISIT REASON FAILED === */
+export function merchantPostNoVisitReasonFailed(data) {
+  return { type: types.MERCHANT_POST_NO_VISIT_REASON_FAILED, payload: data };
+}
+/**
+ * ====================================
+ * GET JOURNEY BOOK DETAIL
+ * ====================================
+ */
+/** === MERCHANT GET JOURNEY BOOK DETAIL PROCESS === */
+export function merchantGetDetailJourneyBookProcess(data) {
+  return {
+    type: types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_PROCESS,
+    payload: data
+  };
+}
+/** === MERCHANT GET JOURNEY BOOK DETAIL SUCCESS === */
+export function merchantGetDetailJourneyBookSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_FAILED, payload: data };
+}
+/** === MERCHANT GET JOURNEY BOOK DETAIL FAILED === */
+export function merchantGetDetailJourneyBookFailed(data) {
+  return { type: types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_FAILED, payload: data };
 }
 /**
  * =====================================

@@ -74,10 +74,12 @@ import ToastType1 from '../components/toast/ToastType1';
 import ProductListType1 from '../components/list/ProductListType1';
 import ProductListType2 from '../components/list/ProductListType2';
 import ProductListType3 from '../components/list/ProductListType3';
+import ProductListType4 from '../components/list/ProductListType4';
 import ProductListType7 from '../components/list/ProductListType7';
 /** EMPTY DATA */
 import ComingSoon from '../components/empty_state/ComingSoon';
 import EmptyData from '../components/empty_state/EmptyData';
+import EmptyDataType2 from '../components/empty_state/EmptyDataType2';
 /** SKELETON */
 import SkeletonType1 from '../components/skeleton/SkeletonType1';
 import SkeletonType2 from '../components/skeleton/SkeletonType2';
@@ -92,6 +94,8 @@ import SkeletonType18 from '../components/skeleton/SkeletonType18';
 import SkeletonType21 from '../components/skeleton/SkeletonType21';
 import SkeletonType23 from '../components/skeleton/SkeletonType23';
 import SkeletonType24 from '../components/skeleton/SkeletonType24';
+import SkeletonType25 from '../components/skeleton/SkeletonType25';
+import SkeletonType26 from '../components/skeleton/SkeletonType26';
 /** ADDRESS */
 import Address from '../components/Address';
 /** TAG */
@@ -186,10 +190,12 @@ export {
   ProductListType1,
   ProductListType2,
   ProductListType3,
+  ProductListType4,
   ProductListType7,
   /** EMPTY DATA */
   ComingSoon,
   EmptyData,
+  EmptyDataType2,
   /** SKELETON */
   SkeletonType1,
   SkeletonType2,
@@ -204,6 +210,8 @@ export {
   SkeletonType21,
   SkeletonType23,
   SkeletonType24,
+  SkeletonType25,
+  SkeletonType26,
   /** ADDRESS */
   Address,
   /** TAG */
@@ -233,13 +241,9 @@ export {
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Dyah
- * updatedDate: 18122020
- * updatedFunction:
- * -> Add new component (customize modal bottom => modalBottomType5)
  * updatedBy: dyah
- * updatedDate: 06052021
+ * updatedDate: 06082021
  * updatedFunction:
- * -> Add new component (customize modal => ModalConfirmationType4)
+ * -> add new component (empty state => emptyDataType2)
  *
  */
