@@ -630,7 +630,7 @@ class MerchantHomeView extends Component {
     }
     if (item.activity === ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY) {
       if (
-        this.props.merchant.surveyList.payload.data?.find(
+        this.props.merchant.surveyList?.find(
           value => value.responseStatus === 'inProgress'
         )
       ) {
@@ -713,7 +713,7 @@ class MerchantHomeView extends Component {
       // checkIn true & surveyList inProgress customize button
       if (item.activity === ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY) {
         if (
-          this.props.merchant.surveyList.payload.data?.find(
+          this.props.merchant.surveyList?.find(
             value => value.responseStatus === 'inProgress'
           )
         ) {

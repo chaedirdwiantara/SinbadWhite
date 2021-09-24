@@ -934,7 +934,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingLoadMoreSurveyList: false,
       loadingGetSurveyList: false,
       refreshGetSurveyList: false,
-      surveyList: [...state.surveyList, ...action.payload.payload.data]
+      surveyList: [...state.surveyList, ...action.payload.payload.result]
     };
   },
   [types.MERCHANT_GET_SURVEY_LIST_FAILED](state, action) {
