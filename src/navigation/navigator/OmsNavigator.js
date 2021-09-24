@@ -6,6 +6,8 @@ import OmsCartView from '../../screens/oms/OmsCartView';
 import OmsCheckoutView from '../../screens/oms/OmsCheckoutView';
 import OmsVerificationView from '../../screens/oms/OmsVerificationView';
 import OmsOtpKurView from '../../screens/oms/OMSOtpKurView';
+import ReturnOrderView from '../../screens/merchants/return-order/ReturnOrderView';
+import { GlobalStyle } from '../../helpers';
 
 const OmsNavigator = {
   OmsCartView: {
@@ -84,8 +86,16 @@ const OmsNavigator = {
         shadowOpacity: 0
       },
       headerRight: <View />,
-      gesturesEnabled: false,
-      
+      gesturesEnabled: false
+    }
+  },
+  ReturnOrderView: {
+    screen: ReturnOrderView,
+    navigationOptions: {
+      headerTitle: 'Daftar Pesanan',
+      headerTitleStyle: GlobalFont.textHeaderPage,
+      headerStyle: GlobalStyle.shadowForBox10,
+      gesturesEnabled: false
     }
   }
 };
