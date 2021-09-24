@@ -33,6 +33,14 @@ class ReturnOrderView extends Component {
 
   parentFunction(data) {
     console.log(data);
+    switch (data.type) {
+      case 'search':
+        this.setState({ searchText: data.data });
+        break;
+
+      default:
+        break;
+    }
   }
 
   renderSearchBar() {
