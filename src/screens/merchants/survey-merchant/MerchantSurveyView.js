@@ -19,9 +19,7 @@ import SurveyListDataView from './SurveyListDataView';
 class MerchantSurveyView extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      successSurveyList: false
-    };
+    this.state = {};
   }
   /**
    * =======================
@@ -35,20 +33,20 @@ class MerchantSurveyView extends Component {
     );
   }
   /** FOR GET SURVEY LIST */
-  getSurveyList() {
+  getSurveyList(loading) {
     const params = {
       storeId: this.props.merchant.selectedMerchant.storeId,
       page: 1,
-      length: 10
+      length: 10,
+      loading
     };
     this.props.merchantGetSurveyListProcess(params);
   }
   /** === DID MOUNT === */
   componentDidMount() {
     this.refreshMerchantGetLogAllActivityProcess();
-    this.props.merchantGetTotalSurveyProcess(
-      this.props.merchant.selectedMerchant?.storeId
-    );
+    this.props.merchantGetSurveyListReset();
+    this.getSurveyList(true);
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
@@ -73,7 +71,12 @@ class MerchantSurveyView extends Component {
    * ========================
    */
   static navigationOptions = ({ navigation }) => {
-    const { totalSurvey, totalCompletedSurvey } = navigation.state.params;
+    let totalSurvey,
+      totalCompletedSurvey = 0;
+    if (navigation.state.params) {
+      totalSurvey = navigation.state.params.totalSurvey;
+      totalCompletedSurvey = navigation.state.params.totalCompletedSurvey;
+    }
 
     return {
       headerTitle: () => (
@@ -99,8 +102,7 @@ class MerchantSurveyView extends Component {
     return (
       <SafeAreaView>
         <StatusBarWhite />
-        {this.props.merchant.loadingGetSurveyList ||
-        this.props.merchant.loadingGetTotalSurvey ? (
+        {this.props.merchant.loadingGetSurveyList ? (
           <View style={{ height: '100%' }}>
             <LoadingPage />
           </View>
@@ -140,7 +142,8 @@ export default connect(
  * createdBy: dyah
  * createdDate: 19112020
  * updatedBy: dyah
- * updatedDate: 16092021
+ * updatedDate: 23092021
  * updatedFunction:
- * -> add function to get total survey.
+ * -> add loading when get survey list.
+ * -> update navigation param.
  */
