@@ -140,7 +140,7 @@ class ReturnOrderListView extends Component {
                 Total pembelian
               </Text>
               <Text style={[Fonts.type56, { color: Color.fontBlack80 }]}>
-                {MoneyFormat(item.deliveredParcelFinalPriceBuyer)}
+                {MoneyFormat(item?.deliveredParcelFinalPriceBuyer || 0)}
               </Text>
             </View>
           </View>

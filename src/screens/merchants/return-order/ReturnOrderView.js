@@ -20,6 +20,7 @@ import * as ActionCreators from '../../../state/actions';
 import ReturnOrderListView from './ReturnOrderListView';
 import { GlobalMethod } from '../../../services/methods';
 import { Color } from '../../../config';
+import ModalFilterDate from './ModalFilterDate';
 
 class ReturnOrderView extends Component {
   constructor(props) {
@@ -29,7 +30,8 @@ class ReturnOrderView extends Component {
       dateFilter: {
         dateGte: '',
         dateLte: ''
-      }
+      },
+      openModalDateFilter: false
     };
   }
 
@@ -54,7 +56,7 @@ class ReturnOrderView extends Component {
       <View style={styles.containerFloatButton}>
         <ButtonFloatType2
           title={'Filter Tanggal'}
-          push={() => console.log('Filter Tanggal')}
+          push={() => this.setState({ openModalDateFilter: true })}
           icon={
             <MaterialIcon
               color={Color.backgroundWhite}
@@ -101,12 +103,30 @@ class ReturnOrderView extends Component {
     );
   }
 
+  renderModalDateFilter() {
+    return this.state.openModalDateFilter ? (
+      <ModalFilterDate
+        open={this.state.openModalDateFilter}
+        close={() => this.setState({ openModalDateFilter: false })}
+        title={'Tanggal Pesanan'}
+        custom={true}
+        icon={
+          <MaterialIcon name={'close'} size={24} color={Color.fontBlack100} />
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
+
   render() {
     return (
       <View style={styles.mainContainer}>
         <StatusBarWhite />
         {this.renderContent()}
         {this.renderDateFilterButton()}
+        {/* RENDER MODAL */}
+        {this.renderModalDateFilter()}
       </View>
     );
   }
