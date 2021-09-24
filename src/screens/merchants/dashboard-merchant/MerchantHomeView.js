@@ -254,7 +254,7 @@ class MerchantHomeView extends Component {
         !surveyList.payload.data &&
         !errorGetSurveyList
       ) {
-        this.getSurvey();
+        // this.getSurvey();
       }
     }
     if (
@@ -488,6 +488,7 @@ class MerchantHomeView extends Component {
         }
         break;
       case 'retur':
+        NavigationService.navigate('ReturnOrderView');
         break;
       default:
         break;
@@ -1532,7 +1533,14 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ auth, merchant, user, permanent, profile, privileges }) => {
+const mapStateToProps = ({
+  auth,
+  merchant,
+  user,
+  permanent,
+  profile,
+  privileges
+}) => {
   return { auth, merchant, user, permanent, profile, privileges };
 };
 
