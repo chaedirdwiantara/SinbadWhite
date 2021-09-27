@@ -629,11 +629,8 @@ class MerchantHomeView extends Component {
       return <MaterialIcon name="cancel" color={Color.fontRed50} size={24} />;
     }
     if (item.activity === ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY) {
-      if (
-        this.props.merchant.surveyList?.find(
-          value => value.responseStatus === 'inProgress'
-        )
-      ) {
+      const { dataGetTotalSurvey } = this.props.merchant;
+      if (dataGetTotalSurvey?.inProgress >= 1) {
         return (
           <View
             style={{
@@ -712,11 +709,8 @@ class MerchantHomeView extends Component {
     ) {
       // checkIn true & surveyList inProgress customize button
       if (item.activity === ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY) {
-        if (
-          this.props.merchant.surveyList?.find(
-            value => value.responseStatus === 'inProgress'
-          )
-        ) {
+        const { dataGetTotalSurvey } = this.props.merchant;
+        if (dataGetTotalSurvey?.inProgress >= 1) {
           return (
             <TouchableOpacity
               onPress={() =>
@@ -1562,8 +1556,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 23092021
+ * updatedDate: 27092021
  * updatedFunction:
- * -> update survey list condition to total survey (componentDidUpdate)
- * -> update SurveyDone function.
+ * -> change validation for survey response with status 'inProgress'
  */
