@@ -8,6 +8,10 @@ import {
 } from '../../../library/reactPackage';
 import SfaNoDataView from '../../sfa/SfaNoDataView';
 import { MoneyFormatSpace, Fonts, GlobalStyle } from '../../../helpers';
+import {
+  OVERDUE,
+  WAITING_FOR_PAYMENT
+} from '../../../constants/paymentConstants';
 import { toLocalTime } from '../../../helpers/TimeHelper';
 import masterColor from '../../../config/masterColor.json';
 const MerchantCollectionReasonList = props => {
@@ -16,26 +20,28 @@ const MerchantCollectionReasonList = props => {
   /** RENDER STATUS PAYMENT */
   /** === RENDER ITEM (STATUS PAYMENT) === */
   const renderItemStatusPayment = status_payment => {
+    console.log(status_payment);
     let textStyle = Fonts.type67;
     let colorStyle = masterColor.fontBlack05;
+    let text = '';
 
     switch (status_payment) {
-      case 'overdue':
+      case OVERDUE:
         textStyle = Fonts.type14;
         colorStyle = masterColor.fontRed10;
+        text = 'Overdue';
         break;
-      case 'waiting_for_payment':
+      case WAITING_FOR_PAYMENT:
         textStyle = Fonts.type109p;
         colorStyle = masterColor.fontYellow10;
+        text = 'Menunggu Pembayaran';
         break;
       default:
         break;
     }
     return (
       <View style={{ ...styles.view1Status, backgroundColor: colorStyle }}>
-        <Text style={{ ...textStyle, textAlign: 'right' }}>
-          {/* {statusPayment(status_payment)} */}
-        </Text>
+        <Text style={{ ...textStyle, textAlign: 'right' }}>{text}</Text>
       </View>
     );
   };

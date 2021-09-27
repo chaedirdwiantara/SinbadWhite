@@ -29,7 +29,8 @@ const MerchantNoCollectionReason = () => {
           orderCode: 'S0100032305811078558',
           orderRef: null,
           outstandingAmount: 0,
-          paidAmount: 139740
+          paidAmount: 139740,
+          statusPayment: 'overdue'
         },
         {
           deliveredDate: '2021-09-03 09:09:46',
@@ -40,7 +41,8 @@ const MerchantNoCollectionReason = () => {
           orderCode: 'S0100032305811078558',
           orderRef: null,
           outstandingAmount: 0,
-          paidAmount: 139740
+          paidAmount: 139740,
+          statusPayment: 'overdue'
         }
       ]
     }
