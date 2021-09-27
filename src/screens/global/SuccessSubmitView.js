@@ -7,7 +7,8 @@ import {
   Image,
   Dimensions,
   StatusBar,
-  ImageBackground
+  ImageBackground,
+  BackHandler
 } from '../../library/reactPackage';
 
 import { Fonts } from '../../helpers';
@@ -15,12 +16,23 @@ import masterColor from '../../config/masterColor.json';
 import { ButtonSingle } from '../../library/component';
 import NavigationService from '../../navigation/NavigationService';
 
-let ScreenHeight = Dimensions.get('window').height;
+const win = Dimensions.get('window');
 class SuccessSubmitView extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      caption: this.props.navigation.state.params.caption
+    };
   }
-
+  /** === UNMOUNT ALL LISTENER === */
+  componentWillUnmount() {
+    const { dataSurveyResult } = this.props.merchant;
+    BackHandler.removeEventListener('hardwareBackPress', () => {
+      NavigationService.navigate('MerchantHomeView', {
+        storeName: dataSurveyResult.storeName ?? '-'
+      });
+    });
+  }
   /**
    * ==============================
    * RENDER VIEW
@@ -89,7 +101,7 @@ class SuccessSubmitView extends Component {
           { marginTop: '3%', marginBottom: '5%', textAlign: 'center' }
         ]}
       >
-        {`Terima kasih sudah menyelesaikan "${surveyName ?? '-'}". `}
+        {`${this.state.caption}`}
       </Text>
     );
   }
@@ -118,9 +130,12 @@ class SuccessSubmitView extends Component {
     return (
       <ImageBackground
         source={require('../../assets/images/background/bg_confirm.png')}
-        style={styles.boxImage}
+      
+          style={styles.boxImage}
       >
+        <View style={styles.contentView}>
         {this.renderContent()}
+        </View>
       </ImageBackground>
     );
   }
@@ -141,8 +156,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   boxImage: {
-    height: ScreenHeight,
-    width: '100%'
+    width: '100%', 
+    height: '100%' 
   },
   centeredCaption: {
     position: 'absolute',
@@ -155,7 +170,7 @@ const styles = StyleSheet.create({
   imageSuccess: {
     width: 150,
     height: 150
-  }
+  },
 });
 
 export default SuccessSubmitView;
