@@ -46,6 +46,7 @@ class MerchantSurveyResultView extends Component {
     this.props.merchantGetSurveyBrandProcess(surveyId);
     this.props.merchantGetSurveyResponseProcess(surveyResponseId);
   }
+
   /**
    *  === CONVERT BRAND AND INVOICE  ===
    * @param {array} value data of brand/invoice
@@ -84,11 +85,11 @@ class MerchantSurveyResultView extends Component {
     return (
       <View
         style={{
-          flex: 0.5,
+          flex: 0.9,
           flexDirection: 'row',
           justifyContent: 'space-around',
           alignContent: 'center',
-          paddingVertical: '9%'
+          paddingHorizontal: 10
         }}
       >
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -144,7 +145,7 @@ class MerchantSurveyResultView extends Component {
           <View
             style={{
               paddingHorizontal: 16,
-              flex: 2,
+              flex: 1,
               flexDirection: 'row',
               justifyContent: 'space-between'
             }}
@@ -238,11 +239,12 @@ class MerchantSurveyResultView extends Component {
             paddingHorizontal: 16,
             borderTopColor: Color.fontGreen50,
             marginBottom: 16,
+            paddingBottom: '5%',
             flex: 0.5
           }
         ]}
       >
-        <Text style={[Fonts.type4, { paddingLeft: 0 }]}>
+        <Text style={[Fonts.type4, { paddingLeft: 0, width: '90%' }]}>
           {dataSurveyResponse?.survey?.name || '-'}
         </Text>
         <Text style={[Fonts.type23, { paddingTop: 4 }]}>
@@ -303,7 +305,7 @@ class MerchantSurveyResultView extends Component {
   renderDetailScore() {
     return (
       <View
-        style={[styles.headerContainer, { flex: 2, flexDirection: 'column' }]}
+        style={[styles.headerContainer, { flex: 1.9, flexDirection: 'column' }]}
       >
         {this.renderDetailScoreHeader()}
         {this.renderDivider()}
