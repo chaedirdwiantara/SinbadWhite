@@ -405,10 +405,17 @@ class MerchantQuestionnaireView extends Component {
         <Text style={[Fonts.type4, { width: '90%' }]}>
           {dataGetSurvey?.name || '-'}
         </Text>
-        <Text style={[Fonts.type23, { paddingTop: 4 }]}>
+        <Text style={[Fonts.type23, { paddingTop: 4, width: '90%' }]}>
           {dataGetSurvey?.description || '-'}
         </Text>
-        <View style={{ flexDirection: 'row', paddingVertical: 12 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            paddingVertical: 12,
+            flex: 1,
+            flexWrap: 'wrap'
+          }}
+        >
           <View
             style={{
               flexDirection: 'row',
