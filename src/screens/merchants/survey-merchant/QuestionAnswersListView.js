@@ -18,14 +18,12 @@ class QuestionAnswersListView extends Component {
    */
   /** === CHECK RENDER PER CATEGORY & TYPE === */
   renderContent = item => {
-    const { category, scoreType, candidateAnswer, id } = item;
+    const { category, scoreType, id } = item;
+    const candidateAnswer = _.orderBy(item.candidateAnswer, ['order']);
     switch (category.code) {
       case 'single_answer':
         if (scoreType.code === 'single_score') {
-          return this.renderSingleAnswer(
-            _.orderBy(candidateAnswer, ['order']),
-            id
-          );
+          return this.renderSingleAnswer(candidateAnswer, id);
         }
         break;
       case 'multiple_answer':
@@ -181,9 +179,7 @@ export default QuestionAnswersListView;
  * createdBy: dyah
  * createdDate: 13092021
  * updatedBy: dyah
- * updatedDate: 16092021
+ * updatedDate: 28092021
  * updatedFunction:
- * -> integration for ui take survey.
- * -> add isBaseValue & defaultValue.
- * -> change surveyId to questionId.
+ * -> fix order for question.
  */

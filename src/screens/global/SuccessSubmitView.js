@@ -7,8 +7,8 @@ import {
   Image,
   Dimensions,
   StatusBar,
-  ImageBackground,
-  BackHandler
+  BackHandler,
+  ImageBackground
 } from '../../library/reactPackage';
 
 import { Fonts } from '../../helpers';
@@ -24,14 +24,29 @@ class SuccessSubmitView extends Component {
       caption: this.props.navigation.state.params.caption
     };
   }
-  /** === UNMOUNT ALL LISTENER === */
+  /**
+   * ==============================
+   * FUNCTIONAL
+   * ==============================
+   */
+  /**
+   * === BACK ACTION ===
+   * @returns {boolean} true & navigate to survey list.
+   */
+  backAction = () => {
+    NavigationService.navigate('MerchantHomeView');
+    return true;
+  };
+  /** === DID MOUNT === */
+  componentDidMount() {
+    this.backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.backAction
+    );
+  }
+  /** === WILL UNMOUNT === */
   componentWillUnmount() {
-    const { dataSurveyResult } = this.props.merchant;
-    BackHandler.removeEventListener('hardwareBackPress', () => {
-      NavigationService.navigate('MerchantHomeView', {
-        storeName: dataSurveyResult.storeName ?? '-'
-      });
-    });
+    this.backHandler.remove();
   }
   /**
    * ==============================
@@ -130,12 +145,9 @@ class SuccessSubmitView extends Component {
     return (
       <ImageBackground
         source={require('../../assets/images/background/bg_confirm.png')}
-      
-          style={styles.boxImage}
+        style={styles.boxImage}
       >
-        <View style={styles.contentView}>
-        {this.renderContent()}
-        </View>
+        <View style={styles.contentView}>{this.renderContent()}</View>
       </ImageBackground>
     );
   }
@@ -156,8 +168,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   boxImage: {
-    width: '100%', 
-    height: '100%' 
+    width: '100%',
+    height: '100%'
   },
   centeredCaption: {
     position: 'absolute',
@@ -170,7 +182,19 @@ const styles = StyleSheet.create({
   imageSuccess: {
     width: 150,
     height: 150
-  },
+  }
 });
 
 export default SuccessSubmitView;
+
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy: nada
+ * createdDate:
+ * updatedBy: dyah
+ * updatedDate: 28092021
+ * updatedFunction:
+ * -> add backhandler.
+ */
