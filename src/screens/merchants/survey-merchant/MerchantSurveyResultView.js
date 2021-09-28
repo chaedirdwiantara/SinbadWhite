@@ -128,7 +128,7 @@ class MerchantSurveyResultView extends Component {
     return (
       <View
         style={{
-          flex: 0.9,
+          flex: 1,
           flexDirection: 'row',
           justifyContent: 'space-around',
           alignContent: 'center',
@@ -279,11 +279,14 @@ class MerchantSurveyResultView extends Component {
         style={[
           styles.headerContainer,
           {
+            marginHorizontal: 16,
+            marginTop: 16,
             paddingHorizontal: 16,
             borderTopColor: Color.fontGreen50,
-            marginBottom: 16,
+            marginBottom: 10,
             paddingBottom: '5%',
-            flex: 0.5
+            flex: 0.7,
+            borderTopWidth: 4
           }
         ]}
       >
@@ -348,7 +351,14 @@ class MerchantSurveyResultView extends Component {
   renderDetailScore() {
     return (
       <View
-        style={[styles.headerContainer, { flex: 1.9, flexDirection: 'column' }]}
+        style={[
+          styles.headerContainer,
+          {
+            flex: 2,
+            flexDirection: 'column',
+            marginHorizontal: 16
+          }
+        ]}
       >
         {this.renderDetailScoreHeader()}
         {this.renderDivider()}
@@ -365,12 +375,14 @@ class MerchantSurveyResultView extends Component {
     return (
       <View
         style={[
-          styles.bottomButtonContainer,
           styles.headerContainer,
           {
             borderTopColor: 'none',
-            marginTop: 16,
-            flex: 0.5
+            marginTop: 10,
+            marginBottom: 10,
+            flex: 0.5,
+            justifyContent: 'center',
+            shadowColor: 'none'
           }
         ]}
       >
@@ -394,7 +406,7 @@ class MerchantSurveyResultView extends Component {
    */
   renderContent() {
     return (
-      <View style={{ height: '100%', flexDirection: 'column', padding: 16 }}>
+      <View style={{ height: '100%', flexDirection: 'column' }}>
         {this.renderHeader()}
         {this.renderDetailScore()}
         {this.renderButton()}
@@ -422,55 +434,10 @@ class MerchantSurveyResultView extends Component {
 const styles = StyleSheet.create({
   headerContainer: {
     paddingTop: 12,
+    paddingBottom: 12,
     borderWidth: 1,
-    borderTopWidth: 4,
     borderRadius: 4,
     borderColor: Color.fontBlack10
-  },
-  unAnsweredQuestionContainer: {
-    backgroundColor: Color.fontYellow10,
-    borderRadius: 4,
-    paddingVertical: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20
-  },
-  /** for content */
-  menuContainer: {
-    paddingTop: 11,
-    paddingBottom: 5
-  },
-  card: {
-    borderWidth: 1,
-    borderRadius: 4,
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    backgroundColor: Color.backgroundWhite
-  },
-  boxContentItem: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Color.backgroundWhite,
-    paddingTop: 12
-  },
-  notBaseContainer: {
-    marginTop: 12,
-    borderWidth: 1,
-    borderColor: Color.fontBlack10,
-    borderRadius: 4,
-    padding: 12
-  },
-  finishButton: {
-    marginRight: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: Color.mainColor,
-    borderWidth: 1,
-    borderRadius: 24,
-    padding: 8,
-    paddingHorizontal: 12
   },
   boxCollapse: {
     paddingRight: 15,
