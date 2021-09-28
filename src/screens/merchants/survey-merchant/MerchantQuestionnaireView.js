@@ -126,7 +126,9 @@ class MerchantQuestionnaireView extends Component {
           return NavigationService.navigate('SuccessSubmit', {
             surveyResponseId,
             surveyId: dataSubmitSurveyResponse.survey?.id,
-            surveyName: dataSubmitSurveyResponse.survey?.name
+            surveyName: dataSubmitSurveyResponse.survey?.name,
+            caption: `Terima kasih sudah menyelesaikan "${dataSubmitSurveyResponse
+              .survey.name ?? '-'}".`
           });
         } else {
           // if success with status 'inProgress' back to survey list
@@ -394,12 +396,26 @@ class MerchantQuestionnaireView extends Component {
   renderHeaderQuestionnaire() {
     const { dataGetSurvey, dataGetSurveyBrand } = this.props.merchant;
     return (
-      <View style={styles.headerContainer}>
-        <Text style={Fonts.type4}>{dataGetSurvey?.name || '-'}</Text>
-        <Text style={[Fonts.type23, { paddingTop: 4 }]}>
+      <View
+        style={[
+          styles.headerContainer,
+          { flex: 1, flexWrap: 'wrap', paddingBottom: '5%' }
+        ]}
+      >
+        <Text style={[Fonts.type4, { width: '90%' }]}>
+          {dataGetSurvey?.name || '-'}
+        </Text>
+        <Text style={[Fonts.type23, { paddingTop: 4, width: '90%' }]}>
           {dataGetSurvey?.description || '-'}
         </Text>
-        <View style={{ flexDirection: 'row', paddingVertical: 12 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            paddingVertical: 12,
+            flex: 1,
+            flexWrap: 'wrap'
+          }}
+        >
           <View
             style={{
               flexDirection: 'row',

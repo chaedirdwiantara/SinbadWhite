@@ -16,10 +16,13 @@ import masterColor from '../../config/masterColor.json';
 import { ButtonSingle } from '../../library/component';
 import NavigationService from '../../navigation/NavigationService';
 
-let ScreenHeight = Dimensions.get('window').height;
+const win = Dimensions.get('window');
 class SuccessSubmitView extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      caption: this.props.navigation.state.params.caption
+    };
   }
   /**
    * ==============================
@@ -31,7 +34,10 @@ class SuccessSubmitView extends Component {
    * @returns {boolean} true & navigate to survey list.
    */
   backAction = () => {
-    NavigationService.navigate('MerchantSurveyView');
+    const { dataSurveyResult } = this.props.merchant;
+    NavigationService.navigate('MerchantHomeView', {
+      storeName: dataSurveyResult.storeName ?? '-'
+    });
     return true;
   };
   /** === DID MOUNT === */
@@ -113,7 +119,7 @@ class SuccessSubmitView extends Component {
           { marginTop: '3%', marginBottom: '5%', textAlign: 'center' }
         ]}
       >
-        {`Terima kasih sudah menyelesaikan "${surveyName ?? '-'}". `}
+        {`${this.state.caption}`}
       </Text>
     );
   }
@@ -144,7 +150,7 @@ class SuccessSubmitView extends Component {
         source={require('../../assets/images/background/bg_confirm.png')}
         style={styles.boxImage}
       >
-        {this.renderContent()}
+        <View style={styles.contentView}>{this.renderContent()}</View>
       </ImageBackground>
     );
   }
@@ -165,8 +171,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   boxImage: {
-    height: ScreenHeight,
-    width: '100%'
+    width: '100%',
+    height: '100%'
   },
   centeredCaption: {
     position: 'absolute',

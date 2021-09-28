@@ -17,7 +17,8 @@ import {
 import {
   LoadingPage,
   StatusBarWhite,
-  ButtonSingle
+  ButtonSingle,
+  ModalBottomErrorRespons
 } from '../../../library/component';
 import { Fonts } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
@@ -30,7 +31,8 @@ class MerchantSurveyResultView extends Component {
     super(props);
     this.state = {
       openCollapse: false,
-      activeIndexCollapse: 0
+      activeIndexCollapse: 0,
+      openModalErrorGlobal: false
     };
   }
 
@@ -46,6 +48,21 @@ class MerchantSurveyResultView extends Component {
     this.props.merchantGetSurveyBrandProcess(surveyId);
     this.props.merchantGetSurveyResponseProcess(surveyResponseId);
   }
+
+  componentDidUpdate() {
+    // if failed show modal error
+    if (this.props.merchant.errorGetSurveyResponse) {
+      if (
+        prevProps.merchant.errorGetSurveyResponse !==
+          this.props.merchant.errorGetSurveyResponse ||
+        prevProps.merchant.errorGetSurveyBrand !==
+          this.props.merchant.errorGetSurveyBrand
+      ) {
+        this.setState({ openModalErrorGlobal: true });
+      }
+    }
+  }
+
   /**
    *  === CONVERT BRAND AND INVOICE  ===
    * @param {array} value data of brand/invoice
@@ -74,21 +91,48 @@ class MerchantSurveyResultView extends Component {
    * RENDER
    * =======================
    */
-
+  /**
+   *  === RENDER MODAL ERROR RESPONSE  ===
+   * @returns {ReactElement} render modal if error from be
+   * @memberof renderModalError
+   */
+  renderModalErrorResponse() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={this.setState({ openModalErrorGlobal: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /**
+   * === RENDER STORE NAME ===
+   * @returns {ReactElement} render store name
+   */
+  renderStoreName() {
+    const { dataSurveyResult } = this.props.merchant;
+    if (dataSurveyResult.storeName.length >= 30) {
+      return dataSurveyResult.storeName.substring(0, 30) + '...';
+    } else {
+      return dataSurveyResult.storeName;
+    }
+  }
   /**
    * === RENDER HEADER OF DETAIL SCORE ===
    * @returns {ReactElement} render header of DETAIL SCORE.
    */
   renderDetailScoreHeader() {
-    const { dataSurveyResult, dataTotalScoreSurvey } = this.props.merchant;
+    const { dataTotalScoreSurvey } = this.props.merchant;
     return (
       <View
         style={{
-          flex: 0.5,
+          flex: 1,
           flexDirection: 'row',
           justifyContent: 'space-around',
           alignContent: 'center',
-          paddingVertical: '9%'
+          paddingHorizontal: 10
         }}
       >
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -96,7 +140,7 @@ class MerchantSurveyResultView extends Component {
           <Text
             style={[Fonts.textSubHeaderPageSurveyResult, { paddingTop: 4 }]}
           >
-            {dataSurveyResult.storeName ?? '-'}
+            {this.renderStoreName()}
           </Text>
         </View>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -144,7 +188,7 @@ class MerchantSurveyResultView extends Component {
           <View
             style={{
               paddingHorizontal: 16,
-              flex: 2,
+              flex: 1,
               flexDirection: 'row',
               justifyContent: 'space-between'
             }}
@@ -235,14 +279,19 @@ class MerchantSurveyResultView extends Component {
         style={[
           styles.headerContainer,
           {
+            marginHorizontal: 16,
+            marginTop: 16,
             paddingHorizontal: 16,
             borderTopColor: Color.fontGreen50,
-            marginBottom: 16,
-            flex: 0.5
+            marginBottom: 10,
+            paddingBottom: '5%',
+            flex: 0.7,
+            borderTopWidth: 4,
+            borderWidth: 1
           }
         ]}
       >
-        <Text style={[Fonts.type4, { paddingLeft: 0 }]}>
+        <Text style={[Fonts.type4, { paddingLeft: 0, width: '90%' }]}>
           {dataSurveyResponse?.survey?.name || '-'}
         </Text>
         <Text style={[Fonts.type23, { paddingTop: 4 }]}>
@@ -303,7 +352,15 @@ class MerchantSurveyResultView extends Component {
   renderDetailScore() {
     return (
       <View
-        style={[styles.headerContainer, { flex: 2, flexDirection: 'column' }]}
+        style={[
+          styles.headerContainer,
+          {
+            flex: 2,
+            flexDirection: 'column',
+            marginHorizontal: 16,
+            borderWidth: 1
+          }
+        ]}
       >
         {this.renderDetailScoreHeader()}
         {this.renderDivider()}
@@ -320,12 +377,15 @@ class MerchantSurveyResultView extends Component {
     return (
       <View
         style={[
-          styles.bottomButtonContainer,
           styles.headerContainer,
           {
             borderTopColor: 'none',
-            marginTop: 16,
-            flex: 0.5
+            marginTop: 10,
+            marginBottom: 10,
+            flex: 0.5,
+            justifyContent: 'center',
+            shadowColor: 'none',
+            borderTopWidth: 1
           }
         ]}
       >
@@ -349,7 +409,7 @@ class MerchantSurveyResultView extends Component {
    */
   renderContent() {
     return (
-      <View style={{ height: '100%', flexDirection: 'column', padding: 16 }}>
+      <View style={{ height: '100%', flexDirection: 'column' }}>
         {this.renderHeader()}
         {this.renderDetailScore()}
         {this.renderButton()}
@@ -377,55 +437,9 @@ class MerchantSurveyResultView extends Component {
 const styles = StyleSheet.create({
   headerContainer: {
     paddingTop: 12,
-    borderWidth: 1,
-    borderTopWidth: 4,
+    paddingBottom: 12,
     borderRadius: 4,
     borderColor: Color.fontBlack10
-  },
-  unAnsweredQuestionContainer: {
-    backgroundColor: Color.fontYellow10,
-    borderRadius: 4,
-    paddingVertical: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20
-  },
-  /** for content */
-  menuContainer: {
-    paddingTop: 11,
-    paddingBottom: 5
-  },
-  card: {
-    borderWidth: 1,
-    borderRadius: 4,
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    backgroundColor: Color.backgroundWhite
-  },
-  boxContentItem: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Color.backgroundWhite,
-    paddingTop: 12
-  },
-  notBaseContainer: {
-    marginTop: 12,
-    borderWidth: 1,
-    borderColor: Color.fontBlack10,
-    borderRadius: 4,
-    padding: 12
-  },
-  finishButton: {
-    marginRight: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: Color.mainColor,
-    borderWidth: 1,
-    borderRadius: 24,
-    padding: 8,
-    paddingHorizontal: 12
   },
   boxCollapse: {
     paddingRight: 15,
