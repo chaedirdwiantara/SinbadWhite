@@ -108,11 +108,23 @@ class MerchantSurveyResultView extends Component {
     );
   }
   /**
+   * === RENDER STORE NAME ===
+   * @returns {ReactElement} render store name
+   */
+  renderStoreName() {
+    const { dataSurveyResult } = this.props.merchant;
+    if (dataSurveyResult.storeName.length >= 30) {
+      return dataSurveyResult.storeName.substring(0, 30) + '...';
+    } else {
+      return dataSurveyResult.storeName;
+    }
+  }
+  /**
    * === RENDER HEADER OF DETAIL SCORE ===
    * @returns {ReactElement} render header of DETAIL SCORE.
    */
   renderDetailScoreHeader() {
-    const { dataSurveyResult, dataTotalScoreSurvey } = this.props.merchant;
+    const { dataTotalScoreSurvey } = this.props.merchant;
     return (
       <View
         style={{
@@ -128,7 +140,7 @@ class MerchantSurveyResultView extends Component {
           <Text
             style={[Fonts.textSubHeaderPageSurveyResult, { paddingTop: 4 }]}
           >
-            {dataSurveyResult.storeName ?? '-'}
+            {this.renderStoreName()}
           </Text>
         </View>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
