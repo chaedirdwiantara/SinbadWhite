@@ -1807,8 +1807,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
+ * updatedBy: ayu
  * updatedDate: 28092021
  * updatedFunction:
- * -> fix infinite loop (hide survey).
+ * -> fix privileges for collection menu.
  */
