@@ -103,7 +103,6 @@ class MerchantQuestionnaireView extends Component {
     }
     const dataSubmitSurveyResponse = this.props.merchant
       .dataSubmitSurveyResponse.payload;
-    const { surveyResponseId } = this.props.navigation.state.params;
     // check the data submit (if success)
     if (dataSubmitSurveyResponse) {
       if (
@@ -124,7 +123,7 @@ class MerchantQuestionnaireView extends Component {
           );
           // if success with status 'completed' navigate to success screen
           return NavigationService.navigate('SuccessSubmit', {
-            surveyResponseId,
+            surveyResponseId: dataSubmitSurveyResponse.id,
             surveyId: dataSubmitSurveyResponse.survey?.id,
             surveyName: dataSubmitSurveyResponse.survey?.name,
             caption: `Terima kasih sudah menyelesaikan "${dataSubmitSurveyResponse
@@ -666,8 +665,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 06092021
  * updatedBy: dyah
- * updatedDate: 23092021
+ * updatedDate: 26092021
  * updatedFunction:
- * -> reset survey list when success submit survey.
- * -> add get total survey when success submit survey.
+ * -> update params surveyResponseId when success submit questionnaire.
  */
