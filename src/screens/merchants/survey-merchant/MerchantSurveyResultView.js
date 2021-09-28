@@ -286,7 +286,8 @@ class MerchantSurveyResultView extends Component {
             marginBottom: 10,
             paddingBottom: '5%',
             flex: 0.7,
-            borderTopWidth: 4
+            borderTopWidth: 4,
+            borderWidth: 1
           }
         ]}
       >
@@ -356,7 +357,8 @@ class MerchantSurveyResultView extends Component {
           {
             flex: 2,
             flexDirection: 'column',
-            marginHorizontal: 16
+            marginHorizontal: 16,
+            borderWidth: 1
           }
         ]}
       >
@@ -382,7 +384,8 @@ class MerchantSurveyResultView extends Component {
             marginBottom: 10,
             flex: 0.5,
             justifyContent: 'center',
-            shadowColor: 'none'
+            shadowColor: 'none',
+            borderTopWidth: 1
           }
         ]}
       >
@@ -435,7 +438,6 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingTop: 12,
     paddingBottom: 12,
-    borderWidth: 1,
     borderRadius: 4,
     borderColor: Color.fontBlack10
   },
