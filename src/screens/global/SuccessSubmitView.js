@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   StatusBar,
+  BackHandler,
   ImageBackground
 } from '../../library/reactPackage';
 
@@ -20,7 +21,30 @@ class SuccessSubmitView extends Component {
   constructor(props) {
     super(props);
   }
-
+  /**
+   * ==============================
+   * FUNCTIONAL
+   * ==============================
+   */
+  /**
+   * === BACK ACTION ===
+   * @returns {boolean} true & navigate to survey list.
+   */
+  backAction = () => {
+    NavigationService.navigate('MerchantSurveyView');
+    return true;
+  };
+  /** === DID MOUNT === */
+  componentDidMount() {
+    this.backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.backAction
+    );
+  }
+  /** === WILL UNMOUNT === */
+  componentWillUnmount() {
+    this.backHandler.remove();
+  }
   /**
    * ==============================
    * RENDER VIEW
@@ -159,3 +183,15 @@ const styles = StyleSheet.create({
 });
 
 export default SuccessSubmitView;
+
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy: nada
+ * createdDate:
+ * updatedBy: dyah
+ * updatedDate: 28092021
+ * updatedFunction:
+ * -> add backhandler.
+ */
