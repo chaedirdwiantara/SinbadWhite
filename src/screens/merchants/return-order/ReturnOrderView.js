@@ -13,7 +13,10 @@ import {
 import {
   StatusBarWhite,
   SearchBarType5,
-  ButtonFloatType2
+  ButtonFloatType2,
+  DatePickerSpinner,
+  ModalBottomType4,
+  StatusBarBlack
 } from '../../../library/component';
 import masterColor from '../../../config/masterColor.json';
 import * as ActionCreators from '../../../state/actions';
@@ -33,7 +36,11 @@ class ReturnOrderView extends Component {
       },
       openModalDateFilter: false,
       emptyDataType: 'default',
-      selectedDate: ''
+      selectedDate: '',
+      openDateSpinner: false,
+      typeDate: '',
+      startDate: '',
+      endDate: ''
     };
   }
 
@@ -51,8 +58,25 @@ class ReturnOrderView extends Component {
           openModalDateFilter: false,
           dateFilter: data.data.dateFilter,
           emptyDataType: 'default',
-          selectedDate: data.data.selectedDate
+          selectedDate: data.data.selectedDate,
+          startDate: data.data.dateFilter.dateGte,
+          endDate: data.data.dateFilter.dateLte
         });
+        break;
+      case 'customDate':
+        this.setState({
+          openDateSpinner: true,
+          typeDate: data.data.typeDate
+        });
+        break;
+      case 'datePicker':
+        console.log('Date Picker', data);
+        this.setState({ openDateSpinner: false });
+        if (this.state.typeDate === 'startDate') {
+          this.setState({ startDate: data.data, endDate: '' });
+        } else {
+          this.setState({ endDate: data.data });
+        }
         break;
 
       default:
@@ -126,6 +150,33 @@ class ReturnOrderView extends Component {
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
         selectedDate={this.state.selectedDate}
+        startDate={this.state.startDate}
+        endDate={this.state.endDate}
+      />
+    ) : (
+      <View />
+    );
+  }
+
+  renderModalDateSpinner() {
+    return this.state.openDateSpinner ? (
+      <ModalBottomType4
+        open={this.state.openDateSpinner}
+        title={
+          this.state.typeDate === 'startDate'
+            ? 'Tanggal Mulai Dari'
+            : 'Tanggal Sampai Dengan'
+        }
+        close={() => this.setState({ openDateSpinner: false })}
+        content={
+          <View>
+            <StatusBarBlack />
+            <DatePickerSpinner
+              onRef={ref => (this.parentFunction = ref)}
+              parentFunction={this.parentFunction.bind(this)}
+            />
+          </View>
+        }
       />
     ) : (
       <View />
@@ -140,6 +191,7 @@ class ReturnOrderView extends Component {
         {this.renderDateFilterButton()}
         {/* RENDER MODAL */}
         {this.renderModalDateFilter()}
+        {this.renderModalDateSpinner()}
       </View>
     );
   }
