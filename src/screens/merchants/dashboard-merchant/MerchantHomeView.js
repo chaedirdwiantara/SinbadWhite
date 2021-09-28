@@ -271,9 +271,10 @@ class MerchantHomeView extends Component {
         }
       }
       /** FOR GET SURVEY LIST */
-      if (!loadingGetSurveyList && !surveyList.payload.data && !errorGetSurveyList) {
-        this.getSurvey();
-      }
+      /** HIDE SURVEY -> BECAUSE INFINITE LOOP */
+      // if (!loadingGetSurveyList && !surveyList.payload.data && !errorGetSurveyList) {
+      //   this.getSurvey();
+      // }
     }
     if (
       prevProps.merchant.dataPostActivityV2 !==
@@ -1493,7 +1494,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 12082021
+ * updatedDate: 28092021
  * updatedFunction:
- * -> update parameter storetype and delete NavigationEvents.
+ * -> fix infinite loop (hide survey).
  */
