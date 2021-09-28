@@ -106,6 +106,12 @@ class MerchantHomeView extends Component {
           activity: ACTIVITY_JOURNEY_PLAN_ORDER
         },
         {
+          name: 'Penagihan',
+          title: 'Tagih',
+          goTo: 'collection',
+          activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
+        },
+        {
           name: 'Keluar Toko',
           title: 'Keluar',
           goTo: 'checkOut',
@@ -153,7 +159,7 @@ class MerchantHomeView extends Component {
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
     // HIDE TASK BASE ON PRIVILEGE
-    const { checkIn, checkOut, order } = this.state.privileges || {};
+    const { checkIn, checkOut, order, collection } = this.state.privileges || {};
     let newTask = this.state.task;
     if (!checkIn?.status) {
       // same as (checkIn && !checkIn.status)
@@ -164,6 +170,9 @@ class MerchantHomeView extends Component {
     }
     if (!order?.status) {
       newTask = newTask.filter(el => el.title !== 'Order');
+    }
+    if (!collection?.status) {
+      newTask = newTask.filter(el => el.title !== 'Tagih');
     }
     this.setState({ task: newTask });
     /** FOR GET PORTFOLIO (FOR PAYLOAD CHECKOUT ORDER) */
@@ -373,13 +382,10 @@ class MerchantHomeView extends Component {
         }
       }
       /** FOR GET SURVEY LIST */
-      if (
-        !loadingGetSurveyList &&
-        !surveyList.payload.data &&
-        !errorGetSurveyList
-      ) {
-        this.getSurvey();
-      }
+      /** HIDE SURVEY -> BECAUSE INFINITE LOOP */
+      // if (!loadingGetSurveyList && !surveyList.payload.data && !errorGetSurveyList) {
+      //   this.getSurvey();
+      // }
     }
     if (
       prevProps.merchant.dataPostActivityV2 !==
@@ -1802,7 +1808,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 12082021
+ * updatedDate: 28092021
  * updatedFunction:
- * -> update parameter storetype and delete NavigationEvents.
+ * -> fix infinite loop (hide survey).
  */
