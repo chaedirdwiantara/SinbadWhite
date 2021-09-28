@@ -265,11 +265,14 @@ function* getSurveyResponse(actions) {
       return MerchantMethod.getSurveyResponse(actions.payload);
     });
     let totalScore = 0;
-    if (!response.data.payload.responsePhoto) {
-      let arrResult = response.data.payload.survey.questions.map(data =>
-        parseFloat(data.questionResponseScore.result)
-      );
-      totalScore = arrResult.reduce((a, b) => a + b, 0);
+    if (response.data.payload.responsePhoto.length === 0) {
+      
+      let arrResult = response.data.payload.survey.questions.map(data =>{
+        if(data.questionResponseScore !== null){
+          return parseFloat(data.questionResponseScore.result)
+        }
+      });
+      totalScore = arrResult[0] !== undefined ?arrResult.reduce((a, b) => a + b, 0) : 0;
     }
     yield put(
       ActionCreators.merchantGetSurveyResponseSuccess(response, totalScore)
