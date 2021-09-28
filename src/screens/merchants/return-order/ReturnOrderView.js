@@ -31,7 +31,9 @@ class ReturnOrderView extends Component {
         dateGte: '',
         dateLte: ''
       },
-      openModalDateFilter: false
+      openModalDateFilter: false,
+      emptyDataType: 'default',
+      selectedDate: ''
     };
   }
 
@@ -40,10 +42,17 @@ class ReturnOrderView extends Component {
   }
 
   parentFunction(data) {
-    console.log(data);
     switch (data.type) {
       case 'search':
-        this.setState({ searchText: data.data });
+        this.setState({ searchText: data.data, emptyDataType: 'search' });
+        break;
+      case 'dateFilter':
+        this.setState({
+          openModalDateFilter: false,
+          dateFilter: data.data.dateFilter,
+          emptyDataType: 'default',
+          selectedDate: data.data.selectedDate
+        });
         break;
 
       default:
@@ -89,6 +98,7 @@ class ReturnOrderView extends Component {
           storeId={GlobalMethod.merchantStoreId()}
           search={this.state.searchText}
           dateFilter={this.state.dateFilter}
+          emptyData={this.state.emptyDataType}
         />
       </View>
     );
@@ -113,6 +123,9 @@ class ReturnOrderView extends Component {
         icon={
           <MaterialIcon name={'close'} size={24} color={Color.fontBlack100} />
         }
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+        selectedDate={this.state.selectedDate}
       />
     ) : (
       <View />

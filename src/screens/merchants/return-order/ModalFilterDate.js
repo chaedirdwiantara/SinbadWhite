@@ -9,8 +9,13 @@ import {
   width,
   height
 } from '../../../library/reactPackage';
-import { Modal, moment } from '../../../library/thirdPartyPackage';
-import { StatusBarBlackOP40 } from '../../../library/component';
+import {
+  Modal,
+  moment,
+  MaterialIcon,
+  MaterialCommunityIcons
+} from '../../../library/thirdPartyPackage';
+import { StatusBarBlackOP40, ButtonSingle } from '../../../library/component';
 import { GlobalStyle, Fonts } from '../../../helpers';
 import { Color } from '../../../config';
 
@@ -25,12 +30,17 @@ class ModalFilterDate extends Component {
       lastMonthStartDate: '',
       lastMonthEndDate: '',
       customStartDate: '',
-      customEndDate: ''
+      customEndDate: '',
+      selectedDate: this.props.selectedDate
     };
   }
 
   componentDidMount() {
     this.getDate();
+  }
+
+  toParentFunction(data) {
+    this.props.parentFunction({ type: 'dateFilter', data });
   }
 
   getDate() {
@@ -56,6 +66,69 @@ class ModalFilterDate extends Component {
       lastWeekEndDate,
       lastMonthStartDate,
       lastMonthEndDate
+    });
+  }
+
+  submitFilter() {
+    switch (this.state.selectedDate) {
+      case 'today':
+        this.toParentFunction({
+          dateFilter: {
+            dateGte: moment(this.state.todayDate).format('YYYY-MM-DD'),
+            dateLte: moment(this.state.todayDate).format('YYYY-MM-DD')
+          },
+          selectedDate: this.state.selectedDate
+        });
+        break;
+      case 'yesterday':
+        this.toParentFunction({
+          dateFilter: {
+            dateGte: moment(this.state.yesterdayDate).format('YYYY-MM-DD'),
+            dateLte: moment(this.state.yesterdayDate).format('YYYY-MM-DD')
+          },
+          selectedDate: this.state.selectedDate
+        });
+        break;
+      case 'lastWeek':
+        this.toParentFunction({
+          dateFilter: {
+            dateGte: moment(this.state.lastWeekStartDate).format('YYYY-MM-DD'),
+            dateLte: moment(this.state.lastWeekEndDate).format('YYYY-MM-DD')
+          },
+          selectedDate: this.state.selectedDate
+        });
+        break;
+      case 'lastMonth':
+        this.toParentFunction({
+          dateFilter: {
+            dateGte: moment(this.state.lastMonthStartDate).format('YYYY-MM-DD'),
+            dateLte: moment(this.state.lastMonthEndDate).format('YYYY-MM-DD')
+          },
+          selectedDate: this.state.selectedDate
+        });
+        break;
+      case 'customDate':
+        this.toParentFunction({
+          dateFilter: {
+            dateGte: moment(this.state.lastMonthStartDate).format('YYYY-MM-DD'),
+            dateLte: moment(this.state.lastMonthEndDate).format('YYYY-MM-DD')
+          },
+          selectedDate: this.state.selectedDate
+        });
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  resetFilter() {
+    this.toParentFunction({
+      dateFilter: {
+        dateGte: '',
+        dateLte: ''
+      },
+      selectedDate: ''
     });
   }
   /**
@@ -93,44 +166,303 @@ class ModalFilterDate extends Component {
   }
   renderBody() {
     return (
-      <View>
+      <View style={{ marginHorizontal: 16 }}>
         {/* Today Date */}
-        <View style={{ justifyContent: 'space-around', marginBottom: 16 }}>
-          <Text>Hari ini</Text>
-          <Text>{moment(this.state.todayDate).format('DD MMMM')}</Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => this.setState({ selectedDate: 'today' })}
+        >
+          <View
+            style={{
+              justifyContent: 'space-between',
+              marginBottom: 16,
+              flexDirection: 'row'
+            }}
+          >
+            <View>
+              <Text
+                style={[
+                  {
+                    marginBottom: 4,
+                    color:
+                      this.state.selectedDate === 'today'
+                        ? Color.fontRed50
+                        : Color.fontBlack80
+                  },
+                  Fonts.fontH10Bold
+                ]}
+              >
+                Hari ini
+              </Text>
+              <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack60 }]}>
+                {moment(this.state.todayDate).format('DD MMMM')}
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: 'center',
+                position: 'absolute',
+                right: 16
+              }}
+            >
+              {this.state.selectedDate === 'today' ? (
+                this.renderSelectedActive()
+              ) : (
+                <MaterialCommunityIcons
+                  name="checkbox-blank-circle-outline"
+                  color={Color.fontBlack40}
+                  size={24}
+                />
+              )}
+            </View>
+          </View>
+        </TouchableOpacity>
         {/* Yesterday Date */}
-        <View style={{ justifyContent: 'space-around', marginBottom: 16 }}>
-          <Text>Kemarin</Text>
-          <Text>{moment(this.state.yesterdayDate).format('DD MMMM')}</Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => this.setState({ selectedDate: 'yesterday' })}
+        >
+          <View
+            style={{
+              justifyContent: 'space-between',
+              marginBottom: 16,
+              flexDirection: 'row'
+            }}
+          >
+            <View>
+              <Text
+                style={[
+                  {
+                    marginBottom: 4,
+                    color:
+                      this.state.selectedDate === 'yesterday'
+                        ? Color.fontRed50
+                        : Color.fontBlack80
+                  },
+                  Fonts.fontH10Bold
+                ]}
+              >
+                Kemarin
+              </Text>
+              <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack60 }]}>
+                {moment(this.state.yesterdayDate).format('DD MMMM')}
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: 'center',
+                position: 'absolute',
+                right: 16
+              }}
+            >
+              {this.state.selectedDate === 'yesterday' ? (
+                this.renderSelectedActive()
+              ) : (
+                <MaterialCommunityIcons
+                  name="checkbox-blank-circle-outline"
+                  color={Color.fontBlack40}
+                  size={24}
+                />
+              )}
+            </View>
+          </View>
+        </TouchableOpacity>
         {/* Last Week Date Range */}
-        <View style={{ justifyContent: 'space-around', marginBottom: 16 }}>
-          <Text>Minggu Lalu</Text>
-          <Text>
-            {moment(this.state.lastWeekStartDate).format('D')} -{' '}
-            {moment(this.state.lastWeekEndDate).format('DD MMMM')}
-          </Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => this.setState({ selectedDate: 'lastWeek' })}
+        >
+          <View
+            style={{
+              justifyContent: 'space-between',
+              marginBottom: 16,
+              flexDirection: 'row'
+            }}
+          >
+            <View>
+              <Text
+                style={[
+                  {
+                    marginBottom: 4,
+                    color:
+                      this.state.selectedDate === 'lastWeek'
+                        ? Color.fontRed50
+                        : Color.fontBlack80
+                  },
+                  Fonts.fontH10Bold
+                ]}
+              >
+                Minggu Lalu
+              </Text>
+              <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack60 }]}>
+                {moment(this.state.lastWeekStartDate).format('D')} -{' '}
+                {moment(this.state.lastWeekEndDate).format('DD MMMM')}
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: 'center',
+                position: 'absolute',
+                right: 16
+              }}
+            >
+              {this.state.selectedDate === 'lastWeek' ? (
+                this.renderSelectedActive()
+              ) : (
+                <MaterialCommunityIcons
+                  name="checkbox-blank-circle-outline"
+                  color={Color.fontBlack40}
+                  size={24}
+                />
+              )}
+            </View>
+          </View>
+        </TouchableOpacity>
         {/* Last Week Date Range */}
-        <View style={{ justifyContent: 'space-around', marginBottom: 16 }}>
-          <Text>Bulan Lalu</Text>
-          <Text>
-            {moment(this.state.lastMonthStartDate).format('D')} -{' '}
-            {moment(this.state.lastMonthEndDate).format('DD MMMM')}
-          </Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => this.setState({ selectedDate: 'lastMonth' })}
+        >
+          <View
+            style={{
+              justifyContent: 'space-between',
+              marginBottom: 16,
+              flexDirection: 'row'
+            }}
+          >
+            <View>
+              <Text
+                style={[
+                  {
+                    marginBottom: 4,
+                    color:
+                      this.state.selectedDate === 'lastMonth'
+                        ? Color.fontRed50
+                        : Color.fontBlack80
+                  },
+                  Fonts.fontH10Bold
+                ]}
+              >
+                Bulan Lalu
+              </Text>
+              <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack60 }]}>
+                {moment(this.state.lastMonthStartDate).format('D')} -{' '}
+                {moment(this.state.lastMonthEndDate).format('DD MMMM')}
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: 'center',
+                position: 'absolute',
+                right: 16
+              }}
+            >
+              {this.state.selectedDate === 'lastMonth' ? (
+                this.renderSelectedActive()
+              ) : (
+                <MaterialCommunityIcons
+                  name="checkbox-blank-circle-outline"
+                  color={Color.fontBlack40}
+                  size={24}
+                />
+              )}
+            </View>
+          </View>
+        </TouchableOpacity>
         {/* Custom Date Range */}
-        <View style={{ justifyContent: 'space-around', marginBottom: 16 }}>
-          <Text>Tanggal lainnya</Text>
+        <View
+          style={{
+            justifyContent: 'center',
+            marginBottom: 16,
+            flexDirection: 'row'
+          }}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flex: 1
+            }}
+          >
+            <View>
+              <Text
+                style={[
+                  {
+                    color:
+                      this.state.selectedDate === 'customDate'
+                        ? Color.fontRed50
+                        : Color.fontBlack80
+                  },
+                  Fonts.fontH10Bold
+                ]}
+              >
+                Tanggal lainnya
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: 'center',
+                right: 16
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => this.setState({ selectedDate: 'customDate' })}
+              >
+                {this.state.selectedDate === 'customDate' ? (
+                  this.renderSelectedActive()
+                ) : (
+                  <MaterialCommunityIcons
+                    name="checkbox-blank-circle-outline"
+                    color={Color.fontBlack40}
+                    size={24}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
+      </View>
+    );
+  }
+
+  renderSelectedActive() {
+    return (
+      <View
+        style={{
+          height: 20,
+          width: 20,
+          backgroundColor: Color.fontRed10,
+          borderRadius: 10,
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <View
+          style={{
+            height: 12,
+            width: 12,
+            backgroundColor: Color.fontRed50,
+            borderRadius: 6
+          }}
+        />
       </View>
     );
   }
   renderButton() {
     return (
-      <View>
-        <Text>Button</Text>
+      <View style={[GlobalStyle.shadowBottom, { flex: 1 }]}>
+        <View>
+          <ButtonSingle
+            title={'Terapkan Filter'}
+            borderRadius={8}
+            onPress={() => this.submitFilter()}
+          />
+        </View>
+        <View style={{ top: -16 }}>
+          <ButtonSingle
+            title={'Reset Filter'}
+            borderRadius={8}
+            white
+            onPress={() => this.resetFilter()}
+          />
+        </View>
       </View>
     );
   }
@@ -145,7 +477,7 @@ class ModalFilterDate extends Component {
         swipeDirection={['down']}
         backdropColor={Color.fontBlack100}
         backdropOpacity={0.4}
-        onSwipeMove={this.props.close}
+        // onSwipeMove={this.props.close}
         deviceHeight={height}
         style={styles.mainContainer}
       >
@@ -185,8 +517,7 @@ const styles = StyleSheet.create({
     zIndex: 1000
   },
   boxContentBody: {
-    flex: 1,
-    marginHorizontal: 16
+    flex: 1
   },
   boxContentTitle: {
     marginTop: 18,

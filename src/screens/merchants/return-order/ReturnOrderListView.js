@@ -15,6 +15,7 @@ import {
 import {
   SkeletonType5,
   EmptyData,
+  EmptyDataType2,
   ProductListType1
 } from '../../../library/component';
 import { Color } from '../../../config';
@@ -83,7 +84,14 @@ class ReturnOrderListView extends Component {
 
   /** EMPTY DATA */
   renderEmpty() {
-    return <EmptyData title={'Tidak ada pesanan'} description={''} />;
+    return this.props.emptyData === 'default' ? (
+      <EmptyData title={'Tidak ada pesanan'} description={''} />
+    ) : (
+      <EmptyDataType2
+        title={'Pencarian Tidak Ditemukan'}
+        description={'Cek kembali nama atau ID produk yang kamu masukkan'}
+      />
+    );
   }
   /** RENDER DATA */
   renderData() {
