@@ -32,18 +32,10 @@ class InputType7 extends Component {
   handleFocus = () => this.setState({ isFocused: true });
   handleBlur = () => this.setState({ isFocused: false });
   changeText = text => {
-    const parsedQty = parseInt(text, 10);
-    let newText = '';
+    let newText = parseInt(text || this.props.min, 10);
 
-    if (Number.isNaN(parsedQty)) {
-      newText = '0';
-    } else if (parsedQty < this.props.min) {
-      newText = this.props.min.toString();
-    } else if (parsedQty > this.props.max) {
-      newText = this.props.max.toString();
-    } else {
-      newText = text;
-    }
+    if (newText > this.props.max) newText = this.props.max;
+    newText = newText.toString();
 
     const self = this;
 
@@ -132,7 +124,7 @@ export default InputType7;
  * createdBy: dyah
  * createdDate: 06092021
  * updatedBy: dyah
- * updatedDate: 16092021
+ * updatedDate: 28092021
  * updatedFunction:
- * -> add prop defaultValue.
+ * -> update validation min value.
  */
