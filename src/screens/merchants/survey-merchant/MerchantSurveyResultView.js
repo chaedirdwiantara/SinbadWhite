@@ -17,7 +17,8 @@ import {
 import {
   LoadingPage,
   StatusBarWhite,
-  ButtonSingle
+  ButtonSingle,
+  ModalBottomErrorRespons
 } from '../../../library/component';
 import { Fonts } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
@@ -30,7 +31,8 @@ class MerchantSurveyResultView extends Component {
     super(props);
     this.state = {
       openCollapse: false,
-      activeIndexCollapse: 0
+      activeIndexCollapse: 0,
+      openModalErrorGlobal: false
     };
   }
 
@@ -45,6 +47,20 @@ class MerchantSurveyResultView extends Component {
 
     this.props.merchantGetSurveyBrandProcess(surveyId);
     this.props.merchantGetSurveyResponseProcess(surveyResponseId);
+  }
+
+  componentDidUpdate() {
+    // if failed show modal error
+    if (this.props.merchant.errorGetSurveyResponse) {
+      if (
+        prevProps.merchant.errorGetSurveyResponse !==
+          this.props.merchant.errorGetSurveyResponse ||
+        prevProps.merchant.errorGetSurveyBrand !==
+          this.props.merchant.errorGetSurveyBrand
+      ) {
+        this.setState({ openModalErrorGlobal: true });
+      }
+    }
   }
 
   /**
@@ -75,7 +91,22 @@ class MerchantSurveyResultView extends Component {
    * RENDER
    * =======================
    */
-
+  /**
+   *  === RENDER MODAL ERROR RESPONSE  ===
+   * @returns {ReactElement} render modal if error from be
+   * @memberof renderModalError
+   */
+  renderModalErrorResponse() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={this.setState({ openModalErrorGlobal: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
   /**
    * === RENDER HEADER OF DETAIL SCORE ===
    * @returns {ReactElement} render header of DETAIL SCORE.
