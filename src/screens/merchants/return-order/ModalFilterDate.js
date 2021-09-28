@@ -3,16 +3,13 @@ import {
   Component,
   View,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
   Text,
-  width,
   height
 } from '../../../library/reactPackage';
 import {
   Modal,
   moment,
-  MaterialIcon,
   MaterialCommunityIcons
 } from '../../../library/thirdPartyPackage';
 import { StatusBarBlackOP40, ButtonSingle } from '../../../library/component';
@@ -29,8 +26,8 @@ class ModalFilterDate extends Component {
       lastWeekEndDate: '',
       lastMonthStartDate: '',
       lastMonthEndDate: '',
-      customStartDate: '',
-      customEndDate: '',
+      customStartDate: this.props.startDate,
+      customEndDate: this.props.endDate,
       selectedDate: this.props.selectedDate
     };
   }
@@ -65,7 +62,9 @@ class ModalFilterDate extends Component {
       lastWeekStartDate,
       lastWeekEndDate,
       lastMonthStartDate,
-      lastMonthEndDate
+      lastMonthEndDate,
+      customStartDate: this.props.startDate,
+      customEndDate: this.props.endDate
     });
   }
 
@@ -110,8 +109,8 @@ class ModalFilterDate extends Component {
       case 'customDate':
         this.toParentFunction({
           dateFilter: {
-            dateGte: moment(this.state.lastMonthStartDate).format('YYYY-MM-DD'),
-            dateLte: moment(this.state.lastMonthEndDate).format('YYYY-MM-DD')
+            dateGte: moment(this.props.startDate).format('YYYY-MM-DD'),
+            dateLte: moment(this.props.endDate).format('YYYY-MM-DD')
           },
           selectedDate: this.state.selectedDate
         });
@@ -418,6 +417,124 @@ class ModalFilterDate extends Component {
             </View>
           </View>
         </View>
+        <View style={{ flex: 1, flexDirection: 'row', marginBottom: 32 }}>
+          <View style={{ flex: 1, marginRight: 16 }}>
+            <View style={{ marginBottom: 8 }}>
+              <Text
+                style={[
+                  Fonts.fontH12Medium,
+                  {
+                    color:
+                      this.state.selectedDate === 'customDate'
+                        ? Color.fontBlack80
+                        : Color.fontBlack60
+                  }
+                ]}
+              >
+                Mulai Dari
+              </Text>
+            </View>
+            <TouchableOpacity
+              disabled={this.state.selectedDate !== 'customDate'}
+              onPress={() => {
+                this.props.parentFunction({
+                  type: 'customDate',
+                  data: {
+                    typeDate: 'startDate'
+                  }
+                });
+              }}
+            >
+              <View
+                style={{
+                  borderWidth: 1,
+                  width: '100%',
+                  borderRadius: 4,
+                  paddingVertical: 12,
+                  paddingHorizontal: 8,
+                  borderColor:
+                    this.state.selectedDate === 'customDate'
+                      ? Color.fontBlack80
+                      : Color.fontBlack60
+                }}
+              >
+                <Text
+                  style={[
+                    Fonts.fontH12Medium,
+                    {
+                      color:
+                        this.state.selectedDate === 'customDate'
+                          ? Color.fontBlack80
+                          : Color.fontBlack60
+                    }
+                  ]}
+                >
+                  {this.props.startDate === ''
+                    ? 'DD / MM / YYYY'
+                    : moment(this.props.startDate).format('DD MMMM YYYY')}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={{ flex: 1 }}>
+            <View style={{ marginBottom: 8 }}>
+              <Text
+                style={[
+                  Fonts.fontH12Medium,
+                  {
+                    color:
+                      this.state.selectedDate === 'customDate'
+                        ? Color.fontBlack80
+                        : Color.fontBlack60
+                  }
+                ]}
+              >
+                Sampai Dengan
+              </Text>
+            </View>
+            <TouchableOpacity
+              disabled={this.state.selectedDate !== 'customDate'}
+              onPress={() => {
+                this.props.parentFunction({
+                  type: 'customDate',
+                  data: {
+                    typeDate: 'endDate'
+                  }
+                });
+              }}
+            >
+              <View
+                style={{
+                  borderWidth: 1,
+                  width: '100%',
+                  borderRadius: 4,
+                  paddingVertical: 12,
+                  paddingHorizontal: 8,
+                  borderColor:
+                    this.state.selectedDate === 'customDate'
+                      ? Color.fontBlack80
+                      : Color.fontBlack60
+                }}
+              >
+                <Text
+                  style={[
+                    Fonts.fontH12Medium,
+                    {
+                      color:
+                        this.state.selectedDate === 'customDate'
+                          ? Color.fontBlack80
+                          : Color.fontBlack60
+                    }
+                  ]}
+                >
+                  {this.props.endDate === ''
+                    ? 'DD / MM / YYYY'
+                    : moment(this.props.endDate).format('DD MMMM YYYY')}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     );
   }
@@ -453,6 +570,12 @@ class ModalFilterDate extends Component {
             title={'Terapkan Filter'}
             borderRadius={8}
             onPress={() => this.submitFilter()}
+            disabled={
+              (this.state.selectedDate === 'customDate' &&
+                this.props.startDate === '') ||
+              this.props.endDate === '' ||
+              this.state.selectedDate === ''
+            }
           />
         </View>
         <View style={{ top: -16 }}>
@@ -488,6 +611,7 @@ class ModalFilterDate extends Component {
       </Modal>
     );
   }
+
   /** === MAIN === */
   render() {
     return (
