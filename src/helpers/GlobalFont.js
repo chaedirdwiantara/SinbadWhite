@@ -799,6 +799,18 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 14,
     color: Color.fontRed40
+  },
+  fontH10Bold: {
+    fontFamily: Fonts.MontserratBold,
+    fontWeight: '700',
+    fontSize: 12,
+    lineHeight: 15
+  },
+  fontH12Medium: {
+    fontFamily: Fonts.MontserratMedium,
+    fontWeight: '500',
+    fontSize: 12,
+    lineHeight: 15
   }
 });
 
