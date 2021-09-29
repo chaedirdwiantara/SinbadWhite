@@ -40,8 +40,8 @@ const SfaImageInput = props => {
         skipBackup: true,
         path: 'images'
       },
-      maxWidth: 800,
-      quality: 1
+      maxWidth: 1024,
+      quality: 0.8
     };
 
     ImagePicker.showImagePicker(options, response => {
