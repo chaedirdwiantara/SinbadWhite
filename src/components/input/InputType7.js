@@ -48,7 +48,7 @@ class InputType7 extends Component {
       typing: false,
       typingTimeout: setTimeout(function() {
         self.sendToParent(self.state.text);
-      }, 1000)
+      }, 500)
     });
   };
   sendToParent = () => {
