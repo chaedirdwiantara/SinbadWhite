@@ -41,14 +41,30 @@ class MerchantSurveyResultView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  /**
+   * === BACK ACTION ===
+   * @returns {boolean} true & navigate to survey list.
+   */
+  backAction = () => {
+    NavigationService.navigate('MerchantSurveyView');
+    return true;
+  };
   /** === DID MOUNT === */
   componentDidMount() {
     const { surveyResponseId, surveyId } = this.props.navigation.state.params;
 
     this.props.merchantGetSurveyBrandProcess(surveyId);
     this.props.merchantGetSurveyResponseProcess(surveyResponseId);
+    this.backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.backAction
+    );
   }
-
+  /** === WILL UNMOUNT === */
+  componentWillUnmount() {
+    this.backHandler.remove();
+  }
+  /** === DID UPDATE === */
   componentDidUpdate() {
     // if failed show modal error
     if (this.props.merchant.errorGetSurveyResponse) {
