@@ -8,7 +8,8 @@ import {
 import {
   bindActionCreators,
   connect,
-  MaterialIcon
+  MaterialIcon,
+  moment
 } from '../../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
@@ -84,11 +85,24 @@ class ReturnOrderView extends Component {
     }
   }
 
+  checkButtonTitle() {
+    if (
+      this.state.dateFilter.dateGte === '' &&
+      this.state.dateFilter.dateLte === ''
+    ) {
+      return 'Filter Tanggal';
+    } else {
+      return `${moment(this.state.dateFilter.dateGte).format(
+        'DD MMM'
+      )} - ${moment(this.state.dateFilter.dateLte).format('DD MMM YYYY')}`;
+    }
+  }
+
   renderDateFilterButton() {
     return (
       <View style={styles.containerFloatButton}>
         <ButtonFloatType2
-          title={'Filter Tanggal'}
+          title={this.checkButtonTitle()}
           push={() => this.setState({ openModalDateFilter: true })}
           icon={
             <MaterialIcon

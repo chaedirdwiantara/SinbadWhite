@@ -21,7 +21,18 @@ class ButtonFloatType2 extends Component {
    */
   renderContent() {
     return (
-      <TouchableOpacity style={styles.boxContent} onPress={this.props.push}>
+      <TouchableOpacity
+        style={[
+          styles.boxContent,
+          {
+            backgroundColor:
+              this.props.title === 'Filter Tanggal'
+                ? Color.fontBlack80OP90
+                : Color.fontRed50
+          }
+        ]}
+        onPress={this.props.push}
+      >
         {this.props.icon}
         <View style={{ marginLeft: 6 }}>
           <Text style={Fonts.type25}>{this.props.title}</Text>
