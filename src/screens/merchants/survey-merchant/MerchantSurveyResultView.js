@@ -7,7 +7,8 @@ import {
   FlatList,
   SafeAreaView,
   Text,
-  ScrollView
+  ScrollView,
+  BackHandler
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
