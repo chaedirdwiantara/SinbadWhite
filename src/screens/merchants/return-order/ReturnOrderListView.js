@@ -21,6 +21,7 @@ import {
 import { Color } from '../../../config';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
+import NavigationService from '../../../navigation/NavigationService';
 
 class ReturnOrderListView extends Component {
   constructor(props) {
@@ -121,7 +122,11 @@ class ReturnOrderListView extends Component {
       <View key={index}>
         <TouchableOpacity
           style={[styles.cardContainer, GlobalStyle.shadowForBox]}
-          onPress={() => console.log('Create Return Draft')}
+          onPress={() =>
+            NavigationService.navigate('ReturnRequestView', {
+              orderCode: item.orderCode
+            })
+          }
         >
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
