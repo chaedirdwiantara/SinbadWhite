@@ -51,6 +51,9 @@ class InputType7 extends Component {
       }, 500)
     });
   };
+  setText = text => {
+    this.setState({ text });
+  };
   sendToParent = () => {
     this.props.text(this.state.text);
   };
@@ -124,7 +127,7 @@ export default InputType7;
  * createdBy: dyah
  * createdDate: 06092021
  * updatedBy: dyah
- * updatedDate: 28092021
+ * updatedDate: 29092021
  * updatedFunction:
- * -> update validation min value.
+ * -> add function setText for set internal state 'text'.
  */
