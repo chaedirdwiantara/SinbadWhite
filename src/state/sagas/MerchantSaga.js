@@ -266,13 +266,13 @@ function* getSurveyResponse(actions) {
     });
     let totalScore = 0;
     if (response.data.payload.responsePhoto.length === 0) {
-      
-      let arrResult = response.data.payload.survey.questions.map(data =>{
-        if(data.questionResponseScore !== null){
-          return parseFloat(data.questionResponseScore.result)
+      let arrResult = response.data.payload.survey.questions.map(data => {
+        if (data.questionResponseScore !== null) {
+          return parseFloat(data.questionResponseScore.score);
         }
       });
-      totalScore = arrResult[0] !== undefined ?arrResult.reduce((a, b) => a + b, 0) : 0;
+      totalScore =
+        arrResult[0] !== undefined ? arrResult.reduce((a, b) => a + b, 0) : 0;
     }
     yield put(
       ActionCreators.merchantGetSurveyResponseSuccess(response, totalScore)
