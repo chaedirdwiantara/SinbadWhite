@@ -34,10 +34,7 @@ class SuccessSubmitView extends Component {
    * @returns {boolean} true & navigate to survey list.
    */
   backAction = () => {
-    const { dataSurveyResult } = this.props.merchant;
-    NavigationService.navigate('MerchantHomeView', {
-      storeName: dataSurveyResult.storeName ?? '-'
-    });
+    NavigationService.navigate('MerchantSurveyView');
     return true;
   };
   /** === DID MOUNT === */
