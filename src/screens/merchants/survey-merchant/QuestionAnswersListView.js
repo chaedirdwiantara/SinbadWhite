@@ -131,12 +131,8 @@ class QuestionAnswersListView extends Component {
         item={candidateAnswer}
         disabled={this.props.disabled}
         onChange={inputValue => {
-          candidateAnswer[0].push({
-            inputValue: inputValue.valueA
-          });
-          candidateAnswer[1].push({
-            inputValue: inputValue.valueB
-          });
+          candidateAnswer[0].inputValue = inputValue.valueA;
+          candidateAnswer[1].inputValue = inputValue.valueB;
           this.props.onChange({
             candidateAnswer,
             questionId,
