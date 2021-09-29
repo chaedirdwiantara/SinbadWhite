@@ -55,10 +55,7 @@ class QuestionListDataView extends Component {
           inputValue: 'checked'
         });
       }
-    } else if (
-      survey.category === 'vc_basic' ||
-      survey.category === 'vc_compare_group'
-    ) {
+    } else if (survey.category === 'vc_compare_group') {
       // check the answer already inputed or not (input)
       const alreadyInputed = newQuestions[index].value.findIndex(
         item => item.candidateAnswerId === candidateAnswerId
@@ -76,6 +73,35 @@ class QuestionListDataView extends Component {
           candidateAnswerId,
           isBaseValue: survey.isBaseValue,
           inputValue: survey.inputValue
+        });
+      }
+    } else if (survey.category === 'vc_basic') {
+      // check the answer already inputed or not (value A and B)
+      const findIndexValueA = newQuestions[index].value.findIndex(
+        item => item.candidateAnswerId === survey.candidateAnswer[0].id
+      );
+      const findIndexValueB = newQuestions[index].value.findIndex(
+        item => item.candidateAnswerId === survey.candidateAnswer[1].id
+      );
+      // if findIndexValueA, change the value of the answer
+      if (findIndexValueA > -1) {
+        survey.candidateAnswer.map(item => {
+          let value = findIndexValueA;
+          if (item.order === 2) value = findIndexValueB;
+          newQuestions[index].value[value] = {
+            candidateAnswerId: item.id,
+            isBaseValue: false,
+            inputValue: item.inputValue
+          };
+        });
+      } else {
+        // if not, add the value to the answer
+        survey.candidateAnswer.map(item => {
+          newQuestions[index].value.push({
+            candidateAnswerId: item.id,
+            isBaseValue: false,
+            inputValue: item.inputValue
+          });
         });
       }
     }
@@ -291,7 +317,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 13092021
  * updatedBy: dyah
- * updatedDate: 160092021
+ * updatedDate: 29092021
  * updatedFunction:
- * -> add isBaseValue and change surveyId to questionId.
+ * -> update onchange for  question type basic - value comparison.
  */

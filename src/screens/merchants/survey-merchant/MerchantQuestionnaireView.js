@@ -26,6 +26,7 @@ import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
 import QuestionListDataView from './QuestionListDataView';
+import _ from 'lodash';
 
 class MerchantQuestionnaireView extends Component {
   constructor(props) {
@@ -173,6 +174,11 @@ class MerchantQuestionnaireView extends Component {
    * @returns {callback} array of unanswered "required" question or show modal confirmation finish taking survey.
    */
   checkRequiredAnswers = () => {
+    // check there's a value or not in the question.
+    if (_.isEmpty(this.state.questions.filter(item => item.value.length > 0))) {
+      return null;
+    }
+
     // filter the required answer
     const requiredAnswer = this.state.questions.filter(item => item.required);
     let unAnswered = [];
@@ -665,7 +671,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 06092021
  * updatedBy: dyah
- * updatedDate: 26092021
+ * updatedDate: 29092021
  * updatedFunction:
- * -> update params surveyResponseId when success submit questionnaire.
+ * -> add validation user can't submit response without input any value.
  */
