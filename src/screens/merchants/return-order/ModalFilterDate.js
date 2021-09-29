@@ -562,6 +562,26 @@ class ModalFilterDate extends Component {
       </View>
     );
   }
+  checkButton() {
+    if (this.state.selectedDate === 'customDate') {
+      if (this.props.startDate === '' || this.props.endDate === '') {
+        return true;
+      } else {
+        if (
+          moment(this.props.startDate).valueOf('milliseconds') >
+          moment(this.props.endDate).valueOf('milliseconds')
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    } else if (this.state.selectedDate === '') {
+      return true;
+    } else {
+      return false;
+    }
+  }
   renderButton() {
     return (
       <View style={[GlobalStyle.shadowBottom, { flex: 1 }]}>
@@ -570,12 +590,7 @@ class ModalFilterDate extends Component {
             title={'Terapkan Filter'}
             borderRadius={8}
             onPress={() => this.submitFilter()}
-            disabled={
-              (this.state.selectedDate === 'customDate' &&
-                this.props.startDate === '') ||
-              this.props.endDate === '' ||
-              this.state.selectedDate === ''
-            }
+            disabled={this.checkButton()}
           />
         </View>
         <View style={{ top: -16 }}>
