@@ -26,14 +26,42 @@ class ReturnRequestView extends Component {
           {
             catalogueName: 'Cip - Kornet Sapi Merah 700GR - Rasa Sapi Panggang',
             imageUrl:
-              'https://seller-sandbox.sinbad.web.id/assets/images/logos/sinbad.svg',
+              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115808.png',
             price: 90000,
             maxQty: 80
           },
           {
             catalogueName: 'Cip - Kornet Sapi Merah 700GR - Rasa Sapi Panggang',
             imageUrl:
-              'https://seller-sandbox.sinbad.web.id/assets/images/logos/sinbad.svg',
+              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115808.png',
+            price: 10000,
+            maxQty: 80
+          },
+          {
+            catalogueName: 'Cip - Kornet Sapi Merah 700GR - Rasa Sapi Panggang',
+            imageUrl:
+              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115808.png',
+            price: 90000,
+            maxQty: 80
+          },
+          {
+            catalogueName: 'Cip - Kornet Sapi Merah 700GR - Rasa Sapi Panggang',
+            imageUrl:
+              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115808.png',
+            price: 10000,
+            maxQty: 80
+          },
+          {
+            catalogueName: 'Cip - Kornet Sapi Merah 700GR - Rasa Sapi Panggang',
+            imageUrl:
+              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115808.png',
+            price: 90000,
+            maxQty: 80
+          },
+          {
+            catalogueName: 'Cip - Kornet Sapi Merah 700GR - Rasa Sapi Panggang',
+            imageUrl:
+              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115808.png',
             price: 10000,
             maxQty: 80
           }
@@ -57,7 +85,11 @@ class ReturnRequestView extends Component {
     };
   };
   renderListData() {
-    return <ReturnRequestListView data={this.state.mockData} />;
+    return (
+      <View style={styles.mainContainer}>
+        <ReturnRequestListView data={this.state.mockData} />
+      </View>
+    );
   }
 
   renderLoadingPage() {
