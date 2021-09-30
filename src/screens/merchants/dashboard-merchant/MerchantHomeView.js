@@ -270,10 +270,11 @@ class MerchantHomeView extends Component {
           }
         }
       }
+      /** HIDE SURVEY -> BECAUSE INFINITE LOOP */
       /** FOR GET SURVEY LIST */
-      if (!loadingGetSurveyList && !surveyList.payload.data && !errorGetSurveyList) {
-        this.getSurvey();
-      }
+      // if (!loadingGetSurveyList && !surveyList.payload.data && !errorGetSurveyList) {
+      //   this.getSurvey();
+      // }
     }
     if (
       prevProps.merchant.dataPostActivityV2 !==
@@ -485,7 +486,7 @@ class MerchantHomeView extends Component {
             item => item.activityName === 'toko_survey'
           )
           const {checkOut} = this.state.privileges
-          if ((haveSurvey || surveyHasDone) && checkOut?.status) {
+          if (haveSurvey || surveyHasDone || checkOut?.status) {
             this.setState({ openModalCheckout: true });
           }
         }
@@ -1560,8 +1561,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantHomeView);
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 16092021
+ * updatedDate: 30092021
  * updatedFunction:
- * -> change writing (task list -> daftar tugas).
- * -> change writing (completed -> selesai).
+ * -> fix infinite loop (hide survey).
+ * -> can checkout without filling survey.
  */
