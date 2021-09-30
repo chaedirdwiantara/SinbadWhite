@@ -754,7 +754,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
   render() {
     return (
       <SafeAreaView>
-        <BackHandlerBackSpecific navigation={this.props.navigation} />
+        <BackHandlerBackSpecific navigation={this.props.navigation} page="MerchantSurveyView" />
         <StatusBarRed />
         {this.props.merchant.loadingGetSurveyResponse ? (
           <View style={{ height: '100%' }}>
@@ -882,9 +882,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * ============================
  * createdBy: dyah
  * createdDate: 20112020
- * updatedBy: dyah
- * updatedDate: 23092021
+ * updatedBy: raka
+ * updatedDate: 30092021
  * updatedFunction:
- * -> add loading when get survey list.
- * -> add get total survey.
+ * -> backhandler go to previous page
  */
