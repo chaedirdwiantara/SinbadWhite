@@ -16,6 +16,7 @@ import { Fonts } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
 import QuestionAnswersListView from './QuestionAnswersListView';
+import _ from 'lodash';
 
 class QuestionListDataView extends Component {
   constructor(props) {
@@ -255,7 +256,9 @@ class QuestionListDataView extends Component {
   render() {
     return (
       <FlatList
-        data={this.props.merchant.dataGetSurvey?.questions}
+        data={_.orderBy(this.props.merchant.dataGetSurvey?.questions, [
+          'order'
+        ])}
         keyExtractor={(data, index) => index.toString()}
         renderItem={({ item, index }) => this.renderQuestion(item, index)}
       />
@@ -317,7 +320,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 13092021
  * updatedBy: dyah
- * updatedDate: 29092021
+ * updatedDate: 30092021
  * updatedFunction:
- * -> update onchange for  question type basic - value comparison.
+ * -> fix order for questions.
  */
