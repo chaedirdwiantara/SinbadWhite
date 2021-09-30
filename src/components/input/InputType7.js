@@ -3,6 +3,7 @@ import {
   Component,
   View,
   TextInput,
+  Text,
   StyleSheet
 } from '../../library/reactPackage';
 import { Fonts } from '../../helpers';
@@ -65,8 +66,11 @@ class InputType7 extends Component {
   /** === RENDER BAR === */
   inputText() {
     let backgroundColor = Color.fontBlack05;
+    let borderColor = Color.fontBlack10;
     if (this.props.backgroundColor)
       backgroundColor = this.props.backgroundColor;
+    if (this.state.isFocused) borderColor = Color.fontBlack50;
+    if (this.props.error) borderColor = Color.mainColor;
 
     return (
       <View>
@@ -86,18 +90,31 @@ class InputType7 extends Component {
             styles.input,
             {
               backgroundColor,
-              borderColor: this.state.isFocused
-                ? Color.fontBlack50
-                : Color.fontBlack10
+              borderColor
             }
           ]}
         />
       </View>
     );
   }
+  /** === RENDER ERROR INPUT === */
+  inputTextError() {
+    return this.props.error ? (
+      <View style={styles.boxInputError}>
+        <Text style={Fonts.type13}>{this.props.errorText}</Text>
+      </View>
+    ) : (
+      <View />
+    );
+  }
   /** === RENDER CONTENT === */
   renderContent() {
-    return <View style={styles.contentContainer}>{this.inputText()}</View>;
+    return (
+      <View style={styles.contentContainer}>
+        {this.inputText()}
+        {this.inputTextError()}
+      </View>
+    );
   }
   /** === MAIN VIEW === */
   render() {
@@ -115,6 +132,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 2,
     textAlign: 'center'
+  },
+  boxInputError: {
+    paddingTop: 5
   }
 });
 
@@ -127,7 +147,7 @@ export default InputType7;
  * createdBy: dyah
  * createdDate: 06092021
  * updatedBy: dyah
- * updatedDate: 29092021
+ * updatedDate: 30092021
  * updatedFunction:
- * -> add function setText for set internal state 'text'.
+ * -> add props for error message.
  */

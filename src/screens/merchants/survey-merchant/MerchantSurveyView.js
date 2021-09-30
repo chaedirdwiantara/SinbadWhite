@@ -10,7 +10,11 @@ import {
   bindActionCreators,
   connect
 } from '../../../library/thirdPartyPackage';
-import { LoadingPage, StatusBarWhite } from '../../../library/component';
+import {
+  LoadingPage,
+  ModalBottomErrorRespons,
+  StatusBarWhite
+} from '../../../library/component';
 import { Fonts } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
@@ -19,7 +23,9 @@ import SurveyListDataView from './SurveyListDataView';
 class MerchantSurveyView extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      openModalErrorGlobal: false
+    };
   }
   /**
    * =======================
@@ -64,6 +70,15 @@ class MerchantSurveyView extends Component {
         });
       }
     }
+    // show modal error when failed get survey list
+    if (this.props.merchant.errorGetSurveyList) {
+      if (
+        prevProps.merchant.errorGetSurveyList !==
+        this.props.merchant.errorGetSurveyList
+      ) {
+        this.setState({ openModalErrorGlobal: true });
+      }
+    }
   }
   /**
    * ========================
@@ -97,6 +112,18 @@ class MerchantSurveyView extends Component {
   renderSurveyList() {
     return <SurveyListDataView navigation={this.props.navigation} />;
   }
+  /** === RENDER MODAL ERROR RESPONSE  === */
+  renderModalErrorResponse() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={() => this.setState({ openModalErrorGlobal: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
   /** === RENDER MAIN === */
   render() {
     return (
@@ -109,6 +136,7 @@ class MerchantSurveyView extends Component {
         ) : (
           <View style={styles.container}>{this.renderSurveyList()}</View>
         )}
+        {this.renderModalErrorResponse()}
       </SafeAreaView>
     );
   }
@@ -142,8 +170,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 19112020
  * updatedBy: dyah
- * updatedDate: 23092021
+ * updatedDate: 30092021
  * updatedFunction:
- * -> add loading when get survey list.
- * -> update navigation param.
+ * -> add modal error when failed get survey list.
  */
