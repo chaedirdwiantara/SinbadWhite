@@ -31,8 +31,7 @@ class MerchantSurveyResultView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openCollapse: false,
-      activeIndexCollapse: 0,
+      activeIndexCollapse: -1,
       openModalErrorGlobal: false
     };
   }
@@ -235,14 +234,12 @@ class MerchantSurveyResultView extends Component {
                   style={styles.boxCollapse}
                   onPress={() =>
                     this.setState({
-                      openCollapse: !this.state.openCollapse,
                       activeIndexCollapse: index
                     })
                   }
                 >
                   <View>
-                    {this.state.openCollapse &&
-                    this.state.activeIndexCollapse === index ? (
+                    {this.state.activeIndexCollapse === index ? (
                       <MaterialIcon
                         name="keyboard-arrow-up"
                         color={'#CACCCF'}
@@ -261,12 +258,11 @@ class MerchantSurveyResultView extends Component {
                       Pertanyaan {index + 1}
                     </Text>
                     <View style={{ width: '80%' }}>
-                      {this.state.openCollapse &&
-                        this.state.activeIndexCollapse === index && (
-                          <Text style={[Fonts.type8, { color: '#A0A4A8' }]}>
-                            {item?.title ?? '-'}
-                          </Text>
-                        )}
+                      {this.state.activeIndexCollapse === index && (
+                        <Text style={[Fonts.type8, { color: '#A0A4A8' }]}>
+                          {item?.title ?? '-'}
+                        </Text>
+                      )}
                     </View>
                   </View>
                 </TouchableOpacity>
