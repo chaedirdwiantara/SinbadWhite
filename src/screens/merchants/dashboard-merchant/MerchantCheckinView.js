@@ -109,13 +109,17 @@ class MerchantCheckinView extends Component {
           dataGetRadiusLockGeotag.active &&
           !dataGetRadiusLockGeotag.accepted
         ) {
-          this.setState({
-            succes: false,
-            count: this.state.count + 1
-          });
-          if (this.state.count === 4) {
-            this.setState({ openModalNotInRadius: true });
-          }
+          this.setState(
+            {
+              succes: false,
+              count: this.state.count + 1
+            },
+            () => {
+              if (this.state.count === 3) {
+                this.setState({ openModalNotInRadius: true });
+              }
+            }
+          );
         }
       }
     }
