@@ -220,7 +220,7 @@ function getSalesSegmentation({ type, supplierId, urbanId }) {
 /** GET RADIUS LOCK GEOTAG */
 function getRadiusLockGeotag(params) {
   return ApiRest({
-    path: `${salesManagementService}/v1/lockgeotag/validate?storeLong=${
+    path: `${salesManagementService}/v1/agent/lockgeotag/validate?storeLong=${
       params.storeLong
     }&storeLat=${params.storeLat}&salesLong=${params.salesLong}&salesLat=${
       params.salesLat
@@ -266,7 +266,7 @@ export const MerchantMethod = {
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 22092021
+ * updatedDate: 30092021
  * updatedFunction:
- * -> add new method, get radius lock geotag. (getRadiusLockGeotag)
+ * -> add endpoint get radius lock geotag. (getRadiusLockGeotag)
  */
