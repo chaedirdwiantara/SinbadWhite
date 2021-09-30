@@ -118,7 +118,7 @@ class JourneyView extends Component {
       if (this.props.journey.dataSaveMerchantToJourneyPlanV2 !== null) {
         this.getJourneyPlan();
         this.props.getJourneyPlanReportProcessV2();
-        this.setState({ openModalMerchantList: false });
+        this.setState({ openModalMerchantList: false, openModalAddMerchant: false, });
       }
     }
     /** IF ADD MERCHANT SUCCESS */
@@ -383,7 +383,7 @@ class JourneyView extends Component {
     return this.state.openModalMerchantList ? (
       <ModalBottomMerchantList
         open={this.state.openModalMerchantList}
-        close={() => this.setState({ openModalMerchantList: false })}
+        close={() => this.setState({ openModalMerchantList: false, openModalAddMerchant: false, })}
       />
     ) : (
       <View />
@@ -548,7 +548,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: Raka
- * updatedDate: 14092021
+ * updatedDate: 30092021
  * updatedFunction:
- * -> make dialog multiple when open toko existing dialog.
+ * -> close dialog tambah toko when add to journey plan
  */
