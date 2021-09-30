@@ -67,7 +67,11 @@ class MerchantQuestionnaireView extends Component {
         prevProps.merchant.dataGetSurvey !== this.props.merchant.dataGetSurvey
       ) {
         let newQuestions = [];
-        this.props.merchant.dataGetSurvey.questions.map(item => {
+        const orderedQuestions = _.orderBy(
+          this.props.merchant.dataGetSurvey.questions,
+          ['order']
+        );
+        orderedQuestions.map(item => {
           // calculate the total of candidate answer
           let totalCandidateAnswerMax;
           let value = [];
@@ -699,7 +703,5 @@ export default connect(
  * updatedBy: dyah
  * updatedDate: 30092021
  * updatedFunction:
- * -> add modal error when failed get survey & get survey brand.
- * -> update validation for required answer.
- * -> update condition when click ok in modal error
+ * -> fix order for questions.
  */
