@@ -13,32 +13,62 @@ import { parseInt } from 'lodash';
 class BasicRangeAnswerComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      errorA: false,
+      errorB: false
+    };
     this.inputValueA = React.createRef(null);
     this.inputValueB = React.createRef(null);
   }
 
-  _onChange = (text, item) => {
+  /** === CHECK VALIDATION === */
+  checkValidation = (text, order) => {
     const { inputValueA, inputValueB } = this;
     let valueA = inputValueA.current.state.text;
     let valueB = inputValueB.current.state.text;
 
-    if (item.order === 1) {
-      // update valueB when valueB is empty or less than valueA
-      if (valueB.length === 0 || parseInt(valueB) < parseInt(text)) {
-        inputValueB.current.setText(text);
+    if (order === 1) {
+      /** === CONDITION WHEN INPUT THE FIRST VALUE (VALUE A) === */
+      // update errorB when valueB is empty
+      if (valueB.length === 0) {
+        valueB = '';
+        this.setState({ errorB: true });
+      }
+      // update errorA when valueB is less than valueA
+      if (valueB.length !== 0 && parseInt(valueB) < parseInt(text)) {
+        valueA = '';
+        if (!this.state.errorB) this.setState({ errorA: true });
+      }
+      // set error false when valueB already more than valueA
+      if (parseInt(valueB) >= parseInt(text)) {
+        valueA = text;
+        this.setState({ errorA: false, errorB: false });
+      }
+    } else {
+      /** === CONDITION WHEN INPUT THE SECOND VALUE (VALUE B) === */
+      // update errorA when valueA is empty
+      if (valueA.length === 0) {
+        valueA = '';
+        this.setState({ errorA: true });
+      }
+      // update errorB when valueA is more than valueB
+      if (parseInt(valueA) > parseInt(text)) {
+        valueB = '';
+        if (!this.state.errorA) this.setState({ errorB: true });
+      }
+      // set error false when valueA already less than valueB
+      if (parseInt(valueA) <= parseInt(text)) {
+        this.setState({ errorA: false, errorB: false });
         valueB = text;
       }
-      inputValueA.current.setText(text);
-    } else {
-      // update valueA when valueA is empty or more than valueB
-      if (valueA.length === 0 || parseInt(valueA) > parseInt(text)) {
-        inputValueA.current.setText(text);
-        valueA = text;
-      }
-      inputValueB.current.setText(text);
     }
 
+    return { valueA, valueB };
+  };
+
+  /** === ON CHANGE TEXT === */
+  _onChange = (text, item) => {
+    const { valueA, valueB } = this.checkValidation(text, item.order);
     this.props.onChange({ valueA, valueB });
   };
 
@@ -58,6 +88,8 @@ class BasicRangeAnswerComponent extends Component {
               max={1000000}
               min={0}
               keyboardType="numeric"
+              error={this.state.errorA}
+              errorText="Nilai input tidak valid"
               text={inputValue => this._onChange(inputValue, item[0])}
             />
           </View>
@@ -73,6 +105,8 @@ class BasicRangeAnswerComponent extends Component {
               max={1000000}
               min={0}
               keyboardType="numeric"
+              error={this.state.errorB}
+              errorText="Nilai input tidak valid"
               text={inputValue => this._onChange(inputValue, item[1])}
             />
           </View>
@@ -101,7 +135,7 @@ export default BasicRangeAnswerComponent;
  * createdBy: dyah
  * createdDate: 13092021
  * updatedBy: dyah
- * updatedDate: 29092021
+ * updatedDate: 30092021
  * updatedFunction:
- * -> add validation for basic range answer component.
+ * -> update validation for basic range answer component.
  */
