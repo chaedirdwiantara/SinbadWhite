@@ -136,7 +136,24 @@ class MerchantQuestionnaireView extends Component {
         }
       }
     }
-    // if failed show modal error
+    // show modal error when failed get survey
+    if (this.props.merchant.errorGetSurvey) {
+      if (
+        prevProps.merchant.errorGetSurvey !== this.props.merchant.errorGetSurvey
+      ) {
+        this.setState({ openModalErrorGlobal: true });
+      }
+    }
+    // show modal error when failed get survey brands
+    if (this.props.merchant.errorGetSurveyBrand) {
+      if (
+        prevProps.merchant.errorGetSurveyBrand !==
+        this.props.merchant.errorGetSurveyBrand
+      ) {
+        this.setState({ openModalErrorGlobal: true });
+      }
+    }
+    // show modal error when failed submit survey
     if (this.props.merchant.errorSubmitSurveyResponse) {
       if (
         prevProps.merchant.errorSubmitSurveyResponse !==
@@ -175,7 +192,15 @@ class MerchantQuestionnaireView extends Component {
    */
   checkRequiredAnswers = () => {
     // check there's a value or not in the question.
-    if (_.isEmpty(this.state.questions.filter(item => item.value.length > 0))) {
+    const emptyValue = _.isEmpty(
+      this.state.questions.filter(item => item.value.length > 0)
+    );
+    const checkUnRequiredQuestion = this.state.questions.filter(
+      item => !item.required
+    ).length;
+    const allUnRequiredQuestion =
+      this.state.questions.length === checkUnRequiredQuestion;
+    if (emptyValue && allUnRequiredQuestion) {
       return null;
     }
 
@@ -192,17 +217,16 @@ class MerchantQuestionnaireView extends Component {
       unAnswered = requiredAnswer.filter(
         item => item.value.length < item.totalCandidateAnswerMax
       );
-    } else {
-      // check length of input (required) to make sure the length of answer not 0.
-      requiredAnswer.map(item => {
-        item.value.map(input => {
-          if (input.inputValue.length === 0) {
-            // get the unanswered question (required)
-            unAnswered.push(item);
-          }
-        });
-      });
     }
+    // check length of input (required) to make sure the length of answer not 0.
+    requiredAnswer.map(item => {
+      item.value.map(input => {
+        if (input.inputValue.length === 0) {
+          // get the unanswered question (required)
+          unAnswered.push(item);
+        }
+      });
+    });
     // if there's required question still empty give info
     if (unAnswered.length > 0) {
       return this.setState({ unAnswered });
@@ -586,9 +610,11 @@ class MerchantQuestionnaireView extends Component {
         statusBarType={'transparent'}
         open={this.state.openModalErrorGlobal}
         onPress={() =>
-          this.setState({ openModalErrorGlobal: false }, () =>
-            this.submitQuestionnaire()
-          )
+          this.setState({ openModalErrorGlobal: false }, () => {
+            if (this.props.merchant.errorSubmitSurveyResponse) {
+              return this.submitQuestionnaire();
+            }
+          })
         }
       />
     ) : (
@@ -671,7 +697,9 @@ export default connect(
  * createdBy: dyah
  * createdDate: 06092021
  * updatedBy: dyah
- * updatedDate: 29092021
+ * updatedDate: 30092021
  * updatedFunction:
- * -> add validation user can't submit response without input any value.
+ * -> add modal error when failed get survey & get survey brand.
+ * -> update validation for required answer.
+ * -> update condition when click ok in modal error
  */
