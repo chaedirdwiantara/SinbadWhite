@@ -41,6 +41,8 @@ const SfaCollectionDetailView = props => {
     loadingSfaGetCollectionImage
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
+  const { id } = useSelector(state => state.user);
+  const userId = parseInt(id, 10);
 
   /** === ON REFRESH === */
   const onRefresh = () => {
@@ -64,7 +66,8 @@ const SfaCollectionDetailView = props => {
       limit: 20,
       storeId: parseInt(selectedMerchant.storeId, 10),
       skip: 0,
-      loading: true
+      loading: true,
+      userId: userId
     };
     dispatch(sfaGetPaymentCollectionLogProcess(data));
   };
