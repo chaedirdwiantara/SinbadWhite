@@ -316,6 +316,18 @@ function* getSalesSegmentation(actions) {
   }
 }
 
+/** GET RADIUS LOCK GEOTAG */
+function* getRadiusLockGeotag(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getRadiusLockGeotag(actions.payload);
+    });
+    yield put(ActionCreators.getRadiusLockGeotagSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.getRadiusLockGeotagFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
   yield takeLatest(types.MERCHANT_GET_PROCESS_V2, getMerchantV2);
@@ -374,6 +386,7 @@ function* MerchantSaga() {
     updateSurveyResponse
   );
   yield takeEvery(types.GET_SALES_SEGMENTATION_PROCESS, getSalesSegmentation);
+  yield takeLatest(types.GET_RADIUS_LOCK_GEOTAG_PROCESS, getRadiusLockGeotag);
 }
 
 export default MerchantSaga;
