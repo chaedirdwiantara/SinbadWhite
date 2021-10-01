@@ -215,7 +215,9 @@ class MerchantSurveyResultView extends Component {
     return (
       <View style={{ paddingBottom: 5, flex: 1 }}>
         <FlatList
-          data={dataSurveyResponse?.survey?.questions ?? []}
+          data={_.orderBy(dataSurveyResponse?.survey?.questions ?? [], [
+            'order'
+          ])}
           keyExtractor={(data, index) => index.toString()}
           renderItem={({ item, index }) => (
             <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -259,7 +261,7 @@ class MerchantSurveyResultView extends Component {
               </View>
               <View style={{ flex: 1 }}>
                 <View style={styles.boxScore}>
-                  <Text>{item.questionResponseScore?.result ?? '0'}</Text>
+                  <Text>{item.questionResponseScore?.score ?? '0'}</Text>
                 </View>
               </View>
             </View>

@@ -271,8 +271,18 @@ function* getSurveyResponse(actions) {
           return parseFloat(data.questionResponseScore.score);
         }
       });
-      totalScore =
-        arrResult[0] !== undefined ? arrResult.reduce((a, b) => a + b, 0) : 0;
+      //arrResult return undefined or arr of Number score
+      if (arrResult) {
+        if (arrResult[0] !== undefined) {
+          arrResult.map(result => {
+            if (result) totalScore += result;
+          });
+        } else {
+          return 0;
+        }
+      } else {
+        return 0;
+      }
     }
     yield put(
       ActionCreators.merchantGetSurveyResponseSuccess(response, totalScore)
