@@ -259,7 +259,7 @@ class MerchantSurveyResultView extends Component {
               </View>
               <View style={{ flex: 1 }}>
                 <View style={styles.boxScore}>
-                  <Text>{item.questionResponseScore?.result ?? '0'}</Text>
+                  <Text>{item.questionResponseScore?.score ?? '0'}</Text>
                 </View>
               </View>
             </View>
