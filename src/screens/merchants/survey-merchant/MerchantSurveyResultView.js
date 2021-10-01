@@ -144,11 +144,15 @@ class MerchantSurveyResultView extends Component {
     return (
       <View
         style={{
-          flex: 1,
+          flex: 1.5,
           flexDirection: 'row',
           justifyContent: 'space-around',
           alignContent: 'center',
-          paddingHorizontal: 10
+          paddingTop: 40,
+          paddingBottom: 40,
+          paddingHorizontal: 10,
+          borderBottomColor: Color.fontBlack10,
+          borderBottomWidth: 1
         }}
       >
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -170,20 +174,7 @@ class MerchantSurveyResultView extends Component {
       </View>
     );
   }
-  /**
-   * === RENDER DIVIDER ===
-   * @returns {ReactElement} render line as divider.
-   */
-  renderDivider() {
-    return (
-      <View
-        style={{
-          borderBottomColor: Color.fontBlack10,
-          borderBottomWidth: 1
-        }}
-      />
-    );
-  }
+
   /**
    * === RENDER  OF DETAIL SCORE CONTENT===
    * @returns {ReactElement} render header of detail score content.
@@ -193,9 +184,8 @@ class MerchantSurveyResultView extends Component {
       <React.Fragment>
         <View
           style={{
-            lineHeight: 16,
-            paddingVertical: 16,
-            paddingHorizontal: 16
+            paddingVertical: 14,
+            paddingHorizontal: 14
           }}
         >
           <Text style={Fonts.textSurveyResult}>Detail Skor</Text>
@@ -292,6 +282,7 @@ class MerchantSurveyResultView extends Component {
         style={[
           styles.headerContainer,
           {
+            paddingTop: 12,
             marginHorizontal: 16,
             marginTop: 16,
             paddingHorizontal: 16,
@@ -376,7 +367,6 @@ class MerchantSurveyResultView extends Component {
         ]}
       >
         {this.renderDetailScoreHeader()}
-        {this.renderDivider()}
         {this.renderDetailScoreContent()}
       </View>
     );
@@ -449,7 +439,6 @@ class MerchantSurveyResultView extends Component {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    paddingTop: 12,
     paddingBottom: 12,
     borderRadius: 4,
     borderColor: Color.fontBlack10
