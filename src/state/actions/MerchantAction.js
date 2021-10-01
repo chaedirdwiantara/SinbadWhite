@@ -643,3 +643,23 @@ export function getSalesSegmentationFailed(data){
 export function resetGetSalesSegmentation(){
   return { type: types.RESET_SALES_SEGMENTATION }
 }
+/**
+ * ===========================================
+ * GET RADIUS LOCK GEOTAG
+ * ===========================================
+ */
+export function getRadiusLockGeotagProcess(data) {
+  return { type: types.GET_RADIUS_LOCK_GEOTAG_PROCESS, payload: data };
+}
+export function getRadiusLockGeotagSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.GET_RADIUS_LOCK_GEOTAG_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.GET_RADIUS_LOCK_GEOTAG_FAILED, payload: data };
+}
+export function getRadiusLockGeotagFailed(data) {
+  return { type: types.GET_RADIUS_LOCK_GEOTAG_FAILED, payload: data };
+}

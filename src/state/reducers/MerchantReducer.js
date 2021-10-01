@@ -31,6 +31,7 @@ const INITIAL_STATE = {
   loadingSubmitSurveyResponse: false,
   loadingValidateAreaMapping: false,
   loadingGetSalesSegmentation: false,
+  loadingGetRadiusLockGeotag: false,
   /** data */
   dataPostActivityV2: null,
   dataGetLogAllActivityV2: null,
@@ -157,6 +158,7 @@ const INITIAL_STATE = {
   dataTotalScoreSurvey: "0",
   dataValidateAreaMapping: null,
   dataSalesSegmentation: null,
+  dataGetRadiusLockGeotag: null,
   /** error */
   errorGetMerchantV2: null,
   errorAddMerchant: null,
@@ -181,7 +183,8 @@ const INITIAL_STATE = {
   errorGetSurveyResponse: null,
   errorSubmitSurveyResponse: null,
   errorValidateAreaMapping: null,
-  errorGetSalesSegmentation: null
+  errorGetSalesSegmentation: null,
+  errorGetRadiusLockGeotag: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -1193,6 +1196,33 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingSubmitSurveyResponse: true,
       dataSubmitSurveyResponse: {},
       errorSubmitSurveyResponse: null
+    };
+  },
+  /**
+   * ============================
+   * GET RADIUS LOCK GEOTAG
+   * ============================
+   */
+  [types.GET_RADIUS_LOCK_GEOTAG_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetRadiusLockGeotag: true,
+      dataGetRadiusLockGeotag: null,
+      errorGetRadiusLockGeotag: null
+    };
+  },
+  [types.GET_RADIUS_LOCK_GEOTAG_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetRadiusLockGeotag: false,
+      dataGetRadiusLockGeotag: action.payload.data
+    };
+  },
+  [types.GET_RADIUS_LOCK_GEOTAG_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetRadiusLockGeotag: false,
+      errorGetRadiusLockGeotag: action.payload
     };
   }
 });
