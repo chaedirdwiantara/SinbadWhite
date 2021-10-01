@@ -271,12 +271,16 @@ function* getSurveyResponse(actions) {
           return parseFloat(data.questionResponseScore.score);
         }
       });
-
-      arrResult[0] !== undefined
-        ? arrResult.map(result => {
+      //arrResult return undefined or arr of Number score
+      if (arrResult) {
+        if (arrResult[0] !== undefined) {
+          arrResult.map(result => {
             if (result) totalScore += result;
-          })
-        : 0;
+          });
+        } else {
+          return 0;
+        }
+      }
     }
     yield put(
       ActionCreators.merchantGetSurveyResponseSuccess(response, totalScore)
