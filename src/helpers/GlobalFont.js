@@ -811,6 +811,24 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 12,
     lineHeight: 15
+  },
+  fontH11SemiBold: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontWeight: '600',
+    fontSize: 12,
+    lineHeight: 15
+  },
+  fontC2Medium: {
+    fontFamily: Fonts.MontserratMedium,
+    fontWeight: '500',
+    fontSize: 10,
+    lineHeight: 12
+  },
+  fontH9Medium: {
+    fontFamily: Fonts.MontserratMedium,
+    fontWeight: '500',
+    fontSize: 13,
+    lineHeight: 16
   }
 });
 
