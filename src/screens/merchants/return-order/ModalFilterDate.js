@@ -584,7 +584,7 @@ class ModalFilterDate extends Component {
   }
   renderButton() {
     return (
-      <View style={[GlobalStyle.shadowBottom, { flex: 1 }]}>
+      <View style={[GlobalStyle.shadowForBox10, { flex: 1 }]}>
         <View>
           <ButtonSingle
             title={'Terapkan Filter'}
