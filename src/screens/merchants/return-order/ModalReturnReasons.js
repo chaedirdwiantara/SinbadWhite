@@ -91,7 +91,7 @@ class ModalReturnReasons extends Component {
   }
 
   renderSeparator() {
-    return <View style={{ marginBottom: 16 }} />;
+    return <View style={[{ marginBottom: 16 }, GlobalStyle.lines]} />;
   }
 
   renderItem({ item, index }) {
