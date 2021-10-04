@@ -65,7 +65,7 @@ class MerchantSurveyResultView extends Component {
     this.backHandler.remove();
   }
   /** === DID UPDATE === */
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     // if failed show modal error
     if (this.props.merchant.errorGetSurveyResponse) {
       if (
