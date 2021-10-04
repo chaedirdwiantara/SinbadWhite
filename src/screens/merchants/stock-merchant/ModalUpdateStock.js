@@ -18,7 +18,8 @@ class ModalUpdateStock extends Component {
     super(props);
     this.state = {
       pcs: this.props.data.data.qty.pcs,
-      box: this.props.data.data.qty.box
+      box: this.props.data.data.qty.box,
+      loadingAddStock: false
     };
   }
 
@@ -39,6 +40,8 @@ class ModalUpdateStock extends Component {
         backdropOpacity={0.4}
         deviceHeight={height}
         style={styles.mainContainer}
+        onBackButtonPress={this.props.onBackButtonPress}
+        onBackdropPress={this.props.onBackdropPress}
       >
         <View
           style={[styles.contentContainer, { height: this.state.heightList }]}
@@ -96,9 +99,9 @@ class ModalUpdateStock extends Component {
             keyboardType="numeric"
             returnKeyType="done"
             enablesReturnKeyAutomatically
-            maxLength={4}
+            maxLength={3}
             onChangeText={qty => {
-              const pcs = qty.replace(/\W|^0+|\\+(?!$)/g, '');
+              const pcs = qty.replace(/^0-9]\\+(?!$)/g, '');
               this.setState({ pcs });
             }}
           />
@@ -124,9 +127,10 @@ class ModalUpdateStock extends Component {
             keyboardType="numeric"
             returnKeyType="done"
             enablesReturnKeyAutomatically
-            maxLength={4}
+            maxLength={3}
             onChangeText={qty => {
-              const box = qty.replace(/\W|^0+|\\+(?!$)/g, '');
+              const box = qty.replace(/^0-9]\\+(?!$)/g, '');
+              console.log('Update Box', box);
               this.setState({ box });
             }}
           />
@@ -152,6 +156,19 @@ class ModalUpdateStock extends Component {
     );
   }
 
+  checkButtonDisabled() {
+    if (
+      parseInt(this.state.pcs, 10) ===
+        parseInt(this.props.data.data.qty.pcs, 10) &&
+      parseInt(this.state.box, 10) ===
+        parseInt(this.props.data.data.qty.box, 10)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // Render Button
   renderButton() {
     return (
@@ -159,6 +176,7 @@ class ModalUpdateStock extends Component {
         <ButtonSingle
           title={'Konfirmasi'}
           borderRadius={4}
+          disabled={this.checkButtonDisabled()}
           onPress={() =>
             this.props.parentFunction({
               type: 'edit',

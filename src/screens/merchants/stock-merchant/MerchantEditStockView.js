@@ -521,6 +521,8 @@ class MerchantEditStockView extends Component {
         close={() => {
           this.setState({ openModalUpdateStock: false });
         }}
+        onBackButtonPress={() => this.setState({ openModalUpdateStock: false })}
+        onBackdropPress={() => this.setState({ openModalUpdateStock: false })}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
         title={this.state.modalTitleUpdate}

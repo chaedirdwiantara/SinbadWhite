@@ -294,7 +294,7 @@ class MerchantHomeView extends Component {
         !surveyList.payload.data &&
         !errorGetSurveyList
       ) {
-        this.getSurvey();
+        // this.getSurvey();
       }
     }
     if (
