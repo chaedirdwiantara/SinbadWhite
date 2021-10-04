@@ -110,7 +110,14 @@ class ModalManualInputQty extends Component {
                 this.setState({ qty: 0 });
               } else {
                 const cleanNumber = qty.replace(/^0+|[^0-9]/g, '');
-                this.setState({ qty: cleanNumber });
+                if (
+                  parseInt(cleanNumber, 10) >
+                  parseInt(this.props.data.maxQty, 10)
+                ) {
+                  this.setState({ qty: this.props.data.maxQty });
+                } else {
+                  this.setState({ qty: cleanNumber });
+                }
               }
             }}
           />
@@ -118,7 +125,11 @@ class ModalManualInputQty extends Component {
         <View
           style={[styles.inputList, { alignItems: 'center', borderWidth: 0 }]}
         >
-          <Text>Maks Retur {this.props.data.maxQty} Barang</Text>
+          <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack80 }]}>
+            Maks Retur{' '}
+            <Text style={{ fontWeight: 'bold' }}>{this.props.data.maxQty}</Text>{' '}
+            Barang
+          </Text>
         </View>
       </View>
     );

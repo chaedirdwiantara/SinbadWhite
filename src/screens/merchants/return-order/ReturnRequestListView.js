@@ -120,7 +120,6 @@ class ReturnRequestView extends Component {
                   </Text>
                 </View>
                 <View>
-                  {/* <Text>Button Order</Text> */}
                   <CustomOrderButton
                     showKeyboard={this.state.showKeyboard}
                     item={item}

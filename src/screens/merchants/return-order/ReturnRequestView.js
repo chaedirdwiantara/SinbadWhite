@@ -137,7 +137,12 @@ class ReturnRequestView extends Component {
     const indexCatalogue = listCatalogue.returnParcelDraft.findIndex(
       item => parseInt(item.catalogueId, 10) === parseInt(data.catalogueId, 10)
     );
-    listCatalogue.returnParcelDraft[indexCatalogue].qty = data.qty;
+    if (data.qty > listCatalogue.returnParcelDraft[indexCatalogue].maxQty) {
+      listCatalogue.returnParcelDraft[indexCatalogue].qty =
+        listCatalogue.returnParcelDraft[indexCatalogue].maxQty;
+    } else {
+      listCatalogue.returnParcelDraft[indexCatalogue].qty = data.qty;
+    }
     this.setState({ localData: listCatalogue });
   }
 
