@@ -16,6 +16,7 @@ import * as ActionCreators from '../../../state/actions';
 import ReturnRequestListView from './ReturnRequestListView';
 import ModalManualInputQty from './ModalManualInputQty';
 import ModalUpdatePrice from './ModalUpdatePrice';
+import ModalReturnReasons from './ModalReturnReasons';
 
 class ReturnRequestView extends Component {
   constructor(props) {
@@ -24,6 +25,7 @@ class ReturnRequestView extends Component {
       loading: true,
       openModalManualInputQty: false,
       openModalManualInputPrice: false,
+      openModalReturnReasons: false,
       selectedData: null,
       localData: {
         orderCode: 'S01000452400341847316',
@@ -77,7 +79,81 @@ class ReturnRequestView extends Component {
             maxQty: 17
           }
         ]
-      }
+      },
+      returnReasons: [
+        {
+          id: '4',
+          reason: 'Out of stock ',
+          description: 'Out of stock ',
+          showOnMobile: false,
+          showOnAgentApp: true,
+          createdAt: '2021-08-02T07:38:34.957Z',
+          updatedAt: '2021-08-18T04:33:24.924Z',
+          deletedAt: null
+        },
+        {
+          id: '5',
+          reason:
+            'To make sure that the device arrives in its original condition, package and send it using the label and instructions from the Google Store support email.  If you’re returning multiple items, package a',
+          description:
+            'To make sure that the device arrives in its original condition, package and send it using the label and instructions from the Google Store support email.\n\nIf you’re returning multiple items, package a',
+          showOnMobile: true,
+          showOnAgentApp: true,
+          createdAt: '2021-08-08T11:52:02.588Z',
+          updatedAt: '2021-08-09T06:37:50.736Z',
+          deletedAt: null
+        },
+        {
+          id: '13',
+          reason: 'ttt',
+          description: 'tttt',
+          showOnMobile: true,
+          showOnAgentApp: true,
+          createdAt: '2021-08-16T05:45:31.059Z',
+          updatedAt: '2021-08-16T05:45:31.059Z',
+          deletedAt: null
+        },
+        {
+          id: '14',
+          reason: 'TRS',
+          description: 'TRS',
+          showOnMobile: true,
+          showOnAgentApp: true,
+          createdAt: '2021-08-16T05:46:31.894Z',
+          updatedAt: '2021-08-16T05:46:31.894Z',
+          deletedAt: null
+        },
+        {
+          id: '15',
+          reason: 'KKK ',
+          description: 'JJJJ',
+          showOnMobile: true,
+          showOnAgentApp: true,
+          createdAt: '2021-08-16T05:47:33.596Z',
+          updatedAt: '2021-08-16T05:47:33.596Z',
+          deletedAt: null
+        },
+        {
+          id: '17',
+          reason: 'Barang Hilang',
+          description: 'Barang yang dipesan hilang di Warehouse',
+          showOnMobile: false,
+          showOnAgentApp: true,
+          createdAt: '2021-08-18T03:32:28.941Z',
+          updatedAt: '2021-08-18T03:32:28.941Z',
+          deletedAt: null
+        },
+        {
+          id: '18',
+          reason: 'The merchant shipped the wrong item',
+          description: 'The merchant shipped the wrong item',
+          showOnMobile: true,
+          showOnAgentApp: true,
+          createdAt: '2021-08-18T04:25:07.368Z',
+          updatedAt: '2021-08-18T04:25:07.368Z',
+          deletedAt: null
+        }
+      ]
     };
   }
   static navigationOptions = ({ navigation }) => {
@@ -104,8 +180,14 @@ class ReturnRequestView extends Component {
   convertListToLocalState() {
     const productArray = [];
     this.state.localData.returnParcelDraft.map((item, index) => {
+      const reason = {
+        id: null,
+        reason: null
+      };
       item.qty = 0;
       item.suggestedPrice = item.price;
+      item.note = null;
+      item.returnReason = reason;
       productArray.push(item);
     });
     const data = {
@@ -113,6 +195,10 @@ class ReturnRequestView extends Component {
       returnParcelDraft: productArray
     };
     this.setState({ localData: data });
+  }
+
+  getReturnReason() {
+    return null;
   }
 
   parentFunction(data) {
@@ -134,9 +220,19 @@ class ReturnRequestView extends Component {
         });
         break;
       case 'ChangePrice':
-        console.log('Update Price', data);
         this.updatePrice(data.data);
         this.setState({ openModalManualInputPrice: false });
+        break;
+      case 'GetReturnReasons':
+        this.setState({
+          openModalReturnReasons: true,
+          selectedData: data.data
+        });
+        break;
+      case 'SelectReason':
+        console.log(data);
+        this.updateReason(data.data);
+        this.setState({ openModalReturnReasons: false });
         break;
 
       default:
@@ -156,7 +252,7 @@ class ReturnRequestView extends Component {
     } else {
       listCatalogue.returnParcelDraft[indexCatalogue].qty = data.qty;
     }
-    /** SET TO LOCAL STATE */
+    /** UPDATE LOCAL STATE */
     this.setState({ localData: listCatalogue });
   }
 
@@ -166,7 +262,26 @@ class ReturnRequestView extends Component {
       item => parseInt(item.catalogueId, 10) === parseInt(data.catalogueId, 10)
     );
 
+    /** UPDATED PRICE */
     listCatalogue.returnParcelDraft[indexCatalogue].price = data.price;
+
+    /** UPDATE LOCAL STATE */
+    this.setState({ localData: listCatalogue });
+  }
+
+  updateReason(data) {
+    console.log(data);
+    const listCatalogue = this.state.localData;
+    const indexCatalogue = listCatalogue.returnParcelDraft.findIndex(
+      item => parseInt(item.catalogueId, 10) === parseInt(data.catalogueId, 10)
+    );
+
+    const reason = {
+      id: data.reason.id,
+      reason: data.reason.reason
+    };
+
+    listCatalogue.returnParcelDraft[indexCatalogue].returnReason = reason;
 
     this.setState({ localData: listCatalogue });
   }
@@ -227,6 +342,22 @@ class ReturnRequestView extends Component {
       <View />
     );
   }
+
+  renderModalReturnReasons() {
+    return this.state.openModalReturnReasons ? (
+      <ModalReturnReasons
+        open={this.state.openModalReturnReasons}
+        close={() => this.setState({ openModalReturnReasons: false })}
+        data={this.state.selectedData}
+        returnReasons={this.state.returnReasons}
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+        title={'Alasan Retur'}
+      />
+    ) : (
+      <View />
+    );
+  }
   render() {
     return (
       <View style={styles.mainContainer}>
@@ -234,6 +365,7 @@ class ReturnRequestView extends Component {
         {/* MODAL */}
         {this.renderModalManualInputQty()}
         {this.renderModalUpdatePrice()}
+        {this.renderModalReturnReasons()}
       </View>
     );
   }

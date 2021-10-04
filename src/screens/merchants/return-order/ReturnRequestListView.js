@@ -184,12 +184,45 @@ class ReturnRequestView extends Component {
                 Alasan Retur
               </Text>
             </View>
-            <View>
-              <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack40 }]}>
-                Return Reason
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+              disabled={parseInt(item.qty, 10) === 0}
+              onPress={() =>
+                this.toParentFunction({ type: 'GetReturnReasons', data: item })
+              }
+            >
+              <Text
+                style={[
+                  Fonts.fontH12Medium,
+                  {
+                    color:
+                      item.returnReason.reason === null
+                        ? Color.fontBlack40
+                        : Color.fontBlack80,
+                    marginRight: 8
+                  }
+                ]}
+              >
+                {item.returnReason.reason === null
+                  ? 'Pilih Alasan Retur'
+                  : item.returnReason.reason}
               </Text>
-            </View>
+              <MaterialCommunityIcons
+                name="pencil"
+                size={16}
+                color={
+                  parseInt(item.qty, 10) === 0
+                    ? Color.fontRed10
+                    : Color.fontRed50
+                }
+              />
+            </TouchableOpacity>
           </View>
+          {this.renderReturnInfo(item)}
           <View style={GlobalStyle.lines} />
           <View
             style={{
@@ -226,6 +259,30 @@ class ReturnRequestView extends Component {
           </View>
         </View>
       </View>
+    );
+  }
+
+  renderReturnInfo(item) {
+    return item.qty > 0 && item.returnReason.reason === null ? (
+      <View
+        style={{
+          flexDirection: 'row',
+          flex: 1,
+          marginHorizontal: 16,
+          marginBottom: 8,
+          justifyContent: 'center',
+          backgroundColor: Color.fontYellow10,
+          borderRadius: 4
+        }}
+      >
+        <View style={{ flex: 1, margin: 8 }}>
+          <Text style={[Fonts.fontH12Medium, { color: Color.fontYellow60 }]}>
+            Wajib Memilih Alasan Retur
+          </Text>
+        </View>
+      </View>
+    ) : (
+      <View />
     );
   }
 
