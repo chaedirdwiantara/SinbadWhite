@@ -176,23 +176,6 @@ class OrderButton extends Component {
   renderInput() {
     return (
       <View style={styles.inputList}>
-        {/* <TextInput
-          selectionColor={masterColor.mainColor}
-          returnKeyType="done"
-          value={this.state.qty.toString()}
-          keyboardType="numeric"
-          maxLength={6}
-          enablesReturnKeyAutomatically
-          onFocus={this.props.onFocus}
-          onBlur={this.props.onBlur}
-          onEndEditing={() => this.checkQtyAfterEnter()}
-          onChangeText={qty => {
-            const cleanNumber = qty.replace(/[^0-9]/g, '');
-            this.checkTotalClickPlusButton(cleanNumber);
-            this.setState({ qty: cleanNumber });
-          }}
-          style={[Fonts.type24, styles.input]}
-        /> */}
         <TouchableOpacity
           onPress={() =>
             this.sendValueToParent({

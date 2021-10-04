@@ -10,14 +10,14 @@ import {
 } from '../../../library/reactPackage';
 import { Modal, MaterialIcon } from '../../../library/thirdPartyPackage';
 import { StatusBarBlackOP40, ButtonSingle } from '../../../library/component';
-import { GlobalStyle, Fonts } from '../../../helpers';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers';
 import { Color } from '../../../config';
 
-class ModalManualInputQty extends Component {
+class ModalUpdatePrice extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      qty: this.props.data.qty
+      price: this.props.data.price
     };
   }
   /**
@@ -44,15 +44,17 @@ class ModalManualInputQty extends Component {
           </View>
           <TouchableOpacity
             style={[{ alignItems: 'flex-end', flex: 1, marginRight: 16 }]}
-            onPress={() => this.setState({ qty: 0 })}
-            disabled={parseInt(this.state.qty, 10) === 0}
+            onPress={() =>
+              this.setState({ price: this.props.data.suggestedPrice })
+            }
+            disabled={parseInt(this.props.data.qty, 10) === 0}
           >
             <Text
               style={
                 (Fonts.fontH9Medium,
                 {
                   color:
-                    parseInt(this.state.qty, 10) === 0
+                    parseInt(this.props.data.qty, 10) === 0
                       ? Color.fontRed10
                       : Color.fontRed50
                 })
@@ -66,7 +68,6 @@ class ModalManualInputQty extends Component {
       </View>
     );
   }
-
   renderContentBody() {
     return (
       <View style={styles.boxContentBody}>
@@ -88,69 +89,56 @@ class ModalManualInputQty extends Component {
       >
         <View style={styles.inputList}>
           <TextInput
+            editable={parseInt(this.props.data.qty, 10) !== 0}
             returnKeyType="done"
-            value={this.state.qty.toString()}
+            value={MoneyFormat(parseInt(this.state.price, 10))}
             style={[
               Fonts.type24,
               styles.input,
               {
                 color:
-                  parseInt(this.state.qty, 10) === 0
+                  parseInt(this.state.price, 10) ===
+                  parseInt(this.props.data.price, 10)
                     ? Color.fontBlack60
                     : Color.fontBlack80
               }
             ]}
             keyboardType="numeric"
-            maxLength={6}
+            maxLength={12}
             enablesReturnKeyAutomatically
             onFocus={this.props.onFocus}
             onBlur={this.props.onBlur}
-            onChangeText={qty => {
-              if (qty === '' || qty === 0) {
-                this.setState({ qty: 0 });
-              } else {
-                const cleanNumber = qty.replace(/^0+|[^0-9]/g, '');
-                if (
-                  parseInt(cleanNumber, 10) >
-                  parseInt(this.props.data.maxQty, 10)
-                ) {
-                  this.setState({ qty: this.props.data.maxQty });
-                } else {
-                  this.setState({ qty: cleanNumber });
-                }
-              }
+            onChangeText={price => {
+              const cleanNumber = price.replace(/^0+|[^0-9]/g, '');
+              this.setState({ price: cleanNumber });
             }}
           />
-        </View>
-        <View
-          style={[styles.inputList, { alignItems: 'center', borderWidth: 0 }]}
-        >
-          <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack80 }]}>
-            Maks Retur{' '}
-            <Text style={{ fontWeight: 'bold' }}>{this.props.data.maxQty}</Text>{' '}
-            Barang
-          </Text>
         </View>
       </View>
     );
   }
 
   renderButton() {
+    console.log('Modal Update > ', this.props.data);
     return (
       <View style={[GlobalStyle.shadowForBox10, { flex: 1 }]}>
         <ButtonSingle
-          title={'Terapkan Retur'}
+          title={'Terapkan Harga'}
           borderRadius={8}
           onPress={() =>
             this.props.parentFunction({
-              type: 'ChangeQty',
+              type: 'ChangePrice',
               data: {
-                qty: parseInt(this.state.qty, 10),
+                price: parseInt(this.state.price, 10),
                 catalogueId: this.props.data.catalogueId
               }
             })
           }
-          disabled={parseInt(this.state.qty, 10) === 0}
+          disabled={
+            parseInt(this.props.data.qty, 10) === 0 ||
+            parseInt(this.state.price, 10) ===
+              parseInt(this.props.data.price, 10)
+          }
         />
       </View>
     );
@@ -177,7 +165,6 @@ class ModalManualInputQty extends Component {
       </Modal>
     );
   }
-
   render() {
     return (
       <View>
@@ -223,7 +210,8 @@ const styles = StyleSheet.create({
     padding: 0,
     alignItems: 'center',
     width: '100%',
-    textAlign: 'center'
+    textAlign: 'left',
+    marginLeft: 16
   },
   /** FOR INPUT  */
   inputList: {
@@ -237,4 +225,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ModalManualInputQty;
+export default ModalUpdatePrice;

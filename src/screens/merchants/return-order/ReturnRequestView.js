@@ -15,6 +15,7 @@ import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import ReturnRequestListView from './ReturnRequestListView';
 import ModalManualInputQty from './ModalManualInputQty';
+import ModalUpdatePrice from './ModalUpdatePrice';
 
 class ReturnRequestView extends Component {
   constructor(props) {
@@ -22,6 +23,7 @@ class ReturnRequestView extends Component {
     this.state = {
       loading: true,
       openModalManualInputQty: false,
+      openModalManualInputPrice: false,
       selectedData: null,
       localData: {
         orderCode: 'S01000452400341847316',
@@ -103,6 +105,7 @@ class ReturnRequestView extends Component {
     const productArray = [];
     this.state.localData.returnParcelDraft.map((item, index) => {
       item.qty = 0;
+      item.suggestedPrice = item.price;
       productArray.push(item);
     });
     const data = {
@@ -124,6 +127,17 @@ class ReturnRequestView extends Component {
         this.updateQty(data.data);
         this.setState({ openModalManualInputQty: false });
         break;
+      case 'ManualInputPrice':
+        this.setState({
+          openModalManualInputPrice: true,
+          selectedData: data.data
+        });
+        break;
+      case 'ChangePrice':
+        console.log('Update Price', data);
+        this.updatePrice(data.data);
+        this.setState({ openModalManualInputPrice: false });
+        break;
 
       default:
         break;
@@ -135,12 +149,25 @@ class ReturnRequestView extends Component {
     const indexCatalogue = listCatalogue.returnParcelDraft.findIndex(
       item => parseInt(item.catalogueId, 10) === parseInt(data.catalogueId, 10)
     );
+    /** UPDATE QTY */
     if (data.qty > listCatalogue.returnParcelDraft[indexCatalogue].maxQty) {
       listCatalogue.returnParcelDraft[indexCatalogue].qty =
         listCatalogue.returnParcelDraft[indexCatalogue].maxQty;
     } else {
       listCatalogue.returnParcelDraft[indexCatalogue].qty = data.qty;
     }
+    /** SET TO LOCAL STATE */
+    this.setState({ localData: listCatalogue });
+  }
+
+  updatePrice(data) {
+    const listCatalogue = this.state.localData;
+    const indexCatalogue = listCatalogue.returnParcelDraft.findIndex(
+      item => parseInt(item.catalogueId, 10) === parseInt(data.catalogueId, 10)
+    );
+
+    listCatalogue.returnParcelDraft[indexCatalogue].price = data.price;
+
     this.setState({ localData: listCatalogue });
   }
 
@@ -185,12 +212,28 @@ class ReturnRequestView extends Component {
       <View />
     );
   }
+
+  renderModalUpdatePrice() {
+    return this.state.openModalManualInputPrice ? (
+      <ModalUpdatePrice
+        open={this.state.openModalManualInputPrice}
+        close={() => this.setState({ openModalManualInputPrice: false })}
+        data={this.state.selectedData}
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+        title={'Harga Retur'}
+      />
+    ) : (
+      <View />
+    );
+  }
   render() {
     return (
       <View style={styles.mainContainer}>
         {this.renderContent()}
         {/* MODAL */}
         {this.renderModalManualInputQty()}
+        {this.renderModalUpdatePrice()}
       </View>
     );
   }

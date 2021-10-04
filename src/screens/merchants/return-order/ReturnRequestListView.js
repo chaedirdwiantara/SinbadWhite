@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import {
   React,
   Component,
@@ -6,11 +7,13 @@ import {
   StyleSheet,
   FlatList,
   Image,
-  TextInput
+  TextInput,
+  TouchableOpacity
 } from '../../../library/reactPackage';
 import {
   connect,
-  bindActionCreators
+  bindActionCreators,
+  MaterialCommunityIcons
 } from '../../../library/thirdPartyPackage';
 import { EmptyData } from '../../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../../helpers';
@@ -128,11 +131,44 @@ class ReturnRequestView extends Component {
                 Harga Retur
               </Text>
             </View>
-            <View>
-              <Text style={[Fonts.fontH10Bold, { color: Color.fontBlack40 }]}>
-                Price
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+              onPress={() =>
+                this.toParentFunction({
+                  type: 'ManualInputPrice',
+                  data: item
+                })
+              }
+              disabled={parseInt(item.qty, 10) === 0}
+            >
+              <Text
+                style={[
+                  Fonts.fontH10Bold,
+                  {
+                    color:
+                      parseInt(item.qty, 10) === 0
+                        ? Color.fontBlack40
+                        : Color.fontBlack80,
+                    marginRight: 4
+                  }
+                ]}
+              >
+                {MoneyFormat(item.price)}
               </Text>
-            </View>
+              <MaterialCommunityIcons
+                name="pencil"
+                size={16}
+                color={
+                  parseInt(item.qty, 10) === 0
+                    ? Color.fontRed10
+                    : Color.fontRed50
+                }
+              />
+            </TouchableOpacity>
           </View>
           <View style={GlobalStyle.lines} />
           <View
