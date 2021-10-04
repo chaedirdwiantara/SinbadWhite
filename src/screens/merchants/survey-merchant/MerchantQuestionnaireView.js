@@ -613,13 +613,7 @@ class MerchantQuestionnaireView extends Component {
       <ModalBottomErrorRespons
         statusBarType={'transparent'}
         open={this.state.openModalErrorGlobal}
-        onPress={() =>
-          this.setState({ openModalErrorGlobal: false }, () => {
-            if (this.props.merchant.errorSubmitSurveyResponse) {
-              return this.submitQuestionnaire();
-            }
-          })
-        }
+        onPress={() => this.setState({ openModalErrorGlobal: false })}
       />
     ) : (
       <View />
@@ -701,7 +695,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 06092021
  * updatedBy: dyah
- * updatedDate: 30092021
+ * updatedDate: 04102021
  * updatedFunction:
- * -> fix order for questions.
+ * -> fix modal when press the button only hides the modal, not send to API.
  */
