@@ -34,24 +34,6 @@ class ReturnRequestView extends Component {
 
   parentFunctionFromOrderButton(data) {
     this.toParentFunction(data);
-    // const productCartArray = this.state.productCartArray;
-    // const indexProductCartArray = productCartArray.findIndex(
-    //   item => item.catalogueId === data.catalogueId
-    // );
-    // productCartArray[indexProductCartArray].qty = data.qty;
-    // this.setState({ productCartArray });
-
-    // switch (data.type) {
-    //   case 'ChangeQty':
-    //     console.log('Change Qty', data);
-    //     break;
-    //   case 'ManualInput':
-    //     this.toParentFunction(data);
-    //     break;
-
-    //   default:
-    //     break;
-    // }
   }
   checkPrice(data) {
     const price = Math.floor(data.price * data.qty);
@@ -223,7 +205,6 @@ class ReturnRequestView extends Component {
     return <View>{this.renderData()}</View>;
   }
   render() {
-    console.log(this.props.data);
     return <View style={styles.mainContainer}>{this.renderContent()}</View>;
   }
 }

@@ -115,14 +115,12 @@ class ReturnRequestView extends Component {
   parentFunction(data) {
     switch (data.type) {
       case 'ManualInput':
-        console.log('Manual Input', data);
         this.setState({
           openModalManualInputQty: true,
           selectedData: data.data
         });
         break;
       case 'ChangeQty':
-        console.log('Change Qty', data);
         this.updateQty(data.data);
         this.setState({ openModalManualInputQty: false });
         break;

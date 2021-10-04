@@ -105,7 +105,6 @@ class ModalManualInputQty extends Component {
             onFocus={this.props.onFocus}
             onBlur={this.props.onBlur}
             onChangeText={qty => {
-              console.log(qty);
               if (qty === '' || qty === 0) {
                 this.setState({ qty: 0 });
               } else {
@@ -179,7 +178,6 @@ class ModalManualInputQty extends Component {
   }
 
   render() {
-    console.log('Modal Manual Input', this.props.data);
     return (
       <View>
         <StatusBarBlackOP40 />

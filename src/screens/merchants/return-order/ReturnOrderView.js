@@ -71,7 +71,6 @@ class ReturnOrderView extends Component {
         });
         break;
       case 'datePicker':
-        console.log('Date Picker', data);
         this.setState({ openDateSpinner: false });
         if (this.state.typeDate === 'startDate') {
           this.setState({ startDate: data.data, endDate: '' });

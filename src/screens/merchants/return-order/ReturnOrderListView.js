@@ -80,7 +80,7 @@ class ReturnOrderListView extends Component {
   };
 
   parentFunction(data) {
-    console.log('Return Order List View', data);
+    return null;
   }
 
   /** EMPTY DATA */
