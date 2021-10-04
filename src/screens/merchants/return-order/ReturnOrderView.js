@@ -2,7 +2,6 @@ import {
   React,
   Component,
   View,
-  Text,
   StyleSheet
 } from '../../../library/reactPackage';
 import {

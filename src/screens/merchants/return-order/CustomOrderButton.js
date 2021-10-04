@@ -4,10 +4,9 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
   Text
 } from '../../../library/reactPackage';
-import { Fonts, NumberFormat } from '../../../helpers';
+import { Fonts } from '../../../helpers';
 import masterColor from '../../../config/masterColor.json';
 import { Color } from '../../../config';
 
