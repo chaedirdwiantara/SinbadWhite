@@ -267,7 +267,7 @@ class MerchantQuestionnaireView extends Component {
         // check the not required question
         let totalValue = 0;
         // check the length of value (answer)
-        if (item.value.length === item.totalCandidateAnswerMax) {
+        if (item.value.length >= item.totalCandidateAnswerMax) {
           item.value.map(input => {
             // calculate the input that not empty
             if (input.inputValue.length !== 0) {
@@ -276,7 +276,7 @@ class MerchantQuestionnaireView extends Component {
           });
           // if totalValue same with totalCandidateAnswerMax assign to answer
           if (
-            totalValue === item.totalCandidateAnswerMax ||
+            totalValue >= item.totalCandidateAnswerMax ||
             (totalValue < item.totalCandidateAnswerMax &&
               status === 'inProgress')
           ) {
@@ -697,5 +697,5 @@ export default connect(
  * updatedBy: dyah
  * updatedDate: 04102021
  * updatedFunction:
- * -> fix modal when press the button only hides the modal, not send to API.
+ * -> update validation when submit questionnaire (status: completed)
  */
