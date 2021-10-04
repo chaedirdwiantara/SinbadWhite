@@ -13,9 +13,10 @@ import {
   bindActionCreators
 } from '../../../library/thirdPartyPackage';
 import { EmptyData } from '../../../library/component';
-import { Fonts, GlobalStyle } from '../../../helpers';
+import { Fonts, GlobalStyle, MoneyFormat } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
+import CustomOrderButton from './CustomOrderButton';
 
 class ReturnRequestView extends Component {
   constructor(props) {
@@ -23,6 +24,39 @@ class ReturnRequestView extends Component {
     this.state = {};
   }
 
+  toParentFunction(data) {
+    this.props.parentFunction(data);
+  }
+
+  parentFunction(data) {
+    return null;
+  }
+
+  parentFunctionFromOrderButton(data) {
+    this.toParentFunction(data);
+    // const productCartArray = this.state.productCartArray;
+    // const indexProductCartArray = productCartArray.findIndex(
+    //   item => item.catalogueId === data.catalogueId
+    // );
+    // productCartArray[indexProductCartArray].qty = data.qty;
+    // this.setState({ productCartArray });
+
+    // switch (data.type) {
+    //   case 'ChangeQty':
+    //     console.log('Change Qty', data);
+    //     break;
+    //   case 'ManualInput':
+    //     this.toParentFunction(data);
+    //     break;
+
+    //   default:
+    //     break;
+    // }
+  }
+  checkPrice(data) {
+    const price = Math.floor(data.price * data.qty);
+    return price;
+  }
   renderData() {
     return this.props.data.returnParcelDraft.length > 0 ? (
       <View>
@@ -65,7 +99,12 @@ class ReturnRequestView extends Component {
             </View>
             <View style={{ flex: 1 }}>
               <View style={{ marginBottom: 21 }}>
-                <Text style={{ flex: 1, flexWrap: 'wrap' }}>
+                <Text
+                  style={[
+                    Fonts.fontH11SemiBold,
+                    { flex: 1, flexWrap: 'wrap', color: Color.fontBlack80 }
+                  ]}
+                >
                   {item.catalogueName}
                 </Text>
               </View>
@@ -76,10 +115,20 @@ class ReturnRequestView extends Component {
                 }}
               >
                 <View>
-                  <Text>RP. 0</Text>
+                  <Text style={[Fonts.fontH10Bold, { color: Color.fontRed50 }]}>
+                    {MoneyFormat(this.checkPrice(item))}
+                  </Text>
                 </View>
                 <View>
-                  <Text>Button Order</Text>
+                  {/* <Text>Button Order</Text> */}
+                  <CustomOrderButton
+                    showKeyboard={this.state.showKeyboard}
+                    item={item}
+                    onRef={ref => (this.parentFunctionFromOrderButton = ref)}
+                    parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
+                      this
+                    )}
+                  />
                 </View>
               </View>
             </View>
@@ -94,10 +143,14 @@ class ReturnRequestView extends Component {
             }}
           >
             <View>
-              <Text>Harga Retur</Text>
+              <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack80 }]}>
+                Harga Retur
+              </Text>
             </View>
             <View>
-              <Text>Price</Text>
+              <Text style={[Fonts.fontH10Bold, { color: Color.fontBlack40 }]}>
+                Price
+              </Text>
             </View>
           </View>
           <View style={GlobalStyle.lines} />
@@ -110,10 +163,14 @@ class ReturnRequestView extends Component {
             }}
           >
             <View>
-              <Text>Alasan Retur</Text>
+              <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack80 }]}>
+                Alasan Retur
+              </Text>
             </View>
             <View>
-              <Text>Return Reason</Text>
+              <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack40 }]}>
+                Return Reason
+              </Text>
             </View>
           </View>
           <View style={GlobalStyle.lines} />
@@ -124,16 +181,29 @@ class ReturnRequestView extends Component {
             }}
           >
             <TextInput
-              style={{
-                borderWidth: 1,
-                width: '100%',
-                borderRadius: 4,
-                borderColor: Color.fontBlack10
-              }}
+              style={[
+                Fonts.fontH12Medium,
+                {
+                  borderWidth: 1,
+                  width: '100%',
+                  borderRadius: 4,
+                  borderColor: Color.fontBlack10,
+                  color: Color.fontBlack60
+                }
+              ]}
               placeholder={'Tambah catatan untuk barang ini'}
               textAlignVertical="top"
             />
-            <Text style={{ alignSelf: 'flex-end', marginTop: 8 }}>
+            <Text
+              style={[
+                Fonts.fontC2Medium,
+                {
+                  alignSelf: 'flex-end',
+                  marginTop: 8,
+                  color: Color.fontBlack40
+                }
+              ]}
+            >
               0/255 Karakter
             </Text>
           </View>
@@ -154,6 +224,7 @@ class ReturnRequestView extends Component {
     return <View>{this.renderData()}</View>;
   }
   render() {
+    console.log(this.props.data);
     return <View style={styles.mainContainer}>{this.renderContent()}</View>;
   }
 }
