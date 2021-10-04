@@ -7,7 +7,7 @@ function getPdp(data) {
       GlobalMethod.userSupplierMapping()
     )}&searchName=${encodeURIComponent(data.search)}&status=active&sort=${
       data.sort
-    }&sortby=${data.sortBy}&storeId=${GlobalMethod.merchantStoreId()}`,
+    }&sortby=${data.sortBy}&storeId=${GlobalMethod.merchantStoreId()}&invoiceGroupIds=${JSON.stringify(data.invoiceGroupIds)}`,
     method: 'GET'
   });
 }
@@ -18,7 +18,7 @@ function getSearchPdp(data) {
       GlobalMethod.userSupplierMapping()
     )}&searchName=${encodeURIComponent(data.search)}&status=active&sort=${
       data.sort
-    }&sortby=${data.sortBy}&storeId=${GlobalMethod.merchantStoreId()}`,
+    }&sortby=${data.sortBy}&storeId=${GlobalMethod.merchantStoreId()}&invoiceGroupIds=${JSON.stringify(data.invoiceGroupIds)}`,
     method: 'GET'
   });
 }
