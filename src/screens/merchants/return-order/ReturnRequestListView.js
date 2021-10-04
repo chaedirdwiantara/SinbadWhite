@@ -243,6 +243,17 @@ class ReturnRequestView extends Component {
               ]}
               placeholder={'Tambah catatan untuk barang ini'}
               textAlignVertical="top"
+              maxLength={255}
+              multiline={true}
+              onChangeText={text =>
+                this.toParentFunction({
+                  type: 'addNote',
+                  data: {
+                    note: text,
+                    catalogueId: item.catalogueId
+                  }
+                })
+              }
             />
             <Text
               style={[

@@ -230,9 +230,12 @@ class ReturnRequestView extends Component {
         });
         break;
       case 'SelectReason':
-        console.log(data);
         this.updateReason(data.data);
         this.setState({ openModalReturnReasons: false });
+        break;
+      case 'addNote':
+        console.log(data);
+        this.updateNote(data.data);
         break;
 
       default:
@@ -270,7 +273,6 @@ class ReturnRequestView extends Component {
   }
 
   updateReason(data) {
-    console.log(data);
     const listCatalogue = this.state.localData;
     const indexCatalogue = listCatalogue.returnParcelDraft.findIndex(
       item => parseInt(item.catalogueId, 10) === parseInt(data.catalogueId, 10)
@@ -282,6 +284,16 @@ class ReturnRequestView extends Component {
     };
 
     listCatalogue.returnParcelDraft[indexCatalogue].returnReason = reason;
+
+    this.setState({ localData: listCatalogue });
+  }
+
+  updateNote(data) {
+    const listCatalogue = this.state.localData;
+    const indexCatalogue = listCatalogue.returnParcelDraft.findIndex(
+      item => parseInt(item.catalogueId, 10) === parseInt(data.catalogueId, 10)
+    );
+    listCatalogue.returnParcelDraft[indexCatalogue].note = data.note;
 
     this.setState({ localData: listCatalogue });
   }
