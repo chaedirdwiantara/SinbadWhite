@@ -46,7 +46,9 @@ class MerchantSurveyResultView extends Component {
    * @returns {boolean} true & navigate to survey list.
    */
   backAction = () => {
-    NavigationService.navigate('MerchantSurveyView');
+    NavigationService.navigate('MerchantSurveyView', {
+      readOnly: false
+    })
     return true;
   };
   /** === DID MOUNT === */
