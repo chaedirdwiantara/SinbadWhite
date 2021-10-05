@@ -57,7 +57,8 @@ import Pdf from 'react-native-pdf';
 
 /** LINEAR GRADIENT */
 import LinearGradient from 'react-native-linear-gradient'
-
+/** CLIPBOARD */
+import Clipboard from '@react-native-clipboard/clipboard';
 export {
   /** REDUX */
   bindActionCreators,
@@ -119,7 +120,9 @@ export {
   /** PDF */
   Pdf,
   /** LINEAR GRADIENT */
-  LinearGradient
+  LinearGradient,
+  /** CLIPBOARD */
+  Clipboard
 };
 
 /**

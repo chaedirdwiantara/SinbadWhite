@@ -36,7 +36,7 @@ class SuccessSubmitView extends Component {
   backAction = () => {
     NavigationService.navigate('MerchantSurveyView', {
       readOnly: false
-    })
+    });
     return true;
   };
   /** === DID MOUNT === */
@@ -72,11 +72,7 @@ class SuccessSubmitView extends Component {
    * @returns {ReactElement} render button.
    */
   renderButton() {
-    const {
-      surveyResponseId,
-      surveyId,
-      surveyName
-    } = this.props.navigation.state.params;
+    const { dataSubmitSurveyResponse } = this.props.navigation.state.params;
     return (
       <ButtonSingle
         whiteTransparent
@@ -85,9 +81,7 @@ class SuccessSubmitView extends Component {
         borderRadius={4}
         onPress={() =>
           NavigationService.navigate('MerchantSurveyResultView', {
-            surveyResponseId,
-            surveyId,
-            surveyName
+            dataSubmitSurveyResponse: dataSubmitSurveyResponse
           })
         }
       />
@@ -110,7 +104,6 @@ class SuccessSubmitView extends Component {
    */
 
   renderCaption() {
-    const { surveyName } = this.props.navigation.state.params;
     return (
       <Text
         style={[
