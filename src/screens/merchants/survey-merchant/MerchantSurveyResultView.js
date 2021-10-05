@@ -310,7 +310,7 @@ class MerchantSurveyResultView extends Component {
             paddingHorizontal: 16,
             borderTopColor: Color.fontGreen50,
             marginBottom: 10,
-            flex: 0.9,
+            flex: 1,
             borderTopWidth: 4,
             borderWidth: 1
           }
@@ -387,11 +387,12 @@ class MerchantSurveyResultView extends Component {
                 size={14}
                 style={{ marginRight: 6 }}
               />
-              <Text style={Fonts.type23}>
+              <Text selectable={true} style={Fonts.type23}>
                 {dataSubmitSurveyResponse?.surveySerialId || '-'}
               </Text>
             </View>
             <TouchableOpacity
+              style={{ zIndex: 9999 }}
               onPress={() => {
                 Clipboard.getString(
                   dataSubmitSurveyResponse?.surveySerialId || '-'
@@ -411,9 +412,9 @@ class MerchantSurveyResultView extends Component {
                 );
               }}
             >
-              <Text selectable={true} style={styles.copyID}>
-                Copy ID
-              </Text>
+              <View>
+                <Text style={styles.copyID}>Copy ID</Text>
+              </View>
             </TouchableOpacity>
           </View>
         </View>
@@ -536,7 +537,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 14,
     lineHeight: 25,
-    color: Color.fontRed50
+    color: Color.fontRed50,
+    zIndex: 0
   }
 });
 
