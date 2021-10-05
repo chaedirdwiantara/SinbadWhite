@@ -94,15 +94,19 @@ class ModalUpdateStock extends Component {
         >
           <TextInput
             style={[Fonts.H12Medium, { color: Color.fontBlack100 }]}
-            value={this.state.pcs === 0 ? null : this.state.pcs.toString()}
+            value={this.state.pcs.toString()}
             placeholder={'pcs'}
             keyboardType="numeric"
             returnKeyType="done"
             enablesReturnKeyAutomatically
             maxLength={3}
             onChangeText={qty => {
-              const pcs = qty.replace(/^0-9]\\+(?!$)/g, '');
-              this.setState({ pcs });
+              if (qty === '' || parseInt(qty, 10) === 0) {
+                this.setState({ pcs: 0 });
+              } else {
+                const pcs = qty.replace(/^0+|[^0-9]/g, '');
+                this.setState({ pcs });
+              }
             }}
           />
         </View>
@@ -122,16 +126,20 @@ class ModalUpdateStock extends Component {
         >
           <TextInput
             style={[Fonts.H12Medium, { color: Color.fontBlack100 }]}
-            value={this.state.box === 0 ? null : this.state.box.toString()}
+            value={this.state.box.toString()}
             placeholder={'box'}
             keyboardType="numeric"
             returnKeyType="done"
             enablesReturnKeyAutomatically
             maxLength={3}
             onChangeText={qty => {
-              const box = qty.replace(/^0-9]\\+(?!$)/g, '');
-              console.log('Update Box', box);
-              this.setState({ box });
+              console.log('Qty Box', qty);
+              if (qty === '' || parseInt(qty, 10) === 0) {
+                this.setState({ box: 0 });
+              } else {
+                const box = qty.replace(/^0+|[^0-9]/g, '');
+                this.setState({ box });
+              }
             }}
           />
         </View>
