@@ -57,7 +57,8 @@ class MerchantCheckinView extends Component {
       refresh: true,
       success: false,
       openModalNotInRadius: false,
-      openModalErrorGlobal: false
+      openModalErrorGlobal: false,
+      btnYesClicked: false
     };
     this.initialState = { ...this.state };
   }
@@ -111,12 +112,20 @@ class MerchantCheckinView extends Component {
         ) {
           this.setState(
             {
-              succes: false,
-              count: this.state.count + 1
+              count: this.state.count + 1,
+              succes: false
             },
             () => {
-              if (this.state.count === 3) {
-                this.setState({ openModalNotInRadius: true });
+              if (this.state.btnYesClicked) {
+                if (this.state.count === 4) {
+                  this.setState({ openModalNotInRadius: true }, () => {
+                    this.setState({ btnYesClicked: false });
+                  });
+                }
+              } else {
+                if (this.state.count === 3) {
+                  this.setState({ openModalNotInRadius: true });
+                }
               }
             }
           );
@@ -477,7 +486,7 @@ class MerchantCheckinView extends Component {
               ]}
               disabled={this.props.merchant.loadingPostActivity}
               onPress={() => {
-                this.setState({ inStore: true });
+                this.setState({ inStore: true, btnYesClicked: true });
                 this.props.getRadiusLockGeotagProcess({
                   storeLong: this.props.merchant.selectedMerchant.longitude,
                   storeLat: this.props.merchant.selectedMerchant.latitude,
