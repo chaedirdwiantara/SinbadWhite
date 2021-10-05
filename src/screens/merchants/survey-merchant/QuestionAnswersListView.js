@@ -39,9 +39,7 @@ class QuestionAnswersListView extends Component {
         break;
       case 'vc_basic':
         if (scoreType.code === 'percentage_range_score') {
-          return candidateAnswer.map(candidate =>
-            this.renderBasicRangeAnswer(candidate, id)
-          );
+          return this.renderBasicRangeAnswer(candidateAnswer, id);
         }
         break;
       case 'vc_compare_group':
@@ -130,19 +128,17 @@ class QuestionAnswersListView extends Component {
   renderBasicRangeAnswer = (candidateAnswer, questionId) => {
     return (
       <BasicRangeAnswerComponent
-        key={'basic-range-ans-' + candidateAnswer.id}
         item={candidateAnswer}
-        defaultValue={candidateAnswer.answersResponse?.inputValue}
         disabled={this.props.disabled}
-        onChange={inputValue =>
+        onChange={inputValue => {
+          candidateAnswer[0].inputValue = inputValue.valueA;
+          candidateAnswer[1].inputValue = inputValue.valueB;
           this.props.onChange({
-            id: candidateAnswer.id,
-            inputValue,
+            candidateAnswer,
             questionId,
-            isBaseValue: false,
             category: 'vc_basic'
-          })
-        }
+          });
+        }}
       />
     );
   };
@@ -179,7 +175,7 @@ export default QuestionAnswersListView;
  * createdBy: dyah
  * createdDate: 13092021
  * updatedBy: dyah
- * updatedDate: 28092021
+ * updatedDate: 29092021
  * updatedFunction:
- * -> fix order for question.
+ * -> update props for renderBasicRangeAnswer.
  */

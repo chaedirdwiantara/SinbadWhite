@@ -26,6 +26,7 @@ import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
 import QuestionListDataView from './QuestionListDataView';
+import _ from 'lodash';
 
 class MerchantQuestionnaireView extends Component {
   constructor(props) {
@@ -66,7 +67,11 @@ class MerchantQuestionnaireView extends Component {
         prevProps.merchant.dataGetSurvey !== this.props.merchant.dataGetSurvey
       ) {
         let newQuestions = [];
-        this.props.merchant.dataGetSurvey.questions.map(item => {
+        const orderedQuestions = _.orderBy(
+          this.props.merchant.dataGetSurvey.questions,
+          ['order']
+        );
+        orderedQuestions.map(item => {
           // calculate the total of candidate answer
           let totalCandidateAnswerMax;
           let value = [];
@@ -135,7 +140,24 @@ class MerchantQuestionnaireView extends Component {
         }
       }
     }
-    // if failed show modal error
+    // show modal error when failed get survey
+    if (this.props.merchant.errorGetSurvey) {
+      if (
+        prevProps.merchant.errorGetSurvey !== this.props.merchant.errorGetSurvey
+      ) {
+        this.setState({ openModalErrorGlobal: true });
+      }
+    }
+    // show modal error when failed get survey brands
+    if (this.props.merchant.errorGetSurveyBrand) {
+      if (
+        prevProps.merchant.errorGetSurveyBrand !==
+        this.props.merchant.errorGetSurveyBrand
+      ) {
+        this.setState({ openModalErrorGlobal: true });
+      }
+    }
+    // show modal error when failed submit survey
     if (this.props.merchant.errorSubmitSurveyResponse) {
       if (
         prevProps.merchant.errorSubmitSurveyResponse !==
@@ -173,6 +195,19 @@ class MerchantQuestionnaireView extends Component {
    * @returns {callback} array of unanswered "required" question or show modal confirmation finish taking survey.
    */
   checkRequiredAnswers = () => {
+    // check there's a value or not in the question.
+    const emptyValue = _.isEmpty(
+      this.state.questions.filter(item => item.value.length > 0)
+    );
+    const checkUnRequiredQuestion = this.state.questions.filter(
+      item => !item.required
+    ).length;
+    const allUnRequiredQuestion =
+      this.state.questions.length === checkUnRequiredQuestion;
+    if (emptyValue && allUnRequiredQuestion) {
+      return null;
+    }
+
     // filter the required answer
     const requiredAnswer = this.state.questions.filter(item => item.required);
     let unAnswered = [];
@@ -186,17 +221,16 @@ class MerchantQuestionnaireView extends Component {
       unAnswered = requiredAnswer.filter(
         item => item.value.length < item.totalCandidateAnswerMax
       );
-    } else {
-      // check length of input (required) to make sure the length of answer not 0.
-      requiredAnswer.map(item => {
-        item.value.map(input => {
-          if (input.inputValue.length === 0) {
-            // get the unanswered question (required)
-            unAnswered.push(item);
-          }
-        });
-      });
     }
+    // check length of input (required) to make sure the length of answer not 0.
+    requiredAnswer.map(item => {
+      item.value.map(input => {
+        if (input.inputValue.length === 0) {
+          // get the unanswered question (required)
+          unAnswered.push(item);
+        }
+      });
+    });
     // if there's required question still empty give info
     if (unAnswered.length > 0) {
       return this.setState({ unAnswered });
@@ -233,7 +267,7 @@ class MerchantQuestionnaireView extends Component {
         // check the not required question
         let totalValue = 0;
         // check the length of value (answer)
-        if (item.value.length === item.totalCandidateAnswerMax) {
+        if (item.value.length >= item.totalCandidateAnswerMax) {
           item.value.map(input => {
             // calculate the input that not empty
             if (input.inputValue.length !== 0) {
@@ -242,7 +276,7 @@ class MerchantQuestionnaireView extends Component {
           });
           // if totalValue same with totalCandidateAnswerMax assign to answer
           if (
-            totalValue === item.totalCandidateAnswerMax ||
+            totalValue >= item.totalCandidateAnswerMax ||
             (totalValue < item.totalCandidateAnswerMax &&
               status === 'inProgress')
           ) {
@@ -579,11 +613,7 @@ class MerchantQuestionnaireView extends Component {
       <ModalBottomErrorRespons
         statusBarType={'transparent'}
         open={this.state.openModalErrorGlobal}
-        onPress={() =>
-          this.setState({ openModalErrorGlobal: false }, () =>
-            this.submitQuestionnaire()
-          )
-        }
+        onPress={() => this.setState({ openModalErrorGlobal: false })}
       />
     ) : (
       <View />
@@ -665,7 +695,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 06092021
  * updatedBy: dyah
- * updatedDate: 26092021
+ * updatedDate: 04102021
  * updatedFunction:
- * -> update params surveyResponseId when success submit questionnaire.
+ * -> update validation when submit questionnaire (status: completed)
  */

@@ -1573,14 +1573,12 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
-<<<<<<< HEAD
  * updatedDate: 27092021
  * updatedFunction:
  * -> change validation for survey response with status 'inProgress'
-=======
+
  * updatedDate: 30092021
  * updatedFunction:
  * -> fix infinite loop (hide survey).
  * -> can checkout without filling survey.
->>>>>>> sprint/sup20
  */

@@ -46,7 +46,9 @@ class MerchantSurveyResultView extends Component {
    * @returns {boolean} true & navigate to survey list.
    */
   backAction = () => {
-    NavigationService.navigate('MerchantSurveyView');
+    NavigationService.navigate('MerchantSurveyView', {
+      readOnly: false
+    })
     return true;
   };
   /** === DID MOUNT === */
@@ -65,7 +67,7 @@ class MerchantSurveyResultView extends Component {
     this.backHandler.remove();
   }
   /** === DID UPDATE === */
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     // if failed show modal error
     if (this.props.merchant.errorGetSurveyResponse) {
       if (
@@ -144,11 +146,15 @@ class MerchantSurveyResultView extends Component {
     return (
       <View
         style={{
-          flex: 1,
+          flex: 1.5,
           flexDirection: 'row',
           justifyContent: 'space-around',
           alignContent: 'center',
-          paddingHorizontal: 10
+          paddingTop: 40,
+          paddingBottom: 40,
+          paddingHorizontal: 10,
+          borderBottomColor: Color.fontBlack10,
+          borderBottomWidth: 1
         }}
       >
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -170,20 +176,7 @@ class MerchantSurveyResultView extends Component {
       </View>
     );
   }
-  /**
-   * === RENDER DIVIDER ===
-   * @returns {ReactElement} render line as divider.
-   */
-  renderDivider() {
-    return (
-      <View
-        style={{
-          borderBottomColor: Color.fontBlack10,
-          borderBottomWidth: 1
-        }}
-      />
-    );
-  }
+
   /**
    * === RENDER  OF DETAIL SCORE CONTENT===
    * @returns {ReactElement} render header of detail score content.
@@ -193,9 +186,8 @@ class MerchantSurveyResultView extends Component {
       <React.Fragment>
         <View
           style={{
-            lineHeight: 16,
-            paddingVertical: 16,
-            paddingHorizontal: 16
+            paddingVertical: 14,
+            paddingHorizontal: 14
           }}
         >
           <Text style={Fonts.textSurveyResult}>Detail Skor</Text>
@@ -225,7 +217,9 @@ class MerchantSurveyResultView extends Component {
     return (
       <View style={{ paddingBottom: 5, flex: 1 }}>
         <FlatList
-          data={dataSurveyResponse?.survey?.questions ?? []}
+          data={_.orderBy(dataSurveyResponse?.survey?.questions ?? [], [
+            'order'
+          ])}
           keyExtractor={(data, index) => index.toString()}
           renderItem={({ item, index }) => (
             <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -269,7 +263,7 @@ class MerchantSurveyResultView extends Component {
               </View>
               <View style={{ flex: 1 }}>
                 <View style={styles.boxScore}>
-                  <Text>{item.questionResponseScore?.result ?? '0'}</Text>
+                  <Text>{item.questionResponseScore?.score ?? '0'}</Text>
                 </View>
               </View>
             </View>
@@ -292,6 +286,7 @@ class MerchantSurveyResultView extends Component {
         style={[
           styles.headerContainer,
           {
+            paddingTop: 12,
             marginHorizontal: 16,
             marginTop: 16,
             paddingHorizontal: 16,
@@ -376,7 +371,6 @@ class MerchantSurveyResultView extends Component {
         ]}
       >
         {this.renderDetailScoreHeader()}
-        {this.renderDivider()}
         {this.renderDetailScoreContent()}
       </View>
     );
@@ -449,7 +443,6 @@ class MerchantSurveyResultView extends Component {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    paddingTop: 12,
     paddingBottom: 12,
     borderRadius: 4,
     borderColor: Color.fontBlack10
