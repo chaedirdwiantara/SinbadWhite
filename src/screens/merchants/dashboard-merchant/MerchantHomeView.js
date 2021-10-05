@@ -486,7 +486,7 @@ class MerchantHomeView extends Component {
             item => item.activityName === 'toko_survey'
           );
           const { checkOut } = this.state.privileges;
-          if (haveSurvey || surveyHasDone || checkOut?.status) {
+          if ((haveSurvey || surveyHasDone) && checkOut?.status) {
             this.setState({ openModalCheckout: true });
           }
         }
@@ -1573,12 +1573,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 27092021
+ * updatedDate: 05102021
  * updatedFunction:
- * -> change validation for survey response with status 'inProgress'
-
- * updatedDate: 30092021
- * updatedFunction:
- * -> fix infinite loop (hide survey).
- * -> can checkout without filling survey.
+ * -> fix the validation when checking out. (must completed the survey)
  */
