@@ -13,17 +13,19 @@ import {
 import {
   bindActionCreators,
   connect,
-  MaterialIcon
+  MaterialIcon,
+  Clipboard
 } from '../../../library/thirdPartyPackage';
 import {
   LoadingPage,
   StatusBarWhite,
   ButtonSingle,
-  ModalBottomErrorRespons
+  ModalBottomErrorRespons,
+  ToastType1
 } from '../../../library/component';
 import { Fonts } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
-import { Color } from '../../../config';
+import { Color, Fonts as GlobalFonts } from '../../../config';
 import _ from 'lodash';
 import NavigationService from '../../../navigation/NavigationService';
 
@@ -32,7 +34,9 @@ class MerchantSurveyResultView extends Component {
     super(props);
     this.state = {
       activeIndexCollapse: -1,
-      openModalErrorGlobal: false
+      openModalErrorGlobal: false,
+      showToast: false,
+      toastText: ''
     };
   }
 
@@ -48,7 +52,7 @@ class MerchantSurveyResultView extends Component {
   backAction = () => {
     NavigationService.navigate('MerchantSurveyView', {
       readOnly: false
-    })
+    });
     return true;
   };
   /** === DID MOUNT === */
@@ -123,6 +127,17 @@ class MerchantSurveyResultView extends Component {
       />
     ) : (
       <View />
+    );
+  }
+  /**
+   *  === RENDER TOAST ===
+   * @returns {ReactElement} render toast
+   */
+  renderToast() {
+    return (
+      this.state.showToast && (
+        <ToastType1 margin={10} content={this.state.toastText} />
+      )
     );
   }
   /**
@@ -280,7 +295,7 @@ class MerchantSurveyResultView extends Component {
   renderHeader() {
     const dataSurveyResponse = this.props.merchant.dataSurveyResponse.payload;
     const dataGetSurveyBrand = this.props.merchant.dataGetSurveyBrand;
-
+    const { surveyResponseId } = this.props.navigation.state.params;
     return (
       <View
         style={[
@@ -292,8 +307,7 @@ class MerchantSurveyResultView extends Component {
             paddingHorizontal: 16,
             borderTopColor: Color.fontGreen50,
             marginBottom: 10,
-            paddingBottom: '5%',
-            flex: 0.7,
+            flex: 0.9,
             borderTopWidth: 4,
             borderWidth: 1
           }
@@ -307,7 +321,6 @@ class MerchantSurveyResultView extends Component {
         </Text>
         <View
           style={{
-            flexDirection: 'row',
             flex: 1,
             flexWrap: 'wrap',
             paddingVertical: 12
@@ -317,7 +330,8 @@ class MerchantSurveyResultView extends Component {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              paddingRight: 17
+              paddingRight: 17,
+              marginBottom: '0.5%'
             }}
           >
             <MaterialIcon
@@ -336,7 +350,8 @@ class MerchantSurveyResultView extends Component {
           <View
             style={{
               flexDirection: 'row',
-              alignItems: 'center'
+              alignItems: 'center',
+              marginBottom: '0.5%'
             }}
           >
             <MaterialIcon
@@ -348,6 +363,52 @@ class MerchantSurveyResultView extends Component {
             <Text style={Fonts.type23}>
               {this.convertBrandAndInvoice(dataGetSurveyBrand, 'brand')}
             </Text>
+          </View>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              marginBottom: '0.5%'
+            }}
+          >
+            <View
+              style={{
+                flexDirection: 'row',
+                flex: 0.5
+              }}
+            >
+              <MaterialIcon
+                name="assignment"
+                color={Color.fontBlack40}
+                size={14}
+                style={{ marginRight: 6 }}
+              />
+              <Text style={Fonts.type23}>{surveyResponseId || '-'}</Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                let id = surveyResponseId.toString() || '-';
+                Clipboard.getString(id);
+                this.setState(
+                  {
+                    toastText: `ID berhasil disalin`,
+                    showToast: true
+                  },
+                  () => {
+                    setTimeout(() => {
+                      this.setState({
+                        showToast: false
+                      });
+                    }, 3000);
+                  }
+                );
+              }}
+            >
+              <Text selectable={true} style={styles.copyID}>
+                Copy ID
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -420,6 +481,7 @@ class MerchantSurveyResultView extends Component {
         {this.renderHeader()}
         {this.renderDetailScore()}
         {this.renderButton()}
+        {this.renderToast()}
       </View>
     );
   }
@@ -461,6 +523,14 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     marginBottom: '15%'
+  },
+  copyID: {
+    textDecorationLine: 'underline',
+    fontFamily: GlobalFonts.MontserratSemiBold,
+    fontWeight: 'bold',
+    fontSize: 14,
+    lineHeight: 25,
+    color: Color.fontRed50
   }
 });
 
