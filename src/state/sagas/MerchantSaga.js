@@ -258,6 +258,7 @@ function* getSurveyBrand(actions) {
     yield put(ActionCreators.merchantGetSurveyBrandFailed(error));
   }
 }
+
 /** GET SURVEY RESPONSE */
 function* getSurveyResponse(actions) {
   try {
@@ -271,17 +272,17 @@ function* getSurveyResponse(actions) {
           return parseFloat(data.questionResponseScore.score);
         }
       });
-      //arrResult return undefined or arr of Number score
+    //arrResult return undefined or arr of Number score
       if (arrResult) {
         if (arrResult[0] !== undefined) {
           arrResult.map(result => {
             if (result) totalScore += result;
           });
         } else {
-          return 0;
+          totalScore =  0;
         }
       } else {
-        return 0;
+        totalScore =  0;
       }
     }
     yield put(

@@ -46,7 +46,9 @@ class MerchantSurveyResultView extends Component {
    * @returns {boolean} true & navigate to survey list.
    */
   backAction = () => {
-    NavigationService.navigate('MerchantSurveyView');
+    NavigationService.navigate('MerchantSurveyView', {
+      readOnly: false
+    })
     return true;
   };
   /** === DID MOUNT === */
@@ -65,7 +67,7 @@ class MerchantSurveyResultView extends Component {
     this.backHandler.remove();
   }
   /** === DID UPDATE === */
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     // if failed show modal error
     if (this.props.merchant.errorGetSurveyResponse) {
       if (
