@@ -394,7 +394,7 @@ class MerchantSurveyResultView extends Component {
             <TouchableOpacity
               style={{ zIndex: 9999 }}
               onPress={() => {
-                Clipboard.getString(
+                Clipboard.setString(
                   dataSubmitSurveyResponse?.surveySerialId || '-'
                 );
                 this.setState(
