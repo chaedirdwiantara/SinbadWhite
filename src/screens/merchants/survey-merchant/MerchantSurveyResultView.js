@@ -57,10 +57,13 @@ class MerchantSurveyResultView extends Component {
   };
   /** === DID MOUNT === */
   componentDidMount() {
-    const { surveyResponseId, surveyId } = this.props.navigation.state.params;
-
-    this.props.merchantGetSurveyBrandProcess(surveyId);
-    this.props.merchantGetSurveyResponseProcess(surveyResponseId);
+    const { dataSubmitSurveyResponse } = this.props.navigation.state.params;
+    this.props.merchantGetSurveyBrandProcess(
+      dataSubmitSurveyResponse?.id ?? dataSubmitSurveyResponse?.surveyId
+    );
+    this.props.merchantGetSurveyResponseProcess(
+      dataSubmitSurveyResponse?.surveyResponseId
+    );
     this.backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       this.backAction
@@ -295,7 +298,7 @@ class MerchantSurveyResultView extends Component {
   renderHeader() {
     const dataSurveyResponse = this.props.merchant.dataSurveyResponse.payload;
     const dataGetSurveyBrand = this.props.merchant.dataGetSurveyBrand;
-    const { surveyResponseId } = this.props.navigation.state.params;
+    const { dataSubmitSurveyResponse } = this.props.navigation.state.params;
     return (
       <View
         style={[
@@ -384,12 +387,15 @@ class MerchantSurveyResultView extends Component {
                 size={14}
                 style={{ marginRight: 6 }}
               />
-              <Text style={Fonts.type23}>{surveyResponseId || '-'}</Text>
+              <Text style={Fonts.type23}>
+                {dataSubmitSurveyResponse?.surveySerialId || '-'}
+              </Text>
             </View>
             <TouchableOpacity
               onPress={() => {
-                let id = surveyResponseId.toString() || '-';
-                Clipboard.getString(id);
+                Clipboard.getString(
+                  dataSubmitSurveyResponse?.surveySerialId || '-'
+                );
                 this.setState(
                   {
                     toastText: `ID berhasil disalin`,
