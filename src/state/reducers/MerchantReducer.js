@@ -132,12 +132,7 @@ const INITIAL_STATE = {
     storeChannel: '',
     channelId: null
   },
-  surveyList: {
-    payload: {
-      data: null
-    },
-    success: null
-  },
+  surveyList: [],
   dataSurveyResult: {
     storeName: ''
   },
@@ -930,17 +925,19 @@ export const merchant = createReducer(INITIAL_STATE, {
   [types.MERCHANT_GET_SURVEY_LIST_PROCESS](state, action) {
     return {
       ...state,
-      loadingGetSurveyList: true,
-      surveyList: INITIAL_STATE.surveyList,
+      loadingGetSurveyList: action.payload.loading,
+      surveyList: [...state.surveyList],
+      pageGetSurveyList: action.payload.page,
       errorGetSurveyList: null
     };
   },
   [types.MERCHANT_GET_SURVEY_LIST_SUCCESS](state, action) {
     return {
       ...state,
+      loadingLoadMoreSurveyList: false,
       loadingGetSurveyList: false,
       refreshGetSurveyList: false,
-      surveyList: action.payload
+      surveyList: [...state.surveyList, ...action.payload.payload.result]
     };
   },
   [types.MERCHANT_GET_SURVEY_LIST_FAILED](state, action) {
@@ -953,7 +950,7 @@ export const merchant = createReducer(INITIAL_STATE, {
   [types.MERCHANT_GET_SURVEY_LIST_RESET](state, action) {
     return {
       ...state,
-      surveyList: INITIAL_STATE.surveyList
+      surveyList: []
     };
   },
   [types.MERCHANT_GET_SURVEY_LIST_REFRESH](state, action) {
@@ -963,7 +960,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingGetSurveyList: true,
       pageGetSurveyList: 0,
       totalDataGetSurveyList: 0,
-      surveyList: INITIAL_STATE.surveyList
+      surveyList: []
     };
   },
   [types.MERCHANT_GET_SURVEY_LIST_LOADMORE](state, action) {

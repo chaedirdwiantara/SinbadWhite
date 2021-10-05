@@ -18,14 +18,12 @@ class QuestionAnswersListView extends Component {
    */
   /** === CHECK RENDER PER CATEGORY & TYPE === */
   renderContent = item => {
-    const { category, scoreType, candidateAnswer, id } = item;
+    const { category, scoreType, id } = item;
+    const candidateAnswer = _.orderBy(item.candidateAnswer, ['order']);
     switch (category.code) {
       case 'single_answer':
         if (scoreType.code === 'single_score') {
-          return this.renderSingleAnswer(
-            _.orderBy(candidateAnswer, ['order']),
-            id
-          );
+          return this.renderSingleAnswer(candidateAnswer, id);
         }
         break;
       case 'multiple_answer':
@@ -41,9 +39,7 @@ class QuestionAnswersListView extends Component {
         break;
       case 'vc_basic':
         if (scoreType.code === 'percentage_range_score') {
-          return candidateAnswer.map(candidate =>
-            this.renderBasicRangeAnswer(candidate, id)
-          );
+          return this.renderBasicRangeAnswer(candidateAnswer, id);
         }
         break;
       case 'vc_compare_group':
@@ -132,19 +128,17 @@ class QuestionAnswersListView extends Component {
   renderBasicRangeAnswer = (candidateAnswer, questionId) => {
     return (
       <BasicRangeAnswerComponent
-        key={'basic-range-ans-' + candidateAnswer.id}
         item={candidateAnswer}
-        defaultValue={candidateAnswer.answersResponse?.inputValue}
         disabled={this.props.disabled}
-        onChange={inputValue =>
+        onChange={inputValue => {
+          candidateAnswer[0].inputValue = inputValue.valueA;
+          candidateAnswer[1].inputValue = inputValue.valueB;
           this.props.onChange({
-            id: candidateAnswer.id,
-            inputValue,
+            candidateAnswer,
             questionId,
-            isBaseValue: false,
             category: 'vc_basic'
-          })
-        }
+          });
+        }}
       />
     );
   };
@@ -181,9 +175,7 @@ export default QuestionAnswersListView;
  * createdBy: dyah
  * createdDate: 13092021
  * updatedBy: dyah
- * updatedDate: 16092021
+ * updatedDate: 29092021
  * updatedFunction:
- * -> integration for ui take survey.
- * -> add isBaseValue & defaultValue.
- * -> change surveyId to questionId.
+ * -> update props for renderBasicRangeAnswer.
  */

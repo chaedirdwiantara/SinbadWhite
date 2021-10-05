@@ -258,6 +258,7 @@ function* getSurveyBrand(actions) {
     yield put(ActionCreators.merchantGetSurveyBrandFailed(error));
   }
 }
+
 /** GET SURVEY RESPONSE */
 function* getSurveyResponse(actions) {
   try {
@@ -265,11 +266,24 @@ function* getSurveyResponse(actions) {
       return MerchantMethod.getSurveyResponse(actions.payload);
     });
     let totalScore = 0;
-    if (!response.data.payload.responsePhoto) {
-      let arrResult = response.data.payload.survey.questions.map(data =>
-        parseFloat(data.questionResponseScore.result)
-      );
-      totalScore = arrResult.reduce((a, b) => a + b, 0);
+    if (response.data.payload.responsePhoto.length === 0) {
+      let arrResult = response.data.payload.survey.questions.map(data => {
+        if (data.questionResponseScore !== null) {
+          return parseFloat(data.questionResponseScore.score);
+        }
+      });
+    //arrResult return undefined or arr of Number score
+      if (arrResult) {
+        if (arrResult[0] !== undefined) {
+          arrResult.map(result => {
+            if (result) totalScore += result;
+          });
+        } else {
+          totalScore =  0;
+        }
+      } else {
+        totalScore =  0;
+      }
     }
     yield put(
       ActionCreators.merchantGetSurveyResponseSuccess(response, totalScore)

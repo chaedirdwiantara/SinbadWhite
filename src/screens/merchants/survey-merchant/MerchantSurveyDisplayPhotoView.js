@@ -116,7 +116,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
       const surveyResponseId = this.props.merchant.dataSubmitSurveyResponse
         .payload.id;
       this.props.merchantGetSurveyResponseProcess(surveyResponseId);
-      this.getSurvey();
+      this.getSurvey(true);
     }
     /**CHECK NAVIGATION FUNCTION */
     if (!this.props.navigation.state.params.goBackFunction) {
@@ -165,12 +165,18 @@ class MerchantSurveyDisplayPhotoView extends Component {
     }
   };
   /** === FOR GET SURVEY LIST === */
-  getSurvey = () => {
+  getSurvey = loading => {
+    this.props.merchantGetSurveyListReset();
     const params = {
       storeId: this.props.merchant.selectedMerchant.storeId,
       page: 1,
-      length: 10
+      length: 10,
+      loading
     };
+    /** FOR GET TOTAL SURVEY */
+    this.props.merchantGetTotalSurveyProcess(
+      this.props.merchant.selectedMerchant?.storeId
+    );
     this.props.merchantGetSurveyListProcess(params);
   };
   /** === GO BACK FUNCTION === */
@@ -345,7 +351,9 @@ class MerchantSurveyDisplayPhotoView extends Component {
   /** === GO TO MERCHANT VIEW === */
   goToMerchantHomeView = () => {
     this.setState({ modalCompleted: false });
-    this.props.merchantGetSurveyListReset();
+    this.props.merchantGetTotalSurveyProcess(
+      this.props.merchant.selectedMerchant?.storeId
+    );
     this.props.merchantGetLogAllActivityProcessV2(
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
@@ -746,7 +754,7 @@ class MerchantSurveyDisplayPhotoView extends Component {
   render() {
     return (
       <SafeAreaView>
-        <BackHandlerBackSpecific navigation={this.props.navigation} />
+        <BackHandlerBackSpecific navigation={this.props.navigation} page="MerchantSurveyView" />
         <StatusBarRed />
         {this.props.merchant.loadingGetSurveyResponse ? (
           <View style={{ height: '100%' }}>
@@ -874,8 +882,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyDispla
  * ============================
  * createdBy: dyah
  * createdDate: 20112020
- * updatedBy: dyah
- * updatedDate: 17092021
+ * updatedBy: raka
+ * updatedDate: 30092021
  * updatedFunction:
- * -> add change surveyQuestionId to questionId when getting survey response & displaying the photo.
+ * -> backhandler go to previous page
  */

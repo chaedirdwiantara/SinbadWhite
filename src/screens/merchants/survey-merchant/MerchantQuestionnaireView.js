@@ -26,6 +26,7 @@ import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
 import NavigationService from '../../../navigation/NavigationService';
 import QuestionListDataView from './QuestionListDataView';
+import _ from 'lodash';
 
 class MerchantQuestionnaireView extends Component {
   constructor(props) {
@@ -66,7 +67,11 @@ class MerchantQuestionnaireView extends Component {
         prevProps.merchant.dataGetSurvey !== this.props.merchant.dataGetSurvey
       ) {
         let newQuestions = [];
-        this.props.merchant.dataGetSurvey.questions.map(item => {
+        const orderedQuestions = _.orderBy(
+          this.props.merchant.dataGetSurvey.questions,
+          ['order']
+        );
+        orderedQuestions.map(item => {
           // calculate the total of candidate answer
           let totalCandidateAnswerMax;
           let value = [];
@@ -103,24 +108,31 @@ class MerchantQuestionnaireView extends Component {
     }
     const dataSubmitSurveyResponse = this.props.merchant
       .dataSubmitSurveyResponse.payload;
-    const { surveyResponseId } = this.props.navigation.state.params;
     // check the data submit (if success)
     if (dataSubmitSurveyResponse) {
       if (
         prevProps.merchant.dataSubmitSurveyResponse.payload !==
         dataSubmitSurveyResponse
       ) {
+        this.props.merchantGetSurveyListReset();
         this.props.merchantGetSurveyListProcess({
           storeId: this.props.merchant.selectedMerchant.storeId,
+          loading: true,
           page: 1,
           length: 10
         });
         if (dataSubmitSurveyResponse.status === 'completed') {
+          /** FOR GET TOTAL SURVEY */
+          this.props.merchantGetTotalSurveyProcess(
+            this.props.merchant.selectedMerchant?.storeId
+          );
           // if success with status 'completed' navigate to success screen
           return NavigationService.navigate('SuccessSubmit', {
-            surveyResponseId,
+            surveyResponseId: dataSubmitSurveyResponse.id,
             surveyId: dataSubmitSurveyResponse.survey?.id,
-            surveyName: dataSubmitSurveyResponse.survey?.name
+            surveyName: dataSubmitSurveyResponse.survey?.name,
+            caption: `Terima kasih sudah menyelesaikan "${dataSubmitSurveyResponse
+              .survey.name ?? '-'}".`
           });
         } else {
           // if success with status 'inProgress' back to survey list
@@ -128,7 +140,24 @@ class MerchantQuestionnaireView extends Component {
         }
       }
     }
-    // if failed show modal error
+    // show modal error when failed get survey
+    if (this.props.merchant.errorGetSurvey) {
+      if (
+        prevProps.merchant.errorGetSurvey !== this.props.merchant.errorGetSurvey
+      ) {
+        this.setState({ openModalErrorGlobal: true });
+      }
+    }
+    // show modal error when failed get survey brands
+    if (this.props.merchant.errorGetSurveyBrand) {
+      if (
+        prevProps.merchant.errorGetSurveyBrand !==
+        this.props.merchant.errorGetSurveyBrand
+      ) {
+        this.setState({ openModalErrorGlobal: true });
+      }
+    }
+    // show modal error when failed submit survey
     if (this.props.merchant.errorSubmitSurveyResponse) {
       if (
         prevProps.merchant.errorSubmitSurveyResponse !==
@@ -166,6 +195,19 @@ class MerchantQuestionnaireView extends Component {
    * @returns {callback} array of unanswered "required" question or show modal confirmation finish taking survey.
    */
   checkRequiredAnswers = () => {
+    // check there's a value or not in the question.
+    const emptyValue = _.isEmpty(
+      this.state.questions.filter(item => item.value.length > 0)
+    );
+    const checkUnRequiredQuestion = this.state.questions.filter(
+      item => !item.required
+    ).length;
+    const allUnRequiredQuestion =
+      this.state.questions.length === checkUnRequiredQuestion;
+    if (emptyValue && allUnRequiredQuestion) {
+      return null;
+    }
+
     // filter the required answer
     const requiredAnswer = this.state.questions.filter(item => item.required);
     let unAnswered = [];
@@ -179,17 +221,16 @@ class MerchantQuestionnaireView extends Component {
       unAnswered = requiredAnswer.filter(
         item => item.value.length < item.totalCandidateAnswerMax
       );
-    } else {
-      // check length of input (required) to make sure the length of answer not 0.
-      requiredAnswer.map(item => {
-        item.value.map(input => {
-          if (input.inputValue.length === 0) {
-            // get the unanswered question (required)
-            unAnswered.push(item);
-          }
-        });
-      });
     }
+    // check length of input (required) to make sure the length of answer not 0.
+    requiredAnswer.map(item => {
+      item.value.map(input => {
+        if (input.inputValue.length === 0) {
+          // get the unanswered question (required)
+          unAnswered.push(item);
+        }
+      });
+    });
     // if there's required question still empty give info
     if (unAnswered.length > 0) {
       return this.setState({ unAnswered });
@@ -226,7 +267,7 @@ class MerchantQuestionnaireView extends Component {
         // check the not required question
         let totalValue = 0;
         // check the length of value (answer)
-        if (item.value.length === item.totalCandidateAnswerMax) {
+        if (item.value.length >= item.totalCandidateAnswerMax) {
           item.value.map(input => {
             // calculate the input that not empty
             if (input.inputValue.length !== 0) {
@@ -235,7 +276,7 @@ class MerchantQuestionnaireView extends Component {
           });
           // if totalValue same with totalCandidateAnswerMax assign to answer
           if (
-            totalValue === item.totalCandidateAnswerMax ||
+            totalValue >= item.totalCandidateAnswerMax ||
             (totalValue < item.totalCandidateAnswerMax &&
               status === 'inProgress')
           ) {
@@ -388,12 +429,26 @@ class MerchantQuestionnaireView extends Component {
   renderHeaderQuestionnaire() {
     const { dataGetSurvey, dataGetSurveyBrand } = this.props.merchant;
     return (
-      <View style={styles.headerContainer}>
-        <Text style={Fonts.type4}>{dataGetSurvey?.name || '-'}</Text>
-        <Text style={[Fonts.type23, { paddingTop: 4 }]}>
+      <View
+        style={[
+          styles.headerContainer,
+          { flex: 1, flexWrap: 'wrap', paddingBottom: '5%' }
+        ]}
+      >
+        <Text style={[Fonts.type4, { width: '90%' }]}>
+          {dataGetSurvey?.name || '-'}
+        </Text>
+        <Text style={[Fonts.type23, { paddingTop: 4, width: '90%' }]}>
           {dataGetSurvey?.description || '-'}
         </Text>
-        <View style={{ flexDirection: 'row', paddingVertical: 12 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            paddingVertical: 12,
+            flex: 1,
+            flexWrap: 'wrap'
+          }}
+        >
           <View
             style={{
               flexDirection: 'row',
@@ -558,11 +613,7 @@ class MerchantQuestionnaireView extends Component {
       <ModalBottomErrorRespons
         statusBarType={'transparent'}
         open={this.state.openModalErrorGlobal}
-        onPress={() =>
-          this.setState({ openModalErrorGlobal: false }, () =>
-            this.submitQuestionnaire()
-          )
-        }
+        onPress={() => this.setState({ openModalErrorGlobal: false })}
       />
     ) : (
       <View />
@@ -644,8 +695,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 06092021
  * updatedBy: dyah
- * updatedDate: 16092021
+ * updatedDate: 04102021
  * updatedFunction:
- * -> add get survey brand.
- * -> add componentDidUpdate when success submit survey.
+ * -> update validation when submit questionnaire (status: completed)
  */

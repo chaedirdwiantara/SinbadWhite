@@ -17,6 +17,7 @@ import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
 import masterColor from '../../../config/masterColor.json';
+import { LoadingLoadMore } from '../../../library/component';
 
 class SurveyListDataView extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class SurveyListDataView extends Component {
   /** FOR REFRESH */
   onHandleRefresh = () => {
     this.props.merchantGetSurveyListRefresh();
-    this.getSurveyList(1);
+    this.getSurveyList(1, true);
     this.props.merchantGetTotalSurveyProcess(
       this.props.merchant.selectedMerchant?.storeId
     );
@@ -39,27 +40,26 @@ class SurveyListDataView extends Component {
   /** FOR LOAD MORE */
   onHandleLoadMore = () => {
     if (
-      !this.props.merchant.errorGetSurveyList &&
-      !this.props.merchant.loadingLoadMoreSurveyList
+      this.props.merchant.surveyList.length !== 0 &&
+      this.props.merchant.dataGetTotalSurvey?.total
     ) {
-      if (this.props.merchant.surveyList.payload.data) {
-        if (
-          this.props.merchant.surveyList.payload.data.length <
-          this.props.merchant.totalDataGetSurveyList
-        ) {
-          const page = this.props.merchant.pageGetSurveyList + 1;
-          this.props.MerchantGetSurveyListLoadMore();
-          this.getSurveyList(page);
-        }
+      if (
+        this.props.merchant.surveyList.length <
+        this.props.merchant.dataGetTotalSurvey.total
+      ) {
+        const page = this.props.merchant.pageGetSurveyList + 1;
+        this.props.MerchantGetSurveyListLoadMore(page);
+        this.getSurveyList(page, false);
       }
     }
   };
   /** FOR GET SURVEY LIST */
-  getSurveyList(page) {
+  getSurveyList(page, loading) {
     const params = {
       storeId: this.props.merchant.selectedMerchant.storeId,
       page,
-      length: 10
+      length: 10,
+      loading
     };
     this.props.merchantGetSurveyListProcess(params);
   }
@@ -83,7 +83,7 @@ class SurveyListDataView extends Component {
       return NavigationService.navigate('MerchantSurveyResultView', {
         surveyResponseId: item.surveyResponseId,
         surveyId: item.id,
-        surveyName: item.surveyName,
+        surveyName: item.surveyName
       });
     } else {
       return NavigationService.navigate('MerchantQuestionnaireView', {
@@ -173,9 +173,10 @@ class SurveyListDataView extends Component {
   /** === RENDER CONTENT === */
   renderContent() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <FlatList
-          data={this.props.merchant.surveyList.payload.data}
+          contentContainerStyle={styles.flatListContainer}
+          data={this.props.merchant.surveyList}
           renderItem={this.renderItem.bind(this)}
           keyExtractor={(item, index) => index.toString()}
           refreshing={this.props.merchant.refreshGetSurveyList}
@@ -187,15 +188,28 @@ class SurveyListDataView extends Component {
       </View>
     );
   }
+  /** === RENDER LOADMORE === */
+  renderLoadMore() {
+    return this.props.merchant.loadingLoadMoreSurveyList ? (
+      <LoadingLoadMore />
+    ) : (
+      <View />
+    );
+  }
   /** === RENDER MAIN === */
   render() {
-    return <View style={styles.container}>{this.renderContent()}</View>;
+    return (
+      <View style={styles.container}>
+        {this.renderContent()}
+        {this.renderLoadMore()}
+      </View>
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
+    flex: 1,
     backgroundColor: Color.fontBlack05
   },
   menuContainer: {
@@ -223,6 +237,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-start'
+  },
+  flatListContainer: {
+    paddingBottom: 26
   }
 });
 
@@ -244,9 +261,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(SurveyListDataView);
  * createdBy: dyah
  * createdDate: 13092021
  * updatedBy: dyah
- * updatedDate: 16092021
+ * updatedDate: 23092021
  * updatedFunction:
- * -> create new function when going to survey.
- * -> update stylesheet for survey response status.
- * -> add new props when refresh (getTotalSurvey).
+ * -> fix loadmore on survey list.
  */

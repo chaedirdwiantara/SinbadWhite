@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   StatusBar,
+  BackHandler,
   ImageBackground
 } from '../../library/reactPackage';
 
@@ -15,12 +16,40 @@ import masterColor from '../../config/masterColor.json';
 import { ButtonSingle } from '../../library/component';
 import NavigationService from '../../navigation/NavigationService';
 
-let ScreenHeight = Dimensions.get('window').height;
+const win = Dimensions.get('window');
 class SuccessSubmitView extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      caption: this.props.navigation.state.params.caption
+    };
   }
-
+  /**
+   * ==============================
+   * FUNCTIONAL
+   * ==============================
+   */
+  /**
+   * === BACK ACTION ===
+   * @returns {boolean} true & navigate to survey list.
+   */
+  backAction = () => {
+    NavigationService.navigate('MerchantSurveyView', {
+      readOnly: false
+    })
+    return true;
+  };
+  /** === DID MOUNT === */
+  componentDidMount() {
+    this.backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.backAction
+    );
+  }
+  /** === WILL UNMOUNT === */
+  componentWillUnmount() {
+    this.backHandler.remove();
+  }
   /**
    * ==============================
    * RENDER VIEW
@@ -89,7 +118,7 @@ class SuccessSubmitView extends Component {
           { marginTop: '3%', marginBottom: '5%', textAlign: 'center' }
         ]}
       >
-        {`Terima kasih sudah menyelesaikan "${surveyName ?? '-'}". `}
+        {`${this.state.caption}`}
       </Text>
     );
   }
@@ -120,7 +149,7 @@ class SuccessSubmitView extends Component {
         source={require('../../assets/images/background/bg_confirm.png')}
         style={styles.boxImage}
       >
-        {this.renderContent()}
+        <View style={styles.contentView}>{this.renderContent()}</View>
       </ImageBackground>
     );
   }
@@ -141,8 +170,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   boxImage: {
-    height: ScreenHeight,
-    width: '100%'
+    width: '100%',
+    height: '100%'
   },
   centeredCaption: {
     position: 'absolute',
@@ -159,3 +188,15 @@ const styles = StyleSheet.create({
 });
 
 export default SuccessSubmitView;
+
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy: nada
+ * createdDate:
+ * updatedBy: dyah
+ * updatedDate: 28092021
+ * updatedFunction:
+ * -> add backhandler.
+ */

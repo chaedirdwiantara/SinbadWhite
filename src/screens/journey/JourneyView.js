@@ -118,7 +118,7 @@ class JourneyView extends Component {
       if (this.props.journey.dataSaveMerchantToJourneyPlanV2 !== null) {
         this.getJourneyPlan();
         this.props.getJourneyPlanReportProcessV2();
-        this.setState({ openModalMerchantList: false });
+        this.setState({ openModalMerchantList: false, openModalAddMerchant: false, });
       }
     }
     /** IF ADD MERCHANT SUCCESS */
@@ -293,14 +293,14 @@ class JourneyView extends Component {
           style={[styles.headerContainer, { zIndex: 0 }]}
         >
           <View style={[styles.boxHeader, { zIndex: 1 }]}>
-            <Text style={[styles.headerTextTitle, { marginBottom: 5 }]}>
+            <Text style={[Fonts.textHeaderPageJourney, { marginBottom: 5 }]}>
               {this.props.journey.dataGetJourneyPlanReportV2.total}/
               {this.props.journey.dataGetJourneyPlanReportV2.target}
             </Text>
             <Text style={styles.headerTextSubTitle}>Kunjungan Toko</Text>
           </View>
           <View style={styles.boxHeader}>
-            <Text style={[styles.headerTextTitle, { marginBottom: 5 }]}>
+            <Text style={[Fonts.textHeaderPageJourney, { marginBottom: 5 }]}>
               {MoneyFormat(
                 this.props.journey.dataGetJourneyPlanReportV2.totalOrder
               )}
@@ -383,7 +383,7 @@ class JourneyView extends Component {
     return this.state.openModalMerchantList ? (
       <ModalBottomMerchantList
         open={this.state.openModalMerchantList}
-        close={() => this.setState({ openModalMerchantList: false })}
+        close={() => this.setState({ openModalMerchantList: false, openModalAddMerchant: false, })}
       />
     ) : (
       <View />
@@ -524,12 +524,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 12,
     color: masterColor.fontBlack80
-  },
-  headerTextTitle: {
-    fontFamily: Fonts.MontserratExtraBold,
-    fontSize: 18,
-    lineHeight: 17,
-    color: masterColor.fontBlack50
   }
 });
 
@@ -554,7 +548,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: Raka
- * updatedDate: 14092021
+ * updatedDate: 30092021
  * updatedFunction:
- * -> make dialog multiple when open toko existing dialog.
+ * -> close dialog tambah toko when add to journey plan
  */

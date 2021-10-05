@@ -16,6 +16,7 @@ import { Fonts } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
 import QuestionAnswersListView from './QuestionAnswersListView';
+import _ from 'lodash';
 
 class QuestionListDataView extends Component {
   constructor(props) {
@@ -55,10 +56,7 @@ class QuestionListDataView extends Component {
           inputValue: 'checked'
         });
       }
-    } else if (
-      survey.category === 'vc_basic' ||
-      survey.category === 'vc_compare_group'
-    ) {
+    } else if (survey.category === 'vc_compare_group') {
       // check the answer already inputed or not (input)
       const alreadyInputed = newQuestions[index].value.findIndex(
         item => item.candidateAnswerId === candidateAnswerId
@@ -76,6 +74,35 @@ class QuestionListDataView extends Component {
           candidateAnswerId,
           isBaseValue: survey.isBaseValue,
           inputValue: survey.inputValue
+        });
+      }
+    } else if (survey.category === 'vc_basic') {
+      // check the answer already inputed or not (value A and B)
+      const findIndexValueA = newQuestions[index].value.findIndex(
+        item => item.candidateAnswerId === survey.candidateAnswer[0].id
+      );
+      const findIndexValueB = newQuestions[index].value.findIndex(
+        item => item.candidateAnswerId === survey.candidateAnswer[1].id
+      );
+      // if findIndexValueA, change the value of the answer
+      if (findIndexValueA > -1) {
+        survey.candidateAnswer.map(item => {
+          let value = findIndexValueA;
+          if (item.order === 2) value = findIndexValueB;
+          newQuestions[index].value[value] = {
+            candidateAnswerId: item.id,
+            isBaseValue: false,
+            inputValue: item.inputValue
+          };
+        });
+      } else {
+        // if not, add the value to the answer
+        survey.candidateAnswer.map(item => {
+          newQuestions[index].value.push({
+            candidateAnswerId: item.id,
+            isBaseValue: false,
+            inputValue: item.inputValue
+          });
         });
       }
     }
@@ -229,7 +256,9 @@ class QuestionListDataView extends Component {
   render() {
     return (
       <FlatList
-        data={this.props.merchant.dataGetSurvey?.questions}
+        data={_.orderBy(this.props.merchant.dataGetSurvey?.questions, [
+          'order'
+        ])}
         keyExtractor={(data, index) => index.toString()}
         renderItem={({ item, index }) => this.renderQuestion(item, index)}
       />
@@ -291,7 +320,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 13092021
  * updatedBy: dyah
- * updatedDate: 160092021
+ * updatedDate: 30092021
  * updatedFunction:
- * -> add isBaseValue and change surveyId to questionId.
+ * -> fix order for questions.
  */
