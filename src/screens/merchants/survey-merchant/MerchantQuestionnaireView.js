@@ -128,9 +128,10 @@ class MerchantQuestionnaireView extends Component {
           );
           // if success with status 'completed' navigate to success screen
           return NavigationService.navigate('SuccessSubmit', {
-            surveyResponseId: dataSubmitSurveyResponse.id,
-            surveyId: dataSubmitSurveyResponse.survey?.id,
-            surveyName: dataSubmitSurveyResponse.survey?.name,
+            dataSubmitSurveyResponse: dataSubmitSurveyResponse,
+            // surveyResponseId: dataSubmitSurveyResponse.id,
+            // surveyId: dataSubmitSurveyResponse.survey?.id,
+            // surveyName: dataSubmitSurveyResponse.survey?.name,
             caption: `Terima kasih sudah menyelesaikan "${dataSubmitSurveyResponse
               .survey.name ?? '-'}".`
           });

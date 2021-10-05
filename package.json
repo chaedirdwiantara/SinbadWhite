@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@ptomasroos/react-native-multi-slider": "2.2.0",
+    "@react-native-clipboard/clipboard": "^1.8.4",
     "@react-native-community/image-editor": "git@github.com:Sinbad-B2B-Platform/react-native-image-editor.git#2.3.1",
     "@react-native-community/progress-bar-android": "1.0.3",
     "@react-native-community/progress-view": "1.2.2",

@@ -81,9 +81,10 @@ class SurveyListDataView extends Component {
     if (item.responseStatus === 'completed') {
       // navigate to result
       return NavigationService.navigate('MerchantSurveyResultView', {
-        surveyResponseId: item.surveyResponseId,
-        surveyId: item.id,
-        surveyName: item.surveyName
+        dataSubmitSurveyResponse: item
+        // surveyResponseId: item.surveyResponseId,
+        // surveyId: item.id,
+        // surveyName: item.surveyName
       });
     } else {
       return NavigationService.navigate('MerchantQuestionnaireView', {
@@ -252,7 +253,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(SurveyListDataView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SurveyListDataView);
 
 /**
  * ============================
