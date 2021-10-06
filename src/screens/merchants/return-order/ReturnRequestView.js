@@ -25,6 +25,7 @@ import ModalUpdatePrice from './ModalUpdatePrice';
 import ModalReturnReasons from './ModalReturnReasons';
 import ModalReturnSummary from './ModalReturnSummary';
 import ModalReturnConfirmation from './ModalReturnConfirmation';
+import NavigationService from '../../../navigation/NavigationService';
 
 class ReturnRequestView extends Component {
   constructor(props) {
@@ -93,6 +94,23 @@ class ReturnRequestView extends Component {
     ) {
       if (this.props.oms.errorPostReturnOrder !== null) {
         this.openModalResponseError();
+      }
+    }
+
+    if (
+      prevProps.oms.dataPostReturnOrder !== this.props.oms.dataPostReturnOrder
+    ) {
+      if (this.props.oms.dataPostReturnOrder !== null) {
+        NavigationService.customizeReset(
+          3,
+          [
+            'JourneyView',
+            'MerchantHomeView',
+            'ReturnOrderView',
+            'ReturnRequestDoneView'
+          ],
+          { storeName: this.props.merchant.selectedMerchant.storeName }
+        );
       }
     }
   }
@@ -584,8 +602,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ oms }) => {
-  return { oms };
+const mapStateToProps = ({ oms, merchant }) => {
+  return { oms, merchant };
 };
 
 const mapDispatchToProps = dispatch => {
