@@ -618,6 +618,8 @@ class ModalFilterDate extends Component {
         // onSwipeMove={this.props.close}
         deviceHeight={height}
         style={styles.mainContainer}
+        onBackButtonPress={this.props.close}
+        onBackdropPress={this.props.close}
       >
         <View style={styles.contentContainer}>
           {this.renderContentTitle()}
