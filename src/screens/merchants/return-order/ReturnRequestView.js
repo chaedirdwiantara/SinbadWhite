@@ -11,7 +11,7 @@ import {
   connect,
   bindActionCreators
 } from '../../../library/thirdPartyPackage';
-import { LoadingPage, ButtonSingleSmall } from '../../../library/component';
+import { LoadingPage, EmptyData } from '../../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
@@ -31,133 +31,7 @@ class ReturnRequestView extends Component {
       selectedData: null,
       returnLines: [],
       disabledConfirmationButton: true,
-      localData: {
-        orderCode: 'S01000452400341847316',
-        returnParcelDraft: [
-          {
-            catalogueId: 1,
-            catalogueName: 'Cip - Kornet Sapi Merah 700GR - Rasa Sapi Panggang',
-            imageUrl:
-              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115808.png',
-            price: 90000,
-            maxQty: 80
-          },
-          {
-            catalogueId: 2,
-            catalogueName: 'Cip - Kornet Sapi Merah 700GR - Rasa Sapi Panggang',
-            imageUrl:
-              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115808.png',
-            price: 10000,
-            maxQty: 10
-          },
-          {
-            catalogueId: 3,
-            catalogueName: 'Cip - Kornet Sapi Merah 700GR - Rasa Sapi Panggang',
-            imageUrl:
-              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115808.png',
-            price: 90000,
-            maxQty: 20
-          },
-          {
-            catalogueId: 4,
-            catalogueName: 'Cip - Kornet Sapi Merah 700GR - Rasa Sapi Panggang',
-            imageUrl:
-              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115808.png',
-            price: 10000,
-            maxQty: 30
-          },
-          {
-            catalogueId: 5,
-            catalogueName: 'Cip - Kornet Sapi Merah 700GR - Rasa Sapi Panggang',
-            imageUrl:
-              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115808.png',
-            price: 90000,
-            maxQty: 11
-          },
-          {
-            catalogueId: 6,
-            catalogueName: 'Cip - Kornet Sapi Merah 700GR - Rasa Sapi Panggang',
-            imageUrl:
-              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/115808.png',
-            price: 10000,
-            maxQty: 17
-          }
-        ]
-      },
-      returnReasons: [
-        {
-          id: '4',
-          reason: 'Out of stock ',
-          description: 'Out of stock ',
-          showOnMobile: false,
-          showOnAgentApp: true,
-          createdAt: '2021-08-02T07:38:34.957Z',
-          updatedAt: '2021-08-18T04:33:24.924Z',
-          deletedAt: null
-        },
-        {
-          id: '5',
-          reason:
-            'To make sure that the device arrives in its original condition, package and send it using the label and instructions from the Google Store support email.  If you’re returning multiple items, package a',
-          description:
-            'To make sure that the device arrives in its original condition, package and send it using the label and instructions from the Google Store support email.\n\nIf you’re returning multiple items, package a',
-          showOnMobile: true,
-          showOnAgentApp: true,
-          createdAt: '2021-08-08T11:52:02.588Z',
-          updatedAt: '2021-08-09T06:37:50.736Z',
-          deletedAt: null
-        },
-        {
-          id: '13',
-          reason: 'ttt',
-          description: 'tttt',
-          showOnMobile: true,
-          showOnAgentApp: true,
-          createdAt: '2021-08-16T05:45:31.059Z',
-          updatedAt: '2021-08-16T05:45:31.059Z',
-          deletedAt: null
-        },
-        {
-          id: '14',
-          reason: 'TRS',
-          description: 'TRS',
-          showOnMobile: true,
-          showOnAgentApp: true,
-          createdAt: '2021-08-16T05:46:31.894Z',
-          updatedAt: '2021-08-16T05:46:31.894Z',
-          deletedAt: null
-        },
-        {
-          id: '15',
-          reason: 'KKK ',
-          description: 'JJJJ',
-          showOnMobile: true,
-          showOnAgentApp: true,
-          createdAt: '2021-08-16T05:47:33.596Z',
-          updatedAt: '2021-08-16T05:47:33.596Z',
-          deletedAt: null
-        },
-        {
-          id: '17',
-          reason: 'Barang Hilang',
-          description: 'Barang yang dipesan hilang di Warehouse',
-          showOnMobile: false,
-          showOnAgentApp: true,
-          createdAt: '2021-08-18T03:32:28.941Z',
-          updatedAt: '2021-08-18T03:32:28.941Z',
-          deletedAt: null
-        },
-        {
-          id: '18',
-          reason: 'The merchant shipped the wrong item',
-          description: 'The merchant shipped the wrong item',
-          showOnMobile: true,
-          showOnAgentApp: true,
-          createdAt: '2021-08-18T04:25:07.368Z',
-          updatedAt: '2021-08-18T04:25:07.368Z',
-          deletedAt: null
-        }
-      ]
+      localData: {}
     };
   }
   static navigationOptions = ({ navigation }) => {
@@ -177,13 +51,26 @@ class ReturnRequestView extends Component {
   };
 
   componentDidMount() {
-    this.convertListToLocalState();
-    setTimeout(() => this.setState({ loading: false }), 100);
+    this.loading(true);
+    this.props.GetReturnDraftProcess({
+      orderParcelId: this.props.navigation.state.params.orderParcelId
+    });
+    this.getReturnReason();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.oms.dataGetReturnDraft !== this.props.oms.dataGetReturnDraft
+    ) {
+      if (this.props.oms.dataGetReturnDraft !== null) {
+        this.convertListToLocalState();
+      }
+    }
   }
 
   convertListToLocalState() {
     const productArray = [];
-    this.state.localData.returnParcelDraft.map((item, index) => {
+    this.props.oms.dataGetReturnDraft.returnParcelDraft.map((item, index) => {
       const reason = {
         id: null,
         reason: null
@@ -198,11 +85,15 @@ class ReturnRequestView extends Component {
       orderCode: this.state.localData.orderCode,
       returnParcelDraft: productArray
     };
-    this.setState({ localData: data });
+    this.setState({ localData: data, loading: false });
+  }
+
+  loading(status) {
+    this.setState({ loading: status });
   }
 
   getReturnReason() {
-    return null;
+    this.props.GetReturnReasonProcess();
   }
 
   parentFunction(data) {
@@ -336,12 +227,6 @@ class ReturnRequestView extends Component {
      * Replace existing data with the updated one
      * */
     if (returnLinesIndex > -1) {
-      // if (transformData.qty > 0 && transformData.returnReasonId === null) {
-      //   this.setState({ disabledConfirmationButton: true });
-      // } else {
-      //   this.setState({ disabledConfirmationButton: false });
-      // }
-
       if (parseInt(transformData.qty, 10) === 0) {
         returnLines.splice(returnLinesIndex, 1);
       } else {
@@ -430,15 +315,19 @@ class ReturnRequestView extends Component {
   }
 
   renderContent() {
-    return this.state.loading ? this.renderLoadingPage() : this.renderBody();
+    return this.props.oms.loadingGetReturnDraft || this.state.loading
+      ? this.renderLoadingPage()
+      : this.renderBody();
   }
 
   renderBody() {
-    return (
+    return this.props.oms.dataGetReturnDraft !== null ? (
       <View style={styles.mainContainer}>
         {this.renderListData()}
         {this.renderBottomSection()}
       </View>
+    ) : (
+      <EmptyData />
     );
   }
 
@@ -478,12 +367,13 @@ class ReturnRequestView extends Component {
   }
 
   renderModalReturnReasons() {
-    return this.state.openModalReturnReasons ? (
+    return this.state.openModalReturnReasons &&
+      this.props.oms.dataGetReturnReason !== null ? (
       <ModalReturnReasons
         open={this.state.openModalReturnReasons}
         close={() => this.setState({ openModalReturnReasons: false })}
         data={this.state.selectedData}
-        returnReasons={this.state.returnReasons}
+        returnReasons={this.props.oms.dataGetReturnReason}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
         title={'Alasan Retur'}
