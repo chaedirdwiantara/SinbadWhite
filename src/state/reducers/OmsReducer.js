@@ -15,6 +15,7 @@ const INITIAL_STATE = {
   loadingOmsApplicablePaylater: false,
   loadingOmsPostKurConsent: false,
   loadingGetReturnDraft: false,
+  loadingGetReturnReason: false,
   /** data */
   dataOmsGetCartItem: null,
   dataOmsGetCartItemFromCheckout: null,
@@ -30,6 +31,7 @@ const INITIAL_STATE = {
   dataOmsGetPayLaterType: null,
   dataOmsPostKurConsent: null,
   dataGetReturnDraft: null,
+  dataGetReturnReason: null,
   /** error */
   errorOmsGetCartItem: null,
   errorOmsGetCheckoutItem: null,
@@ -42,7 +44,8 @@ const INITIAL_STATE = {
   errorOmsGetPayLaterType: null,
   errorOmsApplicablePaylater: null,
   errorOmsPostKurConsent: null,
-  errorGetReturnDraft: null
+  errorGetReturnDraft: null,
+  errorGetReturnReason: null
 };
 
 export const oms = createReducer(INITIAL_STATE, {
@@ -582,6 +585,34 @@ export const oms = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetReturnDraft: false,
       errorGetReturnDraft: action.payload
+    };
+  },
+
+  /**
+   * =================================
+   * GET RETURN REASON
+   * =================================
+   */
+  [types.GET_RETURN_REASON_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReturnReason: true,
+      dataGetReturnReason: null,
+      errorGetReturnReason: null
+    };
+  },
+  [types.GET_RETURN_REASON_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReturnReason: false,
+      dataGetReturnReason: action.payload.data
+    };
+  },
+  [types.GET_RETURN_REASON_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetReturnReason: false,
+      errorGetReturnReason: action.payload
     };
   }
 });

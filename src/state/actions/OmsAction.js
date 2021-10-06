@@ -450,3 +450,24 @@ export function GetReturnDraftSuccess(data) {
 export function GetReturnDraftFailed(data) {
   return { type: types.GET_RETURN_DRAFT_FAILED, payload: data };
 }
+
+/**
+ * ===================
+ * GET RETURN REASON
+ * ===================
+ */
+export function GetReturnReasonProcess(data) {
+  return { type: types.GET_RETURN_REASON_PROCESS, payload: data };
+}
+export function GetReturnReasonSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.GET_RETURN_REASON_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.GET_RETURN_REASON_FAILED, payload: data };
+}
+export function GetReturnReasonFailed(data) {
+  return { type: types.GET_RETURN_REASON_FAILED, payload: data };
+}

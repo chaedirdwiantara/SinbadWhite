@@ -172,6 +172,17 @@ function* getReturnDraft(actions) {
   }
 }
 
+function* getReturnReason(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.getReturnReason(actions.payload);
+    });
+    yield put(ActionCreators.GetReturnReasonSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.GetReturnReasonFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* OmsSaga() {
   yield takeEvery(types.OMS_GET_CART_ITEM_PROCESS, getCartItem);
@@ -195,6 +206,7 @@ function* OmsSaga() {
   yield takeEvery(types.OMS_GET_KUR_OTP_PROCESS, getKurOtp);
   yield takeEvery(types.OMS_POST_KUR_CONSENT_PROCESS, postKurConsent);
   yield takeEvery(types.GET_RETURN_DRAFT_PROCESS, getReturnDraft);
+  yield takeEvery(types.GET_RETURN_REASON_PROCESS, getReturnReason);
 }
 
 export default OmsSaga;

@@ -178,6 +178,13 @@ function getReturnDraft(data) {
   });
 }
 
+function getReturnReason() {
+  return ApiRest({
+    method: 'GET',
+    path: 'return-reasons?showOnAgentApp=true'
+  });
+}
+
 export const OmsMethod = {
   getCartItem,
   getCheckoutItem,
@@ -192,5 +199,6 @@ export const OmsMethod = {
   getApplicablePaylater,
   getKurOtp,
   postKurConsent,
-  getReturnDraft
+  getReturnDraft,
+  getReturnReason
 };

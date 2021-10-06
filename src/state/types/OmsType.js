@@ -82,3 +82,8 @@ export const OMS_POST_KUR_CONSENT_FAILED = 'OmsPostKurConsentFailed';
 export const GET_RETURN_DRAFT_PROCESS = 'GetReturnDraftProcess';
 export const GET_RETURN_DRAFT_SUCCESS = 'GetReturnDraftSuccess';
 export const GET_RETURN_DRAFT_FAILED = 'GetReturnDraftFailed';
+
+/** GET RETURN REASON */
+export const GET_RETURN_REASON_PROCESS = 'GetReturnReasonProcess';
+export const GET_RETURN_REASON_SUCCESS = 'GetReturnReasonSuccess';
+export const GET_RETURN_REASON_FAILED = 'GetReturnReasonFailed';
