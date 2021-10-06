@@ -657,7 +657,6 @@ class MerchantHomeView extends Component {
   }
   /**
    * CHECK THE CONDITION WHEN isCollectionAvailable true
-   * @params prevProps 
    * - SELECTED MERCHANT HAVE isCollectionAvailable to render "Penagihan" text
    * return true | false
   */
