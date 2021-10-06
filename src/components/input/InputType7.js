@@ -8,6 +8,7 @@ import {
 } from '../../library/reactPackage';
 import { Fonts } from '../../helpers';
 import { Color } from '../../config';
+import _ from 'lodash';
 
 /**
  * =============================
@@ -74,13 +75,21 @@ class InputType7 extends Component {
 
     return (
       <View>
+        {/* 
+          MULTILINE PROP 
+          SOURCE: https://stackoverflow.com/a/67281614
+        */}
         <TextInput
           editable={this.props.editable}
           selectionColor={Color.mainColor}
           placeholder={this.props.placeholder}
           value={this.state.text}
           placeholderTextColor={Color.fontBlack40}
-          onChangeText={this.changeText}
+          multiline={true}
+          onChangeText={value => {
+            const cleanValue = value.replace(/[^0-9]/g, '');
+            this.changeText(cleanValue);
+          }}
           keyboardType={this.props.keyboardType}
           maxLength={this.props.maxLength}
           onFocus={this.handleFocus}
@@ -147,7 +156,7 @@ export default InputType7;
  * createdBy: dyah
  * createdDate: 06092021
  * updatedBy: dyah
- * updatedDate: 30092021
+ * updatedDate: 06102021
  * updatedFunction:
- * -> add props for error message.
+ * -> add validation when user input not number.
  */
