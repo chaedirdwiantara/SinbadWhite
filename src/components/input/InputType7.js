@@ -8,7 +8,6 @@ import {
 } from '../../library/reactPackage';
 import { Fonts } from '../../helpers';
 import { Color } from '../../config';
-import _ from 'lodash';
 
 /**
  * =============================
