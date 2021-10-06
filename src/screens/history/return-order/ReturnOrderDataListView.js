@@ -49,44 +49,63 @@ class ReturnOrderDataListView extends Component {
           storeName: 'Indah Mart',
           imagesUrl:
             'https://sinbad-website-sg.s3.ap-southeast-1.amazonaws.com/staging/user-id-images/image_1606990533463.png',
-          status: 'pending',
+          status: 'approved',
           amount: 80000,
           parcelQty: 7,
           returned: true,
           created_at: '2021-06-02T04:23:27.481Z',
           updated_at: '2021-06-02T04:23:27.481Z'
-        }
-      ],
-      mockReturnStatus: [
-        {
-          id: 0,
-          status: 'all',
-          title: 'Semua'
         },
         {
-          id: 1,
-          status: 'pending',
-          title: 'Menunggu'
-        },
-        {
-          id: 2,
-          status: 'approved',
-          title: 'Disetujui'
-        },
-        {
-          id: 3,
+          id: 13,
+          orderParcelsId: 'SO002',
+          returnCode: 'R1202106000002',
+          userId: '3232',
+          userName: 'Mr Abc',
+          storeId: 12213,
+          storeName: 'Indah Mart',
+          imagesUrl:
+            'https://sinbad-website-sg.s3.ap-southeast-1.amazonaws.com/staging/user-id-images/image_1606990533463.png',
           status: 'approved_returned',
-          title: 'Dikembalikan'
+          amount: 80000,
+          parcelQty: 7,
+          returned: true,
+          created_at: '2021-06-02T04:23:27.481Z',
+          updated_at: '2021-06-02T04:23:27.481Z'
         },
         {
-          id: 4,
+          id: 13,
+          orderParcelsId: 'SO002',
+          returnCode: 'R1202106000002',
+          userId: '3232',
+          userName: 'Mr Abc',
+          storeId: 12213,
+          storeName: 'Indah Mart',
+          imagesUrl:
+            'https://sinbad-website-sg.s3.ap-southeast-1.amazonaws.com/staging/user-id-images/image_1606990533463.png',
           status: 'closed',
-          title: 'Selesai'
+          amount: 80000,
+          parcelQty: 7,
+          returned: true,
+          created_at: '2021-06-02T04:23:27.481Z',
+          updated_at: '2021-06-02T04:23:27.481Z'
         },
         {
-          id: 5,
+          id: 13,
+          orderParcelsId: 'SO002',
+          returnCode: 'R1202106000002',
+          userId: '3232',
+          userName: 'Mr Abc',
+          storeId: 12213,
+          storeName: 'Indah Mart',
+          imagesUrl:
+            'https://sinbad-website-sg.s3.ap-southeast-1.amazonaws.com/staging/user-id-images/image_1606990533463.png',
           status: 'rejected',
-          title: 'Ditolak'
+          amount: 80000,
+          parcelQty: 7,
+          returned: true,
+          created_at: '2021-06-02T04:23:27.481Z',
+          updated_at: '2021-06-02T04:23:27.481Z'
         }
       ]
     };
@@ -102,6 +121,25 @@ class ReturnOrderDataListView extends Component {
 
   toParentFunction(data) {
     console.log(data);
+  }
+
+  checkStatus(status) {
+    const data = this.props.status.find(item => item.status === status);
+    if (data) {
+      return data.title;
+    } else {
+      return '';
+    }
+  }
+
+  checkStatusColor(status) {
+    if (status === 'pending') {
+      return Color.fontYellow50;
+    } else if (status === 'rejected') {
+      return Color.fontRed50;
+    } else {
+      return Color.fontGreen50;
+    }
   }
 
   /**
@@ -120,29 +158,58 @@ class ReturnOrderDataListView extends Component {
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
               <Text style={Fonts.type83}>{item.returnCode}</Text>
-              <Text style={[Fonts.type83, { color: Color.fontGreen50 }]}>
-                Selesai
+              <Text
+                style={[
+                  Fonts.type83,
+                  { color: this.checkStatusColor(item.status) }
+                ]}
+              >
+                {this.checkStatus(item.status)}
               </Text>
             </View>
             <View style={{ marginVertical: 16 }}>
               {/* {this.renderProductSection(item.orderBrands)} */}
             </View>
             <View style={[styles.boxItemContent, { marginBottom: 8 }]}>
-              <Text style={[Fonts.type56, { color: Color.fontBlack80 }]}>
-                Dipesan pada
+              <Text style={[Fonts.fontC2Medium, { color: Color.fontBlack80 }]}>
+                Tanggal Retur
               </Text>
-              <Text style={[Fonts.type56, { color: Color.fontBlack80 }]}>
+              <Text
+                style={[Fonts.fontC1SemiBold, { color: Color.fontBlack80 }]}
+              >
                 {moment(new Date(item.created_at)).format(
                   'DD MMM YYYY HH:mm:ss'
                 )}
               </Text>
             </View>
-            <View style={styles.boxItemContent}>
-              <Text style={[Fonts.type56, { color: Color.fontBlack80 }]}>
-                Total pembelian
+            <View style={[styles.boxItemContent, { marginBottom: 8 }]}>
+              <Text style={[Fonts.fontC2Medium, { color: Color.fontBlack80 }]}>
+                Total Jumlah Retur
               </Text>
-              <Text style={[Fonts.type56, { color: Color.fontBlack80 }]}>
-                {/* {MoneyFormat(item?.deliveredParcelFinalPriceBuyer || 0)} */}
+              <Text
+                style={[Fonts.fontC1SemiBold, { color: Color.fontBlack80 }]}
+              >
+                {item.parcelQty}
+              </Text>
+            </View>
+            <View style={[styles.boxItemContent, { marginBottom: 8 }]}>
+              <Text style={[Fonts.fontC2Medium, { color: Color.fontBlack80 }]}>
+                Total Dana Retur
+              </Text>
+              <Text
+                style={[Fonts.fontC1SemiBold, { color: Color.fontBlack80 }]}
+              >
+                {MoneyFormat(item.amount)}
+              </Text>
+            </View>
+            <View style={[styles.boxItemContent, { marginBottom: 8 }]}>
+              <Text style={[Fonts.fontC2Medium, { color: Color.fontBlack80 }]}>
+                Barang sudah dibawa
+              </Text>
+              <Text
+                style={[Fonts.fontC1SemiBold, { color: Color.fontBlack80 }]}
+              >
+                {item.returned ? 'Ya' : 'Tidak'}
               </Text>
             </View>
           </View>
@@ -172,7 +239,11 @@ class ReturnOrderDataListView extends Component {
     );
   }
   renderContent() {
-    return <View>{this.renderData()}</View>;
+    return (
+      <View>
+        {this.state.loading ? this.renderSkeleton() : this.renderData()}
+      </View>
+    );
   }
 
   renderSkeleton() {
@@ -180,11 +251,7 @@ class ReturnOrderDataListView extends Component {
   }
 
   render() {
-    return (
-      <View style={styles.mainContainer}>
-        {this.state.loading ? this.renderSkeleton() : this.renderContent()}
-      </View>
-    );
+    return <View style={styles.mainContainer}>{this.renderContent()}</View>;
   }
 }
 

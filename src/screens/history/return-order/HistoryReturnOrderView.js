@@ -16,16 +16,50 @@ import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
 import { Fonts, GlobalStyle } from '../../../helpers';
 import ReturnOrderDataListView from './ReturnOrderDataListView';
+import ModalReturnStatus from './ModalReturnStatus';
 
 class HistoryReturnOrderView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      returnStatus: 'all',
+      selectedReturnStatus: null,
       dateFilter: {
         dateGte: '',
         dateLte: ''
-      }
+      },
+      openModalReturnStatus: false,
+      mockReturnStatus: [
+        {
+          id: 0,
+          status: 'all',
+          title: 'Semua'
+        },
+        {
+          id: 1,
+          status: 'pending',
+          title: 'Menunggu'
+        },
+        {
+          id: 2,
+          status: 'approved',
+          title: 'Disetujui'
+        },
+        {
+          id: 3,
+          status: 'approved_returned',
+          title: 'Dikembalikan'
+        },
+        {
+          id: 4,
+          status: 'closed',
+          title: 'Selesai'
+        },
+        {
+          id: 5,
+          status: 'rejected',
+          title: 'Ditolak'
+        }
+      ]
     };
   }
 
@@ -36,6 +70,18 @@ class HistoryReturnOrderView extends Component {
 
   parentFunction(data) {
     console.log(data);
+    switch (data.type) {
+      case 'SelectStatus':
+        this.setState({
+          selectedReturnStatus: data.data,
+          openModalReturnStatus: false
+        });
+
+        break;
+
+      default:
+        break;
+    }
   }
 
   /**
@@ -71,16 +117,36 @@ class HistoryReturnOrderView extends Component {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: Color.fontBlack05
+            backgroundColor:
+              this.state.selectedReturnStatus === null
+                ? Color.fontBlack05
+                : Color.fontBlack80
           }}
+          onPress={() => this.setState({ openModalReturnStatus: true })}
         >
-          <Text style={[Fonts.fontC2Medium, { color: Color.fontBlack40 }]}>
-            Cari Semua Status
+          <Text
+            style={[
+              Fonts.fontC2Medium,
+              {
+                color:
+                  this.state.selectedReturnStatus === null
+                    ? Color.fontBlack40
+                    : Color.fontWhite
+              }
+            ]}
+          >
+            {this.state.selectedReturnStatus === null
+              ? 'Cari Semua Status'
+              : `Status ${this.state.selectedReturnStatus.title}`}
           </Text>
           <MaterialIcon
             name="keyboard-arrow-down"
             size={18}
-            color={Color.fontBlack40}
+            color={
+              this.state.selectedReturnStatus === null
+                ? Color.fontBlack40
+                : Color.fontWhite
+            }
           />
         </TouchableOpacity>
       </View>
@@ -121,7 +187,8 @@ class HistoryReturnOrderView extends Component {
     return (
       <View style={styles.mainContainer}>
         <ReturnOrderDataListView
-          status={this.state.returnStatus}
+          selectedStatus={this.state.selectedReturnStatus}
+          status={this.state.mockReturnStatus}
           dateFilter={this.state.dateFilter}
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
@@ -139,8 +206,30 @@ class HistoryReturnOrderView extends Component {
     );
   }
 
+  modalReturnStatus() {
+    return this.state.openModalReturnStatus ? (
+      <ModalReturnStatus
+        title={'Status Retur'}
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+        returnStatus={this.state.mockReturnStatus}
+        selectedStatus={this.state.selectedReturnStatus}
+        open={this.state.openModalReturnStatus}
+        close={() => this.setState({ openModalReturnStatus: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
+
   render() {
-    return <View style={styles.mainContainer}>{this.renderContent()}</View>;
+    return (
+      <View style={styles.mainContainer}>
+        {this.renderContent()}
+        {/* MODAL */}
+        {this.modalReturnStatus()}
+      </View>
+    );
   }
 }
 
