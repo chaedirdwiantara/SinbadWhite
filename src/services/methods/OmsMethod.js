@@ -153,19 +153,28 @@ function getApplicablePaylater(data) {
 function getKurOtp(data) {
   return ApiRest({
     path: `payment/v1/klik-acc/otp?via=phone&storeCode=${data}`,
-    method: 'GET',
+    method: 'GET'
   });
 }
 
 /** POST KUR CONSENT */
 function postKurConsent(data) {
   return ApiRest({
-    path: `payment/v1/consent`,
+    path: 'payment/v1/consent',
     method: 'POST',
     params: {
       storeId: data.storeId,
       timestamp: data.timestamp
     }
+  });
+}
+
+function getReturnDraft(data) {
+  return ApiRest({
+    method: 'GET',
+    path: `return-draft?orderParcelId=${
+      data.orderParcelId
+    }&storeId=${GlobalMethod.merchantStoreId()}`
   });
 }
 
@@ -182,5 +191,6 @@ export const OmsMethod = {
   getPayLaterType,
   getApplicablePaylater,
   getKurOtp,
-  postKurConsent
+  postKurConsent,
+  getReturnDraft
 };

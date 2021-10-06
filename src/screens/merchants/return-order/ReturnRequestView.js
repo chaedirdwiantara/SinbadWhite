@@ -11,7 +11,7 @@ import {
   connect,
   bindActionCreators
 } from '../../../library/thirdPartyPackage';
-import { LoadingPage, ButtonSingleSmall } from '../../../library/component';
+import { LoadingPage, EmptyData } from '../../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
@@ -177,13 +177,25 @@ class ReturnRequestView extends Component {
   };
 
   componentDidMount() {
-    this.convertListToLocalState();
-    setTimeout(() => this.setState({ loading: false }), 100);
+    this.loading(true);
+    this.props.GetReturnDraftProcess({
+      orderParcelId: this.props.navigation.state.params.orderParcelId
+    });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.oms.dataGetReturnDraft !== this.props.oms.dataGetReturnDraft
+    ) {
+      if (this.props.oms.dataGetReturnDraft !== null) {
+        this.convertListToLocalState();
+      }
+    }
   }
 
   convertListToLocalState() {
     const productArray = [];
-    this.state.localData.returnParcelDraft.map((item, index) => {
+    this.props.oms.dataGetReturnDraft.returnParcelDraft.map((item, index) => {
       const reason = {
         id: null,
         reason: null
@@ -198,7 +210,11 @@ class ReturnRequestView extends Component {
       orderCode: this.state.localData.orderCode,
       returnParcelDraft: productArray
     };
-    this.setState({ localData: data });
+    this.setState({ localData: data, loading: false });
+  }
+
+  loading(status) {
+    this.setState({ loading: status });
   }
 
   getReturnReason() {
@@ -336,12 +352,6 @@ class ReturnRequestView extends Component {
      * Replace existing data with the updated one
      * */
     if (returnLinesIndex > -1) {
-      // if (transformData.qty > 0 && transformData.returnReasonId === null) {
-      //   this.setState({ disabledConfirmationButton: true });
-      // } else {
-      //   this.setState({ disabledConfirmationButton: false });
-      // }
-
       if (parseInt(transformData.qty, 10) === 0) {
         returnLines.splice(returnLinesIndex, 1);
       } else {
@@ -430,15 +440,19 @@ class ReturnRequestView extends Component {
   }
 
   renderContent() {
-    return this.state.loading ? this.renderLoadingPage() : this.renderBody();
+    return this.props.oms.loadingGetReturnDraft || this.state.loading
+      ? this.renderLoadingPage()
+      : this.renderBody();
   }
 
   renderBody() {
-    return (
+    return this.props.oms.dataGetReturnDraft !== null ? (
       <View style={styles.mainContainer}>
         {this.renderListData()}
         {this.renderBottomSection()}
       </View>
+    ) : (
+      <EmptyData />
     );
   }
 

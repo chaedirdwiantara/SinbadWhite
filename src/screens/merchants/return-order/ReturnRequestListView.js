@@ -61,6 +61,7 @@ class ReturnRequestView extends Component {
   }
 
   renderItem({ item, index }) {
+    console.log(item);
     return (
       <View
         key={index}

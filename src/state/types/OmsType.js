@@ -77,3 +77,8 @@ export const OMS_GET_KUR_OTP_FAILED = 'OmsGetKurOTPFailed';
 export const OMS_POST_KUR_CONSENT_PROCESS = 'OmsPostKurConsentProcess';
 export const OMS_POST_KUR_CONSENT_SUCCESS = 'OmsPostKurConsentSuccess';
 export const OMS_POST_KUR_CONSENT_FAILED = 'OmsPostKurConsentFailed';
+
+/** GET RETURN DRAFT */
+export const GET_RETURN_DRAFT_PROCESS = 'GetReturnDraftProcess';
+export const GET_RETURN_DRAFT_SUCCESS = 'GetReturnDraftSuccess';
+export const GET_RETURN_DRAFT_FAILED = 'GetReturnDraftFailed';

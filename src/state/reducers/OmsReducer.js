@@ -14,6 +14,7 @@ const INITIAL_STATE = {
   loadingOmsGetPayLaterType: false,
   loadingOmsApplicablePaylater: false,
   loadingOmsPostKurConsent: false,
+  loadingGetReturnDraft: false,
   /** data */
   dataOmsGetCartItem: null,
   dataOmsGetCartItemFromCheckout: null,
@@ -28,6 +29,7 @@ const INITIAL_STATE = {
   dataOmsCheckPromo: null,
   dataOmsGetPayLaterType: null,
   dataOmsPostKurConsent: null,
+  dataGetReturnDraft: null,
   /** error */
   errorOmsGetCartItem: null,
   errorOmsGetCheckoutItem: null,
@@ -39,7 +41,8 @@ const INITIAL_STATE = {
   errorOmsCheckPromo: null,
   errorOmsGetPayLaterType: null,
   errorOmsApplicablePaylater: null,
-  errorOmsPostKurConsent: null
+  errorOmsPostKurConsent: null,
+  errorGetReturnDraft: null
 };
 
 export const oms = createReducer(INITIAL_STATE, {
@@ -498,59 +501,87 @@ export const oms = createReducer(INITIAL_STATE, {
     };
   },
 
-   /**
+  /**
    * ==================================
    * GET KUR OTP
    * =================================
    */
-    [types.OMS_GET_KUR_OTP_PROCESS](state, action) {
-      return {
-        ...state,
-        loadingOmsGetKurOtp: true,
-        dataOmsGetKurOtp: null,
-        errorOmsGetKurOtp: null
-      };
-    },
-    [types.OMS_GET_KUR_OTP_SUCCESS](state, action) {
-      return {
-        ...state,
-        loadingOmsGetKurOtp: false,
-        dataOmsGetKurOtp: action.payload
-      };
-    },
-    [types.OMS_GET_KUR_OTP_FAILED](state, action) {
-      return {
-        ...state,
-        loadingOmsGetKurOtp: false,
-        errorOmsGetKurOtp: action.payload
-      };
-    },
+  [types.OMS_GET_KUR_OTP_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetKurOtp: true,
+      dataOmsGetKurOtp: null,
+      errorOmsGetKurOtp: null
+    };
+  },
+  [types.OMS_GET_KUR_OTP_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetKurOtp: false,
+      dataOmsGetKurOtp: action.payload
+    };
+  },
+  [types.OMS_GET_KUR_OTP_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsGetKurOtp: false,
+      errorOmsGetKurOtp: action.payload
+    };
+  },
 
-    /**
+  /**
    * ==================================
    * POST KUR CONSENT
    * =================================
    */
-     [types.OMS_POST_KUR_CONSENT_PROCESS](state, action) {
-      return {
-        ...state,
-        loadingOmsPostKurConsent: true,
-        dataOmsPostKurConsent: null,
-        errorOmsPostKurConsent: null
-      };
-    },
-    [types.OMS_POST_KUR_CONSENT_SUCCESS](state, action) {
-      return {
-        ...state,
-        loadingOmsPostKurConsent: false,
-        dataOmsPostKurConsent: action.payload
-      };
-    },
-    [types.OMS_POST_KUR_CONSENT_FAILED](state, action) {
-      return {
-        ...state,
-        loadingOmsPostKurConsent: false,
-        errorOmsPostKurConsent: action.payload
-      };
-    },
+  [types.OMS_POST_KUR_CONSENT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsPostKurConsent: true,
+      dataOmsPostKurConsent: null,
+      errorOmsPostKurConsent: null
+    };
+  },
+  [types.OMS_POST_KUR_CONSENT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsPostKurConsent: false,
+      dataOmsPostKurConsent: action.payload
+    };
+  },
+  [types.OMS_POST_KUR_CONSENT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsPostKurConsent: false,
+      errorOmsPostKurConsent: action.payload
+    };
+  },
+
+  /**
+   * =================================
+   * GET RETURN DRAFT
+   * =================================
+   */
+  [types.GET_RETURN_DRAFT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReturnDraft: true,
+      dataGetReturnDraft: null,
+      errorGetReturnDraft: null
+    };
+  },
+  [types.GET_RETURN_DRAFT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReturnDraft: false,
+      dataGetReturnDraft: action.payload
+    };
+  },
+  [types.GET_RETURN_DRAFT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetReturnDraft: false,
+      errorGetReturnDraft: action.payload
+    };
+  }
 });
