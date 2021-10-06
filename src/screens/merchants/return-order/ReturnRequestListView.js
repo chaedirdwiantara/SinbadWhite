@@ -245,15 +245,15 @@ class ReturnRequestView extends Component {
               textAlignVertical="top"
               maxLength={255}
               multiline={true}
-              onChangeText={text =>
+              onChangeText={text => {
                 this.toParentFunction({
                   type: 'addNote',
                   data: {
                     note: text,
                     catalogueId: item.catalogueId
                   }
-                })
-              }
+                });
+              }}
             />
             <Text
               style={[
@@ -265,7 +265,7 @@ class ReturnRequestView extends Component {
                 }
               ]}
             >
-              0/255 Karakter
+              {item.note.length}/255 Karakter
             </Text>
           </View>
         </View>

@@ -3,14 +3,16 @@ import {
   Component,
   View,
   Text,
-  StyleSheet
+  StyleSheet,
+  height,
+  TouchableOpacity
 } from '../../../library/reactPackage';
 import {
   connect,
   bindActionCreators
 } from '../../../library/thirdPartyPackage';
-import { LoadingPage } from '../../../library/component';
-import { Fonts } from '../../../helpers';
+import { LoadingPage, ButtonSingleSmall } from '../../../library/component';
+import { Fonts, GlobalStyle, MoneyFormat } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import ReturnRequestListView from './ReturnRequestListView';
@@ -27,6 +29,8 @@ class ReturnRequestView extends Component {
       openModalManualInputPrice: false,
       openModalReturnReasons: false,
       selectedData: null,
+      returnLines: [],
+      disabledConfirmationButton: true,
       localData: {
         orderCode: 'S01000452400341847316',
         returnParcelDraft: [
@@ -174,7 +178,7 @@ class ReturnRequestView extends Component {
 
   componentDidMount() {
     this.convertListToLocalState();
-    setTimeout(() => this.setState({ loading: false }), 500);
+    setTimeout(() => this.setState({ loading: false }), 100);
   }
 
   convertListToLocalState() {
@@ -186,7 +190,7 @@ class ReturnRequestView extends Component {
       };
       item.qty = 0;
       item.suggestedPrice = item.price;
-      item.note = null;
+      item.note = '';
       item.returnReason = reason;
       productArray.push(item);
     });
@@ -234,7 +238,6 @@ class ReturnRequestView extends Component {
         this.setState({ openModalReturnReasons: false });
         break;
       case 'addNote':
-        console.log(data);
         this.updateNote(data.data);
         break;
 
@@ -243,11 +246,18 @@ class ReturnRequestView extends Component {
     }
   }
 
-  updateQty(data) {
+  findIndex(data) {
     const listCatalogue = this.state.localData;
     const indexCatalogue = listCatalogue.returnParcelDraft.findIndex(
       item => parseInt(item.catalogueId, 10) === parseInt(data.catalogueId, 10)
     );
+
+    return indexCatalogue;
+  }
+
+  updateQty(data) {
+    const listCatalogue = this.state.localData;
+    const indexCatalogue = this.findIndex(data);
     /** UPDATE QTY */
     if (data.qty > listCatalogue.returnParcelDraft[indexCatalogue].maxQty) {
       listCatalogue.returnParcelDraft[indexCatalogue].qty =
@@ -256,27 +266,27 @@ class ReturnRequestView extends Component {
       listCatalogue.returnParcelDraft[indexCatalogue].qty = data.qty;
     }
     /** UPDATE LOCAL STATE */
-    this.setState({ localData: listCatalogue });
+    this.saveToReturnLines(listCatalogue.returnParcelDraft[indexCatalogue]);
+    this.setState({
+      localData: listCatalogue
+    });
   }
 
   updatePrice(data) {
     const listCatalogue = this.state.localData;
-    const indexCatalogue = listCatalogue.returnParcelDraft.findIndex(
-      item => parseInt(item.catalogueId, 10) === parseInt(data.catalogueId, 10)
-    );
+    const indexCatalogue = this.findIndex(data);
 
     /** UPDATED PRICE */
     listCatalogue.returnParcelDraft[indexCatalogue].price = data.price;
 
     /** UPDATE LOCAL STATE */
+    this.saveToReturnLines(listCatalogue.returnParcelDraft[indexCatalogue]);
     this.setState({ localData: listCatalogue });
   }
 
   updateReason(data) {
     const listCatalogue = this.state.localData;
-    const indexCatalogue = listCatalogue.returnParcelDraft.findIndex(
-      item => parseInt(item.catalogueId, 10) === parseInt(data.catalogueId, 10)
-    );
+    const indexCatalogue = this.findIndex(data);
 
     const reason = {
       id: data.reason.id,
@@ -285,17 +295,76 @@ class ReturnRequestView extends Component {
 
     listCatalogue.returnParcelDraft[indexCatalogue].returnReason = reason;
 
-    this.setState({ localData: listCatalogue });
+    /** UPDATE LOCAL STATE */
+    this.saveToReturnLines(listCatalogue.returnParcelDraft[indexCatalogue]);
+    this.setState({
+      localData: listCatalogue
+    });
   }
 
   updateNote(data) {
     const listCatalogue = this.state.localData;
-    const indexCatalogue = listCatalogue.returnParcelDraft.findIndex(
-      item => parseInt(item.catalogueId, 10) === parseInt(data.catalogueId, 10)
-    );
+    const indexCatalogue = this.findIndex(data);
+
     listCatalogue.returnParcelDraft[indexCatalogue].note = data.note;
 
+    /** UPDATE LOCAL STATE */
+    this.saveToReturnLines(listCatalogue.returnParcelDraft[indexCatalogue]);
     this.setState({ localData: listCatalogue });
+  }
+
+  saveToReturnLines(data) {
+    const returnLines = this.state.returnLines;
+
+    /** Transform Data */
+    const transformData = {
+      orderBrandCatalogueId: data.catalogueId,
+      qty: data.qty,
+      unitPrice: data.price,
+      returnReasonId: data.returnReason.id,
+      note: data.note
+    };
+
+    /** Find existing catalogue on Return Lines */
+    const returnLinesIndex = returnLines.findIndex(
+      item =>
+        parseInt(item.orderBrandCatalogueId, 10) ===
+        parseInt(data.catalogueId, 10)
+    );
+
+    /** Logic for Add Return Lines or
+     * Replace existing data with the updated one
+     * */
+    if (returnLinesIndex > -1) {
+      // if (transformData.qty > 0 && transformData.returnReasonId === null) {
+      //   this.setState({ disabledConfirmationButton: true });
+      // } else {
+      //   this.setState({ disabledConfirmationButton: false });
+      // }
+
+      if (parseInt(transformData.qty, 10) === 0) {
+        returnLines.splice(returnLinesIndex, 1);
+      } else {
+        returnLines[returnLinesIndex] = transformData;
+      }
+    } else {
+      returnLines.push(transformData);
+    }
+
+    this.setState({ returnLines });
+  }
+
+  checkReturnLines() {
+    const returnLines = this.state.returnLines;
+
+    if (returnLines.length > 0) {
+      const checkReturnReason = returnLines.some(
+        item => item.returnReasonId === null
+      );
+      return checkReturnReason;
+    } else {
+      return true;
+    }
   }
 
   renderListData() {
@@ -310,14 +379,67 @@ class ReturnRequestView extends Component {
     );
   }
 
+  renderButton() {
+    return (
+      <TouchableOpacity
+        style={{
+          padding: 12,
+          backgroundColor: this.checkReturnLines()
+            ? Color.fontRed10
+            : Color.fontRed50,
+          borderRadius: 8
+        }}
+        disabled={this.checkReturnLines()}
+        onPress={() => console.log('Confirmation')}
+      >
+        <Text style={Fonts.textButtonSmallRedActive}>Konfirmasi Retur</Text>
+      </TouchableOpacity>
+    );
+  }
+
+  /** ===> RENDER TOTAL BOTTOM VALUE === */
+  renderBottomValue() {
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={styles.boxBottomValue}>
+          <View style={{ marginBottom: 8 }}>
+            <Text>
+              <Text style={Fonts.type9}>Total: </Text>
+              <Text style={Fonts.type53}>{MoneyFormat(10000)}</Text>
+            </Text>
+          </View>
+          <View>
+            <Text style={Fonts.type74}>Total Produk 4 SKU</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  renderBottomSection() {
+    return (
+      <View style={[styles.boxTotalPrice, GlobalStyle.shadowForBox10]}>
+        <View style={{ flex: 1 }}>{this.renderBottomValue()}</View>
+        <View style={{ flex: 0, marginRight: 4 }}>{this.renderButton()}</View>
+      </View>
+    );
+  }
+
   renderLoadingPage() {
     return <LoadingPage />;
   }
 
   renderContent() {
-    return this.state.loading
-      ? this.renderLoadingPage()
-      : this.renderListData();
+    return this.state.loading ? this.renderLoadingPage() : this.renderBody();
+  }
+
+  renderBody() {
+    return (
+      <View style={styles.mainContainer}>
+        {this.renderListData()}
+        {this.renderBottomSection()}
+      </View>
+    );
   }
 
   /**
@@ -386,6 +508,21 @@ class ReturnRequestView extends Component {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1
+  },
+  boxTotalPrice: {
+    flexDirection: 'row',
+    paddingVertical: 11,
+    paddingLeft: 20,
+    paddingRight: 10,
+    height: 63
+  },
+  /** bottom bar */
+  boxBottomValue: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    alignContent: 'center',
+    paddingRight: 10
   }
 });
 
