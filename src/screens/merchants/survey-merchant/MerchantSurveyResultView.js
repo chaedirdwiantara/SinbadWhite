@@ -58,11 +58,16 @@ class MerchantSurveyResultView extends Component {
   /** === DID MOUNT === */
   componentDidMount() {
     const { dataSubmitSurveyResponse } = this.props.navigation.state.params;
+
     this.props.merchantGetSurveyBrandProcess(
-      dataSubmitSurveyResponse?.id ?? dataSubmitSurveyResponse?.surveyId
+      // from survey success
+      dataSubmitSurveyResponse?.survey?.id ??
+        // from survey tasklist
+        dataSubmitSurveyResponse?.id
     );
+
     this.props.merchantGetSurveyResponseProcess(
-      dataSubmitSurveyResponse?.surveyResponseId
+      dataSubmitSurveyResponse?.surveyResponseId ?? dataSubmitSurveyResponse?.id
     );
     this.backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -76,12 +81,17 @@ class MerchantSurveyResultView extends Component {
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
     // if failed show modal error
-    if (this.props.merchant.errorGetSurveyResponse) {
+    if (
+      this.props.merchant.errorGetSurveyResponse ||
+      this.props.merchant.errorGetSurveyBrand
+    ) {
       if (
-        prevProps.merchant.errorGetSurveyResponse !==
-          this.props.merchant.errorGetSurveyResponse ||
-        prevProps.merchant.errorGetSurveyBrand !==
-          this.props.merchant.errorGetSurveyBrand
+        (this.props.merchant.errorGetSurveyResponse !== null &&
+          this.props.merchant.errorGetSurveyResponse !==
+            prevProps.merchant.errorGetSurveyResponse) ||
+        (this.props.merchant.errorGetSurveyBrand !== null &&
+          this.props.merchant.errorGetSurveyBrand !==
+            prevProps.merchant.errorGetSurveyBrand)
       ) {
         this.setState({ openModalErrorGlobal: true });
       }
@@ -149,8 +159,8 @@ class MerchantSurveyResultView extends Component {
    */
   renderStoreName() {
     const { dataSurveyResult } = this.props.merchant;
-    if (dataSurveyResult.storeName.length >= 30) {
-      return dataSurveyResult.storeName.substring(0, 30) + '...';
+    if (dataSurveyResult.storeName.length >= 20) {
+      return dataSurveyResult.storeName.substring(0, 20) + '...';
     } else {
       return dataSurveyResult.storeName;
     }
@@ -388,14 +398,20 @@ class MerchantSurveyResultView extends Component {
                 style={{ marginRight: 6 }}
               />
               <Text selectable={true} style={Fonts.type23}>
-                {dataSubmitSurveyResponse?.surveySerialId || '-'}
+                {//from survey success
+                dataSubmitSurveyResponse?.surveySerialId ??
+                  //from survey tasklist
+                  dataSubmitSurveyResponse?.surveyId}
               </Text>
             </View>
             <TouchableOpacity
               style={{ zIndex: 9999 }}
               onPress={() => {
                 Clipboard.setString(
-                  dataSubmitSurveyResponse?.surveySerialId || '-'
+                  //from survey success
+                  dataSubmitSurveyResponse?.surveySerialId ??
+                    //from survey tasklist
+                    dataSubmitSurveyResponse?.surveyId
                 );
                 this.setState(
                   {
@@ -488,6 +504,7 @@ class MerchantSurveyResultView extends Component {
         {this.renderHeader()}
         {this.renderDetailScore()}
         {this.renderButton()}
+        {this.renderModalErrorResponse()}
         {this.renderToast()}
       </View>
     );

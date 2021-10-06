@@ -108,7 +108,12 @@ class SuccessSubmitView extends Component {
       <Text
         style={[
           Fonts.type25,
-          { marginTop: '3%', marginBottom: '5%', textAlign: 'center' }
+          {
+            marginTop: '3%',
+            marginBottom: '5%',
+            textAlign: 'center',
+            marginHorizontal: '2%'
+          }
         ]}
       >
         {`${this.state.caption}`}
