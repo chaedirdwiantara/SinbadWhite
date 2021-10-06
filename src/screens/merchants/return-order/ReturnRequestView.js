@@ -11,7 +11,12 @@ import {
   connect,
   bindActionCreators
 } from '../../../library/thirdPartyPackage';
-import { LoadingPage, EmptyData, ErrorPage } from '../../../library/component';
+import {
+  LoadingPage,
+  EmptyData,
+  ErrorPage,
+  ModalBottomErrorRespons
+} from '../../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
@@ -32,13 +37,15 @@ class ReturnRequestView extends Component {
       openModalReturnReasons: false,
       openModalReturnSummary: false,
       openModalReturnConfirmation: false,
+      openModalResponseError: false,
       selectedData: null,
       returnLines: [],
       disabledConfirmationButton: true,
       localData: {},
       dataConfirmation: [],
       returnedConfirmation: null,
-      showInfo: false
+      showInfo: false,
+      orderParcelId: this.props.navigation.state.params.orderParcelId
     };
   }
   static navigationOptions = ({ navigation }) => {
@@ -81,6 +88,14 @@ class ReturnRequestView extends Component {
         this.loading(false);
       }
     }
+
+    if (
+      prevProps.oms.errorPostReturnOrder !== this.props.oms.errorPostReturnOrder
+    ) {
+      if (this.props.oms.errorPostReturnOrder !== null) {
+        this.openModalResponseError();
+      }
+    }
   }
 
   convertListToLocalState() {
@@ -109,6 +124,13 @@ class ReturnRequestView extends Component {
 
   getReturnReason() {
     this.props.GetReturnReasonProcess();
+  }
+
+  openModalResponseError() {
+    this.setState({
+      openModalResponseError: true,
+      openModalReturnSummary: false
+    });
   }
 
   parentFunction(data) {
@@ -163,7 +185,6 @@ class ReturnRequestView extends Component {
         });
         break;
       case 'SelectConfirmation':
-        console.log(data);
         this.setState({
           showInfo: false,
           returnedConfirmation: data.data,
@@ -177,7 +198,16 @@ class ReturnRequestView extends Component {
   }
 
   confirmReturnOrder() {
-    console.log('Confirm Retur Order');
+    const data = {
+      orderParcelId: parseInt(this.state.orderParcelId, 10),
+      returns: this.state.returnLines,
+      returned: this.state.returnedConfirmation
+    };
+
+    console.log('Confirm Return Order', data);
+    console.log(JSON.stringify(data));
+
+    this.props.PostReturnOrderProcess(data);
   }
 
   findIndex(data) {
@@ -465,7 +495,12 @@ class ReturnRequestView extends Component {
     return this.state.openModalReturnSummary ? (
       <ModalReturnSummary
         open={this.state.openModalReturnSummary}
-        close={() => this.setState({ openModalReturnSummary: false })}
+        close={() =>
+          this.setState({
+            openModalReturnSummary: false,
+            openModalReturnConfirmation: false
+          })
+        }
         data={this.state.dataConfirmation}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
@@ -496,6 +531,23 @@ class ReturnRequestView extends Component {
       <View />
     );
   }
+
+  renderModalResponseError() {
+    return this.state.openModalResponseError ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalResponseError}
+        onPress={() =>
+          this.setState({
+            openModalResponseError: false,
+            openModalReturnSummary: true
+          })
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
   render() {
     return (
       <View style={styles.mainContainer}>
@@ -506,6 +558,7 @@ class ReturnRequestView extends Component {
         {this.renderModalReturnReasons()}
         {this.renderModalReturnSummary()}
         {this.renderModalReturnConfirmation()}
+        {this.renderModalResponseError()}
       </View>
     );
   }

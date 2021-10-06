@@ -169,6 +169,7 @@ function postKurConsent(data) {
   });
 }
 
+/** GET RETURN DRAFT */
 function getReturnDraft(data) {
   return ApiRest({
     method: 'GET',
@@ -178,10 +179,20 @@ function getReturnDraft(data) {
   });
 }
 
+/** GET RETURN REASON */
 function getReturnReason() {
   return ApiRest({
     method: 'GET',
     path: 'return-reasons?showOnAgentApp=true'
+  });
+}
+
+/** CREATE RETURN ORDER */
+function postReturnOrder(params) {
+  return ApiRest({
+    method: 'POST',
+    path: 'return-parcels',
+    params
   });
 }
 
@@ -200,5 +211,6 @@ export const OmsMethod = {
   getKurOtp,
   postKurConsent,
   getReturnDraft,
-  getReturnReason
+  getReturnReason,
+  postReturnOrder
 };

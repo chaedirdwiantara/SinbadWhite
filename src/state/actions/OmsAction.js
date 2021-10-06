@@ -451,6 +451,10 @@ export function GetReturnDraftFailed(data) {
   return { type: types.GET_RETURN_DRAFT_FAILED, payload: data };
 }
 
+export function SaveReturnDraftParcelId(data) {
+  return { type: types.SAVE_RETURN_DRAFT_PARCEL_ID, payload: data };
+}
+
 /**
  * ===================
  * GET RETURN REASON
@@ -470,4 +474,24 @@ export function GetReturnReasonSuccess(data) {
 }
 export function GetReturnReasonFailed(data) {
   return { type: types.GET_RETURN_REASON_FAILED, payload: data };
+}
+
+/**
+ * =====================
+ * POST RETURN ORDER
+ * =====================
+ */
+export function PostReturnOrderProcess(data) {
+  return { type: types.POST_RETURN_ORDER_PROCESS, payload: data };
+}
+
+export function PostReturnOrderSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.POST_RETURN_ORDER_SUCCESS, payload: data };
+  }
+  return { type: types.POST_RETURN_ORDER_FAILED, payload: data };
+}
+
+export function PostReturnOrderFailed(data) {
+  return { type: types.POST_RETURN_ORDER_FAILED, payload: data };
 }
