@@ -159,8 +159,8 @@ class MerchantSurveyResultView extends Component {
    */
   renderStoreName() {
     const { dataSurveyResult } = this.props.merchant;
-    if (dataSurveyResult.storeName.length >= 20) {
-      return dataSurveyResult.storeName.substring(0, 20) + '...';
+    if (dataSurveyResult.storeName.length >= 16) {
+      return dataSurveyResult.storeName.substring(0, 15) + '...';
     } else {
       return dataSurveyResult.storeName;
     }
@@ -174,9 +174,9 @@ class MerchantSurveyResultView extends Component {
     return (
       <View
         style={{
-          flex: 1.5,
+          flex: 1,
           flexDirection: 'row',
-          justifyContent: 'space-around',
+          justifyContent: 'flex-start',
           alignContent: 'center',
           paddingTop: 40,
           paddingBottom: 40,
@@ -185,18 +185,45 @@ class MerchantSurveyResultView extends Component {
           borderBottomWidth: 1
         }}
       >
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            width: '70%'
+          }}
+        >
           <Text style={Fonts.textHeaderPageSurveyResult}>Responden</Text>
           <Text
-            style={[Fonts.textSubHeaderPageSurveyResult, { paddingTop: 4 }]}
+            style={[
+              Fonts.textSubHeaderPageSurveyResult,
+              {
+                paddingTop: 4,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden'
+              }
+            ]}
           >
             {this.renderStoreName()}
           </Text>
         </View>
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            width: '30%'
+          }}
+        >
           <Text style={Fonts.textHeaderPageSurveyResult}>Total Skor</Text>
           <Text
-            style={[Fonts.textSubHeaderPageSurveyResult, { paddingTop: 4 }]}
+            style={[
+              Fonts.textSubHeaderPageSurveyResult,
+              {
+                paddingTop: 4,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }
+            ]}
           >
             {dataTotalScoreSurvey ?? '0'}
           </Text>
@@ -320,120 +347,125 @@ class MerchantSurveyResultView extends Component {
             paddingHorizontal: 16,
             borderTopColor: Color.fontGreen50,
             marginBottom: 10,
-            flex: 1,
+            flex: 1.2,
             borderTopWidth: 4,
             borderWidth: 1
           }
         ]}
       >
-        <Text style={[Fonts.type4, { paddingLeft: 0, width: '90%' }]}>
-          {dataSurveyResponse?.survey?.name || '-'}
-        </Text>
-        <Text style={[Fonts.type23, { paddingTop: 4 }]}>
-          {dataSurveyResponse?.survey?.description || '-'}
-        </Text>
-        <View
-          style={{
-            flex: 1,
-            flexWrap: 'wrap',
-            paddingVertical: 12
-          }}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ width: '100%', height: '100%' }}
         >
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingRight: 17,
-              marginBottom: '0.5%'
-            }}
-          >
-            <MaterialIcon
-              name="bookmark"
-              color={Color.fontBlack40}
-              size={14}
-              style={{ marginRight: 6 }}
-            />
-            <Text style={Fonts.type23}>
-              {this.convertBrandAndInvoice(
-                dataSurveyResponse?.survey?.invoiceGroups,
-                'invoice'
-              )}
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginBottom: '0.5%'
-            }}
-          >
-            <MaterialIcon
-              name="local-offer"
-              color={Color.fontBlack40}
-              size={14}
-              style={{ marginRight: 6 }}
-            />
-            <Text style={Fonts.type23}>
-              {this.convertBrandAndInvoice(dataGetSurveyBrand, 'brand')}
-            </Text>
-          </View>
+          <Text style={[Fonts.type4, { paddingLeft: 0, width: '90%' }]}>
+            {dataSurveyResponse?.survey?.name || '-'}
+          </Text>
+          <Text style={[Fonts.type23, { paddingTop: 4 }]}>
+            {dataSurveyResponse?.survey?.description || '-'}
+          </Text>
           <View
             style={{
               flex: 1,
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              marginBottom: '0.5%'
+              flexWrap: 'wrap',
+              paddingVertical: 12
             }}
           >
             <View
               style={{
                 flexDirection: 'row',
-                flex: 0.5
+                alignItems: 'center',
+                paddingRight: 17,
+                marginBottom: '0.5%'
               }}
             >
               <MaterialIcon
-                name="assignment"
+                name="bookmark"
                 color={Color.fontBlack40}
                 size={14}
                 style={{ marginRight: 6 }}
               />
-              <Text selectable={true} style={Fonts.type23}>
-                {//from survey success
-                dataSubmitSurveyResponse?.surveySerialId ??
-                  //from survey tasklist
-                  dataSubmitSurveyResponse?.surveyId}
+              <Text style={Fonts.type23}>
+                {this.convertBrandAndInvoice(
+                  dataSurveyResponse?.survey?.invoiceGroups,
+                  'invoice'
+                )}
               </Text>
             </View>
-            <TouchableOpacity
-              style={{ zIndex: 9999 }}
-              onPress={() => {
-                Clipboard.setString(
-                  //from survey success
-                  dataSubmitSurveyResponse?.surveySerialId ??
-                    //from survey tasklist
-                    dataSubmitSurveyResponse?.surveyId
-                );
-                this.setState(
-                  {
-                    toastText: `ID berhasil disalin`,
-                    showToast: true
-                  },
-                  () => {
-                    setTimeout(() => {
-                      this.setState({
-                        showToast: false
-                      });
-                    }, 3000);
-                  }
-                );
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: '0.5%'
               }}
             >
-              <View>
-                <Text style={styles.copyID}>Copy ID</Text>
+              <MaterialIcon
+                name="local-offer"
+                color={Color.fontBlack40}
+                size={14}
+                style={{ marginRight: 6 }}
+              />
+              <Text style={Fonts.type23}>
+                {this.convertBrandAndInvoice(dataGetSurveyBrand, 'brand')}
+              </Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+                marginBottom: '0.5%'
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flex: 0.5
+                }}
+              >
+                <MaterialIcon
+                  name="assignment"
+                  color={Color.fontBlack40}
+                  size={14}
+                  style={{ marginRight: 6 }}
+                />
+                <Text selectable={true} style={Fonts.type23}>
+                  {//from survey success
+                  dataSubmitSurveyResponse?.surveySerialId ??
+                    //from survey tasklist
+                    dataSubmitSurveyResponse?.surveyId}
+                </Text>
               </View>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={{ zIndex: 9999 }}
+                onPress={() => {
+                  Clipboard.setString(
+                    //from survey success
+                    dataSubmitSurveyResponse?.surveySerialId ??
+                      //from survey tasklist
+                      dataSubmitSurveyResponse?.surveyId
+                  );
+                  this.setState(
+                    {
+                      toastText: `ID berhasil disalin`,
+                      showToast: true
+                    },
+                    () => {
+                      setTimeout(() => {
+                        this.setState({
+                          showToast: false
+                        });
+                      }, 3000);
+                    }
+                  );
+                }}
+              >
+                <View>
+                  <Text style={styles.copyID}>Copy ID</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </View>
     );
   }
@@ -447,7 +479,7 @@ class MerchantSurveyResultView extends Component {
         style={[
           styles.headerContainer,
           {
-            flex: 2,
+            flex: 1.8,
             flexDirection: 'column',
             marginHorizontal: 16,
             borderWidth: 1
