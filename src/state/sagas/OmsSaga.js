@@ -161,6 +161,7 @@ function* postKurConsent(actions) {
   }
 }
 
+/** GET RETURN DRAFT */
 function* getReturnDraft(actions) {
   try {
     const response = yield call(() => {
@@ -172,6 +173,7 @@ function* getReturnDraft(actions) {
   }
 }
 
+/** GET RETURN REASON */
 function* getReturnReason(actions) {
   try {
     const response = yield call(() => {
@@ -180,6 +182,18 @@ function* getReturnReason(actions) {
     yield put(ActionCreators.GetReturnReasonSuccess(response));
   } catch (error) {
     yield put(ActionCreators.GetReturnReasonFailed(error));
+  }
+}
+
+/** POST RETURN ORDER */
+function* postReturnOrder(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.postReturnOrder(actions.payload);
+    });
+    yield put(ActionCreators.PostReturnOrderSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.PostReturnOrderFailed(error));
   }
 }
 
@@ -207,6 +221,7 @@ function* OmsSaga() {
   yield takeEvery(types.OMS_POST_KUR_CONSENT_PROCESS, postKurConsent);
   yield takeEvery(types.GET_RETURN_DRAFT_PROCESS, getReturnDraft);
   yield takeEvery(types.GET_RETURN_REASON_PROCESS, getReturnReason);
+  yield takeEvery(types.POST_RETURN_ORDER_PROCESS, postReturnOrder);
 }
 
 export default OmsSaga;

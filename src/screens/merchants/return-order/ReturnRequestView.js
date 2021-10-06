@@ -4,14 +4,18 @@ import {
   View,
   Text,
   StyleSheet,
-  height,
   TouchableOpacity
 } from '../../../library/reactPackage';
 import {
   connect,
   bindActionCreators
 } from '../../../library/thirdPartyPackage';
-import { LoadingPage, EmptyData } from '../../../library/component';
+import {
+  LoadingPage,
+  EmptyData,
+  ErrorPage,
+  ModalBottomErrorRespons
+} from '../../../library/component';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
@@ -19,6 +23,9 @@ import ReturnRequestListView from './ReturnRequestListView';
 import ModalManualInputQty from './ModalManualInputQty';
 import ModalUpdatePrice from './ModalUpdatePrice';
 import ModalReturnReasons from './ModalReturnReasons';
+import ModalReturnSummary from './ModalReturnSummary';
+import ModalReturnConfirmation from './ModalReturnConfirmation';
+import NavigationService from '../../../navigation/NavigationService';
 
 class ReturnRequestView extends Component {
   constructor(props) {
@@ -28,10 +35,17 @@ class ReturnRequestView extends Component {
       openModalManualInputQty: false,
       openModalManualInputPrice: false,
       openModalReturnReasons: false,
+      openModalReturnSummary: false,
+      openModalReturnConfirmation: false,
+      openModalResponseError: false,
       selectedData: null,
       returnLines: [],
       disabledConfirmationButton: true,
-      localData: {}
+      localData: {},
+      dataConfirmation: [],
+      returnedConfirmation: null,
+      showInfo: false,
+      orderParcelId: this.props.navigation.state.params.orderParcelId
     };
   }
   static navigationOptions = ({ navigation }) => {
@@ -66,6 +80,39 @@ class ReturnRequestView extends Component {
         this.convertListToLocalState();
       }
     }
+
+    if (
+      prevProps.oms.errorGetReturnDraft !== this.props.oms.errorGetReturnDraft
+    ) {
+      if (this.props.oms.errorGetReturnDraft !== null) {
+        this.loading(false);
+      }
+    }
+
+    if (
+      prevProps.oms.errorPostReturnOrder !== this.props.oms.errorPostReturnOrder
+    ) {
+      if (this.props.oms.errorPostReturnOrder !== null) {
+        this.openModalResponseError();
+      }
+    }
+
+    if (
+      prevProps.oms.dataPostReturnOrder !== this.props.oms.dataPostReturnOrder
+    ) {
+      if (this.props.oms.dataPostReturnOrder !== null) {
+        NavigationService.customizeReset(
+          3,
+          [
+            'JourneyView',
+            'MerchantHomeView',
+            'ReturnOrderView',
+            'ReturnRequestDoneView'
+          ],
+          { storeName: this.props.merchant.selectedMerchant.storeName }
+        );
+      }
+    }
   }
 
   convertListToLocalState() {
@@ -94,6 +141,13 @@ class ReturnRequestView extends Component {
 
   getReturnReason() {
     this.props.GetReturnReasonProcess();
+  }
+
+  openModalResponseError() {
+    this.setState({
+      openModalResponseError: true,
+      openModalReturnSummary: false
+    });
   }
 
   parentFunction(data) {
@@ -131,10 +185,46 @@ class ReturnRequestView extends Component {
       case 'addNote':
         this.updateNote(data.data);
         break;
+      case 'ConfirmationCancel':
+        this.setState({ openModalReturnSummary: false });
+        break;
+      case 'ConfirmationContinue':
+        if (this.state.returnedConfirmation === null) {
+          this.setState({ showInfo: true });
+        } else {
+          this.confirmReturnOrder();
+        }
+        break;
+      case 'openModalConfirmation':
+        this.setState({
+          openModalReturnConfirmation: true,
+          openModalReturnSummary: false
+        });
+        break;
+      case 'SelectConfirmation':
+        this.setState({
+          showInfo: false,
+          returnedConfirmation: data.data,
+          openModalReturnSummary: true
+        });
+        break;
 
       default:
         break;
     }
+  }
+
+  confirmReturnOrder() {
+    const data = {
+      orderParcelId: parseInt(this.state.orderParcelId, 10),
+      returns: this.state.returnLines,
+      returned: this.state.returnedConfirmation
+    };
+
+    console.log('Confirm Return Order', data);
+    console.log(JSON.stringify(data));
+
+    this.props.PostReturnOrderProcess(data);
   }
 
   findIndex(data) {
@@ -205,14 +295,18 @@ class ReturnRequestView extends Component {
   }
 
   saveToReturnLines(data) {
+    const dataConfirmation = this.state.dataConfirmation;
     const returnLines = this.state.returnLines;
 
     /** Transform Data */
     const transformData = {
-      orderBrandCatalogueId: data.catalogueId,
-      qty: data.qty,
-      unitPrice: data.price,
-      returnReasonId: data.returnReason.id,
+      orderBrandCatalogueId: parseInt(data.catalogueId, 10),
+      qty: parseInt(data.qty, 10),
+      unitPrice: parseInt(data.price, 10),
+      returnReasonId:
+        data.returnReason.id === null
+          ? null
+          : parseInt(data.returnReason.id, 10),
       note: data.note
     };
 
@@ -229,14 +323,20 @@ class ReturnRequestView extends Component {
     if (returnLinesIndex > -1) {
       if (parseInt(transformData.qty, 10) === 0) {
         returnLines.splice(returnLinesIndex, 1);
+        dataConfirmation.splice(returnLinesIndex, 1);
       } else {
         returnLines[returnLinesIndex] = transformData;
+        dataConfirmation[returnLinesIndex] = data;
       }
     } else {
       returnLines.push(transformData);
+      dataConfirmation.push(data);
     }
 
-    this.setState({ returnLines });
+    console.log('Data Order Lines', returnLines);
+    console.log('Data Confirmation', dataConfirmation);
+
+    this.setState({ returnLines, dataConfirmation });
   }
 
   checkReturnLines() {
@@ -250,6 +350,14 @@ class ReturnRequestView extends Component {
     } else {
       return true;
     }
+  }
+
+  checkGrandTotalPrice() {
+    let grandTotalPrice = 0;
+    this.state.returnLines.map(item => {
+      grandTotalPrice += item.qty * item.unitPrice;
+    });
+    return grandTotalPrice;
   }
 
   renderListData() {
@@ -275,7 +383,7 @@ class ReturnRequestView extends Component {
           borderRadius: 8
         }}
         disabled={this.checkReturnLines()}
-        onPress={() => console.log('Confirmation')}
+        onPress={() => this.setState({ openModalReturnSummary: true })}
       >
         <Text style={Fonts.textButtonSmallRedActive}>Konfirmasi Retur</Text>
       </TouchableOpacity>
@@ -290,11 +398,15 @@ class ReturnRequestView extends Component {
           <View style={{ marginBottom: 8 }}>
             <Text>
               <Text style={Fonts.type9}>Total: </Text>
-              <Text style={Fonts.type53}>{MoneyFormat(10000)}</Text>
+              <Text style={Fonts.type53}>
+                {MoneyFormat(this.checkGrandTotalPrice())}
+              </Text>
             </Text>
           </View>
           <View>
-            <Text style={Fonts.type74}>Total Produk 4 SKU</Text>
+            <Text style={Fonts.type74}>
+              Total Produk {this.state.returnLines.length} SKU
+            </Text>
           </View>
         </View>
       </View>
@@ -326,6 +438,19 @@ class ReturnRequestView extends Component {
         {this.renderListData()}
         {this.renderBottomSection()}
       </View>
+    ) : this.props.oms.errorGetReturnDraft !== null ? (
+      <ErrorPage
+        title={
+          this.props.oms.errorGetReturnDraft.data?.errorCode === 'ERR-LIMIT'
+            ? 'Order Sudah Melebihi Batas Waktu'
+            : 'Terjadi Kesalahan'
+        }
+        description={
+          this.props.oms.errorGetReturnDraft.data?.errorCode === 'ERR-LIMIT'
+            ? 'Silahkan pilih order lainnya'
+            : 'Silahkan mencoba kembali'
+        }
+      />
     ) : (
       <EmptyData />
     );
@@ -382,6 +507,64 @@ class ReturnRequestView extends Component {
       <View />
     );
   }
+
+  renderModalReturnSummary() {
+    return this.state.openModalReturnSummary ? (
+      <ModalReturnSummary
+        open={this.state.openModalReturnSummary}
+        close={() =>
+          this.setState({
+            openModalReturnSummary: false,
+            openModalReturnConfirmation: false
+          })
+        }
+        data={this.state.dataConfirmation}
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+        title={'Konfirmasi Retur'}
+        showInfo={this.state.showInfo}
+        returnInfo={this.state.returnedConfirmation}
+      />
+    ) : (
+      <View />
+    );
+  }
+
+  renderModalReturnConfirmation() {
+    return this.state.openModalReturnConfirmation ? (
+      <ModalReturnConfirmation
+        open={this.state.openModalReturnConfirmation}
+        close={() =>
+          this.setState({
+            openModalReturnConfirmation: false,
+            openModalReturnSummary: true
+          })
+        }
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+        title={'Barang sudah dibawa?'}
+      />
+    ) : (
+      <View />
+    );
+  }
+
+  renderModalResponseError() {
+    return this.state.openModalResponseError ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalResponseError}
+        onPress={() =>
+          this.setState({
+            openModalResponseError: false,
+            openModalReturnSummary: true
+          })
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
   render() {
     return (
       <View style={styles.mainContainer}>
@@ -390,6 +573,9 @@ class ReturnRequestView extends Component {
         {this.renderModalManualInputQty()}
         {this.renderModalUpdatePrice()}
         {this.renderModalReturnReasons()}
+        {this.renderModalReturnSummary()}
+        {this.renderModalReturnConfirmation()}
+        {this.renderModalResponseError()}
       </View>
     );
   }
@@ -416,8 +602,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ oms }) => {
-  return { oms };
+const mapStateToProps = ({ oms, merchant }) => {
+  return { oms, merchant };
 };
 
 const mapDispatchToProps = dispatch => {

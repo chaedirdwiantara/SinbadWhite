@@ -30,5 +30,17 @@ export default [
   {
     api: 'check-return-is-active',
     team: 'kanzun'
+  },
+  {
+    api: 'return-reasons',
+    team: 'kanzun'
+  },
+  {
+    api: 'return-draft',
+    team: 'kanzun'
+  },
+  {
+    api: 'return-parcels',
+    team: 'kanzun'
   }
 ];

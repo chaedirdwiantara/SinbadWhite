@@ -16,7 +16,9 @@ const INITIAL_STATE = {
   loadingOmsPostKurConsent: false,
   loadingGetReturnDraft: false,
   loadingGetReturnReason: false,
+  loadingPostReturnOrder: false,
   /** data */
+  selectedReturnParcelId: null,
   dataOmsGetCartItem: null,
   dataOmsGetCartItemFromCheckout: null,
   dataOmsGetCheckoutItem: null,
@@ -32,6 +34,7 @@ const INITIAL_STATE = {
   dataOmsPostKurConsent: null,
   dataGetReturnDraft: null,
   dataGetReturnReason: null,
+  dataPostReturnOrder: null,
   /** error */
   errorOmsGetCartItem: null,
   errorOmsGetCheckoutItem: null,
@@ -45,7 +48,8 @@ const INITIAL_STATE = {
   errorOmsApplicablePaylater: null,
   errorOmsPostKurConsent: null,
   errorGetReturnDraft: null,
-  errorGetReturnReason: null
+  errorGetReturnReason: null,
+  errorPostReturnOrder: null
 };
 
 export const oms = createReducer(INITIAL_STATE, {
@@ -587,6 +591,12 @@ export const oms = createReducer(INITIAL_STATE, {
       errorGetReturnDraft: action.payload
     };
   },
+  [types.SAVE_RETURN_DRAFT_PARCEL_ID](state, action) {
+    return {
+      ...state,
+      selectedReturnParcelId: action.data
+    };
+  },
 
   /**
    * =================================
@@ -613,6 +623,34 @@ export const oms = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetReturnReason: false,
       errorGetReturnReason: action.payload
+    };
+  },
+
+  /**
+   * =========================
+   * POST RETURN ORDER
+   * =========================
+   */
+  [types.POST_RETURN_ORDER_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingPostReturnOrder: true,
+      dataPostReturnOrder: null,
+      errorPostReturnOrder: null
+    };
+  },
+  [types.POST_RETURN_ORDER_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingPostReturnOrder: false,
+      dataPostReturnOrder: action.data
+    };
+  },
+  [types.POST_RETURN_ORDER_FAILED](state, action) {
+    return {
+      ...state,
+      loadingPostReturnOrder: false,
+      errorPostReturnOrder: action.data
     };
   }
 });

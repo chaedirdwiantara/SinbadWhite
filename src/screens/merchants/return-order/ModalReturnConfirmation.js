@@ -21,19 +21,22 @@ import {
 import { GlobalStyle, Fonts } from '../../../helpers';
 import { Color } from '../../../config';
 
-class ModalReturnReasons extends Component {
+class ModalReturnConfirmation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedReason: {
-        id: null,
-        reason: null
-      },
-      loading: true
+      confirmation: [
+        {
+          status: true,
+          title: 'Ya'
+        },
+        {
+          status: false,
+          title: 'Tidak'
+        }
+      ],
+      selectedConfirmation: null
     };
-  }
-  componentDidMount() {
-    setTimeout(() => this.setState({ loading: false }), 100);
   }
   /**
    * ==================
@@ -79,8 +82,7 @@ class ModalReturnReasons extends Component {
       <View>
         <FlatList
           contentContainerStyle={styles.flatListContainer}
-          ItemSeparatorComponent={this.renderSeparator}
-          data={this.props.returnReasons}
+          data={this.state.confirmation}
           numColumns={1}
           extraData={this.state}
           keyExtractor={(item, index) => index.toString()}
@@ -88,10 +90,6 @@ class ModalReturnReasons extends Component {
         />
       </View>
     );
-  }
-
-  renderSeparator() {
-    return <View style={[{ marginBottom: 16 }, GlobalStyle.lines]} />;
   }
 
   renderItem({ item, index }) {
@@ -105,11 +103,7 @@ class ModalReturnReasons extends Component {
             flexDirection: 'row'
           }}
           onPress={() => {
-            const data = {
-              id: item.id,
-              reason: item.reason
-            };
-            this.setState({ selectedReason: data });
+            this.setState({ selectedConfirmation: item.status });
           }}
         >
           <View
@@ -128,7 +122,7 @@ class ModalReturnReasons extends Component {
                 Fonts.fontH10Bold
               ]}
             >
-              {item.reason}
+              {item.title}
             </Text>
           </View>
           <View
@@ -137,8 +131,7 @@ class ModalReturnReasons extends Component {
               marginRight: 16
             }}
           >
-            {parseInt(this.state.selectedReason.id, 10) ===
-            parseInt(item.id, 10) ? (
+            {this.state.selectedConfirmation === item.status ? (
               this.renderSelectedActive()
             ) : (
               <MaterialCommunityIcons
@@ -182,21 +175,13 @@ class ModalReturnReasons extends Component {
     return (
       <View style={[GlobalStyle.shadowForBox10, { flex: 1 }]}>
         <ButtonSingle
-          title={'Pilih Alasan'}
+          title={'Konfirmasi'}
           borderRadius={8}
           onPress={() =>
             this.props.parentFunction({
-              type: 'SelectReason',
-              data: {
-                reason: this.state.selectedReason,
-                catalogueId: this.props.data.catalogueId
-              }
+              type: 'SelectConfirmation',
+              data: this.state.selectedConfirmation
             })
-          }
-          disabled={
-            parseInt(this.props.data.qty, 10) === 0 ||
-            parseInt(this.state.price, 10) ===
-              parseInt(this.props.data.price, 10)
           }
         />
       </View>
@@ -294,4 +279,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ModalReturnReasons;
+export default ModalReturnConfirmation;
