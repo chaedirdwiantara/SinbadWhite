@@ -122,6 +122,7 @@ class ReturnRequestView extends Component {
         id: null,
         reason: null
       };
+      item.catalogueId = item.orderBrandCatalogueId;
       item.qty = 0;
       item.suggestedPrice = item.price;
       item.note = '';
