@@ -159,6 +159,9 @@ class MerchantDetailView extends Component {
           storeId: this.props.merchant.dataGetMerchantDetailV2.storeId
         });
         break;
+      case 'HistoryReturnOrderView':
+        NavigationService.navigate('HistoryReturnOrderView');
+        break;
       default:
         break;
     }
@@ -431,7 +434,7 @@ class MerchantDetailView extends Component {
         <ButtonMenuType1
           child
           title={'Riwayat Retur'}
-          onPress={() => this.goTo('merchantOrderHistory')}
+          onPress={() => this.goTo('HistoryReturnOrderView')}
         />
       </View>
     );
