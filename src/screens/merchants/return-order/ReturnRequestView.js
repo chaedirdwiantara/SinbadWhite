@@ -4,7 +4,6 @@ import {
   View,
   Text,
   StyleSheet,
-  height,
   TouchableOpacity
 } from '../../../library/reactPackage';
 import {
