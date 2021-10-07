@@ -261,8 +261,8 @@ class MerchantCheckinView extends Component {
   }
   /** === DISABLE BUTTON MASUK TOKO === */
   disableButton() {
-    const { dataGetRadiusLockGeotag } = this.props.merchant;
-    if (this.props.merchant.loadingPostActivity) {
+    const { dataGetRadiusLockGeotag, loadingPostActivity, loadingGetRadiusLockGeotag } = this.props.merchant;
+    if (loadingPostActivity || this.state.reRender || loadingGetRadiusLockGeotag) {
       return true;
     }
     if (this.state.latitude === 0 && this.state.longitude === 0) {
@@ -772,7 +772,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 23092021
+ * updatedDate: 07102021
  * updatedFunction:
- * -> add modal error response (when failed get radius lock geotag & failed post activity)
+ * -> add validation to disable button confirmation when refresh the location.
  */
