@@ -10,7 +10,8 @@ import {
   BackHandler,
   ImageBackground
 } from '../../library/reactPackage';
-
+import { Animated } from 'react-native';
+import Animation from 'lottie-react-native';
 import { Fonts } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import { ButtonSingle } from '../../library/component';
@@ -21,7 +22,8 @@ class SuccessSubmitView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      caption: this.props.navigation.state.params.caption
+      caption: this.props.navigation.state.params.caption,
+      progress: new Animated.Value(0)
     };
   }
   /**
@@ -29,6 +31,7 @@ class SuccessSubmitView extends Component {
    * FUNCTIONAL
    * ==============================
    */
+
   /**
    * === BACK ACTION ===
    * @returns {boolean} true & navigate to survey list.
@@ -45,6 +48,10 @@ class SuccessSubmitView extends Component {
       'hardwareBackPress',
       this.backAction
     );
+    Animated.timing(this.state.progress, {
+      toValue: 1,
+      duration: 5000
+    }).start();
   }
   /** === WILL UNMOUNT === */
   componentWillUnmount() {
@@ -121,16 +128,36 @@ class SuccessSubmitView extends Component {
     );
   }
   /**
+   * === RENDER  ===
+   * @returns {ReactElement} render animation success.
+   */
+  renderAnimation() {
+    return (
+      <Animation
+        style={{
+          width: 200,
+          height: 200
+        }}
+        autoPlay={true}
+        loop={false}
+        source={require('../../assets/json/CheckAnimation.json')}
+        progress={this.state.progress}
+      />
+    );
+  }
+  /**
    * === RENDER CONTENT ===
    * @returns {ReactElement} render content.
    */
   renderContent() {
     return (
       <View style={styles.centeredCaption}>
-        <Image
+        {/* <Image
           source={require('../../assets/images/afterSubmit/Check_Illustration.png')}
           style={styles.imageSuccess}
-        />
+        /> */}
+
+        {this.renderAnimation()}
         {this.renderTitleCaption()}
         {this.renderCaption()}
         {this.renderButton()}
