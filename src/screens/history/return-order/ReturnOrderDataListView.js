@@ -16,6 +16,7 @@ import {
 import { Color } from '../../../config';
 import { GlobalStyle, MoneyFormat, Fonts } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
+import NavigationService from '../../../navigation/NavigationService';
 
 class ReturnOrderDataListView extends Component {
   constructor(props) {
@@ -154,6 +155,11 @@ class ReturnOrderDataListView extends Component {
       >
         <TouchableOpacity
           style={[styles.cardContainer, GlobalStyle.shadowForBox]}
+          onPress={() =>
+            NavigationService.navigate('HistoryReturnOrderDetailView', {
+              returnCode: item.returnCode
+            })
+          }
         >
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
