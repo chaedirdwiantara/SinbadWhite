@@ -139,7 +139,7 @@ class SuccessSubmitView extends Component {
           height: 200
         }}
         autoPlay={true}
-        loop={true}
+        loop={false}
         source={require('../../assets/json/CheckAnimation.json')}
         progress={this.state.progress}
       />
