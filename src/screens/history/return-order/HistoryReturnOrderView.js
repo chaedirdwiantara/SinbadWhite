@@ -9,25 +9,38 @@ import {
 import {
   connect,
   bindActionCreators,
-  MaterialIcon
+  MaterialIcon,
+  moment
 } from '../../../library/thirdPartyPackage';
-import { StatusBarWhite } from '../../../library/component';
+import {
+  StatusBarWhite,
+  DatePickerSpinner,
+  ModalBottomType4,
+  StatusBarBlack
+} from '../../../library/component';
 import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
 import { Fonts, GlobalStyle } from '../../../helpers';
 import ReturnOrderDataListView from './ReturnOrderDataListView';
 import ModalReturnStatus from './ModalReturnStatus';
+import ModalFilterDate from './ModalFilterDate';
 
 class HistoryReturnOrderView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedReturnStatus: null,
+      selectedDate: '',
       dateFilter: {
-        dateGte: '',
-        dateLte: ''
+        startReturnDate: '',
+        endReturnDate: ''
       },
+      startDate: '',
+      endDate: '',
+      typeDate: '',
       openModalReturnStatus: false,
+      openModalFilterDate: false,
+      openDateSpinner: false,
       mockReturnStatus: [
         {
           id: 0,
@@ -77,6 +90,29 @@ class HistoryReturnOrderView extends Component {
           openModalReturnStatus: false
         });
 
+        break;
+      case 'dateFilter':
+        this.setState({
+          openModalFilterDate: false,
+          dateFilter: data.data.dateFilter,
+          selectedDate: data.data.selectedDate,
+          startDate: data.data.dateFilter.startReturnDate,
+          endDate: data.data.dateFilter.endReturnDate
+        });
+        break;
+      case 'customDate':
+        this.setState({
+          openDateSpinner: true,
+          typeDate: data.data.typeDate
+        });
+        break;
+      case 'datePicker':
+        this.setState({ openDateSpinner: false });
+        if (this.state.typeDate === 'startDate') {
+          this.setState({ startDate: data.data, endDate: '' });
+        } else {
+          this.setState({ endDate: data.data });
+        }
         break;
 
       default:
@@ -167,16 +203,38 @@ class HistoryReturnOrderView extends Component {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: Color.fontBlack05
+            backgroundColor:
+              this.state.selectedDate === ''
+                ? Color.fontBlack05
+                : Color.fontBlack80
           }}
+          onPress={() => this.setState({ openModalFilterDate: true })}
         >
-          <Text style={[Fonts.fontC2Medium, { color: Color.fontBlack40 }]}>
-            Cari Semua Tanggal
+          <Text
+            style={[
+              Fonts.fontC2Medium,
+              {
+                color:
+                  this.state.selectedDate === ''
+                    ? Color.fontBlack40
+                    : Color.fontWhite
+              }
+            ]}
+          >
+            {this.state.selectedDate === ''
+              ? 'Cari Semua Tanggal'
+              : `${moment(this.state.startDate).format('DD MMM YY')} - ${moment(
+                  this.state.endDate
+                ).format('DD MMM YY')}`}
           </Text>
           <MaterialIcon
             name="keyboard-arrow-down"
             size={18}
-            color={Color.fontBlack40}
+            color={
+              this.state.selectedDate === ''
+                ? Color.fontBlack40
+                : Color.fontWhite
+            }
           />
         </TouchableOpacity>
       </View>
@@ -222,12 +280,56 @@ class HistoryReturnOrderView extends Component {
     );
   }
 
+  modalFilterDate() {
+    return this.state.openModalFilterDate ? (
+      <ModalFilterDate
+        title={'Tanggal Retur'}
+        open={this.state.openModalFilterDate}
+        close={() => this.setState({ openModalFilterDate: false })}
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+        selectedDate={this.state.selectedDate}
+        startDate={this.state.startDate}
+        endDate={this.state.endDate}
+      />
+    ) : (
+      <View />
+    );
+  }
+
+  renderModalDateSpinner() {
+    return this.state.openDateSpinner ? (
+      <ModalBottomType4
+        open={this.state.openDateSpinner}
+        title={
+          this.state.typeDate === 'startDate'
+            ? 'Tanggal Mulai Dari'
+            : 'Tanggal Sampai Dengan'
+        }
+        close={() => this.setState({ openDateSpinner: false })}
+        content={
+          <View>
+            <StatusBarBlack />
+            <DatePickerSpinner
+              onRef={ref => (this.parentFunction = ref)}
+              parentFunction={this.parentFunction.bind(this)}
+            />
+          </View>
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
+
   render() {
     return (
       <View style={styles.mainContainer}>
         {this.renderContent()}
         {/* MODAL */}
         {this.modalReturnStatus()}
+        {this.modalFilterDate()}
+        {this.renderModalDateSpinner()}
       </View>
     );
   }
