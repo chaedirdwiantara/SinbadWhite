@@ -1361,7 +1361,6 @@ class MerchantHomeView extends Component {
   }
   /** === RENDER MAIN === */
   render() {
-    console.log('this.state.privileges => ', this.state.privileges)
     return (
       <SafeAreaView>
         <StatusBarRed />
