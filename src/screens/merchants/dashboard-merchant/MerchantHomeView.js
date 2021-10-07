@@ -40,11 +40,19 @@ import {
   ACTIVITY_JOURNEY_PLAN_CHECK_IN,
   ACTIVITY_JOURNEY_PLAN_CHECK_OUT,
   ACTIVITY_JOURNEY_PLAN_ORDER,
-  ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+  ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY,
+  ACTIVITY_JOURNEY_PLAN_BILLING
 } from '../../../constants';
 import _ from 'lodash';
 
 const { width, height } = Dimensions.get('window');
+
+const PENAGIHAN_TASK =  {
+  name: 'Penagihan',
+  title: 'Penagihan',
+  goTo: '',
+  activity: ACTIVITY_JOURNEY_PLAN_BILLING
+}
 
 class MerchantHomeView extends Component {
   constructor(props) {
@@ -186,61 +194,38 @@ class MerchantHomeView extends Component {
         /** IF NO SURVEY */
         if (dataGetTotalSurvey.total === 0) {
           this.SurveyDone();
-          if (this.state.task.length === 4) {
-            this.setState({
-              task: [
-                {
-                  name: 'Masuk Toko',
-                  title: 'Masuk',
-                  goTo: 'checkIn',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                },
-                {
-                  name: 'Order',
-                  title: 'Order',
-                  goTo: 'pdp',
-                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
-                },
-                {
-                  name: 'Keluar Toko',
-                  title: 'Keluar',
-                  goTo: 'checkOut',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                }
-              ]
-            });
-          }
         }
         /** IF SURVEY LIST EXIST */
         if (dataGetTotalSurvey.total !== 0) {
-          if (this.state.task.length === 3) {
+          if (!this.checkExistTask(ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY)) {
+            let task = [
+              {
+                name: 'Masuk Toko',
+                title: 'Masuk',
+                goTo: 'checkIn',
+                activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+              },
+              {
+                name: 'Order',
+                title: 'Order',
+                goTo: 'pdp',
+                activity: ACTIVITY_JOURNEY_PLAN_ORDER
+              },
+              {
+                name: 'Survei',
+                title: 'Isi',
+                goTo: 'survey',
+                activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+              },
+              {
+                name: 'Keluar Toko',
+                title: 'Keluar',
+                goTo: 'checkOut',
+                activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+              }
+            ]
             this.setState({
-              task: [
-                {
-                  name: 'Masuk Toko',
-                  title: 'Masuk',
-                  goTo: 'checkIn',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                },
-                {
-                  name: 'Order',
-                  title: 'Order',
-                  goTo: 'pdp',
-                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
-                },
-                {
-                  name: 'Survei',
-                  title: 'Isi',
-                  goTo: 'survey',
-                  activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-                },
-                {
-                  name: 'Keluar Toko',
-                  title: 'Keluar',
-                  goTo: 'checkOut',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                }
-              ]
+              task,
             });
           }
         }
@@ -332,6 +317,18 @@ class MerchantHomeView extends Component {
             });
           }
         }
+      }
+    }
+    // CHECK RENDER PENAGIHAN
+    if (this.checkBilling()) {
+      // CHECK THIS STATE TO PREVENT MAXIMUM EXCEED ERROR
+      if (!this.checkExistTask(ACTIVITY_JOURNEY_PLAN_BILLING)) {
+        let task = [...this.state.task]
+        // CHECK TO RENDER PENAGIHAN ROW
+        task.splice(2, 0, PENAGIHAN_TASK)
+        this.setState({
+          task,
+        });
       }
     }
     /** FOR ERROR */
@@ -658,6 +655,28 @@ class MerchantHomeView extends Component {
       />
     );
   }
+  /**
+   * CHECK THE CONDITION WHEN isCollectionAvailable true
+   * - SELECTED MERCHANT HAVE isCollectionAvailable to render "Penagihan" text
+   * return true | false
+  */
+  checkBilling() {
+    const {
+      selectedMerchant,
+    } = this.props.merchant;
+    const { journeyBookStores } = selectedMerchant
+    
+    if (journeyBookStores.isCollectionAvailable) {
+      return true
+    }
+    return false
+  }
+   /**
+   * CHECK EXISTING TASK INSIDE THIS.STATE.TASK
+   * @params activityName (name that want to check) 
+   * return true | false
+  */
+  checkExistTask = (activityName) => this.state.task.some(item => item.activity === activityName)
   /**
    * ========================
    * RENDER VIEW
@@ -1572,8 +1591,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
- * updatedDate: 05102021
+ * updatedBy: raka
+ * updatedDate: 06102021
  * updatedFunction:
- * -> fix the validation when checking out. (must completed the survey)
+ * -> check isCollectionAvailable from journeyplan to show penagihan text
  */
