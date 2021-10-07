@@ -46,3 +46,14 @@ export const HISTORY_ACTIVATE_VA_FAILED = 'HistoryActivateVAFailed';
 export const HISTORY_VIEW_INVOICE_PROCESS = 'HistoryViewInvoiceProcess';
 export const HISTORY_VIEW_INVOICE_SUCCESS = 'HistoryViewInvoiceSuccess';
 export const HISTORY_VIEW_INVOICE_FAILED = 'HistoryViewInvoiceFailed';
+/** GET RETURN STATUS */
+export const GET_RETURN_STATUS_PROCESS = 'GetReturnStatusProcess';
+export const GET_RETURN_STATUS_SUCCESS = 'GetReturnStatusSuccess';
+export const GET_RETURN_STATUS_FAILED = 'GetReturnStatusFailed';
+/** GET RETURN PARCELS */
+export const GET_RETURN_PARCELS_PROCESS = 'GetReturnParcelsProcess';
+export const GET_RETURN_PARCELS_SUCCESS = 'GetReturnParcelsSuccess';
+export const GET_RETURN_PARCELS_FAILED = 'GetReturnParcelsFailed';
+export const GET_RETURN_PARCELS_REFRESH = 'GetReturnParcelsRefresh';
+export const GET_RETURN_PARCELS_RESET = 'GetReturnParcelsReset';
+export const GET_RETURN_PARCELS_LOADMORE = 'GetReturnParcelsLoadMore';

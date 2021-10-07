@@ -90,6 +90,26 @@ function viewInvoice(id) {
   });
 }
 
+/** GET RETURN STATUS */
+function getReturnStatus() {
+  return ApiRest({
+    path: 'return-status',
+    method: 'GET'
+  });
+}
+
+/** GET RETURN PARCELS */
+function getReturnParcels(data) {
+  return ApiRest({
+    path: `return-parcels?supplierId=${GlobalMethod.userSupplierMapping()}&storeId=${GlobalMethod.merchantStoreId()}&status=${
+      data.status
+    }&startReturnDate=${data.startReturnDate}&endReturnDate=${
+      data.endReturnDate
+    }&$skip=${data.page}&$limit=10`,
+    method: 'GET'
+  });
+}
+
 export const HistoryMethod = {
   getHistory,
   getHistoryOrderStatus,
@@ -98,5 +118,7 @@ export const HistoryMethod = {
   getDetailHistory,
   activateVA,
   changePaymentMethod,
-  viewInvoice
+  viewInvoice,
+  getReturnStatus,
+  getReturnParcels
 };

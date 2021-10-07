@@ -160,6 +160,7 @@ class MerchantDetailView extends Component {
         });
         break;
       case 'HistoryReturnOrderView':
+        this.props.getReturnStatusProcess();
         NavigationService.navigate('HistoryReturnOrderView');
         break;
       default:

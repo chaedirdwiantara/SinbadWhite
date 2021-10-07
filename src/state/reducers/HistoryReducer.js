@@ -7,12 +7,16 @@ const INITIAL_STATE = {
   loadingEditHistory: false,
   loadingDetailHistory: false,
   refreshGetHistory: false,
+  refreshGetReturnParcels: false,
   loadingLoadMoreGetHistory: false,
   loadingGetOrderStatus: false,
   loadingGetPaymentStatus: false,
   loadingHistoryActivateVA: false,
   loadingHistoryChangePaymentMethod: false,
   loadingViewInvoice: false,
+  loadingGetReturnStatus: false,
+  loadingGetReturnParcels: false,
+  loadingLoadMoreGetReturnParcels: false,
   /** data */
   dataGetHistory: [],
   dataEditHistory: null,
@@ -24,6 +28,10 @@ const INITIAL_STATE = {
   totalDataGetHistory: 0,
   pageGetHistory: 0,
   dataViewInvoice: null,
+  dataGetReturnStatus: null,
+  dataGetReturnParcels: [],
+  totalGetReturnParcels: 0,
+  pageGetReturnParcels: 0,
   /** error */
   errorGetHistory: null,
   errorGetOrderStatus: null,
@@ -32,7 +40,9 @@ const INITIAL_STATE = {
   errorHistoryDetail: null,
   errorHistoryActivateVA: null,
   errorHistoryChangePaymentMethod: null,
-  errorViewInvoice: null
+  errorViewInvoice: null,
+  errorGetReturnStatus: null,
+  errorGetReturnParcels: null
 };
 
 export const history = createReducer(INITIAL_STATE, {
@@ -185,7 +195,7 @@ export const history = createReducer(INITIAL_STATE, {
     };
   },
 
-   /**
+  /**
    * ==================================
    * ACTIVATE VA
    * =================================
@@ -219,7 +229,7 @@ export const history = createReducer(INITIAL_STATE, {
       errorHistoryDetail: action.payload
     };
   },
-    /**
+  /**
    * ==================================
    * CHANGE PAYMENT METHOD
    * =================================
@@ -234,18 +244,24 @@ export const history = createReducer(INITIAL_STATE, {
   },
   [types.HISTORY_CHANGE_PAYMENT_METHOD_SUCCESS](state, action) {
     let dataDetailHistory = { ...state.dataDetailHistory };
-    dataDetailHistory.billing.paymentChannelId = action.payload.data.paymentChannelId;
+    dataDetailHistory.billing.paymentChannelId =
+      action.payload.data.paymentChannelId;
     dataDetailHistory.billing.paymentTypeId = action.payload.data.paymentTypeId;
     dataDetailHistory.paymentType.id = action.payload.data.paymentTypeId;
     dataDetailHistory.paymentChannel.id = action.payload.data.paymentChannelId;
-    dataDetailHistory.paymentChannel.name = action.payload.data.paymentChannelName;
-    dataDetailHistory.paymentChannel.description = action.payload.data.paymentDescription;
+    dataDetailHistory.paymentChannel.name =
+      action.payload.data.paymentChannelName;
+    dataDetailHistory.paymentChannel.description =
+      action.payload.data.paymentDescription;
     dataDetailHistory.billing.accountVaNo = action.payload.data.accountVaNo;
-    dataDetailHistory.billing.expiredPaymentTime = action.payload.data.expiredPaymentTime;
-    dataDetailHistory.paymentChannel.iconUrl = action.payload.data.paymentIconUrl;
+    dataDetailHistory.billing.expiredPaymentTime =
+      action.payload.data.expiredPaymentTime;
+    dataDetailHistory.paymentChannel.iconUrl =
+      action.payload.data.paymentIconUrl;
     dataDetailHistory.billing.totalPayment = action.payload.data.totalPayment;
-    dataDetailHistory.paymentChannel.paymentChannelTypeId = action.payload.data.paymentChannelTypeId;
-     return {
+    dataDetailHistory.paymentChannel.paymentChannelTypeId =
+      action.payload.data.paymentChannelTypeId;
+    return {
       ...state,
       loadingHistoryChangePaymentMethod: false,
       dataHistoryChangePaymentMethod: action.payload,
@@ -316,6 +332,94 @@ export const history = createReducer(INITIAL_STATE, {
       loadingViewInvoice: false,
       errorViewInvoice: action.payload,
       errorHistoryDetail: action.payload
+    };
+  },
+
+  /**
+   * ==========================
+   * GET RETURN STATUS
+   * ==========================
+   */
+  [types.GET_RETURN_STATUS_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReturnStatus: true,
+      dataGetReturnStatus: null,
+      errorGetReturnStatus: null
+    };
+  },
+  [types.GET_RETURN_STATUS_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReturnStatus: false,
+      dataGetReturnStatus: action.payload.data
+    };
+  },
+  [types.GET_RETURN_STATUS_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetReturnStatus: false,
+      errorGetReturnStatus: action.payload
+    };
+  },
+
+  /**
+   * =========================
+   * GET RETURN PARCELS
+   * =========================
+   */
+  [types.GET_RETURN_PARCELS_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReturnParcels: true,
+      errorGetReturnParcels: null
+    };
+  },
+  [types.GET_RETURN_PARCELS_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReturnParcels: false,
+      loadingLoadMoreGetReturnParcels: false,
+      refreshGetReturnParcels: false,
+      totalGetReturnParcels: action.payload.data.total,
+      dataGetReturnParcels: removeDuplicateData(
+        state.dataGetReturnParcels,
+        action.payload.data.data
+      )
+    };
+  },
+  [types.GET_RETURN_PARCELS_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetReturnParcels: false,
+      loadingLoadMoreGetReturnParcels: false,
+      refreshGetReturnParcels: false,
+      errorGetReturnParcels: action.payload
+    };
+  },
+  [types.GET_RETURN_PARCELS_RESET](state, action) {
+    return {
+      ...state,
+      pageGetReturnParcels: 0,
+      totalGetReturnParcels: 0,
+      dataGetReturnParcels: []
+    };
+  },
+  [types.HISTORY_GET_REFRESH](state, action) {
+    return {
+      ...state,
+      refreshGetReturnParcels: true,
+      loadingGetReturnParcels: true,
+      pageGetReturnParcels: 0,
+      totalGetReturnParcels: 0,
+      dataGetReturnParcels: []
+    };
+  },
+  [types.HISTORY_GET_LOADMORE](state, action) {
+    return {
+      ...state,
+      loadingLoadMoreGetReturnParcels: true,
+      pageGetReturnParcels: action.payload
     };
   }
 });

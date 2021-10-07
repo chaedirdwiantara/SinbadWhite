@@ -16,7 +16,9 @@ import {
   StatusBarWhite,
   DatePickerSpinner,
   ModalBottomType4,
-  StatusBarBlack
+  StatusBarBlack,
+  ErrorPage,
+  EmptyDataType2
 } from '../../../library/component';
 import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
@@ -30,6 +32,7 @@ class HistoryReturnOrderView extends Component {
     super(props);
     this.state = {
       selectedReturnStatus: null,
+      status: 'all',
       selectedDate: '',
       dateFilter: {
         startReturnDate: '',
@@ -87,6 +90,7 @@ class HistoryReturnOrderView extends Component {
       case 'SelectStatus':
         this.setState({
           selectedReturnStatus: data.data,
+          status: data.data.status,
           openModalReturnStatus: false
         });
 
@@ -246,7 +250,7 @@ class HistoryReturnOrderView extends Component {
       <View style={styles.mainContainer}>
         <ReturnOrderDataListView
           selectedStatus={this.state.selectedReturnStatus}
-          status={this.state.mockReturnStatus}
+          status={this.state.status}
           dateFilter={this.state.dateFilter}
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
@@ -265,12 +269,13 @@ class HistoryReturnOrderView extends Component {
   }
 
   modalReturnStatus() {
-    return this.state.openModalReturnStatus ? (
+    return this.state.openModalReturnStatus &&
+      this.props.history.dataGetReturnStatus.length > 0 ? (
       <ModalReturnStatus
         title={'Status Retur'}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
-        returnStatus={this.state.mockReturnStatus}
+        returnStatus={this.props.history.dataGetReturnStatus}
         selectedStatus={this.state.selectedReturnStatus}
         open={this.state.openModalReturnStatus}
         close={() => this.setState({ openModalReturnStatus: false })}

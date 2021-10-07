@@ -7,7 +7,11 @@ import {
   TouchableOpacity,
   FlatList
 } from '../../../library/reactPackage';
-import { ProductListType1, SkeletonType5 } from '../../../library/component';
+import {
+  ProductListType1,
+  SkeletonType5,
+  EmptyDataType2
+} from '../../../library/component';
 import {
   bindActionCreators,
   connect,
@@ -117,15 +121,74 @@ class ReturnOrderDataListView extends Component {
    * FUNCTIONAL SECTION
    */
   componentDidMount() {
-    setTimeout(() => this.setState({ loading: false }), 100);
+    console.log('Get Returns Parcel');
+    this.props.getReturnParcelsReset();
+    this.getReturnParcels(true, 0);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.history.dataGetReturnParcels !==
+      this.props.history.dataGetReturnParcels
+    ) {
+      if (this.props.history.dataGetReturnParcels !== null) {
+        this.loading(false);
+      }
+    }
+
+    if (prevProps.status !== this.props.status) {
+      this.props.getReturnParcelsReset();
+      this.getReturnParcels(true, 0);
+    }
+
+    if (prevProps.dateFilter !== this.props.dateFilter) {
+      this.props.getReturnParcelsReset();
+      this.getReturnParcels(true, 0);
+    }
   }
 
   toParentFunction(data) {
     console.log(data);
   }
 
+  getReturnParcels(loading, page) {
+    this.loading(true);
+    this.props.getReturnParcelsProcess({
+      status: this.props.status,
+      startReturnDate: this.props.dateFilter.startReturnDate,
+      endReturnDate: this.props.dateFilter.endReturnDate,
+      page,
+      loading
+    });
+  }
+
+  loading(status) {
+    this.setState({ loading: status });
+  }
+
+  onHandleRefresh = () => {
+    this.props.getReturnParcelsRefresh();
+    this.getReturnParcels(true, 0);
+  };
+
+  /** LOAD MORE LIST VIEW */
+  onHandleLoadMore = () => {
+    if (this.props.history.dataGetReturnParcels) {
+      if (
+        this.props.history.dataGetReturnParcels.length <
+        this.props.history.totalGetReturnParcels
+      ) {
+        const page = this.props.history.pageGetReturnParcels + 10;
+        this.props.getReturnParcelsLoadMore(page);
+        this.getReturnParcels(false, page);
+      }
+    }
+  };
+
   checkStatus(status) {
-    const data = this.props.status.find(item => item.status === status);
+    const data = this.props.history.dataGetReturnStatus.find(
+      item => item.status === status
+    );
     if (data) {
       return data.title;
     } else {
@@ -157,13 +220,13 @@ class ReturnOrderDataListView extends Component {
           style={[styles.cardContainer, GlobalStyle.shadowForBox]}
           onPress={() =>
             NavigationService.navigate('HistoryReturnOrderDetailView', {
-              returnCode: item.returnCode
+              returnCode: item.returnNumber
             })
           }
         >
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
-              <Text style={Fonts.type83}>{item.returnCode}</Text>
+              <Text style={Fonts.type83}>{item.returnNumber}</Text>
               <Text
                 style={[
                   Fonts.type83,
@@ -183,7 +246,7 @@ class ReturnOrderDataListView extends Component {
               <Text
                 style={[Fonts.fontC1SemiBold, { color: Color.fontBlack80 }]}
               >
-                {moment(new Date(item.created_at)).format(
+                {moment(new Date(item.createdAt)).format(
                   'DD MMM YYYY HH:mm:ss'
                 )}
               </Text>
@@ -228,26 +291,35 @@ class ReturnOrderDataListView extends Component {
   }
 
   renderData() {
-    return this.state.mockReturnsParcels.length > 0 ? (
+    return this.props.history.dataGetReturnParcels.length > 0 ? (
       <View>
         <FlatList
           contentContainerStyle={styles.flatListContainer}
           ItemSeparatorComponent={this.renderSeparator}
-          data={this.state.mockReturnsParcels}
+          data={this.props.history.dataGetReturnParcels}
           renderItem={this.renderItem.bind(this)}
           numColumns={1}
           extraData={this.state}
           keyExtractor={(item, index) => index.toString()}
+          refreshing={this.props.history.refreshGetReturnParcels}
+          onRefresh={this.onHandleRefresh}
+          onEndReachedThreshold={0.2}
+          onEndReached={this.onHandleLoadMore}
         />
       </View>
     ) : (
-      <View />
+      <EmptyDataType2
+        title={'Pencarian Tidak Ditemukan'}
+        description={'Cek kembali nama atau ID produk yang kamu masukkan'}
+      />
     );
   }
   renderContent() {
     return (
-      <View>
-        {this.state.loading ? this.renderSkeleton() : this.renderData()}
+      <View style={styles.mainContainer}>
+        {this.props.history.loadingGetReturnParcels
+          ? this.renderSkeleton()
+          : this.renderData()}
       </View>
     );
   }
