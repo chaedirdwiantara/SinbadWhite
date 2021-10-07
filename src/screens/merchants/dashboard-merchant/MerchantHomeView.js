@@ -321,8 +321,12 @@ class MerchantHomeView extends Component {
     }
     // CHECK RENDER PENAGIHAN
     if (this.checkBilling()) {
+      const { collection } = this.state.privileges || {};
       // CHECK THIS STATE TO PREVENT MAXIMUM EXCEED ERROR
-      if (!this.checkExistTask(ACTIVITY_JOURNEY_PLAN_BILLING)) {
+      if (
+        (!this.checkExistTask(ACTIVITY_JOURNEY_PLAN_BILLING)) && 
+        (collection && collection.status) 
+      ) {
         let task = [...this.state.task]
         // CHECK TO RENDER PENAGIHAN ROW
         task.splice(2, 0, PENAGIHAN_TASK)
@@ -1357,6 +1361,7 @@ class MerchantHomeView extends Component {
   }
   /** === RENDER MAIN === */
   render() {
+    console.log('this.state.privileges => ', this.state.privileges)
     return (
       <SafeAreaView>
         <StatusBarRed />
