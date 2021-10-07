@@ -75,8 +75,14 @@ const HistoryNavigator = {
   HistoryReturnOrderView: {
     screen: HistoryReturnOrderView,
     navigationOptions: {
-      headerTitleStyle: GlobalFont.textHeaderPage,
-      headerStyle: GlobalStyle.shadowForBox10,
+      headerTitle: 'Riwayat Retur',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          color: masterColor.fontBlack80
+        }
+      ],
+      headerStyle: GlobalStyle.shadowForBox,
       gesturesEnabled: false
     }
   },

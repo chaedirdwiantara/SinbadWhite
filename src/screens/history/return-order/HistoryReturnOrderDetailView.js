@@ -22,6 +22,7 @@ class HistoryReturnOrderDetailView extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
+        <StatusBarWhite />
         <Text>History Return Order View</Text>
       </View>
     );
