@@ -347,7 +347,7 @@ class MerchantSurveyResultView extends Component {
             paddingHorizontal: 16,
             borderTopColor: Color.fontGreen50,
             marginBottom: 10,
-            flex: 1.2,
+            flex: 1,
             borderTopWidth: 4,
             borderWidth: 1
           }
@@ -366,8 +366,10 @@ class MerchantSurveyResultView extends Component {
           <View
             style={{
               flex: 1,
-              flexWrap: 'wrap',
-              paddingVertical: 12
+              flexDirection: 'column',
+              flexWrap: 'nowrap',
+              paddingVertical: 12,
+              height: '100%'
             }}
           >
             <View
