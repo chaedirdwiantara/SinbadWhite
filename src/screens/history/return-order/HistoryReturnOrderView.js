@@ -13,12 +13,9 @@ import {
   moment
 } from '../../../library/thirdPartyPackage';
 import {
-  StatusBarWhite,
   DatePickerSpinner,
   ModalBottomType4,
-  StatusBarBlack,
-  ErrorPage,
-  EmptyDataType2
+  StatusBarBlack
 } from '../../../library/component';
 import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
@@ -85,7 +82,6 @@ class HistoryReturnOrderView extends Component {
    */
 
   parentFunction(data) {
-    console.log(data);
     switch (data.type) {
       case 'SelectStatus':
         this.setState({

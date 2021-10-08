@@ -221,10 +221,6 @@ class ReturnRequestView extends Component {
       returns: this.state.returnLines,
       returned: this.state.returnedConfirmation
     };
-
-    console.log('Confirm Return Order', data);
-    console.log(JSON.stringify(data));
-
     this.props.PostReturnOrderProcess(data);
   }
 
@@ -333,9 +329,6 @@ class ReturnRequestView extends Component {
       returnLines.push(transformData);
       dataConfirmation.push(data);
     }
-
-    console.log('Data Order Lines', returnLines);
-    console.log('Data Confirmation', dataConfirmation);
 
     this.setState({ returnLines, dataConfirmation });
   }
