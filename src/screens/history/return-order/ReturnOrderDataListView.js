@@ -21,6 +21,7 @@ import { Color } from '../../../config';
 import { GlobalStyle, MoneyFormat, Fonts } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
+import CatalogueShowCaseView from './CatalogueShowCaseView';
 
 class ReturnOrderDataListView extends Component {
   constructor(props) {
@@ -238,6 +239,7 @@ class ReturnOrderDataListView extends Component {
             </View>
             <View style={{ marginVertical: 16 }}>
               {/* {this.renderProductSection(item.orderBrands)} */}
+              <CatalogueShowCaseView data={item} />
             </View>
             <View style={[styles.boxItemContent, { marginBottom: 8 }]}>
               <Text style={[Fonts.fontC2Medium, { color: Color.fontBlack80 }]}>
