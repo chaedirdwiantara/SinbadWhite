@@ -110,6 +110,14 @@ function getReturnParcels(data) {
   });
 }
 
+/** GET RETURN PARCELS DETAIL */
+function getReturnParcelsDetail(data) {
+  return ApiRest({
+    path: `return-parcels/${data.returnParcelId}`,
+    method: 'GET'
+  });
+}
+
 export const HistoryMethod = {
   getHistory,
   getHistoryOrderStatus,
@@ -120,5 +128,6 @@ export const HistoryMethod = {
   changePaymentMethod,
   viewInvoice,
   getReturnStatus,
-  getReturnParcels
+  getReturnParcels,
+  getReturnParcelsDetail
 };

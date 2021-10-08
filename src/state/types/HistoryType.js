@@ -57,3 +57,7 @@ export const GET_RETURN_PARCELS_FAILED = 'GetReturnParcelsFailed';
 export const GET_RETURN_PARCELS_REFRESH = 'GetReturnParcelsRefresh';
 export const GET_RETURN_PARCELS_RESET = 'GetReturnParcelsReset';
 export const GET_RETURN_PARCELS_LOADMORE = 'GetReturnParcelsLoadMore';
+/** GET RETURN PARCELS DETAIL */
+export const GET_RETURN_PARCEL_DETAIL_PROCESS = 'GetReturnParcelDetailProcess';
+export const GET_RETURN_PARCEL_DETAIL_SUCCESS = 'GetReturnParcelDetailSuccess';
+export const GET_RETURN_PARCEL_DETAIL_FAILED = 'GetReturnParcelDetailFailed';

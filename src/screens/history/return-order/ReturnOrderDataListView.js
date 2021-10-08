@@ -220,11 +220,12 @@ class ReturnOrderDataListView extends Component {
       >
         <TouchableOpacity
           style={[styles.cardContainer, GlobalStyle.shadowForBox]}
-          onPress={() =>
+          onPress={() => {
             NavigationService.navigate('HistoryReturnOrderDetailView', {
-              returnCode: item.returnNumber
-            })
-          }
+              returnCode: item.returnNumber,
+              returnParcelId: parseInt(item.id, 10)
+            });
+          }}
         >
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>

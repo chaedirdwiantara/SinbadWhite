@@ -13,7 +13,7 @@ import {
   bindActionCreators,
   moment
 } from '../../../library/thirdPartyPackage';
-import { StatusBarWhite } from '../../../library/component';
+import { StatusBarWhite, LoadingPage } from '../../../library/component';
 import * as ActionCreators from '../../../state/actions';
 import { Color } from '../../../config';
 import { Fonts, MoneyFormat, GlobalStyle } from '../../../helpers';
@@ -22,6 +22,7 @@ class HistoryReturnOrderDetailView extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: true,
       mockData: {
         returnParcelsId: 14,
         returnCode: 'R1202106000001',
@@ -81,7 +82,55 @@ class HistoryReturnOrderDetailView extends Component {
     };
   };
 
+  componentDidMount() {
+    this.getReturnParcelDetail();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.history.dataGetReturnParcelDetail !==
+      this.props.history.dataGetReturnParcelDetail
+    ) {
+      if (this.props.history.dataGetReturnParcelDetail !== null) {
+        this.loading(false);
+      }
+    }
+  }
+
+  loading(status) {
+    this.setState({ loading: status });
+  }
+
+  getReturnParcelDetail() {
+    this.loading(true);
+    this.props.getReturnParcelDetailProcess({
+      returnParcelId: this.props.navigation.state.params.returnParcelId
+    });
+  }
+
+  checkStatus(status) {
+    const data = this.props.history.dataGetReturnStatus.find(
+      item => item.status === status
+    );
+    if (data) {
+      return data.title;
+    } else {
+      return '';
+    }
+  }
+
+  checkStatusColor(status) {
+    if (status === 'pending') {
+      return Color.fontYellow50;
+    } else if (status === 'rejected') {
+      return Color.fontRed50;
+    } else {
+      return Color.fontGreen50;
+    }
+  }
+
   renderSummary() {
+    const data = this.props.history.dataGetReturnParcelDetail;
     return (
       <View
         style={[
@@ -104,8 +153,13 @@ class HistoryReturnOrderDetailView extends Component {
           <Text style={(Fonts.fontC2Medium, { color: Color.fontBlack80 })}>
             Status
           </Text>
-          <Text style={[Fonts.fontC1SemiBold, { color: Color.fontGreen50 }]}>
-            Selesai
+          <Text
+            style={[
+              Fonts.fontC1SemiBold,
+              { color: this.checkStatusColor(data.status) }
+            ]}
+          >
+            {this.checkStatus(data.status)}
           </Text>
         </View>
         <View
@@ -121,7 +175,7 @@ class HistoryReturnOrderDetailView extends Component {
             Tanggal Dibuat
           </Text>
           <Text style={[Fonts.fontC1SemiBold, { color: Color.fontBlack80 }]}>
-            {moment('2021-06-02T04:23:27.481Z').format('DD MMMM YYYY HH:MM:SS')}
+            {moment(data.createdAt).format('DD MMMM YYYY HH:MM:SS')}
           </Text>
         </View>
         <View
@@ -137,11 +191,11 @@ class HistoryReturnOrderDetailView extends Component {
             Total Jumlah Retur
           </Text>
           <Text style={[Fonts.fontC1SemiBold, { color: Color.fontBlack80 }]}>
-            {/* {this.props.data.reduce(
+            {data.returns.reduce(
               (prevQty, currentQty) => prevQty + currentQty.qty,
               0
-            )}{' '} */}
-            0 Qty
+            )}{' '}
+            Qty
           </Text>
         </View>
         <View
@@ -157,7 +211,7 @@ class HistoryReturnOrderDetailView extends Component {
             Total Produk Retur
           </Text>
           <Text style={[Fonts.fontC1SemiBold, { color: Color.fontBlack80 }]}>
-            4 SKU
+            {data.returns.length} SKU
           </Text>
         </View>
         <View
@@ -173,7 +227,7 @@ class HistoryReturnOrderDetailView extends Component {
             Total Dana Retur
           </Text>
           <Text style={[Fonts.fontC1SemiBold, { color: Color.fontBlack80 }]}>
-            {MoneyFormat(60000)}
+            {MoneyFormat(data.amount)}
           </Text>
         </View>
         <View
@@ -189,7 +243,7 @@ class HistoryReturnOrderDetailView extends Component {
             Barang Sudah Dibawa
           </Text>
           <Text style={[Fonts.fontC1SemiBold, { color: Color.fontBlack80 }]}>
-            Tidak
+            {data.returned === true ? 'Ya' : 'Tidak'}
           </Text>
         </View>
       </View>
@@ -201,6 +255,7 @@ class HistoryReturnOrderDetailView extends Component {
   }
 
   renderData() {
+    const data = this.props.history.dataGetReturnParcelDetail;
     return (
       <View>
         <FlatList
@@ -210,7 +265,7 @@ class HistoryReturnOrderDetailView extends Component {
           extraData={this.state}
           keyExtractor={(item, index) => index.toString()}
           renderItem={this.renderItem.bind(this)}
-          data={this.state.mockData.returns}
+          data={data.returns}
         />
       </View>
     );
@@ -348,11 +403,17 @@ class HistoryReturnOrderDetailView extends Component {
     );
   }
 
+  renderLoadingPage() {
+    return <LoadingPage />;
+  }
+
   render() {
     return (
       <View style={styles.mainContainer}>
         <StatusBarWhite />
-        {this.renderContent()}
+        {this.state.loading || this.props.history.loadingGetReturnParcelDetail
+          ? this.renderLoadingPage()
+          : this.renderContent()}
       </View>
     );
   }
