@@ -15,12 +15,14 @@ import {
 import {
   bindActionCreators,
   connect,
-  moment
+  moment,
+  NavigationEvents
 } from '../../../library/thirdPartyPackage';
 import { Color } from '../../../config';
 import { GlobalStyle, MoneyFormat, Fonts } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
+import CatalogueShowCaseView from './CatalogueShowCaseView';
 
 class ReturnOrderDataListView extends Component {
   constructor(props) {
@@ -237,7 +239,7 @@ class ReturnOrderDataListView extends Component {
               </Text>
             </View>
             <View style={{ marginVertical: 16 }}>
-              {/* {this.renderProductSection(item.orderBrands)} */}
+              <CatalogueShowCaseView data={item} />
             </View>
             <View style={[styles.boxItemContent, { marginBottom: 8 }]}>
               <Text style={[Fonts.fontC2Medium, { color: Color.fontBlack80 }]}>
@@ -317,7 +319,7 @@ class ReturnOrderDataListView extends Component {
   renderContent() {
     return (
       <View style={styles.mainContainer}>
-        {this.props.history.loadingGetReturnParcels
+        {this.props.history.loadingGetReturnParcels || this.state.loading
           ? this.renderSkeleton()
           : this.renderData()}
       </View>
@@ -328,8 +330,19 @@ class ReturnOrderDataListView extends Component {
     return <SkeletonType5 />;
   }
 
+  renderNavigationEvents() {
+    return (
+      <NavigationEvents onWillFocus={() => this.getReturnParcels(true, 0)} />
+    );
+  }
+
   render() {
-    return <View style={styles.mainContainer}>{this.renderContent()}</View>;
+    return (
+      <View style={styles.mainContainer}>
+        {this.renderNavigationEvents()}
+        {this.renderContent()}
+      </View>
+    );
   }
 }
 

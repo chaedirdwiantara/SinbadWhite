@@ -225,7 +225,8 @@ class HistoryReturnOrderView extends Component {
               }
             ]}
           >
-            {this.state.selectedDate === ''
+            {this.state.selectedDate === '' ||
+            (this.state.startDate === '' && this.state.endDate === '')
               ? 'Cari Semua Tanggal'
               : `${moment(this.state.startDate).format('DD MMM YY')} - ${moment(
                   this.state.endDate
@@ -250,7 +251,7 @@ class HistoryReturnOrderView extends Component {
       <View style={styles.mainContainer}>
         <ReturnOrderDataListView
           selectedStatus={this.state.selectedReturnStatus}
-          status={this.state.status}
+          status={this.state.status === null ? 'all' : this.state.status}
           dateFilter={this.state.dateFilter}
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
