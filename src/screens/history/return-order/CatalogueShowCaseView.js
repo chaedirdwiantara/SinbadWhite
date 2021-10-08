@@ -35,9 +35,7 @@ class CatalogueShowCaseView extends Component {
   }
   /** ITEM LIST PRODUCT */
   renderListProductImageContent(itemProduct, indexCounter) {
-    console.log(itemProduct);
     return itemProduct.map((item, index) => {
-      console.log('Mapping', item);
       return indexCounter++ < 3 ? (
         <View key={index} style={{ paddingHorizontal: 5 }}>
           <Image

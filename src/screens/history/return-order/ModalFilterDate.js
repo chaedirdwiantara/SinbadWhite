@@ -21,11 +21,10 @@ class ModalFilterDate extends Component {
     super(props);
     this.state = {
       todayDate: '',
-      yesterdayDate: '',
-      lastWeekStartDate: '',
-      lastWeekEndDate: '',
-      lastMonthStartDate: '',
-      lastMonthEndDate: '',
+      lastNinetyDays: '',
+      lastSixtyDays: '',
+      lastThirtyDays: '',
+      lastSevenDays: '',
       customStartDate: this.props.startDate,
       customEndDate: this.props.endDate,
       selectedDate: this.props.selectedDate
@@ -42,27 +41,25 @@ class ModalFilterDate extends Component {
 
   getDate() {
     const todayDate = moment(new Date());
-    const yesterdayDate = moment().subtract(1, 'days');
-    const lastWeekStartDate = moment()
-      .subtract(1, 'weeks')
-      .startOf('week');
-    const lastWeekEndDate = moment()
-      .subtract(1, 'weeks')
-      .endOf('week');
-    const lastMonthStartDate = moment()
-      .subtract(1, 'months')
-      .startOf('month');
-    const lastMonthEndDate = moment()
-      .subtract(1, 'months')
-      .endOf('month');
+    const lastNinetyDays = moment()
+      .subtract(90, 'days')
+      .startOf('day');
+    const lastSixtyDays = moment()
+      .subtract(60, 'days')
+      .startOf('day');
+    const lastThirtyDays = moment()
+      .subtract(30, 'days')
+      .startOf('day');
+    const lastSevenDays = moment()
+      .subtract(7, 'days')
+      .startOf('day');
 
     this.setState({
       todayDate,
-      yesterdayDate,
-      lastWeekStartDate,
-      lastWeekEndDate,
-      lastMonthStartDate,
-      lastMonthEndDate,
+      lastNinetyDays,
+      lastSixtyDays,
+      lastThirtyDays,
+      lastSevenDays,
       customStartDate: this.props.startDate,
       customEndDate: this.props.endDate
     });
@@ -70,52 +67,60 @@ class ModalFilterDate extends Component {
 
   submitFilter() {
     switch (this.state.selectedDate) {
-      case 'today':
+      case 'all':
         this.toParentFunction({
           dateFilter: {
-            startReturnDate: moment(this.state.todayDate).format('YYYY-MM-DD'),
+            startReturnDate: '',
+            endReturnDate: ''
+          },
+          selectedDate: this.state.selectedDate
+        });
+        break;
+      case '90days':
+        this.toParentFunction({
+          dateFilter: {
+            startReturnDate: moment(this.state.lastNinetyDays).format(
+              'YYYY-MM-DD'
+            ),
             endReturnDate: moment(this.state.todayDate).format('YYYY-MM-DD')
           },
           selectedDate: this.state.selectedDate
         });
         break;
-      case 'yesterday':
+      case '60days':
         this.toParentFunction({
           dateFilter: {
-            startReturnDate: moment(this.state.yesterdayDate).format(
+            startReturnDate: moment(this.state.lastSixtyDays).format(
               'YYYY-MM-DD'
             ),
-            endReturnDate: moment(this.state.yesterdayDate).format('YYYY-MM-DD')
+            endReturnDate: moment(this.state.todayDate).format('YYYY-MM-DD')
           },
           selectedDate: this.state.selectedDate
         });
         break;
-      case 'lastWeek':
+      case '30days':
         this.toParentFunction({
           dateFilter: {
-            startReturnDate: moment(this.state.lastWeekStartDate).format(
+            startReturnDate: moment(this.state.lastThirtyDays).format(
               'YYYY-MM-DD'
             ),
-            endReturnDate: moment(this.state.lastWeekEndDate).format(
-              'YYYY-MM-DD'
-            )
+            endReturnDate: moment(this.state.todayDate).format('YYYY-MM-DD')
           },
           selectedDate: this.state.selectedDate
         });
         break;
-      case 'lastMonth':
+      case '7days':
         this.toParentFunction({
           dateFilter: {
-            startReturnDate: moment(this.state.lastMonthStartDate).format(
+            startReturnDate: moment(this.state.lastSevenDays).format(
               'YYYY-MM-DD'
             ),
-            endReturnDate: moment(this.state.lastMonthEndDate).format(
-              'YYYY-MM-DD'
-            )
+            endReturnDate: moment(this.state.todayDate).format('YYYY-MM-DD')
           },
           selectedDate: this.state.selectedDate
         });
         break;
+
       case 'customDate':
         this.toParentFunction({
           dateFilter: {
@@ -129,16 +134,6 @@ class ModalFilterDate extends Component {
       default:
         break;
     }
-  }
-
-  resetFilter() {
-    this.toParentFunction({
-      dateFilter: {
-        startReturnDate: '',
-        endReturnDate: ''
-      },
-      selectedDate: ''
-    });
   }
   /**
    * ==================
@@ -176,34 +171,28 @@ class ModalFilterDate extends Component {
   renderBody() {
     return (
       <View style={{ marginHorizontal: 16 }}>
-        {/* Today Date */}
+        {/* All Date */}
         <TouchableOpacity
-          onPress={() => this.setState({ selectedDate: 'today' })}
+          onPress={() => this.setState({ selectedDate: 'all' })}
         >
           <View
             style={{
               justifyContent: 'space-between',
               marginBottom: 16,
-              flexDirection: 'row'
+              flexDirection: 'row',
+              alignItems: 'center'
             }}
           >
             <View>
               <Text
                 style={[
                   {
-                    marginBottom: 4,
-                    color:
-                      this.state.selectedDate === 'today'
-                        ? Color.fontRed50
-                        : Color.fontBlack80
+                    color: Color.fontBlack80
                   },
                   Fonts.fontH10Bold
                 ]}
               >
-                Hari ini
-              </Text>
-              <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack60 }]}>
-                {moment(this.state.todayDate).format('DD MMMM')}
+                Semua Tanggal
               </Text>
             </View>
             <View
@@ -213,7 +202,7 @@ class ModalFilterDate extends Component {
                 right: 16
               }}
             >
-              {this.state.selectedDate === 'today' ? (
+              {this.state.selectedDate === 'all' ? (
                 this.renderSelectedActive()
               ) : (
                 <MaterialCommunityIcons
@@ -225,34 +214,29 @@ class ModalFilterDate extends Component {
             </View>
           </View>
         </TouchableOpacity>
-        {/* Yesterday Date */}
+        <View style={GlobalStyle.lines} />
+        {/* Last 90 Days*/}
         <TouchableOpacity
-          onPress={() => this.setState({ selectedDate: 'yesterday' })}
+          onPress={() => this.setState({ selectedDate: '90days' })}
         >
           <View
             style={{
               justifyContent: 'space-between',
-              marginBottom: 16,
-              flexDirection: 'row'
+              marginVertical: 16,
+              flexDirection: 'row',
+              alignItems: 'center'
             }}
           >
             <View>
               <Text
                 style={[
                   {
-                    marginBottom: 4,
-                    color:
-                      this.state.selectedDate === 'yesterday'
-                        ? Color.fontRed50
-                        : Color.fontBlack80
+                    color: Color.fontBlack80
                   },
                   Fonts.fontH10Bold
                 ]}
               >
-                Kemarin
-              </Text>
-              <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack60 }]}>
-                {moment(this.state.yesterdayDate).format('DD MMMM')}
+                90 Hari terakhir
               </Text>
             </View>
             <View
@@ -262,7 +246,7 @@ class ModalFilterDate extends Component {
                 right: 16
               }}
             >
-              {this.state.selectedDate === 'yesterday' ? (
+              {this.state.selectedDate === '90days' ? (
                 this.renderSelectedActive()
               ) : (
                 <MaterialCommunityIcons
@@ -274,35 +258,30 @@ class ModalFilterDate extends Component {
             </View>
           </View>
         </TouchableOpacity>
-        {/* Last Week Date Range */}
+        <View style={GlobalStyle.lines} />
+
+        {/* Last 60 Days*/}
         <TouchableOpacity
-          onPress={() => this.setState({ selectedDate: 'lastWeek' })}
+          onPress={() => this.setState({ selectedDate: '60days' })}
         >
           <View
             style={{
               justifyContent: 'space-between',
-              marginBottom: 16,
-              flexDirection: 'row'
+              marginVertical: 16,
+              flexDirection: 'row',
+              alignItems: 'center'
             }}
           >
             <View>
               <Text
                 style={[
                   {
-                    marginBottom: 4,
-                    color:
-                      this.state.selectedDate === 'lastWeek'
-                        ? Color.fontRed50
-                        : Color.fontBlack80
+                    color: Color.fontBlack80
                   },
                   Fonts.fontH10Bold
                 ]}
               >
-                Minggu Lalu
-              </Text>
-              <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack60 }]}>
-                {moment(this.state.lastWeekStartDate).format('D')} -{' '}
-                {moment(this.state.lastWeekEndDate).format('DD MMMM')}
+                60 Hari terakhir
               </Text>
             </View>
             <View
@@ -312,7 +291,7 @@ class ModalFilterDate extends Component {
                 right: 16
               }}
             >
-              {this.state.selectedDate === 'lastWeek' ? (
+              {this.state.selectedDate === '60days' ? (
                 this.renderSelectedActive()
               ) : (
                 <MaterialCommunityIcons
@@ -324,35 +303,30 @@ class ModalFilterDate extends Component {
             </View>
           </View>
         </TouchableOpacity>
-        {/* Last Week Date Range */}
+        <View style={GlobalStyle.lines} />
+
+        {/* Last 30 Days*/}
         <TouchableOpacity
-          onPress={() => this.setState({ selectedDate: 'lastMonth' })}
+          onPress={() => this.setState({ selectedDate: '30days' })}
         >
           <View
             style={{
               justifyContent: 'space-between',
-              marginBottom: 16,
-              flexDirection: 'row'
+              marginVertical: 16,
+              flexDirection: 'row',
+              alignItems: 'center'
             }}
           >
             <View>
               <Text
                 style={[
                   {
-                    marginBottom: 4,
-                    color:
-                      this.state.selectedDate === 'lastMonth'
-                        ? Color.fontRed50
-                        : Color.fontBlack80
+                    color: Color.fontBlack80
                   },
                   Fonts.fontH10Bold
                 ]}
               >
-                Bulan Lalu
-              </Text>
-              <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack60 }]}>
-                {moment(this.state.lastMonthStartDate).format('D')} -{' '}
-                {moment(this.state.lastMonthEndDate).format('DD MMMM')}
+                30 Hari terakhir
               </Text>
             </View>
             <View
@@ -362,7 +336,7 @@ class ModalFilterDate extends Component {
                 right: 16
               }}
             >
-              {this.state.selectedDate === 'lastMonth' ? (
+              {this.state.selectedDate === '30days' ? (
                 this.renderSelectedActive()
               ) : (
                 <MaterialCommunityIcons
@@ -374,11 +348,58 @@ class ModalFilterDate extends Component {
             </View>
           </View>
         </TouchableOpacity>
+        <View style={GlobalStyle.lines} />
+
+        {/* Last 7 Days*/}
+        <TouchableOpacity
+          onPress={() => this.setState({ selectedDate: '7days' })}
+        >
+          <View
+            style={{
+              justifyContent: 'space-between',
+              marginVertical: 16,
+              flexDirection: 'row',
+              alignItems: 'center'
+            }}
+          >
+            <View>
+              <Text
+                style={[
+                  {
+                    color: Color.fontBlack80
+                  },
+                  Fonts.fontH10Bold
+                ]}
+              >
+                7 Hari terakhir
+              </Text>
+            </View>
+            <View
+              style={{
+                justifyContent: 'center',
+                position: 'absolute',
+                right: 16
+              }}
+            >
+              {this.state.selectedDate === '7days' ? (
+                this.renderSelectedActive()
+              ) : (
+                <MaterialCommunityIcons
+                  name="checkbox-blank-circle-outline"
+                  color={Color.fontBlack40}
+                  size={24}
+                />
+              )}
+            </View>
+          </View>
+        </TouchableOpacity>
+        <View style={GlobalStyle.lines} />
+
         {/* Custom Date Range */}
         <View
           style={{
             justifyContent: 'center',
-            marginBottom: 16,
+            marginVertical: 16,
             flexDirection: 'row'
           }}
         >
@@ -601,14 +622,6 @@ class ModalFilterDate extends Component {
             borderRadius={8}
             onPress={() => this.submitFilter()}
             disabled={this.checkButton()}
-          />
-        </View>
-        <View style={{ top: -16 }}>
-          <ButtonSingle
-            title={'Reset Filter'}
-            borderRadius={8}
-            white
-            onPress={() => this.resetFilter()}
           />
         </View>
       </View>
