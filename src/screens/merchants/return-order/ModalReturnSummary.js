@@ -396,6 +396,7 @@ class ModalReturnSummary extends Component {
               borderWidth: 1,
               borderColor: Color.fontRed50
             }}
+            disabled={this.props.loading}
             onPress={() =>
               this.props.parentFunction({
                 type: 'ConfirmationContinue',
