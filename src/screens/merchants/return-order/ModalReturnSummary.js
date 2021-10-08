@@ -7,10 +7,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  Image
+  Image,
+  ScrollView
 } from '../../../library/reactPackage';
 import { Modal, MaterialIcon } from '../../../library/thirdPartyPackage';
-import { StatusBarBlackOP40, ButtonSingle } from '../../../library/component';
+import { StatusBarBlackOP40 } from '../../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers';
 import { Color } from '../../../config';
 
@@ -18,7 +19,8 @@ class ModalReturnSummary extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      price: this.props.data.price
+      price: this.props.data.price,
+      heightList: 0.93 * height
     };
   }
   calculateReturnPrice() {
@@ -82,7 +84,6 @@ class ModalReturnSummary extends Component {
   }
 
   renderSummary() {
-    console.log('Return Lines', this.props.data);
     return (
       <View
         style={{
@@ -186,7 +187,7 @@ class ModalReturnSummary extends Component {
   }
 
   renderOrderLines() {
-    return <View>{this.renderData()}</View>;
+    return <View style={{ flex: 1 }}>{this.renderData()}</View>;
   }
   renderSeparator() {
     return <View style={{ marginBottom: 12 }} />;
@@ -194,7 +195,7 @@ class ModalReturnSummary extends Component {
 
   renderData() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <FlatList
           contentContainerStyle={styles.flatListContainer}
           ItemSeparatorComponent={this.renderSeparator}
@@ -316,17 +317,27 @@ class ModalReturnSummary extends Component {
                 justifyContent: 'space-between',
                 alignContent: 'center',
                 alignItems: 'center',
-                marginVertical: 6
+                marginVertical: 6,
+                flex: 1
               }}
             >
-              <Text style={(Fonts.fontC2Medium, { color: Color.fontBlack80 })}>
-                Alasan Retur
-              </Text>
-              <Text
-                style={[Fonts.fontC1SemiBold, { color: Color.fontBlack80 }]}
-              >
-                {item.returnReason.reason}
-              </Text>
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={(Fonts.fontC2Medium, { color: Color.fontBlack80 })}
+                >
+                  Alasan Retur
+                </Text>
+              </View>
+              <View style={{ flex: 2, paddingLeft: 16 }}>
+                <Text
+                  style={[
+                    Fonts.fontC1SemiBold,
+                    { color: Color.fontBlack80, textAlign: 'right' }
+                  ]}
+                >
+                  {item.returnReason.reason}
+                </Text>
+              </View>
             </View>
           </View>
           <View style={GlobalStyle.lines} />
@@ -359,7 +370,6 @@ class ModalReturnSummary extends Component {
         style={[
           GlobalStyle.shadowForBox10,
           {
-            flex: 1,
             flexDirection: 'row',
             paddingHorizontal: 8,
             paddingVertical: 16
@@ -420,7 +430,7 @@ class ModalReturnSummary extends Component {
         useNativeDriver={true}
         hasBackdrop={true}
         coverScreen={true}
-        swipeDirection={['down']}
+        // swipeDirection={['down']}
         backdropColor={Color.fontBlack100}
         backdropOpacity={0.4}
         deviceHeight={height}
@@ -428,7 +438,9 @@ class ModalReturnSummary extends Component {
         onBackButtonPress={this.props.close}
         onBackdropPress={this.props.close}
       >
-        <View style={styles.contentContainer}>
+        <View
+          style={[styles.contentContainer, { height: this.state.heightList }]}
+        >
           {this.renderContentTitle()}
           {this.renderContentBody()}
         </View>
@@ -449,7 +461,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     marginBottom: 0,
     marginLeft: 0,
-    marginRight: 0
+    marginRight: 0,
+    flex: 1
   },
   contentContainer: {
     borderTopRightRadius: 20,

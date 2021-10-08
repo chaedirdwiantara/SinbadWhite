@@ -7,11 +7,7 @@ import {
   TouchableOpacity,
   FlatList
 } from '../../../library/reactPackage';
-import {
-  ProductListType1,
-  SkeletonType5,
-  EmptyDataType2
-} from '../../../library/component';
+import { SkeletonType5, EmptyDataType2 } from '../../../library/component';
 import {
   bindActionCreators,
   connect,
@@ -123,7 +119,6 @@ class ReturnOrderDataListView extends Component {
    * FUNCTIONAL SECTION
    */
   componentDidMount() {
-    console.log('Get Returns Parcel');
     this.props.getReturnParcelsReset();
     this.getReturnParcels(true, 0);
   }
@@ -147,10 +142,6 @@ class ReturnOrderDataListView extends Component {
       this.props.getReturnParcelsReset();
       this.getReturnParcels(true, 0);
     }
-  }
-
-  toParentFunction(data) {
-    console.log(data);
   }
 
   getReturnParcels(loading, page) {

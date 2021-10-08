@@ -171,7 +171,6 @@ class ModalReturnConfirmation extends Component {
   }
 
   renderButton() {
-    console.log('Modal Update > ', this.props.data);
     return (
       <View style={[GlobalStyle.shadowForBox10, { flex: 1 }]}>
         <ButtonSingle
