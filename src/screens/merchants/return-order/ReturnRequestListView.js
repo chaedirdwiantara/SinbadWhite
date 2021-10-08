@@ -179,7 +179,13 @@ class ReturnRequestView extends Component {
               justifyContent: 'space-between'
             }}
           >
-            <View>
+            <View
+              style={{
+                flex: 1,
+                marginRight: 8,
+                alignSelf: 'center'
+              }}
+            >
               <Text style={[Fonts.fontH12Medium, { color: Color.fontBlack80 }]}>
                 Alasan Retur
               </Text>
@@ -187,8 +193,11 @@ class ReturnRequestView extends Component {
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center'
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                flex: 2,
+                alignSelf: 'flex-end',
+                marginLeft: 8
               }}
               disabled={parseInt(item.qty, 10) === 0}
               onPress={() =>
@@ -203,7 +212,8 @@ class ReturnRequestView extends Component {
                       item.returnReason.reason === null
                         ? Color.fontBlack40
                         : Color.fontBlack80,
-                    marginRight: 8
+                    marginRight: 8,
+                    textAlign: 'right'
                   }
                 ]}
               >
@@ -315,7 +325,8 @@ class ReturnRequestView extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1
+    flex: 1,
+    height: '100%'
   },
   flatListContainer: {
     paddingVertical: 16,
