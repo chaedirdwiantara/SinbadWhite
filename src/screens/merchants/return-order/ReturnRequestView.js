@@ -383,7 +383,9 @@ class ReturnRequestView extends Component {
             : Color.fontRed50,
           borderRadius: 8
         }}
-        disabled={this.checkReturnLines()}
+        disabled={
+          this.checkReturnLines() || this.props.oms.loadingPostReturnOrder
+        }
         onPress={() => this.setState({ openModalReturnSummary: true })}
       >
         <Text style={Fonts.textButtonSmallRedActive}>Konfirmasi Retur</Text>
@@ -442,12 +444,14 @@ class ReturnRequestView extends Component {
     ) : this.props.oms.errorGetReturnDraft !== null ? (
       <ErrorPage
         title={
-          this.props.oms.errorGetReturnDraft.data?.errorCode === 'ERR-LIMIT'
+          this.props.oms.errorGetReturnDraft.data?.errorCodeMessage ===
+          'ERR-LIMIT'
             ? 'Order Sudah Melebihi Batas Waktu'
             : 'Terjadi Kesalahan'
         }
         description={
-          this.props.oms.errorGetReturnDraft.data?.errorCode === 'ERR-LIMIT'
+          this.props.oms.errorGetReturnDraft.data?.errorCodeMessage ===
+          'ERR-LIMIT'
             ? 'Silahkan pilih order lainnya'
             : 'Silahkan mencoba kembali'
         }
@@ -525,6 +529,7 @@ class ReturnRequestView extends Component {
         title={'Konfirmasi Retur'}
         showInfo={this.state.showInfo}
         returnInfo={this.state.returnedConfirmation}
+        loading={this.props.oms.loadingPostReturnOrder}
       />
     ) : (
       <View />
