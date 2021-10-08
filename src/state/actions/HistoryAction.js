@@ -235,15 +235,31 @@ export function getReturnParcelsSuccess(data) {
 export function getReturnParcelsFailed(data) {
   return { type: types.GET_RETURN_PARCELS_FAILED, payload: data };
 }
-/** === REFRESH GET HISTORY === */
+
 export function getReturnParcelsRefresh() {
   return { type: types.GET_RETURN_PARCELS_REFRESH };
 }
-/** === RESET GET HISTORY === */
+
 export function getReturnParcelsReset() {
   return { type: types.GET_RETURN_PARCELS_RESET };
 }
-/** === LOAD MORE GET HISTORY === */
+
 export function getReturnParcelsLoadMore(page) {
   return { type: types.GET_RETURN_PARCELS_LOADMORE, payload: page };
+}
+
+/** GET RETURN PARCELS DETAIL*/
+export function getReturnParcelDetailProcess(data) {
+  return { type: types.GET_RETURN_PARCEL_DETAIL_PROCESS, payload: data };
+}
+
+export function getReturnParcelDetailSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.GET_RETURN_PARCEL_DETAIL_SUCCESS, payload: data };
+  }
+  return { type: types.GET_RETURN_PARCEL_DETAIL_FAILED, payload: data };
+}
+
+export function getReturnParcelDetailFailed(data) {
+  return { type: types.GET_RETURN_PARCEL_DETAIL_FAILED, payload: data };
 }

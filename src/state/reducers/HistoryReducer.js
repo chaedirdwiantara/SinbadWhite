@@ -17,6 +17,7 @@ const INITIAL_STATE = {
   loadingGetReturnStatus: false,
   loadingGetReturnParcels: false,
   loadingLoadMoreGetReturnParcels: false,
+  loadingGetReturnParcelDetail: false,
   /** data */
   dataGetHistory: [],
   dataEditHistory: null,
@@ -32,6 +33,7 @@ const INITIAL_STATE = {
   dataGetReturnParcels: [],
   totalGetReturnParcels: 0,
   pageGetReturnParcels: 0,
+  dataGetReturnParcelDetail: null,
   /** error */
   errorGetHistory: null,
   errorGetOrderStatus: null,
@@ -42,7 +44,8 @@ const INITIAL_STATE = {
   errorHistoryChangePaymentMethod: null,
   errorViewInvoice: null,
   errorGetReturnStatus: null,
-  errorGetReturnParcels: null
+  errorGetReturnParcels: null,
+  errorGetReturnParcelDetail: null
 };
 
 export const history = createReducer(INITIAL_STATE, {
@@ -420,6 +423,29 @@ export const history = createReducer(INITIAL_STATE, {
       ...state,
       loadingLoadMoreGetReturnParcels: true,
       pageGetReturnParcels: action.payload
+    };
+  },
+  /** GET RETURN PARCEL DETAIL */
+  [types.GET_RETURN_PARCEL_DETAIL_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReturnParcelDetail: true,
+      dataGetReturnParcelDetail: null,
+      errorGetReturnParcelDetail: null
+    };
+  },
+  [types.GET_RETURN_PARCEL_DETAIL_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReturnParcelDetail: false,
+      dataGetReturnParcelDetail: action.payload.data
+    };
+  },
+  [types.GET_RETURN_PARCEL_DETAIL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetReturnParcelDetail: false,
+      errorGetReturnParcelDetail: action.payload
     };
   }
 });
