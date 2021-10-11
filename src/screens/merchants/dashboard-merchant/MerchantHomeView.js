@@ -41,11 +41,18 @@ import {
   ACTIVITY_JOURNEY_PLAN_CHECK_OUT,
   ACTIVITY_JOURNEY_PLAN_ORDER,
   ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY,
-  ACTIVITY_JOURNEY_PLAN_COLLECTION
+  ACTIVITY_JOURNEY_PLAN_BILLING
 } from '../../../constants';
 import _ from 'lodash';
 
 const { width, height } = Dimensions.get('window');
+
+const PENAGIHAN_TASK =  {
+  name: 'Penagihan',
+  title: 'Penagihan',
+  goTo: '',
+  activity: ACTIVITY_JOURNEY_PLAN_BILLING
+}
 
 class MerchantHomeView extends Component {
   constructor(props) {
@@ -104,12 +111,6 @@ class MerchantHomeView extends Component {
           title: 'Order',
           goTo: 'pdp',
           activity: ACTIVITY_JOURNEY_PLAN_ORDER
-        },
-        {
-          name: 'Penagihan',
-          title: 'Tagih',
-          goTo: 'collection',
-          activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
         },
         {
           name: 'Keluar Toko',
@@ -200,149 +201,41 @@ class MerchantHomeView extends Component {
     if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
       if (dataGetTotalSurvey) {
         /** IF NO SURVEY */
-        if (
-          _.isEmpty(surveyList.payload.data) &&
-          surveyList.success &&
-          !this.state.successSurveyList &&
-          sfaStatus
-        ) {
-          if (
-            !this.props.merchant.dataGetLogAllActivityV2.find(
-              item => item.activityName === 'toko_survey'
-            )
-          ) {
-            this.SurveyDone();
-          } else {
-            this.setState({ successSurveyList: true });
-          }
-          if (this.state.task.length === 3) {
-            if (sfaStatus.data.totalInvoice > 0) {
-              this.setState({
-                task: [
-                  {
-                    name: 'Masuk Toko',
-                    title: 'Masuk',
-                    goTo: 'checkIn',
-                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                  },
-                  {
-                    name: 'Order',
-                    title: 'Order',
-                    goTo: 'pdp',
-                    activity: ACTIVITY_JOURNEY_PLAN_ORDER
-                  },
-                  {
-                    name: 'Penagihan',
-                    title: 'Tagih',
-                    goTo: 'collection',
-                    activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
-                  },
-                  {
-                    name: 'Keluar Toko',
-                    title: 'Keluar',
-                    goTo: 'checkOut',
-                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                  }
-                ]
-              });
-            } else {
-              this.setState({
-                task: [
-                  {
-                    name: 'Masuk Toko',
-                    title: 'Masuk',
-                    goTo: 'checkIn',
-                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                  },
-                  {
-                    name: 'Order',
-                    title: 'Order',
-                    goTo: 'pdp',
-                    activity: ACTIVITY_JOURNEY_PLAN_ORDER
-                  },
-                  {
-                    name: 'Keluar Toko',
-                    title: 'Keluar',
-                    goTo: 'checkOut',
-                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                  }
-                ]
-              });
-            }
-          }
+        if (dataGetTotalSurvey.total === 0) {
+          this.SurveyDone();
         }
         /** IF SURVEY LIST EXIST */
-        if (
-          !_.isEmpty(surveyList.payload.data) &&
-          surveyList.success &&
-          sfaStatus
-        ) {
-          if (this.state.task.length === 3) {
-            if (sfaStatus.data.totalInvoice > 0) {
-              this.setState({
-                task: [
-                  {
-                    name: 'Masuk Toko',
-                    title: 'Masuk',
-                    goTo: 'checkIn',
-                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                  },
-                  {
-                    name: 'Order',
-                    title: 'Order',
-                    goTo: 'pdp',
-                    activity: ACTIVITY_JOURNEY_PLAN_ORDER
-                  },
-                  {
-                    name: 'Penagihan',
-                    title: 'Tagih',
-                    goTo: 'collection',
-                    activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
-                  },
-                  {
-                    name: 'Toko Survey',
-                    title: 'Isi',
-                    goTo: 'survey',
-                    activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-                  },
-                  {
-                    name: 'Keluar Toko',
-                    title: 'Keluar',
-                    goTo: 'checkOut',
-                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                  }
-                ]
-              });
-            } else {
-              this.setState({
-                task: [
-                  {
-                    name: 'Masuk Toko',
-                    title: 'Masuk',
-                    goTo: 'checkIn',
-                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                  },
-                  {
-                    name: 'Order',
-                    title: 'Order',
-                    goTo: 'pdp',
-                    activity: ACTIVITY_JOURNEY_PLAN_ORDER
-                  },
-                  {
-                    name: 'Toko Survey',
-                    title: 'Isi',
-                    goTo: 'survey',
-                    activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-                  },
-                  {
-                    name: 'Keluar Toko',
-                    title: 'Keluar',
-                    goTo: 'checkOut',
-                    activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                  }
-                ]
-              });
-            }
+        if (dataGetTotalSurvey.total !== 0) {
+          if (!this.checkExistTask(ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY)) {
+            let task = [
+              {
+                name: 'Masuk Toko',
+                title: 'Masuk',
+                goTo: 'checkIn',
+                activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+              },
+              {
+                name: 'Order',
+                title: 'Order',
+                goTo: 'pdp',
+                activity: ACTIVITY_JOURNEY_PLAN_ORDER
+              },
+              {
+                name: 'Survei',
+                title: 'Isi',
+                goTo: 'survey',
+                activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+              },
+              {
+                name: 'Keluar Toko',
+                title: 'Keluar',
+                goTo: 'checkOut',
+                activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+              }
+            ]
+            this.setState({
+              task,
+            });
           }
         }
         /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
@@ -354,9 +247,9 @@ class MerchantHomeView extends Component {
             this.SurveyDone();
           }
           /** FOR GET SURVEY LIST */
-          if (!loadingGetSurveyList && !surveyList.payload.data) {
-            this.getSurvey();
-          }
+          // if (!loadingGetSurveyList && !surveyList.payload.data) {
+          //   this.getSurvey();
+          // }
         }
       }
       /** HIDE SURVEY -> BECAUSE INFINITE LOOP */
@@ -437,6 +330,22 @@ class MerchantHomeView extends Component {
             });
           }
         }
+      }
+    }
+    // CHECK RENDER PENAGIHAN
+    if (this.checkBilling()) {
+      const { collection } = this.state.privileges || {};
+      // CHECK THIS STATE TO PREVENT MAXIMUM EXCEED ERROR
+      if (
+        !this.checkExistTask(ACTIVITY_JOURNEY_PLAN_BILLING) && 
+        (collection && collection.status) 
+      ) {
+        let task = [...this.state.task]
+        // CHECK TO RENDER PENAGIHAN ROW
+        task.splice(2, 0, PENAGIHAN_TASK)
+        this.setState({
+          task,
+        });
       }
     }
     /** FOR ERROR */
@@ -774,6 +683,28 @@ class MerchantHomeView extends Component {
     );
   }
   /**
+   * CHECK THE CONDITION WHEN isCollectionAvailable true
+   * - SELECTED MERCHANT HAVE isCollectionAvailable to render "Penagihan" text
+   * return true | false
+  */
+  checkBilling() {
+    const {
+      selectedMerchant,
+    } = this.props.merchant;
+    const { journeyBookStores } = selectedMerchant
+    
+    if (journeyBookStores.isCollectionAvailable) {
+      return true
+    }
+    return false
+  }
+   /**
+   * CHECK EXISTING TASK INSIDE THIS.STATE.TASK
+   * @params activityName (name that want to check) 
+   * return true | false
+  */
+  checkExistTask = (activityName) => this.state.task.some(item => item.activity === activityName)
+  /**
    * ========================
    * RENDER VIEW
    * =======================
@@ -1110,42 +1041,6 @@ class MerchantHomeView extends Component {
                           size={24}
                         />
                       )
-                    ) : item.activity === ACTIVITY_JOURNEY_PLAN_COLLECTION ? (
-                      sfaStatus.totalOverdueInvoice === 0 ? (
-                        this.checkCheckIn() ? (
-                          <MaterialIcon
-                            name="check-circle"
-                            color={Color.fontGreen50}
-                            size={24}
-                          />
-                        ) : (
-                          <MaterialIcon
-                            name="radio-button-unchecked"
-                            color={Color.fontBlack40}
-                            size={24}
-                          />
-                        )
-                      ) : this.checkCheckIn() ? (
-                        sfaStatus.totalOverdueInvoice >= 1 ? (
-                          <MaterialIcon
-                            name="timelapse"
-                            color={Color.fontYellow50}
-                            size={24}
-                          />
-                        ) : (
-                          <MaterialIcon
-                            name="radio-button-unchecked"
-                            color={Color.fontBlack40}
-                            size={24}
-                          />
-                        )
-                      ) : (
-                        <MaterialIcon
-                          name="radio-button-unchecked"
-                          color={Color.fontBlack40}
-                          size={24}
-                        />
-                      )
                     ) : !this.checkCheckIn() && // check task list checkIn, reason not visit
                       journeyBookStores.noVisitReasonId &&
                       item.title === 'Masuk' ? (
@@ -1299,97 +1194,6 @@ class MerchantHomeView extends Component {
                           width: '100%'
                         }}
                       />
-                    )
-                  ) : item.activity === ACTIVITY_JOURNEY_PLAN_COLLECTION ? (
-                    sfaStatus.totalOverdueInvoice === 0 ? (
-                      this.checkCheckIn() ? (
-                        <TouchableOpacity
-                          onPress={() => {
-                            this.goTo(item.goTo);
-                          }}
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'flex-end',
-                            alignItems: 'center',
-                            marginRight: -5,
-                            marginTop: -5
-                          }}
-                        >
-                          <Text style={Fonts.type51}>{'Sudah Lunas'}</Text>
-                        </TouchableOpacity>
-                      ) : (
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                          }}
-                        >
-                          <Text style={Fonts.type34}>Belum Masuk</Text>
-                        </View>
-                      )
-                    ) : // ) : sfaStatus.totalOverdueInvoice > 1 ? (
-                    //   <MaterialIcon
-                    //     name="cancel"
-                    //     color={Color.fontRed50}
-                    //     size={24}
-                    //   />
-                    this.checkCheckIn() ? (
-                      sfaStatus.totalOverdueInvoice >= 1 ? (
-                        <TouchableOpacity
-                          onPress={() => {
-                            this.goTo(item.goTo);
-                          }}
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'flex-end',
-                            alignItems: 'center',
-                            marginRight: -5,
-                            marginTop: -5
-                          }}
-                        >
-                          <Text style={Fonts.type69}>Berlangsung</Text>
-                          <MaterialIcon
-                            style={{
-                              marginTop: 2,
-                              padding: 0
-                            }}
-                            name="chevron-right"
-                            color={Color.fontYellow50}
-                            size={20}
-                          />
-                        </TouchableOpacity>
-                      ) : (
-                        <Button
-                          onPress={() => {
-                            this.goTo(item.goTo);
-                          }}
-                          title={item.title}
-                          titleStyle={[
-                            Fonts.type16,
-                            {
-                              color: Color.fontWhite
-                            }
-                          ]}
-                          buttonStyle={{
-                            backgroundColor: Color.fontRed50,
-                            borderRadius: 7,
-                            paddingHorizontal: 20,
-                            paddingVertical: 5,
-                            width: '100%'
-                          }}
-                        />
-                      )
-                    ) : (
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <Text style={Fonts.type34}>Belum Masuk</Text>
-                      </View>
                     )
                   ) : (
                     this.rendercheckCheckIn(item)
@@ -1875,8 +1679,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
- * updatedDate: 05102021
+ * updatedBy: raka
+ * updatedDate: 06102021
  * updatedFunction:
- * -> fix the validation when checking out. (must completed the survey)
+ * -> check isCollectionAvailable from journeyplan to show penagihan text
  */
