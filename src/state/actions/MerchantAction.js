@@ -444,15 +444,16 @@ export function merchantGetWarehouseSuccess(data){
 export function merchantGetWarehouseFailed(data){
   return { type: types.MERCHANT_GET_WAREHOUSE_FAILED, payload: data}
 }
-
 /**
  * ===========================================
  * GET SURVEY LIST
  * ===========================================
  */
+/** === SURVEY LIST GET PROCESS ==== */
 export function merchantGetSurveyListProcess(data) {
   return { type: types.MERCHANT_GET_SURVEY_LIST_PROCESS, payload: data };
 }
+/** === SURVEY LIST GET SUCCESS ==== */
 export function merchantGetSurveyListSuccess(data) {
   if (data.result === 'Ok') {
     return {
@@ -462,15 +463,45 @@ export function merchantGetSurveyListSuccess(data) {
   }
   return { type: types.MERCHANT_GET_SURVEY_LIST_FAILED, payload: data };
 }
+/** === SURVEY LIST GET FAILED ==== */
 export function merchantGetSurveyListFailed(data) {
   return { type: types.MERCHANT_GET_SURVEY_LIST_FAILED, payload: data };
 }
+/** === RESET SURVEY LIST ==== */
 export function merchantGetSurveyListReset(data) {
   return { type: types.MERCHANT_GET_SURVEY_LIST_RESET, payload: data };
 }
+/** === REFRESH SURVEY LIST ==== */
+export function merchantGetSurveyListRefresh(data) {
+  return { type: types.MERCHANT_GET_SURVEY_LIST_REFRESH, payload: data };
+}
+/** === LOAD MORE SURVEY LIST ==== */
+export function MerchantGetSurveyListLoadMore(data) {
+  return { type: types.MERCHANT_GET_SURVEY_LIST_LOADMORE, payload: data };
+}
 /**
  * ===========================================
- * GET SURVEY RESPONSE
+ * GET TOTAL SURVEY
+ * ===========================================
+ */
+export function merchantGetTotalSurveyProcess(data) {
+  return { type: types.MERCHANT_GET_TOTAL_SURVEY_PROCESS, payload: data };
+}
+export function merchantGetTotalSurveySuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_TOTAL_SURVEY_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_GET_TOTAL_SURVEY_FAILED, payload: data };
+}
+export function merchantGetTotalSurveyFailed(data) {
+  return { type: types.MERCHANT_GET_TOTAL_SURVEY_FAILED, payload: data };
+}
+/**
+ * ===========================================
+ * GET SURVEY BY ID
  * ===========================================
  */
 export function merchantGetSurveyProcess(data) {
@@ -490,31 +521,80 @@ export function merchantGetSurveyFailed(data) {
 }
 /**
  * ===========================================
- * SUBMIT SURVEY
+ * GET SURVEY BRAND BY SURVEY ID
  * ===========================================
  */
-export function merchantSubmitSurveyProcess(data) {
-  return { type: types.MERCHANT_SUBMIT_SURVEY_PROCESS, payload: data };
+export function merchantGetSurveyBrandProcess(data) {
+  return { type: types.MERCHANT_GET_SURVEY_BRAND_PROCESS, payload: data };
 }
-export function merchantSubmitSurveySuccess(data) {
+export function merchantGetSurveyBrandSuccess(data) {
   if (data.result === 'Ok') {
     return {
-      type: types.MERCHANT_SUBMIT_SURVEY_SUCCESS,
+      type: types.MERCHANT_GET_SURVEY_BRAND_SUCCESS,
       payload: data.data
     };
   }
-  return { type: types.MERCHANT_SUBMIT_SURVEY_FAILED, payload: data };
+  return { type: types.MERCHANT_GET_SURVEY_BRAND_FAILED, payload: data };
 }
-export function merchantSubmitSurveyFailed(data) {
-  return { type: types.MERCHANT_SUBMIT_SURVEY_FAILED, payload: data };
+export function merchantGetSurveyBrandFailed(data) {
+  return { type: types.MERCHANT_GET_SURVEY_BRAND_FAILED, payload: data };
+}
+/**
+ * ===========================================
+ * GET SURVEY RESPONSE
+ * ===========================================
+ */
+export function merchantGetSurveyResponseProcess(data) {
+  return { type: types.MERCHANT_GET_SURVEY_RESPONSE_PROCESS, payload: data };
+}
+export function merchantGetSurveyResponseSuccess(data, totalScore) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_SURVEY_RESPONSE_SUCCESS,
+      payload: data.data,
+      totalScore: totalScore
+    };
+  }
+  return { type: types.MERCHANT_GET_SURVEY_RESPONSE_FAILED, payload: data };
+}
+export function merchantGetSurveyResponseFailed(data) {
+  return { type: types.MERCHANT_GET_SURVEY_RESPONSE_FAILED, payload: data };
+}
+/**
+ * ===========================================
+ * SUBMIT SURVEY
+ * ===========================================
+ */
+export function merchantSubmitSurveyResponseProcess(data) {
+  return { type: types.MERCHANT_SUBMIT_SURVEY_RESPONSE_PROCESS, payload: data };
+}
+export function merchantSubmitSurveyResponseSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_SUBMIT_SURVEY_RESPONSE_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_SUBMIT_SURVEY_RESPONSE_FAILED, payload: data };
+}
+export function merchantSubmitSurveyResponseFailed(data) {
+  return { type: types.MERCHANT_SUBMIT_SURVEY_RESPONSE_FAILED, payload: data };
 }
 /**
  * ===========================================
  * UPDATE SURVEY RESPONSE
  * ===========================================
  */
-export function merchantUpdateSurveyProcess(data) {
-  return { type: types.MERCHANT_UPDATE_SURVEY_PROCESS, payload: data };
+export function merchantUpdateSurveyResponseProcess(data) {
+  return { type: types.MERCHANT_UPDATE_SURVEY_RESPONSE_PROCESS, payload: data };
+}
+/**
+ * ===========================================
+ * SURVEY RESULT
+ * ===========================================
+ */
+ export function getSurveyResult(data){
+  return { type: types.MERCHANT_SURVEY_RESULT, payload: data}
 }
 
 /**
@@ -562,4 +642,24 @@ export function getSalesSegmentationFailed(data){
 }
 export function resetGetSalesSegmentation(){
   return { type: types.RESET_SALES_SEGMENTATION }
+}
+/**
+ * ===========================================
+ * GET RADIUS LOCK GEOTAG
+ * ===========================================
+ */
+export function getRadiusLockGeotagProcess(data) {
+  return { type: types.GET_RADIUS_LOCK_GEOTAG_PROCESS, payload: data };
+}
+export function getRadiusLockGeotagSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.GET_RADIUS_LOCK_GEOTAG_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.GET_RADIUS_LOCK_GEOTAG_FAILED, payload: data };
+}
+export function getRadiusLockGeotagFailed(data) {
+  return { type: types.GET_RADIUS_LOCK_GEOTAG_FAILED, payload: data };
 }

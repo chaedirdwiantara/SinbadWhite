@@ -321,6 +321,7 @@ class ModalBottomMerchantList extends Component {
         backdropOpacity={0.4}
         deviceHeight={height}
         style={styles.mainContainer}
+        onRequestClose={this.props.onRequestClose ? this.props.onRequestClose : this.props.close}
       >
         <View
           style={[styles.contentContainer, { height: this.state.heightList }]}
@@ -423,8 +424,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
- * updatedDate: 24082021
+ * updatedBy: Raka
+ * updatedDate: 14092021
  * updatedFunction:
- * -> maximise the character of search (30 characters)
+ * -> set default function to close modal when click back button android
  */
