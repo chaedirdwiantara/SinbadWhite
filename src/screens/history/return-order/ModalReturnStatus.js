@@ -33,11 +33,8 @@ class ModalReturnStatus extends Component {
               status: 'all',
               title: 'Semua'
             },
-      loading: true
+      loading: false
     };
-  }
-  componentDidMount() {
-    setTimeout(() => this.setState({ loading: false }), 100);
   }
   /**
    * ==================

@@ -31,10 +31,6 @@ class ReturnRequestView extends Component {
     this.props.parentFunction(data);
   }
 
-  parentFunction(data) {
-    return null;
-  }
-
   parentFunctionFromOrderButton(data) {
     this.toParentFunction(data);
   }

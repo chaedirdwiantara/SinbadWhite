@@ -44,10 +44,6 @@ class ReturnOrderView extends Component {
     };
   }
 
-  componentDidMount() {
-    /** Call Return Order */
-  }
-
   parentFunction(data) {
     switch (data.type) {
       case 'search':

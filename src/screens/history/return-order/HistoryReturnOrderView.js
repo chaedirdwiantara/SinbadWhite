@@ -40,39 +40,7 @@ class HistoryReturnOrderView extends Component {
       typeDate: '',
       openModalReturnStatus: false,
       openModalFilterDate: false,
-      openDateSpinner: false,
-      mockReturnStatus: [
-        {
-          id: 0,
-          status: 'all',
-          title: 'Semua'
-        },
-        {
-          id: 1,
-          status: 'pending',
-          title: 'Menunggu'
-        },
-        {
-          id: 2,
-          status: 'approved',
-          title: 'Disetujui'
-        },
-        {
-          id: 3,
-          status: 'approved_returned',
-          title: 'Dikembalikan'
-        },
-        {
-          id: 4,
-          status: 'closed',
-          title: 'Selesai'
-        },
-        {
-          id: 5,
-          status: 'rejected',
-          title: 'Ditolak'
-        }
-      ]
+      openDateSpinner: false
     };
   }
 
