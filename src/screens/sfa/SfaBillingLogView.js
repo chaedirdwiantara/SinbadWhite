@@ -32,9 +32,9 @@ import { toLocalTime } from '../../helpers/TimeHelper';
 import SfaNoDataView from './SfaNoDataView';
 const SfaBillingLogView = props => {
   const dispatch = useDispatch();
-  const collectionMethodId =
-    props.navigation.state.params.paymentCollectionTypeId;
-  const paymentCollectionMethodId = props.navigation.state.params.collectionId;
+  // const collectionMethodId =
+  //   props.navigation.state.params.paymentCollectionTypeId;
+  // const paymentCollectionMethodId = props.navigation.state.params.collectionId;
   const [refreshing, setRefreshing] = useState(false);
   const [billingId, setBillingId] = useState(null);
   const [
@@ -184,9 +184,10 @@ const SfaBillingLogView = props => {
     );
   };
   /** RENDER BUTTON */
-  const renderButton = (title, type, disable, action, item) => {
+  const renderButton = (title, type, disable, action, item, testId) => {
     return (
       <TouchableOpacity
+        testID={testId}
         disabled={disable}
         style={{
           ...styles.buttonSmall,
@@ -304,7 +305,8 @@ const SfaBillingLogView = props => {
                 'white',
                 !item.isEditable,
                 onDeleteCollection.bind(item),
-                item
+                item,
+                'btnDelete'
               )}
             </View>
             <View

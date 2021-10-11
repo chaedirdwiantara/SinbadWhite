@@ -1,6 +1,10 @@
 export const mockStoreDummy = {
   sfa: {
     loadingSfaGetCollectionLog: false,
+    loadingLoadMoreGetPaymentCollectionLog: false,
+    loadingSfaGetPaymentCollectionLog: false,
+    dataSfaDeletePaymentBilling: { meta: {}, data: {} },
+    errorSfaDeletePaymentBilling: { data: {} },
     dataSfaGetPaymentCollectionLog: {
       meta: {
         limit: 20,
