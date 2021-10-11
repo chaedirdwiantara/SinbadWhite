@@ -79,7 +79,7 @@ class MerchantHomeView extends Component {
           goTo: 'checkIn'
         },
         {
-          menuName: 'Toko Survey',
+          menuName: 'Survei',
           icon: require('../../../assets/icons/merchant/pesanan.png'),
           goTo: 'survey'
         },
@@ -118,7 +118,6 @@ class MerchantHomeView extends Component {
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
         }
       ],
-      successSurveyList: false,
       privileges: this.props.privileges.data
     };
   }
@@ -148,8 +147,8 @@ class MerchantHomeView extends Component {
   componentDidMount() {
     /** FOR GET LATEST CHECK IN AND CHECK OUT */
     this.props.merchantGetLatestCheckInOutProcess();
-    /** FOR GET MERCHANT LIST RESET */
-    this.props.merchantGetSurveyListReset();
+    /** FOR GET MERCHANT LIST */
+    this.getSurvey();
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
       this.props.merchant.selectedMerchant.storeId
@@ -185,19 +184,21 @@ class MerchantHomeView extends Component {
     if (this.props.profile.errorGetSalesTeam) {
       this.props.getSalesTeamProcess();
     }
+    /** FOR GET TOTAL SURVEY */
+    this.props.merchantGetTotalSurveyProcess(
+      this.props.merchant.selectedMerchant?.storeId
+    );
   }
 
   componentDidUpdate(prevProps) {
     const {
-      surveyList,
-      loadingGetSurveyList,
-      errorGetSurveyList,
       loadingGetLogAllActivity,
+      dataGetTotalSurvey,
       dataGetLogAllActivityV2
     } = this.props.merchant;
     const sfaStatus = this.props.sfa.dataSfaGetStatusOrder;
     if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
-      if (surveyList.payload.data) {
+      if (dataGetTotalSurvey) {
         /** IF NO SURVEY */
         if (
           _.isEmpty(surveyList.payload.data) &&
@@ -345,35 +346,12 @@ class MerchantHomeView extends Component {
           }
         }
         /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
-        if (
-          !_.isEmpty(surveyList.payload.data) &&
-          surveyList.success &&
-          !this.state.successSurveyList
-        ) {
+        if (dataGetTotalSurvey.total !== 0) {
           if (
-            surveyList.payload.data.length ===
-            surveyList.payload.data.filter(
-              item => item.responseStatus === 'completed'
-            ).length
+            this.props.merchant.dataGetTotalSurvey.total ===
+            this.props.merchant.dataGetTotalSurvey.completed
           ) {
-            if (this.props.merchant.dataGetLogAllActivity) {
-              if (
-                surveyList.payload.data.length ===
-                surveyList.payload.data.filter(
-                  item => item.responseStatus === 'completed'
-                ).length
-              ) {
-                if (this.props.merchant.dataGetLogAllActivityV2) {
-                  if (
-                    !this.props.merchant.dataGetLogAllActivityV2.find(
-                      item => item.activityName === 'toko_survey'
-                    )
-                  ) {
-                    this.SurveyDone();
-                  }
-                }
-              }
-            }
+            this.SurveyDone();
           }
           /** FOR GET SURVEY LIST */
           if (!loadingGetSurveyList && !surveyList.payload.data) {
@@ -381,8 +359,8 @@ class MerchantHomeView extends Component {
           }
         }
       }
-      /** FOR GET SURVEY LIST */
       /** HIDE SURVEY -> BECAUSE INFINITE LOOP */
+      /** FOR GET SURVEY LIST */
       // if (!loadingGetSurveyList && !surveyList.payload.data && !errorGetSurveyList) {
       //   this.getSurvey();
       // }
@@ -396,7 +374,7 @@ class MerchantHomeView extends Component {
         if (
           this.props.merchant.dataPostActivityV2.activity ===
             ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY &&
-          !_.isEmpty(surveyList.payload.data)
+          dataGetTotalSurvey.total !== 0
         ) {
           /** FOR GET LOG ALL ACTIVITY */
           this.refreshMerchantGetLogAllActivityProcess();
@@ -498,11 +476,19 @@ class MerchantHomeView extends Component {
         this.doError();
       }
     }
+    /** error get total survey */
+    if (this.props.merchant.errorGetTotalSurvey) {
+      if (
+        prevProps.merchant.errorGetTotalSurvey !==
+        this.props.merchant.errorGetTotalSurvey
+      ) {
+        this.doError();
+      }
+    }
   }
 
   componentWillUnmount() {
     const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
-    this.props.merchantGetSurveyListReset();
     this.props.journeyPlanGetResetV2();
     this.props.journeyPlanGetProcessV2({
       page: 1,
@@ -539,19 +525,27 @@ class MerchantHomeView extends Component {
    * Set sales activity survey_toko done
    */
   SurveyDone() {
-    if (this.props.merchant.dataGetLogAllActivityV2) {
+    const {
+      loadingPostActivity,
+      dataGetLogAllActivityV2,
+      dataPostActivityV2
+    } = this.props.merchant;
+    if (!loadingPostActivity) {
       if (
-        !this.props.merchant.dataGetLogAllActivityV2.find(
-          item => item.activityName === 'toko_survey'
-        )
+        !dataPostActivityV2 ||
+        dataPostActivityV2?.activity !== ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
       ) {
-        this.setState({ successSurveyList: true }, () =>
+        if (
+          !dataGetLogAllActivityV2.find(
+            item => item.activityName === 'toko_survey'
+          )
+        ) {
           this.props.merchantPostActivityProcessV2({
             journeyBookStoreId: this.props.merchant.selectedMerchant
               .journeyBookStores.id,
             activityName: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-          })
-        );
+          });
+        }
       }
     }
   }
@@ -592,14 +586,12 @@ class MerchantHomeView extends Component {
           activity: 'check_in'
         });
         if (this.props.merchant.dataGetLogAllActivityV2) {
-          const haveSurvey = _.isEmpty(
-            this.props.merchant.surveyList.payload.data
-          );
+          const haveSurvey = this.props.merchant.dataGetTotalSurvey.total === 0;
           const surveyHasDone = this.props.merchant.dataGetLogAllActivityV2.find(
             item => item.activityName === 'toko_survey'
           );
           const { checkOut } = this.state.privileges;
-          if (haveSurvey || surveyHasDone || checkOut?.status) {
+          if ((haveSurvey || surveyHasDone) && checkOut?.status) {
             this.setState({ openModalCheckout: true });
           }
         }
@@ -612,7 +604,10 @@ class MerchantHomeView extends Component {
             )
           ) {
             NavigationService.navigate('MerchantSurveyView', {
-              readOnly: false
+              readOnly: false,
+              totalSurvey: this.props.merchant.dataGetTotalSurvey.total,
+              totalCompletedSurvey: this.props.merchant.dataGetTotalSurvey
+                .completed
             });
           }
         }
@@ -655,6 +650,8 @@ class MerchantHomeView extends Component {
 
   navigateSurveyReadOnly = data => {
     NavigationService.navigate('MerchantSurveyView', {
+      totalSurvey: this.props.merchant.dataGetTotalSurvey.total,
+      totalCompletedSurvey: this.props.merchant.dataGetTotalSurvey.completed,
       readOnly: true,
       data
     });
@@ -740,6 +737,43 @@ class MerchantHomeView extends Component {
     return true;
   }
   /**
+   * CHECK THE CONDITION WHEN
+   * - HAVING REASON NOT VISIT
+   * - STATUS SURVEY IN PROGRESS
+   */
+  checkNoVisitReasonAndSurveyStatus(journeyBookStores, item) {
+    if (
+      !this.checkCheckIn() &&
+      journeyBookStores.noVisitReasonId &&
+      item.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN
+    ) {
+      return <MaterialIcon name="cancel" color={Color.fontRed50} size={24} />;
+    }
+    if (item.activity === ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY) {
+      const { dataGetTotalSurvey } = this.props.merchant;
+      if (dataGetTotalSurvey?.inProgress >= 1) {
+        return (
+          <View
+            style={{
+              backgroundColor: Color.fontYellow50,
+              borderRadius: 100,
+              padding: 2
+            }}
+          >
+            <MaterialIcon name="timelapse" color={Color.fontWhite} size={20} />
+          </View>
+        );
+      }
+    }
+    return (
+      <MaterialIcon
+        name="radio-button-unchecked"
+        color={Color.fontBlack40}
+        size={24}
+      />
+    );
+  }
+  /**
    * ========================
    * RENDER VIEW
    * =======================
@@ -761,10 +795,7 @@ class MerchantHomeView extends Component {
             >
               <Text style={Fonts.type100}>Lihat Alasan</Text>
               <MaterialIcon
-                style={{
-                  marginTop: 2,
-                  padding: 0
-                }}
+                style={styles.containerChevronRight}
                 name="chevron-right"
                 color={Color.fontRed50}
                 size={20}
@@ -792,7 +823,38 @@ class MerchantHomeView extends Component {
         );
       }
     }
-    if (this.checkCheckIn() || item.title === 'Masuk') {
+    // checkIn true or activity check_in => show button
+    if (
+      this.checkCheckIn() ||
+      item.activity === ACTIVITY_JOURNEY_PLAN_CHECK_IN
+    ) {
+      // checkIn true & surveyList inProgress customize button
+      if (item.activity === ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY) {
+        const { dataGetTotalSurvey } = this.props.merchant;
+        if (dataGetTotalSurvey?.inProgress >= 1) {
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                NavigationService.navigate('MerchantSurveyView', {
+                  readOnly: false,
+                  totalSurvey: this.props.merchant.dataGetTotalSurvey.total,
+                  totalCompletedSurvey: this.props.merchant.dataGetTotalSurvey
+                    .completed
+                })
+              }
+              style={styles.containerSurveyInProgress}
+            >
+              <Text style={Fonts.type69}>Berlangsung</Text>
+              <MaterialIcon
+                style={styles.containerChevronRight}
+                name="chevron-right"
+                color={Color.fontYellow50}
+                size={20}
+              />
+            </TouchableOpacity>
+          );
+        }
+      }
       return (
         <Button
           accessible={true}
@@ -873,7 +935,7 @@ class MerchantHomeView extends Component {
 
   renderLastOrder() {
     const order = this.props.merchant.dataGetMerchantLastOrder;
-    return order && order.orderParcels && !_.isEmpty(order.orderParcels) ? (
+    return order?.orderParcels && !_.isEmpty(order.orderParcels) ? (
       <View style={styles.lastOrderContainer}>
         <View style={[styles.cardLastOrder, GlobalStyle.shadowForBox5]}>
           <View
@@ -899,10 +961,7 @@ class MerchantHomeView extends Component {
             >
               <Text style={Fonts.type100}>Lihat Riwayat</Text>
               <MaterialIcon
-                style={{
-                  marginTop: 2,
-                  padding: 0
-                }}
+                style={styles.containerChevronRight}
                 name="chevron-right"
                 color={Color.fontRed50}
                 size={20}
@@ -990,7 +1049,6 @@ class MerchantHomeView extends Component {
         storeName = navigation.state.params.storeName;
       }
     }
-
     return {
       headerTitle: () => (
         <View>
@@ -1015,9 +1073,9 @@ class MerchantHomeView extends Component {
               paddingBottom: 10
             }}
           >
-            <Text style={Fonts.type64}>Task List</Text>
+            <Text style={Fonts.type64}>Daftar Tugas</Text>
             <Text style={Fonts.type31}>
-              {this.checkTotalCompleteTask()}/{this.state.task.length} Complete
+              {this.checkTotalCompleteTask()}/{this.state.task.length} Selesai
             </Text>
           </View>
           {this.state.task.map((item, index) => {
@@ -1097,11 +1155,10 @@ class MerchantHomeView extends Component {
                         size={24}
                       />
                     ) : (
-                      <MaterialIcon
-                        name="radio-button-unchecked"
-                        color={Color.fontBlack40}
-                        size={24}
-                      />
+                      this.checkNoVisitReasonAndSurveyStatus(
+                        journeyBookStores,
+                        item
+                      )
                     )}
                   </View>
                   <View style={{ justifyContent: 'center', paddingLeft: 8 }}>
@@ -1776,6 +1833,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: -5,
     marginTop: -5
+  },
+  containerSurveyInProgress: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginRight: -5,
+    marginTop: -5
+  },
+  containerChevronRight: {
+    marginTop: 2,
+    padding: 0
   }
 });
 
@@ -1807,8 +1875,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: ayu
- * updatedDate: 28092021
+ * updatedBy: dyah
+ * updatedDate: 05102021
  * updatedFunction:
- * -> fix privileges for collection menu.
+ * -> fix the validation when checking out. (must completed the survey)
  */
