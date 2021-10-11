@@ -22,47 +22,7 @@ class HistoryReturnOrderDetailView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
-      mockData: {
-        returnParcelsId: 14,
-        returnCode: 'R1202106000001',
-        userId: '3232',
-        userName: 'Mr Abc',
-        storeId: 12213,
-        storeName: 'Indah Mart',
-        status: 'pending',
-        returns: [
-          {
-            id: 12,
-            catalogueId: 12,
-            name: 'SGM 123 SGM 123 SGM 123 SGM 123 SGM 123 SGM 123 SGM 123 ',
-            imageUrl:
-              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/113443.png',
-            qty: 2,
-            unitPrice: 1000,
-            sumPrice: 2000,
-            returnReasonsId: 1,
-            reason: 'Kemasan Rusak',
-            note: 'barang pecah'
-          },
-          {
-            id: 13,
-            catalogueId: 14,
-            name: 'SGM 456',
-            imageUrl:
-              'https://sinbad-website.s3.amazonaws.com/odoo_img/product/113443.png',
-            qty: 3,
-            unitPrice: 1000,
-            sumPrice: 3000,
-            returnReasonsId: 1,
-            reason: 'Kemasan Rusak',
-            note: 'barang pecah'
-          }
-        ],
-        created_at: '2021-06-02T04:23:27.481Z',
-        returned: true,
-        amount: 5000
-      }
+      loading: true
     };
   }
 
@@ -257,7 +217,7 @@ class HistoryReturnOrderDetailView extends Component {
   renderData() {
     const data = this.props.history.dataGetReturnParcelDetail;
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <FlatList
           contentContainerStyle={styles.flatListContainer}
           ItemSeparatorComponent={this.renderSeparator}
@@ -360,14 +320,23 @@ class HistoryReturnOrderDetailView extends Component {
                 marginVertical: 6
               }}
             >
-              <Text style={(Fonts.fontC2Medium, { color: Color.fontBlack80 })}>
-                Alasan Retur
-              </Text>
-              <Text
-                style={[Fonts.fontC1SemiBold, { color: Color.fontBlack80 }]}
-              >
-                {item.reason}
-              </Text>
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={(Fonts.fontC2Medium, { color: Color.fontBlack80 })}
+                >
+                  Alasan Retur
+                </Text>
+              </View>
+              <View style={{ flex: 2, paddingLeft: 16 }}>
+                <Text
+                  style={[
+                    Fonts.fontC1SemiBold,
+                    { color: Color.fontBlack80, textAlign: 'right' }
+                  ]}
+                >
+                  {item.reason}
+                </Text>
+              </View>
             </View>
           </View>
           <View style={GlobalStyle.lines} />

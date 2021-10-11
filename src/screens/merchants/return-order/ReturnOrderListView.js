@@ -79,10 +79,6 @@ class ReturnOrderListView extends Component {
     }
   };
 
-  parentFunction(data) {
-    return null;
-  }
-
   /** EMPTY DATA */
   renderEmpty() {
     return this.props.emptyData === 'default' ? (

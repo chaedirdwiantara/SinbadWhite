@@ -29,11 +29,8 @@ class ModalReturnReasons extends Component {
         id: null,
         reason: null
       },
-      loading: true
+      loading: false
     };
-  }
-  componentDidMount() {
-    setTimeout(() => this.setState({ loading: false }), 100);
   }
   /**
    * ==================

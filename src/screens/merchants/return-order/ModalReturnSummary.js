@@ -7,8 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  Image,
-  ScrollView
+  Image
 } from '../../../library/reactPackage';
 import { Modal, MaterialIcon } from '../../../library/thirdPartyPackage';
 import { StatusBarBlackOP40 } from '../../../library/component';
