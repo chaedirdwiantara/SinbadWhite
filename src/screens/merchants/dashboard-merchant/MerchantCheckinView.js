@@ -276,6 +276,9 @@ class MerchantCheckinView extends Component {
         return true;
       }
     }
+    if (!this.state.inStore) {
+      return false;
+    }
     //if success false && lock geo tag active
     if (!this.state.success && dataGetRadiusLockGeotag?.active) {
       return true;
