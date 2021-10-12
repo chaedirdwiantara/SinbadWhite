@@ -276,6 +276,9 @@ class MerchantCheckinView extends Component {
         return true;
       }
     }
+    if (!this.state.inStore) {
+      return false;
+    }
     //if success false && lock geo tag active
     if (!this.state.success && dataGetRadiusLockGeotag?.active) {
       return true;
@@ -772,7 +775,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 07102021
+ * updatedDate: 12102021
  * updatedFunction:
- * -> add validation to disable button confirmation when refresh the location.
+ * -> fix bug user can't confirm when choose not in store.
  */
