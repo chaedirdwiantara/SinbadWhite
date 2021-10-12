@@ -775,7 +775,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 07102021
+ * updatedDate: 12102021
  * updatedFunction:
- * -> add validation to disable button confirmation when refresh the location.
+ * -> fix bug user can't confirm when choose not in store.
  */
