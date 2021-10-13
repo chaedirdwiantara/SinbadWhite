@@ -23,6 +23,9 @@ const INITIAL_STATE = {
   loadingGetStoreStatus: false,
   loadingGetWarehouse: false,
   loadingGetListSurvey: false,
+  refreshGetSurveyList: false,
+  loadingLoadMoreSurveyList: false,
+  loadingGetTotalSurvey: false,
   loadingGetSurvey: false,
   loadingSubmitSurvey: false,
   loadingAddRecordStock: false,
@@ -31,8 +34,12 @@ const INITIAL_STATE = {
   loadingUpdateRecordStock: false,
   loadingBatchDeleteRecord: false,
   loadingRefreshStock: false,
+  loadingGetSurveyBrand: false,
+  loadingGetSurveyResponse: false,
+  loadingSubmitSurveyResponse: false,
   loadingValidateAreaMapping: false,
   loadingGetSalesSegmentation: false,
+  loadingGetRadiusLockGeotag: false,
   /** data */
   dataPostActivityV2: null,
   dataGetLogAllActivityV2: null,
@@ -133,21 +140,24 @@ const INITIAL_STATE = {
     storeChannel: '',
     channelId: null
   },
-  surveyList: {
-    payload: {
-      data: null
-    },
-    success: null
+  surveyList: [],
+  dataSurveyResult: {
+    storeName: ''
   },
+  totalDataGetSurveyList: 0,
+  pageGetSurveyList: 0,
+  dataGetTotalSurvey: null,
+  dataGetSurvey: null,
+  dataGetSurveyBrand: null,
   newSurveyResponse: false,
-  dataSurvey: {
+  dataSurveyResponse: {
     id: null,
     status: '',
     responsePhoto: []
   },
-  dataSubmitSurvey: {
+  dataSubmitSurveyResponse: {
     surveyId: null,
-    surveyStepId: null,
+    surveyQuestionId: null,
     storeId: null,
     storeName: '',
     status: '',
@@ -159,8 +169,10 @@ const INITIAL_STATE = {
   dataUpdateRecordStock: {},
   dataBatchDeleteStock: {},
   merchantStockRecordStatus: '',
+  dataTotalScoreSurvey: '0',
   dataValidateAreaMapping: null,
   dataSalesSegmentation: null,
+  dataGetRadiusLockGeotag: null,
   /** error */
   errorGetMerchantV2: null,
   errorAddMerchant: null,
@@ -179,6 +191,7 @@ const INITIAL_STATE = {
   errorGetStoreStatus: null,
   errorGetWarehouse: null,
   errorGetSurveyList: null,
+  errorGetTotalSurvey: null,
   errorGetSurvey: null,
   errorSubmitSurvey: null,
   errorAddRecordStock: null,
@@ -186,8 +199,12 @@ const INITIAL_STATE = {
   errorDeleteRecordStock: null,
   errorUpdateRecordStock: null,
   errorBatchDeleteStock: null,
+  errorGetSurveyBrand: null,
+  errorGetSurveyResponse: null,
+  errorSubmitSurveyResponse: null,
   errorValidateAreaMapping: null,
-  errorGetSalesSegmentation: null
+  errorGetSalesSegmentation: null,
+  errorGetRadiusLockGeotag: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -420,7 +437,11 @@ export const merchant = createReducer(INITIAL_STATE, {
         taxImageUrl: checkData('taxImageUrl', dataUpdate, dataPrevious),
         selfieImageUrl: checkData('selfieImageUrl', dataUpdate, dataPrevious),
         isEmailVerified: checkData('isEmailVerified', dataUpdate, dataPrevious),
-        isMobilePhoneNoVerified: checkData('isMobilePhoneNoVerified', dataUpdate, dataPrevious),
+        isMobilePhoneNoVerified: checkData(
+          'isMobilePhoneNoVerified',
+          dataUpdate,
+          dataPrevious
+        ),
         /** merchant information */
         numberOfEmployee: checkData(
           'numberOfEmployee',
@@ -909,7 +930,17 @@ export const merchant = createReducer(INITIAL_STATE, {
       dataMerchantDisabledField: INITIAL_STATE.dataMerchantDisabledField
     };
   },
-
+  /**
+   * ============================
+   * SURVEY RESULT
+   * ============================
+   */
+  [types.MERCHANT_SURVEY_RESULT](state, action) {
+    return {
+      ...state,
+      dataSurveyResult: { storeName: action.payload }
+    };
+  },
   /**
    * ============================
    * GET SURVEY LIST
@@ -918,16 +949,19 @@ export const merchant = createReducer(INITIAL_STATE, {
   [types.MERCHANT_GET_SURVEY_LIST_PROCESS](state, action) {
     return {
       ...state,
-      loadingGetSurveyList: true,
-      surveyList: INITIAL_STATE.surveyList,
+      loadingGetSurveyList: action.payload.loading,
+      surveyList: [...state.surveyList],
+      pageGetSurveyList: action.payload.page,
       errorGetSurveyList: null
     };
   },
   [types.MERCHANT_GET_SURVEY_LIST_SUCCESS](state, action) {
     return {
       ...state,
+      loadingLoadMoreSurveyList: false,
       loadingGetSurveyList: false,
-      surveyList: action.payload
+      refreshGetSurveyList: false,
+      surveyList: [...state.surveyList, ...action.payload.payload.result]
     };
   },
   [types.MERCHANT_GET_SURVEY_LIST_FAILED](state, action) {
@@ -940,25 +974,63 @@ export const merchant = createReducer(INITIAL_STATE, {
   [types.MERCHANT_GET_SURVEY_LIST_RESET](state, action) {
     return {
       ...state,
-      surveyList: INITIAL_STATE.surveyList
+      surveyList: []
     };
   },
-
+  [types.MERCHANT_GET_SURVEY_LIST_REFRESH](state, action) {
+    return {
+      ...state,
+      refreshGetSurveyList: true,
+      loadingGetSurveyList: true,
+      pageGetSurveyList: 0,
+      totalDataGetSurveyList: 0,
+      surveyList: []
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_LIST_LOADMORE](state, action) {
+    return {
+      ...state,
+      loadingLoadMoreSurveyList: true,
+      pageGetSurveyList: action.payload
+    };
+  },
   /**
    * ============================
-   * GET SURVEY
+   * GET TOTAL SURVEY
+   * ============================
+   */
+  [types.MERCHANT_GET_TOTAL_SURVEY_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetTotalSurvey: true,
+      dataGetTotalSurvey: null,
+      errorGetTotalSurvey: null
+    };
+  },
+  [types.MERCHANT_GET_TOTAL_SURVEY_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetTotalSurvey: false,
+      dataGetTotalSurvey: action.payload.payload
+    };
+  },
+  [types.MERCHANT_GET_TOTAL_SURVEY_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetTotalSurvey: false,
+      errorGetTotalSurvey: action.payload
+    };
+  },
+  /**
+   * ============================
+   * GET SURVEY BY ID
    * ============================
    */
   [types.MERCHANT_GET_SURVEY_PROCESS](state, action) {
     return {
       ...state,
       loadingGetSurvey: true,
-      dataSurvey: {
-        id: null,
-        status: '',
-        responsePhoto: []
-      },
-      newSurveyResponse: false,
+      dataGetSurvey: null,
       errorGetSurvey: null
     };
   },
@@ -966,7 +1038,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetSurvey: false,
-      dataSurvey: action.payload
+      dataGetSurvey: action.payload.payload
     };
   },
   [types.MERCHANT_GET_SURVEY_FAILED](state, action) {
@@ -976,37 +1048,97 @@ export const merchant = createReducer(INITIAL_STATE, {
       errorGetSurvey: action.payload
     };
   },
+  /**
+   * ============================
+   * GET SURVEY BRAND BY SURVEY ID
+   * ============================
+   */
+  [types.MERCHANT_GET_SURVEY_BRAND_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyBrand: true,
+      dataGetSurveyBrand: null,
+      errorGetSurveyBrand: null
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_BRAND_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyBrand: false,
+      dataGetSurveyBrand: action.payload.payload.data
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_BRAND_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyBrand: false,
+      errorGetSurveyBrand: action.payload
+    };
+  },
+
+  /**
+   * ============================
+   * GET SURVEY RESPONSE
+   * ============================
+   */
+  [types.MERCHANT_GET_SURVEY_RESPONSE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyResponse: true,
+      dataSurveyResponse: {
+        id: null,
+        status: '',
+        responsePhoto: []
+      },
+      newSurveyResponse: false,
+      errorGetSurveyResponse: null
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_RESPONSE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyResponse: false,
+      dataSurveyResponse: action.payload,
+      dataTotalScoreSurvey: action.totalScore
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_RESPONSE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyResponse: false,
+      errorGetSurveyResponse: action.payload
+    };
+  },
 
   /**
    * ============================
    * SUBMIT SURVEY
    * ============================
    */
-  [types.MERCHANT_SUBMIT_SURVEY_PROCESS](state, action) {
+  [types.MERCHANT_SUBMIT_SURVEY_RESPONSE_PROCESS](state, action) {
     return {
       ...state,
-      loadingSubmitSurvey: true,
-      dataSubmitSurvey: {},
-      errorSubmitSurvey: null
+      loadingSubmitSurveyResponse: true,
+      dataSubmitSurveyResponse: {},
+      errorSubmitSurveyResponse: null
     };
   },
-  [types.MERCHANT_SUBMIT_SURVEY_SUCCESS](state, action) {
+  [types.MERCHANT_SUBMIT_SURVEY_RESPONSE_SUCCESS](state, action) {
     return {
       ...state,
-      loadingSubmitSurvey: false,
-      dataSubmitSurvey: action.payload,
+      loadingSubmitSurveyResponse: false,
+      dataSubmitSurveyResponse: action.payload,
       newSurveyResponse: true
     };
   },
-  [types.MERCHANT_SUBMIT_SURVEY_FAILED](state, action) {
+  [types.MERCHANT_SUBMIT_SURVEY_RESPONSE_FAILED](state, action) {
     return {
       ...state,
-      loadingSubmitSurvey: false,
-      errorSubmitSurvey: action.payload
+      loadingSubmitSurveyResponse: false,
+      errorSubmitSurveyResponse: action.payload
     };
   },
-
-/**
+  /**
    * ============================
    * VALIDATE AREA MAPPING
    * ============================
@@ -1041,7 +1173,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       errorValidateAreaMapping: null
     };
   },
-/**
+  /**
    * ============================
    * GET SALES SEGMENTATION
    * ============================
@@ -1082,12 +1214,39 @@ export const merchant = createReducer(INITIAL_STATE, {
    * UPDATE SURVEY
    * ============================
    */
-  [types.MERCHANT_UPDATE_SURVEY_PROCESS](state, action) {
+  [types.MERCHANT_UPDATE_SURVEY_RESPONSE_PROCESS](state, action) {
     return {
       ...state,
-      loadingSubmitSurvey: true,
-      dataSubmitSurvey: {},
-      errorSubmitSurvey: null
+      loadingSubmitSurveyResponse: true,
+      dataSubmitSurveyResponse: {},
+      errorSubmitSurveyResponse: null
+    };
+  },
+  /**
+   * ============================
+   * GET RADIUS LOCK GEOTAG
+   * ============================
+   */
+  [types.GET_RADIUS_LOCK_GEOTAG_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetRadiusLockGeotag: true,
+      dataGetRadiusLockGeotag: null,
+      errorGetRadiusLockGeotag: null
+    };
+  },
+  [types.GET_RADIUS_LOCK_GEOTAG_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetRadiusLockGeotag: false,
+      dataGetRadiusLockGeotag: action.payload.data
+    };
+  },
+  [types.GET_RADIUS_LOCK_GEOTAG_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetRadiusLockGeotag: false,
+      errorGetRadiusLockGeotag: action.payload
     };
   },
   /**
@@ -1101,7 +1260,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingAddRecordStock: true,
       dataAddRecordStock: {},
       errorAddRecordStock: null
-    }
+    };
   },
   [types.MERCHANT_ADD_STOCK_RECORD_SUCCESS](state, action) {
     return {
@@ -1109,20 +1268,20 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingAddRecordStock: false,
       dataAddRecordStock: action.payload,
       errorAddRecordStock: null
-    }
+    };
   },
   [types.MERCHANT_ADD_STOCK_RECORD_FAILED](state, action) {
     return {
       ...state,
       loadingAddRecordStock: false,
       errorAddMerchant: action.payload
-    }
+    };
   },
   [types.MERCHANT_ADD_STOCK_RECORD_RESET](state, action) {
     return {
       ...state,
       dataAddRecordStock: {}
-    }
+    };
   },
   /**
    * ========================
@@ -1135,7 +1294,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingGetRecordStock: true,
       dataGetRecordStock: [],
       errorGetRecordStock: null
-    }
+    };
   },
   [types.MERCHANT_GET_STOCK_RECORD_SUCCESS](state, action) {
     return {
@@ -1143,35 +1302,35 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingGetRecordStock: false,
       dataGetRecordStock: action.payload,
       errorGetRecordStock: null
-    }
+    };
   },
   [types.MERCHANT_GET_STOCK_RECORD_FAILED](state, action) {
     return {
       ...state,
       loadingGetRecordStock: false,
       errorGetRecordStock: action.payload
-    }
+    };
   },
   [types.MERCHANT_GET_STOCK_RECORD_REFRESH](state, action) {
     return {
       ...state,
       loadingGetRecordStock: true,
       loadingRefreshStock: true,
-      dataGetRecordStock: [],
-    }
+      dataGetRecordStock: []
+    };
   },
   /**
    * =======================
    * DELETE RECORD STOCK
    * =======================
    */
-  [types.MERCHANT_DELETE_STOCK_RECORD_PROCESS](state, action){
+  [types.MERCHANT_DELETE_STOCK_RECORD_PROCESS](state, action) {
     return {
       ...state,
       loadingDeleteRecordStock: true,
       dataDeleteRecordStock: {},
       errorDeleteRecordStock: null
-    }
+    };
   },
   [types.MERCHANT_DELETE_STOCK_RECORD_SUCCESS](state, action) {
     return {
@@ -1179,100 +1338,100 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingDeleteRecordStock: false,
       dataDeleteRecordStock: action.payload,
       errorDeleteRecordStock: null
-    }
+    };
   },
   [types.MERCHANT_DELETE_STOCK_RECORD_FAILED](state, action) {
     return {
       ...state,
       loadingDeleteRecordStock: false,
       errorDeleteRecordStock: action.payload
-    }
+    };
   },
   [types.MERCHANT_DELETE_STOCK_RECORD_RESET](state, action) {
     return {
       ...state,
       dataDeleteRecordStock: {}
-    }
+    };
   },
   /**
    * ====================
    * UPDATE RECORD STOCK
    * ====================
    */
-  [types.MERCHANT_UPDATE_STOCK_RECORD_PROCESS](state, action){
+  [types.MERCHANT_UPDATE_STOCK_RECORD_PROCESS](state, action) {
     return {
       ...state,
       loadingUpdateRecordStock: true,
       dataUpdateRecordStock: {},
       errorDeleteRecordStock: null
-    }
+    };
   },
-  [types.MERCHANT_UPDATE_STOCK_RECORD_SUCCESS](state, action){
+  [types.MERCHANT_UPDATE_STOCK_RECORD_SUCCESS](state, action) {
     return {
       ...state,
       loadingUpdateRecordStock: false,
       dataUpdateRecordStock: action.payload,
       errorUpdateRecordStock: null
-    }
+    };
   },
-  [types.MERCHANT_UPDATE_STOCK_RECORD_FAILED](state, action){
+  [types.MERCHANT_UPDATE_STOCK_RECORD_FAILED](state, action) {
     return {
       ...state,
       loadingUpdateRecordStock: false,
       errorUpdateRecordStock: action.payload
-    }
+    };
   },
-  [types.MERCHANT_UPDATE_STOCK_RECORD_RESET](state, action){
+  [types.MERCHANT_UPDATE_STOCK_RECORD_RESET](state, action) {
     return {
       ...state,
       dataUpdateRecordStock: {}
-    }
+    };
   },
   /**
    * ======================
    * BATCH DELETE STOCK
    * ======================
    */
-  [types.MERCHANT_BATCH_DELETE_STOCK_PROCESS](state, action){
+  [types.MERCHANT_BATCH_DELETE_STOCK_PROCESS](state, action) {
     return {
       ...state,
       loadingBatchDeleteRecord: true,
       dataBatchDeleteStock: {},
       errorBatchDeleteStock: null
-    }
+    };
   },
-  [types.MERCHANT_BATCH_DELETE_STOCK_SUCCESS](state, action){
+  [types.MERCHANT_BATCH_DELETE_STOCK_SUCCESS](state, action) {
     return {
       ...state,
       loadingBatchDeleteRecord: false,
       dataBatchDeleteStock: action.payload,
       errorBatchDeleteStock: null
-    }
+    };
   },
-  [types.MERCHANT_BATCH_DELETE_STOCK_FAILED](state, action){
+  [types.MERCHANT_BATCH_DELETE_STOCK_FAILED](state, action) {
     return {
       ...state,
       loadingBatchDeleteRecord: false,
       errorBatchDeleteStock: action.payload
-    }
+    };
   },
-  [types.MERCHANT_BATCH_DELETE_STOCK_RESET](state, action){
+  [types.MERCHANT_BATCH_DELETE_STOCK_RESET](state, action) {
     return {
       ...state,
       dataBatchDeleteStock: {}
-    }
+    };
   },
   /**
    * ==============================
    * MERCHANT STOCK RECORD FLAG
    * ==============================
    */
-   [types.MERCHANT_STOCK_RECORD_STATUS](state, action){
-     return {
-       ...state,
-       merchantStockRecordStatus: action.payload
-     }
-   }
+  [types.MERCHANT_STOCK_RECORD_STATUS](state, action) {
+    return {
+      ...state,
+      merchantStockRecordStatus: action.payload
+    };
+  }
 });
 /**
  * ===========================

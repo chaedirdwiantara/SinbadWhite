@@ -1,12 +1,7 @@
-import {
-  React,
-  Component,
-  StyleSheet,
-  View
-} from '../../library/reactPackage'
-import { Button } from '../../library/thirdPartyPackage'
-import { Color } from '../../config'
-import { Fonts } from '../../helpers'
+import { React, Component, StyleSheet, View } from '../../library/reactPackage';
+import { Button } from '../../library/thirdPartyPackage';
+import { Color } from '../../config';
+import { Fonts } from '../../helpers';
 
 /**
  * HOW TO USE
@@ -49,7 +44,7 @@ class ButtonSingle extends Component {
         styles.buttonRed,
         { borderRadius: this.props.borderRadius }
       ];
-    }else if (this.props.disabledGreyWhite) {
+    } else if (this.props.disabledGreyWhite) {
       color = Color.mainColor;
       modifyFonts = Fonts.textButtonWhiteActive;
       modifyDisabledFonts = Fonts.textButtonGreyWhiteDisabled;
@@ -59,6 +54,18 @@ class ButtonSingle extends Component {
       ];
       modifyButtonColor = [
         styles.buttonWhite,
+        { borderRadius: this.props.borderRadius }
+      ];
+    } else if (this.props.whiteTransparent) {
+      color = Color.fontWhite;
+      modifyFonts = Fonts.textButtonWhite;
+      modifyDisabledFonts = Fonts.textButtonGreyWhiteDisabled;
+      modifyDisabledButtonColor = [
+        styles.buttonGreyWhiteDisabled,
+        { borderRadius: this.props.borderRadius }
+      ];
+      modifyButtonColor = [
+        styles.buttonWhiteTransparent,
         { borderRadius: this.props.borderRadius }
       ];
     } else {
@@ -112,6 +119,13 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 16
   },
+  buttonWhiteTransparent: {
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: Color.backgroundWhite,
+    width: '100%',
+    paddingVertical: 16
+  },
   buttonWhiteDisabled: {
     backgroundColor: Color.buttonActiveColorWhite,
     borderWidth: 1.5,
@@ -133,22 +147,20 @@ const styles = StyleSheet.create({
     borderColor: Color.buttonGreyWhiteDisabled,
     width: '100%',
     paddingVertical: 16
-  },
-
+  }
 });
 
 export default ButtonSingle;
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
