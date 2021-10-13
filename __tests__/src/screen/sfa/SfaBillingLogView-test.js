@@ -11,8 +11,6 @@ import {
   SafeAreaView
 } from 'react-native';
 import SfaBillingLogView from '../../../../src/screens/sfa/SfaBillingLogView';
-import { journeyPlanGetSuccessV2 } from '../../../../src/state/actions';
-import { exportAllDeclaration } from '@babel/types';
 jest.useFakeTimers();
 
 const middlewares = [];
@@ -160,12 +158,18 @@ describe('SfaInvoiceListView', function() {
 
   it('called right function when click delete', () => {
     const store = factoryMockStore({});
-    const { getByText } = render(
+    const mockDeleteFn = jest.fn();
+    const { getByText, getByTestId } = render(
       <Provider store={store}>
-        <SfaBillingLogView />
+        <SfaBillingLogView onDeleteCollection={mockDeleteFn} />
       </Provider>
     );
-    
-    const a = getByText('Hapus')
+
+    const btnDelete = getByTestId('btnDelete')
+    const pressed = btnDelete.findAllByType(TouchableOpacity)[1]
+
+    fireEvent.press(pressed, 'onPress');
+    console.log(pressed.props.onPress);
+    expect(mockDeleteFn).toHaveBeenCalled();
   });
 });

@@ -211,7 +211,7 @@ describe('SFA COLLECTION', function() {
     const store = factoryMockStore({});
     const component = TestRenderer.create(
       <Provider store={store}>
-        <SfaCollectionDetailView />
+        <SfaCollectionDetailView type="payment" />
       </Provider>
     );
     const result = component.root.findAllByType(SfaCollectionDetailView);

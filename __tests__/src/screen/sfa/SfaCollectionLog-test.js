@@ -2,13 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import TestRenderer from 'react-test-renderer';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  FlatList,
-  SafeAreaView
-} from 'react-native';
+import { FlatList } from 'react';
 import SfaCollectionLog from '../../../../src/screens/sfa/SfaCollectionLog';
 import MoneyFormat from '../../../../src/helpers/NumberFormater';
 jest.useFakeTimers();
@@ -20,8 +14,10 @@ describe('SFA COLLECTION', function() {
   const navigationMock = { state: { params: { section: 'payment' } } };
 
   const mockSfaState = {
+    history: { dataDetailHistory: { billing: { orderParcelId: 9 } } },
     sfa: {
       loadingSfaGetCollectionLog: false,
+      dataSfaGetDetail : {data: {id: 1}},
       dataSfaGetCollectionLog: {
         data: [
           {
@@ -119,9 +115,10 @@ describe('SFA COLLECTION', function() {
   // show approval status in collection log
   it('SHOW COLLECTION LOG', () => {
     const store = factoryMockStore({});
+    const mockNavigation = { state: { params: { type: 'payment' } } };
     const component = TestRenderer.create(
       <Provider store={store}>
-        <SfaCollectionLog MoneyFormat />
+        <SfaCollectionLog navigation={mockNavigation} MoneyFormat />
       </Provider>
     );
     const result = component.root.findAllByType(SfaCollectionLog);
@@ -132,9 +129,10 @@ describe('SFA COLLECTION', function() {
   // show approval status in collection log
   it('SHOW APPROVAL STATUS IN COLLECTION LOG', () => {
     const store = factoryMockStore({});
+    const mockNavigation = { state: { params: { type: 'payment' } } };
     const component = TestRenderer.create(
       <Provider store={store}>
-        <SfaCollectionLog MoneyFormat />
+        <SfaCollectionLog navigation={mockNavigation} MoneyFormat />
       </Provider>
     );
     const result = component.root.findAllByType(FlatList);
