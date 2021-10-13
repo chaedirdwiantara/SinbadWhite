@@ -42,7 +42,7 @@ class StockRecordListView extends Component {
         <View style={{ alignItems: 'baseline', flexDirection: 'row' }}>
           <View>
             <Text style={[Fonts.type10, { marginTop: 20 }]}>
-              {item.catalogueCode}
+              {item.catalogueExternalId}
             </Text>
           </View>
           {item.isMustSale ? this.renderMSSType() : <View />}
