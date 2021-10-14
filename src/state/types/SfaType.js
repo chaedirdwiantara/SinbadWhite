@@ -159,3 +159,8 @@ export const SFA_GET_COLLECTION_LIST_STATUS_FAILED =
 
 /** SELECTED COLLECTION TRANSACTION */
 export const COLLECTION_SELECTED = 'CollectionSelected';
+
+/** GET REASON NOT TO PAY LIST */
+export const SFA_GET_REASON_NOT_TO_PAY_PROCESS = 'SfaGetReasonNotToPayProcess';
+export const SFA_GET_REASON_NOT_TO_PAY_SUCCESS = 'SfaGetReasonNotToPaySuccess';
+export const SFA_GET_REASON_NOT_TO_PAY_FAILED = 'SfaGetReasonNotToPayFailed';

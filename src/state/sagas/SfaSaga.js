@@ -302,6 +302,18 @@ function* getSfaCollectionListStatus(actions) {
   }
 }
 
+/** GET COLLECTION LIST STATUS */
+function* getSfaReasonNotToPay(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getReasonNotToPay(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetReasonNotToPaySuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetReasonNotToPayFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* SfaSaga() {
   yield takeEvery(
@@ -352,6 +364,10 @@ function* SfaSaga() {
   yield takeEvery(
     types.SFA_GET_COLLECTION_LIST_STATUS_PROCESS,
     getSfaCollectionListStatus
+  );
+  yield takeEvery(
+    types.SFA_GET_REASON_NOT_TO_PAY_PROCESS,
+    getSfaReasonNotToPay
   );
 }
 
