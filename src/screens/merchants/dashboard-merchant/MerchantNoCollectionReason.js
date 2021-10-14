@@ -4,11 +4,15 @@ import {
   Text,
   TouchableOpacity
 } from '../../../library/reactPackage';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { sfaGetReasonNotToPayProcess } from '../../../state/actions';
 import ModalBottomMerchantNoCollectionReason from './ModalBottomMerchantNoCollectionReason';
 import MerchantCollectionReasonList from './MerchantCollectionReasonList';
 const MerchantNoCollectionReason = () => {
+  const dispatch = useDispatch();
   const [isModalReasonOpen, setIsModalReasonOpen] = useState(false);
+  const { dataSfaGetReasonNotToPay } = useSelector(state => state.sfa);
   const reasonNotCollect = [
     { id: 1, reason: 'Masalah AR' },
     { id: 2, reason: 'Bayar Kunjungan Berikut' },
@@ -47,16 +51,31 @@ const MerchantNoCollectionReason = () => {
       ]
     }
   };
+  /** RENDER USE EFFECT */
+  /** get reason not to pay on render screen */
+  useEffect(() => {
+    getReasonNotToPay();
+  }, []);
+
+  /**=== RENDER FUNCTION === */
+  /** GET DATA REASON NOT TO PAY */
+  const getReasonNotToPay = () => {
+    dispatch(sfaGetReasonNotToPayProcess());
+  };
   const onPressReason = () => {
     setIsModalReasonOpen(true);
     console.log('modal open');
   };
+  const onSaveReason = id => {
+    console.log(id, 'ID REASON');
+  };
   const renderModalBottomNotCollectReason = () => {
-    return isModalReasonOpen ? (
+    return isModalReasonOpen && dataSfaGetReasonNotToPay ? (
       <ModalBottomMerchantNoCollectionReason
         open={isModalReasonOpen}
-        data={reasonNotCollect}
+        data={dataSfaGetReasonNotToPay.data}
         close={() => setIsModalReasonOpen(false)}
+        onPress={() => onSaveReason()}
       />
     ) : null;
   };
@@ -64,7 +83,10 @@ const MerchantNoCollectionReason = () => {
   return (
     <>
       <View>
-        <MerchantCollectionReasonList dataList={collectionUnpaid} />
+        <MerchantCollectionReasonList
+          openReason={() => onPressReason}
+          dataList={collectionUnpaid}
+        />
       </View>
       {renderModalBottomNotCollectReason()}
     </>

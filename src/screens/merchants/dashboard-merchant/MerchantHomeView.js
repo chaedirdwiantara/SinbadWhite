@@ -1527,6 +1527,9 @@ class MerchantHomeView extends Component {
         cancelText={'Tidak'}
         ok={() => {
           this.setState({ openModalConfirmNoCollection: false });
+          setTimeout(() => {
+            NavigationService.navigate('MerchantNoCollectionReason');
+          }, 10);
         }}
         cancel={() => {
           this.setState({

@@ -14,6 +14,7 @@ import {
 } from '../../../constants/paymentConstants';
 import { toLocalTime } from '../../../helpers/TimeHelper';
 import masterColor from '../../../config/masterColor.json';
+import { MaterialIcon } from '../../../library/thirdPartyPackage';
 const MerchantCollectionReasonList = props => {
   /** RENDER FUNCTION */
 
@@ -52,7 +53,7 @@ const MerchantCollectionReasonList = props => {
 
     return (
       <View style={styles.listContainer}>
-        <TouchableOpacity>
+        <View>
           <View style={styles.view1}>
             <View style={{ flex: 1 }}>
               <Text style={Fonts.type48}>{item.invoiceGroupName}</Text>
@@ -95,7 +96,29 @@ const MerchantCollectionReasonList = props => {
               </Text>
             </View>
           </View>
-        </TouchableOpacity>
+          <View style={GlobalStyle.lines} />
+          <View>
+            <View style={styles.reasonContainer}>
+              <Text style={[Fonts.type8, { flex: 1 }]}> Alasan</Text>
+              <TouchableOpacity
+                onPress={props.openReason()}
+                style={styles.reasonButton}
+              >
+                <Text style={[Fonts.type85]}>Pilih Alasan</Text>
+                <MaterialIcon
+                  name="chevron-right"
+                  color={masterColor.mainColor}
+                  size={24}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.reasonAlert}>
+              <Text style={[Fonts.type119]}>
+                Wajib Memilih Alasan Tidak Ada Penagihan
+              </Text>
+            </View>
+          </View>
+        </View>
       </View>
     );
   };
@@ -170,7 +193,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   view3: {
-    paddingTop: 12,
+    paddingVertical: 12,
     flexDirection: 'row'
   },
   buttonDetail: {
@@ -180,6 +203,24 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  reasonContainer: {
+    flexDirection: 'row',
+    marginTop: 16,
+    alignItems: 'center'
+  },
+  reasonButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end'
+  },
+  reasonAlert: {
+    backgroundColor: masterColor.fontYellow10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+    marginTop: 8
   }
 });
 export default MerchantCollectionReasonList;
