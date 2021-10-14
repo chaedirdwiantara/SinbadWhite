@@ -448,7 +448,8 @@ class MerchantHomeView extends Component {
             this.props.merchant.dataGetLogPerActivityV2[0].activityName ===
             'order'
           ) {
-            this.checkoutProcess();
+            // this.checkoutProcess();
+            this.setState({ openModalConfirmNoCollection: true})
           }
         } else {
           if (this.state.checkNoOrder) {
@@ -1469,7 +1470,10 @@ class MerchantHomeView extends Component {
                 activity: 'order'
               });
             } else {
-              this.checkoutProcess();
+              // this.checkoutProcess();
+              this.setState({
+                openModalConfirmNoCollection : true
+              })
             }
           }
           // this.props.merchantPostActivityProcess({
