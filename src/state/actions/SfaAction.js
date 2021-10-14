@@ -646,3 +646,12 @@ export function sfaGetCollectionListStatusSuccess(data) {
 export function sfaGetCollectionListStatusFailed(data) {
   return { type: types.SFA_GET_COLLECTION_LIST_STATUS_FAILED, payload: data };
 }
+
+/**
+ * ==================================
+ * SELECTED COLLECTION TRANSACTION
+ * ==================================
+ */
+ export function collectionTransactionSelected(data) {
+  return { type: types.COLLECTION_SELECTED, payload: data };
+}
