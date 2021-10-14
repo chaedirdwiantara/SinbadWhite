@@ -101,8 +101,16 @@ class JourneyListDataView extends Component {
       }
     }
     /** GO TO SELECTED STORE */
+    //map collection ids to selected merchant information
+    const collections = data?.journeyBookStores.collectionNotes || null;
+    const collectionIds = [];
+    collections.map(item => {
+      collectionIds.push(item.collectionTransactionDetailId);
+    });
+
     data.name = data.storeName;
     data.storeId = data.storeId.toString();
+    data.collectionIds = collectionIds;
     this.props.merchantSelected(data);
     setTimeout(() => {
       NavigationService.navigate('MerchantHomeView', {
