@@ -152,11 +152,15 @@ class HomeView extends Component {
   componentDidMount() {
     this.props.appVersion(0);
     // this.props.versionsGetProcess();
+
+    // get kpi daily or monthly
     this.getKpiData(this.state.tabValue);
+    //pass some data between the screens
     this.props.navigation.setParams({
       fullName: this.props.user.fullName,
       imageUrl: this.props.user.imageUrl
     });
+    //get redux dataSalesTeam
     this.props.getSalesTeamProcess();
     // CHECK SALES PRIVILEGE
     if (this.props.privileges.data === null) {
@@ -169,6 +173,7 @@ class HomeView extends Component {
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
+    //listen new data kpi dashboard from be
     if (this.props.salesmanKpi.kpiDashboardData) {
       if (
         prevProps.salesmanKpi.kpiDashboardData !==
@@ -204,6 +209,7 @@ class HomeView extends Component {
     //     }
     //   }
     // }
+    //trigger modal force update
     if (
       prevProps.permanent.appVersionCode !== this.props.permanent.appVersionCode
     ) {
@@ -239,7 +245,11 @@ class HomeView extends Component {
       this.props.getSalesTeamProcess();
     });
   }
-  /** === GET KPI DATA === */
+  /**
+   *  === GET KPI DATA ===
+   * @returns {ReactElement} render dashboard, and bottom menu each item
+   * @memberof renderKpiDashboard,renderMenu
+   */
   getKpiData(period) {
     if (_.isNil(this.props.user)) {
       return;
@@ -282,6 +292,7 @@ class HomeView extends Component {
       default:
         break;
     }
+    //get redux kpiDashboardData, fetch api
     this.props.getKpiDashboardProcess(params);
     SalesmanKpiMethod.getKpiSalesPending(params).then(response => {
       if (response.code === 200 && response.data.payload.data.length !== 0) {
@@ -296,7 +307,11 @@ class HomeView extends Component {
     });
     this.setState({ refreshing: false });
   }
-  /** === FOR PARSE VALUE === */
+  /**
+   * === FOR PARSE VALUE ===
+   * @param {number} value a number represent achieve the target, target, achieved data
+   * @returns {string}
+   */
   parseValue = (value, type, target) => {
     if (target) {
       if (value === 0 || value === '0') {
@@ -321,7 +336,11 @@ class HomeView extends Component {
       this.getKpiData(this.state.tabValue)
     );
   }
-  /** === GO TO PAGE === */
+  /**
+   *  === GO TO PAGE ===
+   * Navigate to menu page
+   * @param {object} item object goTo represent route to go to
+   */
   goToPage(item) {
     switch (item.goTo) {
       case 'dashboard':
@@ -409,7 +428,11 @@ class HomeView extends Component {
    * RENDER VIEW
    * ==============================
    */
-  /** === RENDER BANNER === */
+
+  /**
+   * === RENDER BANNER ===
+   * @returns {ReactElement} render banner image
+   */
   renderBanner() {
     return (
       <View style={{ paddingVertical: 10 }}>
@@ -427,7 +450,10 @@ class HomeView extends Component {
       </View>
     );
   }
-  /** === RENDER KPI DASHBOARD === */
+  /**
+   *  === RENDER KPI DASHBOARD ===
+   * @returns {ReactElement} render dashboard kpi part
+   */
   renderKpiDashboard() {
     return (
       <View style={{ paddingVertical: 10 }}>
@@ -483,7 +509,11 @@ class HomeView extends Component {
       </View>
     );
   }
-  /** === RENDER KPI DASHBOARD ITEM === */
+  /**
+   *  === RENDER KPI DASHBOARD ITEM ===
+   * @returns {ReactElement} render dashboard kpi each item
+   * @memberof renderKpiDashboard
+   */
   renderKpiDashboardItem = ({ item, index }) => {
     return (
       <View key={index}>
@@ -572,7 +602,10 @@ class HomeView extends Component {
       </View>
     );
   };
-  /** === RENDER MENU === */
+  /**
+   * Render bottom menu
+   * @returns {ReactElement} flatlist of menu
+   */
   renderMenu() {
     return (
       <View style={{ paddingVertical: 10 }}>
@@ -587,7 +620,11 @@ class HomeView extends Component {
       </View>
     );
   }
-  /** === RENDER MENU ITEM === */
+  /**
+   * === RENDER MENU ITEM ===
+   * @returns {ReactElement} render dashboard, and bottom menu each item
+   * @memberof renderKpiDashboard,renderMenu
+   */
   renderMenuItem = ({ item, index }) => {
     return (
       <TouchableOpacity
@@ -626,7 +663,12 @@ class HomeView extends Component {
       </View>
     );
   }
-  /** === RENDER ITEM MAIN === */
+  /**
+   * === RENDER ITEM MAIN  ===
+   * @param {array} item from props data flatlist
+   * @param {number} index from index of arr data props
+   * @returns {ReactElement}
+   */
   renderItem({ item, index }) {
     return (
       <View style={styles.mainContainer} key={index}>
@@ -638,7 +680,12 @@ class HomeView extends Component {
       </View>
     );
   }
-  /** === RENDER MAIN DATA === */
+  /**
+   * === RENDER MAIN DATA ===
+   * return dashboard menu(kpi, journey plan and show store list menu)
+   * @returns {ReactElement} dashboard menu
+   *
+   */
   renderData() {
     return (
       <View>
@@ -662,7 +709,12 @@ class HomeView extends Component {
    * MODAL
    * =====================
    */
-  /** RENDER MODAL FORCE UPDATE */
+
+  /**
+   * RENDER MODAL FORCE UPDATE
+   * @returns {ReactElement} modal/popup for update the app version
+   */
+
   renderModalForceUpdate() {
     return this.state.openModalForceUpdateApp ? (
       <ModalConfirmationType2
@@ -706,7 +758,10 @@ class HomeView extends Component {
       <View />
     );
   }
-  /** === RENDER MAIN === */
+  /**
+   * === RENDER MAIN ===
+   * @returns {ReactElement} render all component in HomeView
+   */
   render() {
     return (
       <SafeAreaView>

@@ -3,30 +3,28 @@ import {
   Component,
   View,
   StyleSheet,
-  TouchableOpacity,
-  FlatList,
   SafeAreaView,
   Text
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
-  connect,
-  MaterialIcon,
-  AntDesignIcon
+  connect
 } from '../../../library/thirdPartyPackage';
-import { LoadingPage, StatusBarRed } from '../../../library/component';
-import { GlobalStyle, Fonts } from '../../../helpers';
+import {
+  LoadingPage,
+  ModalBottomErrorRespons,
+  StatusBarWhite
+} from '../../../library/component';
+import { Fonts } from '../../../helpers';
 import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
-import NavigationService from '../../../navigation/NavigationService';
-import masterColor from '../../../config/masterColor.json';
-import _ from 'lodash';
+import SurveyListDataView from './SurveyListDataView';
 
 class MerchantSurveyView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      successSurveyList: false
+      openModalErrorGlobal: false
     };
   }
   /**
@@ -41,199 +39,118 @@ class MerchantSurveyView extends Component {
     );
   }
   /** FOR GET SURVEY LIST */
-  getSurveyList() {
+  getSurveyList(loading) {
     const params = {
       storeId: this.props.merchant.selectedMerchant.storeId,
       page: 1,
-      length: 10
+      length: 10,
+      loading
     };
     this.props.merchantGetSurveyListProcess(params);
   }
   /** === DID MOUNT === */
   componentDidMount() {
     this.refreshMerchantGetLogAllActivityProcess();
+    this.props.merchantGetSurveyListReset();
+    this.getSurveyList(true);
+  }
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    if (this.props.merchant.dataGetTotalSurvey) {
+      if (
+        prevProps.merchant.dataGetTotalSurvey !==
+        this.props.merchant.dataGetTotalSurvey
+      ) {
+        const { readOnly } = this.props.navigation.state.params;
+        this.props.navigation.setParams({
+          totalSurvey: this.props.merchant.dataGetTotalSurvey.total,
+          totalCompletedSurvey: this.props.merchant.dataGetTotalSurvey
+            .completed,
+          readOnly
+        });
+      }
+    }
+    // show modal error when failed get survey list
+    if (this.props.merchant.errorGetSurveyList) {
+      if (
+        prevProps.merchant.errorGetSurveyList !==
+        this.props.merchant.errorGetSurveyList
+      ) {
+        this.setState({ openModalErrorGlobal: true });
+      }
+    }
   }
   /**
    * ========================
    * HEADER MODIFY
    * ========================
    */
-  static navigationOptions = () => {
-    let storeName = 'Toko Survey';
+  static navigationOptions = ({ navigation }) => {
+    let totalSurvey,
+      totalCompletedSurvey = 0;
+    if (navigation.state.params) {
+      totalSurvey = navigation.state.params.totalSurvey;
+      totalCompletedSurvey = navigation.state.params.totalCompletedSurvey;
+    }
 
     return {
       headerTitle: () => (
         <View>
-          <Text style={Fonts.type35}>{storeName}</Text>
+          <Text style={Fonts.textHeaderPage}>
+            Survei ({totalCompletedSurvey}/{totalSurvey})
+          </Text>
         </View>
       )
     };
   };
-  /** === RENDER DISPLAY PHOTO MENU === */
-  renderDisplayPhotoMenu(item) {
-    const { readOnly } = this.props.navigation.state.params;
-    return (
-      <View style={[styles.menuContainer]}>
-        <View style={[styles.card, GlobalStyle.shadowForBox5]}>
-          <TouchableOpacity
-            style={styles.cardInside}
-            onPress={() =>
-              NavigationService.navigate('MerchantSurveyDisplayPhotoView', {
-                readOnly,
-                surveyId: item.id,
-                surveyName: item.surveyName,
-                surveyResponseId: item.surveyResponseId,
-                surveySerialId: item.surveySerialId,
-                surveySteps: item.surveySteps
-              })
-            }
-          >
-            <View style={styles.cameraBackground}>
-              <AntDesignIcon
-                name="camerao"
-                color={masterColor.fontWhite}
-                size={20}
-              />
-              {item.responseStatus ? (
-                <View
-                  style={[
-                    styles.iconContainer,
-                    {
-                      backgroundColor:
-                        item.responseStatus === 'inProgress'
-                          ? masterColor.fontYellow50
-                          : masterColor.fontGreen50
-                    }
-                  ]}
-                >
-                  <MaterialIcon
-                    name={
-                      item.responseStatus === 'inProgress'
-                        ? 'timelapse'
-                        : 'check'
-                    }
-                    color={masterColor.fontWhite}
-                    size={11}
-                  />
-                </View>
-              ) : null}
-            </View>
-            <View>
-              <Text style={[Fonts.type12, { color: masterColor.fontBlack100 }]}>
-                {item.surveyName}
-              </Text>
-              <Text style={[Fonts.type12, { color: masterColor.fontBlack80 }]}>
-                {item.SurveyDesc ? item.SurveyDesc : ''}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
+  /**
+   * ========================
+   * RENDER
+   * ========================
+   */
+  /** === RENDER SURVEY LIST === */
+  renderSurveyList() {
+    return <SurveyListDataView navigation={this.props.navigation} />;
   }
-  /** === RENDER CONTENT ITEM === */
-  renderContentItem() {
-    return (
-      <View>
-        <FlatList
-          data={this.props.merchant.surveyList.payload.data}
-          keyExtractor={(data, index) => index.toString()}
-          renderItem={({ item }) => this.renderDisplayPhotoMenu(item)}
-        />
-      </View>
+  /** === RENDER MODAL ERROR RESPONSE  === */
+  renderModalErrorResponse() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={() => this.setState({ openModalErrorGlobal: false })}
+      />
+    ) : (
+      <View />
     );
-  }
-  /** === RENDER CONTENT === */
-  renderContent() {
-    return (
-      <View style={styles.contentContainer}>
-        <FlatList
-          showsVerticalScrollIndicator
-          data={[1]}
-          renderItem={this.renderContentItem.bind(this)}
-          keyExtractor={(data, index) => index.toString()}
-        />
-      </View>
-    );
-  }
-  /** BACKGROUND */
-  renderBackground() {
-    return <View style={styles.backgroundRed} />;
   }
   /** === RENDER MAIN === */
   render() {
     return (
       <SafeAreaView>
-        <StatusBarRed />
+        <StatusBarWhite />
         {this.props.merchant.loadingGetSurveyList ? (
           <View style={{ height: '100%' }}>
             <LoadingPage />
           </View>
         ) : (
-          <View style={{ height: '100%' }}>
-            {this.renderBackground()}
-            {this.renderContent()}
-          </View>
+          <View style={styles.container}>{this.renderSurveyList()}</View>
         )}
+        {this.renderModalErrorResponse()}
       </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  contentContainer: {
-    width: '100%',
+  container: {
     height: '100%',
-    position: 'absolute',
-    zIndex: 1000
-  },
-  backgroundRed: {
-    backgroundColor: Color.mainColor,
-    height: 85
-  },
-  /** for content */
-  menuContainer: {
-    paddingHorizontal: 16,
-    paddingTop: 11,
-    paddingBottom: 5
-  },
-  card: {
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderRadius: 10,
-    backgroundColor: Color.backgroundWhite
-  },
-  cardInside: {
-    borderWidth: 1,
-    borderColor: masterColor.fontBlack10,
-    borderRadius: 5,
-    padding: 8,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  cameraBackground: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: masterColor.mainColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 6
-  },
-  iconContainer: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center'
+    backgroundColor: Color.fontBlack05
   }
 });
 
-const mapStateToProps = ({ auth, merchant, user, permanent }) => {
-  return { auth, merchant, user, permanent };
+const mapStateToProps = ({ merchant }) => {
+  return { merchant };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -241,7 +158,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MerchantSurveyView);
 
 /**
  * ============================
@@ -250,23 +170,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantSurveyView);
  * createdBy: dyah
  * createdDate: 19112020
  * updatedBy: dyah
- * updatedDate: 16122020
+ * updatedDate: 30092021
  * updatedFunction:
- * -> add surveySerialId to param navigation.
- * updatedBy: dyah
- * updatedDate: 24022021
- * updatedFunction:
- *  -> Update the props of log activity.
- * updatedBy: dyah
- * updatedDate: 26022021
- * updatedFunction:
- * -> Update the props of post activity.
- * updatedBy: dyah
- * updatedDate: 08032021
- * updatedFunction:
- * -> Update validation for survey (componentDidUpdate).
- * updatedBy: dyah
- * updatedDate: 21042021
- * updatedFunction:
- * -> Delete componentDidUpdate in the screenn & delete function surveyDone().
+ * -> add modal error when failed get survey list.
  */
