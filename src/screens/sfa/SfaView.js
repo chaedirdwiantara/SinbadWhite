@@ -43,9 +43,9 @@ const SfaView = props => {
     dataGetReferenceList // collection
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
-  const { userSuppliers } = useSelector(state => state.user);
+  const { userSuppliers, id } = useSelector(state => state.user);
   const [selectedTagStatus, setSelectedTagStatus] = useState(0);
-  const [paymentStatus, setPaymentStatus] = useState('');
+  const [paymentStatus, setPaymentStatus] = useState(null);
   const [limit, setLimit] = useState(20);
   const [activeTab, setActiveTab] = useState(TAB_INVOICE);
   const [searchTextCollection, setSearchTextCollection] = useState('');
@@ -73,16 +73,18 @@ const SfaView = props => {
   const getInvoiceList = (loading, page) => {
     const data = {
       storeId: parseInt(selectedMerchant.storeId, 10),
+      userId: parseInt(id, 10),
       supplierId: parseInt(userSuppliers[0].supplier.id, 10),
       keyword: searchText,
       statusPayment: paymentStatus,
       loading: loading,
       limit: page,
-      skip: 0
+      skip: 0,
+      collectionTransactionDetailStatus: null,
+      collectionTransactionDetailIds: selectedMerchant.collectionIds
     };
     dispatch(sfaGetCollectionListProcess(data));
   };
-
   /** TO GET COLLECTION STATUS */
   const getCollectionListStatus = () => {
     dispatch(sfaGetCollectionListStatusProcess());
@@ -119,7 +121,13 @@ const SfaView = props => {
           );
         } else {
           // dataGetCollectionStatus is TRANSACTION / INVOICE
-          setPaymentStatus(dataGetCollectionStatus.data[data.data].status);
+          const isAllSelected =
+            dataGetCollectionStatus.data[data.data].status === '';
+          setPaymentStatus(
+            !isAllSelected
+              ? dataGetCollectionStatus.data[data.data].status
+              : null
+          );
         }
 
         break;
@@ -140,7 +148,7 @@ const SfaView = props => {
           getCollectionListStatus();
         } else {
           setSearchText('');
-          setPaymentStatus('');
+          setPaymentStatus(null);
           getInvoiceStatus();
           // getInvoiceList(true, 20);
         }
