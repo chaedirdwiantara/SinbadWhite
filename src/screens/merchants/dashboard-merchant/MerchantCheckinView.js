@@ -228,7 +228,9 @@ class MerchantCheckinView extends Component {
       () =>
         Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
           timeout: 30000,
-          enableHighAccuracy: true
+          maximumAge: 30000,
+          enableHighAccuracy: true,
+          distanceFilter: 0
         })
     );
   }
@@ -775,7 +777,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 12102021
+ * updatedDate: 14102021
  * updatedFunction:
- * -> fix bug user can't confirm when choose not in store.
+ * -> fix bug user can't update his current location.
  */
