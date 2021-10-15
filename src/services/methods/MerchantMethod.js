@@ -95,6 +95,30 @@ function getNoOrderReason() {
     method: 'GET'
   });
 }
+/** === GET NO VISIT REASON === */
+function getNoVisitReason() {
+  return ApiRest({
+    path: `${salesManagementService}/v1/no-visit-reason`,
+    method: 'GET'
+  });
+}
+/** === POST NO VISIT REASON === */
+function postNoVisitReason(data) {
+  return ApiRest({
+    path: `${salesManagementService}/v1/journey-book-stores/${
+      data.journeyBookStoreId
+    }/notvisitstore`,
+    method: 'POST',
+    params: data.data
+  });
+}
+/** === GET DETAIL JOURNEY BOOK  === */
+function getJourneyBookDetail(journeyBookStoreId) {
+  return ApiRest({
+    path: `${salesManagementService}/v1/journey-book-stores/${journeyBookStoreId}`,
+    method: 'GET'
+  });
+}
 /** === GET STORE STATUS === */
 function getStoreStatus() {
   return ApiRest({
@@ -124,15 +148,38 @@ function getSurveyList(params) {
     method: 'GET'
   });
 }
-/** GET SURVEY RESPONSE */
-function getSurveyResponse(id) {
+/** GET TOTAL SURVEY */
+function getTotalSurvey(storeId) {
   return ApiRest({
-    path: `supplier/service-survey/v1/survey/response?id=${id}`,
+    path: `supplier/service-survey/v1/surveys/totaltoday/mobile?storeId=${storeId}`,
     method: 'GET'
   });
 }
-/** SUBMIT SURVEY */
-function submitSurvey(params) {
+/** GET SURVEY BY ID */
+function getSurvey(params) {
+  return ApiRest({
+    path: `supplier/service-survey/v1/surveys/withresponse/${params.id}${
+      params.responseId
+    }`,
+    method: 'GET'
+  });
+}
+/** GET SURVEY BRAND BY SURVEY ID */
+function getSurveyBrand(id) {
+  return ApiRest({
+    path: `supplier/service-survey/v1/brands/survey/${id}`,
+    method: 'GET'
+  });
+}
+/** GET SURVEY RESPONSE */
+function getSurveyResponse(id) {
+  return ApiRest({
+    path: `supplier/service-survey/v1/survey/response/${id}`,
+    method: 'GET'
+  });
+}
+/** SUBMIT SURVEY RESPONSE */
+function submitSurveyResponse(params) {
   return ApiRest({
     path: 'supplier/service-survey/v1/survey/response',
     method: 'POST',
@@ -140,7 +187,7 @@ function submitSurvey(params) {
   });
 }
 /** UPDATE SURVEY RESPONSE */
-function updateSurvey({ params, surveyResponseId }) {
+function updateSurveyResponse({ params, surveyResponseId }) {
   return ApiRest({
     path: `supplier/service-survey/v1/survey/response/${surveyResponseId}`,
     method: 'PATCH',
@@ -156,9 +203,9 @@ function validateAreaMapping(params) {
   });
 }
 /** GET SEGMENTATION LSIT */
-function getSalesSegmentation({type, supplierId, urbanId}){
-  if(urbanId){
-    const params = {urbanId, supplierId}
+function getSalesSegmentation({ type, supplierId, urbanId }) {
+  if (urbanId) {
+    const params = { urbanId, supplierId };
     return ApiRest({
       path: 'validate-urban-segmentation',
       method: 'POST',
@@ -168,9 +215,19 @@ function getSalesSegmentation({type, supplierId, urbanId}){
   return ApiRest({
     path: `sales-segmentation?type=${type}&supplierId=${supplierId}`,
     method: 'GET'
-  })
+  });
 }
-
+/** GET RADIUS LOCK GEOTAG */
+function getRadiusLockGeotag(params) {
+  return ApiRest({
+    path: `${salesManagementService}/v1/agent/lockgeotag/validate?storeLong=${
+      params.storeLong
+    }&storeLat=${params.storeLat}&salesLong=${params.salesLong}&salesLat=${
+      params.salesLat
+    }`,
+    method: 'GET'
+  });
+}
 
 export const MerchantMethod = {
   getMerchantV2,
@@ -185,14 +242,21 @@ export const MerchantMethod = {
   getLogPerActivityV2,
   getLatestCheckInOut,
   getNoOrderReason,
+  getNoVisitReason,
+  postNoVisitReason,
+  getJourneyBookDetail,
   getStoreStatus,
   getWarehouse,
   getSurveyList,
+  getTotalSurvey,
+  getSurvey,
+  getSurveyBrand,
   getSurveyResponse,
-  submitSurvey,
-  updateSurvey,
+  submitSurveyResponse,
+  updateSurveyResponse,
   validateAreaMapping,
-  getSalesSegmentation
+  getSalesSegmentation,
+  getRadiusLockGeotag
 };
 
 /**
@@ -201,40 +265,8 @@ export const MerchantMethod = {
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: tatas
- * updatedDate: 01072020
- * updatedFunction:
- * -> add fucntion to get store status
- * updatedBy: tatas
- * updatedDate: 06072020
- * updatedFunction:
- * -> Change global method to get userId and supplierId\
  * updatedBy: dyah
- * updatedDate: 27112020
+ * updatedDate: 30092021
  * updatedFunction:
- * -> Add methods. (get survey list, get survey response, submit survey)
- * updatedBy: dyah
- * updatedDate: 18022021
- * updatedFunction:
- * -> Add new methods. (getMerchantV2, getMerchantDetailV2, getPortfolioByUserIdV2)
- * updatedBy: dyah
- * updatedDate: 22022021
- * updatedFunction:
- * -> Add new methods. (postActivityV2, getLogAllActivityV2, getLogPerActivityV2)
- * updatedBy: dyah
- * updatedDate: 26022021
- * updatedFunction:
- * -> Update the methods. (getNoOrderReason, postActivityV2, getMerchantV2)
- * updatedBy: dyah
- * updatedDate: 08032021
- * updatedFunction:
- * -> Add new method. (getMerchantExisting)
- * updatedBy: dyah
- * updatedDate: 08042021
- * updatedFunction:
- * -> Clean method from old portfolio.
- * updatedBy: dyah
- * updatedDate: 10052021
- * updatedFunction:
- * -> add method for latest checkin&checkout.
+ * -> add endpoint get radius lock geotag. (getRadiusLockGeotag)
  */

@@ -6,13 +6,16 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Text,
-  Image
+  PermissionsAndroid,
+  Image,
+  ImageBackground
 } from '../../library/reactPackage';
 import {
   MaterialIcon,
   bindActionCreators,
   connect,
   moment,
+  Geolocation,
   SkeletonPlaceholder
 } from '../../library/thirdPartyPackage';
 import {
@@ -52,8 +55,14 @@ class JourneyView extends Component {
    * HEADER MODIFY
    * ========================
    */
+  /**
+   * === Render Header ===
+   * @returns {ReactElement} render menu back, title, map
+   */
   static navigationOptions = ({ navigation }) => {
+    const getCurrentLocation = navigation.getParam('getCurrentLocation');
     return {
+      //go to home
       headerLeft: () => (
         <TouchableOpacity
           style={{ marginLeft: 16 }}
@@ -64,6 +73,21 @@ class JourneyView extends Component {
             name={'arrow-back'}
             size={24}
           />
+        </TouchableOpacity>
+      ),
+      //go to map
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.headerMapButton}
+          onPress={() =>
+            getCurrentLocation ? getCurrentLocation(navigation) : null
+          }
+        >
+          <Image
+            style={{ marginRight: 8, width: 14 }}
+            source={require('../../assets/icons/maps/map_journey.png')}
+          />
+          <Text style={Fonts.type16}>Peta</Text>
         </TouchableOpacity>
       )
     };
@@ -78,6 +102,12 @@ class JourneyView extends Component {
     this.getJourneyPlan();
     this.props.getJourneyPlanReportProcessV2();
     this.props.portfolioGetProcessV2();
+    /**SET NAVIGATION FUNCTION */
+    this.props.navigation.setParams({
+      getCurrentLocation: this.getCurrentLocation,
+      successMaps: this.successMaps,
+      errorMaps: this.errorMaps
+    });
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
@@ -88,7 +118,7 @@ class JourneyView extends Component {
       if (this.props.journey.dataSaveMerchantToJourneyPlanV2 !== null) {
         this.getJourneyPlan();
         this.props.getJourneyPlanReportProcessV2();
-        this.setState({ openModalMerchantList: false });
+        this.setState({ openModalMerchantList: false, openModalAddMerchant: false, });
       }
     }
     /** IF ADD MERCHANT SUCCESS */
@@ -116,13 +146,19 @@ class JourneyView extends Component {
       }
     }
   }
-  /** === FROM CHILD FUNCTION === */
+  /**
+   * === FROM CHILD FUNCTION ===
+   * @returns {ReactElement} trigger modal add merchant
+   */
   parentFunction(data) {
     if (data.type === 'search') {
       this.setState({ search: data.data }, () => this.getJourneyPlan());
     }
   }
-  /** FOR ERROR FUNCTION (FROM DID UPDATE) */
+  /**
+   * === FOR ERROR FUNCTION (FROM DID UPDATE) ===
+   * @returns {ReactElement} trigger modal add merchant
+   */
   doError() {
     /** Close all modal and open modal error respons */
     this.setState({
@@ -130,10 +166,13 @@ class JourneyView extends Component {
       openModalAddMerchant: false,
       openModalMerchantList: false,
       showToast: false,
-      showModalError: false,
+      showModalError: false
     });
   }
-  /** === GET JOURNEY PLAN === */
+  /**
+   * === GET JOURNEY PLAN ===
+   * fetch api , get journey plan data from be
+   */
   getJourneyPlan() {
     const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
     this.props.journeyPlanGetResetV2();
@@ -141,10 +180,14 @@ class JourneyView extends Component {
       page: 1,
       date: today,
       search: this.state.search,
+      storetype: 'all',
       loading: true
     });
   }
-  /** === ADD MERCHANT TO JOURNEY === */
+  /**
+   * === ADD MERCHANT TO JOURNEY ===
+   * @returns {ReactElement} trigger modal add merchant
+   */
   addMerchant() {
     this.setState({ openModalAddMerchant: true });
   }
@@ -153,16 +196,16 @@ class JourneyView extends Component {
     switch (type) {
       case 'existing_merchant':
         this.setState({
-          openModalAddMerchant: false,
           openModalMerchantList: true
         });
         break;
       case 'new_merchant':
         // VALIDATE SALES REP CAN ADD STORE OR NOT
         this.setState({ openModalAddMerchant: false });
-        const portfolio = this.props.merchant.dataGetPortfolioV2
-        const canCreateStore = this.props.privileges.data?.createStore?.status || false
-        if(portfolio !== null && portfolio.length > 0 && canCreateStore){
+        const portfolio = this.props.merchant.dataGetPortfolioV2;
+        const canCreateStore =
+          this.props.privileges.data?.createStore?.status || false;
+        if (portfolio !== null && portfolio.length > 0 && canCreateStore) {
           this.props.savePageAddMerchantFrom('JourneyView');
           setTimeout(() => {
             NavigationService.navigate('AddMerchantStep1');
@@ -176,11 +219,57 @@ class JourneyView extends Component {
     }
   }
   /**
+   *  === SUCCESS GET CURRENT LOCATION ===
+   * @param {object} object contain coords (longitude,latitude )
+   * @returns {callback} navigate to journeyMapView with some data
+   */
+  successMaps = success => {
+    const longitude = success.coords.longitude;
+    const latitude = success.coords.latitude;
+    // navigate to journey map
+    NavigationService.navigate('JourneyMapView', {
+      longitude,
+      latitude
+    });
+  };
+  /**
+   *  === ERROR GET CURRENT LOCATION ===
+   * @returns {PermissionsAndroid||callback||warn}
+   */
+  errorMaps = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        this.getCurrentLocation();
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+  /**
+   *  === GET CURRENT LOCATION ===
+   * @returns {callback} get current value
+   */
+  getCurrentLocation(navigation) {
+    if (navigation) {
+      return Geolocation.getCurrentPosition(
+        navigation.getParam('successMaps'),
+        navigation.getParam('errorMaps')
+      );
+    }
+    return Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
+  }
+  /**
    * =================
    * RENDER VIEW
    * =================
    */
-  /** === EMPTY JOURNEY === */
+  /**
+   * === RENDER WRAPPER JOURNEY PLAN LIST ===
+   * @returns {ReactElement} render container that contain list of journeyplan
+   */
   renderJourneyListData() {
     return (
       <JourneyListDataView
@@ -190,26 +279,36 @@ class JourneyView extends Component {
       />
     );
   }
-  /** === RENDER HEADER === */
+  /**
+   *  === RENDER HEADER ===
+   * @returns {ReactElement} render header journey plan
+   */
   renderHeader() {
     return !this.props.journey.loadingGetJourneyPlanReport &&
       this.props.journey.dataGetJourneyPlanReportV2 !== null ? (
-      <View style={styles.headerContainer}>
-        <View style={styles.boxHeader}>
-          <Text style={[Fonts.type27, { marginBottom: 5 }]}>
-            {this.props.journey.dataGetJourneyPlanReportV2.total}/
-            {this.props.journey.dataGetJourneyPlanReportV2.target}
-          </Text>
-          <Text style={Fonts.type26}>Toko Visit</Text>
-        </View>
-        <View style={styles.boxHeader}>
-          <Text style={[Fonts.type27, { marginBottom: 5 }]}>
-            {MoneyFormat(
-              this.props.journey.dataGetJourneyPlanReportV2.totalOrder
-            )}
-          </Text>
-          <Text style={Fonts.type26}>Total Order</Text>
-        </View>
+      <View>
+        {/* <View style={styles.mainContainer}> */}
+        <ImageBackground
+          source={require('../../assets/images/background/bg_jp_white.png')}
+          style={[styles.headerContainer, { zIndex: 0 }]}
+        >
+          <View style={[styles.boxHeader, { zIndex: 1 }]}>
+            <Text style={[Fonts.textHeaderPageJourney, { marginBottom: 5 }]}>
+              {this.props.journey.dataGetJourneyPlanReportV2.total}/
+              {this.props.journey.dataGetJourneyPlanReportV2.target}
+            </Text>
+            <Text style={styles.headerTextSubTitle}>Kunjungan Toko</Text>
+          </View>
+          <View style={styles.boxHeader}>
+            <Text style={[Fonts.textHeaderPageJourney, { marginBottom: 5 }]}>
+              {MoneyFormat(
+                this.props.journey.dataGetJourneyPlanReportV2.totalOrder
+              )}
+            </Text>
+            <Text style={styles.headerTextSubTitle}>Total Order Toko</Text>
+          </View>
+        </ImageBackground>
+        {/* </View> */}
       </View>
     ) : (
       <SkeletonPlaceholder>
@@ -217,7 +316,10 @@ class JourneyView extends Component {
       </SkeletonPlaceholder>
     );
   }
-  /** === BUTTON ADD JOURNEY === */
+  /**
+   * === BUTTON ADD JOURNEY ===
+   * @returns {ReactElement} render float button 'tambah toko'
+   */
   renderButtonAddJourney() {
     return !this.props.journey.loadingGetJourneyPlan ? (
       <View style={styles.containerFloatButton}>
@@ -235,7 +337,10 @@ class JourneyView extends Component {
    * MODAL
    * ======================
    */
-  /** TOAST */
+  /**
+   *  === RENDER TOAST ===
+   * @returns {ReactElement} render toast If state showToast true
+   */
   renderToast() {
     return this.state.showToast ? (
       <ToastType1 margin={30} content={this.state.notifToast} />
@@ -243,8 +348,12 @@ class JourneyView extends Component {
       <View />
     );
   }
-  /** MODAL MENU ADD MERCHANT */
+  /**
+   * === MODAL MENU ADD MERCHANT ===
+   * @returns {ReactElement} render modal add merchant/store
+   */
   renderModalAddMerchant() {
+    //open modal add merchant after trigger addMerchant
     return this.state.openModalAddMerchant ? (
       <View>
         <ModalBottomSwipeCloseNotScroll
@@ -252,6 +361,7 @@ class JourneyView extends Component {
           closeButton
           title={'Tambah Toko'}
           close={() => this.setState({ openModalAddMerchant: false })}
+          //modal contain add 'new store' or 'existing store'
           content={
             <ModalContentMenuAddMerchant
               onRef={ref => (this.parentFunction = ref)}
@@ -264,18 +374,25 @@ class JourneyView extends Component {
       <View />
     );
   }
-  /** MODAL MERCHANT LIST */
+  /**
+   *  === RENDER MODAL MERCHANT LIST ===
+   * @returns {ReactElement} render mercant list If state openModalMerchantList true
+   * openModalMerchantList true If user choose existing store
+   */
   renderModalMerchantList() {
     return this.state.openModalMerchantList ? (
       <ModalBottomMerchantList
         open={this.state.openModalMerchantList}
-        close={() => this.setState({ openModalMerchantList: false })}
+        close={() => this.setState({ openModalMerchantList: false, openModalAddMerchant: false, })}
       />
     ) : (
       <View />
     );
   }
-  /** RENDER MODAL ERROR */
+  /**
+   *  === RENDER MODAL ERROR  ===
+   * @returns {ReactElement} render modal error If state showModalError true
+   */
   renderModalError() {
     return (
       <ModalBottomType3
@@ -293,8 +410,12 @@ class JourneyView extends Component {
       />
     );
   }
+  /**
+   *  === RENDER MODAL ERROR CONTENT  ===
+   * @returns {ReactElement} render modal error If state showModalError true
+   * @memberof renderModalError
+   */
 
-  /** RENDER MODAL ERROR CONTENT */
   modalErrorContent() {
     return (
       <View style={{ alignItems: 'center' }}>
@@ -303,11 +424,11 @@ class JourneyView extends Component {
           source={require('../../assets/images/sinbad_image/sinbad_no_access.png')}
           style={{ width: 208, height: 156 }}
         />
-        <View style={{padding: 24}}>
+        <View style={{ padding: 24 }}>
           <Text style={[Fonts.type7, { padding: 8, textAlign: 'center' }]}>
             Maaf, Anda tidak memiliki akses ke halaman ini
           </Text>
-          <Text style={[Fonts.type17, {textAlign: 'center', lineHeight: 18}]}>
+          <Text style={[Fonts.type17, { textAlign: 'center', lineHeight: 18 }]}>
             Silakan hubungi admin untuk proses lebih lanjut
           </Text>
         </View>
@@ -323,14 +444,18 @@ class JourneyView extends Component {
       </View>
     );
   }
-  /** RENDER MODAL ERROR RESPONSE */
+  /**
+   *  === RENDER MODAL ERROR RESPONSE  ===
+   * @returns {ReactElement} render modal if error from be
+   * @memberof renderModalError
+   */
   renderModalErrorResponse() {
-  return this.state.openModalErrorGlobal ? (
-    <ModalBottomErrorRespons
-      statusBarType={'transparent'}
-      open={this.state.openModalErrorGlobal}
-      onPress={() => this.setState({ openModalErrorGlobal: false })}
-    />
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={() => this.setState({ openModalErrorGlobal: false })}
+      />
     ) : (
       <View />
     );
@@ -346,7 +471,9 @@ class JourneyView extends Component {
         />
         <StatusBarWhite />
         {this.renderHeader()}
+        {/* button add store on bottom */}
         {this.renderButtonAddJourney()}
+        {/* journey plan list */}
         {this.renderJourneyListData()}
         {/* modal */}
         {this.renderModalAddMerchant()}
@@ -365,9 +492,20 @@ const styles = StyleSheet.create({
     backgroundColor: masterColor.backgroundWhite
   },
   headerContainer: {
-    backgroundColor: masterColor.mainColor,
+    backgroundColor: masterColor.backgroundWhite,
     flexDirection: 'row',
     paddingVertical: 13
+  },
+  headerMapButton: {
+    backgroundColor: masterColor.fontBlack05,
+    marginRight: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: masterColor.fontBlack10,
+    borderWidth: 1,
+    borderRadius: 24,
+    padding: 8,
+    paddingHorizontal: 12
   },
   containerFloatButton: {
     width: '100%',
@@ -379,6 +517,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  //extra font
+  headerTextSubTitle: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10,
+    lineHeight: 12,
+    color: masterColor.fontBlack80
   }
 });
 
@@ -402,8 +547,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
- * updatedDate: 08072021
+ * updatedBy: Raka
+ * updatedDate: 30092021
  * updatedFunction:
- * -> move variable 'today' to inside class component (related function)
+ * -> close dialog tambah toko when add to journey plan
  */

@@ -15,6 +15,7 @@ import {
   TextInput,
   Keyboard,
   Image,
+  ImageBackground,
   FlatList,
   BackHandler,
   Linking,
@@ -49,6 +50,7 @@ export {
   width,
   height,
   Image,
+  ImageBackground,
   FlatList,
   BackHandler,
   Linking,
@@ -56,21 +58,21 @@ export {
   StatusBar,
   ModalPopUp,
   ToastAndroid,
-  LayoutAnimation, 
+  LayoutAnimation,
   Clipboard,
   ActivityIndicator,
   PermissionsAndroid
 };
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Add new react native package
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: dyah
+ * updatedDate: 28072021
+ * updatedFunction:
+ * -> add new react native package (ImageBackground).
+ *
+ */

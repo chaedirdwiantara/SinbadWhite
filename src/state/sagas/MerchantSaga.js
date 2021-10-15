@@ -1,4 +1,4 @@
-import { put, call, takeEvery } from 'redux-saga/effects';
+import { put, call, takeEvery, takeLatest } from 'redux-saga/effects';
 import { MerchantMethod } from '../../services/methods';
 import * as ActionCreators from '../actions';
 import * as types from '../types';
@@ -148,37 +148,70 @@ function* getNoOrderReason(actions) {
     yield put(ActionCreators.merchantGetNoOrderReasonFailed(error));
   }
 }
-/** === GET STORE STATUS === */
-function* getStoreStatus(actions){
+/** === GET NO VISIT REASON === */
+function* getNoVisitReason(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.getStoreStatus(actions.payload)
-    })
-    yield put(ActionCreators.merchantGetStoreStatusSuccess(response))
+      return MerchantMethod.getNoVisitReason(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetNoVisitReasonSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.merchantGetStoreStatusFailed(error))
+    yield put(ActionCreators.merchantGetNoVisitReasonFailed(error));
+  }
+}
+/** === POST NO VISIT REASON === */
+function* postNoVisitReason(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.postNoVisitReason(actions.payload);
+    });
+    yield put(ActionCreators.merchantPostNoVisitReasonSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantPostNoVisitReasonFailed(error));
+  }
+}
+/** === GET JOURNEY BOOK DETAIL === */
+function* getJourneyBookDetail(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getJourneyBookDetail(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetDetailJourneyBookSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetDetailJourneyBookFailed(error));
+  }
+}
+/** === GET STORE STATUS === */
+function* getStoreStatus(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getStoreStatus(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetStoreStatusSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetStoreStatusFailed(error));
   }
 }
 /** GET WAREHOUSE */
-function* getWarehouse(actions){
+function* getWarehouse(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.getWarehouse(actions.payload)
-    })
-    yield put(ActionCreators.merchantGetWarehouseSuccess(response))
+      return MerchantMethod.getWarehouse(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetWarehouseSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.merchantGetWarehouseFailed(error))
+    yield put(ActionCreators.merchantGetWarehouseFailed(error));
   }
 }
 /** VALIDATE AREA MAPPING */
-function* validateAreaMapping(actions){
+function* validateAreaMapping(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.validateAreaMapping(actions.payload)
-    })
-    yield put(ActionCreators.validateAreaMappingSuccess(response))
+      return MerchantMethod.validateAreaMapping(actions.payload);
+    });
+    yield put(ActionCreators.validateAreaMappingSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.validateAreaMappingFailed(error))
+    yield put(ActionCreators.validateAreaMappingFailed(error));
   }
 }
 /** GET SURVEY LIST */
@@ -192,39 +225,96 @@ function* getSurveyList(actions) {
     yield put(ActionCreators.merchantGetSurveyListFailed(error));
   }
 }
-/** GET SURVEY RESPONSE */
+/** GET TOTAL SURVEY */
+function* getTotalSurvey(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getTotalSurvey(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetTotalSurveySuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetTotalSurveyFailed(error));
+  }
+}
+/** GET SURVEY BY ID */
 function* getSurvey(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.getSurveyResponse(actions.payload);
+      return MerchantMethod.getSurvey(actions.payload);
     });
     yield put(ActionCreators.merchantGetSurveySuccess(response));
   } catch (error) {
     yield put(ActionCreators.merchantGetSurveyFailed(error));
   }
 }
-/** SUBMIT SURVEY */
-function* submitSurvey(actions) {
+/** GET SURVEY BRAND BY SURVEY ID */
+function* getSurveyBrand(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.submitSurvey(actions.payload);
+      return MerchantMethod.getSurveyBrand(actions.payload);
     });
-    yield put(ActionCreators.merchantSubmitSurveySuccess(response));
+    yield put(ActionCreators.merchantGetSurveyBrandSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.merchantSubmitSurveyFailed(error));
+    yield put(ActionCreators.merchantGetSurveyBrandFailed(error));
+  }
+}
+
+/** GET SURVEY RESPONSE */
+function* getSurveyResponse(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getSurveyResponse(actions.payload);
+    });
+    let totalScore = 0;
+    if (response.data.payload.responsePhoto.length === 0) {
+      let arrResult = response.data.payload.survey.questions.map(data => {
+        if (data.questionResponseScore !== null) {
+          return parseFloat(data.questionResponseScore.score);
+        }
+      });
+    //arrResult return undefined or arr of Number score
+      if (arrResult) {
+        if (arrResult[0] !== undefined) {
+          arrResult.map(result => {
+            if (result) totalScore += result;
+          });
+        } else {
+          totalScore =  0;
+        }
+      } else {
+        totalScore =  0;
+      }
+    }
+    yield put(
+      ActionCreators.merchantGetSurveyResponseSuccess(response, totalScore)
+    );
+  } catch (error) {
+    yield put(ActionCreators.merchantGetSurveyResponseFailed(error));
+  }
+}
+/** SUBMIT SURVEY */
+function* submitSurveyResponse(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.submitSurveyResponse(actions.payload);
+    });
+    yield put(ActionCreators.merchantSubmitSurveyResponseSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantSubmitSurveyResponseFailed(error));
   }
 }
 /** UPDATE SURVEY RESPONSE */
-function* updateSurvey(actions) {
+function* updateSurveyResponse(actions) {
   try {
     const response = yield call(() => {
-      return MerchantMethod.updateSurvey(actions.payload);
+      return MerchantMethod.updateSurveyResponse(actions.payload);
     });
-    yield put(ActionCreators.merchantSubmitSurveySuccess(response));
+    yield put(ActionCreators.merchantSubmitSurveyResponseSuccess(response));
   } catch (error) {
-    yield put(ActionCreators.merchantSubmitSurveyFailed(error));
+    yield put(ActionCreators.merchantSubmitSurveyResponseFailed(error));
   }
 }
+
 /** GET SALES SEGMENTATION */
 function* getSalesSegmentation(actions) {
   try {
@@ -237,37 +327,77 @@ function* getSalesSegmentation(actions) {
   }
 }
 
+/** GET RADIUS LOCK GEOTAG */
+function* getRadiusLockGeotag(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getRadiusLockGeotag(actions.payload);
+    });
+    yield put(ActionCreators.getRadiusLockGeotagSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.getRadiusLockGeotagFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
-  yield takeEvery(types.MERCHANT_GET_PROCESS_V2, getMerchantV2);
-  yield takeEvery(types.MERCHANT_EXISTING_GET_PROCESS, getMerchantExisting);
-  yield takeEvery(types.MERCHANT_GET_DETAIL_PROCESS_V2, getMerchantDetailV2);
-  yield takeEvery(types.PORTFOLIO_GET_PROCESS_V2, getPortfolioV2);
+  yield takeLatest(types.MERCHANT_GET_PROCESS_V2, getMerchantV2);
+  yield takeLatest(types.MERCHANT_EXISTING_GET_PROCESS, getMerchantExisting);
+  yield takeLatest(types.MERCHANT_GET_DETAIL_PROCESS_V2, getMerchantDetailV2);
+  yield takeLatest(types.PORTFOLIO_GET_PROCESS_V2, getPortfolioV2);
   yield takeEvery(types.MERCHANT_ADD_PROCESS, addMerchant);
   yield takeEvery(types.MERCHANT_EDIT_PROCESS, editMerchant);
   yield takeEvery(types.MERCHANT_GET_LAST_ORDER_PROCESS, getMerchantLastOrder);
-  yield takeEvery(types.MERCHANT_POST_ACTIVITY_PROCESS_V2, postActivityV2);
-  yield takeEvery(types.MERCHANT_NO_ORDER_REASON_GET_PROCESS, getNoOrderReason);
-  yield takeEvery(
+  yield takeLatest(types.MERCHANT_POST_ACTIVITY_PROCESS_V2, postActivityV2);
+  yield takeLatest(
+    types.MERCHANT_NO_ORDER_REASON_GET_PROCESS,
+    getNoOrderReason
+  );
+  yield takeLatest(
+    types.MERCHANT_NO_VISIT_REASON_GET_PROCESS,
+    getNoVisitReason
+  );
+  yield takeLatest(
+    types.MERCHANT_POST_NO_VISIT_REASON_PROCESS,
+    postNoVisitReason
+  );
+  yield takeLatest(
+    types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_PROCESS,
+    getJourneyBookDetail
+  );
+  yield takeLatest(
     types.MERCHANT_GET_LOG_ALL_ACTIVITY_PROCESS_V2,
     getLogAllActivityV2
   );
-  yield takeEvery(
+  yield takeLatest(
     types.MERCHANT_GET_LOG_PER_ACTIVITY_PROCESS_V2,
     getLogPerActivityV2
   );
-  yield takeEvery(
+  yield takeLatest(
     types.MERCHANT_GET_LATEST_CHECK_IN_OUT_PROCESS,
     getLatestCheckInOut
   );
-  yield takeEvery(types.MERCHANT_STORE_STATUS_PROCESS, getStoreStatus),
+  yield takeEvery(types.MERCHANT_STORE_STATUS_PROCESS, getStoreStatus);
   yield takeEvery(types.MERCHANT_GET_WAREHOUSE_PROCESS, getWarehouse);
   yield takeEvery(types.VALIDATE_AREA_MAPPING_PROCESS, validateAreaMapping);
-  yield takeEvery(types.MERCHANT_GET_SURVEY_LIST_PROCESS, getSurveyList);
-  yield takeEvery(types.MERCHANT_GET_SURVEY_PROCESS, getSurvey);
-  yield takeEvery(types.MERCHANT_SUBMIT_SURVEY_PROCESS, submitSurvey);
-  yield takeEvery(types.MERCHANT_UPDATE_SURVEY_PROCESS, updateSurvey);
+  yield takeLatest(types.MERCHANT_GET_SURVEY_LIST_PROCESS, getSurveyList);
+  yield takeLatest(types.MERCHANT_GET_TOTAL_SURVEY_PROCESS, getTotalSurvey);
+  yield takeLatest(types.MERCHANT_GET_SURVEY_PROCESS, getSurvey);
+  yield takeLatest(types.MERCHANT_GET_SURVEY_BRAND_PROCESS, getSurveyBrand);
+  yield takeLatest(
+    types.MERCHANT_GET_SURVEY_RESPONSE_PROCESS,
+    getSurveyResponse
+  );
+  yield takeLatest(
+    types.MERCHANT_SUBMIT_SURVEY_RESPONSE_PROCESS,
+    submitSurveyResponse
+  );
+  yield takeLatest(
+    types.MERCHANT_UPDATE_SURVEY_RESPONSE_PROCESS,
+    updateSurveyResponse
+  );
   yield takeEvery(types.GET_SALES_SEGMENTATION_PROCESS, getSalesSegmentation);
+  yield takeLatest(types.GET_RADIUS_LOCK_GEOTAG_PROCESS, getRadiusLockGeotag);
 }
 
 export default MerchantSaga;

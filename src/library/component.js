@@ -24,6 +24,7 @@ import InputType2 from '../components/input/InputType2';
 import InputType3 from '../components/input/InputType3';
 import InputType4 from '../components/input/inputType4';
 import InputType6 from '../components/input/InputType6';
+import InputType7 from '../components/input/InputType7';
 /** INPUT MAPS (PIN POINT) */
 import InputMapsType1 from '../components/input/InputMapsType1';
 import InputMapsType2 from '../components/input/InputMapsType2';
@@ -52,6 +53,7 @@ import ModalBottomType2 from '../components/modal_bottom/ModalBottomType2';
 import ModalBottomType3 from '../components/modal_bottom/ModalBottomType3';
 import ModalBottomType4 from '../components/modal_bottom/ModalBottomType4';
 import ModalBottomType5 from '../components/modal_bottom/ModalBottomType5';
+import ModalBottomType6 from '../components/modal_bottom/ModalBottomType6';
 /** ERROR MODAL */
 import ModalBottomErrorRespons from '../components/error/ModalBottomErrorRespons';
 /** OTP */
@@ -80,6 +82,7 @@ import ProductListType7 from '../components/list/ProductListType7';
 /** EMPTY DATA */
 import ComingSoon from '../components/empty_state/ComingSoon';
 import EmptyData from '../components/empty_state/EmptyData';
+import EmptyDataType2 from '../components/empty_state/EmptyDataType2';
 /** SKELETON */
 import SkeletonType1 from '../components/skeleton/SkeletonType1';
 import SkeletonType2 from '../components/skeleton/SkeletonType2';
@@ -94,6 +97,8 @@ import SkeletonType18 from '../components/skeleton/SkeletonType18';
 import SkeletonType21 from '../components/skeleton/SkeletonType21';
 import SkeletonType23 from '../components/skeleton/SkeletonType23';
 import SkeletonType24 from '../components/skeleton/SkeletonType24';
+import SkeletonType25 from '../components/skeleton/SkeletonType25';
+import SkeletonType26 from '../components/skeleton/SkeletonType26';
 /** ADDRESS */
 import Address from '../components/Address';
 /** TAG */
@@ -114,6 +119,15 @@ import CardType1 from '../components/card/CardType1';
 import PdpGrid from '../components/template/PdpGrid';
 /** ACCORDION */
 import Accordion from '../components/accordion/Accordion';
+/** RADIO BUTTON */
+import RadioButton from '../components/radioButton/radioButton';
+/** CHECK BOX */
+import CheckBox from '../components/checkBox/checkBox';
+/** QUESTIONNAIRE */
+import SingleAnswerComponent from '../components/questionnaire/SingleAnswerComponent';
+import MultipleAnswerComponent from '../components/questionnaire/MultipleAnswerComponent';
+import BasicRangeAnswerComponent from '../components/questionnaire/BasicRangeAnswerComponent';
+import CompareGroupRangeAnswerComponent from '../components/questionnaire/CompareGroupRangeAnswerComponent';
 
 export {
   CartGlobal,
@@ -140,6 +154,7 @@ export {
   InputType3,
   InputType4,
   InputType6,
+  InputType7,
   /** INPUT MAPS (PIN POINT) */
   InputMapsType1,
   InputMapsType2,
@@ -168,6 +183,7 @@ export {
   ModalBottomType3,
   ModalBottomType4,
   ModalBottomType5,
+  ModalBottomType6,
   /** ERROR MODAL */
   ModalBottomErrorRespons,
   /** OTP */
@@ -194,6 +210,7 @@ export {
   /** EMPTY DATA */
   ComingSoon,
   EmptyData,
+  EmptyDataType2,
   /** SKELETON */
   SkeletonType1,
   SkeletonType2,
@@ -208,6 +225,8 @@ export {
   SkeletonType21,
   SkeletonType23,
   SkeletonType24,
+  SkeletonType25,
+  SkeletonType26,
   /** ADDRESS */
   Address,
   /** TAG */
@@ -228,7 +247,16 @@ export {
   /** TEMPLATE */
   PdpGrid,
   /** Accordion */
-  Accordion
+  Accordion,
+  /** RADIO BUTTON */
+  RadioButton,
+  /** CHECK BOX */
+  CheckBox,
+  /** QUESTIONNAIRE */
+  SingleAnswerComponent,
+  MultipleAnswerComponent,
+  BasicRangeAnswerComponent,
+  CompareGroupRangeAnswerComponent
 };
 
 /**
@@ -237,13 +265,9 @@ export {
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Dyah
- * updatedDate: 18122020
- * updatedFunction:
- * -> Add new component (customize modal bottom => modalBottomType5)
  * updatedBy: dyah
- * updatedDate: 06052021
+ * updatedDate: 20092021
  * updatedFunction:
- * -> Add new component (customize modal => ModalConfirmationType4)
+ * -> add new modal bottom component (ModalBottomType6)
  *
  */

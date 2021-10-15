@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Text
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   bindActionCreators,
   connect,
@@ -19,9 +19,10 @@ import {
   LoadingLoadMore,
   Address,
   SearchBarType1,
+  EmptyDataType2,
   EmptyData
-} from '../../library/component'
-import { GlobalStyle, Fonts } from '../../helpers'
+} from '../../library/component';
+import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
@@ -50,6 +51,7 @@ class JourneyListDataView extends Component {
       page: 1,
       date: today,
       search: this.props.searchText,
+      storetype: 'all',
       loading: true
     });
     this.props.getJourneyPlanReportProcessV2();
@@ -72,6 +74,7 @@ class JourneyListDataView extends Component {
             page,
             date: today,
             search: this.props.searchText,
+            storetype: 'all',
             loading: false
           });
         }
@@ -90,7 +93,10 @@ class JourneyListDataView extends Component {
      * if agent change store
      */
     if (this.props.merchant.selectedMerchant !== null) {
-      if (this.props.merchant.selectedMerchant.storeId !== data.storeId) {
+      if (
+        parseInt(this.props.merchant.selectedMerchant.storeId, 10) !==
+        data.storeId
+      ) {
         this.props.merchantChanged(true);
       }
     }
@@ -99,8 +105,9 @@ class JourneyListDataView extends Component {
     data.storeId = data.storeId.toString();
     this.props.merchantSelected(data);
     setTimeout(() => {
+      this.props.getSurveyResult(data.storeName)
       NavigationService.navigate('MerchantHomeView', {
-        storeName
+        storeName: data.storeName
       });
     }, 100);
   }
@@ -121,6 +128,21 @@ class JourneyListDataView extends Component {
       total = total + 1;
     }
     return total;
+  }
+  /** CHECK VISIT ACTIVITY */
+  checkVisitActivity(logs) {
+    // check already check out or not
+    if ((logs.longitudeCheckOut && logs.latitudeCheckOut) !== 0) {
+      return require('../../assets/icons/journey/visit_green.png');
+    }
+    // not checkin yet.
+    if ((logs.longitudeCheckOut && logs.latitudeCheckOut) === 0) {
+      // not visit
+      if (!logs.visitStatus && logs.noVisitReasonId) {
+        return require('../../assets/icons/journey/no_visit_black.png');
+      }
+      return require('../../assets/icons/journey/visit_gray.png');
+    }
   }
   /**
    * ======================
@@ -146,6 +168,7 @@ class JourneyListDataView extends Component {
     return (
       <View style={styles.searchBar}>
         <SearchBarType1
+          maxLength={30}
           searchText={this.props.searchText}
           placeholder={'Cari nama / id toko disini'}
           onRef={ref => (this.parentFunction = ref)}
@@ -219,6 +242,9 @@ class JourneyListDataView extends Component {
             <View style={styles.containerExternalStoreId}>
               <Text
                 style={
+                  /*
+                  exist_store ditambahkan dari toko existing, selain itu adalah toko baru
+                 */
                   item.journeyBookStores.typeOfStore === 'exist_store'
                     ? Fonts.type67
                     : Fonts.type29
@@ -252,6 +278,9 @@ class JourneyListDataView extends Component {
             </View>
             <Text
               style={
+                /*
+                  exist_store ditambahkan dari toko existing, selain itu adalah toko baru
+                */
                 item.journeyBookStores.typeOfStore === 'exist_store'
                   ? Fonts.type8
                   : Fonts.type29
@@ -265,6 +294,9 @@ class JourneyListDataView extends Component {
               maxLength={30}
               substring
               font={
+                /*
+                  exist_store ditambahkan dari toko existing, selain itu adalah toko baru
+                 */
                 item.journeyBookStores.typeOfStore === 'exist_store'
                   ? Fonts.type67
                   : Fonts.type22
@@ -288,12 +320,7 @@ class JourneyListDataView extends Component {
             }}
           >
             <Image
-              source={
-                (item.journeyBookStores.longitudeCheckOut &&
-                  item.journeyBookStores.latitudeCheckOut) !== 0
-                  ? require('../../assets/icons/journey/visit_green.png')
-                  : require('../../assets/icons/journey/visit_gray.png')
-              }
+              source={this.checkVisitActivity(item.journeyBookStores)}
               style={styles.iconVisitOrder}
             />
             <View style={{ marginLeft: 10 }} />
@@ -344,6 +371,7 @@ class JourneyListDataView extends Component {
   }
   /** === RENDER DATA CONTENT === */
   renderContent() {
+    console.log("this.props.journey.dataGetJourneyPlanV2", this.props.journey.dataGetJourneyPlanV2)
     return (
       <View style={{ flex: 1 }}>
         <FlatList
@@ -362,7 +390,13 @@ class JourneyListDataView extends Component {
   }
   /** === RENDER EMPTY === */
   renderEmpty() {
-    return (
+    return this.props.searchText.length > 0 ? (
+      <EmptyDataType2
+        top
+        title={'Pencarian Tidak Ditemukan'}
+        description={'Cek kembali nama toko atau ID toko yang kamu masukkan'}
+      />
+    ) : (
       <EmptyData
         title={'Journey Plan Kosong'}
         description={
@@ -456,9 +490,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 12072021
+ * updatedDate: 24082021
  * updatedFunction:
- * -> add get journey report when refresh journey plan.
- * -> fix styling for list of journey plan.
+ * -> maximise the character of search (30 characters).
  *
  */

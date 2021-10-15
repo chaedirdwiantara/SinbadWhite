@@ -40,6 +40,27 @@ export const MERCHANT_NO_ORDER_REASON_GET_SUCCESS =
   'MerchantNoOrderReasonGetSuccess';
 export const MERCHANT_NO_ORDER_REASON_GET_FAILED =
   'MerchantNoOrderReasonGetFailed';
+/** FOR GET REASON NO VISIT */
+export const MERCHANT_NO_VISIT_REASON_GET_PROCESS =
+  'MerchantNoVisitReasonGetProcess';
+export const MERCHANT_NO_VISIT_REASON_GET_SUCCESS =
+  'MerchantNoVisitReasonGetSuccess';
+export const MERCHANT_NO_VISIT_REASON_GET_FAILED =
+  'MerchantNoVisitReasonGetFailed';
+/** FOR POST REASON NO VISIT */
+export const MERCHANT_POST_NO_VISIT_REASON_PROCESS =
+'MerchantPostNoVisitReasonProcess';
+export const MERCHANT_POST_NO_VISIT_REASON_SUCCESS =
+'MerchantPostNoVisitReasonSuccess';
+export const MERCHANT_POST_NO_VISIT_REASON_FAILED =
+'MerchantPostNoVisitReasonFailed';
+/* FOR GET JOURNEY BOOK DETAIL */
+export const MERCHANT_GET_JOURNEY_BOOK_DETAIL_PROCESS =
+  'MerchantGetJourneyBookDetailProcess';
+export const MERCHANT_GET_JOURNEY_BOOK_DETAIL_SUCCESS =
+  'MerchantGetJourneyBookDetailSuccess';
+export const MERCHANT_GET_JOURNEY_BOOK_DETAIL_FAILED =
+  'MerchantGetJourneyBookDetailFailed';
 /** FOR ADD MERCHANT */
 export const MERCHANT_SAVE_DATA_VOLATILE = 'MerchantAddDataVolatile';
 /** FOR EDIT MERCHANT */
@@ -94,16 +115,40 @@ export const MERCHANT_GET_SURVEY_LIST_PROCESS = 'MerchantGetSurveyListProcess';
 export const MERCHANT_GET_SURVEY_LIST_SUCCESS = 'MerchantGetSurveyListSuccess';
 export const MERCHANT_GET_SURVEY_LIST_FAILED = 'MerchantGetSurveyListFailed';
 export const MERCHANT_GET_SURVEY_LIST_RESET = 'MerchantGetSurveyListReset';
-/** MERCHANT GET SURVEY RESPONSE*/
+export const MERCHANT_GET_SURVEY_LIST_REFRESH = 'MerchantGetSurveyListRefresh';
+export const MERCHANT_GET_SURVEY_LIST_LOADMORE = 'MerchantGetSurveyListLoadMore';
+/** MERCHANT GET TOTAL SURVEY*/
+export const MERCHANT_GET_TOTAL_SURVEY_PROCESS = 'MerchantGetTotalSurveyProcess';
+export const MERCHANT_GET_TOTAL_SURVEY_SUCCESS = 'MerchantGetTotalSurveySuccess';
+export const MERCHANT_GET_TOTAL_SURVEY_FAILED = 'MerchantGetTotalSurveyFailed';
+/** MERCHANT GET SURVEY BY ID*/
 export const MERCHANT_GET_SURVEY_PROCESS = 'MerchantGetSurveyProcess';
 export const MERCHANT_GET_SURVEY_SUCCESS = 'MerchantGetSurveySuccess';
 export const MERCHANT_GET_SURVEY_FAILED = 'MerchantGetSurveyFailed';
+/** MERCHANT GET SURVEY BRAND BY SURVEY ID*/
+export const MERCHANT_GET_SURVEY_BRAND_PROCESS = 'MerchantGetSurveyBrandProcess';
+export const MERCHANT_GET_SURVEY_BRAND_SUCCESS = 'MerchantGetSurveyBrandSuccess';
+export const MERCHANT_GET_SURVEY_BRAND_FAILED = 'MerchantGetSurveyBrandFailed';
+/** MERCHANT GET SURVEY RESPONSE*/
+export const MERCHANT_GET_SURVEY_RESPONSE_PROCESS =
+  'MerchantGetSurveyResponseProcess';
+export const MERCHANT_GET_SURVEY_RESPONSE_SUCCESS =
+  'MerchantGetSurveyResponseSuccess';
+export const MERCHANT_GET_SURVEY_RESPONSE_FAILED =
+  'MerchantGetSurveyResponseFailed';
 /** MERCHANT SUBMIT SURVEY */
-export const MERCHANT_SUBMIT_SURVEY_PROCESS = 'MerchantSubmitSurveyProcess';
-export const MERCHANT_SUBMIT_SURVEY_SUCCESS = 'MerchantSubmitSurveySuccess';
-export const MERCHANT_SUBMIT_SURVEY_FAILED = 'MerchantSubmitSurveyFailed';
+export const MERCHANT_SUBMIT_SURVEY_RESPONSE_PROCESS =
+  'MerchantSubmitSurveyResponseProcess';
+export const MERCHANT_SUBMIT_SURVEY_RESPONSE_SUCCESS =
+  'MerchantSubmitSurveyResponseSuccess';
+export const MERCHANT_SUBMIT_SURVEY_RESPONSE_FAILED =
+  'MerchantSubmitSurveyResponseFailed';
 /** MERCHANT UPDATE SURVEY RESPONSE */
+export const MERCHANT_UPDATE_SURVEY_RESPONSE_PROCESS =
+  'MerchantUpdateSurveyResponseProcess';
 export const MERCHANT_UPDATE_SURVEY_PROCESS = 'MerchantUpdateSurveyProcess';
+/** MERCHANT SURVEY RESULT*/
+export const MERCHANT_SURVEY_RESULT = 'MerchantGetSurveyResult';
 /** MERCHANT VALIDATE AREA MAPPING */
 export const VALIDATE_AREA_MAPPING_PROCESS = 'ValidateAreaMappingProcess'
 export const VALIDATE_AREA_MAPPING_SUCCESS = 'ValidateAreaMappingSuccess'
@@ -114,3 +159,7 @@ export const GET_SALES_SEGMENTATION_PROCESS = 'GetSalesSegmentationProcess'
 export const GET_SALES_SEGMENTATION_SUCCESS = 'GetSalesSegmentationSuccess'
 export const GET_SALES_SEGMENTATION_FAILED = 'GetSalesSegmentationFailed'
 export const RESET_SALES_SEGMENTATION = 'ResetSalesSegmentation'
+/** MERCHANT GET RADIUS LOCK GEOTAG */
+export const GET_RADIUS_LOCK_GEOTAG_PROCESS = 'GetRadiusLockGeotagProcess';
+export const GET_RADIUS_LOCK_GEOTAG_SUCCESS = 'GetRadiusLockGeotagSuccess';
+export const GET_RADIUS_LOCK_GEOTAG_FAILED = 'GetRadiusLockGeotagFailed';

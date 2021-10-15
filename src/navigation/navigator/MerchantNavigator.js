@@ -15,18 +15,23 @@ import MerchantHomeView from '../../screens/merchants/dashboard-merchant/Merchan
 import MerchantCheckinView from '../../screens/merchants/dashboard-merchant/MerchantCheckinView';
 import MerchantNoOrderReason from '../../screens/merchants/dashboard-merchant/MerchantNoOrderReason';
 import MerchantNoOrderReasonDetail from '../../screens/merchants/dashboard-merchant/MerchantNoOrderReasonDetail';
+import MerchantNoVisitReasonView from '../../screens/merchants/dashboard-merchant/MerchantNoVisitReasonView';
+import MerchantNoVisitPicture from '../../screens/merchants/dashboard-merchant/MerchantNoVisitPicture';
+import MerchantNoVisitReasonDetailView from '../../screens/merchants/dashboard-merchant/MerchantNoVisitReasonDetailView';
 /** merchant detail */
 import MerchantDetailProfileView from '../../screens/merchants/details-merchant/MerchantDetailProfileView';
 import MerchantDetailAccountView from '../../screens/merchants/details-merchant/MerchantDetailAccountView';
 import MerchantDetailInformationView from '../../screens/merchants/details-merchant/MerchantDetailInformationView';
 import MerchantDetailPaymentView from '../../screens/merchants/details-merchant/MerchantDetailPaymentView';
 import MerchantDetailAddressView from '../../screens/merchants/details-merchant/MerchantDetailAddressView';
-import MerchantDetailClassificationView from '../../screens/merchants/details-merchant/MerchantDetailClassificationView'
+import MerchantDetailClassificationView from '../../screens/merchants/details-merchant/MerchantDetailClassificationView';
 /** merchant edit */
 import MerchantEditView from '../../screens/merchants/edit-merchant/MerchantEditView';
 /** merchant survey */
 import MerchantSurveyView from '../../screens/merchants/survey-merchant/MerchantSurveyView';
 import MerchantSurveyDisplayPhotoView from '../../screens/merchants/survey-merchant/MerchantSurveyDisplayPhotoView';
+import MerchantQuestionnaireView from '../../screens/merchants/survey-merchant/MerchantQuestionnaireView';
+import MerchantSurveyResultView from '../../screens/merchants/survey-merchant/MerchantSurveyResultView';
 
 const MerchantNavigator = {
   MerchantView: {
@@ -256,9 +261,7 @@ const MerchantNavigator = {
     screen: MerchantNoOrderReason,
     navigationOptions: {
       headerTitle: 'Alasan Tidak Ada Order',
-      headerTitleStyle: [
-        GlobalFont.textHeaderPage,
-      ],
+      headerTitleStyle: [GlobalFont.textHeaderPage],
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
@@ -277,14 +280,45 @@ const MerchantNavigator = {
       gesturesEnabled: false
     }
   },
-  /** === SURVEY MERCHANT ==== */
-  MerchantSurveyView: {
-    screen: MerchantSurveyView,
+  MerchantNoVisitReasonView: {
+    screen: MerchantNoVisitReasonView,
+    navigationOptions: {
+      headerTitle: 'Alasan Tidak Ada Kunjungan',
+      headerTitleStyle: [GlobalFont.textHeaderPage],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      gesturesEnabled: false
+    }
+  },
+  MerchantNoVisitPicture: {
+    screen: MerchantNoVisitPicture,
     navigationOptions: {
       headerTintColor: masterColor.backButtonWhite,
       headerStyle: {
         elevation: 0,
         backgroundColor: masterColor.mainColor
+      },
+      gesturesEnabled: false
+    }
+  },
+  MerchantNoVisitReasonDetailView: {
+    screen: MerchantNoVisitReasonDetailView,
+    navigationOptions: {
+      headerTitle: 'Detail Alasan',
+      headerTitleStyle: GlobalFont.textHeaderPage,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      gesturesEnabled: false
+    }
+  },
+  /** === SURVEY MERCHANT ==== */
+  MerchantSurveyView: {
+    screen: MerchantSurveyView,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
       },
       gesturesEnabled: false
     }
@@ -298,6 +332,30 @@ const MerchantNavigator = {
         backgroundColor: masterColor.mainColor
       },
       gesturesEnabled: false
+    }
+  },
+  MerchantQuestionnaireView: {
+    screen: MerchantQuestionnaireView,
+    navigationOptions: {
+      headerTitle: 'Input Survey',
+      headerTitleStyle: GlobalFont.textHeaderPage,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      gesturesEnabled: false
+    }
+  },
+  MerchantSurveyResultView: {
+    screen: MerchantSurveyResultView,
+
+    navigationOptions: {
+      title: 'Hasil Survey',
+      headerTitleStyle: [GlobalFont.textHeaderPage, { marginLeft: '5%' }],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite,
+        paddingLeft: 20
+      },
+      headerLeft: null
     }
   }
 };

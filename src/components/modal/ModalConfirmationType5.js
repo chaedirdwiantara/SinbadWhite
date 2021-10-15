@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Text
 } from '../../library/reactPackage';
-import { connect, Modal } from '../../library/thirdPartyPackage';
+import { connect } from '../../library/thirdPartyPackage';
 import { StatusBarRedOP50, StatusBarBlackOP40 } from '../../library/component';
 import { Fonts } from '../../helpers';
 import { Color } from '../../config';
@@ -19,17 +19,11 @@ class ModalConfirmationType5 extends Component {
   /** MAIN RENDER */
   render() {
     return (
-      <Modal
-        isVisible={this.props.open}
-        onBackButtonPress={this.props.onBackButtonPress}
-        onBackdropPress={this.props.onBackdropPress}
-        useNativeDriver={true}
-        hasBackdrop={true}
-        coverScreen={true}
-        swipeDirection={['up']}
-        backdropColor={Color.fontBlack100}
-        backdropOpacity={0.4}
-        style={styles.mainContainer}
+      <ModalPopUp
+        visible={this.props.open}
+        transparent
+        animationType="fade"
+        onRequestClose={() => {}}
       >
         {this.props.statusBarWhite ? (
           <StatusBarBlackOP40 />
@@ -40,40 +34,67 @@ class ModalConfirmationType5 extends Component {
           <View style={styles.card}>
             <View style={styles.boxCard}>
               <View style={styles.containerTitle}>
-                <Text style={Fonts.modalConfirmationType5Title}>
+                <Text style={[Fonts.type43, { textAlign: 'center' }]}>
                   {this.props.title}
                 </Text>
               </View>
-              <View style={[styles.contentContainer, { textAlign: 'center' }]}>
-                <Text
-                  style={[
-                    Fonts.modalConfirmationType5Content,
-                    { textAlign: 'center' }
-                  ]}
-                >
+              <View style={styles.contentContainer}>
+                <Text style={[Fonts.type17, { textAlign: 'center' }]}>
                   {this.props.content}
                 </Text>
               </View>
-              <View style={[styles.buttonContainer]}>
-                <TouchableOpacity style={styles.boxRed} onPress={this.props.ok}>
-                  <Text style={Fonts.modalConfirmationType5Button}>
-                    {this.props.okText}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              {this.props.subContent ? (
+                <View style={styles.contentSubContainer}>
+                  <Text style={Fonts.type44}>{this.props.subContent}</Text>
+                </View>
+              ) : (
+                <View />
+              )}
+              {this.props.type === 'okeNotRed' ? (
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.boxWhite}
+                    onPress={this.props.ok}
+                  >
+                    <Text style={Fonts.type29}>{this.props.okText}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.boxRed}
+                    onPress={this.props.cancel}
+                  >
+                    <Text style={Fonts.type25}>{this.props.cancelText}</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.boxRed}
+                    onPress={this.props.ok}
+                  >
+                    <Text style={Fonts.type25}>{this.props.okText}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.boxWhite}
+                    onPress={this.props.cancel}
+                  >
+                    <Text style={Fonts.type29}>{this.props.cancelText}</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           </View>
         </View>
-      </Modal>
+      </ModalPopUp>
     );
   }
 }
 
 const styles = StyleSheet.create({
   mainContainer: {
+    backgroundColor: Color.fontBlack100OP40,
     position: 'relative',
-    justifyContent: 'center',
-    flex: 1
+    height: '100%',
+    justifyContent: 'center'
   },
   card: {
     backgroundColor: Color.backgroundWhite,
@@ -99,29 +120,24 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   buttonContainer: {
-    width: '100%',
     marginTop: 16,
     flexDirection: 'row',
-    alignSelf: 'center'
+    justifyContent: 'space-between'
   },
   boxRed: {
-    width: '100%',
+    width: '47%',
     alignItems: 'center',
     borderRadius: 8,
     paddingVertical: 12,
     backgroundColor: Color.mainColor
   },
-  boxGrey: {
+  boxWhite: {
     width: '47%',
     alignItems: 'center',
     borderRadius: 8,
-    paddingVertical: 12,
-    backgroundColor: Color.fontBlack40
-  },
-  modalContainer: {
-    marginBottom: 0,
-    marginLeft: 0,
-    marginRight: 0
+    borderWidth: 1,
+    borderColor: Color.mainColor,
+    paddingVertical: 12
   }
 });
 
@@ -131,11 +147,11 @@ export default connect()(ModalConfirmationType5);
  * ============================
  * NOTES
  * ============================
- * createdBy:
- * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
+ * createdBy: dyah
+ * createdDate: 13092021
+ * updatedBy:
+ * updatedDate:
  * updatedFunction:
- * -> Refactoring Module Import
+ * -> add new modal confirmation type. (type 5)
  *
  */

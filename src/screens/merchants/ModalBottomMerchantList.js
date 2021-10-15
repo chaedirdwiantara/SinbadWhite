@@ -245,6 +245,7 @@ class ModalBottomMerchantList extends Component {
     return (
       <View>
         <SearchBarType1
+          maxLength={30}
           searchText={this.state.search}
           editable={this.props.merchant.dataGetPortfolioV2 ? true : false}
           placeholder={'Cari nama / id toko disini'}
@@ -320,6 +321,7 @@ class ModalBottomMerchantList extends Component {
         backdropOpacity={0.4}
         deviceHeight={height}
         style={styles.mainContainer}
+        onRequestClose={this.props.onRequestClose ? this.props.onRequestClose : this.props.close}
       >
         <View
           style={[styles.contentContainer, { height: this.state.heightList }]}
@@ -422,9 +424,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
- * updatedDate: 19072021
+ * updatedBy: Raka
+ * updatedDate: 14092021
  * updatedFunction:
- * -> fix bug sales (who didn't have portfolio) trying to search merchant.
- * -> add toast when sales didn't have portfolio.
+ * -> set default function to close modal when click back button android
  */

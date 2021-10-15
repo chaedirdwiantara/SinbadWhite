@@ -18,6 +18,7 @@ import {
   MaterialIcon,
   DeviceInfo,
   bindActionCreators,
+  moment,
   connect
 } from '../../library/thirdPartyPackage';
 import {
@@ -149,20 +150,30 @@ class HomeView extends Component {
    * =======================
    */
   componentDidMount() {
-    this.props.versionsGetProcess();
+    this.props.appVersion(0);
+    // this.props.versionsGetProcess();
+
+    // get kpi daily or monthly
     this.getKpiData(this.state.tabValue);
+    //pass some data between the screens
     this.props.navigation.setParams({
       fullName: this.props.user.fullName,
       imageUrl: this.props.user.imageUrl
     });
+    //get redux dataSalesTeam
     this.props.getSalesTeamProcess();
     // CHECK SALES PRIVILEGE
-    if(this.props.privileges.data === null){
-      this.getPrivileges()
+    if (this.props.privileges.data === null) {
+      this.getPrivileges();
+    }
+    /** THIS FOR MAINTENANCE PAGE */
+    if (this.props.permanent.appMaintenance) {
+      NavigationService.navigate('MaintenanceView');
     }
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
+    //listen new data kpi dashboard from be
     if (this.props.salesmanKpi.kpiDashboardData) {
       if (
         prevProps.salesmanKpi.kpiDashboardData !==
@@ -185,30 +196,42 @@ class HomeView extends Component {
         }
       }
     }
-    if (prevProps.global.dataGetVersion !== this.props.global.dataGetVersion) {
-      if (this.props.global.dataGetVersion !== null) {
-        if (
-          this.props.global.dataGetVersion.version !== DeviceInfo.getVersion()
-        ) {
-          if (this.props.global.dataGetVersion.isForce) {
-            this.setState({ openModalForceUpdateApp: true });
-          } else {
-            this.setState({ openModalUpdateApp: true });
-          }
-        }
+    // if (prevProps.global.dataGetVersion !== this.props.global.dataGetVersion) {
+    //   if (this.props.global.dataGetVersion !== null) {
+    //     if (
+    //       this.props.global.dataGetVersion.version !== DeviceInfo.getVersion()
+    //     ) {
+    //       if (this.props.global.dataGetVersion.isForce) {
+    //         this.setState({ openModalForceUpdateApp: true });
+    //       } else {
+    //         this.setState({ openModalUpdateApp: true });
+    //       }
+    //     }
+    //   }
+    // }
+    //trigger modal force update
+    if (
+      prevProps.permanent.appVersionCode !== this.props.permanent.appVersionCode
+    ) {
+      if (this.props.permanent.appVersionCode > DeviceInfo.getBuildNumber()) {
+        this.setState({ openModalForceUpdateApp: true });
+      } else if (
+        this.props.permanent.appVersionCode <= DeviceInfo.getBuildNumber()
+      ) {
+        this.setState({ openModalForceUpdateApp: false });
       }
     }
   }
-  // GET SALES PRIVILEGE 
-  getPrivileges(){
-    let supplierId = GlobalMethod.userSupplierMapping()
-    if(supplierId.length > 0){
-      supplierId = supplierId[0].toString()
+  // GET SALES PRIVILEGE
+  getPrivileges() {
+    let supplierId = GlobalMethod.userSupplierMapping();
+    if (supplierId.length > 0) {
+      supplierId = supplierId[0].toString();
     }
-    let userId = this.props.user?.id || ''
-    this.props.getPrivilegeProcess({supplierId, userId})
+    let userId = this.props.user?.id || '';
+    this.props.getPrivilegeProcess({ supplierId, userId });
   }
-  
+
   /** === PULL TO REFRESH === */
   _onRefresh() {
     this.setState({ refreshing: true }, () => {
@@ -222,7 +245,11 @@ class HomeView extends Component {
       this.props.getSalesTeamProcess();
     });
   }
-  /** === GET KPI DATA === */
+  /**
+   *  === GET KPI DATA ===
+   * @returns {ReactElement} render dashboard, and bottom menu each item
+   * @memberof renderKpiDashboard,renderMenu
+   */
   getKpiData(period) {
     if (_.isNil(this.props.user)) {
       return;
@@ -244,23 +271,28 @@ class HomeView extends Component {
 
     switch (period) {
       case 'daily':
-        params.startDate = getStartDateMinHour();
-        params.endDate = getDateNow();
+        params.startDate = moment().format('YYYY-MM-DD');
+        params.endDate = moment().format('YYYY-MM-DD');
         break;
 
       case 'weekly':
-        params.startDate = getStartDateNow();
-        params.endDate = getDateNow();
+        params.startDate = moment().format('YYYY-MM-DD');
+        params.endDate = moment().format('YYYY-MM-DD');
         break;
 
       case 'monthly':
-        params.startDate = getStartDateMonth();
-        params.endDate = getEndDateMonth();
+        params.startDate = moment()
+          .startOf('month')
+          .format('YYYY-MM-DD');
+        params.endDate = moment()
+          .endOf('month')
+          .format('YYYY-MM-DD');
         break;
 
       default:
         break;
     }
+    //get redux kpiDashboardData, fetch api
     this.props.getKpiDashboardProcess(params);
     SalesmanKpiMethod.getKpiSalesPending(params).then(response => {
       if (response.code === 200 && response.data.payload.data.length !== 0) {
@@ -275,7 +307,11 @@ class HomeView extends Component {
     });
     this.setState({ refreshing: false });
   }
-  /** === FOR PARSE VALUE === */
+  /**
+   * === FOR PARSE VALUE ===
+   * @param {number} value a number represent achieve the target, target, achieved data
+   * @returns {string}
+   */
   parseValue = (value, type, target) => {
     if (target) {
       if (value === 0 || value === '0') {
@@ -300,7 +336,11 @@ class HomeView extends Component {
       this.getKpiData(this.state.tabValue)
     );
   }
-  /** === GO TO PAGE === */
+  /**
+   *  === GO TO PAGE ===
+   * Navigate to menu page
+   * @param {object} item object goTo represent route to go to
+   */
   goToPage(item) {
     switch (item.goTo) {
       case 'dashboard':
@@ -365,7 +405,11 @@ class HomeView extends Component {
           )}
 
           <View style={{ marginLeft: 12 }}>
-            <Text accessible={true} accessibilityLabel={'txtHomeScreen'} style={Fonts.type5}>
+            <Text
+              accessible={true}
+              accessibilityLabel={'txtHomeScreen'}
+              style={Fonts.type5}
+            >
               Hello{' '}
               {navigation.state.params
                 ? navigation.state.params.fullName.length >= 20
@@ -384,7 +428,11 @@ class HomeView extends Component {
    * RENDER VIEW
    * ==============================
    */
-  /** === RENDER BANNER === */
+
+  /**
+   * === RENDER BANNER ===
+   * @returns {ReactElement} render banner image
+   */
   renderBanner() {
     return (
       <View style={{ paddingVertical: 10 }}>
@@ -402,7 +450,10 @@ class HomeView extends Component {
       </View>
     );
   }
-  /** === RENDER KPI DASHBOARD === */
+  /**
+   *  === RENDER KPI DASHBOARD ===
+   * @returns {ReactElement} render dashboard kpi part
+   */
   renderKpiDashboard() {
     return (
       <View style={{ paddingVertical: 10 }}>
@@ -458,7 +509,11 @@ class HomeView extends Component {
       </View>
     );
   }
-  /** === RENDER KPI DASHBOARD ITEM === */
+  /**
+   *  === RENDER KPI DASHBOARD ITEM ===
+   * @returns {ReactElement} render dashboard kpi each item
+   * @memberof renderKpiDashboard
+   */
   renderKpiDashboardItem = ({ item, index }) => {
     return (
       <View key={index}>
@@ -547,7 +602,10 @@ class HomeView extends Component {
       </View>
     );
   };
-  /** === RENDER MENU === */
+  /**
+   * Render bottom menu
+   * @returns {ReactElement} flatlist of menu
+   */
   renderMenu() {
     return (
       <View style={{ paddingVertical: 10 }}>
@@ -562,7 +620,11 @@ class HomeView extends Component {
       </View>
     );
   }
-  /** === RENDER MENU ITEM === */
+  /**
+   * === RENDER MENU ITEM ===
+   * @returns {ReactElement} render dashboard, and bottom menu each item
+   * @memberof renderKpiDashboard,renderMenu
+   */
   renderMenuItem = ({ item, index }) => {
     return (
       <TouchableOpacity
@@ -601,7 +663,12 @@ class HomeView extends Component {
       </View>
     );
   }
-  /** === RENDER ITEM MAIN === */
+  /**
+   * === RENDER ITEM MAIN  ===
+   * @param {array} item from props data flatlist
+   * @param {number} index from index of arr data props
+   * @returns {ReactElement}
+   */
   renderItem({ item, index }) {
     return (
       <View style={styles.mainContainer} key={index}>
@@ -613,7 +680,12 @@ class HomeView extends Component {
       </View>
     );
   }
-  /** === RENDER MAIN DATA === */
+  /**
+   * === RENDER MAIN DATA ===
+   * return dashboard menu(kpi, journey plan and show store list menu)
+   * @returns {ReactElement} dashboard menu
+   *
+   */
   renderData() {
     return (
       <View>
@@ -637,7 +709,12 @@ class HomeView extends Component {
    * MODAL
    * =====================
    */
-  /** RENDER MODAL FORCE UPDATE */
+
+  /**
+   * RENDER MODAL FORCE UPDATE
+   * @returns {ReactElement} modal/popup for update the app version
+   */
+
   renderModalForceUpdate() {
     return this.state.openModalForceUpdateApp ? (
       <ModalConfirmationType2
@@ -681,7 +758,10 @@ class HomeView extends Component {
       <View />
     );
   }
-  /** === RENDER MAIN === */
+  /**
+   * === RENDER MAIN ===
+   * @returns {ReactElement} render all component in HomeView
+   */
   render() {
     return (
       <SafeAreaView>
@@ -752,8 +832,15 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, merchant, global, salesmanKpi, privileges }) => {
-  return { user, merchant, global, salesmanKpi, privileges };
+const mapStateToProps = ({
+  user,
+  merchant,
+  global,
+  salesmanKpi,
+  privileges,
+  permanent
+}) => {
+  return { user, merchant, global, salesmanKpi, privileges, permanent };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -761,7 +848,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomeView);
 
 /**
  * ============================
@@ -770,8 +860,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 30062021
+ * updatedDate: 25082021
  * updatedFunction:
- * -> update kpi dashboard title (Toko Order = Toko Memesan)
+ * -> update date format.
  *
  */

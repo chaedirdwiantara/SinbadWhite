@@ -16,13 +16,22 @@ const INITIAL_STATE = {
   loadingGetLogPerActivity: false,
   loadingGetLatestCheckInOut: false,
   loadingGetNoOrderReason: false,
+  loadingGetNoVisitReason: false,
+  loadingPostNoVisitReason: false,
+  loadingGetJourneyBookDetail: false,
   loadingGetStoreStatus: false,
   loadingGetWarehouse: false,
   loadingGetListSurvey: false,
+  refreshGetSurveyList: false,
+  loadingLoadMoreSurveyList: false,
+  loadingGetTotalSurvey: false,
   loadingGetSurvey: false,
-  loadingSubmitSurvey: false,
+  loadingGetSurveyBrand: false,
+  loadingGetSurveyResponse: false,
+  loadingSubmitSurveyResponse: false,
   loadingValidateAreaMapping: false,
   loadingGetSalesSegmentation: false,
+  loadingGetRadiusLockGeotag: false,
   /** data */
   dataPostActivityV2: null,
   dataGetLogAllActivityV2: null,
@@ -55,6 +64,9 @@ const INITIAL_STATE = {
   dataGetPortfolioV2: null,
   merchantChanged: false,
   dataGetNoOrderReason: null,
+  dataGetNoVisitReason: null,
+  dataPostNoVisitReason: null,
+  dataGetJourneyBookDetail: null,
   dataMerchantRejectedV2: {
     name: null,
     phoneNo: null,
@@ -120,28 +132,33 @@ const INITIAL_STATE = {
     storeChannel: '',
     channelId: null
   },
-  surveyList: {
-    payload: {
-      data: null
-    },
-    success: null
+  surveyList: [],
+  dataSurveyResult: {
+    storeName: ''
   },
+  totalDataGetSurveyList: 0,
+  pageGetSurveyList: 0,
+  dataGetTotalSurvey: null,
+  dataGetSurvey: null,
+  dataGetSurveyBrand: null,
   newSurveyResponse: false,
-  dataSurvey: {
+  dataSurveyResponse: {
     id: null,
     status: '',
     responsePhoto: []
   },
-  dataSubmitSurvey: {
+  dataSubmitSurveyResponse: {
     surveyId: null,
-    surveyStepId: null,
+    surveyQuestionId: null,
     storeId: null,
     storeName: '',
     status: '',
     photos: []
   },
+  dataTotalScoreSurvey: "0",
   dataValidateAreaMapping: null,
   dataSalesSegmentation: null,
+  dataGetRadiusLockGeotag: null,
   /** error */
   errorGetMerchantV2: null,
   errorAddMerchant: null,
@@ -154,13 +171,20 @@ const INITIAL_STATE = {
   errorGetLogPerActivityV2: null,
   errorGetLatestCheckInOut: null,
   errorGetNoOrderReason: null,
+  errorGetNoVisitReason: null,
+  errorGetJourneyBookDetail: null,
+  errorPostNoVisitReason: null,
   errorGetStoreStatus: null,
   errorGetWarehouse: null,
   errorGetSurveyList: null,
+  errorGetTotalSurvey: null,
   errorGetSurvey: null,
-  errorSubmitSurvey: null,
+  errorGetSurveyBrand: null,
+  errorGetSurveyResponse: null,
+  errorSubmitSurveyResponse: null,
   errorValidateAreaMapping: null,
-  errorGetSalesSegmentation: null
+  errorGetSalesSegmentation: null,
+  errorGetRadiusLockGeotag: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -701,7 +725,7 @@ export const merchant = createReducer(INITIAL_STATE, {
   /**
   /**
    * =============================
-   * GET LOG PER ACTIVITY MERCHANT
+   * GET NO ORDER REASON
    * =============================
    */
   [types.MERCHANT_NO_ORDER_REASON_GET_PROCESS](state, action) {
@@ -724,6 +748,95 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetNoOrderReason: false,
       errorGetNoOrderReason: action.payload
+    };
+  },
+  /**
+   * =============================
+   * GET NO VISIT REASON
+   * =============================
+   */
+  [types.MERCHANT_NO_VISIT_REASON_GET_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetNoVisitReason: true,
+      dataGetNoVisitReason: null,
+      errorGetNoVisitReason: null
+    };
+  },
+  [types.MERCHANT_NO_VISIT_REASON_GET_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetNoVisitReason: false,
+      dataGetNoVisitReason: action.payload.data
+    };
+  },
+  [types.MERCHANT_NO_VISIT_REASON_GET_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetNoVisitReason: false,
+      errorGetNoVisitReason: action.payload
+    };
+  },
+  /**
+   * =============================
+   * POST NO VISIT REASON
+   * =============================
+   */
+  [types.MERCHANT_POST_NO_VISIT_REASON_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingPostNoVisitReason: true,
+      dataPostNoVisitReason: null,
+      errorPostNoVisitReason: null
+    };
+  },
+  [types.MERCHANT_POST_NO_VISIT_REASON_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingPostNoVisitReason: false,
+      selectedMerchant: {
+        ...state.selectedMerchant,
+        journeyBookStores: action.payload.data
+      },
+      dataPostNoVisitReason: action.payload.data
+    };
+  },
+  [types.MERCHANT_POST_NO_VISIT_REASON_FAILED](state, action) {
+    return {
+      ...state,
+      loadingPostNoVisitReason: false,
+      errorPostNoVisitReason: action.payload
+    };
+  },
+  /**
+   * =============================
+   * GET JOURNEY BOOK DETAIL
+   * =============================
+   */
+  [types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyBookDetail: true,
+      dataGetJourneyBookDetail: null,
+      errorGetJourneyBookDetail: null
+    };
+  },
+  [types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyBookDetail: false,
+      selectedMerchant: {
+        ...state.selectedMerchant,
+        journeyBookStores: action.payload.data
+      },
+      dataGetJourneyBookDetail: action.payload.data
+    };
+  },
+  [types.MERCHANT_GET_JOURNEY_BOOK_DETAIL_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetJourneyBookDetail: false,
+      errorGetJourneyBookDetail: action.payload
     };
   },
   /**
@@ -793,7 +906,17 @@ export const merchant = createReducer(INITIAL_STATE, {
       dataMerchantDisabledField: INITIAL_STATE.dataMerchantDisabledField
     };
   },
-
+  /**
+   * ============================
+   * SURVEY RESULT
+   * ============================
+   */
+   [types.MERCHANT_SURVEY_RESULT](state, action) {
+    return {
+      ...state,
+      dataSurveyResult: {storeName : action.payload}
+    };
+  }, 
   /**
    * ============================
    * GET SURVEY LIST
@@ -802,16 +925,19 @@ export const merchant = createReducer(INITIAL_STATE, {
   [types.MERCHANT_GET_SURVEY_LIST_PROCESS](state, action) {
     return {
       ...state,
-      loadingGetSurveyList: true,
-      surveyList: INITIAL_STATE.surveyList,
+      loadingGetSurveyList: action.payload.loading,
+      surveyList: [...state.surveyList],
+      pageGetSurveyList: action.payload.page,
       errorGetSurveyList: null
     };
   },
   [types.MERCHANT_GET_SURVEY_LIST_SUCCESS](state, action) {
     return {
       ...state,
+      loadingLoadMoreSurveyList: false,
       loadingGetSurveyList: false,
-      surveyList: action.payload
+      refreshGetSurveyList: false,
+      surveyList: [...state.surveyList, ...action.payload.payload.result]
     };
   },
   [types.MERCHANT_GET_SURVEY_LIST_FAILED](state, action) {
@@ -824,25 +950,63 @@ export const merchant = createReducer(INITIAL_STATE, {
   [types.MERCHANT_GET_SURVEY_LIST_RESET](state, action) {
     return {
       ...state,
-      surveyList: INITIAL_STATE.surveyList
+      surveyList: []
     };
   },
-
+  [types.MERCHANT_GET_SURVEY_LIST_REFRESH](state, action) {
+    return {
+      ...state,
+      refreshGetSurveyList: true,
+      loadingGetSurveyList: true,
+      pageGetSurveyList: 0,
+      totalDataGetSurveyList: 0,
+      surveyList: []
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_LIST_LOADMORE](state, action) {
+    return {
+      ...state,
+      loadingLoadMoreSurveyList: true,
+      pageGetSurveyList: action.payload
+    };
+  },
   /**
    * ============================
-   * GET SURVEY
+   * GET TOTAL SURVEY
+   * ============================
+   */
+  [types.MERCHANT_GET_TOTAL_SURVEY_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetTotalSurvey: true,
+      dataGetTotalSurvey: null,
+      errorGetTotalSurvey: null
+    };
+  },
+  [types.MERCHANT_GET_TOTAL_SURVEY_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetTotalSurvey: false,
+      dataGetTotalSurvey: action.payload.payload
+    };
+  },
+  [types.MERCHANT_GET_TOTAL_SURVEY_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetTotalSurvey: false,
+      errorGetTotalSurvey: action.payload
+    };
+  },
+  /**
+   * ============================
+   * GET SURVEY BY ID
    * ============================
    */
   [types.MERCHANT_GET_SURVEY_PROCESS](state, action) {
     return {
       ...state,
       loadingGetSurvey: true,
-      dataSurvey: {
-        id: null,
-        status: '',
-        responsePhoto: []
-      },
-      newSurveyResponse: false,
+      dataGetSurvey: null,
       errorGetSurvey: null
     };
   },
@@ -850,7 +1014,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetSurvey: false,
-      dataSurvey: action.payload
+      dataGetSurvey: action.payload.payload
     };
   },
   [types.MERCHANT_GET_SURVEY_FAILED](state, action) {
@@ -860,36 +1024,96 @@ export const merchant = createReducer(INITIAL_STATE, {
       errorGetSurvey: action.payload
     };
   },
+  /**
+   * ============================
+   * GET SURVEY BRAND BY SURVEY ID
+   * ============================
+   */
+  [types.MERCHANT_GET_SURVEY_BRAND_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyBrand: true,
+      dataGetSurveyBrand: null,
+      errorGetSurveyBrand: null
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_BRAND_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyBrand: false,
+      dataGetSurveyBrand: action.payload.payload.data
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_BRAND_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyBrand: false,
+      errorGetSurveyBrand: action.payload
+    };
+  },
+
+  /**
+   * ============================
+   * GET SURVEY RESPONSE
+   * ============================
+   */
+  [types.MERCHANT_GET_SURVEY_RESPONSE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyResponse: true,
+      dataSurveyResponse: {
+        id: null,
+        status: '',
+        responsePhoto: []
+      },
+      newSurveyResponse: false,
+      errorGetSurveyResponse: null
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_RESPONSE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyResponse: false,
+      dataSurveyResponse: action.payload,
+      dataTotalScoreSurvey: action.totalScore
+    };
+  },
+  [types.MERCHANT_GET_SURVEY_RESPONSE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetSurveyResponse: false,
+      errorGetSurveyResponse: action.payload
+    };
+  },
 
   /**
    * ============================
    * SUBMIT SURVEY
    * ============================
    */
-  [types.MERCHANT_SUBMIT_SURVEY_PROCESS](state, action) {
+  [types.MERCHANT_SUBMIT_SURVEY_RESPONSE_PROCESS](state, action) {
     return {
       ...state,
-      loadingSubmitSurvey: true,
-      dataSubmitSurvey: {},
-      errorSubmitSurvey: null
+      loadingSubmitSurveyResponse: true,
+      dataSubmitSurveyResponse: {},
+      errorSubmitSurveyResponse: null
     };
   },
-  [types.MERCHANT_SUBMIT_SURVEY_SUCCESS](state, action) {
+  [types.MERCHANT_SUBMIT_SURVEY_RESPONSE_SUCCESS](state, action) {
     return {
       ...state,
-      loadingSubmitSurvey: false,
-      dataSubmitSurvey: action.payload,
+      loadingSubmitSurveyResponse: false,
+      dataSubmitSurveyResponse: action.payload,
       newSurveyResponse: true
     };
   },
-  [types.MERCHANT_SUBMIT_SURVEY_FAILED](state, action) {
+  [types.MERCHANT_SUBMIT_SURVEY_RESPONSE_FAILED](state, action) {
     return {
       ...state,
-      loadingSubmitSurvey: false,
-      errorSubmitSurvey: action.payload
+      loadingSubmitSurveyResponse: false,
+      errorSubmitSurveyResponse: action.payload
     };
   },
-
 /**
    * ============================
    * VALIDATE AREA MAPPING
@@ -966,12 +1190,39 @@ export const merchant = createReducer(INITIAL_STATE, {
    * UPDATE SURVEY
    * ============================
    */
-  [types.MERCHANT_UPDATE_SURVEY_PROCESS](state, action) {
+  [types.MERCHANT_UPDATE_SURVEY_RESPONSE_PROCESS](state, action) {
     return {
       ...state,
-      loadingSubmitSurvey: true,
-      dataSubmitSurvey: {},
-      errorSubmitSurvey: null
+      loadingSubmitSurveyResponse: true,
+      dataSubmitSurveyResponse: {},
+      errorSubmitSurveyResponse: null
+    };
+  },
+  /**
+   * ============================
+   * GET RADIUS LOCK GEOTAG
+   * ============================
+   */
+  [types.GET_RADIUS_LOCK_GEOTAG_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetRadiusLockGeotag: true,
+      dataGetRadiusLockGeotag: null,
+      errorGetRadiusLockGeotag: null
+    };
+  },
+  [types.GET_RADIUS_LOCK_GEOTAG_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetRadiusLockGeotag: false,
+      dataGetRadiusLockGeotag: action.payload.data
+    };
+  },
+  [types.GET_RADIUS_LOCK_GEOTAG_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetRadiusLockGeotag: false,
+      errorGetRadiusLockGeotag: action.payload
     };
   }
 });

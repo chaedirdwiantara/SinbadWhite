@@ -26,7 +26,8 @@ import {
   typeCustomTabs,
   LoadingPage,
   SalesmanChart,
-  SlideIndicator
+  SlideIndicator,
+  ModalBottomErrorRespons
 } from '../../library/component';
 import TargetCard from './target';
 import moment from 'moment';
@@ -148,7 +149,8 @@ class DashboardView extends Component {
           uri: '',
           title: 'Total Pesanan'
         }
-      ]
+      ],
+      showModalError: false
     };
   }
 
@@ -273,8 +275,8 @@ class DashboardView extends Component {
   getNowDetailKpi = () => {
     this.getKpiData({
       period: 'nowDaily',
-      startDate: getStartDateMinHour(),
-      endDate: moment().format()
+      startDate: moment().format('YYYY-MM-DD'),
+      endDate: moment().format('YYYY-MM-DD')
     });
   };
 
@@ -285,8 +287,8 @@ class DashboardView extends Component {
       period: 'nowMonthly',
       startDate: moment(
         new Date(date.getFullYear(), date.getMonth(), 1)
-      ).format(),
-      endDate: moment().format()
+      ).format('YYYY-MM-DD'),
+      endDate: moment().format('YYYY-MM-DD')
     });
   };
 
@@ -296,10 +298,10 @@ class DashboardView extends Component {
       period: 'daily',
       startDate: moment(getStartDateNow())
         .subtract(3, 'day')
-        .format(),
+        .format('YYYY-MM-DD'),
       endDate: moment()
         .add(3, 'day')
-        .format()
+        .format('YYYY-MM-DD')
     });
   };
 
@@ -310,10 +312,10 @@ class DashboardView extends Component {
       period: 'monthly',
       startDate: moment(new Date(date.getFullYear(), date.getMonth(), 1))
         .subtract(3, 'month')
-        .format(),
+        .format('YYYY-MM-DD'),
       endDate: moment()
         .add(3, 'month')
-        .format()
+        .format('YYYY-MM-DD')
     });
   };
 
@@ -361,6 +363,19 @@ class DashboardView extends Component {
           load: false
         });
       }
+    }
+
+    /** handle error */
+    if (
+      this.props.salesmanKpi.errorDetailKpiDashboard !==
+      prevProps.salesmanKpi.errorDetailKpiDashboard
+    ) {
+      if (prevProps.salesmanKpi.errorDetailKpiDashboard !== '') {
+        this.setState({
+          load: false,
+          showModalError: true,
+        });
+       }
     }
   }
 
@@ -565,10 +580,11 @@ class DashboardView extends Component {
       tabsTimeTarget,
       tabsTarget,
       data,
-      load
+      load,
+      showModalError,
     } = this.state;
 
-    const isValidData = data.now[tabsTimeTarget][tabsWhite] && data.now[tabsTimeTarget][tabsWhite].length > 0;
+    const isValidData = data.now[tabsTimeTarget] && data.now[tabsTimeTarget][tabsWhite] && data.now[tabsTimeTarget][tabsWhite].length > 0;
 
     return (
       <ScrollView
@@ -585,6 +601,10 @@ class DashboardView extends Component {
             <LoadingPage />
           </View>
         ) : null}
+        <ModalBottomErrorRespons
+          open={showModalError}
+          onPress={() => this.setState({ showModalError: false })}
+        />  
         <View style={styles.mainContainer}>
           <TabsCustom
             type={typeCustomTabs.redScroll}
@@ -801,8 +821,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(DashboardView);
  * createdBy:
  * createdDate:
  * updatedBy: Dyah
- * updatedDate: 30062021
+ * updatedDate: 25082021
  * updatedFunction:
- * -> update dashboard title (Toko Order => Toko Memesan)
+ * -> update date format.
  *
  */

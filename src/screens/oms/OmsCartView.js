@@ -214,7 +214,10 @@ class OmsCartView extends Component {
           /** => makes all sku check (choose) */
           productItem.checkBox = true;
           /** => Check if SKU has maxQty */
-          productItem.qty = productItem.isMaximum && productItem.qty > productItem.maxQty ? productItem.maxQty : productItem.qty
+          productItem.qty =
+            productItem.isMaximum && productItem.qty > productItem.maxQty
+              ? productItem.maxQty
+              : productItem.qty;
           /** => grouping all sku (available, out of stock, and unavailable) */
           if (productItem.catalogue.status === 'inactive') {
             productItem.statusInCart = 'unavailable';
@@ -711,7 +714,7 @@ class OmsCartView extends Component {
    * - price per item product (===> RENDER PRICE PER SKU)
    * - item
    */
-   renderButtonOrder(itemForOrderButton) {
+  renderButtonOrder(itemForOrderButton) {
     return (
       <OrderButton
         showKeyboard={this.state.showKeyboard}
@@ -737,7 +740,15 @@ class OmsCartView extends Component {
                 flexDirection: 'row'
               }}
             >
-              {this.renderNameGlobal(item)}
+              <View
+                style={{
+                  flex: 9,
+                  justifyContent: 'center',
+                  marginRight: 8
+                }}
+              >
+                {this.renderNameGlobal(item)}
+              </View>
               <View style={{ flex: 1 }}>{this.renderDeleteIcon(item)}</View>
             </View>
             <View style={{ flex: 1 }}>
@@ -758,9 +769,10 @@ class OmsCartView extends Component {
     return this.state.productCartArray.map((item, index) => {
       const itemForOrderButton = item.catalogue;
       itemForOrderButton.addToCart = true;
-      itemForOrderButton.qtyToCart = item.isMaximum && item.qty > item.maxQty ? item.maxQty : item.qty;
-      itemForOrderButton.maxQty = item.maxQty
-      itemForOrderButton.isMaximum = item.isMaximum
+      itemForOrderButton.qtyToCart =
+        item.isMaximum && item.qty > item.maxQty ? item.maxQty : item.qty;
+      itemForOrderButton.maxQty = item.maxQty;
+      itemForOrderButton.isMaximum = item.isMaximum;
       return item.brandId === productItem.brandId &&
         item.statusInCart === 'available' ? (
         <View style={styles.boxListItem} key={index}>

@@ -6,8 +6,10 @@ import {
   Dimensions,
   Text,
   PermissionsAndroid,
-  TouchableOpacity
-} from '../../../library/reactPackage'
+  Image,
+  TouchableOpacity,
+  BackHandler
+} from '../../../library/reactPackage';
 import {
   bindActionCreators,
   connect,
@@ -16,19 +18,21 @@ import {
   Marker,
   Geolocation,
   OpenAppSettings
-} from '../../../library/thirdPartyPackage'
+} from '../../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
   SearchBarType3,
-  ModalBottomType2,
+  ModalBottomType6,
   ModalConfirmation,
+  ModalConfirmationType5,
   Address,
   ButtonSingle,
   LoadingPage,
+  ModalBottomErrorRespons,
   ErrorPageNoGPS
-} from '../../../library/component'
-import { GlobalStyle, Fonts } from '../../../helpers'
-import { Color } from '../../../config'
+} from '../../../library/component';
+import { GlobalStyle, Fonts } from '../../../helpers';
+import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
 
@@ -46,8 +50,17 @@ class MerchantCheckinView extends Component {
       longitudeDelta: 0.02,
       reRender: false,
       interval: false,
-      openModalNoGPS: false
+      inStore: null,
+      visitStore: null,
+      openModalNoGPS: false,
+      count: 0,
+      refresh: true,
+      success: false,
+      openModalNotInRadius: false,
+      openModalErrorGlobal: false,
+      btnYesClicked: false
     };
+    this.initialState = { ...this.state };
   }
   /**
    * =====================
@@ -66,18 +79,86 @@ class MerchantCheckinView extends Component {
       this.props.merchant.dataPostActivityV2
     ) {
       if (this.props.merchant.dataPostActivityV2 !== null) {
-        if (this.props.merchant.dataPostActivityV2.activity === 'check_in'){
+        if (this.props.merchant.dataPostActivityV2.activity === 'check_in') {
           /** get log all activity */
           this.props.merchantGetLogAllActivityProcessV2(
             this.props.merchant.selectedMerchant.journeyBookStores.id
           );
-          NavigationService.goBack(this.props.navigation.state.key);
+          NavigationService.navigate('MerchantHomeView');
         }
+      }
+    }
+    const {
+      dataGetRadiusLockGeotag,
+      errorGetRadiusLockGeotag,
+      errorPostActivityV2
+    } = this.props.merchant;
+    /** CHECK RADIUS LOCK GEOTAG (SUCCESS) */
+    if (dataGetRadiusLockGeotag) {
+      if (
+        prevProps.merchant.dataGetRadiusLockGeotag !== dataGetRadiusLockGeotag
+      ) {
+        /** IF USER LOCATION IN THE RADIUS */
+        if (
+          dataGetRadiusLockGeotag.active &&
+          dataGetRadiusLockGeotag.accepted
+        ) {
+          this.setState({ success: true, count: 0 });
+        }
+        /** IF USER LOCATION NOT IN THE RADIUS */
+        if (
+          dataGetRadiusLockGeotag.active &&
+          !dataGetRadiusLockGeotag.accepted
+        ) {
+          this.setState(
+            {
+              count: this.state.count + 1,
+              succes: false
+            },
+            () => {
+              if (this.state.btnYesClicked) {
+                if (this.state.count === 4) {
+                  this.setState({ openModalNotInRadius: true }, () => {
+                    this.setState({ btnYesClicked: false });
+                  });
+                }
+              } else {
+                if (this.state.count === 3) {
+                  this.setState({ openModalNotInRadius: true });
+                }
+              }
+            }
+          );
+        }
+      }
+    }
+    /** CHECK RADIUS LOCK GEOTAG (FAILED) */
+    if (errorGetRadiusLockGeotag) {
+      if (
+        prevProps.merchant.errorGetRadiusLockGeotag !== errorGetRadiusLockGeotag
+      ) {
+        this.doError();
+      }
+    }
+    /** FAILED ERROR POST CHECK IN ACTIVITY */
+    if (errorPostActivityV2) {
+      if (prevProps.merchant.errorPostActivityV2 !== errorPostActivityV2) {
+        this.doError();
       }
     }
   }
   componentWillUnmount() {
     this.internalClearInterval();
+  }
+  /** FOR ERROR FUNCTION (FROM DID UPDATE) */
+  doError() {
+    /** Close all modal and open modal error respons */
+    this.setState({
+      openModalErrorGlobal: true,
+      openModalNoGPS: false,
+      modalOutStore: false,
+      openModalNotInRadius: false
+    });
   }
   /** === GET CURRENT LOCATION === */
   successMaps = success => {
@@ -85,12 +166,24 @@ class MerchantCheckinView extends Component {
     const latitude = success.coords.latitude;
     if (longitude !== 0 && latitude !== 0) {
       this.internalClearInterval();
-      this.setState({
-        longitude,
-        latitude,
-        openModalNoGPS: false,
-        reRender: false
-      });
+      this.setState(
+        {
+          longitude,
+          latitude,
+          openModalNoGPS: false,
+          reRender: false
+        },
+        () => {
+          if (this.state.refresh) {
+            this.props.getRadiusLockGeotagProcess({
+              storeLong: this.props.merchant.selectedMerchant.longitude,
+              storeLat: this.props.merchant.selectedMerchant.latitude,
+              salesLong: this.state.longitude,
+              salesLat: this.state.latitude
+            });
+          }
+        }
+      );
     } else {
       if (!this.state.interval) {
         this.setState({
@@ -124,16 +217,37 @@ class MerchantCheckinView extends Component {
       console.warn(err);
     }
   };
-  getCurrentLocation() {
-    this.setState({ reRender: true });
-    Geolocation.getCurrentPosition(this.successMaps, this.errorMaps);
+  getCurrentLocation(value) {
+    let refresh = false;
+    if (value) refresh = value;
+    this.setState(
+      {
+        refresh,
+        reRender: true
+      },
+      () =>
+        Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
+          timeout: 30000,
+          maximumAge: 30000,
+          enableHighAccuracy: true,
+          distanceFilter: 0
+        })
+    );
   }
   /** === CHECK IN/OUT STORE === */
-  checkInOutStore() {
-    if (this.state.checked) {
-      return this.postActivityCheckIn(true);
+  confirm() {
+    const { inStore, visitStore } = this.state;
+    if (!this.state.inStore) {
+      NavigationService.navigate('MerchantNoVisitReasonView', {
+        status: { inStore }
+      });
+    } else if (this.state.inStore && this.state.visitStore) {
+      this.postActivityCheckIn(this.state.inStore);
+    } else if (this.state.inStore && !this.state.visitStore) {
+      NavigationService.navigate('MerchantNoVisitReasonView', {
+        status: { inStore, visitStore }
+      });
     }
-    return this.setState({ modalOutStore: true });
   }
   /** === POST ACTIVITY CHECKIN === */
   postActivityCheckIn(inStore) {
@@ -149,13 +263,36 @@ class MerchantCheckinView extends Component {
   }
   /** === DISABLE BUTTON MASUK TOKO === */
   disableButton() {
-    if (this.props.merchant.loadingPostActivity) {
+    const { dataGetRadiusLockGeotag, loadingPostActivity, loadingGetRadiusLockGeotag } = this.props.merchant;
+    if (loadingPostActivity || this.state.reRender || loadingGetRadiusLockGeotag) {
       return true;
     }
     if (this.state.latitude === 0 && this.state.longitude === 0) {
       return true;
     }
+    if (this.state.inStore === null) {
+      return true;
+    }
+    if (this.state.inStore) {
+      if (this.state.visitStore === null) {
+        return true;
+      }
+    }
+    if (!this.state.inStore) {
+      return false;
+    }
+    //if success false && lock geo tag active
+    if (!this.state.success && dataGetRadiusLockGeotag?.active) {
+      return true;
+    }
     return false;
+  }
+  /**
+   * Reset to initial state
+   */
+  onHandleReset() {
+    this.setState(this.initialState);
+    this.getCurrentLocation();
   }
   /**
    * ========================
@@ -186,7 +323,6 @@ class MerchantCheckinView extends Component {
       <MapView
         ref={ref => (this.mapRef = ref)}
         style={{ flex: 1, width: '100%' }}
-        showsUserLocation={true}
         maxZoomLevel={16}
         initialRegion={{
           latitude: this.state.latitude,
@@ -216,18 +352,31 @@ class MerchantCheckinView extends Component {
                 },
                 animated: true
               }
-            )
-          }}
-      }
+            );
+          }
+        }}
       >
         <Marker
-          image={require('../../../assets/icons/maps/drop_pin.png')}
+          coordinate={{
+            latitude: this.state.latitude,
+            longitude: this.state.longitude
+          }}
+          title={'Anda'}
+        >
+          <Image
+            style={{ width: 30, height: 30 }}
+            source={require('../../../assets/icons/maps/pin_my_location_2.png')}
+          />
+        </Marker>
+        <Marker
           coordinate={{
             latitude: this.props.merchant.selectedMerchant.latitude,
             longitude: this.props.merchant.selectedMerchant.longitude
           }}
           title={this.props.merchant.selectedMerchant.name}
-        />
+        >
+          <Image source={require('../../../assets/icons/maps/store_red.png')} />
+        </Marker>
       </MapView>
     );
   }
@@ -241,11 +390,7 @@ class MerchantCheckinView extends Component {
             NavigationService.goBack(this.props.navigation.state.key)
           }
         >
-          <MaterialIcon
-            name="arrow-back"
-            color={Color.fontBlack80}
-            size={24}
-          />
+          <MaterialIcon name="arrow-back" color={Color.fontBlack80} size={24} />
         </TouchableOpacity>
       </View>
     );
@@ -257,11 +402,7 @@ class MerchantCheckinView extends Component {
           style={[styles.boxButton, GlobalStyle.shadow]}
           onPress={() => this.getCurrentLocation()}
         >
-          <MaterialIcon
-            name="near-me"
-            color={Color.fontBlue50}
-            size={24}
-          />
+          <MaterialIcon name="near-me" color={Color.fontBlue50} size={24} />
         </TouchableOpacity>
       </View>
     );
@@ -276,61 +417,200 @@ class MerchantCheckinView extends Component {
       ? this.renderLoading()
       : this.renderMapsContent();
   }
+  /** === RENDER MERCHANT === */
+  renderMerchant() {
+    const merchant = this.props.merchant.selectedMerchant;
+    return (
+      <View style={styles.merchantContainer}>
+        <View style={styles.merchantView}>
+          <View>
+            <Image
+              source={require('../../../assets/images/menu/list_toko.png')}
+              style={styles.imageCircle}
+            />
+          </View>
+          <View style={{ paddingHorizontal: 12 }}>
+            <Text style={Fonts.type12}>{merchant.externalId}</Text>
+            <View style={{ height: 4 }} />
+            <Text style={Fonts.type23}>{merchant.name}</Text>
+          </View>
+        </View>
+        <View style={{ flexDirection: 'row', paddingRight: 12 }}>
+          <View style={{ width: 40 }} />
+          <View style={{ paddingLeft: 12, paddingRight: 16 }}>
+            <Address
+              substring
+              maxLength={50}
+              font={Fonts.type56}
+              address={merchant.address}
+              urban={merchant.urbans}
+            />
+          </View>
+        </View>
+      </View>
+    );
+  }
+  /** === RENDER IN STORE === */
+  renderInStore() {
+    return (
+      <View>
+        <View style={styles.confirmInStoreContainer}>
+          <Text style={Fonts.type23}>Anda Sedang di Toko Saat ini?</Text>
+          <View style={styles.confirmButtonContainer}>
+            <TouchableOpacity
+              style={[
+                styles.confirmButton,
+                {
+                  borderColor:
+                    this.state.inStore === null || this.state.inStore
+                      ? Color.fontBlack10
+                      : Color.mainColor
+                }
+              ]}
+              disabled={this.props.merchant.loadingPostActivity}
+              onPress={() => this.setState({ inStore: false })}
+            >
+              <Text
+                style={
+                  this.state.inStore === null || this.state.inStore
+                    ? Fonts.type23
+                    : Fonts.type62
+                }
+              >
+                Tidak
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.confirmButton,
+                {
+                  borderColor: this.state.inStore
+                    ? Color.mainColor
+                    : Color.fontBlack10
+                }
+              ]}
+              disabled={this.props.merchant.loadingPostActivity}
+              onPress={() => {
+                this.setState({ inStore: true, btnYesClicked: true });
+                this.props.getRadiusLockGeotagProcess({
+                  storeLong: this.props.merchant.selectedMerchant.longitude,
+                  storeLat: this.props.merchant.selectedMerchant.latitude,
+                  salesLong: this.state.longitude,
+                  salesLat: this.state.latitude
+                });
+              }}
+            >
+              <Text style={this.state.inStore ? Fonts.type62 : Fonts.type23}>
+                Ya
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  }
+  /** === RENDER VISIT STORE === */
+  renderVisitStore() {
+    return (
+      <View>
+        <View style={styles.confirmVisitStoreContainer}>
+          <Text style={Fonts.type23}>Toko dapat di Kunjungi?</Text>
+          <View style={styles.confirmButtonContainer}>
+            <TouchableOpacity
+              style={[
+                styles.confirmButton,
+                {
+                  borderColor:
+                    this.state.visitStore === null || this.state.visitStore
+                      ? Color.fontBlack10
+                      : Color.mainColor
+                }
+              ]}
+              disabled={this.props.merchant.loadingPostActivity}
+              onPress={() => this.setState({ visitStore: false })}
+            >
+              <Text
+                style={
+                  this.state.visitStore === null || this.state.visitStore
+                    ? Fonts.type23
+                    : Fonts.type62
+                }
+              >
+                Tidak
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.confirmButton,
+                {
+                  borderColor: this.state.visitStore
+                    ? Color.mainColor
+                    : Color.fontBlack10
+                }
+              ]}
+              disabled={this.props.merchant.loadingPostActivity}
+              onPress={() => this.setState({ visitStore: true })}
+            >
+              <Text style={this.state.visitStore ? Fonts.type62 : Fonts.type23}>
+                Ya
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  }
   /**
    * ====================
    * MODAL
    * ====================
    */
-  renderModalBottom() {
-    const store = this.props.merchant.selectedMerchant;
+  /**
+   * === RENDER DIALOG NOT IN RADIUS ===
+   * @returns {ReactElement}
+   */
+  renderDialogPositionNotInRadius() {
     return (
-      <ModalBottomType2
-        title={`${
-          store.externalId
-            ? store.externalId
-            : '-'
-        } - ${store.name}`}
+      <ModalConfirmationType5
+        title={'Posisi Anda Belum Sesuai'}
+        okText={'Coba Lagi'}
+        cancelText={'Keluar'}
+        open={this.state.openModalNotInRadius}
+        content={
+          'Silakan tutup dan buka kembali (force close) aplikasi dan ulangi proses masuk ke toko.'
+        }
+        type={'okeNotRed'}
+        ok={() => {
+          this.onHandleReset();
+        }}
+        cancel={() => {
+          BackHandler.exitApp();
+        }}
+      />
+    );
+  }
+
+  renderModalBottom() {
+    const { loadingGetRadiusLockGeotag } = this.props.merchant;
+    return (
+      <ModalBottomType6
+        noTitle={this.renderMerchant()}
+        onRefresh={() => this.getCurrentLocation(true)}
+        count={this.state.count}
+        success={this.state.success}
+        maxHeight={height}
+        loadGeoTag={loadingGetRadiusLockGeotag}
         body={
-          <View style={{ flex: 1 }}>
-            <View
-              style={{ paddingHorizontal: 16, paddingVertical: 16, flex: 1 }}
-            >
-              <Address
-                font={Fonts.type17}
-                address={store.address}
-                urban={store.urban}
-              />
-            </View>
-            <View style={styles.spaceBeforeCheckBox} />
-            <View style={styles.checkInOutStore}>
-              <Text style={Fonts.type23}>Saya Berada di Toko</Text>
-              <TouchableOpacity
-                onPress={() => this.setState({ checked: !this.state.checked })}
-              >
-                {this.state.checked ? (
-                  <MaterialIcon
-                    name="check-circle"
-                    color={Color.mainColor}
-                    size={24}
-                  />
-                ) : (
-                  <MaterialIcon
-                    name="radio-button-unchecked"
-                    color={Color.fontBlack40}
-                    size={24}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-            <View>
-              <ButtonSingle
-                disabled={this.disableButton()}
-                title={'Masuk Toko'}
-                loading={this.props.merchant.loadingPostActivity}
-                borderRadius={4}
-                onPress={() => this.checkInOutStore()}
-              />
-            </View>
+          <View style={{ flex: 1, backgroundColor: Color.backgroundWhite }}>
+            {this.renderInStore()}
+            {this.state.inStore && this.renderVisitStore()}
+            <ButtonSingle
+              disabled={this.disableButton()}
+              title={'Konfirmasi'}
+              loading={this.props.merchant.loadingPostActivity}
+              borderRadius={4}
+              onPress={() => this.confirm()}
+            />
           </View>
         }
       />
@@ -370,6 +650,19 @@ class MerchantCheckinView extends Component {
     );
   }
 
+  /** RENDER MODAL ERROR RESPONSE */
+  renderModalErrorResponse() {
+    return this.state.openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={this.state.openModalErrorGlobal}
+        onPress={() => this.setState({ openModalErrorGlobal: false })}
+      />
+    ) : (
+      <View />
+    );
+  }
+
   /** RENDER CONTENT */
   renderContent() {
     return (
@@ -379,6 +672,7 @@ class MerchantCheckinView extends Component {
         {this.renderMaps()}
         {this.renderModalBottom()}
         {this.renderModalOutStore()}
+        {this.renderModalErrorResponse()}
       </View>
     );
   }
@@ -388,6 +682,7 @@ class MerchantCheckinView extends Component {
       <View style={styles.mainContainer}>
         <StatusBarWhite />
         {this.state.openModalNoGPS ? this.renderNoGps() : this.renderContent()}
+        {this.renderDialogPositionNotInRadius()}
       </View>
     );
   }
@@ -418,6 +713,39 @@ const styles = StyleSheet.create({
     height: 55,
     zIndex: 1000
   },
+  merchantView: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  imageCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 40
+  },
+  confirmInStoreContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 8,
+    flex: 1
+  },
+  confirmVisitStoreContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    flex: 1
+  },
+  confirmButtonContainer: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingTop: 16
+  },
+  confirmButton: {
+    borderWidth: 1,
+    borderRadius: 24,
+    padding: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '48%'
+  },
   boxButton: {
     backgroundColor: Color.backgroundWhite,
     justifyContent: 'center',
@@ -425,29 +753,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     height: 40,
     width: '100%'
-  },
-  boxButtonBottom: {
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    backgroundColor: Color.backgroundWhite,
-    position: 'absolute',
-    width: '100%',
-    bottom: 0
-  },
-  spaceBeforeCheckBox: {
-    borderTopColor: Color.fontBlack10,
-    borderTopWidth: 1,
-    marginLeft: 16
-  },
-  checkInOutStore: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomColor: Color.fontBlack10,
-    borderBottomWidth: 1
   }
 });
 
@@ -472,7 +777,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 12072021
+ * updatedDate: 14102021
  * updatedFunction:
- * -> change behaviour when getting current location (use interval & auto refresh when failed getting location (latlong 0))
+ * -> fix bug user can't update his current location.
  */
