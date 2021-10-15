@@ -705,6 +705,21 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: Color.fontGreen50
   },
+  /** === text for haader detail hasil survey === */
+  textHeaderPageSurveyResult: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: RFPercentage(2)
+  },
+  /** === text for sub haader detail hasil survey === */
+  textSubHeaderPageSurveyResult: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: RFPercentage(2.4)
+  },
+  /** === text for haader page journey list === */
+  textHeaderPageJourney: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: RFPercentage(2.4)
+  },
   /** === text for haader page === */
   textHeaderPage: {
     fontFamily: Fonts.MontserratBold,
@@ -752,6 +767,12 @@ const styles = StyleSheet.create({
     fontSize: RFPercentage(2.1), //13,
     textAlign: 'center',
     color: Color.mainColor
+  },
+  textButtonWhite: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: RFPercentage(2.1), //13,
+    textAlign: 'center',
+    color: Color.backgroundWhite
   },
   textButtonWhiteDisabled: {
     fontFamily: Fonts.MontserratSemiBold,
@@ -841,6 +862,21 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 11,
     lineHeight: 13
+  },
+  //success submit
+  textWhiteTitle: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 20,
+    lineHeight: 24,
+    color: Color.fontWhite
+  },
+  //hasil survey
+  textSurveyResult: {
+    fontFamily: Fonts.MontserratMedium,
+    fontWeight: 'bold',
+    fontSize: 13,
+    lineHeight: 16,
+    color: Color.fontBlack50
   }
 });
 

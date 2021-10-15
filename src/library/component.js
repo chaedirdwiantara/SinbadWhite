@@ -25,6 +25,7 @@ import InputType2 from '../components/input/InputType2';
 import InputType3 from '../components/input/InputType3';
 import InputType4 from '../components/input/inputType4';
 import InputType6 from '../components/input/InputType6';
+import InputType7 from '../components/input/InputType7';
 /** INPUT MAPS (PIN POINT) */
 import InputMapsType1 from '../components/input/InputMapsType1';
 import InputMapsType2 from '../components/input/InputMapsType2';
@@ -46,6 +47,7 @@ import ModalWarning from '../components/modal/ModalWarning';
 import ModalConfirmation from '../components/modal/ModalConfirmation';
 import ModalConfirmationType2 from '../components/modal/ModalConfirmationType2';
 import ModalConfirmationType4 from '../components/modal/ModalConfirmationType4';
+import ModalConfirmationType5 from '../components/modal/ModalConfirmationType5';
 import ModalBottomErrorPinMap from '../components/error/ModalBottomErrorPinMap';
 import ModalBottomSwipeCloseNotScroll from '../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalBottomType1 from '../components/modal_bottom/ModalBottomType1';
@@ -53,6 +55,7 @@ import ModalBottomType2 from '../components/modal_bottom/ModalBottomType2';
 import ModalBottomType3 from '../components/modal_bottom/ModalBottomType3';
 import ModalBottomType4 from '../components/modal_bottom/ModalBottomType4';
 import ModalBottomType5 from '../components/modal_bottom/ModalBottomType5';
+import ModalBottomType6 from '../components/modal_bottom/ModalBottomType6';
 /** ERROR MODAL */
 import ModalBottomErrorRespons from '../components/error/ModalBottomErrorRespons';
 /** OTP */
@@ -118,6 +121,15 @@ import CardType1 from '../components/card/CardType1';
 import PdpGrid from '../components/template/PdpGrid';
 /** ACCORDION */
 import Accordion from '../components/accordion/Accordion';
+/** RADIO BUTTON */
+import RadioButton from '../components/radioButton/radioButton';
+/** CHECK BOX */
+import CheckBox from '../components/checkBox/checkBox';
+/** QUESTIONNAIRE */
+import SingleAnswerComponent from '../components/questionnaire/SingleAnswerComponent';
+import MultipleAnswerComponent from '../components/questionnaire/MultipleAnswerComponent';
+import BasicRangeAnswerComponent from '../components/questionnaire/BasicRangeAnswerComponent';
+import CompareGroupRangeAnswerComponent from '../components/questionnaire/CompareGroupRangeAnswerComponent';
 
 export {
   CartGlobal,
@@ -145,6 +157,7 @@ export {
   InputType3,
   InputType4,
   InputType6,
+  InputType7,
   /** INPUT MAPS (PIN POINT) */
   InputMapsType1,
   InputMapsType2,
@@ -166,6 +179,7 @@ export {
   ModalConfirmation,
   ModalConfirmationType2,
   ModalConfirmationType4,
+  ModalConfirmationType5,
   ModalBottomErrorPinMap,
   ModalBottomSwipeCloseNotScroll,
   ModalBottomType1,
@@ -173,6 +187,7 @@ export {
   ModalBottomType3,
   ModalBottomType4,
   ModalBottomType5,
+  ModalBottomType6,
   /** ERROR MODAL */
   ModalBottomErrorRespons,
   /** OTP */
@@ -236,7 +251,16 @@ export {
   /** TEMPLATE */
   PdpGrid,
   /** Accordion */
-  Accordion
+  Accordion,
+  /** RADIO BUTTON */
+  RadioButton,
+  /** CHECK BOX */
+  CheckBox,
+  /** QUESTIONNAIRE */
+  SingleAnswerComponent,
+  MultipleAnswerComponent,
+  BasicRangeAnswerComponent,
+  CompareGroupRangeAnswerComponent
 };
 
 /**
@@ -246,8 +270,8 @@ export {
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 06082021
+ * updatedDate: 20092021
  * updatedFunction:
- * -> add new component (empty state => emptyDataType2)
+ * -> add new modal bottom component (ModalBottomType6)
  *
  */

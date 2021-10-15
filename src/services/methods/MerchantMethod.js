@@ -148,15 +148,38 @@ function getSurveyList(params) {
     method: 'GET'
   });
 }
-/** GET SURVEY RESPONSE */
-function getSurveyResponse(id) {
+/** GET TOTAL SURVEY */
+function getTotalSurvey(storeId) {
   return ApiRest({
-    path: `supplier/service-survey/v1/survey/response?id=${id}`,
+    path: `supplier/service-survey/v1/surveys/totaltoday/mobile?storeId=${storeId}`,
     method: 'GET'
   });
 }
-/** SUBMIT SURVEY */
-function submitSurvey(params) {
+/** GET SURVEY BY ID */
+function getSurvey(params) {
+  return ApiRest({
+    path: `supplier/service-survey/v1/surveys/withresponse/${params.id}${
+      params.responseId
+    }`,
+    method: 'GET'
+  });
+}
+/** GET SURVEY BRAND BY SURVEY ID */
+function getSurveyBrand(id) {
+  return ApiRest({
+    path: `supplier/service-survey/v1/brands/survey/${id}`,
+    method: 'GET'
+  });
+}
+/** GET SURVEY RESPONSE */
+function getSurveyResponse(id) {
+  return ApiRest({
+    path: `supplier/service-survey/v1/survey/response/${id}`,
+    method: 'GET'
+  });
+}
+/** SUBMIT SURVEY RESPONSE */
+function submitSurveyResponse(params) {
   return ApiRest({
     path: 'supplier/service-survey/v1/survey/response',
     method: 'POST',
@@ -164,7 +187,7 @@ function submitSurvey(params) {
   });
 }
 /** UPDATE SURVEY RESPONSE */
-function updateSurvey({ params, surveyResponseId }) {
+function updateSurveyResponse({ params, surveyResponseId }) {
   return ApiRest({
     path: `supplier/service-survey/v1/survey/response/${surveyResponseId}`,
     method: 'PATCH',
@@ -202,6 +225,18 @@ function getReturnActiveInfo(data) {
   });
 }
 
+/** GET RADIUS LOCK GEOTAG */
+function getRadiusLockGeotag(params) {
+  return ApiRest({
+    path: `${salesManagementService}/v1/agent/lockgeotag/validate?storeLong=${
+      params.storeLong
+    }&storeLat=${params.storeLat}&salesLong=${params.salesLong}&salesLat=${
+      params.salesLat
+    }`,
+    method: 'GET'
+  });
+}
+
 export const MerchantMethod = {
   getMerchantV2,
   getMerchantExisting,
@@ -221,12 +256,16 @@ export const MerchantMethod = {
   getStoreStatus,
   getWarehouse,
   getSurveyList,
+  getTotalSurvey,
+  getSurvey,
+  getSurveyBrand,
   getSurveyResponse,
-  submitSurvey,
-  updateSurvey,
+  submitSurveyResponse,
+  updateSurveyResponse,
   validateAreaMapping,
   getSalesSegmentation,
-  getReturnActiveInfo
+  getReturnActiveInfo,
+  getRadiusLockGeotag
 };
 
 /**
@@ -236,7 +275,7 @@ export const MerchantMethod = {
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 27072021
+ * updatedDate: 30092021
  * updatedFunction:
- * -> add new method. (getDetailJourneyBook)
+ * -> add endpoint get radius lock geotag. (getRadiusLockGeotag)
  */
