@@ -41,18 +41,21 @@ import {
   ACTIVITY_JOURNEY_PLAN_CHECK_OUT,
   ACTIVITY_JOURNEY_PLAN_ORDER,
   ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY,
-  ACTIVITY_JOURNEY_PLAN_COLLECTION
+  ACTIVITY_JOURNEY_PLAN_COLLECTION,
+  ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING,
+  ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS,
+  ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
 } from '../../../constants';
 import _ from 'lodash';
 
 const { width, height } = Dimensions.get('window');
 
-const PENAGIHAN_TASK =  {
+const PENAGIHAN_TASK = {
   name: 'Penagihan',
   title: 'Tagih',
   goTo: 'collection',
   activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
-}
+};
 
 class MerchantHomeView extends Component {
   constructor(props) {
@@ -598,13 +601,6 @@ class MerchantHomeView extends Component {
           return getOrderStatus[0];
         }
       }
-
-      // if (activity === ACTIVITY_JOURNEY_PLAN_COLLECTION) {
-
-      //       return true;
-
-      // }
-
       if (checkActivity.length > 0) {
         return checkActivity[0];
       }
@@ -786,6 +782,86 @@ class MerchantHomeView extends Component {
           );
         }
       }
+      if (item.activity === ACTIVITY_JOURNEY_PLAN_COLLECTION) {
+        const activity = this.props.merchant.dataGetLogAllActivityV2;
+        if (
+          activity.find(
+            items =>
+              items.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+          )
+        ) {
+          return (
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                // marginRight: -3,
+                marginTop: -5
+              }}
+            >
+              <Text
+                accessible={true}
+                accessibilityLabel={'txtMerchantHomeSelesaiOrder'}
+                style={Fonts.type51}
+              >
+                Sudah Lunas
+              </Text>
+            </TouchableOpacity>
+          );
+        }
+        if (
+          activity.find(
+            items =>
+              items.activityName ===
+              ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
+          )
+        ) {
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                NavigationService.navigate('MerchantNoCollectionReason')
+              }
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                marginRight: -5,
+                marginTop: -5
+              }}
+            >
+              <Text style={Fonts.type100}>Lihat Alasan</Text>
+              <MaterialIcon
+                style={{
+                  marginTop: 2,
+                  padding: 0
+                }}
+                name="chevron-right"
+                color={Color.fontRed50}
+                size={20}
+              />
+            </TouchableOpacity>
+          );
+        } else {
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                NavigationService.navigate('MerchantNoCollectionReason')
+              }
+              style={styles.containerSurveyInProgress}
+            >
+              <Text style={Fonts.type69}>Berlangsung</Text>
+              <MaterialIcon
+                style={styles.containerChevronRight}
+                name="chevron-right"
+                color={Color.fontYellow50}
+                size={20}
+              />
+            </TouchableOpacity>
+          );
+        }
+      }
+
       return (
         <Button
           accessible={true}
@@ -1011,7 +1087,8 @@ class MerchantHomeView extends Component {
           </View>
           {this.state.task.map((item, index) => {
             const taskList = this.checkCheckListTask(item.activity);
-            const sfaStatus = this.props.sfa.dataSfaGetStatusOrder.data;
+            console.log(item, 'ITEM');
+            console.log(taskList, 'TASK LIST');
             const journeyBookStores = this.props.merchant.selectedMerchant
               .journeyBookStores;
             return (
