@@ -178,7 +178,7 @@ class ModalReturnStatus extends Component {
     return (
       <View style={[GlobalStyle.shadowForBox10, { flex: 1 }]}>
         <ButtonSingle
-          title={'Pilih Alasan'}
+          title={'Pilih Status'}
           borderRadius={8}
           onPress={() =>
             this.props.parentFunction({

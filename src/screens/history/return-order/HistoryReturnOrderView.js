@@ -141,6 +141,8 @@ class HistoryReturnOrderView extends Component {
           >
             {this.state.selectedReturnStatus === null
               ? 'Cari Semua Status'
+              : this.state.selectedReturnStatus.status === 'all'
+              ? 'Semua Status'
               : `Status ${this.state.selectedReturnStatus.title}`}
           </Text>
           <MaterialIcon
@@ -276,6 +278,7 @@ class HistoryReturnOrderView extends Component {
             ? 'Tanggal Mulai Dari'
             : 'Tanggal Sampai Dengan'
         }
+        typeClose={'cancel'}
         close={() => this.setState({ openDateSpinner: false })}
         content={
           <View>

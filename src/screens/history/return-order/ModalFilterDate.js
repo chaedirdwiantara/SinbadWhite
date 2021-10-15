@@ -10,7 +10,8 @@ import {
 import {
   Modal,
   moment,
-  MaterialCommunityIcons
+  MaterialCommunityIcons,
+  MaterialIcon
 } from '../../../library/thirdPartyPackage';
 import { StatusBarBlackOP40, ButtonSingle } from '../../../library/component';
 import { GlobalStyle, Fonts } from '../../../helpers';
@@ -149,7 +150,7 @@ class ModalFilterDate extends Component {
         </View>
         <View style={styles.boxContentTitle}>
           <TouchableOpacity style={styles.boxClose} onPress={this.props.close}>
-            {this.props.custom ? this.props.icon : null}
+            <MaterialIcon name={'close'} size={24} color={Color.fontBlack100} />
           </TouchableOpacity>
           <View>
             <Text style={Fonts.type7}>{this.props.title}</Text>

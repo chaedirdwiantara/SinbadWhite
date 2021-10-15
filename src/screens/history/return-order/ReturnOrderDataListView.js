@@ -217,8 +217,10 @@ class ReturnOrderDataListView extends Component {
       </View>
     ) : (
       <EmptyDataType2
-        title={'Pencarian Tidak Ditemukan'}
-        description={'Cek kembali nama atau ID produk yang kamu masukkan'}
+        title={'Hasil Filter Tidak Ditemukan'}
+        description={
+          'Maaf, Filter yang anda cari tidak ditemukan coba cari dengan pencarian lain'
+        }
       />
     );
   }
