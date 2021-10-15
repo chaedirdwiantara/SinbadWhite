@@ -26,7 +26,7 @@ import {
   ToastType1,
   ModalConfirmation,
   ModalBottomErrorRespons,
-  ModalConfirmationType5
+  ModalConfirmationType6
 } from '../../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers';
 import { Color } from '../../../config';
@@ -1373,7 +1373,7 @@ class MerchantHomeView extends Component {
   /** RENDER MODAL OVERDUE */
   renderModalOverdue() {
     return this.state.openModalOverdue ? (
-      <ModalConfirmationType5
+      <ModalConfirmationType6
         title={'Toko Ini Memiliki Transaksi Overdue'}
         content={
           'Silahkan konfirmasi kepada toko terkait transaksi tersebut. Anda juga dapat melakukan penagihan.'

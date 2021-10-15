@@ -46,6 +46,7 @@ import ModalConfirmation from '../components/modal/ModalConfirmation';
 import ModalConfirmationType2 from '../components/modal/ModalConfirmationType2';
 import ModalConfirmationType4 from '../components/modal/ModalConfirmationType4';
 import ModalConfirmationType5 from '../components/modal/ModalConfirmationType5';
+import ModalConfirmationType6 from '../components/modal/ModalConfirmationType6';
 import ModalBottomErrorPinMap from '../components/error/ModalBottomErrorPinMap';
 import ModalBottomSwipeCloseNotScroll from '../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalBottomType1 from '../components/modal_bottom/ModalBottomType1';
@@ -176,6 +177,7 @@ export {
   ModalConfirmationType2,
   ModalConfirmationType4,
   ModalConfirmationType5,
+  ModalConfirmationType6,
   ModalBottomErrorPinMap,
   ModalBottomSwipeCloseNotScroll,
   ModalBottomType1,
