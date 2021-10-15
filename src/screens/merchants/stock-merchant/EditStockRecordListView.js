@@ -59,7 +59,7 @@ class EditStockRecordListView extends Component {
         >
           <View>
             <Text style={[Fonts.type10, { marginTop: 20 }]}>
-              {item.catalogueCode}
+              {item.catalogueExternalId}
             </Text>
           </View>
           {item.isMustSale ? this.renderMSSType() : <View />}
