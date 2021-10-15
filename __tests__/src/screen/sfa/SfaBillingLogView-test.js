@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import TestRenderer from 'react-test-renderer';
+import { render, fireEvent } from '@testing-library/react-native';
 import {
   View,
   TouchableOpacity,
@@ -9,20 +10,41 @@ import {
   FlatList,
   SafeAreaView
 } from 'react-native';
-import SfaCollectionDetailView from '../../../../src/screens/sfa/SfaCollectionDetailView';
-import MoneyFormat from '../../../../src/helpers/NumberFormater';
+import SfaBillingLogView from '../../../../src/screens/sfa/SfaBillingLogView';
 jest.useFakeTimers();
 
 const middlewares = [];
 const mockStore = configureStore(middlewares);
 
-describe('SFA COLLECTION', function() {
-  const navigationMock = { state: { params: { section: 'payment' } } };
-
-  const mockSfaState = {
-    user: { id: 60 },
+describe('SfaInvoiceListView', function() {
+  const mockState = {
     sfa: {
       loadingSfaGetCollectionLog: false,
+      loadingLoadMoreGetPaymentCollectionLog: false,
+      loadingSfaGetPaymentCollectionLog: false,
+      dataSfaDeletePaymentBilling: { meta: {}, data: {} },
+      errorSfaDeletePaymentBilling: { data: {} },
+      dataSfaGetPaymentCollectionLog: {
+        meta: {
+          limit: 20,
+          paymentCollectionMethodId: 404,
+          skip: 0,
+          total: 1
+        },
+        data: [
+          {
+            id: 341,
+            orderCode: 'S123132323',
+            paymentCollectionMethodId: 494,
+            paymentCollectionMethodName: 'Cek',
+            amount: 312805,
+            salesName: 'Sales RepPaym101',
+            createdAt: '2021-07-08 09:16:15',
+            approvalStatus: 'pending',
+            isEditable: true
+          }
+        ]
+      },
       dataSfaGetCollectionLog: {
         data: [
           {
@@ -52,95 +74,7 @@ describe('SFA COLLECTION', function() {
           total: 19
         }
       },
-      errorSfaGetCollectionLog: null,
-      dataSfaGetDetail: {
-        data: {
-          collections: [
-            {
-              name: 'Tunai',
-              value: 5000
-            },
-            {
-              name: 'Cek',
-              value: 612000
-            },
-            {
-              name: 'Giro',
-              value: 55000
-            },
-            {
-              name: 'Transfer',
-              value: 65000
-            },
-            {
-              name: 'Promo',
-              value: 53000
-            }
-          ],
-          id: 1079858,
-          invoiceGroupName: 'COMBINE',
-          isPaid: false,
-          orderCode: 'S0100042235001077030',
-          orderRef: null,
-          parcelGrossPrice: 3083200,
-          parcelPromo: 1000,
-          parcelQty: 200,
-          parcelTaxes: 308220,
-          promoList: [
-            {
-              catalogueName: null,
-              catalogueimagesurl: null,
-              promoId: '600',
-              promoName: 'teestflexi11',
-              promoQty: null,
-              promoValue: 1000
-            }
-          ],
-          remainingBilling: 2578420,
-          totalBilling: 3390420,
-          totalCollection: 823000,
-          totalInStorePayment: 0
-        }
-      },
-      dataSfaGetCollectionDetail: {
-        data: {
-          approvalStatus: 'pending',
-          createdDate: '2021-89-22',
-          paymentCollectionType: { id: 1, name: 'tunai' },
-          reference: 'ABCD',
-          bankFrom: { displayName: 'Bank BCA' },
-          bankToAccount: {},
-          issuedDate: '2020-01-02',
-          dueDate: '2020-02-03',
-          amount: 5000,
-          stamp: {},
-          totalAmount: 10000,
-          totalBalance: 90000
-        },
-        isEditable: true,
-        outstanding: 2578420,
-        paymentCollection: {
-          id: 175,
-          isPrimary: true,
-          paidAmount: 40000,
-          paymentCollectionMethod: {
-            amount: 300000,
-            approvalStatus: 'pending',
-            balance: 260000,
-            bankFrom: { id: 1, name: 'BCA', displayName: 'Bank BCA' },
-            bankToAccount: null,
-            date: '2021-06-11 00:00:00',
-            dueDate: '2021-06-22 00:00:00',
-            id: 125,
-            image: null,
-            paymentCollectionType: { id: 2, name: 'Cek', code: 'check' },
-            principal: null,
-            promoNo: null,
-            reference: 'testjumat',
-            stamp: null
-          }
-        }
-      }
+      errorSfaGetCollectionLog: null
     },
     merchant: {
       address: 'jalan bendungan hilir IX',
@@ -196,26 +130,46 @@ describe('SFA COLLECTION', function() {
         urban: 'BENDUNGAN HILIR',
         zipCode: '10210'
       }
-    }
+    },
+    user: {
+      userSuppliers: [{ userId: 0 }]
+    },
+    selectedMerchant: { storeId: 1 }
   };
 
   const factoryMockStore = attr =>
     mockStore({
-      ...navigationMock,
-      ...mockSfaState,
+      ...mockState,
       ...attr
     });
 
-  // show data detail collection
-  it('SHOW COLLECTION DETAIL DATA', () => {
+  // render right data
+  it('show invoice list with right data', () => {
     const store = factoryMockStore({});
     const component = TestRenderer.create(
       <Provider store={store}>
-        <SfaCollectionDetailView type="payment" />
+        <SfaBillingLogView />
       </Provider>
     );
-    const result = component.root.findAllByType(SfaCollectionDetailView);
 
+    const result = component.root.findAllByType(SfaBillingLogView);
     expect(result).toBeDefined();
+  });
+
+  it('called right function when click delete', () => {
+    const store = factoryMockStore({});
+    const mockDeleteFn = jest.fn();
+    const { getByText, getByTestId } = render(
+      <Provider store={store}>
+        <SfaBillingLogView onDeleteCollection={mockDeleteFn} />
+      </Provider>
+    );
+
+    const btnDelete = getByTestId('btnDelete')
+    const pressed = btnDelete.findAllByType(TouchableOpacity)[1]
+
+    fireEvent.press(pressed, 'onPress');
+    console.log(pressed.props.onPress);
+    expect(mockDeleteFn).toHaveBeenCalled();
   });
 });

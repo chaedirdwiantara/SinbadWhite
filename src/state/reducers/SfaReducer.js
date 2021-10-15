@@ -59,6 +59,7 @@ const INITIAL_STATE = {
   dataSfaPatchCollectionMethod: null,
   dataSfaDeleteCollectionMethod: null,
   dataGetCollectionListStatus: null,
+  selectedCollectionTransaction: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -809,6 +810,17 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetCollectionListStatus: false,
       errorGetCollectionListStatus: action.payload
+    };
+  },
+  /**
+   * ============================
+   * SELECTED COLLECTION TRANSACTION
+   * ============================
+   */
+  [types.COLLECTION_SELECTED](state, action) {
+    return {
+      ...state,
+      selectedCollectionTransaction: { ...action.payload }
     };
   }
 });

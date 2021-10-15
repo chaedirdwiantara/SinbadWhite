@@ -156,3 +156,6 @@ export const SFA_GET_COLLECTION_LIST_STATUS_SUCCESS =
   'SfaGetCollectionListStatusSuccess';
 export const SFA_GET_COLLECTION_LIST_STATUS_FAILED =
   'SfaGetCollectionListStatusFailed';
+
+/** SELECTED COLLECTION TRANSACTION */
+export const COLLECTION_SELECTED = 'CollectionSelected';

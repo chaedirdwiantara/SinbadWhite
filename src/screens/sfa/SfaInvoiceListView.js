@@ -14,7 +14,10 @@ import NavigationService from '../../navigation/NavigationService';
 import SfaNoDataView from './SfaNoDataView';
 import { useSelector } from 'react-redux';
 import { toLocalTime } from '../../helpers/TimeHelper';
-import { sfaGetDetailProcess } from '../../state/actions';
+import {
+  collectionTransactionSelected,
+  sfaGetDetailProcess
+} from '../../state/actions';
 
 function SfaInvoiceListView(props) {
   const dispatch = useDispatch();
@@ -93,6 +96,11 @@ function SfaInvoiceListView(props) {
   };
 
   const navigateToDetail = item => {
+    dispatch(
+      collectionTransactionSelected({
+        collectionTransactionId: item.collectionTransactionDetailId
+      })
+    );
     dispatch(sfaGetDetailProcess(item.id));
     NavigationService.navigate('SfaDetailView', {
       orderParcelId: item.id

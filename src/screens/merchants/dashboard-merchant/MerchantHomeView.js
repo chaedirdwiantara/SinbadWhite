@@ -1041,14 +1041,6 @@ class MerchantHomeView extends Component {
                           size={24}
                         />
                       )
-                    ) : !this.checkCheckIn() && // check task list checkIn, reason not visit
-                      journeyBookStores.noVisitReasonId &&
-                      item.title === 'Masuk' ? (
-                      <MaterialIcon
-                        name="cancel"
-                        color={Color.fontRed50}
-                        size={24}
-                      />
                     ) : (
                       this.checkNoVisitReasonAndSurveyStatus(
                         journeyBookStores,
@@ -1679,8 +1671,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: raka
- * updatedDate: 06102021
+ * updatedBy: dyah
+ * updatedDate: 05102021
  * updatedFunction:
- * -> check isCollectionAvailable from journeyplan to show penagihan text
+ * -> fix the validation when checking out. (must completed the survey)
  */
