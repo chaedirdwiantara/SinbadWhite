@@ -58,7 +58,7 @@ export {
   StatusBar,
   ModalPopUp,
   ToastAndroid,
-  LayoutAnimation, 
+  LayoutAnimation,
   Clipboard,
   ActivityIndicator,
   PermissionsAndroid

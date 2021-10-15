@@ -102,19 +102,22 @@ class JourneyListDataView extends Component {
     }
     /** GO TO SELECTED STORE */
     //map collection ids to selected merchant information
-    const collections = data?.journeyBookStores.collectionNotes || null;
+    const collections = data?.journeyBookStores.collections || null;
     const collectionIds = [];
-    collections.map(item => {
-      collectionIds.push(item.collectionTransactionDetailId);
-    });
+    if (collections) {
+      collections.map(item => {
+        collectionIds.push(item.collectionTransactionDetailId);
+      });
+    }
 
     data.name = data.storeName;
     data.storeId = data.storeId.toString();
     data.collectionIds = collectionIds;
     this.props.merchantSelected(data);
     setTimeout(() => {
+      this.props.getSurveyResult(data.storeName);
       NavigationService.navigate('MerchantHomeView', {
-        storeName
+        storeName: data.storeName
       });
     }, 100);
   }
@@ -249,6 +252,9 @@ class JourneyListDataView extends Component {
             <View style={styles.containerExternalStoreId}>
               <Text
                 style={
+                  /*
+                  exist_store ditambahkan dari toko existing, selain itu adalah toko baru
+                 */
                   item.journeyBookStores.typeOfStore === 'exist_store'
                     ? Fonts.type67
                     : Fonts.type29
@@ -282,6 +288,9 @@ class JourneyListDataView extends Component {
             </View>
             <Text
               style={
+                /*
+                  exist_store ditambahkan dari toko existing, selain itu adalah toko baru
+                */
                 item.journeyBookStores.typeOfStore === 'exist_store'
                   ? Fonts.type8
                   : Fonts.type29
@@ -295,6 +304,9 @@ class JourneyListDataView extends Component {
               maxLength={30}
               substring
               font={
+                /*
+                  exist_store ditambahkan dari toko existing, selain itu adalah toko baru
+                 */
                 item.journeyBookStores.typeOfStore === 'exist_store'
                   ? Fonts.type67
                   : Fonts.type22
@@ -369,6 +381,10 @@ class JourneyListDataView extends Component {
   }
   /** === RENDER DATA CONTENT === */
   renderContent() {
+    console.log(
+      'this.props.journey.dataGetJourneyPlanV2',
+      this.props.journey.dataGetJourneyPlanV2
+    );
     return (
       <View style={{ flex: 1 }}>
         <FlatList

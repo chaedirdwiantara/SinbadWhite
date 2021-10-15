@@ -17,7 +17,7 @@ class MerchantSurveySteps extends Component {
 
   componentDidMount() {
     let steps = [];
-    _.orderBy(this.props.surveySteps, ['order'], ['asc']).map(item => {
+    _.orderBy(this.props.surveyQuestions, ['order'], ['asc']).map(item => {
       steps.push(item.title);
     });
     steps.push('Selesai');
@@ -123,7 +123,7 @@ export default MerchantSurveySteps;
  * createdBy: dyah
  * createdDate: 20112020
  * updatedBy: dyah
- * updatedDate: 03122020
+ * updatedDate: 08092021
  * updatedFunction:
- * -> update ui step component.
+ * -> update property surveyStep to surveyQuestion.
  */

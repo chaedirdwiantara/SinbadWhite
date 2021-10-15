@@ -25,12 +25,14 @@ import MerchantDetailAccountView from '../../screens/merchants/details-merchant/
 import MerchantDetailInformationView from '../../screens/merchants/details-merchant/MerchantDetailInformationView';
 import MerchantDetailPaymentView from '../../screens/merchants/details-merchant/MerchantDetailPaymentView';
 import MerchantDetailAddressView from '../../screens/merchants/details-merchant/MerchantDetailAddressView';
-import MerchantDetailClassificationView from '../../screens/merchants/details-merchant/MerchantDetailClassificationView'
+import MerchantDetailClassificationView from '../../screens/merchants/details-merchant/MerchantDetailClassificationView';
 /** merchant edit */
 import MerchantEditView from '../../screens/merchants/edit-merchant/MerchantEditView';
 /** merchant survey */
 import MerchantSurveyView from '../../screens/merchants/survey-merchant/MerchantSurveyView';
 import MerchantSurveyDisplayPhotoView from '../../screens/merchants/survey-merchant/MerchantSurveyDisplayPhotoView';
+import MerchantQuestionnaireView from '../../screens/merchants/survey-merchant/MerchantQuestionnaireView';
+import MerchantSurveyResultView from '../../screens/merchants/survey-merchant/MerchantSurveyResultView';
 
 const MerchantNavigator = {
   MerchantView: {
@@ -316,10 +318,8 @@ const MerchantNavigator = {
   MerchantSurveyView: {
     screen: MerchantSurveyView,
     navigationOptions: {
-      headerTintColor: masterColor.backButtonWhite,
       headerStyle: {
-        elevation: 0,
-        backgroundColor: masterColor.mainColor
+        backgroundColor: masterColor.backgroundWhite
       },
       gesturesEnabled: false
     }
@@ -345,6 +345,30 @@ const MerchantNavigator = {
       },
       headerRight: <View />,
       gesturesEnabled: false
+    }
+  },
+  MerchantQuestionnaireView: {
+    screen: MerchantQuestionnaireView,
+    navigationOptions: {
+      headerTitle: 'Input Survey',
+      headerTitleStyle: GlobalFont.textHeaderPage,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      gesturesEnabled: false
+    }
+  },
+  MerchantSurveyResultView: {
+    screen: MerchantSurveyResultView,
+
+    navigationOptions: {
+      title: 'Hasil Survey',
+      headerTitleStyle: [GlobalFont.textHeaderPage, { marginLeft: '5%' }],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite,
+        paddingLeft: 20
+      },
+      headerLeft: null
     }
   }
 };
