@@ -797,8 +797,6 @@ class MerchantHomeView extends Component {
                 flexDirection: 'row',
                 justifyContent: 'flex-end',
                 alignItems: 'center',
-                // marginRight: -3,
-                marginTop: -5
               }}
             >
               <Text
