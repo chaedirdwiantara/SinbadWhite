@@ -219,7 +219,7 @@ class ReturnRequestView extends Component {
               </Text>
               <MaterialCommunityIcons
                 name="chevron-right"
-                size={16}
+                size={24}
                 color={
                   parseInt(item.qty, 10) === 0
                     ? Color.fontRed10
