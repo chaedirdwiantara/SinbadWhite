@@ -796,7 +796,7 @@ class MerchantHomeView extends Component {
               style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-end',
-                alignItems: 'center',
+                alignItems: 'center'
               }}
             >
               <Text
@@ -843,9 +843,7 @@ class MerchantHomeView extends Component {
         } else {
           return (
             <TouchableOpacity
-              onPress={() =>
-                NavigationService.navigate('MerchantNoCollectionReason')
-              }
+              onPress={() => NavigationService.navigate('SfaView')}
               style={styles.containerSurveyInProgress}
             >
               <Text style={Fonts.type69}>Berlangsung</Text>
