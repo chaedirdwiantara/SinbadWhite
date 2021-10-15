@@ -48,7 +48,8 @@ const SfaBillingAddView = props => {
     loadingSfaPostCollectionPayment,
     dataSfaPostCollectionPayment,
     errorSfaPostCollectionPayment,
-    dataSfaGetDetail
+    dataSfaGetDetail,
+    selectedCollectionTransaction
   } = useSelector(state => state.sfa);
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
@@ -158,6 +159,7 @@ const SfaBillingAddView = props => {
 
   const submit = () => {
     setIsButtonDisabled(true);
+    const ctdId = selectedCollectionTransaction.collectionTransactionId;
     const data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
@@ -165,7 +167,8 @@ const SfaBillingAddView = props => {
       storeId: parseInt(selectedMerchant.storeId, 10),
       paymentCollectionMethodId: collectionInfo.id,
       amount: billingAmount,
-      isUsedStamp: isStampChecked
+      isUsedStamp: isStampChecked,
+      collectionTransactionDetailId: parseInt(ctdId, 10)
     };
     dispatch(sfaPostCollectionPaymentProcess(data));
   };
@@ -499,7 +502,8 @@ const SfaBillingAddView = props => {
             paddingVertical: 16
           }}
         >
-          {collectionInfo.stampStatus === USED || collectionInfo.stampStatus === NOT_USED
+          {collectionInfo.stampStatus === USED ||
+          collectionInfo.stampStatus === NOT_USED
             ? renderItem()
             : checkMateraiStatus(collectionInfo.stampStatus)}
         </View>

@@ -19,12 +19,9 @@ function getSfaDetail(orderParcelId) {
 /** GET INVOICE LIST */
 function getCollectionList(data) {
   return ApiRest({
-    path: `collection/v1/order-parcels?skip=${data.skip}&limit=${
-      data.limit
-    }&storeId=${data.storeId}&supplierId=${data.supplierId}&keyword=${
-      data.keyword
-    }&statusPayment=${data.statusPayment}`,
-    method: 'GET'
+    path: 'collection/v1/order-parcels',
+    method: 'POST',
+    params: data
   });
 }
 

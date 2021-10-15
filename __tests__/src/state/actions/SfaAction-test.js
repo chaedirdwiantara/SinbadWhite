@@ -522,14 +522,14 @@ describe('action', () => {
         })
 
         it('should create action to trigger process', function(){
-            const result = SfaAction.sfaGetTransferImageProcess(data);
+            const result = SfaAction.sfaGetCollectionImageProcess(data);
             expect(result).toStrictEqual(
-                factory(SfaType.SFA_GET_TRANSFER_IMAGE_PROCESS)
+                factory(SfaType.SFA_GET_COLLECTION_IMAGE_PROCESS)
             )
         });
         it('should create action to trigger success', function() {
             // act
-            const result = SfaAction.sfaGetTransferImageSuccess(data.data);
+            const result = SfaAction.sfaGetCollectionImageSuccess(data.data);
             // assert           
                 expect(result.payload).toStrictEqual(
                     factory(SfaType.SFA_GET_COLLECTION_IMAGE_SUCCESS).payload.data.data
@@ -537,10 +537,10 @@ describe('action', () => {
         });
         it('should create action to trigger failed', function() {
             // act
-            const result = SfaAction.sfaGetTransferImageFailed(data);
+            const result = SfaAction.sfaGetCollectionImageFailed(data);
             // assert
             expect(result).toStrictEqual(
-                factory(SfaType.SFA_GET_TRANSFER_IMAGE_FAILED)
+                factory(SfaType.SFA_GET_COLLECTION_IMAGE_FAILED)
             );
             });
         });
@@ -804,7 +804,7 @@ describe('action', () => {
                 data: {
                     code: 200,
                     data: {
-                        name: "Success",
+                        // name: "Success", 
                         code: 200,
                         data: {}
                     },
@@ -818,23 +818,23 @@ describe('action', () => {
             })
     
             it('should create action to trigger process', function(){
-                const result = SfaAction.sfaEditCollectionProcess(data);
+                const result = SfaAction.sfaEditBillingProcess(data);
                 expect(result).toStrictEqual(
                     factory(SfaType.SFA_EDIT_BILLING_PROCESS)
                 )
             });
-            it('should create action to trigger success', function() {
-                // act
-                const result = SfaAction.sfaEditCollectionSuccess(data.data);
+            // it('should create action to trigger success', function() {
+            //     // act
+            //     const result = SfaAction.sfaEditBillingSuccess(data.data);
 
-                // assert           
-                    expect(result.payload).toStrictEqual(
-                        factory(SfaType.SFA_EDIT_BILLING_SUCCESS).payload.data.data
-                    );
-            });
+            //     // assert           
+            //         expect(result.payload).toStrictEqual(
+            //             factory(SfaType.SFA_EDIT_BILLING_SUCCESS).payload.data.data
+            //         );
+            // });
             it('should create action to trigger failed', function() {
                 // act
-                const result = SfaAction.sfaEditCollectionFailed(data);
+                const result = SfaAction.sfaEditBillingFailed(data);
                 // assert
                 expect(result).toStrictEqual(
                     factory(SfaType.SFA_EDIT_BILLING_FAILED)
@@ -862,14 +862,14 @@ describe('action', () => {
         })
 
         it('should create action to trigger process', function(){
-            const result = SfaAction.sfaDeleteCollectionProcess(data);
+            const result = SfaAction.sfaDeletePaymentBillingProcess(data);
             expect(result).toStrictEqual(
                 factory(SfaType.SFA_DELETE_PAYMENT_BILLING_PROCESS)
             )
         });
         it('should create action to trigger success', function() {
             // act
-            const result = SfaAction.sfaDeleteCollectionSuccess(data.data);
+            const result = SfaAction.sfaDeletePaymentBillingSuccess(data.data);
             // assert           
                 expect(result.payload).toStrictEqual(
                     factory(SfaType.SFA_DELETE_PAYMENT_BILLING_SUCCESS).payload.data
@@ -877,7 +877,7 @@ describe('action', () => {
         });
         it('should create action to trigger failed', function() {
             // act
-            const result = SfaAction.sfaDeleteCollectionFailed(data);
+            const result = SfaAction.sfaDeletePaymentBillingFailed(data);
             // assert
             expect(result).toStrictEqual(
                 factory(SfaType.SFA_DELETE_PAYMENT_BILLING_FAILED)

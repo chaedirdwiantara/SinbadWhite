@@ -184,9 +184,10 @@ const SfaBillingLogView = props => {
     );
   };
   /** RENDER BUTTON */
-  const renderButton = (title, type, disable, action, item) => {
+  const renderButton = (title, type, disable, action, item, testId) => {
     return (
       <TouchableOpacity
+        testID={testId}
         disabled={disable}
         style={{
           ...styles.buttonSmall,
@@ -291,7 +292,7 @@ const SfaBillingLogView = props => {
                 true
               )}
             </View>
-            <View style={styles.buttonContainer}>
+            <View testID='btnDelete' style={styles.buttonContainer}>
               {renderButton(
                 'Ubah',
                 'white',
