@@ -28,7 +28,11 @@ import {
 } from '../../state/actions/SfaAction';
 import SfaTabView, { TAB_INVOICE, TAB_COLLECTION } from './SfaTabView';
 import SfaCollectionListView from './SfaCollectionListView';
-
+import { ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING } from '../../constants';
+import {
+  merchantPostActivityProcessV2,
+  merchantGetLogAllActivityProcessV2
+} from '../../state/actions';
 const SfaView = props => {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('');
@@ -42,7 +46,9 @@ const SfaView = props => {
     loadingGetReferenceList, // collection
     dataGetReferenceList // collection
   } = useSelector(state => state.sfa);
-  const { selectedMerchant } = useSelector(state => state.merchant);
+  const { selectedMerchant, dataGetLogAllActivityV2 } = useSelector(
+    state => state.merchant
+  );
   const { userSuppliers, id } = useSelector(state => state.user);
   const [selectedTagStatus, setSelectedTagStatus] = useState(0);
   const [paymentStatus, setPaymentStatus] = useState(null);
@@ -64,11 +70,30 @@ const SfaView = props => {
     getInvoiceStatus();
   }, []);
 
+  useEffect(() => {
+    if (
+      !dataGetLogAllActivityV2.find(
+        item => item.activityName === 'collection_ongoing'
+      )
+    ) {
+      postCollectionOngoing();
+    }
+  }, []);
+
   /** TO GET INVOICE STATUS */
   const getInvoiceStatus = () => {
     dispatch(sfaGetCollectionStatusProcess());
   };
-
+  /** POST ACTIVITY COLLECTION ONGOING */
+  const postCollectionOngoing = () => {
+    const journeyBookStoreId = selectedMerchant.journeyBookStores.id
+    const data = {
+      journeyBookStoreId,
+      activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING
+    };
+    dispatch(merchantPostActivityProcessV2(data));
+    dispatch(merchantGetLogAllActivityProcessV2(journeyBookStoreId));
+  };
   /** TO GET INVOICE LIST */
   const getInvoiceList = (loading, page) => {
     const data = {

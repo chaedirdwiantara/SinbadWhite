@@ -17,7 +17,8 @@ import {
   moment,
   MaterialIcon,
   RFPercentage,
-  Button
+  Button,
+  MaterialCommunityIcons
 } from '../../../library/thirdPartyPackage';
 import {
   StatusBarRed,
@@ -41,18 +42,21 @@ import {
   ACTIVITY_JOURNEY_PLAN_CHECK_OUT,
   ACTIVITY_JOURNEY_PLAN_ORDER,
   ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY,
-  ACTIVITY_JOURNEY_PLAN_BILLING
+  ACTIVITY_JOURNEY_PLAN_COLLECTION,
+  ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING,
+  ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS,
+  ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
 } from '../../../constants';
 import _ from 'lodash';
 
 const { width, height } = Dimensions.get('window');
 
-const PENAGIHAN_TASK =  {
+const PENAGIHAN_TASK = {
   name: 'Penagihan',
   title: 'Tagih',
-  goTo: '',
-  activity: ACTIVITY_JOURNEY_PLAN_BILLING
-}
+  goTo: 'collection',
+  activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
+};
 
 class MerchantHomeView extends Component {
   constructor(props) {
@@ -159,7 +163,8 @@ class MerchantHomeView extends Component {
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
     // HIDE TASK BASE ON PRIVILEGE
-    const { checkIn, checkOut, order, collection } = this.state.privileges || {};
+    const { checkIn, checkOut, order, collection } =
+      this.state.privileges || {};
     let newTask = this.state.task;
     if (!checkIn?.status) {
       // same as (checkIn && !checkIn.status)
@@ -232,9 +237,9 @@ class MerchantHomeView extends Component {
                 goTo: 'checkOut',
                 activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
               }
-            ]
+            ];
             this.setState({
-              task,
+              task
             });
           }
         }
@@ -337,14 +342,14 @@ class MerchantHomeView extends Component {
       const { collection } = this.state.privileges || {};
       // CHECK THIS STATE TO PREVENT MAXIMUM EXCEED ERROR
       if (
-        !this.checkExistTask(ACTIVITY_JOURNEY_PLAN_BILLING) && 
-        (collection && collection.status) 
+        !this.checkExistTask(ACTIVITY_JOURNEY_PLAN_COLLECTION) &&
+        (collection && collection.status)
       ) {
-        let task = [...this.state.task]
+        let task = [...this.state.task];
         // CHECK TO RENDER PENAGIHAN ROW
-        task.splice(2, 0, PENAGIHAN_TASK)
+        task.splice(2, 0, PENAGIHAN_TASK);
         this.setState({
-          task,
+          task
         });
       }
     }
@@ -597,13 +602,6 @@ class MerchantHomeView extends Component {
           return getOrderStatus[0];
         }
       }
-
-      // if (activity === ACTIVITY_JOURNEY_PLAN_COLLECTION) {
-
-      //       return true;
-
-      // }
-
       if (checkActivity.length > 0) {
         return checkActivity[0];
       }
@@ -686,24 +684,23 @@ class MerchantHomeView extends Component {
    * CHECK THE CONDITION WHEN isCollectionAvailable true
    * - SELECTED MERCHANT HAVE isCollectionAvailable to render "Penagihan" text
    * return true | false
-  */
+   */
   checkBilling() {
-    const {
-      selectedMerchant,
-    } = this.props.merchant;
-    const { journeyBookStores } = selectedMerchant
-    
+    const { selectedMerchant } = this.props.merchant;
+    const { journeyBookStores } = selectedMerchant;
+
     if (journeyBookStores.isCollectionAvailable) {
-      return true
+      return true;
     }
-    return false
+    return false;
   }
-   /**
+  /**
    * CHECK EXISTING TASK INSIDE THIS.STATE.TASK
-   * @params activityName (name that want to check) 
+   * @params activityName (name that want to check)
    * return true | false
-  */
-  checkExistTask = (activityName) => this.state.task.some(item => item.activity === activityName)
+   */
+  checkExistTask = activityName =>
+    this.state.task.some(item => item.activity === activityName);
   /**
    * ========================
    * RENDER VIEW
@@ -786,6 +783,81 @@ class MerchantHomeView extends Component {
           );
         }
       }
+      if (item.activity === ACTIVITY_JOURNEY_PLAN_COLLECTION) {
+        const activity = this.props.merchant.dataGetLogAllActivityV2;
+        if (
+          activity.find(
+            items =>
+              items.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+          )
+        ) {
+          return (
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center'
+              }}
+            >
+              <Text
+                accessible={true}
+                accessibilityLabel={'txtMerchantHomeSelesaiOrder'}
+                style={Fonts.type51}
+              >
+                Sudah Lunas
+              </Text>
+            </TouchableOpacity>
+          );
+        } else if (
+          activity.find(
+            items =>
+              items.activityName ===
+              ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
+          )
+        ) {
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                NavigationService.navigate('MerchantNoCollectionReason')
+              }
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                marginRight: -5,
+                marginTop: -5
+              }}
+            >
+              <Text style={Fonts.type100}>Lihat Alasan</Text>
+              <MaterialIcon
+                style={{
+                  marginTop: 2,
+                  padding: 0
+                }}
+                name="chevron-right"
+                color={Color.fontRed50}
+                size={20}
+              />
+            </TouchableOpacity>
+          );
+        } else {
+          return (
+            <TouchableOpacity
+              onPress={() => NavigationService.navigate('SfaView')}
+              style={styles.containerSurveyInProgress}
+            >
+              <Text style={Fonts.type69}>Berlangsung</Text>
+              <MaterialIcon
+                style={styles.containerChevronRight}
+                name="chevron-right"
+                color={Color.fontYellow50}
+                size={20}
+              />
+            </TouchableOpacity>
+          );
+        }
+      }
+
       return (
         <Button
           accessible={true}
@@ -1011,9 +1083,21 @@ class MerchantHomeView extends Component {
           </View>
           {this.state.task.map((item, index) => {
             const taskList = this.checkCheckListTask(item.activity);
-            const sfaStatus = this.props.sfa.dataSfaGetStatusOrder.data;
             const journeyBookStores = this.props.merchant.selectedMerchant
               .journeyBookStores;
+            const activityLogs = this.props.merchant.dataGetLogAllActivityV2;
+            const isCollectionOnGoing = activityLogs.find(
+              cog =>
+                cog.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING
+            );
+            const isCollectionNotSuccess = activityLogs.find(
+              cns =>
+                cns.activityName ===
+                ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
+            );
+            const isCollectionSuccess = activityLogs.find(
+              cs => cs.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+            );
             return (
               <View
                 key={index}
@@ -1038,6 +1122,26 @@ class MerchantHomeView extends Component {
                         <MaterialIcon
                           name="check-circle"
                           color={Color.fontGreen50}
+                          size={24}
+                        />
+                      )
+                    ) : item.activity === ACTIVITY_JOURNEY_PLAN_COLLECTION ? (
+                      isCollectionSuccess ? (
+                        <MaterialIcon
+                          name="check-circle"
+                          color={Color.fontGreen50}
+                          size={24}
+                        />
+                      ) : isCollectionNotSuccess ? (
+                        <MaterialIcon
+                          name="cancel"
+                          color={Color.fontRed50}
+                          size={24}
+                        />
+                      ) : (
+                        <MaterialCommunityIcons
+                          name="timelapse"
+                          color={Color.fontYellow50}
                           size={24}
                         />
                       )
