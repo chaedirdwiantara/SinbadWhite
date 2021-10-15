@@ -260,7 +260,8 @@ class HistoryReturnOrderDetailView extends Component {
                     flex: 1,
                     flexWrap: 'wrap',
                     color: Color.fontBlack80,
-                    alignSelf: 'flex-start'
+                    alignSelf: 'flex-start',
+                    marginLeft: 8
                   }
                 ]}
               >
