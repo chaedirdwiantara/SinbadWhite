@@ -17,7 +17,8 @@ import {
   moment,
   MaterialIcon,
   RFPercentage,
-  Button
+  Button,
+  MaterialCommunityIcons
 } from '../../../library/thirdPartyPackage';
 import {
   StatusBarRed,
@@ -809,8 +810,7 @@ class MerchantHomeView extends Component {
               </Text>
             </TouchableOpacity>
           );
-        }
-        if (
+        } else if (
           activity.find(
             items =>
               items.activityName ===
@@ -1087,10 +1087,21 @@ class MerchantHomeView extends Component {
           </View>
           {this.state.task.map((item, index) => {
             const taskList = this.checkCheckListTask(item.activity);
-            console.log(item, 'ITEM');
-            console.log(taskList, 'TASK LIST');
             const journeyBookStores = this.props.merchant.selectedMerchant
               .journeyBookStores;
+            const activityLogs = this.props.merchant.dataGetLogAllActivityV2;
+            const isCollectionOnGoing = activityLogs.find(
+              cog =>
+                cog.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING
+            );
+            const isCollectionNotSuccess = activityLogs.find(
+              cns =>
+                cns.activityName ===
+                ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
+            );
+            const isCollectionSuccess = activityLogs.find(
+              cs => cs.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+            );
             return (
               <View
                 key={index}
@@ -1115,6 +1126,26 @@ class MerchantHomeView extends Component {
                         <MaterialIcon
                           name="check-circle"
                           color={Color.fontGreen50}
+                          size={24}
+                        />
+                      )
+                    ) : item.activity === ACTIVITY_JOURNEY_PLAN_COLLECTION ? (
+                      isCollectionSuccess ? (
+                        <MaterialIcon
+                          name="check-circle"
+                          color={Color.fontGreen50}
+                          size={24}
+                        />
+                      ) : isCollectionNotSuccess ? (
+                        <MaterialIcon
+                          name="cancel"
+                          color={Color.fontRed50}
+                          size={24}
+                        />
+                      ) : (
+                        <MaterialCommunityIcons
+                          name="timelapse"
+                          color={Color.fontYellow50}
                           size={24}
                         />
                       )
