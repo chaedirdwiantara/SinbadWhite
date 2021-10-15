@@ -218,7 +218,7 @@ class ReturnRequestView extends Component {
                   : item.returnReason.reason}
               </Text>
               <MaterialCommunityIcons
-                name="pencil"
+                name="chevron-right"
                 size={16}
                 color={
                   parseInt(item.qty, 10) === 0

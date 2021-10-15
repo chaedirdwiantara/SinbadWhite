@@ -35,7 +35,7 @@ class ModalReturnConfirmation extends Component {
           title: 'Tidak'
         }
       ],
-      selectedConfirmation: null
+      selectedConfirmation: this.props.data
     };
   }
   /**
@@ -175,6 +175,7 @@ class ModalReturnConfirmation extends Component {
       <View style={[GlobalStyle.shadowForBox10, { flex: 1 }]}>
         <ButtonSingle
           title={'Konfirmasi'}
+          disabled={this.state.selectedConfirmation === null}
           borderRadius={8}
           onPress={() =>
             this.props.parentFunction({

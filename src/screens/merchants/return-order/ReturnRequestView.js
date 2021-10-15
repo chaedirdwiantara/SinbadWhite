@@ -187,12 +187,19 @@ class ReturnRequestView extends Component {
         this.updateNote(data.data);
         break;
       case 'ConfirmationCancel':
-        this.setState({ openModalReturnSummary: false });
+        this.setState({
+          openModalReturnSummary: false,
+          openModalReturnConfirmation: false
+        });
         break;
       case 'ConfirmationContinue':
         if (this.state.returnedConfirmation === null) {
           this.setState({ showInfo: true });
         } else {
+          this.setState({
+            openModalReturnSummary: false,
+            openModalReturnConfirmation: false
+          });
           this.confirmReturnOrder();
         }
         break;
@@ -206,7 +213,8 @@ class ReturnRequestView extends Component {
         this.setState({
           showInfo: false,
           returnedConfirmation: data.data,
-          openModalReturnSummary: true
+          openModalReturnSummary: true,
+          openModalReturnConfirmation: false
         });
         break;
 
@@ -539,6 +547,7 @@ class ReturnRequestView extends Component {
             openModalReturnSummary: true
           })
         }
+        data={this.state.returnedConfirmation}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
         title={'Barang sudah dibawa?'}
