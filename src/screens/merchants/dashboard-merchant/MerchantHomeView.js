@@ -49,7 +49,7 @@ const { width, height } = Dimensions.get('window');
 
 const PENAGIHAN_TASK =  {
   name: 'Penagihan',
-  title: 'Penagihan',
+  title: 'Tagih',
   goTo: '',
   activity: ACTIVITY_JOURNEY_PLAN_BILLING
 }
