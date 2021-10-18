@@ -119,7 +119,7 @@ class ModalBottomMerchantList extends Component {
   }
   /** KEYBOARD SHOW */
   keyboardDidShow = () => {
-    this.setState({ heightList: 0.2 * height });
+    this.setState({ heightList: 0.5 * height });
   };
   /** KEYBOARD HIDE */
   keyboardDidHide = () => {
@@ -424,8 +424,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Raka
- * updatedDate: 14092021
+ * updatedBy: dyah
+ * updatedDate: 18102021
  * updatedFunction:
- * -> set default function to close modal when click back button android
+ * -> fix ux when clicking search bar.
  */
