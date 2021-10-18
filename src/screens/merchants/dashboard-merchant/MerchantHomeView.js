@@ -1138,10 +1138,16 @@ class MerchantHomeView extends Component {
                           color={Color.fontRed50}
                           size={24}
                         />
-                      ) : (
+                      ) : isCollectionOnGoing ? (
                         <MaterialCommunityIcons
                           name="timelapse"
                           color={Color.fontYellow50}
+                          size={24}
+                        />
+                      ) : (
+                        <MaterialIcon
+                          name="radio-button-unchecked"
+                          color={Color.fontBlack40}
                           size={24}
                         />
                       )
