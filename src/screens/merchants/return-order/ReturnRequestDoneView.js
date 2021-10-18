@@ -5,7 +5,8 @@ import {
   Text,
   StyleSheet,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  BackHandler
 } from '../../../library/reactPackage';
 import { StatusBarWhite } from '../../../library/component';
 import {
@@ -22,6 +23,38 @@ class ReturnRequestDoneView extends Component {
     super(props);
     this.state = {};
   }
+
+  componentDidMount() {
+    this.navigationFunction();
+  }
+
+  /** === WILL UNMOUNT === */
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleHardwareBackPress
+    );
+  }
+
+  /**
+   * =======================
+   * NAVIGATION FUNCTION
+   * ======================
+   */
+  navigationFunction() {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleHardwareBackPress
+    );
+  }
+
+  /** === BACK BUTTON HARDWARE PRESS HANDLING === */
+  handleHardwareBackPress = () => {
+    NavigationService.customizeReset(1, ['JourneyView', 'MerchantHomeView'], {
+      storeName: this.props.merchant.selectedMerchant.storeName
+    });
+    return true;
+  };
 
   renderImage() {
     return (
