@@ -652,6 +652,30 @@ export function sfaGetCollectionListStatusFailed(data) {
  * SELECTED COLLECTION TRANSACTION
  * ==================================
  */
- export function collectionTransactionSelected(data) {
+export function collectionTransactionSelected(data) {
   return { type: types.COLLECTION_SELECTED, payload: data };
+}
+
+/**
+ * ================================
+ * SFA CHECK COLLECTION STATUS
+ * ================================
+ */
+/** === SFA CHECK COLLECTION STATUS === */
+export function sfaCheckCollectionStatusProcess(data) {
+  return { type: types.SFA_CHECK_COLLECTION_STATUS_PROCESS, payload: data };
+}
+/** === SFA GET COLLECTION LIST STATUS SUCCESS === */
+export function sfaCheckCollectionStatusSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_CHECK_COLLECTION_STATUS_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_CHECK_COLLECTION_STATUS_FAILED, payload: data };
+}
+/** === SFA GET COLLECTION LIST STATUS FAILED === */
+export function sfaCheckCollectionStatusFailed(data) {
+  return { type: types.SFA_CHECK_COLLECTION_STATUS_FAILED, payload: data };
 }

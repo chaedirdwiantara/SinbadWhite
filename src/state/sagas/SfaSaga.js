@@ -302,6 +302,18 @@ function* getSfaCollectionListStatus(actions) {
   }
 }
 
+/** GET COLLECTION LIST STATUS */
+function* postCheckSfaCollectionStatus(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getCollectionList(actions.payload);
+    });
+    yield put(ActionCreators.sfaCheckCollectionStatusSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaCheckCollectionStatusFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* SfaSaga() {
   yield takeEvery(
@@ -352,6 +364,10 @@ function* SfaSaga() {
   yield takeEvery(
     types.SFA_GET_COLLECTION_LIST_STATUS_PROCESS,
     getSfaCollectionListStatus
+  );
+  yield takeEvery(
+    types.SFA_CHECK_COLLECTION_STATUS_PROCESS,
+    postCheckSfaCollectionStatus
   );
 }
 
