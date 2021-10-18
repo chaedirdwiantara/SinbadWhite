@@ -58,8 +58,15 @@ class MerchantCheckinView extends Component {
       success: false,
       openModalNotInRadius: false,
       openModalErrorGlobal: false,
+      didmount: false,
       btnYesClicked: false
     };
+    this.watchID = null;
+    this.watchPosition = {
+      latitude: 0,
+      longitude: 0
+    };
+    this.mapRef = React.createRef(null);
     this.initialState = { ...this.state };
   }
   /**
@@ -69,7 +76,28 @@ class MerchantCheckinView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    this.getCurrentLocation();
+    this.watchID = Geolocation.watchPosition(
+      success => {
+        const longitude = success.coords.longitude;
+        const latitude = success.coords.latitude;
+        this.watchPosition = { longitude, latitude };
+        if (!this.state.didmount) {
+          this.setState({ didmount: true }, () => this.getCurrentLocation());
+        }
+      },
+      () => {
+        if (!this.state.didmount) {
+          this.setState({ didmount: true }, this.errorMaps);
+        }
+      },
+      {
+        showLocationDialog: false,
+        enableHighAccuracy: true,
+        timeout: 0,
+        maximumAge: 0,
+        distanceFilter: 0
+      }
+    );
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
@@ -149,6 +177,7 @@ class MerchantCheckinView extends Component {
   }
   componentWillUnmount() {
     this.internalClearInterval();
+    Geolocation.clearWatch(this.watchID);
   }
   /** FOR ERROR FUNCTION (FROM DID UPDATE) */
   doError() {
@@ -162,8 +191,16 @@ class MerchantCheckinView extends Component {
   }
   /** === GET CURRENT LOCATION === */
   successMaps = success => {
-    const longitude = success.coords.longitude;
-    const latitude = success.coords.latitude;
+    const latestLongitude = this.watchPosition.longitude;
+    const latestLatitude = this.watchPosition.latitude;
+    let longitude = success.coords.longitude;
+    let latitude = success.coords.latitude;
+    if (latestLatitude && latestLongitude) {
+      if (latestLatitude !== latitude || latestLongitude !== longitude) {
+        longitude = latestLongitude;
+        latitude = latestLatitude;
+      }
+    }
     if (longitude !== 0 && latitude !== 0) {
       this.internalClearInterval();
       this.setState(
@@ -174,6 +211,9 @@ class MerchantCheckinView extends Component {
           reRender: false
         },
         () => {
+          if (this.mapRef) {
+            this.setZoomMap(this.state.latitude, this.state.longitude);
+          }
           if (this.state.refresh) {
             this.props.getRadiusLockGeotagProcess({
               storeLong: this.props.merchant.selectedMerchant.longitude,
@@ -227,12 +267,20 @@ class MerchantCheckinView extends Component {
       },
       () =>
         Geolocation.getCurrentPosition(this.successMaps, this.errorMaps, {
-          timeout: 30000,
-          maximumAge: 30000,
           enableHighAccuracy: true,
-          distanceFilter: 0
+          timeout: 5000,
+          maximumAge: 0
         })
     );
+  }
+  /** === CONTROL ZOOM & RADIUS 1KM === */
+  setZoomMap(latitude, longitude) {
+    this.mapRef.current.animateToRegion({
+      latitude,
+      longitude,
+      latitudeDelta: this.state.latitudeDelta,
+      longitudeDelta: this.state.longitudeDelta
+    });
   }
   /** === CHECK IN/OUT STORE === */
   confirm() {
@@ -321,10 +369,9 @@ class MerchantCheckinView extends Component {
   renderMapsContent() {
     return (
       <MapView
-        ref={ref => (this.mapRef = ref)}
+        ref={this.mapRef}
         style={{ flex: 1, width: '100%' }}
-        maxZoomLevel={16}
-        initialRegion={{
+        region={{
           latitude: this.state.latitude,
           longitude: this.state.longitude,
           latitudeDelta: this.state.latitudeDelta,
@@ -332,7 +379,7 @@ class MerchantCheckinView extends Component {
         }}
         onLayout={() => {
           if (this.mapRef) {
-            this.mapRef.fitToCoordinates(
+            this.mapRef.current.fitToCoordinates(
               [
                 {
                   latitude: this.state.latitude,
@@ -347,7 +394,7 @@ class MerchantCheckinView extends Component {
                 edgePadding: {
                   top: 16,
                   right: 16,
-                  bottom: 16,
+                  bottom: 0.8 * height,
                   left: 16
                 },
                 animated: true
@@ -362,6 +409,7 @@ class MerchantCheckinView extends Component {
             longitude: this.state.longitude
           }}
           title={'Anda'}
+          anchor={{ x: 0.5, y: 0.5 }}
         >
           <Image
             style={{ width: 30, height: 30 }}
@@ -374,6 +422,7 @@ class MerchantCheckinView extends Component {
             longitude: this.props.merchant.selectedMerchant.longitude
           }}
           title={this.props.merchant.selectedMerchant.name}
+          anchor={{ x: 0.5, y: 0.5 }}
         >
           <Image source={require('../../../assets/icons/maps/store_red.png')} />
         </Marker>
@@ -777,7 +826,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 14102021
+ * updatedDate: 18102021
  * updatedFunction:
- * -> fix bug user can't update his current location.
+ * -> optimize gps (current location) lock geotag feature.
  */
