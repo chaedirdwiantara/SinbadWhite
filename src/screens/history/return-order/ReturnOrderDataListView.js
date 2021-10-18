@@ -166,7 +166,7 @@ class ReturnOrderDataListView extends Component {
               <Text
                 style={[Fonts.fontC1SemiBold, { color: Color.fontBlack80 }]}
               >
-                {item.parcelQty}
+                {item.parcelQty} Qty
               </Text>
             </View>
             <View style={[styles.boxItemContent, { marginBottom: 8 }]}>
