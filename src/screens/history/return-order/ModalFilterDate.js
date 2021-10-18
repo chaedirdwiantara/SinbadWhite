@@ -28,7 +28,7 @@ class ModalFilterDate extends Component {
       lastSevenDays: '',
       customStartDate: this.props.startDate,
       customEndDate: this.props.endDate,
-      selectedDate: this.props.selectedDate
+      selectedDate: this.props.selectedDate || 'all'
     };
   }
 
@@ -193,7 +193,7 @@ class ModalFilterDate extends Component {
                   Fonts.fontH10Bold
                 ]}
               >
-                Semua Tanggal
+                Semua Tanggal Retur
               </Text>
             </View>
             <View
@@ -424,7 +424,7 @@ class ModalFilterDate extends Component {
                   Fonts.fontH10Bold
                 ]}
               >
-                Tanggal lainnya
+                Pilih Tanggal lainnya
               </Text>
             </View>
             <View
@@ -595,18 +595,21 @@ class ModalFilterDate extends Component {
     );
   }
   checkButton() {
+    const todayDate = moment(new Date()).valueOf('milliseconds');
     if (this.state.selectedDate === 'customDate') {
       if (this.props.startDate === '' || this.props.endDate === '') {
         return true;
+      } else if (
+        moment(this.props.startDate).valueOf('milliseconds') >
+        moment(this.props.endDate).valueOf('milliseconds')
+      ) {
+        return true;
+      } else if (
+        moment(this.props.endDate).valueOf('milliseconds') > todayDate
+      ) {
+        return true;
       } else {
-        if (
-          moment(this.props.startDate).valueOf('milliseconds') >
-          moment(this.props.endDate).valueOf('milliseconds')
-        ) {
-          return true;
-        } else {
-          return false;
-        }
+        return false;
       }
     } else if (this.state.selectedDate === '') {
       return true;
@@ -619,7 +622,7 @@ class ModalFilterDate extends Component {
       <View style={[GlobalStyle.shadowForBox10, { flex: 1 }]}>
         <View>
           <ButtonSingle
-            title={'Terapkan Filter'}
+            title={'Terapkan Tanggal'}
             borderRadius={8}
             onPress={() => this.submitFilter()}
             disabled={this.checkButton()}
