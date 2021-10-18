@@ -679,3 +679,27 @@ export function sfaCheckCollectionStatusSuccess(data) {
 export function sfaCheckCollectionStatusFailed(data) {
   return { type: types.SFA_CHECK_COLLECTION_STATUS_FAILED, payload: data };
 }
+
+/**
+ * ================================
+ * SFA GET REASON NOT TO PAY
+ * ================================
+ */
+/** === SFA GET REASON NOT TO PAY PROCESS === */
+export function sfaGetReasonNotToPayProcess(data) {
+  return { type: types.SFA_GET_REASON_NOT_TO_PAY_PROCESS, payload: data };
+}
+/** === SFA REASON NOT TO PAY SUCCESS === */
+export function sfaGetReasonNotToPaySuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_REASON_NOT_TO_PAY_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_REASON_NOT_TO_PAY_FAILED, payload: data };
+}
+/** === SFA REASON NOT TO PAY FAILED === */
+export function sfaGetReasonNotToPayFailed(data) {
+  return { type: types.SFA_GET_REASON_NOT_TO_PAY_FAILED, payload: data };
+}

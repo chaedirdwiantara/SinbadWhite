@@ -6,13 +6,22 @@ import {
   StyleSheet
 } from '../../../library/reactPackage';
 import { ModalBottomWithClose, ButtonSingle } from '../../../library/component';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Fonts } from '../../../helpers';
 import { Color } from '../../../config';
 const ModalBottomMerchantNoCollectionReason = props => {
   const [isButtonDisabled, setIsButtonDisaled] = useState(false);
   const [selectedReasonId, setSelectedReasonId] = useState('');
   const [isViewOnly, setIsViewOnly] = useState(false);
+
+  /** EFFECT TO DISABLE BBUTTON */
+  useEffect(() => {
+    if (selectedReasonId) {
+      setIsButtonDisaled(false);
+    } else {
+      setIsButtonDisaled(true);
+    }
+  }, [selectedReasonId]);
   /** FUNCTION REASON SELECTED */
   const selectReason = id => {
     if (id === selectedReasonId) {
@@ -21,6 +30,12 @@ const ModalBottomMerchantNoCollectionReason = props => {
       setSelectedReasonId(id);
     }
   };
+  /** FUNCTION PRESS BUTTON */
+  const onPressButton = () => {
+    if(selectedReasonId){
+     props.onPress(selectedReasonId)
+    }
+  }
   /** RENDER CONTENT ITEM */
   const renderContentItem = (item, index) => {
     let checked = false;
@@ -68,7 +83,7 @@ const ModalBottomMerchantNoCollectionReason = props => {
           title={'Pilih Alasan'}
           loading={false}
           borderRadius={4}
-          onPress={props.onPress}
+          onPress={onPressButton()}
         />
       </>
     );

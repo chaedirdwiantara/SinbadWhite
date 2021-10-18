@@ -216,6 +216,14 @@ function getCollectionListStatus() {
   });
 }
 
+/** GET REASON NOT TO PAY LIST */
+function getReasonNotToPay() {
+  return ApiRest({
+    path: 'collection/v1/no-payment-reasons',
+    method: 'GET'
+  })
+}
+
 export const SfaMethod = {
   getCollectionStatus,
   getSfaDetail,
@@ -238,5 +246,6 @@ export const SfaMethod = {
   getPaymentCollectionLog,
   editCollectionMethod,
   deleteCollectionMethod,
-  getCollectionListStatus
+  getCollectionListStatus,
+  getReasonNotToPay
 };
