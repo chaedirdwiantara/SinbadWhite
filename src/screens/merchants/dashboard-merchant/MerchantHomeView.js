@@ -321,10 +321,11 @@ class MerchantHomeView extends Component {
         if (this.props.merchant.dataGetLogPerActivityV2.length > 0) {
           if (
             this.props.merchant.dataGetLogPerActivityV2[0].activityName ===
-            'order'
+              'order' &&
+            this.props.sfa.dataSfaCheckCollectionStatus &&
+            this.props.sfa.dataSfaCheckCollectionStatus.meta.total === 0
           ) {
-            console.log('DID UPDATE');
-            // this.checkoutProcess();
+            this.checkoutProcess();
           }
         } else {
           if (this.state.checkNoOrder) {
@@ -1465,8 +1466,7 @@ class MerchantHomeView extends Component {
                 openModalCheckout: false
               });
             } else {
-              console.log('modal');
-              // this.checkoutProcess();
+              this.checkoutProcess();
             }
           }
           // this.props.merchantPostActivityProcess({
