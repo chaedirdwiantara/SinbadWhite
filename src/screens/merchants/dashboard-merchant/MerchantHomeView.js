@@ -202,7 +202,6 @@ class MerchantHomeView extends Component {
       dataGetTotalSurvey,
       dataGetLogAllActivityV2
     } = this.props.merchant;
-    const sfaStatus = this.props.sfa.dataSfaGetStatusOrder;
     if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
       if (dataGetTotalSurvey) {
         /** IF NO SURVEY */
@@ -322,7 +321,9 @@ class MerchantHomeView extends Component {
         if (this.props.merchant.dataGetLogPerActivityV2.length > 0) {
           if (
             this.props.merchant.dataGetLogPerActivityV2[0].activityName ===
-            'order'
+              'order' &&
+            this.props.sfa.dataSfaCheckCollectionStatus &&
+            this.props.sfa.dataSfaCheckCollectionStatus.meta.total === 0
           ) {
             this.checkoutProcess();
           }
@@ -347,7 +348,11 @@ class MerchantHomeView extends Component {
       ) {
         let task = [...this.state.task];
         // CHECK TO RENDER PENAGIHAN ROW
-        task.splice(2, 0, PENAGIHAN_TASK);
+        if (!this.checkExistTask(ACTIVITY_JOURNEY_PLAN_ORDER)) {
+          task.splice(1, 0, PENAGIHAN_TASK);
+        } else {
+          task.splice(2, 0, PENAGIHAN_TASK);
+        }
         this.setState({
           task
         });
@@ -463,7 +468,22 @@ class MerchantHomeView extends Component {
       }
     }
   }
-
+  /** CHECK LIST COLLECTION */
+  checkCollectionStatus() {
+    const { selectedMerchant } = this.props.merchant;
+    const { userSuppliers, id } = this.props.user;
+    const data = {
+      storeId: parseInt(selectedMerchant.storeId, 10),
+      userId: parseInt(id, 10),
+      supplierId: parseInt(userSuppliers[0].supplier.id, 10),
+      loading: true,
+      limit: 20,
+      skip: 0,
+      collectionTransactionDetailStatus: 'pending',
+      collectionTransactionDetailIds: selectedMerchant.collectionIds
+    };
+    this.props.sfaCheckCollectionStatusProcess(data);
+  }
   /** FOR ERROR FUNCTION (FROM DID UPDATE) */
   doError() {
     /** Close all modal and open modal error respons */
@@ -499,6 +519,7 @@ class MerchantHomeView extends Component {
             .journeyBookStores.id,
           activity: 'check_in'
         });
+        this.checkCollectionStatus();
         if (this.props.merchant.dataGetLogAllActivityV2) {
           const haveSurvey = this.props.merchant.dataGetTotalSurvey.total === 0;
           const surveyHasDone = this.props.merchant.dataGetLogAllActivityV2.find(
@@ -840,7 +861,12 @@ class MerchantHomeView extends Component {
               />
             </TouchableOpacity>
           );
-        } else {
+        } else if (
+          activity.find(
+            items =>
+              items.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING
+          )
+        ) {
           return (
             <TouchableOpacity
               onPress={() => NavigationService.navigate('SfaView')}
@@ -1138,10 +1164,16 @@ class MerchantHomeView extends Component {
                           color={Color.fontRed50}
                           size={24}
                         />
-                      ) : (
+                      ) : isCollectionOnGoing ? (
                         <MaterialCommunityIcons
                           name="timelapse"
                           color={Color.fontYellow50}
+                          size={24}
+                        />
+                      ) : (
+                        <MaterialIcon
+                          name="radio-button-unchecked"
+                          color={Color.fontBlack40}
                           size={24}
                         />
                       )
@@ -1425,8 +1457,32 @@ class MerchantHomeView extends Component {
                   .journeyBookStores.id,
                 activity: 'order'
               });
+              /** if there is collection and the total unpaid is > 0 -> open Modal Confirmation No Collection*/
+            } else if (
+              this.props.sfa.dataSfaCheckCollectionStatus &&
+              this.props.sfa.dataSfaCheckCollectionStatus.meta.total > 0
+            ) {
+              this.setState({
+                openModalConfirmNoCollection: true,
+                openModalCheckout: false
+              });
             } else {
-              this.checkoutProcess();
+              /** if there is collection and the total unpaid is 0  -> POST COLLECTION SUCCESS*/
+              if (
+                this.props.sfa.dataSfaCheckCollectionStatus &&
+                this.props.sfa.dataSfaCheckCollectionStatus.meta.total === 0
+              ) {
+                const journeyBookStoreId = this.props.merchant.selectedMerchant
+                  .journeyBookStores.id;
+                const data = {
+                  journeyBookStoreId,
+                  activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+                };
+                this.props.merchantPostActivityProcessV2(data);
+                this.checkoutProcess();
+              } else {
+                this.checkoutProcess();
+              }
             }
           }
           // this.props.merchantPostActivityProcess({
@@ -1480,6 +1536,9 @@ class MerchantHomeView extends Component {
         cancelText={'Tidak'}
         ok={() => {
           this.setState({ openModalConfirmNoCollection: false });
+          setTimeout(() => {
+            NavigationService.navigate('MerchantNoCollectionReason');
+          }, 10);
         }}
         cancel={() => {
           this.setState({

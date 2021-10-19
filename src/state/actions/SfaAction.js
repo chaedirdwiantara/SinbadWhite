@@ -652,6 +652,54 @@ export function sfaGetCollectionListStatusFailed(data) {
  * SELECTED COLLECTION TRANSACTION
  * ==================================
  */
- export function collectionTransactionSelected(data) {
+export function collectionTransactionSelected(data) {
   return { type: types.COLLECTION_SELECTED, payload: data };
+}
+
+/**
+ * ================================
+ * SFA CHECK COLLECTION STATUS
+ * ================================
+ */
+/** === SFA CHECK COLLECTION STATUS === */
+export function sfaCheckCollectionStatusProcess(data) {
+  return { type: types.SFA_CHECK_COLLECTION_STATUS_PROCESS, payload: data };
+}
+/** === SFA GET COLLECTION LIST STATUS SUCCESS === */
+export function sfaCheckCollectionStatusSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_CHECK_COLLECTION_STATUS_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_CHECK_COLLECTION_STATUS_FAILED, payload: data };
+}
+/** === SFA GET COLLECTION LIST STATUS FAILED === */
+export function sfaCheckCollectionStatusFailed(data) {
+  return { type: types.SFA_CHECK_COLLECTION_STATUS_FAILED, payload: data };
+}
+
+/**
+ * ================================
+ * SFA GET REASON NOT TO PAY
+ * ================================
+ */
+/** === SFA GET REASON NOT TO PAY PROCESS === */
+export function sfaGetReasonNotToPayProcess(data) {
+  return { type: types.SFA_GET_REASON_NOT_TO_PAY_PROCESS, payload: data };
+}
+/** === SFA REASON NOT TO PAY SUCCESS === */
+export function sfaGetReasonNotToPaySuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_REASON_NOT_TO_PAY_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_REASON_NOT_TO_PAY_FAILED, payload: data };
+}
+/** === SFA REASON NOT TO PAY FAILED === */
+export function sfaGetReasonNotToPayFailed(data) {
+  return { type: types.SFA_GET_REASON_NOT_TO_PAY_FAILED, payload: data };
 }

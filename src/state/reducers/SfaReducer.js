@@ -32,6 +32,8 @@ const INITIAL_STATE = {
   loadingSfaDeleteCollectionMethod: true,
   loadingLoadMoreGetPaymentCollectionLog: false,
   loadingGetCollectionListStatus: false,
+  loadingSfaCheckCollectionStatus: false,
+  loadingSfaGetReasonNotToPay: null,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -59,7 +61,9 @@ const INITIAL_STATE = {
   dataSfaPatchCollectionMethod: null,
   dataSfaDeleteCollectionMethod: null,
   dataGetCollectionListStatus: null,
+  dataSfaGetReasonNotToPay: null,
   selectedCollectionTransaction: null,
+  dataSfaCheckCollectionStatus: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -86,7 +90,9 @@ const INITIAL_STATE = {
   errorSfaGetPaymentCollectionLog: null,
   errorSfaPatchCollectionMethod: null,
   errorSfaDeleteCollectionMethod: null,
-  errorGetCollectionListStatus: null
+  errorGetCollectionListStatus: null,
+  errorSfaCheckCollectionStatus: null,
+  errorSfaGetReasonNotToPay: null
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -821,6 +827,61 @@ export const sfa = createReducer(INITIAL_STATE, {
     return {
       ...state,
       selectedCollectionTransaction: { ...action.payload }
+    };
+  },
+
+  /**
+   * ==========================
+   * CHECK COLLECTION STATUS
+   * ==========================
+   */
+  [types.SFA_CHECK_COLLECTION_STATUS_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaCheckCollectionStatus: true,
+      dataSfaCheckCollectionStatus: null,
+      errorSfaCheckCollectionStatus: null
+    };
+  },
+  [types.SFA_CHECK_COLLECTION_STATUS_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaCheckCollectionStatus: false,
+      dataSfaCheckCollectionStatus: action.payload
+    };
+  },
+  [types.SFA_CHECK_COLLECTION_STATUS_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaCheckCollectionStatus: false,
+      errorSfaCheckCollectionStatus: action.payload
+    };;
+  },
+  /**
+   * ==========================
+   * GET REASON NOT TO PAY
+   * ==========================
+   */
+   [types.SFA_GET_REASON_NOT_TO_PAY_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetReasonNotToPay: true,
+      dataSfaGetReasonNotToPay: null,
+      errorSfaGetReasonNotToPay: null
+    };
+  },
+  [types.SFA_GET_REASON_NOT_TO_PAY_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetReasonNotToPay: false,
+      dataSfaGetReasonNotToPay: action.payload
+    };
+  },
+  [types.SFA_GET_REASON_NOT_TO_PAY_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaGetReasonNotToPay: false,
+      errorSfaGetReasonNotToPay: action.payload
     };
   }
 });

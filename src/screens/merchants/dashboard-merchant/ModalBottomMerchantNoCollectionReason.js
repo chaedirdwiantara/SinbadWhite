@@ -6,32 +6,52 @@ import {
   StyleSheet
 } from '../../../library/reactPackage';
 import { ModalBottomWithClose, ButtonSingle } from '../../../library/component';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Fonts } from '../../../helpers';
 import { Color } from '../../../config';
 const ModalBottomMerchantNoCollectionReason = props => {
   const [isButtonDisabled, setIsButtonDisaled] = useState(false);
   const [selectedReasonId, setSelectedReasonId] = useState('');
+  const [selectedReasonText, setSelectedReasonText] = useState('');
   const [isViewOnly, setIsViewOnly] = useState(false);
+
+  /** EFFECT TO DISABLE BBUTTON */
+  useEffect(() => {
+    if (selectedReasonId) {
+      setIsButtonDisaled(false);
+    } else {
+      setIsButtonDisaled(true);
+    }
+  }, [selectedReasonId]);
   /** FUNCTION REASON SELECTED */
-  const selectReason = id => {
-    if (id === selectedReasonId) {
+  const selectReason = item => {
+    if (item.id === selectedReasonId) {
       setSelectedReasonId('');
     } else {
-      setSelectedReasonId(id);
+      setSelectedReasonId(item.id);
+      setSelectedReasonText(item.reason);
+    }
+  };
+  /** FUNCTION PRESS BUTTON */
+  const onPressButton = () => {
+    const data = { selectedReasonId, selectedReasonText };
+    if (selectedReasonId) {
+      props.onPress(data);
     }
   };
   /** RENDER CONTENT ITEM */
   const renderContentItem = (item, index) => {
     let checked = false;
-    if (selectedReasonId === item.id) checked = true;
+    if (selectedReasonId === item.id) {
+      checked = true;
+    }
 
     return (
       <TouchableOpacity
         key={index}
         disabled={isViewOnly}
         onPress={() => {
-          selectReason(item.id);
+          selectReason(item);
         }}
       >
         <View style={[styles.boxContentItem]}>
@@ -68,12 +88,11 @@ const ModalBottomMerchantNoCollectionReason = props => {
           title={'Pilih Alasan'}
           loading={false}
           borderRadius={4}
-          onPress={props.onPress}
+          onPress={() => onPressButton()}
         />
       </>
     );
   };
-  console.log(props.data);
   /** MAIN */
   return (
     <ModalBottomWithClose
