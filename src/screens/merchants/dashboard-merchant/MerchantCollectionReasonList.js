@@ -21,7 +21,6 @@ const MerchantCollectionReasonList = props => {
   /** RENDER STATUS PAYMENT */
   /** === RENDER ITEM (STATUS PAYMENT) === */
   const renderItemStatusPayment = status_payment => {
-    console.log(status_payment);
     let textStyle = Fonts.type67;
     let colorStyle = masterColor.fontBlack05;
     let text = '';
@@ -50,7 +49,6 @@ const MerchantCollectionReasonList = props => {
   /** RENDER ITEM FLATLIST */
   const renderItem = ({ item, index }) => {
     const dueDate = toLocalTime(item.dueDate, 'DD MMM YYYY');
-
     return (
       <View style={styles.listContainer}>
         <View>
@@ -101,10 +99,14 @@ const MerchantCollectionReasonList = props => {
             <View style={styles.reasonContainer}>
               <Text style={[Fonts.type8, { flex: 1 }]}> Alasan</Text>
               <TouchableOpacity
-                onPress={props.openReason()}
+                onPress={() => props.openReason(index)}
                 style={styles.reasonButton}
               >
-                <Text style={[Fonts.type85]}>Pilih Alasan</Text>
+                {item.reasonNotToPay ? (
+                  <Text style={[Fonts.type48]}>{item.reasonNotToPay}</Text>
+                ) : (
+                  <Text style={[Fonts.type85]}>Pilih Alasan</Text>
+                )}
                 <MaterialIcon
                   name="chevron-right"
                   color={masterColor.mainColor}
@@ -112,11 +114,13 @@ const MerchantCollectionReasonList = props => {
                 />
               </TouchableOpacity>
             </View>
-            <View style={styles.reasonAlert}>
-              <Text style={[Fonts.type119]}>
-                Wajib Memilih Alasan Tidak Ada Penagihan
-              </Text>
-            </View>
+            {item.reasonNotToPay ? null : (
+              <View style={styles.reasonAlert}>
+                <Text style={[Fonts.type119]}>
+                  Wajib Memilih Alasan Tidak Ada Penagihan
+                </Text>
+              </View>
+            )}
           </View>
         </View>
       </View>
@@ -129,9 +133,9 @@ const MerchantCollectionReasonList = props => {
       return (
         <>
           <View style={styles.flatListContainer}>
-            {props.dataList.data.orderParcels !== null ? (
+            {props.dataList !== null ? (
               <FlatList
-                data={props.dataList.data.orderParcels}
+                data={props.dataList}
                 renderItem={renderItem}
                 numColumns={1}
                 keyExtractor={(item, index) => index.toString()}

@@ -12,6 +12,7 @@ import { Color } from '../../../config';
 const ModalBottomMerchantNoCollectionReason = props => {
   const [isButtonDisabled, setIsButtonDisaled] = useState(false);
   const [selectedReasonId, setSelectedReasonId] = useState('');
+  const [selectedReasonText, setSelectedReasonText] = useState('');
   const [isViewOnly, setIsViewOnly] = useState(false);
 
   /** EFFECT TO DISABLE BBUTTON */
@@ -23,30 +24,35 @@ const ModalBottomMerchantNoCollectionReason = props => {
     }
   }, [selectedReasonId]);
   /** FUNCTION REASON SELECTED */
-  const selectReason = id => {
-    if (id === selectedReasonId) {
+  const selectReason = item => {
+    if (item.id === selectedReasonId) {
       setSelectedReasonId('');
     } else {
-      setSelectedReasonId(id);
+      setSelectedReasonId(item.id);
+      setSelectedReasonText(item.reason);
     }
   };
   /** FUNCTION PRESS BUTTON */
   const onPressButton = () => {
-    if(selectedReasonId){
-     props.onPress(selectedReasonId)
+    const data = { selectedReasonId, selectedReasonText };
+    if (selectedReasonId) {
+      console.log('MASUK IF',data);
+      props.onPress(data);
     }
-  }
+  };
   /** RENDER CONTENT ITEM */
   const renderContentItem = (item, index) => {
     let checked = false;
-    if (selectedReasonId === item.id) checked = true;
+    if (selectedReasonId === item.id) {
+      checked = true;
+    }
 
     return (
       <TouchableOpacity
         key={index}
         disabled={isViewOnly}
         onPress={() => {
-          selectReason(item.id);
+          selectReason(item);
         }}
       >
         <View style={[styles.boxContentItem]}>
@@ -83,12 +89,11 @@ const ModalBottomMerchantNoCollectionReason = props => {
           title={'Pilih Alasan'}
           loading={false}
           borderRadius={4}
-          onPress={onPressButton()}
+          onPress={() => onPressButton()}
         />
       </>
     );
   };
-  console.log(props.data);
   /** MAIN */
   return (
     <ModalBottomWithClose

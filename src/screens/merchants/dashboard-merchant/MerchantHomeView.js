@@ -347,7 +347,11 @@ class MerchantHomeView extends Component {
       ) {
         let task = [...this.state.task];
         // CHECK TO RENDER PENAGIHAN ROW
-        task.splice(2, 0, PENAGIHAN_TASK);
+        if (!this.checkExistTask(ACTIVITY_JOURNEY_PLAN_ORDER)) {
+          task.splice(1, 0, PENAGIHAN_TASK);
+        } else {
+          task.splice(2, 0, PENAGIHAN_TASK);
+        }
         this.setState({
           task
         });
@@ -856,7 +860,12 @@ class MerchantHomeView extends Component {
               />
             </TouchableOpacity>
           );
-        } else {
+        } else if (
+          activity.find(
+            items =>
+              items.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING
+          )
+        ) {
           return (
             <TouchableOpacity
               onPress={() => NavigationService.navigate('SfaView')}
@@ -1453,7 +1462,7 @@ class MerchantHomeView extends Component {
             ) {
               this.setState({
                 openModalConfirmNoCollection: true,
-                openModalCheckout : false
+                openModalCheckout: false
               });
             } else {
               console.log('modal');
