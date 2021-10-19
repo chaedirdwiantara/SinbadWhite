@@ -218,13 +218,13 @@ class MerchantHomeView extends Component {
         /** IF NO SURVEY */
         if (dataGetTotalSurvey.total === 0) {
           this.SurveyDone();
-          if (this.state.task.length === 4) {
+          if (this.state.task.length === 6) {
             this.taskListFilter('noSurvey');
           }
         }
         /** IF SURVEY LIST EXIST */
         if (dataGetTotalSurvey.total !== 0) {
-          if (this.state.task.length === 5) {
+          if (this.state.task.length === 7) {
             this.taskListFilter('surveyExist');
           }
         }
@@ -904,6 +904,7 @@ class MerchantHomeView extends Component {
     );
   }
 
+  /** RENDER BUTTON RETURN */
   buttonReturn(item) {
     return item.activity ? (
       <TouchableOpacity
