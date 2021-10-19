@@ -36,7 +36,6 @@ const ModalBottomMerchantNoCollectionReason = props => {
   const onPressButton = () => {
     const data = { selectedReasonId, selectedReasonText };
     if (selectedReasonId) {
-      console.log('MASUK IF',data);
       props.onPress(data);
     }
   };

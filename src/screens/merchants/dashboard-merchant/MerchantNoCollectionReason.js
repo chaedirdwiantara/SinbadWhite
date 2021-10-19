@@ -17,6 +17,8 @@ const MerchantNoCollectionReason = () => {
   const [dataPostTransaction, setDataPostTransaction] = useState(null);
   const [indexCollection, setIndexCollection] = useState(0);
   const [dataReasonList, setDataReasonList] = useState([]);
+  const [reasonLength, setReasonLength] = useState(0)
+  const [isSaveButtonDisable, setIsSaveButtonDisable] = useState(true);
   const { dataSfaCheckCollectionStatus } = useSelector(state => state.sfa);
 
   const { dataSfaGetReasonNotToPay } = useSelector(state => state.sfa);
@@ -30,7 +32,15 @@ const MerchantNoCollectionReason = () => {
   useEffect(() => {
     setDataPostTransaction(dataSfaCheckCollectionStatus.data.orderParcels);
   }, []);
-
+  /** save button disabled if all reason not filled */
+  useEffect(() => {
+    const collectionLength = dataSfaCheckCollectionStatus.meta.total;
+    if (reasonLength === collectionLength) {
+      setIsSaveButtonDisable(false);
+    } else {
+      setIsSaveButtonDisable(true);
+    }
+  }, [dataReasonList, reasonLength]);
   /**=== RENDER FUNCTION === */
   /** GET DATA REASON NOT TO PAY */
   const getReasonNotToPay = () => {
@@ -46,15 +56,15 @@ const MerchantNoCollectionReason = () => {
     const dataReason = dataReasonList;
     const reasonNotToPay = item.selectedReasonText;
     data.splice(index, 1, { ...data[index], reasonNotToPay });
-    dataReasonList.splice(index, 1, {
-      ...dataReasonList[index],
+    dataReason.splice(index, 1, {
+      ...dataReason[index],
       reasonNotToPay
     });
-
+    setDataReasonList(dataReason)
+    setReasonLength(dataReasonList.length);
     setDataPostTransaction(data);
     setIsModalReasonOpen(false);
   };
-  console.log('ARRAY REASON', dataReasonList);
   const renderModalBottomNotCollectReason = () => {
     return isModalReasonOpen && dataSfaGetReasonNotToPay ? (
       <ModalBottomMerchantNoCollectionReason
@@ -73,9 +83,9 @@ const MerchantNoCollectionReason = () => {
       <>
         <ButtonSingle
           onPress={() => console.log('button')}
-          title={'Simpan'}
+          title={'Simpan Alasan'}
           borderRadius={4}
-          // disabled={isSaveDisabled || loadingSfaPostPaymentMethod}
+          disabled={isSaveButtonDisable}
           // loading={loadingSfaPostPaymentMethod}
         />
       </>
@@ -83,13 +93,15 @@ const MerchantNoCollectionReason = () => {
   };
   return dataSfaCheckCollectionStatus ? (
     <>
-      <View>
-        <MerchantCollectionReasonList
-          onRef={ref => (onPressReason = ref)}
-          openReason={onPressReason.bind(this)}
-          dataList={dataPostTransaction}
-        />
-        {renderButton()}
+      <View style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
+          <MerchantCollectionReasonList
+            onRef={ref => (onPressReason = ref)}
+            openReason={onPressReason.bind(this)}
+            dataList={dataPostTransaction}
+          />
+        </View>
+        <View>{renderButton()}</View>
       </View>
       {renderModalBottomNotCollectReason()}
     </>
