@@ -1,3 +1,4 @@
+import styles from '../../helpers/GlobalFont';
 import * as types from '../types';
 import createReducer from './createReducer';
 
@@ -26,6 +27,13 @@ const INITIAL_STATE = {
   loadingLoadMoreSurveyList: false,
   loadingGetTotalSurvey: false,
   loadingGetSurvey: false,
+  loadingSubmitSurvey: false,
+  loadingAddRecordStock: false,
+  loadingGetRecordStock: false,
+  loadingDeleteRecordStock: false,
+  loadingUpdateRecordStock: false,
+  loadingBatchDeleteRecord: false,
+  loadingRefreshStock: false,
   loadingGetSurveyBrand: false,
   loadingGetSurveyResponse: false,
   loadingSubmitSurveyResponse: false,
@@ -156,6 +164,12 @@ const INITIAL_STATE = {
     status: '',
     photos: []
   },
+  dataAddRecordStock: {},
+  dataGetRecordStock: [],
+  dataDeleteRecordStock: {},
+  dataUpdateRecordStock: {},
+  dataBatchDeleteStock: {},
+  merchantStockRecordStatus: '',
   dataTotalScoreSurvey: '0',
   dataValidateAreaMapping: null,
   dataSalesSegmentation: null,
@@ -181,6 +195,12 @@ const INITIAL_STATE = {
   errorGetSurveyList: null,
   errorGetTotalSurvey: null,
   errorGetSurvey: null,
+  errorSubmitSurvey: null,
+  errorAddRecordStock: null,
+  errorGetRecordStock: null,
+  errorDeleteRecordStock: null,
+  errorUpdateRecordStock: null,
+  errorBatchDeleteStock: null,
   errorGetSurveyBrand: null,
   errorGetSurveyResponse: null,
   errorSubmitSurveyResponse: null,
@@ -1258,6 +1278,189 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingReturnActiveInfo: false,
       errorReturnActiveInfo: action.payload
+    };
+  },
+  /*
+   * ======================
+   * ADD RECORD STOCK
+   * ======================
+   */
+  [types.MERCHANT_ADD_STOCK_RECORD_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingAddRecordStock: true,
+      dataAddRecordStock: {},
+      errorAddRecordStock: null
+    };
+  },
+  [types.MERCHANT_ADD_STOCK_RECORD_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingAddRecordStock: false,
+      dataAddRecordStock: action.payload,
+      errorAddRecordStock: null
+    };
+  },
+  [types.MERCHANT_ADD_STOCK_RECORD_FAILED](state, action) {
+    return {
+      ...state,
+      loadingAddRecordStock: false,
+      errorAddMerchant: action.payload
+    };
+  },
+  [types.MERCHANT_ADD_STOCK_RECORD_RESET](state, action) {
+    return {
+      ...state,
+      dataAddRecordStock: {}
+    };
+  },
+  /**
+   * ========================
+   * GET RECORD STOCK
+   * ========================
+   */
+  [types.MERCHANT_GET_STOCK_RECORD_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetRecordStock: true,
+      dataGetRecordStock: [],
+      errorGetRecordStock: null
+    };
+  },
+  [types.MERCHANT_GET_STOCK_RECORD_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetRecordStock: false,
+      dataGetRecordStock: action.payload,
+      errorGetRecordStock: null
+    };
+  },
+  [types.MERCHANT_GET_STOCK_RECORD_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetRecordStock: false,
+      errorGetRecordStock: action.payload
+    };
+  },
+  [types.MERCHANT_GET_STOCK_RECORD_REFRESH](state, action) {
+    return {
+      ...state,
+      loadingGetRecordStock: true,
+      loadingRefreshStock: true,
+      dataGetRecordStock: []
+    };
+  },
+  /**
+   * =======================
+   * DELETE RECORD STOCK
+   * =======================
+   */
+  [types.MERCHANT_DELETE_STOCK_RECORD_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingDeleteRecordStock: true,
+      dataDeleteRecordStock: {},
+      errorDeleteRecordStock: null
+    };
+  },
+  [types.MERCHANT_DELETE_STOCK_RECORD_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingDeleteRecordStock: false,
+      dataDeleteRecordStock: action.payload,
+      errorDeleteRecordStock: null
+    };
+  },
+  [types.MERCHANT_DELETE_STOCK_RECORD_FAILED](state, action) {
+    return {
+      ...state,
+      loadingDeleteRecordStock: false,
+      errorDeleteRecordStock: action.payload
+    };
+  },
+  [types.MERCHANT_DELETE_STOCK_RECORD_RESET](state, action) {
+    return {
+      ...state,
+      dataDeleteRecordStock: {}
+    };
+  },
+  /**
+   * ====================
+   * UPDATE RECORD STOCK
+   * ====================
+   */
+  [types.MERCHANT_UPDATE_STOCK_RECORD_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingUpdateRecordStock: true,
+      dataUpdateRecordStock: {},
+      errorDeleteRecordStock: null
+    };
+  },
+  [types.MERCHANT_UPDATE_STOCK_RECORD_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingUpdateRecordStock: false,
+      dataUpdateRecordStock: action.payload,
+      errorUpdateRecordStock: null
+    };
+  },
+  [types.MERCHANT_UPDATE_STOCK_RECORD_FAILED](state, action) {
+    return {
+      ...state,
+      loadingUpdateRecordStock: false,
+      errorUpdateRecordStock: action.payload
+    };
+  },
+  [types.MERCHANT_UPDATE_STOCK_RECORD_RESET](state, action) {
+    return {
+      ...state,
+      dataUpdateRecordStock: {}
+    };
+  },
+  /**
+   * ======================
+   * BATCH DELETE STOCK
+   * ======================
+   */
+  [types.MERCHANT_BATCH_DELETE_STOCK_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingBatchDeleteRecord: true,
+      dataBatchDeleteStock: {},
+      errorBatchDeleteStock: null
+    };
+  },
+  [types.MERCHANT_BATCH_DELETE_STOCK_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingBatchDeleteRecord: false,
+      dataBatchDeleteStock: action.payload,
+      errorBatchDeleteStock: null
+    };
+  },
+  [types.MERCHANT_BATCH_DELETE_STOCK_FAILED](state, action) {
+    return {
+      ...state,
+      loadingBatchDeleteRecord: false,
+      errorBatchDeleteStock: action.payload
+    };
+  },
+  [types.MERCHANT_BATCH_DELETE_STOCK_RESET](state, action) {
+    return {
+      ...state,
+      dataBatchDeleteStock: {}
+    };
+  },
+  /**
+   * ==============================
+   * MERCHANT STOCK RECORD FLAG
+   * ==============================
+   */
+  [types.MERCHANT_STOCK_RECORD_STATUS](state, action) {
+    return {
+      ...state,
+      merchantStockRecordStatus: action.payload
     };
   }
 });

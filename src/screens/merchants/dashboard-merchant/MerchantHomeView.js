@@ -41,7 +41,8 @@ import {
   ACTIVITY_JOURNEY_PLAN_CHECK_OUT,
   ACTIVITY_JOURNEY_PLAN_ORDER,
   ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY,
-  ACTIVITY_JOURNEY_PLAN_RETUR
+  ACTIVITY_JOURNEY_PLAN_RETUR,
+  ACTIVITY_JOURNEY_PLAN_STOCK
 } from '../../../constants';
 import _ from 'lodash';
 
@@ -83,6 +84,10 @@ class MerchantHomeView extends Component {
           goTo: 'survey'
         },
         {
+          menuName: 'Catatan Stok',
+          goTo: 'stock'
+        },
+        {
           menuName: 'Keluar Toko',
           icon: require('../../../assets/icons/merchant/check-out.png'),
           goTo: 'checkOut'
@@ -103,6 +108,12 @@ class MerchantHomeView extends Component {
           title: 'Order',
           goTo: 'pdp',
           activity: ACTIVITY_JOURNEY_PLAN_ORDER
+        },
+        {
+          name: 'Catatan Stok',
+          title: 'Isi',
+          goTo: 'stock',
+          activity: ACTIVITY_JOURNEY_PLAN_STOCK
         },
         {
           name: 'Keluar Toko',
@@ -483,6 +494,15 @@ class MerchantHomeView extends Component {
       case 'retur':
         NavigationService.navigate('ReturnOrderView');
         break;
+      case 'stock':
+        if (
+          this.props.merchant.dataGetLogAllActivityV2.find(
+            task => task.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_IN
+          )
+        ) {
+          NavigationService.navigate('MerchantStockView');
+        }
+        break;
       default:
         break;
     }
@@ -554,6 +574,12 @@ class MerchantHomeView extends Component {
             title: 'Order',
             goTo: 'pdp',
             activity: ACTIVITY_JOURNEY_PLAN_ORDER
+          },
+          {
+            name: 'Catatan Stok',
+            title: 'Isi',
+            goTo: 'stock',
+            activity: ACTIVITY_JOURNEY_PLAN_STOCK
           },
           {
             name: 'Toko Survey',
@@ -820,6 +846,55 @@ class MerchantHomeView extends Component {
           Belum Masuk
         </Text>
       </View>
+    );
+  }
+
+  // RENDER BUTTON STOCK RECORD
+  buttonStock(item) {
+    return item.activity ? (
+      <TouchableOpacity
+        onPress={() => {
+          this.goTo(item.goTo);
+        }}
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          marginTop: -5,
+          marginRight: -5
+        }}
+      >
+        <Text style={Fonts.type51}>Selesai</Text>
+        <MaterialIcon
+          style={{
+            marginTop: 2,
+            padding: 0
+          }}
+          name="chevron-right"
+          color={Color.fontGreen50}
+          size={20}
+        />
+      </TouchableOpacity>
+    ) : (
+      <Button
+        onPress={() => {
+          this.goTo(item.goTo);
+        }}
+        title={item.title}
+        titleStyle={[
+          Fonts.type16,
+          {
+            color: Color.fontWhite
+          }
+        ]}
+        buttonStyle={{
+          backgroundColor: Color.fontRed50,
+          borderRadius: 7,
+          paddingHorizontal: 20,
+          paddingVertical: 5,
+          width: '100%'
+        }}
+      />
     );
   }
 
@@ -1137,6 +1212,12 @@ class MerchantHomeView extends Component {
                           />
                         </TouchableOpacity>
                       )
+                    ) : taskList.activityName ===
+                      ACTIVITY_JOURNEY_PLAN_STOCK ? (
+                      this.buttonStock({
+                        goTo: item.goTo,
+                        activity: ACTIVITY_JOURNEY_PLAN_STOCK
+                      })
                     ) : taskList.activityName ===
                       ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY ? (
                       <TouchableOpacity

@@ -863,6 +863,25 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 13
   },
+  H12Bold: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 14,
+    lineHeight: 17,
+    fontWeight: '500',
+    color: Color.fontBlack80
+  },
+  H12Medium: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 12,
+    lineHeight: 15,
+    color: Color.fontBlack40
+  },
+  H11Normal: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 11,
+    lineHeight: 13,
+    color: Color.fontBlack70
+  },
   //success submit
   textWhiteTitle: {
     fontFamily: Fonts.MontserratSemiBold,

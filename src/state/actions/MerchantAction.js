@@ -596,6 +596,132 @@ export function merchantUpdateSurveyResponseProcess(data) {
 export function getSurveyResult(data) {
   return { type: types.MERCHANT_SURVEY_RESULT, payload: data };
 }
+/**
+ * ======================
+ * STOCK MANAGEMENT ADD RECORD STOCK
+ * ======================
+ */
+export function merchantAddStockRecordProcess(data) {
+  return { type: types.MERCHANT_ADD_STOCK_RECORD_PROCESS, payload: data };
+}
+
+export function merchantAddStockRecordSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_ADD_STOCK_RECORD_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_ADD_STOCK_RECORD_FAILED, payload: data };
+}
+
+export function merchantAddStockRecordFailed(data) {
+  return { type: types.MERCHANT_ADD_STOCK_RECORD_FAILED, payload: data };
+}
+
+export function merchantAddStockRecordReset() {
+  return { type: types.MERCHANT_ADD_STOCK_RECORD_RESET };
+}
+/**
+ * ======================
+ * GET STOCK RECORD
+ * ======================
+ */
+export function merchantGetStockRecordProcess(data) {
+  return { type: types.MERCHANT_GET_STOCK_RECORD_PROCESS, payload: data };
+}
+export function merchantGetStockRecordSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_STOCK_RECORD_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_GET_STOCK_RECORD_FAILED, payload: data };
+}
+export function merchantGetStockRecordFailed(data) {
+  return { type: types.MERCHANT_GET_STOCK_RECORD_FAILED, payload: data };
+}
+export function merchantGetRecordRefresh() {
+  return { type: types.MERCHANT_GET_STOCK_RECORD_REFRESH };
+}
+/**
+ * =======================
+ * DELETE STOCK RECORD
+ * =======================
+ */
+export function merchantDeleteStockRecordProcess(data) {
+  return { type: types.MERCHANT_DELETE_STOCK_RECORD_PROCESS, payload: data };
+}
+export function merchantDeleteStockRecordSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_DELETE_STOCK_RECORD_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_DELETE_STOCK_RECORD_FAILED, payload: data };
+}
+export function merchantDeleteStockRecordFailed(data) {
+  return { type: types.MERCHANT_DELETE_STOCK_RECORD_FAILED, payload: data };
+}
+export function merchantDeleteStockRecordReset() {
+  return { type: types.MERCHANT_DELETE_STOCK_RECORD_RESET };
+}
+/**
+ * =====================
+ * UPDATE STOCK RECORD
+ * =====================
+ */
+export function merchantUpdateStockRecordProcess(data) {
+  return { type: types.MERCHANT_UPDATE_STOCK_RECORD_PROCESS, payload: data };
+}
+export function merchantUpdateStockRecordSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_UPDATE_STOCK_RECORD_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_UPDATE_STOCK_RECORD_FAILED, payload: data };
+}
+export function merchantUpdateStockRecordFailed(data) {
+  return { type: types.MERCHANT_UPDATE_STOCK_RECORD_FAILED, payload: data };
+}
+export function merchantUpdateStockRecordReset() {
+  return { type: types.MERCHANT_UPDATE_STOCK_RECORD_RESET };
+}
+/**
+ * ============================
+ * BATCH DELETE STOCK RECORD
+ * ============================
+ */
+export function merchantBatchDeleteStockProcess(data) {
+  return { type: types.MERCHANT_BATCH_DELETE_STOCK_PROCESS, payload: data };
+}
+export function merchantBatchDeleteStockSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_BATCH_DELETE_STOCK_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_BATCH_DELETE_STOCK_FAILED, payload: data };
+}
+export function merchantBatchDeleteStockFailed(data) {
+  return { type: types.MERCHANT_BATCH_DELETE_STOCK_FAILED, payload: data };
+}
+export function merchantBatchDeleteStockReset() {
+  return { type: types.MERCHANT_BATCH_DELETE_STOCK_RESET };
+}
+/**
+ * ===============================
+ * MERCHANT STOCK RECORD STATUS
+ * ===============================
+ */
+export function merchantStockRecordStatus(status) {
+  return { type: types.MERCHANT_STOCK_RECORD_STATUS, payload: status };
+}
 
 /**
  * ===========================================

@@ -8,7 +8,7 @@ import {
   Keyboard
 } from '../../library/reactPackage';
 import { connect, MaterialIcon } from '../../library/thirdPartyPackage';
-import { GlobalStyle, Fonts } from '../../helpers';
+import { Fonts } from '../../helpers';
 import { Color } from '../../config';
 
 /**
@@ -19,7 +19,7 @@ import { Color } from '../../config';
  * =====================
  */
 
-class SearchBarType2 extends Component {
+class SearchBarType5 extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +34,7 @@ class SearchBarType2 extends Component {
   searchText() {
     this.props.parentFunction({ type: 'search', data: this.state.search });
   }
-  /** === CLEART SEARCH INPUT === */
+  /** === CLEAR SEARCH INPUT === */
   clearSearch() {
     this.setState({ search: '' });
     this.props.parentFunction({ type: 'search', data: '' });
@@ -49,13 +49,7 @@ class SearchBarType2 extends Component {
   renderSearchIcon() {
     return (
       <View style={{ paddingHorizontal: 11 }}>
-        <MaterialIcon
-          color={
-            this.props.blackSearchIcon ? Color.fontBlack100 : Color.fontBlack60
-          }
-          name={'search'}
-          size={24}
-        />
+        <MaterialIcon color={Color.fontBlack60} name={'search'} size={24} />
       </View>
     );
   }
@@ -77,12 +71,11 @@ class SearchBarType2 extends Component {
     return (
       <View style={{ flex: 1 }}>
         <TextInput
-          maxLength={this.props.maxLength}
           selectionColor={Color.mainColor}
           onEndEditing={() => this.searchText()}
           value={this.state.search}
           returnKeyType={'search'}
-          placeholder={'Cari nama / id toko disini'}
+          placeholder={this.props.placeholder}
           onChangeText={search => this.setState({ search })}
           style={[Fonts.textInputSearch, styles.inputBox]}
         />
@@ -92,15 +85,7 @@ class SearchBarType2 extends Component {
   /** === SEARCH BAR === */
   renderSearchBar() {
     return (
-      <View
-        style={[
-          styles.boxSearchBar,
-          {
-            borderColor: Color.fontBlack40,
-            borderWidth: 1
-          }
-        ]}
-      >
+      <View style={styles.boxSearchBar}>
         {this.renderSearchIcon()}
         {this.renderInput()}
         {this.renderDeleteIcon()}
@@ -115,17 +100,15 @@ class SearchBarType2 extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    paddingTop: 16,
+    paddingVertical: 6,
     paddingHorizontal: 16
   },
   boxSearchBar: {
-    height: 41,
-    borderRadius: 4,
+    height: 32,
+    borderRadius: 5,
     alignItems: 'center',
-    backgroundColor: Color.fontBlack05,
-    flexDirection: 'row',
-    borderColor: Color.fontBlack40,
-    borderWidth: 5
+    backgroundColor: Color.fontBlack10OP50,
+    flexDirection: 'row'
   },
   inputBox: {
     paddingVertical: 0
@@ -137,7 +120,7 @@ const mapStateToProps = ({}) => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, {})(SearchBarType2);
+  export default connect(mapStateToProps, {})(SearchBarType5);
 
 /**
  * ============================
@@ -145,9 +128,9 @@ export default connect(mapStateToProps, {})(SearchBarType2);
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
- * updatedDate: 24082021
+ * updatedBy: Tatas
+ * updatedDate: 08072020
  * updatedFunction:
- * -> adding new props 'maxlength' to maximize the character.
+ * -> Refactoring Module Import
  *
  */
