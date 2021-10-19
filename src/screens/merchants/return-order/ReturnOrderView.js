@@ -12,7 +12,7 @@ import {
 } from '../../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
-  SearchBarType5,
+  SearchBarType6,
   ButtonFloatType2,
   DatePickerSpinner,
   ModalBottomType4,
@@ -113,7 +113,7 @@ class ReturnOrderView extends Component {
   renderSearchBar() {
     return (
       <View style={{ marginVertical: 8 }}>
-        <SearchBarType5
+        <SearchBarType6
           placeholder={'Nama produk / ID faktur'}
           searchText={this.state.searchText}
           onRef={ref => (this.parentFunction = ref)}
