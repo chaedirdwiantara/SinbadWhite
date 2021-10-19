@@ -989,6 +989,58 @@ class MerchantHomeView extends Component {
     };
   };
   /**
+   * ===========
+   * RENDER BUTTON RETURN ORDER
+   * ============
+   */
+  buttonReturn(item) {
+    return item.activity ? (
+      <TouchableOpacity
+        onPress={() => {
+          this.goTo(item.goTo);
+        }}
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          marginTop: -5,
+          marginRight: -5
+        }}
+      >
+        <Text style={Fonts.type51}>Selesai</Text>
+        <MaterialIcon
+          style={{
+            marginTop: 2,
+            padding: 0
+          }}
+          name="chevron-right"
+          color={Color.fontGreen50}
+          size={20}
+        />
+      </TouchableOpacity>
+    ) : (
+      <Button
+        onPress={() => {
+          this.goTo(item.goTo);
+        }}
+        title={item.title}
+        titleStyle={[
+          Fonts.type16,
+          {
+            color: Color.fontWhite
+          }
+        ]}
+        buttonStyle={{
+          backgroundColor: Color.fontRed50,
+          borderRadius: 7,
+          paddingHorizontal: 20,
+          paddingVertical: 5,
+          width: '100%'
+        }}
+      />
+    );
+  }
+  /**
    * ====================
    * FOR TASK LIST
    * ====================
@@ -1137,6 +1189,12 @@ class MerchantHomeView extends Component {
                           />
                         </TouchableOpacity>
                       )
+                    ) : taskList.activityName === ACTIVITY_JOURNEY_PLAN_RETUR &&
+                      this.props.merchant.dataReturnActiveInfo.isActive ? (
+                      this.buttonReturn({
+                        goTo: item.goTo,
+                        activity: ACTIVITY_JOURNEY_PLAN_RETUR
+                      })
                     ) : taskList.activityName ===
                       ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY ? (
                       <TouchableOpacity
