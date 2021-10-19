@@ -218,7 +218,7 @@ class MerchantHomeView extends Component {
         /** IF NO SURVEY */
         if (dataGetTotalSurvey.total === 0) {
           this.SurveyDone();
-          if (this.state.task.length === 5) {
+          if (this.state.task.length === 4) {
             this.taskListFilter('noSurvey');
           }
         }
@@ -554,6 +554,12 @@ class MerchantHomeView extends Component {
             activity: ACTIVITY_JOURNEY_PLAN_ORDER
           },
           {
+            name: 'Catatan Stok',
+            title: 'Isi',
+            goTo: 'stock',
+            activity: ACTIVITY_JOURNEY_PLAN_STOCK
+          },
+          {
             name: 'Keluar Toko',
             title: 'Keluar',
             goTo: 'checkOut',
@@ -851,6 +857,54 @@ class MerchantHomeView extends Component {
 
   // RENDER BUTTON STOCK RECORD
   buttonStock(item) {
+    return item.activity ? (
+      <TouchableOpacity
+        onPress={() => {
+          this.goTo(item.goTo);
+        }}
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          marginTop: -5,
+          marginRight: -5
+        }}
+      >
+        <Text style={Fonts.type51}>Selesai</Text>
+        <MaterialIcon
+          style={{
+            marginTop: 2,
+            padding: 0
+          }}
+          name="chevron-right"
+          color={Color.fontGreen50}
+          size={20}
+        />
+      </TouchableOpacity>
+    ) : (
+      <Button
+        onPress={() => {
+          this.goTo(item.goTo);
+        }}
+        title={item.title}
+        titleStyle={[
+          Fonts.type16,
+          {
+            color: Color.fontWhite
+          }
+        ]}
+        buttonStyle={{
+          backgroundColor: Color.fontRed50,
+          borderRadius: 7,
+          paddingHorizontal: 20,
+          paddingVertical: 5,
+          width: '100%'
+        }}
+      />
+    );
+  }
+
+  buttonReturn(item) {
     return item.activity ? (
       <TouchableOpacity
         onPress={() => {
@@ -1212,6 +1266,12 @@ class MerchantHomeView extends Component {
                           />
                         </TouchableOpacity>
                       )
+                    ) : taskList.activityName === ACTIVITY_JOURNEY_PLAN_RETUR &&
+                      this.props.merchant.dataReturnActiveInfo.isActive ? (
+                      this.buttonReturn({
+                        goTo: item.goTo,
+                        activity: ACTIVITY_JOURNEY_PLAN_RETUR
+                      })
                     ) : taskList.activityName ===
                       ACTIVITY_JOURNEY_PLAN_STOCK ? (
                       this.buttonStock({
