@@ -200,6 +200,13 @@ class ReturnRequestView extends Component {
             openModalReturnSummary: false,
             openModalReturnConfirmation: false
           });
+          this.props.merchantPostActivityProcessV2({
+            journeyBookStoreId: this.props.merchant.selectedMerchant
+              .journeyBookStores.id,
+            activityName: 'retur',
+            longitude: this.props.merchant.selectedMerchant.longitude,
+            latitude: this.props.merchant.selectedMerchant.latitude
+          });
           this.confirmReturnOrder();
         }
         break;
