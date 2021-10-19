@@ -416,10 +416,7 @@ class ModalFilterDate extends Component {
               <Text
                 style={[
                   {
-                    color:
-                      this.state.selectedDate === 'customDate'
-                        ? Color.fontRed50
-                        : Color.fontBlack80
+                    color: Color.fontBlack80
                   },
                   Fonts.fontH10Bold
                 ]}
