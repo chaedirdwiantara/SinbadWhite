@@ -855,14 +855,14 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       loadingSfaCheckCollectionStatus: false,
       errorSfaCheckCollectionStatus: action.payload
-    };;
+    };
   },
   /**
    * ==========================
    * GET REASON NOT TO PAY
    * ==========================
    */
-   [types.SFA_GET_REASON_NOT_TO_PAY_PROCESS](state, action) {
+  [types.SFA_GET_REASON_NOT_TO_PAY_PROCESS](state, action) {
     return {
       ...state,
       loadingSfaGetReasonNotToPay: true,
@@ -882,6 +882,33 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       loadingSfaGetReasonNotToPay: false,
       errorSfaGetReasonNotToPay: action.payload
+    };
+  },
+  /**
+   * ==========================
+   * POST TRANSACTION CHECKOUT
+   * ==========================
+   */
+  [types.SFA_POST_TRANSACTION_CHECKOUT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaPostTransactionCheckout: true,
+      dataSfaPostTransactionCheckout: null,
+      errorSfaPostTransactionCheckout: null
+    };
+  },
+  [types.SFA_POST_TRANSACTION_CHECKOUT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaPostTransactionCheckout: false,
+      dataSfaPostTransactionCheckout: action.payload
+    };
+  },
+  [types.SFA_POST_TRANSACTION_CHECKOUT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaPostTransactionCheckout: false,
+      errorSfaPostTransactionCheckout: action.payload
     };
   }
 });

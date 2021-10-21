@@ -17,16 +17,26 @@ const MerchantNoCollectionReason = () => {
   const [dataPostTransaction, setDataPostTransaction] = useState(null);
   const [indexCollection, setIndexCollection] = useState(0);
   const [dataReasonList, setDataReasonList] = useState([]);
-  const [reasonLength, setReasonLength] = useState(0)
+  const [reasonLength, setReasonLength] = useState(0);
   const [isSaveButtonDisable, setIsSaveButtonDisable] = useState(true);
-  const { dataSfaCheckCollectionStatus } = useSelector(state => state.sfa);
+  const [
+    collectionTransactionDetails,
+    setCollectionTransactionDetails
+  ] = useState([]);
+  const {
+    dataSfaCheckCollectionStatus,
+    dataSfaGetReasonNotToPay
+  } = useSelector(state => state.sfa);
 
-  const { dataSfaGetReasonNotToPay } = useSelector(state => state.sfa);
+  const { selectedMerchant } = useSelector(state => state.merchant);
 
   /** RENDER USE EFFECT */
   /** get reason not to pay on render screen */
   useEffect(() => {
     getReasonNotToPay();
+    setCollectionTransactionDetails(
+      selectedMerchant?.journeyBookStores.collections
+    );
   }, []);
   /** save data post transaction */
   useEffect(() => {
@@ -42,6 +52,17 @@ const MerchantNoCollectionReason = () => {
     }
   }, [dataReasonList, reasonLength]);
   /**=== RENDER FUNCTION === */
+  /** function post transaction checkout */
+  const postTransaction = () => {
+    const data = [];
+    const storeId = 123;
+    const collectionTransactionDetailIds = selectedMerchant.collectionIds;
+
+    data.storeId = storeId;
+    data.collectionTransactionDetailIds = collectionTransactionDetailIds;
+    data.collectionTransactionDetails = collectionTransactionDetails;
+    console.log('DATA POST', data);
+  };
   /** GET DATA REASON NOT TO PAY */
   const getReasonNotToPay = () => {
     dispatch(sfaGetReasonNotToPayProcess());
@@ -55,16 +76,24 @@ const MerchantNoCollectionReason = () => {
     const data = dataPostTransaction;
     const dataReason = dataReasonList;
     const reasonNotToPay = item.selectedReasonText;
+    const reasonNotToPayId = item.selectedReasonId;
+    const dataPost = collectionTransactionDetails;
     data.splice(index, 1, { ...data[index], reasonNotToPay });
     dataReason.splice(index, 1, {
       ...dataReason[index],
       reasonNotToPay
     });
-    setDataReasonList(dataReason)
+    dataPost.splice(index, 1, {
+      ...dataPost[index],
+      reasonNotToPayId
+    });
+    setCollectionTransactionDetails(dataPost);
+    setDataReasonList(dataReason);
     setReasonLength(dataReasonList.length);
     setDataPostTransaction(data);
     setIsModalReasonOpen(false);
   };
+  console.log(collectionTransactionDetails);
   const renderModalBottomNotCollectReason = () => {
     return isModalReasonOpen && dataSfaGetReasonNotToPay ? (
       <ModalBottomMerchantNoCollectionReason
@@ -82,7 +111,7 @@ const MerchantNoCollectionReason = () => {
     return (
       <>
         <ButtonSingle
-          onPress={() => console.log('button')}
+          onPress={() => postTransaction()}
           title={'Simpan Alasan'}
           borderRadius={4}
           disabled={isSaveButtonDisable}

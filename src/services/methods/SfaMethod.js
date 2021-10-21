@@ -224,6 +224,15 @@ function getReasonNotToPay() {
   })
 }
 
+/** POST TRANSACTION CHECKOUT */
+function postTransactionCheckout(data){
+  return ApiRest({
+    path: 'collection/v1/transaction-checkout',
+    method: 'POST',
+    params: data
+  });
+}
+
 export const SfaMethod = {
   getCollectionStatus,
   getSfaDetail,
@@ -247,5 +256,6 @@ export const SfaMethod = {
   editCollectionMethod,
   deleteCollectionMethod,
   getCollectionListStatus,
-  getReasonNotToPay
+  getReasonNotToPay,
+  postTransactionCheckout
 };

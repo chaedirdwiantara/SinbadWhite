@@ -250,17 +250,8 @@ class MerchantHomeView extends Component {
           ) {
             this.SurveyDone();
           }
-          /** FOR GET SURVEY LIST */
-          // if (!loadingGetSurveyList && !surveyList.payload.data) {
-          //   this.getSurvey();
-          // }
         }
       }
-      /** HIDE SURVEY -> BECAUSE INFINITE LOOP */
-      /** FOR GET SURVEY LIST */
-      // if (!loadingGetSurveyList && !surveyList.payload.data && !errorGetSurveyList) {
-      //   this.getSurvey();
-      // }
     }
     if (
       prevProps.merchant.dataPostActivityV2 !==
@@ -325,7 +316,8 @@ class MerchantHomeView extends Component {
             this.props.sfa.dataSfaCheckCollectionStatus &&
             this.props.sfa.dataSfaCheckCollectionStatus.meta.total === 0
           ) {
-            this.checkoutProcess();
+            console.log('DID UPDATE');
+            // this.checkoutProcess();
           }
         } else {
           if (this.state.checkNoOrder) {
@@ -1479,9 +1471,10 @@ class MerchantHomeView extends Component {
                   activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
                 };
                 this.props.merchantPostActivityProcessV2(data);
-                this.checkoutProcess();
+                // this.checkoutProcess();
               } else {
-                this.checkoutProcess();
+                // this.checkoutProcess();
+                console.log('modal');
               }
             }
           }
