@@ -213,6 +213,13 @@ class MerchantHomeView extends Component {
       }
     }
 
+    if (prevProps.merchant.dataGetTotalSurvey !== dataGetTotalSurvey) {
+      /** IF SURVEY LIST EXIST */
+      if (dataGetTotalSurvey !== null) {
+        this.taskListFilter();
+      }
+    }
+
     if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
       if (dataGetTotalSurvey) {
         /** IF NO SURVEY */
@@ -530,13 +537,21 @@ class MerchantHomeView extends Component {
   }
 
   taskListFilter(filter) {
-    const { dataReturnActiveInfo } = this.props.merchant;
+    const { dataReturnActiveInfo, dataGetTotalSurvey } = this.props.merchant;
     const retur = {
       name: 'Retur Barang',
       title: 'Retur',
       goTo: 'retur',
       activity: ACTIVITY_JOURNEY_PLAN_RETUR
     };
+
+    const surveyTask = {
+      name: 'Toko Survey',
+      title: 'Isi',
+      goTo: 'survey',
+      activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+    };
+
     const data = {};
     switch (filter) {
       case 'noSurvey':
@@ -603,11 +618,49 @@ class MerchantHomeView extends Component {
         break;
 
       default:
+        data.task = [
+          {
+            name: 'Masuk Toko',
+            title: 'Masuk',
+            goTo: 'checkIn',
+            activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+          },
+          {
+            name: 'Order',
+            title: 'Order',
+            goTo: 'pdp',
+            activity: ACTIVITY_JOURNEY_PLAN_ORDER
+          },
+          {
+            name: 'Catatan Stok',
+            title: 'Isi',
+            goTo: 'stock',
+            activity: ACTIVITY_JOURNEY_PLAN_STOCK
+          },
+          {
+            name: 'Keluar Toko',
+            title: 'Keluar',
+            goTo: 'checkOut',
+            activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+          }
+        ];
         break;
     }
+
+    /** ADD RETURN TASK */
     if (dataReturnActiveInfo.isActive) {
       data.task.splice(2, 0, retur);
     }
+
+    /** ADD SURVEY TASK */
+    if (dataGetTotalSurvey.total !== 0) {
+      /** FIND CHECKOUT INDEX */
+      const taskCheckoutIndex = data.task.findIndex(
+        task => task.title === 'Keluar'
+      );
+      data.task.splice(taskCheckoutIndex, 0, surveyTask);
+    }
+
     this.setState({ task: data.task });
   }
 
