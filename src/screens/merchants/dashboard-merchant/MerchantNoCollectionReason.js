@@ -143,7 +143,6 @@ const MerchantNoCollectionReason = () => {
     setDataPostTransaction(data);
     setIsModalReasonOpen(false);
   };
-  console.log(collectionTransactionDetails);
   const renderModalBottomNotCollectReason = () => {
     return isModalReasonOpen && dataSfaGetReasonNotToPay ? (
       <ModalBottomMerchantNoCollectionReason
