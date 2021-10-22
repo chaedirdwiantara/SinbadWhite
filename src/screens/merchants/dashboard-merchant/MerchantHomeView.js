@@ -250,17 +250,8 @@ class MerchantHomeView extends Component {
           ) {
             this.SurveyDone();
           }
-          /** FOR GET SURVEY LIST */
-          // if (!loadingGetSurveyList && !surveyList.payload.data) {
-          //   this.getSurvey();
-          // }
         }
       }
-      /** HIDE SURVEY -> BECAUSE INFINITE LOOP */
-      /** FOR GET SURVEY LIST */
-      // if (!loadingGetSurveyList && !surveyList.payload.data && !errorGetSurveyList) {
-      //   this.getSurvey();
-      // }
     }
     if (
       prevProps.merchant.dataPostActivityV2 !==
@@ -321,14 +312,25 @@ class MerchantHomeView extends Component {
         if (this.props.merchant.dataGetLogPerActivityV2.length > 0) {
           if (
             this.props.merchant.dataGetLogPerActivityV2[0].activityName ===
-              'order' &&
-            this.props.sfa.dataSfaCheckCollectionStatus &&
-            this.props.sfa.dataSfaCheckCollectionStatus.meta.total === 0
+            'order'
           ) {
-            this.checkoutProcess();
+            console.log('DID UPDATE');
+            // this.checkoutProcess();
           }
         } else {
-          if (this.state.checkNoOrder) {
+          if (
+            this.props.sfa.dataSfaCheckCollectionStatus?.meta?.total > 0 &&
+            !this.props.merchant.dataGetLogAllActivityV2.find(
+              item =>
+                item.activityName ===
+                ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
+            )
+          ) {
+            this.setState({
+              openModalCheckout: false,
+              openModalConfirmNoCollection: true
+            });
+          } else if (this.state.checkNoOrder) {
             this.setState({
               openModalCheckout: false,
               checkNoOrder: false,
@@ -1479,9 +1481,10 @@ class MerchantHomeView extends Component {
                   activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
                 };
                 this.props.merchantPostActivityProcessV2(data);
-                this.checkoutProcess();
+                // this.checkoutProcess();
               } else {
-                this.checkoutProcess();
+                // this.checkoutProcess();
+                console.log('modal');
               }
             }
           }

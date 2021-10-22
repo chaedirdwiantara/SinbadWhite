@@ -703,3 +703,28 @@ export function sfaGetReasonNotToPaySuccess(data) {
 export function sfaGetReasonNotToPayFailed(data) {
   return { type: types.SFA_GET_REASON_NOT_TO_PAY_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * POST TRANSACTION CHECKOUT
+ * ===========================
+ */
+/** === SFA POST PAYMENT METHOD PROCESS === */
+export function sfaPostTransactionCheckoutProcess(data) {
+  return { type: types.SFA_POST_TRANSACTION_CHECKOUT_PROCESS, payload: data };
+}
+
+/** === SFA POST PAYMENT METHOD SUCCESS === */
+export function sfaPostTransactionCheckoutSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_POST_TRANSACTION_CHECKOUT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_POST_TRANSACTION_CHECKOUT_FAILED, payload: data };
+}
+/** === SFA POST PAYMENT METHOD FAILED === */
+export function sfaPostTransactionCheckoutFailed(data) {
+  return { type: types.SFA_POST_TRANSACTION_CHECKOUT_FAILED, payload: data };
+}

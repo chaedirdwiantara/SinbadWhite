@@ -324,6 +324,18 @@ function* getSfaReasonNotToPay(actions) {
   }
 }
 
+/** POST TRANSACTION CHECKOUT */
+function* postTransactionCheckout(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.postTransactionCheckout(actions.payload);
+    });
+    yield put(ActionCreators.sfaPostTransactionCheckoutSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaPostTransactionCheckoutFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* SfaSaga() {
   yield takeEvery(
@@ -382,6 +394,10 @@ function* SfaSaga() {
   yield takeEvery(
     types.SFA_GET_REASON_NOT_TO_PAY_PROCESS,
     getSfaReasonNotToPay
+  );
+  yield takeEvery(
+    types.SFA_POST_TRANSACTION_CHECKOUT_PROCESS,
+    postTransactionCheckout
   );
 }
 

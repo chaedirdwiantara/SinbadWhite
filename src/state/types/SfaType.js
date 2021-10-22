@@ -171,3 +171,11 @@ export const SFA_CHECK_COLLECTION_STATUS_FAILED =
 export const SFA_GET_REASON_NOT_TO_PAY_PROCESS = 'SfaGetReasonNotToPayProcess';
 export const SFA_GET_REASON_NOT_TO_PAY_SUCCESS = 'SfaGetReasonNotToPaySuccess';
 export const SFA_GET_REASON_NOT_TO_PAY_FAILED = 'SfaGetReasonNotToPayFailed';
+
+/** POST TRANSACTION CHECKOUT */
+export const SFA_POST_TRANSACTION_CHECKOUT_PROCESS =
+  'SfaPostTransactionCheckoutProcess';
+export const SFA_POST_TRANSACTION_CHECKOUT_SUCCESS =
+  'SfaPostTransactionCheckoutSuccess';
+export const SFA_POST_TRANSACTION_CHECKOUT_FAILED =
+  'SfaPostTransactionCheckoutFailed';
