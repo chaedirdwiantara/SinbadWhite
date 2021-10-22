@@ -9,7 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   merchantPostActivityProcessV2,
   sfaGetReasonNotToPayProcess,
-  sfaPostTransactionCheckoutProcess
+  sfaPostTransactionCheckoutProcess,
+  merchantGetLogAllActivityProcessV2
 } from '../../../state/actions';
 import ModalBottomMerchantNoCollectionReason from './ModalBottomMerchantNoCollectionReason';
 import MerchantCollectionReasonList from './MerchantCollectionReasonList';
@@ -36,12 +37,16 @@ const MerchantNoCollectionReason = () => {
     dataSfaPostTransactionCheckout
   } = useSelector(state => state.sfa);
 
-  const { selectedMerchant } = useSelector(state => state.merchant);
+  const { selectedMerchant, dataPostActivityV2 } = useSelector(
+    state => state.merchant
+  );
   const journeyBookStoreId = selectedMerchant?.journeyBookStores.id;
-  //USEREF POST TRANSACTION CHECKOUT
+  /** RENDER USE REF */
   const prevdataSfaPostTransactionCheckout = useRef(
     dataSfaPostTransactionCheckout
   );
+  const prevdataPostActivityV2 = useRef(dataPostActivityV2);
+
   /** RENDER USE EFFECT */
   /** get reason not to pay on render screen */
   useEffect(() => {
@@ -69,6 +74,11 @@ const MerchantNoCollectionReason = () => {
     prevdataSfaPostTransactionCheckout.current = dataSfaPostTransactionCheckout;
   }, []);
 
+  /** save previous dataPostTransactionCheckout */
+  useEffect(() => {
+    prevdataPostActivityV2.current = dataPostActivityV2;
+  }, []);
+
   /** post collection_not_success & navigate to merchantHomeView on success post transaction checkout */
   useEffect(() => {
     if (prevdataSfaPostTransactionCheckout !== dataSfaPostTransactionCheckout) {
@@ -78,10 +88,19 @@ const MerchantNoCollectionReason = () => {
           activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
         };
         dispatch(merchantPostActivityProcessV2(data));
-        NavigationService.navigate('MerchantHomeView');
       }
     }
   }, [dataSfaPostTransactionCheckout]);
+
+  /** post collection_not_success & navigate to merchantHomeView on success post transaction checkout */
+  useEffect(() => {
+    if (prevdataPostActivityV2 !== dataPostActivityV2) {
+      if (dataPostActivityV2) {
+        dispatch(merchantGetLogAllActivityProcessV2(journeyBookStoreId));
+        NavigationService.navigate('MerchantHomeView');
+      }
+    }
+  }, [dataPostActivityV2]);
   /**=== RENDER FUNCTION === */
   /** function post transaction checkout */
   const postTransaction = () => {

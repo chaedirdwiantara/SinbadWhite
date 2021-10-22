@@ -319,8 +319,7 @@ class MerchantHomeView extends Component {
           }
         } else {
           if (
-            this.props.sfa.dataSfaCheckCollectionStatus &&
-            this.props.sfa.dataSfaCheckCollectionStatus.meta.total > 0  &&
+            this.props.sfa.dataSfaCheckCollectionStatus?.meta?.total > 0 &&
             !this.props.merchant.dataGetLogAllActivityV2.find(
               item =>
                 item.activityName ===
