@@ -6,11 +6,18 @@ import {
 } from '../../../library/reactPackage';
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { sfaGetReasonNotToPayProcess } from '../../../state/actions';
+import {
+  merchantPostActivityProcessV2,
+  sfaGetReasonNotToPayProcess,
+  sfaPostTransactionCheckoutProcess
+} from '../../../state/actions';
 import ModalBottomMerchantNoCollectionReason from './ModalBottomMerchantNoCollectionReason';
 import MerchantCollectionReasonList from './MerchantCollectionReasonList';
 import SfaNoDataView from '../../sfa/SfaNoDataView';
 import { ButtonSingle } from '../../../library/component';
+import { ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS } from '../../../constants';
+import NavigationService from '../../../navigation/NavigationService';
+
 const MerchantNoCollectionReason = () => {
   const dispatch = useDispatch();
   const [isModalReasonOpen, setIsModalReasonOpen] = useState(false);
@@ -25,11 +32,16 @@ const MerchantNoCollectionReason = () => {
   ] = useState([]);
   const {
     dataSfaCheckCollectionStatus,
-    dataSfaGetReasonNotToPay
+    dataSfaGetReasonNotToPay,
+    dataSfaPostTransactionCheckout
   } = useSelector(state => state.sfa);
 
   const { selectedMerchant } = useSelector(state => state.merchant);
-
+  const journeyBookStoreId = selectedMerchant?.journeyBookStores.id;
+  //USEREF POST TRANSACTION CHECKOUT
+  const prevdataSfaPostTransactionCheckout = useRef(
+    dataSfaPostTransactionCheckout
+  );
   /** RENDER USE EFFECT */
   /** get reason not to pay on render screen */
   useEffect(() => {
@@ -51,17 +63,36 @@ const MerchantNoCollectionReason = () => {
       setIsSaveButtonDisable(true);
     }
   }, [dataReasonList, reasonLength]);
+
+  /** save previous dataPostTransactionCheckout */
+  useEffect(() => {
+    prevdataSfaPostTransactionCheckout.current = dataSfaPostTransactionCheckout;
+  }, []);
+
+  /** post collection_not_success & navigate to merchantHomeView on success post transaction checkout */
+  useEffect(() => {
+    if (prevdataSfaPostTransactionCheckout !== dataSfaPostTransactionCheckout) {
+      if (dataSfaPostTransactionCheckout) {
+        const data = {
+          journeyBookStoreId: journeyBookStoreId,
+          activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
+        };
+        dispatch(merchantPostActivityProcessV2(data));
+        NavigationService.navigate('MerchantHomeView');
+      }
+    }
+  }, [dataSfaPostTransactionCheckout]);
   /**=== RENDER FUNCTION === */
   /** function post transaction checkout */
   const postTransaction = () => {
-    const data = [];
-    const storeId = 123;
+    const data = {};
+    const storeId = parseInt(selectedMerchant.storeId, 10);
     const collectionTransactionDetailIds = selectedMerchant.collectionIds;
 
     data.storeId = storeId;
     data.collectionTransactionDetailIds = collectionTransactionDetailIds;
     data.collectionTransactionDetails = collectionTransactionDetails;
-    console.log('DATA POST', data);
+    dispatch(sfaPostTransactionCheckoutProcess(data));
   };
   /** GET DATA REASON NOT TO PAY */
   const getReasonNotToPay = () => {

@@ -312,15 +312,26 @@ class MerchantHomeView extends Component {
         if (this.props.merchant.dataGetLogPerActivityV2.length > 0) {
           if (
             this.props.merchant.dataGetLogPerActivityV2[0].activityName ===
-              'order' &&
-            this.props.sfa.dataSfaCheckCollectionStatus &&
-            this.props.sfa.dataSfaCheckCollectionStatus.meta.total === 0
+            'order'
           ) {
             console.log('DID UPDATE');
             // this.checkoutProcess();
           }
         } else {
-          if (this.state.checkNoOrder) {
+          if (
+            this.props.sfa.dataSfaCheckCollectionStatus &&
+            this.props.sfa.dataSfaCheckCollectionStatus.meta.total > 0  &&
+            !this.props.merchant.dataGetLogAllActivityV2.find(
+              item =>
+                item.activityName ===
+                ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
+            )
+          ) {
+            this.setState({
+              openModalCheckout: false,
+              openModalConfirmNoCollection: true
+            });
+          } else if (this.state.checkNoOrder) {
             this.setState({
               openModalCheckout: false,
               checkNoOrder: false,
