@@ -267,6 +267,16 @@ class MerchantHomeView extends Component {
           /** FOR GET LOG ALL ACTIVITY */
           this.refreshMerchantGetLogAllActivityProcess();
         }
+        /** IF COLLECTION DONE SUCCESS */
+        if (
+          this.props.merchant.dataPostActivityV2.activity ===
+          ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+        ) {
+          /** FOR GET LOG ALL ACTIVITY */
+          this.refreshMerchantGetLogAllActivityProcess();
+          this.checkOrder();
+          // this.checkoutProcess();
+        }
       }
       if (this.props.merchant.dataPostActivityV2 !== null) {
         /** IF CHECK OUT SUCCESS */
@@ -304,6 +314,50 @@ class MerchantHomeView extends Component {
         }
       }
     }
+    /** CHECK COLLECTION */
+    if (
+      prevProps.sfa.dataSfaCheckCollectionStatus !==
+      this.props.sfa.dataSfaCheckCollectionStatus
+    ) {
+      if (this.props.sfa.dataSfaCheckCollectionStatus) {
+        /** if collection total === 0 post transaction checkout, if not then open modal confirm no collection */
+        if (this.props.sfa.dataSfaCheckCollectionStatus?.meta.total === 0) {
+          this.postTransactionCheckout();
+        } else {
+          this.setState({
+            openModalCheckout: false,
+            openModalConfirmNoCollection: true
+          });
+        }
+      }
+    }
+    if (
+      prevProps.sfa.dataSfaPostTransactionCheckout !==
+      this.props.sfa.dataSfaPostTransactionCheckout
+    ) {
+      console.log(
+        prevProps.sfa.dataSfaPostTransactionCheckout,
+        this.props.sfa.dataSfaPostTransactionCheckout,
+        'DID UPDATE POST TRANSACTION'
+      );
+      if (!this.props.errorSfaPostTransactionCheckout) {
+        if (this.props.sfa.dataSfaCheckCollectionStatus?.meta?.total === 0) {
+          console.log('ACTIVITY SUCCESS');
+          this.props.merchantPostActivityProcessV2({
+            journeyBookStoreId: this.props.merchant.selectedMerchant
+              .journeyBookStores.id,
+            activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+          });
+        } else {
+          console.log('ACTIVITY NOT SUCCESS');
+          // this.props.merchantPostActivityProcessV2({
+          //   journeyBookStoreId: this.props.merchant.selectedMerchant
+          //     .journeyBookStores.id,
+          //   activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+          // });
+        }
+      }
+    }
     if (
       prevProps.merchant.dataGetLogPerActivityV2 !==
       this.props.merchant.dataGetLogPerActivityV2
@@ -314,23 +368,10 @@ class MerchantHomeView extends Component {
             this.props.merchant.dataGetLogPerActivityV2[0].activityName ===
             'order'
           ) {
-            console.log('DID UPDATE');
-            // this.checkoutProcess();
+            this.checkoutProcess();
           }
         } else {
-          if (
-            this.props.sfa.dataSfaCheckCollectionStatus?.meta?.total > 0 &&
-            !this.props.merchant.dataGetLogAllActivityV2.find(
-              item =>
-                item.activityName ===
-                ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
-            )
-          ) {
-            this.setState({
-              openModalCheckout: false,
-              openModalConfirmNoCollection: true
-            });
-          } else if (this.state.checkNoOrder) {
+          if (this.state.checkNoOrder) {
             this.setState({
               openModalCheckout: false,
               checkNoOrder: false,
@@ -442,6 +483,18 @@ class MerchantHomeView extends Component {
     });
   }
 
+  /** POST TRANSACTION CHECKOUT FOR COLLECTION */
+  postTransactionCheckout() {
+    const data = {};
+    const { selectedMerchant } = this.props.merchant;
+    const storeId = parseInt(selectedMerchant.storeId, 10);
+    const collectionTransactionDetailIds = selectedMerchant.collectionIds;
+
+    data.storeId = storeId;
+    data.collectionTransactionDetailIds = collectionTransactionDetailIds;
+    data.collectionTransactionDetails = [];
+    this.props.sfaPostTransactionCheckoutProcess(data);
+  }
   /*
    * Set sales activity survey_toko done
    */
@@ -521,7 +574,6 @@ class MerchantHomeView extends Component {
             .journeyBookStores.id,
           activity: 'check_in'
         });
-        this.checkCollectionStatus();
         if (this.props.merchant.dataGetLogAllActivityV2) {
           const haveSurvey = this.props.merchant.dataGetTotalSurvey.total === 0;
           const surveyHasDone = this.props.merchant.dataGetLogAllActivityV2.find(
@@ -1438,54 +1490,37 @@ class MerchantHomeView extends Component {
       <View />
     );
   }
+  /** CHECK ORDER BEFORE CHECKOUT */
+  checkOrder() {
+    const { order } = this.state.privileges;
+    if (order?.status) {
+      this.setState({ checkNoOrder: true });
+      this.props.merchantGetLogPerActivityProcessV2({
+        journeyBookStoresId: this.props.merchant.selectedMerchant
+          .journeyBookStores.id,
+        activity: 'order'
+      });
+    } else {
+      console.log('CHECKOUT VIA CHECKORDER');
+      // this.checkoutProcess();
+    }
+  }
   /**
    * ====================
    * MODAL
    * =====================
    */
   renderModalCheckout() {
-    const { order } = this.state.privileges;
-
     return this.state.openModalCheckout ? (
       <ModalBottomMerchantCheckout
         open={this.state.openModalCheckout}
         close={() => this.setState({ openModalCheckout: false })}
         onPress={
           () => {
-            if (order?.status) {
-              this.setState({ checkNoOrder: true });
-              this.props.merchantGetLogPerActivityProcessV2({
-                journeyBookStoresId: this.props.merchant.selectedMerchant
-                  .journeyBookStores.id,
-                activity: 'order'
-              });
-              /** if there is collection and the total unpaid is > 0 -> open Modal Confirmation No Collection*/
-            } else if (
-              this.props.sfa.dataSfaCheckCollectionStatus &&
-              this.props.sfa.dataSfaCheckCollectionStatus.meta.total > 0
-            ) {
-              this.setState({
-                openModalConfirmNoCollection: true,
-                openModalCheckout: false
-              });
+            if (this.props.merchant.selectedMerchant.collectionIds.length > 0) {
+              this.checkCollectionStatus();
             } else {
-              /** if there is collection and the total unpaid is 0  -> POST COLLECTION SUCCESS*/
-              if (
-                this.props.sfa.dataSfaCheckCollectionStatus &&
-                this.props.sfa.dataSfaCheckCollectionStatus.meta.total === 0
-              ) {
-                const journeyBookStoreId = this.props.merchant.selectedMerchant
-                  .journeyBookStores.id;
-                const data = {
-                  journeyBookStoreId,
-                  activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
-                };
-                this.props.merchantPostActivityProcessV2(data);
-                // this.checkoutProcess();
-              } else {
-                // this.checkoutProcess();
-                console.log('modal');
-              }
+              this.checkOrder();
             }
           }
           // this.props.merchantPostActivityProcess({
