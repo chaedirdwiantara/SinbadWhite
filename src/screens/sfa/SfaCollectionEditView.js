@@ -187,7 +187,6 @@ const SfaCollectionEditView = props => {
   }, [isStampChecked]);
 
   useEffect(() => {
-    console.log('edit ');
     dispatch(sfaGetCollectionImageProcess(pcmId));
   }, []);
 

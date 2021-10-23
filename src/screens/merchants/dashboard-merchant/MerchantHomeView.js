@@ -270,7 +270,9 @@ class MerchantHomeView extends Component {
         /** IF COLLECTION DONE SUCCESS */
         if (
           this.props.merchant.dataPostActivityV2.activity ===
-          ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+            ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS ||
+          this.props.merchant.dataPostActivityV2.activity ===
+            ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
         ) {
           /** FOR GET LOG ALL ACTIVITY */
           this.refreshMerchantGetLogAllActivityProcess();
@@ -335,26 +337,26 @@ class MerchantHomeView extends Component {
       prevProps.sfa.dataSfaPostTransactionCheckout !==
       this.props.sfa.dataSfaPostTransactionCheckout
     ) {
-      console.log(
-        prevProps.sfa.dataSfaPostTransactionCheckout,
-        this.props.sfa.dataSfaPostTransactionCheckout,
-        'DID UPDATE POST TRANSACTION'
-      );
-      if (!this.props.errorSfaPostTransactionCheckout) {
+      if (this.props.sfa.dataSfaPostTransactionCheckout) {
         if (this.props.sfa.dataSfaCheckCollectionStatus?.meta?.total === 0) {
-          console.log('ACTIVITY SUCCESS');
+          if (
+            !dataGetLogAllActivityV2.find(
+              item =>
+                item.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+            )
+          ) {
+            this.props.merchantPostActivityProcessV2({
+              journeyBookStoreId: this.props.merchant.selectedMerchant
+                .journeyBookStores.id,
+              activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+            });
+          }
+        } else {
           this.props.merchantPostActivityProcessV2({
             journeyBookStoreId: this.props.merchant.selectedMerchant
               .journeyBookStores.id,
-            activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+            activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
           });
-        } else {
-          console.log('ACTIVITY NOT SUCCESS');
-          // this.props.merchantPostActivityProcessV2({
-          //   journeyBookStoreId: this.props.merchant.selectedMerchant
-          //     .journeyBookStores.id,
-          //   activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
-          // });
         }
       }
     }
@@ -1501,8 +1503,7 @@ class MerchantHomeView extends Component {
         activity: 'order'
       });
     } else {
-      console.log('CHECKOUT VIA CHECKORDER');
-      // this.checkoutProcess();
+      this.checkoutProcess();
     }
   }
   /**

@@ -51,10 +51,17 @@ const MerchantNoCollectionReason = () => {
   /** get reason not to pay on render screen */
   useEffect(() => {
     getReasonNotToPay();
-    setCollectionTransactionDetails(
-      selectedMerchant?.journeyBookStores.collections
-    );
+    getCollectionTransactionDetailId();
   }, []);
+  const getCollectionTransactionDetailId = () => {
+    const data = [];
+    dataSfaCheckCollectionStatus.data.orderParcels.map(item =>
+      data.push({
+        collectionTransactionDetailId: item.collectionTransactionDetailId
+      })
+    );
+    setCollectionTransactionDetails(data);
+  };
   /** save data post transaction */
   useEffect(() => {
     setDataPostTransaction(dataSfaCheckCollectionStatus.data.orderParcels);
@@ -83,11 +90,12 @@ const MerchantNoCollectionReason = () => {
   useEffect(() => {
     if (prevdataSfaPostTransactionCheckout !== dataSfaPostTransactionCheckout) {
       if (dataSfaPostTransactionCheckout) {
-        const data = {
-          journeyBookStoreId: journeyBookStoreId,
-          activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
-        };
-        dispatch(merchantPostActivityProcessV2(data));
+        // const data = {
+        //   journeyBookStoreId: journeyBookStoreId,
+        //   activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
+        // };
+        // dispatch(merchantPostActivityProcessV2(data));
+        NavigationService.navigate('MerchantHomeView');
       }
     }
   }, [dataSfaPostTransactionCheckout]);
