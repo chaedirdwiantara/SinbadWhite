@@ -19,7 +19,7 @@ const MerchantNoCollectionDetailView = props => {
   /** RENDER USE EFFECT */
   /** get initial data */
   useEffect(() => {
-    getCollectionList(true, 5);
+    getCollectionList(true, 20);
   }, []);
   /** RENDER FUNCTION */
   /** handle loadmore get collectin */
