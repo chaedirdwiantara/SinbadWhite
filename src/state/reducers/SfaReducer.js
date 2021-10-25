@@ -910,5 +910,13 @@ export const sfa = createReducer(INITIAL_STATE, {
       loadingSfaPostTransactionCheckout: false,
       errorSfaPostTransactionCheckout: action.payload
     };
+  },
+  [types.SFA_POST_TRANSACTION_CHECKOUT_RESET](state, action) {
+    return {
+      ...state,
+      loadingSfaPostTransactionCheckout: false,
+      dataSfaPostTransactionCheckout: null,
+      errorSfaPostTransactionCheckout: null
+    };
   }
 });

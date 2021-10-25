@@ -728,3 +728,7 @@ export function sfaPostTransactionCheckoutSuccess(data) {
 export function sfaPostTransactionCheckoutFailed(data) {
   return { type: types.SFA_POST_TRANSACTION_CHECKOUT_FAILED, payload: data };
 }
+
+export function sfaPostTransactionCheckoutReset(){
+  return { type: types.SFA_POST_TRANSACTION_CHECKOUT_RESET };
+}

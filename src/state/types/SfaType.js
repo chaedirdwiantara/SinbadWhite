@@ -179,3 +179,7 @@ export const SFA_POST_TRANSACTION_CHECKOUT_SUCCESS =
   'SfaPostTransactionCheckoutSuccess';
 export const SFA_POST_TRANSACTION_CHECKOUT_FAILED =
   'SfaPostTransactionCheckoutFailed';
+
+/** RESET POST TRANSACTION CHECKOUT */
+export const SFA_POST_TRANSACTION_CHECKOUT_RESET =
+  'SfaPostTransactionCheckoutReset';
