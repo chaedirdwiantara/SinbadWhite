@@ -326,10 +326,22 @@ class MerchantHomeView extends Component {
         if (this.props.sfa.dataSfaCheckCollectionStatus?.meta.total === 0) {
           this.postTransactionCheckout();
         } else {
-          this.setState({
-            openModalCheckout: false,
-            openModalConfirmNoCollection: true
-          });
+          const isCollectionSuccess = this.props.merchant.dataGetLogAllActivityV2.find(
+            item =>
+              item.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+          );
+          const isCollectionNotSuccess = this.props.merchant.dataGetLogAllActivityV2.find(
+            item =>
+              item.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
+          );
+          if (!isCollectionSuccess && !isCollectionNotSuccess) {
+            this.setState({
+              openModalCheckout: false,
+              openModalConfirmNoCollection: true
+            });
+          } else {
+            this.checkOrder();
+          }
         }
       }
     }
@@ -350,6 +362,8 @@ class MerchantHomeView extends Component {
                 .journeyBookStores.id,
               activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
             });
+          } else {
+            this.checkOrder();
           }
         } else {
           this.props.merchantPostActivityProcessV2({
@@ -869,7 +883,7 @@ class MerchantHomeView extends Component {
           )
         ) {
           return (
-            <TouchableOpacity
+            <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-end',
@@ -883,7 +897,7 @@ class MerchantHomeView extends Component {
               >
                 Sudah Lunas
               </Text>
-            </TouchableOpacity>
+            </View>
           );
         } else if (
           activity.find(
@@ -895,7 +909,7 @@ class MerchantHomeView extends Component {
           return (
             <TouchableOpacity
               onPress={() =>
-                NavigationService.navigate('MerchantNoCollectionReason')
+                NavigationService.navigate('MerchantNoCollectionDetailView')
               }
               style={{
                 flexDirection: 'row',
