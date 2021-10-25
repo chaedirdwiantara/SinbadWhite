@@ -114,6 +114,7 @@ class JourneyListDataView extends Component {
     data.storeId = data.storeId.toString();
     data.collectionIds = collectionIds;
     this.props.merchantSelected(data);
+    this.props.sfaPostTransactionCheckoutReset();
     setTimeout(() => {
       this.props.getSurveyResult(data.storeName);
       NavigationService.navigate('MerchantHomeView', {
