@@ -19,6 +19,7 @@ import MerchantNoVisitReasonView from '../../screens/merchants/dashboard-merchan
 import MerchantNoVisitPicture from '../../screens/merchants/dashboard-merchant/MerchantNoVisitPicture';
 import MerchantNoVisitReasonDetailView from '../../screens/merchants/dashboard-merchant/MerchantNoVisitReasonDetailView';
 import MerchantNoCollectionReason from '../../screens/merchants/dashboard-merchant/MerchantNoCollectionReason';
+import MerchantNoCollectionDetailView from '../../screens/merchants/dashboard-merchant/MerchantNoCollectionDetailView';
 /** merchant detail */
 import MerchantDetailProfileView from '../../screens/merchants/details-merchant/MerchantDetailProfileView';
 import MerchantDetailAccountView from '../../screens/merchants/details-merchant/MerchantDetailAccountView';
@@ -369,6 +370,19 @@ const MerchantNavigator = {
         paddingLeft: 20
       },
       headerLeft: null
+    }
+  },
+  MerchantNoCollectionDetailView: {
+    screen: MerchantNoCollectionDetailView,
+
+    navigationOptions: {
+      headerTitle: 'Lihat Alasan',
+      headerTitleStyle: [GlobalFont.textHeaderPage],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
     }
   }
 };

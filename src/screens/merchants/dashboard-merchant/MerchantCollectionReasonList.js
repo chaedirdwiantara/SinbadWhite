@@ -6,6 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity
 } from '../../../library/reactPackage';
+import { LoadingLoadMore } from '../../../components/Loading';
+import { useSelector } from 'react-redux';
 import SfaNoDataView from '../../sfa/SfaNoDataView';
 import { MoneyFormatSpace, Fonts, GlobalStyle } from '../../../helpers';
 import {
@@ -15,7 +17,11 @@ import {
 import { toLocalTime } from '../../../helpers/TimeHelper';
 import masterColor from '../../../config/masterColor.json';
 import { MaterialIcon } from '../../../library/thirdPartyPackage';
+import { ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS } from '../../../constants';
 const MerchantCollectionReasonList = props => {
+  const { refreshGetCollection, loadingLoadMoreGetSfa } = useSelector(
+    state => state.sfa
+  );
   /** RENDER FUNCTION */
 
   /** RENDER STATUS PAYMENT */
@@ -101,20 +107,28 @@ const MerchantCollectionReasonList = props => {
               <TouchableOpacity
                 onPress={() => props.openReason(index)}
                 style={styles.reasonButton}
+                disabled={
+                  props.type === ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
+                    ? true
+                    : false
+                }
               >
-                {item.reasonNotToPay ? (
-                  <Text style={[Fonts.type48]}>{item.reasonNotToPay}</Text>
+                {item.reasonNotPay ? (
+                  <Text style={[Fonts.type48]}>{item.reasonNotPay}</Text>
                 ) : (
                   <Text style={[Fonts.type85]}>Pilih Alasan</Text>
                 )}
-                <MaterialIcon
-                  name="chevron-right"
-                  color={masterColor.mainColor}
-                  size={24}
-                />
+                {props.type ===
+                ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS ? null : (
+                  <MaterialIcon
+                    name="chevron-right"
+                    color={masterColor.mainColor}
+                    size={24}
+                  />
+                )}
               </TouchableOpacity>
             </View>
-            {item.reasonNotToPay ? null : (
+            {item.reasonNotPay ? null : (
               <View style={styles.reasonAlert}>
                 <Text style={[Fonts.type119]}>
                   Wajib Memilih Alasan Tidak Ada Penagihan
@@ -124,6 +138,16 @@ const MerchantCollectionReasonList = props => {
           </View>
         </View>
       </View>
+    );
+  };
+  /** RENDER LOADING LOAD MORE */
+  const renderLoadMore = () => {
+    return loadingLoadMoreGetSfa ? (
+      <View style={{ marginTop: 8 }}>
+        <LoadingLoadMore />
+      </View>
+    ) : (
+      <View />
     );
   };
 
@@ -139,10 +163,10 @@ const MerchantCollectionReasonList = props => {
                 renderItem={renderItem}
                 numColumns={1}
                 keyExtractor={(item, index) => index.toString()}
-                // refreshing={refreshGetCollection}
+                refreshing={refreshGetCollection}
                 // onRefresh={() => props.refersh()}
                 onEndReachedThreshold={0.2}
-                // onEndReached={() => props.loadmore()}
+                onEndReached={() => props.loadmore()}
                 showsVerticalScrollIndicator
               />
             ) : (
@@ -164,7 +188,18 @@ const MerchantCollectionReasonList = props => {
     return <>{renderData()}</>;
   };
   /** MAIN */
-  return <>{renderContent()}</>;
+  return props.dataList?.length > 0 ? (
+    <>
+      {renderContent()}
+      {renderLoadMore()}
+    </>
+  ) : (
+    <SfaNoDataView
+      topText={'Belum Ada Tagihan'}
+      midText={'Yuk belanja kebutuhanmu sekarang di Sinbad'}
+      bottomText={''}
+    />
+  );
 };
 
 const styles = StyleSheet.create({

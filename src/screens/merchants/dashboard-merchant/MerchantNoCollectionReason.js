@@ -7,15 +7,14 @@ import {
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  merchantPostActivityProcessV2,
   sfaGetReasonNotToPayProcess,
   sfaPostTransactionCheckoutProcess,
-  merchantGetLogAllActivityProcessV2
+  sfaGetCollectionListProcess,
+  SfaGetLoadMore
 } from '../../../state/actions';
 import ModalBottomMerchantNoCollectionReason from './ModalBottomMerchantNoCollectionReason';
 import MerchantCollectionReasonList from './MerchantCollectionReasonList';
-import SfaNoDataView from '../../sfa/SfaNoDataView';
-import { ButtonSingle } from '../../../library/component';
+import { ButtonSingle, LoadingPage } from '../../../library/component';
 import { ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS } from '../../../constants';
 import NavigationService from '../../../navigation/NavigationService';
 
@@ -26,6 +25,7 @@ const MerchantNoCollectionReason = () => {
   const [indexCollection, setIndexCollection] = useState(0);
   const [dataReasonList, setDataReasonList] = useState([]);
   const [reasonLength, setReasonLength] = useState(0);
+  const [limit, setLimit] = useState(20);
   const [isSaveButtonDisable, setIsSaveButtonDisable] = useState(true);
   const [
     collectionTransactionDetails,
@@ -34,31 +34,36 @@ const MerchantNoCollectionReason = () => {
   const {
     dataSfaCheckCollectionStatus,
     dataSfaGetReasonNotToPay,
-    dataSfaPostTransactionCheckout
+    dataSfaPostTransactionCheckout,
+    dataGetCollectionList,
+    loadingGetCollectionList,
+    loadingSfaPostTransactionCheckout
   } = useSelector(state => state.sfa);
-
-  const { selectedMerchant, dataPostActivityV2 } = useSelector(
-    state => state.merchant
-  );
-  const journeyBookStoreId = selectedMerchant?.journeyBookStores.id;
+  const { id, userSuppliers } = useSelector(state => state.user);
+  const { selectedMerchant } = useSelector(state => state.merchant);
   /** RENDER USE REF */
   const prevdataSfaPostTransactionCheckout = useRef(
     dataSfaPostTransactionCheckout
   );
-  const prevdataPostActivityV2 = useRef(dataPostActivityV2);
+  const prevdataGetCollectionList = useRef(dataGetCollectionList);
 
   /** RENDER USE EFFECT */
   /** get reason not to pay on render screen */
   useEffect(() => {
     getReasonNotToPay();
-    setCollectionTransactionDetails(
-      selectedMerchant?.journeyBookStores.collections
+    getCollectionTransactionDetailId();
+    getCollectionList(true, 20);
+  }, []);
+  const getCollectionTransactionDetailId = () => {
+    const data = [];
+    dataSfaCheckCollectionStatus.data.orderParcels.map(item =>
+      data.push({
+        collectionTransactionDetailId: item.collectionTransactionDetailId
+      })
     );
-  }, []);
-  /** save data post transaction */
-  useEffect(() => {
-    setDataPostTransaction(dataSfaCheckCollectionStatus.data.orderParcels);
-  }, []);
+    setCollectionTransactionDetails(data);
+  };
+
   /** save button disabled if all reason not filled */
   useEffect(() => {
     const collectionLength = dataSfaCheckCollectionStatus.meta.total;
@@ -73,35 +78,56 @@ const MerchantNoCollectionReason = () => {
   useEffect(() => {
     prevdataSfaPostTransactionCheckout.current = dataSfaPostTransactionCheckout;
   }, []);
-
-  /** save previous dataPostTransactionCheckout */
+  /** save previous dataGetCollectionList */
   useEffect(() => {
-    prevdataPostActivityV2.current = dataPostActivityV2;
+    prevdataGetCollectionList.current = dataGetCollectionList;
   }, []);
-
   /** post collection_not_success & navigate to merchantHomeView on success post transaction checkout */
   useEffect(() => {
     if (prevdataSfaPostTransactionCheckout !== dataSfaPostTransactionCheckout) {
       if (dataSfaPostTransactionCheckout) {
-        const data = {
-          journeyBookStoreId: journeyBookStoreId,
-          activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
-        };
-        dispatch(merchantPostActivityProcessV2(data));
-      }
-    }
-  }, [dataSfaPostTransactionCheckout]);
-
-  /** post collection_not_success & navigate to merchantHomeView on success post transaction checkout */
-  useEffect(() => {
-    if (prevdataPostActivityV2 !== dataPostActivityV2) {
-      if (dataPostActivityV2) {
-        dispatch(merchantGetLogAllActivityProcessV2(journeyBookStoreId));
         NavigationService.navigate('MerchantHomeView');
       }
     }
-  }, [dataPostActivityV2]);
+  }, [dataSfaPostTransactionCheckout]);
+  /** SAVE DATA ON SUCCESS GET COLLECTION LIST */
+  useEffect(() => {
+    if (prevdataGetCollectionList !== dataGetCollectionList) {
+      if (dataGetCollectionList) {
+        setDataPostTransaction(dataGetCollectionList.data.orderParcels);
+      }
+    }
+  }, [dataGetCollectionList]);
   /**=== RENDER FUNCTION === */
+  /** handle loadmore get collectin */
+  const onHandleLoadMore = () => {
+    if (dataGetCollectionList) {
+      if (
+        dataGetCollectionList.data.orderParcels.length <
+        dataGetCollectionList.data.totalInvoice
+      ) {
+        const page = limit + 10;
+
+        setLimit(page);
+        dispatch(SfaGetLoadMore(page));
+        getCollectionList(false, page);
+      }
+    }
+  };
+  /** get data collection */
+  const getCollectionList = (loading, page) => {
+    const data = {
+      storeId: parseInt(selectedMerchant.storeId, 10),
+      userId: parseInt(id, 10),
+      supplierId: parseInt(userSuppliers[0].supplier.id, 10),
+      loading: loading,
+      limit: page,
+      skip: 0,
+      collectionTransactionDetailStatus: 'pending',
+      collectionTransactionDetailIds: selectedMerchant.collectionIds
+    };
+    dispatch(sfaGetCollectionListProcess(data));
+  };
   /** function post transaction checkout */
   const postTransaction = () => {
     const data = {};
@@ -125,13 +151,13 @@ const MerchantNoCollectionReason = () => {
     const index = indexCollection;
     const data = dataPostTransaction;
     const dataReason = dataReasonList;
-    const reasonNotToPay = item.selectedReasonText;
+    const reasonNotPay = item.selectedReasonText;
     const reasonNotToPayId = item.selectedReasonId;
     const dataPost = collectionTransactionDetails;
-    data.splice(index, 1, { ...data[index], reasonNotToPay });
+    data.splice(index, 1, { ...data[index], reasonNotPay });
     dataReason.splice(index, 1, {
       ...dataReason[index],
-      reasonNotToPay
+      reasonNotPay
     });
     dataPost.splice(index, 1, {
       ...dataPost[index],
@@ -143,6 +169,7 @@ const MerchantNoCollectionReason = () => {
     setDataPostTransaction(data);
     setIsModalReasonOpen(false);
   };
+  
   const renderModalBottomNotCollectReason = () => {
     return isModalReasonOpen && dataSfaGetReasonNotToPay ? (
       <ModalBottomMerchantNoCollectionReason
@@ -164,12 +191,12 @@ const MerchantNoCollectionReason = () => {
           title={'Simpan Alasan'}
           borderRadius={4}
           disabled={isSaveButtonDisable}
-          // loading={loadingSfaPostPaymentMethod}
+          loading={loadingSfaPostTransactionCheckout}
         />
       </>
     );
   };
-  return dataSfaCheckCollectionStatus ? (
+  return dataGetCollectionList && !loadingGetCollectionList ? (
     <>
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1 }}>
@@ -177,6 +204,7 @@ const MerchantNoCollectionReason = () => {
             onRef={ref => (onPressReason = ref)}
             openReason={onPressReason.bind(this)}
             dataList={dataPostTransaction}
+            loadmore={onHandleLoadMore}
           />
         </View>
         <View>{renderButton()}</View>
@@ -184,11 +212,7 @@ const MerchantNoCollectionReason = () => {
       {renderModalBottomNotCollectReason()}
     </>
   ) : (
-    <SfaNoDataView
-      topText={'Belum Ada Tagihan'}
-      midText={'Yuk belanja kebutuhanmu sekarang di Sinbad'}
-      bottomText={''}
-    />
+    <LoadingPage />
   );
 };
 
