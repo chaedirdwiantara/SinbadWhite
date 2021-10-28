@@ -6,7 +6,8 @@ import HistoryView from '../../screens/history/HistoryView';
 import HistoryDetailView from '../../screens/history/HistoryDetailView';
 import HistoryDetailStatusView from '../../screens/history/HistoryDetailStatusView';
 import HistoryPaymentInvoiceView from '../../screens/history/HistoryPaymentInvoiceView';
-
+import SfaCollectionLog from '../../screens/sfa/SfaCollectionLog';
+import SfaBillingDetailView from '../../screens/sfa/SfaBillingDetailView';
 const HistoryNavigator = {
   HistoryView: {
     screen: HistoryView,
@@ -69,6 +70,44 @@ const HistoryNavigator = {
   HistoryPaymentInvoiceView: {
     screen: HistoryPaymentInvoiceView,
   },
+  HistoryCollectionLog: {
+    screen: SfaCollectionLog,
+    navigationOptions: {
+      headerTitle: 'Riwayat Penagihan',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'left',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.fontBlack50,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  HistoryCollectionDetail: {
+    screen: SfaBillingDetailView,
+    navigationOptions: {
+      headerTitle: 'Detail Penagihan',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'left',
+          flex: 1
+        }
+      ],
+      headerTintColor: masterColor.fontBlack50,
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  }
 };
 
 export default HistoryNavigator;

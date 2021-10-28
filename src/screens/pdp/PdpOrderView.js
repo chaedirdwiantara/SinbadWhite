@@ -218,6 +218,7 @@ class PdpOrderView extends Component {
   renderButton() {
     return (
       <ButtonSingleSmall
+        accessibilityLabel={'btnPdpAddtoCart'}
         disabledGrey={!this.state.showKeyboard}
         disabled={this.buttonDisabled() || this.state.showKeyboard}
         title={this.buttonTitle()}
