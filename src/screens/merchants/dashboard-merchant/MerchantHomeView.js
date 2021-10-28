@@ -463,6 +463,24 @@ class MerchantHomeView extends Component {
         this.doError();
       }
     }
+    /** error check collection status */
+    if (this.props.sfa.errorSfaCheckCollectionStatus) {
+      if (
+        prevProps.sfa.errorSfaCheckCollectionStatus !==
+        this.props.sfa.errorSfaCheckCollectionStatus
+      ) {
+        this.doError();
+      }
+    }
+    /** error post transaction checkout */
+    if (this.props.sfa.errorSfaPostTransactionCheckout) {
+      if (
+        prevProps.sfa.errorSfaPostTransactionCheckout !==
+        this.props.sfa.errorSfaPostTransactionCheckout
+      ) {
+        this.doError();
+      }
+    }
   }
 
   componentWillUnmount() {
