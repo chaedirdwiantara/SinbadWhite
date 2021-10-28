@@ -46,6 +46,8 @@ const SfaBillingEditView = props => {
     loadingSfaEditBilling
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
+  const { id } = useSelector(state => state.user);
+  const userId = id;
   const collectionInfo = props.navigation.state.params;
   const [stampNominal, setStampNominal] = useState(null);
   const [paymentAmount, setPaymentAmount] = useState(0);
@@ -71,7 +73,9 @@ const SfaBillingEditView = props => {
 
   /** FUNCTION TO CHECK IF PAYMENT BILLING !> BALANCE || PAYMENT BILLING !> OUTSTANDING */
   useEffect(() => {
-    const outstanding = dataSfaGetBillingDetail?.data.outstandingAmount;
+    const outstanding =
+      dataSfaGetBillingDetail?.data.outstandingAmount +
+      dataSfaGetBillingDetail?.data.paidAmount;
     const paymentGreaterThanOutstanding =
       parseInt(paymentAmount, 10) > parseInt(outstanding, 10);
     const collectionBalanceGreaterThanOutstanding =
@@ -81,7 +85,7 @@ const SfaBillingEditView = props => {
     if (paymentGreaterThanOutstanding) {
       if (collectionBalanceGreaterThanOutstanding) {
         setPaymentAmount(parseInt(outstanding, 10));
-        setTotalPaymentAmount( parseInt(outstanding, 10) + stampNominal);
+        setTotalPaymentAmount(parseInt(outstanding, 10) + stampNominal);
       } else {
         setPaymentAmount(parseInt(collectionBalance, 10));
         setTotalPaymentAmount(parseInt(collectionBalance, 10) + stampNominal);
@@ -98,13 +102,33 @@ const SfaBillingEditView = props => {
       setPaymentAmount(parseInt(paymentAmount, 10));
       setTotalPaymentAmount(parseInt(paymentAmount, 10) + stampNominal);
     }
-  }, [paymentAmount, collectionBalance]);
+  }, [paymentAmount, collectionBalance, stampNominal]);
 
+  useEffect(() => {
+    const outstanding =
+      dataSfaGetBillingDetail?.data.outstandingAmount +
+      dataSfaGetBillingDetail?.data.paidAmount;
+    if (totalPaymentAmount > outstanding) {
+      setPaymentAmount(outstanding - stampNominal);
+    } else if (totalPaymentAmount > collectionBalance) {
+      setPaymentAmount(collectionBalance - stampNominal);
+    }
+  }, [totalPaymentAmount, stampNominal]);
+
+  useEffect(() => {
+    if (isStampChecked) {
+      setStampNominal(stampAmount);
+    } else {
+      setStampNominal(0);
+    }
+  }, [isStampChecked]);
   const isNumber = n => (n !== null && n !== undefined ? true : false);
 
   /** FUNCTION ON CHANGE PAYMENT AMOUNT */
   const onChangePaymentAmount = text => {
-    const outstanding = dataSfaGetBillingDetail?.data.outstandingAmount;
+    const outstanding =
+      dataSfaGetBillingDetail?.data.outstandingAmount +
+      dataSfaGetBillingDetail?.data.paidAmount;
     if (parseInt(text.replace(/[Rp.]+/g, ''), 10) > parseInt(outstanding, 10)) {
       // setIsChangeBillingValue(true);
       if (outstanding + paymentAmount < collectionBalance) {
@@ -262,7 +286,8 @@ const SfaBillingEditView = props => {
       limit: 20,
       storeId: parseInt(selectedMerchant.storeId, 10),
       skip: 0,
-      loading: true
+      loading: true,
+      userId: userId
     };
     dispatch(sfaGetPaymentCollectionLogProcess(data));
     NavigationService.navigate('SfaBillingLogView', {
@@ -275,9 +300,8 @@ const SfaBillingEditView = props => {
   useEffect(() => {
     const noPaymentAmount = paymentAmount === 0;
     const initialTotalPaymentAmount =
-      dataSfaGetBillingDetail?.data.paidByCollectionMethod + stampNominal;
+      dataSfaGetBillingDetail?.data.paidByCollectionMethod + stampAmount;
     const isDataIdentic = totalPaymentAmount === initialTotalPaymentAmount;
- 
     if (noPaymentAmount || isDataIdentic) {
       setIsButtonDisabled(true);
     } else {
@@ -369,9 +393,10 @@ const SfaBillingEditView = props => {
         orderCode,
         orderRef,
         deliveredAmount,
-        outstandingAmount
+        outstandingAmount,
+        paidAmount
       } = dataBillingDetail?.data;
-
+      const finalOutstandingAmount = outstandingAmount + paidAmount;
       return (
         <>
           {CardBody({
@@ -398,8 +423,8 @@ const SfaBillingEditView = props => {
           })}
           {CardBody({
             title: 'Sisa Tagihan',
-            value: isNumber(outstandingAmount)
-              ? MoneyFormatSpace(outstandingAmount)
+            value: isNumber(finalOutstandingAmount)
+              ? MoneyFormatSpace(finalOutstandingAmount)
               : MoneyFormatSpace(0),
             styleCardView: styles.styleCardView
           })}
