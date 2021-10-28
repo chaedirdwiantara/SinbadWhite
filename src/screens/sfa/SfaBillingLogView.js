@@ -49,7 +49,8 @@ const SfaBillingLogView = props => {
     dataSfaDeletePaymentBilling,
     errorSfaDeletePaymentBilling
   } = useSelector(state => state.sfa);
-  const { userSuppliers } = useSelector(state => state.user);
+  const { userSuppliers, id } = useSelector(state => state.user);
+  const userId = parseInt(id, 10);
   const { selectedMerchant } = useSelector(state => state.merchant);
   /**
    * *********************************
@@ -104,14 +105,15 @@ const SfaBillingLogView = props => {
       limit: page,
       storeId: parseInt(selectedMerchant.storeId, 10),
       skip: 0,
-      loading
+      loading,
+      userId: userId
     };
     dispatch(sfaGetPaymentCollectionLogProcess(data));
   };
 
   /** FUNCTION NAVIGATE TO EDIT BILLING */
   const navigatetoEditBilling = item => {
-    dispatch(sfaGetBillingDetailProcess(item.id))
+    dispatch(sfaGetBillingDetailProcess(item.id));
     NavigationService.navigate('SfaBillingEditView', {
       ...item,
       paymentCollectionTypeId: parseInt(collectionMethodId, 10)
@@ -292,7 +294,7 @@ const SfaBillingLogView = props => {
                 true
               )}
             </View>
-            <View testID='btnDelete' style={styles.buttonContainer}>
+            <View testID="btnDelete" style={styles.buttonContainer}>
               {renderButton(
                 'Ubah',
                 'white',
