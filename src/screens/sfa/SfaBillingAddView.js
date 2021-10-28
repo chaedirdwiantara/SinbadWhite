@@ -139,14 +139,13 @@ const SfaBillingAddView = props => {
     const substraction = totalBillAmountWithStamp - remainingBilling;
 
     let totalBillAmount = 0;
-
     if (isStampChecked === false) {
       if (totalBillAmountWithStamp > remainingBilling) {
         totalBillAmount = billingAmount;
         setBillingAmount(billingAmount - substraction);
       } else if (totalBillAmountWithStamp > totalBalance) {
         totalBillAmount = billingAmount;
-        setBillingAmount(billingAmount - substraction);
+        setBillingAmount(totalBalance - stampAmount);
       } else {
         totalBillAmount = totalBillAmountWithStamp;
       }
