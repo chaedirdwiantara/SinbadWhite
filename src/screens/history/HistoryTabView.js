@@ -72,6 +72,8 @@ class HistoryTabView extends Component {
       </View>
     ) : (
       <TouchableOpacity
+        accessible={true}
+        accessibilityLabel={'btnHistoryTabPayment'}
         style={this.styleTabs('payment')}
         onPress={() => this.changeTabs('payment')}
       >
@@ -103,6 +105,8 @@ class HistoryTabView extends Component {
       </View>
     ) : (
       <TouchableOpacity
+        accessible={true}
+        accessibilityLabel={'btnHistoryTabOrder'}
         style={this.styleTabs('order')}
         onPress={() => this.changeTabs('order')}
       >

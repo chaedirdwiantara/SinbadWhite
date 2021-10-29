@@ -460,7 +460,6 @@ class HistoryDataListView extends Component {
   // }
   /** ITEM */
   renderItem({ item, index }) {
-    const paymentType = item.paymentType.id;
     return (
       <View key={index}>
         <TouchableOpacity
@@ -792,6 +791,8 @@ class HistoryDataListView extends Component {
     return this.props.history.dataGetHistory.length > 0 ? (
       <View>
         <FlatList
+          accessible={true}
+          accessibilityLabel={'cardHistoryList'}
           contentContainerStyle={styles.flatListContainer}
           ItemSeparatorComponent={this.renderSeparator}
           data={this.props.history.dataGetHistory}
