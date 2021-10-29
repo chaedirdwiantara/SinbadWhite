@@ -196,6 +196,14 @@ function postReturnOrder(params) {
   });
 }
 
+/** GET CHECK OVEDUE */
+function checkOverdue() {
+  return ApiRest({
+    path: `check-overdue?storeId=${GlobalMethod.merchantStoreId()}&supplierId=${GlobalMethod.userSupplierMapping()}`,
+    method: 'GET'
+  });
+}
+
 export const OmsMethod = {
   getCartItem,
   getCheckoutItem,
@@ -212,5 +220,6 @@ export const OmsMethod = {
   postKurConsent,
   getReturnDraft,
   getReturnReason,
-  postReturnOrder
+  postReturnOrder,
+  checkOverdue
 };

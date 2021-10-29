@@ -93,3 +93,7 @@ export const GET_RETURN_REASON_FAILED = 'GetReturnReasonFailed';
 export const POST_RETURN_ORDER_PROCESS = 'PostReturnOrderProcess';
 export const POST_RETURN_ORDER_SUCCESS = 'PostReturnOrderSuccess';
 export const POST_RETURN_ORDER_FAILED = 'PostReturnOrderFailed';
+/** CHECK ORDER OVERDUE */
+export const OMS_CHECK_OVERDUE_PROCESS = 'OMSCheckOverdueProcess';
+export const OMS_CHECK_OVERDUE_SUCCESS = 'OMSCheckOverdueSuccess';
+export const OMS_CHECK_OVERDUE_FAILED = 'OMSCheckOverdueFailed';

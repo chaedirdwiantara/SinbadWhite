@@ -42,5 +42,9 @@ export default [
   {
     api: 'return-parcels',
     team: 'kanzun'
+  },
+  {
+    api: 'check-overdue',
+    team: 'kanzun'
   }
 ];

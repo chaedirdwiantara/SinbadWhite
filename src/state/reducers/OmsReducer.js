@@ -17,6 +17,7 @@ const INITIAL_STATE = {
   loadingGetReturnDraft: false,
   loadingGetReturnReason: false,
   loadingPostReturnOrder: false,
+  loadingOMSCheckOverdue: false,
   /** data */
   selectedReturnParcelId: null,
   dataOmsGetCartItem: null,
@@ -35,6 +36,7 @@ const INITIAL_STATE = {
   dataGetReturnDraft: null,
   dataGetReturnReason: null,
   dataPostReturnOrder: null,
+  dataOMSCheckOverdue: null,
   /** error */
   errorOmsGetCartItem: null,
   errorOmsGetCheckoutItem: null,
@@ -49,7 +51,8 @@ const INITIAL_STATE = {
   errorOmsPostKurConsent: null,
   errorGetReturnDraft: null,
   errorGetReturnReason: null,
-  errorPostReturnOrder: null
+  errorPostReturnOrder: null,
+  errorOMSCheckOverdue: null
 };
 
 export const oms = createReducer(INITIAL_STATE, {
@@ -109,6 +112,7 @@ export const oms = createReducer(INITIAL_STATE, {
       loadingOmsDeleteCartItem: false,
       loadingOmsGetCartItemFromCheckout: false,
       loadingOmsCheckPromo: false,
+      loadingOMSCheckOverdue: false,
       /** data */
       dataOmsGetCartItem: null,
       dataOmsGetCartItemFromCheckout: null,
@@ -120,6 +124,7 @@ export const oms = createReducer(INITIAL_STATE, {
       dataCheckout: [],
       dataCheckBoxlistCart: [],
       dataOmsCheckPromo: null,
+      dataOMSCheckOverdue: null,
       /** error */
       errorOmsGetCartItem: null,
       errorOmsGetCheckoutItem: null,
@@ -127,7 +132,8 @@ export const oms = createReducer(INITIAL_STATE, {
       errorOmsGetPayment: null,
       errorOmsDeleteCartItem: null,
       errorOmsGetCartItemFromCheckout: null,
-      errorOmsCheckPromo: null
+      errorOmsCheckPromo: null,
+      errorOMSCheckOverdue: null
     };
   },
   /**
@@ -651,6 +657,33 @@ export const oms = createReducer(INITIAL_STATE, {
       ...state,
       loadingPostReturnOrder: false,
       errorPostReturnOrder: action.data
+    };
+  },
+  /**
+   * ========================
+   * GET CHECK OVERDUE
+   * ========================
+   */
+  [types.OMS_CHECK_OVERDUE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOMSCheckOverdue: true,
+      dataOMSCheckOverdue: null,
+      errorOMSCheckOverdue: null
+    };
+  },
+  [types.OMS_CHECK_OVERDUE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOMSCheckOverdue: false,
+      dataOMSCheckOverdue: action.payload
+    };
+  },
+  [types.OMS_CHECK_OVERDUE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOMSCheckOverdue: false,
+      errorOMSCheckOverdue: action.data
     };
   }
 });

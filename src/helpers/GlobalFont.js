@@ -882,6 +882,30 @@ const styles = StyleSheet.create({
     lineHeight: 13,
     color: Color.fontBlack70
   },
+  modalConfirmationType5Title: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 14,
+    lineHeight: 17,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: Color.fontBlack100
+  },
+  modalConfirmationType5Content: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 12,
+    lineHeight: 15,
+    textAlign: 'center',
+    color: Color.fontBlack100,
+    fontWeight: '500'
+  },
+  modalConfirmationType5Button: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 12,
+    lineHeight: 18,
+    textAlign: 'center',
+    color: Color.fontWhite,
+    fontWeight: '600'
+  },
   //success submit
   textWhiteTitle: {
     fontFamily: Fonts.MontserratSemiBold,

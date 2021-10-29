@@ -25,7 +25,8 @@ import {
   LoadingPage,
   ToastType1,
   ModalConfirmation,
-  ModalBottomErrorRespons
+  ModalBottomErrorRespons,
+  ModalConfirmationType6
 } from '../../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers';
 import { Color } from '../../../config';
@@ -58,6 +59,7 @@ class MerchantHomeView extends Component {
       openModalCheckUser: false,
       openModalProgressChecking: false,
       openModalBeforeCheckIn: false,
+      openModalOverdue: false,
       checkNoOrder: false,
       showToast: false,
       loadingPostForCheckoutNoOrder: false,
@@ -362,6 +364,26 @@ class MerchantHomeView extends Component {
         this.doError();
       }
     }
+
+    /**
+     * CHECK OVERDUE ORDER STATUS
+     */
+    // IF SUCCESS
+    if (
+      prevProps.oms.dataOMSCheckOverdue !== this.props.oms.dataOMSCheckOverdue
+    ) {
+      if (this.props.oms.dataOMSCheckOverdue !== null) {
+        this.verifyUser();
+      }
+    }
+    // IF FAILED
+    if (
+      prevProps.oms.errorOMSCheckOverdue !== this.props.oms.errorOMSCheckOverdue
+    ) {
+      if (this.props.oms.errorOMSCheckOverdue !== null) {
+        this.doError();
+      }
+    }
     /** error get total survey */
     if (this.props.merchant.errorGetTotalSurvey) {
       if (
@@ -448,11 +470,27 @@ class MerchantHomeView extends Component {
       });
     }
   }
+
+  /** FOR VERIFY USER STATUS AND ORDER OVERDUE */
+  verifyUser() {
+    if (
+      this.props.oms.dataOMSCheckOverdue.overdue &&
+      this.props.oms.dataOMSCheckOverdue !== null
+    ) {
+      this.setState({
+        openModalOverdue: true,
+        openModalProgressChecking: false
+      });
+    } else {
+      this.setState({ openModalCheckUser: true });
+    }
+  }
   /** === GO TO (MENU PRESS) */
   goTo(page) {
     switch (page) {
       case 'pdp':
-        this.setState({ openModalCheckUser: true });
+        this.setState({ openModalProgressChecking: true });
+        this.props.OMSCheckOverdueProcess();
         break;
       case 'history':
         NavigationService.navigate('HistoryView', {
@@ -716,7 +754,6 @@ class MerchantHomeView extends Component {
       }
       return false;
     }
-    return false;
   }
   /** CHECK TOTAL COMPLETE TASK */
   checkTotalCompleteTask() {
@@ -1440,7 +1477,8 @@ class MerchantHomeView extends Component {
   }
   /** RENDER MODAL PROGRESS CHECKING */
   renderModalProgressChecking() {
-    return this.state.openModalProgressChecking ? (
+    return this.state.openModalProgressChecking ||
+      this.props.oms.loadingOMSCheckOverdue ? (
       <ModalBottomProgressChecking
         open={this.state.openModalProgressChecking}
         progress={'Mohon tunggu'}
@@ -1573,6 +1611,26 @@ class MerchantHomeView extends Component {
       />
     );
   }
+  /** RENDER MODAL OVERDUE */
+  renderModalOverdue() {
+    return this.state.openModalOverdue ? (
+      <ModalConfirmationType6
+        title={'Toko Ini Memiliki Transaksi Overdue'}
+        content={
+          'Silahkan konfirmasi kepada toko terkait transaksi tersebut. Anda juga dapat melakukan penagihan.'
+        }
+        open={this.state.openModalOverdue}
+        onBackButtonPress={() => this.setState({ openModalOverdue: false })}
+        onBackdropPress={() => this.setState({ openModalOverdue: false })}
+        okText={'Baik, Mengerti'}
+        ok={() =>
+          this.setState({ openModalOverdue: false, openModalCheckUser: true })
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
   /** BACKGROUND */
   renderBackground() {
     return <View style={styles.backgroundRed} />;
@@ -1603,6 +1661,7 @@ class MerchantHomeView extends Component {
         {this.renderModalVerifyUser()}
         {this.renderModalProgressChecking()}
         {this.renderModalBeforeCheckIn()}
+        {this.renderModalOverdue()}
         <ModalBottomSuccessOrder />
       </SafeAreaView>
     );
@@ -1792,9 +1851,10 @@ const mapStateToProps = ({
   user,
   permanent,
   profile,
-  privileges
+  privileges,
+  oms
 }) => {
-  return { auth, merchant, user, permanent, profile, privileges };
+  return { auth, merchant, user, permanent, profile, privileges, oms };
 };
 
 const mapDispatchToProps = dispatch => {

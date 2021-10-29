@@ -197,6 +197,18 @@ function* postReturnOrder(actions) {
   }
 }
 
+/** GET CHECK OVERDUE */
+function* getCheckOverdue(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.checkOverdue(actions.payload);
+    });
+    yield put(ActionCreators.OMSCheckOverdueSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.OMSCheckoutOverdueFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* OmsSaga() {
   yield takeEvery(types.OMS_GET_CART_ITEM_PROCESS, getCartItem);
@@ -222,6 +234,7 @@ function* OmsSaga() {
   yield takeEvery(types.GET_RETURN_DRAFT_PROCESS, getReturnDraft);
   yield takeEvery(types.GET_RETURN_REASON_PROCESS, getReturnReason);
   yield takeEvery(types.POST_RETURN_ORDER_PROCESS, postReturnOrder);
+  yield takeEvery(types.OMS_CHECK_OVERDUE_PROCESS, getCheckOverdue);
 }
 
 export default OmsSaga;

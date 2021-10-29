@@ -495,3 +495,26 @@ export function PostReturnOrderSuccess(data) {
 export function PostReturnOrderFailed(data) {
   return { type: types.POST_RETURN_ORDER_FAILED, payload: data };
 }
+/**
+ * =====================================
+ * OMS CHECK OVERDUE
+ * =====================================
+ */
+/** CHECK OVERDUE PROCESS */
+export function OMSCheckOverdueProcess(data) {
+  return { type: types.OMS_CHECK_OVERDUE_PROCESS, payload: data };
+}
+/** CHECK OVERDUE SUCCESS */
+export function OMSCheckOverdueSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_CHECK_OVERDUE_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_CHECK_OVERDUE_FAILED, payload: data };
+}
+/** CHECK OVERDUE FAILED */
+export function OMSCheckoutOverdueFailed(data) {
+  return { type: types.OMS_CHECK_OVERDUE_FAILED, payload: data };
+}
