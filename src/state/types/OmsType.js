@@ -77,3 +77,23 @@ export const OMS_GET_KUR_OTP_FAILED = 'OmsGetKurOTPFailed';
 export const OMS_POST_KUR_CONSENT_PROCESS = 'OmsPostKurConsentProcess';
 export const OMS_POST_KUR_CONSENT_SUCCESS = 'OmsPostKurConsentSuccess';
 export const OMS_POST_KUR_CONSENT_FAILED = 'OmsPostKurConsentFailed';
+
+/** GET RETURN DRAFT */
+export const GET_RETURN_DRAFT_PROCESS = 'GetReturnDraftProcess';
+export const GET_RETURN_DRAFT_SUCCESS = 'GetReturnDraftSuccess';
+export const GET_RETURN_DRAFT_FAILED = 'GetReturnDraftFailed';
+export const SAVE_RETURN_DRAFT_PARCEL_ID = 'SaveReturnDraftParcelId';
+
+/** GET RETURN REASON */
+export const GET_RETURN_REASON_PROCESS = 'GetReturnReasonProcess';
+export const GET_RETURN_REASON_SUCCESS = 'GetReturnReasonSuccess';
+export const GET_RETURN_REASON_FAILED = 'GetReturnReasonFailed';
+
+/** POST RETURN ORDER */
+export const POST_RETURN_ORDER_PROCESS = 'PostReturnOrderProcess';
+export const POST_RETURN_ORDER_SUCCESS = 'PostReturnOrderSuccess';
+export const POST_RETURN_ORDER_FAILED = 'PostReturnOrderFailed';
+/** CHECK ORDER OVERDUE */
+export const OMS_CHECK_OVERDUE_PROCESS = 'OMSCheckOverdueProcess';
+export const OMS_CHECK_OVERDUE_SUCCESS = 'OMSCheckOverdueSuccess';
+export const OMS_CHECK_OVERDUE_FAILED = 'OMSCheckOverdueFailed';

@@ -73,7 +73,14 @@ class ProductListType1 extends Component {
 
   render() {
     return (
-      <View style={styles.boxListProduct}>
+      <View
+        style={[
+          styles.boxListProduct,
+          {
+            borderRadius: this.props.borderRadius ? this.props.borderRadius : 0
+          }
+        ]}
+      >
         <View style={{ flexDirection: 'row' }}>
           {this.renderListProductImage(this.props.data, 0)}
         </View>
@@ -91,7 +98,8 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     flexDirection: 'row',
     backgroundColor: Color.fontBlack05,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    borderRadius: 0
   }
 });
 

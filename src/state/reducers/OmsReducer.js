@@ -14,7 +14,12 @@ const INITIAL_STATE = {
   loadingOmsGetPayLaterType: false,
   loadingOmsApplicablePaylater: false,
   loadingOmsPostKurConsent: false,
+  loadingGetReturnDraft: false,
+  loadingGetReturnReason: false,
+  loadingPostReturnOrder: false,
+  loadingOMSCheckOverdue: false,
   /** data */
+  selectedReturnParcelId: null,
   dataOmsGetCartItem: null,
   dataOmsGetCartItemFromCheckout: null,
   dataOmsGetCheckoutItem: null,
@@ -28,6 +33,10 @@ const INITIAL_STATE = {
   dataOmsCheckPromo: null,
   dataOmsGetPayLaterType: null,
   dataOmsPostKurConsent: null,
+  dataGetReturnDraft: null,
+  dataGetReturnReason: null,
+  dataPostReturnOrder: null,
+  dataOMSCheckOverdue: null,
   /** error */
   errorOmsGetCartItem: null,
   errorOmsGetCheckoutItem: null,
@@ -39,7 +48,11 @@ const INITIAL_STATE = {
   errorOmsCheckPromo: null,
   errorOmsGetPayLaterType: null,
   errorOmsApplicablePaylater: null,
-  errorOmsPostKurConsent: null
+  errorOmsPostKurConsent: null,
+  errorGetReturnDraft: null,
+  errorGetReturnReason: null,
+  errorPostReturnOrder: null,
+  errorOMSCheckOverdue: null
 };
 
 export const oms = createReducer(INITIAL_STATE, {
@@ -99,6 +112,7 @@ export const oms = createReducer(INITIAL_STATE, {
       loadingOmsDeleteCartItem: false,
       loadingOmsGetCartItemFromCheckout: false,
       loadingOmsCheckPromo: false,
+      loadingOMSCheckOverdue: false,
       /** data */
       dataOmsGetCartItem: null,
       dataOmsGetCartItemFromCheckout: null,
@@ -110,6 +124,7 @@ export const oms = createReducer(INITIAL_STATE, {
       dataCheckout: [],
       dataCheckBoxlistCart: [],
       dataOmsCheckPromo: null,
+      dataOMSCheckOverdue: null,
       /** error */
       errorOmsGetCartItem: null,
       errorOmsGetCheckoutItem: null,
@@ -117,7 +132,8 @@ export const oms = createReducer(INITIAL_STATE, {
       errorOmsGetPayment: null,
       errorOmsDeleteCartItem: null,
       errorOmsGetCartItemFromCheckout: null,
-      errorOmsCheckPromo: null
+      errorOmsCheckPromo: null,
+      errorOMSCheckOverdue: null
     };
   },
   /**
@@ -498,59 +514,176 @@ export const oms = createReducer(INITIAL_STATE, {
     };
   },
 
-   /**
+  /**
    * ==================================
    * GET KUR OTP
    * =================================
    */
-    [types.OMS_GET_KUR_OTP_PROCESS](state, action) {
-      return {
-        ...state,
-        loadingOmsGetKurOtp: true,
-        dataOmsGetKurOtp: null,
-        errorOmsGetKurOtp: null
-      };
-    },
-    [types.OMS_GET_KUR_OTP_SUCCESS](state, action) {
-      return {
-        ...state,
-        loadingOmsGetKurOtp: false,
-        dataOmsGetKurOtp: action.payload
-      };
-    },
-    [types.OMS_GET_KUR_OTP_FAILED](state, action) {
-      return {
-        ...state,
-        loadingOmsGetKurOtp: false,
-        errorOmsGetKurOtp: action.payload
-      };
-    },
+  [types.OMS_GET_KUR_OTP_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetKurOtp: true,
+      dataOmsGetKurOtp: null,
+      errorOmsGetKurOtp: null
+    };
+  },
+  [types.OMS_GET_KUR_OTP_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsGetKurOtp: false,
+      dataOmsGetKurOtp: action.payload
+    };
+  },
+  [types.OMS_GET_KUR_OTP_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsGetKurOtp: false,
+      errorOmsGetKurOtp: action.payload
+    };
+  },
 
-    /**
+  /**
    * ==================================
    * POST KUR CONSENT
    * =================================
    */
-     [types.OMS_POST_KUR_CONSENT_PROCESS](state, action) {
-      return {
-        ...state,
-        loadingOmsPostKurConsent: true,
-        dataOmsPostKurConsent: null,
-        errorOmsPostKurConsent: null
-      };
-    },
-    [types.OMS_POST_KUR_CONSENT_SUCCESS](state, action) {
-      return {
-        ...state,
-        loadingOmsPostKurConsent: false,
-        dataOmsPostKurConsent: action.payload
-      };
-    },
-    [types.OMS_POST_KUR_CONSENT_FAILED](state, action) {
-      return {
-        ...state,
-        loadingOmsPostKurConsent: false,
-        errorOmsPostKurConsent: action.payload
-      };
-    },
+  [types.OMS_POST_KUR_CONSENT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsPostKurConsent: true,
+      dataOmsPostKurConsent: null,
+      errorOmsPostKurConsent: null
+    };
+  },
+  [types.OMS_POST_KUR_CONSENT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsPostKurConsent: false,
+      dataOmsPostKurConsent: action.payload
+    };
+  },
+  [types.OMS_POST_KUR_CONSENT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOmsPostKurConsent: false,
+      errorOmsPostKurConsent: action.payload
+    };
+  },
+
+  /**
+   * =================================
+   * GET RETURN DRAFT
+   * =================================
+   */
+  [types.GET_RETURN_DRAFT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReturnDraft: true,
+      dataGetReturnDraft: null,
+      errorGetReturnDraft: null
+    };
+  },
+  [types.GET_RETURN_DRAFT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReturnDraft: false,
+      dataGetReturnDraft: action.payload
+    };
+  },
+  [types.GET_RETURN_DRAFT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetReturnDraft: false,
+      errorGetReturnDraft: action.payload
+    };
+  },
+  [types.SAVE_RETURN_DRAFT_PARCEL_ID](state, action) {
+    return {
+      ...state,
+      selectedReturnParcelId: action.data
+    };
+  },
+
+  /**
+   * =================================
+   * GET RETURN REASON
+   * =================================
+   */
+  [types.GET_RETURN_REASON_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReturnReason: true,
+      dataGetReturnReason: null,
+      errorGetReturnReason: null
+    };
+  },
+  [types.GET_RETURN_REASON_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetReturnReason: false,
+      dataGetReturnReason: action.payload.data
+    };
+  },
+  [types.GET_RETURN_REASON_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetReturnReason: false,
+      errorGetReturnReason: action.payload
+    };
+  },
+
+  /**
+   * =========================
+   * POST RETURN ORDER
+   * =========================
+   */
+  [types.POST_RETURN_ORDER_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingPostReturnOrder: true,
+      dataPostReturnOrder: null,
+      errorPostReturnOrder: null
+    };
+  },
+  [types.POST_RETURN_ORDER_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingPostReturnOrder: false,
+      dataPostReturnOrder: action.data
+    };
+  },
+  [types.POST_RETURN_ORDER_FAILED](state, action) {
+    return {
+      ...state,
+      loadingPostReturnOrder: false,
+      errorPostReturnOrder: action.data
+    };
+  },
+  /**
+   * ========================
+   * GET CHECK OVERDUE
+   * ========================
+   */
+  [types.OMS_CHECK_OVERDUE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOMSCheckOverdue: true,
+      dataOMSCheckOverdue: null,
+      errorOMSCheckOverdue: null
+    };
+  },
+  [types.OMS_CHECK_OVERDUE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOMSCheckOverdue: false,
+      dataOMSCheckOverdue: action.payload
+    };
+  },
+  [types.OMS_CHECK_OVERDUE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOMSCheckOverdue: false,
+      errorOMSCheckOverdue: action.data
+    };
+  }
 });

@@ -25,7 +25,8 @@ import {
   LoadingPage,
   ToastType1,
   ModalConfirmation,
-  ModalBottomErrorRespons
+  ModalBottomErrorRespons,
+  ModalConfirmationType6
 } from '../../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers';
 import { Color } from '../../../config';
@@ -40,7 +41,9 @@ import {
   ACTIVITY_JOURNEY_PLAN_CHECK_IN,
   ACTIVITY_JOURNEY_PLAN_CHECK_OUT,
   ACTIVITY_JOURNEY_PLAN_ORDER,
-  ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+  ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY,
+  ACTIVITY_JOURNEY_PLAN_RETUR,
+  ACTIVITY_JOURNEY_PLAN_STOCK
 } from '../../../constants';
 import _ from 'lodash';
 
@@ -56,6 +59,7 @@ class MerchantHomeView extends Component {
       openModalCheckUser: false,
       openModalProgressChecking: false,
       openModalBeforeCheckIn: false,
+      openModalOverdue: false,
       checkNoOrder: false,
       showToast: false,
       loadingPostForCheckoutNoOrder: false,
@@ -82,6 +86,10 @@ class MerchantHomeView extends Component {
           goTo: 'survey'
         },
         {
+          menuName: 'Catatan Stok',
+          goTo: 'stock'
+        },
+        {
           menuName: 'Keluar Toko',
           icon: require('../../../assets/icons/merchant/check-out.png'),
           goTo: 'checkOut'
@@ -102,6 +110,12 @@ class MerchantHomeView extends Component {
           title: 'Order',
           goTo: 'pdp',
           activity: ACTIVITY_JOURNEY_PLAN_ORDER
+        },
+        {
+          name: 'Catatan Stok',
+          title: 'Isi',
+          goTo: 'stock',
+          activity: ACTIVITY_JOURNEY_PLAN_STOCK
         },
         {
           name: 'Keluar Toko',
@@ -149,8 +163,9 @@ class MerchantHomeView extends Component {
     this.props.merchantGetLogAllActivityProcessV2(
       this.props.merchant.selectedMerchant.journeyBookStores.id
     );
+    this.props.getReturnActiveInfoProcess();
     // HIDE TASK BASE ON PRIVILEGE
-    const { checkIn, checkOut, order } = this.state.privileges || {};
+    const { checkIn, checkOut, order, retur } = this.state.privileges || {};
     let newTask = this.state.task;
     if (!checkIn?.status) {
       // same as (checkIn && !checkIn.status)
@@ -162,6 +177,9 @@ class MerchantHomeView extends Component {
     if (!order?.status) {
       newTask = newTask.filter(el => el.title !== 'Order');
     }
+    // if (!retur?.status) {
+    //   newTask = newTask.filter(el => el.title !== 'Retur');
+    // }
     this.setState({ task: newTask });
     /** FOR GET PORTFOLIO (FOR PAYLOAD CHECKOUT ORDER) */
     this.props.portfolioGetProcessV2();
@@ -177,71 +195,46 @@ class MerchantHomeView extends Component {
   componentDidUpdate(prevProps) {
     const {
       loadingGetLogAllActivity,
-      dataGetTotalSurvey,
-      dataGetLogAllActivityV2
+      dataGetLogAllActivityV2,
+      dataReturnActiveInfo,
+      dataGetTotalSurvey
     } = this.props.merchant;
+
+    // Check is retur active
+    if (prevProps.merchant.dataReturnActiveInfo !== dataReturnActiveInfo) {
+      if (dataReturnActiveInfo !== null && dataReturnActiveInfo.isActive) {
+        const retur = {
+          name: 'Retur Barang',
+          title: 'Retur',
+          goTo: 'retur',
+          activity: ACTIVITY_JOURNEY_PLAN_RETUR
+        };
+        let newTask = this.state.task;
+        newTask.splice(2, 0, retur);
+        this.setState({ task: newTask });
+      }
+    }
+
+    if (prevProps.merchant.dataGetTotalSurvey !== dataGetTotalSurvey) {
+      /** IF SURVEY LIST EXIST */
+      if (dataGetTotalSurvey !== null) {
+        this.taskListFilter();
+      }
+    }
 
     if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
       if (dataGetTotalSurvey) {
         /** IF NO SURVEY */
         if (dataGetTotalSurvey.total === 0) {
           this.SurveyDone();
-          if (this.state.task.length === 4) {
-            this.setState({
-              task: [
-                {
-                  name: 'Masuk Toko',
-                  title: 'Masuk',
-                  goTo: 'checkIn',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                },
-                {
-                  name: 'Order',
-                  title: 'Order',
-                  goTo: 'pdp',
-                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
-                },
-                {
-                  name: 'Keluar Toko',
-                  title: 'Keluar',
-                  goTo: 'checkOut',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                }
-              ]
-            });
+          if (this.state.task.length === 6) {
+            this.taskListFilter('noSurvey');
           }
         }
         /** IF SURVEY LIST EXIST */
         if (dataGetTotalSurvey.total !== 0) {
-          if (this.state.task.length === 3) {
-            this.setState({
-              task: [
-                {
-                  name: 'Masuk Toko',
-                  title: 'Masuk',
-                  goTo: 'checkIn',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-                },
-                {
-                  name: 'Order',
-                  title: 'Order',
-                  goTo: 'pdp',
-                  activity: ACTIVITY_JOURNEY_PLAN_ORDER
-                },
-                {
-                  name: 'Survei',
-                  title: 'Isi',
-                  goTo: 'survey',
-                  activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-                },
-                {
-                  name: 'Keluar Toko',
-                  title: 'Keluar',
-                  goTo: 'checkOut',
-                  activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-                }
-              ]
-            });
+          if (this.state.task.length === 7) {
+            this.taskListFilter('surveyExist');
           }
         }
         /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
@@ -371,6 +364,26 @@ class MerchantHomeView extends Component {
         this.doError();
       }
     }
+
+    /**
+     * CHECK OVERDUE ORDER STATUS
+     */
+    // IF SUCCESS
+    if (
+      prevProps.oms.dataOMSCheckOverdue !== this.props.oms.dataOMSCheckOverdue
+    ) {
+      if (this.props.oms.dataOMSCheckOverdue !== null) {
+        this.verifyUser();
+      }
+    }
+    // IF FAILED
+    if (
+      prevProps.oms.errorOMSCheckOverdue !== this.props.oms.errorOMSCheckOverdue
+    ) {
+      if (this.props.oms.errorOMSCheckOverdue !== null) {
+        this.doError();
+      }
+    }
     /** error get total survey */
     if (this.props.merchant.errorGetTotalSurvey) {
       if (
@@ -457,11 +470,27 @@ class MerchantHomeView extends Component {
       });
     }
   }
+
+  /** FOR VERIFY USER STATUS AND ORDER OVERDUE */
+  verifyUser() {
+    if (
+      this.props.oms.dataOMSCheckOverdue.overdue &&
+      this.props.oms.dataOMSCheckOverdue !== null
+    ) {
+      this.setState({
+        openModalOverdue: true,
+        openModalProgressChecking: false
+      });
+    } else {
+      this.setState({ openModalCheckUser: true });
+    }
+  }
   /** === GO TO (MENU PRESS) */
   goTo(page) {
     switch (page) {
       case 'pdp':
-        this.setState({ openModalCheckUser: true });
+        this.setState({ openModalProgressChecking: true });
+        this.props.OMSCheckOverdueProcess();
         break;
       case 'history':
         NavigationService.navigate('HistoryView', {
@@ -507,6 +536,18 @@ class MerchantHomeView extends Component {
           }
         }
         break;
+      case 'retur':
+        NavigationService.navigate('ReturnOrderView');
+        break;
+      case 'stock':
+        if (
+          this.props.merchant.dataGetLogAllActivityV2.find(
+            task => task.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_IN
+          )
+        ) {
+          NavigationService.navigate('MerchantStockView');
+        }
+        break;
       default:
         break;
     }
@@ -531,6 +572,134 @@ class MerchantHomeView extends Component {
       default:
         break;
     }
+  }
+
+  taskListFilter(filter) {
+    const { dataReturnActiveInfo, dataGetTotalSurvey } = this.props.merchant;
+    const retur = {
+      name: 'Retur Barang',
+      title: 'Retur',
+      goTo: 'retur',
+      activity: ACTIVITY_JOURNEY_PLAN_RETUR
+    };
+
+    const surveyTask = {
+      name: 'Toko Survey',
+      title: 'Isi',
+      goTo: 'survey',
+      activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+    };
+
+    const data = {};
+    switch (filter) {
+      case 'noSurvey':
+        data.task = [
+          {
+            name: 'Masuk Toko',
+            title: 'Masuk',
+            goTo: 'checkIn',
+            activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+          },
+          {
+            name: 'Order',
+            title: 'Order',
+            goTo: 'pdp',
+            activity: ACTIVITY_JOURNEY_PLAN_ORDER
+          },
+          {
+            name: 'Catatan Stok',
+            title: 'Isi',
+            goTo: 'stock',
+            activity: ACTIVITY_JOURNEY_PLAN_STOCK
+          },
+          {
+            name: 'Keluar Toko',
+            title: 'Keluar',
+            goTo: 'checkOut',
+            activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+          }
+        ];
+        break;
+      case 'surveyExist':
+        data.task = [
+          {
+            name: 'Masuk Toko',
+            title: 'Masuk',
+            goTo: 'checkIn',
+            activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+          },
+          {
+            name: 'Order',
+            title: 'Order',
+            goTo: 'pdp',
+            activity: ACTIVITY_JOURNEY_PLAN_ORDER
+          },
+          {
+            name: 'Catatan Stok',
+            title: 'Isi',
+            goTo: 'stock',
+            activity: ACTIVITY_JOURNEY_PLAN_STOCK
+          },
+          {
+            name: 'Toko Survey',
+            title: 'Isi',
+            goTo: 'survey',
+            activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
+          },
+          {
+            name: 'Keluar Toko',
+            title: 'Keluar',
+            goTo: 'checkOut',
+            activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+          }
+        ];
+        break;
+
+      default:
+        data.task = [
+          {
+            name: 'Masuk Toko',
+            title: 'Masuk',
+            goTo: 'checkIn',
+            activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
+          },
+          {
+            name: 'Order',
+            title: 'Order',
+            goTo: 'pdp',
+            activity: ACTIVITY_JOURNEY_PLAN_ORDER
+          },
+          {
+            name: 'Catatan Stok',
+            title: 'Isi',
+            goTo: 'stock',
+            activity: ACTIVITY_JOURNEY_PLAN_STOCK
+          },
+          {
+            name: 'Keluar Toko',
+            title: 'Keluar',
+            goTo: 'checkOut',
+            activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
+          }
+        ];
+        break;
+    }
+
+    /** ADD RETURN TASK */
+    if (dataReturnActiveInfo.isActive) {
+      data.task.splice(2, 0, retur);
+    }
+
+    /** ADD SURVEY TASK */
+    if (dataGetTotalSurvey.total !== 0) {
+      /** FIND CHECKOUT INDEX */
+      const taskCheckoutIndex = data.task.findIndex(
+        task => task.title === 'Keluar'
+      );
+      data.task.splice(taskCheckoutIndex, 0, surveyTask);
+    }
+
+    this.setState({ task: data.task });
   }
 
   /** CUSTOM NAVIGATE VIEW NO ORDER REASON PAGE */
@@ -585,7 +754,6 @@ class MerchantHomeView extends Component {
       }
       return false;
     }
-    return false;
   }
   /** CHECK TOTAL COMPLETE TASK */
   checkTotalCompleteTask() {
@@ -774,6 +942,104 @@ class MerchantHomeView extends Component {
           Belum Masuk
         </Text>
       </View>
+    );
+  }
+
+  // RENDER BUTTON STOCK RECORD
+  buttonStock(item) {
+    return item.activity ? (
+      <TouchableOpacity
+        onPress={() => {
+          this.goTo(item.goTo);
+        }}
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          marginTop: -5,
+          marginRight: -5
+        }}
+      >
+        <Text style={Fonts.type51}>Selesai</Text>
+        <MaterialIcon
+          style={{
+            marginTop: 2,
+            padding: 0
+          }}
+          name="chevron-right"
+          color={Color.fontGreen50}
+          size={20}
+        />
+      </TouchableOpacity>
+    ) : (
+      <Button
+        onPress={() => {
+          this.goTo(item.goTo);
+        }}
+        title={item.title}
+        titleStyle={[
+          Fonts.type16,
+          {
+            color: Color.fontWhite
+          }
+        ]}
+        buttonStyle={{
+          backgroundColor: Color.fontRed50,
+          borderRadius: 7,
+          paddingHorizontal: 20,
+          paddingVertical: 5,
+          width: '100%'
+        }}
+      />
+    );
+  }
+
+  /** RENDER BUTTON RETURN */
+  buttonReturn(item) {
+    return item.activity ? (
+      <TouchableOpacity
+        onPress={() => {
+          this.goTo(item.goTo);
+        }}
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          marginTop: -5,
+          marginRight: -5
+        }}
+      >
+        <Text style={Fonts.type51}>Selesai</Text>
+        <MaterialIcon
+          style={{
+            marginTop: 2,
+            padding: 0
+          }}
+          name="chevron-right"
+          color={Color.fontGreen50}
+          size={20}
+        />
+      </TouchableOpacity>
+    ) : (
+      <Button
+        onPress={() => {
+          this.goTo(item.goTo);
+        }}
+        title={item.title}
+        titleStyle={[
+          Fonts.type16,
+          {
+            color: Color.fontWhite
+          }
+        ]}
+        buttonStyle={{
+          backgroundColor: Color.fontRed50,
+          borderRadius: 7,
+          paddingHorizontal: 20,
+          paddingVertical: 5,
+          width: '100%'
+        }}
+      />
     );
   }
 
@@ -1091,6 +1357,18 @@ class MerchantHomeView extends Component {
                           />
                         </TouchableOpacity>
                       )
+                    ) : taskList.activityName === ACTIVITY_JOURNEY_PLAN_RETUR &&
+                      this.props.merchant.dataReturnActiveInfo.isActive ? (
+                      this.buttonReturn({
+                        goTo: item.goTo,
+                        activity: ACTIVITY_JOURNEY_PLAN_RETUR
+                      })
+                    ) : taskList.activityName ===
+                      ACTIVITY_JOURNEY_PLAN_STOCK ? (
+                      this.buttonStock({
+                        goTo: item.goTo,
+                        activity: ACTIVITY_JOURNEY_PLAN_STOCK
+                      })
                     ) : taskList.activityName ===
                       ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY ? (
                       <TouchableOpacity
@@ -1199,7 +1477,8 @@ class MerchantHomeView extends Component {
   }
   /** RENDER MODAL PROGRESS CHECKING */
   renderModalProgressChecking() {
-    return this.state.openModalProgressChecking ? (
+    return this.state.openModalProgressChecking ||
+      this.props.oms.loadingOMSCheckOverdue ? (
       <ModalBottomProgressChecking
         open={this.state.openModalProgressChecking}
         progress={'Mohon tunggu'}
@@ -1332,6 +1611,26 @@ class MerchantHomeView extends Component {
       />
     );
   }
+  /** RENDER MODAL OVERDUE */
+  renderModalOverdue() {
+    return this.state.openModalOverdue ? (
+      <ModalConfirmationType6
+        title={'Toko Ini Memiliki Transaksi Overdue'}
+        content={
+          'Silahkan konfirmasi kepada toko terkait transaksi tersebut. Anda juga dapat melakukan penagihan.'
+        }
+        open={this.state.openModalOverdue}
+        onBackButtonPress={() => this.setState({ openModalOverdue: false })}
+        onBackdropPress={() => this.setState({ openModalOverdue: false })}
+        okText={'Baik, Mengerti'}
+        ok={() =>
+          this.setState({ openModalOverdue: false, openModalCheckUser: true })
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
   /** BACKGROUND */
   renderBackground() {
     return <View style={styles.backgroundRed} />;
@@ -1362,6 +1661,7 @@ class MerchantHomeView extends Component {
         {this.renderModalVerifyUser()}
         {this.renderModalProgressChecking()}
         {this.renderModalBeforeCheckIn()}
+        {this.renderModalOverdue()}
         <ModalBottomSuccessOrder />
       </SafeAreaView>
     );
@@ -1551,9 +1851,10 @@ const mapStateToProps = ({
   user,
   permanent,
   profile,
-  privileges
+  privileges,
+  oms
 }) => {
-  return { auth, merchant, user, permanent, profile, privileges };
+  return { auth, merchant, user, permanent, profile, privileges, oms };
 };
 
 const mapDispatchToProps = dispatch => {

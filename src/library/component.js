@@ -3,7 +3,9 @@ import CartGlobal from '../components/CartGlobal';
 import SearchBarType1 from '../components/search_bar/SearchBarType1';
 import SearchBarType2 from '../components/search_bar/SearchBarType2';
 import SearchBarType3 from '../components/search_bar/SearchBarType3';
+import SearchBarType5 from '../components/search_bar/SearchBarType5';
 import SearchBarType4 from '../components/search_bar/SearchBarType4';
+import SearchBarType6 from '../components/search_bar/SearchBarType6';
 /** BACK HANDLER */
 import BackHandlerCloseApp from '../components/BackHandlerCloseApp';
 import BackHandlerBackSpecific from '../components/BackHandlerBackSpecific';
@@ -34,6 +36,7 @@ import DropdownType2 from '../components/input/DropdownType2';
 /** BUTTON */
 import OrderButton from '../components/OrderButton';
 import ButtonFloatType1 from '../components/button/ButtonFloatType1';
+import ButtonFloatType2 from '../components/button/ButtonFloatType2';
 import ButtonSingle from '../components/button/ButtonSingle';
 import ButtonMenuType1 from '../components/button/ButtonMenuType1';
 import ButtonSingleSmall from '../components/button/ButtonSingleSmall';
@@ -45,7 +48,9 @@ import ModalWarning from '../components/modal/ModalWarning';
 import ModalConfirmation from '../components/modal/ModalConfirmation';
 import ModalConfirmationType2 from '../components/modal/ModalConfirmationType2';
 import ModalConfirmationType4 from '../components/modal/ModalConfirmationType4';
+import ModalConfirmationType3 from '../components/modal/ModalConfirmationType3';
 import ModalConfirmationType5 from '../components/modal/ModalConfirmationType5';
+import ModalConfirmationType6 from '../components/modal/ModalConfirmationType6';
 import ModalBottomErrorPinMap from '../components/error/ModalBottomErrorPinMap';
 import ModalBottomSwipeCloseNotScroll from '../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalBottomType1 from '../components/modal_bottom/ModalBottomType1';
@@ -104,6 +109,7 @@ import Address from '../components/Address';
 /** TAG */
 import TagListType1 from '../components/tag/TagListType1';
 import TagListType2 from '../components/tag/TagListType2';
+import TagListType3 from '../components/tag/TagListType3';
 /** DATE PICKER SPINNER */
 import DatePickerSpinner from '../components/DatePickerSpinner';
 /** SELECTED MERCHANT */
@@ -136,6 +142,8 @@ export {
   SearchBarType2,
   SearchBarType3,
   SearchBarType4,
+  SearchBarType5,
+  SearchBarType6,
   /** BACK HANDLER */
   BackHandlerCloseApp,
   BackHandlerBackSpecific,
@@ -164,6 +172,7 @@ export {
   /** BUTTON */
   OrderButton,
   ButtonFloatType1,
+  ButtonFloatType2,
   ButtonSingle,
   ButtonMenuType1,
   ButtonSingleSmall,
@@ -175,7 +184,9 @@ export {
   ModalConfirmation,
   ModalConfirmationType2,
   ModalConfirmationType4,
+  ModalConfirmationType3,
   ModalConfirmationType5,
+  ModalConfirmationType6,
   ModalBottomErrorPinMap,
   ModalBottomSwipeCloseNotScroll,
   ModalBottomType1,
@@ -232,6 +243,7 @@ export {
   /** TAG */
   TagListType1,
   TagListType2,
+  TagListType3,
   /** DATE PICKER SPINNER */
   DatePickerSpinner,
   /** SELECTED MERCHANT NAME */

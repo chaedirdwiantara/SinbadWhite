@@ -1,11 +1,14 @@
 import React from 'react';
 import { View } from 'react-native';
+import { GlobalStyle } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 import HistoryView from '../../screens/history/HistoryView';
 import HistoryDetailView from '../../screens/history/HistoryDetailView';
 import HistoryDetailStatusView from '../../screens/history/HistoryDetailStatusView';
 import HistoryPaymentInvoiceView from '../../screens/history/HistoryPaymentInvoiceView';
+import HistoryReturnOrderView from '../../screens/history/return-order/HistoryReturnOrderView';
+import HistoryReturnOrderDetailView from '../../screens/history/return-order/HistoryReturnOrderDetailView';
 
 const HistoryNavigator = {
   HistoryView: {
@@ -67,8 +70,30 @@ const HistoryNavigator = {
     }
   },
   HistoryPaymentInvoiceView: {
-    screen: HistoryPaymentInvoiceView,
+    screen: HistoryPaymentInvoiceView
   },
+  HistoryReturnOrderView: {
+    screen: HistoryReturnOrderView,
+    navigationOptions: {
+      headerTitle: 'Riwayat Retur',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          color: masterColor.fontBlack80
+        }
+      ],
+      headerStyle: GlobalStyle.shadowForBox,
+      gesturesEnabled: false
+    }
+  },
+  HistoryReturnOrderDetailView: {
+    screen: HistoryReturnOrderDetailView,
+    navigationOptions: {
+      headerTitleStyle: GlobalFont.textHeaderPage,
+      headerStyle: GlobalStyle.shadowForBox10,
+      gesturesEnabled: false
+    }
+  }
 };
 
 export default HistoryNavigator;
