@@ -42,7 +42,7 @@ class EditStockRecordListView extends Component {
           borderRadius: 100
         }}
       >
-        <Text style={Fonts.type108}>MSS</Text>
+        <Text style={[Fonts.type108, { color: Color.fontYellow50 }]}>MSS</Text>
       </View>
     );
   }
