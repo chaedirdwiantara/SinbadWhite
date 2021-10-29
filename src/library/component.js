@@ -79,6 +79,7 @@ import ProductListType2 from '../components/list/ProductListType2';
 import ProductListType3 from '../components/list/ProductListType3';
 import ProductListType4 from '../components/list/ProductListType4';
 import ProductListType7 from '../components/list/ProductListType7';
+import ProductListType8 from '../components/list/ProductListType8';
 /** EMPTY DATA */
 import ComingSoon from '../components/empty_state/ComingSoon';
 import EmptyData from '../components/empty_state/EmptyData';
@@ -207,6 +208,7 @@ export {
   ProductListType3,
   ProductListType4,
   ProductListType7,
+  ProductListType8,
   /** EMPTY DATA */
   ComingSoon,
   EmptyData,
