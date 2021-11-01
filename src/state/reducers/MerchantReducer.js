@@ -600,7 +600,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetMerchantLastOrder: false,
-      dataGetMerchantLastOrder: action.payload.lastOrder
+      dataGetMerchantLastOrder: action.payload.data
     };
   },
   [types.MERCHANT_GET_LAST_ORDER_FAILED](state, action) {
