@@ -53,7 +53,7 @@ function editMerchant(data) {
 /** === MERCHANT LAST ORDER === */
 function getMerchantLastOrder(storeId) {
   return ApiRest({
-    path: `journey-reports/${storeId}`,
+    path: `${salesManagementService}/v1/agent/last_order/${storeId}`,
     method: 'GET'
   });
 }
