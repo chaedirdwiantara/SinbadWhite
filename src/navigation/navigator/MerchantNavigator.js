@@ -1,4 +1,4 @@
-import React, { View } from 'react';
+import { React, View } from '../../library/reactPackage';
 import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 import MerchantView from '../../screens/merchants/MerchantView';

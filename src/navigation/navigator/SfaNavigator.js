@@ -1,5 +1,4 @@
-import React from 'react';
-import { View } from 'react-native';
+import { React, View } from '../../library/reactPackage';
 import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 import SfaView from '../../screens/sfa/SfaView';
