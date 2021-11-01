@@ -37,7 +37,7 @@ import {
               <Text
                 style={[Fonts.type7, { textAlign: 'center', marginBottom: 10 }]}
               >
-                Terjadi Kesalahan
+               {this.props.errorTitle? this.props.errorTitle :'Terjadi Kesalahan'} 
               </Text>
               <Text style={[Fonts.type17, { textAlign: 'center', marginHorizontal: 20 }]}>
                 {this.props.text? this.props.text : 'Silahkan Mencoba Kembali'}
