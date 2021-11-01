@@ -244,7 +244,7 @@ class MerchantHomeView extends Component {
     }
 
     if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
-      if (dataGetTotalSurvey) {
+      if (prevProps.merchant.dataGetTotalSurvey !== dataGetTotalSurvey && dataGetTotalSurvey )  {
         /** IF NO SURVEY */
         if (dataGetTotalSurvey.total === 0) {
           this.SurveyDone();
@@ -2207,8 +2207,8 @@ const mapStateToProps = ({
   permanent,
   privileges,
   profile,
-  privileges,
-  oms
+  oms,
+  sfa
 }) => {
   return { auth, merchant, user, permanent, profile, privileges, oms, sfa };
 };
