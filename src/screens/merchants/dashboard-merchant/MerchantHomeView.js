@@ -178,7 +178,8 @@ class MerchantHomeView extends Component {
     );
     this.props.getReturnActiveInfoProcess();
     // HIDE TASK BASE ON PRIVILEGE
-    const { checkIn, checkOut, order, retur , collection} = this.state.privileges || {};
+    const { checkIn, checkOut, order, retur, collection } =
+      this.state.privileges || {};
     let newTask = this.state.task;
     if (!checkIn?.status) {
       // same as (checkIn && !checkIn.status)

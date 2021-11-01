@@ -1,5 +1,4 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { View } from 'react';
 import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 import MerchantView from '../../screens/merchants/MerchantView';
