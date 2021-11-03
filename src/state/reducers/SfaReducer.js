@@ -744,8 +744,8 @@ export const sfa = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingSfaPatchCollectionMethod: true,
-      dataSfaSfaPatchCollectionMethod: null,
-      errorSfaSfaPatchCollectionMethod: null
+      dataSfaPatchCollectionMethod: null,
+      errorSfaPatchCollectionMethod: null
     };
   },
   [types.SFA_EDIT_COLLECTION_METHOD_SUCCESS](state, action) {
@@ -759,7 +759,7 @@ export const sfa = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingSfaPatchCollectionMethod: false,
-      errorSfaSfaPatchCollectionMethod: action.payload
+      errorSfaPatchCollectionMethod: action.payload
     };
   },
 
