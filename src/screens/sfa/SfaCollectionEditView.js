@@ -547,7 +547,6 @@ const SfaCollectionEditView = props => {
       </>
     );
   };
-  console.log(noReference, 'REFENSI');
   /** RENDER REFERENCE */
   const renderReference = () => {
     return paymentCollectionTypeId === CHECK ||
