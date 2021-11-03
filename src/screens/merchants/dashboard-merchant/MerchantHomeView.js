@@ -245,7 +245,10 @@ class MerchantHomeView extends Component {
     }
 
     if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
-      if (prevProps.merchant.dataGetTotalSurvey !== dataGetTotalSurvey && dataGetTotalSurvey )  {
+      if (
+        prevProps.merchant.dataGetTotalSurvey !== dataGetTotalSurvey &&
+        dataGetTotalSurvey
+      ) {
         /** IF NO SURVEY */
         if (dataGetTotalSurvey.total === 0) {
           this.SurveyDone();
@@ -841,8 +844,10 @@ class MerchantHomeView extends Component {
     }
 
     /** ADD RETURN TASK */
-    if (dataReturnActiveInfo.isActive) {
-      data.task.splice(2, 0, retur);
+    if (dataReturnActiveInfo !== null) {
+      if (dataReturnActiveInfo.isActive) {
+        data.task.splice(2, 0, retur);
+      }
     }
 
     /** ADD SURVEY TASK */
