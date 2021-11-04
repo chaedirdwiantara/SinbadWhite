@@ -1391,7 +1391,7 @@ class MerchantHomeView extends Component {
           >
             <Text style={Fonts.type59}>{order.order_parcels[0].orderCode}</Text>
             <Text style={Fonts.type59}>
-              {order.order_parcels[0].orderCode} Qty
+              {order.order_parcels[0]?.parcel_qty ?? '-'} Qty
             </Text>
           </View>
           <View
@@ -1406,7 +1406,8 @@ class MerchantHomeView extends Component {
               )}
             </Text>
             <Text style={Fonts.type59}>
-              {/* Total: {MoneyFormat(order.order_parcels[0].billings.totalPayment)} */}
+              Total:{' '}
+              {MoneyFormat(order.order_parcels[0]?.parcel_final_price ?? '-')}
             </Text>
           </View>
         </View>
