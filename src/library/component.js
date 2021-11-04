@@ -3,7 +3,9 @@ import CartGlobal from '../components/CartGlobal';
 import SearchBarType1 from '../components/search_bar/SearchBarType1';
 import SearchBarType2 from '../components/search_bar/SearchBarType2';
 import SearchBarType3 from '../components/search_bar/SearchBarType3';
+import SearchBarType5 from '../components/search_bar/SearchBarType5';
 import SearchBarType4 from '../components/search_bar/SearchBarType4';
+import SearchBarType6 from '../components/search_bar/SearchBarType6';
 /** BACK HANDLER */
 import BackHandlerCloseApp from '../components/BackHandlerCloseApp';
 import BackHandlerBackSpecific from '../components/BackHandlerBackSpecific';
@@ -23,6 +25,7 @@ import InputType1 from '../components/input/InputType1';
 import InputType2 from '../components/input/InputType2';
 import InputType3 from '../components/input/InputType3';
 import InputType4 from '../components/input/inputType4';
+import InputType5 from '../components/input/inputType5';
 import InputType6 from '../components/input/InputType6';
 import InputType7 from '../components/input/InputType7';
 /** INPUT MAPS (PIN POINT) */
@@ -34,6 +37,7 @@ import DropdownType2 from '../components/input/DropdownType2';
 /** BUTTON */
 import OrderButton from '../components/OrderButton';
 import ButtonFloatType1 from '../components/button/ButtonFloatType1';
+import ButtonFloatType2 from '../components/button/ButtonFloatType2';
 import ButtonSingle from '../components/button/ButtonSingle';
 import ButtonMenuType1 from '../components/button/ButtonMenuType1';
 import ButtonSingleSmall from '../components/button/ButtonSingleSmall';
@@ -45,7 +49,9 @@ import ModalWarning from '../components/modal/ModalWarning';
 import ModalConfirmation from '../components/modal/ModalConfirmation';
 import ModalConfirmationType2 from '../components/modal/ModalConfirmationType2';
 import ModalConfirmationType4 from '../components/modal/ModalConfirmationType4';
+import ModalConfirmationType3 from '../components/modal/ModalConfirmationType3';
 import ModalConfirmationType5 from '../components/modal/ModalConfirmationType5';
+import ModalConfirmationType6 from '../components/modal/ModalConfirmationType6';
 import ModalBottomErrorPinMap from '../components/error/ModalBottomErrorPinMap';
 import ModalBottomSwipeCloseNotScroll from '../components/modal_bottom/ModalBottomSwipeCloseNotScroll';
 import ModalBottomType1 from '../components/modal_bottom/ModalBottomType1';
@@ -99,13 +105,17 @@ import SkeletonType23 from '../components/skeleton/SkeletonType23';
 import SkeletonType24 from '../components/skeleton/SkeletonType24';
 import SkeletonType25 from '../components/skeleton/SkeletonType25';
 import SkeletonType26 from '../components/skeleton/SkeletonType26';
+import SkeletonType27 from '../components/skeleton/SkeletonType27';
+import SkeletonType28 from '../components/skeleton/SkeletonType28';
 /** ADDRESS */
 import Address from '../components/Address';
 /** TAG */
 import TagListType1 from '../components/tag/TagListType1';
 import TagListType2 from '../components/tag/TagListType2';
+import TagListType3 from '../components/tag/TagListType3';
 /** DATE PICKER SPINNER */
 import DatePickerSpinner from '../components/DatePickerSpinner';
+import DatePickerSpinnerWithMinMaxDate from '../components/DatePickerSpinnerWithMinMaxDate';
 /** SELECTED MERCHANT */
 import SelectedMerchantName from '../components/SelectedMerchantName';
 /** CARD */
@@ -136,6 +146,8 @@ export {
   SearchBarType2,
   SearchBarType3,
   SearchBarType4,
+  SearchBarType5,
+  SearchBarType6,
   /** BACK HANDLER */
   BackHandlerCloseApp,
   BackHandlerBackSpecific,
@@ -153,6 +165,7 @@ export {
   InputType2,
   InputType3,
   InputType4,
+  InputType5,
   InputType6,
   InputType7,
   /** INPUT MAPS (PIN POINT) */
@@ -164,6 +177,7 @@ export {
   /** BUTTON */
   OrderButton,
   ButtonFloatType1,
+  ButtonFloatType2,
   ButtonSingle,
   ButtonMenuType1,
   ButtonSingleSmall,
@@ -175,7 +189,9 @@ export {
   ModalConfirmation,
   ModalConfirmationType2,
   ModalConfirmationType4,
+  ModalConfirmationType3,
   ModalConfirmationType5,
+  ModalConfirmationType6,
   ModalBottomErrorPinMap,
   ModalBottomSwipeCloseNotScroll,
   ModalBottomType1,
@@ -227,13 +243,17 @@ export {
   SkeletonType24,
   SkeletonType25,
   SkeletonType26,
+  SkeletonType27,
+  SkeletonType28,
   /** ADDRESS */
   Address,
   /** TAG */
   TagListType1,
   TagListType2,
+  TagListType3,
   /** DATE PICKER SPINNER */
   DatePickerSpinner,
+  DatePickerSpinnerWithMinMaxDate,
   /** SELECTED MERCHANT NAME */
   SelectedMerchantName,
   /** CARD */

@@ -433,7 +433,13 @@ class MerchantQuestionnaireView extends Component {
       <View
         style={[
           styles.headerContainer,
-          { flex: 1, flexWrap: 'wrap', paddingBottom: '5%' }
+          {
+            flex: 1,
+            flexWrap: 'wrap',
+            paddingBottom: '10%',
+            flexDirection: 'column',
+            overflow: 'visible'
+          }
         ]}
       >
         <Text style={[Fonts.type4, { width: '90%' }]}>

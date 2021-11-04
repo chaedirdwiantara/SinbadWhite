@@ -234,6 +234,7 @@ class PdpBundleOrderView extends Component {
     return (
       <ButtonSingleSmall
         disabledGrey={!this.state.showKeyboard}
+        accessibilityLabel={'btnPdpAddtoCart'}
         disabled={this.buttonDisabled() || this.state.showKeyboard}
         title={this.buttonTitle()}
         borderRadius={4}

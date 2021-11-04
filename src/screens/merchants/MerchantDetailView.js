@@ -46,7 +46,9 @@ class MerchantDetailView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
-    this.props.merchantGetDetailProcessV2(this.props.navigation.state.params.id);
+    this.props.merchantGetDetailProcessV2(
+      this.props.navigation.state.params.id
+    );
   }
   /** === COMBINE ADDRESS === */
   combineAddress(item) {
@@ -94,27 +96,44 @@ class MerchantDetailView extends Component {
 
   async toMapDetail() {
     const {
-      latitude, longitude, name,
-      storeCode, externalId, address, urban
-    } = this.props.merchant.dataGetMerchantDetailV2
+      latitude,
+      longitude,
+      name,
+      storeCode,
+      externalId,
+      address,
+      urban
+    } = this.props.merchant.dataGetMerchantDetailV2;
     const params = {
-      latitude, longitude, name,
-      storeCode,externalId,address,urban  
-    }
+      latitude,
+      longitude,
+      name,
+      storeCode,
+      externalId,
+      address,
+      urban
+    };
     try {
-      let granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-      if(!granted) {
-        let permissionResult = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-        if (permissionResult === PermissionsAndroid.RESULTS.GRANTED){
+      let granted = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+      if (!granted) {
+        let permissionResult = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+        );
+        if (permissionResult === PermissionsAndroid.RESULTS.GRANTED) {
           NavigationService.navigate('MerchantDetailMapView', params);
         } else {
-          ToastAndroid.show('Anda harus mengizinkan aplikasi untuk mengakses lokasi', ToastAndroid.SHORT)
+          ToastAndroid.show(
+            'Anda harus mengizinkan aplikasi untuk mengakses lokasi',
+            ToastAndroid.SHORT
+          );
         }
       } else {
         NavigationService.navigate('MerchantDetailMapView', params);
       }
     } catch (error) {
-      ToastAndroid.show(error?.message || '', ToastAndroid.SHORT)
+      ToastAndroid.show(error?.message || '', ToastAndroid.SHORT);
     }
   }
   /** GO TO PAGE */
@@ -139,6 +158,10 @@ class MerchantDetailView extends Component {
         NavigationService.navigate('HistoryView', {
           storeId: this.props.merchant.dataGetMerchantDetailV2.storeId
         });
+        break;
+      case 'HistoryReturnOrderView':
+        this.props.getReturnStatusProcess();
+        NavigationService.navigate('HistoryReturnOrderView');
         break;
       default:
         break;
@@ -212,7 +235,7 @@ class MerchantDetailView extends Component {
   }
   /** === HEADER MERCHANT === */
   renderHeaderMerchant() {
-    const {dataGetMerchantDetailV2} = this.props.merchant
+    const { dataGetMerchantDetailV2 } = this.props.merchant;
     return (
       <View
         style={[
@@ -233,7 +256,7 @@ class MerchantDetailView extends Component {
           </TouchableOpacity>
           {dataGetMerchantDetailV2.imageUrl ? (
             <Image
-              source={{uri: dataGetMerchantDetailV2.imageUrl}}
+              source={{ uri: dataGetMerchantDetailV2.imageUrl }}
               style={{ width: '100%', height: 169 }}
             />
           ) : (
@@ -262,13 +285,13 @@ class MerchantDetailView extends Component {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {this.renderVerifiedIcon()}
             <Text style={Fonts.type7}>
-              {dataGetMerchantDetailV2.externalId || dataGetMerchantDetailV2.storeCode || "-"}
+              {dataGetMerchantDetailV2.externalId ||
+                dataGetMerchantDetailV2.storeCode ||
+                '-'}
             </Text>
           </View>
 
-          <Text style={Fonts.type7}>
-            {dataGetMerchantDetailV2.name}
-          </Text>
+          <Text style={Fonts.type7}>{dataGetMerchantDetailV2.name}</Text>
           <Text
             style={[Fonts.type8, { marginTop: 5, textTransform: 'capitalize' }]}
           >
@@ -305,7 +328,9 @@ class MerchantDetailView extends Component {
         </View>
         <ProgressBarType1
           totalStep={this.props.merchant.dataGetMerchantDetailV2.progress.total}
-          currentStep={this.props.merchant.dataGetMerchantDetailV2.progress.done}
+          currentStep={
+            this.props.merchant.dataGetMerchantDetailV2.progress.done
+          }
         />
       </View>
     );
@@ -327,8 +352,15 @@ class MerchantDetailView extends Component {
         <View style={styles.boxContentHeader}>
           <Text style={Fonts.type42}>Data Pemilik</Text>
           <Text style={Fonts.type59}>
-            {this.props.merchant.dataGetMerchantDetailV2.progress.ownerData.done}/
-            {this.props.merchant.dataGetMerchantDetailV2.progress.ownerData.total}{' '}
+            {
+              this.props.merchant.dataGetMerchantDetailV2.progress.ownerData
+                .done
+            }
+            /
+            {
+              this.props.merchant.dataGetMerchantDetailV2.progress.ownerData
+                .total
+            }{' '}
             Selesai
           </Text>
         </View>
@@ -347,8 +379,15 @@ class MerchantDetailView extends Component {
         <View style={styles.boxContentHeader}>
           <Text style={Fonts.type42}>Data Toko</Text>
           <Text style={Fonts.type59}>
-            {this.props.merchant.dataGetMerchantDetailV2.progress.storeData.done}/
-            {this.props.merchant.dataGetMerchantDetailV2.progress.storeData.total}{' '}
+            {
+              this.props.merchant.dataGetMerchantDetailV2.progress.storeData
+                .done
+            }
+            /
+            {
+              this.props.merchant.dataGetMerchantDetailV2.progress.storeData
+                .total
+            }{' '}
             Selesai
           </Text>
         </View>
@@ -392,6 +431,11 @@ class MerchantDetailView extends Component {
           child
           title={'Pesanan'}
           onPress={() => this.goTo('merchantOrderHistory')}
+        />
+        <ButtonMenuType1
+          child
+          title={'Riwayat Retur'}
+          onPress={() => this.goTo('HistoryReturnOrderView')}
         />
       </View>
     );

@@ -272,17 +272,19 @@ function* getSurveyResponse(actions) {
           return parseFloat(data.questionResponseScore.score);
         }
       });
-    //arrResult return undefined or arr of Number score
+      //arrResult return undefined or arr of Number score
       if (arrResult) {
         if (arrResult[0] !== undefined) {
           arrResult.map(result => {
-            if (result) totalScore += result;
+            if (result) {
+              totalScore += result;
+            }
           });
         } else {
-          totalScore =  0;
+          totalScore = 0;
         }
       } else {
-        totalScore =  0;
+        totalScore = 0;
       }
     }
     yield put(
@@ -314,6 +316,61 @@ function* updateSurveyResponse(actions) {
     yield put(ActionCreators.merchantSubmitSurveyResponseFailed(error));
   }
 }
+/** ADD RECORD STOCK */
+function* addRecordStock(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.addRecordStock(actions.payload);
+    });
+    yield put(ActionCreators.merchantAddStockRecordSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantAddStockRecordFailed(error));
+  }
+}
+/** GET RECORD STOCK */
+function* getRecordStock(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getRecordStock(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetStockRecordSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetStockRecordFailed(error));
+  }
+}
+/** DELETE RECORD STOCK */
+function* deleteRecordStock(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.deleteRecordStock(actions.payload);
+    });
+    yield put(ActionCreators.merchantDeleteStockRecordSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantDeleteStockRecordFailed(error));
+  }
+}
+/** UPDATE RECORD STOCK */
+function* updateRecordStock(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.updateRecordStock(actions.payload);
+    });
+    yield put(ActionCreators.merchantUpdateStockRecordSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantUpdateStockRecordFailed(error));
+  }
+}
+/** BATCH DELETE RECORD STOCK */
+function* batchDeleteRecordStock(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.batchDeleteRecordStock(actions.payload);
+    });
+    yield put(ActionCreators.merchantBatchDeleteStockSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantBatchDeleteStockFailed(error));
+  }
+}
 
 /** GET SALES SEGMENTATION */
 function* getSalesSegmentation(actions) {
@@ -324,6 +381,17 @@ function* getSalesSegmentation(actions) {
     yield put(ActionCreators.getSalesSegmentationSuccess(response));
   } catch (error) {
     yield put(ActionCreators.getSalesSegmentationFailed(error));
+  }
+}
+/** GET RETURN ACTIVE INFO */
+function* getReturnActiveInfo(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getReturnActiveInfo(actions.payload);
+    });
+    yield put(ActionCreators.getReturnActiveInfoSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.getReturnActiveInfoFailed(error));
   }
 }
 
@@ -397,7 +465,22 @@ function* MerchantSaga() {
     updateSurveyResponse
   );
   yield takeEvery(types.GET_SALES_SEGMENTATION_PROCESS, getSalesSegmentation);
+  yield takeEvery(types.GET_RETURN_ACTIVE_INFO_PROCESS, getReturnActiveInfo);
   yield takeLatest(types.GET_RADIUS_LOCK_GEOTAG_PROCESS, getRadiusLockGeotag);
+  yield takeEvery(types.MERCHANT_ADD_STOCK_RECORD_PROCESS, addRecordStock);
+  yield takeEvery(types.MERCHANT_GET_STOCK_RECORD_PROCESS, getRecordStock);
+  yield takeEvery(
+    types.MERCHANT_DELETE_STOCK_RECORD_PROCESS,
+    deleteRecordStock
+  );
+  yield takeEvery(
+    types.MERCHANT_UPDATE_STOCK_RECORD_PROCESS,
+    updateRecordStock
+  );
+  yield takeEvery(
+    types.MERCHANT_BATCH_DELETE_STOCK_PROCESS,
+    batchDeleteRecordStock
+  );
 }
 
 export default MerchantSaga;
