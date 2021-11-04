@@ -31,3 +31,10 @@ export const PDP_OPEN_ORDER = 'PdpOpenOrder';
 export const PDP_CLOSE_ORDER = 'PdpCloseOrder';
 export const PDP_ADD_TO_CART = 'pdpAddToCart';
 export const PDP_MODIFY_PRODUCT_LIST_DATA = 'pdpModifyProductListData';
+/** FOR GET MSS CATALOGUES */
+export const MSS_GET_CATALOGUES_PROCESS = 'MSSGetCataloguesProcess'
+export const MSS_GET_CATALOGUES_SUCCESS = 'MSSGetCataloguesSuccess'
+export const MSS_GET_CATALOGUES_FAILED = 'MSSGetCataloguesFailed'
+export const MSS_GET_CATALOGUES_REFRESH = 'MSSGetCataloguesRefresh'
+export const MSS_GET_CATALOGUES_RESET = 'MSSGetCataloguesReset'
+export const MSS_GET_CATALOGUES_LOADMORE = 'MSSGetCataloguesLoadMore'

@@ -4,7 +4,8 @@ import {
   View,
   Text,
   SafeAreaView,
-  StyleSheet
+  StyleSheet,
+  TouchableOpacity
 } from '../../library/reactPackage';
 import { MoneyFormat } from '../../helpers/NumberFormater';
 import { Fonts, GlobalStyle } from '../../helpers';
@@ -18,8 +19,11 @@ import {
   PAY_LATER,
   PAY_NOW,
   PAY_ON_DELIVERY,
-  WAITING_FOR_PAYMENT
+  WAITING_FOR_PAYMENT,
+  HISTORY
 } from '../../constants/paymentConstants';
+import NavigationService from '../../navigation/NavigationService';
+
 class HistoryDetailPaymentInformation extends Component {
   constructor(props) {
     super(props);
@@ -170,14 +174,37 @@ class HistoryDetailPaymentInformation extends Component {
     const paymentPromo = this.props.history.dataDetailHistory
       .parcelPromoPaymentAmount;
     const detailHistory = this.props.history.dataDetailHistory;
+    const isPayLater = detailHistory.billing.paymentTypeId === PAY_LATER;
+    const isDeliveredOrDone =
+      detailHistory.status === DONE || detailHistory.status === DELIVERED;
     return (
       <View>
         <View style={GlobalStyle.boxPadding} />
         <View style={GlobalStyle.shadowForBox}>
           <View
-            style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}
+            style={{
+              paddingHorizontal: 16,
+              paddingTop: 16,
+              paddingBottom: 8,
+              flexDirection: 'row'
+            }}
           >
-            <Text style={Fonts.type48}>Informasi Pembayaran</Text>
+            <View style={{ flex: 1, alignItems: 'flex-start' }}>
+              <Text style={Fonts.type48}>Informasi Pembayaran</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              {isPayLater && isDeliveredOrDone ? (
+                <TouchableOpacity
+                  onPress={() =>
+                    NavigationService.navigate('HistoryCollectionLog', {
+                      type: HISTORY
+                    })
+                  }
+                >
+                  <Text style={Fonts.type29}>Riwayat Penagihan</Text>
+                </TouchableOpacity>
+              ) : null}
+            </View>
           </View>
           <View style={[GlobalStyle.lines, { marginHorizontal: 16 }]} />
           <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>

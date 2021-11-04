@@ -48,11 +48,24 @@ function* getDetailBundlePdp(actions) {
   }
 }
 
+/** GET MSS CATALOGUES */
+function* getMSSCatalogues(actions){
+  try {
+    const response = yield call(() => {
+      return PdpMethod.getMSSCatalogues(actions.payload)
+    })
+    yield put(ActionCreators.getMSSCataloguesSuccess(response))
+  } catch (error) {
+    yield put (ActionCreators.getMSSCataloguesFailed(error))
+  }
+}
+
 function* PdpSaga() {
   yield takeEvery(types.PDP_GET_PROCESS, getPdp);
   yield takeEvery(types.PDP_SEARCH_GET_PROCESS, getSearchPdp);
   yield takeEvery(types.PDP_GET_DETAIL_PROCESS, getDetailPdp);
-  yield takeEvery(types.PDP_GET_BUNDLE_DETAIL_PROCESS, getDetailBundlePdp)
+  yield takeEvery(types.PDP_GET_BUNDLE_DETAIL_PROCESS, getDetailBundlePdp);
+  yield takeEvery(types.MSS_GET_CATALOGUES_PROCESS, getMSSCatalogues)
 }
 
 export default PdpSaga;

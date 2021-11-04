@@ -664,16 +664,10 @@ const styles = StyleSheet.create({
     color: Color.fontBlack50
   },
   type108p: {
-    fontFamily: Fonts.MontserratBold,
-    fontSize: 11,
-    lineHeight: 13,
-    color: Color.fontRed50
-  },
-  type117p: {
-    fontFamily: Fonts.MontserratBold,
-    fontSize: 10,
-    lineHeight: 13,
-    color: Color.fontBlack50
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 9,
+    lineHeight: 14,
+    color: Color.mainColor
   },
   type109p: {
     fontFamily: Fonts.MontserratMedium,
@@ -698,6 +692,48 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 13,
     color: Color.fontBlack40
+  },
+  type113p: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 11,
+    lineHeight: 13,
+    color: Color.mainColor
+  },
+  type114p: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 10,
+    lineHeight: 14,
+    color: Color.fontYellow50
+  },
+  type115p: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 10,
+    lineHeight: 14,
+    color: Color.fontRed50
+  },
+  type116p: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 14,
+    lineHeight: 17,
+    color: Color.fontRed50
+  },
+  type117p: {
+    fontFamily: Fonts.MontserratBold,
+    fontSize: 10,
+    lineHeight: 13,
+    color: Color.fontBlack50
+  },
+  type118p: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontSize: 11,
+    lineHeight: 14,
+    color: Color.fontBlack60
+  },
+  type119: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 11,
+    lineHeight: 14,
+    color: Color.fontYellow60
   },
   forCompare: {
     fontFamily: Fonts.MontserratBold,
@@ -820,6 +856,91 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 14,
     color: Color.fontRed40
+  },
+  fontH10Bold: {
+    fontFamily: Fonts.MontserratBold,
+    fontWeight: '700',
+    fontSize: 12,
+    lineHeight: 15
+  },
+  fontH12Medium: {
+    fontFamily: Fonts.MontserratMedium,
+    fontWeight: '500',
+    fontSize: 12,
+    lineHeight: 15
+  },
+  fontH11SemiBold: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontWeight: '600',
+    fontSize: 12,
+    lineHeight: 15
+  },
+  fontC2Medium: {
+    fontFamily: Fonts.MontserratMedium,
+    fontWeight: '500',
+    fontSize: 10,
+    lineHeight: 12
+  },
+  fontH9Medium: {
+    fontFamily: Fonts.MontserratMedium,
+    fontWeight: '500',
+    fontSize: 13,
+    lineHeight: 16
+  },
+  fontC1SemiBold: {
+    fontFamily: Fonts.MontserratSemiBold,
+    fontWeight: '600',
+    fontSize: 10,
+    lineHeight: 12
+  },
+  fontB3Medium: {
+    fontFamily: Fonts.MontserratRegular,
+    fontWeight: '500',
+    fontSize: 11,
+    lineHeight: 13
+  },
+  H12Bold: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 14,
+    lineHeight: 17,
+    fontWeight: '500',
+    color: Color.fontBlack80
+  },
+  H12Medium: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 12,
+    lineHeight: 15,
+    color: Color.fontBlack40
+  },
+  H11Normal: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 11,
+    lineHeight: 13,
+    color: Color.fontBlack70
+  },
+  modalConfirmationType5Title: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 14,
+    lineHeight: 17,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: Color.fontBlack100
+  },
+  modalConfirmationType5Content: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 12,
+    lineHeight: 15,
+    textAlign: 'center',
+    color: Color.fontBlack100,
+    fontWeight: '500'
+  },
+  modalConfirmationType5Button: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 12,
+    lineHeight: 18,
+    textAlign: 'center',
+    color: Color.fontWhite,
+    fontWeight: '600'
   },
   //success submit
   textWhiteTitle: {
