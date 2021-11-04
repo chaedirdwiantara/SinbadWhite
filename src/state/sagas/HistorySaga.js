@@ -48,7 +48,6 @@ function* changePaymentMethod(actions) {
   }
 }
 
-
 /** EDIT HISTORY */
 function* editHistory(actions) {
   try {
@@ -94,6 +93,42 @@ function* viewInvoice(actions) {
   }
 }
 
+/** GET RETURN STATUS */
+function* getReturnStatus(actions) {
+  try {
+    const response = yield call(() => {
+      return HistoryMethod.getReturnStatus(actions.payload);
+    });
+    yield put(ActionCreators.getReturnStatusSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.getReturnStatusFailed(error));
+  }
+}
+
+/** GET RETURN PARCELS */
+function* getReturnParcels(actions) {
+  try {
+    const response = yield call(() => {
+      return HistoryMethod.getReturnParcels(actions.payload);
+    });
+    yield put(ActionCreators.getReturnParcelsSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.getReturnParcelsFailed(error));
+  }
+}
+
+/** GET RETURN PARCEL DETAIL */
+function* getReturnParcelDetail(actions) {
+  try {
+    const response = yield call(() => {
+      return HistoryMethod.getReturnParcelsDetail(actions.payload);
+    });
+    yield put(ActionCreators.getReturnParcelDetailSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.getReturnParcelDetailFailed(error));
+  }
+}
+
 function* HistorySaga() {
   yield takeEvery(types.HISTORY_GET_PROCESS, getHistory);
   yield takeEvery(types.HISTORY_GET_DETAIL_PROCESS, getDetailHistory);
@@ -110,10 +145,14 @@ function* HistorySaga() {
     types.HISTORY_CHANGE_PAYMENT_METHOD_PROCESS,
     changePaymentMethod
   );
-  yield takeEvery(types.HISTORY_ACTIVATE_VA_PROCESS, 
-    activateVA);
-    yield takeEvery(types.HISTORY_VIEW_INVOICE_PROCESS, 
-      viewInvoice);
+  yield takeEvery(types.HISTORY_ACTIVATE_VA_PROCESS, activateVA);
+  yield takeEvery(types.HISTORY_VIEW_INVOICE_PROCESS, viewInvoice);
+  yield takeEvery(types.GET_RETURN_STATUS_PROCESS, getReturnStatus);
+  yield takeEvery(types.GET_RETURN_PARCELS_PROCESS, getReturnParcels);
+  yield takeEvery(
+    types.GET_RETURN_PARCEL_DETAIL_PROCESS,
+    getReturnParcelDetail
+  );
 }
 
 export default HistorySaga;

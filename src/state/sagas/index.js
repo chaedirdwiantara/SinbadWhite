@@ -9,6 +9,7 @@ import OmsSaga from './OmsSaga';
 import HistorySaga from './HistorySaga';
 import ProfileSaga from './ProfileSaga';
 import SalesmanKpiSaga from './SalesmanKpiSaga';
+import SfaSaga from './SfaSaga';
 import PrivilegeSaga from './PrivilegeSaga';
 
 export default function* rootSaga() {
@@ -22,6 +23,7 @@ export default function* rootSaga() {
     fork(HistorySaga),
     fork(ProfileSaga),
     fork(SalesmanKpiSaga),
+    fork(SfaSaga),
     fork(PrivilegeSaga)
   ]);
 }

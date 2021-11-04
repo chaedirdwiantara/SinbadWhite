@@ -57,6 +57,11 @@ class InputType4 extends Component {
       <View style={styles.contentInput}>
         <View style={{ flex: 1 }}>
           <TextInput
+            accessibilityLabel={
+              this.props.accessibilityLabel
+                ? this.props.accessibilityLabel
+                : null
+            }
             multiline={this.props.multiline}
             editable={this.props.editable}
             maxLength={this.props.maxLength}

@@ -1,3 +1,4 @@
+import { fadeIn } from 'react-navigation-transitions';
 import * as types from '../types';
 import createReducer from './createReducer';
 
@@ -11,6 +12,9 @@ const INITIAL_STATE = {
   loadingGetSearchPdp: false,
   refreshGetSearchPdp: false,
   loadingLoadMoreGetSearchPdp: false,
+  loadingGetMSSCatalogues: false,
+  loadingLoadMoreMSSCatalogues: false,
+  refreshGetMSSCatalogues: false,
   /** data */
   dataGetPdp: [],
   totalDataGetPdp: 0,
@@ -23,11 +27,15 @@ const INITIAL_STATE = {
   pdpOrderData: null,
   dataDetailPdp: null,
   dataDetailBundlePdp: null,
+  dataGetMSSCatalogues: [],
+  totalDataGetMSSCatalogues: 0,
+  pageGetMSSCatalogues: 0,
   /** error */
   errorGetPdp: null,
   errorGetSearchPdp: null,
   errorDetailPdp: null,
-  errorDetailBundlePdp: null 
+  errorDetailBundlePdp: null,
+  errorGetMSSCatalogues: null
 };
 
 export const pdp = createReducer(INITIAL_STATE, {
@@ -247,5 +255,61 @@ export const pdp = createReducer(INITIAL_STATE, {
       ...state,
       pdpOpenModalOrder: false
     };
+  },
+  /**
+   * ==================
+   * MSS CATALOGUES
+   * ==================
+   */
+  [types.MSS_GET_CATALOGUES_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetMSSCatalogues: true,
+      errorGetMSSCatalogues: null
+    }
+  },
+  [types.MSS_GET_CATALOGUES_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetMSSCatalogues: false,
+      loadingLoadMoreMSSCatalogues: false,
+      refreshMSSCatalogues: false,
+      dataGetMSSCatalogues: [...state.dataGetMSSCatalogues, ...action.payload.data],
+      totalDataGetMSSCatalogues: action.payload.total
+    }
+  },
+  [types.MSS_GET_CATALOGUES_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetMSSCatalogues: false,
+      loadingLoadMoreMSSCatalogues: false,
+      refreshGetMSSCatalogues: false,
+      errorGetMSSCatalogues: action.payload
+    }
+  },
+  [types.MSS_GET_CATALOGUES_RESET](state, action) {
+    return {
+      ...state,
+      pageGetMSSCatalogues: 0,
+      totalDataGetMSSCatalogues: 0,
+      dataGetMSSCatalogues: []
+    }
+  },
+  [types.MSS_GET_CATALOGUES_REFRESH](state, action) {
+    return {
+      ...state,
+      refreshMSSCatalogues: true,
+      loadingGetMSSCatalogues: true,
+      pageGetMSSCatalogues: 0,
+      totalDataGetMSSCatalogues: 0,
+      dataGetMSSCatalogues: []
+    }
+  },
+  [types.MSS_GET_CATALOGUES_LOADMORE](state, action) {
+    return {
+      ...state,
+      loadingLoadMoreMSSCatalogues: true,
+      pageGetMSSCatalogues: action.payload
+    }
   }
 });

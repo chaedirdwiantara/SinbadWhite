@@ -1,5 +1,4 @@
-import React from 'react';
-import { View } from 'react-native';
+import { React, View } from '../../library/reactPackage';
 import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
 import MerchantView from '../../screens/merchants/MerchantView';
@@ -18,6 +17,8 @@ import MerchantNoOrderReasonDetail from '../../screens/merchants/dashboard-merch
 import MerchantNoVisitReasonView from '../../screens/merchants/dashboard-merchant/MerchantNoVisitReasonView';
 import MerchantNoVisitPicture from '../../screens/merchants/dashboard-merchant/MerchantNoVisitPicture';
 import MerchantNoVisitReasonDetailView from '../../screens/merchants/dashboard-merchant/MerchantNoVisitReasonDetailView';
+import MerchantNoCollectionReason from '../../screens/merchants/dashboard-merchant/MerchantNoCollectionReason';
+import MerchantNoCollectionDetailView from '../../screens/merchants/dashboard-merchant/MerchantNoCollectionDetailView';
 /** merchant detail */
 import MerchantDetailProfileView from '../../screens/merchants/details-merchant/MerchantDetailProfileView';
 import MerchantDetailAccountView from '../../screens/merchants/details-merchant/MerchantDetailAccountView';
@@ -30,6 +31,9 @@ import MerchantEditView from '../../screens/merchants/edit-merchant/MerchantEdit
 /** merchant survey */
 import MerchantSurveyView from '../../screens/merchants/survey-merchant/MerchantSurveyView';
 import MerchantSurveyDisplayPhotoView from '../../screens/merchants/survey-merchant/MerchantSurveyDisplayPhotoView';
+/** merchant stock */
+import MerchantStockView from '../../screens/merchants/stock-merchant/MerchantStockView';
+import MerchantEditStockView from '../../screens/merchants/stock-merchant/MerchantEditStockView';
 import MerchantQuestionnaireView from '../../screens/merchants/survey-merchant/MerchantQuestionnaireView';
 import MerchantSurveyResultView from '../../screens/merchants/survey-merchant/MerchantSurveyResultView';
 
@@ -334,6 +338,34 @@ const MerchantNavigator = {
       gesturesEnabled: false
     }
   },
+  /** === STOCK MERCHANT */
+  MerchantStockView: {
+    screen: MerchantStockView,
+    navigationOptions: {
+      headerTitle: 'Catatan Stok',
+      headerTitleStyle: [GlobalFont.textHeaderPage],
+      gesturesEnabled: false
+    }
+  },
+  MerchantEditStockView: {
+    screen: MerchantEditStockView,
+    navigationOptions: {
+      headerTitleStyle: [GlobalFont.textHeaderPage],
+      gesturesEnabled: false
+    }
+  },
+  MerchantNoCollectionReason: {
+    screen: MerchantNoCollectionReason,
+    navigationOptions: {
+      headerTitle: 'Alasan Tidak Ada Penagihan',
+      headerTitleStyle: [GlobalFont.textHeaderPage],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
   MerchantQuestionnaireView: {
     screen: MerchantQuestionnaireView,
     navigationOptions: {
@@ -356,6 +388,19 @@ const MerchantNavigator = {
         paddingLeft: 20
       },
       headerLeft: null
+    }
+  },
+  MerchantNoCollectionDetailView: {
+    screen: MerchantNoCollectionDetailView,
+
+    navigationOptions: {
+      headerTitle: 'Lihat Alasan',
+      headerTitleStyle: [GlobalFont.textHeaderPage],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
     }
   }
 };

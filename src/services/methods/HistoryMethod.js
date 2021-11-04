@@ -4,13 +4,13 @@ import { GlobalMethod } from './GlobalMethod';
 /** GET CART ITEM */
 function getHistory(data) {
   return ApiRest({
-    path: `payment/v1/order/get-parcels?userId=${data.userId}&storeId=${
-      data.storeId
-    }&$limit=10&$skip=${data.page}&status=${data.statusOrder}&statusPayment=${
-      data.statusPayment
-    }&orderGte=${data.dateGte}&orderLte=${data.dateLte}&searchKey=${
-      data.search
-    }`,
+    path: `payment/v1/order/get-parcels?userId=${
+      data.userId
+    }&storeId=${GlobalMethod.merchantStoreId()}&$limit=10&$skip=${
+      data.page
+    }&status=${data.statusOrder}&statusPayment=${data.statusPayment}&orderGte=${
+      data.dateGte
+    }&orderLte=${data.dateLte}&searchKey=${data.search}`,
     method: 'GET'
   });
 }
@@ -90,6 +90,34 @@ function viewInvoice(id) {
   });
 }
 
+/** GET RETURN STATUS */
+function getReturnStatus() {
+  return ApiRest({
+    path: 'return-status',
+    method: 'GET'
+  });
+}
+
+/** GET RETURN PARCELS */
+function getReturnParcels(data) {
+  return ApiRest({
+    path: `return-parcels?supplierId=${GlobalMethod.userSupplierMapping()}&storeId=${GlobalMethod.merchantStoreId()}&status=${
+      data.status
+    }&startReturnDate=${data.startReturnDate}&endReturnDate=${
+      data.endReturnDate
+    }&$skip=${data.page}&$limit=10`,
+    method: 'GET'
+  });
+}
+
+/** GET RETURN PARCELS DETAIL */
+function getReturnParcelsDetail(data) {
+  return ApiRest({
+    path: `return-parcels/${data.returnParcelId}`,
+    method: 'GET'
+  });
+}
+
 export const HistoryMethod = {
   getHistory,
   getHistoryOrderStatus,
@@ -98,5 +126,8 @@ export const HistoryMethod = {
   getDetailHistory,
   activateVA,
   changePaymentMethod,
-  viewInvoice
+  viewInvoice,
+  getReturnStatus,
+  getReturnParcels,
+  getReturnParcelsDetail
 };
