@@ -1,0 +1,4 @@
+Sekarang anda bisa melakukan:
+
+- Fitur penagihan hutang (untuk supplier dan sales agent tertentu)
+- Pencatatan Stock & Input barang yang ingin di retur di daftar tugas Anda.
