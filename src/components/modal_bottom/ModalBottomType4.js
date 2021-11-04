@@ -50,7 +50,12 @@ class ModalBottomType4 extends Component {
           <View style={{ marginTop: 14 }} />
         </View>
         <View style={styles.boxContentTitle}>
-          <TouchableOpacity style={styles.boxClose} onPress={this.props.close}>
+          <TouchableOpacity
+            accessible={true}
+            accessibilityLabel={'btnCloseModal'}
+            style={styles.boxClose}
+            onPress={this.props.close}
+          >
             {this.props.typeClose === 'cancel' ? (
               <MaterialIcon
                 name="close"

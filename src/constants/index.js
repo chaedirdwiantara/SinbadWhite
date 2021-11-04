@@ -16,6 +16,8 @@ export const TOTAL_PESANAN = 'total.pesanan';
  */
 export const ACTIVITY_JOURNEY_PLAN_CHECK_IN = 'check_in';
 export const ACTIVITY_JOURNEY_PLAN_ORDER = 'order';
+export const ACTIVITY_JOURNEY_PLAN_RETUR = 'retur';
+export const ACTIVITY_JOURNEY_PLAN_STOCK = 'record_stock';
 export const ACTIVITY_JOURNEY_PLAN_CHECK_OUT = 'check_out';
 
 /*
@@ -25,3 +27,14 @@ export const ACTIVITY_JOURNEY_PLAN_CHECK_OUT = 'check_out';
  * 4. Sales then exit toko (check out)
  */
 export const ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY = 'toko_survey';
+
+/*
+ * Sales JOURNEY PLAN ACTIVITY TOKO SURVEY
+ * Before sales exit toko, must do survey
+ * 3. Sales then do penagihan if there is isCollectionAvailable property
+ * 4. Sales then exit toko (check out)
+ */
+export const ACTIVITY_JOURNEY_PLAN_COLLECTION = 'collection';
+export const ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING = 'collection_ongoing';
+export const ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS = 'collection_success';
+export const ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS = 'collection_not_success';

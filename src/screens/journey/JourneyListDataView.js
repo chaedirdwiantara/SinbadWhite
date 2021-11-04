@@ -101,11 +101,22 @@ class JourneyListDataView extends Component {
       }
     }
     /** GO TO SELECTED STORE */
+    //map collection ids to selected merchant information
+    const collections = data?.journeyBookStores.collections || null;
+    const collectionIds = [];
+    if (collections) {
+      collections.map(item => {
+        collectionIds.push(item.collectionTransactionDetailId);
+      });
+    }
+
     data.name = data.storeName;
     data.storeId = data.storeId.toString();
+    data.collectionIds = collectionIds;
     this.props.merchantSelected(data);
+    this.props.sfaPostTransactionCheckoutReset();
     setTimeout(() => {
-      this.props.getSurveyResult(data.storeName)
+      this.props.getSurveyResult(data.storeName);
       NavigationService.navigate('MerchantHomeView', {
         storeName: data.storeName
       });
@@ -371,7 +382,6 @@ class JourneyListDataView extends Component {
   }
   /** === RENDER DATA CONTENT === */
   renderContent() {
-    console.log("this.props.journey.dataGetJourneyPlanV2", this.props.journey.dataGetJourneyPlanV2)
     return (
       <View style={{ flex: 1 }}>
         <FlatList

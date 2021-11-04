@@ -222,7 +222,7 @@ class JourneyMapView extends Component {
           this.mapMerchantRef
         ) {
           // set current location & zoom radius 1km
-          this.setZoomMap(this.state.latitude, this.state.latitude);
+          this.setZoomMap(this.state.latitude, this.state.longitude);
         }
       }
     );
@@ -809,7 +809,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 28072021
  * updatedBy: dyah
- * updatedDate: 12082021
+ * updatedDate: 27102021
  * updatedFunction:
- * -> integrate parameter filter (storetype) journey plan.
+ * -> fix bug recenter button should be zooming to the user current location.
  */

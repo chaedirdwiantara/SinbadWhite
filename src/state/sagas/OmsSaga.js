@@ -150,9 +150,9 @@ function* getKurOtp(actions) {
 }
 
 /** POST OMS KUR CONSENT */
-function* postKurConsent (actions){
-  try{
-    const response = yield call(()=> {
+function* postKurConsent(actions) {
+  try {
+    const response = yield call(() => {
       return OmsMethod.postKurConsent(actions.payload);
     });
     yield put(ActionCreators.OmsPostKurConsentSuccess(response));
@@ -161,7 +161,53 @@ function* postKurConsent (actions){
   }
 }
 
+/** GET RETURN DRAFT */
+function* getReturnDraft(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.getReturnDraft(actions.payload);
+    });
+    yield put(ActionCreators.GetReturnDraftSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.GetReturnDraftFailed(error));
+  }
+}
 
+/** GET RETURN REASON */
+function* getReturnReason(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.getReturnReason(actions.payload);
+    });
+    yield put(ActionCreators.GetReturnReasonSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.GetReturnReasonFailed(error));
+  }
+}
+
+/** POST RETURN ORDER */
+function* postReturnOrder(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.postReturnOrder(actions.payload);
+    });
+    yield put(ActionCreators.PostReturnOrderSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.PostReturnOrderFailed(error));
+  }
+}
+
+/** GET CHECK OVERDUE */
+function* getCheckOverdue(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.checkOverdue(actions.payload);
+    });
+    yield put(ActionCreators.OMSCheckOverdueSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.OMSCheckoutOverdueFailed(error));
+  }
+}
 
 /** === SAGA FUNCTION === */
 function* OmsSaga() {
@@ -185,6 +231,10 @@ function* OmsSaga() {
   yield takeEvery(types.OMS_APPLICABLE_PAYLATER_PROCESS, getApplicablePaylater);
   yield takeEvery(types.OMS_GET_KUR_OTP_PROCESS, getKurOtp);
   yield takeEvery(types.OMS_POST_KUR_CONSENT_PROCESS, postKurConsent);
+  yield takeEvery(types.GET_RETURN_DRAFT_PROCESS, getReturnDraft);
+  yield takeEvery(types.GET_RETURN_REASON_PROCESS, getReturnReason);
+  yield takeEvery(types.POST_RETURN_ORDER_PROCESS, postReturnOrder);
+  yield takeEvery(types.OMS_CHECK_OVERDUE_PROCESS, getCheckOverdue);
 }
 
 export default OmsSaga;

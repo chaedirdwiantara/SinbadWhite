@@ -86,3 +86,6 @@ android/app/newrelic.properties
 coverage/
 
 .env
+
+contract/
+android/app/newrelic.properties

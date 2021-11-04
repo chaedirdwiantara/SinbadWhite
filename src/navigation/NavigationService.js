@@ -21,24 +21,30 @@ function getActiveRouteName(navigationState) {
 }
 /** === TOP LEVEL NAVIGATOR === */
 function setTopLevelNavigator(navigatorRef) {
-  navigator = navigatorRef;
+  if (navigatorRef !== null) {
+    navigator = navigatorRef;
+  }
 }
 /** === GO TO PAGE SCREEN === */
 function navigate(routeName, params) {
-  navigator.dispatch(
-    NavigationActions.navigate({
-      routeName,
-      params
-    })
-  );
+  if (navigator !== null) {
+    navigator.dispatch(
+      NavigationActions.navigate({
+        routeName,
+        params
+      })
+    );
+  }
 }
 /** === BACK TO BEFORE PAGE === */
 function goBack(key) {
-  navigator.dispatch(
-    NavigationActions.back({
-      key: key
-    })
-  );
+  if (navigator !== null) {
+    navigator.dispatch(
+      NavigationActions.back({
+        key: key
+      })
+    );
+  }
 }
 /** === CUSTOMIZE RESET PAGE === */
 function customizeReset(index, routeNames, params) {
@@ -51,12 +57,14 @@ function customizeReset(index, routeNames, params) {
       })
     )
   );
-  navigator.dispatch(
-    StackActions.reset({
-      index,
-      actions
-    })
-  );
+  if (navigator !== null) {
+    navigator.dispatch(
+      StackActions.reset({
+        index,
+        actions
+      })
+    );
+  }
 }
 
 export default {

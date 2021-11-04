@@ -1,7 +1,12 @@
 import Fonts from './GlobalFont';
 import GlobalStyle from './GlobalStyle';
 import GlobalStyleHtml from './GlobalStyleHtml';
-import { NumberFormat, MoneyFormat, MoneyFormatShort } from './NumberFormater';
+import {
+  NumberFormat,
+  MoneyFormat,
+  MoneyFormatShort,
+  MoneyFormatSpace
+} from './NumberFormater';
 import Scale from './Scale';
 import {
   getStartDateNow,
@@ -13,6 +18,7 @@ import {
   getStartDateMinHour
 } from './TimeHelper';
 import { generateGraphUri } from './Graph';
+import { StringToNumber } from './Converter';
 
 export {
   Fonts,
@@ -21,6 +27,7 @@ export {
   NumberFormat,
   MoneyFormat,
   MoneyFormatShort,
+  MoneyFormatSpace,
   Scale,
   getStartDateNow,
   getDateNow,
@@ -29,5 +36,6 @@ export {
   getStartDateMonth,
   getEndDateMonth,
   getStartDateMinHour,
-  generateGraphUri
+  generateGraphUri,
+  StringToNumber
 };

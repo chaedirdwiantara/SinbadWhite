@@ -203,3 +203,63 @@ export function historyViewInvoiceSuccess(data) {
 export function historyViewInvoiceFailed(data) {
   return { type: types.HISTORY_VIEW_INVOICE_FAILED, payload: data };
 }
+
+/** GET RETURN STATUS */
+export function getReturnStatusProcess(data) {
+  return { type: types.GET_RETURN_STATUS_PROCESS, payload: data };
+}
+
+export function getReturnStatusSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.GET_RETURN_STATUS_SUCCESS, payload: data };
+  }
+  return { type: types.GET_RETURN_STATUS_FAILED, payload: data };
+}
+
+export function getReturnStatusFailed(data) {
+  return { type: types.GET_RETURN_STATUS_FAILED, payload: data };
+}
+
+/** GET RETURN PARCELS */
+export function getReturnParcelsProcess(data) {
+  return { type: types.GET_RETURN_PARCELS_PROCESS, payload: data };
+}
+
+export function getReturnParcelsSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.GET_RETURN_PARCELS_SUCCESS, payload: data };
+  }
+  return { type: types.GET_RETURN_PARCELS_FAILED, payload: data };
+}
+
+export function getReturnParcelsFailed(data) {
+  return { type: types.GET_RETURN_PARCELS_FAILED, payload: data };
+}
+
+export function getReturnParcelsRefresh() {
+  return { type: types.GET_RETURN_PARCELS_REFRESH };
+}
+
+export function getReturnParcelsReset() {
+  return { type: types.GET_RETURN_PARCELS_RESET };
+}
+
+export function getReturnParcelsLoadMore(page) {
+  return { type: types.GET_RETURN_PARCELS_LOADMORE, payload: page };
+}
+
+/** GET RETURN PARCELS DETAIL*/
+export function getReturnParcelDetailProcess(data) {
+  return { type: types.GET_RETURN_PARCEL_DETAIL_PROCESS, payload: data };
+}
+
+export function getReturnParcelDetailSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.GET_RETURN_PARCEL_DETAIL_SUCCESS, payload: data };
+  }
+  return { type: types.GET_RETURN_PARCEL_DETAIL_FAILED, payload: data };
+}
+
+export function getReturnParcelDetailFailed(data) {
+  return { type: types.GET_RETURN_PARCEL_DETAIL_FAILED, payload: data };
+}
