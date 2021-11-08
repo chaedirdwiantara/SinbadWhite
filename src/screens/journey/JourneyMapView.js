@@ -113,7 +113,7 @@ class JourneyMapView extends Component {
         if (
           prevProps.navigation.state.params.merchant !==
           this.props.navigation.state.params.merchant
-        )
+        ) {
           this.setState(
             {
               merchant: this.props.navigation.state.params.merchant
@@ -126,6 +126,7 @@ class JourneyMapView extends Component {
               );
             }
           );
+        }
       }
     }
     // check params filter & update the filter's state
@@ -491,11 +492,12 @@ class JourneyMapView extends Component {
             title={'Detail'}
             white
             borderRadius={4}
-            onPress={() =>
+            onPress={() => {
+              this.props.merchantSelected(this.state.merchant);
               NavigationService.navigate('MerchantDetailView', {
                 id: this.state.merchant.id
-              })
-            }
+              });
+            }}
           />
         </View>
         <View style={{ flex: 1 }}>

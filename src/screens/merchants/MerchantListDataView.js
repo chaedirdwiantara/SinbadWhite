@@ -7,20 +7,17 @@ import {
   Image,
   TouchableOpacity,
   Text
-} from '../../library/reactPackage'
-import {
-  bindActionCreators,
-  connect
-} from '../../library/thirdPartyPackage'
+} from '../../library/reactPackage';
+import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import {
   SkeletonType1,
   LoadingLoadMore,
   Address,
   EmptyDataType2,
   EmptyData
-} from '../../library/component'
-import { GlobalStyle, Fonts } from '../../helpers'
-import { Color } from '../../config'
+} from '../../library/component';
+import { GlobalStyle, Fonts } from '../../helpers';
+import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 
@@ -65,9 +62,10 @@ class MerchantListDataView extends Component {
     }
   };
   /** GO TO MERCHANT DETAIL */
-  goToDetailMerchant(id) {
+  goToDetailMerchant(item) {
+    this.props.merchantSelected(item);
     NavigationService.navigate('MerchantDetailView', {
-      id
+      id: item.id
     });
   }
   /**
@@ -97,7 +95,7 @@ class MerchantListDataView extends Component {
   renderItem({ item, index }) {
     return (
       <View key={index} style={styles.boxItem}>
-        <TouchableOpacity onPress={() => this.goToDetailMerchant(item.id)}>
+        <TouchableOpacity onPress={() => this.goToDetailMerchant(item)}>
           {item.imageUrl !== null ? (
             <Image source={{ uri: item.imageUrl }} style={styles.boxImage} />
           ) : (
@@ -108,7 +106,7 @@ class MerchantListDataView extends Component {
           )}
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => this.goToDetailMerchant(item.id)}
+          onPress={() => this.goToDetailMerchant(item)}
           style={{
             paddingHorizontal: 16,
             justifyContent: 'space-between',
@@ -137,7 +135,7 @@ class MerchantListDataView extends Component {
         <View style={{ justifyContent: 'flex-end' }}>
           <TouchableOpacity
             style={styles.boxButtonDetail}
-            onPress={() => this.goToDetailMerchant(item.id)}
+            onPress={() => this.goToDetailMerchant(item)}
           >
             <Text style={Fonts.type18}>Detail</Text>
           </TouchableOpacity>

@@ -82,9 +82,10 @@ class JourneyListDataView extends Component {
     }
   };
   /** go to detail merchant */
-  goToDetailMerchant(id) {
+  goToDetailMerchant(item) {
+    this.props.merchantSelected(item);
     NavigationService.navigate('MerchantDetailView', {
-      id
+      id: item.id
     });
   }
   /** go to merchant dashboard */
@@ -361,7 +362,7 @@ class JourneyListDataView extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.boxButtonDetail}
-              onPress={() => this.goToDetailMerchant(item.id)}
+              onPress={() => this.goToDetailMerchant(item)}
             >
               <Text style={Fonts.type49}>Detail</Text>
             </TouchableOpacity>
