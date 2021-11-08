@@ -1,4 +1,4 @@
-import { put, call, takeEvery } from 'redux-saga/effects';
+import { put, call, takeEvery, takeLatest } from 'redux-saga/effects';
 import { HistoryMethod } from '../../services/methods';
 import * as ActionCreators from '../actions';
 import * as types from '../types';
@@ -130,7 +130,7 @@ function* getReturnParcelDetail(actions) {
 }
 
 function* HistorySaga() {
-  yield takeEvery(types.HISTORY_GET_PROCESS, getHistory);
+  yield takeLatest(types.HISTORY_GET_PROCESS, getHistory);
   yield takeEvery(types.HISTORY_GET_DETAIL_PROCESS, getDetailHistory);
   yield takeEvery(types.HISTORY_EDIT_PROCESS, editHistory);
   yield takeEvery(
