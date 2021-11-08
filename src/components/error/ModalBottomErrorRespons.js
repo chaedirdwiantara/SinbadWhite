@@ -39,30 +39,33 @@ class ModalBottomErrorRespons extends Component {
   /** === RENDER CONTENT === */
   renderContent() {
     return (
-      <View>
-        {this.checkStatusBar()}
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-        >
-          <Image
-            source={require('../../assets/images/sinbad_image/cry_sinbad.png')}
-            style={GlobalStyle.fullImage}
-          />
-          <View style={{ marginBottom: 20 }}>
-            <Text
-              style={[Fonts.type7, { textAlign: 'center', marginBottom: 10 }]}
-            >
-              Terjadi Kesalahan
-            </Text>
-            <Text style={[Fonts.type17, { textAlign: 'center' }]}>
-              Silahkan Mencoba Kembali
-            </Text>
+      <React.Fragment>
+        <View>
+          {this.checkStatusBar()}
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <Image
+              source={require('../../assets/images/sinbad_image/cry_sinbad.png')}
+              style={GlobalStyle.fullImage}
+            />
+            <View style={{ marginBottom: 20 }}>
+              <Text
+                style={[Fonts.type7, { textAlign: 'center', marginBottom: 10 }]}
+              >
+                Terjadi Kesalahan
+              </Text>
+              <Text style={[Fonts.type17, { textAlign: 'center' }]}>
+                Silahkan Mencoba Kembali
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
+        {this.props.toast}
+      </React.Fragment>
     );
   }
   /** === MAIN === */
