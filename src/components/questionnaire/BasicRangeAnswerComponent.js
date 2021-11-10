@@ -78,7 +78,9 @@ class BasicRangeAnswerComponent extends Component {
     return (
       <View>
         <View style={styles.boxContentItem}>
-          <Text style={Fonts.type23}>{item[0].title}</Text>
+          <View style={{ width: '50%' }}>
+            <Text style={Fonts.type23}>{item[0].title}</Text>
+          </View>
           <View style={{ width: '40%' }}>
             <InputType7
               ref={this.inputValueA}
@@ -95,7 +97,9 @@ class BasicRangeAnswerComponent extends Component {
           </View>
         </View>
         <View style={styles.boxContentItem}>
-          <Text style={Fonts.type23}>{item[1].title}</Text>
+          <View style={{ width: '50%' }}>
+            <Text style={Fonts.type23}>{item[1].title}</Text>
+          </View>
           <View style={{ width: '40%' }}>
             <InputType7
               ref={this.inputValueB}
@@ -135,7 +139,7 @@ export default BasicRangeAnswerComponent;
  * createdBy: dyah
  * createdDate: 13092021
  * updatedBy: dyah
- * updatedDate: 30092021
+ * updatedDate: 10112021
  * updatedFunction:
- * -> update validation for basic range answer component.
+ * -> update width of answer title.
  */
