@@ -1,0 +1,3 @@
+Perbaikan :
+- Sekarang kita support untuk android 11
+- Bug Fix dan Performance
