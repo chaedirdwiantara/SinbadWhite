@@ -62,8 +62,8 @@ pipeline {
         // Andorid Lib
         SDK_URL = "https://dl.google.com/android/repository/commandlinetools-linux-6609375_latest.zip"
         ANDROID_HOME = "${WORKSPACE}/android-sdk"
-        ANDROID_VERSION = "29"
-        ANDROID_BUILD_TOOLS_VERSION = "29.0.2"
+        ANDROID_VERSION = "30"
+        ANDROID_BUILD_TOOLS_VERSION = "30.0.2"
         GRADLE_HOME = "${WORKSPACE}/android-gradle"
         GRADLE_VERSION = "6.6.1"
         MAVEN_HOME = "${WORKSPACE}/android-maven"
