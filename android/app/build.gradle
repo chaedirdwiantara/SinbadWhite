@@ -25,8 +25,8 @@ android {
         applicationId "com.sinbad.agentdevelopment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9245774
-        versionName "1.22.0"
+        versionCode 9245777
+        versionName "1.22.2"
         missingDimensionStrategy 'react-native-camera', 'general'
         multiDexEnabled true
     }

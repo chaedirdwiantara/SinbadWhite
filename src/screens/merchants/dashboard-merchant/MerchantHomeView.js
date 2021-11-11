@@ -224,22 +224,14 @@ class MerchantHomeView extends Component {
     // Check is retur active
     if (prevProps.merchant.dataReturnActiveInfo !== dataReturnActiveInfo) {
       if (dataReturnActiveInfo !== null && dataReturnActiveInfo.isActive) {
-        const retur = {
-          name: 'Retur Barang',
-          title: 'Retur',
-          goTo: 'retur',
-          activity: ACTIVITY_JOURNEY_PLAN_RETUR
-        };
-        let newTask = this.state.task;
-        newTask.splice(2, 0, retur);
-        this.setState({ task: newTask });
+        this.taskReturnCheck();
       }
     }
 
     if (prevProps.merchant.dataGetTotalSurvey !== dataGetTotalSurvey) {
       /** IF SURVEY LIST EXIST */
       if (dataGetTotalSurvey !== null) {
-        this.taskListFilter();
+        this.taskSurveyCheck();
       }
     }
 
@@ -251,15 +243,11 @@ class MerchantHomeView extends Component {
         /** IF NO SURVEY */
         if (dataGetTotalSurvey.total === 0) {
           this.SurveyDone();
-          if (this.state.task.length === 6) {
-            this.taskListFilter('noSurvey');
-          }
+          this.taskSurveyCheck();
         }
         /** IF SURVEY LIST EXIST */
         if (dataGetTotalSurvey.total !== 0) {
-          if (this.state.task.length === 7) {
-            this.taskListFilter('surveyExist');
-          }
+          this.taskSurveyCheck();
         }
         /** IF ALL SURVEYS ARE COMPLETE AND ACTIVITY NOT COMPLETE YET */
         if (dataGetTotalSurvey.total !== 0) {
@@ -731,14 +719,9 @@ class MerchantHomeView extends Component {
     }
   }
 
-  taskListFilter(filter) {
-    const { dataReturnActiveInfo, dataGetTotalSurvey } = this.props.merchant;
-    const retur = {
-      name: 'Retur Barang',
-      title: 'Retur',
-      goTo: 'retur',
-      activity: ACTIVITY_JOURNEY_PLAN_RETUR
-    };
+  taskSurveyCheck() {
+    const { dataGetTotalSurvey } = this.props.merchant;
+    const task = this.state.task;
 
     const surveyTask = {
       name: 'Toko Survey',
@@ -747,118 +730,45 @@ class MerchantHomeView extends Component {
       activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
     };
 
-    const data = {};
-    switch (filter) {
-      case 'noSurvey':
-        data.task = [
-          {
-            name: 'Masuk Toko',
-            title: 'Masuk',
-            goTo: 'checkIn',
-            activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-          },
-          {
-            name: 'Order',
-            title: 'Order',
-            goTo: 'pdp',
-            activity: ACTIVITY_JOURNEY_PLAN_ORDER
-          },
-          {
-            name: 'Catatan Stok',
-            title: 'Isi',
-            goTo: 'stock',
-            activity: ACTIVITY_JOURNEY_PLAN_STOCK
-          },
-          {
-            name: 'Keluar Toko',
-            title: 'Keluar',
-            goTo: 'checkOut',
-            activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-          }
-        ];
-        break;
-      case 'surveyExist':
-        data.task = [
-          {
-            name: 'Masuk Toko',
-            title: 'Masuk',
-            goTo: 'checkIn',
-            activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-          },
-          {
-            name: 'Order',
-            title: 'Order',
-            goTo: 'pdp',
-            activity: ACTIVITY_JOURNEY_PLAN_ORDER
-          },
-          {
-            name: 'Catatan Stok',
-            title: 'Isi',
-            goTo: 'stock',
-            activity: ACTIVITY_JOURNEY_PLAN_STOCK
-          },
-          {
-            name: 'Toko Survey',
-            title: 'Isi',
-            goTo: 'survey',
-            activity: ACTIVITY_JOURNEY_PLAN_TOKO_SURVEY
-          },
-          {
-            name: 'Keluar Toko',
-            title: 'Keluar',
-            goTo: 'checkOut',
-            activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-          }
-        ];
-        break;
-
-      default:
-        data.task = [
-          {
-            name: 'Masuk Toko',
-            title: 'Masuk',
-            goTo: 'checkIn',
-            activity: ACTIVITY_JOURNEY_PLAN_CHECK_IN
-          },
-          {
-            name: 'Order',
-            title: 'Order',
-            goTo: 'pdp',
-            activity: ACTIVITY_JOURNEY_PLAN_ORDER
-          },
-          {
-            name: 'Catatan Stok',
-            title: 'Isi',
-            goTo: 'stock',
-            activity: ACTIVITY_JOURNEY_PLAN_STOCK
-          },
-          {
-            name: 'Keluar Toko',
-            title: 'Keluar',
-            goTo: 'checkOut',
-            activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
-          }
-        ];
-        break;
-    }
-
-    /** ADD RETURN TASK */
-    if (dataReturnActiveInfo !== null) {
-      if (dataReturnActiveInfo.isActive) {
-        data.task.splice(2, 0, retur);
-      }
-    }
-
     /** ADD SURVEY TASK */
     if (dataGetTotalSurvey.total !== 0) {
       /** FIND CHECKOUT INDEX */
-      const taskCheckoutIndex = data.task.findIndex(
-        task => task.title === 'Keluar'
+      const taskCheckoutIndex = task.findIndex(
+        itemTask => itemTask.title === 'Keluar'
       );
-      data.task.splice(taskCheckoutIndex, 0, surveyTask);
+      if (taskCheckoutIndex > -1) {
+        task.splice(taskCheckoutIndex, 0, surveyTask);
+      }
     }
 
-    this.setState({ task: data.task });
+    this.setState({ task });
+  }
+
+  taskReturnCheck() {
+    const retur = {
+      name: 'Retur Barang',
+      title: 'Retur',
+      goTo: 'retur',
+      activity: ACTIVITY_JOURNEY_PLAN_RETUR
+    };
+    let newTask = this.state.task;
+
+    /** FIND ORDER INDEX */
+    const taskOrderIndex = newTask.findIndex(
+      itemTask => itemTask.title === 'Order'
+    );
+
+    /**
+     * CHECK IF THERE ARE ORDER MENU
+     * Return button must be after Order Button
+     */
+    if (taskOrderIndex > -1) {
+      newTask.splice(taskOrderIndex + 1, 0, retur);
+    } else {
+      newTask.splice(newTask.length > 0 ? 1 : 0, 0, retur);
+    }
+
+    this.setState({ task: newTask });
   }
 
   /** CUSTOM NAVIGATE VIEW NO ORDER REASON PAGE */
