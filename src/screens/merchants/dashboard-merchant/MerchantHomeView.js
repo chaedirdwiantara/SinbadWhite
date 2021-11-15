@@ -228,13 +228,6 @@ class MerchantHomeView extends Component {
       }
     }
 
-    if (prevProps.merchant.dataGetTotalSurvey !== dataGetTotalSurvey) {
-      /** IF SURVEY LIST EXIST */
-      if (dataGetTotalSurvey !== null) {
-        this.taskSurveyCheck();
-      }
-    }
-
     if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
       if (
         prevProps.merchant.dataGetTotalSurvey !== dataGetTotalSurvey &&
@@ -243,7 +236,6 @@ class MerchantHomeView extends Component {
         /** IF NO SURVEY */
         if (dataGetTotalSurvey.total === 0) {
           this.SurveyDone();
-          this.taskSurveyCheck();
         }
         /** IF SURVEY LIST EXIST */
         if (dataGetTotalSurvey.total !== 0) {
@@ -2146,7 +2138,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 05102021
+ * updatedDate: 15112021
  * updatedFunction:
  * -> fix the validation when checking out. (must completed the survey)
  */
