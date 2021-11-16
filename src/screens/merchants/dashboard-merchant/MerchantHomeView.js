@@ -728,7 +728,12 @@ class MerchantHomeView extends Component {
       const taskCheckoutIndex = task.findIndex(
         itemTask => itemTask.title === 'Keluar'
       );
-      if (taskCheckoutIndex > -1) {
+      /** CHECK SURVEY TASK (already added or not) */
+      const checkSurveyTask = task.find(
+        itemTask => itemTask.name === 'Toko Survey'
+      );
+      /** ADD SURVEY TASK WHEN CHECKOUT INDEX FOUND & SURVEY TASK NOT ADDED YET */
+      if (taskCheckoutIndex > -1 && !checkSurveyTask ) {
         task.splice(taskCheckoutIndex, 0, surveyTask);
       }
     }
@@ -2140,5 +2145,5 @@ export default connect(
  * updatedBy: dyah
  * updatedDate: 15112021
  * updatedFunction:
- * -> fix the validation when checking out. (must completed the survey)
+ * -> fix double toko survey on task list.
  */
