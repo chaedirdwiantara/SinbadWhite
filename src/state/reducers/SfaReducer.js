@@ -15,7 +15,6 @@ const INITIAL_STATE = {
   loadingSfaGetStampList: false,
   loadingLoadMoreGetSfa: false,
   refreshGetCollection: false,
-  loadingSfaGetStatusOrder: false,
   loadingSfaGetCollectionImage: false,
   loadingSfaGetPrincipal: false,
   loadingLoadmorePrincipal: false,
@@ -45,7 +44,6 @@ const INITIAL_STATE = {
   dataSfaPostPaymentMethod: null,
   dataSfaPostCollectionPayment: null,
   dataSfaGetStampList: null,
-  dataSfaGetStatusOrder: null,
   dataSfaGetCollectionImage: null,
   dataSfaGetPrincipal: null,
   dataLoadmorePrincipal: null,
@@ -75,7 +73,6 @@ const INITIAL_STATE = {
   errorSfaPostPaymentMethod: null,
   errorSfaPostCollectionPayment: null,
   errorSfaGetStampList: null,
-  errorSfaGetStatusOrder: null,
   errorSfaGetCollectionImage: null,
   errorSfaGetPrincipal: null,
   errorLoadmorePrincipal: null,
@@ -395,34 +392,6 @@ export const sfa = createReducer(INITIAL_STATE, {
       refreshGetCollection: true,
       loadingGetCollectionList: true,
       dataGetCollectionList: []
-    };
-  },
-
-  /**
-   * ==========================
-   * GET STATUS ORDER
-   * ==========================
-   */
-  [types.SFA_GET_STATUS_ORDER_PROCESS](state, action) {
-    return {
-      ...state,
-      loadingSfaGetStatusOrder: true,
-      dataSfaGetStatusOrder: null,
-      errorSfaGetStatusOrder: null
-    };
-  },
-  [types.SFA_GET_STATUS_ORDER_SUCCESS](state, action) {
-    return {
-      ...state,
-      loadingSfaGetStatusOrder: false,
-      dataSfaGetStatusOrder: action.payload
-    };
-  },
-  [types.SFA_GET_STATUS_ORDER_FAILED](state, action) {
-    return {
-      ...state,
-      loadingSfaGetStatusOrder: false,
-      errorSfaGetStatusOrder: action.payload
     };
   },
 

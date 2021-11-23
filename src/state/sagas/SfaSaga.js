@@ -122,18 +122,6 @@ function* getStampList(actions) {
   }
 }
 
-/** GET STATUS ORDER */
-function* getStatusOrder(actions) {
-  try {
-    const response = yield call(() => {
-      return SfaMethod.getStatusOrder(actions.payload);
-    });
-    yield put(ActionCreators.sfaGetStatusOrderSuccess(response));
-  } catch (error) {
-    yield put(ActionCreators.sfaGetStatusOrderFailed(error));
-  }
-}
-
 /** GET TRANSFER IMAGE */
 function* getCollectionImage(actions) {
   try {
@@ -354,7 +342,6 @@ function* SfaSaga() {
     postCollectionPayment
   );
   yield takeEvery(types.SFA_GET_STAMP_PROCESS, getStampList);
-  yield takeEvery(types.SFA_GET_STATUS_ORDER_PROCESS, getStatusOrder);
   yield takeEvery(types.SFA_GET_COLLECTION_IMAGE_PROCESS, getCollectionImage);
   yield takeEvery(types.SFA_GET_PRINCIPAL_PROCESS, getPrincipal);
   yield takeEvery(types.SFA_PRINCIPAL_LOADMORE_PROCESS, loadmorePrincipal);

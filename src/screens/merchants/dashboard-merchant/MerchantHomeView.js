@@ -199,11 +199,6 @@ class MerchantHomeView extends Component {
     this.setState({ task: newTask });
     /** FOR GET PORTFOLIO (FOR PAYLOAD CHECKOUT ORDER) */
     this.props.portfolioGetProcessV2();
-    /** FOR GET SFA STATUS ORDER */
-    this.props.sfaGetStatusOrderProcess({
-      storeId: this.props.merchant.selectedMerchant.storeId,
-      supplierId: this.props.user.userSuppliers[0].supplier.id
-    });
     if (this.props.profile.errorGetSalesTeam) {
       this.props.getSalesTeamProcess();
     }
@@ -1908,9 +1903,8 @@ class MerchantHomeView extends Component {
         {!this.props.merchant.loadingGetMerchantLastOrder &&
         !this.props.merchant.loadingGetLogAllActivity &&
         this.props.merchant.dataGetLogAllActivityV2 !== null &&
-        !this.state.loadingPostForCheckoutNoOrder &&
-        this.props.sfa.dataSfaGetStatusOrder &&
-        !this.props.sfa.loadingSfaGetStatusOrder ? (
+        !this.state.loadingPostForCheckoutNoOrder 
+        ? (
           <View style={{ height: '100%' }}>
             {this.renderBackground()}
             {this.renderContent()}
