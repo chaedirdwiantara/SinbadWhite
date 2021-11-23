@@ -22,7 +22,7 @@ import {
 } from '../../../library/thirdPartyPackage';
 import {
   StatusBarRed,
-  ProductListType1,
+  ProductListType8,
   LoadingPage,
   ToastType1,
   ModalConfirmation,
@@ -60,7 +60,6 @@ const PENAGIHAN_TASK = {
   goTo: 'collection',
   activity: ACTIVITY_JOURNEY_PLAN_COLLECTION
 };
-
 class MerchantHomeView extends Component {
   constructor(props) {
     super(props);
@@ -229,13 +228,6 @@ class MerchantHomeView extends Component {
       }
     }
 
-    if (prevProps.merchant.dataGetTotalSurvey !== dataGetTotalSurvey) {
-      /** IF SURVEY LIST EXIST */
-      if (dataGetTotalSurvey !== null) {
-        this.taskSurveyCheck();
-      }
-    }
-
     if (!loadingGetLogAllActivity && dataGetLogAllActivityV2) {
       if (
         prevProps.merchant.dataGetTotalSurvey !== dataGetTotalSurvey &&
@@ -244,7 +236,6 @@ class MerchantHomeView extends Component {
         /** IF NO SURVEY */
         if (dataGetTotalSurvey.total === 0) {
           this.SurveyDone();
-          this.taskSurveyCheck();
         }
         /** IF SURVEY LIST EXIST */
         if (dataGetTotalSurvey.total !== 0) {
@@ -737,7 +728,12 @@ class MerchantHomeView extends Component {
       const taskCheckoutIndex = task.findIndex(
         itemTask => itemTask.title === 'Keluar'
       );
-      if (taskCheckoutIndex > -1) {
+      /** CHECK SURVEY TASK (already added or not) */
+      const checkSurveyTask = task.find(
+        itemTask => itemTask.name === 'Toko Survey'
+      );
+      /** ADD SURVEY TASK WHEN CHECKOUT INDEX FOUND & SURVEY TASK NOT ADDED YET */
+      if (taskCheckoutIndex > -1 && !checkSurveyTask ) {
         task.splice(taskCheckoutIndex, 0, surveyTask);
       }
     }
@@ -1215,7 +1211,7 @@ class MerchantHomeView extends Component {
   }
 
   renderListProductImage(item) {
-    return item.orderBrands.map((itemBrand, indexBrand) => {
+    return item.order_brands.map((itemBrand, indexBrand) => {
       return itemBrand.orderBrandCatalogues.map(
         (itemCatalogue, indexCatalogue) => {
           return indexCatalogue < 3 ? (
@@ -1238,7 +1234,7 @@ class MerchantHomeView extends Component {
 
   renderPlusProduct(item) {
     let count = 0;
-    item.orderBrands.map((itemBrand, indexBrand) => {
+    item.order_brands.map((itemBrand, indexBrand) => {
       return itemBrand.orderBrandCatalogues.map(
         (itemCatalogue, indexCatalogue) => {
           count++;
@@ -1257,7 +1253,7 @@ class MerchantHomeView extends Component {
 
   renderLastOrder() {
     const order = this.props.merchant.dataGetMerchantLastOrder;
-    return order?.orderParcels && !_.isEmpty(order.orderParcels) ? (
+    return order?.order_parcels && !_.isEmpty(order.order_parcels) ? (
       <View style={styles.lastOrderContainer}>
         <View style={[styles.cardLastOrder, GlobalStyle.shadowForBox5]}>
           <View
@@ -1291,7 +1287,7 @@ class MerchantHomeView extends Component {
             </TouchableOpacity>
           </View>
           <View>
-            <ProductListType1 data={order.orderParcels[0].orderBrands} />
+            <ProductListType8 data={order.order_parcels[0].order_brands} />
           </View>
           <View
             style={{
@@ -1300,9 +1296,9 @@ class MerchantHomeView extends Component {
               paddingVertical: 8
             }}
           >
-            <Text style={Fonts.type59}>{order.orderParcels[0].orderCode}</Text>
+            <Text style={Fonts.type59}>{order.order_parcels[0].orderCode}</Text>
             <Text style={Fonts.type59}>
-              {order.orderParcels[0].parcelQty} Qty
+              {order.order_parcels[0]?.parcel_qty ?? '-'} Qty
             </Text>
           </View>
           <View
@@ -1312,12 +1308,13 @@ class MerchantHomeView extends Component {
             }}
           >
             <Text style={Fonts.type59}>
-              {moment(new Date(order.orderParcels[0].createdAt)).format(
+              {moment(new Date(order.order_parcels[0].createdAt)).format(
                 'DD MMMM YYYY HH:mm:ss'
               )}
             </Text>
             <Text style={Fonts.type59}>
-              Total: {MoneyFormat(order.orderParcels[0].billings.totalPayment)}
+              Total:{' '}
+              {MoneyFormat(order.order_parcels[0]?.parcel_final_price ?? '-')}
             </Text>
           </View>
         </View>
@@ -1332,11 +1329,11 @@ class MerchantHomeView extends Component {
   //   return this.props.merchant.dataGetMerchantLastOrder !== null &&
   //     this.props.merchant.dataGetMerchantLastOrder !== undefined ? (
   //     <View>
-  //       {this.props.merchant.dataGetMerchantLastOrder.orderParcels.length >
+  //       {this.props.merchant.dataGetMerchantLastOrder.order_parcels.length >
   //       0 ? (
   //         <Carousel
   //           ref={ref => (this.carousel = ref)}
-  //           data={this.props.merchant.dataGetMerchantLastOrder.orderParcels}
+  //           data={this.props.merchant.dataGetMerchantLastOrder.order_parcels}
   //           sliderWidth={1 * width}
   //           itemWidth={1 * width}
   //           renderItem={this.renderItem.bind(this)}
@@ -2146,7 +2143,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 05102021
+ * updatedDate: 15112021
  * updatedFunction:
- * -> fix the validation when checking out. (must completed the survey)
+ * -> fix double toko survey on task list.
  */

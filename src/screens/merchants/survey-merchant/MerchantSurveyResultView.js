@@ -35,6 +35,7 @@ class MerchantSurveyResultView extends Component {
     this.state = {
       activeIndexCollapse: -1,
       openModalErrorGlobal: false,
+      openCollapse: {},
       showToast: false,
       toastText: ''
     };
@@ -175,6 +176,7 @@ class MerchantSurveyResultView extends Component {
       <View
         style={{
           flex: 1,
+          maxHeight: '30%',
           flexDirection: 'row',
           justifyContent: 'flex-start',
           alignContent: 'center',
@@ -188,7 +190,7 @@ class MerchantSurveyResultView extends Component {
         <View
           style={{
             alignItems: 'center',
-            justifyContent: 'flex-start',
+            justifyContent: 'center',
             width: '70%'
           }}
         >
@@ -209,7 +211,7 @@ class MerchantSurveyResultView extends Component {
         <View
           style={{
             alignItems: 'center',
-            justifyContent: 'flex-start',
+            justifyContent: 'center',
             width: '30%'
           }}
         >
@@ -283,12 +285,16 @@ class MerchantSurveyResultView extends Component {
                   style={styles.boxCollapse}
                   onPress={() =>
                     this.setState({
-                      activeIndexCollapse: index
+                      activeIndexCollapse: index,
+                      openCollapse: {
+                        [index]: !this.state.openCollapse[index]
+                      }
                     })
                   }
                 >
                   <View>
-                    {this.state.activeIndexCollapse === index ? (
+                    {this.state.activeIndexCollapse === index &&
+                    this.state.openCollapse[index] ? (
                       <MaterialIcon
                         name="keyboard-arrow-up"
                         color={'#CACCCF'}
@@ -307,11 +313,12 @@ class MerchantSurveyResultView extends Component {
                       Pertanyaan {index + 1}
                     </Text>
                     <View style={{ width: '80%' }}>
-                      {this.state.activeIndexCollapse === index && (
-                        <Text style={[Fonts.type8, { color: '#A0A4A8' }]}>
-                          {item?.title ?? '-'}
-                        </Text>
-                      )}
+                      {this.state.activeIndexCollapse === index &&
+                        this.state.openCollapse[index] && (
+                          <Text style={[Fonts.type8, { color: '#A0A4A8' }]}>
+                            {item?.title ?? '-'}
+                          </Text>
+                        )}
                     </View>
                   </View>
                 </TouchableOpacity>
@@ -348,6 +355,7 @@ class MerchantSurveyResultView extends Component {
             borderTopColor: Color.fontGreen50,
             marginBottom: 10,
             flex: 1,
+            maxHeight: '27%',
             borderTopWidth: 4,
             borderWidth: 1
           }
