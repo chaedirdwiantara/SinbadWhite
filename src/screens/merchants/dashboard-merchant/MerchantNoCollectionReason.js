@@ -190,7 +190,7 @@ const MerchantNoCollectionReason = () => {
           onPress={() => postTransaction()}
           title={'Simpan Alasan'}
           borderRadius={4}
-          disabled={isSaveButtonDisable}
+          disabled={isSaveButtonDisable || loadingSfaPostTransactionCheckout}
           loading={loadingSfaPostTransactionCheckout}
         />
       </>
