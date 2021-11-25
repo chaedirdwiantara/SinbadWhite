@@ -459,48 +459,6 @@ describe('action', () => {
             )
         });
     })
-     /** GET STATUS ORDER */
-     describe('get status order', () => {
-        const data = {
-            code: 200,
-            data: {
-                code: 200,
-                data: {
-                    name: "Success",
-                    code: 200,
-                    data: {}
-                },
-                result: 'Ok'
-            },  
-        };
-        const factory = type => ({
-            type: type,
-            payload: data
-        })
-
-        it('should create action to trigger process', function(){
-            const result = SfaAction.sfaGetStatusOrderProcess(data);
-            expect(result).toStrictEqual(
-                factory(SfaType.SFA_GET_STATUS_ORDER_PROCESS)
-            )
-        });
-        it('should create action to trigger success', function() {
-            // act
-            const result = SfaAction.sfaGetStatusOrderSuccess(data.data);
-            // assert           
-                expect(result.payload).toStrictEqual(
-                    factory(SfaType.SFA_GET_STATUS_ORDER_SUCCESS).payload.data.data
-                );
-        });
-        it('should create action to trigger failed', function() {
-            // act
-            const result = SfaAction.sfaGetStatusOrderFailed(data);
-            // assert
-            expect(result).toStrictEqual(
-                factory(SfaType.SFA_GET_STATUS_ORDER_FAILED)
-            );
-        });
-    })
 
     /** GET TRANSFER IMAGE*/
     describe('get transfer image', () => {
