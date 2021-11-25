@@ -23,7 +23,9 @@ class CompareGroupRangeAnswerComponent extends Component {
           .filter(candidate => candidate.isBaseValue)
           .map(answer => (
             <View key={'base-' + answer.id} style={styles.boxContentItem}>
-              <Text style={Fonts.type23}>{answer.title}</Text>
+              <View style={{ width: '50%' }}>
+                <Text style={Fonts.type23}>{answer.title}</Text>
+              </View>
               <View style={{ width: '40%' }}>
                 <InputType7
                   editable={!this.props.disabled}
@@ -43,13 +45,15 @@ class CompareGroupRangeAnswerComponent extends Component {
               </View>
             </View>
           ))}
-        <View style={styles.notBaseContainer}>
+        <View style={{ paddingTop: 12 }}>
           <Text style={Fonts.type83}>Bandingkan dengan:</Text>
           {_.orderBy(this.props.item, ['order'])
             .filter(candidate => !candidate.isBaseValue)
             .map(answer => (
               <View key={'not-base-' + answer.id} style={styles.boxContentItem}>
-                <Text style={Fonts.type23}>{answer.title}</Text>
+                <View style={{ width: '50%' }}>
+                  <Text style={Fonts.type23}>{answer.title}</Text>
+                </View>
                 <View style={{ width: '40%' }}>
                   <InputType7
                     editable={!this.props.disabled}
@@ -94,9 +98,7 @@ export default CompareGroupRangeAnswerComponent;
  * createdBy: dyah
  * createdDate: 13092021
  * updatedBy: dyah
- * updatedDate: 16092021
+ * updatedDate: 10112021
  * updatedFunction:
- * -> add props defaultValue.
- * -> update min & max.
- * -> add baseValue when updating text.
+ * -> update width of answer title.
  */

@@ -1,0 +1,3 @@
+Update Your Agent App to enjoy latest features from Sinbad!
+- In this version Agent App has supported Android 11
+- Bug fix and improve performance

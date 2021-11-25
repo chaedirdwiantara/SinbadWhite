@@ -5,19 +5,19 @@ import {
   StyleSheet,
   Text,
   Dimensions
-} from '../../../library/reactPackage'
+} from '../../../library/reactPackage';
 import {
   bindActionCreators,
   connect,
   moment
-} from '../../../library/thirdPartyPackage'
+} from '../../../library/thirdPartyPackage';
 import {
   StatusBarRedOP50,
   ButtonSingle,
   ModalBottomWithClose
-} from '../../../library/component'
-import { GlobalStyle, Fonts } from '../../../helpers'
-import { Color } from '../../../config'
+} from '../../../library/component';
+import { GlobalStyle, Fonts } from '../../../helpers';
+import { Color } from '../../../config';
 import * as ActionCreators from '../../../state/actions';
 
 const { height } = Dimensions.get('window');
@@ -106,10 +106,7 @@ class ModalBottomMerchantCheckout extends Component {
           }}
         >
           <Text style={Fonts.type8}>
-            {store.externalId
-              ? store.externalId
-              : '-'}{' '}
-            - {store.name}
+            {store.externalId ? store.externalId : '-'} - {store.name}
           </Text>
         </View>
         <View style={GlobalStyle.lines} />
@@ -154,12 +151,14 @@ class ModalBottomMerchantCheckout extends Component {
           disabled={
             this.props.merchant.loadingGetLogPerActivity ||
             this.checkDisableButton() ||
-            this.props.merchant.loadingPostActivity
+            this.props.merchant.loadingPostActivity ||
+            this.props.sfa?.loadingSfaCheckCollectionStatus
           }
           title={'Keluar Toko'}
           loading={
             this.props.merchant.loadingGetLogPerActivity ||
-            this.props.merchant.loadingPostActivity
+            this.props.merchant.loadingPostActivity ||
+            this.props.sfa?.loadingSfaCheckCollectionStatus
           }
           borderRadius={4}
           onPress={this.props.onPress}
@@ -240,8 +239,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ user, merchant }) => {
-  return { user, merchant };
+const mapStateToProps = ({ user, merchant, sfa }) => {
+  return { user, merchant, sfa };
 };
 
 const mapDispatchToProps = dispatch => {

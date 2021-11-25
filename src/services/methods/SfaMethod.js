@@ -102,17 +102,6 @@ function getStamp(data) {
   });
 }
 
-/** GET STATUS ORDER */
-function getStatusOrder(data) {
-  return ApiRest({
-    path: `collection/v1/count-order-parcels?storeId=${parseInt(
-      data.storeId,
-      10
-    )}&supplierId=${parseInt(data.supplierId, 10)}`,
-    method: 'GET'
-  });
-}
-
 /** GET TRANSFER IMAGE */
 function getCollectionImage(id) {
   return ApiRest({
@@ -244,7 +233,6 @@ export const SfaMethod = {
   postPaymentMethod,
   postCollectionPayment,
   getStamp,
-  getStatusOrder,
   getCollectionImage,
   getPrincipal,
   getCollectionLog,

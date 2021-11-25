@@ -21,6 +21,8 @@ import {
   StatusBarWhite,
   ProgressBarType1,
   LoadingPage,
+  ModalBottomErrorRespons,
+  ToastType1,
   ButtonMenuType1
 } from '../../library/component';
 import { Color } from '../../config';
@@ -36,6 +38,8 @@ class MerchantDetailView extends Component {
     super(props);
     this.state = {
       openModalCallMerchant: false,
+      openModalError: false,
+      toastText: '',
       showToast: false
     };
   }
@@ -49,6 +53,15 @@ class MerchantDetailView extends Component {
     this.props.merchantGetDetailProcessV2(
       this.props.navigation.state.params.id
     );
+  }
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    const { errorGetMerchantDetailV2 } = this.props.merchant
+    if (errorGetMerchantDetailV2){
+      if (prevProps.merchant.errorGetMerchantDetailV2 !== errorGetMerchantDetailV2){
+        this.setState({ openModalError: true, showToast: true, toastText: errorGetMerchantDetailV2.message })
+      }
+    }
   }
   /** === COMBINE ADDRESS === */
   combineAddress(item) {
@@ -194,12 +207,12 @@ class MerchantDetailView extends Component {
    */
   /** === RENDER VERIFIED ICON === */
   renderVerifiedIcon() {
-    return this.props.merchant.dataGetMerchantDetailV2.approvalStatus ===
+    return this.props.merchant.dataGetMerchantDetailV2?.approvalStatus ===
       'rejected' ||
-      this.props.merchant.dataGetMerchantDetailV2.approvalStatus ===
+      this.props.merchant.dataGetMerchantDetailV2?.approvalStatus ===
         'verified' ? (
       <View style={{ paddingRight: 8 }}>
-        {this.props.merchant.dataGetMerchantDetailV2.approvalStatus ===
+        {this.props.merchant.dataGetMerchantDetailV2?.approvalStatus ===
         'rejected' ? (
           <MaterialIcon name="cancel" color={Color.mainColor} size={24} />
         ) : (
@@ -254,7 +267,7 @@ class MerchantDetailView extends Component {
               style={styles.mapImage}
             />
           </TouchableOpacity>
-          {dataGetMerchantDetailV2.imageUrl ? (
+          {dataGetMerchantDetailV2?.imageUrl ? (
             <Image
               source={{ uri: dataGetMerchantDetailV2.imageUrl }}
               style={{ width: '100%', height: 169 }}
@@ -285,17 +298,17 @@ class MerchantDetailView extends Component {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {this.renderVerifiedIcon()}
             <Text style={Fonts.type7}>
-              {dataGetMerchantDetailV2.externalId ||
-                dataGetMerchantDetailV2.storeCode ||
+              {dataGetMerchantDetailV2?.externalId ||
+                dataGetMerchantDetailV2?.storeCode ||
                 '-'}
             </Text>
           </View>
 
-          <Text style={Fonts.type7}>{dataGetMerchantDetailV2.name}</Text>
+          <Text style={Fonts.type7}>{dataGetMerchantDetailV2?.name ?? ''}</Text>
           <Text
             style={[Fonts.type8, { marginTop: 5, textTransform: 'capitalize' }]}
           >
-            {this.combineAddress(dataGetMerchantDetailV2)}
+            {dataGetMerchantDetailV2 && this.combineAddress(dataGetMerchantDetailV2)}
           </Text>
           <TouchableOpacity
             style={{ marginTop: 8 }}
@@ -327,9 +340,9 @@ class MerchantDetailView extends Component {
           <Text style={Fonts.type42}>Kelengkapan Profil</Text>
         </View>
         <ProgressBarType1
-          totalStep={this.props.merchant.dataGetMerchantDetailV2.progress.total}
+          totalStep={this.props.merchant.dataGetMerchantDetailV2?.progress.total}
           currentStep={
-            this.props.merchant.dataGetMerchantDetailV2.progress.done
+            this.props.merchant.dataGetMerchantDetailV2?.progress.done
           }
         />
       </View>
@@ -353,12 +366,12 @@ class MerchantDetailView extends Component {
           <Text style={Fonts.type42}>Data Pemilik</Text>
           <Text style={Fonts.type59}>
             {
-              this.props.merchant.dataGetMerchantDetailV2.progress.ownerData
+              this.props.merchant.dataGetMerchantDetailV2?.progress.ownerData
                 .done
             }
             /
             {
-              this.props.merchant.dataGetMerchantDetailV2.progress.ownerData
+              this.props.merchant.dataGetMerchantDetailV2?.progress.ownerData
                 .total
             }{' '}
             Selesai
@@ -380,12 +393,12 @@ class MerchantDetailView extends Component {
           <Text style={Fonts.type42}>Data Toko</Text>
           <Text style={Fonts.type59}>
             {
-              this.props.merchant.dataGetMerchantDetailV2.progress.storeData
+              this.props.merchant.dataGetMerchantDetailV2?.progress.storeData
                 .done
             }
             /
             {
-              this.props.merchant.dataGetMerchantDetailV2.progress.storeData
+              this.props.merchant.dataGetMerchantDetailV2?.progress.storeData
                 .total
             }{' '}
             Selesai
@@ -464,7 +477,7 @@ class MerchantDetailView extends Component {
       <View>
         <CallMerchant
           phoneNumber={
-            this.props.merchant.dataGetMerchantDetailV2.owner.mobilePhoneNo
+            this.props.merchant.dataGetMerchantDetailV2?.owner.mobilePhoneNo
           }
           open={this.state.openModalCallMerchant}
           close={() => this.setState({ openModalCallMerchant: false })}
@@ -476,19 +489,37 @@ class MerchantDetailView extends Component {
       <View />
     );
   }
+  /** MODAL ERROR RESPONSE */
+  renderModalErrorResponse() {
+    return (
+      <ModalBottomErrorRespons
+        open={this.state.openModalError}
+        onPress={() => this.setState({ openModalError: false })}
+        toast={this.renderToast()}
+      />  
+    )
+  }
+  /** TOAST ERROR RESPONSE */
+  renderToast() {
+    return (
+      this.state.showToast && (
+        <ToastType1 margin={10} content={this.state.toastText} basic />
+      )
+    );
+  }
   /** === MAIN === */
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarWhite />
-        {!this.props.merchant.loadingGetMerchantDetail &&
-        this.props.merchant.dataGetMerchantDetailV2 !== null ? (
+        {!this.props.merchant.loadingGetMerchantDetail ? (
           this.renderData()
         ) : (
           <LoadingPage />
         )}
         {/* modal */}
         {this.renderModalCallMerchant()}
+        {this.renderModalErrorResponse()}
       </SafeAreaView>
     );
   }
@@ -552,9 +583,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(MerchantDetailView);
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
+ * updatedBy: dyah
+ * updatedDate: 08112021
  * updatedFunction:
- * -> Refactoring Module Import
+ * -> add modal & toast error response
  *
  */
