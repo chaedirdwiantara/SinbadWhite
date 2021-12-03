@@ -20,7 +20,7 @@ export function otpGetProcess(phoneNumber) {
 /** === OTP SUCCESS === */
 export function otpGetSuccess(data) {
   if (data.result === 'Ok') {
-    return { type: types.OTP_GET_SUCCESS, payload: data.data.otp };
+    return { type: types.OTP_GET_SUCCESS, payload: data?.data?.otp };
   }
   return { type: types.OTP_GET_FAILED, payload: data };
 }
