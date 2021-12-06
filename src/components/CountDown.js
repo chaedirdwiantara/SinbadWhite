@@ -7,7 +7,7 @@ import {
   AppState
 } from '../library/reactPackage';
 import masterColor from '../config/masterColor.json';
-import { Fonts } from '../config';
+import Fonts from '../helpers/GlobalFont';
 class CountDown extends Component {
   constructor(props) {
     super(props);
