@@ -317,6 +317,7 @@ class HistoryDataListView extends Component {
           backgroundColor={masterColor.mainColor}
           type={'small'}
           expiredTimer={Math.abs(timeDiffInSecond)}
+          originalTime={item.billing?.expiredPaymentTime}
         />
       </View>
     );
