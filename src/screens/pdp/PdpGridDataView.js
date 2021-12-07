@@ -17,7 +17,8 @@ import {
 import {
   SkeletonType4,
   LoadingLoadMore,
-  EmptyData
+  EmptyData,
+  ImageKit
 } from '../../library/component';
 import { Color } from '../../config';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
@@ -117,11 +118,9 @@ class PdpGridDataView extends Component {
   /** === RENDER ITEM === */
   renderItem(item, index) {
     const productImage = (
-      <Image
+      <ImageKit
         defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
-        source={{
-          uri: item.catalogueImages[0].imageUrl
-        }}
+        uri={item.catalogueImages[0].imageUrl}
         style={GlobalStyle.fullWidthRatioContainRadius5Image}
       />
     );

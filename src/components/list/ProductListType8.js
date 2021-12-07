@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text
 } from '../../library/reactPackage';
+import { ImageKit } from '../../library/component';
 import { GlobalStyle, Fonts } from '../../helpers';
 import { Color } from '../../config';
 
@@ -44,11 +45,9 @@ class ProductListType8 extends Component {
     return itemProduct.map((item, index) => {
       return indexCounter++ < 3 ? (
         <View key={index} style={{ paddingHorizontal: 5 }}>
-          <Image
+          <ImageKit
             defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
-            source={{
-              uri: item.image_url
-            }}
+            uri={item.image_url}
             style={GlobalStyle.image54Contain}
           />
         </View>
@@ -62,7 +61,8 @@ class ProductListType8 extends Component {
     return (
       <View key={indexCounter} style={{ flexDirection: 'row' }}>
         {this.renderListProductImageContent(
-          itemBrand[indexCounter]?.order_brand_catalogues?.Catalogues?.catalogue_images,
+          itemBrand[indexCounter]?.order_brand_catalogues?.Catalogues
+            ?.catalogue_images,
           indexCounter
         )}
       </View>

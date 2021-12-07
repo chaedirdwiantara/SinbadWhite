@@ -139,7 +139,8 @@ import SingleAnswerComponent from '../components/questionnaire/SingleAnswerCompo
 import MultipleAnswerComponent from '../components/questionnaire/MultipleAnswerComponent';
 import BasicRangeAnswerComponent from '../components/questionnaire/BasicRangeAnswerComponent';
 import CompareGroupRangeAnswerComponent from '../components/questionnaire/CompareGroupRangeAnswerComponent';
-
+/** IMAGEKIT */
+import ImageKit from '../components/ImageKit';
 export {
   CartGlobal,
   /** SEARCH BAR */
@@ -278,7 +279,9 @@ export {
   SingleAnswerComponent,
   MultipleAnswerComponent,
   BasicRangeAnswerComponent,
-  CompareGroupRangeAnswerComponent
+  CompareGroupRangeAnswerComponent,
+  // image kit
+  ImageKit
 };
 
 /**

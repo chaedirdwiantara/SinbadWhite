@@ -26,7 +26,8 @@ import {
   LayoutAnimation,
   Clipboard,
   ActivityIndicator,
-  PermissionsAndroid
+  PermissionsAndroid,
+  AppState
 } from 'react-native';
 import Text from 'react-native-text';
 /** FOR DIMENSIONS */
@@ -61,7 +62,8 @@ export {
   LayoutAnimation,
   Clipboard,
   ActivityIndicator,
-  PermissionsAndroid
+  PermissionsAndroid,
+  AppState
 };
 
 /**

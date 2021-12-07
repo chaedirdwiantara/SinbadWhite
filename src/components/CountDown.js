@@ -1,13 +1,19 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import Fonts from '../helpers/GlobalFont';
+import {
+  React,
+  Component,
+  View,
+  StyleSheet,
+  Text,
+  AppState
+} from '../library/reactPackage';
 import masterColor from '../config/masterColor.json';
-
+import Fonts from '../helpers/GlobalFont';
 class CountDown extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      expiredTime: Math.abs(this.props.expiredTimer)
+      expiredTime: Math.abs(this.props.expiredTimer),
+      appState: AppState.currentState
     };
   }
 
@@ -16,8 +22,25 @@ class CountDown extends Component {
    * FUNCTIONAL
    * =======================
    */
-
+  /** === DID MOUNT === */
   componentDidMount() {
+    this.setExpiredTime();
+    this.countDownSetInterval();
+    this.listenAppState();
+  }
+
+  componentWillUnmount() {
+    this.removeAppState();
+  }
+
+  setExpiredTime() {
+    const newDate = new Date();
+    const convertDate = new Date(this.props.originalTime);
+    const currentDiffTime = (newDate.getTime() - convertDate.getTime()) / 1000;
+    this.setState({ expiredTime: Math.abs(currentDiffTime) });
+  }
+
+  countDownSetInterval() {
     this.countDownTimer = setInterval(() => {
       this.setState({
         expiredTime: this.state.expiredTime - 1
@@ -28,11 +51,31 @@ class CountDown extends Component {
     }, 1000);
   }
 
-   /** === SEND DATA TO PARENT (PdpView) */
-   toParentFunction() {
+  listenAppState() {
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
+  removeAppState() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+
+  _handleAppStateChange = nextAppState => {
+    if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      clearInterval(this.countDownTimer);
+
+      this.setExpiredTime();
+      this.countDownSetInterval();
+    }
+    this.setState({ appState: nextAppState });
+  };
+  /** === SEND DATA TO PARENT (PdpView) */
+  toParentFunction() {
     this.props.parentFunction({
       type: 'countdown',
-      status : 'false'
+      status: 'false'
     });
   }
 
@@ -71,7 +114,6 @@ class CountDown extends Component {
       </View>
     );
   }
-
 
   renderTimeCountDownSmallRed() {
     const { h, m, s } = this.timeConverter(this.state.expiredTime);
