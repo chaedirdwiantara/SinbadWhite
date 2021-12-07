@@ -12,7 +12,8 @@ import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import {
   SkeletonType1,
   LoadingLoadMore,
-  EmptyData
+  EmptyData,
+  ImageKit
 } from '../../library/component';
 import { Color } from '../../config';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
@@ -71,11 +72,9 @@ class PdpListDataView extends Component {
   /** === RENDER ITEM === */
   renderItem({ item, index }) {
     const productImage = (
-      <Image
+      <ImageKit
         defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
-        source={{
-          uri: item.catalogueImages[0].imageUrl
-        }}
+        uri={item.catalogueImages[0].imageUrl}
         style={GlobalStyle.image65Contain}
       />
     );

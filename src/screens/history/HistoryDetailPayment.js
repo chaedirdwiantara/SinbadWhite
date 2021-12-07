@@ -36,7 +36,13 @@ import CountDown from '../../components/CountDown';
 import { timeDiff, toLocalTime } from '../../helpers/TimeHelper';
 import HistoryDetailPaymentInformation from './HistoryDetailPaymentInformation';
 import { Color } from '../../config';
-import { BILLING_REFUNDED, BILLING_REFUND_REQUESTED, BILLING_EXPIRED, BILLING_CANCEL, BILLING_PAID} from '../../constants/paymentConstants';
+import {
+  BILLING_REFUNDED,
+  BILLING_REFUND_REQUESTED,
+  BILLING_EXPIRED,
+  BILLING_CANCEL,
+  BILLING_PAID
+} from '../../constants/paymentConstants';
 
 const { width, height } = Dimensions.get('window');
 class HistoryDetailPayment extends Component {
@@ -167,6 +173,7 @@ class HistoryDetailPayment extends Component {
         <CountDown
           type={'big'}
           expiredTimer={Math.trunc(this.state.expiredTime)}
+          originalTime={this.props.data.billing.expiredPaymentTime}
         />
       );
     }
@@ -502,7 +509,8 @@ class HistoryDetailPayment extends Component {
   renderPanduanPembayaran() {
     const billingStatus = this.props.history.dataDetailHistory.billing
       .billingStatus;
-    const paymentChannelId = this.props.data.paymentChannel.paymentChannelTypeId;
+    const paymentChannelId = this.props.data.paymentChannel
+      .paymentChannelTypeId;
     return (
       <View>
         {billingStatus !== BILLING_PAID &&
@@ -570,8 +578,7 @@ class HistoryDetailPayment extends Component {
           accountVaNo !== null &&
           billingStatus !== 'paid' &&
           (a.statusPayment === 'waiting_for_payment' ||
-            (a.statusPayment === 'overdue' &&
-              expiredPaymentTime !== null)) &&
+            (a.statusPayment === 'overdue' && expiredPaymentTime !== null)) &&
           billingStatus !== 'cancel' ? (
             <View>
               <View style={GlobalStyle.boxPadding} />
@@ -592,9 +599,7 @@ class HistoryDetailPayment extends Component {
                     SEGERA LAKUKAN PEMBAYARAN DALAM WAKTU
                   </Text>
                   <View style={styles.headerContainer}>
-                    {this.state.expiredTime
-                      ? this.renderTimeCountDown()
-                      : null}
+                    {this.state.expiredTime ? this.renderTimeCountDown() : null}
 
                     <Text style={styles.unFocusedFont}>
                       {`(Sebelum ${expiredTime.format('LLLL')} WIB)`}
@@ -643,8 +648,7 @@ class HistoryDetailPayment extends Component {
             statusPayment === 'overdue') &&
           billingStatus !== 'cancel' ? (
             this.renderVirtualAccountNumber()
-          ) : 
-          paymentChannelTypeId !== 1 &&
+          ) : paymentChannelTypeId !== 1 &&
             expiredPaymentTime === null &&
             billingStatus !== 'paid' &&
             (statusPayment === 'waiting_for_payment' ||

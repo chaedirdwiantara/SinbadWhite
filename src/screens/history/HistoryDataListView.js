@@ -99,6 +99,7 @@ class HistoryDataListView extends Component {
   }
   /** REFRESH LIST VIEW */
   onHandleRefresh = () => {
+    this.props.historyGetReset();
     this.props.historyGetRefresh();
     this.getHistory(true, 0);
   };
@@ -317,6 +318,7 @@ class HistoryDataListView extends Component {
           backgroundColor={masterColor.mainColor}
           type={'small'}
           expiredTimer={Math.abs(timeDiffInSecond)}
+          originalTime={item.billing?.expiredPaymentTime}
         />
       </View>
     );

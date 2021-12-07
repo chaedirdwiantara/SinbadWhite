@@ -23,7 +23,8 @@ import {
   EmptyData,
   ErrorPage,
   SelectedMerchantName,
-  ModalBottomErrorRespons
+  ModalBottomErrorRespons,
+  ImageKit
 } from '../../library/component';
 import { Color } from '../../config';
 import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers';
@@ -484,11 +485,9 @@ class OmsCartView extends Component {
           alignItems: 'center'
         }}
       >
-        <Image
+        <ImageKit
           defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
-          source={{
-            uri: item.catalogue.catalogueImages[0].imageUrl
-          }}
+          uri={item.catalogue.catalogueImages[0].imageUrl}
           style={[
             GlobalStyle.image77Contain,
             { opacity: item.statusInCart === 'available' ? 1 : 0.5 }
@@ -1231,7 +1230,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(OmsCartView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OmsCartView);
 
 /**
  * ============================

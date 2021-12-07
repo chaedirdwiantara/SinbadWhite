@@ -6,11 +6,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text
-} from '../../library/reactPackage'
-import {
-  LinearGradient
-} from '../../library/thirdPartyPackage'
-import { GlobalStyle, Fonts } from '../../helpers'
+} from '../../library/reactPackage';
+import { LinearGradient } from '../../library/thirdPartyPackage';
+import { ImageKit } from '../../library/component';
+import { GlobalStyle, Fonts } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 
 class PdpGrid extends Component {
@@ -63,11 +62,9 @@ class PdpGrid extends Component {
   /** === RENDER ITEM === */
   renderItem() {
     const productImage = (
-      <Image
+      <ImageKit
         defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
-        source={{
-          uri: this.props.image
-        }}
+        uri={this.props.image}
         style={GlobalStyle.fullWidthRatioContainRadius5Image}
       />
     );
