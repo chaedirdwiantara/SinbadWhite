@@ -99,6 +99,7 @@ class HistoryDataListView extends Component {
   }
   /** REFRESH LIST VIEW */
   onHandleRefresh = () => {
+    this.props.historyGetReset();
     this.props.historyGetRefresh();
     this.getHistory(true, 0);
   };
