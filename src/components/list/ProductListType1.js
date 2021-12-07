@@ -11,6 +11,7 @@ import {
   StyleSheet,
   Text
 } from '../../library/reactPackage';
+import { ImageKit } from '../../library/component';
 import { GlobalStyle, Fonts } from '../../helpers';
 import { Color } from '../../config';
 
@@ -46,11 +47,9 @@ class ProductListType1 extends Component {
     return itemProduct.map((item, index) => {
       return indexCounter++ < 3 ? (
         <View key={index} style={{ paddingHorizontal: 5 }}>
-          <Image
+          <ImageKit
             defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
-            source={{
-              uri: item.catalogue.catalogueImages[0].imageUrl
-            }}
+            uri={item.catalogue.catalogueImages[0].imageUrl}
             style={GlobalStyle.image54Contain}
           />
         </View>
