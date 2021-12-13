@@ -16,6 +16,7 @@ import {
   connect,
   bindActionCreators
 } from '../../library/thirdPartyPackage';
+import { ImageKit } from '../../library/component';
 import * as ActionCreators from '../../state/actions';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import NavigationService from '../../navigation/NavigationService';
@@ -172,11 +173,9 @@ class ProductListType7 extends Component {
           }}
         >
           <View>
-            <Image
+            <ImageKit
               defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
-              source={{
-                uri: item.catalogueImagesUrl
-              }}
+              uri={item.catalogueImagesUrl}
               style={[GlobalStyle.image60, { borderRadius: 5 }]}
             />
           </View>
@@ -227,11 +226,9 @@ class ProductListType7 extends Component {
         >
           <View>
             <TouchableOpacity onPress={() => this.goToDetail(item.id)}>
-              <Image
+              <ImageKit
                 defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
-                source={{
-                  uri: item.catalogueImagesUrl
-                }}
+                uri={item.catalogueImagesUrl}
                 style={[GlobalStyle.image60, { borderRadius: 5 }]}
               />
             </TouchableOpacity>
