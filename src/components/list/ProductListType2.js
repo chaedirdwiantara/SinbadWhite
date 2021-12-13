@@ -9,11 +9,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text
-} from '../../library/reactPackage'
-import {
-  MaterialIcon
-} from '../../library/thirdPartyPackage'
-import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
+} from '../../library/reactPackage';
+import { ImageKit } from '../../library/component';
+import { MaterialIcon } from '../../library/thirdPartyPackage';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 
 class ProductListType2 extends Component {
@@ -60,11 +59,9 @@ class ProductListType2 extends Component {
           }}
         >
           <View>
-            <Image
+            <ImageKit
               defaultSource={require('../../assets/images/sinbad_image/sinbadopacity.png')}
-              source={{
-                uri: item.catalogue.catalogueImages[0].imageUrl
-              }}
+              uri={item.catalogue.catalogueImages[0].imageUrl}
               style={[GlobalStyle.image60, { borderRadius: 5 }]}
             />
           </View>
@@ -83,14 +80,20 @@ class ProductListType2 extends Component {
               alignItems: 'flex-end'
             }}
           >
-            <Text style={Fonts.type47}>{item.deliveredQty ? item.deliveredQty : item.qty} Pcs</Text>
+            <Text style={Fonts.type47}>
+              {item.deliveredQty ? item.deliveredQty : item.qty} Pcs
+            </Text>
           </View>
         </View>
         <View style={GlobalStyle.lines} />
         <View style={styles.boxButtonAndPriceTotal}>
           <Text style={Fonts.type47}>Total Harga: </Text>
           <Text style={Fonts.type111p}>
-            {MoneyFormat(item.deliveredCatalogueGrossPrice ? item.deliveredCatalogueGrossPrice : item.catalogueGrossPrice)}
+            {MoneyFormat(
+              item.deliveredCatalogueGrossPrice
+                ? item.deliveredCatalogueGrossPrice
+                : item.catalogueGrossPrice
+            )}
           </Text>
         </View>
       </View>
@@ -138,12 +141,20 @@ class ProductListType2 extends Component {
       >
         {this.state.showMore ? (
           <View style={styles.boxSeeMore}>
-            <MaterialIcon name="keyboard-arrow-up" size={24} color={masterColor.fontRed50}/>
+            <MaterialIcon
+              name="keyboard-arrow-up"
+              size={24}
+              color={masterColor.fontRed50}
+            />
             <Text style={Fonts.type11}>Lihat Ringkas</Text>
           </View>
         ) : (
           <View style={styles.boxSeeMore}>
-            <MaterialIcon name="keyboard-arrow-down" size={24} color={masterColor.fontRed50}/>
+            <MaterialIcon
+              name="keyboard-arrow-down"
+              size={24}
+              color={masterColor.fontRed50}
+            />
             <Text style={Fonts.type11}>Lihat Lebih</Text>
           </View>
         )}
@@ -189,27 +200,25 @@ const styles = StyleSheet.create({
 export default ProductListType2;
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
 /**
-* createdBy: 
-* createdDate: 
-* updatedBy: Tyo
-* updatedDate: 30062021
-* updatedFunction:
-* -> change font type10 to type 11 in wording lihat lebih & lihat ringkas
-* -> change color black to red in icon arrow up & arrow down
-* -> modify text Total Harga using flexDirection = row and change font
-* 
-*/
-
-
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tyo
+ * updatedDate: 30062021
+ * updatedFunction:
+ * -> change font type10 to type 11 in wording lihat lebih & lihat ringkas
+ * -> change color black to red in icon arrow up & arrow down
+ * -> modify text Total Harga using flexDirection = row and change font
+ *
+ */
