@@ -47,7 +47,8 @@ class OtpView extends Component {
       if (this.props.auth.errorSignIn !== null) {
         this.setState({
           errorOTP: true,
-          otpErrorText: 'Kode verifikasi Anda telah expired'
+          otpErrorText:
+            'Kode verifikasi yang Anda masukkan salah atau kadaluarsa'
         });
       }
     }
@@ -62,17 +63,10 @@ class OtpView extends Component {
   checkOtp() {
     Keyboard.dismiss();
     this.setState({ errorOTP: false });
-    if (this.props.permanent.otpAgentSignIn !== this.state.otpInput.join('')) {
-      this.setState({
-        errorOTP: true,
-        otpErrorText: 'Pastikan kode verifikasi yang anda masukan benar'
-      });
-    } else {
-      this.props.signInProcess({
-        mobilePhoneNo: '0' + this.props.permanent.phoneNumberAgentSignIn,
-        otpCode: this.state.otpInput.join('')
-      });
-    }
+    this.props.signInProcess({
+      mobilePhoneNo: '0' + this.props.permanent.phoneNumberAgentSignIn,
+      otpCode: this.state.otpInput.join('')
+    });
   }
   /**
    * ==============================
@@ -226,4 +220,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(OtpView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OtpView);

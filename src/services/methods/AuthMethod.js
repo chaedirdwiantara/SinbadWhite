@@ -3,7 +3,7 @@ import { GlobalMethod } from './GlobalMethod';
 
 function getOTP(phoneNumber) {
   return ApiRest({
-    path: 'auth/check-phone',
+    path: 'auth/check-phone-v2',
     method: 'POST',
     params: {
       mobilePhoneNo: phoneNumber
@@ -12,12 +12,12 @@ function getOTP(phoneNumber) {
 }
 
 function checkPhoneNumberAvailable(phoneNumber) {
-  let supplierId = GlobalMethod.userSupplierMapping()
-  if(supplierId.length > 0){
-    supplierId = supplierId[0]
+  let supplierId = GlobalMethod.userSupplierMapping();
+  if (supplierId.length > 0) {
+    supplierId = supplierId[0];
   }
   return ApiRest({
-    path: 'auth/valid-phone', 
+    path: 'auth/valid-phone',
     method: 'POST',
     params: {
       mobilePhoneNo: phoneNumber,
