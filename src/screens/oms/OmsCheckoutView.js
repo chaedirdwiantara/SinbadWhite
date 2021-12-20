@@ -13,7 +13,8 @@ import {
   MaterialIcon,
   bindActionCreators,
   connect,
-  Button
+  Button,
+  firebase
 } from '../../library/thirdPartyPackage';
 import {
   ModalConfirmation,
@@ -38,15 +39,15 @@ import ModalBottomStockConfirmationConfirmOrder from './ModalBottomStockConfirma
 import ModalBottomErrorMinimumOrder from './ModalBottomErrorMinimumOrder';
 import ModalBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 import ModalBottomPayLaterType from './ModalBottomPayLaterType';
-import ModalConfirmKUR from '../../components/modal_bottom/ModalBottomType4';
 import ModalOmsKurWebView from './ModalOmsKurWebView';
 import ModalOmsKurAnnouncement from './ModalOmsKurAnnouncement';
 import ModalOmsOTPKur from './ModalOmsOTPKur';
 import ModalBottomConfirmKur from './ModalBottomConfirmKur';
-import { toLocalTime, toUtcTime } from '../../helpers/TimeHelper';
+import { toUtcTime } from '../../helpers/TimeHelper';
 class OmsCheckoutView extends Component {
   constructor(props) {
     super(props);
+    this.checkLeadTimeWarehouse = firebase.database().ref('leadTimeWarehouse');
     this.state = {
       /** data */
       parcels: [],
@@ -94,7 +95,6 @@ class OmsCheckoutView extends Component {
       makeConfirmOrder: false,
       selectedParcelDetail: null,
       selectedPaymentType: null,
-      paymentMethodDetail: null,
       tAndRDetail: null,
       tAndRLoading: false,
       alreadyFetchTAndR: false,
@@ -108,7 +108,8 @@ class OmsCheckoutView extends Component {
       openModalKurAnnouncement: false,
       openModalOmsOtpKur: false,
       modalErrorConsent: false,
-      selectedParcelDetailPayment: null
+      selectedParcelDetailPayment: null,
+      leadTimeWarehouse: 3
     };
   }
   /**
@@ -140,6 +141,9 @@ class OmsCheckoutView extends Component {
    */
   /** === DID MOUNT === */
   componentDidMount() {
+    this.checkLeadTimeWarehouse.once('value').then(snapshot => {
+      this.setState({ leadTimeWarehouse: snapshot.val() });
+    });
     this.navigationFunction();
     if (this.state.dataOmsGetCheckoutItem !== null) {
       this.modifyDataForList();
@@ -395,7 +399,8 @@ class OmsCheckoutView extends Component {
       }
     }
     if (
-      prevProps.oms.errorOmsGetPaymentChannel !== this.props.oms.errorOmsGetPaymentChannel
+      prevProps.oms.errorOmsGetPaymentChannel !==
+      this.props.oms.errorOmsGetPaymentChannel
     ) {
       if (
         this.props.oms.errorOmsGetPaymentChannel &&
@@ -558,9 +563,7 @@ class OmsCheckoutView extends Component {
   }
   /** === CALCULATE TOTAL SERVICE FEE === */
   calTotalServiceFee() {
-    const mapParcel = this.state.parcels.map(
-      item => item.totalFee
-    );
+    const mapParcel = this.state.parcels.map(item => item.totalFee);
     return mapParcel.reduce((a, b) => a + b, 0);
   }
   /** === OPEN COLAPSE SUB TOTAL === */
@@ -604,7 +607,7 @@ class OmsCheckoutView extends Component {
         ].paymentChannel = this.props.oms.dataOmsGetPaymentChannel.data;
         parcels[indexParcel].error = false;
         parcels[indexParcel].paylaterType = this.state.selectedPaylaterType;
-        parcels[indexParcel].totalFee = item.totalFee
+        parcels[indexParcel].totalFee = item.totalFee;
       }
       this.setState({
         parcels,
@@ -725,7 +728,7 @@ class OmsCheckoutView extends Component {
             ? itemParcelFind.paylaterType
             : null;
           error = itemParcelFind.error;
-          totalFee = itemParcelFind.paymentMethodDetail.totalFee
+          totalFee = itemParcelFind.paymentMethodDetail.totalFee;
         }
       }
       const data = {
@@ -919,27 +922,27 @@ class OmsCheckoutView extends Component {
       modalPaylaterType: true
     });
   }
-// === ERROR PAYMENT ORDER PARCEL EXPIRED ===
-handleErrorOrderParcelExpired() {
-  this.setState({
-    modalWarningCheckoutIsExpired: true,
-    modalPaymentTypeList: false,
-    modalPaymentTypeMethod: false,
-    modalPaymentMethodDetail: false,
-    modalPaylaterType: false
-  });
-}
+  // === ERROR PAYMENT ORDER PARCEL EXPIRED ===
+  handleErrorOrderParcelExpired() {
+    this.setState({
+      modalWarningCheckoutIsExpired: true,
+      modalPaymentTypeList: false,
+      modalPaymentTypeMethod: false,
+      modalPaymentMethodDetail: false,
+      modalPaylaterType: false
+    });
+  }
 
-closeErrorOrderParcelExpired() {
-  this.setState({
+  closeErrorOrderParcelExpired() {
+    this.setState({
       modalWarningCheckoutIsExpired: false,
       modalPaymentTypeList: false,
       modalPaymentTypeMethod: false,
       modalPaymentMethodDetail: false,
       modalPaylaterType: false
-  });
-  this.backToCartItemView();
-}
+    });
+    this.backToCartItemView();
+  }
   /** === FOR OPEN MODAL TERM AND REFRENCE ===  */
   checkTerm(selectedPaymentType) {
     this.setState({ modalPaymentTypeList: false, selectedPaymentType });
@@ -1306,7 +1309,8 @@ closeErrorOrderParcelExpired() {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginBottom: this.state.parcels[index].paymentMethodDetail !== null ? 5 : null
+            marginBottom:
+              this.state.parcels[index].paymentMethodDetail !== null ? 5 : null
           }}
         >
           <View>
@@ -1316,26 +1320,26 @@ closeErrorOrderParcelExpired() {
             <Text style={Fonts.type17}>{MoneyFormat(item.parcelTaxes)}</Text>
           </View>
         </View>
-        {
-          this.state.parcels[index].paymentMethodDetail && this.state.parcels[index].paymentMethodDetail.totalFee ? (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between'
-              }}
-            >
-              <View>
-                <Text style={Fonts.type17}>Layanan Pembayaran</Text>
-              </View>
-              <View>
-                <Text style={Fonts.type17}>
-                  {MoneyFormat(this.state.parcels[index].paymentMethodDetail.totalFee)}
-                </Text>
-              </View>
+        {this.state.parcels[index].paymentMethodDetail &&
+        this.state.parcels[index].paymentMethodDetail.totalFee ? (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}
+          >
+            <View>
+              <Text style={Fonts.type17}>Layanan Pembayaran</Text>
             </View>
-          ) : null
-        }
-        
+            <View>
+              <Text style={Fonts.type17}>
+                {MoneyFormat(
+                  this.state.parcels[index].paymentMethodDetail.totalFee
+                )}
+              </Text>
+            </View>
+          </View>
+        ) : null}
       </View>
     ) : (
       <View />
@@ -1364,11 +1368,13 @@ closeErrorOrderParcelExpired() {
         </View>
         <View>
           <Text style={Fonts.type50}>
-            {
-               this.state.parcels[index] && this.state.parcels[index].paymentMethodDetail
-                ? MoneyFormat(item.parcelFinalPrice + this.state.parcels[index].paymentMethodDetail.totalFee)
-                : MoneyFormat(item.parcelFinalPrice)
-            }
+            {this.state.parcels[index] &&
+            this.state.parcels[index].paymentMethodDetail
+              ? MoneyFormat(
+                  item.parcelFinalPrice +
+                    this.state.parcels[index].paymentMethodDetail.totalFee
+                )
+              : MoneyFormat(item.parcelFinalPrice)}
           </Text>
         </View>
       </TouchableOpacity>
@@ -1438,7 +1444,9 @@ closeErrorOrderParcelExpired() {
           }}
         >
           <View>
-            <Text style={Fonts.type17}>(± 3 hari)</Text>
+            <Text style={Fonts.type17}>
+              (± {this.state.leadTimeWarehouse} hari)
+            </Text>
             <Text style={Fonts.type17}>Self Delivery</Text>
           </View>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -1758,13 +1766,13 @@ closeErrorOrderParcelExpired() {
       <View>
         {this.state.modalWarningCheckoutIsExpired ? (
           <ModalBottomFailPayment
-          open={this.state.modalWarningCheckoutIsExpired}
-          text={
+            open={this.state.modalWarningCheckoutIsExpired}
+            text={
               'Sesi checkout Anda sudah habis. Silakan ulangi proses checkout Anda.'
             }
-          buttonTitle={'Ok'}
-          onPress={() => this.closeErrorOrderParcelExpired()}
-        />
+            buttonTitle={'Ok'}
+            onPress={() => this.closeErrorOrderParcelExpired()}
+          />
         ) : (
           <View />
         )}
