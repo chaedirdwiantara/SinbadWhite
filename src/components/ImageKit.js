@@ -19,7 +19,7 @@ class ImageKit extends Component {
       <Image
         defaultSource={this.props.defaultSource}
         source={{
-          uri: this.props.uri + `?tr=w-${isTab ? 200 : 100}`
+          uri: this.props.uri + `?tr=w-${isTab ? 250 : 150}`
         }}
         style={this.props.style}
       />
