@@ -26,6 +26,7 @@ import MerchantDetailInformationView from '../../screens/merchants/details-merch
 import MerchantDetailPaymentView from '../../screens/merchants/details-merchant/MerchantDetailPaymentView';
 import MerchantDetailAddressView from '../../screens/merchants/details-merchant/MerchantDetailAddressView';
 import MerchantDetailClassificationView from '../../screens/merchants/details-merchant/MerchantDetailClassificationView';
+import MerchantDetailCreditLimitView from '../../screens/merchants/details-merchant/MerchantDetailCreditLimitView';
 /** merchant edit */
 import MerchantEditView from '../../screens/merchants/edit-merchant/MerchantEditView';
 /** merchant survey */
@@ -236,6 +237,24 @@ const MerchantNavigator = {
     screen: MerchantDetailClassificationView,
     navigationOptions: {
       headerTitle: 'Klasifikasi Toko',
+      headerTitleStyle: [
+        GlobalFont.textHeaderPage,
+        {
+          textAlign: 'center',
+          flex: 1
+        }
+      ],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  MerchantDetailCreditLimitView: {
+    screen: MerchantDetailCreditLimitView,
+    navigationOptions: {
+      headerTitle: 'Batas Kredit',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
