@@ -27,7 +27,9 @@ import {
   ToastType1,
   ModalConfirmation,
   ModalBottomErrorRespons,
-  ModalConfirmationType6
+  ModalConfirmationType6,
+  ButtonSingle,
+  ModalBottomType1
 } from '../../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers';
 import { Color } from '../../../config';
@@ -136,7 +138,9 @@ class MerchantHomeView extends Component {
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
         }
       ],
-      privileges: this.props.privileges.data
+      privileges: this.props.privileges.data,
+      isPaused: false,
+      modalConfirmPause: false
     };
   }
   /**
@@ -1477,8 +1481,16 @@ class MerchantHomeView extends Component {
                   style={{
                     flex: 3
                   }}
-                >
-                  {taskList ? (
+                > 
+                  {this.state.isPaused && taskList.activityName !== ACTIVITY_JOURNEY_PLAN_CHECK_IN ?
+                    <Button
+                      title={"Ditunda"}
+                      disabled
+                      titleStyle={[Fonts.type25]}
+                      buttonStyle={styles.buttonPaused}
+                    />
+                    :
+                  taskList ? (
                     taskList.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_IN ||
                     taskList.activityName ===
                       ACTIVITY_JOURNEY_PLAN_CHECK_OUT ? (
@@ -1685,6 +1697,24 @@ class MerchantHomeView extends Component {
       </View>
     );
   }
+  /** === RENDER BUTTON PAUSE OR RESUME VISIT === */
+  renderButtonPause() {
+    return (
+      <ButtonSingle
+        white
+        title="Tunda Kunjungan"
+        onPress={() => {this.setState({ modalConfirmPause: true })}}
+      />
+    )
+  }
+  renderButtonResume() {
+    return (
+      <ButtonSingle
+        title="Lanjutkan Kunjungan"
+        onPress={() => this.setState({ isPaused: false })}
+      />
+    )
+  }
   /** === RENDER CONTENT ITEM === */
   renderContentItem() {
     const { order } = this.state.privileges;
@@ -1693,6 +1723,7 @@ class MerchantHomeView extends Component {
         {/* {this.renderData()} */}
         {order?.status && this.renderLastOrder()}
         {this.renderTastList()}
+        {(this.checkCheckIn() && !this.state.isPaused) && this.renderButtonPause()}
         {/* {this.renderMerchantMenu()} */}
       </View>
     );
@@ -1719,6 +1750,7 @@ class MerchantHomeView extends Component {
           renderItem={this.renderContentItem.bind(this)}
           keyExtractor={(data, index) => index.toString()}
         />
+        {this.state.isPaused && this.renderButtonResume()}
       </View>
     );
   }
@@ -1891,6 +1923,45 @@ class MerchantHomeView extends Component {
       <View />
     );
   }
+  /** RENDER MODAL CONFIRM PAUSE */
+  renderModalConfirmPause() {
+    return (
+      <ModalBottomType1
+        open={this.state.modalConfirmPause}
+        title="Menunda Sementara Kunjungan Ini?"
+        content={
+          <View>
+            <Text style={[Fonts.type3, { marginHorizontal: 24, textAlign: 'center', marginBottom: 32 }]}>
+              Dengan menunda kunjungan ini, anda dapat melanjutkan kunjungan ke toko lainnya tanpa harus Check-out.
+            </Text>
+            <View style={styles.buttonModalPauseResumeContainer}>
+              <View style={{ flex: 1, }}>
+                <Button
+                  title="Kembali"
+                  titleStyle={[Fonts.type93, { color: Color.mainColor }]}
+                  buttonStyle={{ width: '100%', paddingVertical: 16, backgroundColor: Color.backgroundWhite, borderColor: Color.mainColor, borderWidth: 1 }}
+                  onPress={() => this.setState({ modalConfirmPause: false })}
+                />
+              </View>
+              <View style={{ width: 16 }} />
+              <View style={{ flex: 1, }}>
+                <Button
+                  title="Tunda Sekarang"
+                  titleStyle={[Fonts.type93]}
+                  buttonStyle={{ width: '100%', paddingVertical: 16, backgroundColor: Color.mainColor, }}
+                  onPress={() => this.setState({ modalConfirmPause: false, isPaused: true })}
+                />
+              </View>
+            </View>
+          </View>
+        }
+      />
+    );
+  }
+  /** RENDER MODAL CONFIRM RESUME */
+  renderModalConfirmResume() {
+    return null;
+  }
   /** BACKGROUND */
   renderBackground() {
     return <View style={styles.backgroundRed} />;
@@ -1924,6 +1995,8 @@ class MerchantHomeView extends Component {
         {this.renderModalBeforeCheckIn()}
         {this.renderModalOverdue()}
         {this.renderModalNoCollectionConfirmation()}
+        {this.renderModalConfirmPause()}
+        {this.renderModalConfirmResume()}
         <ModalBottomSuccessOrder />
       </SafeAreaView>
     );
@@ -2104,6 +2177,21 @@ const styles = StyleSheet.create({
   containerChevronRight: {
     marginTop: 2,
     padding: 0
+  },
+  buttonModalPauseResumeContainer: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    marginHorizontal: 24, 
+    marginBottom: 32 ,
+    alignItems: 'center',
+    alignContent: 'stretch'
+  },
+  buttonPaused: {
+    backgroundColor: Color.buttonGreyWhiteDisabled,
+    borderRadius: 4,
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    width: '100%'
   }
 });
 
@@ -2136,8 +2224,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
- * updatedDate: 15112021
+ * updatedBy: raka
+ * updatedDate: 20012022
  * updatedFunction:
- * -> fix double toko survey on task list.
+ * -> add button pause and resume visit
  */

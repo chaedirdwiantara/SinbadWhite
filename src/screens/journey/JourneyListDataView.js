@@ -20,18 +20,39 @@ import {
   Address,
   SearchBarType1,
   EmptyDataType2,
-  EmptyData
+  EmptyData,
+  TabsCustom
 } from '../../library/component';
 import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 
+const tabDashboard = [
+  {
+    title: 'Semua',
+    value: 'all'
+  },
+  {
+    title: 'Belum Dikunjungi',
+    value: 'notVisited'
+  },
+  {
+    title: 'Tertunda',
+    value: 'paused'
+  },
+  {
+    title: 'Sudah Dikunjungi',
+    value: 'visited'
+  }
+];
+
 class JourneyListDataView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: ''
+      search: '',
+      tabValue: tabDashboard[0].value
     };
   }
   parentFunction(data) {
@@ -155,6 +176,10 @@ class JourneyListDataView extends Component {
       }
       return require('../../assets/icons/journey/visit_gray.png');
     }
+  }
+  /** === ON CHANGE TAB === */
+  onChangeTab(value) {
+    this.setState({ tabValue: value });
   }
   /**
    * ======================
@@ -416,11 +441,24 @@ class JourneyListDataView extends Component {
       />
     );
   }
+  /** === RENDER TABS */
+  renderTabs() {
+    return (
+      <View style={{ height: 70, paddingHorizontal: 8 }}>
+        <TabsCustom
+          listMenu={tabDashboard}
+          onChange={value => this.onChangeTab(value)}
+          value={this.state.tabValue}
+        />
+      </View>
+    )
+  }
   /** === MAIN === */
   render() {
     return (
       <View style={styles.mainContainer}>
         {this.renderSearchBar()}
+        {this.renderTabs()}
         {this.props.journey.loadingGetJourneyPlan
           ? this.renderSkeleton()
           : this.renderData()}
@@ -500,9 +538,9 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
- * updatedDate: 24082021
+ * updatedBy: raka
+ * updatedDate: 20012022
  * updatedFunction:
- * -> maximise the character of search (30 characters).
+ * -> use tabs component for filter jbs.
  *
  */
