@@ -1,0 +1,2 @@
+Update Your Agent App to enjoy latest features from Sinbad!
+- Bug fix and performance
