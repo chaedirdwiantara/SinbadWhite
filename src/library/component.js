@@ -60,6 +60,7 @@ import ModalBottomType3 from '../components/modal_bottom/ModalBottomType3';
 import ModalBottomType4 from '../components/modal_bottom/ModalBottomType4';
 import ModalBottomType5 from '../components/modal_bottom/ModalBottomType5';
 import ModalBottomType6 from '../components/modal_bottom/ModalBottomType6';
+import ModalBottomType7 from '../components/modal_bottom/ModalBottomType7';
 /** ERROR MODAL */
 import ModalBottomErrorRespons from '../components/error/ModalBottomErrorRespons';
 /** OTP */
@@ -202,6 +203,7 @@ export {
   ModalBottomType4,
   ModalBottomType5,
   ModalBottomType6,
+  ModalBottomType7,
   /** ERROR MODAL */
   ModalBottomErrorRespons,
   /** OTP */
