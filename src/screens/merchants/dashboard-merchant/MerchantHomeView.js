@@ -142,7 +142,8 @@ class MerchantHomeView extends Component {
       privileges: this.props.privileges.data,
       isPaused: false,
       modalConfirmPause: false,
-      modalConfirmResume: false
+      modalConfirmResume: false,
+      checkUserCheckout: false
     };
   }
   /**
@@ -915,6 +916,27 @@ class MerchantHomeView extends Component {
   checkExistTask = activityName =>
     this.state.task.some(item => item.activity === activityName);
   /**
+   * 
+   * @param - 
+   * @returns  boolean, is currently jbs is paused
+  */
+  checkIsPaused() {
+    return this.state.isPaused
+  }
+  /**
+   * 
+   * @param -
+   * @returns boolean, render button pause if user already check in & current jbs is not paused & user have'nt checkout
+   */
+  checkRenderButtonPause() {
+    return (
+      this.checkCheckIn() && 
+      !this.checkIsPaused() &&
+      !this.props.merchant.loadingGetLogAllActivit && 
+      !this.checkCheckListTask.bind(this)(ACTIVITY_JOURNEY_PLAN_CHECK_OUT)
+    )
+  }
+  /**
    * ========================
    * RENDER VIEW
    * =======================
@@ -1484,14 +1506,9 @@ class MerchantHomeView extends Component {
                     flex: 3
                   }}
                 > 
-                  {this.state.isPaused && taskList.activityName !== ACTIVITY_JOURNEY_PLAN_CHECK_IN ?
-                    <Button
-                      title={"Ditunda"}
-                      titleStyle={[Fonts.type25]}
-                      buttonStyle={styles.buttonPaused}
-                    />
-                    :
-                  taskList ? (
+                  {this.checkIsPaused() && taskList.activityName !== ACTIVITY_JOURNEY_PLAN_CHECK_IN ?
+                    this.renderButtonPostponed()
+                  : taskList ? (
                     taskList.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_IN ||
                     taskList.activityName ===
                       ACTIVITY_JOURNEY_PLAN_CHECK_OUT ? (
@@ -1698,7 +1715,11 @@ class MerchantHomeView extends Component {
       </View>
     );
   }
-  /** === RENDER BUTTON PAUSE OR RESUME VISIT === */
+  /** 
+   * ==================================== 
+   * RENDER BUTTON PAUSE OR RESUME VISIT 
+   * ==================================== 
+   * */
   renderButtonPause() {
     return (
       <ButtonSingle
@@ -1716,6 +1737,20 @@ class MerchantHomeView extends Component {
       />
     )
   }
+  /** 
+   * ==================================== 
+   * RENDER BUTTON POSTPONED
+   * ==================================== 
+   * */
+  renderButtonPostponed() {
+    return (
+      <Button
+        title={"Ditunda"}
+        titleStyle={[Fonts.type25]}
+        buttonStyle={styles.buttonPaused}
+      />
+    )
+  }
   /** === RENDER CONTENT ITEM === */
   renderContentItem() {
     const { order } = this.state.privileges;
@@ -1724,7 +1759,9 @@ class MerchantHomeView extends Component {
         {/* {this.renderData()} */}
         {order?.status && this.renderLastOrder()}
         {this.renderTastList()}
-        {(this.checkCheckIn() && !this.state.isPaused) && this.renderButtonPause()}
+        {
+          (this.checkRenderButtonPause()) && this.renderButtonPause()
+        }
         {/* {this.renderMerchantMenu()} */}
       </View>
     );
@@ -1751,7 +1788,7 @@ class MerchantHomeView extends Component {
           renderItem={this.renderContentItem.bind(this)}
           keyExtractor={(data, index) => index.toString()}
         />
-        {this.state.isPaused && this.renderButtonResume()}
+        {this.checkIsPaused() && this.renderButtonResume()}
       </View>
     );
   }

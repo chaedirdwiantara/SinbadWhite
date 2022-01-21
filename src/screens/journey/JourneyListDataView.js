@@ -27,6 +27,7 @@ import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
+import { Color } from '../../config';
 
 const tabDashboard = [
   {
@@ -349,27 +350,42 @@ class JourneyListDataView extends Component {
             paddingVertical: 13
           }}
         >
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              marginBottom: 17
-            }}
-          >
-            <Image
-              source={this.checkVisitActivity(item.journeyBookStores)}
-              style={styles.iconVisitOrder}
-            />
-            <View style={{ marginLeft: 10 }} />
-            <Image
-              source={
-                item.journeyBookStores.orderStatus
-                  ? require('../../assets/icons/journey/order_green.png')
-                  : require('../../assets/icons/journey/order_gray.png')
-              }
-              style={styles.iconVisitOrder}
-            />
-          </View>
+          {
+            false 
+            ? // TODO: for isPaused journeyBookStore later
+              <View
+                style={{
+                  backgroundColor: Color.fontYellow10,
+                  paddingVertical: 4,
+                  paddingHorizontal: 6,
+                  marginBottom: 8
+                }}
+              >
+                <Text style={[Fonts.type22, { color: Color.fontYellow40 }]}>Sedang ditunda</Text>
+              </View>
+            :
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                  marginBottom: 17
+                }}
+              >
+                <Image
+                  source={this.checkVisitActivity(item.journeyBookStores)}
+                  style={styles.iconVisitOrder}
+                />
+                <View style={{ marginLeft: 10 }} />
+                <Image
+                  source={
+                    item.journeyBookStores.orderStatus
+                      ? require('../../assets/icons/journey/order_green.png')
+                      : require('../../assets/icons/journey/order_gray.png')
+                  }
+                  style={styles.iconVisitOrder}
+                />
+              </View>
+          }
           <View
             style={{
               flexDirection: 'row'
