@@ -40,6 +40,7 @@ import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
 import MerchantVerifyUser from './MerchantVerifyUser';
 import ModalBeforeCheckIn from './ModalBeforeCheckIn';
 import ModalBottomProgressChecking from '../../global/ModalBottomProgressChecking';
+import ModalBottomConfirmResume from './ModalBottomConfirmResume'
 import {
   ACTIVITY_JOURNEY_PLAN_CHECK_IN,
   ACTIVITY_JOURNEY_PLAN_CHECK_OUT,
@@ -140,7 +141,8 @@ class MerchantHomeView extends Component {
       ],
       privileges: this.props.privileges.data,
       isPaused: false,
-      modalConfirmPause: false
+      modalConfirmPause: false,
+      modalConfirmResume: false
     };
   }
   /**
@@ -1485,7 +1487,6 @@ class MerchantHomeView extends Component {
                   {this.state.isPaused && taskList.activityName !== ACTIVITY_JOURNEY_PLAN_CHECK_IN ?
                     <Button
                       title={"Ditunda"}
-                      disabled
                       titleStyle={[Fonts.type25]}
                       buttonStyle={styles.buttonPaused}
                     />
@@ -1711,7 +1712,7 @@ class MerchantHomeView extends Component {
     return (
       <ButtonSingle
         title="Lanjutkan Kunjungan"
-        onPress={() => this.setState({ isPaused: false })}
+        onPress={() => this.setState({ modalConfirmResume: true })}
       />
     )
   }
@@ -1928,11 +1929,11 @@ class MerchantHomeView extends Component {
     return (
       <ModalBottomType1
         open={this.state.modalConfirmPause}
-        title="Menunda Sementara Kunjungan Ini?"
+        title="Kunjungan di Toko Ini akan Ditunda"
         content={
           <View>
             <Text style={[Fonts.type3, { marginHorizontal: 24, textAlign: 'center', marginBottom: 32 }]}>
-              Dengan menunda kunjungan ini, anda dapat melanjutkan kunjungan ke toko lainnya tanpa harus Check-out.
+              Anda bisa melanjutkan kunjungan ke toko lainnya tanpa harus check-out.
             </Text>
             <View style={styles.buttonModalPauseResumeContainer}>
               <View style={{ flex: 1, }}>
@@ -1960,7 +1961,11 @@ class MerchantHomeView extends Component {
   }
   /** RENDER MODAL CONFIRM RESUME */
   renderModalConfirmResume() {
-    return null;
+    return <ModalBottomConfirmResume
+      open={this.state.modalConfirmResume}
+      onOk={() => this.setState({ isPaused: false, modalConfirmResume: false })}
+      onCancel={() => this.setState({ modalConfirmResume: false })}
+    />;
   }
   /** BACKGROUND */
   renderBackground() {
