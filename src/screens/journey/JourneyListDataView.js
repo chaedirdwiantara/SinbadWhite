@@ -21,7 +21,9 @@ import {
   SearchBarType1,
   EmptyDataType2,
   EmptyData,
-  TabsCustom
+  TabsCustom,
+  ModalBottomType1,
+  ButtonSingle
 } from '../../library/component';
 import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
@@ -469,6 +471,34 @@ class JourneyListDataView extends Component {
       </View>
     )
   }
+   /**
+   * ====================
+   * MODAL
+   * =====================
+   */
+  /** === RENDER MODAL DELAYED VISIT === */
+  renderModalDelayedVisit() {
+    return (
+      <ModalBottomType1
+        open={false}
+        title="Masih Ada Kunjungan Tertunda"
+        content={
+          <View>
+            <Text style={[Fonts.type3, { marginHorizontal: 24, textAlign: 'center', marginBottom: 32 }]}>
+              Pastikan untuk menyelesaikan semua kunjungan di journey plan.
+            </Text>
+            <View style={{ marginBottom: 16 }}>
+              <ButtonSingle
+                disabled={false}
+                title={'Mengerti'}
+                borderRadius={4}
+              />
+            </View>
+          </View>
+        }
+      />
+    )
+  }
   /** === MAIN === */
   render() {
     return (
@@ -480,6 +510,8 @@ class JourneyListDataView extends Component {
           : this.renderData()}
         {/* for loadmore */}
         {this.renderLoadMore()}
+        {/* modal */}
+        {this.renderModalDelayedVisit()}
       </View>
     );
   }
