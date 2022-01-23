@@ -68,6 +68,15 @@ class JourneyListDataView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.journey.dataGetJourneyPlanV2 !==
+      this.props.journey.dataGetJourneyPlanV2
+    ) {
+      
+    }
+  } 
   onHandleRefresh = () => {
     const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
     this.props.journeyPlanGetRefreshV2();

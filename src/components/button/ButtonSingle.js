@@ -97,6 +97,7 @@ class ButtonSingle extends Component {
           disabledTitleStyle={modifyDisabledFonts}
           loadingProps={{ color }}
           loading={this.props.loading}
+          icon={this.props.leftIcon}
         />
       </View>
     );
