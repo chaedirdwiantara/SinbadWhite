@@ -4,7 +4,8 @@ import {
   Text,
   StyleSheet,
   Component,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
@@ -12,27 +13,94 @@ import {
   MaterialIcon
 } from '../../../library/thirdPartyPackage';
 import { Color } from '../../../config';
-import { Fonts, GlobalStyle } from '../../../helpers';
+import { Fonts, GlobalStyle, MoneyFormat } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
+import { indexOf } from 'lodash';
+
+const dummy = {
+  total: 7,
+  limit: 3,
+  skip: 0,
+  data: [
+    {
+      id: 1,
+      storeId: 1,
+      invoiceGroupId: 1,
+      invoiceGroupName: 'Combine',
+      creditLimit: 99000000000000.0,
+      balanceAmount: 98870623985367.8,
+      freezeStatus: true,
+      allowCreditLimit: true,
+      termOfPayment: 14
+    },
+    {
+      id: 2,
+      storeId: 1,
+      invoiceGroupId: 1,
+      invoiceGroupName: 'PT Tigaraksa',
+      creditLimit: 990000000000.0,
+      balanceAmount: 98870623985367.8,
+      freezeStatus: false,
+      allowCreditLimit: true,
+      termOfPayment: 14
+    },
+    {
+      id: 3,
+      storeId: 1,
+      invoiceGroupId: 1,
+      invoiceGroupName: 'Exclusive Danone',
+      creditLimit: 1000000000000.0,
+      balanceAmount: 200000000.8,
+      freezeStatus: false,
+      allowCreditLimit: true,
+      termOfPayment: 14
+    }
+  ]
+};
 class MerchantDetailCreditLimitView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showMore: false
+      showMore: false,
+      indexShow: []
     };
   }
+  /** === FUNCTION ON SEE MORE */
+  onOpenToogle(index) {
+    const listArray = this.state.indexShow;
+    if (listArray.indexOf(index) === -1) {
+      listArray.push(index);
+    } else if (listArray.indexOf(index) > -1) {
+      listArray.splice(listArray.indexOf(index), 1);
+    }
+    this.setState({ indexShow: listArray });
+  }
+  /** === SEE MORE STATUS */
+  seeMoreStatus(index) {
+    const listIndex = this.state.indexShow;
+    let condition = false;
+    if (listIndex.indexOf(index) === -1) {
+      condition = false;
+    } else if (listIndex.indexOf(index) > -1) {
+      condition = true;
+    }
+    return condition;
+  }
+
   /** === RENDER INVOICE INFORMATION === */
   renderInvoiceInformation() {
-    return (
-      <View style={{ paddingHorizontal: 16 }}>
-        {this.renderInvoiceList()}
-        {this.renderInvoiceList()}
-      </View>
-    );
+    return dummy.data.map((item, index) => {
+      return (
+        <View style={{ paddingHorizontal: 16 }}>
+          {this.renderInvoiceList(item, index)}
+        </View>
+      );
+    });
   }
   /** === RENDER ICON SEE MORE === */
-  renderIconSeeMore() {
-    return this.state.showMore ? (
+  renderIconSeeMore(index) {
+    const condition = this.seeMoreStatus(index);
+    return condition ? (
       <MaterialIcon
         name="keyboard-arrow-up"
         size={30}
@@ -47,28 +115,27 @@ class MerchantDetailCreditLimitView extends Component {
     );
   }
   /** === RENDER INVOICE LIST === */
-  renderInvoiceList() {
+  renderInvoiceList(item, index) {
+    const condition = this.seeMoreStatus(index);
     return (
       <View style={styles.invoiceListContainer}>
         <View style={styles.listRow}>
           <View>
-            <Text style={Fonts.type7}>Invoice Name</Text>
+            <Text style={Fonts.type7}>{item.invoiceGroupName}</Text>
             <Text style={[Fonts.type104, { marginTop: 6 }]}>
-              Limit: Rp50.000.000
+              Limit: {MoneyFormat(item.creditLimit)}
             </Text>
           </View>
-          <TouchableOpacity
-            onPress={() => this.setState({ showMore: !this.state.showMore })}
-          >
-            {this.renderIconSeeMore()}
+          <TouchableOpacity onPress={() => this.onOpenToogle(index)}>
+            {this.renderIconSeeMore(index)}
           </TouchableOpacity>
         </View>
-        {this.state.showMore ? this.renderInvoiceListFull() : null}
+        {condition ? this.renderInvoiceListFull(item, index) : null}
       </View>
     );
   }
   /** === RENDER INVOICE LIST FULL === */
-  renderInvoiceListFull() {
+  renderInvoiceListFull(item, index) {
     return (
       <View style={{ marginTop: 16 }}>
         <View
@@ -81,7 +148,9 @@ class MerchantDetailCreditLimitView extends Component {
         >
           <Text style={Fonts.type9}>Kredit</Text>
 
-          <Text style={Fonts.type16}>Ya</Text>
+          <Text style={Fonts.type16}>
+            {item.allowCreditLimit && item.freezeStatus ? 'Ya' : 'Tidak'}
+          </Text>
         </View>
         <View
           style={[
@@ -93,7 +162,7 @@ class MerchantDetailCreditLimitView extends Component {
         >
           <Text style={Fonts.type9}>Balance</Text>
 
-          <Text style={Fonts.type16}>Rp.100.000</Text>
+          <Text style={Fonts.type16}>{MoneyFormat(item.balanceAmount)}</Text>
         </View>
         <View
           style={[
@@ -145,9 +214,11 @@ class MerchantDetailCreditLimitView extends Component {
   /** === CONTENT === */
   renderContent() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         {this.renderCreditInformation()}
-        {this.renderInvoiceInformation()}
+        <ScrollView style={{ marginBottom: 16 }}>
+          {this.renderInvoiceInformation()}
+        </ScrollView>
       </View>
     );
   }
