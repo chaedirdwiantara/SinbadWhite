@@ -795,6 +795,7 @@ export function getRadiusLockGeotagProcess(data) {
   return { type: types.GET_RADIUS_LOCK_GEOTAG_PROCESS, payload: data };
 }
 export function getRadiusLockGeotagSuccess(data) {
+  alert('MASUK ACTION SUCCESS?')
   if (data.result === 'Ok') {
     return {
       type: types.GET_RADIUS_LOCK_GEOTAG_SUCCESS,
@@ -805,4 +806,46 @@ export function getRadiusLockGeotagSuccess(data) {
 }
 export function getRadiusLockGeotagFailed(data) {
   return { type: types.GET_RADIUS_LOCK_GEOTAG_FAILED, payload: data };
+}
+
+/**
+ * ===========================================
+ * CHECK CAN RESUME VISIT JOURNEY BOOK STORES
+ * ===========================================
+ */
+export function checkCanResumeVisitProcess(data) {
+  return { type: types.CHECK_CAN_RESUME_VISIT_PROCESS, payload: data };
+}
+export function checkCanResumeVisitSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.CHECK_CAN_RESUME_VISIT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.CHECK_CAN_RESUME_VISIT_FAILED, payload: data };
+}
+export function checkCanResumeVisitFailed(data) {
+  return { type: types.CHECK_CAN_RESUME_VISIT_FAILED, payload: data };
+}
+
+// /**
+//  * ===========================================
+//  * PAUSE / RESUME VISIT JOURNEY BOOK
+//  * ===========================================
+//  */
+ export function pauseResumeVisitProcess(data) {
+  return { type: types.PAUSE_RESUME_VISIT_PROCESS, payload: data };
+}
+export function pauseResumeVisitSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.PAUSE_RESUME_VISIT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.PAUSE_RESUME_VISIT_FAILED, payload: data };
+}
+export function pauseResumeVisitFailed(data) {
+  return { type: types.PAUSE_RESUME_VISIT_FAILED, payload: data };
 }

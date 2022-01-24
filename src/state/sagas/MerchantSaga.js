@@ -407,6 +407,26 @@ function* getRadiusLockGeotag(actions) {
   }
 }
 
+/** CHECK CAN RESUME VISIT JBS */
+function* checkCanResumeVisit(actions) {
+  try {
+    const response = yield call(MerchantMethod.checkCanResumeVisit, actions.payload);
+    yield put(ActionCreators.checkCanResumeVisitSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.checkCanResumeVisitFailed(error));
+  }
+}
+
+/** PAUSE OR RESUME VISIT JBS */
+function* pauseResumeVisit(actions) {
+  try {
+    const response = yield call(MerchantMethod.pauseResumeVisit, actions.payload);
+    yield put(ActionCreators.pauseResumeVisitSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.pauseResumeVisitFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
   yield takeLatest(types.MERCHANT_GET_PROCESS_V2, getMerchantV2);
@@ -480,6 +500,14 @@ function* MerchantSaga() {
   yield takeEvery(
     types.MERCHANT_BATCH_DELETE_STOCK_PROCESS,
     batchDeleteRecordStock
+  );
+  yield takeLatest(
+    types.CHECK_CAN_RESUME_VISIT_PROCESS,
+    checkCanResumeVisit
+  );
+  yield takeLatest(
+    types.PAUSE_RESUME_VISIT_PROCESS,
+    pauseResumeVisit
   );
 }
 

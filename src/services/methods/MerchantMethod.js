@@ -237,6 +237,22 @@ function getRadiusLockGeotag(params) {
   });
 }
 
+/** CHECK CAN RESUME VISIT JBS */
+function checkCanResumeVisit(params) {
+  return {
+    result: 'Ok',
+    data: true
+  }
+}
+
+/** PAUSE OR RESUME VISIT JBS */
+function pauseResumeVisit(params) {
+  return {
+    result: 'Ok',
+    data: {} // TODO INTEGRATION
+  }
+}
+
 /**
  * ==================
  * STOCK MANAGEMENT
@@ -324,7 +340,9 @@ export const MerchantMethod = {
   validateAreaMapping,
   getSalesSegmentation,
   getReturnActiveInfo,
-  getRadiusLockGeotag
+  getRadiusLockGeotag,
+  checkCanResumeVisit,
+  pauseResumeVisit
 };
 
 /**

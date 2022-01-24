@@ -55,7 +55,8 @@ class JourneyListDataView extends Component {
     super(props);
     this.state = {
       search: '',
-      tabValue: tabDashboard[0].value
+      tabValue: tabDashboard[0].value,
+      modalPausedVisit: false
     };
   }
   parentFunction(data) {
@@ -74,7 +75,8 @@ class JourneyListDataView extends Component {
       prevProps.journey.dataGetJourneyPlanV2 !==
       this.props.journey.dataGetJourneyPlanV2
     ) {
-      
+      /** CHECKING IF THERE ARE PAUSED JOURNEY PLAN, NEED TO SHOW MODAL WARNING */
+      this.checkPausedVisit(this.props.journey.dataGetJourneyPlanV2)
     }
   } 
   onHandleRefresh = () => {
@@ -192,6 +194,12 @@ class JourneyListDataView extends Component {
   /** === ON CHANGE TAB === */
   onChangeTab(value) {
     this.setState({ tabValue: value });
+  }
+  checkPausedVisit(data) {
+    data.map((item) => {
+      // TODO CHECKING PAUSED JOURNEY PLAN
+
+    })
   }
   /**
    * ======================
@@ -372,7 +380,7 @@ class JourneyListDataView extends Component {
                   marginBottom: 8
                 }}
               >
-                <Text style={[Fonts.type22, { color: Color.fontYellow40 }]}>Sedang ditunda</Text>
+                <Text style={[Fonts.type22, { color: Color.fontYellow60 }]}>Sedang ditunda</Text>
               </View>
             :
               <View
@@ -486,10 +494,10 @@ class JourneyListDataView extends Component {
    * =====================
    */
   /** === RENDER MODAL DELAYED VISIT === */
-  renderModalDelayedVisit() {
+  renderModalPausedVisit() {
     return (
       <ModalBottomType1
-        open={false}
+        open={this.state.modalPausedVisit}
         title="Masih Ada Kunjungan Tertunda"
         content={
           <View>
@@ -520,7 +528,7 @@ class JourneyListDataView extends Component {
         {/* for loadmore */}
         {this.renderLoadMore()}
         {/* modal */}
-        {this.renderModalDelayedVisit()}
+        {this.renderModalPausedVisit()}
       </View>
     );
   }
