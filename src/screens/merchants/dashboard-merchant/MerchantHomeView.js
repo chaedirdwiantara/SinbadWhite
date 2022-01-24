@@ -933,7 +933,7 @@ class MerchantHomeView extends Component {
       this.checkCheckIn() && 
       !this.checkIsPaused() &&
       !this.props.merchant.loadingGetLogAllActivity && 
-      !this.checkCheckListTask.bind(this)(ACTIVITY_JOURNEY_PLAN_CHECK_OUT)
+      !this.checkCheckListTask(ACTIVITY_JOURNEY_PLAN_CHECK_OUT)
     )
   }
   /**
