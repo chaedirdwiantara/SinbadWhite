@@ -20,7 +20,8 @@ import {
   SelectedMerchantName,
   ModalConfirmation,
   ModalBottomErrorRespons,
-  ModalBottomSkuNotAvailable
+  ModalBottomSkuNotAvailable,
+  ModalBottomType7
 } from '../../library/component';
 import { Fonts } from '../../helpers';
 import { Color } from '../../config';
@@ -43,6 +44,7 @@ class PdpView extends Component {
       openModalSort: false,
       openModalConfirmRemoveCart: false,
       openModalErrorGlobal: false,
+      openWarningContent: true,
       /** data */
       layout: 'grid',
       addProductNotif: false,
@@ -209,25 +211,27 @@ class PdpView extends Component {
   /** FOR ERROR FUNCTION (FROM DID UPDATE) */
   doError() {
     /** Close all modal and open modal error respons */
-    if (!this.state.openModalErrorGlobal){
+    if (!this.state.openModalErrorGlobal) {
       this.setState({
         openModalErrorGlobal: true,
         openModalOrder: false,
         openModalSkuNotAvailable: false,
         openModalSort: false,
-        openModalConfirmRemoveCart: false,
+        openModalConfirmRemoveCart: false
       });
     }
   }
   /** === FETCH DATA (THIS FOR ALL FITLER) === */
   getPdp(data) {
-    const { dataSalesTeam } = this.props.profile
+    const { dataSalesTeam } = this.props.profile;
     this.props.pdpGetProcess({
       page: data.page,
       loading: data.loading,
       sort: data.sort !== undefined ? data.sort : this.state.sort,
       sortBy: data.sortBy !== undefined ? data.sortBy : this.state.sortBy,
-      invoiceGroupIds: dataSalesTeam ? dataSalesTeam[0].salesTeamInvoice.map(item => item.invoiceId) : [],
+      invoiceGroupIds: dataSalesTeam
+        ? dataSalesTeam[0].salesTeamInvoice.map(item => item.invoiceId)
+        : [],
       search: this.props.global.search
     });
   }
@@ -333,7 +337,7 @@ class PdpView extends Component {
   /** === RENDER MODAL ORDER === */
   renderModalOrder() {
     return this.state.openModalOrder ? (
-      <ModalBottomType3
+      <ModalBottomType7
         open={this.state.openModalOrder}
         title={'Masukan Jumlah'}
         content={
@@ -344,9 +348,32 @@ class PdpView extends Component {
         }
         close={() => this.setState({ openModalOrder: false })}
         typeClose={'cancel'}
+        warningContent={
+          this.state.openWarningContent ? this.renderWarningContent() : null
+        }
       />
     ) : (
       <View />
+    );
+  }
+  renderWarningContent() {
+    return (
+      <View
+        style={{
+          paddingHorizontal: 16,
+          paddingVertical: 12,
+          flexDirection: 'row',
+          alignItems: 'center'
+        }}
+      >
+        <MaterialIcon name={'info'} size={24} color={'white'} />
+        <View style={{ marginLeft: 12 }}>
+          <Text style={Fonts.type35}>Toko Ini Telah Melewati Limit Kredit</Text>
+          <Text style={Fonts.type94}>
+            Selesaikan pembayaran sebelumnya terlebih dahulu
+          </Text>
+        </View>
+      </View>
     );
   }
   /** === RENDER MODAL SKU NOT AVAILABLE === */
