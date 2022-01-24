@@ -20,18 +20,42 @@ import {
   Address,
   SearchBarType1,
   EmptyDataType2,
-  EmptyData
+  EmptyData,
+  TabsCustom,
+  ModalBottomType1,
+  ButtonSingle
 } from '../../library/component';
 import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
+import { Color } from '../../config';
+
+const tabDashboard = [
+  {
+    title: 'Semua',
+    value: 'all'
+  },
+  {
+    title: 'Belum Dikunjungi',
+    value: 'notVisited'
+  },
+  {
+    title: 'Tertunda',
+    value: 'paused'
+  },
+  {
+    title: 'Sudah Dikunjungi',
+    value: 'visited'
+  }
+];
 
 class JourneyListDataView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: ''
+      search: '',
+      tabValue: tabDashboard[0].value
     };
   }
   parentFunction(data) {
@@ -155,6 +179,10 @@ class JourneyListDataView extends Component {
       }
       return require('../../assets/icons/journey/visit_gray.png');
     }
+  }
+  /** === ON CHANGE TAB === */
+  onChangeTab(value) {
+    this.setState({ tabValue: value });
   }
   /**
    * ======================
@@ -324,27 +352,42 @@ class JourneyListDataView extends Component {
             paddingVertical: 13
           }}
         >
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              marginBottom: 17
-            }}
-          >
-            <Image
-              source={this.checkVisitActivity(item.journeyBookStores)}
-              style={styles.iconVisitOrder}
-            />
-            <View style={{ marginLeft: 10 }} />
-            <Image
-              source={
-                item.journeyBookStores.orderStatus
-                  ? require('../../assets/icons/journey/order_green.png')
-                  : require('../../assets/icons/journey/order_gray.png')
-              }
-              style={styles.iconVisitOrder}
-            />
-          </View>
+          {
+            false 
+            ? // TODO: for isPaused journeyBookStore later
+              <View
+                style={{
+                  backgroundColor: Color.fontYellow10,
+                  paddingVertical: 4,
+                  paddingHorizontal: 6,
+                  marginBottom: 8
+                }}
+              >
+                <Text style={[Fonts.type22, { color: Color.fontYellow40 }]}>Sedang ditunda</Text>
+              </View>
+            :
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                  marginBottom: 17
+                }}
+              >
+                <Image
+                  source={this.checkVisitActivity(item.journeyBookStores)}
+                  style={styles.iconVisitOrder}
+                />
+                <View style={{ marginLeft: 10 }} />
+                <Image
+                  source={
+                    item.journeyBookStores.orderStatus
+                      ? require('../../assets/icons/journey/order_green.png')
+                      : require('../../assets/icons/journey/order_gray.png')
+                  }
+                  style={styles.iconVisitOrder}
+                />
+              </View>
+          }
           <View
             style={{
               flexDirection: 'row'
@@ -416,16 +459,59 @@ class JourneyListDataView extends Component {
       />
     );
   }
+  /** === RENDER TABS */
+  renderTabs() {
+    return (
+      <View style={{ height: 70, paddingHorizontal: 8 }}>
+        <TabsCustom
+          listMenu={tabDashboard}
+          onChange={value => this.onChangeTab(value)}
+          value={this.state.tabValue}
+        />
+      </View>
+    )
+  }
+   /**
+   * ====================
+   * MODAL
+   * =====================
+   */
+  /** === RENDER MODAL DELAYED VISIT === */
+  renderModalDelayedVisit() {
+    return (
+      <ModalBottomType1
+        open={false}
+        title="Masih Ada Kunjungan Tertunda"
+        content={
+          <View>
+            <Text style={[Fonts.type3, { marginHorizontal: 24, textAlign: 'center', marginBottom: 32 }]}>
+              Pastikan untuk menyelesaikan semua kunjungan di journey plan.
+            </Text>
+            <View style={{ marginBottom: 16 }}>
+              <ButtonSingle
+                disabled={false}
+                title={'Mengerti'}
+                borderRadius={4}
+              />
+            </View>
+          </View>
+        }
+      />
+    )
+  }
   /** === MAIN === */
   render() {
     return (
       <View style={styles.mainContainer}>
         {this.renderSearchBar()}
+        {this.renderTabs()}
         {this.props.journey.loadingGetJourneyPlan
           ? this.renderSkeleton()
           : this.renderData()}
         {/* for loadmore */}
         {this.renderLoadMore()}
+        {/* modal */}
+        {this.renderModalDelayedVisit()}
       </View>
     );
   }
@@ -500,9 +586,9 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
- * updatedDate: 24082021
+ * updatedBy: raka
+ * updatedDate: 20012022
  * updatedFunction:
- * -> maximise the character of search (30 characters).
+ * -> use tabs component for filter jbs.
  *
  */
