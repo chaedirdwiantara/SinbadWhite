@@ -43,8 +43,8 @@ class MerchantDetailCreditLimitView extends Component {
           loading: false,
           skip,
           limit: this.state.limit,
-          storeId: 231632,
-          supplierId: 1,
+          storeId: this.props.merchant.dataGetMerchantDetailV2.store.id,
+          supplierId: this.props.merchant.dataGetMerchantDetailV2.supplier.id,
           loading: false
         });
       }
@@ -57,8 +57,8 @@ class MerchantDetailCreditLimitView extends Component {
   /** === FUNCTION GET MERCHANT CREDIT LIMIT LIST */
   getMerchantCreditLimitList() {
     const data = {
-      storeId: 231632,
-      supplierId: 1,
+      storeId: this.props.merchant.dataGetMerchantDetailV2.store.id,
+      supplierId: this.props.merchant.dataGetMerchantDetailV2.supplier.id,
       skip: 0,
       limit: this.state.limit,
       loading: true
@@ -150,7 +150,7 @@ class MerchantDetailCreditLimitView extends Component {
           style={[
             styles.listRow,
             {
-              marginTop: 6
+              marginTop: 8
             }
           ]}
         >
@@ -164,7 +164,7 @@ class MerchantDetailCreditLimitView extends Component {
           style={[
             styles.listRow,
             {
-              marginTop: 6
+              marginTop: 8
             }
           ]}
         >
@@ -176,7 +176,7 @@ class MerchantDetailCreditLimitView extends Component {
           style={[
             styles.listRow,
             {
-              marginTop: 6
+              marginTop: 8
             }
           ]}
         >
