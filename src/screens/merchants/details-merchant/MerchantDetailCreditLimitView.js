@@ -5,7 +5,8 @@ import {
   StyleSheet,
   Component,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  FlatList
 } from '../../../library/reactPackage';
 import {
   bindActionCreators,
@@ -15,56 +16,48 @@ import {
 import { Color } from '../../../config';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
-import { indexOf } from 'lodash';
-
-const dummy = {
-  total: 7,
-  limit: 3,
-  skip: 0,
-  data: [
-    {
-      id: 1,
-      storeId: 1,
-      invoiceGroupId: 1,
-      invoiceGroupName: 'Combine',
-      creditLimit: 99000000000000.0,
-      balanceAmount: 98870623985367.8,
-      freezeStatus: true,
-      allowCreditLimit: true,
-      termOfPayment: 14
-    },
-    {
-      id: 2,
-      storeId: 1,
-      invoiceGroupId: 1,
-      invoiceGroupName: 'PT Tigaraksa',
-      creditLimit: 990000000000.0,
-      balanceAmount: 98870623985367.8,
-      freezeStatus: false,
-      allowCreditLimit: true,
-      termOfPayment: 14
-    },
-    {
-      id: 3,
-      storeId: 1,
-      invoiceGroupId: 1,
-      invoiceGroupName: 'Exclusive Danone',
-      creditLimit: 1000000000000.0,
-      balanceAmount: 200000000.8,
-      freezeStatus: false,
-      allowCreditLimit: true,
-      termOfPayment: 14
-    }
-  ]
-};
+import { SkeletonType29 } from '../../../library/component';
 class MerchantDetailCreditLimitView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showMore: false,
-      indexShow: []
+      indexShow: [],
+      limit: 6
     };
   }
+
+  componentDidMount() {
+    const data = {
+      storeId: 231632,
+      supplierId: 1,
+      skip: 0,
+      limit: this.state.limit,
+      loading: true
+    };
+    this.props.merchantGetCreditLimitListReset();
+    this.props.merchantGetCreditLimitListProcess(data);
+  }
+  /** LOAD MORE LIST VIEW */
+  onHandleLoadMore = () => {
+    if (this.props.merchant.dataGetCreditLimitList) {
+      if (
+        this.props.merchant.dataGetCreditLimitList.length <
+        this.props.merchant.totalDataGetCreditLimitList
+      ) {
+        const skip = this.props.merchant.skipGetCreditLimit + this.state.limit;
+        this.props.merchantGetCreditLimitListLoadMore(skip);
+        this.props.merchantGetCreditLimitListProcess({
+          loading: false,
+          skip,
+          limit: this.state.limit,
+          storeId: 231632,
+          supplierId: 1,
+          loading: false
+        });
+      }
+    }
+  };
   /** === FUNCTION ON SEE MORE */
   onOpenToogle(index) {
     const listArray = this.state.indexShow;
@@ -89,13 +82,20 @@ class MerchantDetailCreditLimitView extends Component {
 
   /** === RENDER INVOICE INFORMATION === */
   renderInvoiceInformation() {
-    return dummy.data.map((item, index) => {
-      return (
-        <View style={{ paddingHorizontal: 16 }}>
-          {this.renderInvoiceList(item, index)}
-        </View>
-      );
-    });
+    const dataCreditLimit = this.props.merchant.dataGetCreditLimitList;
+    return (
+      <FlatList
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
+        data={dataCreditLimit}
+        renderItem={this.renderInvoiceList.bind(this)}
+        keyExtractor={(item, index) => index.toString()}
+        refreshing={this.props.merchant.refreshGetCreditLimitList}
+        onRefresh={() => console.log('resfresh')}
+        onEndReachedThreshold={0.1}
+        onEndReached={() => this.onHandleLoadMore()}
+        // ItemSeparatorComponent={this.renderSeparator}
+      />
+    );
   }
   /** === RENDER ICON SEE MORE === */
   renderIconSeeMore(index) {
@@ -115,7 +115,7 @@ class MerchantDetailCreditLimitView extends Component {
     );
   }
   /** === RENDER INVOICE LIST === */
-  renderInvoiceList(item, index) {
+  renderInvoiceList({ item, index }) {
     const condition = this.seeMoreStatus(index);
     return (
       <View style={styles.invoiceListContainer}>
@@ -216,9 +216,7 @@ class MerchantDetailCreditLimitView extends Component {
     return (
       <View style={{ flex: 1 }}>
         {this.renderCreditInformation()}
-        <ScrollView style={{ marginBottom: 16 }}>
-          {this.renderInvoiceInformation()}
-        </ScrollView>
+        {this.renderInvoiceInformation()}
       </View>
     );
   }
@@ -226,7 +224,11 @@ class MerchantDetailCreditLimitView extends Component {
   render() {
     return (
       <View style={{ backgroundColor: Color.fontBlack10, height: '100%' }}>
-        {this.renderContent()}
+        {!this.props.merchant.loadingGetCreditLimitList ? (
+          this.renderContent()
+        ) : (
+          <SkeletonType29 />
+        )}
       </View>
     );
   }
