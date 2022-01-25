@@ -1731,10 +1731,43 @@ class MerchantHomeView extends Component {
   }
   renderButtonResume() {
     return (
-      <ButtonSingle
-        title="Lanjutkan Kunjungan"
-        onPress={() => this.setState({ modalConfirmResume: true })}
-      />
+      <View style={{ backgroundColor: 'white' }}>
+        { 
+          false && // TODO: WHEN CAN RESUME IS FALSE
+          <View style={styles.disableResumeInfoContainer}>
+            <View>
+              <Image 
+                source={require('../../../assets/icons/global/alert-yellow.png')}
+                style={{
+                  width: 16,
+                  height: 16,
+                  resizeMode: 'contain',
+                  marginRight: 8
+                }}
+              />
+            </View>
+            <View>
+              <Text style={[Fonts.type109, { color: Color.fontYellow60 }]}>{`Selesaikan kunjungan Anda di toko sebelumnya\nuntuk melanjutkan kunjungan ini.`}</Text>
+            </View>
+          </View>
+        }
+        <ButtonSingle
+          disabled
+          leftIcon={
+            <Image 
+              source={require('../../../assets/icons/merchant/visit_store.png')} 
+              style={{ 
+                width: 16,
+                height: 16,
+                resizeMode: 'contain',
+                marginRight: 8,
+              }}
+            />
+          }
+          title="Lanjutkan Kunjungan"
+          onPress={() => this.setState({ modalConfirmResume: true })}
+        />
+      </View>
     )
   }
   /** 
@@ -2234,6 +2267,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 5,
     width: '100%'
+  },
+  disableResumeInfoContainer: {
+    backgroundColor: Color.fontYellow10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginHorizontal: 16,
+    flexDirection: `row`,
+    borderRadius: 4
   }
 });
 
@@ -2267,7 +2308,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: raka
- * updatedDate: 20012022
+ * updatedDate: 25012022
  * updatedFunction:
- * -> add button pause and resume visit
+ * -> use button with left icon
+ * -> add component info when can resume false / button resume disabled
  */
