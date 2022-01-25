@@ -795,7 +795,6 @@ export function getRadiusLockGeotagProcess(data) {
   return { type: types.GET_RADIUS_LOCK_GEOTAG_PROCESS, payload: data };
 }
 export function getRadiusLockGeotagSuccess(data) {
-  alert('MASUK ACTION SUCCESS?')
   if (data.result === 'Ok') {
     return {
       type: types.GET_RADIUS_LOCK_GEOTAG_SUCCESS,
