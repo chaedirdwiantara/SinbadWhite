@@ -213,6 +213,8 @@ class MerchantHomeView extends Component {
     this.props.merchantGetTotalSurveyProcess(
       this.props.merchant.selectedMerchant?.storeId
     );
+    /** FOR CHECK CAN RESUME VISIT CURRENT JORUNEY PLAN */
+    this.props.checkCanResumeVisitProcess()
   }
 
   componentDidUpdate(prevProps) {
@@ -1733,26 +1735,26 @@ class MerchantHomeView extends Component {
     return (
       <View style={{ backgroundColor: 'white' }}>
         { 
-          false && // TODO: WHEN CAN RESUME IS FALSE
-          <View style={styles.disableResumeInfoContainer}>
-            <View>
-              <Image 
-                source={require('../../../assets/icons/global/alert-yellow.png')}
-                style={{
-                  width: 16,
-                  height: 16,
-                  resizeMode: 'contain',
-                  marginRight: 8
-                }}
-              />
+          !this.props.merchant.dataCheckCanResumeVisit &&
+            <View style={styles.disableResumeInfoContainer}>
+              <View>
+                <Image 
+                  source={require('../../../assets/icons/global/alert-yellow.png')}
+                  style={{
+                    width: 16,
+                    height: 16,
+                    resizeMode: 'contain',
+                    marginRight: 8
+                  }}
+                />
+              </View>
+              <View>
+                <Text style={[Fonts.type109, { color: Color.fontYellow60 }]}>{`Selesaikan kunjungan Anda di toko sebelumnya\nuntuk melanjutkan kunjungan ini.`}</Text>
+              </View>
             </View>
-            <View>
-              <Text style={[Fonts.type109, { color: Color.fontYellow60 }]}>{`Selesaikan kunjungan Anda di toko sebelumnya\nuntuk melanjutkan kunjungan ini.`}</Text>
-            </View>
-          </View>
         }
         <ButtonSingle
-          disabled
+          disabled={!this.props.merchant.dataCheckCanResumeVisit}
           leftIcon={
             <Image 
               source={require('../../../assets/icons/merchant/visit_store.png')} 
@@ -1821,7 +1823,14 @@ class MerchantHomeView extends Component {
           renderItem={this.renderContentItem.bind(this)}
           keyExtractor={(data, index) => index.toString()}
         />
-        {this.checkIsPaused() && this.renderButtonResume()}
+        {
+          (
+            /** RENDER BUTTON RESUME WHEN IS PAUSED == TRUE AND FETCH CHECK CAN RESUME FINISHED */
+            this.checkIsPaused() &&
+            !this.props.merchant.loadingCheckCanResumeVisit
+          ) 
+          && this.renderButtonResume()
+        }
       </View>
     );
   }
@@ -2308,7 +2317,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: raka
- * updatedDate: 20012022
+ * updatedDate: 25012022
  * updatedFunction:
- * -> add button pause and resume visit
+ * -> adjustment check can resume visit
  */

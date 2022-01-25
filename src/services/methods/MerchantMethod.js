@@ -237,6 +237,22 @@ function getRadiusLockGeotag(params) {
   });
 }
 
+/** CHECK CAN RESUME VISIT JBS */
+function checkCanResumeVisit(params) {
+  return {
+    result: 'Ok',
+    data: true
+  }
+}
+
+/** PAUSE OR RESUME VISIT JBS */
+function pauseResumeVisit(params) {
+  return {
+    result: 'Ok',
+    data: {} // TODO INTEGRATION
+  }
+}
+
 /**
  * ==================
  * STOCK MANAGEMENT
@@ -324,7 +340,9 @@ export const MerchantMethod = {
   validateAreaMapping,
   getSalesSegmentation,
   getReturnActiveInfo,
-  getRadiusLockGeotag
+  getRadiusLockGeotag,
+  checkCanResumeVisit,
+  pauseResumeVisit
 };
 
 /**
@@ -333,8 +351,9 @@ export const MerchantMethod = {
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
- * updatedDate: 30092021
+ * updatedBy: raka
+ * updatedDate: 25012022
  * updatedFunction:
- * -> add endpoint get radius lock geotag. (getRadiusLockGeotag)
+ * -> add temporary endpoint check can resume visit
+ * -> add temporary endpoint pause resume visit
  */
