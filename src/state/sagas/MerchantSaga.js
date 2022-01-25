@@ -410,7 +410,9 @@ function* getRadiusLockGeotag(actions) {
 /** CHECK CAN RESUME VISIT JBS */
 function* checkCanResumeVisit(actions) {
   try {
-    const response = yield call(MerchantMethod.checkCanResumeVisit, actions.payload);
+    const response = yield call(() => {
+      return MerchantMethod.checkCanResumeVisit(actions.payload);
+    });
     yield put(ActionCreators.checkCanResumeVisitSuccess(response));
   } catch (error) {
     yield put(ActionCreators.checkCanResumeVisitFailed(error));
@@ -420,7 +422,9 @@ function* checkCanResumeVisit(actions) {
 /** PAUSE OR RESUME VISIT JBS */
 function* pauseResumeVisit(actions) {
   try {
-    const response = yield call(MerchantMethod.pauseResumeVisit, actions.payload);
+    const response = yield call(() => {
+      return MerchantMethod.pauseResumeVisit(actions.payload);
+    });
     yield put(ActionCreators.pauseResumeVisitSuccess(response));
   } catch (error) {
     yield put(ActionCreators.pauseResumeVisitFailed(error));

@@ -226,6 +226,6 @@ export const CHECK_CAN_RESUME_VISIT_SUCCESS = 'CheckCanResumeVisitSuccess';
 export const CHECK_CAN_RESUME_VISIT_FAILED = 'CheckCanResumeFVisitailed';
 
 /** MERCHANT PAUSE OR RESUME VISIT JBS */
-export const PAUSE_RESUME_VISIT_PROCESS = 'CheckCanResumeVisitProcess';
-export const PAUSE_RESUME_VISIT_SUCCESS = 'CheckCanResumeVisitSuccess';
-export const PAUSE_RESUME_VISIT_FAILED = 'CheckCanResumeFVisitailed';
+export const PAUSE_RESUME_VISIT_PROCESS = 'PauseResumeVisitProcess';
+export const PAUSE_RESUME_VISIT_SUCCESS = 'PauseResumeVisitSuccess';
+export const PAUSE_RESUME_VISIT_FAILED = 'PauseResumeFVisitailed';

@@ -1478,7 +1478,6 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingCheckCanResumeVisit: true,
-      dataCheckCanResumeVisit: false,
       errorCheckCanResumeVisit: null
     };
   },
@@ -1507,7 +1506,6 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingPauseResumeVisit: true,
-      dataPauseResumeVisit: false,
       errorPauseResumeVisit: null
     };
   },

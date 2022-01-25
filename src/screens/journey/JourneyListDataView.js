@@ -75,12 +75,8 @@ class JourneyListDataView extends Component {
       prevProps.journey.dataGetJourneyPlanV2 !==
       this.props.journey.dataGetJourneyPlanV2
     ) {
-<<<<<<< HEAD
-      
-=======
       /** CHECKING IF THERE ARE PAUSED JOURNEY PLAN, NEED TO SHOW MODAL WARNING */
       this.checkPausedVisit(this.props.journey.dataGetJourneyPlanV2)
->>>>>>> TSEP47_50_23
     }
   } 
   onHandleRefresh = () => {
