@@ -219,3 +219,13 @@ export const GET_RETURN_ACTIVE_INFO_FAILED = 'GetReturnActiveInfoFailed';
 export const GET_RADIUS_LOCK_GEOTAG_PROCESS = 'GetRadiusLockGeotagProcess';
 export const GET_RADIUS_LOCK_GEOTAG_SUCCESS = 'GetRadiusLockGeotagSuccess';
 export const GET_RADIUS_LOCK_GEOTAG_FAILED = 'GetRadiusLockGeotagFailed';
+
+/** MERCHANT CHECK CAN RESUME VISIT JBS */
+export const CHECK_CAN_RESUME_VISIT_PROCESS = 'CheckCanResumeVisitProcess';
+export const CHECK_CAN_RESUME_VISIT_SUCCESS = 'CheckCanResumeVisitSuccess';
+export const CHECK_CAN_RESUME_VISIT_FAILED = 'CheckCanResumeFVisitailed';
+
+/** MERCHANT PAUSE OR RESUME VISIT JBS */
+export const PAUSE_RESUME_VISIT_PROCESS = 'CheckCanResumeVisitProcess';
+export const PAUSE_RESUME_VISIT_SUCCESS = 'CheckCanResumeVisitSuccess';
+export const PAUSE_RESUME_VISIT_FAILED = 'CheckCanResumeFVisitailed';
