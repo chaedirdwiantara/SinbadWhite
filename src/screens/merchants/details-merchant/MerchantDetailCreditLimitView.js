@@ -28,15 +28,7 @@ class MerchantDetailCreditLimitView extends Component {
   }
 
   componentDidMount() {
-    const data = {
-      storeId: 231632,
-      supplierId: 1,
-      skip: 0,
-      limit: this.state.limit,
-      loading: true
-    };
-    this.props.merchantGetCreditLimitListReset();
-    this.props.merchantGetCreditLimitListProcess(data);
+    this.getMerchantCreditLimitList();
   }
   /** LOAD MORE LIST VIEW */
   onHandleLoadMore = () => {
@@ -58,7 +50,23 @@ class MerchantDetailCreditLimitView extends Component {
       }
     }
   };
-  /** === FUNCTION ON SEE MORE */
+  /** === FUNCTION REFRESH LIST ===*/
+  onRefresh() {
+    this.getMerchantCreditLimitList();
+  }
+  /** === FUNCTION GET MERCHANT CREDIT LIMIT LIST */
+  getMerchantCreditLimitList() {
+    const data = {
+      storeId: 231632,
+      supplierId: 1,
+      skip: 0,
+      limit: this.state.limit,
+      loading: true
+    };
+    this.props.merchantGetCreditLimitListReset();
+    this.props.merchantGetCreditLimitListProcess(data);
+  }
+  /** === FUNCTION ON SEE MORE ===*/
   onOpenToogle(index) {
     const listArray = this.state.indexShow;
     if (listArray.indexOf(index) === -1) {
@@ -90,7 +98,7 @@ class MerchantDetailCreditLimitView extends Component {
         renderItem={this.renderInvoiceList.bind(this)}
         keyExtractor={(item, index) => index.toString()}
         refreshing={this.props.merchant.refreshGetCreditLimitList}
-        onRefresh={() => console.log('resfresh')}
+        onRefresh={() => this.onRefresh()}
         onEndReachedThreshold={0.1}
         onEndReached={() => this.onHandleLoadMore()}
         // ItemSeparatorComponent={this.renderSeparator}
