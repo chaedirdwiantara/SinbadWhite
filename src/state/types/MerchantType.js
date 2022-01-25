@@ -219,3 +219,15 @@ export const GET_RETURN_ACTIVE_INFO_FAILED = 'GetReturnActiveInfoFailed';
 export const GET_RADIUS_LOCK_GEOTAG_PROCESS = 'GetRadiusLockGeotagProcess';
 export const GET_RADIUS_LOCK_GEOTAG_SUCCESS = 'GetRadiusLockGeotagSuccess';
 export const GET_RADIUS_LOCK_GEOTAG_FAILED = 'GetRadiusLockGeotagFailed';
+
+/** MERCHANT GET CREDIT LIMIT LIST */
+export const MERCHANT_GET_CREDIT_LIMIT_PROCESS =
+  'MerchantGetCreditLimitProcess';
+export const MERCHANT_GET_CREDIT_LIMIT_SUCCESS =
+  'MerchantGetCreditLimitSuccess';
+export const MERCHANT_GET_CREDIT_LIMIT_FAILED = 'MerchantGetCreditLimitFailed';
+export const MERCHANT_GET_CREDIT_LIMIT_RESET = 'MerchantGetCreditLimitReset';
+export const MERCHANT_GET_CREDIT_LIMIT_REFRESH =
+  'MerchantGetCreditLimitRefresh';
+export const MERCHANT_GET_CREDIT_LIMIT_LOADMORE =
+  'MerchantGetCreditLimitLoadMore';
