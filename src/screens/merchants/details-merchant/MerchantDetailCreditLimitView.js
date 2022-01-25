@@ -16,14 +16,14 @@ import {
 import { Color } from '../../../config';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
-import { SkeletonType29 } from '../../../library/component';
+import { SkeletonType29, LoadingLoadMore } from '../../../library/component';
 class MerchantDetailCreditLimitView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showMore: false,
       indexShow: [],
-      limit: 6
+      limit: 10
     };
   }
 
@@ -101,7 +101,6 @@ class MerchantDetailCreditLimitView extends Component {
         onRefresh={() => this.onRefresh()}
         onEndReachedThreshold={0.1}
         onEndReached={() => this.onHandleLoadMore()}
-        // ItemSeparatorComponent={this.renderSeparator}
       />
     );
   }
@@ -219,12 +218,19 @@ class MerchantDetailCreditLimitView extends Component {
       </View>
     );
   }
+  /** === LOADING LOAD MORE === */
+  renderLoadingLoadMore() {
+    return this.props.merchant.loadingLoadmoreGetCreditLimit ? (
+      <LoadingLoadMore />
+    ) : null;
+  }
   /** === CONTENT === */
   renderContent() {
     return (
       <View style={{ flex: 1 }}>
         {this.renderCreditInformation()}
         {this.renderInvoiceInformation()}
+        {this.renderLoadingLoadMore()}
       </View>
     );
   }

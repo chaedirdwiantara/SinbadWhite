@@ -1476,7 +1476,6 @@ export const merchant = createReducer(INITIAL_STATE, {
    * ===================
    */
   [types.MERCHANT_GET_CREDIT_LIMIT_PROCESS](state, action) {
-    console.log(action, 'action');
     return {
       ...state,
       loadingGetCreditLimitList: action.payload.loading,
