@@ -240,7 +240,7 @@ function getRadiusLockGeotag(params) {
 /** CHECK CAN RESUME VISIT JBS */
 function checkCanResumeVisit(params) {
   return ApiRest({
-    testpath: `https://0944a58f-17fd-46cb-a43e-e1c2282cf435.mock.pstmn.io/supplier/sales-management/v1/journey-book/check-pause/${params.journeyBookId}`,
+    path: `${salesManagementService}/v1/journey-book/check-pause/${params.journeyBookId}`,
     method: 'GET'
   });
 }

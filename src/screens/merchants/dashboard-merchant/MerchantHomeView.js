@@ -217,7 +217,7 @@ class MerchantHomeView extends Component {
     );
     /** FOR CHECK CAN RESUME VISIT CURRENT JORUNEY PLAN */
     this.props.checkCanResumeVisitProcess({
-      journeyBookId: 1
+      journeyBookId: this.props.merchant.selectedMerchant.journeyBookStores.journeyBookId
     })
   }
 
