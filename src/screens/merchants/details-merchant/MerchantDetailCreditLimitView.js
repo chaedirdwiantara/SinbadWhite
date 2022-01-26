@@ -63,7 +63,8 @@ class MerchantDetailCreditLimitView extends Component {
       10
     );
     const supplierId = parseInt(
-      this.props.merchant.dataGetMerchantDetailV2.supplier.id
+      this.props.merchant.dataGetMerchantDetailV2.supplier.id,
+      10
     );
 
     this.props.merchantGetCreditLimitSummaryProcess({ storeId, supplierId });
