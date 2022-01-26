@@ -202,7 +202,6 @@ class MerchantDetailCreditLimitView extends Component {
   /** === RENDER CREDIT INFORMATION === */
   renderCreditInformation() {
     const dataSummary = this.props.merchant.dataGetCreditLimitSummary;
-    console.log(dataSummary, 'data summary');
     return (
       <View style={{ padding: 16, backgroundColor: Color.fontWhite }}>
         <Text style={Fonts.type5}>Kredit Saat ini</Text>
