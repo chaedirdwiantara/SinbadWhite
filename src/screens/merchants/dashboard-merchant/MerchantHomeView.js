@@ -51,7 +51,10 @@ import {
   ACTIVITY_JOURNEY_PLAN_COLLECTION,
   ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING,
   ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS,
-  ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+  ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS,
+  JOURNEY_PLAN_PAUSE_STATUS_PAUSED,
+  JOURNEY_PLAN_PAUSE_STATUS_RESUME,
+  JOURNEY_PLAN_PAUSE_STATUS_DEFAULT
 } from '../../../constants';
 import _ from 'lodash';
 
@@ -140,7 +143,6 @@ class MerchantHomeView extends Component {
         }
       ],
       privileges: this.props.privileges.data,
-      isPaused: false,
       modalConfirmPause: false,
       modalConfirmResume: false,
       checkUserCheckout: false
@@ -213,6 +215,10 @@ class MerchantHomeView extends Component {
     this.props.merchantGetTotalSurveyProcess(
       this.props.merchant.selectedMerchant?.storeId
     );
+    /** FOR CHECK CAN RESUME VISIT CURRENT JORUNEY PLAN */
+    this.props.checkCanResumeVisitProcess({
+      journeyBookId: 1
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -220,7 +226,9 @@ class MerchantHomeView extends Component {
       loadingGetLogAllActivity,
       dataGetLogAllActivityV2,
       dataReturnActiveInfo,
-      dataGetTotalSurvey
+      dataGetTotalSurvey,
+      loadingPauseResumeVisit,
+      dataPauseResumeVisit,
     } = this.props.merchant;
 
     // Check is retur active
@@ -499,6 +507,15 @@ class MerchantHomeView extends Component {
         prevProps.sfa.errorSfaPostTransactionCheckout !==
         this.props.sfa.errorSfaPostTransactionCheckout
       ) {
+        this.doError();
+      }
+    }
+    /** ERROR HANDLE PAUSE OR RESUME VISIT */
+    if (
+      prevProps.merchant.errorPauseResumeVisit !==
+      this.props.merchant.errorPauseResumeVisit 
+    ) {
+      if (this.props.merchant.errorPauseResumeVisit !== null) {
         this.doError();
       }
     }
@@ -921,19 +938,21 @@ class MerchantHomeView extends Component {
    * @returns  boolean, is currently jbs is paused
   */
   checkIsPaused() {
-    return this.state.isPaused
+    return this.props.merchant.selectedMerchant.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_PAUSED
   }
   /**
    * 
    * @param -
-   * @returns boolean, render button pause if user already check in & current jbs is not paused & user have'nt checkout
+   * @returns boolean, render button pause if user already check in & current jbs is not paused & user have'nt checkout & pauseStatus === 0
+   * pauseStatus !== 0, means jbs just started haven't paused or resumed
    */
   checkRenderButtonPause() {
     return (
       this.checkCheckIn() && 
       !this.checkIsPaused() &&
       !this.props.merchant.loadingGetLogAllActivity && 
-      !this.checkCheckListTask(ACTIVITY_JOURNEY_PLAN_CHECK_OUT)
+      !this.checkCheckListTask(ACTIVITY_JOURNEY_PLAN_CHECK_OUT) &&
+      this.props.merchant.selectedMerchant.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_DEFAULT
     )
   }
   /**
@@ -1731,10 +1750,43 @@ class MerchantHomeView extends Component {
   }
   renderButtonResume() {
     return (
-      <ButtonSingle
-        title="Lanjutkan Kunjungan"
-        onPress={() => this.setState({ modalConfirmResume: true })}
-      />
+      <View style={{ backgroundColor: 'white' }}>
+        { 
+          !this.props.merchant.dataCheckCanResumeVisit &&
+            <View style={styles.disableResumeInfoContainer}>
+              <View>
+                <Image 
+                  source={require('../../../assets/icons/global/alert-yellow.png')}
+                  style={{
+                    width: 16,
+                    height: 16,
+                    resizeMode: 'contain',
+                    marginRight: 8
+                  }}
+                />
+              </View>
+              <View>
+                <Text style={[Fonts.type109, { color: Color.fontYellow60 }]}>{`Selesaikan kunjungan Anda di toko sebelumnya\nuntuk melanjutkan kunjungan ini.`}</Text>
+              </View>
+            </View>
+        }
+        <ButtonSingle
+          disabled={!this.props.merchant.dataCheckCanResumeVisit}
+          leftIcon={
+            <Image 
+              source={require('../../../assets/icons/merchant/visit_store.png')} 
+              style={{ 
+                width: 16,
+                height: 16,
+                resizeMode: 'contain',
+                marginRight: 8,
+              }}
+            />
+          }
+          title="Lanjutkan Kunjungan"
+          onPress={() => this.setState({ modalConfirmResume: true })}
+        />
+      </View>
     )
   }
   /** 
@@ -1788,7 +1840,14 @@ class MerchantHomeView extends Component {
           renderItem={this.renderContentItem.bind(this)}
           keyExtractor={(data, index) => index.toString()}
         />
-        {this.checkIsPaused() && this.renderButtonResume()}
+        {
+          (
+            /** RENDER BUTTON RESUME WHEN IS PAUSED == TRUE AND FETCH CHECK CAN RESUME FINISHED */
+            this.checkIsPaused() &&
+            !this.props.merchant.loadingCheckCanResumeVisit
+          ) 
+          && this.renderButtonResume()
+        }
       </View>
     );
   }
@@ -1984,10 +2043,20 @@ class MerchantHomeView extends Component {
               <View style={{ width: 16 }} />
               <View style={{ flex: 1, }}>
                 <Button
-                  title="Tunda Sekarang"
+                  title="Tunda Kunjungan"
                   titleStyle={[Fonts.type93]}
                   buttonStyle={{ width: '100%', paddingVertical: 16, backgroundColor: Color.mainColor, }}
-                  onPress={() => this.setState({ modalConfirmPause: false, isPaused: true })}
+                  onPress={() => {
+                    this.setState({ modalConfirmPause: false }, () => {
+                      this.props.pauseResumeVisitProcess({ 
+                        journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores.id, 
+                        params: {
+                          pauseStatus: JOURNEY_PLAN_PAUSE_STATUS_PAUSED,
+                          pauseDate: new Date(), 
+                        }
+                      });
+                    });
+                  }}
                 />
               </View>
             </View>
@@ -2000,7 +2069,17 @@ class MerchantHomeView extends Component {
   renderModalConfirmResume() {
     return <ModalBottomConfirmResume
       open={this.state.modalConfirmResume}
-      onOk={() => this.setState({ isPaused: false, modalConfirmResume: false })}
+      onOk={() => {
+        this.setState({ modalConfirmResume: false }, () => {
+          this.props.pauseResumeVisitProcess({ 
+            journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores.id, 
+            params: {
+              pauseStatus: JOURNEY_PLAN_PAUSE_STATUS_RESUME,
+              resumeDate: new Date(), 
+            }
+          });
+        });
+      }}
       onCancel={() => this.setState({ modalConfirmResume: false })}
     />;
   }
@@ -2016,7 +2095,8 @@ class MerchantHomeView extends Component {
         {!this.props.merchant.loadingGetMerchantLastOrder &&
         !this.props.merchant.loadingGetLogAllActivity &&
         this.props.merchant.dataGetLogAllActivityV2 !== null &&
-        !this.state.loadingPostForCheckoutNoOrder 
+        !this.state.loadingPostForCheckoutNoOrder &&
+        !this.props.merchant.loadingPauseResumeVisit
         ? (
           <View style={{ height: '100%' }}>
             {this.renderBackground()}
@@ -2234,6 +2314,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 5,
     width: '100%'
+  },
+  disableResumeInfoContainer: {
+    backgroundColor: Color.fontYellow10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginHorizontal: 16,
+    flexDirection: `row`,
+    borderRadius: 4
   }
 });
 
@@ -2267,7 +2355,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: raka
- * updatedDate: 20012022
+ * updatedDate: 26012022
  * updatedFunction:
- * -> add button pause and resume visit
+ * -> integration pause/resume visit
+ * ->
  */

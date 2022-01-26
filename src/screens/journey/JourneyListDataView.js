@@ -30,6 +30,9 @@ import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import { Color } from '../../config';
+import {
+  JOURNEY_PLAN_PAUSE_STATUS_PAUSED
+} from '../../constants';
 
 const tabDashboard = [
   {
@@ -55,7 +58,8 @@ class JourneyListDataView extends Component {
     super(props);
     this.state = {
       search: '',
-      tabValue: tabDashboard[0].value
+      tabValue: tabDashboard[0].value,
+      modalInfoPausedVisit: false
     };
   }
   parentFunction(data) {
@@ -68,6 +72,18 @@ class JourneyListDataView extends Component {
    * FUNCTIONAL
    * =======================
    */
+  /** === DID UPDATE === */
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.journey.dataGetJourneyPlanV2 !==
+      this.props.journey.dataGetJourneyPlanV2
+    ) {
+      /** CHECKING IF THERE ARE PAUSED JOURNEY PLAN, NEED TO SHOW MODAL WARNING */
+      if (this.props.journey.dataGetJourneyPlanV2) {
+        this.checkPausedVisit(this.props.journey.dataGetJourneyPlanV2)
+      }
+    }
+  } 
   onHandleRefresh = () => {
     const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
     this.props.journeyPlanGetRefreshV2();
@@ -183,6 +199,13 @@ class JourneyListDataView extends Component {
   /** === ON CHANGE TAB === */
   onChangeTab(value) {
     this.setState({ tabValue: value });
+  }
+  checkPausedVisit(data) {
+    data && data.filter((item) => {
+      if (item.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_PAUSED) {
+        this.setState({ modalInfoPausedVisit: true })
+      }
+    })
   }
   /**
    * ======================
@@ -353,8 +376,8 @@ class JourneyListDataView extends Component {
           }}
         >
           {
-            false 
-            ? // TODO: for isPaused journeyBookStore later
+            item.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_PAUSED
+            ? 
               <View
                 style={{
                   backgroundColor: Color.fontYellow10,
@@ -363,7 +386,7 @@ class JourneyListDataView extends Component {
                   marginBottom: 8
                 }}
               >
-                <Text style={[Fonts.type22, { color: Color.fontYellow40 }]}>Sedang ditunda</Text>
+                <Text style={[Fonts.type22, { color: Color.fontYellow60 }]}>Sedang ditunda</Text>
               </View>
             :
               <View
@@ -477,10 +500,10 @@ class JourneyListDataView extends Component {
    * =====================
    */
   /** === RENDER MODAL DELAYED VISIT === */
-  renderModalDelayedVisit() {
+  renderModalInfoPausedVisit() {
     return (
       <ModalBottomType1
-        open={false}
+        open={this.state.modalInfoPausedVisit}
         title="Masih Ada Kunjungan Tertunda"
         content={
           <View>
@@ -492,6 +515,7 @@ class JourneyListDataView extends Component {
                 disabled={false}
                 title={'Mengerti'}
                 borderRadius={4}
+                onPress={() => this.setState({ modalInfoPausedVisit: false })}
               />
             </View>
           </View>
@@ -511,7 +535,7 @@ class JourneyListDataView extends Component {
         {/* for loadmore */}
         {this.renderLoadMore()}
         {/* modal */}
-        {this.renderModalDelayedVisit()}
+        {this.renderModalInfoPausedVisit()}
       </View>
     );
   }
@@ -587,8 +611,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: raka
- * updatedDate: 20012022
+ * updatedDate: 26012022
  * updatedFunction:
- * -> use tabs component for filter jbs.
+ * -> adjustment check pause function
  *
  */

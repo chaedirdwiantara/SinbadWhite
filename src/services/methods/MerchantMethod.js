@@ -237,6 +237,23 @@ function getRadiusLockGeotag(params) {
   });
 }
 
+/** CHECK CAN RESUME VISIT JBS */
+function checkCanResumeVisit(params) {
+  return ApiRest({
+    testpath: `https://0944a58f-17fd-46cb-a43e-e1c2282cf435.mock.pstmn.io/supplier/sales-management/v1/journey-book/check-pause/${params.journeyBookId}`,
+    method: 'GET'
+  });
+}
+
+/** PAUSE OR RESUME VISIT JBS */
+function pauseResumeVisit({ journeyBookStoreId, params }) {
+  return ApiRest({
+    path: `${salesManagementService}/v1/journey-book-stores/pause-resume/${journeyBookStoreId}`,
+    method: 'PATCH',
+    params
+  });
+}
+
 /**
  * ==================
  * STOCK MANAGEMENT
@@ -324,7 +341,9 @@ export const MerchantMethod = {
   validateAreaMapping,
   getSalesSegmentation,
   getReturnActiveInfo,
-  getRadiusLockGeotag
+  getRadiusLockGeotag,
+  checkCanResumeVisit,
+  pauseResumeVisit
 };
 
 /**
@@ -333,8 +352,9 @@ export const MerchantMethod = {
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
- * updatedDate: 30092021
+ * updatedBy: raka
+ * updatedDate: 26012022
  * updatedFunction:
- * -> add endpoint get radius lock geotag. (getRadiusLockGeotag)
+ * -> add endpoint mock check resume visit. (journey book stores)
+ * -> add endpoint pause or resume visit. (journey book stores)
  */

@@ -41,6 +41,8 @@ const INITIAL_STATE = {
   loadingGetSalesSegmentation: false,
   loadingReturnActiveInfo: false,
   loadingGetRadiusLockGeotag: false,
+  loadingCheckCanResumeVisit: false,
+  loadingPauseResumeVisit: false,
   /** data */
   dataPostActivityV2: null,
   dataGetLogAllActivityV2: null,
@@ -175,6 +177,8 @@ const INITIAL_STATE = {
   dataSalesSegmentation: null,
   dataReturnActiveInfo: null,
   dataGetRadiusLockGeotag: null,
+  dataCheckCanResumeVisit: false,
+  dataPauseResumeVisit: null,
   /** error */
   errorGetMerchantV2: null,
   errorAddMerchant: null,
@@ -207,7 +211,9 @@ const INITIAL_STATE = {
   errorValidateAreaMapping: null,
   errorGetSalesSegmentation: null,
   errorReturnActiveInfo: null,
-  errorGetRadiusLockGeotag: null
+  errorGetRadiusLockGeotag: null,
+  errorCheckCanResumeVisit: null,
+  errorPauseResumeVisit: null,
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -1462,7 +1468,72 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       merchantStockRecordStatus: action.payload
     };
-  }
+  },
+  /**
+   * ======================
+   * CHECK CAN RESUME VISIT JBS
+   * ======================
+   */
+  [types.CHECK_CAN_RESUME_VISIT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingCheckCanResumeVisit: true,
+      errorCheckCanResumeVisit: null
+    };
+  },
+  [types.CHECK_CAN_RESUME_VISIT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingCheckCanResumeVisit: false,
+      dataCheckCanResumeVisit: action.payload,
+      errorCheckCanResumeVisit: null
+    };
+  },
+  [types.CHECK_CAN_RESUME_VISIT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingCheckCanResumeVisit: false,
+      errorCheckCanResumeVisit: action.payload,
+      dataCheckCanResumeVisit: false
+    };
+  },
+   /**
+   * ======================
+   * CHECK CAN RESUME VISIT JBS
+   * ======================
+   */
+  [types.PAUSE_RESUME_VISIT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingPauseResumeVisit: true,
+      errorPauseResumeVisit: null
+    };
+  },
+  [types.PAUSE_RESUME_VISIT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingPauseResumeVisit: false,
+      dataPauseResumeVisit: action.payload,
+      errorPauseResumeVisit: null,
+      // directly update pause status of selected merchant when pause/resume visit update success
+      selectedMerchant: {
+        ...state.selectedMerchant,
+        journeyBookStores: {
+          ...state.selectedMerchant.journeyBookStores,
+          pauseStatus: action.payload.pauseStatus,
+          pauseDate: action.payload?.pauseDate
+        },
+      },
+    };
+  },
+  [types.PAUSE_RESUME_VISIT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingPauseResumeVisit: false,
+      errorPauseResumeVisit: action.payload,
+      dataPauseResumeVisit: false
+    };
+  },
 });
 /**
  * ===========================

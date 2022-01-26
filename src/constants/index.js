@@ -38,3 +38,13 @@ export const ACTIVITY_JOURNEY_PLAN_COLLECTION = 'collection';
 export const ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING = 'collection_ongoing';
 export const ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS = 'collection_success';
 export const ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS = 'collection_not_success';
+
+/**
+ * JOURNEY PLAN PAUSE STATUS
+ * 0. jbs just started haven't paused or resumed
+ * 1. if journey plan isPaused == true
+ * 2. if journey plan isPaused == false, means journey plan is running/resume
+ */
+export const JOURNEY_PLAN_PAUSE_STATUS_DEFAULT = 0
+export const JOURNEY_PLAN_PAUSE_STATUS_PAUSED = 1;
+export const JOURNEY_PLAN_PAUSE_STATUS_RESUME = 2;
