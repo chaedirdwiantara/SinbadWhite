@@ -217,7 +217,8 @@ class MerchantHomeView extends Component {
     );
     /** FOR CHECK CAN RESUME VISIT CURRENT JORUNEY PLAN */
     this.props.checkCanResumeVisitProcess({
-      journeyBookId: this.props.merchant.selectedMerchant.journeyBookStores.journeyBookId
+      journeyBookId: this.props.merchant.selectedMerchant.journeyBookStores.journeyBookId,
+      journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores.id
     })
   }
 
@@ -226,9 +227,7 @@ class MerchantHomeView extends Component {
       loadingGetLogAllActivity,
       dataGetLogAllActivityV2,
       dataReturnActiveInfo,
-      dataGetTotalSurvey,
-      loadingPauseResumeVisit,
-      dataPauseResumeVisit,
+      dataGetTotalSurvey
     } = this.props.merchant;
 
     // Check is retur active

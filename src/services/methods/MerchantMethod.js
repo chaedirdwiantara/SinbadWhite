@@ -240,7 +240,9 @@ function getRadiusLockGeotag(params) {
 /** CHECK CAN RESUME VISIT JBS */
 function checkCanResumeVisit(params) {
   return ApiRest({
-    path: `${salesManagementService}/v1/journey-book/check-pause/${params.journeyBookId}`,
+    path: `${salesManagementService}/v1/journey-book/check-resume/${params.journeyBookId}?jbsId=${
+      params.journeyBookStoreId
+    }`,
     method: 'GET'
   });
 }
