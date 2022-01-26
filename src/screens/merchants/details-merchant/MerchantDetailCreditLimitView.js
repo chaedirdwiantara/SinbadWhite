@@ -17,13 +17,20 @@ import { Color } from '../../../config';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import { SkeletonType29, LoadingLoadMore } from '../../../library/component';
+
+const dummySummary = {
+  supplierId: 1,
+  storeId: 1,
+  creditLimit: 99000000000000.0,
+  balanceAmount: 98870623985367.8
+};
 class MerchantDetailCreditLimitView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showMore: false,
       indexShow: [],
-      limit: 10
+      limit: 5
     };
   }
 
@@ -156,7 +163,7 @@ class MerchantDetailCreditLimitView extends Component {
           <Text style={Fonts.type9}>Kredit</Text>
 
           <Text style={Fonts.type16}>
-            {item.allowCreditLimit && item.freezeStatus ? 'Ya' : 'Tidak'}
+            {item.allowCreditLimit ? 'Ya' : 'Tidak'}
           </Text>
         </View>
         <View
@@ -201,7 +208,9 @@ class MerchantDetailCreditLimitView extends Component {
           ]}
         >
           <Text style={Fonts.type9}>Total Balance</Text>
-          <Text style={Fonts.type16}>Rp100.000</Text>
+          <Text style={Fonts.type16}>
+            {MoneyFormat(dummySummary.balanceAmount)}
+          </Text>
         </View>
         <View
           style={[
@@ -213,7 +222,9 @@ class MerchantDetailCreditLimitView extends Component {
           ]}
         >
           <Text style={Fonts.type9}>Total Limit</Text>
-          <Text style={Fonts.type9}>Rp200.000</Text>
+          <Text style={Fonts.type9}>
+            {MoneyFormat(dummySummary.creditLimit)}
+          </Text>
         </View>
       </View>
     );

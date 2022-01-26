@@ -300,6 +300,16 @@ function getMerchantCreditLimitList(params) {
   });
 }
 
+/** GET MERCHANT CREDIT LIMIT SUMMARY */
+function getMerchantCreditLimitSummary(params) {
+  return ApiRest({
+    path: `payment/v1/credit-limit-store-summary/${params.supplierId}/${
+      params.storeId
+    }`,
+    method: 'GET'
+  });
+}
+
 export const MerchantMethod = {
   getMerchantV2,
   getMerchantExisting,
@@ -334,7 +344,8 @@ export const MerchantMethod = {
   getSalesSegmentation,
   getReturnActiveInfo,
   getRadiusLockGeotag,
-  getMerchantCreditLimitList
+  getMerchantCreditLimitList,
+  getMerchantCreditLimitSummary
 };
 
 /**

@@ -44,6 +44,7 @@ const INITIAL_STATE = {
   loadingGetCreditLimitList: false,
   loadingLoadmoreGetCreditLimit: false,
   refreshGetCreditLimitList: false,
+  loadingGetCreditLimitSummary: false,
   /** data */
   dataPostActivityV2: null,
   dataGetLogAllActivityV2: null,
@@ -181,6 +182,7 @@ const INITIAL_STATE = {
   dataGetCreditLimitList: [],
   totalDataGetCreditLimitList: null,
   skipGetCreditLimit: null,
+  dataGetCreditLimitSummary: null,
   /** error */
   errorGetMerchantV2: null,
   errorAddMerchant: null,
@@ -214,7 +216,8 @@ const INITIAL_STATE = {
   errorGetSalesSegmentation: null,
   errorReturnActiveInfo: null,
   errorGetRadiusLockGeotag: null,
-  errorGetCreditLimitList: null
+  errorGetCreditLimitList: null,
+  errorGetCreditLimitSummary: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -1527,6 +1530,40 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingLoadmoreGetCreditLimit: true,
       skipGetCreditLimit: action.payload
+    };
+  },
+  /**
+   * ======================
+   * GET MERCHANT CREDIT LIMIT SUMMARY
+   * ======================
+   */
+  [types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetCreditLimitSummary: true,
+      dataGetCreditLimitSummary: {},
+      errorGetCreditLimitSummary: null
+    };
+  },
+  [types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetCreditLimitSummary: false,
+      dataGetCreditLimitSummary: action.payload,
+      errorGetCreditLimitSummary: null
+    };
+  },
+  [types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetCreditLimitSummary: false,
+      errorGetCreditLimitSummary: action.payload
+    };
+  },
+  [types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_RESET](state, action) {
+    return {
+      ...state,
+      dataBatchDeleteStock: {}
     };
   }
 });
