@@ -303,8 +303,8 @@ function getMerchantCreditLimitList(params) {
 /** GET MERCHANT CREDIT LIMIT SUMMARY */
 function getMerchantCreditLimitSummary(params) {
   return ApiRest({
-    path: `payment/v1/credit-limit-store-summary/${params.supplierId}/${
-      params.storeId
+    path: `payment/v1/credit-limit-store-summary/${params.storeId}/${
+      params.supplierId
     }`,
     method: 'GET'
   });

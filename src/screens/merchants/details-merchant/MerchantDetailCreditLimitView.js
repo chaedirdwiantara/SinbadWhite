@@ -18,12 +18,6 @@ import { Fonts, GlobalStyle, MoneyFormat } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import { SkeletonType29, LoadingLoadMore } from '../../../library/component';
 
-const dummySummary = {
-  supplierId: 1,
-  storeId: 1,
-  creditLimit: 99000000000000.0,
-  balanceAmount: 98870623985367.8
-};
 class MerchantDetailCreditLimitView extends Component {
   constructor(props) {
     super(props);
@@ -36,6 +30,7 @@ class MerchantDetailCreditLimitView extends Component {
 
   componentDidMount() {
     this.getMerchantCreditLimitList();
+    this.getMerchantCreditLimitSummary();
   }
   /** LOAD MORE LIST VIEW */
   onHandleLoadMore = () => {
@@ -61,7 +56,19 @@ class MerchantDetailCreditLimitView extends Component {
   onRefresh() {
     this.getMerchantCreditLimitList();
   }
-  /** === FUNCTION GET MERCHANT CREDIT LIMIT LIST */
+  /** === FUNCTION GET MERCHANT CREDIT LIMIT SUMMARY === */
+  getMerchantCreditLimitSummary() {
+    const storeId = parseInt(
+      this.props.merchant.dataGetMerchantDetailV2.store.id,
+      10
+    );
+    const supplierId = parseInt(
+      this.props.merchant.dataGetMerchantDetailV2.supplier.id
+    );
+
+    this.props.merchantGetCreditLimitSummaryProcess({ storeId, supplierId });
+  }
+  /** === FUNCTION GET MERCHANT CREDIT LIMIT LIST === */
   getMerchantCreditLimitList() {
     const data = {
       storeId: this.props.merchant.dataGetMerchantDetailV2.store.id,
@@ -194,6 +201,8 @@ class MerchantDetailCreditLimitView extends Component {
   }
   /** === RENDER CREDIT INFORMATION === */
   renderCreditInformation() {
+    const dataSummary = this.props.merchant.dataGetCreditLimitSummary;
+    console.log(dataSummary, 'data summary');
     return (
       <View style={{ padding: 16, backgroundColor: Color.fontWhite }}>
         <Text style={Fonts.type5}>Kredit Saat ini</Text>
@@ -209,7 +218,7 @@ class MerchantDetailCreditLimitView extends Component {
         >
           <Text style={Fonts.type9}>Total Balance</Text>
           <Text style={Fonts.type16}>
-            {MoneyFormat(dummySummary.balanceAmount)}
+            {MoneyFormat(dataSummary.balanceAmount)}
           </Text>
         </View>
         <View
@@ -223,7 +232,7 @@ class MerchantDetailCreditLimitView extends Component {
         >
           <Text style={Fonts.type9}>Total Limit</Text>
           <Text style={Fonts.type9}>
-            {MoneyFormat(dummySummary.creditLimit)}
+            {MoneyFormat(dataSummary.creditLimit)}
           </Text>
         </View>
       </View>

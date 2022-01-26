@@ -1549,7 +1549,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetCreditLimitSummary: false,
-      dataGetCreditLimitSummary: action.payload,
+      dataGetCreditLimitSummary: action.payload.data,
       errorGetCreditLimitSummary: null
     };
   },
