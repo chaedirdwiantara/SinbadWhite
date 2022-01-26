@@ -417,6 +417,17 @@ function* getMerchantCreditLimitList(actions) {
     yield put(ActionCreators.merchantGetCreditLimitListFailed(error));
   }
 }
+/** GET MERCHANT CREDIT LIMIT SUMMARY */
+function* getMerchantCreditLimitSummary(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getMerchantCreditLimitSummary(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetCreditLimitSummarySuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetCreditLimitSummaryFailed(error));
+  }
+}
 
 /** === SAGA FUNCTION === */
 function* MerchantSaga() {
@@ -495,6 +506,10 @@ function* MerchantSaga() {
   yield takeEvery(
     types.MERCHANT_GET_CREDIT_LIMIT_PROCESS,
     getMerchantCreditLimitList
+  );
+  yield takeEvery(
+    types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_PROCESS,
+    getMerchantCreditLimitSummary
   );
 }
 

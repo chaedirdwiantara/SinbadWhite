@@ -833,3 +833,35 @@ export function merchantGetCreditLimitListReset() {
 export function merchantGetCreditLimitListLoadMore(page) {
   return { type: types.MERCHANT_GET_CREDIT_LIMIT_LOADMORE, payload: page };
 }
+/**
+ * ============================
+ * GET MERCHANT CREDIT LIMIT SUMMARY
+ * ============================
+ */
+export function merchantGetCreditLimitSummaryProcess(data) {
+  return {
+    type: types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_PROCESS,
+    payload: data
+  };
+}
+export function merchantGetCreditLimitSummarySuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_SUCCESS,
+      payload: data.data
+    };
+  }
+  return {
+    type: types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_FAILED,
+    payload: data
+  };
+}
+export function merchantGetCreditLimitSummaryFailed(data) {
+  return {
+    type: types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_FAILED,
+    payload: data
+  };
+}
+export function merchantGetCreditLimitSummaryReset() {
+  return { type: types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_RESET };
+}

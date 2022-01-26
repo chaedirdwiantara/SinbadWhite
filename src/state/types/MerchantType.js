@@ -231,3 +231,13 @@ export const MERCHANT_GET_CREDIT_LIMIT_REFRESH =
   'MerchantGetCreditLimitRefresh';
 export const MERCHANT_GET_CREDIT_LIMIT_LOADMORE =
   'MerchantGetCreditLimitLoadMore';
+
+/** === MERCHANT GET CREDIT LIMIT SUMMARY === */
+export const MERCHANT_GET_CREDIT_LIMIT_SUMMARY_PROCESS =
+  'MerchantGetCreditLimitSummaryProcess';
+export const MERCHANT_GET_CREDIT_LIMIT_SUMMARY_SUCCESS =
+  'MerchantGetCreditLimitSummarySuccess';
+export const MERCHANT_GET_CREDIT_LIMIT_SUMMARY_FAILED =
+  'MerchantGetCreditLimitSummaryFailed';
+export const MERCHANT_GET_CREDIT_LIMIT_SUMMARY_RESET =
+  'MerchantGetCreditLimitSummaryReset';
