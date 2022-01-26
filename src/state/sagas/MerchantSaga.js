@@ -425,7 +425,14 @@ function* pauseResumeVisit(actions) {
     const response = yield call(() => {
       return MerchantMethod.pauseResumeVisit(actions.payload);
     });
-    yield put(ActionCreators.pauseResumeVisitSuccess(response));
+    yield put(ActionCreators.pauseResumeVisitSuccess({ 
+      ...response,
+      data: {
+        ...response.data, 
+        pauseStatus: actions.payload.params.pauseStatus,
+        pauseDate: actions.payload.params.pauseDate
+      }
+     }));
   } catch (error) {
     yield put(ActionCreators.pauseResumeVisitFailed(error));
   }

@@ -53,7 +53,8 @@ import {
   ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS,
   ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS,
   JOURNEY_PLAN_PAUSE_STATUS_PAUSED,
-  JOURNEY_PLAN_PAUSE_STATUS_RESUME
+  JOURNEY_PLAN_PAUSE_STATUS_RESUME,
+  JOURNEY_PLAN_PAUSE_STATUS_DEFAULT
 } from '../../../constants';
 import _ from 'lodash';
 
@@ -142,7 +143,6 @@ class MerchantHomeView extends Component {
         }
       ],
       privileges: this.props.privileges.data,
-      isPaused: false,
       modalConfirmPause: false,
       modalConfirmResume: false,
       checkUserCheckout: false
@@ -216,7 +216,9 @@ class MerchantHomeView extends Component {
       this.props.merchant.selectedMerchant?.storeId
     );
     /** FOR CHECK CAN RESUME VISIT CURRENT JORUNEY PLAN */
-    this.props.checkCanResumeVisitProcess()
+    this.props.checkCanResumeVisitProcess({
+      journeyBookId: 1
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -422,17 +424,6 @@ class MerchantHomeView extends Component {
         this.setState({
           task
         });
-      }
-    }
-    /** CHECK IF SUCCESS PAUSE OR RESUME JBS */
-    if (!loadingPauseResumeVisit && dataPauseResumeVisit) {
-      if (
-        prevProps.merchant.dataPauseResumeVisit !==
-        dataPauseResumeVisit // this.props
-      ) {
-        if (dataPauseResumeVisit !== null && dataPauseResumeVisit.status === 200) {
-          this.setState({ modalConfirmPause: false, isPaused: true })
-        }
       }
     }
     /** FOR ERROR */
@@ -947,19 +938,21 @@ class MerchantHomeView extends Component {
    * @returns  boolean, is currently jbs is paused
   */
   checkIsPaused() {
-    return this.state.isPaused
+    return this.props.merchant.selectedMerchant.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_PAUSED
   }
   /**
    * 
    * @param -
-   * @returns boolean, render button pause if user already check in & current jbs is not paused & user have'nt checkout
+   * @returns boolean, render button pause if user already check in & current jbs is not paused & user have'nt checkout & pauseStatus === 0
+   * pauseStatus !== 0, means jbs just started haven't paused or resumed
    */
   checkRenderButtonPause() {
     return (
       this.checkCheckIn() && 
       !this.checkIsPaused() &&
       !this.props.merchant.loadingGetLogAllActivity && 
-      !this.checkCheckListTask(ACTIVITY_JOURNEY_PLAN_CHECK_OUT)
+      !this.checkCheckListTask(ACTIVITY_JOURNEY_PLAN_CHECK_OUT) &&
+      this.props.merchant.selectedMerchant.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_DEFAULT
     )
   }
   /**
@@ -2054,14 +2047,15 @@ class MerchantHomeView extends Component {
                   titleStyle={[Fonts.type93]}
                   buttonStyle={{ width: '100%', paddingVertical: 16, backgroundColor: Color.mainColor, }}
                   onPress={() => {
-                    this.props.pauseResumeVisitProcess({ 
-                      journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores.id, 
-                      params: {
-                        "pauseStatus": JOURNEY_PLAN_PAUSE_STATUS_PAUSED,
-                        "pauseDate": new Date(), 
-                      }
-                    })
-                    this.setState({ modalConfirmPause: false })
+                    this.setState({ modalConfirmPause: false }, () => {
+                      this.props.pauseResumeVisitProcess({ 
+                        journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores.id, 
+                        params: {
+                          pauseStatus: JOURNEY_PLAN_PAUSE_STATUS_PAUSED,
+                          pauseDate: new Date(), 
+                        }
+                      });
+                    });
                   }}
                 />
               </View>
@@ -2075,7 +2069,17 @@ class MerchantHomeView extends Component {
   renderModalConfirmResume() {
     return <ModalBottomConfirmResume
       open={this.state.modalConfirmResume}
-      onOk={() => this.setState({ isPaused: false, modalConfirmResume: false })}
+      onOk={() => {
+        this.setState({ modalConfirmResume: false }, () => {
+          this.props.pauseResumeVisitProcess({ 
+            journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores.id, 
+            params: {
+              pauseStatus: JOURNEY_PLAN_PAUSE_STATUS_RESUME,
+              resumeDate: new Date(), 
+            }
+          });
+        });
+      }}
       onCancel={() => this.setState({ modalConfirmResume: false })}
     />;
   }
@@ -2351,18 +2355,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: raka
-<<<<<<< HEAD
- * updatedDate: 25012022
+ * updatedDate: 26012022
  * updatedFunction:
-<<<<<<< HEAD
- * -> use button with left icon
- * -> add component info when can resume false / button resume disabled
-=======
- * -> adjustment check can resume visit
->>>>>>> TSEP47_50_23
-=======
- * updatedDate: 2512022
- * updatedFunction:
- * -> mock integration pause/resume visit
->>>>>>> TSEP47_50_24
+ * -> integration pause/resume visit
+ * ->
  */

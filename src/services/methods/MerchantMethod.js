@@ -240,7 +240,7 @@ function getRadiusLockGeotag(params) {
 /** CHECK CAN RESUME VISIT JBS */
 function checkCanResumeVisit(params) {
   return ApiRest({
-    testpath: `https://0944a58f-17fd-46cb-a43e-e1c2282cf435.mock.pstmn.io/supplier/sales-management/v1/journey-book/check-pause/${params.id}`,
+    testpath: `https://0944a58f-17fd-46cb-a43e-e1c2282cf435.mock.pstmn.io/supplier/sales-management/v1/journey-book/check-pause/${params.journeyBookId}`,
     method: 'GET'
   });
 }
@@ -248,7 +248,7 @@ function checkCanResumeVisit(params) {
 /** PAUSE OR RESUME VISIT JBS */
 function pauseResumeVisit({ journeyBookStoreId, params }) {
   return ApiRest({
-    testpath: `https://0944a58f-17fd-46cb-a43e-e1c2282cf435.mock.pstmn.io/supplier/sales-management/v1/journey-book-stores/pause-resume/${journeyBookStoreId}`,
+    path: `${salesManagementService}/v1/journey-book-stores/pause-resume/${journeyBookStoreId}`,
     method: 'PATCH',
     params
   });
@@ -353,13 +353,8 @@ export const MerchantMethod = {
  * createdBy:
  * createdDate:
  * updatedBy: raka
- * updatedDate: 25012022
+ * updatedDate: 26012022
  * updatedFunction:
-<<<<<<< HEAD
- * -> add temporary endpoint check can resume visit
- * -> add temporary endpoint pause resume visit
-=======
  * -> add endpoint mock check resume visit. (journey book stores)
- * -> add endpoint mock pause or resume visit. (journey book stores)
->>>>>>> TSEP47_50_24
+ * -> add endpoint pause or resume visit. (journey book stores)
  */

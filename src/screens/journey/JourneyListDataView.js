@@ -30,6 +30,9 @@ import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
 import { Color } from '../../config';
+import {
+  JOURNEY_PLAN_PAUSE_STATUS_PAUSED
+} from '../../constants';
 
 const tabDashboard = [
   {
@@ -56,7 +59,7 @@ class JourneyListDataView extends Component {
     this.state = {
       search: '',
       tabValue: tabDashboard[0].value,
-      modalPausedVisit: false
+      modalInfoPausedVisit: false
     };
   }
   parentFunction(data) {
@@ -196,9 +199,10 @@ class JourneyListDataView extends Component {
     this.setState({ tabValue: value });
   }
   checkPausedVisit(data) {
-    data.map((item) => {
-      // TODO CHECKING PAUSED JOURNEY PLAN
-
+    data.filter((item) => {
+      if (item.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_PAUSED) {
+        this.setState({ modalInfoPausedVisit: true })
+      }
     })
   }
   /**
@@ -370,8 +374,8 @@ class JourneyListDataView extends Component {
           }}
         >
           {
-            false 
-            ? // TODO: for isPaused journeyBookStore later
+            item.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_PAUSED
+            ? 
               <View
                 style={{
                   backgroundColor: Color.fontYellow10,
@@ -494,10 +498,10 @@ class JourneyListDataView extends Component {
    * =====================
    */
   /** === RENDER MODAL DELAYED VISIT === */
-  renderModalPausedVisit() {
+  renderModalInfoPausedVisit() {
     return (
       <ModalBottomType1
-        open={this.state.modalPausedVisit}
+        open={this.state.modalInfoPausedVisit}
         title="Masih Ada Kunjungan Tertunda"
         content={
           <View>
@@ -509,6 +513,7 @@ class JourneyListDataView extends Component {
                 disabled={false}
                 title={'Mengerti'}
                 borderRadius={4}
+                onPress={() => this.setState({ modalInfoPausedVisit: false })}
               />
             </View>
           </View>
@@ -528,7 +533,7 @@ class JourneyListDataView extends Component {
         {/* for loadmore */}
         {this.renderLoadMore()}
         {/* modal */}
-        {this.renderModalPausedVisit()}
+        {this.renderModalInfoPausedVisit()}
       </View>
     );
   }
@@ -604,7 +609,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: raka
- * updatedDate: 25012022
+ * updatedDate: 26012022
  * updatedFunction:
  * -> adjustment check pause function
  *

@@ -32,11 +32,12 @@ const { height } = Dimensions.get('window');
  */
 
 class ModalBottomConfirmResume extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      checkInTime: null
-    };
+  pauseDate = this.props.merchant.selectedMerchant.journeyBookStores.pauseDate
+  /** FIND DIFF PAUSE DATE */
+  findDiffVisit() {
+    const a = moment();
+    const b = moment(this.props.merchant.selectedMerchant.journeyBookStores.pauseDate);
+    return a.diff(b, 'minutes');
   }
   /**
    * ==================
@@ -72,7 +73,7 @@ class ModalBottomConfirmResume extends Component {
             <View>
               <Text style={Fonts.type23}>Penundaan dimulai</Text>
               <Text style={[Fonts.type24, { marginTop: 5 }]}>
-                {moment().format('HH:mm:ss')}
+                {moment(this.props.merchant.selectedMerchant.journeyBookStores.pauseDate).format('HH:mm:ss')}
               </Text>
             </View>
             <View style={{ marginTop: 12 }}>
@@ -85,7 +86,7 @@ class ModalBottomConfirmResume extends Component {
           <View>
             <View style={styles.cirlce}>
               <Text>
-                <Text style={Fonts.type66}>121</Text>
+                <Text style={Fonts.type66}>{this.findDiffVisit()}</Text>
                 <Text style={Fonts.type23}> Min</Text>
               </Text>
               <Text style={Fonts.type65}>Durasi</Text>
@@ -215,8 +216,8 @@ export default connect(
  * ============================
  * createdBy: raka
  * createdDate: 20012022
- * updatedBy: -
- * updatedDate: -
+ * updatedBy: raka
+ * updatedDate: 26012022
  * updatedFunction:
- * -> 
+ * -> handle pause date to be show on modal
  */

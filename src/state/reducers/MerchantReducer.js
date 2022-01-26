@@ -1514,7 +1514,16 @@ export const merchant = createReducer(INITIAL_STATE, {
       ...state,
       loadingPauseResumeVisit: false,
       dataPauseResumeVisit: action.payload,
-      errorPauseResumeVisit: null
+      errorPauseResumeVisit: null,
+      // directly update pause status of selected merchant when pause/resume visit update success
+      selectedMerchant: {
+        ...state.selectedMerchant,
+        journeyBookStores: {
+          ...state.selectedMerchant.journeyBookStores,
+          pauseStatus: action.payload.pauseStatus,
+          pauseDate: action.payload?.pauseDate
+        },
+      },
     };
   },
   [types.PAUSE_RESUME_VISIT_FAILED](state, action) {
