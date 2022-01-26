@@ -79,7 +79,9 @@ class JourneyListDataView extends Component {
       this.props.journey.dataGetJourneyPlanV2
     ) {
       /** CHECKING IF THERE ARE PAUSED JOURNEY PLAN, NEED TO SHOW MODAL WARNING */
-      this.checkPausedVisit(this.props.journey.dataGetJourneyPlanV2)
+      if (this.props.journey.dataGetJourneyPlanV2) {
+        this.checkPausedVisit(this.props.journey.dataGetJourneyPlanV2)
+      }
     }
   } 
   onHandleRefresh = () => {
@@ -199,7 +201,7 @@ class JourneyListDataView extends Component {
     this.setState({ tabValue: value });
   }
   checkPausedVisit(data) {
-    data.filter((item) => {
+    data && data.filter((item) => {
       if (item.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_PAUSED) {
         this.setState({ modalInfoPausedVisit: true })
       }
