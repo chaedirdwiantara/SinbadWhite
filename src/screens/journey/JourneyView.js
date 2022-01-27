@@ -56,7 +56,7 @@ class JourneyView extends Component {
       notifToast: '',
       showModalError: false,
       filterValue: 0,
-      modalInfoPausedVisit: true,
+      modalInfoPausedVisit: false,
       /** used for flag whether need to show modalInfoPausedVisit, if true, we need to show modalInfoPausedVisit */
       checkPausedVisit: true 
     };
