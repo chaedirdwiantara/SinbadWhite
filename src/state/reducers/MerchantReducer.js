@@ -1541,7 +1541,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetCreditLimitSummary: true,
-      dataGetCreditLimitSummary: {},
+      dataGetCreditLimitSummary: null,
       errorGetCreditLimitSummary: null
     };
   },
@@ -1563,7 +1563,7 @@ export const merchant = createReducer(INITIAL_STATE, {
   [types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_RESET](state, action) {
     return {
       ...state,
-      dataBatchDeleteStock: {}
+      dataGetCreditLimitSummary: null
     };
   }
 });

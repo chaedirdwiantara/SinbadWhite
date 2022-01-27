@@ -44,7 +44,7 @@ class PdpView extends Component {
       openModalSort: false,
       openModalConfirmRemoveCart: false,
       openModalErrorGlobal: false,
-      openWarningContent: true,
+      openWarningCredit: false,
       /** data */
       layout: 'grid',
       addProductNotif: false,
@@ -159,6 +159,12 @@ class PdpView extends Component {
             selectedProduct: data.data
           });
         } else {
+          const invoiceGroupId = data.invoice[0].invoiceGroupId;
+          const storeId = this.props.merchant.selectedMerchant.storeId;
+          this.props.OMSCheckCreditProcess({
+            invoiceGroupId: parseInt(invoiceGroupId, 10),
+            storeId: parseInt(storeId, 10)
+          });
           this.props.pdpGetDetailProcess(data.data);
           this.setState({ openModalOrder: true });
         }
@@ -203,6 +209,14 @@ class PdpView extends Component {
             this.getPdp({ page, loading: false });
           }
         }
+        break;
+      /** => over credit limit */
+      case 'overCreditLimit':
+        this.setState({ openWarningCredit: true });
+        break;
+      /** => hide warning credit limit */
+      case 'hideWarningCredit':
+        this.setState({ openWarningCredit: false });
         break;
       default:
         break;
@@ -349,7 +363,7 @@ class PdpView extends Component {
         close={() => this.setState({ openModalOrder: false })}
         typeClose={'cancel'}
         warningContent={
-          this.state.openWarningContent ? this.renderWarningContent() : null
+          this.state.openWarningCredit ? this.renderWarningContent() : null
         }
       />
     ) : (
@@ -357,7 +371,9 @@ class PdpView extends Component {
     );
   }
   renderWarningContent() {
-    return (
+    const allowCreditLimit = this.props.oms.dataOMSCheckCredit.allowCreditLimit;
+    const freezeStatus = this.props.oms.dataOMSCheckCredit.freezeStatus;
+    return allowCreditLimit && !freezeStatus ? (
       <View
         style={{
           paddingHorizontal: 16,
@@ -374,7 +390,7 @@ class PdpView extends Component {
           </Text>
         </View>
       </View>
-    );
+    ) : null;
   }
   /** === RENDER MODAL SKU NOT AVAILABLE === */
   renderModalSkuNotAvailable() {

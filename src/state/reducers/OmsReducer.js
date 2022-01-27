@@ -18,6 +18,7 @@ const INITIAL_STATE = {
   loadingGetReturnReason: false,
   loadingPostReturnOrder: false,
   loadingOMSCheckOverdue: false,
+  loadingOMSCheckCredit: false,
   /** data */
   selectedReturnParcelId: null,
   dataOmsGetCartItem: null,
@@ -37,6 +38,7 @@ const INITIAL_STATE = {
   dataGetReturnReason: null,
   dataPostReturnOrder: null,
   dataOMSCheckOverdue: null,
+  dataOmsCheckCredit: null,
   /** error */
   errorOmsGetCartItem: null,
   errorOmsGetCheckoutItem: null,
@@ -52,7 +54,8 @@ const INITIAL_STATE = {
   errorGetReturnDraft: null,
   errorGetReturnReason: null,
   errorPostReturnOrder: null,
-  errorOMSCheckOverdue: null
+  errorOMSCheckOverdue: null,
+  errorOMSCheckCredit: null
 };
 
 export const oms = createReducer(INITIAL_STATE, {
@@ -684,6 +687,33 @@ export const oms = createReducer(INITIAL_STATE, {
       ...state,
       loadingOMSCheckOverdue: false,
       errorOMSCheckOverdue: action.data
+    };
+  },
+  /**
+   * ========================
+   * GET CHECK CREDIT
+   * ========================
+   */
+  [types.OMS_CHECK_CREDIT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingOmsCheckCredit: true,
+      dataOmsCheckCredit: null,
+      errorOmsCheckCredit: null
+    };
+  },
+  [types.OMS_CHECK_CREDIT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingOMSCheckCredit: false,
+      dataOMSCheckCredit: action.payload.data
+    };
+  },
+  [types.OMS_CHECK_CREDIT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingOMSCheckCredit: false,
+      errorOMSCheckCredit: action.data
     };
   }
 });

@@ -63,7 +63,8 @@ class MerchantDetailCreditLimitView extends Component {
       10
     );
     const supplierId = parseInt(
-      this.props.merchant.dataGetMerchantDetailV2.supplier.id
+      this.props.merchant.dataGetMerchantDetailV2.supplier.id,
+      10
     );
 
     this.props.merchantGetCreditLimitSummaryProcess({ storeId, supplierId });
@@ -167,6 +168,33 @@ class MerchantDetailCreditLimitView extends Component {
             }
           ]}
         >
+          <Text style={Fonts.type9}>Status</Text>
+          <View
+            style={{
+              backgroundColor: !item.freezeStatus
+                ? Color.fontGreen10
+                : Color.fontBlack05,
+              borderRadius: 6
+            }}
+          >
+            <Text
+              style={[
+                !item.freezeStatus ? Fonts.type51 : Fonts.type96,
+                { marginHorizontal: 8, marginVertical: 4 }
+              ]}
+            >
+              {!item?.freezeStatus ? 'Aktif' : 'Tidak Aktif'}
+            </Text>
+          </View>
+        </View>
+        <View
+          style={[
+            styles.listRow,
+            {
+              marginTop: 8
+            }
+          ]}
+        >
           <Text style={Fonts.type9}>Kredit</Text>
 
           <Text style={Fonts.type16}>
@@ -257,7 +285,10 @@ class MerchantDetailCreditLimitView extends Component {
   render() {
     return (
       <View style={{ backgroundColor: Color.fontBlack10, height: '100%' }}>
-        {!this.props.merchant.loadingGetCreditLimitList ? (
+        {!this.props.merchant.loadingGetCreditLimitList &&
+        !this.props.merchant.loadingGetCreditLimitSummary &&
+        this.props.merchant.dataGetCreditLimitList &&
+        this.props.merchant.dataGetCreditLimitSummary ? (
           this.renderContent()
         ) : (
           <SkeletonType29 />
@@ -270,7 +301,8 @@ class MerchantDetailCreditLimitView extends Component {
 const styles = StyleSheet.create({
   listRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   invoiceListContainer: {
     marginTop: 16,
