@@ -44,7 +44,6 @@ class PdpView extends Component {
       openModalSort: false,
       openModalConfirmRemoveCart: false,
       openModalErrorGlobal: false,
-      openWarningContent: true,
       openWarningCredit: false,
       /** data */
       layout: 'grid',
@@ -372,7 +371,9 @@ class PdpView extends Component {
     );
   }
   renderWarningContent() {
-    return (
+    const allowCreditLimit = this.props.oms.dataOMSCheckCredit.allowCreditLimit;
+    const freezeStatus = this.props.oms.dataOMSCheckCredit.freezeStatus;
+    return allowCreditLimit && !freezeStatus ? (
       <View
         style={{
           paddingHorizontal: 16,
@@ -389,7 +390,7 @@ class PdpView extends Component {
           </Text>
         </View>
       </View>
-    );
+    ) : null;
   }
   /** === RENDER MODAL SKU NOT AVAILABLE === */
   renderModalSkuNotAvailable() {
