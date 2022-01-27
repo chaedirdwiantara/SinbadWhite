@@ -124,6 +124,7 @@ class ModalBottomPaymentType extends Component {
   }
   /** RENDER CONTENT */
   renderContent() {
+    const dataPaymentType = this.props?.oms?.dataOmsGetPayment;
     return (
       <View style={styles.mainContainer}>
         <StatusBarRedOP50 />
@@ -134,17 +135,21 @@ class ModalBottomPaymentType extends Component {
               borderRadius: 8
             }}
           >
-            <View style={styles.warningItems}>
-              <MaterialIcon
-                name={'info'}
-                size={24}
-                color={Color.fontYellow40}
-              />
-              <Text style={[Fonts.type69, { marginLeft: 8, fontSize: 12 }]}>
-                Toko ini telah melebihi batas kredit. Sarankan untuk
-                menyelesaikan pembayaran sebelumnya terlebih dahulu
-              </Text>
-            </View>
+            {dataPaymentType?.map(item =>
+              parseInt(item.paymentTypeId, 10) === 2 && item.overLimitStatus ? (
+                <View style={styles.warningItems}>
+                  <MaterialIcon
+                    name={'info'}
+                    size={24}
+                    color={Color.fontYellow40}
+                  />
+                  <Text style={[Fonts.type69, { marginLeft: 8, fontSize: 12 }]}>
+                    Toko ini telah melebihi batas kredit. Sarankan untuk
+                    menyelesaikan pembayaran sebelumnya terlebih dahulu
+                  </Text>
+                </View>
+              ) : null
+            )}
           </View>
         </View>
         <View style={styles.container}>

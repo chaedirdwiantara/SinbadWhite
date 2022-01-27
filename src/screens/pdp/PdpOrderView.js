@@ -21,7 +21,7 @@ import {
   ButtonSingleSmall,
   SkeletonType18
 } from '../../library/component';
-import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
 import Price from '../../functions/Price';
