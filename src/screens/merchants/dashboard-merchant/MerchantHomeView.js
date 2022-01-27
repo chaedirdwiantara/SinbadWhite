@@ -217,7 +217,8 @@ class MerchantHomeView extends Component {
     );
     /** FOR CHECK CAN RESUME VISIT CURRENT JORUNEY PLAN */
     this.props.checkCanResumeVisitProcess({
-      journeyBookId: 1
+      journeyBookId: this.props.merchant.selectedMerchant.journeyBookStores.journeyBookId,
+      journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores.id
     })
   }
 
@@ -226,9 +227,7 @@ class MerchantHomeView extends Component {
       loadingGetLogAllActivity,
       dataGetLogAllActivityV2,
       dataReturnActiveInfo,
-      dataGetTotalSurvey,
-      loadingPauseResumeVisit,
-      dataPauseResumeVisit,
+      dataGetTotalSurvey
     } = this.props.merchant;
 
     // Check is retur active
@@ -943,8 +942,9 @@ class MerchantHomeView extends Component {
   /**
    * 
    * @param -
-   * @returns boolean, render button pause if user already check in & current jbs is not paused & user have'nt checkout & pauseStatus === 0
-   * pauseStatus !== 0, means jbs just started haven't paused or resumed
+   * @returns boolean, render button pause if user already check in & current jbs is not paused & user have'nt checkout & (pauseStatus === 0 or pauseStatus === 2)
+   * pauseStatus === 0, means jbs just started haven't paused or resumed
+   * pauseStatus === 2, means user already pause then resume visit again. in this case we will show button pause but we disabled that button
    */
   checkRenderButtonPause() {
     return (
@@ -952,7 +952,10 @@ class MerchantHomeView extends Component {
       !this.checkIsPaused() &&
       !this.props.merchant.loadingGetLogAllActivity && 
       !this.checkCheckListTask(ACTIVITY_JOURNEY_PLAN_CHECK_OUT) &&
-      this.props.merchant.selectedMerchant.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_DEFAULT
+      (
+        this.props.merchant.selectedMerchant.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_DEFAULT ||
+        this.props.merchant.selectedMerchant.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_RESUME
+      )
     )
   }
   /**
@@ -1740,12 +1743,23 @@ class MerchantHomeView extends Component {
    * ==================================== 
    * */
   renderButtonPause() {
+    if (this.props.merchant.selectedMerchant.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_RESUME) {
+      return (
+        <View style={[styles.buttonPauseDisabled]}>
+          <Text style={[Fonts.type7, { color: Color.fontBlack40 }]}>Tunda Kunjungan</Text>
+        </View>
+      )
+    } 
+
     return (
-      <ButtonSingle
-        white
-        title="Tunda Kunjungan"
-        onPress={() => {this.setState({ modalConfirmPause: true })}}
-      />
+      /** BUTTON SINGLE HAVE DEFAULT PADDING */
+      <View style={{ marginTop: -16 }}>
+        <ButtonSingle
+          white
+          title="Tunda Kunjungan"
+          onPress={() => {this.setState({ modalConfirmPause: true })}}
+        />
+      </View>
     )
   }
   renderButtonResume() {
@@ -2322,6 +2336,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     flexDirection: `row`,
     borderRadius: 4
+  },
+  buttonPauseDisabled: {
+    borderWidth: 1,
+    borderColor: Color.fontBlack40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 16,
+    marginHorizontal: 16,
+    backgroundColor: Color.backgroundWhite
   }
 });
 
@@ -2355,8 +2378,8 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: raka
- * updatedDate: 26012022
+ * updatedDate: 27012022
  * updatedFunction:
  * -> integration pause/resume visit
- * ->
+ * -> adjust button pause to be disabled when pausestatus == 2
  */

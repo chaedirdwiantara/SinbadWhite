@@ -21,9 +21,7 @@ import {
   SearchBarType1,
   EmptyDataType2,
   EmptyData,
-  TabsCustom,
-  ModalBottomType1,
-  ButtonSingle
+  TagListType2
 } from '../../library/component';
 import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
@@ -33,6 +31,9 @@ import { Color } from '../../config';
 import {
   JOURNEY_PLAN_PAUSE_STATUS_PAUSED
 } from '../../constants';
+import {
+  storeType
+} from '../../constants/journeyPlanParams';
 
 const tabDashboard = [
   {
@@ -41,7 +42,7 @@ const tabDashboard = [
   },
   {
     title: 'Belum Dikunjungi',
-    value: 'notVisited'
+    value: 'notvisited'
   },
   {
     title: 'Tertunda',
@@ -57,13 +58,11 @@ class JourneyListDataView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: '',
-      tabValue: tabDashboard[0].value,
-      modalInfoPausedVisit: false
+      search: ''
     };
   }
   parentFunction(data) {
-    if (data.type === 'search') {
+    if (data.type === 'search' || data.type === 'status') {
       this.props.parentFunction(data);
     }
   }
@@ -72,18 +71,6 @@ class JourneyListDataView extends Component {
    * FUNCTIONAL
    * =======================
    */
-  /** === DID UPDATE === */
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.journey.dataGetJourneyPlanV2 !==
-      this.props.journey.dataGetJourneyPlanV2
-    ) {
-      /** CHECKING IF THERE ARE PAUSED JOURNEY PLAN, NEED TO SHOW MODAL WARNING */
-      if (this.props.journey.dataGetJourneyPlanV2) {
-        this.checkPausedVisit(this.props.journey.dataGetJourneyPlanV2)
-      }
-    }
-  } 
   onHandleRefresh = () => {
     const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
     this.props.journeyPlanGetRefreshV2();
@@ -91,10 +78,11 @@ class JourneyListDataView extends Component {
       page: 1,
       date: today,
       search: this.props.searchText,
-      storetype: 'all',
+      storetype: storeType[this.props.storeType],
       loading: true
     });
     this.props.getJourneyPlanReportProcessV2();
+    this.props.setCheckPausedVisit(true);
   };
 
   onHandleLoadMore = () => {
@@ -114,7 +102,7 @@ class JourneyListDataView extends Component {
             page,
             date: today,
             search: this.props.searchText,
-            storetype: 'all',
+            storetype: storeType[this.props.storeType],
             loading: false
           });
         }
@@ -195,17 +183,6 @@ class JourneyListDataView extends Component {
       }
       return require('../../assets/icons/journey/visit_gray.png');
     }
-  }
-  /** === ON CHANGE TAB === */
-  onChangeTab(value) {
-    this.setState({ tabValue: value });
-  }
-  checkPausedVisit(data) {
-    data && data.filter((item) => {
-      if (item.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_PAUSED) {
-        this.setState({ modalInfoPausedVisit: true })
-      }
-    })
   }
   /**
    * ======================
@@ -485,42 +462,14 @@ class JourneyListDataView extends Component {
   /** === RENDER TABS */
   renderTabs() {
     return (
-      <View style={{ height: 70, paddingHorizontal: 8 }}>
-        <TabsCustom
-          listMenu={tabDashboard}
-          onChange={value => this.onChangeTab(value)}
-          value={this.state.tabValue}
+      <View>
+         <TagListType2
+          selected={this.props.storeType}
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
+          data={tabDashboard}
         />
       </View>
-    )
-  }
-   /**
-   * ====================
-   * MODAL
-   * =====================
-   */
-  /** === RENDER MODAL DELAYED VISIT === */
-  renderModalInfoPausedVisit() {
-    return (
-      <ModalBottomType1
-        open={this.state.modalInfoPausedVisit}
-        title="Masih Ada Kunjungan Tertunda"
-        content={
-          <View>
-            <Text style={[Fonts.type3, { marginHorizontal: 24, textAlign: 'center', marginBottom: 32 }]}>
-              Pastikan untuk menyelesaikan semua kunjungan di journey plan.
-            </Text>
-            <View style={{ marginBottom: 16 }}>
-              <ButtonSingle
-                disabled={false}
-                title={'Mengerti'}
-                borderRadius={4}
-                onPress={() => this.setState({ modalInfoPausedVisit: false })}
-              />
-            </View>
-          </View>
-        }
-      />
     )
   }
   /** === MAIN === */
@@ -534,8 +483,6 @@ class JourneyListDataView extends Component {
           : this.renderData()}
         {/* for loadmore */}
         {this.renderLoadMore()}
-        {/* modal */}
-        {this.renderModalInfoPausedVisit()}
       </View>
     );
   }
