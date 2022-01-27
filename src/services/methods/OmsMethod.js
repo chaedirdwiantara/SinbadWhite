@@ -204,6 +204,16 @@ function checkOverdue() {
   });
 }
 
+/** GET CHECK CREDIT LIMIT */
+function checkCreditLimit(params) {
+  return ApiRest({
+    path: `payment/v1/credit-limit-store/${params.invoiceGroupId}/${
+      params.storeId
+    }`,
+    method: 'GET'
+  });
+}
+
 export const OmsMethod = {
   getCartItem,
   getCheckoutItem,
@@ -221,5 +231,6 @@ export const OmsMethod = {
   getReturnDraft,
   getReturnReason,
   postReturnOrder,
-  checkOverdue
+  checkOverdue,
+  checkCreditLimit
 };
