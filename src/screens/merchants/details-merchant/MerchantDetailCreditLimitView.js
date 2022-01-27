@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Component,
   TouchableOpacity,
-  ScrollView,
   FlatList
 } from '../../../library/reactPackage';
 import {
@@ -24,7 +23,7 @@ class MerchantDetailCreditLimitView extends Component {
     this.state = {
       showMore: false,
       indexShow: [],
-      limit: 5
+      limit: 10
     };
   }
 
@@ -46,8 +45,7 @@ class MerchantDetailCreditLimitView extends Component {
           skip,
           limit: this.state.limit,
           storeId: this.props.merchant.dataGetMerchantDetailV2.store.id,
-          supplierId: this.props.merchant.dataGetMerchantDetailV2.supplier.id,
-          loading: false
+          supplierId: this.props.merchant.dataGetMerchantDetailV2.supplier.id
         });
       }
     }

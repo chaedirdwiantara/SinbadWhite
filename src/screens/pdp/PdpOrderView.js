@@ -71,10 +71,10 @@ class PdpOrderView extends Component {
       }
     }
     if (prevState.qtyFromChild !== this.state.qtyFromChild) {
-      const creditLimit = this.props.oms.dataOMSCheckCredit.creditLimit;
+      const balanceCredit = this.props.oms.dataOMSCheckCredit?.balanceAmount;
       const totalAmount =
         Price(this.props.pdp.dataDetailPdp) * this.state.qtyFromChild;
-      if (totalAmount > creditLimit) {
+      if (totalAmount > balanceCredit) {
         this.toParentFunction({ type: 'overCreditLimit' });
       } else {
         this.toParentFunction({ type: 'hideWarningCredit' });
