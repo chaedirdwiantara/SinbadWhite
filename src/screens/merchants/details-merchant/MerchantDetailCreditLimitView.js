@@ -258,7 +258,10 @@ class MerchantDetailCreditLimitView extends Component {
   render() {
     return (
       <View style={{ backgroundColor: Color.fontBlack10, height: '100%' }}>
-        {!this.props.merchant.loadingGetCreditLimitList ? (
+        {!this.props.merchant.loadingGetCreditLimitList &&
+        !this.props.merchant.loadingGetCreditLimitSummary &&
+        this.props.merchant.dataGetCreditLimitList &&
+        this.props.merchant.dataGetCreditLimitSummary ? (
           this.renderContent()
         ) : (
           <SkeletonType29 />
