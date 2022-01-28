@@ -527,7 +527,7 @@ class MerchantHomeView extends Component {
       page: 1,
       date: today,
       search: '',
-      storetype: 'all',
+      storetype: this.props.navigation.state.params.storeType,
       loading: true
     });
     this.props.getJourneyPlanReportProcessV2();
