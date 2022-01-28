@@ -144,8 +144,7 @@ class ModalBottomPaymentType extends Component {
                     color={Color.fontYellow40}
                   />
                   <Text style={[Fonts.type69, { marginLeft: 8, fontSize: 12 }]}>
-                    Toko ini telah melebihi batas kredit. Sarankan untuk
-                    menyelesaikan pembayaran sebelumnya terlebih dahulu
+                    {item.warningMessage ?? ''}
                   </Text>
                 </View>
               ) : null
