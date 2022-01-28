@@ -6,9 +6,7 @@ import SfaDetailView, {
   HeaderRightOption
 } from '../../screens/sfa/SfaDetailView';
 import SfaCollectionLog from '../../screens/sfa/SfaCollectionLog';
-import SfaCollectionDetailView, {
-  DetailHeaderOption
-} from '../../screens/sfa/SfaCollectionDetailView';
+import SfaCollectionDetailView from '../../screens/sfa/SfaCollectionDetailView';
 import SfaCollectionMethodListView from '../../screens/sfa/SfaCollectionMethodListView';
 import SfaCollectionListView from '../../screens/sfa/SfaCollectionListView';
 import SfaCollectionAddView from '../../screens/sfa/SfaCollectionAddView';
@@ -219,7 +217,7 @@ const SfaNavigator = {
       headerRight: <View />,
       gesturesEnabled: false
     }
-  }, 
+  },
   SfaBillingEditView: {
     screen: SfaBillingEditView,
     navigationOptions: {
