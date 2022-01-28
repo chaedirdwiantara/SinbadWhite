@@ -21,7 +21,7 @@ import {
   ButtonSingleSmall,
   SkeletonType18
 } from '../../library/component';
-import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
 import Price from '../../functions/Price';
@@ -71,10 +71,10 @@ class PdpOrderView extends Component {
       }
     }
     if (prevState.qtyFromChild !== this.state.qtyFromChild) {
-      const creditLimit = this.props.oms.dataOMSCheckCredit.creditLimit;
+      const balanceCredit = this.props.oms.dataOMSCheckCredit?.balanceAmount;
       const totalAmount =
         Price(this.props.pdp.dataDetailPdp) * this.state.qtyFromChild;
-      if (totalAmount > creditLimit) {
+      if (totalAmount > balanceCredit) {
         this.toParentFunction({ type: 'overCreditLimit' });
       } else {
         this.toParentFunction({ type: 'hideWarningCredit' });

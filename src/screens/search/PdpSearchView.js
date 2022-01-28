@@ -3,19 +3,25 @@ import {
   Component,
   View,
   StyleSheet,
-  SafeAreaView
+  SafeAreaView,
+  Text
 } from '../../library/reactPackage';
-import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
+import {
+  bindActionCreators,
+  connect,
+  MaterialIcon
+} from '../../library/thirdPartyPackage';
 import {
   StatusBarRed,
   SearchBarType3,
   CartGlobal,
-  ModalBottomType3,
   ToastType1,
   ModalConfirmation,
-  ModalBottomSkuNotAvailable
+  ModalBottomSkuNotAvailable,
+  ModalBottomType7
 } from '../../library/component';
 import { Color } from '../../config';
+import { Fonts } from '../../helpers';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
 import PdpSearchListDataView from './PdpSearchListDataView';
@@ -33,6 +39,7 @@ class PdpSearchView extends Component {
       addProductNotif: false,
       addProductNotifText: '',
       selectedProduct: null,
+      openWarningCredit: false,
       /** sort */
       sort: 'asc',
       sortBy: 'name'
@@ -76,13 +83,15 @@ class PdpSearchView extends Component {
   }
   /** === FETCH DATA (THIS FOR ALL FITLER) === */
   getPdp(data) {
-    const { dataSalesTeam } = this.props.profile
+    const { dataSalesTeam } = this.props.profile;
     this.props.pdpSearchGetProcess({
       page: data.page,
       loading: data.loading,
       sort: data.sort !== undefined ? data.sort : this.state.sort,
       sortBy: data.sortBy !== undefined ? data.sortBy : this.state.sortBy,
-      invoiceGroupIds: dataSalesTeam ? dataSalesTeam[0].salesTeamInvoice.map(item => item.invoiceId) : [],
+      invoiceGroupIds: dataSalesTeam
+        ? dataSalesTeam[0].salesTeamInvoice.map(item => item.invoiceId)
+        : [],
       search: this.props.global.search
     });
   }
@@ -105,6 +114,12 @@ class PdpSearchView extends Component {
             selectedProduct: data.data
           });
         } else {
+          const invoiceGroupId = data.invoice[0].invoiceGroupId;
+          const storeId = this.props.merchant.selectedMerchant.storeId;
+          this.props.OMSCheckCreditProcess({
+            invoiceGroupId: parseInt(invoiceGroupId, 10),
+            storeId: parseInt(storeId, 10)
+          });
           this.props.pdpGetDetailProcess(data.data);
           this.setState({ openModalOrder: true });
         }
@@ -150,6 +165,14 @@ class PdpSearchView extends Component {
             this.getPdp({ page, loading: false });
           }
         }
+        break;
+      /** => over credit limit */
+      case 'overCreditLimit':
+        this.setState({ openWarningCredit: true });
+        break;
+      /** => hide warning credit limit */
+      case 'hideWarningCredit':
+        this.setState({ openWarningCredit: false });
         break;
       default:
         break;
@@ -220,7 +243,7 @@ class PdpSearchView extends Component {
   /** === RENDER MODAL ORDER === */
   renderModalOrder() {
     return this.state.openModalOrder ? (
-      <ModalBottomType3
+      <ModalBottomType7
         open={this.state.openModalOrder}
         title={'Masukan Jumlah'}
         content={
@@ -229,12 +252,40 @@ class PdpSearchView extends Component {
             parentFunction={this.parentFunction.bind(this)}
           />
         }
-        close={() => this.setState({ openModalOrder: false })}
+        close={() =>
+          this.setState({ openModalOrder: false, openWarningCredit: false })
+        }
         typeClose={'cancel'}
+        warningContent={
+          this.state.openWarningCredit ? this.renderWarningContent() : null
+        }
       />
     ) : (
       <View />
     );
+  }
+  /** === RENDER WARNING CREDIT LIMIT === */
+  renderWarningContent() {
+    const allowCreditLimit = this.props.oms.dataOMSCheckCredit.allowCreditLimit;
+    const freezeStatus = this.props.oms.dataOMSCheckCredit.freezeStatus;
+    return allowCreditLimit && !freezeStatus ? (
+      <View
+        style={{
+          paddingHorizontal: 16,
+          paddingVertical: 12,
+          flexDirection: 'row',
+          alignItems: 'center'
+        }}
+      >
+        <MaterialIcon name={'info'} size={24} color={'white'} />
+        <View style={{ marginLeft: 12 }}>
+          <Text style={Fonts.type35}>Toko Ini Telah Melewati Limit Kredit</Text>
+          <Text style={Fonts.type94}>
+            Selesaikan pembayaran sebelumnya terlebih dahulu
+          </Text>
+        </View>
+      </View>
+    ) : null;
   }
   /** === RENDER MODAL SKU NOT AVAILABLE === */
   renderModalSkuNotAvailable() {
@@ -280,7 +331,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(PdpSearchView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PdpSearchView);
 
 /**
  * ============================

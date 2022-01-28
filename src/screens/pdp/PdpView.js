@@ -360,7 +360,9 @@ class PdpView extends Component {
             parentFunction={this.parentFunction.bind(this)}
           />
         }
-        close={() => this.setState({ openModalOrder: false })}
+        close={() =>
+          this.setState({ openModalOrder: false, openWarningCredit: false })
+        }
         typeClose={'cancel'}
         warningContent={
           this.state.openWarningCredit ? this.renderWarningContent() : null
