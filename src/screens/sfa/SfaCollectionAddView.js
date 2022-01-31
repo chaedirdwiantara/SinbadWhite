@@ -43,6 +43,10 @@ import {
 import { collectionMethodLabel } from './functions/sfa';
 import SfaTooltip from './components/SfaTooltip';
 import InputAmount from './components/InputAmount';
+import {
+  ModalConfirmBack,
+  navigationFunctionAddView
+} from './sfa-collection/AddViewBundle';
 
 const MODAL_TYPE_SOURCE = 1;
 const MODAL_TYPE_TO = 2;
@@ -81,6 +85,7 @@ const SfaCollectionAddView = props => {
   // TODO: saldo barang retur
   const returnedGoodsBalance = 500000;
   const [invalidAmountRetur, setInvalidAmountRetur] = useState(false);
+  const [openModalConfirmBack, setOpenModalConfirmBack] = useState(false);
 
   /**
    * *********************************
@@ -140,6 +145,10 @@ const SfaCollectionAddView = props => {
       setDataStamp(null);
     }
   }, [isStampChecked]);
+
+  useEffect(() => {
+    navigationFunctionAddView({ setOpenModalConfirmBack });
+  }, []);
 
   /** HANDLE ERROR POST COLLECTION */
   useEffect(() => {
@@ -232,19 +241,22 @@ const SfaCollectionAddView = props => {
   };
 
   const totalAmountCal = value => {
-    if (
-      paymentCollectionMethodId === CASH ||
-      paymentCollectionMethodId === TRANSFER
-    ) {
-      setTotalAmount(amount);
-    }
-    if (
-      paymentCollectionMethodId === CHECK ||
-      paymentCollectionMethodId === GIRO
-    ) {
-      const stamp = dataStamp ? dataStamp.nominal : 0;
-      const total = amount + stamp;
-      setTotalAmount(parseInt(total, 10));
+    switch (paymentCollectionMethodId) {
+      case CASH:
+      case TRANSFER:
+      case RETUR:
+        setTotalAmount(amount);
+        break;
+      case CHECK:
+      case GIRO:
+        // eslint-disable-next-line no-case-declarations
+        const stamp = dataStamp ? dataStamp.nominal : 0;
+        // eslint-disable-next-line no-case-declarations
+        const total = amount + stamp;
+        setTotalAmount(parseInt(total, 10));
+        break;
+      case PROMO:
+        break;
     }
   };
 
@@ -999,6 +1011,19 @@ const SfaCollectionAddView = props => {
       </View>
     );
   };
+
+  /** ===> RENDER MODAL BACK CONFIRMATION === */
+  const renderModalConfirmBack = () => {
+    return openModalConfirmBack ? (
+      <ModalConfirmBack
+        openModalConfirmBack={openModalConfirmBack}
+        setOpenModalConfirmBack={setOpenModalConfirmBack}
+      />
+    ) : (
+      <View />
+    );
+  };
+
   /**
    * *********************************
    * RENDER MAIN
@@ -1015,6 +1040,7 @@ const SfaCollectionAddView = props => {
       {renderModalListMaterai()}
       {renderModalError()}
       {renderModalBankDestination()}
+      {renderModalConfirmBack()}
     </>
   );
 };
