@@ -425,6 +425,18 @@ class MerchantHomeView extends Component {
         });
       }
     }
+    /** checkCanResumeVisitAgain when on update pauseResumeVisitSuccess */
+    if (
+      prevProps.merchant.dataPauseResumeVisit !==
+      this.props.merchant.dataPauseResumeVisit
+    ) {
+      if (this.props.dataPauseResumeVisit !== null) {
+        this.props.checkCanResumeVisitProcess({
+          journeyBookId: this.props.merchant.selectedMerchant.journeyBookStores.journeyBookId,
+          journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores.id
+        })
+      }
+    }
     /** FOR ERROR */
     /** error post */
     if (

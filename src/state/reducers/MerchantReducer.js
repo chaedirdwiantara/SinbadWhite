@@ -1485,7 +1485,7 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingCheckCanResumeVisit: false,
-      dataCheckCanResumeVisit: action.payload,
+      dataCheckCanResumeVisit: action.payload.data,
       errorCheckCanResumeVisit: null
     };
   },
