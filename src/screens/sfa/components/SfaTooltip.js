@@ -5,6 +5,12 @@ import masterColor from '../../../config/masterColor.json';
 
 const { width } = Dimensions.get('window');
 
+/**
+ * SFA TOOLTIP
+ * @param {number} height number
+ * @param {any} popover any
+ * @returns
+ */
 const SfaTooltip = props => {
   const [questionMarkShow, setQuestionMarkShow] = useState(true);
   return (
