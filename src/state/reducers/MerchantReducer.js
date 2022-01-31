@@ -22,7 +22,7 @@ const INITIAL_STATE = {
   loadingGetJourneyBookDetail: false,
   loadingGetStoreStatus: false,
   loadingGetWarehouse: false,
-  loadingGetListSurvey: false,
+  loadingGetSurveyList: false,
   refreshGetSurveyList: false,
   loadingLoadMoreSurveyList: false,
   loadingGetTotalSurvey: false,

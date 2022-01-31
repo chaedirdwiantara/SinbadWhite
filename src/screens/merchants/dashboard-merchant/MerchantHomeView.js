@@ -162,20 +162,10 @@ class MerchantHomeView extends Component {
   }
 
   /** === DID MOUNT === */
-  getSurvey = () => {
-    const params = {
-      storeId: this.props.merchant.selectedMerchant.storeId,
-      page: 1,
-      length: 10
-    };
-    this.props.merchantGetSurveyListProcess(params);
-  };
 
   componentDidMount() {
     /** FOR GET LATEST CHECK IN AND CHECK OUT */
     this.props.merchantGetLatestCheckInOutProcess();
-    /** FOR GET MERCHANT LIST */
-    this.getSurvey();
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
       this.props.merchant.selectedMerchant.storeId
@@ -674,12 +664,12 @@ class MerchantHomeView extends Component {
           activity: 'check_in'
         });
         if (this.props.merchant.dataGetLogAllActivityV2) {
-          const haveSurvey = this.props.merchant.dataGetTotalSurvey.total === 0;
+          const haveSurvey = this.props.merchant.dataGetTotalSurvey?.total > 0;
           const surveyHasDone = this.props.merchant.dataGetLogAllActivityV2.find(
             item => item.activityName === 'toko_survey'
           );
           const { checkOut } = this.state.privileges;
-          if ((haveSurvey || surveyHasDone) && checkOut?.status) {
+          if ((!haveSurvey || surveyHasDone) && checkOut?.status) {
             this.setState({ openModalCheckout: true });
           }
         }
@@ -2122,7 +2112,8 @@ class MerchantHomeView extends Component {
         !this.props.merchant.loadingGetLogAllActivity &&
         this.props.merchant.dataGetLogAllActivityV2 !== null &&
         !this.state.loadingPostForCheckoutNoOrder &&
-        !this.props.merchant.loadingPauseResumeVisit
+        !this.props.merchant.loadingPauseResumeVisit &&
+        !this.props.merchant.loadingGetTotalSurvey
         ? (
           <View style={{ height: '100%' }}>
             {this.renderBackground()}
@@ -2389,9 +2380,8 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: raka
- * updatedDate: 27012022
+ * updatedBy: dyah
+ * updatedDate: 31012022
  * updatedFunction:
- * -> integration pause/resume visit
- * -> adjust button pause to be disabled when pausestatus == 2
+ * -> add loading get total survey.
  */
