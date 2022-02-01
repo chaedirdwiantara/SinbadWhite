@@ -492,15 +492,6 @@ class HistoryDataListView extends Component {
                     justifyContent: 'space-between'
                   }}
                 >
-                  <Text
-                    accessible={true}
-                    accessibilityLabel={'txtTagihanTanggalTransaksi'}
-                    style={[Fonts.type57, { marginTop: 11 }]}
-                  >
-                    {moment(new Date(item.createdAt)).format(
-                      'DD MMM YYYY HH:mm:ss'
-                    )}
-                  </Text>
                   {item.statusPayment !== PAID &&
                   item.statusPayment !== REFUNDED &&
                   item.statusPayment !== WAITING_FOR_REFUND
@@ -517,17 +508,6 @@ class HistoryDataListView extends Component {
                         : this.renderCountDown(item)
                       : null
                     : null}
-                </View>
-              ) : (
-                <View />
-              )}
-              {this.props.section === 'order' ? (
-                <View style={[styles.boxItemContent, { flex: 1 }]}>
-                  <Text style={[Fonts.type57]}>
-                    {moment(new Date(item.createdAt)).format(
-                      'DD MMM YYYY HH:mm:ss'
-                    )}
-                  </Text>
                 </View>
               ) : (
                 <View />
@@ -549,85 +529,15 @@ class HistoryDataListView extends Component {
               <View>
                 {!item.deliveredParcelModified &&
                 (item.status === DELIVERED || item.status === DONE) ? (
-                  <View style={[styles.boxItemContent, { marginBottom: 4 }]}>
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        alignSelf: 'space-between'
-                      }}
-                    >
-                      <Text
-                        style={[
-                          item.deliveredParcelModified
-                            ? Fonts.type112p
-                            : Fonts.type111p,
-                          {
-                            flex: 1,
-                            textDecorationLine: item.deliveredParcelModified
-                              ? 'line-through'
-                              : 'none'
-                          }
-                        ]}
-                      >
-                        {MoneyFormat(item.billing.deliveredTotalPayment)}
-                      </Text>
-                      <Text
-                        style={[
-                          item.deliveredParcelModified
-                            ? Fonts.type112p
-                            : Fonts.type111p,
-                          {
-                            textDecorationLine: item.deliveredParcelModified
-                              ? 'line-through'
-                              : 'none'
-                          }
-                        ]}
-                      >
-                        QTY: {item.deliveredParcelQty}
-                      </Text>
-                    </View>
-                  </View>
+                  <BottomCardItem
+                    item={item}
+                    totalPembelian={item.billing.deliveredTotalPayment}
+                  />
                 ) : (
-                  <View style={[styles.boxItemContent, { marginBottom: 4 }]}>
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        alignSelf: 'space-between'
-                      }}
-                    >
-                      <Text
-                        style={[
-                          item.deliveredParcelModified
-                            ? Fonts.type112p
-                            : Fonts.type111p,
-                          {
-                            flex: 1,
-                            textDecorationLine: item.deliveredParcelModified
-                              ? 'line-through'
-                              : 'none'
-                          }
-                        ]}
-                      >
-                        {MoneyFormat(item.billing.totalPayment)}
-                      </Text>
-                      <Text
-                        style={[
-                          item.deliveredParcelModified
-                            ? Fonts.type112p
-                            : Fonts.type111p,
-                          {
-                            textDecorationLine: item.deliveredParcelModified
-                              ? 'line-through'
-                              : 'none'
-                          }
-                        ]}
-                      >
-                        QTY: {item.parcelQty}
-                      </Text>
-                    </View>
-                  </View>
+                  <BottomCardItem
+                    item={item}
+                    totalPembelian={item.billing.totalPayment}
+                  />
                 )}
                 {item.deliveredParcelModified ? (
                   <View style={styles.boxItemContent}>
@@ -874,6 +784,117 @@ class HistoryDataListView extends Component {
   }
 }
 
+const BottomCardItem = props => {
+  return (
+    <View style={[styles.boxItemColumnContent, { marginBottom: 4 }]}>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          alignSelf: 'space-between',
+          marginBottom: 3
+        }}
+      >
+        <Text
+          style={[
+            Fonts.type57,
+            {
+              flex: 1,
+              textDecorationLine: props.item.deliveredParcelModified
+                ? 'line-through'
+                : 'none'
+            }
+          ]}
+        >
+          Order Via
+        </Text>
+        <Text
+          style={[
+            Fonts.type57,
+            {
+              textDecorationLine: props.item.deliveredParcelModified
+                ? 'line-through'
+                : 'none'
+            }
+          ]}
+        >
+          Sales Rep
+        </Text>
+      </View>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          alignSelf: 'space-between',
+          marginBottom: 3
+        }}
+      >
+        <Text
+          style={[
+            Fonts.type57,
+            {
+              flex: 1,
+              textDecorationLine: props.item.deliveredParcelModified
+                ? 'line-through'
+                : 'none'
+            }
+          ]}
+        >
+          Dipesan Pada
+        </Text>
+        <Text
+          style={[
+            Fonts.type57,
+            {
+              textDecorationLine: props.item.deliveredParcelModified
+                ? 'line-through'
+                : 'none'
+            }
+          ]}
+        >
+          {moment(new Date(props.item.createdAt)).format(
+            'DD MMM YYYY HH:mm:ss'
+          )}
+        </Text>
+      </View>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          alignSelf: 'space-between',
+          marginBottom: 3
+        }}
+      >
+        <Text
+          style={[
+            Fonts.type10,
+            {
+              flex: 1,
+              textDecorationLine: props.item.deliveredParcelModified
+                ? 'line-through'
+                : 'none'
+            }
+          ]}
+        >
+          Total Pembelian
+        </Text>
+        <Text
+          style={[
+            Fonts.type10,
+            {
+              textDecorationLine: props.item.deliveredParcelModified
+                ? 'line-through'
+                : 'none'
+            }
+          ]}
+        >
+          {MoneyFormat(props.totalPembelian)}
+        </Text>
+      </View>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1
@@ -896,6 +917,11 @@ const styles = StyleSheet.create({
   },
   boxItemContent: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  boxItemColumnContent: {
+    flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center'
   },

@@ -63,7 +63,7 @@ class HistoryView extends Component {
     this.checkNewOrderNotif();
     this.props.historyGetOrderStatusProcess();
     this.props.historyGetPaymentStatusProcess();
-    this.getSalesName();
+    // this.getSalesName();
   }
 
   /** CHECK NEW ORDER NOTIF */
@@ -414,7 +414,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(HistoryView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HistoryView);
 
 /**
  * ============================

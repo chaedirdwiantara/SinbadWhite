@@ -5,11 +5,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   Text
-} from '../../library/reactPackage'
-import {
-  connect
-} from '../../library/thirdPartyPackage'
-import { Fonts } from '../../helpers'
+} from '../../library/reactPackage';
+import { connect } from '../../library/thirdPartyPackage';
+import { Fonts } from '../../helpers';
 import masterColor from '../../config/masterColor';
 
 class HistoryTabView extends Component {
@@ -152,14 +150,14 @@ const mapStateToProps = ({ auth }) => {
 export default connect(mapStateToProps)(HistoryTabView);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
