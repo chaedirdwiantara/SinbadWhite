@@ -16,7 +16,7 @@ import { Color } from '../../../config';
 import { Fonts, GlobalStyle, MoneyFormat } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import { SkeletonType29, LoadingLoadMore } from '../../../library/component';
-
+import MerchantCreditLimitNoDataView from './MerchantCreditLimitNoDataView';
 class MerchantDetailCreditLimitView extends Component {
   constructor(props) {
     super(props);
@@ -269,12 +269,22 @@ class MerchantDetailCreditLimitView extends Component {
       <LoadingLoadMore />
     ) : null;
   }
+  /** === RENDER EMPTY STATE === */
+  renderEmptyState() {
+    return (
+      <View style={{ marginTop: '10%' }}>
+        <MerchantCreditLimitNoDataView />
+      </View>
+    );
+  }
   /** === CONTENT === */
   renderContent() {
     return (
       <View style={{ flex: 1 }}>
         {this.renderCreditInformation()}
-        {this.renderInvoiceInformation()}
+        {this.props.merchant.dataGetCreditLimitList?.data?.length > 0
+          ? this.renderInvoiceInformation()
+          : this.renderEmptyState()}
         {this.renderLoadingLoadMore()}
       </View>
     );
