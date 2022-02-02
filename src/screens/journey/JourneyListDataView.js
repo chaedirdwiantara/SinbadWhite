@@ -288,7 +288,7 @@ class JourneyListDataView extends Component {
                  */
                   item.journeyBookStores.typeOfStore === 'exist_store'
                     ? Fonts.type67
-                    : Fonts.type29
+                    : Fonts.type120
                 }
               >
                 {item.externalId ? item.externalId : '-'}
@@ -324,7 +324,7 @@ class JourneyListDataView extends Component {
                 */
                 item.journeyBookStores.typeOfStore === 'exist_store'
                   ? Fonts.type8
-                  : Fonts.type29
+                  : Fonts.type121
               }
             >
               {item.storeName}
@@ -340,7 +340,7 @@ class JourneyListDataView extends Component {
                  */
                 item.journeyBookStores.typeOfStore === 'exist_store'
                   ? Fonts.type67
-                  : Fonts.type22
+                  : Fonts.type120
               }
               address={item.address}
               urban={item.urbans}
