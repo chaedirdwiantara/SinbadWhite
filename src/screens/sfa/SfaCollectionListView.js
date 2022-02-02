@@ -486,7 +486,7 @@ const SfaCollectionListView = props => {
           open={openModalNoSaldo}
           onPress={() => setOpenModalNoSaldo(false)}
           buttonTitle={'OK'}
-          imagePath={require('../../assets/images/sinbad_image/no_saldo.png')}
+          imagePath={require('../../assets/images/sinbad_image/no_balance_sinbad.png')}
           title={'Saldo tidak ada'}
           description={'Mohon maaf Anda belum memiliki saldo barang retur'}
         />
