@@ -1,5 +1,7 @@
 import ApiRest from '../apiRest';
 
+// TODO: Remove testpath after integration with real API
+
 /** GET ORDER STATUS */
 function getCollectionStatus(data) {
   return ApiRest({
@@ -136,8 +138,8 @@ function getCollectionLog(data) {
 function getCollectionDetail(data) {
   return ApiRest({
     path: `collection/v1/payment-method/${data}`,
-    method: 'GET'
-    // testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-method/${data}`
+    method: 'GET',
+    testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-method/${data}`
   });
 }
 
@@ -163,7 +165,8 @@ function deletePaymentBilling(data) {
 function getBillingDetail(data) {
   return ApiRest({
     path: `collection/v1/payment-billing/${data}`,
-    method: 'GET'
+    method: 'GET',
+    testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billing/${data}`
   });
 }
 
@@ -175,8 +178,10 @@ function getPaymentCollectionLog(data) {
     }&storeId=${data.storeId}&limit=${data.limit}&skip=${data.skip}&userId=${
       data.userId
     }`,
-    // testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billing-collections?paymentCollectionMethodId=${data.paymentCollectionMethodId}&limit=${data.limit}&skip=${data.skip}`,
-    method: 'GET'
+    method: 'GET',
+    testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billing-collections?paymentCollectionMethodId=${
+      data.paymentCollectionMethodId
+    }&limit=${data.limit}&skip=${data.skip}` // TODO: remove me
   });
 }
 

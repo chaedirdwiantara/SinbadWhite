@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -10,11 +11,7 @@ import {
 import { MaterialIcon } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormatSpace } from '../../helpers';
-import {
-  APPROVED,
-  REJECTED,
-  PENDING
-} from '../../constants/collectionConstants';
+import { APPROVED, PENDING, RETUR } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 import {
   LoadingPage,
@@ -78,8 +75,8 @@ const SfaBillingLogView = props => {
   useEffect(() => {
     prevErrorSfaDeletePaymentBillingRef.current = errorSfaDeletePaymentBilling;
   }, []);
-  const prevErrorSfaDeletePaymentBilling =
-    prevErrorSfaDeletePaymentBillingRef.current;
+  // const prevErrorSfaDeletePaymentBilling =
+  //   prevErrorSfaDeletePaymentBillingRef.current;
 
   useEffect(() => {
     if (prevDataSfaDeletePaymentBilling !== dataSfaDeletePaymentBilling) {
@@ -278,6 +275,9 @@ const SfaBillingLogView = props => {
 
           <View style={styles.salesContainer}>
             <View>
+              {/* TODO: integration API Nama Faktur*/}
+              {collectionMethodId === RETUR &&
+                renderContentListGlobal('Nama Faktur', 'COMBINE')}
               {renderContentListGlobal('Nomor Pesanan', item.orderCode)}
               {renderContentListGlobal(
                 'Tanggal Pembayaran',

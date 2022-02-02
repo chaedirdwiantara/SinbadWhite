@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -22,7 +23,8 @@ import {
   USED,
   USED_BY_OTHERS,
   NOT_AVAILABLE,
-  NOT_USED
+  NOT_USED,
+  RETUR
 } from '../../constants/collectionConstants';
 import { CardHeaderBadge, CardBody, CardHeader } from './components/CardView';
 import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
@@ -248,10 +250,19 @@ const SfaBillingDetailView = props => {
   const renderCodeInfoBody = () => {
     const {
       billingPaymentCode,
-      billingPaymentRef
+      billingPaymentRef,
+      paymentCollectionType
     } = dataSfaGetBillingDetail.data;
 
-    return (
+    return paymentCollectionType.id === RETUR ? (
+      <>
+        {CardBody({
+          title: 'Kode Penagihan',
+          value: 'S0100042273101076686', // TODO: Integration with API
+          styleCardView: styles.styleCardView
+        })}
+      </>
+    ) : (
       <>
         {CardBody({
           title: 'Kode Pembayaran',
@@ -261,6 +272,43 @@ const SfaBillingDetailView = props => {
         {CardBody({
           title: 'Kode Pembayaran Ref',
           value: billingPaymentRef || '-',
+          styleCardView: styles.styleCardView
+        })}
+      </>
+    );
+  };
+
+  /** RENDER SALESMAN INFORMATION HEADER */
+  const renderSalesmanInfoHeader = () => {
+    return (
+      <>
+        {CardHeader({
+          title: 'Informasi Salesman',
+          styleContainer: styles.container,
+          styleCard: {
+            ...styles.cardTaskList,
+            ...GlobalStyle.shadowForBox5
+          },
+          styleCardView: styles.styleCardView,
+          renderCardBody: renderSalesmanInfoBody
+        })}
+      </>
+    );
+  };
+
+  /** RENDER SALESMAN INFORMATION BODY */
+  // TODO: Integration with API
+  const renderSalesmanInfoBody = () => {
+    return (
+      <>
+        {CardBody({
+          title: 'Kode Salesman',
+          value: 'ID8930249',
+          styleCardView: styles.styleCardView
+        })}
+        {CardBody({
+          title: 'Nama Salesman',
+          value: 'Budiman Sujadmiko',
           styleCardView: styles.styleCardView
         })}
       </>
@@ -342,7 +390,7 @@ const SfaBillingDetailView = props => {
             paymentCollectionType.id === TRANSFER
               ? '*Tanggal Pembayaran'
               : 'Tanggal Pembayaran',
-          valueIcon: {
+          valueIcon: paymentCollectionType.id !== RETUR && {
             prefixIcon: 'date-range',
             prefixStyle: { marginRight: 11 }
           },
@@ -352,6 +400,16 @@ const SfaBillingDetailView = props => {
           valueStyle: { marginBottom: 16, marginTop: 2 },
           styleCardView: styles.styleCardView
         })}
+        {/* TODO: Integration with API */}
+        {paymentCollectionType.id === RETUR &&
+          CardBody({
+            title: 'Metode Penagihan',
+            value: paymentCollectionType?.name || '-',
+            valuePosition: 'bottom',
+            titleStyle: { ...Fonts.type37 },
+            valueStyle: { marginBottom: 16 },
+            styleCardView: styles.styleCardView
+          })}
         {CardBody({
           title:
             paymentCollectionType.id === TRANSFER
@@ -400,6 +458,7 @@ const SfaBillingDetailView = props => {
       <View style={{ flex: 1 }}>
         {renderInvoiceInfoHeader()}
         {renderCodeInfoHeader()}
+        {renderSalesmanInfoHeader()}
         {renderBillingInfoCardHeader()}
       </View>
     );

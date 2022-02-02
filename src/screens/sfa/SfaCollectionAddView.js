@@ -82,7 +82,7 @@ const SfaCollectionAddView = props => {
   const [titleError, setTitleError] = useState(null);
   const [buttonTitle, setButtonTitle] = useState(null);
 
-  // TODO: saldo barang retur
+  // TODO: Integration API - saldo barang retur
   const returnedGoodsBalance = 500000;
   const [invalidAmountRetur, setInvalidAmountRetur] = useState(false);
   const [openModalConfirmBack, setOpenModalConfirmBack] = useState(false);
@@ -299,7 +299,7 @@ const SfaCollectionAddView = props => {
         }
         break;
       case PROMO:
-        // TODO:
+        // TODO: logic payment method collection PROMO
         break;
       case RETUR:
         if (!amount) {
@@ -377,12 +377,12 @@ const SfaCollectionAddView = props => {
       };
       dispatch(sfaPostPaymentMethodProcess(dataTransfer));
     }
-    // TODO: Retur
+    // TODO: Integration API - Retur
     if (paymentCollectionMethodId === RETUR) {
       const dataRetur = {};
       dispatch(sfaPostPaymentMethodProcess(dataRetur));
     }
-    // TODO: Promo
+    // TODO: Integration API - Promo
     if (paymentCollectionMethodId === PROMO) {
       const dataPromo = {};
       dispatch(sfaPostPaymentMethodProcess(dataPromo));
