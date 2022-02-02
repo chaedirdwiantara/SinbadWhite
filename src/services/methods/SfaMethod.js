@@ -137,6 +137,7 @@ function getCollectionDetail(data) {
   return ApiRest({
     path: `collection/v1/payment-method/${data}`,
     method: 'GET'
+    // testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-method/${data}`
   });
 }
 
@@ -210,11 +211,11 @@ function getReasonNotToPay() {
   return ApiRest({
     path: 'collection/v1/no-payment-reasons',
     method: 'GET'
-  })
+  });
 }
 
 /** POST TRANSACTION CHECKOUT */
-function postTransactionCheckout(data){
+function postTransactionCheckout(data) {
   return ApiRest({
     path: 'collection/v1/transaction-checkout',
     method: 'POST',

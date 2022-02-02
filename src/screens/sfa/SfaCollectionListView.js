@@ -12,7 +12,7 @@ import { MaterialIcon } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
-import { APPROVED, PENDING } from '../../constants/collectionConstants';
+import { APPROVED, PENDING, RETUR } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 import {
   ButtonSingle,
@@ -480,7 +480,7 @@ const SfaCollectionListView = props => {
    * =======================
    */
   const renderModalNoSaldo = () => {
-    return !props.isNavigateFromTab ? (
+    return collectionTypeId === RETUR && !props.isNavigateFromTab ? (
       <View>
         <ModalBottom
           open={openModalNoSaldo}
