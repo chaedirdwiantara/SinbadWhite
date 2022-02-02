@@ -20,7 +20,7 @@ class MerchantCreditLimitNoDataView extends Component {
           <View style={{ alignSelf: 'center' }}>
             <View style={{ alignSelf: 'center' }}>
               <Image
-                source={require('../../../assets/images/sinbad_image/not_found.png')}
+                source={require('../../../assets/images/sinbad_image/no_balance_sinbad.png')}
                 style={{ width: 230 }}
               />
             </View>
