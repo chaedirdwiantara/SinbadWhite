@@ -14,6 +14,14 @@ export const TRANSFER = 4;
 export const PROMO = 5;
 export const RETUR = 6;
 
+/** COLLECTION METHOD TYPE LABEL */
+export const CASH_LABEL = 'Tunai';
+export const CHECK_LABEL = 'Cek';
+export const GIRO_LABEL = 'Giro';
+export const TRANSFER_LABEL = 'Transfer';
+export const PROMO_LABEL = 'Kerjasama Promosi';
+export const RETUR_LABEL = 'Barang Retur';
+
 /**
  * STATUS APPROVAL SFA
  * 1. approved

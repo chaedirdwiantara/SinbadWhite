@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -11,11 +12,10 @@ import { MaterialIcon } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
-import { APPROVED, PENDING } from '../../constants/collectionConstants';
+import { APPROVED, PENDING, RETUR } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 import {
   ButtonSingle,
-  LoadingPage,
   LoadingLoadMore,
   ModalConfirmation,
   SkeletonType28
@@ -29,6 +29,7 @@ import {
   sfaGetCollectionImageProcess
 } from '../../state/actions';
 import SfaNoDataView from './SfaNoDataView';
+import ModalBottom from './components/ModalBottom';
 
 const SfaCollectionListView = props => {
   const dispatch = useDispatch();
@@ -51,6 +52,7 @@ const SfaCollectionListView = props => {
   } = useSelector(state => state.sfa);
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
+  const [openModalNoSaldo, setOpenModalNoSaldo] = useState(false);
 
   /**
    * *********************************
@@ -78,8 +80,8 @@ const SfaCollectionListView = props => {
   useEffect(() => {
     prevErrorSfaDeleteCollectionMethodRef.current = errorSfaDeleteCollectionMethod;
   }, []);
-  const prevErrorSfaDeleteCollectionMethod =
-    prevErrorSfaDeleteCollectionMethodRef.current;
+  // const prevErrorSfaDeleteCollectionMethod =
+  //   prevErrorSfaDeleteCollectionMethodRef.current;
 
   useEffect(() => {
     if (prevDataSfaDeleteCollectionMethod !== dataSfaDeleteCollectionMethod) {
@@ -88,6 +90,11 @@ const SfaCollectionListView = props => {
       }
     }
   }, [dataSfaDeleteCollectionMethod]);
+
+  // TODO: for layouting only
+  useEffect(() => {
+    !dataGetReferenceList?.data || setOpenModalNoSaldo(true);
+  }, []);
 
   /** FUNCTION NAVIGATE ON SUCCES DELETE COLLECTION */
   const navigateOnSuccesDelete = () => {
@@ -128,7 +135,7 @@ const SfaCollectionListView = props => {
   useEffect(() => {
     getCollectionList(true, 20);
   }, []);
- 
+
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigatetoAddCollection = () => {
     NavigationService.navigate('SfaCollectionAddView', {
@@ -449,12 +456,12 @@ const SfaCollectionListView = props => {
       </View>
     );
   };
+
   /**
    * =======================
    * RENDER BOTTOM BUTTON
    * =======================
    */
-
   const renderBottomButton = () => {
     return (
       <>
@@ -469,10 +476,29 @@ const SfaCollectionListView = props => {
 
   /**
    * =======================
+   * RENDER MODAL NO SALDO
+   * =======================
+   */
+  const renderModalNoSaldo = () => {
+    return collectionTypeId === RETUR && !props.isNavigateFromTab ? (
+      <View>
+        <ModalBottom
+          open={openModalNoSaldo}
+          onPress={() => setOpenModalNoSaldo(false)}
+          buttonTitle={'OK'}
+          imagePath={require('../../assets/images/sinbad_image/no_balance_sinbad.png')}
+          title={'Saldo tidak ada'}
+          description={'Mohon maaf Anda belum memiliki saldo barang retur'}
+        />
+      </View>
+    ) : null;
+  };
+
+  /**
+   * =======================
    * RENDER CONTENT
    * =======================
    */
-
   const renderContent = () => {
     return !loadingGetReferenceList ? (
       <View style={{ flex: 1 }}>
@@ -494,6 +520,7 @@ const SfaCollectionListView = props => {
     <>
       {renderContent()}
       {props.isNavigateFromTab ? null : renderBottomButton()}
+      {props.isNavigateFromTab ? null : renderModalNoSaldo()}
       {renderModalConfirmationDelete()}
     </>
   );

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -22,12 +23,13 @@ import {
   TRANSFER,
   CASH,
   CHECK,
-  GIRO
+  GIRO,
+  RETUR
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 import { CardBody, CardHeader, CardHeaderBadge } from './components/CardView';
 
-const { width, height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 const isNumber = n => (n !== null && n !== undefined ? true : false);
 
 const SfaCollectionDetailView = props => {
@@ -99,7 +101,8 @@ const SfaCollectionDetailView = props => {
    * ==============================
    */
   const renderCodeInfoHeader = () => {
-    return (
+    const { paymentCollectionType } = dataSfaGetCollectionDetail.data;
+    return paymentCollectionType?.id !== RETUR ? (
       <>
         {CardHeader({
           title: 'Informasi Kode',
@@ -112,7 +115,7 @@ const SfaCollectionDetailView = props => {
           renderCardBody: renderCodeInfoBody
         })}
       </>
-    );
+    ) : null;
   };
 
   /**
@@ -223,14 +226,14 @@ const SfaCollectionDetailView = props => {
           value: paymentCollectionType?.name,
           styleCardView: styles.styleCardView
         })}
-        {paymentCollectionType.id !== CASH
+        {paymentCollectionType.id !== CASH && paymentCollectionType.id !== RETUR
           ? CardBody({
               title: 'Nomor Referensi',
               value: reference,
               styleCardView: styles.styleCardView
             })
           : null}
-        {paymentCollectionType.id !== CASH
+        {paymentCollectionType.id !== CASH && paymentCollectionType.id !== RETUR
           ? CardBody({
               title: 'Sumber Bank',
               value: bankFrom.displayName,
@@ -291,14 +294,16 @@ const SfaCollectionDetailView = props => {
               styleCardView: styles.styleCardView
             })
           : null}
-        {CardBody({
-          title: 'Foto Penagihan',
-          loadingImage: loadingSfaGetCollectionImage,
-          imageSource: { uri: `data:image/jpeg;base64, ${image}` },
-          imageSourceStyle: styles.images,
-          imageContainerStyle: styles.smallContainerImage,
-          styleCardView: styles.styleCardViewImage
-        })}
+        {paymentCollectionType.id !== RETUR
+          ? CardBody({
+              title: 'Foto Penagihan',
+              loadingImage: loadingSfaGetCollectionImage,
+              imageSource: { uri: `data:image/jpeg;base64, ${image}` },
+              imageSourceStyle: styles.images,
+              imageContainerStyle: styles.smallContainerImage,
+              styleCardView: styles.styleCardViewImage
+            })
+          : null}
         {CardBody({
           title: 'Total Penagihan',
           value: isNumber(totalAmount) ? MoneyFormatSpace(totalAmount) : '',
