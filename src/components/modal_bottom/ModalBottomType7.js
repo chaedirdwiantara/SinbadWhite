@@ -35,7 +35,11 @@ class ModalBottomType7 extends Component {
             borderTopRightRadius: 16
           }}
         >
-          {this.props.warningContent}
+          {this.props.warningContent ? (
+            <View testID="view-warning-credit">
+              {this.props.warningContent}
+            </View>
+          ) : null}
           <View
             style={{
               alignItems: 'center',
