@@ -383,6 +383,7 @@ class PdpView extends Component {
           flexDirection: 'row',
           alignItems: 'center'
         }}
+        testID={'view-warning-credit'}
       >
         <MaterialIcon name={'info'} size={24} color={'white'} />
         <View style={{ marginLeft: 12 }}>

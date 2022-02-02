@@ -110,7 +110,7 @@ class MerchantDetailCreditLimitView extends Component {
         data={dataCreditLimit}
         renderItem={this.renderInvoiceList.bind(this)}
         keyExtractor={(item, index) => index.toString()}
-        refreshing={this.props.merchant.refreshGetCreditLimitList}
+        refreshing={this.props.merchant.refreshGetCreditLimitList || false}
         onRefresh={() => this.onRefresh()}
         onEndReachedThreshold={0.1}
         onEndReached={() => this.onHandleLoadMore()}
@@ -138,7 +138,7 @@ class MerchantDetailCreditLimitView extends Component {
   renderInvoiceList({ item, index }) {
     const condition = this.seeMoreStatus(index);
     return (
-      <View style={styles.invoiceListContainer}>
+      <View style={styles.invoiceListContainer} testID={'view-invoice-list'}>
         <View style={styles.listRow}>
           <View>
             <Text style={Fonts.type7}>{item.invoiceGroupName}</Text>
@@ -146,7 +146,10 @@ class MerchantDetailCreditLimitView extends Component {
               Limit: {MoneyFormat(item.creditLimit)}
             </Text>
           </View>
-          <TouchableOpacity onPress={() => this.onOpenToogle(index)}>
+          <TouchableOpacity
+            testID={'btn-see-more'}
+            onPress={() => this.onOpenToogle(index)}
+          >
             {this.renderIconSeeMore(index)}
           </TouchableOpacity>
         </View>
@@ -157,7 +160,7 @@ class MerchantDetailCreditLimitView extends Component {
   /** === RENDER INVOICE LIST FULL === */
   renderInvoiceListFull(item, index) {
     return (
-      <View style={{ marginTop: 16 }}>
+      <View style={{ marginTop: 16 }} testID={'view-full-invoice'}>
         <View
           style={[
             styles.listRow,

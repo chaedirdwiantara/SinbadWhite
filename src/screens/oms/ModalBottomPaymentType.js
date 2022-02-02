@@ -137,13 +137,19 @@ class ModalBottomPaymentType extends Component {
           >
             {dataPaymentType?.map(item =>
               parseInt(item.paymentTypeId, 10) === 2 && item.overLimitStatus ? (
-                <View style={styles.warningItems}>
+                <View
+                  style={styles.warningItems}
+                  testID={'view-warning-credit'}
+                >
                   <MaterialIcon
                     name={'info'}
                     size={24}
                     color={Color.fontYellow40}
                   />
-                  <Text style={[Fonts.type69, { marginLeft: 8, fontSize: 12 }]}>
+                  <Text
+                    style={[Fonts.type69, { marginLeft: 8, fontSize: 12 }]}
+                    testID={'text-warning-credit'}
+                  >
                     {item.warningMessage ?? ''}
                   </Text>
                 </View>

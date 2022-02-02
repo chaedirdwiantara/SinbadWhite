@@ -18,6 +18,7 @@ jest.mock('react-native-device-info', () => {
     getFirstInstallTime: jest.fn(),
     getLastUpdateTime: jest.fn(),
     getAPILevel: jest.fn(),
-    getUniqueID: jest.fn()
+    getUniqueID: jest.fn(),
+    isTablet: jest.fn()
   };
 });
