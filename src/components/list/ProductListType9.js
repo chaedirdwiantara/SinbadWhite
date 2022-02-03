@@ -48,7 +48,7 @@ class ProductListType9 extends Component {
     });
     return totalBrand > 1 ? (
       <Text style={[Fonts.type38, { marginTop: 15 }]}>
-        (+ {totalBrand - 1} Produk Lain)
+        +{totalBrand - 1} Produk Lainnya
       </Text>
     ) : (
       <Text>{''}</Text>
