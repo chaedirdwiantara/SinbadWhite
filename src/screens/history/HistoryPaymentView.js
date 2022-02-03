@@ -1,6 +1,6 @@
 import { React, Component, View, StyleSheet } from '../../library/reactPackage';
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
-import { TagListType2, SkeletonType2 } from '../../library/component';
+import { TagListType4, SkeletonType2 } from '../../library/component';
 import * as ActionCreators from '../../state/actions';
 import GlobalStyle from '../../helpers/GlobalStyle';
 import masterColor from '../../config/masterColor.json';
@@ -52,7 +52,7 @@ class HistoryPaymentView extends Component {
   renderTagsContent() {
     return (
       <View>
-        <TagListType2
+        <TagListType4
           selected={this.state.selectedPaymentStatus}
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
