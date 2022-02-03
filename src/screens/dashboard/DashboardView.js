@@ -150,7 +150,8 @@ class DashboardView extends Component {
           title: 'Total Pesanan'
         }
       ],
-      showModalError: false
+      showModalError: false,
+      checkError: false // flag for check error, so when re-entering this screen will check the error again
     };
   }
 
@@ -368,12 +369,14 @@ class DashboardView extends Component {
     /** handle error */
     if (
       this.props.salesmanKpi.errorDetailKpiDashboard !==
-      prevProps.salesmanKpi.errorDetailKpiDashboard
+      prevProps.salesmanKpi.errorDetailKpiDashboard &&
+      !this.state.checkError 
     ) {
-      if (prevProps.salesmanKpi.errorDetailKpiDashboard !== '') {
+      if (this.props.salesmanKpi.errorDetailKpiDashboard !== '') {
         this.setState({
           load: false,
           showModalError: true,
+          checkError: true,
         });
        }
     }
@@ -820,9 +823,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(DashboardView);
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Dyah
- * updatedDate: 25082021
+ * updatedBy: Raka
+ * updatedDate: 30112021
  * updatedFunction:
- * -> update date format.
+ * -> fix handle check error.
  *
  */

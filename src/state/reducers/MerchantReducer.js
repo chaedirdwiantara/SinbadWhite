@@ -22,7 +22,7 @@ const INITIAL_STATE = {
   loadingGetJourneyBookDetail: false,
   loadingGetStoreStatus: false,
   loadingGetWarehouse: false,
-  loadingGetListSurvey: false,
+  loadingGetSurveyList: false,
   refreshGetSurveyList: false,
   loadingLoadMoreSurveyList: false,
   loadingGetTotalSurvey: false,
@@ -41,6 +41,8 @@ const INITIAL_STATE = {
   loadingGetSalesSegmentation: false,
   loadingReturnActiveInfo: false,
   loadingGetRadiusLockGeotag: false,
+  loadingCheckCanResumeVisit: false,
+  loadingPauseResumeVisit: false,
   loadingGetCreditLimitList: false,
   loadingLoadmoreGetCreditLimit: false,
   refreshGetCreditLimitList: false,
@@ -179,6 +181,8 @@ const INITIAL_STATE = {
   dataSalesSegmentation: null,
   dataReturnActiveInfo: null,
   dataGetRadiusLockGeotag: null,
+  dataCheckCanResumeVisit: false,
+  dataPauseResumeVisit: null,
   dataGetCreditLimitList: [],
   totalDataGetCreditLimitList: null,
   skipGetCreditLimit: null,
@@ -216,6 +220,8 @@ const INITIAL_STATE = {
   errorGetSalesSegmentation: null,
   errorReturnActiveInfo: null,
   errorGetRadiusLockGeotag: null,
+  errorCheckCanResumeVisit: null,
+  errorPauseResumeVisit: null,
   errorGetCreditLimitList: null,
   errorGetCreditLimitSummary: null
 };
@@ -1474,10 +1480,70 @@ export const merchant = createReducer(INITIAL_STATE, {
     };
   },
   /**
-   * ===================
-   * MERCHANT GET CREDIT LIMIT LIST
-   * ===================
+   * ======================
+   * CHECK CAN RESUME VISIT JBS
+   * ======================
    */
+  [types.CHECK_CAN_RESUME_VISIT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingCheckCanResumeVisit: true,
+      errorCheckCanResumeVisit: null
+    };
+  },
+  [types.CHECK_CAN_RESUME_VISIT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingCheckCanResumeVisit: false,
+      dataCheckCanResumeVisit: action.payload.data,
+      errorCheckCanResumeVisit: null
+    };
+  },
+  [types.CHECK_CAN_RESUME_VISIT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingCheckCanResumeVisit: false,
+      errorCheckCanResumeVisit: action.payload,
+      dataCheckCanResumeVisit: false
+    };
+  },
+   /**
+   * ======================
+   * CHECK CAN RESUME VISIT JBS
+   * ======================
+   */
+  [types.PAUSE_RESUME_VISIT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingPauseResumeVisit: true,
+      errorPauseResumeVisit: null
+    };
+  },
+  [types.PAUSE_RESUME_VISIT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingPauseResumeVisit: false,
+      dataPauseResumeVisit: action.payload,
+      errorPauseResumeVisit: null,
+      // directly update pause status of selected merchant when pause/resume visit update success
+      selectedMerchant: {
+        ...state.selectedMerchant,
+        journeyBookStores: {
+          ...state.selectedMerchant.journeyBookStores,
+          pauseStatus: action.payload.pauseStatus,
+          pauseDate: action.payload?.pauseDate
+        },
+      },
+    };
+  },
+  [types.PAUSE_RESUME_VISIT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingPauseResumeVisit: false,
+      errorPauseResumeVisit: action.payload,
+      dataPauseResumeVisit: false
+    };
+  },
   [types.MERCHANT_GET_CREDIT_LIMIT_PROCESS](state, action) {
     return {
       ...state,
