@@ -86,6 +86,7 @@ import ProductListType3 from '../components/list/ProductListType3';
 import ProductListType4 from '../components/list/ProductListType4';
 import ProductListType7 from '../components/list/ProductListType7';
 import ProductListType8 from '../components/list/ProductListType8';
+import ProductListType9 from '../components/list/ProductListType9';
 /** EMPTY DATA */
 import ComingSoon from '../components/empty_state/ComingSoon';
 import EmptyData from '../components/empty_state/EmptyData';
@@ -114,6 +115,7 @@ import Address from '../components/Address';
 import TagListType1 from '../components/tag/TagListType1';
 import TagListType2 from '../components/tag/TagListType2';
 import TagListType3 from '../components/tag/TagListType3';
+import TagListType4 from '../components/tag/TagListType4';
 /** DATE PICKER SPINNER */
 import DatePickerSpinner from '../components/DatePickerSpinner';
 import DatePickerSpinnerWithMinMaxDate from '../components/DatePickerSpinnerWithMinMaxDate';
@@ -226,6 +228,7 @@ export {
   ProductListType4,
   ProductListType7,
   ProductListType8,
+  ProductListType9,
   /** EMPTY DATA */
   ComingSoon,
   EmptyData,
@@ -254,6 +257,7 @@ export {
   TagListType1,
   TagListType2,
   TagListType3,
+  TagListType4,
   /** DATE PICKER SPINNER */
   DatePickerSpinner,
   DatePickerSpinnerWithMinMaxDate,
