@@ -21,7 +21,7 @@ import {
   ButtonSingleSmall,
   SkeletonType18
 } from '../../library/component';
-import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
 import Price from '../../functions/Price';
@@ -56,7 +56,7 @@ class PdpOrderView extends Component {
     this.keyboardRemove();
   }
   /** === DID UPDATE === */
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     /** => IF SKU NOT AVAILABLE */
     if (prevProps.pdp.dataDetailPdp !== this.props.pdp.dataDetailPdp) {
       if (this.props.pdp.dataDetailPdp !== null) {
@@ -68,6 +68,16 @@ class PdpOrderView extends Component {
             type: 'skuNotAvailable'
           });
         }
+      }
+    }
+    if (prevState.qtyFromChild !== this.state.qtyFromChild) {
+      const balanceCredit = this.props.oms.dataOMSCheckCredit?.balanceAmount;
+      const totalAmount =
+        Price(this.props.pdp.dataDetailPdp) * this.state.qtyFromChild;
+      if (totalAmount > balanceCredit) {
+        this.toParentFunction({ type: 'overCreditLimit' });
+      } else {
+        this.toParentFunction({ type: 'hideWarningCredit' });
       }
     }
   }
@@ -201,17 +211,17 @@ class PdpOrderView extends Component {
   /** === RENDER BUTTON ORDER === */
   renderButtonOrder() {
     return (
-        <OrderButton
-          showKeyboard={this.state.showKeyboard}
-          disabledAllButton={this.state.showKeyboard}
-          item={this.props.pdp.dataDetailPdp}
-          onRef={ref => (this.parentFunctionFromOrderButton = ref)}
-          parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
-            this
-          )}
-          onFocus={() => this.setState({ buttonAddDisabled: true })}
-          onBlur={() => this.setState({ buttonAddDisabled: false })}
-        />
+      <OrderButton
+        showKeyboard={this.state.showKeyboard}
+        disabledAllButton={this.state.showKeyboard}
+        item={this.props.pdp.dataDetailPdp}
+        onRef={ref => (this.parentFunctionFromOrderButton = ref)}
+        parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
+          this
+        )}
+        onFocus={() => this.setState({ buttonAddDisabled: true })}
+        onBlur={() => this.setState({ buttonAddDisabled: false })}
+      />
     );
   }
   /** === RENDER BUTTON === */
@@ -331,9 +341,7 @@ class PdpOrderView extends Component {
             <View style={{ alignContent: 'flex-start' }}>
               <Text style={Fonts.type96}>Jumlah/pcs</Text>
             </View>
-            <View style={{ flex: 1 }}>
-              {this.renderButtonOrder()}
-            </View>
+            <View style={{ flex: 1 }}>{this.renderButtonOrder()}</View>
           </View>
         ) : (
           <View />

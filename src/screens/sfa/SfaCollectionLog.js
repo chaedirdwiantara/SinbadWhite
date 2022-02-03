@@ -129,7 +129,7 @@ function SfaCollectionLog(props) {
         : dataSfaGetDetail.data.id;
     const storeId =
       type === HISTORY
-        ? dataGetMerchantDetailV2.store.id
+        ? parseInt(dataDetailHistory?.store.id, 10)
         : selectedMerchant?.storeId;
     const data = {
       storeId: parseInt(storeId, 10),

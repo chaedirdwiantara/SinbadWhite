@@ -290,6 +290,25 @@ function batchDeleteRecordStock(params) {
     params
   });
 }
+/** GET MERCHANT CREDIT LIMIT LIST */
+function getMerchantCreditLimitList(params) {
+  return ApiRest({
+    path: `payment/v1/credit-limit-stores?supplierId=${
+      params.supplierId
+    }&storeId=${params.storeId}&limit=${params.limit}&skip=${params.skip}`,
+    method: 'GET'
+  });
+}
+
+/** GET MERCHANT CREDIT LIMIT SUMMARY */
+function getMerchantCreditLimitSummary(params) {
+  return ApiRest({
+    path: `payment/v1/credit-limit-store-summary/${params.storeId}/${
+      params.supplierId
+    }`,
+    method: 'GET'
+  });
+}
 
 export const MerchantMethod = {
   getMerchantV2,
@@ -324,7 +343,9 @@ export const MerchantMethod = {
   validateAreaMapping,
   getSalesSegmentation,
   getReturnActiveInfo,
-  getRadiusLockGeotag
+  getRadiusLockGeotag,
+  getMerchantCreditLimitList,
+  getMerchantCreditLimitSummary
 };
 
 /**

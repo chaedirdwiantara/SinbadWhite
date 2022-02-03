@@ -41,6 +41,10 @@ const INITIAL_STATE = {
   loadingGetSalesSegmentation: false,
   loadingReturnActiveInfo: false,
   loadingGetRadiusLockGeotag: false,
+  loadingGetCreditLimitList: false,
+  loadingLoadmoreGetCreditLimit: false,
+  refreshGetCreditLimitList: false,
+  loadingGetCreditLimitSummary: false,
   /** data */
   dataPostActivityV2: null,
   dataGetLogAllActivityV2: null,
@@ -175,6 +179,10 @@ const INITIAL_STATE = {
   dataSalesSegmentation: null,
   dataReturnActiveInfo: null,
   dataGetRadiusLockGeotag: null,
+  dataGetCreditLimitList: [],
+  totalDataGetCreditLimitList: null,
+  skipGetCreditLimit: null,
+  dataGetCreditLimitSummary: null,
   /** error */
   errorGetMerchantV2: null,
   errorAddMerchant: null,
@@ -207,7 +215,9 @@ const INITIAL_STATE = {
   errorValidateAreaMapping: null,
   errorGetSalesSegmentation: null,
   errorReturnActiveInfo: null,
-  errorGetRadiusLockGeotag: null
+  errorGetRadiusLockGeotag: null,
+  errorGetCreditLimitList: null,
+  errorGetCreditLimitSummary: null
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -227,7 +237,7 @@ export const merchant = createReducer(INITIAL_STATE, {
   [types.MERCHANT_SELECTED](state, action) {
     return {
       ...state,
-      selectedMerchant:{ ...action.payload, supplierId: 1}
+      selectedMerchant: { ...action.payload, supplierId: 1 }
     };
   },
   /**
@@ -656,7 +666,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       loadingPostActivity: false,
       selectedMerchant: {
         ...state.selectedMerchant,
-        journeyBookStores: action.payload.data,
+        journeyBookStores: action.payload.data
       },
       dataPostActivityV2: action.payload.data
     };
@@ -1461,6 +1471,99 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       merchantStockRecordStatus: action.payload
+    };
+  },
+  /**
+   * ===================
+   * MERCHANT GET CREDIT LIMIT LIST
+   * ===================
+   */
+  [types.MERCHANT_GET_CREDIT_LIMIT_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetCreditLimitList: action.payload.loading,
+      errorGetCreditLimitList: null
+    };
+  },
+  [types.MERCHANT_GET_CREDIT_LIMIT_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetCreditLimitList: false,
+      loadingLoadmoreGetCreditLimit: false,
+      refreshGetCreditLimitList: false,
+      totalDataGetCreditLimitList: action.payload.meta.total,
+      dataGetCreditLimitList: [
+        ...state.dataGetCreditLimitList,
+        ...action.payload.data
+      ]
+    };
+  },
+  [types.MERCHANT_GET_CREDIT_LIMIT_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetCreditLimitList: false,
+      loadingLoadmoreGetCreditLimit: false,
+      refreshGetCreditLimitList: false,
+      errorGetCreditLimitList: action.payload
+    };
+  },
+  [types.MERCHANT_GET_CREDIT_LIMIT_RESET](state, action) {
+    return {
+      ...state,
+      skipGetCreditLimit: 0,
+      totalDataGetCreditLimitList: 0,
+      dataGetCreditLimitList: []
+    };
+  },
+  [types.MERCHANT_GET_CREDIT_LIMIT_REFRESH](state, action) {
+    return {
+      ...state,
+      refreshGetCreditLimitList: true,
+      loadingGetCreditLimitList: true,
+      skipGetCreditLimit: 0,
+      totalDataGetCreditLimitList: 0,
+      dataGetCreditLimitList: []
+    };
+  },
+  [types.MERCHANT_GET_CREDIT_LIMIT_LOADMORE](state, action) {
+    return {
+      ...state,
+      loadingLoadmoreGetCreditLimit: true,
+      skipGetCreditLimit: action.payload
+    };
+  },
+  /**
+   * ======================
+   * GET MERCHANT CREDIT LIMIT SUMMARY
+   * ======================
+   */
+  [types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetCreditLimitSummary: true,
+      dataGetCreditLimitSummary: null,
+      errorGetCreditLimitSummary: null
+    };
+  },
+  [types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetCreditLimitSummary: false,
+      dataGetCreditLimitSummary: action.payload.data,
+      errorGetCreditLimitSummary: null
+    };
+  },
+  [types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetCreditLimitSummary: false,
+      errorGetCreditLimitSummary: action.payload
+    };
+  },
+  [types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_RESET](state, action) {
+    return {
+      ...state,
+      dataGetCreditLimitSummary: null
     };
   }
 });

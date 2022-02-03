@@ -60,6 +60,7 @@ import ModalBottomType3 from '../components/modal_bottom/ModalBottomType3';
 import ModalBottomType4 from '../components/modal_bottom/ModalBottomType4';
 import ModalBottomType5 from '../components/modal_bottom/ModalBottomType5';
 import ModalBottomType6 from '../components/modal_bottom/ModalBottomType6';
+import ModalBottomType7 from '../components/modal_bottom/ModalBottomType7';
 /** ERROR MODAL */
 import ModalBottomErrorRespons from '../components/error/ModalBottomErrorRespons';
 /** OTP */
@@ -108,6 +109,7 @@ import SkeletonType25 from '../components/skeleton/SkeletonType25';
 import SkeletonType26 from '../components/skeleton/SkeletonType26';
 import SkeletonType27 from '../components/skeleton/SkeletonType27';
 import SkeletonType28 from '../components/skeleton/SkeletonType28';
+import SkeletonType29 from '../components/skeleton/SkeletonType29';
 /** ADDRESS */
 import Address from '../components/Address';
 /** TAG */
@@ -202,6 +204,7 @@ export {
   ModalBottomType4,
   ModalBottomType5,
   ModalBottomType6,
+  ModalBottomType7,
   /** ERROR MODAL */
   ModalBottomErrorRespons,
   /** OTP */
@@ -248,6 +251,7 @@ export {
   SkeletonType26,
   SkeletonType27,
   SkeletonType28,
+  SkeletonType29,
   /** ADDRESS */
   Address,
   /** TAG */
