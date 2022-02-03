@@ -91,7 +91,7 @@ const SfaCollectionListView = props => {
     }
   }, [dataSfaDeleteCollectionMethod]);
 
-  // TODO: for layouting only
+  // TODO: remove after integration API Retur - for layouting only
   useEffect(() => {
     !dataGetReferenceList?.data || setOpenModalNoSaldo(true);
   }, []);

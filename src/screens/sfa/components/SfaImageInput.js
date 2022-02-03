@@ -14,7 +14,20 @@ import { MaterialIcon, Tooltip } from '../../../library/thirdPartyPackage';
 import { Fonts, GlobalStyle } from '../../../helpers';
 import { II_MB } from '../../../constants/paymentConstants';
 const { width } = Dimensions.get('window');
+
+/**
+ *
+ * @param {boolean} tooltipActive boolean - default: true
+ * @param {string} imageData string - base64
+ * @param {function} delete function to delete image local
+ * @param {function} action function action
+ * @param {string} tooltipText string - text for tooltip
+ * @param {string} title string - title for input
+ * @param {boolean} loading boolean
+ * @returns JSX.Element
+ */
 const SfaImageInput = props => {
+  const isTooltipActive = props?.tooltipActive ?? true;
   const [isQuestionMarkShow, setQuestionMarkShow] = useState(true);
   const [errorInputImage, setErrorInputImage] = useState(false);
   const [imageName, setImageName] = useState(null);
@@ -90,7 +103,7 @@ const SfaImageInput = props => {
   };
   /** === RENDER TOOLTIP === */
   const renderTooltip = () => {
-    return (
+    return isTooltipActive ? (
       <>
         <Tooltip
           backgroundColor={masterColor.fontBlack50OP80}
@@ -105,7 +118,8 @@ const SfaImageInput = props => {
           }}
           popover={
             <Text style={Fonts.type87}>
-              Dapat berupa foto Bukti Transfer atau Kuitansi
+              {props?.tooltipText ??
+                'Dapat berupa foto Bukti Transfer atau Kuitansi'}
             </Text>
           }
         >
@@ -116,7 +130,7 @@ const SfaImageInput = props => {
           )}
         </Tooltip>
       </>
-    );
+    ) : null;
   };
   /** RENDER TITLE */
   const renderTitle = () => {

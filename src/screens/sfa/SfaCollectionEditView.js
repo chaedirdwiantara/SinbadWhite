@@ -1,3 +1,5 @@
+/* eslint-disable no-case-declarations */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -23,6 +25,8 @@ import {
   CASH,
   CHECK,
   GIRO,
+  PROMO,
+  RETUR,
   TRANSFER
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
@@ -37,13 +41,14 @@ import { TextInputMask } from 'react-native-masked-text';
 import SfaImageInput from './components/SfaImageInput';
 import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
 import {
-  sfaPostPaymentMethodProcess,
   sfaGetReferenceListProcess,
   sfaGetCollectionImageProcess,
   sfaEditCollectionMethodProcess
+  // sfaGetCollectionDetailProcess // TODO: remove me after integration API
 } from '../../state/actions';
-const { width } = Dimensions.get('window');
+import { collectionMethodLabel } from './functions/sfa';
 
+const { width } = Dimensions.get('window');
 const MODAL_TYPE_SOURCE = 1;
 const MODAL_TYPE_TO = 2;
 
@@ -77,10 +82,14 @@ const SfaCollectionEditView = props => {
   const [imageName, setImageName] = useState(null);
   const [imageType, setImageType] = useState(null);
   const [imageData, setImageData] = useState(null);
+  const [imageNameSKP, setImageNameSKP] = useState(null);
+  const [imageTypeSKP, setImageTypeSKP] = useState(null);
+  const [imageDataSKP, setImageDataSKP] = useState(null);
   const [isModalBottomErrorOpen, setIsModalBottomErrorOpen] = useState(false);
   const [messageError, setMessageError] = useState(null);
   const [titleError, setTitleError] = useState(null);
   const [buttonTitle, setButtonTitle] = useState(null);
+
   /**
    * *********************************
    * RENDER USESELECTOR
@@ -169,6 +178,7 @@ const SfaCollectionEditView = props => {
   }, [
     amount,
     imageData,
+    imageDataSKP,
     noReference,
     dataBankTo,
     dataBank,
@@ -185,6 +195,11 @@ const SfaCollectionEditView = props => {
       setDataStamp(null);
     }
   }, [isStampChecked]);
+
+  // TODO: remove me after integration API
+  // useEffect(() => {
+  //   dispatch(sfaGetCollectionDetailProcess(1));
+  // }, []);
 
   useEffect(() => {
     dispatch(sfaGetCollectionImageProcess(pcmId));
@@ -257,6 +272,18 @@ const SfaCollectionEditView = props => {
     setImageType();
   };
 
+  const onChooseImageSKP = response => {
+    setImageDataSKP(response.data);
+    setImageNameSKP(response.fileName);
+    setImageTypeSKP(response.type);
+  };
+
+  const onDeleteImageSKP = () => {
+    setImageDataSKP();
+    setImageNameSKP();
+    setImageTypeSKP();
+  };
+
   const onSelectTransferDate = date => {
     setTransferDate(date);
   };
@@ -300,16 +327,21 @@ const SfaCollectionEditView = props => {
   };
 
   const totalAmountCal = value => {
-    if (
-      paymentCollectionTypeId === CASH ||
-      paymentCollectionTypeId === TRANSFER
-    ) {
-      setTotalAmount(amount);
-    }
-    if (paymentCollectionTypeId === CHECK || paymentCollectionTypeId === GIRO) {
-      const stamp = dataStamp?.nominal || 0;
-      const total = amount + stamp;
-      setTotalAmount(parseInt(total, 10));
+    switch (paymentCollectionTypeId) {
+      case CASH:
+      case TRANSFER:
+      case RETUR:
+      case PROMO:
+        setTotalAmount(amount);
+        break;
+      case CHECK:
+      case GIRO:
+        const stamp = dataStamp?.nominal || 0;
+        const total = amount + stamp;
+        setTotalAmount(parseInt(total, 10));
+        break;
+      default:
+        break;
     }
   };
 
@@ -320,67 +352,93 @@ const SfaCollectionEditView = props => {
     const isDueDateChange = initialData?.dueDate !== invalidDate;
     const isBankFromChange =
       initialData?.bankFrom?.displayName !== dataBank?.displayName;
-    const isBankToChange =
-      initialData?.bankToAccount?.displayName !== dataBankTo?.displayName;
+    // const isBankToChange =
+    //   initialData?.bankToAccount?.displayName !== dataBankTo?.displayName;
     const isImageChange = dataSfaGetCollectionImage?.data.image !== imageData;
+
+    // TODO: Integration with API SKP
+    // get collection image for SKP
+    const isImageChangeSKP =
+      dataSfaGetCollectionImage?.data.image !== imageDataSKP;
+
     const isStampNominalChange =
       dataSfaGetCollectionDetail?.data.stamp?.nominal !== dataStamp?.nominal;
 
-    if (paymentCollectionTypeId === CASH) {
-      const isDataCashChange = isAmountChange || isImageChange;
-      const isDataCashComplete = amount && imageData;
-      if (isDataCashComplete && isDataCashChange) {
-        setIsSaveDisabled(false);
-      } else {
-        setIsSaveDisabled(true);
-      }
-    }
-    if (paymentCollectionTypeId === CHECK || paymentCollectionTypeId === GIRO) {
-      const isDataCheckGiroChange =
-        isAmountChange ||
-        isReferenceChange ||
-        isIssuedDateChange ||
-        isDueDateChange ||
-        isBankFromChange ||
-        isStampNominalChange ||
-        isImageChange;
+    switch (paymentCollectionTypeId) {
+      case CASH:
+        const isDataCashChange = isAmountChange || isImageChange;
+        const isDataCashComplete = amount && imageData;
+        if (isDataCashComplete && isDataCashChange) {
+          setIsSaveDisabled(false);
+        } else {
+          setIsSaveDisabled(true);
+        }
+        break;
+      case CHECK:
+      case GIRO:
+        const isDataCheckGiroChange =
+          isAmountChange ||
+          isReferenceChange ||
+          isIssuedDateChange ||
+          isDueDateChange ||
+          isBankFromChange ||
+          isStampNominalChange ||
+          isImageChange;
 
-      const isDataCheckGiroComplete =
-        amount &&
-        imageData &&
-        issuedDate &&
-        noReference &&
-        invalidDate &&
-        dataBank;
-      if (isDataCheckGiroComplete && isDataCheckGiroChange) {
-        setIsSaveDisabled(false);
-      } else {
-        setIsSaveDisabled(true);
-      }
-    }
-    if (paymentCollectionTypeId === TRANSFER) {
-      const isDataTransferChange =
-        isAmountChange ||
-        isReferenceChange ||
-        isIssuedDateChange ||
-        isBankFromChange ||
-        isBankFromChange ||
-        isStampNominalChange ||
-        isImageChange;
+        const isDataCheckGiroComplete =
+          amount &&
+          imageData &&
+          issuedDate &&
+          noReference &&
+          invalidDate &&
+          dataBank;
 
-      const isDataTransferComplete =
-        amount &&
-        noReference &&
-        dataBank &&
-        dataBankTo &&
-        transferDate &&
-        amount &&
-        imageData;
-      if (isDataTransferComplete && isDataTransferChange) {
-        setIsSaveDisabled(false);
-      } else {
-        setIsSaveDisabled(true);
-      }
+        if (isDataCheckGiroComplete && isDataCheckGiroChange) {
+          setIsSaveDisabled(false);
+        } else {
+          setIsSaveDisabled(true);
+        }
+        break;
+      case TRANSFER:
+        const isDataTransferChange =
+          isAmountChange ||
+          isReferenceChange ||
+          isIssuedDateChange ||
+          isBankFromChange ||
+          isBankFromChange ||
+          isStampNominalChange ||
+          isImageChange;
+
+        const isDataTransferComplete =
+          amount &&
+          noReference &&
+          dataBank &&
+          dataBankTo &&
+          transferDate &&
+          imageData;
+        if (isDataTransferComplete && isDataTransferChange) {
+          setIsSaveDisabled(false);
+        } else {
+          setIsSaveDisabled(true);
+        }
+        break;
+      case PROMO:
+        // TODO: Integration API PROMO
+        const isDataPromoChange =
+          isAmountChange || isImageChange || isImageChangeSKP;
+
+        const isDataPromoComplete = amount && imageData && imageDataSKP;
+        if (isDataPromoComplete && isDataPromoChange) {
+          setIsSaveDisabled(false);
+        } else {
+          setIsSaveDisabled(true);
+        }
+        break;
+      case RETUR:
+        // TODO: logic payment method collection RETUR
+        break;
+      default:
+        break;
     }
   };
 
@@ -394,50 +452,70 @@ const SfaCollectionEditView = props => {
       balance: parseInt(amount, 10),
       filename: imageName,
       type: imageType,
-      image: imageData
+      image: imageData,
+      // TODO: Integration with API for SKP image
+      skpFilename: imageNameSKP,
+      skpType: imageTypeSKP,
+      skpImage: imageDataSKP
     };
-    if (paymentCollectionTypeId === CASH) {
-      dispatch(sfaEditCollectionMethodProcess(data));
-    }
-    if (paymentCollectionTypeId === CHECK || paymentCollectionTypeId === GIRO) {
-      const stampId = dataStamp ? dataStamp.id : null;
-      const isUsedStamp = dataStamp ? true : false;
-      const bankId = dataBank.id;
-      const dateIssued = moment
-        .utc(issuedDate)
-        .local()
-        .format('YYYY-MM-DD HH:mm:ss');
-      const dateInvalid = moment
-        .utc(invalidDate)
-        .local()
-        .format('YYYY-MM-DD HH:mm:ss');
-      const dataCheckGiro = {
-        ...data,
-        stampId: stampId,
-        isUsedStamp: stampId ? isUsedStamp : false,
-        bankId: bankId,
-        issuedDate: dateIssued,
-        invalidDate: dateInvalid,
-        referenceCode: noReference
-      };
-      dispatch(sfaEditCollectionMethodProcess(dataCheckGiro));
-    }
-    if (paymentCollectionTypeId === TRANSFER) {
-      const bankId = dataBank.id;
-      const bankToId = dataBankTo.id;
-      const trfDate = moment
-        .utc(transferDate)
-        .local()
-        .format('YYYY-MM-DD HH:mm:ss');
 
-      const dataTransfer = {
-        ...data,
-        referenceCode: noReference,
-        issuedDate: trfDate,
-        bankId,
-        bankToAccountId: bankToId
-      };
-      dispatch(sfaEditCollectionMethodProcess(dataTransfer));
+    switch (paymentCollectionTypeId) {
+      case CASH:
+        dispatch(sfaEditCollectionMethodProcess(data));
+        break;
+      case CHECK:
+      case GIRO:
+        const stampId = dataStamp ? dataStamp.id : null;
+        const isUsedStamp = dataStamp ? true : false;
+        const dateIssued = moment
+          .utc(issuedDate)
+          .local()
+          .format('YYYY-MM-DD HH:mm:ss');
+        const dateInvalid = moment
+          .utc(invalidDate)
+          .local()
+          .format('YYYY-MM-DD HH:mm:ss');
+
+        const dataCheckGiro = {
+          ...data,
+          stampId: stampId,
+          isUsedStamp: stampId ? isUsedStamp : false,
+          bankId: dataBank.id,
+          issuedDate: dateIssued,
+          invalidDate: dateInvalid,
+          referenceCode: noReference
+        };
+        dispatch(sfaEditCollectionMethodProcess(dataCheckGiro));
+        break;
+      case TRANSFER:
+        const trfDate = moment
+          .utc(transferDate)
+          .local()
+          .format('YYYY-MM-DD HH:mm:ss');
+
+        const dataTransfer = {
+          ...data,
+          referenceCode: noReference,
+          issuedDate: trfDate,
+          bankId: dataBank.id,
+          bankToAccountId: dataBankTo.id
+        };
+        dispatch(sfaEditCollectionMethodProcess(dataTransfer));
+        break;
+      case RETUR:
+        // TODO: Integration API - Retur
+        // const dataRetur = {};
+        // dispatch(sfaEditCollectionMethodProcess(dataRetur));
+        break;
+      case PROMO:
+        // TODO: Integration API - Promo / SKP
+        const dataPromo = {
+          ...data
+        };
+        dispatch(sfaEditCollectionMethodProcess(dataPromo));
+        break;
+      default:
+        break;
     }
   };
 
@@ -489,6 +567,7 @@ const SfaCollectionEditView = props => {
         {renderAmount()}
         {renderMaterai()}
         {renderImage()}
+        {renderImageSKP()}
       </View>
     );
   };
@@ -500,13 +579,7 @@ const SfaCollectionEditView = props => {
       <View>
         <Text style={[Fonts.type10, styles.titleInput]}>Metode Penagihan</Text>
         <Text style={[Fonts.type17, { marginBottom: 16 }]}>
-          {id === CASH
-            ? 'Tunai'
-            : id === CHECK
-            ? 'Cek'
-            : id === GIRO
-            ? 'Giro'
-            : 'Transfer'}
+          {collectionMethodLabel(id)}
         </Text>
       </View>
     );
@@ -849,17 +922,36 @@ const SfaCollectionEditView = props => {
     ) : null;
   };
 
-  /** RENDER IMAGE */
+  /** RENDER IMAGE - FOTO PENAGIHAN */
   const renderImage = () => {
     return (
-      <SfaImageInput
-        title={'*Foto Penagihan'}
-        action={onChooseImage}
-        delete={onDeleteImage}
-        loading={loadingSfaGetCollectionImage}
-        imageData={imageData}
-      />
+      <View style={{ marginTop: 16 }}>
+        <SfaImageInput
+          title={'*Foto Penagihan'}
+          action={onChooseImage}
+          delete={onDeleteImage}
+          loading={loadingSfaGetCollectionImage}
+          imageData={imageData}
+        />
+      </View>
     );
+  };
+
+  /** RENDER IMAGE - SURAT KERJASAMA PROMOSI */
+  const renderImageSKP = () => {
+    return paymentCollectionTypeId === PROMO ? (
+      <View style={{ marginTop: 16 }}>
+        <SfaImageInput
+          title={'*Surat Kerjasama Promosi'}
+          action={onChooseImageSKP}
+          delete={onDeleteImageSKP}
+          loading={loadingSfaGetCollectionImage}
+          imageData={imageData}
+          tooltipActive={false}
+          tooltipText={''}
+        />
+      </View>
+    ) : null;
   };
 
   /** === RENDER TOOLTIP === */
@@ -878,9 +970,9 @@ const SfaCollectionEditView = props => {
         }}
         popover={
           <Text style={Fonts.type87}>
-            {`\u25CF`} Masukan nilai materai apabila disediakan oleh Toko {'\n'}
+            {'\u25CF'} Masukan nilai materai apabila disediakan oleh Toko {'\n'}
             {'\n'}
-            {`\u25CF`} Nilai Materai yang dipilih akan menambah nilai penagihan
+            {'\u25CF'} Nilai Materai yang dipilih akan menambah nilai penagihan
           </Text>
         }
       >
@@ -983,6 +1075,7 @@ const SfaCollectionEditView = props => {
             title={title}
             open={isModalBankOpen}
             close={() => setIsModalBankOpen(false)}
+            // eslint-disable-next-line no-undef
             onRef={ref => (selectCollection = ref)}
             selectCollection={fnSelectCollection}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
@@ -1002,6 +1095,7 @@ const SfaCollectionEditView = props => {
           <ModalBankDestination
             open={isModalBankDestinationOpen}
             close={() => setIsModalBankDestinationOpen(false)}
+            // eslint-disable-next-line no-undef
             onRef={ref => (selectBankDestination = ref)}
             selectBankDestination={onSelectBankTo.bind(this)}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
@@ -1021,6 +1115,7 @@ const SfaCollectionEditView = props => {
           <ModalListMaterai
             open={isModalStampOpen}
             close={() => setIsModalStampOpen(false)}
+            // eslint-disable-next-line no-undef
             onRef={ref => (selectedStamp = ref)}
             selectStamp={onSelectStamp.bind(this)}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
