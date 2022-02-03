@@ -16,7 +16,7 @@ import {
 import {
   SkeletonType5,
   EmptyData,
-  ProductListType1,
+  ProductListType9,
   LoadingLoadMore,
   ModalConfirmation
 } from '../../library/component';
@@ -288,7 +288,7 @@ class HistoryDataListView extends Component {
   }
   /** ITEM PRODUCT SECTION */
   renderProductSection(data) {
-    return <ProductListType1 data={data} />;
+    return <ProductListType9 data={data} />;
   }
   /** RENDER SEPARATOR */
   renderSeparator() {
@@ -522,7 +522,7 @@ class HistoryDataListView extends Component {
                 <View />
               )}
             </View>
-            <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
+            {/* <View style={[GlobalStyle.lines, { marginVertical: 10 }]} /> */}
             {this.renderProductSection(item.orderBrands)}
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
             {this.props.section === 'order' ? (
@@ -540,22 +540,10 @@ class HistoryDataListView extends Component {
                   />
                 )}
                 {item.deliveredParcelModified ? (
-                  <View style={styles.boxItemContent}>
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        alignSelf: 'space-between'
-                      }}
-                    >
-                      <Text style={[Fonts.type111p, { flex: 1 }]}>
-                        {MoneyFormat(item.billing.deliveredTotalPayment)}
-                      </Text>
-                      <Text style={Fonts.type111p}>
-                        QTY: {item.deliveredParcelQty}
-                      </Text>
-                    </View>
-                  </View>
+                  <BottomCardItem
+                    item={item}
+                    totalPembelian={item.billing.deliveredTotalPayment}
+                  />
                 ) : null}
                 <View
                   style={{
@@ -574,103 +562,21 @@ class HistoryDataListView extends Component {
                 <View>
                   {!item.deliveredParcelModified &&
                   (item.status === DELIVERED || item.status === DONE) ? (
-                    <View style={[styles.boxItemContent, { marginBottom: 4 }]}>
-                      <View
-                        style={{
-                          flex: 1,
-                          flexDirection: 'row',
-                          alignSelf: 'space-between'
-                        }}
-                      >
-                        <Text
-                          style={[
-                            item.deliveredParcelModified
-                              ? Fonts.type112p
-                              : Fonts.type111p,
-                            {
-                              flex: 1,
-                              textDecorationLine: item.deliveredParcelModified
-                                ? 'line-through'
-                                : 'none'
-                            }
-                          ]}
-                        >
-                          {MoneyFormat(item.billing.deliveredTotalPayment)}
-                        </Text>
-                        <Text
-                          style={[
-                            item.deliveredParcelModified
-                              ? Fonts.type112p
-                              : Fonts.type111p,
-                            {
-                              textDecorationLine: item.deliveredParcelModified
-                                ? 'line-through'
-                                : 'none'
-                            }
-                          ]}
-                        >
-                          QTY: {item.deliveredParcelQty}
-                        </Text>
-                      </View>
-                    </View>
+                    <BottomCardItem
+                      item={item}
+                      totalPembelian={item.billing.deliveredTotalPayment}
+                    />
                   ) : (
-                    <View style={[styles.boxItemContent, { marginBottom: 4 }]}>
-                      <View
-                        style={{
-                          flex: 1,
-                          flexDirection: 'row',
-                          alignSelf: 'space-between'
-                        }}
-                      >
-                        <Text
-                          style={[
-                            item.deliveredParcelModified
-                              ? Fonts.type112p
-                              : Fonts.type111p,
-                            {
-                              flex: 1,
-                              textDecorationLine: item.deliveredParcelModified
-                                ? 'line-through'
-                                : 'none'
-                            }
-                          ]}
-                        >
-                          {MoneyFormat(item.billing.totalPayment)}
-                        </Text>
-                        <Text
-                          style={[
-                            item.deliveredParcelModified
-                              ? Fonts.type112p
-                              : Fonts.type111p,
-                            {
-                              textDecorationLine: item.deliveredParcelModified
-                                ? 'line-through'
-                                : 'none'
-                            }
-                          ]}
-                        >
-                          QTY: {item.parcelQty}
-                        </Text>
-                      </View>
-                    </View>
+                    <BottomCardItem
+                      item={item}
+                      totalPembelian={item.billing.totalPayment}
+                    />
                   )}
                   {item.deliveredParcelModified ? (
-                    <View style={styles.boxItemContent}>
-                      <View
-                        style={{
-                          flex: 1,
-                          flexDirection: 'row',
-                          alignSelf: 'space-between'
-                        }}
-                      >
-                        <Text style={[Fonts.type111p, { flex: 1 }]}>
-                          {MoneyFormat(item.billing.deliveredTotalPayment)}
-                        </Text>
-                        <Text style={Fonts.type111p}>
-                          QTY: {item.deliveredParcelQty}
-                        </Text>
-                      </View>
-                    </View>
+                    <BottomCardItem
+                      item={item}
+                      totalPembelian={item.billing.deliveredTotalPayment}
+                    />
                   ) : null}
                 </View>
               </View>
@@ -785,6 +691,22 @@ class HistoryDataListView extends Component {
 }
 
 const BottomCardItem = props => {
+  /** ORDER VIA */
+  // const orderVia = item => {
+  //   if (item.order !== null) {
+  //     switch (item.order.orderVia) {
+  //       case null:
+  //         return '';
+  //       case 'sales':
+  //         return 'Sales Rep';
+  //       case 'store':
+  //         return 'Toko';
+  //       default:
+  //         break;
+  //     }
+  //   }
+  //   return '';
+  // };
   return (
     <View style={[styles.boxItemColumnContent, { marginBottom: 4 }]}>
       <View
@@ -818,7 +740,7 @@ const BottomCardItem = props => {
             }
           ]}
         >
-          Sales Rep
+          {props.item.order.platform}
         </Text>
       </View>
       <View
@@ -853,7 +775,7 @@ const BottomCardItem = props => {
           ]}
         >
           {moment(new Date(props.item.createdAt)).format(
-            'DD MMM YYYY HH:mm:ss'
+            'DD MMMM YYYY HH:mm:ss'
           )}
         </Text>
       </View>
