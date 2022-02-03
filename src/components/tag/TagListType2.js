@@ -6,9 +6,9 @@ import {
   FlatList,
   TouchableOpacity,
   Text
-} from '../../library/reactPackage'
-import { GlobalStyle, Fonts } from '../../helpers'
-import { Color } from '../../config'
+} from '../../library/reactPackage';
+import { GlobalStyle, Fonts } from '../../helpers';
+import { Color } from '../../config';
 
 /**
  * =====================
@@ -146,15 +146,14 @@ const styles = StyleSheet.create({
 export default TagListType2;
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 08072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 08072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
