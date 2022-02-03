@@ -11,7 +11,7 @@ import {
 import { ImageKit } from '../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 
-class ProductListType2 extends Component {
+class ProductListType9 extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ProductListType2;
+export default ProductListType9;
 
 /**
  * ============================
