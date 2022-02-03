@@ -77,7 +77,8 @@ class PdpGridDataView extends Component {
         onPress={() =>
           this.toParentFunction({
             type: item.isBundle ? 'goToBundlePage' : 'openModalOrder',
-            data: item.id
+            data: item.id,
+            invoice: item.brand.invoiceGroupBrands
           })
         }
         style={[styles.pesanButton, { backgroundColor: Color.mainColor }]}

@@ -20,7 +20,8 @@ import {
   SelectedMerchantName,
   ModalConfirmation,
   ModalBottomErrorRespons,
-  ModalBottomSkuNotAvailable
+  ModalBottomSkuNotAvailable,
+  ModalBottomType7
 } from '../../library/component';
 import { Fonts } from '../../helpers';
 import { Color } from '../../config';
@@ -43,6 +44,7 @@ class PdpView extends Component {
       openModalSort: false,
       openModalConfirmRemoveCart: false,
       openModalErrorGlobal: false,
+      openWarningCredit: false,
       /** data */
       layout: 'grid',
       addProductNotif: false,
@@ -157,6 +159,12 @@ class PdpView extends Component {
             selectedProduct: data.data
           });
         } else {
+          const invoiceGroupId = data.invoice[0].invoiceGroupId;
+          const storeId = this.props.merchant.selectedMerchant.storeId;
+          this.props.OMSCheckCreditProcess({
+            invoiceGroupId: parseInt(invoiceGroupId, 10),
+            storeId: parseInt(storeId, 10)
+          });
           this.props.pdpGetDetailProcess(data.data);
           this.setState({ openModalOrder: true });
         }
@@ -202,6 +210,14 @@ class PdpView extends Component {
           }
         }
         break;
+      /** => over credit limit */
+      case 'overCreditLimit':
+        this.setState({ openWarningCredit: true });
+        break;
+      /** => hide warning credit limit */
+      case 'hideWarningCredit':
+        this.setState({ openWarningCredit: false });
+        break;
       default:
         break;
     }
@@ -209,25 +225,27 @@ class PdpView extends Component {
   /** FOR ERROR FUNCTION (FROM DID UPDATE) */
   doError() {
     /** Close all modal and open modal error respons */
-    if (!this.state.openModalErrorGlobal){
+    if (!this.state.openModalErrorGlobal) {
       this.setState({
         openModalErrorGlobal: true,
         openModalOrder: false,
         openModalSkuNotAvailable: false,
         openModalSort: false,
-        openModalConfirmRemoveCart: false,
+        openModalConfirmRemoveCart: false
       });
     }
   }
   /** === FETCH DATA (THIS FOR ALL FITLER) === */
   getPdp(data) {
-    const { dataSalesTeam } = this.props.profile
+    const { dataSalesTeam } = this.props.profile;
     this.props.pdpGetProcess({
       page: data.page,
       loading: data.loading,
       sort: data.sort !== undefined ? data.sort : this.state.sort,
       sortBy: data.sortBy !== undefined ? data.sortBy : this.state.sortBy,
-      invoiceGroupIds: dataSalesTeam ? dataSalesTeam[0].salesTeamInvoice.map(item => item.invoiceId) : [],
+      invoiceGroupIds: dataSalesTeam
+        ? dataSalesTeam[0].salesTeamInvoice.map(item => item.invoiceId)
+        : [],
       search: this.props.global.search
     });
   }
@@ -333,7 +351,7 @@ class PdpView extends Component {
   /** === RENDER MODAL ORDER === */
   renderModalOrder() {
     return this.state.openModalOrder ? (
-      <ModalBottomType3
+      <ModalBottomType7
         open={this.state.openModalOrder}
         title={'Masukan Jumlah'}
         content={
@@ -342,12 +360,40 @@ class PdpView extends Component {
             parentFunction={this.parentFunction.bind(this)}
           />
         }
-        close={() => this.setState({ openModalOrder: false })}
+        close={() =>
+          this.setState({ openModalOrder: false, openWarningCredit: false })
+        }
         typeClose={'cancel'}
+        warningContent={
+          this.state.openWarningCredit ? this.renderWarningContent() : null
+        }
       />
     ) : (
       <View />
     );
+  }
+  renderWarningContent() {
+    const allowCreditLimit = this.props.oms.dataOMSCheckCredit.allowCreditLimit;
+    const freezeStatus = this.props.oms.dataOMSCheckCredit.freezeStatus;
+    return allowCreditLimit && !freezeStatus ? (
+      <View
+        style={{
+          paddingHorizontal: 16,
+          paddingVertical: 12,
+          flexDirection: 'row',
+          alignItems: 'center'
+        }}
+        testID={'view-warning-credit'}
+      >
+        <MaterialIcon name={'info'} size={24} color={'white'} />
+        <View style={{ marginLeft: 12 }}>
+          <Text style={Fonts.type35}>Toko Ini Telah Melewati Limit Kredit</Text>
+          <Text style={Fonts.type94}>
+            Selesaikan pembayaran sebelumnya terlebih dahulu
+          </Text>
+        </View>
+      </View>
+    ) : null;
   }
   /** === RENDER MODAL SKU NOT AVAILABLE === */
   renderModalSkuNotAvailable() {

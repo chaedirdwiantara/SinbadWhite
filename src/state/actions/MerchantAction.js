@@ -806,7 +806,6 @@ export function getRadiusLockGeotagSuccess(data) {
 export function getRadiusLockGeotagFailed(data) {
   return { type: types.GET_RADIUS_LOCK_GEOTAG_FAILED, payload: data };
 }
-
 /**
  * ===========================================
  * CHECK CAN RESUME VISIT JOURNEY BOOK STORES
@@ -827,7 +826,6 @@ export function checkCanResumeVisitSuccess(data) {
 export function checkCanResumeVisitFailed(data) {
   return { type: types.CHECK_CAN_RESUME_VISIT_FAILED, payload: data };
 }
-
 // /**
 //  * ===========================================
 //  * PAUSE / RESUME VISIT JOURNEY BOOK
@@ -847,4 +845,64 @@ export function pauseResumeVisitSuccess(data) {
 }
 export function pauseResumeVisitFailed(data) {
   return { type: types.PAUSE_RESUME_VISIT_FAILED, payload: data };
+}
+
+/**
+ * ============================
+ * GET MERCHANT CREDIT LIMIT LIST
+ * ============================
+ */
+export function merchantGetCreditLimitListProcess(data) {
+  return { type: types.MERCHANT_GET_CREDIT_LIMIT_PROCESS, payload: data };
+}
+export function merchantGetCreditLimitListSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_CREDIT_LIMIT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.MERCHANT_GET_CREDIT_LIMIT_FAILED, payload: data };
+}
+export function merchantGetCreditLimitListFailed(data) {
+  return { type: types.MERCHANT_GET_CREDIT_LIMIT_FAILED, payload: data };
+}
+export function merchantGetCreditLimitListReset() {
+  return { type: types.MERCHANT_GET_CREDIT_LIMIT_RESET };
+}
+/** === LOAD MORE GET MERCHANT  CREDIT LIMIT LIST=== */
+export function merchantGetCreditLimitListLoadMore(page) {
+  return { type: types.MERCHANT_GET_CREDIT_LIMIT_LOADMORE, payload: page };
+}
+/**
+ * ============================
+ * GET MERCHANT CREDIT LIMIT SUMMARY
+ * ============================
+ */
+export function merchantGetCreditLimitSummaryProcess(data) {
+  return {
+    type: types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_PROCESS,
+    payload: data
+  };
+}
+export function merchantGetCreditLimitSummarySuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_SUCCESS,
+      payload: data.data
+    };
+  }
+  return {
+    type: types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_FAILED,
+    payload: data
+  };
+}
+export function merchantGetCreditLimitSummaryFailed(data) {
+  return {
+    type: types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_FAILED,
+    payload: data
+  };
+}
+export function merchantGetCreditLimitSummaryReset() {
+  return { type: types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_RESET };
 }

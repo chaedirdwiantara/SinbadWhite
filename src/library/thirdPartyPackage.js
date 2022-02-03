@@ -29,7 +29,7 @@ import { RFPercentage } from 'react-native-responsive-fontsize';
 /** SETTING */
 import DeviceInfo from 'react-native-device-info';
 /** MOMENT */
-import moment from 'moment'
+import moment from 'moment';
 /** TOAST */
 import Toast, { DURATION } from 'react-native-easy-toast';
 /** RNFS */
@@ -37,26 +37,26 @@ var RNFS = require('react-native-fs');
 /** RN CAMERA */
 import { RNCamera } from 'react-native-camera';
 /** IMAGE EDITOR */
-import ImageEditor from '@react-native-community/image-editor';
+import ImageEditor from '@sinbad/image-editor';
 /** FIREBASE */
 import firebase from 'react-native-firebase';
 /** HTML VIEW */
-import HTMLView from 'react-native-htmlview'
+import HTMLView from 'react-native-htmlview';
 /** REACT NATIVE ELEMENTS */
 import { Button, Tooltip, Badge } from 'react-native-elements';
 /** MODAL */
-import Modal from 'react-native-modal'
+import Modal from 'react-native-modal';
 /** GESTURE RECOGNIZER */
-import GestureRecognizer from 'react-native-swipe-gestures'
+import GestureRecognizer from 'react-native-swipe-gestures';
 /** WHEEL PICKER */
-import { WheelPicker } from 'react-native-wheel-picker-android'
+import { WheelPicker } from 'react-native-wheel-picker-android';
 /** RN FETCH BLOB */
 import RNFetchBlob from 'rn-fetch-blob';
 /** PDF */
 import Pdf from 'react-native-pdf';
 
 /** LINEAR GRADIENT */
-import LinearGradient from 'react-native-linear-gradient'
+import LinearGradient from 'react-native-linear-gradient';
 /** CLIPBOARD */
 import Clipboard from '@react-native-clipboard/clipboard';
 export {
@@ -126,15 +126,14 @@ export {
 };
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Add new third party component
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Add new third party component
+ *
+ */

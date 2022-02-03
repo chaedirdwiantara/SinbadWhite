@@ -518,3 +518,26 @@ export function OMSCheckOverdueSuccess(data) {
 export function OMSCheckoutOverdueFailed(data) {
   return { type: types.OMS_CHECK_OVERDUE_FAILED, payload: data };
 }
+/**
+ * =====================================
+ * OMS CHECK CREDIT LIMIT
+ * =====================================
+ */
+/** CHECK CREDIT LIMIT PROCESS */
+export function OMSCheckCreditProcess(data) {
+  return { type: types.OMS_CHECK_CREDIT_PROCESS, payload: data };
+}
+/** CHECK CREDIT LIMIT SUCCESS */
+export function OMSCheckCreditSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.OMS_CHECK_CREDIT_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.OMS_CHECK_CREDIT_FAILED, payload: data };
+}
+/** CHECK CREDIT LIMIT FAILED */
+export function OMSCheckCreditFailed(data) {
+  return { type: types.OMS_CHECK_CREDIT_FAILED, payload: data };
+}

@@ -406,6 +406,28 @@ function* getRadiusLockGeotag(actions) {
     yield put(ActionCreators.getRadiusLockGeotagFailed(error));
   }
 }
+/** GET MERCHANT CREDIT LIMIT LIST */
+function* getMerchantCreditLimitList(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getMerchantCreditLimitList(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetCreditLimitListSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetCreditLimitListFailed(error));
+  }
+}
+/** GET MERCHANT CREDIT LIMIT SUMMARY */
+function* getMerchantCreditLimitSummary(actions) {
+  try {
+    const response = yield call(() => {
+      return MerchantMethod.getMerchantCreditLimitSummary(actions.payload);
+    });
+    yield put(ActionCreators.merchantGetCreditLimitSummarySuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.merchantGetCreditLimitSummaryFailed(error));
+  }
+}
 
 /** CHECK CAN RESUME VISIT JBS */
 function* checkCanResumeVisit(actions) {
@@ -519,6 +541,14 @@ function* MerchantSaga() {
   yield takeLatest(
     types.PAUSE_RESUME_VISIT_PROCESS,
     pauseResumeVisit
+  );
+  yield takeEvery(
+    types.MERCHANT_GET_CREDIT_LIMIT_PROCESS,
+    getMerchantCreditLimitList
+  );
+  yield takeEvery(
+    types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_PROCESS,
+    getMerchantCreditLimitSummary
   );
 }
 

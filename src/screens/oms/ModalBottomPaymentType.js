@@ -8,19 +8,19 @@ import {
   TouchableOpacity,
   ScrollView,
   Text
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   connect,
   MaterialIcon,
   bindActionCreators
-} from '../../library/thirdPartyPackage'
+} from '../../library/thirdPartyPackage';
 import {
   StatusBarRedOP50,
   SkeletonType8,
   ModalBottomType3
-} from '../../library/component'
-import { Color } from '../../config'
-import { GlobalStyle, Fonts } from '../../helpers'
+} from '../../library/component';
+import { Color } from '../../config';
+import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 
 const { height } = Dimensions.get('window');
@@ -124,9 +124,39 @@ class ModalBottomPaymentType extends Component {
   }
   /** RENDER CONTENT */
   renderContent() {
+    const dataPaymentType = this.props?.oms?.dataOmsGetPayment;
     return (
       <View style={styles.mainContainer}>
         <StatusBarRedOP50 />
+        <View style={styles.warningContainer}>
+          <View
+            style={{
+              backgroundColor: Color.fontYellow10,
+              borderRadius: 8
+            }}
+          >
+            {dataPaymentType?.map(item =>
+              parseInt(item.paymentTypeId, 10) === 2 && item.overLimitStatus ? (
+                <View
+                  style={styles.warningItems}
+                  testID={'view-warning-credit'}
+                >
+                  <MaterialIcon
+                    name={'info'}
+                    size={24}
+                    color={Color.fontYellow40}
+                  />
+                  <Text
+                    style={[Fonts.type69, { marginLeft: 8, fontSize: 12 }]}
+                    testID={'text-warning-credit'}
+                  >
+                    {item.warningMessage ?? ''}
+                  </Text>
+                </View>
+              ) : null
+            )}
+          </View>
+        </View>
         <View style={styles.container}>
           {!this.props.oms.loadingOmsGetPayment &&
           this.props.oms.dataOmsGetPayment !== null ? (
@@ -142,7 +172,7 @@ class ModalBottomPaymentType extends Component {
   render() {
     return (
       <ModalBottomType3
-        typeClose={"cancel"}
+        typeClose={'cancel'}
         open={this.props.open}
         onPress={this.props.close}
         close={this.props.close}
@@ -164,7 +194,12 @@ const styles = StyleSheet.create({
   icons: {
     width: 24,
     height: 24
-  }
+  },
+  warningContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 16
+  },
+  warningItems: { flexDirection: 'row', padding: 16, marginRight: '5%' }
 });
 
 const mapStateToProps = ({ oms }) => {
@@ -181,14 +216,14 @@ export default connect(
 )(ModalBottomPaymentType);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
