@@ -285,7 +285,7 @@ class MerchantDetailCreditLimitView extends Component {
     return (
       <View style={{ flex: 1 }}>
         {this.renderCreditInformation()}
-        {this.props.merchant.dataGetCreditLimitList?.data?.length > 0
+        {this.props.merchant.dataGetCreditLimitList?.length > 0
           ? this.renderInvoiceInformation()
           : this.renderEmptyState()}
         {this.renderLoadingLoadMore()}
