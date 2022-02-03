@@ -6,6 +6,7 @@ import SearchBarType3 from '../components/search_bar/SearchBarType3';
 import SearchBarType5 from '../components/search_bar/SearchBarType5';
 import SearchBarType4 from '../components/search_bar/SearchBarType4';
 import SearchBarType6 from '../components/search_bar/SearchBarType6';
+import SearchBarType7 from '../components/search_bar/SearchBarType7';
 /** BACK HANDLER */
 import BackHandlerCloseApp from '../components/BackHandlerCloseApp';
 import BackHandlerBackSpecific from '../components/BackHandlerBackSpecific';
@@ -152,6 +153,7 @@ export {
   SearchBarType4,
   SearchBarType5,
   SearchBarType6,
+  SearchBarType7,
   /** BACK HANDLER */
   BackHandlerCloseApp,
   BackHandlerBackSpecific,

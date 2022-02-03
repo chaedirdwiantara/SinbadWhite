@@ -50,7 +50,7 @@ class HistoryTabView extends Component {
           styles.boxTabItem,
           {
             borderBottomWidth: 1,
-            borderBottomColor: masterColor.fontBlack10
+            borderBottomColor: masterColor.fontBlack05
           }
         ];
   }

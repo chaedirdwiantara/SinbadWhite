@@ -4,19 +4,17 @@ import {
   View,
   Image,
   StyleSheet,
-  TouchableOpacity,
-  Text
+  TouchableOpacity
 } from '../../library/reactPackage';
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
   StatusBarBlackOP40,
-  SearchBarType1,
+  SearchBarType7,
   ModalBottomType3,
   ModalBottomType4,
   DatePickerSpinner
 } from '../../library/component';
-import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
 import HistoryTabView from './HistoryTabView';
@@ -216,7 +214,7 @@ class HistoryView extends Component {
       <View>
         <View style={{ flexDirection: 'row' }}>
           <View style={{ flex: 1 }}>
-            <SearchBarType1
+            <SearchBarType7
               accessibilityLabel={'txtFieldTagihanCariProduk'}
               placeholder={'Cari produk, nomor pesanan'}
               searchText={this.state.searchText}
@@ -239,13 +237,11 @@ class HistoryView extends Component {
             )}
 
             <Image
-              source={require('../../assets/icons/pdp/filter.png')}
-              style={{ height: 24, width: 24 }}
+              source={require('../../assets/icons/pdp/filter-black.png')}
+              style={{ height: 26, width: 26 }}
             />
-            <Text style={Fonts.type67}>Filter</Text>
           </TouchableOpacity>
         </View>
-        <View style={GlobalStyle.lines} />
       </View>
     );
   }
