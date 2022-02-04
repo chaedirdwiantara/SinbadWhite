@@ -12,7 +12,6 @@ import {
 } from '../../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
-  SearchBarType6,
   ButtonFloatType2,
   DatePickerSpinner,
   ModalBottomType4,
@@ -24,12 +23,12 @@ import ReturnOrderListView from './ReturnOrderListView';
 import { GlobalMethod } from '../../../services/methods';
 import { Color } from '../../../config';
 import ModalFilterDate from './ModalFilterDate';
+import ReactiveSearchBar from './ReactiveSearchBar';
 
 class ReturnOrderView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchText: '',
       dateFilter: {
         dateGte: '',
         dateLte: ''
@@ -44,20 +43,27 @@ class ReturnOrderView extends Component {
     };
   }
 
+  componentDidMount() {
+    this.initiateFetchProcess();
+  }
+
   parentFunction(data) {
     switch (data.type) {
-      case 'search':
-        this.setState({ searchText: data.data, emptyDataType: 'search' });
-        break;
       case 'dateFilter':
-        this.setState({
-          openModalDateFilter: false,
-          dateFilter: data.data.dateFilter,
-          emptyDataType: 'default',
-          selectedDate: data.data.selectedDate,
-          startDate: data.data.dateFilter.dateGte,
-          endDate: data.data.dateFilter.dateLte
-        });
+        this.setState(
+          {
+            openModalDateFilter: false,
+            dateFilter: data.data.dateFilter,
+            emptyDataType: 'default',
+            selectedDate: data.data.selectedDate,
+            startDate: data.data.dateFilter.dateGte,
+            endDate: data.data.dateFilter.dateLte
+          },
+          () => {
+            this.props.historyGetReset();
+            this.getHistory(true, 0);
+          }
+        );
         break;
       case 'customDate':
         this.setState({
@@ -78,6 +84,44 @@ class ReturnOrderView extends Component {
         break;
     }
   }
+
+  getHistory(loading, page, searchKeyword) {
+    this.props.historyGetProcess({
+      loading,
+      page,
+      storeId: parseInt(GlobalMethod.merchantStoreId(), 10),
+      userId: '',
+      statusOrder: 'done',
+      statusPayment: '',
+      dateGte: this.state.dateFilter.dateGte,
+      dateLte: this.state.dateFilter.dateLte,
+      search: '',
+      searchSkuName: searchKeyword ? searchKeyword : ''
+    });
+  }
+
+  initiateFetchProcess() {
+    this.props.historyGetReset();
+    this.getHistory(true, 0);
+  }
+
+  handleRefreshFetch = () => {
+    this.props.historyGetRefresh();
+    this.getHistory(true, 0);
+  };
+
+  handleLoadMoreFetch = () => {
+    if (this.props.history.dataGetHistory) {
+      if (
+        this.props.history.dataGetHistory.length <
+        this.props.history.totalDataGetHistory
+      ) {
+        const page = this.props.history.pageGetHistory + 10;
+        this.props.historyGetLoadMore(page);
+        this.getHistory(false, page);
+      }
+    }
+  };
 
   checkButtonTitle() {
     if (
@@ -113,11 +157,13 @@ class ReturnOrderView extends Component {
   renderSearchBar() {
     return (
       <View style={{ marginVertical: 8 }}>
-        <SearchBarType6
-          placeholder={'Nama produk / ID faktur'}
-          searchText={this.state.searchText}
-          onRef={ref => (this.parentFunction = ref)}
-          parentFunction={this.parentFunction.bind(this)}
+        <ReactiveSearchBar
+          placeholder="Cari Nama SKU"
+          fetchFn={searchKeyword => {
+            this.props.historyGetReset();
+            this.getHistory(true, 0, searchKeyword);
+            this.setState({ emptyDataType: 'search' });
+          }}
         />
       </View>
     );
@@ -127,10 +173,9 @@ class ReturnOrderView extends Component {
     return (
       <View style={styles.mainContainer}>
         <ReturnOrderListView
-          storeId={GlobalMethod.merchantStoreId()}
-          search={this.state.searchText}
-          dateFilter={this.state.dateFilter}
           emptyData={this.state.emptyDataType}
+          onRefresh={this.handleRefreshFetch}
+          onLoadMore={this.handleLoadMoreFetch}
         />
       </View>
     );
@@ -225,6 +270,7 @@ const mapStateToProps = ({ history, user, merchant }) => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
