@@ -1,0 +1,3 @@
+What's New:
+- Enable user to pause an ongoing visit for the day.
+- Credit Limit UI enhancement for better User Experience.
