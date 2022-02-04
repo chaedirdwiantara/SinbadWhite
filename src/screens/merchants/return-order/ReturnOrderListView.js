@@ -15,71 +15,20 @@ import {
 import {
   SkeletonType5,
   EmptyData,
-  EmptyDataType2,
-  ProductListType1
+  EmptyDataType2
 } from '../../../library/component';
 import { Color } from '../../../config';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
+import CollapsibleProductList from './CollapsibleProductList';
 
 class ReturnOrderListView extends Component {
   constructor(props) {
     super(props);
     this.renderItem = this.renderItem.bind(this);
-    this.state = {};
   }
 
-  componentDidMount() {
-    this.props.historyGetReset();
-    this.getHistory(true, 0);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.dateFilter !== this.props.dateFilter) {
-      this.props.historyGetReset();
-      this.getHistory(true, 0);
-    }
-
-    if (prevProps.search !== this.props.search) {
-      this.props.historyGetReset();
-      this.getHistory(true, 0);
-    }
-  }
-
-  getHistory(loading, page) {
-    this.props.historyGetProcess({
-      loading,
-      page,
-      storeId: parseInt(this.props.storeId, 10),
-      userId: '',
-      statusOrder: 'done',
-      statusPayment: '',
-      dateGte: this.props.dateFilter.dateGte,
-      dateLte: this.props.dateFilter.dateLte,
-      search: this.props.search
-    });
-  }
-  /** REFRESH LIST VIEW */
-  onHandleRefresh = () => {
-    this.props.historyGetRefresh();
-    this.getHistory(true, 0);
-  };
-  /** LOAD MORE LIST VIEW */
-  onHandleLoadMore = () => {
-    if (this.props.history.dataGetHistory) {
-      if (
-        this.props.history.dataGetHistory.length <
-        this.props.history.totalDataGetHistory
-      ) {
-        const page = this.props.history.pageGetHistory + 10;
-        this.props.historyGetLoadMore(page);
-        this.getHistory(false, page);
-      }
-    }
-  };
-
-  /** EMPTY DATA */
   renderEmpty() {
     return this.props.emptyData === 'default' ? (
       <EmptyData title={'Tidak ada pesanan'} description={''} />
@@ -90,7 +39,7 @@ class ReturnOrderListView extends Component {
       />
     );
   }
-  /** RENDER DATA */
+
   renderData() {
     return this.props.history.dataGetHistory.length > 0 ? (
       <View>
@@ -103,9 +52,9 @@ class ReturnOrderListView extends Component {
           extraData={this.state}
           keyExtractor={(item, index) => index.toString()}
           refreshing={this.props.history.refreshGetHistory}
-          onRefresh={this.onHandleRefresh}
+          onRefresh={this.props.onRefresh}
           onEndReachedThreshold={0.2}
-          onEndReached={this.onHandleLoadMore}
+          onEndReached={this.props.onLoadMore}
         />
       </View>
     ) : (
@@ -129,7 +78,7 @@ class ReturnOrderListView extends Component {
             <View style={styles.boxItemContent}>
               <Text style={Fonts.type83}>{item.orderCode}</Text>
               <Text style={[Fonts.type83, { color: Color.fontGreen50 }]}>
-                Selesai
+                {item.status === 'done' ? 'Selesai' : 'Terkirim'}
               </Text>
             </View>
             <View style={{ marginVertical: 16 }}>
@@ -159,9 +108,12 @@ class ReturnOrderListView extends Component {
     );
   }
 
-  /** ITEM PRODUCT SECTION */
   renderProductSection(data) {
-    return <ProductListType1 data={data} borderRadius={10} />;
+    return data.length > 0 ? (
+      <CollapsibleProductList brands={data} />
+    ) : (
+      <View />
+    );
   }
 
   renderSeparator() {
