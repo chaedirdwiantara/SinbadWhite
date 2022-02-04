@@ -208,6 +208,17 @@ function* getCheckOverdue(actions) {
     yield put(ActionCreators.OMSCheckoutOverdueFailed(error));
   }
 }
+/** GET CHECK CREDIT LIMIT */
+function* getCheckCreditLimit(actions) {
+  try {
+    const response = yield call(() => {
+      return OmsMethod.checkCreditLimit(actions.payload);
+    });
+    yield put(ActionCreators.OMSCheckCreditSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.OMSCheckCreditFailed(error));
+  }
+}
 
 /** === SAGA FUNCTION === */
 function* OmsSaga() {
@@ -235,6 +246,7 @@ function* OmsSaga() {
   yield takeEvery(types.GET_RETURN_REASON_PROCESS, getReturnReason);
   yield takeEvery(types.POST_RETURN_ORDER_PROCESS, postReturnOrder);
   yield takeEvery(types.OMS_CHECK_OVERDUE_PROCESS, getCheckOverdue);
+  yield takeEvery(types.OMS_CHECK_CREDIT_PROCESS, getCheckCreditLimit);
 }
 
 export default OmsSaga;

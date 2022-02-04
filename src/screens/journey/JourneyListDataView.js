@@ -20,12 +20,39 @@ import {
   Address,
   SearchBarType1,
   EmptyDataType2,
-  EmptyData
+  EmptyData,
+  TagListType2
 } from '../../library/component';
 import { GlobalStyle, Fonts } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import masterColor from '../../config/masterColor';
+import { Color } from '../../config';
+import {
+  JOURNEY_PLAN_PAUSE_STATUS_PAUSED
+} from '../../constants';
+import {
+  storeType
+} from '../../constants/journeyPlanParams';
+
+const tabDashboard = [
+  {
+    title: 'Semua',
+    value: 'all'
+  },
+  {
+    title: 'Belum Dikunjungi',
+    value: 'notvisited'
+  },
+  {
+    title: 'Tertunda',
+    value: 'paused'
+  },
+  {
+    title: 'Sudah Dikunjungi',
+    value: 'visited'
+  }
+];
 
 class JourneyListDataView extends Component {
   constructor(props) {
@@ -35,7 +62,7 @@ class JourneyListDataView extends Component {
     };
   }
   parentFunction(data) {
-    if (data.type === 'search') {
+    if (data.type === 'search' || data.type === 'status') {
       this.props.parentFunction(data);
     }
   }
@@ -51,10 +78,11 @@ class JourneyListDataView extends Component {
       page: 1,
       date: today,
       search: this.props.searchText,
-      storetype: 'all',
+      storetype: storeType[this.props.storeType],
       loading: true
     });
     this.props.getJourneyPlanReportProcessV2();
+    this.props.setCheckPausedVisit(true);
   };
 
   onHandleLoadMore = () => {
@@ -74,7 +102,7 @@ class JourneyListDataView extends Component {
             page,
             date: today,
             search: this.props.searchText,
-            storetype: 'all',
+            storetype: storeType[this.props.storeType],
             loading: false
           });
         }
@@ -119,7 +147,8 @@ class JourneyListDataView extends Component {
     setTimeout(() => {
       this.props.getSurveyResult(data.storeName);
       NavigationService.navigate('MerchantHomeView', {
-        storeName: data.storeName
+        storeName: data.storeName,
+        storeType: storeType[this.props.storeType]
       });
     }, 100);
   }
@@ -259,7 +288,7 @@ class JourneyListDataView extends Component {
                  */
                   item.journeyBookStores.typeOfStore === 'exist_store'
                     ? Fonts.type67
-                    : Fonts.type29
+                    : Fonts.type120
                 }
               >
                 {item.externalId ? item.externalId : '-'}
@@ -295,7 +324,7 @@ class JourneyListDataView extends Component {
                 */
                 item.journeyBookStores.typeOfStore === 'exist_store'
                   ? Fonts.type8
-                  : Fonts.type29
+                  : Fonts.type121
               }
             >
               {item.storeName}
@@ -311,7 +340,7 @@ class JourneyListDataView extends Component {
                  */
                 item.journeyBookStores.typeOfStore === 'exist_store'
                   ? Fonts.type67
-                  : Fonts.type22
+                  : Fonts.type120
               }
               address={item.address}
               urban={item.urbans}
@@ -324,27 +353,42 @@ class JourneyListDataView extends Component {
             paddingVertical: 13
           }}
         >
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              marginBottom: 17
-            }}
-          >
-            <Image
-              source={this.checkVisitActivity(item.journeyBookStores)}
-              style={styles.iconVisitOrder}
-            />
-            <View style={{ marginLeft: 10 }} />
-            <Image
-              source={
-                item.journeyBookStores.orderStatus
-                  ? require('../../assets/icons/journey/order_green.png')
-                  : require('../../assets/icons/journey/order_gray.png')
-              }
-              style={styles.iconVisitOrder}
-            />
-          </View>
+          {
+            item.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_PAUSED
+            ? 
+              <View
+                style={{
+                  backgroundColor: Color.fontYellow10,
+                  paddingVertical: 4,
+                  paddingHorizontal: 6,
+                  marginBottom: 8
+                }}
+              >
+                <Text style={[Fonts.type22, { color: Color.fontYellow60 }]}>Sedang ditunda</Text>
+              </View>
+            :
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                  marginBottom: 17
+                }}
+              >
+                <Image
+                  source={this.checkVisitActivity(item.journeyBookStores)}
+                  style={styles.iconVisitOrder}
+                />
+                <View style={{ marginLeft: 10 }} />
+                <Image
+                  source={
+                    item.journeyBookStores.orderStatus
+                      ? require('../../assets/icons/journey/order_green.png')
+                      : require('../../assets/icons/journey/order_gray.png')
+                  }
+                  style={styles.iconVisitOrder}
+                />
+              </View>
+          }
           <View
             style={{
               flexDirection: 'row'
@@ -416,11 +460,25 @@ class JourneyListDataView extends Component {
       />
     );
   }
+  /** === RENDER TABS */
+  renderTabs() {
+    return (
+      <View>
+         <TagListType2
+          selected={this.props.storeType}
+          onRef={ref => (this.parentFunction = ref)}
+          parentFunction={this.parentFunction.bind(this)}
+          data={tabDashboard}
+        />
+      </View>
+    )
+  }
   /** === MAIN === */
   render() {
     return (
       <View style={styles.mainContainer}>
         {this.renderSearchBar()}
+        {this.renderTabs()}
         {this.props.journey.loadingGetJourneyPlan
           ? this.renderSkeleton()
           : this.renderData()}
@@ -500,9 +558,9 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
- * updatedDate: 24082021
+ * updatedBy: raka
+ * updatedDate: 26012022
  * updatedFunction:
- * -> maximise the character of search (30 characters).
+ * -> adjustment check pause function
  *
  */
