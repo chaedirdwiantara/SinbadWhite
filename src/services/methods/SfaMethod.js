@@ -46,6 +46,8 @@ function getReferenceList(data) {
       data.limit
     }`,
     method: 'GET'
+    // testpath:
+    //   'https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-methods'
   });
 }
 
@@ -104,11 +106,13 @@ function getStamp(data) {
   });
 }
 
-/** GET TRANSFER IMAGE */
+/** GET COLLECTION IMAGE */
 function getCollectionImage(id) {
   return ApiRest({
     path: `collection/v1/payment-method/images/${id}`,
     method: 'GET'
+    // testpath:
+    //   'https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-method/images/133'
   });
 }
 
@@ -138,8 +142,8 @@ function getCollectionLog(data) {
 function getCollectionDetail(data) {
   return ApiRest({
     path: `collection/v1/payment-method/${data}`,
-    method: 'GET',
-    testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-method/${data}`
+    method: 'GET'
+    // testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-method/${data}`
   });
 }
 
@@ -165,8 +169,8 @@ function deletePaymentBilling(data) {
 function getBillingDetail(data) {
   return ApiRest({
     path: `collection/v1/payment-billing/${data}`,
-    method: 'GET',
-    testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billing/${data}`
+    method: 'GET'
+    // testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billing/${data}`
   });
 }
 
@@ -178,10 +182,10 @@ function getPaymentCollectionLog(data) {
     }&storeId=${data.storeId}&limit=${data.limit}&skip=${data.skip}&userId=${
       data.userId
     }`,
-    method: 'GET',
-    testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billing-collections?paymentCollectionMethodId=${
-      data.paymentCollectionMethodId
-    }&limit=${data.limit}&skip=${data.skip}` // TODO: remove me
+    method: 'GET'
+    // testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billing-collections?paymentCollectionMethodId=${
+    //   data.paymentCollectionMethodId
+    // }&limit=${data.limit}&skip=${data.skip}` // TODO: remove me
   });
 }
 
