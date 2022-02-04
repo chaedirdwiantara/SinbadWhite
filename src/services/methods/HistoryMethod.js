@@ -11,7 +11,7 @@ function getHistory(data) {
     }&status=${data.statusOrder}&statusPayment=${data.statusPayment}&orderGte=${
       data.dateGte
     }&orderLte=${data.dateLte}&searchKey=${data.search}&searchSkuName=${
-      data.searchSkuName
+      data.searchSkuName !== undefined ? data.searchSkuName : ''
     }`,
     method: 'GET'
   });
