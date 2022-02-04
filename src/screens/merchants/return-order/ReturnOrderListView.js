@@ -18,6 +18,7 @@ import {
   EmptyDataType2
 } from '../../../library/component';
 import { Color } from '../../../config';
+import masterColor from '../../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
@@ -77,9 +78,11 @@ class ReturnOrderListView extends Component {
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
               <Text style={Fonts.type83}>{item.orderCode}</Text>
-              <Text style={[Fonts.type83, { color: Color.fontGreen50 }]}>
-                {item.status === 'done' ? 'Selesai' : 'Terkirim'}
-              </Text>
+              <View style={styles.statusTag}>
+                <Text style={{ ...Fonts.type110p }}>
+                  {item.status === 'done' ? 'Selesai' : 'Terkirim'}
+                </Text>
+              </View>
             </View>
             <View style={{ marginVertical: 16 }}>
               {this.renderProductSection(item.orderBrands)}
@@ -90,15 +93,13 @@ class ReturnOrderListView extends Component {
               </Text>
               <Text style={[Fonts.type56, { color: Color.fontBlack80 }]}>
                 {moment(new Date(item.createdAt)).format(
-                  'DD MMM YYYY HH:mm:ss'
+                  'DD MMMM YYYY HH:mm:ss'
                 )}
               </Text>
             </View>
             <View style={styles.boxItemContent}>
-              <Text style={[Fonts.type56, { color: Color.fontBlack80 }]}>
-                Total pembelian
-              </Text>
-              <Text style={[Fonts.type56, { color: Color.fontBlack80 }]}>
+              <Text style={Fonts.type111p}>Total pembelian</Text>
+              <Text style={Fonts.type111p}>
                 {MoneyFormat(item?.deliveredParcelFinalPriceBuyer || 0)}
               </Text>
             </View>
@@ -158,6 +159,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
+  },
+  statusTag: {
+    backgroundColor: masterColor.fontGreen10,
+    marginLeft: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    flexDirection: 'row'
   }
 });
 
