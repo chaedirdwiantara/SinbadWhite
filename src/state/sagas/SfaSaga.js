@@ -324,6 +324,17 @@ function* postTransactionCheckout(actions) {
   }
 }
 
+function* getReturnBalance(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getReturnBalance(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetReturnBalanceSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetReturnBalanceFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* SfaSaga() {
   yield takeEvery(
@@ -386,6 +397,7 @@ function* SfaSaga() {
     types.SFA_POST_TRANSACTION_CHECKOUT_PROCESS,
     postTransactionCheckout
   );
+  yield takeEvery(types.SFA_GET_RETURN_BALANCE_PROCESS, getReturnBalance);
 }
 
 export default SfaSaga;

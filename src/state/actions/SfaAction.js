@@ -707,3 +707,28 @@ export function sfaPostTransactionCheckoutFailed(data) {
 export function sfaPostTransactionCheckoutReset() {
   return { type: types.SFA_POST_TRANSACTION_CHECKOUT_RESET };
 }
+
+/**
+ * ===========================
+ * GET RETURN BALANCE
+ * ===========================
+ */
+/** === SFA GET RETURN BALANCE PROCESS === */
+export function sfaGetReturnBalanceProcess(data) {
+  return { type: types.SFA_GET_RETURN_BALANCE_PROCESS, payload: data };
+}
+
+/** === SFA GET RETURN BALANCE SUCCESS === */
+export function sfaGetReturnBalanceSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_RETURN_BALANCE_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_RETURN_BALANCE_FAILED, payload: data };
+}
+/** === SFA GET RETURN BALANCE FAILED === */
+export function sfaGetReturnBalanceFailed(data) {
+  return { type: types.SFA_GET_RETURN_BALANCE_FAILED, payload: data };
+}

@@ -26,10 +26,12 @@ import {
   sfaCollectionListLoadmoreProcess,
   sfaDeleteCollectionMethodProcess,
   sfaGetCollectionDetailProcess,
-  sfaGetCollectionImageProcess
+  sfaGetCollectionImageProcess,
+  sfaGetReturnBalanceProcess
 } from '../../state/actions';
 import SfaNoDataView from './SfaNoDataView';
 import ModalBottom from './components/ModalBottom';
+import { ModalError } from './components/ModalError';
 
 const SfaCollectionListView = props => {
   const dispatch = useDispatch();
@@ -48,11 +50,15 @@ const SfaCollectionListView = props => {
     loadingLoadMoreGetReferenceList,
     loadingGetReferenceList,
     dataSfaDeleteCollectionMethod,
-    errorSfaDeleteCollectionMethod
+    errorSfaDeleteCollectionMethod,
+    loadingSfaGetReturnBalance,
+    dataSfaGetReturnBalance,
+    errorSfaGetReturnBalance
   } = useSelector(state => state.sfa);
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [openModalNoSaldo, setOpenModalNoSaldo] = useState(false);
+  const [clickedAddCollection, setClickedAddCollection] = useState(false);
 
   /**
    * *********************************
@@ -65,6 +71,7 @@ const SfaCollectionListView = props => {
   const prevErrorSfaDeleteCollectionMethodRef = useRef(
     errorSfaDeleteCollectionMethod
   );
+  const refModalError = useRef();
 
   /**
    * *********************************
@@ -90,11 +97,6 @@ const SfaCollectionListView = props => {
       }
     }
   }, [dataSfaDeleteCollectionMethod]);
-
-  // TODO: remove after integration API Retur - for layouting only
-  useEffect(() => {
-    !dataGetReferenceList?.data || setOpenModalNoSaldo(true);
-  }, []);
 
   /** FUNCTION NAVIGATE ON SUCCES DELETE COLLECTION */
   const navigateOnSuccesDelete = () => {
@@ -132,9 +134,54 @@ const SfaCollectionListView = props => {
     dispatch(sfaGetReferenceListProcess(data));
   };
 
+  const getReturnBalance = () => {
+    const data = {
+      supplierId: parseInt(userSuppliers[0].supplier.id, 10),
+      storeId: selectedMerchant.storeId
+    };
+    dispatch(sfaGetReturnBalanceProcess(data));
+  };
+
   useEffect(() => {
     getCollectionList(true, 20);
   }, []);
+
+  /** HANDLE CHECK RETURN BALANCE */
+  useEffect(() => {
+    if (
+      collectionTypeId === RETUR &&
+      clickedAddCollection &&
+      dataSfaGetReturnBalance
+    ) {
+      if (dataSfaGetReturnBalance?.data?.returnBalance > 0) {
+        navigatetoAddCollection();
+      } else {
+        setOpenModalNoSaldo(true);
+      }
+      setClickedAddCollection(false);
+    }
+  }, [dataSfaGetReturnBalance]);
+
+  /** HANDLE ERROR */
+  useEffect(() => {
+    if (
+      collectionTypeId === RETUR &&
+      clickedAddCollection &&
+      errorSfaGetReturnBalance
+    ) {
+      refModalError?.current?.handleError(errorSfaGetReturnBalance);
+      setClickedAddCollection(false);
+    }
+  }, [errorSfaGetReturnBalance]);
+
+  const handleOnClickAddCollection = () => {
+    if (collectionTypeId === RETUR) {
+      setClickedAddCollection(true);
+      getReturnBalance();
+    } else {
+      navigatetoAddCollection();
+    }
+  };
 
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigatetoAddCollection = () => {
@@ -201,6 +248,7 @@ const SfaCollectionListView = props => {
       paymentCollectionId: item.id
     });
   };
+
   /** RENDER CONTENT LIST GLOBAL */
   const renderContentListGlobal = (key, value, black, bold, red) => {
     return (
@@ -463,12 +511,16 @@ const SfaCollectionListView = props => {
    * =======================
    */
   const renderBottomButton = () => {
+    const isLoading =
+      collectionTypeId === RETUR ? loadingSfaGetReturnBalance : false;
     return (
       <>
         <ButtonSingle
-          onPress={() => navigatetoAddCollection()}
+          onPress={() => handleOnClickAddCollection()}
           title={'Tambah Penagihan'}
           borderRadius={4}
+          disabled={isLoading}
+          loading={isLoading}
         />
       </>
     );
@@ -507,7 +559,9 @@ const SfaCollectionListView = props => {
           : renderNoData()}
       </View>
     ) : (
-      <SkeletonType28 />
+      <View style={{ marginTop: 16 }}>
+        <SkeletonType28 />
+      </View>
     );
   };
 
@@ -522,6 +576,7 @@ const SfaCollectionListView = props => {
       {props.isNavigateFromTab ? null : renderBottomButton()}
       {props.isNavigateFromTab ? null : renderModalNoSaldo()}
       {renderModalConfirmationDelete()}
+      <ModalError ref={refModalError} />
     </>
   );
 };
