@@ -40,6 +40,7 @@ class PdpSearchView extends Component {
       addProductNotifText: '',
       selectedProduct: null,
       openWarningCredit: false,
+      invoiceGroupId: 0,
       /** sort */
       sort: 'asc',
       sortBy: 'name'
@@ -111,7 +112,8 @@ class PdpSearchView extends Component {
         ) {
           this.setState({
             openModalConfirmRemoveCart: true,
-            selectedProduct: data.data
+            selectedProduct: data.data,
+            invoiceGroupId: data.invoice[0].invoiceGroupId
           });
         } else {
           const invoiceGroupId = data.invoice[0].invoiceGroupId;
@@ -214,6 +216,7 @@ class PdpSearchView extends Component {
    */
   /** === RENDER MODAL CONFIRM DELETE CART === */
   renderModalConfirmDelete() {
+    console.log(this.state.selectedProduct);
     return this.state.openModalConfirmRemoveCart ? (
       <ModalConfirmation
         title={'Anda telah berpindah toko'}
@@ -231,6 +234,12 @@ class PdpSearchView extends Component {
           });
           this.props.omsResetData();
           this.props.merchantChanged(false);
+          const invoiceGroupId = this.state.invoiceGroupId;
+          const storeId = this.props.merchant.selectedMerchant.storeId;
+          this.props.OMSCheckCreditProcess({
+            invoiceGroupId: parseInt(invoiceGroupId, 10),
+            storeId: parseInt(storeId, 10)
+          });
           this.props.pdpGetDetailProcess(this.state.selectedProduct);
           this.setState({ openModalOrder: true });
         }}
@@ -266,8 +275,9 @@ class PdpSearchView extends Component {
   }
   /** === RENDER WARNING CREDIT LIMIT === */
   renderWarningContent() {
-    const allowCreditLimit = this.props.oms.dataOMSCheckCredit.allowCreditLimit;
-    const freezeStatus = this.props.oms.dataOMSCheckCredit.freezeStatus;
+    const allowCreditLimit = this.props.oms?.dataOMSCheckCredit
+      ?.allowCreditLimit;
+    const freezeStatus = this.props.oms?.dataOMSCheckCredit?.freezeStatus;
     return allowCreditLimit && !freezeStatus ? (
       <View
         style={{
