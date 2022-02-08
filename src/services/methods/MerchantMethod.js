@@ -237,6 +237,25 @@ function getRadiusLockGeotag(params) {
   });
 }
 
+/** CHECK CAN RESUME VISIT JBS */
+function checkCanResumeVisit(params) {
+  return ApiRest({
+    path: `${salesManagementService}/v1/journey-book/check-resume/${params.journeyBookId}?jbsId=${
+      params.journeyBookStoreId
+    }`,
+    method: 'GET'
+  });
+}
+
+/** PAUSE OR RESUME VISIT JBS */
+function pauseResumeVisit({ journeyBookStoreId, params }) {
+  return ApiRest({
+    path: `${salesManagementService}/v1/journey-book-stores/pause-resume/${journeyBookStoreId}`,
+    method: 'PATCH',
+    params
+  });
+}
+
 /**
  * ==================
  * STOCK MANAGEMENT
@@ -290,6 +309,25 @@ function batchDeleteRecordStock(params) {
     params
   });
 }
+/** GET MERCHANT CREDIT LIMIT LIST */
+function getMerchantCreditLimitList(params) {
+  return ApiRest({
+    path: `payment/v1/credit-limit-stores?supplierId=${
+      params.supplierId
+    }&storeId=${params.storeId}&limit=${params.limit}&skip=${params.skip}`,
+    method: 'GET'
+  });
+}
+
+/** GET MERCHANT CREDIT LIMIT SUMMARY */
+function getMerchantCreditLimitSummary(params) {
+  return ApiRest({
+    path: `payment/v1/credit-limit-store-summary/${params.storeId}/${
+      params.supplierId
+    }`,
+    method: 'GET'
+  });
+}
 
 export const MerchantMethod = {
   getMerchantV2,
@@ -324,7 +362,11 @@ export const MerchantMethod = {
   validateAreaMapping,
   getSalesSegmentation,
   getReturnActiveInfo,
-  getRadiusLockGeotag
+  getRadiusLockGeotag,
+  checkCanResumeVisit,
+  pauseResumeVisit,
+  getMerchantCreditLimitList,
+  getMerchantCreditLimitSummary
 };
 
 /**
@@ -333,8 +375,9 @@ export const MerchantMethod = {
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: dyah
- * updatedDate: 30092021
+ * updatedBy: raka
+ * updatedDate: 26012022
  * updatedFunction:
- * -> add endpoint get radius lock geotag. (getRadiusLockGeotag)
+ * -> add endpoint mock check resume visit. (journey book stores)
+ * -> add endpoint pause or resume visit. (journey book stores)
  */

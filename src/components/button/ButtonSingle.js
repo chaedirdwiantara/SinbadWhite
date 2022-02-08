@@ -97,6 +97,7 @@ class ButtonSingle extends Component {
           disabledTitleStyle={modifyDisabledFonts}
           loadingProps={{ color }}
           loading={this.props.loading}
+          icon={this.props.leftIcon}
         />
       </View>
     );
@@ -158,9 +159,9 @@ export default ButtonSingle;
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
+ * updatedBy: raka
+ * updatedDate: 25012022
  * updatedFunction:
- * -> Refactoring Module Import
+ * -> Add left icon to be filled with JSX element
  *
  */
