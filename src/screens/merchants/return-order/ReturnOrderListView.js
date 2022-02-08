@@ -89,7 +89,7 @@ class ReturnOrderListView extends Component {
             </View>
             <View style={[styles.boxItemContent, { marginBottom: 8 }]}>
               <Text style={[Fonts.type56, { color: Color.fontBlack80 }]}>
-                Dipesan pada
+                Dipesan Pada
               </Text>
               <Text style={[Fonts.type56, { color: Color.fontBlack80 }]}>
                 {moment(new Date(item.createdAt)).format(
@@ -98,7 +98,7 @@ class ReturnOrderListView extends Component {
               </Text>
             </View>
             <View style={styles.boxItemContent}>
-              <Text style={Fonts.type111p}>Total pembelian</Text>
+              <Text style={Fonts.type111p}>Total Pembelian</Text>
               <Text style={Fonts.type111p}>
                 {MoneyFormat(item?.deliveredParcelFinalPriceBuyer || 0)}
               </Text>

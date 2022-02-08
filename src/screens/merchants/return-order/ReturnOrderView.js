@@ -39,7 +39,8 @@ class ReturnOrderView extends Component {
       openDateSpinner: false,
       typeDate: '',
       startDate: '',
-      endDate: ''
+      endDate: '',
+      searchKeyword: ''
     };
   }
 
@@ -61,7 +62,7 @@ class ReturnOrderView extends Component {
           },
           () => {
             this.props.historyGetReset();
-            this.getHistory(true, 0);
+            this.getHistory(true, 0, this.state.searchKeyword);
           }
         );
         break;
@@ -96,7 +97,8 @@ class ReturnOrderView extends Component {
       dateGte: this.state.dateFilter.dateGte,
       dateLte: this.state.dateFilter.dateLte,
       search: '',
-      searchSkuName: searchKeyword ? searchKeyword : ''
+      searchSkuName: searchKeyword ? searchKeyword : '',
+      returnWindow: true
     });
   }
 
@@ -162,7 +164,7 @@ class ReturnOrderView extends Component {
           fetchFn={searchKeyword => {
             this.props.historyGetReset();
             this.getHistory(true, 0, searchKeyword);
-            this.setState({ emptyDataType: 'search' });
+            this.setState({ emptyDataType: 'search', searchKeyword });
           }}
         />
       </View>

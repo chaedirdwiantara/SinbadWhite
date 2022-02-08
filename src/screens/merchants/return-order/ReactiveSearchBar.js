@@ -22,6 +22,7 @@ class ReactiveSearchBar extends Component {
   }
 
   fetchHistory = () => {
+    Keyboard.dismiss();
     this.props.fetchFn(this.state.keyword);
   };
 
@@ -58,6 +59,7 @@ class ReactiveSearchBar extends Component {
               selectionColor={Color.mainColor}
               onEndEditing={() => {
                 if (this.state.keyword.length === 0) {
+                  Keyboard.dismiss();
                   this.props.fetchFn(this.state.keyword);
                 } else {
                   Keyboard.dismiss();

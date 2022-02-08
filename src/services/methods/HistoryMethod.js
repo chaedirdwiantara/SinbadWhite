@@ -12,7 +12,7 @@ function getHistory(data) {
       data.dateGte
     }&orderLte=${data.dateLte}&searchKey=${data.search}&searchSkuName=${
       data.searchSkuName !== undefined ? data.searchSkuName : ''
-    }`,
+    }&returnWindow=${data.returnWindow ? data.returnWindow : false}`,
     method: 'GET'
   });
 }
