@@ -81,9 +81,6 @@ const SfaCollectionAddView = props => {
   const [messageError, setMessageError] = useState(null);
   const [titleError, setTitleError] = useState(null);
   const [buttonTitle, setButtonTitle] = useState(null);
-
-  // TODO: Integration API - saldo barang retur
-  const returnedGoodsBalance = 500000;
   const [invalidAmountRetur, setInvalidAmountRetur] = useState(false);
   const [openModalConfirmBack, setOpenModalConfirmBack] = useState(false);
 
@@ -97,7 +94,8 @@ const SfaCollectionAddView = props => {
   const {
     loadingSfaPostPaymentMethod,
     dataSfaPostPaymentMethod,
-    errorSfaPostPaymentMethod
+    errorSfaPostPaymentMethod,
+    dataSfaGetReturnBalance
   } = useSelector(state => state.sfa);
 
   /**
@@ -306,7 +304,7 @@ const SfaCollectionAddView = props => {
           setIsSaveDisabled(true);
           setInvalidAmountRetur(false);
         } else {
-          if (amount > returnedGoodsBalance) {
+          if (amount > (dataSfaGetReturnBalance?.data?.returnBalance ?? 0)) {
             setIsSaveDisabled(true);
             setInvalidAmountRetur(true);
           } else {
@@ -835,7 +833,7 @@ const SfaCollectionAddView = props => {
           />
         </View>
         <Text style={[Fonts.type17, { marginBottom: 16 }]}>
-          {MoneyFormatSpace(returnedGoodsBalance)}
+          {MoneyFormatSpace(dataSfaGetReturnBalance?.data?.returnBalance ?? 0)}
         </Text>
       </View>
     ) : null;

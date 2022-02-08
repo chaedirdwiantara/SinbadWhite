@@ -232,6 +232,19 @@ function postTransactionCheckout(data) {
   });
 }
 
+/** GET RETURN BALANCE */
+function getReturnBalance(data) {
+  return ApiRest({
+    path: `/collection/v1/return-balance?storeId=${data.storeId}&supplierId=${
+      data.supplierId
+    }`,
+    method: 'GET'
+    // testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/return-balance?storeId=${
+    //   data.storeId
+    // }&supplierId=${data.supplierId}`
+  });
+}
+
 export const SfaMethod = {
   getCollectionStatus,
   getSfaDetail,
@@ -255,5 +268,6 @@ export const SfaMethod = {
   deleteCollectionMethod,
   getCollectionListStatus,
   getReasonNotToPay,
-  postTransactionCheckout
+  postTransactionCheckout,
+  getReturnBalance
 };
