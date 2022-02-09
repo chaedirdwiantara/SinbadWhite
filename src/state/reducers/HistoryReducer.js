@@ -177,7 +177,8 @@ export const history = createReducer(INITIAL_STATE, {
       ...state,
       pageGetHistory: 0,
       totalDataGetHistory: 0,
-      dataGetHistory: []
+      dataGetHistory: [],
+      pageGetReturnParcels: 0
     };
   },
   [types.HISTORY_GET_REFRESH](state, action) {
