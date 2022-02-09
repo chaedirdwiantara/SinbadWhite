@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Text
 } from '../../library/reactPackage';
-import { connect } from '../../library/thirdPartyPackage';
 import { GlobalStyle, Fonts } from '../../helpers';
 import { Color } from '../../config';
 
@@ -19,12 +18,12 @@ import { Color } from '../../config';
  * =====================
  */
 
-class TagListType3 extends Component {
+class TagListType4 extends Component {
   constructor(props) {
     super(props);
     this.renderItem = this.renderItem.bind(this);
     this.state = {
-      activeTag: this.props.selected || 0
+      activeTag: this.props.selected
     };
   }
   /**
@@ -35,7 +34,7 @@ class TagListType3 extends Component {
   /** === SEND DATA TO PARENT === */
   selectTag(index) {
     this.setState({ activeTag: index });
-    this.props.parentFunction({ type: 'sku-tag', data: index });
+    this.props.parentFunction({ type: 'status', data: index });
   }
   /**
    * =======================
@@ -47,29 +46,28 @@ class TagListType3 extends Component {
     return this.props.shadow
       ? [
           styles.boxChip,
-          { backgroundColor: Color.mainColor },
+          {
+            backgroundColor: '#FFEDEE',
+            borderColor: Color.fontRed40,
+            borderWidth: 1
+          },
           GlobalStyle.shadow
         ]
-      : [styles.boxChip, { backgroundColor: Color.mainColor }];
+      : [
+          styles.boxChip,
+          {
+            backgroundColor: '#FFEDEE',
+            borderColor: Color.fontRed40,
+            borderWidth: 1
+          }
+        ];
   }
   /** === ACTIVE TAG VIEW === */
   renderTagActive(item) {
     return (
       <View style={this.tagActiveStyle()}>
-        <Text style={Fonts.type2}>
-          {item.type === 'MSS' ? (
-            <View
-              style={{
-                height: 8,
-                width: 8,
-                backgroundColor: Color.fontYellow40,
-                borderRadius: 100
-              }}
-            />
-          ) : (
-            <View />
-          )}{' '}
-          {item.name}
+        <Text style={[Fonts.type2, { color: Color.fontRed50 }]}>
+          {item.title}
         </Text>
       </View>
     );
@@ -81,7 +79,7 @@ class TagListType3 extends Component {
           styles.boxChip,
           {
             backgroundColor: Color.backgroundWhite,
-            borderColor: Color.fontBlack80
+            borderColor: Color.fontBlack40
           },
           GlobalStyle.shadow
         ]
@@ -90,7 +88,7 @@ class TagListType3 extends Component {
           {
             backgroundColor: Color.backgroundWhite,
             borderWidth: 1,
-            borderColor: Color.fontBlack80
+            borderColor: Color.fontBlack40
           }
         ];
   }
@@ -101,21 +99,7 @@ class TagListType3 extends Component {
         onPress={() => this.selectTag(index)}
         style={this.tagInactiveStyle()}
       >
-        <Text style={[Fonts.type9, { color: Color.fontBlack80 }]}>
-          {item.type === 'MSS' ? (
-            <View
-              style={{
-                height: 8,
-                width: 8,
-                backgroundColor: Color.fontYellow40,
-                borderRadius: 100
-              }}
-            />
-          ) : (
-            <View />
-          )}{' '}
-          {item.name}
-        </Text>
+        <Text style={[Fonts.type9, { color: '#0B1A28' }]}>{item.title}</Text>
       </TouchableOpacity>
     );
   }
@@ -165,19 +149,24 @@ const styles = StyleSheet.create({
   boxChip: {
     paddingVertical: 9,
     paddingHorizontal: 16,
-    borderRadius: 20
+    borderRadius: 5
   },
   marginPerTag: {
     width: 16
   }
 });
 
-const mapStateToProps = ({}) => {
-  return {};
-};
+export default TagListType4;
 
-// eslint-disable-next-line prettier/prettier
-export default connect(
-  mapStateToProps,
-  {}
-)(TagListType3);
+/**
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 08072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
