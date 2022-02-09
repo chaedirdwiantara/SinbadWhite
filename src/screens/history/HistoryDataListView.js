@@ -107,7 +107,7 @@ class HistoryDataListView extends Component {
   onHandleLoadMore = () => {
     if (this.props.history.dataGetHistory) {
       if (
-        this.props.history.dataGetHistory.length <
+        this.props.history.pageGetHistory + 10 <
         this.props.history.totalDataGetHistory
       ) {
         const page = this.props.history.pageGetHistory + 10;
