@@ -116,8 +116,8 @@ class PdpSearchView extends Component {
             invoiceGroupId: data.invoice[0].invoiceGroupId
           });
         } else {
-          const invoiceGroupId = data.invoice[0].invoiceGroupId;
-          const storeId = this.props.merchant.selectedMerchant.storeId;
+          const invoiceGroupId = data?.invoice[0]?.invoiceGroupId;
+          const storeId = this.props.merchant?.selectedMerchant?.storeId;
           this.props.OMSCheckCreditProcess({
             invoiceGroupId: parseInt(invoiceGroupId, 10),
             storeId: parseInt(storeId, 10)
@@ -235,7 +235,7 @@ class PdpSearchView extends Component {
           this.props.omsResetData();
           this.props.merchantChanged(false);
           const invoiceGroupId = this.state.invoiceGroupId;
-          const storeId = this.props.merchant.selectedMerchant.storeId;
+          const storeId = this.props.merchant?.selectedMerchant?.storeId;
           this.props.OMSCheckCreditProcess({
             invoiceGroupId: parseInt(invoiceGroupId, 10),
             storeId: parseInt(storeId, 10)
