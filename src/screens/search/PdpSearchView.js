@@ -216,7 +216,6 @@ class PdpSearchView extends Component {
    */
   /** === RENDER MODAL CONFIRM DELETE CART === */
   renderModalConfirmDelete() {
-    console.log(this.state.selectedProduct);
     return this.state.openModalConfirmRemoveCart ? (
       <ModalConfirmation
         title={'Anda telah berpindah toko'}
