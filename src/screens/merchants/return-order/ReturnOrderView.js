@@ -115,10 +115,10 @@ class ReturnOrderView extends Component {
   handleLoadMoreFetch = () => {
     if (this.props.history.dataGetHistory) {
       if (
-        this.props.history.dataGetHistory.length <
+        this.props.history.pageGetReturnParcels + 10 <
         this.props.history.totalDataGetHistory
       ) {
-        const page = this.props.history.pageGetHistory + 10;
+        const page = this.props.history.pageGetReturnParcels + 10;
         this.props.historyGetLoadMore(page);
         this.getHistory(false, page);
       }
