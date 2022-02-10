@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import {
@@ -247,9 +248,7 @@ const SfaCollectionAddView = props => {
         break;
       case CHECK:
       case GIRO:
-        // eslint-disable-next-line no-case-declarations
         const stamp = dataStamp ? dataStamp.nominal : 0;
-        // eslint-disable-next-line no-case-declarations
         const total = amount + stamp;
         setTotalAmount(parseInt(total, 10));
         break;
@@ -329,61 +328,65 @@ const SfaCollectionAddView = props => {
       type: imageType,
       image: imageData
     };
-    if (paymentCollectionMethodId === CASH) {
-      dispatch(sfaPostPaymentMethodProcess(data));
-    }
-    if (
-      paymentCollectionMethodId === CHECK ||
-      paymentCollectionMethodId === GIRO
-    ) {
-      const stampId = dataStamp ? dataStamp.id : null;
-      const isUsedStamp = dataStamp ? true : false;
-      const bankId = dataBank.id;
-      const dateIssued = moment
-        .utc(issuedDate)
-        .local()
-        .format('YYYY-MM-DD HH:mm:ss');
-      const dateInvalid = moment
-        .utc(invalidDate)
-        .local()
-        .format('YYYY-MM-DD HH:mm:ss');
-      const dataCheckGiro = {
-        ...data,
-        stampId: stampId,
-        isUsedStamp: isUsedStamp,
-        bankId: bankId,
-        issuedDate: dateIssued,
-        invalidDate: dateInvalid,
-        referenceCode: noReference
-      };
-      dispatch(sfaPostPaymentMethodProcess(dataCheckGiro));
-    }
-    if (paymentCollectionMethodId === TRANSFER) {
-      const bankId = dataBank.id;
-      const bankToId = dataBankTo.id;
-      const trfDate = moment
-        .utc(transferDate)
-        .local()
-        .format('YYYY-MM-DD HH:mm:ss');
 
-      const dataTransfer = {
-        ...data,
-        referenceCode: noReference,
-        issuedDate: trfDate,
-        bankId,
-        bankToAccountId: bankToId
-      };
-      dispatch(sfaPostPaymentMethodProcess(dataTransfer));
-    }
-    // TODO: Integration API - Retur
-    if (paymentCollectionMethodId === RETUR) {
-      const dataRetur = {};
-      dispatch(sfaPostPaymentMethodProcess(dataRetur));
-    }
-    // TODO: Integration API - Promo
-    if (paymentCollectionMethodId === PROMO) {
-      const dataPromo = {};
-      dispatch(sfaPostPaymentMethodProcess(dataPromo));
+    switch (paymentCollectionMethodId) {
+      case CASH:
+        dispatch(sfaPostPaymentMethodProcess(data));
+        break;
+      case CHECK:
+      case GIRO:
+        const stampId = dataStamp ? dataStamp.id : null;
+        const isUsedStamp = dataStamp ? true : false;
+        const dateIssued = moment
+          .utc(issuedDate)
+          .local()
+          .format('YYYY-MM-DD HH:mm:ss');
+        const dateInvalid = moment
+          .utc(invalidDate)
+          .local()
+          .format('YYYY-MM-DD HH:mm:ss');
+        const dataCheckGiro = {
+          ...data,
+          stampId: stampId,
+          isUsedStamp: isUsedStamp,
+          bankId: dataBank.id,
+          issuedDate: dateIssued,
+          invalidDate: dateInvalid,
+          referenceCode: noReference
+        };
+        dispatch(sfaPostPaymentMethodProcess(dataCheckGiro));
+        break;
+      case TRANSFER:
+        const trfDate = moment
+          .utc(transferDate)
+          .local()
+          .format('YYYY-MM-DD HH:mm:ss');
+
+        const dataTransfer = {
+          ...data,
+          referenceCode: noReference,
+          issuedDate: trfDate,
+          bankId: dataBank.id,
+          bankToAccountId: dataBankTo.id
+        };
+        dispatch(sfaPostPaymentMethodProcess(dataTransfer));
+        break;
+      case RETUR:
+        const dataRetur = {
+          ...data
+        };
+        delete dataRetur.filename;
+        delete dataRetur.type;
+        delete dataRetur.image;
+        dispatch(sfaPostPaymentMethodProcess(dataRetur));
+        break;
+      case PROMO:
+        // TODO: Integration API - Promo
+        const dataPromo = {};
+        dispatch(sfaPostPaymentMethodProcess(dataPromo));
+        break;
+      default:
+        break;
     }
   };
 
@@ -940,7 +943,6 @@ const SfaCollectionAddView = props => {
             title={title}
             open={isModalBankOpen}
             close={() => setIsModalBankOpen(false)}
-            // eslint-disable-next-line no-undef
             onRef={ref => (fnSelectCollection = ref)}
             selectCollection={fnSelectCollection}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
