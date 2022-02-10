@@ -4,22 +4,22 @@ import {
   View,
   StyleSheet,
   Dimensions
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
   bindActionCreators,
   connect,
   MapView,
   Marker,
   Geolocation
-} from '../../library/thirdPartyPackage'
+} from '../../library/thirdPartyPackage';
 import {
   TagListType1,
   SearchBarType2,
   EmptyData,
   LoadingPage,
   ModalBottomType2
-} from '../../library/component'
-import { Color } from '../../config'
+} from '../../library/component';
+import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
 import MerchantListDataView from './MerchantListDataView';
 
@@ -164,7 +164,7 @@ class MerchantMapView extends Component {
         }}
         onLayout={() =>
           setTimeout(() => {
-            this.mapRef.fitToCoordinates(
+            this.mapRef?.fitToCoordinates(
               [
                 {
                   latitude: this.state.latitude,
@@ -215,7 +215,7 @@ class MerchantMapView extends Component {
         onLayout={() =>
           setTimeout(() => {
             if (this.props.merchant.dataGetMerchantV2.length > 0) {
-              this.mapRef.fitToCoordinates(
+              this.mapRef?.fitToCoordinates(
                 this.props.merchant.dataGetMerchantV2,
                 {
                   edgePadding: {
@@ -331,7 +331,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(MerchantMapView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MerchantMapView);
 
 /**
  * ============================
