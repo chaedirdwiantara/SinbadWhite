@@ -7,6 +7,7 @@ import {
 import { MaterialIcon } from '../../../library/thirdPartyPackage';
 import masterColor from '../../../config/masterColor.json';
 import { ModalConfirmation } from '../../../library/component';
+import NavigationService from '../../../navigation/NavigationService';
 
 /** === HEADER === */
 export const HeaderLeftOption = props => {
@@ -50,7 +51,7 @@ export const ModalConfirmBack = props => {
       type={'okeNotRed'}
       ok={() => {
         props?.setOpenModalConfirmBack(false);
-        props?.navigateTo();
+        props?.navigateTo ? props.navigateTo() : NavigationService.goBack();
       }}
       cancel={() => {
         props?.setOpenModalConfirmBack(false);

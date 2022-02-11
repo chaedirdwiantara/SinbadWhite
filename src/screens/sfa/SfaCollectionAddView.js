@@ -1027,7 +1027,6 @@ const SfaCollectionAddView = props => {
       <ModalConfirmBack
         openModalConfirmBack={openModalConfirmBack}
         setOpenModalConfirmBack={setOpenModalConfirmBack}
-        navigateTo={NavigationService.goBack}
       />
     ) : (
       <View />
