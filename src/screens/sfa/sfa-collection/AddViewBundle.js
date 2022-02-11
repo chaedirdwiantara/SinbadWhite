@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import {
   View,
   TouchableOpacity,
-  StyleSheet,
-  BackHandler
+  StyleSheet
 } from '../../../library/reactPackage';
 import { MaterialIcon } from '../../../library/thirdPartyPackage';
-import NavigationService from '../../../navigation/NavigationService';
 import masterColor from '../../../config/masterColor.json';
 import { ModalConfirmation } from '../../../library/component';
 
@@ -52,7 +50,7 @@ export const ModalConfirmBack = props => {
       type={'okeNotRed'}
       ok={() => {
         props?.setOpenModalConfirmBack(false);
-        handleBackPress();
+        props?.navigateTo();
       }}
       cancel={() => {
         props?.setOpenModalConfirmBack(false);
@@ -61,30 +59,6 @@ export const ModalConfirmBack = props => {
   ) : (
     <View />
   );
-};
-
-/** === BACK BUTTON RN PRESS HANDLING === */
-export const handleBackPress = () => {
-  NavigationService.goBack();
-};
-
-/**
- * ================================
- * NAVIGATION FUNCTION for ADD VIEW
- * ================================
- */
-export const navigationFunctionAddView = props => {
-  const backAction = () => {
-    props?.setOpenModalConfirmBack(true);
-    return true;
-  };
-
-  const backHandler = BackHandler.addEventListener(
-    'hardwareBackPress',
-    backAction
-  );
-
-  return () => backHandler.remove();
 };
 
 const styles = StyleSheet.create({

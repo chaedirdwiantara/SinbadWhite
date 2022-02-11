@@ -6,7 +6,8 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  BackHandler
 } from '../../library/reactPackage';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -44,10 +45,7 @@ import {
 import { collectionMethodLabel } from './functions/sfa';
 import SfaTooltip from './components/SfaTooltip';
 import InputAmount from './components/InputAmount';
-import {
-  ModalConfirmBack,
-  navigationFunctionAddView
-} from './sfa-collection/AddViewBundle';
+import { ModalConfirmBack } from './sfa-collection/AddViewBundle';
 
 const MODAL_TYPE_SOURCE = 1;
 const MODAL_TYPE_TO = 2;
@@ -146,8 +144,14 @@ const SfaCollectionAddView = props => {
   }, [isStampChecked]);
 
   useEffect(() => {
-    navigationFunctionAddView({ setOpenModalConfirmBack });
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
   }, []);
+
+  useEffect(
+    () => () =>
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress),
+    []
+  );
 
   /** HANDLE ERROR POST COLLECTION */
   useEffect(() => {
@@ -162,6 +166,11 @@ const SfaCollectionAddView = props => {
    * RENDER FUNCTION
    * *********************************
    */
+  const handleBackPress = () => {
+    setOpenModalConfirmBack(true);
+    return true;
+  };
+
   const navigateOnSucces = () => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
@@ -1018,6 +1027,7 @@ const SfaCollectionAddView = props => {
       <ModalConfirmBack
         openModalConfirmBack={openModalConfirmBack}
         setOpenModalConfirmBack={setOpenModalConfirmBack}
+        navigateTo={NavigationService.goBack}
       />
     ) : (
       <View />
