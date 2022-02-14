@@ -1,6 +1,6 @@
 import { React, Component, View, StyleSheet } from '../../library/reactPackage';
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
-import { TagListType2, SkeletonType2 } from '../../library/component';
+import { TagListType4, SkeletonType2 } from '../../library/component';
 import { GlobalStyle } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
@@ -52,7 +52,7 @@ class HistoryOrderView extends Component {
   renderTagsContent() {
     return (
       <View>
-        <TagListType2
+        <TagListType4
           selected={this.state.selectedOrderStatus}
           onRef={ref => (this.parentFunction = ref)}
           parentFunction={this.parentFunction.bind(this)}
@@ -105,7 +105,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(HistoryOrderView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HistoryOrderView);
 
 /**
  * ============================

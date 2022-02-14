@@ -127,18 +127,12 @@ class ReturnRequestView extends Component {
                 Harga Retur
               </Text>
             </View>
-            <TouchableOpacity
+            <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center'
               }}
-              onPress={() =>
-                this.toParentFunction({
-                  type: 'ManualInputPrice',
-                  data: item
-                })
-              }
               disabled={parseInt(item.qty, 10) === 0}
             >
               <Text
@@ -155,16 +149,7 @@ class ReturnRequestView extends Component {
               >
                 {MoneyFormat(item.price)}
               </Text>
-              <MaterialCommunityIcons
-                name="pencil"
-                size={16}
-                color={
-                  parseInt(item.qty, 10) === 0
-                    ? Color.fontRed10
-                    : Color.fontRed50
-                }
-              />
-            </TouchableOpacity>
+            </View>
           </View>
           <View style={GlobalStyle.lines} />
           <View
