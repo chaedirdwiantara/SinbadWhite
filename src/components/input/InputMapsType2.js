@@ -60,23 +60,25 @@ class InputMapsType1 extends Component {
             }}
             onLayout={() => {
               setTimeout(() => {
-                this.mapRef.fitToCoordinates(
-                  [
+                if (this.mapRef) {
+                  this.mapRef.fitToCoordinates(
+                    [
+                      {
+                        latitude: this.props.selectedMapLat,
+                        longitude: this.props.selectedMapLong
+                      }
+                    ],
                     {
-                      latitude: this.props.selectedMapLat,
-                      longitude: this.props.selectedMapLong
+                      edgePadding: {
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        left: 0
+                      },
+                      animated: true
                     }
-                  ],
-                  {
-                    edgePadding: {
-                      top: 0,
-                      right: 0,
-                      bottom: 0,
-                      left: 0
-                    },
-                    animated: true
-                  }
-                );
+                  );
+                }
               }, 0);
             }}
           >
@@ -178,10 +180,10 @@ export default InputMapsType1;
 * ============================
 * createdBy: 
 * createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
+* updatedBy: dyah
+* updatedDate: 15022022
 * updatedFunction:
-* -> Refactoring Module Import
+* -> add validation to fix crash because of ref (fitToCoordinates)
 * 
 */
 
