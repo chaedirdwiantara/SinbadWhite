@@ -194,23 +194,25 @@ class MapsView extends Component {
         }}
         onLayout={() => {
           setTimeout(() => {
-            this.mapRef.fitToCoordinates(
-              [
+            if (this.mapRef) {
+              this.mapRef.fitToCoordinates(
+                [
+                  {
+                    latitude: this.state.latitude,
+                    longitude: this.state.longitude
+                  }
+                ],
                 {
-                  latitude: this.state.latitude,
-                  longitude: this.state.longitude
+                  edgePadding: {
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0
+                  },
+                  animated: true
                 }
-              ],
-              {
-                edgePadding: {
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  left: 0
-                },
-                animated: true
-              }
-            );
+              );
+            }
           }, 0);
         }}
       >
