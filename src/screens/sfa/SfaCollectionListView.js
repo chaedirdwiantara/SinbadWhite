@@ -31,6 +31,7 @@ import {
 } from '../../state/actions';
 import SfaNoDataView from './SfaNoDataView';
 import ModalBottom from './components/ModalBottom';
+import ModalBottomAction from './components/ModalBottomAction';
 import { ModalError } from './components/ModalError';
 
 const SfaCollectionListView = props => {
@@ -481,6 +482,23 @@ const SfaCollectionListView = props => {
       <View />
     );
   };
+
+  const renderModalBottomDelete = () => {
+    return isModalDeleteConfirmationOpen ? (
+      <View>
+        <ModalBottomAction
+          open={isModalDeleteConfirmationOpen}
+          close={() => setIsModalDeleteConfirmationOpen(false)}
+          onPress={() => setIsModalDeleteConfirmationOpen(false)}
+          leftTitle={'Kembali'}
+          rightTitle={'Hapus'}
+          leftButtonPress={() => setIsModalDeleteConfirmationOpen(false)}
+        />
+      </View>
+    ) : (
+      <View />
+    );
+  };
   /**
    * =======================
    * RENDER COLLECTION LIST
@@ -575,7 +593,8 @@ const SfaCollectionListView = props => {
       {renderContent()}
       {props.isNavigateFromTab ? null : renderBottomButton()}
       {props.isNavigateFromTab ? null : renderModalNoSaldo()}
-      {renderModalConfirmationDelete()}
+      {/* {renderModalConfirmationDelete()} */}
+      {renderModalBottomDelete()}
       <ModalError ref={refModalError} />
     </>
   );
