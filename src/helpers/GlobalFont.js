@@ -956,6 +956,20 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 16,
     color: Color.fontBlack50
+  },
+  bodyDefault: {
+    fontFamily: Fonts.InterRegular,
+    fontSize: 14,
+    fontStyle: 'normal',
+    lineHeight: 20,
+    fontWeight: '600'
+  },
+  paragraphSmall: {
+    fontFamily: Fonts.InterRegular,
+    fontSize: 12,
+    fontStyle: 'normal',
+    lineHeight: 18,
+    fontWeight: '400'
   }
 });
 
