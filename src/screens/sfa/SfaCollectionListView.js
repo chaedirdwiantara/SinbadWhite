@@ -17,7 +17,6 @@ import NavigationService from '../../navigation/NavigationService';
 import {
   ButtonSingle,
   LoadingLoadMore,
-  ModalConfirmation,
   SkeletonType28
 } from '../../library/component';
 import {
@@ -463,26 +462,6 @@ const SfaCollectionListView = props => {
     );
   };
 
-  /** ===> RENDER MODAL DELETE CONFIRMATION === */
-  const renderModalConfirmationDelete = () => {
-    return isModalDeleteConfirmationOpen ? (
-      <ModalConfirmation
-        title={'Hapus Penagihan?'}
-        open={isModalDeleteConfirmationOpen}
-        okText={'Kembali'}
-        cancelText={'Hapus'}
-        content={'Penagihan yang telah terhapus tidak dapat dikembalikan'}
-        type={'okeNotRed'}
-        ok={() => {
-          setIsModalDeleteConfirmationOpen(false);
-        }}
-        cancel={() => deleteCollection()}
-      />
-    ) : (
-      <View />
-    );
-  };
-
   const renderModalBottomDelete = () => {
     return isModalDeleteConfirmationOpen ? (
       <View>
@@ -493,6 +472,7 @@ const SfaCollectionListView = props => {
           leftTitle={'Kembali'}
           rightTitle={'Hapus'}
           leftButtonPress={() => setIsModalDeleteConfirmationOpen(false)}
+          rightButtonPress={() => deleteCollection()}
         />
       </View>
     ) : (

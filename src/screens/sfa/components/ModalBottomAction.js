@@ -1,19 +1,13 @@
 import {
   React,
-  Component,
   View,
   Text,
-  Image,
   StyleSheet,
   TouchableOpacity
 } from '../../../library/reactPackage';
-import {
-  ModalBottomType4,
-  StatusBarRedOP50,
-  ButtonSingleSmall
-} from '../../../library/component';
+import { ModalBottomType4, StatusBarRedOP50 } from '../../../library/component';
 import { Color } from '../../../config/';
-import { Fonts, GlobalStyle } from '../../../helpers';
+import { Fonts } from '../../../helpers';
 
 const ModalBottomAction = props => {
   /** === RENDER CONTENT === */
