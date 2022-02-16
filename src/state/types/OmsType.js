@@ -97,3 +97,7 @@ export const POST_RETURN_ORDER_FAILED = 'PostReturnOrderFailed';
 export const OMS_CHECK_OVERDUE_PROCESS = 'OMSCheckOverdueProcess';
 export const OMS_CHECK_OVERDUE_SUCCESS = 'OMSCheckOverdueSuccess';
 export const OMS_CHECK_OVERDUE_FAILED = 'OMSCheckOverdueFailed';
+/** CHECK CREDIT LIMIT */
+export const OMS_CHECK_CREDIT_PROCESS = 'OmsCheckCreditProcess';
+export const OMS_CHECK_CREDIT_SUCCESS = 'OmsCheckCreditSuccess';
+export const OMS_CHECK_CREDIT_FAILED = 'OmsCheckCreditFailed';

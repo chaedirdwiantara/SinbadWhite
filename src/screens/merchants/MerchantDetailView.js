@@ -56,10 +56,16 @@ class MerchantDetailView extends Component {
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
-    const { errorGetMerchantDetailV2 } = this.props.merchant
-    if (errorGetMerchantDetailV2){
-      if (prevProps.merchant.errorGetMerchantDetailV2 !== errorGetMerchantDetailV2){
-        this.setState({ openModalError: true, showToast: true, toastText: errorGetMerchantDetailV2.message })
+    const { errorGetMerchantDetailV2 } = this.props.merchant;
+    if (errorGetMerchantDetailV2) {
+      if (
+        prevProps.merchant.errorGetMerchantDetailV2 !== errorGetMerchantDetailV2
+      ) {
+        this.setState({
+          openModalError: true,
+          showToast: true,
+          toastText: errorGetMerchantDetailV2.message
+        });
       }
     }
   }
@@ -159,10 +165,7 @@ class MerchantDetailView extends Component {
         NavigationService.navigate('MerchantDetailInformationView');
         break;
       case 'merchantPayment':
-        NavigationService.navigate('MerchantEditView', {
-          title: 'Faktur',
-          type: 'merchantPayment'
-        });
+        NavigationService.navigate('MerchantDetailCreditLimitView');
         break;
       case 'merchantAddress':
         NavigationService.navigate('MerchantDetailAddressView');
@@ -308,7 +311,8 @@ class MerchantDetailView extends Component {
           <Text
             style={[Fonts.type8, { marginTop: 5, textTransform: 'capitalize' }]}
           >
-            {dataGetMerchantDetailV2 && this.combineAddress(dataGetMerchantDetailV2)}
+            {dataGetMerchantDetailV2 &&
+              this.combineAddress(dataGetMerchantDetailV2)}
           </Text>
           <TouchableOpacity
             style={{ marginTop: 8 }}
@@ -340,7 +344,9 @@ class MerchantDetailView extends Component {
           <Text style={Fonts.type42}>Kelengkapan Profil</Text>
         </View>
         <ProgressBarType1
-          totalStep={this.props.merchant.dataGetMerchantDetailV2?.progress.total}
+          totalStep={
+            this.props.merchant.dataGetMerchantDetailV2?.progress.total
+          }
           currentStep={
             this.props.merchant.dataGetMerchantDetailV2?.progress.done
           }
@@ -427,7 +433,7 @@ class MerchantDetailView extends Component {
         </View>
         <ButtonMenuType1
           child
-          title={'Faktur'}
+          title={'Batas Kredit'}
           onPress={() => this.goTo('merchantPayment')}
         />
       </View>
@@ -496,8 +502,8 @@ class MerchantDetailView extends Component {
         open={this.state.openModalError}
         onPress={() => this.setState({ openModalError: false })}
         toast={this.renderToast()}
-      />  
-    )
+      />
+    );
   }
   /** TOAST ERROR RESPONSE */
   renderToast() {
@@ -575,7 +581,10 @@ const mapDispatchToProps = dispatch => {
   return bindActionCreators(ActionCreators, dispatch);
 };
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(MerchantDetailView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MerchantDetailView);
 
 /**
  * ============================

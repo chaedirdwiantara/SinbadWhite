@@ -15,71 +15,21 @@ import {
 import {
   SkeletonType5,
   EmptyData,
-  EmptyDataType2,
-  ProductListType1
+  EmptyDataType2
 } from '../../../library/component';
 import { Color } from '../../../config';
+import masterColor from '../../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers';
 import * as ActionCreators from '../../../state/actions';
 import NavigationService from '../../../navigation/NavigationService';
+import CollapsibleProductList from './CollapsibleProductList';
 
 class ReturnOrderListView extends Component {
   constructor(props) {
     super(props);
     this.renderItem = this.renderItem.bind(this);
-    this.state = {};
   }
 
-  componentDidMount() {
-    this.props.historyGetReset();
-    this.getHistory(true, 0);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.dateFilter !== this.props.dateFilter) {
-      this.props.historyGetReset();
-      this.getHistory(true, 0);
-    }
-
-    if (prevProps.search !== this.props.search) {
-      this.props.historyGetReset();
-      this.getHistory(true, 0);
-    }
-  }
-
-  getHistory(loading, page) {
-    this.props.historyGetProcess({
-      loading,
-      page,
-      storeId: parseInt(this.props.storeId, 10),
-      userId: '',
-      statusOrder: 'done',
-      statusPayment: '',
-      dateGte: this.props.dateFilter.dateGte,
-      dateLte: this.props.dateFilter.dateLte,
-      search: this.props.search
-    });
-  }
-  /** REFRESH LIST VIEW */
-  onHandleRefresh = () => {
-    this.props.historyGetRefresh();
-    this.getHistory(true, 0);
-  };
-  /** LOAD MORE LIST VIEW */
-  onHandleLoadMore = () => {
-    if (this.props.history.dataGetHistory) {
-      if (
-        this.props.history.dataGetHistory.length <
-        this.props.history.totalDataGetHistory
-      ) {
-        const page = this.props.history.pageGetHistory + 10;
-        this.props.historyGetLoadMore(page);
-        this.getHistory(false, page);
-      }
-    }
-  };
-
-  /** EMPTY DATA */
   renderEmpty() {
     return this.props.emptyData === 'default' ? (
       <EmptyData title={'Tidak ada pesanan'} description={''} />
@@ -90,7 +40,7 @@ class ReturnOrderListView extends Component {
       />
     );
   }
-  /** RENDER DATA */
+
   renderData() {
     return this.props.history.dataGetHistory.length > 0 ? (
       <View>
@@ -103,9 +53,9 @@ class ReturnOrderListView extends Component {
           extraData={this.state}
           keyExtractor={(item, index) => index.toString()}
           refreshing={this.props.history.refreshGetHistory}
-          onRefresh={this.onHandleRefresh}
+          onRefresh={this.props.onRefresh}
           onEndReachedThreshold={0.2}
-          onEndReached={this.onHandleLoadMore}
+          onEndReached={this.props.onLoadMore}
         />
       </View>
     ) : (
@@ -128,28 +78,28 @@ class ReturnOrderListView extends Component {
           <View style={styles.boxContent}>
             <View style={styles.boxItemContent}>
               <Text style={Fonts.type83}>{item.orderCode}</Text>
-              <Text style={[Fonts.type83, { color: Color.fontGreen50 }]}>
-                Selesai
-              </Text>
+              <View style={styles.statusTag}>
+                <Text style={{ ...Fonts.type110p }}>
+                  {item.status === 'done' ? 'Selesai' : 'Terkirim'}
+                </Text>
+              </View>
             </View>
             <View style={{ marginVertical: 16 }}>
               {this.renderProductSection(item.orderBrands)}
             </View>
             <View style={[styles.boxItemContent, { marginBottom: 8 }]}>
               <Text style={[Fonts.type56, { color: Color.fontBlack80 }]}>
-                Dipesan pada
+                Dipesan Pada
               </Text>
               <Text style={[Fonts.type56, { color: Color.fontBlack80 }]}>
                 {moment(new Date(item.createdAt)).format(
-                  'DD MMM YYYY HH:mm:ss'
+                  'DD MMMM YYYY HH:mm:ss'
                 )}
               </Text>
             </View>
             <View style={styles.boxItemContent}>
-              <Text style={[Fonts.type56, { color: Color.fontBlack80 }]}>
-                Total pembelian
-              </Text>
-              <Text style={[Fonts.type56, { color: Color.fontBlack80 }]}>
+              <Text style={Fonts.type111p}>Total Pembelian</Text>
+              <Text style={Fonts.type111p}>
                 {MoneyFormat(item?.deliveredParcelFinalPriceBuyer || 0)}
               </Text>
             </View>
@@ -159,9 +109,12 @@ class ReturnOrderListView extends Component {
     );
   }
 
-  /** ITEM PRODUCT SECTION */
   renderProductSection(data) {
-    return <ProductListType1 data={data} borderRadius={10} />;
+    return data.length > 0 ? (
+      <CollapsibleProductList brands={data} />
+    ) : (
+      <View />
+    );
   }
 
   renderSeparator() {
@@ -206,6 +159,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
+  },
+  statusTag: {
+    backgroundColor: masterColor.fontGreen10,
+    marginLeft: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    flexDirection: 'row'
   }
 });
 

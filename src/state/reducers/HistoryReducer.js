@@ -177,7 +177,8 @@ export const history = createReducer(INITIAL_STATE, {
       ...state,
       pageGetHistory: 0,
       totalDataGetHistory: 0,
-      dataGetHistory: []
+      dataGetHistory: [],
+      pageGetReturnParcels: 0
     };
   },
   [types.HISTORY_GET_REFRESH](state, action) {
@@ -194,7 +195,9 @@ export const history = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingLoadMoreGetHistory: true,
-      pageGetHistory: action.payload
+      pageGetHistory: action.payload,
+      loadingLoadMoreGetReturnParcels: true,
+      pageGetReturnParcels: action.payload
     };
   },
 
@@ -416,13 +419,6 @@ export const history = createReducer(INITIAL_STATE, {
       pageGetReturnParcels: 0,
       totalGetReturnParcels: 0,
       dataGetReturnParcels: []
-    };
-  },
-  [types.HISTORY_GET_LOADMORE](state, action) {
-    return {
-      ...state,
-      loadingLoadMoreGetReturnParcels: true,
-      pageGetReturnParcels: action.payload
     };
   },
   /** GET RETURN PARCEL DETAIL */

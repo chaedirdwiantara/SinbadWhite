@@ -314,7 +314,7 @@ class ReturnRequestView extends Component {
     const transformData = {
       orderBrandCatalogueId: parseInt(data.catalogueId, 10),
       qty: parseInt(data.qty, 10),
-      unitPrice: parseInt(data.price, 10),
+      unitPrice: data.price,
       returnReasonId:
         data.returnReason.id === null
           ? null

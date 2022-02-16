@@ -27,7 +27,9 @@ import {
   ToastType1,
   ModalConfirmation,
   ModalBottomErrorRespons,
-  ModalConfirmationType6
+  ModalConfirmationType6,
+  ButtonSingle,
+  ModalBottomType1
 } from '../../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../../helpers';
 import { Color } from '../../../config';
@@ -38,6 +40,7 @@ import ModalBottomSuccessOrder from './ModalBottomSuccessOrder';
 import MerchantVerifyUser from './MerchantVerifyUser';
 import ModalBeforeCheckIn from './ModalBeforeCheckIn';
 import ModalBottomProgressChecking from '../../global/ModalBottomProgressChecking';
+import ModalBottomConfirmResume from './ModalBottomConfirmResume'
 import {
   ACTIVITY_JOURNEY_PLAN_CHECK_IN,
   ACTIVITY_JOURNEY_PLAN_CHECK_OUT,
@@ -48,7 +51,10 @@ import {
   ACTIVITY_JOURNEY_PLAN_COLLECTION,
   ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING,
   ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS,
-  ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+  ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS,
+  JOURNEY_PLAN_PAUSE_STATUS_PAUSED,
+  JOURNEY_PLAN_PAUSE_STATUS_RESUME,
+  JOURNEY_PLAN_PAUSE_STATUS_DEFAULT
 } from '../../../constants';
 import _ from 'lodash';
 
@@ -136,7 +142,10 @@ class MerchantHomeView extends Component {
           activity: ACTIVITY_JOURNEY_PLAN_CHECK_OUT
         }
       ],
-      privileges: this.props.privileges.data
+      privileges: this.props.privileges.data,
+      modalConfirmPause: false,
+      modalConfirmResume: false,
+      checkUserCheckout: false
     };
   }
   /**
@@ -153,20 +162,10 @@ class MerchantHomeView extends Component {
   }
 
   /** === DID MOUNT === */
-  getSurvey = () => {
-    const params = {
-      storeId: this.props.merchant.selectedMerchant.storeId,
-      page: 1,
-      length: 10
-    };
-    this.props.merchantGetSurveyListProcess(params);
-  };
 
   componentDidMount() {
     /** FOR GET LATEST CHECK IN AND CHECK OUT */
     this.props.merchantGetLatestCheckInOutProcess();
-    /** FOR GET MERCHANT LIST */
-    this.getSurvey();
     /** FOR GET LAST ORDER */
     this.props.merchantGetLastOrderProcess(
       this.props.merchant.selectedMerchant.storeId
@@ -206,6 +205,11 @@ class MerchantHomeView extends Component {
     this.props.merchantGetTotalSurveyProcess(
       this.props.merchant.selectedMerchant?.storeId
     );
+    /** FOR CHECK CAN RESUME VISIT CURRENT JORUNEY PLAN */
+    this.props.checkCanResumeVisitProcess({
+      journeyBookId: this.props.merchant.selectedMerchant.journeyBookStores.journeyBookId,
+      journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores.id
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -411,6 +415,18 @@ class MerchantHomeView extends Component {
         });
       }
     }
+    /** checkCanResumeVisitAgain when on update pauseResumeVisitSuccess */
+    if (
+      prevProps.merchant.dataPauseResumeVisit !==
+      this.props.merchant.dataPauseResumeVisit
+    ) {
+      if (this.props.dataPauseResumeVisit !== null) {
+        this.props.checkCanResumeVisitProcess({
+          journeyBookId: this.props.merchant.selectedMerchant.journeyBookStores.journeyBookId,
+          journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores.id
+        })
+      }
+    }
     /** FOR ERROR */
     /** error post */
     if (
@@ -495,6 +511,15 @@ class MerchantHomeView extends Component {
         this.doError();
       }
     }
+    /** ERROR HANDLE PAUSE OR RESUME VISIT */
+    if (
+      prevProps.merchant.errorPauseResumeVisit !==
+      this.props.merchant.errorPauseResumeVisit 
+    ) {
+      if (this.props.merchant.errorPauseResumeVisit !== null) {
+        this.doError();
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -504,7 +529,7 @@ class MerchantHomeView extends Component {
       page: 1,
       date: today,
       search: '',
-      storetype: 'all',
+      storetype: this.props.navigation.state.params.storeType,
       loading: true
     });
     this.props.getJourneyPlanReportProcessV2();
@@ -639,12 +664,12 @@ class MerchantHomeView extends Component {
           activity: 'check_in'
         });
         if (this.props.merchant.dataGetLogAllActivityV2) {
-          const haveSurvey = this.props.merchant.dataGetTotalSurvey.total === 0;
+          const haveSurvey = this.props.merchant.dataGetTotalSurvey?.total > 0;
           const surveyHasDone = this.props.merchant.dataGetLogAllActivityV2.find(
             item => item.activityName === 'toko_survey'
           );
           const { checkOut } = this.state.privileges;
-          if ((haveSurvey || surveyHasDone) && checkOut?.status) {
+          if ((!haveSurvey || surveyHasDone) && checkOut?.status) {
             this.setState({ openModalCheckout: true });
           }
         }
@@ -908,6 +933,33 @@ class MerchantHomeView extends Component {
    */
   checkExistTask = activityName =>
     this.state.task.some(item => item.activity === activityName);
+  /**
+   * 
+   * @param - 
+   * @returns  boolean, is currently jbs is paused
+  */
+  checkIsPaused() {
+    return this.props.merchant.selectedMerchant.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_PAUSED
+  }
+  /**
+   * 
+   * @param -
+   * @returns boolean, render button pause if user already check in & current jbs is not paused & user have'nt checkout & (pauseStatus === 0 or pauseStatus === 2)
+   * pauseStatus === 0, means jbs just started haven't paused or resumed
+   * pauseStatus === 2, means user already pause then resume visit again. in this case we will show button pause but we disabled that button
+   */
+  checkRenderButtonPause() {
+    return (
+      this.checkCheckIn() && 
+      !this.checkIsPaused() &&
+      !this.props.merchant.loadingGetLogAllActivity && 
+      !this.checkCheckListTask(ACTIVITY_JOURNEY_PLAN_CHECK_OUT) &&
+      (
+        this.props.merchant.selectedMerchant.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_DEFAULT ||
+        this.props.merchant.selectedMerchant.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_RESUME
+      )
+    )
+  }
   /**
    * ========================
    * RENDER VIEW
@@ -1477,8 +1529,10 @@ class MerchantHomeView extends Component {
                   style={{
                     flex: 3
                   }}
-                >
-                  {taskList ? (
+                > 
+                  {this.checkIsPaused() && taskList.activityName !== ACTIVITY_JOURNEY_PLAN_CHECK_IN ?
+                    this.renderButtonPostponed()
+                  : taskList ? (
                     taskList.activityName === ACTIVITY_JOURNEY_PLAN_CHECK_IN ||
                     taskList.activityName ===
                       ACTIVITY_JOURNEY_PLAN_CHECK_OUT ? (
@@ -1685,6 +1739,86 @@ class MerchantHomeView extends Component {
       </View>
     );
   }
+  /** 
+   * ==================================== 
+   * RENDER BUTTON PAUSE OR RESUME VISIT 
+   * ==================================== 
+   * */
+  renderButtonPause() {
+    if (this.props.merchant.selectedMerchant.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_RESUME) {
+      return (
+        <View style={[styles.buttonPauseDisabled]}>
+          <Text style={[Fonts.type7, { color: Color.fontBlack40 }]}>Tunda Kunjungan</Text>
+        </View>
+      )
+    } 
+
+    return (
+      /** BUTTON SINGLE HAVE DEFAULT PADDING */
+      <View style={{ marginTop: -16 }}>
+        <ButtonSingle
+          white
+          title="Tunda Kunjungan"
+          onPress={() => {this.setState({ modalConfirmPause: true })}}
+        />
+      </View>
+    )
+  }
+  renderButtonResume() {
+    return (
+      <View style={{ backgroundColor: 'white' }}>
+        { 
+          !this.props.merchant.dataCheckCanResumeVisit &&
+            <View style={styles.disableResumeInfoContainer}>
+              <View>
+                <Image 
+                  source={require('../../../assets/icons/global/alert-yellow.png')}
+                  style={{
+                    width: 16,
+                    height: 16,
+                    resizeMode: 'contain',
+                    marginRight: 8
+                  }}
+                />
+              </View>
+              <View>
+                <Text style={[Fonts.type109, { color: Color.fontYellow60 }]}>{`Selesaikan kunjungan Anda di toko sebelumnya\nuntuk melanjutkan kunjungan ini.`}</Text>
+              </View>
+            </View>
+        }
+        <ButtonSingle
+          disabled={!this.props.merchant.dataCheckCanResumeVisit}
+          leftIcon={
+            <Image 
+              source={require('../../../assets/icons/merchant/visit_store.png')} 
+              style={{ 
+                width: 16,
+                height: 16,
+                resizeMode: 'contain',
+                marginRight: 8,
+              }}
+            />
+          }
+          title="Lanjutkan Kunjungan"
+          onPress={() => this.setState({ modalConfirmResume: true })}
+        />
+      </View>
+    )
+  }
+  /** 
+   * ==================================== 
+   * RENDER BUTTON POSTPONED
+   * ==================================== 
+   * */
+  renderButtonPostponed() {
+    return (
+      <Button
+        title={"Ditunda"}
+        titleStyle={[Fonts.type25]}
+        buttonStyle={styles.buttonPaused}
+      />
+    )
+  }
   /** === RENDER CONTENT ITEM === */
   renderContentItem() {
     const { order } = this.state.privileges;
@@ -1693,6 +1827,9 @@ class MerchantHomeView extends Component {
         {/* {this.renderData()} */}
         {order?.status && this.renderLastOrder()}
         {this.renderTastList()}
+        {
+          (this.checkRenderButtonPause()) && this.renderButtonPause()
+        }
         {/* {this.renderMerchantMenu()} */}
       </View>
     );
@@ -1719,6 +1856,14 @@ class MerchantHomeView extends Component {
           renderItem={this.renderContentItem.bind(this)}
           keyExtractor={(data, index) => index.toString()}
         />
+        {
+          (
+            /** RENDER BUTTON RESUME WHEN IS PAUSED == TRUE AND FETCH CHECK CAN RESUME FINISHED */
+            this.checkIsPaused() &&
+            !this.props.merchant.loadingCheckCanResumeVisit
+          ) 
+          && this.renderButtonResume()
+        }
       </View>
     );
   }
@@ -1891,6 +2036,69 @@ class MerchantHomeView extends Component {
       <View />
     );
   }
+  /** RENDER MODAL CONFIRM PAUSE */
+  renderModalConfirmPause() {
+    return (
+      <ModalBottomType1
+        open={this.state.modalConfirmPause}
+        title="Kunjungan di Toko Ini akan Ditunda"
+        content={
+          <View>
+            <Text style={[Fonts.type3, { marginHorizontal: 24, textAlign: 'center', marginBottom: 32 }]}>
+              Anda bisa melanjutkan kunjungan ke toko lainnya tanpa harus check-out.
+            </Text>
+            <View style={styles.buttonModalPauseResumeContainer}>
+              <View style={{ flex: 1, }}>
+                <Button
+                  title="Kembali"
+                  titleStyle={[Fonts.type93, { color: Color.mainColor }]}
+                  buttonStyle={{ width: '100%', paddingVertical: 16, backgroundColor: Color.backgroundWhite, borderColor: Color.mainColor, borderWidth: 1 }}
+                  onPress={() => this.setState({ modalConfirmPause: false })}
+                />
+              </View>
+              <View style={{ width: 16 }} />
+              <View style={{ flex: 1, }}>
+                <Button
+                  title="Tunda Kunjungan"
+                  titleStyle={[Fonts.type93]}
+                  buttonStyle={{ width: '100%', paddingVertical: 16, backgroundColor: Color.mainColor, }}
+                  onPress={() => {
+                    this.setState({ modalConfirmPause: false }, () => {
+                      this.props.pauseResumeVisitProcess({ 
+                        journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores.id, 
+                        params: {
+                          pauseStatus: JOURNEY_PLAN_PAUSE_STATUS_PAUSED,
+                          pauseDate: new Date(), 
+                        }
+                      });
+                    });
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        }
+      />
+    );
+  }
+  /** RENDER MODAL CONFIRM RESUME */
+  renderModalConfirmResume() {
+    return <ModalBottomConfirmResume
+      open={this.state.modalConfirmResume}
+      onOk={() => {
+        this.setState({ modalConfirmResume: false }, () => {
+          this.props.pauseResumeVisitProcess({ 
+            journeyBookStoreId: this.props.merchant.selectedMerchant.journeyBookStores.id, 
+            params: {
+              pauseStatus: JOURNEY_PLAN_PAUSE_STATUS_RESUME,
+              resumeDate: new Date(), 
+            }
+          });
+        });
+      }}
+      onCancel={() => this.setState({ modalConfirmResume: false })}
+    />;
+  }
   /** BACKGROUND */
   renderBackground() {
     return <View style={styles.backgroundRed} />;
@@ -1903,7 +2111,9 @@ class MerchantHomeView extends Component {
         {!this.props.merchant.loadingGetMerchantLastOrder &&
         !this.props.merchant.loadingGetLogAllActivity &&
         this.props.merchant.dataGetLogAllActivityV2 !== null &&
-        !this.state.loadingPostForCheckoutNoOrder 
+        !this.state.loadingPostForCheckoutNoOrder &&
+        !this.props.merchant.loadingPauseResumeVisit &&
+        !this.props.merchant.loadingGetTotalSurvey
         ? (
           <View style={{ height: '100%' }}>
             {this.renderBackground()}
@@ -1924,6 +2134,8 @@ class MerchantHomeView extends Component {
         {this.renderModalBeforeCheckIn()}
         {this.renderModalOverdue()}
         {this.renderModalNoCollectionConfirmation()}
+        {this.renderModalConfirmPause()}
+        {this.renderModalConfirmResume()}
         <ModalBottomSuccessOrder />
       </SafeAreaView>
     );
@@ -2104,6 +2316,38 @@ const styles = StyleSheet.create({
   containerChevronRight: {
     marginTop: 2,
     padding: 0
+  },
+  buttonModalPauseResumeContainer: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    marginHorizontal: 24, 
+    marginBottom: 32 ,
+    alignItems: 'center',
+    alignContent: 'stretch'
+  },
+  buttonPaused: {
+    backgroundColor: Color.buttonGreyWhiteDisabled,
+    borderRadius: 4,
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    width: '100%'
+  },
+  disableResumeInfoContainer: {
+    backgroundColor: Color.fontYellow10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginHorizontal: 16,
+    flexDirection: `row`,
+    borderRadius: 4
+  },
+  buttonPauseDisabled: {
+    borderWidth: 1,
+    borderColor: Color.fontBlack40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 16,
+    marginHorizontal: 16,
+    backgroundColor: Color.backgroundWhite
   }
 });
 
@@ -2137,7 +2381,7 @@ export default connect(
  * createdBy:
  * createdDate:
  * updatedBy: dyah
- * updatedDate: 15112021
+ * updatedDate: 31012022
  * updatedFunction:
- * -> fix double toko survey on task list.
+ * -> add loading get total survey.
  */
