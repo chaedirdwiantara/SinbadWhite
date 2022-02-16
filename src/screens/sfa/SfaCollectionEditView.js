@@ -36,7 +36,8 @@ import {
   DatePickerSpinnerWithMinMaxDate,
   ModalBottomType4,
   LoadingPage,
-  ToolTip
+  ToolTip,
+  StatusBarWhite
 } from '../../library/component';
 import { TextInputMask } from 'react-native-masked-text';
 import SfaImageInput from './components/SfaImageInput';
@@ -48,7 +49,6 @@ import {
   // sfaGetCollectionDetailProcess // TODO: remove me after integration API
 } from '../../state/actions';
 import { collectionMethodLabel } from './functions/sfa';
-import SfaTooltip from './components/SfaTooltip';
 import InputAmountBox from './components/InputAmountBox';
 import { Color } from '../../config';
 
@@ -520,9 +520,24 @@ const SfaCollectionEditView = props => {
         dispatch(sfaEditCollectionMethodProcess(dataTransfer));
         break;
       case RETUR:
-        // TODO: Integration API - Retur
-        // const dataRetur = {};
-        // dispatch(sfaEditCollectionMethodProcess(dataRetur));
+        const dataRetur = {
+          ...data,
+          amount: data.balance,
+          issuedDate: moment
+            .utc(issuedDate)
+            .local()
+            .format('YYYY-MM-DD HH:mm:ss')
+        };
+
+        delete dataRetur.filename;
+        delete dataRetur.image;
+        delete dataRetur.type;
+        delete dataRetur.skpImage;
+        delete dataRetur.skpFilename;
+        delete dataRetur.skpType;
+        delete dataRetur.balance;
+
+        dispatch(sfaEditCollectionMethodProcess(dataRetur));
         break;
       case PROMO:
         // TODO: Integration API - Promo / SKP
@@ -1213,6 +1228,7 @@ const SfaCollectionEditView = props => {
     <>
       {!loadingSfaGetCollectionDetail && dataSfaGetCollectionDetail ? (
         <>
+          <StatusBarWhite />
           <ScrollView>{renderContent()}</ScrollView>
 
           {renderBottomTab()}
