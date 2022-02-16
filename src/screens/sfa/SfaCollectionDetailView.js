@@ -5,9 +5,15 @@ import {
   StyleSheet,
   ScrollView,
   RefreshControl,
-  Dimensions
+  Dimensions,
+  Image
 } from '../../library/reactPackage';
-import { LoadingPage, ButtonSingle } from '../../library/component';
+import {
+  LoadingPage,
+  ButtonSingle,
+  StatusBarBlackOP40,
+  ModalBottomWithClose
+} from '../../library/component';
 import { GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
 import masterColor from '../../config/masterColor.json';
@@ -24,7 +30,8 @@ import {
   CASH,
   CHECK,
   GIRO,
-  RETUR
+  RETUR,
+  PROMO
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 import { CardBody, CardHeader, CardHeaderBadge } from './components/CardView';
@@ -35,6 +42,11 @@ const isNumber = n => (n !== null && n !== undefined ? true : false);
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
+  const [stateModalImage, setStateModalImage] = useState({
+    open: false,
+    source: null,
+    title: ''
+  });
 
   const {
     dataSfaGetCollectionDetail,
@@ -133,11 +145,13 @@ const SfaCollectionDetailView = props => {
           value: collectionDetail?.collectionCode || '-',
           styleCardView: styles.styleCardView
         })}
-        {CardBody({
-          title: 'Kode Penagihan Ref',
-          value: collectionDetail?.collectionRef || '-',
-          styleCardView: styles.styleCardView
-        })}
+        {collectionDetail?.paymentCollectionType?.id !== PROMO
+          ? CardBody({
+              title: 'Kode Penagihan Ref',
+              value: collectionDetail?.collectionRef || '-',
+              styleCardView: styles.styleCardView
+            })
+          : null}
       </>
     );
   };
@@ -214,6 +228,7 @@ const SfaCollectionDetailView = props => {
       totalBalance
     } = dataSfaGetCollectionDetail.data;
     const image = dataSfaGetCollectionImage?.data.image;
+    const skpImage = dataSfaGetCollectionImage?.data.skpImage;
     return (
       <>
         {CardBody({
@@ -226,14 +241,18 @@ const SfaCollectionDetailView = props => {
           value: paymentCollectionType?.name,
           styleCardView: styles.styleCardView
         })}
-        {paymentCollectionType.id !== CASH && paymentCollectionType.id !== RETUR
+        {paymentCollectionType.id !== CASH &&
+        paymentCollectionType.id !== RETUR &&
+        paymentCollectionType.id !== PROMO
           ? CardBody({
               title: 'Nomor Referensi',
               value: reference,
               styleCardView: styles.styleCardView
             })
           : null}
-        {paymentCollectionType.id !== CASH && paymentCollectionType.id !== RETUR
+        {paymentCollectionType.id !== CASH &&
+        paymentCollectionType.id !== RETUR &&
+        paymentCollectionType.id !== PROMO
           ? CardBody({
               title: 'Sumber Bank',
               value: bankFrom.displayName,
@@ -301,7 +320,31 @@ const SfaCollectionDetailView = props => {
               imageSource: { uri: `data:image/jpeg;base64, ${image}` },
               imageSourceStyle: styles.images,
               imageContainerStyle: styles.smallContainerImage,
-              styleCardView: styles.styleCardViewImage
+              imageBackgroundStyle: styles.imageBackgroundStyle,
+              styleCardView: styles.styleCardViewImage,
+              onPressImage: () =>
+                setStateModalImage({
+                  source: image,
+                  title: 'Foto Penagihan',
+                  open: true
+                })
+            })
+          : null}
+        {paymentCollectionType.id === PROMO
+          ? CardBody({
+              title: 'Surat Kerjasama Promosi',
+              loadingImage: loadingSfaGetCollectionImage,
+              imageSource: { uri: `data:image/jpeg;base64, ${skpImage}` },
+              imageSourceStyle: styles.images,
+              imageContainerStyle: styles.smallContainerImage,
+              imageBackgroundStyle: styles.imageBackgroundStyle,
+              styleCardView: styles.styleCardViewImage,
+              onPressImage: () =>
+                setStateModalImage({
+                  source: skpImage,
+                  title: 'Surat Kerjasama Promosi',
+                  open: true
+                })
             })
           : null}
         {CardBody({
@@ -365,6 +408,31 @@ const SfaCollectionDetailView = props => {
     );
   };
 
+  /** CONTENT MODAL IMAGE */
+  const contentModalImage = () => {
+    return (
+      <View style={{ flex: 1, maxnHeight: (80 / 100) * height }}>
+        <StatusBarBlackOP40 />
+        <Image
+          source={{ uri: `data:image/jpeg;base64, ${stateModalImage.source}` }}
+          style={styles.modalImage}
+        />
+      </View>
+    );
+  };
+
+  /** RENDER MODAL IMAGE */
+  const renderModalImage = () => {
+    return (
+      <ModalBottomWithClose
+        open={stateModalImage.open}
+        title={stateModalImage.title}
+        close={() => setStateModalImage({ ...stateModalImage, open: false })}
+        content={contentModalImage()}
+      />
+    );
+  };
+
   /**
    * RENDER BILLING HISTORY BUTTON
    * @returns
@@ -419,6 +487,7 @@ const SfaCollectionDetailView = props => {
             {renderContent()}
           </ScrollView>
           {renderBillingHistoryButton()}
+          {renderModalImage()}
         </>
       ) : (
         <LoadingPage />
@@ -479,20 +548,36 @@ const styles = StyleSheet.create({
     elevation: 1
   },
   smallContainerImage: {
+    backgroundColor: 'white',
+    marginTop: -16,
+    marginBottom: 16,
+    // height: (50 / 100) * height,
+    height: 138,
+    width: '100%'
+  },
+  images: {
+    // resizeMode: 'contain',
+    // resizeMode: 'stretch',
+    height: 138,
+    width: '100%',
+    // borderWidth: 1,
+    backgroundColor: 'white',
+    flex: 1
+  },
+  imageBackgroundStyle: {
+    lineHeight: 116,
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignContent: 'center',
+    backgroundColor: '#000000c0'
+  },
+  modalImage: {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
     marginBottom: 16,
     height: (50 / 100) * height,
     width: '100%'
-  },
-  images: {
-    resizeMode: 'contain',
-    height: '100%',
-    width: '100%',
-    borderWidth: 1,
-    backgroundColor: 'white',
-    flex: 1
   },
   styleCardView: {
     flexDirection: 'row',
