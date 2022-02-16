@@ -40,6 +40,7 @@ import {
   PENDING_PAYMENT,
   DONE
 } from '../../constants/orderConstants';
+import { Color } from '../../config';
 
 class HistoryDataListView extends Component {
   constructor(props) {
@@ -525,6 +526,13 @@ class HistoryDataListView extends Component {
             {/* <View style={[GlobalStyle.lines, { marginVertical: 10 }]} /> */}
             {this.renderProductSection(item.orderBrands)}
             <View style={[GlobalStyle.lines, { marginVertical: 10 }]} />
+            <InfoSectionItem value={item.order.platform} title={'Order Via'} />
+            <InfoSectionItem
+              value={moment(new Date(item.createdAt)).format(
+                'DD MMMM YYYY HH:mm:ss'
+              )}
+              title={'Dipesan Pada'}
+            />
             {this.props.section === 'order' ? (
               <View>
                 {!item.deliveredParcelModified &&
@@ -537,6 +545,7 @@ class HistoryDataListView extends Component {
                   <BottomCardItem
                     item={item}
                     totalPembelian={item.billing.totalPayment}
+                    lineThrough={item.deliveredParcelModified}
                   />
                 )}
                 {item.deliveredParcelModified ? (
@@ -570,6 +579,7 @@ class HistoryDataListView extends Component {
                     <BottomCardItem
                       item={item}
                       totalPembelian={item.billing.totalPayment}
+                      lineThrough={item.deliveredParcelModified}
                     />
                   )}
                   {item.deliveredParcelModified ? (
@@ -690,23 +700,32 @@ class HistoryDataListView extends Component {
   }
 }
 
+const InfoSectionItem = props => {
+  return (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+        alignSelf: 'space-between',
+        marginBottom: 3
+      }}
+    >
+      <Text
+        style={[
+          Fonts.type57,
+          {
+            flex: 1
+          }
+        ]}
+      >
+        {props.title}
+      </Text>
+      <Text style={Fonts.type57}>{props.value}</Text>
+    </View>
+  );
+};
+
 const BottomCardItem = props => {
-  /** ORDER VIA */
-  // const orderVia = item => {
-  //   if (item.order !== null) {
-  //     switch (item.order.orderVia) {
-  //       case null:
-  //         return '';
-  //       case 'sales':
-  //         return 'Sales Rep';
-  //       case 'store':
-  //         return 'Toko';
-  //       default:
-  //         break;
-  //     }
-  //   }
-  //   return '';
-  // };
   return (
     <View style={[styles.boxItemColumnContent, { marginBottom: 4 }]}>
       <View
@@ -719,82 +738,11 @@ const BottomCardItem = props => {
       >
         <Text
           style={[
-            Fonts.type57,
-            {
-              flex: 1,
-              textDecorationLine: props.item.deliveredParcelModified
-                ? 'line-through'
-                : 'none'
-            }
-          ]}
-        >
-          Order Via
-        </Text>
-        <Text
-          style={[
-            Fonts.type57,
-            {
-              textDecorationLine: props.item.deliveredParcelModified
-                ? 'line-through'
-                : 'none'
-            }
-          ]}
-        >
-          {props.item.order.platform}
-        </Text>
-      </View>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          alignSelf: 'space-between',
-          marginBottom: 3
-        }}
-      >
-        <Text
-          style={[
-            Fonts.type57,
-            {
-              flex: 1,
-              textDecorationLine: props.item.deliveredParcelModified
-                ? 'line-through'
-                : 'none'
-            }
-          ]}
-        >
-          Dipesan Pada
-        </Text>
-        <Text
-          style={[
-            Fonts.type57,
-            {
-              textDecorationLine: props.item.deliveredParcelModified
-                ? 'line-through'
-                : 'none'
-            }
-          ]}
-        >
-          {moment(new Date(props.item.createdAt)).format(
-            'DD MMMM YYYY HH:mm:ss'
-          )}
-        </Text>
-      </View>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          alignSelf: 'space-between',
-          marginBottom: 3
-        }}
-      >
-        <Text
-          style={[
             Fonts.type10,
             {
               flex: 1,
-              textDecorationLine: props.item.deliveredParcelModified
-                ? 'line-through'
-                : 'none'
+              textDecorationLine: props.lineThrough ? 'line-through' : 'none',
+              color: props.lineThrough ? Color.fontBlack40 : Color.fontBlack50
             }
           ]}
         >
@@ -804,9 +752,8 @@ const BottomCardItem = props => {
           style={[
             Fonts.type10,
             {
-              textDecorationLine: props.item.deliveredParcelModified
-                ? 'line-through'
-                : 'none'
+              textDecorationLine: props.lineThrough ? 'line-through' : 'none',
+              color: props.lineThrough ? Color.fontBlack40 : Color.fontBlack50
             }
           ]}
         >
