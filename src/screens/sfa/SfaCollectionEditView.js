@@ -36,7 +36,8 @@ import {
   DatePickerSpinnerWithMinMaxDate,
   ModalBottomType4,
   LoadingPage,
-  ToolTip
+  ToolTip,
+  StatusBarWhite
 } from '../../library/component';
 import { TextInputMask } from 'react-native-masked-text';
 import SfaImageInput from './components/SfaImageInput';
@@ -48,7 +49,6 @@ import {
   // sfaGetCollectionDetailProcess // TODO: remove me after integration API
 } from '../../state/actions';
 import { collectionMethodLabel } from './functions/sfa';
-import SfaTooltip from './components/SfaTooltip';
 import InputAmountBox from './components/InputAmountBox';
 import { Color } from '../../config';
 
@@ -1213,6 +1213,7 @@ const SfaCollectionEditView = props => {
     <>
       {!loadingSfaGetCollectionDetail && dataSfaGetCollectionDetail ? (
         <>
+          <StatusBarWhite />
           <ScrollView>{renderContent()}</ScrollView>
 
           {renderBottomTab()}
