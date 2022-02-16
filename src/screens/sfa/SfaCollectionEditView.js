@@ -520,9 +520,24 @@ const SfaCollectionEditView = props => {
         dispatch(sfaEditCollectionMethodProcess(dataTransfer));
         break;
       case RETUR:
-        // TODO: Integration API - Retur
-        // const dataRetur = {};
-        // dispatch(sfaEditCollectionMethodProcess(dataRetur));
+        const dataRetur = {
+          ...data,
+          amount: data.balance,
+          issuedDate: moment
+            .utc(issuedDate)
+            .local()
+            .format('YYYY-MM-DD HH:mm:ss')
+        };
+
+        delete dataRetur.filename;
+        delete dataRetur.image;
+        delete dataRetur.type;
+        delete dataRetur.skpImage;
+        delete dataRetur.skpFilename;
+        delete dataRetur.skpType;
+        delete dataRetur.balance;
+
+        dispatch(sfaEditCollectionMethodProcess(dataRetur));
         break;
       case PROMO:
         // TODO: Integration API - Promo / SKP
