@@ -191,6 +191,9 @@ const SfaCollectionListView = props => {
   };
 
   const navigatetoEditCollection = item => {
+    if (collectionTypeId === RETUR) {
+      getReturnBalance();
+    }
     dispatch(sfaGetCollectionDetailProcess(item.id));
     NavigationService.navigate('SfaCollectionEditView', {
       collectionTypeId: item.paymentCollectionTypeId,
