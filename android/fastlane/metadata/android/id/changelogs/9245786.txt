@@ -1,0 +1,7 @@
+
+We're always making improvements in our app. In this updates:
+
+Now you can search the SKU name
+Lesser hustle, cause now you can see the SKU name when you try to find the SKU
+Return price cannot be edited (don't worry the price already based on the PO's Price)
+Improved UI for Riwayat Order for Stores

@@ -62,10 +62,11 @@ class ProductListType1 extends Component {
   renderListProductImage(itemBrand, indexCounter) {
     return (
       <View key={indexCounter} style={{ flexDirection: 'row' }}>
-        {this.renderListProductImageContent(
-          itemBrand[indexCounter].orderBrandCatalogues,
-          indexCounter
-        )}
+        {itemBrand.length > 0 &&
+          this.renderListProductImageContent(
+            itemBrand[indexCounter].orderBrandCatalogues,
+            indexCounter
+          )}
       </View>
     );
   }

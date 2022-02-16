@@ -219,3 +219,35 @@ export const GET_RETURN_ACTIVE_INFO_FAILED = 'GetReturnActiveInfoFailed';
 export const GET_RADIUS_LOCK_GEOTAG_PROCESS = 'GetRadiusLockGeotagProcess';
 export const GET_RADIUS_LOCK_GEOTAG_SUCCESS = 'GetRadiusLockGeotagSuccess';
 export const GET_RADIUS_LOCK_GEOTAG_FAILED = 'GetRadiusLockGeotagFailed';
+
+/** MERCHANT CHECK CAN RESUME VISIT JBS */
+export const CHECK_CAN_RESUME_VISIT_PROCESS = 'CheckCanResumeVisitProcess';
+export const CHECK_CAN_RESUME_VISIT_SUCCESS = 'CheckCanResumeVisitSuccess';
+export const CHECK_CAN_RESUME_VISIT_FAILED = 'CheckCanResumeVisitFailed';
+
+/** MERCHANT PAUSE OR RESUME VISIT JBS */
+export const PAUSE_RESUME_VISIT_PROCESS = 'PauseResumeVisitProcess';
+export const PAUSE_RESUME_VISIT_SUCCESS = 'PauseResumeVisitSuccess';
+export const PAUSE_RESUME_VISIT_FAILED = 'PauseResumeVisitFailed';
+
+/** MERCHANT GET CREDIT LIMIT LIST */
+export const MERCHANT_GET_CREDIT_LIMIT_PROCESS =
+  'MerchantGetCreditLimitProcess';
+export const MERCHANT_GET_CREDIT_LIMIT_SUCCESS =
+  'MerchantGetCreditLimitSuccess';
+export const MERCHANT_GET_CREDIT_LIMIT_FAILED = 'MerchantGetCreditLimitFailed';
+export const MERCHANT_GET_CREDIT_LIMIT_RESET = 'MerchantGetCreditLimitReset';
+export const MERCHANT_GET_CREDIT_LIMIT_REFRESH =
+  'MerchantGetCreditLimitRefresh';
+export const MERCHANT_GET_CREDIT_LIMIT_LOADMORE =
+  'MerchantGetCreditLimitLoadMore';
+
+/** === MERCHANT GET CREDIT LIMIT SUMMARY === */
+export const MERCHANT_GET_CREDIT_LIMIT_SUMMARY_PROCESS =
+  'MerchantGetCreditLimitSummaryProcess';
+export const MERCHANT_GET_CREDIT_LIMIT_SUMMARY_SUCCESS =
+  'MerchantGetCreditLimitSummarySuccess';
+export const MERCHANT_GET_CREDIT_LIMIT_SUMMARY_FAILED =
+  'MerchantGetCreditLimitSummaryFailed';
+export const MERCHANT_GET_CREDIT_LIMIT_SUMMARY_RESET =
+  'MerchantGetCreditLimitSummaryReset';

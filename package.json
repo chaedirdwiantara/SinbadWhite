@@ -89,7 +89,7 @@
       "node_modules/(?!(react-native.*|@?react-navigation.*)/),"
     ],
     "setupFiles": [
-      "./node_modules/react-native-gesture-handler/jestSetup.js"
+      "./jest/setup.js"
     ],
     "collectCoverage": true,
     "coverageReporters": [

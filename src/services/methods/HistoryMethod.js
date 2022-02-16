@@ -10,7 +10,9 @@ function getHistory(data) {
       data.page
     }&status=${data.statusOrder}&statusPayment=${data.statusPayment}&orderGte=${
       data.dateGte
-    }&orderLte=${data.dateLte}&searchKey=${data.search}`,
+    }&orderLte=${data.dateLte}&searchKey=${data.search}&searchSkuName=${
+      data.searchSkuName !== undefined ? data.searchSkuName : ''
+    }&returnWindow=${data.returnWindow ? data.returnWindow : false}`,
     method: 'GET'
   });
 }
