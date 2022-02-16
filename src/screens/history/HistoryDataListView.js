@@ -579,6 +579,7 @@ class HistoryDataListView extends Component {
                     <BottomCardItem
                       item={item}
                       totalPembelian={item.billing.totalPayment}
+                      lineThrough={item.deliveredParcelModified}
                     />
                   )}
                   {item.deliveredParcelModified ? (
