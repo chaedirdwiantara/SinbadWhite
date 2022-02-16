@@ -275,7 +275,7 @@ const SfaCollectionListView = props => {
               { textAlign: 'right' }
             ]}
           >
-            {value}
+            {value || ''}
           </Text>
         </View>
       </View>
