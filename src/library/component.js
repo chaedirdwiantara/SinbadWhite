@@ -141,6 +141,8 @@ import BasicRangeAnswerComponent from '../components/questionnaire/BasicRangeAns
 import CompareGroupRangeAnswerComponent from '../components/questionnaire/CompareGroupRangeAnswerComponent';
 /** IMAGEKIT */
 import ImageKit from '../components/ImageKit';
+/** ToolTip */
+import ToolTip from '../components/tooltip/ToolTip';
 export {
   CartGlobal,
   /** SEARCH BAR */
@@ -281,7 +283,9 @@ export {
   BasicRangeAnswerComponent,
   CompareGroupRangeAnswerComponent,
   // image kit
-  ImageKit
+  ImageKit,
+  /** TOOLTIP */
+  ToolTip
 };
 
 /**
