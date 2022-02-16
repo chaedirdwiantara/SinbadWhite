@@ -35,7 +35,8 @@ import {
   InputType5,
   DatePickerSpinnerWithMinMaxDate,
   ModalBottomType4,
-  LoadingPage
+  LoadingPage,
+  ToolTip
 } from '../../library/component';
 import { TextInputMask } from 'react-native-masked-text';
 import SfaImageInput from './components/SfaImageInput';
@@ -47,6 +48,9 @@ import {
   // sfaGetCollectionDetailProcess // TODO: remove me after integration API
 } from '../../state/actions';
 import { collectionMethodLabel } from './functions/sfa';
+import SfaTooltip from './components/SfaTooltip';
+import InputAmountBox from './components/InputAmountBox';
+import { Color } from '../../config';
 
 const { width } = Dimensions.get('window');
 const MODAL_TYPE_SOURCE = 1;
@@ -89,6 +93,7 @@ const SfaCollectionEditView = props => {
   const [messageError, setMessageError] = useState(null);
   const [titleError, setTitleError] = useState(null);
   const [buttonTitle, setButtonTitle] = useState(null);
+  const [invalidAmountRetur, setInvalidAmountRetur] = useState(false);
 
   /**
    * *********************************
@@ -104,7 +109,8 @@ const SfaCollectionEditView = props => {
     loadingSfaGetCollectionImage,
     dataSfaGetCollectionImage,
     dataSfaGetCollectionDetail,
-    loadingSfaGetCollectionDetail
+    loadingSfaGetCollectionDetail,
+    dataSfaGetReturnBalance
   } = useSelector(state => state.sfa);
 
   /**
@@ -435,7 +441,18 @@ const SfaCollectionEditView = props => {
         }
         break;
       case RETUR:
-        // TODO: logic payment method collection RETUR
+        if (!amount) {
+          setIsSaveDisabled(true);
+          setInvalidAmountRetur(false);
+        } else {
+          if (amount > (dataSfaGetReturnBalance?.data?.returnBalance ?? 0)) {
+            setIsSaveDisabled(true);
+            setInvalidAmountRetur(true);
+          } else {
+            setIsSaveDisabled(false);
+            setInvalidAmountRetur(false);
+          }
+        }
         break;
       default:
         break;
@@ -565,11 +582,25 @@ const SfaCollectionEditView = props => {
         {renderIssuedDate()}
         {renderInvalidDate()}
         {renderAmount()}
+        {renderAmountRetur()}
         {renderMaterai()}
         {renderImage()}
         {renderImageSKP()}
       </View>
     );
+  };
+
+  /** === RENDER NILAI PENAGIHAN BARANG RETUR === */
+  const renderAmountRetur = () => {
+    return paymentCollectionTypeId === RETUR ? (
+      <InputAmountBox
+        title={'*Nilai Penagihan Barang Retur'}
+        value={amount}
+        onChange={onChangeAmount}
+        error={invalidAmountRetur}
+        errorText={'Nilai Penagihan melebihi batas maksimal saldo barang retur'}
+      />
+    ) : null;
   };
 
   /** RENDER COLLECTION METHOD */
@@ -587,7 +618,7 @@ const SfaCollectionEditView = props => {
 
   /** RENDER AMOUNT */
   const renderAmount = () => {
-    return (
+    return paymentCollectionTypeId !== RETUR ? (
       <>
         <Text style={[Fonts.type10]}>*Jumlah Penagihan</Text>
         <View
@@ -618,7 +649,7 @@ const SfaCollectionEditView = props => {
         </View>
         <View style={[GlobalStyle.lines, { marginBottom: 8 }]} />
       </>
-    );
+    ) : null;
   };
   /** RENDER REFERENCE */
   const renderReference = () => {
@@ -718,6 +749,7 @@ const SfaCollectionEditView = props => {
     return (
       <View style={[styles.contentContainer, GlobalStyle.shadowForBox]}>
         {renderCollectionMethod()}
+        {renderReturnedGoodsBalance()}
         {renderDataInput()}
       </View>
     );
@@ -922,9 +954,36 @@ const SfaCollectionEditView = props => {
     ) : null;
   };
 
+  /** RENDER RETURNED GOOD BALANCE */
+  const renderReturnedGoodsBalance = () => {
+    return paymentCollectionTypeId === RETUR ? (
+      <View style={{ marginBottom: 16 }}>
+        <View style={{ display: 'flex', flexDirection: 'row' }}>
+          <Text style={[Fonts.type10, styles.titleInput]}>
+            Saldo Barang Retur{' '}
+          </Text>
+          <ToolTip
+            iconName={'info'}
+            iconSize={15}
+            iconColor={Color.fontBlue50}
+            popover={
+              <Text style={Fonts.type87}>
+                Saldo barang retur disini berasal dari saldo barang retur yang
+                sudah diapprove di dalam system
+              </Text>
+            }
+          />
+        </View>
+        <Text style={[Fonts.type17, { marginBottom: 16 }]}>
+          {MoneyFormatSpace(dataSfaGetReturnBalance?.data?.returnBalance ?? 0)}
+        </Text>
+      </View>
+    ) : null;
+  };
+
   /** RENDER IMAGE - FOTO PENAGIHAN */
   const renderImage = () => {
-    return (
+    return paymentCollectionTypeId !== RETUR ? (
       <View style={{ marginTop: 16 }}>
         <SfaImageInput
           title={'*Foto Penagihan'}
@@ -934,7 +993,7 @@ const SfaCollectionEditView = props => {
           imageData={imageData}
         />
       </View>
-    );
+    ) : null;
   };
 
   /** RENDER IMAGE - SURAT KERJASAMA PROMOSI */
