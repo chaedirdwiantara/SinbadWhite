@@ -359,27 +359,29 @@ class JourneyMapView extends Component {
         }}
         onLayout={() =>
           setTimeout(() => {
-            this.mapRef.fitToCoordinates(
-              [
+            if (this.mapRef) {
+              this.mapRef.fitToCoordinates(
+                [
+                  {
+                    latitude: this.state.latitude,
+                    longitude: this.state.longitude
+                  },
+                  {
+                    latitudeDelta: this.state.latitudeDelta,
+                    longitudeDelta: this.state.longitudeDelta
+                  }
+                ],
                 {
-                  latitude: this.state.latitude,
-                  longitude: this.state.longitude
-                },
-                {
-                  latitudeDelta: this.state.latitudeDelta,
-                  longitudeDelta: this.state.longitudeDelta
+                  edgePadding: {
+                    top: 16,
+                    right: 16,
+                    bottom: 16,
+                    left: 16
+                  },
+                  animated: true
                 }
-              ],
-              {
-                edgePadding: {
-                  top: 16,
-                  right: 16,
-                  bottom: 16,
-                  left: 16
-                },
-                animated: true
-              }
-            );
+              );
+            }
           }, 500)
         }
       >
@@ -413,27 +415,29 @@ class JourneyMapView extends Component {
         onLayout={() =>
           setTimeout(() => {
             if (this.props.journey.dataGetJourneyPlanMapData?.length > 0) {
-              this.mapMerchantRef.current.fitToCoordinates(
-                [
+              if (this.mapMerchantRef?.current){
+                this.mapMerchantRef?.current.fitToCoordinates(
+                  [
+                    {
+                      latitude: this.state.latitude,
+                      longitude: this.state.longitude
+                    },
+                    {
+                      latitudeDelta: this.state.latitudeDelta,
+                      longitudeDelta: this.state.longitudeDelta
+                    }
+                  ],
                   {
-                    latitude: this.state.latitude,
-                    longitude: this.state.longitude
-                  },
-                  {
-                    latitudeDelta: this.state.latitudeDelta,
-                    longitudeDelta: this.state.longitudeDelta
+                    edgePadding: {
+                      top: 16,
+                      right: 16,
+                      bottom: 0.45 * height,
+                      left: 16
+                    },
+                    animated: true
                   }
-                ],
-                {
-                  edgePadding: {
-                    top: 16,
-                    right: 16,
-                    bottom: 0.45 * height,
-                    left: 16
-                  },
-                  animated: true
-                }
-              );
+                );
+              }
             }
           }, 500)
         }
@@ -811,7 +815,7 @@ export default connect(
  * createdBy: dyah
  * createdDate: 28072021
  * updatedBy: dyah
- * updatedDate: 27102021
+ * updatedDate: 15022022
  * updatedFunction:
- * -> fix bug recenter button should be zooming to the user current location.
+ * -> add validation to fix crash because of ref (fitToCoordinates)
  */

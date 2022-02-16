@@ -114,27 +114,29 @@ class MerchantDetailMapView extends Component {
         }}
         onLayout={() =>
           setTimeout(() => {
-            this.mapRef.fitToCoordinates(
-              [
+            if(this.mapRef) {
+              this.mapRef.fitToCoordinates(
+                [
+                  {
+                    latitude: this.state.latitude,
+                    longitude: this.state.longitude
+                  },
+                  {
+                    latitude: this.props.navigation.state.params.latitude,
+                    longitude: this.props.navigation.state.params.longitude
+                  }
+                ],
                 {
-                  latitude: this.state.latitude,
-                  longitude: this.state.longitude
-                },
-                {
-                  latitude: this.props.navigation.state.params.latitude,
-                  longitude: this.props.navigation.state.params.longitude
+                  edgePadding: {
+                    top: 0.1 * height,
+                    right: 16,
+                    bottom: 16,
+                    left: 16
+                  },
+                  animated: true
                 }
-              ],
-              {
-                edgePadding: {
-                  top: 0.1 * height,
-                  right: 16,
-                  bottom: 16,
-                  left: 16
-                },
-                animated: true
-              }
-            );
+              );
+            }
           }, 500)
         }
       >
@@ -328,9 +330,9 @@ export default connect(
 * ============================
 * createdBy: 
 * createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
+* updatedBy: dyah
+* updatedDate: 15022022
 * updatedFunction:
-* -> Refactoring Module Import
+* -> add validation to fix crash because of ref (fitToCoordinates)
 * 
 */
