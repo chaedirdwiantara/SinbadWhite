@@ -275,9 +275,8 @@ const SfaBillingLogView = props => {
 
           <View style={styles.salesContainer}>
             <View>
-              {/* TODO: integration API Nama Faktur*/}
               {collectionMethodId === RETUR &&
-                renderContentListGlobal('Nama Faktur', 'COMBINE')}
+                renderContentListGlobal('Nama Faktur', item.invoiceGroupName)}
               {renderContentListGlobal('Nomor Pesanan', item.orderCode)}
               {renderContentListGlobal(
                 'Tanggal Pembayaran',
