@@ -735,6 +735,18 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     color: Color.fontYellow60
   },
+  type120: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10,
+    lineHeight: 13,
+    color: Color.mainColor
+  },
+  type121: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 12,
+    lineHeight: 15,
+    color: Color.mainColor
+  },
   forCompare: {
     fontFamily: Fonts.MontserratBold,
     fontSize: 14,
@@ -956,6 +968,20 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 16,
     color: Color.fontBlack50
+  },
+  bodyDefault: {
+    fontFamily: Fonts.InterRegular,
+    fontSize: 14,
+    fontStyle: 'normal',
+    lineHeight: 20,
+    fontWeight: '600'
+  },
+  paragraphSmall: {
+    fontFamily: Fonts.InterRegular,
+    fontSize: 12,
+    fontStyle: 'normal',
+    lineHeight: 18,
+    fontWeight: '400'
   }
 });
 

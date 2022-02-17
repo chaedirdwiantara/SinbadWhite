@@ -17,7 +17,6 @@ import NavigationService from '../../navigation/NavigationService';
 import {
   ButtonSingle,
   LoadingLoadMore,
-  ModalConfirmation,
   SkeletonType28
 } from '../../library/component';
 import {
@@ -31,6 +30,7 @@ import {
 } from '../../state/actions';
 import SfaNoDataView from './SfaNoDataView';
 import ModalBottom from './components/ModalBottom';
+import ModalBottomAction from './components/ModalBottomAction';
 import { ModalError } from './components/ModalError';
 
 const SfaCollectionListView = props => {
@@ -191,6 +191,9 @@ const SfaCollectionListView = props => {
   };
 
   const navigatetoEditCollection = item => {
+    if (collectionTypeId === RETUR) {
+      getReturnBalance();
+    }
     dispatch(sfaGetCollectionDetailProcess(item.id));
     NavigationService.navigate('SfaCollectionEditView', {
       collectionTypeId: item.paymentCollectionTypeId,
@@ -462,21 +465,19 @@ const SfaCollectionListView = props => {
     );
   };
 
-  /** ===> RENDER MODAL DELETE CONFIRMATION === */
-  const renderModalConfirmationDelete = () => {
+  const renderModalBottomDelete = () => {
     return isModalDeleteConfirmationOpen ? (
-      <ModalConfirmation
-        title={'Hapus Penagihan?'}
-        open={isModalDeleteConfirmationOpen}
-        okText={'Kembali'}
-        cancelText={'Hapus'}
-        content={'Penagihan yang telah terhapus tidak dapat dikembalikan'}
-        type={'okeNotRed'}
-        ok={() => {
-          setIsModalDeleteConfirmationOpen(false);
-        }}
-        cancel={() => deleteCollection()}
-      />
+      <View>
+        <ModalBottomAction
+          open={isModalDeleteConfirmationOpen}
+          close={() => setIsModalDeleteConfirmationOpen(false)}
+          onPress={() => setIsModalDeleteConfirmationOpen(false)}
+          leftTitle={'Kembali'}
+          rightTitle={'Hapus'}
+          leftButtonPress={() => setIsModalDeleteConfirmationOpen(false)}
+          rightButtonPress={() => deleteCollection()}
+        />
+      </View>
     ) : (
       <View />
     );
@@ -575,7 +576,8 @@ const SfaCollectionListView = props => {
       {renderContent()}
       {props.isNavigateFromTab ? null : renderBottomButton()}
       {props.isNavigateFromTab ? null : renderModalNoSaldo()}
-      {renderModalConfirmationDelete()}
+      {/* {renderModalConfirmationDelete()} */}
+      {renderModalBottomDelete()}
       <ModalError ref={refModalError} />
     </>
   );
