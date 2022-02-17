@@ -24,7 +24,8 @@ import {
   USED_BY_OTHERS,
   NOT_AVAILABLE,
   NOT_USED,
-  RETUR
+  RETUR,
+  PROMO
 } from '../../constants/collectionConstants';
 import { CardHeaderBadge, CardBody, CardHeader } from './components/CardView';
 import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
@@ -202,7 +203,7 @@ const SfaBillingDetailView = props => {
     return (
       <>
         {CardBody({
-          title: 'Nomor Faktur',
+          title: 'Nama Faktur',
           value: invoiceGroupName,
           styleCardView: styles.styleCardView
         })}
@@ -254,45 +255,46 @@ const SfaBillingDetailView = props => {
       paymentCollectionType
     } = dataSfaGetBillingDetail.data;
 
-    return paymentCollectionType.id === RETUR ? (
+    return (
       <>
         {CardBody({
-          title: 'Kode Penagihan',
-          value: 'S0100042273101076686', // TODO: Integration with API
-          styleCardView: styles.styleCardView
-        })}
-      </>
-    ) : (
-      <>
-        {CardBody({
-          title: 'Kode Pembayaran',
+          title:
+            paymentCollectionType.id === RETUR
+              ? 'Kode Penagihan'
+              : 'Kode Pembayaran',
           value: billingPaymentCode || '-',
           styleCardView: styles.styleCardView
         })}
-        {CardBody({
-          title: 'Kode Pembayaran Ref',
-          value: billingPaymentRef || '-',
-          styleCardView: styles.styleCardView
-        })}
+        {paymentCollectionType.id !== RETUR
+          ? CardBody({
+              title: 'Kode Pembayaran Ref',
+              value: billingPaymentRef || '-',
+              styleCardView: styles.styleCardView
+            })
+          : null}
       </>
     );
   };
 
   /** RENDER SALESMAN INFORMATION HEADER */
   const renderSalesmanInfoHeader = () => {
+    const { paymentCollectionType } = dataSfaGetBillingDetail.data;
     return (
-      <>
-        {CardHeader({
-          title: 'Informasi Salesman',
-          styleContainer: styles.container,
-          styleCard: {
-            ...styles.cardTaskList,
-            ...GlobalStyle.shadowForBox5
-          },
-          styleCardView: styles.styleCardView,
-          renderCardBody: renderSalesmanInfoBody
-        })}
-      </>
+      (paymentCollectionType.id === RETUR ||
+        paymentCollectionType.id === PROMO) && (
+        <>
+          {CardHeader({
+            title: 'Informasi Salesman',
+            styleContainer: styles.container,
+            styleCard: {
+              ...styles.cardTaskList,
+              ...GlobalStyle.shadowForBox5
+            },
+            styleCardView: styles.styleCardView,
+            renderCardBody: renderSalesmanInfoBody
+          })}
+        </>
+      )
     );
   };
 
@@ -303,12 +305,12 @@ const SfaBillingDetailView = props => {
       <>
         {CardBody({
           title: 'Kode Salesman',
-          value: 'ID8930249',
+          value: dataSfaGetBillingDetail?.salesCode,
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Nama Salesman',
-          value: 'Budiman Sujadmiko',
+          value: dataSfaGetBillingDetail?.salesName,
           styleCardView: styles.styleCardView
         })}
       </>
@@ -400,7 +402,6 @@ const SfaBillingDetailView = props => {
           valueStyle: { marginBottom: 16, marginTop: 2 },
           styleCardView: styles.styleCardView
         })}
-        {/* TODO: Integration with API */}
         {paymentCollectionType.id === RETUR &&
           CardBody({
             title: 'Metode Penagihan',
