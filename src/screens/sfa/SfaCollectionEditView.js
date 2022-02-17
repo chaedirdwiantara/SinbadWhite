@@ -46,7 +46,6 @@ import {
   sfaGetReferenceListProcess,
   sfaGetCollectionImageProcess,
   sfaEditCollectionMethodProcess
-  // sfaGetCollectionDetailProcess // TODO: remove me after integration API
 } from '../../state/actions';
 import { collectionMethodLabel } from './functions/sfa';
 import InputAmountBox from './components/InputAmountBox';
@@ -175,10 +174,12 @@ const SfaCollectionEditView = props => {
     if (prevDataSfaGetCollectionImage !== dataSfaGetCollectionImage) {
       if (dataSfaGetCollectionImage) {
         setImageData(dataSfaGetCollectionImage.data.image);
+        setImageDataSKP(dataSfaGetCollectionImage.data.skpImage);
         checkInput();
       }
     }
   }, [dataSfaGetCollectionImage]);
+
   useEffect(() => {
     checkInput();
   }, [
@@ -201,11 +202,6 @@ const SfaCollectionEditView = props => {
       setDataStamp(null);
     }
   }, [isStampChecked]);
-
-  // TODO: remove me after integration API
-  // useEffect(() => {
-  //   dispatch(sfaGetCollectionDetailProcess(1));
-  // }, []);
 
   useEffect(() => {
     dispatch(sfaGetCollectionImageProcess(pcmId));
@@ -361,12 +357,8 @@ const SfaCollectionEditView = props => {
     // const isBankToChange =
     //   initialData?.bankToAccount?.displayName !== dataBankTo?.displayName;
     const isImageChange = dataSfaGetCollectionImage?.data.image !== imageData;
-
-    // TODO: Integration with API SKP
-    // get collection image for SKP
-    const isImageChangeSKP =
-      dataSfaGetCollectionImage?.data.image !== imageDataSKP;
-
+    const isImageSkpChange =
+      dataSfaGetCollectionImage?.data.skpImage !== imageDataSKP;
     const isStampNominalChange =
       dataSfaGetCollectionDetail?.data.stamp?.nominal !== dataStamp?.nominal;
 
@@ -429,9 +421,8 @@ const SfaCollectionEditView = props => {
         }
         break;
       case PROMO:
-        // TODO: Integration API PROMO
         const isDataPromoChange =
-          isAmountChange || isImageChange || isImageChangeSKP;
+          isAmountChange || isImageChange || isImageSkpChange;
 
         const isDataPromoComplete = amount && imageData && imageDataSKP;
         if (isDataPromoComplete && isDataPromoChange) {
@@ -469,11 +460,7 @@ const SfaCollectionEditView = props => {
       balance: parseInt(amount, 10),
       filename: imageName,
       type: imageType,
-      image: imageData,
-      // TODO: Integration with API for SKP image
-      skpFilename: imageNameSKP,
-      skpType: imageTypeSKP,
-      skpImage: imageDataSKP
+      image: imageData
     };
 
     switch (paymentCollectionTypeId) {
@@ -540,10 +527,14 @@ const SfaCollectionEditView = props => {
         dispatch(sfaEditCollectionMethodProcess(dataRetur));
         break;
       case PROMO:
-        // TODO: Integration API - Promo / SKP
         const dataPromo = {
-          ...data
+          ...data,
+          amount: data.balance,
+          filenameSkp: imageNameSKP,
+          typeSkp: imageTypeSKP,
+          imageSkp: imageDataSKP
         };
+        delete dataPromo.balance;
         dispatch(sfaEditCollectionMethodProcess(dataPromo));
         break;
       default:
@@ -1020,7 +1011,7 @@ const SfaCollectionEditView = props => {
           action={onChooseImageSKP}
           delete={onDeleteImageSKP}
           loading={loadingSfaGetCollectionImage}
-          imageData={imageData}
+          imageData={imageDataSKP}
           tooltipActive={false}
           tooltipText={''}
         />
