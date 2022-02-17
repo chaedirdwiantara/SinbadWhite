@@ -20,9 +20,8 @@ import PdpNavigator from './PdpNavigator';
 import OmsNavigator from './OmsNavigator';
 import HistoryNavigator from './HistoryNavigator';
 import SfaNavigator from './SfaNavigator';
-import {
-  nrInit,
-} from '../../../NewRelicRN.js';
+import CollectionNavigator from './CollectionNavigator';
+import { nrInit } from '../../../NewRelicRN.js';
 
 const MergeAllNavigator = {
   ...NotificationNavigator,
@@ -37,6 +36,7 @@ const MergeAllNavigator = {
   ...OmsNavigator,
   ...HistoryNavigator,
   ...SfaNavigator,
+  ...CollectionNavigator
 };
 
 const config = {
