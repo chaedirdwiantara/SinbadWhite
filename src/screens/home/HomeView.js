@@ -365,8 +365,10 @@ class HomeView extends Component {
         this.setState({ openModalJPMenu: true });
         break;
       case 'journey_plan':
-        console.log('sdfsdf');
         NavigationService.navigate('JourneyView');
+        break;
+      case 'collection_list':
+        NavigationService.navigate('CollectionListView');
         break;
       default:
         break;
@@ -688,6 +690,7 @@ class HomeView extends Component {
           {this.state.menuJourneyPlan.map((item, index) => {
             return (
               <TouchableOpacity
+                key={index}
                 style={[GlobalStyle.shadowForBox, styles.menuJPContainer]}
                 onPress={() => {
                   this.goToPage(item);
