@@ -148,6 +148,8 @@ import CompareGroupRangeAnswerComponent from '../components/questionnaire/Compar
 import ImageKit from '../components/ImageKit';
 /** ToolTip */
 import ToolTip from '../components/tooltip/ToolTip';
+/** DATE PICKER CALENDER */
+import DatePickerCalender from '../components/DatePickerCalender';
 export {
   CartGlobal,
   /** SEARCH BAR */
@@ -295,7 +297,9 @@ export {
   // image kit
   ImageKit,
   /** TOOLTIP */
-  ToolTip
+  ToolTip,
+  /** DATE PICKER CALENDER */
+  DatePickerCalender
 };
 
 /**

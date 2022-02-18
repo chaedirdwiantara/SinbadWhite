@@ -572,12 +572,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000c0'
   },
   modalImage: {
+    resizeMode: 'stretch',
+    marginHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
     marginBottom: 16,
-    height: (50 / 100) * height,
-    width: '100%'
+    height: (50 / 100) * height
   },
   styleCardView: {
     flexDirection: 'row',

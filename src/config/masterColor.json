@@ -21,12 +21,14 @@
   "statusBarGreenOP80": "rgba(15, 117, 46, 1)",
   "fontWhite": "#ffffff",
   "fontWhite100OP30": "rgba(255, 255, 255, 0.3)",
+  "fontRed": "#EC1A24",
   "fontRed80": "#501619",
   "fontRed60": "#a02d32",
   "fontRed50": "#f0444c",
   "fontRed50OP20": "rgba(240, 68, 76, 0.2)",
   "fontRed40": "#f58287",
   "fontRed10": "#fac0c3",
+  "fontRed10OP10": "#FFEDEE",
   "fontYellow80": "#c98c10",
   "fontYellow60": "#e39e14",
   "fontYellow50": "#fbaf18",
@@ -61,5 +63,6 @@
   "fontBlack100OP60": "rgba(0, 0, 0, 0.6)",
   "btnSec": "#677A8E",
   "btnPri": "#F0444C",
-  "textSecondary": "#677A8E"
+  "textSecondary": "#677A8E",
+  "placeholder": "#ACB8C3"
 }
