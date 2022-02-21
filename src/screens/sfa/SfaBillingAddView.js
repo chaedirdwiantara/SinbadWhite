@@ -45,8 +45,6 @@ const SfaBillingAddView = props => {
   const [isStampChecked, setIsStampChecked] = useState(false);
   const [totalBillingAmount, setTotalBillingAmount] = useState(0);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const [isTotalCollection, setTotalCollection] = useState(true);
-  const [isCollectionLeft, setCollectionLeft] = useState(false);
 
   // SELECTOR
   const {
@@ -447,7 +445,7 @@ const SfaBillingAddView = props => {
 
   const renderReturnInfo = data => {
     return (
-      <View style={{ marginBottom: 12, ...styles.styleCardView, marginTop: 4 }}>
+      <View style={{ marginBottom: 12, ...styles.styleCardView }}>
         <View
           style={{
             ...styles.styleCardView,
@@ -458,7 +456,7 @@ const SfaBillingAddView = props => {
             <Text style={[Fonts.type17]}>{data.title} </Text>
             <ToolTip
               iconName={'info'}
-              iconSize={15}
+              iconSize={12}
               height={55}
               iconColor={Color.fontBlue50}
               popover={
