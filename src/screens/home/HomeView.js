@@ -368,7 +368,7 @@ class HomeView extends Component {
         NavigationService.navigate('JourneyView');
         break;
       case 'collection_list':
-        NavigationService.navigate('CollectionListView');
+        NavigationService.navigate('CollectionView');
         break;
       default:
         break;

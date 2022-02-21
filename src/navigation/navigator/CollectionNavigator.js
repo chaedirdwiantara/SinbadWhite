@@ -2,11 +2,11 @@ import React from 'react';
 import { View } from 'react-native';
 import masterColor from '../../config/masterColor.json';
 import GlobalFont from '../../helpers/GlobalFont';
-import CollectionListView from '../../screens/collection/CollectionListView';
+import CollectionView from '../../screens/collection/CollectionView';
 
 const CollectionNavigator = {
-  CollectionListView: {
-    screen: CollectionListView,
+  CollectionView: {
+    screen: CollectionView,
     navigationOptions: {
       headerTitle: 'Collection List',
       headerTitleStyle: [
