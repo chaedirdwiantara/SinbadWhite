@@ -46,6 +46,7 @@ import { collectionMethodLabel } from './functions/sfa';
 import SfaTooltip from './components/SfaTooltip';
 import InputAmount from './components/InputAmount';
 import { ModalConfirmBack } from './sfa-collection/AddViewBundle';
+import { Color } from '../../config';
 
 const MODAL_TYPE_SOURCE = 1;
 const MODAL_TYPE_TO = 2;
@@ -76,6 +77,9 @@ const SfaCollectionAddView = props => {
   const [imageName, setImageName] = useState();
   const [imageType, setImageType] = useState();
   const [imageData, setImageData] = useState();
+  const [imageSkpName, setImageSkpName] = useState();
+  const [imageSkpType, setImageSkpType] = useState();
+  const [imageSkpData, setImageSkpData] = useState();
   const [isModalBottomErrorOpen, setIsModalBottomErrorOpen] = useState(false);
   const [messageError, setMessageError] = useState(null);
   const [titleError, setTitleError] = useState(null);
@@ -204,6 +208,18 @@ const SfaCollectionAddView = props => {
     setImageData();
     setImageName();
     setImageType();
+  };
+
+  const onChooseImageSkp = response => {
+    setImageSkpData(response.data);
+    setImageSkpName(response.fileName);
+    setImageSkpType(response.type);
+  };
+
+  const onDeleteImageSkp = () => {
+    setImageSkpData();
+    setImageSkpName();
+    setImageSkpType();
   };
 
   const onSelectTransferDate = date => {
@@ -450,6 +466,7 @@ const SfaCollectionAddView = props => {
         {renderAmountRetur()}
         {renderMaterai()}
         {renderImage()}
+        {renderSKPImage()}
       </View>
     );
   };
@@ -854,12 +871,49 @@ const SfaCollectionAddView = props => {
   /** RENDER IMAGE */
   const renderImage = () => {
     return paymentCollectionMethodId !== RETUR ? (
-      <SfaImageInput
-        title={'*Foto Penagihan'}
-        action={onChooseImage}
-        delete={onDeleteImage}
-        loading={false}
-      />
+      <View style={{ marginTop: 16 }}>
+        <SfaImageInput
+          title={'Foto Penagihan'}
+          mandatory={true}
+          action={onChooseImage}
+          delete={onDeleteImage}
+          loading={false}
+          tooltipActive={paymentCollectionMethodId === PROMO ? false : true}
+        />
+        <Text
+          style={[
+            Fonts.paragraphSmall,
+            { color: Color.textSecondary, marginTop: 8 }
+          ]}
+        >
+          Support file JPG or PNG
+        </Text>
+      </View>
+    ) : null;
+  };
+
+  /** RENDER SKP IMAGE */
+  const renderSKPImage = () => {
+    console.log(paymentCollectionMethodId);
+    return paymentCollectionMethodId === PROMO ? (
+      <View style={{ marginTop: 16 }}>
+        <SfaImageInput
+          title={'Surat Kerjasama Promosi'}
+          mandatory={true}
+          action={onChooseImageSkp}
+          delete={onDeleteImageSkp}
+          loading={false}
+          tooltipActive={paymentCollectionMethodId === PROMO ? false : true}
+        />
+        <Text
+          style={[
+            Fonts.paragraphSmall,
+            { color: Color.textSecondary, marginTop: 8 }
+          ]}
+        >
+          Support file JPG or PNG
+        </Text>
+      </View>
     ) : null;
   };
 
