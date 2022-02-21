@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
@@ -9,7 +10,7 @@ import {
 } from '../../library/reactPackage';
 import { MaterialCommunityIcons } from '../../library/thirdPartyPackage';
 import { TextInputMask } from 'react-native-masked-text';
-import { ButtonSingle } from '../../library/component';
+import { ButtonSingle, ToolTip } from '../../library/component';
 import {
   Fonts,
   GlobalStyle,
@@ -27,13 +28,15 @@ import {
   USED,
   USED_BY_OTHERS,
   NOT_AVAILABLE,
-  NOT_USED
+  NOT_USED,
+  RETUR
 } from '../../constants/collectionConstants';
 import {
   sfaGetDetailProcess,
   sfaPostCollectionPaymentProcess
 } from '../../state/actions';
 import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
+import { Color } from '../../config';
 
 const SfaBillingAddView = props => {
   const dispatch = useDispatch();
@@ -42,6 +45,8 @@ const SfaBillingAddView = props => {
   const [isStampChecked, setIsStampChecked] = useState(false);
   const [totalBillingAmount, setTotalBillingAmount] = useState(0);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [isTotalCollection, setTotalCollection] = useState(true);
+  const [isCollectionLeft, setCollectionLeft] = useState(false);
 
   // SELECTOR
   const {
@@ -382,7 +387,8 @@ const SfaBillingAddView = props => {
           value: collectionInfo?.collectionMethodName,
           styleCardView: styles.styleCardView
         })}
-        {collectionInfo.paymentCollectionTypeId !== CASH
+        {collectionInfo.paymentCollectionTypeId !== CASH &&
+        collectionInfo.paymentCollectionTypeId !== RETUR
           ? CardBody({
               title: 'Nomor Referensi',
               value: collectionInfo?.collectionCode || '-',
@@ -407,17 +413,66 @@ const SfaBillingAddView = props => {
               styleCardView: styles.styleCardView
             })
           : null}
-        {CardBody({
-          title: 'Total Penagihan',
-          value: MoneyFormatSpace(collectionInfo?.totalAmount),
-          styleCardView: styles.styleCardView
-        })}
-        {CardBody({
-          title: 'Sisa Penagihan',
-          value: MoneyFormatSpace(collectionInfo?.totalBalance),
-          styleCardView: styles.styleCardView
-        })}
+        {collectionInfo.paymentCollectionTypeId !== RETUR ? (
+          <>
+            {CardBody({
+              title: 'Total Penagihan',
+              value: MoneyFormatSpace(collectionInfo?.totalAmount),
+              styleCardView: styles.styleCardView
+            })}
+            {CardBody({
+              title: 'Sisa Penagihan',
+              value: MoneyFormatSpace(collectionInfo?.totalBalance),
+              styleCardView: styles.styleCardView
+            })}
+          </>
+        ) : (
+          <>
+            {renderReturnInfo({
+              title: 'Total Penagihan',
+              value: MoneyFormatSpace(collectionInfo?.totalAmount),
+              toolTipText: 'Total saldo di metode penagihan barang retur'
+            })}
+            {renderReturnInfo({
+              title: 'Sisa Penagihan',
+              value: MoneyFormatSpace(collectionInfo?.totalBalance),
+              toolTipText:
+                'Sisa saldo di metode penagihan barang retur karena sudah terpakai untuk tagihan lainnya'
+            })}
+          </>
+        )}
       </>
+    );
+  };
+
+  const renderReturnInfo = data => {
+    return (
+      <View style={{ marginBottom: 12, ...styles.styleCardView, marginTop: 4 }}>
+        <View
+          style={{
+            ...styles.styleCardView,
+            flex: 1
+          }}
+        >
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={[Fonts.type17]}>{data.title} </Text>
+            <ToolTip
+              iconName={'info'}
+              iconSize={15}
+              height={55}
+              iconColor={Color.fontBlue50}
+              popover={
+                <Text style={[Fonts.type87, { textAlign: 'center' }]}>
+                  {data.toolTipText}
+                </Text>
+              }
+            />
+          </View>
+          <View>
+            <Text style={[Fonts.type17]}>{data.value}</Text>
+          </View>
+        </View>
+      </View>
     );
   };
 
