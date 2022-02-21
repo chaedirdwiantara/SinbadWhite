@@ -509,11 +509,7 @@ const SfaCollectionEditView = props => {
       case RETUR:
         const dataRetur = {
           ...data,
-          amount: data.balance,
-          issuedDate: moment
-            .utc(issuedDate)
-            .local()
-            .format('YYYY-MM-DD HH:mm:ss')
+          amount: data.balance
         };
 
         delete dataRetur.filename;
