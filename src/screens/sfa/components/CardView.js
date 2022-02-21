@@ -264,7 +264,7 @@ const CardBody = props => {
   const valuePosition = props.valuePosition ? props.valuePosition : 'right';
   return (
     <>
-      <View style={{ marginBottom: 8, ...props?.styleCardView }}>
+      <View style={{ marginBottom: 12, ...props?.styleCardView }}>
         {props?.tooltip ? (
           <View style={{ flexDirection: 'row' }}>
             {cardBodyTitle(props)}
