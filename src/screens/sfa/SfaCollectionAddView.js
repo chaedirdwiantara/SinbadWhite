@@ -477,7 +477,12 @@ const SfaCollectionAddView = props => {
     return (
       <View>
         <Text style={[Fonts.type10, styles.titleInput]}>Metode Penagihan</Text>
-        <Text style={[Fonts.type17, { marginBottom: 16 }]}>
+        <Text
+          style={[
+            Fonts.type17,
+            { marginBottom: 16, color: masterColor.textSecondary }
+          ]}
+        >
           {collectionMethodLabel(id)}
         </Text>
       </View>
@@ -488,7 +493,12 @@ const SfaCollectionAddView = props => {
   const renderAmount = () => {
     return paymentCollectionMethodId !== RETUR ? (
       <>
-        <Text style={[Fonts.type10]}>*Jumlah Penagihan</Text>
+        <View style={{ flexDirection: 'row', marginTop: 8 }}>
+          <Text style={[Fonts.type10, { color: masterColor.fontRed50 }]}>
+            *
+          </Text>
+          <Text style={[Fonts.type10]}>Jumlah Penagihan</Text>
+        </View>
         <View
           style={[
             GlobalStyle.boxInput,
@@ -504,6 +514,7 @@ const SfaCollectionAddView = props => {
               unit: 'Rp ',
               suffixUnit: ''
             }}
+            placeholder={'Masukkan jumlah penagihan'}
             value={amount}
             onChangeText={value => onChangeAmount(value)}
             style={[
