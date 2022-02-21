@@ -497,7 +497,7 @@ const SfaCollectionAddView = props => {
           <Text style={[Fonts.type10, { color: masterColor.fontRed50 }]}>
             *
           </Text>
-          <Text style={[Fonts.type10]}>Jumlah Penagihan</Text>
+          <Text style={[Fonts.type10]}>Nilai Penagihan</Text>
         </View>
         <View
           style={[
@@ -1121,8 +1121,6 @@ const SfaCollectionAddView = props => {
 
 const styles = StyleSheet.create({
   contentContainer: {
-    marginHorizontal: 16,
-    marginVertical: 16,
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderColor: masterColor.fontBlack40,
