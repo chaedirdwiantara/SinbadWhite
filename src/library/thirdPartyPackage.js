@@ -54,11 +54,13 @@ import { WheelPicker } from 'react-native-wheel-picker-android';
 import RNFetchBlob from 'rn-fetch-blob';
 /** PDF */
 import Pdf from 'react-native-pdf';
-
 /** LINEAR GRADIENT */
 import LinearGradient from 'react-native-linear-gradient';
 /** CLIPBOARD */
 import Clipboard from '@react-native-clipboard/clipboard';
+/** CALENDER */
+import { Calendar } from 'react-native-calendars';
+
 export {
   /** REDUX */
   bindActionCreators,
@@ -122,7 +124,9 @@ export {
   /** LINEAR GRADIENT */
   LinearGradient,
   /** CLIPBOARD */
-  Clipboard
+  Clipboard,
+  /** CALENDER */
+  Calendar
 };
 
 /**
