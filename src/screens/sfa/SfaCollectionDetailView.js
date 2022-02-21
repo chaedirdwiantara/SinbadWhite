@@ -318,8 +318,8 @@ const SfaCollectionDetailView = props => {
               title: 'Foto Penagihan',
               loadingImage: loadingSfaGetCollectionImage,
               imageSource: { uri: `data:image/jpeg;base64, ${image}` },
-              imageSourceStyle: styles.images,
-              imageContainerStyle: styles.smallContainerImage,
+              imageContainerStyle: styles.imageContainerStyle,
+              imageSourceStyle: styles.imageSourceStyle,
               imageBackgroundStyle: styles.imageBackgroundStyle,
               styleCardView: styles.styleCardViewImage,
               onPressImage: () =>
@@ -335,8 +335,8 @@ const SfaCollectionDetailView = props => {
               title: 'Surat Kerjasama Promosi',
               loadingImage: loadingSfaGetCollectionImage,
               imageSource: { uri: `data:image/jpeg;base64, ${skpImage}` },
-              imageSourceStyle: styles.images,
-              imageContainerStyle: styles.smallContainerImage,
+              imageContainerStyle: styles.imageContainerStyle,
+              imageSourceStyle: styles.imageSourceStyle,
               imageBackgroundStyle: styles.imageBackgroundStyle,
               styleCardView: styles.styleCardViewImage,
               onPressImage: () =>
@@ -547,29 +547,25 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 1
   },
-  smallContainerImage: {
+  imageContainerStyle: {
     backgroundColor: 'white',
     marginTop: -16,
     marginBottom: 16,
-    // height: (50 / 100) * height,
     height: 138,
     width: '100%'
   },
-  images: {
-    // resizeMode: 'contain',
-    // resizeMode: 'stretch',
-    height: 138,
+  imageSourceStyle: {
+    resizeMode: 'cover',
     width: '100%',
-    // borderWidth: 1,
-    backgroundColor: 'white',
-    flex: 1
+    height: 138,
+    backgroundColor: 'white'
   },
   imageBackgroundStyle: {
-    lineHeight: 116,
+    height: '100%',
+    width: '100%',
+    backgroundColor: '#000000c0',
     textAlign: 'center',
-    justifyContent: 'center',
-    alignContent: 'center',
-    backgroundColor: '#000000c0'
+    textAlignVertical: 'center'
   },
   modalImage: {
     resizeMode: 'stretch',
