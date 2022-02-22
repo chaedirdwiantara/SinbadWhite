@@ -15,6 +15,7 @@ import { TextInputMask } from 'react-native-masked-text';
 const InputAmountBox = props => {
   const value = props?.value;
   const error = props?.error;
+  const placeholder = props?.placeholder;
 
   return (
     <>
@@ -33,6 +34,7 @@ const InputAmountBox = props => {
         ]}
       >
         <TextInputMask
+          placeholder={placeholder}
           type={'money'}
           options={{
             precision: 0,

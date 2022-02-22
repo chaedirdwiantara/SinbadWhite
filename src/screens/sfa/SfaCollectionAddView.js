@@ -46,6 +46,8 @@ import { collectionMethodLabel } from './functions/sfa';
 import SfaTooltip from './components/SfaTooltip';
 import InputAmount from './components/InputAmount';
 import { ModalConfirmBack } from './sfa-collection/AddViewBundle';
+import { Color } from '../../config';
+import InputAmountBox from './components/InputAmountBox';
 
 const MODAL_TYPE_SOURCE = 1;
 const MODAL_TYPE_TO = 2;
@@ -76,6 +78,9 @@ const SfaCollectionAddView = props => {
   const [imageName, setImageName] = useState();
   const [imageType, setImageType] = useState();
   const [imageData, setImageData] = useState();
+  const [imageSkpName, setImageSkpName] = useState();
+  const [imageSkpType, setImageSkpType] = useState();
+  const [imageSkpData, setImageSkpData] = useState();
   const [isModalBottomErrorOpen, setIsModalBottomErrorOpen] = useState(false);
   const [messageError, setMessageError] = useState(null);
   const [titleError, setTitleError] = useState(null);
@@ -206,6 +211,18 @@ const SfaCollectionAddView = props => {
     setImageType();
   };
 
+  const onChooseImageSkp = response => {
+    setImageSkpData(response.data);
+    setImageSkpName(response.fileName);
+    setImageSkpType(response.type);
+  };
+
+  const onDeleteImageSkp = () => {
+    setImageSkpData();
+    setImageSkpName();
+    setImageSkpType();
+  };
+
   const onSelectTransferDate = date => {
     setTransferDate(date);
   };
@@ -305,7 +322,11 @@ const SfaCollectionAddView = props => {
         }
         break;
       case PROMO:
-        // TODO: logic payment method collection PROMO
+        if (!amount || !imageData || !imageSkpData) {
+          setIsSaveDisabled(true);
+        } else {
+          setIsSaveDisabled(false);
+        }
         break;
       case RETUR:
         if (!amount) {
@@ -335,7 +356,10 @@ const SfaCollectionAddView = props => {
       amount: parseInt(amount, 10),
       filename: imageName,
       type: imageType,
-      image: imageData
+      image: imageData,
+      skpFilename: imageSkpName,
+      skpType: imageSkpType,
+      skpImage: imageSkpData
     };
 
     switch (paymentCollectionMethodId) {
@@ -390,8 +414,7 @@ const SfaCollectionAddView = props => {
         dispatch(sfaPostPaymentMethodProcess(dataRetur));
         break;
       case PROMO:
-        // TODO: Integration API - Promo
-        const dataPromo = {};
+        const dataPromo = { ...data };
         dispatch(sfaPostPaymentMethodProcess(dataPromo));
         break;
       default:
@@ -450,6 +473,7 @@ const SfaCollectionAddView = props => {
         {renderAmountRetur()}
         {renderMaterai()}
         {renderImage()}
+        {renderSKPImage()}
       </View>
     );
   };
@@ -460,7 +484,12 @@ const SfaCollectionAddView = props => {
     return (
       <View>
         <Text style={[Fonts.type10, styles.titleInput]}>Metode Penagihan</Text>
-        <Text style={[Fonts.type17, { marginBottom: 16 }]}>
+        <Text
+          style={[
+            Fonts.type17,
+            { marginBottom: 16, color: masterColor.textSecondary }
+          ]}
+        >
           {collectionMethodLabel(id)}
         </Text>
       </View>
@@ -471,34 +500,24 @@ const SfaCollectionAddView = props => {
   const renderAmount = () => {
     return paymentCollectionMethodId !== RETUR ? (
       <>
-        <Text style={[Fonts.type10]}>*Jumlah Penagihan</Text>
+        <View style={{ flexDirection: 'row', marginTop: 8 }}>
+          <Text style={[Fonts.type10, { color: masterColor.fontRed50 }]}>
+            *
+          </Text>
+          <Text style={[Fonts.type10]}>Nilai Penagihan</Text>
+        </View>
         <View
           style={[
             GlobalStyle.boxInput,
             { flexDirection: 'row', alignItems: 'center' }
           ]}
         >
-          <TextInputMask
-            type={'money'}
-            options={{
-              precision: 0,
-              separator: ',',
-              delimiter: '.',
-              unit: 'Rp ',
-              suffixUnit: ''
-            }}
-            value={amount}
-            onChangeText={value => onChangeAmount(value)}
-            style={[
-              Fonts.type17,
-              {
-                width: '95%',
-                borderBottomColor: masterColor.fontBlack10
-              }
-            ]}
+          <InputAmountBox
+            value={amount != 0 ? amount : null}
+            onChange={onChangeAmount}
+            placeholder={'Masukkan jumlah penagihan'}
           />
         </View>
-        <View style={[GlobalStyle.lines, { marginBottom: 8 }]} />
       </>
     ) : null;
   };
@@ -640,7 +659,7 @@ const SfaCollectionAddView = props => {
       <View style={[GlobalStyle.shadowForBox, { borderWidth: 0.2 }]}>
         <View style={[styles.totalCollection]}>
           <Text style={[Fonts.type23, { flex: 1 }]}>Total Penagihan</Text>
-          <Text style={[Fonts.type116p, { flex: 1, textAlign: 'right' }]}>
+          <Text style={[Fonts.type7, { flex: 1, textAlign: 'right' }]}>
             {MoneyFormatSpace(totalAmount)}
           </Text>
         </View>
@@ -854,12 +873,48 @@ const SfaCollectionAddView = props => {
   /** RENDER IMAGE */
   const renderImage = () => {
     return paymentCollectionMethodId !== RETUR ? (
-      <SfaImageInput
-        title={'*Foto Penagihan'}
-        action={onChooseImage}
-        delete={onDeleteImage}
-        loading={false}
-      />
+      <View style={{ marginTop: 16 }}>
+        <SfaImageInput
+          title={'Foto Penagihan'}
+          mandatory={true}
+          action={onChooseImage}
+          delete={onDeleteImage}
+          loading={false}
+          tooltipActive={paymentCollectionMethodId === PROMO ? false : true}
+        />
+        <Text
+          style={[
+            Fonts.paragraphSmall,
+            { color: Color.textSecondary, marginTop: 8 }
+          ]}
+        >
+          Support file JPG or PNG
+        </Text>
+      </View>
+    ) : null;
+  };
+
+  /** RENDER SKP IMAGE */
+  const renderSKPImage = () => {
+    return paymentCollectionMethodId === PROMO ? (
+      <View style={{ marginTop: 16 }}>
+        <SfaImageInput
+          title={'Surat Kerjasama Promosi'}
+          mandatory={true}
+          action={onChooseImageSkp}
+          delete={onDeleteImageSkp}
+          loading={false}
+          tooltipActive={paymentCollectionMethodId === PROMO ? false : true}
+        />
+        <Text
+          style={[
+            Fonts.paragraphSmall,
+            { color: Color.textSecondary, marginTop: 8 }
+          ]}
+        >
+          Support file JPG or PNG
+        </Text>
+      </View>
     ) : null;
   };
 
@@ -1056,8 +1111,6 @@ const SfaCollectionAddView = props => {
 
 const styles = StyleSheet.create({
   contentContainer: {
-    marginHorizontal: 16,
-    marginVertical: 16,
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderColor: masterColor.fontBlack40,

@@ -13,6 +13,7 @@ import masterColor from '../../../config/masterColor.json';
 import { MaterialIcon, Tooltip } from '../../../library/thirdPartyPackage';
 import { Fonts, GlobalStyle } from '../../../helpers';
 import { II_MB } from '../../../constants/paymentConstants';
+import { Color } from '../../../config';
 const { width } = Dimensions.get('window');
 
 /**
@@ -28,6 +29,7 @@ const { width } = Dimensions.get('window');
  */
 const SfaImageInput = props => {
   const isTooltipActive = props?.tooltipActive ?? true;
+  const mandatory = props?.mandatory ?? false;
   const [isQuestionMarkShow, setQuestionMarkShow] = useState(true);
   const [errorInputImage, setErrorInputImage] = useState(false);
   const [imageName, setImageName] = useState(null);
@@ -82,18 +84,28 @@ const SfaImageInput = props => {
       <View>
         <TouchableOpacity
           onPress={() => clickCamera()}
-          style={[GlobalStyle.shadowForBox, { width: 90, marginTop: 12 }]}
+          style={[
+            // GlobalStyle.shadowForBox,
+            {
+              width: 100,
+              marginTop: 12,
+              borderStyle: 'dashed',
+              borderWidth: 1,
+              borderRadius: 8,
+              borderColor: Color.fontBlack20
+            }
+          ]}
         >
           <View>
             <MaterialIcon
               name="camera-alt"
-              color={masterColor.mainColor}
+              color={masterColor.iconDark}
               size={50}
               style={{ alignSelf: 'center', marginTop: 18 }}
             />
           </View>
           <Text
-            style={[Fonts.type38, { textAlign: 'center', marginBottom: 8 }]}
+            style={[Fonts.type38, { textAlign: 'center', marginBottom: 18 }]}
           >
             Unggah Foto
           </Text>
@@ -136,8 +148,16 @@ const SfaImageInput = props => {
   const renderTitle = () => {
     return (
       <View style={{ flexDirection: 'row' }}>
+        {mandatory ? (
+          <Text style={[Fonts.type10, { color: masterColor.fontRed50 }]}>
+            *
+          </Text>
+        ) : (
+          <View />
+        )}
+
         <Text style={[Fonts.type10, { marginRight: 6 }]}>
-          {props.title ? props.title : '*Foto Penagihan'}
+          {props.title ? props.title : 'Foto Penagihan'}
         </Text>
         {renderTooltip()}
       </View>
