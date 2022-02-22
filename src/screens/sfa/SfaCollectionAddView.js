@@ -322,7 +322,11 @@ const SfaCollectionAddView = props => {
         }
         break;
       case PROMO:
-        // TODO: logic payment method collection PROMO
+        if (!amount || !imageData || !imageSkpData) {
+          setIsSaveDisabled(true);
+        } else {
+          setIsSaveDisabled(false);
+        }
         break;
       case RETUR:
         if (!amount) {
@@ -352,7 +356,10 @@ const SfaCollectionAddView = props => {
       amount: parseInt(amount, 10),
       filename: imageName,
       type: imageType,
-      image: imageData
+      image: imageData,
+      skpFilename: imageSkpName,
+      skpType: imageSkpType,
+      skpImage: imageSkpData
     };
 
     switch (paymentCollectionMethodId) {
