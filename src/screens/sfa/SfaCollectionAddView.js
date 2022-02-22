@@ -47,6 +47,7 @@ import SfaTooltip from './components/SfaTooltip';
 import InputAmount from './components/InputAmount';
 import { ModalConfirmBack } from './sfa-collection/AddViewBundle';
 import { Color } from '../../config';
+import InputAmountBox from './components/InputAmountBox';
 
 const MODAL_TYPE_SOURCE = 1;
 const MODAL_TYPE_TO = 2;
@@ -497,7 +498,7 @@ const SfaCollectionAddView = props => {
           <Text style={[Fonts.type10, { color: masterColor.fontRed50 }]}>
             *
           </Text>
-          <Text style={[Fonts.type10]}>Jumlah Penagihan</Text>
+          <Text style={[Fonts.type10]}>Nilai Penagihan</Text>
         </View>
         <View
           style={[
@@ -505,28 +506,12 @@ const SfaCollectionAddView = props => {
             { flexDirection: 'row', alignItems: 'center' }
           ]}
         >
-          <TextInputMask
-            type={'money'}
-            options={{
-              precision: 0,
-              separator: ',',
-              delimiter: '.',
-              unit: 'Rp ',
-              suffixUnit: ''
-            }}
+          <InputAmountBox
+            value={amount != 0 ? amount : null}
+            onChange={onChangeAmount}
             placeholder={'Masukkan jumlah penagihan'}
-            value={amount}
-            onChangeText={value => onChangeAmount(value)}
-            style={[
-              Fonts.type17,
-              {
-                width: '95%',
-                borderBottomColor: masterColor.fontBlack10
-              }
-            ]}
           />
         </View>
-        <View style={[GlobalStyle.lines, { marginBottom: 8 }]} />
       </>
     ) : null;
   };
@@ -668,7 +653,7 @@ const SfaCollectionAddView = props => {
       <View style={[GlobalStyle.shadowForBox, { borderWidth: 0.2 }]}>
         <View style={[styles.totalCollection]}>
           <Text style={[Fonts.type23, { flex: 1 }]}>Total Penagihan</Text>
-          <Text style={[Fonts.type116p, { flex: 1, textAlign: 'right' }]}>
+          <Text style={[Fonts.type7, { flex: 1, textAlign: 'right' }]}>
             {MoneyFormatSpace(totalAmount)}
           </Text>
         </View>
@@ -1121,8 +1106,6 @@ const SfaCollectionAddView = props => {
 
 const styles = StyleSheet.create({
   contentContainer: {
-    marginHorizontal: 16,
-    marginVertical: 16,
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderColor: masterColor.fontBlack40,
