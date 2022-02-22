@@ -47,6 +47,7 @@ import SfaTooltip from './components/SfaTooltip';
 import InputAmount from './components/InputAmount';
 import { ModalConfirmBack } from './sfa-collection/AddViewBundle';
 import { Color } from '../../config';
+import InputAmountBox from './components/InputAmountBox';
 
 const MODAL_TYPE_SOURCE = 1;
 const MODAL_TYPE_TO = 2;
@@ -285,7 +286,7 @@ const SfaCollectionAddView = props => {
   const checkInput = () => {
     switch (paymentCollectionMethodId) {
       case CASH:
-        if (!amount || !imageData) {
+        if (!amount || !imageData || !imageSkpData) {
           setIsSaveDisabled(true);
         } else {
           setIsSaveDisabled(false);
@@ -296,6 +297,7 @@ const SfaCollectionAddView = props => {
         if (
           !amount ||
           !imageData ||
+          !imageSkpData ||
           !issuedDate ||
           !noReference ||
           !invalidDate ||
@@ -313,7 +315,8 @@ const SfaCollectionAddView = props => {
           !dataBankTo ||
           !transferDate ||
           !amount ||
-          !imageData
+          !imageData ||
+          !imageSkpData
         ) {
           setIsSaveDisabled(true);
         } else {
@@ -505,28 +508,12 @@ const SfaCollectionAddView = props => {
             { flexDirection: 'row', alignItems: 'center' }
           ]}
         >
-          <TextInputMask
-            type={'money'}
-            options={{
-              precision: 0,
-              separator: ',',
-              delimiter: '.',
-              unit: 'Rp ',
-              suffixUnit: ''
-            }}
+          <InputAmountBox
+            value={amount != 0 ? amount : null}
+            onChange={onChangeAmount}
             placeholder={'Masukkan jumlah penagihan'}
-            value={amount}
-            onChangeText={value => onChangeAmount(value)}
-            style={[
-              Fonts.type17,
-              {
-                width: '95%',
-                borderBottomColor: masterColor.fontBlack10
-              }
-            ]}
           />
         </View>
-        <View style={[GlobalStyle.lines, { marginBottom: 8 }]} />
       </>
     ) : null;
   };
