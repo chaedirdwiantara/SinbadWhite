@@ -655,7 +655,7 @@ const SfaCollectionAddView = props => {
       <View style={[GlobalStyle.shadowForBox, { borderWidth: 0.2 }]}>
         <View style={[styles.totalCollection]}>
           <Text style={[Fonts.type23, { flex: 1 }]}>Total Penagihan</Text>
-          <Text style={[Fonts.type116p, { flex: 1, textAlign: 'right' }]}>
+          <Text style={[Fonts.type7, { flex: 1, textAlign: 'right' }]}>
             {MoneyFormatSpace(totalAmount)}
           </Text>
         </View>
