@@ -896,7 +896,6 @@ const SfaCollectionAddView = props => {
 
   /** RENDER SKP IMAGE */
   const renderSKPImage = () => {
-    console.log(paymentCollectionMethodId);
     return paymentCollectionMethodId === PROMO ? (
       <View style={{ marginTop: 16 }}>
         <SfaImageInput
