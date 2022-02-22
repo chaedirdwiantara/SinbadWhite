@@ -286,7 +286,7 @@ const SfaCollectionAddView = props => {
   const checkInput = () => {
     switch (paymentCollectionMethodId) {
       case CASH:
-        if (!amount || !imageData || !imageSkpData) {
+        if (!amount || !imageData) {
           setIsSaveDisabled(true);
         } else {
           setIsSaveDisabled(false);
@@ -297,7 +297,6 @@ const SfaCollectionAddView = props => {
         if (
           !amount ||
           !imageData ||
-          !imageSkpData ||
           !issuedDate ||
           !noReference ||
           !invalidDate ||
@@ -315,8 +314,7 @@ const SfaCollectionAddView = props => {
           !dataBankTo ||
           !transferDate ||
           !amount ||
-          !imageData ||
-          !imageSkpData
+          !imageData
         ) {
           setIsSaveDisabled(true);
         } else {
