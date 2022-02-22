@@ -414,8 +414,7 @@ const SfaCollectionAddView = props => {
         dispatch(sfaPostPaymentMethodProcess(dataRetur));
         break;
       case PROMO:
-        // TODO: Integration API - Promo
-        const dataPromo = {};
+        const dataPromo = { ...data };
         dispatch(sfaPostPaymentMethodProcess(dataPromo));
         break;
       default:
