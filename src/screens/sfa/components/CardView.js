@@ -181,10 +181,7 @@ const renderImage = props => {
   return (
     <View
       style={{
-        flexDirection: 'row',
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
         ...props?.imageContainerStyle
       }}
     >
@@ -194,29 +191,24 @@ const renderImage = props => {
           accessibilityLabel={'btnOpenModalImage'}
           onPress={props?.onPressImage}
           style={{
-            flexDirection: 'row',
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center'
+            flex: 1
           }}
         >
-          <View style={styles.container}>
+          <View style={styles.imageContainer}>
             <ImageBackground
               source={{ ...props?.imageSource }}
               style={{ ...styles.image, ...props?.imageSourceStyle }}
             >
               <Text style={{ ...props?.imageBackgroundStyle }}>
-                <View>
-                  <Image
-                    source={require('../../../assets/icons/global/zoom_in.png')}
-                  />
-                </View>
+                <Image
+                  source={require('../../../assets/icons/global/zoom_in.png')}
+                />
               </Text>
             </ImageBackground>
           </View>
         </TouchableOpacity>
       ) : (
-        <View style={styles.container}>
+        <View style={styles.imageContainer}>
           <Image
             source={{ ...props?.imageSource }}
             style={{ ...styles.image, ...props?.imageSourceStyle }}
@@ -312,15 +304,11 @@ const CardBody = props => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  imageContainer: {
     flex: 1
   },
   image: {
-    flex: 1,
-    justifyContent: 'center',
-    alignContent: 'center',
-    width: 100,
-    height: 100
+    flex: 1
   }
 });
 
