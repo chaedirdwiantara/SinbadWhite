@@ -354,7 +354,10 @@ const SfaCollectionAddView = props => {
       amount: parseInt(amount, 10),
       filename: imageName,
       type: imageType,
-      image: imageData
+      image: imageData,
+      skpFilename: imageSkpName,
+      skpType: imageSkpType,
+      skpImage: imageSkpData
     };
 
     switch (paymentCollectionMethodId) {
