@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -10,23 +10,27 @@ import {
 import { MaterialIcon, moment } from '../../../library/thirdPartyPackage';
 import {
   ButtonSingle,
-  ModalBottomErrorRespons,
   ModalBottomType4,
   DatePickerCalender
 } from '../../../library/component';
 import { Fonts, GlobalStyle } from '../../../helpers';
 import masterColor from '../../../config/masterColor.json';
-import { useDispatch, useSelector } from 'react-redux';
 import { toLocalTime } from '../../../helpers/TimeHelper';
+import NavigationService from '../../../navigation/NavigationService';
 
-const PromisePayView = props => {
-  const dispatch = useDispatch();
-  const promisePayList = props.navigation.state.params.promisePayList;
-  const maxDatePromisePay = moment()
-    .add(7, 'days')
+const MerchantPromisePayView = props => {
+  const {
+    selectedReason,
+    promisePayList,
+    onSavePromisePayDate
+  } = props.navigation.state.params;
+
+  const tomorrow = moment(tomorrow)
+    .add(1, 'days')
     .locale('id')
     .format('YYYY-MM-DD');
-  const currentDate = moment()
+  const maxDatePromisePay = moment(tomorrow)
+    .add(6, 'days')
     .locale('id')
     .format('YYYY-MM-DD');
 
@@ -38,17 +42,7 @@ const PromisePayView = props => {
   const [isModalPromisePayDateOpen, setIsModalPromisePayDateOpen] = useState(
     false
   );
-  const [modalBottomError, setModalBottomError] = useState(false);
-
-  // SELECTOR
-  const {
-    loadingMerchantPromisePay,
-    dataMerchantPromisePay,
-    errorMerchantPromisePay
-  } = useSelector(state => state.merchant);
-
-  // USEREF ERROR
-  const prevErrorMerchantPromisePayRef = useRef(errorMerchantPromisePay);
+  const [isSaveButtonLoading, setIsSaveButtonLoading] = useState(false);
 
   /**
    * *********************************
@@ -60,10 +54,13 @@ const PromisePayView = props => {
     setIsModalPromisePayDateOpen(true);
   };
   const onSubmit = () => {
+    setIsSaveButtonLoading(true);
     setIsSaveButtonDisabled(true);
-    alert('ON SUBMIT: ' + promisePayDate);
-    // const data = {};
-    // dispatch(merchantPostPromisePayProcess(data));
+    onSavePromisePayDate({
+      ...selectedReason,
+      promisePayDate
+    });
+    NavigationService.goBack();
   };
 
   /**
@@ -72,7 +69,7 @@ const PromisePayView = props => {
    * *********************************
    */
   useEffect(() => {
-    setPromiseDateCount(promisePayList.length + 1);
+    setPromiseDateCount(promisePayList ? promisePayList.length + 1 : 1);
   }, []);
 
   /** CHECK INPUT */
@@ -80,24 +77,9 @@ const PromisePayView = props => {
     if (promisePayDate) {
       setIsSaveButtonDisabled(false);
     } else {
-      setIsSaveButtonDisabled(false);
+      setIsSaveButtonDisabled(true);
     }
   }, [promisePayDate]);
-
-  /** USE EFFECT PREV DATA ERROR  */
-  useEffect(() => {
-    prevErrorMerchantPromisePayRef.current = errorMerchantPromisePay;
-  }, []);
-  const prevErrorMerchantPromisePay = prevErrorMerchantPromisePayRef.current;
-
-  /** USE EFFECT HANDLE MODAL ERROR POST PROMISE PAY */
-  useEffect(() => {
-    if (prevErrorMerchantPromisePay !== errorMerchantPromisePay) {
-      if (errorMerchantPromisePay) {
-        setModalBottomError(true);
-      }
-    }
-  }, [errorMerchantPromisePay]);
 
   /**
    * *********************************
@@ -114,7 +96,7 @@ const PromisePayView = props => {
           size={18}
           style={{ paddingRight: 12 }}
         />
-        <Text style={[Fonts.type108]}>
+        <Text style={[Fonts.type108, { paddingRight: 16 }]}>
           Janji bayar bisa dilakukan 3 kali per faktur dengan tenggat maksimal 7
           hari per perjanjian.
         </Text>
@@ -229,7 +211,7 @@ const PromisePayView = props => {
       <>
         <View style={[GlobalStyle.lines]} />
         <ButtonSingle
-          loading={loadingMerchantPromisePay}
+          loading={isSaveButtonLoading}
           disabled={isSaveButtonDisabled}
           title={'Simpan Alasan'}
           borderRadius={4}
@@ -242,8 +224,8 @@ const PromisePayView = props => {
   const renderPromiseDateCalender = () => {
     return (
       <DatePickerCalender
-        current={currentDate}
-        minDate={currentDate}
+        current={tomorrow}
+        minDate={tomorrow}
         maxDate={maxDatePromisePay}
         selectedDate={selectedDate}
         onDayPress={day => {
@@ -264,23 +246,6 @@ const PromisePayView = props => {
         close={() => setIsModalPromisePayDateOpen(false)}
         content={renderPromiseDateCalender()}
       />
-    );
-  };
-
-  /** RENDER MODAL ERROR */
-  const renderModalError = () => {
-    return (
-      <View>
-        {modalBottomError ? (
-          <ModalBottomErrorRespons
-            statusBarType={'transparent'}
-            open={modalBottomError}
-            onPress={() => setModalBottomError(false)}
-          />
-        ) : (
-          <View />
-        )}
-      </View>
     );
   };
 
@@ -307,7 +272,6 @@ const PromisePayView = props => {
         {renderSaveButton()}
       </SafeAreaView>
       {renderModalPromisePayDate()}
-      {renderModalError()}
     </>
   );
 };
@@ -337,4 +301,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default PromisePayView;
+export default MerchantPromisePayView;
