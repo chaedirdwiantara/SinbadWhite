@@ -5,9 +5,9 @@ import {
   Image,
   StyleSheet,
   Text
-} from '../../library/reactPackage'
-import { GlobalStyle, Fonts } from '../../helpers'
-import { Color } from '../../config'
+} from '../../library/reactPackage';
+import { GlobalStyle, Fonts } from '../../helpers';
+import { Color } from '../../config';
 
 /**
  * Props
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
   boxTitle: {
     width: '100%',
-    paddingBottom: 10,
+    paddingBottom: 20,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 75
@@ -73,15 +73,14 @@ const styles = StyleSheet.create({
 export default EmptyData;
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

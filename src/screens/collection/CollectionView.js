@@ -29,7 +29,7 @@ const dummyData = [
   },
   {
     storeId: 12345,
-    storeName: 'Toko Sinar Mas Jaya',
+    storeName: 'Toko Payment 123',
     storeAddress: 'Jl Padurenan',
     totalInvoices: 8,
     outstandingAmount: 5000000,
@@ -41,16 +41,43 @@ class CollectionView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openModalCollectionMenu: true,
+      openModalCollectionMenu: false,
       collectionMenu: [
-        { title: 'Lakukan Penagihan' },
-        { title: 'Tidak Melakukan Penagihan' }
-      ]
+        { title: 'Lakukan Penagihan', screen: 'SfaView' },
+        {
+          title: 'Tidak Melakukan Penagihan',
+          screen: 'MerchantNoCollectionView'
+        }
+      ],
+      storeName: '',
+      emptyDataType: 'default'
     };
+  }
+  /** === PARENT FUNCTION === */
+  parentFunction(item) {
+    switch (item.type) {
+      case 'modal_collection':
+        this.setState({
+          storeName: item.storeName,
+          openModalCollectionMenu: true
+        });
+
+        break;
+
+      default:
+        break;
+    }
   }
   /** === RENDER DATA LIST VIEW === */
   renderDataList() {
-    return <CollectionListDataView data={dummyData} />;
+    return (
+      <CollectionListDataView
+        data={dummyData}
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={this.parentFunction.bind(this)}
+        emptyData={this.state.emptyDataType}
+      />
+    );
   }
   /** === RENDER SEARCH BAR === */
   renderSearchBar() {
@@ -63,10 +90,9 @@ class CollectionView extends Component {
   }
   /** === RENDER MODAL COLLECTION MENU */
   renderModalCollectionMenu() {
-    console.log(this.state.openModalCollectionMenu);
     return this.state.openModalCollectionMenu ? (
       <ModalBottomType3
-        title={'Journey Plan'}
+        title={this.state.storeName}
         open={this.state.openModalCollectionMenu}
         close={() => this.setState({ openModalCollectionMenu: false })}
         content={this.renderCollectionMenu()}
@@ -105,7 +131,6 @@ class CollectionView extends Component {
   }
   /** === MAIN RENDER === */
   render() {
-    console.log(this.state.openModalCollectionMenu);
     return (
       <>
         {this.renderSearchBar()}

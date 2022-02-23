@@ -12,6 +12,7 @@ import { MoneyFormat, GlobalStyle, Fonts } from '../../helpers';
 import { Color } from '../../config';
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import * as ActionCreators from '../../state/actions';
+import { EmptyData, EmptyDataType2 } from '../../library/component';
 class CollectionListDataView extends Component {
   /** CHECK COLLECTION ACTIVITY */
   checkCollectionActivity(status) {
@@ -59,7 +60,12 @@ class CollectionListDataView extends Component {
           />
           <TouchableOpacity
             style={styles.iconContainer}
-            onPress={() => console.log('tagih')}
+            onPress={() =>
+              this.props.parentFunction({
+                type: 'modal_collection',
+                storeName: item.storeName
+              })
+            }
           >
             <Text style={Fonts.type83}>Tagih</Text>
           </TouchableOpacity>
@@ -69,7 +75,7 @@ class CollectionListDataView extends Component {
   }
   /** === DATA VIEW === */
   renderData() {
-    return (
+    return this.props.data.length < 0 ? (
       <View style={{ paddingHorizontal: 16, paddingVertical: 20 }}>
         <FlatList
           initialScrollIndex={0}
@@ -80,10 +86,31 @@ class CollectionListDataView extends Component {
           ItemSeparatorComponent={this.renderSeparator}
         />
       </View>
+    ) : (
+      <View>{this.renderEmpty()}</View>
     );
   }
+  /** === RENDER EMPTY DATA === */
+  renderEmpty() {
+    return this.props.emptyData !== 'default' ? (
+      <EmptyData
+        top
+        title={'Store Kosong'}
+        description={
+          'Untuk hari ini tidak ada jadwal toko yang harus dikunjungi ya '
+        }
+      />
+    ) : (
+      <EmptyDataType2
+        top
+        title={'Maaf pencarian anda tidak ditemukan'}
+        description={'Silahkan masukan kata pencarian yang lain ya '}
+      />
+    );
+  }
+  /** === MAIN RENDER === */
   render() {
-    return <>{this.renderData()}</>;
+    return <View>{this.renderData()}</View>;
   }
 }
 
