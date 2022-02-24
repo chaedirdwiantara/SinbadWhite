@@ -304,7 +304,7 @@ const SfaBillingLogView = props => {
             </View>
             <View testID="btnDelete" style={styles.buttonContainer}>
               {renderButton(
-                'Ubah',
+                'Edit',
                 'white',
                 !item.isEditable,
                 navigatetoEditBilling.bind(item),

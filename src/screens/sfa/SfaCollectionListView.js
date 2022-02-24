@@ -411,7 +411,7 @@ const SfaCollectionListView = props => {
               }
             >
               {renderButton(
-                'Ubah',
+                'Edit',
                 'white',
                 !item.isEditable,
                 navigatetoEditCollection.bind(item),
