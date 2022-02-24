@@ -23,7 +23,7 @@ import MerchantNoCollectionDetailView from '../../screens/merchants/dashboard-me
 import MerchantDetailProfileView from '../../screens/merchants/details-merchant/MerchantDetailProfileView';
 import MerchantDetailAccountView from '../../screens/merchants/details-merchant/MerchantDetailAccountView';
 import MerchantDetailInformationView from '../../screens/merchants/details-merchant/MerchantDetailInformationView';
-import MerchantDetailPaymentView from '../../screens/merchants/details-merchant/MerchantDetailPaymentView';
+// import MerchantDetailPaymentView from '../../screens/merchants/details-merchant/MerchantDetailPaymentView';
 import MerchantDetailAddressView from '../../screens/merchants/details-merchant/MerchantDetailAddressView';
 import MerchantDetailClassificationView from '../../screens/merchants/details-merchant/MerchantDetailClassificationView';
 import MerchantDetailCreditLimitView from '../../screens/merchants/details-merchant/MerchantDetailCreditLimitView';
@@ -37,6 +37,8 @@ import MerchantStockView from '../../screens/merchants/stock-merchant/MerchantSt
 import MerchantEditStockView from '../../screens/merchants/stock-merchant/MerchantEditStockView';
 import MerchantQuestionnaireView from '../../screens/merchants/survey-merchant/MerchantQuestionnaireView';
 import MerchantSurveyResultView from '../../screens/merchants/survey-merchant/MerchantSurveyResultView';
+/** merchant promise pay */
+import MerchantPromisePayView from '../../screens/merchants/promise-pay-merchant/MerchantPromisePayView';
 
 const MerchantNavigator = {
   MerchantView: {
@@ -398,7 +400,6 @@ const MerchantNavigator = {
   },
   MerchantSurveyResultView: {
     screen: MerchantSurveyResultView,
-
     navigationOptions: {
       title: 'Hasil Survey',
       headerTitleStyle: [GlobalFont.textHeaderPage, { marginLeft: '5%' }],
@@ -411,9 +412,20 @@ const MerchantNavigator = {
   },
   MerchantNoCollectionDetailView: {
     screen: MerchantNoCollectionDetailView,
-
     navigationOptions: {
       headerTitle: 'Lihat Alasan',
+      headerTitleStyle: [GlobalFont.textHeaderPage],
+      headerStyle: {
+        backgroundColor: masterColor.backgroundWhite
+      },
+      headerRight: <View />,
+      gesturesEnabled: false
+    }
+  },
+  MerchantPromisePayView: {
+    screen: MerchantPromisePayView,
+    navigationOptions: {
+      headerTitle: 'Janji Bayar',
       headerTitleStyle: [GlobalFont.textHeaderPage],
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite

@@ -1,9 +1,5 @@
-import {
-  React,
-  View,
-  Text,
-  TouchableOpacity
-} from '../../../library/reactPackage';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { React, View } from '../../../library/reactPackage';
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -15,8 +11,8 @@ import {
 import ModalBottomMerchantNoCollectionReason from './ModalBottomMerchantNoCollectionReason';
 import MerchantCollectionReasonList from './MerchantCollectionReasonList';
 import { ButtonSingle, LoadingPage } from '../../../library/component';
-import { ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS } from '../../../constants';
 import NavigationService from '../../../navigation/NavigationService';
+import { REASON_NO_PAYMENT } from '../../../constants';
 
 const MerchantNoCollectionReason = () => {
   const dispatch = useDispatch();
@@ -27,6 +23,10 @@ const MerchantNoCollectionReason = () => {
   const [reasonLength, setReasonLength] = useState(0);
   const [limit, setLimit] = useState(20);
   const [isSaveButtonDisable, setIsSaveButtonDisable] = useState(true);
+  const [
+    dataSfaCheckCollectionStatusLength,
+    setDataSfaCheckCollectionStatusLength
+  ] = useState(0);
   const [
     collectionTransactionDetails,
     setCollectionTransactionDetails
@@ -50,7 +50,6 @@ const MerchantNoCollectionReason = () => {
   /** RENDER USE EFFECT */
   /** get reason not to pay on render screen */
   useEffect(() => {
-    getReasonNotToPay();
     getCollectionTransactionDetailId();
     getCollectionList(true, 20);
   }, []);
@@ -66,8 +65,9 @@ const MerchantNoCollectionReason = () => {
 
   /** save button disabled if all reason not filled */
   useEffect(() => {
-    const collectionLength = dataSfaCheckCollectionStatus.meta.total;
-    if (reasonLength === collectionLength) {
+    // const collectionLength = dataSfaCheckCollectionStatus.meta.total;
+
+    if (reasonLength === dataSfaCheckCollectionStatusLength) {
       setIsSaveButtonDisable(false);
     } else {
       setIsSaveButtonDisable(true);
@@ -95,10 +95,23 @@ const MerchantNoCollectionReason = () => {
     if (prevdataGetCollectionList !== dataGetCollectionList) {
       if (dataGetCollectionList) {
         setDataPostTransaction(dataGetCollectionList.data.orderParcels);
+        setDataSfaCheckCollectionStatusLength(
+          dataGetCollectionList.data.orderParcels.length
+        );
       }
     }
   }, [dataGetCollectionList]);
+
   /**=== RENDER FUNCTION === */
+
+  /** FUNCTION NAVIGATE TO ADD COLLECTION */
+  const navigateToPromisePayView = data => {
+    NavigationService.navigate('MerchantPromisePayView', {
+      selectedReason: data.selectedReason,
+      promisePayList: data.promisePayList,
+      onSavePromisePayDate
+    });
+  };
   /** handle loadmore get collectin */
   const onHandleLoadMore = () => {
     if (dataGetCollectionList) {
@@ -130,46 +143,71 @@ const MerchantNoCollectionReason = () => {
   };
   /** function post transaction checkout */
   const postTransaction = () => {
-    const data = {};
     const storeId = parseInt(selectedMerchant.storeId, 10);
     const collectionTransactionDetailIds = selectedMerchant.collectionIds;
 
-    data.storeId = storeId;
-    data.collectionTransactionDetailIds = collectionTransactionDetailIds;
-    data.collectionTransactionDetails = collectionTransactionDetails;
+    const data = {
+      storeId,
+      collectionTransactionDetailIds,
+      collectionTransactionDetails
+    };
     dispatch(sfaPostTransactionCheckoutProcess(data));
   };
   /** GET DATA REASON NOT TO PAY */
-  const getReasonNotToPay = () => {
-    dispatch(sfaGetReasonNotToPayProcess());
+  const getReasonNotToPay = orderParcelId => {
+    dispatch(sfaGetReasonNotToPayProcess({ orderParcelId }));
   };
-  let onPressReason = index => {
+  let onPressReason = (index, orderParcelId) => {
+    getReasonNotToPay(orderParcelId);
     setIsModalReasonOpen(true);
     setIndexCollection(index);
   };
+
+  const onSavePromisePayDate = item => {
+    saveReason(item);
+  };
+
   let onSaveReason = item => {
+    if (item.selectedReasonId === REASON_NO_PAYMENT.JANJI_BAYAR) {
+      const promisePayList = dataSfaGetReasonNotToPay.data.find(
+        v => v.id === REASON_NO_PAYMENT.JANJI_BAYAR
+      );
+      setIsModalReasonOpen(false);
+      navigateToPromisePayView({
+        selectedReason: item,
+        promisePayList: promisePayList.data
+      });
+    } else {
+      saveReason(item);
+    }
+  };
+
+  const saveReason = item => {
     const index = indexCollection;
-    const data = dataPostTransaction;
     const dataReason = dataReasonList;
-    const reasonNotPay = item.selectedReasonText;
-    const reasonNotToPayId = item.selectedReasonId;
     const dataPost = collectionTransactionDetails;
-    data.splice(index, 1, { ...data[index], reasonNotPay });
+    const reasonNotPay = item.selectedReasonText;
+
     dataReason.splice(index, 1, {
       ...dataReason[index],
       reasonNotPay
     });
     dataPost.splice(index, 1, {
       ...dataPost[index],
-      reasonNotToPayId
+      reasonNotToPayId: item.selectedReasonId,
+      promiseDate: item?.promisePayDate || null
     });
+
     setCollectionTransactionDetails(dataPost);
     setDataReasonList(dataReason);
     setReasonLength(dataReasonList.length);
-    setDataPostTransaction(data);
+    setDataPostTransaction(prevState => {
+      prevState.splice(index, 1, { ...prevState[index], reasonNotPay });
+      return [...prevState];
+    });
     setIsModalReasonOpen(false);
   };
-  
+
   const renderModalBottomNotCollectReason = () => {
     return isModalReasonOpen && dataSfaGetReasonNotToPay ? (
       <ModalBottomMerchantNoCollectionReason
@@ -196,6 +234,8 @@ const MerchantNoCollectionReason = () => {
       </>
     );
   };
+
+  /** RENDER MAIN */
   return dataGetCollectionList && !loadingGetCollectionList ? (
     <>
       <View style={{ flex: 1 }}>
@@ -204,6 +244,7 @@ const MerchantNoCollectionReason = () => {
             onRef={ref => (onPressReason = ref)}
             openReason={onPressReason.bind(this)}
             dataList={dataPostTransaction}
+            extraData={dataPostTransaction}
             loadmore={onHandleLoadMore}
           />
         </View>

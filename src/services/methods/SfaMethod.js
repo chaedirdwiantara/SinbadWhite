@@ -216,9 +216,11 @@ function getCollectionListStatus() {
 }
 
 /** GET REASON NOT TO PAY LIST */
-function getReasonNotToPay() {
+function getReasonNotToPay(data) {
   return ApiRest({
-    path: 'collection/v1/no-payment-reasons',
+    path: `collection/v1/no-payment-reasons?orderParcelId=${
+      data.orderParcelId
+    }`,
     method: 'GET'
   });
 }

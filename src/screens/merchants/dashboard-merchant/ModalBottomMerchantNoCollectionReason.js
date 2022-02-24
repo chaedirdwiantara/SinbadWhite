@@ -9,6 +9,7 @@ import { ModalBottomWithClose, ButtonSingle } from '../../../library/component';
 import { useEffect, useState } from 'react';
 import { Fonts } from '../../../helpers';
 import { Color } from '../../../config';
+
 const ModalBottomMerchantNoCollectionReason = props => {
   const [isButtonDisabled, setIsButtonDisaled] = useState(false);
   const [selectedReasonId, setSelectedReasonId] = useState('');
@@ -93,6 +94,7 @@ const ModalBottomMerchantNoCollectionReason = props => {
       </>
     );
   };
+
   /** MAIN */
   return (
     <ModalBottomWithClose
@@ -105,10 +107,10 @@ const ModalBottomMerchantNoCollectionReason = props => {
     />
   );
 };
+
 const styles = StyleSheet.create({
   boxContentItem: {
     marginHorizontal: 16,
-    marginBottom: 8,
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 16.5,
@@ -139,6 +141,7 @@ const styles = StyleSheet.create({
   }
 });
 export default ModalBottomMerchantNoCollectionReason;
+
 /**
  * ============================
  * NOTES
