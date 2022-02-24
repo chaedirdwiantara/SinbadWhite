@@ -11,7 +11,12 @@ import {
 import { MaterialIcon } from '../../library/thirdPartyPackage';
 import masterColor from '../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormatSpace } from '../../helpers';
-import { APPROVED, PENDING, RETUR } from '../../constants/collectionConstants';
+import {
+  APPROVED,
+  PENDING,
+  PROMO,
+  RETUR
+} from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 import {
   LoadingPage,
@@ -275,13 +280,17 @@ const SfaBillingLogView = props => {
 
           <View style={styles.salesContainer}>
             <View>
-              {collectionMethodId === RETUR &&
+              {(collectionMethodId === RETUR || collectionMethodId === PROMO) &&
                 renderContentListGlobal('Nama Faktur', item.invoiceGroupName)}
-              {renderContentListGlobal('Nomor Pesanan', item.orderCode)}
+              {collectionMethodId !== RETUR &&
+                collectionMethodId !== PROMO &&
+                renderContentListGlobal('Nomor Pesanan', item.orderCode)}
               {renderContentListGlobal(
                 'Tanggal Pembayaran',
                 toLocalTime(item.createdAt, 'DD MMM YYYY')
               )}
+              {(collectionMethodId === RETUR || collectionMethodId === PROMO) &&
+                renderContentListGlobal('Nomor Pesanan', item.orderCode)}
               {renderContentListGlobal(
                 'Metode Penagihan',
                 item.paymentCollectionMethodName
