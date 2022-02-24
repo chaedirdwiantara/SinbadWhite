@@ -300,7 +300,10 @@ const SfaCollectionDetailView = props => {
             })
           : null}
         {CardBody({
-          title: 'Jumlah Penagihan',
+          title:
+            paymentCollectionType.id === PROMO
+              ? 'Nilai Penagihan'
+              : 'Jumlah Penagihan',
           value: isNumber(amount) ? MoneyFormatSpace(amount) : '',
           styleCardView: styles.styleCardView
         })}
@@ -400,7 +403,7 @@ const SfaCollectionDetailView = props => {
           styleCardView: styles.styleCardView
         })}
         {CardBody({
-          title: 'Name Salesman',
+          title: 'Nama Salesman',
           value: collectionDetail.salesmanName,
           styleCardView: styles.styleCardView
         })}
