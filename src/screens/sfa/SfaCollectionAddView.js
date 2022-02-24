@@ -279,6 +279,7 @@ const SfaCollectionAddView = props => {
         setTotalAmount(parseInt(total, 10));
         break;
       case PROMO:
+        setTotalAmount(amount);
         break;
     }
   };
