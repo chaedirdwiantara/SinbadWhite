@@ -204,7 +204,7 @@ const SfaNavigator = {
   SfaCollectionEditView: {
     screen: SfaCollectionEditView,
     navigationOptions: {
-      headerTitle: 'Ubah Penagihan',
+      headerTitle: 'Edit Penagihan',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
@@ -223,7 +223,7 @@ const SfaNavigator = {
   SfaBillingEditView: {
     screen: SfaBillingEditView,
     navigationOptions: {
-      headerTitle: 'Ubah Pembayaran',
+      headerTitle: 'Edit Pembayaran',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
