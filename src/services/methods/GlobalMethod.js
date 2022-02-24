@@ -4,9 +4,8 @@ import { Store } from '../../state/Store';
 import { DEFAULT_PRIVILEGE } from '../../helpers/RoleBaseAccessControl';
 
 function getListAndSearch(data) {
-  
   const stateData = Store.getState();
-  
+
   /**
    * PROPS
    * data.type =  'vehicleMerchant' / 'hierarchyMerchant' / 'clusterMerchant' / 'typeMerchant' / 'groupMerchant' / 'segmentMerchant'
@@ -46,21 +45,25 @@ function getListAndSearch(data) {
     case 'province':
       listAndSearchApi = 'provinces?';
       break;
-    case 'city':
-      listAndSearchApi = `locations?type=city&provinceId=${
-        stateData.global.dataLocationVolatile.provinceId
-      }&`;
+    case 'city': {
+      const { provinceId } = stateData.global.dataLocationVolatile;
+      listAndSearchApi = `locations?type=city&provinceId=${provinceId}&`;
       break;
-    case 'district':
-      listAndSearchApi = `locations?type=district&city=${
-        stateData.global.dataLocationVolatile.cityName
-      }&`;
+    }
+    case 'district': {
+      const { cityName, provinceId } = stateData.global.dataLocationVolatile;
+      listAndSearchApi = `locations?type=district&city=${cityName}&provinceId=${provinceId}&`;
       break;
-    case 'urban':
-      listAndSearchApi = `locations?type=urban&district=${
-        stateData.global.dataLocationVolatile.districtName
-      }&`;
+    }
+    case 'urban': {
+      const {
+        cityName,
+        provinceId,
+        districtName
+      } = stateData.global.dataLocationVolatile;
+      listAndSearchApi = `locations?type=urban&district=${districtName}&city=${cityName}&provinceId=${provinceId}&`;
       break;
+    }
     case 'warehouse':
       listAndSearchApi = `warehouses?supplierIds=${JSON.stringify(
         userSupplierMapping()
@@ -185,33 +188,36 @@ function userStoreId() {
 }
 
 //** FORMATTER TEXTINPUT */
-function addGaps(string = "", gaps, spacer){
+function addGaps(string = '', gaps, spacer) {
   const offsets = [0].concat(gaps).concat([string.length]);
-  return offsets.map((end, index) => {
-    if (index === 0) return "";
-    const start = offsets[index - 1];
-    return string.substr(start, end - start);
-  }).filter(part => part !== "").join(spacer);
-};
+  return offsets
+    .map((end, index) => {
+      if (index === 0) return '';
+      const start = offsets[index - 1];
+      return string.substr(start, end - start);
+    })
+    .filter(part => part !== '')
+    .join(spacer);
+}
 /** ROLE BASE ACCESS CONTROL */
-export function remappingPrivilege(privilege){
-  if(!privilege || privilege.length === 0){
-    return DEFAULT_PRIVILEGE
+export function remappingPrivilege(privilege) {
+  if (!privilege || privilege.length === 0) {
+    return DEFAULT_PRIVILEGE;
   }
-  const temp = {...DEFAULT_PRIVILEGE}
-  if(Array.isArray(privilege)){
+  const temp = { ...DEFAULT_PRIVILEGE };
+  if (Array.isArray(privilege)) {
     for (const key in temp) {
-      let flag = false
+      let flag = false;
       privilege.forEach(el => {
-        if(temp[key].name === el.privilege){
-          flag = true
-          return
+        if (temp[key].name === el.privilege) {
+          flag = true;
+          return;
         }
-      })
-      temp[key].status = flag
+      });
+      temp[key].status = flag;
     }
   }
-  return temp
+  return temp;
 }
 
 export const GlobalMethod = {
