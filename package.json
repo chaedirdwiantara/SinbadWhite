@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "clear": "cd ./android && ./gradlew clean && ./gradlew cleanBuildCache",
     "build": "cd ./android && ./gradlew clean && ./gradlew cleanBuildCache && ./gradlew app:bundleRelease",
+    "build:android": "cd ./android && ./gradlew clean && ./gradlew cleanBuildCache && ./gradlew app:assembleRelease",
     "postinstall": "rm -rf node_modules/*/.git && npx jetify"
   },
   "dependencies": {

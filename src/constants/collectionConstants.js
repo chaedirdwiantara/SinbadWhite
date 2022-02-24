@@ -4,7 +4,7 @@
  * 2. Check
  * 3. Giro
  * 4. Transfer
- * 5. Promo
+ * 5. Promo (Kerjasama Promosi)
  * 6. Retur
  */
 export const CASH = 1;

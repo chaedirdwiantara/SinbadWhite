@@ -259,13 +259,15 @@ const SfaBillingDetailView = props => {
       <>
         {CardBody({
           title:
-            paymentCollectionType.id === RETUR
+            paymentCollectionType.id === RETUR ||
+            paymentCollectionType.id === PROMO
               ? 'Kode Penagihan'
               : 'Kode Pembayaran',
           value: billingPaymentCode || '-',
           styleCardView: styles.styleCardView
         })}
-        {paymentCollectionType.id !== RETUR
+        {paymentCollectionType.id !== RETUR &&
+        paymentCollectionType.id !== PROMO
           ? CardBody({
               title: 'Kode Pembayaran Ref',
               value: billingPaymentRef || '-',
@@ -305,12 +307,12 @@ const SfaBillingDetailView = props => {
       <>
         {CardBody({
           title: 'Kode Salesman',
-          value: dataSfaGetBillingDetail?.salesCode,
+          value: dataSfaGetBillingDetail?.data?.salesCode,
           styleCardView: styles.styleCardView
         })}
         {CardBody({
           title: 'Nama Salesman',
-          value: dataSfaGetBillingDetail?.salesName,
+          value: dataSfaGetBillingDetail?.data?.salesName,
           styleCardView: styles.styleCardView
         })}
       </>
@@ -402,7 +404,8 @@ const SfaBillingDetailView = props => {
           valueStyle: { marginBottom: 16, marginTop: 2 },
           styleCardView: styles.styleCardView
         })}
-        {paymentCollectionType.id === RETUR &&
+        {(paymentCollectionType.id === RETUR ||
+          paymentCollectionType.id === PROMO) &&
           CardBody({
             title: 'Metode Penagihan',
             value: paymentCollectionType?.name || '-',
