@@ -362,7 +362,11 @@ class HomeView extends Component {
         NavigationService.navigate('MerchantView');
         break;
       case 'journey_plan_menu':
-        this.setState({ openModalJPMenu: true });
+        if (this.props.privileges.data?.collection?.status) {
+          this.setState({ openModalJPMenu: true });
+        } else {
+          NavigationService.navigate('JourneyView');
+        }
         break;
       case 'journey_plan':
         NavigationService.navigate('JourneyView');
