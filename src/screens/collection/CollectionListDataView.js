@@ -75,7 +75,7 @@ class CollectionListDataView extends Component {
   }
   /** === DATA VIEW === */
   renderData() {
-    return this.props.data.length < 0 ? (
+    return this.props.data.length > 0 ? (
       <View style={{ paddingHorizontal: 16, paddingVertical: 20 }}>
         <FlatList
           initialScrollIndex={0}
@@ -92,20 +92,24 @@ class CollectionListDataView extends Component {
   }
   /** === RENDER EMPTY DATA === */
   renderEmpty() {
-    return this.props.emptyData !== 'default' ? (
-      <EmptyData
-        top
-        title={'Store Kosong'}
-        description={
-          'Untuk hari ini tidak ada jadwal toko yang harus dikunjungi ya '
-        }
-      />
-    ) : (
-      <EmptyDataType2
-        top
-        title={'Maaf pencarian anda tidak ditemukan'}
-        description={'Silahkan masukan kata pencarian yang lain ya '}
-      />
+    return (
+      <View style={{ marginTop: '60%' }}>
+        {this.props.emptyData === 'default' ? (
+          <EmptyData
+            top
+            title={'Store Kosong'}
+            description={
+              'Untuk hari ini tidak ada jadwal toko yang harus dikunjungi ya '
+            }
+          />
+        ) : (
+          <EmptyDataType2
+            wideTitle
+            title={'Maaf pencarian anda tidak ditemukan'}
+            description={'Silahkan masukan kata pencarian yang lain ya '}
+          />
+        )}
+      </View>
     );
   }
   /** === MAIN RENDER === */
