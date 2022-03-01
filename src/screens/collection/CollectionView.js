@@ -4,19 +4,26 @@ import {
   View,
   TouchableOpacity,
   Text,
-  StyleSheet
+  StyleSheet,
+  Image
 } from '../../library/reactPackage';
 import {
   bindActionCreators,
   connect,
   MaterialIcon
 } from '../../library/thirdPartyPackage';
-import { ModalBottomType3, SearchBarType8 } from '../../library/component';
+import {
+  ButtonSingle,
+  ModalBottomType3,
+  ModalBottomType4,
+  SearchBarType8
+} from '../../library/component';
 import { GlobalStyle, Fonts } from '../../helpers';
 import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
 
 import CollectionListDataView from './CollectionListDataView';
+import NavigationService from '../../navigation/NavigationService';
 const dummyData = [
   {
     storeId: 12345,
@@ -37,11 +44,36 @@ const dummyData = [
     collectionIds: [5, 6, 7, 8]
   }
 ];
+const dataDummy = {
+  meta: {
+    skip: 0,
+    limit: 20,
+    total: 2
+  },
+  data: {
+    stores: [
+      {
+        id: 1081595,
+        name: 'Toko Baru',
+        address: 'Alamat',
+        externalId: 'SXXXXXX',
+        collectionTransactionDetailIds: [1050, 1051, 1052],
+        totalOutstandingAmount: 1000000,
+        collectionStatus: 'ASSIGNED',
+        isInPjp: true
+      }
+    ],
+    totalStore: 5,
+    totalStoreAlreadyVisit: 3,
+    totalOutstandingAmount: 213774
+  }
+};
 class CollectionView extends Component {
   constructor(props) {
     super(props);
     this.state = {
       openModalCollectionMenu: false,
+      openModalExistInPjp: false,
       collectionMenu: [
         { title: 'Lakukan Penagihan', screen: 'SfaView' },
         {
@@ -57,10 +89,16 @@ class CollectionView extends Component {
   parentFunction(item) {
     switch (item.type) {
       case 'modal_collection':
-        this.setState({
-          storeName: item.storeName,
-          openModalCollectionMenu: true
-        });
+        if (item.isInPjp) {
+          this.setState({
+            openModalExistInPjp: true
+          });
+        } else {
+          this.setState({
+            storeName: item.storeName,
+            openModalCollectionMenu: true
+          });
+        }
 
         break;
 
@@ -72,7 +110,7 @@ class CollectionView extends Component {
   renderDataList() {
     return (
       <CollectionListDataView
-        data={dummyData}
+        data={dataDummy.data.stores || []}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
         emptyData={this.state.emptyDataType}
@@ -129,6 +167,42 @@ class CollectionView extends Component {
       </>
     );
   }
+  /** === RENDER MODAL STORE EXIST IN PJP */
+  renderModalExistInPjp() {
+    return this.state.openModalExistInPjp ? (
+      <ModalBottomType4
+        open={this.state.openModalExistInPjp}
+        close={this.props.close}
+        typeClose={'cancel'}
+        onPress={() => console.log('lala')}
+        buttonTitle={'Masuk ke Journey Plan'}
+        content={this.renderExistInPjp()}
+      />
+    ) : (
+      <View />
+    );
+  }
+  /** === RENDER EXIST IN PJP === */
+  renderExistInPjp() {
+    return (
+      <>
+        <View>
+          <View style={{ alignItems: 'center' }}>
+            <Image
+              source={require('../../assets/icons/collection/pjp_task.png')}
+              style={{ height: 79.5, width: 83.3 }}
+            />
+            <Text style={[Fonts.type7, { marginVertical: 16 }]}>
+              Toko Anda berada di Journey Plan
+            </Text>
+            <Text style={[Fonts.type9, { marginBottom: 10 }]}>
+              Silahkan masuk ke journey plan
+            </Text>
+          </View>
+        </View>
+      </>
+    );
+  }
   /** === MAIN RENDER === */
   render() {
     return (
@@ -136,6 +210,7 @@ class CollectionView extends Component {
         {this.renderSearchBar()}
         {this.renderDataList()}
         {this.renderModalCollectionMenu()}
+        {this.renderModalExistInPjp()}
       </>
     );
   }

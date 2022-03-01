@@ -39,23 +39,25 @@ class CollectionListDataView extends Component {
       >
         <View>
           <Text style={[Fonts.type9, { marginBottom: 10 }]}>
-            {item.storeId}
+            {item.id || 0}
           </Text>
           <Text style={[Fonts.type7, { marginBottom: 4 }]}>
-            {item.storeName}
+            {item.name || ''}
           </Text>
-          <Text style={Fonts.type17}>{item.storeAddress}</Text>
+          <Text style={Fonts.type17}>{item.address || ''}</Text>
           <View style={styles.itemContainer}>
-            <Text style={Fonts.type17}>{item.totalInvoices} Invoice</Text>
+            <Text style={Fonts.type17}>
+              {item.collectionTransactionDetailIds.length || 0} Invoice
+            </Text>
             <Text style={Fonts.type17}> | </Text>
             <Text style={Fonts.type17}>
-              Total Tagihan {MoneyFormat(item.outstandingAmount)}
+              Total Tagihan {MoneyFormat(item.totalOutstandingAmount || 0)}
             </Text>
           </View>
         </View>
         <View style={{ alignItems: 'center' }}>
           <Image
-            source={this.checkCollectionActivity(item.storeStatus)}
+            source={this.checkCollectionActivity(item.collectionStatus)}
             style={styles.iconCollectionDoor}
           />
           <TouchableOpacity
@@ -63,7 +65,8 @@ class CollectionListDataView extends Component {
             onPress={() =>
               this.props.parentFunction({
                 type: 'modal_collection',
-                storeName: item.storeName
+                storeName: item.name || '',
+                isInPjp: item.isInPjp || false
               })
             }
           >
