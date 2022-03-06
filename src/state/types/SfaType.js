@@ -183,3 +183,18 @@ export const SFA_POST_TRANSACTION_CHECKOUT_RESET =
 export const SFA_GET_RETURN_BALANCE_PROCESS = 'SfaGetReturnBalanceProcess';
 export const SFA_GET_RETURN_BALANCE_SUCCESS = 'SfaGetReturnBalanceSuccess';
 export const SFA_GET_RETURN_BALANCE_FAILED = 'SfaGetReturnBalanceFailed';
+
+/** GET STORE COLLECTION LIST */
+export const SFA_GET_STORE_COLLECTION_LIST_PROCESS =
+  'SfaGetStoreCollectionListProcess';
+export const SFA_GET_STORE_COLLECTION_LIST_SUCCESS =
+  'SfaGetStoreCollectionListSuccess';
+export const SFA_GET_STORE_COLLECTION_LIST_FAILED =
+  'SfaGetStoreCollectionListFailed';
+export const SFA_GET_STORE_COLLECTION_LIST_RESET =
+  'SfaGetStoreCollectionListReset';
+export const SFA_GET_STORE_COLLECTION_LIST_REFRESH =
+  'SfaGetStoreCollectionListRefresh';
+export const SFA_GET_STORE_COLLECTION_LIST_LOADMORE =
+  'SfaGetStoreCollectionListLoadmore';
+export const SELECTED_STORE = 'selectedStore';

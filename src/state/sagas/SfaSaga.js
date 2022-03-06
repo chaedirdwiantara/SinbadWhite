@@ -334,6 +334,17 @@ function* getReturnBalance(actions) {
     yield put(ActionCreators.sfaGetReturnBalanceFailed(error));
   }
 }
+/** GET STORE COLLECTION LIST */
+function* getStoreCollectionList(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getStoreCollectionList(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetStoreCollectionListSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetStoreCollectionListFailed(error));
+  }
+}
 
 /** === SAGA FUNCTION === */
 function* SfaSaga() {
@@ -398,6 +409,10 @@ function* SfaSaga() {
     postTransactionCheckout
   );
   yield takeEvery(types.SFA_GET_RETURN_BALANCE_PROCESS, getReturnBalance);
+  yield takeEvery(
+    types.SFA_GET_STORE_COLLECTION_LIST_PROCESS,
+    getStoreCollectionList
+  );
 }
 
 export default SfaSaga;
