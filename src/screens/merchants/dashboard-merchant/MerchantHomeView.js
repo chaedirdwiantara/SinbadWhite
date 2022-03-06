@@ -1085,8 +1085,7 @@ class MerchantHomeView extends Component {
             items =>
               items.activityName ===
               ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
-          ) ||
-          this.state.isNotCollected
+          )
         ) {
           return (
             <TouchableOpacity

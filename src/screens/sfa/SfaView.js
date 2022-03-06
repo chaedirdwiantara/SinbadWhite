@@ -34,6 +34,7 @@ import {
   merchantGetLogAllActivityProcessV2
 } from '../../state/actions';
 const SfaView = props => {
+  const { params } = props.navigation.state;
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('');
   const {
@@ -44,7 +45,8 @@ const SfaView = props => {
     loadingGetCollectionListStatus, // collection
     dataGetCollectionListStatus, // collection
     loadingGetReferenceList, // collection
-    dataGetReferenceList // collection
+    dataGetReferenceList, // collection
+    selectedStore
   } = useSelector(state => state.sfa);
   const { selectedMerchant, dataGetLogAllActivityV2 } = useSelector(
     state => state.merchant
@@ -71,12 +73,14 @@ const SfaView = props => {
   }, []);
 
   useEffect(() => {
-    if (
-      !dataGetLogAllActivityV2.find(
-        item => item.activityName === 'collection_ongoing'
-      )
-    ) {
-      postCollectionOngoing();
+    if (!(params?.type || '') === 'COLLECTION_LIST') {
+      if (
+        !(dataGetLogAllActivityV2 || []).find(
+          item => item.activityName === 'collection_ongoing'
+        )
+      ) {
+        postCollectionOngoing();
+      }
     }
   }, []);
 
@@ -86,7 +90,7 @@ const SfaView = props => {
   };
   /** POST ACTIVITY COLLECTION ONGOING */
   const postCollectionOngoing = () => {
-    const journeyBookStoreId = selectedMerchant.journeyBookStores.id
+    const journeyBookStoreId = selectedMerchant.journeyBookStores.id;
     const data = {
       journeyBookStoreId,
       activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING
@@ -96,8 +100,16 @@ const SfaView = props => {
   };
   /** TO GET INVOICE LIST */
   const getInvoiceList = (loading, page) => {
+    const collectionTransactionDetailIds =
+      (params?.type || '') === 'COLLECTION_LIST'
+        ? selectedStore.collectionTransactionDetailIds || []
+        : selectedMerchant.collectionIds || [];
+    const storeId =
+      (params?.type || '') === 'COLLECTION_LIST'
+        ? parseInt(selectedStore.id, 10) || 0
+        : parseInt(selectedMerchant.storeId, 10) || 0;
     const data = {
-      storeId: parseInt(selectedMerchant.storeId, 10),
+      storeId: storeId,
       userId: parseInt(id, 10),
       supplierId: parseInt(userSuppliers[0].supplier.id, 10),
       keyword: searchText,
@@ -106,7 +118,7 @@ const SfaView = props => {
       limit: page,
       skip: 0,
       collectionTransactionDetailStatus: null,
-      collectionTransactionDetailIds: selectedMerchant.collectionIds
+      collectionTransactionDetailIds
     };
     dispatch(sfaGetCollectionListProcess(data));
   };
@@ -117,9 +129,13 @@ const SfaView = props => {
 
   /** FUNCTION GET COLLECTION LIST */
   const getCollectionList = (loading, page) => {
+    const storeId =
+      (params?.type || '') === 'COLLECTION_LIST'
+        ? parseInt(selectedStore.id, 10) || 0
+        : parseInt(selectedMerchant.storeId, 10) || 0;
     let data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
-      storeId: parseInt(selectedMerchant.storeId, 10),
+      storeId,
       userId: parseInt(userSuppliers[0].userId, 10),
       approvalStatus: approvalStatusCollection,
       keyword: searchTextCollection,
@@ -242,6 +258,7 @@ const SfaView = props => {
           isNavigateFromTab={true}
           keyword={searchTextCollection}
           approvalStatus={approvalStatusCollection}
+          type={params?.type || ''}
         />
       </>
     );

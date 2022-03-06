@@ -82,8 +82,18 @@ class CollectionView extends Component {
         }
       ],
       storeName: '',
-      emptyDataType: 'default'
+      emptyDataType: 'default',
+      searchKeyword: ''
     };
+  }
+  componentDidMount() {
+    this.props.sfaGetStoreCollectionListReset();
+    this.getStoreCollectionList(true, '');
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.searchKeyword !== this.state.searchKeyword) {
+      this.getStoreCollectionList(true, this.state.searchKeyword);
+    }
   }
   /** === PARENT FUNCTION === */
   parentFunction(item) {
@@ -106,23 +116,45 @@ class CollectionView extends Component {
         break;
     }
   }
+  /** === GET STORE COLLECTION LIST === */
+  getStoreCollectionList(loading, searchKey) {
+    const data = {
+      salesId: parseInt(this.props?.user?.id || 0, 10),
+      supplierId: parseInt(
+        this.props?.user?.userSuppliers[0]?.supplier?.id || 0,
+        10
+      ),
+      skip: 1,
+      limit: 10,
+      loading,
+      searchKey
+    };
+    this.props.sfaGetStoreCollectionListReset();
+    this.props.sfaGetStoreCollectionListProcess(data);
+  }
+  //** FUNCTION ON CHANGE SEARCH KEY */
+  onChangeSearchKey = searchKey => {
+    this.setState({ searchKeyword: searchKey || '' });
+  };
   /** === RENDER DATA LIST VIEW === */
-  renderDataList() {
+  renderDataList = () => {
     return (
       <CollectionListDataView
-        data={dataDummy.data.stores || []}
+        data={this.props.sfa.dataGetStoreCollectionList || []}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
         emptyData={this.state.emptyDataType}
       />
     );
-  }
+  };
   /** === RENDER SEARCH BAR === */
   renderSearchBar() {
     return (
       <SearchBarType8
         placeholder="Cari nama/ID Toko disini"
-        fetchFn={searchKeyword => console.log(searchKeyword)}
+        fetchFn={searchKeyword => this.onChangeSearchKey(searchKeyword)}
+        onRef={ref => (this.parentFunction = ref)}
+        parentFunction={() => console.log('search enter')}
       />
     );
   }
@@ -142,6 +174,8 @@ class CollectionView extends Component {
   }
   /** === RENDER COLLECTION MENU === */
   renderCollectionMenu() {
+    const collectionIds =
+      this.props.sfa?.selectedStore?.collectionTransactionDetailIds || [];
     return (
       <>
         <View style={{ marginBottom: 8 }}>
@@ -152,6 +186,10 @@ class CollectionView extends Component {
                 style={[GlobalStyle.shadowForBox, styles.menuJPContainer]}
                 onPress={() => {
                   this.setState({ openModalCollectionMenu: false });
+                  NavigationService.navigate('SfaView', {
+                    type: 'COLLECTION_LIST',
+                    collectionIds
+                  });
                 }}
               >
                 <Text style={[Fonts.type7]}>{item.title}</Text>
@@ -208,9 +246,15 @@ class CollectionView extends Component {
     return (
       <>
         {this.renderSearchBar()}
-        {this.renderDataList()}
-        {this.renderModalCollectionMenu()}
-        {this.renderModalExistInPjp()}
+        {!this.props.sfa.loadingGetStoreCollectionList ? (
+          <>
+            {this.renderDataList()}
+            {this.renderModalCollectionMenu()}
+            {this.renderModalExistInPjp()}
+          </>
+        ) : (
+          <Text>Loading</Text>
+        )}
       </>
     );
   }
@@ -227,8 +271,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   }
 });
-const mapStateToProps = ({ user, auth, salesmanKpi, permanent }) => {
-  return { user, auth, salesmanKpi, permanent };
+const mapStateToProps = ({ user, auth, sfa }) => {
+  return { user, auth, sfa };
 };
 
 const mapDispatchToProps = dispatch => {

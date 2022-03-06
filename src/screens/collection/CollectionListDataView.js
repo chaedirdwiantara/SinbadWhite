@@ -14,6 +14,33 @@ import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import * as ActionCreators from '../../state/actions';
 import { EmptyData, EmptyDataType2 } from '../../library/component';
 class CollectionListDataView extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  onHandleRefresh = () => {
+    this.props.sfaGetStoreCollectionListReset();
+    this.props.sfaGetStoreCollectionListRefresh();
+    this.getStoreCollectionList(true);
+  };
+  /** === GET STORE COLLECTION LIST === */
+  getStoreCollectionList = loading => {
+    const data = {
+      salesId: parseInt(this.props?.user?.id || 0, 10),
+      supplierId: parseInt(
+        this.props?.user?.userSuppliers[0]?.supplier?.id || 0,
+        10
+      ),
+      skip: 1,
+      limit: 10,
+      loading: true,
+      searchKey: '',
+      loading
+    };
+    this.props.sfaGetStoreCollectionListReset();
+    this.props.sfaGetStoreCollectionListProcess(data);
+  };
   /** CHECK COLLECTION ACTIVITY */
   checkCollectionActivity(status) {
     // check already check out or not
@@ -37,7 +64,7 @@ class CollectionListDataView extends Component {
           justifyContent: 'space-between'
         }}
       >
-        <View>
+        <View style={{ width: '80%' }}>
           <Text style={[Fonts.type9, { marginBottom: 10 }]}>
             {item.id || 0}
           </Text>
@@ -62,13 +89,14 @@ class CollectionListDataView extends Component {
           />
           <TouchableOpacity
             style={styles.iconContainer}
-            onPress={() =>
+            onPress={() => {
               this.props.parentFunction({
                 type: 'modal_collection',
                 storeName: item.name || '',
                 isInPjp: item.isInPjp || false
-              })
-            }
+              });
+              this.props.selectedStore(item);
+            }}
           >
             <Text style={Fonts.type83}>Tagih</Text>
           </TouchableOpacity>
@@ -87,6 +115,8 @@ class CollectionListDataView extends Component {
           renderItem={this.renderItem.bind(this)}
           keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={this.renderSeparator}
+          onRefresh={this.onHandleRefresh}
+          refreshing={this.props.sfa.refreshGetStoreCollectionList}
         />
       </View>
     ) : (
@@ -99,7 +129,7 @@ class CollectionListDataView extends Component {
       <View style={{ marginTop: '60%' }}>
         {this.props.emptyData === 'default' ? (
           <EmptyData
-            top
+            heighTitle
             title={'Store Kosong'}
             description={
               'Untuk hari ini tidak ada jadwal toko yang harus dikunjungi ya '
@@ -117,11 +147,14 @@ class CollectionListDataView extends Component {
   }
   /** === MAIN RENDER === */
   render() {
-    return <View>{this.renderData()}</View>;
+    return <View style={styles.mainContainer}>{this.renderData()}</View>;
   }
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1
+  },
   iconCollectionDoor: {
     width: 15,
     height: 15,
@@ -136,8 +169,8 @@ const styles = StyleSheet.create({
   },
   itemContainer: { flexDirection: 'row', marginTop: 5 }
 });
-const mapStateToProps = ({ user, auth, salesmanKpi, permanent }) => {
-  return { user, auth, salesmanKpi, permanent };
+const mapStateToProps = ({ sfa, user }) => {
+  return { sfa, user };
 };
 
 const mapDispatchToProps = dispatch => {
