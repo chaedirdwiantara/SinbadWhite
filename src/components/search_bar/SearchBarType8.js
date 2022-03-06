@@ -58,12 +58,8 @@ class SeacrhBarType8 extends Component {
               maxLength={this.props.maxLength}
               selectionColor={Color.mainColor}
               onEndEditing={() => {
-                if (this.state.keyword.length === 0) {
-                  Keyboard.dismiss();
-                  this.props.fetchFn(this.state.keyword);
-                } else {
-                  Keyboard.dismiss();
-                }
+                Keyboard.dismiss();
+                this.props.fetchFn(this.state.keyword);
               }}
               value={this.state.keyword}
               returnKeyType="search"
