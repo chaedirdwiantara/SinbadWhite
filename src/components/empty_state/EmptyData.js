@@ -21,13 +21,17 @@ class EmptyData extends Component {
   }
   /** === EMPTY STATE === */
   renderEmptyState() {
+    let paddingBottom = 10;
+    if (this.props.heighTitle) {
+      paddingBottom = 20;
+    }
     return (
       <View style={styles.boxEmpty}>
         <Image
           source={require('../../assets/images/sinbad_image/cry_sinbad.png')}
           style={GlobalStyle.fullImage}
         />
-        <View style={styles.boxTitle}>
+        <View style={[styles.boxTitle, { paddingBottom }]}>
           <Text style={[Fonts.type7, { textAlign: 'center' }]}>
             {this.props.title}
           </Text>
