@@ -198,11 +198,13 @@ const MerchantCollectionReasonList = props => {
       {renderLoadMore()}
     </>
   ) : (
-    <SfaNoDataView
-      topText={'Belum Ada Tagihan'}
-      midText={'Yuk belanja kebutuhanmu sekarang di Sinbad'}
-      bottomText={''}
-    />
+    <View style={{ marginTop: '20%' }}>
+      <SfaNoDataView
+        topText={'Belum Ada Tagihan'}
+        midText={'Yuk belanja kebutuhanmu sekarang di Sinbad'}
+        bottomText={''}
+      />
+    </View>
   );
 };
 

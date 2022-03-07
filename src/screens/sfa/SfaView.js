@@ -3,9 +3,10 @@ import {
   View,
   StyleSheet,
   Text,
-  SafeAreaView
+  SafeAreaView,
+  TouchableOpacity
 } from '../../library/reactPackage';
-
+import { MaterialIcon } from '../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
   SearchBarType1,
@@ -24,7 +25,8 @@ import {
   sfaGetCollectionListStatusProcess,
   SfaGetLoadMore,
   sfaGetRefresh,
-  sfaGetReferenceListProcess
+  sfaGetReferenceListProcess,
+  sfaModalCollectionListMenu
 } from '../../state/actions/SfaAction';
 import SfaTabView, { TAB_INVOICE, TAB_COLLECTION } from './SfaTabView';
 import SfaCollectionListView from './SfaCollectionListView';
@@ -33,7 +35,39 @@ import {
   merchantPostActivityProcessV2,
   merchantGetLogAllActivityProcessV2
 } from '../../state/actions';
+import NavigationService from '../../navigation/NavigationService';
+let navigationProps = '';
+/** === HEADER === */
+export const HeaderLeftSfaViewtOption = () => {
+  const type = navigationProps?.navigation?.state?.params?.type || '';
+  console.log(type, 'type');
+  const dispatch = useDispatch();
+  return (
+    <>
+      <View style={styles.headerLeftOption}>
+        <TouchableOpacity
+          style={[styles.boxButton]}
+          onPress={() => {
+            if (type === 'COLLECTION_LIST') {
+              dispatch(sfaModalCollectionListMenu(true));
+              NavigationService.goBack();
+            } else {
+              NavigationService.goBack();
+            }
+          }}
+        >
+          <MaterialIcon
+            name="arrow-back"
+            color={masterColor.fontBlack80}
+            size={24}
+          />
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+};
 const SfaView = props => {
+  navigationProps = props;
   const { params } = props.navigation.state;
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('');
@@ -64,6 +98,7 @@ const SfaView = props => {
    * FUNCTIONAL
    * =======================
    */
+
   useEffect(() => {
     getInvoiceList(true, 20);
   }, [paymentStatus, searchText]);
@@ -117,7 +152,7 @@ const SfaView = props => {
       loading: loading,
       limit: page,
       skip: 0,
-      collectionTransactionDetailStatus: null,
+      collectionTransactionDetailStatus: '',
       collectionTransactionDetailIds
     };
     dispatch(sfaGetCollectionListProcess(data));
@@ -498,7 +533,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   textLeft: { textAlign: 'right', marginBottom: 4 },
-  textRight: { marginBottom: 4 }
+  textRight: { marginBottom: 4 },
+  headerLeftOption: {
+    marginLeft: 16
+  }
 });
 
 export default SfaView;

@@ -1,20 +1,52 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { React, View } from '../../../library/reactPackage';
+import { React, View, TouchableOpacity } from '../../../library/reactPackage';
 import { useState, useEffect, useRef } from 'react';
+import { MaterialIcon } from '../../../library/thirdPartyPackage';
+import masterColor from '../../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   sfaGetReasonNotToPayProcess,
   sfaPostTransactionCheckoutProcess,
   sfaGetCollectionListProcess,
-  SfaGetLoadMore
+  SfaGetLoadMore,
+  sfaModalCollectionListMenu
 } from '../../../state/actions';
 import ModalBottomMerchantNoCollectionReason from './ModalBottomMerchantNoCollectionReason';
 import MerchantCollectionReasonList from './MerchantCollectionReasonList';
 import { ButtonSingle, LoadingPage } from '../../../library/component';
 import NavigationService from '../../../navigation/NavigationService';
 import { REASON_NO_PAYMENT } from '../../../constants';
-
-const MerchantNoCollectionReason = () => {
+let navigationProps = '';
+/** === HEADER === */
+export const HeaderLeftReasonOption = () => {
+  const type = navigationProps?.navigation?.state?.params?.type || '';
+  const dispatch = useDispatch();
+  return (
+    <>
+      <View style={{ marginLeft: 16 }}>
+        <TouchableOpacity
+          onPress={() => {
+            if (type === 'COLLECTION_LIST') {
+              dispatch(sfaModalCollectionListMenu(true));
+              NavigationService.goBack();
+            } else {
+              NavigationService.goBack();
+            }
+          }}
+        >
+          <MaterialIcon
+            name="arrow-back"
+            color={masterColor.fontBlack80}
+            size={24}
+          />
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+};
+const MerchantNoCollectionReason = props => {
+  navigationProps = props;
+  const { params } = props.navigation.state;
   const dispatch = useDispatch();
   const [isModalReasonOpen, setIsModalReasonOpen] = useState(false);
   const [dataPostTransaction, setDataPostTransaction] = useState(null);
@@ -37,10 +69,12 @@ const MerchantNoCollectionReason = () => {
     dataSfaPostTransactionCheckout,
     dataGetCollectionList,
     loadingGetCollectionList,
-    loadingSfaPostTransactionCheckout
+    loadingSfaPostTransactionCheckout,
+    selectedStore
   } = useSelector(state => state.sfa);
   const { id, userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
+
   /** RENDER USE REF */
   const prevdataSfaPostTransactionCheckout = useRef(
     dataSfaPostTransactionCheckout
@@ -54,12 +88,16 @@ const MerchantNoCollectionReason = () => {
     getCollectionList(true, 20);
   }, []);
   const getCollectionTransactionDetailId = () => {
-    const data = [];
-    dataSfaCheckCollectionStatus.data.orderParcels.map(item =>
-      data.push({
-        collectionTransactionDetailId: item.collectionTransactionDetailId
-      })
-    );
+    let data = [];
+    if (params?.type === 'COLLECTION_LIST') {
+      data = params?.collectionIds || [];
+    } else {
+      dataSfaCheckCollectionStatus.data.orderParcels.map(item =>
+        data.push({
+          collectionTransactionDetailId: item.collectionTransactionDetailId
+        })
+      );
+    }
     setCollectionTransactionDetails(data);
   };
 
@@ -129,15 +167,25 @@ const MerchantNoCollectionReason = () => {
   };
   /** get data collection */
   const getCollectionList = (loading, page) => {
+    const storeId = parseInt(
+      params?.type === 'COLLECTION_LIST'
+        ? selectedStore.id
+        : selectedMerchant.storeId,
+      10
+    );
+    const collectionTransactionDetailIds =
+      params?.type === 'COLLECTION_LIST'
+        ? params.collectionIds
+        : selectedMerchant.collectionIds;
     const data = {
-      storeId: parseInt(selectedMerchant.storeId, 10),
+      storeId,
       userId: parseInt(id, 10),
       supplierId: parseInt(userSuppliers[0].supplier.id, 10),
       loading: loading,
       limit: page,
       skip: 0,
-      collectionTransactionDetailStatus: 'pending',
-      collectionTransactionDetailIds: selectedMerchant.collectionIds
+      collectionTransactionDetailStatus: 'assigned',
+      collectionTransactionDetailIds
     };
     dispatch(sfaGetCollectionListProcess(data));
   };
@@ -222,7 +270,7 @@ const MerchantNoCollectionReason = () => {
 
   /** RENDER BUTTON */
   const renderButton = () => {
-    return (
+    return (dataGetCollectionList?.data?.orderParcels || []).length > 0 ? (
       <>
         <ButtonSingle
           onPress={() => postTransaction()}
@@ -232,7 +280,7 @@ const MerchantNoCollectionReason = () => {
           loading={loadingSfaPostTransactionCheckout}
         />
       </>
-    );
+    ) : null;
   };
 
   /** RENDER MAIN */

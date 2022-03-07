@@ -13,7 +13,6 @@ import {
   MaterialIcon
 } from '../../library/thirdPartyPackage';
 import {
-  ButtonSingle,
   ModalBottomType3,
   ModalBottomType4,
   SearchBarType8
@@ -24,50 +23,6 @@ import * as ActionCreators from '../../state/actions';
 
 import CollectionListDataView from './CollectionListDataView';
 import NavigationService from '../../navigation/NavigationService';
-const dummyData = [
-  {
-    storeId: 12345,
-    storeName: 'Toko Sinar Mas Jaya',
-    storeAddress: 'Jl Padurenan',
-    totalInvoices: 8,
-    outstandingAmount: 5000000,
-    storeStatus: 'partial_collected',
-    collectionIds: [1, 2, 3, 4]
-  },
-  {
-    storeId: 12345,
-    storeName: 'Toko Payment 123',
-    storeAddress: 'Jl Padurenan',
-    totalInvoices: 8,
-    outstandingAmount: 5000000,
-    storeStatus: 'assigned',
-    collectionIds: [5, 6, 7, 8]
-  }
-];
-const dataDummy = {
-  meta: {
-    skip: 0,
-    limit: 20,
-    total: 2
-  },
-  data: {
-    stores: [
-      {
-        id: 1081595,
-        name: 'Toko Baru',
-        address: 'Alamat',
-        externalId: 'SXXXXXX',
-        collectionTransactionDetailIds: [1050, 1051, 1052],
-        totalOutstandingAmount: 1000000,
-        collectionStatus: 'ASSIGNED',
-        isInPjp: true
-      }
-    ],
-    totalStore: 5,
-    totalStoreAlreadyVisit: 3,
-    totalOutstandingAmount: 213774
-  }
-};
 class CollectionView extends Component {
   constructor(props) {
     super(props);
@@ -78,7 +33,7 @@ class CollectionView extends Component {
         { title: 'Lakukan Penagihan', screen: 'SfaView' },
         {
           title: 'Tidak Melakukan Penagihan',
-          screen: 'MerchantNoCollectionView'
+          screen: 'MerchantNoCollectionReason'
         }
       ],
       storeName: '',
@@ -86,6 +41,7 @@ class CollectionView extends Component {
       searchKeyword: ''
     };
   }
+
   componentDidMount() {
     this.props.sfaGetStoreCollectionListReset();
     this.getStoreCollectionList(true, '');
@@ -108,6 +64,7 @@ class CollectionView extends Component {
             storeName: item.storeName,
             openModalCollectionMenu: true
           });
+          this.props.sfaModalCollectionListMenu(true);
         }
 
         break;
@@ -160,11 +117,15 @@ class CollectionView extends Component {
   }
   /** === RENDER MODAL COLLECTION MENU */
   renderModalCollectionMenu() {
-    return this.state.openModalCollectionMenu ? (
+    const storeName = this.props.sfa.selectedStore?.name || '';
+    return this.props.sfa.modalCollectionListMenu ? (
       <ModalBottomType3
-        title={this.state.storeName}
-        open={this.state.openModalCollectionMenu}
-        close={() => this.setState({ openModalCollectionMenu: false })}
+        title={storeName}
+        open={this.props.sfa.modalCollectionListMenu}
+        close={() => {
+          this.setState({ openModalCollectionMenu: false }),
+            this.props.sfaModalCollectionListMenu(false);
+        }}
         content={this.renderCollectionMenu()}
         typeClose={'cancel'}
       />
@@ -185,8 +146,8 @@ class CollectionView extends Component {
                 key={index}
                 style={[GlobalStyle.shadowForBox, styles.menuJPContainer]}
                 onPress={() => {
-                  this.setState({ openModalCollectionMenu: false });
-                  NavigationService.navigate('SfaView', {
+                  this.props.sfaModalCollectionListMenu(false);
+                  NavigationService.navigate(item.screen, {
                     type: 'COLLECTION_LIST',
                     collectionIds
                   });

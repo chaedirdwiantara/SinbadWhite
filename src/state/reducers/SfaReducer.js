@@ -37,6 +37,7 @@ const INITIAL_STATE = {
   loadingGetStoreCollectionList: false,
   refreshGetStoreCollectionList: false,
   loadingLoadmoreGetStoreCollectionList: false,
+  modalCollectionListMenu: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -989,6 +990,13 @@ export const sfa = createReducer(INITIAL_STATE, {
     return {
       ...state,
       selectedStore: action.payload
+    };
+  },
+  [types.SFA_MODAL_COLLECTION_LIST_MENU](state, action) {
+    console.log(action, 'action');
+    return {
+      ...state,
+      modalCollectionListMenu: action.payload
     };
   }
 });

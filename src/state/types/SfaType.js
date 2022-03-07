@@ -198,3 +198,4 @@ export const SFA_GET_STORE_COLLECTION_LIST_REFRESH =
 export const SFA_GET_STORE_COLLECTION_LIST_LOADMORE =
   'SfaGetStoreCollectionListLoadmore';
 export const SELECTED_STORE = 'selectedStore';
+export const SFA_MODAL_COLLECTION_LIST_MENU = 'SfaModalCOllectionListMenu';

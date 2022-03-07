@@ -66,7 +66,7 @@ class CollectionListDataView extends Component {
       >
         <View style={{ width: '80%' }}>
           <Text style={[Fonts.type9, { marginBottom: 10 }]}>
-            {item.id || 0}
+            {item.externalId || 0}
           </Text>
           <Text style={[Fonts.type7, { marginBottom: 4 }]}>
             {item.name || ''}
@@ -96,6 +96,7 @@ class CollectionListDataView extends Component {
                 isInPjp: item.isInPjp || false
               });
               this.props.selectedStore(item);
+              this.props.sfaModalCollectionListMenu(true);
             }}
           >
             <Text style={Fonts.type83}>Tagih</Text>
