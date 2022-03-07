@@ -39,7 +39,8 @@ function SfaCollectionLog(props) {
     dataSfaGetCollectionLog,
     loadingLoadmoreCollectionLog,
     dataSfaGetDetail,
-    dataSfaDeleteCollection
+    dataSfaDeleteCollection,
+    selectedStore
   } = useSelector(state => state.sfa);
   const { dataDetailHistory } = useSelector(state => state.history);
   const { selectedMerchant, dataGetMerchantDetailV2 } = useSelector(
@@ -102,7 +103,10 @@ function SfaCollectionLog(props) {
         setLimit(page);
         dispatch(
           sfaCollectionLogLoadmoreProcess({
-            storeId: parseInt(selectedMerchant.storeId, 10),
+            storeId: parseInt(
+              selectedMerchant?.storeId || selectedStore?.id,
+              10
+            ),
             orderParcelId: dataSfaGetDetail.data.id,
             limit: page,
             skip: 1
@@ -123,7 +127,7 @@ function SfaCollectionLog(props) {
     const storeId =
       type === HISTORY
         ? parseInt(dataDetailHistory?.store.id, 10)
-        : selectedMerchant?.storeId;
+        : selectedMerchant?.storeId || selectedStore?.id;
     const data = {
       storeId: parseInt(storeId, 10),
       orderParcelId: parseInt(orderParcelId, 10),

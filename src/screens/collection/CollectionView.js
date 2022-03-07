@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
-  Image
+  Image,
+  ImageBackground
 } from '../../library/reactPackage';
 import {
   bindActionCreators,
@@ -17,10 +18,10 @@ import {
   ModalBottomType4,
   SearchBarType8
 } from '../../library/component';
-import { GlobalStyle, Fonts } from '../../helpers';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
-
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import CollectionListDataView from './CollectionListDataView';
 import NavigationService from '../../navigation/NavigationService';
 class CollectionView extends Component {
@@ -82,7 +83,7 @@ class CollectionView extends Component {
         10
       ),
       skip: 1,
-      limit: 10,
+      limit: 8,
       loading,
       searchKey
     };
@@ -93,6 +94,41 @@ class CollectionView extends Component {
   onChangeSearchKey = searchKey => {
     this.setState({ searchKeyword: searchKey || '' });
   };
+  /** === HEADER === */
+  renderHeader() {
+    return this.props.sfa.dataGetStoreCollection ? (
+      <View>
+        <ImageBackground
+          source={require('../../assets/images/background/bg_jp_white.png')}
+          style={[styles.headerContainer, { zIndex: 0 }]}
+        >
+          <View style={[styles.boxHeader, { zIndex: 1 }]}>
+            <Text style={[Fonts.textHeaderPageJourney, { marginBottom: 5 }]}>
+              {this.props.sfa?.dataGetStoreCollection?.totalStoreAlreadyVisit ||
+                0}
+              /{this.props.sfa?.dataGetStoreCollection?.totalStore || 0}
+            </Text>
+            <Text style={styles.headerTextSubTitle}>Kunjungan Toko</Text>
+          </View>
+          <View style={styles.boxHeader}>
+            <Text style={[Fonts.textHeaderPageJourney, { marginBottom: 5 }]}>
+              {MoneyFormat(
+                this.props.sfa.dataGetStoreCollection?.totalOutstandingAmount ||
+                  0
+              )}
+            </Text>
+            <Text style={styles.headerTextSubTitle}>Total Tagihan</Text>
+          </View>
+        </ImageBackground>
+        {/* </View> */}
+      </View>
+    ) : (
+      <SkeletonPlaceholder>
+        <View style={{ height: 70 }} />
+      </SkeletonPlaceholder>
+    );
+  }
+
   /** === RENDER DATA LIST VIEW === */
   renderDataList = () => {
     return (
@@ -108,7 +144,7 @@ class CollectionView extends Component {
   renderSearchBar() {
     return (
       <SearchBarType8
-        placeholder="Cari nama/ID Toko disini"
+        placeholder="Cari nama / ID Toko disini"
         fetchFn={searchKeyword => this.onChangeSearchKey(searchKeyword)}
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={() => console.log('search enter')}
@@ -206,6 +242,7 @@ class CollectionView extends Component {
   render() {
     return (
       <>
+        {this.renderHeader()}
         {this.renderSearchBar()}
         {!this.props.sfa.loadingGetStoreCollectionList ? (
           <>
@@ -230,6 +267,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'
+  },
+  headerContainer: {
+    backgroundColor: Color.backgroundWhite,
+    flexDirection: 'row',
+    paddingVertical: 13
+  },
+  headerTextSubTitle: {
+    fontFamily: Fonts.MontserratMedium,
+    fontSize: 10,
+    lineHeight: 12,
+    color: Color.fontBlack80
+  },
+  boxHeader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
 const mapStateToProps = ({ user, auth, sfa }) => {

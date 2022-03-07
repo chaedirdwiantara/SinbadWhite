@@ -33,7 +33,7 @@ class CollectionListDataView extends Component {
         10
       ),
       skip: 1,
-      limit: 10,
+      limit: 8,
       loading: true,
       searchKey: '',
       loading
@@ -111,13 +111,15 @@ class CollectionListDataView extends Component {
       <View style={{ paddingHorizontal: 16, paddingVertical: 20 }}>
         <FlatList
           initialScrollIndex={0}
-          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           data={this.props.data}
           renderItem={this.renderItem.bind(this)}
           keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={this.renderSeparator}
           onRefresh={this.onHandleRefresh}
           refreshing={this.props.sfa.refreshGetStoreCollectionList}
+          onEndReachedThreshold={0.2}
+          onEndReached={() => console.log('end')}
         />
       </View>
     ) : (

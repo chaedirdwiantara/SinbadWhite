@@ -49,7 +49,8 @@ const SfaBillingLogView = props => {
     loadingSfaGetPaymentCollectionLog,
     dataSfaGetPaymentCollectionLog,
     dataSfaDeletePaymentBilling,
-    errorSfaDeletePaymentBilling
+    errorSfaDeletePaymentBilling,
+    selectedStore
   } = useSelector(state => state.sfa);
   const { userSuppliers, id } = useSelector(state => state.user);
   const userId = parseInt(id, 10);
@@ -105,7 +106,7 @@ const SfaBillingLogView = props => {
     const data = {
       paymentCollectionMethodId: paymentCollectionMethodId,
       limit: page,
-      storeId: parseInt(selectedMerchant.storeId, 10),
+      storeId: parseInt(selectedMerchant?.storeId || selectedStore?.id, 10),
       skip: 0,
       loading,
       userId: userId

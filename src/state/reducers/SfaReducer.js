@@ -72,6 +72,7 @@ const INITIAL_STATE = {
   totalGetStoreCollectionList: 0,
   skipGetStoreCollection: 0,
   selectedStore: null,
+  dataGetStoreCollection: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -949,7 +950,8 @@ export const sfa = createReducer(INITIAL_STATE, {
       dataGetStoreCollectionList: [
         ...state.dataGetStoreCollectionList,
         ...(action.payload.data.stores || [])
-      ]
+      ],
+      dataGetStoreCollection: action.payload.data
     };
   },
   [types.SFA_GET_STORE_COLLECTION_LIST_FAILED](state, action) {
@@ -966,7 +968,8 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       skipGetStoreCollection: 0,
       totalGetStoreCollectionList: 0,
-      dataGetStoreCollectionList: []
+      dataGetStoreCollectionList: [],
+      dataGetStoreCollection: null
     };
   },
   [types.SFA_GET_STORE_COLLECTION_LIST_REFRESH](state, action) {
@@ -976,7 +979,8 @@ export const sfa = createReducer(INITIAL_STATE, {
       loadingGetStoreCollectionList: true,
       skipGetStoreCollection: 0,
       totalGetStoreCollectionList: 0,
-      dataGetStoreCollectionList: []
+      dataGetStoreCollectionList: [],
+      dataGetStoreCollection: null
     };
   },
   [types.SFA_GET_STORE_COLLECTION_LIST_LOADMORE](state, action) {

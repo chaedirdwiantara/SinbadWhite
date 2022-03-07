@@ -109,7 +109,8 @@ const SfaCollectionEditView = props => {
     dataSfaGetCollectionImage,
     dataSfaGetCollectionDetail,
     loadingSfaGetCollectionDetail,
-    dataSfaGetReturnBalance
+    dataSfaGetReturnBalance,
+    selectedStore
   } = useSelector(state => state.sfa);
 
   /**
@@ -249,7 +250,7 @@ const SfaCollectionEditView = props => {
   const navigateOnSucces = () => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
-      storeId: parseInt(selectedMerchant.storeId, 10),
+      storeId: parseInt(selectedMerchant?.storeId || selectedStore?.id, 10),
       paymentCollectionTypeId: parseInt(paymentCollectionTypeId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
       limit: 20,
@@ -462,7 +463,7 @@ const SfaCollectionEditView = props => {
       paymentCollectionId: initialData.id,
       paymentCollectionTypeId: paymentCollectionTypeId,
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
-      storeId: parseInt(selectedMerchant.storeId, 10),
+      storeId: parseInt(selectedMerchant?.storeId || selectedStore?.id, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
       balance: parseInt(amount, 10),
       filename: imageName,
@@ -1147,7 +1148,10 @@ const SfaCollectionEditView = props => {
             onRef={ref => (selectCollection = ref)}
             selectCollection={fnSelectCollection}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
-            storeId={parseInt(selectedMerchant.storeId, 10)}
+            storeId={parseInt(
+              selectedMerchant?.storeId || selectedStore?.id,
+              10
+            )}
             paymentCollectionTypeId={paymentCollectionTypeId}
           />
         ) : null}
@@ -1167,7 +1171,10 @@ const SfaCollectionEditView = props => {
             onRef={ref => (selectBankDestination = ref)}
             selectBankDestination={onSelectBankTo.bind(this)}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
-            storeId={parseInt(selectedMerchant.storeId, 10)}
+            storeId={parseInt(
+              selectedMerchant?.storeId || selectedStore?.id,
+              10
+            )}
             paymentCollectionTypeId={paymentCollectionTypeId}
           />
         ) : null}
@@ -1187,7 +1194,10 @@ const SfaCollectionEditView = props => {
             onRef={ref => (selectedStamp = ref)}
             selectStamp={onSelectStamp.bind(this)}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
-            storeId={parseInt(selectedMerchant.storeId, 10)}
+            storeId={parseInt(
+              selectedMerchant?.storeId || selectedStore?.id,
+              10
+            )}
             paymentCollectionTypeId={paymentCollectionTypeId}
           />
         ) : null}

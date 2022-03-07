@@ -52,7 +52,8 @@ const SfaCollectionDetailView = props => {
     dataSfaGetCollectionDetail,
     loadingSfaGetCollectionDetail,
     dataSfaGetCollectionImage,
-    loadingSfaGetCollectionImage
+    loadingSfaGetCollectionImage,
+    selectedStore
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const { id } = useSelector(state => state.user);
@@ -78,7 +79,7 @@ const SfaCollectionDetailView = props => {
     const data = {
       paymentCollectionMethodId: dataSfaGetCollectionDetail.data.id,
       limit: 20,
-      storeId: parseInt(selectedMerchant.storeId, 10),
+      storeId: parseInt(selectedMerchant?.storeId || selectedStore?.id, 10),
       skip: 0,
       loading: true,
       userId: userId
