@@ -968,6 +968,12 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 16,
     color: Color.fontBlack50
+  },
+  fontCaption1: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 12,
+    lineHeight: 18,
+    color: Color.fontSecondary
   }
 });
 
