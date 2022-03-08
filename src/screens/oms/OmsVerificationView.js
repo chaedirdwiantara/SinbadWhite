@@ -10,7 +10,7 @@ import {
   TouchableOpacity
 } from '../../library/reactPackage';
 import {
-  StatusBarRed,
+  StatusBarWhite,
   ButtonSingle,
   ModalBottomErrorRespons,
   LoadingPage
@@ -142,14 +142,17 @@ class OmsVerificationView extends Component {
   /** ===  === */
   getCheckoutItem() {
     let portfolioId;
-    if(this.props.merchant.dataGetPortfolioV2 && !_.isEmpty(this.props.merchant.dataGetPortfolioV2)){
-      portfolioId = this.props.merchant.dataGetPortfolioV2[0].id
+    if (
+      this.props.merchant.dataGetPortfolioV2 &&
+      !_.isEmpty(this.props.merchant.dataGetPortfolioV2)
+    ) {
+      portfolioId = this.props.merchant.dataGetPortfolioV2[0].id;
     }
 
     this.props.omsGetCheckoutItemProcess({
       cartId: this.props.navigation.state.params.cartId,
       catalogues: this.props.oms.dataCheckout,
-      portfolioId,
+      portfolioId
     });
   }
 
@@ -169,7 +172,9 @@ class OmsVerificationView extends Component {
   renderHeader() {
     return (
       <View style={styles.headerContainer}>
-        <Text style={Fonts.type48}>BERIKUT ADALAH RINGKASAN ORDER ANDA</Text>
+        <Text style={Fonts.fontH11SemiBold}>
+          Berikut adalah ringkasan order Anda
+        </Text>
       </View>
     );
   }
@@ -203,16 +208,16 @@ class OmsVerificationView extends Component {
             </View>
             <View style={styles.productDetailContainer}>
               <View style={{ width: '75%' }}>
-                <Text style={[Fonts.type16, { marginBottom: 4 }]}>
+                <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                   {item.name}
                 </Text>
               </View>
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={[Fonts.type17, { marginBottom: 4 }]}>{`x${
+                  <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>{`${
                     item.qty
                   } Pcs`}</Text>
-                  <Text style={[Fonts.type22, { marginBottom: 4 }]}>
+                  <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                     {MoneyFormat(parseInt(item.price))}
                   </Text>
                   <View style={styles.totalAndPriceContainer}>
@@ -304,14 +309,14 @@ class OmsVerificationView extends Component {
           </View>
           <View style={styles.productDetailContainer}>
             <View style={{ width: '75%' }}>
-              <Text style={[Fonts.type16, { marginBottom: 4 }]}>
+              <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                 {item.name}
               </Text>
             </View>
-            <Text style={[Fonts.type17, { marginBottom: 4 }]}>
+            <Text style={[Fonts.type17, { marginBottom: 2 }]}>
               {item.promoName}
             </Text>
-            <Text style={[Fonts.type10, { marginBottom: 4 }]}>{`x${
+            <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>{`${
               item.qty
             } Pcs`}</Text>
           </View>
@@ -325,9 +330,18 @@ class OmsVerificationView extends Component {
     if (notPromoSku.length > 0) {
       return (
         <View>
-          <View style={styles.sectionHeaderContainer}>
-            <Text style={Fonts.type16}>
-              Produk Tidak Mendapatkan Potongan Harga
+          <View style={styles.sectionInfoBox}>
+            <Image
+              style={{
+                width: 16,
+                height: 16,
+                resizeMode: 'contain',
+                marginRight: 8
+              }}
+              source={require('../../assets/icons/global/alert-grey.png')}
+            />
+            <Text style={Fonts.fontCaption1}>
+              Produk tidak mendapatkan potongan harga
             </Text>
           </View>
           {this.renderNonBenefitProductItem(notPromoSku)}
@@ -349,16 +363,16 @@ class OmsVerificationView extends Component {
             </View>
             <View style={styles.productDetailContainer}>
               <View style={{ width: '75%' }}>
-                <Text style={[Fonts.type16, { marginBottom: 4 }]}>
+                <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                   {item.name}
                 </Text>
               </View>
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={[Fonts.type17, { marginBottom: 4 }]}>{`x${
+                  <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>{`${
                     item.qty
                   } Pcs`}</Text>
-                  <Text style={[Fonts.type22, { marginBottom: 4 }]}>
+                  <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                     {MoneyFormat(parseInt(item.price))}
                   </Text>
                   <View style={styles.totalAndPriceContainer}>
@@ -569,7 +583,7 @@ class OmsVerificationView extends Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <StatusBarRed />
+        <StatusBarWhite />
         {this.renderContent()}
         {/* modal */}
         {this.renderModalSkuStatusConfirmation()}
@@ -592,18 +606,25 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingVertical: 16,
     marginHorizontal: 16,
-    borderBottomColor: masterColor.fontBlack10,
-    borderBottomWidth: 1
+    borderBottomColor: masterColor.fontBlack10
   },
   sectionHeaderContainer: {
     padding: 16
   },
+  sectionInfoBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginHorizontal: 16,
+    marginVertical: 16,
+    borderRadius: 4,
+    backgroundColor: masterColor.bgColorNeutral
+  },
   productListContainer: {
     flexDirection: 'row',
     marginHorizontal: 16,
-    paddingVertical: 8,
-    borderBottomColor: masterColor.fontBlack10,
-    borderBottomWidth: 1
+    paddingVertical: 8
   },
   productImageContainer: {
     marginRight: 8
@@ -637,7 +658,6 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     borderColor: masterColor.fontBlack10,
-    borderWidth: 1,
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10
   },
@@ -666,4 +686,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(OmsVerificationView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OmsVerificationView);

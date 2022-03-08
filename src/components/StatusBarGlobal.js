@@ -1,8 +1,5 @@
-import {
-  React,
-  StatusBar
-} from '../library/reactPackage'
-import { Color } from '../config'
+import { React, StatusBar } from '../library/reactPackage';
+import { Color } from '../config';
 
 const StatusBarRed = () => {
   return (
@@ -109,15 +106,14 @@ export {
 };
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 08072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 08072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
