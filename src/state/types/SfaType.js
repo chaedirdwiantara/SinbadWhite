@@ -198,4 +198,12 @@ export const SFA_GET_STORE_COLLECTION_LIST_REFRESH =
 export const SFA_GET_STORE_COLLECTION_LIST_LOADMORE =
   'SfaGetStoreCollectionListLoadmore';
 export const SELECTED_STORE = 'selectedStore';
-export const SFA_MODAL_COLLECTION_LIST_MENU = 'SfaModalCOllectionListMenu';
+export const SFA_MODAL_COLLECTION_LIST_MENU = 'SfaModalCollectionListMenu';
+export const SFA_STORE_COLLECTION_STATUS_PROCESS =
+  'SfaStoreCollectionStatusProcess';
+export const SFA_STORE_COLLECTION_STATUS_FAILED =
+  'SfaStoreCollectionStatusFailed';
+export const SFA_STORE_COLLECTION_STATUS_SUCCESS =
+  'SfaStoreCollectionStatusSuccess';
+export const SFA_STORE_COLLECTION_STATUS_RESET =
+  'SfaStoreCollectionStatusReset';

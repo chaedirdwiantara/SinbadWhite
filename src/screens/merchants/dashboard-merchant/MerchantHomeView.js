@@ -215,8 +215,13 @@ class MerchantHomeView extends Component {
     });
 
     /** FOR CHECK COLLECTION STATUS */
-    if (this.props.merchant.selectedMerchant?.collectionIds?.length > 0) {
-      this.setState({ isNotCollected: true });
+    if (
+      (this.props.merchant.selectedMerchant?.collectionIds || [])?.length > 0
+    ) {
+      const salesId = parseInt(this.props.user?.id, 10) || 0;
+      const storeId =
+        parseInt(this.props.merchant?.selectedMerchant?.storeId, 10) || 0;
+      this.props.sfaStoreCollectionStatusProcess({ salesId, storeId });
     }
   }
 
@@ -1061,7 +1066,9 @@ class MerchantHomeView extends Component {
           activity.find(
             items =>
               items.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
-          )
+          ) ||
+          this.props.sfa?.dataStoreCollectionStatus?.collectionStatus ===
+            'COLLECTED'
         ) {
           return (
             <View
@@ -1085,7 +1092,9 @@ class MerchantHomeView extends Component {
             items =>
               items.activityName ===
               ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
-          )
+          ) ||
+          this.props.sfa?.dataStoreCollectionStatus?.collectionStatus ===
+            'NOT_COLLECTED'
         ) {
           return (
             <TouchableOpacity
@@ -1116,7 +1125,9 @@ class MerchantHomeView extends Component {
           activity.find(
             items =>
               items.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING
-          )
+          ) ||
+          this.props.sfa?.dataStoreCollectionStatus?.collectionStatus ===
+            'PARTIAL_COLLECTED'
         ) {
           return (
             <TouchableOpacity

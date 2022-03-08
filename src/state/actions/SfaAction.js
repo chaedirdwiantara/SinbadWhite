@@ -776,3 +776,27 @@ export function sfaModalCollectionListMenu(data) {
   console.log(data, 'dataa');
   return { type: types.SFA_MODAL_COLLECTION_LIST_MENU, payload: data };
 }
+/** === SFA GET STORE COLLECTION STATUS PROCESS === */
+export function sfaStoreCollectionStatusProcess(data) {
+  return { type: types.SFA_STORE_COLLECTION_STATUS_PROCESS, payload: data };
+}
+
+/** === SFA GET STORE COLLECTION STATUS SUCCESS === */
+export function sfaStoreCollectionStatusSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_STORE_COLLECTION_STATUS_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_STORE_COLLECTION_STATUS_FAILED, payload: data };
+}
+/** === SFA GET STORE COLLECTION STATUS FAILED === */
+export function sfaStoreCollectionStatusFailed(data) {
+  return { type: types.SFA_STORE_COLLECTION_STATUS_FAILED, payload: data };
+}
+
+/** === SFA GET STORE COLLECTION STATUS RESET === */
+export function sfaStoreCollectionStatusReset() {
+  return { type: types.SFA_STORE_COLLECTION_STATUS_RESET };
+}

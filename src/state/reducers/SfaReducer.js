@@ -1,3 +1,5 @@
+import { findLastKey } from 'lodash';
+import { stat } from 'react-native-fs';
 import * as types from '../types';
 import createReducer from './createReducer';
 
@@ -38,6 +40,7 @@ const INITIAL_STATE = {
   refreshGetStoreCollectionList: false,
   loadingLoadmoreGetStoreCollectionList: false,
   modalCollectionListMenu: false,
+  loadingStoreCollectionStatus: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -73,6 +76,7 @@ const INITIAL_STATE = {
   skipGetStoreCollection: 0,
   selectedStore: null,
   dataGetStoreCollection: null,
+  dataStoreCollectionStatus: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -102,7 +106,8 @@ const INITIAL_STATE = {
   errorSfaCheckCollectionStatus: null,
   errorSfaGetReasonNotToPay: null,
   errorSfaGetReturnBalance: null,
-  errorGetStoreCollectionList: null
+  errorGetStoreCollectionList: null,
+  errorStoreCollectionStatus: null
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -997,10 +1002,37 @@ export const sfa = createReducer(INITIAL_STATE, {
     };
   },
   [types.SFA_MODAL_COLLECTION_LIST_MENU](state, action) {
-    console.log(action, 'action');
     return {
       ...state,
       modalCollectionListMenu: action.payload
+    };
+  },
+  [types.SFA_STORE_COLLECTION_STATUS_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingStoreCollectionStatus: true,
+      dataStoreCollectionStatus: null
+    };
+  },
+  [types.SFA_STORE_COLLECTION_STATUS_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingStoreCollectionStatus: false,
+      dataStoreCollectionStatus: action.payload.data
+    };
+  },
+  [types.SFA_STORE_COLLECTION_STATUS_FAILED](state, action) {
+    return {
+      ...state,
+      loadingStoreCollectionStatus: false,
+      dataStoreCollectionStatus: action.payload
+    };
+  },
+  [types.SFA_STORE_COLLECTION_STATUS_RESET](state, action) {
+    return {
+      ...state,
+      loadingStoreCollectionStatus: false,
+      dataSfaCheckCollectionStatus: null
     };
   }
 });

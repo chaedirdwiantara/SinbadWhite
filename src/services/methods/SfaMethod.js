@@ -259,6 +259,16 @@ function getStoreCollectionList(data) {
   });
 }
 
+/** === GET STORE COLLECTION STATUS === */
+function getStoreCollectionStatus(data) {
+  return ApiRest({
+    path: `collection/v1/collection-request-store-status/${data.salesId}/${
+      data.storeId
+    }`,
+    method: 'GET'
+  });
+}
+
 export const SfaMethod = {
   getCollectionStatus,
   getSfaDetail,
@@ -284,5 +294,6 @@ export const SfaMethod = {
   getReasonNotToPay,
   postTransactionCheckout,
   getReturnBalance,
-  getStoreCollectionList
+  getStoreCollectionList,
+  getStoreCollectionStatus
 };

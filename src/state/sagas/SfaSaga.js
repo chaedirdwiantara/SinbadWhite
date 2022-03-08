@@ -345,6 +345,17 @@ function* getStoreCollectionList(actions) {
     yield put(ActionCreators.sfaGetStoreCollectionListFailed(error));
   }
 }
+/** === GET STORE COLLECTION STATUS === */
+function* getStroreCollectionStatus(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getStoreCollectionStatus(actions.payload);
+    });
+    yield put(ActionCreators.sfaStoreCollectionStatusSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaStoreCollectionStatusFailed(error));
+  }
+}
 
 /** === SAGA FUNCTION === */
 function* SfaSaga() {
@@ -412,6 +423,10 @@ function* SfaSaga() {
   yield takeEvery(
     types.SFA_GET_STORE_COLLECTION_LIST_PROCESS,
     getStoreCollectionList
+  );
+  yield takeEvery(
+    types.SFA_STORE_COLLECTION_STATUS_PROCESS,
+    getStroreCollectionStatus
   );
 }
 

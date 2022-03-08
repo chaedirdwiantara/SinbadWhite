@@ -46,7 +46,12 @@ class CollectionView extends Component {
   componentDidMount() {
     this.props.sfaGetStoreCollectionListReset();
     this.getStoreCollectionList(true, '');
+    this.props.navigation.addListener('didFocus', payload => {
+      this.props.sfaGetStoreCollectionListReset();
+      this.getStoreCollectionList(true, '');
+    });
   }
+
   componentDidUpdate(prevProps, prevState) {
     if (prevState.searchKeyword !== this.state.searchKeyword) {
       this.getStoreCollectionList(true, this.state.searchKeyword);
@@ -207,9 +212,12 @@ class CollectionView extends Component {
     return this.state.openModalExistInPjp ? (
       <ModalBottomType4
         open={this.state.openModalExistInPjp}
-        close={this.props.close}
+        close={() => this.setState({ openModalExistInPjp: false })}
         typeClose={'cancel'}
-        onPress={() => console.log('lala')}
+        onPress={() => {
+          NavigationService.navigate('JourneyView'),
+            this.setState({ openModalExistInPjp: false });
+        }}
         buttonTitle={'Masuk ke Journey Plan'}
         content={this.renderExistInPjp()}
       />

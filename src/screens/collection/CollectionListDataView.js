@@ -44,12 +44,24 @@ class CollectionListDataView extends Component {
   /** CHECK COLLECTION ACTIVITY */
   checkCollectionActivity(status) {
     // check already check out or not
-    if (status === 'partial_collected') {
+    if (status !== 'ASSIGNED') {
       return require('../../assets/icons/journey/visit_green.png');
     } else {
       return require('../../assets/icons/journey/visit_gray.png');
     }
   }
+  /** === ONPRESS BUTTON TAGIH */
+  onPressButtonTagih = item => {
+    this.props.parentFunction({
+      type: 'modal_collection',
+      storeName: item.name || '',
+      isInPjp: item.isInPjp || false
+    });
+    this.props.selectedStore(item);
+    if (!item.isInPjp) {
+      this.props.sfaModalCollectionListMenu(true);
+    }
+  };
   /** === RENDER SEPARATOR === */
   renderSeparator() {
     return <View style={[GlobalStyle.lines, { marginVertical: 12 }]} />;
@@ -89,15 +101,7 @@ class CollectionListDataView extends Component {
           />
           <TouchableOpacity
             style={styles.iconContainer}
-            onPress={() => {
-              this.props.parentFunction({
-                type: 'modal_collection',
-                storeName: item.name || '',
-                isInPjp: item.isInPjp || false
-              });
-              this.props.selectedStore(item);
-              this.props.sfaModalCollectionListMenu(true);
-            }}
+            onPress={() => this.onPressButtonTagih(item)}
           >
             <Text style={Fonts.type83}>Tagih</Text>
           </TouchableOpacity>
