@@ -1,3 +1,7 @@
+import { REASON_NO_PAYMENT } from './promisePayConstans';
+
+export { REASON_NO_PAYMENT };
+
 /*
  * Request parameter of Graphic Content Types on Dashboard detail
  */

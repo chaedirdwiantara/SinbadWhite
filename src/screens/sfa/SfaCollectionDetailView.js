@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
   ScrollView,
   RefreshControl,
-  Dimensions
+  Dimensions,
+  Image
 } from '../../library/reactPackage';
-import { LoadingPage, ButtonSingle } from '../../library/component';
+import {
+  LoadingPage,
+  ButtonSingle,
+  StatusBarBlackOP40,
+  ModalBottomWithClose
+} from '../../library/component';
 import { GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import { toLocalTime } from '../../helpers/TimeHelper';
 import masterColor from '../../config/masterColor.json';
@@ -22,17 +29,24 @@ import {
   TRANSFER,
   CASH,
   CHECK,
-  GIRO
+  GIRO,
+  RETUR,
+  PROMO
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 import { CardBody, CardHeader, CardHeaderBadge } from './components/CardView';
 
-const { width, height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 const isNumber = n => (n !== null && n !== undefined ? true : false);
 
 const SfaCollectionDetailView = props => {
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
+  const [stateModalImage, setStateModalImage] = useState({
+    open: false,
+    source: null,
+    title: ''
+  });
 
   const {
     dataSfaGetCollectionDetail,
@@ -99,7 +113,8 @@ const SfaCollectionDetailView = props => {
    * ==============================
    */
   const renderCodeInfoHeader = () => {
-    return (
+    const { paymentCollectionType } = dataSfaGetCollectionDetail.data;
+    return paymentCollectionType?.id !== RETUR ? (
       <>
         {CardHeader({
           title: 'Informasi Kode',
@@ -112,7 +127,7 @@ const SfaCollectionDetailView = props => {
           renderCardBody: renderCodeInfoBody
         })}
       </>
-    );
+    ) : null;
   };
 
   /**
@@ -130,11 +145,13 @@ const SfaCollectionDetailView = props => {
           value: collectionDetail?.collectionCode || '-',
           styleCardView: styles.styleCardView
         })}
-        {CardBody({
-          title: 'Kode Penagihan Ref',
-          value: collectionDetail?.collectionRef || '-',
-          styleCardView: styles.styleCardView
-        })}
+        {collectionDetail?.paymentCollectionType?.id !== PROMO
+          ? CardBody({
+              title: 'Kode Penagihan Ref',
+              value: collectionDetail?.collectionRef || '-',
+              styleCardView: styles.styleCardView
+            })
+          : null}
       </>
     );
   };
@@ -211,6 +228,7 @@ const SfaCollectionDetailView = props => {
       totalBalance
     } = dataSfaGetCollectionDetail.data;
     const image = dataSfaGetCollectionImage?.data.image;
+    const skpImage = dataSfaGetCollectionImage?.data.skpImage;
     return (
       <>
         {CardBody({
@@ -223,14 +241,18 @@ const SfaCollectionDetailView = props => {
           value: paymentCollectionType?.name,
           styleCardView: styles.styleCardView
         })}
-        {paymentCollectionType.id !== CASH
+        {paymentCollectionType.id !== CASH &&
+        paymentCollectionType.id !== RETUR &&
+        paymentCollectionType.id !== PROMO
           ? CardBody({
               title: 'Nomor Referensi',
               value: reference,
               styleCardView: styles.styleCardView
             })
           : null}
-        {paymentCollectionType.id !== CASH
+        {paymentCollectionType.id !== CASH &&
+        paymentCollectionType.id !== RETUR &&
+        paymentCollectionType.id !== PROMO
           ? CardBody({
               title: 'Sumber Bank',
               value: bankFrom.displayName,
@@ -278,7 +300,10 @@ const SfaCollectionDetailView = props => {
             })
           : null}
         {CardBody({
-          title: 'Jumlah Penagihan',
+          title:
+            paymentCollectionType.id === PROMO
+              ? 'Nilai Penagihan'
+              : 'Jumlah Penagihan',
           value: isNumber(amount) ? MoneyFormatSpace(amount) : '',
           styleCardView: styles.styleCardView
         })}
@@ -291,14 +316,40 @@ const SfaCollectionDetailView = props => {
               styleCardView: styles.styleCardView
             })
           : null}
-        {CardBody({
-          title: 'Foto Penagihan',
-          loadingImage: loadingSfaGetCollectionImage,
-          imageSource: { uri: `data:image/jpeg;base64, ${image}` },
-          imageSourceStyle: styles.images,
-          imageContainerStyle: styles.smallContainerImage,
-          styleCardView: styles.styleCardViewImage
-        })}
+        {paymentCollectionType.id !== RETUR
+          ? CardBody({
+              title: 'Foto Penagihan',
+              loadingImage: loadingSfaGetCollectionImage,
+              imageSource: { uri: `data:image/jpeg;base64, ${image}` },
+              imageContainerStyle: styles.imageContainerStyle,
+              imageSourceStyle: styles.imageSourceStyle,
+              imageBackgroundStyle: styles.imageBackgroundStyle,
+              styleCardView: styles.styleCardViewImage,
+              onPressImage: () =>
+                setStateModalImage({
+                  source: image,
+                  title: 'Foto Penagihan',
+                  open: true
+                })
+            })
+          : null}
+        {paymentCollectionType.id === PROMO
+          ? CardBody({
+              title: 'Surat Kerjasama Promosi',
+              loadingImage: loadingSfaGetCollectionImage,
+              imageSource: { uri: `data:image/jpeg;base64, ${skpImage}` },
+              imageContainerStyle: styles.imageContainerStyle,
+              imageSourceStyle: styles.imageSourceStyle,
+              imageBackgroundStyle: styles.imageBackgroundStyle,
+              styleCardView: styles.styleCardViewImage,
+              onPressImage: () =>
+                setStateModalImage({
+                  source: skpImage,
+                  title: 'Surat Kerjasama Promosi',
+                  open: true
+                })
+            })
+          : null}
         {CardBody({
           title: 'Total Penagihan',
           value: isNumber(totalAmount) ? MoneyFormatSpace(totalAmount) : '',
@@ -352,11 +403,36 @@ const SfaCollectionDetailView = props => {
           styleCardView: styles.styleCardView
         })}
         {CardBody({
-          title: 'Name Salesman',
+          title: 'Nama Salesman',
           value: collectionDetail.salesmanName,
           styleCardView: styles.styleCardView
         })}
       </>
+    );
+  };
+
+  /** CONTENT MODAL IMAGE */
+  const contentModalImage = () => {
+    return (
+      <View style={{ flex: 1, maxnHeight: (80 / 100) * height }}>
+        <StatusBarBlackOP40 />
+        <Image
+          source={{ uri: `data:image/jpeg;base64, ${stateModalImage.source}` }}
+          style={styles.modalImage}
+        />
+      </View>
+    );
+  };
+
+  /** RENDER MODAL IMAGE */
+  const renderModalImage = () => {
+    return (
+      <ModalBottomWithClose
+        open={stateModalImage.open}
+        title={stateModalImage.title}
+        close={() => setStateModalImage({ ...stateModalImage, open: false })}
+        content={contentModalImage()}
+      />
     );
   };
 
@@ -414,6 +490,7 @@ const SfaCollectionDetailView = props => {
             {renderContent()}
           </ScrollView>
           {renderBillingHistoryButton()}
+          {renderModalImage()}
         </>
       ) : (
         <LoadingPage />
@@ -473,21 +550,34 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 1
   },
-  smallContainerImage: {
+  imageContainerStyle: {
+    backgroundColor: 'white',
+    marginTop: -16,
+    marginBottom: 16,
+    height: 138,
+    width: '100%'
+  },
+  imageSourceStyle: {
+    resizeMode: 'cover',
+    width: '100%',
+    height: 138,
+    backgroundColor: 'white'
+  },
+  imageBackgroundStyle: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: '#000000c0',
+    textAlign: 'center',
+    textAlignVertical: 'center'
+  },
+  modalImage: {
+    resizeMode: 'stretch',
+    marginHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',
     marginBottom: 16,
-    height: (50 / 100) * height,
-    width: '100%'
-  },
-  images: {
-    resizeMode: 'contain',
-    height: '100%',
-    width: '100%',
-    borderWidth: 1,
-    backgroundColor: 'white',
-    flex: 1
+    height: (50 / 100) * height
   },
   styleCardView: {
     flexDirection: 'row',

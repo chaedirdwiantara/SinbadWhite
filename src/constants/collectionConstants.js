@@ -4,7 +4,7 @@
  * 2. Check
  * 3. Giro
  * 4. Transfer
- * 5. Promo
+ * 5. Promo (Kerjasama Promosi)
  * 6. Retur
  */
 export const CASH = 1;
@@ -13,6 +13,14 @@ export const GIRO = 3;
 export const TRANSFER = 4;
 export const PROMO = 5;
 export const RETUR = 6;
+
+/** COLLECTION METHOD TYPE LABEL */
+export const CASH_LABEL = 'Tunai';
+export const CHECK_LABEL = 'Cek';
+export const GIRO_LABEL = 'Giro';
+export const TRANSFER_LABEL = 'Transfer';
+export const PROMO_LABEL = 'Kerjasama Promosi';
+export const RETUR_LABEL = 'Barang Retur';
 
 /**
  * STATUS APPROVAL SFA

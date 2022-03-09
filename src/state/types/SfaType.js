@@ -178,3 +178,8 @@ export const SFA_POST_TRANSACTION_CHECKOUT_FAILED =
 /** RESET POST TRANSACTION CHECKOUT */
 export const SFA_POST_TRANSACTION_CHECKOUT_RESET =
   'SfaPostTransactionCheckoutReset';
+
+/** GET RETURN BALANCE */
+export const SFA_GET_RETURN_BALANCE_PROCESS = 'SfaGetReturnBalanceProcess';
+export const SFA_GET_RETURN_BALANCE_SUCCESS = 'SfaGetReturnBalanceSuccess';
+export const SFA_GET_RETURN_BALANCE_FAILED = 'SfaGetReturnBalanceFailed';

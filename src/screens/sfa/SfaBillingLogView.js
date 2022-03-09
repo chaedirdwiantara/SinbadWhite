@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -12,8 +13,9 @@ import masterColor from '../../config/masterColor.json';
 import { GlobalStyle, Fonts, MoneyFormatSpace } from '../../helpers';
 import {
   APPROVED,
-  REJECTED,
-  PENDING
+  PENDING,
+  PROMO,
+  RETUR
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 import {
@@ -78,8 +80,8 @@ const SfaBillingLogView = props => {
   useEffect(() => {
     prevErrorSfaDeletePaymentBillingRef.current = errorSfaDeletePaymentBilling;
   }, []);
-  const prevErrorSfaDeletePaymentBilling =
-    prevErrorSfaDeletePaymentBillingRef.current;
+  // const prevErrorSfaDeletePaymentBilling =
+  //   prevErrorSfaDeletePaymentBillingRef.current;
 
   useEffect(() => {
     if (prevDataSfaDeletePaymentBilling !== dataSfaDeletePaymentBilling) {
@@ -278,11 +280,17 @@ const SfaBillingLogView = props => {
 
           <View style={styles.salesContainer}>
             <View>
-              {renderContentListGlobal('Nomor Pesanan', item.orderCode)}
+              {(collectionMethodId === RETUR || collectionMethodId === PROMO) &&
+                renderContentListGlobal('Nama Faktur', item.invoiceGroupName)}
+              {collectionMethodId !== RETUR &&
+                collectionMethodId !== PROMO &&
+                renderContentListGlobal('Nomor Pesanan', item.orderCode)}
               {renderContentListGlobal(
                 'Tanggal Pembayaran',
                 toLocalTime(item.createdAt, 'DD MMM YYYY')
               )}
+              {(collectionMethodId === RETUR || collectionMethodId === PROMO) &&
+                renderContentListGlobal('Nomor Pesanan', item.orderCode)}
               {renderContentListGlobal(
                 'Metode Penagihan',
                 item.paymentCollectionMethodName
@@ -296,7 +304,7 @@ const SfaBillingLogView = props => {
             </View>
             <View testID="btnDelete" style={styles.buttonContainer}>
               {renderButton(
-                'Ubah',
+                'Edit',
                 'white',
                 !item.isEditable,
                 navigatetoEditBilling.bind(item),

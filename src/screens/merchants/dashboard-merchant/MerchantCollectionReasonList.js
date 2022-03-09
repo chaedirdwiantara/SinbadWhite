@@ -18,6 +18,7 @@ import { toLocalTime } from '../../../helpers/TimeHelper';
 import masterColor from '../../../config/masterColor.json';
 import { MaterialIcon } from '../../../library/thirdPartyPackage';
 import { ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS } from '../../../constants';
+
 const MerchantCollectionReasonList = props => {
   const { refreshGetCollection, loadingLoadMoreGetSfa } = useSelector(
     state => state.sfa
@@ -105,7 +106,7 @@ const MerchantCollectionReasonList = props => {
             <View style={styles.reasonContainer}>
               <Text style={[Fonts.type8, { flex: 1 }]}> Alasan</Text>
               <TouchableOpacity
-                onPress={() => props.openReason(index)}
+                onPress={() => props.openReason(index, item.id)}
                 style={styles.reasonButton}
                 disabled={
                   props.type === ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
@@ -160,6 +161,7 @@ const MerchantCollectionReasonList = props => {
             {props.dataList !== null ? (
               <FlatList
                 data={props.dataList}
+                extraData={props.extraData}
                 renderItem={renderItem}
                 numColumns={1}
                 keyExtractor={(item, index) => index.toString()}

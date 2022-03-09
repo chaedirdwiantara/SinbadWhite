@@ -1,5 +1,7 @@
 import ApiRest from '../apiRest';
 
+// TODO: Remove testpath after integration with real API
+
 /** GET ORDER STATUS */
 function getCollectionStatus(data) {
   return ApiRest({
@@ -44,6 +46,8 @@ function getReferenceList(data) {
       data.limit
     }`,
     method: 'GET'
+    // testpath:
+    //   'https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-methods'
   });
 }
 
@@ -102,11 +106,13 @@ function getStamp(data) {
   });
 }
 
-/** GET TRANSFER IMAGE */
+/** GET COLLECTION IMAGE */
 function getCollectionImage(id) {
   return ApiRest({
     path: `collection/v1/payment-method/images/${id}`,
     method: 'GET'
+    // testpath:
+    //   'https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-method/images/133'
   });
 }
 
@@ -137,6 +143,7 @@ function getCollectionDetail(data) {
   return ApiRest({
     path: `collection/v1/payment-method/${data}`,
     method: 'GET'
+    // testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-method/${data}`
   });
 }
 
@@ -163,6 +170,7 @@ function getBillingDetail(data) {
   return ApiRest({
     path: `collection/v1/payment-billing/${data}`,
     method: 'GET'
+    // testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billing/${data}`
   });
 }
 
@@ -174,8 +182,10 @@ function getPaymentCollectionLog(data) {
     }&storeId=${data.storeId}&limit=${data.limit}&skip=${data.skip}&userId=${
       data.userId
     }`,
-    // testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billing-collections?paymentCollectionMethodId=${data.paymentCollectionMethodId}&limit=${data.limit}&skip=${data.skip}`,
     method: 'GET'
+    // testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/payment-billing-collections?paymentCollectionMethodId=${
+    //   data.paymentCollectionMethodId
+    // }&limit=${data.limit}&skip=${data.skip}` // TODO: remove me
   });
 }
 
@@ -206,19 +216,34 @@ function getCollectionListStatus() {
 }
 
 /** GET REASON NOT TO PAY LIST */
-function getReasonNotToPay() {
+function getReasonNotToPay(data) {
   return ApiRest({
-    path: 'collection/v1/no-payment-reasons',
+    path: `collection/v1/no-payment-reasons?orderParcelId=${
+      data.orderParcelId
+    }`,
     method: 'GET'
-  })
+  });
 }
 
 /** POST TRANSACTION CHECKOUT */
-function postTransactionCheckout(data){
+function postTransactionCheckout(data) {
   return ApiRest({
     path: 'collection/v1/transaction-checkout',
     method: 'POST',
     params: data
+  });
+}
+
+/** GET RETURN BALANCE */
+function getReturnBalance(data) {
+  return ApiRest({
+    path: `/collection/v1/return-balance?storeId=${data.storeId}&supplierId=${
+      data.supplierId
+    }`,
+    method: 'GET'
+    // testpath: `https://e7686c2e-1298-481b-a158-af31670f15b3.mock.pstmn.io/collection/v1/return-balance?storeId=${
+    //   data.storeId
+    // }&supplierId=${data.supplierId}`
   });
 }
 
@@ -245,5 +270,6 @@ export const SfaMethod = {
   deleteCollectionMethod,
   getCollectionListStatus,
   getReasonNotToPay,
-  postTransactionCheckout
+  postTransactionCheckout,
+  getReturnBalance
 };
