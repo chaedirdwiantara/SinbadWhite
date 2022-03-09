@@ -8,16 +8,7 @@ const Fonts = {
   MontserratMedium: 'Montserrat-Medium',
   MontserratRegular: 'Montserrat-Regular',
   MontserratSemiBold: 'Montserrat-SemiBold',
-  MontserratThin: 'Montserrat-Thin',
-  InterBlack: 'Inter-Black',
-  InterBold: 'Inter-Bold',
-  InterExtraBold: 'Inter-ExtraBold',
-  InterExtraLight: 'Inter-ExtraLight',
-  InterLight: 'Inter-Light',
-  InterMedium: 'Inter-Medium',
-  InterRegular: 'Inter-Regular',
-  InterSemiBold: 'Inter-SemiBold',
-  InterThin: 'Inter-Thin'
+  MontserratThin: 'Montserrat-Thin'
 };
 
 export default Fonts;

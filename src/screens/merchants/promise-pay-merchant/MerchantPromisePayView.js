@@ -179,7 +179,7 @@ const MerchantPromisePayView = props => {
     return (
       <View style={{ marginTop: 24 }}>
         <View style={{ flexDirection: 'row' }}>
-          <Text style={{ color: masterColor.fontRed }}>* </Text>
+          <Text style={{ color: masterColor.fontRed50 }}>* </Text>
           <Text style={[Fonts.type10]}>
             Tanggal Janji Bayar {promiseDateCount}
           </Text>
