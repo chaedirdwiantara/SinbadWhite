@@ -51,9 +51,9 @@ const DatePickerCalender = ({
         );
       }}
       theme={{
-        selectedDayBackgroundColor: masterColor.fontRed,
+        selectedDayBackgroundColor: masterColor.fontRed50,
         selectedDayTextColor: masterColor.fontWhite,
-        todayTextColor: masterColor.fontRed,
+        todayTextColor: masterColor.fontRed50,
         arrowColor: masterColor.fontBlack100
       }}
     />

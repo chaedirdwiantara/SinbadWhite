@@ -970,14 +970,14 @@ const styles = StyleSheet.create({
     color: Color.fontBlack50
   },
   bodyDefault: {
-    fontFamily: Fonts.InterRegular,
+    fontFamily: Fonts.MontserratRegular,
     fontSize: 14,
     fontStyle: 'normal',
     lineHeight: 20,
     fontWeight: '600'
   },
   paragraphSmall: {
-    fontFamily: Fonts.InterRegular,
+    fontFamily: Fonts.MontserratRegular,
     fontSize: 12,
     fontStyle: 'normal',
     lineHeight: 18,
