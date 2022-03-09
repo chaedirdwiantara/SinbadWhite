@@ -16,7 +16,8 @@ import {
 import {
   ModalBottomType3,
   ModalBottomType4,
-  SearchBarType8
+  SearchBarType8,
+  LoadingPage
 } from '../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import { Color } from '../../config';
@@ -88,7 +89,7 @@ class CollectionView extends Component {
         10
       ),
       skip: 1,
-      limit: 8,
+      limit: 10,
       loading,
       searchKey
     };
@@ -259,7 +260,7 @@ class CollectionView extends Component {
             {this.renderModalExistInPjp()}
           </>
         ) : (
-          <Text>Loading</Text>
+          <LoadingPage />
         )}
       </>
     );

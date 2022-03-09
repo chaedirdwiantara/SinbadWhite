@@ -771,9 +771,12 @@ export function selectedStore(data) {
 export function sfaGetStoreCollectionListRefresh() {
   return { type: types.SFA_GET_STORE_COLLECTION_LIST_REFRESH };
 }
+/** === LOAD MORE GET STORE COLLECTION LIST === */
+export function sfaGetStoreCollectionListLoadmore(data) {
+  return { type: types.SFA_GET_STORE_COLLECTION_LIST_LOADMORE, payload: data };
+}
 /** === MODAL COLLECTION LIST MENU === */
 export function sfaModalCollectionListMenu(data) {
-  console.log(data, 'dataa');
   return { type: types.SFA_MODAL_COLLECTION_LIST_MENU, payload: data };
 }
 /** === SFA GET STORE COLLECTION STATUS PROCESS === */

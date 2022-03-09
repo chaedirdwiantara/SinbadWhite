@@ -18,22 +18,36 @@ class CollectionListDataView extends Component {
     super(props);
     this.state = {};
   }
-
+  /** HANDLE ON REFRESH LIST */
   onHandleRefresh = () => {
     this.props.sfaGetStoreCollectionListReset();
     this.props.sfaGetStoreCollectionListRefresh();
     this.getStoreCollectionList(true);
   };
+  /**  HANDLE ON LOAD MORE LIST VIEW */
+  onHandleLoadMore = () => {
+    if (this.props.sfa.dataGetStoreCollectionList) {
+      if (
+        (this.props.sfa.dataGetStoreCollectionList || []).length <
+          this.props.sfa.totalGetStoreCollectionList ||
+        0
+      ) {
+        const skip = this.props.sfa.skipGetStoreCollection + 1;
+        this.props.sfaGetStoreCollectionListLoadmore(skip);
+        this.getStoreCollectionList(false, skip);
+      }
+    }
+  };
   /** === GET STORE COLLECTION LIST === */
-  getStoreCollectionList = loading => {
+  getStoreCollectionList = (loading, skip) => {
     const data = {
       salesId: parseInt(this.props?.user?.id || 0, 10),
       supplierId: parseInt(
         this.props?.user?.userSuppliers[0]?.supplier?.id || 0,
         10
       ),
-      skip: 1,
-      limit: 8,
+      skip: skip || 1,
+      limit: 10,
       loading: true,
       searchKey: '',
       loading
@@ -123,7 +137,7 @@ class CollectionListDataView extends Component {
           onRefresh={this.onHandleRefresh}
           refreshing={this.props.sfa.refreshGetStoreCollectionList}
           onEndReachedThreshold={0.2}
-          onEndReached={() => console.log('end')}
+          onEndReached={() => this.onHandleLoadMore()}
         />
       </View>
     ) : (

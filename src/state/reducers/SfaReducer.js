@@ -73,7 +73,7 @@ const INITIAL_STATE = {
   dataSfaGetReturnBalance: null,
   dataGetStoreCollectionList: [],
   totalGetStoreCollectionList: 0,
-  skipGetStoreCollection: 0,
+  skipGetStoreCollection: 1,
   selectedStore: null,
   dataGetStoreCollection: null,
   dataStoreCollectionStatus: null,
@@ -951,7 +951,7 @@ export const sfa = createReducer(INITIAL_STATE, {
       loadingGetStoreCollectionList: false,
       loadingLoadmoreGetStoreCollection: false,
       refreshGetStoreCollectionList: false,
-      totalDataGetStoreCollectionList: action.payload.meta.total,
+      totalGetStoreCollectionList: action.payload.meta.total,
       dataGetStoreCollectionList: [
         ...state.dataGetStoreCollectionList,
         ...(action.payload.data.stores || [])
@@ -971,7 +971,7 @@ export const sfa = createReducer(INITIAL_STATE, {
   [types.SFA_GET_STORE_COLLECTION_LIST_RESET](state, action) {
     return {
       ...state,
-      skipGetStoreCollection: 0,
+      skipGetStoreCollection: 1,
       totalGetStoreCollectionList: 0,
       dataGetStoreCollectionList: [],
       dataGetStoreCollection: null
@@ -982,7 +982,7 @@ export const sfa = createReducer(INITIAL_STATE, {
       ...state,
       refreshGetStoreCollectionList: true,
       loadingGetStoreCollectionList: true,
-      skipGetStoreCollection: 0,
+      skipGetStoreCollection: 1,
       totalGetStoreCollectionList: 0,
       dataGetStoreCollectionList: [],
       dataGetStoreCollection: null
