@@ -184,7 +184,7 @@ const MerchantNoCollectionReason = props => {
       loading: loading,
       limit: page,
       skip: 0,
-      collectionTransactionDetailStatus: 'assigned',
+      collectionTransactionDetailStatus: 'ASSIGNED',
       collectionTransactionDetailIds
     };
     dispatch(sfaGetCollectionListProcess(data));

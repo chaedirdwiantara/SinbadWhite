@@ -46,7 +46,7 @@ const MerchantNoCollectionDetailView = props => {
       loading: loading,
       limit: page,
       skip: 0,
-      collectionTransactionDetailStatus: 'pending',
+      collectionTransactionDetailStatus: 'ASSIGNED',
       collectionTransactionDetailIds: selectedMerchant.collectionIds
     };
     dispatch(sfaGetCollectionListProcess(data));

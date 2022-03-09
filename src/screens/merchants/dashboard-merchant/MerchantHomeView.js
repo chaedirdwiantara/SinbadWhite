@@ -622,7 +622,7 @@ class MerchantHomeView extends Component {
       loading: true,
       limit: 20,
       skip: 0,
-      collectionTransactionDetailStatus: 'pending',
+      collectionTransactionDetailStatus: 'ASSIGNED',
       collectionTransactionDetailIds: selectedMerchant.collectionIds
     };
     this.props.sfaCheckCollectionStatusProcess(data);
@@ -1127,7 +1127,7 @@ class MerchantHomeView extends Component {
               items.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING
           ) ||
           this.props.sfa?.dataStoreCollectionStatus?.collectionStatus ===
-            'PARTIAL_COLLECTED'
+            'PARTIAL COLLECTED'
         ) {
           return (
             <TouchableOpacity

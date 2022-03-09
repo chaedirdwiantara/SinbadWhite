@@ -37,12 +37,8 @@ import masterColor from '../../config/masterColor';
 import ModalContentMenuAddMerchant from './ModalContentMenuAddMerchant';
 import ModalBottomMerchantList from '../merchants/ModalBottomMerchantList';
 import JourneyListDataView from './JourneyListDataView';
-import {
-  JOURNEY_PLAN_PAUSE_STATUS_PAUSED
-} from '../../constants';
-import {
-  storeType
-} from '../../constants/journeyPlanParams';
+import { JOURNEY_PLAN_PAUSE_STATUS_PAUSED } from '../../constants';
+import { storeType } from '../../constants/journeyPlanParams';
 
 class JourneyView extends Component {
   constructor(props) {
@@ -58,7 +54,7 @@ class JourneyView extends Component {
       filterValue: 0,
       modalInfoPausedVisit: false,
       /** used for flag whether need to show modalInfoPausedVisit, if true, we need to show modalInfoPausedVisit */
-      checkPausedVisit: true 
+      checkPausedVisit: true
     };
   }
   /**
@@ -121,8 +117,8 @@ class JourneyView extends Component {
     });
     /** WE NEED TO CHECK IS THERE ANY PAUSED JOURNEY PLAN AGAIN, WHEN USER BACK TO THIS SCREEN */
     this.props.navigation.addListener('didBlur', () => {
-      this.setState({ checkPausedVisit: true })
-    })
+      this.setState({ checkPausedVisit: true });
+    });
   }
   /** === DID UPDATE === */
   componentDidUpdate(prevProps) {
@@ -133,7 +129,10 @@ class JourneyView extends Component {
       if (this.props.journey.dataSaveMerchantToJourneyPlanV2 !== null) {
         this.getJourneyPlan();
         this.props.getJourneyPlanReportProcessV2();
-        this.setState({ openModalMerchantList: false, openModalAddMerchant: false, });
+        this.setState({
+          openModalMerchantList: false,
+          openModalAddMerchant: false
+        });
       }
     }
     /** IF ADD MERCHANT SUCCESS */
@@ -160,7 +159,7 @@ class JourneyView extends Component {
         this.props.journey.dataGetJourneyPlanV2 &&
         this.state.checkPausedVisit
       ) {
-        this.checkPausedVisit(this.props.journey.dataGetJourneyPlanV2)
+        this.checkPausedVisit(this.props.journey.dataGetJourneyPlanV2);
       }
     }
     /** error get journey plan reports */
@@ -182,7 +181,7 @@ class JourneyView extends Component {
       this.setState({ search: data.data }, () => this.getJourneyPlan());
     }
     if (data.type === 'status') {
-      this.setState({  filterValue: data.data }, () => this.getJourneyPlan());
+      this.setState({ filterValue: data.data }, () => this.getJourneyPlan());
     }
   }
   /**
@@ -293,14 +292,21 @@ class JourneyView extends Component {
   }
   /**
    * === FILTER DATA IF FOUND JBS WITH PAUSE STATUS === 1, MEANS PAUSED NEED TO SHOW MODAL TO INFORM USER THERE IS PAUSED VISIT
-   * @param {Array<this.props.journey.dataGetJourneyPlanV2>} data 
+   * @param {Array<this.props.journey.dataGetJourneyPlanV2>} data
    */
   checkPausedVisit(data) {
-    data && data.filter((item) => {
-      if (item.journeyBookStores.pauseStatus === JOURNEY_PLAN_PAUSE_STATUS_PAUSED) {
-        this.setState({ modalInfoPausedVisit: true, checkPausedVisit: false })
-      }
-    })
+    data &&
+      data.filter(item => {
+        if (
+          item.journeyBookStores.pauseStatus ===
+          JOURNEY_PLAN_PAUSE_STATUS_PAUSED
+        ) {
+          this.setState({
+            modalInfoPausedVisit: true,
+            checkPausedVisit: false
+          });
+        }
+      });
   }
   /**
    * =================
@@ -318,7 +324,9 @@ class JourneyView extends Component {
         onRef={ref => (this.parentFunction = ref)}
         parentFunction={this.parentFunction.bind(this)}
         storeType={this.state.filterValue}
-        setCheckPausedVisit={(checkPausedVisit) => this.setState({ checkPausedVisit })}
+        setCheckPausedVisit={checkPausedVisit =>
+          this.setState({ checkPausedVisit })
+        }
       />
     );
   }
@@ -426,7 +434,12 @@ class JourneyView extends Component {
     return this.state.openModalMerchantList ? (
       <ModalBottomMerchantList
         open={this.state.openModalMerchantList}
-        close={() => this.setState({ openModalMerchantList: false, openModalAddMerchant: false, })}
+        close={() =>
+          this.setState({
+            openModalMerchantList: false,
+            openModalAddMerchant: false
+          })
+        }
       />
     ) : (
       <View />
@@ -503,15 +516,20 @@ class JourneyView extends Component {
       <View />
     );
   }
-   /** === RENDER MODAL DELAYED VISIT === */
-   renderModalInfoPausedVisit() {
+  /** === RENDER MODAL DELAYED VISIT === */
+  renderModalInfoPausedVisit() {
     return (
       <ModalBottomType1
         open={this.state.modalInfoPausedVisit}
         title="Masih Ada Kunjungan Tertunda"
         content={
           <View>
-            <Text style={[Fonts.type3, { marginHorizontal: 24, textAlign: 'center', marginBottom: 32 }]}>
+            <Text
+              style={[
+                Fonts.type3,
+                { marginHorizontal: 24, textAlign: 'center', marginBottom: 32 }
+              ]}
+            >
               Pastikan untuk menyelesaikan semua kunjungan di journey plan.
             </Text>
             <View style={{ marginBottom: 16 }}>
@@ -525,7 +543,7 @@ class JourneyView extends Component {
           </View>
         }
       />
-    )
+    );
   }
   /** ===================== */
   /** === MAIN === */

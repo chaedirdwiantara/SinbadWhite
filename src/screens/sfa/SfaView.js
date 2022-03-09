@@ -26,7 +26,9 @@ import {
   SfaGetLoadMore,
   sfaGetRefresh,
   sfaGetReferenceListProcess,
-  sfaModalCollectionListMenu
+  sfaModalCollectionListMenu,
+  sfaGetStoreCollectionListReset,
+  sfaGetStoreCollectionListProcess
 } from '../../state/actions/SfaAction';
 import SfaTabView, { TAB_INVOICE, TAB_COLLECTION } from './SfaTabView';
 import SfaCollectionListView from './SfaCollectionListView';
@@ -40,21 +42,36 @@ let navigationProps = '';
 /** === HEADER === */
 export const HeaderLeftSfaViewtOption = () => {
   const type = navigationProps?.navigation?.state?.params?.type || '';
-  console.log(type, 'type');
   const dispatch = useDispatch();
+  const { selectedStore } = useSelector(state => state.sfa);
+  const { id, userSuppliers } = useSelector(state => state.user);
+  const onHandleBack = () => {
+    if (type === 'COLLECTION_LIST') {
+      const supplierId = parseInt(userSuppliers[0]?.supplier?.id || 0, 10);
+      const salesId = parseInt(id, 10) || 0;
+      const data = {
+        salesId,
+        supplierId,
+        skip: 1,
+        limit: 10,
+        loading: true,
+        searchKey: ''
+      };
+      dispatch(sfaGetStoreCollectionListReset());
+      dispatch(sfaGetStoreCollectionListProcess(data));
+      dispatch(sfaModalCollectionListMenu(true));
+      NavigationService.goBack();
+    } else {
+      NavigationService.goBack();
+    }
+  };
+
   return (
     <>
       <View style={styles.headerLeftOption}>
         <TouchableOpacity
           style={[styles.boxButton]}
-          onPress={() => {
-            if (type === 'COLLECTION_LIST') {
-              dispatch(sfaModalCollectionListMenu(true));
-              NavigationService.goBack();
-            } else {
-              NavigationService.goBack();
-            }
-          }}
+          onPress={() => onHandleBack()}
         >
           <MaterialIcon
             name="arrow-back"

@@ -47,10 +47,6 @@ class CollectionView extends Component {
   componentDidMount() {
     this.props.sfaGetStoreCollectionListReset();
     this.getStoreCollectionList(true, '');
-    this.props.navigation.addListener('didFocus', payload => {
-      this.props.sfaGetStoreCollectionListReset();
-      this.getStoreCollectionList(true, '');
-    });
   }
 
   componentDidUpdate(prevProps, prevState) {
