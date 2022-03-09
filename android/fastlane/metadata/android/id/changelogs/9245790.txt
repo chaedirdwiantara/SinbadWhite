@@ -1,0 +1,4 @@
+We are always thrive to become better. Hence there are some new features in this version. In this updates:
+Now we have more options for collection. You are able to do collection with Barang retur, Promo (previously Tunai, Giro, Cek, Transfer)
+Now you can input Janji Bayar date in our App
+Update your App to experience these new features!
