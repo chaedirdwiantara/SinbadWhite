@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -22,7 +23,9 @@ import {
   USED,
   USED_BY_OTHERS,
   NOT_AVAILABLE,
-  NOT_USED
+  NOT_USED,
+  RETUR,
+  PROMO
 } from '../../constants/collectionConstants';
 import { CardHeaderBadge, CardBody, CardHeader } from './components/CardView';
 import ErrorBottomFailPayment from '../../components/error/ModalBottomFailPayment';
@@ -200,7 +203,7 @@ const SfaBillingDetailView = props => {
     return (
       <>
         {CardBody({
-          title: 'Nomor Faktur',
+          title: 'Nama Faktur',
           value: invoiceGroupName,
           styleCardView: styles.styleCardView
         })}
@@ -248,19 +251,68 @@ const SfaBillingDetailView = props => {
   const renderCodeInfoBody = () => {
     const {
       billingPaymentCode,
-      billingPaymentRef
+      billingPaymentRef,
+      paymentCollectionType
     } = dataSfaGetBillingDetail.data;
 
     return (
       <>
         {CardBody({
-          title: 'Kode Pembayaran',
+          title:
+            paymentCollectionType.id === RETUR ||
+            paymentCollectionType.id === PROMO
+              ? 'Kode Penagihan'
+              : 'Kode Pembayaran',
           value: billingPaymentCode || '-',
           styleCardView: styles.styleCardView
         })}
+        {paymentCollectionType.id !== RETUR &&
+        paymentCollectionType.id !== PROMO
+          ? CardBody({
+              title: 'Kode Pembayaran Ref',
+              value: billingPaymentRef || '-',
+              styleCardView: styles.styleCardView
+            })
+          : null}
+      </>
+    );
+  };
+
+  /** RENDER SALESMAN INFORMATION HEADER */
+  const renderSalesmanInfoHeader = () => {
+    const { paymentCollectionType } = dataSfaGetBillingDetail.data;
+    return (
+      (paymentCollectionType.id === RETUR ||
+        paymentCollectionType.id === PROMO) && (
+        <>
+          {CardHeader({
+            title: 'Informasi Salesman',
+            styleContainer: styles.container,
+            styleCard: {
+              ...styles.cardTaskList,
+              ...GlobalStyle.shadowForBox5
+            },
+            styleCardView: styles.styleCardView,
+            renderCardBody: renderSalesmanInfoBody
+          })}
+        </>
+      )
+    );
+  };
+
+  /** RENDER SALESMAN INFORMATION BODY */
+  // TODO: Integration with API
+  const renderSalesmanInfoBody = () => {
+    return (
+      <>
         {CardBody({
-          title: 'Kode Pembayaran Ref',
-          value: billingPaymentRef || '-',
+          title: 'Kode Salesman',
+          value: dataSfaGetBillingDetail?.data?.salesCode,
+          styleCardView: styles.styleCardView
+        })}
+        {CardBody({
+          title: 'Nama Salesman',
+          value: dataSfaGetBillingDetail?.data?.salesName,
           styleCardView: styles.styleCardView
         })}
       </>
@@ -342,7 +394,7 @@ const SfaBillingDetailView = props => {
             paymentCollectionType.id === TRANSFER
               ? '*Tanggal Pembayaran'
               : 'Tanggal Pembayaran',
-          valueIcon: {
+          valueIcon: paymentCollectionType.id !== RETUR && {
             prefixIcon: 'date-range',
             prefixStyle: { marginRight: 11 }
           },
@@ -352,6 +404,16 @@ const SfaBillingDetailView = props => {
           valueStyle: { marginBottom: 16, marginTop: 2 },
           styleCardView: styles.styleCardView
         })}
+        {(paymentCollectionType.id === RETUR ||
+          paymentCollectionType.id === PROMO) &&
+          CardBody({
+            title: 'Metode Penagihan',
+            value: paymentCollectionType?.name || '-',
+            valuePosition: 'bottom',
+            titleStyle: { ...Fonts.type37 },
+            valueStyle: { marginBottom: 16 },
+            styleCardView: styles.styleCardView
+          })}
         {CardBody({
           title:
             paymentCollectionType.id === TRANSFER
@@ -400,6 +462,7 @@ const SfaBillingDetailView = props => {
       <View style={{ flex: 1 }}>
         {renderInvoiceInfoHeader()}
         {renderCodeInfoHeader()}
+        {renderSalesmanInfoHeader()}
         {renderBillingInfoCardHeader()}
       </View>
     );

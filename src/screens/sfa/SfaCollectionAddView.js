@@ -1,3 +1,5 @@
+/* eslint-disable no-case-declarations */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -5,14 +7,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Dimensions
+  BackHandler
 } from '../../library/reactPackage';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   MaterialIcon,
   MaterialCommunityIcons,
-  moment,
-  Tooltip
+  moment
 } from '../../library/thirdPartyPackage';
 import ModalBankAccount from './ModalBankAccount';
 import ModalListMaterai from './ModalListMaterai';
@@ -23,7 +24,9 @@ import {
   CASH,
   CHECK,
   GIRO,
-  TRANSFER
+  TRANSFER,
+  RETUR,
+  PROMO
 } from '../../constants/collectionConstants';
 import NavigationService from '../../navigation/NavigationService';
 import {
@@ -39,7 +42,12 @@ import {
   sfaPostPaymentMethodProcess,
   sfaGetReferenceListProcess
 } from '../../state/actions';
-const { width } = Dimensions.get('window');
+import { collectionMethodLabel } from './functions/sfa';
+import SfaTooltip from './components/SfaTooltip';
+import InputAmount from './components/InputAmount';
+import { ModalConfirmBack } from './sfa-collection/AddViewBundle';
+import { Color } from '../../config';
+import InputAmountBox from './components/InputAmountBox';
 
 const MODAL_TYPE_SOURCE = 1;
 const MODAL_TYPE_TO = 2;
@@ -67,14 +75,19 @@ const SfaCollectionAddView = props => {
   );
   const [isStampChecked, setIsStampChecked] = useState(false);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
-  const [questionMarkShow, setQuestionMarkShow] = useState(true);
   const [imageName, setImageName] = useState();
   const [imageType, setImageType] = useState();
   const [imageData, setImageData] = useState();
+  const [imageSkpName, setImageSkpName] = useState();
+  const [imageSkpType, setImageSkpType] = useState();
+  const [imageSkpData, setImageSkpData] = useState();
   const [isModalBottomErrorOpen, setIsModalBottomErrorOpen] = useState(false);
   const [messageError, setMessageError] = useState(null);
   const [titleError, setTitleError] = useState(null);
   const [buttonTitle, setButtonTitle] = useState(null);
+  const [invalidAmountRetur, setInvalidAmountRetur] = useState(false);
+  const [openModalConfirmBack, setOpenModalConfirmBack] = useState(false);
+
   /**
    * *********************************
    * RENDER USESELECTOR
@@ -85,7 +98,8 @@ const SfaCollectionAddView = props => {
   const {
     loadingSfaPostPaymentMethod,
     dataSfaPostPaymentMethod,
-    errorSfaPostPaymentMethod
+    errorSfaPostPaymentMethod,
+    dataSfaGetReturnBalance
   } = useSelector(state => state.sfa);
 
   /**
@@ -134,6 +148,16 @@ const SfaCollectionAddView = props => {
     }
   }, [isStampChecked]);
 
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+  }, []);
+
+  useEffect(
+    () => () =>
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress),
+    []
+  );
+
   /** HANDLE ERROR POST COLLECTION */
   useEffect(() => {
     if (prevErrorSfaPostPaymentMethod !== errorSfaPostPaymentMethod) {
@@ -147,6 +171,11 @@ const SfaCollectionAddView = props => {
    * RENDER FUNCTION
    * *********************************
    */
+  const handleBackPress = () => {
+    setOpenModalConfirmBack(true);
+    return true;
+  };
+
   const navigateOnSucces = () => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
@@ -180,6 +209,18 @@ const SfaCollectionAddView = props => {
     setImageData();
     setImageName();
     setImageType();
+  };
+
+  const onChooseImageSkp = response => {
+    setImageSkpData(response.data);
+    setImageSkpName(response.fileName);
+    setImageSkpType(response.type);
+  };
+
+  const onDeleteImageSkp = () => {
+    setImageSkpData();
+    setImageSkpName();
+    setImageSkpType();
   };
 
   const onSelectTransferDate = date => {
@@ -225,60 +266,85 @@ const SfaCollectionAddView = props => {
   };
 
   const totalAmountCal = value => {
-    if (
-      paymentCollectionMethodId === CASH ||
-      paymentCollectionMethodId === TRANSFER
-    ) {
-      setTotalAmount(amount);
-    }
-    if (
-      paymentCollectionMethodId === CHECK ||
-      paymentCollectionMethodId === GIRO
-    ) {
-      const stamp = dataStamp ? dataStamp.nominal : 0;
-      const total = amount + stamp;
-      setTotalAmount(parseInt(total, 10));
+    switch (paymentCollectionMethodId) {
+      case CASH:
+      case TRANSFER:
+      case RETUR:
+        setTotalAmount(amount);
+        break;
+      case CHECK:
+      case GIRO:
+        const stamp = dataStamp ? dataStamp.nominal : 0;
+        const total = amount + stamp;
+        setTotalAmount(parseInt(total, 10));
+        break;
+      case PROMO:
+        setTotalAmount(amount);
+        break;
     }
   };
 
   const checkInput = () => {
-    if (paymentCollectionMethodId === CASH) {
-      if (!amount || !imageData) {
-        setIsSaveDisabled(true);
-      } else {
-        setIsSaveDisabled(false);
-      }
-    }
-    if (
-      paymentCollectionMethodId === CHECK ||
-      paymentCollectionMethodId === GIRO
-    ) {
-      if (
-        !amount ||
-        !imageData ||
-        !issuedDate ||
-        !noReference ||
-        !invalidDate ||
-        !dataBank
-      ) {
-        setIsSaveDisabled(true);
-      } else {
-        setIsSaveDisabled(false);
-      }
-    }
-    if (paymentCollectionMethodId === TRANSFER) {
-      if (
-        !noReference ||
-        !dataBank ||
-        !dataBankTo ||
-        !transferDate ||
-        !amount ||
-        !imageData
-      ) {
-        setIsSaveDisabled(true);
-      } else {
-        setIsSaveDisabled(false);
-      }
+    switch (paymentCollectionMethodId) {
+      case CASH:
+        if (!amount || !imageData) {
+          setIsSaveDisabled(true);
+        } else {
+          setIsSaveDisabled(false);
+        }
+        break;
+      case CHECK:
+      case GIRO:
+        if (
+          !amount ||
+          !imageData ||
+          !issuedDate ||
+          !noReference ||
+          !invalidDate ||
+          !dataBank
+        ) {
+          setIsSaveDisabled(true);
+        } else {
+          setIsSaveDisabled(false);
+        }
+        break;
+      case TRANSFER:
+        if (
+          !noReference ||
+          !dataBank ||
+          !dataBankTo ||
+          !transferDate ||
+          !amount ||
+          !imageData
+        ) {
+          setIsSaveDisabled(true);
+        } else {
+          setIsSaveDisabled(false);
+        }
+        break;
+      case PROMO:
+        if (!amount || !imageData || !imageSkpData) {
+          setIsSaveDisabled(true);
+        } else {
+          setIsSaveDisabled(false);
+        }
+        break;
+      case RETUR:
+        if (!amount) {
+          setIsSaveDisabled(true);
+          setInvalidAmountRetur(false);
+        } else {
+          if (amount > (dataSfaGetReturnBalance?.data?.returnBalance ?? 0)) {
+            setIsSaveDisabled(true);
+            setInvalidAmountRetur(true);
+          } else {
+            setIsSaveDisabled(false);
+            setInvalidAmountRetur(false);
+          }
+        }
+        break;
+      default:
+        break;
     }
   };
 
@@ -291,53 +357,69 @@ const SfaCollectionAddView = props => {
       amount: parseInt(amount, 10),
       filename: imageName,
       type: imageType,
-      image: imageData
+      image: imageData,
+      skpFilename: imageSkpName,
+      skpType: imageSkpType,
+      skpImage: imageSkpData
     };
-    if (paymentCollectionMethodId === CASH) {
-      dispatch(sfaPostPaymentMethodProcess(data));
-    }
-    if (
-      paymentCollectionMethodId === CHECK ||
-      paymentCollectionMethodId === GIRO
-    ) {
-      const stampId = dataStamp ? dataStamp.id : null;
-      const isUsedStamp = dataStamp ? true : false;
-      const bankId = dataBank.id;
-      const dateIssued = moment
-        .utc(issuedDate)
-        .local()
-        .format('YYYY-MM-DD HH:mm:ss');
-      const dateInvalid = moment
-        .utc(invalidDate)
-        .local()
-        .format('YYYY-MM-DD HH:mm:ss');
-      const dataCheckGiro = {
-        ...data,
-        stampId: stampId,
-        isUsedStamp: isUsedStamp,
-        bankId: bankId,
-        issuedDate: dateIssued,
-        invalidDate: dateInvalid,
-        referenceCode: noReference
-      };
-      dispatch(sfaPostPaymentMethodProcess(dataCheckGiro));
-    }
-    if (paymentCollectionMethodId === TRANSFER) {
-      const bankId = dataBank.id;
-      const bankToId = dataBankTo.id;
-      const trfDate = moment
-        .utc(transferDate)
-        .local()
-        .format('YYYY-MM-DD HH:mm:ss');
 
-      const dataTransfer = {
-        ...data,
-        referenceCode: noReference,
-        issuedDate: trfDate,
-        bankId,
-        bankToAccountId: bankToId
-      };
-      dispatch(sfaPostPaymentMethodProcess(dataTransfer));
+    switch (paymentCollectionMethodId) {
+      case CASH:
+        dispatch(sfaPostPaymentMethodProcess(data));
+        break;
+      case CHECK:
+      case GIRO:
+        const stampId = dataStamp ? dataStamp.id : null;
+        const isUsedStamp = dataStamp ? true : false;
+        const dateIssued = moment
+          .utc(issuedDate)
+          .local()
+          .format('YYYY-MM-DD HH:mm:ss');
+        const dateInvalid = moment
+          .utc(invalidDate)
+          .local()
+          .format('YYYY-MM-DD HH:mm:ss');
+        const dataCheckGiro = {
+          ...data,
+          stampId: stampId,
+          isUsedStamp: isUsedStamp,
+          bankId: dataBank.id,
+          issuedDate: dateIssued,
+          invalidDate: dateInvalid,
+          referenceCode: noReference
+        };
+        dispatch(sfaPostPaymentMethodProcess(dataCheckGiro));
+        break;
+      case TRANSFER:
+        const trfDate = moment
+          .utc(transferDate)
+          .local()
+          .format('YYYY-MM-DD HH:mm:ss');
+
+        const dataTransfer = {
+          ...data,
+          referenceCode: noReference,
+          issuedDate: trfDate,
+          bankId: dataBank.id,
+          bankToAccountId: dataBankTo.id
+        };
+        dispatch(sfaPostPaymentMethodProcess(dataTransfer));
+        break;
+      case RETUR:
+        const dataRetur = {
+          ...data
+        };
+        delete dataRetur.filename;
+        delete dataRetur.type;
+        delete dataRetur.image;
+        dispatch(sfaPostPaymentMethodProcess(dataRetur));
+        break;
+      case PROMO:
+        const dataPromo = { ...data };
+        dispatch(sfaPostPaymentMethodProcess(dataPromo));
+        break;
+      default:
+        break;
     }
   };
 
@@ -382,14 +464,17 @@ const SfaCollectionAddView = props => {
     return (
       <View>
         {renderReference()}
+        {renderReturnedGoodsBalance()}
         {renderBankSource()}
         {renderBankTo()}
         {renderTransferDate()}
         {renderIssuedDate()}
         {renderInvalidDate()}
         {renderAmount()}
+        {renderAmountRetur()}
         {renderMaterai()}
         {renderImage()}
+        {renderSKPImage()}
       </View>
     );
   };
@@ -400,14 +485,13 @@ const SfaCollectionAddView = props => {
     return (
       <View>
         <Text style={[Fonts.type10, styles.titleInput]}>Metode Penagihan</Text>
-        <Text style={[Fonts.type17, { marginBottom: 16 }]}>
-          {id === CASH
-            ? 'Tunai'
-            : id === CHECK
-            ? 'Cek'
-            : id === GIRO
-            ? 'Giro'
-            : 'Transfer'}
+        <Text
+          style={[
+            Fonts.type17,
+            { marginBottom: 16, color: masterColor.textSecondary }
+          ]}
+        >
+          {collectionMethodLabel(id)}
         </Text>
       </View>
     );
@@ -415,38 +499,41 @@ const SfaCollectionAddView = props => {
 
   /** RENDER AMOUNT */
   const renderAmount = () => {
-    return (
+    return paymentCollectionMethodId !== RETUR ? (
       <>
-        <Text style={[Fonts.type10]}>*Jumlah Penagihan</Text>
+        <View style={{ flexDirection: 'row', marginTop: 8 }}>
+          <Text style={[Fonts.type10, { color: masterColor.fontRed50 }]}>
+            *
+          </Text>
+          <Text style={[Fonts.type10]}>Nilai Penagihan</Text>
+        </View>
         <View
           style={[
             GlobalStyle.boxInput,
             { flexDirection: 'row', alignItems: 'center' }
           ]}
         >
-          <TextInputMask
-            type={'money'}
-            options={{
-              precision: 0,
-              separator: ',',
-              delimiter: '.',
-              unit: 'Rp ',
-              suffixUnit: ''
-            }}
-            value={amount}
-            onChangeText={value => onChangeAmount(value)}
-            style={[
-              Fonts.type17,
-              {
-                width: '95%',
-                borderBottomColor: masterColor.fontBlack10
-              }
-            ]}
+          <InputAmountBox
+            value={amount != 0 ? amount : null}
+            onChange={onChangeAmount}
+            placeholder={'Masukkan jumlah penagihan'}
           />
         </View>
-        <View style={[GlobalStyle.lines, { marginBottom: 8 }]} />
       </>
-    );
+    ) : null;
+  };
+
+  /** === RENDER NILAI PENAGIHAN BARANG RETUR === */
+  const renderAmountRetur = () => {
+    return paymentCollectionMethodId === RETUR ? (
+      <InputAmount
+        title={'*Nilai Penagihan Barang Retur'}
+        value={amount}
+        onChange={onChangeAmount}
+        error={invalidAmountRetur}
+        errorText={'Nilai Penagihan melebihi batas maksimal saldo barang retur'}
+      />
+    ) : null;
   };
 
   /** RENDER REFERENCE */
@@ -573,7 +660,7 @@ const SfaCollectionAddView = props => {
       <View style={[GlobalStyle.shadowForBox, { borderWidth: 0.2 }]}>
         <View style={[styles.totalCollection]}>
           <Text style={[Fonts.type23, { flex: 1 }]}>Total Penagihan</Text>
-          <Text style={[Fonts.type116p, { flex: 1, textAlign: 'right' }]}>
+          <Text style={[Fonts.type7, { flex: 1, textAlign: 'right' }]}>
             {MoneyFormatSpace(totalAmount)}
           </Text>
         </View>
@@ -690,8 +777,19 @@ const SfaCollectionAddView = props => {
       paymentCollectionMethodId === GIRO ? (
       <View style={{ marginTop: 16 }}>
         <View style={{ display: 'flex', flexDirection: 'row' }}>
-          <Text style={[Fonts.type10]}>Materai</Text>
-          {renderStampTooltip()}
+          <Text style={[Fonts.type10]}>Materai </Text>
+          <SfaTooltip
+            popover={
+              <Text style={Fonts.type87}>
+                {'\u25CF'} Masukan nilai materai apabila disediakan oleh Toko{' '}
+                {'\n'}
+                {'\n'}
+                {'\u25CF'} Nilai Materai yang dipilih akan menambah nilai
+                penagihan
+              </Text>
+            }
+            height={90}
+          />
         </View>
         <View
           style={{
@@ -749,47 +847,76 @@ const SfaCollectionAddView = props => {
     ) : null;
   };
 
-  /** RENDER IMAGE */
-  const renderImage = () => {
-    return (
-      <SfaImageInput
-        title={'*Foto Penagihan'}
-        action={onChooseImage}
-        delete={onDeleteImage}
-        loading={false}
-      />
-    );
+  /** RENDER RETURNED GOOD BALANCE */
+  const renderReturnedGoodsBalance = () => {
+    return paymentCollectionMethodId === RETUR ? (
+      <View style={{ marginBottom: 16 }}>
+        <View style={{ display: 'flex', flexDirection: 'row' }}>
+          <Text style={[Fonts.type10, styles.titleInput]}>
+            Saldo Barang Retur{' '}
+          </Text>
+          <SfaTooltip
+            popover={
+              <Text style={Fonts.type87}>
+                Saldo barang retur disini berasal dari saldo barang retur yang
+                sudah diapprove di dalam system
+              </Text>
+            }
+          />
+        </View>
+        <Text style={[Fonts.type17, { marginBottom: 16 }]}>
+          {MoneyFormatSpace(dataSfaGetReturnBalance?.data?.returnBalance ?? 0)}
+        </Text>
+      </View>
+    ) : null;
   };
 
-  /** === RENDER TOOLTIP === */
-  const renderStampTooltip = () => {
-    return (
-      <Tooltip
-        backgroundColor={masterColor.fontBlack50OP80}
-        height={75}
-        withOverlay={false}
-        withPointer={false}
-        onOpen={() => setQuestionMarkShow(false)}
-        onClose={() => setQuestionMarkShow(true)}
-        containerStyle={{
-          padding: 8,
-          width: 0.6 * width
-        }}
-        popover={
-          <Text style={Fonts.type87}>
-            {`\u25CF`} Masukan nilai materai apabila disediakan oleh Toko {'\n'}
-            {'\n'}
-            {`\u25CF`} Nilai Materai yang dipilih akan menambah nilai penagihan
-          </Text>
-        }
-      >
-        {questionMarkShow ? (
-          <MaterialIcon name="help" size={13} color={masterColor.mainColor} />
-        ) : (
-          <View />
-        )}
-      </Tooltip>
-    );
+  /** RENDER IMAGE */
+  const renderImage = () => {
+    return paymentCollectionMethodId !== RETUR ? (
+      <View style={{ marginTop: 16 }}>
+        <SfaImageInput
+          title={'Foto Penagihan'}
+          mandatory={true}
+          action={onChooseImage}
+          delete={onDeleteImage}
+          loading={false}
+          tooltipActive={paymentCollectionMethodId === PROMO ? false : true}
+        />
+        <Text
+          style={[
+            Fonts.paragraphSmall,
+            { color: Color.textSecondary, marginTop: 8 }
+          ]}
+        >
+          Support file JPG or PNG
+        </Text>
+      </View>
+    ) : null;
+  };
+
+  /** RENDER SKP IMAGE */
+  const renderSKPImage = () => {
+    return paymentCollectionMethodId === PROMO ? (
+      <View style={{ marginTop: 16 }}>
+        <SfaImageInput
+          title={'Surat Kerjasama Promosi'}
+          mandatory={true}
+          action={onChooseImageSkp}
+          delete={onDeleteImageSkp}
+          loading={false}
+          tooltipActive={paymentCollectionMethodId === PROMO ? false : true}
+        />
+        <Text
+          style={[
+            Fonts.paragraphSmall,
+            { color: Color.textSecondary, marginTop: 8 }
+          ]}
+        >
+          Support file JPG or PNG
+        </Text>
+      </View>
+    ) : null;
   };
 
   /**
@@ -881,7 +1008,7 @@ const SfaCollectionAddView = props => {
             title={title}
             open={isModalBankOpen}
             close={() => setIsModalBankOpen(false)}
-            onRef={ref => (selectCollection = ref)}
+            onRef={ref => (fnSelectCollection = ref)}
             selectCollection={fnSelectCollection}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
             storeId={parseInt(selectedMerchant.storeId, 10)}
@@ -900,6 +1027,7 @@ const SfaCollectionAddView = props => {
           <ModalListMaterai
             open={isModalStampOpen}
             close={() => setIsModalStampOpen(false)}
+            // eslint-disable-next-line no-undef
             onRef={ref => (selectedStamp = ref)}
             selectStamp={onSelectStamp.bind(this)}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
@@ -918,6 +1046,7 @@ const SfaCollectionAddView = props => {
           <ModalBankDestination
             open={isModalBankDestinationOpen}
             close={() => setIsModalBankDestinationOpen(false)}
+            // eslint-disable-next-line no-undef
             onRef={ref => (selectBankDestination = ref)}
             selectBankDestination={onSelectBankTo.bind(this)}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
@@ -947,6 +1076,19 @@ const SfaCollectionAddView = props => {
       </View>
     );
   };
+
+  /** ===> RENDER MODAL BACK CONFIRMATION === */
+  const renderModalConfirmBack = () => {
+    return openModalConfirmBack ? (
+      <ModalConfirmBack
+        openModalConfirmBack={openModalConfirmBack}
+        setOpenModalConfirmBack={setOpenModalConfirmBack}
+      />
+    ) : (
+      <View />
+    );
+  };
+
   /**
    * *********************************
    * RENDER MAIN
@@ -963,14 +1105,13 @@ const SfaCollectionAddView = props => {
       {renderModalListMaterai()}
       {renderModalError()}
       {renderModalBankDestination()}
+      {renderModalConfirmBack()}
     </>
   );
 };
 
 const styles = StyleSheet.create({
   contentContainer: {
-    marginHorizontal: 16,
-    marginVertical: 16,
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderColor: masterColor.fontBlack40,

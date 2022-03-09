@@ -19,6 +19,7 @@ import {
 } from './TimeHelper';
 import { generateGraphUri } from './Graph';
 import { StringToNumber } from './Converter';
+import { monthsDataID, monthsDataEN } from './Month';
 
 export {
   Fonts,
@@ -37,5 +38,7 @@ export {
   getEndDateMonth,
   getStartDateMinHour,
   generateGraphUri,
-  StringToNumber
+  StringToNumber,
+  monthsDataID,
+  monthsDataEN
 };

@@ -33,6 +33,7 @@ const INITIAL_STATE = {
   loadingGetCollectionListStatus: false,
   loadingSfaCheckCollectionStatus: false,
   loadingSfaGetReasonNotToPay: null,
+  loadingSfaGetReturnBalance: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -62,6 +63,7 @@ const INITIAL_STATE = {
   dataSfaGetReasonNotToPay: null,
   selectedCollectionTransaction: null,
   dataSfaCheckCollectionStatus: null,
+  dataSfaGetReturnBalance: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -89,7 +91,8 @@ const INITIAL_STATE = {
   errorSfaDeleteCollectionMethod: null,
   errorGetCollectionListStatus: null,
   errorSfaCheckCollectionStatus: null,
-  errorSfaGetReasonNotToPay: null
+  errorSfaGetReasonNotToPay: null,
+  errorSfaGetReturnBalance: null
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -886,6 +889,33 @@ export const sfa = createReducer(INITIAL_STATE, {
       loadingSfaPostTransactionCheckout: false,
       dataSfaPostTransactionCheckout: null,
       errorSfaPostTransactionCheckout: null
+    };
+  },
+  /**
+   * ==========================
+   * GET RETURN BALANCE
+   * ==========================
+   */
+  [types.SFA_GET_RETURN_BALANCE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetReturnBalance: true,
+      dataSfaGetReturnBalance: null,
+      errorSfaGetReturnBalance: null
+    };
+  },
+  [types.SFA_GET_RETURN_BALANCE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetReturnBalance: false,
+      dataSfaGetReturnBalance: action.payload
+    };
+  },
+  [types.SFA_GET_RETURN_BALANCE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaGetReturnBalance: false,
+      errorSfaGetReturnBalance: action.payload
     };
   }
 });
