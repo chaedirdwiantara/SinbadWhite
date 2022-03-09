@@ -27,8 +27,8 @@ export const HeaderLeftReasonOption = () => {
         <TouchableOpacity
           onPress={() => {
             if (type === 'COLLECTION_LIST') {
-              dispatch(sfaModalCollectionListMenu(true));
               NavigationService.goBack();
+              dispatch(sfaModalCollectionListMenu(true));
             } else {
               NavigationService.goBack();
             }
