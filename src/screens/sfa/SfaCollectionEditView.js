@@ -93,7 +93,6 @@ const SfaCollectionEditView = props => {
   const [titleError, setTitleError] = useState(null);
   const [buttonTitle, setButtonTitle] = useState(null);
   const [invalidAmountRetur, setInvalidAmountRetur] = useState(false);
-  const [returnBalance, setReturnBalance] = useState(0);
 
   /**
    * *********************************
@@ -152,14 +151,10 @@ const SfaCollectionEditView = props => {
   useEffect(() => {
     prevDataSfaGetCollectionDetailRef.current = dataSfaGetCollectionDetail;
   }, []);
-  const prevDataSfaGetCollectionDetail =
-    prevDataSfaGetCollectionDetailRef.current;
 
   useEffect(() => {
-    if (prevDataSfaGetCollectionDetail !== dataSfaGetCollectionDetail) {
-      if (dataSfaGetCollectionDetail) {
-        getInitialData();
-      }
+    if (dataSfaGetCollectionDetail) {
+      getInitialData();
     }
   }, [dataSfaGetCollectionDetail]);
 
@@ -243,12 +238,11 @@ const SfaCollectionEditView = props => {
     checkInput();
   };
 
+  /** FUNCTION GET RETURN BALANCE */
   const getDataReturnBalance = () => {
-    const detailCollection = dataSfaGetCollectionDetail?.data;
-    const returnAmount =
-      detailCollection?.amount + dataSfaGetReturnBalance?.data?.returnBalance ??
-      0;
-    setReturnBalance(returnAmount);
+    const a = dataSfaGetCollectionDetail?.data?.amount ?? 0;
+    const b = dataSfaGetReturnBalance?.data?.returnBalance ?? 0;
+    return a + b;
   };
 
   /** FUNCTION ON SUCCESS EDIT COLLECTION */
@@ -449,7 +443,7 @@ const SfaCollectionEditView = props => {
           setIsSaveDisabled(true);
           setInvalidAmountRetur(false);
         } else {
-          if (amount > returnBalance) {
+          if (amount > getDataReturnBalance()) {
             setIsSaveDisabled(true);
             setInvalidAmountRetur(true);
           } else {
@@ -990,7 +984,7 @@ const SfaCollectionEditView = props => {
           />
         </View>
         <Text style={[Fonts.type17, { marginBottom: 16 }]}>
-          {MoneyFormatSpace(returnBalance)}
+          {MoneyFormatSpace(getDataReturnBalance())}
         </Text>
       </View>
     ) : null;
