@@ -240,9 +240,9 @@ const SfaCollectionEditView = props => {
 
   /** FUNCTION GET RETURN BALANCE */
   const getDataReturnBalance = () => {
-    const a = dataSfaGetCollectionDetail?.data?.amount ?? 0;
-    const b = dataSfaGetReturnBalance?.data?.returnBalance ?? 0;
-    return a + b;
+    const paymentAmount = dataSfaGetCollectionDetail?.data?.amount ?? 0;
+    const returnBalance = dataSfaGetReturnBalance?.data?.returnBalance ?? 0;
+    return paymentAmount + returnBalance;
   };
 
   /** FUNCTION ON SUCCESS EDIT COLLECTION */
