@@ -7,10 +7,10 @@ import {
   TextInput,
   Text
 } from '../library/reactPackage';
-import { Fonts, NumberFormat } from '../helpers';
+import { Fonts } from '../helpers';
 import masterColor from '../config/masterColor.json';
 
-class OrderButton extends Component {
+class OrderButtonLargeUOM extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -250,25 +250,12 @@ class OrderButton extends Component {
 
   /** FOR DISABLE PLUS BUTTON */
   checkDisablePlusButton() {
-    // if (!this.state.unlimitedStock) {
-    //   if (this.state.stock <= this.state.minQty) {
-    //     return true;
-    //   } else if (this.state.stock <= this.state.qty) {
-    //     return true;
-    //   }
-    // }
     if (this.state.totalClickPlus === 0) {
       return true;
     }
     return false;
   }
-  /** === CHECK TERSISA TEXT === */
-  checkTersisa() {
-    if (!this.state.unlimitedStock && this.state.stock > this.state.minQty) {
-      return `Tersisa ${NumberFormat(this.state.stock)} ${this.state.unit}`;
-    }
-    return '';
-  }
+
   /** === MAX QUANTITY ORDER === */
   checkMaxQtyOrder() {
     if (this.state.isMax) {
@@ -357,22 +344,11 @@ class OrderButton extends Component {
       </View>
     );
   }
-  /** => render stock */
-  renderRemainingStock() {
-    return (
-      <View style={{ paddingRight: 8, justifyContent: 'center' }}>
-        <Text style={Fonts.type22}>{this.checkTersisa()}</Text>
-      </View>
-    );
-  }
 
   render() {
     return (
       <View style={styles.mainContainer}>
-        <View style={styles.subMainContainer}>
-          {this.renderRemainingStock()}
-          {this.renderCalculator()}
-        </View>
+        <View style={styles.subMainContainer}>{this.renderCalculator()}</View>
         {this.renderMaxQtyOrder()}
       </View>
     );
@@ -457,7 +433,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default OrderButton;
+export default OrderButtonLargeUOM;
 
 /**
  * ========================================
