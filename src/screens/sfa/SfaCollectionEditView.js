@@ -151,15 +151,15 @@ const SfaCollectionEditView = props => {
   useEffect(() => {
     prevDataSfaGetCollectionDetailRef.current = dataSfaGetCollectionDetail;
   }, []);
-  const prevDataSfaGetCollectionDetail =
-    prevDataSfaGetCollectionDetailRef.current;
 
   useEffect(() => {
-    if (prevDataSfaGetCollectionDetail !== dataSfaGetCollectionDetail) {
-      if (dataSfaGetCollectionDetail) {
-        getInitialData();
-      }
+    if (dataSfaGetCollectionDetail) {
+      getInitialData();
     }
+  }, [dataSfaGetCollectionDetail]);
+
+  useEffect(() => {
+    getDataReturnBalance();
   }, [dataSfaGetCollectionDetail]);
 
   useEffect(() => {
@@ -236,6 +236,13 @@ const SfaCollectionEditView = props => {
     setDataStamp(detailCollection.stamp || 0);
     setIsStampChecked(detailCollection.stamp ? true : false);
     checkInput();
+  };
+
+  /** FUNCTION GET RETURN BALANCE */
+  const getDataReturnBalance = () => {
+    const paymentAmount = dataSfaGetCollectionDetail?.data?.amount ?? 0;
+    const returnBalance = dataSfaGetReturnBalance?.data?.returnBalance ?? 0;
+    return paymentAmount + returnBalance;
   };
 
   /** FUNCTION ON SUCCESS EDIT COLLECTION */
@@ -436,7 +443,7 @@ const SfaCollectionEditView = props => {
           setIsSaveDisabled(true);
           setInvalidAmountRetur(false);
         } else {
-          if (amount > (dataSfaGetReturnBalance?.data?.returnBalance ?? 0)) {
+          if (amount > getDataReturnBalance()) {
             setIsSaveDisabled(true);
             setInvalidAmountRetur(true);
           } else {
@@ -977,7 +984,7 @@ const SfaCollectionEditView = props => {
           />
         </View>
         <Text style={[Fonts.type17, { marginBottom: 16 }]}>
-          {MoneyFormatSpace(dataSfaGetReturnBalance?.data?.returnBalance ?? 0)}
+          {MoneyFormatSpace(getDataReturnBalance())}
         </Text>
       </View>
     ) : null;
