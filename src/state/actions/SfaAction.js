@@ -767,6 +767,10 @@ export function sfaGetStoreCollectionListReset() {
 export function selectedStore(data) {
   return { type: types.SELECTED_STORE, payload: data };
 }
+/** === SELECTED STORE RESET === */
+export function selectedStoreReset() {
+  return { type: types.SELECTED_STORE_RESET };
+}
 /** === REFRESH GET STORE COLLECTION LIST === */
 export function sfaGetStoreCollectionListRefresh() {
   return { type: types.SFA_GET_STORE_COLLECTION_LIST_REFRESH };

@@ -162,7 +162,8 @@ class CollectionView extends Component {
         open={this.props.sfa.modalCollectionListMenu}
         close={() => {
           this.setState({ openModalCollectionMenu: false }),
-            this.props.sfaModalCollectionListMenu(false);
+            this.props.sfaModalCollectionListMenu(false),
+            this.props.selectedStoreReset();
         }}
         content={this.renderCollectionMenu()}
         typeClose={'cancel'}

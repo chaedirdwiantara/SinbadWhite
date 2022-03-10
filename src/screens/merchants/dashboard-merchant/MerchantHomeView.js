@@ -579,7 +579,7 @@ class MerchantHomeView extends Component {
     const collectionTransactionDetailIds = selectedMerchant.collectionIds;
 
     data.storeId = storeId;
-    data.collectionTransactionDetails = collectionTransactionDetailIds;
+    data.collectionTransactionDetailIds = collectionTransactionDetailIds;
     data.collectionTransactionDetails = [];
     this.props.sfaPostTransactionCheckoutProcess(data);
   }

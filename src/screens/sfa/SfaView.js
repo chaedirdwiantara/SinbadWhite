@@ -57,10 +57,10 @@ export const HeaderLeftSfaViewtOption = () => {
         loading: true,
         searchKey: ''
       };
+      NavigationService.goBack();
       dispatch(sfaGetStoreCollectionListReset());
       dispatch(sfaGetStoreCollectionListProcess(data));
       dispatch(sfaModalCollectionListMenu(true));
-      NavigationService.goBack();
     } else {
       NavigationService.goBack();
     }

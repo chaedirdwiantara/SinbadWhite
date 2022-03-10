@@ -52,6 +52,10 @@ const MerchantNoCollectionReason = props => {
   const [dataPostTransaction, setDataPostTransaction] = useState(null);
   const [indexCollection, setIndexCollection] = useState(0);
   const [dataReasonList, setDataReasonList] = useState([]);
+  const [
+    collectionTransactionDetails,
+    setCollectionTransactionDetails
+  ] = useState([]);
   const [reasonLength, setReasonLength] = useState(0);
   const [limit, setLimit] = useState(20);
   const [isSaveButtonDisable, setIsSaveButtonDisable] = useState(true);
@@ -60,8 +64,8 @@ const MerchantNoCollectionReason = props => {
     setDataSfaCheckCollectionStatusLength
   ] = useState(0);
   const [
-    collectionTransactionDetails,
-    setCollectionTransactionDetails
+    collectionTransactionDetailReason,
+    setCollectionTransactionDetailReason
   ] = useState([]);
   const {
     dataSfaCheckCollectionStatus,
@@ -98,7 +102,7 @@ const MerchantNoCollectionReason = props => {
         })
       );
     }
-    setCollectionTransactionDetails(data);
+    setCollectionTransactionDetailReason(data);
   };
 
   /** save button disabled if all reason not filled */
@@ -141,7 +145,6 @@ const MerchantNoCollectionReason = props => {
   }, [dataGetCollectionList]);
 
   /**=== RENDER FUNCTION === */
-
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigateToPromisePayView = data => {
     NavigationService.navigate('MerchantPromisePayView', {
@@ -198,13 +201,13 @@ const MerchantNoCollectionReason = props => {
     const collectionTransactionDetailIds =
       selectedMerchant?.collectionIds ||
       selectedStore?.collectionTransactionDetailIds;
-
+    const collectionTransactionDetails = collectionTransactionDetailIds;
     const data = {
       storeId,
       collectionTransactionDetailIds,
       collectionTransactionDetails
     };
-    console.log(data, 'data');
+    console.log(data, 'dataPostTransaction');
     // dispatch(sfaPostTransactionCheckoutProcess(data));
   };
   /** GET DATA REASON NOT TO PAY */
@@ -235,13 +238,15 @@ const MerchantNoCollectionReason = props => {
       saveReason(item);
     }
   };
-
   const saveReason = item => {
+    console.log(collectionTransactionDetails?.length === 0);
     const index = indexCollection;
     const dataReason = dataReasonList;
-    const dataPost = collectionTransactionDetails;
+    const dataPost =
+      (collectionTransactionDetails || [])?.length === 0
+        ? collectionTransactionDetailReason
+        : collectionTransactionDetails;
     const reasonNotPay = item.selectedReasonText;
-
     dataReason.splice(index, 1, {
       ...dataReason[index],
       reasonNotPay
@@ -251,7 +256,7 @@ const MerchantNoCollectionReason = props => {
       reasonNotToPayId: item.selectedReasonId,
       promiseDate: item?.promisePayDate || null
     });
-
+    console.log(dataReason, dataPost);
     setCollectionTransactionDetails(dataPost);
     setDataReasonList(dataReason);
     setReasonLength(dataReasonList.length);

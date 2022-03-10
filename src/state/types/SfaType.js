@@ -198,6 +198,7 @@ export const SFA_GET_STORE_COLLECTION_LIST_REFRESH =
 export const SFA_GET_STORE_COLLECTION_LIST_LOADMORE =
   'SfaGetStoreCollectionListLoadmore';
 export const SELECTED_STORE = 'selectedStore';
+export const SELECTED_STORE_RESET = 'selectedStoreReset';
 export const SFA_MODAL_COLLECTION_LIST_MENU = 'SfaModalCollectionListMenu';
 export const SFA_STORE_COLLECTION_STATUS_PROCESS =
   'SfaStoreCollectionStatusProcess';

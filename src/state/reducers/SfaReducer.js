@@ -1,5 +1,6 @@
 import { findLastKey } from 'lodash';
 import { stat } from 'react-native-fs';
+import { selectedStore } from '../actions';
 import * as types from '../types';
 import createReducer from './createReducer';
 
@@ -998,7 +999,16 @@ export const sfa = createReducer(INITIAL_STATE, {
   [types.SELECTED_STORE](state, action) {
     return {
       ...state,
-      selectedStore: action.payload
+      selectedStore: {
+        ...action.payload,
+        ctdIds: action.payload.collectionTransactionDetailIds
+      }
+    };
+  },
+  [types.SELECTED_STORE_RESET](state, action) {
+    return {
+      ...state,
+      selectedStore: null
     };
   },
   [types.SFA_MODAL_COLLECTION_LIST_MENU](state, action) {
