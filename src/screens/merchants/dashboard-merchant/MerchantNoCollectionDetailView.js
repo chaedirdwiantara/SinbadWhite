@@ -58,6 +58,7 @@ const MerchantNoCollectionDetailView = props => {
         dataList={dataGetCollectionList.data.orderParcels}
         type={ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS}
         loadmore={onHandleLoadMore}
+        navigateFrom={'view-reason'}
       />
     </View>
   ) : (
