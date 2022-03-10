@@ -175,8 +175,8 @@ const MerchantNoCollectionReason = props => {
     );
     const collectionTransactionDetailIds =
       params?.type === 'COLLECTION_LIST'
-        ? params.collectionIds
-        : selectedMerchant.collectionIds;
+        ? params?.collectionIds
+        : selectedMerchant?.collectionIds;
     const data = {
       storeId,
       userId: parseInt(id, 10),
@@ -191,15 +191,21 @@ const MerchantNoCollectionReason = props => {
   };
   /** function post transaction checkout */
   const postTransaction = () => {
-    const storeId = parseInt(selectedMerchant.storeId, 10);
-    const collectionTransactionDetailIds = selectedMerchant.collectionIds;
+    const storeId = parseInt(
+      selectedMerchant?.storeId || selectedStore?.id,
+      10
+    );
+    const collectionTransactionDetailIds =
+      selectedMerchant?.collectionIds ||
+      selectedStore?.collectionTransactionDetailIds;
 
     const data = {
       storeId,
       collectionTransactionDetailIds,
       collectionTransactionDetails
     };
-    dispatch(sfaPostTransactionCheckoutProcess(data));
+    console.log(data, 'data');
+    // dispatch(sfaPostTransactionCheckoutProcess(data));
   };
   /** GET DATA REASON NOT TO PAY */
   const getReasonNotToPay = orderParcelId => {

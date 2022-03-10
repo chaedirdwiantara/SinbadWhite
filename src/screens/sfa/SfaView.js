@@ -125,7 +125,7 @@ const SfaView = props => {
   }, []);
 
   useEffect(() => {
-    if (!(params?.type || '') === 'COLLECTION_LIST') {
+    if ((params?.type || '') !== 'COLLECTION_LIST') {
       if (
         !(dataGetLogAllActivityV2 || []).find(
           item => item.activityName === 'collection_ongoing'
