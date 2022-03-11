@@ -25,6 +25,7 @@ import * as ActionCreators from '../../state/actions';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import CollectionListDataView from './CollectionListDataView';
 import NavigationService from '../../navigation/NavigationService';
+import { selectedStore } from '../../state/actions';
 class CollectionView extends Component {
   constructor(props) {
     super(props);
@@ -32,8 +33,9 @@ class CollectionView extends Component {
       openModalCollectionMenu: false,
       openModalExistInPjp: false,
       collectionMenu: [
-        { title: 'Lakukan Penagihan', screen: 'SfaView' },
+        { id: 1, title: 'Lakukan Penagihan', screen: 'SfaView' },
         {
+          id: 2,
           title: 'Tidak Melakukan Penagihan',
           screen: 'MerchantNoCollectionReason'
         }
@@ -185,6 +187,7 @@ class CollectionView extends Component {
                 key={index}
                 style={[GlobalStyle.shadowForBox, styles.menuJPContainer]}
                 onPress={() => {
+                  console.log(this.props.sfa.selectedStore, 'item');
                   this.props.sfaModalCollectionListMenu(false);
                   NavigationService.navigate(item.screen, {
                     type: 'COLLECTION_LIST',

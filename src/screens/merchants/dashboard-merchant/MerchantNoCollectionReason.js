@@ -9,7 +9,9 @@ import {
   sfaPostTransactionCheckoutProcess,
   sfaGetCollectionListProcess,
   SfaGetLoadMore,
-  sfaModalCollectionListMenu
+  sfaModalCollectionListMenu,
+  sfaGetStoreCollectionListReset,
+  sfaGetStoreCollectionListProcess
 } from '../../../state/actions';
 import ModalBottomMerchantNoCollectionReason from './ModalBottomMerchantNoCollectionReason';
 import MerchantCollectionReasonList from './MerchantCollectionReasonList';
@@ -63,10 +65,6 @@ const MerchantNoCollectionReason = props => {
     dataSfaCheckCollectionStatusLength,
     setDataSfaCheckCollectionStatusLength
   ] = useState(0);
-  const [
-    collectionTransactionDetailReason,
-    setCollectionTransactionDetailReason
-  ] = useState([]);
   const {
     dataSfaCheckCollectionStatus,
     dataSfaGetReasonNotToPay,
@@ -133,7 +131,23 @@ const MerchantNoCollectionReason = props => {
   useEffect(() => {
     if (prevdataSfaPostTransactionCheckout !== dataSfaPostTransactionCheckout) {
       if (dataSfaPostTransactionCheckout) {
-        NavigationService.navigate('MerchantHomeView');
+        if (params?.type === 'COLLECTION_LIST') {
+          const supplierId = parseInt(userSuppliers[0]?.supplier?.id || 0, 10);
+          const salesId = parseInt(id, 10) || 0;
+          const data = {
+            salesId,
+            supplierId,
+            skip: 1,
+            limit: 10,
+            loading: true,
+            searchKey: ''
+          };
+          NavigationService.goBack();
+          dispatch(sfaGetStoreCollectionListReset());
+          dispatch(sfaGetStoreCollectionListProcess(data));
+        } else {
+          NavigationService.navigate('MerchantHomeView');
+        }
       }
     }
   }, [dataSfaPostTransactionCheckout]);
