@@ -91,20 +91,11 @@ const MerchantNoCollectionReason = props => {
   }, []);
   const getCollectionTransactionDetailId = () => {
     let data = [];
-    if (params?.type === 'COLLECTION_LIST') {
-      const ctdIds = params?.collectionIds || [];
-      ctdIds.map(item =>
-        data.push({
-          collectionTransactionDetailId: item
-        })
-      );
-    } else {
-      dataSfaCheckCollectionStatus.data.orderParcels.map(item =>
-        data.push({
-          collectionTransactionDetailId: item.collectionTransactionDetailId
-        })
-      );
-    }
+    dataSfaCheckCollectionStatus.data?.orderParcels.map(item =>
+      data.push({
+        collectionTransactionDetailId: item.collectionTransactionDetailId
+      })
+    );
     setCollectionTransactionDetails(data);
   };
 

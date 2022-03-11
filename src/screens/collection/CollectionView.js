@@ -55,6 +55,27 @@ class CollectionView extends Component {
     if (prevState.searchKeyword !== this.state.searchKeyword) {
       this.getStoreCollectionList(true, this.state.searchKeyword);
     }
+    if (
+      prevProps.sfa.dataSfaCheckCollectionStatus !==
+      this.props.sfa.dataSfaCheckCollectionStatus
+    ) {
+      if (this.props.sfa.dataSfaCheckCollectionStatus) {
+        const collectionIds =
+          this.props.sfa.selectedStore?.collectionTransactionDetailIds || [];
+        /** if collection total === 0 post transaction checkout, if not then open modal confirm no collection */
+        if (this.props.sfa.dataSfaCheckCollectionStatus?.meta.total === 0) {
+          NavigationService.navigate('MerchantNoCollectionDetailView', {
+            type: 'COLLECTION_LIST',
+            collectionIds
+          });
+        } else {
+          NavigationService.navigate('MerchantNoCollectionReason', {
+            type: 'COLLECTION_LIST',
+            collectionIds
+          });
+        }
+      }
+    }
   }
   /** === PARENT FUNCTION === */
   parentFunction(item) {
@@ -174,28 +195,64 @@ class CollectionView extends Component {
       <View />
     );
   }
-  /** === RENDER COLLECTION MENU === */
-  renderCollectionMenu() {
+  /** === FUNCTION ON COLLECTION MENU === */
+  onClickCollectionMenu = item => {
     const collectionIds =
       this.props.sfa?.selectedStore?.collectionTransactionDetailIds || [];
+    this.props.sfaModalCollectionListMenu(false);
+    if (item.id !== 1) {
+      this.checkCollectionStatus();
+    } else {
+      NavigationService.navigate(item.screen, {
+        type: 'COLLECTION_LIST',
+        collectionIds
+      });
+    }
+  };
+
+  /** === CHECK COLLECTION STATUS === */
+  checkCollectionStatus() {
+    const storeId = this.props.sfa?.selectedStore?.id || 0;
+    const { userSuppliers, id } = this.props.user;
+    const data = {
+      storeId: parseInt(storeId, 10),
+      userId: parseInt(id, 10),
+      supplierId: parseInt(userSuppliers[0].supplier.id, 10),
+      loading: true,
+      limit: 20,
+      skip: 0,
+      collectionTransactionDetailStatus: 'ASSIGNED',
+      collectionTransactionDetailIds: this.props.sfa?.selectedStore
+        ?.collectionTransactionDetailIds
+    };
+    this.props.sfaCheckCollectionStatusProcess(data);
+  }
+  /** === RENDER COLLECTION MENU === */
+  renderCollectionMenu() {
     return (
       <>
         <View style={{ marginBottom: 8 }}>
           {this.state.collectionMenu.map((item, index) => {
+            const isCollectionDisable =
+              item.id === 1 &&
+              this.props.sfa.selectedStore?.collectionStatus ===
+                'NOT COLLECTED';
             return (
               <TouchableOpacity
+                disabled={isCollectionDisable}
                 key={index}
                 style={[GlobalStyle.shadowForBox, styles.menuJPContainer]}
-                onPress={() => {
-                  console.log(this.props.sfa.selectedStore, 'item');
-                  this.props.sfaModalCollectionListMenu(false);
-                  NavigationService.navigate(item.screen, {
-                    type: 'COLLECTION_LIST',
-                    collectionIds
-                  });
-                }}
+                onPress={() => this.onClickCollectionMenu(item)}
               >
-                <Text style={[Fonts.type7]}>{item.title}</Text>
+                <Text
+                  style={
+                    isCollectionDisable
+                      ? [Fonts.type7, { color: Color.fontBlack40 }]
+                      : [Fonts.type7]
+                  }
+                >
+                  {item.title}
+                </Text>
                 <MaterialIcon
                   name="keyboard-arrow-right"
                   color={Color.fontBlack50}

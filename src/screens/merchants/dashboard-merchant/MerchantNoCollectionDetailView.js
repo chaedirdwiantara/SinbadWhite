@@ -9,13 +9,16 @@ import MerchantCollectionReasonList from './MerchantCollectionReasonList';
 import { LoadingPage } from '../../../components/Loading';
 import { ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS } from '../../../constants';
 const MerchantNoCollectionDetailView = props => {
+  const { params } = props.navigation.state;
   const dispatch = useDispatch();
   const { id, userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [limit, setLimit] = useState(20);
-  const { dataGetCollectionList, loadingGetCollectionList } = useSelector(
-    state => state.sfa
-  );
+  const {
+    dataGetCollectionList,
+    loadingGetCollectionList,
+    selectedStore
+  } = useSelector(state => state.sfa);
   /** RENDER USE EFFECT */
   /** get initial data */
   useEffect(() => {
@@ -39,15 +42,25 @@ const MerchantNoCollectionDetailView = props => {
   };
   /** get collection list */
   const getCollectionList = (loading, page) => {
+    const storeId = parseInt(
+      params?.type === 'COLLECTION_LIST'
+        ? selectedStore.id
+        : selectedMerchant.storeId,
+      10
+    );
+    const collectionTransactionDetailIds =
+      params?.type === 'COLLECTION_LIST'
+        ? params?.collectionIds
+        : selectedMerchant?.collectionIds;
     const data = {
-      storeId: parseInt(selectedMerchant.storeId, 10),
+      storeId,
       userId: parseInt(id, 10),
       supplierId: parseInt(userSuppliers[0].supplier.id, 10),
       loading: loading,
       limit: page,
       skip: 0,
-      collectionTransactionDetailStatus: 'ASSIGNED',
-      collectionTransactionDetailIds: selectedMerchant.collectionIds
+      collectionTransactionDetailStatus: 'NOT_COLLECTED',
+      collectionTransactionDetailIds
     };
     dispatch(sfaGetCollectionListProcess(data));
   };
