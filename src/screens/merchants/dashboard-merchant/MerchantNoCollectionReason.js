@@ -94,7 +94,12 @@ const MerchantNoCollectionReason = props => {
   const getCollectionTransactionDetailId = () => {
     let data = [];
     if (params?.type === 'COLLECTION_LIST') {
-      data = params?.collectionIds || [];
+      const ctdIds = params?.collectionIds || [];
+      ctdIds.map(item =>
+        data.push({
+          collectionTransactionDetailId: item
+        })
+      );
     } else {
       dataSfaCheckCollectionStatus.data.orderParcels.map(item =>
         data.push({
@@ -102,7 +107,7 @@ const MerchantNoCollectionReason = props => {
         })
       );
     }
-    setCollectionTransactionDetailReason(data);
+    setCollectionTransactionDetails(data);
   };
 
   /** save button disabled if all reason not filled */
@@ -236,15 +241,39 @@ const MerchantNoCollectionReason = props => {
       saveReason(item);
     }
   };
+  // const saveReason = item => {
+  //   const index = indexCollection;
+  //   const dataReason = dataReasonList;
+  //   const dataPost =
+  //     (collectionTransactionDetails || [])?.length === 0
+  //       ? collectionTransactionDetailReason
+  //       : collectionTransactionDetails;
+  //   const dataPostNew = [...dataPost];
+  //   const reasonNotPay = item.selectedReasonText;
+  //   dataReason.splice(index, 1, {
+  //     ...dataReason[index],
+  //     reasonNotPay
+  //   });
+  //   dataPostNew.splice(index, 1, {
+  //     ...dataPostNew[index],
+  //     reasonNotToPayId: item.selectedReasonId,
+  //     promiseDate: item?.promisePayDate || null
+  //   });
+  //   setCollectionTransactionDetails(dataPostNew);
+  //   setDataReasonList(dataReason);
+  //   setReasonLength(dataReasonList.length);
+  //   setDataPostTransaction(prevState => {
+  //     prevState.splice(index, 1, { ...prevState[index], reasonNotPay });
+  //     return [...prevState];
+  //   });
+  //   setIsModalReasonOpen(false);
+  // };
   const saveReason = item => {
     const index = indexCollection;
     const dataReason = dataReasonList;
-    const dataPost =
-      (collectionTransactionDetails || [])?.length === 0
-        ? collectionTransactionDetailReason
-        : collectionTransactionDetails;
-    const dataPostNew = [...dataPost];
+    const dataPost = collectionTransactionDetails;
     const reasonNotPay = item.selectedReasonText;
+    const dataPostNew = [...dataPost];
     dataReason.splice(index, 1, {
       ...dataReason[index],
       reasonNotPay
@@ -254,6 +283,7 @@ const MerchantNoCollectionReason = props => {
       reasonNotToPayId: item.selectedReasonId,
       promiseDate: item?.promisePayDate || null
     });
+
     setCollectionTransactionDetails(dataPostNew);
     setDataReasonList(dataReason);
     setReasonLength(dataReasonList.length);
