@@ -23,8 +23,6 @@ const MerchantCollectionReasonList = props => {
   const { refreshGetCollection, loadingLoadMoreGetSfa } = useSelector(
     state => state.sfa
   );
-  /** RENDER FUNCTION */
-
   /** RENDER STATUS PAYMENT */
   /** === RENDER ITEM (STATUS PAYMENT) === */
   const renderItemStatusPayment = status_payment => {
@@ -116,10 +114,10 @@ const MerchantCollectionReasonList = props => {
               >
                 {item.reasonNotPay ? (
                   <Text style={[Fonts.type48]}>{item.reasonNotPay}</Text>
+                ) : props?.navigateFrom === 'view-reason' ? (
+                  <Text style={[Fonts.type48]}>{item.reasonNotPayView}</Text>
                 ) : (
-                  props?.navigateFrom === 'view-reason' 
-                    ? <Text style={[Fonts.type48]}>{item.reasonNotPayView}</Text>
-                    : <Text style={[Fonts.type85]}>Pilih Alasan</Text>
+                  <Text style={[Fonts.type85]}>Pilih Alasan</Text>
                 )}
                 {props.type ===
                 ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS ? null : (
