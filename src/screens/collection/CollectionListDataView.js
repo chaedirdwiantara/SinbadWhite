@@ -71,8 +71,8 @@ class CollectionListDataView extends Component {
       storeName: item.name || '',
       isInPjp: item.isInPjp || false
     });
-    this.props.selectedStore(item);
     if (!item.isInPjp) {
+      this.props.selectedStore(item);
       this.props.sfaModalCollectionListMenu(true);
     }
   };

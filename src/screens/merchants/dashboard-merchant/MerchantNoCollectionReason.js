@@ -201,14 +201,12 @@ const MerchantNoCollectionReason = props => {
     const collectionTransactionDetailIds =
       selectedMerchant?.collectionIds ||
       selectedStore?.collectionTransactionDetailIds;
-    const collectionTransactionDetails = collectionTransactionDetailIds;
     const data = {
       storeId,
       collectionTransactionDetailIds,
       collectionTransactionDetails
     };
-    console.log(data, 'dataPostTransaction');
-    // dispatch(sfaPostTransactionCheckoutProcess(data));
+    dispatch(sfaPostTransactionCheckoutProcess(data));
   };
   /** GET DATA REASON NOT TO PAY */
   const getReasonNotToPay = orderParcelId => {
@@ -239,25 +237,24 @@ const MerchantNoCollectionReason = props => {
     }
   };
   const saveReason = item => {
-    console.log(collectionTransactionDetails?.length === 0);
     const index = indexCollection;
     const dataReason = dataReasonList;
     const dataPost =
       (collectionTransactionDetails || [])?.length === 0
         ? collectionTransactionDetailReason
         : collectionTransactionDetails;
+    const dataPostNew = [...dataPost];
     const reasonNotPay = item.selectedReasonText;
     dataReason.splice(index, 1, {
       ...dataReason[index],
       reasonNotPay
     });
-    dataPost.splice(index, 1, {
-      ...dataPost[index],
+    dataPostNew.splice(index, 1, {
+      ...dataPostNew[index],
       reasonNotToPayId: item.selectedReasonId,
       promiseDate: item?.promisePayDate || null
     });
-    console.log(dataReason, dataPost);
-    setCollectionTransactionDetails(dataPost);
+    setCollectionTransactionDetails(dataPostNew);
     setDataReasonList(dataReason);
     setReasonLength(dataReasonList.length);
     setDataPostTransaction(prevState => {
@@ -266,7 +263,6 @@ const MerchantNoCollectionReason = props => {
     });
     setIsModalReasonOpen(false);
   };
-
   const renderModalBottomNotCollectReason = () => {
     return isModalReasonOpen && dataSfaGetReasonNotToPay ? (
       <ModalBottomMerchantNoCollectionReason

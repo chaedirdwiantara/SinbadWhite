@@ -89,7 +89,7 @@ const MerchantCollectionReasonList = props => {
                 Total Tagihan
               </Text>
               <Text style={Fonts.type50}>
-                {MoneyFormatSpace(item.invoiceAmount)}
+                {MoneyFormatSpace(item?.invoiceAmount || 0)}
               </Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -97,7 +97,7 @@ const MerchantCollectionReasonList = props => {
                 Sisa Tagihan
               </Text>
               <Text style={Fonts.type113p}>
-                {MoneyFormatSpace(item.outstandingAmount)}
+                {MoneyFormatSpace(item?.outstandingAmount || 0)}
               </Text>
             </View>
           </View>
