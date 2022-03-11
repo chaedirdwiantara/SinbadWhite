@@ -940,6 +940,7 @@ export const sfa = createReducer(INITIAL_STATE, {
    * ==========================
    */
   [types.SFA_GET_STORE_COLLECTION_LIST_PROCESS](state, action) {
+    console.log(action.payload.loading);
     return {
       ...state,
       loadingGetStoreCollectionList: action.payload.loading,
@@ -952,6 +953,7 @@ export const sfa = createReducer(INITIAL_STATE, {
       loadingGetStoreCollectionList: false,
       loadingLoadmoreGetStoreCollection: false,
       refreshGetStoreCollectionList: false,
+      loadingLoadmoreGetStoreCollectionList: false,
       totalGetStoreCollectionList: action.payload.meta.total,
       dataGetStoreCollectionList: [
         ...state.dataGetStoreCollectionList,

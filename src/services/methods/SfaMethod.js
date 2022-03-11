@@ -252,9 +252,9 @@ function getStoreCollectionList(data) {
   return ApiRest({
     path: `/collection/v1/collection-request-store?salesId=${
       data.salesId
-    }&supplierId=${data.supplierId}&searchKey=${data.searchKey}&skip=1&limit=${
-      data.limit
-    }`,
+    }&supplierId=${data.supplierId}&searchKey=${data.searchKey}&skip=${
+      data.skip
+    }&limit=${data.limit}`,
     method: 'GET'
   });
 }
