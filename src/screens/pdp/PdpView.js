@@ -184,7 +184,8 @@ class PdpView extends Component {
         this.props.omsAddToCart({
           method: 'add',
           catalogueId: data.data.catalogueId,
-          qty: data.data.qty
+          qty: data.data.qty,
+          detail: data.data?.detail ?? null
         });
         this.setState({
           openModalOrder: false,
