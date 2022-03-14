@@ -7,10 +7,10 @@ import {
   TextInput,
   Text
 } from '../library/reactPackage';
-import { Fonts, NumberFormat } from '../helpers';
+import { Fonts } from '../helpers';
 import masterColor from '../config/masterColor.json';
 
-class OrderButton extends Component {
+class OrderButtonLargeUOM extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,10 +30,7 @@ class OrderButton extends Component {
       maxQty: this.props.item.maxQty,
       isMax: this.props.item.isMaximum,
       totalClickPlus: 0,
-      unit: this.props.item.minQtyType,
-      largeUnit: this.props.item.catalogueLargeUnit?.unit ?? 'Box',
-      enableLargeUom: this.props.item.enableLargeUom,
-      largeUomQty: 0
+      unit: this.props.item.minQtyType
     };
   }
   /**
@@ -104,42 +101,27 @@ class OrderButton extends Component {
    * PLUS BUTTON CAL
    * =======================
    */
-  onPressPlus(isLarge) {
+  onPressPlus() {
     /** === COUNTER PLUS BUTTON === */
     let totalClickPlus = this.state.totalClickPlus;
     this.setState({ totalClickPlus: totalClickPlus - 1 });
     let qty = this.state.qty + this.state.multipleQty;
     /** === SET QTY === */
-    if (isLarge) {
-      this.setState({
-        largeUomQty: this.state.largeUomQty + 1
-      });
-    } else {
-      if (!this.state.unlimitedStock) {
-        if (this.state.stock - qty < this.state.multipleQty) {
-          this.sendValueToParent(qty);
-          this.setState({
-            qty,
-            plusButtonDisable: true
-          });
-        } else {
-          this.sendValueToParent(qty);
-          this.setState({ qty });
-        }
+    if (!this.state.unlimitedStock) {
+      if (this.state.stock - qty < this.state.multipleQty) {
+        this.sendValueToParent(qty);
+        this.setState({
+          qty,
+          plusButtonDisable: true
+        });
       } else {
         this.sendValueToParent(qty);
         this.setState({ qty });
       }
+    } else {
+      this.sendValueToParent(qty);
+      this.setState({ qty });
     }
-  }
-
-  onPressPlusLarge() {
-    /** === SET LARGE UOM QTY === */
-    const qty = this.state.largeUomQty + 1;
-    this.setState({
-      largeUomQty: qty
-    });
-    this.sendValueToParentLarge(qty);
   }
   /**
    * =======================
@@ -172,15 +154,6 @@ class OrderButton extends Component {
       }
     }
   }
-
-  onPressMinusLarge() {
-    /** === SET LARGE UOM QTY === */
-    const qty = this.state.largeUomQty - 1;
-    this.setState({
-      largeUomQty: qty
-    });
-    this.sendValueToParentLarge(qty);
-  }
   /**
    * =======================================
    * function minus button end
@@ -190,37 +163,9 @@ class OrderButton extends Component {
    * this for calculator start
    */
   sendValueToParent(qty) {
-    if (this.state.enableLargeUom) {
-      this.props.parentFunctionFromOrderButton({
-        catalogueId: this.state.selectedProduct.id,
-        qty: this.state.largeUomQty * this.state.packagedQty + qty,
-        detail: {
-          smallUom: this.state.unit,
-          smallUomQty: qty,
-          largeUom: this.state.largeUnit,
-          largeUomQty: this.state.largeUomQty,
-          packagedQty: this.state.packagedQty
-        }
-      });
-    } else {
-      this.props.parentFunctionFromOrderButton({
-        catalogueId: this.state.selectedProduct.id,
-        qty
-      });
-    }
-  }
-
-  sendValueToParentLarge(qty) {
     this.props.parentFunctionFromOrderButton({
       catalogueId: this.state.selectedProduct.id,
-      qty: qty * this.state.packagedQty + this.state.qty,
-      detail: {
-        smallUom: this.state.unit,
-        smallUomQty: this.state.qty,
-        largeUom: this.state.largeUnit,
-        largeUomQty: qty,
-        packagedQty: this.state.packagedQty
-      }
+      qty
     });
   }
 
@@ -310,13 +255,7 @@ class OrderButton extends Component {
     }
     return false;
   }
-  /** === CHECK TERSISA TEXT === */
-  checkTersisa() {
-    if (!this.state.unlimitedStock && this.state.stock > this.state.minQty) {
-      return `Tersisa ${NumberFormat(this.state.stock)} ${this.state.unit}`;
-    }
-    return '';
-  }
+
   /** === MAX QUANTITY ORDER === */
   checkMaxQtyOrder() {
     if (this.state.isMax) {
@@ -356,23 +295,6 @@ class OrderButton extends Component {
       </TouchableOpacity>
     );
   }
-
-  /** => render minus button large */
-  renderMinusButtonLarge() {
-    return this.state.largeUomQty <= 0 || this.props.showKeyboard ? (
-      <View style={styles.minusButtonDisabled}>
-        <Text style={styles.minusText}>-</Text>
-      </View>
-    ) : (
-      <TouchableOpacity
-        style={styles.minusButton}
-        onPress={() => this.onPressMinusLarge()}
-      >
-        <Text style={styles.minusText}>-</Text>
-      </TouchableOpacity>
-    );
-  }
-
   /** => render plus button */
   renderPlusButton() {
     return this.checkDisablePlusButton() || this.props.showKeyboard ? (
@@ -388,31 +310,14 @@ class OrderButton extends Component {
       </TouchableOpacity>
     );
   }
-
-  /** => render plus button large */
-  renderPlusButtonLarge() {
-    return this.checkDisablePlusButton() || this.props.showKeyboard ? (
-      <View style={styles.plusButtonDisabled}>
-        <Text style={styles.plusText}>+</Text>
-      </View>
-    ) : (
-      <TouchableOpacity
-        style={styles.plusButton}
-        onPress={() => this.onPressPlusLarge()}
-      >
-        <Text style={styles.plusText}>+</Text>
-      </TouchableOpacity>
-    );
-  }
-
   /** => render input calculator */
-  renderInput(parentQty) {
+  renderInput() {
     return (
       <View style={styles.inputList}>
         <TextInput
           selectionColor={masterColor.mainColor}
           returnKeyType="done"
-          value={parentQty.toString()}
+          value={this.state.qty.toString()}
           keyboardType="numeric"
           maxLength={6}
           enablesReturnKeyAutomatically
@@ -430,97 +335,20 @@ class OrderButton extends Component {
     );
   }
   /** => render calculator */
-  renderCalculator(qty, isLarge) {
+  renderCalculator() {
     return (
       <View style={styles.containerInputQty}>
-        {isLarge ? this.renderMinusButtonLarge() : this.renderMinusButton()}
-        {this.renderInput(qty)}
-        {isLarge ? this.renderPlusButtonLarge() : this.renderPlusButton()}
+        {this.renderMinusButton()}
+        {this.renderInput()}
+        {this.renderPlusButton()}
       </View>
-    );
-  }
-  /** => render stock */
-  renderRemainingStock() {
-    return (
-      <View
-        style={{
-          paddingRight: 8,
-          justifyContent: 'center'
-        }}
-      >
-        <Text style={Fonts.type22}>{this.checkTersisa()}</Text>
-      </View>
-    );
-  }
-
-  /** => render single uom */
-  renderSingleUOM() {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          flex: 1
-        }}
-      >
-        <View style={{ alignContent: 'flex-start' }}>
-          <Text style={Fonts.type96}>Dalam Pcs</Text>
-        </View>
-        <View style={styles.subMainContainer}>
-          {this.renderRemainingStock()}
-          {this.renderCalculator(this.state.qty, false)}
-        </View>
-      </View>
-    );
-  }
-
-  /** => render double uom */
-  renderDoubleUOM() {
-    return (
-      <>
-        <View style={{ alignSelf: 'flex-start' }}>
-          {this.renderRemainingStock()}
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            flex: 1
-          }}
-        >
-          <View style={{ alignContent: 'flex-start' }}>
-            <Text style={Fonts.fontH12Medium}>Dalam Pcs</Text>
-          </View>
-          <View style={styles.subMainContainerDouble}>
-            {this.renderCalculator(this.state.qty, false)}
-          </View>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            flex: 1,
-            marginTop: 10,
-            justifyContent: 'space-between'
-          }}
-        >
-          <View style={{ alignContent: 'flex-start' }}>
-            <Text style={Fonts.type38}>Order dengan satuan besar</Text>
-            <Text style={Fonts.fontH12Medium}>Dalam Box</Text>
-          </View>
-          <View style={styles.subMainContainerDouble}>
-            {this.renderCalculator(this.state.largeUomQty, true)}
-            <Text style={[Fonts.type38, { marginTop: 5 }]}>{`Sejumlah ${this
-              .state.largeUomQty * this.state.packagedQty} pcs`}</Text>
-          </View>
-        </View>
-      </>
     );
   }
 
   render() {
     return (
       <View style={styles.mainContainer}>
-        {this.state.enableLargeUom
-          ? this.renderDoubleUOM()
-          : this.renderSingleUOM()}
+        <View style={styles.subMainContainer}>{this.renderCalculator()}</View>
         {this.renderMaxQtyOrder()}
       </View>
     );
@@ -534,12 +362,7 @@ const styles = StyleSheet.create({
   },
   subMainContainer: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-end'
-  },
-  subMainContainerDouble: {
-    flex: 1,
-    alignItems: 'flex-end'
+    flexDirection: 'row'
   },
   containerInputQty: {
     height: 27,
@@ -610,7 +433,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default OrderButton;
+export default OrderButtonLargeUOM;
 
 /**
  * ========================================
