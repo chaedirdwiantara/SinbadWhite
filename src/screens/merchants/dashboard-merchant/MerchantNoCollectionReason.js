@@ -15,7 +15,11 @@ import {
 } from '../../../state/actions';
 import ModalBottomMerchantNoCollectionReason from './ModalBottomMerchantNoCollectionReason';
 import MerchantCollectionReasonList from './MerchantCollectionReasonList';
-import { ButtonSingle, LoadingPage } from '../../../library/component';
+import {
+  ButtonSingle,
+  LoadingPage,
+  ModalBottomErrorRespons
+} from '../../../library/component';
 import NavigationService from '../../../navigation/NavigationService';
 import { REASON_NO_PAYMENT } from '../../../constants';
 let navigationProps = '';
@@ -61,6 +65,7 @@ const MerchantNoCollectionReason = props => {
   const [reasonLength, setReasonLength] = useState(0);
   const [limit, setLimit] = useState(20);
   const [isSaveButtonDisable, setIsSaveButtonDisable] = useState(true);
+  const [openModalErrorGlobal, setOpenModalErrorGlobal] = useState(false);
   const [
     dataSfaCheckCollectionStatusLength,
     setDataSfaCheckCollectionStatusLength
@@ -72,17 +77,22 @@ const MerchantNoCollectionReason = props => {
     dataGetCollectionList,
     loadingGetCollectionList,
     loadingSfaPostTransactionCheckout,
-    selectedStore
+    selectedStore,
+    errorSfaPostTransactionCheckout
   } = useSelector(state => state.sfa);
   const { id, userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
 
   /** RENDER USE REF */
+  /** REF ON SUCCESS POST TRANSACTION CHECKOUT */
   const prevdataSfaPostTransactionCheckout = useRef(
     dataSfaPostTransactionCheckout
   );
   const prevdataGetCollectionList = useRef(dataGetCollectionList);
-
+  /** REF ON ERROR POST TRANSACTION CHECKOUT */
+  const preverrorSfaPostTransactionCheckout = useRef(
+    errorSfaPostTransactionCheckout
+  );
   /** RENDER USE EFFECT */
   /** get reason not to pay on render screen */
   useEffect(() => {
@@ -118,13 +128,16 @@ const MerchantNoCollectionReason = props => {
   useEffect(() => {
     prevdataGetCollectionList.current = dataGetCollectionList;
   }, []);
+  /** save previous errorSfaPostTransactionCheckout */
+  useEffect(() => {
+    preverrorSfaPostTransactionCheckout.current = errorSfaPostTransactionCheckout;
+  }, []);
   /** post collection_not_success & navigate to merchantHomeView on success post transaction checkout */
   useEffect(() => {
-    if (prevdataSfaPostTransactionCheckout !== dataSfaPostTransactionCheckout) {
-      console.log(
-        prevdataSfaPostTransactionCheckout,
-        dataSfaPostTransactionCheckout
-      );
+    if (
+      prevdataSfaPostTransactionCheckout?.current !==
+      dataSfaPostTransactionCheckout
+    ) {
       if (dataSfaPostTransactionCheckout) {
         if (params?.type === 'COLLECTION_LIST') {
           const supplierId = parseInt(userSuppliers[0]?.supplier?.id || 0, 10);
@@ -157,6 +170,16 @@ const MerchantNoCollectionReason = props => {
       }
     }
   }, [dataGetCollectionList]);
+  /** on error post transaction checkout, show modal error */
+  useEffect(() => {
+    if (
+      preverrorSfaPostTransactionCheckout !== errorSfaPostTransactionCheckout
+    ) {
+      if (errorSfaPostTransactionCheckout) {
+        setOpenModalErrorGlobal(true);
+      }
+    }
+  }, [errorSfaPostTransactionCheckout]);
 
   /**=== RENDER FUNCTION === */
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
@@ -276,6 +299,7 @@ const MerchantNoCollectionReason = props => {
     });
     setIsModalReasonOpen(false);
   };
+  /*** === MODAL BOTTOM NOT COLLECT REASON === */
   const renderModalBottomNotCollectReason = () => {
     return isModalReasonOpen && dataSfaGetReasonNotToPay ? (
       <ModalBottomMerchantNoCollectionReason
@@ -286,6 +310,19 @@ const MerchantNoCollectionReason = props => {
         onPress={onSaveReason.bind(this)}
       />
     ) : null;
+  };
+
+  /*** === MODAL ERROR POST TRANSACTION CHECKOUT === */
+  const renderModalErrorGlobal = () => {
+    return openModalErrorGlobal ? (
+      <ModalBottomErrorRespons
+        statusBarType={'transparent'}
+        open={openModalErrorGlobal}
+        onPress={() => setOpenModalErrorGlobal()}
+      />
+    ) : (
+      <View />
+    );
   };
 
   /** RENDER BUTTON */
@@ -319,6 +356,7 @@ const MerchantNoCollectionReason = props => {
         <View>{renderButton()}</View>
       </View>
       {renderModalBottomNotCollectReason()}
+      {renderModalErrorGlobal()}
     </>
   ) : (
     <LoadingPage />

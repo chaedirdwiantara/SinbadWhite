@@ -80,6 +80,14 @@ class CollectionListDataView extends Component {
   renderSeparator() {
     return <View style={[GlobalStyle.lines, { marginVertical: 12 }]} />;
   }
+  /** === RENDER LOADMORE === */
+  renderLoadMore() {
+    return this.props.sfa.loadingLoadmoreGetStoreCollectionList ? (
+      <LoadingLoadMore />
+    ) : (
+      <View />
+    );
+  }
   /** === DATA ITEM === */
   renderItem({ item, index }) {
     return (

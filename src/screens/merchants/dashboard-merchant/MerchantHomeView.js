@@ -1063,12 +1063,14 @@ class MerchantHomeView extends Component {
       if (item.activity === ACTIVITY_JOURNEY_PLAN_COLLECTION) {
         const activity = this.props.merchant.dataGetLogAllActivityV2;
         if (
-          activity.find(
+          (activity.find(
             items =>
               items.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
           ) ||
-          this.props.sfa?.dataStoreCollectionStatus?.collectionStatus ===
-            'COLLECTED'
+            this.props.sfa?.dataStoreCollectionStatus?.collectionStatus ===
+              'COLLECTED') &&
+          this.props.sfa?.dataStoreCollectionStatus?.collectionStatus !==
+            'NOT COLLECTED'
         ) {
           return (
             <View
@@ -1473,18 +1475,30 @@ class MerchantHomeView extends Component {
             const journeyBookStores = this.props.merchant.selectedMerchant
               .journeyBookStores;
             const activityLogs = this.props.merchant.dataGetLogAllActivityV2;
-            const isCollectionOnGoing = activityLogs.find(
-              cog =>
-                cog.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING
-            );
-            const isCollectionNotSuccess = activityLogs.find(
-              cns =>
-                cns.activityName ===
-                ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
-            );
-            const isCollectionSuccess = activityLogs.find(
-              cs => cs.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
-            );
+            const isCollectionOnGoing =
+              activityLogs.find(
+                cog =>
+                  cog.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING
+              ) ||
+              this.props.sfa?.dataStoreCollectionStatus?.collectionStatus ===
+                'PARTIAL COLLECTED';
+            const isCollectionNotSuccess =
+              activityLogs.find(
+                cns =>
+                  cns.activityName ===
+                  ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
+              ) ||
+              this.props.sfa?.dataStoreCollectionStatus?.collectionStatus ===
+                'NOT COLLECTED';
+            const isCollectionSuccess =
+              (activityLogs.find(
+                cs =>
+                  cs.activityName === ACTIVITY_JOURNEY_PLAN_COLLECTION_SUCCESS
+              ) ||
+                this.props.sfa?.dataStoreCollectionStatus?.collectionStatus ===
+                  'COLLECTED') &&
+              this.props.sfa?.dataStoreCollectionStatus?.collectionStatus !==
+                'NOT COLLECTED';
             return (
               <View
                 key={index}

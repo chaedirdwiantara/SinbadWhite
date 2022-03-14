@@ -362,7 +362,7 @@ function SfaDetailView(props) {
       <ButtonSingle
         disabled={
           dataSfaGetDetail.data.isPaid ||
-          dataSfaGetDetail.data.remainingBilling === 0
+          parseInt(dataSfaGetDetail.data.remainingBilling, 10) === 0
         }
         title={'Tagih'}
         borderRadius={4}
