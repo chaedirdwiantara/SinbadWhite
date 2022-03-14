@@ -250,7 +250,7 @@ const SfaCollectionEditView = props => {
   const navigateOnSucces = () => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
-      storeId: parseInt(selectedMerchant?.storeId || selectedStore?.id, 10),
+      storeId: parseInt(selectedStore?.id || selectedMerchant?.storeId, 10),
       paymentCollectionTypeId: parseInt(paymentCollectionTypeId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
       limit: 20,

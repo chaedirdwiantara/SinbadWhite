@@ -180,7 +180,7 @@ const SfaCollectionAddView = props => {
   const navigateOnSucces = () => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
-      storeId: parseInt(selectedMerchant?.storeId || selectedStore?.id, 10),
+      storeId: parseInt(selectedStore?.id || selectedMerchant?.storeId, 10),
       paymentCollectionTypeId: parseInt(paymentCollectionMethodId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
       limit: 20,
@@ -1013,7 +1013,7 @@ const SfaCollectionAddView = props => {
             selectCollection={fnSelectCollection}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
             storeId={parseInt(
-              selectedMerchant?.storeId || selectedStore?.id,
+              selectedStore?.id || selectedMerchant?.storeId,
               10
             )}
             paymentCollectionTypeId={paymentCollectionMethodId}
@@ -1058,7 +1058,7 @@ const SfaCollectionAddView = props => {
             selectBankDestination={onSelectBankTo.bind(this)}
             supplierId={parseInt(userSuppliers[0].supplierId, 10)}
             storeId={parseInt(
-              selectedMerchant?.storeId || selectedStore?.id,
+              selectedStore?.id || selectedMerchant?.storeId,
               10
             )}
             paymentCollectionTypeId={paymentCollectionMethodId}
