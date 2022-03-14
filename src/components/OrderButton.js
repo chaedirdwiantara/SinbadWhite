@@ -7,7 +7,7 @@ import {
   TextInput,
   Text
 } from '../library/reactPackage';
-import { Fonts, NumberFormat } from '../helpers';
+import { Fonts, NumberFormat, GlobalStyle } from '../helpers';
 import masterColor from '../config/masterColor.json';
 
 class OrderButton extends Component {
@@ -493,6 +493,7 @@ class OrderButton extends Component {
             {this.renderCalculator(this.state.qty, false)}
           </View>
         </View>
+        <View style={[GlobalStyle.lines, { marginVertical: 8 }]} />
         <View
           style={{
             flexDirection: 'row',
