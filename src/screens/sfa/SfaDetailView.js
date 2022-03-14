@@ -66,7 +66,7 @@ function SfaDetailView(props) {
   const addCollection = () => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplier.id, 10),
-      storeId: selectedMerchant?.storeId || selectedStore?.id
+      storeId: selectedStore?.id || selectedMerchant?.storeId
     };
     dispatch(sfaGetPaymentMethodProcess(data));
     NavigationService.navigate('SfaCollectionMethodListView');

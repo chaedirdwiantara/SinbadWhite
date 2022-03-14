@@ -274,7 +274,8 @@ class CollectionView extends Component {
         typeClose={'cancel'}
         onPress={() => {
           NavigationService.navigate('JourneyView'),
-            this.setState({ openModalExistInPjp: false });
+            this.setState({ openModalExistInPjp: false }),
+            this.props.selectedStoreReset();
         }}
         buttonTitle={'Masuk ke Journey Plan'}
         content={this.renderExistInPjp()}

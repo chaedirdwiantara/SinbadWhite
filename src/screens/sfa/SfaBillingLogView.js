@@ -106,7 +106,7 @@ const SfaBillingLogView = props => {
     const data = {
       paymentCollectionMethodId: paymentCollectionMethodId,
       limit: page,
-      storeId: parseInt(selectedMerchant?.storeId || selectedStore?.id, 10),
+      storeId: parseInt(selectedStore?.id || selectedMerchant?.storeId, 10),
       skip: 0,
       loading,
       userId: userId

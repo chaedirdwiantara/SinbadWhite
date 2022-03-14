@@ -36,7 +36,7 @@ const SfaCollectionMethodListView = props => {
   const onSelectCollectionMethod = item => {
     let data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
-      storeId: parseInt(selectedMerchant?.storeId || selectedStore?.id, 10),
+      storeId: parseInt(selectedStore?.id || selectedMerchant?.storeId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
       limit: 20,
       loading: true,
@@ -51,7 +51,7 @@ const SfaCollectionMethodListView = props => {
   const getReference = () => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplier.id, 10),
-      storeId: selectedMerchant?.storeId || selectedStore?.id
+      storeId: selectedStore?.id || selectedMerchant?.storeId
     };
     dispatch(sfaGetPaymentMethodProcess(data));
   };

@@ -205,7 +205,7 @@ const MerchantNoCollectionReason = props => {
   /** function post transaction checkout */
   const postTransaction = () => {
     const storeId = parseInt(
-      selectedMerchant?.storeId || selectedStore?.id,
+      selectedStore?.id || selectedMerchant?.storeId,
       10
     );
     const collectionTransactionDetailIds =

@@ -104,7 +104,7 @@ function SfaCollectionLog(props) {
         dispatch(
           sfaCollectionLogLoadmoreProcess({
             storeId: parseInt(
-              selectedMerchant?.storeId || selectedStore?.id,
+              selectedStore?.id || selectedMerchant?.storeId,
               10
             ),
             orderParcelId: dataSfaGetDetail.data.id,
@@ -127,7 +127,7 @@ function SfaCollectionLog(props) {
     const storeId =
       type === HISTORY
         ? parseInt(dataDetailHistory?.store.id, 10)
-        : selectedMerchant?.storeId || selectedStore?.id;
+        : selectedStore?.id || selectedMerchant?.storeId;
     const data = {
       storeId: parseInt(storeId, 10),
       orderParcelId: parseInt(orderParcelId, 10),

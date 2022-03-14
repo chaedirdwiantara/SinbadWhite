@@ -79,7 +79,7 @@ const SfaCollectionDetailView = props => {
     const data = {
       paymentCollectionMethodId: dataSfaGetCollectionDetail.data.id,
       limit: 20,
-      storeId: parseInt(selectedMerchant?.storeId || selectedStore?.id, 10),
+      storeId: parseInt(selectedStore?.id || selectedMerchant?.storeId, 10),
       skip: 0,
       loading: true,
       userId: userId
