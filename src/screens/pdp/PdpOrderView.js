@@ -294,6 +294,9 @@ class PdpOrderView extends Component {
   }
   /** === RENDER DATA === */
   renderData() {
+    const largeUnit = this.props.pdp.dataDetailPdp.catalogueLargeUnit ? this.props.pdp.dataDetailPdp.catalogueLargeUnit.unit : 'dus';
+    const smallUnit = this.props.pdp.dataDetailPdp.catalogueUnit.unit;
+
     return (
       <View style={styles.boxItem}>
         <View style={{ flexDirection: 'row', paddingBottom: 25 }}>
@@ -324,8 +327,8 @@ class PdpOrderView extends Component {
             </View>
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={[Fonts.type38, { marginRight: 10 }]}>
-                per-Dus {this.props.pdp.dataDetailPdp.packagedQty}{' '}
-                {this.props.pdp.dataDetailPdp.catalogueUnit.unit}
+                per-{largeUnit} {this.props.pdp.dataDetailPdp.packagedQty}{' '}
+                {smallUnit}
               </Text>
               <View
                 style={{
