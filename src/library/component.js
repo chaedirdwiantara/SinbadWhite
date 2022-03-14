@@ -37,6 +37,7 @@ import DropdownType1 from '../components/input/DropdownType1';
 import DropdownType2 from '../components/input/DropdownType2';
 /** BUTTON */
 import OrderButton from '../components/OrderButton';
+import OrderButtonLargeUOM from '../components/OrderButtonLargeUOM';
 import ButtonFloatType1 from '../components/button/ButtonFloatType1';
 import ButtonFloatType2 from '../components/button/ButtonFloatType2';
 import ButtonSingle from '../components/button/ButtonSingle';
@@ -184,6 +185,7 @@ export {
   DropdownType2,
   /** BUTTON */
   OrderButton,
+  OrderButtonLargeUOM,
   ButtonFloatType1,
   ButtonFloatType2,
   ButtonSingle,
