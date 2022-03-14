@@ -534,7 +534,7 @@ const styles = StyleSheet.create({
   },
   subMainContainer: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'flex-end'
   },
   subMainContainerDouble: {
