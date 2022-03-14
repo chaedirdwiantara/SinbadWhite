@@ -203,6 +203,7 @@ class JourneyView extends Component {
    * fetch api , get journey plan data from be
    */
   getJourneyPlan() {
+    this.props.selectedStoreReset(); /** reset selectedStore from collection list to prevent wrong storeId with selectedMerchant*/
     const today = moment().format('YYYY-MM-DD') + 'T00:00:00%2B00:00';
     this.props.journeyPlanGetResetV2();
     this.props.journeyPlanGetProcessV2({
