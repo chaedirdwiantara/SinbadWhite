@@ -42,7 +42,6 @@ let navigationProps = '';
 /** === HEADER === */
 export const HeaderLeftSfaViewtOption = () => {
   const type = navigationProps?.navigation?.state?.params?.type || '';
-  console.log(type, searchKey);
   const dispatch = useDispatch();
   const { selectedStore } = useSelector(state => state.sfa);
   const { id, userSuppliers } = useSelector(state => state.user);
@@ -182,7 +181,6 @@ const SfaView = props => {
 
   /** FUNCTION GET COLLECTION LIST */
   const getCollectionList = (loading, page) => {
-    console.log(params.searchKey, 'searchKey');
     const storeId =
       (params?.type || '') === 'COLLECTION_LIST'
         ? parseInt(selectedStore.id, 10) || 0
