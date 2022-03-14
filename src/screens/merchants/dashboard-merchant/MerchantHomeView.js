@@ -1094,7 +1094,7 @@ class MerchantHomeView extends Component {
               ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
           ) ||
           this.props.sfa?.dataStoreCollectionStatus?.collectionStatus ===
-            'NOT_COLLECTED'
+            'NOT COLLECTED'
         ) {
           return (
             <TouchableOpacity
