@@ -16,7 +16,6 @@ import {
 } from '../../library/thirdPartyPackage';
 import {
   OrderButton,
-  OrderButtonLargeUOM,
   StatusBarRedOP50,
   StatusBarBlackOP40,
   ButtonSingleSmall,
@@ -40,7 +39,8 @@ class PdpOrderView extends Component {
       qtyFromChild:
         this.props.pdp.dataDetailPdp !== null
           ? this.props.pdp.dataDetailPdp.minQty
-          : 0
+          : 0,
+      detailFromChild: null
     };
   }
   /**
@@ -175,7 +175,8 @@ class PdpOrderView extends Component {
   parentFunctionFromOrderButton(data) {
     /** NOTE 1 */
     this.setState({
-      qtyFromChild: data.qty
+      qtyFromChild: data.qty,
+      detailFromChild: data.detail
     });
   }
 
@@ -226,21 +227,6 @@ class PdpOrderView extends Component {
     );
   }
 
-  renderButtonOrderLargeUOM() {
-    return (
-      <OrderButtonLargeUOM
-        showKeyboard={this.state.showKeyboard}
-        disabledAllButton={this.state.showKeyboard}
-        item={this.props.pdp.dataDetailPdp}
-        onRef={ref => (this.parentFunctionFromOrderButton = ref)}
-        parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
-          this
-        )}
-        onFocus={() => this.setState({ buttonAddDisabled: true })}
-        onBlur={() => this.setState({ buttonAddDisabled: false })}
-      />
-    );
-  }
   /** === RENDER BUTTON === */
   renderButton() {
     return (
@@ -255,7 +241,8 @@ class PdpOrderView extends Component {
             type: 'addSkuToCart',
             data: {
               catalogueId: this.props.pdp.dataDetailPdp.id,
-              qty: this.state.qtyFromChild
+              qty: this.state.qtyFromChild,
+              detail: this.state.detailFromChild
             }
           })
         }
@@ -353,30 +340,7 @@ class PdpOrderView extends Component {
             </View>
           </View>
         </View>
-        {this.checkInputQtySection() ? (
-          <>
-            <View style={{ flexDirection: 'row', flex: 1 }}>
-              <View style={{ alignContent: 'flex-start' }}>
-                <Text style={Fonts.type96}>Dalam Pcs</Text>
-              </View>
-              <View style={{ flex: 1 }}>{this.renderButtonOrder()}</View>
-            </View>
-            {this.props.pdp.dataDetailPdp.enableLargeUom && (
-              <View style={{ flexDirection: 'row', flex: 1 }}>
-                <View style={{ alignContent: 'flex-start' }}>
-                  <Text style={Fonts.type96}>Dalam Box</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <View style={{ flex: 1 }}>
-                    {this.renderButtonOrderLargeUOM()}
-                  </View>
-                </View>
-              </View>
-            )}
-          </>
-        ) : (
-          <View />
-        )}
+        {this.checkInputQtySection() ? this.renderButtonOrder() : <View />}
       </View>
     );
   }
