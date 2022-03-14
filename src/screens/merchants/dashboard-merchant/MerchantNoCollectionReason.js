@@ -121,6 +121,10 @@ const MerchantNoCollectionReason = props => {
   /** post collection_not_success & navigate to merchantHomeView on success post transaction checkout */
   useEffect(() => {
     if (prevdataSfaPostTransactionCheckout !== dataSfaPostTransactionCheckout) {
+      console.log(
+        prevdataSfaPostTransactionCheckout,
+        dataSfaPostTransactionCheckout
+      );
       if (dataSfaPostTransactionCheckout) {
         if (params?.type === 'COLLECTION_LIST') {
           const supplierId = parseInt(userSuppliers[0]?.supplier?.id || 0, 10);

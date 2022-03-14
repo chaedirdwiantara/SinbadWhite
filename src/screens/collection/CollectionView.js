@@ -17,7 +17,8 @@ import {
   ModalBottomType3,
   ModalBottomType4,
   SearchBarType8,
-  LoadingPage
+  LoadingPage,
+  SkeletonType30
 } from '../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import { Color } from '../../config';
@@ -25,7 +26,6 @@ import * as ActionCreators from '../../state/actions';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import CollectionListDataView from './CollectionListDataView';
 import NavigationService from '../../navigation/NavigationService';
-import { selectedStore } from '../../state/actions';
 class CollectionView extends Component {
   constructor(props) {
     super(props);
@@ -199,13 +199,15 @@ class CollectionView extends Component {
   onClickCollectionMenu = item => {
     const collectionIds =
       this.props.sfa?.selectedStore?.collectionTransactionDetailIds || [];
+    const searchKey = this.state.searchKeyword;
     this.props.sfaModalCollectionListMenu(false);
     if (item.id !== 1) {
       this.checkCollectionStatus();
     } else {
       NavigationService.navigate(item.screen, {
         type: 'COLLECTION_LIST',
-        collectionIds
+        collectionIds,
+        searchKey
       });
     }
   };
@@ -318,7 +320,7 @@ class CollectionView extends Component {
             {this.renderModalExistInPjp()}
           </>
         ) : (
-          <LoadingPage />
+          <SkeletonType30 />
         )}
       </>
     );

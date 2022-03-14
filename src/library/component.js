@@ -113,6 +113,7 @@ import SkeletonType26 from '../components/skeleton/SkeletonType26';
 import SkeletonType27 from '../components/skeleton/SkeletonType27';
 import SkeletonType28 from '../components/skeleton/SkeletonType28';
 import SkeletonType29 from '../components/skeleton/SkeletonType29';
+import SkeletonType30 from '../components/skeleton/SkeletonType30';
 /** ADDRESS */
 import Address from '../components/Address';
 /** TAG */
@@ -263,6 +264,7 @@ export {
   SkeletonType27,
   SkeletonType28,
   SkeletonType29,
+  SkeletonType30,
   /** ADDRESS */
   Address,
   /** TAG */
