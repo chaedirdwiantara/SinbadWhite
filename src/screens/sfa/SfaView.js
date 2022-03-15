@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
-  TouchableOpacity
+  TouchableOpacity,
+  BackHandler
 } from '../../library/reactPackage';
 import { MaterialIcon } from '../../library/thirdPartyPackage';
 import {
@@ -43,7 +44,6 @@ let navigationProps = '';
 export const HeaderLeftSfaViewtOption = () => {
   const type = navigationProps?.navigation?.state?.params?.type || '';
   const dispatch = useDispatch();
-  const { selectedStore } = useSelector(state => state.sfa);
   const { id, userSuppliers } = useSelector(state => state.user);
   const onHandleBack = () => {
     if (type === 'COLLECTION_LIST') {
@@ -57,7 +57,7 @@ export const HeaderLeftSfaViewtOption = () => {
         loading: true,
         searchKey: ''
       };
-      NavigationService.goBack();
+      NavigationService.navigate('CollectionView');
       dispatch(sfaGetStoreCollectionListReset());
       dispatch(sfaGetStoreCollectionListProcess(data));
       dispatch(sfaModalCollectionListMenu(true));
@@ -197,11 +197,20 @@ const SfaView = props => {
 
     dispatch(sfaGetReferenceListProcess(data));
   };
-
+  /** === GET COLLECTION LIST ON CHANGE STATUS OR SEARCH === */
   useEffect(() => {
     getCollectionList(true, 20);
   }, [approvalStatusCollection, searchTextCollection]);
+  /** === HANDLE BACK HARDWARE PRESS ===  */
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', onHandleBack);
+  }, []);
 
+  useEffect(
+    () => () =>
+      BackHandler.removeEventListener('hardwareBackPress', onHandleBack),
+    []
+  );
   /** PARENT FUNCTION */
   let parentFunction = data => {
     switch (data.type) {
@@ -268,7 +277,28 @@ const SfaView = props => {
     dispatch(sfaGetRefresh());
     getInvoiceList(true, 20);
   };
-
+  /** === HANDLE BACK PRESS */
+  const onHandleBack = () => {
+    const type = params.type || '';
+    if (type === 'COLLECTION_LIST') {
+      const supplierId = parseInt(userSuppliers[0]?.supplier?.id || 0, 10);
+      const salesId = parseInt(id, 10) || 0;
+      const data = {
+        salesId,
+        supplierId,
+        skip: 1,
+        limit: 10,
+        loading: true,
+        searchKey: ''
+      };
+      NavigationService.goBack();
+      dispatch(sfaGetStoreCollectionListReset());
+      dispatch(sfaGetStoreCollectionListProcess(data));
+      dispatch(sfaModalCollectionListMenu(true));
+    } else {
+      NavigationService.goBack();
+    }
+  };
   /** === HEADER TABS === */
   const renderHeaderTabs = () => {
     return (

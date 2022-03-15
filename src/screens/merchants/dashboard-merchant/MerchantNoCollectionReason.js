@@ -1,5 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { React, View, TouchableOpacity } from '../../../library/reactPackage';
+import {
+  React,
+  View,
+  TouchableOpacity,
+  BackHandler
+} from '../../../library/reactPackage';
 import { useState, useEffect, useRef } from 'react';
 import { MaterialIcon } from '../../../library/thirdPartyPackage';
 import masterColor from '../../../config/masterColor.json';
@@ -180,7 +185,23 @@ const MerchantNoCollectionReason = props => {
       }
     }
   }, [errorSfaPostTransactionCheckout]);
+  /** === HANDLE BACK HARDWARE PRESS ===  */
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backHandlerHardware
+    );
+    return () => backHandler.remove();
+  }, []);
+  const backHandlerHardware = () => {
+    if (params?.type === 'COLLECTION_LIST' || '') {
+      NavigationService.navigate('CollectionView');
+      dispatch(sfaModalCollectionListMenu(true));
+    } else {
+      NavigationService.goBack();
+    }
+  };
   /**=== RENDER FUNCTION === */
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigateToPromisePayView = data => {
@@ -236,8 +257,8 @@ const MerchantNoCollectionReason = props => {
       10
     );
     const collectionTransactionDetailIds =
-      selectedMerchant?.collectionIds ||
-      selectedStore?.collectionTransactionDetailIds;
+      selectedStore?.collectionTransactionDetailIds ||
+      selectedMerchant?.collectionIds;
     const data = {
       storeId,
       collectionTransactionDetailIds,

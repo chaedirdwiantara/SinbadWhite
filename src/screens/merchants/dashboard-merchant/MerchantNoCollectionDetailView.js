@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import {
   sfaGetCollectionListProcess,
-  SfaGetLoadMore
+  SfaGetLoadMore,
+  sfaModalCollectionListMenu
 } from '../../../state/actions';
 import MerchantCollectionReasonList from './MerchantCollectionReasonList';
 import { LoadingPage } from '../../../components/Loading';
@@ -24,6 +25,15 @@ const MerchantNoCollectionDetailView = props => {
   useEffect(() => {
     getCollectionList(true, 20);
   }, []);
+  /** UNMOUNT COMPONENT */
+  useEffect(
+    () => () => {
+      if (params.type === 'COLLECTION_LIST') {
+        dispatch(sfaModalCollectionListMenu(true));
+      }
+    },
+    []
+  );
   /** RENDER FUNCTION */
   /** handle loadmore get collectin */
   const onHandleLoadMore = () => {
