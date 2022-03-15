@@ -178,10 +178,9 @@ class CollectionView extends Component {
   }
   /** === RENDER MODAL COLLECTION MENU */
   renderModalCollectionMenu() {
-    const storeName = this.props.sfa.selectedStore?.name || '';
     return this.props.sfa.modalCollectionListMenu ? (
       <ModalBottomType3
-        title={storeName}
+        title={'Tagih Toko'}
         open={this.props.sfa.modalCollectionListMenu}
         close={() => {
           this.setState({ openModalCollectionMenu: false }),
@@ -231,9 +230,26 @@ class CollectionView extends Component {
   }
   /** === RENDER COLLECTION MENU === */
   renderCollectionMenu() {
+    const selectedStore = this.props.sfa.selectedStore;
     return (
       <>
         <View style={{ marginBottom: 8 }}>
+          <View style={styles.menuJPInfo}>
+            <Text
+              style={[
+                Fonts.type10,
+                { color: Color.fontBlack70, marginBottom: 4 }
+              ]}
+            >
+              {selectedStore?.externalId || ''}
+            </Text>
+            <Text style={[Fonts.type16, { marginBottom: 4 }]}>
+              {selectedStore?.name || ''}
+            </Text>
+            <Text style={[Fonts.type57, { color: Color.fontBlack70 }]}>
+              {selectedStore?.address || ''}
+            </Text>
+          </View>
           {this.state.collectionMenu.map((item, index) => {
             const isCollectionDisable =
               item.id === 1 &&
@@ -352,6 +368,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  menuJPInfo: {
+    marginHorizontal: 16,
+    marginVertical: 4
   }
 });
 const mapStateToProps = ({ user, auth, sfa }) => {

@@ -100,12 +100,14 @@ class CollectionListDataView extends Component {
       >
         <View style={{ width: '80%' }}>
           <Text style={[Fonts.type9, { marginBottom: 10 }]}>
-            {item.externalId || 0}
+            {item.externalId || ''}
           </Text>
           <Text style={[Fonts.type7, { marginBottom: 4 }]}>
             {item.name || ''}
           </Text>
-          <Text style={Fonts.type17}>{item.address || ''}</Text>
+          <Text style={Fonts.type17} numberOfLines={1}>
+            {item.address || ''}
+          </Text>
           <View style={styles.itemContainer}>
             <Text style={Fonts.type17}>
               {item.collectionTransactionDetailIds.length || 0} Invoice
