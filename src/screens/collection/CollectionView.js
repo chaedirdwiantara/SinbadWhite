@@ -173,7 +173,9 @@ class CollectionView extends Component {
         placeholder="Cari nama / ID Toko disini"
         fetchFn={searchKeyword => this.onChangeSearchKey(searchKeyword)}
         onRef={ref => (this.parentFunction = ref)}
-        parentFunction={() => console.log('search enter')}
+        parentFunction={() =>
+          this.getStoreCollectionList(true, this.state.searchKeyword)
+        }
       />
     );
   }
