@@ -73,8 +73,11 @@ const MerchantNoCollectionDetailView = props => {
     return () => backHandler.remove();
   }, []);
   /** RENDER FUNCTION */
+  /** function back from back hardaware */
   const backHandlerHardware = () => {
-    dispatch(sfaModalCollectionListMenu(true));
+    if (params?.type === 'COLLECTION_LIST' || '') {
+      dispatch(sfaModalCollectionListMenu(true));
+    }
   };
   /** handle loadmore get collectin */
   const onHandleLoadMore = () => {
