@@ -1,6 +1,14 @@
-import { React, View, Text } from '../../../library/reactPackage';
+import {
+  React,
+  View,
+  BackHandler,
+  TouchableOpacity
+} from '../../../library/reactPackage';
+import { MaterialIcon } from '../../../library/thirdPartyPackage';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+import masterColor from '../../../config/masterColor.json';
+import NavigationService from '../../../navigation/NavigationService';
 import {
   sfaGetCollectionListProcess,
   SfaGetLoadMore,
@@ -9,7 +17,37 @@ import {
 import MerchantCollectionReasonList from './MerchantCollectionReasonList';
 import { LoadingPage } from '../../../components/Loading';
 import { ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS } from '../../../constants';
+let navigationProps = '';
+/** === HEADER === */
+export const HeaderLeftDetailReasonOption = () => {
+  const type = navigationProps?.navigation?.state?.params?.type || '';
+  const dispatch = useDispatch();
+  return (
+    <>
+      <View style={{ marginLeft: 16 }}>
+        <TouchableOpacity
+          onPress={() => {
+            if (type === 'COLLECTION_LIST') {
+              NavigationService.goBack(null);
+              dispatch(sfaModalCollectionListMenu(true));
+            } else {
+              NavigationService.goBack(null);
+            }
+          }}
+        >
+          <MaterialIcon
+            name="arrow-back"
+            color={masterColor.fontBlack80}
+            size={24}
+          />
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+};
+
 const MerchantNoCollectionDetailView = props => {
+  navigationProps = props;
   const { params } = props.navigation.state;
   const dispatch = useDispatch();
   const { id, userSuppliers } = useSelector(state => state.user);
@@ -25,16 +63,19 @@ const MerchantNoCollectionDetailView = props => {
   useEffect(() => {
     getCollectionList(true, 20);
   }, []);
-  /** UNMOUNT COMPONENT */
-  useEffect(
-    () => () => {
-      if (params.type === 'COLLECTION_LIST') {
-        dispatch(sfaModalCollectionListMenu(true));
-      }
-    },
-    []
-  );
+
+  /** === HANDLE BACK HARDWARE PRESS ===  */
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backHandlerHardware
+    );
+    return () => backHandler.remove();
+  }, []);
   /** RENDER FUNCTION */
+  const backHandlerHardware = () => {
+    dispatch(sfaModalCollectionListMenu(true));
+  };
   /** handle loadmore get collectin */
   const onHandleLoadMore = () => {
     if (dataGetCollectionList) {

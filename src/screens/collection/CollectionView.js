@@ -77,6 +77,7 @@ class CollectionView extends Component {
       }
     }
   }
+
   /** === PARENT FUNCTION === */
   parentFunction(item) {
     switch (item.type) {
@@ -117,7 +118,7 @@ class CollectionView extends Component {
   }
   //** FUNCTION ON CHANGE SEARCH KEY */
   onChangeSearchKey = searchKey => {
-    this.setState({ searchKeyword: searchKey || '' });
+    this.setState({ searchKeyword: searchKey || '', emptyDataType: 'search' });
   };
   /** === HEADER === */
   renderHeader() {
@@ -196,6 +197,7 @@ class CollectionView extends Component {
   }
   /** === FUNCTION ON COLLECTION MENU === */
   onClickCollectionMenu = item => {
+    this.setState({ searchKeyword: '' });
     const collectionIds =
       this.props.sfa?.selectedStore?.collectionTransactionDetailIds || [];
     const searchKey = this.state.searchKeyword;

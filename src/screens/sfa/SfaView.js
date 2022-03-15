@@ -202,15 +202,15 @@ const SfaView = props => {
     getCollectionList(true, 20);
   }, [approvalStatusCollection, searchTextCollection]);
   /** === HANDLE BACK HARDWARE PRESS ===  */
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', onHandleBack);
-  }, []);
+  /** === HANDLE BACK HARDWARE PRESS ===  */
 
-  useEffect(
-    () => () =>
-      BackHandler.removeEventListener('hardwareBackPress', onHandleBack),
-    []
-  );
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      onHandleBack
+    );
+    return () => backHandler.remove();
+  }, []);
   /** PARENT FUNCTION */
   let parentFunction = data => {
     switch (data.type) {
@@ -291,12 +291,9 @@ const SfaView = props => {
         loading: true,
         searchKey: ''
       };
-      NavigationService.goBack();
       dispatch(sfaGetStoreCollectionListReset());
       dispatch(sfaGetStoreCollectionListProcess(data));
       dispatch(sfaModalCollectionListMenu(true));
-    } else {
-      NavigationService.goBack();
     }
   };
   /** === HEADER TABS === */

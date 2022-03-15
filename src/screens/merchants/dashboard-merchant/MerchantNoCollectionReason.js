@@ -197,10 +197,7 @@ const MerchantNoCollectionReason = props => {
   }, []);
   const backHandlerHardware = () => {
     if (params?.type === 'COLLECTION_LIST' || '') {
-      NavigationService.navigate('CollectionView');
       dispatch(sfaModalCollectionListMenu(true));
-    } else {
-      NavigationService.goBack();
     }
   };
   /**=== RENDER FUNCTION === */
