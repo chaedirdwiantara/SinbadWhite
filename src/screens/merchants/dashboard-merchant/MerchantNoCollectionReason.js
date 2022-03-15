@@ -38,10 +38,10 @@ export const HeaderLeftReasonOption = () => {
         <TouchableOpacity
           onPress={() => {
             if (type === 'COLLECTION_LIST') {
-              NavigationService.goBack();
+              NavigationService.goBack(null);
               dispatch(sfaModalCollectionListMenu(true));
             } else {
-              NavigationService.goBack();
+              NavigationService.goBack(null);
             }
           }}
         >
@@ -178,7 +178,8 @@ const MerchantNoCollectionReason = props => {
   /** on error post transaction checkout, show modal error */
   useEffect(() => {
     if (
-      preverrorSfaPostTransactionCheckout !== errorSfaPostTransactionCheckout
+      preverrorSfaPostTransactionCheckout?.current !==
+      errorSfaPostTransactionCheckout
     ) {
       if (errorSfaPostTransactionCheckout) {
         setOpenModalErrorGlobal(true);
