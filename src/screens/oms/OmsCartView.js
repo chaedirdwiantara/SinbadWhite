@@ -349,6 +349,7 @@ class OmsCartView extends Component {
       item => item.catalogueId === data.catalogueId
     );
     productCartArray[indexProductCartArray].qty = data.qty;
+    productCartArray[indexProductCartArray].detail = data.detail;
     this.setState({ productCartArray });
     /**
      * jangan hapus code dibawah
@@ -434,7 +435,8 @@ class OmsCartView extends Component {
     const mapProduct = productCheckBox.map(item => {
       return {
         catalogueId: parseInt(item.catalogueId, 10),
-        qty: item.qty
+        qty: item.qty,
+        detail: item.detail
       };
     });
     /** => save to oms.dataCheckout */
@@ -719,16 +721,46 @@ class OmsCartView extends Component {
    * - price per item product (===> RENDER PRICE PER SKU)
    * - item
    */
-  renderButtonOrder(itemForOrderButton) {
+  renderButtonOrder(itemForOrderButton, uomDetail) {
     return (
-      <OrderButton
-        showKeyboard={this.state.showKeyboard}
-        item={itemForOrderButton}
-        onRef={ref => (this.parentFunctionFromOrderButton = ref)}
-        parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
-          this
+      <View style={{ marginLeft: 30 }}>
+        <OrderButton
+          showKeyboard={this.state.showKeyboard}
+          item={itemForOrderButton}
+          uomDetail={uomDetail}
+          onRef={ref => (this.parentFunctionFromOrderButton = ref)}
+          parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
+            this
+          )}
+        />
+      </View>
+    );
+  }
+
+  renderChecklist(item) {
+    return (
+      <TouchableOpacity
+        style={{ width: 30, justifyContent: 'center' }}
+        onPress={() => this.checkBoxProduct(item.catalogue.id)}
+      >
+        {this.state.productCartArray.findIndex(
+          itemProductCartArray =>
+            itemProductCartArray.catalogueId === item.catalogue.id &&
+            item.checkBox
+        ) > -1 ? (
+          <MaterialCommunityIcons
+            color={Color.mainColor}
+            name="checkbox-marked"
+            size={24}
+          />
+        ) : (
+          <MaterialCommunityIcons
+            color={Color.fontBlack40}
+            name="checkbox-blank-outline"
+            size={24}
+          />
         )}
-      />
+      </TouchableOpacity>
     );
   }
 
@@ -736,6 +768,7 @@ class OmsCartView extends Component {
     return (
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row' }}>
+          {this.renderChecklist(item)}
           {this.renderImageGlobal(item)}
           <View style={{ flex: 1 }}>
             <View
@@ -758,10 +791,10 @@ class OmsCartView extends Component {
             </View>
             <View style={{ flex: 1 }}>
               {this.renderPriceProductGlobal(item)}
-              {this.renderButtonOrder(itemForOrderButton)}
             </View>
           </View>
         </View>
+        {this.renderButtonOrder(itemForOrderButton, item.detail)}
       </View>
     );
   }
@@ -781,8 +814,8 @@ class OmsCartView extends Component {
       return item.brandId === productItem.brandId &&
         item.statusInCart === 'available' ? (
         <View style={styles.boxListItem} key={index}>
-          <TouchableOpacity
-            style={{ width: 30, justifyContent: 'center' }}
+          {/* <TouchableOpacity
+            style={{ width: 30 }}
             onPress={() => this.checkBoxProduct(item.catalogue.id)}
           >
             {this.state.productCartArray.findIndex(
@@ -802,7 +835,7 @@ class OmsCartView extends Component {
                 size={24}
               />
             )}
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {this.renderListCartItemContent(item, itemForOrderButton)}
         </View>
       ) : (

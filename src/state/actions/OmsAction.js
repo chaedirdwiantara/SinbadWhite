@@ -201,7 +201,8 @@ export function omsAddToCart(data) {
         } else {
           dataCart.push({
             catalogueId: parseInt(data.catalogueId, 10),
-            qty: data.qty
+            qty: data.qty,
+            detail: data.detail
           });
         }
         break;
@@ -217,7 +218,8 @@ export function omsAddToCart(data) {
   } else {
     dataCart.push({
       catalogueId: parseInt(data.catalogueId, 10),
-      qty: data.qty
+      qty: data.qty,
+      detail: data.detail
     });
   }
   return { type: types.OMS_ITEM_FOR_CART, payload: dataCart };
