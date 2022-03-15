@@ -33,7 +33,9 @@ class OrderButton extends Component {
       unit: this.props.item.minQtyType,
       largeUnit: this.props.item.catalogueLargeUnit?.unit ?? 'Box',
       enableLargeUom: this.props.item.enableLargeUom,
-      largeUomQty: 0
+      largeUomQty: 0,
+      smallUomQty: 0,
+      uomDetail: this.props.uomDetail ?? null
     };
   }
   /**
@@ -43,6 +45,7 @@ class OrderButton extends Component {
    */
   /** === DID MOUNT */
   componentDidMount() {
+    this.checkUomDetail();
     this.checkTotalClickPlusButton(this.state.qty);
   }
   componentDidUpdate(prevProps) {
@@ -64,6 +67,15 @@ class OrderButton extends Component {
         /** => after keyboard close, call calculate function */
         this.checkQtyAfterEnter();
       }
+    }
+  }
+
+  checkUomDetail() {
+    if (this.state.uomDetail !== null) {
+      this.setState({
+        largeUomQty: this.state.uomDetail.largeUomQty,
+        qty: this.state.uomDetail.smallUomQty
+      });
     }
   }
 
@@ -487,7 +499,7 @@ class OrderButton extends Component {
           }}
         >
           <View style={{ alignContent: 'flex-start' }}>
-            <Text style={Fonts.fontH12Medium}>Dalam Pcs</Text>
+            <Text style={Fonts.fontH12Medium}>Dalam {this.state.unit}</Text>
           </View>
           <View style={styles.subMainContainerDouble}>
             {this.renderCalculator(this.state.qty, false)}
@@ -504,7 +516,9 @@ class OrderButton extends Component {
         >
           <View style={{ alignContent: 'flex-start' }}>
             <Text style={Fonts.type38}>Order dengan satuan besar</Text>
-            <Text style={Fonts.fontH12Medium}>Dalam Box</Text>
+            <Text style={Fonts.fontH12Medium}>
+              Dalam {this.state.largeUnit}
+            </Text>
           </View>
           <View style={styles.subMainContainerDouble}>
             {this.renderCalculator(this.state.largeUomQty, true)}

@@ -349,6 +349,7 @@ class OmsCartView extends Component {
       item => item.catalogueId === data.catalogueId
     );
     productCartArray[indexProductCartArray].qty = data.qty;
+    productCartArray[indexProductCartArray].detail = data.detail;
     this.setState({ productCartArray });
     /**
      * jangan hapus code dibawah
@@ -434,7 +435,8 @@ class OmsCartView extends Component {
     const mapProduct = productCheckBox.map(item => {
       return {
         catalogueId: parseInt(item.catalogueId, 10),
-        qty: item.qty
+        qty: item.qty,
+        detail: item.detail
       };
     });
     /** => save to oms.dataCheckout */
@@ -719,12 +721,13 @@ class OmsCartView extends Component {
    * - price per item product (===> RENDER PRICE PER SKU)
    * - item
    */
-  renderButtonOrder(itemForOrderButton) {
+  renderButtonOrder(itemForOrderButton, uomDetail) {
     return (
       <View style={{ marginLeft: 30 }}>
         <OrderButton
           showKeyboard={this.state.showKeyboard}
           item={itemForOrderButton}
+          uomDetail={uomDetail}
           onRef={ref => (this.parentFunctionFromOrderButton = ref)}
           parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
             this
@@ -791,7 +794,7 @@ class OmsCartView extends Component {
             </View>
           </View>
         </View>
-        {this.renderButtonOrder(itemForOrderButton)}
+        {this.renderButtonOrder(itemForOrderButton, item.detail)}
       </View>
     );
   }
