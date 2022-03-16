@@ -361,7 +361,11 @@ class MerchantHomeView extends Component {
       this.props.sfa.dataSfaPostTransactionCheckout
     ) {
       if (this.props.sfa.dataSfaPostTransactionCheckout) {
-        if (this.props.sfa.dataSfaCheckCollectionStatus?.meta?.total === 0) {
+        if (
+          this.props.sfa.dataSfaCheckCollectionStatus?.meta?.total === 0 &&
+          (this.props.sfa.dataSfaCheckCollectionStatus?.data?.storeStatus ||
+            '') !== 'NOT COLLECTED'
+        ) {
           if (
             !dataGetLogAllActivityV2.find(
               item =>

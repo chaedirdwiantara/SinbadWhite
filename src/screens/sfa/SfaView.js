@@ -158,7 +158,7 @@ const SfaView = props => {
       loading: loading,
       limit: page,
       skip: 0,
-      collectionTransactionDetailStatus: '',
+      collectionTransactionDetailStatus: 'ASSIGNED',
       collectionTransactionDetailIds
     };
     dispatch(sfaGetCollectionListProcess(data));
@@ -207,7 +207,7 @@ const SfaView = props => {
   /** === GET COLLECTION LIST */
   const getListCollectionStores = () => {
     console.log('list store');
-    if (params.type === 'COLLECTION_LIST') {
+    if ((params?.type || '') === 'COLLECTION_LIST') {
       const supplierId = parseInt(userSuppliers[0]?.supplier?.id || 0, 10);
       const salesId = parseInt(id, 10) || 0;
       const data = {

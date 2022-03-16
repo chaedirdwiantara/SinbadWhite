@@ -329,6 +329,7 @@ class CollectionView extends Component {
   }
   /** === MAIN RENDER === */
   render() {
+    console.log('SEARCH KEY', this.state.searchKeyword);
     return (
       <>
         {this.renderHeader()}
