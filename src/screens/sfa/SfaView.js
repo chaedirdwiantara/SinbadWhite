@@ -206,7 +206,6 @@ const SfaView = props => {
 
   /** === GET COLLECTION LIST */
   const getListCollectionStores = () => {
-    console.log('list store');
     if ((params?.type || '') === 'COLLECTION_LIST') {
       const supplierId = parseInt(userSuppliers[0]?.supplier?.id || 0, 10);
       const salesId = parseInt(id, 10) || 0;
