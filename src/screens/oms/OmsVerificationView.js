@@ -99,10 +99,6 @@ class OmsVerificationView extends Component {
   /** DID MOUNT */
   componentDidMount() {
     this.setState({ openToastConvertion: true });
-
-    // setTimeout(() => {
-    //   this.setState({ openToastConvertion: false });
-    // }, 3000);
   }
 
   /**
@@ -399,9 +395,18 @@ class OmsVerificationView extends Component {
               </View>
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>{`${
-                    item.qty
-                  } Pcs`}</Text>
+                  <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
+                    {!item.detail
+                      ? `${item.qty} Pcs`
+                      : `${item.detail.smallUomQty} ${item.detail.smallUom} | ${
+                          item.detail.largeUomQty
+                        } ${item.detail.largeUom}`}
+                  </Text>
+                  {item.detail && (
+                    <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
+                      {`Total item ${item.qty} pcs`}
+                    </Text>
+                  )}
                   <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                     {MoneyFormat(parseInt(item.price))}
                   </Text>
