@@ -13,7 +13,8 @@ import {
   StatusBarWhite,
   ButtonSingle,
   ModalBottomErrorRespons,
-  LoadingPage
+  LoadingPage,
+  ToastType1
 } from '../../library/component';
 import {
   connect,
@@ -41,7 +42,8 @@ class OmsVerificationView extends Component {
       openModalErrorNoUrban: false,
       openModalCS: false,
       openModalErrorPromo: false,
-      openModalErrorMaxOrder: false
+      openModalErrorMaxOrder: false,
+      openToastConvertion: false
     };
   }
 
@@ -92,6 +94,15 @@ class OmsVerificationView extends Component {
         }
       }
     }
+  }
+
+  /** DID MOUNT */
+  componentDidMount() {
+    this.setState({ openToastConvertion: true });
+
+    // setTimeout(() => {
+    //   this.setState({ openToastConvertion: false });
+    // }, 3000);
   }
 
   /**
@@ -162,6 +173,25 @@ class OmsVerificationView extends Component {
     } else {
       this.setState({ openBenefitDetail: index });
     }
+  }
+
+  /**
+   * ===================
+   * TOAST
+   * ====================
+   */
+  renderToast() {
+    return this.state.openToastConvertion ? (
+      <ToastType1
+        basic={true}
+        margin={10}
+        content={
+          'Jumlah order satuan terkecil terkonversi otomatis ke satuan terbesar jika mencukupi jumlah satuan terbesar.'
+        }
+      />
+    ) : (
+      <View />
+    );
   }
 
   /**
@@ -587,6 +617,8 @@ class OmsVerificationView extends Component {
         {this.renderContent()}
         {/* modal */}
         {this.renderModalSkuStatusConfirmation()}
+        {/* toast */}
+        {this.renderToast()}
         {/* error */}
         {this.renderModalErrorRespons()}
         {this.renderModalErrorNoUrban()}
