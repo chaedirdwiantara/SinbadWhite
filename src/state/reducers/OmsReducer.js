@@ -467,7 +467,6 @@ export const oms = createReducer(INITIAL_STATE, {
       promoSku
     };
 
-    console.log('[OMS_CHECK_PROMO_SUCCESS]: ', dataOmsCheckPromo);
     return {
       ...state,
       loadingOmsCheckPromo: false,
