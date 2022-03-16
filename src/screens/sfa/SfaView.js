@@ -21,6 +21,7 @@ import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
 import SfaInvoiceListView from './SfaInvoiceListView';
 import {
+  selectedStoreReset,
   sfaGetCollectionListProcess,
   sfaGetCollectionStatusProcess,
   sfaGetCollectionListStatusProcess,
@@ -47,19 +48,7 @@ export const HeaderLeftSfaViewtOption = () => {
   const { id, userSuppliers } = useSelector(state => state.user);
   const onHandleBack = () => {
     if (type === 'COLLECTION_LIST') {
-      const supplierId = parseInt(userSuppliers[0]?.supplier?.id || 0, 10);
-      const salesId = parseInt(id, 10) || 0;
-      const data = {
-        salesId,
-        supplierId,
-        skip: 1,
-        limit: 10,
-        loading: true,
-        searchKey: ''
-      };
       NavigationService.navigate('CollectionView');
-      dispatch(sfaGetStoreCollectionListReset());
-      dispatch(sfaGetStoreCollectionListProcess(data));
       dispatch(sfaModalCollectionListMenu(true));
     } else {
       NavigationService.goBack();
@@ -154,12 +143,12 @@ const SfaView = props => {
   const getInvoiceList = (loading, page) => {
     const collectionTransactionDetailIds =
       (params?.type || '') === 'COLLECTION_LIST'
-        ? selectedStore.collectionTransactionDetailIds || []
-        : selectedMerchant.collectionIds || [];
+        ? selectedStore?.collectionTransactionDetailIds || []
+        : selectedMerchant?.collectionIds || [];
     const storeId =
       (params?.type || '') === 'COLLECTION_LIST'
-        ? parseInt(selectedStore.id, 10) || 0
-        : parseInt(selectedMerchant.storeId, 10) || 0;
+        ? parseInt(selectedStore?.id, 10) || 0
+        : parseInt(selectedMerchant?.storeId, 10) || 0;
     const data = {
       storeId: storeId,
       userId: parseInt(id, 10),
@@ -205,12 +194,34 @@ const SfaView = props => {
   /** === HANDLE BACK HARDWARE PRESS ===  */
 
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      onHandleBack
-    );
-    return () => backHandler.remove();
+    BackHandler.addEventListener('hardwareBackPress', onHandleBack);
   }, []);
+
+  useEffect(
+    () => () =>
+      BackHandler.removeEventListener('hardwareBackPress', onHandleBack),
+    []
+  );
+  useEffect(() => () => getListCollectionStores(), []);
+
+  /** === GET COLLECTION LIST */
+  const getListCollectionStores = () => {
+    console.log('list store');
+    if (params.type === 'COLLECTION_LIST') {
+      const supplierId = parseInt(userSuppliers[0]?.supplier?.id || 0, 10);
+      const salesId = parseInt(id, 10) || 0;
+      const data = {
+        salesId,
+        supplierId,
+        skip: 1,
+        limit: 10,
+        loading: true,
+        searchKey: ''
+      };
+      dispatch(sfaGetStoreCollectionListReset());
+      dispatch(sfaGetStoreCollectionListProcess(data));
+    }
+  };
   /** PARENT FUNCTION */
   let parentFunction = data => {
     switch (data.type) {
@@ -277,24 +288,9 @@ const SfaView = props => {
     dispatch(sfaGetRefresh());
     getInvoiceList(true, 20);
   };
-  /** === HANDLE BACK PRESS */
+  /** === HANDLE BACK HARDWARE */
   const onHandleBack = () => {
-    const type = params.type || '';
-    if (type === 'COLLECTION_LIST') {
-      const supplierId = parseInt(userSuppliers[0]?.supplier?.id || 0, 10);
-      const salesId = parseInt(id, 10) || 0;
-      const data = {
-        salesId,
-        supplierId,
-        skip: 1,
-        limit: 10,
-        loading: true,
-        searchKey: ''
-      };
-      dispatch(sfaGetStoreCollectionListReset());
-      dispatch(sfaGetStoreCollectionListProcess(data));
-      dispatch(sfaModalCollectionListMenu(true));
-    }
+    dispatch(selectedStoreReset());
   };
   /** === HEADER TABS === */
   const renderHeaderTabs = () => {
