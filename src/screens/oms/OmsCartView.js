@@ -359,7 +359,6 @@ class OmsCartView extends Component {
   }
 
   parentFunctionFromMultipleOrderButton(data) {
-    console.log('Multiple Order Button', data);
     const productCartArray = this.state.productCartArray;
     const indexProductCartArray = productCartArray.findIndex(
       item => item.catalogueId === data.catalogueId
@@ -733,7 +732,6 @@ class OmsCartView extends Component {
    * - item
    */
   renderButtonOrder(itemForOrderButton, uomDetail) {
-    console.log(itemForOrderButton);
     return (
       <View style={{ marginLeft: 30 }}>
         {!itemForOrderButton.enableLargeUom ? (

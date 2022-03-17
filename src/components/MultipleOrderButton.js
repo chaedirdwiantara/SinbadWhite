@@ -45,7 +45,6 @@ class MultipleOrderButton extends Component {
    */
   /** === DID MOUNT */
   componentDidMount() {
-    console.log('Uom Detail', this.props.uomDetail);
     this.checkUomDetail();
     this.checkTotalClickPlusButton(this.state.qty);
   }
@@ -203,7 +202,6 @@ class MultipleOrderButton extends Component {
    * this for calculator start
    */
   sendValueToParent(qty) {
-    console.log('sendValueToParent', qty);
     if (this.state.enableLargeUom) {
       this.props.parentFunctionFromOrderButton({
         catalogueId: this.state.selectedProduct.id,
