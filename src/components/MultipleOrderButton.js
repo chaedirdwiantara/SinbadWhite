@@ -32,6 +32,7 @@ class MultipleOrderButton extends Component {
       totalClickPlus: 0,
       unit: this.props.item.minQtyType,
       largeUnit: this.props.item.catalogueLargeUnit?.unit ?? 'Box',
+      smallUnit: 'pcs',
       enableLargeUom: this.props.item.enableLargeUom,
       largeUomQty: this.props.uomDetail?.largeUomQty ?? 0,
       smallUomQty: this.props.uomDetail?.smallUomQty ?? 0,
@@ -74,7 +75,12 @@ class MultipleOrderButton extends Component {
     if (this.state.uomDetail !== null) {
       this.setState({
         largeUomQty: this.state.uomDetail.largeUomQty,
-        smallUomQty: this.state.uomDetail.smallUomQty
+        largeUnit: this.state.uomDetail.largeUom,
+        smallUomQty: this.state.uomDetail.smallUomQty,
+        smallUnit: this.state.uomDetail.smallUom,
+        qty:
+          this.state.uomDetail.largeUomQty * this.state.uomDetail.packagedQty +
+          this.state.uomDetail.smallUomQty
       });
     }
   }
@@ -206,13 +212,13 @@ class MultipleOrderButton extends Component {
       this.props.parentFunctionFromOrderButton({
         catalogueId: this.state.selectedProduct.id,
         qty:
-          this.state.largeUomQty * this.state.packagedQty +
-          this.state.smallUomQty,
+          parseInt(this.state.largeUomQty, 10) * this.state.packagedQty +
+          parseInt(this.state.smallUomQty, 10),
         detail: {
           smallUom: this.state.unit,
-          smallUomQty: qty,
+          smallUomQty: parseInt(qty, 10),
           largeUom: this.state.largeUnit,
-          largeUomQty: this.state.largeUomQty,
+          largeUomQty: parseInt(this.state.largeUomQty, 10),
           packagedQty: this.state.packagedQty
         }
       });
@@ -227,12 +233,14 @@ class MultipleOrderButton extends Component {
   sendValueToParentLarge(qty) {
     this.props.parentFunctionFromOrderButton({
       catalogueId: this.state.selectedProduct.id,
-      qty: qty * this.state.packagedQty + this.state.smallUomQty,
+      qty:
+        parseInt(qty, 10) * this.state.packagedQty +
+        parseInt(this.state.smallUomQty, 10),
       detail: {
         smallUom: this.state.unit,
-        smallUomQty: this.state.smallUomQty,
+        smallUomQty: parseInt(this.state.smallUomQty, 10),
         largeUom: this.state.largeUnit,
-        largeUomQty: qty,
+        largeUomQty: parseInt(qty, 10),
         packagedQty: this.state.packagedQty
       }
     });
@@ -420,7 +428,7 @@ class MultipleOrderButton extends Component {
   }
 
   /** => render input calculator */
-  renderInput(parentQty) {
+  renderInput(parentQty, isLarge) {
     return (
       <View style={styles.inputList}>
         <TextInput
@@ -436,7 +444,9 @@ class MultipleOrderButton extends Component {
           onChangeText={qty => {
             const cleanNumber = qty.replace(/[^0-9]/g, '');
             this.checkTotalClickPlusButton(cleanNumber);
-            this.setState({ qty: cleanNumber });
+            isLarge
+              ? this.setState({ largeUomQty: cleanNumber })
+              : this.setState({ smallUomQty: cleanNumber });
           }}
           style={[Fonts.type24, styles.input]}
         />
@@ -448,7 +458,7 @@ class MultipleOrderButton extends Component {
     return (
       <View style={styles.containerInputQty}>
         {isLarge ? this.renderMinusButtonLarge() : this.renderMinusButton()}
-        {this.renderInput(qty)}
+        {this.renderInput(qty, isLarge)}
         {isLarge ? this.renderPlusButtonLarge() : this.renderPlusButton()}
       </View>
     );
@@ -501,7 +511,9 @@ class MultipleOrderButton extends Component {
           }}
         >
           <View style={{ alignContent: 'flex-start' }}>
-            <Text style={Fonts.fontH12Medium}>Dalam {this.state.unit}</Text>
+            <Text style={Fonts.fontH12Medium}>
+              Dalam {this.state.smallUnit}
+            </Text>
           </View>
           <View style={styles.subMainContainerDouble}>
             {this.renderCalculator(this.state.smallUomQty, false)}
@@ -525,7 +537,9 @@ class MultipleOrderButton extends Component {
           <View style={styles.subMainContainerDouble}>
             {this.renderCalculator(this.state.largeUomQty, true)}
             <Text style={[Fonts.type38, { marginTop: 5 }]}>{`Sejumlah ${this
-              .state.largeUomQty * this.state.packagedQty} pcs`}</Text>
+              .state.largeUomQty * this.state.packagedQty} ${
+              this.state.smallUnit
+            }`}</Text>
           </View>
         </View>
       </>
