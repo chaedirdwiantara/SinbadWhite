@@ -831,7 +831,7 @@ export function checkCanResumeVisitFailed(data) {
 //  * PAUSE / RESUME VISIT JOURNEY BOOK
 //  * ===========================================
 //  */
- export function pauseResumeVisitProcess(data) {
+export function pauseResumeVisitProcess(data) {
   return { type: types.PAUSE_RESUME_VISIT_PROCESS, payload: data };
 }
 export function pauseResumeVisitSuccess(data) {
@@ -905,4 +905,12 @@ export function merchantGetCreditLimitSummaryFailed(data) {
 }
 export function merchantGetCreditLimitSummaryReset() {
   return { type: types.MERCHANT_GET_CREDIT_LIMIT_SUMMARY_RESET };
+}
+
+/** MODAL CHANGE MERCHANT */
+export function modalChangeMerchant(data) {
+  return {
+    type: types.MODAL_CHANGE_MERCHANT,
+    payload: data
+  };
 }
