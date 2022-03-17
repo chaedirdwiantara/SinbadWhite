@@ -449,15 +449,15 @@ export const oms = createReducer(INITIAL_STATE, {
   [types.OMS_CHECK_PROMO_SUCCESS](state, action) {
     const bonusSku = action.payload.bonusSku.map(t1 => ({
       ...t1,
-      ...state.dataCart.find(t2 => t2.catalogueId === t1.id)
+      ...state.dataCheckout.find(t2 => t2.catalogueId === t1.id)
     }));
     const notPromoSku = action.payload.notPromoSku.map(t1 => ({
       ...t1,
-      ...state.dataCart.find(t2 => t2.catalogueId === t1.id)
+      ...state.dataCheckout.find(t2 => t2.catalogueId === t1.id)
     }));
     const promoSku = action.payload.promoSku.map(t1 => ({
       ...t1,
-      ...state.dataCart.find(t2 => t2.catalogueId === t1.id)
+      ...state.dataCheckout.find(t2 => t2.catalogueId === t1.id)
     }));
 
     const dataOmsCheckPromo = {
