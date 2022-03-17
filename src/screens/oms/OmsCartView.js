@@ -3,7 +3,6 @@ import {
   Component,
   View,
   StyleSheet,
-  Dimensions,
   ScrollView,
   TouchableOpacity,
   Image,
@@ -28,12 +27,10 @@ import {
   MultipleOrderButton
 } from '../../library/component';
 import { Color } from '../../config';
-import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import CallCS from '../../screens/global/CallCS';
-
-const { width, height } = Dimensions.get('window');
 
 class OmsCartView extends Component {
   constructor(props) {

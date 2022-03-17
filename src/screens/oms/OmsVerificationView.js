@@ -13,7 +13,8 @@ import {
   StatusBarWhite,
   ButtonSingle,
   ModalBottomErrorRespons,
-  LoadingPage
+  LoadingPage,
+  ToastType1
 } from '../../library/component';
 import {
   connect,
@@ -41,7 +42,8 @@ class OmsVerificationView extends Component {
       openModalErrorNoUrban: false,
       openModalCS: false,
       openModalErrorPromo: false,
-      openModalErrorMaxOrder: false
+      openModalErrorMaxOrder: false,
+      openToastConvertion: false
     };
   }
 
@@ -92,6 +94,11 @@ class OmsVerificationView extends Component {
         }
       }
     }
+  }
+
+  /** DID MOUNT */
+  componentDidMount() {
+    this.setState({ openToastConvertion: true });
   }
 
   /**
@@ -162,6 +169,25 @@ class OmsVerificationView extends Component {
     } else {
       this.setState({ openBenefitDetail: index });
     }
+  }
+
+  /**
+   * ===================
+   * TOAST
+   * ====================
+   */
+  renderToast() {
+    return this.state.openToastConvertion ? (
+      <ToastType1
+        basic={true}
+        margin={10}
+        content={
+          'Jumlah order satuan terkecil terkonversi otomatis ke satuan terbesar jika mencukupi jumlah satuan terbesar.'
+        }
+      />
+    ) : (
+      <View />
+    );
   }
 
   /**
@@ -369,9 +395,18 @@ class OmsVerificationView extends Component {
               </View>
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>{`${
-                    item.qty
-                  } Pcs`}</Text>
+                  <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
+                    {!item.detail
+                      ? `${item.qty} Pcs`
+                      : `${item.detail.smallUomQty} ${item.detail.smallUom} | ${
+                          item.detail.largeUomQty
+                        } ${item.detail.largeUom}`}
+                  </Text>
+                  {item.detail && (
+                    <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
+                      {`Total item ${item.qty} pcs`}
+                    </Text>
+                  )}
                   <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                     {MoneyFormat(parseInt(item.price))}
                   </Text>
@@ -587,6 +622,8 @@ class OmsVerificationView extends Component {
         {this.renderContent()}
         {/* modal */}
         {this.renderModalSkuStatusConfirmation()}
+        {/* toast */}
+        {this.renderToast()}
         {/* error */}
         {this.renderModalErrorRespons()}
         {this.renderModalErrorNoUrban()}

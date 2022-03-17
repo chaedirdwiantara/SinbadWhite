@@ -7,15 +7,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Text
-} from '../../library/reactPackage'
-import {
-  MaterialIcon
-} from '../../library/thirdPartyPackage'
-import {
-  ModalBottomType4,
-  StatusBarRedOP50
-} from '../../library/component'
-import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
+} from '../../library/reactPackage';
+import { MaterialIcon } from '../../library/thirdPartyPackage';
+import { ModalBottomType4, StatusBarRedOP50 } from '../../library/component';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 
 const { height } = Dimensions.get('window');
@@ -70,7 +65,7 @@ class ModalBottomParcelDetail extends Component {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginBottom: 5,
+            marginBottom: 5
           }}
         >
           <View>
@@ -82,25 +77,26 @@ class ModalBottomParcelDetail extends Component {
             </Text>
           </View>
         </View>
-        { 
-          this.state.dataPayment.paymentMethodDetail && this.state.dataPayment.paymentMethodDetail.totalFee ? (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between'
-              }}
-            >
-              <View>
-                <Text style={Fonts.type17}>Layanan Pembayaran</Text>
-              </View>
-              <View>
-                <Text style={Fonts.type17}>
-                  {MoneyFormat(this.state.dataPayment.paymentMethodDetail.totalFee)}
-                </Text>
-              </View>
+        {this.state.dataPayment.paymentMethodDetail &&
+        this.state.dataPayment.paymentMethodDetail.totalFee ? (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}
+          >
+            <View>
+              <Text style={Fonts.type17}>Layanan Pembayaran</Text>
             </View>
-          ) : null
-        }
+            <View>
+              <Text style={Fonts.type17}>
+                {MoneyFormat(
+                  this.state.dataPayment.paymentMethodDetail.totalFee
+                )}
+              </Text>
+            </View>
+          </View>
+        ) : null}
       </View>
     );
   }
@@ -122,11 +118,12 @@ class ModalBottomParcelDetail extends Component {
         </View>
         <View>
           <Text style={Fonts.type7}>
-            {
-              this.state.dataPayment.paymentMethodDetail
-              ? MoneyFormat(this.state.data.parcelFinalPrice + this.state.dataPayment.paymentMethodDetail.totalFee)
-              : MoneyFormat(this.state.data.parcelFinalPrice)
-            }
+            {this.state.dataPayment.paymentMethodDetail
+              ? MoneyFormat(
+                  this.state.data.parcelFinalPrice +
+                    this.state.dataPayment.paymentMethodDetail.totalFee
+                )
+              : MoneyFormat(this.state.data.parcelFinalPrice)}
           </Text>
         </View>
       </TouchableOpacity>
@@ -135,7 +132,52 @@ class ModalBottomParcelDetail extends Component {
 
   renderProductListContent(brand) {
     return brand.orderBrandCatalogues.map((item, index) => {
-      return (
+      return item.detail ? (
+        <>
+          <View
+            key={index}
+            style={{
+              flexDirection: 'row',
+              marginBottom: 5,
+              justifyContent: 'space-between',
+              paddingHorizontal: 16
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={Fonts.type17}>
+                {item.catalogue.name} ({item.detail.smallUomQty}
+                {item.detail.smallUom})
+              </Text>
+            </View>
+            <View style={{ width: '40%', alignItems: 'flex-end' }}>
+              <Text style={Fonts.type17}>
+                {MoneyFormat(item.detail.totalSmallUom)}
+              </Text>
+            </View>
+          </View>
+          <View
+            key={index}
+            style={{
+              flexDirection: 'row',
+              marginBottom: 5,
+              justifyContent: 'space-between',
+              paddingHorizontal: 16
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={Fonts.type17}>
+                {item.catalogue.name} ({item.detail.largeUomQty}
+                {item.detail.largeUom})
+              </Text>
+            </View>
+            <View style={{ width: '40%', alignItems: 'flex-end' }}>
+              <Text style={Fonts.type17}>
+                {MoneyFormat(item.detail.totalLargeUom)}
+              </Text>
+            </View>
+          </View>
+        </>
+      ) : (
         <View
           key={index}
           style={{
@@ -334,14 +376,14 @@ const styles = StyleSheet.create({
 export default ModalBottomParcelDetail;
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */
