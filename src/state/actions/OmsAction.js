@@ -198,6 +198,7 @@ export function omsAddToCart(data) {
       case 'add':
         if (indexDataCart > -1) {
           dataCart[indexDataCart].qty = data.qty;
+          dataCart[indexDataCart].detail = data.detail;
         } else {
           dataCart.push({
             catalogueId: parseInt(data.catalogueId, 10),

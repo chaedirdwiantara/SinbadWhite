@@ -294,7 +294,9 @@ class PdpOrderView extends Component {
   }
   /** === RENDER DATA === */
   renderData() {
-    const largeUnit = this.props.pdp.dataDetailPdp.catalogueLargeUnit ? this.props.pdp.dataDetailPdp.catalogueLargeUnit.unit : 'dus';
+    const largeUnit = this.props.pdp.dataDetailPdp.catalogueLargeUnit
+      ? this.props.pdp.dataDetailPdp.catalogueLargeUnit.unit
+      : 'dus';
     const smallUnit = this.props.pdp.dataDetailPdp.catalogueUnit.unit;
 
     return (
