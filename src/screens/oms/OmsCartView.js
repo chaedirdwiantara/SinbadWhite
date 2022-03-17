@@ -24,7 +24,8 @@ import {
   ErrorPage,
   SelectedMerchantName,
   ModalBottomErrorRespons,
-  ImageKit
+  ImageKit,
+  MultipleOrderButton
 } from '../../library/component';
 import { Color } from '../../config';
 import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers';
@@ -358,6 +359,19 @@ class OmsCartView extends Component {
      * code :
      * this.forCartData('update', data.catalogueId, data.qty);
      */
+  }
+
+  parentFunctionFromMultipleOrderButton(data) {
+    console.log('Multiple Order Button', data);
+    const productCartArray = this.state.productCartArray;
+    const indexProductCartArray = productCartArray.findIndex(
+      item => item.catalogueId === data.catalogueId
+    );
+    const { smallUomQty, largeUomQty, packagedQty } = data.detail;
+    productCartArray[indexProductCartArray].qty =
+      largeUomQty * packagedQty + smallUomQty;
+    productCartArray[indexProductCartArray].detail = data.detail;
+    this.setState({ productCartArray });
   }
   /** === CHECK LIST SKU LEVEL */
   checkBoxProduct(productId) {
@@ -722,17 +736,30 @@ class OmsCartView extends Component {
    * - item
    */
   renderButtonOrder(itemForOrderButton, uomDetail) {
+    console.log(itemForOrderButton);
     return (
       <View style={{ marginLeft: 30 }}>
-        <OrderButton
-          showKeyboard={this.state.showKeyboard}
-          item={itemForOrderButton}
-          uomDetail={uomDetail}
-          onRef={ref => (this.parentFunctionFromOrderButton = ref)}
-          parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
-            this
-          )}
-        />
+        {!itemForOrderButton.enableLargeUom ? (
+          <OrderButton
+            showKeyboard={this.state.showKeyboard}
+            item={itemForOrderButton}
+            uomDetail={uomDetail}
+            onRef={ref => (this.parentFunctionFromOrderButton = ref)}
+            parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
+              this
+            )}
+          />
+        ) : (
+          <MultipleOrderButton
+            showKeyboard={this.state.showKeyboard}
+            item={itemForOrderButton}
+            uomDetail={uomDetail}
+            onRef={ref => (this.parentFunctionFromMultipleOrderButton = ref)}
+            parentFunctionFromOrderButton={this.parentFunctionFromMultipleOrderButton.bind(
+              this
+            )}
+          />
+        )}
       </View>
     );
   }
