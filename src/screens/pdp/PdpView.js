@@ -130,7 +130,7 @@ class PdpView extends Component {
     if (this.props.oms.dataCart.length > 0) {
       this.setState({
         modalChangeMerchantText:
-          'Apakah anda setuju untuk menhapus keranjang sebelumnya?',
+          'Apakah anda setuju untuk menghapus keranjang sebelumnya?',
         openModalConfirmRemoveCart: true
       });
     } else {
