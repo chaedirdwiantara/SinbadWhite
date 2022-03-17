@@ -30,7 +30,7 @@ class OrderButton extends Component {
       maxQty: this.props.item.maxQty,
       isMax: this.props.item.isMaximum,
       totalClickPlus: 0,
-      unit: this.props.item.minQtyType,
+      unit: this.props.item.catalogueUnit?.unit ?? 'Pcs',
       largeUnit: this.props.item.catalogueLargeUnit?.unit ?? 'Box',
       enableLargeUom: this.props.item.enableLargeUom,
       largeUomQty: 0,
@@ -475,7 +475,7 @@ class OrderButton extends Component {
         }}
       >
         <View style={{ alignContent: 'flex-start' }}>
-          <Text style={Fonts.type96}>Dalam Pcs</Text>
+          <Text style={Fonts.fontH12Medium}>Dalam {this.state.unit}</Text>
         </View>
         <View style={styles.subMainContainer}>
           {this.renderRemainingStock()}
@@ -523,7 +523,9 @@ class OrderButton extends Component {
           <View style={styles.subMainContainerDouble}>
             {this.renderCalculator(this.state.largeUomQty, true)}
             <Text style={[Fonts.type38, { marginTop: 5 }]}>{`Sejumlah ${this
-              .state.largeUomQty * this.state.packagedQty} pcs`}</Text>
+              .state.largeUomQty * this.state.packagedQty} ${
+              this.state.unit
+            }`}</Text>
           </View>
         </View>
       </>
