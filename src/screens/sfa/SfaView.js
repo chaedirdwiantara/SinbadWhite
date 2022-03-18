@@ -158,7 +158,7 @@ const SfaView = props => {
       loading: loading,
       limit: page,
       skip: 0,
-      collectionTransactionDetailStatus: 'ASSIGNED',
+      collectionTransactionDetailStatus: '',
       collectionTransactionDetailIds
     };
     dispatch(sfaGetCollectionListProcess(data));
