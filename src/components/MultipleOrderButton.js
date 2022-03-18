@@ -30,9 +30,9 @@ class MultipleOrderButton extends Component {
       maxQty: this.props.item.maxQty,
       isMax: this.props.item.isMaximum,
       totalClickPlus: 0,
-      unit: this.props.item.minQtyType,
+      unit: this.props.item.catalogueUnit?.unit ?? 'Pcs',
       largeUnit: this.props.item.catalogueLargeUnit?.unit ?? 'Box',
-      smallUnit: 'pcs',
+      smallUnit: this.props.item.catalogueUnit?.unit ?? 'Pcs',
       enableLargeUom: this.props.item.enableLargeUom,
       largeUomQty: this.props.uomDetail?.largeUomQty ?? 0,
       smallUomQty: this.props.uomDetail?.smallUomQty ?? 0,
@@ -335,14 +335,16 @@ class MultipleOrderButton extends Component {
   /** === CHECK TERSISA TEXT === */
   checkTersisa() {
     if (!this.state.unlimitedStock && this.state.stock > this.state.minQty) {
-      return `Tersisa ${NumberFormat(this.state.stock)} ${this.state.unit}`;
+      return `Tersisa ${NumberFormat(this.state.stock)} ${
+        this.state.smallUnit
+      }`;
     }
     return '';
   }
   /** === MAX QUANTITY ORDER === */
   checkMaxQtyOrder() {
     if (this.state.isMax) {
-      return `Maksimum pembelian ${this.state.maxQty} ${this.state.unit}`;
+      return `Maksimum pembelian ${this.state.maxQty} ${this.state.smallUnit}`;
     }
     return '';
   }
