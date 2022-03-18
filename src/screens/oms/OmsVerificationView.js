@@ -240,9 +240,18 @@ class OmsVerificationView extends Component {
               </View>
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>{`${
-                    item.qty
-                  } Pcs`}</Text>
+                  <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
+                    {!item.detail
+                      ? `${item.qty} Pcs`
+                      : `${item.detail.smallUomQty} ${item.detail.smallUom} | ${
+                          item.detail.largeUomQty
+                        } ${item.detail.largeUom}`}
+                  </Text>
+                  {item.detail && (
+                    <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
+                      {`Total item ${item.qty} ${item.detail.smallUom}`}
+                    </Text>
+                  )}
                   <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                     {MoneyFormat(parseInt(item.price))}
                   </Text>
@@ -342,9 +351,18 @@ class OmsVerificationView extends Component {
             <Text style={[Fonts.type17, { marginBottom: 2 }]}>
               {item.promoName}
             </Text>
-            <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>{`${
-              item.qty
-            } Pcs`}</Text>
+            <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
+              {!item.detail
+                ? `${item.qty} Pcs`
+                : `${item.detail.smallUomQty} ${item.detail.smallUom} | ${
+                    item.detail.largeUomQty
+                  } ${item.detail.largeUom}`}
+            </Text>
+            {item.detail && (
+              <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
+                {`Total item ${item.qty} ${item.detail.smallUom}`}
+              </Text>
+            )}
           </View>
         </View>
       );
@@ -404,7 +422,7 @@ class OmsVerificationView extends Component {
                   </Text>
                   {item.detail && (
                     <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
-                      {`Total item ${item.qty} pcs`}
+                      {`Total item ${item.qty} ${item.detail.smallUom}`}
                     </Text>
                   )}
                   <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
