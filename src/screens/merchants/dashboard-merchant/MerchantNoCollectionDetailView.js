@@ -66,18 +66,23 @@ const MerchantNoCollectionDetailView = props => {
 
   /** === HANDLE BACK HARDWARE PRESS ===  */
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backHandlerHardware
-    );
-    return () => backHandler.remove();
+    if ((params?.type || '') === 'COLLECTION_LIST') {
+      const backAction = () => {
+        if (props.navigation.isFocused()) {
+          onHandleBack();
+        }
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
+      return () => backHandler.remove();
+    }
   }, []);
   /** RENDER FUNCTION */
   /** function back from back hardaware */
-  const backHandlerHardware = () => {
-    if (params?.type === 'COLLECTION_LIST' || '') {
-      dispatch(sfaModalCollectionListMenu(true));
-    }
+  const onHandleBack = () => {
+    dispatch(sfaModalCollectionListMenu(true));
   };
   /** handle loadmore get collectin */
   const onHandleLoadMore = () => {

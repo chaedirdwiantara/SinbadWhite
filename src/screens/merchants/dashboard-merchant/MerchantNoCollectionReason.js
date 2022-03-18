@@ -166,7 +166,7 @@ const MerchantNoCollectionReason = props => {
   }, [dataSfaPostTransactionCheckout]);
 
   useEffect(() => {
-    if (params.type === 'COLLECTION_LIST') {
+    if ((params?.type || '') === 'COLLECTION_LIST') {
       const backAction = () => {
         if (props.navigation.isFocused()) {
           onHandleBack();
