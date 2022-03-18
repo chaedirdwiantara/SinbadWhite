@@ -4,8 +4,7 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
-  TouchableOpacity,
-  BackHandler
+  TouchableOpacity
 } from '../../library/reactPackage';
 import { MaterialIcon } from '../../library/thirdPartyPackage';
 import {
@@ -193,15 +192,6 @@ const SfaView = props => {
   /** === HANDLE BACK HARDWARE PRESS ===  */
   /** === HANDLE BACK HARDWARE PRESS ===  */
 
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', onHandleBack);
-  }, []);
-
-  useEffect(
-    () => () =>
-      BackHandler.removeEventListener('hardwareBackPress', onHandleBack),
-    []
-  );
   useEffect(() => () => getListCollectionStores(), []);
 
   /** === GET COLLECTION LIST */
@@ -262,7 +252,6 @@ const SfaView = props => {
           setSearchText('');
           setPaymentStatus(null);
           getInvoiceStatus();
-          // getInvoiceList(true, 20);
         }
         break;
     }
@@ -287,10 +276,7 @@ const SfaView = props => {
     dispatch(sfaGetRefresh());
     getInvoiceList(true, 20);
   };
-  /** === HANDLE BACK HARDWARE */
-  const onHandleBack = () => {
-    dispatch(selectedStoreReset());
-  };
+
   /** === HEADER TABS === */
   const renderHeaderTabs = () => {
     return (
