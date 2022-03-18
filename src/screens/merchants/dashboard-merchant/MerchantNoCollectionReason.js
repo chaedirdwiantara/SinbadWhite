@@ -186,20 +186,7 @@ const MerchantNoCollectionReason = props => {
       }
     }
   }, [errorSfaPostTransactionCheckout]);
-  /** === HANDLE BACK HARDWARE PRESS ===  */
 
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backHandlerHardware
-    );
-    return () => backHandler.remove();
-  }, []);
-  const backHandlerHardware = () => {
-    if (params?.type === 'COLLECTION_LIST' || '') {
-      dispatch(sfaModalCollectionListMenu(true));
-    }
-  };
   /**=== RENDER FUNCTION === */
   /** FUNCTION NAVIGATE TO ADD COLLECTION */
   const navigateToPromisePayView = data => {
@@ -228,7 +215,7 @@ const MerchantNoCollectionReason = props => {
   const getCollectionList = (loading, page) => {
     const storeId = parseInt(
       params?.type === 'COLLECTION_LIST'
-        ? selectedStore.id
+        ? params?.storeId || 0
         : selectedMerchant.storeId,
       10
     );
@@ -251,7 +238,7 @@ const MerchantNoCollectionReason = props => {
   /** function post transaction checkout */
   const postTransaction = () => {
     const storeId = parseInt(
-      selectedStore?.id || selectedMerchant?.storeId,
+      params.storeId || 0 || selectedMerchant?.storeId,
       10
     );
     const collectionTransactionDetailIds =

@@ -62,16 +62,19 @@ class CollectionView extends Component {
       if (this.props.sfa.dataSfaCheckCollectionStatus) {
         const collectionIds =
           this.props.sfa.selectedStore?.collectionTransactionDetailIds || [];
+        storeId = this.props.sfa.selectedStore?.id || 0;
         /** if collection total === 0 post transaction checkout, if not then open modal confirm no collection */
         if (this.props.sfa.dataSfaCheckCollectionStatus?.meta.total === 0) {
           NavigationService.navigate('MerchantNoCollectionDetailView', {
             type: 'COLLECTION_LIST',
-            collectionIds
+            collectionIds,
+            storeId
           });
         } else {
           NavigationService.navigate('MerchantNoCollectionReason', {
             type: 'COLLECTION_LIST',
-            collectionIds
+            collectionIds,
+            storeId
           });
         }
       }
