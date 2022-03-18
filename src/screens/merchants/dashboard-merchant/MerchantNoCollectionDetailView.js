@@ -103,7 +103,7 @@ const MerchantNoCollectionDetailView = props => {
   const getCollectionList = (loading, page) => {
     const storeId = parseInt(
       params?.type === 'COLLECTION_LIST'
-        ? selectedStore.id
+        ? params?.storeId
         : selectedMerchant.storeId,
       10
     );
