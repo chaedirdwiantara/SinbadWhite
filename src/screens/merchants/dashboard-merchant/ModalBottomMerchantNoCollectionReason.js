@@ -3,14 +3,12 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  BackHandler
+  StyleSheet
 } from '../../../library/reactPackage';
 import { ModalBottomWithClose, ButtonSingle } from '../../../library/component';
 import { useEffect, useState } from 'react';
 import { Fonts } from '../../../helpers';
 import { Color } from '../../../config';
-import { sfaModalCollectionListMenu } from '../../../state/actions';
 
 const ModalBottomMerchantNoCollectionReason = props => {
   const [isButtonDisabled, setIsButtonDisaled] = useState(false);
@@ -26,24 +24,6 @@ const ModalBottomMerchantNoCollectionReason = props => {
       setIsButtonDisaled(true);
     }
   }, [selectedReasonId]);
-  useEffect(() => {
-    const backAction = () => {
-      if (props.navigation.isFocused()) {
-        onHandleBack();
-      }
-    };
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction
-    );
-    return () => backHandler.remove();
-  }, []);
-
-  /** function on back from hardware */
-  const onHandleBack = () => {
-    console.log('handle back');
-    dispatch(sfaModalCollectionListMenu(true));
-  };
   /** FUNCTION REASON SELECTED */
   const selectReason = item => {
     if (item.id === selectedReasonId) {
