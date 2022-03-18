@@ -40,7 +40,19 @@ class PdpOrderView extends Component {
         this.props.pdp.dataDetailPdp !== null
           ? this.props.pdp.dataDetailPdp.minQty
           : 0,
-      detailFromChild: null
+      detailFromChild:
+        this.props.pdp.dataDetailPdp !== null &&
+        this.props.pdp.dataDetailPdp?.enableLargeUom === true
+          ? {
+              smallUom:
+                this.props.pdp.dataDetailPdp?.catalogueUnit?.unit ?? 'Pcs',
+              smallUomQty: this.props.pdp.dataDetailPdp.minQty,
+              largeUom:
+                this.props.pdp.dataDetailPdp?.catalogueLargeUnit?.unit ?? 'Box',
+              largeUomQty: 0,
+              packagedQty: this.props.pdp.dataDetailPdp.packagedQty
+            }
+          : null
     };
   }
   /**
@@ -62,7 +74,20 @@ class PdpOrderView extends Component {
     if (prevProps.pdp.dataDetailPdp !== this.props.pdp.dataDetailPdp) {
       if (this.props.pdp.dataDetailPdp !== null) {
         this.setState({
-          qtyFromChild: this.props.pdp.dataDetailPdp.minQty
+          qtyFromChild: this.props.pdp.dataDetailPdp.minQty,
+          detailFromChild:
+            this.props.pdp.dataDetailPdp?.enableLargeUom === true
+              ? {
+                  smallUom:
+                    this.props.pdp.dataDetailPdp?.catalogueUnit?.unit ?? 'Pcs',
+                  smallUomQty: this.props.pdp.dataDetailPdp.minQty,
+                  largeUom:
+                    this.props.pdp.dataDetailPdp?.catalogueLargeUnit?.unit ??
+                    'Box',
+                  largeUomQty: 0,
+                  packagedQty: this.props.pdp.dataDetailPdp.packagedQty
+                }
+              : null
         });
         if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length === 0) {
           this.toParentFunction({
