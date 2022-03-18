@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
-  TouchableOpacity
+  TouchableOpacity,
+  BackHandler
 } from '../../library/reactPackage';
 import { MaterialIcon } from '../../library/thirdPartyPackage';
 import {
@@ -192,6 +193,20 @@ const SfaView = props => {
   /** === HANDLE BACK HARDWARE PRESS ===  */
   /** === HANDLE BACK HARDWARE PRESS ===  */
 
+  useEffect(() => {
+    if (params.type === 'COLLECTION_LIST') {
+      const backAction = () => {
+        if (props.navigation.isFocused()) {
+          onHandleBack();
+        }
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
+      return () => backHandler.remove();
+    }
+  }, []);
   useEffect(() => () => getListCollectionStores(), []);
 
   /** === GET COLLECTION LIST */
@@ -252,6 +267,7 @@ const SfaView = props => {
           setSearchText('');
           setPaymentStatus(null);
           getInvoiceStatus();
+          // getInvoiceList(true, 20);
         }
         break;
     }
@@ -276,7 +292,10 @@ const SfaView = props => {
     dispatch(sfaGetRefresh());
     getInvoiceList(true, 20);
   };
-
+  /** === HANDLE BACK HARDWARE */
+  const onHandleBack = () => {
+    dispatch(sfaModalCollectionListMenu(true));
+  };
   /** === HEADER TABS === */
   const renderHeaderTabs = () => {
     return (

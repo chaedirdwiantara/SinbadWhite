@@ -164,6 +164,25 @@ const MerchantNoCollectionReason = props => {
       }
     }
   }, [dataSfaPostTransactionCheckout]);
+
+  useEffect(() => {
+    if (params.type === 'COLLECTION_LIST') {
+      const backAction = () => {
+        if (props.navigation.isFocused()) {
+          onHandleBack();
+        }
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
+      return () => backHandler.remove();
+    }
+  }, []);
+
+  const onHandleBack = () => {
+    dispatch(sfaModalCollectionListMenu(true));
+  };
   /** SAVE DATA ON SUCCESS GET COLLECTION LIST */
   useEffect(() => {
     if (prevdataGetCollectionList !== dataGetCollectionList) {
