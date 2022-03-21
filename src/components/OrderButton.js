@@ -166,10 +166,12 @@ class OrderButton extends Component {
     /** === SET QTY === */
     let qty = this.state.qty - this.state.multipleQty;
 
+    /** if qty ltd 0, set qty to 0 */
     if (qty <= 0) {
       qty = 0;
     }
 
+    /** conditional if total qty lt min qty */
     if (
       qty + this.state.largeUomQty * this.state.packagedQty <
       this.state.minQty
@@ -202,6 +204,7 @@ class OrderButton extends Component {
     this.setState({
       largeUomQty: qty
     });
+    this.checkQtyAfterMinusLarge(qty);
     this.sendValueToParentLarge(qty);
   }
   /**
@@ -251,25 +254,38 @@ class OrderButton extends Component {
     const valueAfterMinimum = this.state.qty - this.state.minQty;
     if (this.state.maxQty) {
       if (valueAfterMinimum < this.state.maxQty) {
-        return (
+        let result =
           Math.floor(valueAfterMinimum / this.state.multipleQty) *
             this.state.multipleQty +
-          this.state.minQty
-        );
+          this.state.minQty;
+
+        if (result <= 0) {
+          result = 0;
+        }
+
+        return result;
       } else {
         const maxQtyAfterMinimum = this.state.maxQty - this.state.minQty;
-        return (
+        let result =
           Math.floor(maxQtyAfterMinimum / this.state.multipleQty) *
             this.state.multipleQty +
-          this.state.minQty
-        );
+          this.state.minQty;
+
+        result -= this.state.largeUomQty * this.state.packagedQty;
+        return result;
       }
     }
-    return (
+
+    let result =
       Math.floor(valueAfterMinimum / this.state.multipleQty) *
         this.state.multipleQty +
-      this.state.minQty
-    );
+      this.state.minQty;
+
+    if (result <= 0) {
+      result = 0;
+    }
+
+    return result;
   }
 
   modifyStockQty() {
@@ -309,8 +325,11 @@ class OrderButton extends Component {
       this.state.qty + this.state.largeUomQty * this.state.packagedQty <
         this.state.minQty
     ) {
-      this.sendValueToParent(this.state.minQty);
-      this.setState({ qty: this.state.minQty });
+      let totalQty =
+        this.state.minQty - this.state.largeUomQty * this.state.packagedQty;
+
+      this.sendValueToParent(totalQty);
+      this.setState({ qty: totalQty });
       return true;
     }
     if (!this.state.unlimitedStock) {
@@ -329,6 +348,22 @@ class OrderButton extends Component {
     } else {
       this.sendValueToParent(this.modifyQty());
       this.setState({ qty: this.modifyQty() });
+    }
+  }
+
+  checkQtyAfterMinusLarge(largeQty) {
+    const currentQty = this.state.qty + largeQty * this.state.packagedQty;
+
+    if (largeQty > 0) {
+      if (currentQty < this.state.minQty) {
+        this.sendValueToParent(this.state.minQty - currentQty);
+        this.setState({ qty: this.state.minQty - currentQty });
+      }
+    } else {
+      if (currentQty < this.state.minQty) {
+        this.sendValueToParent(this.state.minQty);
+        this.setState({ qty: this.state.minQty });
+      }
     }
   }
 
@@ -391,7 +426,10 @@ class OrderButton extends Component {
 
   /** => render minus button large */
   renderMinusButtonLarge() {
-    return this.state.largeUomQty <= 0 || this.props.showKeyboard ? (
+    return this.state.largeUomQty <= 0 ||
+      this.state.qty + this.state.largeUomQty * this.state.packagedQty <
+        this.state.minQty ||
+      this.props.showKeyboard ? (
       <View style={styles.minusButtonDisabled}>
         <Text style={styles.minusText}>-</Text>
       </View>
