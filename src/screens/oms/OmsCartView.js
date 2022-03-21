@@ -364,9 +364,18 @@ class OmsCartView extends Component {
       item => item.catalogueId === data.catalogueId
     );
     const { smallUomQty, largeUomQty, packagedQty } = data.detail;
-    productCartArray[indexProductCartArray].qty =
-      largeUomQty * packagedQty + smallUomQty;
-    productCartArray[indexProductCartArray].detail = data.detail;
+
+    if (smallUomQty === 0 && largeUomQty === 0) {
+      productCartArray[indexProductCartArray].detail = data.detail;
+      productCartArray[indexProductCartArray].qty =
+        productCartArray[indexProductCartArray].catalogue.minQty;
+      productCartArray[indexProductCartArray].detail.smallUomQty =
+        productCartArray[indexProductCartArray].catalogue.minQty;
+    } else {
+      productCartArray[indexProductCartArray].qty =
+        largeUomQty * packagedQty + smallUomQty;
+      productCartArray[indexProductCartArray].detail = data.detail;
+    }
     this.setState({ productCartArray });
   }
   /** === CHECK LIST SKU LEVEL */
