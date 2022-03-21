@@ -164,13 +164,24 @@ class OrderButton extends Component {
     this.setState({ totalClickPlus: totalClickPlus + 1 });
     this.setState({ plusButtonDisable: false });
     /** === SET QTY === */
-    const qty = this.state.qty - this.state.multipleQty;
-    if (qty < this.state.minQty) {
+    let qty = this.state.qty - this.state.multipleQty;
+
+    if (qty <= 0) {
+      qty = 0;
+    }
+
+    if (
+      qty + this.state.largeUomQty * this.state.packagedQty <
+      this.state.minQty
+    ) {
       this.sendValueToParent(this.state.minQty);
       this.setState({ qty: this.state.minQty });
     } else {
       if (this.state.isMax) {
-        if (this.state.qty > this.state.maxQty) {
+        if (
+          this.state.qty + this.state.largeUomQty * this.state.packagedQty >
+          this.state.maxQty
+        ) {
           this.checkTotalClickPlusButton(this.state.minQty);
           this.sendValueToParent(this.state.minQty);
           this.setState({ qty: this.state.minQty });
@@ -289,9 +300,15 @@ class OrderButton extends Component {
   }
 
   checkQtyAfterEnter() {
-    this.checkTotalClickPlusButton(this.state.qty);
+    this.checkTotalClickPlusButton(
+      this.state.qty + this.state.largeUomQty * this.state.packagedQty
+    );
     /** if value that entered below min qty, qty = min qty */
-    if (this.state.qty === '' || this.state.qty < this.state.minQty) {
+    if (
+      this.state.qty === '' ||
+      this.state.qty + this.state.largeUomQty * this.state.packagedQty <
+        this.state.minQty
+    ) {
       this.sendValueToParent(this.state.minQty);
       this.setState({ qty: this.state.minQty });
       return true;
@@ -355,7 +372,10 @@ class OrderButton extends Component {
   }
   /** => render minus button */
   renderMinusButton() {
-    return this.state.qty <= this.state.minQty || this.props.showKeyboard ? (
+    return this.state.qty <= 0 ||
+      this.state.qty + this.state.largeUomQty * this.state.packagedQty <=
+        this.state.minQty ||
+      this.props.showKeyboard ? (
       <View style={styles.minusButtonDisabled}>
         <Text style={styles.minusText}>-</Text>
       </View>
@@ -418,7 +438,7 @@ class OrderButton extends Component {
   }
 
   /** => render input calculator */
-  renderInput(parentQty) {
+  renderInput(parentQty, isLarge) {
     return (
       <View style={styles.inputList}>
         <TextInput
@@ -432,25 +452,35 @@ class OrderButton extends Component {
           onBlur={this.props.onBlur}
           onEndEditing={() => this.checkQtyAfterEnter()}
           onChangeText={qty => {
-            const cleanNumber = qty.replace(/[^0-9]/g, '');
-            this.checkTotalClickPlusButton(cleanNumber);
-            this.setState({ qty: cleanNumber });
+            const cleanNumber = Number(qty.replace(/[^0-9]/g, ''));
+
+            if (isLarge) {
+              this.checkTotalClickPlusButton(
+                cleanNumber * this.state.packagedQty
+              );
+              this.setState({ largeUomQty: cleanNumber });
+            } else {
+              this.checkTotalClickPlusButton(cleanNumber);
+              this.setState({ qty: cleanNumber });
+            }
           }}
           style={[Fonts.type24, styles.input]}
         />
       </View>
     );
   }
+
   /** => render calculator */
   renderCalculator(qty, isLarge) {
     return (
       <View style={styles.containerInputQty}>
         {isLarge ? this.renderMinusButtonLarge() : this.renderMinusButton()}
-        {this.renderInput(qty)}
+        {this.renderInput(qty, isLarge)}
         {isLarge ? this.renderPlusButtonLarge() : this.renderPlusButton()}
       </View>
     );
   }
+
   /** => render stock */
   renderRemainingStock() {
     return (
