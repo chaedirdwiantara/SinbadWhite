@@ -69,6 +69,16 @@ class MultipleOrderButton extends Component {
         this.checkQtyAfterEnter();
       }
     }
+
+    if (this.state.uomDetail !== this.props.uomDetail) {
+      if (this.props.uomDetail !== null) {
+        this.updateUomDetail();
+      }
+    }
+  }
+
+  updateUomDetail() {
+    this.setState({ uomDetail: this.props.uomDetail });
   }
 
   checkUomDetail() {

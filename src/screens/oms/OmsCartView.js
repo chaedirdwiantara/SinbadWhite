@@ -836,28 +836,6 @@ class OmsCartView extends Component {
       return item.brandId === productItem.brandId &&
         item.statusInCart === 'available' ? (
         <View style={styles.boxListItem} key={index}>
-          {/* <TouchableOpacity
-            style={{ width: 30 }}
-            onPress={() => this.checkBoxProduct(item.catalogue.id)}
-          >
-            {this.state.productCartArray.findIndex(
-              itemProductCartArray =>
-                itemProductCartArray.catalogueId === item.catalogue.id &&
-                item.checkBox
-            ) > -1 ? (
-              <MaterialCommunityIcons
-                color={Color.mainColor}
-                name="checkbox-marked"
-                size={24}
-              />
-            ) : (
-              <MaterialCommunityIcons
-                color={Color.fontBlack40}
-                name="checkbox-blank-outline"
-                size={24}
-              />
-            )}
-          </TouchableOpacity> */}
           {this.renderListCartItemContent(item, itemForOrderButton)}
         </View>
       ) : (
