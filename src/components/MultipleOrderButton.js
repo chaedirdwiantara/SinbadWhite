@@ -499,7 +499,7 @@ class MultipleOrderButton extends Component {
         }}
       >
         <View style={{ alignContent: 'flex-start' }}>
-          <Text style={Fonts.type96}>Dalam Pcs</Text>
+          <Text style={Fonts.fontH12Medium}>Dalam Pcs</Text>
         </View>
         <View style={styles.subMainContainer}>
           {this.renderRemainingStock()}
