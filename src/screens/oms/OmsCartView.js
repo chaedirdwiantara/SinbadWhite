@@ -451,10 +451,12 @@ class OmsCartView extends Component {
     const productCheckBox = this.state.productCartArray.filter(
       item => item.checkBox && item.statusInCart === 'available'
     );
+
     const mapProduct = productCheckBox.map(item => {
       return {
         catalogueId: parseInt(item.catalogueId, 10),
         qty: item.qty,
+        unit: item.catalogue?.catalogueUnit?.unit ?? 'PCS',
         detail: item.detail
       };
     });

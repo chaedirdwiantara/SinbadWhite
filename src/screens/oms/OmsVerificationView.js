@@ -242,7 +242,7 @@ class OmsVerificationView extends Component {
                 <View style={{ flex: 1 }}>
                   <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                     {!item.detail
-                      ? `${item.qty} Pcs`
+                      ? `${item.qty} ${item.unit}`
                       : `${item.detail.smallUomQty} ${item.detail.smallUom} | ${
                           item.detail.largeUomQty
                         } ${item.detail.largeUom}`}
@@ -353,7 +353,7 @@ class OmsVerificationView extends Component {
             </Text>
             <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
               {!item.detail
-                ? `${item.qty} Pcs`
+                ? `${item.qty} ${item.unit}`
                 : `${item.detail.smallUomQty} ${item.detail.smallUom} | ${
                     item.detail.largeUomQty
                   } ${item.detail.largeUom}`}
@@ -415,7 +415,7 @@ class OmsVerificationView extends Component {
                 <View style={{ flex: 1 }}>
                   <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                     {!item.detail
-                      ? `${item.qty} Pcs`
+                      ? `${item.qty} ${item.unit}`
                       : `${item.detail.smallUomQty} ${item.detail.smallUom} | ${
                           item.detail.largeUomQty
                         } ${item.detail.largeUom}`}

@@ -166,10 +166,12 @@ class OrderButton extends Component {
     /** === SET QTY === */
     let qty = this.state.qty - this.state.multipleQty;
 
+    /** if qty ltd 0, set qty to 0 */
     if (qty <= 0) {
       qty = 0;
     }
 
+    /** conditional if total qty lt min qty */
     if (
       qty + this.state.largeUomQty * this.state.packagedQty <
       this.state.minQty
