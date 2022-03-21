@@ -364,9 +364,18 @@ class OmsCartView extends Component {
       item => item.catalogueId === data.catalogueId
     );
     const { smallUomQty, largeUomQty, packagedQty } = data.detail;
-    productCartArray[indexProductCartArray].qty =
-      largeUomQty * packagedQty + smallUomQty;
-    productCartArray[indexProductCartArray].detail = data.detail;
+
+    if (smallUomQty === 0 && largeUomQty === 0) {
+      productCartArray[indexProductCartArray].detail = data.detail;
+      productCartArray[indexProductCartArray].qty =
+        productCartArray[indexProductCartArray].catalogue.minQty;
+      productCartArray[indexProductCartArray].detail.smallUomQty =
+        productCartArray[indexProductCartArray].catalogue.minQty;
+    } else {
+      productCartArray[indexProductCartArray].qty =
+        largeUomQty * packagedQty + smallUomQty;
+      productCartArray[indexProductCartArray].detail = data.detail;
+    }
     this.setState({ productCartArray });
   }
   /** === CHECK LIST SKU LEVEL */
@@ -836,28 +845,6 @@ class OmsCartView extends Component {
       return item.brandId === productItem.brandId &&
         item.statusInCart === 'available' ? (
         <View style={styles.boxListItem} key={index}>
-          {/* <TouchableOpacity
-            style={{ width: 30 }}
-            onPress={() => this.checkBoxProduct(item.catalogue.id)}
-          >
-            {this.state.productCartArray.findIndex(
-              itemProductCartArray =>
-                itemProductCartArray.catalogueId === item.catalogue.id &&
-                item.checkBox
-            ) > -1 ? (
-              <MaterialCommunityIcons
-                color={Color.mainColor}
-                name="checkbox-marked"
-                size={24}
-              />
-            ) : (
-              <MaterialCommunityIcons
-                color={Color.fontBlack40}
-                name="checkbox-blank-outline"
-                size={24}
-              />
-            )}
-          </TouchableOpacity> */}
           {this.renderListCartItemContent(item, itemForOrderButton)}
         </View>
       ) : (
