@@ -78,7 +78,16 @@ class MultipleOrderButton extends Component {
   }
 
   updateUomDetail() {
-    this.setState({ uomDetail: this.props.uomDetail });
+    this.setState({
+      uomDetail: this.props.uomDetail,
+      largeUomQty: this.props.uomDetail.largeUomQty,
+      largeUnit: this.props.uomDetail.largeUom,
+      smallUomQty: this.props.uomDetail.smallUomQty,
+      smallUnit: this.props.uomDetail.smallUom,
+      qty:
+        this.props.uomDetail.largeUomQty * this.props.uomDetail.packagedQty +
+        this.props.uomDetail.smallUomQty
+    });
   }
 
   checkUomDetail() {
@@ -499,7 +508,7 @@ class MultipleOrderButton extends Component {
         }}
       >
         <View style={{ alignContent: 'flex-start' }}>
-          <Text style={Fonts.fontH12Medium}>Dalam Pcs</Text>
+          <Text style={Fonts.fontH12Medium}>Dalam {this.state.smallUnit}</Text>
         </View>
         <View style={styles.subMainContainer}>
           {this.renderRemainingStock()}
