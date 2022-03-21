@@ -1,27 +1,89 @@
-import { React, View, Text } from '../../../library/reactPackage';
+import {
+  React,
+  View,
+  BackHandler,
+  TouchableOpacity
+} from '../../../library/reactPackage';
+import { MaterialIcon } from '../../../library/thirdPartyPackage';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+import masterColor from '../../../config/masterColor.json';
+import NavigationService from '../../../navigation/NavigationService';
 import {
   sfaGetCollectionListProcess,
-  SfaGetLoadMore
+  SfaGetLoadMore,
+  sfaModalCollectionListMenu
 } from '../../../state/actions';
 import MerchantCollectionReasonList from './MerchantCollectionReasonList';
 import { LoadingPage } from '../../../components/Loading';
 import { ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS } from '../../../constants';
+let navigationProps = '';
+/** === HEADER === */
+export const HeaderLeftDetailReasonOption = () => {
+  const type = navigationProps?.navigation?.state?.params?.type || '';
+  const dispatch = useDispatch();
+  return (
+    <>
+      <View style={{ marginLeft: 16 }}>
+        <TouchableOpacity
+          onPress={() => {
+            if (type === 'COLLECTION_LIST') {
+              NavigationService.goBack(null);
+              dispatch(sfaModalCollectionListMenu(true));
+            } else {
+              NavigationService.goBack(null);
+            }
+          }}
+        >
+          <MaterialIcon
+            name="arrow-back"
+            color={masterColor.fontBlack80}
+            size={24}
+          />
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+};
+
 const MerchantNoCollectionDetailView = props => {
+  navigationProps = props;
+  const { params } = props.navigation.state;
   const dispatch = useDispatch();
   const { id, userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const [limit, setLimit] = useState(20);
-  const { dataGetCollectionList, loadingGetCollectionList } = useSelector(
-    state => state.sfa
-  );
+  const {
+    dataGetCollectionList,
+    loadingGetCollectionList,
+    selectedStore
+  } = useSelector(state => state.sfa);
   /** RENDER USE EFFECT */
   /** get initial data */
   useEffect(() => {
     getCollectionList(true, 20);
   }, []);
+
+  /** === HANDLE BACK HARDWARE PRESS ===  */
+  useEffect(() => {
+    if ((params?.type || '') === 'COLLECTION_LIST') {
+      const backAction = () => {
+        if (props.navigation.isFocused()) {
+          onHandleBack();
+        }
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
+      return () => backHandler.remove();
+    }
+  }, []);
   /** RENDER FUNCTION */
+  /** function back from back hardaware */
+  const onHandleBack = () => {
+    dispatch(sfaModalCollectionListMenu(true));
+  };
   /** handle loadmore get collectin */
   const onHandleLoadMore = () => {
     if (dataGetCollectionList) {
@@ -39,15 +101,25 @@ const MerchantNoCollectionDetailView = props => {
   };
   /** get collection list */
   const getCollectionList = (loading, page) => {
+    const storeId = parseInt(
+      params?.type === 'COLLECTION_LIST'
+        ? params?.storeId
+        : selectedMerchant.storeId,
+      10
+    );
+    const collectionTransactionDetailIds =
+      params?.type === 'COLLECTION_LIST'
+        ? params?.collectionIds
+        : selectedMerchant?.collectionIds;
     const data = {
-      storeId: parseInt(selectedMerchant.storeId, 10),
+      storeId,
       userId: parseInt(id, 10),
       supplierId: parseInt(userSuppliers[0].supplier.id, 10),
       loading: loading,
       limit: page,
       skip: 0,
-      collectionTransactionDetailStatus: 'pending',
-      collectionTransactionDetailIds: selectedMerchant.collectionIds
+      collectionTransactionDetailStatus: 'NOT_COLLECTED',
+      collectionTransactionDetailIds
     };
     dispatch(sfaGetCollectionListProcess(data));
   };

@@ -247,6 +247,28 @@ function getReturnBalance(data) {
   });
 }
 
+/** GET STORE COLLECTION LIST */
+function getStoreCollectionList(data) {
+  return ApiRest({
+    path: `/collection/v1/collection-request-store?salesId=${
+      data.salesId
+    }&supplierId=${data.supplierId}&searchKey=${data.searchKey}&skip=1&limit=${
+      data.limit
+    }`,
+    method: 'GET'
+  });
+}
+
+/** === GET STORE COLLECTION STATUS === */
+function getStoreCollectionStatus(data) {
+  return ApiRest({
+    path: `collection/v1/collection-request-store-status/${data.salesId}/${
+      data.storeId
+    }`,
+    method: 'GET'
+  });
+}
+
 export const SfaMethod = {
   getCollectionStatus,
   getSfaDetail,
@@ -271,5 +293,7 @@ export const SfaMethod = {
   getCollectionListStatus,
   getReasonNotToPay,
   postTransactionCheckout,
-  getReturnBalance
+  getReturnBalance,
+  getStoreCollectionList,
+  getStoreCollectionStatus
 };

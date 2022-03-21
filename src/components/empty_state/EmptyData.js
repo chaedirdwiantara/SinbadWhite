@@ -5,9 +5,9 @@ import {
   Image,
   StyleSheet,
   Text
-} from '../../library/reactPackage'
-import { GlobalStyle, Fonts } from '../../helpers'
-import { Color } from '../../config'
+} from '../../library/reactPackage';
+import { GlobalStyle, Fonts } from '../../helpers';
+import { Color } from '../../config';
 
 /**
  * Props
@@ -21,13 +21,17 @@ class EmptyData extends Component {
   }
   /** === EMPTY STATE === */
   renderEmptyState() {
+    let paddingBottom = 10;
+    if (this.props.heighTitle) {
+      paddingBottom = 20;
+    }
     return (
       <View style={styles.boxEmpty}>
         <Image
           source={require('../../assets/images/sinbad_image/cry_sinbad.png')}
           style={GlobalStyle.fullImage}
         />
-        <View style={styles.boxTitle}>
+        <View style={[styles.boxTitle, { paddingBottom }]}>
           <Text style={[Fonts.type7, { textAlign: 'center' }]}>
             {this.props.title}
           </Text>
@@ -57,7 +61,7 @@ const styles = StyleSheet.create({
   },
   boxTitle: {
     width: '100%',
-    paddingBottom: 10,
+    paddingBottom: 20,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 75
@@ -73,15 +77,14 @@ const styles = StyleSheet.create({
 export default EmptyData;
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 07072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 07072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

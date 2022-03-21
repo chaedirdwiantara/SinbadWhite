@@ -732,3 +732,78 @@ export function sfaGetReturnBalanceSuccess(data) {
 export function sfaGetReturnBalanceFailed(data) {
   return { type: types.SFA_GET_RETURN_BALANCE_FAILED, payload: data };
 }
+
+/**
+ * ===========================
+ * GET STORE COLLECTION LIST
+ * ===========================
+ */
+/** === SFA GET STORE COLLECTION LIST PROCESS === */
+export function sfaGetStoreCollectionListProcess(data) {
+  return { type: types.SFA_GET_STORE_COLLECTION_LIST_PROCESS, payload: data };
+}
+
+/** === SFA GET STORE COLLECTION LIST SUCCESS === */
+export function sfaGetStoreCollectionListSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_GET_STORE_COLLECTION_LIST_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_GET_STORE_COLLECTION_LIST_FAILED, payload: data };
+}
+/** === SFA GET STORE COLLECTION LIST FAILED === */
+export function sfaGetStoreCollectionListFailed(data) {
+  return { type: types.SFA_GET_STORE_COLLECTION_LIST_FAILED, payload: data };
+}
+
+/** === SFA GET STORE COLLECTION LIST RESET === */
+export function sfaGetStoreCollectionListReset() {
+  return { type: types.SFA_GET_STORE_COLLECTION_LIST_RESET };
+}
+
+/** === SELECTED STORE === */
+export function selectedStore(data) {
+  return { type: types.SELECTED_STORE, payload: data };
+}
+/** === SELECTED STORE RESET === */
+export function selectedStoreReset() {
+  return { type: types.SELECTED_STORE_RESET };
+}
+/** === REFRESH GET STORE COLLECTION LIST === */
+export function sfaGetStoreCollectionListRefresh() {
+  return { type: types.SFA_GET_STORE_COLLECTION_LIST_REFRESH };
+}
+/** === LOAD MORE GET STORE COLLECTION LIST === */
+export function sfaGetStoreCollectionListLoadmore(data) {
+  return { type: types.SFA_GET_STORE_COLLECTION_LIST_LOADMORE, payload: data };
+}
+/** === MODAL COLLECTION LIST MENU === */
+export function sfaModalCollectionListMenu(data) {
+  return { type: types.SFA_MODAL_COLLECTION_LIST_MENU, payload: data };
+}
+/** === SFA GET STORE COLLECTION STATUS PROCESS === */
+export function sfaStoreCollectionStatusProcess(data) {
+  return { type: types.SFA_STORE_COLLECTION_STATUS_PROCESS, payload: data };
+}
+
+/** === SFA GET STORE COLLECTION STATUS SUCCESS === */
+export function sfaStoreCollectionStatusSuccess(data) {
+  if (data.result === 'Ok') {
+    return {
+      type: types.SFA_STORE_COLLECTION_STATUS_SUCCESS,
+      payload: data.data
+    };
+  }
+  return { type: types.SFA_STORE_COLLECTION_STATUS_FAILED, payload: data };
+}
+/** === SFA GET STORE COLLECTION STATUS FAILED === */
+export function sfaStoreCollectionStatusFailed(data) {
+  return { type: types.SFA_STORE_COLLECTION_STATUS_FAILED, payload: data };
+}
+
+/** === SFA GET STORE COLLECTION STATUS RESET === */
+export function sfaStoreCollectionStatusReset() {
+  return { type: types.SFA_STORE_COLLECTION_STATUS_RESET };
+}

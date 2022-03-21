@@ -23,9 +23,15 @@ class EmptyDataType2 extends Component {
   renderEmptyState() {
     let justifyContent = 'center';
     let paddingTop = 0;
+    let paddingHorizontal = 75;
+    let paddingVertical = 16;
     if (this.props.top) {
       justifyContent = 'flex-start';
       paddingTop = 40;
+    }
+    if (this.props.wideTitle) {
+      paddingHorizontal = 20;
+      paddingVertical = 20;
     }
 
     return (
@@ -34,7 +40,7 @@ class EmptyDataType2 extends Component {
           source={require('../../assets/images/sinbad_image/search_sinbad.png')}
           style={GlobalStyle.fullImage}
         />
-        <View style={styles.boxTitle}>
+        <View style={[styles.boxTitle, { paddingHorizontal, paddingVertical }]}>
           <Text style={[Fonts.type7, { textAlign: 'center' }]}>
             {this.props.title}
           </Text>

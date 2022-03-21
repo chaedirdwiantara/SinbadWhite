@@ -53,7 +53,8 @@ const SfaCollectionListView = props => {
     errorSfaDeleteCollectionMethod,
     loadingSfaGetReturnBalance,
     dataSfaGetReturnBalance,
-    errorSfaGetReturnBalance
+    errorSfaGetReturnBalance,
+    selectedStore
   } = useSelector(state => state.sfa);
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
@@ -103,7 +104,7 @@ const SfaCollectionListView = props => {
     setIsModalDeleteConfirmationOpen(false);
     const data = {
       supplierId: parseInt(userSuppliers[0].supplier.id, 10),
-      storeId: selectedMerchant.storeId
+      storeId: selectedStore?.id || selectedMerchant?.storeId
     };
     getCollectionList(true, 20);
     dispatch(sfaGetPaymentMethodProcess(data));
@@ -113,7 +114,7 @@ const SfaCollectionListView = props => {
   const getCollectionList = (loading, page) => {
     let data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
-      storeId: parseInt(selectedMerchant.storeId, 10),
+      storeId: parseInt(selectedStore?.id || selectedMerchant?.storeId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
       limit: page,
       loading: loading
@@ -137,7 +138,7 @@ const SfaCollectionListView = props => {
   const getReturnBalance = () => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplier.id, 10),
-      storeId: selectedMerchant.storeId
+      storeId: selectedStore?.id || selectedMerchant?.storeId
     };
     dispatch(sfaGetReturnBalanceProcess(data));
   };

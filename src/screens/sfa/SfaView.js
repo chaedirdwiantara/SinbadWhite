@@ -3,9 +3,11 @@ import {
   View,
   StyleSheet,
   Text,
-  SafeAreaView
+  SafeAreaView,
+  TouchableOpacity,
+  BackHandler
 } from '../../library/reactPackage';
-
+import { MaterialIcon } from '../../library/thirdPartyPackage';
 import {
   StatusBarWhite,
   SearchBarType1,
@@ -19,12 +21,16 @@ import masterColor from '../../config/masterColor.json';
 import { useDispatch, useSelector } from 'react-redux';
 import SfaInvoiceListView from './SfaInvoiceListView';
 import {
+  selectedStoreReset,
   sfaGetCollectionListProcess,
   sfaGetCollectionStatusProcess,
   sfaGetCollectionListStatusProcess,
   SfaGetLoadMore,
   sfaGetRefresh,
-  sfaGetReferenceListProcess
+  sfaGetReferenceListProcess,
+  sfaModalCollectionListMenu,
+  sfaGetStoreCollectionListReset,
+  sfaGetStoreCollectionListProcess
 } from '../../state/actions/SfaAction';
 import SfaTabView, { TAB_INVOICE, TAB_COLLECTION } from './SfaTabView';
 import SfaCollectionListView from './SfaCollectionListView';
@@ -33,7 +39,42 @@ import {
   merchantPostActivityProcessV2,
   merchantGetLogAllActivityProcessV2
 } from '../../state/actions';
+import NavigationService from '../../navigation/NavigationService';
+let navigationProps = '';
+/** === HEADER === */
+export const HeaderLeftSfaViewtOption = () => {
+  const type = navigationProps?.navigation?.state?.params?.type || '';
+  const dispatch = useDispatch();
+  const { id, userSuppliers } = useSelector(state => state.user);
+  const onHandleBack = () => {
+    if (type === 'COLLECTION_LIST') {
+      NavigationService.navigate('CollectionView');
+      dispatch(sfaModalCollectionListMenu(true));
+    } else {
+      NavigationService.goBack();
+    }
+  };
+
+  return (
+    <>
+      <View style={styles.headerLeftOption}>
+        <TouchableOpacity
+          style={[styles.boxButton]}
+          onPress={() => onHandleBack()}
+        >
+          <MaterialIcon
+            name="arrow-back"
+            color={masterColor.fontBlack80}
+            size={24}
+          />
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+};
 const SfaView = props => {
+  navigationProps = props;
+  const { params } = props.navigation.state;
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState('');
   const {
@@ -44,7 +85,8 @@ const SfaView = props => {
     loadingGetCollectionListStatus, // collection
     dataGetCollectionListStatus, // collection
     loadingGetReferenceList, // collection
-    dataGetReferenceList // collection
+    dataGetReferenceList, // collection
+    selectedStore
   } = useSelector(state => state.sfa);
   const { selectedMerchant, dataGetLogAllActivityV2 } = useSelector(
     state => state.merchant
@@ -62,6 +104,7 @@ const SfaView = props => {
    * FUNCTIONAL
    * =======================
    */
+
   useEffect(() => {
     getInvoiceList(true, 20);
   }, [paymentStatus, searchText]);
@@ -71,12 +114,14 @@ const SfaView = props => {
   }, []);
 
   useEffect(() => {
-    if (
-      !dataGetLogAllActivityV2.find(
-        item => item.activityName === 'collection_ongoing'
-      )
-    ) {
-      postCollectionOngoing();
+    if ((params?.type || '') !== 'COLLECTION_LIST') {
+      if (
+        !(dataGetLogAllActivityV2 || []).find(
+          item => item.activityName === 'collection_ongoing'
+        )
+      ) {
+        postCollectionOngoing();
+      }
     }
   }, []);
 
@@ -86,7 +131,7 @@ const SfaView = props => {
   };
   /** POST ACTIVITY COLLECTION ONGOING */
   const postCollectionOngoing = () => {
-    const journeyBookStoreId = selectedMerchant.journeyBookStores.id
+    const journeyBookStoreId = selectedMerchant.journeyBookStores.id;
     const data = {
       journeyBookStoreId,
       activityName: ACTIVITY_JOURNEY_PLAN_COLLECTION_ONGOING
@@ -96,8 +141,16 @@ const SfaView = props => {
   };
   /** TO GET INVOICE LIST */
   const getInvoiceList = (loading, page) => {
+    const collectionTransactionDetailIds =
+      (params?.type || '') === 'COLLECTION_LIST'
+        ? selectedStore?.collectionTransactionDetailIds || []
+        : selectedMerchant?.collectionIds || [];
+    const storeId =
+      (params?.type || '') === 'COLLECTION_LIST'
+        ? parseInt(selectedStore?.id, 10) || 0
+        : parseInt(selectedMerchant?.storeId, 10) || 0;
     const data = {
-      storeId: parseInt(selectedMerchant.storeId, 10),
+      storeId: storeId,
       userId: parseInt(id, 10),
       supplierId: parseInt(userSuppliers[0].supplier.id, 10),
       keyword: searchText,
@@ -105,8 +158,8 @@ const SfaView = props => {
       loading: loading,
       limit: page,
       skip: 0,
-      collectionTransactionDetailStatus: null,
-      collectionTransactionDetailIds: selectedMerchant.collectionIds
+      collectionTransactionDetailStatus: '',
+      collectionTransactionDetailIds
     };
     dispatch(sfaGetCollectionListProcess(data));
   };
@@ -117,9 +170,13 @@ const SfaView = props => {
 
   /** FUNCTION GET COLLECTION LIST */
   const getCollectionList = (loading, page) => {
+    const storeId =
+      (params?.type || '') === 'COLLECTION_LIST'
+        ? parseInt(selectedStore.id, 10) || 0
+        : parseInt(selectedMerchant.storeId, 10) || 0;
     let data = {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
-      storeId: parseInt(selectedMerchant.storeId, 10),
+      storeId,
       userId: parseInt(userSuppliers[0].userId, 10),
       approvalStatus: approvalStatusCollection,
       keyword: searchTextCollection,
@@ -129,11 +186,46 @@ const SfaView = props => {
 
     dispatch(sfaGetReferenceListProcess(data));
   };
-
+  /** === GET COLLECTION LIST ON CHANGE STATUS OR SEARCH === */
   useEffect(() => {
     getCollectionList(true, 20);
   }, [approvalStatusCollection, searchTextCollection]);
+  /** === HANDLE BACK HARDWARE PRESS ===  */
+  /** === HANDLE BACK HARDWARE PRESS ===  */
 
+  useEffect(() => {
+    if ((params?.type || '') === 'COLLECTION_LIST') {
+      const backAction = () => {
+        if (props.navigation.isFocused()) {
+          onHandleBack();
+        }
+      };
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
+      return () => backHandler.remove();
+    }
+  }, []);
+  useEffect(() => () => getListCollectionStores(), []);
+
+  /** === GET COLLECTION LIST */
+  const getListCollectionStores = () => {
+    if ((params?.type || '') === 'COLLECTION_LIST') {
+      const supplierId = parseInt(userSuppliers[0]?.supplier?.id || 0, 10);
+      const salesId = parseInt(id, 10) || 0;
+      const data = {
+        salesId,
+        supplierId,
+        skip: 1,
+        limit: 10,
+        loading: true,
+        searchKey: ''
+      };
+      dispatch(sfaGetStoreCollectionListReset());
+      dispatch(sfaGetStoreCollectionListProcess(data));
+    }
+  };
   /** PARENT FUNCTION */
   let parentFunction = data => {
     switch (data.type) {
@@ -200,7 +292,10 @@ const SfaView = props => {
     dispatch(sfaGetRefresh());
     getInvoiceList(true, 20);
   };
-
+  /** === HANDLE BACK HARDWARE */
+  const onHandleBack = () => {
+    dispatch(sfaModalCollectionListMenu(true));
+  };
   /** === HEADER TABS === */
   const renderHeaderTabs = () => {
     return (
@@ -242,6 +337,7 @@ const SfaView = props => {
           isNavigateFromTab={true}
           keyword={searchTextCollection}
           approvalStatus={approvalStatusCollection}
+          type={params?.type || ''}
         />
       </>
     );
@@ -481,7 +577,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   textLeft: { textAlign: 'right', marginBottom: 4 },
-  textRight: { marginBottom: 4 }
+  textRight: { marginBottom: 4 },
+  headerLeftOption: {
+    marginLeft: 16
+  }
 });
 
 export default SfaView;

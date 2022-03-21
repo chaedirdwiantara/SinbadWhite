@@ -19,6 +19,8 @@ import MerchantNoVisitPicture from '../../screens/merchants/dashboard-merchant/M
 import MerchantNoVisitReasonDetailView from '../../screens/merchants/dashboard-merchant/MerchantNoVisitReasonDetailView';
 import MerchantNoCollectionReason from '../../screens/merchants/dashboard-merchant/MerchantNoCollectionReason';
 import MerchantNoCollectionDetailView from '../../screens/merchants/dashboard-merchant/MerchantNoCollectionDetailView';
+import { HeaderLeftReasonOption } from '../../screens/merchants/dashboard-merchant/MerchantNoCollectionReason';
+import { HeaderLeftDetailReasonOption } from '../../screens/merchants/dashboard-merchant/MerchantNoCollectionDetailView';
 /** merchant detail */
 import MerchantDetailProfileView from '../../screens/merchants/details-merchant/MerchantDetailProfileView';
 import MerchantDetailAccountView from '../../screens/merchants/details-merchant/MerchantDetailAccountView';
@@ -383,6 +385,7 @@ const MerchantNavigator = {
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
+      headerLeft: <HeaderLeftReasonOption />,
       headerRight: <View />,
       gesturesEnabled: false
     }
@@ -419,7 +422,8 @@ const MerchantNavigator = {
         backgroundColor: masterColor.backgroundWhite
       },
       headerRight: <View />,
-      gesturesEnabled: false
+      gesturesEnabled: false,
+      headerLeft: <HeaderLeftDetailReasonOption />
     }
   },
   MerchantPromisePayView: {
