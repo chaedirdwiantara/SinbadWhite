@@ -69,6 +69,25 @@ class MultipleOrderButton extends Component {
         this.checkQtyAfterEnter();
       }
     }
+
+    if (this.state.uomDetail !== this.props.uomDetail) {
+      if (this.props.uomDetail !== null) {
+        this.updateUomDetail();
+      }
+    }
+  }
+
+  updateUomDetail() {
+    this.setState({
+      uomDetail: this.props.uomDetail,
+      largeUomQty: this.props.uomDetail.largeUomQty,
+      largeUnit: this.props.uomDetail.largeUom,
+      smallUomQty: this.props.uomDetail.smallUomQty,
+      smallUnit: this.props.uomDetail.smallUom,
+      qty:
+        this.props.uomDetail.largeUomQty * this.props.uomDetail.packagedQty +
+        this.props.uomDetail.smallUomQty
+    });
   }
 
   checkUomDetail() {
@@ -171,19 +190,30 @@ class MultipleOrderButton extends Component {
     this.setState({ plusButtonDisable: false });
     /** === SET QTY === */
     const qty = this.state.smallUomQty - this.state.multipleQty;
-    if (qty < this.state.minQty) {
-      this.sendValueToParent(this.state.minQty);
-      this.setState({ smallUomQty: this.state.minQty });
-    } else {
-      if (this.state.isMax) {
-        if (this.state.smallUomQty > this.state.maxQty) {
-          this.checkTotalClickPlusButton(this.state.minQty);
-          this.sendValueToParent(this.state.minQty);
-          this.setState({ smallUomQty: this.state.minQty });
+
+    if (this.state.largeUomQty === 0) {
+      if (qty < this.state.minQty) {
+        this.sendValueToParent(this.state.minQty);
+        this.setState({ smallUomQty: this.state.minQty });
+      } else {
+        if (this.state.isMax) {
+          if (this.state.smallUomQty > this.state.maxQty) {
+            this.checkTotalClickPlusButton(this.state.minQty);
+            this.sendValueToParent(this.state.minQty);
+            this.setState({ smallUomQty: this.state.minQty });
+          } else {
+            this.sendValueToParent(qty);
+            this.setState({ smallUomQty: qty });
+          }
         } else {
           this.sendValueToParent(qty);
           this.setState({ smallUomQty: qty });
         }
+      }
+    } else {
+      if (qty <= 0) {
+        this.sendValueToParent(0);
+        this.setState({ smallUomQty: 0 });
       } else {
         this.sendValueToParent(qty);
         this.setState({ smallUomQty: qty });
@@ -194,10 +224,21 @@ class MultipleOrderButton extends Component {
   onPressMinusLarge() {
     /** === SET LARGE UOM QTY === */
     const qty = this.state.largeUomQty - 1;
-    this.setState({
-      largeUomQty: qty
-    });
-    this.sendValueToParentLarge(qty);
+
+    if (qty <= 0 && this.state.smallUomQty === 0) {
+      this.sendValueToParent(this.state.minQty);
+      this.sendValueToParentLarge(0);
+
+      this.setState({
+        largeUomQty: 0,
+        smallUomQty: this.state.minQty
+      });
+    } else {
+      this.setState({
+        largeUomQty: qty
+      });
+      this.sendValueToParentLarge(qty);
+    }
   }
   /**
    * =======================================
@@ -367,7 +408,9 @@ class MultipleOrderButton extends Component {
   }
   /** => render minus button */
   renderMinusButton() {
-    return this.state.qty <= this.state.minQty || this.props.showKeyboard ? (
+    return this.state.qty <= this.state.minQty ||
+      this.props.showKeyboard ||
+      this.state.smallUomQty === 0 ? (
       <View style={styles.minusButtonDisabled}>
         <Text style={styles.minusText}>-</Text>
       </View>
@@ -446,9 +489,11 @@ class MultipleOrderButton extends Component {
           onChangeText={qty => {
             const cleanNumber = qty.replace(/[^0-9]/g, '');
             this.checkTotalClickPlusButton(cleanNumber);
-            isLarge
-              ? this.setState({ largeUomQty: cleanNumber })
-              : this.setState({ smallUomQty: cleanNumber });
+            if (isLarge) {
+              this.setState({ largeUomQty: cleanNumber });
+            } else {
+              this.setState({ smallUomQty: cleanNumber });
+            }
           }}
           style={[Fonts.type24, styles.input]}
         />
@@ -489,7 +534,7 @@ class MultipleOrderButton extends Component {
         }}
       >
         <View style={{ alignContent: 'flex-start' }}>
-          <Text style={Fonts.type96}>Dalam Pcs</Text>
+          <Text style={Fonts.fontH12Medium}>Dalam {this.state.smallUnit}</Text>
         </View>
         <View style={styles.subMainContainer}>
           {this.renderRemainingStock()}
