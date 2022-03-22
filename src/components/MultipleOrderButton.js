@@ -146,7 +146,6 @@ class MultipleOrderButton extends Component {
    * =======================
    */
   onPressPlus(isLarge) {
-    console.log('Small Button press', this.state.maxQty);
     /** === COUNTER PLUS BUTTON === */
     let totalClickPlus = this.state.totalClickPlus;
     this.setState({ totalClickPlus: totalClickPlus - 1 });
@@ -176,8 +175,6 @@ class MultipleOrderButton extends Component {
   }
 
   onPressPlusLarge() {
-    console.log('Large Button press, Max Qty', this.state.maxQty);
-    console.log('Large Button press, Max Stock', this.state.stock);
     /** === SET LARGE UOM QTY === */
     const totalQtyLarge =
       (this.props.uomDetail.largeUomQty + 1) * this.props.uomDetail.packagedQty;
@@ -187,11 +184,9 @@ class MultipleOrderButton extends Component {
         this.props.uomDetail.packagedQty +
       this.props.uomDetail.smallUomQty;
 
-    console.log('Total Qty after Large Button Press', totalQtyLarge);
     /** Check available stock */
     /** Total Qty less than stock */
     if (totalQtyLarge <= this.state.stock) {
-      console.log('Less than stock');
       if (totalQty >= this.state.stock) {
         const modifyLargeUomQty = this.state.largeUomQty + 1;
         const modifySmallUomQty =
@@ -211,14 +206,12 @@ class MultipleOrderButton extends Component {
         this.sendValueToParentLarge(this.state.largeUomQty + 1);
       }
     } else if (totalQty >= this.state.stock) {
-      console.log('Large Qty', this.state.largeUomQty);
       this.setState({
         plusButtonLargeDisable: true,
         plusButtonDisable: true,
         totalClickPlus: 0
       });
     } else {
-      console.log('Test');
       this.setState({
         largeUomQty: this.state.largeUomQty,
         plusButtonLargeDisable: true
@@ -358,21 +351,14 @@ class MultipleOrderButton extends Component {
       if (parseInt(this.state.largeUomQty, 10) !== 0) {
         const valueAfterMinimum = this.state.qty - this.state.minQty;
 
-        console.log('Value after minimum', valueAfterMinimum);
-        console.log('Multiple Qty', this.state.multipleQty);
-        console.log('Min Qty', this.state.minQty);
-        console.log('Max Qty', this.state.maxQty);
-
         if (this.state.maxQty) {
           if (valueAfterMinimum < this.state.maxQty) {
-            console.log('Modify 1');
             return (
               Math.floor(valueAfterMinimum / this.state.multipleQty) *
                 this.state.multipleQty +
               this.state.minQty
             );
           } else {
-            console.log('Modify 2');
             const maxQtyAfterMinimum = this.state.maxQty - this.state.minQty;
             return (
               Math.floor(maxQtyAfterMinimum / this.state.multipleQty) *
@@ -430,7 +416,6 @@ class MultipleOrderButton extends Component {
         this.state.minQty
     ) {
       if (!isLarge) {
-        console.log('Logic 1');
         this.sendValueToParent(this.state.minQty);
         this.setState({ smallUomQty: this.state.minQty });
       }
@@ -440,18 +425,15 @@ class MultipleOrderButton extends Component {
     if (!this.state.unlimitedStock) {
       /** Modified Qty is less than stock */
       if (this.modifyQty() < this.state.stock) {
-        console.log('Logic 2');
         /** Qty less than Multiple Qty */
         if (this.state.stock - this.modifyQty() <= this.state.multipleQty) {
           this.setState({ plusButtonDisable: true, qty: this.modifyQty() });
         } else {
-          console.log('Logic 3');
           this.sendValueToParent(this.modifyQty());
           this.setState({ qty: this.modifyQty() });
         }
       } else {
         /** Modified Qty is more than stock */
-        console.log('Logic 4');
         this.sendValueToParent(this.modifyStockQty());
         this.setState({ qty: this.modifyStockQty() });
         this.setState({ plusButtonDisable: true });
