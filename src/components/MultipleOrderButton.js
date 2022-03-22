@@ -79,15 +79,18 @@ class MultipleOrderButton extends Component {
   }
 
   updateUomDetail() {
+    const qty =
+      this.props.uomDetail.largeUomQty * this.props.uomDetail.packagedQty +
+      this.props.uomDetail.smallUomQty;
+
     this.setState({
       uomDetail: this.props.uomDetail,
       largeUomQty: this.props.uomDetail.largeUomQty,
       largeUnit: this.props.uomDetail.largeUom,
       smallUomQty: this.props.uomDetail.smallUomQty,
       smallUnit: this.props.uomDetail.smallUom,
-      qty:
-        this.props.uomDetail.largeUomQty * this.props.uomDetail.packagedQty +
-        this.props.uomDetail.smallUomQty
+      qty,
+      isMax: this.state.maxQty < qty ? true : false
     });
   }
 
