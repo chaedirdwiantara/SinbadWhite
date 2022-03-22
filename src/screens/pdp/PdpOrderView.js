@@ -199,7 +199,6 @@ class PdpOrderView extends Component {
    */
   parentFunctionFromOrderButton(data) {
     /** NOTE 1 */
-    console.log('[DATA]: ', data);
     this.setState({
       qtyFromChild: data.qty,
       detailFromChild: data.detail
