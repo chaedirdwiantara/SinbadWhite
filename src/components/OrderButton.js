@@ -204,8 +204,8 @@ class OrderButton extends Component {
     this.setState({
       largeUomQty: qty
     });
-    this.checkQtyAfterMinusLarge(qty);
     this.sendValueToParentLarge(qty);
+    this.checkQtyAfterMinusLarge(qty);
   }
   /**
    * =======================================
@@ -356,13 +356,34 @@ class OrderButton extends Component {
 
     if (largeQty > 0) {
       if (currentQty < this.state.minQty) {
-        this.sendValueToParent(this.state.minQty - currentQty);
         this.setState({ qty: this.state.minQty - currentQty });
+        this.props.parentFunctionFromOrderButton({
+          catalogueId: this.state.selectedProduct.id,
+          qty:
+            largeQty * this.state.packagedQty + this.state.minQty - currentQty,
+          detail: {
+            smallUom: this.state.unit,
+            smallUomQty: this.state.minQty - currentQty,
+            largeUom: this.state.largeUnit,
+            largeUomQty: largeQty,
+            packagedQty: this.state.packagedQty
+          }
+        });
       }
     } else {
       if (currentQty < this.state.minQty) {
-        this.sendValueToParent(this.state.minQty);
         this.setState({ qty: this.state.minQty });
+        this.props.parentFunctionFromOrderButton({
+          catalogueId: this.state.selectedProduct.id,
+          qty: largeQty * this.state.packagedQty + this.state.minQty,
+          detail: {
+            smallUom: this.state.unit,
+            smallUomQty: this.state.minQty,
+            largeUom: this.state.largeUnit,
+            largeUomQty: largeQty,
+            packagedQty: this.state.packagedQty
+          }
+        });
       }
     }
   }
@@ -536,20 +557,25 @@ class OrderButton extends Component {
   /** => render single uom */
   renderSingleUOM() {
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          flex: 1
-        }}
-      >
-        <View style={{ alignContent: 'flex-start' }}>
-          <Text style={Fonts.fontH12Medium}>Dalam {this.state.unit}</Text>
-        </View>
-        <View style={styles.subMainContainer}>
+      <>
+        <View style={{ alignSelf: 'flex-start' }}>
           {this.renderRemainingStock()}
-          {this.renderCalculator(this.state.qty, false)}
         </View>
-      </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            flex: 1,
+            alignItems: 'center'
+          }}
+        >
+          <View style={{ alignContent: 'flex-start' }}>
+            <Text style={Fonts.fontH12Medium}>Dalam {this.state.unit}</Text>
+          </View>
+          <View style={styles.subMainContainer}>
+            {this.renderCalculator(this.state.qty, false)}
+          </View>
+        </View>
+      </>
     );
   }
 
@@ -563,7 +589,8 @@ class OrderButton extends Component {
         <View
           style={{
             flexDirection: 'row',
-            flex: 1
+            flex: 1,
+            alignItems: 'center'
           }}
         >
           <View style={{ alignContent: 'flex-start' }}>
