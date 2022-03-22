@@ -190,13 +190,10 @@ class MultipleOrderButton extends Component {
     if (totalQtyLarge <= this.state.stock) {
       console.log('Less than stock');
       if (totalQty >= this.state.stock) {
-        console.log('Modify Qty');
         const modifyLargeUomQty = this.state.largeUomQty + 1;
         const modifySmallUomQty =
           this.state.stock -
           modifyLargeUomQty * this.props.uomDetail.packagedQty;
-        console.log('Large Uom', modifyLargeUomQty);
-        console.log('Small Uom', modifySmallUomQty);
         this.sendQtyToParent(modifySmallUomQty, modifyLargeUomQty);
         this.setState({
           largeUomQty: modifyLargeUomQty,
@@ -306,7 +303,7 @@ class MultipleOrderButton extends Component {
           parseInt(this.state.largeUomQty, 10) * this.state.packagedQty +
           parseInt(this.state.smallUomQty, 10),
         detail: {
-          smallUom: this.state.unit,
+          smallUom: this.state.smallUnit,
           smallUomQty: parseInt(qty, 10),
           largeUom: this.state.largeUnit,
           largeUomQty: parseInt(this.state.largeUomQty, 10),
@@ -328,7 +325,7 @@ class MultipleOrderButton extends Component {
         parseInt(qty, 10) * this.state.packagedQty +
         parseInt(this.state.smallUomQty, 10),
       detail: {
-        smallUom: this.state.unit,
+        smallUom: this.state.smallUnit,
         smallUomQty: parseInt(this.state.smallUomQty, 10),
         largeUom: this.state.largeUnit,
         largeUomQty: parseInt(qty, 10),
@@ -344,7 +341,7 @@ class MultipleOrderButton extends Component {
         parseInt(largeQty, 10) * this.state.packagedQty +
         parseInt(smallQty, 10),
       detail: {
-        smallUom: this.state.unit,
+        smallUom: this.state.smallUnit,
         smallUomQty: parseInt(smallQty, 10),
         largeUom: this.state.largeUnit,
         largeUomQty: parseInt(largeQty, 10),
