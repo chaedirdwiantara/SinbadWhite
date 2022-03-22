@@ -359,6 +359,7 @@ class OmsCartView extends Component {
   }
 
   parentFunctionFromMultipleOrderButton(data) {
+    console.log('Order Data', data);
     const productCartArray = this.state.productCartArray;
     const indexProductCartArray = productCartArray.findIndex(
       item => item.catalogueId === data.catalogueId
