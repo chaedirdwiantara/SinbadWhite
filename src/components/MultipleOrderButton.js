@@ -146,11 +146,15 @@ class MultipleOrderButton extends Component {
    * =======================
    */
   onPressPlus(isLarge) {
-    console.log('Small Button press', this.state.maxQty);
+    console.log('Large Button press, Max Qty', this.state.maxQty);
+    console.log('Large Button press, Max Stock', this.state.stock);
+    console.log('Multiple Qty', this.state.multipleQty);
     /** === COUNTER PLUS BUTTON === */
     let totalClickPlus = this.state.totalClickPlus;
     this.setState({ totalClickPlus: totalClickPlus - 1 });
     let qty = this.state.smallUomQty + this.state.multipleQty;
+    const totalQty =
+      this.props.uomDetail.largeUomQty * this.props.uomDetail.packagedQty + qty;
     /** === SET QTY === */
     if (isLarge) {
       this.setState({
@@ -159,14 +163,24 @@ class MultipleOrderButton extends Component {
     } else {
       if (!this.state.unlimitedStock) {
         if (this.state.stock - qty < this.state.multipleQty) {
+          console.log('true');
           this.sendValueToParent(qty);
           this.setState({
             smallUomQty: qty,
             plusButtonDisable: true
           });
         } else {
-          this.sendValueToParent(qty);
-          this.setState({ smallUomQty: qty });
+          if (totalQty >= this.state.stock) {
+            console.log('else');
+            console.log('Total Qty', totalQty);
+            console.log('Small Qty', qty);
+            this.sendValueToParent(qty);
+            this.setState({ smallUomQty: qty, plusButtonDisable: true });
+          } else {
+            console.log('Stock Available');
+            this.sendValueToParent(qty);
+            this.setState({ smallUomQty: qty });
+          }
         }
       } else {
         this.sendValueToParent(qty);
@@ -191,7 +205,7 @@ class MultipleOrderButton extends Component {
     /** Check available stock */
     /** Total Qty less than stock */
     if (totalQtyLarge <= this.state.stock) {
-      console.log('Less than stock');
+      /** Modify Qty if sum of Large Qty * Packaged Qty is more than stock */
       if (totalQty >= this.state.stock) {
         const modifyLargeUomQty = this.state.largeUomQty + 1;
         const modifySmallUomQty =
@@ -205,6 +219,7 @@ class MultipleOrderButton extends Component {
           plusButtonDisable: true
         });
       } else {
+        /** Set Large Qty if Total Qty less than Stock */
         this.setState({
           largeUomQty: this.state.largeUomQty + 1
         });
