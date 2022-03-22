@@ -90,7 +90,8 @@ class MultipleOrderButton extends Component {
       smallUomQty: this.props.uomDetail.smallUomQty,
       smallUnit: this.props.uomDetail.smallUom,
       qty,
-      isMax: this.state.maxQty < qty ? true : false
+      isMax:
+        this.state.maxQty !== null && qty > this.state.maxQty ? true : false
     });
   }
 
@@ -175,7 +176,11 @@ class MultipleOrderButton extends Component {
             console.log('Total Qty', totalQty);
             console.log('Small Qty', qty);
             this.sendValueToParent(qty);
-            this.setState({ smallUomQty: qty, plusButtonDisable: true });
+            this.setState({
+              smallUomQty: qty,
+              plusButtonDisable: true,
+              plusButtonLargeDisable: true
+            });
           } else {
             console.log('Stock Available');
             this.sendValueToParent(qty);
@@ -225,13 +230,13 @@ class MultipleOrderButton extends Component {
         });
         this.sendValueToParentLarge(this.state.largeUomQty + 1);
       }
-    } else if (totalQty >= this.state.stock) {
-      console.log('Large Qty', this.state.largeUomQty);
-      this.setState({
-        plusButtonLargeDisable: true,
-        plusButtonDisable: true,
-        totalClickPlus: 0
-      });
+      // } else if (totalQty >= this.state.stock) {
+      //   console.log('Large Qty', this.state.largeUomQty);
+      //   this.setState({
+      //     plusButtonLargeDisable: true,
+      //     plusButtonDisable: true,
+      //     totalClickPlus: 0
+      //   });
     } else {
       console.log('Test');
       this.setState({
@@ -300,7 +305,8 @@ class MultipleOrderButton extends Component {
       this.setState({
         largeUomQty: qty,
         plusButtonLargeDisable: false,
-        plusButtonDisable: false
+        plusButtonDisable: false,
+        isMax: false
       });
       this.sendValueToParentLarge(qty);
     }
@@ -319,7 +325,7 @@ class MultipleOrderButton extends Component {
         catalogueId: this.state.selectedProduct.id,
         qty:
           parseInt(this.state.largeUomQty, 10) * this.state.packagedQty +
-          parseInt(this.state.smallUomQty, 10),
+          parseInt(qty, 10),
         detail: {
           smallUom: this.state.smallUnit,
           smallUomQty: parseInt(qty, 10),
@@ -501,6 +507,7 @@ class MultipleOrderButton extends Component {
   }
   /** === MAX QUANTITY ORDER === */
   checkMaxQtyOrder() {
+    console.log('Check max Qty', this.state.maxQty);
     if (this.state.isMax) {
       return `Maksimum pembelian ${this.state.maxQty} ${this.state.smallUnit}`;
     }
