@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   boxTitle: {
     width: '100%',
-    paddingBottom: 20,
+    paddingBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 75

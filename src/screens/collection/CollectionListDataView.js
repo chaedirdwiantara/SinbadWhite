@@ -12,7 +12,11 @@ import { MoneyFormat, GlobalStyle, Fonts } from '../../helpers';
 import { Color } from '../../config';
 import { bindActionCreators, connect } from '../../library/thirdPartyPackage';
 import * as ActionCreators from '../../state/actions';
-import { EmptyData, EmptyDataType2 } from '../../library/component';
+import {
+  EmptyData,
+  EmptyDataType2,
+  LoadingLoadMore
+} from '../../library/component';
 class CollectionListDataView extends Component {
   constructor(props) {
     super(props);
@@ -48,11 +52,9 @@ class CollectionListDataView extends Component {
       ),
       skip: skip || 1,
       limit: 10,
-      loading: true,
       searchKey: '',
       loading
     };
-    this.props.sfaGetStoreCollectionListReset();
     this.props.sfaGetStoreCollectionListProcess(data);
   };
   /** CHECK COLLECTION ACTIVITY */
@@ -178,7 +180,12 @@ class CollectionListDataView extends Component {
   }
   /** === MAIN RENDER === */
   render() {
-    return <View style={styles.mainContainer}>{this.renderData()}</View>;
+    return (
+      <View style={styles.mainContainer}>
+        {this.renderData()}
+        {this.renderLoadMore()}
+      </View>
+    );
   }
 }
 

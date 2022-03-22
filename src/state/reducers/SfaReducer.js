@@ -952,6 +952,7 @@ export const sfa = createReducer(INITIAL_STATE, {
       loadingGetStoreCollectionList: false,
       loadingLoadmoreGetStoreCollection: false,
       refreshGetStoreCollectionList: false,
+      loadingLoadmoreGetStoreCollectionList: false,
       totalGetStoreCollectionList: action.payload.meta.total,
       dataGetStoreCollectionList: [
         ...state.dataGetStoreCollectionList,
