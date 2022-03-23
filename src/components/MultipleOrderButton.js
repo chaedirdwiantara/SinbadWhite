@@ -699,7 +699,6 @@ class MultipleOrderButton extends Component {
 
   /** => render double uom */
   renderDoubleUOM() {
-    console.log(this.props.uomDetail);
     return (
       <>
         <View style={{ alignSelf: 'flex-start' }}>
