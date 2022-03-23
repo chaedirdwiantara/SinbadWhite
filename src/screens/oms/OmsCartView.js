@@ -384,10 +384,7 @@ class OmsCartView extends Component {
         const productUomDetail = {
           ...data.detail,
           smallUomQty: totalSmallQty <= 0 ? 0 : totalSmallQty,
-          largeUomQty:
-            totalLargeQty >= productCartArray[indexProductCartArray].maxQty
-              ? largeUomQty - 1
-              : largeUomQty - 1
+          largeUomQty: largeUomQty - 1
         };
 
         productCartArray[indexProductCartArray].qty =
