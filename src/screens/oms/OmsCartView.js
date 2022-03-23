@@ -375,16 +375,29 @@ class OmsCartView extends Component {
       if (largeUomQty >= 1) {
         let totalLargeQty = largeUomQty * packagedQty;
 
+        const modifyLargeQty = () => {
+          const divideQty =
+            productCartArray[indexProductCartArray].maxQty / packagedQty;
+
+          return Math.floor(divideQty);
+        };
+
+        const modifySmallQty = () => {
+          const calculateQty =
+            productCartArray[indexProductCartArray].maxQty -
+            modifyLargeQty() * packagedQty;
+
+          return Math.floor(calculateQty);
+        };
+
         if (totalLargeQty >= productCartArray[indexProductCartArray].maxQty) {
-          totalLargeQty = (largeUomQty - 1) * packagedQty;
+          totalLargeQty = modifyLargeQty() * packagedQty;
         }
-        const totalSmallQty =
-          productCartArray[indexProductCartArray].maxQty - totalLargeQty;
 
         const productUomDetail = {
           ...data.detail,
-          smallUomQty: totalSmallQty <= 0 ? 0 : totalSmallQty,
-          largeUomQty: largeUomQty - 1
+          smallUomQty: modifySmallQty(),
+          largeUomQty: modifyLargeQty()
         };
 
         productCartArray[indexProductCartArray].qty =
