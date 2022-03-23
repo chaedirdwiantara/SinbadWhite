@@ -10,6 +10,7 @@ const INITIAL_STATE = {
   loadingGetVersion: false,
   loadingGetUrbanId: false,
   loadingUploadImage: false,
+  loadingGetCatalogueTaxes: false,
   /** data */
   search: '',
   longitude: '',
@@ -33,12 +34,14 @@ const INITIAL_STATE = {
   },
   dataGetUrbanId: null,
   dataUploadImage: null,
+  dataGetCatalogueTaxes: null,
   /** error */
   errorGetListAndSearch: null,
   errorGlobalLongLatToAddress: null,
   errorGetVersion: null,
   errorGetUrbanId: null,
-  errorUploadImage: null
+  errorUploadImage: null,
+  errorGetCatalogueTaxes: null
 };
 
 export const global = createReducer(INITIAL_STATE, {
@@ -171,7 +174,7 @@ export const global = createReducer(INITIAL_STATE, {
   [types.RESET_MANUAL_INPUT_LOCATION_DATA](state, action) {
     return {
       ...state,
-      dataLocationVolatile: INITIAL_STATE.dataLocationVolatile,
+      dataLocationVolatile: INITIAL_STATE.dataLocationVolatile
     };
   },
   /**
@@ -322,11 +325,11 @@ export const global = createReducer(INITIAL_STATE, {
       errorGetVersion: action.payload
     };
   },
-  [types.SAVE_PAGE_AREA_MAPPING_FROM](state, action){
+  [types.SAVE_PAGE_AREA_MAPPING_FROM](state, action) {
     return {
       ...state,
       pageAreaMappingFrom: action.payload
-    }
+    };
   },
   /**
    * ===================================
@@ -353,6 +356,33 @@ export const global = createReducer(INITIAL_STATE, {
       ...state,
       loadingUploadImage: false,
       errorUploadImage: action.payload
+    };
+  },
+  /**
+   * ===================================
+   * GET CATALOGUE_TAXES VALUE
+   * ===================================
+   */
+  [types.GET_CATALOGUE_TAXES_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetCatalogueTaxes: true,
+      dataGetCatalogueTaxes: null,
+      errorGetCatalogueTaxes: null
+    };
+  },
+  [types.GET_CATALOGUE_TAXES_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetCatalogueTaxes: false,
+      dataGetCatalogueTaxes: action.payload
+    };
+  },
+  [types.GET_CATALOGUE_TAXES_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetCatalogueTaxes: false,
+      errorGetCatalogueTaxes: action.payload
     };
   }
 });
