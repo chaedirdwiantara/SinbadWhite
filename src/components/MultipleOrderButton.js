@@ -633,11 +633,12 @@ class MultipleOrderButton extends Component {
           onEndEditing={() => this.checkQtyAfterEnter(isLarge)}
           onChangeText={qty => {
             const cleanNumber = qty.replace(/[^0-9]/g, '');
-            this.checkTotalClickPlusButton(cleanNumber);
+            const number = cleanNumber === '' ? 0 : cleanNumber;
+            this.checkTotalClickPlusButton(number);
             if (isLarge) {
-              this.setState({ largeUomQty: cleanNumber });
+              this.setState({ largeUomQty: number });
             } else {
-              this.setState({ smallUomQty: cleanNumber });
+              this.setState({ smallUomQty: number });
             }
           }}
           style={[Fonts.type24, styles.input]}
