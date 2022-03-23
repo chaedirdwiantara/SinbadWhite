@@ -242,14 +242,15 @@ class OmsVerificationView extends Component {
                 <View style={{ flex: 1 }}>
                   <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                     {!item.detail
-                      ? `${item.qty} ${item.unit}`
+                      ? `${item.qty} ${item.unit ?? 'Pcs'}`
                       : `${item.detail.smallUomQty} ${item.detail.smallUom} | ${
                           item.detail.largeUomQty
                         } ${item.detail.largeUom}`}
                   </Text>
                   {item.detail && (
                     <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
-                      {`Total item ${item.qty} ${item.detail.smallUom}`}
+                      {`Total item ${item.qty} ${item.detail.smallUom ??
+                        'Pcs'}`}
                     </Text>
                   )}
                   <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
@@ -353,14 +354,14 @@ class OmsVerificationView extends Component {
             </Text>
             <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
               {!item.detail
-                ? `${item.qty} ${item.unit}`
-                : `${item.detail.smallUomQty} ${item.detail.smallUom} | ${
-                    item.detail.largeUomQty
-                  } ${item.detail.largeUom}`}
+                ? `${item.qty} ${item.unit ?? 'Pcs'}`
+                : `${item.detail.smallUomQty} ${item?.detail?.smallUom ??
+                    'Pcs'} | ${item.detail.largeUomQty} ${item?.detail
+                    ?.largeUom ?? 'Box'}`}
             </Text>
             {item.detail && (
               <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
-                {`Total item ${item.qty} ${item.detail.smallUom}`}
+                {`Total item ${item.qty} ${item.detail.smallUom ?? 'Pcs'}`}
               </Text>
             )}
           </View>
