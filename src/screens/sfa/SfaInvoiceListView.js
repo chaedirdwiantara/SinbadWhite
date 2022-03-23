@@ -51,10 +51,11 @@ function SfaInvoiceListView(props) {
    */
   const renderData = () => {
     if (props.dataList) {
+      const dataOrderParcels = props.dataList?.data?.orderParcels || [];
       return (
         <>
           <View style={styles.flatListContainer}>
-            {props.dataList.data.orderParcels !== null ? (
+            {dataOrderParcels.length > 0 ? (
               <FlatList
                 data={props.dataList.data.orderParcels}
                 renderItem={renderItem}

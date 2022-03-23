@@ -52,7 +52,8 @@ const SfaBillingAddView = props => {
     dataSfaPostCollectionPayment,
     errorSfaPostCollectionPayment,
     dataSfaGetDetail,
-    selectedCollectionTransaction
+    selectedCollectionTransaction,
+    selectedStore
   } = useSelector(state => state.sfa);
   const { userSuppliers } = useSelector(state => state.user);
   const { selectedMerchant } = useSelector(state => state.merchant);
@@ -166,7 +167,7 @@ const SfaBillingAddView = props => {
       supplierId: parseInt(userSuppliers[0].supplierId, 10),
       userId: parseInt(userSuppliers[0].userId, 10),
       orderParcelId: dataSfaGetDetail.data.id,
-      storeId: parseInt(selectedMerchant.storeId, 10),
+      storeId: parseInt(selectedStore?.id || selectedMerchant?.storeId, 10),
       paymentCollectionMethodId: collectionInfo.id,
       amount: billingAmount,
       isUsedStamp: isStampChecked,

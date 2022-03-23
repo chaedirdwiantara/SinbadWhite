@@ -29,7 +29,8 @@ import {
   ProgressBarType2,
   Shadow,
   TabsCustom,
-  SlideIndicator
+  SlideIndicator,
+  ModalBottomType3
 } from '../../library/component';
 import {
   GlobalStyle,
@@ -71,12 +72,13 @@ class HomeView extends Component {
     this.state = {
       openModalUpdateApp: false,
       openModalForceUpdateApp: false,
+      openModalJPMenu: false,
       menu: [
         {
           title1: 'Journey',
           title2: 'Plan',
           image: require('../../assets/images/menu/journey_plan.png'),
-          goTo: 'journey_plan'
+          goTo: 'journey_plan_menu'
         },
         {
           title1: 'List',
@@ -136,6 +138,16 @@ class HomeView extends Component {
             achieved: 0,
             target: 0
           }
+        }
+      ],
+      menuJourneyPlan: [
+        {
+          title: 'Journey Plan',
+          goTo: 'journey_plan'
+        },
+        {
+          title: 'Collection List',
+          goTo: 'collection_list'
         }
       ],
       pageOne: 0,
@@ -349,8 +361,18 @@ class HomeView extends Component {
       case 'list_toko':
         NavigationService.navigate('MerchantView');
         break;
+      case 'journey_plan_menu':
+        if (this.props.privileges.data?.collection?.status) {
+          this.setState({ openModalJPMenu: true });
+        } else {
+          NavigationService.navigate('JourneyView');
+        }
+        break;
       case 'journey_plan':
         NavigationService.navigate('JourneyView');
+        break;
+      case 'collection_list':
+        NavigationService.navigate('CollectionView');
         break;
       default:
         break;
@@ -663,6 +685,35 @@ class HomeView extends Component {
       </View>
     );
   }
+
+  /** === RENDER LIST JOURNEY PLAN MENU === */
+  renderJourneyPlanMenu() {
+    return (
+      <>
+        <View style={{ marginBottom: 8 }}>
+          {this.state.menuJourneyPlan.map((item, index) => {
+            return (
+              <TouchableOpacity
+                key={index}
+                style={[GlobalStyle.shadowForBox, styles.menuJPContainer]}
+                onPress={() => {
+                  this.goToPage(item);
+                  this.setState({ openModalJPMenu: false });
+                }}
+              >
+                <Text style={[Fonts.type7]}>{item.title}</Text>
+                <MaterialIcon
+                  name="keyboard-arrow-right"
+                  color={masterColor.fontBlack50}
+                  size={24}
+                />
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </>
+    );
+  }
   /**
    * === RENDER ITEM MAIN  ===
    * @param {array} item from props data flatlist
@@ -758,6 +809,21 @@ class HomeView extends Component {
       <View />
     );
   }
+
+  /** RENDER MODAL JOURNEY PLAN MENU */
+  renderModalJourneyPlanMenu() {
+    return this.state.openModalJPMenu ? (
+      <ModalBottomType3
+        title={'Journey Plan'}
+        open={this.state.openModalJPMenu}
+        close={() => this.setState({ openModalJPMenu: false })}
+        content={this.renderJourneyPlanMenu()}
+        typeClose={'cancel'}
+      />
+    ) : (
+      <View />
+    );
+  }
   /**
    * === RENDER MAIN ===
    * @returns {ReactElement} render all component in HomeView
@@ -771,6 +837,7 @@ class HomeView extends Component {
         {/* modal */}
         {/* {this.renderModalUpdate()} */}
         {this.renderModalForceUpdate()}
+        {this.renderModalJourneyPlanMenu()}
       </SafeAreaView>
     );
   }
@@ -829,6 +896,16 @@ const styles = StyleSheet.create({
     width: 50,
     borderRadius: 50,
     marginRight: 16
+  },
+  menuJPContainer: {
+    marginHorizontal: 16,
+    marginVertical: 4,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   }
 });
 

@@ -16,7 +16,7 @@ import SfaBillingLogView from '../../screens/sfa/SfaBillingLogView';
 import SfaCollectionEditView from '../../screens/sfa/SfaCollectionEditView';
 import SfaBillingEditView from '../../screens/sfa/SfaBillingEditView';
 import { HeaderLeftOption } from '../../screens/sfa/sfa-collection/AddViewBundle';
-
+import { HeaderLeftSfaViewtOption } from '../../screens/sfa/SfaView';
 const SfaNavigator = {
   SfaView: {
     screen: SfaView,
@@ -26,7 +26,8 @@ const SfaNavigator = {
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
-      gesturesEnabled: false
+      gesturesEnabled: false,
+      headerLeft: <HeaderLeftSfaViewtOption />
     }
   },
   SfaDetailView: {

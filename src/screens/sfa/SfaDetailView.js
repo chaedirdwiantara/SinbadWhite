@@ -41,7 +41,8 @@ function SfaDetailView(props) {
   const {
     loadingSfaGetDetail,
     dataSfaGetDetail,
-    errorSfaGetDetail
+    errorSfaGetDetail,
+    selectedStore
   } = useSelector(state => state.sfa);
 
   const { selectedMerchant } = useSelector(state => state.merchant);
@@ -65,7 +66,7 @@ function SfaDetailView(props) {
   const addCollection = () => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplier.id, 10),
-      storeId: selectedMerchant.storeId
+      storeId: selectedStore?.id || selectedMerchant?.storeId
     };
     dispatch(sfaGetPaymentMethodProcess(data));
     NavigationService.navigate('SfaCollectionMethodListView');
@@ -361,7 +362,7 @@ function SfaDetailView(props) {
       <ButtonSingle
         disabled={
           dataSfaGetDetail.data.isPaid ||
-          dataSfaGetDetail.data.remainingBilling === 0
+          parseInt(dataSfaGetDetail.data.remainingBilling, 10) === 0
         }
         title={'Tagih'}
         borderRadius={4}
