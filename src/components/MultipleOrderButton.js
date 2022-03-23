@@ -738,8 +738,9 @@ class MultipleOrderButton extends Component {
           <View style={styles.subMainContainerDouble}>
             {this.renderCalculator(this.state.largeUomQty, true)}
             <Text style={[Fonts.type38, { marginTop: 5 }]}>{`Sejumlah ${this
-              .state.largeUomQty * this.state.packagedQty} ${
-              this.state.smallUnit
+              .props.uomDetail.largeUomQty *
+              this.props.uomDetail.packagedQty} ${
+              this.props.uomDetail.smallUom
             }`}</Text>
           </View>
         </View>
