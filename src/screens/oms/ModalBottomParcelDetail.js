@@ -189,7 +189,8 @@ class ModalBottomParcelDetail extends Component {
         >
           <View style={{ flex: 1 }}>
             <Text style={Fonts.type17}>
-              {item.catalogue.name} ({item.qty}pcs)
+              {item.catalogue.name} ({item.qty}
+              {item.catalogue?.catalogueUnit?.unit ?? 'PCS'})
             </Text>
           </View>
           <View style={{ width: '40%', alignItems: 'flex-end' }}>

@@ -7,12 +7,9 @@ import {
   Image,
   ScrollView,
   Text
-} from '../../library/reactPackage'
-import {
-  ModalBottomType4,
-  StatusBarRedOP50
-} from '../../library/component'
-import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
+} from '../../library/reactPackage';
+import { ModalBottomType4, StatusBarRedOP50 } from '../../library/component';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 
 const { height } = Dimensions.get('window');
@@ -66,7 +63,12 @@ class ModalBottomListProduct extends Component {
                 {this.renderPriceProduct(itemProduct)}
               </View>
               <View>
-                <Text style={Fonts.type10}>x{itemProduct.qty} Pcs</Text>
+                <Text style={Fonts.type10}>
+                  x{itemProduct.qty}{' '}
+                  {itemProduct.detail
+                    ? itemProduct.detail?.smallUom ?? 'PCS'
+                    : itemProduct.catalogue?.catalogueUnit?.unit ?? 'PCS'}
+                </Text>
               </View>
             </View>
           </View>
@@ -140,14 +142,14 @@ const styles = StyleSheet.create({
 export default ModalBottomListProduct;
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

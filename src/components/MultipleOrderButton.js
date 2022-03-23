@@ -672,20 +672,27 @@ class MultipleOrderButton extends Component {
   /** => render single uom */
   renderSingleUOM() {
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          flex: 1
-        }}
-      >
-        <View style={{ alignContent: 'flex-start' }}>
-          <Text style={Fonts.fontH12Medium}>Dalam {this.state.smallUnit}</Text>
-        </View>
-        <View style={styles.subMainContainer}>
+      <>
+        <View style={{ alignSelf: 'flex-start' }}>
           {this.renderRemainingStock()}
-          {this.renderCalculator(this.state.qty, false)}
         </View>
-      </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            flex: 1,
+            alignItems: 'center'
+          }}
+        >
+          <View style={{ alignContent: 'flex-start' }}>
+            <Text style={Fonts.fontH12Medium}>
+              Dalam {this.state.smallUnit}
+            </Text>
+          </View>
+          <View style={styles.subMainContainer}>
+            {this.renderCalculator(this.state.qty, false)}
+          </View>
+        </View>
+      </>
     );
   }
 
@@ -699,7 +706,8 @@ class MultipleOrderButton extends Component {
         <View
           style={{
             flexDirection: 'row',
-            flex: 1
+            flex: 1,
+            alignItems: 'center'
           }}
         >
           <View style={{ alignContent: 'flex-start' }}>
