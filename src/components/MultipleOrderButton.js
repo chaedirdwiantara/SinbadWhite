@@ -527,7 +527,10 @@ class MultipleOrderButton extends Component {
   }
   /** === MAX QUANTITY ORDER === */
   checkMaxQtyOrder() {
-    if (this.state.isMax) {
+    if (
+      this.props.item.isMaximum ||
+      this.props.item.qty === this.props.item.maxQty
+    ) {
       return `Maksimum pembelian ${this.state.maxQty} ${this.state.smallUnit}`;
     }
     return '';
