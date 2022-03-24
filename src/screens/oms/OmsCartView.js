@@ -404,8 +404,23 @@ class OmsCartView extends Component {
           productCartArray[indexProductCartArray].maxQty;
         productCartArray[indexProductCartArray].detail = productUomDetail;
       } else {
-        productCartArray[indexProductCartArray].qty = totalQty;
-        productCartArray[indexProductCartArray].detail = data.detail;
+        if (
+          smallUomQty >= productCartArray[indexProductCartArray].maxQty &&
+          largeUomQty === 0
+        ) {
+          const productUomDetail = {
+            ...data.detail,
+            smallUomQty: productCartArray[indexProductCartArray].maxQty,
+            largeUomQty: 0
+          };
+
+          productCartArray[indexProductCartArray].qty =
+            productCartArray[indexProductCartArray].maxQty;
+          productCartArray[indexProductCartArray].detail = productUomDetail;
+        } else {
+          productCartArray[indexProductCartArray].qty = totalQty;
+          productCartArray[indexProductCartArray].detail = data.detail;
+        }
       }
     } else {
       /** For Min Qty */
