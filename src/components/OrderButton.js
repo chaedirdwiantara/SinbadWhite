@@ -148,10 +148,14 @@ class OrderButton extends Component {
   onPressPlusLarge() {
     /** === SET LARGE UOM QTY === */
     const qty = this.state.largeUomQty + 1;
+
     this.setState({
       largeUomQty: qty
     });
     this.sendValueToParentLarge(qty);
+    this.checkTotalClickPlusButton(
+      qty * this.state.packagedQty + this.state.qty
+    );
   }
   /**
    * =======================
@@ -206,6 +210,9 @@ class OrderButton extends Component {
     });
     this.sendValueToParentLarge(qty);
     this.checkQtyAfterMinusLarge(qty);
+    this.checkTotalClickPlusButton(
+      qty * this.state.packagedQty + this.state.qty
+    );
   }
   /**
    * =======================================
