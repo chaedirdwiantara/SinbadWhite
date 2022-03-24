@@ -44,7 +44,7 @@ function SfaDetailView(props) {
     errorSfaGetDetail,
     selectedStore
   } = useSelector(state => state.sfa);
-
+  const { dataGetCatalogueTaxes } = useSelector(state => state.global);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const { userSuppliers } = useSelector(state => state.user);
   const [accordionOpen, setAccordionOpen] = useState(false);
@@ -373,6 +373,11 @@ function SfaDetailView(props) {
 
   /** RENDER ACCORDING */
   const renderAccordion = () => {
+    const catalogueTaxes = dataGetCatalogueTaxes?.data || [];
+    let ppn = null;
+    if ((catalogueTaxes || []).length > 0) {
+      ppn = catalogueTaxes[0].amount;
+    }
     if (accordionOpen === true) {
       return (
         <View>
@@ -411,7 +416,9 @@ function SfaDetailView(props) {
               justifyContent: 'space-between'
             }}
           >
-            <Text style={Fonts.type17}>PPN 10%</Text>
+            <Text style={Fonts.type17}>
+              PPN {ppn !== null ? `${ppn}%` : ''}
+            </Text>
             <Text style={Fonts.type17}>
               {MoneyFormatSpace(dataSfaGetDetail.data.parcelTaxes)}
             </Text>

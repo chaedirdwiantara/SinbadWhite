@@ -1260,6 +1260,11 @@ class OmsCheckoutView extends Component {
   }
   /** === RENDER SUB TOTAL DETAIL === */
   renderOpenSubTotal(item, index) {
+    const catalogueTaxes = this.props.global.dataGetCatalogueTaxes?.data || [];
+    let ppn = null;
+    if ((catalogueTaxes || []).length > 0) {
+      ppn = catalogueTaxes[0].amount;
+    }
     return this.state.openSubTotal === index ? (
       <View
         style={{
@@ -1314,7 +1319,9 @@ class OmsCheckoutView extends Component {
           }}
         >
           <View>
-            <Text style={Fonts.type17}>PPN</Text>
+            <Text style={Fonts.type17}>
+              PPN {ppn !== null ? `${ppn}%` : ''}
+            </Text>
           </View>
           <View>
             <Text style={Fonts.type17}>{MoneyFormat(item.parcelTaxes)}</Text>
@@ -2230,8 +2237,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ oms, merchant, user, permanent }) => {
-  return { oms, merchant, user, permanent };
+const mapStateToProps = ({ oms, merchant, user, permanent, global }) => {
+  return { oms, merchant, user, permanent, global };
 };
 
 const mapDispatchToProps = dispatch => {

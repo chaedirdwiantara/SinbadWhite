@@ -177,6 +177,11 @@ class HistoryDetailPaymentInformation extends Component {
     const isPayLater = detailHistory.billing.paymentTypeId === PAY_LATER;
     const isDeliveredOrDone =
       detailHistory.status === DONE || detailHistory.status === DELIVERED;
+    const catalogueTaxes = this.props.global.dataGetCatalogueTaxes?.data || [];
+    let ppn = null;
+    if ((catalogueTaxes || []).length > 0) {
+      ppn = catalogueTaxes[0].amount;
+    }
     return (
       <View>
         <View style={GlobalStyle.boxPadding} />
@@ -232,7 +237,7 @@ class HistoryDetailPaymentInformation extends Component {
             {this.renderVoucherList(detailHistory.voucherList)}
             {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
             {this.renderContentListGlobal(
-              'PPN 10%',
+              `PPN ${ppn !== null ? `${ppn}%` : ''}`,
               MoneyFormat(this.totalPPN(detailHistory))
             )}
             <View
@@ -424,8 +429,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ history, user, merchant }) => {
-  return { history, user, merchant };
+const mapStateToProps = ({ history, user, merchant, global }) => {
+  return { history, user, merchant, global };
 };
 
 const mapDispatchToProps = dispatch => {
