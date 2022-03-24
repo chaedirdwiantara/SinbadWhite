@@ -258,7 +258,11 @@ class PdpOrderView extends Component {
       <ButtonSingleSmall
         accessibilityLabel={'btnPdpAddtoCart'}
         disabledGrey={!this.state.showKeyboard}
-        disabled={this.buttonDisabled() || this.state.showKeyboard}
+        disabled={
+          this.buttonDisabled() ||
+          this.state.showKeyboard ||
+          this.state.qtyFromChild > this.props.pdp.dataDetailPdp.maxQty
+        }
         title={this.buttonTitle()}
         borderRadius={4}
         onPress={() =>

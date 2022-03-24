@@ -107,26 +107,31 @@ class OmsVerificationView extends Component {
    * ============================
    */
   manageError() {
-    switch (this.props.oms.errorOmsGetCheckoutItem.data.errorCode) {
-      case 'ERR-URBAN':
-        this.setState({
-          openModalErrorNoUrban: true,
-          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
-        });
-        break;
-      case 'ERR-PROMO':
-        this.setState({
-          openModalErrorPromo: true,
-          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
-        });
-        break;
-      case 'ERR-MAX-QTY':
-        this.setState({
-          openModalErrorMaxOrder: true
-        });
-        break;
-      default:
-        break;
+    if (this.props.oms.errorOmsGetCheckoutItem.data) {
+      switch (this.props.oms.errorOmsGetCheckoutItem.data.errorCode) {
+        case 'ERR-URBAN':
+          this.setState({
+            openModalErrorNoUrban: true,
+            cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
+          });
+          break;
+        case 'ERR-PROMO':
+          this.setState({
+            openModalErrorPromo: true,
+            cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
+          });
+          break;
+        case 'ERR-MAX-QTY':
+          this.setState({
+            openModalErrorMaxOrder: true
+          });
+          break;
+        default:
+          this.setState({ openModalErrorGlobal: true });
+          break;
+      }
+    } else {
+      this.setState({ openModalErrorGlobal: true });
     }
   }
 
