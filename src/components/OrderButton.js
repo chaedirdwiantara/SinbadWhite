@@ -148,11 +148,26 @@ class OrderButton extends Component {
   onPressPlusLarge() {
     /** === SET LARGE UOM QTY === */
     const qty = this.state.largeUomQty + 1;
+    const checkLargeQty = this.checkQtyInput(qty, true);
+
+    let smallQty = null;
+
+    if (
+      this.state.isMax &&
+      qty * this.state.packagedQty + this.state.qty >= this.state.maxQty
+    ) {
+      smallQty = this.state.maxQty - checkLargeQty * this.state.packagedQty;
+    }
 
     this.setState({
-      largeUomQty: this.checkQtyInput(qty, true)
+      largeUomQty: checkLargeQty
     });
-    this.sendValueToParentLarge(qty);
+
+    if (smallQty === null) {
+      this.sendValueToParentLarge(this.checkQtyInput(qty, true));
+    } else {
+      this.sendQtyToParent(checkLargeQty, smallQty);
+    }
     this.checkTotalClickPlusButton(
       qty * this.state.packagedQty + this.state.qty
     );
@@ -395,6 +410,66 @@ class OrderButton extends Component {
     }
   }
 
+  sendQtyToParent(largeQty, smallQty) {
+    this.props.parentFunctionFromOrderButton({
+      catalogueId: this.state.selectedProduct.id,
+      qty: largeQty * this.state.packagedQty + smallQty,
+      detail: {
+        smallUom: this.state.unit,
+        smallUomQty: smallQty,
+        largeUom: this.state.largeUnit,
+        largeUomQty: largeQty,
+        packagedQty: this.state.packagedQty
+      }
+    });
+  }
+
+  checkQtyInput(qty, isLarge) {
+    if (this.state.isMax) {
+      if (isLarge) {
+        const totalLargeQty = qty * this.state.packagedQty;
+        const maxLargeQty = Math.floor(
+          this.state.maxQty / this.state.packagedQty
+        );
+        if (totalLargeQty >= this.state.maxQty) {
+          const smallQty =
+            this.state.maxQty - maxLargeQty * this.state.packagedQty;
+          this.setState({
+            qty: smallQty
+          });
+          return maxLargeQty;
+        } else {
+          if (totalLargeQty + this.state.qty >= this.state.maxQty) {
+            const smallQty = this.state.maxQty - totalLargeQty;
+            this.setState({
+              qty: smallQty
+            });
+            return qty;
+          } else {
+            return qty;
+          }
+        }
+      } else {
+        if (this.state.largeUomQty >= 1) {
+          const totalLargeQty = this.state.largeUomQty * this.state.packagedQty;
+          if (totalLargeQty >= this.state.maxQty) {
+            return this.state.maxQty - totalLargeQty;
+          } else {
+            if (totalLargeQty + qty >= this.state.maxQty) {
+              return this.state.maxQty - totalLargeQty;
+            } else {
+              return qty;
+            }
+          }
+        } else {
+          return qty >= this.state.maxQty ? this.state.maxQty : qty;
+        }
+      }
+    } else {
+      return qty;
+    }
+  }
+
   /** FOR DISABLE PLUS BUTTON */
   checkDisablePlusButton() {
     if (this.state.totalClickPlus === 0) {
@@ -536,40 +611,6 @@ class OrderButton extends Component {
         />
       </View>
     );
-  }
-
-  checkQtyInput(qty, isLarge) {
-    if (this.state.isMax) {
-      if (isLarge) {
-        const totalLargeQty = qty * this.state.packagedQty;
-        const maxLargeQty = Math.floor(
-          this.state.maxQty / this.state.packagedQty
-        );
-        if (totalLargeQty >= this.state.maxQty) {
-          this.setState({
-            qty: this.state.maxQty - maxLargeQty * this.state.packagedQty
-          });
-          return maxLargeQty;
-        } else {
-          if (totalLargeQty + this.state.qty >= this.state.maxQty) {
-            this.setState({
-              qty: this.state.maxQty - totalLargeQty
-            });
-            return qty;
-          } else {
-            return qty;
-          }
-        }
-      } else {
-        if (this.state.largeUomQty >= 1) {
-          return qty;
-        } else {
-          return qty >= this.state.maxQty ? this.state.maxQty : qty;
-        }
-      }
-    } else {
-      return qty;
-    }
   }
 
   /** => render calculator */
