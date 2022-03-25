@@ -296,7 +296,9 @@ class MultipleOrderButton extends Component {
     /** === SET LARGE UOM QTY === */
     const qty = this.state.largeUomQty - 1;
     this.setState({
-      totalClickPlus: this.state.maxQty - qty * this.state.packagedQty
+      totalClickPlus: this.state.isMax
+        ? this.state.maxQty - qty * this.state.packagedQty
+        : this.state.totalClickPlus + qty * this.state.packagedQty
     });
 
     if (qty <= 0 && this.state.smallUomQty === 0) {
