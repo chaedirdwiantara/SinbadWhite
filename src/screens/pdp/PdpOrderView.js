@@ -209,7 +209,6 @@ class PdpOrderView extends Component {
    * fungsi memanggil fungsi di RootProduct untuk menutup ProductOrderView
    */
   parentFunctionFromOrderButton(data) {
-    console.log('Data from Order', data);
     if (
       this.props.pdp.dataDetailPdp.isMaximum &&
       data.qty >= this.props.pdp.dataDetailPdp.maxQty
