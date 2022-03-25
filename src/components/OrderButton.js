@@ -135,8 +135,13 @@ class OrderButton extends Component {
             plusButtonDisable: true
           });
         } else {
-          this.sendValueToParent(qty);
-          this.setState({ qty });
+          if (this.state.isMax && qty >= this.state.maxQty) {
+            this.sendValueToParent(this.state.maxQty);
+            this.setState({ qty: this.state.maxQty, totalClickPlus: 0 });
+          } else {
+            this.sendValueToParent(qty);
+            this.setState({ qty });
+          }
         }
       } else {
         this.sendValueToParent(qty);
