@@ -295,6 +295,9 @@ class MultipleOrderButton extends Component {
   onPressMinusLarge() {
     /** === SET LARGE UOM QTY === */
     const qty = this.state.largeUomQty - 1;
+    this.setState({
+      totalClickPlus: this.state.maxQty - qty * this.state.packagedQty
+    });
 
     if (qty <= 0 && this.state.smallUomQty === 0) {
       this.sendQtyToParent(this.state.minQty, 0);
