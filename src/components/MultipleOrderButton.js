@@ -84,6 +84,8 @@ class MultipleOrderButton extends Component {
       this.props.uomDetail.largeUomQty * this.props.uomDetail.packagedQty +
       this.props.uomDetail.smallUomQty;
 
+    console.log('Qty from Pdp', qty);
+    const checkMaxQty = this.props.item.isMaximum && qty >= this.state.maxQty;
     this.setState({
       uomDetail: this.props.uomDetail,
       largeUomQty: this.props.uomDetail.largeUomQty,
@@ -92,22 +94,28 @@ class MultipleOrderButton extends Component {
       smallUnit: this.props.uomDetail.smallUom,
       qty,
       isMax:
-        this.state.maxQty !== null && qty > this.state.maxQty ? true : false
+        this.state.maxQty !== null && qty > this.state.maxQty ? true : false,
+      plusButtonDisable: checkMaxQty,
+      plusButtonLargeDisable: checkMaxQty,
+      showMaxQtyWarning: checkMaxQty
     });
 
-    if (this.props.item.isMaximum && qty >= this.state.maxQty) {
-      this.setState({
-        plusButtonDisable: true,
-        plusButtonLargeDisable: true,
-        showMaxQtyWarning: true
-      });
-    } else {
-      this.setState({
-        plusButtonDisable: false,
-        plusButtonLargeDisable: false,
-        showMaxQtyWarning: false
-      });
-    }
+    // if (this.props.item.isMaximum && qty >= this.state.maxQty) {
+    //   console.log('Maximum ', this.props.item.isMaximum);
+    //   console.log('Qty Max?', qty >= this.state.maxQty);
+    //   this.setState({
+    //     plusButtonDisable: true,
+    //     plusButtonLargeDisable: true,
+    //     showMaxQtyWarning: true
+    //   });
+    // } else {
+    //   console.log('No Max Qty');
+    //   this.setState({
+    //     plusButtonDisable: false,
+    //     plusButtonLargeDisable: false,
+    //     showMaxQtyWarning: false
+    //   });
+    // }
   }
 
   checkUomDetail() {
@@ -295,6 +303,9 @@ class MultipleOrderButton extends Component {
   onPressMinusLarge() {
     /** === SET LARGE UOM QTY === */
     const qty = this.state.largeUomQty - 1;
+    this.setState({
+      totalClickPlus: this.state.maxQty - qty * this.state.packagedQty
+    });
 
     if (qty <= 0 && this.state.smallUomQty === 0) {
       this.sendQtyToParent(this.state.minQty, 0);
