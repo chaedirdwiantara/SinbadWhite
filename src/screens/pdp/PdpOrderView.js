@@ -188,6 +188,17 @@ class PdpOrderView extends Component {
       return true;
     }
   }
+
+  checkMaxQty() {
+    if (
+      this.props.pdp.dataDetailPdp.isMaximum &&
+      this.state.qtyFromChild > this.props.pdp.dataDetailPdp.maxQty
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   /**
    * ========================================
    * beberapa penjelasan fungsi
@@ -198,11 +209,28 @@ class PdpOrderView extends Component {
    * fungsi memanggil fungsi di RootProduct untuk menutup ProductOrderView
    */
   parentFunctionFromOrderButton(data) {
-    /** NOTE 1 */
-    this.setState({
-      qtyFromChild: data.qty,
-      detailFromChild: data.detail
-    });
+    if (
+      this.props.pdp.dataDetailPdp.isMaximum &&
+      data.qty >= this.props.pdp.dataDetailPdp.maxQty
+    ) {
+      if (data.detail !== null) {
+        this.setState({
+          qtyFromChild: this.props.pdp.dataDetailPdp.maxQty,
+          detailFromChild: data.detail
+        });
+      } else {
+        /** NOTE 1 */
+        this.setState({
+          qtyFromChild: data.qty,
+          detailFromChild: data.detail
+        });
+      }
+    } else {
+      this.setState({
+        qtyFromChild: data.qty,
+        detailFromChild: data.detail
+      });
+    }
   }
 
   /**
@@ -259,9 +287,7 @@ class PdpOrderView extends Component {
         accessibilityLabel={'btnPdpAddtoCart'}
         disabledGrey={!this.state.showKeyboard}
         disabled={
-          this.buttonDisabled() ||
-          this.state.showKeyboard ||
-          this.state.qtyFromChild > this.props.pdp.dataDetailPdp.maxQty
+          this.buttonDisabled() || this.state.showKeyboard || this.checkMaxQty()
         }
         title={this.buttonTitle()}
         borderRadius={4}
