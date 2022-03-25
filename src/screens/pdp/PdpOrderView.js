@@ -209,11 +209,28 @@ class PdpOrderView extends Component {
    * fungsi memanggil fungsi di RootProduct untuk menutup ProductOrderView
    */
   parentFunctionFromOrderButton(data) {
-    /** NOTE 1 */
-    this.setState({
-      qtyFromChild: data.qty,
-      detailFromChild: data.detail
-    });
+    if (
+      this.props.pdp.dataDetailPdp.isMaximum &&
+      data.qty >= this.props.pdp.dataDetailPdp.maxQty
+    ) {
+      if (data.detail !== null) {
+        this.setState({
+          qtyFromChild: this.props.pdp.dataDetailPdp.maxQty,
+          detailFromChild: data.detail
+        });
+      } else {
+        /** NOTE 1 */
+        this.setState({
+          qtyFromChild: data.qty,
+          detailFromChild: data.detail
+        });
+      }
+    } else {
+      this.setState({
+        qtyFromChild: data.qty,
+        detailFromChild: data.detail
+      });
+    }
   }
 
   /**
