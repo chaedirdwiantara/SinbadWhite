@@ -190,12 +190,11 @@ class PdpOrderView extends Component {
   }
 
   checkMaxQty() {
-    if (this.props.pdp.dataDetailPdp.isMaximum) {
-      if (this.state.qtyFromChild > this.props.pdp.dataDetailPdp.maxQty) {
-        return true;
-      } else {
-        return false;
-      }
+    if (
+      this.props.pdp.dataDetailPdp.isMaximum &&
+      this.state.qtyFromChild > this.props.pdp.dataDetailPdp.maxQty
+    ) {
+      return true;
     } else {
       return false;
     }
