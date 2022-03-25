@@ -562,7 +562,12 @@ class OrderButton extends Component {
         }
       } else {
         if (this.state.largeUomQty >= 1) {
-          return qty;
+          const totalLargeQty = this.state.largeUomQty * this.state.packagedQty;
+          if (totalLargeQty >= this.state.maxQty) {
+            return this.state.maxQty - totalLargeQty;
+          } else {
+            return qty;
+          }
         } else {
           return qty >= this.state.maxQty ? this.state.maxQty : qty;
         }
