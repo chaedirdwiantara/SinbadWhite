@@ -188,6 +188,18 @@ class PdpOrderView extends Component {
       return true;
     }
   }
+
+  checkMaxQty() {
+    if (this.props.pdp.dataDetailPdp.isMaximum) {
+      if (this.state.qtyFromChild > this.props.pdp.dataDetailPdp.maxQty) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
   /**
    * ========================================
    * beberapa penjelasan fungsi
@@ -259,9 +271,7 @@ class PdpOrderView extends Component {
         accessibilityLabel={'btnPdpAddtoCart'}
         disabledGrey={!this.state.showKeyboard}
         disabled={
-          this.buttonDisabled() ||
-          this.state.showKeyboard ||
-          this.state.qtyFromChild > this.props.pdp.dataDetailPdp.maxQty
+          this.buttonDisabled() || this.state.showKeyboard || this.checkMaxQty()
         }
         title={this.buttonTitle()}
         borderRadius={4}
