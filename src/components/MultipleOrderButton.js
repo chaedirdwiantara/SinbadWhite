@@ -95,7 +95,7 @@ class MultipleOrderButton extends Component {
         this.state.maxQty !== null && qty > this.state.maxQty ? true : false
     });
 
-    if (this.props.item.isMaximum && qty >= this.state.maxQty) {
+    if (this.props.item.isMaximum && qty >= this.props.item.maxQty) {
       this.setState({
         plusButtonDisable: true,
         plusButtonLargeDisable: true,
@@ -334,7 +334,7 @@ class MultipleOrderButton extends Component {
   sendValueToParent(qty) {
     if (this.state.enableLargeUom) {
       this.props.parentFunctionFromOrderButton({
-        catalogueId: this.state.selectedProduct.id,
+        catalogueId: this.props.item.id,
         qty:
           parseInt(this.state.largeUomQty, 10) * this.state.packagedQty +
           parseInt(qty, 10),
@@ -356,7 +356,7 @@ class MultipleOrderButton extends Component {
 
   sendValueToParentLarge(qty) {
     this.props.parentFunctionFromOrderButton({
-      catalogueId: this.state.selectedProduct.id,
+      catalogueId: this.props.item.id,
       qty:
         parseInt(qty, 10) * this.state.packagedQty +
         parseInt(this.state.smallUomQty, 10),
@@ -372,7 +372,7 @@ class MultipleOrderButton extends Component {
 
   sendQtyToParent(smallQty, largeQty) {
     this.props.parentFunctionFromOrderButton({
-      catalogueId: this.state.selectedProduct.id,
+      catalogueId: this.props.item.id,
       qty:
         parseInt(largeQty, 10) * this.state.packagedQty +
         parseInt(smallQty, 10),
@@ -523,7 +523,10 @@ class MultipleOrderButton extends Component {
   }
   /** === CHECK TERSISA TEXT === */
   checkTersisa() {
-    if (!this.state.unlimitedStock && this.state.stock > this.state.minQty) {
+    if (
+      !this.props.item.warehouseCatalogues[0].unlimitedStock &&
+      this.props.item.warehouseCatalogues[0].stock > this.state.minQty
+    ) {
       return `Tersisa ${NumberFormat(this.state.stock)} ${
         this.state.smallUnit
       }`;
@@ -593,9 +596,7 @@ class MultipleOrderButton extends Component {
 
   /** => render plus button */
   renderPlusButton() {
-    return this.checkDisablePlusButton() ||
-      this.props.showKeyboard ||
-      this.state.plusButtonDisable ? (
+    return this.props.showKeyboard || this.state.plusButtonDisable ? (
       <View style={styles.plusButtonDisabled}>
         <Text style={styles.plusText}>+</Text>
       </View>
