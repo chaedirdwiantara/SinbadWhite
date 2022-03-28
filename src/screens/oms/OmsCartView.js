@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import {
   React,
   Component,
@@ -283,9 +284,27 @@ class OmsCartView extends Component {
             this.setState({
               cartId: item.cartId
             });
+
+            const smallQty = this.checkStock(
+              item.suggestedStock,
+              productCartArray[indexProductCartArray]
+            ).smallQty;
+
+            const largeQty = this.checkStock(
+              item.suggestedStock,
+              productCartArray[indexProductCartArray]
+            ).largeQty;
+
+            const productUomDetail = {
+              ...productCartArray[indexProductCartArray].detail,
+              smallUomQty: smallQty,
+              largeUomQty: largeQty
+            };
             productCartArray[indexProductCartArray].qty = item.suggestedStock;
+            productCartArray[indexProductCartArray].detail = productUomDetail;
             productCartArray[indexProductCartArray].catalogue.stock =
               item.catalogueStock;
+
             break;
           case 'ERR-PRICE':
             this.setState({
@@ -317,6 +336,29 @@ class OmsCartView extends Component {
       }
     });
   }
+
+  checkStock = (suggestedStock, catalogueDetail) => {
+    const { smallUomQty, largeUomQty, packagedQty } = catalogueDetail.detail;
+    let totalLargeQty = largeUomQty * packagedQty;
+
+    const modifyLargeQty = () => {
+      const divideQty = suggestedStock / packagedQty;
+
+      return Math.floor(divideQty);
+    };
+
+    const modifySmallQty = () => {
+      const calculateQty = suggestedStock - modifyLargeQty() * packagedQty;
+
+      return Math.floor(calculateQty);
+    };
+
+    if (totalLargeQty >= suggestedStock) {
+      totalLargeQty = modifyLargeQty() * packagedQty;
+    }
+
+    return { smallQty: modifySmallQty(), largeQty: modifyLargeQty() };
+  };
   /**
    * ==========================================
    * ALL FUNCTION IN COMPONENT DID UPDATE END
