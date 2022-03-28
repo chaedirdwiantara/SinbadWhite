@@ -85,7 +85,7 @@ class OrderButton extends Component {
     let totalClickPlus = 0;
     /** === check if stock unlimited or not === */
     if (!this.state.unlimitedStock) {
-      if (this.state.isMax) {
+      if (this.state.isMax && this.state.stock > qty) {
         qtyMinusQtyOrder = this.state.maxQty - qty;
         totalClickPlus = Math.floor(qtyMinusQtyOrder / this.state.multipleQty);
         this.setState({
@@ -118,9 +118,10 @@ class OrderButton extends Component {
    */
   onPressPlus(isLarge) {
     /** === COUNTER PLUS BUTTON === */
-    let totalClickPlus = this.state.totalClickPlus;
-    this.setState({ totalClickPlus: totalClickPlus - 1 });
     let qty = this.state.qty + this.state.multipleQty;
+    this.checkTotalClickPlusButton(
+      this.state.largeUomQty * this.state.packagedQty + qty
+    );
     /** === SET QTY === */
     if (isLarge) {
       this.setState({
@@ -164,6 +165,13 @@ class OrderButton extends Component {
       smallQty = this.state.maxQty - checkLargeQty * this.state.packagedQty;
     }
 
+    if (
+      this.state.isMax &&
+      qty * this.state.packagedQty + this.state.qty >= this.state.stock
+    ) {
+      smallQty = this.state.stock - checkLargeQty * this.state.packagedQty;
+    }
+
     this.setState({
       largeUomQty: checkLargeQty
     });
@@ -172,6 +180,9 @@ class OrderButton extends Component {
       this.sendValueToParentLarge(this.checkQtyInput(qty, true));
     } else {
       this.sendQtyToParent(checkLargeQty, smallQty);
+      this.setState({
+        qty: smallQty
+      });
     }
     this.checkTotalClickPlusButton(
       qty * this.state.packagedQty + this.state.qty
@@ -184,8 +195,6 @@ class OrderButton extends Component {
    */
   onPressMinus() {
     /** === COUNTER PLUS BUTTON === */
-    let totalClickPlus = this.state.totalClickPlus;
-    this.setState({ totalClickPlus: totalClickPlus + 1 });
     this.setState({ plusButtonDisable: false });
     /** === SET QTY === */
     let qty = this.state.qty - this.state.multipleQty;
@@ -194,6 +203,10 @@ class OrderButton extends Component {
     if (qty <= 0) {
       qty = 0;
     }
+
+    this.checkTotalClickPlusButton(
+      this.state.largeUomQty * this.state.packagedQty + qty
+    );
 
     /** conditional if total qty lt min qty */
     if (
@@ -316,29 +329,40 @@ class OrderButton extends Component {
   }
 
   modifyStockQty() {
-    if (this.state.stock <= this.state.qty) {
+    if (
+      this.state.stock <=
+      this.state.qty + this.state.largeUomQty * this.state.packagedQty
+    ) {
       const valueAfterMinimum = this.state.stock - this.state.minQty;
-      if (this.state.maxQty) {
+      if (this.state.isMax) {
         if (valueAfterMinimum < this.state.maxQty) {
-          return (
+          let result =
             Math.floor(valueAfterMinimum / this.state.multipleQty) *
               this.state.multipleQty +
-            this.state.minQty
-          );
+            this.state.minQty;
+
+          result -= this.state.largeUomQty * this.state.packagedQty;
+          return result;
         } else {
           const maxQtyAfterMinimum = this.state.maxQty - this.state.minQty;
-          return (
+          let result =
             Math.floor(maxQtyAfterMinimum / this.state.multipleQty) *
               this.state.multipleQty +
-            this.state.minQty
-          );
+            this.state.minQty;
+
+          result -= this.state.largeUomQty * this.state.packagedQty;
+          return result;
         }
       }
-      return (
+      let result =
         Math.floor(valueAfterMinimum / this.state.multipleQty) *
           this.state.multipleQty +
-        this.state.minQty
-      );
+        this.state.minQty;
+
+      result -= this.state.largeUomQty * this.state.packagedQty;
+      return result;
+    } else {
+      return this.state.qty;
     }
   }
 
@@ -433,10 +457,19 @@ class OrderButton extends Component {
     if (this.state.isMax) {
       if (isLarge) {
         const totalLargeQty = qty * this.state.packagedQty;
-        const maxLargeQty = Math.floor(
+        let maxLargeQty = Math.floor(
           this.state.maxQty / this.state.packagedQty
         );
-        if (totalLargeQty >= this.state.maxQty) {
+
+        if (!this.state.unlimitedStock && totalLargeQty > this.state.stock) {
+          maxLargeQty = Math.floor(this.state.stock / this.state.packagedQty);
+          const smallQty =
+            this.state.stock - maxLargeQty * this.state.packagedQty;
+          this.setState({
+            qty: smallQty
+          });
+          return maxLargeQty;
+        } else if (totalLargeQty >= this.state.maxQty) {
           const smallQty =
             this.state.maxQty - maxLargeQty * this.state.packagedQty;
           this.setState({
@@ -454,24 +487,41 @@ class OrderButton extends Component {
             return qty;
           }
         }
-      } else {
-        if (this.state.largeUomQty >= 1) {
-          const totalLargeQty = this.state.largeUomQty * this.state.packagedQty;
-          if (totalLargeQty >= this.state.maxQty) {
+      } else if (this.state.largeUomQty >= 1) {
+        const totalLargeQty = this.state.largeUomQty * this.state.packagedQty;
+        if (totalLargeQty >= this.state.maxQty) {
+          return this.state.maxQty - totalLargeQty;
+        } else {
+          if (totalLargeQty + qty >= this.state.maxQty) {
             return this.state.maxQty - totalLargeQty;
           } else {
-            if (totalLargeQty + qty >= this.state.maxQty) {
-              return this.state.maxQty - totalLargeQty;
-            } else {
-              return qty;
-            }
+            return qty;
           }
-        } else {
-          return qty >= this.state.maxQty ? this.state.maxQty : qty;
         }
+      } else {
+        return qty >= this.state.maxQty ? this.state.maxQty : qty;
       }
     } else {
-      return qty;
+      if (isLarge) {
+        const maxLargeQty = Math.floor(
+          this.state.stock / this.state.packagedQty
+        );
+        const totalQty = qty * this.state.packagedQty + this.state.qty;
+
+        //isMax false And unlimited stock false
+        if (totalQty > this.state.stock) {
+          const smallQty =
+            this.state.stock - maxLargeQty * this.state.packagedQty;
+          this.setState({
+            qty: smallQty
+          });
+          return maxLargeQty;
+        } else {
+          return qty;
+        }
+      } else {
+        return qty;
+      }
     }
   }
 

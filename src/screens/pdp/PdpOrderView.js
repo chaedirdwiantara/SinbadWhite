@@ -199,6 +199,20 @@ class PdpOrderView extends Component {
       return false;
     }
   }
+
+  checkStockQty() {
+    if (
+      Array.isArray(this.props.pdp.dataDetailPdp.warehouseCatalogues) &&
+      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock ===
+        false &&
+      this.state.qtyFromChild >
+        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   /**
    * ========================================
    * beberapa penjelasan fungsi
@@ -287,7 +301,10 @@ class PdpOrderView extends Component {
         accessibilityLabel={'btnPdpAddtoCart'}
         disabledGrey={!this.state.showKeyboard}
         disabled={
-          this.buttonDisabled() || this.state.showKeyboard || this.checkMaxQty()
+          this.buttonDisabled() ||
+          this.state.showKeyboard ||
+          this.checkMaxQty() ||
+          this.checkStockQty()
         }
         title={this.buttonTitle()}
         borderRadius={4}
