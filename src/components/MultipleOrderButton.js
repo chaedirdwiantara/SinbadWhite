@@ -95,20 +95,20 @@ class MultipleOrderButton extends Component {
         this.state.maxQty !== null && qty > this.state.maxQty ? true : false
     });
 
-    if (
-      (this.props.item.isMaximum && qty >= this.state.maxQty) ||
-      (!this.props.item.warehouseCatalogues[0].unlimitedStock &&
-        qty >= this.props.item.warehouseCatalogues[0].stock)
+    if (this.props.item.isMaximum && qty >= this.props.item.maxQty) {
+      this.setState({
+        plusButtonDisable: true,
+        plusButtonLargeDisable: true,
+        showMaxQtyWarning: true
+      });
+    } else if (
+      !this.props.item.warehouseCatalogues[0].unlimitedStock &&
+      qty >= this.props.item.warehouseCatalogues[0].stock
     ) {
       this.setState({
         plusButtonDisable: true,
         plusButtonLargeDisable: true
       });
-      if (qty >= this.state.maxQty) {
-        this.setState({
-          showMaxQtyWarning: true
-        });
-      }
     } else {
       this.setState({
         plusButtonDisable: false,
@@ -471,9 +471,13 @@ class MultipleOrderButton extends Component {
       this.state.qty + this.state.largeUomQty * this.state.packagedQty <
         this.state.minQty
     ) {
+      console.log('test 3');
       if (!isLarge) {
         this.sendValueToParent(this.state.minQty);
-        this.setState({ smallUomQty: this.state.minQty });
+        this.setState({
+          smallUomQty: this.state.minQty,
+          plusButtonDisable: false
+        });
       }
       return true;
     }
@@ -486,11 +490,13 @@ class MultipleOrderButton extends Component {
           this.state.stock - this.calculateTotalQty() <=
           this.state.multipleQty
         ) {
+          console.log('test 1');
           this.setState({
             plusButtonDisable: true,
             qty: this.modifyQty(isLarge)
           });
         } else {
+          console.log('test 2');
           if (isLarge) {
             this.sendValueToParentLarge(largeUomQty);
             this.setState({ largeUomQty });
@@ -500,7 +506,9 @@ class MultipleOrderButton extends Component {
           }
         }
       } else {
+        console.log('Test 4');
         /** Modified Qty is more than stock */
+        console.log('Test 4 Large Uom', largeUomQty);
         if (isLarge) {
           this.sendValueToParentLarge(largeUomQty);
           this.setState({ largeUomQty });
@@ -560,7 +568,7 @@ class MultipleOrderButton extends Component {
   renderMaxQtyOrder() {
     return (
       <View style={{ paddingTop: 8 }}>
-        {this.state.totalClickPlus === 0 || this.state.showMaxQtyWarning ? (
+        {this.state.showMaxQtyWarning ? (
           <Text style={Fonts.type67}>{this.checkMaxQtyOrder()}</Text>
         ) : (
           <Text style={Fonts.type67}>{''}</Text>
@@ -604,9 +612,7 @@ class MultipleOrderButton extends Component {
 
   /** => render plus button */
   renderPlusButton() {
-    return this.checkDisablePlusButton() ||
-      this.props.showKeyboard ||
-      this.state.plusButtonDisable ? (
+    return this.props.showKeyboard || this.state.plusButtonDisable ? (
       <View style={styles.plusButtonDisabled}>
         <Text style={styles.plusText}>+</Text>
       </View>

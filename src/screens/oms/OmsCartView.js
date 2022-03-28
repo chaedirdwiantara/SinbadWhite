@@ -416,7 +416,17 @@ class OmsCartView extends Component {
       productCartArray[indexProductCartArray].isMaximum &&
       totalQty >= productCartArray[indexProductCartArray].maxQty
     ) {
-      checkSummaryQty(productCartArray[indexProductCartArray].maxQty);
+      if (
+        productCartArray[indexProductCartArray].catalogue.warehouseCatalogues[0]
+          .unlimitedStock
+      ) {
+        checkSummaryQty(productCartArray[indexProductCartArray].maxQty);
+      } else {
+        checkSummaryQty(
+          productCartArray[indexProductCartArray].catalogue
+            .warehouseCatalogues[0].stock
+        );
+      }
     } else {
       if (
         !productCartArray[indexProductCartArray].catalogue
