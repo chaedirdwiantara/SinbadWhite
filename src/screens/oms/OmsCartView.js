@@ -439,7 +439,9 @@ class OmsCartView extends Component {
         const productUomDetail = {
           ...data.detail,
           smallUomQty: modifySmallQty(),
-          largeUomQty: modifyLargeQty()
+          largeUomQty: modifyLargeQty(),
+          packagedQty:
+            productCartArray[indexProductCartArray].detail.packagedQty
         };
 
         productCartArray[indexProductCartArray].qty =

@@ -336,14 +336,15 @@ class MultipleOrderButton extends Component {
       this.props.parentFunctionFromOrderButton({
         catalogueId: this.props.item.id,
         qty:
-          parseInt(this.state.largeUomQty, 10) * this.state.packagedQty +
+          parseInt(this.state.largeUomQty, 10) *
+            this.props.uomDetail.packagedQty +
           parseInt(qty, 10),
         detail: {
           smallUom: this.state.smallUnit,
           smallUomQty: parseInt(qty, 10),
           largeUom: this.state.largeUnit,
           largeUomQty: parseInt(this.state.largeUomQty, 10),
-          packagedQty: this.state.packagedQty
+          packagedQty: this.props.uomDetail.packagedQty
         }
       });
     } else {
@@ -358,14 +359,14 @@ class MultipleOrderButton extends Component {
     this.props.parentFunctionFromOrderButton({
       catalogueId: this.props.item.id,
       qty:
-        parseInt(qty, 10) * this.state.packagedQty +
+        parseInt(qty, 10) * this.props.uomDetail.packagedQty +
         parseInt(this.state.smallUomQty, 10),
       detail: {
         smallUom: this.state.smallUnit,
         smallUomQty: parseInt(this.state.smallUomQty, 10),
         largeUom: this.state.largeUnit,
         largeUomQty: parseInt(qty, 10),
-        packagedQty: this.state.packagedQty
+        packagedQty: this.props.uomDetail.packagedQty
       }
     });
   }
@@ -374,14 +375,14 @@ class MultipleOrderButton extends Component {
     this.props.parentFunctionFromOrderButton({
       catalogueId: this.props.item.id,
       qty:
-        parseInt(largeQty, 10) * this.state.packagedQty +
+        parseInt(largeQty, 10) * this.props.uomDetail.packagedQty +
         parseInt(smallQty, 10),
       detail: {
         smallUom: this.state.smallUnit,
         smallUomQty: parseInt(smallQty, 10),
         largeUom: this.state.largeUnit,
         largeUomQty: parseInt(largeQty, 10),
-        packagedQty: this.state.packagedQty
+        packagedQty: this.props.uomDetail.packagedQty
       }
     });
   }
@@ -527,9 +528,9 @@ class MultipleOrderButton extends Component {
       !this.props.item.warehouseCatalogues[0].unlimitedStock &&
       this.props.item.warehouseCatalogues[0].stock > this.state.minQty
     ) {
-      return `Tersisa ${NumberFormat(this.state.stock)} ${
-        this.state.smallUnit
-      }`;
+      return `Tersisa ${NumberFormat(
+        this.props.item.warehouseCatalogues[0].stock
+      )} ${this.state.smallUnit}`;
     }
     return '';
   }
@@ -539,7 +540,9 @@ class MultipleOrderButton extends Component {
       this.props.item.isMaximum ||
       this.props.item.qty === this.props.item.maxQty
     ) {
-      return `Maksimum pembelian ${this.state.maxQty} ${this.state.smallUnit}`;
+      return `Maksimum pembelian ${this.props.item.maxQty} ${
+        this.state.smallUnit
+      }`;
     }
     return '';
   }
@@ -552,7 +555,7 @@ class MultipleOrderButton extends Component {
   renderMaxQtyOrder() {
     return (
       <View style={{ paddingTop: 8 }}>
-        {this.state.totalClickPlus === 0 || this.state.showMaxQtyWarning ? (
+        {this.state.showMaxQtyWarning ? (
           <Text style={Fonts.type67}>{this.checkMaxQtyOrder()}</Text>
         ) : (
           <Text style={Fonts.type67}>{''}</Text>
