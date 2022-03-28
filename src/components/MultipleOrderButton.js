@@ -95,12 +95,20 @@ class MultipleOrderButton extends Component {
         this.state.maxQty !== null && qty > this.state.maxQty ? true : false
     });
 
-    if (this.props.item.isMaximum && qty >= this.state.maxQty) {
+    if (
+      (this.props.item.isMaximum && qty >= this.state.maxQty) ||
+      (!this.props.item.warehouseCatalogues[0].unlimitedStock &&
+        qty >= this.props.item.warehouseCatalogues[0].stock)
+    ) {
       this.setState({
         plusButtonDisable: true,
-        plusButtonLargeDisable: true,
-        showMaxQtyWarning: true
+        plusButtonLargeDisable: true
       });
+      if (qty >= this.state.maxQty) {
+        this.setState({
+          showMaxQtyWarning: true
+        });
+      }
     } else {
       this.setState({
         plusButtonDisable: false,
@@ -523,10 +531,13 @@ class MultipleOrderButton extends Component {
   }
   /** === CHECK TERSISA TEXT === */
   checkTersisa() {
-    if (!this.state.unlimitedStock && this.state.stock > this.state.minQty) {
-      return `Tersisa ${NumberFormat(this.state.stock)} ${
-        this.state.smallUnit
-      }`;
+    if (
+      !this.props.item.warehouseCatalogues[0].unlimitedStock &&
+      this.props.item.warehouseCatalogues[0].stock > this.state.minQty
+    ) {
+      return `Tersisa ${NumberFormat(
+        this.props.item.warehouseCatalogues[0].stock
+      )} ${this.state.smallUnit}`;
     }
     return '';
   }

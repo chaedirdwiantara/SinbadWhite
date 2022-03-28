@@ -367,30 +367,23 @@ class OmsCartView extends Component {
 
     const totalQty = largeUomQty * packagedQty + smallUomQty;
 
-    if (
-      productCartArray[indexProductCartArray].isMaximum &&
-      totalQty >= productCartArray[indexProductCartArray].maxQty
-    ) {
-      /** For Max Qty */
+    const checkSummaryQty = maximumQty => {
       if (largeUomQty >= 1) {
         let totalLargeQty = largeUomQty * packagedQty;
 
         const modifyLargeQty = () => {
-          const divideQty =
-            productCartArray[indexProductCartArray].maxQty / packagedQty;
+          const divideQty = maximumQty / packagedQty;
 
           return Math.floor(divideQty);
         };
 
         const modifySmallQty = () => {
-          const calculateQty =
-            productCartArray[indexProductCartArray].maxQty -
-            modifyLargeQty() * packagedQty;
+          const calculateQty = maximumQty - modifyLargeQty() * packagedQty;
 
           return Math.floor(calculateQty);
         };
 
-        if (totalLargeQty >= productCartArray[indexProductCartArray].maxQty) {
+        if (totalLargeQty >= maximumQty) {
           totalLargeQty = modifyLargeQty() * packagedQty;
         }
 
@@ -400,48 +393,63 @@ class OmsCartView extends Component {
           largeUomQty: modifyLargeQty()
         };
 
-        productCartArray[indexProductCartArray].qty =
-          productCartArray[indexProductCartArray].maxQty;
+        productCartArray[indexProductCartArray].qty = maximumQty;
         productCartArray[indexProductCartArray].detail = productUomDetail;
       } else {
-        if (
-          smallUomQty >= productCartArray[indexProductCartArray].maxQty &&
-          largeUomQty === 0
-        ) {
+        if (maximumQty && largeUomQty === 0) {
           const productUomDetail = {
             ...data.detail,
-            smallUomQty: productCartArray[indexProductCartArray].maxQty,
+            smallUomQty: maximumQty,
             largeUomQty: 0
           };
 
-          productCartArray[indexProductCartArray].qty =
-            productCartArray[indexProductCartArray].maxQty;
+          productCartArray[indexProductCartArray].qty = maximumQty;
           productCartArray[indexProductCartArray].detail = productUomDetail;
         } else {
           productCartArray[indexProductCartArray].qty = totalQty;
           productCartArray[indexProductCartArray].detail = data.detail;
         }
       }
+    };
+
+    if (
+      productCartArray[indexProductCartArray].isMaximum &&
+      totalQty >= productCartArray[indexProductCartArray].maxQty
+    ) {
+      checkSummaryQty(productCartArray[indexProductCartArray].maxQty);
     } else {
-      /** For Min Qty */
-      if (smallUomQty === 0 && largeUomQty === 0) {
-        productCartArray[indexProductCartArray].detail = data.detail;
-        productCartArray[indexProductCartArray].qty =
-          productCartArray[indexProductCartArray].catalogue.minQty;
-        productCartArray[indexProductCartArray].detail.smallUomQty =
-          productCartArray[indexProductCartArray].catalogue.minQty;
-      } else if (
-        data.qty < productCartArray[indexProductCartArray].catalogue.minQty
+      if (
+        !productCartArray[indexProductCartArray].catalogue
+          .warehouseCatalogues[0].unlimitedStock &&
+        totalQty >=
+          productCartArray[indexProductCartArray].catalogue
+            .warehouseCatalogues[0].stock
       ) {
-        productCartArray[indexProductCartArray].detail = data.detail;
-        productCartArray[indexProductCartArray].qty =
-          productCartArray[indexProductCartArray].catalogue.minQty;
-        productCartArray[indexProductCartArray].detail.smallUomQty =
-          productCartArray[indexProductCartArray].catalogue.minQty;
+        checkSummaryQty(
+          productCartArray[indexProductCartArray].catalogue
+            .warehouseCatalogues[0].stock
+        );
       } else {
-        productCartArray[indexProductCartArray].qty =
-          largeUomQty * packagedQty + smallUomQty;
-        productCartArray[indexProductCartArray].detail = data.detail;
+        /** For Min Qty */
+        if (smallUomQty === 0 && largeUomQty === 0) {
+          productCartArray[indexProductCartArray].detail = data.detail;
+          productCartArray[indexProductCartArray].qty =
+            productCartArray[indexProductCartArray].catalogue.minQty;
+          productCartArray[indexProductCartArray].detail.smallUomQty =
+            productCartArray[indexProductCartArray].catalogue.minQty;
+        } else if (
+          data.qty < productCartArray[indexProductCartArray].catalogue.minQty
+        ) {
+          productCartArray[indexProductCartArray].detail = data.detail;
+          productCartArray[indexProductCartArray].qty =
+            productCartArray[indexProductCartArray].catalogue.minQty;
+          productCartArray[indexProductCartArray].detail.smallUomQty =
+            productCartArray[indexProductCartArray].catalogue.minQty;
+        } else {
+          productCartArray[indexProductCartArray].qty =
+            largeUomQty * packagedQty + smallUomQty;
+          productCartArray[indexProductCartArray].detail = data.detail;
+        }
       }
     }
 
