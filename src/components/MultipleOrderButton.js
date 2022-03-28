@@ -342,7 +342,7 @@ class MultipleOrderButton extends Component {
   sendValueToParent(qty) {
     if (this.state.enableLargeUom) {
       this.props.parentFunctionFromOrderButton({
-        catalogueId: this.props.item.id,
+        catalogueId: this.state.selectedProduct.id,
         qty:
           parseInt(this.state.largeUomQty, 10) * this.state.packagedQty +
           parseInt(qty, 10),
@@ -364,7 +364,7 @@ class MultipleOrderButton extends Component {
 
   sendValueToParentLarge(qty) {
     this.props.parentFunctionFromOrderButton({
-      catalogueId: this.props.item.id,
+      catalogueId: this.state.selectedProduct.id,
       qty:
         parseInt(qty, 10) * this.state.packagedQty +
         parseInt(this.state.smallUomQty, 10),
@@ -380,7 +380,7 @@ class MultipleOrderButton extends Component {
 
   sendQtyToParent(smallQty, largeQty) {
     this.props.parentFunctionFromOrderButton({
-      catalogueId: this.props.item.id,
+      catalogueId: this.state.selectedProduct.id,
       qty:
         parseInt(largeQty, 10) * this.state.packagedQty +
         parseInt(smallQty, 10),
@@ -471,6 +471,7 @@ class MultipleOrderButton extends Component {
       this.state.qty + this.state.largeUomQty * this.state.packagedQty <
         this.state.minQty
     ) {
+      console.log('test 3');
       if (!isLarge) {
         this.sendValueToParent(this.state.minQty);
         this.setState({
@@ -489,11 +490,13 @@ class MultipleOrderButton extends Component {
           this.state.stock - this.calculateTotalQty() <=
           this.state.multipleQty
         ) {
+          console.log('test 1');
           this.setState({
             plusButtonDisable: true,
             qty: this.modifyQty(isLarge)
           });
         } else {
+          console.log('test 2');
           if (isLarge) {
             this.sendValueToParentLarge(largeUomQty);
             this.setState({ largeUomQty });
@@ -503,7 +506,9 @@ class MultipleOrderButton extends Component {
           }
         }
       } else {
+        console.log('Test 4');
         /** Modified Qty is more than stock */
+        console.log('Test 4 Large Uom', largeUomQty);
         if (isLarge) {
           this.sendValueToParentLarge(largeUomQty);
           this.setState({ largeUomQty });
