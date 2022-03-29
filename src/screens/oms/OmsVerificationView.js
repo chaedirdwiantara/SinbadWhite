@@ -149,6 +149,13 @@ class OmsVerificationView extends Component {
     this.props.omsDeleteCartItemProcess({
       orderId: this.props.navigation.state.params.cartId
     });
+
+    this.getCartItem(this.props.oms.dataCart);
+  }
+
+  /** => get cart item */
+  getCartItem(catalogues) {
+    this.props.omsGetCartItemProcess({ catalogues });
   }
 
   /** ===  === */
