@@ -44,7 +44,6 @@ function SfaDetailView(props) {
     errorSfaGetDetail,
     selectedStore
   } = useSelector(state => state.sfa);
-
   const { selectedMerchant } = useSelector(state => state.merchant);
   const { userSuppliers } = useSelector(state => state.user);
   const [accordionOpen, setAccordionOpen] = useState(false);
@@ -411,7 +410,7 @@ function SfaDetailView(props) {
               justifyContent: 'space-between'
             }}
           >
-            <Text style={Fonts.type17}>PPN 10%</Text>
+            <Text style={Fonts.type17}>PPN</Text>
             <Text style={Fonts.type17}>
               {MoneyFormatSpace(dataSfaGetDetail.data.parcelTaxes)}
             </Text>

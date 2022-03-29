@@ -232,7 +232,7 @@ class HistoryDetailPaymentInformation extends Component {
             {this.renderVoucherList(detailHistory.voucherList)}
             {this.renderContentListGlobal('Ongkos Kirim', MoneyFormat(0))}
             {this.renderContentListGlobal(
-              'PPN 10%',
+              'PPN',
               MoneyFormat(this.totalPPN(detailHistory))
             )}
             <View
@@ -424,8 +424,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ history, user, merchant }) => {
-  return { history, user, merchant };
+const mapStateToProps = ({ history, user, merchant, global }) => {
+  return { history, user, merchant, global };
 };
 
 const mapDispatchToProps = dispatch => {
