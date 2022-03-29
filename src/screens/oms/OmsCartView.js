@@ -12,7 +12,8 @@ import {
 import {
   bindActionCreators,
   connect,
-  MaterialCommunityIcons
+  MaterialCommunityIcons,
+  NavigationEvents
 } from '../../library/thirdPartyPackage';
 import {
   ButtonSingleSmall,
@@ -401,6 +402,7 @@ class OmsCartView extends Component {
   }
 
   parentFunctionFromMultipleOrderButton(data) {
+    console.log('Data from Button', data);
     const productCartArray = this.state.productCartArray;
     const indexProductCartArray = productCartArray.findIndex(
       item => item.catalogueId === data.catalogueId
@@ -483,11 +485,14 @@ class OmsCartView extends Component {
         productCartArray[indexProductCartArray].detail.smallUomQty =
           productCartArray[indexProductCartArray].catalogue.minQty;
       } else {
+        console.log('More than min Qty');
         productCartArray[indexProductCartArray].qty =
           largeUomQty * packagedQty + smallUomQty;
         productCartArray[indexProductCartArray].detail = data.detail;
       }
     }
+
+    console.log('Saved Data', productCartArray);
 
     this.setState({ productCartArray });
   }
@@ -573,6 +578,8 @@ class OmsCartView extends Component {
         detail: item.detail
       };
     });
+
+    console.log('Before checkout', mapProduct);
     /** => save to oms.dataCheckout */
     this.props.omsCheckoutItem(mapProduct);
     /** => verification page */
@@ -599,6 +606,28 @@ class OmsCartView extends Component {
         this.state.productWantToDelete.catalogueId,
         this.state.productWantToDelete.qty
       );
+    }
+  }
+
+  /** Update Qty after moving to different screen */
+  checkQty() {
+    const productCartArray = this.state.productCartArray;
+    const productCheckoutArray = this.props.oms.dataCheckout;
+    console.log('Cart Data', productCartArray);
+    console.log('Checkout Data', productCheckoutArray);
+    if (productCartArray.length >= 1) {
+      productCheckoutArray.map(checkout => {
+        const indexProductCartArray = productCartArray.findIndex(
+          item => parseInt(item.catalogueId, 10) === checkout.catalogueId
+        );
+        productCartArray[indexProductCartArray].detail = checkout.detail;
+        productCartArray[indexProductCartArray].qty = checkout.qty;
+        return true;
+      });
+
+      console.log('After modify', productCartArray);
+
+      this.setState({ productCartArray });
     }
   }
   /**
@@ -856,6 +885,7 @@ class OmsCartView extends Component {
    * - item
    */
   renderButtonOrder(itemForOrderButton, uomDetail) {
+    console.log('Uom Detail', uomDetail);
     return (
       <View style={{ marginLeft: 30 }}>
         {!itemForOrderButton.enableLargeUom ? (
@@ -1291,6 +1321,16 @@ class OmsCartView extends Component {
       ? this.renderErrorGetCartList()
       : this.renderSkeleton();
   }
+
+  navigationEvents() {
+    return (
+      <NavigationEvents
+        onWillFocus={() => {
+          this.checkQty();
+        }}
+      />
+    );
+  }
   /**
    * ====================
    * MAIN
@@ -1299,6 +1339,7 @@ class OmsCartView extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
+        {this.navigationEvents()}
         {this.props.oms.dataCart.length > 0
           ? this.renderContent()
           : this.renderEmpty()}

@@ -7,6 +7,7 @@ import {
   TextInput,
   Text
 } from '../library/reactPackage';
+import { NavigationEvents } from '../library/thirdPartyPackage';
 import { Fonts, NumberFormat, GlobalStyle } from '../helpers';
 import masterColor from '../config/masterColor.json';
 
@@ -52,6 +53,8 @@ class MultipleOrderButton extends Component {
     this.checkTotalClickPlusButton(this.state.qty);
   }
   componentDidUpdate(prevProps) {
+    // console.log('Update Screen, Item: ', this.props.item);
+    // console.log('Update screen, Uom', this.props.uomDetail);
     /**
      * this code for error status
      * update qty to qtySuges from BE
@@ -74,12 +77,15 @@ class MultipleOrderButton extends Component {
 
     if (this.state.uomDetail !== this.props.uomDetail) {
       if (this.props.uomDetail !== null) {
+        console.log('uom detail trigger');
         this.updateUomDetail();
       }
     }
   }
 
   updateUomDetail() {
+    console.log('Local State', this.state.uomDetail);
+    console.log('Props State', this.props.uomDetail);
     const qty =
       this.props.uomDetail.largeUomQty * this.props.uomDetail.packagedQty +
       this.props.uomDetail.smallUomQty;
@@ -132,13 +138,17 @@ class MultipleOrderButton extends Component {
     if (!this.state.unlimitedStock) {
       if (this.state.isMax) {
         qtyMinusQtyOrder = this.state.maxQty - qty;
-        totalClickPlus = Math.floor(qtyMinusQtyOrder / this.state.multipleQty);
+        totalClickPlus = Math.floor(
+          qtyMinusQtyOrder / this.props.item.multipleQty
+        );
         this.setState({
           totalClickPlus: totalClickPlus >= 0 ? totalClickPlus : 0
         });
       } else {
         qtyMinusQtyOrder = this.state.stock - qty;
-        totalClickPlus = Math.floor(qtyMinusQtyOrder / this.state.multipleQty);
+        totalClickPlus = Math.floor(
+          qtyMinusQtyOrder / this.props.item.multipleQty
+        );
         this.setState({
           totalClickPlus: totalClickPlus >= 0 ? totalClickPlus : 0
         });
@@ -146,7 +156,9 @@ class MultipleOrderButton extends Component {
     } else {
       if (this.state.isMax) {
         qtyMinusQtyOrder = this.state.maxQty - qty;
-        totalClickPlus = Math.floor(qtyMinusQtyOrder / this.state.multipleQty);
+        totalClickPlus = Math.floor(
+          qtyMinusQtyOrder / this.props.item.multipleQty
+        );
         this.setState({
           totalClickPlus: totalClickPlus >= 0 ? totalClickPlus : 0
         });
@@ -165,7 +177,7 @@ class MultipleOrderButton extends Component {
     /** === COUNTER PLUS BUTTON === */
     let totalClickPlus = this.state.totalClickPlus;
     this.setState({ totalClickPlus: totalClickPlus - 1 });
-    let qty = this.state.smallUomQty + this.state.multipleQty;
+    let qty = this.state.smallUomQty + this.props.item.multipleQty;
     const totalQty =
       this.props.uomDetail.largeUomQty * this.props.uomDetail.packagedQty + qty;
     /** === SET QTY === */
@@ -175,7 +187,7 @@ class MultipleOrderButton extends Component {
       });
     } else {
       if (!this.state.unlimitedStock) {
-        if (this.state.stock - qty < this.state.multipleQty) {
+        if (this.state.stock - qty < this.props.item.multipleQty) {
           this.sendValueToParent(qty);
           this.setState({
             smallUomQty: qty,
@@ -260,18 +272,18 @@ class MultipleOrderButton extends Component {
     this.setState({ totalClickPlus: totalClickPlus + 1 });
     this.setState({ plusButtonDisable: false });
     /** === SET QTY === */
-    const qty = this.props.uomDetail.smallUomQty - this.state.multipleQty;
+    const qty = this.props.uomDetail.smallUomQty - this.props.item.multipleQty;
 
     if (this.state.largeUomQty === 0) {
-      if (qty < this.state.minQty) {
-        this.sendValueToParent(this.state.minQty);
-        this.setState({ smallUomQty: this.state.minQty });
+      if (qty < this.props.item.minQty) {
+        this.sendValueToParent(this.props.item.minQty);
+        this.setState({ smallUomQty: this.props.item.minQty });
       } else {
         if (this.state.isMax) {
           if (this.state.smallUomQty > this.state.maxQty) {
-            this.checkTotalClickPlusButton(this.state.minQty);
-            this.sendValueToParent(this.state.minQty);
-            this.setState({ smallUomQty: this.state.minQty });
+            this.checkTotalClickPlusButton(this.props.item.minQty);
+            this.sendValueToParent(this.props.item.minQty);
+            this.setState({ smallUomQty: this.props.item.minQty });
           } else {
             this.sendValueToParent(qty);
             this.setState({ smallUomQty: qty });
@@ -297,30 +309,42 @@ class MultipleOrderButton extends Component {
     const qty = this.state.largeUomQty - 1;
     this.setState({
       totalClickPlus: this.state.isMax
-        ? this.state.maxQty - qty * this.state.packagedQty
-        : this.state.totalClickPlus + qty * this.state.packagedQty
+        ? this.state.maxQty - qty * this.props.uomDetail.packagedQty
+        : this.state.totalClickPlus + qty * this.props.uomDetail.packagedQty
     });
 
     if (qty <= 0 && this.state.smallUomQty === 0) {
-      this.sendQtyToParent(this.state.minQty, 0);
+      this.sendQtyToParent(this.props.item.minQty, 0);
 
       this.setState({
         largeUomQty: 0,
-        smallUomQty: this.state.minQty
+        smallUomQty: this.props.item.minQty
       });
-    } else if (qty * this.state.packagedQty <= this.state.minQty) {
+    } else if (
+      qty * this.props.uomDetail.packagedQty <=
+      this.props.item.minQty
+    ) {
       const largeQty = qty;
-      const smallQty = this.state.minQty - qty * this.state.packagedQty;
+      const smallQty =
+        this.props.item.minQty - qty * this.props.uomDetail.packagedQty;
       this.sendQtyToParent(smallQty, largeQty);
       this.setState({ smallUomQty: smallQty, largeUomQty: largeQty });
     } else {
-      this.setState({
-        largeUomQty: qty,
-        plusButtonLargeDisable: false,
-        plusButtonDisable: false,
-        isMax: false
-      });
-      this.sendValueToParentLarge(qty);
+      if (qty * this.props.uomDetail.packagedQty <= this.props.item.minQty) {
+        const largeQty = qty;
+        const smallQty =
+          this.props.item.minQty - qty * this.props.uomDetail.packagedQty;
+        this.sendQtyToParent(smallQty, largeQty);
+        this.setState({ smallUomQty: smallQty, largeUomQty: largeQty });
+      } else {
+        this.setState({
+          largeUomQty: qty,
+          plusButtonLargeDisable: false,
+          plusButtonDisable: false,
+          isMax: false
+        });
+        this.sendValueToParentLarge(qty);
+      }
     }
   }
   /**
@@ -332,18 +356,19 @@ class MultipleOrderButton extends Component {
    * this for calculator start
    */
   sendValueToParent(qty) {
+    console.log('Send Value Small', qty);
     if (this.state.enableLargeUom) {
       this.props.parentFunctionFromOrderButton({
         catalogueId: this.props.item.id,
         qty:
-          parseInt(this.state.largeUomQty, 10) *
+          parseInt(this.props.uomDetail.largeUomQty, 10) *
             this.props.uomDetail.packagedQty +
           parseInt(qty, 10),
         detail: {
           smallUom: this.state.smallUnit,
           smallUomQty: parseInt(qty, 10),
           largeUom: this.state.largeUnit,
-          largeUomQty: parseInt(this.state.largeUomQty, 10),
+          largeUomQty: parseInt(this.props.uomDetail.largeUomQty, 10),
           packagedQty: this.props.uomDetail.packagedQty
         }
       });
@@ -356,14 +381,15 @@ class MultipleOrderButton extends Component {
   }
 
   sendValueToParentLarge(qty) {
+    console.log('Send Value Large', qty);
     this.props.parentFunctionFromOrderButton({
       catalogueId: this.props.item.id,
       qty:
         parseInt(qty, 10) * this.props.uomDetail.packagedQty +
-        parseInt(this.state.smallUomQty, 10),
+        parseInt(this.props.uomDetail.smallUomQty, 10),
       detail: {
         smallUom: this.state.smallUnit,
-        smallUomQty: parseInt(this.state.smallUomQty, 10),
+        smallUomQty: parseInt(this.props.uomDetail.smallUomQty, 10),
         largeUom: this.state.largeUnit,
         largeUomQty: parseInt(qty, 10),
         packagedQty: this.props.uomDetail.packagedQty
@@ -372,6 +398,8 @@ class MultipleOrderButton extends Component {
   }
 
   sendQtyToParent(smallQty, largeQty) {
+    console.log('Send Both Value Small', smallQty);
+    console.log('Send Both Value Large', largeQty);
     this.props.parentFunctionFromOrderButton({
       catalogueId: this.props.item.id,
       qty:
@@ -398,28 +426,30 @@ class MultipleOrderButton extends Component {
   modifyQty(isLarge) {
     if (!isLarge) {
       if (parseInt(this.state.largeUomQty, 10) !== 0) {
-        const valueAfterMinimum = this.calculateTotalQty() - this.state.minQty;
+        const valueAfterMinimum =
+          this.calculateTotalQty() - this.props.item.minQty;
 
         if (this.state.maxQty) {
           if (valueAfterMinimum < this.state.maxQty) {
             return (
-              Math.floor(valueAfterMinimum / this.state.multipleQty) *
-                this.state.multipleQty +
-              this.state.minQty
+              Math.floor(valueAfterMinimum / this.props.item.multipleQty) *
+                this.props.item.multipleQty +
+              this.props.item.minQty
             );
           } else {
-            const maxQtyAfterMinimum = this.state.maxQty - this.state.minQty;
+            const maxQtyAfterMinimum =
+              this.state.maxQty - this.props.item.minQty;
             return (
-              Math.floor(maxQtyAfterMinimum / this.state.multipleQty) *
-                this.state.multipleQty +
-              this.state.minQty
+              Math.floor(maxQtyAfterMinimum / this.props.item.multipleQty) *
+                this.props.item.multipleQty +
+              this.props.item.minQty
             );
           }
         }
         return (
-          Math.floor(valueAfterMinimum / this.state.multipleQty) *
-            this.state.multipleQty +
-          this.state.minQty
+          Math.floor(valueAfterMinimum / this.props.item.multipleQty) *
+            this.props.item.multipleQty +
+          this.props.item.minQty
         );
       }
     } else {
@@ -429,27 +459,27 @@ class MultipleOrderButton extends Component {
 
   modifyStockQty() {
     if (this.state.stock <= this.state.qty) {
-      const valueAfterMinimum = this.state.stock - this.state.minQty;
+      const valueAfterMinimum = this.state.stock - this.props.item.minQty;
       if (this.state.maxQty) {
         if (valueAfterMinimum < this.state.maxQty) {
           return (
-            Math.floor(valueAfterMinimum / this.state.multipleQty) *
-              this.state.multipleQty +
-            this.state.minQty
+            Math.floor(valueAfterMinimum / this.props.item.multipleQty) *
+              this.props.item.multipleQty +
+            this.props.item.minQty
           );
         } else {
-          const maxQtyAfterMinimum = this.state.maxQty - this.state.minQty;
+          const maxQtyAfterMinimum = this.state.maxQty - this.props.item.minQty;
           return (
-            Math.floor(maxQtyAfterMinimum / this.state.multipleQty) *
-              this.state.multipleQty +
-            this.state.minQty
+            Math.floor(maxQtyAfterMinimum / this.props.item.multipleQty) *
+              this.props.item.multipleQty +
+            this.props.item.minQty
           );
         }
       }
       return (
-        Math.floor(valueAfterMinimum / this.state.multipleQty) *
-          this.state.multipleQty +
-        this.state.minQty
+        Math.floor(valueAfterMinimum / this.props.item.multipleQty) *
+          this.props.item.multipleQty +
+        this.props.item.minQty
       );
     }
   }
@@ -461,12 +491,13 @@ class MultipleOrderButton extends Component {
     /** if value that entered below min qty, qty = min qty */
     if (
       this.state.qty === '' ||
-      this.state.qty + this.state.largeUomQty * this.state.packagedQty <
-        this.state.minQty
+      this.state.qty +
+        this.props.uomDetail.largeUomQty * this.props.uomDetail.packagedQty <
+        this.props.item.minQty
     ) {
       if (!isLarge) {
-        this.sendValueToParent(this.state.minQty);
-        this.setState({ smallUomQty: this.state.minQty });
+        this.sendValueToParent(this.props.item.minQty);
+        this.setState({ smallUomQty: this.props.item.minQty });
       }
       return true;
     }
@@ -477,7 +508,7 @@ class MultipleOrderButton extends Component {
         /** Qty less than Multiple Qty */
         if (
           this.state.stock - this.calculateTotalQty() <=
-          this.state.multipleQty
+          this.props.item.multipleQty
         ) {
           this.setState({
             plusButtonDisable: true,
@@ -485,14 +516,28 @@ class MultipleOrderButton extends Component {
           });
         } else {
           if (isLarge) {
-            this.sendValueToParentLarge(largeUomQty);
-            this.setState({ largeUomQty });
+            if (
+              this.props.uomDetail.largeUomQty *
+                this.props.uomDetail.packagedQty <=
+              this.props.item.minQty
+            ) {
+              if (largeUomQty === 0) {
+                this.sendQtyToParent(this.props.item.minQty, 0);
+              } else {
+                this.sendValueToParentLarge(largeUomQty);
+                this.setState({ largeUomQty });
+              }
+            } else {
+              this.sendValueToParentLarge(largeUomQty);
+              this.setState({ largeUomQty });
+            }
           } else {
             this.sendValueToParent(smallUomQty);
             this.setState({ smallUomQty });
           }
         }
       } else {
+        console.log('Qty more than stock');
         /** Modified Qty is more than stock */
         if (isLarge) {
           this.sendValueToParentLarge(largeUomQty);
@@ -504,6 +549,7 @@ class MultipleOrderButton extends Component {
         this.setState({ plusButtonDisable: true });
       }
     } else {
+      console.log('Unlimited stock');
       /** Unlimited Stock */
       if (isLarge) {
         this.sendValueToParentLarge(largeUomQty);
@@ -526,7 +572,7 @@ class MultipleOrderButton extends Component {
   checkTersisa() {
     if (
       !this.props.item.warehouseCatalogues[0].unlimitedStock &&
-      this.props.item.warehouseCatalogues[0].stock > this.state.minQty
+      this.props.item.warehouseCatalogues[0].stock > this.props.item.minQty
     ) {
       return `Tersisa ${NumberFormat(
         this.props.item.warehouseCatalogues[0].stock
@@ -547,6 +593,52 @@ class MultipleOrderButton extends Component {
     return '';
   }
 
+  checkQtyInput(qty, isLarge) {
+    if (this.state.isMax) {
+      if (isLarge) {
+        const totalLargeQty = qty * this.state.packagedQty;
+        const maxLargeQty = Math.floor(
+          this.state.maxQty / this.state.packagedQty
+        );
+        if (totalLargeQty >= this.state.maxQty) {
+          const smallQty =
+            this.state.maxQty - maxLargeQty * this.state.packagedQty;
+          this.setState({
+            smallUomQty: smallQty
+          });
+          return maxLargeQty;
+        } else {
+          if (totalLargeQty + this.state.qty >= this.state.maxQty) {
+            const smallQty = this.state.maxQty - totalLargeQty;
+            this.setState({
+              smallUomQty: smallQty
+            });
+            return qty;
+          } else {
+            return qty;
+          }
+        }
+      } else {
+        if (this.state.largeUomQty >= 1) {
+          const totalLargeQty = this.state.largeUomQty * this.state.packagedQty;
+          if (totalLargeQty >= this.state.maxQty) {
+            return this.state.maxQty - totalLargeQty;
+          } else {
+            if (totalLargeQty + qty >= this.state.maxQty) {
+              return this.state.maxQty - totalLargeQty;
+            } else {
+              return qty;
+            }
+          }
+        } else {
+          return qty >= this.state.maxQty ? this.state.maxQty : qty;
+        }
+      }
+    } else {
+      return qty;
+    }
+  }
+
   /**
    * this for calculator end
    */
@@ -565,7 +657,7 @@ class MultipleOrderButton extends Component {
   }
   /** => render minus button */
   renderMinusButton() {
-    return this.state.qty <= this.state.minQty ||
+    return this.state.qty <= this.props.item.minQty ||
       this.props.showKeyboard ||
       this.state.smallUomQty === 0 ? (
       <View style={styles.minusButtonDisabled}>
@@ -634,6 +726,7 @@ class MultipleOrderButton extends Component {
     return (
       <View style={styles.inputList}>
         <TextInput
+          editable={!isLarge}
           selectionColor={masterColor.mainColor}
           returnKeyType="done"
           value={parentQty.toString()}
@@ -648,9 +741,13 @@ class MultipleOrderButton extends Component {
             const number = cleanNumber === '' ? 0 : cleanNumber;
             this.checkTotalClickPlusButton(number);
             if (isLarge) {
-              this.setState({ largeUomQty: number });
+              this.setState({
+                largeUomQty: number
+              });
             } else {
-              this.setState({ smallUomQty: number });
+              this.setState({
+                smallUomQty: number
+              });
             }
           }}
           style={[Fonts.type24, styles.input]}
@@ -760,9 +857,22 @@ class MultipleOrderButton extends Component {
     );
   }
 
+  navigationEvents() {
+    return (
+      <NavigationEvents
+        onWillFocus={() => {
+          console.log('Multiple Rerender');
+          console.log('Props', this.props.uomDetail);
+          this.updateUomDetail();
+        }}
+      />
+    );
+  }
+
   render() {
     return (
       <View style={styles.mainContainer}>
+        {this.navigationEvents()}
         {this.state.enableLargeUom
           ? this.renderDoubleUOM()
           : this.renderSingleUOM()}
