@@ -402,7 +402,6 @@ class OmsCartView extends Component {
   }
 
   parentFunctionFromMultipleOrderButton(data) {
-    console.log('Data from Button', data);
     const productCartArray = this.state.productCartArray;
     const indexProductCartArray = productCartArray.findIndex(
       item => item.catalogueId === data.catalogueId
@@ -485,14 +484,11 @@ class OmsCartView extends Component {
         productCartArray[indexProductCartArray].detail.smallUomQty =
           productCartArray[indexProductCartArray].catalogue.minQty;
       } else {
-        console.log('More than min Qty');
         productCartArray[indexProductCartArray].qty =
           largeUomQty * packagedQty + smallUomQty;
         productCartArray[indexProductCartArray].detail = data.detail;
       }
     }
-
-    console.log('Saved Data', productCartArray);
 
     this.setState({ productCartArray });
   }
@@ -579,7 +575,6 @@ class OmsCartView extends Component {
       };
     });
 
-    console.log('Before checkout', mapProduct);
     /** => save to oms.dataCheckout */
     this.props.omsCheckoutItem(mapProduct);
     /** => verification page */
@@ -613,8 +608,6 @@ class OmsCartView extends Component {
   checkQty() {
     const productCartArray = this.state.productCartArray;
     const productCheckoutArray = this.props.oms.dataCheckout;
-    console.log('Cart Data', productCartArray);
-    console.log('Checkout Data', productCheckoutArray);
     if (productCartArray.length >= 1) {
       productCheckoutArray.map(checkout => {
         const indexProductCartArray = productCartArray.findIndex(
@@ -624,8 +617,6 @@ class OmsCartView extends Component {
         productCartArray[indexProductCartArray].qty = checkout.qty;
         return true;
       });
-
-      console.log('After modify', productCartArray);
 
       this.setState({ productCartArray });
     }
@@ -885,7 +876,6 @@ class OmsCartView extends Component {
    * - item
    */
   renderButtonOrder(itemForOrderButton, uomDetail) {
-    console.log('Uom Detail', uomDetail);
     return (
       <View style={{ marginLeft: 30 }}>
         {!itemForOrderButton.enableLargeUom ? (

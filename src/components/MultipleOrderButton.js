@@ -53,8 +53,6 @@ class MultipleOrderButton extends Component {
     this.checkTotalClickPlusButton(this.state.qty);
   }
   componentDidUpdate(prevProps) {
-    // console.log('Update Screen, Item: ', this.props.item);
-    // console.log('Update screen, Uom', this.props.uomDetail);
     /**
      * this code for error status
      * update qty to qtySuges from BE
@@ -77,15 +75,12 @@ class MultipleOrderButton extends Component {
 
     if (this.state.uomDetail !== this.props.uomDetail) {
       if (this.props.uomDetail !== null) {
-        console.log('uom detail trigger');
         this.updateUomDetail();
       }
     }
   }
 
   updateUomDetail() {
-    console.log('Local State', this.state.uomDetail);
-    console.log('Props State', this.props.uomDetail);
     const qty =
       this.props.uomDetail.largeUomQty * this.props.uomDetail.packagedQty +
       this.props.uomDetail.smallUomQty;
@@ -356,7 +351,6 @@ class MultipleOrderButton extends Component {
    * this for calculator start
    */
   sendValueToParent(qty) {
-    console.log('Send Value Small', qty);
     if (this.state.enableLargeUom) {
       this.props.parentFunctionFromOrderButton({
         catalogueId: this.props.item.id,
@@ -381,7 +375,6 @@ class MultipleOrderButton extends Component {
   }
 
   sendValueToParentLarge(qty) {
-    console.log('Send Value Large', qty);
     this.props.parentFunctionFromOrderButton({
       catalogueId: this.props.item.id,
       qty:
@@ -398,8 +391,6 @@ class MultipleOrderButton extends Component {
   }
 
   sendQtyToParent(smallQty, largeQty) {
-    console.log('Send Both Value Small', smallQty);
-    console.log('Send Both Value Large', largeQty);
     this.props.parentFunctionFromOrderButton({
       catalogueId: this.props.item.id,
       qty:
@@ -537,7 +528,6 @@ class MultipleOrderButton extends Component {
           }
         }
       } else {
-        console.log('Qty more than stock');
         /** Modified Qty is more than stock */
         if (isLarge) {
           this.sendValueToParentLarge(largeUomQty);
@@ -549,7 +539,6 @@ class MultipleOrderButton extends Component {
         this.setState({ plusButtonDisable: true });
       }
     } else {
-      console.log('Unlimited stock');
       /** Unlimited Stock */
       if (isLarge) {
         this.sendValueToParentLarge(largeUomQty);
@@ -861,8 +850,6 @@ class MultipleOrderButton extends Component {
     return (
       <NavigationEvents
         onWillFocus={() => {
-          console.log('Multiple Rerender');
-          console.log('Props', this.props.uomDetail);
           this.updateUomDetail();
         }}
       />
