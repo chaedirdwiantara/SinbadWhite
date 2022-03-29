@@ -1327,6 +1327,8 @@ class OmsCartView extends Component {
       <NavigationEvents
         onWillFocus={() => {
           this.checkQty();
+          this.loading(true);
+          this.getCartItem(this.props.oms.dataCart);
         }}
       />
     );
