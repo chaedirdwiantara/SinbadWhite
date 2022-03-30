@@ -5,6 +5,7 @@ import {
   nrInteraction,
   nrRecordMetric
 } from '../services/report/newRelic/NewRelicRN.js';
+import { navigationStateChange } from '../services/report/navigationStateChange';
 
 class Navigations extends Component {
   render() {
@@ -20,6 +21,8 @@ class Navigations extends Component {
           const previousRouteName = NavigationService.getActiveRouteName(
             prevState
           );
+
+          navigationStateChange(prevState, currentState, action);
 
           if (previousRouteName !== currentRouteName) {
             nrInteraction(currentRouteName);
