@@ -47,7 +47,6 @@ public class MainApplication extends Application implements ReactApplication {
           packages.add(new RNFirebaseFirestorePackage());
           packages.add(new RNFirebaseDatabasePackage());
           packages.add(new NewRelicPackage());
-          packages.add(new MoEReactPackage());
           return packages;
         }
 
