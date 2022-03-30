@@ -7,15 +7,15 @@ import {
   TouchableOpacity,
   ScrollView,
   Text
-} from '../../library/reactPackage'
+} from '../../library/reactPackage';
 import {
-  MaterialIcon
-} from '../../library/thirdPartyPackage'
-import {
-  ModalBottomType4,
-  StatusBarRedOP50
-} from '../../library/component'
-import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers'
+  MaterialIcon,
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage';
+import * as ActionCreators from '../../state/actions';
+import { ModalBottomType4, StatusBarRedOP50 } from '../../library/component';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
 
 const { height } = Dimensions.get('window');
@@ -32,6 +32,11 @@ class ModalBottomParcelDetail extends Component {
   }
 
   renderOpenTotal() {
+    const catalogueTaxes = this.props.global.dataGetCatalogueTaxes?.data || [];
+    let ppn = null;
+    if ((catalogueTaxes || []).length > 0) {
+      ppn = catalogueTaxes[0].amount;
+    }
     return (
       <View style={styles.boxOpenTotal}>
         <View
@@ -70,11 +75,13 @@ class ModalBottomParcelDetail extends Component {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginBottom: 5,
+            marginBottom: 5
           }}
         >
           <View>
-            <Text style={Fonts.type17}>PPN 10%</Text>
+            <Text style={Fonts.type17}>
+              PPN {ppn !== null ? `${ppn}%` : ''}
+            </Text>
           </View>
           <View>
             <Text style={Fonts.type17}>
@@ -82,25 +89,26 @@ class ModalBottomParcelDetail extends Component {
             </Text>
           </View>
         </View>
-        { 
-          this.state.dataPayment.paymentMethodDetail && this.state.dataPayment.paymentMethodDetail.totalFee ? (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between'
-              }}
-            >
-              <View>
-                <Text style={Fonts.type17}>Layanan Pembayaran</Text>
-              </View>
-              <View>
-                <Text style={Fonts.type17}>
-                  {MoneyFormat(this.state.dataPayment.paymentMethodDetail.totalFee)}
-                </Text>
-              </View>
+        {this.state.dataPayment.paymentMethodDetail &&
+        this.state.dataPayment.paymentMethodDetail.totalFee ? (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}
+          >
+            <View>
+              <Text style={Fonts.type17}>Layanan Pembayaran</Text>
             </View>
-          ) : null
-        }
+            <View>
+              <Text style={Fonts.type17}>
+                {MoneyFormat(
+                  this.state.dataPayment.paymentMethodDetail.totalFee
+                )}
+              </Text>
+            </View>
+          </View>
+        ) : null}
       </View>
     );
   }
@@ -122,11 +130,12 @@ class ModalBottomParcelDetail extends Component {
         </View>
         <View>
           <Text style={Fonts.type7}>
-            {
-              this.state.dataPayment.paymentMethodDetail
-              ? MoneyFormat(this.state.data.parcelFinalPrice + this.state.dataPayment.paymentMethodDetail.totalFee)
-              : MoneyFormat(this.state.data.parcelFinalPrice)
-            }
+            {this.state.dataPayment.paymentMethodDetail
+              ? MoneyFormat(
+                  this.state.data.parcelFinalPrice +
+                    this.state.dataPayment.paymentMethodDetail.totalFee
+                )
+              : MoneyFormat(this.state.data.parcelFinalPrice)}
           </Text>
         </View>
       </TouchableOpacity>
@@ -330,18 +339,28 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
+const mapStateToProps = ({ global }) => {
+  return { global };
+};
 
-export default ModalBottomParcelDetail;
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ModalBottomParcelDetail);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 06072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 06072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ */

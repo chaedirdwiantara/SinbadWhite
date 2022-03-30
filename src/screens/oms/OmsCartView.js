@@ -956,6 +956,11 @@ class OmsCartView extends Component {
   }
   /** ===> RENDER TOTAL BOTTOM VALUE === */
   renderBottomValue() {
+    const catalogueTaxes = this.props.global.dataGetCatalogueTaxes?.data || [];
+    let ppn = null;
+    if ((catalogueTaxes || []).length > 0) {
+      ppn = catalogueTaxes[0].amount;
+    }
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.boxBottomValue}>
@@ -968,7 +973,9 @@ class OmsCartView extends Component {
             </Text>
           </View>
           <View>
-            <Text style={Fonts.type74}>Belum termasuk PPN 10%</Text>
+            <Text style={Fonts.type74}>
+              Belum termasuk PPN {ppn !== null ? `${ppn}%` : ''}
+            </Text>
           </View>
         </View>
       </View>
@@ -1221,8 +1228,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ merchant, oms }) => {
-  return { merchant, oms };
+const mapStateToProps = ({ merchant, oms, global }) => {
+  return { merchant, oms, global };
 };
 
 const mapDispatchToProps = dispatch => {

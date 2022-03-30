@@ -243,6 +243,25 @@ export function appVersion(data) {
   return { type: types.APP_VERSION, payload: data };
 }
 /**
+ * ======================
+ * GET CATALOGUE_TAXES VALUE
+ * ======================
+ */
+export function getCatalogueTaxesProcess(data) {
+  return { type: types.GET_CATALOGUE_TAXES_PROCESS, payload: data };
+}
+/** === UPLOAD IMAGE SUCCESS === */
+export function getCatalogueTaxesSuccess(data) {
+  if (data.result === 'Ok') {
+    return { type: types.GET_CATALOGUE_TAXES_SUCCESS, payload: data.data };
+  }
+  return { type: types.GET_CATALOGUE_TAXES_FAILED, payload: data };
+}
+/** === UPLOAD IMAGE FAILED === */
+export function getCatalogueTaxesFailed(data) {
+  return { type: types.GET_CATALOGUE_TAXES_FAILED, payload: data };
+}
+/**
  * ========================
  * NOTE
  * ========================

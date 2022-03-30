@@ -182,6 +182,8 @@ class HomeView extends Component {
     if (this.props.permanent.appMaintenance) {
       NavigationService.navigate('MaintenanceView');
     }
+    /** THIS FOR GET PPN VALUE */
+    this.props.getCatalogueTaxesProcess();
   }
   /** DID UPDATE */
   componentDidUpdate(prevProps) {
