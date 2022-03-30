@@ -48,3 +48,7 @@ export const UPLOAD_IMAGE_FAILED = 'uploadImageFailed';
 /** THIS FOR MAINTENANCE APP */
 export const APP_MAINTENANCE = 'appCurrentMaintenance';
 export const APP_VERSION = 'appVersion';
+/** THIS FOR GET CATALOGUE_TAXES VALUE */
+export const GET_CATALOGUE_TAXES_PROCESS = 'getCatalogueTaxesProcess';
+export const GET_CATALOGUE_TAXES_SUCCESS = 'getCatalogueTaxesSuccess';
+export const GET_CATALOGUE_TAXES_FAILED = 'getCatalogueTaxesFailed';
