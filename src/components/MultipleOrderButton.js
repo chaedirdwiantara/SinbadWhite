@@ -501,10 +501,13 @@ class MultipleOrderButton extends Component {
           this.state.stock - this.calculateTotalQty() <=
           this.props.item.multipleQty
         ) {
-          this.setState({
-            plusButtonDisable: true,
-            qty: this.modifyQty(isLarge)
-          });
+          if (isLarge) {
+            this.sendValueToParentLarge(largeUomQty);
+            this.setState({ largeUomQty });
+          } else {
+            this.sendValueToParent(smallUomQty);
+            this.setState({ smallUomQty });
+          }
         } else {
           if (isLarge) {
             if (
