@@ -1,9 +1,9 @@
+/* eslint-disable no-case-declarations */
 import {
   React,
   Component,
   View,
   StyleSheet,
-  Dimensions,
   ScrollView,
   TouchableOpacity,
   Image,
@@ -12,7 +12,8 @@ import {
 import {
   bindActionCreators,
   connect,
-  MaterialCommunityIcons
+  MaterialCommunityIcons,
+  NavigationEvents
 } from '../../library/thirdPartyPackage';
 import {
   ButtonSingleSmall,
@@ -24,15 +25,14 @@ import {
   ErrorPage,
   SelectedMerchantName,
   ModalBottomErrorRespons,
-  ImageKit
+  ImageKit,
+  MultipleOrderButton
 } from '../../library/component';
 import { Color } from '../../config';
-import { GlobalStyle, Fonts, MoneyFormat, NumberFormat } from '../../helpers';
+import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import NavigationService from '../../navigation/NavigationService';
 import CallCS from '../../screens/global/CallCS';
-
-const { width, height } = Dimensions.get('window');
 
 class OmsCartView extends Component {
   constructor(props) {
@@ -285,9 +285,27 @@ class OmsCartView extends Component {
             this.setState({
               cartId: item.cartId
             });
+
+            const smallQty = this.checkStock(
+              item.suggestedStock,
+              productCartArray[indexProductCartArray]
+            ).smallQty;
+
+            const largeQty = this.checkStock(
+              item.suggestedStock,
+              productCartArray[indexProductCartArray]
+            ).largeQty;
+
+            const productUomDetail = {
+              ...productCartArray[indexProductCartArray].detail,
+              smallUomQty: smallQty,
+              largeUomQty: largeQty
+            };
             productCartArray[indexProductCartArray].qty = item.suggestedStock;
+            productCartArray[indexProductCartArray].detail = productUomDetail;
             productCartArray[indexProductCartArray].catalogue.stock =
               item.catalogueStock;
+
             break;
           case 'ERR-PRICE':
             this.setState({
@@ -319,6 +337,29 @@ class OmsCartView extends Component {
       }
     });
   }
+
+  checkStock = (suggestedStock, catalogueDetail) => {
+    const { smallUomQty, largeUomQty, packagedQty } = catalogueDetail.detail;
+    let totalLargeQty = largeUomQty * packagedQty;
+
+    const modifyLargeQty = () => {
+      const divideQty = suggestedStock / packagedQty;
+
+      return Math.floor(divideQty);
+    };
+
+    const modifySmallQty = () => {
+      const calculateQty = suggestedStock - modifyLargeQty() * packagedQty;
+
+      return Math.floor(calculateQty);
+    };
+
+    if (totalLargeQty >= suggestedStock) {
+      totalLargeQty = modifyLargeQty() * packagedQty;
+    }
+
+    return { smallQty: modifySmallQty(), largeQty: modifyLargeQty() };
+  };
   /**
    * ==========================================
    * ALL FUNCTION IN COMPONENT DID UPDATE END
@@ -349,6 +390,7 @@ class OmsCartView extends Component {
       item => item.catalogueId === data.catalogueId
     );
     productCartArray[indexProductCartArray].qty = data.qty;
+    productCartArray[indexProductCartArray].detail = data.detail;
     this.setState({ productCartArray });
     /**
      * jangan hapus code dibawah
@@ -357,6 +399,98 @@ class OmsCartView extends Component {
      * code :
      * this.forCartData('update', data.catalogueId, data.qty);
      */
+  }
+
+  parentFunctionFromMultipleOrderButton(data) {
+    const productCartArray = this.state.productCartArray;
+    const indexProductCartArray = productCartArray.findIndex(
+      item => item.catalogueId === data.catalogueId
+    );
+    const { smallUomQty, largeUomQty, packagedQty } = data.detail;
+
+    const totalQty = largeUomQty * packagedQty + smallUomQty;
+
+    if (
+      productCartArray[indexProductCartArray].isMaximum &&
+      totalQty >= productCartArray[indexProductCartArray].maxQty
+    ) {
+      /** For Max Qty */
+      if (largeUomQty >= 1) {
+        let totalLargeQty = largeUomQty * packagedQty;
+
+        const modifyLargeQty = () => {
+          const divideQty =
+            productCartArray[indexProductCartArray].maxQty / packagedQty;
+
+          return Math.floor(divideQty);
+        };
+
+        const modifySmallQty = () => {
+          const calculateQty =
+            productCartArray[indexProductCartArray].maxQty -
+            modifyLargeQty() * packagedQty;
+
+          return Math.floor(calculateQty);
+        };
+
+        if (totalLargeQty >= productCartArray[indexProductCartArray].maxQty) {
+          totalLargeQty = modifyLargeQty() * packagedQty;
+        }
+
+        const productUomDetail = {
+          ...data.detail,
+          smallUomQty: modifySmallQty(),
+          largeUomQty: modifyLargeQty(),
+          packagedQty:
+            productCartArray[indexProductCartArray].detail.packagedQty
+        };
+
+        productCartArray[indexProductCartArray].qty =
+          productCartArray[indexProductCartArray].maxQty;
+        productCartArray[indexProductCartArray].detail = productUomDetail;
+      } else {
+        if (
+          smallUomQty >= productCartArray[indexProductCartArray].maxQty &&
+          largeUomQty === 0
+        ) {
+          const productUomDetail = {
+            ...data.detail,
+            smallUomQty: productCartArray[indexProductCartArray].maxQty,
+            largeUomQty: 0
+          };
+
+          productCartArray[indexProductCartArray].qty =
+            productCartArray[indexProductCartArray].maxQty;
+          productCartArray[indexProductCartArray].detail = productUomDetail;
+        } else {
+          productCartArray[indexProductCartArray].qty = totalQty;
+          productCartArray[indexProductCartArray].detail = data.detail;
+        }
+      }
+    } else {
+      /** For Min Qty */
+      if (smallUomQty === 0 && largeUomQty === 0) {
+        productCartArray[indexProductCartArray].detail = data.detail;
+        productCartArray[indexProductCartArray].qty =
+          productCartArray[indexProductCartArray].catalogue.minQty;
+        productCartArray[indexProductCartArray].detail.smallUomQty =
+          productCartArray[indexProductCartArray].catalogue.minQty;
+      } else if (
+        data.qty < productCartArray[indexProductCartArray].catalogue.minQty
+      ) {
+        productCartArray[indexProductCartArray].detail = data.detail;
+        productCartArray[indexProductCartArray].qty =
+          productCartArray[indexProductCartArray].catalogue.minQty;
+        productCartArray[indexProductCartArray].detail.smallUomQty =
+          productCartArray[indexProductCartArray].catalogue.minQty;
+      } else {
+        productCartArray[indexProductCartArray].qty =
+          largeUomQty * packagedQty + smallUomQty;
+        productCartArray[indexProductCartArray].detail = data.detail;
+      }
+    }
+
+    this.setState({ productCartArray });
   }
   /** === CHECK LIST SKU LEVEL */
   checkBoxProduct(productId) {
@@ -431,12 +565,16 @@ class OmsCartView extends Component {
     const productCheckBox = this.state.productCartArray.filter(
       item => item.checkBox && item.statusInCart === 'available'
     );
+
     const mapProduct = productCheckBox.map(item => {
       return {
         catalogueId: parseInt(item.catalogueId, 10),
-        qty: item.qty
+        qty: item.qty,
+        unit: item.catalogue?.catalogueUnit?.unit ?? 'PCS',
+        detail: item.detail
       };
     });
+
     /** => save to oms.dataCheckout */
     this.props.omsCheckoutItem(mapProduct);
     /** => verification page */
@@ -463,6 +601,24 @@ class OmsCartView extends Component {
         this.state.productWantToDelete.catalogueId,
         this.state.productWantToDelete.qty
       );
+    }
+  }
+
+  /** Update Qty after moving to different screen */
+  checkQty() {
+    const productCartArray = this.state.productCartArray;
+    const productCheckoutArray = this.props.oms.dataCheckout;
+    if (productCartArray.length >= 1) {
+      productCheckoutArray.map(checkout => {
+        const indexProductCartArray = productCartArray.findIndex(
+          item => parseInt(item.catalogueId, 10) === checkout.catalogueId
+        );
+        productCartArray[indexProductCartArray].detail = checkout.detail;
+        productCartArray[indexProductCartArray].qty = checkout.qty;
+        return true;
+      });
+
+      this.setState({ productCartArray });
     }
   }
   /**
@@ -719,16 +875,58 @@ class OmsCartView extends Component {
    * - price per item product (===> RENDER PRICE PER SKU)
    * - item
    */
-  renderButtonOrder(itemForOrderButton) {
+  renderButtonOrder(itemForOrderButton, uomDetail) {
     return (
-      <OrderButton
-        showKeyboard={this.state.showKeyboard}
-        item={itemForOrderButton}
-        onRef={ref => (this.parentFunctionFromOrderButton = ref)}
-        parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
-          this
+      <View style={{ marginLeft: 30 }}>
+        {!itemForOrderButton.enableLargeUom ? (
+          <OrderButton
+            showKeyboard={this.state.showKeyboard}
+            item={itemForOrderButton}
+            uomDetail={uomDetail}
+            onRef={ref => (this.parentFunctionFromOrderButton = ref)}
+            parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
+              this
+            )}
+          />
+        ) : (
+          <MultipleOrderButton
+            showKeyboard={this.state.showKeyboard}
+            item={itemForOrderButton}
+            uomDetail={uomDetail}
+            onRef={ref => (this.parentFunctionFromMultipleOrderButton = ref)}
+            parentFunctionFromOrderButton={this.parentFunctionFromMultipleOrderButton.bind(
+              this
+            )}
+          />
         )}
-      />
+      </View>
+    );
+  }
+
+  renderChecklist(item) {
+    return (
+      <TouchableOpacity
+        style={{ width: 30, justifyContent: 'center' }}
+        onPress={() => this.checkBoxProduct(item.catalogue.id)}
+      >
+        {this.state.productCartArray.findIndex(
+          itemProductCartArray =>
+            itemProductCartArray.catalogueId === item.catalogue.id &&
+            item.checkBox
+        ) > -1 ? (
+          <MaterialCommunityIcons
+            color={Color.mainColor}
+            name="checkbox-marked"
+            size={24}
+          />
+        ) : (
+          <MaterialCommunityIcons
+            color={Color.fontBlack40}
+            name="checkbox-blank-outline"
+            size={24}
+          />
+        )}
+      </TouchableOpacity>
     );
   }
 
@@ -736,6 +934,7 @@ class OmsCartView extends Component {
     return (
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row' }}>
+          {this.renderChecklist(item)}
           {this.renderImageGlobal(item)}
           <View style={{ flex: 1 }}>
             <View
@@ -758,10 +957,10 @@ class OmsCartView extends Component {
             </View>
             <View style={{ flex: 1 }}>
               {this.renderPriceProductGlobal(item)}
-              {this.renderButtonOrder(itemForOrderButton)}
             </View>
           </View>
         </View>
+        {this.renderButtonOrder(itemForOrderButton, item.detail)}
       </View>
     );
   }
@@ -781,28 +980,6 @@ class OmsCartView extends Component {
       return item.brandId === productItem.brandId &&
         item.statusInCart === 'available' ? (
         <View style={styles.boxListItem} key={index}>
-          <TouchableOpacity
-            style={{ width: 30, justifyContent: 'center' }}
-            onPress={() => this.checkBoxProduct(item.catalogue.id)}
-          >
-            {this.state.productCartArray.findIndex(
-              itemProductCartArray =>
-                itemProductCartArray.catalogueId === item.catalogue.id &&
-                item.checkBox
-            ) > -1 ? (
-              <MaterialCommunityIcons
-                color={Color.mainColor}
-                name="checkbox-marked"
-                size={24}
-              />
-            ) : (
-              <MaterialCommunityIcons
-                color={Color.fontBlack40}
-                name="checkbox-blank-outline"
-                size={24}
-              />
-            )}
-          </TouchableOpacity>
           {this.renderListCartItemContent(item, itemForOrderButton)}
         </View>
       ) : (
@@ -1141,6 +1318,18 @@ class OmsCartView extends Component {
       ? this.renderErrorGetCartList()
       : this.renderSkeleton();
   }
+
+  navigationEvents() {
+    return (
+      <NavigationEvents
+        onWillFocus={() => {
+          this.checkQty();
+          this.loading(true);
+          this.getCartItem(this.props.oms.dataCart);
+        }}
+      />
+    );
+  }
   /**
    * ====================
    * MAIN
@@ -1149,6 +1338,7 @@ class OmsCartView extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
+        {this.navigationEvents()}
         {this.props.oms.dataCart.length > 0
           ? this.renderContent()
           : this.renderEmpty()}

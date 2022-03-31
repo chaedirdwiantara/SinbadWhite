@@ -39,7 +39,20 @@ class PdpOrderView extends Component {
       qtyFromChild:
         this.props.pdp.dataDetailPdp !== null
           ? this.props.pdp.dataDetailPdp.minQty
-          : 0
+          : 0,
+      detailFromChild:
+        this.props.pdp.dataDetailPdp !== null &&
+        this.props.pdp.dataDetailPdp?.enableLargeUom === true
+          ? {
+              smallUom:
+                this.props.pdp.dataDetailPdp?.catalogueUnit?.unit ?? 'Pcs',
+              smallUomQty: this.props.pdp.dataDetailPdp.minQty,
+              largeUom:
+                this.props.pdp.dataDetailPdp?.catalogueLargeUnit?.unit ?? 'Box',
+              largeUomQty: 0,
+              packagedQty: this.props.pdp.dataDetailPdp.packagedQty
+            }
+          : null
     };
   }
   /**
@@ -61,7 +74,20 @@ class PdpOrderView extends Component {
     if (prevProps.pdp.dataDetailPdp !== this.props.pdp.dataDetailPdp) {
       if (this.props.pdp.dataDetailPdp !== null) {
         this.setState({
-          qtyFromChild: this.props.pdp.dataDetailPdp.minQty
+          qtyFromChild: this.props.pdp.dataDetailPdp.minQty,
+          detailFromChild:
+            this.props.pdp.dataDetailPdp?.enableLargeUom === true
+              ? {
+                  smallUom:
+                    this.props.pdp.dataDetailPdp?.catalogueUnit?.unit ?? 'Pcs',
+                  smallUomQty: this.props.pdp.dataDetailPdp.minQty,
+                  largeUom:
+                    this.props.pdp.dataDetailPdp?.catalogueLargeUnit?.unit ??
+                    'Box',
+                  largeUomQty: 0,
+                  packagedQty: this.props.pdp.dataDetailPdp.packagedQty
+                }
+              : null
         });
         if (this.props.pdp.dataDetailPdp.warehouseCatalogues.length === 0) {
           this.toParentFunction({
@@ -162,6 +188,31 @@ class PdpOrderView extends Component {
       return true;
     }
   }
+
+  checkMaxQty() {
+    if (
+      this.props.pdp.dataDetailPdp.isMaximum &&
+      this.state.qtyFromChild > this.props.pdp.dataDetailPdp.maxQty
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  checkStockQty() {
+    if (
+      Array.isArray(this.props.pdp.dataDetailPdp.warehouseCatalogues) &&
+      this.props.pdp.dataDetailPdp.warehouseCatalogues[0].unlimitedStock ===
+        false &&
+      this.state.qtyFromChild >
+        this.props.pdp.dataDetailPdp.warehouseCatalogues[0].stock
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   /**
    * ========================================
    * beberapa penjelasan fungsi
@@ -172,10 +223,28 @@ class PdpOrderView extends Component {
    * fungsi memanggil fungsi di RootProduct untuk menutup ProductOrderView
    */
   parentFunctionFromOrderButton(data) {
-    /** NOTE 1 */
-    this.setState({
-      qtyFromChild: data.qty
-    });
+    if (
+      this.props.pdp.dataDetailPdp.isMaximum &&
+      data.qty >= this.props.pdp.dataDetailPdp.maxQty
+    ) {
+      if (data.detail !== null) {
+        this.setState({
+          qtyFromChild: this.props.pdp.dataDetailPdp.maxQty,
+          detailFromChild: data.detail
+        });
+      } else {
+        /** NOTE 1 */
+        this.setState({
+          qtyFromChild: data.qty,
+          detailFromChild: data.detail
+        });
+      }
+    } else {
+      this.setState({
+        qtyFromChild: data.qty,
+        detailFromChild: data.detail
+      });
+    }
   }
 
   /**
@@ -231,13 +300,19 @@ class PdpOrderView extends Component {
       />
     );
   }
+
   /** === RENDER BUTTON === */
   renderButton() {
     return (
       <ButtonSingleSmall
         accessibilityLabel={'btnPdpAddtoCart'}
         disabledGrey={!this.state.showKeyboard}
-        disabled={this.buttonDisabled() || this.state.showKeyboard}
+        disabled={
+          this.buttonDisabled() ||
+          this.state.showKeyboard ||
+          this.checkMaxQty() ||
+          this.checkStockQty()
+        }
         title={this.buttonTitle()}
         borderRadius={4}
         onPress={() =>
@@ -245,7 +320,8 @@ class PdpOrderView extends Component {
             type: 'addSkuToCart',
             data: {
               catalogueId: this.props.pdp.dataDetailPdp.id,
-              qty: this.state.qtyFromChild
+              qty: this.state.qtyFromChild,
+              detail: this.state.detailFromChild
             }
           })
         }
@@ -297,6 +373,11 @@ class PdpOrderView extends Component {
   }
   /** === RENDER DATA === */
   renderData() {
+    const largeUnit = this.props.pdp.dataDetailPdp.catalogueLargeUnit
+      ? this.props.pdp.dataDetailPdp.catalogueLargeUnit.unit
+      : 'dus';
+    const smallUnit = this.props.pdp.dataDetailPdp.catalogueUnit.unit;
+
     return (
       <View style={styles.boxItem}>
         <View style={{ flexDirection: 'row', paddingBottom: 25 }}>
@@ -327,8 +408,8 @@ class PdpOrderView extends Component {
             </View>
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <Text style={[Fonts.type38, { marginRight: 10 }]}>
-                per-Dus {this.props.pdp.dataDetailPdp.packagedQty}{' '}
-                {this.props.pdp.dataDetailPdp.catalogueUnit.unit}
+                per-{largeUnit} {this.props.pdp.dataDetailPdp.packagedQty}{' '}
+                {smallUnit}
               </Text>
               <View
                 style={{
@@ -343,16 +424,7 @@ class PdpOrderView extends Component {
             </View>
           </View>
         </View>
-        {this.checkInputQtySection() ? (
-          <View style={{ flexDirection: 'row', flex: 1 }}>
-            <View style={{ alignContent: 'flex-start' }}>
-              <Text style={Fonts.type96}>Jumlah/pcs</Text>
-            </View>
-            <View style={{ flex: 1 }}>{this.renderButtonOrder()}</View>
-          </View>
-        ) : (
-          <View />
-        )}
+        {this.checkInputQtySection() ? this.renderButtonOrder() : <View />}
       </View>
     );
   }

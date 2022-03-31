@@ -447,10 +447,44 @@ export const oms = createReducer(INITIAL_STATE, {
     };
   },
   [types.OMS_CHECK_PROMO_SUCCESS](state, action) {
+    const dataCheckout = state.dataCheckout.map(item => {
+      if (item.detail && item.detail.smallUomQty >= item.detail.packagedQty) {
+        if (item.detail.smallUomQty >= item.detail.packagedQty) {
+          item.detail.largeUomQty =
+            item.detail.largeUomQty +
+            Math.floor(item.detail.smallUomQty / item.detail.packagedQty);
+          item.detail.smallUomQty =
+            item.detail.smallUomQty % item.detail.packagedQty;
+        }
+      }
+
+      return item;
+    });
+
+    const bonusSku = action.payload.bonusSku.map(t1 => ({
+      ...t1,
+      ...dataCheckout.find(t2 => t2.catalogueId === t1.id)
+    }));
+    const notPromoSku = action.payload.notPromoSku.map(t1 => ({
+      ...t1,
+      ...dataCheckout.find(t2 => t2.catalogueId === t1.id)
+    }));
+    const promoSku = action.payload.promoSku.map(t1 => ({
+      ...t1,
+      ...dataCheckout.find(t2 => t2.catalogueId === t1.id)
+    }));
+
+    const dataOmsCheckPromo = {
+      ...action.payload,
+      bonusSku,
+      notPromoSku,
+      promoSku
+    };
+
     return {
       ...state,
       loadingOmsCheckPromo: false,
-      dataOmsCheckPromo: action.payload
+      dataOmsCheckPromo: dataOmsCheckPromo
     };
   },
   [types.OMS_CHECK_PROMO_FAILED](state, action) {
