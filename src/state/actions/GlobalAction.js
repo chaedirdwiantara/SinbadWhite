@@ -243,6 +243,14 @@ export function appVersion(data) {
   return { type: types.APP_VERSION, payload: data };
 }
 /**
+ * ======================
+ * CHECK UPDATED APP
+ * ======================
+ */
+export function saveAppVersion(data) {
+  return { type: types.SAVE_APP_VERSION, payload: data };
+}
+/**
  * ========================
  * NOTE
  * ========================
