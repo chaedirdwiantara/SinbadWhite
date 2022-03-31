@@ -20,6 +20,7 @@ import com.moengage.react.MoEReactPackage;
 import com.moengage.core.MoEngage;
 import com.newrelic.agent.android.NewRelic;
 import com.rnnewrelic.NewRelicPackage;
+import com.reactlibrary.RNInstallReferrerPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
