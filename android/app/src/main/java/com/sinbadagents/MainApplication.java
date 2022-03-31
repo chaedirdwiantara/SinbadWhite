@@ -15,6 +15,9 @@ import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import com.microsoft.codepush.react.CodePush;
+import com.moengage.react.MoEInitializer;
+import com.moengage.react.MoEReactPackage;
+import com.moengage.core.MoEngage;
 import com.newrelic.agent.android.NewRelic;
 import com.rnnewrelic.NewRelicPackage;
 
@@ -64,6 +67,11 @@ public class MainApplication extends Application implements ReactApplication {
     SoLoader.init(this, /* native exopackage */ false);
     if (!BuildConfig.NEWRELIC_KEY.isEmpty() && BuildConfig.NEWRELIC_KEY != null) {
       NewRelic.withApplicationToken(BuildConfig.NEWRELIC_KEY).start(this);
+    }
+
+    if(!BuildConfig.MOENGAGE_KEY.isEmpty() && BuildConfig.MOENGAGE_KEY != null){
+        MoEngage.Builder moEngage = new MoEngage.Builder(this, BuildConfig.MOENGAGE_KEY);
+        MoEInitializer.INSTANCE.initialize(getApplicationContext(), moEngage);
     }
   }
 }
