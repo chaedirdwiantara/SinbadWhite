@@ -7,6 +7,7 @@ import SearchBarType5 from '../components/search_bar/SearchBarType5';
 import SearchBarType4 from '../components/search_bar/SearchBarType4';
 import SearchBarType6 from '../components/search_bar/SearchBarType6';
 import SearchBarType7 from '../components/search_bar/SearchBarType7';
+import SearchBarType8 from '../components/search_bar/SearchBarType8';
 /** BACK HANDLER */
 import BackHandlerCloseApp from '../components/BackHandlerCloseApp';
 import BackHandlerBackSpecific from '../components/BackHandlerBackSpecific';
@@ -114,6 +115,7 @@ import SkeletonType26 from '../components/skeleton/SkeletonType26';
 import SkeletonType27 from '../components/skeleton/SkeletonType27';
 import SkeletonType28 from '../components/skeleton/SkeletonType28';
 import SkeletonType29 from '../components/skeleton/SkeletonType29';
+import SkeletonType30 from '../components/skeleton/SkeletonType30';
 /** ADDRESS */
 import Address from '../components/Address';
 /** TAG */
@@ -148,6 +150,10 @@ import BasicRangeAnswerComponent from '../components/questionnaire/BasicRangeAns
 import CompareGroupRangeAnswerComponent from '../components/questionnaire/CompareGroupRangeAnswerComponent';
 /** IMAGEKIT */
 import ImageKit from '../components/ImageKit';
+/** ToolTip */
+import ToolTip from '../components/tooltip/ToolTip';
+/** DATE PICKER CALENDER */
+import DatePickerCalender from '../components/DatePickerCalender';
 export {
   CartGlobal,
   /** SEARCH BAR */
@@ -158,6 +164,7 @@ export {
   SearchBarType5,
   SearchBarType6,
   SearchBarType7,
+  SearchBarType8,
   /** BACK HANDLER */
   BackHandlerCloseApp,
   BackHandlerBackSpecific,
@@ -261,6 +268,7 @@ export {
   SkeletonType27,
   SkeletonType28,
   SkeletonType29,
+  SkeletonType30,
   /** ADDRESS */
   Address,
   /** TAG */
@@ -295,7 +303,11 @@ export {
   BasicRangeAnswerComponent,
   CompareGroupRangeAnswerComponent,
   // image kit
-  ImageKit
+  ImageKit,
+  /** TOOLTIP */
+  ToolTip,
+  /** DATE PICKER CALENDER */
+  DatePickerCalender
 };
 
 /**

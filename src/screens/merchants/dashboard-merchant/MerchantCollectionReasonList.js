@@ -18,12 +18,11 @@ import { toLocalTime } from '../../../helpers/TimeHelper';
 import masterColor from '../../../config/masterColor.json';
 import { MaterialIcon } from '../../../library/thirdPartyPackage';
 import { ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS } from '../../../constants';
+
 const MerchantCollectionReasonList = props => {
   const { refreshGetCollection, loadingLoadMoreGetSfa } = useSelector(
     state => state.sfa
   );
-  /** RENDER FUNCTION */
-
   /** RENDER STATUS PAYMENT */
   /** === RENDER ITEM (STATUS PAYMENT) === */
   const renderItemStatusPayment = status_payment => {
@@ -88,7 +87,7 @@ const MerchantCollectionReasonList = props => {
                 Total Tagihan
               </Text>
               <Text style={Fonts.type50}>
-                {MoneyFormatSpace(item.invoiceAmount)}
+                {MoneyFormatSpace(item?.invoiceAmount || 0)}
               </Text>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -96,7 +95,7 @@ const MerchantCollectionReasonList = props => {
                 Sisa Tagihan
               </Text>
               <Text style={Fonts.type113p}>
-                {MoneyFormatSpace(item.outstandingAmount)}
+                {MoneyFormatSpace(item?.outstandingAmount || 0)}
               </Text>
             </View>
           </View>
@@ -105,7 +104,7 @@ const MerchantCollectionReasonList = props => {
             <View style={styles.reasonContainer}>
               <Text style={[Fonts.type8, { flex: 1 }]}> Alasan</Text>
               <TouchableOpacity
-                onPress={() => props.openReason(index)}
+                onPress={() => props.openReason(index, item.id)}
                 style={styles.reasonButton}
                 disabled={
                   props.type === ACTIVITY_JOURNEY_PLAN_COLLECTION_NOT_SUCCESS
@@ -115,6 +114,8 @@ const MerchantCollectionReasonList = props => {
               >
                 {item.reasonNotPay ? (
                   <Text style={[Fonts.type48]}>{item.reasonNotPay}</Text>
+                ) : props?.navigateFrom === 'view-reason' ? (
+                  <Text style={[Fonts.type48]}>{item.reasonNotPayView}</Text>
                 ) : (
                   <Text style={[Fonts.type85]}>Pilih Alasan</Text>
                 )}
@@ -160,6 +161,7 @@ const MerchantCollectionReasonList = props => {
             {props.dataList !== null ? (
               <FlatList
                 data={props.dataList}
+                extraData={props.extraData}
                 renderItem={renderItem}
                 numColumns={1}
                 keyExtractor={(item, index) => index.toString()}
@@ -194,11 +196,13 @@ const MerchantCollectionReasonList = props => {
       {renderLoadMore()}
     </>
   ) : (
-    <SfaNoDataView
-      topText={'Belum Ada Tagihan'}
-      midText={'Yuk belanja kebutuhanmu sekarang di Sinbad'}
-      bottomText={''}
-    />
+    <View style={{ marginTop: '20%' }}>
+      <SfaNoDataView
+        topText={'Belum Ada Tagihan'}
+        midText={'Yuk belanja kebutuhanmu sekarang di Sinbad'}
+        bottomText={''}
+      />
+    </View>
   );
 };
 

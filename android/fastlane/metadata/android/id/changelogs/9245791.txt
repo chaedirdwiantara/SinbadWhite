@@ -1,0 +1,1 @@
+In this release, you don’t have to confuse which Stores who have collection. We will have 1 dedicated page to see all stores who have outstanding Invoices. Plus, you can input your collection directly from the new page.

@@ -191,6 +191,11 @@ class PdpBundleOrderView extends Component {
    */
   /** === RENDER TOTAL VALUE === */
   renderBottomValue() {
+    const catalogueTaxes = this.props.global.dataGetCatalogueTaxes?.data || [];
+    let ppn = null;
+    if ((catalogueTaxes || []).length > 0) {
+      ppn = catalogueTaxes[0].amount;
+    }
     return (
       <View style={{ flex: 1 }}>
         <View
@@ -208,7 +213,9 @@ class PdpBundleOrderView extends Component {
             </Text>
           </View>
           <View>
-            <Text style={Fonts.type69}>Belum termasuk PPN 10%</Text>
+            <Text style={Fonts.type69}>
+              Belum termasuk PPN {ppn !== null ? `${ppn}%` : ''}
+            </Text>
           </View>
         </View>
       </View>
@@ -217,16 +224,16 @@ class PdpBundleOrderView extends Component {
   /** === RENDER BUTTON ORDER === */
   renderButtonOrder() {
     return (
-        <OrderButton
-          disabledAllButton={this.state.showKeyboard}
-          item={this.props.pdp.dataDetailBundlePdp}
-          onRef={ref => (this.parentFunctionFromOrderButton = ref)}
-          parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
-            this
-          )}
-          onFocus={() => this.setState({ buttonAddDisabled: true })}
-          onBlur={() => this.setState({ buttonAddDisabled: false })}
-        />
+      <OrderButton
+        disabledAllButton={this.state.showKeyboard}
+        item={this.props.pdp.dataDetailBundlePdp}
+        onRef={ref => (this.parentFunctionFromOrderButton = ref)}
+        parentFunctionFromOrderButton={this.parentFunctionFromOrderButton.bind(
+          this
+        )}
+        onFocus={() => this.setState({ buttonAddDisabled: true })}
+        onBlur={() => this.setState({ buttonAddDisabled: false })}
+      />
     );
   }
   /** === RENDER BUTTON === */
@@ -347,9 +354,7 @@ class PdpBundleOrderView extends Component {
             <View style={{ justifyContent: 'flex-start' }}>
               <Text style={Fonts.type96}>Jumlah/pcs</Text>
             </View>
-            <View style={{ flex: 1 }}>
-              {this.renderButtonOrder()}
-            </View>
+            <View style={{ flex: 1 }}>{this.renderButtonOrder()}</View>
           </View>
         ) : (
           <View />

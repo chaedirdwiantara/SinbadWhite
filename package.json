@@ -27,6 +27,7 @@
     "react": "16.9.0",
     "react-native": "0.63.3",
     "react-native-app-settings": "2.0.1",
+    "react-native-calendars": "^1.1278.0",
     "react-native-camera": "3.37.0",
     "react-native-code-push": "6.3.0",
     "react-native-config": "1.4.2",

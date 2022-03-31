@@ -969,6 +969,20 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: Color.fontBlack50
   },
+  bodyDefault: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 14,
+    fontStyle: 'normal',
+    lineHeight: 20,
+    fontWeight: '600'
+  },
+  paragraphSmall: {
+    fontFamily: Fonts.MontserratRegular,
+    fontSize: 12,
+    fontStyle: 'normal',
+    lineHeight: 18,
+    fontWeight: '400'
+  },
   fontCaption1: {
     fontFamily: Fonts.MontserratRegular,
     fontSize: 12,

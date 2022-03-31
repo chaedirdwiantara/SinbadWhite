@@ -43,7 +43,8 @@ const SfaBillingEditView = props => {
     errorSfaEditBilling,
     dataSfaEditBilling,
     dataSfaGetBillingDetail,
-    loadingSfaEditBilling
+    loadingSfaEditBilling,
+    selectedStore
   } = useSelector(state => state.sfa);
   const { selectedMerchant } = useSelector(state => state.merchant);
   const { id } = useSelector(state => state.user);
@@ -284,7 +285,7 @@ const SfaBillingEditView = props => {
       paymentCollectionMethodId:
         paymentCollectionMethod.paymentCollectionMethodId,
       limit: 20,
-      storeId: parseInt(selectedMerchant.storeId, 10),
+      storeId: parseInt(selectedStore?.id || selectedMerchant?.storeId, 10),
       skip: 0,
       loading: true,
       userId: userId

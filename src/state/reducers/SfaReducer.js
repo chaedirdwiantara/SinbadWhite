@@ -1,3 +1,6 @@
+import { findLastKey } from 'lodash';
+import { stat } from 'react-native-fs';
+import { selectedStore } from '../actions';
 import * as types from '../types';
 import createReducer from './createReducer';
 
@@ -33,6 +36,12 @@ const INITIAL_STATE = {
   loadingGetCollectionListStatus: false,
   loadingSfaCheckCollectionStatus: false,
   loadingSfaGetReasonNotToPay: null,
+  loadingSfaGetReturnBalance: false,
+  loadingGetStoreCollectionList: false,
+  refreshGetStoreCollectionList: false,
+  loadingLoadmoreGetStoreCollectionList: false,
+  modalCollectionListMenu: false,
+  loadingStoreCollectionStatus: false,
   /** data */
   dataGetCollectionStatus: null,
   dataSfaGetDetail: null,
@@ -62,6 +71,13 @@ const INITIAL_STATE = {
   dataSfaGetReasonNotToPay: null,
   selectedCollectionTransaction: null,
   dataSfaCheckCollectionStatus: null,
+  dataSfaGetReturnBalance: null,
+  dataGetStoreCollectionList: [],
+  totalGetStoreCollectionList: 0,
+  skipGetStoreCollection: 1,
+  selectedStore: null,
+  dataGetStoreCollection: null,
+  dataStoreCollectionStatus: null,
   /** error */
   errorGetCollectionStatus: null,
   errorSfaGetDetail: null,
@@ -89,7 +105,10 @@ const INITIAL_STATE = {
   errorSfaDeleteCollectionMethod: null,
   errorGetCollectionListStatus: null,
   errorSfaCheckCollectionStatus: null,
-  errorSfaGetReasonNotToPay: null
+  errorSfaGetReasonNotToPay: null,
+  errorSfaGetReturnBalance: null,
+  errorGetStoreCollectionList: null,
+  errorStoreCollectionStatus: null
 };
 
 export const sfa = createReducer(INITIAL_STATE, {
@@ -886,6 +905,145 @@ export const sfa = createReducer(INITIAL_STATE, {
       loadingSfaPostTransactionCheckout: false,
       dataSfaPostTransactionCheckout: null,
       errorSfaPostTransactionCheckout: null
+    };
+  },
+  /**
+   * ==========================
+   * GET RETURN BALANCE
+   * ==========================
+   */
+  [types.SFA_GET_RETURN_BALANCE_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetReturnBalance: true,
+      dataSfaGetReturnBalance: null,
+      errorSfaGetReturnBalance: null
+    };
+  },
+  [types.SFA_GET_RETURN_BALANCE_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingSfaGetReturnBalance: false,
+      dataSfaGetReturnBalance: action.payload
+    };
+  },
+  [types.SFA_GET_RETURN_BALANCE_FAILED](state, action) {
+    return {
+      ...state,
+      loadingSfaGetReturnBalance: false,
+      errorSfaGetReturnBalance: action.payload
+    };
+  },
+  /**
+   * ==========================
+   * GET STORE COLLECTION LIST
+   * ==========================
+   */
+  [types.SFA_GET_STORE_COLLECTION_LIST_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingGetStoreCollectionList: action.payload.loading,
+      errorGetStoreCollectionList: null
+    };
+  },
+  [types.SFA_GET_STORE_COLLECTION_LIST_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingGetStoreCollectionList: false,
+      loadingLoadmoreGetStoreCollection: false,
+      refreshGetStoreCollectionList: false,
+      loadingLoadmoreGetStoreCollectionList: false,
+      totalGetStoreCollectionList: action.payload.meta.total,
+      dataGetStoreCollectionList: [
+        ...state.dataGetStoreCollectionList,
+        ...(action.payload.data.stores || [])
+      ],
+      dataGetStoreCollection: action.payload.data
+    };
+  },
+  [types.SFA_GET_STORE_COLLECTION_LIST_FAILED](state, action) {
+    return {
+      ...state,
+      loadingGetStoreCollectionList: false,
+      loadingLoadmoreGetStoreCollection: false,
+      refreshGetStoreCollectionList: false,
+      errorGetStoreCollectionList: action.payload
+    };
+  },
+  [types.SFA_GET_STORE_COLLECTION_LIST_RESET](state, action) {
+    return {
+      ...state,
+      skipGetStoreCollection: 1,
+      totalGetStoreCollectionList: 0,
+      dataGetStoreCollectionList: [],
+      dataGetStoreCollection: null
+    };
+  },
+  [types.SFA_GET_STORE_COLLECTION_LIST_REFRESH](state, action) {
+    return {
+      ...state,
+      refreshGetStoreCollectionList: true,
+      loadingGetStoreCollectionList: true,
+      skipGetStoreCollection: 1,
+      totalGetStoreCollectionList: 0,
+      dataGetStoreCollectionList: [],
+      dataGetStoreCollection: null
+    };
+  },
+  [types.SFA_GET_STORE_COLLECTION_LIST_LOADMORE](state, action) {
+    return {
+      ...state,
+      loadingLoadmoreGetStoreCollectionList: true,
+      skipGetStoreCollection: action.payload
+    };
+  },
+  [types.SELECTED_STORE](state, action) {
+    return {
+      ...state,
+      selectedStore: {
+        ...action.payload,
+        ctdIds: action.payload.collectionTransactionDetailIds
+      }
+    };
+  },
+  [types.SELECTED_STORE_RESET](state, action) {
+    return {
+      ...state,
+      selectedStore: null
+    };
+  },
+  [types.SFA_MODAL_COLLECTION_LIST_MENU](state, action) {
+    return {
+      ...state,
+      modalCollectionListMenu: action.payload
+    };
+  },
+  [types.SFA_STORE_COLLECTION_STATUS_PROCESS](state, action) {
+    return {
+      ...state,
+      loadingStoreCollectionStatus: true,
+      dataStoreCollectionStatus: null
+    };
+  },
+  [types.SFA_STORE_COLLECTION_STATUS_SUCCESS](state, action) {
+    return {
+      ...state,
+      loadingStoreCollectionStatus: false,
+      dataStoreCollectionStatus: action.payload.data
+    };
+  },
+  [types.SFA_STORE_COLLECTION_STATUS_FAILED](state, action) {
+    return {
+      ...state,
+      loadingStoreCollectionStatus: false,
+      dataStoreCollectionStatus: action.payload
+    };
+  },
+  [types.SFA_STORE_COLLECTION_STATUS_RESET](state, action) {
+    return {
+      ...state,
+      loadingStoreCollectionStatus: false,
+      dataSfaCheckCollectionStatus: null
     };
   }
 });
