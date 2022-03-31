@@ -8,7 +8,12 @@ import {
   ScrollView,
   Text
 } from '../../library/reactPackage';
-import { MaterialIcon } from '../../library/thirdPartyPackage';
+import {
+  MaterialIcon,
+  bindActionCreators,
+  connect
+} from '../../library/thirdPartyPackage';
+import * as ActionCreators from '../../state/actions';
 import { ModalBottomType4, StatusBarRedOP50 } from '../../library/component';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import masterColor from '../../config/masterColor.json';
@@ -27,6 +32,11 @@ class ModalBottomParcelDetail extends Component {
   }
 
   renderOpenTotal() {
+    const catalogueTaxes = this.props.global.dataGetCatalogueTaxes?.data || [];
+    let ppn = null;
+    if ((catalogueTaxes || []).length > 0) {
+      ppn = catalogueTaxes[0].amount;
+    }
     return (
       <View style={styles.boxOpenTotal}>
         <View
@@ -69,7 +79,9 @@ class ModalBottomParcelDetail extends Component {
           }}
         >
           <View>
-            <Text style={Fonts.type17}>PPN 10%</Text>
+            <Text style={Fonts.type17}>
+              PPN {ppn !== null ? `${ppn}%` : ''}
+            </Text>
           </View>
           <View>
             <Text style={Fonts.type17}>
@@ -373,8 +385,18 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
+const mapStateToProps = ({ global }) => {
+  return { global };
+};
 
-export default ModalBottomParcelDetail;
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(ActionCreators, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ModalBottomParcelDetail);
 
 /**
  * ============================

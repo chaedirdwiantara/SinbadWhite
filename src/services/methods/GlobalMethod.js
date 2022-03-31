@@ -45,21 +45,25 @@ function getListAndSearch(data) {
     case 'province':
       listAndSearchApi = 'provinces?';
       break;
-    case 'city':
-      listAndSearchApi = `locations?type=city&provinceId=${
-        stateData.global.dataLocationVolatile.provinceId
-      }&`;
+    case 'city': {
+      const { provinceId } = stateData.global.dataLocationVolatile;
+      listAndSearchApi = `locations?type=city&provinceId=${provinceId}&`;
       break;
-    case 'district':
-      listAndSearchApi = `locations?type=district&city=${
-        stateData.global.dataLocationVolatile.cityName
-      }&`;
+    }
+    case 'district': {
+      const { cityName, provinceId } = stateData.global.dataLocationVolatile;
+      listAndSearchApi = `locations?type=district&city=${cityName}&provinceId=${provinceId}&`;
       break;
-    case 'urban':
-      listAndSearchApi = `locations?type=urban&district=${
-        stateData.global.dataLocationVolatile.districtName
-      }&`;
+    }
+    case 'urban': {
+      const {
+        cityName,
+        provinceId,
+        districtName
+      } = stateData.global.dataLocationVolatile;
+      listAndSearchApi = `locations?type=urban&district=${districtName}&city=${cityName}&provinceId=${provinceId}&`;
       break;
+    }
     case 'warehouse':
       listAndSearchApi = `warehouses?supplierIds=${JSON.stringify(
         userSupplierMapping()
@@ -188,7 +192,9 @@ function addGaps(string = '', gaps, spacer) {
   const offsets = [0].concat(gaps).concat([string.length]);
   return offsets
     .map((end, index) => {
-      if (index === 0) return '';
+      if (index === 0) {
+        return '';
+      }
       const start = offsets[index - 1];
       return string.substr(start, end - start);
     })
@@ -216,6 +222,15 @@ export function remappingPrivilege(privilege) {
   return temp;
 }
 
+/** GET PPN VALUE */
+function getCatalogueTaxes() {
+  const queryParams = '$limit=1&$skip=0&sort=desc&sortby=amount&status=active';
+  return ApiRest({
+    path: `catalogue-taxes?${queryParams}`,
+    method: 'GET'
+  });
+}
+
 export const GlobalMethod = {
   getListAndSearch,
   getAddressFromLongLat,
@@ -227,7 +242,8 @@ export const GlobalMethod = {
   userStoreId,
   addGaps,
   uploadImage,
-  remappingPrivilege
+  remappingPrivilege,
+  getCatalogueTaxes
 };
 
 /**

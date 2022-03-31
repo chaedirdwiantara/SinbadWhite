@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -17,12 +18,7 @@ import {
   LoadingLoadMore,
   ToastType1
 } from '../../library/component';
-import {
-  Fonts,
-  GlobalStyle,
-  MoneyFormat,
-  MoneyFormatSpace
-} from '../../helpers';
+import { Fonts, GlobalStyle, MoneyFormatSpace } from '../../helpers';
 import NavigationService from '../../navigation/NavigationService';
 import * as ActionCreators from '../../state/actions';
 import masterColor from '../../config/masterColor.json';
@@ -33,12 +29,9 @@ import {
   sfaCollectionLogLoadmoreProcess
 } from '../../state/actions';
 import { toLocalTime } from '../../helpers/TimeHelper';
-import {
-  APPROVED,
-  REJECTED,
-  PENDING
-} from '../../constants/collectionConstants';
+import { APPROVED, PENDING } from '../../constants/collectionConstants';
 import { HISTORY } from '../../constants/paymentConstants';
+
 function SfaCollectionLog(props) {
   const type = props.navigation.state.params.type;
   const dispatch = useDispatch();
@@ -46,7 +39,8 @@ function SfaCollectionLog(props) {
     dataSfaGetCollectionLog,
     loadingLoadmoreCollectionLog,
     dataSfaGetDetail,
-    dataSfaDeleteCollection
+    dataSfaDeleteCollection,
+    selectedStore
   } = useSelector(state => state.sfa);
   const { dataDetailHistory } = useSelector(state => state.history);
   const { selectedMerchant, dataGetMerchantDetailV2 } = useSelector(
@@ -109,7 +103,10 @@ function SfaCollectionLog(props) {
         setLimit(page);
         dispatch(
           sfaCollectionLogLoadmoreProcess({
-            storeId: parseInt(selectedMerchant.storeId),
+            storeId: parseInt(
+              selectedStore?.id || selectedMerchant?.storeId,
+              10
+            ),
             orderParcelId: dataSfaGetDetail.data.id,
             limit: page,
             skip: 1
@@ -130,7 +127,7 @@ function SfaCollectionLog(props) {
     const storeId =
       type === HISTORY
         ? parseInt(dataDetailHistory?.store.id, 10)
-        : selectedMerchant?.storeId;
+        : selectedStore?.id || selectedMerchant?.storeId;
     const data = {
       storeId: parseInt(storeId, 10),
       orderParcelId: parseInt(orderParcelId, 10),
@@ -190,8 +187,6 @@ function SfaCollectionLog(props) {
 
   //**RENDER ITEM */
   const renderItem = ({ item, index }) => {
-    const date = toLocalTime(item.createdAt, 'DD MMMM YYYY HH:mm');
-
     return (
       <View key={index} style={{ marginHorizontal: 16, marginVertical: 8 }}>
         <TouchableOpacity

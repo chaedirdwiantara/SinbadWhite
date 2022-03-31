@@ -6,9 +6,7 @@ import SfaDetailView, {
   HeaderRightOption
 } from '../../screens/sfa/SfaDetailView';
 import SfaCollectionLog from '../../screens/sfa/SfaCollectionLog';
-import SfaCollectionDetailView, {
-  DetailHeaderOption
-} from '../../screens/sfa/SfaCollectionDetailView';
+import SfaCollectionDetailView from '../../screens/sfa/SfaCollectionDetailView';
 import SfaCollectionMethodListView from '../../screens/sfa/SfaCollectionMethodListView';
 import SfaCollectionListView from '../../screens/sfa/SfaCollectionListView';
 import SfaCollectionAddView from '../../screens/sfa/SfaCollectionAddView';
@@ -17,7 +15,8 @@ import SfaBillingAddView from '../../screens/sfa/SfaBillingAddView';
 import SfaBillingLogView from '../../screens/sfa/SfaBillingLogView';
 import SfaCollectionEditView from '../../screens/sfa/SfaCollectionEditView';
 import SfaBillingEditView from '../../screens/sfa/SfaBillingEditView';
-
+import { HeaderLeftOption } from '../../screens/sfa/sfa-collection/AddViewBundle';
+import { HeaderLeftSfaViewtOption } from '../../screens/sfa/SfaView';
 const SfaNavigator = {
   SfaView: {
     screen: SfaView,
@@ -27,7 +26,8 @@ const SfaNavigator = {
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
-      gesturesEnabled: false
+      gesturesEnabled: false,
+      headerLeft: <HeaderLeftSfaViewtOption />
     }
   },
   SfaDetailView: {
@@ -178,6 +178,7 @@ const SfaNavigator = {
       headerStyle: {
         backgroundColor: masterColor.backgroundWhite
       },
+      headerLeft: <HeaderLeftOption />,
       headerRight: <View />,
       gesturesEnabled: false
     }
@@ -204,7 +205,7 @@ const SfaNavigator = {
   SfaCollectionEditView: {
     screen: SfaCollectionEditView,
     navigationOptions: {
-      headerTitle: 'Ubah Penagihan',
+      headerTitle: 'Edit Penagihan',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {
@@ -219,11 +220,11 @@ const SfaNavigator = {
       headerRight: <View />,
       gesturesEnabled: false
     }
-  }, 
+  },
   SfaBillingEditView: {
     screen: SfaBillingEditView,
     navigationOptions: {
-      headerTitle: 'Ubah Pembayaran',
+      headerTitle: 'Edit Pembayaran',
       headerTitleStyle: [
         GlobalFont.textHeaderPage,
         {

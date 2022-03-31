@@ -324,6 +324,39 @@ function* postTransactionCheckout(actions) {
   }
 }
 
+function* getReturnBalance(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getReturnBalance(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetReturnBalanceSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetReturnBalanceFailed(error));
+  }
+}
+/** GET STORE COLLECTION LIST */
+function* getStoreCollectionList(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getStoreCollectionList(actions.payload);
+    });
+    yield put(ActionCreators.sfaGetStoreCollectionListSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaGetStoreCollectionListFailed(error));
+  }
+}
+/** === GET STORE COLLECTION STATUS === */
+function* getStroreCollectionStatus(actions) {
+  try {
+    const response = yield call(() => {
+      return SfaMethod.getStoreCollectionStatus(actions.payload);
+    });
+    yield put(ActionCreators.sfaStoreCollectionStatusSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.sfaStoreCollectionStatusFailed(error));
+  }
+}
+
 /** === SAGA FUNCTION === */
 function* SfaSaga() {
   yield takeEvery(
@@ -385,6 +418,15 @@ function* SfaSaga() {
   yield takeEvery(
     types.SFA_POST_TRANSACTION_CHECKOUT_PROCESS,
     postTransactionCheckout
+  );
+  yield takeEvery(types.SFA_GET_RETURN_BALANCE_PROCESS, getReturnBalance);
+  yield takeEvery(
+    types.SFA_GET_STORE_COLLECTION_LIST_PROCESS,
+    getStoreCollectionList
+  );
+  yield takeEvery(
+    types.SFA_STORE_COLLECTION_STATUS_PROCESS,
+    getStroreCollectionStatus
   );
 }
 

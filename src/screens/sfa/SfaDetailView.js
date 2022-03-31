@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -40,9 +41,9 @@ function SfaDetailView(props) {
   const {
     loadingSfaGetDetail,
     dataSfaGetDetail,
-    errorSfaGetDetail
+    errorSfaGetDetail,
+    selectedStore
   } = useSelector(state => state.sfa);
-
   const { selectedMerchant } = useSelector(state => state.merchant);
   const { userSuppliers } = useSelector(state => state.user);
   const [accordionOpen, setAccordionOpen] = useState(false);
@@ -64,7 +65,7 @@ function SfaDetailView(props) {
   const addCollection = () => {
     const data = {
       supplierId: parseInt(userSuppliers[0].supplier.id, 10),
-      storeId: selectedMerchant.storeId
+      storeId: selectedStore?.id || selectedMerchant?.storeId
     };
     dispatch(sfaGetPaymentMethodProcess(data));
     NavigationService.navigate('SfaCollectionMethodListView');
@@ -360,7 +361,7 @@ function SfaDetailView(props) {
       <ButtonSingle
         disabled={
           dataSfaGetDetail.data.isPaid ||
-          dataSfaGetDetail.data.remainingBilling === 0
+          parseInt(dataSfaGetDetail.data.remainingBilling, 10) === 0
         }
         title={'Tagih'}
         borderRadius={4}
@@ -409,7 +410,7 @@ function SfaDetailView(props) {
               justifyContent: 'space-between'
             }}
           >
-            <Text style={Fonts.type17}>PPN 10%</Text>
+            <Text style={Fonts.type17}>PPN</Text>
             <Text style={Fonts.type17}>
               {MoneyFormatSpace(dataSfaGetDetail.data.parcelTaxes)}
             </Text>

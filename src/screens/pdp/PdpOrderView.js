@@ -254,6 +254,11 @@ class PdpOrderView extends Component {
    */
   /** === RENDER TOTAL VALUE === */
   renderBottomValue() {
+    const catalogueTaxes = this.props.global.dataGetCatalogueTaxes?.data || [];
+    let ppn = null;
+    if ((catalogueTaxes || []).length > 0) {
+      ppn = catalogueTaxes[0].amount;
+    }
     return (
       <View style={{ flex: 1 }}>
         <View
@@ -271,7 +276,9 @@ class PdpOrderView extends Component {
             </Text>
           </View>
           <View>
-            <Text style={Fonts.type69}>Belum termasuk PPN 10%</Text>
+            <Text style={Fonts.type69}>
+              Belum termasuk PPN {ppn !== null ? `${ppn}%` : ''}
+            </Text>
           </View>
         </View>
       </View>
@@ -487,8 +494,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ pdp, oms }) => {
-  return { pdp, oms };
+const mapStateToProps = ({ pdp, oms, global }) => {
+  return { pdp, oms, global };
 };
 
 const mapDispatchToProps = dispatch => {

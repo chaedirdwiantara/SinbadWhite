@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, Text, Dimensions, Image } from '../../../library/reactPackage';
+import {
+  View,
+  Text,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+  ImageBackground,
+  StyleSheet
+} from '../../../library/reactPackage';
 import { MaterialIcon, Tooltip } from '../../../library/thirdPartyPackage';
 import { Fonts, GlobalStyle } from '../../../helpers';
 import masterColor from '../../../config/masterColor.json';
@@ -148,7 +156,7 @@ const cardBodyValue = props => {
           })
         : null}
       <Text style={{ ...Fonts.type17, ...props?.valueStyle }}>
-        {props?.value}
+        {props?.value ?? ''}
       </Text>
       {props?.valueIcon?.suffixIcon
         ? icon({
@@ -171,24 +179,57 @@ const cardBodyValue = props => {
  */
 const renderImage = props => {
   return (
-    <View style={{ flexDirection: 'row' }}>
-      <View style={{ ...props?.imageContainerStyle }}>
-        <Image
-          source={{ ...props?.imageSource }}
-          style={{ ...props?.imageSourceStyle }}
-        />
-      </View>
+    <View
+      style={{
+        flex: 1,
+        ...props?.imageContainerStyle
+      }}
+    >
+      {props?.onPressImage ? (
+        <TouchableOpacity
+          accessible={true}
+          accessibilityLabel={'btnOpenModalImage'}
+          onPress={props?.onPressImage}
+          style={{
+            flex: 1
+          }}
+        >
+          <View style={styles.imageContainer}>
+            <ImageBackground
+              source={{ ...props?.imageSource }}
+              style={{ ...styles.image, ...props?.imageSourceStyle }}
+            >
+              <Text style={{ ...props?.imageBackgroundStyle }}>
+                <Image
+                  source={require('../../../assets/icons/global/zoom_in.png')}
+                />
+              </Text>
+            </ImageBackground>
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ ...props?.imageSource }}
+            style={{ ...styles.image, ...props?.imageSourceStyle }}
+          />
+        </View>
+      )}
     </View>
   );
 };
 
 /**
+ * MAIN RENDER
  * CARD BODY
+ *
  * @param {string} title string
  * @param {*} value string | number
  * @param {string} imageSource string
+ * @param {function} onPressImage function
  * @param {StyleSheet} imageContainerStyle StyleSheet
  * @param {StyleSheet} imageSourceStyle StyleSheet
+ * @param {StyleSheet} imageBackgroundStyle StyleSheet
  * @param {StyleSheet} titleStyle StyleSheet - for title
  * @param {StyleSheet} valueStyle StyleSheet - for value
  * @param {string} valuePosition right | bottom; default: right
@@ -215,7 +256,7 @@ const CardBody = props => {
   const valuePosition = props.valuePosition ? props.valuePosition : 'right';
   return (
     <>
-      <View style={{ marginBottom: 8, ...props?.styleCardView }}>
+      <View style={{ marginBottom: 12, ...props?.styleCardView }}>
         {props?.tooltip ? (
           <View style={{ flexDirection: 'row' }}>
             {cardBodyTitle(props)}
@@ -234,27 +275,41 @@ const CardBody = props => {
       {valuePosition === 'bottom' ? (
         <View style={{ flexDirection: 'row' }}>{cardBodyValue(props)}</View>
       ) : null}
-      <View
-        style={{
-          ...props?.imageSourceStyle,
-          alignItems: 'center',
-          justifyContent: 'center',
-          alignContent:'center',
-          alignSelf:'center',
-          borderColor: '#ffffff'
-        }}
-      >
-        {props?.loadingImage ? (
-          <Image
-            source={require('../../../assets/gif/loading/load_triagle.gif')}
-            style={{ height: 50, width: 50 }}
-          />
-        ) : (
-          renderImage(props)
-        )}
-      </View>
+
+      {props?.imageSource ? (
+        <>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignContent: 'center',
+              alignSelf: 'center',
+              borderColor: '#ffffff',
+              ...props?.imageSourceStyle
+            }}
+          >
+            {props?.loadingImage ? (
+              <Image
+                source={require('../../../assets/gif/loading/load_triagle.gif')}
+                style={{ height: 50, width: 50 }}
+              />
+            ) : (
+              renderImage(props)
+            )}
+          </View>
+        </>
+      ) : null}
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  imageContainer: {
+    flex: 1
+  },
+  image: {
+    flex: 1
+  }
+});
 
 export { CardHeaderBadge, CardHeader, CardBody };
