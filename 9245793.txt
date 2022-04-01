@@ -1,0 +1,2 @@
+What's New:
+- Now you can order products using small and large Units Of Measurement
