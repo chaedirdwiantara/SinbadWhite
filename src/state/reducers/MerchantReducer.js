@@ -223,7 +223,8 @@ const INITIAL_STATE = {
   errorCheckCanResumeVisit: null,
   errorPauseResumeVisit: null,
   errorGetCreditLimitList: null,
-  errorGetCreditLimitSummary: null
+  errorGetCreditLimitSummary: null,
+  modalChangeMerchant: false
 };
 
 export const merchant = createReducer(INITIAL_STATE, {
@@ -1507,7 +1508,7 @@ export const merchant = createReducer(INITIAL_STATE, {
       dataCheckCanResumeVisit: false
     };
   },
-   /**
+  /**
    * ======================
    * CHECK CAN RESUME VISIT JBS
    * ======================
@@ -1532,8 +1533,8 @@ export const merchant = createReducer(INITIAL_STATE, {
           ...state.selectedMerchant.journeyBookStores,
           pauseStatus: action.payload.pauseStatus,
           pauseDate: action.payload?.pauseDate
-        },
-      },
+        }
+      }
     };
   },
   [types.PAUSE_RESUME_VISIT_FAILED](state, action) {
@@ -1630,6 +1631,13 @@ export const merchant = createReducer(INITIAL_STATE, {
     return {
       ...state,
       dataGetCreditLimitSummary: null
+    };
+  },
+  /** Modal Change Merchant */
+  [types.MODAL_CHANGE_MERCHANT](state, action) {
+    return {
+      ...state,
+      modalChangeMerchant: action.payload
     };
   }
 });

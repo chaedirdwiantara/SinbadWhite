@@ -52,6 +52,8 @@ class PdpView extends Component {
       selectedProduct: null,
       skuBundle: true,
       invoiceGroupId: 0,
+      modalChangeMerchantText:
+        'Menambahkan produk ini ke keranjang akan menghapus SKU sebelumnya. Apakah Anda Setuju ?',
       /** sort */
       sort: 'asc',
       sortBy: 'name',
@@ -113,6 +115,27 @@ class PdpView extends Component {
         });
       }
     }
+
+    if (
+      prevState.merchant.modalChangeMerchant !==
+      this.props.merchant.modalChangeMerchant
+    ) {
+      if (this.props.merchant.modalChangeMerchant) {
+        this.checkModalChangeMerchant();
+      }
+    }
+  }
+
+  checkModalChangeMerchant() {
+    if (this.props.oms.dataCart.length > 0) {
+      this.setState({
+        modalChangeMerchantText:
+          'Apakah anda setuju untuk menghapus keranjang sebelumnya?',
+        openModalConfirmRemoveCart: true
+      });
+    } else {
+      NavigationService.navigate('OmsCartView');
+    }
   }
   /** CALLED FROM CHILD */
   parentFunction(data) {
@@ -156,6 +179,8 @@ class PdpView extends Component {
           this.props.oms.dataCart.length > 0
         ) {
           this.setState({
+            modalChangeMerchantText:
+              'Menambahkan produk ini ke keranjang akan menghapus SKU sebelumnya. Apakah Anda Setuju ?',
             openModalConfirmRemoveCart: true,
             selectedProduct: data.data,
             invoiceGroupId: data.invoice[0].invoiceGroupId
@@ -184,7 +209,8 @@ class PdpView extends Component {
         this.props.omsAddToCart({
           method: 'add',
           catalogueId: data.data.catalogueId,
-          qty: data.data.qty
+          qty: data.data.qty,
+          detail: data.data?.detail ?? null
         });
         this.setState({
           openModalOrder: false,
@@ -330,27 +356,38 @@ class PdpView extends Component {
         okText={'Ya'}
         cancelText={'Tidak'}
         open={this.state.openModalConfirmRemoveCart}
-        content={
-          'Menambahkan produk ini ke keranjang akan menghapus SKU sebelumnya. Apakah Anda Setuju ?'
-        }
+        content={this.state.modalChangeMerchantText}
         type={'okeRed'}
         ok={() => {
-          this.setState({
-            openModalConfirmRemoveCart: false,
-            openModalOrder: true
-          });
-          this.props.omsResetData();
-          this.props.merchantChanged(false);
-          const invoiceGroupId = this.state.invoiceGroupId;
-          const storeId = this.props.merchant?.selectedMerchant?.storeId;
-          this.props.OMSCheckCreditProcess({
-            invoiceGroupId: parseInt(invoiceGroupId, 10),
-            storeId: parseInt(storeId, 10)
-          });
-          this.props.pdpGetDetailProcess(this.state.selectedProduct);
-          this.setState({ openModalOrder: true });
+          if (!this.props.merchant.modalChangeMerchant) {
+            this.setState({
+              openModalConfirmRemoveCart: false,
+              openModalOrder: true
+            });
+            this.props.omsResetData();
+            this.props.merchantChanged(false);
+            this.props.modalChangeMerchant(false);
+            const invoiceGroupId = this.state.invoiceGroupId;
+            const storeId = this.props.merchant?.selectedMerchant?.storeId;
+            this.props.OMSCheckCreditProcess({
+              invoiceGroupId: parseInt(invoiceGroupId, 10),
+              storeId: parseInt(storeId, 10)
+            });
+            this.props.pdpGetDetailProcess(this.state.selectedProduct);
+            this.setState({ openModalOrder: true });
+          } else {
+            this.props.omsResetData();
+            this.props.merchantChanged(false);
+            this.props.modalChangeMerchant(false);
+            this.setState({
+              openModalConfirmRemoveCart: false
+            });
+          }
         }}
-        cancel={() => this.setState({ openModalConfirmRemoveCart: false })}
+        cancel={() => {
+          this.props.modalChangeMerchant(false);
+          this.setState({ openModalConfirmRemoveCart: false });
+        }}
       />
     ) : (
       <View />

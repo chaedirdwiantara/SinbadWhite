@@ -10,10 +10,11 @@ import {
   TouchableOpacity
 } from '../../library/reactPackage';
 import {
-  StatusBarRed,
+  StatusBarWhite,
   ButtonSingle,
   ModalBottomErrorRespons,
-  LoadingPage
+  LoadingPage,
+  ToastType1
 } from '../../library/component';
 import {
   connect,
@@ -41,7 +42,8 @@ class OmsVerificationView extends Component {
       openModalErrorNoUrban: false,
       openModalCS: false,
       openModalErrorPromo: false,
-      openModalErrorMaxOrder: false
+      openModalErrorMaxOrder: false,
+      openToastConvertion: false
     };
   }
 
@@ -94,32 +96,42 @@ class OmsVerificationView extends Component {
     }
   }
 
+  /** DID MOUNT */
+  componentDidMount() {
+    this.setState({ openToastConvertion: true });
+  }
+
   /**
    * =============================
    * ERROR FUNCTION
    * ============================
    */
   manageError() {
-    switch (this.props.oms.errorOmsGetCheckoutItem.data.errorCode) {
-      case 'ERR-URBAN':
-        this.setState({
-          openModalErrorNoUrban: true,
-          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
-        });
-        break;
-      case 'ERR-PROMO':
-        this.setState({
-          openModalErrorPromo: true,
-          cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
-        });
-        break;
-      case 'ERR-MAX-QTY':
-        this.setState({
-          openModalErrorMaxOrder: true
-        });
-        break;
-      default:
-        break;
+    if (this.props.oms.errorOmsGetCheckoutItem.data) {
+      switch (this.props.oms.errorOmsGetCheckoutItem.data.errorCode) {
+        case 'ERR-URBAN':
+          this.setState({
+            openModalErrorNoUrban: true,
+            cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
+          });
+          break;
+        case 'ERR-PROMO':
+          this.setState({
+            openModalErrorPromo: true,
+            cartId: this.props.oms.errorOmsGetCheckoutItem.data.cartId
+          });
+          break;
+        case 'ERR-MAX-QTY':
+          this.setState({
+            openModalErrorMaxOrder: true
+          });
+          break;
+        default:
+          this.setState({ openModalErrorGlobal: true });
+          break;
+      }
+    } else {
+      this.setState({ openModalErrorGlobal: true });
     }
   }
 
@@ -137,19 +149,29 @@ class OmsVerificationView extends Component {
     this.props.omsDeleteCartItemProcess({
       orderId: this.props.navigation.state.params.cartId
     });
+
+    this.getCartItem(this.props.oms.dataCart);
+  }
+
+  /** => get cart item */
+  getCartItem(catalogues) {
+    this.props.omsGetCartItemProcess({ catalogues });
   }
 
   /** ===  === */
   getCheckoutItem() {
     let portfolioId;
-    if(this.props.merchant.dataGetPortfolioV2 && !_.isEmpty(this.props.merchant.dataGetPortfolioV2)){
-      portfolioId = this.props.merchant.dataGetPortfolioV2[0].id
+    if (
+      this.props.merchant.dataGetPortfolioV2 &&
+      !_.isEmpty(this.props.merchant.dataGetPortfolioV2)
+    ) {
+      portfolioId = this.props.merchant.dataGetPortfolioV2[0].id;
     }
 
     this.props.omsGetCheckoutItemProcess({
       cartId: this.props.navigation.state.params.cartId,
       catalogues: this.props.oms.dataCheckout,
-      portfolioId,
+      portfolioId
     });
   }
 
@@ -162,6 +184,25 @@ class OmsVerificationView extends Component {
   }
 
   /**
+   * ===================
+   * TOAST
+   * ====================
+   */
+  renderToast() {
+    return this.state.openToastConvertion ? (
+      <ToastType1
+        basic={true}
+        margin={10}
+        content={
+          'Jumlah order satuan terkecil terkonversi otomatis ke satuan terbesar jika mencukupi jumlah satuan terbesar.'
+        }
+      />
+    ) : (
+      <View />
+    );
+  }
+
+  /**
    * ======================
    * RENDER VIEW
    * ======================
@@ -169,7 +210,9 @@ class OmsVerificationView extends Component {
   renderHeader() {
     return (
       <View style={styles.headerContainer}>
-        <Text style={Fonts.type48}>BERIKUT ADALAH RINGKASAN ORDER ANDA</Text>
+        <Text style={Fonts.fontH11SemiBold}>
+          Berikut adalah ringkasan order Anda
+        </Text>
       </View>
     );
   }
@@ -203,16 +246,26 @@ class OmsVerificationView extends Component {
             </View>
             <View style={styles.productDetailContainer}>
               <View style={{ width: '75%' }}>
-                <Text style={[Fonts.type16, { marginBottom: 4 }]}>
+                <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                   {item.name}
                 </Text>
               </View>
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={[Fonts.type17, { marginBottom: 4 }]}>{`x${
-                    item.qty
-                  } Pcs`}</Text>
-                  <Text style={[Fonts.type22, { marginBottom: 4 }]}>
+                  <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
+                    {!item.detail
+                      ? `${item.qty} ${item.unit ?? 'Pcs'}`
+                      : `${item.detail.smallUomQty} ${item.detail.smallUom} | ${
+                          item.detail.largeUomQty
+                        } ${item.detail.largeUom}`}
+                  </Text>
+                  {item.detail && (
+                    <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
+                      {`Total item ${item.qty} ${item.detail.smallUom ??
+                        'Pcs'}`}
+                    </Text>
+                  )}
+                  <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                     {MoneyFormat(parseInt(item.price))}
                   </Text>
                   <View style={styles.totalAndPriceContainer}>
@@ -304,16 +357,25 @@ class OmsVerificationView extends Component {
           </View>
           <View style={styles.productDetailContainer}>
             <View style={{ width: '75%' }}>
-              <Text style={[Fonts.type16, { marginBottom: 4 }]}>
+              <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                 {item.name}
               </Text>
             </View>
-            <Text style={[Fonts.type17, { marginBottom: 4 }]}>
+            <Text style={[Fonts.type17, { marginBottom: 2 }]}>
               {item.promoName}
             </Text>
-            <Text style={[Fonts.type10, { marginBottom: 4 }]}>{`x${
-              item.qty
-            } Pcs`}</Text>
+            <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
+              {!item.detail
+                ? `${item.qty} ${item.unit ?? 'Pcs'}`
+                : `${item.detail.smallUomQty} ${item?.detail?.smallUom ??
+                    'Pcs'} | ${item.detail.largeUomQty} ${item?.detail
+                    ?.largeUom ?? 'Box'}`}
+            </Text>
+            {item.detail && (
+              <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
+                {`Total item ${item.qty} ${item.detail.smallUom ?? 'Pcs'}`}
+              </Text>
+            )}
           </View>
         </View>
       );
@@ -325,9 +387,18 @@ class OmsVerificationView extends Component {
     if (notPromoSku.length > 0) {
       return (
         <View>
-          <View style={styles.sectionHeaderContainer}>
-            <Text style={Fonts.type16}>
-              Produk Tidak Mendapatkan Potongan Harga
+          <View style={styles.sectionInfoBox}>
+            <Image
+              style={{
+                width: 16,
+                height: 16,
+                resizeMode: 'contain',
+                marginRight: 8
+              }}
+              source={require('../../assets/icons/global/alert-grey.png')}
+            />
+            <Text style={Fonts.fontCaption1}>
+              Produk tidak mendapatkan potongan harga
             </Text>
           </View>
           {this.renderNonBenefitProductItem(notPromoSku)}
@@ -349,16 +420,25 @@ class OmsVerificationView extends Component {
             </View>
             <View style={styles.productDetailContainer}>
               <View style={{ width: '75%' }}>
-                <Text style={[Fonts.type16, { marginBottom: 4 }]}>
+                <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                   {item.name}
                 </Text>
               </View>
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={[Fonts.type17, { marginBottom: 4 }]}>{`x${
-                    item.qty
-                  } Pcs`}</Text>
-                  <Text style={[Fonts.type22, { marginBottom: 4 }]}>
+                  <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
+                    {!item.detail
+                      ? `${item.qty} ${item.unit}`
+                      : `${item.detail.smallUomQty} ${item.detail.smallUom} | ${
+                          item.detail.largeUomQty
+                        } ${item.detail.largeUom}`}
+                  </Text>
+                  {item.detail && (
+                    <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
+                      {`Total item ${item.qty} ${item.detail.smallUom}`}
+                    </Text>
+                  )}
+                  <Text style={[Fonts.fontCaption1, { marginBottom: 2 }]}>
                     {MoneyFormat(parseInt(item.price))}
                   </Text>
                   <View style={styles.totalAndPriceContainer}>
@@ -569,10 +649,12 @@ class OmsVerificationView extends Component {
   render() {
     return (
       <SafeAreaView style={styles.mainContainer}>
-        <StatusBarRed />
+        <StatusBarWhite />
         {this.renderContent()}
         {/* modal */}
         {this.renderModalSkuStatusConfirmation()}
+        {/* toast */}
+        {this.renderToast()}
         {/* error */}
         {this.renderModalErrorRespons()}
         {this.renderModalErrorNoUrban()}
@@ -592,18 +674,25 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingVertical: 16,
     marginHorizontal: 16,
-    borderBottomColor: masterColor.fontBlack10,
-    borderBottomWidth: 1
+    borderBottomColor: masterColor.fontBlack10
   },
   sectionHeaderContainer: {
     padding: 16
   },
+  sectionInfoBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginHorizontal: 16,
+    marginVertical: 16,
+    borderRadius: 4,
+    backgroundColor: masterColor.bgColorNeutral
+  },
   productListContainer: {
     flexDirection: 'row',
     marginHorizontal: 16,
-    paddingVertical: 8,
-    borderBottomColor: masterColor.fontBlack10,
-    borderBottomWidth: 1
+    paddingVertical: 8
   },
   productImageContainer: {
     marginRight: 8
@@ -637,7 +726,6 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     borderColor: masterColor.fontBlack10,
-    borderWidth: 1,
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10
   },
@@ -666,4 +754,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(OmsVerificationView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OmsVerificationView);

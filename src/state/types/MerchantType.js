@@ -251,3 +251,6 @@ export const MERCHANT_GET_CREDIT_LIMIT_SUMMARY_FAILED =
   'MerchantGetCreditLimitSummaryFailed';
 export const MERCHANT_GET_CREDIT_LIMIT_SUMMARY_RESET =
   'MerchantGetCreditLimitSummaryReset';
+
+/** === MODAL CHANGE MERCHANT */
+export const MODAL_CHANGE_MERCHANT = 'ModalChangeMerchant';
