@@ -23,7 +23,7 @@ import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
 import Price from '../../functions/Price';
-import masterColor from '../../config/masterColor.json';
+import MssTag from './pdp-list/MssTag';
 
 class PdpListDataView extends Component {
   constructor(props) {
@@ -75,35 +75,6 @@ class PdpListDataView extends Component {
       </TouchableOpacity>
     );
   }
-  /** === RENDER MSS TAG === */
-  renderMSS(item) {
-    return item.isMss ? (
-      <View
-        style={{
-          paddingTop: 8,
-          paddingBottom: 8
-        }}
-      >
-        <View
-          style={{
-            alignSelf: 'flex-start',
-            backgroundColor: masterColor.fontBlue10,
-            padding: 4,
-            borderRadius: 50,
-            flexDirection: 'row',
-            alignItems: 'center'
-          }}
-        >
-          <MaterialIcon name="stars" color={masterColor.fontBlue50} size={18} />
-          <Text style={[Fonts.type108, { paddingHorizontal: 4 }]}>
-            Must-Selling
-          </Text>
-        </View>
-      </View>
-    ) : (
-      <View />
-    );
-  }
   /** === RENDER ITEM === */
   renderItem({ item, index }) {
     const productImage = (
@@ -120,7 +91,9 @@ class PdpListDataView extends Component {
             <View>{productImage}</View>
           </View>
           <View style={styles.boxContentDesc}>
-            {this.renderMSS(item)}
+            <MssTag
+              item={item}
+            />
             <View style={styles.boxTitleAndSku}>
               <View style={styles.boxName}>
                 <Text style={[Fonts.type16, { textTransform: 'capitalize' }]}>
@@ -294,9 +267,9 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
+ * updatedBy: Raka
+ * updatedDate: 04042022
  * updatedFunction:
- * -> Refactoring Module Import
- *
+ * -> Update MSS tag
+ * -> 
  */
