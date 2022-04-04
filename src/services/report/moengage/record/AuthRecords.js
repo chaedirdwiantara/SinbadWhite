@@ -23,6 +23,16 @@ export function trackUserLogin(props) {
   SnbSetAttribute(neededData);
 }
 
+export function trackUserLogout(props) {
+  const { data, eventName } = props;
+
+  const neededData = {
+    sr_phone_number: data
+  };
+  SnbRecord(eventName, neededData);
+  ReactMoE.logout();
+}
+
 trackUserLogin.propTypes = {
   loginType: PropTypes.string,
   data: PropTypes.shape({
@@ -32,5 +42,11 @@ trackUserLogin.propTypes = {
       mobilePhoneNo: PropTypes.string,
       email: PropTypes.string
     })
+  })
+};
+
+trackUserLogout.propTypes = {
+  data: PropTypes.shape({
+    user_phone_number: PropTypes.string
   })
 };

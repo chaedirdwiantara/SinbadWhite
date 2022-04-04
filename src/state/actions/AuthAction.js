@@ -1,6 +1,8 @@
 import * as types from '../types';
 import { globalReportFromAction } from '../../services/report/globalReport';
 import * as EventName from '../../services/report/moengage/event';
+import { Store } from '../Store';
+
 /**
  * ==============================
  * SIGNOUT
@@ -8,6 +10,8 @@ import * as EventName from '../../services/report/moengage/event';
  */
 /** === DELETE ALL DATA ==== */
 export function signOut() {
+  const { user } = Store.getState();
+  globalReportFromAction(EventName.LOGOUT, user?.mobilePhoneNo ?? null);
   return { type: types.DELETE_USER_DATA };
 }
 /**
