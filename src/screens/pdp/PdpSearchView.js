@@ -119,7 +119,8 @@ class PdpSearchView extends Component {
         this.props.omsAddToCart({
           method: 'add',
           catalogueId: data.data.catalogueId,
-          qty: data.data.qty
+          qty: data.data.qty,
+          detail: data.data?.detail ?? null
         });
         this.setState({
           openModalOrder: false,
@@ -276,7 +277,10 @@ const mapDispatchToProps = dispatch => {
 };
 
 // eslint-disable-next-line prettier/prettier
-export default connect(mapStateToProps, mapDispatchToProps)(PdpSearchView);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PdpSearchView);
 
 /**
  * ============================

@@ -144,7 +144,52 @@ class ModalBottomParcelDetail extends Component {
 
   renderProductListContent(brand) {
     return brand.orderBrandCatalogues.map((item, index) => {
-      return (
+      return item.detail ? (
+        <>
+          <View
+            key={index}
+            style={{
+              flexDirection: 'row',
+              marginBottom: 5,
+              justifyContent: 'space-between',
+              paddingHorizontal: 16
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={Fonts.type17}>
+                {item.catalogue.name} ({item.detail.smallUomQty}
+                {item.detail.smallUom})
+              </Text>
+            </View>
+            <View style={{ width: '40%', alignItems: 'flex-end' }}>
+              <Text style={Fonts.type17}>
+                {MoneyFormat(item.detail.totalSmallUom)}
+              </Text>
+            </View>
+          </View>
+          <View
+            key={index}
+            style={{
+              flexDirection: 'row',
+              marginBottom: 5,
+              justifyContent: 'space-between',
+              paddingHorizontal: 16
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={Fonts.type17}>
+                {item.catalogue.name} ({item.detail.largeUomQty}
+                {item.detail.largeUom})
+              </Text>
+            </View>
+            <View style={{ width: '40%', alignItems: 'flex-end' }}>
+              <Text style={Fonts.type17}>
+                {MoneyFormat(item.detail.totalLargeUom)}
+              </Text>
+            </View>
+          </View>
+        </>
+      ) : (
         <View
           key={index}
           style={{
@@ -156,7 +201,8 @@ class ModalBottomParcelDetail extends Component {
         >
           <View style={{ flex: 1 }}>
             <Text style={Fonts.type17}>
-              {item.catalogue.name} ({item.qty}pcs)
+              {item.catalogue.name} ({item.qty}
+              {item.catalogue?.catalogueUnit?.unit ?? 'PCS'})
             </Text>
           </View>
           <View style={{ width: '40%', alignItems: 'flex-end' }}>
