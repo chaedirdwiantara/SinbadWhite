@@ -64,5 +64,8 @@
   "btnPri": "#F0444C",
   "textSecondary": "#677A8E",
   "iconDark": "#0B1A28",
-  "placeholder": "#ACB8C3"
+  "placeholder": "#ACB8C3",
+  "bgColorNeutral": "#F3F5F7",
+  "bgColorGrey": "#E5E5E5",
+  "fontSecondary": "#677A8E"
 }

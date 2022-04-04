@@ -61,9 +61,9 @@ const OmsNavigator = {
           flex: 1
         }
       ],
-      headerTintColor: masterColor.backButtonWhite,
+      headerTintColor: masterColor.fontBlack100,
       headerStyle: {
-        backgroundColor: masterColor.mainColor
+        backgroundColor: masterColor.backgroundWhite
       },
       headerRight: <View />,
       gesturesEnabled: false
