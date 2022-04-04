@@ -2,7 +2,6 @@ import * as EventName from '../event';
 import * as Auth from '../record/AuthRecords';
 
 function recordLogin(data) {
-  console.log('Action', data);
   const props = {
     eventName: EventName.LOGIN,
     data
@@ -11,4 +10,12 @@ function recordLogin(data) {
   Auth.trackUserLogin(props);
 }
 
-export { recordLogin };
+function recordLogout(data) {
+  const props = {
+    eventName: EventName.LOGOUT,
+    data
+  };
+  Auth.trackUserLogout(props);
+}
+
+export { recordLogin, recordLogout };

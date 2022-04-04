@@ -5,6 +5,9 @@ export const toMoengageFromAction = (eventName, data) => {
     case EventName.LOGIN:
       MoeAction.recordLogin(data);
       break;
+    case EventName.LOGOUT:
+      MoeAction.recordLogout(data);
+      break;
     default:
       break;
   }
