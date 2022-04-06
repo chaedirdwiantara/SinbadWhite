@@ -4,25 +4,49 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity
-} from '../library/reactPackage'
+} from '../library/reactPackage';
 import {
   Badge,
   bindActionCreators,
   connect
-} from '../library/thirdPartyPackage'
-import { Fonts } from '../helpers'
-import { Color } from '../config'
+} from '../library/thirdPartyPackage';
+import { Fonts } from '../helpers';
+import { Color } from '../config';
 import * as ActionCreators from '../state/actions';
 import NavigationServices from '../navigation/NavigationService';
 
 class CartGlobal extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      merchantChanged: false
+    };
+  }
   /**
    * ====================
    * FUNCTIONAL
    * ====================
    */
+  componentDidMount() {
+    this.changeMerchantStatus(this.props.merchant.merchantChanged);
+  }
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.merchant.merchantChanged !== this.props.merchant.merchantChanged
+    ) {
+      this.changeMerchantStatus(this.props.merchant.merchantChanged);
+    }
+  }
   goToOmsCartView() {
-    NavigationServices.navigate('OmsCartView');
+    if (!this.state.merchantChanged) {
+      NavigationServices.navigate('OmsCartView');
+    } else {
+      this.props.modalChangeMerchant(true);
+    }
+  }
+
+  changeMerchantStatus(status) {
+    this.setState({ merchantChanged: status });
   }
   /**
    * ====================
@@ -91,8 +115,8 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ oms }) => {
-  return { oms };
+const mapStateToProps = ({ oms, merchant }) => {
+  return { oms, merchant };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -103,15 +127,20 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(CartGlobal);
 
 /**
-* ============================
-* NOTES
-* ============================
-* createdBy: 
-* createdDate: 
-* updatedBy: Tatas
-* updatedDate: 08072020
-* updatedFunction:
-* -> Refactoring Module Import
-* 
-*/
-
+ * ============================
+ * NOTES
+ * ============================
+ * createdBy:
+ * createdBy:
+ * createdBy:
+ * createdDate:
+ * createdDate:
+ * createdDate:
+ * updatedBy: Tatas
+ * updatedDate: 08072020
+ * updatedFunction:
+ * -> Refactoring Module Import
+ *
+ *
+ *
+ */

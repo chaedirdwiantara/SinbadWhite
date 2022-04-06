@@ -57,6 +57,17 @@ function* uploadImage(actions) {
     yield put(ActionCreators.uploadImageFailed(error));
   }
 }
+/** === THIS FOR GET CATALOGUE_TAXES VALUE === */
+function* getCatalogueTaxes() {
+  try {
+    const response = yield call(() => {
+      return GlobalMethod.getCatalogueTaxes();
+    });
+    yield put(ActionCreators.getCatalogueTaxesSuccess(response));
+  } catch (error) {
+    yield put(ActionCreators.getCatalogueTaxesFailed(error));
+  }
+}
 /** === SAGA FUNCTION === */
 function* GlobalSaga() {
   yield takeEvery(types.LIST_AND_SEARCH_GET_PROCESS, getListAndSearch);
@@ -67,6 +78,7 @@ function* GlobalSaga() {
     types.GLOBAL_LONGLAT_TO_ADDRESS_PROCESS,
     getAddressFromLongLat
   );
+  yield takeEvery(types.GET_CATALOGUE_TAXES_PROCESS, getCatalogueTaxes);
 }
 
 export default GlobalSaga;

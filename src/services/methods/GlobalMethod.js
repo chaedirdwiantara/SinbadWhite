@@ -192,7 +192,9 @@ function addGaps(string = '', gaps, spacer) {
   const offsets = [0].concat(gaps).concat([string.length]);
   return offsets
     .map((end, index) => {
-      if (index === 0) return '';
+      if (index === 0) {
+        return '';
+      }
       const start = offsets[index - 1];
       return string.substr(start, end - start);
     })
@@ -220,6 +222,15 @@ export function remappingPrivilege(privilege) {
   return temp;
 }
 
+/** GET PPN VALUE */
+function getCatalogueTaxes() {
+  const queryParams = '$limit=1&$skip=0&sort=desc&sortby=amount&status=active';
+  return ApiRest({
+    path: `catalogue-taxes?${queryParams}`,
+    method: 'GET'
+  });
+}
+
 export const GlobalMethod = {
   getListAndSearch,
   getAddressFromLongLat,
@@ -231,7 +242,8 @@ export const GlobalMethod = {
   userStoreId,
   addGaps,
   uploadImage,
-  remappingPrivilege
+  remappingPrivilege,
+  getCatalogueTaxes
 };
 
 /**

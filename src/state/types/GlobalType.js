@@ -51,3 +51,7 @@ export const APP_VERSION = 'appVersion';
 
 /** FOR UPDATED APP */
 export const SAVE_APP_VERSION = 'saveAppVersion';
+/** THIS FOR GET CATALOGUE_TAXES VALUE */
+export const GET_CATALOGUE_TAXES_PROCESS = 'getCatalogueTaxesProcess';
+export const GET_CATALOGUE_TAXES_SUCCESS = 'getCatalogueTaxesSuccess';
+export const GET_CATALOGUE_TAXES_FAILED = 'getCatalogueTaxesFailed';
