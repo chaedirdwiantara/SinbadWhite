@@ -10,7 +10,9 @@ const INITIAL_STATE = {
   /** this for maintenance app */
   appMaintenance: false,
   /** this for version app */
-  appVersionCode: 0
+  appVersionCode: 0,
+  /** Moengage App Version */
+  appVersion: null
 };
 
 export const permanent = createReducer(INITIAL_STATE, {
@@ -110,6 +112,13 @@ export const permanent = createReducer(INITIAL_STATE, {
     return {
       ...state,
       otpAgentSignIn: action.payload
+    };
+  },
+  /** Moengage App Version Code */
+  [types.SAVE_APP_VERSION](state, action) {
+    return {
+      ...state,
+      appVersion: action.payload
     };
   }
 });

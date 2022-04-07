@@ -244,6 +244,13 @@ export function appVersion(data) {
 }
 /**
  * ======================
+ * CHECK UPDATED APP
+ * ======================
+ */
+export function saveAppVersion(data) {
+  return { type: types.SAVE_APP_VERSION, payload: data };
+}
+/*=========================
  * GET CATALOGUE_TAXES VALUE
  * ======================
  */
