@@ -1,4 +1,8 @@
 import * as types from '../types';
+import { globalReportFromAction } from '../../services/report/globalReport';
+import * as EventName from '../../services/report/moengage/event';
+import { Store } from '../Store';
+
 /**
  * ==============================
  * SIGNOUT
@@ -6,6 +10,8 @@ import * as types from '../types';
  */
 /** === DELETE ALL DATA ==== */
 export function signOut() {
+  const { user } = Store.getState();
+  globalReportFromAction(EventName.LOGOUT, user?.mobilePhoneNo ?? null);
   return { type: types.DELETE_USER_DATA };
 }
 /**
@@ -66,6 +72,7 @@ export function signInProcess(data) {
 /** === SIGNIN SUCCESS === */
 export function signInSuccess(data) {
   if (data.result === 'Ok') {
+    globalReportFromAction(EventName.LOGIN, data.data);
     return { type: types.SIGN_IN_SUCCESS, payload: data.data };
   }
   return { type: types.SIGN_IN_FAILED, payload: data };
