@@ -5,25 +5,21 @@ import {
   StyleSheet,
   Text
 } from '../../../library/reactPackage';
-import { Color } from '../../../config';
 import { Fonts } from '../../../helpers';
 
 export class MssTagV2 extends Component {
   render() {
     const { item } = this.props;
 
-    /** TODO: specify mss core/mss only */
-    const core = false;
-
-    if (item.isMss) {
+    if (item.mssSetting?.id) {
       return (
         <View style={[styles.mainContainer, { 
-          backgroundColor: core ? Color.fontRed10OP10 : Color.fontGreen50OP10
+          backgroundColor: item.mssSetting?.backgroundColor
          }]}>
           <Text style={[Fonts.type108, {
-            color: core ? Color.mainColor : Color.fontGreen50
+            color: item.mssSetting?.color
           }]}>
-            {core ? 'MSS Core' : 'MSS'}
+            {item.mssSetting?.name}
           </Text>
         </View>
       )

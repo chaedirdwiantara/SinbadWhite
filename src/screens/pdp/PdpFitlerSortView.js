@@ -20,7 +20,7 @@ class PdpFilterSortView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: ['Harga Tinggi ke Rendah', 'Harga Rendah ke Tinggi'],
+      data: ['Berdasarkan Prioritas', 'Harga Tinggi ke Rendah', 'Harga Rendah ke Tinggi'],
       sortIndex: this.props.sortIndex
     };
   }
@@ -34,15 +34,19 @@ class PdpFilterSortView extends Component {
     let sortBy = '';
     switch (this.state.sortIndex) {
       case 0:
+        // sortBy = 'mss_type';
+        // sort = 'asc';
+        break;
+      case 1:
         sortBy = 'retail_buying_price';
         sort = 'desc';
         break;
-      case 1:
+      case 2:
         sortBy = 'retail_buying_price';
         sort = 'asc';
         break;
       case null:
-        sortBy = 'name';
+        sortBy = 'name'; // mss_type
         sort = 'asc';
         break;
       default:

@@ -8,30 +8,26 @@ import {
 import {
   MaterialIcon
 } from '../../../library/thirdPartyPackage';
-import { Color } from '../../../config';
 import { Fonts } from '../../../helpers';
 
 export class MssTag extends Component {
   render() {
     const { item } = this.props;
 
-    /** TODO: specify mss core/mss only */
-    const core = false;
-
-    if (item.isMss) {
+    if (item.mssSetting?.id) {
       return (
         <View style={[styles.mainContainer]}>
           <View
             style={[styles.tagContainer, {
-              backgroundColor: core ? Color.fontRed10OP10 : Color.fontGreen50OP10
+              backgroundColor: item.mssSetting?.backgroundColor //core ? Color.fontRed10OP10 : Color.fontGreen50OP10
             }]}
           >
-            <MaterialIcon name="stars" color={core ? Color.mainColor : Color.fontGreen50} size={18} />
+            <MaterialIcon name="stars" color={item.mssSetting?.color} size={18} />
             <Text style={[Fonts.type108, { 
               paddingHorizontal: 4,
-              color: core ? Color.mainColor : Color.fontGreen50 
+              color: item.mssSetting?.color
             }]}>
-              {core ? 'MSS Core' : 'MSS'}
+              {item.mssSetting?.name}
             </Text>
           </View>
         </View>
