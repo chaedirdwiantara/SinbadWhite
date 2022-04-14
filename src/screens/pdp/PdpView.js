@@ -490,7 +490,6 @@ class PdpView extends Component {
   }
   /** === MAIN === */
   render() {
-    console.log('this.props.user => ', this.props.user)
     return (
       <SafeAreaView style={styles.mainContainer}>
         <StatusBarRed />
