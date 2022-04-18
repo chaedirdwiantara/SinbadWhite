@@ -7,6 +7,11 @@ export const toMoengageFromPage = (prevPage, currentPage) => {
     case 'AddMerchantStep1':
       MoEAction.recordRegisterStep(prevPage);
       break;
+    case 'AddMerchantStep2':
+      if (currentPage !== 'TakeIdPicture') {
+        MoEAction.recordRegisterStep(prevPage);
+      }
+      break;
     default:
       break;
   }

@@ -21,15 +21,23 @@ function recordLogout(data) {
 
 function recordRegisterStep(screen) {
   const {
-    merchant: { dataMerchantVolatile }
+    merchant: { dataMerchantVolatile },
+    user
   } = Store.getState();
   const data = {};
   console.log('Merchant Volatile', dataMerchantVolatile);
   switch (screen) {
     case 'AddMerchantStep1':
-      console.log('Step 1');
       data.owner_mobile_number = dataMerchantVolatile.phone;
       data.screen = 'SRRegisterStoreStep1';
+      break;
+    case 'AddMerchantStep2':
+      data.owner_name = dataMerchantVolatile.fullName;
+      data.store_name = dataMerchantVolatile.name;
+      data.supplier_name = user.userSuppliers[0].supplier.name;
+      data.owner_ktp = dataMerchantVolatile.idNo;
+      data.owner_npwp = dataMerchantVolatile.taxNo;
+      data.screen = 'SRRegisterStoreStep2';
       break;
 
     default:
