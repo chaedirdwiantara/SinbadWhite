@@ -35,7 +35,7 @@ class PdpSearchView extends Component {
       selectedProduct: null,
       /** sort */
       sort: 'asc',
-      sortBy: 'name' // mss_type
+      sortBy: 'mss_types'
     };
   }
   /**

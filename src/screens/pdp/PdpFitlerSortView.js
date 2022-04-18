@@ -34,8 +34,8 @@ class PdpFilterSortView extends Component {
     let sortBy = '';
     switch (this.state.sortIndex) {
       case 0:
-        // sortBy = 'mss_type';
-        // sort = 'asc';
+        sortBy = 'mss_types';
+        sort = 'asc';
         break;
       case 1:
         sortBy = 'retail_buying_price';
@@ -46,7 +46,7 @@ class PdpFilterSortView extends Component {
         sort = 'asc';
         break;
       case null:
-        sortBy = 'name'; // mss_type
+        sortBy = 'mss_types';
         sort = 'asc';
         break;
       default:
