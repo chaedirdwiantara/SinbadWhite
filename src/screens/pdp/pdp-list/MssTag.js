@@ -14,20 +14,20 @@ export class MssTag extends Component {
   render() {
     const { item } = this.props;
 
-    if (item.mssSetting?.id) {
+    if (item.mssSettings?.id) {
       return (
         <View style={[styles.mainContainer]}>
           <View
             style={[styles.tagContainer, {
-              backgroundColor: item.mssSetting?.backgroundColor //core ? Color.fontRed10OP10 : Color.fontGreen50OP10
+              backgroundColor: item.mssSettings?.backgroundColor
             }]}
           >
-            <MaterialIcon name="stars" color={item.mssSetting?.color} size={18} />
+            <MaterialIcon name="stars" color={item.mssSettings?.color} size={18} />
             <Text style={[Fonts.type108, { 
               paddingHorizontal: 4,
-              color: item.mssSetting?.color
+              color: item.mssSettings?.color
             }]}>
-              {item.mssSetting?.name}
+              {item.mssSettings?.name}
             </Text>
           </View>
         </View>

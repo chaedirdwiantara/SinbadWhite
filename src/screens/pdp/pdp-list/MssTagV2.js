@@ -11,15 +11,15 @@ export class MssTagV2 extends Component {
   render() {
     const { item } = this.props;
 
-    if (item.mssSetting?.id) {
+    if (item.mssSettings?.id) {
       return (
         <View style={[styles.mainContainer, { 
-          backgroundColor: item.mssSetting?.backgroundColor
+          backgroundColor: item.mssSettings?.backgroundColor
          }]}>
           <Text style={[Fonts.type108, {
-            color: item.mssSetting?.color
+            color: item.mssSettings?.color
           }]}>
-            {item.mssSetting?.name}
+            {item.mssSettings?.name}
           </Text>
         </View>
       )
