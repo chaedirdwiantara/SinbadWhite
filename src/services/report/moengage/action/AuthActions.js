@@ -39,6 +39,17 @@ function recordRegisterStep(screen) {
       data.owner_npwp = dataMerchantVolatile.taxNo;
       data.screen = 'SRRegisterStoreStep2';
       break;
+    case 'AddMerchantStep3':
+      data.location_coordinate = `${dataMerchantVolatile.latitude}, ${
+        dataMerchantVolatile.longitude
+      }`;
+      data.store_address = dataMerchantVolatile.address;
+      data.address_notes = dataMerchantVolatile.noteAddress;
+      data.vehicle_accessibility =
+        dataMerchantVolatile.vehicleAccessibilityName;
+      data.vehicle_capacity = dataMerchantVolatile.vehicleAccessibilityAmount;
+      data.screen = 'SRRegisterStoreStep3';
+      break;
 
     default:
       break;
