@@ -19,13 +19,12 @@ function recordLogout(data) {
   Auth.trackUserLogout(props);
 }
 
-function recordRegisterStep(screen) {
+function recordRegisterStep(screen, params) {
   const {
-    merchant: { dataMerchantVolatile },
+    merchant: { dataMerchantVolatile, dataValidateAreaMapping },
     user
   } = Store.getState();
   const data = {};
-  console.log('Merchant Volatile', dataMerchantVolatile);
   switch (screen) {
     case 'AddMerchantStep1':
       data.owner_mobile_number = dataMerchantVolatile.phone;
@@ -49,6 +48,14 @@ function recordRegisterStep(screen) {
         dataMerchantVolatile.vehicleAccessibilityName;
       data.vehicle_capacity = dataMerchantVolatile.vehicleAccessibilityAmount;
       data.screen = 'SRRegisterStoreStep3';
+      break;
+    case 'AddMerchantStep4':
+      data.warehouse = dataValidateAreaMapping[0].name;
+      data.store_type = params.registerData.typeId;
+      data.store_group = params.registerData.groupId;
+      data.store_cluster = params.registerData.clusterId;
+      data.store_channel = params.registerData.channelId;
+      data.screen = 'SRRegisterStoreStep4';
       break;
 
     default:
