@@ -1,3 +1,4 @@
+import * as MoEAction from './action';
 export const toMoengageFromPage = (prevPage, currentPage) => {
   console.log('PreviousPage: ', prevPage);
   console.log('Current Page: ', currentPage);
@@ -8,6 +9,9 @@ export const toMoengageFromPage = (prevPage, currentPage) => {
   }
 
   switch (currentPage) {
+    case 'JourneyView':
+      // MoEAction.recordJourneyPlan(currentPage, prevPage);
+      break;
     default:
       break;
   }

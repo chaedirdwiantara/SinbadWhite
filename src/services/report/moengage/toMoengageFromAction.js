@@ -8,6 +8,9 @@ export const toMoengageFromAction = (eventName, data) => {
     case EventName.LOGOUT:
       MoeAction.recordLogout(data);
       break;
+    case EventName.JOURNEY_PLAN:
+      MoeAction.recordJourneyPlan(data);
+      break;
     default:
       break;
   }
