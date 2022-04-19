@@ -4,6 +4,20 @@ export const toMoengageFromPage = (prevPage, currentPage) => {
   console.log('Current Page: ', currentPage);
   /** this function for send data metric based on page */
   switch (prevPage) {
+    case 'AddMerchantStep1':
+      MoEAction.recordRegisterStep(prevPage);
+      break;
+    case 'AddMerchantStep2':
+      if (currentPage === 'AddMerchantStep3') {
+        MoEAction.recordRegisterStep(prevPage);
+      }
+      break;
+    case 'AddMerchantStep3':
+      if (currentPage === 'AddMerchantStep4') {
+        MoEAction.recordRegisterStep(prevPage);
+      }
+      break;
+
     default:
       break;
   }

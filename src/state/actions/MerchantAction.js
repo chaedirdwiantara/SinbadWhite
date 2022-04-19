@@ -1,4 +1,6 @@
 import * as types from '../types';
+import * as EventName from '../../services/report/moengage/event';
+import { globalReportFromAction } from '../../services/report/globalReport';
 /**
  * ==================================
  * SELECTED MERCHANT FROM JOURNEY
@@ -293,6 +295,7 @@ export function merchantGetLatestCheckInOutFailed(data) {
  */
 /** PORTFOLIO GET PROCESS */
 export function merchantAddProcess(data) {
+  globalReportFromAction(EventName.REGISTER_NEW_STORE, data);
   return { type: types.MERCHANT_ADD_PROCESS, payload: data };
 }
 /** PORTFOLIO GET SUCCESS */
