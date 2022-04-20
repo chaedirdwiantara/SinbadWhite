@@ -1,5 +1,8 @@
 import * as types from '../types';
 import { Store } from '../Store';
+import { globalReportFromAction } from '../../services/report/globalReport';
+import * as EventName from '../../services/report/moengage/event';
+
 /**
  * ===========================
  * GET DETAIL PDP
@@ -84,6 +87,7 @@ export function pdpSearchGetProcess(data) {
 /** === PDP SEARCH GET SUCCESS === */
 export function pdpSearchGetSuccess(data) {
   if (data.result === 'Ok') {
+    globalReportFromAction(EventName.SEARCH_PDP, data);
     return { type: types.PDP_SEARCH_GET_SUCCESS, payload: data.data };
   }
   return { type: types.PDP_SEARCH_GET_FAILED, payload: data };
@@ -156,29 +160,29 @@ export function pdpModifyProductListData(data) {
  * ===============================
  */
 /** MSS GET PROCESS */
-export function getMSSCataloguesProcess(data){
-  return { type: types.MSS_GET_CATALOGUES_PROCESS, payload: data}
+export function getMSSCataloguesProcess(data) {
+  return { type: types.MSS_GET_CATALOGUES_PROCESS, payload: data };
 }
 /** MSS GET SUCCESS */
-export function getMSSCataloguesSuccess(data){
+export function getMSSCataloguesSuccess(data) {
   if (data.result === 'Ok') {
-    return { type: types.MSS_GET_CATALOGUES_SUCCESS, payload: data.data}
+    return { type: types.MSS_GET_CATALOGUES_SUCCESS, payload: data.data };
   }
-  return { type: types.MSS_GET_CATALOGUES_FAILED, payload: data}
+  return { type: types.MSS_GET_CATALOGUES_FAILED, payload: data };
 }
 /** MSS GET FAILED */
-export function getMSSCataloguesFailed(data){
-  return { type: types.MSS_GET_CATALOGUES_FAILED, payload: data}
+export function getMSSCataloguesFailed(data) {
+  return { type: types.MSS_GET_CATALOGUES_FAILED, payload: data };
 }
 /** MSS REFRESH */
-export function getMSSCataloguesRefresh(){
-  return { type: types.MSS_GET_CATALOGUES_REFRESH}
+export function getMSSCataloguesRefresh() {
+  return { type: types.MSS_GET_CATALOGUES_REFRESH };
 }
 /** MSS RESET */
-export function getMSSCataloguesReset(){
-  return { type: types.MSS_GET_CATALOGUES_RESET}
+export function getMSSCataloguesReset() {
+  return { type: types.MSS_GET_CATALOGUES_RESET };
 }
 /** MSS LOAD MORE */
-export function getMSSCataloguesLoadMore(page){
-  return { type: types.MSS_GET_CATALOGUES_LOADMORE, payload: page}
+export function getMSSCataloguesLoadMore(page) {
+  return { type: types.MSS_GET_CATALOGUES_LOADMORE, payload: page };
 }
