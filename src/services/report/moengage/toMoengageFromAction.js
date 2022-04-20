@@ -1,5 +1,6 @@
 import * as EventName from './event';
 import * as MoeAction from './action';
+
 export const toMoengageFromAction = (eventName, data) => {
   switch (eventName) {
     case EventName.LOGIN:
@@ -16,6 +17,9 @@ export const toMoengageFromAction = (eventName, data) => {
       break;
     case EventName.ENTER_STORE:
       MoeAction.recordEnterStore(data);
+      break;
+    case EventName.SEARCH_PDP:
+      MoeAction.recordSearchPdp(data);
       break;
     default:
       break;
