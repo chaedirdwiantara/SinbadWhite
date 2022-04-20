@@ -21,6 +21,9 @@ export const toMoengageFromAction = (eventName, data) => {
     case EventName.SEARCH_PDP:
       MoeAction.recordSearchPdp(data);
       break;
+    case EventName.PDP_DETAIL:
+      MoeAction.recordPdpDetail(data);
+      break;
     default:
       break;
   }

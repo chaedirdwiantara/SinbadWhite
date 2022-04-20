@@ -1,3 +1,4 @@
+import Price from '../../../../functions/Price';
 import { Store } from '../../../../state/Store';
 import * as EventName from '../event';
 import * as MoERecord from '../record';
@@ -18,6 +19,19 @@ function recordSearchPdp(props) {
   }
 }
 
+function recordPdpDetail(props) {
+  const data = {
+    store_id: storeMapping().storeId,
+    store_name: storeMapping().storeName,
+    sku_name: props.data.name,
+    sku_id: props.data.id,
+    sku_price: Price(props.data),
+    brand_name: props.data.brand.name
+  };
+
+  MoERecord.trackPdpDetail({ eventName: EventName.PDP_DETAIL, data });
+}
+
 function storeMapping() {
   const {
     merchant: { selectedMerchant }
@@ -31,4 +45,4 @@ function storeMapping() {
   return data;
 }
 
-export { recordSearchPdp };
+export { recordSearchPdp, recordPdpDetail };
