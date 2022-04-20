@@ -1,5 +1,8 @@
 import * as types from '../types';
 import { Store } from '../Store';
+import { globalReportFromAction } from '../../services/report/globalReport';
+import * as EventName from '../../services/report/moengage/event';
+
 /**
  * ====================================
  * DELETE ALL DATA IN OMS
@@ -200,6 +203,7 @@ export function omsAddToCart(data) {
           dataCart[indexDataCart].qty = data.qty;
           dataCart[indexDataCart].detail = data.detail;
         } else {
+          globalReportFromAction(EventName.ADD_TO_CART, data);
           dataCart.push({
             catalogueId: parseInt(data.catalogueId, 10),
             qty: data.qty,
@@ -217,6 +221,7 @@ export function omsAddToCart(data) {
         break;
     }
   } else {
+    globalReportFromAction(EventName.ADD_TO_CART, data);
     dataCart.push({
       catalogueId: parseInt(data.catalogueId, 10),
       qty: data.qty,
