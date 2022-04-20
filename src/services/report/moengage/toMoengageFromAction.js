@@ -24,6 +24,9 @@ export const toMoengageFromAction = (eventName, data) => {
     case EventName.PDP_DETAIL:
       MoeAction.recordPdpDetail(data);
       break;
+    case EventName.ADD_TO_CART:
+      MoeAction.recordAddToCart(data);
+      break;
     default:
       break;
   }
