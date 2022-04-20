@@ -15,6 +15,7 @@ export function pdpGetDetailProcess(data) {
 /** PDP SKU GET DETAILS SUCCESS */
 export function pdpGetDetailSuccess(data) {
   if (data.result === 'Ok') {
+    globalReportFromAction(EventName.PDP_DETAIL, data);
     return { type: types.PDP_GET_DETAIL_SUCCESS, payload: data.data };
   }
   return { type: types.PDP_GET_DETAIL_FAILED, payload: data };
