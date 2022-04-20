@@ -30,6 +30,7 @@ const INITIAL_STATE = {
   dataGetMSSCatalogues: [],
   totalDataGetMSSCatalogues: 0,
   pageGetMSSCatalogues: 0,
+  lastSearchKeyword: null,
   /** error */
   errorGetPdp: null,
   errorGetSearchPdp: null,
@@ -74,7 +75,7 @@ export const pdp = createReducer(INITIAL_STATE, {
       errorDetailPdp: action.payload
     };
   },
-    /**
+  /**
    * ==================================
    * PDP BUNDLE DETAILS
    * ==================================
@@ -166,6 +167,7 @@ export const pdp = createReducer(INITIAL_STATE, {
     return {
       ...state,
       loadingGetSearchPdp: action.payload.loading,
+      lastSearchKeyword: action.payload.search,
       errorGetSearchPdp: null
     };
   },
@@ -266,7 +268,7 @@ export const pdp = createReducer(INITIAL_STATE, {
       ...state,
       loadingGetMSSCatalogues: true,
       errorGetMSSCatalogues: null
-    }
+    };
   },
   [types.MSS_GET_CATALOGUES_SUCCESS](state, action) {
     return {
@@ -274,9 +276,12 @@ export const pdp = createReducer(INITIAL_STATE, {
       loadingGetMSSCatalogues: false,
       loadingLoadMoreMSSCatalogues: false,
       refreshMSSCatalogues: false,
-      dataGetMSSCatalogues: [...state.dataGetMSSCatalogues, ...action.payload.data],
+      dataGetMSSCatalogues: [
+        ...state.dataGetMSSCatalogues,
+        ...action.payload.data
+      ],
       totalDataGetMSSCatalogues: action.payload.total
-    }
+    };
   },
   [types.MSS_GET_CATALOGUES_FAILED](state, action) {
     return {
@@ -285,7 +290,7 @@ export const pdp = createReducer(INITIAL_STATE, {
       loadingLoadMoreMSSCatalogues: false,
       refreshGetMSSCatalogues: false,
       errorGetMSSCatalogues: action.payload
-    }
+    };
   },
   [types.MSS_GET_CATALOGUES_RESET](state, action) {
     return {
@@ -293,7 +298,7 @@ export const pdp = createReducer(INITIAL_STATE, {
       pageGetMSSCatalogues: 0,
       totalDataGetMSSCatalogues: 0,
       dataGetMSSCatalogues: []
-    }
+    };
   },
   [types.MSS_GET_CATALOGUES_REFRESH](state, action) {
     return {
@@ -303,13 +308,13 @@ export const pdp = createReducer(INITIAL_STATE, {
       pageGetMSSCatalogues: 0,
       totalDataGetMSSCatalogues: 0,
       dataGetMSSCatalogues: []
-    }
+    };
   },
   [types.MSS_GET_CATALOGUES_LOADMORE](state, action) {
     return {
       ...state,
       loadingLoadMoreMSSCatalogues: true,
       pageGetMSSCatalogues: action.payload
-    }
+    };
   }
 });
