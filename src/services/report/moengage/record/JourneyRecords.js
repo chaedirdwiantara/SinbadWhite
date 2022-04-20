@@ -3,7 +3,6 @@ import { SnbRecord } from '../index';
 
 export function trackJourneyPlan(props) {
   const { eventName, data } = props;
-  console.log(props);
   SnbRecord(eventName, data);
 }
 
