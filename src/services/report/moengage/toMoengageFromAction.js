@@ -14,6 +14,9 @@ export const toMoengageFromAction = (eventName, data) => {
     case EventName.REGISTER_NEW_STORE:
       MoeAction.recordRegisterStep('AddMerchantStep4', data);
       break;
+    case EventName.ENTER_STORE:
+      MoeAction.recordEnterStore(data);
+      break;
     default:
       break;
   }
