@@ -61,6 +61,61 @@ function recordViewCart(props) {
   MoERecord.trackViewCart({ eventName: EventName.VIEW_CART, data });
 }
 
+function recordRemoveItemFromCart(props) {
+  const {
+    oms: { dataOmsGetCartItem }
+  } = Store.getState();
+  const { catalogueId } = props;
+
+  const data = {
+    store_id: storeMapping().storeId,
+    store_name: storeMapping().storeName,
+    cart_id: dataOmsGetCartItem.id
+  };
+
+  const allCatalogues = transformCartParcels(dataOmsGetCartItem);
+
+  const deletedCatalogue = allCatalogues.find(
+    item => item.sku_id === catalogueId
+  );
+
+  for (var key in deletedCatalogue) {
+    if (deletedCatalogue.hasOwnProperty(key)) {
+      data[`${key}`] = deletedCatalogue[key];
+    }
+  }
+
+  MoERecord.trackDeletedSKU({ eventName: EventName.REMOVE_SKU, data });
+}
+
+function transformCartParcels(data) {
+  /**
+   * Transform Catalogue
+   */
+  const allCatalogues = [];
+  // Mapping Parcels
+  data.cartParcels.map((parcelItem, parcelIndex) => {
+    // Mapping Brands
+    parcelItem.cartBrands.map((brandItem, brandIndex) => {
+      // Mapping Catalogues
+      brandItem.cartBrandCatalogues.map((brandCatalogue, catalogueIndex) => {
+        const skuPrice = Price(brandCatalogue.catalogue);
+        const catalogue = {
+          sku_name: brandCatalogue.catalogue.name,
+          sku_id: brandCatalogue.catalogue.id,
+          sku_price: skuPrice,
+          sku_category: brandCatalogue.catalogue.lastCatalogueCategoryId,
+          sku_qty: brandCatalogue.qty,
+          sku_total_price: brandCatalogue.qty * skuPrice
+        };
+        allCatalogues.push(catalogue);
+      });
+    });
+  });
+
+  return allCatalogues;
+}
+
 function storeMapping() {
   const {
     merchant: { selectedMerchant }
@@ -74,4 +129,4 @@ function storeMapping() {
   return data;
 }
 
-export { recordAddToCart, recordViewCart };
+export { recordAddToCart, recordViewCart, recordRemoveItemFromCart };

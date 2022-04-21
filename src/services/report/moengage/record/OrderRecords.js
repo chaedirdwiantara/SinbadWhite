@@ -9,6 +9,10 @@ export function trackViewCart({ eventName, data }) {
   SnbRecord(eventName, data);
 }
 
+export function trackDeletedSKU({ eventName, data }) {
+  SnbRecord(eventName, data);
+}
+
 trackAddToCart.propTypes = {
   data: PropTypes.shape({
     store_id: PropTypes.number,
