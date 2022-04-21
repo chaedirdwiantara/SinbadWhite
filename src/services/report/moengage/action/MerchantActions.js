@@ -7,19 +7,21 @@ function recordEnterStore(data) {
   const {
     merchant: { selectedMerchant }
   } = Store.getState();
-  if (data.activityName === 'check_in') {
-    const neededData = {
-      store_id: parseInt(selectedMerchant.storeId, 10),
-      store_name: selectedMerchant.storeName,
-      sr_inside_store: data.inStore,
-      store_available: true,
-      time_entered: moment(new Date()).format()
-    };
+  if (selectedMerchant !== null) {
+    if (data.activityName === 'check_in') {
+      const neededData = {
+        store_id: parseInt(selectedMerchant.storeId, 10),
+        store_name: selectedMerchant.storeName,
+        sr_inside_store: data.inStore,
+        store_available: true,
+        time_entered: moment(new Date()).format()
+      };
 
-    MoERecord.trackEnterStore({
-      eventName: EventName.ENTER_STORE,
-      data: neededData
-    });
+      MoERecord.trackEnterStore({
+        eventName: EventName.ENTER_STORE,
+        data: neededData
+      });
+    }
   }
 }
 

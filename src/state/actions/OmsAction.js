@@ -39,6 +39,7 @@ export function omsGetCartItemProcess(data) {
 /** === CART ITEM SUCCESS === */
 export function omsGetCartItemSuccess(data) {
   if (data.result === 'Ok') {
+    globalReportFromAction(EventName.VIEW_CART, data.data);
     return { type: types.OMS_GET_CART_ITEM_SUCCESS, payload: data.data };
   }
   return { type: types.OMS_GET_CART_ITEM_FAILED, payload: data };
