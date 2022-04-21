@@ -27,6 +27,9 @@ export const toMoengageFromAction = (eventName, data) => {
     case EventName.ADD_TO_CART:
       MoeAction.recordAddToCart(data);
       break;
+    case EventName.VIEW_CART:
+      MoeAction.recordViewCart(data);
+      break;
     default:
       break;
   }
