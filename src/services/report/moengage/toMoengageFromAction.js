@@ -15,8 +15,8 @@ export const toMoengageFromAction = (eventName, data) => {
     case EventName.REGISTER_NEW_STORE:
       MoeAction.recordRegisterStep('AddMerchantStep4', data);
       break;
-    case EventName.ENTER_STORE:
-      MoeAction.recordEnterStore(data);
+    case EventName.STORE_ACTIVITY:
+      MoeAction.recordStoreActivity(data);
       break;
     case EventName.SEARCH_PDP:
       MoeAction.recordSearchPdp(data);
