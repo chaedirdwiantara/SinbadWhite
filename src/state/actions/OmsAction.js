@@ -83,6 +83,7 @@ export function omsConfirmOrderProcess(data) {
 /** === CONFIRM ORDER SUCCESS === */
 export function omsConfirmOrderSuccess(data) {
   if (data.result === 'Ok') {
+    globalReportFromAction(EventName.CHECKOUT_ORDER, data.data);
     return { type: types.OMS_CONFIRM_ORDER_SUCCESS, payload: data.data };
   }
   return { type: types.OMS_CONFIRM_ORDER_FAILED, payload: data };

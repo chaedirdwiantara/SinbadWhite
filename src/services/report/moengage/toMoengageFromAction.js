@@ -36,6 +36,9 @@ export const toMoengageFromAction = (eventName, data) => {
     case EventName.VERIFY_ORDER:
       MoeAction.recordVerifyOrder(data);
       break;
+    case EventName.CHECKOUT_ORDER:
+      MoeAction.recordCheckoutOrder(data.data);
+      break;
     default:
       break;
   }
