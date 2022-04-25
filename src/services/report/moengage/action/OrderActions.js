@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import Price from '../../../../functions/Price';
 import { Store } from '../../../../state/Store';
 import * as EventName from '../event';
@@ -88,6 +89,85 @@ function recordRemoveItemFromCart(props) {
   MoERecord.trackDeletedSKU({ eventName: EventName.REMOVE_SKU, data });
 }
 
+function recordVerifyOrder(props) {
+  let allCatalogues = [];
+  const cart_sku = [];
+
+  // Transform Non Promo SKU
+  if (props.notPromoSku.length > 0) {
+    props.notPromoSku.map(itemCatalogues => {
+      const catalogue = {
+        sku_name: itemCatalogues.name,
+        sku_id: itemCatalogues.id,
+        sku_price: itemCatalogues.price,
+        sku_qty: itemCatalogues.qty,
+        sku_total_price: itemCatalogues.totalPrice
+      };
+      allCatalogues.push(catalogue);
+      cart_sku.push(itemCatalogues.id);
+    });
+  }
+
+  // Transform Promo SKU
+  if (props.promoSku.length > 0) {
+    props.promoSku.map(itemCatalogues => {
+      const catalogue = {
+        sku_name: itemCatalogues.name,
+        sku_id: itemCatalogues.id,
+        sku_price: itemCatalogues.price,
+        sku_qty: itemCatalogues.qty,
+        sku_total_price: itemCatalogues.totalPrice
+      };
+
+      // Check if SKU have Promo
+      if (itemCatalogues.listPromo.length > 0) {
+        catalogue.sku_promo_id = itemCatalogues.listPromo
+          .map(item => item.id)
+          .join(', ');
+        catalogue.sku_promo_value = itemCatalogues.listPromo
+          .map(item => item.value)
+          .reduce(
+            (previousValue, currentValue) => previousValue + currentValue
+          );
+        catalogue.sku_promo_total = itemCatalogues.listPromo.length;
+        catalogue.sku_promo_name = itemCatalogues.listPromo
+          .map(item => item.name)
+          .join(', ');
+      }
+
+      allCatalogues.push(catalogue);
+    });
+  }
+
+  // Transform Bonus SKU
+  let allBonusSku = [];
+  const bonus_sku_id = [];
+  if (props.bonusSku.length > 0) {
+    props.bonusSku.map(itemCatalogue => {
+      const catalogue = {
+        sku_bonus_name: itemCatalogue.name,
+        sku_bonus_id: itemCatalogue.id,
+        sku_bonus_qty: itemCatalogue.qty,
+        sku_bonus_promo_name: itemCatalogue.promoName
+      };
+
+      allBonusSku.push(catalogue);
+      bonus_sku_id.push(itemCatalogue.id);
+    });
+  }
+
+  const data = {
+    cart_id: props.cartId,
+    total_original_price: props.grandTotalTransaction,
+    total_discounted_price: props.grandTotalRebate,
+    total_final_price: props.grandTotalTransaction - props.grandTotalRebate,
+    sku_cart: cart_sku.join(','),
+    bonus_sku_id: bonus_sku_id.join(',')
+  };
+
+  MoERecord.trackVerifyOrder({ eventName: EventName.VERIFY_ORDER, data });
+}
+
 function transformCartParcels(data) {
   /**
    * Transform Catalogue
@@ -129,4 +209,9 @@ function storeMapping() {
   return data;
 }
 
-export { recordAddToCart, recordViewCart, recordRemoveItemFromCart };
+export {
+  recordAddToCart,
+  recordViewCart,
+  recordRemoveItemFromCart,
+  recordVerifyOrder
+};

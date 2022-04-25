@@ -33,6 +33,9 @@ export const toMoengageFromAction = (eventName, data) => {
     case EventName.REMOVE_SKU:
       MoeAction.recordRemoveItemFromCart(data);
       break;
+    case EventName.VERIFY_ORDER:
+      MoeAction.recordVerifyOrder(data);
+      break;
     default:
       break;
   }
