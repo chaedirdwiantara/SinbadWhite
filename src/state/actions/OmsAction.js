@@ -216,6 +216,7 @@ export function omsAddToCart(data) {
         dataCart[indexDataCart].qty = data.qty;
         break;
       case 'delete':
+        globalReportFromAction(EventName.REMOVE_SKU, data);
         dataCart.splice(indexDataCart, 1);
         break;
       default:
