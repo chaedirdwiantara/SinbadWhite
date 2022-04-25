@@ -168,6 +168,24 @@ function recordVerifyOrder(props) {
   MoERecord.trackVerifyOrder({ eventName: EventName.VERIFY_ORDER, data });
 }
 
+function recordCheckoutOrder(props) {
+  const {
+    oms: { dataOmsGetCheckoutItem }
+  } = Store.getState();
+
+  const data = {
+    cart_id: dataOmsGetCheckoutItem.cartId,
+    store_id: storeMapping().storeId,
+    store_name: storeMapping().storeName,
+    store_phone_number: storeMapping().storePhoneNumber,
+    store_address: storeMapping().storeAddress,
+    order_id: props.orderParcels[0].orderId,
+    order_parcel_id: props.orderParcels.map(item => item.id).join(',')
+  };
+
+  MoERecord.trackCheckoutOrder({ eventName: EventName.CHECKOUT_ORDER, data });
+}
+
 function transformCartParcels(data) {
   /**
    * Transform Catalogue
@@ -203,7 +221,13 @@ function storeMapping() {
 
   const data = {
     storeId: parseInt(selectedMerchant.storeId, 10),
-    storeName: selectedMerchant.storeName
+    storeName: selectedMerchant.storeName,
+    storePhoneNumber: selectedMerchant.ownerMobilePhoneNo,
+    storeAddress: `${selectedMerchant.address}, ${
+      selectedMerchant.urbans.urban
+    }, ${selectedMerchant.urbans.district}, ${selectedMerchant.urbans.city}, ${
+      selectedMerchant.urbans.province.name
+    }, ${selectedMerchant.urbans.zipCode} `
   };
 
   return data;
@@ -213,5 +237,6 @@ export {
   recordAddToCart,
   recordViewCart,
   recordRemoveItemFromCart,
-  recordVerifyOrder
+  recordVerifyOrder,
+  recordCheckoutOrder
 };

@@ -193,7 +193,7 @@ export function merchantGetLastOrderFailed(data) {
  */
 /** POST ACTIVITY PROCESS */
 export function merchantPostActivityProcessV2(data) {
-  globalReportFromAction(EventName.ENTER_STORE, data);
+  globalReportFromAction(EventName.STORE_ACTIVITY, data);
   return { type: types.MERCHANT_POST_ACTIVITY_PROCESS_V2, payload: data };
 }
 /** POST ACTIVITY SUCCESS */
