@@ -323,6 +323,7 @@ export function omsCheckPromoProcess(data) {
 /** === CHECK PROMO SUCCESS === */
 export function omsCheckPromoSuccess(data) {
   if (data.result === 'Ok') {
+    globalReportFromAction(EventName.VERIFY_ORDER, data.data);
     return {
       type: types.OMS_CHECK_PROMO_SUCCESS,
       payload: data.data
