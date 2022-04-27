@@ -174,17 +174,27 @@ class PdpView extends Component {
         break;
       /** => 'pesan' buttom press (from child) */
       case 'openModalOrder':
-        if (
-          this.props.merchant.merchantChanged &&
-          this.props.oms.dataCart.length > 0
-        ) {
-          this.setState({
-            modalChangeMerchantText:
-              'Menambahkan produk ini ke keranjang akan menghapus SKU sebelumnya. Apakah Anda Setuju ?',
-            openModalConfirmRemoveCart: true,
-            selectedProduct: data.data,
-            invoiceGroupId: data.invoice[0].invoiceGroupId
-          });
+        if (this.props.merchant.merchantChanged) {
+          if (this.props.oms.dataCart.length > 0) {
+            this.setState({
+              modalChangeMerchantText:
+                'Menambahkan produk ini ke keranjang akan menghapus SKU sebelumnya. Apakah Anda Setuju ?',
+              openModalConfirmRemoveCart: true,
+              selectedProduct: data.data,
+              invoiceGroupId: data.invoice[0].invoiceGroupId
+            });
+          } else {
+            const invoiceGroupId = data?.invoice[0]?.invoiceGroupId;
+            const storeId = this.props.merchant?.selectedMerchant?.storeId;
+            this.props.OMSCheckCreditProcess({
+              invoiceGroupId: parseInt(invoiceGroupId, 10),
+              storeId: parseInt(storeId, 10)
+            });
+
+            this.props.merchantChanged(false);
+            this.props.pdpGetDetailProcess(data.data);
+            this.setState({ openModalOrder: true });
+          }
         } else {
           const invoiceGroupId = data?.invoice[0]?.invoiceGroupId;
           const storeId = this.props.merchant?.selectedMerchant?.storeId;
