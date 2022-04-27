@@ -21,7 +21,7 @@ import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import { Color } from '../../config';
 import * as ActionCreators from '../../state/actions';
 import Price from '../../functions/Price';
-import masterColor from '../../config/masterColor.json';
+import MSSTagV2 from './pdp-list/MssTagV2';
 
 class PdpLineDataView extends Component {
   constructor(props) {
@@ -73,36 +73,13 @@ class PdpLineDataView extends Component {
       </TouchableOpacity>
     );
   }
-  /** === RENDER MSS TAG === */
-  renderMSS(item) {
-    return item.isMss ? (
-      <View
-        style={{
-          paddingTop: 8,
-          paddingBottom: 8
-        }}
-      >
-        <View
-          style={{
-            alignSelf: 'flex-start',
-            backgroundColor: masterColor.fontBlue10,
-            padding: 4,
-            borderRadius: 50,
-            flexDirection: 'row',
-            alignItems: 'center'
-          }}
-        >
-          <MaterialIcon name="stars" color={masterColor.fontBlue50} size={18} />
-        </View>
-      </View>
-    ) : (
-      <View />
-    );
-  }
   /** === RENDER ITEM === */
   renderItem({ item, index }) {
     return (
-      <View key={index}>
+      <View key={index} style={{ paddingTop: 16 }}>
+        <MSSTagV2
+          item={item}
+        />
         <View style={styles.boxContentList}>
           <View
             style={{
@@ -112,10 +89,9 @@ class PdpLineDataView extends Component {
               flexDirection: 'row'
             }}
           >
-            <View style={{ width: '60%' }}>
+            <View>
               <Text style={Fonts.type16}>SKU : {item.externalId}</Text>
             </View>
-            {this.renderMSS(item)}
           </View>
           <View style={{ flex: 1, justifyContent: 'center', paddingLeft: 10 }}>
             <Text style={Fonts.type24}>{this.checkPrice(item)}</Text>
@@ -196,7 +172,10 @@ const styles = StyleSheet.create({
   boxContentList: {
     flex: 1,
     flexDirection: 'row',
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: 16,
   },
   flatListContainer: {
     paddingBottom: 30
@@ -205,8 +184,7 @@ const styles = StyleSheet.create({
   pesanButton: {
     borderRadius: 4,
     paddingVertical: 7,
-    paddingHorizontal: 20,
-    marginVertical: 10
+    paddingHorizontal: 20
   }
 });
 
@@ -229,9 +207,9 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
+ * updatedBy: Raka
+ * updatedDate: 04042022
  * updatedFunction:
- * -> Refactoring Module Import
- *
+ * -> Update MSS tag
+ * -> 
  */
