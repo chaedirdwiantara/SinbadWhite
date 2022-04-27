@@ -56,8 +56,9 @@ class PdpView extends Component {
         'Menambahkan produk ini ke keranjang akan menghapus SKU sebelumnya. Apakah Anda Setuju ?',
       /** sort */
       sort: 'asc',
-      sortBy: 'name',
-      sortIndex: null
+      sortBy: 'mss_types',
+      /** sort by mss priority by default */ 
+      sortIndex: 0
     };
   }
   /**
@@ -111,7 +112,7 @@ class PdpView extends Component {
           page: 0,
           loading: true,
           sort: 'asc',
-          sortBy: 'name'
+          sortBy: 'mss_types' 
         });
       }
     }
