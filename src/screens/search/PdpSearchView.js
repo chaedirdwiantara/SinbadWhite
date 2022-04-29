@@ -173,7 +173,7 @@ class PdpSearchView extends Component {
             this.props.pdp.dataGetSearchPdp.length <
             this.props.pdp.totalDataGetPdp
           ) {
-            const page = this.props.pdp.pageGetPdp + 10;
+            const page = this.props.pdp.pageGetSearchPdp + 10;
             this.props.pdpSearchGetLoadMore(page);
             this.getPdp({ page, loading: false });
           }
