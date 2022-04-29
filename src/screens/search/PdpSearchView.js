@@ -79,7 +79,10 @@ class PdpSearchView extends Component {
   componentDidUpdate(prevState) {
     if (prevState.global.search !== this.props.global.search) {
       this.props.pdpSearchGetReset();
-      this.getPdp({ page: 0, loading: true });
+      /** search pdp only when search input filled */
+      if (this.props.global.search && this.props.global.search !== '') {
+        this.getPdp({ page: 0, loading: true });
+      }
     }
   }
   /** === FETCH DATA (THIS FOR ALL FITLER) === */
