@@ -19,6 +19,7 @@ import { Color } from '../../config';
 import { GlobalStyle, Fonts, MoneyFormat } from '../../helpers';
 import * as ActionCreators from '../../state/actions';
 import Price from '../../functions/Price';
+import MssTag from '../pdp/pdp-list/MssTag';
 
 class PdpListDataView extends Component {
   constructor(props) {
@@ -86,6 +87,9 @@ class PdpListDataView extends Component {
             <View>{productImage}</View>
           </View>
           <View style={styles.boxContentDesc}>
+            <MssTag
+              item={item}
+            />
             <View style={styles.boxTitleAndSku}>
               <View style={styles.boxName}>
                 <Text style={[Fonts.type16, { textTransform: 'capitalize' }]}>
@@ -259,9 +263,9 @@ export default connect(
  * ============================
  * createdBy:
  * createdDate:
- * updatedBy: Tatas
- * updatedDate: 07072020
+ * updatedBy: Raka
+ * updatedDate: 04042022
  * updatedFunction:
- * -> Refactoring Module Import
+ * -> Add MSS tag
  *
  */
