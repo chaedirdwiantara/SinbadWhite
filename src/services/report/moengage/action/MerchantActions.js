@@ -36,7 +36,7 @@ function recordStoreActivity(props) {
         sr_in_store: true,
         sr_visited_store: true,
         time_entered: checkInTime,
-        time_exited: checkOutTime,
+        time_exited: moment(new Date()).format(),
         visit_duration: `${checkOutTime.diff(checkInTime, 'minutes')} minutes`
       };
 
