@@ -2032,7 +2032,10 @@ class MerchantHomeView extends Component {
       <ModalBottomErrorRespons
         open={this.state.openModalErrorGlobal}
         onPress={() => {
-          this.setState({ openModalErrorGlobal: false });
+          this.setState({
+            openModalErrorGlobal: false,
+            openModalProgressChecking: false
+          });
           if (this.props.merchant.errorGetLogAllActivityV2) {
             return NavigationService.navigate('JourneyView');
           }

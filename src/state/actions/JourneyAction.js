@@ -1,4 +1,6 @@
 import * as types from '../types';
+import { globalReportFromAction } from '../../services/report/globalReport';
+import * as EventName from '../../services/report/moengage/event';
 
 /**
  * ==============================
@@ -12,6 +14,7 @@ export function journeyPlanGetProcessV2(data) {
 /** === JOURNEY PLAN GET SUCCESS === */
 export function journeyPlanGetSuccessV2(data) {
   if (data.result === 'Ok') {
+    globalReportFromAction(EventName.JOURNEY_PLAN, data.data);
     return { type: types.JOURNEY_PLAN_GET_SUCCESS_V2, payload: data.data };
   }
   return { type: types.JOURNEY_PLAN_GET_FAILED_V2, payload: data };
