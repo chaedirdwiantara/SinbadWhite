@@ -49,6 +49,21 @@ pipeline {
             defaultValue: '',
             description: 'Code Push Message'
         )
+        string(
+            name: 'GIT_TAG',
+            defaultValue: '',
+            description: 'TAG number'
+        )
+        string(
+            name: 'GIT_TAG_TITLE',
+            defaultValue: '',
+            description: 'Release TAG Title'
+        )
+        string(
+            name: 'GIT_TAG_MESSAGE',
+            defaultValue: '',
+            description: 'Release TAG Messages'
+        )
     }
 
     environment {
@@ -373,6 +388,13 @@ ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
                     }
                 }
             }
+        }
+        stage('Tagging PRODUCTION') {
+               when { expression {SINBAD_ENV == "production" } }
+                  steps {
+              script {
+                sh "gh release create ${params.GIT_TAG} --notes '${params.GIT_TAG_MESSAGE}' --title '${params.GIT_TAG_TITLE}'"
+          }	
         }
         stage('Code Analysis') {
             when { expression { SINBAD_ENV != "production" && SINBAD_ENV != "demo" } }
