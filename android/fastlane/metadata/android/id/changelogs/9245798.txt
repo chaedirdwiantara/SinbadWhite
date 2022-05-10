@@ -1,2 +1,1 @@
-Update Your Agent App to enjoy latest features from Sinbad!
-- App improvement
+Bugfix : - Fixed bug when search Product List is looped infinitely with multiple copies of the same Product.
