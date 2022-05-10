@@ -1,4 +1,6 @@
 import * as types from '../types';
+import * as EventName from '../../services/report/moengage/event';
+import { globalReportFromAction } from '../../services/report/globalReport';
 /**
  * ==================================
  * SELECTED MERCHANT FROM JOURNEY
@@ -191,6 +193,7 @@ export function merchantGetLastOrderFailed(data) {
  */
 /** POST ACTIVITY PROCESS */
 export function merchantPostActivityProcessV2(data) {
+  globalReportFromAction(EventName.STORE_ACTIVITY, data);
   return { type: types.MERCHANT_POST_ACTIVITY_PROCESS_V2, payload: data };
 }
 /** POST ACTIVITY SUCCESS */
@@ -293,6 +296,7 @@ export function merchantGetLatestCheckInOutFailed(data) {
  */
 /** PORTFOLIO GET PROCESS */
 export function merchantAddProcess(data) {
+  globalReportFromAction(EventName.REGISTER_NEW_STORE, data);
   return { type: types.MERCHANT_ADD_PROCESS, payload: data };
 }
 /** PORTFOLIO GET SUCCESS */

@@ -1,4 +1,4 @@
-import { put, call, takeEvery } from 'redux-saga/effects';
+import { put, call, takeEvery, takeLatest } from 'redux-saga/effects';
 import { OmsMethod } from '../../services/methods';
 import * as ActionCreators from '../actions';
 import * as types from '../types';
@@ -222,7 +222,7 @@ function* getCheckCreditLimit(actions) {
 
 /** === SAGA FUNCTION === */
 function* OmsSaga() {
-  yield takeEvery(types.OMS_GET_CART_ITEM_PROCESS, getCartItem);
+  yield takeLatest(types.OMS_GET_CART_ITEM_PROCESS, getCartItem);
   yield takeEvery(
     types.OMS_GET_CART_ITEM_FROM_CHECKOUT_PROCESS,
     getCartItemFromCheckout

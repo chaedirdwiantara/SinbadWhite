@@ -33,6 +33,11 @@ export function trackUserLogout(props) {
   ReactMoE.logout();
 }
 
+export function trackUserRegister(props) {
+  const { eventName, data } = props;
+  SnbRecord(eventName, data);
+}
+
 trackUserLogin.propTypes = {
   loginType: PropTypes.string,
   data: PropTypes.shape({

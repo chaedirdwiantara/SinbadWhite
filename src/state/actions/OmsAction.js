@@ -1,5 +1,8 @@
 import * as types from '../types';
 import { Store } from '../Store';
+import { globalReportFromAction } from '../../services/report/globalReport';
+import * as EventName from '../../services/report/moengage/event';
+
 /**
  * ====================================
  * DELETE ALL DATA IN OMS
@@ -36,6 +39,7 @@ export function omsGetCartItemProcess(data) {
 /** === CART ITEM SUCCESS === */
 export function omsGetCartItemSuccess(data) {
   if (data.result === 'Ok') {
+    globalReportFromAction(EventName.VIEW_CART, data.data);
     return { type: types.OMS_GET_CART_ITEM_SUCCESS, payload: data.data };
   }
   return { type: types.OMS_GET_CART_ITEM_FAILED, payload: data };
@@ -79,6 +83,7 @@ export function omsConfirmOrderProcess(data) {
 /** === CONFIRM ORDER SUCCESS === */
 export function omsConfirmOrderSuccess(data) {
   if (data.result === 'Ok') {
+    globalReportFromAction(EventName.CHECKOUT_ORDER, data.data);
     return { type: types.OMS_CONFIRM_ORDER_SUCCESS, payload: data.data };
   }
   return { type: types.OMS_CONFIRM_ORDER_FAILED, payload: data };
@@ -200,6 +205,7 @@ export function omsAddToCart(data) {
           dataCart[indexDataCart].qty = data.qty;
           dataCart[indexDataCart].detail = data.detail;
         } else {
+          globalReportFromAction(EventName.ADD_TO_CART, data);
           dataCart.push({
             catalogueId: parseInt(data.catalogueId, 10),
             qty: data.qty,
@@ -211,12 +217,14 @@ export function omsAddToCart(data) {
         dataCart[indexDataCart].qty = data.qty;
         break;
       case 'delete':
+        globalReportFromAction(EventName.REMOVE_SKU, data);
         dataCart.splice(indexDataCart, 1);
         break;
       default:
         break;
     }
   } else {
+    globalReportFromAction(EventName.ADD_TO_CART, data);
     dataCart.push({
       catalogueId: parseInt(data.catalogueId, 10),
       qty: data.qty,
@@ -316,6 +324,7 @@ export function omsCheckPromoProcess(data) {
 /** === CHECK PROMO SUCCESS === */
 export function omsCheckPromoSuccess(data) {
   if (data.result === 'Ok') {
+    globalReportFromAction(EventName.VERIFY_ORDER, data.data);
     return {
       type: types.OMS_CHECK_PROMO_SUCCESS,
       payload: data.data
