@@ -442,4 +442,3 @@ Changes Message : ${env.GIT_MESSAGE}""", channel: "${SLACK_CHANNEL}"
 			}
 		}
 	}
-}
