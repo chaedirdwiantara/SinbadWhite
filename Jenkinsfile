@@ -436,8 +436,9 @@ Application : ${SINBAD_REPO}
 Version : ${env.GIT_TAG}
 Commit ID : ${env.GIT_COMMIT}
 Changes Message : ${env.GIT_MESSAGE}""", channel: "${SLACK_CHANNEL}"
-                }
-            }
-        }
-    }
+					}
+				}
+			}
+		}
+	}
 }
