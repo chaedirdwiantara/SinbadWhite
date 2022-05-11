@@ -394,8 +394,9 @@ ${SINBAD_URI_DOWNLOAD}/${SINBAD_ENV}/${SINBAD_REPO}-latest.tar.gz
                   steps {
               script {
                 sh "gh release create ${params.GIT_TAG} --notes '${params.GIT_TAG_MESSAGE}' --title '${params.GIT_TAG_TITLE}'"
-          }	
-        }
+				}	
+			}
+		}
         stage('Code Analysis') {
             when { expression { SINBAD_ENV != "production" && SINBAD_ENV != "demo" } }
             steps{
