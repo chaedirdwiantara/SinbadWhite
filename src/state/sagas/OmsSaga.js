@@ -6,6 +6,7 @@ import {
 } from '../../services/report/datadog/rumDatadog';
 import * as ActionCreators from '../actions';
 import * as types from '../types';
+import { DdTrace } from '@datadog/mobile-react-native';
 /** === CART ITEM LIST === */
 function* getCartItem(actions) {
   try {
@@ -87,11 +88,11 @@ function* getPaymentChannel(actions) {
 function* getTermsConditions(actions) {
   try {
     // const { startSpan } = startRecordTransaction('omsGetTermsConditions');
-    const spanId = DdTrace.startSpan('foo', { custom: 42 }, Date.now());
+    const spanId = DdTrace.startSpan('omsGetTermsConditions');
     const response = yield call(() => {
       return OmsMethod.getTermsConditions(actions.payload);
     });
-    DdTrace.finishSpan(spanId, { custom: 21 }, Date.now());
+    DdTrace.finishSpan('omsGetTermsConditions');
     yield put(ActionCreators.OmsGetTermsConditionsSuccess(response));
     // finishRecordTransaction(startSpan);
   } catch (error) {

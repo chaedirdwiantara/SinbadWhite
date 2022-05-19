@@ -1,6 +1,7 @@
 import {
   DdSdkReactNative,
-  DdSdkReactNativeConfiguration
+  DdSdkReactNativeConfiguration,
+  DdTrace
 } from '@datadog/mobile-react-native';
 
 export const startRecordTransaction = transactionModule => {
