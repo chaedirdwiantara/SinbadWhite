@@ -13,6 +13,7 @@
     "postinstall": "rm -rf node_modules/*/.git && npx jetify"
   },
   "dependencies": {
+    "@datadog/mobile-react-native": "^1.0.0-rc7",
     "@ptomasroos/react-native-multi-slider": "2.2.0",
     "@react-native-clipboard/clipboard": "1.8.4",
     "@react-native-community/progress-bar-android": "1.0.3",
@@ -25,7 +26,7 @@
     "moment": "2.27.0",
     "numeral": "2.0.6",
     "react": "16.9.0",
-    "react-native": "0.63.3",
+    "react-native": "0.63.4",
     "react-native-app-settings": "2.0.1",
     "react-native-calendars": "^1.1278.0",
     "react-native-camera": "3.37.0",
