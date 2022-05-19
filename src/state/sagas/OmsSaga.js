@@ -1,5 +1,9 @@
 import { put, call, takeEvery, takeLatest } from 'redux-saga/effects';
 import { OmsMethod } from '../../services/methods';
+import {
+  finishRecordTransaction,
+  startRecordTransaction
+} from '../../services/report/datadog/rumDatadog';
 import * as ActionCreators from '../actions';
 import * as types from '../types';
 /** === CART ITEM LIST === */
@@ -82,10 +86,14 @@ function* getPaymentChannel(actions) {
 /** === GET TERMS AND CONDITIONS === */
 function* getTermsConditions(actions) {
   try {
+    // const { startSpan } = startRecordTransaction('omsGetTermsConditions');
+    const spanId = DdTrace.startSpan('foo', { custom: 42 }, Date.now());
     const response = yield call(() => {
       return OmsMethod.getTermsConditions(actions.payload);
     });
+    DdTrace.finishSpan(spanId, { custom: 21 }, Date.now());
     yield put(ActionCreators.OmsGetTermsConditionsSuccess(response));
+    // finishRecordTransaction(startSpan);
   } catch (error) {
     yield put(ActionCreators.OmsGetTermsConditionsFailed(error));
   }
