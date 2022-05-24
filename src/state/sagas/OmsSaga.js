@@ -32,6 +32,7 @@ function* getCartItemFromCheckout(actions) {
 /** === CHECKOUT ITEM LIST === */
 function* getCheckoutItem(actions) {
   try {
+    const { startSpan } = startRecordTransaction('omsGetTermsConditions');
     const response = yield call(() => {
       return OmsMethod.getCheckoutItem(actions.payload);
     });
@@ -88,13 +89,13 @@ function* getPaymentChannel(actions) {
 function* getTermsConditions(actions) {
   try {
     // const { startSpan } = startRecordTransaction('omsGetTermsConditions');
-    const spanId = DdTrace.startSpan('omsGetTermsConditions');
+    // DdTrace.startSpan('omsGetTermsConditions');
     const response = yield call(() => {
       return OmsMethod.getTermsConditions(actions.payload);
     });
-    DdTrace.finishSpan('omsGetTermsConditions');
+    // DdTrace.finishSpan('omsGetTermsConditions');
     yield put(ActionCreators.OmsGetTermsConditionsSuccess(response));
-    // finishRecordTransaction(startSpan);
+    finishRecordTransaction('omsGetTermsConditions');
   } catch (error) {
     yield put(ActionCreators.OmsGetTermsConditionsFailed(error));
   }

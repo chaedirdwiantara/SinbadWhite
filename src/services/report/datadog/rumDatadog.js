@@ -1,10 +1,11 @@
 import {
+  DdRum,
   DdSdkReactNative,
   DdSdkReactNativeConfiguration,
   DdTrace
 } from '@datadog/mobile-react-native';
 
-export const startRecordTransaction = transactionModule => {
+export const startRecordTransaction = id => {
   const config = new DdSdkReactNativeConfiguration(
     'pubeac8cf838454dd990b8b792d1b15f0ce',
     'SANDBOX',
@@ -18,32 +19,20 @@ export const startRecordTransaction = transactionModule => {
   // Optional: enable or disable native crash reports
   config.nativeCrashReportEnabled = true;
   // Optional: sample RUM sessions (here, 80% of session will be sent to Datadog. Default = 100%)
-  config.sessionSamplingRate = 80;
+  config.sessionSamplingRate = 100;
+
+  DdRum.startView('<view-key>', 'View Url', {}, Date.now());
 
   DdSdkReactNative.initialize(config);
   // This will create a new Transaction for you
-  const startSpan = DdTrace.startSpan(
-    transactionModule,
-    { custom: 42 },
-    Date.now()
-  );
+  const startSpan = DdTrace.startSpan(id);
   return { startSpan };
 };
 
-export const finishRecordTransaction = startSpan => {
+export const finishRecordTransaction = id => {
+  DdRum.stopView('<view-key>', { custom: 42 }, Date.now());
+
   // This will create a new Transaction for you
-  const finishSpan = DdTrace.finishSpan(startSpan, { custom: 21 }, Date.now());
+  const finishSpan = DdTrace.finishSpan(id);
   return { finishSpan };
 };
-
-// import { Sentry } from '../SentryConfig';
-// /** SENTRY CHECK SHOP CHECKOUT */
-// export const recordTransactionS = transactionModule => {
-//   // This will create a new Transaction for you
-//   const transaction = Sentry.startTransaction({ name: transactionModule });
-//   Sentry.getCurrentHub().configureScope(scope => scope.setSpan(transaction));
-//   const span = transaction.startChild({
-//     op: transactionModule
-//   });
-//   return { transaction, span };
-// };
