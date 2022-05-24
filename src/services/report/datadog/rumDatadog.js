@@ -21,7 +21,7 @@ export const startRecordTransaction = id => {
   // Optional: sample RUM sessions (here, 80% of session will be sent to Datadog. Default = 100%)
   config.sessionSamplingRate = 100;
 
-  DdRum.startView('<view-key>', 'View Url', {}, Date.now());
+  DdRum.startView('<view-key>', id, {}, Date.now());
 
   DdSdkReactNative.initialize(config);
   // This will create a new Transaction for you
@@ -30,7 +30,7 @@ export const startRecordTransaction = id => {
 };
 
 export const finishRecordTransaction = id => {
-  DdRum.stopView('<view-key>', { custom: 42 }, Date.now());
+  DdRum.stopView('<view-key>', { id }, Date.now());
 
   // This will create a new Transaction for you
   const finishSpan = DdTrace.finishSpan(id);
